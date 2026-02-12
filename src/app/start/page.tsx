@@ -68,7 +68,7 @@ export default function StartPage() {
               <Sparkles className="h-5 w-5" />
             </div>
             <div className="text-left">
-              <p className="text-base font-bold">Frag deine Haar-Beraterin</p>
+              <p className="text-base font-bold">Frag deinen Haar-Experten</p>
               <p className="text-sm font-normal opacity-80">
                 Personalisierte Tipps & Empfehlungen
               </p>

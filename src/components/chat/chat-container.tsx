@@ -99,10 +99,10 @@ export function ChatContainer() {
                 <Sparkles className="h-8 w-8 text-white" />
               </div>
               <h2 className="mb-2 text-xl font-bold">
-                Hallo, Schatz! 💇‍♀️
+                Hey, meine Lieben! 💇
               </h2>
               <p className="mb-8 max-w-md text-center text-sm text-muted-foreground">
-                Ich bin deine persönliche Haar-Beraterin. Frag mich alles rund
+                Ich bin Tom, euer Haar-Experte. Fragt mich alles rund
                 ums Thema Haare — von Pflege-Tipps bis Produktempfehlungen!
               </p>
               <div className="grid w-full max-w-lg grid-cols-1 gap-2 sm:grid-cols-2">

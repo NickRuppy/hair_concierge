@@ -29,7 +29,7 @@ export default function AuthPage() {
             Hair Concierge
           </h1>
           <p className="text-lg text-muted-foreground">
-            Deine persönliche Haar-Beraterin — powered by AI
+            Dein persönlicher Haar-Experte — powered by AI
           </p>
         </div>
 
