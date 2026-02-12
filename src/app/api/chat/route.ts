@@ -56,7 +56,7 @@ export async function POST(request: Request) {
   const { message, conversation_id, image_url } = parsed.data
 
   try {
-    const { stream, conversationId, intent } = await runPipeline({
+    const { stream, conversationId, intent, matchedProducts } = await runPipeline({
       message,
       conversationId: conversation_id,
       userId: user.id,
@@ -101,25 +101,13 @@ export async function POST(request: Request) {
             )
           }
 
-          // If products were recommended, fetch and send them
-          if (
-            intent === "product_recommendation" ||
-            intent === "routine_help"
-          ) {
-            const admin = createAdminClient()
-            const { data: products } = await admin
-              .from("products")
-              .select("*")
-              .eq("is_active", true)
-              .limit(3)
-
-            if (products && products.length > 0) {
-              controller.enqueue(
-                encoder.encode(
-                  `data: ${JSON.stringify({ type: "product_recommendations", data: products })}\n\n`
-                )
+          // Send matched products from the pipeline (already filtered by relevance)
+          if (matchedProducts.length > 0) {
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ type: "product_recommendations", data: matchedProducts.slice(0, 5) })}\n\n`
               )
-            }
+            )
           }
 
           // Save assistant message

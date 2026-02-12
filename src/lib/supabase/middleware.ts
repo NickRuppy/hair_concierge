@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
+import { getOnboardingPath } from "@/lib/onboarding-utils"
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -70,12 +71,12 @@ export async function updateSession(request: NextRequest) {
   if (user && pathname === "/auth") {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("onboarding_completed")
+      .select("onboarding_completed, onboarding_step")
       .eq("id", user.id)
       .single()
 
     const url = request.nextUrl.clone()
-    url.pathname = profile?.onboarding_completed ? "/start" : "/onboarding/step-1"
+    url.pathname = profile?.onboarding_completed ? "/start" : getOnboardingPath(profile?.onboarding_step)
     return NextResponse.redirect(url)
   }
 

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { getOnboardingPath } from "@/lib/onboarding-utils"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
@@ -22,13 +23,13 @@ export async function GET(request: Request) {
         const admin = createAdminClient()
         const { data: profile } = await admin
           .from("profiles")
-          .select("onboarding_completed")
+          .select("onboarding_completed, onboarding_step")
           .eq("id", user.id)
           .single()
 
         const redirectTo = profile?.onboarding_completed
           ? next
-          : "/onboarding/step-1"
+          : getOnboardingPath(profile?.onboarding_step)
 
         return NextResponse.redirect(`${origin}${redirectTo}`)
       }

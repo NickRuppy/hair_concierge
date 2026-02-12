@@ -4,7 +4,7 @@ import { classifyIntent } from "@/lib/rag/intent-classifier"
 import { retrieveContext } from "@/lib/rag/retriever"
 import { matchProducts } from "@/lib/rag/product-matcher"
 import { synthesizeResponse } from "@/lib/rag/synthesizer"
-import type { IntentType, Message, HairProfile } from "@/lib/types"
+import type { IntentType, Message, HairProfile, Product } from "@/lib/types"
 
 export interface PipelineParams {
   message: string
@@ -17,6 +17,7 @@ export interface PipelineResult {
   stream: ReadableStream<Uint8Array>
   conversationId: string
   intent: IntentType
+  matchedProducts: Product[]
 }
 
 /** Intents that should trigger product matching */
@@ -143,5 +144,6 @@ export async function runPipeline(
     stream,
     conversationId: conversationId!,
     intent,
+    matchedProducts: matchedProducts ?? [],
   }
 }

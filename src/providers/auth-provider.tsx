@@ -52,7 +52,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user, fetchProfile])
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut()
+    try {
+      await supabase.auth.signOut()
+    } catch {
+      // Sign out locally even if the server request fails
+    }
     setUser(null)
     setProfile(null)
     window.location.href = "/auth"
