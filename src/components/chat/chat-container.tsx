@@ -1,19 +1,14 @@
 "use client"
 
 import { useChat } from "@/hooks/use-chat"
+import { useHairProfile } from "@/hooks/use-hair-profile"
+import { generateSuggestedPrompts } from "@/lib/suggested-prompts"
 import { ChatInput } from "./chat-input"
 import { ChatMessage } from "./chat-message"
 import { ProductCard } from "./product-card"
 import { ConversationSidebar } from "./conversation-sidebar"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Menu, Sparkles } from "lucide-react"
-
-const SUGGESTED_PROMPTS = [
-  "Welche Routine empfiehlst du für lockiges Haar?",
-  "Was hilft gegen Spliss?",
-  "Kannst du mir ein gutes Shampoo empfehlen?",
-  "Wie bekomme ich mehr Volumen?",
-]
 
 export function ChatContainer() {
   const {
@@ -28,6 +23,9 @@ export function ChatContainer() {
     deleteConversation,
     startNewConversation,
   } = useChat()
+
+  const { hairProfile } = useHairProfile()
+  const suggestedPrompts = useMemo(() => generateSuggestedPrompts(hairProfile), [hairProfile])
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -106,7 +104,7 @@ export function ChatContainer() {
                 ums Thema Haare — von Pflege-Tipps bis Produktempfehlungen!
               </p>
               <div className="grid w-full max-w-lg grid-cols-1 gap-2 sm:grid-cols-2">
-                {SUGGESTED_PROMPTS.map((prompt) => (
+                {suggestedPrompts.map((prompt) => (
                   <button
                     key={prompt}
                     onClick={() => sendMessage(prompt)}
