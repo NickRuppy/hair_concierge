@@ -40,7 +40,10 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function loadProfile() {
-      if (!user) return
+      if (!user) {
+        setLoading(false)
+        return
+      }
       const { data } = await supabase
         .from("hair_profiles")
         .select("*")
