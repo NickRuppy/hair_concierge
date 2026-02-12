@@ -27,8 +27,8 @@ if (fs.existsSync(envPath)) {
   }
 }
 
-const EMBEDDING_MODEL = "text-embedding-3-small"
-const EMBEDDING_BATCH_SIZE = 100
+const EMBEDDING_MODEL = "text-embedding-3-large"
+const EMBEDDING_BATCH_SIZE = 10
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -158,6 +158,7 @@ async function generateEmbeddings(texts: string[]): Promise<number[][]> {
     const response = await openai.embeddings.create({
       model: EMBEDDING_MODEL,
       input: batch,
+      dimensions: 384,
     })
 
     const sorted = response.data.sort((a, b) => a.index - b.index)

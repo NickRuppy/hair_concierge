@@ -33,8 +33,8 @@ if (fs.existsSync(envPath)) {
 // Config
 // ---------------------------------------------------------------------------
 
-const EMBEDDING_MODEL = "text-embedding-3-small"
-const EMBEDDING_BATCH_SIZE = 100
+const EMBEDDING_MODEL = "text-embedding-3-large"
+const EMBEDDING_BATCH_SIZE = 10
 const DB_INSERT_BATCH_SIZE = 50
 const CONTEXT_CONCURRENCY = 10
 const MD_DIR = path.join(process.cwd(), "data", "markdown-cleaned")
@@ -490,6 +490,7 @@ async function generateEmbeddings(texts: string[]): Promise<number[][]> {
     const response = await getOpenAI().embeddings.create({
       model: EMBEDDING_MODEL,
       input: batch,
+      dimensions: 384,
     })
 
     const sorted = response.data.sort((a, b) => a.index - b.index)

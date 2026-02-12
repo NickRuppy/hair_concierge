@@ -13,6 +13,17 @@ import OpenAI from "openai"
 import fs from "fs"
 import path from "path"
 
+// Load .env.local for standalone script execution
+const envPath = path.join(process.cwd(), ".env.local")
+if (fs.existsSync(envPath)) {
+  for (const line of fs.readFileSync(envPath, "utf-8").replace(/\r/g, "").split("\n")) {
+    const match = line.match(/^([^#=]+)=(.*)$/)
+    if (match && !process.env[match[1].trim()]) {
+      process.env[match[1].trim()] = match[2].trim()
+    }
+  }
+}
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -121,8 +132,9 @@ function generateDescription(product: ProductInput): string {
 
 async function generateEmbedding(text: string): Promise<number[]> {
   const response = await openai.embeddings.create({
-    model: "text-embedding-3-small",
+    model: "text-embedding-3-large",
     input: text,
+    dimensions: 384,
   })
 
   return response.data[0].embedding

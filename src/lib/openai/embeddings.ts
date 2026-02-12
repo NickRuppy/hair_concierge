@@ -1,6 +1,7 @@
 import { getOpenAI } from "@/lib/openai/client"
 
-const EMBEDDING_MODEL = "text-embedding-3-small"
+const EMBEDDING_MODEL = "text-embedding-3-large"
+const EMBEDDING_DIMENSIONS = 384
 
 /**
  * Generates an embedding vector for a single text string.
@@ -12,6 +13,7 @@ export async function generateEmbedding(text: string): Promise<number[]> {
   const response = await getOpenAI().embeddings.create({
     model: EMBEDDING_MODEL,
     input: text,
+    dimensions: EMBEDDING_DIMENSIONS,
   })
 
   return response.data[0].embedding
@@ -33,6 +35,7 @@ export async function generateEmbeddings(
   const response = await getOpenAI().embeddings.create({
     model: EMBEDDING_MODEL,
     input: texts,
+    dimensions: EMBEDDING_DIMENSIONS,
   })
 
   // Sort by index to ensure consistent ordering with the input
