@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
@@ -11,13 +12,15 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
-      // Check if user has completed onboarding
       const {
         data: { user },
       } = await supabase.auth.getUser()
 
       if (user) {
-        const { data: profile } = await supabase
+        // Use admin client to bypass RLS — the anon client's session
+        // may not be fully established in cookies yet after exchange.
+        const admin = createAdminClient()
+        const { data: profile } = await admin
           .from("profiles")
           .select("onboarding_completed")
           .eq("id", user.id)
