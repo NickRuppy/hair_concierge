@@ -29,7 +29,7 @@ export default function OnboardingStep4() {
         .from("hair_profiles")
         .select("goals")
         .eq("user_id", user.id)
-        .single()
+        .maybeSingle()
 
       if (data?.goals && Array.isArray(data.goals)) {
         setGoals(data.goals as Goal[])

@@ -57,7 +57,7 @@ export default function OnboardingStep1() {
         .from("hair_profiles")
         .select("hair_type, hair_texture")
         .eq("user_id", user.id)
-        .single()
+        .maybeSingle()
 
       if (data) {
         if (data.hair_type) setHairType(data.hair_type as HairType)

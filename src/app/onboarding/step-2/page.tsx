@@ -29,7 +29,7 @@ export default function OnboardingStep2() {
         .from("hair_profiles")
         .select("concerns")
         .eq("user_id", user.id)
-        .single()
+        .maybeSingle()
 
       if (data?.concerns && Array.isArray(data.concerns)) {
         setConcerns(data.concerns as Concern[])

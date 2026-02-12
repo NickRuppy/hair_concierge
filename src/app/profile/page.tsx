@@ -45,7 +45,7 @@ export default function ProfilePage() {
         .from("hair_profiles")
         .select("*")
         .eq("user_id", user.id)
-        .single()
+        .maybeSingle()
       if (data) {
         setHairProfile(data)
         setFormData({

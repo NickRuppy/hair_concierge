@@ -15,15 +15,30 @@ import {
 import { ProgressBar } from "@/components/onboarding/progress-bar"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select"
+import { DiscreteSlider, type SliderStop } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
+
+const WASH_SHORT_LABELS: Record<string, string> = {
+  alle_2_tage: "Alle 2 T.",
+  "2_mal_woche": "2x/Wo.",
+  "1_mal_woche": "1x/Wo.",
+}
+
+const HEAT_SHORT_LABELS: Record<string, string> = {
+  mehrmals_woche: "Mehrmals/Wo.",
+  "1_mal_woche": "1x/Wo.",
+}
+
+const WASH_FREQUENCY_STOPS: SliderStop[] = WASH_FREQUENCY_OPTIONS.map((opt) => ({
+  ...opt,
+  shortLabel: WASH_SHORT_LABELS[opt.value],
+}))
+
+const HEAT_STYLING_STOPS: SliderStop[] = HEAT_STYLING_OPTIONS.map((opt) => ({
+  ...opt,
+  shortLabel: HEAT_SHORT_LABELS[opt.value],
+}))
 
 export default function OnboardingStep3() {
   const router = useRouter()
@@ -47,7 +62,7 @@ export default function OnboardingStep3() {
         .from("hair_profiles")
         .select("wash_frequency, heat_styling, styling_tools, products_used")
         .eq("user_id", user.id)
-        .single()
+        .maybeSingle()
 
       if (data) {
         if (data.wash_frequency) setWashFrequency(data.wash_frequency as WashFrequency)
@@ -156,42 +171,24 @@ export default function OnboardingStep3() {
 
       {/* Wash Frequency */}
       <div className="space-y-2">
-        <Label htmlFor="wash-frequency">Wie oft waeschst du deine Haare?</Label>
-        <Select
-          value={washFrequency}
+        <Label>Wie oft waeschst du deine Haare?</Label>
+        <DiscreteSlider
+          stops={WASH_FREQUENCY_STOPS}
+          value={washFrequency || undefined}
           onValueChange={(val) => setWashFrequency(val as WashFrequency)}
-        >
-          <SelectTrigger id="wash-frequency">
-            <SelectValue placeholder="Bitte waehlen..." />
-            <SelectContent>
-              {WASH_FREQUENCY_OPTIONS.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </SelectTrigger>
-        </Select>
+          aria-label="Wie oft wäschst du deine Haare?"
+        />
       </div>
 
       {/* Heat Styling */}
       <div className="space-y-2">
-        <Label htmlFor="heat-styling">Wie oft verwendest du Hitze-Styling?</Label>
-        <Select
-          value={heatStyling}
+        <Label>Wie oft verwendest du Hitze-Styling?</Label>
+        <DiscreteSlider
+          stops={HEAT_STYLING_STOPS}
+          value={heatStyling || undefined}
           onValueChange={(val) => setHeatStyling(val as HeatStyling)}
-        >
-          <SelectTrigger id="heat-styling">
-            <SelectValue placeholder="Bitte waehlen..." />
-            <SelectContent>
-              {HEAT_STYLING_OPTIONS.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </SelectTrigger>
-        </Select>
+          aria-label="Wie oft verwendest du Hitze-Styling?"
+        />
       </div>
 
       {/* Styling Tools */}
