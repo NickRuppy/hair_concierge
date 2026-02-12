@@ -68,18 +68,13 @@ export default function OnboardingStep4() {
     setSaving(true)
 
     try {
-      // Save goals to hair profile
-      const { error: upsertError } = await supabase
+      // Use update (not upsert) since the row already exists from step 1
+      const { error: updateError } = await supabase
         .from("hair_profiles")
-        .upsert(
-          {
-            user_id: user!.id,
-            goals: result.data.goals,
-          },
-          { onConflict: "user_id" }
-        )
+        .update({ goals: result.data.goals })
+        .eq("user_id", user!.id)
 
-      if (upsertError) throw upsertError
+      if (updateError) throw updateError
 
       // Mark onboarding as completed
       const { error: profileError } = await supabase

@@ -68,17 +68,13 @@ export default function OnboardingStep2() {
     setSaving(true)
 
     try {
-      const { error: upsertError } = await supabase
+      // Use update (not upsert) since the row already exists from step 1
+      const { error: updateError } = await supabase
         .from("hair_profiles")
-        .upsert(
-          {
-            user_id: user!.id,
-            concerns: result.data.concerns,
-          },
-          { onConflict: "user_id" }
-        )
+        .update({ concerns: result.data.concerns })
+        .eq("user_id", user!.id)
 
-      if (upsertError) throw upsertError
+      if (updateError) throw updateError
 
       const { error: profileError } = await supabase
         .from("profiles")
