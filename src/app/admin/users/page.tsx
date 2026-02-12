@@ -98,8 +98,8 @@ export default function AdminUsersPage() {
                       <span
                         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                           user.is_admin
-                            ? "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
-                            : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                            ? "bg-secondary/20 text-secondary"
+                            : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {user.is_admin ? "Admin" : "Nutzer"}
@@ -109,8 +109,8 @@ export default function AdminUsersPage() {
                       <span
                         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                           user.onboarding_completed
-                            ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                            : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
+                            ? "bg-green-900/30 text-green-400"
+                            : "bg-yellow-900/30 text-yellow-400"
                         }`}
                       >
                         {user.onboarding_completed ? "Abgeschlossen" : `Schritt ${user.onboarding_step}`}

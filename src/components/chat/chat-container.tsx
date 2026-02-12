@@ -93,8 +93,8 @@ export function ChatContainer() {
         <div className="flex-1 overflow-y-auto">
           {isEmpty ? (
             <div className="flex h-full flex-col items-center justify-center px-4">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-pink-400 to-purple-500">
-                <Sparkles className="h-8 w-8 text-white" />
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
+                <Sparkles className="h-8 w-8 text-primary-foreground" />
               </div>
               <h2 className="mb-2 text-xl font-bold">
                 Hey, meine Lieben! 💇
@@ -140,7 +140,7 @@ export function ChatContainer() {
                 messages[messages.length - 1]?.role === "assistant" &&
                 !messages[messages.length - 1]?.content && (
                   <div className="flex gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-pink-400 to-purple-500 text-xs font-bold text-white">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                       HC
                     </div>
                     <div className="rounded-2xl bg-muted px-4 py-2.5">

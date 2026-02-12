@@ -20,7 +20,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
           isUser
             ? "bg-primary text-primary-foreground"
-            : "bg-gradient-to-br from-pink-400 to-purple-500 text-white"
+            : "bg-primary text-primary-foreground"
         }`}
       >
         {isUser ? "Du" : "HC"}
@@ -55,7 +55,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
             {isUser ? (
               <p className="text-sm whitespace-pre-wrap">{message.content}</p>
             ) : (
-              <div className="prose prose-sm max-w-none dark:prose-invert">
+              <div className="prose prose-sm max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {message.content}
                 </ReactMarkdown>

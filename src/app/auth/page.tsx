@@ -22,10 +22,10 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-pink-50 to-white px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight text-foreground">
+          <h1 className="font-header text-4xl tracking-tight text-foreground">
             Hair Concierge
           </h1>
           <p className="text-lg text-muted-foreground">
@@ -41,7 +41,7 @@ export default function AuthPage() {
             <button
               onClick={handleGoogleLogin}
               disabled={loading}
-              className="inline-flex w-full items-center justify-center gap-3 rounded-lg border bg-white px-6 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:opacity-50"
+              className="inline-flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-white px-6 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-100 disabled:opacity-50"
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24">
                 <path

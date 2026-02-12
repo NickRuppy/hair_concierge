@@ -20,7 +20,7 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <Link href="/start" className="flex items-center gap-2">
-          <span className="text-xl font-bold text-primary">Hair Concierge</span>
+          <span className="font-header text-2xl tracking-wide text-primary">Hair Concierge</span>
         </Link>
 
         {/* Desktop nav */}

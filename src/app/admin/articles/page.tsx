@@ -407,8 +407,8 @@ export default function AdminArticlesPage() {
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                         article.is_published
-                          ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                          : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
+                          ? "bg-green-900/30 text-green-400"
+                          : "bg-yellow-900/30 text-yellow-400"
                       }`}
                     >
                       {article.is_published ? "Ja" : "Entwurf"}
@@ -427,7 +427,7 @@ export default function AdminArticlesPage() {
                       </button>
                       <button
                         onClick={() => handleDelete(article.id)}
-                        className="rounded-md px-2.5 py-1 text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
+                        className="rounded-md px-2.5 py-1 text-xs font-medium text-red-400 hover:bg-red-900/20 transition-colors"
                       >
                         Löschen
                       </button>

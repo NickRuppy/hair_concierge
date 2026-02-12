@@ -62,7 +62,7 @@ export default function StartPage() {
         <section className="flex justify-center pb-8">
           <Link
             href="/chat"
-            className="group inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+            className="font-header group inline-flex items-center gap-3 rounded-2xl bg-primary px-8 py-4 text-lg text-primary-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
               <Sparkles className="h-5 w-5" />

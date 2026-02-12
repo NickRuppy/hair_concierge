@@ -63,7 +63,7 @@ export default function AdminDashboard() {
       label: "Produkte",
       value: stats.productCount,
       icon: Package,
-      color: "text-purple-500",
+      color: "text-secondary",
     },
     {
       label: "Artikel",
