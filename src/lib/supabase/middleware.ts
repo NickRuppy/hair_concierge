@@ -46,38 +46,57 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // All checks below require an authenticated user
+  if (!user) {
+    return supabaseResponse
+  }
+
+  const isOnboardingRoute = pathname.startsWith("/onboarding")
+  const isApiRoute = pathname.startsWith("/api")
+
+  // Fetch profile once for all subsequent checks
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("is_admin, onboarding_completed, onboarding_step")
+    .eq("id", user.id)
+    .single()
+
+  // Redirect authenticated users away from auth page
+  if (pathname === "/auth") {
+    const url = request.nextUrl.clone()
+    url.pathname = profile?.onboarding_completed ? "/start" : getOnboardingPath(profile?.onboarding_step)
+    return NextResponse.redirect(url)
+  }
+
+  // Onboarding gate: redirect incomplete users to their current onboarding step
+  // Only allow API routes that onboarding forms need (profile saves + auth)
+  const isOnboardingAllowedApi = pathname.startsWith("/api/profile") || pathname.startsWith("/api/auth")
+  if (!profile?.onboarding_completed && !isOnboardingRoute && !isOnboardingAllowedApi) {
+    if (isApiRoute) {
+      return new Response(JSON.stringify({ error: "Onboarding nicht abgeschlossen" }), {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
+      })
+    }
+    const url = request.nextUrl.clone()
+    url.pathname = getOnboardingPath(profile?.onboarding_step)
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect completed users away from onboarding pages
+  if (profile?.onboarding_completed && isOnboardingRoute) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/start"
+    return NextResponse.redirect(url)
+  }
+
   // Admin route protection
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
-    if (!user) {
-      const url = request.nextUrl.clone()
-      url.pathname = "/auth"
-      return NextResponse.redirect(url)
-    }
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("is_admin")
-      .eq("id", user.id)
-      .single()
-
     if (!profile?.is_admin) {
       const url = request.nextUrl.clone()
       url.pathname = "/start"
       return NextResponse.redirect(url)
     }
-  }
-
-  // Redirect authenticated users from auth page
-  if (user && pathname === "/auth") {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("onboarding_completed, onboarding_step")
-      .eq("id", user.id)
-      .single()
-
-    const url = request.nextUrl.clone()
-    url.pathname = profile?.onboarding_completed ? "/start" : getOnboardingPath(profile?.onboarding_step)
-    return NextResponse.redirect(url)
   }
 
   return supabaseResponse
