@@ -11,13 +11,14 @@ export interface SynthesizeParams {
   imageAnalysis?: string
   products?: Product[]
   intent: IntentType
+  consultationMode?: boolean
 }
 
 /**
  * Formats the user's hair profile into a human-readable German summary
  * for injection into the system prompt.
  */
-function formatUserProfile(profile: HairProfile | null): string {
+function formatUserProfile(profile: HairProfile | null, consultationMode?: boolean): string {
   if (!profile) {
     return "Kein Haarprofil vorhanden. Frage den Nutzer nach seinen Haardetails, wenn relevant."
   }
@@ -52,13 +53,19 @@ function formatUserProfile(profile: HairProfile | null): string {
     parts.push(`Zusaetzliche Infos: ${profile.additional_notes}`)
   }
 
-  return parts.length > 0
+  let result = parts.length > 0
     ? parts.join("\n")
     : "Haarprofil angelegt, aber noch keine Details eingetragen."
+
+  if (consultationMode) {
+    result += "\n\n(HINWEIS: Dies ist die erste Nachricht des Nutzers in diesem Gespraech. Das Profil zeigt die Grunddaten — aber finde zuerst heraus, was die AKTUELLE Situation und das konkrete Anliegen ist, bevor du Empfehlungen gibst.)"
+  }
+
+  return result
 }
 
 /** German labels for source types, used in RAG context formatting. */
-const SOURCE_TYPE_LABELS: Record<string, string> = {
+export const SOURCE_TYPE_LABELS: Record<string, string> = {
   book: "Fachbuch",
   product_list: "Produktmatrix",
   qa: "FAQ",
@@ -115,11 +122,12 @@ function buildSystemPrompt(
   hairProfile: HairProfile | null,
   ragChunks: ContentChunk[],
   imageAnalysis?: string,
-  products?: Product[]
+  products?: Product[],
+  consultationMode?: boolean
 ): string {
   let prompt = SYSTEM_PROMPT
 
-  prompt = prompt.replace("{{USER_PROFILE}}", formatUserProfile(hairProfile))
+  prompt = prompt.replace("{{USER_PROFILE}}", formatUserProfile(hairProfile, consultationMode))
 
   let ragContext = formatRagContext(ragChunks)
   if (products && products.length > 0) {
@@ -155,13 +163,15 @@ export async function synthesizeResponse(
     ragChunks,
     imageAnalysis,
     products,
+    consultationMode,
   } = params
 
   const systemPrompt = buildSystemPrompt(
     hairProfile,
     ragChunks,
     imageAnalysis,
-    products
+    products,
+    consultationMode
   )
 
   // Build the messages array for the API call

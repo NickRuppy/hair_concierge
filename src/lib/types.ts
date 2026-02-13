@@ -155,7 +155,7 @@ export interface Message {
   image_url: string | null
   image_analysis: string | null
   product_recommendations: Product[] | null
-  rag_context: Record<string, unknown> | null
+  rag_context: { sources: CitationSource[] } | null
   token_usage: Record<string, number> | null
   created_at: string
 }
@@ -197,6 +197,14 @@ export interface ContentChunk {
   created_at: string
 }
 
+export interface CitationSource {
+  index: number          // 1-based, matches [1] markers
+  source_type: string    // "book", "product_list", etc.
+  label: string          // German: "Fachbuch", "Produktmatrix"
+  source_name: string | null
+  snippet: string        // First ~200 chars of chunk content
+}
+
 export type IntentType =
   | "product_recommendation"
   | "hair_care_advice"
@@ -208,6 +216,6 @@ export type IntentType =
   | "followup"
 
 export interface ChatSSEEvent {
-  type: "conversation_id" | "content_delta" | "product_recommendations" | "done" | "error"
+  type: "conversation_id" | "content_delta" | "product_recommendations" | "sources" | "done" | "error"
   data: unknown
 }

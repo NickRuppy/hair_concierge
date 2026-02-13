@@ -56,7 +56,7 @@ export async function POST(request: Request) {
   const { message, conversation_id, image_url } = parsed.data
 
   try {
-    const { stream, conversationId, intent, matchedProducts } = await runPipeline({
+    const { stream, conversationId, intent, matchedProducts, sources } = await runPipeline({
       message,
       conversationId: conversation_id,
       userId: user.id,
@@ -110,12 +110,22 @@ export async function POST(request: Request) {
             )
           }
 
+          // Send citation sources
+          if (sources.length > 0) {
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ type: "sources", data: sources })}\n\n`
+              )
+            )
+          }
+
           // Save assistant message
           const admin = createAdminClient()
           await admin.from("messages").insert({
             conversation_id: conversationId,
             role: "assistant",
             content: fullContent,
+            rag_context: sources.length > 0 ? { sources } : null,
           })
 
           // Update conversation updated_at

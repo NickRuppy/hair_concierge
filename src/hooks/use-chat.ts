@@ -161,6 +161,19 @@ export function useChat(): UseChatReturn {
                 case "product_recommendations":
                   setProductRecommendations(event.data)
                   break
+                case "sources":
+                  setMessages((prev) => {
+                    const updated = [...prev]
+                    const last = updated[updated.length - 1]
+                    if (last?.role === "assistant") {
+                      updated[updated.length - 1] = {
+                        ...last,
+                        rag_context: { sources: event.data },
+                      }
+                    }
+                    return updated
+                  })
+                  break
                 case "done":
                   break
                 case "error":
