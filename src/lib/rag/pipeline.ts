@@ -4,6 +4,7 @@ import { classifyIntent } from "@/lib/rag/intent-classifier"
 import { retrieveContext } from "@/lib/rag/retriever"
 import { matchProducts } from "@/lib/rag/product-matcher"
 import { synthesizeResponse, SOURCE_TYPE_LABELS } from "@/lib/rag/synthesizer"
+import { formatSourceName } from "@/lib/rag/source-names"
 import type { IntentType, Message, HairProfile, Product, CitationSource } from "@/lib/types"
 
 export interface PipelineParams {
@@ -38,10 +39,16 @@ function shouldSkipProductMatching(
   conversationHistory: Message[],
   hasImage: boolean
 ): boolean {
-  if (conversationHistory.length > 0) return false
-  if (hasImage) return false
-  const wordCount = message.trim().split(/\s+/).length
-  return message.length < 100 && wordCount < 15
+  const userTurns = conversationHistory.filter(m => m.role === "user").length
+  // First message: skip if short/vague
+  if (userTurns === 0) {
+    if (hasImage) return false
+    const wordCount = message.trim().split(/\s+/).length
+    return message.length < 100 && wordCount < 15
+  }
+  // Second exchange (1 user turn so far): still too early for products
+  if (userTurns < 2) return true
+  return false
 }
 
 /**
@@ -87,10 +94,11 @@ export async function runPipeline(
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
 
   // ── Step 2: Retrieve context chunks ─────────────────────────────────
-  // For product-related intents, use hair texture from profile for hybrid
-  // search (metadata pre-filter + vector similarity).
+  // Only apply hair-texture metadata filter for product_recommendation intent.
+  // Other intents (hair_care_advice, routine_help) need book/transcript chunks
+  // which don't carry hair_texture metadata — filtering would return 0 results.
   let metadataFilter: Record<string, string> | undefined
-  if (PRODUCT_INTENTS.includes(intent)) {
+  if (intent === "product_recommendation") {
     if (hairProfile?.hair_texture) {
       metadataFilter = { hair_texture: hairProfile.hair_texture }
     } else if (hairProfile) {
@@ -109,7 +117,7 @@ export async function runPipeline(
     index: i + 1,
     source_type: chunk.source_type,
     label: SOURCE_TYPE_LABELS[chunk.source_type] ?? chunk.source_type,
-    source_name: chunk.source_name,
+    source_name: chunk.source_name ? formatSourceName(chunk.source_name) : null,
     snippet: chunk.content.slice(0, 200) + (chunk.content.length > 200 ? "..." : ""),
   }))
 

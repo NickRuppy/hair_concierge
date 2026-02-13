@@ -39,7 +39,7 @@ export function CitationBadge({ source }: CitationBadgeProps) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-0.5 rounded px-1 py-0 text-[10px] font-semibold leading-none align-super bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors cursor-pointer"
+        className="inline-flex items-center rounded-md px-1.5 py-0.5 text-[11px] font-bold leading-none align-super bg-primary/20 text-primary hover:bg-primary/30 transition-colors cursor-pointer border border-primary/30"
         aria-label={`Quelle ${source.index}`}
       >
         {source.index}

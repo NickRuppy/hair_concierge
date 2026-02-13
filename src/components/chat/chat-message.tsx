@@ -19,7 +19,7 @@ function renderWithCitations(
   text: string,
   sourceMap: Map<number, CitationSource>
 ): ReactNode[] {
-  const parts = text.split(/\[(\d)\]/g)
+  const parts = text.split(/\[(\d+)\]/g)
   const result: ReactNode[] = []
 
   for (let i = 0; i < parts.length; i++) {

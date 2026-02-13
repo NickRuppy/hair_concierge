@@ -97,10 +97,10 @@ export function ChatContainer() {
                 <Sparkles className="h-8 w-8 text-primary-foreground" />
               </div>
               <h2 className="mb-2 text-xl font-bold">
-                Hey, meine Lieben! 💇
+                Hey! 💇
               </h2>
               <p className="mb-8 max-w-md text-center text-sm text-muted-foreground">
-                Ich bin Tom, euer Haar-Experte. Fragt mich alles rund
+                Ich bin Tom, dein Haar-Experte. Frag mich alles rund
                 ums Thema Haare — von Pflege-Tipps bis Produktempfehlungen!
               </p>
               <div className="grid w-full max-w-lg grid-cols-1 gap-2 sm:grid-cols-2">
@@ -117,9 +117,11 @@ export function ChatContainer() {
             </div>
           ) : (
             <div className="mx-auto max-w-3xl space-y-4 p-4">
-              {messages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg} />
-              ))}
+              {messages.map((msg) => {
+                // Don't render empty assistant placeholder — streaming indicator handles it
+                if (msg.role === "assistant" && !msg.content) return null
+                return <ChatMessage key={msg.id} message={msg} />
+              })}
 
               {/* Product recommendations */}
               {productRecommendations.length > 0 && (

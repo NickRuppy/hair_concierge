@@ -101,8 +101,9 @@ export async function POST(request: Request) {
             )
           }
 
-          // Send matched products from the pipeline (already filtered by relevance)
-          if (matchedProducts.length > 0) {
+          // Send matched products — suppress if response is consultation-mode (asking questions)
+          const questionCount = (fullContent.match(/\?/g) || []).length
+          if (matchedProducts.length > 0 && questionCount < 2) {
             controller.enqueue(
               encoder.encode(
                 `data: ${JSON.stringify({ type: "product_recommendations", data: matchedProducts.slice(0, 5) })}\n\n`
