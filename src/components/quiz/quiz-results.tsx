@@ -11,7 +11,7 @@ import {
   hopeText,
 } from "@/lib/quiz/results-lookup"
 import { QuizProfileCard } from "./quiz-profile-card"
-import { QuizGlassCard } from "./quiz-glass-card"
+import { QuizCard } from "./quiz-card"
 import { Button } from "@/components/ui/button"
 
 export function QuizResults() {
@@ -55,15 +55,15 @@ export function QuizResults() {
   return (
     <div className="flex flex-col pb-6 animate-fade-in-up">
       {/* Header */}
-      <h2 className="font-header text-2xl text-white mb-1">
+      <h2 className="font-header text-3xl text-white mb-1">
         {lead.name.toUpperCase()}, DEIN HAARPROFIL
       </h2>
-      <p className="text-sm text-white/60 mb-5">
+      <p className="text-base text-white/60 mb-5">
         Basierend auf deinen Antworten sieht Tom dein Haar so:
       </p>
 
-      {/* Profile cards */}
-      <div className="space-y-2.5 mb-6">
+      {/* Profile cards — 2-column grid */}
+      <div className="grid grid-cols-2 gap-3 mb-6">
         {cards.map((card, i) => (
           <QuizProfileCard
             key={card.title}
@@ -75,26 +75,26 @@ export function QuizResults() {
         ))}
       </div>
 
-      {/* Aha-Moment box */}
+      {/* Aha-Moment box — full width */}
       {aiInsight && (
         <div className="animate-fade-in-up mb-6" style={{ animationDelay: "500ms" }}>
-          <QuizGlassCard className="border-[#F5C518]/20">
+          <QuizCard className="border-[#F5C518]/20">
             <p className="text-xs font-semibold text-[#F5C518] uppercase tracking-wide mb-2">
               WAS BISHER WAHRSCHEINLICH SCHIEF LIEF
             </p>
             <p className="text-sm text-white/80 leading-relaxed">{aiInsight}</p>
-          </QuizGlassCard>
+          </QuizCard>
         </div>
       )}
 
       {/* Hope text */}
-      <p className="text-sm text-white/60 leading-relaxed mb-6">{hopeText}</p>
+      <p className="text-base text-white/60 leading-relaxed mb-6">{hopeText}</p>
 
       {/* CTA */}
       <Button
         onClick={goNext}
-        className="w-full h-12 text-base font-bold tracking-wide rounded-xl"
-        style={{ background: "linear-gradient(135deg, #F5C518, #D4A800)" }}
+        variant="unstyled"
+        className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
       >
         DEINEN PLAN STARTEN
       </Button>

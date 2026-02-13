@@ -81,7 +81,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
   const multiHasSelection = Array.isArray(localSelection) && localSelection.length > 0
 
   return (
-    <div className="flex min-h-[80dvh] flex-col" key={question.step}>
+    <div className="flex flex-col" key={question.step}>
       {/* Back button + progress */}
       <div className="flex items-center gap-3 mb-4">
         <button onClick={goBack} className="text-white/60 hover:text-white transition-colors">
@@ -90,23 +90,23 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
         <div className="flex-1">
           <QuizProgressBar current={question.questionNumber} total={7} />
         </div>
-        <span className="text-xs text-white/38 tabular-nums">
+        <span className="text-sm text-white/38 tabular-nums">
           {question.questionNumber}/7
         </span>
       </div>
 
       {/* Title */}
-      <h2 className="font-header text-2xl leading-tight text-white mb-2">
+      <h2 className="font-header text-3xl leading-tight text-white mb-2">
         {question.title}
       </h2>
 
       {/* Instruction */}
-      <p className="text-xs text-white/60 leading-relaxed mb-5">
+      <p className="text-sm text-white/60 leading-relaxed mb-5">
         {question.instruction}
       </p>
 
       {/* Options */}
-      <div className="space-y-2.5 flex-1">
+      <div className="space-y-3 flex-1">
         {question.options.map((opt, i) => (
           <QuizOptionCard
             key={opt.value}
@@ -130,8 +130,8 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
           <Button
             onClick={handleMultiContinue}
             disabled={!multiHasSelection}
-            className="w-full h-12 text-base font-bold tracking-wide rounded-xl disabled:opacity-40"
-            style={{ background: multiHasSelection ? "linear-gradient(135deg, #F5C518, #D4A800)" : undefined }}
+            variant="unstyled"
+            className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${multiHasSelection ? "quiz-btn-primary" : "disabled:opacity-40"}`}
           >
             WEITER
           </Button>
@@ -139,7 +139,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
       )}
 
       {/* Motivation text */}
-      <p className="mt-3 text-center text-xs text-white/38">
+      <p className="mt-3 text-center text-sm text-white/38">
         {question.motivation}
       </p>
     </div>

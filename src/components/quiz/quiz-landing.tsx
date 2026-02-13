@@ -13,12 +13,12 @@ export function QuizLanding() {
   const goNext = useQuizStore((s) => s.goNext)
 
   return (
-    <div className="flex min-h-[80dvh] flex-col justify-between animate-fade-in-up">
+    <div className="flex flex-col animate-fade-in-up">
       <div className="flex-1 flex flex-col justify-center">
-        <h1 className="font-header text-3xl leading-tight text-white mb-4">
+        <h1 className="font-header text-4xl leading-tight text-white mb-4">
           FINDE IN 2 MINUTEN HERAUS, WAS DEINE HAARE WIRKLICH BRAUCHEN
         </h1>
-        <p className="text-sm text-white/60 mb-6 leading-relaxed">
+        <p className="text-base text-white/60 mb-6 leading-relaxed">
           TomBot analysiert dein Haar nach der Methode von Haar-Experte Tom Hannemann und sagt dir, was DEINE Haare tatsaechlich brauchen.
         </p>
         <ul className="space-y-3 mb-8">
@@ -29,7 +29,7 @@ export function QuizLanding() {
                   <path d="M2.5 6L5 8.5L9.5 4" stroke="#F5C518" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
-              <span className="text-sm text-white/80">{text}</span>
+              <span className="text-base text-white/80">{text}</span>
             </li>
           ))}
         </ul>
@@ -38,12 +38,12 @@ export function QuizLanding() {
       <div className="space-y-2">
         <Button
           onClick={goNext}
-          className="w-full h-12 text-base font-bold tracking-wide rounded-xl"
-          style={{ background: "linear-gradient(135deg, #F5C518, #D4A800)" }}
+          variant="unstyled"
+          className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
         >
           QUIZ STARTEN
         </Button>
-        <p className="text-center text-xs text-white/38">
+        <p className="text-center text-sm text-white/38">
           Dauert ca. 2 Minuten. Du kannst nichts falsch machen.
         </p>
       </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { QuizGlassCard } from "./quiz-glass-card"
+import { QuizCard } from "./quiz-card"
 
 interface QuizOptionCardProps {
   emoji: string
@@ -17,13 +17,13 @@ export function QuizOptionCard({ emoji, label, description, active, onClick, ani
       className="animate-fade-in-up"
       style={{ animationDelay: `${animationDelay}ms` }}
     >
-      <QuizGlassCard active={active} onClick={onClick}>
+      <QuizCard active={active} onClick={onClick}>
         <div className="flex items-start gap-3">
-          <span className="text-xl leading-none mt-0.5">{emoji}</span>
+          <span className="text-2xl leading-none mt-0.5">{emoji}</span>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-white">{label}</p>
+            <p className="text-base font-semibold text-white">{label}</p>
             {description && (
-              <p className="text-xs text-white/60 mt-0.5 leading-relaxed">{description}</p>
+              <p className="text-sm text-white/60 mt-0.5 leading-relaxed">{description}</p>
             )}
           </div>
           {active && (
@@ -34,7 +34,7 @@ export function QuizOptionCard({ emoji, label, description, active, onClick, ani
             </div>
           )}
         </div>
-      </QuizGlassCard>
+      </QuizCard>
     </div>
   )
 }

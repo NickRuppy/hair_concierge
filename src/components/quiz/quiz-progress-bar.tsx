@@ -9,7 +9,7 @@ export function QuizProgressBar({ current, total }: QuizProgressBarProps) {
   const fraction = current / total
 
   return (
-    <div className="h-[3px] w-full rounded-full bg-white/10">
+    <div className="h-[4px] w-full rounded-full bg-white/10">
       <div
         className="h-full rounded-full transition-all duration-500 ease-out"
         style={{

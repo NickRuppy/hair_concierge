@@ -1,8 +1,20 @@
+"use client"
+
+import { QuizBrandPanel } from "@/components/quiz/quiz-brand-panel"
+
 export default function QuizLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative flex min-h-[100dvh] items-center justify-center bg-[#0A0A0A]">
-      <div className="relative z-10 flex w-full max-w-[420px] flex-col px-4 py-6">
-        {children}
+    <div className="flex min-h-[100dvh] bg-[#231F20]">
+      {/* Left panel — brand / contextual */}
+      <div className="sticky top-0 flex h-screen w-1/2 items-center justify-center overflow-hidden">
+        <QuizBrandPanel />
+      </div>
+
+      {/* Right panel — quiz content */}
+      <div className="w-1/2 overflow-y-auto">
+        <div className="mx-auto max-w-[540px] px-10 py-12">
+          {children}
+        </div>
       </div>
     </div>
   )

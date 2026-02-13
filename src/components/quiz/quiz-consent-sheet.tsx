@@ -1,6 +1,6 @@
 "use client"
 
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { QuizCard } from "./quiz-card"
 import { Button } from "@/components/ui/button"
 
 interface QuizConsentSheetProps {
@@ -9,15 +9,14 @@ interface QuizConsentSheetProps {
 }
 
 export function QuizConsentSheet({ open, onConsent }: QuizConsentSheetProps) {
+  if (!open) return null
+
   return (
-    <Sheet open={open} onOpenChange={() => onConsent(false)}>
-      <SheetContent
-        side="bottom"
-        className="rounded-t-2xl border-white/10 bg-[#141414] px-6 pb-8 pt-6"
-      >
+    <div className="animate-fade-in-up">
+      <QuizCard className="px-6 py-6">
         {/* Envelope icon */}
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F5C518]/20">
-          <span className="text-2xl">✉️</span>
+          <span className="text-2xl">&#9993;&#65039;</span>
         </div>
 
         <h3 className="font-header text-center text-xl text-white mb-2">
@@ -36,8 +35,8 @@ export function QuizConsentSheet({ open, onConsent }: QuizConsentSheetProps) {
 
         <Button
           onClick={() => onConsent(true)}
-          className="w-full h-12 text-base font-bold tracking-wide rounded-xl mb-3"
-          style={{ background: "linear-gradient(135deg, #F5C518, #D4A800)" }}
+          variant="unstyled"
+          className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl mb-3"
         >
           JA, WEITER ZU MEINEM PLAN
         </Button>
@@ -47,7 +46,7 @@ export function QuizConsentSheet({ open, onConsent }: QuizConsentSheetProps) {
         >
           Nein, nur meinen Plan schicken
         </button>
-      </SheetContent>
-    </Sheet>
+      </QuizCard>
+    </div>
   )
 }

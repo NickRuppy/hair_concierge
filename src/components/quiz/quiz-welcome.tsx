@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useQuizStore } from "@/lib/quiz/store"
-import { QuizGlassCard } from "./quiz-glass-card"
+import { QuizCard } from "./quiz-card"
 import { Button } from "@/components/ui/button"
 
 const nextSteps = [
@@ -16,28 +16,28 @@ export function QuizWelcome() {
   const lead = useQuizStore((s) => s.lead)
 
   return (
-    <div className="flex min-h-[80dvh] flex-col justify-between animate-fade-in-up">
+    <div className="flex flex-col animate-fade-in-up">
       <div className="flex-1 flex flex-col justify-center">
-        <h2 className="font-header text-3xl text-white mb-3">
+        <h2 className="font-header text-4xl text-white mb-3">
           WILLKOMMEN, {lead.name.toUpperCase()}
         </h2>
-        <p className="text-sm text-white/60 mb-8 leading-relaxed">
+        <p className="text-base text-white/60 mb-8 leading-relaxed">
           Dein Haarprofil ist gespeichert. Heute machen wir nur einen Schritt: Tom zeigt dir, wie du beim naechsten Waschen vorgehst.
         </p>
 
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           {nextSteps.map((item, i) => (
             <div
               key={item.text}
               className="animate-fade-in-up"
               style={{ animationDelay: `${i * 100}ms` }}
             >
-              <QuizGlassCard>
+              <QuizCard>
                 <div className="flex items-start gap-3">
-                  <span className="text-xl leading-none mt-0.5">{item.emoji}</span>
-                  <p className="text-sm text-white/80 leading-relaxed">{item.text}</p>
+                  <span className="text-2xl leading-none mt-0.5">{item.emoji}</span>
+                  <p className="text-base text-white/80 leading-relaxed">{item.text}</p>
                 </div>
-              </QuizGlassCard>
+              </QuizCard>
             </div>
           ))}
         </div>
@@ -46,8 +46,8 @@ export function QuizWelcome() {
       <div className="mt-8">
         <Button
           onClick={() => router.push("/auth?from=quiz")}
-          className="w-full h-12 text-base font-bold tracking-wide rounded-xl"
-          style={{ background: "linear-gradient(135deg, #F5C518, #D4A800)" }}
+          variant="unstyled"
+          className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
         >
           ERSTEN SCHRITT ANSEHEN
         </Button>

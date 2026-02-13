@@ -2,14 +2,14 @@
 
 import { cn } from "@/lib/utils"
 
-interface QuizGlassCardProps {
+interface QuizCardProps {
   children: React.ReactNode
   className?: string
   active?: boolean
   onClick?: () => void
 }
 
-export function QuizGlassCard({ children, className, active, onClick }: QuizGlassCardProps) {
+export function QuizCard({ children, className, active, onClick }: QuizCardProps) {
   return (
     <div
       role={onClick ? "button" : undefined}
@@ -17,9 +17,9 @@ export function QuizGlassCard({ children, className, active, onClick }: QuizGlas
       onClick={onClick}
       onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") onClick() } : undefined}
       className={cn(
-        "glass-card transition-all duration-200",
-        active && "glass-card-active scale-[1.015]",
-        onClick && "cursor-pointer hover:border-white/20",
+        "quiz-card transition-all duration-200",
+        active && "quiz-card-active scale-[1.015]",
+        onClick && "cursor-pointer",
         className
       )}
     >

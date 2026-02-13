@@ -56,11 +56,11 @@ export function QuizAnalysis() {
   }, [completedSteps, apiDone, goNext])
 
   return (
-    <div className="flex min-h-[80dvh] flex-col items-center justify-center animate-fade-in-up">
-      <h2 className="font-header text-2xl text-white text-center mb-2">
+    <div className="flex flex-col items-center justify-center py-16 animate-fade-in-up">
+      <h2 className="font-header text-3xl text-white text-center mb-2">
         {lead.name.toUpperCase()}, DEIN PROFIL WIRD ERSTELLT
       </h2>
-      <p className="text-sm text-white/60 mb-10">Einen Moment noch...</p>
+      <p className="text-base text-white/60 mb-10">Einen Moment noch...</p>
 
       <div className="w-full space-y-4">
         {steps.map((text, i) => {
@@ -73,18 +73,18 @@ export function QuizAnalysis() {
               className="flex items-center gap-3 transition-opacity duration-300"
               style={{ opacity: completedSteps >= i ? 1 : 0.3 }}
             >
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center">
                 {done ? (
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#F5C518]">
-                    <Check className="h-3.5 w-3.5 text-[#0A0A0A]" />
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F5C518]">
+                    <Check className="h-4 w-4 text-[#1A1618]" />
                   </div>
                 ) : active ? (
-                  <Loader2 className="h-5 w-5 animate-spin text-[#F5C518]" />
+                  <Loader2 className="h-6 w-6 animate-spin text-[#F5C518]" />
                 ) : (
-                  <div className="h-2 w-2 rounded-full bg-white/20" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-white/20" />
                 )}
               </div>
-              <span className={`text-sm ${done ? "text-white" : "text-white/60"}`}>{text}</span>
+              <span className={`text-base ${done ? "text-white" : "text-white/60"}`}>{text}</span>
             </div>
           )
         })}
