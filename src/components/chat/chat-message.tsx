@@ -1,7 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
-import type { Message, CitationSource } from "@/lib/types"
+import type { Message, CitationSource, Product } from "@/lib/types"
 import type { Components } from "react-markdown"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -9,6 +9,7 @@ import { CitationBadge } from "./citation-badge"
 
 interface ChatMessageProps {
   message: Message
+  onProductClick?: (product: Product) => void
 }
 
 /**
@@ -43,21 +44,100 @@ function renderWithCitations(
 }
 
 /**
+ * Scans text nodes for product name matches and wraps them in clickable buttons.
+ */
+function renderWithProductMentions(
+  nodes: ReactNode[],
+  productMap: Map<string, Product>,
+  onProductClick?: (product: Product) => void
+): ReactNode[] {
+  if (productMap.size === 0 || !onProductClick) return nodes
+
+  const result: ReactNode[] = []
+
+  for (const node of nodes) {
+    if (typeof node !== "string") {
+      result.push(node)
+      continue
+    }
+
+    // Try to find product names in text, sorted by length (longest first to avoid partial matches)
+    const names = Array.from(productMap.keys()).sort(
+      (a, b) => b.length - a.length
+    )
+    let remaining = node
+    let key = 0
+
+    while (remaining.length > 0) {
+      let earliest = -1
+      let matchedName = ""
+
+      for (const name of names) {
+        const idx = remaining.indexOf(name)
+        if (idx !== -1 && (earliest === -1 || idx < earliest)) {
+          earliest = idx
+          matchedName = name
+        }
+      }
+
+      if (earliest === -1) {
+        result.push(remaining)
+        break
+      }
+
+      // Push text before the match
+      if (earliest > 0) {
+        result.push(remaining.slice(0, earliest))
+      }
+
+      // Push the clickable product mention
+      const product = productMap.get(matchedName)!
+      result.push(
+        <button
+          key={`pm-${key++}`}
+          type="button"
+          onClick={() => onProductClick(product)}
+          className="inline font-semibold text-primary underline decoration-primary/30 underline-offset-2 transition-colors hover:text-primary/80 hover:decoration-primary/60"
+        >
+          {matchedName}
+        </button>
+      )
+
+      remaining = remaining.slice(earliest + matchedName.length)
+    }
+  }
+
+  return result
+}
+
+/**
  * Recursively processes React children, replacing string segments that contain
- * [N] citation markers with CitationBadge components.
+ * [N] citation markers with CitationBadge components, then product mentions.
  */
 function processChildren(
   children: ReactNode,
-  sourceMap: Map<number, CitationSource>
+  sourceMap: Map<number, CitationSource>,
+  productMap: Map<string, Product>,
+  onProductClick?: (product: Product) => void
 ): ReactNode {
   if (typeof children === "string") {
-    return renderWithCitations(children, sourceMap)
+    const cited = renderWithCitations(children, sourceMap)
+    return renderWithProductMentions(cited, productMap, onProductClick)
   }
   if (Array.isArray(children)) {
     return children.map((child, i) => {
       if (typeof child === "string") {
-        const parts = renderWithCitations(child, sourceMap)
-        return parts.length === 1 ? parts[0] : <span key={i}>{parts}</span>
+        const cited = renderWithCitations(child, sourceMap)
+        const withProducts = renderWithProductMentions(
+          cited,
+          productMap,
+          onProductClick
+        )
+        return withProducts.length === 1 ? (
+          withProducts[0]
+        ) : (
+          <span key={i}>{withProducts}</span>
+        )
       }
       return child
     })
@@ -65,23 +145,36 @@ function processChildren(
   return children
 }
 
-export function ChatMessage({ message }: ChatMessageProps) {
+export function ChatMessage({ message, onProductClick }: ChatMessageProps) {
   const isUser = message.role === "user"
   const sources: CitationSource[] = message.rag_context?.sources ?? []
   const sourceMap = new Map(sources.map((s) => [s.index, s]))
 
-  // Build custom markdown components that inject citation badges
-  const markdownComponents: Components =
-    sources.length > 0
-      ? {
-          p({ children }) {
-            return <p>{processChildren(children, sourceMap)}</p>
-          },
-          li({ children }) {
-            return <li>{processChildren(children, sourceMap)}</li>
-          },
-        }
-      : {}
+  // Build product name -> Product map for inline mentions
+  const products: Product[] = message.product_recommendations ?? []
+  const productMap = new Map(products.map((p) => [p.name, p]))
+
+  const hasEnhancements = sources.length > 0 || productMap.size > 0
+
+  // Build custom markdown components that inject citation badges + product mentions
+  const markdownComponents: Components = hasEnhancements
+    ? {
+        p({ children }) {
+          return (
+            <p>
+              {processChildren(children, sourceMap, productMap, onProductClick)}
+            </p>
+          )
+        },
+        li({ children }) {
+          return (
+            <li>
+              {processChildren(children, sourceMap, productMap, onProductClick)}
+            </li>
+          )
+        },
+      }
+    : {}
 
   return (
     <div

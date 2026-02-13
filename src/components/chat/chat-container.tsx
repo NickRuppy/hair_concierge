@@ -5,10 +5,12 @@ import { useHairProfile } from "@/hooks/use-hair-profile"
 import { generateSuggestedPrompts } from "@/lib/suggested-prompts"
 import { ChatInput } from "./chat-input"
 import { ChatMessage } from "./chat-message"
-import { ProductCard } from "./product-card"
+import { ProductRecommendations } from "./product-recommendations"
+import { ProductDetailDrawer } from "./product-detail-drawer"
 import { ConversationSidebar } from "./conversation-sidebar"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState, useCallback } from "react"
 import { Menu, Sparkles } from "lucide-react"
+import type { Product } from "@/lib/types"
 
 export function ChatContainer() {
   const {
@@ -16,7 +18,6 @@ export function ChatContainer() {
     isStreaming,
     conversations,
     currentConversationId,
-    productRecommendations,
     sendMessage,
     loadConversation,
     loadConversations,
@@ -25,9 +26,14 @@ export function ChatContainer() {
   } = useChat()
 
   const { hairProfile } = useHairProfile()
-  const suggestedPrompts = useMemo(() => generateSuggestedPrompts(hairProfile), [hairProfile])
+  const suggestedPrompts = useMemo(
+    () => generateSuggestedPrompts(hairProfile),
+    [hairProfile]
+  )
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [drawerProduct, setDrawerProduct] = useState<Product | null>(null)
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -37,6 +43,11 @@ export function ChatContainer() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
+
+  const handleProductClick = useCallback((product: Product) => {
+    setDrawerProduct(product)
+    setDrawerOpen(true)
+  }, [])
 
   const isEmpty = messages.length === 0
 
@@ -96,12 +107,10 @@ export function ChatContainer() {
               <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
                 <Sparkles className="h-8 w-8 text-primary-foreground" />
               </div>
-              <h2 className="mb-2 text-xl font-bold">
-                Hey! 💇
-              </h2>
+              <h2 className="mb-2 text-xl font-bold">Hey!</h2>
               <p className="mb-8 max-w-md text-center text-sm text-muted-foreground">
-                Ich bin Tom, dein Haar-Experte. Frag mich alles rund
-                ums Thema Haare — von Pflege-Tipps bis Produktempfehlungen!
+                Ich bin Tom, dein Haar-Experte. Frag mich alles rund ums Thema
+                Haare — von Pflege-Tipps bis Produktempfehlungen!
               </p>
               <div className="grid w-full max-w-lg grid-cols-1 gap-2 sm:grid-cols-2">
                 {suggestedPrompts.map((prompt) => (
@@ -120,22 +129,30 @@ export function ChatContainer() {
               {messages.map((msg) => {
                 // Don't render empty assistant placeholder — streaming indicator handles it
                 if (msg.role === "assistant" && !msg.content) return null
-                return <ChatMessage key={msg.id} message={msg} />
-              })}
 
-              {/* Product recommendations */}
-              {productRecommendations.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-xs font-medium text-muted-foreground">
-                    Produktempfehlungen
-                  </p>
-                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                    {productRecommendations.map((product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
+                const hasProducts =
+                  msg.role === "assistant" &&
+                  msg.product_recommendations &&
+                  msg.product_recommendations.length > 0
+
+                return (
+                  <div key={msg.id} className="space-y-3">
+                    <ChatMessage
+                      message={msg}
+                      onProductClick={handleProductClick}
+                    />
+                    {hasProducts && (
+                      <div className="ml-11">
+                        <ProductRecommendations
+                          products={msg.product_recommendations!}
+                          hairProfile={hairProfile}
+                          onProductClick={handleProductClick}
+                        />
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
+                )
+              })}
 
               {/* Streaming indicator */}
               {isStreaming &&
@@ -163,6 +180,14 @@ export function ChatContainer() {
         {/* Input */}
         <ChatInput onSend={sendMessage} disabled={isStreaming} />
       </div>
+
+      {/* Product Detail Drawer */}
+      <ProductDetailDrawer
+        product={drawerProduct}
+        hairProfile={hairProfile}
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+      />
     </div>
   )
 }

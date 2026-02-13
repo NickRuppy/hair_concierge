@@ -1,14 +1,13 @@
 "use client"
 
 import { useState, useCallback, useRef } from "react"
-import type { Message, Conversation, Product } from "@/lib/types"
+import type { Message, Conversation } from "@/lib/types"
 
 interface UseChatReturn {
   messages: Message[]
   isStreaming: boolean
   conversations: Conversation[]
   currentConversationId: string | null
-  productRecommendations: Product[]
   sendMessage: (content: string, imageUrl?: string) => Promise<void>
   loadConversation: (id: string) => Promise<void>
   loadConversations: () => Promise<void>
@@ -23,9 +22,6 @@ export function useChat(): UseChatReturn {
   const [currentConversationId, setCurrentConversationId] = useState<
     string | null
   >(null)
-  const [productRecommendations, setProductRecommendations] = useState<
-    Product[]
-  >([])
   const abortRef = useRef<AbortController | null>(null)
 
   const loadConversations = useCallback(async () => {
@@ -42,7 +38,6 @@ export function useChat(): UseChatReturn {
       const data = await res.json()
       setMessages(data.messages || [])
       setCurrentConversationId(id)
-      setProductRecommendations([])
     }
   }, [])
 
@@ -63,7 +58,6 @@ export function useChat(): UseChatReturn {
   const startNewConversation = useCallback(() => {
     setMessages([])
     setCurrentConversationId(null)
-    setProductRecommendations([])
   }, [])
 
   const sendMessage = useCallback(
@@ -85,7 +79,6 @@ export function useChat(): UseChatReturn {
       }
       setMessages((prev) => [...prev, userMessage])
       setIsStreaming(true)
-      setProductRecommendations([])
 
       // Create placeholder for assistant message
       const assistantMessage: Message = {
@@ -159,7 +152,17 @@ export function useChat(): UseChatReturn {
                   })
                   break
                 case "product_recommendations":
-                  setProductRecommendations(event.data)
+                  setMessages((prev) => {
+                    const updated = [...prev]
+                    const last = updated[updated.length - 1]
+                    if (last?.role === "assistant") {
+                      updated[updated.length - 1] = {
+                        ...last,
+                        product_recommendations: event.data,
+                      }
+                    }
+                    return updated
+                  })
                   break
                 case "sources":
                   setMessages((prev) => {
@@ -217,7 +220,6 @@ export function useChat(): UseChatReturn {
     isStreaming,
     conversations,
     currentConversationId,
-    productRecommendations,
     sendMessage,
     loadConversation,
     loadConversations,

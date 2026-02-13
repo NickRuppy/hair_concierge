@@ -105,14 +105,15 @@ function formatProducts(products: Product[]): string {
     .map((p) => {
       const parts = [`- **${p.name}**`]
       if (p.brand) parts[0] += ` von ${p.brand}`
-      if (p.description) parts.push(`  ${p.description}`)
+      if (p.short_description) parts.push(`  ${p.short_description}`)
+      else if (p.description) parts.push(`  ${p.description}`)
       if (p.price_eur) parts.push(`  Preis: ${p.price_eur.toFixed(2)} EUR`)
       if (p.tags.length > 0) parts.push(`  Tags: ${p.tags.join(", ")}`)
       return parts.join("\n")
     })
     .join("\n")
 
-  return `\n\nPassende Produkte aus unserer Datenbank:\n${productList}`
+  return `\n\nPassende Produkte aus unserer Datenbank:\n${productList}\n\nWICHTIG: Verwende die EXAKTEN Produktnamen (wie oben geschrieben) wenn du sie erwaehst — die Namen werden in der App als klickbare Links dargestellt.`
 }
 
 /**

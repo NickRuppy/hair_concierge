@@ -103,10 +103,13 @@ export async function POST(request: Request) {
 
           // Send matched products — suppress if response is consultation-mode (asking questions)
           const questionCount = (fullContent.match(/\?/g) || []).length
-          if (matchedProducts.length > 0 && questionCount < 2) {
+          const productsToSend = matchedProducts.length > 0 && questionCount < 2
+            ? matchedProducts.slice(0, 3)
+            : []
+          if (productsToSend.length > 0) {
             controller.enqueue(
               encoder.encode(
-                `data: ${JSON.stringify({ type: "product_recommendations", data: matchedProducts.slice(0, 5) })}\n\n`
+                `data: ${JSON.stringify({ type: "product_recommendations", data: productsToSend })}\n\n`
               )
             )
           }
@@ -120,13 +123,14 @@ export async function POST(request: Request) {
             )
           }
 
-          // Save assistant message
+          // Save assistant message (with products for persistence)
           const admin = createAdminClient()
           await admin.from("messages").insert({
             conversation_id: conversationId,
             role: "assistant",
             content: fullContent,
             rag_context: sources.length > 0 ? { sources } : null,
+            product_recommendations: productsToSend.length > 0 ? productsToSend : null,
           })
 
           // Update conversation updated_at

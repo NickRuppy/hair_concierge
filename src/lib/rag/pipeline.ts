@@ -5,6 +5,7 @@ import { retrieveContext } from "@/lib/rag/retriever"
 import { matchProducts } from "@/lib/rag/product-matcher"
 import { synthesizeResponse, SOURCE_TYPE_LABELS } from "@/lib/rag/synthesizer"
 import { formatSourceName } from "@/lib/rag/source-names"
+import { generateConversationTitle } from "@/lib/rag/title-generator"
 import type { IntentType, Message, HairProfile, Product, CitationSource } from "@/lib/types"
 
 export interface PipelineParams {
@@ -150,6 +151,7 @@ export async function runPipeline(
     }
 
     conversationId = newConversation.id
+    generateConversationTitle(newConversation.id, message).catch(() => {})
   }
 
   // ── Step 4: Match products (if intent requires it) ──────────────────
@@ -160,7 +162,7 @@ export async function runPipeline(
       message,
       hairProfile?.hair_type ?? undefined,
       hairProfile?.concerns ?? undefined,
-      5
+      3
     )
   }
 

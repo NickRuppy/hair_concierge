@@ -37,12 +37,12 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Public routes that don't need auth
-  const publicRoutes = ["/auth", "/api/auth/callback"]
+  const publicRoutes = ["/auth", "/api/auth/callback", "/quiz", "/api/quiz"]
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
 
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
-    url.pathname = "/auth"
+    url.pathname = "/quiz"
     return NextResponse.redirect(url)
   }
 
@@ -61,8 +61,8 @@ export async function updateSession(request: NextRequest) {
     .eq("id", user.id)
     .single()
 
-  // Redirect authenticated users away from auth page
-  if (pathname === "/auth") {
+  // Redirect authenticated users away from auth page and quiz
+  if (pathname === "/auth" || pathname === "/quiz") {
     const url = request.nextUrl.clone()
     url.pathname = profile?.onboarding_completed ? "/start" : getOnboardingPath(profile?.onboarding_step)
     return NextResponse.redirect(url)
