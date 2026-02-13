@@ -113,6 +113,8 @@ function renderWithProductMentions(
 /**
  * Recursively processes React children, replacing string segments that contain
  * [N] citation markers with CitationBadge components, then product mentions.
+ * Also recurses into React elements (e.g. <strong>, <em>) so product names
+ * inside bold/italic markdown formatting are still matched.
  */
 function processChildren(
   children: ReactNode,
@@ -126,21 +128,27 @@ function processChildren(
   }
   if (Array.isArray(children)) {
     return children.map((child, i) => {
-      if (typeof child === "string") {
-        const cited = renderWithCitations(child, sourceMap)
-        const withProducts = renderWithProductMentions(
-          cited,
-          productMap,
-          onProductClick
-        )
-        return withProducts.length === 1 ? (
-          withProducts[0]
-        ) : (
-          <span key={i}>{withProducts}</span>
-        )
+      const processed = processChildren(child, sourceMap, productMap, onProductClick)
+      // Wrap arrays in a span for valid React keys
+      if (Array.isArray(processed)) {
+        return <span key={i}>{processed}</span>
       }
-      return child
+      return processed
     })
+  }
+  // Recurse into React elements (e.g. <strong>, <em>, <a>)
+  if (children !== null && typeof children === "object" && "props" in children) {
+    const element = children as React.ReactElement<{ children?: ReactNode }>
+    if (element.props.children) {
+      const processed = processChildren(
+        element.props.children,
+        sourceMap,
+        productMap,
+        onProductClick
+      )
+      // Clone the element with processed children
+      return { ...element, props: { ...element.props, children: processed } }
+    }
   }
   return children
 }
@@ -171,6 +179,20 @@ export function ChatMessage({ message, onProductClick }: ChatMessageProps) {
             <li>
               {processChildren(children, sourceMap, productMap, onProductClick)}
             </li>
+          )
+        },
+        strong({ children }) {
+          return (
+            <strong>
+              {processChildren(children, sourceMap, productMap, onProductClick)}
+            </strong>
+          )
+        },
+        em({ children }) {
+          return (
+            <em>
+              {processChildren(children, sourceMap, productMap, onProductClick)}
+            </em>
           )
         },
       }
