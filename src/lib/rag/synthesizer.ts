@@ -57,6 +57,10 @@ function formatUserProfile(profile: HairProfile | null, consultationMode?: boole
     ? parts.join("\n")
     : "Haarprofil angelegt, aber noch keine Details eingetragen."
 
+  if (profile.conversation_memory) {
+    result += `\n\nErinnerungen aus frueheren Gespraechen:\n${profile.conversation_memory}`
+  }
+
   if (consultationMode) {
     result += "\n\n(HINWEIS: Dies ist die erste Nachricht des Nutzers in diesem Gespraech. Das Profil zeigt die Grunddaten — aber finde zuerst heraus, was die AKTUELLE Situation und das konkrete Anliegen ist, bevor du Empfehlungen gibst.)"
   }
@@ -73,6 +77,7 @@ export const SOURCE_TYPE_LABELS: Record<string, string> = {
   transcript: "Kurs-Transkript",
   live_call: "Live-Beratung",
   product_links: "Produktlinks",
+  community_qa: "Community-Beratung",
 }
 
 /**

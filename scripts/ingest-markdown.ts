@@ -94,11 +94,12 @@ interface Chunk {
 // Chunking config per source type
 const CHUNK_CONFIG: Record<
   string,
-  { size: number; overlap: number; strategy: "recursive" | "qa" | "natural" | "structured" }
+  { size: number; overlap: number; strategy: "recursive" | "qa" | "natural" | "structured" | "community_qa" }
 > = {
   book: { size: 2000, overlap: 200, strategy: "structured" },
   transcript: { size: 1600, overlap: 200, strategy: "recursive" },
   qa: { size: 0, overlap: 0, strategy: "qa" },
+  community_qa: { size: 0, overlap: 0, strategy: "community_qa" },
   live_call: { size: 1600, overlap: 200, strategy: "recursive" },
   live_call_transcript: { size: 1600, overlap: 200, strategy: "recursive" },
   product_links: { size: 800, overlap: 0, strategy: "natural" },
@@ -112,6 +113,7 @@ function mapSourceType(fmType: string): string {
     book: "book",
     transcript: "transcript",
     qa: "qa",
+    community_qa: "community_qa",
     live_call_transcript: "live_call",
     product_links: "product_links",
     product_list: "product_list",
@@ -355,6 +357,38 @@ function chunkQA(text: string): string[] {
 }
 
 /**
+ * Community Q&A chunking: each exchange block (Kontext + Frage + Antwort) becomes one chunk.
+ * Splits on "---" separators, extracts per-chunk metadata from HTML comments.
+ */
+function chunkCommunityQA(text: string): { content: string; extraMeta: Record<string, unknown> }[] {
+  const blocks = text.split(/\n---\n/)
+  const results: { content: string; extraMeta: Record<string, unknown> }[] = []
+
+  for (const block of blocks) {
+    const cleaned = block.trim()
+    if (!cleaned || cleaned.startsWith("# Community Q&A")) continue
+
+    // Must contain both a question and answer section
+    if (!cleaned.includes("**Frage:**") || !cleaned.includes("**Antwort:**")) continue
+
+    // Extract and strip metadata comment
+    let content = cleaned
+    let extraMeta: Record<string, unknown> = {}
+    const metaMatch = cleaned.match(/<!-- metadata: ({.*}) -->/)
+    if (metaMatch) {
+      try { extraMeta = JSON.parse(metaMatch[1]) } catch { /* use defaults */ }
+      content = cleaned.replace(/\n?<!-- metadata: {.*?} -->/, "").trim()
+    }
+
+    if (content.length > 50) {
+      results.push({ content, extraMeta })
+    }
+  }
+
+  return results
+}
+
+/**
  * Natural chunking: split on paragraph boundaries, no overlap.
  * Used for product links and short structured content.
  */
@@ -394,6 +428,10 @@ function chunkContent(text: string, sourceType: string, frontMatter?: FrontMatte
   switch (config.strategy) {
     case "qa":
       return chunkQA(text)
+    case "community_qa":
+      // NOTE: This path is NOT used in the main loop — community_qa is handled
+      // separately to preserve per-chunk metadata. This exists only as a fallback.
+      return chunkCommunityQA(text).map((c) => c.content)
     case "natural":
       return chunkNatural(text, config.size)
     case "structured":
@@ -601,7 +639,6 @@ async function main() {
 
     for (const file of files) {
       const relPath = path.relative(MD_DIR, file.filePath)
-      const textChunks = chunkContent(file.content, fmSourceType, file.frontMatter)
 
       // Track full document content for contextual prefix generation
       sourceDocuments.set(relPath, file.content)
@@ -611,22 +648,40 @@ async function main() {
       delete metadata.source_type // already a column
       metadata.file = relPath
 
-      // Create Chunk objects
-      for (let i = 0; i < textChunks.length; i++) {
-        allChunks.push({
-          content: textChunks[i],
-          sourceType: dbSourceType,
-          sourceName: relPath,
-          chunkIndex: i,
-          tokenCount: Math.ceil(textChunks[i].length / 4),
-          metadata: { ...metadata },
-        })
+      // community_qa has per-chunk metadata from HTML comments
+      if (fmSourceType === "community_qa") {
+        const enrichedChunks = chunkCommunityQA(file.content)
+        for (let i = 0; i < enrichedChunks.length; i++) {
+          allChunks.push({
+            content: enrichedChunks[i].content,
+            sourceType: dbSourceType,
+            sourceName: relPath,
+            chunkIndex: i,
+            tokenCount: Math.ceil(enrichedChunks[i].content.length / 4),
+            metadata: { ...metadata, ...enrichedChunks[i].extraMeta },
+          })
+        }
+      } else {
+        const textChunks = chunkContent(file.content, fmSourceType, file.frontMatter)
+        // Create Chunk objects
+        for (let i = 0; i < textChunks.length; i++) {
+          allChunks.push({
+            content: textChunks[i],
+            sourceType: dbSourceType,
+            sourceName: relPath,
+            chunkIndex: i,
+            tokenCount: Math.ceil(textChunks[i].length / 4),
+            metadata: { ...metadata },
+          })
+        }
       }
 
-      if (textChunks.length > 0) {
-        const totalChars = textChunks.reduce((sum, c) => sum + c.length, 0)
-        const avgChars = Math.round(totalChars / textChunks.length)
-        console.log(`  ${relPath}: ${textChunks.length} chunks (avg ${avgChars} chars)`)
+      // Log chunk stats for this file
+      const fileChunks = allChunks.filter((c) => c.sourceName === relPath)
+      if (fileChunks.length > 0) {
+        const totalChars = fileChunks.reduce((sum, c) => sum + c.content.length, 0)
+        const avgChars = Math.round(totalChars / fileChunks.length)
+        console.log(`  ${relPath}: ${fileChunks.length} chunks (avg ${avgChars} chars)`)
       }
     }
 

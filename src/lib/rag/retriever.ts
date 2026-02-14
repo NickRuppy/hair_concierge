@@ -9,11 +9,11 @@ export interface RetrievedChunk extends ContentChunk {
 
 /** Intent → allowed source types. null = all sources. */
 const INTENT_SOURCE_ROUTES: Record<IntentType, string[] | null> = {
-  product_recommendation: ["product_list", "book"],
+  product_recommendation: ["product_list", "book", "community_qa"],
   ingredient_question: ["book", "qa"],
-  hair_care_advice: ["book", "transcript", "qa", "product_list"],
-  routine_help: ["book", "transcript", "qa", "product_list"],
-  diagnosis: ["book", "qa", "live_call"],
+  hair_care_advice: ["book", "transcript", "qa", "product_list", "community_qa"],
+  routine_help: ["book", "transcript", "qa", "product_list", "community_qa"],
+  diagnosis: ["book", "qa", "live_call", "community_qa"],
   photo_analysis: ["book", "qa", "live_call"],
   general_chat: null,
   followup: null,

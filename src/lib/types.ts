@@ -114,6 +114,7 @@ export interface HairProfile {
   styling_tools: string[]
   goals: string[]
   additional_notes: string | null
+  conversation_memory: string | null
   created_at: string
   updated_at: string
 }
@@ -145,6 +146,7 @@ export interface Conversation {
   title: string | null
   is_active: boolean
   message_count: number
+  memory_extracted_at_count: number
   created_at: string
   updated_at: string
 }

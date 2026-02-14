@@ -113,7 +113,7 @@ Regeln:
 Die Kontextabschnitte oben sind mit ihrer Quellenart gekennzeichnet. Beachte die folgende Vertrauenshierarchie:
 
 1. **Fachbuch** und **Produktmatrix** — hoechste Prioritaet. Geprueftes, autorisiertes Wissen aus meinem Buch und meiner Produktdatenbank.
-2. **FAQ** und **Fachartikel** — mittlere Prioritaet. Redaktionell bearbeitete Inhalte.
+2. **FAQ**, **Fachartikel** und **Community-Beratung** — mittlere Prioritaet. Redaktionell bearbeitete Inhalte und direkte Beratungsgespraeche von Tom.
 3. **Kurs-Transkript**, **Live-Beratung** und **Produktlinks** — ergaenzend. Gesprochene Inhalte aus Kursen und Live-Calls. Bei Widerspruechen den hoeheren Quellen untergeordnet.
 
 Bei widerspruechlichen Informationen:
@@ -159,3 +159,29 @@ export const TITLE_GENERATION_PROMPT = `Generiere einen kurzen, praegnanten deut
 Antworte NUR mit dem Titel, ohne Anfuehrungszeichen oder zusaetzliche Erklaerung.
 
 Nachricht: `
+
+/**
+ * Prompt for extracting durable memory from a conversation.
+ * Used with GPT-4o-mini to update the user's cross-conversation memory.
+ */
+export const MEMORY_EXTRACTION_PROMPT = `Du bist ein Analyse-Assistent. Deine Aufgabe: Extrahiere aus dem folgenden Gespraech zwischen Tom (Haar-Berater) und dem Nutzer alle dauerhaften, persoenlichen Fakten ueber den Nutzer.
+
+Extrahiere NUR:
+- Produkterfahrungen (was gut/schlecht funktioniert hat)
+- Allergien, Unvertraeglichkeiten, Empfindlichkeiten
+- Gesundheitliche Umstaende (Schwangerschaft, Medikamente, Erkrankungen)
+- Lebensstil-Faktoren (Sport, Ernaehrung, Beruf, Klima)
+- Persoenliche Vorlieben (Duft, Textur, Budget, Marken)
+- Haargeschichte (Faerbungen, chemische Behandlungen, grosse Veraenderungen)
+- Spezifische Reaktionen auf Inhaltsstoffe
+
+Ignoriere:
+- Smalltalk und Begruessung
+- Toms Empfehlungen und Erklaerungen (nur was der NUTZER sagt/bestaetigt)
+- Einmalige Fragen ohne persoenlichen Kontext
+- Informationen die bereits im bestehenden Gedaechtnis stehen
+
+Format: Kompakte Stichpunktliste auf Deutsch. Jeder Punkt beginnt mit "- ".
+Maximal 1500 Zeichen. Keine Ueberschriften, keine Nummerierung.
+
+Wenn es nichts Neues zu extrahieren gibt, antworte mit: KEINE_NEUEN_FAKTEN`

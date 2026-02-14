@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { runPipeline } from "@/lib/rag/pipeline"
+import { extractConversationMemory } from "@/lib/rag/memory-extractor"
 import { chatMessageSchema } from "@/lib/validators"
 import { NextResponse } from "next/server"
 
@@ -140,6 +141,9 @@ export async function POST(request: Request) {
               updated_at: new Date().toISOString(),
             })
             .eq("id", conversationId)
+
+          // Extract conversation memory (fire-and-forget)
+          extractConversationMemory(conversationId, user.id).catch(() => {})
 
           // Increment user message count
           await admin

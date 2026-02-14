@@ -91,6 +91,12 @@ export function formatSourceName(sourceName: string): string {
     return `Kurs: ${courseName}`
   }
 
+  // Community QA: "community-qa/chat-01.md"
+  if (sourceName.startsWith("community-qa/")) {
+    const match = sourceName.match(/chat-(\d+)/)
+    return match ? `Community-Beratung, Chat ${parseInt(match[1])}` : "Community-Beratung"
+  }
+
   // QA: "qa/haeufige-fragen.md"
   if (sourceName.startsWith("qa/")) return "Haeufige Fragen (FAQ)"
 
