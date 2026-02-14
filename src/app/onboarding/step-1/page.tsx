@@ -53,21 +53,27 @@ export default function OnboardingStep1() {
     if (authLoading || !user) return
 
     const loadExistingData = async () => {
-      const { data } = await supabase
-        .from("hair_profiles")
-        .select("hair_type, hair_texture")
-        .eq("user_id", user.id)
-        .maybeSingle()
+      try {
+        const { data } = await supabase
+          .from("hair_profiles")
+          .select("hair_type, hair_texture")
+          .eq("user_id", user.id)
+          .maybeSingle()
 
-      if (data) {
-        if (data.hair_type) setHairType(data.hair_type as HairType)
-        if (data.hair_texture) setHairTexture(data.hair_texture as HairTexture)
+        if (data) {
+          if (data.hair_type) setHairType(data.hair_type as HairType)
+          if (data.hair_texture) setHairTexture(data.hair_texture as HairTexture)
+        }
+      } catch (err) {
+        console.error("Error loading hair profile:", err)
+      } finally {
+        setLoadingData(false)
       }
-      setLoadingData(false)
     }
 
     loadExistingData()
-  }, [user, authLoading, supabase])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, authLoading])
 
   // Redirect if not authenticated
   useEffect(() => {

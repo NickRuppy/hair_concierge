@@ -44,29 +44,35 @@ export default function ProfilePage() {
         setLoading(false)
         return
       }
-      const { data } = await supabase
-        .from("hair_profiles")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle()
-      if (data) {
-        setHairProfile(data)
-        setFormData({
-          hair_type: data.hair_type || "",
-          hair_texture: data.hair_texture || "",
-          concerns: data.concerns || [],
-          wash_frequency: data.wash_frequency || "",
-          heat_styling: data.heat_styling || "",
-          styling_tools: data.styling_tools || [],
-          products_used: data.products_used || "",
-          goals: data.goals || [],
-          additional_notes: data.additional_notes || "",
-        })
+      try {
+        const { data } = await supabase
+          .from("hair_profiles")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle()
+        if (data) {
+          setHairProfile(data)
+          setFormData({
+            hair_type: data.hair_type || "",
+            hair_texture: data.hair_texture || "",
+            concerns: data.concerns || [],
+            wash_frequency: data.wash_frequency || "",
+            heat_styling: data.heat_styling || "",
+            styling_tools: data.styling_tools || [],
+            products_used: data.products_used || "",
+            goals: data.goals || [],
+            additional_notes: data.additional_notes || "",
+          })
+        }
+      } catch (err) {
+        console.error("Error loading profile:", err)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
     loadProfile()
-  }, [user, supabase])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
   async function handleSave() {
     if (!user) return

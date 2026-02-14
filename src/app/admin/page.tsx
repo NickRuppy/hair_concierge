@@ -23,28 +23,34 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     async function loadStats() {
-      const [
-        { count: userCount },
-        { count: messageCount },
-        { count: productCount },
-        { count: articleCount },
-      ] = await Promise.all([
-        supabase.from("profiles").select("*", { count: "exact", head: true }),
-        supabase.from("messages").select("*", { count: "exact", head: true }),
-        supabase.from("products").select("*", { count: "exact", head: true }),
-        supabase.from("articles").select("*", { count: "exact", head: true }),
-      ])
+      try {
+        const [
+          { count: userCount },
+          { count: messageCount },
+          { count: productCount },
+          { count: articleCount },
+        ] = await Promise.all([
+          supabase.from("profiles").select("*", { count: "exact", head: true }),
+          supabase.from("messages").select("*", { count: "exact", head: true }),
+          supabase.from("products").select("*", { count: "exact", head: true }),
+          supabase.from("articles").select("*", { count: "exact", head: true }),
+        ])
 
-      setStats({
-        userCount: userCount || 0,
-        messageCount: messageCount || 0,
-        productCount: productCount || 0,
-        articleCount: articleCount || 0,
-      })
-      setLoading(false)
+        setStats({
+          userCount: userCount || 0,
+          messageCount: messageCount || 0,
+          productCount: productCount || 0,
+          articleCount: articleCount || 0,
+        })
+      } catch (err) {
+        console.error("Error loading admin stats:", err)
+      } finally {
+        setLoading(false)
+      }
     }
     loadStats()
-  }, [supabase])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const cards = [
     {

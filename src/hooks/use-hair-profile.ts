@@ -18,13 +18,18 @@ export function useHairProfile() {
         setLoading(false)
         return
       }
-      const { data } = await supabase
-        .from("hair_profiles")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle()
-      setHairProfile(data)
-      setLoading(false)
+      try {
+        const { data } = await supabase
+          .from("hair_profiles")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle()
+        setHairProfile(data)
+      } catch (err) {
+        console.error("Error loading hair profile:", err)
+      } finally {
+        setLoading(false)
+      }
     }
     load()
   }, [user])

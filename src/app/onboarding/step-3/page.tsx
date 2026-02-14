@@ -58,25 +58,31 @@ export default function OnboardingStep3() {
     if (authLoading || !user) return
 
     const loadExistingData = async () => {
-      const { data } = await supabase
-        .from("hair_profiles")
-        .select("wash_frequency, heat_styling, styling_tools, products_used")
-        .eq("user_id", user.id)
-        .maybeSingle()
+      try {
+        const { data } = await supabase
+          .from("hair_profiles")
+          .select("wash_frequency, heat_styling, styling_tools, products_used")
+          .eq("user_id", user.id)
+          .maybeSingle()
 
-      if (data) {
-        if (data.wash_frequency) setWashFrequency(data.wash_frequency as WashFrequency)
-        if (data.heat_styling) setHeatStyling(data.heat_styling as HeatStyling)
-        if (data.styling_tools && Array.isArray(data.styling_tools)) {
-          setStylingTools(data.styling_tools)
+        if (data) {
+          if (data.wash_frequency) setWashFrequency(data.wash_frequency as WashFrequency)
+          if (data.heat_styling) setHeatStyling(data.heat_styling as HeatStyling)
+          if (data.styling_tools && Array.isArray(data.styling_tools)) {
+            setStylingTools(data.styling_tools)
+          }
+          if (data.products_used) setProductsUsed(data.products_used)
         }
-        if (data.products_used) setProductsUsed(data.products_used)
+      } catch (err) {
+        console.error("Error loading hair profile:", err)
+      } finally {
+        setLoadingData(false)
       }
-      setLoadingData(false)
     }
 
     loadExistingData()
-  }, [user, authLoading, supabase])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, authLoading])
 
   // Redirect if not authenticated
   useEffect(() => {
