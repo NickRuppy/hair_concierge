@@ -4,11 +4,11 @@ import type { Product, HairProfile } from "@/lib/types"
 import { ProductImage } from "./product-image"
 import { Badge } from "@/components/ui/badge"
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
+  BottomSheet,
+  BottomSheetContent,
+  BottomSheetHeader,
+  BottomSheetTitle,
+} from "@/components/ui/bottom-sheet"
 import { ExternalLink } from "lucide-react"
 
 interface ProductDetailDrawerProps {
@@ -64,30 +64,30 @@ export function ProductDetailDrawer({
   const description = product.short_description || product.description
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
-        <SheetHeader className="items-center gap-4 pb-4">
+    <BottomSheet open={open} onOpenChange={onOpenChange}>
+      <BottomSheetContent>
+        <BottomSheetHeader className="gap-4 pb-4">
           <ProductImage
             imageUrl={product.image_url}
             category={product.category}
             size="lg"
           />
-          <div className="text-center">
+          <div className="min-w-0 flex-1">
             {product.brand && (
               <p className="text-sm font-medium text-muted-foreground">
                 {product.brand}
               </p>
             )}
-            <SheetTitle className="text-lg">{product.name}</SheetTitle>
+            <BottomSheetTitle className="text-lg">{product.name}</BottomSheetTitle>
             {product.category && (
               <Badge variant="secondary" className="mt-2">
                 {product.category}
               </Badge>
             )}
           </div>
-        </SheetHeader>
+        </BottomSheetHeader>
 
-        <div className="space-y-5 pt-2">
+        <div className="space-y-4 pt-2">
           {/* Personalization */}
           {personalization && (
             <div className="rounded-lg bg-primary/10 px-4 py-3">
@@ -189,7 +189,7 @@ export function ProductDetailDrawer({
             </div>
           )}
         </div>
-      </SheetContent>
-    </Sheet>
+      </BottomSheetContent>
+    </BottomSheet>
   )
 }
