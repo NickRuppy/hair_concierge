@@ -74,7 +74,7 @@ function formatUserProfile(profile: HairProfile | null, consultationMode?: boole
   }
 
   if (consultationMode) {
-    result += "\n\n(HINWEIS: Dies ist die erste Nachricht des Nutzers in diesem Gespraech. Das Profil zeigt die Grunddaten — aber finde zuerst heraus, was die AKTUELLE Situation und das konkrete Anliegen ist, bevor du Empfehlungen gibst.)"
+    result += "\n\n(HINWEIS: Dies ist der Beginn des Gespraechs. Stelle zuerst 2-3 gezielte Rueckfragen, um die Situation zu verstehen. Nenne dabei KEINE konkreten Produktnamen — auch nicht die Produkte aus der Datenbank unten. Produktempfehlungen kommen erst, wenn du genug Kontext hast.)"
   }
 
   return result
@@ -116,7 +116,9 @@ function formatRagContext(chunks: ContentChunk[]): string {
  * Formats matched products into a context block for the system prompt.
  */
 function formatProducts(products: Product[]): string {
-  if (products.length === 0) return ""
+  if (products.length === 0) {
+    return "\n\nKeine passenden Produkte in der Datenbank gefunden. Nenne KEINE konkreten Produktnamen — sage dem Nutzer ehrlich, dass du gerade kein passendes Produkt parat hast, und bitte um genauere Angaben."
+  }
 
   const productList = products
     .map((p) => {
@@ -148,7 +150,7 @@ function buildSystemPrompt(
   prompt = prompt.replace("{{USER_PROFILE}}", formatUserProfile(hairProfile, consultationMode))
 
   let ragContext = formatRagContext(ragChunks)
-  if (products && products.length > 0) {
+  if (products) {
     ragContext += formatProducts(products)
   }
   prompt = prompt.replace("{{RAG_CONTEXT}}", ragContext)

@@ -34,21 +34,29 @@ const PRODUCT_INTENTS: IntentType[] = [
  * Returns true when the message is a short/vague opener that should trigger
  * consultation-first behaviour — i.e. Tom asks clarifying questions before
  * recommending products.
+ *
+ * Only skips on the very first message if it's short/vague. Explicit
+ * product_recommendation intents and images always get products. Second+
+ * messages are never skipped — the prompt's consultation rules and the
+ * question-mark filter in the API route handle suppression from there.
  */
 function shouldSkipProductMatching(
   message: string,
   conversationHistory: Message[],
-  hasImage: boolean
+  hasImage: boolean,
+  intent: IntentType
 ): boolean {
+  // Explicit product requests always get products
+  if (intent === "product_recommendation") return false
+  // Images bypass vagueness check
+  if (hasImage) return false
+
   const userTurns = conversationHistory.filter(m => m.role === "user").length
-  // First message: skip if short/vague
+  // First message only: skip if very short/vague
   if (userTurns === 0) {
-    if (hasImage) return false
     const wordCount = message.trim().split(/\s+/).length
     return message.length < 100 && wordCount < 15
   }
-  // Second exchange (1 user turn so far): still too early for products
-  if (userTurns < 2) return true
   return false
 }
 
@@ -155,7 +163,7 @@ export async function runPipeline(
   }
 
   // ── Step 4: Match products (if intent requires it) ──────────────────
-  const skipProducts = shouldSkipProductMatching(message, conversationHistory, !!imageUrl)
+  const skipProducts = shouldSkipProductMatching(message, conversationHistory, !!imageUrl, intent)
   let matchedProducts = undefined
   if (PRODUCT_INTENTS.includes(intent) && !skipProducts) {
     matchedProducts = await matchProducts(
@@ -167,6 +175,7 @@ export async function runPipeline(
   }
 
   // ── Step 5: Synthesize streaming response ───────────────────────────
+  const isFirstMessage = conversationHistory.filter(m => m.role === "user").length === 0
   const stream = await synthesizeResponse({
     userMessage: message,
     conversationHistory,
@@ -175,7 +184,7 @@ export async function runPipeline(
     imageAnalysis,
     products: matchedProducts,
     intent,
-    consultationMode: PRODUCT_INTENTS.includes(intent) && skipProducts,
+    consultationMode: PRODUCT_INTENTS.includes(intent) && isFirstMessage,
   })
 
   return {
