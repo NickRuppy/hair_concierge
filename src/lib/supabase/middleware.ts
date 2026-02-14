@@ -53,7 +53,7 @@ export async function updateSession(request: NextRequest) {
   // Redirect authenticated users away from auth page and quiz
   if (pathname === "/auth" || pathname === "/quiz") {
     const url = request.nextUrl.clone()
-    url.pathname = "/start"
+    url.pathname = "/chat"
     return NextResponse.redirect(url)
   }
 
@@ -67,7 +67,7 @@ export async function updateSession(request: NextRequest) {
 
     if (!profile?.is_admin) {
       const url = request.nextUrl.clone()
-      url.pathname = "/start"
+      url.pathname = "/chat"
       return NextResponse.redirect(url)
     }
   }

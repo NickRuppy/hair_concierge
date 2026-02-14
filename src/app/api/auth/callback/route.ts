@@ -6,9 +6,9 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get("code")
   const leadId = searchParams.get("lead") ?? undefined
-  const rawNext = searchParams.get("next") ?? "/start"
+  const rawNext = searchParams.get("next") ?? "/chat"
   // Prevent open redirect: must be a relative path, not protocol-relative
-  const next = rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/start"
+  const next = rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/chat"
 
   if (code) {
     const supabase = await createClient()

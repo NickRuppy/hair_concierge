@@ -19,15 +19,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
-        <Link href="/start" className="flex items-center gap-2">
+        <Link href="/chat" className="flex items-center gap-2">
           <span className="font-header text-2xl tracking-wide text-primary">Hair Concierge</span>
         </Link>
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-1 md:flex">
-          <NavLink href="/start" current={pathname}>
-            Start
-          </NavLink>
           <NavLink href="/chat" current={pathname}>
             <MessageCircle className="mr-1.5 h-4 w-4" />
             Chat
@@ -64,13 +61,6 @@ export function Header() {
       {menuOpen && (
         <div className="border-t bg-background p-4 md:hidden">
           <nav className="flex flex-col gap-1">
-            <MobileNavLink
-              href="/start"
-              current={pathname}
-              onClick={() => setMenuOpen(false)}
-            >
-              Start
-            </MobileNavLink>
             <MobileNavLink
               href="/chat"
               current={pathname}

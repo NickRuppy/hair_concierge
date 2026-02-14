@@ -1,5 +1,6 @@
 "use client"
 
+import { useAuth } from "@/providers/auth-provider"
 import { useChat } from "@/hooks/use-chat"
 import { useHairProfile } from "@/hooks/use-hair-profile"
 import { generateSuggestedPrompts } from "@/lib/suggested-prompts"
@@ -13,6 +14,7 @@ import { Menu, Sparkles } from "lucide-react"
 import type { Product } from "@/lib/types"
 
 export function ChatContainer() {
+  const { profile } = useAuth()
   const {
     messages,
     isStreaming,
@@ -48,6 +50,12 @@ export function ChatContainer() {
     setDrawerProduct(product)
     setDrawerOpen(true)
   }, [])
+
+  const firstName = profile?.full_name?.split(" ")[0] || null
+  const hour = new Date().getHours()
+  const timeGreeting =
+    hour < 12 ? "Guten Morgen" : hour < 18 ? "Guten Tag" : "Guten Abend"
+  const greeting = firstName ? `${timeGreeting}, ${firstName}` : timeGreeting
 
   const isEmpty = messages.length === 0
 
@@ -107,10 +115,10 @@ export function ChatContainer() {
               <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
                 <Sparkles className="h-8 w-8 text-primary-foreground" />
               </div>
-              <h2 className="mb-2 text-xl font-bold">Hey!</h2>
+              <h2 className="mb-2 text-2xl font-bold">{greeting}</h2>
               <p className="mb-8 max-w-md text-center text-sm text-muted-foreground">
-                Ich bin Tom, dein Haar-Experte. Frag mich alles rund ums Thema
-                Haare — von Pflege-Tipps bis Produktempfehlungen!
+                Frag mich alles rund ums Thema Haare — von Pflege-Tipps bis
+                Produktempfehlungen!
               </p>
               <div className="grid w-full max-w-lg grid-cols-1 gap-2 sm:grid-cols-2">
                 {suggestedPrompts.map((prompt) => (
