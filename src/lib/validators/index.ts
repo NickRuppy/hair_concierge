@@ -1,27 +1,5 @@
 import { z } from "zod"
 
-export const hairProfileStep1Schema = z.object({
-  hair_type: z.enum(["glatt", "wellig", "lockig", "kraus"]),
-  hair_texture: z.enum(["fein", "mittel", "dick"]),
-})
-
-export const hairProfileStep2Schema = z.object({
-  concerns: z
-    .array(z.string())
-    .min(1, "Bitte wähle mindestens ein Problem aus."),
-})
-
-export const hairProfileStep3Schema = z.object({
-  wash_frequency: z.string().min(1, "Bitte wähle eine Häufigkeit."),
-  heat_styling: z.string().min(1, "Bitte wähle eine Option."),
-  styling_tools: z.array(z.string()).default([]),
-  products_used: z.string().optional().default(""),
-})
-
-export const hairProfileStep4Schema = z.object({
-  goals: z.array(z.string()).min(1, "Bitte wähle mindestens ein Ziel aus."),
-})
-
 export const hairProfileFullSchema = z.object({
   hair_type: z.enum(["glatt", "wellig", "lockig", "kraus"]).nullable(),
   hair_texture: z.enum(["fein", "mittel", "dick"]).nullable(),
@@ -76,10 +54,6 @@ export const articleSchema = z.object({
   sort_order: z.number().int().default(0),
 })
 
-export type HairProfileStep1 = z.infer<typeof hairProfileStep1Schema>
-export type HairProfileStep2 = z.infer<typeof hairProfileStep2Schema>
-export type HairProfileStep3 = z.infer<typeof hairProfileStep3Schema>
-export type HairProfileStep4 = z.infer<typeof hairProfileStep4Schema>
 export type HairProfileFull = z.infer<typeof hairProfileFullSchema>
 export type ChatMessage = z.infer<typeof chatMessageSchema>
 export type ProductInput = z.infer<typeof productSchema>

@@ -14,6 +14,7 @@ const nextSteps = [
 export function QuizWelcome() {
   const router = useRouter()
   const lead = useQuizStore((s) => s.lead)
+  const leadId = useQuizStore((s) => s.leadId)
 
   return (
     <div className="flex flex-col animate-fade-in-up">
@@ -45,7 +46,7 @@ export function QuizWelcome() {
 
       <div className="mt-8">
         <Button
-          onClick={() => router.push("/auth?from=quiz")}
+          onClick={() => router.push(`/auth?from=quiz${leadId ? `&lead=${leadId}` : ""}`)}
           variant="unstyled"
           className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
         >

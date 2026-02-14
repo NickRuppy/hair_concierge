@@ -11,8 +11,8 @@ export function Header() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
 
-  // Don't show header on auth or onboarding pages
-  if (pathname.startsWith("/auth") || pathname.startsWith("/onboarding")) {
+  // Don't show header on auth or quiz pages
+  if (pathname.startsWith("/auth") || pathname.startsWith("/quiz")) {
     return null
   }
 

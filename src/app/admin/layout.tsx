@@ -9,6 +9,7 @@ import {
   FileText,
   Package,
   Users,
+  MessageCircle,
 } from "lucide-react"
 
 const adminNav = [
@@ -17,6 +18,7 @@ const adminNav = [
   { href: "/admin/articles", label: "Artikel", icon: FileText },
   { href: "/admin/products", label: "Produkte", icon: Package },
   { href: "/admin/users", label: "Nutzer", icon: Users },
+  { href: "/admin/conversations", label: "Chats", icon: MessageCircle },
 ]
 
 export default function AdminLayout({

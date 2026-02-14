@@ -78,7 +78,6 @@ export default function AdminUsersPage() {
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Email</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Admin</th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Onboarding</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Haarprofil</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Erstellt am</th>
               </tr>
@@ -103,17 +102,6 @@ export default function AdminUsersPage() {
                         }`}
                       >
                         {user.is_admin ? "Admin" : "Nutzer"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                          user.onboarding_completed
-                            ? "bg-green-900/30 text-green-400"
-                            : "bg-yellow-900/30 text-yellow-400"
-                        }`}
-                      >
-                        {user.onboarding_completed ? "Abgeschlossen" : `Schritt ${user.onboarding_step}`}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">

@@ -2,17 +2,23 @@
 
 import { createClient } from "@/lib/supabase/client"
 import { useState } from "react"
+import { useSearchParams } from "next/navigation"
 
 export default function AuthPage() {
   const [loading, setLoading] = useState(false)
   const supabase = createClient()
+  const searchParams = useSearchParams()
+  const leadId = searchParams.get("lead")
 
   async function handleGoogleLogin() {
     setLoading(true)
+    const callbackUrl = new URL("/api/auth/callback", window.location.origin)
+    if (leadId) callbackUrl.searchParams.set("lead", leadId)
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
+        redirectTo: callbackUrl.toString(),
       },
     })
     if (error) {

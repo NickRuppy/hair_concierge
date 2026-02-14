@@ -46,6 +46,18 @@ function formatUserProfile(profile: HairProfile | null, consultationMode?: boole
   if (profile.styling_tools.length > 0) {
     parts.push(`Styling-Tools: ${profile.styling_tools.join(", ")}`)
   }
+  if (profile.cuticle_condition) {
+    parts.push(`Kutikula-Zustand: ${profile.cuticle_condition}`)
+  }
+  if (profile.protein_moisture_balance) {
+    parts.push(`Protein-Feuchtigkeits-Balance: ${profile.protein_moisture_balance}`)
+  }
+  if (profile.scalp_type) {
+    parts.push(`Kopfhaut-Typ: ${profile.scalp_type}`)
+  }
+  if (profile.chemical_treatment?.length > 0) {
+    parts.push(`Chemische Behandlung: ${profile.chemical_treatment.join(", ")}`)
+  }
   if (profile.products_used) {
     parts.push(`Aktuelle Produkte: ${profile.products_used}`)
   }

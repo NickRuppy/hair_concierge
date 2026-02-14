@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Bebas_Neue, Montserrat } from "next/font/google"
 import { AuthProvider } from "@/providers/auth-provider"
+import { PostHogClientProvider } from "@/providers/posthog-provider"
 import { ToastProvider } from "@/providers/toast-provider"
 import "./globals.css"
 
@@ -36,7 +37,9 @@ export default function RootLayout({
         className={`${bebasNeue.variable} ${montserrat.variable} antialiased`}
       >
         <AuthProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <PostHogClientProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </PostHogClientProvider>
         </AuthProvider>
       </body>
     </html>

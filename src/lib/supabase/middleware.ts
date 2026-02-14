@@ -1,6 +1,5 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
-import { getOnboardingPath } from "@/lib/onboarding-utils"
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -51,40 +50,8 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse
   }
 
-  const isOnboardingRoute = pathname.startsWith("/onboarding")
-  const isApiRoute = pathname.startsWith("/api")
-
-  // Fetch profile once for all subsequent checks
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("is_admin, onboarding_completed, onboarding_step")
-    .eq("id", user.id)
-    .single()
-
   // Redirect authenticated users away from auth page and quiz
   if (pathname === "/auth" || pathname === "/quiz") {
-    const url = request.nextUrl.clone()
-    url.pathname = profile?.onboarding_completed ? "/start" : getOnboardingPath(profile?.onboarding_step)
-    return NextResponse.redirect(url)
-  }
-
-  // Onboarding gate: redirect incomplete users to their current onboarding step
-  // Only allow API routes that onboarding forms need (profile saves + auth)
-  const isOnboardingAllowedApi = pathname.startsWith("/api/profile") || pathname.startsWith("/api/auth")
-  if (!profile?.onboarding_completed && !isOnboardingRoute && !isOnboardingAllowedApi) {
-    if (isApiRoute) {
-      return new Response(JSON.stringify({ error: "Onboarding nicht abgeschlossen" }), {
-        status: 403,
-        headers: { "Content-Type": "application/json" },
-      })
-    }
-    const url = request.nextUrl.clone()
-    url.pathname = getOnboardingPath(profile?.onboarding_step)
-    return NextResponse.redirect(url)
-  }
-
-  // Redirect completed users away from onboarding pages
-  if (profile?.onboarding_completed && isOnboardingRoute) {
     const url = request.nextUrl.clone()
     url.pathname = "/start"
     return NextResponse.redirect(url)
@@ -92,6 +59,12 @@ export async function updateSession(request: NextRequest) {
 
   // Admin route protection
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("is_admin")
+      .eq("id", user.id)
+      .single()
+
     if (!profile?.is_admin) {
       const url = request.nextUrl.clone()
       url.pathname = "/start"

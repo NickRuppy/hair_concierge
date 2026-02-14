@@ -1,38 +1,32 @@
 import { createClient } from "@/lib/supabase/server"
-import { createAdminClient } from "@/lib/supabase/admin"
-import { getOnboardingPath } from "@/lib/onboarding-utils"
+import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get("code")
-  const next = searchParams.get("next") ?? "/start"
+  const leadId = searchParams.get("lead") ?? undefined
+  const rawNext = searchParams.get("next") ?? "/start"
+  // Prevent open redirect: must be a relative path, not protocol-relative
+  const next = rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/start"
 
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
+      // Link quiz lead data to the authenticated user's hair profile
+      const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        // Use admin client to bypass RLS — the anon client's session
-        // may not be fully established in cookies yet after exchange.
-        const admin = createAdminClient()
-        const { data: profile } = await admin
-          .from("profiles")
-          .select("onboarding_completed, onboarding_step")
-          .eq("id", user.id)
-          .single()
-
-        const redirectTo = profile?.onboarding_completed
-          ? next
-          : getOnboardingPath(profile?.onboarding_step)
-
-        return NextResponse.redirect(`${origin}${redirectTo}`)
+        try {
+          await linkQuizToProfile(user.id, user.email, leadId)
+        } catch (e) {
+          // Non-blocking: log but don't break the auth flow
+          console.error("linkQuizToProfile failed:", e)
+        }
       }
+
+      return NextResponse.redirect(`${origin}${next}`)
     }
   }
 

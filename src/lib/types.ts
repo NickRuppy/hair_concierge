@@ -92,8 +92,6 @@ export interface Profile {
   full_name: string | null
   avatar_url: string | null
   is_admin: boolean
-  onboarding_completed: boolean
-  onboarding_step: number
   locale: string
   subscription_tier_id: string | null
   message_count_this_month: number
@@ -113,6 +111,10 @@ export interface HairProfile {
   heat_styling: string | null
   styling_tools: string[]
   goals: string[]
+  cuticle_condition: string | null
+  protein_moisture_balance: string | null
+  scalp_type: string | null
+  chemical_treatment: string[]
   additional_notes: string | null
   conversation_memory: string | null
   created_at: string

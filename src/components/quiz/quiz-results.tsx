@@ -13,9 +13,20 @@ import {
 import { QuizProfileCard } from "./quiz-profile-card"
 import { QuizCard } from "./quiz-card"
 import { Button } from "@/components/ui/button"
+import { posthog } from "@/providers/posthog-provider"
 
 export function QuizResults() {
   const { lead, answers, aiInsight, goNext } = useQuizStore()
+
+  const handleStart = () => {
+    posthog.capture("quiz_completed", {
+      structure: answers.structure,
+      thickness: answers.thickness,
+      scalp: answers.scalp,
+      goals_count: (answers.goals ?? []).length,
+    })
+    goNext()
+  }
 
   const goalsText = (answers.goals ?? []).map((g) => goalLabels[g] ?? g).join(", ")
 
@@ -92,7 +103,7 @@ export function QuizResults() {
 
       {/* CTA */}
       <Button
-        onClick={goNext}
+        onClick={handleStart}
         variant="unstyled"
         className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
       >

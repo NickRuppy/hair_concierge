@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { QuizConsentSheet } from "./quiz-consent-sheet"
 import { ArrowLeft } from "lucide-react"
+import { posthog } from "@/providers/posthog-provider"
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -60,6 +61,9 @@ export function QuizLeadCapture() {
 
       const data = await res.json()
       setLeadId(data.leadId)
+      posthog.capture("quiz_lead_captured", {
+        marketing_consent: accepted,
+      })
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")
