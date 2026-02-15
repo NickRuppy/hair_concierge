@@ -65,12 +65,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   useEffect(() => {
-    // Rely solely on onAuthStateChange — it fires INITIAL_SESSION
-    // synchronously on setup (Supabase JS v2.39+). Calling getUser()
-    // alongside it causes AbortError race conditions.
+    let resolved = false
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      resolved = true
       try {
         setUser(session?.user ?? null)
         if (session?.user) {
@@ -83,7 +83,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     })
 
+    // Safety net: if INITIAL_SESSION never fires, resolve loading
+    // to prevent an infinite spinner
+    const safety = setTimeout(() => {
+      if (!resolved) setLoading(false)
+    }, 3000)
+
     return () => {
+      clearTimeout(safety)
       subscription.unsubscribe()
     }
   }, [supabase, fetchProfile])
