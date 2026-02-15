@@ -72,7 +72,7 @@ export function ProductCard({
                 {product.brand}
               </p>
             )}
-            <p className="text-sm font-semibold leading-tight">
+            <p className="text-sm font-semibold leading-tight line-clamp-2">
               {product.name}
             </p>
           </div>
@@ -129,7 +129,7 @@ export function ProductCard({
               {product.brand}
             </p>
           )}
-          <p className="text-xs font-semibold leading-tight">
+          <p className="text-xs font-semibold leading-tight line-clamp-2">
             {product.name}
           </p>
         </div>

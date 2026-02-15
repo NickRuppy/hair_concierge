@@ -1,5 +1,6 @@
 "use client"
 
+import { signOutAction } from "@/app/auth/actions"
 import { createClient } from "@/lib/supabase/client"
 import type { Profile } from "@/lib/types"
 import { type User } from "@supabase/supabase-js"
@@ -53,15 +54,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user, fetchProfile])
 
   const signOut = useCallback(async () => {
-    try {
-      await supabase.auth.signOut()
-    } catch {
-      // Sign out locally even if the server request fails
-    }
     setUser(null)
     setProfile(null)
-    window.location.href = "/auth"
-  }, [supabase])
+    await signOutAction()
+  }, [])
 
   useEffect(() => {
     const getUser = async () => {

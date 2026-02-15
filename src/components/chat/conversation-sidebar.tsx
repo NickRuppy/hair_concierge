@@ -34,7 +34,7 @@ export function ConversationSidebar({
         <div className="flex items-center gap-1">
           <button
             onClick={onNew}
-            className="rounded-md p-1.5 text-sidebar-foreground transition-colors hover:bg-sidebar-accent"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-sidebar-foreground transition-colors hover:bg-sidebar-accent"
             title="Neue Unterhaltung"
           >
             <Plus className="h-4 w-4" />
@@ -42,7 +42,7 @@ export function ConversationSidebar({
           {isMobile && onClose && (
             <button
               onClick={onClose}
-              className="rounded-md p-1.5 text-sidebar-foreground transition-colors hover:bg-sidebar-accent"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-sidebar-foreground transition-colors hover:bg-sidebar-accent"
             >
               <X className="h-4 w-4" />
             </button>
@@ -87,7 +87,7 @@ export function ConversationSidebar({
                     e.stopPropagation()
                     onDelete(conv.id)
                   }}
-                  className="shrink-0 rounded p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
+                  className="shrink-0 rounded p-1.5 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive md:p-1"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>

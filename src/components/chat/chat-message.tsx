@@ -226,6 +226,7 @@ export function ChatMessage({ message, onProductClick }: ChatMessageProps) {
               src={message.image_url}
               alt="Hochgeladenes Bild"
               className="max-h-64 max-w-full rounded-xl object-cover"
+              loading="lazy"
             />
           </div>
         )}

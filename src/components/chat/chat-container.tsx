@@ -60,7 +60,7 @@ export function ChatContainer() {
   const isEmpty = messages.length === 0
 
   return (
-    <div className="flex h-[calc(100vh-3.5rem)] overflow-hidden">
+    <div className="flex h-[calc(100dvh-3.5rem)] overflow-hidden">
       {/* Desktop Sidebar */}
       <div className="hidden w-72 shrink-0 md:block">
         <ConversationSidebar
@@ -99,7 +99,7 @@ export function ChatContainer() {
         <div className="flex items-center gap-2 border-b p-3 md:hidden">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-accent"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent"
           >
             <Menu className="h-5 w-5" />
           </button>

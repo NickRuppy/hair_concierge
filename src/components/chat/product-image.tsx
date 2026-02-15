@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import {
   Droplets,
   FlaskConical,
@@ -48,6 +49,12 @@ const SIZES = {
   lg: "h-20 w-20",
 }
 
+const SIZE_PX = {
+  sm: 40,
+  md: 56,
+  lg: 80,
+}
+
 const ICON_SIZES = {
   sm: "h-5 w-5",
   md: "h-7 w-7",
@@ -57,10 +64,13 @@ const ICON_SIZES = {
 export function ProductImage({ imageUrl, category, size = "md" }: ProductImageProps) {
   if (imageUrl) {
     return (
-      <img
+      <Image
         src={imageUrl}
         alt=""
+        width={SIZE_PX[size]}
+        height={SIZE_PX[size]}
         className={`${SIZES[size]} shrink-0 rounded-xl object-cover`}
+        unoptimized
       />
     )
   }

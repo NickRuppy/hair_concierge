@@ -43,7 +43,7 @@ export function ProductRecommendations({
 
       {/* Compact cards */}
       {compact.length > 0 && (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {compact.map((product, i) => (
             <div
               key={product.id}
@@ -74,7 +74,7 @@ export function ProductRecommendations({
       )}
 
       {expanded && (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {overflow.map((product, i) => (
             <div
               key={product.id}

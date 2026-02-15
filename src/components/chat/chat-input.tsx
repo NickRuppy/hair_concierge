@@ -80,7 +80,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
   }
 
   return (
-    <div className="border-t bg-background p-4">
+    <div className="border-t bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       {/* Image preview */}
       {imagePreview && (
         <div className="mb-3 flex items-start gap-2">
@@ -110,7 +110,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled || uploading}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border text-muted-foreground transition-colors hover:bg-accent disabled:opacity-50"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border text-muted-foreground transition-colors hover:bg-accent disabled:opacity-50"
         >
           <Camera className="h-5 w-5" />
         </button>
@@ -135,7 +135,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           onInput={handleTextareaInput}
           placeholder="Stelle eine Frage zu deinen Haaren..."
           disabled={disabled}
-          className="max-h-[200px] min-h-[40px] flex-1 resize-none rounded-lg border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
+          className="max-h-[200px] min-h-[40px] flex-1 resize-none rounded-lg border bg-background px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
           rows={1}
         />
 
@@ -143,7 +143,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         <button
           onClick={handleSubmit}
           disabled={disabled || uploading || (!message.trim() && !imageUrl)}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
         >
           <Send className="h-5 w-5" />
         </button>

@@ -73,10 +73,10 @@ export default function AuthPage() {
         </div>
 
         <footer className="flex justify-center gap-4 text-xs text-muted-foreground">
-          <a href="/impressum" className="hover:underline">
+          <a href="/impressum" className="px-2 py-2 hover:underline">
             Impressum
           </a>
-          <a href="/datenschutz" className="hover:underline">
+          <a href="/datenschutz" className="px-2 py-2 hover:underline">
             Datenschutz
           </a>
         </footer>

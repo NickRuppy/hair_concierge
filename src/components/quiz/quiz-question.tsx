@@ -84,7 +84,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
     <div className="flex flex-col" key={question.step}>
       {/* Back button + progress */}
       <div className="flex items-center gap-3 mb-4">
-        <button onClick={goBack} className="text-white/60 hover:text-white transition-colors">
+        <button onClick={goBack} className="flex min-h-[44px] min-w-[44px] items-center justify-center text-white/60 hover:text-white transition-colors">
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">

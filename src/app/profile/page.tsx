@@ -231,7 +231,7 @@ export default function ProfilePage() {
                           concerns: toggleArrayItem(f.concerns, concern),
                         }))
                       }
-                      className={`rounded-lg border px-3 py-1.5 text-sm transition-colors ${
+                      className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
                         formData.concerns.includes(concern)
                           ? "border-primary bg-primary/10 text-primary"
                           : "hover:bg-accent"
@@ -294,7 +294,7 @@ export default function ProfilePage() {
                           styling_tools: toggleArrayItem(f.styling_tools, tool),
                         }))
                       }
-                      className={`rounded-lg border px-3 py-1.5 text-sm transition-colors ${
+                      className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
                         formData.styling_tools.includes(tool)
                           ? "border-primary bg-primary/10 text-primary"
                           : "hover:bg-accent"
@@ -335,7 +335,7 @@ export default function ProfilePage() {
                           goals: toggleArrayItem(f.goals, goal),
                         }))
                       }
-                      className={`rounded-lg border px-3 py-1.5 text-sm transition-colors ${
+                      className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
                         formData.goals.includes(goal)
                           ? "border-primary bg-primary/10 text-primary"
                           : "hover:bg-accent"

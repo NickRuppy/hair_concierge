@@ -50,7 +50,7 @@ export function Header() {
 
         {/* Mobile menu button */}
         <button
-          className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent md:hidden"
+          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent md:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
         >
           <Menu className="h-5 w-5" />
@@ -92,7 +92,7 @@ export function Header() {
                 setMenuOpen(false)
                 signOut()
               }}
-              className="inline-flex items-center rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent"
+              className="inline-flex items-center rounded-md px-3 py-3 text-sm text-muted-foreground transition-colors hover:bg-accent"
             >
               <LogOut className="mr-2 h-4 w-4" />
               Abmelden
@@ -144,7 +144,7 @@ function MobileNavLink({
     <Link
       href={href}
       onClick={onClick}
-      className={`inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+      className={`inline-flex items-center rounded-md px-3 py-3 text-sm font-medium transition-colors ${
         isActive
           ? "bg-accent text-accent-foreground"
           : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"

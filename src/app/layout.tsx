@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Bebas_Neue, Montserrat } from "next/font/google"
 import { AuthProvider } from "@/providers/auth-provider"
 import { PostHogClientProvider } from "@/providers/posthog-provider"
@@ -19,6 +19,13 @@ const montserrat = Montserrat({
 // Every page requires Supabase auth (AuthProvider SSR + middleware redirect),
 // so there is nothing to statically generate.
 export const dynamic = "force-dynamic"
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#231F20",
+}
 
 export const metadata: Metadata = {
   title: "Hair Concierge — Deine persönliche Haar-Beraterin",
