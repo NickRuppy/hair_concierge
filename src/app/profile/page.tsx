@@ -17,7 +17,7 @@ import { createClient } from "@/lib/supabase/client"
 import { useEffect, useState } from "react"
 
 export default function ProfilePage() {
-  const { user, profile, signOut } = useAuth()
+  const { user, profile, loading: authLoading, signOut } = useAuth()
   const { toast } = useToast()
   const supabase = createClient()
   const [hairProfile, setHairProfile] = useState<HairProfile | null>(null)
@@ -44,6 +44,7 @@ export default function ProfilePage() {
         setLoading(false)
         return
       }
+      setLoading(true)
       try {
         const { data } = await supabase
           .from("hair_profiles")
@@ -78,27 +79,41 @@ export default function ProfilePage() {
     if (!user) return
     setSaving(true)
 
-    const { data, error } = await supabase
-      .from("hair_profiles")
-      .upsert(
-        {
-          user_id: user.id,
-          ...formData,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "user_id" }
-      )
-      .select()
-      .single()
+    try {
+      // Convert empty strings to null so CHECK constraints don't reject them
+      const payload = {
+        user_id: user.id,
+        hair_type: formData.hair_type || null,
+        hair_texture: formData.hair_texture || null,
+        concerns: formData.concerns,
+        wash_frequency: formData.wash_frequency || null,
+        heat_styling: formData.heat_styling || null,
+        styling_tools: formData.styling_tools,
+        products_used: formData.products_used || null,
+        goals: formData.goals,
+        additional_notes: formData.additional_notes || null,
+        updated_at: new Date().toISOString(),
+      }
 
-    if (error) {
+      const { data, error } = await supabase
+        .from("hair_profiles")
+        .upsert(payload, { onConflict: "user_id" })
+        .select()
+        .single()
+
+      if (error) {
+        toast({ title: "Fehler beim Speichern", variant: "destructive" })
+      } else {
+        setHairProfile(data)
+        setEditing(false)
+        toast({ title: "Profil gespeichert!" })
+      }
+    } catch (err) {
+      console.error("Error saving profile:", err)
       toast({ title: "Fehler beim Speichern", variant: "destructive" })
-    } else {
-      setHairProfile(data)
-      setEditing(false)
-      toast({ title: "Profil gespeichert!" })
+    } finally {
+      setSaving(false)
     }
-    setSaving(false)
   }
 
   function toggleArrayItem(arr: string[], item: string) {
@@ -107,7 +122,7 @@ export default function ProfilePage() {
       : [...arr, item]
   }
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <>
         <Header />
