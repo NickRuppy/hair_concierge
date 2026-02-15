@@ -37,12 +37,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = useCallback(
     async (userId: string) => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single()
-      setProfile(data)
+      try {
+        const { data } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .single()
+        setProfile(data)
+      } catch (err) {
+        console.error("Error fetching profile:", err)
+        setProfile(null)
+      }
     },
     [supabase]
   )
@@ -60,32 +65,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser()
-        setUser(user)
-        if (user) {
-          await fetchProfile(user.id)
-        }
-      } catch (err) {
-        console.error("Error fetching user:", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    getUser()
-
+    // Rely solely on onAuthStateChange — it fires INITIAL_SESSION
+    // synchronously on setup (Supabase JS v2.39+). Calling getUser()
+    // alongside it causes AbortError race conditions.
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        await fetchProfile(session.user.id)
-      } else {
-        setProfile(null)
+      try {
+        setUser(session?.user ?? null)
+        if (session?.user) {
+          await fetchProfile(session.user.id)
+        } else {
+          setProfile(null)
+        }
+      } finally {
+        setLoading(false)
       }
     })
 
