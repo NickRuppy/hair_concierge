@@ -14,7 +14,75 @@ import {
 } from "@/lib/types"
 import type { HairProfile } from "@/lib/types"
 import { createClient } from "@/lib/supabase/client"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+
+type ProfileFieldDef = {
+  key: string
+  label: string
+  helpText: string
+  getValue: (hp: HairProfile | null) => string | null
+}
+
+const PROFILE_FIELDS: ProfileFieldDef[] = [
+  {
+    key: "hair_type",
+    label: "Haartyp",
+    helpText: "Grundlage für alle Empfehlungen",
+    getValue: (hp) =>
+      HAIR_TYPE_OPTIONS.find((o) => o.value === hp?.hair_type)?.label ?? null,
+  },
+  {
+    key: "hair_texture",
+    label: "Haarstruktur",
+    helpText: "Bestimmt die richtige Produktwahl",
+    getValue: (hp) =>
+      HAIR_TEXTURE_OPTIONS.find((o) => o.value === hp?.hair_texture)?.label ??
+      null,
+  },
+  {
+    key: "concerns",
+    label: "Probleme",
+    helpText: "Hilft uns, gezielt Lösungen zu finden",
+    getValue: (hp) =>
+      hp?.concerns?.length ? hp.concerns.join(", ") : null,
+  },
+  {
+    key: "wash_frequency",
+    label: "Wasch-Häufigkeit",
+    helpText: "Für eine passende Pflegeroutine",
+    getValue: (hp) =>
+      WASH_FREQUENCY_OPTIONS.find((o) => o.value === hp?.wash_frequency)
+        ?.label ?? null,
+  },
+  {
+    key: "heat_styling",
+    label: "Hitze-Styling",
+    helpText: "Beeinflusst den Pflegebedarf",
+    getValue: (hp) =>
+      HEAT_STYLING_OPTIONS.find((o) => o.value === hp?.heat_styling)?.label ??
+      null,
+  },
+  {
+    key: "styling_tools",
+    label: "Styling-Tools",
+    helpText: "Für passende Styling-Tipps",
+    getValue: (hp) =>
+      hp?.styling_tools?.length ? hp.styling_tools.join(", ") : null,
+  },
+  {
+    key: "products_used",
+    label: "Verwendete Produkte",
+    helpText: "Vermeidet doppelte Empfehlungen",
+    getValue: (hp) => hp?.products_used || null,
+  },
+  {
+    key: "goals",
+    label: "Ziele",
+    helpText: "Richtet unsere Empfehlungen aus",
+    getValue: (hp) =>
+      hp?.goals?.length ? hp.goals.join(", ") : null,
+  },
+]
 
 export default function ProfilePage() {
   const { user, profile, loading: authLoading, signOut } = useAuth()
@@ -74,6 +142,18 @@ export default function ProfilePage() {
     loadProfile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id])
+
+  // Pre-compute field values for read-mode display
+  const fieldValues = useMemo(
+    () =>
+      PROFILE_FIELDS.map((f) => ({
+        ...f,
+        value: f.getValue(hairProfile),
+      })),
+    [hairProfile]
+  )
+  const filledFields = fieldValues.filter((f) => f.value !== null)
+  const emptyFields = fieldValues.filter((f) => f.value === null)
 
   async function handleSave() {
     if (!user) return
@@ -382,60 +462,94 @@ export default function ProfilePage() {
               </div>
             </div>
           ) : (
-            <div className="space-y-4">
-              <ProfileField
-                label="Haartyp"
-                value={
-                  HAIR_TYPE_OPTIONS.find(
-                    (o) => o.value === hairProfile?.hair_type
-                  )?.label
-                }
-              />
-              <ProfileField
-                label="Haarstruktur"
-                value={
-                  HAIR_TEXTURE_OPTIONS.find(
-                    (o) => o.value === hairProfile?.hair_texture
-                  )?.label
-                }
-              />
-              <ProfileField
-                label="Probleme"
-                value={hairProfile?.concerns?.join(", ")}
-              />
-              <ProfileField
-                label="Wasch-Häufigkeit"
-                value={
-                  WASH_FREQUENCY_OPTIONS.find(
-                    (o) => o.value === hairProfile?.wash_frequency
-                  )?.label
-                }
-              />
-              <ProfileField
-                label="Hitze-Styling"
-                value={
-                  HEAT_STYLING_OPTIONS.find(
-                    (o) => o.value === hairProfile?.heat_styling
-                  )?.label
-                }
-              />
-              <ProfileField
-                label="Styling-Tools"
-                value={hairProfile?.styling_tools?.join(", ")}
-              />
-              <ProfileField
-                label="Verwendete Produkte"
-                value={hairProfile?.products_used}
-              />
-              <ProfileField
-                label="Ziele"
-                value={hairProfile?.goals?.join(", ")}
-              />
+            <div className="space-y-6">
+              {/* Progress bar */}
+              <div>
+                <p className="mb-1.5 text-sm text-muted-foreground">
+                  {filledFields.length} von {PROFILE_FIELDS.length} Angaben
+                </p>
+                <div
+                  className="h-2 w-full overflow-hidden rounded-full bg-muted"
+                  role="progressbar"
+                  aria-valuenow={filledFields.length}
+                  aria-valuemin={0}
+                  aria-valuemax={PROFILE_FIELDS.length}
+                  aria-label={`${filledFields.length} von ${PROFILE_FIELDS.length} Angaben ausgefüllt`}
+                >
+                  <div
+                    className="h-full rounded-full bg-primary transition-all"
+                    style={{
+                      width: `${(filledFields.length / PROFILE_FIELDS.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Filled fields as tags */}
+              {filledFields.length > 0 ? (
+                <div>
+                  <h3 className="mb-3 text-sm font-semibold">
+                    Dein Haar-Profil
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {filledFields.map((f) => (
+                      <span
+                        key={f.key}
+                        className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm"
+                      >
+                        <span className="font-medium">{f.label}:</span>{" "}
+                        {f.value}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Noch keine Angaben vorhanden. Klicke auf
+                  &ldquo;Bearbeiten&rdquo; oder starte das Quiz, um dein
+                  Profil zu erstellen.
+                </p>
+              )}
+
+              {/* Additional notes (outside progress tracking) */}
               {hairProfile?.additional_notes && (
-                <ProfileField
-                  label="Zusätzliche Hinweise"
-                  value={hairProfile.additional_notes}
-                />
+                <div className="rounded-lg border bg-muted/50 px-4 py-3">
+                  <p className="mb-1 text-sm font-medium">Zusätzliche Hinweise</p>
+                  <p className="text-sm text-muted-foreground">
+                    {hairProfile.additional_notes}
+                  </p>
+                </div>
+              )}
+
+              {/* Empty fields as actionable cards */}
+              {emptyFields.length > 0 && (
+                <div>
+                  <h3 className="mb-1 text-sm font-semibold">
+                    Profil vervollständigen
+                  </h3>
+                  <p className="mb-3 text-xs text-muted-foreground">
+                    Je mehr wir wissen, desto besser unsere Empfehlungen
+                  </p>
+                  <div className="space-y-2">
+                    {emptyFields.map((f) => (
+                      <button
+                        key={f.key}
+                        onClick={() => setEditing(true)}
+                        className="flex w-full items-center gap-3 rounded-lg border border-dashed border-muted-foreground/30 px-4 py-3 text-left transition-colors hover:bg-accent"
+                      >
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground">
+                          +
+                        </span>
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium">{f.label}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {f.helpText}
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
           )}
@@ -455,17 +569,3 @@ export default function ProfilePage() {
   )
 }
 
-function ProfileField({
-  label,
-  value,
-}: {
-  label: string
-  value: string | null | undefined
-}) {
-  return (
-    <div>
-      <p className="text-sm font-medium text-muted-foreground">{label}</p>
-      <p className="text-sm">{value || "—"}</p>
-    </div>
-  )
-}
