@@ -73,8 +73,8 @@ export function QuizResults() {
         Basierend auf deinen Antworten sieht Tom dein Haar so:
       </p>
 
-      {/* Profile cards — 2-column grid */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
+      {/* Profile cards — responsive grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 items-start gap-3 mb-6">
         {cards.map((card, i) => (
           <QuizProfileCard
             key={card.title}
