@@ -46,6 +46,11 @@ export function QuizLanding() {
         <p className="text-center text-sm text-white/38">
           Dauert ca. 2 Minuten. Du kannst nichts falsch machen.
         </p>
+        <p className="text-center text-sm text-white/50 pt-2">
+          <a href="/auth" className="underline hover:text-white/70 transition-colors">
+            Du hast bereits ein Konto? Hier anmelden
+          </a>
+        </p>
       </div>
     </div>
   )

@@ -46,7 +46,13 @@ export function QuizWelcome() {
 
       <div className="mt-8">
         <Button
-          onClick={() => router.push(`/auth?from=quiz${leadId ? `&lead=${leadId}` : ""}`)}
+          onClick={() => {
+            const params = new URLSearchParams()
+            params.set("from", "quiz")
+            if (leadId) params.set("lead", leadId)
+            if (lead.email) params.set("email", lead.email)
+            router.push(`/auth?${params.toString()}`)
+          }}
           variant="unstyled"
           className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
         >

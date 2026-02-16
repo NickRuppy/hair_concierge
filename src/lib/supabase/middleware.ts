@@ -36,18 +36,37 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Public routes that don't need auth
-  const publicRoutes = ["/auth", "/api/auth/callback", "/quiz", "/api/quiz"]
+  const publicRoutes = ["/auth", "/api/auth/callback", "/auth/confirm", "/quiz", "/api/quiz"]
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
 
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
-    url.pathname = "/quiz"
+    const isReturning = request.cookies.has("hc_returning")
+
+    if (isReturning) {
+      url.pathname = "/auth"
+      url.searchParams.set("reason", "session_expired")
+      url.searchParams.set("next", pathname + request.nextUrl.search)
+    } else {
+      url.pathname = "/quiz"
+    }
     return NextResponse.redirect(url)
   }
 
   // All checks below require an authenticated user
   if (!user) {
     return supabaseResponse
+  }
+
+  // Mark user as returning (survives session expiry, 1 year)
+  if (!request.cookies.has("hc_returning")) {
+    supabaseResponse.cookies.set("hc_returning", "1", {
+      path: "/",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 365,
+    })
   }
 
   // Redirect authenticated users away from auth page and quiz
