@@ -26,6 +26,8 @@ export async function linkQuizToProfile(
   email: string | undefined,
   leadId?: string
 ) {
+  console.log("[linkQuizToProfile] start", { userId, email, leadId })
+
   const admin = createAdminClient()
 
   // --- Find the lead ---
@@ -33,18 +35,25 @@ export async function linkQuizToProfile(
 
   // Primary: direct ID lookup
   if (leadId) {
-    const { data } = await admin
+    const { data, error } = await admin
       .from("leads")
       .select("id, quiz_answers, user_id")
       .eq("id", leadId)
-      .is("user_id", null)
       .single()
-    lead = data
+
+    if (error && error.code !== "PGRST116") {
+      throw new Error(`Lead lookup by id failed: ${error.message}`)
+    }
+
+    // Allow re-linking if the lead already belongs to this user (partial-link recovery)
+    if (data && (data.user_id === null || data.user_id === userId)) {
+      lead = data
+    }
   }
 
   // Fallback: email lookup (most recent unlinked)
   if (!lead && email) {
-    const { data } = await admin
+    const { data, error } = await admin
       .from("leads")
       .select("id, quiz_answers, user_id")
       .eq("email", email.toLowerCase())
@@ -52,14 +61,26 @@ export async function linkQuizToProfile(
       .order("created_at", { ascending: false })
       .limit(1)
       .single()
+
+    if (error && error.code !== "PGRST116") {
+      throw new Error(`Lead lookup by email failed: ${error.message}`)
+    }
     lead = data
   }
 
   // No matching lead — user didn't come from quiz
-  if (!lead) return
+  if (!lead) {
+    console.log("[linkQuizToProfile] no matching lead found, skipping")
+    return
+  }
 
   const answers = lead.quiz_answers
-  if (!answers) return
+  if (!answers) {
+    console.log("[linkQuizToProfile] lead has no quiz_answers, skipping")
+    return
+  }
+
+  console.log("[linkQuizToProfile] found lead", lead.id, "with answers:", Object.keys(answers))
 
   // --- Map quiz answers to hair_profiles columns ---
   const profileData: Record<string, unknown> = {
@@ -80,11 +101,15 @@ export async function linkQuizToProfile(
   }
 
   // --- Check if hair_profiles row already exists ---
-  const { data: existing } = await admin
+  const { data: existing, error: fetchErr } = await admin
     .from("hair_profiles")
     .select("id, hair_type, hair_texture, goals")
     .eq("user_id", userId)
     .single()
+
+  if (fetchErr && fetchErr.code !== "PGRST116") {
+    throw new Error(`hair_profiles lookup failed: ${fetchErr.message}`)
+  }
 
   if (existing) {
     // Only fill NULL fields for hair_type/hair_texture, always write diagnostic columns
@@ -108,19 +133,32 @@ export async function linkQuizToProfile(
       updates.chemical_treatment = profileData.chemical_treatment
 
     if (Object.keys(updates).length > 0) {
-      await admin
+      const { error: updateErr } = await admin
         .from("hair_profiles")
         .update(updates)
         .eq("id", existing.id)
+      if (updateErr) {
+        throw new Error(`hair_profiles update failed: ${updateErr.message}`)
+      }
+      console.log("[linkQuizToProfile] updated existing profile", existing.id)
     }
   } else {
     // Create new hair_profiles row
-    await admin.from("hair_profiles").insert(profileData)
+    const { error: insertErr } = await admin.from("hair_profiles").insert(profileData)
+    if (insertErr) {
+      throw new Error(`hair_profiles insert failed: ${insertErr.message}`)
+    }
+    console.log("[linkQuizToProfile] created new profile for user", userId)
   }
 
   // --- Link the lead to the user ---
-  await admin
+  const { error: linkErr } = await admin
     .from("leads")
     .update({ user_id: userId })
     .eq("id", lead.id)
+  if (linkErr) {
+    throw new Error(`leads.user_id update failed: ${linkErr.message}`)
+  }
+
+  console.log("[linkQuizToProfile] done — lead", lead.id, "linked to user", userId)
 }

@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Mail } from "lucide-react"
+import { linkLeadAction } from "./actions"
 
 const ERROR_MESSAGES: Record<string, string> = {
   link_expired: "Der Link ist abgelaufen oder ungueltig. Bitte fordere einen neuen an.",
@@ -98,6 +99,12 @@ export default function AuthPage() {
       setError(mapSupabaseError(error.message))
       setLoading(null)
     } else {
+      // Link quiz lead data if user logged in with a lead from the quiz
+      if (leadId) {
+        linkLeadAction(leadId).catch((e) =>
+          console.error("linkLeadAction failed:", e)
+        )
+      }
       router.push(next ?? "/chat")
     }
   }
