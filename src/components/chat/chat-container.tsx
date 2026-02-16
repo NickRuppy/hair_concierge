@@ -6,6 +6,7 @@ import { useHairProfile } from "@/hooks/use-hair-profile"
 import { generateSuggestedPrompts } from "@/lib/suggested-prompts"
 import { ChatInput } from "./chat-input"
 import { ChatMessage } from "./chat-message"
+import { ChatLoadingIndicator } from "./chat-loading-indicator"
 import { ProductRecommendations } from "./product-recommendations"
 import { ProductDetailDrawer } from "./product-detail-drawer"
 import { ConversationSidebar } from "./conversation-sidebar"
@@ -166,18 +167,7 @@ export function ChatContainer() {
               {isStreaming &&
                 messages[messages.length - 1]?.role === "assistant" &&
                 !messages[messages.length - 1]?.content && (
-                  <div className="flex gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                      HC
-                    </div>
-                    <div className="rounded-2xl bg-muted px-4 py-2.5">
-                      <div className="flex gap-1">
-                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/40 [animation-delay:0ms]" />
-                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/40 [animation-delay:150ms]" />
-                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/40 [animation-delay:300ms]" />
-                      </div>
-                    </div>
-                  </div>
+                  <ChatLoadingIndicator />
                 )}
 
               <div ref={messagesEndRef} />

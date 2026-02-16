@@ -13,7 +13,7 @@ const INTENT_SOURCE_ROUTES: Record<IntentType, string[] | null> = {
   ingredient_question: ["book", "qa"],
   hair_care_advice: ["book", "transcript", "qa", "product_list", "community_qa"],
   routine_help: ["book", "transcript", "qa", "product_list", "community_qa"],
-  diagnosis: ["book", "qa", "live_call", "community_qa"],
+  diagnosis: ["book", "qa", "live_call", "community_qa", "product_list"],
   photo_analysis: ["book", "qa", "live_call"],
   general_chat: null,
   followup: null,
@@ -48,6 +48,14 @@ function rerankChunks(
       chunk.metadata?.hair_texture === hairProfile.hair_texture
     ) {
       score *= 1.15
+    }
+    // Boost community_qa chunks that contain Tom's specific product picks
+    if (
+      chunk.source_type === "community_qa" &&
+      Array.isArray(chunk.metadata?.products_mentioned) &&
+      (chunk.metadata.products_mentioned as string[]).length > 0
+    ) {
+      score *= 1.25
     }
     return { ...chunk, weighted_similarity: score }
   })

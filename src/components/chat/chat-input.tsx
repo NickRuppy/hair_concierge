@@ -129,6 +129,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         {/* Text input */}
         <textarea
           ref={textareaRef}
+          data-testid="chat-input"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -141,6 +142,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
 
         {/* Send button */}
         <button
+          data-testid="chat-send"
           onClick={handleSubmit}
           disabled={disabled || uploading || (!message.trim() && !imageUrl)}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"

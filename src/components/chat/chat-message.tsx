@@ -200,6 +200,7 @@ export function ChatMessage({ message, onProductClick }: ChatMessageProps) {
 
   return (
     <div
+      data-testid={isUser ? "message-user" : "message-assistant"}
       className={`flex gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}`}
     >
       {/* Avatar */}

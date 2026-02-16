@@ -61,6 +61,24 @@ function shouldSkipProductMatching(
 }
 
 /**
+ * Returns true when the user's message contains enough detail (problem,
+ * history, products tried, etc.) that Tom can respond directly without
+ * asking clarifying questions first.
+ */
+function isRichContext(message: string): boolean {
+  const wordCount = message.trim().split(/\s+/).length
+  if (wordCount < 25) return false
+
+  let criteria = 0
+  criteria++ // Problem/Anliegen always present if they're writing
+  if (/seit|vor \d|wochen|monate|jahre/i.test(message)) criteria++
+  if (/benutze|verwende|probiert|getestet|shampoo|conditioner|leave-in|maske|öl|gel/i.test(message)) criteria++
+  if (/routine|wasche|mal die woche|täglich|alle \d/i.test(message)) criteria++
+  if (/gefärbt|blondiert|hitze|föhn|schwanger|medikament|allergi|empfindlich/i.test(message)) criteria++
+  return criteria >= 3
+}
+
+/**
  * Orchestrates the full RAG pipeline for a single user turn:
  *
  * Step 0: If an image is attached, analyze it with the vision model.
@@ -184,7 +202,7 @@ export async function runPipeline(
     imageAnalysis,
     products: matchedProducts,
     intent,
-    consultationMode: PRODUCT_INTENTS.includes(intent) && isFirstMessage,
+    consultationMode: PRODUCT_INTENTS.includes(intent) && isFirstMessage && !isRichContext(message),
   })
 
   return {

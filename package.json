@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:extract": "tsx scripts/extract-qa-fixtures.ts",
+    "test:qa": "playwright test qa-validation"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
@@ -28,6 +30,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.19.32",
     "@types/react": "^19",
