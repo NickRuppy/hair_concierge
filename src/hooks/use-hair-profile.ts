@@ -32,7 +32,7 @@ export function useHairProfile() {
       }
     }
     load()
-  }, [user])
+  }, [user?.id])
 
   return { hairProfile, loading }
 }

@@ -73,7 +73,7 @@ export default function ProfilePage() {
     }
     loadProfile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
+  }, [user?.id])
 
   async function handleSave() {
     if (!user) return
