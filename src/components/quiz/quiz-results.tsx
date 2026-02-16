@@ -65,6 +65,16 @@ export function QuizResults() {
 
   return (
     <div className="flex flex-col pb-6 animate-fade-in-up">
+      {/* Inline brand mark (replaces left panel on results page) */}
+      <div className="flex items-center gap-2 mb-6">
+        <div className="flex gap-[3px]">
+          <div className="w-[3px] h-5 bg-[#F5C518] rounded-full" />
+          <div className="w-[3px] h-5 bg-[#F5C518]/60 rounded-full" />
+          <div className="w-[3px] h-5 bg-[#F5C518]/30 rounded-full" />
+        </div>
+        <span className="font-header text-sm text-white/50 tracking-widest">TOM BOT</span>
+      </div>
+
       {/* Header */}
       <h2 className="font-header text-3xl text-white mb-1">
         {lead.name.toUpperCase()}, DEIN HAARPROFIL
@@ -74,7 +84,7 @@ export function QuizResults() {
       </p>
 
       {/* Profile cards — responsive grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 items-start gap-3 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {cards.map((card, i) => (
           <QuizProfileCard
             key={card.title}
@@ -105,7 +115,7 @@ export function QuizResults() {
       <Button
         onClick={handleStart}
         variant="unstyled"
-        className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
+        className="quiz-btn-primary w-full sm:max-w-md sm:mx-auto h-14 text-base font-bold tracking-wide rounded-xl"
       >
         DEINEN PLAN STARTEN
       </Button>
