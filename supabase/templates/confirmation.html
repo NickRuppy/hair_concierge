@@ -1,13 +1,85 @@
-<html>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #1a1a1a;">
-  <h2 style="margin-bottom: 24px;">E-Mail bestaetigen</h2>
-  <p>Willkommen bei Hair Concierge! Klicke auf den Button, um dein Konto zu aktivieren:</p>
-  <p style="margin: 32px 0;">
-    <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next={{ .RedirectTo }}"
-       style="display: inline-block; background: #1a1a1a; color: #ffffff; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 500;">
-      E-Mail bestaetigen
-    </a>
-  </p>
-  <p style="color: #666; font-size: 14px;">Falls du kein Konto erstellt hast, kannst du diese E-Mail ignorieren.</p>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>E-Mail bestätigen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="margin: 0; padding: 0; background-color: #231F20; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <!-- Full-width background wrapper -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #231F20;">
+    <tr>
+      <td align="center" style="padding: 40px 16px;">
+        <!-- Card -->
+        <table role="presentation" width="520" cellpadding="0" cellspacing="0" border="0" style="max-width: 520px; width: 100%; background-color: #2A2526; border: 1px solid #3A3536; border-radius: 16px; overflow: hidden;">
+          <tr>
+            <td style="padding: 40px 36px 0 36px; text-align: center;">
+              <!-- Header -->
+              <h1 style="margin: 0 0 6px 0; font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 700; color: #F5C518; text-transform: uppercase; letter-spacing: 0.05em;">
+                HAIR CONCIERGE
+              </h1>
+              <!-- Subtitle -->
+              <p style="margin: 0 0 24px 0; font-family: 'Montserrat', sans-serif; font-size: 13px; color: #A09A8E;">
+                Dein persönlicher Haar-Experte — powered by AI
+              </p>
+              <!-- Divider -->
+              <hr style="border: none; border-top: 1px solid #3A3536; margin: 0;">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 28px 36px 0 36px;">
+              <!-- Body -->
+              <p style="margin: 0 0 20px 0; font-family: 'Montserrat', sans-serif; font-size: 15px; line-height: 1.65; color: #E5DFD3;">
+                Hey! Schön, dass du dabei bist. 🎉
+              </p>
+              <p style="margin: 0 0 28px 0; font-family: 'Montserrat', sans-serif; font-size: 15px; line-height: 1.65; color: #E5DFD3;">
+                Nur noch ein Klick, dann ist dein Account startklar — und wir können dir zeigen, was deine Haare wirklich brauchen.
+              </p>
+              <p style="margin: 0 0 32px 0; font-family: 'Montserrat', sans-serif; font-size: 15px; line-height: 1.65; color: #E5DFD3;">
+                Ganz ehrlich: Es dauert keine 2 Sekunden.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding: 0 36px 28px 36px;">
+              <!-- CTA Button -->
+              <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next={{ .RedirectTo }}"
+                 style="display: inline-block; background: linear-gradient(135deg, #F5C518, #D4A800); color: #231F20; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; text-decoration: none; padding: 14px 40px; border-radius: 8px;">
+                E-Mail bestätigen
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 0 36px 24px 36px;">
+              <!-- Fine print -->
+              <p style="margin: 0 0 20px 0; font-family: 'Montserrat', sans-serif; font-size: 13px; line-height: 1.55; color: #8A847A;">
+                Falls du dich nicht bei Hair Concierge angemeldet hast, kannst du diese E-Mail einfach ignorieren.
+              </p>
+              <!-- Sign-off -->
+              <p style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 13px; line-height: 1.55; color: #8A847A;">
+                Auf geht's! 💛<br>
+                Tom &amp; das Hair Concierge Team
+              </p>
+            </td>
+          </tr>
+        </table>
+        <!-- Footer -->
+        <table role="presentation" width="520" cellpadding="0" cellspacing="0" border="0" style="max-width: 520px; width: 100%;">
+          <tr>
+            <td style="padding: 20px 36px 0 36px; text-align: center;">
+              <p style="margin: 0 0 4px 0; font-family: 'Montserrat', sans-serif; font-size: 11px; color: #5A5550;">
+                Hair Concierge · THE. BEAUTIFUL. PEOPLE.
+              </p>
+              <p style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 11px; color: #5A5550;">
+                Diese E-Mail wurde automatisch versendet.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
