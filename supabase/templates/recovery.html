@@ -1,0 +1,13 @@
+<html>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #1a1a1a;">
+  <h2 style="margin-bottom: 24px;">Passwort zuruecksetzen</h2>
+  <p>Du hast eine Anfrage zum Zuruecksetzen deines Passworts gestellt. Klicke auf den Button, um ein neues Passwort zu setzen:</p>
+  <p style="margin: 32px 0;">
+    <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/auth/update-password"
+       style="display: inline-block; background: #1a1a1a; color: #ffffff; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 500;">
+      Passwort zuruecksetzen
+    </a>
+  </p>
+  <p style="color: #666; font-size: 14px;">Falls du dies nicht angefordert hast, kannst du diese E-Mail ignorieren.</p>
+</body>
+</html>

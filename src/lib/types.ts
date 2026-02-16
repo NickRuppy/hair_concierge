@@ -78,6 +78,31 @@ export const HEAT_STYLING_OPTIONS: { value: HeatStyling; label: string }[] = [
   { value: "nie", label: "Nie" },
 ]
 
+export const CUTICLE_CONDITION_LABELS: Record<string, string> = {
+  glatt: "Glatt (intakt)",
+  leicht_uneben: "Leicht aufgeraut",
+  rau: "Geschädigt",
+}
+
+export const PROTEIN_MOISTURE_LABELS: Record<string, string> = {
+  elastisch: "Ausgewogen",
+  ueberdehnt: "Proteinmangel",
+  bricht: "Feuchtigkeitsmangel",
+}
+
+export const SCALP_TYPE_LABELS: Record<string, string> = {
+  fettig: "Schnell fettend",
+  trocken: "Trocken",
+  fettig_schuppen: "Fettig + Schuppen",
+  unauffaellig: "Unauffällig",
+}
+
+export const CHEMICAL_TREATMENT_LABELS: Record<string, string> = {
+  natur: "Naturhaar",
+  gefaerbt: "Gefärbt",
+  blondiert: "Blondiert",
+}
+
 export const STYLING_TOOL_OPTIONS = [
   "Föhn",
   "Glätteisen",

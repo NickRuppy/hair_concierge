@@ -11,10 +11,22 @@ import {
   STYLING_TOOL_OPTIONS,
   CONCERN_OPTIONS,
   GOAL_OPTIONS,
+  CUTICLE_CONDITION_LABELS,
+  PROTEIN_MOISTURE_LABELS,
+  SCALP_TYPE_LABELS,
+  CHEMICAL_TREATMENT_LABELS,
 } from "@/lib/types"
 import type { HairProfile } from "@/lib/types"
 import { createClient } from "@/lib/supabase/client"
 import { useEffect, useMemo, useState } from "react"
+import { SegmentedControl } from "@/components/ui/segmented-control"
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion"
+import { Badge } from "@/components/ui/badge"
 
 type ProfileFieldDef = {
   key: string
@@ -155,6 +167,13 @@ export default function ProfilePage() {
   const filledFields = fieldValues.filter((f) => f.value !== null)
   const emptyFields = fieldValues.filter((f) => f.value === null)
 
+  // Check if any diagnostic data exists
+  const hasDiagnostics =
+    !!hairProfile?.cuticle_condition ||
+    !!hairProfile?.protein_moisture_balance ||
+    !!hairProfile?.scalp_type ||
+    (hairProfile?.chemical_treatment?.length ?? 0) > 0
+
   async function handleSave() {
     if (!user) return
     setSaving(true)
@@ -268,199 +287,218 @@ export default function ProfilePage() {
           <h2 className="mb-4 text-lg font-semibold">Haar-Profil</h2>
 
           {editing ? (
-            <div className="space-y-6">
-              {/* Hair Type */}
-              <div>
-                <label className="mb-2 block text-sm font-medium">Haartyp</label>
-                <div className="flex flex-wrap gap-2">
-                  {HAIR_TYPE_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() =>
-                        setFormData((f) => ({ ...f, hair_type: opt.value }))
-                      }
-                      className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
-                        formData.hair_type === opt.value
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "hover:bg-accent"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            <Accordion
+              type="multiple"
+              defaultValue={["haartyp", "probleme", "routine"]}
+            >
+              {/* Section 1: Haartyp */}
+              <AccordionItem value="haartyp">
+                <AccordionTrigger>Haartyp</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-6">
+                    {/* Hair Type */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Haartyp</label>
+                      <div className="flex flex-wrap gap-2">
+                        {HAIR_TYPE_OPTIONS.map((opt) => (
+                          <button
+                            key={opt.value}
+                            onClick={() =>
+                              setFormData((f) => ({ ...f, hair_type: opt.value }))
+                            }
+                            className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
+                              formData.hair_type === opt.value
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "hover:bg-accent"
+                            }`}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* Hair Texture */}
-              <div>
-                <label className="mb-2 block text-sm font-medium">Haarstruktur</label>
-                <div className="flex flex-wrap gap-2">
-                  {HAIR_TEXTURE_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() =>
-                        setFormData((f) => ({ ...f, hair_texture: opt.value }))
-                      }
-                      className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
-                        formData.hair_texture === opt.value
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "hover:bg-accent"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                    {/* Hair Texture */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Haarstruktur</label>
+                      <div className="flex flex-wrap gap-2">
+                        {HAIR_TEXTURE_OPTIONS.map((opt) => (
+                          <button
+                            key={opt.value}
+                            onClick={() =>
+                              setFormData((f) => ({ ...f, hair_texture: opt.value }))
+                            }
+                            className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
+                              formData.hair_texture === opt.value
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "hover:bg-accent"
+                            }`}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
 
-              {/* Concerns */}
-              <div>
-                <label className="mb-2 block text-sm font-medium">Probleme</label>
-                <div className="flex flex-wrap gap-2">
-                  {CONCERN_OPTIONS.map((concern) => (
-                    <button
-                      key={concern}
-                      onClick={() =>
-                        setFormData((f) => ({
-                          ...f,
-                          concerns: toggleArrayItem(f.concerns, concern),
-                        }))
-                      }
-                      className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                        formData.concerns.includes(concern)
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "hover:bg-accent"
-                      }`}
-                    >
-                      {concern}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {/* Section 2: Probleme & Ziele */}
+              <AccordionItem value="probleme">
+                <AccordionTrigger>Probleme &amp; Ziele</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-6">
+                    {/* Concerns */}
+                    <div>
+                      <label className="mb-1 block text-sm font-medium">Probleme</label>
+                      <p className="mb-2 text-xs text-muted-foreground">
+                        Wähle alle zutreffenden Probleme aus
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {CONCERN_OPTIONS.map((concern) => (
+                          <button
+                            key={concern}
+                            onClick={() =>
+                              setFormData((f) => ({
+                                ...f,
+                                concerns: toggleArrayItem(f.concerns, concern),
+                              }))
+                            }
+                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
+                              formData.concerns.includes(concern)
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "hover:bg-accent"
+                            }`}
+                          >
+                            {concern}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* Wash Frequency */}
-              <div>
-                <label className="mb-2 block text-sm font-medium">Wasch-Häufigkeit</label>
-                <select
-                  value={formData.wash_frequency}
-                  onChange={(e) =>
-                    setFormData((f) => ({ ...f, wash_frequency: e.target.value }))
-                  }
-                  className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
-                >
-                  <option value="">Bitte wählen...</option>
-                  {WASH_FREQUENCY_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                    {/* Goals */}
+                    <div>
+                      <label className="mb-1 block text-sm font-medium">Ziele</label>
+                      <p className="mb-2 text-xs text-muted-foreground">
+                        Was möchtest du für deine Haare erreichen?
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {GOAL_OPTIONS.map((goal) => (
+                          <button
+                            key={goal}
+                            onClick={() =>
+                              setFormData((f) => ({
+                                ...f,
+                                goals: toggleArrayItem(f.goals, goal),
+                              }))
+                            }
+                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
+                              formData.goals.includes(goal)
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "hover:bg-accent"
+                            }`}
+                          >
+                            {goal}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
 
-              {/* Heat Styling */}
-              <div>
-                <label className="mb-2 block text-sm font-medium">Hitze-Styling</label>
-                <select
-                  value={formData.heat_styling}
-                  onChange={(e) =>
-                    setFormData((f) => ({ ...f, heat_styling: e.target.value }))
-                  }
-                  className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
-                >
-                  <option value="">Bitte wählen...</option>
-                  {HEAT_STYLING_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {/* Section 3: Pflege-Routine */}
+              <AccordionItem value="routine">
+                <AccordionTrigger>Pflege-Routine</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-6">
+                    {/* Wash Frequency */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Wasch-Häufigkeit</label>
+                      <SegmentedControl
+                        options={WASH_FREQUENCY_OPTIONS}
+                        value={formData.wash_frequency}
+                        onChange={(v) =>
+                          setFormData((f) => ({ ...f, wash_frequency: v }))
+                        }
+                      />
+                    </div>
 
-              {/* Styling Tools */}
-              <div>
-                <label className="mb-2 block text-sm font-medium">Styling-Tools</label>
-                <div className="flex flex-wrap gap-2">
-                  {STYLING_TOOL_OPTIONS.map((tool) => (
-                    <button
-                      key={tool}
-                      onClick={() =>
-                        setFormData((f) => ({
-                          ...f,
-                          styling_tools: toggleArrayItem(f.styling_tools, tool),
-                        }))
-                      }
-                      className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                        formData.styling_tools.includes(tool)
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "hover:bg-accent"
-                      }`}
-                    >
-                      {tool}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                    {/* Heat Styling */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Hitze-Styling</label>
+                      <SegmentedControl
+                        options={HEAT_STYLING_OPTIONS}
+                        value={formData.heat_styling}
+                        onChange={(v) =>
+                          setFormData((f) => ({ ...f, heat_styling: v }))
+                        }
+                      />
+                    </div>
 
-              {/* Products Used */}
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Aktuell verwendete Produkte
-                </label>
-                <textarea
-                  value={formData.products_used}
-                  onChange={(e) =>
-                    setFormData((f) => ({ ...f, products_used: e.target.value }))
-                  }
-                  placeholder="z.B. Olaplex No. 3, Moroccanoil..."
-                  className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
-                  rows={3}
-                />
-              </div>
+                    {/* Styling Tools */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Styling-Tools</label>
+                      <div className="flex flex-wrap gap-2">
+                        {STYLING_TOOL_OPTIONS.map((tool) => (
+                          <button
+                            key={tool}
+                            onClick={() =>
+                              setFormData((f) => ({
+                                ...f,
+                                styling_tools: toggleArrayItem(f.styling_tools, tool),
+                              }))
+                            }
+                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
+                              formData.styling_tools.includes(tool)
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "hover:bg-accent"
+                            }`}
+                          >
+                            {tool}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* Goals */}
-              <div>
-                <label className="mb-2 block text-sm font-medium">Ziele</label>
-                <div className="flex flex-wrap gap-2">
-                  {GOAL_OPTIONS.map((goal) => (
-                    <button
-                      key={goal}
-                      onClick={() =>
-                        setFormData((f) => ({
-                          ...f,
-                          goals: toggleArrayItem(f.goals, goal),
-                        }))
-                      }
-                      className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                        formData.goals.includes(goal)
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "hover:bg-accent"
-                      }`}
-                    >
-                      {goal}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                    {/* Products Used */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">
+                        Aktuell verwendete Produkte
+                      </label>
+                      <textarea
+                        value={formData.products_used}
+                        onChange={(e) =>
+                          setFormData((f) => ({ ...f, products_used: e.target.value }))
+                        }
+                        placeholder="z.B. Olaplex No. 3, Moroccanoil..."
+                        className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
+                        rows={3}
+                      />
+                    </div>
 
-              {/* Additional Notes */}
-              <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Zusätzliche Hinweise
-                </label>
-                <textarea
-                  value={formData.additional_notes || ""}
-                  onChange={(e) =>
-                    setFormData((f) => ({
-                      ...f,
-                      additional_notes: e.target.value,
-                    }))
-                  }
-                  placeholder="Gibt es noch etwas, das wir wissen sollten?"
-                  className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
-                  rows={3}
-                />
-              </div>
-            </div>
+                    {/* Additional Notes */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">
+                        Zusätzliche Hinweise
+                      </label>
+                      <textarea
+                        value={formData.additional_notes || ""}
+                        onChange={(e) =>
+                          setFormData((f) => ({
+                            ...f,
+                            additional_notes: e.target.value,
+                          }))
+                        }
+                        placeholder="Gibt es noch etwas, das wir wissen sollten?"
+                        className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           ) : (
             <div className="space-y-6">
               {/* Progress bar */}
@@ -555,6 +593,58 @@ export default function ProfilePage() {
           )}
         </section>
 
+        {/* Diagnose section — read-only, shown in both modes */}
+        {hasDiagnostics && (
+          <section className="mt-6 rounded-xl border bg-card p-6">
+            <h2 className="mb-4 text-lg font-semibold">Diagnose</h2>
+            <div className="space-y-3">
+              {hairProfile?.cuticle_condition && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Schuppenschicht</span>
+                  <Badge variant="outline">
+                    {CUTICLE_CONDITION_LABELS[hairProfile.cuticle_condition] ??
+                      hairProfile.cuticle_condition}
+                  </Badge>
+                </div>
+              )}
+              {hairProfile?.protein_moisture_balance && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Protein / Feuchtigkeit</span>
+                  <Badge variant="outline">
+                    {PROTEIN_MOISTURE_LABELS[hairProfile.protein_moisture_balance] ??
+                      hairProfile.protein_moisture_balance}
+                  </Badge>
+                </div>
+              )}
+              {hairProfile?.scalp_type && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Kopfhaut</span>
+                  <Badge variant="outline">
+                    {SCALP_TYPE_LABELS[hairProfile.scalp_type] ??
+                      hairProfile.scalp_type}
+                  </Badge>
+                </div>
+              )}
+              {hairProfile?.chemical_treatment &&
+                hairProfile.chemical_treatment.length > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Behandlung</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {hairProfile.chemical_treatment.map((t) => (
+                        <Badge key={t} variant="outline">
+                          {CHEMICAL_TREATMENT_LABELS[t] ?? t}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+            </div>
+            <p className="mt-4 text-xs text-muted-foreground">
+              Mach das Quiz erneut, um deine Diagnose zu aktualisieren.
+            </p>
+          </section>
+        )}
+
         {/* Sign out button */}
         <div className="mt-8 text-center">
           <button
@@ -568,4 +658,3 @@ export default function ProfilePage() {
     </>
   )
 }
-
