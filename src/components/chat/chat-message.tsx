@@ -1,11 +1,71 @@
 "use client"
 
-import type { ReactNode } from "react"
+import { useMemo, type ReactNode } from "react"
 import type { Message, CitationSource, Product } from "@/lib/types"
 import type { Components } from "react-markdown"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { CitationBadge } from "./citation-badge"
+
+/**
+ * Renumbers [N] citation markers in content so they appear as [1], [2], [3]
+ * in order of first appearance in the text, and remaps sources to match.
+ */
+function renumberCitations(
+  content: string,
+  sources: CitationSource[]
+): { content: string; sources: CitationSource[] } {
+  if (sources.length === 0) return { content, sources }
+
+  const validIndices = new Set(sources.map((s) => s.index))
+  const sourceByOldIndex = new Map(sources.map((s) => [s.index, s]))
+
+  // Collect first-appearance order of valid citation indices
+  const seen = new Set<number>()
+  const appearanceOrder: number[] = []
+  const regex = /\[(\d+)\]/g
+  let match: RegExpExecArray | null
+  while ((match = regex.exec(content)) !== null) {
+    const idx = parseInt(match[1], 10)
+    if (validIndices.has(idx) && !seen.has(idx)) {
+      seen.add(idx)
+      appearanceOrder.push(idx)
+    }
+  }
+
+  if (appearanceOrder.length === 0) return { content, sources }
+
+  // Check if already in order
+  const isAlreadyOrdered = appearanceOrder.every((idx, i) => idx === i + 1)
+  if (isAlreadyOrdered && appearanceOrder.length === sources.length) {
+    return { content, sources }
+  }
+
+  // Build old -> new mapping
+  const oldToNew = new Map<number, number>()
+  appearanceOrder.forEach((oldIdx, i) => oldToNew.set(oldIdx, i + 1))
+
+  // Replace citations in content
+  const renumberedContent = content.replace(/\[(\d+)\]/g, (full, d) => {
+    const oldIdx = parseInt(d, 10)
+    const newIdx = oldToNew.get(oldIdx)
+    return newIdx !== undefined ? `[${newIdx}]` : full
+  })
+
+  // Remap referenced sources, then append unreferenced ones
+  const remappedSources: CitationSource[] = appearanceOrder.map((oldIdx, i) => ({
+    ...sourceByOldIndex.get(oldIdx)!,
+    index: i + 1,
+  }))
+  let nextIndex = remappedSources.length + 1
+  for (const s of sources) {
+    if (!oldToNew.has(s.index)) {
+      remappedSources.push({ ...s, index: nextIndex++ })
+    }
+  }
+
+  return { content: renumberedContent, sources: remappedSources }
+}
 
 interface ChatMessageProps {
   message: Message
@@ -155,7 +215,13 @@ function processChildren(
 
 export function ChatMessage({ message, onProductClick }: ChatMessageProps) {
   const isUser = message.role === "user"
-  const sources: CitationSource[] = message.rag_context?.sources ?? []
+  const rawSources: CitationSource[] = message.rag_context?.sources ?? []
+
+  const { content: renumberedContent, sources } = useMemo(
+    () => renumberCitations(message.content ?? "", rawSources),
+    [message.content, rawSources]
+  )
+
   const sourceMap = new Map(sources.map((s) => [s.index, s]))
 
   // Build product name -> Product map for inline mentions
@@ -249,7 +315,7 @@ export function ChatMessage({ message, onProductClick }: ChatMessageProps) {
                   remarkPlugins={[remarkGfm]}
                   components={markdownComponents}
                 >
-                  {message.content}
+                  {renumberedContent}
                 </ReactMarkdown>
               </div>
             )}
