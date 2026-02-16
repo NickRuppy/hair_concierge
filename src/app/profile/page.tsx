@@ -96,12 +96,24 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
   },
 ]
 
+const FIELD_TO_SECTION: Record<string, string> = {
+  hair_type: "haartyp",
+  hair_texture: "haartyp",
+  concerns: "probleme",
+  goals: "probleme",
+  wash_frequency: "routine",
+  heat_styling: "routine",
+  styling_tools: "routine",
+  products_used: "routine",
+}
+
 export default function ProfilePage() {
   const { user, profile, loading: authLoading, signOut } = useAuth()
   const { toast } = useToast()
   const supabase = createClient()
   const [hairProfile, setHairProfile] = useState<HairProfile | null>(null)
   const [editing, setEditing] = useState(false)
+  const [editSection, setEditSection] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
@@ -240,7 +252,7 @@ export default function ProfilePage() {
           <h1 className="text-2xl font-bold">Mein Profil</h1>
           {!editing ? (
             <button
-              onClick={() => setEditing(true)}
+              onClick={() => { setEditSection(null); setEditing(true) }}
               className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Bearbeiten
@@ -289,7 +301,7 @@ export default function ProfilePage() {
           {editing ? (
             <Accordion
               type="multiple"
-              defaultValue={["haartyp", "probleme", "routine"]}
+              defaultValue={editSection ? [editSection] : ["haartyp", "probleme", "routine"]}
             >
               {/* Section 1: Haartyp */}
               <AccordionItem value="haartyp">
@@ -531,13 +543,17 @@ export default function ProfilePage() {
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {filledFields.map((f) => (
-                      <span
+                      <button
                         key={f.key}
-                        className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm"
+                        onClick={() => {
+                          setEditSection(FIELD_TO_SECTION[f.key] ?? null)
+                          setEditing(true)
+                        }}
+                        className="cursor-pointer rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm transition-colors hover:bg-primary/20"
                       >
                         <span className="font-medium">{f.label}:</span>{" "}
                         {f.value}
-                      </span>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -572,7 +588,7 @@ export default function ProfilePage() {
                     {emptyFields.map((f) => (
                       <button
                         key={f.key}
-                        onClick={() => setEditing(true)}
+                        onClick={() => { setEditSection(null); setEditing(true) }}
                         className="flex w-full items-center gap-3 rounded-lg border border-dashed border-muted-foreground/30 px-4 py-3 text-left transition-colors hover:bg-accent"
                       >
                         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground">
