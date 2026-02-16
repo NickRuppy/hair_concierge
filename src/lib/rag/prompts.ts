@@ -1,5 +1,5 @@
 /**
- * System prompt for the hair concierge persona.
+ * System prompt for the TomBot persona.
  *
  * Placeholders:
  * - {{USER_PROFILE}} - Serialized hair profile of the current user

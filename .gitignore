@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+.playwright-user-data/
 
 # next.js
 /.next/
@@ -48,7 +49,10 @@ __pycache__/
 *.tsbuildinfo
 next-env.d.ts
 
-# test scripts (may contain credentials)
+# test scripts & artifacts (ad-hoc, may contain credentials)
 test-*.mjs
+test-*.ts
+test-*.json
 fix-test-user.mjs
-test-screenshots/
+test-screenshots*/
+*.png

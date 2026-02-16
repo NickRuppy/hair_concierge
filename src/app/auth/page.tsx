@@ -219,7 +219,7 @@ export default function AuthPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
-            <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+            <h1 className="font-header text-4xl tracking-tight text-foreground">TomBot</h1>
             <p className="text-lg text-muted-foreground">Dein persoenlicher Haar-Experte — powered by AI</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
@@ -257,7 +257,7 @@ export default function AuthPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
-            <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+            <h1 className="font-header text-4xl tracking-tight text-foreground">TomBot</h1>
             <p className="text-lg text-muted-foreground">Dein persoenlicher Haar-Experte — powered by AI</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
@@ -349,7 +349,7 @@ export default function AuthPage() {
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
           <h1 className="font-header text-4xl tracking-tight text-foreground">
-            {copy?.heading ?? "Hair Concierge"}
+            {copy?.heading ?? "TomBot"}
           </h1>
           <p className="text-lg text-muted-foreground">
             {copy?.subtext ?? "Dein persoenlicher Haar-Experte — powered by AI"}

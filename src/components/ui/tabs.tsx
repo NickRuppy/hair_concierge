@@ -29,7 +29,10 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
     const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue)
 
     const value = controlledValue !== undefined ? controlledValue : uncontrolledValue
-    const handleChange = onValueChange || setUncontrolledValue
+    const handleChange = (newValue: string) => {
+      setUncontrolledValue(newValue)
+      onValueChange?.(newValue)
+    }
 
     return (
       <TabsContext.Provider value={{ value, onValueChange: handleChange }}>

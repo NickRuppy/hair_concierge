@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "Hair Concierge — Deine persönliche Haar-Beraterin",
+  title: "TomBot — Deine persönliche Haar-Beraterin",
   description:
     "Personalisierte Haarpflege-Beratung powered by AI. Erhalte individuelle Tipps, Produktempfehlungen und Haar-Analysen.",
 }
