@@ -1,11 +1,12 @@
 "use client"
 
 import { useMemo, type ReactNode } from "react"
-import type { Message, CitationSource, Product } from "@/lib/types"
+import type { Message, CitationSource, Product, HairProfile } from "@/lib/types"
 import type { Components } from "react-markdown"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { CitationBadge } from "./citation-badge"
+import { ProductPopover } from "./product-popover"
 
 /**
  * Renumbers [N] citation markers in content so they appear as [1], [2], [3]
@@ -69,6 +70,7 @@ function renumberCitations(
 
 interface ChatMessageProps {
   message: Message
+  hairProfile: HairProfile | null
   onProductClick?: (product: Product) => void
 }
 
@@ -109,6 +111,7 @@ function renderWithCitations(
 function renderWithProductMentions(
   nodes: ReactNode[],
   productMap: Map<string, Product>,
+  hairProfile: HairProfile | null,
   onProductClick?: (product: Product) => void
 ): ReactNode[] {
   if (productMap.size === 0 || !onProductClick) return nodes
@@ -150,17 +153,22 @@ function renderWithProductMentions(
         result.push(remaining.slice(0, earliest))
       }
 
-      // Push the clickable product mention
+      // Push the clickable product mention wrapped in popover
       const product = productMap.get(matchedName)!
       result.push(
-        <button
+        <ProductPopover
           key={`pm-${key++}`}
-          type="button"
-          onClick={() => onProductClick(product)}
-          className="inline font-semibold text-primary underline decoration-primary/30 underline-offset-2 transition-colors hover:text-primary/80 hover:decoration-primary/60"
+          product={product}
+          hairProfile={hairProfile}
         >
-          {matchedName}
-        </button>
+          <button
+            type="button"
+            onClick={() => onProductClick(product)}
+            className="inline font-semibold text-primary underline decoration-primary/30 underline-offset-2 transition-colors hover:text-primary/80 hover:decoration-primary/60"
+          >
+            {matchedName}
+          </button>
+        </ProductPopover>
       )
 
       remaining = remaining.slice(earliest + matchedName.length)
@@ -180,15 +188,16 @@ function processChildren(
   children: ReactNode,
   sourceMap: Map<number, CitationSource>,
   productMap: Map<string, Product>,
+  hairProfile: HairProfile | null,
   onProductClick?: (product: Product) => void
 ): ReactNode {
   if (typeof children === "string") {
     const cited = renderWithCitations(children, sourceMap)
-    return renderWithProductMentions(cited, productMap, onProductClick)
+    return renderWithProductMentions(cited, productMap, hairProfile, onProductClick)
   }
   if (Array.isArray(children)) {
     return children.map((child, i) => {
-      const processed = processChildren(child, sourceMap, productMap, onProductClick)
+      const processed = processChildren(child, sourceMap, productMap, hairProfile, onProductClick)
       // Wrap arrays in a span for valid React keys
       if (Array.isArray(processed)) {
         return <span key={i}>{processed}</span>
@@ -204,6 +213,7 @@ function processChildren(
         element.props.children,
         sourceMap,
         productMap,
+        hairProfile,
         onProductClick
       )
       // Clone the element with processed children
@@ -213,7 +223,7 @@ function processChildren(
   return children
 }
 
-export function ChatMessage({ message, onProductClick }: ChatMessageProps) {
+export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessageProps) {
   const isUser = message.role === "user"
   const rawSources: CitationSource[] = message.rag_context?.sources ?? []
 
@@ -236,28 +246,28 @@ export function ChatMessage({ message, onProductClick }: ChatMessageProps) {
         p({ children }) {
           return (
             <p>
-              {processChildren(children, sourceMap, productMap, onProductClick)}
+              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
             </p>
           )
         },
         li({ children }) {
           return (
             <li>
-              {processChildren(children, sourceMap, productMap, onProductClick)}
+              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
             </li>
           )
         },
         strong({ children }) {
           return (
             <strong>
-              {processChildren(children, sourceMap, productMap, onProductClick)}
+              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
             </strong>
           )
         },
         em({ children }) {
           return (
             <em>
-              {processChildren(children, sourceMap, productMap, onProductClick)}
+              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
             </em>
           )
         },

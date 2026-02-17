@@ -1,6 +1,7 @@
 "use client"
 
 import type { Product, HairProfile } from "@/lib/types"
+import { getPersonalizationSentence } from "@/lib/product-utils"
 import { ProductImage } from "./product-image"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -16,40 +17,6 @@ interface ProductDetailDrawerProps {
   hairProfile: HairProfile | null
   open: boolean
   onOpenChange: (open: boolean) => void
-}
-
-function getPersonalizationSentence(
-  product: Product,
-  hairProfile: HairProfile | null
-): string | null {
-  if (!hairProfile) return null
-
-  const parts: string[] = []
-
-  if (
-    hairProfile.thickness &&
-    product.suitable_hair_textures?.includes(hairProfile.thickness)
-  ) {
-    const labels: Record<string, string> = {
-      fine: "feines",
-      normal: "normales",
-      coarse: "dickes",
-    }
-    parts.push(
-      `dein ${labels[hairProfile.thickness] || hairProfile.thickness} Haar`
-    )
-  }
-
-  const matchedConcerns = (hairProfile.concerns || []).filter((c) =>
-    product.suitable_concerns?.includes(c)
-  )
-  if (matchedConcerns.length > 0) {
-    parts.push(matchedConcerns.join(" & "))
-  }
-
-  if (parts.length === 0) return null
-
-  return `Empfohlen f\u00FCr ${parts.join(" bei ")}`
 }
 
 export function ProductDetailDrawer({

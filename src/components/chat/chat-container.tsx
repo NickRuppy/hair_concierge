@@ -7,7 +7,6 @@ import { generateSuggestedPrompts } from "@/lib/suggested-prompts"
 import { ChatInput } from "./chat-input"
 import { ChatMessage } from "./chat-message"
 import { ChatLoadingIndicator } from "./chat-loading-indicator"
-import { ProductRecommendations } from "./product-recommendations"
 import { ProductDetailDrawer } from "./product-detail-drawer"
 import { ConversationSidebar } from "./conversation-sidebar"
 import { useEffect, useMemo, useRef, useState, useCallback } from "react"
@@ -139,27 +138,13 @@ export function ChatContainer() {
                 // Don't render empty assistant placeholder — streaming indicator handles it
                 if (msg.role === "assistant" && !msg.content) return null
 
-                const hasProducts =
-                  msg.role === "assistant" &&
-                  msg.product_recommendations &&
-                  msg.product_recommendations.length > 0
-
                 return (
-                  <div key={msg.id} className="space-y-3">
-                    <ChatMessage
-                      message={msg}
-                      onProductClick={handleProductClick}
-                    />
-                    {hasProducts && (
-                      <div className="ml-11">
-                        <ProductRecommendations
-                          products={msg.product_recommendations!}
-                          hairProfile={hairProfile}
-                          onProductClick={handleProductClick}
-                        />
-                      </div>
-                    )}
-                  </div>
+                  <ChatMessage
+                    key={msg.id}
+                    message={msg}
+                    hairProfile={hairProfile}
+                    onProductClick={handleProductClick}
+                  />
                 )
               })}
 
