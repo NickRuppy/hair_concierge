@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { useToast } from "@/providers/toast-provider"
+import { fehler } from "@/lib/vocabulary"
 import { ArrowLeft } from "lucide-react"
 
 interface MessageRow {
@@ -43,12 +44,12 @@ export default function AdminConversationDetailPage() {
         const res = await fetch(`/api/admin/conversations/${id}`)
         if (!res.ok) {
           const json = await res.json()
-          throw new Error(json.error || "Fehler beim Laden")
+          throw new Error(json.error || fehler("Laden"))
         }
         setData(await res.json())
       } catch (err: unknown) {
         const message =
-          err instanceof Error ? err.message : "Fehler beim Laden der Konversation"
+          err instanceof Error ? err.message : fehler("Laden", "der Konversation")
         toast({ title: message, variant: "destructive" })
       } finally {
         setLoading(false)

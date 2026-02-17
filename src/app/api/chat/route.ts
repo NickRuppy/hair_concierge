@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { runPipeline } from "@/lib/rag/pipeline"
 import { extractConversationMemory } from "@/lib/rag/memory-extractor"
 import { chatMessageSchema } from "@/lib/validators"
+import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
 // Rate limiting: simple in-memory store
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 })
+    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
   if (!checkRateLimit(user.id)) {
@@ -186,7 +187,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Chat pipeline error:", error)
     return NextResponse.json(
-      { error: "Fehler bei der Verarbeitung" },
+      { error: fehler("Verarbeitung") },
       { status: 500 }
     )
   }
@@ -200,7 +201,7 @@ export async function GET() {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 })
+    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
   const { data: conversations, error } = await supabase
@@ -211,7 +212,7 @@ export async function GET() {
     .limit(20)
 
   if (error) {
-    return NextResponse.json({ error: "Fehler beim Laden" }, { status: 500 })
+    return NextResponse.json({ error: fehler("Laden") }, { status: 500 })
   }
 
   return NextResponse.json({ conversations })

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
@@ -8,7 +9,7 @@ export async function GET(request: Request) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 })
+    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
   const { searchParams } = new URL(request.url)
@@ -40,7 +41,7 @@ export async function GET(request: Request) {
   const { data: products, count, error } = await query
 
   if (error) {
-    return NextResponse.json({ error: "Fehler beim Laden" }, { status: 500 })
+    return NextResponse.json({ error: fehler("Laden") }, { status: 500 })
   }
 
   return NextResponse.json({ products: products || [], total: count || 0 })

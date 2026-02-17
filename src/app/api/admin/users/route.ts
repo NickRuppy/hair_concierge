@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
@@ -8,7 +9,7 @@ export async function GET(request: Request) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 })
+    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
   const { data: profile } = await supabase
@@ -19,7 +20,7 @@ export async function GET(request: Request) {
 
   if (!profile?.is_admin) {
     return NextResponse.json(
-      { error: "Keine Admin-Berechtigung" },
+      { error: ERR_FORBIDDEN },
       { status: 403 }
     )
   }
@@ -36,7 +37,7 @@ export async function GET(request: Request) {
 
   if (error) {
     return NextResponse.json(
-      { error: "Fehler beim Laden der Benutzer" },
+      { error: fehler("Laden", "der Benutzer") },
       { status: 500 }
     )
   }

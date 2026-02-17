@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { productSchema } from "@/lib/validators"
 import { generateEmbedding } from "@/lib/openai/embeddings"
+import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
 export async function PUT(
@@ -16,7 +17,7 @@ export async function PUT(
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 })
+    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
   const { data: profile } = await supabase
@@ -27,7 +28,7 @@ export async function PUT(
 
   if (!profile?.is_admin) {
     return NextResponse.json(
-      { error: "Keine Admin-Berechtigung" },
+      { error: ERR_FORBIDDEN },
       { status: 403 }
     )
   }
@@ -37,7 +38,7 @@ export async function PUT(
 
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Ungültige Daten", details: parsed.error.flatten() },
+      { error: ERR_INVALID_DATA, details: parsed.error.flatten() },
       { status: 400 }
     )
   }
@@ -58,7 +59,7 @@ export async function PUT(
 
   if (error) {
     return NextResponse.json(
-      { error: "Fehler beim Aktualisieren des Produkts" },
+      { error: fehler("Aktualisieren", "des Produkts") },
       { status: 500 }
     )
   }
@@ -93,7 +94,7 @@ export async function PUT(
         .eq("id", product.id)
     } catch {
       // Embedding generation failed but product was updated successfully
-      console.error("Fehler beim Generieren des Embeddings")
+      console.error(fehler("Generieren", "des Embeddings"))
     }
   }
 
@@ -112,7 +113,7 @@ export async function DELETE(
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 })
+    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
   const { data: profile } = await supabase
@@ -123,7 +124,7 @@ export async function DELETE(
 
   if (!profile?.is_admin) {
     return NextResponse.json(
-      { error: "Keine Admin-Berechtigung" },
+      { error: ERR_FORBIDDEN },
       { status: 403 }
     )
   }
@@ -132,7 +133,7 @@ export async function DELETE(
 
   if (error) {
     return NextResponse.json(
-      { error: "Fehler beim Löschen des Produkts" },
+      { error: fehler("Löschen", "des Produkts") },
       { status: 500 }
     )
   }

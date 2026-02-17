@@ -1,5 +1,10 @@
 import type { HairProfile, HairType, HairTexture, Concern, Goal } from "@/lib/types"
-import { HAIR_TYPE_OPTIONS, HAIR_TEXTURE_OPTIONS } from "@/lib/types"
+import {
+  HAIR_TYPE_ADJECTIVE,
+  HAIR_TEXTURE_ADJECTIVE,
+  HAIR_TYPE_LABELS,
+  HAIR_TEXTURE_LABELS,
+} from "@/lib/vocabulary"
 
 const FALLBACK_PROMPTS = [
   "Welche Routine empfiehlst du für lockiges Haar?",
@@ -7,29 +12,6 @@ const FALLBACK_PROMPTS = [
   "Kannst du mir ein gutes Shampoo empfehlen?",
   "Wie bekomme ich mehr Volumen?",
 ]
-
-/* ── Helper: German adjective forms for natural sentences ── */
-
-const HAIR_TYPE_ADJECTIVE: Record<HairType, string> = {
-  glatt: "glattes",
-  wellig: "welliges",
-  lockig: "lockiges",
-  kraus: "krauses",
-}
-
-const HAIR_TEXTURE_ADJECTIVE: Record<HairTexture, string> = {
-  fein: "feines",
-  mittel: "mittelstarkes",
-  dick: "dickes",
-}
-
-function hairTypeLabel(value: HairType): string {
-  return HAIR_TYPE_OPTIONS.find((o) => o.value === value)?.label ?? value
-}
-
-function hairTextureLabel(value: HairTexture): string {
-  return HAIR_TEXTURE_OPTIONS.find((o) => o.value === value)?.label ?? value
-}
 
 /* ── Slot 1: Template prompts (one picked based on available profile data) ── */
 

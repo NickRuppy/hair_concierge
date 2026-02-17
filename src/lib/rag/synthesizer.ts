@@ -1,5 +1,6 @@
 import { streamChatCompletion } from "@/lib/openai/chat"
 import { SYSTEM_PROMPT } from "@/lib/rag/prompts"
+import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
 import type { Message, HairProfile, IntentType, Product, ContentChunk } from "@/lib/types"
 import type OpenAI from "openai"
 
@@ -81,18 +82,6 @@ function formatUserProfile(profile: HairProfile | null, consultationMode?: boole
   }
 
   return result
-}
-
-/** German labels for source types, used in RAG context formatting. */
-export const SOURCE_TYPE_LABELS: Record<string, string> = {
-  book: "Fachbuch",
-  product_list: "Produktmatrix",
-  qa: "FAQ",
-  narrative: "Fachartikel",
-  transcript: "Kurs-Transkript",
-  live_call: "Live-Beratung",
-  product_links: "Produktlinks",
-  community_qa: "Community-Beratung",
 }
 
 /**

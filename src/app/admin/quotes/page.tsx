@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
 import type { DailyQuote } from "@/lib/types"
+import { fehler } from "@/lib/vocabulary"
 
 interface QuoteForm {
   quote_text: string
@@ -33,12 +34,12 @@ export default function AdminQuotesPage() {
       const res = await fetch("/api/admin/quotes")
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.error || "Fehler beim Laden")
+        throw new Error(data.error || fehler("Laden"))
       }
       const data = await res.json()
       setQuotes(data.quotes)
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Fehler beim Laden der Zitate"
+      const message = err instanceof Error ? err.message : fehler("Laden", "der Zitate")
       toast({ title: message, variant: "destructive" })
     } finally {
       setLoading(false)
@@ -106,14 +107,14 @@ export default function AdminQuotesPage() {
 
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.error || "Fehler beim Speichern")
+        throw new Error(data.error || fehler("Speichern"))
       }
 
       toast({ title: editingId ? "Zitat aktualisiert" : "Zitat erstellt" })
       handleCancel()
       await loadQuotes()
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Fehler beim Speichern"
+      const message = err instanceof Error ? err.message : fehler("Speichern")
       toast({ title: message, variant: "destructive" })
     } finally {
       setSaving(false)
@@ -127,12 +128,12 @@ export default function AdminQuotesPage() {
       const res = await fetch(`/api/admin/quotes/${id}`, { method: "DELETE" })
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.error || "Fehler beim Löschen")
+        throw new Error(data.error || fehler("Löschen"))
       }
       toast({ title: "Zitat gelöscht" })
       await loadQuotes()
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Fehler beim Löschen"
+      const message = err instanceof Error ? err.message : fehler("Löschen")
       toast({ title: message, variant: "destructive" })
     }
   }

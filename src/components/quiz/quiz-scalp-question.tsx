@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
-import { ArrowLeft, Check } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 
 type Phase = "type" | "gate" | "condition"
 
@@ -49,18 +49,6 @@ const SCALP_CONDITIONS = [
   },
 ]
 
-const TYPE_EMOJI: Record<string, string> = {
-  fettig: "\uD83D\uDCA7",
-  ausgeglichen: "\uD83D\uDC4D",
-  trocken: "\u2744\uFE0F",
-}
-
-const TYPE_LABEL: Record<string, string> = {
-  fettig: "Fettig",
-  ausgeglichen: "Ausgeglichen",
-  trocken: "Trocken",
-}
-
 export function QuizScalpQuestion() {
   const { answers, setAnswer, goNext, goBack } = useQuizStore()
 
@@ -86,6 +74,10 @@ export function QuizScalpQuestion() {
   )
   const [advancing, setAdvancing] = useState(false)
 
+  // Track whether sections should animate (false on re-entry, true on user-driven transitions)
+  const [animateGate, setAnimateGate] = useState(false)
+  const [animateCondition, setAnimateCondition] = useState(false)
+
   // Reset advancing flag when phase changes
   useEffect(() => {
     setAdvancing(false)
@@ -98,6 +90,7 @@ export function QuizScalpQuestion() {
       setAnswer("scalp_type", value)
       setAdvancing(true)
       setTimeout(() => {
+        setAnimateGate(true)
         setPhase("gate")
       }, 300)
     },
@@ -116,6 +109,7 @@ export function QuizScalpQuestion() {
         }, 300)
       } else {
         setAdvancing(true)
+        setAnimateCondition(true)
         setPhase("condition")
       }
     },
@@ -140,17 +134,21 @@ export function QuizScalpQuestion() {
       setSelectedCondition("")
       setConditionAnswer("")
       setAnswer("scalp_condition", "")
+      setAnimateCondition(false)
       setPhase("gate")
     } else if (phase === "gate") {
       setSelectedType("")
       setConditionAnswer("")
       setAnswer("scalp_type", "")
       setAnswer("scalp_condition", "")
+      setAnimateGate(false)
       setPhase("type")
     } else {
       goBack()
     }
   }, [phase, goBack, setAnswer])
+
+  const pastTypePhase = phase !== "type"
 
   return (
     <div className="flex flex-col" key="scalp-question">
@@ -168,127 +166,125 @@ export function QuizScalpQuestion() {
         <span className="text-sm text-white/38 tabular-nums">5/7</span>
       </div>
 
-      {/* Phase 1: Scalp Type */}
-      {phase === "type" && (
-        <div className="animate-fade-in-up">
-          <h2 className="font-header text-3xl leading-tight text-white mb-2">
-            WIE IST DEIN KOPFHAUTTYP?
-          </h2>
-          <p className="text-sm text-white/60 leading-relaxed mb-5">
-            Sei ehrlich: Wie oft musst du wirklich waschen? Deine Gesichtshaut
-            gibt dir einen guten Hinweis — oelige T-Zone deutet auf fettige
-            Kopfhaut hin.
-          </p>
-          <div className="space-y-3">
-            {SCALP_TYPES.map((opt, i) => (
+      {/* Title + instruction — always visible */}
+      <h2 className="font-header text-3xl leading-tight text-white mb-2">
+        WIE IST DEIN KOPFHAUTTYP?
+      </h2>
+      <p className="text-sm text-white/60 leading-relaxed mb-5">
+        Sei ehrlich: Wie oft musst du wirklich waschen? Deine Gesichtshaut
+        gibt dir einen guten Hinweis — oelige T-Zone deutet auf fettige
+        Kopfhaut hin.
+      </p>
+
+      {/* Type cards — always rendered, unselected collapse when past type phase */}
+      <div>
+        {SCALP_TYPES.map((opt, i) => {
+          const isCollapsed = pastTypePhase && selectedType !== opt.value
+          return (
+            <div
+              key={opt.value}
+              style={{
+                maxHeight: isCollapsed ? 0 : 500,
+                opacity: isCollapsed ? 0 : 1,
+                marginTop: isCollapsed ? 0 : i > 0 ? 12 : 0,
+                overflow: "hidden",
+                transition:
+                  "max-height 300ms ease, opacity 200ms ease, margin-top 300ms ease",
+              }}
+            >
               <QuizOptionCard
-                key={opt.value}
                 emoji={opt.emoji}
                 label={opt.label}
                 description={opt.description}
                 active={selectedType === opt.value}
-                onClick={() => handleTypeSelect(opt.value)}
+                onClick={() => {
+                  if (!pastTypePhase) handleTypeSelect(opt.value)
+                }}
                 animationDelay={i * 60}
               />
-            ))}
-          </div>
-          <p className="mt-3 text-center text-sm text-white/38">
-            Nur noch 2 Fragen — du machst das super.
-          </p>
-        </div>
-      )}
-
-      {/* Phase 2: Condition Gate */}
-      {phase === "gate" && (
-        <div className="animate-fade-in-up">
-          {/* Collapsed type summary */}
-          <div className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 px-4 py-3 mb-5">
-            <span className="text-xl">{TYPE_EMOJI[selectedType]}</span>
-            <span className="text-sm font-semibold text-white flex-1">
-              Kopfhauttyp: {TYPE_LABEL[selectedType]}
-            </span>
-            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F5C518]">
-              <Check className="h-3 w-3 text-[#0A0A0A]" strokeWidth={2.5} />
             </div>
-          </div>
+          )
+        })}
+      </div>
 
-          <h2 className="font-header text-2xl leading-tight text-white mb-2">
-            HAST DU KOPFHAUTBESCHWERDEN?
-          </h2>
-          <p className="text-sm text-white/60 leading-relaxed mb-5">
-            Schuppen, Jucken oder Roetungen — oder ist alles im gruenen
-            Bereich?
-          </p>
+      {/* Gate section — slides in below selected type card */}
+      <div
+        className={
+          phase === "type"
+            ? "hidden"
+            : animateGate
+              ? "mt-5 animate-fade-in-up"
+              : "mt-5"
+        }
+      >
+        <h2 className="font-header text-2xl leading-tight text-white mb-2">
+          HAST DU KOPFHAUTBESCHWERDEN?
+        </h2>
+        <p className="text-sm text-white/60 leading-relaxed mb-5">
+          Schuppen, Jucken oder Roetungen — oder ist alles im gruenen
+          Bereich?
+        </p>
 
-          <div className="flex gap-3">
-            <button
-              onClick={() => handleGateAnswer("nein")}
-              className={`flex-1 h-14 rounded-xl text-base font-bold tracking-wide transition-all duration-200 ${
-                conditionAnswer === "nein"
-                  ? "bg-[#F5C518] text-[#0A0A0A] scale-[1.02]"
-                  : "bg-white/8 text-white hover:bg-white/12 border border-white/10"
-              }`}
-            >
-              NEIN
-            </button>
-            <button
-              onClick={() => handleGateAnswer("ja")}
-              className={`flex-1 h-14 rounded-xl text-base font-bold tracking-wide transition-all duration-200 ${
-                conditionAnswer === "ja"
-                  ? "bg-[#F5C518] text-[#0A0A0A] scale-[1.02]"
-                  : "bg-white/8 text-white hover:bg-white/12 border border-white/10"
-              }`}
-            >
-              JA
-            </button>
-          </div>
-
-          <p className="mt-3 text-center text-sm text-white/38">
-            Nur noch 2 Fragen — du machst das super.
-          </p>
+        <div className="flex gap-3">
+          <button
+            onClick={() => handleGateAnswer("nein")}
+            className={`flex-1 h-14 rounded-xl text-base font-bold tracking-wide transition-all duration-200 ${
+              conditionAnswer === "nein"
+                ? "bg-[#F5C518] text-[#0A0A0A] scale-[1.02]"
+                : "bg-white/8 text-white hover:bg-white/12 border border-white/10"
+            }`}
+          >
+            NEIN
+          </button>
+          <button
+            onClick={() => handleGateAnswer("ja")}
+            className={`flex-1 h-14 rounded-xl text-base font-bold tracking-wide transition-all duration-200 ${
+              conditionAnswer === "ja"
+                ? "bg-[#F5C518] text-[#0A0A0A] scale-[1.02]"
+                : "bg-white/8 text-white hover:bg-white/12 border border-white/10"
+            }`}
+          >
+            JA
+          </button>
         </div>
-      )}
+      </div>
 
-      {/* Phase 2b: Condition Selection */}
-      {phase === "condition" && (
-        <div className="animate-fade-in-up">
-          {/* Collapsed type summary */}
-          <div className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 px-4 py-3 mb-4">
-            <span className="text-xl">{TYPE_EMOJI[selectedType]}</span>
-            <span className="text-sm font-semibold text-white flex-1">
-              Kopfhauttyp: {TYPE_LABEL[selectedType]}
-            </span>
-            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F5C518]">
-              <Check className="h-3 w-3 text-[#0A0A0A]" strokeWidth={2.5} />
-            </div>
-          </div>
+      {/* Condition cards — slides in below gate */}
+      <div
+        className={
+          phase !== "condition"
+            ? "hidden"
+            : animateCondition
+              ? "mt-6 animate-fade-in-up"
+              : "mt-6"
+        }
+      >
+        <h2 className="font-header text-2xl leading-tight text-white mb-2">
+          WELCHE BESCHWERDEN HAST DU?
+        </h2>
+        <p className="text-sm text-white/60 leading-relaxed mb-5">
+          Waehle die Beschwerde, die am besten zu dir passt.
+        </p>
 
-          <h2 className="font-header text-2xl leading-tight text-white mb-2">
-            WELCHE BESCHWERDEN HAST DU?
-          </h2>
-          <p className="text-sm text-white/60 leading-relaxed mb-5">
-            Waehle die Beschwerde, die am besten zu dir passt.
-          </p>
-
-          <div className="space-y-3">
-            {SCALP_CONDITIONS.map((opt, i) => (
-              <QuizOptionCard
-                key={opt.value}
-                emoji={opt.emoji}
-                label={opt.label}
-                description={opt.description}
-                active={selectedCondition === opt.value}
-                onClick={() => handleConditionSelect(opt.value)}
-                animationDelay={i * 60}
-              />
-            ))}
-          </div>
-
-          <p className="mt-3 text-center text-sm text-white/38">
-            Nur noch 2 Fragen — du machst das super.
-          </p>
+        <div className="space-y-3">
+          {SCALP_CONDITIONS.map((opt, i) => (
+            <QuizOptionCard
+              key={opt.value}
+              emoji={opt.emoji}
+              label={opt.label}
+              description={opt.description}
+              active={selectedCondition === opt.value}
+              onClick={() => handleConditionSelect(opt.value)}
+              animationDelay={i * 60}
+            />
+          ))}
         </div>
-      )}
+      </div>
+
+      {/* Motivation text — always anchored at bottom */}
+      <p className="mt-3 text-center text-sm text-white/38">
+        Nur noch 2 Fragen — du machst das super.
+      </p>
     </div>
   )
 }

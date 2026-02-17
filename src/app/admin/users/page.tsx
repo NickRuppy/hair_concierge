@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
 import type { Profile, HairProfile } from "@/lib/types"
+import { fehler } from "@/lib/vocabulary"
 
 interface UserWithHairProfile extends Profile {
   hair_profiles?: HairProfile[]
@@ -19,12 +20,12 @@ export default function AdminUsersPage() {
       const res = await fetch("/api/admin/users")
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.error || "Fehler beim Laden")
+        throw new Error(data.error || fehler("Laden"))
       }
       const data = await res.json()
       setUsers(data.users)
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Fehler beim Laden der Nutzer"
+      const message = err instanceof Error ? err.message : fehler("Laden", "der Nutzer")
       toast({ title: message, variant: "destructive" })
     } finally {
       setLoading(false)

@@ -3,20 +3,8 @@
 import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
 import type { Product } from "@/lib/types"
-
-const HAIR_TYPE_OPTIONS = ["glatt", "wellig", "lockig", "kraus"]
-
-const CONCERN_OPTIONS = [
-  "Haarausfall",
-  "Schuppen",
-  "Trockenheit",
-  "Fettige Kopfhaut",
-  "Haarschaeden",
-  "Coloriert",
-  "Spliss",
-  "Frizz",
-  "Duenner werdendes Haar",
-]
+import { HAIR_TYPE_OPTIONS, CONCERN_OPTIONS } from "@/lib/types"
+import { fehler } from "@/lib/vocabulary"
 
 interface ProductForm {
   name: string
@@ -63,12 +51,12 @@ export default function AdminProductsPage() {
       const res = await fetch("/api/admin/products")
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.error || "Fehler beim Laden")
+        throw new Error(data.error || fehler("Laden"))
       }
       const data = await res.json()
       setProducts(data.products)
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Fehler beim Laden der Produkte"
+      const message = err instanceof Error ? err.message : fehler("Laden", "der Produkte")
       toast({ title: message, variant: "destructive" })
     } finally {
       setLoading(false)
@@ -167,14 +155,14 @@ export default function AdminProductsPage() {
 
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.error || "Fehler beim Speichern")
+        throw new Error(data.error || fehler("Speichern"))
       }
 
       toast({ title: editingId ? "Produkt aktualisiert" : "Produkt erstellt" })
       handleCancel()
       await loadProducts()
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Fehler beim Speichern"
+      const message = err instanceof Error ? err.message : fehler("Speichern")
       toast({ title: message, variant: "destructive" })
     } finally {
       setSaving(false)
@@ -188,12 +176,12 @@ export default function AdminProductsPage() {
       const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" })
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.error || "Fehler beim Löschen")
+        throw new Error(data.error || fehler("Löschen"))
       }
       toast({ title: "Produkt gelöscht" })
       await loadProducts()
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Fehler beim Löschen"
+      const message = err instanceof Error ? err.message : fehler("Löschen")
       toast({ title: message, variant: "destructive" })
     }
   }
@@ -359,20 +347,20 @@ export default function AdminProductsPage() {
                 Geeignete Haartypen
               </label>
               <div className="flex flex-wrap gap-2">
-                {HAIR_TYPE_OPTIONS.map((type) => {
-                  const selected = form.suitable_hair_types.includes(type)
+                {HAIR_TYPE_OPTIONS.map(({ value, label }) => {
+                  const selected = form.suitable_hair_types.includes(value)
                   return (
                     <button
-                      key={type}
+                      key={value}
                       type="button"
-                      onClick={() => toggleChip("suitable_hair_types", type)}
+                      onClick={() => toggleChip("suitable_hair_types", value)}
                       className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                         selected
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted text-muted-foreground hover:bg-muted/80"
                       }`}
                     >
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                      {label}
                     </button>
                   )
                 })}

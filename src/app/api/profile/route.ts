@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { hairProfileFullSchema } from "@/lib/validators"
+import { ERR_UNAUTHORIZED, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
 export async function GET() {
@@ -9,7 +10,7 @@ export async function GET() {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 })
+    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
   const { data: profile } = await supabase
@@ -34,7 +35,7 @@ export async function PUT(request: Request) {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 })
+    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
   const body = await request.json()
@@ -42,7 +43,7 @@ export async function PUT(request: Request) {
 
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Ungültige Daten", details: parsed.error.flatten() },
+      { error: ERR_INVALID_DATA, details: parsed.error.flatten() },
       { status: 400 }
     )
   }
@@ -62,7 +63,7 @@ export async function PUT(request: Request) {
 
   if (error) {
     return NextResponse.json(
-      { error: "Fehler beim Speichern" },
+      { error: fehler("Speichern") },
       { status: 500 }
     )
   }

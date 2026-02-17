@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
 export async function GET(
@@ -12,7 +13,7 @@ export async function GET(
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 })
+    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
   // Verify ownership
@@ -50,7 +51,7 @@ export async function DELETE(
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 })
+    return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
   const { error } = await supabase
@@ -61,7 +62,7 @@ export async function DELETE(
 
   if (error) {
     return NextResponse.json(
-      { error: "Fehler beim Löschen" },
+      { error: fehler("Löschen") },
       { status: 500 }
     )
   }

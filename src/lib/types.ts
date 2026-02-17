@@ -1,120 +1,23 @@
-export type HairType = "glatt" | "wellig" | "lockig" | "kraus"
-export type HairTexture = "fein" | "mittel" | "dick"
-export type WashFrequency = "taeglich" | "alle_2_tage" | "2_mal_woche" | "1_mal_woche" | "seltener"
-export type HeatStyling = "taeglich" | "mehrmals_woche" | "1_mal_woche" | "selten" | "nie"
+/* ── Re-export shared vocabulary (single source of truth) ── */
 
-export type Concern =
-  | "Haarausfall"
-  | "Schuppen"
-  | "Trockenheit"
-  | "Fettige Kopfhaut"
-  | "Haarschaeden"
-  | "Coloriert"
-  | "Spliss"
-  | "Frizz"
-  | "Duenner werdendes Haar"
+import type { HairType, HairTexture, WashFrequency, HeatStyling, Concern, Goal } from "@/lib/vocabulary"
 
-export type Goal =
-  | "Mehr Volumen"
-  | "Gesuenderes Haar"
-  | "Haarwachstum"
-  | "Weniger Frizz"
-  | "Farbschutz"
-  | "Mehr Feuchtigkeit"
-  | "Gesunde Kopfhaut"
-  | "Mehr Glanz"
-  | "Locken-Definition"
+export type { HairType, HairTexture, WashFrequency, HeatStyling, Concern, Goal }
 
-export const CONCERN_OPTIONS: Concern[] = [
-  "Haarausfall",
-  "Schuppen",
-  "Trockenheit",
-  "Fettige Kopfhaut",
-  "Haarschaeden",
-  "Coloriert",
-  "Spliss",
-  "Frizz",
-  "Duenner werdendes Haar",
-]
-
-export const GOAL_OPTIONS: Goal[] = [
-  "Mehr Volumen",
-  "Gesuenderes Haar",
-  "Haarwachstum",
-  "Weniger Frizz",
-  "Farbschutz",
-  "Mehr Feuchtigkeit",
-  "Gesunde Kopfhaut",
-  "Mehr Glanz",
-  "Locken-Definition",
-]
-
-export const HAIR_TYPE_OPTIONS: { value: HairType; label: string }[] = [
-  { value: "glatt", label: "Glatt" },
-  { value: "wellig", label: "Wellig" },
-  { value: "lockig", label: "Lockig" },
-  { value: "kraus", label: "Kraus" },
-]
-
-export const HAIR_TEXTURE_OPTIONS: { value: HairTexture; label: string }[] = [
-  { value: "fein", label: "Fein" },
-  { value: "mittel", label: "Mittel" },
-  { value: "dick", label: "Dick" },
-]
-
-export const WASH_FREQUENCY_OPTIONS: { value: WashFrequency; label: string }[] = [
-  { value: "taeglich", label: "Täglich" },
-  { value: "alle_2_tage", label: "Alle 2 Tage" },
-  { value: "2_mal_woche", label: "2x pro Woche" },
-  { value: "1_mal_woche", label: "1x pro Woche" },
-  { value: "seltener", label: "Seltener" },
-]
-
-export const HEAT_STYLING_OPTIONS: { value: HeatStyling; label: string }[] = [
-  { value: "taeglich", label: "Täglich" },
-  { value: "mehrmals_woche", label: "Mehrmals pro Woche" },
-  { value: "1_mal_woche", label: "1x pro Woche" },
-  { value: "selten", label: "Selten" },
-  { value: "nie", label: "Nie" },
-]
-
-export const CUTICLE_CONDITION_LABELS: Record<string, string> = {
-  glatt: "Glatt (intakt)",
-  leicht_uneben: "Leicht aufgeraut",
-  rau: "Geschädigt",
-}
-
-export const PROTEIN_MOISTURE_LABELS: Record<string, string> = {
-  elastisch: "Ausgewogen",
-  ueberdehnt: "Proteinmangel",
-  bricht: "Feuchtigkeitsmangel",
-}
-
-export const SCALP_TYPE_LABELS: Record<string, string> = {
-  fettig: "Schnell fettend",
-  ausgeglichen: "Ausgeglichen",
-  trocken: "Trocken",
-}
-
-export const SCALP_CONDITION_LABELS: Record<string, string> = {
-  keine: "Keine Beschwerden",
-  schuppen: "Schuppen",
-  gereizt: "Gereizte Kopfhaut",
-}
-
-export const CHEMICAL_TREATMENT_LABELS: Record<string, string> = {
-  natur: "Naturhaar",
-  gefaerbt: "Gefärbt",
-  blondiert: "Blondiert",
-}
-
-export const STYLING_TOOL_OPTIONS = [
-  "Föhn",
-  "Glätteisen",
-  "Lockenstab",
-  "Warmluftbürste",
-  "Diffusor",
-]
+export {
+  HAIR_TYPE_OPTIONS,
+  HAIR_TEXTURE_OPTIONS,
+  CONCERN_OPTIONS,
+  GOAL_OPTIONS,
+  WASH_FREQUENCY_OPTIONS,
+  HEAT_STYLING_OPTIONS,
+  STYLING_TOOL_OPTIONS,
+  CUTICLE_CONDITION_LABELS,
+  PROTEIN_MOISTURE_LABELS,
+  SCALP_TYPE_LABELS,
+  SCALP_CONDITION_LABELS,
+  CHEMICAL_TREATMENT_LABELS,
+} from "@/lib/vocabulary"
 
 export interface Profile {
   id: string

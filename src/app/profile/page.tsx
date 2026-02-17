@@ -28,6 +28,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
+import { fehler } from "@/lib/vocabulary"
 
 type ProfileFieldDef = {
   key: string
@@ -215,7 +216,7 @@ export default function ProfilePage() {
         .single()
 
       if (error) {
-        toast({ title: "Fehler beim Speichern", variant: "destructive" })
+        toast({ title: fehler("Speichern"), variant: "destructive" })
       } else {
         setHairProfile(data)
         setEditing(false)
@@ -223,7 +224,7 @@ export default function ProfilePage() {
       }
     } catch (err) {
       console.error("Error saving profile:", err)
-      toast({ title: "Fehler beim Speichern", variant: "destructive" })
+      toast({ title: fehler("Speichern"), variant: "destructive" })
     } finally {
       setSaving(false)
     }
@@ -647,7 +648,7 @@ export default function ProfilePage() {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Kopfhautbeschwerden</span>
                   <Badge variant="outline">
-                    {SCALP_CONDITION_LABELS[hairProfile.scalp_condition] ??
+                    {SCALP_CONDITION_LABELS[hairProfile.scalp_condition as keyof typeof SCALP_CONDITION_LABELS] ??
                       hairProfile.scalp_condition}
                   </Badge>
                 </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/providers/toast-provider"
+import { fehler } from "@/lib/vocabulary"
 
 interface ConversationRow {
   id: string
@@ -30,14 +31,14 @@ export default function AdminConversationsPage() {
         const res = await fetch("/api/admin/conversations")
         if (!res.ok) {
           const data = await res.json()
-          throw new Error(data.error || "Fehler beim Laden")
+          throw new Error(data.error || fehler("Laden"))
         }
         const data = await res.json()
         setConversations(data.conversations)
         setTotal(data.total)
       } catch (err: unknown) {
         const message =
-          err instanceof Error ? err.message : "Fehler beim Laden der Chats"
+          err instanceof Error ? err.message : fehler("Laden", "der Chats")
         toast({ title: message, variant: "destructive" })
       } finally {
         setLoading(false)
