@@ -1,11 +1,11 @@
 /* ── Re-export shared vocabulary (single source of truth) ── */
 
-import type { HairType, HairThickness, WashFrequency, HeatStyling, Concern, Goal } from "@/lib/vocabulary"
+import type { HairTexture, HairThickness, WashFrequency, HeatStyling, Concern, Goal } from "@/lib/vocabulary"
 
-export type { HairType, HairThickness, WashFrequency, HeatStyling, Concern, Goal }
+export type { HairTexture, HairThickness, WashFrequency, HeatStyling, Concern, Goal }
 
 export {
-  HAIR_TYPE_OPTIONS,
+  HAIR_TEXTURE_OPTIONS,
   HAIR_THICKNESS_OPTIONS,
   CONCERN_OPTIONS,
   GOAL_OPTIONS,
@@ -36,7 +36,7 @@ export interface Profile {
 export interface HairProfile {
   id: string
   user_id: string
-  hair_type: HairType | null
+  hair_texture: HairTexture | null
   thickness: HairThickness | null
   concerns: string[]
   products_used: string | null
@@ -68,7 +68,7 @@ export interface Product {
   price_eur: number | null
   currency: string
   tags: string[]
-  suitable_hair_types: string[]
+  suitable_hair_textures: string[]
   suitable_concerns: string[]
   is_active: boolean
   sort_order: number

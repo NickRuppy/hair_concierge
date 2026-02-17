@@ -4,7 +4,7 @@ import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
 import { Header } from "@/components/layout/header"
 import {
-  HAIR_TYPE_OPTIONS,
+  HAIR_TEXTURE_OPTIONS,
   HAIR_THICKNESS_OPTIONS,
   WASH_FREQUENCY_OPTIONS,
   HEAT_STYLING_OPTIONS,
@@ -39,11 +39,11 @@ type ProfileFieldDef = {
 
 const PROFILE_FIELDS: ProfileFieldDef[] = [
   {
-    key: "hair_type",
+    key: "hair_texture",
     label: "Haartyp",
     helpText: "Grundlage für alle Empfehlungen",
     getValue: (hp) =>
-      HAIR_TYPE_OPTIONS.find((o) => o.value === hp?.hair_type)?.label ?? null,
+      HAIR_TEXTURE_OPTIONS.find((o) => o.value === hp?.hair_texture)?.label ?? null,
   },
   {
     key: "thickness",
@@ -99,7 +99,7 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
 ]
 
 const FIELD_TO_SECTION: Record<string, string> = {
-  hair_type: "haartyp",
+  hair_texture: "haartyp",
   thickness: "haartyp",
   concerns: "probleme",
   goals: "probleme",
@@ -121,7 +121,7 @@ export default function ProfilePage() {
 
   // Edit form state
   const [formData, setFormData] = useState({
-    hair_type: "",
+    hair_texture: "",
     thickness: "",
     concerns: [] as string[],
     wash_frequency: "",
@@ -148,7 +148,7 @@ export default function ProfilePage() {
         if (data) {
           setHairProfile(data)
           setFormData({
-            hair_type: data.hair_type || "",
+            hair_texture: data.hair_texture || "",
             thickness: data.thickness || "",
             concerns: data.concerns || [],
             wash_frequency: data.wash_frequency || "",
@@ -197,7 +197,7 @@ export default function ProfilePage() {
       // Convert empty strings to null so CHECK constraints don't reject them
       const payload = {
         user_id: user.id,
-        hair_type: formData.hair_type || null,
+        hair_texture: formData.hair_texture || null,
         thickness: formData.thickness || null,
         concerns: formData.concerns,
         wash_frequency: formData.wash_frequency || null,
@@ -315,14 +315,14 @@ export default function ProfilePage() {
                     <div>
                       <label className="mb-2 block text-sm font-medium">Haartyp</label>
                       <div className="flex flex-wrap gap-2">
-                        {HAIR_TYPE_OPTIONS.map((opt) => (
+                        {HAIR_TEXTURE_OPTIONS.map((opt) => (
                           <button
                             key={opt.value}
                             onClick={() =>
-                              setFormData((f) => ({ ...f, hair_type: opt.value }))
+                              setFormData((f) => ({ ...f, hair_texture: opt.value }))
                             }
                             className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
-                              formData.hair_type === opt.value
+                              formData.hair_texture === opt.value
                                 ? "border-primary bg-primary/10 text-primary"
                                 : "hover:bg-accent"
                             }`}

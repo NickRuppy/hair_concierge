@@ -28,7 +28,7 @@ function getPersonalizationSentence(
 
   if (
     hairProfile.thickness &&
-    product.suitable_hair_types?.includes(hairProfile.thickness)
+    product.suitable_hair_textures?.includes(hairProfile.thickness)
   ) {
     const labels: Record<string, string> = {
       fine: "feines",
@@ -120,13 +120,13 @@ export function ProductDetailDrawer({
           )}
 
           {/* Hair types */}
-          {product.suitable_hair_types?.length > 0 && (
+          {product.suitable_hair_textures?.length > 0 && (
             <div>
               <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Geeignet f\u00FCr
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {product.suitable_hair_types.map((ht) => (
+                {product.suitable_hair_textures.map((ht) => (
                   <Badge key={ht} variant="outline" className="text-xs">
                     {ht}
                   </Badge>

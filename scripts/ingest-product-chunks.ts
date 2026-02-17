@@ -69,7 +69,7 @@ interface ProductInput {
   name: string
   brand?: string
   category?: string
-  suitable_hair_types?: string[]
+  suitable_hair_textures?: string[]
   suitable_concerns?: string[]
   tags?: string[]
 }
@@ -91,7 +91,7 @@ function buildChunks(allProducts: ProductInput[]): ChunkData[] {
 
   for (const product of allProducts) {
     const category = product.category || "Sonstiges"
-    const hairType = product.suitable_hair_types?.[0] || "alle"
+    const hairType = product.suitable_hair_textures?.[0] || "alle"
     const concern = product.suitable_concerns?.[0] || "allgemein"
     const key = `${category}|${hairType}|${concern}`
 

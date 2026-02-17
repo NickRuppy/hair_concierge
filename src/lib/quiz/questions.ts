@@ -8,10 +8,10 @@ export const quizQuestions: QuizQuestion[] = [
     instruction:
       "Mach eine Straehne richtig nass \u2013 sie muss tropfnass sein. Halte sie am Ansatz fest, druecke sie oben zusammen und lass los. Schau, was passiert:",
     options: [
-      { value: "glatt", label: "Glatt", description: "Es passiert nichts \u2013 die Straehne haengt einfach glatt runter", emoji: "\u3030\uFE0F" },
-      { value: "wellig", label: "Wellig", description: "Es bildet sich eine S-Kurve, aber keine richtige 3D-Windung", emoji: "\uD83C\uDF0A" },
-      { value: "lockig", label: "Lockig", description: "Die Straehne formt sich zu einer deutlichen 3D-Locke", emoji: "\uD83D\uDD04" },
-      { value: "kraus", label: "Kraus", description: "Enge Windungen, die sich zusaetzlich in sich selbst drehen", emoji: "\uD83C\uDF00" },
+      { value: "straight", label: "Glatt", description: "Es passiert nichts \u2013 die Straehne haengt einfach glatt runter", emoji: "\u3030\uFE0F" },
+      { value: "wavy", label: "Wellig", description: "Es bildet sich eine S-Kurve, aber keine richtige 3D-Windung", emoji: "\uD83C\uDF0A" },
+      { value: "curly", label: "Lockig", description: "Die Straehne formt sich zu einer deutlichen 3D-Locke", emoji: "\uD83D\uDD04" },
+      { value: "coily", label: "Kraus", description: "Enge Windungen, die sich zusaetzlich in sich selbst drehen", emoji: "\uD83C\uDF00" },
     ],
     selectionMode: "single",
     motivation: "Super, du bist gerade erst gestartet. Noch 6 kurze Fragen.",

@@ -46,11 +46,11 @@ async function enrichProduct(product: {
   brand: string | null
   category: string | null
   tags: string[]
-  suitable_hair_types: string[]
+  suitable_hair_textures: string[]
   suitable_concerns: string[]
 }): Promise<{ short_description: string; tom_take: string | null }> {
-  const hairTypes = product.suitable_hair_types?.length
-    ? product.suitable_hair_types.join(", ")
+  const hairTypes = product.suitable_hair_textures?.length
+    ? product.suitable_hair_textures.join(", ")
     : "alle Haartypen"
   const concerns = product.suitable_concerns?.length
     ? product.suitable_concerns.join(", ")
@@ -101,7 +101,7 @@ async function main() {
 
   const { data: products, error } = await supabase
     .from("products")
-    .select("id, name, brand, category, tags, suitable_hair_types, suitable_concerns")
+    .select("id, name, brand, category, tags, suitable_hair_textures, suitable_concerns")
     .is("short_description", null)
     .eq("is_active", true)
     .order("name")

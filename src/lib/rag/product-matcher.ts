@@ -13,7 +13,7 @@ export interface MatchedProduct extends Product {
  * `match_products` to find the most relevant products via pgvector.
  *
  * @param query - The search query describing what products the user needs
- * @param hairType - Optional hair type filter (e.g., "lockig", "glatt")
+ * @param hairType - Optional hair texture filter (e.g., "straight", "curly")
  * @param concerns - Optional array of concern filters (e.g., ["Trockenheit", "Spliss"])
  * @param count - Number of results to return (default 5)
  * @returns Array of matched products with similarity scores
@@ -31,7 +31,7 @@ export async function matchProducts(
     const rpcParams: Record<string, unknown> = {
       query_embedding: embedding,
       match_count: count,
-      user_hair_type: hairType ?? null,
+      user_hair_texture: hairType ?? null,
       user_concerns: concerns ?? [],
     }
 

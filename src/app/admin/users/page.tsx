@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
 import type { Profile, HairProfile } from "@/lib/types"
-import { fehler } from "@/lib/vocabulary"
+import { fehler, HAIR_TEXTURE_LABELS } from "@/lib/vocabulary"
 
 interface UserWithHairProfile extends Profile {
   hair_profiles?: HairProfile[]
@@ -42,8 +42,8 @@ export default function AdminUsersPage() {
     if (!hp) return null
 
     const parts: string[] = []
-    if (hp.hair_type) {
-      parts.push(hp.hair_type.charAt(0).toUpperCase() + hp.hair_type.slice(1))
+    if (hp.hair_texture) {
+      parts.push(HAIR_TEXTURE_LABELS[hp.hair_texture as keyof typeof HAIR_TEXTURE_LABELS] ?? hp.hair_texture)
     }
     if (hp.concerns && hp.concerns.length > 0) {
       parts.push(`${hp.concerns.length} Probleme`)

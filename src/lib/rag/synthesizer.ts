@@ -26,8 +26,8 @@ function formatUserProfile(profile: HairProfile | null, consultationMode?: boole
 
   const parts: string[] = []
 
-  if (profile.hair_type) {
-    parts.push(`Haartyp: ${profile.hair_type}`)
+  if (profile.hair_texture) {
+    parts.push(`Haartyp: ${profile.hair_texture}`)
   }
   if (profile.thickness) {
     parts.push(`Haardicke: ${profile.thickness}`)

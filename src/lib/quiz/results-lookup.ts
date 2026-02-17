@@ -2,10 +2,10 @@ import type { QuizAnswers } from "./types"
 
 // --- Card 1: Haartyp (composite label) ---
 const structureLabels: Record<string, string> = {
-  glatt: "glatte",
-  wellig: "wellige",
-  lockig: "lockige",
-  kraus: "krause",
+  straight: "glatte",
+  wavy: "wellige",
+  curly: "lockige",
+  coily: "krause",
 }
 
 const thicknessLabels: Record<string, string> = {

@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const category = searchParams.get("category")
   const search = searchParams.get("search")
-  const hairType = searchParams.get("hair_type")
+  const hairType = searchParams.get("hair_texture")
   const limit = parseInt(searchParams.get("limit") || "20")
   const offset = parseInt(searchParams.get("offset") || "0")
 
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
   }
 
   if (hairType) {
-    query = query.contains("suitable_hair_types", [hairType])
+    query = query.contains("suitable_hair_textures", [hairType])
   }
 
   const { data: products, count, error } = await query

@@ -23,7 +23,7 @@ function getPersonalizationText(
   // Hair type match
   if (
     hairProfile.thickness &&
-    product.suitable_hair_types?.includes(hairProfile.thickness)
+    product.suitable_hair_textures?.includes(hairProfile.thickness)
   ) {
     const labels: Record<string, string> = {
       fine: "feines",

@@ -187,7 +187,7 @@ export async function runPipeline(
   if (PRODUCT_INTENTS.includes(intent) && !skipProducts) {
     matchedProducts = await matchProducts(
       message,
-      hairProfile?.hair_type ?? undefined,
+      hairProfile?.hair_texture ?? undefined,
       hairProfile?.concerns ?? undefined,
       3
     )

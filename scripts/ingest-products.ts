@@ -4,8 +4,8 @@
  * Usage: npx tsx scripts/ingest-products.ts
  *
  * Expects: data/products.csv or data/products.json
- * CSV format: name,brand,description,category,affiliate_link,image_url,price_eur,tags,suitable_hair_types,suitable_concerns
- * (tags, suitable_hair_types, suitable_concerns are semicolon-separated within the field)
+ * CSV format: name,brand,description,category,affiliate_link,image_url,price_eur,tags,suitable_hair_textures,suitable_concerns
+ * (tags, suitable_hair_textures, suitable_concerns are semicolon-separated within the field)
  */
 
 import { createClient } from "@supabase/supabase-js"
@@ -51,9 +51,9 @@ const CONCERN_LABELS: Record<string, string> = {
 }
 
 const TEXTURE_ADJECTIVES: Record<string, string> = {
-  fein: "feines",
-  mittel: "mittelstarkes",
-  dick: "dickes",
+  fine: "feines",
+  normal: "mittelstarkes",
+  coarse: "dickes",
 }
 
 interface ProductInput {
@@ -65,7 +65,7 @@ interface ProductInput {
   image_url?: string
   price_eur?: number
   tags?: string[]
-  suitable_hair_types?: string[]
+  suitable_hair_textures?: string[]
   suitable_concerns?: string[]
   is_active?: boolean
   sort_order?: number
@@ -95,8 +95,8 @@ function parseCSV(content: string): ProductInput[] {
       image_url: obj.image_url || undefined,
       price_eur: obj.price_eur ? parseFloat(obj.price_eur) : undefined,
       tags: obj.tags ? obj.tags.split(";").map((t) => t.trim()).filter(Boolean) : [],
-      suitable_hair_types: obj.suitable_hair_types
-        ? obj.suitable_hair_types.split(";").map((t) => t.trim()).filter(Boolean)
+      suitable_hair_textures: obj.suitable_hair_textures
+        ? obj.suitable_hair_textures.split(";").map((t) => t.trim()).filter(Boolean)
         : [],
       suitable_concerns: obj.suitable_concerns
         ? obj.suitable_concerns.split(";").map((t) => t.trim()).filter(Boolean)
@@ -110,7 +110,7 @@ function parseCSV(content: string): ProductInput[] {
 }
 
 function generateDescription(product: ProductInput): string {
-  const hairTypes = (product.suitable_hair_types || [])
+  const hairTypes = (product.suitable_hair_textures || [])
     .map((t) => TEXTURE_ADJECTIVES[t] || t)
     .join(", ")
   const hair = hairTypes || "alle Haartypen"
@@ -198,7 +198,7 @@ async function main() {
         image_url: product.image_url || null,
         price_eur: product.price_eur || null,
         tags: product.tags || [],
-        suitable_hair_types: product.suitable_hair_types || [],
+        suitable_hair_textures: product.suitable_hair_textures || [],
         suitable_concerns: product.suitable_concerns || [],
         is_active: product.is_active ?? true,
         sort_order: product.sort_order ?? i,

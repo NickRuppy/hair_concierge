@@ -1,8 +1,8 @@
 import { z } from "zod"
-import { HAIR_TYPES, HAIR_THICKNESSES } from "@/lib/vocabulary"
+import { HAIR_TEXTURES, HAIR_THICKNESSES } from "@/lib/vocabulary"
 
 export const hairProfileFullSchema = z.object({
-  hair_type: z.enum(HAIR_TYPES).nullable(),
+  hair_texture: z.enum(HAIR_TEXTURES).nullable(),
   thickness: z.enum(HAIR_THICKNESSES).nullable(),
   concerns: z.array(z.string()).default([]),
   products_used: z.string().nullable().default(null),
@@ -28,7 +28,7 @@ export const productSchema = z.object({
   image_url: z.string().url().optional().or(z.literal("")),
   price_eur: z.number().min(0).optional(),
   tags: z.array(z.string()).default([]),
-  suitable_hair_types: z.array(z.string()).default([]),
+  suitable_hair_textures: z.array(z.string()).default([]),
   suitable_concerns: z.array(z.string()).default([]),
   is_active: z.boolean().default(true),
   sort_order: z.number().int().default(0),
