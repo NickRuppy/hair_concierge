@@ -160,6 +160,7 @@ function renderWithProductMentions(
           key={`pm-${key++}`}
           product={product}
           hairProfile={hairProfile}
+          onProductClick={onProductClick}
         >
           <button
             type="button"
