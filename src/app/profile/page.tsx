@@ -5,7 +5,7 @@ import { useToast } from "@/providers/toast-provider"
 import { Header } from "@/components/layout/header"
 import {
   HAIR_TYPE_OPTIONS,
-  HAIR_TEXTURE_OPTIONS,
+  HAIR_THICKNESS_OPTIONS,
   WASH_FREQUENCY_OPTIONS,
   HEAT_STYLING_OPTIONS,
   STYLING_TOOL_OPTIONS,
@@ -46,11 +46,11 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
       HAIR_TYPE_OPTIONS.find((o) => o.value === hp?.hair_type)?.label ?? null,
   },
   {
-    key: "hair_texture",
+    key: "thickness",
     label: "Haarstruktur",
     helpText: "Bestimmt die richtige Produktwahl",
     getValue: (hp) =>
-      HAIR_TEXTURE_OPTIONS.find((o) => o.value === hp?.hair_texture)?.label ??
+      HAIR_THICKNESS_OPTIONS.find((o) => o.value === hp?.thickness)?.label ??
       null,
   },
   {
@@ -100,7 +100,7 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
 
 const FIELD_TO_SECTION: Record<string, string> = {
   hair_type: "haartyp",
-  hair_texture: "haartyp",
+  thickness: "haartyp",
   concerns: "probleme",
   goals: "probleme",
   wash_frequency: "routine",
@@ -122,7 +122,7 @@ export default function ProfilePage() {
   // Edit form state
   const [formData, setFormData] = useState({
     hair_type: "",
-    hair_texture: "",
+    thickness: "",
     concerns: [] as string[],
     wash_frequency: "",
     heat_styling: "",
@@ -149,7 +149,7 @@ export default function ProfilePage() {
           setHairProfile(data)
           setFormData({
             hair_type: data.hair_type || "",
-            hair_texture: data.hair_texture || "",
+            thickness: data.thickness || "",
             concerns: data.concerns || [],
             wash_frequency: data.wash_frequency || "",
             heat_styling: data.heat_styling || "",
@@ -198,7 +198,7 @@ export default function ProfilePage() {
       const payload = {
         user_id: user.id,
         hair_type: formData.hair_type || null,
-        hair_texture: formData.hair_texture || null,
+        thickness: formData.thickness || null,
         concerns: formData.concerns,
         wash_frequency: formData.wash_frequency || null,
         heat_styling: formData.heat_styling || null,
@@ -337,14 +337,14 @@ export default function ProfilePage() {
                     <div>
                       <label className="mb-2 block text-sm font-medium">Haarstruktur</label>
                       <div className="flex flex-wrap gap-2">
-                        {HAIR_TEXTURE_OPTIONS.map((opt) => (
+                        {HAIR_THICKNESS_OPTIONS.map((opt) => (
                           <button
                             key={opt.value}
                             onClick={() =>
-                              setFormData((f) => ({ ...f, hair_texture: opt.value }))
+                              setFormData((f) => ({ ...f, thickness: opt.value }))
                             }
                             className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
-                              formData.hair_texture === opt.value
+                              formData.thickness === opt.value
                                 ? "border-primary bg-primary/10 text-primary"
                                 : "hover:bg-accent"
                             }`}

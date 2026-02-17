@@ -1,14 +1,14 @@
 export {
   HAIR_TYPES,
-  HAIR_TEXTURES,
+  HAIR_THICKNESSES,
   HAIR_TYPE_LABELS,
-  HAIR_TEXTURE_LABELS,
+  HAIR_THICKNESS_LABELS,
   HAIR_TYPE_OPTIONS,
-  HAIR_TEXTURE_OPTIONS,
+  HAIR_THICKNESS_OPTIONS,
   HAIR_TYPE_ADJECTIVE,
-  HAIR_TEXTURE_ADJECTIVE,
+  HAIR_THICKNESS_ADJECTIVE,
 } from "./hair-types"
-export type { HairType, HairTexture } from "./hair-types"
+export type { HairType, HairThickness } from "./hair-types"
 
 export {
   CONCERNS,

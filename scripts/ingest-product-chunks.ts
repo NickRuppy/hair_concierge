@@ -56,9 +56,9 @@ const CONCERN_LABELS: Record<string, string> = {
 }
 
 const TEXTURE_LABELS: Record<string, string> = {
-  fein: "feines Haar",
-  mittel: "mittelstarkes Haar (normale Haardicke)",
-  dick: "dickes Haar",
+  fine: "feines Haar",
+  normal: "mittelstarkes Haar (normale Haardicke)",
+  coarse: "dickes Haar",
 }
 
 // ---------------------------------------------------------------------------
@@ -130,7 +130,7 @@ function buildChunks(allProducts: ProductInput[]): ChunkData[] {
       chunkIndex: chunkIndex++,
       metadata: {
         category,
-        hair_texture: hairTexture,
+        thickness: hairTexture,
         concern,
         product_count: products.length,
         product_names: products.map((p) => p.name),

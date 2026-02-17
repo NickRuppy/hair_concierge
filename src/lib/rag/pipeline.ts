@@ -122,15 +122,15 @@ export async function runPipeline(
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
 
   // ── Step 2: Retrieve context chunks ─────────────────────────────────
-  // Only apply hair-texture metadata filter for product_recommendation intent.
+  // Only apply thickness metadata filter for product_recommendation intent.
   // Other intents (hair_care_advice, routine_help) need book/transcript chunks
-  // which don't carry hair_texture metadata — filtering would return 0 results.
+  // which don't carry thickness metadata — filtering would return 0 results.
   let metadataFilter: Record<string, string> | undefined
   if (intent === "product_recommendation") {
-    if (hairProfile?.hair_texture) {
-      metadataFilter = { hair_texture: hairProfile.hair_texture }
+    if (hairProfile?.thickness) {
+      metadataFilter = { thickness: hairProfile.thickness }
     } else if (hairProfile) {
-      console.warn(`User ${userId} has profile but missing hair_texture — skipping metadata filter`)
+      console.warn(`User ${userId} has profile but missing thickness — skipping metadata filter`)
     }
   }
   const ragChunks = await retrieveContext(message, {

@@ -1,9 +1,9 @@
 import { z } from "zod"
-import { HAIR_TYPES, HAIR_TEXTURES } from "@/lib/vocabulary"
+import { HAIR_TYPES, HAIR_THICKNESSES } from "@/lib/vocabulary"
 
 export const hairProfileFullSchema = z.object({
   hair_type: z.enum(HAIR_TYPES).nullable(),
-  hair_texture: z.enum(HAIR_TEXTURES).nullable(),
+  thickness: z.enum(HAIR_THICKNESSES).nullable(),
   concerns: z.array(z.string()).default([]),
   products_used: z.string().nullable().default(null),
   wash_frequency: z.string().nullable().default(null),

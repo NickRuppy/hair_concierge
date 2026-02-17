@@ -90,7 +90,7 @@ interface ProcessedExchange {
   metadata: {
     topics: string[]
     concerns: string[]
-    hair_texture: string | null
+    thickness: string | null
     products_mentioned: string[]
     has_photo_reference: boolean
   }
@@ -451,7 +451,7 @@ Aufgaben:
 4. METADATEN EXTRAHIEREN als JSON:
    - topics: Array von Themen-Stichworten auf Deutsch (z.B. ["Spliss", "Kolaplex", "Haarschnitt"])
    - concerns: Array aus diesen Werten wenn zutreffend: ["Haarausfall", "Schuppen", "Trockenheit", "Fettige Kopfhaut", "Haarschaeden", "Coloriert", "Spliss", "Frizz", "Duenner werdendes Haar"]
-   - hair_texture: "fein" oder "mittel" oder "dick" oder null (nur wenn explizit erwähnt oder klar ableitbar)
+   - thickness: "fine" oder "normal" oder "coarse" oder null (nur wenn explizit erwähnt oder klar ableitbar)
    - products_mentioned: Array aller erwähnten Produktnamen
    - has_photo_reference: true wenn der Austausch auf ein Foto verweist das wir nicht haben
 
@@ -463,7 +463,7 @@ Antwort EXAKT in diesem Format (jede Sektion muss vorhanden sein):
 ---ANSWER---
 [cleaned answer]
 ---METADATA---
-{"topics":[],"concerns":[],"hair_texture":null,"products_mentioned":[],"has_photo_reference":false}`
+{"topics":[],"concerns":[],"thickness":null,"products_mentioned":[],"has_photo_reference":false}`
 
 async function processExchange(
   exchange: Exchange,
@@ -513,7 +513,7 @@ function parseProcessingResponse(raw: string): ProcessedExchange | null {
   let metadata = {
     topics: [] as string[],
     concerns: [] as string[],
-    hair_texture: null as string | null,
+    thickness: null as string | null,
     products_mentioned: [] as string[],
     has_photo_reference: false,
   }
@@ -526,7 +526,7 @@ function parseProcessingResponse(raw: string): ProcessedExchange | null {
       metadata = {
         topics: Array.isArray(parsed.topics) ? parsed.topics : [],
         concerns: Array.isArray(parsed.concerns) ? parsed.concerns : [],
-        hair_texture: parsed.hair_texture || null,
+        thickness: parsed.thickness || null,
         products_mentioned: Array.isArray(parsed.products_mentioned) ? parsed.products_mentioned : [],
         has_photo_reference: Boolean(parsed.has_photo_reference),
       }

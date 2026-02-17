@@ -29,7 +29,7 @@ export interface RetrieveOptions {
 /**
  * Lightweight re-ranking: profile boost + deduplication.
  *
- * 1. Chunks whose metadata.hair_texture matches the user's hair_texture
+ * 1. Chunks whose metadata.thickness matches the user's thickness
  *    get a 1.15× multiplier on their weighted_similarity.
  * 2. Sorted by final score descending.
  * 3. Deduplicated: if >80% of a shorter chunk's text appears verbatim
@@ -44,8 +44,8 @@ function rerankChunks(
   const scored = chunks.map((chunk) => {
     let score = chunk.weighted_similarity ?? chunk.similarity ?? 0
     if (
-      hairProfile?.hair_texture &&
-      chunk.metadata?.hair_texture === hairProfile.hair_texture
+      hairProfile?.thickness &&
+      chunk.metadata?.thickness === hairProfile.thickness
     ) {
       score *= 1.15
     }

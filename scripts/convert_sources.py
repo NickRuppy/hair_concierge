@@ -706,9 +706,9 @@ def convert_single_vtt(vtt_path: Path, out_dir: Path):
 
 # Maps Excel hair labels to HairTexture enum values (fein/mittel/dick)
 HAIR_TEXTURE_MAP = {
-    "Feine Haare": "fein",
-    "Normale Haare": "mittel",
-    "Dicke Haare": "dick",
+    "Feine Haare": "fine",
+    "Normale Haare": "normal",
+    "Dicke Haare": "coarse",
 }
 
 # Display labels for hair textures in German prose
@@ -896,7 +896,7 @@ def generate_matrix_markdown(category: str, matrix: dict):
             write_md(out_dir / filename, {
                 "source_type": "product_list",
                 "category": category,
-                "hair_texture": hair_tag,
+                "thickness": hair_tag,
                 "concern": concern_tag,
                 "content_type": "Produktempfehlung",
                 "language": "de",

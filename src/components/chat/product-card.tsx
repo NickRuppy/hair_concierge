@@ -22,15 +22,15 @@ function getPersonalizationText(
 
   // Hair type match
   if (
-    hairProfile.hair_texture &&
-    product.suitable_hair_types?.includes(hairProfile.hair_texture)
+    hairProfile.thickness &&
+    product.suitable_hair_types?.includes(hairProfile.thickness)
   ) {
     const labels: Record<string, string> = {
-      fein: "feines",
-      mittel: "normales",
-      dick: "dickes",
+      fine: "feines",
+      normal: "normales",
+      coarse: "dickes",
     }
-    parts.push(`Passt zu deinem ${labels[hairProfile.hair_texture] || hairProfile.hair_texture} Haar`)
+    parts.push(`Passt zu deinem ${labels[hairProfile.thickness] || hairProfile.thickness} Haar`)
   }
 
   // Concern matches

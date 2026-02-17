@@ -29,8 +29,8 @@ function formatUserProfile(profile: HairProfile | null, consultationMode?: boole
   if (profile.hair_type) {
     parts.push(`Haartyp: ${profile.hair_type}`)
   }
-  if (profile.hair_texture) {
-    parts.push(`Haartextur: ${profile.hair_texture}`)
+  if (profile.thickness) {
+    parts.push(`Haardicke: ${profile.thickness}`)
   }
   if (profile.concerns.length > 0) {
     parts.push(`Probleme/Bedenken: ${profile.concerns.join(", ")}`)

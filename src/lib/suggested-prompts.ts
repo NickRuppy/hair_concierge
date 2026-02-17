@@ -1,9 +1,9 @@
-import type { HairProfile, HairType, HairTexture, Concern, Goal } from "@/lib/types"
+import type { HairProfile, HairType, HairThickness, Concern, Goal } from "@/lib/types"
 import {
   HAIR_TYPE_ADJECTIVE,
-  HAIR_TEXTURE_ADJECTIVE,
+  HAIR_THICKNESS_ADJECTIVE,
   HAIR_TYPE_LABELS,
-  HAIR_TEXTURE_LABELS,
+  HAIR_THICKNESS_LABELS,
 } from "@/lib/vocabulary"
 
 const FALLBACK_PROMPTS = [
@@ -18,14 +18,14 @@ const FALLBACK_PROMPTS = [
 function getTemplatePrompts(profile: HairProfile): string[] {
   const prompts: string[] = []
   const ht = profile.hair_type
-  const tx = profile.hair_texture
+  const tx = profile.thickness
 
   if (ht && tx) {
     prompts.push(
-      `Welche Pflegeroutine passt am besten zu meinem ${HAIR_TYPE_ADJECTIVE[ht]}, ${HAIR_TEXTURE_ADJECTIVE[tx]} Haar?`
+      `Welche Pflegeroutine passt am besten zu meinem ${HAIR_TYPE_ADJECTIVE[ht]}, ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar?`
     )
     prompts.push(
-      `Was sind die besten Produkte für ${HAIR_TYPE_ADJECTIVE[ht]} und ${HAIR_TEXTURE_ADJECTIVE[tx]} Haar?`
+      `Was sind die besten Produkte für ${HAIR_TYPE_ADJECTIVE[ht]} und ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar?`
     )
   }
   if (ht) {
@@ -38,7 +38,7 @@ function getTemplatePrompts(profile: HairProfile): string[] {
   }
   if (tx) {
     prompts.push(
-      `Worauf sollte ich bei ${HAIR_TEXTURE_ADJECTIVE[tx]} Haar besonders achten?`
+      `Worauf sollte ich bei ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar besonders achten?`
     )
   }
 
@@ -111,7 +111,7 @@ function matchesProfile(prompt: PoolPrompt, profile: HairProfile): boolean {
 /* ── Main export ── */
 
 export function generateSuggestedPrompts(profile: HairProfile | null): string[] {
-  if (!profile || (!profile.hair_type && !profile.hair_texture && (profile.concerns ?? []).length === 0 && (profile.goals ?? []).length === 0)) {
+  if (!profile || (!profile.hair_type && !profile.thickness && (profile.concerns ?? []).length === 0 && (profile.goals ?? []).length === 0)) {
     return FALLBACK_PROMPTS
   }
 

@@ -9,9 +9,9 @@ const structureLabels: Record<string, string> = {
 }
 
 const thicknessLabels: Record<string, string> = {
-  fein: "Feine",
-  mittel: "Mittlere",
-  dick: "Dicke",
+  fine: "Feine",
+  normal: "Mittlere",
+  coarse: "Dicke",
 }
 
 export function getHaartypLabel(answers: QuizAnswers): string {
@@ -22,9 +22,9 @@ export function getHaartypLabel(answers: QuizAnswers): string {
 
 // --- Card 2: Haarstaerke ---
 export const thicknessResults: Record<string, string> = {
-  fein: "Fein \u2013 braucht leichte, waessrige Produkte. Dicke Cremes druecken feine Haare platt, weil der Haardurchmesser zu gering ist.",
-  mittel: "Mittel \u2013 gute Basis. Du kannst sowohl leichtere als auch reichhaltigere Produkte nutzen.",
-  dick: "Dick \u2013 vertraegt reichhaltige Pflege mit hohem Oelanteil. Dickere Haare brauchen mehr Fett und Inhaltsstoffe.",
+  fine: "Fein \u2013 braucht leichte, waessrige Produkte. Dicke Cremes druecken feine Haare platt, weil der Haardurchmesser zu gering ist.",
+  normal: "Mittel \u2013 gute Basis. Du kannst sowohl leichtere als auch reichhaltigere Produkte nutzen.",
+  coarse: "Dick \u2013 vertraegt reichhaltige Pflege mit hohem Oelanteil. Dickere Haare brauchen mehr Fett und Inhaltsstoffe.",
 }
 
 // --- Card 3: Oberflaeche ---

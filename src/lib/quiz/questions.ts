@@ -23,9 +23,9 @@ export const quizQuestions: QuizQuestion[] = [
     instruction:
       "Nimm ein einzelnes Haar und halte es zwischen Daumen und Zeigefinger. Vergleiche es mit einem Naehfaden \u2013 das ist der beste Referenzpunkt.",
     options: [
-      { value: "fein", label: "Fein", description: "Kaum spuerbar \u2013 viel duenner als ein Naehfaden", emoji: "\uD83E\uDEB6" },
-      { value: "mittel", label: "Mittel", description: "Spuerbar, aber nicht grob \u2013 aehnlich wie ein Naehfaden", emoji: "\u270B" },
-      { value: "dick", label: "Dick", description: "Fuehlt sich an wie Naehgarn \u2013 deutlich spuerbar und fest", emoji: "\uD83D\uDCAA" },
+      { value: "fine", label: "Fein", description: "Kaum spuerbar \u2013 viel duenner als ein Naehfaden", emoji: "\uD83E\uDEB6" },
+      { value: "normal", label: "Mittel", description: "Spuerbar, aber nicht grob \u2013 aehnlich wie ein Naehfaden", emoji: "\u270B" },
+      { value: "coarse", label: "Dick", description: "Fuehlt sich an wie Naehgarn \u2013 deutlich spuerbar und fest", emoji: "\uD83D\uDCAA" },
     ],
     selectionMode: "single",
     motivation: "Top, schon ein gutes Stueck geschafft.",

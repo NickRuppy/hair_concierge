@@ -88,7 +88,7 @@ export async function linkQuizToProfile(
   }
 
   if (answers.structure) profileData.hair_type = answers.structure
-  if (answers.thickness) profileData.hair_texture = answers.thickness
+  if (answers.thickness) profileData.thickness = answers.thickness
   if (answers.fingertest) profileData.cuticle_condition = answers.fingertest
   if (answers.pulltest) profileData.protein_moisture_balance = answers.pulltest
 
@@ -126,7 +126,7 @@ export async function linkQuizToProfile(
   // --- Check if hair_profiles row already exists ---
   const { data: existing, error: fetchErr } = await admin
     .from("hair_profiles")
-    .select("id, hair_type, hair_texture, goals")
+    .select("id, hair_type, thickness, goals")
     .eq("user_id", userId)
     .single()
 
@@ -140,8 +140,8 @@ export async function linkQuizToProfile(
 
     if (!existing.hair_type && profileData.hair_type)
       updates.hair_type = profileData.hair_type
-    if (!existing.hair_texture && profileData.hair_texture)
-      updates.hair_texture = profileData.hair_texture
+    if (!existing.thickness && profileData.thickness)
+      updates.thickness = profileData.thickness
     if (existing.goals?.length === 0 && profileData.goals)
       updates.goals = profileData.goals
 
