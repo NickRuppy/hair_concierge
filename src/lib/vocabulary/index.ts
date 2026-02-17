@@ -61,3 +61,6 @@ export {
   ERR_INVALID_DATA,
   fehler,
 } from "./errors"
+
+export { ONBOARDING_GOALS } from "./onboarding-goals"
+export type { OnboardingGoal } from "./onboarding-goals"
