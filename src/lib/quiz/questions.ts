@@ -59,21 +59,6 @@ export const quizQuestions: QuizQuestion[] = [
     motivation: "Jetzt sind wir mitten in der Profi-Analyse.",
   },
   {
-    step: 6,
-    questionNumber: 5,
-    title: "WIE VERHAELT SICH DEINE KOPFHAUT?",
-    instruction:
-      "Sei ehrlich: Wie oft musst du wirklich waschen? Wenn nach einem Tag die Ansaetze fettig sind, ist deine Kopfhaut schnell fettend. Wenn du eine Woche ohne Waschen auskommst, ist sie eher trocken. Deine Gesichtshaut gibt dir einen guten Hinweis \u2013 oelige T-Zone deutet auf fettige Kopfhaut hin.",
-    options: [
-      { value: "fettig", label: "Schnell fettend", description: "Nach 1\u20132 Tagen sind die Ansaetze schon wieder platt und oelig", emoji: "\uD83D\uDCA7" },
-      { value: "trocken", label: "Trocken / Schuppen", description: "Spannt, juckt, trockene weisse Schuppen \u2013 Zeichen fuer gestoerte Hautbarriere", emoji: "\u2744\uFE0F" },
-      { value: "fettig_schuppen", label: "Fettig + gelbliche Schuppen", description: "Fettet schnell UND schuppt \u2013 deutet auf Hefepilz hin, braucht spezielles Shampoo", emoji: "\uD83C\uDF21\uFE0F" },
-      { value: "unauffaellig", label: "Unauffaellig", description: "Kein Jucken, keine Roetung, kein auffaelliges Fetten \u2013 alles im gruenen Bereich", emoji: "\uD83D\uDC4D" },
-    ],
-    selectionMode: "single",
-    motivation: "Nur noch 2 Fragen \u2013 du machst das super.",
-  },
-  {
     step: 7,
     questionNumber: 6,
     title: "SIND DEINE HAARE CHEMISCH BEHANDELT?",

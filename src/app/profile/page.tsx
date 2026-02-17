@@ -14,6 +14,7 @@ import {
   CUTICLE_CONDITION_LABELS,
   PROTEIN_MOISTURE_LABELS,
   SCALP_TYPE_LABELS,
+  SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
 } from "@/lib/types"
 import type { HairProfile } from "@/lib/types"
@@ -184,6 +185,7 @@ export default function ProfilePage() {
     !!hairProfile?.cuticle_condition ||
     !!hairProfile?.protein_moisture_balance ||
     !!hairProfile?.scalp_type ||
+    !!hairProfile?.scalp_condition ||
     (hairProfile?.chemical_treatment?.length ?? 0) > 0
 
   async function handleSave() {
@@ -634,10 +636,19 @@ export default function ProfilePage() {
               )}
               {hairProfile?.scalp_type && (
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Kopfhaut</span>
+                  <span className="text-sm text-muted-foreground">Kopfhauttyp</span>
                   <Badge variant="outline">
                     {SCALP_TYPE_LABELS[hairProfile.scalp_type] ??
                       hairProfile.scalp_type}
+                  </Badge>
+                </div>
+              )}
+              {hairProfile?.scalp_condition && hairProfile.scalp_condition !== "keine" && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Kopfhautbeschwerden</span>
+                  <Badge variant="outline">
+                    {SCALP_CONDITION_LABELS[hairProfile.scalp_condition] ??
+                      hairProfile.scalp_condition}
                   </Badge>
                 </div>
               )}

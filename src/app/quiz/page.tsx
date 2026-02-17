@@ -5,6 +5,7 @@ import { useQuizStore } from "@/lib/quiz/store"
 import { getQuestionByStep } from "@/lib/quiz/questions"
 import { QuizLanding } from "@/components/quiz/quiz-landing"
 import { QuizQuestion } from "@/components/quiz/quiz-question"
+import { QuizScalpQuestion } from "@/components/quiz/quiz-scalp-question"
 import { QuizLeadCapture } from "@/components/quiz/quiz-lead-capture"
 import { QuizAnalysis } from "@/components/quiz/quiz-analysis"
 import { QuizResults } from "@/components/quiz/quiz-results"
@@ -36,7 +37,10 @@ export default function QuizPage() {
     })
   }, [step])
 
-  // Screens 2-8: quiz questions
+  // Step 6: custom scalp progressive disclosure
+  if (step === 6) return <QuizScalpQuestion />
+
+  // Screens 2-8: quiz questions (except 6)
   if (step >= 2 && step <= 8) {
     const question = getQuestionByStep(step)
     if (question) return <QuizQuestion question={question} />

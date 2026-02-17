@@ -91,7 +91,30 @@ export async function linkQuizToProfile(
   if (answers.thickness) profileData.hair_texture = answers.thickness
   if (answers.fingertest) profileData.cuticle_condition = answers.fingertest
   if (answers.pulltest) profileData.protein_moisture_balance = answers.pulltest
-  if (answers.scalp) profileData.scalp_type = answers.scalp
+
+  // New split scalp fields
+  if (answers.scalp_type) {
+    profileData.scalp_type = answers.scalp_type
+  }
+  if (answers.scalp_condition) {
+    profileData.scalp_condition = answers.scalp_condition
+  }
+
+  // Backwards compat: old leads have { scalp: "fettig" } etc.
+  const legacyScalp = (answers as Record<string, unknown>).scalp as string | undefined
+  if (legacyScalp && !answers.scalp_type) {
+    if (legacyScalp === "fettig_schuppen") {
+      profileData.scalp_type = "fettig"
+      profileData.scalp_condition = "schuppen"
+    } else if (legacyScalp === "unauffaellig") {
+      profileData.scalp_type = "ausgeglichen"
+      profileData.scalp_condition = "keine"
+    } else {
+      profileData.scalp_type = legacyScalp
+      profileData.scalp_condition = "keine"
+    }
+  }
+
   if (answers.treatment) profileData.chemical_treatment = answers.treatment
 
   if (answers.goals) {
@@ -129,6 +152,8 @@ export async function linkQuizToProfile(
       updates.protein_moisture_balance = profileData.protein_moisture_balance
     if (profileData.scalp_type)
       updates.scalp_type = profileData.scalp_type
+    if (profileData.scalp_condition)
+      updates.scalp_condition = profileData.scalp_condition
     if (profileData.chemical_treatment)
       updates.chemical_treatment = profileData.chemical_treatment
 

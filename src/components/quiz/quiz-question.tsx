@@ -13,7 +13,6 @@ const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswer
   3: "thickness",
   4: "fingertest",
   5: "pulltest",
-  6: "scalp",
   7: "treatment",
   8: "goals",
 }

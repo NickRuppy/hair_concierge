@@ -55,6 +55,9 @@ function formatUserProfile(profile: HairProfile | null, consultationMode?: boole
   if (profile.scalp_type) {
     parts.push(`Kopfhaut-Typ: ${profile.scalp_type}`)
   }
+  if (profile.scalp_condition && profile.scalp_condition !== "keine") {
+    parts.push(`Kopfhaut-Beschwerden: ${profile.scalp_condition}`)
+  }
   if (profile.chemical_treatment?.length > 0) {
     parts.push(`Chemische Behandlung: ${profile.chemical_treatment.join(", ")}`)
   }

@@ -6,7 +6,8 @@ import {
   thicknessResults,
   surfaceResults,
   pullTestResults,
-  scalpResults,
+  scalpTypeResults,
+  scalpConditionResults,
   goalLabels,
   hopeText,
 } from "@/lib/quiz/results-lookup"
@@ -22,7 +23,8 @@ export function QuizResults() {
     posthog.capture("quiz_completed", {
       structure: answers.structure,
       thickness: answers.thickness,
-      scalp: answers.scalp,
+      scalp_type: answers.scalp_type,
+      scalp_condition: answers.scalp_condition,
       goals_count: (answers.goals ?? []).length,
     })
     goNext()
@@ -54,7 +56,10 @@ export function QuizResults() {
     {
       emoji: "\uD83E\uDDF4",
       title: "Kopfhaut",
-      description: scalpResults[answers.scalp ?? ""] ?? "",
+      description:
+        (scalpTypeResults[answers.scalp_type ?? ""] ?? "") +
+        (scalpConditionResults[answers.scalp_condition ?? ""] ?? "") ||
+        "Keine Angaben zur Kopfhaut.",
     },
     {
       emoji: "\uD83C\uDFAF",

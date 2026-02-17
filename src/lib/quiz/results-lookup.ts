@@ -44,13 +44,17 @@ export const pullTestResults: Record<string, string> = {
     "Dein Zugtest zeigt: Deine Haare reissen bei leichtem Zug sofort. Sie brauchen dringend Feuchtigkeit \u2013 Fettalkohole, Glycerin und feuchtigkeitsbindende Inhaltsstoffe.",
 }
 
-// --- Card 5: Kopfhaut ---
-export const scalpResults: Record<string, string> = {
-  fettig: "Deine Kopfhaut fettet schnell \u2013 du brauchst ein klares, tiefenreinigendes Shampoo. Evtl. ein Saeurepeeling als Vorreinigung.",
+// --- Card 5: Kopfhaut (type + condition) ---
+export const scalpTypeResults: Record<string, string> = {
+  fettig: "Deine Kopfhaut fettet schnell — du brauchst ein klares, tiefenreinigendes Shampoo.",
+  ausgeglichen: "Deine Kopfhaut ist ausgeglichen — keine speziellen Massnahmen beim Shampoo noetig.",
   trocken: "Deine Kopfhaut ist dehydriert. Du brauchst ein mildes Shampoo und evtl. ein Serum mit Niacinamid und Ceramiden.",
-  fettig_schuppen:
-    "Fettige Kopfhaut plus Schuppen \u2013 das deutet auf Hefepilz. Du brauchst ein therapeutisches Anti-Schuppen-Shampoo.",
-  unauffaellig: "Deine Kopfhaut ist unauffaellig \u2013 keine speziellen Massnahmen noetig.",
+}
+
+export const scalpConditionResults: Record<string, string> = {
+  keine: "",
+  schuppen: " Dazu kommen Schuppen — weisse oder gelbliche Flocken, die auf ein Ungleichgewicht hindeuten.",
+  gereizt: " Dazu kommt eine gereizte Kopfhaut — Jucken, Roetungen oder Brennen brauchen besondere Aufmerksamkeit.",
 }
 
 // --- Card 6: Ziele (display labels) ---

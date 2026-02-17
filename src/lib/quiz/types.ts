@@ -39,7 +39,8 @@ export interface QuizAnswers {
   thickness?: string
   fingertest?: string
   pulltest?: string
-  scalp?: string
+  scalp_type?: string
+  scalp_condition?: string
   treatment?: string[]
   goals?: string[]
 }

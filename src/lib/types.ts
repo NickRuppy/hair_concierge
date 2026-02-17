@@ -92,9 +92,14 @@ export const PROTEIN_MOISTURE_LABELS: Record<string, string> = {
 
 export const SCALP_TYPE_LABELS: Record<string, string> = {
   fettig: "Schnell fettend",
+  ausgeglichen: "Ausgeglichen",
   trocken: "Trocken",
-  fettig_schuppen: "Fettig + Schuppen",
-  unauffaellig: "Unauffällig",
+}
+
+export const SCALP_CONDITION_LABELS: Record<string, string> = {
+  keine: "Keine Beschwerden",
+  schuppen: "Schuppen",
+  gereizt: "Gereizte Kopfhaut",
 }
 
 export const CHEMICAL_TREATMENT_LABELS: Record<string, string> = {
@@ -139,6 +144,7 @@ export interface HairProfile {
   cuticle_condition: string | null
   protein_moisture_balance: string | null
   scalp_type: string | null
+  scalp_condition: string | null
   chemical_treatment: string[]
   additional_notes: string | null
   conversation_memory: string | null
