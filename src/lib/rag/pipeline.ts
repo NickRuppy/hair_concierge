@@ -4,10 +4,11 @@ import { classifyIntent } from "@/lib/rag/intent-classifier"
 import { retrieveContext } from "@/lib/rag/retriever"
 import { matchProducts } from "@/lib/rag/product-matcher"
 import { synthesizeResponse } from "@/lib/rag/synthesizer"
+import { mapScalpToConcernCode } from "@/lib/rag/scalp-mapper"
 import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
 import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
-import type { IntentType, Message, HairProfile, Product, CitationSource } from "@/lib/types"
+import type { IntentType, Message, HairProfile, Product, CitationSource, ProductCategory } from "@/lib/types"
 
 export interface PipelineParams {
   message: string
@@ -83,7 +84,7 @@ function isRichContext(message: string): boolean {
  * Orchestrates the full RAG pipeline for a single user turn:
  *
  * Step 0: If an image is attached, analyze it with the vision model.
- * Step 1: Classify the user's intent.
+ * Step 1: Classify the user's intent (with product category).
  * Step 2: Retrieve relevant knowledge chunks via embedding + pgvector search.
  * Step 3: Load the user's hair profile and last 10 conversation messages.
  * Step 4: If the intent calls for it, match relevant products.
@@ -111,7 +112,7 @@ export async function runPipeline(
   }
 
   // ── Step 1: Classify intent + load hair profile (parallel) ─────────
-  const [intent, hairProfileResult] = await Promise.all([
+  const [classification, hairProfileResult] = await Promise.all([
     classifyIntent(message, !!imageUrl),
     supabase
       .from("hair_profiles")
@@ -119,16 +120,24 @@ export async function runPipeline(
       .eq("user_id", userId)
       .single(),
   ])
+  const { intent, product_category } = classification
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
 
+  // Pre-compute scalp concern code once (used in both retrieval and product matching)
+  const scalpConcern = product_category === "shampoo"
+    ? mapScalpToConcernCode(hairProfile?.scalp_type, hairProfile?.scalp_condition)
+    : null
+
   // ── Step 2: Retrieve context chunks ─────────────────────────────────
-  // Only apply thickness metadata filter for product_recommendation intent.
-  // Other intents (hair_care_advice, routine_help) need book/transcript chunks
-  // which don't carry thickness metadata — filtering would return 0 results.
+  // Build metadata filter based on intent and category
   let metadataFilter: Record<string, string> | undefined
   if (intent === "product_recommendation") {
     if (hairProfile?.thickness) {
       metadataFilter = { thickness: hairProfile.thickness }
+      // For shampoo: also filter by scalp concern
+      if (scalpConcern) {
+        metadataFilter.concern = scalpConcern
+      }
     } else if (hairProfile) {
       console.warn(`User ${userId} has profile but missing thickness — skipping metadata filter`)
     }
@@ -185,12 +194,24 @@ export async function runPipeline(
   const skipProducts = shouldSkipProductMatching(message, conversationHistory, !!imageUrl, intent)
   let matchedProducts = undefined
   if (PRODUCT_INTENTS.includes(intent) && !skipProducts) {
-    matchedProducts = await matchProducts(
-      message,
-      hairProfile?.hair_texture ?? undefined,
-      hairProfile?.concerns ?? undefined,
-      3
-    )
+    if (product_category === "shampoo") {
+      // Shampoo-specific: pre-filter by category + score by thickness & scalp concern
+      matchedProducts = await matchProducts({
+        query: message,
+        thickness: hairProfile?.thickness ?? undefined,
+        concerns: scalpConcern ? [scalpConcern] : [],
+        category: "shampoo",
+        count: 3,
+      })
+    } else {
+      // Generic: pass thickness for scoring, no category filter
+      matchedProducts = await matchProducts({
+        query: message,
+        thickness: hairProfile?.thickness ?? undefined,
+        concerns: [],
+        count: 3,
+      })
+    }
   }
 
   // ── Step 5: Synthesize streaming response ───────────────────────────
@@ -203,6 +224,7 @@ export async function runPipeline(
     imageAnalysis,
     products: matchedProducts,
     intent,
+    productCategory: product_category,
     consultationMode: PRODUCT_INTENTS.includes(intent) && isFirstMessage && !isRichContext(message),
   })
 

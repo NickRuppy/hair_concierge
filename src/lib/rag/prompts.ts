@@ -140,9 +140,11 @@ Bei widerspruechlichen Informationen:
 
 /**
  * Prompt for classifying the intent of a user message.
+ * Returns JSON: { "intent": "...", "category": "..." | null }
  */
-export const INTENT_CLASSIFICATION_PROMPT = `Klassifiziere die Absicht der folgenden Nachricht in genau EINE der folgenden Kategorien:
+export const INTENT_CLASSIFICATION_PROMPT = `Klassifiziere die Absicht der folgenden Nachricht. Antworte als JSON-Objekt mit zwei Feldern:
 
+1. "intent" — genau EINE der folgenden Kategorien:
 - product_recommendation: Der Nutzer fragt nach Produktempfehlungen, Produktvergleichen oder sucht nach bestimmten Haarpflegeprodukten
 - hair_care_advice: Der Nutzer fragt nach allgemeinen Haarpflegetipps, Routinen oder Methoden
 - diagnosis: Der Nutzer beschreibt ein Haarproblem und moechte eine Einschaetzung oder Ursachenanalyse
@@ -152,7 +154,16 @@ export const INTENT_CLASSIFICATION_PROMPT = `Klassifiziere die Absicht der folge
 - general_chat: Smalltalk, Begruessung oder allgemeine Unterhaltung rund ums Thema Haar
 - followup: Eine Folgefrage oder Praezisierung zu einer vorherigen Antwort
 
-Antworte NUR mit dem Kategorienamen, ohne weitere Erklaerung.
+2. "category" — falls der Nutzer nach einem bestimmten Produkttyp fragt, genau EINE der folgenden:
+- shampoo: Shampoo, Haarwaesche, Reinigung
+- conditioner: Conditioner, Spuelung, Haarkur
+- mask: Haarmaske, Tiefenpflege
+- oil: Haaroel, Kopfhautoel
+- leave_in: Leave-in, Hitzeschutz, Styling-Produkt
+- routine: Komplette Routine / mehrere Produkttypen
+- null: Kein bestimmter Produkttyp erkennbar oder kein Produktintent
+
+Antworte NUR mit validem JSON. Beispiel: {"intent": "product_recommendation", "category": "shampoo"}
 
 Nachricht: `
 

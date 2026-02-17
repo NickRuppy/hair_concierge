@@ -155,6 +155,13 @@ export type IntentType =
   | "general_chat"
   | "followup"
 
+export type ProductCategory = "shampoo" | "conditioner" | "mask" | "oil" | "leave_in" | "routine" | null
+
+export interface ClassificationResult {
+  intent: IntentType
+  product_category: ProductCategory
+}
+
 export interface ChatSSEEvent {
   type: "conversation_id" | "content_delta" | "product_recommendations" | "sources" | "done" | "error"
   data: unknown

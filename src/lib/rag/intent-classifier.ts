@@ -1,6 +1,6 @@
 import { getOpenAI } from "@/lib/openai/client"
 import { INTENT_CLASSIFICATION_PROMPT } from "@/lib/rag/prompts"
-import type { IntentType } from "@/lib/types"
+import type { IntentType, ClassificationResult, ProductCategory } from "@/lib/types"
 
 const VALID_INTENTS: IntentType[] = [
   "product_recommendation",
@@ -13,20 +13,30 @@ const VALID_INTENTS: IntentType[] = [
   "followup",
 ]
 
+const VALID_CATEGORIES: ProductCategory[] = [
+  "shampoo",
+  "conditioner",
+  "mask",
+  "oil",
+  "leave_in",
+  "routine",
+]
+
 /**
  * Classifies the intent of a user message using GPT-4o.
+ * Returns both the intent type and an optional product category.
  *
  * @param message - The user's message text
  * @param hasImage - Whether the message includes an uploaded image
- * @returns The classified intent type
+ * @returns The classified intent and product category
  */
 export async function classifyIntent(
   message: string,
   hasImage: boolean
-): Promise<IntentType> {
+): Promise<ClassificationResult> {
   // If an image is present, override to photo_analysis
   if (hasImage) {
-    return "photo_analysis"
+    return { intent: "photo_analysis", product_category: null }
   }
 
   try {
@@ -38,17 +48,21 @@ export async function classifyIntent(
           content: `${INTENT_CLASSIFICATION_PROMPT}${message}`,
         },
       ],
+      response_format: { type: "json_object" },
       temperature: 0,
-      max_tokens: 30,
+      max_tokens: 80,
     })
 
-    const raw = response.choices[0]?.message?.content?.trim().toLowerCase() ?? ""
+    const raw = response.choices[0]?.message?.content?.trim() ?? ""
 
-    // Validate the returned intent is one of our known types
-    const intent = VALID_INTENTS.find((valid) => raw === valid)
-    return intent ?? "general_chat"
+    const parsed = JSON.parse(raw) as { intent?: string; category?: string | null }
+
+    const intent = VALID_INTENTS.find((v) => v === parsed.intent) ?? "general_chat"
+    const category = VALID_CATEGORIES.find((v) => v === parsed.category) ?? null
+
+    return { intent, product_category: category }
   } catch (error) {
     console.error("Intent classification failed, defaulting to general_chat:", error)
-    return "general_chat"
+    return { intent: "general_chat", product_category: null }
   }
 }

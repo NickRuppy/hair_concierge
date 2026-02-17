@@ -1,7 +1,7 @@
 import { streamChatCompletion } from "@/lib/openai/chat"
 import { SYSTEM_PROMPT } from "@/lib/rag/prompts"
 import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
-import type { Message, HairProfile, IntentType, Product, ContentChunk } from "@/lib/types"
+import type { Message, HairProfile, IntentType, Product, ContentChunk, ProductCategory } from "@/lib/types"
 import type OpenAI from "openai"
 
 export interface SynthesizeParams {
@@ -12,6 +12,7 @@ export interface SynthesizeParams {
   imageAnalysis?: string
   products?: Product[]
   intent: IntentType
+  productCategory?: ProductCategory
   consultationMode?: boolean
 }
 
@@ -104,10 +105,15 @@ function formatRagContext(chunks: ContentChunk[]): string {
     .join("\n\n")
 }
 
+/** Category-specific product section headers */
+const PRODUCT_SECTION_HEADERS: Record<string, string> = {
+  shampoo: "Passende Shampoos aus unserer Datenbank",
+}
+
 /**
  * Formats matched products into a context block for the system prompt.
  */
-function formatProducts(products: Product[]): string {
+function formatProducts(products: Product[], productCategory?: ProductCategory): string {
   if (products.length === 0) {
     return "\n\nKeine passenden Produkte in der Datenbank gefunden. Nenne KEINE konkreten Produktnamen — sage dem Nutzer ehrlich, dass du gerade kein passendes Produkt parat hast, und bitte um genauere Angaben."
   }
@@ -124,7 +130,20 @@ function formatProducts(products: Product[]): string {
     })
     .join("\n")
 
-  return `\n\nPassende Produkte aus unserer Datenbank:\n${productList}\n\nWICHTIG: Verwende die EXAKTEN Produktnamen (wie oben geschrieben) wenn du sie erwaehst — die Namen werden in der App als klickbare Links dargestellt.`
+  const header = (productCategory && PRODUCT_SECTION_HEADERS[productCategory])
+    ?? "Passende Produkte aus unserer Datenbank"
+
+  return `\n\n${header}:\n${productList}\n\nWICHTIG: Verwende die EXAKTEN Produktnamen (wie oben geschrieben) wenn du sie erwaehst — die Namen werden in der App als klickbare Links dargestellt.`
+}
+
+/** Category-specific reasoning instructions injected into the system prompt */
+const CATEGORY_REASONING_PROMPTS: Record<string, string> = {
+  shampoo: `
+
+## Shampoo-Empfehlungen:
+Wenn du Shampoo-Empfehlungen gibst:
+1. Erklaere ZUERST, welche Shampoo-Eigenschaften ideal fuer dieses Nutzerprofil sind (z.B. Kopfhauttyp, Haardicke). Beschreibe die ideale Shampoo-Art in 1-2 Saetzen.
+2. Empfehle DANN konkrete Produkte und erklaere WARUM jedes Produkt zu diesem Profil passt. Nenne Preis-Leistungs-Optionen und Premium-Alternativen, wenn verfuegbar.`,
 }
 
 /**
@@ -135,15 +154,21 @@ function buildSystemPrompt(
   ragChunks: ContentChunk[],
   imageAnalysis?: string,
   products?: Product[],
-  consultationMode?: boolean
+  consultationMode?: boolean,
+  productCategory?: ProductCategory
 ): string {
   let prompt = SYSTEM_PROMPT
+
+  // Inject category-specific reasoning instructions
+  if (productCategory && CATEGORY_REASONING_PROMPTS[productCategory]) {
+    prompt += CATEGORY_REASONING_PROMPTS[productCategory]
+  }
 
   prompt = prompt.replace("{{USER_PROFILE}}", formatUserProfile(hairProfile, consultationMode))
 
   let ragContext = formatRagContext(ragChunks)
   if (products) {
-    ragContext += formatProducts(products)
+    ragContext += formatProducts(products, productCategory)
   }
   prompt = prompt.replace("{{RAG_CONTEXT}}", ragContext)
 
@@ -175,6 +200,7 @@ export async function synthesizeResponse(
     ragChunks,
     imageAnalysis,
     products,
+    productCategory,
     consultationMode,
   } = params
 
@@ -183,7 +209,8 @@ export async function synthesizeResponse(
     ragChunks,
     imageAnalysis,
     products,
-    consultationMode
+    consultationMode,
+    productCategory
   )
 
   // Build the messages array for the API call
