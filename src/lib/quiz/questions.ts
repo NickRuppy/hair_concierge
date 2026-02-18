@@ -51,9 +51,9 @@ export const quizQuestions: QuizQuestion[] = [
     instruction:
       "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefuehl, nicht reissen. Beobachte genau, was passiert:",
     options: [
-      { value: "elastisch", label: "Dehnt sich und geht zurueck", description: "Es gibt nach, federt aber in den Ursprungszustand zurueck \u2013 dein Haar ist gut balanciert", emoji: "\uD83C\uDFAF" },
-      { value: "ueberdehnt", label: "Dehnt sich, bleibt ausgeleiert", description: "Es gibt nach, kommt aber nicht mehr zurueck \u2013 wie ein ausgeleiertes Gummiband. Zeichen fuer Proteinmangel", emoji: "\uD83D\uDCCF" },
-      { value: "bricht", label: "Reisst sofort", description: "Es bricht bei leichtem Zug direkt ab \u2013 kaum Dehnung moeglich. Zeichen fuer Feuchtigkeitsmangel", emoji: "\u26A1" },
+      { value: "stretches_bounces", label: "Dehnt sich und geht zurueck", description: "Es gibt nach, federt aber in den Ursprungszustand zurueck \u2013 dein Haar ist gut balanciert", emoji: "\uD83C\uDFAF" },
+      { value: "stretches_stays", label: "Dehnt sich, bleibt ausgeleiert", description: "Es gibt nach, kommt aber nicht mehr zurueck \u2013 wie ein ausgeleiertes Gummiband. Zeichen fuer Proteinmangel", emoji: "\uD83D\uDCCF" },
+      { value: "snaps", label: "Reisst sofort", description: "Es bricht bei leichtem Zug direkt ab \u2013 kaum Dehnung moeglich. Zeichen fuer Feuchtigkeitsmangel", emoji: "\u26A1" },
     ],
     selectionMode: "single",
     motivation: "Jetzt sind wir mitten in der Profi-Analyse.",

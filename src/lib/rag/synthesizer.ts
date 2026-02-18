@@ -108,6 +108,7 @@ function formatRagContext(chunks: ContentChunk[]): string {
 /** Category-specific product section headers */
 const PRODUCT_SECTION_HEADERS: Record<string, string> = {
   shampoo: "Passende Shampoos aus unserer Datenbank",
+  conditioner: "Passende Conditioner aus unserer Datenbank",
 }
 
 /**
@@ -144,6 +145,12 @@ const CATEGORY_REASONING_PROMPTS: Record<string, string> = {
 Wenn du Shampoo-Empfehlungen gibst:
 1. Erklaere ZUERST, welche Shampoo-Eigenschaften ideal fuer dieses Nutzerprofil sind (z.B. Kopfhauttyp, Haardicke). Beschreibe die ideale Shampoo-Art in 1-2 Saetzen.
 2. Empfehle DANN konkrete Produkte und erklaere WARUM jedes Produkt zu diesem Profil passt. Nenne Preis-Leistungs-Optionen und Premium-Alternativen, wenn verfuegbar.`,
+  conditioner: `
+
+## Conditioner-Empfehlungen:
+Wenn du Conditioner-Empfehlungen gibst:
+1. Erklaere ZUERST den Protein-Feuchtigkeits-Status des Nutzers basierend auf dem Zugtest-Ergebnis im Profil. Beschreibe, was das Haar gerade braucht (Protein, Feuchtigkeit, oder ausgewogene Pflege) in 1-2 Saetzen.
+2. Empfehle DANN konkrete Produkte und erklaere WARUM jedes Produkt zu diesem Bedarf und der Haardicke passt.`,
 }
 
 /**

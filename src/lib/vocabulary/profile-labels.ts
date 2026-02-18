@@ -11,13 +11,13 @@ export const CUTICLE_CONDITION_LABELS: Record<string, string> = {
 
 /* ── Protein-moisture balance ── */
 
-export const PROTEIN_MOISTURE_LEVELS = ["elastisch", "ueberdehnt", "bricht"] as const
+export const PROTEIN_MOISTURE_LEVELS = ["snaps", "stretches_bounces", "stretches_stays"] as const
 export type ProteinMoistureBalance = (typeof PROTEIN_MOISTURE_LEVELS)[number]
 
 export const PROTEIN_MOISTURE_LABELS: Record<string, string> = {
-  elastisch: "Ausgewogen",
-  ueberdehnt: "Proteinmangel",
-  bricht: "Feuchtigkeitsmangel",
+  snaps: "Feuchtigkeitsmangel",
+  stretches_bounces: "Ausgewogen",
+  stretches_stays: "Proteinmangel",
 } satisfies Record<ProteinMoistureBalance, string>
 
 /* ── Scalp type ── */

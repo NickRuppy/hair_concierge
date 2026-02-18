@@ -68,10 +68,10 @@ export async function POST(request: Request) {
         ],
       })
 
-      insight = completion.choices[0]?.message?.content?.trim() ?? ahaFallback[pulltest] ?? ahaFallback.elastisch!
+      insight = completion.choices[0]?.message?.content?.trim() ?? ahaFallback[pulltest] ?? ahaFallback.stretches_bounces!
     } catch {
       // Fallback to static text
-      insight = ahaFallback[pulltest] ?? ahaFallback.elastisch!
+      insight = ahaFallback[pulltest] ?? ahaFallback.stretches_bounces!
     }
 
     // Cache insight in leads table

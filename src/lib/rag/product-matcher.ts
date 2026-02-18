@@ -9,6 +9,7 @@ export interface MatchedProduct extends Product {
 /** Maps ProductCategory → DB category column values */
 const CATEGORY_DB_MAP: Record<string, string[]> = {
   shampoo: ["Shampoo", "Shampoo Profi"],
+  conditioner: ["Conditioner", "Conditioner Profi"],
 }
 
 export interface ProductMatchParams {

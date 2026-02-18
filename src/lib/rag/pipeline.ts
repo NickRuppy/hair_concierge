@@ -5,6 +5,7 @@ import { retrieveContext } from "@/lib/rag/retriever"
 import { matchProducts } from "@/lib/rag/product-matcher"
 import { synthesizeResponse } from "@/lib/rag/synthesizer"
 import { mapScalpToConcernCode } from "@/lib/rag/scalp-mapper"
+import { mapProteinMoistureToConcernCode } from "@/lib/rag/conditioner-mapper"
 import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
 import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
@@ -128,6 +129,11 @@ export async function runPipeline(
     ? mapScalpToConcernCode(hairProfile?.scalp_type, hairProfile?.scalp_condition)
     : null
 
+  // Pre-compute conditioner concern code (protein/moisture balance)
+  const conditionerConcern = product_category === "conditioner"
+    ? mapProteinMoistureToConcernCode(hairProfile?.protein_moisture_balance)
+    : null
+
   // ── Step 2: Retrieve context chunks ─────────────────────────────────
   // Build metadata filter based on intent and category
   let metadataFilter: Record<string, string> | undefined
@@ -137,6 +143,10 @@ export async function runPipeline(
       // For shampoo: also filter by scalp concern
       if (scalpConcern) {
         metadataFilter.concern = scalpConcern
+      }
+      // For conditioner: filter by protein/moisture concern
+      if (conditionerConcern) {
+        metadataFilter.concern = conditionerConcern
       }
     } else if (hairProfile) {
       console.warn(`User ${userId} has profile but missing thickness — skipping metadata filter`)
@@ -201,6 +211,15 @@ export async function runPipeline(
         thickness: hairProfile?.thickness ?? undefined,
         concerns: scalpConcern ? [scalpConcern] : [],
         category: "shampoo",
+        count: 3,
+      })
+    } else if (product_category === "conditioner") {
+      // Conditioner-specific: pre-filter by category + score by thickness & protein/moisture concern
+      matchedProducts = await matchProducts({
+        query: message,
+        thickness: hairProfile?.thickness ?? undefined,
+        concerns: conditionerConcern ? [conditionerConcern] : [],
+        category: "conditioner",
         count: 3,
       })
     } else {

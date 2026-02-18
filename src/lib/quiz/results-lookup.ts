@@ -36,11 +36,11 @@ export const surfaceResults: Record<string, string> = {
 
 // --- Card 4: Protein vs. Feuchtigkeit ---
 export const pullTestResults: Record<string, string> = {
-  elastisch:
+  stretches_bounces:
     "Dein Zugtest zeigt: Dein Haar dehnt sich und federt zurueck \u2013 die Balance stimmt. Du brauchst gute Basispflege, keinen speziellen Repair-Conditioner.",
-  ueberdehnt:
+  stretches_stays:
     "Dein Zugtest zeigt: Deine Haare sind ueberdehnt und gehen nicht zurueck. Das Protein hat nicht mehr genug Spannkraft. Du brauchst einen Protein-Conditioner als Hauptprodukt.",
-  bricht:
+  snaps:
     "Dein Zugtest zeigt: Deine Haare reissen bei leichtem Zug sofort. Sie brauchen dringend Feuchtigkeit \u2013 Fettalkohole, Glycerin und feuchtigkeitsbindende Inhaltsstoffe.",
 }
 
@@ -70,11 +70,11 @@ export const goalLabels: Record<string, string> = {
 
 // --- Aha-Moment fallback ---
 export const ahaFallback: Record<string, string> = {
-  elastisch:
+  stretches_bounces:
     "Deine Balance stimmt \u2013 aber mit der richtigen Reihenfolge (Shampoo, Maske, dann Conditioner) holst du noch deutlich mehr raus.",
-  ueberdehnt:
+  stretches_stays:
     "Wahrscheinlich gibst du deinen Haaren gerade vor allem Feuchtigkeit. Aber dein Zugtest zeigt: Dir fehlt Protein. Deshalb fuehlen sich deine Haare nie richtig stabil an.",
-  bricht:
+  snaps:
     "Wahrscheinlich setzt du auf Repair-Produkte. Aber dein Zugtest zeigt: Dir fehlt Feuchtigkeit und Fett. Deshalb werden sie immer sproeder statt weicher.",
 }
 
