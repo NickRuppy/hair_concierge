@@ -13,21 +13,21 @@ const SCALP_TYPES = [
     value: "fettig",
     label: "Fettig",
     description:
-      "Deine Kopfhaut produziert schnell Talg — die Ansaetze werden schon nach 1-2 Tagen oelig.",
+      "Ansaetze werden nach 1-2 Tagen oelig",
     emoji: "\uD83D\uDCA7",
   },
   {
     value: "ausgeglichen",
     label: "Ausgeglichen",
     description:
-      "Weder besonders fettig noch trocken — kommt gut mit 2-3 Tagen ohne Waschen klar.",
+      "Kommt gut 2-3 Tage ohne Waschen klar",
     emoji: "\uD83D\uDC4D",
   },
   {
     value: "trocken",
     label: "Trocken",
     description:
-      "Spannt gelegentlich, fuehlt sich manchmal rau an. Kann laenger ohne Waschen auskommen.",
+      "Spannt gelegentlich, fuehlt sich rau an",
     emoji: "\u2744\uFE0F",
   },
 ]
@@ -37,14 +37,14 @@ const SCALP_CONDITIONS = [
     value: "schuppen",
     label: "Schuppen",
     description:
-      "Weisse oder gelbliche Flocken, die sich regelmaessig loesen.",
+      "Weisse oder gelbliche Flocken",
     emoji: "\uD83C\uDF21\uFE0F",
   },
   {
     value: "gereizt",
     label: "Gereizte Kopfhaut",
     description:
-      "Jucken, Roetungen oder Brennen — deine Kopfhaut meldet sich regelmaessig.",
+      "Jucken, Roetungen oder Brennen",
     emoji: "\uD83D\uDD25",
   },
 ]

@@ -8,10 +8,10 @@ export const quizQuestions: QuizQuestion[] = [
     instruction:
       "Mach eine Straehne richtig nass \u2013 sie muss tropfnass sein. Halte sie am Ansatz fest, druecke sie oben zusammen und lass los. Schau, was passiert:",
     options: [
-      { value: "straight", label: "Glatt", description: "Es passiert nichts \u2013 die Straehne haengt einfach glatt runter", emoji: "\u3030\uFE0F" },
-      { value: "wavy", label: "Wellig", description: "Es bildet sich eine S-Kurve, aber keine richtige 3D-Windung", emoji: "\uD83C\uDF0A" },
-      { value: "curly", label: "Lockig", description: "Die Straehne formt sich zu einer deutlichen 3D-Locke", emoji: "\uD83D\uDD04" },
-      { value: "coily", label: "Kraus", description: "Enge Windungen, die sich zusaetzlich in sich selbst drehen", emoji: "\uD83C\uDF00" },
+      { value: "straight", label: "Glatt", description: "Die Straehne haengt glatt runter", emoji: "\u3030\uFE0F" },
+      { value: "wavy", label: "Wellig", description: "Bildet eine S-Kurve, keine 3D-Windung", emoji: "\uD83C\uDF0A" },
+      { value: "curly", label: "Lockig", description: "Formt sich zu einer deutlichen 3D-Locke", emoji: "\uD83D\uDD04" },
+      { value: "coily", label: "Kraus", description: "Enge Windungen, die sich in sich selbst drehen", emoji: "\uD83C\uDF00" },
     ],
     selectionMode: "single",
     motivation: "Super, du bist gerade erst gestartet. Noch 6 kurze Fragen.",
@@ -23,9 +23,9 @@ export const quizQuestions: QuizQuestion[] = [
     instruction:
       "Nimm ein einzelnes Haar und halte es zwischen Daumen und Zeigefinger. Vergleiche es mit einem Naehfaden \u2013 das ist der beste Referenzpunkt.",
     options: [
-      { value: "fine", label: "Fein", description: "Kaum spuerbar \u2013 viel duenner als ein Naehfaden", emoji: "\uD83E\uDEB6" },
-      { value: "normal", label: "Mittel", description: "Spuerbar, aber nicht grob \u2013 aehnlich wie ein Naehfaden", emoji: "\u270B" },
-      { value: "coarse", label: "Dick", description: "Fuehlt sich an wie Naehgarn \u2013 deutlich spuerbar und fest", emoji: "\uD83D\uDCAA" },
+      { value: "fine", label: "Fein", description: "Kaum spuerbar \u2013 duenner als ein Naehfaden", emoji: "\uD83E\uDEB6" },
+      { value: "normal", label: "Mittel", description: "Spuerbar \u2013 aehnlich wie ein Naehfaden", emoji: "\u270B" },
+      { value: "coarse", label: "Dick", description: "Deutlich spuerbar \u2013 dicker als ein Naehfaden", emoji: "\uD83D\uDCAA" },
     ],
     selectionMode: "single",
     motivation: "Top, schon ein gutes Stueck geschafft.",
@@ -37,9 +37,9 @@ export const quizQuestions: QuizQuestion[] = [
     instruction:
       "Nimm ein gewaschenes, trockenes Haar aus deiner Buerste \u2013 es darf kein Produkt mehr drauf sein. Schliesse die Augen und fahre ganz langsam mit zwei Fingern von der Wurzel zur Spitze. Konzentrier dich darauf, was du fuehlst:",
     options: [
-      { value: "glatt", label: "Glatt wie Glas", description: "Keine Unebenheiten \u2013 die Finger gleiten gleichmaessig durch", emoji: "\u2728" },
-      { value: "leicht_uneben", label: "Leicht uneben", description: "Kleine Huegel spuerbar, aber nicht durchgehend rau", emoji: "\u303D\uFE0F" },
-      { value: "rau", label: "Richtig rau und huckelig", description: "Deutliche Hoehen und Tiefen \u2013 die Oberflaeche fuehlt sich kaputt an", emoji: "\uD83C\uDFD4\uFE0F" },
+      { value: "glatt", label: "Glatt wie Glas", description: "Die Finger gleiten gleichmaessig durch", emoji: "\u2728" },
+      { value: "leicht_uneben", label: "Leicht uneben", description: "Kleine Huegel spuerbar, nicht durchgehend", emoji: "\u303D\uFE0F" },
+      { value: "rau", label: "Richtig rau und huckelig", description: "Durchgehend rau und uneben", emoji: "\uD83C\uDFD4\uFE0F" },
     ],
     selectionMode: "single",
     motivation: "Klasse \u2013 du hilfst TomBot, deine Haare richtig einzuschaetzen.",
@@ -51,9 +51,9 @@ export const quizQuestions: QuizQuestion[] = [
     instruction:
       "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefuehl, nicht reissen. Beobachte genau, was passiert:",
     options: [
-      { value: "stretches_bounces", label: "Dehnt sich und geht zurueck", description: "Es gibt nach, federt aber in den Ursprungszustand zurueck \u2013 dein Haar ist gut balanciert", emoji: "\uD83C\uDFAF" },
-      { value: "stretches_stays", label: "Dehnt sich, bleibt ausgeleiert", description: "Es gibt nach, kommt aber nicht mehr zurueck \u2013 wie ein ausgeleiertes Gummiband. Zeichen fuer Proteinmangel", emoji: "\uD83D\uDCCF" },
-      { value: "snaps", label: "Reisst sofort", description: "Es bricht bei leichtem Zug direkt ab \u2013 kaum Dehnung moeglich. Zeichen fuer Feuchtigkeitsmangel", emoji: "\u26A1" },
+      { value: "stretches_bounces", label: "Dehnt sich und geht zurueck", description: "Federt in den Ursprungszustand zurueck", emoji: "\uD83C\uDFAF" },
+      { value: "stretches_stays", label: "Dehnt sich, bleibt ausgeleiert", description: "Kommt nicht mehr zurueck \u2013 bleibt laenglich", emoji: "\uD83D\uDCCF" },
+      { value: "snaps", label: "Reisst sofort", description: "Bricht bei leichtem Zug direkt ab", emoji: "\u26A1" },
     ],
     selectionMode: "single",
     motivation: "Jetzt sind wir mitten in der Profi-Analyse.",
