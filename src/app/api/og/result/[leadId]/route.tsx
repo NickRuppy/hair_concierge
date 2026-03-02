@@ -7,20 +7,8 @@ export const runtime = "edge"
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
-// Pre-load fonts at module level via import.meta.url — bundled into the Edge function at build time
-const bebasFont = fetch(
-  new URL("../../../../../../public/fonts/BebasNeue-Regular.ttf", import.meta.url)
-).then((r) => r.arrayBuffer())
-const montserratFont = fetch(
-  new URL("../../../../../../public/fonts/Montserrat-Regular.ttf", import.meta.url)
-).then((r) => r.arrayBuffer())
-const montserratBoldFont = fetch(
-  new URL("../../../../../../public/fonts/Montserrat-Bold.ttf", import.meta.url)
-).then((r) => r.arrayBuffer())
-
-
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ leadId: string }> }
 ) {
   const { leadId } = await params
@@ -50,11 +38,11 @@ export async function GET(
   const name = (lead.name as string).toUpperCase()
   const quote = (lead.share_quote as string) || "Deine Haare verdienen die richtige Pflege."
 
-  // Await pre-loaded fonts (bundled at build time, no network round-trip)
-  const [bebasData, montserratData, montserratBoldData] = await Promise.all([
-    bebasFont,
-    montserratFont,
-    montserratBoldFont,
+  // Load fonts from public/ at runtime (kept out of bundle to stay under 1 MB Edge limit)
+  const origin = new URL(request.url).origin
+  const [bebasData, montserratData] = await Promise.all([
+    fetch(`${origin}/fonts/BebasNeue-Regular.ttf`).then((r) => r.arrayBuffer()),
+    fetch(`${origin}/fonts/Montserrat-Regular.ttf`).then((r) => r.arrayBuffer()),
   ])
 
   // Pick top 4 cards (skip Ziele — too verbose for image)
@@ -253,7 +241,6 @@ export async function GET(
       fonts: [
         { name: "Bebas Neue", data: bebasData, style: "normal", weight: 400 },
         { name: "Montserrat", data: montserratData, style: "normal", weight: 400 },
-        { name: "Montserrat", data: montserratBoldData, style: "normal", weight: 700 },
       ],
     }
   )
