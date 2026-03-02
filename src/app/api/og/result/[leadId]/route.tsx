@@ -17,6 +17,19 @@ export async function GET(
     return new Response("Invalid ID", { status: 400 })
   }
 
+  // Quick smoke test: if ?test=1, return a minimal image without DB
+  const url = new URL(request.url)
+  if (url.searchParams.get("test") === "1") {
+    return new ImageResponse(
+      (
+        <div style={{ display: "flex", backgroundColor: "#231F20", width: "100%", height: "100%", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ color: "white", fontSize: 60 }}>Hello OG</div>
+        </div>
+      ),
+      { width: 1080, height: 1920 }
+    )
+  }
+
   // Fetch lead data
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -49,21 +62,17 @@ export async function GET(
           height: "100%",
           backgroundColor: "#231F20",
           padding: 60,
-          fontFamily: "sans-serif",
           color: "white",
         }}
       >
-        {/* Headline */}
         <div style={{ fontSize: 64, marginBottom: 16 }}>
           {name}, DEINE HAAR-DIAGNOSE
         </div>
 
-        {/* Summary line */}
         <div style={{ display: "flex", fontSize: 32, color: "rgba(255,255,255,0.6)", marginBottom: 48 }}>
           {cardData.summaryLine}
         </div>
 
-        {/* Attribute badges */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 48 }}>
           {badges.map((badge) => (
             <div
@@ -89,7 +98,6 @@ export async function GET(
           ))}
         </div>
 
-        {/* Quote box */}
         <div
           style={{
             display: "flex",
@@ -108,7 +116,6 @@ export async function GET(
           </div>
         </div>
 
-        {/* Bottom CTA */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginTop: "auto" }}>
           <div style={{ fontSize: 22, color: "rgba(255,255,255,0.5)" }}>
             Was sagt Tom zu DEINEM Haar?
@@ -131,9 +138,6 @@ export async function GET(
         </div>
       </div>
     ),
-    {
-      width: 1080,
-      height: 1920,
-    }
+    { width: 1080, height: 1920 }
   )
 }
