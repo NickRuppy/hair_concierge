@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { analyzeSchema } from "@/lib/quiz/validators"
 import OpenAI from "openai"
-import { ahaFallback } from "@/lib/quiz/results-lookup"
+import { ahaFallback, shareQuoteFallback } from "@/lib/quiz/results-lookup"
 
 const openai = new OpenAI()
 
@@ -48,18 +48,20 @@ export async function POST(request: Request) {
     const pulltest = (quizAnswers.pulltest as string) ?? ""
     const safeName = name.replace(/[^\p{L}\p{N}\s'-]/gu, "").slice(0, 50)
 
-    // Try GPT-4o for personalized insight
+    // Try GPT-4o for personalized insight + shareable quote
     let insight: string
+    let shareQuote: string
     try {
       const completion = await openai.chat.completions.create({
         model: "gpt-4o",
         temperature: 0.7,
-        max_tokens: 200,
+        max_tokens: 350,
+        response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
             content:
-              "Du bist TomBot, ein erfahrener Haar-Experte. Schreibe einen kurzen, persoenlichen Aha-Moment (2-3 Saetze) auf Deutsch. Erklaere, was bei der bisherigen Haarpflege wahrscheinlich schief lief, basierend auf den Quiz-Antworten. Sei direkt und empathisch. Verwende den Vornamen.",
+              'Du bist TomBot, ein erfahrener Haar-Experte. Antworte als JSON mit zwei Feldern:\n\n1. "insight": Ein kurzer, persoenlicher Aha-Moment (2-3 Saetze). Erklaere, was bei der bisherigen Haarpflege wahrscheinlich schief lief. Sei direkt und empathisch. Verwende den Vornamen.\n\n2. "share_quote": Ein punchiger Satz (max 15 Woerter) von Tom ueber dieses Haar — motivierend, persoenlich, geeignet fuer eine Instagram-Story-Karte. Kein Hashtag, keine Emojis.\n\nBeispiel: {"insight": "Lisa, deine Haare ...", "share_quote": "Deine Locken brauchen Protein, nicht noch mehr Feuchtigkeit."}',
           },
           {
             role: "user",
@@ -68,19 +70,23 @@ export async function POST(request: Request) {
         ],
       })
 
-      insight = completion.choices[0]?.message?.content?.trim() ?? ahaFallback[pulltest] ?? ahaFallback.stretches_bounces!
+      const raw = completion.choices[0]?.message?.content?.trim() ?? ""
+      const parsed = JSON.parse(raw) as { insight?: string; share_quote?: string }
+      insight = parsed.insight ?? ahaFallback[pulltest] ?? ahaFallback.stretches_bounces!
+      shareQuote = parsed.share_quote ?? shareQuoteFallback[pulltest] ?? shareQuoteFallback.stretches_bounces!
     } catch {
       // Fallback to static text
       insight = ahaFallback[pulltest] ?? ahaFallback.stretches_bounces!
+      shareQuote = shareQuoteFallback[pulltest] ?? shareQuoteFallback.stretches_bounces!
     }
 
-    // Cache insight in leads table
+    // Cache insight + share quote in leads table
     await supabase
       .from("leads")
-      .update({ ai_insight: insight })
+      .update({ ai_insight: insight, share_quote: shareQuote })
       .eq("id", leadId)
 
-    return NextResponse.json({ insight })
+    return NextResponse.json({ insight, shareQuote })
   } catch (err) {
     console.error("Analyze API error:", err)
     return NextResponse.json({ error: "Analyse fehlgeschlagen" }, { status: 400 })

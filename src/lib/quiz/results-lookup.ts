@@ -78,6 +78,16 @@ export const ahaFallback: Record<string, string> = {
     "Wahrscheinlich setzt du auf Repair-Produkte. Aber dein Zugtest zeigt: Dir fehlt Feuchtigkeit und Fett. Deshalb werden sie immer sproeder statt weicher.",
 }
 
+// --- Share quote fallback (for OG card) ---
+export const shareQuoteFallback: Record<string, string> = {
+  stretches_bounces:
+    "Deine Balance stimmt — jetzt fehlt nur die richtige Routine.",
+  stretches_stays:
+    "Deinen Haaren fehlt Protein. Das aendert alles.",
+  snaps:
+    "Deine Haare schreien nach Feuchtigkeit, nicht nach Repair.",
+}
+
 // --- Hope text (always the same) ---
 export const hopeText =
   "Das Gute: Deine Haare sind nicht hoffnungslos. Sie brauchen nur die richtige Reihenfolge aus Reinigung, Pflege und Schutz. Genau das baut TomBot jetzt fuer dich."

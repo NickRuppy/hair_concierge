@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button"
 import { posthog } from "@/providers/posthog-provider"
 
 export function QuizResults() {
-  const { lead, answers, aiInsight, goNext } = useQuizStore()
+  const { lead, answers, aiInsight, leadId, goNext } = useQuizStore()
 
   const handleStart = () => {
     posthog.capture("quiz_completed", {
@@ -117,13 +117,28 @@ export function QuizResults() {
       <p className="text-base text-white/60 leading-relaxed mb-6">{hopeText}</p>
 
       {/* CTA */}
-      <Button
-        onClick={handleStart}
-        variant="unstyled"
-        className="quiz-btn-primary w-full sm:max-w-md sm:mx-auto h-14 text-base font-bold tracking-wide rounded-xl"
-      >
-        DEINEN PLAN STARTEN
-      </Button>
+      <div className="flex flex-col gap-3 sm:max-w-md sm:mx-auto w-full">
+        <Button
+          onClick={handleStart}
+          variant="unstyled"
+          className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
+        >
+          DEINEN PLAN STARTEN
+        </Button>
+
+        {leadId && (
+          <Button
+            onClick={() => {
+              posthog.capture("quiz_result_share_clicked", { leadId })
+              window.open(`/result/${leadId}`, "_blank")
+            }}
+            variant="outline"
+            className="w-full h-12 text-sm font-bold tracking-wide rounded-xl border-white/20 text-white hover:bg-white/10"
+          >
+            ERGEBNIS TEILEN
+          </Button>
+        )}
+      </div>
     </div>
   )
 }

@@ -36,7 +36,7 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Public routes that don't need auth
-  const publicRoutes = ["/auth", "/api/auth/callback", "/auth/confirm", "/quiz", "/api/quiz"]
+  const publicRoutes = ["/auth", "/api/auth/callback", "/auth/confirm", "/quiz", "/api/quiz", "/result", "/api/og"]
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
 
   if (!user && !isPublicRoute) {
