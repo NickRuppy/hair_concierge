@@ -7,7 +7,6 @@ export const runtime = "edge"
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
-/** Replace Unicode chars unsupported by the default Noto Sans Latin font */
 function sanitize(text: string): string {
   return text
     .replace(/\u2013/g, "-")
@@ -16,33 +15,6 @@ function sanitize(text: string): string {
     .replace(/\u2026/g, "...")
     .replace(/[\u201C\u201D]/g, '"')
     .replace(/[\u2018\u2019]/g, "'")
-}
-
-function truncate(text: string, max: number): string {
-  return text.length > max ? text.slice(0, max - 3) + "..." : text
-}
-
-function Badge({ title, desc }: { title: string; desc: string }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: "rgba(255,255,255,0.06)",
-        borderLeft: "4px solid #F5C518",
-        borderRadius: 12,
-        padding: "20px 24px",
-        marginBottom: 16,
-      }}
-    >
-      <div style={{ fontSize: 16, color: "#F5C518", letterSpacing: 2, marginBottom: 6 }}>
-        {title}
-      </div>
-      <div style={{ fontSize: 22, color: "rgba(255,255,255,0.8)", lineHeight: 1.4 }}>
-        {desc}
-      </div>
-    </div>
-  )
 }
 
 export async function GET(
@@ -71,105 +43,57 @@ export async function GET(
     return new Response("Not found", { status: 404 })
   }
 
-  // Hardcoded test data to isolate rendering vs data issue
-  const name = "TEST"
-  const quote = "Deine Haare brauchen Protein."
-  const summary = "Wellig / Mittel / Trocken"
-  const b = [
-    { t: "HAARTYP", d: "Mittlere, wellige Haare" },
-    { t: "HAARSTAERKE", d: "Mittel - gute Basis." },
-    { t: "OBERFLAECHE", d: "Leicht aufgeraut." },
-    { t: "PROTEIN", d: "Haare sind ueberdehnt." },
-  ]
-  // Suppress unused warnings
-  void buildCardData
-  void lead
+  const cardData = buildCardData(lead.quiz_answers as QuizAnswers)
+  const name = sanitize((lead.name as string).toUpperCase())
+  const quote = sanitize((lead.share_quote as string) || "Deine Haare verdienen die richtige Pflege.")
+  const summary = sanitize(cardData.summaryLine)
+  const cards = cardData.cards.slice(0, 4).map((c) => ({
+    t: sanitize(c.title).toUpperCase(),
+    d: sanitize(c.description).slice(0, 100),
+  }))
 
   return new ImageResponse(
     (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          height: "100%",
-          backgroundColor: "#231F20",
-          padding: "70px 55px",
-          color: "white",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 50 }}>
-          <div style={{ display: "flex", gap: 4 }}>
-            <div style={{ width: 5, height: 30, backgroundColor: "#F5C518", borderRadius: 3 }} />
-            <div style={{ width: 5, height: 30, backgroundColor: "#F5C518", opacity: 0.6, borderRadius: 3 }} />
-            <div style={{ width: 5, height: 30, backgroundColor: "#F5C518", opacity: 0.3, borderRadius: 3 }} />
+      <div style={{ display: "flex", flexDirection: "column", backgroundColor: "#231F20", width: "100%", height: "100%", padding: 60, color: "white" }}>
+        <div style={{ display: "flex", fontSize: 60, marginBottom: 12 }}>{name}, DEINE HAAR-DIAGNOSE</div>
+        <div style={{ display: "flex", fontSize: 28, color: "#999", marginBottom: 40 }}>{summary}</div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", backgroundColor: "#333", borderRadius: 10, padding: 20, marginBottom: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", fontSize: 14, color: "#F5C518", marginBottom: 4 }}>{cards[0]?.t}</div>
+              <div style={{ display: "flex", fontSize: 20, color: "#ccc" }}>{cards[0]?.d}</div>
+            </div>
           </div>
-          <div style={{ fontSize: 24, color: "rgba(255,255,255,0.5)", letterSpacing: 6 }}>
-            TOM BOT
+          <div style={{ display: "flex", backgroundColor: "#333", borderRadius: 10, padding: 20, marginBottom: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", fontSize: 14, color: "#F5C518", marginBottom: 4 }}>{cards[1]?.t}</div>
+              <div style={{ display: "flex", fontSize: 20, color: "#ccc" }}>{cards[1]?.d}</div>
+            </div>
           </div>
-        </div>
-
-        <div style={{ fontSize: 64, color: "white", lineHeight: 1.1, marginBottom: 12 }}>
-          {name}, DEINE HAAR-DIAGNOSE
-        </div>
-
-        <div style={{ fontSize: 28, color: "rgba(255,255,255,0.6)", marginBottom: 50 }}>
-          {summary}
-        </div>
-
-        <Badge title={b[0]?.t ?? ""} desc={b[0]?.d ?? ""} />
-        <Badge title={b[1]?.t ?? ""} desc={b[1]?.d ?? ""} />
-        <Badge title={b[2]?.t ?? ""} desc={b[2]?.d ?? ""} />
-        <Badge title={b[3]?.t ?? ""} desc={b[3]?.d ?? ""} />
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            border: "2px solid rgba(245,197,24,0.4)",
-            borderRadius: 16,
-            padding: 28,
-            marginTop: 20,
-            marginBottom: 40,
-          }}
-        >
-          <div style={{ fontSize: 14, color: "#F5C518", letterSpacing: 2, marginBottom: 10 }}>
-            TOM SAGT
+          <div style={{ display: "flex", backgroundColor: "#333", borderRadius: 10, padding: 20, marginBottom: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", fontSize: 14, color: "#F5C518", marginBottom: 4 }}>{cards[2]?.t}</div>
+              <div style={{ display: "flex", fontSize: 20, color: "#ccc" }}>{cards[2]?.d}</div>
+            </div>
           </div>
-          <div style={{ fontSize: 26, color: "white", lineHeight: 1.5 }}>
-            {quote}
+          <div style={{ display: "flex", backgroundColor: "#333", borderRadius: 10, padding: 20, marginBottom: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", fontSize: 14, color: "#F5C518", marginBottom: 4 }}>{cards[3]?.t}</div>
+              <div style={{ display: "flex", fontSize: 20, color: "#ccc" }}>{cards[3]?.d}</div>
+            </div>
           </div>
         </div>
-
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-          <div style={{ fontSize: 22, color: "rgba(255,255,255,0.5)" }}>
-            Was sagt Tom zu DEINEM Haar?
+        <div style={{ display: "flex", border: "2px solid #F5C518", borderRadius: 12, padding: 24, marginTop: 20 }}>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", fontSize: 14, color: "#F5C518", marginBottom: 8 }}>TOM SAGT</div>
+            <div style={{ display: "flex", fontSize: 24, color: "white" }}>{quote}</div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              backgroundColor: "#F5C518",
-              color: "#231F20",
-              fontSize: 26,
-              padding: "14px 44px",
-              borderRadius: 12,
-              letterSpacing: 2,
-            }}
-          >
-            QUIZ STARTEN
-          </div>
-          <div style={{ fontSize: 18, color: "rgba(255,255,255,0.35)", marginTop: 6 }}>
-            tombot.de/quiz
-          </div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 30 }}>
+          <div style={{ display: "flex", backgroundColor: "#F5C518", color: "#231F20", fontSize: 24, padding: "12px 40px", borderRadius: 10 }}>QUIZ STARTEN</div>
         </div>
       </div>
     ),
-    {
-      width: 1080,
-      height: 1920,
-      headers: {
-        "Cache-Control": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600",
-      },
-    }
+    { width: 1080, height: 1920 }
   )
 }
