@@ -58,7 +58,7 @@ export async function POST(request: Request) {
   const { message, conversation_id, image_url } = parsed.data
 
   try {
-    const { stream, conversationId, intent, matchedProducts, sources } = await runPipeline({
+    const { stream, conversationId, intent, matchedProducts, sources, retrievalSummary } = await runPipeline({
       message,
       conversationId: conversation_id,
       userId: user.id,
@@ -162,7 +162,7 @@ export async function POST(request: Request) {
 
           controller.enqueue(
             encoder.encode(
-              `data: ${JSON.stringify({ type: "done", data: { intent } })}\n\n`
+              `data: ${JSON.stringify({ type: "done", data: { intent, ...retrievalSummary } })}\n\n`
             )
           )
         } catch (error) {

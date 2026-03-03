@@ -1,0 +1,132 @@
+[
+  {
+    "query": "Welches Shampoo für fettige Kopfhaut und feines Haar?",
+    "intent": "product_recommendation",
+    "metadata_filter": { "thickness": "fine" },
+    "source_types": ["product_list", "book", "community_qa"],
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Shampoo path: scalp concern + thickness filter"
+  },
+  {
+    "query": "Conditioner für Feuchtigkeitsmangel, feines Haar",
+    "intent": "product_recommendation",
+    "metadata_filter": { "thickness": "fine", "concern": "moisture_deficit" },
+    "source_types": ["product_list", "book", "community_qa"],
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Conditioner path: protein/moisture mapping + thickness"
+  },
+  {
+    "query": "Was ist der Unterschied zwischen Protein und Feuchtigkeit?",
+    "intent": "hair_care_advice",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Factual knowledge question — should find book chunks"
+  },
+  {
+    "query": "Mein Haar ist trocken und bricht leicht ab. Was kann ich tun?",
+    "intent": "diagnosis",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Diagnosis: multi-symptom, needs breakage + dryness evidence"
+  },
+  {
+    "query": "Sodium Lauryl Sulfate vs Sodium Laureth Sulfate",
+    "intent": "ingredient_question",
+    "source_types": ["book", "qa"],
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "INCI/ingredient keyword — lexical retrieval should shine"
+  },
+  {
+    "query": "Wie oft sollte ich meine Haare waschen wenn ich Sport treibe?",
+    "intent": "hair_care_advice",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Routine advice — broad knowledge base question"
+  },
+  {
+    "query": "Ich habe dickes, lockiges Haar und suche ein Leave-in ohne Silikone",
+    "intent": "product_recommendation",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Multi-constraint: texture + thickness + ingredient exclusion"
+  },
+  {
+    "query": "Olaplex No. 3 Erfahrungen",
+    "intent": "ingredient_question",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Exact product name search — keyword retrieval critical"
+  },
+  {
+    "query": "Haarpflegeroutine für gefärbtes Haar",
+    "intent": "routine_help",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Routine help: needs broad coverage (wash, condition, protect)"
+  },
+  {
+    "query": "Welche Bürste für nasses Haar?",
+    "intent": "hair_care_advice",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Specific tool question"
+  },
+  {
+    "query": "Kann ich Kokosöl als Haarmaske verwenden?",
+    "intent": "ingredient_question",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Common DIY question — should find book/qa evidence"
+  },
+  {
+    "query": "Kopfhaut juckt und schuppt seit 3 Wochen",
+    "intent": "diagnosis",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Scalp diagnosis: temporal context + symptoms"
+  },
+  {
+    "query": "Shampoo ohne Sulfate für empfindliche Kopfhaut normales Haar",
+    "intent": "product_recommendation",
+    "metadata_filter": { "thickness": "normal" },
+    "source_types": ["product_list", "book", "community_qa"],
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Shampoo: sensitive scalp + sulfate-free constraint"
+  },
+  {
+    "query": "Mein Zugtest zeigt dass das Haar sofort reißt — was bedeutet das?",
+    "intent": "diagnosis",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Pull test interpretation — needs protein/moisture knowledge"
+  },
+  {
+    "query": "Glycerin in Haarprodukten",
+    "intent": "ingredient_question",
+    "source_types": ["book", "qa"],
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Ingredient deep dive — lexical match on 'Glycerin'"
+  },
+  {
+    "query": "Conditioner für dickes Haar mit Proteinüberschuss",
+    "intent": "product_recommendation",
+    "metadata_filter": { "thickness": "coarse", "concern": "protein_overload" },
+    "source_types": ["product_list", "book", "community_qa"],
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Conditioner path: protein overload + coarse hair"
+  },
+  {
+    "query": "Wie verwende ich einen Conditioner richtig?",
+    "intent": "hair_care_advice",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Application technique — broad knowledge"
+  },
+  {
+    "query": "Was hilft gegen Frizz bei welligem Haar?",
+    "intent": "hair_care_advice",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Concern-specific advice: frizz + wavy hair"
+  },
+  {
+    "query": "Haarausfall nach Schwangerschaft",
+    "intent": "diagnosis",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Medical-adjacent: hormonal hair loss"
+  },
+  {
+    "query": "Curly Girl Methode Anfänger Tipps",
+    "intent": "routine_help",
+    "relevant_chunk_ids": ["__ANNOTATE__"],
+    "_note": "Method-specific routine — needs structured advice"
+  }
+]

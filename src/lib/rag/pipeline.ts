@@ -9,7 +9,7 @@ import { mapProteinMoistureToConcernCode } from "@/lib/rag/conditioner-mapper"
 import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
 import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
-import type { IntentType, Message, HairProfile, Product, CitationSource, ProductCategory } from "@/lib/types"
+import type { IntentType, Message, HairProfile, Product, CitationSource, EnrichedCitationSource, ProductCategory } from "@/lib/types"
 
 export interface PipelineParams {
   message: string
@@ -23,7 +23,11 @@ export interface PipelineResult {
   conversationId: string
   intent: IntentType
   matchedProducts: Product[]
-  sources: CitationSource[]
+  sources: EnrichedCitationSource[]
+  /** Retrieval summary for the done event */
+  retrievalSummary: {
+    final_context_count: number
+  }
 }
 
 /** Intents that should trigger product matching */
@@ -134,7 +138,7 @@ export async function runPipeline(
     ? mapProteinMoistureToConcernCode(hairProfile?.protein_moisture_balance)
     : null
 
-  // ── Step 2: Retrieve context chunks ─────────────────────────────────
+  // ── Step 2: Retrieve context chunks (hybrid: decompose + dense + lexical + RRF + rerank) ──
   // Build metadata filter based on intent and category
   let metadataFilter: Record<string, string> | undefined
   if (intent === "product_recommendation") {
@@ -157,15 +161,18 @@ export async function runPipeline(
     hairProfile,
     metadataFilter,
     count: 5,
+    userId,
   })
 
-  // ── Build citation sources from retrieved chunks ──────────────────
-  const sources: CitationSource[] = ragChunks.map((chunk, i) => ({
+  // ── Build enriched citation sources from retrieved chunks ─────────
+  const sources: EnrichedCitationSource[] = ragChunks.map((chunk, i) => ({
     index: i + 1,
     source_type: chunk.source_type,
     label: SOURCE_TYPE_LABELS[chunk.source_type] ?? chunk.source_type,
     source_name: chunk.source_name ? formatSourceName(chunk.source_name) : null,
     snippet: chunk.content.slice(0, 200) + (chunk.content.length > 200 ? "..." : ""),
+    confidence: chunk.weighted_similarity,
+    retrieval_path: chunk.retrieval_path,
   }))
 
   // ── Step 3: Load conversation history ─────────────────────────────
@@ -253,5 +260,8 @@ export async function runPipeline(
     intent,
     matchedProducts: matchedProducts ?? [],
     sources,
+    retrievalSummary: {
+      final_context_count: ragChunks.length,
+    },
   }
 }

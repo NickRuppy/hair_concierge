@@ -160,9 +160,25 @@ export type ProductCategory = "shampoo" | "conditioner" | "mask" | "oil" | "leav
 export interface ClassificationResult {
   intent: IntentType
   product_category: ProductCategory
+  /** Phase 2 prep: query complexity level */
+  complexity?: "simple" | "multi_constraint" | "multi_hop"
+  /** Phase 2 prep: whether clarification is needed before retrieval */
+  needs_clarification?: boolean
+  /** Retrieval path selector */
+  retrieval_mode?: "faq" | "hybrid" | "hybrid_plus_graph" | "product_sql_plus_hybrid"
+  /** Normalized filter values extracted from query */
+  normalized_filters?: Record<string, string | string[] | null>
+  /** Router confidence score (0-1) */
+  router_confidence?: number
 }
 
 export interface ChatSSEEvent {
   type: "conversation_id" | "content_delta" | "product_recommendations" | "sources" | "done" | "error"
   data: unknown
+}
+
+/** Enriched citation source with optional hybrid retrieval metadata */
+export interface EnrichedCitationSource extends CitationSource {
+  confidence?: number
+  retrieval_path?: "dense" | "lexical" | "hybrid"
 }
