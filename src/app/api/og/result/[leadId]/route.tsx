@@ -10,16 +10,43 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 /** Replace Unicode chars unsupported by the default Noto Sans Latin font */
 function sanitize(text: string): string {
   return text
-    .replace(/\u2013/g, "-")   // en-dash
-    .replace(/\u2014/g, " - ") // em-dash
-    .replace(/\u00B7/g, " / ") // middle dot
-    .replace(/\u2026/g, "...") // ellipsis
-    .replace(/[\u201C\u201D]/g, '"')  // curly quotes
-    .replace(/[\u2018\u2019]/g, "'")  // curly apostrophes
+    .replace(/\u2013/g, "-")
+    .replace(/\u2014/g, " - ")
+    .replace(/\u00B7/g, " / ")
+    .replace(/\u2026/g, "...")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+}
+
+function truncate(text: string, max: number): string {
+  return text.length > max ? text.slice(0, max - 3) + "..." : text
+}
+
+function Badge({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "rgba(255,255,255,0.06)",
+        borderLeft: "4px solid #F5C518",
+        borderRadius: 12,
+        padding: "20px 24px",
+        marginBottom: 16,
+      }}
+    >
+      <div style={{ fontSize: 16, color: "#F5C518", letterSpacing: 2, marginBottom: 6 }}>
+        {title}
+      </div>
+      <div style={{ fontSize: 22, color: "rgba(255,255,255,0.8)", lineHeight: 1.4 }}>
+        {desc}
+      </div>
+    </div>
+  )
 }
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ leadId: string }> }
 ) {
   const { leadId } = await params
@@ -28,7 +55,6 @@ export async function GET(
     return new Response("Invalid ID", { status: 400 })
   }
 
-  // Fetch lead data
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -49,9 +75,9 @@ export async function GET(
   const name = sanitize((lead.name as string).toUpperCase())
   const quote = sanitize((lead.share_quote as string) || "Deine Haare verdienen die richtige Pflege.")
   const summary = sanitize(cardData.summaryLine)
-  const badges = cardData.cards.slice(0, 4).map((b) => ({
-    title: sanitize(b.title).toUpperCase(),
-    description: sanitize(b.description),
+  const b = cardData.cards.slice(0, 4).map((c) => ({
+    t: sanitize(c.title).toUpperCase(),
+    d: truncate(sanitize(c.description), 120),
   }))
 
   return new ImageResponse(
@@ -63,81 +89,55 @@ export async function GET(
           width: "100%",
           height: "100%",
           backgroundColor: "#231F20",
-          padding: "80px 60px",
-          fontFamily: "sans-serif",
+          padding: "70px 55px",
           color: "white",
         }}
       >
-        {/* Brand mark */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 60 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 50 }}>
           <div style={{ display: "flex", gap: 4 }}>
-            <div style={{ width: 6, height: 36, backgroundColor: "#F5C518", borderRadius: 3 }} />
-            <div style={{ width: 6, height: 36, backgroundColor: "rgba(245,197,24,0.6)", borderRadius: 3 }} />
-            <div style={{ width: 6, height: 36, backgroundColor: "rgba(245,197,24,0.3)", borderRadius: 3 }} />
+            <div style={{ width: 5, height: 30, backgroundColor: "#F5C518", borderRadius: 3 }} />
+            <div style={{ width: 5, height: 30, backgroundColor: "#F5C518", opacity: 0.6, borderRadius: 3 }} />
+            <div style={{ width: 5, height: 30, backgroundColor: "#F5C518", opacity: 0.3, borderRadius: 3 }} />
           </div>
-          <span style={{ fontFamily: "sans-serif", fontSize: 28, color: "rgba(255,255,255,0.5)", letterSpacing: 6 }}>
+          <div style={{ fontSize: 24, color: "rgba(255,255,255,0.5)", letterSpacing: 6 }}>
             TOM BOT
-          </span>
+          </div>
         </div>
 
-        {/* Headline */}
-        <div style={{ fontFamily: "sans-serif", fontSize: 72, color: "white", lineHeight: 1.1, marginBottom: 16 }}>
+        <div style={{ fontSize: 64, color: "white", lineHeight: 1.1, marginBottom: 12 }}>
           {name}, DEINE HAAR-DIAGNOSE
         </div>
 
-        {/* Summary line */}
-        <div style={{ display: "flex", fontSize: 32, color: "rgba(255,255,255,0.6)", marginBottom: 60 }}>
+        <div style={{ fontSize: 28, color: "rgba(255,255,255,0.6)", marginBottom: 50 }}>
           {summary}
         </div>
 
-        {/* Attribute badges */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 20, marginBottom: 60 }}>
-          {badges.map((badge) => (
-            <div
-              key={badge.title}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                backgroundColor: "rgba(255,255,255,0.06)",
-                borderLeft: "4px solid #F5C518",
-                borderRadius: 12,
-                padding: "24px 28px",
-              }}
-            >
-              <div style={{ fontSize: 18, color: "#F5C518", letterSpacing: 2, marginBottom: 8 }}>
-                {badge.title}
-              </div>
-              <div style={{ fontSize: 24, color: "rgba(255,255,255,0.8)", lineHeight: 1.4 }}>
-                {badge.description.length > 120
-                  ? badge.description.slice(0, 117) + "..."
-                  : badge.description}
-              </div>
-            </div>
-          ))}
-        </div>
+        <Badge title={b[0]?.t ?? ""} desc={b[0]?.d ?? ""} />
+        <Badge title={b[1]?.t ?? ""} desc={b[1]?.d ?? ""} />
+        <Badge title={b[2]?.t ?? ""} desc={b[2]?.d ?? ""} />
+        <Badge title={b[3]?.t ?? ""} desc={b[3]?.d ?? ""} />
 
-        {/* Quote box */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             border: "2px solid rgba(245,197,24,0.4)",
             borderRadius: 16,
-            padding: 32,
-            flexGrow: 1,
+            padding: 28,
+            marginTop: 20,
+            marginBottom: 40,
           }}
         >
-          <div style={{ fontSize: 16, color: "#F5C518", letterSpacing: 2, marginBottom: 12 }}>
+          <div style={{ fontSize: 14, color: "#F5C518", letterSpacing: 2, marginBottom: 10 }}>
             TOM SAGT
           </div>
-          <div style={{ fontSize: 30, color: "white", lineHeight: 1.5 }}>
+          <div style={{ fontSize: 26, color: "white", lineHeight: 1.5 }}>
             {quote}
           </div>
         </div>
 
-        {/* Bottom CTA */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginTop: 40 }}>
-          <div style={{ fontSize: 24, color: "rgba(255,255,255,0.5)" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+          <div style={{ fontSize: 22, color: "rgba(255,255,255,0.5)" }}>
             Was sagt Tom zu DEINEM Haar?
           </div>
           <div
@@ -145,15 +145,15 @@ export async function GET(
               display: "flex",
               backgroundColor: "#F5C518",
               color: "#231F20",
-              fontSize: 28,
-              padding: "16px 48px",
+              fontSize: 26,
+              padding: "14px 44px",
               borderRadius: 12,
               letterSpacing: 2,
             }}
           >
             QUIZ STARTEN
           </div>
-          <div style={{ fontSize: 20, color: "rgba(255,255,255,0.35)", marginTop: 8 }}>
+          <div style={{ fontSize: 18, color: "rgba(255,255,255,0.35)", marginTop: 6 }}>
             tombot.de/quiz
           </div>
         </div>
