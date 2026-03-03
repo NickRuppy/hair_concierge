@@ -71,14 +71,19 @@ export async function GET(
     return new Response("Not found", { status: 404 })
   }
 
-  const cardData = buildCardData(lead.quiz_answers as QuizAnswers)
-  const name = sanitize((lead.name as string).toUpperCase())
-  const quote = sanitize((lead.share_quote as string) || "Deine Haare verdienen die richtige Pflege.")
-  const summary = sanitize(cardData.summaryLine)
-  const b = cardData.cards.slice(0, 4).map((c) => ({
-    t: sanitize(c.title).toUpperCase(),
-    d: truncate(sanitize(c.description), 120),
-  }))
+  // Hardcoded test data to isolate rendering vs data issue
+  const name = "TEST"
+  const quote = "Deine Haare brauchen Protein."
+  const summary = "Wellig / Mittel / Trocken"
+  const b = [
+    { t: "HAARTYP", d: "Mittlere, wellige Haare" },
+    { t: "HAARSTAERKE", d: "Mittel - gute Basis." },
+    { t: "OBERFLAECHE", d: "Leicht aufgeraut." },
+    { t: "PROTEIN", d: "Haare sind ueberdehnt." },
+  ]
+  // Suppress unused warnings
+  void buildCardData
+  void lead
 
   return new ImageResponse(
     (
