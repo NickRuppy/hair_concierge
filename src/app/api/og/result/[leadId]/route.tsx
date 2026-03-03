@@ -16,7 +16,7 @@ function sanitize(text: string): string {
     .replace(/[\u2018\u2019]/g, "'")
 }
 
-/* ── Short lookup maps for the OG card (punchy one-liners) ── */
+/* ── Lookup maps ── */
 
 const structureHero: Record<string, string> = {
   straight: "GLATTE",
@@ -39,21 +39,21 @@ const heroEmoji: Record<string, string> = {
 }
 
 const balanceShort: Record<string, string> = {
-  stretches_bounces: "Balance stimmt",
+  stretches_bounces: "Stimmt",
   stretches_stays: "Protein fehlt",
-  snaps: "Feuchtigkeit fehlt",
+  snaps: "Zu trocken",
 }
 
 const surfaceShort: Record<string, string> = {
-  glatt: "Schuppenschicht intakt",
-  leicht_uneben: "Leicht aufgeraut",
-  rau: "Stark geschaedigt",
+  glatt: "Intakt",
+  leicht_uneben: "Aufgeraut",
+  rau: "Geschaedigt",
 }
 
 const scalpShort: Record<string, string> = {
-  fettig: "Fettige Kopfhaut",
-  ausgeglichen: "Kopfhaut ausgeglichen",
-  trocken: "Trockene Kopfhaut",
+  fettig: "Fettig",
+  ausgeglichen: "Ausgeglichen",
+  trocken: "Trocken",
 }
 
 export async function GET(
@@ -88,30 +88,14 @@ export async function GET(
     (lead.share_quote as string) || "Deine Haare verdienen die richtige Pflege."
   )
 
-  // Hero hair type
   const thickness = thicknessHero[a.thickness ?? ""] ?? ""
   const structure = structureHero[a.structure ?? ""] ?? ""
   const emoji = heroEmoji[a.structure ?? ""] ?? "\uD83E\uDDEC"
 
-  // 3 compact findings
-  const finding1 = balanceShort[a.pulltest ?? ""] ?? "Analyse laeuft"
-  const finding2 = surfaceShort[a.fingertest ?? ""] ?? "Keine Angabe"
-  const finding3 = scalpShort[a.scalp_type ?? ""] ?? "Keine Angabe"
+  const finding1 = balanceShort[a.pulltest ?? ""] ?? "-"
+  const finding2 = surfaceShort[a.fingertest ?? ""] ?? "-"
+  const finding3 = scalpShort[a.scalp_type ?? ""] ?? "-"
 
-  // Goals as short text
-  const goalMap: Record<string, string> = {
-    spliss: "Spliss",
-    frizz: "Frizz",
-    kein_volumen: "Mehr Volumen",
-    zu_viel_volumen: "Weniger Volumen",
-    glanzlos: "Mehr Glanz",
-    kopfhaut: "Kopfhaut",
-    haarausfall: "Haarausfall",
-  }
-  const goalsArr = (a.goals ?? []).map((g) => goalMap[g] ?? g).slice(0, 3)
-  const goalsLine = goalsArr.join("  /  ") || ""
-
-  // Load custom fonts at runtime
   const origin = new URL(request.url).origin
   const [bebasData, montserratData] = await Promise.all([
     fetch(`${origin}/fonts/BebasNeue-Regular.ttf`).then((r) => r.arrayBuffer()),
@@ -126,124 +110,183 @@ export async function GET(
           flexDirection: "column",
           width: "100%",
           height: "100%",
-          padding: "80px 65px",
           color: "white",
           fontFamily: "Montserrat",
-          backgroundImage: "linear-gradient(170deg, #2a2325 0%, #1a1617 50%, #231F20 100%)",
+          backgroundImage: "linear-gradient(180deg, #1a1617 0%, #231F20 50%, #1a1617 100%)",
         }}
       >
-        {/* Brand mark */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 60 }}>
-          <div style={{ display: "flex", gap: 4 }}>
-            <div style={{ width: 5, height: 30, backgroundColor: "#F5C518", borderRadius: 3 }} />
-            <div style={{ width: 5, height: 30, backgroundColor: "#C9A013", borderRadius: 3 }} />
-            <div style={{ width: 5, height: 30, backgroundColor: "#7A6010", borderRadius: 3 }} />
-          </div>
-          <div style={{ display: "flex", fontFamily: "Bebas Neue", fontSize: 24, color: "#777", letterSpacing: 6 }}>
-            TOM BOT
-          </div>
-        </div>
-
-        {/* Hero emoji */}
-        <div style={{ display: "flex", fontSize: 140, marginBottom: 30 }}>
-          {emoji}
-        </div>
-
-        {/* Hair type — the BIG result */}
-        <div style={{ display: "flex", fontFamily: "Bebas Neue", fontSize: 96, color: "#F5C518", lineHeight: 1, marginBottom: 8 }}>
-          {thickness} {structure}
-        </div>
-        <div style={{ display: "flex", fontFamily: "Bebas Neue", fontSize: 96, color: "#F5C518", lineHeight: 1, marginBottom: 20 }}>
-          HAARE
-        </div>
-
-        {/* Name subtitle */}
-        <div style={{ display: "flex", fontSize: 30, color: "#888", marginBottom: 70 }}>
-          {name}S HAAR-DIAGNOSE
-        </div>
-
-        {/* Gold divider */}
-        <div style={{ display: "flex", width: 80, height: 4, backgroundColor: "#F5C518", borderRadius: 2, marginBottom: 52 }} />
-
-        {/* Finding 1 */}
-        <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 36 }}>
-          <div style={{ display: "flex", fontSize: 42 }}>{"\u2696\uFE0F"}</div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", fontSize: 16, color: "#F5C518", letterSpacing: 3, marginBottom: 6 }}>PROTEIN / FEUCHTIGKEIT</div>
-            <div style={{ display: "flex", fontSize: 32, color: "white" }}>{finding1}</div>
-          </div>
-        </div>
-
-        {/* Finding 2 */}
-        <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 36 }}>
-          <div style={{ display: "flex", fontSize: 42 }}>{"\uD83D\uDD2C"}</div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", fontSize: 16, color: "#F5C518", letterSpacing: 3, marginBottom: 6 }}>OBERFLAECHE</div>
-            <div style={{ display: "flex", fontSize: 32, color: "white" }}>{finding2}</div>
-          </div>
-        </div>
-
-        {/* Finding 3 */}
-        <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 36 }}>
-          <div style={{ display: "flex", fontSize: 42 }}>{"\uD83E\uDDF4"}</div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", fontSize: 16, color: "#F5C518", letterSpacing: 3, marginBottom: 6 }}>KOPFHAUT</div>
-            <div style={{ display: "flex", fontSize: 32, color: "white" }}>{finding3}</div>
-          </div>
-        </div>
-
-        {/* Goals */}
-        {goalsLine && (
-          <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 56 }}>
-            <div style={{ display: "flex", fontSize: 42 }}>{"\uD83C\uDFAF"}</div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", fontSize: 16, color: "#F5C518", letterSpacing: 3, marginBottom: 6 }}>DEINE ZIELE</div>
-              <div style={{ display: "flex", fontSize: 30, color: "white" }}>{goalsLine}</div>
-            </div>
-          </div>
-        )}
-
-        {/* Tom quote — the emotional hook */}
+        {/* Gold top accent bar */}
         <div
           style={{
             display: "flex",
-            border: "3px solid #F5C518",
-            borderRadius: 20,
-            padding: "44px 40px",
-            marginBottom: 60,
+            width: "100%",
+            height: 6,
+            backgroundImage: "linear-gradient(90deg, #7A6010 0%, #F5C518 50%, #7A6010 100%)",
+          }}
+        />
+
+        {/* Content */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: "50px 65px 70px",
+            flex: 1,
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", fontSize: 16, color: "#F5C518", letterSpacing: 4, marginBottom: 18 }}>
-              TOM SAGT
+          {/* Brand mark */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+            <div style={{ display: "flex", gap: 4 }}>
+              <div style={{ width: 5, height: 24, backgroundColor: "#F5C518", borderRadius: 3 }} />
+              <div style={{ width: 5, height: 24, backgroundColor: "#C9A013", borderRadius: 3 }} />
+              <div style={{ width: 5, height: 24, backgroundColor: "#7A6010", borderRadius: 3 }} />
             </div>
-            <div style={{ display: "flex", fontSize: 38, color: "white", lineHeight: 1.4 }}>
-              {quote}
+            <div style={{ display: "flex", fontFamily: "Bebas Neue", fontSize: 22, color: "#666", letterSpacing: 6 }}>
+              TOM BOT
             </div>
           </div>
-        </div>
 
-        {/* CTA */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, marginTop: "auto" }}>
-          <div style={{ display: "flex", fontSize: 24, color: "#777" }}>
-            Was sagt Tom zu DEINEM Haar?
+          {/* Section label */}
+          <div style={{ display: "flex", fontFamily: "Bebas Neue", fontSize: 32, color: "#F5C518", letterSpacing: 10, marginBottom: 4 }}>
+            HAAR-DIAGNOSE
           </div>
+
+          {/* Name */}
+          <div style={{ display: "flex", fontSize: 22, color: "#666", letterSpacing: 3, marginBottom: 70 }}>
+            {name}
+          </div>
+
+          {/* Emoji in gold-rimmed circle */}
           <div
             style={{
               display: "flex",
-              backgroundColor: "#F5C518",
-              color: "#231F20",
-              fontFamily: "Bebas Neue",
-              fontSize: 32,
-              padding: "18px 60px",
-              borderRadius: 14,
-              letterSpacing: 4,
+              width: 240,
+              height: 240,
+              borderRadius: 120,
+              backgroundColor: "#2a2210",
+              border: "3px solid #C9A013",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 40,
             }}
           >
-            QUIZ STARTEN
+            <div style={{ display: "flex", fontSize: 130 }}>{emoji}</div>
           </div>
-          <div style={{ display: "flex", fontSize: 18, color: "#555", marginTop: 4 }}>
-            tombot.de/quiz
+
+          {/* Hair type — THE hero result */}
+          <div style={{ display: "flex", fontFamily: "Bebas Neue", fontSize: 105, color: "white", lineHeight: 1 }}>
+            {thickness}
+          </div>
+          <div style={{ display: "flex", fontFamily: "Bebas Neue", fontSize: 105, color: "white", lineHeight: 1, marginBottom: 6 }}>
+            {structure}
+          </div>
+          <div style={{ display: "flex", fontFamily: "Bebas Neue", fontSize: 130, color: "#F5C518", lineHeight: 1, marginBottom: 56 }}>
+            HAARE
+          </div>
+
+          {/* Gold gradient divider */}
+          <div
+            style={{
+              display: "flex",
+              width: 140,
+              height: 5,
+              backgroundImage: "linear-gradient(90deg, #7A6010, #F5C518, #7A6010)",
+              borderRadius: 3,
+              marginBottom: 52,
+            }}
+          />
+
+          {/* 3 stat boxes side by side */}
+          <div style={{ display: "flex", gap: 18, marginBottom: 56, width: "100%" }}>
+            {/* Box 1: Balance */}
+            <div
+              style={{
+                display: "flex",
+                flex: 1,
+                flexDirection: "column",
+                alignItems: "center",
+                backgroundColor: "#2a2628",
+                borderRadius: 20,
+                padding: "32px 14px",
+                borderTop: "4px solid #F5C518",
+              }}
+            >
+              <div style={{ display: "flex", fontSize: 48, marginBottom: 14 }}>{"\u2696\uFE0F"}</div>
+              <div style={{ display: "flex", fontSize: 18, color: "#F5C518", letterSpacing: 2, marginBottom: 10 }}>BALANCE</div>
+              <div style={{ display: "flex", fontSize: 28, color: "white" }}>{finding1}</div>
+            </div>
+            {/* Box 2: Surface */}
+            <div
+              style={{
+                display: "flex",
+                flex: 1,
+                flexDirection: "column",
+                alignItems: "center",
+                backgroundColor: "#2a2628",
+                borderRadius: 20,
+                padding: "32px 14px",
+                borderTop: "4px solid #F5C518",
+              }}
+            >
+              <div style={{ display: "flex", fontSize: 48, marginBottom: 14 }}>{"\uD83D\uDD2C"}</div>
+              <div style={{ display: "flex", fontSize: 18, color: "#F5C518", letterSpacing: 2, marginBottom: 10 }}>OBERFLAECHE</div>
+              <div style={{ display: "flex", fontSize: 28, color: "white" }}>{finding2}</div>
+            </div>
+            {/* Box 3: Scalp */}
+            <div
+              style={{
+                display: "flex",
+                flex: 1,
+                flexDirection: "column",
+                alignItems: "center",
+                backgroundColor: "#2a2628",
+                borderRadius: 20,
+                padding: "32px 14px",
+                borderTop: "4px solid #F5C518",
+              }}
+            >
+              <div style={{ display: "flex", fontSize: 48, marginBottom: 14 }}>{"\uD83E\uDDF4"}</div>
+              <div style={{ display: "flex", fontSize: 18, color: "#F5C518", letterSpacing: 2, marginBottom: 10 }}>KOPFHAUT</div>
+              <div style={{ display: "flex", fontSize: 28, color: "white" }}>{finding3}</div>
+            </div>
+          </div>
+
+          {/* Tom quote — flex: 1 absorbs remaining space */}
+          <div style={{ display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", padding: "0 20px" }}>
+            <div style={{ display: "flex", fontSize: 18, color: "#F5C518", letterSpacing: 5, marginBottom: 16 }}>
+              TOM SAGT
+            </div>
+            <div style={{ display: "flex", fontSize: 40, color: "#ccc", lineHeight: 1.5, marginBottom: 20 }}>
+              {'"'}{quote}{'"'}
+            </div>
+            <div style={{ display: "flex", fontSize: 22, color: "#F5C518", letterSpacing: 5 }}>
+              -- TOM
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+            <div style={{ display: "flex", fontSize: 26, color: "#666" }}>
+              Was sagt Tom zu DEINEM Haar?
+            </div>
+            <div
+              style={{
+                display: "flex",
+                backgroundImage: "linear-gradient(90deg, #C9A013, #F5C518, #C9A013)",
+                color: "#1a1617",
+                fontFamily: "Bebas Neue",
+                fontSize: 40,
+                padding: "22px 100px",
+                borderRadius: 16,
+                letterSpacing: 5,
+              }}
+            >
+              QUIZ STARTEN
+            </div>
+            <div style={{ display: "flex", fontSize: 20, color: "#444", marginTop: 4 }}>
+              tombot.de/quiz
+            </div>
           </div>
         </div>
       </div>

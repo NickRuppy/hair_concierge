@@ -35,16 +35,31 @@ export function ResultPageClient({
     try {
       const res = await fetch(`/api/og/result/${leadId}`)
       const blob = await res.blob()
+      const fileName = `haar-diagnose-${name.toLowerCase().replace(/\s+/g, "-")}.png`
+
+      // On mobile: use native share with file (opens share sheet → save to photos / Instagram)
+      if (navigator.share && navigator.canShare) {
+        const file = new File([blob], fileName, { type: "image/png" })
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `${name}s Haar-Diagnose`,
+          })
+          return
+        }
+      }
+
+      // Desktop fallback: trigger download
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `haar-diagnose-${name.toLowerCase().replace(/\s+/g, "-")}.png`
+      a.download = fileName
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
     } catch {
-      // Fallback: open image in new tab
+      // Last resort: open image in new tab
       window.open(`/api/og/result/${leadId}`, "_blank")
     }
   }, [leadId, name])
@@ -89,7 +104,7 @@ export function ResultPageClient({
         </p>
 
         {/* Profile cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 items-start">
           {cardData.cards.map((card) => (
             <div
               key={card.title}
@@ -176,7 +191,7 @@ export function ResultPageClient({
             </a>
           </div>
           <p className="text-xs text-white/30 text-center mt-3">
-            Speichere das Bild und teile es in deiner Instagram Story!
+            Speichere das Bild und poste es in deiner Instagram Story!
           </p>
         </div>
 
