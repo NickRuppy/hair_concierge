@@ -54,13 +54,6 @@ export async function GET(
     description: sanitize(b.description),
   }))
 
-  // Load fonts at runtime from public/ (not bundled to stay under 1 MB Edge limit)
-  const origin = new URL(request.url).origin
-  const [bebasData, montserratData] = await Promise.all([
-    fetch(`${origin}/fonts/BebasNeue-Regular.ttf`).then((r) => r.arrayBuffer()),
-    fetch(`${origin}/fonts/Montserrat-Regular.ttf`).then((r) => r.arrayBuffer()),
-  ])
-
   return new ImageResponse(
     (
       <div
@@ -71,7 +64,7 @@ export async function GET(
           height: "100%",
           backgroundColor: "#231F20",
           padding: "80px 60px",
-          fontFamily: "Montserrat",
+          fontFamily: "sans-serif",
           color: "white",
         }}
       >
@@ -82,13 +75,13 @@ export async function GET(
             <div style={{ width: 6, height: 36, backgroundColor: "rgba(245,197,24,0.6)", borderRadius: 3 }} />
             <div style={{ width: 6, height: 36, backgroundColor: "rgba(245,197,24,0.3)", borderRadius: 3 }} />
           </div>
-          <span style={{ fontFamily: "Bebas Neue", fontSize: 28, color: "rgba(255,255,255,0.5)", letterSpacing: 6 }}>
+          <span style={{ fontFamily: "sans-serif", fontSize: 28, color: "rgba(255,255,255,0.5)", letterSpacing: 6 }}>
             TOM BOT
           </span>
         </div>
 
         {/* Headline */}
-        <div style={{ fontFamily: "Bebas Neue", fontSize: 72, color: "white", lineHeight: 1.1, marginBottom: 16 }}>
+        <div style={{ fontFamily: "sans-serif", fontSize: 72, color: "white", lineHeight: 1.1, marginBottom: 16 }}>
           {name}, DEINE HAAR-DIAGNOSE
         </div>
 
@@ -169,10 +162,6 @@ export async function GET(
     {
       width: 1080,
       height: 1920,
-      fonts: [
-        { name: "Bebas Neue", data: bebasData, style: "normal" as const, weight: 400 as const },
-        { name: "Montserrat", data: montserratData, style: "normal" as const, weight: 400 as const },
-      ],
       headers: {
         "Cache-Control": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600",
       },
