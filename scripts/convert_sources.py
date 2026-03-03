@@ -718,12 +718,32 @@ HAIR_TEXTURE_LABELS = {
     "Dicke Haare": "dicke Haare",
 }
 
+# Filename stem → category name overrides (when A1 is generic like "Haartyp")
+CATEGORY_NAME_OVERRIDES = {
+    "20260302_list_oils": "Öle",
+}
+
+# Known multiline product names that get incorrectly split by newline parsing.
+# Maps fragment → full product name. Applied after the merge step.
+PRODUCT_NAME_FIXES = {
+    "K18 Hair": "K18 Hair Professional Molecular Repair Hair Mist",
+    "Professional Molecular Repair Hair Mist": None,  # drop (merged into K18 entry)
+}
+
 # Known concern slugs — unknown headers get auto-slugified
 CONCERN_SLUG_OVERRIDES = {
     "Protein": "protein",
     "Feuchtigkeit": "feuchtigkeit",
     "Nix/Performance": "performance",
+    "Nix": "performance",
     "Dehydriert / Fettig": "dehydriert-fettig",
+    "Schuppen": "schuppen",
+    "Irritationen": "irritationen",
+    "Normal": "normal",
+    "Trocken": "trocken",
+    "NatürlichesÖl": "natuerliches-oel",
+    "Stylingöl": "styling-oel",
+    "Trockenöl": "trocken-oel",
 }
 
 # Display labels for known concerns — unknown ones use the header text as-is
@@ -731,6 +751,14 @@ CONCERN_DISPLAY_OVERRIDES = {
     "Protein": "Proteinbedarf",
     "Feuchtigkeit": "Feuchtigkeitsbedarf",
     "Nix/Performance": "Performance (allgemein leistungsstarke Produkte)",
+    "Nix": "Performance (allgemein leistungsstarke Produkte)",
+    "Schuppen": "Schuppenprobleme",
+    "Irritationen": "Kopfhautirritationen",
+    "Normal": "normaler Zustand (keine besondere Problematik)",
+    "Trocken": "trockenes Haar",
+    "NatürlichesÖl": "natürliches Haaröl",
+    "Stylingöl": "Stylingöl",
+    "Trockenöl": "Trockenöl (leicht, nicht beschwerend)",
 }
 
 
@@ -747,12 +775,10 @@ def concern_to_display(header: str) -> str:
 def convert_excel_matrices():
     """Convert all Excel product matrices to Markdown + JSON."""
     print("\n\n=== STEP 4: Converting Excel Product Matrices ===")
-    # Look in data/ and data/product_lists/
-    xlsx_files = sorted(
-        list(DATA_DIR.glob("*.xlsx")) + list((DATA_DIR / "product_lists").glob("*.xlsx"))
-    )
+    # Look in data/product_lists/0326v2/
+    xlsx_files = sorted((DATA_DIR / "product_lists" / "0326v2").glob("*.xlsx"))
     if not xlsx_files:
-        print("  No .xlsx files found in data/ or data/product_lists/")
+        print("  No .xlsx files found in data/product_lists/0326v2/")
         return
     print(f"  Found {len(xlsx_files)} Excel files")
     for xlsx_path in xlsx_files:
@@ -762,20 +788,50 @@ def convert_excel_matrices():
 def parse_cell_products(cell_value) -> list[str]:
     """Extract product names from a cell value.
 
-    Handles both formats:
-      - Single product name per cell (Leave-In style)
-      - Comma-separated list in one cell (Shampoo style)
+    Handles multiple formats:
+      - Single product name per cell (oils, leave-in — newlines are line wraps)
+      - Multi-product cells (masks, shampoo — newlines separate products)
+      - Comma-separated lists
 
-    Strips whitespace, trailing commas, and ignores "-" placeholder cells.
+    Heuristic: lines starting with '(' are annotations of the previous product
+    (e.g. "(Silikone)"), and single-word lines are brand names whose product
+    name continues on the next line (e.g. "Jean&Len\\nRepair Keratin & Mandel").
     """
     if cell_value is None:
         return []
     text = str(cell_value).strip().rstrip(",").strip()
     if not text or text == "-":
         return []
-    # Split on comma, clean each entry
-    products = [p.strip() for p in text.split(",")]
-    return [p for p in products if p and p != "-"]
+    # Split on newlines, clean each line
+    raw_lines = [ln.strip().rstrip(",").strip() for ln in text.split("\n")]
+    raw_lines = [ln for ln in raw_lines if ln and ln != "-"]
+    if not raw_lines:
+        return []
+    # Merge continuation lines before splitting on commas:
+    # - Lines starting with '(' are annotations (e.g. "(Silikone)")
+    # - If previous entry is a single word (brand-only like "Jean&Len"), join
+    merged = [raw_lines[0]]
+    for ln in raw_lines[1:]:
+        if ln.startswith("("):
+            merged[-1] = merged[-1] + " " + ln
+        elif " " not in merged[-1]:
+            # Previous entry is a single word (likely just a brand name)
+            merged[-1] = merged[-1] + " " + ln
+        else:
+            merged.append(ln)
+    # Now split each merged line on commas
+    products = []
+    for ln in merged:
+        for part in ln.split(","):
+            cleaned = part.strip().rstrip(",").strip()
+            if cleaned and cleaned != "-":
+                products.append(cleaned)
+    # Apply hardcoded fixes for known multiline product names
+    return [
+        PRODUCT_NAME_FIXES.get(p, p)
+        for p in products
+        if PRODUCT_NAME_FIXES.get(p, p) is not None
+    ]
 
 
 def convert_single_excel_matrix(xlsx_path: Path):
@@ -810,7 +866,12 @@ def convert_single_excel_matrix(xlsx_path: Path):
     else:
         # Format B: row 1 is a title, headers in row 2
         if row1_col1:
-            category = str(row1_col1).strip()
+            a1_text = str(row1_col1).strip()
+            # If A1 is generic (e.g. "Haartyp"), use filename-derived category
+            if a1_text in ("Haartyp",):
+                category = CATEGORY_NAME_OVERRIDES.get(filename_stem, a1_text)
+            else:
+                category = a1_text
         header_row = 2
         data_start_row = 3
 
