@@ -1,4 +1,4 @@
-import type { IntentType } from "@/lib/types"
+import type { IntentType, RetrievalMode } from "@/lib/types"
 
 /**
  * Structured retrieval telemetry events.
@@ -30,6 +30,38 @@ export interface RetrievalEvent {
 export function emitRetrievalEvent(event: RetrievalEvent): void {
   console.log(JSON.stringify({
     _type: "retrieval_telemetry",
+    timestamp: new Date().toISOString(),
+    ...event,
+  }))
+}
+
+// ── Router telemetry (Phase 2) ──────────────────────────────────────────────
+
+export type RouterEventType =
+  | "router_classified"
+  | "router_policy_override_applied"
+  | "router_clarification_triggered"
+  | "router_fallback_default_mode"
+
+export interface RouterEvent {
+  event: RouterEventType
+  conversation_id?: string
+  intent?: IntentType
+  retrieval_mode: RetrievalMode
+  router_confidence: number
+  needs_clarification: boolean
+  slot_completeness?: number
+  policy_overrides?: string[]
+  stage_latency_ms: number
+}
+
+/**
+ * Emits a structured router telemetry event to console (JSON format).
+ * Same pattern as emitRetrievalEvent — no PII, only aggregate data.
+ */
+export function emitRouterEvent(event: RouterEvent): void {
+  console.log(JSON.stringify({
+    _type: "router_telemetry",
     timestamp: new Date().toISOString(),
     ...event,
   }))

@@ -13,14 +13,18 @@ export interface SynthesizeParams {
   products?: Product[]
   intent: IntentType
   productCategory?: ProductCategory
-  consultationMode?: boolean
+  /** Slot-aware clarification questions from the router (replaces consultationMode) */
+  clarificationQuestions?: string[]
 }
 
 /**
  * Formats the user's hair profile into a human-readable German summary
  * for injection into the system prompt.
  */
-function formatUserProfile(profile: HairProfile | null, consultationMode?: boolean): string {
+function formatUserProfile(
+  profile: HairProfile | null,
+  clarificationQuestions?: string[],
+): string {
   if (!profile) {
     return "Kein Haarprofil vorhanden. Frage den Nutzer nach seinen Haardetails, wenn relevant."
   }
@@ -78,8 +82,13 @@ function formatUserProfile(profile: HairProfile | null, consultationMode?: boole
     result += `\n\nErinnerungen aus frueheren Gespraechen:\n${profile.conversation_memory}`
   }
 
-  if (consultationMode) {
-    result += "\n\n(HINWEIS: Dies ist der Beginn des Gespraechs. Stelle zuerst 2-3 gezielte Rueckfragen, um die Situation zu verstehen. Nenne dabei KEINE konkreten Produktnamen — auch nicht die Produkte aus der Datenbank unten. Produktempfehlungen kommen erst, wenn du genug Kontext hast.)"
+  if (clarificationQuestions && clarificationQuestions.length > 0) {
+    result += "\n\n(HINWEIS: Stelle zuerst gezielte Rueckfragen, um die Situation zu verstehen. Nenne dabei KEINE konkreten Produktnamen — auch nicht die Produkte aus der Datenbank unten. Produktempfehlungen kommen erst, wenn du genug Kontext hast."
+    result += "\n\nStelle insbesondere diese Fragen (in deinem eigenen Stil, nicht woertlich kopieren):"
+    for (const q of clarificationQuestions) {
+      result += `\n- ${q}`
+    }
+    result += ")"
   }
 
   return result
@@ -161,8 +170,8 @@ function buildSystemPrompt(
   ragChunks: ContentChunk[],
   imageAnalysis?: string,
   products?: Product[],
-  consultationMode?: boolean,
-  productCategory?: ProductCategory
+  productCategory?: ProductCategory,
+  clarificationQuestions?: string[],
 ): string {
   let prompt = SYSTEM_PROMPT
 
@@ -171,7 +180,7 @@ function buildSystemPrompt(
     prompt += CATEGORY_REASONING_PROMPTS[productCategory]
   }
 
-  prompt = prompt.replace("{{USER_PROFILE}}", formatUserProfile(hairProfile, consultationMode))
+  prompt = prompt.replace("{{USER_PROFILE}}", formatUserProfile(hairProfile, clarificationQuestions))
 
   let ragContext = formatRagContext(ragChunks)
   if (products) {
@@ -208,7 +217,7 @@ export async function synthesizeResponse(
     imageAnalysis,
     products,
     productCategory,
-    consultationMode,
+    clarificationQuestions,
   } = params
 
   const systemPrompt = buildSystemPrompt(
@@ -216,8 +225,8 @@ export async function synthesizeResponse(
     ragChunks,
     imageAnalysis,
     products,
-    consultationMode,
-    productCategory
+    productCategory,
+    clarificationQuestions,
   )
 
   // Build the messages array for the API call

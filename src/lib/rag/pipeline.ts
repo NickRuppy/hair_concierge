@@ -1,6 +1,8 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 import { analyzeImage } from "@/lib/openai/vision"
 import { classifyIntent } from "@/lib/rag/intent-classifier"
+import { evaluateRoute } from "@/lib/rag/router"
+import { buildClarificationQuestions } from "@/lib/rag/clarification"
 import { retrieveContext } from "@/lib/rag/retriever"
 import { matchProducts } from "@/lib/rag/product-matcher"
 import { synthesizeResponse } from "@/lib/rag/synthesizer"
@@ -9,7 +11,8 @@ import { mapProteinMoistureToConcernCode } from "@/lib/rag/conditioner-mapper"
 import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
 import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
-import type { IntentType, Message, HairProfile, Product, CitationSource, EnrichedCitationSource, ProductCategory } from "@/lib/types"
+import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
+import type { IntentType, Message, HairProfile, Product, CitationSource, EnrichedCitationSource, ProductCategory, RouterDecision } from "@/lib/types"
 
 export interface PipelineParams {
   message: string
@@ -24,6 +27,7 @@ export interface PipelineResult {
   intent: IntentType
   matchedProducts: Product[]
   sources: EnrichedCitationSource[]
+  routerDecision: RouterDecision
   /** Retrieval summary for the done event */
   retrievalSummary: {
     final_context_count: number
@@ -38,64 +42,17 @@ const PRODUCT_INTENTS: IntentType[] = [
 ]
 
 /**
- * Returns true when the message is a short/vague opener that should trigger
- * consultation-first behaviour — i.e. Tom asks clarifying questions before
- * recommending products.
- *
- * Only skips on the very first message if it's short/vague. Explicit
- * product_recommendation intents and images always get products. Second+
- * messages are never skipped — the prompt's consultation rules and the
- * question-mark filter in the API route handle suppression from there.
- */
-function shouldSkipProductMatching(
-  message: string,
-  conversationHistory: Message[],
-  hasImage: boolean,
-  intent: IntentType
-): boolean {
-  // Explicit product requests always get products
-  if (intent === "product_recommendation") return false
-  // Images bypass vagueness check
-  if (hasImage) return false
-
-  const userTurns = conversationHistory.filter(m => m.role === "user").length
-  // First message only: skip if very short/vague
-  if (userTurns === 0) {
-    const wordCount = message.trim().split(/\s+/).length
-    return message.length < 100 && wordCount < 15
-  }
-  return false
-}
-
-/**
- * Returns true when the user's message contains enough detail (problem,
- * history, products tried, etc.) that Tom can respond directly without
- * asking clarifying questions first.
- */
-function isRichContext(message: string): boolean {
-  const wordCount = message.trim().split(/\s+/).length
-  if (wordCount < 25) return false
-
-  let criteria = 0
-  criteria++ // Problem/Anliegen always present if they're writing
-  if (/seit|vor \d|wochen|monate|jahre/i.test(message)) criteria++
-  if (/benutze|verwende|probiert|getestet|shampoo|conditioner|leave-in|maske|öl|gel/i.test(message)) criteria++
-  if (/routine|wasche|mal die woche|täglich|alle \d/i.test(message)) criteria++
-  if (/gefärbt|blondiert|hitze|föhn|schwanger|medikament|allergi|empfindlich/i.test(message)) criteria++
-  return criteria >= 3
-}
-
-/**
  * Orchestrates the full RAG pipeline for a single user turn:
  *
  * Step 0: If an image is attached, analyze it with the vision model.
- * Step 1: Classify the user's intent (with product category).
+ * Step 1: Classify the user's intent (with enriched fields).
+ * Step 1b: Evaluate routing decision via deterministic policy engine.
  * Step 2: Retrieve relevant knowledge chunks via embedding + pgvector search.
  * Step 3: Load the user's hair profile and last 10 conversation messages.
  * Step 4: If the intent calls for it, match relevant products.
  * Step 5: Synthesize a streaming response with all gathered context.
  *
- * @returns The readable stream of response tokens, conversation ID, and classified intent.
+ * @returns The readable stream of response tokens, conversation ID, classified intent, and router decision.
  */
 export async function runPipeline(
   params: PipelineParams
@@ -138,43 +95,6 @@ export async function runPipeline(
     ? mapProteinMoistureToConcernCode(hairProfile?.protein_moisture_balance)
     : null
 
-  // ── Step 2: Retrieve context chunks (hybrid: decompose + dense + lexical + RRF + rerank) ──
-  // Build metadata filter based on intent and category
-  let metadataFilter: Record<string, string> | undefined
-  if (intent === "product_recommendation") {
-    if (hairProfile?.thickness) {
-      metadataFilter = { thickness: hairProfile.thickness }
-      // For shampoo: also filter by scalp concern
-      if (scalpConcern) {
-        metadataFilter.concern = scalpConcern
-      }
-      // For conditioner: filter by protein/moisture concern
-      if (conditionerConcern) {
-        metadataFilter.concern = conditionerConcern
-      }
-    } else if (hairProfile) {
-      console.warn(`User ${userId} has profile but missing thickness — skipping metadata filter`)
-    }
-  }
-  const ragChunks = await retrieveContext(message, {
-    intent,
-    hairProfile,
-    metadataFilter,
-    count: 5,
-    userId,
-  })
-
-  // ── Build enriched citation sources from retrieved chunks ─────────
-  const sources: EnrichedCitationSource[] = ragChunks.map((chunk, i) => ({
-    index: i + 1,
-    source_type: chunk.source_type,
-    label: SOURCE_TYPE_LABELS[chunk.source_type] ?? chunk.source_type,
-    source_name: chunk.source_name ? formatSourceName(chunk.source_name) : null,
-    snippet: chunk.content.slice(0, 200) + (chunk.content.length > 200 ? "..." : ""),
-    confidence: chunk.weighted_similarity,
-    retrieval_path: chunk.retrieval_path,
-  }))
-
   // ── Step 3: Load conversation history ─────────────────────────────
   const { data: conversationData } = conversationId
     ? await supabase
@@ -186,6 +106,49 @@ export async function runPipeline(
     : { data: null }
 
   const conversationHistory: Message[] = (conversationData as Message[]) ?? []
+
+  // ── Step 1b: Evaluate routing decision ─────────────────────────────
+  const routerStart = Date.now()
+  const routerDecision = evaluateRoute(classification, conversationHistory, hairProfile)
+
+  emitRouterEvent({
+    event: "router_classified",
+    conversation_id: conversationId,
+    intent,
+    retrieval_mode: routerDecision.retrieval_mode,
+    router_confidence: routerDecision.confidence,
+    needs_clarification: routerDecision.needs_clarification,
+    slot_completeness: routerDecision.slot_completeness,
+    policy_overrides: routerDecision.policy_overrides,
+    stage_latency_ms: Date.now() - routerStart,
+  })
+
+  // Emit override events if policy diverged from LLM suggestion
+  if (routerDecision.policy_overrides.length > 0) {
+    emitRouterEvent({
+      event: "router_policy_override_applied",
+      conversation_id: conversationId,
+      intent,
+      retrieval_mode: routerDecision.retrieval_mode,
+      router_confidence: routerDecision.confidence,
+      needs_clarification: routerDecision.needs_clarification,
+      policy_overrides: routerDecision.policy_overrides,
+      stage_latency_ms: 0,
+    })
+  }
+
+  if (routerDecision.needs_clarification) {
+    emitRouterEvent({
+      event: "router_clarification_triggered",
+      conversation_id: conversationId,
+      intent,
+      retrieval_mode: routerDecision.retrieval_mode,
+      router_confidence: routerDecision.confidence,
+      needs_clarification: true,
+      slot_completeness: routerDecision.slot_completeness,
+      stage_latency_ms: 0,
+    })
+  }
 
   // ── Create conversation if it doesn't exist yet ─────────────────────
   if (!conversationId) {
@@ -207,12 +170,103 @@ export async function runPipeline(
     generateConversationTitle(newConversation.id, message).catch(() => {})
   }
 
+  // ── Clarification branch: skip retrieval & products ─────────────────
+  if (routerDecision.needs_clarification) {
+    const clarificationQuestions = buildClarificationQuestions(
+      classification.normalized_filters,
+      product_category,
+      hairProfile,
+    )
+
+    // Minimal retrieval for context (but no product matching)
+    const ragChunks = await retrieveContext(message, {
+      intent,
+      hairProfile,
+      count: 3,
+      userId,
+    })
+
+    const sources: EnrichedCitationSource[] = ragChunks.map((chunk, i) => ({
+      index: i + 1,
+      source_type: chunk.source_type,
+      label: SOURCE_TYPE_LABELS[chunk.source_type] ?? chunk.source_type,
+      source_name: chunk.source_name ? formatSourceName(chunk.source_name) : null,
+      snippet: chunk.content.slice(0, 200) + (chunk.content.length > 200 ? "..." : ""),
+      confidence: chunk.weighted_similarity,
+      retrieval_path: chunk.retrieval_path,
+    }))
+
+    const stream = await synthesizeResponse({
+      userMessage: message,
+      conversationHistory,
+      hairProfile,
+      ragChunks,
+      imageAnalysis,
+      intent,
+      productCategory: product_category,
+      clarificationQuestions,
+    })
+
+    return {
+      stream,
+      conversationId: conversationId!,
+      intent,
+      matchedProducts: [],
+      sources,
+      routerDecision,
+      retrievalSummary: {
+        final_context_count: ragChunks.length,
+      },
+    }
+  }
+
+  // ── Normal branch: full retrieval + product matching ────────────────
+
+  // ── Step 2: Retrieve context chunks ─────────────────────────────────
+  // Build metadata filter based on intent and category
+  let metadataFilter: Record<string, string> | undefined
+  if (intent === "product_recommendation") {
+    if (hairProfile?.thickness) {
+      metadataFilter = { thickness: hairProfile.thickness }
+      // For shampoo: also filter by scalp concern
+      if (scalpConcern) {
+        metadataFilter.concern = scalpConcern
+      }
+      // For conditioner: filter by protein/moisture concern
+      if (conditionerConcern) {
+        metadataFilter.concern = conditionerConcern
+      }
+    } else if (hairProfile) {
+      console.warn(`User ${userId} has profile but missing thickness — skipping metadata filter`)
+    }
+  }
+
+  // FAQ mode: smaller retrieval, skip reranker
+  const retrievalCount = routerDecision.retrieval_mode === "faq" ? 3 : 5
+
+  const ragChunks = await retrieveContext(message, {
+    intent,
+    hairProfile,
+    metadataFilter,
+    count: retrievalCount,
+    userId,
+  })
+
+  // ── Build enriched citation sources from retrieved chunks ─────────
+  const sources: EnrichedCitationSource[] = ragChunks.map((chunk, i) => ({
+    index: i + 1,
+    source_type: chunk.source_type,
+    label: SOURCE_TYPE_LABELS[chunk.source_type] ?? chunk.source_type,
+    source_name: chunk.source_name ? formatSourceName(chunk.source_name) : null,
+    snippet: chunk.content.slice(0, 200) + (chunk.content.length > 200 ? "..." : ""),
+    confidence: chunk.weighted_similarity,
+    retrieval_path: chunk.retrieval_path,
+  }))
+
   // ── Step 4: Match products (if intent requires it) ──────────────────
-  const skipProducts = shouldSkipProductMatching(message, conversationHistory, !!imageUrl, intent)
   let matchedProducts = undefined
-  if (PRODUCT_INTENTS.includes(intent) && !skipProducts) {
+  if (PRODUCT_INTENTS.includes(intent)) {
     if (product_category === "shampoo") {
-      // Shampoo-specific: pre-filter by category + score by thickness & scalp concern
       matchedProducts = await matchProducts({
         query: message,
         thickness: hairProfile?.thickness ?? undefined,
@@ -221,7 +275,6 @@ export async function runPipeline(
         count: 3,
       })
     } else if (product_category === "conditioner") {
-      // Conditioner-specific: pre-filter by category + score by thickness & protein/moisture concern
       matchedProducts = await matchProducts({
         query: message,
         thickness: hairProfile?.thickness ?? undefined,
@@ -230,7 +283,6 @@ export async function runPipeline(
         count: 3,
       })
     } else {
-      // Generic: pass thickness for scoring, no category filter
       matchedProducts = await matchProducts({
         query: message,
         thickness: hairProfile?.thickness ?? undefined,
@@ -241,7 +293,6 @@ export async function runPipeline(
   }
 
   // ── Step 5: Synthesize streaming response ───────────────────────────
-  const isFirstMessage = conversationHistory.filter(m => m.role === "user").length === 0
   const stream = await synthesizeResponse({
     userMessage: message,
     conversationHistory,
@@ -251,7 +302,6 @@ export async function runPipeline(
     products: matchedProducts,
     intent,
     productCategory: product_category,
-    consultationMode: PRODUCT_INTENTS.includes(intent) && isFirstMessage && !isRichContext(message),
   })
 
   return {
@@ -260,6 +310,7 @@ export async function runPipeline(
     intent,
     matchedProducts: matchedProducts ?? [],
     sources,
+    routerDecision,
     retrievalSummary: {
       final_context_count: ragChunks.length,
     },

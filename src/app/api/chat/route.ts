@@ -58,7 +58,7 @@ export async function POST(request: Request) {
   const { message, conversation_id, image_url } = parsed.data
 
   try {
-    const { stream, conversationId, intent, matchedProducts, sources, retrievalSummary } = await runPipeline({
+    const { stream, conversationId, intent, matchedProducts, sources, retrievalSummary, routerDecision } = await runPipeline({
       message,
       conversationId: conversation_id,
       userId: user.id,
@@ -85,6 +85,19 @@ export async function POST(request: Request) {
           )
         )
 
+        // Send router confidence event
+        controller.enqueue(
+          encoder.encode(
+            `data: ${JSON.stringify({
+              type: "confidence",
+              data: {
+                confidence: routerDecision.confidence,
+                retrieval_mode: routerDecision.retrieval_mode,
+              },
+            })}\n\n`
+          )
+        )
+
         const reader = stream.getReader()
         let fullContent = ""
 
@@ -103,9 +116,8 @@ export async function POST(request: Request) {
             )
           }
 
-          // Send matched products — suppress if response is consultation-mode (asking questions)
-          const questionCount = (fullContent.match(/\?/g) || []).length
-          const productsToSend = matchedProducts.length > 0 && questionCount < 2
+          // Send matched products — suppress during clarification rounds
+          const productsToSend = !routerDecision.needs_clarification && matchedProducts.length > 0
             ? matchedProducts.slice(0, 3)
             : []
           if (productsToSend.length > 0) {
@@ -162,7 +174,16 @@ export async function POST(request: Request) {
 
           controller.enqueue(
             encoder.encode(
-              `data: ${JSON.stringify({ type: "done", data: { intent, ...retrievalSummary } })}\n\n`
+              `data: ${JSON.stringify({
+                type: "done",
+                data: {
+                  intent,
+                  ...retrievalSummary,
+                  router_confidence: routerDecision.confidence,
+                  retrieval_mode: routerDecision.retrieval_mode,
+                  policy_overrides: routerDecision.policy_overrides,
+                },
+              })}\n\n`
             )
           )
         } catch (error) {

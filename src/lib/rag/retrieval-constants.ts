@@ -56,3 +56,22 @@ export const THICKNESS_MATCH_BOOST = 1.15
 
 /** Boost for community_qa chunks with product mentions */
 export const COMMUNITY_QA_PRODUCT_BOOST = 1.25
+
+// ── Router (Phase 2) ────────────────────────────────────────────────────────
+/** Minimum confidence for the router to proceed without clarification */
+export const ROUTER_CONFIDENCE_THRESHOLD = 0.72
+
+/** Minimum filled slots required for product/routine intents */
+export const ROUTER_MIN_SLOTS_PRODUCT = 2
+
+/** Maximum clarification rounds before forcing a best-effort answer */
+export const ROUTER_MAX_CLARIFICATION_ROUNDS = 2
+
+/** Key information slots checked for completeness */
+export const ROUTER_SLOT_KEYS = [
+  "problem",
+  "duration",
+  "products_tried",
+  "routine",
+  "special_circumstances",
+] as const

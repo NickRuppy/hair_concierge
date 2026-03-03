@@ -140,9 +140,9 @@ Bei widerspruechlichen Informationen:
 
 /**
  * Prompt for classifying the intent of a user message.
- * Returns JSON: { "intent": "...", "category": "..." | null }
+ * Returns JSON with intent, category, complexity, confidence, filters, and needs_clarification.
  */
-export const INTENT_CLASSIFICATION_PROMPT = `Klassifiziere die Absicht der folgenden Nachricht. Antworte als JSON-Objekt mit zwei Feldern:
+export const INTENT_CLASSIFICATION_PROMPT = `Klassifiziere die Absicht der folgenden Nachricht. Antworte als JSON-Objekt mit sechs Feldern:
 
 1. "intent" — genau EINE der folgenden Kategorien:
 - product_recommendation: Der Nutzer fragt nach Produktempfehlungen, Produktvergleichen oder sucht nach bestimmten Haarpflegeprodukten
@@ -163,9 +163,26 @@ export const INTENT_CLASSIFICATION_PROMPT = `Klassifiziere die Absicht der folge
 - routine: Komplette Routine / mehrere Produkttypen
 - null: Kein bestimmter Produkttyp erkennbar oder kein Produktintent
 
-Antworte NUR mit validem JSON. Beispiel: {"intent": "product_recommendation", "category": "shampoo"}
+3. "complexity" — Komplexitaet der Anfrage:
+- simple: Einfache, eindeutige Frage (z.B. "Was ist Silikon?", "Hallo!")
+- multi_constraint: Mehrere Kriterien oder Einschraenkungen (z.B. "Shampoo fuer fettige Kopfhaut und feines Haar")
+- multi_hop: Erfordert mehrere Denkschritte oder Wissensverknuepfung (z.B. "Warum brechen meine Haare trotz Proteinbehandlung?")
 
-Nachricht: `
+4. "confidence" — Deine Sicherheit bei der Intent-Klassifikation als Zahl zwischen 0.0 und 1.0. Hohe Werte (>0.85) bei eindeutigen Anfragen, niedrige Werte (<0.6) bei vagen oder mehrdeutigen Nachrichten.
+
+5. "filters" — Extrahiere vorhandene Informationen aus der Nachricht als Objekt:
+- problem: Das konkrete Anliegen/Problem (oder null)
+- duration: Seit wann das Problem besteht (oder null)
+- products_tried: Bereits verwendete Produkte (oder null)
+- routine: Aktuelle Pflegeroutine/Waschfrequenz (oder null)
+- special_circumstances: Besondere Umstaende wie Faerben, Hitze, Schwangerschaft, Medikamente (oder null)
+
+6. "needs_clarification" — true wenn die Nachricht zu vage ist fuer eine hilfreiche Antwort, false wenn genug Kontext vorhanden ist.
+
+Antworte NUR mit validem JSON.
+Beispiel: {"intent": "product_recommendation", "category": "shampoo", "complexity": "multi_constraint", "confidence": 0.85, "filters": {"problem": "fettige Kopfhaut", "duration": null, "products_tried": null, "routine": null, "special_circumstances": null}, "needs_clarification": true}
+
+Klassifiziere die folgende Nutzer-Nachricht:`
 
 /**
  * Prompt for generating a short German conversation title from the first message.

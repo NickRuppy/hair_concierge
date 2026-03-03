@@ -157,23 +157,34 @@ export type IntentType =
 
 export type ProductCategory = "shampoo" | "conditioner" | "mask" | "oil" | "leave_in" | "routine" | null
 
+export type RetrievalMode = "faq" | "hybrid" | "hybrid_plus_graph" | "product_sql_plus_hybrid"
+
 export interface ClassificationResult {
   intent: IntentType
   product_category: ProductCategory
-  /** Phase 2 prep: query complexity level */
-  complexity?: "simple" | "multi_constraint" | "multi_hop"
-  /** Phase 2 prep: whether clarification is needed before retrieval */
-  needs_clarification?: boolean
-  /** Retrieval path selector */
-  retrieval_mode?: "faq" | "hybrid" | "hybrid_plus_graph" | "product_sql_plus_hybrid"
+  /** Query complexity level */
+  complexity: "simple" | "multi_constraint" | "multi_hop"
+  /** LLM suggestion: whether clarification is needed (policy may override) */
+  needs_clarification: boolean
+  /** LLM suggestion: retrieval path (policy may override) */
+  retrieval_mode: RetrievalMode
   /** Normalized filter values extracted from query */
-  normalized_filters?: Record<string, string | string[] | null>
+  normalized_filters: Record<string, string | string[] | null>
   /** Router confidence score (0-1) */
-  router_confidence?: number
+  router_confidence: number
+}
+
+export interface RouterDecision {
+  retrieval_mode: RetrievalMode
+  needs_clarification: boolean
+  clarification_reason?: string
+  slot_completeness: number          // 0–1
+  confidence: number
+  policy_overrides: string[]         // e.g. ["low_confidence", "missing_slots"]
 }
 
 export interface ChatSSEEvent {
-  type: "conversation_id" | "content_delta" | "product_recommendations" | "sources" | "done" | "error"
+  type: "conversation_id" | "content_delta" | "product_recommendations" | "sources" | "confidence" | "retrieval_debug" | "done" | "error"
   data: unknown
 }
 
