@@ -1,8 +1,33 @@
 /* ── Re-export shared vocabulary (single source of truth) ── */
 
-import type { HairTexture, HairThickness, WashFrequency, HeatStyling, Concern, Goal } from "@/lib/vocabulary"
+import type {
+  HairTexture,
+  HairThickness,
+  WashFrequency,
+  HeatStyling,
+  Concern,
+  Goal,
+  PostWashAction,
+  RoutinePreference,
+  RoutineProduct,
+} from "@/lib/vocabulary"
+import type {
+  ProductLeaveInSpecs,
+  LeaveInRole,
+} from "@/lib/leave-in/constants"
+import type { ProductMaskSpecs } from "@/lib/mask/constants"
 
-export type { HairTexture, HairThickness, WashFrequency, HeatStyling, Concern, Goal }
+export type {
+  HairTexture,
+  HairThickness,
+  WashFrequency,
+  HeatStyling,
+  Concern,
+  Goal,
+  PostWashAction,
+  RoutinePreference,
+  RoutineProduct,
+}
 
 export {
   HAIR_TEXTURE_OPTIONS,
@@ -17,6 +42,9 @@ export {
   SCALP_TYPE_LABELS,
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
+  POST_WASH_ACTION_OPTIONS,
+  ROUTINE_PREFERENCE_OPTIONS,
+  ROUTINE_PRODUCT_OPTIONS,
 } from "@/lib/vocabulary"
 
 export interface Profile {
@@ -49,6 +77,9 @@ export interface HairProfile {
   scalp_type: string | null
   scalp_condition: string | null
   chemical_treatment: string[]
+  post_wash_actions: PostWashAction[]
+  routine_preference: RoutinePreference | null
+  current_routine_products: RoutineProduct[]
   additional_notes: string | null
   conversation_memory: string | null
   created_at: string
@@ -72,9 +103,32 @@ export interface Product {
   suitable_concerns: string[]
   is_active: boolean
   sort_order: number
+  leave_in_specs?: ProductLeaveInSpecs | null
+  mask_specs?: ProductMaskSpecs | null
+  recommendation_meta?: RecommendationMetadata | null
   created_at: string
   updated_at: string
 }
+
+export interface BaseRecommendationMetadata {
+  category: "leave_in" | "mask"
+  score: number
+  top_reasons: string[]
+  tradeoffs: string[]
+  usage_hint: string
+}
+
+export interface LeaveInRecommendationMetadata extends BaseRecommendationMetadata {
+  category: "leave_in"
+  mode_match: LeaveInRole[]
+}
+
+export interface MaskRecommendationMetadata extends BaseRecommendationMetadata {
+  category: "mask"
+  need_level: "low" | "medium" | "high"
+}
+
+export type RecommendationMetadata = LeaveInRecommendationMetadata | MaskRecommendationMetadata
 
 export interface Conversation {
   id: string

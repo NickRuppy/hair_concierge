@@ -52,6 +52,15 @@ function formatUserProfile(
   if (profile.styling_tools.length > 0) {
     parts.push(`Styling-Tools: ${profile.styling_tools.join(", ")}`)
   }
+  if ((profile.post_wash_actions ?? []).length > 0) {
+    parts.push(`Nach dem Waschen: ${(profile.post_wash_actions ?? []).join(", ")}`)
+  }
+  if (profile.routine_preference) {
+    parts.push(`Routine-Detailgrad: ${profile.routine_preference}`)
+  }
+  if ((profile.current_routine_products ?? []).length > 0) {
+    parts.push(`Aktuelle Routine-Produkte: ${(profile.current_routine_products ?? []).join(", ")}`)
+  }
   if (profile.cuticle_condition) {
     parts.push(`Kutikula-Zustand: ${profile.cuticle_condition}`)
   }
@@ -118,6 +127,14 @@ function formatRagContext(chunks: ContentChunk[]): string {
 const PRODUCT_SECTION_HEADERS: Record<string, string> = {
   shampoo: "Passende Shampoos aus unserer Datenbank",
   conditioner: "Passende Conditioner aus unserer Datenbank",
+  mask: "Passende Masken aus unserer Datenbank",
+  leave_in: "Passende Leave-ins aus unserer Datenbank",
+}
+
+const NEED_LEVEL_LABELS: Record<string, string> = {
+  low: "niedrig",
+  medium: "mittel",
+  high: "hoch",
 }
 
 /**
@@ -135,7 +152,30 @@ function formatProducts(products: Product[], productCategory?: ProductCategory):
       if (p.short_description) parts.push(`  ${p.short_description}`)
       else if (p.description) parts.push(`  ${p.description}`)
       if (p.price_eur) parts.push(`  Preis: ${p.price_eur.toFixed(2)} EUR`)
-      if (p.tags.length > 0) parts.push(`  Tags: ${p.tags.join(", ")}`)
+      if ((p.tags ?? []).length > 0) parts.push(`  Tags: ${(p.tags ?? []).join(", ")}`)
+      if (p.recommendation_meta) {
+        const meta = p.recommendation_meta
+        parts.push(`  Score: ${meta.score.toFixed(1)}`)
+
+        if (meta.category === "leave_in" && meta.mode_match.length > 0) {
+          parts.push(`  Mode-Fit: ${meta.mode_match.join(", ")}`)
+        }
+
+        if (meta.category === "mask") {
+          const needLabel = NEED_LEVEL_LABELS[meta.need_level] ?? meta.need_level
+          parts.push(`  Bedarf: ${needLabel}`)
+        }
+
+        if (meta.top_reasons.length > 0) {
+          parts.push(`  Warum passend: ${meta.top_reasons.join(" | ")}`)
+        }
+        if (meta.tradeoffs.length > 0) {
+          parts.push(`  Trade-offs: ${meta.tradeoffs.join(" | ")}`)
+        }
+        if (meta.usage_hint) {
+          parts.push(`  Anwendung: ${meta.usage_hint}`)
+        }
+      }
       return parts.join("\n")
     })
     .join("\n")
@@ -160,6 +200,21 @@ Wenn du Shampoo-Empfehlungen gibst:
 Wenn du Conditioner-Empfehlungen gibst:
 1. Erklaere ZUERST den Protein-Feuchtigkeits-Status des Nutzers basierend auf dem Zugtest-Ergebnis im Profil. Beschreibe, was das Haar gerade braucht (Protein, Feuchtigkeit, oder ausgewogene Pflege) in 1-2 Saetzen.
 2. Empfehle DANN konkrete Produkte und erklaere WARUM jedes Produkt zu diesem Bedarf und der Haardicke passt.`,
+  leave_in: `
+
+## Leave-in-Empfehlungen:
+Wenn du Leave-in-Empfehlungen gibst:
+1. Nutze den "Mode-Fit", "Warum passend" und "Trade-offs" Kontext der Produkte aktiv.
+2. Bevorzuge bei Hitzestyling Leave-ins mit Pflege + Hitzeschutz gegenueber reinen Hitzeschutz-Produkten.
+3. Erklaere kurz den Anwendungszeitpunkt (z.B. handtuchtrocken vor Styling), basierend auf "Anwendung".`,
+  mask: `
+
+## Masken-Empfehlungen:
+Wenn du Masken-Empfehlungen gibst:
+1. Behandle Masken als Zusatzpflege, nicht als Conditioner-Ersatz.
+2. Betone Anwendung auf Laengen/Spitzen (nicht Kopfhaut).
+3. Erklaere klar die Reihenfolge: Shampoo -> Maske -> Conditioner.
+4. Nutze den "Bedarf"- und "Anwendung"-Kontext fuer Frequenz und Dosierung.`,
 }
 
 /**

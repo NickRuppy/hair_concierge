@@ -120,7 +120,10 @@ export function evaluateRoute(
     // ── Rule 3: Category-specific defaults (only for product intents) ──
     if (
       PRODUCT_INTENTS.includes(intent) &&
-      (product_category === "shampoo" || product_category === "conditioner")
+      (product_category === "shampoo" ||
+        product_category === "conditioner" ||
+        product_category === "mask" ||
+        product_category === "leave_in")
     ) {
       retrieval_mode = "product_sql_plus_hybrid"
       overrides.push("category_product_mode")

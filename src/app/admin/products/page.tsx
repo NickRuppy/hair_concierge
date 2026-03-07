@@ -5,6 +5,49 @@ import { useToast } from "@/providers/toast-provider"
 import type { Product } from "@/lib/types"
 import { HAIR_TEXTURE_OPTIONS, CONCERN_OPTIONS } from "@/lib/types"
 import { fehler } from "@/lib/vocabulary"
+import {
+  LEAVE_IN_FORMATS,
+  LEAVE_IN_WEIGHTS,
+  LEAVE_IN_ROLES,
+  LEAVE_IN_CARE_BENEFITS,
+  LEAVE_IN_INGREDIENT_FLAGS,
+  LEAVE_IN_APPLICATION_STAGES,
+  isLeaveInCategory,
+} from "@/lib/leave-in/constants"
+import {
+  MASK_FORMATS,
+  MASK_WEIGHTS,
+  MASK_CONCENTRATIONS,
+  MASK_BENEFITS,
+  MASK_INGREDIENT_FLAGS,
+  isMaskCategory,
+} from "@/lib/mask/constants"
+
+interface LeaveInSpecForm {
+  format: string
+  weight: string
+  roles: string[]
+  provides_heat_protection: boolean
+  heat_protection_max_c: string
+  heat_activation_required: boolean
+  care_benefits: string[]
+  ingredient_flags: string[]
+  application_stage: string[]
+}
+
+interface MaskSpecForm {
+  format: string
+  weight: string
+  concentration: string
+  benefits: string[]
+  ingredient_flags: string[]
+  apply_on_scalp_allowed: boolean
+  leave_on_minutes: string
+  max_uses_per_week: string
+  dose_fine_ml: string
+  dose_normal_ml: string
+  dose_coarse_ml: string
+}
 
 interface ProductForm {
   name: string
@@ -19,6 +62,34 @@ interface ProductForm {
   suitable_concerns: string[]
   is_active: boolean
   sort_order: number
+  leave_in_specs: LeaveInSpecForm | null
+  mask_specs: MaskSpecForm | null
+}
+
+const emptyLeaveInSpecs: LeaveInSpecForm = {
+  format: "spray",
+  weight: "light",
+  roles: [],
+  provides_heat_protection: false,
+  heat_protection_max_c: "",
+  heat_activation_required: false,
+  care_benefits: [],
+  ingredient_flags: [],
+  application_stage: ["towel_dry"],
+}
+
+const emptyMaskSpecs: MaskSpecForm = {
+  format: "lotion",
+  weight: "medium",
+  concentration: "low",
+  benefits: [],
+  ingredient_flags: [],
+  apply_on_scalp_allowed: false,
+  leave_on_minutes: "10",
+  max_uses_per_week: "1",
+  dose_fine_ml: "",
+  dose_normal_ml: "",
+  dose_coarse_ml: "",
 }
 
 const emptyForm: ProductForm = {
@@ -34,6 +105,8 @@ const emptyForm: ProductForm = {
   suitable_concerns: [],
   is_active: true,
   sort_order: 0,
+  leave_in_specs: null,
+  mask_specs: null,
 }
 
 export default function AdminProductsPage() {
@@ -70,11 +143,57 @@ export default function AdminProductsPage() {
 
   function handleNew() {
     setEditingId(null)
-    setForm(emptyForm)
+    setForm({ ...emptyForm })
     setShowForm(true)
   }
 
   function handleEdit(product: Product) {
+    const leaveInSpecs = product.leave_in_specs
+      ? {
+          format: product.leave_in_specs.format,
+          weight: product.leave_in_specs.weight,
+          roles: product.leave_in_specs.roles || [],
+          provides_heat_protection: product.leave_in_specs.provides_heat_protection,
+          heat_protection_max_c:
+            product.leave_in_specs.heat_protection_max_c != null
+              ? String(product.leave_in_specs.heat_protection_max_c)
+              : "",
+          heat_activation_required: product.leave_in_specs.heat_activation_required,
+          care_benefits: product.leave_in_specs.care_benefits || [],
+          ingredient_flags: product.leave_in_specs.ingredient_flags || [],
+          application_stage: product.leave_in_specs.application_stage || ["towel_dry"],
+        }
+      : isLeaveInCategory(product.category || "")
+        ? { ...emptyLeaveInSpecs }
+        : null
+
+    const maskSpecs = product.mask_specs
+      ? {
+          format: product.mask_specs.format,
+          weight: product.mask_specs.weight,
+          concentration: product.mask_specs.concentration,
+          benefits: product.mask_specs.benefits || [],
+          ingredient_flags: product.mask_specs.ingredient_flags || [],
+          apply_on_scalp_allowed: product.mask_specs.apply_on_scalp_allowed,
+          leave_on_minutes: String(product.mask_specs.leave_on_minutes ?? 10),
+          max_uses_per_week: String(product.mask_specs.max_uses_per_week ?? 1),
+          dose_fine_ml:
+            product.mask_specs.dose_fine_ml != null
+              ? String(product.mask_specs.dose_fine_ml)
+              : "",
+          dose_normal_ml:
+            product.mask_specs.dose_normal_ml != null
+              ? String(product.mask_specs.dose_normal_ml)
+              : "",
+          dose_coarse_ml:
+            product.mask_specs.dose_coarse_ml != null
+              ? String(product.mask_specs.dose_coarse_ml)
+              : "",
+        }
+      : isMaskCategory(product.category || "")
+        ? { ...emptyMaskSpecs }
+        : null
+
     setEditingId(product.id)
     setForm({
       name: product.name,
@@ -89,6 +208,8 @@ export default function AdminProductsPage() {
       suitable_concerns: product.suitable_concerns || [],
       is_active: product.is_active,
       sort_order: product.sort_order,
+      leave_in_specs: leaveInSpecs,
+      mask_specs: maskSpecs,
     })
     setShowForm(true)
   }
@@ -96,7 +217,7 @@ export default function AdminProductsPage() {
   function handleCancel() {
     setShowForm(false)
     setEditingId(null)
-    setForm(emptyForm)
+    setForm({ ...emptyForm })
   }
 
   function toggleChip(field: "suitable_hair_textures" | "suitable_concerns", value: string) {
@@ -107,6 +228,57 @@ export default function AdminProductsPage() {
         : [...current, value]
       return { ...prev, [field]: next }
     })
+  }
+
+  function toggleLeaveInArrayField(
+    field: "roles" | "care_benefits" | "ingredient_flags" | "application_stage",
+    value: string
+  ) {
+    setForm((prev) => {
+      if (!prev.leave_in_specs) return prev
+      const current = prev.leave_in_specs[field]
+      const next = current.includes(value)
+        ? current.filter((entry) => entry !== value)
+        : [...current, value]
+      return {
+        ...prev,
+        leave_in_specs: {
+          ...prev.leave_in_specs,
+          [field]: next,
+        },
+      }
+    })
+  }
+
+  function toggleMaskArrayField(
+    field: "benefits" | "ingredient_flags",
+    value: string
+  ) {
+    setForm((prev) => {
+      if (!prev.mask_specs) return prev
+      const current = prev.mask_specs[field]
+      const next = current.includes(value)
+        ? current.filter((entry) => entry !== value)
+        : [...current, value]
+      return {
+        ...prev,
+        mask_specs: {
+          ...prev.mask_specs,
+          [field]: next,
+        },
+      }
+    })
+  }
+
+  function handleCategoryChange(value: string) {
+    const leaveIn = isLeaveInCategory(value)
+    const mask = isMaskCategory(value)
+    setForm((prev) => ({
+      ...prev,
+      category: value,
+      leave_in_specs: leaveIn ? prev.leave_in_specs ?? { ...emptyLeaveInSpecs } : null,
+      mask_specs: mask ? prev.mask_specs ?? { ...emptyMaskSpecs } : null,
+    }))
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -123,6 +295,19 @@ export default function AdminProductsPage() {
         .map((t) => t.trim())
         .filter(Boolean)
 
+      const leaveInEnabled = isLeaveInCategory(form.category)
+      const maskEnabled = isMaskCategory(form.category)
+      if (leaveInEnabled && !form.leave_in_specs) {
+        toast({ title: "Leave-in-Spezifikation fehlt", variant: "destructive" })
+        setSaving(false)
+        return
+      }
+      if (maskEnabled && !form.mask_specs) {
+        toast({ title: "Masken-Spezifikation fehlt", variant: "destructive" })
+        setSaving(false)
+        return
+      }
+
       const payload = {
         name: form.name.trim(),
         brand: form.brand.trim() || null,
@@ -136,6 +321,48 @@ export default function AdminProductsPage() {
         suitable_concerns: form.suitable_concerns,
         is_active: form.is_active,
         sort_order: form.sort_order,
+        leave_in_specs:
+          leaveInEnabled && form.leave_in_specs
+            ? {
+                format: form.leave_in_specs.format,
+                weight: form.leave_in_specs.weight,
+                roles: form.leave_in_specs.roles,
+                provides_heat_protection: form.leave_in_specs.provides_heat_protection,
+                heat_protection_max_c: form.leave_in_specs.heat_protection_max_c
+                  ? parseInt(form.leave_in_specs.heat_protection_max_c, 10)
+                  : null,
+                heat_activation_required: form.leave_in_specs.heat_activation_required,
+                care_benefits: form.leave_in_specs.care_benefits,
+                ingredient_flags: form.leave_in_specs.ingredient_flags,
+                application_stage: form.leave_in_specs.application_stage,
+              }
+            : null,
+        mask_specs:
+          maskEnabled && form.mask_specs
+            ? {
+                format: form.mask_specs.format,
+                weight: form.mask_specs.weight,
+                concentration: form.mask_specs.concentration,
+                benefits: form.mask_specs.benefits,
+                ingredient_flags: form.mask_specs.ingredient_flags,
+                apply_on_scalp_allowed: form.mask_specs.apply_on_scalp_allowed,
+                leave_on_minutes: form.mask_specs.leave_on_minutes
+                  ? parseInt(form.mask_specs.leave_on_minutes, 10)
+                  : 10,
+                max_uses_per_week: form.mask_specs.max_uses_per_week
+                  ? parseInt(form.mask_specs.max_uses_per_week, 10)
+                  : 1,
+                dose_fine_ml: form.mask_specs.dose_fine_ml
+                  ? parseInt(form.mask_specs.dose_fine_ml, 10)
+                  : null,
+                dose_normal_ml: form.mask_specs.dose_normal_ml
+                  ? parseInt(form.mask_specs.dose_normal_ml, 10)
+                  : null,
+                dose_coarse_ml: form.mask_specs.dose_coarse_ml
+                  ? parseInt(form.mask_specs.dose_coarse_ml, 10)
+                  : null,
+              }
+            : null,
       }
 
       let res: Response
@@ -267,7 +494,7 @@ export default function AdminProductsPage() {
                 <input
                   type="text"
                   value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                  onChange={(e) => handleCategoryChange(e.target.value)}
                   className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="z.B. Shampoo, Conditioner"
                 />
@@ -391,6 +618,490 @@ export default function AdminProductsPage() {
                 })}
               </div>
             </div>
+
+            {isLeaveInCategory(form.category) && form.leave_in_specs && (
+              <div className="rounded-lg border border-input/70 bg-muted/20 p-4 space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">Leave-in Spezifikation</h3>
+                  <p className="text-xs text-muted-foreground">
+                    Strukturierte Felder fuer deterministisches Leave-in-Reranking.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Format
+                    </label>
+                    <select
+                      value={form.leave_in_specs.format}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          leave_in_specs: prev.leave_in_specs
+                            ? { ...prev.leave_in_specs, format: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {LEAVE_IN_FORMATS.map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Gewicht
+                    </label>
+                    <select
+                      value={form.leave_in_specs.weight}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          leave_in_specs: prev.leave_in_specs
+                            ? { ...prev.leave_in_specs, weight: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {LEAVE_IN_WEIGHTS.map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                    Rollen
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {LEAVE_IN_ROLES.map((role) => (
+                      <button
+                        key={role}
+                        type="button"
+                        onClick={() => toggleLeaveInArrayField("roles", role)}
+                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                          form.leave_in_specs?.roles.includes(role)
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {role}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="provides_heat_protection"
+                      checked={form.leave_in_specs.provides_heat_protection}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          leave_in_specs: prev.leave_in_specs
+                            ? {
+                                ...prev.leave_in_specs,
+                                provides_heat_protection: e.target.checked,
+                                heat_protection_max_c: e.target.checked
+                                  ? prev.leave_in_specs.heat_protection_max_c
+                                  : "",
+                              }
+                            : null,
+                        }))
+                      }
+                      className="h-4 w-4 rounded border-input"
+                    />
+                    <label htmlFor="provides_heat_protection" className="text-xs font-medium text-foreground">
+                      Bietet Hitzeschutz
+                    </label>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Hitzeschutz bis (C)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={form.leave_in_specs.heat_protection_max_c}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          leave_in_specs: prev.leave_in_specs
+                            ? {
+                                ...prev.leave_in_specs,
+                                heat_protection_max_c: e.target.value,
+                              }
+                            : null,
+                        }))
+                      }
+                      disabled={!form.leave_in_specs.provides_heat_protection}
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="heat_activation_required"
+                    checked={form.leave_in_specs.heat_activation_required}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        leave_in_specs: prev.leave_in_specs
+                          ? {
+                              ...prev.leave_in_specs,
+                              heat_activation_required: e.target.checked,
+                              roles: e.target.checked
+                                ? prev.leave_in_specs.roles.includes("styling_prep")
+                                  ? prev.leave_in_specs.roles
+                                  : [...prev.leave_in_specs.roles, "styling_prep"]
+                                : prev.leave_in_specs.roles,
+                            }
+                          : null,
+                      }))
+                    }
+                    className="h-4 w-4 rounded border-input"
+                  />
+                  <label htmlFor="heat_activation_required" className="text-xs font-medium text-foreground">
+                    Hitzeaktivierung erforderlich
+                  </label>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                    Care Benefits
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {LEAVE_IN_CARE_BENEFITS.map((benefit) => (
+                      <button
+                        key={benefit}
+                        type="button"
+                        onClick={() => toggleLeaveInArrayField("care_benefits", benefit)}
+                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                          form.leave_in_specs?.care_benefits.includes(benefit)
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {benefit}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                    Ingredient Flags
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {LEAVE_IN_INGREDIENT_FLAGS.map((flag) => (
+                      <button
+                        key={flag}
+                        type="button"
+                        onClick={() => toggleLeaveInArrayField("ingredient_flags", flag)}
+                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                          form.leave_in_specs?.ingredient_flags.includes(flag)
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {flag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                    Anwendungsschritte
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {LEAVE_IN_APPLICATION_STAGES.map((stage) => (
+                      <button
+                        key={stage}
+                        type="button"
+                        onClick={() => toggleLeaveInArrayField("application_stage", stage)}
+                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                          form.leave_in_specs?.application_stage.includes(stage)
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {stage}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isMaskCategory(form.category) && form.mask_specs && (
+              <div className="rounded-lg border border-input/70 bg-muted/20 p-4 space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">Masken-Spezifikation</h3>
+                  <p className="text-xs text-muted-foreground">
+                    Strukturierte Felder fuer deterministisches Masken-Reranking.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Format
+                    </label>
+                    <select
+                      value={form.mask_specs.format}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          mask_specs: prev.mask_specs
+                            ? { ...prev.mask_specs, format: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {MASK_FORMATS.map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Gewicht
+                    </label>
+                    <select
+                      value={form.mask_specs.weight}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          mask_specs: prev.mask_specs
+                            ? { ...prev.mask_specs, weight: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {MASK_WEIGHTS.map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Konzentration
+                    </label>
+                    <select
+                      value={form.mask_specs.concentration}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          mask_specs: prev.mask_specs
+                            ? { ...prev.mask_specs, concentration: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {MASK_CONCENTRATIONS.map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                    Benefits
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {MASK_BENEFITS.map((benefit) => (
+                      <button
+                        key={benefit}
+                        type="button"
+                        onClick={() => toggleMaskArrayField("benefits", benefit)}
+                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                          form.mask_specs?.benefits.includes(benefit)
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {benefit}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
+                    Ingredient Flags
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {MASK_INGREDIENT_FLAGS.map((flag) => (
+                      <button
+                        key={flag}
+                        type="button"
+                        onClick={() => toggleMaskArrayField("ingredient_flags", flag)}
+                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                          form.mask_specs?.ingredient_flags.includes(flag)
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {flag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Einwirkzeit (Minuten)
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="60"
+                      value={form.mask_specs.leave_on_minutes}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          mask_specs: prev.mask_specs
+                            ? { ...prev.mask_specs, leave_on_minutes: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Max. Anwendungen/Woche
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="3"
+                      value={form.mask_specs.max_uses_per_week}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          mask_specs: prev.mask_specs
+                            ? { ...prev.mask_specs, max_uses_per_week: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-6">
+                    <input
+                      type="checkbox"
+                      id="apply_on_scalp_allowed"
+                      checked={form.mask_specs.apply_on_scalp_allowed}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          mask_specs: prev.mask_specs
+                            ? { ...prev.mask_specs, apply_on_scalp_allowed: e.target.checked }
+                            : null,
+                        }))
+                      }
+                      className="h-4 w-4 rounded border-input"
+                    />
+                    <label htmlFor="apply_on_scalp_allowed" className="text-xs font-medium text-foreground">
+                      Auf Kopfhaut anwendbar
+                    </label>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Dosis fein (ml)
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={form.mask_specs.dose_fine_ml}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          mask_specs: prev.mask_specs
+                            ? { ...prev.mask_specs, dose_fine_ml: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Dosis normal (ml)
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={form.mask_specs.dose_normal_ml}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          mask_specs: prev.mask_specs
+                            ? { ...prev.mask_specs, dose_normal_ml: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Dosis dick (ml)
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={form.mask_specs.dose_coarse_ml}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          mask_specs: prev.mask_specs
+                            ? { ...prev.mask_specs, dose_coarse_ml: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center gap-2">
               <input

@@ -16,6 +16,9 @@ import {
   SCALP_TYPE_LABELS,
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
+  POST_WASH_ACTION_OPTIONS,
+  ROUTINE_PREFERENCE_OPTIONS,
+  ROUTINE_PRODUCT_OPTIONS,
 } from "@/lib/types"
 import type { HairProfile } from "@/lib/types"
 import { createClient } from "@/lib/supabase/client"
@@ -84,6 +87,35 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
       hp?.styling_tools?.length ? hp.styling_tools.join(", ") : null,
   },
   {
+    key: "post_wash_actions",
+    label: "Nach dem Waschen",
+    helpText: "Steuert Leave-in- und Styling-Empfehlungen",
+    getValue: (hp) =>
+      hp?.post_wash_actions?.length
+        ? hp.post_wash_actions
+            .map((item) => POST_WASH_ACTION_OPTIONS.find((o) => o.value === item)?.label ?? item)
+            .join(", ")
+        : null,
+  },
+  {
+    key: "routine_preference",
+    label: "Routine-Detailgrad",
+    helpText: "Wie kompakt oder detailliert dein Plan sein soll",
+    getValue: (hp) =>
+      ROUTINE_PREFERENCE_OPTIONS.find((o) => o.value === hp?.routine_preference)?.label ?? null,
+  },
+  {
+    key: "current_routine_products",
+    label: "Produkte in Routine",
+    helpText: "Hilft bei sinnvoller Ergänzung statt Verdopplung",
+    getValue: (hp) =>
+      hp?.current_routine_products?.length
+        ? hp.current_routine_products
+            .map((item) => ROUTINE_PRODUCT_OPTIONS.find((o) => o.value === item)?.label ?? item)
+            .join(", ")
+        : null,
+  },
+  {
     key: "products_used",
     label: "Verwendete Produkte",
     helpText: "Vermeidet doppelte Empfehlungen",
@@ -106,6 +138,9 @@ const FIELD_TO_SECTION: Record<string, string> = {
   wash_frequency: "routine",
   heat_styling: "routine",
   styling_tools: "routine",
+  post_wash_actions: "routine",
+  routine_preference: "routine",
+  current_routine_products: "routine",
   products_used: "routine",
 }
 
@@ -127,6 +162,9 @@ export default function ProfilePage() {
     wash_frequency: "",
     heat_styling: "",
     styling_tools: [] as string[],
+    post_wash_actions: [] as string[],
+    routine_preference: "",
+    current_routine_products: [] as string[],
     products_used: "",
     goals: [] as string[],
     additional_notes: "",
@@ -154,6 +192,9 @@ export default function ProfilePage() {
             wash_frequency: data.wash_frequency || "",
             heat_styling: data.heat_styling || "",
             styling_tools: data.styling_tools || [],
+            post_wash_actions: data.post_wash_actions || [],
+            routine_preference: data.routine_preference || "",
+            current_routine_products: data.current_routine_products || [],
             products_used: data.products_used || "",
             goals: data.goals || [],
             additional_notes: data.additional_notes || "",
@@ -203,6 +244,9 @@ export default function ProfilePage() {
         wash_frequency: formData.wash_frequency || null,
         heat_styling: formData.heat_styling || null,
         styling_tools: formData.styling_tools,
+        post_wash_actions: formData.post_wash_actions,
+        routine_preference: formData.routine_preference || null,
+        current_routine_products: formData.current_routine_products,
         products_used: formData.products_used || null,
         goals: formData.goals,
         additional_notes: formData.additional_notes || null,
@@ -471,6 +515,80 @@ export default function ProfilePage() {
                             }`}
                           >
                             {tool}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">
+                        Nach dem Waschen
+                      </label>
+                      <p className="mb-2 text-xs text-muted-foreground">
+                        Waehle alle Aktionen, die auf dich zutreffen.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {POST_WASH_ACTION_OPTIONS.map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() =>
+                              setFormData((f) => ({
+                                ...f,
+                                post_wash_actions: toggleArrayItem(
+                                  f.post_wash_actions,
+                                  option.value
+                                ),
+                              }))
+                            }
+                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
+                              formData.post_wash_actions.includes(option.value)
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "hover:bg-accent"
+                            }`}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">
+                        Routine-Detailgrad
+                      </label>
+                      <SegmentedControl
+                        options={ROUTINE_PREFERENCE_OPTIONS}
+                        value={formData.routine_preference}
+                        onChange={(v) =>
+                          setFormData((f) => ({ ...f, routine_preference: v }))
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">
+                        Welche Produkte sind Teil deiner Routine?
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {ROUTINE_PRODUCT_OPTIONS.map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() =>
+                              setFormData((f) => ({
+                                ...f,
+                                current_routine_products: toggleArrayItem(
+                                  f.current_routine_products,
+                                  option.value
+                                ),
+                              }))
+                            }
+                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
+                              formData.current_routine_products.includes(option.value)
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "hover:bg-accent"
+                            }`}
+                          >
+                            {option.label}
                           </button>
                         ))}
                       </div>

@@ -50,6 +50,23 @@ export type {
 } from "./profile-labels"
 
 export {
+  POST_WASH_ACTIONS,
+  POST_WASH_ACTION_LABELS,
+  POST_WASH_ACTION_OPTIONS,
+  ROUTINE_PREFERENCES,
+  ROUTINE_PREFERENCE_LABELS,
+  ROUTINE_PREFERENCE_OPTIONS,
+  ROUTINE_PRODUCTS,
+  ROUTINE_PRODUCT_LABELS,
+  ROUTINE_PRODUCT_OPTIONS,
+} from "../leave-in/constants"
+export type {
+  PostWashAction,
+  RoutinePreference,
+  RoutineProduct,
+} from "../leave-in/constants"
+
+export {
   SOURCE_TYPES,
   SOURCE_TYPE_LABELS,
 } from "./source-labels"

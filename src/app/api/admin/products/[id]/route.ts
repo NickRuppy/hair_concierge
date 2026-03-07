@@ -4,6 +4,8 @@ import { productSchema } from "@/lib/validators"
 import { generateEmbedding } from "@/lib/openai/embeddings"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
+import { isLeaveInCategory } from "@/lib/leave-in/constants"
+import { isMaskCategory } from "@/lib/mask/constants"
 
 export async function PUT(
   request: Request,
@@ -43,6 +45,8 @@ export async function PUT(
     )
   }
 
+  const { leave_in_specs, mask_specs, ...productPayload } = parsed.data
+
   // Fetch existing product to check if embedding-relevant fields changed
   const { data: existing } = await supabase
     .from("products")
@@ -52,7 +56,7 @@ export async function PUT(
 
   const { data: product, error } = await supabase
     .from("products")
-    .update({ ...parsed.data, updated_at: new Date().toISOString() })
+    .update({ ...productPayload, updated_at: new Date().toISOString() })
     .eq("id", id)
     .select()
     .single()
@@ -67,11 +71,64 @@ export async function PUT(
   // Regenerate embedding if relevant fields changed
   const embeddingFieldsChanged =
     !existing ||
-    existing.name !== parsed.data.name ||
-    existing.brand !== parsed.data.brand ||
-    existing.description !== parsed.data.description ||
-    existing.category !== parsed.data.category ||
-    JSON.stringify(existing.tags) !== JSON.stringify(parsed.data.tags)
+    existing.name !== productPayload.name ||
+    existing.brand !== productPayload.brand ||
+    existing.description !== productPayload.description ||
+    existing.category !== productPayload.category ||
+    JSON.stringify(existing.tags) !== JSON.stringify(productPayload.tags)
+
+  if (isLeaveInCategory(product.category)) {
+    if (leave_in_specs) {
+      const { error: specsError } = await supabase
+        .from("product_leave_in_specs")
+        .upsert({
+          product_id: product.id,
+          ...leave_in_specs,
+          updated_at: new Date().toISOString(),
+        })
+
+      if (specsError) {
+        return NextResponse.json(
+          { error: fehler("Speichern", "der Leave-in-Spezifikation") },
+          { status: 500 }
+        )
+      }
+    }
+    await supabase
+      .from("product_mask_specs")
+      .delete()
+      .eq("product_id", product.id)
+  } else if (isMaskCategory(product.category)) {
+    if (mask_specs) {
+      const { error: maskSpecsError } = await supabase
+        .from("product_mask_specs")
+        .upsert({
+          product_id: product.id,
+          ...mask_specs,
+          updated_at: new Date().toISOString(),
+        })
+
+      if (maskSpecsError) {
+        return NextResponse.json(
+          { error: fehler("Speichern", "der Masken-Spezifikation") },
+          { status: 500 }
+        )
+      }
+    }
+    await supabase
+      .from("product_leave_in_specs")
+      .delete()
+      .eq("product_id", product.id)
+  } else {
+    await supabase
+      .from("product_leave_in_specs")
+      .delete()
+      .eq("product_id", product.id)
+    await supabase
+      .from("product_mask_specs")
+      .delete()
+      .eq("product_id", product.id)
+  }
 
   if (embeddingFieldsChanged) {
     try {
@@ -98,7 +155,33 @@ export async function PUT(
     }
   }
 
-  return NextResponse.json({ product })
+  // Hydrate category specs for the response
+  let hydratedLeaveInSpecs = null
+  let hydratedMaskSpecs = null
+  if (isLeaveInCategory(product.category)) {
+    const { data: specs } = await supabase
+      .from("product_leave_in_specs")
+      .select("*")
+      .eq("product_id", product.id)
+      .single()
+    hydratedLeaveInSpecs = specs ?? null
+  }
+  if (isMaskCategory(product.category)) {
+    const { data: specs } = await supabase
+      .from("product_mask_specs")
+      .select("*")
+      .eq("product_id", product.id)
+      .single()
+    hydratedMaskSpecs = specs ?? null
+  }
+
+  return NextResponse.json({
+    product: {
+      ...product,
+      leave_in_specs: hydratedLeaveInSpecs,
+      mask_specs: hydratedMaskSpecs,
+    },
+  })
 }
 
 export async function DELETE(

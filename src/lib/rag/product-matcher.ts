@@ -4,12 +4,16 @@ import type { Product, ProductCategory } from "@/lib/types"
 
 export interface MatchedProduct extends Product {
   similarity: number
+  profile_score?: number
+  combined_score?: number
 }
 
 /** Maps ProductCategory → DB category column values */
 const CATEGORY_DB_MAP: Record<string, string[]> = {
   shampoo: ["Shampoo", "Shampoo Profi"],
   conditioner: ["Conditioner", "Conditioner Profi"],
+  mask: ["Maske"],
+  leave_in: ["Leave-in", "Leave-In", "Leave in", "leave_in"],
 }
 
 export interface ProductMatchParams {

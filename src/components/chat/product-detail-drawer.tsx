@@ -64,6 +64,49 @@ export function ProductDetailDrawer({
             </div>
           )}
 
+          {product.recommendation_meta && (
+            <div className="space-y-2 rounded-lg border border-border/60 bg-muted/40 px-4 py-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Empfehlungskontext
+              </p>
+              <p className="text-sm font-medium text-foreground">
+                Score: {product.recommendation_meta.score.toFixed(1)}
+              </p>
+              {product.recommendation_meta.top_reasons.length > 0 && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground">Warum passend</p>
+                  <ul className="mt-1 space-y-1">
+                    {product.recommendation_meta.top_reasons.map((reason) => (
+                      <li key={reason} className="text-sm text-foreground">
+                        - {reason}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {product.recommendation_meta.tradeoffs.length > 0 && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground">Trade-offs</p>
+                  <ul className="mt-1 space-y-1">
+                    {product.recommendation_meta.tradeoffs.map((tradeoff) => (
+                      <li key={tradeoff} className="text-sm text-foreground">
+                        - {tradeoff}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {product.recommendation_meta.usage_hint && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground">Anwendung</p>
+                  <p className="text-sm text-foreground">
+                    {product.recommendation_meta.usage_hint}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Tom's take */}
           {product.tom_take && (
             <div>

@@ -8,11 +8,17 @@ import { matchProducts } from "@/lib/rag/product-matcher"
 import { synthesizeResponse } from "@/lib/rag/synthesizer"
 import { mapScalpToConcernCode } from "@/lib/rag/scalp-mapper"
 import { mapProteinMoistureToConcernCode } from "@/lib/rag/conditioner-mapper"
+import { mapProfileToLeaveInConcernCodes } from "@/lib/rag/leave-in-mapper"
+import { rerankLeaveInProducts } from "@/lib/rag/leave-in-reranker"
+import { mapProfileToMaskConcernCodes } from "@/lib/rag/mask-mapper"
+import { rerankMaskProducts } from "@/lib/rag/mask-reranker"
 import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
 import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
-import type { IntentType, Message, HairProfile, Product, CitationSource, EnrichedCitationSource, ProductCategory, RouterDecision } from "@/lib/types"
+import type { ProductLeaveInSpecs } from "@/lib/leave-in/constants"
+import type { ProductMaskSpecs } from "@/lib/mask/constants"
+import type { IntentType, Message, HairProfile, Product, EnrichedCitationSource, RouterDecision } from "@/lib/types"
 
 export interface PipelineParams {
   message: string
@@ -282,6 +288,63 @@ export async function runPipeline(
         category: "conditioner",
         count: 3,
       })
+    } else if (product_category === "leave_in") {
+      const leaveInCandidates = await matchProducts({
+        query: message,
+        thickness: hairProfile?.thickness ?? undefined,
+        concerns: mapProfileToLeaveInConcernCodes(hairProfile),
+        category: "leave_in",
+        count: 10,
+      })
+
+      if (leaveInCandidates.length === 0) {
+        matchedProducts = []
+      } else {
+        const { data: leaveInSpecs, error: leaveInSpecsError } = await supabase
+          .from("product_leave_in_specs")
+          .select("*")
+          .in("product_id", leaveInCandidates.map((candidate) => candidate.id))
+
+        if (leaveInSpecsError) {
+          console.error("Failed to load leave-in specs for reranking:", leaveInSpecsError)
+          matchedProducts = leaveInCandidates
+        } else {
+          matchedProducts = rerankLeaveInProducts(
+            leaveInCandidates,
+            (leaveInSpecs ?? []) as ProductLeaveInSpecs[],
+            hairProfile
+          ).slice(0, 3)
+        }
+      }
+    } else if (product_category === "mask") {
+      const maskCandidates = await matchProducts({
+        query: message,
+        thickness: hairProfile?.thickness ?? undefined,
+        concerns: mapProfileToMaskConcernCodes(hairProfile),
+        category: "mask",
+        count: 10,
+      })
+
+      if (maskCandidates.length === 0) {
+        matchedProducts = []
+      } else {
+        const { data: maskSpecs, error: maskSpecsError } = await supabase
+          .from("product_mask_specs")
+          .select("*")
+          .in("product_id", maskCandidates.map((candidate) => candidate.id))
+
+        if (maskSpecsError) {
+          console.error("Failed to load mask specs for reranking:", maskSpecsError)
+          matchedProducts = maskCandidates.slice(0, 3)
+        } else {
+          matchedProducts = rerankMaskProducts(
+            maskCandidates,
+            (maskSpecs ?? []) as ProductMaskSpecs[],
+            hairProfile,
+            { explicitMaskRequest: true }
+          )
+        }
+      }
     } else {
       matchedProducts = await matchProducts({
         query: message,

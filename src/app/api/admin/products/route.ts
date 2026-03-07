@@ -4,6 +4,8 @@ import { productSchema } from "@/lib/validators"
 import { generateEmbedding } from "@/lib/openai/embeddings"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
+import { isLeaveInCategory, type ProductLeaveInSpecs } from "@/lib/leave-in/constants"
+import { isMaskCategory, type ProductMaskSpecs } from "@/lib/mask/constants"
 
 export async function GET() {
   const supabase = await createClient()
@@ -40,7 +42,45 @@ export async function GET() {
     )
   }
 
-  return NextResponse.json({ products: products || [] })
+  const rows = products || []
+  const leaveInIds = rows
+    .filter((product) => isLeaveInCategory(product.category))
+    .map((product) => product.id)
+  const maskIds = rows
+    .filter((product) => isMaskCategory(product.category))
+    .map((product) => product.id)
+
+  let specsByProductId = new Map<string, ProductLeaveInSpecs>()
+  if (leaveInIds.length > 0) {
+    const { data: specs } = await supabase
+      .from("product_leave_in_specs")
+      .select("*")
+      .in("product_id", leaveInIds)
+
+    specsByProductId = new Map(
+      ((specs || []) as ProductLeaveInSpecs[]).map((spec) => [spec.product_id, spec])
+    )
+  }
+
+  let maskSpecsByProductId = new Map<string, ProductMaskSpecs>()
+  if (maskIds.length > 0) {
+    const { data: maskSpecs } = await supabase
+      .from("product_mask_specs")
+      .select("*")
+      .in("product_id", maskIds)
+
+    maskSpecsByProductId = new Map(
+      ((maskSpecs || []) as ProductMaskSpecs[]).map((spec) => [spec.product_id, spec])
+    )
+  }
+
+  const hydrated = rows.map((product) => ({
+    ...product,
+    leave_in_specs: specsByProductId.get(product.id) ?? null,
+    mask_specs: maskSpecsByProductId.get(product.id) ?? null,
+  }))
+
+  return NextResponse.json({ products: hydrated })
 }
 
 export async function POST(request: Request) {
@@ -76,9 +116,11 @@ export async function POST(request: Request) {
     )
   }
 
+  const { leave_in_specs, mask_specs, ...productPayload } = parsed.data
+
   const { data: product, error } = await supabase
     .from("products")
-    .insert(parsed.data)
+    .insert(productPayload)
     .select()
     .single()
 
@@ -87,6 +129,42 @@ export async function POST(request: Request) {
       { error: fehler("Erstellen", "des Produkts") },
       { status: 500 }
     )
+  }
+
+  if (isLeaveInCategory(product.category) && leave_in_specs) {
+    const { error: specsError } = await supabase
+      .from("product_leave_in_specs")
+      .upsert({
+        product_id: product.id,
+        ...leave_in_specs,
+      })
+
+    if (specsError) {
+      // Roll back the orphaned product row
+      await supabase.from("products").delete().eq("id", product.id)
+      return NextResponse.json(
+        { error: fehler("Speichern", "der Leave-in-Spezifikation") },
+        { status: 500 }
+      )
+    }
+  }
+
+  if (isMaskCategory(product.category) && mask_specs) {
+    const { error: maskSpecsError } = await supabase
+      .from("product_mask_specs")
+      .upsert({
+        product_id: product.id,
+        ...mask_specs,
+      })
+
+    if (maskSpecsError) {
+      // Roll back the orphaned product row
+      await supabase.from("products").delete().eq("id", product.id)
+      return NextResponse.json(
+        { error: fehler("Speichern", "der Masken-Spezifikation") },
+        { status: 500 }
+      )
+    }
   }
 
   // Generate embedding from product fields

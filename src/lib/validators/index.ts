@@ -1,5 +1,23 @@
 import { z } from "zod"
 import { HAIR_TEXTURES, HAIR_THICKNESSES } from "@/lib/vocabulary"
+import {
+  POST_WASH_ACTIONS,
+  ROUTINE_PREFERENCES,
+  ROUTINE_PRODUCTS,
+  LEAVE_IN_FORMATS,
+  LEAVE_IN_WEIGHTS,
+  LEAVE_IN_ROLES,
+  LEAVE_IN_CARE_BENEFITS,
+  LEAVE_IN_INGREDIENT_FLAGS,
+  LEAVE_IN_APPLICATION_STAGES,
+} from "@/lib/leave-in/constants"
+import {
+  MASK_FORMATS,
+  MASK_WEIGHTS,
+  MASK_CONCENTRATIONS,
+  MASK_BENEFITS,
+  MASK_INGREDIENT_FLAGS,
+} from "@/lib/mask/constants"
 
 export const hairProfileFullSchema = z.object({
   hair_texture: z.enum(HAIR_TEXTURES).nullable(),
@@ -9,8 +27,56 @@ export const hairProfileFullSchema = z.object({
   wash_frequency: z.string().nullable().default(null),
   heat_styling: z.string().nullable().default(null),
   styling_tools: z.array(z.string()).default([]),
+  post_wash_actions: z.array(z.enum(POST_WASH_ACTIONS)).default([]),
+  routine_preference: z.enum(ROUTINE_PREFERENCES).nullable().default(null),
+  current_routine_products: z.array(z.enum(ROUTINE_PRODUCTS)).default([]),
   goals: z.array(z.string()).default([]),
   additional_notes: z.string().nullable().default(null),
+})
+
+const leaveInSpecsSchema = z.object({
+  format: z.enum(LEAVE_IN_FORMATS),
+  weight: z.enum(LEAVE_IN_WEIGHTS),
+  roles: z.array(z.enum(LEAVE_IN_ROLES)).default([]),
+  provides_heat_protection: z.boolean().default(false),
+  heat_protection_max_c: z.number().int().nullable().default(null),
+  heat_activation_required: z.boolean().default(false),
+  care_benefits: z.array(z.enum(LEAVE_IN_CARE_BENEFITS)).default([]),
+  ingredient_flags: z.array(z.enum(LEAVE_IN_INGREDIENT_FLAGS)).default([]),
+  application_stage: z.array(z.enum(LEAVE_IN_APPLICATION_STAGES)).default(["towel_dry"]),
+})
+  .superRefine((value, ctx) => {
+    if (value.heat_protection_max_c !== null && !value.provides_heat_protection) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["heat_protection_max_c"],
+        message: "heat_protection_max_c requires provides_heat_protection = true",
+      })
+    }
+    if (
+      value.heat_activation_required &&
+      !value.roles.includes("styling_prep")
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["roles"],
+        message: "heat_activation_required requires styling_prep role",
+      })
+    }
+  })
+
+const maskSpecsSchema = z.object({
+  format: z.enum(MASK_FORMATS),
+  weight: z.enum(MASK_WEIGHTS),
+  concentration: z.enum(MASK_CONCENTRATIONS),
+  benefits: z.array(z.enum(MASK_BENEFITS)).default([]),
+  ingredient_flags: z.array(z.enum(MASK_INGREDIENT_FLAGS)).default([]),
+  apply_on_scalp_allowed: z.boolean().default(false),
+  leave_on_minutes: z.number().int().min(1).max(60).default(10),
+  max_uses_per_week: z.number().int().min(1).max(3).default(1),
+  dose_fine_ml: z.number().int().positive().nullable().default(null),
+  dose_normal_ml: z.number().int().positive().nullable().default(null),
+  dose_coarse_ml: z.number().int().positive().nullable().default(null),
 })
 
 export const chatMessageSchema = z.object({
@@ -32,6 +98,8 @@ export const productSchema = z.object({
   suitable_concerns: z.array(z.string()).default([]),
   is_active: z.boolean().default(true),
   sort_order: z.number().int().default(0),
+  leave_in_specs: leaveInSpecsSchema.nullable().optional(),
+  mask_specs: maskSpecsSchema.nullable().optional(),
 })
 
 export const quoteSchema = z.object({
