@@ -7,6 +7,12 @@ import type {
   HeatStyling,
   Concern,
   Goal,
+  StylingTool,
+  CuticleCondition,
+  ProteinMoistureBalance,
+  ScalpType,
+  ScalpCondition,
+  ChemicalTreatment,
   PostWashAction,
   RoutinePreference,
   RoutineProduct,
@@ -24,6 +30,12 @@ export type {
   HeatStyling,
   Concern,
   Goal,
+  StylingTool,
+  CuticleCondition,
+  ProteinMoistureBalance,
+  ScalpType,
+  ScalpCondition,
+  ChemicalTreatment,
   PostWashAction,
   RoutinePreference,
   RoutineProduct,
@@ -37,6 +49,9 @@ export {
   WASH_FREQUENCY_OPTIONS,
   HEAT_STYLING_OPTIONS,
   STYLING_TOOL_OPTIONS,
+  CONCERN_LABELS,
+  GOAL_LABELS,
+  STYLING_TOOL_LABELS,
   CUTICLE_CONDITION_LABELS,
   PROTEIN_MOISTURE_LABELS,
   SCALP_TYPE_LABELS,
@@ -66,17 +81,17 @@ export interface HairProfile {
   user_id: string
   hair_texture: HairTexture | null
   thickness: HairThickness | null
-  concerns: string[]
+  concerns: Concern[]
   products_used: string | null
-  wash_frequency: string | null
-  heat_styling: string | null
-  styling_tools: string[]
-  goals: string[]
-  cuticle_condition: string | null
-  protein_moisture_balance: string | null
-  scalp_type: string | null
-  scalp_condition: string | null
-  chemical_treatment: string[]
+  wash_frequency: WashFrequency | null
+  heat_styling: HeatStyling | null
+  styling_tools: StylingTool[]
+  goals: Goal[]
+  cuticle_condition: CuticleCondition | null
+  protein_moisture_balance: ProteinMoistureBalance | null
+  scalp_type: ScalpType | null
+  scalp_condition: ScalpCondition | null
+  chemical_treatment: ChemicalTreatment[]
   post_wash_actions: PostWashAction[]
   routine_preference: RoutinePreference | null
   current_routine_products: RoutineProduct[]
@@ -99,7 +114,7 @@ export interface Product {
   price_eur: number | null
   currency: string
   tags: string[]
-  suitable_hair_textures: string[]
+  suitable_thicknesses: string[]
   suitable_concerns: string[]
   is_active: boolean
   sort_order: number

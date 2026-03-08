@@ -2,6 +2,7 @@
 
 import type { Product, HairProfile } from "@/lib/types"
 import { getPersonalizationSentence } from "@/lib/product-utils"
+import { HAIR_THICKNESS_LABELS } from "@/lib/vocabulary"
 import { ProductImage } from "./product-image"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -130,15 +131,15 @@ export function ProductDetailDrawer({
           )}
 
           {/* Hair types */}
-          {product.suitable_hair_textures?.length > 0 && (
+          {product.suitable_thicknesses?.length > 0 && (
             <div>
               <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Geeignet f\u00FCr
+                Geeignete Haardicke
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {product.suitable_hair_textures.map((ht) => (
+                {product.suitable_thicknesses.map((ht) => (
                   <Badge key={ht} variant="outline" className="text-xs">
-                    {ht}
+                    {HAIR_THICKNESS_LABELS[ht as keyof typeof HAIR_THICKNESS_LABELS] ?? ht}
                   </Badge>
                 ))}
               </div>

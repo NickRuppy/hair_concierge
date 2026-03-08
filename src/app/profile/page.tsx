@@ -10,7 +10,10 @@ import {
   HEAT_STYLING_OPTIONS,
   STYLING_TOOL_OPTIONS,
   CONCERN_OPTIONS,
+  CONCERN_LABELS,
   GOAL_OPTIONS,
+  GOAL_LABELS,
+  STYLING_TOOL_LABELS,
   CUTICLE_CONDITION_LABELS,
   PROTEIN_MOISTURE_LABELS,
   SCALP_TYPE_LABELS,
@@ -61,7 +64,7 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
     label: "Probleme",
     helpText: "Hilft uns, gezielt Lösungen zu finden",
     getValue: (hp) =>
-      hp?.concerns?.length ? hp.concerns.join(", ") : null,
+      hp?.concerns?.length ? hp.concerns.map((c) => CONCERN_LABELS[c] ?? c).join(", ") : null,
   },
   {
     key: "wash_frequency",
@@ -84,7 +87,7 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
     label: "Styling-Tools",
     helpText: "Für passende Styling-Tipps",
     getValue: (hp) =>
-      hp?.styling_tools?.length ? hp.styling_tools.join(", ") : null,
+      hp?.styling_tools?.length ? hp.styling_tools.map((t) => STYLING_TOOL_LABELS[t] ?? t).join(", ") : null,
   },
   {
     key: "post_wash_actions",
@@ -126,7 +129,7 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
     label: "Ziele",
     helpText: "Richtet unsere Empfehlungen aus",
     getValue: (hp) =>
-      hp?.goals?.length ? hp.goals.join(", ") : null,
+      hp?.goals?.length ? hp.goals.map((g) => GOAL_LABELS[g] ?? g).join(", ") : null,
   },
 ]
 
@@ -414,22 +417,22 @@ export default function ProfilePage() {
                         Wähle alle zutreffenden Probleme aus
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        {CONCERN_OPTIONS.map((concern) => (
+                        {CONCERN_OPTIONS.map((opt) => (
                           <button
-                            key={concern}
+                            key={opt.value}
                             onClick={() =>
                               setFormData((f) => ({
                                 ...f,
-                                concerns: toggleArrayItem(f.concerns, concern),
+                                concerns: toggleArrayItem(f.concerns, opt.value),
                               }))
                             }
                             className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                              formData.concerns.includes(concern)
+                              formData.concerns.includes(opt.value)
                                 ? "border-primary bg-primary/10 text-primary"
                                 : "hover:bg-accent"
                             }`}
                           >
-                            {concern}
+                            {opt.label}
                           </button>
                         ))}
                       </div>
@@ -442,22 +445,22 @@ export default function ProfilePage() {
                         Was möchtest du für deine Haare erreichen?
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        {GOAL_OPTIONS.map((goal) => (
+                        {GOAL_OPTIONS.map((opt) => (
                           <button
-                            key={goal}
+                            key={opt.value}
                             onClick={() =>
                               setFormData((f) => ({
                                 ...f,
-                                goals: toggleArrayItem(f.goals, goal),
+                                goals: toggleArrayItem(f.goals, opt.value),
                               }))
                             }
                             className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                              formData.goals.includes(goal)
+                              formData.goals.includes(opt.value)
                                 ? "border-primary bg-primary/10 text-primary"
                                 : "hover:bg-accent"
                             }`}
                           >
-                            {goal}
+                            {opt.label}
                           </button>
                         ))}
                       </div>
@@ -499,22 +502,22 @@ export default function ProfilePage() {
                     <div>
                       <label className="mb-2 block text-sm font-medium">Styling-Tools</label>
                       <div className="flex flex-wrap gap-2">
-                        {STYLING_TOOL_OPTIONS.map((tool) => (
+                        {STYLING_TOOL_OPTIONS.map((opt) => (
                           <button
-                            key={tool}
+                            key={opt.value}
                             onClick={() =>
                               setFormData((f) => ({
                                 ...f,
-                                styling_tools: toggleArrayItem(f.styling_tools, tool),
+                                styling_tools: toggleArrayItem(f.styling_tools, opt.value),
                               }))
                             }
                             className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                              formData.styling_tools.includes(tool)
+                              formData.styling_tools.includes(opt.value)
                                 ? "border-primary bg-primary/10 text-primary"
                                 : "hover:bg-accent"
                             }`}
                           >
-                            {tool}
+                            {opt.label}
                           </button>
                         ))}
                       </div>
@@ -762,7 +765,7 @@ export default function ProfilePage() {
                   </Badge>
                 </div>
               )}
-              {hairProfile?.scalp_condition && hairProfile.scalp_condition !== "keine" && (
+              {hairProfile?.scalp_condition && hairProfile.scalp_condition !== "none" && (
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Kopfhautbeschwerden</span>
                   <Badge variant="outline">

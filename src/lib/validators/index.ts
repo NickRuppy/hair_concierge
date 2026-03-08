@@ -1,5 +1,13 @@
 import { z } from "zod"
-import { HAIR_TEXTURES, HAIR_THICKNESSES } from "@/lib/vocabulary"
+import {
+  HAIR_TEXTURES,
+  HAIR_THICKNESSES,
+  CONCERNS,
+  GOALS,
+  STYLING_TOOLS,
+  WASH_FREQUENCIES,
+  HEAT_STYLING_LEVELS,
+} from "@/lib/vocabulary"
 import {
   POST_WASH_ACTIONS,
   ROUTINE_PREFERENCES,
@@ -22,15 +30,15 @@ import {
 export const hairProfileFullSchema = z.object({
   hair_texture: z.enum(HAIR_TEXTURES).nullable(),
   thickness: z.enum(HAIR_THICKNESSES).nullable(),
-  concerns: z.array(z.string()).default([]),
+  concerns: z.array(z.enum(CONCERNS)).default([]),
   products_used: z.string().nullable().default(null),
-  wash_frequency: z.string().nullable().default(null),
-  heat_styling: z.string().nullable().default(null),
-  styling_tools: z.array(z.string()).default([]),
+  wash_frequency: z.enum(WASH_FREQUENCIES).nullable().default(null),
+  heat_styling: z.enum(HEAT_STYLING_LEVELS).nullable().default(null),
+  styling_tools: z.array(z.enum(STYLING_TOOLS)).default([]),
   post_wash_actions: z.array(z.enum(POST_WASH_ACTIONS)).default([]),
   routine_preference: z.enum(ROUTINE_PREFERENCES).nullable().default(null),
   current_routine_products: z.array(z.enum(ROUTINE_PRODUCTS)).default([]),
-  goals: z.array(z.string()).default([]),
+  goals: z.array(z.enum(GOALS)).default([]),
   additional_notes: z.string().nullable().default(null),
 })
 
@@ -94,7 +102,7 @@ export const productSchema = z.object({
   image_url: z.string().url().optional().or(z.literal("")),
   price_eur: z.number().min(0).optional(),
   tags: z.array(z.string()).default([]),
-  suitable_hair_textures: z.array(z.string()).default([]),
+  suitable_thicknesses: z.array(z.string()).default([]),
   suitable_concerns: z.array(z.string()).default([]),
   is_active: z.boolean().default(true),
   sort_order: z.number().int().default(0),

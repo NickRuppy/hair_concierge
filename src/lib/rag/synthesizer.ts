@@ -1,6 +1,17 @@
 import { streamChatCompletion } from "@/lib/openai/chat"
 import { SYSTEM_PROMPT } from "@/lib/rag/prompts"
-import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
+import {
+  SOURCE_TYPE_LABELS,
+  CONCERN_LABELS,
+  GOAL_LABELS,
+  STYLING_TOOL_LABELS,
+  WASH_FREQUENCY_LABELS,
+  HEAT_STYLING_LABELS,
+  CUTICLE_CONDITION_LABELS,
+  SCALP_TYPE_LABELS,
+  SCALP_CONDITION_LABELS,
+  CHEMICAL_TREATMENT_LABELS,
+} from "@/lib/vocabulary"
 import type { Message, HairProfile, IntentType, Product, ContentChunk, ProductCategory } from "@/lib/types"
 import type OpenAI from "openai"
 
@@ -38,19 +49,19 @@ function formatUserProfile(
     parts.push(`Haardicke: ${profile.thickness}`)
   }
   if (profile.concerns.length > 0) {
-    parts.push(`Probleme/Bedenken: ${profile.concerns.join(", ")}`)
+    parts.push(`Probleme/Bedenken: ${profile.concerns.map((c) => CONCERN_LABELS[c] ?? c).join(", ")}`)
   }
   if (profile.goals.length > 0) {
-    parts.push(`Ziele: ${profile.goals.join(", ")}`)
+    parts.push(`Ziele: ${profile.goals.map((g) => GOAL_LABELS[g] ?? g).join(", ")}`)
   }
   if (profile.wash_frequency) {
-    parts.push(`Waschfrequenz: ${profile.wash_frequency}`)
+    parts.push(`Waschfrequenz: ${WASH_FREQUENCY_LABELS[profile.wash_frequency] ?? profile.wash_frequency}`)
   }
   if (profile.heat_styling) {
-    parts.push(`Hitzestyling: ${profile.heat_styling}`)
+    parts.push(`Hitzestyling: ${HEAT_STYLING_LABELS[profile.heat_styling] ?? profile.heat_styling}`)
   }
   if (profile.styling_tools.length > 0) {
-    parts.push(`Styling-Tools: ${profile.styling_tools.join(", ")}`)
+    parts.push(`Styling-Tools: ${profile.styling_tools.map((t) => STYLING_TOOL_LABELS[t] ?? t).join(", ")}`)
   }
   if ((profile.post_wash_actions ?? []).length > 0) {
     parts.push(`Nach dem Waschen: ${(profile.post_wash_actions ?? []).join(", ")}`)
@@ -62,19 +73,19 @@ function formatUserProfile(
     parts.push(`Aktuelle Routine-Produkte: ${(profile.current_routine_products ?? []).join(", ")}`)
   }
   if (profile.cuticle_condition) {
-    parts.push(`Kutikula-Zustand: ${profile.cuticle_condition}`)
+    parts.push(`Kutikula-Zustand: ${CUTICLE_CONDITION_LABELS[profile.cuticle_condition] ?? profile.cuticle_condition}`)
   }
   if (profile.protein_moisture_balance) {
     parts.push(`Protein-Feuchtigkeits-Balance: ${profile.protein_moisture_balance}`)
   }
   if (profile.scalp_type) {
-    parts.push(`Kopfhaut-Typ: ${profile.scalp_type}`)
+    parts.push(`Kopfhaut-Typ: ${SCALP_TYPE_LABELS[profile.scalp_type] ?? profile.scalp_type}`)
   }
-  if (profile.scalp_condition && profile.scalp_condition !== "keine") {
-    parts.push(`Kopfhaut-Beschwerden: ${profile.scalp_condition}`)
+  if (profile.scalp_condition && profile.scalp_condition !== "none") {
+    parts.push(`Kopfhaut-Beschwerden: ${SCALP_CONDITION_LABELS[profile.scalp_condition] ?? profile.scalp_condition}`)
   }
   if (profile.chemical_treatment?.length > 0) {
-    parts.push(`Chemische Behandlung: ${profile.chemical_treatment.join(", ")}`)
+    parts.push(`Chemische Behandlung: ${profile.chemical_treatment.map((t) => CHEMICAL_TREATMENT_LABELS[t] ?? t).join(", ")}`)
   }
   if (profile.products_used) {
     parts.push(`Aktuelle Produkte: ${profile.products_used}`)

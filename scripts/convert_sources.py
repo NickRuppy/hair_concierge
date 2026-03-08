@@ -1009,13 +1009,13 @@ def generate_product_json(category: str, matrix: dict):
                         "name": product_name,
                         "brand": guess_brand(product_name),
                         "category": category,
-                        "suitable_hair_textures": [],
+                        "suitable_thicknesses": [],
                         "suitable_concerns": [],
                         "tags": [category.lower()],
                     }
                 entry = product_map[product_name]
-                if hair_tag not in entry["suitable_hair_textures"]:
-                    entry["suitable_hair_textures"].append(hair_tag)
+                if hair_tag not in entry["suitable_thicknesses"]:
+                    entry["suitable_thicknesses"].append(hair_tag)
                 if concern_tag not in entry["suitable_concerns"]:
                     entry["suitable_concerns"].append(concern_tag)
 

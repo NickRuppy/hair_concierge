@@ -1,18 +1,18 @@
 export const WASH_FREQUENCIES = [
-  "taeglich",
-  "alle_2_tage",
-  "2_mal_woche",
-  "1_mal_woche",
-  "seltener",
+  "daily",
+  "every_2_days",
+  "twice_weekly",
+  "once_weekly",
+  "rarely",
 ] as const
 export type WashFrequency = (typeof WASH_FREQUENCIES)[number]
 
 export const WASH_FREQUENCY_LABELS = {
-  taeglich: "Täglich",
-  alle_2_tage: "Alle 2 Tage",
-  "2_mal_woche": "2x pro Woche",
-  "1_mal_woche": "1x pro Woche",
-  seltener: "Seltener",
+  daily: "Täglich",
+  every_2_days: "Alle 2 Tage",
+  twice_weekly: "2x pro Woche",
+  once_weekly: "1x pro Woche",
+  rarely: "Seltener",
 } as const satisfies Record<WashFrequency, string>
 
 export const WASH_FREQUENCY_OPTIONS = WASH_FREQUENCIES.map((value) => ({
@@ -21,20 +21,20 @@ export const WASH_FREQUENCY_OPTIONS = WASH_FREQUENCIES.map((value) => ({
 }))
 
 export const HEAT_STYLING_LEVELS = [
-  "taeglich",
-  "mehrmals_woche",
-  "1_mal_woche",
-  "selten",
-  "nie",
+  "daily",
+  "several_weekly",
+  "once_weekly",
+  "rarely",
+  "never",
 ] as const
 export type HeatStyling = (typeof HEAT_STYLING_LEVELS)[number]
 
 export const HEAT_STYLING_LABELS = {
-  taeglich: "Täglich",
-  mehrmals_woche: "Mehrmals pro Woche",
-  "1_mal_woche": "1x pro Woche",
-  selten: "Selten",
-  nie: "Nie",
+  daily: "Täglich",
+  several_weekly: "Mehrmals pro Woche",
+  once_weekly: "1x pro Woche",
+  rarely: "Selten",
+  never: "Nie",
 } as const satisfies Record<HeatStyling, string>
 
 export const HEAT_STYLING_OPTIONS = HEAT_STYLING_LEVELS.map((value) => ({

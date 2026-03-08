@@ -12,8 +12,10 @@ export type { HairTexture, HairThickness } from "./hair-types"
 
 export {
   CONCERNS,
+  CONCERN_LABELS,
   CONCERN_OPTIONS,
   GOALS,
+  GOAL_LABELS,
   GOAL_OPTIONS,
 } from "./concerns-goals"
 export type { Concern, Goal } from "./concerns-goals"
@@ -39,6 +41,8 @@ export {
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENTS,
   CHEMICAL_TREATMENT_LABELS,
+  STYLING_TOOLS,
+  STYLING_TOOL_LABELS,
   STYLING_TOOL_OPTIONS,
 } from "./profile-labels"
 export type {
@@ -47,6 +51,7 @@ export type {
   ScalpType,
   ScalpCondition,
   ChemicalTreatment,
+  StylingTool,
 } from "./profile-labels"
 
 export {

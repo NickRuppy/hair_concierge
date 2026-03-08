@@ -35,7 +35,7 @@ export async function GET(request: Request) {
   }
 
   if (hairType) {
-    query = query.contains("suitable_hair_textures", [hairType])
+    query = query.contains("suitable_thicknesses", [hairType])
   }
 
   const { data: products, count, error } = await query

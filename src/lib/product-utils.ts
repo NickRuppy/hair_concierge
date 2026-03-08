@@ -10,7 +10,7 @@ export function getPersonalizationSentence(
 
   if (
     hairProfile.thickness &&
-    product.suitable_hair_textures?.includes(hairProfile.thickness)
+    product.suitable_thicknesses?.includes(hairProfile.thickness)
   ) {
     const labels: Record<string, string> = {
       fine: "feines",

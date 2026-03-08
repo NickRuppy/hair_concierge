@@ -1,12 +1,5 @@
 import type { HairProfile } from "@/lib/types"
 
-function normalize(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "")
-}
-
 /**
  * Maps broad profile concerns to the coarse leave-in concern buckets
  * currently present in the product matrix (`protein`, `feuchtigkeit`, `performance`).
@@ -19,19 +12,17 @@ export function mapProfileToLeaveInConcernCodes(
   const mapped = new Set<string>()
 
   for (const concern of profile.concerns ?? []) {
-    const normalized = normalize(concern)
-
-    if (normalized.includes("trocken") || normalized.includes("frizz")) {
+    if (concern === "dryness" || concern === "frizz") {
       mapped.add("feuchtigkeit")
       continue
     }
 
-    if (normalized.includes("spliss") || normalized.includes("schad")) {
+    if (concern === "split_ends" || concern === "hair_damage") {
       mapped.add("protein")
       continue
     }
 
-    if (normalized.includes("volumen") || normalized.includes("glanz")) {
+    if (concern === "thinning" || concern === "hair_loss") {
       mapped.add("performance")
     }
   }

@@ -1,15 +1,15 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 import type { QuizAnswers } from "./types"
 
-/** Map quiz goal slugs to the German labels used in hair_profiles.goals */
+/** Map quiz goal slugs to English keys used in hair_profiles.goals */
 const GOAL_SLUG_MAP: Record<string, string> = {
-  spliss: "Spliss",
-  frizz: "Weniger Frizz",
-  kein_volumen: "Mehr Volumen",
-  zu_viel_volumen: "Zu viel Volumen",
-  glanzlos: "Mehr Glanz",
-  kopfhaut: "Gesunde Kopfhaut",
-  haarausfall: "Haarwachstum",
+  spliss: "healthier_hair",
+  frizz: "less_frizz",
+  kein_volumen: "volume",
+  zu_viel_volumen: "volume",
+  glanzlos: "shine",
+  kopfhaut: "healthy_scalp",
+  haarausfall: "hair_growth",
 }
 
 /**
@@ -89,33 +89,60 @@ export async function linkQuizToProfile(
 
   if (answers.structure) profileData.hair_texture = answers.structure
   if (answers.thickness) profileData.thickness = answers.thickness
-  if (answers.fingertest) profileData.cuticle_condition = answers.fingertest
+  // Map quiz cuticle condition keys to English
+  const CUTICLE_MAP: Record<string, string> = {
+    glatt: "smooth",
+    leicht_uneben: "slightly_rough",
+    rau: "rough",
+  }
+  if (answers.fingertest) profileData.cuticle_condition = CUTICLE_MAP[answers.fingertest] ?? answers.fingertest
   if (answers.pulltest) profileData.protein_moisture_balance = answers.pulltest
 
-  // New split scalp fields
+  // Map quiz scalp keys to English
+  const SCALP_TYPE_MAP: Record<string, string> = {
+    fettig: "oily",
+    ausgeglichen: "balanced",
+    trocken: "dry",
+  }
+  const SCALP_CONDITION_MAP: Record<string, string> = {
+    keine: "none",
+    schuppen: "dandruff",
+    gereizt: "irritated",
+  }
+
   if (answers.scalp_type) {
-    profileData.scalp_type = answers.scalp_type
+    profileData.scalp_type = SCALP_TYPE_MAP[answers.scalp_type] ?? answers.scalp_type
   }
   if (answers.scalp_condition) {
-    profileData.scalp_condition = answers.scalp_condition
+    profileData.scalp_condition = SCALP_CONDITION_MAP[answers.scalp_condition] ?? answers.scalp_condition
   }
 
   // Backwards compat: old leads have { scalp: "fettig" } etc.
   const legacyScalp = (answers as Record<string, unknown>).scalp as string | undefined
   if (legacyScalp && !answers.scalp_type) {
     if (legacyScalp === "fettig_schuppen") {
-      profileData.scalp_type = "fettig"
-      profileData.scalp_condition = "schuppen"
+      profileData.scalp_type = "oily"
+      profileData.scalp_condition = "dandruff"
     } else if (legacyScalp === "unauffaellig") {
-      profileData.scalp_type = "ausgeglichen"
-      profileData.scalp_condition = "keine"
+      profileData.scalp_type = "balanced"
+      profileData.scalp_condition = "none"
     } else {
-      profileData.scalp_type = legacyScalp
-      profileData.scalp_condition = "keine"
+      profileData.scalp_type = SCALP_TYPE_MAP[legacyScalp] ?? legacyScalp
+      profileData.scalp_condition = "none"
     }
   }
 
-  if (answers.treatment) profileData.chemical_treatment = answers.treatment
+  // Map quiz chemical treatment keys to English
+  const TREATMENT_MAP: Record<string, string> = {
+    natur: "natural",
+    gefaerbt: "colored",
+    blondiert: "bleached",
+  }
+  if (answers.treatment) {
+    profileData.chemical_treatment = answers.treatment.map(
+      (t: string) => TREATMENT_MAP[t] ?? t
+    )
+  }
 
   if (answers.goals) {
     profileData.goals = answers.goals.map(

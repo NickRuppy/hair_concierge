@@ -10,19 +10,19 @@ export interface OnboardingGoal {
 export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
   straight: [
     {
-      key: "volumen",
+      key: "volume",
       label: "Mehr Volumen & Lift",
       description: "Ansatzvolumen ohne Beschwerung",
       emoji: "🌿",
     },
     {
-      key: "nachfetten",
+      key: "healthy_scalp",
       label: "Weniger schnell nachfetten",
       description: "Laengere Frische zwischen den Waeschen",
       emoji: "⏳",
     },
     {
-      key: "anti-frizz",
+      key: "less_frizz",
       label: "Anti-Frizz & Geschmeidigkeit",
       description: "Glatter Fall ohne Kraeuselung",
       emoji: "✨",
@@ -30,19 +30,19 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
   ],
   wavy: [
     {
-      key: "definition",
+      key: "curl_definition",
       label: "Wellen-Definition",
       description: "Gleichmaessige, sichtbare Wellen",
       emoji: "🌊",
     },
     {
-      key: "feuchtigkeit",
+      key: "moisture",
       label: "Leichte Feuchtigkeit",
       description: "Hydration ohne Beschwerung",
       emoji: "💧",
     },
     {
-      key: "beach-waves",
+      key: "curl_definition",
       label: "Beach-Waves Textur",
       description: "Natuerlicher, undone Look",
       emoji: "🏖️",
@@ -50,19 +50,19 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
   ],
   curly: [
     {
-      key: "clumping",
+      key: "curl_definition",
       label: "Locken-Clumping",
       description: "Definierte Lockenbuendel statt Frizz",
       emoji: "🔄",
     },
     {
-      key: "feuchtigkeit",
+      key: "moisture",
       label: "Intensive Feuchtigkeit",
       description: "Tiefenwirksame Pflege fuer trockene Locken",
       emoji: "💦",
     },
     {
-      key: "strecken",
+      key: "curl_definition",
       label: "Locken strecken",
       description: "Laengere, locker fallende Curls",
       emoji: "📏",
@@ -70,19 +70,19 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
   ],
   coily: [
     {
-      key: "versiegeln",
+      key: "moisture",
       label: "Feuchtigkeit versiegeln",
       description: "Feuchtigkeit einschliessen und bewahren",
       emoji: "🔒",
     },
     {
-      key: "kopfhaut",
+      key: "healthy_scalp",
       label: "Kopfhaut beruhigen",
       description: "Reizfreie, ausgeglichene Kopfhaut",
       emoji: "🌱",
     },
     {
-      key: "geschmeidigkeit",
+      key: "moisture",
       label: "Maximale Geschmeidigkeit",
       description: "Weichheit und einfacheres Entwirren",
       emoji: "🧈",

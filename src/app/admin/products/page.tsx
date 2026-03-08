@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
 import type { Product } from "@/lib/types"
-import { HAIR_TEXTURE_OPTIONS, CONCERN_OPTIONS } from "@/lib/types"
+import { HAIR_THICKNESS_OPTIONS, CONCERN_OPTIONS } from "@/lib/types"
 import { fehler } from "@/lib/vocabulary"
 import {
   LEAVE_IN_FORMATS,
@@ -58,7 +58,7 @@ interface ProductForm {
   image_url: string
   price_eur: string
   tags: string
-  suitable_hair_textures: string[]
+  suitable_thicknesses: string[]
   suitable_concerns: string[]
   is_active: boolean
   sort_order: number
@@ -101,7 +101,7 @@ const emptyForm: ProductForm = {
   image_url: "",
   price_eur: "",
   tags: "",
-  suitable_hair_textures: [],
+  suitable_thicknesses: [],
   suitable_concerns: [],
   is_active: true,
   sort_order: 0,
@@ -204,7 +204,7 @@ export default function AdminProductsPage() {
       image_url: product.image_url || "",
       price_eur: product.price_eur != null ? String(product.price_eur) : "",
       tags: (product.tags || []).join(", "),
-      suitable_hair_textures: product.suitable_hair_textures || [],
+      suitable_thicknesses: product.suitable_thicknesses || [],
       suitable_concerns: product.suitable_concerns || [],
       is_active: product.is_active,
       sort_order: product.sort_order,
@@ -220,7 +220,7 @@ export default function AdminProductsPage() {
     setForm({ ...emptyForm })
   }
 
-  function toggleChip(field: "suitable_hair_textures" | "suitable_concerns", value: string) {
+  function toggleChip(field: "suitable_thicknesses" | "suitable_concerns", value: string) {
     setForm((prev) => {
       const current = prev[field]
       const next = current.includes(value)
@@ -317,7 +317,7 @@ export default function AdminProductsPage() {
         image_url: form.image_url.trim() || null,
         price_eur: form.price_eur ? parseFloat(form.price_eur) : null,
         tags: tagsArray,
-        suitable_hair_textures: form.suitable_hair_textures,
+        suitable_thicknesses: form.suitable_thicknesses,
         suitable_concerns: form.suitable_concerns,
         is_active: form.is_active,
         sort_order: form.sort_order,
@@ -571,16 +571,16 @@ export default function AdminProductsPage() {
 
             <div>
               <label className="mb-2 block text-sm font-medium text-foreground">
-                Geeignete Haartypen
+                Geeignete Haardicke
               </label>
               <div className="flex flex-wrap gap-2">
-                {HAIR_TEXTURE_OPTIONS.map(({ value, label }) => {
-                  const selected = form.suitable_hair_textures.includes(value)
+                {HAIR_THICKNESS_OPTIONS.map(({ value, label }) => {
+                  const selected = form.suitable_thicknesses.includes(value)
                   return (
                     <button
                       key={value}
                       type="button"
-                      onClick={() => toggleChip("suitable_hair_textures", value)}
+                      onClick={() => toggleChip("suitable_thicknesses", value)}
                       className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                         selected
                           ? "bg-primary text-primary-foreground"
@@ -599,20 +599,20 @@ export default function AdminProductsPage() {
                 Geeignet bei Problemen
               </label>
               <div className="flex flex-wrap gap-2">
-                {CONCERN_OPTIONS.map((concern) => {
-                  const selected = form.suitable_concerns.includes(concern)
+                {CONCERN_OPTIONS.map(({ value, label }) => {
+                  const selected = form.suitable_concerns.includes(value)
                   return (
                     <button
-                      key={concern}
+                      key={value}
                       type="button"
-                      onClick={() => toggleChip("suitable_concerns", concern)}
+                      onClick={() => toggleChip("suitable_concerns", value)}
                       className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                         selected
                           ? "bg-primary text-primary-foreground"
                           : "bg-muted text-muted-foreground hover:bg-muted/80"
                       }`}
                     >
-                      {concern}
+                      {label}
                     </button>
                   )
                 })}

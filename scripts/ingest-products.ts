@@ -4,8 +4,8 @@
  * Usage: npx tsx scripts/ingest-products.ts
  *
  * Expects: data/products.csv or data/products.json
- * CSV format: name,brand,description,category,affiliate_link,image_url,price_eur,tags,suitable_hair_textures,suitable_concerns
- * (tags, suitable_hair_textures, suitable_concerns are semicolon-separated within the field)
+ * CSV format: name,brand,description,category,affiliate_link,image_url,price_eur,tags,suitable_thicknesses,suitable_concerns
+ * (tags, suitable_thicknesses, suitable_concerns are semicolon-separated within the field)
  */
 
 import { createClient } from "@supabase/supabase-js"
@@ -83,7 +83,7 @@ interface ProductInput {
   image_url?: string
   price_eur?: number
   tags?: string[]
-  suitable_hair_textures?: string[]
+  suitable_thicknesses?: string[]
   suitable_concerns?: string[]
   is_active?: boolean
   sort_order?: number
@@ -127,8 +127,8 @@ function parseCSV(content: string): ProductInput[] {
       image_url: obj.image_url || undefined,
       price_eur: obj.price_eur ? parseFloat(obj.price_eur) : undefined,
       tags: obj.tags ? obj.tags.split(";").map((t) => t.trim()).filter(Boolean) : [],
-      suitable_hair_textures: obj.suitable_hair_textures
-        ? obj.suitable_hair_textures.split(";").map((t) => t.trim()).filter(Boolean)
+      suitable_thicknesses: obj.suitable_thicknesses
+        ? obj.suitable_thicknesses.split(";").map((t) => t.trim()).filter(Boolean)
         : [],
       suitable_concerns: obj.suitable_concerns
         ? obj.suitable_concerns.split(";").map((t) => t.trim()).filter(Boolean)
@@ -181,7 +181,7 @@ function inferLeaveInSpecs(product: ProductInput): Omit<ProductLeaveInSpecs, "pr
   }
 
   const normalizedName = product.name.toLowerCase()
-  const textures = new Set(product.suitable_hair_textures ?? [])
+  const textures = new Set(product.suitable_thicknesses ?? [])
   const concerns = new Set(product.suitable_concerns ?? [])
 
   const format =
@@ -298,7 +298,7 @@ function inferMaskSpecs(product: ProductInput): Omit<ProductMaskSpecs, "product_
 
   const normalizedName = product.name.toLowerCase()
   const concerns = new Set(product.suitable_concerns ?? [])
-  const textures = new Set(product.suitable_hair_textures ?? [])
+  const textures = new Set(product.suitable_thicknesses ?? [])
 
   const format =
     normalizedName.includes("gel")
@@ -370,7 +370,7 @@ function inferMaskSpecs(product: ProductInput): Omit<ProductMaskSpecs, "product_
 }
 
 function generateDescription(product: ProductInput): string {
-  const hairTypes = (product.suitable_hair_textures || [])
+  const hairTypes = (product.suitable_thicknesses || [])
     .map((t) => TEXTURE_ADJECTIVES[t] || t)
     .join(", ")
   const hair = hairTypes || "alle Haartypen"
@@ -458,7 +458,7 @@ async function main() {
         image_url: product.image_url || null,
         price_eur: product.price_eur || null,
         tags: product.tags || [],
-        suitable_hair_textures: product.suitable_hair_textures || [],
+        suitable_thicknesses: product.suitable_thicknesses || [],
         suitable_concerns: product.suitable_concerns || [],
         is_active: product.is_active ?? true,
         sort_order: product.sort_order ?? i,

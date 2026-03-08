@@ -43,24 +43,8 @@ interface ScoreAdjustment {
   reason: string
 }
 
-function normalizeText(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "")
-    .trim()
-}
-
-function includesAny(value: string, patterns: string[]): boolean {
-  return patterns.some((pattern) => value.includes(pattern))
-}
-
 function isNonFoenHeatTool(tool: string): boolean {
-  const normalized = normalizeText(tool)
-  if (includesAny(normalized, ["fohn", "blow", "diffusor", "diffuser"])) {
-    return false
-  }
-  return includesAny(normalized, ["glatteisen", "lockenstab", "warmluft", "styler", "heat"])
+  return tool === "flat_iron" || tool === "curling_iron" || tool === "hot_air_brush"
 }
 
 function buildLeaveInContext(profile: HairProfile | null): LeaveInContext {
@@ -78,23 +62,15 @@ function buildLeaveInContext(profile: HairProfile | null): LeaveInContext {
   const needsStylingPrep = usesHeatTools || hasNonHeatStylingAction
 
   const concerns = profile?.concerns ?? []
-  const hasFrizzConcern = concerns.some((concern) =>
-    normalizeText(concern).includes("frizz")
-  )
+  const hasFrizzConcern = concerns.includes("frizz")
 
   const hasDamageSignals =
-    concerns.some((concern) => {
-      const normalized = normalizeText(concern)
-      return (
-        (normalized.includes("haar") && normalized.includes("schad")) ||
-        normalized.includes("spliss") ||
-        normalized.includes("bruch")
-      )
-    }) ||
-    profile?.cuticle_condition === "rau" ||
+    concerns.includes("hair_damage") ||
+    concerns.includes("split_ends") ||
+    profile?.cuticle_condition === "rough" ||
     profile?.protein_moisture_balance === "snaps" ||
     profile?.protein_moisture_balance === "stretches_stays" ||
-    (profile?.chemical_treatment ?? []).includes("blondiert")
+    (profile?.chemical_treatment ?? []).includes("bleached")
 
   return {
     thickness: profile?.thickness ?? null,
@@ -155,18 +131,16 @@ function inferModes(context: LeaveInContext): ModeInference {
 }
 
 function mapConcernToBenefits(concern: string): string[] {
-  const normalized = normalizeText(concern)
-
-  if (normalized.includes("frizz")) return ["anti_frizz"]
-  if (normalized.includes("trocken")) return ["moisture"]
-  if (normalized.includes("spliss")) return ["repair"]
-  if (normalized.includes("schad")) return ["repair", "protein"]
-  if (normalized.includes("glanz")) return ["shine"]
-  if (normalized.includes("volumen")) return ["volume"]
-  if (normalized.includes("locken")) return ["curl_definition"]
-  if (normalized.includes("haarausfall") || normalized.includes("duenner")) return ["volume"]
-
-  return []
+  switch (concern) {
+    case "frizz": return ["anti_frizz"]
+    case "dryness": return ["moisture"]
+    case "split_ends": return ["repair"]
+    case "hair_damage": return ["repair", "protein"]
+    case "colored": return ["shine"]
+    case "thinning":
+    case "hair_loss": return ["volume"]
+    default: return []
+  }
 }
 
 function concernOverlapRatio(concerns: string[], careBenefits: string[]): number {

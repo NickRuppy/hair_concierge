@@ -88,7 +88,7 @@ function GoalSelector({
   const [selectedGoals, setSelectedGoals] = useState<Set<string>>(() => {
     const initial = new Set<string>()
     for (const goal of goals) {
-      if (existingGoals.includes(goal.label)) {
+      if (existingGoals.includes(goal.key)) {
         initial.add(goal.key)
       }
     }
@@ -136,15 +136,15 @@ function GoalSelector({
     if (selectedGoals.size === 0) return
     setSaving(true)
 
-    const selectedLabels = goals
+    const selectedKeys = goals
       .filter((g) => selectedGoals.has(g.key))
-      .map((g) => g.label)
+      .map((g) => g.key)
 
     const supabase = createClient()
     const { error } = await supabase
       .from("hair_profiles")
       .update({
-        goals: selectedLabels,
+        goals: selectedKeys,
         post_wash_actions: [...selectedPostWashActions],
         routine_preference: routinePreference || null,
         current_routine_products: [...selectedRoutineProducts],

@@ -10,15 +10,15 @@ export function mapScalpToConcernCode(
   scalpCondition?: string | null
 ): string | null {
   // Scalp condition takes priority (specific problem > general type)
-  if (scalpCondition && scalpCondition !== "keine") {
-    if (scalpCondition === "schuppen") return "schuppen"
-    if (scalpCondition === "gereizt") return "irritationen"
+  if (scalpCondition && scalpCondition !== "none") {
+    if (scalpCondition === "dandruff") return "schuppen"
+    if (scalpCondition === "irritated") return "irritationen"
   }
 
   // Scalp type (general)
-  if (scalpType === "fettig") return "dehydriert-fettig"
-  if (scalpType === "trocken") return "trocken"
-  if (scalpType === "ausgeglichen") return "normal"
+  if (scalpType === "oily") return "dehydriert-fettig"
+  if (scalpType === "dry") return "trocken"
+  if (scalpType === "balanced") return "normal"
 
   return null
 }
