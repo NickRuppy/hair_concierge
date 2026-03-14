@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { runPipeline } from "@/lib/rag/pipeline"
+import { buildAssistantRagContext, buildDoneEventData } from "@/lib/rag/chat-response"
 import { extractConversationMemory } from "@/lib/rag/memory-extractor"
 import { chatMessageSchema } from "@/lib/validators"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
@@ -58,7 +59,16 @@ export async function POST(request: Request) {
   const { message, conversation_id, image_url } = parsed.data
 
   try {
-    const { stream, conversationId, intent, matchedProducts, sources, retrievalSummary, routerDecision } = await runPipeline({
+    const {
+      stream,
+      conversationId,
+      intent,
+      matchedProducts,
+      sources,
+      retrievalSummary,
+      routerDecision,
+      categoryDecision,
+    } = await runPipeline({
       message,
       conversationId: conversation_id,
       userId: user.id,
@@ -143,7 +153,7 @@ export async function POST(request: Request) {
             conversation_id: conversationId,
             role: "assistant",
             content: fullContent,
-            rag_context: sources.length > 0 ? { sources } : null,
+            rag_context: buildAssistantRagContext(sources, categoryDecision),
             product_recommendations: productsToSend.length > 0 ? productsToSend : null,
           })
 
@@ -176,17 +186,16 @@ export async function POST(request: Request) {
             encoder.encode(
               `data: ${JSON.stringify({
                 type: "done",
-                data: {
+                data: buildDoneEventData({
                   intent,
-                  ...retrievalSummary,
-                  router_confidence: routerDecision.confidence,
-                  retrieval_mode: routerDecision.retrieval_mode,
-                  policy_overrides: routerDecision.policy_overrides,
-                },
+                  retrievalSummary,
+                  routerDecision,
+                  categoryDecision,
+                }),
               })}\n\n`
             )
           )
-        } catch (error) {
+        } catch {
           controller.enqueue(
             encoder.encode(
               `data: ${JSON.stringify({ type: "error", data: { message: "Stream-Fehler aufgetreten" } })}\n\n`

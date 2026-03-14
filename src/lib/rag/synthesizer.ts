@@ -9,6 +9,7 @@ import {
   WASH_FREQUENCY_LABELS,
   HEAT_STYLING_LABELS,
   CUTICLE_CONDITION_LABELS,
+  HAIR_THICKNESS_LABELS,
   SCALP_TYPE_LABELS,
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
@@ -21,6 +22,7 @@ import type {
   ContentChunk,
   ProductCategory,
   MaskDecision,
+  ShampooDecision,
 } from "@/lib/types"
 import type OpenAI from "openai"
 
@@ -34,6 +36,7 @@ export interface SynthesizeParams {
   intent: IntentType
   productCategory?: ProductCategory
   maskDecision?: MaskDecision
+  shampooDecision?: ShampooDecision
   /** Slot-aware clarification questions from the router (replaces consultationMode) */
   clarificationQuestions?: string[]
 }
@@ -127,6 +130,51 @@ function formatUserProfile(
   return result
 }
 
+function formatShampooProfile(
+  profile: HairProfile | null,
+  clarificationQuestions?: string[],
+): string {
+  if (!profile) {
+    return "Kein Shampoo-Profil vorhanden. Frage nur nach Haardicke, Kopfhaut-Typ und Kopfhaut-Beschwerden."
+  }
+
+  const parts: string[] = []
+
+  if (profile.thickness) {
+    parts.push(`Haardicke: ${HAIR_THICKNESS_LABELS[profile.thickness] ?? profile.thickness}`)
+  }
+  if (profile.scalp_type) {
+    parts.push(`Kopfhaut-Typ: ${SCALP_TYPE_LABELS[profile.scalp_type] ?? profile.scalp_type}`)
+  }
+  if (profile.scalp_condition) {
+    const scalpConditionLabel =
+      profile.scalp_condition === "none"
+        ? "keine"
+        : (SCALP_CONDITION_LABELS[profile.scalp_condition] ?? profile.scalp_condition)
+    parts.push(`Kopfhaut-Beschwerden: ${scalpConditionLabel}`)
+  }
+
+  let result = parts.length > 0
+    ? parts.join("\n")
+    : "Shampoo-Profil angelegt, aber die drei Pflichtfelder fehlen noch."
+
+  if (clarificationQuestions && clarificationQuestions.length > 0) {
+    result += "\n\n(HINWEIS: Shampoo-Klaerungsrunde. Stelle AUSSCHLIESSLICH Rueckfragen zu den fehlenden Shampoo-Feldern."
+    result += "\nNenne KEINE Produkte und stelle KEINE weiteren Fragen zu Routine, Zielen, Haarstruktur, Waschfrequenz oder anderen Produkten."
+    if (clarificationQuestions.length === 1) {
+      result += "\nStelle genau diese eine Rueckfrage:"
+    } else {
+      result += "\nStelle genau diese Rueckfragen:"
+    }
+    for (const q of clarificationQuestions) {
+      result += `\n- ${q}`
+    }
+    result += ")"
+  }
+
+  return result
+}
+
 /**
  * Formats the retrieved RAG chunks into a context string for the system prompt.
  * Includes a German source type label for each chunk.
@@ -203,24 +251,77 @@ function formatMaskDecision(maskDecision?: MaskDecision): string {
   return parts.join("\n")
 }
 
+const SHAMPOO_FIELD_LABELS: Record<string, string> = {
+  thickness: "Haardicke",
+  scalp_type: "Kopfhaut-Typ",
+  scalp_condition: "Kopfhaut-Beschwerden",
+}
+
+function formatShampooDecision(shampooDecision?: ShampooDecision): string {
+  if (!shampooDecision) return ""
+
+  const parts = ["\n\nShampoo-Entscheidung:"]
+  parts.push(`- Profil ausreichend: ${shampooDecision.eligible ? "ja" : "nein"}`)
+
+  if (shampooDecision.matched_profile.thickness) {
+    parts.push(`- Haardicke: ${HAIR_THICKNESS_LABELS[shampooDecision.matched_profile.thickness] ?? shampooDecision.matched_profile.thickness}`)
+  }
+  if (shampooDecision.matched_profile.scalp_type) {
+    parts.push(`- Kopfhaut-Typ: ${SCALP_TYPE_LABELS[shampooDecision.matched_profile.scalp_type] ?? shampooDecision.matched_profile.scalp_type}`)
+  }
+  if (shampooDecision.matched_profile.scalp_condition) {
+    parts.push(`- Kopfhaut-Beschwerden: ${SCALP_CONDITION_LABELS[shampooDecision.matched_profile.scalp_condition] ?? shampooDecision.matched_profile.scalp_condition}`)
+  }
+  if (shampooDecision.matched_concern_code) {
+    parts.push(`- Wissensbasis-Fokus: ${shampooDecision.matched_concern_code}`)
+  }
+
+  if (!shampooDecision.eligible) {
+    parts.push(
+      `- Fehlende Felder: ${shampooDecision.missing_profile_fields
+        .map((field) => SHAMPOO_FIELD_LABELS[field] ?? field)
+        .join(", ")}`
+    )
+  } else if (shampooDecision.no_catalog_match) {
+    parts.push("- Katalogstatus: kein exakter Shampoo-Match fuer dieses Profil vorhanden")
+  } else {
+    parts.push(`- Exakte Shampoo-Kandidaten: ${shampooDecision.candidate_count}`)
+  }
+
+  return parts.join("\n")
+}
+
 /**
  * Formats matched products into a context block for the system prompt.
  */
 function formatProducts(
   products: Product[],
   productCategory?: ProductCategory,
-  maskDecision?: MaskDecision
+  maskDecision?: MaskDecision,
+  shampooDecision?: ShampooDecision
 ): string {
   const maskDecisionBlock = productCategory === "mask"
     ? formatMaskDecision(maskDecision)
     : ""
+  const shampooDecisionBlock = productCategory === "shampoo"
+    ? formatShampooDecision(shampooDecision)
+    : ""
+  const categoryDecisionBlock = shampooDecisionBlock || maskDecisionBlock
 
   if (products.length === 0) {
     if (productCategory === "mask" && maskDecision && !maskDecision.needs_mask) {
       return `${maskDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell keine Maske noetig ist. Nenne in diesem Fall KEINE konkreten Maskenprodukte.`
     }
 
-    return `${maskDecisionBlock}\n\nKeine passenden Produkte in der Datenbank gefunden. Nenne KEINE konkreten Produktnamen — sage dem Nutzer ehrlich, dass du gerade kein passendes Produkt parat hast, und bitte um genauere Angaben.`
+    if (productCategory === "shampoo" && shampooDecision && !shampooDecision.eligible) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Frage nur nach den fehlenden Shampoo-Profilfeldern. Nenne keine Produkte und behandle das NICHT als Katalog-No-Match.`
+    }
+
+    if (productCategory === "shampoo" && shampooDecision?.no_catalog_match) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Shampoo in der Datenbank exakt zu Haardicke, Kopfhaut-Typ und Kopfhaut-Beschwerden passt. Weiche NICHT auf andere Kopfhaut-Buckets aus und nenne KEINE konkreten Shampoo-Produkte.`
+    }
+
+    return `${categoryDecisionBlock}\n\nKeine passenden Produkte in der Datenbank gefunden. Nenne KEINE konkreten Produktnamen — sage dem Nutzer ehrlich, dass du gerade kein passendes Produkt parat hast, und bitte um genauere Angaben.`
   }
 
   const productList = products
@@ -246,6 +347,19 @@ function formatProducts(
           parts.push(`  Typ: ${maskTypeLabel}`)
         }
 
+        if (meta.category === "shampoo") {
+          parts.push(
+            `  Match-Profil: ${[
+              meta.matched_profile.thickness,
+              meta.matched_profile.scalp_type,
+              meta.matched_profile.scalp_condition,
+            ].filter(Boolean).join(" | ")}`
+          )
+          if (meta.matched_concern_code) {
+            parts.push(`  Kopfhaut-Fokus: ${meta.matched_concern_code}`)
+          }
+        }
+
         if (meta.top_reasons.length > 0) {
           parts.push(`  Warum passend: ${meta.top_reasons.join(" | ")}`)
         }
@@ -263,7 +377,7 @@ function formatProducts(
   const header = (productCategory && PRODUCT_SECTION_HEADERS[productCategory])
     ?? "Passende Produkte aus unserer Datenbank"
 
-  return `${maskDecisionBlock}\n\n${header}:\n${productList}\n\nWICHTIG: Verwende die EXAKTEN Produktnamen (wie oben geschrieben) wenn du sie erwaehst — die Namen werden in der App als klickbare Links dargestellt.`
+  return `${categoryDecisionBlock}\n\n${header}:\n${productList}\n\nWICHTIG: Verwende die EXAKTEN Produktnamen (wie oben geschrieben) wenn du sie erwaehst — die Namen werden in der App als klickbare Links dargestellt.`
 }
 
 /** Category-specific reasoning instructions injected into the system prompt */
@@ -272,8 +386,12 @@ const CATEGORY_REASONING_PROMPTS: Record<string, string> = {
 
 ## Shampoo-Empfehlungen:
 Wenn du Shampoo-Empfehlungen gibst:
-1. Erklaere ZUERST, welche Shampoo-Eigenschaften ideal fuer dieses Nutzerprofil sind (z.B. Kopfhauttyp, Haardicke). Beschreibe die ideale Shampoo-Art in 1-2 Saetzen.
-2. Empfehle DANN konkrete Produkte und erklaere WARUM jedes Produkt zu diesem Profil passt. Nenne Preis-Leistungs-Optionen und Premium-Alternativen, wenn verfuegbar.`,
+1. Nutze fuer die Shampoo-Begruendung NUR diese Signale: Haardicke, Kopfhaut-Typ, Kopfhaut-Beschwerden und den Shampoo-Entscheidungsblock.
+2. Wenn im Shampoo-Entscheidungsblock Profilfelder fehlen, frage EXAKT nur nach diesen fehlenden Shampoo-Feldern und nenne keine Produkte.
+3. Wenn der Shampoo-Entscheidungsblock sagt, dass es keinen exakten Katalog-Match gibt, sage das klar und nenne keine ausweichenden Shampoo-Produkte aus anderen Kopfhaut-Buckets.
+4. Erklaere ZUERST, welche Shampoo-Eigenschaften ideal fuer dieses Nutzerprofil sind. Empfehle DANN konkrete Produkte und erklaere WARUM jedes Produkt zu genau diesem Profil passt.
+5. Begruende Shampoo-Fit NICHT mit Haarstruktur, Zielen, chemischer Behandlung, Waschfrequenz oder anderen Randprofilen.
+6. Erwaehne Haarmuster wie glatt, wellig, lockig oder coily NICHT als Shampoo-Fit-Signal, auch wenn diese Infos im Nutzerprofil stehen.`,
   conditioner: `
 
 ## Conditioner-Empfehlungen:
@@ -308,6 +426,7 @@ function buildSystemPrompt(
   products?: Product[],
   productCategory?: ProductCategory,
   maskDecision?: MaskDecision,
+  shampooDecision?: ShampooDecision,
   clarificationQuestions?: string[],
 ): string {
   let prompt = SYSTEM_PROMPT
@@ -317,11 +436,15 @@ function buildSystemPrompt(
     prompt += CATEGORY_REASONING_PROMPTS[productCategory]
   }
 
-  prompt = prompt.replace("{{USER_PROFILE}}", formatUserProfile(hairProfile, clarificationQuestions))
+  const userProfileContext = productCategory === "shampoo"
+    ? formatShampooProfile(hairProfile, clarificationQuestions)
+    : formatUserProfile(hairProfile, clarificationQuestions)
+
+  prompt = prompt.replace("{{USER_PROFILE}}", userProfileContext)
 
   let ragContext = formatRagContext(ragChunks)
-  if (products || maskDecision) {
-    ragContext += formatProducts(products ?? [], productCategory, maskDecision)
+  if (products || maskDecision || shampooDecision) {
+    ragContext += formatProducts(products ?? [], productCategory, maskDecision, shampooDecision)
   }
   prompt = prompt.replace("{{RAG_CONTEXT}}", ragContext)
 
@@ -355,6 +478,7 @@ export async function synthesizeResponse(
     products,
     productCategory,
     maskDecision,
+    shampooDecision,
     clarificationQuestions,
   } = params
 
@@ -365,6 +489,7 @@ export async function synthesizeResponse(
     products,
     productCategory,
     maskDecision,
+    shampooDecision,
     clarificationQuestions,
   )
 

@@ -171,13 +171,30 @@ export function useChat(): UseChatReturn {
                     if (last?.role === "assistant") {
                       updated[updated.length - 1] = {
                         ...last,
-                        rag_context: { sources: event.data },
+                        rag_context: {
+                          ...(last.rag_context ?? { category_decision: null }),
+                          sources: event.data,
+                        },
                       }
                     }
                     return updated
                   })
                   break
                 case "done":
+                  setMessages((prev) => {
+                    const updated = [...prev]
+                    const last = updated[updated.length - 1]
+                    if (last?.role === "assistant") {
+                      updated[updated.length - 1] = {
+                        ...last,
+                        rag_context: {
+                          sources: last.rag_context?.sources ?? [],
+                          category_decision: event.data?.category_decision ?? null,
+                        },
+                      }
+                    }
+                    return updated
+                  })
                   break
                 case "error":
                   console.error("Stream error:", event.data)

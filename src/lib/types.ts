@@ -132,11 +132,25 @@ export interface Product {
 }
 
 export interface BaseRecommendationMetadata {
-  category: "leave_in" | "mask"
+  category: "shampoo" | "leave_in" | "mask"
   score: number
   top_reasons: string[]
   tradeoffs: string[]
   usage_hint: string
+}
+
+export interface ShampooMatchedProfile {
+  thickness: HairThickness | null
+  scalp_type: ScalpType | null
+  scalp_condition: ScalpCondition | null
+}
+
+export type ShampooProfileField = "thickness" | "scalp_type" | "scalp_condition"
+
+export interface ShampooRecommendationMetadata extends BaseRecommendationMetadata {
+  category: "shampoo"
+  matched_profile: ShampooMatchedProfile
+  matched_concern_code: string | null
 }
 
 export interface LeaveInRecommendationMetadata extends BaseRecommendationMetadata {
@@ -154,13 +168,35 @@ export interface MaskRecommendationMetadata extends BaseRecommendationMetadata {
   need_strength: MaskNeedStrength
 }
 
-export type RecommendationMetadata = LeaveInRecommendationMetadata | MaskRecommendationMetadata
+export type RecommendationMetadata =
+  | ShampooRecommendationMetadata
+  | LeaveInRecommendationMetadata
+  | MaskRecommendationMetadata
+
+export interface ShampooDecision {
+  category: "shampoo"
+  eligible: boolean
+  missing_profile_fields: ShampooProfileField[]
+  matched_profile: ShampooMatchedProfile
+  matched_concern_code: string | null
+  retrieval_filter: {
+    thickness: HairThickness | null
+    concern: string | null
+  }
+  candidate_count: number
+  no_catalog_match: boolean
+}
 
 export interface MaskDecision {
   needs_mask: boolean
   need_strength: 0 | MaskNeedStrength
   mask_type: MaskType | null
   active_signals: MaskSignal[]
+}
+
+export interface MessageRagContext {
+  sources: CitationSource[]
+  category_decision?: ShampooDecision | null
 }
 
 export interface Conversation {
@@ -182,7 +218,7 @@ export interface Message {
   image_url: string | null
   image_analysis: string | null
   product_recommendations: Product[] | null
-  rag_context: { sources: CitationSource[] } | null
+  rag_context: MessageRagContext | null
   token_usage: Record<string, number> | null
   created_at: string
 }

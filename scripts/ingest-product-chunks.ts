@@ -2,7 +2,7 @@
  * Product Matrix → content_chunks Ingestion
  *
  * Reads the JSON files from data/products-from-excel/, groups products by
- * category × hair_texture × concern, and creates rich text chunks with
+ * category × thickness × concern, and creates rich text chunks with
  * embeddings in the content_chunks table (source_type = 'product_list').
  *
  * This makes product data discoverable via RAG vector search alongside
@@ -15,6 +15,10 @@ import { createClient } from "@supabase/supabase-js"
 import OpenAI from "openai"
 import fs from "fs"
 import path from "path"
+import {
+  buildProductListChunks,
+  type ProductListChunkProduct as ProductInput,
+} from "../src/lib/rag/product-list-chunks"
 
 // Load .env.local for standalone script execution
 const envPath = path.join(process.cwd(), ".env.local")
@@ -35,112 +39,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
-
-// ---------------------------------------------------------------------------
-// German labels
-// ---------------------------------------------------------------------------
-
-const CONCERN_LABELS: Record<string, string> = {
-  schuppen: "Schuppen",
-  irritationen: "Kopfhautirritationen",
-  normal: "normale Pflege",
-  "dehydriert-fettig": "dehydrierte oder fettige Kopfhaut",
-  trocken: "trockene Kopfhaut",
-  protein: "Proteinbedarf",
-  feuchtigkeit: "Feuchtigkeitsbedarf",
-  performance: "Performance-Pflege",
-  nix: "allgemeine Pflege (keine besonderen Probleme)",
-  "natuerliches-oel": "natürliche Ölpflege",
-  stylingoel: "Styling mit Öl",
-  trockenoel: "Trockenöl-Pflege",
-}
-
-const TEXTURE_LABELS: Record<string, string> = {
-  fine: "feines Haar",
-  normal: "mittelstarkes Haar (normale Haardicke)",
-  coarse: "dickes Haar",
-}
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-interface ProductInput {
-  name: string
-  brand?: string
-  category?: string
-  suitable_thicknesses?: string[]
-  suitable_concerns?: string[]
-  tags?: string[]
-}
-
-interface ChunkData {
-  content: string
-  sourceName: string
-  chunkIndex: number
-  metadata: Record<string, unknown>
-}
-
-// ---------------------------------------------------------------------------
-// Grouping & Chunk Generation
-// ---------------------------------------------------------------------------
-
-function buildChunks(allProducts: ProductInput[]): ChunkData[] {
-  // Group by: category → hair_texture → concern
-  const groups = new Map<string, ProductInput[]>()
-
-  for (const product of allProducts) {
-    const category = product.category || "Sonstiges"
-    const hairType = product.suitable_thicknesses?.[0] || "alle"
-    const concern = product.suitable_concerns?.[0] || "allgemein"
-    const key = `${category}|${hairType}|${concern}`
-
-    if (!groups.has(key)) {
-      groups.set(key, [])
-    }
-    groups.get(key)!.push(product)
-  }
-
-  const chunks: ChunkData[] = []
-  let chunkIndex = 0
-
-  for (const [key, products] of groups) {
-    const [category, hairTexture, concern] = key.split("|")
-    const textureLabel = TEXTURE_LABELS[hairTexture] || hairTexture
-    const concernLabel = CONCERN_LABELS[concern] || concern
-
-    // Build a rich, natural-language chunk
-    const productLines = products.map((p) => {
-      if (p.brand && p.brand !== p.name) {
-        return `- ${p.name} (${p.brand})`
-      }
-      return `- ${p.name}`
-    })
-
-    const content =
-      `Toms Produktempfehlungen: ${category} für ${textureLabel} bei ${concernLabel}\n\n` +
-      `Folgende ${category}-Produkte empfiehlt Tom Hannemann für Menschen mit ${textureLabel} ` +
-      `und dem Anliegen "${concernLabel}":\n\n` +
-      productLines.join("\n") +
-      `\n\nInsgesamt ${products.length} empfohlene Produkte in dieser Kategorie.`
-
-    chunks.push({
-      content,
-      sourceName: `produktmatrix/${category.toLowerCase().replace(/\s+/g, "-")}`,
-      chunkIndex: chunkIndex++,
-      metadata: {
-        category,
-        thickness: hairTexture,
-        concern,
-        product_count: products.length,
-        product_names: products.map((p) => p.name),
-        language: "de",
-      },
-    })
-  }
-
-  return chunks
-}
 
 // ---------------------------------------------------------------------------
 // Embedding & Storage
@@ -203,8 +101,8 @@ async function main() {
   console.log(`\nTotal products: ${allProducts.length}`)
 
   // Build grouped chunks
-  const chunks = buildChunks(allProducts)
-  console.log(`Generated ${chunks.length} chunks (category × hair_texture × concern)`)
+  const chunks = buildProductListChunks(allProducts)
+  console.log(`Generated ${chunks.length} chunks (category x thickness x concern)`)
 
   if (dryRun) {
     console.log("\nChunk preview:")

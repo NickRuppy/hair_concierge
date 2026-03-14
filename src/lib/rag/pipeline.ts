@@ -6,8 +6,13 @@ import { buildClarificationQuestions } from "@/lib/rag/clarification"
 import { retrieveContext } from "@/lib/rag/retriever"
 import { matchProducts, matchShampooProducts, matchConditionerProducts } from "@/lib/rag/product-matcher"
 import { synthesizeResponse } from "@/lib/rag/synthesizer"
-import { mapScalpToConcernCode } from "@/lib/rag/scalp-mapper"
 import { mapProteinMoistureToConcernCode } from "@/lib/rag/conditioner-mapper"
+import {
+  annotateShampooRecommendations,
+  buildShampooClarificationQuestions,
+  buildShampooDecision,
+  buildShampooRetrievalFilter,
+} from "@/lib/rag/shampoo-decision"
 import { mapProfileToLeaveInConcernCodes } from "@/lib/rag/leave-in-mapper"
 import { rerankLeaveInProducts } from "@/lib/rag/leave-in-reranker"
 import { buildMaskConcernSearchOrder } from "@/lib/rag/mask-mapper"
@@ -27,6 +32,7 @@ import type {
   EnrichedCitationSource,
   RouterDecision,
   MaskDecision,
+  ShampooDecision,
 } from "@/lib/types"
 
 export interface PipelineParams {
@@ -43,6 +49,7 @@ export interface PipelineResult {
   matchedProducts: Product[]
   sources: EnrichedCitationSource[]
   routerDecision: RouterDecision
+  categoryDecision?: ShampooDecision
   /** Retrieval summary for the done event */
   retrievalSummary: {
     final_context_count: number
@@ -92,11 +99,11 @@ export async function runPipeline(
   ])
   const { intent, product_category } = classification
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
+  let shampooDecision = product_category === "shampoo"
+    ? buildShampooDecision(hairProfile)
+    : undefined
 
   // Pre-compute concern codes for category-specific metadata filtering
-  const scalpConcern = product_category === "shampoo"
-    ? mapScalpToConcernCode(hairProfile?.scalp_type, hairProfile?.scalp_condition)
-    : null
   const conditionerConcern = product_category === "conditioner"
     ? mapProteinMoistureToConcernCode(hairProfile?.protein_moisture_balance)
     : null
@@ -178,16 +185,20 @@ export async function runPipeline(
 
   // ── Clarification branch: skip retrieval & products ─────────────────
   if (routerDecision.needs_clarification) {
-    const clarificationQuestions = buildClarificationQuestions(
-      classification.normalized_filters,
-      product_category,
-      hairProfile,
-    )
+    const clarificationQuestions =
+      product_category === "shampoo" && shampooDecision && !shampooDecision.eligible
+        ? buildShampooClarificationQuestions(shampooDecision)
+        : buildClarificationQuestions(
+            classification.normalized_filters,
+            product_category,
+            hairProfile,
+          )
 
     // Minimal retrieval for context (but no product matching)
     const ragChunks = await retrieveContext(message, {
       intent,
       hairProfile,
+      shampooConcern: shampooDecision?.matched_concern_code ?? null,
       count: 3,
       userId,
     })
@@ -210,6 +221,7 @@ export async function runPipeline(
       imageAnalysis,
       intent,
       productCategory: product_category,
+      shampooDecision,
       clarificationQuestions,
     })
 
@@ -220,6 +232,7 @@ export async function runPipeline(
       matchedProducts: [],
       sources,
       routerDecision,
+      categoryDecision: shampooDecision,
       retrievalSummary: {
         final_context_count: ragChunks.length,
       },
@@ -230,14 +243,10 @@ export async function runPipeline(
 
   // ── Step 2: Retrieve context chunks ─────────────────────────────────
   // Build metadata filter based on intent and category
-  let metadataFilter: Record<string, string> | undefined
-  if (intent === "product_recommendation") {
+  let metadataFilter = buildShampooRetrievalFilter(intent, product_category, shampooDecision)
+  if (!metadataFilter && intent === "product_recommendation") {
     if (hairProfile?.thickness) {
       metadataFilter = { thickness: hairProfile.thickness }
-      // For shampoo: also filter by scalp concern
-      if (scalpConcern) {
-        metadataFilter.concern = scalpConcern
-      }
       // For conditioner: filter by protein/moisture concern
       if (conditionerConcern) {
         metadataFilter.concern = conditionerConcern
@@ -254,6 +263,7 @@ export async function runPipeline(
     intent,
     hairProfile,
     metadataFilter,
+    shampooConcern: shampooDecision?.matched_concern_code ?? null,
     count: retrievalCount,
     userId,
   })
@@ -274,16 +284,18 @@ export async function runPipeline(
   let maskDecision: MaskDecision | undefined
   if (PRODUCT_INTENTS.includes(intent)) {
     if (product_category === "shampoo") {
-      if (!hairProfile?.thickness || !hairProfile?.scalp_type || !hairProfile?.scalp_condition) {
+      if (!shampooDecision?.eligible || !hairProfile?.thickness || !hairProfile?.scalp_type || !hairProfile?.scalp_condition) {
         matchedProducts = []
       } else {
-        matchedProducts = await matchShampooProducts({
+        const shampooCandidates = await matchShampooProducts({
           query: message,
           thickness: hairProfile.thickness,
           scalpType: hairProfile.scalp_type,
           scalpCondition: hairProfile.scalp_condition,
           count: 3,
         })
+        shampooDecision = buildShampooDecision(hairProfile, shampooCandidates.length)
+        matchedProducts = annotateShampooRecommendations(shampooCandidates, shampooDecision)
       }
     } else if (product_category === "conditioner") {
       if (!hairProfile?.thickness || !hairProfile?.protein_moisture_balance) {
@@ -396,6 +408,7 @@ export async function runPipeline(
     intent,
     productCategory: product_category,
     maskDecision: product_category === "mask" ? maskDecision : undefined,
+    shampooDecision,
   })
 
   return {
@@ -405,6 +418,7 @@ export async function runPipeline(
     matchedProducts: matchedProducts ?? [],
     sources,
     routerDecision,
+    categoryDecision: shampooDecision,
     retrievalSummary: {
       final_context_count: ragChunks.length,
     },

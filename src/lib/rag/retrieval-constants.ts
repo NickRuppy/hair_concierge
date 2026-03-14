@@ -54,6 +54,9 @@ export const DEFAULT_AUTHORITY_WEIGHT = 1.0
 /** Boost for chunks matching user's thickness */
 export const THICKNESS_MATCH_BOOST = 1.15
 
+/** Boost for shampoo chunks matching the inferred scalp concern */
+export const SHAMPOO_CONCERN_MATCH_BOOST = 1.12
+
 /** Boost for community_qa chunks with product mentions */
 export const COMMUNITY_QA_PRODUCT_BOOST = 1.25
 

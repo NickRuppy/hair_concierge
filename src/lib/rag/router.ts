@@ -42,6 +42,19 @@ function computeSlotCompleteness(
   productCategory: string | null,
   hairProfile: HairProfile | null,
 ): { score: number; rawCount: number } {
+  if (productCategory === "shampoo") {
+    const filledCount = [
+      hairProfile?.thickness,
+      hairProfile?.scalp_type,
+      hairProfile?.scalp_condition,
+    ].filter((value) => Boolean(value)).length
+
+    return {
+      score: filledCount / 3,
+      rawCount: filledCount,
+    }
+  }
+
   let filledCount = 0
 
   for (const key of ROUTER_SLOT_KEYS) {
@@ -54,9 +67,6 @@ function computeSlotCompleteness(
   }
 
   // Category-specific bonus: count profile data as partial slot fills
-  if (productCategory === "shampoo" && hairProfile?.scalp_type) {
-    filledCount += 0.5
-  }
   if (productCategory === "conditioner" && hairProfile?.protein_moisture_balance) {
     filledCount += 0.5
   }
@@ -136,6 +146,17 @@ export function evaluateRoute(
         clarification_reason += "+missing_shampoo_profile"
       }
       overrides.push("missing_shampoo_profile")
+    }
+
+    if (
+      PRODUCT_INTENTS.includes(intent) &&
+      product_category === "shampoo" &&
+      hairProfile?.thickness &&
+      hairProfile.scalp_type &&
+      hairProfile.scalp_condition
+    ) {
+      shouldClarify = false
+      clarification_reason = undefined
     }
 
     // ── Rule 3c: Conditioner profile prerequisites are mandatory ────────
