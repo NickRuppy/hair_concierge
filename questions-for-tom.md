@@ -12,7 +12,11 @@
 
 4. **Reihenfolge der Produkte innerhalb einer Zelle:** In den Produktempfehlungs-Tabellen stehen pro Zelle mehrere Produkte. Gibt es eine bewusste Reihenfolge (z.B. Top-Empfehlung zuerst, nach Preis, nach Verfügbarkeit)? Oder sind sie gleichwertig?
 
-5. **Mechanische Belastung im Onboarding abfragen?** Würde es für die Empfehlung irgendeiner Produktkategorie helfen, wenn wir im Onboarding-Flow auch die mechanische Belastung der Haare abfragen (z.B. häufiges Bürsten, enge Zöpfe, Handtuchrubbeln etc.)?
+5. **Haarmenge (Haardichte) abfragen?** Bisher fragen wir die Haarmenge/Haardichte nicht ab. Im Skool-Kurs wird sie aber z.B. bei der Conditioner-Entscheidung erwähnt. Brauchen wir sie als Profilfeld, und wenn ja, für welche Produktkategorien spielt sie eine Rolle?
+
+6. **Peelings/Seren: Produktempfehlungen vorhanden?** Die Kategorie Peelings/Seren wird im Kurs erklärt, aber in unseren Produkttabellen gibt es dafür noch keine konkreten Produktempfehlungen. Gibt es bereits eine Liste, oder soll Tom eine zusammenstellen?
+
+7. **Mechanische Belastung im Onboarding abfragen?** Würde es für die Empfehlung irgendeiner Produktkategorie helfen, wenn wir im Onboarding-Flow auch die mechanische Belastung der Haare abfragen (z.B. häufiges Bürsten, enge Zöpfe, Handtuchrubbeln etc.)?
 
 ## Beantwortet
 

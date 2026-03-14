@@ -2,13 +2,32 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { OnboardingGoals } from "@/components/onboarding/onboarding-goals"
 import type { HairTexture } from "@/lib/vocabulary"
+import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 
-export default async function OnboardingGoalsPage() {
+interface OnboardingGoalsPageProps {
+  searchParams: Promise<{ lead?: string | string[] }>
+}
+
+export default async function OnboardingGoalsPage({
+  searchParams,
+}: OnboardingGoalsPageProps) {
   const supabase = await createClient()
+  const resolvedSearchParams = await searchParams
+  const leadId = Array.isArray(resolvedSearchParams.lead)
+    ? resolvedSearchParams.lead[0]
+    : resolvedSearchParams.lead
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     redirect("/auth?next=/onboarding/goals")
+  }
+
+  if (leadId) {
+    try {
+      await linkQuizToProfile(user.id, user.email, leadId)
+    } catch (error) {
+      console.error("Onboarding lead link failed:", error)
+    }
   }
 
   const { data: profile } = await supabase

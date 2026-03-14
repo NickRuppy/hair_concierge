@@ -37,6 +37,18 @@ function mapSupabaseError(message: string): string {
   return message
 }
 
+function buildNextDestination(next: string, leadId: string | null): string {
+  if (!leadId) return next
+
+  const nextUrl = new URL(next, "http://localhost")
+  if (nextUrl.pathname !== "/onboarding/goals") {
+    return `${nextUrl.pathname}${nextUrl.search}`
+  }
+
+  nextUrl.searchParams.set("lead", leadId)
+  return `${nextUrl.pathname}${nextUrl.search}`
+}
+
 export default function AuthPage() {
   const supabase = createClient()
   const searchParams = useSearchParams()
@@ -102,6 +114,8 @@ export default function AuthPage() {
       setError(mapSupabaseError(error.message))
       setLoading(null)
     } else {
+      const destination = buildNextDestination(next, leadId)
+
       // Link quiz lead data if user logged in with a lead from the quiz
       if (leadId) {
         try {
@@ -110,7 +124,7 @@ export default function AuthPage() {
           console.error("linkLeadAction failed:", e)
         }
       }
-      router.push(next)
+      router.push(destination)
     }
   }
 
