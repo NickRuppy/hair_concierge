@@ -2,6 +2,7 @@ import { z } from "zod"
 import {
   HAIR_TEXTURES,
   HAIR_THICKNESSES,
+  HAIR_DENSITIES,
   CONCERNS,
   GOALS,
   DESIRED_VOLUME_LEVELS,
@@ -9,6 +10,10 @@ import {
   WASH_FREQUENCIES,
   HEAT_STYLING_LEVELS,
 } from "@/lib/vocabulary"
+import {
+  CONDITIONER_WEIGHTS,
+  CONDITIONER_REPAIR_LEVELS,
+} from "@/lib/conditioner/constants"
 import {
   POST_WASH_ACTIONS,
   ROUTINE_PREFERENCES,
@@ -31,6 +36,7 @@ import {
 export const hairProfileFullSchema = z.object({
   hair_texture: z.enum(HAIR_TEXTURES).nullable(),
   thickness: z.enum(HAIR_THICKNESSES).nullable(),
+  density: z.enum(HAIR_DENSITIES).nullable().default(null),
   concerns: z.array(z.enum(CONCERNS)).default([]),
   products_used: z.string().nullable().default(null),
   wash_frequency: z.enum(WASH_FREQUENCIES).nullable().default(null),
@@ -84,6 +90,11 @@ const maskSpecsSchema = z.object({
   leave_on_minutes: z.number().int().min(1).max(60).default(10),
 })
 
+const conditionerSpecsSchema = z.object({
+  weight: z.enum(CONDITIONER_WEIGHTS),
+  repair_level: z.enum(CONDITIONER_REPAIR_LEVELS),
+})
+
 export const chatMessageSchema = z.object({
   message: z.string().min(1).max(5000),
   conversation_id: z.string().uuid().optional(),
@@ -103,6 +114,7 @@ export const productSchema = z.object({
   suitable_concerns: z.array(z.string()).default([]),
   is_active: z.boolean().default(true),
   sort_order: z.number().int().default(0),
+  conditioner_specs: conditionerSpecsSchema.nullable().optional(),
   leave_in_specs: leaveInSpecsSchema.nullable().optional(),
   mask_specs: maskSpecsSchema.nullable().optional(),
 })

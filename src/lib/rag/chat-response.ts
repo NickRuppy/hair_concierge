@@ -2,13 +2,13 @@ import type {
   IntentType,
   MessageRagContext,
   RouterDecision,
-  ShampooDecision,
+  CategoryDecision,
   CitationSource,
 } from "@/lib/types"
 
 export function buildAssistantRagContext(
   sources: CitationSource[],
-  categoryDecision?: ShampooDecision
+  categoryDecision?: CategoryDecision
 ): MessageRagContext | null {
   if (sources.length === 0 && !categoryDecision) {
     return null
@@ -24,7 +24,7 @@ export function buildDoneEventData(params: {
   intent: IntentType
   retrievalSummary: { final_context_count: number }
   routerDecision: RouterDecision
-  categoryDecision?: ShampooDecision
+  categoryDecision?: CategoryDecision
 }): Record<string, unknown> {
   const { intent, retrievalSummary, routerDecision, categoryDecision } = params
 

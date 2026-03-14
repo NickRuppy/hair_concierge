@@ -156,8 +156,8 @@ export const INTENT_CLASSIFICATION_PROMPT = `Klassifiziere die Absicht der folge
 
 2. "category" — falls der Nutzer nach einem bestimmten Produkttyp fragt, genau EINE der folgenden:
 - shampoo: Shampoo, Haarwaesche, Reinigung
-- conditioner: Conditioner, Spuelung, Haarkur
-- mask: Haarmaske, Tiefenpflege
+- conditioner: Conditioner, Spuelung
+- mask: Haarmaske, Haarkur, Tiefenpflege
 - oil: Haaroel, Kopfhautoel
 - leave_in: Leave-in, Hitzeschutz, Styling-Produkt
 - routine: Komplette Routine / mehrere Produkttypen

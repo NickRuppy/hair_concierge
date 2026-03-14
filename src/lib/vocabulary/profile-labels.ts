@@ -20,6 +20,22 @@ export const PROTEIN_MOISTURE_LABELS: Record<string, string> = {
   stretches_stays: "Proteinmangel",
 } satisfies Record<ProteinMoistureBalance, string>
 
+/* ── Hair density ── */
+
+export const HAIR_DENSITIES = ["low", "medium", "high"] as const
+export type HairDensity = (typeof HAIR_DENSITIES)[number]
+
+export const HAIR_DENSITY_LABELS: Record<string, string> = {
+  low: "Wenig Haare",
+  medium: "Mittlere Dichte",
+  high: "Viele Haare",
+} satisfies Record<HairDensity, string>
+
+export const HAIR_DENSITY_OPTIONS = HAIR_DENSITIES.map((value) => ({
+  value,
+  label: HAIR_DENSITY_LABELS[value],
+}))
+
 /* ── Scalp type ── */
 
 export const SCALP_TYPES = ["oily", "balanced", "dry"] as const

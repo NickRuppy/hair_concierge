@@ -6,6 +6,11 @@ import type { Product } from "@/lib/types"
 import { HAIR_THICKNESS_OPTIONS, CONCERN_OPTIONS } from "@/lib/types"
 import { fehler } from "@/lib/vocabulary"
 import {
+  CONDITIONER_WEIGHTS,
+  CONDITIONER_REPAIR_LEVELS,
+  isConditionerCategory,
+} from "@/lib/conditioner/constants"
+import {
   LEAVE_IN_FORMATS,
   LEAVE_IN_WEIGHTS,
   LEAVE_IN_ROLES,
@@ -44,6 +49,11 @@ interface MaskSpecForm {
   leave_on_minutes: string
 }
 
+interface ConditionerSpecForm {
+  weight: string
+  repair_level: string
+}
+
 interface ProductForm {
   name: string
   brand: string
@@ -57,6 +67,7 @@ interface ProductForm {
   suitable_concerns: string[]
   is_active: boolean
   sort_order: number
+  conditioner_specs: ConditionerSpecForm | null
   leave_in_specs: LeaveInSpecForm | null
   mask_specs: MaskSpecForm | null
 }
@@ -82,6 +93,11 @@ const emptyMaskSpecs: MaskSpecForm = {
   leave_on_minutes: "10",
 }
 
+const emptyConditionerSpecs: ConditionerSpecForm = {
+  weight: "medium",
+  repair_level: "medium",
+}
+
 const emptyForm: ProductForm = {
   name: "",
   brand: "",
@@ -95,6 +111,7 @@ const emptyForm: ProductForm = {
   suitable_concerns: [],
   is_active: true,
   sort_order: 0,
+  conditioner_specs: null,
   leave_in_specs: null,
   mask_specs: null,
 }
@@ -170,6 +187,15 @@ export default function AdminProductsPage() {
         ? { ...emptyMaskSpecs }
         : null
 
+    const conditionerSpecs = product.conditioner_specs
+      ? {
+          weight: product.conditioner_specs.weight,
+          repair_level: product.conditioner_specs.repair_level,
+        }
+      : isConditionerCategory(product.category || "")
+        ? { ...emptyConditionerSpecs }
+        : null
+
     setEditingId(product.id)
     setForm({
       name: product.name,
@@ -184,6 +210,7 @@ export default function AdminProductsPage() {
       suitable_concerns: product.suitable_concerns || [],
       is_active: product.is_active,
       sort_order: product.sort_order,
+      conditioner_specs: conditionerSpecs,
       leave_in_specs: leaveInSpecs,
       mask_specs: maskSpecs,
     })
@@ -247,11 +274,13 @@ export default function AdminProductsPage() {
   }
 
   function handleCategoryChange(value: string) {
+    const conditioner = isConditionerCategory(value)
     const leaveIn = isLeaveInCategory(value)
     const mask = isMaskCategory(value)
     setForm((prev) => ({
       ...prev,
       category: value,
+      conditioner_specs: conditioner ? prev.conditioner_specs ?? { ...emptyConditionerSpecs } : null,
       leave_in_specs: leaveIn ? prev.leave_in_specs ?? { ...emptyLeaveInSpecs } : null,
       mask_specs: mask ? prev.mask_specs ?? { ...emptyMaskSpecs } : null,
     }))
@@ -273,6 +302,12 @@ export default function AdminProductsPage() {
 
       const leaveInEnabled = isLeaveInCategory(form.category)
       const maskEnabled = isMaskCategory(form.category)
+      const conditionerEnabled = isConditionerCategory(form.category)
+      if (conditionerEnabled && !form.conditioner_specs) {
+        toast({ title: "Conditioner-Spezifikation fehlt", variant: "destructive" })
+        setSaving(false)
+        return
+      }
       if (leaveInEnabled && !form.leave_in_specs) {
         toast({ title: "Leave-in-Spezifikation fehlt", variant: "destructive" })
         setSaving(false)
@@ -297,6 +332,13 @@ export default function AdminProductsPage() {
         suitable_concerns: form.suitable_concerns,
         is_active: form.is_active,
         sort_order: form.sort_order,
+        conditioner_specs:
+          conditionerEnabled && form.conditioner_specs
+            ? {
+                weight: form.conditioner_specs.weight,
+                repair_level: form.conditioner_specs.repair_level,
+              }
+            : null,
         leave_in_specs:
           leaveInEnabled && form.leave_in_specs
             ? {
@@ -581,6 +623,67 @@ export default function AdminProductsPage() {
                 })}
               </div>
             </div>
+
+            {isConditionerCategory(form.category) && form.conditioner_specs && (
+              <div className="rounded-lg border border-input/70 bg-muted/20 p-4 space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">Conditioner-Spezifikation</h3>
+                  <p className="text-xs text-muted-foreground">
+                    Strukturierte Felder fuer deterministisches Conditioner-Reranking.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Gewicht
+                    </label>
+                    <select
+                      value={form.conditioner_specs.weight}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          conditioner_specs: prev.conditioner_specs
+                            ? { ...prev.conditioner_specs, weight: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {CONDITIONER_WEIGHTS.map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Repair-Level
+                    </label>
+                    <select
+                      value={form.conditioner_specs.repair_level}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          conditioner_specs: prev.conditioner_specs
+                            ? { ...prev.conditioner_specs, repair_level: e.target.value }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {CONDITIONER_REPAIR_LEVELS.map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {isLeaveInCategory(form.category) && form.leave_in_specs && (
               <div className="rounded-lg border border-input/70 bg-muted/20 p-4 space-y-4">

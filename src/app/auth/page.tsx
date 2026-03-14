@@ -41,7 +41,7 @@ function buildNextDestination(next: string, leadId: string | null): string {
   if (!leadId) return next
 
   const nextUrl = new URL(next, "http://localhost")
-  if (nextUrl.pathname !== "/onboarding/goals") {
+  if (!nextUrl.pathname.startsWith("/onboarding")) {
     return `${nextUrl.pathname}${nextUrl.search}`
   }
 
@@ -59,7 +59,7 @@ export default function AuthPage() {
   const urlError = searchParams.get("error")
   const reason = searchParams.get("reason")
   const rawNext = searchParams.get("next")
-  const defaultNext = from === "quiz" || leadId ? "/onboarding/goals" : "/chat"
+  const defaultNext = from === "quiz" || leadId ? "/onboarding/density" : "/chat"
   const next = rawNext?.startsWith("/") && !rawNext.startsWith("//") && !rawNext.includes("\\")
     ? rawNext
     : defaultNext

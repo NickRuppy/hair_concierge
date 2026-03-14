@@ -6,8 +6,8 @@ import { QuizCard } from "./quiz-card"
 import { Button } from "@/components/ui/button"
 
 const nextSteps = [
-  { emoji: "\uD83C\uDFAF", text: "Waehle jetzt deine Ziele und dein gewuenschtes Volumen" },
-  { emoji: "\uD83E\uDDF4", text: "Danach legst du fest, wie deine Routine aussehen soll" },
+  { emoji: "\uD83E\uDDF4", text: "Sag uns noch kurz, wie dicht dein Haar ist" },
+  { emoji: "\uD83C\uDFAF", text: "Danach waehle deine Ziele und dein gewuenschtes Volumen" },
   { emoji: "\uD83D\uDCAC", text: "Anschliessend kannst du TomBot direkt Fragen zu deinem Haar stellen" },
 ]
 
@@ -49,7 +49,7 @@ export function QuizWelcome() {
           onClick={() => {
             const params = new URLSearchParams()
             params.set("from", "quiz")
-            params.set("next", "/onboarding/goals")
+            params.set("next", "/onboarding/density")
             if (leadId) params.set("lead", leadId)
             if (lead.email) params.set("email", lead.email)
             router.push(`/auth?${params.toString()}`)

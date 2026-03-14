@@ -38,7 +38,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
     const { data, error } = await admin
       .from("hair_profiles")
-      .select("hair_texture, thickness, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, desired_volume, goals, post_wash_actions, routine_preference, current_routine_products")
+      .select("hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, desired_volume, goals, post_wash_actions, routine_preference, current_routine_products")
       .eq("user_id", userId)
       .maybeSingle()
 
@@ -190,12 +190,25 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         .click()
 
       await page.waitForURL(/\/auth\?/, { timeout: 15_000 })
-      await expect(page).toHaveURL(/next=%2Fonboarding%2Fgoals/)
+      await expect(page).toHaveURL(/next=%2Fonboarding%2Fdensity/)
 
       await page.getByRole("tab", { name: "Anmelden" }).click()
       await page.locator('input[type="email"]:visible').fill(email)
       await page.locator('input[type="password"]:visible').fill(password)
       await page.getByRole("button", { name: /^Anmelden$/ }).click()
+
+      await page.waitForURL(/\/onboarding\/density(\?.*)?$/, {
+        timeout: 30_000,
+        waitUntil: "domcontentloaded",
+      })
+      await expect(
+        page.getByText("Wie dicht ist dein", { exact: false })
+      ).toBeVisible()
+    })
+
+    await test.step("Save density, complete onboarding and verify linked database state", async () => {
+      await page.getByRole("button", { name: /Mittlere Dichte/i }).click()
+      await page.getByRole("button", { name: /WEITER ZU DEINEN ZIELEN/i }).click()
 
       await page.waitForURL(/\/onboarding\/goals(\?.*)?$/, {
         timeout: 30_000,
@@ -204,9 +217,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(
         page.getByText("Wie viel Volumen willst du?", { exact: false })
       ).toBeVisible()
-    })
 
-    await test.step("Save onboarding and verify linked database state", async () => {
       await page
         .getByRole("button", {
           name: /^MEHR Mehr Fuelle, Lift und sichtbare Bewegung\.$/,
@@ -253,6 +264,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(hairProfile).toMatchObject({
         hair_texture: "wavy",
         thickness: "normal",
+        density: "medium",
         cuticle_condition: "slightly_rough",
         protein_moisture_balance: "stretches_stays",
         scalp_type: "dry",
@@ -279,6 +291,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(initialProfile).toMatchObject({
         hair_texture: "wavy",
         thickness: "normal",
+        density: "medium",
         cuticle_condition: "slightly_rough",
         protein_moisture_balance: "stretches_stays",
         scalp_type: "dry",
@@ -358,6 +371,16 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.locator('input[type="password"]:visible').fill(password)
       await page.getByRole("button", { name: /^Anmelden$/ }).click()
 
+      await page.waitForURL(/\/onboarding\/density(\?.*)?$/, {
+        timeout: 30_000,
+        waitUntil: "domcontentloaded",
+      })
+      await expect(
+        page.getByText("Wie dicht ist dein", { exact: false })
+      ).toBeVisible()
+
+      await page.getByRole("button", { name: /WEITER ZU DEINEN ZIELEN/i }).click()
+
       await page.waitForURL(/\/onboarding\/goals(\?.*)?$/, {
         timeout: 30_000,
         waitUntil: "domcontentloaded",
@@ -405,6 +428,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(hairProfile).toMatchObject({
         hair_texture: "straight",
         thickness: "fine",
+        density: "medium",
         cuticle_condition: "smooth",
         protein_moisture_balance: "snaps",
         scalp_type: "oily",

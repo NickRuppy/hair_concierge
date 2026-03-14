@@ -35,6 +35,9 @@ export {
   CUTICLE_CONDITION_LABELS,
   PROTEIN_MOISTURE_LEVELS,
   PROTEIN_MOISTURE_LABELS,
+  HAIR_DENSITIES,
+  HAIR_DENSITY_LABELS,
+  HAIR_DENSITY_OPTIONS,
   SCALP_TYPES,
   SCALP_TYPE_LABELS,
   SCALP_CONDITIONS,
@@ -51,6 +54,7 @@ export {
 export type {
   CuticleCondition,
   ProteinMoistureBalance,
+  HairDensity,
   ScalpType,
   ScalpCondition,
   ChemicalTreatment,

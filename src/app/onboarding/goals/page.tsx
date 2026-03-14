@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { OnboardingGoals } from "@/components/onboarding/onboarding-goals"
 import type { HairTexture } from "@/lib/vocabulary"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
@@ -12,6 +13,7 @@ export default async function OnboardingGoalsPage({
   searchParams,
 }: OnboardingGoalsPageProps) {
   const supabase = await createClient()
+  const admin = createAdminClient()
   const resolvedSearchParams = await searchParams
   const leadId = Array.isArray(resolvedSearchParams.lead)
     ? resolvedSearchParams.lead[0]
@@ -30,7 +32,7 @@ export default async function OnboardingGoalsPage({
     }
   }
 
-  const { data: profile } = await supabase
+  const { data: profile } = await admin
     .from("hair_profiles")
     .select("hair_texture, goals, desired_volume, post_wash_actions, routine_preference, current_routine_products")
     .eq("user_id", user.id)

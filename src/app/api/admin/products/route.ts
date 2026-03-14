@@ -4,6 +4,7 @@ import { productSchema } from "@/lib/validators"
 import { generateEmbedding } from "@/lib/openai/embeddings"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
+import { isConditionerCategory, type ProductConditionerSpecs } from "@/lib/conditioner/constants"
 import { isLeaveInCategory, type ProductLeaveInSpecs } from "@/lib/leave-in/constants"
 import { isMaskCategory, type ProductMaskSpecs } from "@/lib/mask/constants"
 
@@ -43,12 +44,27 @@ export async function GET() {
   }
 
   const rows = products || []
+  const conditionerIds = rows
+    .filter((product) => isConditionerCategory(product.category))
+    .map((product) => product.id)
   const leaveInIds = rows
     .filter((product) => isLeaveInCategory(product.category))
     .map((product) => product.id)
   const maskIds = rows
     .filter((product) => isMaskCategory(product.category))
     .map((product) => product.id)
+
+  let conditionerSpecsByProductId = new Map<string, ProductConditionerSpecs>()
+  if (conditionerIds.length > 0) {
+    const { data: specs } = await supabase
+      .from("product_conditioner_rerank_specs")
+      .select("*")
+      .in("product_id", conditionerIds)
+
+    conditionerSpecsByProductId = new Map(
+      ((specs || []) as ProductConditionerSpecs[]).map((spec) => [spec.product_id, spec])
+    )
+  }
 
   let specsByProductId = new Map<string, ProductLeaveInSpecs>()
   if (leaveInIds.length > 0) {
@@ -76,6 +92,7 @@ export async function GET() {
 
   const hydrated = rows.map((product) => ({
     ...product,
+    conditioner_specs: conditionerSpecsByProductId.get(product.id) ?? null,
     leave_in_specs: specsByProductId.get(product.id) ?? null,
     mask_specs: maskSpecsByProductId.get(product.id) ?? null,
   }))
@@ -116,7 +133,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const { leave_in_specs, mask_specs, ...productPayload } = parsed.data
+  const { conditioner_specs, leave_in_specs, mask_specs, ...productPayload } = parsed.data
 
   const { data: product, error } = await supabase
     .from("products")
@@ -129,6 +146,23 @@ export async function POST(request: Request) {
       { error: fehler("Erstellen", "des Produkts") },
       { status: 500 }
     )
+  }
+
+  if (isConditionerCategory(product.category) && conditioner_specs) {
+    const { error: conditionerSpecsError } = await supabase
+      .from("product_conditioner_rerank_specs")
+      .upsert({
+        product_id: product.id,
+        ...conditioner_specs,
+      })
+
+    if (conditionerSpecsError) {
+      await supabase.from("products").delete().eq("id", product.id)
+      return NextResponse.json(
+        { error: fehler("Speichern", "der Conditioner-Spezifikation") },
+        { status: 500 }
+      )
+    }
   }
 
   if (isLeaveInCategory(product.category) && leave_in_specs) {

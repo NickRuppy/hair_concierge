@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/header"
 import {
   HAIR_TEXTURE_OPTIONS,
   HAIR_THICKNESS_OPTIONS,
+  HAIR_DENSITY_OPTIONS,
   WASH_FREQUENCY_OPTIONS,
   HEAT_STYLING_OPTIONS,
   STYLING_TOOL_OPTIONS,
@@ -15,6 +16,7 @@ import {
   GOAL_LABELS,
   DESIRED_VOLUME_OPTIONS,
   DESIRED_VOLUME_LABELS,
+  HAIR_DENSITY_LABELS,
   STYLING_TOOL_LABELS,
   CUTICLE_CONDITION_LABELS,
   PROTEIN_MOISTURE_LABELS,
@@ -63,6 +65,13 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
     getValue: (hp) =>
       HAIR_THICKNESS_OPTIONS.find((o) => o.value === hp?.thickness)?.label ??
       null,
+  },
+  {
+    key: "density",
+    label: "Haardichte",
+    helpText: "Hilft bei Gewicht und Reichhaltigkeit von Pflegeprodukten",
+    getValue: (hp) =>
+      hp?.density ? HAIR_DENSITY_LABELS[hp.density] ?? hp.density : null,
   },
   {
     key: "concerns",
@@ -154,6 +163,7 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
 const FIELD_TO_SECTION: Record<string, string> = {
   hair_texture: "haartyp",
   thickness: "haartyp",
+  density: "haartyp",
   concerns: "probleme",
   desired_volume: "probleme",
   goals: "probleme",
@@ -180,6 +190,7 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState({
     hair_texture: "",
     thickness: "",
+    density: "",
     concerns: [] as string[],
     desired_volume: "",
     wash_frequency: "",
@@ -212,6 +223,7 @@ export default function ProfilePage() {
           setFormData({
             hair_texture: data.hair_texture || "",
             thickness: data.thickness || "",
+            density: data.density || "",
             concerns: data.concerns || [],
             desired_volume: data.desired_volume || (storedGoals.includes("volume") ? "more" : ""),
             wash_frequency: data.wash_frequency || "",
@@ -273,6 +285,7 @@ export default function ProfilePage() {
         user_id: user.id,
         hair_texture: formData.hair_texture || null,
         thickness: formData.thickness || null,
+        density: formData.density || null,
         concerns: formData.concerns,
         desired_volume: desiredVolume,
         wash_frequency: formData.wash_frequency || null,
@@ -423,6 +436,30 @@ export default function ProfilePage() {
                             }
                             className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
                               formData.thickness === opt.value
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "hover:bg-accent"
+                            }`}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Haardichte</label>
+                      <p className="mb-3 text-xs text-muted-foreground">
+                        Wie viele Haare du pro Flaeche hast, nicht wie dick ein einzelnes Haar ist.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {HAIR_DENSITY_OPTIONS.map((opt) => (
+                          <button
+                            key={opt.value}
+                            onClick={() =>
+                              setFormData((f) => ({ ...f, density: opt.value }))
+                            }
+                            className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
+                              formData.density === opt.value
                                 ? "border-primary bg-primary/10 text-primary"
                                 : "hover:bg-accent"
                             }`}
