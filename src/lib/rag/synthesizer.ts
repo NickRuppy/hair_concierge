@@ -4,6 +4,7 @@ import {
   SOURCE_TYPE_LABELS,
   CONCERN_LABELS,
   GOAL_LABELS,
+  DESIRED_VOLUME_LABELS,
   STYLING_TOOL_LABELS,
   WASH_FREQUENCY_LABELS,
   HEAT_STYLING_LABELS,
@@ -12,7 +13,15 @@ import {
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
 } from "@/lib/vocabulary"
-import type { Message, HairProfile, IntentType, Product, ContentChunk, ProductCategory } from "@/lib/types"
+import type {
+  Message,
+  HairProfile,
+  IntentType,
+  Product,
+  ContentChunk,
+  ProductCategory,
+  MaskDecision,
+} from "@/lib/types"
 import type OpenAI from "openai"
 
 export interface SynthesizeParams {
@@ -24,6 +33,7 @@ export interface SynthesizeParams {
   products?: Product[]
   intent: IntentType
   productCategory?: ProductCategory
+  maskDecision?: MaskDecision
   /** Slot-aware clarification questions from the router (replaces consultationMode) */
   clarificationQuestions?: string[]
 }
@@ -53,6 +63,9 @@ function formatUserProfile(
   }
   if (profile.goals.length > 0) {
     parts.push(`Ziele: ${profile.goals.map((g) => GOAL_LABELS[g] ?? g).join(", ")}`)
+  }
+  if (profile.desired_volume) {
+    parts.push(`Gewuenschtes Volumen: ${DESIRED_VOLUME_LABELS[profile.desired_volume] ?? profile.desired_volume}`)
   }
   if (profile.wash_frequency) {
     parts.push(`Waschfrequenz: ${WASH_FREQUENCY_LABELS[profile.wash_frequency] ?? profile.wash_frequency}`)
@@ -142,18 +155,72 @@ const PRODUCT_SECTION_HEADERS: Record<string, string> = {
   leave_in: "Passende Leave-ins aus unserer Datenbank",
 }
 
-const NEED_LEVEL_LABELS: Record<string, string> = {
-  low: "niedrig",
-  medium: "mittel",
-  high: "hoch",
+const MASK_STRENGTH_LABELS: Record<string, string> = {
+  "1": "leicht",
+  "2": "mittel",
+  "3": "stark",
+}
+
+const MASK_TYPE_LABELS: Record<string, string> = {
+  protein: "Protein",
+  moisture: "Feuchtigkeit",
+  performance: "Performance",
+}
+
+const MASK_SIGNAL_LABELS: Record<string, string> = {
+  chemical_treatment: "chemische Behandlung",
+  heat_styling: "regelmaessiges Hitzestyling",
+  protein_moisture_balance: "Protein-/Feuchtigkeits-Balance",
+}
+
+function formatMaskDecision(maskDecision?: MaskDecision): string {
+  if (!maskDecision) return ""
+
+  const parts = ["\n\nMasken-Entscheidung:"]
+  parts.push(`- Maske noetig: ${maskDecision.needs_mask ? "ja" : "nein"}`)
+
+  if (maskDecision.needs_mask) {
+    if (maskDecision.need_strength > 0) {
+      const strengthLabel = MASK_STRENGTH_LABELS[String(maskDecision.need_strength)] ?? String(maskDecision.need_strength)
+      parts.push(`- Staerke: ${strengthLabel}`)
+    }
+    if (maskDecision.mask_type) {
+      const maskTypeLabel = MASK_TYPE_LABELS[maskDecision.mask_type] ?? maskDecision.mask_type
+      parts.push(`- Maskentyp: ${maskTypeLabel}`)
+    }
+  } else {
+    parts.push("- Hinweis: Basierend auf deinem Profil brauchst du aktuell keine Maske.")
+  }
+
+  if (maskDecision.active_signals.length > 0) {
+    parts.push(
+      `- Aktive Signale: ${maskDecision.active_signals
+        .map((signal) => MASK_SIGNAL_LABELS[signal] ?? signal)
+        .join(", ")}`
+    )
+  }
+
+  return parts.join("\n")
 }
 
 /**
  * Formats matched products into a context block for the system prompt.
  */
-function formatProducts(products: Product[], productCategory?: ProductCategory): string {
+function formatProducts(
+  products: Product[],
+  productCategory?: ProductCategory,
+  maskDecision?: MaskDecision
+): string {
+  const maskDecisionBlock = productCategory === "mask"
+    ? formatMaskDecision(maskDecision)
+    : ""
+
   if (products.length === 0) {
-    return "\n\nKeine passenden Produkte in der Datenbank gefunden. Nenne KEINE konkreten Produktnamen — sage dem Nutzer ehrlich, dass du gerade kein passendes Produkt parat hast, und bitte um genauere Angaben."
+    if (productCategory === "mask" && maskDecision && !maskDecision.needs_mask) {
+      return `${maskDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell keine Maske noetig ist. Nenne in diesem Fall KEINE konkreten Maskenprodukte.`
+    }
+
+    return `${maskDecisionBlock}\n\nKeine passenden Produkte in der Datenbank gefunden. Nenne KEINE konkreten Produktnamen — sage dem Nutzer ehrlich, dass du gerade kein passendes Produkt parat hast, und bitte um genauere Angaben.`
   }
 
   const productList = products
@@ -173,8 +240,10 @@ function formatProducts(products: Product[], productCategory?: ProductCategory):
         }
 
         if (meta.category === "mask") {
-          const needLabel = NEED_LEVEL_LABELS[meta.need_level] ?? meta.need_level
-          parts.push(`  Bedarf: ${needLabel}`)
+          const strengthLabel = MASK_STRENGTH_LABELS[String(meta.need_strength)] ?? String(meta.need_strength)
+          const maskTypeLabel = MASK_TYPE_LABELS[meta.mask_type] ?? meta.mask_type
+          parts.push(`  Staerke: ${strengthLabel}`)
+          parts.push(`  Typ: ${maskTypeLabel}`)
         }
 
         if (meta.top_reasons.length > 0) {
@@ -194,7 +263,7 @@ function formatProducts(products: Product[], productCategory?: ProductCategory):
   const header = (productCategory && PRODUCT_SECTION_HEADERS[productCategory])
     ?? "Passende Produkte aus unserer Datenbank"
 
-  return `\n\n${header}:\n${productList}\n\nWICHTIG: Verwende die EXAKTEN Produktnamen (wie oben geschrieben) wenn du sie erwaehst — die Namen werden in der App als klickbare Links dargestellt.`
+  return `${maskDecisionBlock}\n\n${header}:\n${productList}\n\nWICHTIG: Verwende die EXAKTEN Produktnamen (wie oben geschrieben) wenn du sie erwaehst — die Namen werden in der App als klickbare Links dargestellt.`
 }
 
 /** Category-specific reasoning instructions injected into the system prompt */
@@ -225,7 +294,8 @@ Wenn du Masken-Empfehlungen gibst:
 1. Behandle Masken als Zusatzpflege, nicht als Conditioner-Ersatz.
 2. Betone Anwendung auf Laengen/Spitzen (nicht Kopfhaut).
 3. Erklaere klar die Reihenfolge: Shampoo -> Maske -> Conditioner.
-4. Nutze den "Bedarf"- und "Anwendung"-Kontext fuer Frequenz und Dosierung.`,
+4. Nutze den "Masken-Entscheidung", "Staerke", "Typ" und "Anwendung"-Kontext aktiv.
+5. Wenn die Masken-Entscheidung sagt, dass aktuell keine Maske noetig ist, sage das klar und nenne keine Maskenprodukte.`,
 }
 
 /**
@@ -237,6 +307,7 @@ function buildSystemPrompt(
   imageAnalysis?: string,
   products?: Product[],
   productCategory?: ProductCategory,
+  maskDecision?: MaskDecision,
   clarificationQuestions?: string[],
 ): string {
   let prompt = SYSTEM_PROMPT
@@ -249,8 +320,8 @@ function buildSystemPrompt(
   prompt = prompt.replace("{{USER_PROFILE}}", formatUserProfile(hairProfile, clarificationQuestions))
 
   let ragContext = formatRagContext(ragChunks)
-  if (products) {
-    ragContext += formatProducts(products, productCategory)
+  if (products || maskDecision) {
+    ragContext += formatProducts(products ?? [], productCategory, maskDecision)
   }
   prompt = prompt.replace("{{RAG_CONTEXT}}", ragContext)
 
@@ -283,6 +354,7 @@ export async function synthesizeResponse(
     imageAnalysis,
     products,
     productCategory,
+    maskDecision,
     clarificationQuestions,
   } = params
 
@@ -292,6 +364,7 @@ export async function synthesizeResponse(
     imageAnalysis,
     products,
     productCategory,
+    maskDecision,
     clarificationQuestions,
   )
 

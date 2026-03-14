@@ -10,8 +10,8 @@ import { mapScalpToConcernCode } from "@/lib/rag/scalp-mapper"
 import { mapProteinMoistureToConcernCode } from "@/lib/rag/conditioner-mapper"
 import { mapProfileToLeaveInConcernCodes } from "@/lib/rag/leave-in-mapper"
 import { rerankLeaveInProducts } from "@/lib/rag/leave-in-reranker"
-import { mapProfileToMaskConcernCodes } from "@/lib/rag/mask-mapper"
-import { rerankMaskProducts } from "@/lib/rag/mask-reranker"
+import { buildMaskConcernSearchOrder } from "@/lib/rag/mask-mapper"
+import { deriveMaskDecision, rerankMaskProducts } from "@/lib/rag/mask-reranker"
 import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
 import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
@@ -19,7 +19,15 @@ import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
 import type { ProductLeaveInSpecs } from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
 import { PRODUCT_INTENTS } from "@/lib/rag/retrieval-constants"
-import type { IntentType, Message, HairProfile, Product, EnrichedCitationSource, RouterDecision } from "@/lib/types"
+import type {
+  IntentType,
+  Message,
+  HairProfile,
+  Product,
+  EnrichedCitationSource,
+  RouterDecision,
+  MaskDecision,
+} from "@/lib/types"
 
 export interface PipelineParams {
   message: string
@@ -263,6 +271,7 @@ export async function runPipeline(
 
   // ── Step 4: Match products (if intent requires it) ──────────────────
   let matchedProducts = undefined
+  let maskDecision: MaskDecision | undefined
   if (PRODUCT_INTENTS.includes(intent)) {
     if (product_category === "shampoo") {
       if (!hairProfile?.thickness || !hairProfile?.scalp_type || !hairProfile?.scalp_condition) {
@@ -316,32 +325,54 @@ export async function runPipeline(
         }
       }
     } else if (product_category === "mask") {
-      const maskCandidates = await matchProducts({
-        query: message,
-        thickness: hairProfile?.thickness ?? undefined,
-        concerns: mapProfileToMaskConcernCodes(hairProfile),
-        category: "mask",
-        count: 10,
-      })
+      maskDecision = deriveMaskDecision(hairProfile)
 
-      if (maskCandidates.length === 0) {
+      if (!maskDecision.needs_mask || !maskDecision.mask_type) {
         matchedProducts = []
       } else {
-        const { data: maskSpecs, error: maskSpecsError } = await supabase
-          .from("product_mask_specs")
-          .select("*")
-          .in("product_id", maskCandidates.map((candidate) => candidate.id))
+        const concernSearchOrder = buildMaskConcernSearchOrder(maskDecision.mask_type)
+        matchedProducts = []
 
-        if (maskSpecsError) {
-          console.error("Failed to load mask specs for reranking:", maskSpecsError)
-          matchedProducts = maskCandidates.slice(0, 3)
-        } else {
-          matchedProducts = rerankMaskProducts(
-            maskCandidates,
+        for (const concernCode of concernSearchOrder) {
+          const maskCandidates = await matchProducts({
+            query: message,
+            thickness: hairProfile?.thickness ?? undefined,
+            concerns: [concernCode],
+            category: "mask",
+            count: 10,
+          })
+
+          if (maskCandidates.length === 0) continue
+
+          const prioritizedCandidates = maskCandidates.filter((candidate) =>
+            candidate.suitable_concerns.includes(concernCode)
+          )
+          if (prioritizedCandidates.length === 0) continue
+
+          const candidatesForRerank = prioritizedCandidates
+
+          const { data: maskSpecs, error: maskSpecsError } = await supabase
+            .from("product_mask_specs")
+            .select("*")
+            .in("product_id", candidatesForRerank.map((candidate) => candidate.id))
+
+          if (maskSpecsError) {
+            console.error("Failed to load mask specs for reranking:", maskSpecsError)
+            matchedProducts = candidatesForRerank.slice(0, 3)
+            break
+          }
+
+          const rerankedMasks = rerankMaskProducts(
+            candidatesForRerank,
             (maskSpecs ?? []) as ProductMaskSpecs[],
             hairProfile,
-            { explicitMaskRequest: true }
+            maskDecision
           )
+
+          if (rerankedMasks.length > 0) {
+            matchedProducts = rerankedMasks
+            break
+          }
         }
       }
     } else {
@@ -364,6 +395,7 @@ export async function runPipeline(
     products: matchedProducts,
     intent,
     productCategory: product_category,
+    maskDecision: product_category === "mask" ? maskDecision : undefined,
   })
 
   return {

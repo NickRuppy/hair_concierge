@@ -4,19 +4,21 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { useToast } from "@/providers/toast-provider"
-import { ONBOARDING_GOALS } from "@/lib/vocabulary/onboarding-goals"
 import { HAIR_TEXTURE_ADJECTIVE } from "@/lib/vocabulary/hair-types"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
+import { deriveOnboardingGoals, getOnboardingGoalCards } from "@/lib/onboarding/goal-flow"
 import {
+  DESIRED_VOLUME_LABELS,
   POST_WASH_ACTION_OPTIONS,
   ROUTINE_PREFERENCE_OPTIONS,
   ROUTINE_PRODUCT_OPTIONS,
 } from "@/lib/types"
-import type { HairTexture } from "@/lib/vocabulary"
+import type { HairTexture, DesiredVolume } from "@/lib/vocabulary"
 
 interface OnboardingGoalsProps {
   hairTexture: HairTexture | null
   existingGoals: string[]
+  existingDesiredVolume: DesiredVolume | null
   existingPostWashActions: string[]
   existingRoutinePreference: string | null
   existingRoutineProducts: string[]
@@ -27,6 +29,7 @@ interface OnboardingGoalsProps {
 export function OnboardingGoals({
   hairTexture,
   existingGoals,
+  existingDesiredVolume,
   existingPostWashActions,
   existingRoutinePreference,
   existingRoutineProducts,
@@ -51,13 +54,14 @@ export function OnboardingGoals({
     )
   }
 
-  const goals = ONBOARDING_GOALS[hairTexture]
+  const goals = getOnboardingGoalCards(hairTexture)
 
   return (
     <GoalSelector
       goals={goals}
       hairTexture={hairTexture}
       existingGoals={existingGoals}
+      existingDesiredVolume={existingDesiredVolume}
       existingPostWashActions={existingPostWashActions}
       existingRoutinePreference={existingRoutinePreference}
       existingRoutineProducts={existingRoutineProducts}
@@ -70,14 +74,16 @@ function GoalSelector({
   goals,
   hairTexture,
   existingGoals,
+  existingDesiredVolume,
   existingPostWashActions,
   existingRoutinePreference,
   existingRoutineProducts,
   userId,
 }: {
-  goals: typeof ONBOARDING_GOALS[HairTexture]
+  goals: ReturnType<typeof getOnboardingGoalCards>
   hairTexture: HairTexture
   existingGoals: string[]
+  existingDesiredVolume: DesiredVolume | null
   existingPostWashActions: string[]
   existingRoutinePreference: string | null
   existingRoutineProducts: string[]
@@ -85,6 +91,9 @@ function GoalSelector({
 }) {
   const router = useRouter()
   const { toast } = useToast()
+  const [desiredVolume, setDesiredVolume] = useState<DesiredVolume | "">(
+    existingDesiredVolume ?? (existingGoals.includes("volume") ? "more" : "")
+  )
   const [selectedGoals, setSelectedGoals] = useState<Set<string>>(() => {
     const initial = new Set<string>()
     for (const goal of goals) {
@@ -133,25 +142,38 @@ function GoalSelector({
   }
 
   async function handleSave() {
-    if (selectedGoals.size === 0) return
+    if (!desiredVolume) return
     setSaving(true)
 
-    const selectedKeys = goals
+    const selectedSecondaryGoals = goals
       .filter((g) => selectedGoals.has(g.key))
       .map((g) => g.key)
+    const derivedGoals = deriveOnboardingGoals(selectedSecondaryGoals, desiredVolume)
 
     const supabase = createClient()
-    const { error } = await supabase
+    const { error: hairProfileError } = await supabase
       .from("hair_profiles")
       .update({
-        goals: selectedKeys,
+        goals: derivedGoals,
+        desired_volume: desiredVolume,
         post_wash_actions: [...selectedPostWashActions],
         routine_preference: routinePreference || null,
         current_routine_products: [...selectedRoutineProducts],
       })
       .eq("user_id", userId)
 
-    if (error) {
+    if (hairProfileError) {
+      toast({ title: "Fehler beim Speichern. Bitte versuche es erneut.", variant: "destructive" })
+      setSaving(false)
+      return
+    }
+
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .update({ onboarding_completed: true })
+      .eq("id", userId)
+
+    if (profileError) {
       toast({ title: "Fehler beim Speichern. Bitte versuche es erneut.", variant: "destructive" })
       setSaving(false)
       return
@@ -181,8 +203,55 @@ function GoalSelector({
         className="animate-fade-in-up text-sm text-white/50 mb-8"
         style={{ animationDelay: "100ms" }}
       >
-        Waehle 1–3 Ziele aus.
+        Erst das Wunsch-Volumen, dann die Details, die dir sonst noch wichtig sind.
       </p>
+
+      <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "140ms" }}>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className="font-header text-2xl leading-tight text-white">
+            Wie viel Volumen willst du?
+          </h2>
+          <span className="rounded-full border border-[#F5C518]/30 bg-[#F5C518]/10 px-2.5 py-1 text-[11px] font-semibold tracking-[0.14em] text-[#F5C518]">
+            PFLICHT
+          </span>
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {(["less", "balanced", "more"] as const).map((value, i) => {
+            const active = desiredVolume === value
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setDesiredVolume(value)}
+                className={`rounded-2xl border px-4 py-4 text-left transition-all duration-200 ${
+                  active
+                    ? "border-[#F5C518] bg-[#F5C518]/15 text-white shadow-[0_0_0_1px_rgba(245,197,24,0.18)]"
+                    : "border-white/10 bg-white/5 text-white/75 hover:border-white/25 hover:bg-white/8"
+                }`}
+                style={{ animationDelay: `${160 + i * 60}ms` }}
+              >
+                <div className="mb-2 text-xs font-semibold tracking-[0.16em] text-[#F5C518]">
+                  {DESIRED_VOLUME_LABELS[value].toUpperCase()}
+                </div>
+                <div className="text-sm leading-relaxed">
+                  {value === "less" && "Ruhiger, glatter und kompakter im Fall."}
+                  {value === "balanced" && "Natuerlich, kontrolliert und ohne Extreme."}
+                  {value === "more" && "Mehr Fuelle, Lift und sichtbare Bewegung."}
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="mb-3 animate-fade-in-up" style={{ animationDelay: "220ms" }}>
+        <h2 className="font-header text-2xl leading-tight text-white mb-2">
+          Was ist dir ausserdem wichtig?
+        </h2>
+        <p className="text-sm text-white/50">
+          Optional. TomBot nutzt diese Auswahl fuer deinen ersten Plan.
+        </p>
+      </div>
 
       <div className="space-y-3 mb-8">
         {goals.map((goal, i) => (
@@ -193,7 +262,7 @@ function GoalSelector({
             description={goal.description}
             active={selectedGoals.has(goal.key)}
             onClick={() => toggleGoal(goal.key)}
-            animationDelay={150 + i * 80}
+            animationDelay={260 + i * 80}
           />
         ))}
       </div>
@@ -270,12 +339,17 @@ function GoalSelector({
         className="animate-fade-in-up"
         style={{ animationDelay: "620ms" }}
       >
+        {!desiredVolume && (
+          <p className="mb-3 text-sm text-[#F5C518]">
+            Bitte waehle zuerst aus, wie viel Volumen du dir wuenschst.
+          </p>
+        )}
         <button
           onClick={handleSave}
-          disabled={selectedGoals.size === 0 || saving}
+          disabled={!desiredVolume || saving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {saving ? "SPEICHERN..." : "WEITER"}
+          {saving ? "SPEICHERN..." : "ZU TOMBOT"}
         </button>
       </div>
     </div>

@@ -2,22 +2,17 @@
 
 import { useQuizStore } from "@/lib/quiz/store"
 import {
-  getHaartypLabel,
-  thicknessResults,
-  surfaceResults,
-  pullTestResults,
-  scalpTypeResults,
-  scalpConditionResults,
-  goalLabels,
   hopeText,
 } from "@/lib/quiz/results-lookup"
 import { QuizProfileCard } from "./quiz-profile-card"
 import { QuizCard } from "./quiz-card"
 import { Button } from "@/components/ui/button"
 import { posthog } from "@/providers/posthog-provider"
+import { buildCardData } from "@/lib/quiz/result-card-data"
 
 export function QuizResults() {
   const { lead, answers, aiInsight, leadId, goNext } = useQuizStore()
+  const cardData = buildCardData(answers)
 
   const handleStart = () => {
     posthog.capture("quiz_completed", {
@@ -25,48 +20,9 @@ export function QuizResults() {
       thickness: answers.thickness,
       scalp_type: answers.scalp_type,
       scalp_condition: answers.scalp_condition,
-      goals_count: (answers.goals ?? []).length,
     })
     goNext()
   }
-
-  const goalsText = (answers.goals ?? []).map((g) => goalLabels[g] ?? g).join(", ")
-
-  const cards = [
-    {
-      emoji: "\uD83E\uDDEC",
-      title: "Haartyp",
-      description: getHaartypLabel(answers),
-    },
-    {
-      emoji: "\uD83D\uDCD0",
-      title: "Haarstaerke",
-      description: thicknessResults[answers.thickness ?? ""] ?? "",
-    },
-    {
-      emoji: "\uD83D\uDD2C",
-      title: "Oberflaeche",
-      description: surfaceResults[answers.fingertest ?? ""] ?? "",
-    },
-    {
-      emoji: "\u2696\uFE0F",
-      title: "Protein vs. Feuchtigkeit",
-      description: pullTestResults[answers.pulltest ?? ""] ?? "",
-    },
-    {
-      emoji: "\uD83E\uDDF4",
-      title: "Kopfhaut",
-      description:
-        (scalpTypeResults[answers.scalp_type ?? ""] ?? "") +
-        (scalpConditionResults[answers.scalp_condition ?? ""] ?? "") ||
-        "Keine Angaben zur Kopfhaut.",
-    },
-    {
-      emoji: "\uD83C\uDFAF",
-      title: "Deine Ziele",
-      description: goalsText || "Keine Ziele ausgewaehlt",
-    },
-  ]
 
   return (
     <div className="flex flex-col pb-6 animate-fade-in-up">
@@ -85,12 +41,12 @@ export function QuizResults() {
         {lead.name.toUpperCase()}, DEIN HAARPROFIL
       </h2>
       <p className="text-base text-white/60 mb-5">
-        Basierend auf deinen Antworten sieht Tom dein Haar so:
+        Deine Diagnose steht. Im naechsten Schritt legst du Ziele und Routinepraeferenzen fest.
       </p>
 
       {/* Profile cards — responsive grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {cards.map((card, i) => (
+        {cardData.cards.map((card, i) => (
           <QuizProfileCard
             key={card.title}
             emoji={card.emoji}
@@ -123,7 +79,7 @@ export function QuizResults() {
           variant="unstyled"
           className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
         >
-          DEINEN PLAN STARTEN
+          ZIELE UND ROUTINE FESTLEGEN
         </Button>
 
         {leadId && (

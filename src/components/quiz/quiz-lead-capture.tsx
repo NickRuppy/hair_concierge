@@ -8,6 +8,7 @@ import { QuizProgressBar } from "./quiz-progress-bar"
 import { QuizConsentSheet } from "./quiz-consent-sheet"
 import { ArrowLeft } from "lucide-react"
 import { posthog } from "@/providers/posthog-provider"
+import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -41,6 +42,8 @@ export function QuizLeadCapture() {
   }
 
   const handleConsent = async (accepted: boolean) => {
+    if (saving) return
+
     setLeadField("marketingConsent", accepted)
     setSaving(true)
     setError("")
@@ -53,7 +56,7 @@ export function QuizLeadCapture() {
           name: lead.name.trim(),
           email: lead.email.trim().toLowerCase(),
           marketingConsent: accepted,
-          quizAnswers: answers,
+          quizAnswers: canonicalizeQuizAnswers(answers),
         }),
       })
 
@@ -74,7 +77,9 @@ export function QuizLeadCapture() {
   }
 
   const handleBack = () => {
-    if (leadCaptureSubStep === "email") {
+    if (leadCaptureSubStep === "consent") {
+      setLeadCaptureSubStep("email")
+    } else if (leadCaptureSubStep === "email") {
       setLeadCaptureSubStep("name")
     } else if (leadCaptureSubStep === "name") {
       goBack()
@@ -89,7 +94,7 @@ export function QuizLeadCapture() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={7} total={7} />
+          <QuizProgressBar current={6} total={6} />
         </div>
       </div>
 
@@ -163,6 +168,7 @@ export function QuizLeadCapture() {
       {/* Consent inline card */}
       <QuizConsentSheet
         open={leadCaptureSubStep === "consent"}
+        saving={saving}
         onConsent={handleConsent}
       />
     </div>

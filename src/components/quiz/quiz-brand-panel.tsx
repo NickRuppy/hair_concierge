@@ -6,7 +6,7 @@ export function QuizBrandPanel() {
   const step = useQuizStore((s) => s.step)
   const leadCaptureSubStep = useQuizStore((s) => s.leadCaptureSubStep)
 
-  const questionNumber = step >= 2 && step <= 8 ? step - 1 : null
+  const questionNumber = step >= 2 && step <= 7 ? step - 1 : null
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center px-12">
@@ -66,7 +66,7 @@ function QuestionPanel({ questionNumber }: { questionNumber: number }) {
   return (
     <>
       <div className="mb-6 font-header text-sm tracking-[0.2em] text-[#F5C518]">
-        FRAGE {questionNumber} VON 7
+        FRAGE {questionNumber} VON 6
       </div>
       <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
         TOM<br />BOT
@@ -117,7 +117,7 @@ function ResultsPanel() {
       </h2>
       <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
       <p className="text-lg text-white/50 leading-relaxed">
-        Dein Haarprofil
+        Deine Diagnose
       </p>
     </>
   )
@@ -131,7 +131,7 @@ function WelcomePanel() {
       </h2>
       <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
       <p className="text-lg text-white/50 leading-relaxed">
-        Willkommen
+        Dein naechster Schritt
       </p>
     </>
   )

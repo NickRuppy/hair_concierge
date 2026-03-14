@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og"
 import { createClient } from "@supabase/supabase-js"
-import type { QuizAnswers } from "@/lib/quiz/types"
+import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
 
 export const runtime = "edge"
 
@@ -82,7 +82,9 @@ export async function GET(
     return new Response("Not found", { status: 404 })
   }
 
-  const a = lead.quiz_answers as QuizAnswers
+  const a = normalizeStoredQuizAnswers(
+    (lead.quiz_answers as Record<string, unknown> | null) ?? null
+  )
   const name = sanitize((lead.name as string).toUpperCase())
   const quote = sanitize(
     (lead.share_quote as string) || "Deine Haare verdienen die richtige Pflege."

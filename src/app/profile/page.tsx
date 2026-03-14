@@ -13,6 +13,8 @@ import {
   CONCERN_LABELS,
   GOAL_OPTIONS,
   GOAL_LABELS,
+  DESIRED_VOLUME_OPTIONS,
+  DESIRED_VOLUME_LABELS,
   STYLING_TOOL_LABELS,
   CUTICLE_CONDITION_LABELS,
   PROTEIN_MOISTURE_LABELS,
@@ -23,7 +25,7 @@ import {
   ROUTINE_PREFERENCE_OPTIONS,
   ROUTINE_PRODUCT_OPTIONS,
 } from "@/lib/types"
-import type { HairProfile } from "@/lib/types"
+import type { Goal, HairProfile } from "@/lib/types"
 import { createClient } from "@/lib/supabase/client"
 import { useEffect, useMemo, useState } from "react"
 import { SegmentedControl } from "@/components/ui/segmented-control"
@@ -35,6 +37,7 @@ import {
 } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { fehler } from "@/lib/vocabulary"
+import { deriveOnboardingGoals } from "@/lib/onboarding/goal-flow"
 
 type ProfileFieldDef = {
   key: string
@@ -42,6 +45,8 @@ type ProfileFieldDef = {
   helpText: string
   getValue: (hp: HairProfile | null) => string | null
 }
+
+const EDITABLE_GOAL_OPTIONS = GOAL_OPTIONS.filter((option) => option.value !== "volume")
 
 const PROFILE_FIELDS: ProfileFieldDef[] = [
   {
@@ -65,6 +70,15 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
     helpText: "Hilft uns, gezielt Lösungen zu finden",
     getValue: (hp) =>
       hp?.concerns?.length ? hp.concerns.map((c) => CONCERN_LABELS[c] ?? c).join(", ") : null,
+  },
+  {
+    key: "desired_volume",
+    label: "Gewuenschtes Volumen",
+    helpText: "Steuert, ob TomBot eher Ruhe oder mehr Fuelle priorisiert",
+    getValue: (hp) => {
+      const fallbackVolume = hp?.desired_volume ?? (hp?.goals?.includes("volume") ? "more" : null)
+      return fallbackVolume ? DESIRED_VOLUME_LABELS[fallbackVolume] ?? fallbackVolume : null
+    },
   },
   {
     key: "wash_frequency",
@@ -128,8 +142,12 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
     key: "goals",
     label: "Ziele",
     helpText: "Richtet unsere Empfehlungen aus",
-    getValue: (hp) =>
-      hp?.goals?.length ? hp.goals.map((g) => GOAL_LABELS[g] ?? g).join(", ") : null,
+    getValue: (hp) => {
+      const displayGoals = hp?.goals?.filter((goal) => goal !== "volume") ?? []
+      return displayGoals.length
+        ? displayGoals.map((g) => GOAL_LABELS[g] ?? g).join(", ")
+        : null
+    },
   },
 ]
 
@@ -137,6 +155,7 @@ const FIELD_TO_SECTION: Record<string, string> = {
   hair_texture: "haartyp",
   thickness: "haartyp",
   concerns: "probleme",
+  desired_volume: "probleme",
   goals: "probleme",
   wash_frequency: "routine",
   heat_styling: "routine",
@@ -162,6 +181,7 @@ export default function ProfilePage() {
     hair_texture: "",
     thickness: "",
     concerns: [] as string[],
+    desired_volume: "",
     wash_frequency: "",
     heat_styling: "",
     styling_tools: [] as string[],
@@ -188,10 +208,12 @@ export default function ProfilePage() {
           .maybeSingle()
         if (data) {
           setHairProfile(data)
+          const storedGoals = data.goals || []
           setFormData({
             hair_texture: data.hair_texture || "",
             thickness: data.thickness || "",
             concerns: data.concerns || [],
+            desired_volume: data.desired_volume || (storedGoals.includes("volume") ? "more" : ""),
             wash_frequency: data.wash_frequency || "",
             heat_styling: data.heat_styling || "",
             styling_tools: data.styling_tools || [],
@@ -199,7 +221,7 @@ export default function ProfilePage() {
             routine_preference: data.routine_preference || "",
             current_routine_products: data.current_routine_products || [],
             products_used: data.products_used || "",
-            goals: data.goals || [],
+            goals: storedGoals.filter((goal: string) => goal !== "volume"),
             additional_notes: data.additional_notes || "",
           })
         }
@@ -238,12 +260,21 @@ export default function ProfilePage() {
     setSaving(true)
 
     try {
+      const desiredVolume = formData.desired_volume
+        ? (formData.desired_volume as NonNullable<HairProfile["desired_volume"]>)
+        : null
+      const derivedGoals = deriveOnboardingGoals(
+        formData.goals as Goal[],
+        desiredVolume
+      )
+
       // Convert empty strings to null so CHECK constraints don't reject them
       const payload = {
         user_id: user.id,
         hair_texture: formData.hair_texture || null,
         thickness: formData.thickness || null,
         concerns: formData.concerns,
+        desired_volume: desiredVolume,
         wash_frequency: formData.wash_frequency || null,
         heat_styling: formData.heat_styling || null,
         styling_tools: formData.styling_tools,
@@ -251,7 +282,7 @@ export default function ProfilePage() {
         routine_preference: formData.routine_preference || null,
         current_routine_products: formData.current_routine_products,
         products_used: formData.products_used || null,
-        goals: formData.goals,
+        goals: derivedGoals,
         additional_notes: formData.additional_notes || null,
         updated_at: new Date().toISOString(),
       }
@@ -438,14 +469,28 @@ export default function ProfilePage() {
                       </div>
                     </div>
 
+                    <div>
+                      <label className="mb-1 block text-sm font-medium">Gewuenschtes Volumen</label>
+                      <p className="mb-2 text-xs text-muted-foreground">
+                        Soll TomBot eher auf weniger, ausgeglichenes oder mehr Volumen optimieren?
+                      </p>
+                      <SegmentedControl
+                        options={DESIRED_VOLUME_OPTIONS}
+                        value={formData.desired_volume}
+                        onChange={(v) =>
+                          setFormData((f) => ({ ...f, desired_volume: v }))
+                        }
+                      />
+                    </div>
+
                     {/* Goals */}
                     <div>
-                      <label className="mb-1 block text-sm font-medium">Ziele</label>
+                      <label className="mb-1 block text-sm font-medium">Weitere Ziele</label>
                       <p className="mb-2 text-xs text-muted-foreground">
-                        Was möchtest du für deine Haare erreichen?
+                        Waehle die zusaetzlichen Ziele, die neben dem Volumen wichtig sind.
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        {GOAL_OPTIONS.map((opt) => (
+                        {EDITABLE_GOAL_OPTIONS.map((opt) => (
                           <button
                             key={opt.value}
                             onClick={() =>

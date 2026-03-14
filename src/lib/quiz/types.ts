@@ -6,7 +6,6 @@ export type QuizStep =
   | 5   // zugtest
   | 6   // kopfhaut
   | 7   // chemische behandlung
-  | 8   // ziele
   | 9   // lead capture
   | 10  // analysis
   | 11  // results
@@ -42,7 +41,6 @@ export interface QuizAnswers {
   scalp_type?: string
   scalp_condition?: string
   treatment?: string[]
-  goals?: string[]
 }
 
 export interface LeadData {

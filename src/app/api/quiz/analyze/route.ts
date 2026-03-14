@@ -3,6 +3,8 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { analyzeSchema } from "@/lib/quiz/validators"
 import OpenAI from "openai"
 import { ahaFallback, shareQuoteFallback } from "@/lib/quiz/results-lookup"
+import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
+import { getLeadStatusAfterAnalyze } from "@/lib/quiz/lead-lifecycle"
 
 const openai = new OpenAI()
 
@@ -30,19 +32,35 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { leadId, name, quizAnswers } = analyzeSchema.parse(body)
+    const parsed = analyzeSchema.parse(body)
+    const { leadId, name } = parsed
+    const quizAnswers = canonicalizeQuizAnswers(parsed.quizAnswers)
 
     const supabase = createAdminClient()
 
     // Verify lead exists before calling GPT-4o
     const { data: existingLead } = await supabase
       .from("leads")
-      .select("id")
+      .select("id, ai_insight, share_quote, user_id, status")
       .eq("id", leadId)
       .single()
 
     if (!existingLead) {
       return NextResponse.json({ error: "Lead nicht gefunden" }, { status: 404 })
+    }
+
+    if (existingLead.ai_insight && existingLead.share_quote) {
+      if (existingLead.status === "captured") {
+        await supabase
+          .from("leads")
+          .update({ status: getLeadStatusAfterAnalyze(existingLead.user_id) })
+          .eq("id", leadId)
+      }
+
+      return NextResponse.json({
+        insight: existingLead.ai_insight,
+        shareQuote: existingLead.share_quote,
+      })
     }
 
     const pulltest = (quizAnswers.pulltest as string) ?? ""
@@ -83,7 +101,12 @@ export async function POST(request: Request) {
     // Cache insight + share quote in leads table
     await supabase
       .from("leads")
-      .update({ ai_insight: insight, share_quote: shareQuote })
+      .update({
+        quiz_answers: quizAnswers,
+        ai_insight: insight,
+        share_quote: shareQuote,
+        status: getLeadStatusAfterAnalyze(existingLead.user_id),
+      })
       .eq("id", leadId)
 
     return NextResponse.json({ insight, shareQuote })

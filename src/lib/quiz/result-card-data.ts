@@ -6,13 +6,12 @@ import {
   pullTestResults,
   scalpTypeResults,
   scalpConditionResults,
-  goalLabels,
 } from "./results-lookup"
+import { normalizeStoredQuizAnswers } from "./normalization"
 
 export interface CardData {
   haartypLabel: string
   cards: { emoji: string; title: string; description: string }[]
-  goalsText: string
   /** Short summary line: "Wellig · Fein · Trocken" */
   summaryLine: string
 }
@@ -36,10 +35,8 @@ const scalpSummary: Record<string, string> = {
   trocken: "Trocken",
 }
 
-export function buildCardData(answers: QuizAnswers): CardData {
-  const goalsText = (answers.goals ?? [])
-    .map((g) => goalLabels[g] ?? g)
-    .join(", ")
+export function buildCardData(rawAnswers: QuizAnswers): CardData {
+  const answers = normalizeStoredQuizAnswers(rawAnswers)
 
   const scalpDesc =
     (scalpTypeResults[answers.scalp_type ?? ""] ?? "") +
@@ -72,11 +69,6 @@ export function buildCardData(answers: QuizAnswers): CardData {
       title: "Kopfhaut",
       description: scalpDesc,
     },
-    {
-      emoji: "\uD83C\uDFAF",
-      title: "Deine Ziele",
-      description: goalsText || "Keine Ziele ausgewaehlt",
-    },
   ]
 
   const parts = [
@@ -89,7 +81,6 @@ export function buildCardData(answers: QuizAnswers): CardData {
   return {
     haartypLabel: getHaartypLabel(answers),
     cards,
-    goalsText,
     summaryLine,
   }
 }

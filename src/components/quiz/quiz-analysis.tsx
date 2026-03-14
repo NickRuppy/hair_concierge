@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
 import { Loader2, Check } from "lucide-react"
+import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 
 const steps = [
   "Haarstruktur wird analysiert ...",
@@ -37,7 +38,11 @@ export function QuizAnalysis() {
     fetch("/api/quiz/analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ leadId, name: lead.name, quizAnswers: answers }),
+      body: JSON.stringify({
+        leadId,
+        name: lead.name,
+        quizAnswers: canonicalizeQuizAnswers(answers),
+      }),
     })
       .then((r) => r.json())
       .then((data) => {

@@ -47,7 +47,10 @@ export default function AuthPage() {
   const urlError = searchParams.get("error")
   const reason = searchParams.get("reason")
   const rawNext = searchParams.get("next")
-  const next = rawNext?.startsWith("/") && !rawNext.startsWith("//") && !rawNext.includes("\\") ? rawNext : null
+  const defaultNext = from === "quiz" || leadId ? "/onboarding/goals" : "/chat"
+  const next = rawNext?.startsWith("/") && !rawNext.startsWith("//") && !rawNext.includes("\\")
+    ? rawNext
+    : defaultNext
   const copy = reason && reason in REASON_COPY ? REASON_COPY[reason] : null
 
   // Default tab: signup if coming from quiz/lead capture, login otherwise
@@ -66,7 +69,7 @@ export default function AuthPage() {
     setError(null)
     const callbackUrl = new URL("/api/auth/callback", window.location.origin)
     if (leadId) callbackUrl.searchParams.set("lead", leadId)
-    if (next) callbackUrl.searchParams.set("next", next)
+    callbackUrl.searchParams.set("next", next)
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -101,11 +104,13 @@ export default function AuthPage() {
     } else {
       // Link quiz lead data if user logged in with a lead from the quiz
       if (leadId) {
-        linkLeadAction(leadId).catch((e) =>
+        try {
+          await linkLeadAction(leadId)
+        } catch (e) {
           console.error("linkLeadAction failed:", e)
-        )
+        }
       }
-      router.push(next ?? "/chat")
+      router.push(next)
     }
   }
 
@@ -128,7 +133,7 @@ export default function AuthPage() {
 
     const redirectUrl = new URL("/auth/confirm", window.location.origin)
     if (leadId) redirectUrl.searchParams.set("lead", leadId)
-    redirectUrl.searchParams.set("next", next ?? "/chat")
+    redirectUrl.searchParams.set("next", next)
 
     const { data, error } = await supabase.auth.signUp({
       email: trimmedEmail,

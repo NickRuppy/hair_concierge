@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
@@ -85,11 +85,6 @@ export function QuizScalpQuestion() {
   const [animateGate, setAnimateGate] = useState(false)
   const [animateCondition, setAnimateCondition] = useState(false)
 
-  // Reset advancing flag when phase changes
-  useEffect(() => {
-    setAdvancing(false)
-  }, [phase])
-
   const handleTypeSelect = useCallback(
     (value: string) => {
       if (advancing) return
@@ -99,6 +94,7 @@ export function QuizScalpQuestion() {
       setTimeout(() => {
         setAnimateGate(true)
         setPhase("gate")
+        setAdvancing(false)
       }, 300)
     },
     [setAnswer, advancing]
@@ -118,6 +114,7 @@ export function QuizScalpQuestion() {
         setAdvancing(true)
         setAnimateCondition(true)
         setPhase("condition")
+        setAdvancing(false)
       }
     },
     [setAnswer, goNext, advancing]
@@ -168,9 +165,9 @@ export function QuizScalpQuestion() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={5} total={7} />
+          <QuizProgressBar current={5} total={6} />
         </div>
-        <span className="text-sm text-white/38 tabular-nums">5/7</span>
+        <span className="text-sm text-white/38 tabular-nums">5/6</span>
       </div>
 
       {/* Title + instruction — always visible */}
@@ -290,7 +287,7 @@ export function QuizScalpQuestion() {
 
       {/* Motivation text — always anchored at bottom */}
       <p className="mt-3 text-center text-sm text-white/38">
-        Nur noch 2 Fragen — du machst das super.
+        Nur noch 1 Frage — du machst das super.
       </p>
     </div>
   )

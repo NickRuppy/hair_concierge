@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button"
 
 interface QuizConsentSheetProps {
   open: boolean
+  saving: boolean
   onConsent: (accepted: boolean) => void
 }
 
-export function QuizConsentSheet({ open, onConsent }: QuizConsentSheetProps) {
+export function QuizConsentSheet({ open, saving, onConsent }: QuizConsentSheetProps) {
   if (!open) return null
 
   return (
@@ -35,13 +36,15 @@ export function QuizConsentSheet({ open, onConsent }: QuizConsentSheetProps) {
 
         <Button
           onClick={() => onConsent(true)}
+          disabled={saving}
           variant="unstyled"
           className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl mb-3"
         >
-          JA, WEITER ZU MEINEM PLAN
+          {saving ? "WIRD GESPEICHERT..." : "JA, WEITER ZU MEINEM PLAN"}
         </Button>
         <button
           onClick={() => onConsent(false)}
+          disabled={saving}
           className="w-full text-center text-sm text-white/60 underline underline-offset-2 hover:text-white/80 transition-colors"
         >
           Nein, nur meinen Plan schicken

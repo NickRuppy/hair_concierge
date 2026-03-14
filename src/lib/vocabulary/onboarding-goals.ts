@@ -1,7 +1,8 @@
+import type { Goal } from "./concerns-goals"
 import type { HairTexture } from "./hair-types"
 
 export interface OnboardingGoal {
-  key: string
+  key: Goal
   label: string
   description: string
   emoji: string
@@ -9,12 +10,6 @@ export interface OnboardingGoal {
 
 export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
   straight: [
-    {
-      key: "volume",
-      label: "Mehr Volumen & Lift",
-      description: "Ansatzvolumen ohne Beschwerung",
-      emoji: "🌿",
-    },
     {
       key: "healthy_scalp",
       label: "Weniger schnell nachfetten",
@@ -26,6 +21,12 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       label: "Anti-Frizz & Geschmeidigkeit",
       description: "Glatter Fall ohne Kraeuselung",
       emoji: "✨",
+    },
+    {
+      key: "shine",
+      label: "Mehr Glanz",
+      description: "Sichtbar glaenzenderes, ruhigeres Finish",
+      emoji: "🌟",
     },
   ],
   wavy: [
@@ -42,10 +43,10 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       emoji: "💧",
     },
     {
-      key: "curl_definition",
-      label: "Beach-Waves Textur",
-      description: "Natuerlicher, undone Look",
-      emoji: "🏖️",
+      key: "shine",
+      label: "Mehr Glanz",
+      description: "Glaenzenderes, gesuender wirkendes Haar",
+      emoji: "✨",
     },
   ],
   curly: [
@@ -62,10 +63,10 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       emoji: "💦",
     },
     {
-      key: "curl_definition",
-      label: "Locken strecken",
-      description: "Laengere, locker fallende Curls",
-      emoji: "📏",
+      key: "shine",
+      label: "Mehr Glanz",
+      description: "Mehr Reflexion und weniger stumpfer Look",
+      emoji: "✨",
     },
   ],
   coily: [
@@ -82,10 +83,10 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       emoji: "🌱",
     },
     {
-      key: "moisture",
-      label: "Maximale Geschmeidigkeit",
-      description: "Weichheit und einfacheres Entwirren",
-      emoji: "🧈",
+      key: "healthier_hair",
+      label: "Gesuenderes Haar",
+      description: "Mehr Widerstandsfaehigkeit und weniger Haarbruch",
+      emoji: "🛡️",
     },
   ],
 }

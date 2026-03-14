@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
 import type { QuizQuestion as QuizQuestionType } from "@/lib/quiz/types"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
+import { toggleTreatmentSelection } from "@/lib/quiz/normalization"
 
 const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswers> = {
   2: "structure",
@@ -14,7 +15,6 @@ const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswer
   4: "fingertest",
   5: "pulltest",
   7: "treatment",
-  8: "goals",
 }
 
 interface QuizQuestionProps {
@@ -30,13 +30,6 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
     currentValue ?? (question.selectionMode === "multi" ? [] : "")
   )
   const [advancing, setAdvancing] = useState(false)
-
-  // Reset local selection when question changes
-  useEffect(() => {
-    const val = answers[answerKey]
-    setLocalSelection(val ?? (question.selectionMode === "multi" ? [] : ""))
-    setAdvancing(false)
-  }, [question.step, answerKey, answers])
 
   const handleSingleSelect = useCallback(
     (value: string) => {
@@ -55,6 +48,10 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
     (value: string) => {
       setLocalSelection((prev) => {
         const arr = Array.isArray(prev) ? prev : []
+        if (answerKey === "treatment") {
+          return toggleTreatmentSelection(arr, value)
+        }
+
         if (arr.includes(value)) {
           return arr.filter((v) => v !== value)
         }
@@ -64,7 +61,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
         return [...arr, value]
       })
     },
-    [question.maxSelections]
+    [answerKey, question.maxSelections]
   )
 
   const handleMultiContinue = () => {
@@ -87,10 +84,10 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={question.questionNumber} total={7} />
+          <QuizProgressBar current={question.questionNumber} total={6} />
         </div>
         <span className="text-sm text-white/38 tabular-nums">
-          {question.questionNumber}/7
+          {question.questionNumber}/6
         </span>
       </div>
 

@@ -1,0 +1,48 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env*)",
+      "Read(./supabase/.env*)",
+      "Bash(curl * | *)",
+      "Bash(wget *)",
+      "Bash(nc *)",
+      "Bash(ssh *)",
+      "Bash(eval *)",
+      "Bash(rm -rf *)",
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)"
+    ],
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Bash(npm test *)",
+      "Bash(npx tsx *)",
+      "Bash(npx tsc *)",
+      "Bash(npx next *)",
+      "Bash(npx supabase *)",
+      "Bash(npx playwright *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(git branch *)",
+      "Bash(git stash *)",
+      "Bash(ls *)",
+      "Bash(wc *)",
+      "Bash(node *)",
+      "Bash(python3 *)",
+      "Bash(pip3 *)",
+      "Bash(psql *)",
+      "mcp__supabase__*",
+      "WebSearch",
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit",
+      "Write",
+      "WebFetch"
+    ]
+  }
+}

@@ -1,16 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 import type { QuizAnswers } from "./types"
-
-/** Map quiz goal slugs to English keys used in hair_profiles.goals */
-const GOAL_SLUG_MAP: Record<string, string> = {
-  spliss: "healthier_hair",
-  frizz: "less_frizz",
-  kein_volumen: "volume",
-  zu_viel_volumen: "volume",
-  glanzlos: "shine",
-  kopfhaut: "healthy_scalp",
-  haarausfall: "hair_growth",
-}
+import { normalizeStoredQuizAnswers } from "./normalization"
 
 /**
  * After a user authenticates, link their quiz lead data to their profile.
@@ -31,7 +21,7 @@ export async function linkQuizToProfile(
   const admin = createAdminClient()
 
   // --- Find the lead ---
-  let lead: { id: string; quiz_answers: QuizAnswers; user_id: string | null } | null = null
+  let lead: { id: string; quiz_answers: QuizAnswers | Record<string, unknown> | null; user_id: string | null } | null = null
 
   // Primary: direct ID lookup
   if (leadId) {
@@ -74,7 +64,7 @@ export async function linkQuizToProfile(
     return
   }
 
-  const answers = lead.quiz_answers
+  const answers = normalizeStoredQuizAnswers(lead.quiz_answers)
   if (!answers) {
     console.log("[linkQuizToProfile] lead has no quiz_answers, skipping")
     return
@@ -118,21 +108,6 @@ export async function linkQuizToProfile(
     profileData.scalp_condition = SCALP_CONDITION_MAP[answers.scalp_condition] ?? answers.scalp_condition
   }
 
-  // Backwards compat: old leads have { scalp: "fettig" } etc.
-  const legacyScalp = (answers as Record<string, unknown>).scalp as string | undefined
-  if (legacyScalp && !answers.scalp_type) {
-    if (legacyScalp === "fettig_schuppen") {
-      profileData.scalp_type = "oily"
-      profileData.scalp_condition = "dandruff"
-    } else if (legacyScalp === "unauffaellig") {
-      profileData.scalp_type = "balanced"
-      profileData.scalp_condition = "none"
-    } else {
-      profileData.scalp_type = SCALP_TYPE_MAP[legacyScalp] ?? legacyScalp
-      profileData.scalp_condition = "none"
-    }
-  }
-
   // Map quiz chemical treatment keys to English
   const TREATMENT_MAP: Record<string, string> = {
     natur: "natural",
@@ -145,16 +120,10 @@ export async function linkQuizToProfile(
     )
   }
 
-  if (answers.goals) {
-    profileData.goals = answers.goals.map(
-      (slug) => GOAL_SLUG_MAP[slug] ?? slug
-    )
-  }
-
   // --- Check if hair_profiles row already exists ---
   const { data: existing, error: fetchErr } = await admin
     .from("hair_profiles")
-    .select("id, hair_texture, thickness, goals")
+    .select("id")
     .eq("user_id", userId)
     .single()
 
@@ -163,27 +132,8 @@ export async function linkQuizToProfile(
   }
 
   if (existing) {
-    // Only fill NULL fields for hair_texture/thickness, always write diagnostic columns
-    const updates: Record<string, unknown> = {}
-
-    if (!existing.hair_texture && profileData.hair_texture)
-      updates.hair_texture = profileData.hair_texture
-    if (!existing.thickness && profileData.thickness)
-      updates.thickness = profileData.thickness
-    if (existing.goals?.length === 0 && profileData.goals)
-      updates.goals = profileData.goals
-
-    // Always write the new diagnostic fields
-    if (profileData.cuticle_condition)
-      updates.cuticle_condition = profileData.cuticle_condition
-    if (profileData.protein_moisture_balance)
-      updates.protein_moisture_balance = profileData.protein_moisture_balance
-    if (profileData.scalp_type)
-      updates.scalp_type = profileData.scalp_type
-    if (profileData.scalp_condition)
-      updates.scalp_condition = profileData.scalp_condition
-    if (profileData.chemical_treatment)
-      updates.chemical_treatment = profileData.chemical_treatment
+    const updates = { ...profileData }
+    delete updates.user_id
 
     if (Object.keys(updates).length > 0) {
       const { error: updateErr } = await admin
@@ -207,7 +157,7 @@ export async function linkQuizToProfile(
   // --- Link the lead to the user ---
   const { error: linkErr } = await admin
     .from("leads")
-    .update({ user_id: userId })
+    .update({ user_id: userId, status: "linked" })
     .eq("id", lead.id)
   if (linkErr) {
     throw new Error(`leads.user_id update failed: ${linkErr.message}`)

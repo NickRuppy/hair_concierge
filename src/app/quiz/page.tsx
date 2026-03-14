@@ -20,7 +20,6 @@ const STEP_NAMES: Record<number, string> = {
   5: "pull_test",
   6: "scalp",
   7: "chemical_treatment",
-  8: "goals",
   9: "lead_capture",
   10: "analysis",
   11: "results",
@@ -40,10 +39,10 @@ export default function QuizPage() {
   // Step 6: custom scalp progressive disclosure
   if (step === 6) return <QuizScalpQuestion />
 
-  // Screens 2-8: quiz questions (except 6)
-  if (step >= 2 && step <= 8) {
+  // Screens 2-7: quiz questions (except 6)
+  if (step >= 2 && step <= 7) {
     const question = getQuestionByStep(step)
-    if (question) return <QuizQuestion question={question} />
+    if (question) return <QuizQuestion key={question.step} question={question} />
   }
 
   switch (step) {

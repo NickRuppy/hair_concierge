@@ -58,17 +58,6 @@ export const scalpConditionResults: Record<string, string> = {
   gereizt: " Dazu kommt eine gereizte Kopfhaut — Jucken, Roetungen oder Brennen brauchen besondere Aufmerksamkeit.",
 }
 
-// --- Card 6: Ziele (display labels) ---
-export const goalLabels: Record<string, string> = {
-  spliss: "Spliss / Haarbruch",
-  frizz: "Frizz / fliegende Haare",
-  kein_volumen: "Kein Volumen",
-  zu_viel_volumen: "Zu viel Volumen",
-  glanzlos: "Glanzlos",
-  kopfhaut: "Kopfhautprobleme",
-  haarausfall: "Haarausfall / Ausduennen",
-}
-
 // --- Aha-Moment fallback ---
 export const ahaFallback: Record<string, string> = {
   stretches_bounces:
@@ -91,4 +80,4 @@ export const shareQuoteFallback: Record<string, string> = {
 
 // --- Hope text (always the same) ---
 export const hopeText =
-  "Das Gute: Deine Haare sind nicht hoffnungslos. Sie brauchen nur die richtige Reihenfolge aus Reinigung, Pflege und Schutz. Genau das baut TomBot jetzt fuer dich."
+  "Das Gute: Deine Haare sind nicht hoffnungslos. Sie brauchen die richtige Reihenfolge aus Reinigung, Pflege und Schutz. Im naechsten Schritt legt TomBot noch deine Ziele und deine Wunsch-Routine fest."

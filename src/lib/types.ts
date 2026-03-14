@@ -13,6 +13,7 @@ import type {
   ScalpType,
   ScalpCondition,
   ChemicalTreatment,
+  DesiredVolume,
   PostWashAction,
   RoutinePreference,
   RoutineProduct,
@@ -36,6 +37,7 @@ export type {
   ScalpType,
   ScalpCondition,
   ChemicalTreatment,
+  DesiredVolume,
   PostWashAction,
   RoutinePreference,
   RoutineProduct,
@@ -57,6 +59,8 @@ export {
   SCALP_TYPE_LABELS,
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
+  DESIRED_VOLUME_LABELS,
+  DESIRED_VOLUME_OPTIONS,
   POST_WASH_ACTION_OPTIONS,
   ROUTINE_PREFERENCE_OPTIONS,
   ROUTINE_PRODUCT_OPTIONS,
@@ -68,6 +72,7 @@ export interface Profile {
   full_name: string | null
   avatar_url: string | null
   is_admin: boolean
+  onboarding_completed: boolean
   locale: string
   subscription_tier_id: string | null
   message_count_this_month: number
@@ -92,6 +97,7 @@ export interface HairProfile {
   scalp_type: ScalpType | null
   scalp_condition: ScalpCondition | null
   chemical_treatment: ChemicalTreatment[]
+  desired_volume: DesiredVolume | null
   post_wash_actions: PostWashAction[]
   routine_preference: RoutinePreference | null
   current_routine_products: RoutineProduct[]
@@ -138,12 +144,24 @@ export interface LeaveInRecommendationMetadata extends BaseRecommendationMetadat
   mode_match: LeaveInRole[]
 }
 
+export type MaskType = "protein" | "moisture" | "performance"
+export type MaskNeedStrength = 1 | 2 | 3
+export type MaskSignal = "chemical_treatment" | "heat_styling" | "protein_moisture_balance"
+
 export interface MaskRecommendationMetadata extends BaseRecommendationMetadata {
   category: "mask"
-  need_level: "low" | "medium" | "high"
+  mask_type: MaskType
+  need_strength: MaskNeedStrength
 }
 
 export type RecommendationMetadata = LeaveInRecommendationMetadata | MaskRecommendationMetadata
+
+export interface MaskDecision {
+  needs_mask: boolean
+  need_strength: 0 | MaskNeedStrength
+  mask_type: MaskType | null
+  active_signals: MaskSignal[]
+}
 
 export interface Conversation {
   id: string

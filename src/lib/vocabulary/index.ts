@@ -41,6 +41,9 @@ export {
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENTS,
   CHEMICAL_TREATMENT_LABELS,
+  DESIRED_VOLUME_LEVELS,
+  DESIRED_VOLUME_LABELS,
+  DESIRED_VOLUME_OPTIONS,
   STYLING_TOOLS,
   STYLING_TOOL_LABELS,
   STYLING_TOOL_OPTIONS,
@@ -51,6 +54,7 @@ export type {
   ScalpType,
   ScalpCondition,
   ChemicalTreatment,
+  DesiredVolume,
   StylingTool,
 } from "./profile-labels"
 

@@ -72,24 +72,6 @@ export const quizQuestions: QuizQuestion[] = [
     selectionMode: "multi",
     motivation: "Noch eine Frage \u2013 gleich siehst du dein Profil.",
   },
-  {
-    step: 8,
-    questionNumber: 7,
-    title: "WAS NERVT DICH AM MEISTEN?",
-    instruction: "Waehle bis zu 3 Punkte \u2013 TomBot richtet deinen Plan danach aus, was dich wirklich stoert.",
-    options: [
-      { value: "spliss", label: "Spliss / Haarbruch", emoji: "\uD83D\uDC94" },
-      { value: "frizz", label: "Frizz / fliegende Haare", emoji: "\uD83C\uDF2B\uFE0F" },
-      { value: "kein_volumen", label: "Kein Volumen", emoji: "\uD83D\uDCC9" },
-      { value: "zu_viel_volumen", label: "Zu viel Volumen", emoji: "\uD83D\uDCC8" },
-      { value: "glanzlos", label: "Glanzlos", emoji: "\uD83C\uDF11" },
-      { value: "kopfhaut", label: "Kopfhautprobleme", emoji: "\uD83E\uDDF4" },
-      { value: "haarausfall", label: "Haarausfall / Ausduennen", emoji: "\uD83D\uDC87\u200D\u2640\uFE0F" },
-    ],
-    selectionMode: "multi",
-    maxSelections: 3,
-    motivation: "Letzte Frage \u2013 gleich siehst du dein persoenliches Haarprofil.",
-  },
 ]
 
 export function getQuestionByStep(step: number): QuizQuestion | undefined {

@@ -6,9 +6,9 @@ import { QuizCard } from "./quiz-card"
 import { Button } from "@/components/ui/button"
 
 const nextSteps = [
-  { emoji: "\uD83D\uDEBF", text: "3-Minuten-Anleitung fuer deine naechste Haarwaesche" },
-  { emoji: "\uD83D\uDCAC", text: "Danach kannst du TomBot jederzeit Fragen stellen" },
-  { emoji: "\uD83D\uDCC5", text: "In den naechsten Tagen bauen wir deinen Plan Schritt fuer Schritt auf" },
+  { emoji: "\uD83C\uDFAF", text: "Waehle jetzt deine Ziele und dein gewuenschtes Volumen" },
+  { emoji: "\uD83E\uDDF4", text: "Danach legst du fest, wie deine Routine aussehen soll" },
+  { emoji: "\uD83D\uDCAC", text: "Anschliessend kannst du TomBot direkt Fragen zu deinem Haar stellen" },
 ]
 
 export function QuizWelcome() {
@@ -23,7 +23,7 @@ export function QuizWelcome() {
           WILLKOMMEN, {lead.name.toUpperCase()}
         </h2>
         <p className="text-base text-white/60 mb-8 leading-relaxed">
-          Dein Haarprofil ist gespeichert. Heute machen wir nur einen Schritt: Tom zeigt dir, wie du beim naechsten Waschen vorgehst.
+          Deine Haar-Diagnose ist gespeichert. Jetzt fehlt noch ein kurzer Schritt, damit TomBot deine Empfehlungen an deine Ziele und deine Wunsch-Routine anpassen kann.
         </p>
 
         <div className="space-y-3">
@@ -49,6 +49,7 @@ export function QuizWelcome() {
           onClick={() => {
             const params = new URLSearchParams()
             params.set("from", "quiz")
+            params.set("next", "/onboarding/goals")
             if (leadId) params.set("lead", leadId)
             if (lead.email) params.set("email", lead.email)
             router.push(`/auth?${params.toString()}`)
@@ -56,7 +57,7 @@ export function QuizWelcome() {
           variant="unstyled"
           className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
         >
-          ERSTEN SCHRITT ANSEHEN
+          ZIELE UND ROUTINE STARTEN
         </Button>
       </div>
     </div>

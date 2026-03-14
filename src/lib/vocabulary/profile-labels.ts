@@ -54,6 +54,22 @@ export const CHEMICAL_TREATMENT_LABELS: Record<string, string> = {
   bleached: "Blondiert",
 } satisfies Record<ChemicalTreatment, string>
 
+/* ── Desired volume ── */
+
+export const DESIRED_VOLUME_LEVELS = ["less", "balanced", "more"] as const
+export type DesiredVolume = (typeof DESIRED_VOLUME_LEVELS)[number]
+
+export const DESIRED_VOLUME_LABELS: Record<string, string> = {
+  less: "Weniger",
+  balanced: "Ausgeglichen",
+  more: "Mehr",
+} satisfies Record<DesiredVolume, string>
+
+export const DESIRED_VOLUME_OPTIONS = DESIRED_VOLUME_LEVELS.map((value) => ({
+  value,
+  label: DESIRED_VOLUME_LABELS[value],
+}))
+
 /* ── Styling tools ── */
 
 export const STYLING_TOOLS = [
