@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 import { generateEmbedding } from "@/lib/openai/embeddings"
+import { CONDITIONER_DB_CATEGORIES } from "@/lib/conditioner/constants"
 import type { Product, ProductCategory } from "@/lib/types"
 
 export interface MatchedProduct extends Product {
@@ -11,7 +12,7 @@ export interface MatchedProduct extends Product {
 /** Maps ProductCategory → DB category column values */
 const CATEGORY_DB_MAP: Record<string, string[]> = {
   shampoo: ["Shampoo", "Shampoo Profi"],
-  conditioner: ["Conditioner", "Conditioner Profi"],
+  conditioner: [...CONDITIONER_DB_CATEGORIES],
   mask: ["Maske"],
   leave_in: ["Leave-in", "Leave-In", "Leave in", "leave_in"],
 }
@@ -36,6 +37,14 @@ export interface ConditionerMatchParams {
   query: string
   thickness: string
   proteinMoistureBalance: string
+  count?: number
+}
+
+export interface LeaveInMatchParams {
+  query: string
+  thickness: string
+  needBucket: string
+  stylingContext: string
   count?: number
 }
 
@@ -142,6 +151,40 @@ export async function matchConditionerProducts(
     return (data as MatchedProduct[]) ?? []
   } catch (error) {
     console.error("Conditioner product matching failed:", error)
+    return []
+  }
+}
+
+/**
+ * Matches leave-ins using strict eligibility triples:
+ * thickness + leave_in_need_bucket + styling_context must all match.
+ */
+export async function matchLeaveInProducts(
+  params: LeaveInMatchParams
+): Promise<MatchedProduct[]> {
+  const { query, thickness, needBucket, stylingContext, count = 10 } = params
+
+  try {
+    const embedding = await generateEmbedding(query)
+    const supabase = createAdminClient()
+
+    const { data, error } = await supabase.rpc("match_leave_in_products", {
+      query_embedding: embedding,
+      user_thickness: thickness,
+      user_need_bucket: needBucket,
+      user_styling_context: stylingContext,
+      match_count: count,
+      category_filter: CATEGORY_DB_MAP["leave_in"],
+    })
+
+    if (error) {
+      console.error("Error matching leave-in products:", error)
+      return []
+    }
+
+    return (data as MatchedProduct[]) ?? []
+  } catch (error) {
+    console.error("Leave-in product matching failed:", error)
     return []
   }
 }

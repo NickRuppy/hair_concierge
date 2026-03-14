@@ -1,6 +1,16 @@
 import { streamChatCompletion } from "@/lib/openai/chat"
 import { SYSTEM_PROMPT } from "@/lib/rag/prompts"
 import {
+  CONDITIONER_REPAIR_LEVEL_LABELS,
+  CONDITIONER_WEIGHT_LABELS,
+} from "@/lib/conditioner/constants"
+import {
+  LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS,
+  LEAVE_IN_NEED_BUCKET_LABELS,
+  LEAVE_IN_STYLING_CONTEXT_LABELS,
+  LEAVE_IN_WEIGHT_LABELS,
+} from "@/lib/leave-in/constants"
+import {
   SOURCE_TYPE_LABELS,
   CONCERN_LABELS,
   GOAL_LABELS,
@@ -9,7 +19,10 @@ import {
   WASH_FREQUENCY_LABELS,
   HEAT_STYLING_LABELS,
   CUTICLE_CONDITION_LABELS,
+  HAIR_DENSITY_LABELS,
+  HAIR_TEXTURE_LABELS,
   HAIR_THICKNESS_LABELS,
+  PROTEIN_MOISTURE_LABELS,
   SCALP_TYPE_LABELS,
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
@@ -23,6 +36,8 @@ import type {
   ProductCategory,
   MaskDecision,
   ShampooDecision,
+  ConditionerDecision,
+  LeaveInDecision,
 } from "@/lib/types"
 import type OpenAI from "openai"
 
@@ -37,6 +52,8 @@ export interface SynthesizeParams {
   productCategory?: ProductCategory
   maskDecision?: MaskDecision
   shampooDecision?: ShampooDecision
+  conditionerDecision?: ConditionerDecision
+  leaveInDecision?: LeaveInDecision
   /** Slot-aware clarification questions from the router (replaces consultationMode) */
   clarificationQuestions?: string[]
 }
@@ -60,6 +77,9 @@ function formatUserProfile(
   }
   if (profile.thickness) {
     parts.push(`Haardicke: ${profile.thickness}`)
+  }
+  if (profile.density) {
+    parts.push(`Haardichte: ${HAIR_DENSITY_LABELS[profile.density] ?? profile.density}`)
   }
   if (profile.concerns.length > 0) {
     parts.push(`Probleme/Bedenken: ${profile.concerns.map((c) => CONCERN_LABELS[c] ?? c).join(", ")}`)
@@ -291,6 +311,115 @@ function formatShampooDecision(shampooDecision?: ShampooDecision): string {
   return parts.join("\n")
 }
 
+const CONDITIONER_FIELD_LABELS: Record<string, string> = {
+  thickness: "Haardicke",
+  protein_moisture_balance: "Zugtest",
+}
+
+const CONDITIONER_BALANCE_LABELS = {
+  moisture: "Feuchtigkeit",
+  balanced: "ausgewogene Pflege",
+  protein: "Protein",
+} as const
+
+const LEAVE_IN_FIELD_LABELS: Record<string, string> = {
+  hair_texture: "Haarmuster",
+  thickness: "Haardicke",
+  density: "Haardichte",
+  care_signal: "Pflegefokus",
+  styling_signal: "Styling-Kontext",
+}
+
+function formatConditionerDecision(conditionerDecision?: ConditionerDecision): string {
+  if (!conditionerDecision) return ""
+
+  const parts = ["\n\nConditioner-Entscheidung:"]
+  parts.push(`- Profil ausreichend: ${conditionerDecision.eligible ? "ja" : "nein"}`)
+
+  if (conditionerDecision.matched_profile.thickness) {
+    parts.push(`- Haardicke: ${HAIR_THICKNESS_LABELS[conditionerDecision.matched_profile.thickness] ?? conditionerDecision.matched_profile.thickness}`)
+  }
+  if (conditionerDecision.matched_profile.density) {
+    parts.push(`- Haardichte: ${HAIR_DENSITY_LABELS[conditionerDecision.matched_profile.density] ?? conditionerDecision.matched_profile.density}`)
+  }
+  if (conditionerDecision.matched_profile.protein_moisture_balance) {
+    parts.push(`- Zugtest: ${PROTEIN_MOISTURE_LABELS[conditionerDecision.matched_profile.protein_moisture_balance] ?? conditionerDecision.matched_profile.protein_moisture_balance}`)
+  }
+  if (conditionerDecision.matched_balance_need) {
+    parts.push(`- Pflegefokus: ${CONDITIONER_BALANCE_LABELS[conditionerDecision.matched_balance_need]}`)
+  }
+  if (conditionerDecision.matched_weight) {
+    parts.push(`- Erwartetes Gewicht: ${CONDITIONER_WEIGHT_LABELS[conditionerDecision.matched_weight]}`)
+  }
+  if (conditionerDecision.matched_repair_level) {
+    parts.push(`- Repair-Level: ${CONDITIONER_REPAIR_LEVEL_LABELS[conditionerDecision.matched_repair_level]}`)
+  }
+  if (conditionerDecision.matched_concern_code) {
+    parts.push(`- Wissensbasis-Fokus: ${conditionerDecision.matched_concern_code}`)
+  }
+
+  if (!conditionerDecision.eligible) {
+    parts.push(
+      `- Fehlende Felder: ${conditionerDecision.missing_profile_fields
+        .map((field) => CONDITIONER_FIELD_LABELS[field] ?? field)
+        .join(", ")}`
+    )
+  } else if (conditionerDecision.no_catalog_match) {
+    parts.push("- Katalogstatus: kein exakter Conditioner-Match fuer dieses Profil vorhanden")
+  } else {
+    parts.push(`- Exakte Conditioner-Kandidaten: ${conditionerDecision.candidate_count}`)
+  }
+
+  if (!conditionerDecision.used_density) {
+    parts.push("- Hinweis: Die Haardichte fehlt noch, deshalb bleibt das Produktgewicht vorerst ein Soft-Signal.")
+  }
+
+  return parts.join("\n")
+}
+
+function formatLeaveInDecision(leaveInDecision?: LeaveInDecision): string {
+  if (!leaveInDecision) return ""
+
+  const parts = ["\n\nLeave-in-Entscheidung:"]
+  parts.push(`- Profil ausreichend: ${leaveInDecision.eligible ? "ja" : "nein"}`)
+
+  if (leaveInDecision.matched_profile.hair_texture) {
+    parts.push(`- Haarmuster: ${HAIR_TEXTURE_LABELS[leaveInDecision.matched_profile.hair_texture] ?? leaveInDecision.matched_profile.hair_texture}`)
+  }
+  if (leaveInDecision.matched_profile.thickness) {
+    parts.push(`- Haardicke: ${HAIR_THICKNESS_LABELS[leaveInDecision.matched_profile.thickness] ?? leaveInDecision.matched_profile.thickness}`)
+  }
+  if (leaveInDecision.matched_profile.density) {
+    parts.push(`- Haardichte: ${HAIR_DENSITY_LABELS[leaveInDecision.matched_profile.density] ?? leaveInDecision.matched_profile.density}`)
+  }
+  if (leaveInDecision.need_bucket) {
+    parts.push(`- Pflegefokus: ${LEAVE_IN_NEED_BUCKET_LABELS[leaveInDecision.need_bucket]}`)
+  }
+  if (leaveInDecision.styling_context) {
+    parts.push(`- Styling-Kontext: ${LEAVE_IN_STYLING_CONTEXT_LABELS[leaveInDecision.styling_context]}`)
+  }
+  if (leaveInDecision.conditioner_relationship) {
+    parts.push(`- Conditioner-Rolle: ${LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[leaveInDecision.conditioner_relationship]}`)
+  }
+  if (leaveInDecision.matched_weight) {
+    parts.push(`- Erwartetes Gewicht: ${LEAVE_IN_WEIGHT_LABELS[leaveInDecision.matched_weight]}`)
+  }
+
+  if (!leaveInDecision.eligible) {
+    parts.push(
+      `- Fehlende Felder: ${leaveInDecision.missing_profile_fields
+        .map((field) => LEAVE_IN_FIELD_LABELS[field] ?? field)
+        .join(", ")}`
+    )
+  } else if (leaveInDecision.no_catalog_match) {
+    parts.push("- Katalogstatus: kein exakter Leave-in-Match fuer dieses Profil vorhanden")
+  } else {
+    parts.push(`- Exakte Leave-in-Kandidaten: ${leaveInDecision.candidate_count}`)
+  }
+
+  return parts.join("\n")
+}
+
 /**
  * Formats matched products into a context block for the system prompt.
  */
@@ -298,7 +427,9 @@ function formatProducts(
   products: Product[],
   productCategory?: ProductCategory,
   maskDecision?: MaskDecision,
-  shampooDecision?: ShampooDecision
+  shampooDecision?: ShampooDecision,
+  conditionerDecision?: ConditionerDecision,
+  leaveInDecision?: LeaveInDecision,
 ): string {
   const maskDecisionBlock = productCategory === "mask"
     ? formatMaskDecision(maskDecision)
@@ -306,7 +437,13 @@ function formatProducts(
   const shampooDecisionBlock = productCategory === "shampoo"
     ? formatShampooDecision(shampooDecision)
     : ""
-  const categoryDecisionBlock = shampooDecisionBlock || maskDecisionBlock
+  const conditionerDecisionBlock = productCategory === "conditioner"
+    ? formatConditionerDecision(conditionerDecision)
+    : ""
+  const leaveInDecisionBlock = productCategory === "leave_in"
+    ? formatLeaveInDecision(leaveInDecision)
+    : ""
+  const categoryDecisionBlock = shampooDecisionBlock || conditionerDecisionBlock || leaveInDecisionBlock || maskDecisionBlock
 
   if (products.length === 0) {
     if (productCategory === "mask" && maskDecision && !maskDecision.needs_mask) {
@@ -319,6 +456,22 @@ function formatProducts(
 
     if (productCategory === "shampoo" && shampooDecision?.no_catalog_match) {
       return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Shampoo in der Datenbank exakt zu Haardicke, Kopfhaut-Typ und Kopfhaut-Beschwerden passt. Weiche NICHT auf andere Kopfhaut-Buckets aus und nenne KEINE konkreten Shampoo-Produkte.`
+    }
+
+    if (productCategory === "conditioner" && conditionerDecision && !conditionerDecision.eligible) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Frage nur nach den fehlenden Conditioner-Profilfeldern. Nenne keine Produkte und behandle das NICHT als Katalog-No-Match.`
+    }
+
+    if (productCategory === "conditioner" && conditionerDecision?.no_catalog_match) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Conditioner in der Datenbank exakt zu Haardicke und Zugtest-Ergebnis passt. Weiche NICHT auf andere Protein-/Feuchtigkeits-Buckets aus und nenne KEINE konkreten Conditioner-Produkte.`
+    }
+
+    if (productCategory === "leave_in" && leaveInDecision && !leaveInDecision.eligible) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Frage nur nach den fehlenden Leave-in-Profilfeldern. Nenne keine Produkte und behandle das NICHT als Katalog-No-Match.`
+    }
+
+    if (productCategory === "leave_in" && leaveInDecision?.no_catalog_match) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Leave-in in der Datenbank exakt zu Haardicke, Haardichte, Pflegefokus und Styling-Kontext passt. Weiche NICHT auf andere Leave-in-Buckets aus und nenne KEINE konkreten Leave-ins.`
     }
 
     return `${categoryDecisionBlock}\n\nKeine passenden Produkte in der Datenbank gefunden. Nenne KEINE konkreten Produktnamen — sage dem Nutzer ehrlich, dass du gerade kein passendes Produkt parat hast, und bitte um genauere Angaben.`
@@ -335,10 +488,6 @@ function formatProducts(
       if (p.recommendation_meta) {
         const meta = p.recommendation_meta
         parts.push(`  Score: ${meta.score.toFixed(1)}`)
-
-        if (meta.category === "leave_in" && meta.mode_match.length > 0) {
-          parts.push(`  Mode-Fit: ${meta.mode_match.join(", ")}`)
-        }
 
         if (meta.category === "mask") {
           const strengthLabel = MASK_STRENGTH_LABELS[String(meta.need_strength)] ?? String(meta.need_strength)
@@ -357,6 +506,56 @@ function formatProducts(
           )
           if (meta.matched_concern_code) {
             parts.push(`  Kopfhaut-Fokus: ${meta.matched_concern_code}`)
+          }
+        }
+
+        if (meta.category === "conditioner") {
+          parts.push(
+            `  Match-Profil: ${[
+              meta.matched_profile.thickness
+                ? HAIR_THICKNESS_LABELS[meta.matched_profile.thickness] ?? meta.matched_profile.thickness
+                : null,
+              meta.matched_profile.density
+                ? HAIR_DENSITY_LABELS[meta.matched_profile.density] ?? meta.matched_profile.density
+                : null,
+            ].filter(Boolean).join(" | ")}`
+          )
+          if (meta.matched_balance_need) {
+            parts.push(`  Pflegefokus: ${CONDITIONER_BALANCE_LABELS[meta.matched_balance_need]}`)
+          }
+          if (meta.matched_weight) {
+            parts.push(`  Gewicht: ${CONDITIONER_WEIGHT_LABELS[meta.matched_weight]}`)
+          }
+          if (meta.matched_repair_level) {
+            parts.push(`  Repair-Level: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.matched_repair_level]}`)
+          }
+        }
+
+        if (meta.category === "leave_in") {
+          parts.push(
+            `  Match-Profil: ${[
+              meta.matched_profile.hair_texture
+                ? HAIR_TEXTURE_LABELS[meta.matched_profile.hair_texture] ?? meta.matched_profile.hair_texture
+                : null,
+              meta.matched_profile.thickness
+                ? HAIR_THICKNESS_LABELS[meta.matched_profile.thickness] ?? meta.matched_profile.thickness
+                : null,
+              meta.matched_profile.density
+                ? HAIR_DENSITY_LABELS[meta.matched_profile.density] ?? meta.matched_profile.density
+                : null,
+            ].filter(Boolean).join(" | ")}`
+          )
+          if (meta.need_bucket) {
+            parts.push(`  Pflegefokus: ${LEAVE_IN_NEED_BUCKET_LABELS[meta.need_bucket]}`)
+          }
+          if (meta.styling_context) {
+            parts.push(`  Styling-Kontext: ${LEAVE_IN_STYLING_CONTEXT_LABELS[meta.styling_context]}`)
+          }
+          if (meta.conditioner_relationship) {
+            parts.push(`  Conditioner-Rolle: ${LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[meta.conditioner_relationship]}`)
+          }
+          if (meta.matched_weight) {
+            parts.push(`  Gewicht: ${LEAVE_IN_WEIGHT_LABELS[meta.matched_weight]}`)
           }
         }
 
@@ -396,15 +595,22 @@ Wenn du Shampoo-Empfehlungen gibst:
 
 ## Conditioner-Empfehlungen:
 Wenn du Conditioner-Empfehlungen gibst:
-1. Erklaere ZUERST den Protein-Feuchtigkeits-Status des Nutzers basierend auf dem Zugtest-Ergebnis im Profil. Beschreibe, was das Haar gerade braucht (Protein, Feuchtigkeit, oder ausgewogene Pflege) in 1-2 Saetzen.
-2. Empfehle DANN konkrete Produkte und erklaere WARUM jedes Produkt zu diesem Bedarf und der Haardicke passt.`,
+1. Nutze fuer die Conditioner-Begruendung NUR den Conditioner-Entscheidungsblock und die Produkt-Metadaten.
+2. Wenn im Conditioner-Entscheidungsblock Profilfelder fehlen, frage NUR nach diesen fehlenden Conditioner-Feldern und nenne keine Produkte.
+3. Wenn der Conditioner-Entscheidungsblock sagt, dass es keinen exakten Katalog-Match gibt, sage das klar und nenne keine ausweichenden Conditioner-Produkte aus anderen Protein-/Feuchtigkeits-Buckets.
+4. Erklaere ZUERST, was das Haar laut Zugtest gerade braucht: Protein, Feuchtigkeit oder ausgewogene Pflege.
+5. Beziehe DANN das erwartete Gewicht und den Reparaturbedarf ein. Erklaere, ob der Conditioner eher leicht, mittel oder reichhaltig sein sollte und wie viel Repair-Level sinnvoll ist.
+6. Empfehle DANN konkrete Produkte und erklaere WARUM jedes Produkt sowohl zum Pflegefokus als auch zu Gewicht und Repair-Level passt.`,
   leave_in: `
 
 ## Leave-in-Empfehlungen:
 Wenn du Leave-in-Empfehlungen gibst:
-1. Nutze den "Mode-Fit", "Warum passend" und "Trade-offs" Kontext der Produkte aktiv.
-2. Bevorzuge bei Hitzestyling Leave-ins mit Pflege + Hitzeschutz gegenueber reinen Hitzeschutz-Produkten.
-3. Erklaere kurz den Anwendungszeitpunkt (z.B. handtuchtrocken vor Styling), basierend auf "Anwendung".`,
+1. Nutze fuer Leave-in-Begruendungen NUR den Leave-in-Entscheidungsblock und die Produkt-Metadaten.
+2. Wenn im Leave-in-Entscheidungsblock Profilfelder fehlen, frage NUR nach diesen fehlenden Leave-in-Feldern und nenne keine Produkte.
+3. Wenn der Leave-in-Entscheidungsblock sagt, dass es keinen exakten Katalog-Match gibt, sage das klar und nenne keine ausweichenden Leave-ins aus anderen Buckets.
+4. Erklaere zuerst, was das Leave-in leisten soll: Pflegefokus, Styling-Kontext und erwartetes Gewicht.
+5. Unterscheide IMMER sauber zwischen "Conditioner-Ersatz moeglich" und "nur zusaetzlicher Booster". Sage bei Booster-Profilen niemals, dass das Leave-in den Conditioner ersetzt.
+6. Empfehle dann konkrete Produkte und erklaere WARUM jedes Produkt genau zu Pflegefokus, Styling-Kontext und Conditioner-Rolle passt.`,
   mask: `
 
 ## Masken-Empfehlungen:
@@ -427,6 +633,8 @@ function buildSystemPrompt(
   productCategory?: ProductCategory,
   maskDecision?: MaskDecision,
   shampooDecision?: ShampooDecision,
+  conditionerDecision?: ConditionerDecision,
+  leaveInDecision?: LeaveInDecision,
   clarificationQuestions?: string[],
 ): string {
   let prompt = SYSTEM_PROMPT
@@ -443,8 +651,15 @@ function buildSystemPrompt(
   prompt = prompt.replace("{{USER_PROFILE}}", userProfileContext)
 
   let ragContext = formatRagContext(ragChunks)
-  if (products || maskDecision || shampooDecision) {
-    ragContext += formatProducts(products ?? [], productCategory, maskDecision, shampooDecision)
+  if (products || maskDecision || shampooDecision || conditionerDecision || leaveInDecision) {
+    ragContext += formatProducts(
+      products ?? [],
+      productCategory,
+      maskDecision,
+      shampooDecision,
+      conditionerDecision,
+      leaveInDecision,
+    )
   }
   prompt = prompt.replace("{{RAG_CONTEXT}}", ragContext)
 
@@ -479,6 +694,8 @@ export async function synthesizeResponse(
     productCategory,
     maskDecision,
     shampooDecision,
+    conditionerDecision,
+    leaveInDecision,
     clarificationQuestions,
   } = params
 
@@ -490,6 +707,8 @@ export async function synthesizeResponse(
     productCategory,
     maskDecision,
     shampooDecision,
+    conditionerDecision,
+    leaveInDecision,
     clarificationQuestions,
   )
 

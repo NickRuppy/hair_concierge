@@ -1,4 +1,5 @@
 import type { ClassificationResult, RouterDecision, IntentType, Message, HairProfile, RetrievalMode } from "@/lib/types"
+import { buildLeaveInDecision } from "@/lib/rag/leave-in-decision"
 import {
   ROUTER_CONFIDENCE_THRESHOLD,
   ROUTER_MIN_SLOTS_PRODUCT,
@@ -55,6 +56,16 @@ function computeSlotCompleteness(
     }
   }
 
+  if (productCategory === "leave_in") {
+    const decision = buildLeaveInDecision(hairProfile)
+    const filledCount = 5 - decision.missing_profile_fields.length
+
+    return {
+      score: filledCount / 5,
+      rawCount: filledCount,
+    }
+  }
+
   let filledCount = 0
 
   for (const key of ROUTER_SLOT_KEYS) {
@@ -99,6 +110,9 @@ export function evaluateRoute(
       product_category,
       hairProfile,
     )
+    const leaveInDecision = product_category === "leave_in"
+      ? buildLeaveInDecision(hairProfile)
+      : null
 
     // ── Rule 1: Image override ─────────────────────────────────────────
     if (intent === "photo_analysis") {
@@ -174,6 +188,31 @@ export function evaluateRoute(
       overrides.push("missing_conditioner_profile")
     }
 
+    // ── Rule 3d: Leave-in profile prerequisites are mandatory ────────────
+    if (
+      PRODUCT_INTENTS.includes(intent) &&
+      product_category === "leave_in" &&
+      leaveInDecision &&
+      !leaveInDecision.eligible
+    ) {
+      shouldClarify = true
+      if (!clarification_reason) {
+        clarification_reason = "missing_leave_in_profile"
+      } else {
+        clarification_reason += "+missing_leave_in_profile"
+      }
+      overrides.push("missing_leave_in_profile")
+    }
+
+    if (
+      PRODUCT_INTENTS.includes(intent) &&
+      product_category === "leave_in" &&
+      leaveInDecision?.eligible
+    ) {
+      shouldClarify = false
+      clarification_reason = undefined
+    }
+
     // ── Rule 4: Low confidence → clarification ─────────────────────────
     if (
       router_confidence < ROUTER_CONFIDENCE_THRESHOLD &&
@@ -202,7 +241,8 @@ export function evaluateRoute(
     const priorClarificationRounds = countClarificationRounds(conversationHistory)
     const hasMandatoryProfileGap =
       overrides.includes("missing_shampoo_profile") ||
-      overrides.includes("missing_conditioner_profile")
+      overrides.includes("missing_conditioner_profile") ||
+      overrides.includes("missing_leave_in_profile")
     if (shouldClarify && !hasMandatoryProfileGap && priorClarificationRounds >= ROUTER_MAX_CLARIFICATION_ROUNDS) {
       shouldClarify = false
       clarification_reason = undefined

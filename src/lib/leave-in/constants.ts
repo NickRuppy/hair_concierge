@@ -76,6 +76,12 @@ export type LeaveInFormat = (typeof LEAVE_IN_FORMATS)[number]
 export const LEAVE_IN_WEIGHTS = ["light", "medium", "rich"] as const
 export type LeaveInWeight = (typeof LEAVE_IN_WEIGHTS)[number]
 
+export const LEAVE_IN_WEIGHT_LABELS = {
+  light: "Leicht",
+  medium: "Mittel",
+  rich: "Reichhaltig",
+} as const satisfies Record<LeaveInWeight, string>
+
 export const LEAVE_IN_ROLES = [
   "replacement_conditioner",
   "extension_conditioner",
@@ -83,6 +89,13 @@ export const LEAVE_IN_ROLES = [
   "oil_replacement",
 ] as const
 export type LeaveInRole = (typeof LEAVE_IN_ROLES)[number]
+
+export const LEAVE_IN_ROLE_LABELS = {
+  replacement_conditioner: "Conditioner-Ersatz",
+  extension_conditioner: "Conditioner-Booster",
+  styling_prep: "Styling-Vorbereitung",
+  oil_replacement: "Oel-Ersatz",
+} as const satisfies Record<LeaveInRole, string>
 
 export const LEAVE_IN_CARE_BENEFITS = [
   "moisture",
@@ -95,6 +108,47 @@ export const LEAVE_IN_CARE_BENEFITS = [
   "volume",
 ] as const
 export type LeaveInCareBenefit = (typeof LEAVE_IN_CARE_BENEFITS)[number]
+
+export const LEAVE_IN_NEED_BUCKETS = [
+  "heat_protect",
+  "curl_definition",
+  "repair",
+  "moisture_anti_frizz",
+  "shine_protect",
+] as const
+export type LeaveInNeedBucket = (typeof LEAVE_IN_NEED_BUCKETS)[number]
+
+export const LEAVE_IN_NEED_BUCKET_LABELS = {
+  heat_protect: "Hitzeschutz",
+  curl_definition: "Locken-/Wellen-Definition",
+  repair: "Repair",
+  moisture_anti_frizz: "Feuchtigkeit & Anti-Frizz",
+  shine_protect: "Glanz & Schutz",
+} as const satisfies Record<LeaveInNeedBucket, string>
+
+export const LEAVE_IN_STYLING_CONTEXTS = [
+  "air_dry",
+  "non_heat_style",
+  "heat_style",
+] as const
+export type LeaveInStylingContext = (typeof LEAVE_IN_STYLING_CONTEXTS)[number]
+
+export const LEAVE_IN_STYLING_CONTEXT_LABELS = {
+  air_dry: "Lufttrocknen",
+  non_heat_style: "Styling ohne Hitze",
+  heat_style: "Styling mit Hitze/Foehn",
+} as const satisfies Record<LeaveInStylingContext, string>
+
+export const LEAVE_IN_CONDITIONER_RELATIONSHIPS = [
+  "replacement_capable",
+  "booster_only",
+] as const
+export type LeaveInConditionerRelationship = (typeof LEAVE_IN_CONDITIONER_RELATIONSHIPS)[number]
+
+export const LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS = {
+  replacement_capable: "Kann Conditioner ersetzen",
+  booster_only: "Nur als Booster zusaetzlich zum Conditioner",
+} as const satisfies Record<LeaveInConditionerRelationship, string>
 
 export const LEAVE_IN_INGREDIENT_FLAGS = [
   "silicones",

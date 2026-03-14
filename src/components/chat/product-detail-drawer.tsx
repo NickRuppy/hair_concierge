@@ -2,7 +2,24 @@
 
 import type { Product, HairProfile } from "@/lib/types"
 import { getPersonalizationSentence } from "@/lib/product-utils"
-import { HAIR_THICKNESS_LABELS } from "@/lib/vocabulary"
+import {
+  HAIR_TEXTURE_LABELS,
+  HAIR_THICKNESS_LABELS,
+  HAIR_DENSITY_LABELS,
+  PROTEIN_MOISTURE_LABELS,
+  CUTICLE_CONDITION_LABELS,
+  CHEMICAL_TREATMENT_LABELS,
+} from "@/lib/vocabulary"
+import {
+  CONDITIONER_WEIGHT_LABELS,
+  CONDITIONER_REPAIR_LEVEL_LABELS,
+} from "@/lib/conditioner/constants"
+import {
+  LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS,
+  LEAVE_IN_NEED_BUCKET_LABELS,
+  LEAVE_IN_STYLING_CONTEXT_LABELS,
+  LEAVE_IN_WEIGHT_LABELS,
+} from "@/lib/leave-in/constants"
 import { ProductImage } from "./product-image"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -104,6 +121,141 @@ export function ProductDetailDrawer({
                     {product.recommendation_meta.usage_hint}
                   </p>
                 </div>
+              )}
+              {product.recommendation_meta.category === "conditioner" && (
+                <>
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {product.recommendation_meta.matched_balance_need && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Pflegefokus</p>
+                        <p className="text-sm text-foreground">
+                          {product.recommendation_meta.matched_balance_need === "moisture" && "Feuchtigkeit"}
+                          {product.recommendation_meta.matched_balance_need === "balanced" && "Ausgewogene Pflege"}
+                          {product.recommendation_meta.matched_balance_need === "protein" && "Protein"}
+                        </p>
+                      </div>
+                    )}
+                    {product.recommendation_meta.matched_weight && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Gewicht</p>
+                        <p className="text-sm text-foreground">
+                          {CONDITIONER_WEIGHT_LABELS[product.recommendation_meta.matched_weight]}
+                        </p>
+                      </div>
+                    )}
+                    {product.recommendation_meta.matched_repair_level && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Repair-Level</p>
+                        <p className="text-sm text-foreground">
+                          {CONDITIONER_REPAIR_LEVEL_LABELS[product.recommendation_meta.matched_repair_level]}
+                        </p>
+                      </div>
+                    )}
+                    {product.recommendation_meta.matched_profile.protein_moisture_balance && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Zugtest</p>
+                        <p className="text-sm text-foreground">
+                          {PROTEIN_MOISTURE_LABELS[product.recommendation_meta.matched_profile.protein_moisture_balance]}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground">Profil-Match</p>
+                    <div className="mt-1 flex flex-wrap gap-1.5">
+                      {product.recommendation_meta.matched_profile.thickness && (
+                        <Badge variant="outline" className="text-xs">
+                          {HAIR_THICKNESS_LABELS[product.recommendation_meta.matched_profile.thickness]}
+                        </Badge>
+                      )}
+                      {product.recommendation_meta.matched_profile.density && (
+                        <Badge variant="outline" className="text-xs">
+                          {HAIR_DENSITY_LABELS[product.recommendation_meta.matched_profile.density]}
+                        </Badge>
+                      )}
+                      {product.recommendation_meta.matched_profile.cuticle_condition && (
+                        <Badge variant="outline" className="text-xs">
+                          {CUTICLE_CONDITION_LABELS[product.recommendation_meta.matched_profile.cuticle_condition]}
+                        </Badge>
+                      )}
+                      {product.recommendation_meta.matched_profile.chemical_treatment.map((treatment) => (
+                        <Badge key={treatment} variant="outline" className="text-xs">
+                          {CHEMICAL_TREATMENT_LABELS[treatment] ?? treatment}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+              {product.recommendation_meta.category === "leave_in" && (
+                <>
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {product.recommendation_meta.need_bucket && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Pflegefokus</p>
+                        <p className="text-sm text-foreground">
+                          {LEAVE_IN_NEED_BUCKET_LABELS[product.recommendation_meta.need_bucket]}
+                        </p>
+                      </div>
+                    )}
+                    {product.recommendation_meta.styling_context && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Styling-Kontext</p>
+                        <p className="text-sm text-foreground">
+                          {LEAVE_IN_STYLING_CONTEXT_LABELS[product.recommendation_meta.styling_context]}
+                        </p>
+                      </div>
+                    )}
+                    {product.recommendation_meta.conditioner_relationship && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Conditioner-Rolle</p>
+                        <p className="text-sm text-foreground">
+                          {LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[product.recommendation_meta.conditioner_relationship]}
+                        </p>
+                      </div>
+                    )}
+                    {product.recommendation_meta.matched_weight && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Gewicht</p>
+                        <p className="text-sm text-foreground">
+                          {LEAVE_IN_WEIGHT_LABELS[product.recommendation_meta.matched_weight]}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground">Profil-Match</p>
+                    <div className="mt-1 flex flex-wrap gap-1.5">
+                      {product.recommendation_meta.matched_profile.hair_texture && (
+                        <Badge variant="outline" className="text-xs">
+                          {HAIR_TEXTURE_LABELS[product.recommendation_meta.matched_profile.hair_texture]}
+                        </Badge>
+                      )}
+                      {product.recommendation_meta.matched_profile.thickness && (
+                        <Badge variant="outline" className="text-xs">
+                          {HAIR_THICKNESS_LABELS[product.recommendation_meta.matched_profile.thickness]}
+                        </Badge>
+                      )}
+                      {product.recommendation_meta.matched_profile.density && (
+                        <Badge variant="outline" className="text-xs">
+                          {HAIR_DENSITY_LABELS[product.recommendation_meta.matched_profile.density]}
+                        </Badge>
+                      )}
+                      {product.recommendation_meta.matched_profile.cuticle_condition && (
+                        <Badge variant="outline" className="text-xs">
+                          {CUTICLE_CONDITION_LABELS[product.recommendation_meta.matched_profile.cuticle_condition]}
+                        </Badge>
+                      )}
+                      {product.recommendation_meta.matched_profile.chemical_treatment.map((treatment) => (
+                        <Badge key={treatment} variant="outline" className="text-xs">
+                          {CHEMICAL_TREATMENT_LABELS[treatment] ?? treatment}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           )}

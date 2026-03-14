@@ -3,6 +3,7 @@
 import type {
   HairTexture,
   HairThickness,
+  HairDensity,
   WashFrequency,
   HeatStyling,
   Concern,
@@ -20,13 +21,22 @@ import type {
 } from "@/lib/vocabulary"
 import type {
   ProductLeaveInSpecs,
-  LeaveInRole,
+  LeaveInNeedBucket,
+  LeaveInStylingContext,
+  LeaveInConditionerRelationship,
+  LeaveInWeight,
 } from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
+import type {
+  ProductConditionerSpecs,
+  ConditionerWeight,
+  ConditionerRepairLevel,
+} from "@/lib/conditioner/constants"
 
 export type {
   HairTexture,
   HairThickness,
+  HairDensity,
   WashFrequency,
   HeatStyling,
   Concern,
@@ -46,6 +56,7 @@ export type {
 export {
   HAIR_TEXTURE_OPTIONS,
   HAIR_THICKNESS_OPTIONS,
+  HAIR_DENSITY_OPTIONS,
   CONCERN_OPTIONS,
   GOAL_OPTIONS,
   WASH_FREQUENCY_OPTIONS,
@@ -56,6 +67,7 @@ export {
   STYLING_TOOL_LABELS,
   CUTICLE_CONDITION_LABELS,
   PROTEIN_MOISTURE_LABELS,
+  HAIR_DENSITY_LABELS,
   SCALP_TYPE_LABELS,
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
@@ -86,6 +98,7 @@ export interface HairProfile {
   user_id: string
   hair_texture: HairTexture | null
   thickness: HairThickness | null
+  density: HairDensity | null
   concerns: Concern[]
   products_used: string | null
   wash_frequency: WashFrequency | null
@@ -124,6 +137,7 @@ export interface Product {
   suitable_concerns: string[]
   is_active: boolean
   sort_order: number
+  conditioner_specs?: ProductConditionerSpecs | null
   leave_in_specs?: ProductLeaveInSpecs | null
   mask_specs?: ProductMaskSpecs | null
   recommendation_meta?: RecommendationMetadata | null
@@ -132,7 +146,7 @@ export interface Product {
 }
 
 export interface BaseRecommendationMetadata {
-  category: "shampoo" | "leave_in" | "mask"
+  category: "shampoo" | "conditioner" | "leave_in" | "mask"
   score: number
   top_reasons: string[]
   tradeoffs: string[]
@@ -153,9 +167,47 @@ export interface ShampooRecommendationMetadata extends BaseRecommendationMetadat
   matched_concern_code: string | null
 }
 
+export interface ConditionerMatchedProfile {
+  thickness: HairThickness | null
+  density: HairDensity | null
+  protein_moisture_balance: ProteinMoistureBalance | null
+  cuticle_condition: CuticleCondition | null
+  chemical_treatment: ChemicalTreatment[]
+}
+
+export type ConditionerProfileField = "thickness" | "protein_moisture_balance"
+export type ConditionerBalanceNeed = "moisture" | "balanced" | "protein"
+
+export interface ConditionerRecommendationMetadata extends BaseRecommendationMetadata {
+  category: "conditioner"
+  matched_profile: ConditionerMatchedProfile
+  matched_weight: ConditionerWeight | null
+  matched_repair_level: ConditionerRepairLevel | null
+  matched_balance_need: ConditionerBalanceNeed | null
+}
+
+export interface LeaveInMatchedProfile {
+  hair_texture: HairTexture | null
+  thickness: HairThickness | null
+  density: HairDensity | null
+  cuticle_condition: CuticleCondition | null
+  chemical_treatment: ChemicalTreatment[]
+}
+
+export type LeaveInProfileField =
+  | "hair_texture"
+  | "thickness"
+  | "density"
+  | "care_signal"
+  | "styling_signal"
+
 export interface LeaveInRecommendationMetadata extends BaseRecommendationMetadata {
   category: "leave_in"
-  mode_match: LeaveInRole[]
+  matched_profile: LeaveInMatchedProfile
+  need_bucket: LeaveInNeedBucket | null
+  styling_context: LeaveInStylingContext | null
+  conditioner_relationship: LeaveInConditionerRelationship | null
+  matched_weight: LeaveInWeight | null
 }
 
 export type MaskType = "protein" | "moisture" | "performance"
@@ -170,6 +222,7 @@ export interface MaskRecommendationMetadata extends BaseRecommendationMetadata {
 
 export type RecommendationMetadata =
   | ShampooRecommendationMetadata
+  | ConditionerRecommendationMetadata
   | LeaveInRecommendationMetadata
   | MaskRecommendationMetadata
 
@@ -187,6 +240,35 @@ export interface ShampooDecision {
   no_catalog_match: boolean
 }
 
+export interface ConditionerDecision {
+  category: "conditioner"
+  eligible: boolean
+  missing_profile_fields: ConditionerProfileField[]
+  matched_profile: ConditionerMatchedProfile
+  matched_concern_code: string | null
+  matched_weight: ConditionerWeight | null
+  matched_repair_level: ConditionerRepairLevel | null
+  matched_balance_need: ConditionerBalanceNeed | null
+  candidate_count: number
+  no_catalog_match: boolean
+  used_density: boolean
+}
+
+export interface LeaveInDecision {
+  category: "leave_in"
+  eligible: boolean
+  missing_profile_fields: LeaveInProfileField[]
+  matched_profile: LeaveInMatchedProfile
+  need_bucket: LeaveInNeedBucket | null
+  styling_context: LeaveInStylingContext | null
+  conditioner_relationship: LeaveInConditionerRelationship | null
+  matched_weight: LeaveInWeight | null
+  candidate_count: number
+  no_catalog_match: boolean
+}
+
+export type CategoryDecision = ShampooDecision | ConditionerDecision | LeaveInDecision
+
 export interface MaskDecision {
   needs_mask: boolean
   need_strength: 0 | MaskNeedStrength
@@ -196,7 +278,7 @@ export interface MaskDecision {
 
 export interface MessageRagContext {
   sources: CitationSource[]
-  category_decision?: ShampooDecision | null
+  category_decision?: CategoryDecision | null
 }
 
 export interface Conversation {

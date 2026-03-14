@@ -4,25 +4,38 @@ import { classifyIntent } from "@/lib/rag/intent-classifier"
 import { evaluateRoute } from "@/lib/rag/router"
 import { buildClarificationQuestions } from "@/lib/rag/clarification"
 import { retrieveContext } from "@/lib/rag/retriever"
-import { matchProducts, matchShampooProducts, matchConditionerProducts } from "@/lib/rag/product-matcher"
+import {
+  matchProducts,
+  matchShampooProducts,
+  matchConditionerProducts,
+  matchLeaveInProducts,
+} from "@/lib/rag/product-matcher"
 import { synthesizeResponse } from "@/lib/rag/synthesizer"
-import { mapProteinMoistureToConcernCode } from "@/lib/rag/conditioner-mapper"
+import { buildMaskConcernSearchOrder } from "@/lib/rag/mask-mapper"
+import { deriveMaskDecision, rerankMaskProducts } from "@/lib/rag/mask-reranker"
+import {
+  buildConditionerClarificationQuestions,
+  buildConditionerDecision,
+  rerankConditionerProducts,
+} from "@/lib/rag/conditioner-decision"
 import {
   annotateShampooRecommendations,
   buildShampooClarificationQuestions,
   buildShampooDecision,
   buildShampooRetrievalFilter,
 } from "@/lib/rag/shampoo-decision"
-import { mapProfileToLeaveInConcernCodes } from "@/lib/rag/leave-in-mapper"
-import { rerankLeaveInProducts } from "@/lib/rag/leave-in-reranker"
-import { buildMaskConcernSearchOrder } from "@/lib/rag/mask-mapper"
-import { deriveMaskDecision, rerankMaskProducts } from "@/lib/rag/mask-reranker"
+import {
+  buildLeaveInClarificationQuestions,
+  buildLeaveInDecision,
+  rerankLeaveInProducts,
+} from "@/lib/rag/leave-in-decision"
 import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
 import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
 import type { ProductLeaveInSpecs } from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
+import type { ProductConditionerSpecs } from "@/lib/conditioner/constants"
 import { PRODUCT_INTENTS } from "@/lib/rag/retrieval-constants"
 import type {
   IntentType,
@@ -32,7 +45,7 @@ import type {
   EnrichedCitationSource,
   RouterDecision,
   MaskDecision,
-  ShampooDecision,
+  CategoryDecision,
 } from "@/lib/types"
 
 export interface PipelineParams {
@@ -49,7 +62,7 @@ export interface PipelineResult {
   matchedProducts: Product[]
   sources: EnrichedCitationSource[]
   routerDecision: RouterDecision
-  categoryDecision?: ShampooDecision
+  categoryDecision?: CategoryDecision
   /** Retrieval summary for the done event */
   retrievalSummary: {
     final_context_count: number
@@ -102,10 +115,16 @@ export async function runPipeline(
   let shampooDecision = product_category === "shampoo"
     ? buildShampooDecision(hairProfile)
     : undefined
+  let conditionerDecision = product_category === "conditioner"
+    ? buildConditionerDecision(hairProfile)
+    : undefined
+  let leaveInDecision = product_category === "leave_in"
+    ? buildLeaveInDecision(hairProfile)
+    : undefined
 
   // Pre-compute concern codes for category-specific metadata filtering
   const conditionerConcern = product_category === "conditioner"
-    ? mapProteinMoistureToConcernCode(hairProfile?.protein_moisture_balance)
+    ? conditionerDecision?.matched_concern_code
     : null
 
   // ── Step 3: Load conversation history ─────────────────────────────
@@ -188,6 +207,10 @@ export async function runPipeline(
     const clarificationQuestions =
       product_category === "shampoo" && shampooDecision && !shampooDecision.eligible
         ? buildShampooClarificationQuestions(shampooDecision)
+        : product_category === "conditioner" && conditionerDecision && !conditionerDecision.eligible
+          ? buildConditionerClarificationQuestions(conditionerDecision)
+        : product_category === "leave_in" && leaveInDecision && !leaveInDecision.eligible
+          ? buildLeaveInClarificationQuestions(leaveInDecision)
         : buildClarificationQuestions(
             classification.normalized_filters,
             product_category,
@@ -222,6 +245,8 @@ export async function runPipeline(
       intent,
       productCategory: product_category,
       shampooDecision,
+      conditionerDecision,
+      leaveInDecision,
       clarificationQuestions,
     })
 
@@ -232,7 +257,7 @@ export async function runPipeline(
       matchedProducts: [],
       sources,
       routerDecision,
-      categoryDecision: shampooDecision,
+      categoryDecision: shampooDecision ?? conditionerDecision ?? leaveInDecision,
       retrievalSummary: {
         final_context_count: ragChunks.length,
       },
@@ -298,42 +323,76 @@ export async function runPipeline(
         matchedProducts = annotateShampooRecommendations(shampooCandidates, shampooDecision)
       }
     } else if (product_category === "conditioner") {
-      if (!hairProfile?.thickness || !hairProfile?.protein_moisture_balance) {
+      if (!conditionerDecision?.eligible || !hairProfile?.thickness || !hairProfile?.protein_moisture_balance) {
         matchedProducts = []
       } else {
-        matchedProducts = await matchConditionerProducts({
+        const conditionerCandidates = await matchConditionerProducts({
           query: message,
           thickness: hairProfile.thickness,
           proteinMoistureBalance: hairProfile.protein_moisture_balance,
-          count: 3,
+          count: 10,
         })
+        conditionerDecision = buildConditionerDecision(hairProfile, conditionerCandidates.length)
+
+        if (conditionerCandidates.length === 0) {
+          matchedProducts = []
+        } else {
+          const { data: conditionerSpecs, error: conditionerSpecsError } = await supabase
+            .from("product_conditioner_rerank_specs")
+            .select("*")
+            .in("product_id", conditionerCandidates.map((candidate) => candidate.id))
+
+          if (conditionerSpecsError) {
+            console.error("Failed to load conditioner specs for reranking:", conditionerSpecsError)
+          }
+
+          matchedProducts = rerankConditionerProducts(
+            conditionerCandidates,
+            (conditionerSpecs ?? []) as ProductConditionerSpecs[],
+            conditionerDecision
+          ).slice(0, 3)
+        }
       }
     } else if (product_category === "leave_in") {
-      const leaveInCandidates = await matchProducts({
-        query: message,
-        thickness: hairProfile?.thickness ?? undefined,
-        concerns: mapProfileToLeaveInConcernCodes(hairProfile),
-        category: "leave_in",
-        count: 10,
-      })
-
-      if (leaveInCandidates.length === 0) {
+      if (
+        !leaveInDecision?.eligible ||
+        !hairProfile?.thickness ||
+        !leaveInDecision.need_bucket ||
+        !leaveInDecision.styling_context
+      ) {
         matchedProducts = []
       } else {
-        const { data: leaveInSpecs, error: leaveInSpecsError } = await supabase
-          .from("product_leave_in_specs")
-          .select("*")
-          .in("product_id", leaveInCandidates.map((candidate) => candidate.id))
+        const leaveInCandidates = await matchLeaveInProducts({
+          query: message,
+          thickness: hairProfile.thickness,
+          needBucket: leaveInDecision.need_bucket,
+          stylingContext: leaveInDecision.styling_context,
+          count: 10,
+        })
 
-        if (leaveInSpecsError) {
-          console.error("Failed to load leave-in specs for reranking:", leaveInSpecsError)
-          matchedProducts = leaveInCandidates
+        if (leaveInCandidates.length === 0) {
+          leaveInDecision = buildLeaveInDecision(hairProfile, 0)
+          matchedProducts = []
         } else {
-          matchedProducts = rerankLeaveInProducts(
-            leaveInCandidates,
-            (leaveInSpecs ?? []) as ProductLeaveInSpecs[],
-            hairProfile
-          ).slice(0, 3)
+          const { data: leaveInSpecs, error: leaveInSpecsError } = await supabase
+            .from("product_leave_in_specs")
+            .select("*")
+            .in("product_id", leaveInCandidates.map((candidate) => candidate.id))
+
+          if (leaveInSpecsError) {
+            console.error("Failed to load leave-in specs for reranking:", leaveInSpecsError)
+            leaveInDecision = buildLeaveInDecision(hairProfile, 0)
+            matchedProducts = []
+          } else {
+            const rerankedLeaveIns = rerankLeaveInProducts(
+              leaveInCandidates,
+              (leaveInSpecs ?? []) as ProductLeaveInSpecs[],
+              leaveInDecision
+            )
+
+            leaveInDecision = buildLeaveInDecision(hairProfile, rerankedLeaveIns.length)
+            matchedProducts = rerankedLeaveIns.slice(0, 3)
+          }
         }
       }
     } else if (product_category === "mask") {
@@ -409,6 +468,8 @@ export async function runPipeline(
     productCategory: product_category,
     maskDecision: product_category === "mask" ? maskDecision : undefined,
     shampooDecision,
+    conditionerDecision,
+    leaveInDecision,
   })
 
   return {
@@ -418,7 +479,7 @@ export async function runPipeline(
     matchedProducts: matchedProducts ?? [],
     sources,
     routerDecision,
-    categoryDecision: shampooDecision,
+    categoryDecision: shampooDecision ?? conditionerDecision ?? leaveInDecision,
     retrievalSummary: {
       final_context_count: ragChunks.length,
     },
