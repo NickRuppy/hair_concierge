@@ -33,12 +33,13 @@ export const SCALP_TYPE_LABELS: Record<string, string> = {
 
 /* ── Scalp condition ── */
 
-export const SCALP_CONDITIONS = ["none", "dandruff", "irritated"] as const
+export const SCALP_CONDITIONS = ["none", "dandruff", "dry_flakes", "irritated"] as const
 export type ScalpCondition = (typeof SCALP_CONDITIONS)[number]
 
 export const SCALP_CONDITION_LABELS: Record<string, string> = {
   none: "Keine Beschwerden",
   dandruff: "Schuppen",
+  dry_flakes: "Trockene Schuppen",
   irritated: "Gereizte Kopfhaut",
 } satisfies Record<ScalpCondition, string>
 

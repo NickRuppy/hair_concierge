@@ -79,12 +79,7 @@ const maskSpecsSchema = z.object({
   concentration: z.enum(MASK_CONCENTRATIONS),
   benefits: z.array(z.enum(MASK_BENEFITS)).default([]),
   ingredient_flags: z.array(z.enum(MASK_INGREDIENT_FLAGS)).default([]),
-  apply_on_scalp_allowed: z.boolean().default(false),
   leave_on_minutes: z.number().int().min(1).max(60).default(10),
-  max_uses_per_week: z.number().int().min(1).max(3).default(1),
-  dose_fine_ml: z.number().int().positive().nullable().default(null),
-  dose_normal_ml: z.number().int().positive().nullable().default(null),
-  dose_coarse_ml: z.number().int().positive().nullable().default(null),
 })
 
 export const chatMessageSchema = z.object({

@@ -41,12 +41,7 @@ interface MaskSpecForm {
   concentration: string
   benefits: string[]
   ingredient_flags: string[]
-  apply_on_scalp_allowed: boolean
   leave_on_minutes: string
-  max_uses_per_week: string
-  dose_fine_ml: string
-  dose_normal_ml: string
-  dose_coarse_ml: string
 }
 
 interface ProductForm {
@@ -84,12 +79,7 @@ const emptyMaskSpecs: MaskSpecForm = {
   concentration: "low",
   benefits: [],
   ingredient_flags: [],
-  apply_on_scalp_allowed: false,
   leave_on_minutes: "10",
-  max_uses_per_week: "1",
-  dose_fine_ml: "",
-  dose_normal_ml: "",
-  dose_coarse_ml: "",
 }
 
 const emptyForm: ProductForm = {
@@ -174,21 +164,7 @@ export default function AdminProductsPage() {
           concentration: product.mask_specs.concentration,
           benefits: product.mask_specs.benefits || [],
           ingredient_flags: product.mask_specs.ingredient_flags || [],
-          apply_on_scalp_allowed: product.mask_specs.apply_on_scalp_allowed,
           leave_on_minutes: String(product.mask_specs.leave_on_minutes ?? 10),
-          max_uses_per_week: String(product.mask_specs.max_uses_per_week ?? 1),
-          dose_fine_ml:
-            product.mask_specs.dose_fine_ml != null
-              ? String(product.mask_specs.dose_fine_ml)
-              : "",
-          dose_normal_ml:
-            product.mask_specs.dose_normal_ml != null
-              ? String(product.mask_specs.dose_normal_ml)
-              : "",
-          dose_coarse_ml:
-            product.mask_specs.dose_coarse_ml != null
-              ? String(product.mask_specs.dose_coarse_ml)
-              : "",
         }
       : isMaskCategory(product.category || "")
         ? { ...emptyMaskSpecs }
@@ -345,22 +321,9 @@ export default function AdminProductsPage() {
                 concentration: form.mask_specs.concentration,
                 benefits: form.mask_specs.benefits,
                 ingredient_flags: form.mask_specs.ingredient_flags,
-                apply_on_scalp_allowed: form.mask_specs.apply_on_scalp_allowed,
                 leave_on_minutes: form.mask_specs.leave_on_minutes
                   ? parseInt(form.mask_specs.leave_on_minutes, 10)
                   : 10,
-                max_uses_per_week: form.mask_specs.max_uses_per_week
-                  ? parseInt(form.mask_specs.max_uses_per_week, 10)
-                  : 1,
-                dose_fine_ml: form.mask_specs.dose_fine_ml
-                  ? parseInt(form.mask_specs.dose_fine_ml, 10)
-                  : null,
-                dose_normal_ml: form.mask_specs.dose_normal_ml
-                  ? parseInt(form.mask_specs.dose_normal_ml, 10)
-                  : null,
-                dose_coarse_ml: form.mask_specs.dose_coarse_ml
-                  ? parseInt(form.mask_specs.dose_coarse_ml, 10)
-                  : null,
               }
             : null,
       }
@@ -975,130 +938,25 @@ export default function AdminProductsPage() {
                   </div>
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Einwirkzeit (Minuten)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="60"
-                      value={form.mask_specs.leave_on_minutes}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          mask_specs: prev.mask_specs
-                            ? { ...prev.mask_specs, leave_on_minutes: e.target.value }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Max. Anwendungen/Woche
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="3"
-                      value={form.mask_specs.max_uses_per_week}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          mask_specs: prev.mask_specs
-                            ? { ...prev.mask_specs, max_uses_per_week: e.target.value }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-2 pt-6">
-                    <input
-                      type="checkbox"
-                      id="apply_on_scalp_allowed"
-                      checked={form.mask_specs.apply_on_scalp_allowed}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          mask_specs: prev.mask_specs
-                            ? { ...prev.mask_specs, apply_on_scalp_allowed: e.target.checked }
-                            : null,
-                        }))
-                      }
-                      className="h-4 w-4 rounded border-input"
-                    />
-                    <label htmlFor="apply_on_scalp_allowed" className="text-xs font-medium text-foreground">
-                      Auf Kopfhaut anwendbar
-                    </label>
-                  </div>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Dosis fein (ml)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={form.mask_specs.dose_fine_ml}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          mask_specs: prev.mask_specs
-                            ? { ...prev.mask_specs, dose_fine_ml: e.target.value }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Dosis normal (ml)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={form.mask_specs.dose_normal_ml}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          mask_specs: prev.mask_specs
-                            ? { ...prev.mask_specs, dose_normal_ml: e.target.value }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Dosis dick (ml)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={form.mask_specs.dose_coarse_ml}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          mask_specs: prev.mask_specs
-                            ? { ...prev.mask_specs, dose_coarse_ml: e.target.value }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
-                  </div>
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                    Einwirkzeit (Minuten)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="60"
+                    value={form.mask_specs.leave_on_minutes}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        mask_specs: prev.mask_specs
+                          ? { ...prev.mask_specs, leave_on_minutes: e.target.value }
+                          : null,
+                      }))
+                    }
+                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
                 </div>
               </div>
             )}

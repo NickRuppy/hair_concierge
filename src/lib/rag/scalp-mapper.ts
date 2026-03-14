@@ -12,6 +12,7 @@ export function mapScalpToConcernCode(
   // Scalp condition takes priority (specific problem > general type)
   if (scalpCondition && scalpCondition !== "none") {
     if (scalpCondition === "dandruff") return "schuppen"
+    if (scalpCondition === "dry_flakes") return "trocken"
     if (scalpCondition === "irritated") return "irritationen"
   }
 

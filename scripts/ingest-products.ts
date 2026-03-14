@@ -287,12 +287,7 @@ function inferMaskSpecs(product: ProductInput): Omit<ProductMaskSpecs, "product_
       concentration,
       benefits,
       ingredient_flags,
-      apply_on_scalp_allowed: Boolean(existing.apply_on_scalp_allowed),
       leave_on_minutes: Math.max(1, Math.min(60, existing.leave_on_minutes ?? 10)),
-      max_uses_per_week: Math.max(1, Math.min(3, existing.max_uses_per_week ?? 1)),
-      dose_fine_ml: existing.dose_fine_ml ?? null,
-      dose_normal_ml: existing.dose_normal_ml ?? null,
-      dose_coarse_ml: existing.dose_coarse_ml ?? null,
     }
   }
 
@@ -360,12 +355,7 @@ function inferMaskSpecs(product: ProductInput): Omit<ProductMaskSpecs, "product_
     concentration,
     benefits: dedupBenefits,
     ingredient_flags: dedupIngredients,
-    apply_on_scalp_allowed: false,
     leave_on_minutes: 10,
-    max_uses_per_week: 1,
-    dose_fine_ml: 3,
-    dose_normal_ml: 6,
-    dose_coarse_ml: 10,
   }
 }
 

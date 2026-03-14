@@ -4,7 +4,7 @@ import { classifyIntent } from "@/lib/rag/intent-classifier"
 import { evaluateRoute } from "@/lib/rag/router"
 import { buildClarificationQuestions } from "@/lib/rag/clarification"
 import { retrieveContext } from "@/lib/rag/retriever"
-import { matchProducts } from "@/lib/rag/product-matcher"
+import { matchProducts, matchShampooProducts, matchConditionerProducts } from "@/lib/rag/product-matcher"
 import { synthesizeResponse } from "@/lib/rag/synthesizer"
 import { mapScalpToConcernCode } from "@/lib/rag/scalp-mapper"
 import { mapProteinMoistureToConcernCode } from "@/lib/rag/conditioner-mapper"
@@ -18,6 +18,7 @@ import { generateConversationTitle } from "@/lib/rag/title-generator"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
 import type { ProductLeaveInSpecs } from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
+import { PRODUCT_INTENTS } from "@/lib/rag/retrieval-constants"
 import type { IntentType, Message, HairProfile, Product, EnrichedCitationSource, RouterDecision } from "@/lib/types"
 
 export interface PipelineParams {
@@ -39,13 +40,6 @@ export interface PipelineResult {
     final_context_count: number
   }
 }
-
-/** Intents that should trigger product matching */
-const PRODUCT_INTENTS: IntentType[] = [
-  "product_recommendation",
-  "routine_help",
-  "hair_care_advice",
-]
 
 /**
  * Orchestrates the full RAG pipeline for a single user turn:
@@ -91,12 +85,10 @@ export async function runPipeline(
   const { intent, product_category } = classification
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
 
-  // Pre-compute scalp concern code once (used in both retrieval and product matching)
+  // Pre-compute concern codes for category-specific metadata filtering
   const scalpConcern = product_category === "shampoo"
     ? mapScalpToConcernCode(hairProfile?.scalp_type, hairProfile?.scalp_condition)
     : null
-
-  // Pre-compute conditioner concern code (protein/moisture balance)
   const conditionerConcern = product_category === "conditioner"
     ? mapProteinMoistureToConcernCode(hairProfile?.protein_moisture_balance)
     : null
@@ -273,21 +265,28 @@ export async function runPipeline(
   let matchedProducts = undefined
   if (PRODUCT_INTENTS.includes(intent)) {
     if (product_category === "shampoo") {
-      matchedProducts = await matchProducts({
-        query: message,
-        thickness: hairProfile?.thickness ?? undefined,
-        concerns: scalpConcern ? [scalpConcern] : [],
-        category: "shampoo",
-        count: 3,
-      })
+      if (!hairProfile?.thickness || !hairProfile?.scalp_type || !hairProfile?.scalp_condition) {
+        matchedProducts = []
+      } else {
+        matchedProducts = await matchShampooProducts({
+          query: message,
+          thickness: hairProfile.thickness,
+          scalpType: hairProfile.scalp_type,
+          scalpCondition: hairProfile.scalp_condition,
+          count: 3,
+        })
+      }
     } else if (product_category === "conditioner") {
-      matchedProducts = await matchProducts({
-        query: message,
-        thickness: hairProfile?.thickness ?? undefined,
-        concerns: conditionerConcern ? [conditionerConcern] : [],
-        category: "conditioner",
-        count: 3,
-      })
+      if (!hairProfile?.thickness || !hairProfile?.protein_moisture_balance) {
+        matchedProducts = []
+      } else {
+        matchedProducts = await matchConditionerProducts({
+          query: message,
+          thickness: hairProfile.thickness,
+          proteinMoistureBalance: hairProfile.protein_moisture_balance,
+          count: 3,
+        })
+      }
     } else if (product_category === "leave_in") {
       const leaveInCandidates = await matchProducts({
         query: message,

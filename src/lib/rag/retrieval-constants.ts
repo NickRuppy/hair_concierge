@@ -67,6 +67,13 @@ export const ROUTER_MIN_SLOTS_PRODUCT = 2
 /** Maximum clarification rounds before forcing a best-effort answer */
 export const ROUTER_MAX_CLARIFICATION_ROUNDS = 2
 
+/** Intents where product matching is relevant */
+export const PRODUCT_INTENTS: string[] = [
+  "product_recommendation",
+  "routine_help",
+  "hair_care_advice",
+]
+
 /** Key information slots checked for completeness */
 export const ROUTER_SLOT_KEYS = [
   "problem",

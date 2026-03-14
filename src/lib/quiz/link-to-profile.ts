@@ -107,6 +107,7 @@ export async function linkQuizToProfile(
   const SCALP_CONDITION_MAP: Record<string, string> = {
     keine: "none",
     schuppen: "dandruff",
+    trockene_schuppen: "dry_flakes",
     gereizt: "irritated",
   }
 

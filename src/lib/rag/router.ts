@@ -4,14 +4,8 @@ import {
   ROUTER_MIN_SLOTS_PRODUCT,
   ROUTER_MAX_CLARIFICATION_ROUNDS,
   ROUTER_SLOT_KEYS,
+  PRODUCT_INTENTS,
 } from "@/lib/rag/retrieval-constants"
-
-/** Intents where product matching is relevant (must match pipeline.ts) */
-const PRODUCT_INTENTS: IntentType[] = [
-  "product_recommendation",
-  "routine_help",
-  "hair_care_advice",
-]
 
 /** Intents that require rich context to answer well */
 const CONTEXT_SENSITIVE_INTENTS: IntentType[] = [
@@ -129,6 +123,36 @@ export function evaluateRoute(
       overrides.push("category_product_mode")
     }
 
+    // ── Rule 3b: Shampoo profile prerequisites are mandatory ─────────────
+    if (
+      PRODUCT_INTENTS.includes(intent) &&
+      product_category === "shampoo" &&
+      (!hairProfile?.thickness || !hairProfile?.scalp_type || !hairProfile?.scalp_condition)
+    ) {
+      shouldClarify = true
+      if (!clarification_reason) {
+        clarification_reason = "missing_shampoo_profile"
+      } else {
+        clarification_reason += "+missing_shampoo_profile"
+      }
+      overrides.push("missing_shampoo_profile")
+    }
+
+    // ── Rule 3c: Conditioner profile prerequisites are mandatory ────────
+    if (
+      PRODUCT_INTENTS.includes(intent) &&
+      product_category === "conditioner" &&
+      (!hairProfile?.thickness || !hairProfile?.protein_moisture_balance)
+    ) {
+      shouldClarify = true
+      if (!clarification_reason) {
+        clarification_reason = "missing_conditioner_profile"
+      } else {
+        clarification_reason += "+missing_conditioner_profile"
+      }
+      overrides.push("missing_conditioner_profile")
+    }
+
     // ── Rule 4: Low confidence → clarification ─────────────────────────
     if (
       router_confidence < ROUTER_CONFIDENCE_THRESHOLD &&
@@ -155,7 +179,10 @@ export function evaluateRoute(
 
     // ── Rule 6: Clarification cap ──────────────────────────────────────
     const priorClarificationRounds = countClarificationRounds(conversationHistory)
-    if (shouldClarify && priorClarificationRounds >= ROUTER_MAX_CLARIFICATION_ROUNDS) {
+    const hasMandatoryProfileGap =
+      overrides.includes("missing_shampoo_profile") ||
+      overrides.includes("missing_conditioner_profile")
+    if (shouldClarify && !hasMandatoryProfileGap && priorClarificationRounds >= ROUTER_MAX_CLARIFICATION_ROUNDS) {
       shouldClarify = false
       clarification_reason = undefined
       overrides.push("clarification_cap_reached")

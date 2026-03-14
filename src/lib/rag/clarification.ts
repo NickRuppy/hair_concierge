@@ -20,6 +20,10 @@ const SLOT_QUESTIONS: Record<SlotKey, string> = {
 /** Category-specific supplemental questions */
 const SCALP_QUESTION =
   "Wie würdest du deine Kopfhaut beschreiben — eher fettig, trocken, oder ausgeglichen?"
+const SCALP_CONDITION_QUESTION =
+  "Hast du aktuell Kopfhautbeschwerden — keine, Schuppen, trockene Schuppen oder gereizte Kopfhaut?"
+const THICKNESS_QUESTION =
+  "Ist dein Haar eher fein, mittel oder dick?"
 const PROTEIN_MOISTURE_QUESTION =
   "Hast du mal den Zugtest gemacht? Einzelnes Haar ziehen — bricht es direkt, dehnt es sich, oder federt es zurück?"
 
@@ -70,36 +74,33 @@ export function buildClarificationQuestions(
   const missingSlots = getMissingSlots(filters)
   const questions: string[] = []
 
+  // Shampoo prerequisites are hard requirements: collect these first
+  if (productCategory === "shampoo") {
+    if (!hairProfile?.thickness) {
+      questions.push(THICKNESS_QUESTION)
+    }
+    if (!hairProfile?.scalp_type) {
+      questions.push(SCALP_QUESTION)
+    }
+    if (!hairProfile?.scalp_condition) {
+      questions.push(SCALP_CONDITION_QUESTION)
+    }
+  }
+
+  // Conditioner prerequisites are hard requirements: collect these first
+  if (productCategory === "conditioner") {
+    if (!hairProfile?.thickness) {
+      questions.push(THICKNESS_QUESTION)
+    }
+    if (!hairProfile?.protein_moisture_balance) {
+      questions.push(PROTEIN_MOISTURE_QUESTION)
+    }
+  }
+
   // Add slot-based questions in priority order
   for (const slot of SLOT_PRIORITY) {
     if (questions.length >= 3) break
     if (missingSlots.includes(slot)) {
-      questions.push(SLOT_QUESTIONS[slot])
-    }
-  }
-
-  // Category-specific additions (replace the least important question if at capacity)
-  if (productCategory === "shampoo" && !hairProfile?.scalp_type) {
-    if (questions.length < 3) {
-      questions.push(SCALP_QUESTION)
-    } else {
-      questions[questions.length - 1] = SCALP_QUESTION
-    }
-  }
-
-  if (productCategory === "conditioner" && !hairProfile?.protein_moisture_balance) {
-    if (questions.length < 3) {
-      questions.push(PROTEIN_MOISTURE_QUESTION)
-    } else {
-      questions[questions.length - 1] = PROTEIN_MOISTURE_QUESTION
-    }
-  }
-
-  // Ensure at least 2 questions if there are missing slots
-  if (questions.length < 2 && missingSlots.length > 0) {
-    for (const slot of SLOT_PRIORITY) {
-      if (questions.length >= 2) break
-      if (!missingSlots.includes(slot)) continue
       const q = SLOT_QUESTIONS[slot]
       if (!questions.includes(q)) {
         questions.push(q)

@@ -54,6 +54,7 @@ export const scalpTypeResults: Record<string, string> = {
 export const scalpConditionResults: Record<string, string> = {
   keine: "",
   schuppen: " Dazu kommen Schuppen — weisse oder gelbliche Flocken, die auf ein Ungleichgewicht hindeuten.",
+  trockene_schuppen: " Dazu kommen trockene Schuppen — kleine, weisse Flocken, die auf eine dehydrierte Kopfhaut hindeuten.",
   gereizt: " Dazu kommt eine gereizte Kopfhaut — Jucken, Roetungen oder Brennen brauchen besondere Aufmerksamkeit.",
 }
 

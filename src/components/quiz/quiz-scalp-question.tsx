@@ -41,6 +41,13 @@ const SCALP_CONDITIONS = [
     emoji: "\uD83C\uDF21\uFE0F",
   },
   {
+    value: "trockene_schuppen",
+    label: "Trockene Schuppen",
+    description:
+      "Kleine, weisse, trockene Flocken — Kopfhaut spannt",
+    emoji: "❄️",
+  },
+  {
     value: "gereizt",
     label: "Gereizte Kopfhaut",
     description:

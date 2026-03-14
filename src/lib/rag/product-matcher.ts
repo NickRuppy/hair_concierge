@@ -24,6 +24,21 @@ export interface ProductMatchParams {
   count?: number
 }
 
+export interface ShampooMatchParams {
+  query: string
+  thickness: string
+  scalpType: string
+  scalpCondition: string
+  count?: number
+}
+
+export interface ConditionerMatchParams {
+  query: string
+  thickness: string
+  proteinMoistureBalance: string
+  count?: number
+}
+
 /**
  * Matches products from the vector store based on a semantic query,
  * with optional category pre-filtering and profile-based scoring.
@@ -60,6 +75,73 @@ export async function matchProducts(
     return (data as MatchedProduct[]) ?? []
   } catch (error) {
     console.error("Product matching failed:", error)
+    return []
+  }
+}
+
+/**
+ * Matches shampoos using strict eligibility triples:
+ * thickness + scalp_type + scalp_condition must all match.
+ */
+export async function matchShampooProducts(
+  params: ShampooMatchParams
+): Promise<MatchedProduct[]> {
+  const { query, thickness, scalpType, scalpCondition, count = 5 } = params
+
+  try {
+    const embedding = await generateEmbedding(query)
+    const supabase = createAdminClient()
+
+    const { data, error } = await supabase.rpc("match_shampoo_products", {
+      query_embedding: embedding,
+      user_thickness: thickness,
+      user_scalp_type: scalpType,
+      user_scalp_condition: scalpCondition,
+      match_count: count,
+      category_filter: CATEGORY_DB_MAP["shampoo"],
+    })
+
+    if (error) {
+      console.error("Error matching shampoo products:", error)
+      return []
+    }
+
+    return (data as MatchedProduct[]) ?? []
+  } catch (error) {
+    console.error("Shampoo product matching failed:", error)
+    return []
+  }
+}
+
+/**
+ * Matches conditioners using strict eligibility pairs:
+ * thickness + protein_moisture_balance must both match.
+ */
+export async function matchConditionerProducts(
+  params: ConditionerMatchParams
+): Promise<MatchedProduct[]> {
+  const { query, thickness, proteinMoistureBalance, count = 5 } = params
+
+  try {
+    const embedding = await generateEmbedding(query)
+    const supabase = createAdminClient()
+
+    const { data, error } = await supabase.rpc("match_conditioner_products", {
+      query_embedding: embedding,
+      user_thickness: thickness,
+      user_protein_moisture_balance: proteinMoistureBalance,
+      match_count: count,
+      category_filter: CATEGORY_DB_MAP["conditioner"],
+    })
+
+    if (error) {
+      console.error("Error matching conditioner products:", error)
+      return []
+    }
+
+    return (data as MatchedProduct[]) ?? []
+  } catch (error) {
+    console.error("Conditioner product matching failed:", error)
     return []
   }
 }
