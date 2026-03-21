@@ -1,3 +1,10 @@
+import {
+  mapShampooPairsToMetadata,
+  normalizeShampooBucketPairs,
+  type ShampooBucketPairInput,
+} from "@/lib/shampoo/eligibility"
+import { isShampooCategory } from "@/lib/shampoo/constants"
+
 const CONCERN_LABELS: Record<string, string> = {
   schuppen: "Schuppen",
   irritationen: "Kopfhautirritationen",
@@ -24,7 +31,9 @@ export interface ProductListChunkProduct {
   brand?: string
   category?: string
   suitable_thicknesses?: string[]
+  suitable_hair_textures?: string[]
   suitable_concerns?: string[]
+  shampoo_bucket_pairs?: ShampooBucketPairInput[]
   tags?: string[]
 }
 
@@ -51,6 +60,18 @@ export function buildProductListChunks(
 
   for (const product of allProducts) {
     const category = product.category || "Sonstiges"
+    if (isShampooCategory(category)) {
+      const normalizedPairs = mapShampooPairsToMetadata(normalizeShampooBucketPairs(product))
+      for (const pair of normalizedPairs) {
+        const key = `${category}|${pair.thickness}|${pair.concern}`
+        if (!groups.has(key)) {
+          groups.set(key, [])
+        }
+        groups.get(key)!.push(product)
+      }
+      continue
+    }
+
     const thicknesses = uniqueValues(product.suitable_thicknesses, "alle")
     const concerns = uniqueValues(product.suitable_concerns, "allgemein")
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
-import type { Product } from "@/lib/types"
+import type { Product, ShampooBucketPair } from "@/lib/types"
 import { HAIR_THICKNESS_OPTIONS, CONCERN_OPTIONS } from "@/lib/types"
 import { fehler } from "@/lib/vocabulary"
 import {
@@ -27,6 +27,11 @@ import {
   MASK_INGREDIENT_FLAGS,
   isMaskCategory,
 } from "@/lib/mask/constants"
+import {
+  SHAMPOO_BUCKET_LABELS,
+  SHAMPOO_SOURCE_MANAGED_MESSAGE,
+  isShampooCategory,
+} from "@/lib/shampoo/constants"
 
 interface LeaveInSpecForm {
   format: string
@@ -65,6 +70,7 @@ interface ProductForm {
   tags: string
   suitable_thicknesses: string[]
   suitable_concerns: string[]
+  shampoo_bucket_pairs: ShampooBucketPair[]
   is_active: boolean
   sort_order: number
   conditioner_specs: ConditionerSpecForm | null
@@ -109,6 +115,7 @@ const emptyForm: ProductForm = {
   tags: "",
   suitable_thicknesses: [],
   suitable_concerns: [],
+  shampoo_bucket_pairs: [],
   is_active: true,
   sort_order: 0,
   conditioner_specs: null,
@@ -124,6 +131,11 @@ export default function AdminProductsPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<ProductForm>(emptyForm)
   const { toast } = useToast()
+  const editingProduct = editingId
+    ? products.find((product) => product.id === editingId) ?? null
+    : null
+  const isSourceManagedShampoo = isShampooCategory(form.category)
+  const isExistingSourceManagedShampoo = isShampooCategory(editingProduct?.category)
 
   async function loadProducts() {
     try {
@@ -208,6 +220,7 @@ export default function AdminProductsPage() {
       tags: (product.tags || []).join(", "),
       suitable_thicknesses: product.suitable_thicknesses || [],
       suitable_concerns: product.suitable_concerns || [],
+      shampoo_bucket_pairs: product.shampoo_bucket_pairs || [],
       is_active: product.is_active,
       sort_order: product.sort_order,
       conditioner_specs: conditionerSpecs,
@@ -290,6 +303,11 @@ export default function AdminProductsPage() {
     e.preventDefault()
     if (!form.name.trim()) {
       toast({ title: "Produktname ist erforderlich", variant: "destructive" })
+      return
+    }
+
+    if (isSourceManagedShampoo) {
+      toast({ title: SHAMPOO_SOURCE_MANAGED_MESSAGE, variant: "destructive" })
       return
     }
 
@@ -402,6 +420,12 @@ export default function AdminProductsPage() {
   }
 
   async function handleDelete(id: string) {
+    const product = products.find((entry) => entry.id === id)
+    if (product && isShampooCategory(product.category)) {
+      toast({ title: SHAMPOO_SOURCE_MANAGED_MESSAGE, variant: "destructive" })
+      return
+    }
+
     if (!window.confirm("Dieses Produkt wirklich löschen?")) return
 
     try {
@@ -424,6 +448,13 @@ export default function AdminProductsPage() {
       style: "currency",
       currency: "EUR",
     }).format(price)
+  }
+
+  function formatShampooPair(pair: ShampooBucketPair): string {
+    const thicknessLabel =
+      HAIR_THICKNESS_OPTIONS.find((option) => option.value === pair.thickness)?.label ?? pair.thickness
+    const bucketLabel = SHAMPOO_BUCKET_LABELS[pair.shampoo_bucket] ?? pair.shampoo_bucket
+    return `${thicknessLabel}: ${bucketLabel}`
   }
 
   return (
@@ -449,7 +480,32 @@ export default function AdminProductsPage() {
             {editingId ? "Produkt bearbeiten" : "Neues Produkt erstellen"}
           </h2>
 
-          <div className="space-y-4">
+          {isSourceManagedShampoo && (
+            <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4">
+              <h3 className="text-sm font-semibold text-foreground">Shampoo ist quellenverwaltet</h3>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {SHAMPOO_SOURCE_MANAGED_MESSAGE} Bitte Quelldaten aktualisieren und den Ingest erneut laufen
+                lassen.
+              </p>
+              {form.shampoo_bucket_pairs.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {form.shampoo_bucket_pairs.map((pair) => (
+                    <span
+                      key={`${pair.thickness}-${pair.shampoo_bucket}`}
+                      className="rounded-full bg-background/80 px-3 py-1 text-xs font-medium text-foreground"
+                    >
+                      {formatShampooPair(pair)}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <fieldset
+            disabled={isExistingSourceManagedShampoo}
+            className="space-y-4 disabled:cursor-not-allowed disabled:opacity-60"
+          >
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="mb-1 block text-sm font-medium text-foreground">
@@ -574,55 +630,59 @@ export default function AdminProductsPage() {
               />
             </div>
 
-            <div>
-              <label className="mb-2 block text-sm font-medium text-foreground">
-                Geeignete Haardicke
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {HAIR_THICKNESS_OPTIONS.map(({ value, label }) => {
-                  const selected = form.suitable_thicknesses.includes(value)
-                  return (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => toggleChip("suitable_thicknesses", value)}
-                      className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                        selected
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground hover:bg-muted/80"
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  )
-                })}
+            {!isSourceManagedShampoo && (
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Geeignete Haardicke
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {HAIR_THICKNESS_OPTIONS.map(({ value, label }) => {
+                    const selected = form.suitable_thicknesses.includes(value)
+                    return (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => toggleChip("suitable_thicknesses", value)}
+                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                          selected
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div>
-              <label className="mb-2 block text-sm font-medium text-foreground">
-                Geeignet bei Problemen
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {CONCERN_OPTIONS.map(({ value, label }) => {
-                  const selected = form.suitable_concerns.includes(value)
-                  return (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => toggleChip("suitable_concerns", value)}
-                      className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                        selected
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground hover:bg-muted/80"
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  )
-                })}
+            {!isSourceManagedShampoo && (
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Geeignet bei Problemen
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {CONCERN_OPTIONS.map(({ value, label }) => {
+                    const selected = form.suitable_concerns.includes(value)
+                    return (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => toggleChip("suitable_concerns", value)}
+                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                          selected
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             {isConditionerCategory(form.category) && form.conditioner_specs && (
               <div className="rounded-lg border border-input/70 bg-muted/20 p-4 space-y-4">
@@ -1076,15 +1136,22 @@ export default function AdminProductsPage() {
                 Aktiv
               </label>
             </div>
-          </div>
+
+          </fieldset>
 
           <div className="mt-6 flex gap-3">
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || isSourceManagedShampoo}
               className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
-              {saving ? "Speichern..." : editingId ? "Aktualisieren" : "Erstellen"}
+              {isSourceManagedShampoo
+                ? "Nur ueber Quelldaten"
+                : saving
+                  ? "Speichern..."
+                  : editingId
+                    ? "Aktualisieren"
+                    : "Erstellen"}
             </button>
             <button
               type="button"
@@ -1128,7 +1195,12 @@ export default function AdminProductsPage() {
                     {product.brand || "—"}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {product.category || "—"}
+                    <div>{product.category || "—"}</div>
+                    {isShampooCategory(product.category) && (
+                      <div className="mt-1 text-xs text-amber-600">
+                        Quellenverwaltet
+                      </div>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {formatPrice(product.price_eur)}
@@ -1150,11 +1222,13 @@ export default function AdminProductsPage() {
                         onClick={() => handleEdit(product)}
                         className="rounded-md px-2.5 py-1 text-xs font-medium text-primary hover:bg-primary/10 transition-colors"
                       >
-                        Bearbeiten
+                        {isShampooCategory(product.category) ? "Ansehen" : "Bearbeiten"}
                       </button>
                       <button
                         onClick={() => handleDelete(product.id)}
-                        className="rounded-md px-2.5 py-1 text-xs font-medium text-red-400 hover:bg-red-900/20 transition-colors"
+                        disabled={isShampooCategory(product.category)}
+                        title={isShampooCategory(product.category) ? SHAMPOO_SOURCE_MANAGED_MESSAGE : undefined}
+                        className="rounded-md px-2.5 py-1 text-xs font-medium text-red-400 hover:bg-red-900/20 transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
                       >
                         Löschen
                       </button>
