@@ -28,6 +28,10 @@ import {
   isMaskCategory,
 } from "@/lib/mask/constants"
 import {
+  OIL_SUBTYPE_OPTIONS,
+  isOilCategory,
+} from "@/lib/oil/constants"
+import {
   SHAMPOO_BUCKET_LABELS,
   SHAMPOO_SOURCE_MANAGED_MESSAGE,
   isShampooCategory,
@@ -136,6 +140,8 @@ export default function AdminProductsPage() {
     : null
   const isSourceManagedShampoo = isShampooCategory(form.category)
   const isExistingSourceManagedShampoo = isShampooCategory(editingProduct?.category)
+  const oilCategorySelected = isOilCategory(form.category)
+  const concernOptions = oilCategorySelected ? OIL_SUBTYPE_OPTIONS : CONCERN_OPTIONS
 
   async function loadProducts() {
     try {
@@ -290,9 +296,14 @@ export default function AdminProductsPage() {
     const conditioner = isConditionerCategory(value)
     const leaveIn = isLeaveInCategory(value)
     const mask = isMaskCategory(value)
+    const oil = isOilCategory(value)
     setForm((prev) => ({
       ...prev,
       category: value,
+      suitable_concerns:
+        oil === isOilCategory(prev.category)
+          ? prev.suitable_concerns
+          : [],
       conditioner_specs: conditioner ? prev.conditioner_specs ?? { ...emptyConditionerSpecs } : null,
       leave_in_specs: leaveIn ? prev.leave_in_specs ?? { ...emptyLeaveInSpecs } : null,
       mask_specs: mask ? prev.mask_specs ?? { ...emptyMaskSpecs } : null,
@@ -309,6 +320,17 @@ export default function AdminProductsPage() {
     if (isSourceManagedShampoo) {
       toast({ title: SHAMPOO_SOURCE_MANAGED_MESSAGE, variant: "destructive" })
       return
+    }
+
+    if (oilCategorySelected) {
+      if (form.suitable_thicknesses.length === 0) {
+        toast({ title: "Mindestens eine Haardicke ist fuer Oele erforderlich", variant: "destructive" })
+        return
+      }
+      if (form.suitable_concerns.length === 0) {
+        toast({ title: "Mindestens ein Oel-Typ ist fuer Oele erforderlich", variant: "destructive" })
+        return
+      }
     }
 
     setSaving(true)
@@ -633,7 +655,7 @@ export default function AdminProductsPage() {
             {!isSourceManagedShampoo && (
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">
-                  Geeignete Haardicke
+                  {oilCategorySelected ? "Geeignete Haardicke *" : "Geeignete Haardicke"}
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {HAIR_THICKNESS_OPTIONS.map(({ value, label }) => {
@@ -660,10 +682,10 @@ export default function AdminProductsPage() {
             {!isSourceManagedShampoo && (
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">
-                  Geeignet bei Problemen
+                  {oilCategorySelected ? "Geeigneter Oel-Typ *" : "Geeignet bei Problemen"}
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {CONCERN_OPTIONS.map(({ value, label }) => {
+                  {concernOptions.map(({ value, label }) => {
                     const selected = form.suitable_concerns.includes(value)
                     return (
                       <button

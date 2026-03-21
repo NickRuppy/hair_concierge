@@ -248,6 +248,13 @@ function scoreWeightFit(
 ): { points: number; positive?: string; negative?: string } {
   if (!expectedWeight) return { points: 0 }
 
+  if (expectedWeight === "light" && actualWeight === "rich") {
+    return {
+      points: -12,
+      negative: "Dieses Leave-in ist zu schwer fuer feines Haar.",
+    }
+  }
+
   const distance = Math.abs(WEIGHT_INDEX[expectedWeight] - WEIGHT_INDEX[actualWeight])
   if (distance === 0) {
     return {
@@ -449,9 +456,9 @@ export function rerankLeaveInProducts(
       return b._score_debug.finalScore - a._score_debug.finalScore
     }
 
-    const aSort = typeof a.sort_order === "number" ? a.sort_order : Number.MAX_SAFE_INTEGER
-    const bSort = typeof b.sort_order === "number" ? b.sort_order : Number.MAX_SAFE_INTEGER
-    return aSort - bSort
+    const aPrice = typeof a.price_eur === "number" ? a.price_eur : Number.MAX_SAFE_INTEGER
+    const bPrice = typeof b.price_eur === "number" ? b.price_eur : Number.MAX_SAFE_INTEGER
+    return aPrice - bPrice
   })
 
   return scored.map((product) => {

@@ -32,6 +32,11 @@ import type {
   ConditionerWeight,
   ConditionerRepairLevel,
 } from "@/lib/conditioner/constants"
+import type {
+  OilNoRecommendationReason,
+  OilSubtype,
+  OilUseMode,
+} from "@/lib/oil/constants"
 import type { ShampooBucket, ShampooBucketPair } from "@/lib/shampoo/constants"
 
 export type {
@@ -150,7 +155,7 @@ export interface Product {
 }
 
 export interface BaseRecommendationMetadata {
-  category: "shampoo" | "conditioner" | "leave_in" | "mask"
+  category: "shampoo" | "conditioner" | "leave_in" | "mask" | "oil"
   score: number
   top_reasons: string[]
   tradeoffs: string[]
@@ -215,6 +220,20 @@ export interface LeaveInRecommendationMetadata extends BaseRecommendationMetadat
   matched_weight: LeaveInWeight | null
 }
 
+export interface OilMatchedProfile {
+  thickness: HairThickness | null
+}
+
+export type OilProfileField = "thickness" | "oil_purpose"
+
+export interface OilRecommendationMetadata extends BaseRecommendationMetadata {
+  category: "oil"
+  matched_profile: OilMatchedProfile
+  matched_subtype: OilSubtype | null
+  use_mode: OilUseMode | null
+  adjunct_scalp_support: boolean
+}
+
 export type MaskType = "protein" | "moisture" | "performance"
 export type MaskNeedStrength = 1 | 2 | 3
 export type MaskSignal = "chemical_treatment" | "heat_styling" | "protein_moisture_balance"
@@ -229,6 +248,7 @@ export type RecommendationMetadata =
   | ShampooRecommendationMetadata
   | ConditionerRecommendationMetadata
   | LeaveInRecommendationMetadata
+  | OilRecommendationMetadata
   | MaskRecommendationMetadata
 
 export interface ShampooDecision {
@@ -275,7 +295,21 @@ export interface LeaveInDecision {
   no_catalog_match: boolean
 }
 
-export type CategoryDecision = ShampooDecision | ConditionerDecision | LeaveInDecision
+export interface OilDecision {
+  category: "oil"
+  eligible: boolean
+  missing_profile_fields: OilProfileField[]
+  matched_profile: OilMatchedProfile
+  matched_subtype: OilSubtype | null
+  use_mode: OilUseMode | null
+  adjunct_scalp_support: boolean
+  candidate_count: number
+  no_catalog_match: boolean
+  no_recommendation: boolean
+  no_recommendation_reason: OilNoRecommendationReason | null
+}
+
+export type CategoryDecision = ShampooDecision | ConditionerDecision | LeaveInDecision | OilDecision
 
 export interface MaskDecision {
   needs_mask: boolean

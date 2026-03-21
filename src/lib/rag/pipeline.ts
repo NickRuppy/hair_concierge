@@ -9,6 +9,7 @@ import {
   matchShampooProducts,
   matchConditionerProducts,
   matchLeaveInProducts,
+  matchOilProducts,
 } from "@/lib/rag/product-matcher"
 import { synthesizeResponse } from "@/lib/rag/synthesizer"
 import { buildMaskConcernSearchOrder } from "@/lib/rag/mask-mapper"
@@ -29,6 +30,12 @@ import {
   buildLeaveInDecision,
   rerankLeaveInProducts,
 } from "@/lib/rag/leave-in-decision"
+import {
+  annotateOilRecommendations,
+  buildOilClarificationQuestions,
+  buildOilDecision,
+  buildOilRetrievalFilter,
+} from "@/lib/rag/oil-decision"
 import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
 import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
@@ -121,6 +128,9 @@ export async function runPipeline(
   let leaveInDecision = product_category === "leave_in"
     ? buildLeaveInDecision(hairProfile)
     : undefined
+  let oilDecision = product_category === "oil"
+    ? buildOilDecision(hairProfile, message)
+    : undefined
 
   // Pre-compute concern codes for category-specific metadata filtering
   const conditionerConcern = product_category === "conditioner"
@@ -141,7 +151,7 @@ export async function runPipeline(
 
   // ── Step 1b: Evaluate routing decision ─────────────────────────────
   const routerStart = Date.now()
-  const routerDecision = evaluateRoute(classification, conversationHistory, hairProfile)
+  const routerDecision = evaluateRoute(classification, conversationHistory, hairProfile, message)
 
   emitRouterEvent({
     event: "router_classified",
@@ -211,6 +221,8 @@ export async function runPipeline(
           ? buildConditionerClarificationQuestions(conditionerDecision)
         : product_category === "leave_in" && leaveInDecision && !leaveInDecision.eligible
           ? buildLeaveInClarificationQuestions(leaveInDecision)
+        : product_category === "oil" && oilDecision && !oilDecision.eligible
+          ? buildOilClarificationQuestions(oilDecision)
         : buildClarificationQuestions(
             classification.normalized_filters,
             product_category,
@@ -247,6 +259,7 @@ export async function runPipeline(
       shampooDecision,
       conditionerDecision,
       leaveInDecision,
+      oilDecision,
       clarificationQuestions,
     })
 
@@ -257,7 +270,7 @@ export async function runPipeline(
       matchedProducts: [],
       sources,
       routerDecision,
-      categoryDecision: shampooDecision ?? conditionerDecision ?? leaveInDecision,
+      categoryDecision: shampooDecision ?? conditionerDecision ?? leaveInDecision ?? oilDecision,
       retrievalSummary: {
         final_context_count: ragChunks.length,
       },
@@ -268,7 +281,9 @@ export async function runPipeline(
 
   // ── Step 2: Retrieve context chunks ─────────────────────────────────
   // Build metadata filter based on intent and category
-  let metadataFilter = buildShampooRetrievalFilter(intent, product_category, shampooDecision)
+  let metadataFilter =
+    buildShampooRetrievalFilter(intent, product_category, shampooDecision)
+    ?? buildOilRetrievalFilter(intent, product_category, oilDecision)
   if (!metadataFilter && intent === "product_recommendation") {
     if (hairProfile?.thickness) {
       metadataFilter = { thickness: hairProfile.thickness }
@@ -309,18 +324,40 @@ export async function runPipeline(
   let maskDecision: MaskDecision | undefined
   if (PRODUCT_INTENTS.includes(intent)) {
     if (product_category === "shampoo") {
-      if (!shampooDecision?.eligible || !hairProfile?.thickness || !hairProfile?.scalp_type || !hairProfile?.scalp_condition) {
+      if (!shampooDecision?.eligible || !hairProfile?.thickness) {
+        matchedProducts = []
+      } else if (!shampooDecision.matched_bucket) {
         matchedProducts = []
       } else {
         const shampooCandidates = await matchShampooProducts({
           query: message,
           thickness: hairProfile.thickness,
-          scalpType: hairProfile.scalp_type,
-          scalpCondition: hairProfile.scalp_condition,
-          count: 3,
+          shampooBucket: shampooDecision.matched_bucket,
+          count: shampooDecision.secondary_bucket ? 2 : 3,
         })
-        shampooDecision = buildShampooDecision(hairProfile, shampooCandidates.length)
-        matchedProducts = annotateShampooRecommendations(shampooCandidates, shampooDecision)
+
+        // Dandruff rotation: fetch 1 product from the secondary (scalp-type) bucket
+        let secondaryCandidates: Awaited<ReturnType<typeof matchShampooProducts>> = []
+        if (shampooDecision.secondary_bucket && shampooDecision.secondary_bucket !== shampooDecision.matched_bucket) {
+          secondaryCandidates = await matchShampooProducts({
+            query: message,
+            thickness: hairProfile.thickness,
+            shampooBucket: shampooDecision.secondary_bucket,
+            count: 1,
+          })
+          // Tag secondary products with a role for the synthesizer
+          for (const product of secondaryCandidates) {
+            (product as unknown as Record<string, unknown>).shampoo_role = "daily"
+          }
+          // Tag primary products
+          for (const product of shampooCandidates) {
+            (product as unknown as Record<string, unknown>).shampoo_role = "treatment"
+          }
+        }
+
+        const allCandidates = [...shampooCandidates, ...secondaryCandidates]
+        shampooDecision = buildShampooDecision(hairProfile, allCandidates.length)
+        matchedProducts = annotateShampooRecommendations(allCandidates, shampooDecision)
       }
     } else if (product_category === "conditioner") {
       if (!conditionerDecision?.eligible || !hairProfile?.thickness || !hairProfile?.protein_moisture_balance) {
@@ -394,6 +431,25 @@ export async function runPipeline(
             matchedProducts = rerankedLeaveIns.slice(0, 3)
           }
         }
+      }
+    } else if (product_category === "oil") {
+      if (
+        !oilDecision?.eligible ||
+        !hairProfile?.thickness ||
+        !oilDecision.matched_subtype ||
+        oilDecision.no_recommendation
+      ) {
+        matchedProducts = []
+      } else {
+        const oilCandidates = await matchOilProducts({
+          query: message,
+          thickness: hairProfile.thickness,
+          oilSubtype: oilDecision.matched_subtype,
+          count: 10,
+        })
+
+        oilDecision = buildOilDecision(hairProfile, message, oilCandidates.length)
+        matchedProducts = annotateOilRecommendations(oilCandidates.slice(0, 3), oilDecision)
       }
     } else if (product_category === "mask") {
       maskDecision = deriveMaskDecision(hairProfile)
@@ -470,6 +526,7 @@ export async function runPipeline(
     shampooDecision,
     conditionerDecision,
     leaveInDecision,
+    oilDecision,
   })
 
   return {
@@ -479,7 +536,7 @@ export async function runPipeline(
     matchedProducts: matchedProducts ?? [],
     sources,
     routerDecision,
-    categoryDecision: shampooDecision ?? conditionerDecision ?? leaveInDecision,
+    categoryDecision: shampooDecision ?? conditionerDecision ?? leaveInDecision ?? oilDecision,
     retrievalSummary: {
       final_context_count: ragChunks.length,
     },

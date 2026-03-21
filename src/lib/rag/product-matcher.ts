@@ -1,7 +1,8 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 import { generateEmbedding } from "@/lib/openai/embeddings"
 import { CONDITIONER_DB_CATEGORIES } from "@/lib/conditioner/constants"
-import type { Product, ProductCategory } from "@/lib/types"
+import { OIL_DB_CATEGORIES, type OilSubtype } from "@/lib/oil/constants"
+import type { Product, ProductCategory, ShampooBucket } from "@/lib/types"
 
 export interface MatchedProduct extends Product {
   similarity: number
@@ -14,6 +15,7 @@ const CATEGORY_DB_MAP: Record<string, string[]> = {
   shampoo: ["Shampoo", "Shampoo Profi"],
   conditioner: [...CONDITIONER_DB_CATEGORIES],
   mask: ["Maske"],
+  oil: [...OIL_DB_CATEGORIES],
   leave_in: ["Leave-in", "Leave-In", "Leave in", "leave_in"],
 }
 
@@ -28,8 +30,7 @@ export interface ProductMatchParams {
 export interface ShampooMatchParams {
   query: string
   thickness: string
-  scalpType: string
-  scalpCondition: string
+  shampooBucket: ShampooBucket
   count?: number
 }
 
@@ -45,6 +46,13 @@ export interface LeaveInMatchParams {
   thickness: string
   needBucket: string
   stylingContext: string
+  count?: number
+}
+
+export interface OilMatchParams {
+  query: string
+  thickness: string
+  oilSubtype: OilSubtype
   count?: number
 }
 
@@ -89,13 +97,13 @@ export async function matchProducts(
 }
 
 /**
- * Matches shampoos using strict eligibility triples:
- * thickness + scalp_type + scalp_condition must all match.
+ * Matches shampoos using strict matrix buckets:
+ * thickness + shampoo_bucket must both match.
  */
 export async function matchShampooProducts(
   params: ShampooMatchParams
 ): Promise<MatchedProduct[]> {
-  const { query, thickness, scalpType, scalpCondition, count = 5 } = params
+  const { query, thickness, shampooBucket, count = 5 } = params
 
   try {
     const embedding = await generateEmbedding(query)
@@ -104,8 +112,7 @@ export async function matchShampooProducts(
     const { data, error } = await supabase.rpc("match_shampoo_products", {
       query_embedding: embedding,
       user_thickness: thickness,
-      user_scalp_type: scalpType,
-      user_scalp_condition: scalpCondition,
+      user_shampoo_bucket: shampooBucket,
       match_count: count,
       category_filter: CATEGORY_DB_MAP["shampoo"],
     })
@@ -185,6 +192,39 @@ export async function matchLeaveInProducts(
     return (data as MatchedProduct[]) ?? []
   } catch (error) {
     console.error("Leave-in product matching failed:", error)
+    return []
+  }
+}
+
+/**
+ * Matches oils using strict eligibility pairs:
+ * thickness + oil_subtype must both match.
+ */
+export async function matchOilProducts(
+  params: OilMatchParams
+): Promise<MatchedProduct[]> {
+  const { query, thickness, oilSubtype, count = 10 } = params
+
+  try {
+    const embedding = await generateEmbedding(query)
+    const supabase = createAdminClient()
+
+    const { data, error } = await supabase.rpc("match_oil_products", {
+      query_embedding: embedding,
+      user_thickness: thickness,
+      user_oil_subtype: oilSubtype,
+      match_count: count,
+      category_filter: CATEGORY_DB_MAP["oil"],
+    })
+
+    if (error) {
+      console.error("Error matching oil products:", error)
+      return []
+    }
+
+    return (data as MatchedProduct[]) ?? []
+  } catch (error) {
+    console.error("Oil product matching failed:", error)
     return []
   }
 }

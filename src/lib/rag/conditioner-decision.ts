@@ -375,9 +375,9 @@ export function rerankConditionerProducts(
     if (b._score_debug.finalScore !== a._score_debug.finalScore) {
       return b._score_debug.finalScore - a._score_debug.finalScore
     }
-    const aSort = typeof a.sort_order === "number" ? a.sort_order : Number.MAX_SAFE_INTEGER
-    const bSort = typeof b.sort_order === "number" ? b.sort_order : Number.MAX_SAFE_INTEGER
-    return aSort - bSort
+    const aPrice = typeof a.price_eur === "number" ? a.price_eur : Number.MAX_SAFE_INTEGER
+    const bPrice = typeof b.price_eur === "number" ? b.price_eur : Number.MAX_SAFE_INTEGER
+    return aPrice - bPrice
   })
 
   return scored.map((product) => {

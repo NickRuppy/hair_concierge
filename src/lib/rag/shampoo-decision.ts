@@ -2,8 +2,12 @@ import {
   SCALP_CONDITION_LABELS,
   SCALP_TYPE_LABELS,
 } from "@/lib/vocabulary"
-import { mapScalpToConcernCode } from "@/lib/rag/scalp-mapper"
 import { PRODUCT_INTENTS } from "@/lib/rag/retrieval-constants"
+import {
+  deriveShampooBucket,
+  deriveScalpTypeBucket,
+  SHAMPOO_BUCKET_LABELS,
+} from "@/lib/shampoo/constants"
 import type {
   HairProfile,
   IntentType,
@@ -27,14 +31,37 @@ const THICKNESS_REASON_LABELS = {
   coarse: "dickem",
 } as const
 
-function getMissingProfileFields(profile: HairProfile | null): ShampooProfileField[] {
-  const missing: ShampooProfileField[] = []
+export function isShampooScalpTypeRequired(profile: HairProfile | null): boolean {
+  return !profile?.scalp_condition || profile.scalp_condition === "none"
+}
 
-  if (!profile?.thickness) missing.push("thickness")
-  if (!profile?.scalp_type) missing.push("scalp_type")
-  if (!profile?.scalp_condition) missing.push("scalp_condition")
+export function getRequiredShampooProfileFields(profile: HairProfile | null): ShampooProfileField[] {
+  return SHAMPOO_FIELD_ORDER.filter((field) => {
+    if (field === "thickness" || field === "scalp_condition") return true
+    if (field === "scalp_type") return isShampooScalpTypeRequired(profile)
+    return false
+  })
+}
 
-  return missing
+export function getMissingShampooProfileFields(profile: HairProfile | null): ShampooProfileField[] {
+  return getRequiredShampooProfileFields(profile).filter((field) => !profile?.[field])
+}
+
+export function isShampooProfileEligible(profile: HairProfile | null): boolean {
+  return getMissingShampooProfileFields(profile).length === 0
+}
+
+export function getShampooProfileCompleteness(
+  profile: HairProfile | null
+): { filledCount: number; totalCount: number; score: number } {
+  const requiredFields = getRequiredShampooProfileFields(profile)
+  const filledCount = requiredFields.filter((field) => Boolean(profile?.[field])).length
+
+  return {
+    filledCount,
+    totalCount: requiredFields.length,
+    score: requiredFields.length === 0 ? 0 : filledCount / requiredFields.length,
+  }
 }
 
 function toBaseScore(product: MatchedProduct): number {
@@ -51,20 +78,28 @@ export function buildShampooDecision(
   profile: HairProfile | null,
   candidateCount = 0
 ): ShampooDecision {
-  const missingProfileFields = getMissingProfileFields(profile)
-  const matchedConcernCode = mapScalpToConcernCode(profile?.scalp_type, profile?.scalp_condition)
+  const missingProfileFields = getMissingShampooProfileFields(profile)
+  const matchedBucket = deriveShampooBucket(profile?.scalp_type, profile?.scalp_condition)
+  const matchedConcernCode = matchedBucket
   const matchedProfile = {
     thickness: profile?.thickness ?? null,
     scalp_type: profile?.scalp_type ?? null,
     scalp_condition: profile?.scalp_condition ?? null,
   }
-  const eligible = missingProfileFields.length === 0
+  const eligible = isShampooProfileEligible(profile)
+
+  // Dandruff users get a secondary scalp-type-based bucket for rotation
+  const secondaryBucket = profile?.scalp_condition === "dandruff"
+    ? deriveScalpTypeBucket(profile?.scalp_type)
+    : null
 
   return {
     category: "shampoo",
     eligible,
     missing_profile_fields: missingProfileFields,
     matched_profile: matchedProfile,
+    matched_bucket: matchedBucket,
+    secondary_bucket: secondaryBucket,
     matched_concern_code: matchedConcernCode,
     retrieval_filter: {
       thickness: matchedProfile.thickness,
@@ -110,21 +145,25 @@ export function annotateShampooRecommendations(
     const thicknessReason = decision.matched_profile.thickness
       ? `Passt gut zu ${THICKNESS_REASON_LABELS[decision.matched_profile.thickness]} Haar.`
       : "Passt zur eingeordneten Haardicke."
-    const scalpTypeReason = decision.matched_profile.scalp_type
-      ? `Ist fuer ${SCALP_TYPE_LABELS[decision.matched_profile.scalp_type] ?? decision.matched_profile.scalp_type} Kopfhaut eingeordnet.`
-      : "Passt zum eingeordneten Kopfhauttyp."
-    const scalpConditionReason =
-      decision.matched_profile.scalp_condition === "none"
-        ? "Ist fuer Kopfhaut ohne konkrete Beschwerden eingeordnet."
-        : `Ist fuer ${SCALP_CONDITION_LABELS[decision.matched_profile.scalp_condition ?? ""] ?? decision.matched_profile.scalp_condition} eingeordnet.`
+    const bucketReason = decision.matched_bucket
+      ? `Der aktuelle Shampoo-Bucket ist ${SHAMPOO_BUCKET_LABELS[decision.matched_bucket]}.`
+      : "Passt zum aktuellen Shampoo-Fokus."
+    const scalpPriorityReason =
+      decision.matched_profile.scalp_condition &&
+      decision.matched_profile.scalp_condition !== "none"
+        ? `Solange ${SCALP_CONDITION_LABELS[decision.matched_profile.scalp_condition] ?? decision.matched_profile.scalp_condition} aktiv ist, priorisieren wir diesen Shampoo-Fokus vor dem normalen Kopfhauttyp.`
+        : decision.matched_profile.scalp_type
+          ? `Ohne akute Kopfhautbeschwerden richtet sich die Auswahl nach deinem Kopfhauttyp: ${SCALP_TYPE_LABELS[decision.matched_profile.scalp_type] ?? decision.matched_profile.scalp_type}.`
+          : "Ohne akute Kopfhautbeschwerden richtet sich die Auswahl nach deinem Kopfhauttyp."
 
     const recommendationMeta: ShampooRecommendationMetadata = {
       category: "shampoo",
       score: Math.round(toBaseScore(product) * 10) / 10,
-      top_reasons: [thicknessReason, scalpTypeReason, scalpConditionReason],
+      top_reasons: [thicknessReason, bucketReason, scalpPriorityReason],
       tradeoffs: [],
       usage_hint: "",
       matched_profile: decision.matched_profile,
+      matched_bucket: decision.matched_bucket,
       matched_concern_code: decision.matched_concern_code,
     }
 

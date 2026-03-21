@@ -1,5 +1,10 @@
 import type { ClassificationResult, RouterDecision, IntentType, Message, HairProfile, RetrievalMode } from "@/lib/types"
 import { buildLeaveInDecision } from "@/lib/rag/leave-in-decision"
+import { buildOilDecision } from "@/lib/rag/oil-decision"
+import {
+  getShampooProfileCompleteness,
+  isShampooProfileEligible,
+} from "@/lib/rag/shampoo-decision"
 import {
   ROUTER_CONFIDENCE_THRESHOLD,
   ROUTER_MIN_SLOTS_PRODUCT,
@@ -42,16 +47,13 @@ function computeSlotCompleteness(
   filters: Record<string, string | string[] | null>,
   productCategory: string | null,
   hairProfile: HairProfile | null,
+  userMessage = "",
 ): { score: number; rawCount: number } {
   if (productCategory === "shampoo") {
-    const filledCount = [
-      hairProfile?.thickness,
-      hairProfile?.scalp_type,
-      hairProfile?.scalp_condition,
-    ].filter((value) => Boolean(value)).length
+    const { filledCount, score } = getShampooProfileCompleteness(hairProfile)
 
     return {
-      score: filledCount / 3,
+      score,
       rawCount: filledCount,
     }
   }
@@ -62,6 +64,16 @@ function computeSlotCompleteness(
 
     return {
       score: filledCount / 5,
+      rawCount: filledCount,
+    }
+  }
+
+  if (productCategory === "oil") {
+    const decision = buildOilDecision(hairProfile, userMessage)
+    const filledCount = 2 - decision.missing_profile_fields.length
+
+    return {
+      score: filledCount / 2,
       rawCount: filledCount,
     }
   }
@@ -97,6 +109,7 @@ export function evaluateRoute(
   classification: ClassificationResult,
   conversationHistory: Message[],
   hairProfile: HairProfile | null,
+  userMessage = "",
 ): RouterDecision {
   try {
     const { intent, product_category, complexity, router_confidence, normalized_filters, needs_clarification } = classification
@@ -109,9 +122,13 @@ export function evaluateRoute(
       normalized_filters,
       product_category,
       hairProfile,
+      userMessage,
     )
     const leaveInDecision = product_category === "leave_in"
       ? buildLeaveInDecision(hairProfile)
+      : null
+    const oilDecision = product_category === "oil"
+      ? buildOilDecision(hairProfile, userMessage)
       : null
 
     // ── Rule 1: Image override ─────────────────────────────────────────
@@ -141,17 +158,19 @@ export function evaluateRoute(
       (product_category === "shampoo" ||
         product_category === "conditioner" ||
         product_category === "mask" ||
-        product_category === "leave_in")
+        product_category === "leave_in" ||
+        product_category === "oil")
     ) {
       retrieval_mode = "product_sql_plus_hybrid"
       overrides.push("category_product_mode")
     }
 
     // ── Rule 3b: Shampoo profile prerequisites are mandatory ─────────────
+    const shampooProfileEligible = isShampooProfileEligible(hairProfile)
     if (
       PRODUCT_INTENTS.includes(intent) &&
       product_category === "shampoo" &&
-      (!hairProfile?.thickness || !hairProfile?.scalp_type || !hairProfile?.scalp_condition)
+      !shampooProfileEligible
     ) {
       shouldClarify = true
       if (!clarification_reason) {
@@ -165,9 +184,7 @@ export function evaluateRoute(
     if (
       PRODUCT_INTENTS.includes(intent) &&
       product_category === "shampoo" &&
-      hairProfile?.thickness &&
-      hairProfile.scalp_type &&
-      hairProfile.scalp_condition
+      shampooProfileEligible
     ) {
       shouldClarify = false
       clarification_reason = undefined
@@ -213,6 +230,31 @@ export function evaluateRoute(
       clarification_reason = undefined
     }
 
+    // ── Rule 3e: Oil profile prerequisites are mandatory ────────────────────
+    if (
+      PRODUCT_INTENTS.includes(intent) &&
+      product_category === "oil" &&
+      oilDecision &&
+      !oilDecision.eligible
+    ) {
+      shouldClarify = true
+      if (!clarification_reason) {
+        clarification_reason = "missing_oil_profile"
+      } else {
+        clarification_reason += "+missing_oil_profile"
+      }
+      overrides.push("missing_oil_profile")
+    }
+
+    if (
+      PRODUCT_INTENTS.includes(intent) &&
+      product_category === "oil" &&
+      oilDecision?.eligible
+    ) {
+      shouldClarify = false
+      clarification_reason = undefined
+    }
+
     // ── Rule 4: Low confidence → clarification ─────────────────────────
     if (
       router_confidence < ROUTER_CONFIDENCE_THRESHOLD &&
@@ -242,7 +284,8 @@ export function evaluateRoute(
     const hasMandatoryProfileGap =
       overrides.includes("missing_shampoo_profile") ||
       overrides.includes("missing_conditioner_profile") ||
-      overrides.includes("missing_leave_in_profile")
+      overrides.includes("missing_leave_in_profile") ||
+      overrides.includes("missing_oil_profile")
     if (shouldClarify && !hasMandatoryProfileGap && priorClarificationRounds >= ROUTER_MAX_CLARIFICATION_ROUNDS) {
       shouldClarify = false
       clarification_reason = undefined

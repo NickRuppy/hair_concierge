@@ -64,26 +64,43 @@ export function deriveMaskDecision(profile: HairProfile | null): MaskDecision {
   }
 
   const activeSignals: MaskSignal[] = []
+  const signalWeights: Record<string, number> = {}
+  let totalWeight = 0
 
-  if ((profile.chemical_treatment ?? []).some((entry) => ACTIVE_CHEMICAL_TREATMENTS.has(entry))) {
+  const treatments = profile.chemical_treatment ?? []
+  if (treatments.some((entry) => ACTIVE_CHEMICAL_TREATMENTS.has(entry))) {
     activeSignals.push("chemical_treatment")
-  }
-
-  if (profile.heat_styling && ACTIVE_HEAT_STYLING.has(profile.heat_styling)) {
-    activeSignals.push("heat_styling")
+    const chemWeight = treatments.includes("bleached") ? 3 : 2
+    signalWeights.chemical_treatment = chemWeight
+    totalWeight += chemWeight
   }
 
   if (profile.protein_moisture_balance && ACTIVE_BALANCE_STATES.has(profile.protein_moisture_balance)) {
     activeSignals.push("protein_moisture_balance")
+    signalWeights.protein_moisture_balance = 2
+    totalWeight += 2
   }
 
-  const needStrength = activeSignals.length as MaskDecision["need_strength"]
+  if (profile.heat_styling && ACTIVE_HEAT_STYLING.has(profile.heat_styling)) {
+    activeSignals.push("heat_styling")
+    signalWeights.heat_styling = 1
+    totalWeight += 1
+  }
+
+  const needStrength: MaskDecision["need_strength"] =
+    totalWeight === 0 ? 0
+    : totalWeight <= 2 ? 1
+    : totalWeight <= 4 ? 2
+    : 3
 
   return {
-    needs_mask: needStrength >= 1,
+    needs_mask: totalWeight > 0,
     need_strength: needStrength,
     mask_type: deriveMaskType(profile.protein_moisture_balance),
     active_signals: activeSignals,
+    signal_weights: activeSignals.length > 0
+      ? signalWeights as Record<MaskSignal, number>
+      : undefined,
   }
 }
 
@@ -282,9 +299,9 @@ export function rerankMaskProducts(
     if (b._score_debug.concentrationPoints !== a._score_debug.concentrationPoints) {
       return b._score_debug.concentrationPoints - a._score_debug.concentrationPoints
     }
-    const aSort = typeof a.sort_order === "number" ? a.sort_order : Number.MAX_SAFE_INTEGER
-    const bSort = typeof b.sort_order === "number" ? b.sort_order : Number.MAX_SAFE_INTEGER
-    return aSort - bSort
+    const aPrice = typeof a.price_eur === "number" ? a.price_eur : Number.MAX_SAFE_INTEGER
+    const bPrice = typeof b.price_eur === "number" ? b.price_eur : Number.MAX_SAFE_INTEGER
+    return aPrice - bPrice
   })
 
   console.log(

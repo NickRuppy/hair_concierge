@@ -16,6 +16,8 @@ const CONCERN_LABELS: Record<string, string> = {
   performance: "Performance-Pflege",
   nix: "allgemeine Pflege (keine besonderen Probleme)",
   "natuerliches-oel": "natuerliche Oelpflege",
+  "styling-oel": "Styling mit Oel",
+  "trocken-oel": "Trockenoel-Pflege",
   stylingoel: "Styling mit Oel",
   trockenoel: "Trockenoel-Pflege",
 }

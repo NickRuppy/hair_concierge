@@ -2,12 +2,15 @@
 
 import type { Product, HairProfile } from "@/lib/types"
 import { getPersonalizationSentence } from "@/lib/product-utils"
+import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
 import {
   HAIR_TEXTURE_LABELS,
   HAIR_THICKNESS_LABELS,
   HAIR_DENSITY_LABELS,
   PROTEIN_MOISTURE_LABELS,
   CUTICLE_CONDITION_LABELS,
+  SCALP_CONDITION_LABELS,
+  SCALP_TYPE_LABELS,
   CHEMICAL_TREATMENT_LABELS,
 } from "@/lib/vocabulary"
 import {
@@ -20,6 +23,10 @@ import {
   LEAVE_IN_STYLING_CONTEXT_LABELS,
   LEAVE_IN_WEIGHT_LABELS,
 } from "@/lib/leave-in/constants"
+import {
+  OIL_SUBTYPE_LABELS,
+  OIL_USE_MODE_LABELS,
+} from "@/lib/oil/constants"
 import { ProductImage } from "./product-image"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -121,6 +128,40 @@ export function ProductDetailDrawer({
                     {product.recommendation_meta.usage_hint}
                   </p>
                 </div>
+              )}
+              {product.recommendation_meta.category === "shampoo" && (
+                <>
+                  {product.recommendation_meta.matched_bucket && (
+                    <div>
+                      <p className="text-xs font-medium text-muted-foreground">Shampoo-Bucket</p>
+                      <p className="text-sm text-foreground">
+                        {SHAMPOO_BUCKET_LABELS[product.recommendation_meta.matched_bucket]}
+                      </p>
+                    </div>
+                  )}
+
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground">Profil-Match</p>
+                    <div className="mt-1 flex flex-wrap gap-1.5">
+                      {product.recommendation_meta.matched_profile.thickness && (
+                        <Badge variant="outline" className="text-xs">
+                          {HAIR_THICKNESS_LABELS[product.recommendation_meta.matched_profile.thickness]}
+                        </Badge>
+                      )}
+                      {product.recommendation_meta.matched_profile.scalp_type && (
+                        <Badge variant="outline" className="text-xs">
+                          {SCALP_TYPE_LABELS[product.recommendation_meta.matched_profile.scalp_type]}
+                        </Badge>
+                      )}
+                      {product.recommendation_meta.matched_profile.scalp_condition &&
+                        product.recommendation_meta.matched_profile.scalp_condition !== "none" && (
+                          <Badge variant="outline" className="text-xs">
+                            {SCALP_CONDITION_LABELS[product.recommendation_meta.matched_profile.scalp_condition]}
+                          </Badge>
+                        )}
+                    </div>
+                  </div>
+                </>
               )}
               {product.recommendation_meta.category === "conditioner" && (
                 <>
@@ -257,6 +298,44 @@ export function ProductDetailDrawer({
                   </div>
                 </>
               )}
+              {product.recommendation_meta.category === "oil" && (
+                <>
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {product.recommendation_meta.matched_subtype && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Oel-Typ</p>
+                        <p className="text-sm text-foreground">
+                          {OIL_SUBTYPE_LABELS[product.recommendation_meta.matched_subtype]}
+                        </p>
+                      </div>
+                    )}
+                    {product.recommendation_meta.use_mode && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">Anwendung</p>
+                        <p className="text-sm text-foreground">
+                          {OIL_USE_MODE_LABELS[product.recommendation_meta.use_mode]}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground">Profil-Match</p>
+                    <div className="mt-1 flex flex-wrap gap-1.5">
+                      {product.recommendation_meta.matched_profile.thickness && (
+                        <Badge variant="outline" className="text-xs">
+                          {HAIR_THICKNESS_LABELS[product.recommendation_meta.matched_profile.thickness]}
+                        </Badge>
+                      )}
+                      {product.recommendation_meta.adjunct_scalp_support && (
+                        <Badge variant="outline" className="text-xs">
+                          Kopfhaut-supportiv
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -307,7 +386,7 @@ export function ProductDetailDrawer({
               <div className="flex flex-wrap gap-1.5">
                 {product.suitable_concerns.map((c) => (
                   <Badge key={c} variant="outline" className="text-xs">
-                    {c}
+                    {OIL_SUBTYPE_LABELS[c as keyof typeof OIL_SUBTYPE_LABELS] ?? c}
                   </Badge>
                 ))}
               </div>

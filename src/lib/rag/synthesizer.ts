@@ -11,6 +11,12 @@ import {
   LEAVE_IN_WEIGHT_LABELS,
 } from "@/lib/leave-in/constants"
 import {
+  OIL_NO_RECOMMENDATION_LABELS,
+  OIL_SUBTYPE_LABELS,
+  OIL_USE_MODE_LABELS,
+} from "@/lib/oil/constants"
+import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
+import {
   SOURCE_TYPE_LABELS,
   CONCERN_LABELS,
   GOAL_LABELS,
@@ -38,6 +44,7 @@ import type {
   ShampooDecision,
   ConditionerDecision,
   LeaveInDecision,
+  OilDecision,
 } from "@/lib/types"
 import type OpenAI from "openai"
 
@@ -54,6 +61,7 @@ export interface SynthesizeParams {
   shampooDecision?: ShampooDecision
   conditionerDecision?: ConditionerDecision
   leaveInDecision?: LeaveInDecision
+  oilDecision?: OilDecision
   /** Slot-aware clarification questions from the router (replaces consultationMode) */
   clarificationQuestions?: string[]
 }
@@ -221,6 +229,7 @@ const PRODUCT_SECTION_HEADERS: Record<string, string> = {
   conditioner: "Passende Conditioner aus unserer Datenbank",
   mask: "Passende Masken aus unserer Datenbank",
   leave_in: "Passende Leave-ins aus unserer Datenbank",
+  oil: "Passende Oele aus unserer Datenbank",
 }
 
 const MASK_STRENGTH_LABELS: Record<string, string> = {
@@ -292,8 +301,19 @@ function formatShampooDecision(shampooDecision?: ShampooDecision): string {
   if (shampooDecision.matched_profile.scalp_condition) {
     parts.push(`- Kopfhaut-Beschwerden: ${SCALP_CONDITION_LABELS[shampooDecision.matched_profile.scalp_condition] ?? shampooDecision.matched_profile.scalp_condition}`)
   }
+  if (shampooDecision.matched_bucket) {
+    parts.push(`- Shampoo-Bucket: ${SHAMPOO_BUCKET_LABELS[shampooDecision.matched_bucket] ?? shampooDecision.matched_bucket}`)
+  }
   if (shampooDecision.matched_concern_code) {
     parts.push(`- Wissensbasis-Fokus: ${shampooDecision.matched_concern_code}`)
+  }
+  if (shampooDecision.secondary_bucket) {
+    parts.push(`- Basis-Shampoo-Bucket (Rotation): ${SHAMPOO_BUCKET_LABELS[shampooDecision.secondary_bucket] ?? shampooDecision.secondary_bucket}`)
+  }
+  if (shampooDecision.matched_profile.scalp_condition === "dry_flakes") {
+    parts.push(
+      "- Hinweis: Trockene Schuppen ordnen wir dem trockenen Shampoo-Bucket zu. Wenn die Schueppchen nach 4-6 Wochen nicht besser werden, empfehlen wir einen Dermatologen aufzusuchen."
+    )
   }
 
   if (!shampooDecision.eligible) {
@@ -328,6 +348,11 @@ const LEAVE_IN_FIELD_LABELS: Record<string, string> = {
   density: "Haardichte",
   care_signal: "Pflegefokus",
   styling_signal: "Styling-Kontext",
+}
+
+const OIL_FIELD_LABELS: Record<string, string> = {
+  thickness: "Haardicke",
+  oil_purpose: "Oel-Zweck",
 }
 
 function formatConditionerDecision(conditionerDecision?: ConditionerDecision): string {
@@ -420,6 +445,42 @@ function formatLeaveInDecision(leaveInDecision?: LeaveInDecision): string {
   return parts.join("\n")
 }
 
+function formatOilDecision(oilDecision?: OilDecision): string {
+  if (!oilDecision) return ""
+
+  const parts = ["\n\nOel-Entscheidung:"]
+  parts.push(`- Profil ausreichend: ${oilDecision.eligible ? "ja" : "nein"}`)
+
+  if (oilDecision.matched_profile.thickness) {
+    parts.push(`- Haardicke: ${HAIR_THICKNESS_LABELS[oilDecision.matched_profile.thickness] ?? oilDecision.matched_profile.thickness}`)
+  }
+  if (oilDecision.matched_subtype) {
+    parts.push(`- Oel-Typ: ${OIL_SUBTYPE_LABELS[oilDecision.matched_subtype]}`)
+  }
+  if (oilDecision.use_mode) {
+    parts.push(`- Anwendung: ${OIL_USE_MODE_LABELS[oilDecision.use_mode]}`)
+  }
+  if (oilDecision.adjunct_scalp_support) {
+    parts.push("- Kopfhaut-Hinweis: Oel nur als unterstuetzende Zusatzpflege einordnen, nicht als primaeren Behandlungsweg.")
+  }
+
+  if (!oilDecision.eligible) {
+    parts.push(
+      `- Fehlende Felder: ${oilDecision.missing_profile_fields
+        .map((field) => OIL_FIELD_LABELS[field] ?? field)
+        .join(", ")}`
+    )
+  } else if (oilDecision.no_recommendation && oilDecision.no_recommendation_reason) {
+    parts.push(`- Kein Oel empfohlen: ${OIL_NO_RECOMMENDATION_LABELS[oilDecision.no_recommendation_reason]}`)
+  } else if (oilDecision.no_catalog_match) {
+    parts.push("- Katalogstatus: kein exakter Oel-Match fuer Haardicke und Oel-Typ vorhanden")
+  } else {
+    parts.push(`- Exakte Oel-Kandidaten: ${oilDecision.candidate_count}`)
+  }
+
+  return parts.join("\n")
+}
+
 /**
  * Formats matched products into a context block for the system prompt.
  */
@@ -430,6 +491,7 @@ function formatProducts(
   shampooDecision?: ShampooDecision,
   conditionerDecision?: ConditionerDecision,
   leaveInDecision?: LeaveInDecision,
+  oilDecision?: OilDecision,
 ): string {
   const maskDecisionBlock = productCategory === "mask"
     ? formatMaskDecision(maskDecision)
@@ -443,7 +505,15 @@ function formatProducts(
   const leaveInDecisionBlock = productCategory === "leave_in"
     ? formatLeaveInDecision(leaveInDecision)
     : ""
-  const categoryDecisionBlock = shampooDecisionBlock || conditionerDecisionBlock || leaveInDecisionBlock || maskDecisionBlock
+  const oilDecisionBlock = productCategory === "oil"
+    ? formatOilDecision(oilDecision)
+    : ""
+  const categoryDecisionBlock =
+    shampooDecisionBlock ||
+    conditionerDecisionBlock ||
+    leaveInDecisionBlock ||
+    oilDecisionBlock ||
+    maskDecisionBlock
 
   if (products.length === 0) {
     if (productCategory === "mask" && maskDecision && !maskDecision.needs_mask) {
@@ -455,7 +525,7 @@ function formatProducts(
     }
 
     if (productCategory === "shampoo" && shampooDecision?.no_catalog_match) {
-      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Shampoo in der Datenbank exakt zu Haardicke, Kopfhaut-Typ und Kopfhaut-Beschwerden passt. Weiche NICHT auf andere Kopfhaut-Buckets aus und nenne KEINE konkreten Shampoo-Produkte.`
+      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Shampoo in der Datenbank exakt zu Haardicke und dem abgeleiteten Shampoo-Bucket passt. Weiche NICHT auf andere Kopfhaut-Buckets aus und nenne KEINE konkreten Shampoo-Produkte.`
     }
 
     if (productCategory === "conditioner" && conditionerDecision && !conditionerDecision.eligible) {
@@ -474,6 +544,18 @@ function formatProducts(
       return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Leave-in in der Datenbank exakt zu Haardicke, Haardichte, Pflegefokus und Styling-Kontext passt. Weiche NICHT auf andere Leave-in-Buckets aus und nenne KEINE konkreten Leave-ins.`
     }
 
+    if (productCategory === "oil" && oilDecision && !oilDecision.eligible) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Frage nur nach den fehlenden Oel-Feldern. Klaere ausschliesslich Haardicke und Oel-Zweck. Nenne keine Produkte und behandle das NICHT als Katalog-No-Match.`
+    }
+
+    if (productCategory === "oil" && oilDecision?.no_recommendation && oilDecision.no_recommendation_reason) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Oel empfohlen wird. Begruende das nur mit dem Oel-Entscheidungsblock. Nenne KEINE konkreten Oele und improvisiere keinen Therapie-Oel-Ersatz.`
+    }
+
+    if (productCategory === "oil" && oilDecision?.no_catalog_match) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Oel in der Datenbank exakt zu Haardicke und Oel-Typ passt. Weiche NICHT auf andere Oel-Typen oder andere Haardicken aus und nenne KEINE konkreten Oele.`
+    }
+
     return `${categoryDecisionBlock}\n\nKeine passenden Produkte in der Datenbank gefunden. Nenne KEINE konkreten Produktnamen — sage dem Nutzer ehrlich, dass du gerade kein passendes Produkt parat hast, und bitte um genauere Angaben.`
   }
 
@@ -483,7 +565,7 @@ function formatProducts(
       if (p.brand) parts[0] += ` von ${p.brand}`
       if (p.short_description) parts.push(`  ${p.short_description}`)
       else if (p.description) parts.push(`  ${p.description}`)
-      if (p.price_eur) parts.push(`  Preis: ${p.price_eur.toFixed(2)} EUR`)
+      if (p.price_eur != null) parts.push(`  Preis: ${p.price_eur.toFixed(2)} EUR`)
       if ((p.tags ?? []).length > 0) parts.push(`  Tags: ${(p.tags ?? []).join(", ")}`)
       if (p.recommendation_meta) {
         const meta = p.recommendation_meta
@@ -497,6 +579,12 @@ function formatProducts(
         }
 
         if (meta.category === "shampoo") {
+          const shampooRole = (p as unknown as Record<string, unknown>).shampoo_role as string | undefined
+          if (shampooRole === "treatment") {
+            parts.push("  Rolle: Behandlungs-Shampoo (Anti-Schuppen)")
+          } else if (shampooRole === "daily") {
+            parts.push("  Rolle: Basis-Shampoo (Rotationstage)")
+          }
           parts.push(
             `  Match-Profil: ${[
               meta.matched_profile.thickness,
@@ -504,6 +592,9 @@ function formatProducts(
               meta.matched_profile.scalp_condition,
             ].filter(Boolean).join(" | ")}`
           )
+          if (meta.matched_bucket) {
+            parts.push(`  Shampoo-Bucket: ${SHAMPOO_BUCKET_LABELS[meta.matched_bucket] ?? meta.matched_bucket}`)
+          }
           if (meta.matched_concern_code) {
             parts.push(`  Kopfhaut-Fokus: ${meta.matched_concern_code}`)
           }
@@ -559,6 +650,25 @@ function formatProducts(
           }
         }
 
+        if (meta.category === "oil") {
+          parts.push(
+            `  Match-Profil: ${[
+              meta.matched_profile.thickness
+                ? HAIR_THICKNESS_LABELS[meta.matched_profile.thickness] ?? meta.matched_profile.thickness
+                : null,
+            ].filter(Boolean).join(" | ")}`
+          )
+          if (meta.matched_subtype) {
+            parts.push(`  Oel-Typ: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}`)
+          }
+          if (meta.use_mode) {
+            parts.push(`  Anwendung: ${OIL_USE_MODE_LABELS[meta.use_mode]}`)
+          }
+          if (meta.adjunct_scalp_support) {
+            parts.push("  Kopfhaut-Hinweis: nur als unterstuetzende Zusatzpflege")
+          }
+        }
+
         if (meta.top_reasons.length > 0) {
           parts.push(`  Warum passend: ${meta.top_reasons.join(" | ")}`)
         }
@@ -585,12 +695,15 @@ const CATEGORY_REASONING_PROMPTS: Record<string, string> = {
 
 ## Shampoo-Empfehlungen:
 Wenn du Shampoo-Empfehlungen gibst:
-1. Nutze fuer die Shampoo-Begruendung NUR diese Signale: Haardicke, Kopfhaut-Typ, Kopfhaut-Beschwerden und den Shampoo-Entscheidungsblock.
+1. Nutze fuer die Shampoo-Begruendung NUR diese Signale: Haardicke, Kopfhaut-Typ, Kopfhaut-Beschwerden, den abgeleiteten Shampoo-Bucket und den Shampoo-Entscheidungsblock.
 2. Wenn im Shampoo-Entscheidungsblock Profilfelder fehlen, frage EXAKT nur nach diesen fehlenden Shampoo-Feldern und nenne keine Produkte.
 3. Wenn der Shampoo-Entscheidungsblock sagt, dass es keinen exakten Katalog-Match gibt, sage das klar und nenne keine ausweichenden Shampoo-Produkte aus anderen Kopfhaut-Buckets.
-4. Erklaere ZUERST, welche Shampoo-Eigenschaften ideal fuer dieses Nutzerprofil sind. Empfehle DANN konkrete Produkte und erklaere WARUM jedes Produkt zu genau diesem Profil passt.
-5. Begruende Shampoo-Fit NICHT mit Haarstruktur, Zielen, chemischer Behandlung, Waschfrequenz oder anderen Randprofilen.
-6. Erwaehne Haarmuster wie glatt, wellig, lockig oder coily NICHT als Shampoo-Fit-Signal, auch wenn diese Infos im Nutzerprofil stehen.`,
+4. Wenn Kopfhaut-Beschwerden vorliegen, erklaere klar, dass dieser aktuelle Zustand den Shampoo-Bucket voruebergehend priorisiert. Wenn keine Beschwerden vorliegen, richte den Bucket am Kopfhaut-Typ aus.
+5. Erklaere ZUERST, welche Shampoo-Eigenschaften ideal fuer dieses Nutzerprofil sind. Empfehle DANN konkrete Produkte und erklaere WARUM jedes Produkt zu genau diesem Profil passt.
+6. Begruende Shampoo-Fit NICHT mit Haarstruktur, Zielen, chemischer Behandlung, Waschfrequenz oder anderen Randprofilen.
+7. Wenn die Kopfhaut-Beschwerden "trockene Schuppen" sind, sage kurz, dass wir hier den trockenen Shampoo-Bucket nutzen. Ergaenze: "Wenn die Schueppchen nach 4-6 Wochen nicht besser werden, empfehlen wir einen Dermatologen aufzusuchen."
+8. Erwaehne Haarmuster wie glatt, wellig, lockig oder coily NICHT als Shampoo-Fit-Signal, auch wenn diese Infos im Nutzerprofil stehen.
+9. Wenn ZWEI Shampoo-Buckets empfohlen werden (Behandlung + Basis), erklaere die Rotation: Anti-Schuppen-Shampoo 2-3x pro Woche, an den anderen Waschtagen das Basis-Shampoo. Betone, dass Seborrhoische Dermatitis chronisch ist und das Anti-Schuppen-Shampoo langfristig als Erhaltung (1-2x/Woche) noetig bleiben kann.`,
   conditioner: `
 
 ## Conditioner-Empfehlungen:
@@ -611,6 +724,18 @@ Wenn du Leave-in-Empfehlungen gibst:
 4. Erklaere zuerst, was das Leave-in leisten soll: Pflegefokus, Styling-Kontext und erwartetes Gewicht.
 5. Unterscheide IMMER sauber zwischen "Conditioner-Ersatz moeglich" und "nur zusaetzlicher Booster". Sage bei Booster-Profilen niemals, dass das Leave-in den Conditioner ersetzt.
 6. Empfehle dann konkrete Produkte und erklaere WARUM jedes Produkt genau zu Pflegefokus, Styling-Kontext und Conditioner-Rolle passt.`,
+  oil: `
+
+## Oel-Empfehlungen:
+Wenn du Oel-Empfehlungen gibst:
+1. Nutze fuer Oel-Begruendungen NUR den Oel-Entscheidungsblock und die Produkt-Metadaten.
+2. Wenn im Oel-Entscheidungsblock Profilfelder fehlen, frage NUR nach Haardicke und Oel-Zweck. Nenne keine Produkte.
+3. Wenn der Oel-Entscheidungsblock sagt, dass aktuell kein Oel empfohlen wird, sage das klar und nenne keine ausweichenden Oele oder DIY-Mischungen.
+4. Wenn der Oel-Entscheidungsblock sagt, dass es keinen exakten Katalog-Match gibt, sage das klar und nenne keine Oele aus anderen Oel-Typen oder anderen Haardicken.
+5. Erklaere zuerst, welche Art Oel hier gemeint ist: Hair Oiling vor dem Waschen, Styling-Finish oder leichtes Trocken-Oel.
+6. Begruende den Fit danach nur ueber Oel-Typ, Haardicke und die Anwendungslogik aus den Metadaten.
+7. Wenn Kopfhautthemen mitlaufen, ordne natuerliche Oele nur als unterstuetzende Zusatzpflege ein. Stelle sie NICHT als primaeren Behandlungsweg fuer Schuppen, gereizte Kopfhaut oder Haarwachstum dar.
+8. Wenn der Nutzer gezielt ein Therapie-Oel oder eine spezifische Oelmischung sucht und diese nicht im Katalog ist, sage das ehrlich statt einen Ersatz zu erfinden.`,
   mask: `
 
 ## Masken-Empfehlungen:
@@ -619,7 +744,8 @@ Wenn du Masken-Empfehlungen gibst:
 2. Betone Anwendung auf Laengen/Spitzen (nicht Kopfhaut).
 3. Erklaere klar die Reihenfolge: Shampoo -> Maske -> Conditioner.
 4. Nutze den "Masken-Entscheidung", "Staerke", "Typ" und "Anwendung"-Kontext aktiv.
-5. Wenn die Masken-Entscheidung sagt, dass aktuell keine Maske noetig ist, sage das klar und nenne keine Maskenprodukte.`,
+5. Wenn die Masken-Entscheidung sagt, dass aktuell keine Maske noetig ist, sage das klar und nenne keine Maskenprodukte.
+6. Sage niemals, dass Masken Schaeden "vorbeugen" oder "verhindern". Masken pflegen und erhalten den aktuellen Zustand — sie schuetzen nicht praeventiv vor zukuenftigen Schaeden.`,
 }
 
 /**
@@ -635,6 +761,7 @@ function buildSystemPrompt(
   shampooDecision?: ShampooDecision,
   conditionerDecision?: ConditionerDecision,
   leaveInDecision?: LeaveInDecision,
+  oilDecision?: OilDecision,
   clarificationQuestions?: string[],
 ): string {
   let prompt = SYSTEM_PROMPT
@@ -651,7 +778,7 @@ function buildSystemPrompt(
   prompt = prompt.replace("{{USER_PROFILE}}", userProfileContext)
 
   let ragContext = formatRagContext(ragChunks)
-  if (products || maskDecision || shampooDecision || conditionerDecision || leaveInDecision) {
+  if (products || maskDecision || shampooDecision || conditionerDecision || leaveInDecision || oilDecision) {
     ragContext += formatProducts(
       products ?? [],
       productCategory,
@@ -659,6 +786,7 @@ function buildSystemPrompt(
       shampooDecision,
       conditionerDecision,
       leaveInDecision,
+      oilDecision,
     )
   }
   prompt = prompt.replace("{{RAG_CONTEXT}}", ragContext)
@@ -696,6 +824,7 @@ export async function synthesizeResponse(
     shampooDecision,
     conditionerDecision,
     leaveInDecision,
+    oilDecision,
     clarificationQuestions,
   } = params
 
@@ -709,6 +838,7 @@ export async function synthesizeResponse(
     shampooDecision,
     conditionerDecision,
     leaveInDecision,
+    oilDecision,
     clarificationQuestions,
   )
 

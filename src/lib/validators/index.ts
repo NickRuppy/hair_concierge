@@ -32,6 +32,7 @@ import {
   MASK_BENEFITS,
   MASK_INGREDIENT_FLAGS,
 } from "@/lib/mask/constants"
+import { OIL_SUBTYPES, isOilCategory } from "@/lib/oil/constants"
 
 export const hairProfileFullSchema = z.object({
   hair_texture: z.enum(HAIR_TEXTURES).nullable(),
@@ -95,6 +96,21 @@ const conditionerSpecsSchema = z.object({
   repair_level: z.enum(CONDITIONER_REPAIR_LEVELS),
 })
 
+const nullableTextField = z.preprocess(
+  (value) => value === "" ? null : value,
+  z.string().nullable().optional()
+)
+
+const nullableUrlField = z.preprocess(
+  (value) => value === "" ? null : value,
+  z.string().url().nullable().optional()
+)
+
+const nullablePriceField = z.preprocess((value) => {
+  if (value === "" || value === null || value === undefined) return null
+  return value
+}, z.number().min(0).nullable().optional())
+
 export const chatMessageSchema = z.object({
   message: z.string().min(1).max(5000),
   conversation_id: z.string().uuid().optional(),
@@ -103,12 +119,12 @@ export const chatMessageSchema = z.object({
 
 export const productSchema = z.object({
   name: z.string().min(1, "Name ist erforderlich."),
-  brand: z.string().optional().default(""),
-  description: z.string().optional().default(""),
-  category: z.string().optional().default(""),
-  affiliate_link: z.string().url().optional().or(z.literal("")),
-  image_url: z.string().url().optional().or(z.literal("")),
-  price_eur: z.number().min(0).optional(),
+  brand: nullableTextField.default(null),
+  description: nullableTextField.default(null),
+  category: nullableTextField.default(null),
+  affiliate_link: nullableUrlField.default(null),
+  image_url: nullableUrlField.default(null),
+  price_eur: nullablePriceField.default(null),
   tags: z.array(z.string()).default([]),
   suitable_thicknesses: z.array(z.string()).default([]),
   suitable_concerns: z.array(z.string()).default([]),
@@ -118,6 +134,47 @@ export const productSchema = z.object({
   leave_in_specs: leaveInSpecsSchema.nullable().optional(),
   mask_specs: maskSpecsSchema.nullable().optional(),
 })
+  .superRefine((value, ctx) => {
+    if (!isOilCategory(value.category)) return
+
+    if (value.suitable_thicknesses.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["suitable_thicknesses"],
+        message: "Mindestens eine Haardicke ist fuer Oele erforderlich.",
+      })
+    }
+
+    for (const thickness of value.suitable_thicknesses) {
+      if (!HAIR_THICKNESSES.includes(thickness as (typeof HAIR_THICKNESSES)[number])) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["suitable_thicknesses"],
+          message: "Oele duerfen nur gueltige Haardicken verwenden.",
+        })
+        break
+      }
+    }
+
+    if (value.suitable_concerns.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["suitable_concerns"],
+        message: "Mindestens ein Oel-Typ ist fuer Oele erforderlich.",
+      })
+    }
+
+    for (const concern of value.suitable_concerns) {
+      if (!OIL_SUBTYPES.includes(concern as (typeof OIL_SUBTYPES)[number])) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["suitable_concerns"],
+          message: "Oele duerfen nur natuerliches-oel, styling-oel oder trocken-oel verwenden.",
+        })
+        break
+      }
+    }
+  })
 
 export const quoteSchema = z.object({
   quote_text: z.string().min(1, "Zitat ist erforderlich."),

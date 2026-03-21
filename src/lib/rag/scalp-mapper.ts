@@ -1,3 +1,6 @@
+import type { ScalpCondition, ScalpType } from "@/lib/vocabulary"
+import { deriveShampooBucket } from "@/lib/shampoo/constants"
+
 /**
  * Maps user scalp profile fields to product concern codes used in the
  * `suitable_concerns` column on products and the `concern` metadata
@@ -6,20 +9,8 @@
  * Priority: scalp_condition (specific problem) > scalp_type (general).
  */
 export function mapScalpToConcernCode(
-  scalpType?: string | null,
-  scalpCondition?: string | null
+  scalpType?: ScalpType | null,
+  scalpCondition?: ScalpCondition | null
 ): string | null {
-  // Scalp condition takes priority (specific problem > general type)
-  if (scalpCondition && scalpCondition !== "none") {
-    if (scalpCondition === "dandruff") return "schuppen"
-    if (scalpCondition === "dry_flakes") return "trocken"
-    if (scalpCondition === "irritated") return "irritationen"
-  }
-
-  // Scalp type (general)
-  if (scalpType === "oily") return "dehydriert-fettig"
-  if (scalpType === "dry") return "trocken"
-  if (scalpType === "balanced") return "normal"
-
-  return null
+  return deriveShampooBucket(scalpType, scalpCondition)
 }
