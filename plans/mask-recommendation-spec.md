@@ -1,3 +1,5 @@
+> **Status: PARTIAL** — Basic mask logic built. Richer product data model (dosing, concentration, deficit targets) pending.
+
 # Mask Recommendation Logic Spec (v1.1)
 
 ## 1. Purpose

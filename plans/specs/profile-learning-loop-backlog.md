@@ -1,5 +1,7 @@
 # Profile Learning Loop Backlog (Cross-Category)
 
+> **Status: BACKLOG** — Parked. Cross-category profile enrichment from chat behavior.
+
 Status: Backlog (parked)
 Owner: Product + AI Eng
 Scope: Cross-category profile enrichment from chat behavior and explicit user statements

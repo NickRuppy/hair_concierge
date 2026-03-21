@@ -1,3 +1,5 @@
+> **Status: PARTIAL** — Post-validation gap remains (hallucination detection). Structured outputs part is optional.
+
 # Workstream 3: Structured Outputs + Post-Validation
 
 > **Standalone implementation spec.** This file contains everything needed to implement WS3 independently.

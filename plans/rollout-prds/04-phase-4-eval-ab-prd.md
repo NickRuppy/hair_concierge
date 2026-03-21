@@ -1,3 +1,5 @@
+> **Status: BACKLOG** — Eval framework not built. Important infrastructure for quality measurement.
+
 # Phase 4 PRD: Evaluation, Experimentation, and Tuning
 
 ## Document Metadata

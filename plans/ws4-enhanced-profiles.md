@@ -1,3 +1,5 @@
+> **Status: BACKLOG** — Product feedback (likes/dislikes) not built. Valuable for personalization when ready.
+
 # Workstream 4: Enhanced Profile Injection
 
 > **Standalone implementation spec.** This file contains everything needed to implement WS4 independently.
