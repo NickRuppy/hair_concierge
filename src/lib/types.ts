@@ -32,6 +32,7 @@ import type {
   ConditionerWeight,
   ConditionerRepairLevel,
 } from "@/lib/conditioner/constants"
+import type { ShampooBucket, ShampooBucketPair } from "@/lib/shampoo/constants"
 
 export type {
   HairTexture,
@@ -51,6 +52,8 @@ export type {
   PostWashAction,
   RoutinePreference,
   RoutineProduct,
+  ShampooBucket,
+  ShampooBucketPair,
 }
 
 export {
@@ -135,6 +138,7 @@ export interface Product {
   tags: string[]
   suitable_thicknesses: string[]
   suitable_concerns: string[]
+  shampoo_bucket_pairs?: ShampooBucketPair[] | null
   is_active: boolean
   sort_order: number
   conditioner_specs?: ProductConditionerSpecs | null
@@ -164,6 +168,7 @@ export type ShampooProfileField = "thickness" | "scalp_type" | "scalp_condition"
 export interface ShampooRecommendationMetadata extends BaseRecommendationMetadata {
   category: "shampoo"
   matched_profile: ShampooMatchedProfile
+  matched_bucket: ShampooBucket | null
   matched_concern_code: string | null
 }
 
@@ -231,6 +236,9 @@ export interface ShampooDecision {
   eligible: boolean
   missing_profile_fields: ShampooProfileField[]
   matched_profile: ShampooMatchedProfile
+  matched_bucket: ShampooBucket | null
+  /** Secondary bucket for dandruff rotation (scalp-type-based gentle shampoo) */
+  secondary_bucket: ShampooBucket | null
   matched_concern_code: string | null
   retrieval_filter: {
     thickness: HairThickness | null
@@ -274,6 +282,7 @@ export interface MaskDecision {
   need_strength: 0 | MaskNeedStrength
   mask_type: MaskType | null
   active_signals: MaskSignal[]
+  signal_weights?: Record<MaskSignal, number>
 }
 
 export interface MessageRagContext {

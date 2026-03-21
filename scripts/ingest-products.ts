@@ -30,6 +30,14 @@ import {
   isMaskCategory,
   type ProductMaskSpecs,
 } from "../src/lib/mask/constants"
+import {
+  isShampooCategory,
+  type ShampooBucketPair,
+} from "../src/lib/shampoo/constants"
+import {
+  type ShampooBucketPairInput,
+  normalizeShampooBucketPairs,
+} from "../src/lib/shampoo/eligibility"
 
 // Load .env.local for standalone script execution
 const envPath = path.join(process.cwd(), ".env.local")
@@ -84,7 +92,9 @@ interface ProductInput {
   price_eur?: number
   tags?: string[]
   suitable_thicknesses?: string[]
+  suitable_hair_textures?: string[]
   suitable_concerns?: string[]
+  shampoo_bucket_pairs?: ShampooBucketPairInput[]
   is_active?: boolean
   sort_order?: number
   leave_in_specs?: Omit<ProductLeaveInSpecs, "product_id" | "created_at" | "updated_at">
@@ -102,6 +112,69 @@ const MASK_WEIGHT_SET = new Set<string>(MASK_WEIGHTS)
 const MASK_CONCENTRATION_SET = new Set<string>(MASK_CONCENTRATIONS)
 const MASK_BENEFIT_SET = new Set<string>(MASK_BENEFITS)
 const MASK_INGREDIENT_SET = new Set<string>(MASK_INGREDIENT_FLAGS)
+
+function normalizeProductInput(product: ProductInput, fallbackSortOrder: number): ProductInput {
+  const suitable_thicknesses = product.suitable_thicknesses?.length
+    ? product.suitable_thicknesses
+    : product.suitable_hair_textures?.map((value) => value.trim()).filter(Boolean) ?? []
+
+  return {
+    ...product,
+    tags: product.tags?.map((value) => value.trim()).filter(Boolean) ?? [],
+    suitable_thicknesses,
+    suitable_concerns: product.suitable_concerns?.map((value) => value.trim()).filter(Boolean) ?? [],
+    shampoo_bucket_pairs: product.shampoo_bucket_pairs?.map((pair) => ({
+      thickness: pair.thickness.trim(),
+      shampoo_bucket: pair.shampoo_bucket?.trim(),
+      concern: pair.concern?.trim(),
+    })),
+    sort_order: product.sort_order ?? fallbackSortOrder,
+  }
+}
+
+async function replaceCanonicalShampooPairs(
+  productId: string,
+  product: ProductInput,
+): Promise<void> {
+  const canonicalPairs = normalizeShampooBucketPairs(product)
+
+  const { error: deleteError } = await supabase
+    .from("product_shampoo_specs")
+    .delete()
+    .eq("product_id", productId)
+
+  if (deleteError) {
+    throw new Error(`Failed to clear shampoo pairs: ${deleteError.message}`)
+  }
+
+  if (canonicalPairs.length === 0) {
+    throw new Error("Shampoo braucht mindestens ein kanonisches Eligibility-Paar.")
+  }
+
+  const rows = canonicalPairs.map((pair: ShampooBucketPair) => ({
+    product_id: productId,
+    thickness: pair.thickness,
+    shampoo_bucket: pair.shampoo_bucket,
+  }))
+
+  const { error: insertError } = await supabase
+    .from("product_shampoo_specs")
+    .insert(rows)
+
+  if (insertError) {
+    throw new Error(`Failed to write canonical shampoo pairs: ${insertError.message}`)
+  }
+}
+
+function parseProductNamesFilter(rawValue?: string): Set<string> | null {
+  if (!rawValue?.trim()) return null
+  const names = rawValue
+    .split("|")
+    .map((value) => value.trim())
+    .filter(Boolean)
+
+  return names.length > 0 ? new Set(names) : null
+}
 
 function parseCSV(content: string): ProductInput[] {
   const lines = content.split("\n").filter((l) => l.trim())
@@ -424,6 +497,19 @@ async function main() {
     process.exit(1)
   }
 
+  products = products.map((product, index) => normalizeProductInput(product, index))
+
+  const requestedNames = parseProductNamesFilter(process.env.PRODUCT_NAMES)
+  if (requestedNames) {
+    products = products.filter((product) => requestedNames.has(product.name))
+    console.log(`Filtered to ${products.length} products via PRODUCT_NAMES`)
+  }
+
+  if (products.length === 0) {
+    console.error("Error: No products left after filtering.")
+    process.exit(1)
+  }
+
   console.log(`Found ${products.length} products`)
 
   for (let i = 0; i < products.length; i++) {
@@ -454,7 +540,7 @@ async function main() {
         sort_order: product.sort_order ?? i,
         embedding: JSON.stringify(embedding),
       },
-      { onConflict: "name" }
+      { onConflict: "name,category" }
     )
       .select("id, category")
       .single()
@@ -462,6 +548,16 @@ async function main() {
     if (error) {
       console.error(`  Error upserting ${product.name}:`, error.message)
       continue
+    }
+
+    if (upsertedProduct && isShampooCategory(upsertedProduct.category || product.category)) {
+      try {
+        await replaceCanonicalShampooPairs(upsertedProduct.id, product)
+      } catch (shampooError) {
+        const message = shampooError instanceof Error ? shampooError.message : String(shampooError)
+        console.error(`  Error syncing shampoo pairs for ${product.name}:`, message)
+        throw shampooError
+      }
     }
 
     if (upsertedProduct && isLeaveInCategory(upsertedProduct.category || product.category)) {

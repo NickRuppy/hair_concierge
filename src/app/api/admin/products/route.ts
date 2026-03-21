@@ -7,6 +7,13 @@ import { NextResponse } from "next/server"
 import { isConditionerCategory, type ProductConditionerSpecs } from "@/lib/conditioner/constants"
 import { isLeaveInCategory, type ProductLeaveInSpecs } from "@/lib/leave-in/constants"
 import { isMaskCategory, type ProductMaskSpecs } from "@/lib/mask/constants"
+import {
+  SHAMPOO_BUCKETS,
+  SHAMPOO_SOURCE_MANAGED_MESSAGE,
+  isShampooCategory,
+  type ShampooBucketPair,
+} from "@/lib/shampoo/constants"
+import { HAIR_THICKNESSES } from "@/lib/vocabulary"
 
 export async function GET() {
   const supabase = await createClient()
@@ -44,6 +51,9 @@ export async function GET() {
   }
 
   const rows = products || []
+  const shampooIds = rows
+    .filter((product) => isShampooCategory(product.category))
+    .map((product) => product.id)
   const conditionerIds = rows
     .filter((product) => isConditionerCategory(product.category))
     .map((product) => product.id)
@@ -55,6 +65,41 @@ export async function GET() {
     .map((product) => product.id)
 
   let conditionerSpecsByProductId = new Map<string, ProductConditionerSpecs>()
+  let shampooPairsByProductId = new Map<string, ShampooBucketPair[]>()
+  if (shampooIds.length > 0) {
+    const adminClient = createAdminClient()
+    const { data: shampooPairs, error: shampooPairsError } = await adminClient
+      .from("product_shampoo_specs")
+      .select("product_id, thickness, shampoo_bucket")
+      .in("product_id", shampooIds)
+
+    if (shampooPairsError) {
+      return NextResponse.json(
+        { error: fehler("Laden", "der Shampoo-Eligibility") },
+        { status: 500 }
+      )
+    }
+
+    shampooPairsByProductId = (shampooPairs || []).reduce((map, row) => {
+      const currentPairs = map.get(row.product_id) ?? []
+      currentPairs.push({
+        thickness: row.thickness as ShampooBucketPair["thickness"],
+        shampoo_bucket: row.shampoo_bucket as ShampooBucketPair["shampoo_bucket"],
+      })
+      currentPairs.sort((left, right) => {
+        const thicknessDiff =
+          HAIR_THICKNESSES.indexOf(left.thickness) - HAIR_THICKNESSES.indexOf(right.thickness)
+        if (thicknessDiff !== 0) return thicknessDiff
+
+        return (
+          SHAMPOO_BUCKETS.indexOf(left.shampoo_bucket) - SHAMPOO_BUCKETS.indexOf(right.shampoo_bucket)
+        )
+      })
+      map.set(row.product_id, currentPairs)
+      return map
+    }, new Map<string, ShampooBucketPair[]>())
+  }
+
   if (conditionerIds.length > 0) {
     const { data: specs } = await supabase
       .from("product_conditioner_rerank_specs")
@@ -92,6 +137,7 @@ export async function GET() {
 
   const hydrated = rows.map((product) => ({
     ...product,
+    shampoo_bucket_pairs: shampooPairsByProductId.get(product.id) ?? null,
     conditioner_specs: conditionerSpecsByProductId.get(product.id) ?? null,
     leave_in_specs: specsByProductId.get(product.id) ?? null,
     mask_specs: maskSpecsByProductId.get(product.id) ?? null,
@@ -130,6 +176,13 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: ERR_INVALID_DATA, details: parsed.error.flatten() },
       { status: 400 }
+    )
+  }
+
+  if (isShampooCategory(parsed.data.category)) {
+    return NextResponse.json(
+      { error: SHAMPOO_SOURCE_MANAGED_MESSAGE },
+      { status: 409 }
     )
   }
 

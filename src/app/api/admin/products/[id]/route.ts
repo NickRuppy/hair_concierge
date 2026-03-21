@@ -7,6 +7,7 @@ import { NextResponse } from "next/server"
 import { isConditionerCategory } from "@/lib/conditioner/constants"
 import { isLeaveInCategory } from "@/lib/leave-in/constants"
 import { isMaskCategory } from "@/lib/mask/constants"
+import { SHAMPOO_SOURCE_MANAGED_MESSAGE, isShampooCategory } from "@/lib/shampoo/constants"
 
 export async function PUT(
   request: Request,
@@ -46,14 +47,27 @@ export async function PUT(
     )
   }
 
-  const { conditioner_specs, leave_in_specs, mask_specs, ...productPayload } = parsed.data
-
-  // Fetch existing product to check if embedding-relevant fields changed
-  const { data: existing } = await supabase
+  const { data: existing, error: existingError } = await supabase
     .from("products")
     .select("name, brand, description, tags, category")
     .eq("id", id)
     .single()
+
+  if (existingError || !existing) {
+    return NextResponse.json(
+      { error: fehler("Laden", "des Produkts") },
+      { status: 404 }
+    )
+  }
+
+  if (isShampooCategory(existing.category) || isShampooCategory(parsed.data.category)) {
+    return NextResponse.json(
+      { error: SHAMPOO_SOURCE_MANAGED_MESSAGE },
+      { status: 409 }
+    )
+  }
+
+  const { conditioner_specs, leave_in_specs, mask_specs, ...productPayload } = parsed.data
 
   const { data: product, error } = await supabase
     .from("products")
@@ -258,6 +272,26 @@ export async function DELETE(
     return NextResponse.json(
       { error: ERR_FORBIDDEN },
       { status: 403 }
+    )
+  }
+
+  const { data: existing, error: existingError } = await supabase
+    .from("products")
+    .select("category")
+    .eq("id", id)
+    .single()
+
+  if (existingError || !existing) {
+    return NextResponse.json(
+      { error: fehler("Laden", "des Produkts") },
+      { status: 404 }
+    )
+  }
+
+  if (isShampooCategory(existing.category)) {
+    return NextResponse.json(
+      { error: SHAMPOO_SOURCE_MANAGED_MESSAGE },
+      { status: 409 }
     )
   }
 
