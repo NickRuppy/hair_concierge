@@ -71,7 +71,7 @@ const POOL_PROMPTS: PoolPrompt[] = [
 
   // Goal-based
   { text: "Wie bekomme ich mehr Volumen in meine Haare?", goals: ["volume"] },
-  { text: "Was kann ich tun, damit mein Haar schneller wächst?", goals: ["hair_growth"] },
+  { text: "Was kann ich tun, damit mein Haar schneller wächst?" },
   { text: "Wie definiere ich meine Locken am besten?", goals: ["curl_definition"] },
   { text: "Welche Produkte sorgen für mehr Glanz?", goals: ["shine"] },
   { text: "Wie bringe ich mehr Feuchtigkeit in mein Haar?", goals: ["moisture"] },
@@ -79,6 +79,7 @@ const POOL_PROMPTS: PoolPrompt[] = [
   { text: "Wie bekomme ich meine Haare gesünder?", goals: ["healthier_hair"] },
   { text: "Wie reduziere ich Frizz dauerhaft?", goals: ["less_frizz"] },
   { text: "Wie schütze ich meine Farbe am besten?", goals: ["color_protection"] },
+  { text: "Was hilft wirklich gegen Spliss und abgebrochene Spitzen?", goals: ["less_split_ends"] },
 
   // Hair-texture-based
   { text: "Wie style ich Locken ohne Hitze?", hairTextures: ["curly", "coily"] },

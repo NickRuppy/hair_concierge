@@ -79,7 +79,7 @@ export function OnboardingMechanicalStress({
       return
     }
 
-    router.push("/onboarding/goals")
+    router.push("/onboarding/routine")
   }
 
   return (
@@ -141,7 +141,7 @@ export function OnboardingMechanicalStress({
       >
         <button
           type="button"
-          onClick={() => router.push("/onboarding/goals")}
+          onClick={() => router.push("/onboarding/routine")}
           disabled={saving}
           className="text-sm text-white/50 hover:text-white/80 transition-colors"
         >
@@ -153,7 +153,7 @@ export function OnboardingMechanicalStress({
           disabled={saving}
           className="quiz-btn-primary disabled:opacity-50"
         >
-          {saving ? "SPEICHERT..." : "WEITER ZU DEINEN ZIELEN"}
+          {saving ? "SPEICHERT..." : "WEITER ZU DEINER ROUTINE"}
         </button>
       </div>
     </div>

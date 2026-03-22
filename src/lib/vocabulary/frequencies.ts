@@ -1,7 +1,6 @@
 export const WASH_FREQUENCIES = [
   "daily",
-  "every_2_days",
-  "twice_weekly",
+  "every_2_3_days",
   "once_weekly",
   "rarely",
 ] as const
@@ -9,8 +8,7 @@ export type WashFrequency = (typeof WASH_FREQUENCIES)[number]
 
 export const WASH_FREQUENCY_LABELS = {
   daily: "Täglich",
-  every_2_days: "Alle 2 Tage",
-  twice_weekly: "2x pro Woche",
+  every_2_3_days: "Alle 2-3 Tage",
   once_weekly: "1x pro Woche",
   rarely: "Seltener",
 } as const satisfies Record<WashFrequency, string>
