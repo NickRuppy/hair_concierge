@@ -169,7 +169,7 @@ function DensitySelector({
           disabled={!density || saving}
           className="quiz-btn-primary disabled:opacity-50"
         >
-          {saving ? "SPEICHERT..." : "WEITER ZU DEINEN ZIELEN"}
+          {saving ? "SPEICHERT..." : "WEITER"}
         </button>
       </div>
     </div>

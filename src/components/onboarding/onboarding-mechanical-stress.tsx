@@ -12,6 +12,7 @@ import {
 interface OnboardingMechanicalStressProps {
   existingFactors: MechanicalStressFactor[]
   userId: string
+  hasProfile: boolean
 }
 
 const FACTOR_DESCRIPTIONS: Record<MechanicalStressFactor, string> = {
@@ -26,9 +27,26 @@ const FACTOR_DESCRIPTIONS: Record<MechanicalStressFactor, string> = {
 export function OnboardingMechanicalStress({
   existingFactors,
   userId,
+  hasProfile,
 }: OnboardingMechanicalStressProps) {
   const router = useRouter()
   const { toast } = useToast()
+
+  if (!hasProfile) {
+    return (
+      <div className="animate-fade-in-up py-12 text-center">
+        <p className="mb-4 text-lg text-white/70">
+          Bitte absolviere zuerst das Haar-Quiz, damit wir dein Profil anlegen koennen.
+        </p>
+        <button
+          onClick={() => router.push("/quiz")}
+          className="quiz-btn-primary"
+        >
+          ZUM QUIZ
+        </button>
+      </div>
+    )
+  }
   const [selected, setSelected] = useState<Set<MechanicalStressFactor>>(
     new Set(existingFactors),
   )
@@ -123,7 +141,7 @@ export function OnboardingMechanicalStress({
       >
         <button
           type="button"
-          onClick={handleSave}
+          onClick={() => router.push("/onboarding/goals")}
           disabled={saving}
           className="text-sm text-white/50 hover:text-white/80 transition-colors"
         >

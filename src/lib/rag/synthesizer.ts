@@ -252,6 +252,7 @@ const MASK_SIGNAL_LABELS: Record<string, string> = {
   chemical_treatment: "chemische Behandlung",
   heat_styling: "regelmaessiges Hitzestyling",
   protein_moisture_balance: "Protein-/Feuchtigkeits-Balance",
+  mechanical_stress: "mechanische Belastung",
 }
 
 function formatMaskDecision(maskDecision?: MaskDecision): string {

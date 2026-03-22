@@ -3,14 +3,31 @@ import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { OnboardingMechanicalStress } from "@/components/onboarding/onboarding-mechanical-stress"
 import type { MechanicalStressFactor } from "@/lib/vocabulary"
+import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 
-export default async function OnboardingMechanicalStressPage() {
+interface OnboardingMechanicalStressPageProps {
+  searchParams: Promise<{ lead?: string | string[] }>
+}
+
+export default async function OnboardingMechanicalStressPage({
+  searchParams,
+}: OnboardingMechanicalStressPageProps) {
   const supabase = await createClient()
   const admin = createAdminClient()
+  const resolvedSearchParams = await searchParams
+  const leadId = Array.isArray(resolvedSearchParams.lead)
+    ? resolvedSearchParams.lead[0]
+    : resolvedSearchParams.lead
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     redirect("/auth?next=/onboarding/mechanical-stress")
+  }
+
+  try {
+    await linkQuizToProfile(user.id, user.email, leadId)
+  } catch (error) {
+    console.error("Onboarding lead link failed:", error)
   }
 
   const { data: profile } = await admin
@@ -25,6 +42,7 @@ export default async function OnboardingMechanicalStressPage() {
     <OnboardingMechanicalStress
       existingFactors={existing}
       userId={user.id}
+      hasProfile={!!profile}
     />
   )
 }
