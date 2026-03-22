@@ -17,6 +17,10 @@ When entering plan mode for any task:
 
 For trivial tasks (single file, <20 lines changed), skip the options table and plan directly.
 
+## Branch Gate
+
+Before invoking `executing-plans` or `subagent-driven-development`, always invoke the `branch-gate` skill first. This is mandatory — no exceptions.
+
 ## Project Conventions
 
 - All UI text is in German
