@@ -31,26 +31,26 @@ export const CONCERN_OPTIONS = CONCERNS.map((value) => ({
 export const GOALS = [
   "volume",
   "healthier_hair",
-  "hair_growth",
   "less_frizz",
   "color_protection",
   "moisture",
   "healthy_scalp",
   "shine",
   "curl_definition",
+  "less_split_ends",
 ] as const
 export type Goal = (typeof GOALS)[number]
 
 export const GOAL_LABELS: Record<Goal, string> = {
   volume: "Mehr Volumen",
   healthier_hair: "Gesuenderes Haar",
-  hair_growth: "Haarwachstum",
   less_frizz: "Weniger Frizz",
   color_protection: "Farbschutz",
   moisture: "Mehr Feuchtigkeit",
   healthy_scalp: "Gesunde Kopfhaut",
   shine: "Mehr Glanz",
   curl_definition: "Locken-Definition",
+  less_split_ends: "Weniger Spliss",
 }
 
 export const GOAL_OPTIONS = GOALS.map((value) => ({

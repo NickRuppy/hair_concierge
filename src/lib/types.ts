@@ -18,6 +18,7 @@ import type {
   PostWashAction,
   RoutinePreference,
   RoutineProduct,
+  MechanicalStressFactor,
 } from "@/lib/vocabulary"
 import type {
   ProductLeaveInSpecs,
@@ -122,6 +123,7 @@ export interface HairProfile {
   post_wash_actions: PostWashAction[]
   routine_preference: RoutinePreference | null
   current_routine_products: RoutineProduct[]
+  mechanical_stress_factors: MechanicalStressFactor[]
   additional_notes: string | null
   conversation_memory: string | null
   created_at: string
@@ -236,7 +238,7 @@ export interface OilRecommendationMetadata extends BaseRecommendationMetadata {
 
 export type MaskType = "protein" | "moisture" | "performance"
 export type MaskNeedStrength = 1 | 2 | 3
-export type MaskSignal = "chemical_treatment" | "heat_styling" | "protein_moisture_balance"
+export type MaskSignal = "chemical_treatment" | "heat_styling" | "protein_moisture_balance" | "mechanical_stress"
 
 export interface MaskRecommendationMetadata extends BaseRecommendationMetadata {
   category: "mask"

@@ -5,41 +5,32 @@ import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { useToast } from "@/providers/toast-provider"
 import {
-  HAIR_DENSITY_LABELS,
-  type HairDensity,
-  type HairTexture,
+  MECHANICAL_STRESS_FACTOR_OPTIONS,
+  type MechanicalStressFactor,
 } from "@/lib/vocabulary"
-import { HAIR_TEXTURE_ADJECTIVE } from "@/lib/vocabulary/hair-types"
 
-interface OnboardingDensityProps {
-  hairTexture: HairTexture | null
-  existingDensity: HairDensity | null
+interface OnboardingMechanicalStressProps {
+  existingFactors: MechanicalStressFactor[]
   userId: string
   hasProfile: boolean
 }
 
-const DENSITY_COPY: Record<HairDensity, { title: string; body: string }> = {
-  low: {
-    title: "Eher wenig Haare",
-    body: "Du hast weniger Haare pro Flaeche. Das ist etwas anderes als feine oder dicke einzelne Haare.",
-  },
-  medium: {
-    title: "Mittlere Dichte",
-    body: "Du liegst in der Mitte: weder besonders wenig noch besonders viele Haare pro Flaeche.",
-  },
-  high: {
-    title: "Viele Haare",
-    body: "Du hast viele Haare pro Flaeche. Produkte duerfen oft etwas mehr Kontrolle und Reichhaltigkeit mitbringen.",
-  },
+const FACTOR_DESCRIPTIONS: Record<MechanicalStressFactor, string> = {
+  tight_hairstyles:
+    "Frisuren mit Zug am Ansatz — zum Beispiel straffe Zoepfe, enge Dutts, Braids oder Extensions.",
+  rough_brushing:
+    "Haeufiges Buersten oder grobes Durchkaemmen, besonders bei knotigen oder nassen Haaren.",
+  towel_rubbing:
+    "Haare nach dem Waschen mit dem Handtuch trockenrubbeln statt sanft auszudruecken.",
 }
 
-export function OnboardingDensity({
-  hairTexture,
-  existingDensity,
+export function OnboardingMechanicalStress({
+  existingFactors,
   userId,
   hasProfile,
-}: OnboardingDensityProps) {
+}: OnboardingMechanicalStressProps) {
   const router = useRouter()
+  const { toast } = useToast()
 
   if (!hasProfile) {
     return (
@@ -56,39 +47,28 @@ export function OnboardingDensity({
       </div>
     )
   }
-
-  return (
-    <DensitySelector
-      hairTexture={hairTexture}
-      existingDensity={existingDensity}
-      userId={userId}
-    />
+  const [selected, setSelected] = useState<Set<MechanicalStressFactor>>(
+    new Set(existingFactors),
   )
-}
-
-function DensitySelector({
-  hairTexture,
-  existingDensity,
-  userId,
-}: {
-  hairTexture: HairTexture | null
-  existingDensity: HairDensity | null
-  userId: string
-}) {
-  const router = useRouter()
-  const { toast } = useToast()
-  const [density, setDensity] = useState<HairDensity | "">(existingDensity ?? "")
   const [saving, setSaving] = useState(false)
 
+  function toggle(factor: MechanicalStressFactor) {
+    setSelected((prev) => {
+      const next = new Set(prev)
+      if (next.has(factor)) next.delete(factor)
+      else next.add(factor)
+      return next
+    })
+  }
+
   async function handleSave() {
-    if (!density) return
     setSaving(true)
 
     const supabase = createClient()
     const { error } = await supabase
       .from("hair_profiles")
       .update({
-        density,
+        mechanical_stress_factors: [...selected],
         updated_at: new Date().toISOString(),
       })
       .eq("user_id", userId)
@@ -99,10 +79,8 @@ function DensitySelector({
       return
     }
 
-    router.push("/onboarding/mechanical-stress")
+    router.push("/onboarding/routine")
   }
-
-  const adjective = hairTexture ? HAIR_TEXTURE_ADJECTIVE[hairTexture] : null
 
   return (
     <div>
@@ -116,32 +94,31 @@ function DensitySelector({
         className="animate-fade-in-up mb-2 font-header text-3xl leading-tight text-white"
         style={{ animationDelay: "50ms" }}
       >
-        Wie dicht ist dein {adjective ? `${adjective} Haar` : "Haar"}?
+        Wie beanspruchst du dein Haar mechanisch?
       </h1>
 
       <p
         className="animate-fade-in-up mb-2 text-sm text-white/70"
         style={{ animationDelay: "100ms" }}
       >
-        Gemeint ist die Menge an Haaren pro Flaeche, nicht die Dicke eines einzelnen Haares.
+        Optional. Mehrfachauswahl moeglich.
       </p>
 
       <p
         className="animate-fade-in-up mb-8 text-sm text-white/50"
         style={{ animationDelay: "140ms" }}
       >
-        TomBot nutzt das spaeter, um Conditioner und Stylingprodukte leichter oder reichhaltiger einzuordnen.
+        Mechanische Belastung beeinflusst, wie reichhaltig deine Pflege sein sollte.
       </p>
 
       <div className="space-y-3">
-        {(["low", "medium", "high"] as const).map((value, i) => {
-          const active = density === value
-          const copy = DENSITY_COPY[value]
+        {MECHANICAL_STRESS_FACTOR_OPTIONS.map(({ value, label }, i) => {
+          const active = selected.has(value)
           return (
             <button
               key={value}
               type="button"
-              onClick={() => setDensity(value)}
+              onClick={() => toggle(value)}
               className={`animate-fade-in-up w-full rounded-2xl border px-5 py-5 text-left transition-all duration-200 ${
                 active
                   ? "border-[#F5C518] bg-[#F5C518]/15 text-white shadow-[0_0_0_1px_rgba(245,197,24,0.18)]"
@@ -149,27 +126,34 @@ function DensitySelector({
               }`}
               style={{ animationDelay: `${180 + i * 60}ms` }}
             >
-              <div className="mb-2 text-xs font-semibold tracking-[0.16em] text-[#F5C518]">
-                {HAIR_DENSITY_LABELS[value].toUpperCase()}
+              <div className="mb-1 font-header text-xl text-white">{label}</div>
+              <div className="text-sm leading-relaxed text-white/70">
+                {FACTOR_DESCRIPTIONS[value]}
               </div>
-              <div className="mb-1 font-header text-xl text-white">{copy.title}</div>
-              <div className="text-sm leading-relaxed text-white/70">{copy.body}</div>
             </button>
           )
         })}
       </div>
 
       <div
-        className="animate-fade-in-up mt-8 flex justify-end"
+        className="animate-fade-in-up mt-8 flex items-center justify-between"
         style={{ animationDelay: "360ms" }}
       >
         <button
           type="button"
+          onClick={() => router.push("/onboarding/routine")}
+          disabled={saving}
+          className="text-sm text-white/50 hover:text-white/80 transition-colors"
+        >
+          UEBERSPRINGEN
+        </button>
+        <button
+          type="button"
           onClick={handleSave}
-          disabled={!density || saving}
+          disabled={saving}
           className="quiz-btn-primary disabled:opacity-50"
         >
-          {saving ? "SPEICHERT..." : "WEITER"}
+          {saving ? "SPEICHERT..." : "WEITER ZU DEINER ROUTINE"}
         </button>
       </div>
     </div>

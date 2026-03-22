@@ -28,6 +28,18 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       description: "Sichtbar glaenzenderes, ruhigeres Finish",
       emoji: "🌟",
     },
+    {
+      key: "less_split_ends",
+      label: "Weniger Spliss",
+      description: "Gesunde Spitzen, weniger Haarbruch",
+      emoji: "✂️",
+    },
+    {
+      key: "volume",
+      label: "Mehr Volumen",
+      description: "Mehr Fuelle und Bewegung im Haar",
+      emoji: "💨",
+    },
   ],
   wavy: [
     {
@@ -47,6 +59,18 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       label: "Mehr Glanz",
       description: "Glaenzenderes, gesuender wirkendes Haar",
       emoji: "✨",
+    },
+    {
+      key: "less_frizz",
+      label: "Weniger Frizz",
+      description: "Kontrolle ohne Beschwerung",
+      emoji: "🌀",
+    },
+    {
+      key: "less_split_ends",
+      label: "Weniger Spliss",
+      description: "Gesunde Spitzen, weniger Haarbruch",
+      emoji: "✂️",
     },
   ],
   curly: [
@@ -68,6 +92,18 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       description: "Mehr Reflexion und weniger stumpfer Look",
       emoji: "✨",
     },
+    {
+      key: "less_split_ends",
+      label: "Weniger Spliss",
+      description: "Gesunde Spitzen, weniger Haarbruch",
+      emoji: "✂️",
+    },
+    {
+      key: "less_frizz",
+      label: "Weniger Frizz",
+      description: "Kontrolle und Definition statt Kraeuselung",
+      emoji: "🌀",
+    },
   ],
   coily: [
     {
@@ -87,6 +123,12 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       label: "Gesuenderes Haar",
       description: "Mehr Widerstandsfaehigkeit und weniger Haarbruch",
       emoji: "🛡️",
+    },
+    {
+      key: "less_split_ends",
+      label: "Weniger Spliss",
+      description: "Gesunde Spitzen, weniger Haarbruch",
+      emoji: "✂️",
     },
   ],
 }

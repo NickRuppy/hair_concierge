@@ -32,6 +32,7 @@ import {
   SCALP_TYPE_LABELS,
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
+  MECHANICAL_STRESS_FACTOR_LABELS,
 } from "@/lib/vocabulary"
 import type {
   Message,
@@ -130,6 +131,9 @@ function formatUserProfile(
   }
   if (profile.chemical_treatment?.length > 0) {
     parts.push(`Chemische Behandlung: ${profile.chemical_treatment.map((t) => CHEMICAL_TREATMENT_LABELS[t] ?? t).join(", ")}`)
+  }
+  if (profile.mechanical_stress_factors?.length > 0) {
+    parts.push(`Mechanische Belastung: ${profile.mechanical_stress_factors.map((f) => MECHANICAL_STRESS_FACTOR_LABELS[f] ?? f).join(", ")}`)
   }
   if (profile.products_used) {
     parts.push(`Aktuelle Produkte: ${profile.products_used}`)
@@ -248,6 +252,7 @@ const MASK_SIGNAL_LABELS: Record<string, string> = {
   chemical_treatment: "chemische Behandlung",
   heat_styling: "regelmaessiges Hitzestyling",
   protein_moisture_balance: "Protein-/Feuchtigkeits-Balance",
+  mechanical_stress: "mechanische Belastung",
 }
 
 function formatMaskDecision(maskDecision?: MaskDecision): string {

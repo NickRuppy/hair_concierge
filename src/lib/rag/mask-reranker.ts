@@ -7,6 +7,7 @@ import type {
 } from "@/lib/types"
 import type { MatchedProduct } from "@/lib/rag/product-matcher"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
+import { deriveMechanicalStressLevel } from "@/lib/vocabulary"
 
 type WeightFit = "ideal" | "fallback" | "mismatch" | "blocked"
 type ConcentrationFit = "ideal" | "fallback" | "last"
@@ -85,6 +86,14 @@ export function deriveMaskDecision(profile: HairProfile | null): MaskDecision {
     activeSignals.push("heat_styling")
     signalWeights.heat_styling = 1
     totalWeight += 1
+  }
+
+  const stressLevel = deriveMechanicalStressLevel(profile.mechanical_stress_factors ?? [])
+  if (stressLevel !== "low") {
+    activeSignals.push("mechanical_stress")
+    const stressWeight = stressLevel === "high" ? 2 : 1
+    signalWeights.mechanical_stress = stressWeight
+    totalWeight += stressWeight
   }
 
   const needStrength: MaskDecision["need_strength"] =

@@ -5,6 +5,7 @@ import {
   type ProductConditionerSpecs,
 } from "@/lib/conditioner/constants"
 import { mapProteinMoistureToConcernCode } from "@/lib/rag/conditioner-mapper"
+import { deriveMechanicalStressLevel } from "@/lib/vocabulary"
 import type {
   ConditionerBalanceNeed,
   ConditionerDecision,
@@ -123,6 +124,13 @@ export function deriveConditionerRepairLevel(
   }
   if (!level && treatments.includes("natural")) {
     level = "low"
+  }
+
+  const stressLevel = deriveMechanicalStressLevel(profile?.mechanical_stress_factors ?? [])
+  if (stressLevel === "high") {
+    level = maxRepairLevel(level, "medium")
+  } else if (stressLevel === "medium") {
+    level = maxRepairLevel(level, "low")
   }
 
   return level

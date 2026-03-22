@@ -1,17 +1,17 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { OnboardingGoals } from "@/components/onboarding/onboarding-goals"
-import type { HairTexture } from "@/lib/vocabulary"
+import { OnboardingMechanicalStress } from "@/components/onboarding/onboarding-mechanical-stress"
+import type { MechanicalStressFactor } from "@/lib/vocabulary"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 
-interface OnboardingGoalsPageProps {
+interface OnboardingMechanicalStressPageProps {
   searchParams: Promise<{ lead?: string | string[] }>
 }
 
-export default async function OnboardingGoalsPage({
+export default async function OnboardingMechanicalStressPage({
   searchParams,
-}: OnboardingGoalsPageProps) {
+}: OnboardingMechanicalStressPageProps) {
   const supabase = await createClient()
   const admin = createAdminClient()
   const resolvedSearchParams = await searchParams
@@ -21,28 +21,26 @@ export default async function OnboardingGoalsPage({
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    redirect("/auth?next=/onboarding/goals")
+    redirect("/auth?next=/onboarding/mechanical-stress")
   }
 
-  if (leadId) {
-    try {
-      await linkQuizToProfile(user.id, user.email, leadId)
-    } catch (error) {
-      console.error("Onboarding lead link failed:", error)
-    }
+  try {
+    await linkQuizToProfile(user.id, user.email, leadId)
+  } catch (error) {
+    console.error("Onboarding lead link failed:", error)
   }
 
   const { data: profile } = await admin
     .from("hair_profiles")
-    .select("hair_texture, goals, desired_volume")
+    .select("mechanical_stress_factors")
     .eq("user_id", user.id)
     .single()
 
+  const existing = (profile?.mechanical_stress_factors as MechanicalStressFactor[] | null) ?? []
+
   return (
-    <OnboardingGoals
-      hairTexture={(profile?.hair_texture as HairTexture) ?? null}
-      existingGoals={(profile?.goals as string[]) ?? []}
-      existingDesiredVolume={(profile?.desired_volume as "less" | "balanced" | "more" | null) ?? null}
+    <OnboardingMechanicalStress
+      existingFactors={existing}
       userId={user.id}
       hasProfile={!!profile}
     />
