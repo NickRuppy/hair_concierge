@@ -109,3 +109,33 @@ export const STYLING_TOOL_OPTIONS = STYLING_TOOLS.map((value) => ({
   value,
   label: STYLING_TOOL_LABELS[value],
 }))
+
+/* ── Mechanical stress factors ── */
+
+export const MECHANICAL_STRESS_FACTORS = [
+  "tight_hairstyles",
+  "rough_brushing",
+  "towel_rubbing",
+] as const
+export type MechanicalStressFactor = (typeof MECHANICAL_STRESS_FACTORS)[number]
+
+export const MECHANICAL_STRESS_FACTOR_LABELS: Record<string, string> = {
+  tight_hairstyles: "Enge Frisuren (Zoepfe, Dutts, Extensions)",
+  rough_brushing: "Haeufiges oder grobes Buersten",
+  towel_rubbing: "Handtuch-Rubbeln statt Tupfen",
+} satisfies Record<MechanicalStressFactor, string>
+
+export const MECHANICAL_STRESS_FACTOR_OPTIONS = MECHANICAL_STRESS_FACTORS.map((value) => ({
+  value,
+  label: MECHANICAL_STRESS_FACTOR_LABELS[value],
+}))
+
+export type MechanicalStressLevel = "low" | "medium" | "high"
+
+export function deriveMechanicalStressLevel(
+  factors: MechanicalStressFactor[],
+): MechanicalStressLevel {
+  if (factors.length === 0) return "low"
+  if (factors.length === 1) return "medium"
+  return "high"
+}

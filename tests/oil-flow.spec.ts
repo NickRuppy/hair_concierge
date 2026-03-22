@@ -32,6 +32,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     post_wash_actions: ["air_dry"],
     routine_preference: "balanced",
     current_routine_products: ["shampoo", "conditioner"],
+    mechanical_stress_factors: [],
     additional_notes: null,
     conversation_memory: null,
     created_at: "2026-03-21T00:00:00.000Z",

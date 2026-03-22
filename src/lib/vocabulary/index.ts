@@ -50,6 +50,10 @@ export {
   STYLING_TOOLS,
   STYLING_TOOL_LABELS,
   STYLING_TOOL_OPTIONS,
+  MECHANICAL_STRESS_FACTORS,
+  MECHANICAL_STRESS_FACTOR_LABELS,
+  MECHANICAL_STRESS_FACTOR_OPTIONS,
+  deriveMechanicalStressLevel,
 } from "./profile-labels"
 export type {
   CuticleCondition,
@@ -60,6 +64,8 @@ export type {
   ChemicalTreatment,
   DesiredVolume,
   StylingTool,
+  MechanicalStressFactor,
+  MechanicalStressLevel,
 } from "./profile-labels"
 
 export {

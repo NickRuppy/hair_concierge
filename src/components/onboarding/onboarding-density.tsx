@@ -99,7 +99,7 @@ function DensitySelector({
       return
     }
 
-    router.push("/onboarding/goals")
+    router.push("/onboarding/mechanical-stress")
   }
 
   const adjective = hairTexture ? HAIR_TEXTURE_ADJECTIVE[hairTexture] : null
