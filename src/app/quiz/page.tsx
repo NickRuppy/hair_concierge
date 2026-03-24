@@ -31,8 +31,8 @@ export default function QuizPage() {
 
   useEffect(() => {
     posthog.capture("quiz_step_viewed", {
-      step_number: step,
       step_name: STEP_NAMES[step] || `step_${step}`,
+      step_number: step, // deprecated: use step_name after Phase 4 resequencing
     })
   }, [step])
 
