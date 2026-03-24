@@ -165,9 +165,9 @@ export function QuizScalpQuestion() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={5} total={6} />
+          <QuizProgressBar current={2} total={6} />
         </div>
-        <span className="text-sm text-white/38 tabular-nums">5/6</span>
+        <span className="text-sm text-white/38 tabular-nums">2/6</span>
       </div>
 
       {/* Title + instruction — always visible */}
@@ -287,7 +287,7 @@ export function QuizScalpQuestion() {
 
       {/* Motivation text — always anchored at bottom */}
       <p className="mt-3 text-center text-sm text-white/38">
-        Nur noch 1 Frage — du machst das super.
+        Top, die Kopfhaut-Frage ist geschafft.
       </p>
     </div>
   )

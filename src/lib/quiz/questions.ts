@@ -3,7 +3,7 @@ import type { QuizQuestion } from "./types"
 export const quizQuestions: QuizQuestion[] = [
   {
     step: 2,
-    questionNumber: 1,
+    questionNumber: 3,
     title: "WAS IST DEINE NATUERLICHE HAARTEXTUR?",
     instruction:
       "Mach eine Straehne richtig nass \u2013 sie muss tropfnass sein. Halte sie am Ansatz fest, druecke sie oben zusammen und lass los. Schau, was passiert:",
@@ -14,11 +14,11 @@ export const quizQuestions: QuizQuestion[] = [
       { value: "coily", label: "Kraus", description: "Enge Windungen, die sich in sich selbst drehen", emoji: "\uD83C\uDF00" },
     ],
     selectionMode: "single",
-    motivation: "Super, du bist gerade erst gestartet. Noch 6 kurze Fragen.",
+    motivation: "Klasse \u2013 du hilfst TomBot, deine Haare richtig einzuschaetzen.",
   },
   {
     step: 3,
-    questionNumber: 2,
+    questionNumber: 4,
     title: "WIE DICK SIND DEINE EINZELNEN HAARE?",
     instruction:
       "Nimm ein einzelnes Haar und halte es zwischen Daumen und Zeigefinger. Vergleiche es mit einem Naehfaden \u2013 das ist der beste Referenzpunkt.",
@@ -32,7 +32,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     step: 4,
-    questionNumber: 3,
+    questionNumber: 5,
     title: "DER OBERFLAECHENTEST",
     instruction:
       "Nimm ein gewaschenes, trockenes Haar aus deiner Buerste \u2013 es darf kein Produkt mehr drauf sein. Schliesse die Augen und fahre ganz langsam mit zwei Fingern von der Wurzel zur Spitze. Konzentrier dich darauf, was du fuehlst:",
@@ -42,11 +42,11 @@ export const quizQuestions: QuizQuestion[] = [
       { value: "rau", label: "Richtig rau und huckelig", description: "Durchgehend rau und uneben", emoji: "\uD83C\uDFD4\uFE0F" },
     ],
     selectionMode: "single",
-    motivation: "Klasse \u2013 du hilfst TomBot, deine Haare richtig einzuschaetzen.",
+    motivation: "Fast geschafft \u2013 noch ein letzter Test.",
   },
   {
     step: 5,
-    questionNumber: 4,
+    questionNumber: 6,
     title: "DER ZUGTEST",
     instruction:
       "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefuehl, nicht reissen. Beobachte genau, was passiert:",
@@ -56,11 +56,11 @@ export const quizQuestions: QuizQuestion[] = [
       { value: "snaps", label: "Reisst sofort", description: "Bricht bei leichtem Zug direkt ab", emoji: "\u26A1" },
     ],
     selectionMode: "single",
-    motivation: "Jetzt sind wir mitten in der Profi-Analyse.",
+    motivation: "Letzte Frage \u2013 gleich siehst du dein Profil.",
   },
   {
     step: 7,
-    questionNumber: 6,
+    questionNumber: 1,
     title: "SIND DEINE HAARE CHEMISCH BEHANDELT?",
     instruction:
       "Chemische Prozesse wie Blondieren oder Faerben veraendern die innere Struktur deiner Haare grundlegend. Blondieren bricht Brueckenverbindungen auf und entzieht Protein \u2013 das muss in der Pflege ausgeglichen werden.",
@@ -70,7 +70,7 @@ export const quizQuestions: QuizQuestion[] = [
       { value: "blondiert", label: "Blondiert / Aufgehellt", description: "Gebleacht, Straehnchen oder Balayage", emoji: "\u2600\uFE0F" },
     ],
     selectionMode: "multi",
-    motivation: "Noch eine Frage \u2013 gleich siehst du dein Profil.",
+    motivation: "Super, du bist gerade erst gestartet. Noch 5 kurze Fragen.",
   },
 ]
 
