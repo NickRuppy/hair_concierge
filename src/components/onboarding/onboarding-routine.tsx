@@ -8,7 +8,6 @@ import {
   WASH_FREQUENCY_OPTIONS,
   HEAT_STYLING_OPTIONS,
   POST_WASH_ACTION_OPTIONS,
-  ROUTINE_PREFERENCE_OPTIONS,
   ROUTINE_PRODUCT_OPTIONS,
 } from "@/lib/types"
 import type {
@@ -20,7 +19,6 @@ interface OnboardingRoutineProps {
   existingWashFrequency: WashFrequency | null
   existingHeatStyling: HeatStyling | null
   existingPostWashActions: string[]
-  existingRoutinePreference: string | null
   existingRoutineProducts: string[]
   userId: string
 }
@@ -29,7 +27,6 @@ export function OnboardingRoutine({
   existingWashFrequency,
   existingHeatStyling,
   existingPostWashActions,
-  existingRoutinePreference,
   existingRoutineProducts,
   userId,
 }: OnboardingRoutineProps) {
@@ -43,9 +40,6 @@ export function OnboardingRoutine({
   )
   const [selectedPostWashActions, setSelectedPostWashActions] = useState<Set<string>>(
     () => new Set(existingPostWashActions)
-  )
-  const [routinePreference, setRoutinePreference] = useState(
-    existingRoutinePreference ?? ""
   )
   const [selectedRoutineProducts, setSelectedRoutineProducts] = useState<Set<string>>(
     () => new Set(existingRoutineProducts)
@@ -75,7 +69,6 @@ export function OnboardingRoutine({
         wash_frequency: washFrequency,
         heat_styling: heatStyling || null,
         post_wash_actions: [...selectedPostWashActions],
-        routine_preference: routinePreference || null,
         current_routine_products: [...selectedRoutineProducts],
         updated_at: new Date().toISOString(),
       })
@@ -201,29 +194,6 @@ export function OnboardingRoutine({
               onClick={() => toggleSetValue(setSelectedPostWashActions, option.value)}
               className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
                 selectedPostWashActions.has(option.value)
-                  ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
-                  : "border-white/20 text-white/70 hover:border-white/35 hover:text-white"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Section 5: Routine preference (single-select) */}
-      <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "380ms" }}>
-        <h2 className="font-header text-2xl leading-tight text-white mb-2">
-          Wie detailliert soll deine Routine sein?
-        </h2>
-        <div className="flex flex-wrap gap-2">
-          {ROUTINE_PREFERENCE_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => setRoutinePreference(option.value)}
-              className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
-                routinePreference === option.value
                   ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
                   : "border-white/20 text-white/70 hover:border-white/35 hover:text-white"
               }`}
