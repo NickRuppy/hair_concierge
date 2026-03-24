@@ -34,12 +34,6 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       description: "Gesunde Spitzen, weniger Haarbruch",
       emoji: "✂️",
     },
-    {
-      key: "volume",
-      label: "Mehr Volumen",
-      description: "Mehr Fuelle und Bewegung im Haar",
-      emoji: "💨",
-    },
   ],
   wavy: [
     {

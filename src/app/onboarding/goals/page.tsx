@@ -34,7 +34,7 @@ export default async function OnboardingGoalsPage({
 
   const { data: profile } = await admin
     .from("hair_profiles")
-    .select("hair_texture, goals, desired_volume")
+    .select("hair_texture, goals, desired_volume, routine_preference")
     .eq("user_id", user.id)
     .single()
 
@@ -43,6 +43,7 @@ export default async function OnboardingGoalsPage({
       hairTexture={(profile?.hair_texture as HairTexture) ?? null}
       existingGoals={(profile?.goals as string[]) ?? []}
       existingDesiredVolume={(profile?.desired_volume as "less" | "balanced" | "more" | null) ?? null}
+      existingRoutinePreference={(profile?.routine_preference as string) ?? null}
       userId={user.id}
       hasProfile={!!profile}
     />

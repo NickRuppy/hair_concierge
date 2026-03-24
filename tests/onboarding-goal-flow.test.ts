@@ -24,7 +24,7 @@ test("straight onboarding cards are unique and no longer use the old volume chip
   const straightGoals = getOnboardingGoalCards("straight")
   const keys = straightGoals.map((goal) => goal.key)
 
-  assert.deepEqual(keys, ["healthy_scalp", "less_frizz", "shine"])
+  assert.deepEqual(keys, ["healthy_scalp", "less_frizz", "shine", "less_split_ends"])
   assert.equal(new Set(keys).size, keys.length)
   assert.ok(!keys.includes("volume"))
 })
