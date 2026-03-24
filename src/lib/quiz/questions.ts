@@ -6,7 +6,7 @@ export const quizQuestions: QuizQuestion[] = [
     questionNumber: 1,
     title: "WAS IST DEINE NATUERLICHE HAARTEXTUR?",
     instruction:
-      "Mach eine Straehne richtig nass \u2013 sie muss tropfnass sein. Halte sie am Ansatz fest, druecke sie oben zusammen und lass los. Schau, was passiert:",
+      "Mach eine Straehne tropfnass, druecke sie oben zusammen und lass los \u2013 was passiert?",
     options: [
       { value: "straight", label: "Glatt", description: "Die Straehne haengt glatt runter", emoji: "\u3030\uFE0F" },
       { value: "wavy", label: "Wellig", description: "Bildet eine S-Kurve, keine 3D-Windung", emoji: "\uD83C\uDF0A" },
@@ -21,7 +21,7 @@ export const quizQuestions: QuizQuestion[] = [
     questionNumber: 2,
     title: "WIE DICK SIND DEINE EINZELNEN HAARE?",
     instruction:
-      "Nimm ein einzelnes Haar und halte es zwischen Daumen und Zeigefinger. Vergleiche es mit einem Naehfaden \u2013 das ist der beste Referenzpunkt.",
+      "Nimm ein einzelnes Haar und halte es zwischen Daumen und Zeigefinger. Vergleiche es mit einem Naehfaden \u2013 das ist der beste Referenzpunkt.\n\nGemeint ist ein einzelnes Haar, nicht wie viele Haare du insgesamt hast.",
     options: [
       { value: "fine", label: "Fein", description: "Kaum spuerbar \u2013 duenner als ein Naehfaden", emoji: "\uD83E\uDEB6" },
       { value: "normal", label: "Mittel", description: "Spuerbar \u2013 aehnlich wie ein Naehfaden", emoji: "\u270B" },
@@ -33,7 +33,7 @@ export const quizQuestions: QuizQuestion[] = [
   {
     step: 4,
     questionNumber: 3,
-    title: "DER OBERFLAECHENTEST",
+    title: "MINI-HAARCHECK 1 VON 2: OBERFLAECHE",
     instruction:
       "Nimm ein gewaschenes, trockenes Haar aus deiner Buerste \u2013 es darf kein Produkt mehr drauf sein. Schliesse die Augen und fahre ganz langsam mit zwei Fingern von der Wurzel zur Spitze. Konzentrier dich darauf, was du fuehlst:",
     options: [
@@ -47,9 +47,9 @@ export const quizQuestions: QuizQuestion[] = [
   {
     step: 5,
     questionNumber: 4,
-    title: "DER ZUGTEST",
+    title: "MINI-HAARCHECK 2 VON 2: ZUGTEST",
     instruction:
-      "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefuehl, nicht reissen. Beobachte genau, was passiert:",
+      "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefuehl, nicht reissen. Beobachte genau, was passiert:\n\nZiehe nur leicht. Uns geht es um die Tendenz, nicht um Perfektion.",
     options: [
       { value: "stretches_bounces", label: "Dehnt sich und geht zurueck", description: "Federt in den Ursprungszustand zurueck", emoji: "\uD83C\uDFAF" },
       { value: "stretches_stays", label: "Dehnt sich, bleibt ausgeleiert", description: "Kommt nicht mehr zurueck \u2013 bleibt laenglich", emoji: "\uD83D\uDCCF" },
