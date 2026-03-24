@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { useToast } from "@/providers/toast-provider"
+import { mergeAnsweredFields } from "@/lib/onboarding/answered-fields"
 import {
   MECHANICAL_STRESS_FACTOR_OPTIONS,
   type MechanicalStressFactor,
@@ -63,12 +64,14 @@ export function OnboardingMechanicalStress({
 
   async function handleSave() {
     setSaving(true)
-
     const supabase = createClient()
+    const updatedAnswered = await mergeAnsweredFields(supabase, userId, ["mechanical_stress_factors"])
+
     const { error } = await supabase
       .from("hair_profiles")
       .update({
         mechanical_stress_factors: [...selected],
+        answered_fields: updatedAnswered,
         updated_at: new Date().toISOString(),
       })
       .eq("user_id", userId)
@@ -135,9 +138,37 @@ export function OnboardingMechanicalStress({
         })}
       </div>
 
+      <button
+        type="button"
+        onClick={async () => {
+          setSaving(true)
+          const supabase = createClient()
+          const updatedAnswered = await mergeAnsweredFields(supabase, userId, ["mechanical_stress_factors"])
+          const { error } = await supabase
+            .from("hair_profiles")
+            .update({
+              mechanical_stress_factors: [],
+              answered_fields: updatedAnswered,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("user_id", userId)
+          if (error) {
+            toast({ title: "Fehler beim Speichern. Bitte versuche es erneut.", variant: "destructive" })
+            setSaving(false)
+            return
+          }
+          router.push("/onboarding/routine")
+        }}
+        disabled={saving}
+        className="animate-fade-in-up mt-4 w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-center text-sm text-white/60 transition-all hover:border-white/25 hover:text-white/80"
+        style={{ animationDelay: "360ms" }}
+      >
+        Nichts davon regelmaessig
+      </button>
+
       <div
         className="animate-fade-in-up mt-8 flex items-center justify-between"
-        style={{ animationDelay: "360ms" }}
+        style={{ animationDelay: "420ms" }}
       >
         <button
           type="button"

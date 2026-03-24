@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { useToast } from "@/providers/toast-provider"
+import { mergeAnsweredFields } from "@/lib/onboarding/answered-fields"
 import {
   WASH_FREQUENCY_OPTIONS,
   HEAT_STYLING_OPTIONS,
@@ -45,10 +46,13 @@ export function OnboardingRoutine({
     () => new Set(existingRoutineProducts)
   )
   const [saving, setSaving] = useState(false)
+  const [answeredPostWash, setAnsweredPostWash] = useState(false)
+  const [answeredProducts, setAnsweredProducts] = useState(false)
 
   function toggleSetValue(
     setState: (updater: (prev: Set<string>) => Set<string>) => void,
-    key: string
+    key: string,
+    clearNoneFlag?: () => void
   ) {
     setState((prev) => {
       const next = new Set(prev)
@@ -56,22 +60,37 @@ export function OnboardingRoutine({
       else next.add(key)
       return next
     })
+    clearNoneFlag?.()
   }
 
   async function handleSave() {
     if (!washFrequency) return
     setSaving(true)
 
+    const fieldsAnswered: string[] = []
+    if (answeredPostWash || selectedPostWashActions.size > 0) fieldsAnswered.push("post_wash_actions")
+    if (answeredProducts || selectedRoutineProducts.size > 0) fieldsAnswered.push("current_routine_products")
+
     const supabase = createClient()
+    let answeredFieldsUpdate: string[] = []
+    if (fieldsAnswered.length > 0) {
+      answeredFieldsUpdate = await mergeAnsweredFields(supabase, userId, fieldsAnswered)
+    }
+
+    const updatePayload: Record<string, unknown> = {
+      wash_frequency: washFrequency,
+      heat_styling: heatStyling || null,
+      post_wash_actions: [...selectedPostWashActions],
+      current_routine_products: [...selectedRoutineProducts],
+      updated_at: new Date().toISOString(),
+    }
+    if (answeredFieldsUpdate.length > 0) {
+      updatePayload.answered_fields = answeredFieldsUpdate
+    }
+
     const { error } = await supabase
       .from("hair_profiles")
-      .update({
-        wash_frequency: washFrequency,
-        heat_styling: heatStyling || null,
-        post_wash_actions: [...selectedPostWashActions],
-        current_routine_products: [...selectedRoutineProducts],
-        updated_at: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq("user_id", userId)
 
     if (error) {
@@ -144,7 +163,7 @@ export function OnboardingRoutine({
             <button
               key={option.value}
               type="button"
-              onClick={() => toggleSetValue(setSelectedRoutineProducts, option.value)}
+              onClick={() => toggleSetValue(setSelectedRoutineProducts, option.value, () => setAnsweredProducts(false))}
               className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
                 selectedRoutineProducts.has(option.value)
                   ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
@@ -154,6 +173,20 @@ export function OnboardingRoutine({
               {option.label}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedRoutineProducts(new Set())
+              setAnsweredProducts(true)
+            }}
+            className={`mt-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+              answeredProducts && selectedRoutineProducts.size === 0
+                ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
+                : "border-white/20 text-white/70 hover:border-white/35 hover:text-white"
+            }`}
+          >
+            Nichts davon regelmaessig
+          </button>
         </div>
       </div>
 
@@ -191,7 +224,7 @@ export function OnboardingRoutine({
             <button
               key={option.value}
               type="button"
-              onClick={() => toggleSetValue(setSelectedPostWashActions, option.value)}
+              onClick={() => toggleSetValue(setSelectedPostWashActions, option.value, () => setAnsweredPostWash(false))}
               className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
                 selectedPostWashActions.has(option.value)
                   ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
@@ -201,6 +234,20 @@ export function OnboardingRoutine({
               {option.label}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedPostWashActions(new Set())
+              setAnsweredPostWash(true)
+            }}
+            className={`mt-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
+              answeredPostWash && selectedPostWashActions.size === 0
+                ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
+                : "border-white/20 text-white/70 hover:border-white/35 hover:text-white"
+            }`}
+          >
+            Nichts davon regelmaessig
+          </button>
         </div>
       </div>
 
