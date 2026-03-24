@@ -19,8 +19,8 @@
 | 0: PostHog | — | `src/app/quiz/page.tsx` |
 | 1: Copy | — | `src/lib/quiz/questions.ts`, `src/components/quiz/quiz-scalp-question.tsx`, `src/components/quiz/quiz-results.tsx` |
 | 2: Refactors | — | `src/lib/vocabulary/onboarding-goals.ts`, `src/components/onboarding/onboarding-goals.tsx`, `src/components/onboarding/onboarding-routine.tsx`, `src/app/onboarding/goals/page.tsx`, `src/app/onboarding/routine/page.tsx`, `tests/onboarding-goal-flow.test.ts` |
-| 3: None-states | `supabase/migrations/2026MMDD_add_answered_fields.sql` | `src/components/onboarding/onboarding-mechanical-stress.tsx`, `src/components/onboarding/onboarding-routine.tsx`, `src/components/onboarding/onboarding-goals.tsx` |
-| 4: Resequence | — | `src/lib/quiz/store.ts`, `src/lib/quiz/questions.ts`, `src/app/quiz/page.tsx`, `src/components/quiz/quiz-question.tsx`, `src/components/quiz/quiz-scalp-question.tsx`, `src/components/quiz/quiz-brand-panel.tsx` |
+| 3: None-states | `supabase/migrations/20260324120000_add_answered_fields.sql`, `src/lib/onboarding/answered-fields.ts` | `src/components/onboarding/onboarding-mechanical-stress.tsx`, `src/components/onboarding/onboarding-routine.tsx` |
+| 4: Resequence | — | `src/lib/quiz/store.ts`, `src/lib/quiz/questions.ts`, `src/components/quiz/quiz-scalp-question.tsx`, `src/components/quiz/quiz-brand-panel.tsx` |
 
 ---
 
@@ -82,16 +82,18 @@ instruction:
 
 - [ ] **Step 2: Shorten texture wet-strand instruction in questions.ts**
 
-Find the step 2 (texture) question. Replace the multi-line instruction with a condensed one-liner:
+Find the step 2 (texture) question. Replace the instruction with a condensed one-liner.
 
-Old:
+**IMPORTANT:** The codebase uses an en-dash (`\u2013` / `–`), not an em-dash. Match the exact character when finding the old string.
+
+Old (line 9, step 2 instruction):
 ```
-"Mach eine Straehne richtig nass – sie muss tropfnass sein. Halte sie am Ansatz fest, druecke sie oben zusammen und lass los. Schau, was passiert:"
+"Mach eine Straehne richtig nass \u2013 sie muss tropfnass sein. Halte sie am Ansatz fest, druecke sie oben zusammen und lass los. Schau, was passiert:"
 ```
 
 New:
 ```
-"Mach eine Straehne tropfnass, druecke sie oben zusammen und lass los — was passiert?"
+"Mach eine Straehne tropfnass, druecke sie oben zusammen und lass los \u2013 was passiert?"
 ```
 
 - [ ] **Step 3: Reframe surface + pull tests as Mini-Haarcheck in questions.ts**
@@ -202,7 +204,7 @@ After removal, straight has: `healthy_scalp`, `less_frizz`, `shine`, `less_split
 
 - [ ] **Step 2: Update goal-flow test**
 
-In `tests/onboarding-goal-flow.test.ts`, update the straight goals expectation to match the new data (volume removed, less_split_ends still present):
+In `tests/onboarding-goal-flow.test.ts`, the existing test 3 is currently **failing** — it was written as a TDD target that expects `["healthy_scalp", "less_frizz", "shine"]` but `getOnboardingGoalCards("straight")` currently returns all 5 goals. After removing volume, straight will have 4 goals. Update the test to match the new data:
 
 ```typescript
 test("straight onboarding cards are unique and no longer use the old volume chip", () => {
@@ -215,10 +217,12 @@ test("straight onboarding cards are unique and no longer use the old volume chip
 })
 ```
 
+Note: `less_split_ends` remains — further goal curation (removing goals from the chip list) is Phase 7 scope.
+
 - [ ] **Step 3: Run tests**
 
-Run: `node --test tests/onboarding-goal-flow.test.ts`
-Expected: All 3 tests pass.
+Run: `npx tsx --test tests/onboarding-goal-flow.test.ts`
+Expected: All 3 tests pass (test 3 was previously failing, now passes).
 
 - [ ] **Step 4: Fetch routine_preference in goals server component**
 
@@ -259,22 +263,25 @@ const [routinePreference, setRoutinePreference] = useState(
 )
 ```
 
-4. Add import at top:
+4. Extend the existing `@/lib/types` import (line 10 already imports `DESIRED_VOLUME_LABELS`):
 ```typescript
-import { ROUTINE_PREFERENCE_OPTIONS } from "@/lib/types"
+import { DESIRED_VOLUME_LABELS, ROUTINE_PREFERENCE_OPTIONS } from "@/lib/types"
 ```
 
-5. Add routine_preference to the `handleSave` Supabase update:
+5. Add `routine_preference` to the existing `handleSave` Supabase update. **CRITICAL: preserve the existing `onboarding_completed` write to the `profiles` table AND the `router.push("/chat")` redirect that follow.** Only add `routine_preference` to the `hair_profiles` update object:
 ```typescript
+// Add routine_preference to the EXISTING hair_profiles update (do NOT replace handleSave):
 const { error: hairProfileError } = await supabase
   .from("hair_profiles")
   .update({
     goals: derivedGoals,
     desired_volume: desiredVolume,
-    routine_preference: routinePreference || null,
+    routine_preference: routinePreference || null, // ← add this line
     updated_at: new Date().toISOString(),
   })
   .eq("user_id", userId)
+
+// The existing onboarding_completed write + router.push("/chat") MUST remain after this
 ```
 
 6. Add the routine_preference section in the JSX, AFTER the goals section and BEFORE the save button:
@@ -360,9 +367,9 @@ git commit -m "feat(onboarding): remove volume dedup from straight goals, move r
 
 **Files:**
 - Create: `supabase/migrations/20260324120000_add_answered_fields.sql`
+- Create: `src/lib/onboarding/answered-fields.ts` (shared helper)
 - Modify: `src/components/onboarding/onboarding-mechanical-stress.tsx`
 - Modify: `src/components/onboarding/onboarding-routine.tsx`
-- Modify: `src/components/onboarding/onboarding-goals.tsx` (save `answered_fields` for goals-owned fields)
 
 - [ ] **Step 1: Create Supabase migration**
 
@@ -455,13 +462,15 @@ const { error } = await supabase
 
 4. Update `handleSave` to also mark the field as answered (same merge pattern as above).
 
-**Refactoring note:** The `answered_fields` merge pattern repeats. Extract a helper:
+**Before continuing:** Extract the `answered_fields` merge pattern into a shared helper. Create `src/lib/onboarding/answered-fields.ts`:
 
 ```typescript
-async function mergeAnsweredFields(
+import { createClient } from "@/lib/supabase/client"
+
+export async function mergeAnsweredFields(
   supabase: ReturnType<typeof createClient>,
   userId: string,
-  fieldName: string
+  fieldNames: string[]
 ): Promise<string[]> {
   const { data } = await supabase
     .from("hair_profiles")
@@ -469,11 +478,32 @@ async function mergeAnsweredFields(
     .eq("user_id", userId)
     .single()
   const current = (data?.answered_fields as string[]) ?? []
-  return [...new Set([...current, fieldName])]
+  return [...new Set([...current, ...fieldNames])]
 }
 ```
 
-Place this in a shared location like `src/lib/onboarding/answered-fields.ts` and import where needed.
+Import this helper in both `onboarding-mechanical-stress.tsx` and `onboarding-routine.tsx`. Use it in all save/nichts-davon handlers instead of duplicating the merge logic inline.
+
+Refactor the "Nichts davon" button in Step 3 above to use this helper:
+```tsx
+onClick={async () => {
+  setSaving(true)
+  const supabase = createClient()
+  const updatedAnswered = await mergeAnsweredFields(supabase, userId, ["mechanical_stress_factors"])
+
+  const { error } = await supabase
+    .from("hair_profiles")
+    .update({
+      mechanical_stress_factors: [],
+      answered_fields: updatedAnswered,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("user_id", userId)
+  // ... error handling + router.push
+}}
+```
+
+Similarly, refactor `handleSave` to use the helper instead of inline merge.
 
 - [ ] **Step 4: Add "Nichts davon" to routine component (post_wash_actions + current_routine_products)**
 
@@ -546,7 +576,7 @@ const { error } = await supabase
   .eq("user_id", userId)
 ```
 
-Adjust the `mergeAnsweredFields` helper to accept an array of field names.
+The `mergeAnsweredFields` helper already accepts `string[]` — pass the array directly.
 
 - [ ] **Step 5: Build and verify**
 
@@ -568,12 +598,16 @@ git commit -m "feat(onboarding): add answered_fields metadata column and Nichts-
 
 **Key insight:** Step NUMBERS (2, 3, 4, 5, 6, 7) stay the same — they identify which component renders. Only the ORDER changes, plus the displayed question numbers.
 
+**No changes needed (confirmed):**
+- `src/lib/quiz/types.ts` — `QuizStep` is a union of literals, does not encode order
+- `src/components/quiz/quiz-question.tsx` `ANSWER_KEY_MAP` — maps step numbers to answer keys; step numbers are unchanged, only order changes
+- Scalp navigation logic (`goNext`/`goBack` in `quiz-scalp-question.tsx`) — already uses store's `goNext()` which follows `STEP_ORDER`, so resequencing is automatic
+
 **Files:**
 - Modify: `src/lib/quiz/store.ts:25` (STEP_ORDER)
 - Modify: `src/lib/quiz/questions.ts` (questionNumber + motivation for each question)
 - Modify: `src/components/quiz/quiz-scalp-question.tsx:168-170` (progress bar + counter)
 - Modify: `src/components/quiz/quiz-brand-panel.tsx:9` (question number derivation)
-- Modify: `src/app/quiz/page.tsx:15-27` (STEP_NAMES order comment, no functional change)
 
 - [ ] **Step 1: Update STEP_ORDER in store.ts**
 
