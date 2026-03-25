@@ -46,13 +46,15 @@ export function OnboardingRoutine({
     () => new Set(existingRoutineProducts)
   )
   const [saving, setSaving] = useState(false)
-  const [answeredPostWash, setAnsweredPostWash] = useState(false)
-  const [answeredProducts, setAnsweredProducts] = useState(false)
+  const [touchedPostWash, setTouchedPostWash] = useState(false)
+  const [touchedProducts, setTouchedProducts] = useState(false)
+  const [nonePostWash, setNonePostWash] = useState(false)
+  const [noneProducts, setNoneProducts] = useState(false)
 
   function toggleSetValue(
     setState: (updater: (prev: Set<string>) => Set<string>) => void,
     key: string,
-    clearNoneFlag?: () => void
+    onTouch: () => void
   ) {
     setState((prev) => {
       const next = new Set(prev)
@@ -60,7 +62,7 @@ export function OnboardingRoutine({
       else next.add(key)
       return next
     })
-    clearNoneFlag?.()
+    onTouch()
   }
 
   async function handleSave() {
@@ -68,8 +70,8 @@ export function OnboardingRoutine({
     setSaving(true)
 
     const fieldsAnswered: string[] = []
-    if (answeredPostWash || selectedPostWashActions.size > 0) fieldsAnswered.push("post_wash_actions")
-    if (answeredProducts || selectedRoutineProducts.size > 0) fieldsAnswered.push("current_routine_products")
+    if (touchedPostWash) fieldsAnswered.push("post_wash_actions")
+    if (touchedProducts) fieldsAnswered.push("current_routine_products")
 
     const supabase = createClient()
     let answeredFieldsUpdate: string[] = []
@@ -163,7 +165,7 @@ export function OnboardingRoutine({
             <button
               key={option.value}
               type="button"
-              onClick={() => toggleSetValue(setSelectedRoutineProducts, option.value, () => setAnsweredProducts(false))}
+              onClick={() => toggleSetValue(setSelectedRoutineProducts, option.value, () => { setTouchedProducts(true); setNoneProducts(false) })}
               className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
                 selectedRoutineProducts.has(option.value)
                   ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
@@ -177,10 +179,11 @@ export function OnboardingRoutine({
             type="button"
             onClick={() => {
               setSelectedRoutineProducts(new Set())
-              setAnsweredProducts(true)
+              setTouchedProducts(true)
+              setNoneProducts(true)
             }}
             className={`mt-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
-              answeredProducts && selectedRoutineProducts.size === 0
+              noneProducts && selectedRoutineProducts.size === 0
                 ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
                 : "border-white/20 text-white/70 hover:border-white/35 hover:text-white"
             }`}
@@ -224,7 +227,7 @@ export function OnboardingRoutine({
             <button
               key={option.value}
               type="button"
-              onClick={() => toggleSetValue(setSelectedPostWashActions, option.value, () => setAnsweredPostWash(false))}
+              onClick={() => toggleSetValue(setSelectedPostWashActions, option.value, () => { setTouchedPostWash(true); setNonePostWash(false) })}
               className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
                 selectedPostWashActions.has(option.value)
                   ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
@@ -238,10 +241,11 @@ export function OnboardingRoutine({
             type="button"
             onClick={() => {
               setSelectedPostWashActions(new Set())
-              setAnsweredPostWash(true)
+              setTouchedPostWash(true)
+              setNonePostWash(true)
             }}
             className={`mt-2 rounded-full border px-3 py-1.5 text-sm transition-colors ${
-              answeredPostWash && selectedPostWashActions.size === 0
+              nonePostWash && selectedPostWashActions.size === 0
                 ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
                 : "border-white/20 text-white/70 hover:border-white/35 hover:text-white"
             }`}

@@ -65,15 +65,20 @@ export function OnboardingMechanicalStress({
   async function handleSave() {
     setSaving(true)
     const supabase = createClient()
-    const updatedAnswered = await mergeAnsweredFields(supabase, userId, ["mechanical_stress_factors"])
+
+    const updatePayload: Record<string, unknown> = {
+      mechanical_stress_factors: [...selected],
+      updated_at: new Date().toISOString(),
+    }
+
+    // Only mark as answered when user actually selected factors
+    if (selected.size > 0) {
+      updatePayload.answered_fields = await mergeAnsweredFields(supabase, userId, ["mechanical_stress_factors"])
+    }
 
     const { error } = await supabase
       .from("hair_profiles")
-      .update({
-        mechanical_stress_factors: [...selected],
-        answered_fields: updatedAnswered,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq("user_id", userId)
 
     if (error) {
