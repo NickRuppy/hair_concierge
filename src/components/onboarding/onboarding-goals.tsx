@@ -129,18 +129,7 @@ function GoalSelector({
       return
     }
 
-    const { error: profileError } = await supabase
-      .from("profiles")
-      .update({ onboarding_completed: true })
-      .eq("id", userId)
-
-    if (profileError) {
-      toast({ title: "Fehler beim Speichern. Bitte versuche es erneut.", variant: "destructive" })
-      setSaving(false)
-      return
-    }
-
-    router.push("/chat")
+    router.push("/onboarding/profile")
   }
 
   const adjective = HAIR_TEXTURE_ADJECTIVE[hairTexture]
@@ -265,7 +254,7 @@ function GoalSelector({
           disabled={!desiredVolume || saving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {saving ? "SPEICHERN..." : "ZU TOMBOT"}
+          {saving ? "SPEICHERN..." : "WEITER ZUM PROFIL"}
         </button>
       </div>
     </div>

@@ -23,7 +23,7 @@ const STEP_NAMES: Record<number, string> = {
   9: "lead_capture",
   10: "analysis",
   11: "results",
-  14: "welcome",
+  14: "auth_transition",
 }
 
 export default function QuizPage() {

@@ -101,7 +101,17 @@ export function OnboardingRoutine({
       return
     }
 
-    router.push("/onboarding/goals")
+    // Mark onboarding as complete (moved here from goals page)
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .update({ onboarding_completed: true })
+      .eq("id", userId)
+
+    if (profileError) {
+      console.error("Failed to mark onboarding_completed:", profileError)
+    }
+
+    router.push("/chat")
   }
 
   return (
@@ -126,16 +136,11 @@ export function OnboardingRoutine({
         TomBot nutzt das, um deine Routine realistisch einzuordnen und passende Schritte vorzuschlagen.
       </p>
 
-      {/* Section 1: Wash frequency (required) */}
+      {/* Section 1: Wash frequency (required, no PFLICHT badge) */}
       <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "140ms" }}>
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <h2 className="font-header text-2xl leading-tight text-white">
-            Wie oft waeschst du deine Haare?
-          </h2>
-          <span className="rounded-full border border-[#F5C518]/30 bg-[#F5C518]/10 px-2.5 py-1 text-[11px] font-semibold tracking-[0.14em] text-[#F5C518]">
-            PFLICHT
-          </span>
-        </div>
+        <h2 className="font-header text-2xl leading-tight text-white mb-3">
+          Wie oft waeschst du deine Haare regelmaessig?
+        </h2>
         <div className="flex flex-wrap gap-2">
           {WASH_FREQUENCY_OPTIONS.map((option) => (
             <button
@@ -157,7 +162,7 @@ export function OnboardingRoutine({
       {/* Section 2: Products per wash (multi-select) */}
       <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "200ms" }}>
         <h2 className="font-header text-2xl leading-tight text-white mb-2">
-          Welche Produkte nutzt du aktuell?
+          Welche Produkte nutzt du regelmaessig?
         </h2>
         <p className="text-sm text-white/50 mb-4">Mehrfachauswahl moeglich.</p>
         <div className="flex flex-wrap gap-2">
@@ -193,33 +198,10 @@ export function OnboardingRoutine({
         </div>
       </div>
 
-      {/* Section 3: Heat tool frequency (single-select) */}
+      {/* Section 3: Post-wash actions (multi-select) */}
       <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "260ms" }}>
         <h2 className="font-header text-2xl leading-tight text-white mb-2">
-          Wie oft nutzt du Hitzetools?
-        </h2>
-        <div className="flex flex-wrap gap-2">
-          {HEAT_STYLING_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => setHeatStyling(option.value)}
-              className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
-                heatStyling === option.value
-                  ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
-                  : "border-white/20 text-white/70 hover:border-white/35 hover:text-white"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Section 4: Post-wash actions (multi-select) */}
-      <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "320ms" }}>
-        <h2 className="font-header text-2xl leading-tight text-white mb-2">
-          Was machst du nach dem Waschen?
+          Was machst du regelmaessig nach dem Waschen?
         </h2>
         <p className="text-sm text-white/50 mb-4">Mehrfachauswahl moeglich.</p>
         <div className="flex flex-wrap gap-2">
@@ -255,6 +237,29 @@ export function OnboardingRoutine({
         </div>
       </div>
 
+      {/* Section 4: Heat tool frequency (single-select) */}
+      <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "320ms" }}>
+        <h2 className="font-header text-2xl leading-tight text-white mb-2">
+          Wie oft nutzt du regelmaessig Hitzetools?
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {HEAT_STYLING_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => setHeatStyling(option.value)}
+              className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                heatStyling === option.value
+                  ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
+                  : "border-white/20 text-white/70 hover:border-white/35 hover:text-white"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Save button */}
       <div className="animate-fade-in-up" style={{ animationDelay: "440ms" }}>
         {!washFrequency && (
@@ -268,7 +273,7 @@ export function OnboardingRoutine({
           disabled={!washFrequency || saving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {saving ? "SPEICHERN..." : "WEITER ZU DEINEN ZIELEN"}
+          {saving ? "SPEICHERN..." : "PROFIL ABSCHLIESSEN"}
         </button>
       </div>
     </div>

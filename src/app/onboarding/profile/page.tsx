@@ -1,17 +1,17 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { OnboardingMechanicalStress } from "@/components/onboarding/onboarding-mechanical-stress"
-import type { MechanicalStressFactor } from "@/lib/vocabulary"
+import { OnboardingProfile } from "@/components/onboarding/onboarding-profile"
+import type { HairDensity, HairTexture, MechanicalStressFactor } from "@/lib/vocabulary"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 
-interface OnboardingMechanicalStressPageProps {
+interface OnboardingProfilePageProps {
   searchParams: Promise<{ lead?: string | string[] }>
 }
 
-export default async function OnboardingMechanicalStressPage({
+export default async function OnboardingProfilePage({
   searchParams,
-}: OnboardingMechanicalStressPageProps) {
+}: OnboardingProfilePageProps) {
   const supabase = await createClient()
   const admin = createAdminClient()
   const resolvedSearchParams = await searchParams
@@ -21,7 +21,7 @@ export default async function OnboardingMechanicalStressPage({
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    redirect("/auth?next=/onboarding/mechanical-stress")
+    redirect("/auth?next=/onboarding/profile")
   }
 
   try {
@@ -32,15 +32,17 @@ export default async function OnboardingMechanicalStressPage({
 
   const { data: profile } = await admin
     .from("hair_profiles")
-    .select("mechanical_stress_factors")
+    .select("hair_texture, density, mechanical_stress_factors")
     .eq("user_id", user.id)
     .single()
 
-  const existing = (profile?.mechanical_stress_factors as MechanicalStressFactor[] | null) ?? []
-
   return (
-    <OnboardingMechanicalStress
-      existingFactors={existing}
+    <OnboardingProfile
+      hairTexture={(profile?.hair_texture as HairTexture) ?? null}
+      existingDensity={(profile?.density as HairDensity | null) ?? null}
+      existingFactors={
+        (profile?.mechanical_stress_factors as MechanicalStressFactor[]) ?? []
+      }
       userId={user.id}
       hasProfile={!!profile}
     />
