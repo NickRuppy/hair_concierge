@@ -27,12 +27,12 @@ The original audit proposes re-sequencing and re-grouping the quiz + onboarding 
 | 13 | **Legacy routes:** Clean break, no redirect shims. Delete old routes. | Accept that in-flight confirm links break. |
 | 14 | **`routine_preference` move:** Phase 2 owns it exclusively. Phase 5+6 inherits the result. | Eliminates duplication flagged by Codex. |
 
-## Remaining Questions (for Tom)
+## Remaining Questions — RESOLVED (2026-03-25)
 
-1. **Primary goal as pipeline signal:** Does "Womit soll TomBot starten?" drive recommendation engine prioritization (needs `primary_goal` DB column + pipeline work) or is it purely UX ordering? If UX-only, no need to persist separately.
-2. **`desired_volume` vs `volume` goal:** Should `desired_volume` remain a separate preference, or should `volume` only exist when explicitly chosen as a goal? (Currently auto-injected when `desired_volume === "more"`)
-3. **Goal determinism:** Which goals should alter deterministic recommendation logic, category by category? Currently only a subset drives matching (`curl_definition` gates leave-in). Goals like `healthy_scalp`, `healthier_hair`, `less_split_ends` are stored/displayed but prompt-only. If Phase 7's "primary goal" is supposed to change product priority, Tom needs to define which goals have matching weight.
-4. **Scalp reframe mapping:** What exact observable oiling cadence should map to `oily`/`balanced`/`dry`? Should the internal taxonomy stay unchanged? (The label change is engineering; the mapping rule is product.)
+1. ~~**Primary goal as pipeline signal:**~~ **Resolved:** No extra page. The existing goals page collects hair goals. TomBot picks up the user's stated goals and reflects them in the UX (e.g., opening the chat around their goals). This is a UX/prompt concern — no `primary_goal` DB column or pipeline change needed.
+2. ~~**`desired_volume` vs `volume` goal:**~~ **Resolved:** Current design is fine. `desired_volume` stays as the required field; `deriveOnboardingGoals` auto-injects `"volume"` when `desired_volume === "more"`. Volume chip already removed from straight goals in Phase 2. Internal engineering concern, not a product question.
+3. ~~**Goal determinism:**~~ **Resolved:** Deferred. A logic for how stated goals are processed in the pipeline will follow as separate work.
+4. ~~**Scalp reframe mapping:**~~ **Resolved:** Current labels and descriptions are fine as-is. The observable-behavior framing already exists in the option descriptions (e.g., "Ansaetze werden nach 1-2 Tagen oelig"). Internal values unchanged.
 
 ---
 
@@ -188,15 +188,15 @@ The original audit proposes re-sequencing and re-grouping the quiz + onboarding 
 
 **Files:** All onboarding components + routes, `src/app/onboarding/layout.tsx`, `src/components/quiz/quiz-welcome.tsx`, `src/app/auth/page.tsx`, `src/app/api/auth/callback/route.ts`, `src/app/auth/confirm/route.ts`, `src/lib/supabase/middleware.ts` (if onboarding route guards exist), new shared auth component, `tests/quiz-onboarding-e2e.spec.ts`
 
-### Phase 7: Goal Model Rework (3-5 days, needs Tom's input on remaining questions)
+### Phase 7: Goal Model Rework (3-5 days) — UNBLOCKED
 - Replace texture-based hard filtering with relevance sorting + markers
 - Keep `curl_definition` hidden for `straight` as sole hard exclusion
 - Show curated onboarding goal subset (not all enum values), sorted by texture relevance
 - Mark top 3-4 as "Besonders relevant fuer dein Haarprofil"
-- Implement primary goal selection ("Womit soll TomBot starten?") — scope depends on Tom's answers
-- Handle `volume` dedup: resolve interaction between `desired_volume` auto-inject and the goal chip list
+- No extra "primary goal" page — TomBot picks up the user's stated goals and reflects them in the chat UX (prompt/conversation concern, no `primary_goal` DB column needed)
+- ~~Handle `volume` dedup~~ — resolved in Phase 2 (chip removed, auto-inject via `deriveOnboardingGoals` stays)
 - Goal none-handling (if needed) belongs here, not in Phase 3
-- Define which goals have deterministic matching weight vs. prompt-only (needs Tom)
+- Goal-to-pipeline processing logic is separate future work
 - Update `deriveOnboardingGoals`, `goal-flow.ts`, profile page, and pipeline consumers
 - Files: `src/lib/vocabulary/onboarding-goals.ts`, `src/lib/vocabulary/concerns-goals.ts`, `src/components/onboarding/onboarding-goals.tsx`, `src/lib/onboarding/goal-flow.ts`, `src/app/profile/page.tsx`
 
