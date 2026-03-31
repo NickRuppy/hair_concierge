@@ -24,15 +24,17 @@ export default async function OnboardingProfilePage({
     redirect("/auth?next=/onboarding/profile")
   }
 
-  try {
-    await linkQuizToProfile(user.id, user.email, leadId)
-  } catch (error) {
-    console.error("Onboarding lead link failed:", error)
+  if (leadId) {
+    try {
+      await linkQuizToProfile(user.id, user.email, leadId)
+    } catch (error) {
+      console.error("Onboarding lead link failed:", error)
+    }
   }
 
   const { data: profile } = await admin
     .from("hair_profiles")
-    .select("hair_texture, density, mechanical_stress_factors")
+    .select("hair_texture, density, mechanical_stress_factors, answered_fields")
     .eq("user_id", user.id)
     .single()
 
@@ -42,6 +44,10 @@ export default async function OnboardingProfilePage({
       existingDensity={(profile?.density as HairDensity | null) ?? null}
       existingFactors={
         (profile?.mechanical_stress_factors as MechanicalStressFactor[]) ?? []
+      }
+      mechanicalStressWasAnswered={
+        Array.isArray(profile?.answered_fields) &&
+        (profile.answered_fields as string[]).includes("mechanical_stress_factors")
       }
       userId={user.id}
       hasProfile={!!profile}

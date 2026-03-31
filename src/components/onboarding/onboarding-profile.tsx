@@ -18,6 +18,7 @@ interface OnboardingProfileProps {
   hairTexture: HairTexture | null
   existingDensity: HairDensity | null
   existingFactors: MechanicalStressFactor[]
+  mechanicalStressWasAnswered: boolean
   userId: string
   hasProfile: boolean
 }
@@ -50,6 +51,7 @@ export function OnboardingProfile({
   hairTexture,
   existingDensity,
   existingFactors,
+  mechanicalStressWasAnswered,
   userId,
   hasProfile,
 }: OnboardingProfileProps) {
@@ -76,6 +78,7 @@ export function OnboardingProfile({
       hairTexture={hairTexture}
       existingDensity={existingDensity}
       existingFactors={existingFactors}
+      mechanicalStressWasAnswered={mechanicalStressWasAnswered}
       userId={userId}
     />
   )
@@ -85,11 +88,13 @@ function ProfileForm({
   hairTexture,
   existingDensity,
   existingFactors,
+  mechanicalStressWasAnswered,
   userId,
 }: {
   hairTexture: HairTexture | null
   existingDensity: HairDensity | null
   existingFactors: MechanicalStressFactor[]
+  mechanicalStressWasAnswered: boolean
   userId: string
 }) {
   const router = useRouter()
@@ -99,7 +104,9 @@ function ProfileForm({
     new Set(existingFactors),
   )
   const [touchedMechStress, setTouchedMechStress] = useState(false)
-  const [noneMechStress, setNoneMechStress] = useState(false)
+  const [noneMechStress, setNoneMechStress] = useState(
+    mechanicalStressWasAnswered && existingFactors.length === 0
+  )
   const [saving, setSaving] = useState(false)
 
   function toggleFactor(factor: MechanicalStressFactor) {

@@ -20,7 +20,9 @@ interface OnboardingRoutineProps {
   existingWashFrequency: WashFrequency | null
   existingHeatStyling: HeatStyling | null
   existingPostWashActions: string[]
+  postWashWasAnswered: boolean
   existingRoutineProducts: string[]
+  routineProductsWereAnswered: boolean
   userId: string
 }
 
@@ -28,7 +30,9 @@ export function OnboardingRoutine({
   existingWashFrequency,
   existingHeatStyling,
   existingPostWashActions,
+  postWashWasAnswered,
   existingRoutineProducts,
+  routineProductsWereAnswered,
   userId,
 }: OnboardingRoutineProps) {
   const router = useRouter()
@@ -48,8 +52,12 @@ export function OnboardingRoutine({
   const [saving, setSaving] = useState(false)
   const [touchedPostWash, setTouchedPostWash] = useState(false)
   const [touchedProducts, setTouchedProducts] = useState(false)
-  const [nonePostWash, setNonePostWash] = useState(false)
-  const [noneProducts, setNoneProducts] = useState(false)
+  const [nonePostWash, setNonePostWash] = useState(
+    postWashWasAnswered && existingPostWashActions.length === 0
+  )
+  const [noneProducts, setNoneProducts] = useState(
+    routineProductsWereAnswered && existingRoutineProducts.length === 0
+  )
 
   function toggleSetValue(
     setState: (updater: (prev: Set<string>) => Set<string>) => void,

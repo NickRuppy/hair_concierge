@@ -24,10 +24,12 @@ export default async function OnboardingGoalsPage({
     redirect("/auth?next=/onboarding/goals")
   }
 
-  try {
-    await linkQuizToProfile(user.id, user.email, leadId)
-  } catch (error) {
-    console.error("Onboarding lead link failed:", error)
+  if (leadId) {
+    try {
+      await linkQuizToProfile(user.id, user.email, leadId)
+    } catch (error) {
+      console.error("Onboarding lead link failed:", error)
+    }
   }
 
   const { data: profile } = await admin
