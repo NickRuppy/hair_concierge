@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 
@@ -22,10 +22,12 @@ export function SingleSelectScreen({
   onBack,
 }: SingleSelectScreenProps) {
   const advancingRef = useRef(false)
+  const [localSelected, setLocalSelected] = useState(selected)
 
   function handleSelect(value: string) {
     if (advancingRef.current) return
     advancingRef.current = true
+    setLocalSelected(value)
     setTimeout(() => {
       onSelect(value)
       advancingRef.current = false
@@ -60,7 +62,7 @@ export function SingleSelectScreen({
             key={option.value}
             emoji={option.emoji}
             label={option.label}
-            active={selected === option.value}
+            active={localSelected === option.value}
             onClick={() => handleSelect(option.value)}
             animationDelay={100 + i * 60}
           />

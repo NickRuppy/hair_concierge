@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import { useToast } from "@/providers/toast-provider"
 import { createClient } from "@/lib/supabase/client"
 import { useOnboardingStore } from "@/lib/onboarding/store"
 import type { OnboardingStep } from "@/lib/onboarding/store"
@@ -140,9 +141,11 @@ export function OnboardingFlow({
   productUsage,
 }: OnboardingFlowProps) {
   const router = useRouter()
+  const { toast } = useToast()
   const store = useOnboardingStore()
   const [hydrated, setHydrated] = useState(false)
   const initRef = useRef(false)
+  const savingRef = useRef(false)
 
   // ── Initialization: hydrate store from server data ──
 
@@ -218,10 +221,11 @@ export function OnboardingFlow({
   const saveOnboardingStep = useCallback(
     async (step: OnboardingStep) => {
       const supabase = createClient()
-      await supabase
+      const { error } = await supabase
         .from("profiles")
         .update({ onboarding_step: step })
         .eq("id", userId)
+      if (error) throw error
     },
     [userId],
   )
@@ -281,10 +285,11 @@ export function OnboardingFlow({
   const saveHairProfile = useCallback(
     async (fields: Record<string, unknown>) => {
       const supabase = createClient()
-      await supabase
+      const { error } = await supabase
         .from("hair_profiles")
         .update(fields)
         .eq("user_id", userId)
+      if (error) throw error
     },
     [userId],
   )
@@ -293,6 +298,10 @@ export function OnboardingFlow({
 
   const handleStepComplete = useCallback(
     async (completedStep: OnboardingStep) => {
+      if (savingRef.current) return
+      savingRef.current = true
+
+      try {
       const state = useOnboardingStore.getState()
       const supabase = createClient()
 
@@ -377,14 +386,8 @@ export function OnboardingFlow({
         }
 
         case "towel_technique": {
-          const stressFactors = deriveMechanicalStressFactors(
-            state.towelTechnique,
-            state.brushType,
-            state.nightProtection,
-          )
           await saveHairProfile({
             towel_technique: state.towelTechnique,
-            mechanical_stress_factors: stressFactors,
           })
           break
         }
@@ -472,83 +475,71 @@ export function OnboardingFlow({
       // Save the new step (after goNext)
       const nextStep = useOnboardingStore.getState().currentStep
       await saveOnboardingStep(nextStep)
+      } catch (err) {
+        console.error("Failed to save onboarding step:", err)
+        toast({ title: "Fehler beim Speichern. Bitte versuche es erneut.", variant: "destructive" })
+      } finally {
+        savingRef.current = false
+      }
     },
-    [userId, router, saveProductUsage, saveHairProfile, saveOnboardingStep],
+    [userId, router, toast, saveProductUsage, saveHairProfile, saveOnboardingStep],
   )
 
   // ── Toggle helpers ──
 
-  const toggleBasicProduct = useCallback(
-    (value: string) => {
-      const current = store.selectedBasicProducts
-      if (current.includes(value)) {
-        store.setSelectedBasicProducts(current.filter((v) => v !== value))
-      } else {
-        store.setSelectedBasicProducts([...current, value])
-      }
-    },
-    [store],
-  )
+  const toggleBasicProduct = useCallback((value: string) => {
+    const { selectedBasicProducts, setSelectedBasicProducts } = useOnboardingStore.getState()
+    if (selectedBasicProducts.includes(value)) {
+      setSelectedBasicProducts(selectedBasicProducts.filter((v) => v !== value))
+    } else {
+      setSelectedBasicProducts([...selectedBasicProducts, value])
+    }
+  }, [])
 
-  const toggleExtraProduct = useCallback(
-    (value: string) => {
-      const current = store.selectedExtraProducts
-      if (current.includes(value)) {
-        store.setSelectedExtraProducts(current.filter((v) => v !== value))
-      } else {
-        store.setSelectedExtraProducts([...current, value])
-      }
-    },
-    [store],
-  )
+  const toggleExtraProduct = useCallback((value: string) => {
+    const { selectedExtraProducts, setSelectedExtraProducts } = useOnboardingStore.getState()
+    if (selectedExtraProducts.includes(value)) {
+      setSelectedExtraProducts(selectedExtraProducts.filter((v) => v !== value))
+    } else {
+      setSelectedExtraProducts([...selectedExtraProducts, value])
+    }
+  }, [])
 
-  const toggleHeatTool = useCallback(
-    (tool: string) => {
-      const current = store.selectedHeatTools
-      if (current.includes(tool)) {
-        store.setSelectedHeatTools(current.filter((t) => t !== tool))
-      } else {
-        store.setSelectedHeatTools([...current, tool])
-      }
-    },
-    [store],
-  )
+  const toggleHeatTool = useCallback((tool: string) => {
+    const { selectedHeatTools, setSelectedHeatTools } = useOnboardingStore.getState()
+    if (selectedHeatTools.includes(tool)) {
+      setSelectedHeatTools(selectedHeatTools.filter((t) => t !== tool))
+    } else {
+      setSelectedHeatTools([...selectedHeatTools, tool])
+    }
+  }, [])
 
-  const toggleGoal = useCallback(
-    (goal: string) => {
-      const current = store.selectedGoals
-      if (current.includes(goal)) {
-        store.setSelectedGoals(current.filter((g) => g !== goal))
-      } else {
-        store.setSelectedGoals([...current, goal])
-      }
-    },
-    [store],
-  )
+  const toggleGoal = useCallback((goal: string) => {
+    const { selectedGoals, setSelectedGoals } = useOnboardingStore.getState()
+    if (selectedGoals.includes(goal)) {
+      setSelectedGoals(selectedGoals.filter((g) => g !== goal))
+    } else {
+      setSelectedGoals([...selectedGoals, goal])
+    }
+  }, [])
 
-  const toggleNightProtection = useCallback(
-    (value: string) => {
-      const current = store.nightProtection
-      if (current.includes(value as any)) {
-        store.setNightProtection(current.filter((v) => v !== value) as any)
-      } else {
-        store.setNightProtection([...current, value] as any)
-      }
-    },
-    [store],
-  )
+  const toggleNightProtection = useCallback((value: string) => {
+    const { nightProtection, setNightProtection } = useOnboardingStore.getState()
+    if (nightProtection.includes(value as any)) {
+      setNightProtection(nightProtection.filter((v) => v !== value) as any)
+    } else {
+      setNightProtection([...nightProtection, value] as any)
+    }
+  }, [])
 
-  const toggleDryingMethod = useCallback(
-    (value: string) => {
-      const current = store.dryingMethod
-      if (current.includes(value as any)) {
-        store.setDryingMethod(current.filter((v) => v !== value) as any)
-      } else {
-        store.setDryingMethod([...current, value] as any)
-      }
-    },
-    [store],
-  )
+  const toggleDryingMethod = useCallback((value: string) => {
+    const { dryingMethod, setDryingMethod } = useOnboardingStore.getState()
+    if (dryingMethod.includes(value as any)) {
+      setDryingMethod(dryingMethod.filter((v) => v !== value) as any)
+    } else {
+      setDryingMethod([...dryingMethod, value] as any)
+    }
+  }, [])
 
   // ── Don't render until hydrated ──
 
