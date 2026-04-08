@@ -24,7 +24,6 @@ import {
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
   POST_WASH_ACTION_OPTIONS,
-  ROUTINE_PREFERENCE_OPTIONS,
   ROUTINE_PRODUCT_OPTIONS,
 } from "@/lib/types"
 import type { Goal, HairProfile, UserMemoryEntry } from "@/lib/types"
@@ -40,7 +39,19 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
-import { fehler } from "@/lib/vocabulary"
+import {
+  fehler,
+  TOWEL_MATERIAL_OPTIONS,
+  TOWEL_MATERIAL_LABELS,
+  TOWEL_TECHNIQUE_OPTIONS,
+  TOWEL_TECHNIQUE_LABELS,
+  DRYING_METHOD_OPTIONS,
+  DRYING_METHOD_LABELS,
+  BRUSH_TYPE_OPTIONS,
+  BRUSH_TYPE_LABELS,
+  NIGHT_PROTECTION_OPTIONS,
+  NIGHT_PROTECTION_LABELS,
+} from "@/lib/vocabulary"
 import { deriveOnboardingGoals } from "@/lib/onboarding/goal-flow"
 
 type ProfileFieldDef = {
@@ -115,6 +126,42 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
       hp?.styling_tools?.length ? hp.styling_tools.map((t) => STYLING_TOOL_LABELS[t] ?? t).join(", ") : null,
   },
   {
+    key: "towel_material",
+    label: "Handtuch",
+    helpText: "Welches Material nutzt du zum Trocknen",
+    getValue: (hp) => hp?.towel_material ? TOWEL_MATERIAL_LABELS[hp.towel_material] ?? hp.towel_material : null,
+  },
+  {
+    key: "towel_technique",
+    label: "Trocknungstechnik",
+    helpText: "Wie du dein Haar nach dem Waschen trocknest",
+    getValue: (hp) => hp?.towel_technique ? TOWEL_TECHNIQUE_LABELS[hp.towel_technique] ?? hp.towel_technique : null,
+  },
+  {
+    key: "drying_method",
+    label: "Trocknungsmethode",
+    helpText: "Lufttrocknen, Föhnen oder beides",
+    getValue: (hp) => hp?.drying_method?.length ? hp.drying_method.map((d) => DRYING_METHOD_LABELS[d] ?? d).join(", ") : null,
+  },
+  {
+    key: "brush_type",
+    label: "Bürste",
+    helpText: "Welche Bürste du regelmässig nutzt",
+    getValue: (hp) => hp?.brush_type ? BRUSH_TYPE_LABELS[hp.brush_type] ?? hp.brush_type : null,
+  },
+  {
+    key: "night_protection",
+    label: "Nachtschutz",
+    helpText: "Wie du dein Haar nachts schützt",
+    getValue: (hp) => hp?.night_protection?.length ? hp.night_protection.map((n) => NIGHT_PROTECTION_LABELS[n] ?? n).join(", ") : null,
+  },
+  {
+    key: "uses_heat_protection",
+    label: "Hitzeschutz",
+    helpText: "Ob du Hitzeschutz verwendest",
+    getValue: (hp) => hp?.uses_heat_protection != null ? (hp.uses_heat_protection ? "Ja" : "Nein") : null,
+  },
+  {
     key: "post_wash_actions",
     label: "Nach dem Waschen",
     helpText: "Steuert Leave-in- und Styling-Empfehlungen",
@@ -124,13 +171,6 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
             .map((item) => POST_WASH_ACTION_OPTIONS.find((o) => o.value === item)?.label ?? item)
             .join(", ")
         : null,
-  },
-  {
-    key: "routine_preference",
-    label: "Routine-Detailgrad",
-    helpText: "Wie kompakt oder detailliert dein Plan sein soll",
-    getValue: (hp) =>
-      ROUTINE_PREFERENCE_OPTIONS.find((o) => o.value === hp?.routine_preference)?.label ?? null,
   },
   {
     key: "current_routine_products",
@@ -172,8 +212,13 @@ const FIELD_TO_SECTION: Record<string, string> = {
   wash_frequency: "routine",
   heat_styling: "routine",
   styling_tools: "routine",
+  towel_material: "routine",
+  towel_technique: "routine",
+  drying_method: "routine",
+  brush_type: "routine",
+  night_protection: "routine",
+  uses_heat_protection: "routine",
   post_wash_actions: "routine",
-  routine_preference: "routine",
   current_routine_products: "routine",
   products_used: "routine",
 }
@@ -209,8 +254,13 @@ export default function ProfilePage() {
     wash_frequency: "",
     heat_styling: "",
     styling_tools: [] as string[],
+    towel_material: "",
+    towel_technique: "",
+    drying_method: [] as string[],
+    brush_type: "",
+    night_protection: [] as string[],
+    uses_heat_protection: false,
     post_wash_actions: [] as string[],
-    routine_preference: "",
     current_routine_products: [] as string[],
     products_used: "",
     goals: [] as string[],
@@ -242,8 +292,13 @@ export default function ProfilePage() {
             wash_frequency: data.wash_frequency || "",
             heat_styling: data.heat_styling || "",
             styling_tools: data.styling_tools || [],
+            towel_material: data.towel_material || "",
+            towel_technique: data.towel_technique || "",
+            drying_method: data.drying_method || [],
+            brush_type: data.brush_type || "",
+            night_protection: data.night_protection || [],
+            uses_heat_protection: data.uses_heat_protection ?? false,
             post_wash_actions: data.post_wash_actions || [],
-            routine_preference: data.routine_preference || "",
             current_routine_products: data.current_routine_products || [],
             products_used: data.products_used || "",
             goals: storedGoals.filter((goal: string) => goal !== "volume"),
@@ -328,8 +383,13 @@ export default function ProfilePage() {
         wash_frequency: formData.wash_frequency || null,
         heat_styling: formData.heat_styling || null,
         styling_tools: formData.styling_tools,
+        towel_material: formData.towel_material || null,
+        towel_technique: formData.towel_technique || null,
+        drying_method: formData.drying_method,
+        brush_type: formData.brush_type || null,
+        night_protection: formData.night_protection,
+        uses_heat_protection: formData.uses_heat_protection,
         post_wash_actions: formData.post_wash_actions,
-        routine_preference: formData.routine_preference || null,
         current_routine_products: formData.current_routine_products,
         products_used: formData.products_used || null,
         goals: derivedGoals,
@@ -716,6 +776,87 @@ export default function ProfilePage() {
                       </div>
                     </div>
 
+                    {/* Towel Material */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Handtuch</label>
+                      <div className="flex flex-wrap gap-2">
+                        {TOWEL_MATERIAL_OPTIONS.map((opt) => (
+                          <button key={opt.value} onClick={() => setFormData((f) => ({ ...f, towel_material: opt.value }))}
+                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${formData.towel_material === opt.value ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Towel Technique */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Trocknungstechnik</label>
+                      <div className="flex flex-wrap gap-2">
+                        {TOWEL_TECHNIQUE_OPTIONS.map((opt) => (
+                          <button key={opt.value} onClick={() => setFormData((f) => ({ ...f, towel_technique: opt.value }))}
+                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${formData.towel_technique === opt.value ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Drying Method */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Trocknungsmethode</label>
+                      <div className="flex flex-wrap gap-2">
+                        {DRYING_METHOD_OPTIONS.map((opt) => (
+                          <button key={opt.value} onClick={() => setFormData((f) => ({ ...f, drying_method: toggleArrayItem(f.drying_method, opt.value) }))}
+                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${formData.drying_method.includes(opt.value) ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Brush Type */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Bürste</label>
+                      <div className="flex flex-wrap gap-2">
+                        {BRUSH_TYPE_OPTIONS.map((opt) => (
+                          <button key={opt.value} onClick={() => setFormData((f) => ({ ...f, brush_type: opt.value }))}
+                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${formData.brush_type === opt.value ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Night Protection */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Nachtschutz</label>
+                      <div className="flex flex-wrap gap-2">
+                        {NIGHT_PROTECTION_OPTIONS.map((opt) => (
+                          <button key={opt.value} onClick={() => setFormData((f) => ({ ...f, night_protection: toggleArrayItem(f.night_protection, opt.value) }))}
+                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${formData.night_protection.includes(opt.value) ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Uses Heat Protection */}
+                    <div>
+                      <label className="mb-2 block text-sm font-medium">Hitzeschutz</label>
+                      <div className="flex gap-2">
+                        <button onClick={() => setFormData((f) => ({ ...f, uses_heat_protection: true }))}
+                          className={`rounded-lg border px-4 py-2 text-sm transition-colors ${formData.uses_heat_protection ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
+                          Ja
+                        </button>
+                        <button onClick={() => setFormData((f) => ({ ...f, uses_heat_protection: false }))}
+                          className={`rounded-lg border px-4 py-2 text-sm transition-colors ${!formData.uses_heat_protection ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
+                          Nein
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Nach dem Waschen */}
                     <div>
                       <label className="mb-2 block text-sm font-medium">
                         Nach dem Waschen
@@ -746,19 +887,6 @@ export default function ProfilePage() {
                           </button>
                         ))}
                       </div>
-                    </div>
-
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">
-                        Routine-Detailgrad
-                      </label>
-                      <SegmentedControl
-                        options={ROUTINE_PREFERENCE_OPTIONS}
-                        value={formData.routine_preference}
-                        onChange={(v) =>
-                          setFormData((f) => ({ ...f, routine_preference: v }))
-                        }
-                      />
                     </div>
 
                     <div>

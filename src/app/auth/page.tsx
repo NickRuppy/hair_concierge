@@ -29,7 +29,7 @@ export default function AuthPage() {
   const urlError = searchParams.get("error")
   const reason = searchParams.get("reason")
   const rawNext = searchParams.get("next")
-  const defaultNext = from === "quiz" || leadId ? "/onboarding/goals" : "/chat"
+  const defaultNext = from === "quiz" || leadId ? "/onboarding" : "/chat"
   const next = rawNext?.startsWith("/") && !rawNext.startsWith("//") && !rawNext.includes("\\")
     ? rawNext
     : defaultNext

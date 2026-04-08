@@ -33,6 +33,11 @@ import {
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
   MECHANICAL_STRESS_FACTOR_LABELS,
+  TOWEL_MATERIAL_LABELS,
+  TOWEL_TECHNIQUE_LABELS,
+  DRYING_METHOD_LABELS,
+  BRUSH_TYPE_LABELS,
+  NIGHT_PROTECTION_LABELS,
 } from "@/lib/vocabulary"
 import type {
   Message,
@@ -143,6 +148,24 @@ function formatUserProfile(
   }
   if (profile.mechanical_stress_factors?.length > 0) {
     parts.push(`Mechanische Belastung: ${profile.mechanical_stress_factors.map((f) => MECHANICAL_STRESS_FACTOR_LABELS[f] ?? f).join(", ")}`)
+  }
+  if (profile.towel_material) {
+    parts.push(`Handtuch: ${TOWEL_MATERIAL_LABELS[profile.towel_material] ?? profile.towel_material}`)
+  }
+  if (profile.towel_technique) {
+    parts.push(`Trocknungstechnik: ${TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique}`)
+  }
+  if (profile.drying_method?.length > 0) {
+    parts.push(`Trocknungsmethode: ${profile.drying_method.map((d) => DRYING_METHOD_LABELS[d] ?? d).join(", ")}`)
+  }
+  if (profile.brush_type) {
+    parts.push(`Bürste: ${BRUSH_TYPE_LABELS[profile.brush_type] ?? profile.brush_type}`)
+  }
+  if (profile.night_protection?.length > 0) {
+    parts.push(`Nachtschutz: ${profile.night_protection.map((n) => NIGHT_PROTECTION_LABELS[n] ?? n).join(", ")}`)
+  }
+  if (profile.uses_heat_protection) {
+    parts.push("Verwendet Hitzeschutz: Ja")
   }
   if (profile.products_used) {
     parts.push(`Aktuelle Produkte: ${profile.products_used}`)

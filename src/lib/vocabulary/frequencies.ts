@@ -39,3 +39,19 @@ export const HEAT_STYLING_OPTIONS = HEAT_STYLING_LEVELS.map((value) => ({
   value,
   label: HEAT_STYLING_LABELS[value],
 }))
+
+export const PRODUCT_FREQUENCIES = ['rarely','1_2x','3_4x','5_6x','daily'] as const
+export type ProductFrequency = (typeof PRODUCT_FREQUENCIES)[number]
+
+export const PRODUCT_FREQUENCY_LABELS = {
+  rarely: "Seltener",
+  "1_2x": "1-2x pro Woche",
+  "3_4x": "3-4x pro Woche",
+  "5_6x": "5-6x pro Woche",
+  daily: "Täglich",
+} as const satisfies Record<ProductFrequency, string>
+
+export const PRODUCT_FREQUENCY_OPTIONS = PRODUCT_FREQUENCIES.map((value) => ({
+  value,
+  label: PRODUCT_FREQUENCY_LABELS[value],
+}))

@@ -19,6 +19,11 @@ import type {
   RoutinePreference,
   RoutineProduct,
   MechanicalStressFactor,
+  TowelMaterial,
+  TowelTechnique,
+  DryingMethod,
+  BrushType,
+  NightProtection,
 } from "@/lib/vocabulary"
 import type {
   ProductLeaveInSpecs,
@@ -94,6 +99,8 @@ export interface Profile {
   avatar_url: string | null
   is_admin: boolean
   onboarding_completed: boolean
+  onboarding_step: string
+  has_seen_completion_popup: boolean
   locale: string
   subscription_tier_id: string | null
   message_count_this_month: number
@@ -124,6 +131,12 @@ export interface HairProfile {
   routine_preference: RoutinePreference | null
   current_routine_products: RoutineProduct[]
   mechanical_stress_factors: MechanicalStressFactor[]
+  towel_material: TowelMaterial | null
+  towel_technique: TowelTechnique | null
+  drying_method: DryingMethod[]
+  brush_type: BrushType | null
+  night_protection: NightProtection[]
+  uses_heat_protection: boolean
   additional_notes: string | null
   conversation_memory: string | null
   created_at: string
