@@ -1,5 +1,6 @@
 "use client"
 
+import { useRef, useState } from "react"
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 
@@ -14,6 +15,19 @@ export function HeatProtectionScreen({
   onSelect,
   onBack,
 }: HeatProtectionScreenProps) {
+  const advancingRef = useRef(false)
+  const [localSelected, setLocalSelected] = useState(selected)
+
+  function handleSelect(val: boolean) {
+    if (advancingRef.current) return
+    advancingRef.current = true
+    setLocalSelected(val)
+    setTimeout(() => {
+      onSelect(val)
+      advancingRef.current = false
+    }, 400)
+  }
+
   return (
     <div>
       <button
@@ -29,17 +43,17 @@ export function HeatProtectionScreen({
 
       <div className="space-y-3">
         <QuizOptionCard
-          emoji={"\u{1F6E1}\uFE0F"}
+          emoji="🛡️"
           label="Ja"
-          active={selected === true}
-          onClick={() => onSelect(true)}
+          active={localSelected === true}
+          onClick={() => handleSelect(true)}
           animationDelay={100}
         />
         <QuizOptionCard
-          emoji={"\u274C"}
+          emoji="❌"
           label="Nein"
-          active={selected === false}
-          onClick={() => onSelect(false)}
+          active={localSelected === false}
+          onClick={() => handleSelect(false)}
           animationDelay={160}
         />
       </div>
