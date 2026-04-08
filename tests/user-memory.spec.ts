@@ -449,6 +449,73 @@ test.describe("User memory persistence with fake Supabase", () => {
     )
   })
 
+  test("manual edit returns null when normalized_key collides with another active memory", async () => {
+    const fake = new FakeSupabase({
+      user_memory_entries: [
+        createMemoryEntry({
+          id: "memory-1",
+          kind: "preference",
+          content: "Der Nutzer mag leichte Texturen.",
+          normalized_key: "preference:der_nutzer_mag_leichte_texturen",
+        }),
+        createMemoryEntry({
+          id: "memory-2",
+          kind: "preference",
+          content: "Der Nutzer bevorzugt duftfreie Produkte.",
+          normalized_key: "preference:der_nutzer_bevorzugt_duftfreie_produkte",
+        }),
+      ],
+      hair_profiles: [{ user_id: "user-1", conversation_memory: null }],
+    })
+
+    // Editing memory-1 to content that normalizes to the same key as memory-2
+    const result = await updateUserMemoryEntry(
+      "user-1",
+      "memory-1",
+      "Der Nutzer bevorzugt duftfreie Produkte.",
+      asSupabase(fake)
+    )
+
+    expect(result).toBeNull()
+    // Original memory should be unchanged
+    expect(fake.tables.user_memory_entries?.[0]).toEqual(
+      expect.objectContaining({
+        id: "memory-1",
+        content: "Der Nutzer mag leichte Texturen.",
+      })
+    )
+  })
+
+  test("manual edit succeeds when normalized_key changes but no collision exists", async () => {
+    const fake = new FakeSupabase({
+      user_memory_entries: [
+        createMemoryEntry({
+          id: "memory-1",
+          kind: "preference",
+          content: "Der Nutzer mag leichte Texturen.",
+          normalized_key: "preference:der_nutzer_mag_leichte_texturen",
+        }),
+      ],
+      hair_profiles: [{ user_id: "user-1", conversation_memory: null }],
+    })
+
+    const result = await updateUserMemoryEntry(
+      "user-1",
+      "memory-1",
+      "Der Nutzer bevorzugt schwere Oele.",
+      asSupabase(fake)
+    )
+
+    expect(result).not.toBeNull()
+    expect(fake.tables.user_memory_entries?.[0]).toEqual(
+      expect.objectContaining({
+        id: "memory-1",
+        content: "Der Nutzer bevorzugt schwere Oele.",
+        source: "manual",
+      })
+    )
+  })
+
   test("deletes single memories and conversation-sourced memories without touching manual rows", async () => {
     const fake = new FakeSupabase({
       user_memory_entries: [
