@@ -5,11 +5,13 @@ import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import { STYLING_TOOL_OPTIONS } from "@/lib/vocabulary"
 
 const HEAT_TOOL_EMOJIS: Record<string, string> = {
-  blow_dryer: "\u{1F4A8}",
-  flat_iron: "\u{1F525}",
-  curling_iron: "\u{1F300}",
-  hot_air_brush: "\u{1F32C}\uFE0F",
-  diffuser: "\u{1F4AB}",
+  blow_dryer: "💨",
+  flat_iron: "🔥",
+  curling_iron: "🌀",
+  wave_iron: "🌊",
+  hot_air_brush: "🌬️",
+  multi_tool: "🔧",
+  diffuser: "💫",
 }
 
 interface HeatToolsScreenProps {

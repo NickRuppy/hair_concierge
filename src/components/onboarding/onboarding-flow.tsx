@@ -299,6 +299,11 @@ export function OnboardingFlow({
       if (savingRef.current) return
       savingRef.current = true
 
+      // Safety net: auto-reset after 10s in case a save hangs
+      const safetyTimeout = setTimeout(() => {
+        savingRef.current = false
+      }, 10000)
+
       try {
       const state = useOnboardingStore.getState()
       const supabase = createClient()
@@ -477,6 +482,7 @@ export function OnboardingFlow({
         console.error("Failed to save onboarding step:", err)
         toast({ title: "Fehler beim Speichern. Bitte versuche es erneut.", variant: "destructive" })
       } finally {
+        clearTimeout(safetyTimeout)
         savingRef.current = false
       }
     },
