@@ -8,7 +8,7 @@ interface UseChatReturn {
   isStreaming: boolean
   conversations: Conversation[]
   currentConversationId: string | null
-  sendMessage: (content: string, imageUrl?: string) => Promise<void>
+  sendMessage: (content: string) => Promise<void>
   loadConversation: (id: string) => Promise<void>
   loadConversations: () => Promise<void>
   deleteConversation: (id: string) => Promise<void>
@@ -61,7 +61,7 @@ export function useChat(): UseChatReturn {
   }, [])
 
   const sendMessage = useCallback(
-    async (content: string, imageUrl?: string) => {
+    async (content: string) => {
       if (isStreaming) return
 
       // Add user message optimistically
@@ -70,8 +70,6 @@ export function useChat(): UseChatReturn {
         conversation_id: currentConversationId || "",
         role: "user",
         content,
-        image_url: imageUrl || null,
-        image_analysis: null,
         product_recommendations: null,
         rag_context: null,
         token_usage: null,
@@ -86,8 +84,6 @@ export function useChat(): UseChatReturn {
         conversation_id: currentConversationId || "",
         role: "assistant",
         content: "",
-        image_url: null,
-        image_analysis: null,
         product_recommendations: null,
         rag_context: null,
         token_usage: null,
@@ -104,7 +100,6 @@ export function useChat(): UseChatReturn {
           body: JSON.stringify({
             message: content,
             conversation_id: currentConversationId || undefined,
-            image_url: imageUrl || undefined,
           }),
           signal: abortRef.current.signal,
         })

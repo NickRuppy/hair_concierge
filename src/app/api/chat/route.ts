@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const { message, conversation_id, image_url } = parsed.data
+  const { message, conversation_id } = parsed.data
 
   try {
     const {
@@ -72,7 +72,6 @@ export async function POST(request: Request) {
       message,
       conversationId: conversation_id,
       userId: user.id,
-      imageUrl: image_url,
     })
 
     // Save user message
@@ -81,7 +80,6 @@ export async function POST(request: Request) {
       conversation_id: conversationId,
       role: "user",
       content: message,
-      image_url: image_url ?? null,
     })
 
     // Create SSE response

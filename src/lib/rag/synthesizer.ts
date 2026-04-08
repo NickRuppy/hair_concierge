@@ -54,7 +54,6 @@ export interface SynthesizeParams {
   conversationHistory: Message[]
   hairProfile: HairProfile | null
   ragChunks: ContentChunk[]
-  imageAnalysis?: string
   products?: Product[]
   intent: IntentType
   productCategory?: ProductCategory
@@ -759,7 +758,6 @@ Wenn du Masken-Empfehlungen gibst:
 function buildSystemPrompt(
   hairProfile: HairProfile | null,
   ragChunks: ContentChunk[],
-  imageAnalysis?: string,
   products?: Product[],
   productCategory?: ProductCategory,
   maskDecision?: MaskDecision,
@@ -796,13 +794,6 @@ function buildSystemPrompt(
   }
   prompt = prompt.replace("{{RAG_CONTEXT}}", ragContext)
 
-  prompt = prompt.replace(
-    "{{IMAGE_ANALYSIS}}",
-    imageAnalysis
-      ? `Analyse des hochgeladenen Bildes:\n${imageAnalysis}`
-      : "Kein Bild hochgeladen."
-  )
-
   return prompt
 }
 
@@ -822,7 +813,6 @@ export async function synthesizeResponse(
     conversationHistory,
     hairProfile,
     ragChunks,
-    imageAnalysis,
     products,
     productCategory,
     maskDecision,
@@ -836,7 +826,6 @@ export async function synthesizeResponse(
   const systemPrompt = buildSystemPrompt(
     hairProfile,
     ragChunks,
-    imageAnalysis,
     products,
     productCategory,
     maskDecision,

@@ -50,7 +50,7 @@ export async function GET(
   // Fetch messages
   const { data: messages, error: msgError } = await admin
     .from("messages")
-    .select("id, conversation_id, role, content, image_url, product_recommendations, created_at")
+    .select("id, conversation_id, role, content, product_recommendations, created_at")
     .eq("conversation_id", id)
     .order("created_at", { ascending: true })
 

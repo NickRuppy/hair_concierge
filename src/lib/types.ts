@@ -342,8 +342,6 @@ export interface Message {
   conversation_id: string
   role: "user" | "assistant" | "system"
   content: string | null
-  image_url: string | null
-  image_analysis: string | null
   product_recommendations: Product[] | null
   rag_context: MessageRagContext | null
   token_usage: Record<string, number> | null
@@ -400,7 +398,6 @@ export type IntentType =
   | "hair_care_advice"
   | "diagnosis"
   | "routine_help"
-  | "photo_analysis"
   | "ingredient_question"
   | "general_chat"
   | "followup"

@@ -36,7 +36,6 @@ const INTENT_SOURCE_ROUTES: Record<IntentType, string[] | null> = {
   hair_care_advice: ["book", "transcript", "qa", "product_list", "community_qa"],
   routine_help: ["book", "transcript", "qa", "product_list", "community_qa"],
   diagnosis: ["book", "qa", "live_call", "community_qa", "product_list"],
-  photo_analysis: ["book", "qa", "live_call"],
   general_chat: null,
   followup: null,
 }
