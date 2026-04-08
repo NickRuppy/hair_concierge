@@ -130,6 +130,45 @@ export interface HairProfile {
   updated_at: string
 }
 
+export type UserMemoryKind =
+  | "preference"
+  | "routine"
+  | "product_experience"
+  | "hair_history"
+  | "progress"
+  | "sensitivity"
+  | "medical_context"
+  | "legacy_summary"
+  | "other"
+
+export type UserMemorySource = "chat" | "manual" | "legacy"
+export type UserMemoryStatus = "active" | "archived"
+
+export interface UserMemorySettings {
+  user_id: string
+  memory_enabled: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface UserMemoryEntry {
+  id: string
+  user_id: string
+  kind: UserMemoryKind
+  content: string
+  normalized_key: string
+  source: UserMemorySource
+  source_conversation_id: string | null
+  evidence: string | null
+  confidence: number | null
+  metadata: Record<string, unknown>
+  status: UserMemoryStatus
+  superseded_by: string | null
+  archived_at: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface Product {
   id: string
   name: string
