@@ -6,7 +6,15 @@ export function QuizBrandPanel() {
   const step = useQuizStore((s) => s.step)
   const leadCaptureSubStep = useQuizStore((s) => s.leadCaptureSubStep)
 
-  const questionNumber = step >= 2 && step <= 7 ? step - 1 : null
+  const QUESTION_NUMBER_MAP: Record<number, number> = {
+    7: 1,  // chemical
+    6: 2,  // scalp
+    2: 3,  // texture
+    3: 4,  // thickness
+    4: 5,  // surface
+    5: 6,  // pull
+  }
+  const questionNumber = QUESTION_NUMBER_MAP[step] ?? null
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center px-12">

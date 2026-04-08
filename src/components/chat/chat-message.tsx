@@ -226,11 +226,10 @@ function processChildren(
 
 export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessageProps) {
   const isUser = message.role === "user"
-  const rawSources: CitationSource[] = message.rag_context?.sources ?? []
 
   const { content: renumberedContent, sources } = useMemo(
-    () => renumberCitations(message.content ?? "", rawSources),
-    [message.content, rawSources]
+    () => renumberCitations(message.content ?? "", message.rag_context?.sources ?? []),
+    [message.content, message.rag_context?.sources]
   )
 
   const sourceMap = new Map(sources.map((s) => [s.index, s]))
@@ -295,20 +294,6 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
       <div
         className={`max-w-[80%] space-y-2 ${isUser ? "items-end" : "items-start"}`}
       >
-        {/* Image if present */}
-        {message.image_url && (
-          <div
-            className={`overflow-hidden rounded-xl ${isUser ? "ml-auto" : ""}`}
-          >
-            <img
-              src={message.image_url}
-              alt="Hochgeladenes Bild"
-              className="max-h-64 max-w-full rounded-xl object-cover"
-              loading="lazy"
-            />
-          </div>
-        )}
-
         {/* Text content */}
         {message.content && (
           <div

@@ -4,7 +4,6 @@
  * Placeholders:
  * - {{USER_PROFILE}} - Serialized hair profile of the current user
  * - {{RAG_CONTEXT}} - Retrieved knowledge chunks from the vector store
- * - {{IMAGE_ANALYSIS}} - Vision model analysis of an uploaded photo
  */
 export const SYSTEM_PROMPT = `Ich bin Tom Hannemann — Hairstylist, Friseurtrainer und leidenschaftlicher Aufklaerer in Sachen Haarpflege. Seit 18 Jahren bin ich in der Beauty-Industrie unterwegs und habe mir mit meiner Community von 1,5 Millionen Menschen (@_the.beautiful.people) einen Ruf als "leidenschaftlicher Klugsheisser" erarbeitet. Klare Worte ohne Chichi, mit intelligentem Witz — das bin ich.
 
@@ -136,11 +135,7 @@ Bei widerspruechlichen Informationen:
 
 <knowledge_base>
 {{RAG_CONTEXT}}
-</knowledge_base>
-
-<image_analysis>
-{{IMAGE_ANALYSIS}}
-</image_analysis>`
+</knowledge_base>`
 
 /**
  * Prompt for classifying the intent of a user message.
@@ -153,7 +148,6 @@ export const INTENT_CLASSIFICATION_PROMPT = `Klassifiziere die Absicht der folge
 - hair_care_advice: Der Nutzer fragt nach allgemeinen Haarpflegetipps, Routinen oder Methoden
 - diagnosis: Der Nutzer beschreibt ein Haarproblem und moechte eine Einschaetzung oder Ursachenanalyse
 - routine_help: Der Nutzer moechte Hilfe bei der Erstellung oder Optimierung einer Haarpflege-Routine
-- photo_analysis: Der Nutzer hat ein Bild hochgeladen und moechte eine Analyse seines Haarzustands
 - ingredient_question: Der Nutzer fragt nach bestimmten Inhaltsstoffen, INCI-Listen oder deren Wirkung
 - general_chat: Smalltalk, Begruessung oder allgemeine Unterhaltung rund ums Thema Haar
 - followup: Eine Folgefrage oder Praezisierung zu einer vorherigen Antwort

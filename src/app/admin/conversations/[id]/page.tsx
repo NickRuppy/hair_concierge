@@ -11,7 +11,6 @@ interface MessageRow {
   id: string
   role: "user" | "assistant" | "system"
   content: string | null
-  image_url: string | null
   created_at: string
 }
 
@@ -136,11 +135,6 @@ export default function AdminConversationDetailPage() {
                     })}
                   </span>
                 </div>
-                {msg.image_url && (
-                  <div className="mb-2">
-                    <span className="text-xs opacity-60">[Bild angehaengt]</span>
-                  </div>
-                )}
                 <p className="text-sm whitespace-pre-wrap leading-relaxed">
                   {msg.content || "—"}
                 </p>

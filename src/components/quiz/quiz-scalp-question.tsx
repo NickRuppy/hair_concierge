@@ -165,18 +165,17 @@ export function QuizScalpQuestion() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={5} total={6} />
+          <QuizProgressBar current={2} total={6} />
         </div>
-        <span className="text-sm text-white/38 tabular-nums">5/6</span>
+        <span className="text-sm text-white/38 tabular-nums">2/6</span>
       </div>
 
       {/* Title + instruction — always visible */}
       <h2 className="font-header text-3xl leading-tight text-white mb-2">
-        WIE IST DEIN KOPFHAUTTYP?
+        WIE SCHNELL FETTEN DEINE ANSAETZE NACH?
       </h2>
       <p className="text-sm text-white/60 leading-relaxed mb-5">
-        Sei ehrlich: Wie oft musst du wirklich waschen? Deine Gesichtshaut
-        gibt dir einen guten Hinweis — oelige T-Zone deutet auf fettige
+        Deine Gesichtshaut gibt dir einen guten Hinweis — oelige T-Zone deutet auf fettige
         Kopfhaut hin.
       </p>
 
@@ -222,12 +221,8 @@ export function QuizScalpQuestion() {
         }
       >
         <h2 className="font-header text-2xl leading-tight text-white mb-2">
-          HAST DU KOPFHAUTBESCHWERDEN?
+          HAST DU ZUSAETZLICH BESCHWERDEN WIE SCHUPPEN, JUCKREIZ ODER ROETUNGEN?
         </h2>
-        <p className="text-sm text-white/60 leading-relaxed mb-5">
-          Schuppen, Jucken oder Roetungen — oder ist alles im gruenen
-          Bereich?
-        </p>
 
         <div className="flex gap-3">
           <button
@@ -264,7 +259,7 @@ export function QuizScalpQuestion() {
         }
       >
         <h2 className="font-header text-2xl leading-tight text-white mb-2">
-          WELCHE BESCHWERDEN HAST DU?
+          WAS IST AKTUELL DEIN HAUPTPROBLEM?
         </h2>
         <p className="text-sm text-white/60 leading-relaxed mb-5">
           Waehle die Beschwerde, die am besten zu dir passt.
@@ -287,7 +282,7 @@ export function QuizScalpQuestion() {
 
       {/* Motivation text — always anchored at bottom */}
       <p className="mt-3 text-center text-sm text-white/38">
-        Nur noch 1 Frage — du machst das super.
+        Top, die Kopfhaut-Frage ist geschafft.
       </p>
     </div>
   )

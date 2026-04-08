@@ -114,7 +114,6 @@ const nullablePriceField = z.preprocess((value) => {
 export const chatMessageSchema = z.object({
   message: z.string().min(1).max(5000),
   conversation_id: z.string().uuid().optional(),
-  image_url: z.string().url().optional(),
 })
 
 export const productSchema = z.object({

@@ -7,7 +7,6 @@ const VALID_INTENTS: IntentType[] = [
   "hair_care_advice",
   "diagnosis",
   "routine_help",
-  "photo_analysis",
   "ingredient_question",
   "general_chat",
   "followup",
@@ -40,26 +39,11 @@ const DEFAULT_CLASSIFICATION: ClassificationResult = {
  * Returns intent, product category, complexity, confidence, filters, and clarification suggestion.
  *
  * @param message - The user's message text
- * @param hasImage - Whether the message includes an uploaded image
  * @returns The full classification result
  */
 export async function classifyIntent(
-  message: string,
-  hasImage: boolean
+  message: string
 ): Promise<ClassificationResult> {
-  // If an image is present, override to photo_analysis
-  if (hasImage) {
-    return {
-      intent: "photo_analysis",
-      product_category: null,
-      complexity: "simple",
-      needs_clarification: false,
-      retrieval_mode: "hybrid",
-      normalized_filters: {},
-      router_confidence: 0.95,
-    }
-  }
-
   try {
     const response = await getOpenAI().chat.completions.create({
       model: "gpt-4o",

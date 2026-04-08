@@ -7,13 +7,14 @@ import { useToast } from "@/providers/toast-provider"
 import { HAIR_TEXTURE_ADJECTIVE } from "@/lib/vocabulary/hair-types"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import { deriveOnboardingGoals, getOnboardingGoalCards } from "@/lib/onboarding/goal-flow"
-import { DESIRED_VOLUME_LABELS } from "@/lib/types"
+import { DESIRED_VOLUME_LABELS, ROUTINE_PREFERENCE_OPTIONS } from "@/lib/types"
 import type { HairTexture, DesiredVolume } from "@/lib/vocabulary"
 
 interface OnboardingGoalsProps {
   hairTexture: HairTexture | null
   existingGoals: string[]
   existingDesiredVolume: DesiredVolume | null
+  existingRoutinePreference: string | null
   userId: string
   hasProfile: boolean
 }
@@ -22,6 +23,7 @@ export function OnboardingGoals({
   hairTexture,
   existingGoals,
   existingDesiredVolume,
+  existingRoutinePreference,
   userId,
   hasProfile,
 }: OnboardingGoalsProps) {
@@ -51,6 +53,7 @@ export function OnboardingGoals({
       hairTexture={hairTexture}
       existingGoals={existingGoals}
       existingDesiredVolume={existingDesiredVolume}
+      existingRoutinePreference={existingRoutinePreference}
       userId={userId}
     />
   )
@@ -61,12 +64,14 @@ function GoalSelector({
   hairTexture,
   existingGoals,
   existingDesiredVolume,
+  existingRoutinePreference,
   userId,
 }: {
   goals: ReturnType<typeof getOnboardingGoalCards>
   hairTexture: HairTexture
   existingGoals: string[]
   existingDesiredVolume: DesiredVolume | null
+  existingRoutinePreference: string | null
   userId: string
 }) {
   const router = useRouter()
@@ -83,6 +88,7 @@ function GoalSelector({
     }
     return initial
   })
+  const [routinePreference, setRoutinePreference] = useState(existingRoutinePreference ?? "")
   const [saving, setSaving] = useState(false)
 
   function toggleGoal(key: string) {
@@ -112,6 +118,7 @@ function GoalSelector({
       .update({
         goals: derivedGoals,
         desired_volume: desiredVolume,
+        routine_preference: routinePreference || null,
         updated_at: new Date().toISOString(),
       })
       .eq("user_id", userId)
@@ -122,18 +129,7 @@ function GoalSelector({
       return
     }
 
-    const { error: profileError } = await supabase
-      .from("profiles")
-      .update({ onboarding_completed: true })
-      .eq("id", userId)
-
-    if (profileError) {
-      toast({ title: "Fehler beim Speichern. Bitte versuche es erneut.", variant: "destructive" })
-      setSaving(false)
-      return
-    }
-
-    router.push("/chat")
+    router.push("/onboarding/profile")
   }
 
   const adjective = HAIR_TEXTURE_ADJECTIVE[hairTexture]
@@ -221,9 +217,32 @@ function GoalSelector({
         ))}
       </div>
 
+      {/* Routine preference */}
+      <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "620ms" }}>
+        <h2 className="font-header text-2xl leading-tight text-white mb-2">
+          Wie detailliert soll deine Routine sein?
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {ROUTINE_PREFERENCE_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => setRoutinePreference(option.value)}
+              className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
+                routinePreference === option.value
+                  ? "border-[#F5C518] bg-[#F5C518] text-[#1A1618]"
+                  : "border-white/20 text-white/70 hover:border-white/35 hover:text-white"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div
         className="animate-fade-in-up"
-        style={{ animationDelay: "620ms" }}
+        style={{ animationDelay: "740ms" }}
       >
         {!desiredVolume && (
           <p className="mb-3 text-sm text-[#F5C518]">
@@ -235,7 +254,7 @@ function GoalSelector({
           disabled={!desiredVolume || saving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {saving ? "SPEICHERN..." : "ZU TOMBOT"}
+          {saving ? "SPEICHERN..." : "WEITER ZUM PROFIL"}
         </button>
       </div>
     </div>

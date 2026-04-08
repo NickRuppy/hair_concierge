@@ -41,7 +41,7 @@ export function QuizResults() {
         {lead.name.toUpperCase()}, DEIN HAARPROFIL
       </h2>
       <p className="text-base text-white/60 mb-5">
-        Deine Diagnose steht. Im naechsten Schritt legst du Ziele und Routinepraeferenzen fest.
+        Dein Profil ist fast fertig — im naechsten Schritt geht es weiter mit deinen Zielen und deiner Routine.
       </p>
 
       {/* Profile cards — responsive grid */}

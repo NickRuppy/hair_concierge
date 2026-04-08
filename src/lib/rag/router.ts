@@ -131,17 +131,6 @@ export function evaluateRoute(
       ? buildOilDecision(hairProfile, userMessage)
       : null
 
-    // ── Rule 1: Image override ─────────────────────────────────────────
-    if (intent === "photo_analysis") {
-      return {
-        retrieval_mode: "hybrid",
-        needs_clarification: false,
-        slot_completeness: slotScore,
-        confidence: router_confidence,
-        policy_overrides: [],
-      }
-    }
-
     // ── Rule 2: FAQ shortcut ───────────────────────────────────────────
     if (
       complexity === "simple" &&

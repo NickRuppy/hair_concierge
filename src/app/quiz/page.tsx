@@ -23,7 +23,7 @@ const STEP_NAMES: Record<number, string> = {
   9: "lead_capture",
   10: "analysis",
   11: "results",
-  14: "welcome",
+  14: "auth_transition",
 }
 
 export default function QuizPage() {
@@ -31,8 +31,8 @@ export default function QuizPage() {
 
   useEffect(() => {
     posthog.capture("quiz_step_viewed", {
-      step_number: step,
       step_name: STEP_NAMES[step] || `step_${step}`,
+      step_number: step, // deprecated: use step_name after Phase 4 resequencing
     })
   }, [step])
 

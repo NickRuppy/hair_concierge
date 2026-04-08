@@ -1,5 +1,4 @@
 import { createAdminClient } from "@/lib/supabase/admin"
-import { analyzeImage } from "@/lib/openai/vision"
 import { classifyIntent } from "@/lib/rag/intent-classifier"
 import { evaluateRoute } from "@/lib/rag/router"
 import { buildClarificationQuestions } from "@/lib/rag/clarification"
@@ -59,7 +58,6 @@ export interface PipelineParams {
   message: string
   conversationId?: string
   userId: string
-  imageUrl?: string
 }
 
 export interface PipelineResult {
@@ -79,7 +77,6 @@ export interface PipelineResult {
 /**
  * Orchestrates the full RAG pipeline for a single user turn:
  *
- * Step 0: If an image is attached, analyze it with the vision model.
  * Step 1: Classify the user's intent (with enriched fields).
  * Step 1b: Evaluate routing decision via deterministic policy engine.
  * Step 2: Retrieve relevant knowledge chunks via embedding + pgvector search.
@@ -92,25 +89,14 @@ export interface PipelineResult {
 export async function runPipeline(
   params: PipelineParams
 ): Promise<PipelineResult> {
-  const { message, userId, imageUrl } = params
+  const { message, userId } = params
   let { conversationId } = params
 
   const supabase = createAdminClient()
 
-  // ── Step 0: Image analysis (if applicable) ──────────────────────────
-  let imageAnalysis: string | undefined
-  if (imageUrl) {
-    try {
-      imageAnalysis = await analyzeImage(imageUrl, message)
-    } catch (error) {
-      console.error("Image analysis failed:", error)
-      imageAnalysis = "Bildanalyse fehlgeschlagen. Bitte beschreibe dein Haar stattdessen."
-    }
-  }
-
   // ── Step 1: Classify intent + load hair profile (parallel) ─────────
   const [classification, hairProfileResult] = await Promise.all([
-    classifyIntent(message, !!imageUrl),
+    classifyIntent(message),
     supabase
       .from("hair_profiles")
       .select("*")
@@ -253,7 +239,6 @@ export async function runPipeline(
       conversationHistory,
       hairProfile,
       ragChunks,
-      imageAnalysis,
       intent,
       productCategory: product_category,
       shampooDecision,
@@ -518,7 +503,6 @@ export async function runPipeline(
     conversationHistory,
     hairProfile,
     ragChunks,
-    imageAnalysis,
     products: matchedProducts,
     intent,
     productCategory: product_category,

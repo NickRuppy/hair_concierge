@@ -14,6 +14,8 @@
 
 10. **Shampoo bei Schuppen: nur Anti-Schuppen oder Kombi?** Wenn jemand Schuppen hat, soll er/sie ausschließlich ein Anti-Schuppen-Shampoo verwenden (bis das Problem weg ist), oder zusätzlich ein normales Shampoo passend zum Kopfhauttyp im Wechsel nutzen?
 
+11. **Shampoo für dickes Haar + fettige Kopfhaut?** Gibt es wirklich keine Shampoos für Leute mit dickem Haar (coarse) und fettiger Kopfhaut? Oder fehlen uns Produkte in der Matrix?
+
 ### Offen — für Jonas klären
 
 1. **Subscription-Tiers / Monetarisierung:** Wird es verschiedene Abo-Stufen geben (z.B. Free / Pro / Premium)? Welche Features gehören in welchen Tier (Routine-Tracking, Haarbilder-Analyse, individuelle Beratung buchen)? -> for now not

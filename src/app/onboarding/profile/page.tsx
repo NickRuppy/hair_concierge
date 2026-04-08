@@ -1,17 +1,17 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { OnboardingDensity } from "@/components/onboarding/onboarding-density"
-import type { HairDensity, HairTexture } from "@/lib/vocabulary"
+import { OnboardingProfile } from "@/components/onboarding/onboarding-profile"
+import type { HairDensity, HairTexture, MechanicalStressFactor } from "@/lib/vocabulary"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 
-interface OnboardingDensityPageProps {
+interface OnboardingProfilePageProps {
   searchParams: Promise<{ lead?: string | string[] }>
 }
 
-export default async function OnboardingDensityPage({
+export default async function OnboardingProfilePage({
   searchParams,
-}: OnboardingDensityPageProps) {
+}: OnboardingProfilePageProps) {
   const supabase = await createClient()
   const admin = createAdminClient()
   const resolvedSearchParams = await searchParams
@@ -21,25 +21,34 @@ export default async function OnboardingDensityPage({
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    redirect("/auth?next=/onboarding/density")
+    redirect("/auth?next=/onboarding/profile")
   }
 
-  try {
-    await linkQuizToProfile(user.id, user.email, leadId)
-  } catch (error) {
-    console.error("Onboarding lead link failed:", error)
+  if (leadId) {
+    try {
+      await linkQuizToProfile(user.id, user.email, leadId)
+    } catch (error) {
+      console.error("Onboarding lead link failed:", error)
+    }
   }
 
   const { data: profile } = await admin
     .from("hair_profiles")
-    .select("hair_texture, density")
+    .select("hair_texture, density, mechanical_stress_factors, answered_fields")
     .eq("user_id", user.id)
     .single()
 
   return (
-    <OnboardingDensity
+    <OnboardingProfile
       hairTexture={(profile?.hair_texture as HairTexture) ?? null}
       existingDensity={(profile?.density as HairDensity | null) ?? null}
+      existingFactors={
+        (profile?.mechanical_stress_factors as MechanicalStressFactor[]) ?? []
+      }
+      mechanicalStressWasAnswered={
+        Array.isArray(profile?.answered_fields) &&
+        (profile.answered_fields as string[]).includes("mechanical_stress_factors")
+      }
       userId={user.id}
       hasProfile={!!profile}
     />
