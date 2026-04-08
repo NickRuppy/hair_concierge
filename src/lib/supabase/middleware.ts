@@ -71,9 +71,38 @@ export async function updateSession(request: NextRequest) {
 
   // Redirect authenticated users away from auth page and quiz
   if (pathname === "/auth" || pathname === "/quiz") {
+    // Check if user has completed onboarding
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_completed")
+      .eq("id", user.id)
+      .single()
+
     const url = request.nextUrl.clone()
-    url.pathname = "/chat"
+    if (!profile?.onboarding_completed) {
+      url.pathname = "/onboarding"
+      // Preserve lead ID if present
+      const leadId = request.nextUrl.searchParams.get("lead")
+      if (leadId) url.searchParams.set("lead", leadId)
+    } else {
+      url.pathname = "/chat"
+    }
     return NextResponse.redirect(url)
+  }
+
+  // Redirect authenticated users who haven't completed onboarding away from chat
+  if (pathname === "/chat" || pathname === "/") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_completed")
+      .eq("id", user.id)
+      .single()
+
+    if (!profile?.onboarding_completed) {
+      const url = request.nextUrl.clone()
+      url.pathname = "/onboarding"
+      return NextResponse.redirect(url)
+    }
   }
 
   // Admin route protection
