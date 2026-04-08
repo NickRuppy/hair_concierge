@@ -6,8 +6,9 @@
 --   4. Create user_product_usage table with RLS
 
 -- 1. Change onboarding_step from integer to text
+--    Map legacy integer values to 'welcome' so incomplete users restart cleanly
 ALTER TABLE profiles
-  ALTER COLUMN onboarding_step TYPE text USING onboarding_step::text,
+  ALTER COLUMN onboarding_step TYPE text USING 'welcome',
   ALTER COLUMN onboarding_step SET DEFAULT 'welcome';
 
 -- 2. Add has_seen_completion_popup to profiles

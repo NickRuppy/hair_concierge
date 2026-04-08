@@ -53,7 +53,7 @@ export function QuizWelcome() {
           defaultTab="signup"
           defaultEmail={lead.email}
           leadId={leadId}
-          next="/onboarding/goals"
+          next="/onboarding"
           showForgotPassword={false}
           onEmailSent={(email, type) => setEmailSent({ email, type })}
         />

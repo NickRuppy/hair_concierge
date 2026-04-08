@@ -23,7 +23,7 @@ export function mapShampooFrequency(freq: ProductFrequency): WashFrequency {
     case "daily":
       return "daily"
     case "5_6x":
-      return "every_2_3_days" // closest match
+      return "daily" // near-daily, closest match
     case "3_4x":
       return "every_2_3_days"
     case "1_2x":
