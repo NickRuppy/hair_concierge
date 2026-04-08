@@ -5,8 +5,20 @@
 --   3. Add care-habit columns to hair_profiles
 --   4. Create user_product_usage table with RLS
 
--- 1. Add onboarding_step as text (column may not exist in production)
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS onboarding_step text DEFAULT 'welcome';
+-- 1. Ensure onboarding_step is text type with 'welcome' default
+--    Handles both: column exists as integer (convert) or doesn't exist (add)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'profiles' AND column_name = 'onboarding_step'
+  ) THEN
+    ALTER TABLE profiles ALTER COLUMN onboarding_step TYPE text USING 'welcome';
+    ALTER TABLE profiles ALTER COLUMN onboarding_step SET DEFAULT 'welcome';
+  ELSE
+    ALTER TABLE profiles ADD COLUMN onboarding_step text DEFAULT 'welcome';
+  END IF;
+END $$;
 
 -- 2. Add has_seen_completion_popup to profiles
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS has_seen_completion_popup boolean NOT NULL DEFAULT false;

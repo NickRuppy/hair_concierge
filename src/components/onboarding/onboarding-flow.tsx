@@ -151,6 +151,9 @@ export function OnboardingFlow({
     if (initRef.current) return
     initRef.current = true
 
+    // Reset store to clear any stale state from previous sessions
+    store.reset()
+
     // Set starting step
     const step = (initialStep as OnboardingStep) ?? "welcome"
     store.setStep(step)
@@ -285,8 +288,7 @@ export function OnboardingFlow({
       const supabase = createClient()
       const { error } = await supabase
         .from("hair_profiles")
-        .update(fields)
-        .eq("user_id", userId)
+        .upsert({ user_id: userId, ...fields }, { onConflict: "user_id" })
       if (error) throw error
     },
     [userId],
@@ -354,9 +356,12 @@ export function OnboardingFlow({
           await saveHairProfile({
             styling_tools: state.selectedHeatTools,
           })
-          // If no heat tools, set heat_styling to never
+          // If no heat tools, clear heat-related fields
           if (state.selectedHeatTools.length === 0) {
-            await saveHairProfile({ heat_styling: "never" })
+            await saveHairProfile({
+              heat_styling: "never",
+              uses_heat_protection: false,
+            })
           }
           break
         }
