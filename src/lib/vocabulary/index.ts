@@ -100,3 +100,35 @@ export {
 
 export { ONBOARDING_GOALS } from "./onboarding-goals"
 export type { OnboardingGoal } from "./onboarding-goals"
+
+export {
+  PRODUCT_FREQUENCIES,
+  PRODUCT_FREQUENCY_LABELS,
+  PRODUCT_FREQUENCY_OPTIONS,
+} from "./frequencies"
+export type { ProductFrequency } from "./frequencies"
+
+export {
+  TOWEL_MATERIALS,
+  TOWEL_MATERIAL_LABELS,
+  TOWEL_MATERIAL_OPTIONS,
+  TOWEL_TECHNIQUES,
+  TOWEL_TECHNIQUE_LABELS,
+  TOWEL_TECHNIQUE_OPTIONS,
+  DRYING_METHODS,
+  DRYING_METHOD_LABELS,
+  DRYING_METHOD_OPTIONS,
+  BRUSH_TYPES,
+  BRUSH_TYPE_LABELS,
+  BRUSH_TYPE_OPTIONS,
+  NIGHT_PROTECTIONS,
+  NIGHT_PROTECTION_LABELS,
+  NIGHT_PROTECTION_OPTIONS,
+} from "./onboarding-care"
+export type {
+  TowelMaterial,
+  TowelTechnique,
+  DryingMethod,
+  BrushType,
+  NightProtection,
+} from "./onboarding-care"

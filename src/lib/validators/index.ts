@@ -9,6 +9,11 @@ import {
   STYLING_TOOLS,
   WASH_FREQUENCIES,
   HEAT_STYLING_LEVELS,
+  TOWEL_MATERIALS,
+  TOWEL_TECHNIQUES,
+  DRYING_METHODS,
+  BRUSH_TYPES,
+  NIGHT_PROTECTIONS,
 } from "@/lib/vocabulary"
 import {
   CONDITIONER_WEIGHTS,
@@ -48,6 +53,12 @@ export const hairProfileFullSchema = z.object({
   routine_preference: z.enum(ROUTINE_PREFERENCES).nullable().default(null),
   current_routine_products: z.array(z.enum(ROUTINE_PRODUCTS)).default([]),
   goals: z.array(z.enum(GOALS)).default([]),
+  towel_material: z.enum(TOWEL_MATERIALS).nullable().default(null),
+  towel_technique: z.enum(TOWEL_TECHNIQUES).nullable().default(null),
+  drying_method: z.array(z.enum(DRYING_METHODS)).default([]),
+  brush_type: z.enum(BRUSH_TYPES).nullable().default(null),
+  night_protection: z.array(z.enum(NIGHT_PROTECTIONS)).default([]),
+  uses_heat_protection: z.boolean().default(false),
   additional_notes: z.string().nullable().default(null),
 })
 
