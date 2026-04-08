@@ -446,6 +446,19 @@ export async function updateUserMemoryEntry(
     content: nextContent,
   })
 
+  const { data: collision } = await supabase
+    .from("user_memory_entries")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("normalized_key", normalizedKey)
+    .eq("status", "active")
+    .neq("id", memoryId)
+    .maybeSingle()
+
+  if (collision) {
+    return null
+  }
+
   const { data, error } = await supabase
     .from("user_memory_entries")
     .update({

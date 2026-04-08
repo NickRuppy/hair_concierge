@@ -44,7 +44,13 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
-  const body = await request.json()
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: ERR_INVALID_DATA }, { status: 400 })
+  }
+
   const parsed = memorySettingsSchema.safeParse(body)
 
   if (!parsed.success) {

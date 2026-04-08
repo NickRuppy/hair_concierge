@@ -374,13 +374,10 @@ export async function runPipeline(
             console.error("Failed to load conditioner specs for reranking:", conditionerSpecsError)
           }
 
-          matchedProducts = applyProductMemoryConstraints(
-            rerankConditionerProducts(
-              conditionerCandidates,
-              (conditionerSpecs ?? []) as ProductConditionerSpecs[],
-              conditionerDecision
-            ),
-            memoryContext
+          matchedProducts = rerankConditionerProducts(
+            conditionerCandidates,
+            (conditionerSpecs ?? []) as ProductConditionerSpecs[],
+            conditionerDecision
           ).slice(0, 3)
         }
       }
@@ -415,13 +412,10 @@ export async function runPipeline(
             leaveInDecision = buildLeaveInDecision(hairProfile, 0)
             matchedProducts = []
           } else {
-            const rerankedLeaveIns = applyProductMemoryConstraints(
-              rerankLeaveInProducts(
-                leaveInCandidates,
-                (leaveInSpecs ?? []) as ProductLeaveInSpecs[],
-                leaveInDecision
-              ),
-              memoryContext
+            const rerankedLeaveIns = rerankLeaveInProducts(
+              leaveInCandidates,
+              (leaveInSpecs ?? []) as ProductLeaveInSpecs[],
+              leaveInDecision
             )
 
             leaveInDecision = buildLeaveInDecision(hairProfile, rerankedLeaveIns.length)
@@ -447,7 +441,7 @@ export async function runPipeline(
 
         oilDecision = buildOilDecision(hairProfile, message, oilCandidates.length)
         matchedProducts = annotateOilRecommendations(
-          applyProductMemoryConstraints(oilCandidates, memoryContext).slice(0, 3),
+          oilCandidates.slice(0, 3),
           oilDecision
         )
       }

@@ -75,7 +75,7 @@ function createProduct(id: string, name: string): Product {
 }
 
 class FakeSupabaseQuery {
-  private filters: Array<{ column: string; value: unknown }> = []
+  private filters: Array<{ column: string; value: unknown; op: "eq" | "neq" }> = []
   private operation: "select" | "insert" | "update" | "delete" = "select"
   private payload: Record<string, unknown> | Record<string, unknown>[] | null = null
   private maxRows: number | null = null
@@ -92,7 +92,12 @@ class FakeSupabaseQuery {
   }
 
   eq(column: string, value: unknown) {
-    this.filters.push({ column, value })
+    this.filters.push({ column, value, op: "eq" })
+    return this
+  }
+
+  neq(column: string, value: unknown) {
+    this.filters.push({ column, value, op: "neq" })
     return this
   }
 
@@ -188,7 +193,9 @@ class FakeSupabaseQuery {
 
   private filterRows(rows: TableRow[]): TableRow[] {
     let result = rows.filter((row) =>
-      this.filters.every(({ column, value }) => row[column] === value)
+      this.filters.every(({ column, value, op }) =>
+        op === "neq" ? row[column] !== value : row[column] === value
+      )
     )
 
     if (this.orderColumn) {
