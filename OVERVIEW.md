@@ -15,7 +15,7 @@ A personalized AI hair care recommendation platform built around **Tom Hannemann
 | Framework | Next.js 16 (React 19, TypeScript 5, App Router) |
 | Database | Supabase PostgreSQL + pgvector |
 | Auth | Supabase Auth (OAuth + email) |
-| AI/LLM | OpenAI GPT-4 (chat), GPT-4 Vision (photo analysis), text-embedding-3-large (1536-dim embeddings) |
+| AI/LLM | OpenAI GPT-4o (chat/classification), text-embedding-3-large embeddings |
 | Styling | Tailwind CSS 4 + shadcn/ui |
 | State | Zustand |
 | Analytics | PostHog |
@@ -87,7 +87,7 @@ graph TB
     end
 
     subgraph External["External Services"]
-        OpenAI["OpenAI API<br/>(GPT-4 chat,<br/>GPT-4 Vision,<br/>text-embedding-3-large)"]
+        OpenAI["OpenAI API<br/>(GPT-4o chat/classification,<br/>text-embedding-3-large)"]
         PostHog["PostHog<br/>(analytics)"]
         Vercel["Vercel<br/>(hosting)"]
     end
@@ -152,10 +152,7 @@ The core intelligence of the app. Each user message flows through this pipeline:
 
 ```mermaid
 flowchart TD
-    Msg["User sends message"] --> Vision{"Has image?"}
-    Vision -->|Yes| Analyze["GPT-4 Vision<br/>analyze hair photo"]
-    Vision -->|No| Intent
-    Analyze --> Intent["Intent Router<br/>(classify intent)"]
+    Msg["User sends message"] --> Intent["Intent Router<br/>(classify intent)"]
 
     Intent --> Load["Load in parallel:<br/>hair_profile + last 10 messages"]
     Load --> Route["Policy Engine<br/>(select content sources)"]
@@ -267,7 +264,7 @@ src/
 │   ├── rag/                # RAG pipeline (21 files) — the brain of the app
 │   ├── quiz/               # Quiz state, questions, normalization
 │   ├── supabase/           # DB clients (browser, server, admin)
-│   ├── openai/             # LLM wrappers (chat, embeddings, vision)
+│   ├── openai/             # LLM wrappers (chat, embeddings)
 │   ├── vocabulary/         # Centralized German labels (single source of truth)
 │   ├── validators/         # Zod schemas
 │   └── {shampoo,conditioner,leave-in,oil,mask}/  # Category constants
@@ -299,10 +296,10 @@ data/
 
 ---
 
-## Current Status (March 2026)
+## Current Status (April 2026)
 
-**Done:** Quiz, auth, chat with streaming + RAG, product recommendations (5 categories), intent router, admin panel, image analysis, mechanical stress onboarding
+**Done:** Quiz, auth, chat with streaming + RAG, product recommendations (5 categories), intent router, admin panel, mechanical stress onboarding
 
-**In progress:** Onboarding finalization, shareable diagnosis card (Instagram Story format), routine recommendation design spec
+**In progress:** Onboarding finalization, shareable diagnosis card (Instagram Story format), routine recommendation design spec, chat photo upload disabled for launch
 
 **Planned:** Cross-category routine engine, paywall enforcement, Stripe integration, barcode scanner, seasonal refresh notifications
