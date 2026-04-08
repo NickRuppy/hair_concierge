@@ -2,7 +2,7 @@ Daily check-in: review priorities, plan today's work.
 
 ## Context
 Read the current priorities file:
-!`cat "/Users/nickrupprechter/.claude/projects/-Users-nickrupprechter-Desktop-AI-work-hair-conscierge/memory/PRIORITIES.md" 2>/dev/null || echo "No priorities file found."`
+!`cat "/Users/nick/.claude/projects/-Users-nick-AI-work-hair-conscierge/memory/PRIORITIES.md" 2>/dev/null || echo "No priorities file found."`
 
 Today's date: !`date +%Y-%m-%d`
 
