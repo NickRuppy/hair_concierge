@@ -56,14 +56,10 @@ const BASIC_PRODUCT_OPTIONS = [
 ]
 
 const EXTRA_PRODUCT_OPTIONS = [
-  { value: "heat_protectant", label: "Hitzeschutz", emoji: "\u{1F6E1}\uFE0F" },
-  { value: "serum", label: "Serum", emoji: "\u{1F48E}" },
-  { value: "scrub", label: "Peeling", emoji: "\u{1F9F9}" },
-  { value: "dry_shampoo", label: "Trockenshampoo", emoji: "\u{1F32C}\uFE0F" },
-  { value: "styling_gel", label: "Styling-Gel", emoji: "\u{1F488}" },
-  { value: "styling_mousse", label: "Styling-Mousse", emoji: "\u2601\uFE0F" },
-  { value: "styling_cream", label: "Styling-Creme", emoji: "\u{1F9C8}" },
-  { value: "hairspray", label: "Haarspray", emoji: "\u{1F4A8}" },
+  { value: "peeling", label: "Peeling (Serum/Scrub)", emoji: "🧹" },
+  { value: "dry_shampoo", label: "Trockenshampoo", emoji: "🌬️" },
+  { value: "bondbuilder", label: "Bondbuilder", emoji: "🔗" },
+  { value: "deep_cleansing_shampoo", label: "Tiefenreinigungsshampoo", emoji: "🫧" },
 ]
 
 /* ── Care habit emojis ── */
@@ -111,16 +107,18 @@ const CATEGORY_LABELS: Record<string, string> = {
   shampoo: "Shampoo",
   conditioner: "Conditioner",
   leave_in: "Leave-in",
-  oil: "\u00D6l",
+  oil: "Öl",
   mask: "Maske",
-  heat_protectant: "Hitzeschutz",
-  serum: "Serum",
-  scrub: "Peeling",
+  peeling: "Peeling",
   dry_shampoo: "Trockenshampoo",
-  styling_gel: "Styling-Gel",
-  styling_mousse: "Styling-Mousse",
-  styling_cream: "Styling-Creme",
-  hairspray: "Haarspray",
+  bondbuilder: "Bondbuilder",
+  deep_cleansing_shampoo: "Tiefenreinigungsshampoo",
+}
+
+/* ── Custom subtitle overrides for drilldown screens ── */
+
+const CATEGORY_SUBTITLES: Record<string, string> = {
+  peeling: "Nutzt du ein Serum oder Scrub fuer deine Kopfhaut? Welches Produkt und wie oft?",
 }
 
 /* ── Props ── */
@@ -569,10 +567,12 @@ export function OnboardingFlow({
     emoji: BRUSH_TYPE_EMOJIS[o.value] ?? "",
   }))
 
-  const nightProtectionWithEmoji = NIGHT_PROTECTION_OPTIONS.map((o) => ({
-    ...o,
-    emoji: NIGHT_PROTECTION_EMOJIS[o.value] ?? "",
-  }))
+  const nightProtectionWithEmoji = NIGHT_PROTECTION_OPTIONS
+    .filter((o) => o.value !== "tight_hairstyles")
+    .map((o) => ({
+      ...o,
+      emoji: NIGHT_PROTECTION_EMOJIS[o.value] ?? "",
+    }))
 
   // ── Drilldown helpers ──
 
@@ -627,6 +627,7 @@ export function OnboardingFlow({
           <ProductDrilldownScreen
             category={currentCategory}
             categoryLabel={CATEGORY_LABELS[currentCategory] ?? currentCategory}
+            subtitle={CATEGORY_SUBTITLES[currentCategory]}
             productName={currentDrilldown.productName}
             frequency={currentDrilldown.frequency}
             onProductNameChange={(name) =>

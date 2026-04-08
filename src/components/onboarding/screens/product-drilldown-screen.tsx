@@ -7,6 +7,7 @@ import type { ProductFrequency } from "@/lib/vocabulary"
 interface ProductDrilldownScreenProps {
   category: string
   categoryLabel: string
+  subtitle?: string
   productName: string
   frequency: ProductFrequency | null
   onProductNameChange: (name: string) => void
@@ -17,6 +18,7 @@ interface ProductDrilldownScreenProps {
 
 export function ProductDrilldownScreen({
   categoryLabel,
+  subtitle,
   productName,
   frequency,
   onProductNameChange,
@@ -41,7 +43,7 @@ export function ProductDrilldownScreen({
         className="animate-fade-in-up text-sm text-white/50 mb-6"
         style={{ animationDelay: "50ms" }}
       >
-        Welches Produkt nutzt du und wie oft?
+        {subtitle ?? "Welches Produkt nutzt du und wie oft?"}
       </p>
 
       {/* Product name input */}
