@@ -5,16 +5,16 @@
 --   3. Add care-habit columns to hair_profiles
 --   4. Create user_product_usage table with RLS
 
--- 1. Change onboarding_step from integer to text
---    Map legacy integer values to 'welcome' so incomplete users restart cleanly
-ALTER TABLE profiles
-  ALTER COLUMN onboarding_step TYPE text USING 'welcome',
-  ALTER COLUMN onboarding_step SET DEFAULT 'welcome';
+-- 1. Add onboarding_step as text (column may not exist in production)
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS onboarding_step text DEFAULT 'welcome';
 
 -- 2. Add has_seen_completion_popup to profiles
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS has_seen_completion_popup boolean NOT NULL DEFAULT false;
 
--- 3. Add care-habit columns to hair_profiles
+-- 3. Ensure answered_fields exists (may be missing if prior migration wasn't applied)
+ALTER TABLE hair_profiles ADD COLUMN IF NOT EXISTS answered_fields text[] NOT NULL DEFAULT '{}';
+
+-- 4. Add care-habit columns to hair_profiles
 ALTER TABLE hair_profiles
   ADD COLUMN IF NOT EXISTS towel_material text CHECK (towel_material IN ('frottee','mikrofaser','tshirt','turban_mikrofaser')),
   ADD COLUMN IF NOT EXISTS towel_technique text CHECK (towel_technique IN ('rubbeln','tupfen')),
