@@ -39,6 +39,10 @@ import { SOURCE_TYPE_LABELS } from "@/lib/vocabulary"
 import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
+import {
+  applyProductMemoryConstraints,
+  loadUserMemoryContext,
+} from "@/lib/rag/user-memory"
 import type { ProductLeaveInSpecs } from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
 import type { ProductConditionerSpecs } from "@/lib/conditioner/constants"
@@ -95,13 +99,14 @@ export async function runPipeline(
   const supabase = createAdminClient()
 
   // ── Step 1: Classify intent + load hair profile (parallel) ─────────
-  const [classification, hairProfileResult] = await Promise.all([
+  const [classification, hairProfileResult, memoryContext] = await Promise.all([
     classifyIntent(message),
     supabase
       .from("hair_profiles")
       .select("*")
       .eq("user_id", userId)
       .single(),
+    loadUserMemoryContext(userId, supabase),
   ])
   const { intent, product_category } = classification
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
@@ -245,6 +250,7 @@ export async function runPipeline(
       conditionerDecision,
       leaveInDecision,
       oilDecision,
+      memoryContext: memoryContext.promptContext,
       clarificationQuestions,
     })
 
@@ -305,7 +311,7 @@ export async function runPipeline(
   }))
 
   // ── Step 4: Match products (if intent requires it) ──────────────────
-  let matchedProducts = undefined
+  let matchedProducts: Product[] | undefined = undefined
   let maskDecision: MaskDecision | undefined
   if (PRODUCT_INTENTS.includes(intent)) {
     if (product_category === "shampoo") {
@@ -434,7 +440,10 @@ export async function runPipeline(
         })
 
         oilDecision = buildOilDecision(hairProfile, message, oilCandidates.length)
-        matchedProducts = annotateOilRecommendations(oilCandidates.slice(0, 3), oilDecision)
+        matchedProducts = annotateOilRecommendations(
+          oilCandidates.slice(0, 3),
+          oilDecision
+        )
       }
     } else if (product_category === "mask") {
       maskDecision = deriveMaskDecision(hairProfile)
@@ -497,6 +506,10 @@ export async function runPipeline(
     }
   }
 
+  if (matchedProducts) {
+    matchedProducts = applyProductMemoryConstraints(matchedProducts, memoryContext)
+  }
+
   // ── Step 5: Synthesize streaming response ───────────────────────────
   const stream = await synthesizeResponse({
     userMessage: message,
@@ -511,6 +524,7 @@ export async function runPipeline(
     conditionerDecision,
     leaveInDecision,
     oilDecision,
+    memoryContext: memoryContext.promptContext,
   })
 
   return {

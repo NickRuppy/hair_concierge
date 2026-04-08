@@ -62,8 +62,14 @@ export interface SynthesizeParams {
   conditionerDecision?: ConditionerDecision
   leaveInDecision?: LeaveInDecision
   oilDecision?: OilDecision
+  memoryContext?: string | null
   /** Slot-aware clarification questions from the router (replaces consultationMode) */
   clarificationQuestions?: string[]
+}
+
+function appendMemoryContext(profileText: string, memoryContext?: string | null): string {
+  if (!memoryContext) return profileText
+  return `${profileText}\n\nErinnerungen aus frueheren Gespraechen:\n${memoryContext}`
 }
 
 /**
@@ -73,9 +79,13 @@ export interface SynthesizeParams {
 function formatUserProfile(
   profile: HairProfile | null,
   clarificationQuestions?: string[],
+  memoryContext?: string | null,
 ): string {
   if (!profile) {
-    return "Kein Haarprofil vorhanden. Frage den Nutzer nach seinen Haardetails, wenn relevant."
+    return appendMemoryContext(
+      "Kein Haarprofil vorhanden. Frage den Nutzer nach seinen Haardetails, wenn relevant.",
+      memoryContext
+    )
   }
 
   const parts: string[] = []
@@ -145,8 +155,10 @@ function formatUserProfile(
     ? parts.join("\n")
     : "Haarprofil angelegt, aber noch keine Details eingetragen."
 
-  if (profile.conversation_memory) {
-    result += `\n\nErinnerungen aus frueheren Gespraechen:\n${profile.conversation_memory}`
+  const effectiveMemory =
+    memoryContext === undefined ? profile.conversation_memory : memoryContext
+  if (effectiveMemory) {
+    result = appendMemoryContext(result, effectiveMemory)
   }
 
   if (clarificationQuestions && clarificationQuestions.length > 0) {
@@ -164,9 +176,13 @@ function formatUserProfile(
 function formatShampooProfile(
   profile: HairProfile | null,
   clarificationQuestions?: string[],
+  memoryContext?: string | null,
 ): string {
   if (!profile) {
-    return "Kein Shampoo-Profil vorhanden. Frage nur nach Haardicke, Kopfhaut-Typ und Kopfhaut-Beschwerden."
+    return appendMemoryContext(
+      "Kein Shampoo-Profil vorhanden. Frage nur nach Haardicke, Kopfhaut-Typ und Kopfhaut-Beschwerden.",
+      memoryContext
+    )
   }
 
   const parts: string[] = []
@@ -188,6 +204,12 @@ function formatShampooProfile(
   let result = parts.length > 0
     ? parts.join("\n")
     : "Shampoo-Profil angelegt, aber die drei Pflichtfelder fehlen noch."
+
+  const effectiveMemory =
+    memoryContext === undefined ? profile.conversation_memory : memoryContext
+  if (effectiveMemory) {
+    result = appendMemoryContext(result, effectiveMemory)
+  }
 
   if (clarificationQuestions && clarificationQuestions.length > 0) {
     result += "\n\n(HINWEIS: Shampoo-Klaerungsrunde. Stelle AUSSCHLIESSLICH Rueckfragen zu den fehlenden Shampoo-Feldern."
@@ -765,6 +787,7 @@ function buildSystemPrompt(
   conditionerDecision?: ConditionerDecision,
   leaveInDecision?: LeaveInDecision,
   oilDecision?: OilDecision,
+  memoryContext?: string | null,
   clarificationQuestions?: string[],
 ): string {
   let prompt = SYSTEM_PROMPT
@@ -775,8 +798,8 @@ function buildSystemPrompt(
   }
 
   const userProfileContext = productCategory === "shampoo"
-    ? formatShampooProfile(hairProfile, clarificationQuestions)
-    : formatUserProfile(hairProfile, clarificationQuestions)
+    ? formatShampooProfile(hairProfile, clarificationQuestions, memoryContext)
+    : formatUserProfile(hairProfile, clarificationQuestions, memoryContext)
 
   prompt = prompt.replace("{{USER_PROFILE}}", userProfileContext)
 
@@ -820,6 +843,7 @@ export async function synthesizeResponse(
     conditionerDecision,
     leaveInDecision,
     oilDecision,
+    memoryContext,
     clarificationQuestions,
   } = params
 
@@ -833,6 +857,7 @@ export async function synthesizeResponse(
     conditionerDecision,
     leaveInDecision,
     oilDecision,
+    memoryContext,
     clarificationQuestions,
   )
 

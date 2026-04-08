@@ -27,10 +27,12 @@ import {
   ROUTINE_PREFERENCE_OPTIONS,
   ROUTINE_PRODUCT_OPTIONS,
 } from "@/lib/types"
-import type { Goal, HairProfile } from "@/lib/types"
+import type { Goal, HairProfile, UserMemoryEntry } from "@/lib/types"
 import { createClient } from "@/lib/supabase/client"
 import { useEffect, useMemo, useState } from "react"
 import { SegmentedControl } from "@/components/ui/segmented-control"
+import { Switch } from "@/components/ui/switch"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Accordion,
   AccordionItem,
@@ -176,6 +178,11 @@ const FIELD_TO_SECTION: Record<string, string> = {
   products_used: "routine",
 }
 
+type MemoryApiResponse = {
+  settings: { memory_enabled: boolean }
+  entries: UserMemoryEntry[]
+}
+
 export default function ProfilePage() {
   const { user, profile, loading: authLoading, signOut } = useAuth()
   const { toast } = useToast()
@@ -185,6 +192,12 @@ export default function ProfilePage() {
   const [editSection, setEditSection] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [memoryEntries, setMemoryEntries] = useState<UserMemoryEntry[]>([])
+  const [memoryEnabled, setMemoryEnabled] = useState(true)
+  const [memoryLoading, setMemoryLoading] = useState(true)
+  const [memorySaving, setMemorySaving] = useState(false)
+  const [editingMemoryId, setEditingMemoryId] = useState<string | null>(null)
+  const [memoryDraft, setMemoryDraft] = useState("")
 
   // Edit form state
   const [formData, setFormData] = useState({
@@ -246,6 +259,30 @@ export default function ProfilePage() {
     loadProfile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id])
+
+  useEffect(() => {
+    async function loadMemory() {
+      if (!user) {
+        setMemoryLoading(false)
+        return
+      }
+
+      setMemoryLoading(true)
+      try {
+        const res = await fetch("/api/memory")
+        if (!res.ok) throw new Error("Memory konnte nicht geladen werden")
+        const data = (await res.json()) as MemoryApiResponse
+        setMemoryEnabled(data.settings.memory_enabled)
+        setMemoryEntries(data.entries ?? [])
+      } catch (err) {
+        console.error("Error loading memory:", err)
+      } finally {
+        setMemoryLoading(false)
+      }
+    }
+
+    loadMemory()
+  }, [user])
 
   // Pre-compute field values for read-mode display
   const fieldValues = useMemo(
@@ -325,6 +362,80 @@ export default function ProfilePage() {
     return arr.includes(item)
       ? arr.filter((i) => i !== item)
       : [...arr, item]
+  }
+
+  async function handleMemoryToggle(checked: boolean) {
+    setMemoryEnabled(checked)
+    setMemorySaving(true)
+
+    try {
+      const res = await fetch("/api/memory", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ memory_enabled: checked }),
+      })
+
+      if (!res.ok) throw new Error("Memory setting failed")
+      toast({ title: checked ? "Erinnerungen aktiviert" : "Erinnerungen pausiert" })
+    } catch (err) {
+      console.error("Error saving memory setting:", err)
+      setMemoryEnabled(!checked)
+      toast({ title: fehler("Speichern"), variant: "destructive" })
+    } finally {
+      setMemorySaving(false)
+    }
+  }
+
+  function startEditingMemory(entry: UserMemoryEntry) {
+    setEditingMemoryId(entry.id)
+    setMemoryDraft(entry.content)
+  }
+
+  async function handleSaveMemory(memoryId: string) {
+    const content = memoryDraft.trim()
+    if (!content) return
+
+    setMemorySaving(true)
+    try {
+      const res = await fetch(`/api/memory/${memoryId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+      })
+
+      if (!res.ok) throw new Error("Memory update failed")
+      const data = (await res.json()) as { memory: UserMemoryEntry }
+      setMemoryEntries((entries) =>
+        entries.map((entry) => entry.id === memoryId ? data.memory : entry)
+      )
+      setEditingMemoryId(null)
+      setMemoryDraft("")
+      toast({ title: "Erinnerung gespeichert" })
+    } catch (err) {
+      console.error("Error saving memory:", err)
+      toast({ title: fehler("Speichern"), variant: "destructive" })
+    } finally {
+      setMemorySaving(false)
+    }
+  }
+
+  async function handleDeleteMemory(memoryId: string) {
+    setMemorySaving(true)
+    try {
+      const res = await fetch(`/api/memory/${memoryId}`, { method: "DELETE" })
+      if (!res.ok) throw new Error("Memory delete failed")
+      setMemoryEntries((entries) => entries.filter((entry) => entry.id !== memoryId))
+      if (editingMemoryId === memoryId) {
+        setEditingMemoryId(null)
+        setMemoryDraft("")
+      }
+      toast({ title: "Erinnerung gelöscht" })
+    } catch (err) {
+      console.error("Error deleting memory:", err)
+      toast({ title: fehler("Löschen"), variant: "destructive" })
+    } finally {
+      setMemorySaving(false)
+    }
   }
 
   if (authLoading || loading) {
@@ -811,6 +922,96 @@ export default function ProfilePage() {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+        </section>
+
+        <section className="mt-6 rounded-xl border bg-card p-6">
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-semibold">Was TomBot sich merkt</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Diese Haarpflege-Erinnerungen helfen bei Antworten und Produktempfehlungen.
+              </p>
+            </div>
+            <Switch
+              checked={memoryEnabled}
+              disabled={memoryLoading || memorySaving}
+              onCheckedChange={handleMemoryToggle}
+              aria-label="Erinnerungen aktivieren"
+            />
+          </div>
+
+          {memoryLoading ? (
+            <p className="text-sm text-muted-foreground">Erinnerungen werden geladen...</p>
+          ) : memoryEntries.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Noch keine gespeicherten Erinnerungen. Wenn du TomBot im Chat konkrete
+              Haarpflege-Infos gibst, kann er sie hier ablegen.
+            </p>
+          ) : (
+            <div className="divide-y">
+              {memoryEntries.map((entry) => (
+                <div key={entry.id} className="py-4 first:pt-0 last:pb-0">
+                  {editingMemoryId === entry.id ? (
+                    <div className="space-y-3">
+                      <Textarea
+                        value={memoryDraft}
+                        onChange={(event) => setMemoryDraft(event.target.value)}
+                        rows={3}
+                        maxLength={500}
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleSaveMemory(entry.id)}
+                          disabled={memorySaving || !memoryDraft.trim()}
+                          className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+                        >
+                          Speichern
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingMemoryId(null)
+                            setMemoryDraft("")
+                          }}
+                          className="rounded-lg border px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
+                        >
+                          Abbrechen
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <p className="text-sm">{entry.content}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          Aktualisiert am{" "}
+                          {new Date(entry.updated_at).toLocaleDateString("de-DE")}
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => startEditingMemory(entry)}
+                          className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                          Bearbeiten
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteMemory(entry.id)}
+                          disabled={memorySaving}
+                          className="text-xs font-medium text-muted-foreground transition-colors hover:text-destructive disabled:opacity-50"
+                        >
+                          Löschen
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </section>

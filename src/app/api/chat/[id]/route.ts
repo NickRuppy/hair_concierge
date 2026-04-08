@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
+import { deleteConversationSourcedMemories } from "@/lib/rag/user-memory"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
@@ -53,6 +55,9 @@ export async function DELETE(
   if (!user) {
     return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
+
+  const admin = createAdminClient()
+  await deleteConversationSourcedMemories(user.id, id, admin)
 
   const { error } = await supabase
     .from("conversations")
