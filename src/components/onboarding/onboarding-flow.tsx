@@ -1,0 +1,813 @@
+"use client"
+
+import { useEffect, useRef, useState, useCallback } from "react"
+import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase/client"
+import { useOnboardingStore } from "@/lib/onboarding/store"
+import type { OnboardingStep } from "@/lib/onboarding/store"
+import { OnboardingProgressBar } from "@/components/onboarding/onboarding-progress-bar"
+import { mergeAnsweredFields } from "@/lib/onboarding/answered-fields"
+import {
+  mapShampooFrequency,
+  mapHeatFrequency,
+  deriveMechanicalStressFactors,
+  derivePostWashActions,
+  mapProductChecklistToRoutineProducts,
+  reconcileDiffusor,
+} from "@/lib/onboarding/backward-compat"
+import { deriveOnboardingGoals } from "@/lib/onboarding/goal-flow"
+import type { ProductFrequency } from "@/lib/vocabulary"
+import type { HairTexture, DesiredVolume } from "@/lib/vocabulary"
+import type { Goal } from "@/lib/vocabulary"
+
+// Import all screens
+import {
+  WelcomeScreen,
+  ProductChecklistScreen,
+  ProductDrilldownScreen,
+  HeatToolsScreen,
+  HeatFrequencyScreen,
+  HeatProtectionScreen,
+  InterstitialScreen,
+  SingleSelectScreen,
+  MultiSelectScreen,
+  GoalsScreen,
+  CelebrationPopup,
+} from "@/components/onboarding/screens"
+
+// Import option data for care habit screens
+import {
+  TOWEL_MATERIAL_OPTIONS,
+  TOWEL_TECHNIQUE_OPTIONS,
+  DRYING_METHOD_OPTIONS,
+  BRUSH_TYPE_OPTIONS,
+  NIGHT_PROTECTION_OPTIONS,
+} from "@/lib/vocabulary/onboarding-care"
+
+/* ── Product checklist options ── */
+
+const BASIC_PRODUCT_OPTIONS = [
+  { value: "shampoo", label: "Shampoo", emoji: "\u{1F9F4}" },
+  { value: "conditioner", label: "Conditioner", emoji: "\u{1F4A7}" },
+  { value: "leave_in", label: "Leave-in", emoji: "\u2728" },
+  { value: "oil", label: "\u00D6l", emoji: "\u{1FAD2}" },
+  { value: "mask", label: "Maske", emoji: "\u{1F3AD}" },
+]
+
+const EXTRA_PRODUCT_OPTIONS = [
+  { value: "heat_protectant", label: "Hitzeschutz", emoji: "\u{1F6E1}\uFE0F" },
+  { value: "serum", label: "Serum", emoji: "\u{1F48E}" },
+  { value: "scrub", label: "Peeling", emoji: "\u{1F9F9}" },
+  { value: "dry_shampoo", label: "Trockenshampoo", emoji: "\u{1F32C}\uFE0F" },
+  { value: "styling_gel", label: "Styling-Gel", emoji: "\u{1F488}" },
+  { value: "styling_mousse", label: "Styling-Mousse", emoji: "\u2601\uFE0F" },
+  { value: "styling_cream", label: "Styling-Creme", emoji: "\u{1F9C8}" },
+  { value: "hairspray", label: "Haarspray", emoji: "\u{1F4A8}" },
+]
+
+/* ── Care habit emojis ── */
+
+const TOWEL_MATERIAL_EMOJIS: Record<string, string> = {
+  frottee: "\u{1F6C1}",
+  mikrofaser: "\u2728",
+  tshirt: "\u{1F455}",
+  turban_mikrofaser: "\u{1F473}\u200D\u2640\uFE0F",
+}
+
+const TOWEL_TECHNIQUE_EMOJIS: Record<string, string> = {
+  rubbeln: "\u{1F932}",
+  tupfen: "\u{1F446}",
+}
+
+const DRYING_METHOD_EMOJIS: Record<string, string> = {
+  air_dry: "\u{1F32C}\uFE0F",
+  blow_dry: "\u{1F4A8}",
+  blow_dry_diffuser: "\u{1F300}",
+}
+
+const BRUSH_TYPE_EMOJIS: Record<string, string> = {
+  wide_tooth_comb: "\u{1FAE6}",
+  detangling: "\u{1F513}",
+  paddle: "\u{1F3D3}",
+  round: "\u2B55",
+  boar_bristle: "\u{1F417}",
+  fingers: "\u{1F590}\uFE0F",
+  none_regular: "\u274C",
+}
+
+const NIGHT_PROTECTION_EMOJIS: Record<string, string> = {
+  silk_satin_pillow: "\u{1F6CF}\uFE0F",
+  silk_satin_bonnet: "\u{1F3A9}",
+  loose_braid: "\u{1FAA2}",
+  loose_bun: "\u{1F4AB}",
+  pineapple: "\u{1F34D}",
+  tight_hairstyles: "\u26A0\uFE0F",
+}
+
+/* ── Label map for drilldown categories ── */
+
+const CATEGORY_LABELS: Record<string, string> = {
+  shampoo: "Shampoo",
+  conditioner: "Conditioner",
+  leave_in: "Leave-in",
+  oil: "\u00D6l",
+  mask: "Maske",
+  heat_protectant: "Hitzeschutz",
+  serum: "Serum",
+  scrub: "Peeling",
+  dry_shampoo: "Trockenshampoo",
+  styling_gel: "Styling-Gel",
+  styling_mousse: "Styling-Mousse",
+  styling_cream: "Styling-Creme",
+  hairspray: "Haarspray",
+}
+
+/* ── Props ── */
+
+interface OnboardingFlowProps {
+  userId: string
+  initialStep: string
+  hairProfile: Record<string, unknown> | null
+  productUsage: Array<Record<string, unknown>>
+}
+
+/* ── Component ── */
+
+export function OnboardingFlow({
+  userId,
+  initialStep,
+  hairProfile,
+  productUsage,
+}: OnboardingFlowProps) {
+  const router = useRouter()
+  const store = useOnboardingStore()
+  const [hydrated, setHydrated] = useState(false)
+  const initRef = useRef(false)
+
+  // ── Initialization: hydrate store from server data ──
+
+  useEffect(() => {
+    if (initRef.current) return
+    initRef.current = true
+
+    // Set starting step
+    const step = (initialStep as OnboardingStep) ?? "welcome"
+    store.setStep(step)
+
+    // Resume scenario: populate store from existing hair profile
+    if (hairProfile) {
+      if (Array.isArray(hairProfile.styling_tools) && hairProfile.styling_tools.length > 0) {
+        store.setSelectedHeatTools(hairProfile.styling_tools as string[])
+      }
+      if (hairProfile.towel_material) {
+        store.setTowelMaterial(hairProfile.towel_material as any)
+      }
+      if (hairProfile.towel_technique) {
+        store.setTowelTechnique(hairProfile.towel_technique as any)
+      }
+      if (Array.isArray(hairProfile.drying_method)) {
+        store.setDryingMethod(hairProfile.drying_method as any)
+      }
+      if (hairProfile.brush_type) {
+        store.setBrushType(hairProfile.brush_type as any)
+      }
+      if (Array.isArray(hairProfile.night_protection)) {
+        store.setNightProtection(hairProfile.night_protection as any)
+      }
+      if (hairProfile.uses_heat_protection != null) {
+        store.setUsesHeatProtection(hairProfile.uses_heat_protection as boolean)
+      }
+      if (Array.isArray(hairProfile.goals)) {
+        store.setSelectedGoals(hairProfile.goals as string[])
+      }
+      if (hairProfile.desired_volume) {
+        store.setDesiredVolume(hairProfile.desired_volume as DesiredVolume)
+      }
+    }
+
+    // Resume scenario: populate product selections from user_product_usage rows
+    if (productUsage.length > 0) {
+      const basicValues = BASIC_PRODUCT_OPTIONS.map((o) => o.value)
+      const extraValues = EXTRA_PRODUCT_OPTIONS.map((o) => o.value)
+      const basics: string[] = []
+      const extras: string[] = []
+
+      for (const row of productUsage) {
+        const cat = row.category as string
+        if (basicValues.includes(cat)) basics.push(cat)
+        else if (extraValues.includes(cat)) extras.push(cat)
+
+        if (row.product_name || row.frequency_range) {
+          store.setProductDrilldown(cat, {
+            productName: (row.product_name as string) ?? "",
+            frequency: (row.frequency_range as ProductFrequency) ?? null,
+          })
+        }
+      }
+
+      if (basics.length > 0) store.setSelectedBasicProducts(basics)
+      if (extras.length > 0) store.setSelectedExtraProducts(extras)
+    }
+
+    setHydrated(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // ── Save step to profiles.onboarding_step ──
+
+  const saveOnboardingStep = useCallback(
+    async (step: OnboardingStep) => {
+      const supabase = createClient()
+      await supabase
+        .from("profiles")
+        .update({ onboarding_step: step })
+        .eq("id", userId)
+    },
+    [userId],
+  )
+
+  // ── Per-step save helpers ──
+
+  const saveProductUsage = useCallback(
+    async (categories: string[]) => {
+      const supabase = createClient()
+      const drilldowns = useOnboardingStore.getState().productDrilldowns
+
+      // Get existing rows
+      const { data: existing } = await supabase
+        .from("user_product_usage")
+        .select("id, category")
+        .eq("user_id", userId)
+
+      const existingMap = new Map(
+        (existing ?? []).map((r: Record<string, unknown>) => [r.category as string, r.id as string]),
+      )
+
+      // Upsert selected categories
+      for (const cat of categories) {
+        const drilldown = drilldowns[cat]
+        const payload = {
+          user_id: userId,
+          category: cat,
+          product_name: drilldown?.productName ?? null,
+          frequency_range: drilldown?.frequency ?? null,
+        }
+
+        if (existingMap.has(cat)) {
+          await supabase
+            .from("user_product_usage")
+            .update(payload)
+            .eq("id", existingMap.get(cat))
+        } else {
+          await supabase.from("user_product_usage").insert(payload)
+        }
+      }
+
+      // Delete deselected categories
+      const toDelete = (existing ?? [])
+        .filter((r: Record<string, unknown>) => !categories.includes(r.category as string))
+        .map((r: Record<string, unknown>) => r.id as string)
+
+      if (toDelete.length > 0) {
+        await supabase
+          .from("user_product_usage")
+          .delete()
+          .in("id", toDelete)
+      }
+    },
+    [userId],
+  )
+
+  const saveHairProfile = useCallback(
+    async (fields: Record<string, unknown>) => {
+      const supabase = createClient()
+      await supabase
+        .from("hair_profiles")
+        .update(fields)
+        .eq("user_id", userId)
+    },
+    [userId],
+  )
+
+  // ── Step completion handler ──
+
+  const handleStepComplete = useCallback(
+    async (completedStep: OnboardingStep) => {
+      const state = useOnboardingStore.getState()
+      const supabase = createClient()
+
+      switch (completedStep) {
+        case "welcome":
+          // No data to save, just advance
+          break
+
+        case "products_basics":
+        case "products_extras": {
+          const allProducts = [
+            ...state.selectedBasicProducts,
+            ...state.selectedExtraProducts,
+          ]
+          await saveProductUsage(allProducts)
+          break
+        }
+
+        case "product_drilldown": {
+          const categories = state.drilldownCategories()
+          const currentCat = categories[state.currentDrilldownIndex]
+          if (!currentCat) break
+
+          const drilldown = state.productDrilldowns[currentCat]
+          if (!drilldown) break
+
+          // Update the specific product usage row
+          await supabase
+            .from("user_product_usage")
+            .update({
+              product_name: drilldown.productName,
+              frequency_range: drilldown.frequency,
+            })
+            .eq("user_id", userId)
+            .eq("category", currentCat)
+
+          // If shampoo, also update wash_frequency
+          if (currentCat === "shampoo" && drilldown.frequency) {
+            await saveHairProfile({
+              wash_frequency: mapShampooFrequency(drilldown.frequency),
+            })
+          }
+          break
+        }
+
+        case "heat_tools": {
+          await saveHairProfile({
+            styling_tools: state.selectedHeatTools,
+          })
+          // If no heat tools, set heat_styling to never
+          if (state.selectedHeatTools.length === 0) {
+            await saveHairProfile({ heat_styling: "never" })
+          }
+          break
+        }
+
+        case "heat_frequency": {
+          if (state.heatFrequency) {
+            await saveHairProfile({
+              heat_styling: mapHeatFrequency(state.heatFrequency),
+            })
+          }
+          break
+        }
+
+        case "heat_protection": {
+          await saveHairProfile({
+            uses_heat_protection: state.usesHeatProtection,
+          })
+          break
+        }
+
+        case "interstitial":
+          // No data to save
+          break
+
+        case "towel_material": {
+          await saveHairProfile({
+            towel_material: state.towelMaterial,
+          })
+          break
+        }
+
+        case "towel_technique": {
+          const stressFactors = deriveMechanicalStressFactors(
+            state.towelTechnique,
+            state.brushType,
+            state.nightProtection,
+          )
+          await saveHairProfile({
+            towel_technique: state.towelTechnique,
+            mechanical_stress_factors: stressFactors,
+          })
+          break
+        }
+
+        case "drying_method": {
+          const postWashActions = derivePostWashActions(
+            state.dryingMethod,
+            state.selectedHeatTools.length > 0,
+          )
+          const reconciledTools = reconcileDiffusor(
+            state.selectedHeatTools,
+            state.dryingMethod,
+          )
+          await saveHairProfile({
+            drying_method: state.dryingMethod,
+            post_wash_actions: postWashActions,
+            styling_tools: reconciledTools,
+          })
+          break
+        }
+
+        case "brush_type": {
+          await saveHairProfile({
+            brush_type: state.brushType,
+          })
+          break
+        }
+
+        case "night_protection": {
+          const stressFactors = deriveMechanicalStressFactors(
+            state.towelTechnique,
+            state.brushType,
+            state.nightProtection,
+          )
+          const answeredFields = await mergeAnsweredFields(supabase, userId, [
+            "towel_material",
+            "towel_technique",
+            "drying_method",
+            "brush_type",
+            "night_protection",
+            "styling_tools",
+            "uses_heat_protection",
+          ])
+          await saveHairProfile({
+            night_protection: state.nightProtection,
+            mechanical_stress_factors: stressFactors,
+            answered_fields: answeredFields,
+          })
+          break
+        }
+
+        case "goals": {
+          const derivedGoals = deriveOnboardingGoals(
+            state.selectedGoals as Goal[],
+            state.desiredVolume,
+          )
+          const routineProducts = mapProductChecklistToRoutineProducts(
+            state.allSelectedProducts(),
+          )
+          await saveHairProfile({
+            goals: derivedGoals,
+            desired_volume: state.desiredVolume,
+            current_routine_products: routineProducts,
+          })
+          await supabase
+            .from("profiles")
+            .update({ onboarding_completed: true })
+            .eq("id", userId)
+          break
+        }
+
+        case "celebration": {
+          await supabase
+            .from("profiles")
+            .update({ has_seen_completion_popup: true })
+            .eq("id", userId)
+          router.push("/chat")
+          return // Don't advance step
+        }
+      }
+
+      // Advance the store
+      state.goNext()
+
+      // Save the new step (after goNext)
+      const nextStep = useOnboardingStore.getState().currentStep
+      await saveOnboardingStep(nextStep)
+    },
+    [userId, router, saveProductUsage, saveHairProfile, saveOnboardingStep],
+  )
+
+  // ── Toggle helpers ──
+
+  const toggleBasicProduct = useCallback(
+    (value: string) => {
+      const current = store.selectedBasicProducts
+      if (current.includes(value)) {
+        store.setSelectedBasicProducts(current.filter((v) => v !== value))
+      } else {
+        store.setSelectedBasicProducts([...current, value])
+      }
+    },
+    [store],
+  )
+
+  const toggleExtraProduct = useCallback(
+    (value: string) => {
+      const current = store.selectedExtraProducts
+      if (current.includes(value)) {
+        store.setSelectedExtraProducts(current.filter((v) => v !== value))
+      } else {
+        store.setSelectedExtraProducts([...current, value])
+      }
+    },
+    [store],
+  )
+
+  const toggleHeatTool = useCallback(
+    (tool: string) => {
+      const current = store.selectedHeatTools
+      if (current.includes(tool)) {
+        store.setSelectedHeatTools(current.filter((t) => t !== tool))
+      } else {
+        store.setSelectedHeatTools([...current, tool])
+      }
+    },
+    [store],
+  )
+
+  const toggleGoal = useCallback(
+    (goal: string) => {
+      const current = store.selectedGoals
+      if (current.includes(goal)) {
+        store.setSelectedGoals(current.filter((g) => g !== goal))
+      } else {
+        store.setSelectedGoals([...current, goal])
+      }
+    },
+    [store],
+  )
+
+  const toggleNightProtection = useCallback(
+    (value: string) => {
+      const current = store.nightProtection
+      if (current.includes(value as any)) {
+        store.setNightProtection(current.filter((v) => v !== value) as any)
+      } else {
+        store.setNightProtection([...current, value] as any)
+      }
+    },
+    [store],
+  )
+
+  const toggleDryingMethod = useCallback(
+    (value: string) => {
+      const current = store.dryingMethod
+      if (current.includes(value as any)) {
+        store.setDryingMethod(current.filter((v) => v !== value) as any)
+      } else {
+        store.setDryingMethod([...current, value] as any)
+      }
+    },
+    [store],
+  )
+
+  // ── Don't render until hydrated ──
+
+  if (!hydrated) {
+    return null
+  }
+
+  // ── Add emojis to options ──
+
+  const towelMaterialWithEmoji = TOWEL_MATERIAL_OPTIONS.map((o) => ({
+    ...o,
+    emoji: TOWEL_MATERIAL_EMOJIS[o.value] ?? "",
+  }))
+
+  const towelTechniqueWithEmoji = TOWEL_TECHNIQUE_OPTIONS.map((o) => ({
+    ...o,
+    emoji: TOWEL_TECHNIQUE_EMOJIS[o.value] ?? "",
+  }))
+
+  const dryingMethodWithEmoji = DRYING_METHOD_OPTIONS.map((o) => ({
+    ...o,
+    emoji: DRYING_METHOD_EMOJIS[o.value] ?? "",
+  }))
+
+  const brushTypeWithEmoji = BRUSH_TYPE_OPTIONS.map((o) => ({
+    ...o,
+    emoji: BRUSH_TYPE_EMOJIS[o.value] ?? "",
+  }))
+
+  const nightProtectionWithEmoji = NIGHT_PROTECTION_OPTIONS.map((o) => ({
+    ...o,
+    emoji: NIGHT_PROTECTION_EMOJIS[o.value] ?? "",
+  }))
+
+  // ── Drilldown helpers ──
+
+  const drilldownCategories = store.drilldownCategories()
+  const currentCategory = drilldownCategories[store.currentDrilldownIndex]
+  const currentDrilldown = currentCategory
+    ? store.productDrilldowns[currentCategory] ?? { productName: "", frequency: null }
+    : { productName: "", frequency: null }
+
+  // ── Screen rendering ──
+
+  function renderScreen() {
+    switch (store.currentStep) {
+      case "welcome":
+        return (
+          <WelcomeScreen onContinue={() => handleStepComplete("welcome")} />
+        )
+
+      case "products_basics":
+        return (
+          <ProductChecklistScreen
+            title="Deine Basis-Produkte"
+            subtitle="Welche Produkte nutzt du regelmaessig?"
+            options={BASIC_PRODUCT_OPTIONS}
+            selected={store.selectedBasicProducts}
+            onToggle={toggleBasicProduct}
+            onContinue={() => handleStepComplete("products_basics")}
+            onBack={() => store.goBack()}
+          />
+        )
+
+      case "products_extras":
+        return (
+          <ProductChecklistScreen
+            title="Weitere Produkte"
+            subtitle="Nutzt du auch etwas davon?"
+            options={EXTRA_PRODUCT_OPTIONS}
+            selected={store.selectedExtraProducts}
+            onToggle={toggleExtraProduct}
+            onContinue={() => handleStepComplete("products_extras")}
+            onBack={() => store.goBack()}
+            noneLabel="Nichts davon"
+            onNone={() => {
+              store.setSelectedExtraProducts([])
+              handleStepComplete("products_extras")
+            }}
+          />
+        )
+
+      case "product_drilldown":
+        return currentCategory ? (
+          <ProductDrilldownScreen
+            category={currentCategory}
+            categoryLabel={CATEGORY_LABELS[currentCategory] ?? currentCategory}
+            productName={currentDrilldown.productName}
+            frequency={currentDrilldown.frequency}
+            onProductNameChange={(name) =>
+              store.setProductDrilldown(currentCategory, {
+                ...currentDrilldown,
+                productName: name,
+              })
+            }
+            onFrequencyChange={(freq) =>
+              store.setProductDrilldown(currentCategory, {
+                ...currentDrilldown,
+                frequency: freq,
+              })
+            }
+            onContinue={() => handleStepComplete("product_drilldown")}
+            onBack={() => store.goBack()}
+          />
+        ) : null
+
+      case "heat_tools":
+        return (
+          <HeatToolsScreen
+            selected={store.selectedHeatTools}
+            onToggle={toggleHeatTool}
+            onContinue={() => handleStepComplete("heat_tools")}
+            onBack={() => store.goBack()}
+            onNone={() => {
+              store.setSelectedHeatTools([])
+              handleStepComplete("heat_tools")
+            }}
+          />
+        )
+
+      case "heat_frequency":
+        return (
+          <HeatFrequencyScreen
+            selected={store.heatFrequency}
+            onSelect={(freq) => {
+              store.setHeatFrequency(freq)
+              handleStepComplete("heat_frequency")
+            }}
+            onBack={() => store.goBack()}
+          />
+        )
+
+      case "heat_protection":
+        return (
+          <HeatProtectionScreen
+            selected={store.usesHeatProtection}
+            onSelect={(val) => {
+              store.setUsesHeatProtection(val)
+              handleStepComplete("heat_protection")
+            }}
+            onBack={() => store.goBack()}
+          />
+        )
+
+      case "interstitial":
+        return (
+          <InterstitialScreen
+            onContinue={() => handleStepComplete("interstitial")}
+            onBack={() => store.goBack()}
+          />
+        )
+
+      case "towel_material":
+        return (
+          <SingleSelectScreen
+            title="Womit trocknest du dein Haar?"
+            options={towelMaterialWithEmoji}
+            selected={store.towelMaterial}
+            onSelect={(val) => {
+              store.setTowelMaterial(val as any)
+              handleStepComplete("towel_material")
+            }}
+            onBack={() => store.goBack()}
+          />
+        )
+
+      case "towel_technique":
+        return (
+          <SingleSelectScreen
+            title="Wie trocknest du?"
+            subtitle="Rubbeln oder sanft tupfen?"
+            options={towelTechniqueWithEmoji}
+            selected={store.towelTechnique}
+            onSelect={(val) => {
+              store.setTowelTechnique(val as any)
+              handleStepComplete("towel_technique")
+            }}
+            onBack={() => store.goBack()}
+          />
+        )
+
+      case "drying_method":
+        return (
+          <MultiSelectScreen
+            title="Wie trocknest du dein Haar?"
+            subtitle="Mehrfachauswahl moeglich."
+            options={dryingMethodWithEmoji}
+            selected={store.dryingMethod}
+            onToggle={toggleDryingMethod}
+            onContinue={() => handleStepComplete("drying_method")}
+            onBack={() => store.goBack()}
+          />
+        )
+
+      case "brush_type":
+        return (
+          <SingleSelectScreen
+            title="Welche Buerste nutzt du?"
+            options={brushTypeWithEmoji}
+            selected={store.brushType}
+            onSelect={(val) => {
+              store.setBrushType(val as any)
+              handleStepComplete("brush_type")
+            }}
+            onBack={() => store.goBack()}
+          />
+        )
+
+      case "night_protection":
+        return (
+          <MultiSelectScreen
+            title="Wie schuetzt du dein Haar nachts?"
+            subtitle="Mehrfachauswahl moeglich."
+            options={nightProtectionWithEmoji}
+            selected={store.nightProtection}
+            onToggle={toggleNightProtection}
+            onContinue={() => handleStepComplete("night_protection")}
+            onBack={() => store.goBack()}
+            noneLabel="Nichts davon"
+            onNone={() => {
+              store.setNightProtection([])
+              handleStepComplete("night_protection")
+            }}
+          />
+        )
+
+      case "goals":
+        return (
+          <GoalsScreen
+            hairTexture={(hairProfile?.hair_texture as HairTexture) ?? null}
+            selectedGoals={store.selectedGoals}
+            desiredVolume={store.desiredVolume}
+            onGoalToggle={toggleGoal}
+            onVolumeChange={(vol) => store.setDesiredVolume(vol)}
+            onContinue={() => handleStepComplete("goals")}
+            onBack={() => store.goBack()}
+          />
+        )
+
+      case "celebration":
+        return (
+          <CelebrationPopup
+            onDismiss={() => handleStepComplete("celebration")}
+          />
+        )
+
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div>
+      {store.currentStep !== "welcome" && store.currentStep !== "celebration" && (
+        <div className="mb-6">
+          <OnboardingProgressBar currentStep={store.currentStep} />
+        </div>
+      )}
+      {renderScreen()}
+    </div>
+  )
+}

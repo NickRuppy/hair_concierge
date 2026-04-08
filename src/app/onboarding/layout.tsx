@@ -1,5 +1,3 @@
-import OnboardingStepper from "@/components/onboarding/onboarding-stepper"
-
 export default function OnboardingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-[100dvh] bg-[#231F20]">
@@ -11,7 +9,6 @@ export default function OnboardingLayout({ children }: { children: React.ReactNo
       {/* Right panel — onboarding content (full-width on mobile) */}
       <div className="w-full overflow-y-auto md:w-1/2">
         <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">
-          <OnboardingStepper />
           {children}
         </div>
       </div>
