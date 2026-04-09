@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "ci:verify": "npm run typecheck && npm run lint && npm run build",
     "test:extract": "tsx scripts/extract-qa-fixtures.ts",
-    "test:qa": "playwright test qa-validation"
+    "test:qa": "playwright test qa-validation",
+    "prepare": "husky"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
@@ -38,9 +41,14 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "playwright": "^1.58.2",
     "supabase": "^2.75.5",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": ["eslint --fix"]
   }
 }
