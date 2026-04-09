@@ -62,6 +62,7 @@ import type {
   RouterDecision,
   MaskDecision,
   CategoryDecision,
+  RoutinePlan,
 } from "@/lib/types"
 
 export interface PipelineParams {
@@ -105,7 +106,7 @@ export async function runPipeline(
   const supabase = createAdminClient()
 
   // ── Step 1: Classify intent + load hair profile (parallel) ─────────
-  const [classification, hairProfileResult, memoryContext, bondBuilderUsage] = await Promise.all([
+  const [classification, hairProfileResult, memoryContext] = await Promise.all([
     classifyIntent(message),
     supabase
       .from("hair_profiles")
@@ -113,20 +114,21 @@ export async function runPipeline(
       .eq("user_id", userId)
       .single(),
     loadUserMemoryContext(userId, supabase),
-    supabase
+  ])
+  const { intent, product_category } = classification
+  const hairProfile: HairProfile | null = hairProfileResult.data ?? null
+  const shouldPlanRoutine = intent === "routine_help" || product_category === "routine"
+  let routinePlan: RoutinePlan | undefined
+  if (shouldPlanRoutine) {
+    const bondBuilderUsage = await supabase
       .from("user_product_usage")
       .select("id")
       .eq("user_id", userId)
       .eq("category", "bondbuilder")
-      .limit(1),
-  ])
-  const { intent, product_category } = classification
-  const hairProfile: HairProfile | null = hairProfileResult.data ?? null
-  const usesBondBuilder = (bondBuilderUsage.data?.length ?? 0) > 0
-  const shouldPlanRoutine = intent === "routine_help" || product_category === "routine"
-  let routinePlan = shouldPlanRoutine
-    ? buildRoutinePlan(hairProfile, message, { usesBondBuilder })
-    : undefined
+      .limit(1)
+    const usesBondBuilder = (bondBuilderUsage.data?.length ?? 0) > 0
+    routinePlan = buildRoutinePlan(hairProfile, message, { usesBondBuilder })
+  }
   let shampooDecision = product_category === "shampoo"
     ? buildShampooDecision(hairProfile)
     : undefined

@@ -670,7 +670,7 @@ test.describe("Routine planner", () => {
       expect(topics.map((topic) => topic.id)).toContain("bond_builder")
     })
 
-    test("explicit request without damage signals adds optional caveat", () => {
+    test("explicit request without damage signals uses educational mode", () => {
       const plan = buildRoutinePlan(
         createProfile({
           cuticle_condition: "smooth",
@@ -684,9 +684,14 @@ test.describe("Routine planner", () => {
       const bondSlot = plan.sections
         .flatMap((section) => section.slots)
         .find((slot) => slot.id === "occasional-bond-builder")
+      const topicIds = plan.active_topics.map((topic) => topic.id)
 
       expect(bondSlot).toBeDefined()
       expect(bondSlot?.caveats.some((line) => line.includes("eher optional"))).toBe(true)
+      expect(bondSlot?.cadence).toBeNull()
+      expect(bondSlot?.rationale.some((line) => line.includes("optionaler Baustein"))).toBe(true)
+      expect(topicIds).toContain("bond_builder")
+      expect(topicIds).not.toContain("tiefenreinigung")
     })
 
     test("snaps = severe tier with pro note", () => {
@@ -835,6 +840,38 @@ test.describe("Routine planner", () => {
 
       expect(prompt).toContain("nachgewiesener Bond-Technologie")
       expect(prompt).toContain("Laengs- und Querverbindungen")
+    })
+
+    test("snaps alone activates bond builder via damage signals", () => {
+      const topics = activateRoutineTopics(
+        createProfile({
+          protein_moisture_balance: "snaps",
+          cuticle_condition: "smooth",
+          chemical_treatment: ["natural"],
+          concerns: [],
+          heat_styling: "never",
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      expect(topics.map((topic) => topic.id)).toContain("bond_builder")
+    })
+
+    test("usesBondBuilder flag sets slot action to adjust", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          cuticle_condition: "rough",
+          concerns: ["hair_damage"],
+        }),
+        "Welche Routine passt zu mir?",
+        { usesBondBuilder: true },
+      )
+
+      const bondSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+
+      expect(bondSlot?.action).toBe("adjust")
     })
   })
 })

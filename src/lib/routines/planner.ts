@@ -248,6 +248,7 @@ function hasDamageSignals(profile: HairProfile | null): boolean {
   const treatments = new Set(profile?.chemical_treatment ?? [])
 
   return (
+    profile?.protein_moisture_balance === "snaps" ||
     concerns.has("hair_damage") ||
     concerns.has("split_ends") ||
     profile?.cuticle_condition === "rough" ||
@@ -278,6 +279,7 @@ function countDamageSignals(profile: HairProfile | null): number {
   const treatments = new Set(profile?.chemical_treatment ?? [])
   let count = 0
 
+  if (profile?.protein_moisture_balance === "snaps") count++
   if (treatments.has("bleached")) count++
   if (treatments.has("colored")) count++
   if (profile?.cuticle_condition === "rough") count++
@@ -549,6 +551,8 @@ export function activateRoutineTopics(
   }
 
   if (explicit.has("bond_builder") || context.has_bond_builder_signals) {
+    const explicitOnly = explicit.has("bond_builder") && !context.has_bond_builder_signals
+
     push(
       "bond_builder",
       explicit.has("bond_builder")
@@ -558,7 +562,7 @@ export function activateRoutineTopics(
       true,
     )
 
-    if (!seen.has("tiefenreinigung")) {
+    if (!explicitOnly && !seen.has("tiefenreinigung")) {
       push(
         "tiefenreinigung",
         "Bond Builder brauchen Zugang zur inneren Haarstruktur — Rueckstaende von Silikonen oder Stylingprodukten koennen die Aufnahme blockieren.",
@@ -951,57 +955,76 @@ function buildRoutineSlots(
   }
 
   if (activeTopicIds.has("bond_builder")) {
-    const severity = deriveBondBuilderSeverity(profile)
-    const treatments = new Set(profile?.chemical_treatment ?? [])
-    const hasChemical = treatments.has("bleached") || treatments.has("colored")
     const explicitWithoutSignals =
       context.explicit_topic_ids.includes("bond_builder") && !context.has_bond_builder_signals
 
-    const bondRationale: string[] = severity === "severe"
-      ? [
-        "Die Kombination aus K18 und Olaplex kann die Reparatur deutlich verstaerken — K18 fuer Laengsverbindungen, Olaplex fuer Querverbindungen.",
-      ]
-      : hasChemical
-        ? [
-          "Bond Builder kann hier gezielt unterstuetzen.",
-          "Bei chemischer Belastung kann Olaplex (Querverbindungen) besonders sinnvoll sein.",
-        ]
-        : [
-          "Bond Builder kann hier gezielt unterstuetzen.",
-          "Bei allgemeiner Schaedigung ohne Chemie ist K18 (Laengsverbindungen) oft der bessere Einstieg.",
-        ]
-
-    const bondCaveats: string[] = [
-      "Zu haeufige Anwendung kann das Haar steif und sproede machen — Pausen einhalten.",
-    ]
-
-    if (profile?.protein_moisture_balance === "snaps") {
-      bondCaveats.push("Die Haare reissen aktuell leicht — ein professionelles Beratungsgespraech kann hier zusaetzlich helfen.")
-    } else if (profile?.protein_moisture_balance === "stretches_stays") {
-      bondCaveats.push("Bond Builder und Protein koennen parallel laufen, solange die Haare noch ueberdehnt sind.")
-    } else if (profile?.protein_moisture_balance === "stretches_bounces") {
-      bondCaveats.push("Die Haare sind aktuell stabil — Protein-Behandlungen dazu sind nicht mehr noetig, Feuchtigkeit reicht.")
-    }
-
     if (explicitWithoutSignals) {
-      bondCaveats.push("Dein Profil zeigt aktuell keine starken Schadenssignale — Bond Builder ist hier eher optional, aber wir erklaeren gerne wie es funktioniert.")
-    }
+      pushSlot(sections, {
+        id: "occasional-bond-builder",
+        kind: "instruction",
+        phase: "occasional",
+        label: "Bond Builder / Repair-Support",
+        action: options.usesBondBuilder ? "adjust" : "add",
+        category: null,
+        cadence: null,
+        rationale: [
+          "Bond Builder ist ein optionaler Baustein fuer gezielte Reparatur auf molekularer Ebene.",
+        ],
+        caveats: [
+          "Dein Profil zeigt aktuell keine starken Schadenssignale — Bond Builder ist hier eher optional, aber wir erklaeren gerne wie es funktioniert.",
+        ],
+        topic_ids: ["bond_builder"],
+        product_linkable: false,
+        product_query: null,
+        attachment_priority: 96,
+      })
+    } else {
+      const severity = deriveBondBuilderSeverity(profile)
+      const treatments = new Set(profile?.chemical_treatment ?? [])
+      const hasChemical = treatments.has("bleached") || treatments.has("colored")
 
-    pushSlot(sections, {
-      id: "occasional-bond-builder",
-      kind: "instruction",
-      phase: "occasional",
-      label: "Bond Builder / Repair-Support",
-      action: options.usesBondBuilder ? "adjust" : "add",
-      category: null,
-      cadence: "4 Anwendungen am Stueck, dann 4 Waeschen Pause, danach nach Bedarf",
-      rationale: bondRationale,
-      caveats: bondCaveats,
-      topic_ids: ["bond_builder"],
-      product_linkable: false,
-      product_query: null,
-      attachment_priority: 96,
-    })
+      const bondRationale: string[] = severity === "severe"
+        ? [
+          "Die Kombination aus K18 und Olaplex kann die Reparatur deutlich verstaerken — K18 fuer Laengsverbindungen, Olaplex fuer Querverbindungen.",
+        ]
+        : hasChemical
+          ? [
+            "Bond Builder kann hier gezielt unterstuetzen.",
+            "Bei chemischer Belastung kann Olaplex (Querverbindungen) besonders sinnvoll sein.",
+          ]
+          : [
+            "Bond Builder kann hier gezielt unterstuetzen.",
+            "Bei allgemeiner Schaedigung ohne Chemie ist K18 (Laengsverbindungen) oft der bessere Einstieg.",
+          ]
+
+      const bondCaveats: string[] = [
+        "Zu haeufige Anwendung kann das Haar steif und sproede machen — Pausen einhalten.",
+      ]
+
+      if (profile?.protein_moisture_balance === "snaps") {
+        bondCaveats.push("Die Haare reissen aktuell leicht — ein professionelles Beratungsgespraech kann hier zusaetzlich helfen.")
+      } else if (profile?.protein_moisture_balance === "stretches_stays") {
+        bondCaveats.push("Bond Builder und Protein koennen parallel laufen, solange die Haare noch ueberdehnt sind.")
+      } else if (profile?.protein_moisture_balance === "stretches_bounces") {
+        bondCaveats.push("Die Haare sind aktuell stabil — Protein-Behandlungen dazu sind nicht mehr noetig, Feuchtigkeit reicht.")
+      }
+
+      pushSlot(sections, {
+        id: "occasional-bond-builder",
+        kind: "instruction",
+        phase: "occasional",
+        label: "Bond Builder / Repair-Support",
+        action: options.usesBondBuilder ? "adjust" : "add",
+        category: null,
+        cadence: "4 Anwendungen am Stueck, dann 4 Waeschen Pause, danach nach Bedarf",
+        rationale: bondRationale,
+        caveats: bondCaveats,
+        topic_ids: ["bond_builder"],
+        product_linkable: false,
+        product_query: null,
+        attachment_priority: 96,
+      })
+    }
   }
 
   if (activeTopicIds.has("cwc_owc")) {
