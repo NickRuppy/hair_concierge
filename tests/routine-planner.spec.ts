@@ -246,6 +246,7 @@ test.describe("Routine planner", () => {
   test("active oiling slot includes wash-out rationale and essential oil caveat", () => {
     const plan = buildRoutinePlan(
       createProfile({
+        hair_texture: "straight",
         thickness: "normal",
         density: "low",
         concerns: ["dryness"],
@@ -284,6 +285,7 @@ test.describe("Routine planner", () => {
   test("irritated scalp gets both irritation caveat and essential oil caveat on active oiling", () => {
     const plan = buildRoutinePlan(
       createProfile({
+        hair_texture: "straight",
         thickness: "normal",
         density: "low",
         scalp_type: "dry",
@@ -490,6 +492,90 @@ test.describe("Routine planner", () => {
     expect(subqueries).toContain("OWC")
     expect(prompt).toContain("Vergleichsmodus")
     expect(prompt).toContain("kompakten nummerierten Wash-Day-Schritte")
+  })
+
+  test("explicit CWC on healthy profile uses educational mode", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        concerns: [],
+        goals: [],
+        cuticle_condition: "smooth",
+        chemical_treatment: ["natural"],
+        mechanical_stress_factors: [],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Was ist die CWC Methode?"
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).toContain("cwc")
+
+    const cwcSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "base-cwc-technique")
+
+    expect(cwcSlot?.cadence).toBeNull()
+    expect(cwcSlot?.caveats.some((line) => line.includes("eher optional"))).toBe(true)
+    expect(cwcSlot?.product_linkable).toBe(false)
+    expect(cwcSlot?.rationale.some((line) => line.startsWith("1."))).toBe(false)
+  })
+
+  test("comparison on healthy profile does not activate any wash protection topic", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        concerns: [],
+        goals: [],
+        cuticle_condition: "smooth",
+        chemical_treatment: ["natural"],
+        mechanical_stress_factors: [],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Was ist der Unterschied zwischen CWC und OWC?"
+    )
+
+    expect(plan.compare_cwc_owc).toBe(true)
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("cwc")
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("owc")
+
+    const cwcSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "base-cwc-technique")
+    const owcSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "base-owc-technique")
+
+    expect(cwcSlot).toBeUndefined()
+    expect(owcSlot).toBeUndefined()
+  })
+
+  test("OWC suppresses duplicate occasional-oil slot when hair_oiling also activates", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        thickness: "normal",
+        density: "medium",
+        concerns: ["dryness"],
+        cuticle_condition: "rough",
+        scalp_condition: "dry_flakes",
+        mechanical_stress_factors: ["rough_brushing"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu meinen Locken?"
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).toContain("owc")
+
+    const owcOilSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "base-owc-oil")
+    const occasionalOilSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "occasional-oil")
+
+    expect(owcOilSlot).toBeDefined()
+    expect(owcOilSlot?.phase).toBe("base_wash")
+    expect(occasionalOilSlot).toBeUndefined()
   })
 
   test("unnecessary mask steps can still be deprioritized", () => {
