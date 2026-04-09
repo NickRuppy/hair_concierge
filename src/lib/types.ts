@@ -421,8 +421,10 @@ export interface RoutineContext {
   has_buildup_signals: boolean
   has_dryness_damage_signals: boolean
   has_damage_signals: boolean
+  has_bond_builder_signals: boolean
   has_oil_weight_risk: boolean
   has_strong_technique_fit: boolean
+  uses_heat_protection: boolean
 }
 
 export interface RoutineTopicActivation {

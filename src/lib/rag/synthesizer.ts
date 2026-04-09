@@ -866,7 +866,9 @@ Wenn ein Routine-Plan vorhanden ist:
 7. Wenn keine Produkte angehaengt sind, bleibe bei Kategorien und Routine-Logik statt konkrete Produkte zu improvisieren.
 8. Erfinde keine zusaetzlichen Kategorien, Schritte oder Produkttypen ausserhalb des Routine-Plans.
 9. Detaillierte Anwendungstechniken gehoeren NICHT in diese Antwort.
-10. Bei Kopfhautthemen bleibe konservativ und nicht-medizinisch.`,
+10. Bei Kopfhautthemen bleibe konservativ und nicht-medizinisch.
+11. Wenn Bond Builder relevant ist: Olaplex No. 0+3, K18 Molecular Repair Leave-in und Epres gehoeren zu den wenigen Produkten mit nachgewiesener Bond-Technologie. Viele Produkte mit "Bond" im Namen pflegen nur die Oberflaeche, reparieren aber nicht die innere Haarstruktur. Das sind Technologie-Beispiele, keine Produktempfehlungen.
+12. Nenne bei Bond Builder den Unterschied zwischen Laengs- und Querverbindungen nur, wenn der Routine-Plan das vorgibt. Erfinde keine eigene K18-vs-Olaplex-Logik.`,
   mask: `
 
 ## Masken-Empfehlungen:
