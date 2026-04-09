@@ -197,16 +197,130 @@ test.describe("Routine planner", () => {
     expect(topics.map((topic) => topic.id)).toContain("hair_oiling")
   })
 
-  test("oily scalp can proactively surface hair oiling as a scalp-support topic", () => {
+  test("oily scalp does not activate hair oiling", () => {
+    const profile = createProfile({
+      scalp_type: "oily",
+      concerns: ["oily_scalp"],
+      current_routine_products: ["shampoo", "conditioner"],
+    })
+
+    const topics = activateRoutineTopics(
+      profile,
+      "Meine Kopfhaut fettet schnell nach. Welche Routine passt?"
+    )
+    expect(topics.map((topic) => topic.id)).not.toContain("hair_oiling")
+
+    const plan = buildRoutinePlan(profile, "Meine Kopfhaut fettet schnell nach. Welche Routine passt?")
+    const oilSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "occasional-oil")
+    expect(oilSlot).toBeUndefined()
+  })
+
+  test("healthy_scalp goal alone does not activate hair oiling", () => {
     const topics = activateRoutineTopics(
       createProfile({
         scalp_type: "oily",
+        goals: ["healthy_scalp"],
         current_routine_products: ["shampoo", "conditioner"],
       }),
-      "Meine Kopfhaut fettet schnell nach. Welche Routine passt?"
+      "Welche Routine passt zu mir?"
+    )
+
+    expect(topics.map((topic) => topic.id)).not.toContain("hair_oiling")
+  })
+
+  test("dandruff still activates hair oiling via scalp fit", () => {
+    const topics = activateRoutineTopics(
+      createProfile({
+        scalp_condition: "dandruff",
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir?"
     )
 
     expect(topics.map((topic) => topic.id)).toContain("hair_oiling")
+  })
+
+  test("active oiling slot includes wash-out rationale and essential oil caveat", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        thickness: "normal",
+        density: "low",
+        concerns: ["dryness"],
+        cuticle_condition: "rough",
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Ich suche eine Routine fuer trockene Laengen."
+    )
+
+    const oilSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "occasional-oil")
+
+    expect(oilSlot?.action).toBe("add")
+    expect(oilSlot?.rationale.some((line) => line.includes("Shampoo zuerst auf trockenes Haar"))).toBe(true)
+    expect(oilSlot?.caveats).toContain("Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.")
+  })
+
+  test("avoid oiling slot does not include wash-out rationale or essential oil caveat", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        current_routine_products: ["shampoo", "conditioner", "oil"],
+      }),
+      "Welche Routine passt zu mir?"
+    )
+
+    const oilSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "occasional-oil")
+
+    expect(oilSlot?.action).toBe("avoid")
+    expect(oilSlot?.rationale.every((line) => !line.includes("Shampoo zuerst auf trockenes Haar"))).toBe(true)
+    expect(oilSlot?.caveats).not.toContain("Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.")
+  })
+
+  test("irritated scalp gets both irritation caveat and essential oil caveat on active oiling", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        thickness: "normal",
+        density: "low",
+        scalp_type: "dry",
+        scalp_condition: "irritated",
+        concerns: ["dryness"],
+        cuticle_condition: "rough",
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Ich suche eine Routine fuer trockene Laengen."
+    )
+
+    const oilSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "occasional-oil")
+
+    expect(oilSlot?.caveats).toHaveLength(2)
+    expect(oilSlot?.caveats).toContain("Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht ueberladen.")
+    expect(oilSlot?.caveats).toContain("Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.")
+  })
+
+  test("leave-in activates independently of hair oiling", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        concerns: ["frizz"],
+        goals: ["less_frizz"],
+        scalp_type: "balanced",
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir?"
+    )
+
+    const leaveInSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.label === "Leave-in / Finish")
+
+    expect(leaveInSlot).toBeDefined()
+    expect(leaveInSlot?.action).toBe("add")
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("hair_oiling")
   })
 
   test("unnecessary mask steps can still be deprioritized", () => {

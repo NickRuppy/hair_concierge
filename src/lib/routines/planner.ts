@@ -401,9 +401,6 @@ function hasProactiveHairOilingFit(context: RoutineContext): boolean {
 function hasScalpHairOilingFit(context: RoutineContext): boolean {
   return (
     context.scalp_type === "dry" ||
-    context.scalp_type === "oily" ||
-    context.goals.includes("healthy_scalp") ||
-    context.concerns.includes("oily_scalp") ||
     context.scalp_condition === "dry_flakes" ||
     context.scalp_condition === "dandruff"
   )
@@ -669,7 +666,6 @@ function buildRoutineSlots(
   const shouldUseLeaveIn =
     Boolean(leaveInDecision.need_bucket) ||
     activeTopicIds.has("lockenrefresh") ||
-    activeTopicIds.has("hair_oiling") ||
     context.goals.includes("less_frizz") ||
     context.goals.includes("moisture") ||
     context.goals.includes("curl_definition") ||
@@ -798,29 +794,43 @@ function buildRoutineSlots(
   }
 
   if (activeTopicIds.has("hair_oiling") || oilPresent) {
+    const oilAction: RoutineSlotAction = !activeTopicIds.has("hair_oiling")
+      ? "avoid"
+      : oilPresent
+        ? "adjust"
+        : "add"
+    const oilActive = oilAction === "add" || oilAction === "adjust"
+
+    const oilRationale = [
+      "Hair Oiling bleibt ein optionaler Pre-Wash-Baustein und keine Pflicht fuer jede Routine.",
+      hasScalpHairOilingFit(context)
+        ? "Es kann sowohl die Kopfhautbalance unterstuetzen als auch Laengen und Spitzen vor der Waesche schuetzen."
+        : "Es ist vor allem dann sinnvoll, wenn Trockenheit oder Oberflaechenschaeden ein Thema sind.",
+    ]
+    if (oilActive) {
+      oilRationale.push(
+        "Wichtig beim Auswaschen: Shampoo zuerst auf trockenes Haar auftragen, dann erst mit Wasser ausspuelen."
+      )
+    }
+
+    const oilCaveats: string[] = []
+    if (context.scalp_condition === "irritated") {
+      oilCaveats.push("Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht ueberladen.")
+    }
+    if (oilActive) {
+      oilCaveats.push("Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.")
+    }
+
     pushSlot(sections, {
       id: "occasional-oil",
       kind: "product_slot",
       phase: "occasional",
       label: "Hair Oiling",
-      action: !activeTopicIds.has("hair_oiling")
-        ? "avoid"
-        : oilPresent
-          ? "adjust"
-          : "add",
+      action: oilAction,
       category: "oil",
       cadence: "vor einzelnen Waeschen nach Bedarf",
-      rationale: [
-        "Hair Oiling bleibt ein optionaler Pre-Wash-Baustein und keine Pflicht fuer jede Routine.",
-        hasScalpHairOilingFit(context)
-          ? "Es kann sowohl die Kopfhautbalance unterstuetzen als auch Laengen und Spitzen vor der Waesche schuetzen."
-          : "Es ist vor allem dann sinnvoll, wenn Trockenheit oder Oberflaechenschaeden ein Thema sind.",
-      ],
-      caveats: (
-        context.scalp_condition === "irritated"
-      )
-        ? ["Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht ueberladen."]
-        : [],
+      rationale: oilRationale,
+      caveats: oilCaveats,
       topic_ids: ["hair_oiling"],
       product_linkable: activeTopicIds.has("hair_oiling") && !oilPresent,
       product_query: "Ich moechte Hair Oiling vor dem Waschen machen.",
