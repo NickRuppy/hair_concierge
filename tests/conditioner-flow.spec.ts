@@ -393,7 +393,7 @@ test.describe("Conditioner Recommendation Flow", () => {
     await quizPage.getByText("Glatt").first().click()
 
     // Step 2: Thickness — click "Mittel"
-    await expect(quizPage.getByText("2/7")).toBeVisible({ timeout: 10000 })
+    await expect(quizPage.getByText("2/6")).toBeVisible({ timeout: 10000 })
     await quizPage.screenshot({
       path: "test-results/conditioner-flow/16-quiz-step2-thickness.png",
       fullPage: true,
@@ -401,7 +401,7 @@ test.describe("Conditioner Recommendation Flow", () => {
     await quizPage.getByText("Mittel").first().click()
 
     // Step 3: Surface test — click "Glatt wie Glas"
-    await expect(quizPage.getByText("3/7")).toBeVisible({ timeout: 10000 })
+    await expect(quizPage.getByText("3/6")).toBeVisible({ timeout: 10000 })
     await quizPage.screenshot({
       path: "test-results/conditioner-flow/17-quiz-step3-surface.png",
       fullPage: true,
@@ -410,9 +410,9 @@ test.describe("Conditioner Recommendation Flow", () => {
 
     // Step 4: Pull test — THIS IS WHAT WE'RE TESTING
     await expect(
-      quizPage.getByText("DER ZUGTEST", { exact: false })
+      quizPage.getByText("WIE ELASTISCH IST DEIN HAAR?", { exact: false })
     ).toBeVisible({ timeout: 10000 })
-    await expect(quizPage.getByText("4/7")).toBeVisible()
+    await expect(quizPage.getByText("4/6")).toBeVisible()
     await quizPage.screenshot({
       path: "test-results/conditioner-flow/18-quiz-step4-pulltest.png",
       fullPage: true,

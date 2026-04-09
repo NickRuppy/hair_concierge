@@ -7,12 +7,12 @@ export function QuizBrandPanel() {
   const leadCaptureSubStep = useQuizStore((s) => s.leadCaptureSubStep)
 
   const QUESTION_NUMBER_MAP: Record<number, number> = {
-    7: 1,  // chemical
-    6: 2,  // scalp
-    2: 3,  // texture
-    3: 4,  // thickness
-    4: 5,  // surface
-    5: 6,  // pull
+    2: 1,  // texture
+    3: 2,  // thickness
+    4: 3,  // surface
+    5: 4,  // pull
+    7: 5,  // chemical
+    6: 6,  // scalp
   }
   const questionNumber = QUESTION_NUMBER_MAP[step] ?? null
 

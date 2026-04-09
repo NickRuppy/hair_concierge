@@ -106,17 +106,6 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
       await expect(page.getByText("5/6")).toBeVisible()
 
-      await page
-        .locator(".quiz-card")
-        .filter({ has: page.getByText(/^Trocken$/) })
-        .click()
-      await expect(
-        page.getByText("HAST DU KOPFHAUTBESCHWERDEN?", { exact: false })
-      ).toBeVisible()
-      await page.getByRole("button", { name: "JA" }).click()
-      await page.getByText("Trockene Schuppen").click()
-
-      await expect(page.getByText("6/6")).toBeVisible()
       await expect(
         page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false })
       ).toBeVisible()
@@ -148,6 +137,18 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       ).toHaveCount(1)
 
       await page.getByRole("button", { name: /^WEITER$/ }).click()
+
+      // Scalp question (6/6)
+      await expect(page.getByText("6/6")).toBeVisible()
+      await page
+        .locator(".quiz-card")
+        .filter({ has: page.getByText(/^Trocken$/) })
+        .click()
+      await expect(
+        page.getByText("BESCHWERDEN WIE SCHUPPEN", { exact: false })
+      ).toBeVisible()
+      await page.getByRole("button", { name: "JA" }).click()
+      await page.getByText("Trockene Schuppen").click()
 
       await page.getByPlaceholder("Dein Vorname").fill("Playwright")
       await page.getByRole("button", { name: /^WEITER$/ }).click()
