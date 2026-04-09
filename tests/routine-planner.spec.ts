@@ -4,6 +4,7 @@ import {
   buildRoutinePlan,
   buildRoutineRetrievalSubqueries,
   deriveRoutineContext,
+  detectStylingProductKind,
   getRoutineAutofillSlots,
 } from "../src/lib/routines/planner"
 import { evaluateRoute } from "../src/lib/rag/router"
@@ -427,6 +428,177 @@ test.describe("Routine planner", () => {
     expect(context.primary_focuses.map((focus) => focus.label)).not.toContain("minimal")
   })
 
+  test.describe("detectStylingProductKind", () => {
+    test("detects Gel from free text", () => {
+      expect(detectStylingProductKind("Balea Styling Gel")).toBe("Gel")
+    })
+
+    test("detects Mousse/Schaum", () => {
+      expect(detectStylingProductKind("Ich nutze einen Locken-Schaum von Schwarzkopf")).toBe("Mousse")
+      expect(detectStylingProductKind("Mousse von Cantu")).toBe("Mousse")
+    })
+
+    test("detects Lockencreme before generic Creme", () => {
+      expect(detectStylingProductKind("Lockencreme von Cantu und Gel")).toBe("Lockencreme")
+      expect(detectStylingProductKind("Curl Cream plus Gel")).toBe("Lockencreme")
+    })
+
+    test("detects generic Stylingcreme", () => {
+      expect(detectStylingProductKind("eine Creme fuer die Haare")).toBe("Stylingcreme")
+    })
+
+    test("returns null for empty or no-match input", () => {
+      expect(detectStylingProductKind(null)).toBeNull()
+      expect(detectStylingProductKind("")).toBeNull()
+      expect(detectStylingProductKind("ich benutze nichts besonderes")).toBeNull()
+    })
+
+    test("handles mixed casing and diacritics", () => {
+      expect(detectStylingProductKind("STYLING GEL von Wella")).toBe("Gel")
+      expect(detectStylingProductKind("Schäum-Mousse")).toBe("Mousse")
+    })
+
+    test("matches German compound words", () => {
+      expect(detectStylingProductKind("Stylinggel von dm")).toBe("Gel")
+      expect(detectStylingProductKind("Lockenschaum")).toBe("Mousse")
+    })
+
+    test("does not match gel inside gelb", () => {
+      expect(detectStylingProductKind("gelbliches Serum")).toBeNull()
+    })
+  })
+
+  test("refresh slot echoes product kind from products_used", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        products_used: "Balea Styling Gel",
+        current_routine_products: ["shampoo", "conditioner", "leave_in"],
+      }),
+      "Welche Routine passt zu mir?"
+    )
+
+    const refreshSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "maintenance-refresh")
+
+    expect(refreshSlot).toBeDefined()
+    expect(refreshSlot?.rationale.some((line) => line.includes("dein Gel vom letzten Waschtag"))).toBe(true)
+  })
+
+  test("refresh slot uses generic product echo when products_used has no styling match", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        products_used: null,
+        current_routine_products: ["shampoo", "conditioner", "leave_in"],
+      }),
+      "Welche Routine passt zu mir?"
+    )
+
+    const refreshSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "maintenance-refresh")
+
+    expect(refreshSlot?.rationale.some((line) => line.includes("dasselbe Styling-Produkt vom letzten Waschtag"))).toBe(true)
+  })
+
+  test("refresh slot adds leave-in cross-reference for dry/damaged hair", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        concerns: ["dryness"],
+        cuticle_condition: "rough",
+        current_routine_products: ["shampoo", "conditioner", "leave_in"],
+      }),
+      "Welche Routine passt zu mir?"
+    )
+
+    const refreshSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "maintenance-refresh")
+
+    expect(refreshSlot?.rationale.some((line) => line.includes("Leave-In"))).toBe(true)
+    expect(refreshSlot?.rationale.some((line) => line.includes("trainiert langfristig"))).toBe(true)
+  })
+
+  test("refresh slot adds fine-hair caveat when thickness is fine and dryness signals present", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        thickness: "fine",
+        concerns: ["dryness"],
+        current_routine_products: ["shampoo", "conditioner", "leave_in"],
+      }),
+      "Welche Routine passt zu mir?"
+    )
+
+    const refreshSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "maintenance-refresh")
+
+    expect(refreshSlot?.caveats.some((line) => line.includes("feinem Haar"))).toBe(true)
+  })
+
+  test("refresh slot has no leave-in cross-reference when no dryness signals", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        concerns: [],
+        goals: [],
+        cuticle_condition: "smooth",
+        chemical_treatment: ["natural"],
+        current_routine_products: ["shampoo", "conditioner", "leave_in"],
+      }),
+      "Welche Routine passt zu mir?"
+    )
+
+    const refreshSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "maintenance-refresh")
+
+    expect(refreshSlot?.rationale.every((line) => !line.includes("Leave-In"))).toBe(true)
+    expect(refreshSlot?.caveats).toHaveLength(0)
+  })
+
+  test("refresh slot includes duration in cadence", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        current_routine_products: ["shampoo", "conditioner", "leave_in"],
+      }),
+      "Welche Routine passt zu mir?"
+    )
+
+    const refreshSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "maintenance-refresh")
+
+    expect(refreshSlot?.cadence).toContain("ca. 10 Min.")
+  })
+
+  test("chemical treatment alone triggers leave-in cross-reference on refresh", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        thickness: "normal",
+        chemical_treatment: ["colored"],
+        cuticle_condition: "smooth",
+        concerns: [],
+        goals: [],
+        current_routine_products: ["shampoo", "conditioner", "leave_in"],
+      }),
+      "Welche Routine passt zu mir?"
+    )
+
+    const refreshSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "maintenance-refresh")
+
+    expect(refreshSlot?.rationale.some((line) => line.includes("Leave-In"))).toBe(true)
+    expect(refreshSlot?.caveats).toHaveLength(0)
+  })
+
   test("routine system prompt includes the plan, softer avoid wording, and reasoning-first product instructions", () => {
     const profile = createProfile({
       current_routine_products: ["shampoo", "conditioner", "mask"],
@@ -454,5 +626,252 @@ test.describe("Routine planner", () => {
     expect(prompt).toContain("Begruende pro relevantem Slot erst kurz den Fit zum Profil")
     expect(prompt).toContain("ordne sie direkt dem gerade erklaerten Slot")
     expect(prompt).not.toContain("Routine-Detailgrad")
+  })
+
+  test.describe("Bond builder logic", () => {
+    test("colored alone does NOT activate bond builder", () => {
+      const topics = activateRoutineTopics(
+        createProfile({
+          chemical_treatment: ["colored"],
+          cuticle_condition: "smooth",
+          concerns: [],
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      expect(topics.map((topic) => topic.id)).not.toContain("bond_builder")
+    })
+
+    test("colored + rough cuticle activates bond builder", () => {
+      const topics = activateRoutineTopics(
+        createProfile({
+          chemical_treatment: ["colored"],
+          cuticle_condition: "rough",
+          concerns: [],
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      expect(topics.map((topic) => topic.id)).toContain("bond_builder")
+    })
+
+    test("heat damage without protection activates bond builder", () => {
+      const topics = activateRoutineTopics(
+        createProfile({
+          heat_styling: "daily",
+          uses_heat_protection: false,
+          cuticle_condition: "smooth",
+          concerns: [],
+          chemical_treatment: ["natural"],
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      expect(topics.map((topic) => topic.id)).toContain("bond_builder")
+    })
+
+    test("explicit request without damage signals uses educational mode", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          cuticle_condition: "smooth",
+          chemical_treatment: ["natural"],
+          concerns: [],
+          heat_styling: "never",
+        }),
+        "Was ist ein Bond Builder?"
+      )
+
+      const bondSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+      const topicIds = plan.active_topics.map((topic) => topic.id)
+
+      expect(bondSlot).toBeDefined()
+      expect(bondSlot?.caveats.some((line) => line.includes("eher optional"))).toBe(true)
+      expect(bondSlot?.cadence).toBeNull()
+      expect(bondSlot?.rationale.some((line) => line.includes("optionaler Baustein"))).toBe(true)
+      expect(topicIds).toContain("bond_builder")
+      expect(topicIds).not.toContain("tiefenreinigung")
+    })
+
+    test("snaps = severe tier with pro note", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          protein_moisture_balance: "snaps",
+          chemical_treatment: ["bleached"],
+          cuticle_condition: "rough",
+          concerns: ["hair_damage"],
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      const bondSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+
+      expect(bondSlot?.rationale.some((line) => line.includes("Kombination aus K18 und Olaplex"))).toBe(true)
+      expect(bondSlot?.caveats.some((line) => line.includes("professionelles Beratungsgespraech"))).toBe(true)
+    })
+
+    test("moderate + chemical treatment leans Olaplex", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          chemical_treatment: ["colored"],
+          cuticle_condition: "rough",
+          concerns: [],
+          protein_moisture_balance: "stretches_bounces",
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      const bondSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+
+      expect(bondSlot?.rationale.some((line) => line.includes("Olaplex (Querverbindungen)"))).toBe(true)
+    })
+
+    test("moderate + no chemical treatment leans K18", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          chemical_treatment: ["natural"],
+          cuticle_condition: "rough",
+          concerns: ["hair_damage"],
+          protein_moisture_balance: "stretches_bounces",
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      const bondSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+
+      expect(bondSlot?.rationale.some((line) => line.includes("K18 (Laengsverbindungen)"))).toBe(true)
+    })
+
+    test("bond builder co-activates tiefenreinigung", () => {
+      const topics = activateRoutineTopics(
+        createProfile({
+          cuticle_condition: "rough",
+          concerns: ["hair_damage"],
+          chemical_treatment: ["bleached"],
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      const topicIds = topics.map((topic) => topic.id)
+      expect(topicIds).toContain("bond_builder")
+      expect(topicIds).toContain("tiefenreinigung")
+
+      const tiefenreinigung = topics.find((topic) => topic.id === "tiefenreinigung")
+      expect(tiefenreinigung?.reason).toContain("Rueckstaende")
+    })
+
+    test("repair fatigue caveat is always present on bond builder slot", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          cuticle_condition: "rough",
+          concerns: ["hair_damage"],
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      const bondSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+
+      expect(bondSlot?.caveats.some((line) => line.includes("steif und sproede"))).toBe(true)
+    })
+
+    test("protein interaction caveat varies by balance", () => {
+      const stretchesPlan = buildRoutinePlan(
+        createProfile({
+          cuticle_condition: "rough",
+          concerns: ["hair_damage"],
+          protein_moisture_balance: "stretches_stays",
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      const stretchesSlot = stretchesPlan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+
+      expect(stretchesSlot?.caveats.some((line) => line.includes("parallel laufen"))).toBe(true)
+
+      const balancedPlan = buildRoutinePlan(
+        createProfile({
+          cuticle_condition: "rough",
+          concerns: ["hair_damage"],
+          protein_moisture_balance: "stretches_bounces",
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      const balancedSlot = balancedPlan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+
+      expect(balancedSlot?.caveats.some((line) => line.includes("Feuchtigkeit reicht"))).toBe(true)
+    })
+
+    test("system prompt includes bond builder synth rules when bond_builder is active", () => {
+      const profile = createProfile({
+        cuticle_condition: "rough",
+        concerns: ["hair_damage"],
+        chemical_treatment: ["bleached"],
+      })
+      const routinePlan = buildRoutinePlan(profile, "Welche Routine passt zu mir?")
+
+      const prompt = buildSystemPrompt(
+        profile,
+        [createChunk()],
+        [],
+        "routine",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        routinePlan,
+        null,
+        undefined,
+      )
+
+      expect(prompt).toContain("nachgewiesener Bond-Technologie")
+      expect(prompt).toContain("Laengs- und Querverbindungen")
+    })
+
+    test("snaps alone activates bond builder via damage signals", () => {
+      const topics = activateRoutineTopics(
+        createProfile({
+          protein_moisture_balance: "snaps",
+          cuticle_condition: "smooth",
+          chemical_treatment: ["natural"],
+          concerns: [],
+          heat_styling: "never",
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      expect(topics.map((topic) => topic.id)).toContain("bond_builder")
+    })
+
+    test("usesBondBuilder flag sets slot action to adjust", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          cuticle_condition: "rough",
+          concerns: ["hair_damage"],
+        }),
+        "Welche Routine passt zu mir?",
+        { usesBondBuilder: true },
+      )
+
+      const bondSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+
+      expect(bondSlot?.action).toBe("adjust")
+    })
   })
 })

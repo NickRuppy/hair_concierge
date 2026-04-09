@@ -62,6 +62,7 @@ import type {
   RouterDecision,
   MaskDecision,
   CategoryDecision,
+  RoutinePlan,
 } from "@/lib/types"
 
 export interface PipelineParams {
@@ -117,9 +118,17 @@ export async function runPipeline(
   const { intent, product_category } = classification
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
   const shouldPlanRoutine = intent === "routine_help" || product_category === "routine"
-  let routinePlan = shouldPlanRoutine
-    ? buildRoutinePlan(hairProfile, message)
-    : undefined
+  let routinePlan: RoutinePlan | undefined
+  if (shouldPlanRoutine) {
+    const bondBuilderUsage = await supabase
+      .from("user_product_usage")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("category", "bondbuilder")
+      .limit(1)
+    const usesBondBuilder = (bondBuilderUsage.data?.length ?? 0) > 0
+    routinePlan = buildRoutinePlan(hairProfile, message, { usesBondBuilder })
+  }
   let shampooDecision = product_category === "shampoo"
     ? buildShampooDecision(hairProfile)
     : undefined

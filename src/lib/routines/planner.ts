@@ -137,6 +137,34 @@ const WASH_LESS_TERMS = [
 const CURLY_TEXTURES = new Set(["wavy", "curly", "coily"])
 const HEAVY_ROUTINE_PRODUCTS = new Set(["mask", "oil", "leave_in"])
 
+const STYLING_KIND_MAP: [RegExp, string][] = [
+  [/lockencreme|curl\s*cream/i, "Lockencreme"],
+  [/mousse|schaum/i, "Mousse"],
+  [/gel\b/i, "Gel"],
+  [/creme|cream/i, "Stylingcreme"],
+]
+
+function detectStylingProductKind(productsUsed: string | null): string | null {
+  if (!productsUsed) return null
+  const text = normalizeText(productsUsed)
+  for (const [pattern, label] of STYLING_KIND_MAP) {
+    if (pattern.test(text)) return label
+  }
+  return null
+}
+
+function hasRefreshDrynessNeed(profile: HairProfile | null): boolean {
+  const concerns = profile?.concerns ?? []
+  const goals = profile?.goals ?? []
+  return (
+    concerns.includes("dryness") ||
+    concerns.includes("hair_damage") ||
+    goals.includes("healthier_hair") ||
+    profile?.cuticle_condition === "rough" ||
+    (profile?.chemical_treatment ?? []).some((t) => t !== "natural")
+  )
+}
+
 function normalizeText(value: string): string {
   return value
     .toLowerCase()
@@ -208,17 +236,68 @@ function hasDrynessDamageSignals(profile: HairProfile | null): boolean {
   )
 }
 
+function hasFrequentUnprotectedHeat(profile: HairProfile | null): boolean {
+  return (
+    (profile?.heat_styling === "daily" || profile?.heat_styling === "several_weekly") &&
+    !(profile?.uses_heat_protection ?? false)
+  )
+}
+
 function hasDamageSignals(profile: HairProfile | null): boolean {
   const concerns = new Set(profile?.concerns ?? [])
   const treatments = new Set(profile?.chemical_treatment ?? [])
 
   return (
+    profile?.protein_moisture_balance === "snaps" ||
     concerns.has("hair_damage") ||
     concerns.has("split_ends") ||
     profile?.cuticle_condition === "rough" ||
     treatments.has("colored") ||
-    treatments.has("bleached")
+    treatments.has("bleached") ||
+    hasFrequentUnprotectedHeat(profile)
   )
+}
+
+function hasBondBuilderSignals(profile: HairProfile | null): boolean {
+  if (!hasDamageSignals(profile)) return false
+
+  const concerns = new Set(profile?.concerns ?? [])
+  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const hasColoredOnly =
+    treatments.has("colored") &&
+    !treatments.has("bleached") &&
+    !concerns.has("hair_damage") &&
+    !concerns.has("split_ends") &&
+    profile?.cuticle_condition !== "rough" &&
+    !hasFrequentUnprotectedHeat(profile)
+
+  return !hasColoredOnly
+}
+
+function countDamageSignals(profile: HairProfile | null): number {
+  const concerns = new Set(profile?.concerns ?? [])
+  const treatments = new Set(profile?.chemical_treatment ?? [])
+  let count = 0
+
+  if (profile?.protein_moisture_balance === "snaps") count++
+  if (treatments.has("bleached")) count++
+  if (treatments.has("colored")) count++
+  if (profile?.cuticle_condition === "rough") count++
+  if (concerns.has("hair_damage")) count++
+  if (concerns.has("split_ends")) count++
+  if (hasFrequentUnprotectedHeat(profile)) count++
+
+  return count
+}
+
+function deriveBondBuilderSeverity(profile: HairProfile | null): "moderate" | "severe" {
+  const treatments = new Set(profile?.chemical_treatment ?? [])
+
+  if (profile?.protein_moisture_balance === "snaps") return "severe"
+  if (treatments.has("bleached") && countDamageSignals(profile) >= 2) return "severe"
+  if (countDamageSignals(profile) >= 3) return "severe"
+
+  return "moderate"
 }
 
 function hasOilWeightRisk(profile: HairProfile | null): boolean {
@@ -365,8 +444,10 @@ export function deriveRoutineContext(
     has_buildup_signals: hasBuildupSignals(profile, normalizedMessage),
     has_dryness_damage_signals: hasDrynessDamageSignals(profile),
     has_damage_signals: hasDamageSignals(profile),
+    has_bond_builder_signals: hasBondBuilderSignals(profile),
     has_oil_weight_risk: hasOilWeightRisk(profile),
     has_strong_technique_fit: hasStrongTechniqueFit(profile),
+    uses_heat_protection: profile?.uses_heat_protection ?? false,
   }
 }
 
@@ -469,7 +550,9 @@ export function activateRoutineTopics(
     )
   }
 
-  if (explicit.has("bond_builder") || context.has_damage_signals) {
+  if (explicit.has("bond_builder") || context.has_bond_builder_signals) {
+    const explicitOnly = explicit.has("bond_builder") && !context.has_bond_builder_signals
+
     push(
       "bond_builder",
       explicit.has("bond_builder")
@@ -478,6 +561,15 @@ export function activateRoutineTopics(
       45,
       true,
     )
+
+    if (!explicitOnly && !seen.has("tiefenreinigung")) {
+      push(
+        "tiefenreinigung",
+        "Bond Builder brauchen Zugang zur inneren Haarstruktur — Rueckstaende von Silikonen oder Stylingprodukten koennen die Aufnahme blockieren.",
+        30,
+        true,
+      )
+    }
   }
 
   if (
@@ -585,6 +677,7 @@ function buildRoutineSlots(
   context: RoutineContext,
   activations: RoutineTopicActivation[],
   decisionContext: RoutineDecisionContext,
+  options: { usesBondBuilder: boolean },
 ): Map<RoutinePlanSection["phase"], RoutineSlotAdvice[]> {
   const sections = new Map<RoutinePlanSection["phase"], RoutineSlotAdvice[]>()
   const activeTopicIds = new Set(activations.map((entry) => entry.id))
@@ -714,6 +807,26 @@ function buildRoutineSlots(
   }
 
   if (activeTopicIds.has("lockenrefresh")) {
+    const stylingKind = detectStylingProductKind(profile?.products_used ?? null)
+    const productEcho = stylingKind
+      ? `Verwende dein ${stylingKind} vom letzten Waschtag — nicht mit neuen Produkten experimentieren.`
+      : "Verwende dasselbe Styling-Produkt vom letzten Waschtag — nicht mit neuen Produkten experimentieren."
+
+    const refreshRationale = [
+      "Lockenrefresh ist eine abgekuerzte Version des letzten Steps der Locken-Routine — nur leicht anfeuchten, Produkt auffrischen, trocknen lassen.",
+      productEcho,
+      "Regelmaessiges Auffrischen trainiert langfristig die Lockenstruktur.",
+    ]
+
+    const refreshCaveats: string[] = []
+
+    if (hasRefreshDrynessNeed(profile)) {
+      refreshRationale.splice(2, 0, "Bei Bedarf vorher etwas Leave-In in trockene Laengen einarbeiten (siehe Leave-In-Slot).")
+      if (profile?.thickness === "fine") {
+        refreshCaveats.push("Bei feinem Haar reicht oft schon ein minimaler Tropfen Leave-In, damit die Locken nicht beschwert werden.")
+      }
+    }
+
     pushSlot(sections, {
       id: "maintenance-refresh",
       kind: "instruction",
@@ -721,12 +834,9 @@ function buildRoutineSlots(
       label: "Lockenrefresh",
       action: leaveInPresent ? "adjust" : "add",
       category: null,
-      cadence: "an Tagen zwischen den Waeschen",
-      rationale: [
-        "Wellen und Locken profitieren oft von einem leichten Refresh statt einer kompletten Neuwaesche.",
-        "Der Punkt bleibt bewusst auf Routine-Ebene und geht noch nicht in Anwendungstechnik.",
-      ],
-      caveats: [],
+      cadence: "an Tagen zwischen den Waeschen, ca. 10 Min.",
+      rationale: refreshRationale,
+      caveats: refreshCaveats,
       topic_ids: ["lockenrefresh"],
       product_linkable: false,
       product_query: null,
@@ -768,6 +878,7 @@ function buildRoutineSlots(
   }
 
   if (activeTopicIds.has("tiefenreinigung")) {
+    const bondBuilderDriven = activeTopicIds.has("bond_builder")
     pushSlot(sections, {
       id: "occasional-clarify",
       kind: "instruction",
@@ -776,10 +887,15 @@ function buildRoutineSlots(
       action: shampooPresent ? "adjust" : "add",
       category: null,
       cadence: context.scalp_type === "oily" ? "alle 1-2 Wochen nach Bedarf" : "alle 2-3 Wochen oder bei Build-up",
-      rationale: [
-        "Tiefenreinigung ist ein gezielter Reset und kein Pflichtschritt fuer jede Waesche.",
-        "Sie wird vor allem dann relevant, wenn Kopfhaut, Build-up oder Produktueberlagerung die Routine schwerer machen.",
-      ],
+      rationale: bondBuilderDriven
+        ? [
+          "Bond Builder brauchen saubere Haarstruktur — Rueckstaende blockieren die Aufnahme.",
+          "Tiefenreinigung vor dem Bond Builder sorgt fuer maximale Wirkung.",
+        ]
+        : [
+          "Tiefenreinigung ist ein gezielter Reset und kein Pflichtschritt fuer jede Waesche.",
+          "Sie wird vor allem dann relevant, wenn Kopfhaut, Build-up oder Produktueberlagerung die Routine schwerer machen.",
+        ],
       caveats: (
         context.scalp_condition === "irritated" ||
         context.scalp_condition === "dry_flakes"
@@ -839,24 +955,76 @@ function buildRoutineSlots(
   }
 
   if (activeTopicIds.has("bond_builder")) {
-    pushSlot(sections, {
-      id: "occasional-bond-builder",
-      kind: "instruction",
-      phase: "occasional",
-      label: "Bond Builder / Repair-Support",
-      action: maskPresent ? "adjust" : "add",
-      category: null,
-      cadence: "kurweise oder in stressigeren Phasen",
-      rationale: [
-        "Bond Builder wird nur dann relevant, wenn echte Schadens- oder Chemie-Signale mitlaufen.",
-        "Der Punkt bleibt in v1 bewusst instruktional und nicht produktzentriert.",
-      ],
-      caveats: [],
-      topic_ids: ["bond_builder"],
-      product_linkable: false,
-      product_query: null,
-      attachment_priority: 96,
-    })
+    const explicitWithoutSignals =
+      context.explicit_topic_ids.includes("bond_builder") && !context.has_bond_builder_signals
+
+    if (explicitWithoutSignals) {
+      pushSlot(sections, {
+        id: "occasional-bond-builder",
+        kind: "instruction",
+        phase: "occasional",
+        label: "Bond Builder / Repair-Support",
+        action: options.usesBondBuilder ? "adjust" : "add",
+        category: null,
+        cadence: null,
+        rationale: [
+          "Bond Builder ist ein optionaler Baustein fuer gezielte Reparatur auf molekularer Ebene.",
+        ],
+        caveats: [
+          "Dein Profil zeigt aktuell keine starken Schadenssignale — Bond Builder ist hier eher optional, aber wir erklaeren gerne wie es funktioniert.",
+        ],
+        topic_ids: ["bond_builder"],
+        product_linkable: false,
+        product_query: null,
+        attachment_priority: 96,
+      })
+    } else {
+      const severity = deriveBondBuilderSeverity(profile)
+      const treatments = new Set(profile?.chemical_treatment ?? [])
+      const hasChemical = treatments.has("bleached") || treatments.has("colored")
+
+      const bondRationale: string[] = severity === "severe"
+        ? [
+          "Die Kombination aus K18 und Olaplex kann die Reparatur deutlich verstaerken — K18 fuer Laengsverbindungen, Olaplex fuer Querverbindungen.",
+        ]
+        : hasChemical
+          ? [
+            "Bond Builder kann hier gezielt unterstuetzen.",
+            "Bei chemischer Belastung kann Olaplex (Querverbindungen) besonders sinnvoll sein.",
+          ]
+          : [
+            "Bond Builder kann hier gezielt unterstuetzen.",
+            "Bei allgemeiner Schaedigung ohne Chemie ist K18 (Laengsverbindungen) oft der bessere Einstieg.",
+          ]
+
+      const bondCaveats: string[] = [
+        "Zu haeufige Anwendung kann das Haar steif und sproede machen — Pausen einhalten.",
+      ]
+
+      if (profile?.protein_moisture_balance === "snaps") {
+        bondCaveats.push("Die Haare reissen aktuell leicht — ein professionelles Beratungsgespraech kann hier zusaetzlich helfen.")
+      } else if (profile?.protein_moisture_balance === "stretches_stays") {
+        bondCaveats.push("Bond Builder und Protein koennen parallel laufen, solange die Haare noch ueberdehnt sind.")
+      } else if (profile?.protein_moisture_balance === "stretches_bounces") {
+        bondCaveats.push("Die Haare sind aktuell stabil — Protein-Behandlungen dazu sind nicht mehr noetig, Feuchtigkeit reicht.")
+      }
+
+      pushSlot(sections, {
+        id: "occasional-bond-builder",
+        kind: "instruction",
+        phase: "occasional",
+        label: "Bond Builder / Repair-Support",
+        action: options.usesBondBuilder ? "adjust" : "add",
+        category: null,
+        cadence: "4 Anwendungen am Stueck, dann 4 Waeschen Pause, danach nach Bedarf",
+        rationale: bondRationale,
+        caveats: bondCaveats,
+        topic_ids: ["bond_builder"],
+        product_linkable: false,
+        product_query: null,
+        attachment_priority: 96,
+      })
+    }
   }
 
   if (activeTopicIds.has("cwc_owc")) {
@@ -886,11 +1054,14 @@ function buildRoutineSlots(
 export function buildRoutinePlan(
   profile: HairProfile | null,
   message: string,
+  options: { usesBondBuilder?: boolean } = {},
 ): RoutinePlan {
   const context = deriveRoutineContext(profile, message)
   const activeTopics = activateRoutineTopics(profile, message, context)
   const decisionContext = buildRoutineDecisionContext(profile)
-  const sectionSlots = buildRoutineSlots(profile, context, activeTopics, decisionContext)
+  const sectionSlots = buildRoutineSlots(profile, context, activeTopics, decisionContext, {
+    usesBondBuilder: options.usesBondBuilder ?? false,
+  })
 
   const phases: RoutinePlanSection["phase"][] = ["base_wash", "maintenance", "occasional"]
   const sections: RoutinePlanSection[] = phases
@@ -941,7 +1112,7 @@ export function buildRoutineRetrievalSubqueries(
     }
   }
 
-  return [...queries].slice(0, 6)
+  return [...queries].slice(0, 7)
 }
 
 export function getRoutineAutofillSlots(plan: RoutinePlan): RoutineSlotAdvice[] {
@@ -954,4 +1125,4 @@ export function getRoutineAutofillSlots(plan: RoutinePlan): RoutineSlotAdvice[] 
     .sort((a, b) => a.attachment_priority - b.attachment_priority)
 }
 
-export { ROUTINE_TOPIC_LABELS }
+export { detectStylingProductKind, ROUTINE_TOPIC_LABELS }
