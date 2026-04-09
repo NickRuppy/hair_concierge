@@ -40,6 +40,12 @@ import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
 import {
+  buildRoutineClarificationQuestions,
+  buildRoutinePlan,
+  buildRoutineRetrievalSubqueries,
+} from "@/lib/routines/planner"
+import { attachProductsToRoutinePlan } from "@/lib/routines/product-attachments"
+import {
   applyProductMemoryConstraints,
   loadUserMemoryContext,
 } from "@/lib/rag/user-memory"
@@ -110,6 +116,10 @@ export async function runPipeline(
   ])
   const { intent, product_category } = classification
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
+  const shouldPlanRoutine = intent === "routine_help" || product_category === "routine"
+  let routinePlan = shouldPlanRoutine
+    ? buildRoutinePlan(hairProfile, message)
+    : undefined
   let shampooDecision = product_category === "shampoo"
     ? buildShampooDecision(hairProfile)
     : undefined
@@ -206,7 +216,9 @@ export async function runPipeline(
   // ── Clarification branch: skip retrieval & products ─────────────────
   if (routerDecision.needs_clarification) {
     const clarificationQuestions =
-      product_category === "shampoo" && shampooDecision && !shampooDecision.eligible
+      shouldPlanRoutine
+        ? buildRoutineClarificationQuestions(hairProfile, message)
+        : product_category === "shampoo" && shampooDecision && !shampooDecision.eligible
         ? buildShampooClarificationQuestions(shampooDecision)
         : product_category === "conditioner" && conditionerDecision && !conditionerDecision.eligible
           ? buildConditionerClarificationQuestions(conditionerDecision)
@@ -226,6 +238,7 @@ export async function runPipeline(
       hairProfile,
       shampooConcern: shampooDecision?.matched_concern_code ?? null,
       count: 3,
+      subqueries: routinePlan ? buildRoutineRetrievalSubqueries(message, routinePlan) : undefined,
       userId,
     })
 
@@ -296,6 +309,7 @@ export async function runPipeline(
     metadataFilter,
     shampooConcern: shampooDecision?.matched_concern_code ?? null,
     count: retrievalCount,
+    subqueries: routinePlan ? buildRoutineRetrievalSubqueries(message, routinePlan) : undefined,
     userId,
   })
 
@@ -313,7 +327,16 @@ export async function runPipeline(
   // ── Step 4: Match products (if intent requires it) ──────────────────
   let matchedProducts: Product[] | undefined = undefined
   let maskDecision: MaskDecision | undefined
-  if (PRODUCT_INTENTS.includes(intent)) {
+  if (shouldPlanRoutine && routinePlan) {
+    const routineResult = await attachProductsToRoutinePlan({
+      plan: routinePlan,
+      hairProfile,
+      memoryContext,
+      supabase,
+    })
+    routinePlan = routineResult.plan
+    matchedProducts = routineResult.matchedProducts
+  } else if (PRODUCT_INTENTS.includes(intent)) {
     if (product_category === "shampoo") {
       if (!shampooDecision?.eligible || !hairProfile?.thickness) {
         matchedProducts = []
@@ -506,7 +529,7 @@ export async function runPipeline(
     }
   }
 
-  if (matchedProducts) {
+  if (matchedProducts && !shouldPlanRoutine) {
     matchedProducts = applyProductMemoryConstraints(matchedProducts, memoryContext)
   }
 
@@ -524,6 +547,7 @@ export async function runPipeline(
     conditionerDecision,
     leaveInDecision,
     oilDecision,
+    routinePlan,
     memoryContext: memoryContext.promptContext,
   })
 

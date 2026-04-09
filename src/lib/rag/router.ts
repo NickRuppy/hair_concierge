@@ -1,6 +1,7 @@
 import type { ClassificationResult, RouterDecision, IntentType, Message, HairProfile, RetrievalMode } from "@/lib/types"
 import { buildLeaveInDecision } from "@/lib/rag/leave-in-decision"
 import { buildOilDecision } from "@/lib/rag/oil-decision"
+import { deriveRoutineContext } from "@/lib/routines/planner"
 import {
   getShampooProfileCompleteness,
   isShampooProfileEligible,
@@ -44,11 +45,25 @@ function countClarificationRounds(conversationHistory: Message[]): number {
  * Returns { score: 0–1, rawCount: filled slots including profile bonuses }.
  */
 function computeSlotCompleteness(
+  intent: IntentType,
   filters: Record<string, string | string[] | null>,
   productCategory: string | null,
   hairProfile: HairProfile | null,
   userMessage = "",
 ): { score: number; rawCount: number } {
+  if (intent === "routine_help" || productCategory === "routine") {
+    const routineContext = deriveRoutineContext(hairProfile, userMessage)
+    const rawCount =
+      Number(routineContext.organizer_complete) +
+      Number(routineContext.cadence_complete) +
+      Number(routineContext.inventory_complete)
+
+    return {
+      score: rawCount / 3,
+      rawCount,
+    }
+  }
+
   if (productCategory === "shampoo") {
     const { filledCount, score } = getShampooProfileCompleteness(hairProfile)
 
@@ -119,6 +134,7 @@ export function evaluateRoute(
     let clarification_reason: string | undefined
 
     const { score: slotScore, rawCount: filledSlotCount } = computeSlotCompleteness(
+      intent,
       normalized_filters,
       product_category,
       hairProfile,
@@ -254,9 +270,19 @@ export function evaluateRoute(
       overrides.push("low_confidence")
     }
 
+    if (
+      (intent === "routine_help" || product_category === "routine") &&
+      filledSlotCount < 3
+    ) {
+      shouldClarify = true
+      clarification_reason = "missing_routine_frame"
+      overrides.push("missing_routine_frame")
+    }
+
     // ── Rule 5: Missing slots → clarification ──────────────────────────
     if (
       CONTEXT_SENSITIVE_INTENTS.includes(intent) &&
+      !(intent === "routine_help" || product_category === "routine") &&
       filledSlotCount < ROUTER_MIN_SLOTS_PRODUCT
     ) {
       shouldClarify = true

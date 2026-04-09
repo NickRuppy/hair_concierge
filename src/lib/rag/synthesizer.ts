@@ -51,6 +51,7 @@ import type {
   ConditionerDecision,
   LeaveInDecision,
   OilDecision,
+  RoutinePlan,
 } from "@/lib/types"
 import type OpenAI from "openai"
 
@@ -67,6 +68,7 @@ export interface SynthesizeParams {
   conditionerDecision?: ConditionerDecision
   leaveInDecision?: LeaveInDecision
   oilDecision?: OilDecision
+  routinePlan?: RoutinePlan
   memoryContext?: string | null
   /** Slot-aware clarification questions from the router (replaces consultationMode) */
   clarificationQuestions?: string[]
@@ -124,9 +126,6 @@ function formatUserProfile(
   }
   if ((profile.post_wash_actions ?? []).length > 0) {
     parts.push(`Nach dem Waschen: ${(profile.post_wash_actions ?? []).join(", ")}`)
-  }
-  if (profile.routine_preference) {
-    parts.push(`Routine-Detailgrad: ${profile.routine_preference}`)
   }
   if ((profile.current_routine_products ?? []).length > 0) {
     parts.push(`Aktuelle Routine-Produkte: ${(profile.current_routine_products ?? []).join(", ")}`)
@@ -404,6 +403,14 @@ const OIL_FIELD_LABELS: Record<string, string> = {
   oil_purpose: "Oel-Zweck",
 }
 
+const ROUTINE_ACTION_LABELS = {
+  keep: "beibehalten",
+  adjust: "anpassen",
+  add: "erganzen",
+  upgrade: "gezielt aufwerten",
+  avoid: "gerade eher weniger geeignet",
+} as const
+
 function formatConditionerDecision(conditionerDecision?: ConditionerDecision): string {
   if (!conditionerDecision) return ""
 
@@ -526,6 +533,67 @@ function formatOilDecision(oilDecision?: OilDecision): string {
   } else {
     parts.push(`- Exakte Oel-Kandidaten: ${oilDecision.candidate_count}`)
   }
+
+  return parts.join("\n")
+}
+
+function formatRoutinePlan(routinePlan?: RoutinePlan): string {
+  if (!routinePlan) return ""
+
+  const parts = ["\n\nRoutine-Plan:"]
+
+  if (routinePlan.primary_focuses.length > 0) {
+    parts.push(`- Hauptfokus: ${routinePlan.primary_focuses.map((focus) => focus.label).join(", ")}`)
+  }
+
+  if (routinePlan.active_topics.length > 0) {
+    parts.push(
+      `- Aktive Themen: ${routinePlan.active_topics
+        .map((topic) => `${topic.label} (${topic.reason})`)
+        .join(" | ")}`
+    )
+  }
+
+  parts.push("- Niveau: Hohe Ebene, keine Detail-Anwendungsschritte.")
+
+  for (const section of routinePlan.sections) {
+    parts.push(`\n${section.title}: ${section.summary}`)
+
+    for (const slot of section.slots) {
+      const summary = [`- ${slot.label}: ${ROUTINE_ACTION_LABELS[slot.action]}`]
+      if (slot.cadence) {
+        summary.push(`(${slot.cadence})`)
+      }
+      if (slot.category) {
+        summary.push(`[Kategorie: ${slot.category}]`)
+      }
+      parts.push(summary.join(" "))
+
+      if (slot.rationale.length > 0) {
+        parts.push(`  Warum: ${slot.rationale.join(" | ")}`)
+      }
+      if (slot.caveats.length > 0) {
+        parts.push(`  Caveat: ${slot.caveats.join(" | ")}`)
+      }
+      if ((slot.attached_products ?? []).length > 0) {
+        parts.push(
+          `  Angehaengte Produkte: ${(slot.attached_products ?? [])
+            .map((product) => {
+              const name = product.brand
+                ? `${product.name} von ${product.brand}`
+                : product.name
+              const reasons = product.recommendation_meta?.top_reasons?.slice(0, 2).join(" | ")
+              return reasons ? `${name} (${reasons})` : name
+            })
+            .join(" ; ")}`
+        )
+      }
+    }
+  }
+
+  parts.push(
+    "\nWICHTIG: Folge dieser Struktur. Erklaere pro Slot erst die Routine-Logik und den Fit zum Profil. Nenne bereits angehaengte Produkte erst danach und nur direkt beim passenden Slot."
+  )
 
   return parts.join("\n")
 }
@@ -785,6 +853,20 @@ Wenn du Oel-Empfehlungen gibst:
 6. Begruende den Fit danach nur ueber Oel-Typ, Haardicke und die Anwendungslogik aus den Metadaten.
 7. Wenn Kopfhautthemen mitlaufen, ordne natuerliche Oele nur als unterstuetzende Zusatzpflege ein. Stelle sie NICHT als primaeren Behandlungsweg fuer Schuppen, gereizte Kopfhaut oder Haarwachstum dar.
 8. Wenn der Nutzer gezielt ein Therapie-Oel oder eine spezifische Oelmischung sucht und diese nicht im Katalog ist, sage das ehrlich statt einen Ersatz zu erfinden.`,
+  routine: `
+
+## Routine-Antworten:
+Wenn ein Routine-Plan vorhanden ist:
+1. Nutze den Routine-Plan als primaeren Rahmen der Antwort.
+2. Bleibe bewusst auf hoher Ebene: Kombinationen, Frequenz, Rollen der Schritte und das Warum dahinter.
+3. Erklaere die Slots gemaess ihrer Aktion: keep = bestaetigen, adjust = Frequenz/Fokus anpassen, add = neu einfuehren, upgrade = gleicher Slot aber gezielterer Fokus, avoid = fuer jetzt eher nicht priorisieren.
+4. Starte mit den Bausteinen, die schon gut sitzen oder nur leicht angepasst werden sollten. Erklaere danach, was fehlt oder gezielter werden darf.
+5. Begruende pro relevantem Slot erst kurz den Fit zum Profil, also ueber Haarmuster, Ziele, Probleme oder Routinekontext, bevor du ein Produkt nennst.
+6. Wenn Produkte angehaengt sind, nenne nur diese Produkte und ordne sie direkt dem gerade erklaerten Slot im selben Absatz oder Bullet zu.
+7. Wenn keine Produkte angehaengt sind, bleibe bei Kategorien und Routine-Logik statt konkrete Produkte zu improvisieren.
+8. Erfinde keine zusaetzlichen Kategorien, Schritte oder Produkttypen ausserhalb des Routine-Plans.
+9. Detaillierte Anwendungstechniken gehoeren NICHT in diese Antwort.
+10. Bei Kopfhautthemen bleibe konservativ und nicht-medizinisch.`,
   mask: `
 
 ## Masken-Empfehlungen:
@@ -800,7 +882,7 @@ Wenn du Masken-Empfehlungen gibst:
 /**
  * Builds the complete system prompt by replacing placeholders with actual data.
  */
-function buildSystemPrompt(
+export function buildSystemPrompt(
   hairProfile: HairProfile | null,
   ragChunks: ContentChunk[],
   products?: Product[],
@@ -810,6 +892,7 @@ function buildSystemPrompt(
   conditionerDecision?: ConditionerDecision,
   leaveInDecision?: LeaveInDecision,
   oilDecision?: OilDecision,
+  routinePlan?: RoutinePlan,
   memoryContext?: string | null,
   clarificationQuestions?: string[],
 ): string {
@@ -827,7 +910,13 @@ function buildSystemPrompt(
   prompt = prompt.replace("{{USER_PROFILE}}", userProfileContext)
 
   let ragContext = formatRagContext(ragChunks)
-  if (products || maskDecision || shampooDecision || conditionerDecision || leaveInDecision || oilDecision) {
+  if (routinePlan) {
+    ragContext += formatRoutinePlan(routinePlan)
+  }
+  if (
+    (products || maskDecision || shampooDecision || conditionerDecision || leaveInDecision || oilDecision) &&
+    !(productCategory === "routine" && routinePlan)
+  ) {
     ragContext += formatProducts(
       products ?? [],
       productCategory,
@@ -866,6 +955,7 @@ export async function synthesizeResponse(
     conditionerDecision,
     leaveInDecision,
     oilDecision,
+    routinePlan,
     memoryContext,
     clarificationQuestions,
   } = params
@@ -880,6 +970,7 @@ export async function synthesizeResponse(
     conditionerDecision,
     leaveInDecision,
     oilDecision,
+    routinePlan,
     memoryContext,
     clarificationQuestions,
   )

@@ -373,6 +373,105 @@ export interface MaskDecision {
   signal_weights?: Record<MaskSignal, number>
 }
 
+export type RoutineTopicId =
+  | "routine_glatt"
+  | "routine_locken"
+  | "locken_wellen"
+  | "tiefenreinigung"
+  | "hair_oiling"
+  | "bond_builder"
+  | "lockenrefresh"
+  | "cwc_owc"
+
+export type RoutineFocusKind = "goal" | "concern" | "topic" | "pattern" | "scalp"
+export type RoutineSlotAction = "keep" | "adjust" | "add" | "upgrade" | "avoid"
+export type RoutinePlanPhase = "base_wash" | "maintenance" | "occasional"
+export type RoutineSlotKind = "product_slot" | "instruction"
+export type RoutineProductCategory = Exclude<ProductCategory, "routine" | null>
+
+export interface RoutineFocus {
+  kind: RoutineFocusKind
+  code: string
+  label: string
+}
+
+export interface RoutineContext {
+  hair_texture: HairTexture | null
+  thickness: HairThickness | null
+  density: HairDensity | null
+  wash_frequency: WashFrequency | null
+  heat_styling: HeatStyling | null
+  scalp_type: ScalpType | null
+  scalp_condition: ScalpCondition | null
+  cuticle_condition: CuticleCondition | null
+  protein_moisture_balance: ProteinMoistureBalance | null
+  concerns: Concern[]
+  goals: Goal[]
+  chemical_treatment: ChemicalTreatment[]
+  post_wash_actions: PostWashAction[]
+  mechanical_stress_factors: MechanicalStressFactor[]
+  current_routine_products: RoutineProduct[]
+  products_used: string | null
+  explicit_topic_ids: RoutineTopicId[]
+  primary_focuses: RoutineFocus[]
+  organizer_complete: boolean
+  cadence_complete: boolean
+  inventory_complete: boolean
+  has_between_wash_days: boolean
+  has_buildup_signals: boolean
+  has_dryness_damage_signals: boolean
+  has_damage_signals: boolean
+  has_oil_weight_risk: boolean
+  has_strong_technique_fit: boolean
+}
+
+export interface RoutineTopicActivation {
+  id: RoutineTopicId
+  label: string
+  reason: string
+  priority: number
+  instruction_only: boolean
+}
+
+export interface RoutineSlotAdvice {
+  id: string
+  kind: RoutineSlotKind
+  phase: RoutinePlanPhase
+  label: string
+  action: RoutineSlotAction
+  category: RoutineProductCategory | null
+  cadence: string | null
+  rationale: string[]
+  caveats: string[]
+  topic_ids: RoutineTopicId[]
+  product_linkable: boolean
+  product_query: string | null
+  attachment_priority: number
+  attached_products?: Product[]
+}
+
+export interface RoutinePlanSection {
+  phase: RoutinePlanPhase
+  title: string
+  summary: string
+  slots: RoutineSlotAdvice[]
+}
+
+export interface RoutineDecisionContext {
+  shampoo: ShampooDecision
+  conditioner: ConditionerDecision
+  leave_in: LeaveInDecision
+  mask: MaskDecision
+}
+
+export interface RoutinePlan {
+  base_topic_id: RoutineTopicId | null
+  primary_focuses: RoutineFocus[]
+  active_topics: RoutineTopicActivation[]
+  sections: RoutinePlanSection[]
+  decision_context: RoutineDecisionContext
+}
+
 export interface MessageRagContext {
   sources: CitationSource[]
   category_decision?: CategoryDecision | null
