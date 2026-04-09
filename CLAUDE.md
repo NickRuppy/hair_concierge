@@ -27,3 +27,12 @@ Before invoking `executing-plans` or `subagent-driven-development`, always invok
 - Vocabulary: `hair_texture` = pattern (straight/wavy/curly/coily), `thickness` = diameter (fine/normal/coarse)
 - No over-engineering — only build what's requested, no speculative abstractions
 - Supabase project ID: `pqdkhefxsxkyeqelqegq`
+
+## Ship Workflow
+
+Standard finish command: use the `/ship` agent when implementation is done.
+- Runs: type check → build → simplify → review → **confirm with user** → commit & push
+- Pre-commit hooks catch lint/type errors on every commit
+- CI runs on every PR as a required check before merge
+- PRs use squash-merge to keep main history clean
+- Override confirmation with `--yes` flag when needed

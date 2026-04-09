@@ -28,7 +28,8 @@ Check for a manual override first, then auto-classify.
 
 ### Manual override
 If the user's prompt starts with `--light`, `--standard`, or `--full`, use that tier.
-Strip the flag; the remainder becomes the commit message.
+If the user's prompt contains `--yes`, set AUTO_CONFIRM = true. Otherwise AUTO_CONFIRM = false.
+Strip all flags; the remainder becomes the commit message.
 
 ### Auto-classification rules (apply in order, first match wins)
 
@@ -48,21 +49,21 @@ Strip the flag; the remainder becomes the commit message.
 Print the tier, the reason, and the pipeline steps that will run. Examples:
 ```
 TIER: LIGHT (2 files changed, 45 lines)
-Pipeline: Type Check > Build > Commit & Push
+Pipeline: Type Check > Build > Confirm > Commit & Push
 ```
 ```
 TIER: STANDARD (6 files changed, 210 lines)
-Pipeline: Type Check > Build > Simplify > Re-verify > Code Review > Commit & Push
+Pipeline: Type Check > Build > Simplify > Re-verify > Code Review > Confirm > Commit & Push
 ```
 ```
 TIER: FULL (18 files changed, 920 lines, includes .sql)
-Pipeline: Type Check > Build > Simplify > Re-verify > Code Review > E2E > Commit & Push
+Pipeline: Type Check > Build > Simplify > Re-verify > Code Review > E2E > Confirm > Commit & Push
 ```
 
 ## Pipeline Steps
 
 ### Step 1: Type Check [ALL TIERS]
-Run `npx tsc --noEmit`.
+Run `npm run typecheck`.
 If there are errors, stop and report them. Do NOT proceed.
 Report [PASS] or [FAIL].
 
@@ -84,7 +85,7 @@ It only [FAIL]s if the agent errors out or cannot complete.
 ### Step 3b: Re-verify [STANDARD, FULL only — runs only if Step 3 made changes]
 If Step 3 was skipped or made no changes, report [SKIP].
 
-Otherwise re-run `npx tsc --noEmit`. If new type errors were introduced by simplification,
+Otherwise re-run `npm run typecheck`. If new type errors were introduced by simplification,
 stop and report them. Do NOT proceed.
 Report [PASS] or [FAIL].
 
@@ -110,12 +111,24 @@ https://hair-concierge.vercel.app — core flows: navigation, chat, sign-out, pr
 
 If it reports failures, stop and explain what failed. Report [PASS] or [FAIL].
 
-### Step 6: Commit & Push [ALL TIERS]
+### Step 6: Confirm [ALL TIERS]
 If all previous steps passed (or were skipped):
 1. Re-run `git status --short` to get the current list of changed files (may differ from pre-flight if the simplifier made changes).
 2. Stage changed files by name (never use `git add -A` or `git add .`).
 3. If the user provided a commit message, use that. Otherwise, generate a clear commit message summarizing the changes.
-4. Commit, then push to the current branch's remote.
+4. Show the user a preview:
+   - Current branch name
+   - `git diff --cached --stat` output
+   - The proposed commit message
+   - If the current branch is `main`, print a warning: "⚠ You are about to push directly to main."
+5. If AUTO_CONFIRM is true, report [PASS] and proceed to Step 7.
+   Otherwise, ask the user: "Proceed with commit and push? (yes/no)"
+   - Only an explicit "yes" continues. Report [PASS].
+   - "no" stops the pipeline. Report [ABORT].
+
+### Step 7: Commit & Push [ALL TIERS]
+1. Commit with the confirmed message.
+2. Push to the current branch's remote.
 
 Report [PASS] or [FAIL].
 
@@ -132,6 +145,7 @@ Print a summary table:
 | Re-verify    | SKIP   |
 | Code Review  | PASS   |
 | E2E          | SKIP   |
+| Confirm      | PASS   |
 | Commit & Push| PASS   |
 ```
 
@@ -142,6 +156,10 @@ SHIPPED (STANDARD) — 6 files, 210 lines
 or
 ```
 BLOCKED (STANDARD) — Step 2 Build failed
+```
+or
+```
+ABORTED (STANDARD) — User declined at Step 6 Confirm
 ```
 
 Do not skip mandatory steps. Do not proceed past a failure.
