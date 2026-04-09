@@ -324,6 +324,174 @@ test.describe("Routine planner", () => {
     expect(plan.active_topics.map((topic) => topic.id)).not.toContain("hair_oiling")
   })
 
+  test("straight dry profile activates CWC as optional wash-day variant", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        concerns: ["dryness"],
+        chemical_treatment: ["colored"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine hilft gegen trockene Laengen?"
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).toContain("cwc")
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("owc")
+
+    const cwcSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "base-cwc-technique")
+
+    expect(cwcSlot?.phase).toBe("base_wash")
+    expect(cwcSlot?.cadence).toBe("als Wash-Day-Variante bei Bedarf")
+    expect(cwcSlot?.rationale[0]).toContain("kein Pflichtschritt")
+    expect(cwcSlot?.rationale.some((line) => line.startsWith("1. Conditioner"))).toBe(true)
+  })
+
+  test("wavy mild need stays on CWC", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "wavy",
+        concerns: ["frizz"],
+        cuticle_condition: "smooth",
+        chemical_treatment: ["natural"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Meine welligen Haare haben Frizz."
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).toContain("cwc")
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("owc")
+  })
+
+  test("wavy profile upgrades to OWC only with multiple stronger support signals", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "wavy",
+        concerns: ["dryness"],
+        cuticle_condition: "slightly_rough",
+        chemical_treatment: ["colored"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Meine welligen Haare sind trocken und strapaziert."
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).toContain("owc")
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("cwc")
+  })
+
+  test("curly dry profile gets OWC and a dedicated base-wash oil slot", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        thickness: "normal",
+        density: "medium",
+        concerns: [],
+        cuticle_condition: "smooth",
+        mechanical_stress_factors: ["rough_brushing"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu meinen Locken, wenn sie sich an Waschtagen schnell verhaken?"
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).toContain("owc")
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("hair_oiling")
+
+    const owcOilSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "base-owc-oil")
+    const occasionalOilSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "occasional-oil")
+
+    expect(owcOilSlot?.phase).toBe("base_wash")
+    expect(owcOilSlot?.category).toBe("oil")
+    expect(owcOilSlot?.action).toBe("add")
+    expect(owcOilSlot?.product_linkable).toBe(true)
+    expect(occasionalOilSlot).toBeUndefined()
+  })
+
+  test("OWC is not proactively activated when oil-weight risk is present", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        thickness: "fine",
+        density: "high",
+        concerns: ["dryness"],
+        cuticle_condition: "rough",
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu meinen Locken?"
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("owc")
+    expect(plan.sections.flatMap((section) => section.slots).find((slot) => slot.id === "base-owc-oil")).toBeUndefined()
+  })
+
+  test("explicit OWC ask with oil-weight risk keeps the slot but disables oil product matching", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "curly",
+        thickness: "fine",
+        density: "high",
+        concerns: ["dryness"],
+        cuticle_condition: "rough",
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Soll ich OWC testen?"
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).toContain("owc")
+
+    const owcOilSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "base-owc-oil")
+
+    expect(owcOilSlot?.action).toBe("add")
+    expect(owcOilSlot?.product_linkable).toBe(false)
+    expect(owcOilSlot?.caveats.some((line) => line.includes("feinem, dichtem Haar"))).toBe(true)
+  })
+
+  test("comparison requests set compare mode and still personalize to one variant", () => {
+    const profile = createProfile({
+      hair_texture: "curly",
+      concerns: ["dryness"],
+      cuticle_condition: "rough",
+      current_routine_products: ["shampoo", "conditioner"],
+    })
+
+    const plan = buildRoutinePlan(
+      profile,
+      "Was ist der Unterschied zwischen CWC und OWC?"
+    )
+    const prompt = buildSystemPrompt(
+      profile,
+      [createChunk()],
+      [],
+      "routine",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      plan,
+      null,
+      undefined,
+    )
+    const subqueries = buildRoutineRetrievalSubqueries(
+      "Was ist der Unterschied zwischen CWC und OWC?",
+      plan
+    )
+
+    expect(plan.compare_cwc_owc).toBe(true)
+    expect(plan.active_topics.map((topic) => topic.id)).toContain("owc")
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("cwc")
+    expect(subqueries).toContain("CWC")
+    expect(subqueries).toContain("OWC")
+    expect(prompt).toContain("Vergleichsmodus")
+    expect(prompt).toContain("kompakten nummerierten Wash-Day-Schritte")
+  })
+
   test("unnecessary mask steps can still be deprioritized", () => {
     const maskPlan = buildRoutinePlan(
       createProfile({
