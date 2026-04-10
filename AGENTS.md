@@ -83,6 +83,14 @@ For trivial tasks (single file, <20 lines changed), skip the options table and p
 - When evidence is mixed, keep the product behavior conservative and explicit about uncertainty
 - Supabase project ID: `pqdkhefxsxkyeqelqegq`
 
+## Git Workflow
+
+- Default to repo-local worktrees for new implementation work, fixes, and parallel investigations
+- Treat the root checkout as the stable base checkout; do not switch branches in place for new tasks unless the user explicitly asks
+- Create task worktrees under `.worktrees/<slug>` on branches `codex/<slug>`, based on `origin/main` when available
+- Use `npm run worktree:new -- <slug>` to create a bootstrapped worktree
+- Use `npm run dev:worktree` inside a worktree so parallel runs do not fight over the same port
+
 ## Working Outputs
 
 - Put implementation plans in `plans/` when a written plan is needed
