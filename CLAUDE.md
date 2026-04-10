@@ -27,6 +27,7 @@ Before invoking `executing-plans` or `subagent-driven-development`, always invok
 - Vocabulary: `hair_texture` = pattern (straight/wavy/curly/coily), `thickness` = diameter (fine/normal/coarse)
 - No over-engineering — only build what's requested, no speculative abstractions
 - Supabase project ID: `pqdkhefxsxkyeqelqegq`
+- Use TDD (test-first) for deterministic logic in `src/lib/routines/`, `src/lib/rag/router/`, `src/lib/quiz/`
 
 ## Ship Workflow
 
@@ -36,3 +37,4 @@ Standard finish command: use the `/ship` agent when implementation is done.
 - CI runs on every PR as a required check before merge
 - PRs use squash-merge to keep main history clean
 - Override confirmation with `--yes` flag when needed
+- Before calling `/ship`, verify your changes work end-to-end (run the app, test the flow manually or via Playwright)
