@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import posthog from "posthog-js"
 import { useToast } from "@/providers/toast-provider"
 import { createClient } from "@/lib/supabase/client"
 import { useOnboardingStore } from "@/lib/onboarding/store"
@@ -43,6 +44,13 @@ import {
   DRYING_METHOD_OPTIONS,
   BRUSH_TYPE_OPTIONS,
   NIGHT_PROTECTION_OPTIONS,
+} from "@/lib/vocabulary/onboarding-care"
+import type {
+  TowelMaterial,
+  TowelTechnique,
+  DryingMethod,
+  BrushType,
+  NightProtection,
 } from "@/lib/vocabulary/onboarding-care"
 
 /* ── Product checklist options ── */
@@ -164,19 +172,19 @@ export function OnboardingFlow({
         store.setSelectedHeatTools(hairProfile.styling_tools as string[])
       }
       if (hairProfile.towel_material) {
-        store.setTowelMaterial(hairProfile.towel_material as any)
+        store.setTowelMaterial(hairProfile.towel_material as TowelMaterial)
       }
       if (hairProfile.towel_technique) {
-        store.setTowelTechnique(hairProfile.towel_technique as any)
+        store.setTowelTechnique(hairProfile.towel_technique as TowelTechnique)
       }
       if (Array.isArray(hairProfile.drying_method)) {
-        store.setDryingMethod(hairProfile.drying_method as any)
+        store.setDryingMethod(hairProfile.drying_method as DryingMethod[])
       }
       if (hairProfile.brush_type) {
-        store.setBrushType(hairProfile.brush_type as any)
+        store.setBrushType(hairProfile.brush_type as BrushType)
       }
       if (Array.isArray(hairProfile.night_protection)) {
-        store.setNightProtection(hairProfile.night_protection as any)
+        store.setNightProtection(hairProfile.night_protection as NightProtection[])
       }
       if (hairProfile.uses_heat_protection != null) {
         store.setUsesHeatProtection(hairProfile.uses_heat_protection as boolean)
@@ -464,6 +472,7 @@ export function OnboardingFlow({
             .from("profiles")
             .update({ onboarding_completed: true })
             .eq("id", userId)
+          posthog.capture("onboarding_completed", { userId })
           break
         }
 
@@ -534,19 +543,19 @@ export function OnboardingFlow({
 
   const toggleNightProtection = useCallback((value: string) => {
     const { nightProtection, setNightProtection } = useOnboardingStore.getState()
-    if (nightProtection.includes(value as any)) {
-      setNightProtection(nightProtection.filter((v) => v !== value) as any)
+    if (nightProtection.includes(value as NightProtection)) {
+      setNightProtection(nightProtection.filter((v) => v !== value))
     } else {
-      setNightProtection([...nightProtection, value] as any)
+      setNightProtection([...nightProtection, value as NightProtection])
     }
   }, [])
 
   const toggleDryingMethod = useCallback((value: string) => {
     const { dryingMethod, setDryingMethod } = useOnboardingStore.getState()
-    if (dryingMethod.includes(value as any)) {
-      setDryingMethod(dryingMethod.filter((v) => v !== value) as any)
+    if (dryingMethod.includes(value as DryingMethod)) {
+      setDryingMethod(dryingMethod.filter((v) => v !== value))
     } else {
-      setDryingMethod([...dryingMethod, value] as any)
+      setDryingMethod([...dryingMethod, value as DryingMethod])
     }
   }, [])
 
@@ -711,7 +720,7 @@ export function OnboardingFlow({
             options={towelMaterialWithEmoji}
             selected={store.towelMaterial}
             onSelect={(val) => {
-              store.setTowelMaterial(val as any)
+              store.setTowelMaterial(val as TowelMaterial)
               handleStepComplete("towel_material")
             }}
             onBack={() => store.goBack()}
@@ -726,7 +735,7 @@ export function OnboardingFlow({
             options={towelTechniqueWithEmoji}
             selected={store.towelTechnique}
             onSelect={(val) => {
-              store.setTowelTechnique(val as any)
+              store.setTowelTechnique(val as TowelTechnique)
               handleStepComplete("towel_technique")
             }}
             onBack={() => store.goBack()}
@@ -753,7 +762,7 @@ export function OnboardingFlow({
             options={brushTypeWithEmoji}
             selected={store.brushType}
             onSelect={(val) => {
-              store.setBrushType(val as any)
+              store.setBrushType(val as BrushType)
               handleStepComplete("brush_type")
             }}
             onBack={() => store.goBack()}

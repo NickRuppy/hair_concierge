@@ -1,6 +1,7 @@
 "use client"
 
-import { useMemo, type ReactNode } from "react"
+import { useEffect, useMemo, useRef, type ReactNode } from "react"
+import posthog from "posthog-js"
 import type { Message, CitationSource, Product, HairProfile } from "@/lib/types"
 import type { Components } from "react-markdown"
 import ReactMarkdown from "react-markdown"
@@ -237,6 +238,17 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
   // Build product name -> Product map for inline mentions
   const products: Product[] = message.product_recommendations ?? []
   const productMap = new Map(products.map((p) => [p.name, p]))
+
+  // Track product recommendation shown event (fire once per message)
+  const trackedRef = useRef(false)
+  useEffect(() => {
+    if (products.length > 0 && !trackedRef.current) {
+      trackedRef.current = true
+      posthog.capture("chat_product_recommendation_shown", {
+        productCount: products.length,
+      })
+    }
+  }, [products.length])
 
   const hasEnhancements = sources.length > 0 || productMap.size > 0
 

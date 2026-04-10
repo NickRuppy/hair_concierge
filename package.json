@@ -16,6 +16,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.48.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.95.3",
     "class-variance-authority": "^0.7.1",
@@ -46,11 +47,16 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "playwright": "^1.58.2",
+    "prettier": "^3.8.2",
+    "start-server-and-test": "^2.1.5",
     "supabase": "^2.75.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
   "lint-staged": {
-    "*.{ts,tsx}": ["eslint --fix"]
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }

@@ -44,7 +44,7 @@ function BottomSheet({ open: controlledOpen, onOpenChange: controlledOnOpenChang
 
 // --- BottomSheetContent ---
 
-interface BottomSheetContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+type BottomSheetContentProps = React.HTMLAttributes<HTMLDivElement>
 
 const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentProps>(
   ({ className, children, ...props }, ref) => {

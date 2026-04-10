@@ -1,7 +1,5 @@
 "use client"
 
-import { useMemo } from "react"
-
 const LOADING_MESSAGES = [
   "Durchkämmen...",
   "Föhnen...",
@@ -38,11 +36,12 @@ function CombIcon() {
   )
 }
 
+function pickRandomMessage() {
+  return LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)]
+}
+
 export function ChatLoadingIndicator() {
-  const message = useMemo(
-    () => LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)],
-    []
-  )
+  const message = pickRandomMessage()
 
   return (
     <div className="flex gap-3">

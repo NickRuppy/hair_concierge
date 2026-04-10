@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useCallback, useState } from "react"
+import { useEffect, useCallback, useMemo } from "react"
 import Link from "next/link"
 import type { CardData } from "@/lib/quiz/result-card-data"
 import { Button } from "@/components/ui/button"
@@ -21,13 +21,17 @@ export function ResultPageClient({
   shareQuote,
   aiInsight,
 }: ResultPageClientProps) {
-  const [canShare, setCanShare] = useState(false)
-  const [resultUrl, setResultUrl] = useState("")
+  const resultUrl = useMemo(
+    () => (typeof window !== "undefined" ? `${window.location.origin}/result/${leadId}` : ""),
+    [leadId]
+  )
+  const canShare = useMemo(
+    () => typeof navigator !== "undefined" && !!navigator.share,
+    []
+  )
 
   useEffect(() => {
     posthog.capture("result_page_viewed", { leadId })
-    setResultUrl(`${window.location.origin}/result/${leadId}`)
-    setCanShare(typeof navigator !== "undefined" && !!navigator.share)
   }, [leadId])
 
   const handleDownload = useCallback(async () => {

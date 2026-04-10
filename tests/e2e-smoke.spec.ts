@@ -1,10 +1,8 @@
 import { test, expect } from "@playwright/test"
 
-const BASE = "https://hair-concierge.vercel.app"
-
-test.describe("Core user flows — smoke test", () => {
+test.describe("Core user flows — smoke test @ci", () => {
   test("1. Homepage redirects unauthenticated users to /quiz", async ({ page }) => {
-    const response = await page.goto(BASE, { waitUntil: "networkidle" })
+    const response = await page.goto("/", { waitUntil: "networkidle" })
     // After redirect chain settles, URL should contain /quiz
     expect(page.url()).toContain("/quiz")
     // Page should have loaded successfully
@@ -14,7 +12,7 @@ test.describe("Core user flows — smoke test", () => {
   })
 
   test("2. Quiz page loads with intro and first quiz step after clicking start", async ({ page }) => {
-    await page.goto(`${BASE}/quiz`, { waitUntil: "networkidle" })
+    await page.goto("/quiz", { waitUntil: "networkidle" })
     expect(page.url()).toContain("/quiz")
 
     // Wait for quiz content to render
@@ -73,7 +71,7 @@ test.describe("Core user flows — smoke test", () => {
   })
 
   test("3. Auth page renders login form with email and password", async ({ page }) => {
-    await page.goto(`${BASE}/auth`, { waitUntil: "networkidle" })
+    await page.goto("/auth", { waitUntil: "networkidle" })
 
     // Wait for form to render
     await page.waitForTimeout(2000)
@@ -102,7 +100,7 @@ test.describe("Core user flows — smoke test", () => {
   })
 })
 
-test.describe("Phase 2 — Router & Clarification (unit-level contract tests)", () => {
+test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @ci", () => {
   test("4. Router types compile correctly", async () => {
     // This is a compile-time check — if the test file compiles, types are correct.
     // Import types to verify they exist and are compatible.
@@ -133,7 +131,7 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests)", 
   test("5. SSE done event shape includes router fields", async ({ page }) => {
     // Verify the SSE event shape by checking the deployed endpoint responds with
     // the expected event types (requires auth — skip if not available)
-    const response = await page.goto(`${BASE}/auth`, { waitUntil: "networkidle" })
+    const response = await page.goto("/auth", { waitUntil: "networkidle" })
     // This test validates the event type union at compile time
     type SSEEventType = "conversation_id" | "content_delta" | "product_recommendations" | "sources" | "confidence" | "retrieval_debug" | "done" | "error"
 

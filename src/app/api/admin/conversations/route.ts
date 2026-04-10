@@ -52,7 +52,7 @@ export async function GET(request: Request) {
 
   // Fetch last message preview for each conversation
   const conversationIds = (conversations || []).map((c) => c.id)
-  let lastMessages: Record<string, string> = {}
+  const lastMessages: Record<string, string> = {}
 
   if (conversationIds.length > 0) {
     // Get the most recent user message per conversation using distinct on

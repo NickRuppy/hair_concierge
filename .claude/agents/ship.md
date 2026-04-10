@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Adaptive ship-to-production pipeline with type check, build, simplify, review, and optional E2E.
+description: Adaptive ship-to-production pipeline with type check, build, simplify, review, chat eval, codex review, optional E2E, branch protection, and post-deploy verification.
 ---
 
 Run the adaptive ship-to-production pipeline. Stop immediately if any step fails.
@@ -12,15 +12,16 @@ Run these commands to gather context:
 ```bash
 git status --short
 git branch --show-current
-git diff --stat
-git diff --numstat
+git diff HEAD --stat
+git diff HEAD --numstat
 ```
 
 If `git status --short` produces no output (no uncommitted changes), report "Nothing to ship" and stop.
 
-Compute `total_changed_lines` as the sum of all additions + deletions from `git diff --numstat`.
-Compute `changed_file_count` from the number of lines in `git diff --numstat`.
-Save the list of changed file paths for use in tier classification and Step 6.
+Compute `total_changed_lines` as the sum of all additions + deletions from `git diff HEAD --numstat`.
+Compute `changed_file_count` from the number of lines in `git diff HEAD --numstat`.
+Note: `git diff HEAD` includes both staged and unstaged changes, preventing misclassification if files were staged by a prior aborted run.
+Save the list of changed file paths for use in tier classification and later steps.
 
 ## Tier Classification
 
@@ -53,11 +54,11 @@ Pipeline: Type Check > Build > Confirm > Commit & Push
 ```
 ```
 TIER: STANDARD (6 files changed, 210 lines)
-Pipeline: Type Check > Build > Simplify > Re-verify > Code Review > Confirm > Commit & Push
+Pipeline: Type Check > Build > Simplify > Re-verify > Chat Eval > Code Review > Codex Review > Confirm > Commit & Push
 ```
 ```
 TIER: FULL (18 files changed, 920 lines, includes .sql)
-Pipeline: Type Check > Build > Simplify > Re-verify > Code Review > E2E > Confirm > Commit & Push
+Pipeline: Type Check > Build > Simplify > Re-verify > Chat Eval > Code Review > Codex Review > E2E > Confirm > Commit & Push > Post-Deploy Verification > UX Audit
 ```
 
 ## Pipeline Steps
@@ -89,6 +90,30 @@ Otherwise re-run `npm run typecheck`. If new type errors were introduced by simp
 stop and report them. Do NOT proceed.
 Report [PASS] or [FAIL].
 
+### Step 3c: Chat Eval [STANDARD, FULL only]
+If tier is LIGHT, report [SKIP] and move on.
+
+Check whether any changed file matches:
+- `src/lib/rag/**`
+- `src/app/api/chat/**`
+- `scripts/eval-chat/**`
+- `src/lib/routines/**`
+
+If NO changed files match these paths, report [SKIP] and move on.
+
+If any match:
+
+**Prerequisite check:** Before running the eval, verify the dev server is reachable:
+```bash
+curl -sf http://localhost:3000 > /dev/null
+```
+If the curl check fails, report: "Chat eval requires the dev server on localhost:3000. Start it with `npm run dev` and re-run /ship." and report [FAIL]. Do NOT proceed.
+
+If the dev server is reachable, run `npm run test:chat`.
+
+If chat eval fails, stop and report the failures. Do NOT proceed.
+Report [PASS], [SKIP], or [FAIL].
+
 ### Step 4: Code Review [STANDARD, FULL only]
 If tier is LIGHT, report [SKIP] and move on.
 
@@ -98,6 +123,20 @@ uncommitted changes (including any simplifications from Step 3).
 A CRITICAL issue is one that would cause runtime errors, data loss, or security vulnerabilities.
 If the reviewer reports any CRITICAL issues, stop and report them. Do NOT proceed.
 Report [PASS] or [FAIL].
+
+### Step 4b: Codex Review [STANDARD, FULL only]
+If tier is LIGHT, report [SKIP] and move on.
+
+Check whether any changed file matches:
+- `src/lib/rag/**`
+- `src/lib/routines/**`
+- `src/lib/quiz/**`
+
+If NO changed files match these paths, report [SKIP] and move on.
+
+If any match, dispatch the `/codex` skill for a structural review of the changed files.
+This step is **non-blocking**: report findings as advisory but do NOT stop the pipeline
+on issues. Report [ADVISORY] with a summary of findings, or [SKIP] if no matching files.
 
 ### Step 5: E2E Browser Test [FULL only]
 If tier is LIGHT or STANDARD, report [SKIP] and move on.
@@ -120,33 +159,66 @@ If all previous steps passed (or were skipped):
    - Current branch name
    - `git diff --cached --stat` output
    - The proposed commit message
-   - If the current branch is `main`, print a warning: "⚠ You are about to push directly to main."
+   - If the current branch is `main`, print a notice: "Branch is main — will create a ship/<slug> branch and open a PR."
 5. If AUTO_CONFIRM is true, report [PASS] and proceed to Step 7.
    Otherwise, ask the user: "Proceed with commit and push? (yes/no)"
    - Only an explicit "yes" continues. Report [PASS].
-   - "no" stops the pipeline. Report [ABORT].
+   - "no" → unstage all files (`git reset HEAD`) to prevent tier misclassification on the next run, then stop the pipeline. Report [ABORT].
 
 ### Step 7: Commit & Push [ALL TIERS]
-1. Commit with the confirmed message.
-2. Push to the current branch's remote.
+1. Determine the current branch.
+2. **If current branch is `main`:** Do NOT commit on main. Instead:
+   a. Derive a slug from the commit message (lowercase, hyphens, max 40 chars). Example: "feat: add chat eval step" becomes `ship/add-chat-eval-step`.
+   b. Create and checkout a new branch BEFORE committing: `git checkout -b ship/<slug>`.
+   c. Commit with the confirmed message on the new branch.
+   d. Push the new branch: `git push -u origin ship/<slug>`.
+   e. Create a PR: `gh pr create --base main --head ship/<slug> --title "<commit message>" --body "Shipped via /ship pipeline."`
+   f. Report the PR URL.
+3. **If current branch is NOT main:**
+   a. Commit with the confirmed message.
+   b. Push to the current branch's remote as usual: `git push`.
 
 Report [PASS] or [FAIL].
+
+### Step 8: Post-Deploy Verification [FULL only, optional]
+If tier is not FULL, report [SKIP] and move on.
+If Step 7 did NOT create a PR (i.e., was a direct branch push, not the main flow), report [SKIP] and move on.
+
+Otherwise:
+1. Wait 90 seconds for Vercel to deploy the preview.
+2. Retrieve the Vercel preview URL from the PR (check the PR's deployment status or comments).
+3. Launch the e2e-browser-tester agent (subagent_type: `e2e-browser-tester`). Tell it to test the Vercel preview URL — core flows: navigation, chat, sign-out, profile page.
+
+This step is **optional** — if the preview URL is not available or the tester fails, report findings but do NOT fail the pipeline.
+Report [PASS], [SKIP], or [WARN].
+
+### Step 8b: UX Audit [FULL only, optional]
+If tier is not FULL, report [SKIP] and move on.
+If Step 8 was skipped (no preview URL available), report [SKIP] and move on.
+
+Otherwise, run the `ux-check` skill against the Vercel preview URL from Step 8.
+This step is **non-blocking**: report findings as advisory but do NOT fail the pipeline.
+Report [ADVISORY] with a summary of findings, or [SKIP].
 
 ## Final Report
 
 Print a summary table:
 
 ```
-| Step         | Status |
-|--------------|--------|
-| Type Check   | PASS   |
-| Build        | PASS   |
-| Simplify     | PASS   |
-| Re-verify    | SKIP   |
-| Code Review  | PASS   |
-| E2E          | SKIP   |
-| Confirm      | PASS   |
-| Commit & Push| PASS   |
+| Step                     | Status   |
+|--------------------------|----------|
+| Type Check               | PASS     |
+| Build                    | PASS     |
+| Simplify                 | PASS     |
+| Re-verify                | SKIP     |
+| Chat Eval                | SKIP     |
+| Code Review              | PASS     |
+| Codex Review             | ADVISORY |
+| E2E                      | SKIP     |
+| Confirm                  | PASS     |
+| Commit & Push            | PASS     |
+| Post-Deploy Verification | SKIP     |
+| UX Audit                 | SKIP     |
 ```
 
 Then a final line:
