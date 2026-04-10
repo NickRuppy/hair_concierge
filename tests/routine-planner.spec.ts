@@ -1128,4 +1128,70 @@ test.describe("Routine planner", () => {
       expect(bondSlot?.action).toBe("adjust")
     })
   })
+
+  test.describe("Brush tools logic", () => {
+    test("explicit brush question activates brush_tools", () => {
+      const topics = activateRoutineTopics(
+        createProfile(),
+        "Welche Buerste ist fuer nasses Entwirren am besten?"
+      )
+
+      expect(topics.map((topic) => topic.id)).toContain("brush_tools")
+    })
+
+    test("rough brushing proactively adds a brush tools slot", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          brush_type: "paddle",
+          mechanical_stress_factors: ["rough_brushing"],
+        }),
+        "Welche Routine passt zu mir?"
+      )
+
+      const topicIds = plan.active_topics.map((topic) => topic.id)
+      const brushSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "maintenance-brush-tools")
+
+      expect(topicIds).toContain("brush_tools")
+      expect(brushSlot?.action).toBe("adjust")
+      expect(brushSlot?.rationale.some((line) => line.includes("von unten nach oben"))).toBe(true)
+      expect(brushSlot?.rationale.some((line) => line.includes("Paddle- und Rundbuersten"))).toBe(true)
+    })
+
+    test("scalp-sensitive profiles get gentle scalp tool caveats", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          scalp_condition: "irritated",
+          concerns: ["hair_loss"],
+        }),
+        "Welches Tool passt fuer Kopfhautserum und Scalp Brush?"
+      )
+
+      const brushSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "maintenance-brush-tools")
+
+      expect(brushSlot?.rationale.some((line) => line.includes("Applikatorflasche"))).toBe(true)
+      expect(brushSlot?.caveats.some((line) => line.includes("gereizter oder schuppiger Kopfhaut"))).toBe(true)
+      expect(brushSlot?.caveats.some((line) => line.includes("Haarausfall oder Ausduennung"))).toBe(true)
+    })
+
+    test("curl refresh tool questions surface the spray-bottle hint", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          hair_texture: "curly",
+          wash_frequency: "every_2_3_days",
+        }),
+        "Brauche ich eine Spruehflasche fuer meinen Lockenrefresh?"
+      )
+
+      const brushSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "maintenance-brush-tools")
+
+      expect(plan.active_topics.map((topic) => topic.id)).toContain("brush_tools")
+      expect(brushSlot?.rationale.some((line) => line.includes("Spruehflasche"))).toBe(true)
+    })
+  })
 })

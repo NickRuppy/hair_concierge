@@ -8,6 +8,11 @@ import {
 } from "@/lib/vocabulary"
 import { CONDITIONER_REPAIR_LEVEL_LABELS } from "@/lib/conditioner/constants"
 import { LEAVE_IN_NEED_BUCKET_LABELS, LEAVE_IN_STYLING_CONTEXT_LABELS } from "@/lib/leave-in/constants"
+import {
+  buildBrushToolsSlot,
+  hasBrushToolsNeed,
+  hasExplicitBrushToolsRequest,
+} from "@/lib/routines/brush-tools"
 import { buildConditionerDecision } from "@/lib/rag/conditioner-decision"
 import { buildLeaveInDecision } from "@/lib/rag/leave-in-decision"
 import { deriveMaskDecision } from "@/lib/rag/mask-reranker"
@@ -32,6 +37,7 @@ const ROUTINE_TOPIC_LABELS: Record<RoutineTopicId, string> = {
   tiefenreinigung: "Tiefenreinigung",
   hair_oiling: "Hair Oiling",
   bond_builder: "Bond Builder",
+  brush_tools: "Buersten & Tools",
   lockenrefresh: "Lockenrefresh",
   cwc: "CWC",
   owc: "OWC",
@@ -515,6 +521,7 @@ function getExplicitTopicIds(message: string): RoutineTopicId[] {
   if (includesAny(normalizedMessage, CLARIFY_TERMS)) topics.push("tiefenreinigung")
   if (includesAny(normalizedMessage, OILING_TERMS)) topics.push("hair_oiling")
   if (includesAny(normalizedMessage, BOND_BUILDER_TERMS)) topics.push("bond_builder")
+  if (hasExplicitBrushToolsRequest(message)) topics.push("brush_tools")
   if (includesAny(normalizedMessage, REFRESH_TERMS)) topics.push("lockenrefresh")
   if (includesAny(normalizedMessage, CWC_TERMS)) topics.push("cwc")
   if (includesAny(normalizedMessage, OWC_TERMS)) topics.push("owc")
@@ -695,6 +702,17 @@ export function activateRoutineTopics(
         true,
       )
     }
+  }
+
+  if (explicit.has("brush_tools") || hasBrushToolsNeed(profile, message, context)) {
+    push(
+      "brush_tools",
+      explicit.has("brush_tools")
+        ? "Buersten oder Tools wurden direkt angefragt."
+        : "Mechanische Belastung oder Entwirr-Signale sprechen fuer gezielte Tool- und Anwendungshinweise.",
+      55,
+      true,
+    )
   }
 
   if (
@@ -910,6 +928,7 @@ function buildOwcTechniqueSlot(
 function buildRoutineSlots(
   profile: HairProfile | null,
   context: RoutineContext,
+  message: string,
   activations: RoutineTopicActivation[],
   decisionContext: RoutineDecisionContext,
   options: { usesBondBuilder: boolean },
@@ -1143,6 +1162,10 @@ function buildRoutineSlots(
     })
   }
 
+  if (activeTopicIds.has("brush_tools")) {
+    pushSlot(sections, buildBrushToolsSlot(profile, context, message))
+  }
+
   if (maskDecision.needs_mask || maskPresent) {
     pushSlot(sections, {
       id: "occasional-mask",
@@ -1338,7 +1361,7 @@ export function buildRoutinePlan(
   const activeTopics = activateRoutineTopics(profile, message, context)
   const compareMode = isCwcOwcComparisonRequest(message)
   const decisionContext = buildRoutineDecisionContext(profile)
-  const sectionSlots = buildRoutineSlots(profile, context, activeTopics, decisionContext, {
+  const sectionSlots = buildRoutineSlots(profile, context, message, activeTopics, decisionContext, {
     usesBondBuilder: options.usesBondBuilder ?? false,
   })
 
