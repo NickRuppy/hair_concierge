@@ -1,13 +1,11 @@
 import { test, expect } from "@playwright/test"
 
-const BASE = "https://hair-concierge.vercel.app"
-
 test.describe("Deployed App E2E Tests", () => {
   // ─── 1. Homepage / Navigation ───────────────────────────────
   test("homepage redirects unauthenticated users to /quiz", async ({
     page,
   }) => {
-    const response = await page.goto(BASE, { waitUntil: "domcontentloaded" })
+    const response = await page.goto("/", { waitUntil: "domcontentloaded" })
     expect(response?.status()).toBeLessThan(500)
 
     // Middleware redirects unauthenticated users without hc_returning cookie to /quiz
@@ -16,13 +14,13 @@ test.describe("Deployed App E2E Tests", () => {
   })
 
   test("homepage does not return 500", async ({ page }) => {
-    const response = await page.goto(BASE, { waitUntil: "domcontentloaded" })
+    const response = await page.goto("/", { waitUntil: "domcontentloaded" })
     expect(response?.status()).toBeLessThan(500)
   })
 
   // ─── 2. Quiz Page ───────────────────────────────────────────
   test("quiz page loads with landing screen", async ({ page }) => {
-    await page.goto(`${BASE}/quiz`, { waitUntil: "domcontentloaded" })
+    await page.goto("/quiz", { waitUntil: "domcontentloaded" })
     await expect(page).toHaveURL(/\/quiz/)
 
     // Should show the quiz landing content
@@ -44,7 +42,7 @@ test.describe("Deployed App E2E Tests", () => {
   test("quiz flow: start quiz and navigate through first 4 questions", async ({
     page,
   }) => {
-    await page.goto(`${BASE}/quiz`, { waitUntil: "networkidle" })
+    await page.goto("/quiz", { waitUntil: "networkidle" })
     await expect(
       page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })
     ).toBeVisible({ timeout: 15000 })
@@ -90,7 +88,7 @@ test.describe("Deployed App E2E Tests", () => {
   test("quiz flow: navigate through scalp question progressive disclosure", async ({
     page,
   }) => {
-    await page.goto(`${BASE}/quiz`, { waitUntil: "networkidle" })
+    await page.goto("/quiz", { waitUntil: "networkidle" })
     await expect(
       page.getByRole("button", { name: /QUIZ STARTEN/i })
     ).toBeVisible({ timeout: 15000 })
@@ -147,7 +145,7 @@ test.describe("Deployed App E2E Tests", () => {
   test("quiz flow: back button works from question to landing", async ({
     page,
   }) => {
-    await page.goto(`${BASE}/quiz`, { waitUntil: "networkidle" })
+    await page.goto("/quiz", { waitUntil: "networkidle" })
     const startBtn = page.getByRole("button", { name: /QUIZ STARTEN/i })
     await startBtn.waitFor({ state: "visible", timeout: 15000 })
 
@@ -175,7 +173,7 @@ test.describe("Deployed App E2E Tests", () => {
   test("chat page redirects unauthenticated users (no crash)", async ({
     page,
   }) => {
-    const response = await page.goto(`${BASE}/chat`, {
+    const response = await page.goto("/chat", {
       waitUntil: "domcontentloaded",
     })
     // Should NOT be a 500 error
@@ -203,7 +201,7 @@ test.describe("Deployed App E2E Tests", () => {
   test("profile page redirects unauthenticated users (no crash)", async ({
     page,
   }) => {
-    const response = await page.goto(`${BASE}/profile`, {
+    const response = await page.goto("/profile", {
       waitUntil: "domcontentloaded",
     })
     expect(response?.status()).toBeLessThan(500)
@@ -220,7 +218,7 @@ test.describe("Deployed App E2E Tests", () => {
 
   // ─── 5. Auth Page ──────────────────────────────────────────
   test("auth page renders login/signup form", async ({ page }) => {
-    await page.goto(`${BASE}/auth`, { waitUntil: "domcontentloaded" })
+    await page.goto("/auth", { waitUntil: "domcontentloaded" })
 
     // Should show the TomBot branding
     await expect(page.getByText("TomBot").first()).toBeVisible({
@@ -260,7 +258,7 @@ test.describe("Deployed App E2E Tests", () => {
   })
 
   test("auth page: switch between login and signup tabs", async ({ page }) => {
-    await page.goto(`${BASE}/auth`, { waitUntil: "networkidle" })
+    await page.goto("/auth", { waitUntil: "networkidle" })
     await expect(page.getByText("TomBot").first()).toBeVisible({
       timeout: 15000,
     })
@@ -296,7 +294,7 @@ test.describe("Deployed App E2E Tests", () => {
     const pageErrors: string[] = []
     page.on("pageerror", (err) => pageErrors.push(err.message))
 
-    await page.goto(`${BASE}/quiz`, { waitUntil: "networkidle" })
+    await page.goto("/quiz", { waitUntil: "networkidle" })
     await page.waitForTimeout(2000)
 
     if (pageErrors.length > 0) {
@@ -309,7 +307,7 @@ test.describe("Deployed App E2E Tests", () => {
     const pageErrors: string[] = []
     page.on("pageerror", (err) => pageErrors.push(err.message))
 
-    await page.goto(`${BASE}/auth`, { waitUntil: "networkidle" })
+    await page.goto("/auth", { waitUntil: "networkidle" })
     await page.waitForTimeout(2000)
 
     if (pageErrors.length > 0) {
@@ -322,7 +320,7 @@ test.describe("Deployed App E2E Tests", () => {
     const pageErrors: string[] = []
     page.on("pageerror", (err) => pageErrors.push(err.message))
 
-    await page.goto(`${BASE}/quiz`, { waitUntil: "networkidle" })
+    await page.goto("/quiz", { waitUntil: "networkidle" })
     const startBtnErr = page.getByRole("button", { name: /QUIZ STARTEN/i })
     await startBtnErr.waitFor({ state: "visible", timeout: 15000 })
     await startBtnErr.click()

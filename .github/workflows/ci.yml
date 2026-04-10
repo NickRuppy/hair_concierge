@@ -7,20 +7,43 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     env:
-      NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co"
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: "placeholder"
-      SUPABASE_SERVICE_ROLE_KEY: "placeholder"
-      OPENAI_API_KEY: "sk-placeholder"
-      COHERE_API_KEY: "placeholder"
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder' }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'sk-placeholder' }}
+      COHERE_API_KEY: ${{ secrets.COHERE_API_KEY || 'placeholder' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - run: npm run typecheck
-      - name: Lint (non-blocking until pre-existing errors are fixed)
+      - name: Lint
         run: npm run lint
-        continue-on-error: true
       - run: npm run build
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright smoke tests
+        run: npx playwright test --grep @ci --project=chromium
+      - name: Chat evaluation (if RAG files changed)
+        run: |
+          # Check if any RAG/routine/chat files changed in this PR
+          CHANGED=$(git diff --name-only origin/main...HEAD -- src/lib/rag/ src/lib/routines/ src/app/api/chat/ scripts/eval-chat/ || true)
+          if [ -n "$CHANGED" ]; then
+            npx start-server-and-test 'npm run dev' http://localhost:3000 'npm run test:chat'
+          else
+            echo "No RAG/routine/chat files changed — skipping chat eval"
+          fi
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            test-results/
+            tests/results/
+          retention-days: 7
