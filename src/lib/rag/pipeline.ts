@@ -105,9 +105,17 @@ export async function runPipeline(
 
   const supabase = createAdminClient()
 
-  // ── Step 1: Classify intent + load hair profile (parallel) ─────────
-  const [classification, hairProfileResult, memoryContext] = await Promise.all([
-    classifyIntent(message),
+  // ── Step 1: Load conversation history + hair profile + memory (parallel) ─
+  const [conversationData, hairProfileResult, memoryContext] = await Promise.all([
+    conversationId
+      ? supabase
+          .from("messages")
+          .select("*")
+          .eq("conversation_id", conversationId)
+          .order("created_at", { ascending: true })
+          .limit(10)
+          .then(({ data }) => data)
+      : Promise.resolve(null),
     supabase
       .from("hair_profiles")
       .select("*")
@@ -115,8 +123,12 @@ export async function runPipeline(
       .single(),
     loadUserMemoryContext(userId, supabase),
   ])
-  const { intent, product_category } = classification
+  const conversationHistory: Message[] = (conversationData as Message[]) ?? []
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
+
+  // ── Step 1b: Classify intent (with conversation context) ───────────
+  const classification = await classifyIntent(message, conversationHistory)
+  const { intent, product_category } = classification
   const shouldPlanRoutine = intent === "routine_help" || product_category === "routine"
   let routinePlan: RoutinePlan | undefined
   if (shouldPlanRoutine) {
@@ -147,19 +159,7 @@ export async function runPipeline(
     ? conditionerDecision?.matched_concern_code
     : null
 
-  // ── Step 3: Load conversation history ─────────────────────────────
-  const { data: conversationData } = conversationId
-    ? await supabase
-        .from("messages")
-        .select("*")
-        .eq("conversation_id", conversationId)
-        .order("created_at", { ascending: true })
-        .limit(10)
-    : { data: null }
-
-  const conversationHistory: Message[] = (conversationData as Message[]) ?? []
-
-  // ── Step 1b: Evaluate routing decision ─────────────────────────────
+  // ── Step 2: Evaluate routing decision ───────────────────────────────
   const routerStart = Date.now()
   const routerDecision = evaluateRoute(classification, conversationHistory, hairProfile, message)
 

@@ -1,6 +1,6 @@
 import { getOpenAI } from "@/lib/openai/client"
 import { INTENT_CLASSIFICATION_PROMPT } from "@/lib/rag/prompts"
-import type { IntentType, ClassificationResult, ProductCategory, RetrievalMode } from "@/lib/types"
+import type { IntentType, ClassificationResult, ProductCategory, RetrievalMode, Message } from "@/lib/types"
 
 const VALID_INTENTS: IntentType[] = [
   "product_recommendation",
@@ -34,17 +34,47 @@ const DEFAULT_CLASSIFICATION: ClassificationResult = {
   router_confidence: 0.5,
 }
 
+/** Max prior messages to include for follow-up context */
+const HISTORY_CONTEXT_LIMIT = 3
+
+/**
+ * Builds a condensed conversation summary for the classifier.
+ * Keeps only the last few user/assistant turns so GPT-4o can
+ * resolve ambiguous follow-ups like "und öwc testen?".
+ */
+function buildHistoryContext(history: Message[]): string {
+  const recent = history
+    .filter((m) => m.role !== "system" && m.content)
+    .slice(-HISTORY_CONTEXT_LIMIT)
+
+  if (recent.length === 0) return ""
+
+  const lines = recent.map(
+    (m) => `${m.role === "user" ? "Nutzer" : "Assistent"}: ${m.content!.slice(0, 200)}`,
+  )
+
+  return (
+    "Bisheriger Gespraechsverlauf (fuer Kontext bei Folgefragen):\n" +
+    lines.join("\n") +
+    "\n\nAktuelle Nachricht:\n"
+  )
+}
+
 /**
  * Classifies the intent of a user message using GPT-4o.
  * Returns intent, product category, complexity, confidence, filters, and clarification suggestion.
  *
  * @param message - The user's message text
+ * @param conversationHistory - Prior messages for follow-up context (optional)
  * @returns The full classification result
  */
 export async function classifyIntent(
-  message: string
+  message: string,
+  conversationHistory: Message[] = [],
 ): Promise<ClassificationResult> {
   try {
+    const historyPrefix = buildHistoryContext(conversationHistory)
+
     const response = await getOpenAI().chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -54,7 +84,7 @@ export async function classifyIntent(
         },
         {
           role: "user",
-          content: message,
+          content: historyPrefix + message,
         },
       ],
       response_format: { type: "json_object" },
