@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useCallback, useRef } from "react"
+import posthog from "posthog-js"
 import type { Message, Conversation } from "@/lib/types"
 
 interface UseChatReturn {
@@ -64,6 +65,9 @@ export function useChat(): UseChatReturn {
     async (content: string) => {
       if (isStreaming) return
 
+      // Track first chat message (before optimistic update changes state)
+      const isFirstMessage = messages.length === 0
+
       // Add user message optimistically
       const userMessage: Message = {
         id: `temp-${Date.now()}`,
@@ -77,6 +81,10 @@ export function useChat(): UseChatReturn {
       }
       setMessages((prev) => [...prev, userMessage])
       setIsStreaming(true)
+
+      if (isFirstMessage) {
+        posthog.capture("first_chat_message")
+      }
 
       // Create placeholder for assistant message
       const assistantMessage: Message = {
@@ -224,7 +232,7 @@ export function useChat(): UseChatReturn {
         abortRef.current = null
       }
     },
-    [currentConversationId, isStreaming, loadConversations]
+    [currentConversationId, isStreaming, loadConversations, messages.length]
   )
 
   return {

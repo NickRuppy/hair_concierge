@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import posthog from "posthog-js"
 import { useToast } from "@/providers/toast-provider"
 import { createClient } from "@/lib/supabase/client"
 import { useOnboardingStore } from "@/lib/onboarding/store"
@@ -471,6 +472,7 @@ export function OnboardingFlow({
             .from("profiles")
             .update({ onboarding_completed: true })
             .eq("id", userId)
+          posthog.capture("onboarding_completed", { userId })
           break
         }
 
