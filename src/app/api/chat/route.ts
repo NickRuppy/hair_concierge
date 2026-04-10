@@ -3,6 +3,10 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { runPipeline } from "@/lib/rag/pipeline"
 import { buildAssistantRagContext, buildDoneEventData } from "@/lib/rag/chat-response"
 import { extractConversationMemory } from "@/lib/rag/memory-extractor"
+import {
+  buildRetrievalDebugEventData,
+  finalizeChatTurnTrace,
+} from "@/lib/rag/debug-trace"
 import { chatMessageSchema } from "@/lib/validators"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
@@ -27,6 +31,25 @@ function checkRateLimit(userId: string): boolean {
 
   entry.count++
   return true
+}
+
+async function persistConversationTurnTrace(params: {
+  conversation_id: string | null
+  user_id: string
+  user_message_id: string | null
+  assistant_message_id: string | null
+  status: "completed" | "failed"
+  trace: unknown
+}) {
+  try {
+    const admin = createAdminClient()
+    const { error } = await admin.from("conversation_turn_traces").insert(params)
+    if (error) {
+      console.error("Failed to persist conversation turn trace:", error)
+    }
+  } catch (error) {
+    console.error("Failed to persist conversation turn trace:", error)
+  }
 }
 
 export async function POST(request: Request) {
@@ -57,6 +80,8 @@ export async function POST(request: Request) {
   }
 
   const { message, conversation_id } = parsed.data
+  const requestId = crypto.randomUUID()
+  const requestStart = performance.now()
 
   try {
     const {
@@ -68,19 +93,29 @@ export async function POST(request: Request) {
       retrievalSummary,
       routerDecision,
       categoryDecision,
+      debugTrace,
     } = await runPipeline({
       message,
       conversationId: conversation_id,
       userId: user.id,
+      requestId,
     })
 
     // Save user message
     const admin = createAdminClient()
-    await admin.from("messages").insert({
-      conversation_id: conversationId,
-      role: "user",
-      content: message,
-    })
+    const { data: userMessageRow, error: userMessageError } = await admin
+      .from("messages")
+      .insert({
+        conversation_id: conversationId,
+        role: "user",
+        content: message,
+      })
+      .select("id")
+      .single()
+
+    if (userMessageError) {
+      console.error("Failed to save user message:", userMessageError)
+    }
 
     // Create SSE response
     const encoder = new TextEncoder()
@@ -106,8 +141,18 @@ export async function POST(request: Request) {
           )
         )
 
+        controller.enqueue(
+          encoder.encode(
+            `data: ${JSON.stringify({
+              type: "retrieval_debug",
+              data: buildRetrievalDebugEventData(debugTrace),
+            })}\n\n`
+          )
+        )
+
         const reader = stream.getReader()
         let fullContent = ""
+        const streamReadStart = performance.now()
 
         try {
           while (true) {
@@ -147,13 +192,21 @@ export async function POST(request: Request) {
 
           // Save assistant message (with products for persistence)
           const admin = createAdminClient()
-          await admin.from("messages").insert({
-            conversation_id: conversationId,
-            role: "assistant",
-            content: fullContent,
-            rag_context: buildAssistantRagContext(sources, categoryDecision),
-            product_recommendations: productsToSend.length > 0 ? productsToSend : null,
-          })
+          const { data: assistantMessageRow, error: assistantMessageError } = await admin
+            .from("messages")
+            .insert({
+              conversation_id: conversationId,
+              role: "assistant",
+              content: fullContent,
+              rag_context: buildAssistantRagContext(sources, categoryDecision),
+              product_recommendations: productsToSend.length > 0 ? productsToSend : null,
+            })
+            .select("id")
+            .single()
+
+          if (assistantMessageError) {
+            console.error("Failed to save assistant message:", assistantMessageError)
+          }
 
           // Update conversation updated_at
           await admin
@@ -180,6 +233,24 @@ export async function POST(request: Request) {
             })
             .eq("id", user.id)
 
+          const completedTrace = finalizeChatTurnTrace(debugTrace, {
+            assistant_content: fullContent,
+            sources,
+            product_count: productsToSend.length,
+            status: "completed",
+            stream_read_ms: Math.round(performance.now() - streamReadStart),
+            total_ms: Math.round(performance.now() - requestStart),
+          })
+
+          await persistConversationTurnTrace({
+            conversation_id: conversationId,
+            user_id: user.id,
+            user_message_id: userMessageRow?.id ?? null,
+            assistant_message_id: assistantMessageRow?.id ?? null,
+            status: "completed",
+            trace: completedTrace,
+          })
+
           controller.enqueue(
             encoder.encode(
               `data: ${JSON.stringify({
@@ -193,12 +264,33 @@ export async function POST(request: Request) {
               })}\n\n`
             )
           )
-        } catch {
+        } catch (error) {
           controller.enqueue(
             encoder.encode(
               `data: ${JSON.stringify({ type: "error", data: { message: "Stream-Fehler aufgetreten" } })}\n\n`
             )
           )
+
+          const errorMessage =
+            error instanceof Error ? error.message : "Unbekannter Stream-Fehler"
+          const failedTrace = finalizeChatTurnTrace(debugTrace, {
+            assistant_content: fullContent,
+            sources,
+            product_count: 0,
+            status: "failed",
+            error: errorMessage,
+            stream_read_ms: Math.round(performance.now() - streamReadStart),
+            total_ms: Math.round(performance.now() - requestStart),
+          })
+
+          await persistConversationTurnTrace({
+            conversation_id: conversationId,
+            user_id: user.id,
+            user_message_id: userMessageRow?.id ?? null,
+            assistant_message_id: null,
+            status: "failed",
+            trace: failedTrace,
+          })
         }
 
         controller.close()

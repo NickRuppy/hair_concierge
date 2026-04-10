@@ -1,4 +1,8 @@
-import { streamChatCompletion } from "@/lib/openai/chat"
+import {
+  DEFAULT_CHAT_COMPLETION_MODEL,
+  DEFAULT_CHAT_COMPLETION_TEMPERATURE,
+  streamChatCompletion,
+} from "@/lib/openai/chat"
 import { SYSTEM_PROMPT } from "@/lib/rag/prompts"
 import {
   CONDITIONER_REPAIR_LEVEL_LABELS,
@@ -52,6 +56,8 @@ import type {
   LeaveInDecision,
   OilDecision,
   RoutinePlan,
+  ChatPromptMessageSnapshot,
+  ChatPromptSnapshot,
 } from "@/lib/types"
 import type OpenAI from "openai"
 
@@ -72,6 +78,15 @@ export interface SynthesizeParams {
   memoryContext?: string | null
   /** Slot-aware clarification questions from the router (replaces consultationMode) */
   clarificationQuestions?: string[]
+}
+
+export interface SynthesisResult {
+  stream: ReadableStream<Uint8Array>
+  debug: {
+    prompt: ChatPromptSnapshot
+    prompt_build_ms: number
+    stream_setup_ms: number
+  }
 }
 
 function appendMemoryContext(profileText: string, memoryContext?: string | null): string {
@@ -957,7 +972,7 @@ export function buildSystemPrompt(
  */
 export async function synthesizeResponse(
   params: SynthesizeParams
-): Promise<ReadableStream<Uint8Array>> {
+): Promise<SynthesisResult> {
   const {
     userMessage,
     conversationHistory,
@@ -975,6 +990,7 @@ export async function synthesizeResponse(
     clarificationQuestions,
   } = params
 
+  const promptBuildStart = performance.now()
   const systemPrompt = buildSystemPrompt(
     hairProfile,
     ragChunks,
@@ -1009,5 +1025,42 @@ export async function synthesizeResponse(
   // Add the current user message
   messages.push({ role: "user", content: userMessage })
 
-  return streamChatCompletion({ messages })
+  const promptMessages: ChatPromptMessageSnapshot[] = messages
+    .filter(
+      (
+        msg,
+      ): msg is OpenAI.Chat.Completions.ChatCompletionMessageParam & {
+        role: "system" | "user" | "assistant"
+        content: string
+      } =>
+        (msg.role === "system" || msg.role === "user" || msg.role === "assistant") &&
+        typeof msg.content === "string",
+    )
+    .map((msg) => ({
+      role: msg.role,
+      content: msg.content,
+    }))
+
+  const promptBuildMs = Math.round(performance.now() - promptBuildStart)
+  const streamSetupStart = performance.now()
+  const stream = await streamChatCompletion({
+    messages,
+    model: DEFAULT_CHAT_COMPLETION_MODEL,
+    temperature: DEFAULT_CHAT_COMPLETION_TEMPERATURE,
+  })
+  const streamSetupMs = Math.round(performance.now() - streamSetupStart)
+
+  return {
+    stream,
+    debug: {
+      prompt: {
+        model: DEFAULT_CHAT_COMPLETION_MODEL,
+        temperature: DEFAULT_CHAT_COMPLETION_TEMPERATURE,
+        system_prompt: systemPrompt,
+        messages: promptMessages,
+      },
+      prompt_build_ms: promptBuildMs,
+      stream_setup_ms: streamSetupMs,
+    },
+  }
 }
