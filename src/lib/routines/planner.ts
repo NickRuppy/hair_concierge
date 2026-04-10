@@ -13,6 +13,7 @@ import {
   hasBrushToolsNeed,
   hasExplicitBrushToolsRequest,
 } from "@/lib/routines/brush-tools"
+import { CURLY_TEXTURES } from "@/lib/routines/constants"
 import { buildConditionerDecision } from "@/lib/rag/conditioner-decision"
 import { buildLeaveInDecision } from "@/lib/rag/leave-in-decision"
 import { deriveMaskDecision } from "@/lib/rag/mask-reranker"
@@ -156,7 +157,6 @@ const WASH_LESS_TERMS = [
   "langer frisch",
 ]
 
-const CURLY_TEXTURES = new Set(["wavy", "curly", "coily"])
 const HEAVY_ROUTINE_PRODUCTS = new Set(["mask", "oil", "leave_in"])
 
 const STYLING_KIND_MAP: [RegExp, string][] = [
@@ -521,7 +521,7 @@ function getExplicitTopicIds(message: string): RoutineTopicId[] {
   if (includesAny(normalizedMessage, CLARIFY_TERMS)) topics.push("tiefenreinigung")
   if (includesAny(normalizedMessage, OILING_TERMS)) topics.push("hair_oiling")
   if (includesAny(normalizedMessage, BOND_BUILDER_TERMS)) topics.push("bond_builder")
-  if (hasExplicitBrushToolsRequest(message)) topics.push("brush_tools")
+  if (hasExplicitBrushToolsRequest(normalizedMessage)) topics.push("brush_tools")
   if (includesAny(normalizedMessage, REFRESH_TERMS)) topics.push("lockenrefresh")
   if (includesAny(normalizedMessage, CWC_TERMS)) topics.push("cwc")
   if (includesAny(normalizedMessage, OWC_TERMS)) topics.push("owc")
@@ -623,6 +623,7 @@ export function activateRoutineTopics(
   message: string,
   context: RoutineContext = deriveRoutineContext(profile, message),
 ): RoutineTopicActivation[] {
+  const normalizedMessage = normalizeText(message)
   const activations: RoutineTopicActivation[] = []
   const seen = new Set<RoutineTopicId>()
 
@@ -704,7 +705,7 @@ export function activateRoutineTopics(
     }
   }
 
-  if (explicit.has("brush_tools") || hasBrushToolsNeed(profile, message, context)) {
+  if (explicit.has("brush_tools") || hasBrushToolsNeed(profile, normalizedMessage, context)) {
     push(
       "brush_tools",
       explicit.has("brush_tools")
@@ -1163,7 +1164,7 @@ function buildRoutineSlots(
   }
 
   if (activeTopicIds.has("brush_tools")) {
-    pushSlot(sections, buildBrushToolsSlot(profile, context, message))
+    pushSlot(sections, buildBrushToolsSlot(profile, context, normalizeText(message)))
   }
 
   if (maskDecision.needs_mask || maskPresent) {

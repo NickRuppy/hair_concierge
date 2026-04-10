@@ -4,8 +4,7 @@ import type {
   RoutineSlotAction,
   RoutineSlotAdvice,
 } from "@/lib/types"
-
-const CURLY_TEXTURES = new Set(["wavy", "curly", "coily"])
+import { CURLY_TEXTURES } from "@/lib/routines/constants"
 
 const BRUSH_TOOLS_TERMS = [
   "buerste",
@@ -56,14 +55,16 @@ const DRY_STYLING_BRUSH_TERMS = [
 const SCALP_TOOL_TERMS = [
   "kopfhaut",
   "scalp",
-  "serum",
-  "oel",
-  "oil",
+  "kopfhautserum",
+  "scalp serum",
+  "haaroel",
+  "kopfhautoel",
+  "hair oil",
   "applikator",
   "applikatorflasche",
   "kamm applikator",
   "scalp brush",
-  "massage",
+  "kopfhautmassage",
   "einmassieren",
 ]
 
@@ -97,21 +98,22 @@ function includesAny(text: string, terms: string[]): boolean {
   return terms.some((term) => text.includes(normalizeText(term)))
 }
 
-export function hasExplicitBrushToolsRequest(message: string): boolean {
-  return includesAny(normalizeText(message), BRUSH_TOOLS_TERMS)
+/** Accepts an already-normalized message string (via normalizeText). */
+export function hasExplicitBrushToolsRequest(normalizedMessage: string): boolean {
+  return includesAny(normalizedMessage, BRUSH_TOOLS_TERMS)
 }
 
+/** Accepts an already-normalized message string (via normalizeText). */
 export function hasBrushToolsNeed(
   profile: HairProfile | null,
-  message: string,
+  normalizedMessage: string,
   context: RoutineContext,
 ): boolean {
-  const normalizedMessage = normalizeText(message)
-
   return (
     context.mechanical_stress_factors.includes("rough_brushing") ||
     profile?.brush_type === "paddle" ||
     profile?.brush_type === "round" ||
+    profile?.brush_type === "boar_bristle" ||
     includesAny(normalizedMessage, DETANGLING_TERMS)
   )
 }
@@ -119,10 +121,9 @@ export function hasBrushToolsNeed(
 export function buildBrushToolsSlot(
   profile: HairProfile | null,
   context: RoutineContext,
-  message: string,
+  normalizedMessage: string,
 ): RoutineSlotAdvice {
-  const normalizedMessage = normalizeText(message)
-  const explicitBrushRequest = hasExplicitBrushToolsRequest(message)
+  const explicitBrushRequest = hasExplicitBrushToolsRequest(normalizedMessage)
   const wetDetanglingRelevant =
     context.mechanical_stress_factors.includes("rough_brushing") ||
     includesAny(normalizedMessage, DETANGLING_TERMS) ||
@@ -138,8 +139,7 @@ export function buildBrushToolsSlot(
       CURLY_TEXTURES.has(context.hair_texture)
     )
   const sectioningRelevant =
-    includesAny(normalizedMessage, SECTIONING_TERMS) ||
-    scalpToolRelevant
+    includesAny(normalizedMessage, SECTIONING_TERMS)
   const dryStylingBrushRelevant =
     profile?.brush_type === "paddle" ||
     profile?.brush_type === "round" ||
@@ -228,10 +228,12 @@ export function buildBrushToolsSlot(
     )
   }
 
-  const action: RoutineSlotAction =
-    profile?.brush_type || context.mechanical_stress_factors.length > 0
-      ? "adjust"
-      : "add"
+  const needsAdjustment =
+    profile?.brush_type === "paddle" ||
+    profile?.brush_type === "round" ||
+    profile?.brush_type === "boar_bristle" ||
+    context.mechanical_stress_factors.length > 0
+  const action: RoutineSlotAction = needsAdjustment ? "adjust" : "add"
 
   return {
     id: "maintenance-brush-tools",
