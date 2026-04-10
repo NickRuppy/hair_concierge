@@ -28,13 +28,13 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
       - name: Run Playwright smoke tests
-        run: npx playwright test --grep @ci --project=chromium
+        run: npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @ci --project=chromium'
       - name: Chat evaluation (if RAG files changed)
         run: |
           # Check if any RAG/routine/chat files changed in this PR
           CHANGED=$(git diff --name-only origin/main...HEAD -- src/lib/rag/ src/lib/routines/ src/app/api/chat/ scripts/eval-chat/ || true)
           if [ -n "$CHANGED" ]; then
-            npx start-server-and-test 'npm run dev' http://localhost:3000 'npm run test:chat'
+            npx start-server-and-test 'npm run start' http://localhost:3000 'npm run test:chat'
           else
             echo "No RAG/routine/chat files changed — skipping chat eval"
           fi
