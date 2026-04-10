@@ -8,12 +8,14 @@ import { cn } from "@/lib/utils"
 interface DropdownMenuContextValue {
   open: boolean
   onOpenChange: (open: boolean) => void
+  registerTrigger: (el: HTMLButtonElement | null) => void
   triggerRef: React.RefObject<HTMLButtonElement | null>
 }
 
 const DropdownMenuContext = React.createContext<DropdownMenuContextValue>({
   open: false,
   onOpenChange: () => {},
+  registerTrigger: () => {},
   triggerRef: { current: null },
 })
 
@@ -21,21 +23,25 @@ function DropdownMenu({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false)
   const triggerRef = React.useRef<HTMLButtonElement>(null)
 
+  const registerTrigger = React.useCallback((el: HTMLButtonElement | null) => {
+    (triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current = el
+  }, [])
+
   return (
-    <DropdownMenuContext.Provider value={{ open, onOpenChange: setOpen, triggerRef }}>
+    <DropdownMenuContext.Provider value={{ open, onOpenChange: setOpen, triggerRef, registerTrigger }}>
       <div className="relative inline-block">{children}</div>
     </DropdownMenuContext.Provider>
   )
 }
 
-interface DropdownMenuTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+type DropdownMenuTriggerProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 
 const DropdownMenuTrigger = React.forwardRef<HTMLButtonElement, DropdownMenuTriggerProps>(
   ({ className, onClick, ...props }, ref) => {
-    const { open, onOpenChange, triggerRef } = React.useContext(DropdownMenuContext)
+    const { open, onOpenChange, registerTrigger } = React.useContext(DropdownMenuContext)
 
     const composedRef = (el: HTMLButtonElement) => {
-      (triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current = el
+      registerTrigger(el)
       if (typeof ref === "function") ref(el)
       else if (ref) (ref as React.MutableRefObject<HTMLButtonElement | null>).current = el
     }
