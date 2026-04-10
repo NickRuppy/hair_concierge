@@ -380,6 +380,7 @@ export type RoutineTopicId =
   | "tiefenreinigung"
   | "hair_oiling"
   | "bond_builder"
+  | "brush_tools"
   | "lockenrefresh"
   | "cwc"
   | "owc"
