@@ -50,7 +50,7 @@ export async function GET(
   // Fetch messages
   const { data: messages, error: msgError } = await admin
     .from("messages")
-    .select("id, conversation_id, role, content, product_recommendations, created_at")
+    .select("id, conversation_id, role, content, product_recommendations, rag_context, created_at")
     .eq("conversation_id", id)
     .order("created_at", { ascending: true })
 
@@ -59,6 +59,19 @@ export async function GET(
       { error: fehler("Laden", "der Nachrichten") },
       { status: 500 }
     )
+  }
+
+  let traces: unknown[] = []
+  const { data: traceRows, error: traceError } = await admin
+    .from("conversation_turn_traces")
+    .select("id, conversation_id, user_id, user_message_id, assistant_message_id, status, trace, created_at, updated_at")
+    .eq("conversation_id", id)
+    .order("created_at", { ascending: true })
+
+  if (traceError) {
+    console.error("Error fetching conversation turn traces:", traceError)
+  } else {
+    traces = traceRows ?? []
   }
 
   // Fetch user profile + hair profile
@@ -71,6 +84,7 @@ export async function GET(
   return NextResponse.json({
     conversation,
     messages: messages || [],
+    traces,
     user: userProfile,
   })
 }

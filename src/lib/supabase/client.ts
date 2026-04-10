@@ -11,7 +11,7 @@ export function createClient() {
         // Bypass Navigator Locks API to prevent AbortError when lock
         // acquisition times out (causes infinite loading spinner).
         // Safe because createBrowserClient returns a singleton per tab.
-        lock: async (_name: string, _acquireTimeout: number, fn: () => Promise<any>) => {
+        lock: async <R>(_name: string, _acquireTimeout: number, fn: () => Promise<R>): Promise<R> => {
           return await fn()
         },
       },

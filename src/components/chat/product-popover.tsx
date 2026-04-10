@@ -28,7 +28,6 @@ export function ProductPopover({
   children,
 }: ProductPopoverProps) {
   const [visible, setVisible] = useState(false)
-  const [position, setPosition] = useState<{ top: number; left: number } | null>(null)
   const showTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const triggerRef = useRef<HTMLSpanElement>(null)
@@ -75,9 +74,10 @@ export function ProductPopover({
   }, [])
 
   // Position the popover above the trigger, clamped to viewport
+  // useLayoutEffect is used here intentionally to measure and apply DOM positions
+  // after paint but before the browser repaints — this avoids a flash of incorrect position.
   useLayoutEffect(() => {
-    if (!visible || !triggerRef.current) {
-      setPosition(null)
+    if (!visible || !triggerRef.current || !popoverRef.current) {
       return
     }
 
@@ -93,7 +93,7 @@ export function ProductPopover({
     )
 
     // Position above trigger; if popover ref is available use its height
-    const popoverHeight = popoverRef.current?.offsetHeight ?? 200
+    const popoverHeight = popoverRef.current.offsetHeight ?? 200
     let top = triggerRect.top - popoverHeight - gap
 
     // If it would go above viewport, place below the trigger instead
@@ -101,16 +101,19 @@ export function ProductPopover({
       top = triggerRect.bottom + gap
     }
 
-    setPosition({ top, left })
+    // Apply position directly to the DOM element — avoids needing a setState
+    // which would trigger an extra render cycle
+    popoverRef.current.style.top = `${top}px`
+    popoverRef.current.style.left = `${left}px`
   }, [visible])
 
   const personalization = getPersonalizationSentence(product, hairProfile)
 
-  const popoverContent = visible && position && (
+  const popoverContent = visible && (
     <div
       ref={popoverRef}
       className="fixed z-50 w-72"
-      style={{ top: position.top, left: position.left }}
+      style={{ top: 0, left: 0 }}
       onMouseEnter={handlePopoverEnter}
       onMouseLeave={handlePopoverLeave}
     >
