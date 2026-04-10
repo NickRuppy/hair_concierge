@@ -38,3 +38,8 @@ Standard finish command: use the `/ship` agent when implementation is done.
 - PRs use squash-merge to keep main history clean
 - Override confirmation with `--yes` flag when needed
 - Before calling `/ship`, verify your changes work end-to-end (run the app, test the flow manually or via Playwright)
+
+## Session Start
+
+- Run `/checkin` at the start of each session to review priorities and plan the day's work
+- If the dev server is running, consider running `npm run test:chat` to catch any regressions early
