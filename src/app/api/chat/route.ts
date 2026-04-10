@@ -11,6 +11,8 @@ import { chatMessageSchema } from "@/lib/validators"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
+export const maxDuration = 60
+
 // Rate limiting: simple in-memory store
 const rateLimits = new Map<string, { count: number; resetAt: number }>()
 const RATE_LIMIT = 30
@@ -242,14 +244,14 @@ export async function POST(request: Request) {
             total_ms: Math.round(performance.now() - requestStart),
           })
 
-          await persistConversationTurnTrace({
+          persistConversationTurnTrace({
             conversation_id: conversationId,
             user_id: user.id,
             user_message_id: userMessageRow?.id ?? null,
             assistant_message_id: assistantMessageRow?.id ?? null,
             status: "completed",
             trace: completedTrace,
-          })
+          }).catch(() => {})
 
           controller.enqueue(
             encoder.encode(
@@ -283,14 +285,14 @@ export async function POST(request: Request) {
             total_ms: Math.round(performance.now() - requestStart),
           })
 
-          await persistConversationTurnTrace({
+          persistConversationTurnTrace({
             conversation_id: conversationId,
             user_id: user.id,
             user_message_id: userMessageRow?.id ?? null,
             assistant_message_id: null,
             status: "failed",
             trace: failedTrace,
-          })
+          }).catch(() => {})
         }
 
         controller.close()
