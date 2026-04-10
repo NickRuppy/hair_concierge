@@ -12,14 +12,15 @@ Run these commands to gather context:
 ```bash
 git status --short
 git branch --show-current
-git diff --stat
-git diff --numstat
+git diff HEAD --stat
+git diff HEAD --numstat
 ```
 
 If `git status --short` produces no output (no uncommitted changes), report "Nothing to ship" and stop.
 
-Compute `total_changed_lines` as the sum of all additions + deletions from `git diff --numstat`.
-Compute `changed_file_count` from the number of lines in `git diff --numstat`.
+Compute `total_changed_lines` as the sum of all additions + deletions from `git diff HEAD --numstat`.
+Compute `changed_file_count` from the number of lines in `git diff HEAD --numstat`.
+Note: `git diff HEAD` includes both staged and unstaged changes, preventing misclassification if files were staged by a prior aborted run.
 Save the list of changed file paths for use in tier classification and later steps.
 
 ## Tier Classification
@@ -162,7 +163,7 @@ If all previous steps passed (or were skipped):
 5. If AUTO_CONFIRM is true, report [PASS] and proceed to Step 7.
    Otherwise, ask the user: "Proceed with commit and push? (yes/no)"
    - Only an explicit "yes" continues. Report [PASS].
-   - "no" stops the pipeline. Report [ABORT].
+   - "no" → unstage all files (`git reset HEAD`) to prevent tier misclassification on the next run, then stop the pipeline. Report [ABORT].
 
 ### Step 7: Commit & Push [ALL TIERS]
 1. Determine the current branch.
@@ -171,7 +172,7 @@ If all previous steps passed (or were skipped):
    b. Create and checkout a new branch BEFORE committing: `git checkout -b ship/<slug>`.
    c. Commit with the confirmed message on the new branch.
    d. Push the new branch: `git push -u origin ship/<slug>`.
-   e. Create a PR via `gh pr create --base main --head ship/<slug>` with the commit message as the title and a brief body.
+   e. Create a PR: `gh pr create --base main --head ship/<slug> --title "<commit message>" --body "Shipped via /ship pipeline."`
    f. Report the PR URL.
 3. **If current branch is NOT main:**
    a. Commit with the confirmed message.
