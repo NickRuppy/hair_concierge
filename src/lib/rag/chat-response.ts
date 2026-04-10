@@ -33,6 +33,7 @@ export function buildDoneEventData(params: {
     ...retrievalSummary,
     router_confidence: routerDecision.confidence,
     retrieval_mode: routerDecision.retrieval_mode,
+    needs_clarification: routerDecision.needs_clarification,
     policy_overrides: routerDecision.policy_overrides,
     category_decision: categoryDecision ?? null,
   }

@@ -1,0 +1,295 @@
+/**
+ * Chat Evaluation Harness — Test Scenario Fixtures
+ */
+
+import type { EvalScenario, HairProfileOverrides } from "./types"
+
+const FULL_PROFILE: HairProfileOverrides = {
+  hair_texture: "wavy",
+  thickness: "fine",
+  density: "medium",
+  concerns: ["frizz"],
+  protein_moisture_balance: "stretches_bounces",
+  cuticle_condition: "slightly_rough",
+  scalp_type: "balanced",
+  scalp_condition: "none",
+  chemical_treatment: ["colored"],
+  wash_frequency: "every_2_3_days",
+  heat_styling: "rarely",
+  goals: ["shine"],
+  mechanical_stress_factors: ["towel_rubbing", "rough_brushing"],
+  onboarding_completed: true,
+}
+
+export const SCENARIOS: EvalScenario[] = [
+  // ── Regression: ÖWC follow-up ──────────────────────────────────────────
+  {
+    id: "owc-followup",
+    name: "ÖWC follow-up (regression)",
+    description:
+      "Multi-turn: context-setting message then short follow-up 'und owc testen?' — must not misclassify as product query",
+    hair_profile: { ...FULL_PROFILE },
+    turns: [
+      {
+        message:
+          "Welche Pflegeroutine empfiehlst du für welliges Haar?",
+      },
+      {
+        message: "und owc testen?",
+        metadata: {
+          intent: ["hair_care_advice", "followup", "routine_help"],
+          policy_overrides_exclude: ["category_product_mode"],
+          source_count_min: 1,
+        },
+        content: {
+          must_be_german: true,
+          citations_present: true,
+        },
+        judge: {
+          expected_behavior:
+            "Should explain the OWC (Öl-Wasser-Conditioner) method as a pre-wash protection technique. Must NOT describe it as a post-wash layering method. Should retrieve and cite relevant OWC/CWC sources. Must not be classified as a product recommendation.",
+        },
+      },
+    ],
+  },
+
+  // ── CWC/OWC comparison ──────────────────────────────────────────────────
+  {
+    id: "cwc-owc-comparison",
+    name: "CWC vs OWC comparison",
+    description: "Direct comparison question — should discuss both methods",
+    hair_profile: { ...FULL_PROFILE },
+    turns: [
+      {
+        message: "Was ist der Unterschied zwischen CWC und OWC?",
+        metadata: {
+          intent: ["hair_care_advice", "routine_help"],
+          source_count_min: 1,
+        },
+        content: {
+          must_be_german: true,
+          required_keywords: ["CWC", "OWC"],
+          citations_present: true,
+        },
+        judge: {
+          expected_behavior:
+            "Should explain both CWC (Conditioner-Wash-Conditioner) and OWC (Öl-Wasser-Conditioner) methods, highlighting differences in application order and suitability by hair type.",
+        },
+      },
+    ],
+  },
+
+  // ── Mandatory profile gates ─────────────────────────────────────────────
+  {
+    id: "shampoo-missing-profile",
+    name: "Shampoo request with missing thickness",
+    description: "Profile lacks thickness — must trigger clarification",
+    hair_profile: { ...FULL_PROFILE, thickness: null, scalp_type: null },
+    turns: [
+      {
+        message: "Welches Shampoo empfiehlst du mir?",
+        metadata: {
+          needs_clarification: true,
+          policy_overrides_include: ["missing_shampoo_profile"],
+        },
+        content: {
+          must_be_german: true,
+        },
+        judge: {
+          expected_behavior:
+            "Must NOT recommend specific shampoo products. Must ask clarifying questions about hair thickness or scalp type since the profile is incomplete.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "conditioner-missing-profile",
+    name: "Conditioner request with missing protein/moisture balance",
+    description: "Profile lacks protein_moisture_balance — must trigger clarification",
+    hair_profile: { ...FULL_PROFILE, protein_moisture_balance: null },
+    turns: [
+      {
+        message: "Kannst du mir einen guten Conditioner empfehlen?",
+        metadata: {
+          needs_clarification: true,
+          policy_overrides_include: ["missing_conditioner_profile"],
+        },
+        content: { must_be_german: true },
+        judge: {
+          expected_behavior:
+            "Must NOT recommend specific conditioner products. Must ask about the user's protein/moisture balance (e.g. Zugtest) since the profile is incomplete.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "leave-in-missing-profile",
+    name: "Leave-in request with missing fields",
+    description: "Profile lacks texture + density — must trigger clarification",
+    hair_profile: { ...FULL_PROFILE, hair_texture: null, density: null },
+    turns: [
+      {
+        message: "Ich suche ein Leave-in Produkt",
+        metadata: {
+          needs_clarification: true,
+          policy_overrides_include: ["missing_leave_in_profile"],
+        },
+        content: { must_be_german: true },
+        judge: {
+          expected_behavior:
+            "Must NOT recommend leave-in products. Must ask about missing profile fields (hair texture, density).",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "oil-missing-profile",
+    name: "Oil request with missing thickness",
+    description: "Profile lacks thickness — must trigger clarification",
+    hair_profile: { ...FULL_PROFILE, thickness: null },
+    turns: [
+      {
+        message: "Welches Haaröl passt zu mir?",
+        metadata: {
+          needs_clarification: true,
+          policy_overrides_include: ["missing_oil_profile"],
+        },
+        content: { must_be_german: true },
+        judge: {
+          expected_behavior:
+            "Must NOT recommend oil products. Must ask about hair thickness since the profile is incomplete.",
+        },
+      },
+    ],
+  },
+
+  // ── Vague first message ──────────────────────────────────────────────────
+  {
+    id: "vague-first-message",
+    name: "Vague opening message",
+    description: "Underdefined message should trigger clarification",
+    hair_profile: { ...FULL_PROFILE },
+    turns: [
+      {
+        message: "Meine Haare sind trocken",
+        metadata: {
+          needs_clarification: true,
+        },
+        content: {
+          must_be_german: true,
+          min_length: 50,
+        },
+        judge: {
+          expected_behavior:
+            "Should ask follow-up questions (duration, current routine, products tried). Should NOT jump to product recommendations from this vague input.",
+        },
+      },
+    ],
+  },
+
+  // ── FAQ shortcut ─────────────────────────────────────────────────────────
+  {
+    id: "simple-faq",
+    name: "Simple FAQ question",
+    description: "Straightforward question — should use FAQ shortcut",
+    hair_profile: { ...FULL_PROFILE },
+    turns: [
+      {
+        message: "Wie oft sollte ich meine Haare waschen?",
+        metadata: {
+          retrieval_mode: ["faq", "hybrid"],
+        },
+        content: {
+          must_be_german: true,
+          min_length: 100,
+        },
+        judge: {
+          expected_behavior:
+            "Should give a direct answer about wash frequency. May mention it depends on hair/scalp type.",
+        },
+      },
+    ],
+  },
+
+  // ── Medical redirect ─────────────────────────────────────────────────────
+  {
+    id: "medical-redirect",
+    name: "Medical concern redirect",
+    description: "Severe hair loss should mention dermatologist",
+    hair_profile: { ...FULL_PROFILE },
+    turns: [
+      {
+        message: "Ich verliere extrem viele Haare seit Wochen und es wird nicht besser",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Hautarzt", "Dermatologe", "Arzt"],
+        },
+        judge: {
+          expected_behavior:
+            "MUST recommend consulting a dermatologist (Hautarzt/Dermatologe). Should NOT recommend products as the primary solution for severe hair loss.",
+        },
+      },
+    ],
+  },
+
+  // ── Bond builder for damage ──────────────────────────────────────────────
+  {
+    id: "bond-builder-damage",
+    name: "Bond builder for damaged hair",
+    description: "Damage profile should lead to bond builder discussion",
+    hair_profile: {
+      ...FULL_PROFILE,
+      chemical_treatment: ["bleached"],
+      heat_styling: "regularly",
+      cuticle_condition: "rough",
+      protein_moisture_balance: "snaps",
+    },
+    turns: [
+      {
+        message:
+          "Meine Haare brechen ständig ab und fühlen sich strohig an. Was kann ich tun?",
+        content: {
+          must_be_german: true,
+          citations_present: true,
+        },
+        judge: {
+          expected_behavior:
+            "Should discuss bond repair/bond builder (e.g. Olaplex) given the severe damage profile (bleached, regular heat, rough cuticle, protein-deficient). Should cite sources.",
+        },
+      },
+    ],
+  },
+
+  // ── Clarification cap ────────────────────────────────────────────────────
+  {
+    id: "clarification-cap",
+    name: "Clarification cap after 3 vague messages",
+    description:
+      "After 2 clarification rounds, 3rd message should get a real answer (cap at 2)",
+    hair_profile: { ...FULL_PROFILE },
+    turns: [
+      {
+        message: "Meine Haare sind irgendwie komisch",
+        metadata: { needs_clarification: true },
+      },
+      {
+        message: "Es ist halt so ein Problem mit meinen Haaren",
+        metadata: { needs_clarification: true },
+      },
+      {
+        message: "Ich weiss einfach nicht was ich machen soll",
+        metadata: {
+          needs_clarification: false,
+          policy_overrides_include: ["clarification_cap_reached"],
+        },
+        judge: {
+          expected_behavior:
+            "After 2 rounds of clarification, the system must give a best-effort general hair care answer. Should NOT ask more clarifying questions.",
+        },
+      },
+    ],
+  },
+]
