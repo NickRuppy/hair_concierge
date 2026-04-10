@@ -554,7 +554,19 @@ function formatRoutinePlan(routinePlan?: RoutinePlan): string {
     )
   }
 
-  parts.push("- Niveau: Hohe Ebene, keine Detail-Anwendungsschritte.")
+  if (routinePlan.compare_cwc_owc) {
+    parts.push("- Vergleichsmodus: Erklaere CWC und OWC erst kurz gegeneinander und entscheide dich dann fuer die passendere Variante fuer dieses Profil.")
+  }
+
+  const hasWashProtectionTechnique = routinePlan.sections
+    .flatMap((section) => section.slots)
+    .some((slot) => slot.topic_ids.includes("cwc") || slot.topic_ids.includes("owc"))
+
+  parts.push(
+    hasWashProtectionTechnique
+      ? "- Niveau: Hohe Ebene fuer alle Slots; nur bei CWC/OWC sind kompakte nummerierte Wash-Day-Schritte erlaubt."
+      : "- Niveau: Hohe Ebene, keine Detail-Anwendungsschritte."
+  )
 
   for (const section of routinePlan.sections) {
     parts.push(`\n${section.title}: ${section.summary}`)
@@ -853,22 +865,23 @@ Wenn du Oel-Empfehlungen gibst:
 6. Begruende den Fit danach nur ueber Oel-Typ, Haardicke und die Anwendungslogik aus den Metadaten.
 7. Wenn Kopfhautthemen mitlaufen, ordne natuerliche Oele nur als unterstuetzende Zusatzpflege ein. Stelle sie NICHT als primaeren Behandlungsweg fuer Schuppen, gereizte Kopfhaut oder Haarwachstum dar.
 8. Wenn der Nutzer gezielt ein Therapie-Oel oder eine spezifische Oelmischung sucht und diese nicht im Katalog ist, sage das ehrlich statt einen Ersatz zu erfinden.`,
-  routine: `
+ routine: `
 
 ## Routine-Antworten:
 Wenn ein Routine-Plan vorhanden ist:
 1. Nutze den Routine-Plan als primaeren Rahmen der Antwort.
-2. Bleibe bewusst auf hoher Ebene: Kombinationen, Frequenz, Rollen der Schritte und das Warum dahinter.
+2. Bleibe bewusst auf hoher Ebene: Kombinationen, Frequenz, Rollen der Schritte und das Warum dahinter. Ausnahme: Bei aktiven CWC/OWC-Slots darfst du die kompakten nummerierten Wash-Day-Schritte aus dem Routine-Plan uebernehmen.
 3. Erklaere die Slots gemaess ihrer Aktion: keep = bestaetigen, adjust = Frequenz/Fokus anpassen, add = neu einfuehren, upgrade = gleicher Slot aber gezielterer Fokus, avoid = fuer jetzt eher nicht priorisieren.
 4. Starte mit den Bausteinen, die schon gut sitzen oder nur leicht angepasst werden sollten. Erklaere danach, was fehlt oder gezielter werden darf.
 5. Begruende pro relevantem Slot erst kurz den Fit zum Profil, also ueber Haarmuster, Ziele, Probleme oder Routinekontext, bevor du ein Produkt nennst.
 6. Wenn Produkte angehaengt sind, nenne nur diese Produkte und ordne sie direkt dem gerade erklaerten Slot im selben Absatz oder Bullet zu.
 7. Wenn keine Produkte angehaengt sind, bleibe bei Kategorien und Routine-Logik statt konkrete Produkte zu improvisieren.
 8. Erfinde keine zusaetzlichen Kategorien, Schritte oder Produkttypen ausserhalb des Routine-Plans.
-9. Detaillierte Anwendungstechniken gehoeren NICHT in diese Antwort.
+9. Detaillierte Anwendungstechniken gehoeren NICHT in diese Antwort, ausser die kompakten nummerierten CWC/OWC-Schritte stehen bereits im Routine-Plan.
 10. Bei Kopfhautthemen bleibe konservativ und nicht-medizinisch.
 11. Wenn Bond Builder relevant ist: Olaplex No. 0+3, K18 Molecular Repair Leave-in und Epres gehoeren zu den wenigen Produkten mit nachgewiesener Bond-Technologie. Viele Produkte mit "Bond" im Namen pflegen nur die Oberflaeche, reparieren aber nicht die innere Haarstruktur. Das sind Technologie-Beispiele, keine Produktempfehlungen.
-12. Nenne bei Bond Builder den Unterschied zwischen Laengs- und Querverbindungen nur, wenn der Routine-Plan das vorgibt. Erfinde keine eigene K18-vs-Olaplex-Logik.`,
+12. Nenne bei Bond Builder den Unterschied zwischen Laengs- und Querverbindungen nur, wenn der Routine-Plan das vorgibt. Erfinde keine eigene K18-vs-Olaplex-Logik.
+13. Wenn der Routine-Plan Vergleichsmodus fuer CWC/OWC signalisiert, erklaere erst kurz den Unterschied beider Methoden, waehle dann die passendere Option fuer dieses Profil und fuehre nur mit dieser Variante weiter.`,
   mask: `
 
 ## Masken-Empfehlungen:

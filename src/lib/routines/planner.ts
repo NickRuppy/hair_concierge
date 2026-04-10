@@ -33,7 +33,8 @@ const ROUTINE_TOPIC_LABELS: Record<RoutineTopicId, string> = {
   hair_oiling: "Hair Oiling",
   bond_builder: "Bond Builder",
   lockenrefresh: "Lockenrefresh",
-  cwc_owc: "CWC/OWC",
+  cwc: "CWC",
+  owc: "OWC",
 }
 
 const MASK_TYPE_LABELS = {
@@ -87,13 +88,28 @@ const REFRESH_TERMS = [
   "naechster tag",
 ]
 
-const CWC_OWC_TERMS = [
+const CWC_TERMS = [
   "cwc",
-  "owc",
-  "owc methode",
   "cwc methode",
   "conditioner wash conditioner",
+]
+
+const OWC_TERMS = [
+  "owc",
+  "owc methode",
   "oel waschen conditioner",
+  "oil wash conditioner",
+]
+
+const CWC_OWC_COMPARISON_TERMS = [
+  "cwc oder owc",
+  "owc oder cwc",
+  "cwc vs owc",
+  "owc vs cwc",
+  "cwc und owc",
+  "owc und cwc",
+  "unterschied cwc owc",
+  "unterschied zwischen cwc und owc",
 ]
 
 const HEAVY_STYLING_TERMS = [
@@ -306,20 +322,127 @@ function hasOilWeightRisk(profile: HairProfile | null): boolean {
   )
 }
 
-function hasStrongTechniqueFit(profile: HairProfile | null): boolean {
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+function hasFrequentWashNeed(washFrequency: HairProfile["wash_frequency"]): boolean {
+  return washFrequency === "daily" || washFrequency === "every_2_3_days"
+}
+
+function hasMechanicalStressNeed(profile: HairProfile | null): boolean {
+  return (profile?.mechanical_stress_factors?.length ?? 0) > 0
+}
+
+function hasWashProtectionNeed(profile: HairProfile | null): boolean {
+  return (
+    hasDrynessDamageSignals(profile) ||
+    hasMechanicalStressNeed(profile)
+  )
+}
+
+function hasStrongDrynessDamageCluster(profile: HairProfile | null): boolean {
+  const concerns = new Set(profile?.concerns ?? [])
 
   return (
-    hasDrynessDamageSignals(profile) &&
-    (
-      profile?.cuticle_condition === "rough" ||
-      profile?.cuticle_condition === "slightly_rough" ||
-      treatments.has("colored") ||
-      treatments.has("bleached") ||
-      profile?.thickness === "normal" ||
-      profile?.thickness === "coarse"
-    )
+    concerns.has("dryness") ||
+    concerns.has("hair_damage") ||
+    concerns.has("split_ends")
   )
+}
+
+function countOwcSupportSignals(
+  profile: HairProfile | null,
+  context: RoutineContext,
+): number {
+  const treatments = new Set(profile?.chemical_treatment ?? [])
+  let count = 0
+
+  if (treatments.has("colored") || treatments.has("bleached")) count++
+  if (
+    profile?.cuticle_condition === "rough" ||
+    profile?.cuticle_condition === "slightly_rough"
+  ) {
+    count++
+  }
+  if (hasStrongDrynessDamageCluster(profile)) count++
+  if (hasFrequentWashNeed(context.wash_frequency)) count++
+  if (context.mechanical_stress_factors.length > 0) count++
+
+  return count
+}
+
+function hasOwcProactiveBlock(context: RoutineContext): boolean {
+  return (
+    context.has_oil_weight_risk ||
+    context.scalp_type === "oily" ||
+    context.has_buildup_signals
+  )
+}
+
+function hasOwcFit(
+  profile: HairProfile | null,
+  context: RoutineContext,
+): boolean {
+  if (!context.has_wash_protection_need) return false
+
+  switch (profile?.hair_texture) {
+    case "wavy":
+      return countOwcSupportSignals(profile, context) >= 2 && !hasOwcProactiveBlock(context)
+    case "curly":
+    case "coily":
+      return !hasOwcProactiveBlock(context)
+    default:
+      return false
+  }
+}
+
+function isCwcOwcComparisonRequest(message: string): boolean {
+  const normalizedMessage = normalizeText(message)
+  return (
+    (includesAny(normalizedMessage, CWC_TERMS) && includesAny(normalizedMessage, OWC_TERMS)) ||
+    includesAny(normalizedMessage, CWC_OWC_COMPARISON_TERMS)
+  )
+}
+
+function selectWashProtectionTopic(
+  profile: HairProfile | null,
+  context: RoutineContext,
+  message: string,
+): { topicId: "cwc" | "owc" | null; compareMode: boolean } {
+  const compareMode = isCwcOwcComparisonRequest(message)
+  const explicitCwc = context.explicit_topic_ids.includes("cwc")
+  const explicitOwc = context.explicit_topic_ids.includes("owc")
+
+  if (compareMode) {
+    const topicId = hasOwcFit(profile, context)
+      ? "owc"
+      : context.has_wash_protection_need
+        ? "cwc"
+        : null
+
+    return { topicId, compareMode }
+  }
+
+  if (explicitOwc) {
+    return { topicId: "owc", compareMode }
+  }
+
+  if (explicitCwc) {
+    return { topicId: "cwc", compareMode }
+  }
+
+  if (!context.has_wash_protection_need) {
+    return { topicId: null, compareMode }
+  }
+
+  switch (profile?.hair_texture) {
+    case "straight":
+      return { topicId: "cwc", compareMode }
+    case "wavy":
+      return { topicId: hasOwcFit(profile, context) ? "owc" : "cwc", compareMode }
+    case "curly":
+    case "coily":
+      return { topicId: hasOwcFit(profile, context) ? "owc" : null, compareMode }
+    default:
+      return { topicId: null, compareMode }
+  }
 }
 
 function buildPrimaryFocuses(
@@ -393,7 +516,8 @@ function getExplicitTopicIds(message: string): RoutineTopicId[] {
   if (includesAny(normalizedMessage, OILING_TERMS)) topics.push("hair_oiling")
   if (includesAny(normalizedMessage, BOND_BUILDER_TERMS)) topics.push("bond_builder")
   if (includesAny(normalizedMessage, REFRESH_TERMS)) topics.push("lockenrefresh")
-  if (includesAny(normalizedMessage, CWC_OWC_TERMS)) topics.push("cwc_owc")
+  if (includesAny(normalizedMessage, CWC_TERMS)) topics.push("cwc")
+  if (includesAny(normalizedMessage, OWC_TERMS)) topics.push("owc")
 
   return topics
 }
@@ -446,7 +570,7 @@ export function deriveRoutineContext(
     has_damage_signals: hasDamageSignals(profile),
     has_bond_builder_signals: hasBondBuilderSignals(profile),
     has_oil_weight_risk: hasOilWeightRisk(profile),
-    has_strong_technique_fit: hasStrongTechniqueFit(profile),
+    has_wash_protection_need: hasWashProtectionNeed(profile),
     uses_heat_protection: profile?.uses_heat_protection ?? false,
   }
 }
@@ -517,6 +641,7 @@ export function activateRoutineTopics(
   }
 
   const explicit = new Set(context.explicit_topic_ids)
+  const washProtectionSelection = selectWashProtectionTopic(profile, context, message)
 
   if (
     explicit.has("tiefenreinigung") ||
@@ -590,15 +715,24 @@ export function activateRoutineTopics(
     )
   }
 
-  if (explicit.has("cwc_owc") || context.has_strong_technique_fit) {
-    push(
-      "cwc_owc",
-      explicit.has("cwc_owc")
-        ? "CWC/OWC wurde direkt angefragt."
-        : "Trockenheits- und Schadenssignale sprechen fuer eine optionale Technik-Variante.",
-      60,
-      true,
-    )
+  if (washProtectionSelection.topicId) {
+    const topicId = washProtectionSelection.topicId
+    const explicitRequest =
+      (topicId === "cwc" && explicit.has("cwc")) ||
+      (topicId === "owc" && explicit.has("owc"))
+
+    let reason: string
+    if (washProtectionSelection.compareMode) {
+      reason = `CWC und OWC wurden direkt verglichen; ${ROUTINE_TOPIC_LABELS[topicId]} passt hier voraussichtlich besser.`
+    } else if (explicitRequest) {
+      reason = `${ROUTINE_TOPIC_LABELS[topicId]} wurde direkt angefragt.`
+    } else if (topicId === "cwc") {
+      reason = "Das Profil spricht eher fuer eine schonende Conditioner-Schutzwaesche."
+    } else {
+      reason = "Das Profil spricht eher fuer eine Oel-Vorwaesche mit anschliessender Schutzpflege."
+    }
+
+    push(topicId, reason, 60, true)
   }
 
   return activations.sort((a, b) => a.priority - b.priority)
@@ -672,6 +806,107 @@ function buildRoutineDecisionContext(profile: HairProfile | null): RoutineDecisi
   }
 }
 
+function buildCwcTechniqueSlot(): RoutineSlotAdvice {
+  return {
+    id: "base-cwc-technique",
+    kind: "instruction",
+    phase: "base_wash",
+    label: "CWC als Wash-Day-Schutz",
+    action: "add",
+    category: null,
+    cadence: "als Wash-Day-Variante bei Bedarf",
+    rationale: [
+      "CWC ist hier eine Wash-Day-Variante, kein Pflichtschritt fuer jede Waesche.",
+      "1. Conditioner auf trockene Laengen und Spitzen geben.",
+      "2. Shampoo nur an der Kopfhaut verwenden.",
+      "3. Den entstehenden Schaum sanft durch die Laengen gleiten lassen.",
+      "4. Zum Schluss erneut Conditioner auftragen und ausspuelen.",
+    ],
+    caveats: [
+      "Wenn die Haare schnell belegt wirken, nicht als Standard fuer jede Waesche etablieren.",
+    ],
+    topic_ids: ["cwc"],
+    product_linkable: false,
+    product_query: null,
+    attachment_priority: 92,
+  }
+}
+
+function buildOwcOilSlot(
+  context: RoutineContext,
+  explicitOwcRequest: boolean,
+  oilPresent: boolean,
+): RoutineSlotAdvice {
+  const oilAction: RoutineSlotAction = oilPresent ? "adjust" : "add"
+  const cautiousDueToWeight = context.has_oil_weight_risk
+
+  return {
+    id: "base-owc-oil",
+    kind: "product_slot",
+    phase: "base_wash",
+    label: "OWC Oel-Schutz",
+    action: oilAction,
+    category: "oil",
+    cadence: "als Wash-Day-Variante bei Bedarf",
+    rationale: [
+      "Fuer OWC braucht es ein sparsam dosiertes Oel nur fuer Laengen und Spitzen vor dem Waschen.",
+      oilPresent
+        ? "Wenn schon ein Oel in der Routine ist, hier eher Dosierung und Einsatz pruefen als direkt mehr Produkt zu stapeln."
+        : "Wenn noch kein Oel da ist, reicht fuer OWC ein leichtes Pre-Wash-Oel statt eines schweren Finish-Oels.",
+    ],
+    caveats: [
+      "Bei schnell fettender Kopfhaut oder Build-up nicht als Standard etablieren.",
+      "Bei feinem, dichtem Haar nur sehr sparsam dosieren.",
+      "Wenn die Haare schnell belegt wirken, eher bei CWC bleiben oder OWC nur punktuell testen.",
+    ],
+    topic_ids: ["owc"],
+    product_linkable: oilAction === "add" && !(explicitOwcRequest && cautiousDueToWeight),
+    product_query: "Ich suche ein natuerliches Oel fuer OWC vor dem Waschen.",
+    attachment_priority: 15,
+  }
+}
+
+function buildOwcTechniqueSlot(
+  profile: HairProfile | null,
+  context: RoutineContext,
+): RoutineSlotAdvice {
+  const caveats = [
+    "Bei schnell fettender Kopfhaut oder Build-up nicht als Standard etablieren.",
+    "Bei feinem, dichtem Haar nur sehr sparsam dosieren.",
+    "Wenn die Haare schnell belegt wirken, eher bei CWC bleiben oder OWC nur punktuell testen.",
+  ]
+
+  if (profile?.hair_texture === "straight") {
+    caveats.unshift("OWC ist bei glattem Haar meist nicht die erste Wahl und eher ein gezielter Test als ein Default.")
+  }
+
+  if (context.has_oil_weight_risk) {
+    caveats.push("Das Profil hat ein hoeheres Beschwerungsrisiko — lieber mit minimaler Menge starten.")
+  }
+
+  return {
+    id: "base-owc-technique",
+    kind: "instruction",
+    phase: "base_wash",
+    label: "OWC als Wash-Day-Schutz",
+    action: "add",
+    category: null,
+    cadence: "als Wash-Day-Variante bei Bedarf",
+    rationale: [
+      "OWC ist hier eine Wash-Day-Variante fuer mehr Schutz, nicht automatisch die Basis jeder Waesche.",
+      "1. Oel mit Praying Hands oder Scrunching sparsam in trockene Laengen und Spitzen geben.",
+      "2. Shampoo zuerst direkt am trockenen Ansatz verteilen.",
+      "3. Dann Wasser dazugeben und den Schaum sanft durch die Laengen ziehen.",
+      "4. Zum Schluss Conditioner auftragen und ausspuelen.",
+    ],
+    caveats,
+    topic_ids: ["owc"],
+    product_linkable: false,
+    product_query: null,
+    attachment_priority: 91,
+  }
+}
+
 function buildRoutineSlots(
   profile: HairProfile | null,
   context: RoutineContext,
@@ -681,6 +916,12 @@ function buildRoutineSlots(
 ): Map<RoutinePlanSection["phase"], RoutineSlotAdvice[]> {
   const sections = new Map<RoutinePlanSection["phase"], RoutineSlotAdvice[]>()
   const activeTopicIds = new Set(activations.map((entry) => entry.id))
+  const activeWashProtectionTopic = activeTopicIds.has("owc")
+    ? "owc"
+    : activeTopicIds.has("cwc")
+      ? "cwc"
+      : null
+  const explicitOwcRequest = context.explicit_topic_ids.includes("owc")
   const shampooPresent = hasCurrentProduct(profile, "shampoo")
   const conditionerPresent = hasCurrentProduct(profile, "conditioner")
   const leaveInPresent = hasCurrentProduct(profile, "leave_in")
@@ -755,6 +996,64 @@ function buildRoutineSlots(
     product_query: "Ich suche einen Conditioner fuer meine Basisroutine.",
     attachment_priority: 20,
   })
+
+  const explicitWashProtectionWithoutNeed =
+    activeWashProtectionTopic !== null &&
+    (context.explicit_topic_ids.includes("cwc") || context.explicit_topic_ids.includes("owc")) &&
+    !context.has_wash_protection_need
+
+  if (activeWashProtectionTopic === "cwc") {
+    if (explicitWashProtectionWithoutNeed) {
+      pushSlot(sections, {
+        id: "base-cwc-technique",
+        kind: "instruction",
+        phase: "base_wash",
+        label: "CWC als Wash-Day-Schutz",
+        action: "add",
+        category: null,
+        cadence: null,
+        rationale: [
+          "CWC ist ein optionaler Wash-Day-Baustein fuer gezielte Pflege und kein Pflichtschritt.",
+        ],
+        caveats: [
+          "Dein Profil zeigt aktuell keine starken Trockenheits- oder Schadenssignale — CWC ist hier eher optional, aber wir erklaeren gerne wie es funktioniert.",
+        ],
+        topic_ids: ["cwc"],
+        product_linkable: false,
+        product_query: null,
+        attachment_priority: 92,
+      })
+    } else {
+      pushSlot(sections, buildCwcTechniqueSlot())
+    }
+  }
+
+  if (activeWashProtectionTopic === "owc") {
+    if (explicitWashProtectionWithoutNeed) {
+      pushSlot(sections, {
+        id: "base-owc-technique",
+        kind: "instruction",
+        phase: "base_wash",
+        label: "OWC als Wash-Day-Schutz",
+        action: "add",
+        category: null,
+        cadence: null,
+        rationale: [
+          "OWC ist ein optionaler Wash-Day-Baustein fuer gezielte Pflege und kein Pflichtschritt.",
+        ],
+        caveats: [
+          "Dein Profil zeigt aktuell keine starken Trockenheits- oder Schadenssignale — OWC ist hier eher optional, aber wir erklaeren gerne wie es funktioniert.",
+        ],
+        topic_ids: ["owc"],
+        product_linkable: false,
+        product_query: null,
+        attachment_priority: 92,
+      })
+    } else {
+      pushSlot(sections, buildOwcOilSlot(context, explicitOwcRequest, oilPresent))
+      pushSlot(sections, buildOwcTechniqueSlot(profile, context))
+    }
+  }
 
   const shouldUseLeaveIn =
     Boolean(leaveInDecision.need_bucket) ||
@@ -909,7 +1208,7 @@ function buildRoutineSlots(
     })
   }
 
-  if (activeTopicIds.has("hair_oiling") || oilPresent) {
+  if ((activeTopicIds.has("hair_oiling") || oilPresent) && activeWashProtectionTopic !== "owc") {
     const oilAction: RoutineSlotAction = !activeTopicIds.has("hair_oiling")
       ? "avoid"
       : oilPresent
@@ -1027,27 +1326,6 @@ function buildRoutineSlots(
     }
   }
 
-  if (activeTopicIds.has("cwc_owc")) {
-    pushSlot(sections, {
-      id: "occasional-cwc-owc",
-      kind: "instruction",
-      phase: "occasional",
-      label: "CWC / OWC als Technik-Option",
-      action: "add",
-      category: null,
-      cadence: "als Option statt dauerhaftem Pflichtschritt",
-      rationale: [
-        "CWC/OWC bleibt eine Technik-Variante fuer bestimmte Trockenheits- oder Schadenslagen.",
-        "Die Routine soll dadurch flexibler werden, nicht komplizierter.",
-      ],
-      caveats: [],
-      topic_ids: ["cwc_owc"],
-      product_linkable: false,
-      product_query: null,
-      attachment_priority: 97,
-    })
-  }
-
   return sections
 }
 
@@ -1058,6 +1336,7 @@ export function buildRoutinePlan(
 ): RoutinePlan {
   const context = deriveRoutineContext(profile, message)
   const activeTopics = activateRoutineTopics(profile, message, context)
+  const compareMode = isCwcOwcComparisonRequest(message)
   const decisionContext = buildRoutineDecisionContext(profile)
   const sectionSlots = buildRoutineSlots(profile, context, activeTopics, decisionContext, {
     usesBondBuilder: options.usesBondBuilder ?? false,
@@ -1082,6 +1361,7 @@ export function buildRoutinePlan(
     base_topic_id: getBaseRoutineTopicId(profile),
     primary_focuses: context.primary_focuses,
     active_topics: activeTopics,
+    compare_cwc_owc: compareMode,
     sections,
     decision_context: decisionContext,
   }
@@ -1092,11 +1372,17 @@ export function buildRoutineRetrievalSubqueries(
   plan: RoutinePlan,
 ): string[] {
   const focusSummary = plan.primary_focuses
+    .filter((focus) => !(focus.kind === "topic" && (focus.code === "cwc" || focus.code === "owc")))
     .slice(0, 2)
     .map((focus) => focus.label)
     .join(" ")
 
   const queries = new Set<string>([message])
+
+  if (plan.compare_cwc_owc) {
+    queries.add("CWC")
+    queries.add("OWC")
+  }
 
   for (const topic of plan.active_topics) {
     const query = focusSummary

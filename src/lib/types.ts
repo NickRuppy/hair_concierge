@@ -381,7 +381,8 @@ export type RoutineTopicId =
   | "hair_oiling"
   | "bond_builder"
   | "lockenrefresh"
-  | "cwc_owc"
+  | "cwc"
+  | "owc"
 
 export type RoutineFocusKind = "goal" | "concern" | "topic" | "pattern" | "scalp"
 export type RoutineSlotAction = "keep" | "adjust" | "add" | "upgrade" | "avoid"
@@ -423,7 +424,7 @@ export interface RoutineContext {
   has_damage_signals: boolean
   has_bond_builder_signals: boolean
   has_oil_weight_risk: boolean
-  has_strong_technique_fit: boolean
+  has_wash_protection_need: boolean
   uses_heat_protection: boolean
 }
 
@@ -470,6 +471,7 @@ export interface RoutinePlan {
   base_topic_id: RoutineTopicId | null
   primary_focuses: RoutineFocus[]
   active_topics: RoutineTopicActivation[]
+  compare_cwc_owc: boolean
   sections: RoutinePlanSection[]
   decision_context: RoutineDecisionContext
 }
