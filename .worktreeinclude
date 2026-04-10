@@ -1,0 +1,5 @@
+# Ignored local files to copy into fresh worktrees.
+# This repo currently supports exact relative paths only.
+.env.local
+.env
+.env.development.local
