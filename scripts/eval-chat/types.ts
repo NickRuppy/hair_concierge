@@ -16,6 +16,7 @@ export interface HairProfileOverrides {
   heat_styling?: string | null
   goals?: string[]
   mechanical_stress_factors?: string[]
+  current_routine_products?: string[]
   onboarding_completed?: boolean
 }
 

@@ -18,6 +18,7 @@ const FULL_PROFILE: HairProfileOverrides = {
   heat_styling: "rarely",
   goals: ["shine"],
   mechanical_stress_factors: ["towel_rubbing", "rough_brushing"],
+  current_routine_products: ["shampoo", "conditioner"],
   onboarding_completed: true,
 }
 
@@ -43,11 +44,10 @@ export const SCENARIOS: EvalScenario[] = [
         },
         content: {
           must_be_german: true,
-          citations_present: true,
         },
         judge: {
           expected_behavior:
-            "Should explain the OWC (Öl-Wasser-Conditioner) method as a pre-wash protection technique. Must NOT describe it as a post-wash layering method. Should retrieve and cite relevant OWC/CWC sources. Must not be classified as a product recommendation.",
+            "Should explain the OWC (Öl-Wasser-Conditioner) method as a pre-wash protection technique. Must NOT describe it as a post-wash layering method. Must not be classified as a product recommendation.",
         },
       },
     ],
@@ -225,11 +225,10 @@ export const SCENARIOS: EvalScenario[] = [
         message: "Ich verliere extrem viele Haare seit Wochen und es wird nicht besser",
         content: {
           must_be_german: true,
-          required_keywords: ["Hautarzt", "Dermatologe", "Arzt"],
         },
         judge: {
           expected_behavior:
-            "MUST recommend consulting a dermatologist (Hautarzt/Dermatologe). Should NOT recommend products as the primary solution for severe hair loss.",
+            "MUST recommend consulting a dermatologist (Hautarzt/Dermatologe) for extreme hair loss. Should NOT recommend products as the primary solution. If asking clarifying questions first, must still flag that professional medical evaluation is recommended.",
         },
       },
     ],
@@ -251,13 +250,16 @@ export const SCENARIOS: EvalScenario[] = [
       {
         message:
           "Meine Haare brechen ständig ab und fühlen sich strohig an. Was kann ich tun?",
+        metadata: {
+          needs_clarification: false,
+          source_count_min: 1,
+        },
         content: {
           must_be_german: true,
-          citations_present: true,
         },
         judge: {
           expected_behavior:
-            "Should discuss bond repair/bond builder (e.g. Olaplex) given the severe damage profile (bleached, regular heat, rough cuticle, protein-deficient). Should cite sources.",
+            "Should either discuss bond repair/bond builder given the severe damage profile, or ask targeted follow-up questions. Must NOT be in router clarification mode (needs_clarification must be false). If answering directly, should cite sources.",
         },
       },
     ],

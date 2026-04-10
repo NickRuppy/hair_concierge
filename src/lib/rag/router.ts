@@ -280,10 +280,12 @@ export function evaluateRoute(
     }
 
     // ── Rule 5: Missing slots → clarification ──────────────────────────
+    // Diagnosis intent needs only 1 slot (the problem) — the profile provides the rest.
+    const slotThreshold = intent === "diagnosis" ? 1 : ROUTER_MIN_SLOTS_PRODUCT
     if (
       CONTEXT_SENSITIVE_INTENTS.includes(intent) &&
       !(intent === "routine_help" || product_category === "routine") &&
-      filledSlotCount < ROUTER_MIN_SLOTS_PRODUCT
+      filledSlotCount < slotThreshold
     ) {
       shouldClarify = true
       if (!clarification_reason) {
