@@ -40,6 +40,10 @@ import { formatSourceName } from "@/lib/rag/source-names"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
 import {
+  buildPipelineTraceDraft,
+  type PipelineTraceDraft,
+} from "@/lib/rag/debug-trace"
+import {
   buildRoutineClarificationQuestions,
   buildRoutinePlan,
   buildRoutineRetrievalSubqueries,
@@ -69,6 +73,7 @@ export interface PipelineParams {
   message: string
   conversationId?: string
   userId: string
+  requestId: string
 }
 
 export interface PipelineResult {
@@ -82,6 +87,18 @@ export interface PipelineResult {
   /** Retrieval summary for the done event */
   retrievalSummary: {
     final_context_count: number
+  }
+  debugTrace: PipelineTraceDraft
+}
+
+async function measureAsync<T>(
+  work: () => Promise<T>,
+): Promise<{ result: T; durationMs: number }> {
+  const start = performance.now()
+  const result = await work()
+  return {
+    result,
+    durationMs: Math.round(performance.now() - start),
   }
 }
 
@@ -100,46 +117,62 @@ export interface PipelineResult {
 export async function runPipeline(
   params: PipelineParams
 ): Promise<PipelineResult> {
-  const { message, userId } = params
+  const { message, userId, requestId } = params
   let { conversationId } = params
+  const startedAt = new Date().toISOString()
 
   const supabase = createAdminClient()
 
-  // ── Step 1: Load conversation history + hair profile + memory (parallel) ─
-  const [conversationData, hairProfileResult, memoryContext] = await Promise.all([
-    conversationId
-      ? supabase
-          .from("messages")
-          .select("*")
-          .eq("conversation_id", conversationId)
-          .order("created_at", { ascending: true })
-          .limit(10)
-          .then(({ data }) => data)
-      : Promise.resolve(null),
-    supabase
-      .from("hair_profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single(),
-    loadUserMemoryContext(userId, supabase),
+  // ── Step 1: Load conversation history + hair profile + memory ─────
+  const [
+    { result: conversationData, durationMs: historyLoadMs },
+    { result: hairProfileResult, durationMs: hairProfileLoadMs },
+    { result: memoryContext, durationMs: memoryLoadMs },
+  ] = await Promise.all([
+    measureAsync(async () =>
+      conversationId
+        ? await supabase
+            .from("messages")
+            .select("*")
+            .eq("conversation_id", conversationId)
+            .order("created_at", { ascending: true })
+            .limit(10)
+            .then(({ data }) => data)
+        : null
+    ),
+    measureAsync(async () =>
+      await supabase
+        .from("hair_profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .single()
+    ),
+    measureAsync(() => loadUserMemoryContext(userId, supabase)),
   ])
   const conversationHistory: Message[] = (conversationData as Message[]) ?? []
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
 
   // ── Step 1b: Classify intent (with conversation context) ───────────
-  const classification = await classifyIntent(message, conversationHistory)
+  const { result: classification, durationMs: classificationMs } = await measureAsync(() =>
+    classifyIntent(message, conversationHistory)
+  )
   const { intent, product_category } = classification
   const shouldPlanRoutine = intent === "routine_help" || product_category === "routine"
   let routinePlan: RoutinePlan | undefined
+  let routinePlanningMs = 0
   if (shouldPlanRoutine) {
-    const bondBuilderUsage = await supabase
-      .from("user_product_usage")
-      .select("id")
-      .eq("user_id", userId)
-      .eq("category", "bondbuilder")
-      .limit(1)
-    const usesBondBuilder = (bondBuilderUsage.data?.length ?? 0) > 0
-    routinePlan = buildRoutinePlan(hairProfile, message, { usesBondBuilder })
+    const routinePlanning = await measureAsync(async () => {
+      const bondBuilderUsage = await supabase
+        .from("user_product_usage")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("category", "bondbuilder")
+        .limit(1)
+      const usesBondBuilder = (bondBuilderUsage.data?.length ?? 0) > 0
+      return buildRoutinePlan(hairProfile, message, { usesBondBuilder })
+    })
+    routinePlan = routinePlanning.result
+    routinePlanningMs = routinePlanning.durationMs
   }
   let shampooDecision = product_category === "shampoo"
     ? buildShampooDecision(hairProfile)
@@ -160,8 +193,9 @@ export async function runPipeline(
     : null
 
   // ── Step 2: Evaluate routing decision ───────────────────────────────
-  const routerStart = Date.now()
+  const routerStart = performance.now()
   const routerDecision = evaluateRoute(classification, conversationHistory, hairProfile, message)
+  const routerMs = Math.round(performance.now() - routerStart)
 
   emitRouterEvent({
     event: "router_classified",
@@ -172,7 +206,7 @@ export async function runPipeline(
     needs_clarification: routerDecision.needs_clarification,
     slot_completeness: routerDecision.slot_completeness,
     policy_overrides: routerDecision.policy_overrides,
-    stage_latency_ms: Date.now() - routerStart,
+    stage_latency_ms: routerMs,
   })
 
   // Emit override events if policy diverged from LLM suggestion
@@ -203,16 +237,21 @@ export async function runPipeline(
   }
 
   // ── Create conversation if it doesn't exist yet ─────────────────────
+  let conversationCreateMs = 0
   if (!conversationId) {
-    const { data: newConversation, error: convError } = await supabase
-      .from("conversations")
-      .insert({
-        user_id: userId,
-        title: null, // Title will be generated asynchronously
-        is_active: true,
-      })
-      .select("id")
-      .single()
+    const conversationCreate = await measureAsync(async () =>
+      supabase
+        .from("conversations")
+        .insert({
+          user_id: userId,
+          title: null, // Title will be generated asynchronously
+          is_active: true,
+        })
+        .select("id")
+        .single()
+    )
+    const { data: newConversation, error: convError } = conversationCreate.result
+    conversationCreateMs = conversationCreate.durationMs
 
     if (convError || !newConversation) {
       throw new Error(`Failed to create conversation: ${convError?.message}`)
@@ -242,14 +281,17 @@ export async function runPipeline(
           )
 
     // Minimal retrieval for context (but no product matching)
-    const ragChunks = await retrieveContext(message, {
+    const clarificationRetrievalCount = 3
+    const retrievalStart = performance.now()
+    const { chunks: ragChunks, debug: retrievalDebug } = await retrieveContext(message, {
       intent,
       hairProfile,
       shampooConcern: shampooDecision?.matched_concern_code ?? null,
-      count: 3,
+      count: clarificationRetrievalCount,
       subqueries: routinePlan ? buildRoutineRetrievalSubqueries(message, routinePlan) : undefined,
       userId,
     })
+    const retrievalMs = Math.round(performance.now() - retrievalStart)
 
     const sources: EnrichedCitationSource[] = ragChunks.map((chunk, i) => ({
       index: i + 1,
@@ -261,7 +303,7 @@ export async function runPipeline(
       retrieval_path: chunk.retrieval_path,
     }))
 
-    const stream = await synthesizeResponse({
+    const synthesisResult = await synthesizeResponse({
       userMessage: message,
       conversationHistory,
       hairProfile,
@@ -275,18 +317,56 @@ export async function runPipeline(
       memoryContext: memoryContext.promptContext,
       clarificationQuestions,
     })
+    const categoryDecision =
+      shampooDecision ?? conditionerDecision ?? leaveInDecision ?? oilDecision
+    const debugTrace = buildPipelineTraceDraft({
+      request_id: requestId,
+      started_at: startedAt,
+      user_message: message,
+      conversation_id: conversationId ?? null,
+      intent,
+      product_category,
+      conversation_history_count: conversationHistory.length,
+      classification,
+      router_decision: routerDecision,
+      clarification_questions: clarificationQuestions,
+      hair_profile_snapshot: hairProfile,
+      memory_context: memoryContext.promptContext,
+      retrieval_debug: retrievalDebug,
+      retrieval_count: clarificationRetrievalCount,
+      retrieved_chunks: ragChunks,
+      should_plan_routine: shouldPlanRoutine,
+      routine_plan: routinePlan,
+      category_decision: categoryDecision,
+      matched_products: [],
+      prompt: synthesisResult.debug.prompt,
+      latencies_ms: {
+        classification_ms: classificationMs,
+        hair_profile_load_ms: hairProfileLoadMs,
+        memory_load_ms: memoryLoadMs,
+        routine_planning_ms: routinePlanningMs,
+        history_load_ms: historyLoadMs,
+        router_ms: routerMs,
+        conversation_create_ms: conversationCreateMs,
+        retrieval_ms: retrievalMs,
+        product_matching_ms: 0,
+        prompt_build_ms: synthesisResult.debug.prompt_build_ms,
+        stream_setup_ms: synthesisResult.debug.stream_setup_ms,
+      },
+    })
 
     return {
-      stream,
+      stream: synthesisResult.stream,
       conversationId: conversationId!,
       intent,
       matchedProducts: [],
       sources,
       routerDecision,
-      categoryDecision: shampooDecision ?? conditionerDecision ?? leaveInDecision ?? oilDecision,
+      categoryDecision,
       retrievalSummary: {
         final_context_count: ragChunks.length,
       },
+      debugTrace,
     }
   }
 
@@ -312,7 +392,8 @@ export async function runPipeline(
   // FAQ mode: smaller retrieval, skip reranker
   const retrievalCount = routerDecision.retrieval_mode === "faq" ? 3 : 5
 
-  const ragChunks = await retrieveContext(message, {
+  const retrievalStart = performance.now()
+  const { chunks: ragChunks, debug: retrievalDebug } = await retrieveContext(message, {
     intent,
     hairProfile,
     metadataFilter,
@@ -321,6 +402,7 @@ export async function runPipeline(
     subqueries: routinePlan ? buildRoutineRetrievalSubqueries(message, routinePlan) : undefined,
     userId,
   })
+  const retrievalMs = Math.round(performance.now() - retrievalStart)
 
   // ── Build enriched citation sources from retrieved chunks ─────────
   const sources: EnrichedCitationSource[] = ragChunks.map((chunk, i) => ({
@@ -336,6 +418,7 @@ export async function runPipeline(
   // ── Step 4: Match products (if intent requires it) ──────────────────
   let matchedProducts: Product[] | undefined = undefined
   let maskDecision: MaskDecision | undefined
+  const productMatchingStart = performance.now()
   if (shouldPlanRoutine && routinePlan) {
     const routineResult = await attachProductsToRoutinePlan({
       plan: routinePlan,
@@ -537,13 +620,14 @@ export async function runPipeline(
       })
     }
   }
+  const productMatchingMs = Math.round(performance.now() - productMatchingStart)
 
   if (matchedProducts && !shouldPlanRoutine) {
     matchedProducts = applyProductMemoryConstraints(matchedProducts, memoryContext)
   }
 
   // ── Step 5: Synthesize streaming response ───────────────────────────
-  const stream = await synthesizeResponse({
+  const synthesisResult = await synthesizeResponse({
     userMessage: message,
     conversationHistory,
     hairProfile,
@@ -559,17 +643,54 @@ export async function runPipeline(
     routinePlan,
     memoryContext: memoryContext.promptContext,
   })
+  const categoryDecision =
+    shampooDecision ?? conditionerDecision ?? leaveInDecision ?? oilDecision
+  const debugTrace = buildPipelineTraceDraft({
+    request_id: requestId,
+    started_at: startedAt,
+    user_message: message,
+    conversation_id: conversationId ?? null,
+    intent,
+    product_category,
+    conversation_history_count: conversationHistory.length,
+    classification,
+    router_decision: routerDecision,
+    hair_profile_snapshot: hairProfile,
+    memory_context: memoryContext.promptContext,
+    retrieval_debug: retrievalDebug,
+    retrieval_count: retrievalCount,
+    retrieved_chunks: ragChunks,
+    should_plan_routine: shouldPlanRoutine,
+    routine_plan: routinePlan,
+    category_decision: categoryDecision,
+    matched_products: matchedProducts ?? [],
+    prompt: synthesisResult.debug.prompt,
+    latencies_ms: {
+      classification_ms: classificationMs,
+      hair_profile_load_ms: hairProfileLoadMs,
+      memory_load_ms: memoryLoadMs,
+      routine_planning_ms: routinePlanningMs,
+      history_load_ms: historyLoadMs,
+      router_ms: routerMs,
+      conversation_create_ms: conversationCreateMs,
+      retrieval_ms: retrievalMs,
+      product_matching_ms: productMatchingMs,
+      prompt_build_ms: synthesisResult.debug.prompt_build_ms,
+      stream_setup_ms: synthesisResult.debug.stream_setup_ms,
+    },
+  })
 
   return {
-    stream,
+    stream: synthesisResult.stream,
     conversationId: conversationId!,
     intent,
     matchedProducts: matchedProducts ?? [],
     sources,
     routerDecision,
-    categoryDecision: shampooDecision ?? conditionerDecision ?? leaveInDecision ?? oilDecision,
+    categoryDecision,
     retrievalSummary: {
       final_context_count: ragChunks.length,
     },
+    debugTrace,
   }
 }

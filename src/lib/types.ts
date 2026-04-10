@@ -481,6 +481,111 @@ export interface MessageRagContext {
   category_decision?: CategoryDecision | null
 }
 
+export interface ChatPromptMessageSnapshot {
+  role: "system" | "user" | "assistant"
+  content: string
+}
+
+export interface ChatPromptSnapshot {
+  model: string
+  temperature: number
+  system_prompt: string
+  messages: ChatPromptMessageSnapshot[]
+}
+
+export interface ChatRetrievedChunkTrace {
+  chunk_id: string
+  source_type: string
+  source_name: string | null
+  retrieval_path?: "dense" | "lexical" | "hybrid"
+  weighted_similarity: number
+  similarity: number
+  dense_score?: number
+  lexical_score?: number
+  fused_score?: number
+  content_preview: string
+}
+
+export interface ChatMatchedProductTrace {
+  id: string
+  name: string
+  brand: string | null
+  category: string | null
+  score: number | null
+  top_reasons: string[]
+}
+
+export interface ChatTraceLatencyBreakdown {
+  classification_ms: number
+  hair_profile_load_ms: number
+  memory_load_ms: number
+  routine_planning_ms: number
+  history_load_ms: number
+  router_ms: number
+  conversation_create_ms: number
+  retrieval_ms: number
+  product_matching_ms: number
+  prompt_build_ms: number
+  stream_setup_ms: number
+  stream_read_ms?: number
+  total_ms?: number
+}
+
+export interface ChatTurnTrace {
+  trace_version: number
+  request_id: string
+  started_at: string
+  completed_at: string
+  status: "completed" | "failed"
+  user_message: string
+  conversation_id: string | null
+  intent: IntentType
+  product_category: ProductCategory
+  conversation_history_count: number
+  classification: ClassificationResult
+  router_decision: RouterDecision
+  clarification_questions: string[]
+  hair_profile_snapshot: HairProfile | null
+  memory_context: string | null
+  retrieval: {
+    requested_count: number
+    source_types: string[] | null
+    metadata_filter: Record<string, string> | null
+    subqueries: string[]
+    candidate_count_before_rerank: number
+    reranked_count: number
+    fallback_used: boolean
+    final_context_count: number
+    chunks: ChatRetrievedChunkTrace[]
+  }
+  decision_context: {
+    should_plan_routine: boolean
+    routine_plan: RoutinePlan | null
+    category_decision: CategoryDecision | null
+    matched_products: ChatMatchedProductTrace[]
+  }
+  prompt: ChatPromptSnapshot
+  response: {
+    assistant_content: string
+    sources: CitationSource[]
+    product_count: number
+  }
+  latencies_ms: ChatTraceLatencyBreakdown
+  error: string | null
+}
+
+export interface ConversationTurnTrace {
+  id: string
+  conversation_id: string | null
+  user_id: string
+  user_message_id: string | null
+  assistant_message_id: string | null
+  status: "completed" | "failed"
+  trace: ChatTurnTrace
+  created_at: string
+  updated_at: string
+}
+
 export interface Conversation {
   id: string
   user_id: string

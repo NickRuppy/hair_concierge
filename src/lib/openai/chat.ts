@@ -1,6 +1,9 @@
 import { getOpenAI } from "@/lib/openai/client"
 import type OpenAI from "openai"
 
+export const DEFAULT_CHAT_COMPLETION_MODEL = "gpt-4o"
+export const DEFAULT_CHAT_COMPLETION_TEMPERATURE = 0.7
+
 export interface StreamChatCompletionParams {
   messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[]
   model?: string
@@ -15,8 +18,8 @@ export interface StreamChatCompletionParams {
  */
 export async function streamChatCompletion({
   messages,
-  model = "gpt-4o",
-  temperature = 0.7,
+  model = DEFAULT_CHAT_COMPLETION_MODEL,
+  temperature = DEFAULT_CHAT_COMPLETION_TEMPERATURE,
 }: StreamChatCompletionParams): Promise<ReadableStream<Uint8Array>> {
   const response = await getOpenAI().chat.completions.create({
     model,

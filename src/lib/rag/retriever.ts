@@ -58,6 +58,20 @@ export interface RetrieveOptions {
   userId?: string
 }
 
+export interface RetrieveContextDebug {
+  subqueries: string[]
+  source_types: string[] | null
+  metadata_filter: Record<string, string> | null
+  candidate_count_before_rerank: number
+  reranked_count: number
+  fallback_used: boolean
+}
+
+export interface RetrieveContextResult {
+  chunks: RetrievedChunk[]
+  debug: RetrieveContextDebug
+}
+
 // ── Internal types for RRF fusion ─────────────────────────────────────────────
 
 interface DenseRow {
@@ -366,7 +380,7 @@ function applyProfileBoostAndDedup(
 export async function retrieveContext(
   query: string,
   options: RetrieveOptions = {},
-): Promise<RetrievedChunk[]> {
+): Promise<RetrieveContextResult> {
   const {
     intent,
     hairProfile,
@@ -386,6 +400,7 @@ export async function retrieveContext(
     const subqueries = providedSubqueries ?? await decomposeQuery(query)
 
     let candidates: RetrievedChunk[]
+    const fallbackUsed = false
 
     if (includeKeyword) {
       // Hybrid path: dense + lexical + RRF
@@ -429,7 +444,17 @@ export async function retrieveContext(
       top_source_types: topSourceTypes(reranked.slice(0, count)),
     })
 
-    return applyProfileBoostAndDedup(reranked, hairProfile, shampooConcern, count)
+    return {
+      chunks: applyProfileBoostAndDedup(reranked, hairProfile, shampooConcern, count),
+      debug: {
+        subqueries,
+        source_types: sourceTypes,
+        metadata_filter: metadataFilter ?? null,
+        candidate_count_before_rerank: candidates.length,
+        reranked_count: reranked.length,
+        fallback_used: fallbackUsed,
+      },
+    }
   } catch (error) {
     // FR-11: Fail safe to dense-only retrieval
     console.error("Hybrid retrieval failed, falling back to dense-only:", error)
@@ -441,10 +466,30 @@ export async function retrieveContext(
     })
     try {
       const candidates = await retrieveDenseOnly(query, sourceTypes, metadataFilter)
-      return applyProfileBoostAndDedup(candidates, hairProfile, shampooConcern, count)
+      return {
+        chunks: applyProfileBoostAndDedup(candidates, hairProfile, shampooConcern, count),
+        debug: {
+          subqueries: providedSubqueries ?? [query],
+          source_types: sourceTypes,
+          metadata_filter: metadataFilter ?? null,
+          candidate_count_before_rerank: candidates.length,
+          reranked_count: candidates.length,
+          fallback_used: true,
+        },
+      }
     } catch (fallbackError) {
       console.error("Dense-only fallback also failed:", fallbackError)
-      return []
+      return {
+        chunks: [],
+        debug: {
+          subqueries: providedSubqueries ?? [query],
+          source_types: sourceTypes,
+          metadata_filter: metadataFilter ?? null,
+          candidate_count_before_rerank: 0,
+          reranked_count: 0,
+          fallback_used: true,
+        },
+      }
     }
   }
 }
