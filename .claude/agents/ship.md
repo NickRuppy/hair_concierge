@@ -100,8 +100,15 @@ Check whether any changed file matches:
 
 If NO changed files match these paths, report [SKIP] and move on.
 
-If any match, run `npm run test:chat`.
-**Prerequisite:** the dev server must be running on localhost:3000.
+If any match:
+
+**Prerequisite check:** Before running the eval, verify the dev server is reachable:
+```bash
+curl -sf http://localhost:3000 > /dev/null
+```
+If the curl check fails, report: "Chat eval requires the dev server on localhost:3000. Start it with `npm run dev` and re-run /ship." and report [FAIL]. Do NOT proceed.
+
+If the dev server is reachable, run `npm run test:chat`.
 
 If chat eval fails, stop and report the failures. Do NOT proceed.
 Report [PASS], [SKIP], or [FAIL].
@@ -158,15 +165,17 @@ If all previous steps passed (or were skipped):
    - "no" stops the pipeline. Report [ABORT].
 
 ### Step 7: Commit & Push [ALL TIERS]
-1. Commit with the confirmed message.
-2. Determine the current branch:
-   - **If current branch is `main`:** Do NOT push to main. Instead:
-     a. Derive a slug from the commit message (lowercase, hyphens, max 40 chars). Example: "feat: add chat eval step" becomes `ship/add-chat-eval-step`.
-     b. Create a new branch named `ship/<slug>` from the current commit: `git checkout -b ship/<slug>`.
-     c. Push the new branch: `git push -u origin ship/<slug>`.
-     d. Create a PR via `gh pr create --base main --head ship/<slug>` with the commit message as the title and a brief body.
-     e. Report the PR URL.
-   - **If current branch is NOT main:** Push to the current branch's remote as usual: `git push`.
+1. Determine the current branch.
+2. **If current branch is `main`:** Do NOT commit on main. Instead:
+   a. Derive a slug from the commit message (lowercase, hyphens, max 40 chars). Example: "feat: add chat eval step" becomes `ship/add-chat-eval-step`.
+   b. Create and checkout a new branch BEFORE committing: `git checkout -b ship/<slug>`.
+   c. Commit with the confirmed message on the new branch.
+   d. Push the new branch: `git push -u origin ship/<slug>`.
+   e. Create a PR via `gh pr create --base main --head ship/<slug>` with the commit message as the title and a brief body.
+   f. Report the PR URL.
+3. **If current branch is NOT main:**
+   a. Commit with the confirmed message.
+   b. Push to the current branch's remote as usual: `git push`.
 
 Report [PASS] or [FAIL].
 
