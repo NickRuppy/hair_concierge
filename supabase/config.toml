@@ -174,8 +174,8 @@ host = "smtp-relay.brevo.com"
 port = 587
 user = "env(BREVO_SMTP_USER)"
 pass = "env(BREVO_SMTP_KEY)"
-# TODO: Set BREVO_SMTP_SENDER in Supabase vault/env before deploying (replaces hardcoded sender address)
-admin_email = "env(BREVO_SMTP_SENDER)"
+# TODO: Replace with env(BREVO_SMTP_SENDER) once the env var is set in Supabase vault
+admin_email = "tom@tomhannemann.de"
 sender_name = "Hair Concierge"
 
 [auth.email.template.confirmation]
