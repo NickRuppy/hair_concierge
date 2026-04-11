@@ -30,9 +30,7 @@ interface OnboardingProgressBarProps {
   currentStep: OnboardingStep
 }
 
-export function OnboardingProgressBar({
-  currentStep,
-}: OnboardingProgressBarProps) {
+export function OnboardingProgressBar({ currentStep }: OnboardingProgressBarProps) {
   const currentSection = STEP_SECTIONS[currentStep]
 
   return (
@@ -44,16 +42,13 @@ export function OnboardingProgressBar({
           const isCurrent = index === currentSection
 
           return (
-            <div
-              key={index}
-              className="h-[4px] flex-1 rounded-full overflow-hidden bg-white/10"
-            >
+            <div key={index} className="h-[4px] flex-1 rounded-full overflow-hidden bg-white/10">
               {(isCompleted || isCurrent) && (
                 <div
                   className="h-full rounded-full transition-all duration-500 ease-out"
                   style={{
                     width: isCompleted ? "100%" : "60%",
-                    background: "linear-gradient(90deg, #F5C518, #D4A800)",
+                    background: "linear-gradient(90deg, var(--brand-plum), var(--brand-plum-dark))",
                   }}
                 />
               )}
@@ -73,10 +68,7 @@ export function OnboardingProgressBar({
               <span
                 className="text-[11px] font-medium transition-colors duration-300"
                 style={{
-                  color:
-                    isCompleted || isCurrent
-                      ? "#F5C518"
-                      : "rgba(255,255,255,0.3)",
+                  color: isCompleted || isCurrent ? "var(--brand-plum)" : "var(--text-caption)",
                 }}
               >
                 {label}

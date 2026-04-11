@@ -30,9 +30,10 @@ export default function AuthPage() {
   const reason = searchParams.get("reason")
   const rawNext = searchParams.get("next")
   const defaultNext = from === "quiz" || leadId ? "/onboarding" : "/chat"
-  const next = rawNext?.startsWith("/") && !rawNext.startsWith("//") && !rawNext.includes("\\")
-    ? rawNext
-    : defaultNext
+  const next =
+    rawNext?.startsWith("/") && !rawNext.startsWith("//") && !rawNext.includes("\\")
+      ? rawNext
+      : defaultNext
   const copy = reason && reason in REASON_COPY ? REASON_COPY[reason] : null
 
   // Default tab: signup if coming from quiz/lead capture, login otherwise
@@ -58,8 +59,8 @@ export default function AuthPage() {
               <h2 className="text-lg font-semibold text-foreground">Pruefe dein Postfach</h2>
               <p className="text-sm text-muted-foreground">
                 Wir haben eine E-Mail an{" "}
-                <span className="font-medium text-foreground">{emailSentTo}</span>{" "}
-                gesendet. Klicke auf den Link, um dein Passwort zurueckzusetzen.
+                <span className="font-medium text-foreground">{emailSentTo}</span> gesendet. Klicke
+                auf den Link, um dein Passwort zurueckzusetzen.
               </p>
               <button
                 onClick={() => setView("form")}
@@ -92,8 +93,8 @@ export default function AuthPage() {
               <h2 className="text-lg font-semibold text-foreground">Pruefe dein Postfach</h2>
               <p className="text-sm text-muted-foreground">
                 Wir haben eine Bestaetigungs-E-Mail an{" "}
-                <span className="font-medium text-foreground">{emailSentTo}</span>{" "}
-                gesendet. Klicke auf den Link, um dein Konto zu aktivieren.
+                <span className="font-medium text-foreground">{emailSentTo}</span> gesendet. Klicke
+                auf den Link, um dein Konto zu aktivieren.
               </p>
               <button
                 onClick={() => setView("form")}
@@ -130,7 +131,6 @@ export default function AuthPage() {
 
         <div className="rounded-xl border bg-card p-8 shadow-sm">
           <AuthForm
-            theme="light"
             defaultTab={defaultTab}
             defaultEmail={searchParams.get("email") ?? undefined}
             leadId={leadId}

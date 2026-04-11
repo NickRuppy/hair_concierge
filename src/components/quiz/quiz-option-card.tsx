@@ -11,25 +11,35 @@ interface QuizOptionCardProps {
   animationDelay?: number
 }
 
-export function QuizOptionCard({ emoji, label, description, active, onClick, animationDelay = 0 }: QuizOptionCardProps) {
+export function QuizOptionCard({
+  emoji,
+  label,
+  description,
+  active,
+  onClick,
+  animationDelay = 0,
+}: QuizOptionCardProps) {
   return (
-    <div
-      className="animate-fade-in-up"
-      style={{ animationDelay: `${animationDelay}ms` }}
-    >
+    <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
       <QuizCard active={active} onClick={onClick}>
         <div className="flex items-start gap-3">
           <span className="text-2xl leading-none mt-0.5">{emoji}</span>
           <div className="flex-1 min-w-0">
-            <p className="text-base font-semibold text-white">{label}</p>
+            <p className="text-base font-semibold text-foreground">{label}</p>
             {description && (
-              <p className="text-sm text-white/60 mt-0.5 leading-relaxed">{description}</p>
+              <p className="text-sm text-muted-foreground mt-0.5 leading-relaxed">{description}</p>
             )}
           </div>
           {active && (
-            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#F5C518]">
+            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--brand-plum)]">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2.5 6L5 8.5L9.5 4" stroke="#0A0A0A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path
+                  d="M2.5 6L5 8.5L9.5 4"
+                  stroke="#FFFFFF"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
           )}

@@ -23,9 +23,7 @@ export function QuizAnalysis() {
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = []
     for (let i = 0; i < steps.length; i++) {
-      timers.push(
-        setTimeout(() => setCompletedSteps(i + 1), STEP_DELAY * (i + 1))
-      )
+      timers.push(setTimeout(() => setCompletedSteps(i + 1), STEP_DELAY * (i + 1)))
     }
     return () => timers.forEach(clearTimeout)
   }, [])
@@ -62,10 +60,10 @@ export function QuizAnalysis() {
 
   return (
     <div className="flex flex-col items-center justify-center py-16 animate-fade-in-up">
-      <h2 className="font-header text-3xl text-white text-center mb-2">
+      <h2 className="font-header text-3xl text-foreground text-center mb-2">
         {lead.name.toUpperCase()}, DEIN PROFIL WIRD ERSTELLT
       </h2>
-      <p className="text-base text-white/60 mb-10">Einen Moment noch...</p>
+      <p className="text-base text-muted-foreground mb-10">Einen Moment noch...</p>
 
       <div className="w-full space-y-4">
         {steps.map((text, i) => {
@@ -80,16 +78,18 @@ export function QuizAnalysis() {
             >
               <div className="flex h-7 w-7 shrink-0 items-center justify-center">
                 {done ? (
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F5C518]">
-                    <Check className="h-4 w-4 text-[#1A1618]" />
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--brand-plum)]">
+                    <Check className="h-4 w-4 text-white" />
                   </div>
                 ) : active ? (
-                  <Loader2 className="h-6 w-6 animate-spin text-[#F5C518]" />
+                  <Loader2 className="h-6 w-6 animate-spin text-[var(--brand-plum)]" />
                 ) : (
-                  <div className="h-2.5 w-2.5 rounded-full bg-white/20" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-muted-foreground/20" />
                 )}
               </div>
-              <span className={`text-base ${done ? "text-white" : "text-white/60"}`}>{text}</span>
+              <span className={`text-base ${done ? "text-foreground" : "text-muted-foreground"}`}>
+                {text}
+              </span>
             </div>
           )
         })}

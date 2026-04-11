@@ -12,22 +12,19 @@ const SCALP_TYPES = [
   {
     value: "fettig",
     label: "Fettig",
-    description:
-      "Ansaetze werden nach 1-2 Tagen oelig",
+    description: "Ansaetze werden nach 1-2 Tagen oelig",
     emoji: "\uD83D\uDCA7",
   },
   {
     value: "ausgeglichen",
     label: "Ausgeglichen",
-    description:
-      "Kommt gut 2-3 Tage ohne Waschen klar",
+    description: "Kommt gut 2-3 Tage ohne Waschen klar",
     emoji: "\uD83D\uDC4D",
   },
   {
     value: "trocken",
     label: "Trocken",
-    description:
-      "Spannt gelegentlich, fuehlt sich rau an",
+    description: "Spannt gelegentlich, fuehlt sich rau an",
     emoji: "\u2744\uFE0F",
   },
 ]
@@ -36,22 +33,19 @@ const SCALP_CONDITIONS = [
   {
     value: "schuppen",
     label: "Schuppen",
-    description:
-      "Weisse oder gelbliche Flocken",
+    description: "Weisse oder gelbliche Flocken",
     emoji: "\uD83C\uDF21\uFE0F",
   },
   {
     value: "trockene_schuppen",
     label: "Trockene Schuppen",
-    description:
-      "Kleine, weisse, trockene Flocken — Kopfhaut spannt",
+    description: "Kleine, weisse, trockene Flocken — Kopfhaut spannt",
     emoji: "❄️",
   },
   {
     value: "gereizt",
     label: "Gereizte Kopfhaut",
-    description:
-      "Jucken, Roetungen oder Brennen",
+    description: "Jucken, Roetungen oder Brennen",
     emoji: "\uD83D\uDD25",
   },
 ]
@@ -66,18 +60,14 @@ export function QuizScalpQuestion() {
     return "type"
   })
   const [selectedType, setSelectedType] = useState(answers.scalp_type ?? "")
-  const [conditionAnswer, setConditionAnswer] = useState<"ja" | "nein" | "">(
-    () => {
-      if (!answers.scalp_type) return ""
-      if (answers.scalp_condition === "keine") return "nein"
-      if (answers.scalp_condition) return "ja"
-      return ""
-    }
-  )
+  const [conditionAnswer, setConditionAnswer] = useState<"ja" | "nein" | "">(() => {
+    if (!answers.scalp_type) return ""
+    if (answers.scalp_condition === "keine") return "nein"
+    if (answers.scalp_condition) return "ja"
+    return ""
+  })
   const [selectedCondition, setSelectedCondition] = useState(
-    answers.scalp_condition && answers.scalp_condition !== "keine"
-      ? answers.scalp_condition
-      : ""
+    answers.scalp_condition && answers.scalp_condition !== "keine" ? answers.scalp_condition : "",
   )
   const [advancing, setAdvancing] = useState(false)
 
@@ -97,7 +87,7 @@ export function QuizScalpQuestion() {
         setAdvancing(false)
       }, 300)
     },
-    [setAnswer, advancing]
+    [setAnswer, advancing],
   )
 
   const handleGateAnswer = useCallback(
@@ -117,7 +107,7 @@ export function QuizScalpQuestion() {
         setAdvancing(false)
       }
     },
-    [setAnswer, goNext, advancing]
+    [setAnswer, goNext, advancing],
   )
 
   const handleConditionSelect = useCallback(
@@ -130,7 +120,7 @@ export function QuizScalpQuestion() {
         goNext()
       }, 400)
     },
-    [setAnswer, goNext, advancing]
+    [setAnswer, goNext, advancing],
   )
 
   const handleBack = useCallback(() => {
@@ -160,23 +150,23 @@ export function QuizScalpQuestion() {
       <div className="flex items-center gap-3 mb-4">
         <button
           onClick={handleBack}
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-white/60 hover:text-white transition-colors"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
           <QuizProgressBar current={6} total={6} />
         </div>
-        <span className="text-sm text-white/38 tabular-nums">6/6</span>
+        <span className="text-sm text-[var(--text-caption)] tabular-nums">6/6</span>
       </div>
 
       {/* Title + instruction — always visible */}
-      <h2 className="font-header text-3xl leading-tight text-white mb-2">
-        WIE SCHNELL FETTEN DEINE ANSAETZE NACH?
+      <h2 className="font-header text-3xl leading-tight text-foreground mb-2">
+        Wie schnell fetten deine Ansaetze nach?
       </h2>
-      <p className="text-sm text-white/60 leading-relaxed mb-5">
-        Deine Gesichtshaut gibt dir einen guten Hinweis — oelige T-Zone deutet auf fettige
-        Kopfhaut hin.
+      <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+        Deine Gesichtshaut gibt dir einen guten Hinweis — oelige T-Zone deutet auf fettige Kopfhaut
+        hin.
       </p>
 
       {/* Type cards — always rendered, unselected collapse when past type phase */}
@@ -191,8 +181,7 @@ export function QuizScalpQuestion() {
                 opacity: isCollapsed ? 0 : 1,
                 marginTop: isCollapsed ? 0 : i > 0 ? 12 : 0,
                 overflow: "hidden",
-                transition:
-                  "max-height 300ms ease, opacity 200ms ease, margin-top 300ms ease",
+                transition: "max-height 300ms ease, opacity 200ms ease, margin-top 300ms ease",
               }}
             >
               <QuizOptionCard
@@ -212,16 +201,10 @@ export function QuizScalpQuestion() {
 
       {/* Gate section — slides in below selected type card */}
       <div
-        className={
-          phase === "type"
-            ? "hidden"
-            : animateGate
-              ? "mt-5 animate-fade-in-up"
-              : "mt-5"
-        }
+        className={phase === "type" ? "hidden" : animateGate ? "mt-5 animate-fade-in-up" : "mt-5"}
       >
-        <h2 className="font-header text-2xl leading-tight text-white mb-2">
-          HAST DU ZUSAETZLICH BESCHWERDEN WIE SCHUPPEN, JUCKREIZ ODER ROETUNGEN?
+        <h2 className="font-header text-2xl leading-tight text-foreground mb-2">
+          Hast du zusaetzlich Beschwerden wie Schuppen, Juckreiz oder Roetungen?
         </h2>
 
         <div className="flex gap-3">
@@ -229,21 +212,21 @@ export function QuizScalpQuestion() {
             onClick={() => handleGateAnswer("nein")}
             className={`flex-1 h-14 rounded-xl text-base font-bold tracking-wide transition-all duration-200 ${
               conditionAnswer === "nein"
-                ? "bg-[#F5C518] text-[#0A0A0A] scale-[1.02]"
-                : "bg-white/8 text-white hover:bg-white/12 border border-white/10"
+                ? "bg-[var(--brand-coral)] text-white scale-[1.02]"
+                : "bg-muted text-foreground hover:bg-muted/80 border border-border"
             }`}
           >
-            NEIN
+            Nein
           </button>
           <button
             onClick={() => handleGateAnswer("ja")}
             className={`flex-1 h-14 rounded-xl text-base font-bold tracking-wide transition-all duration-200 ${
               conditionAnswer === "ja"
-                ? "bg-[#F5C518] text-[#0A0A0A] scale-[1.02]"
-                : "bg-white/8 text-white hover:bg-white/12 border border-white/10"
+                ? "bg-[var(--brand-coral)] text-white scale-[1.02]"
+                : "bg-muted text-foreground hover:bg-muted/80 border border-border"
             }`}
           >
-            JA
+            Ja
           </button>
         </div>
       </div>
@@ -251,17 +234,13 @@ export function QuizScalpQuestion() {
       {/* Condition cards — slides in below gate */}
       <div
         className={
-          phase !== "condition"
-            ? "hidden"
-            : animateCondition
-              ? "mt-6 animate-fade-in-up"
-              : "mt-6"
+          phase !== "condition" ? "hidden" : animateCondition ? "mt-6 animate-fade-in-up" : "mt-6"
         }
       >
-        <h2 className="font-header text-2xl leading-tight text-white mb-2">
-          WAS IST AKTUELL DEIN HAUPTPROBLEM?
+        <h2 className="font-header text-2xl leading-tight text-foreground mb-2">
+          Was ist aktuell dein Hauptproblem?
         </h2>
-        <p className="text-sm text-white/60 leading-relaxed mb-5">
+        <p className="text-sm text-muted-foreground leading-relaxed mb-5">
           Waehle die Beschwerde, die am besten zu dir passt.
         </p>
 
@@ -281,8 +260,8 @@ export function QuizScalpQuestion() {
       </div>
 
       {/* Motivation text — always anchored at bottom */}
-      <p className="mt-3 text-center text-sm text-white/38">
-        Letzte Frage \u2013 gleich siehst du dein Profil.
+      <p className="mt-3 text-center text-sm text-[var(--text-caption)]">
+        Letzte Frage – gleich siehst du dein Profil.
       </p>
     </div>
   )

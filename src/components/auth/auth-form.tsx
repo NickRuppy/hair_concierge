@@ -8,7 +8,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { linkLeadAction } from "@/app/auth/actions"
 
 interface AuthFormProps {
-  theme: "light" | "dark"
   defaultTab: "login" | "signup"
   defaultEmail?: string
   leadId?: string | null
@@ -43,7 +42,6 @@ function buildNextDestination(next: string, leadId: string | null): string {
 }
 
 export function AuthForm({
-  theme,
   defaultTab,
   defaultEmail,
   leadId,
@@ -61,28 +59,12 @@ export function AuthForm({
   const [error, setError] = useState<string | null>(null)
   const [view, setView] = useState<"tabs" | "forgot">("tabs")
 
-  const isDark = theme === "dark"
+  const submitBtnClass =
+    "inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
 
-  // Style helpers
-  const inputClass = isDark
-    ? "h-11 bg-white/10 border-white/20 text-white placeholder:text-white/40 focus:border-[#F5C518]/50"
-    : "h-11"
-  const submitClass = isDark
-    ? "quiz-btn-primary w-full h-11 text-sm font-medium"
-    : "inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
-  const googleClass = isDark
-    ? "inline-flex w-full items-center justify-center gap-3 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-white/15 disabled:opacity-50"
-    : "inline-flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-white px-6 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-100 disabled:opacity-50"
-  const mutedClass = isDark ? "text-white/60" : "text-muted-foreground"
-  const errorClass = isDark
-    ? "rounded-lg bg-red-500/20 px-4 py-3 text-sm text-red-200"
-    : "rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive"
-  const forgotLinkClass = isDark
-    ? "text-sm text-white/60 hover:text-white hover:underline"
-    : "text-sm text-muted-foreground hover:text-foreground hover:underline"
-  const backLinkClass = isDark
-    ? "text-sm text-[#F5C518] hover:underline"
-    : "text-sm text-primary hover:underline"
+  const errorBanner = error ? (
+    <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div>
+  ) : null
 
   async function handleGoogleLogin() {
     setLoading("google")
@@ -204,7 +186,7 @@ export function AuthForm({
     <button
       onClick={handleGoogleLogin}
       disabled={loading !== null}
-      className={googleClass}
+      className="inline-flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-white px-6 py-3 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-100 disabled:opacity-50"
     >
       <svg className="h-5 w-5" viewBox="0 0 24 24">
         <path
@@ -230,9 +212,9 @@ export function AuthForm({
 
   const divider = (
     <div className="flex items-center gap-3">
-      <div className={`h-px flex-1 ${isDark ? "bg-white/20" : "bg-border"}`} />
-      <span className={`text-xs ${mutedClass}`}>oder</span>
-      <div className={`h-px flex-1 ${isDark ? "bg-white/20" : "bg-border"}`} />
+      <div className="h-px flex-1 bg-border" />
+      <span className="text-xs text-muted-foreground">oder</span>
+      <div className="h-px flex-1 bg-border" />
     </div>
   )
 
@@ -240,14 +222,12 @@ export function AuthForm({
   if (view === "forgot" && showForgotPassword) {
     return (
       <div className="space-y-4">
-        <h2 className={`text-lg font-semibold ${isDark ? "text-white" : "text-foreground"}`}>
-          Passwort vergessen?
-        </h2>
-        <p className={`text-sm ${mutedClass}`}>
+        <h2 className="text-lg font-semibold text-foreground">Passwort vergessen?</h2>
+        <p className="text-sm text-muted-foreground">
           Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zuruecksetzen.
         </p>
 
-        {error && <div className={errorClass}>{error}</div>}
+        {errorBanner}
 
         <form onSubmit={handleForgotPassword} className="space-y-3">
           <Input
@@ -257,12 +237,12 @@ export function AuthForm({
             onChange={(e) => setEmail(e.target.value)}
             disabled={loading !== null}
             required
-            className={inputClass}
+            className="h-11"
           />
           <button
             type="submit"
             disabled={loading !== null || !email.trim()}
-            className={submitClass}
+            className={submitBtnClass}
           >
             {loading === "email" ? "Wird gesendet..." : "Link senden"}
           </button>
@@ -272,7 +252,7 @@ export function AuthForm({
             setView("tabs")
             setError(null)
           }}
-          className={backLinkClass}
+          className="text-sm text-primary hover:underline"
         >
           Zurueck zur Anmeldung
         </button>
@@ -290,39 +270,19 @@ export function AuthForm({
         setConfirmPassword("")
       }}
     >
-      <TabsList
-        className={
-          isDark
-            ? "mb-4 grid w-full grid-cols-2 bg-white/10 border-white/10"
-            : "mb-4 grid w-full grid-cols-2"
-        }
-      >
-        <TabsTrigger
-          value="login"
-          className={
-            isDark
-              ? "text-white/60 data-[state=active]:bg-white/15 data-[state=active]:text-white"
-              : ""
-          }
-        >
-          Anmelden
-        </TabsTrigger>
-        <TabsTrigger
-          value="signup"
-          className={
-            isDark
-              ? "text-white/60 data-[state=active]:bg-white/15 data-[state=active]:text-white"
-              : ""
-          }
-        >
-          Registrieren
-        </TabsTrigger>
+      <TabsList className="mb-4 grid w-full grid-cols-2">
+        <TabsTrigger value="login">Anmelden</TabsTrigger>
+        <TabsTrigger value="signup">Registrieren</TabsTrigger>
       </TabsList>
 
       {/* Login Tab */}
       <TabsContent value="login">
         <div className="space-y-4">
-          {error && <div className={errorClass}>{error}</div>}
+          {error && (
+            <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleLogin} className="space-y-3">
             <Input
@@ -332,7 +292,7 @@ export function AuthForm({
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading !== null}
               required
-              className={inputClass}
+              className="h-11"
             />
             <Input
               type="password"
@@ -341,12 +301,12 @@ export function AuthForm({
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading !== null}
               required
-              className={inputClass}
+              className="h-11"
             />
             <button
               type="submit"
               disabled={loading !== null || !email.trim() || !password}
-              className={submitClass}
+              className={submitBtnClass}
             >
               {loading === "email" ? "Wird geladen..." : "Anmelden"}
             </button>
@@ -359,7 +319,7 @@ export function AuthForm({
                 setError(null)
                 setPassword("")
               }}
-              className={forgotLinkClass}
+              className="text-sm text-muted-foreground hover:text-foreground hover:underline"
             >
               Passwort vergessen?
             </button>
@@ -373,7 +333,11 @@ export function AuthForm({
       {/* Signup Tab */}
       <TabsContent value="signup">
         <div className="space-y-4">
-          {error && <div className={errorClass}>{error}</div>}
+          {error && (
+            <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSignup} className="space-y-3">
             <Input
@@ -383,7 +347,7 @@ export function AuthForm({
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading !== null}
               required
-              className={inputClass}
+              className="h-11"
             />
             <Input
               type="password"
@@ -393,7 +357,7 @@ export function AuthForm({
               disabled={loading !== null}
               required
               minLength={8}
-              className={inputClass}
+              className="h-11"
             />
             <Input
               type="password"
@@ -403,12 +367,12 @@ export function AuthForm({
               disabled={loading !== null}
               required
               minLength={8}
-              className={inputClass}
+              className="h-11"
             />
             <button
               type="submit"
               disabled={loading !== null || !email.trim() || !password || !confirmPassword}
-              className={submitClass}
+              className={submitBtnClass}
             >
               {loading === "email" ? "Wird geladen..." : "Konto erstellen"}
             </button>
