@@ -36,11 +36,6 @@ interface QATestResult {
   error?: string
 }
 
-type RawQAFixture = Omit<QAFixture, "reference_answer"> & {
-  reference_answer?: string
-  [legacyAnswerKey: string]: unknown
-}
-
 // ------------------------------------------------------------------
 // Hand-curated fixture IDs for good topic coverage.
 // After running extract, review qa-pairs.json and update this list.
@@ -75,22 +70,7 @@ function loadFixtures(): QAFixture[] {
     )
   }
 
-  // Keep compatibility with archived fixtures that still use the previous answer key.
-  const legacyAnswerKey = ["to", "m_answer"].join("")
-  const rawFixtures = JSON.parse(fs.readFileSync(FIXTURES_PATH, "utf-8")) as RawQAFixture[]
-
-  return rawFixtures.map((fixture) => ({
-    id: fixture.id,
-    chat_id: fixture.chat_id,
-    context: fixture.context,
-    question: fixture.question,
-    reference_answer:
-      fixture.reference_answer ??
-      (typeof fixture[legacyAnswerKey] === "string" ? (fixture[legacyAnswerKey] as string) : ""),
-    hair_texture: fixture.hair_texture,
-    topics: fixture.topics,
-    is_standalone: fixture.is_standalone,
-  }))
+  return JSON.parse(fs.readFileSync(FIXTURES_PATH, "utf-8"))
 }
 
 function getCuratedFixtures(): QAFixture[] {

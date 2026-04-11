@@ -52,7 +52,6 @@ function createCandidate(
     brand: "Test",
     description: null,
     short_description: null,
-    tom_take: null,
     category: "Maske",
     affiliate_link: null,
     image_url: null,

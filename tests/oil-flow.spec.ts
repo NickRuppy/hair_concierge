@@ -57,7 +57,6 @@ function createCandidate(
     brand: "Test",
     description: null,
     short_description: null,
-    tom_take: null,
     category: "Öle",
     affiliate_link: null,
     image_url: "https://example.com/oil.jpg",

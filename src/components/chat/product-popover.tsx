@@ -160,15 +160,6 @@ export function ProductPopover({
           </span>
         )}
 
-        {/* Short product note */}
-        {product.tom_take && (
-          <span className="mt-2 block">
-            <span className="block text-xs italic text-muted-foreground line-clamp-2">
-              &ldquo;{product.tom_take}&rdquo;
-            </span>
-          </span>
-        )}
-
         {/* Footer: price + hint */}
         <span className="mt-2 flex items-center justify-between border-t border-border pt-2">
           {product.price_eur ? (

@@ -297,6 +297,9 @@ function inferAdvisorSender(chats: Chat[]): string | null {
     }
   }
 
+  // The advisor must appear in more than half the chats to be credible
+  if (maxChats <= chats.length / 2) return null
+
   return inferred
 }
 

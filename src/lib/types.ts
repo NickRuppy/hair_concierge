@@ -188,7 +188,7 @@ export interface Product {
   brand: string | null
   description: string | null
   short_description: string | null
-  tom_take: string | null
+
   category: string | null
   affiliate_link: string | null
   image_url: string | null
