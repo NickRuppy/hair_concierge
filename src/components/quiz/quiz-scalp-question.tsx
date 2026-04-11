@@ -8,45 +8,47 @@ import { ArrowLeft } from "lucide-react"
 
 type Phase = "type" | "gate" | "condition"
 
-const SCALP_TYPES = [
+import type { IconName } from "@/components/ui/icon"
+
+const SCALP_TYPES: { value: string; label: string; description: string; icon: IconName }[] = [
   {
     value: "fettig",
     label: "Fettig",
     description: "Ansaetze werden nach 1-2 Tagen oelig",
-    emoji: "\uD83D\uDCA7",
+    icon: "scalp-oily",
   },
   {
     value: "ausgeglichen",
     label: "Ausgeglichen",
     description: "Kommt gut 2-3 Tage ohne Waschen klar",
-    emoji: "\uD83D\uDC4D",
+    icon: "scalp-normal",
   },
   {
     value: "trocken",
     label: "Trocken",
     description: "Spannt gelegentlich, fuehlt sich rau an",
-    emoji: "\u2744\uFE0F",
+    icon: "scalp-dry",
   },
 ]
 
-const SCALP_CONDITIONS = [
+const SCALP_CONDITIONS: { value: string; label: string; description: string; icon: IconName }[] = [
   {
     value: "schuppen",
     label: "Schuppen",
     description: "Weisse oder gelbliche Flocken",
-    emoji: "\uD83C\uDF21\uFE0F",
+    icon: "scalp-sensitive",
   },
   {
     value: "trockene_schuppen",
     label: "Trockene Schuppen",
     description: "Kleine, weisse, trockene Flocken — Kopfhaut spannt",
-    emoji: "❄️",
+    icon: "scalp-dry",
   },
   {
     value: "gereizt",
     label: "Gereizte Kopfhaut",
     description: "Jucken, Roetungen oder Brennen",
-    emoji: "\uD83D\uDD25",
+    icon: "scalp-irritated",
   },
 ]
 
@@ -185,7 +187,7 @@ export function QuizScalpQuestion() {
               }}
             >
               <QuizOptionCard
-                emoji={opt.emoji}
+                icon={opt.icon}
                 label={opt.label}
                 description={opt.description}
                 active={selectedType === opt.value}
@@ -248,7 +250,7 @@ export function QuizScalpQuestion() {
           {SCALP_CONDITIONS.map((opt, i) => (
             <QuizOptionCard
               key={opt.value}
-              emoji={opt.emoji}
+              icon={opt.icon}
               label={opt.label}
               description={opt.description}
               active={selectedCondition === opt.value}

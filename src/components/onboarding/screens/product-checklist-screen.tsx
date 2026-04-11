@@ -2,11 +2,12 @@
 
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
+import type { IconName } from "@/components/ui/icon"
 
 interface ProductChecklistScreenProps {
   title: string
   subtitle: string
-  options: { value: string; label: string; emoji: string }[]
+  options: { value: string; label: string; icon: IconName }[]
   selected: string[]
   onToggle: (value: string) => void
   onContinue: () => void
@@ -52,7 +53,7 @@ export function ProductChecklistScreen({
         {options.map((option, i) => (
           <QuizOptionCard
             key={option.value}
-            emoji={option.emoji}
+            icon={option.icon}
             label={option.label}
             active={selected.includes(option.value)}
             onClick={() => onToggle(option.value)}

@@ -4,6 +4,7 @@ import { useEffect, useCallback, useMemo } from "react"
 import Link from "next/link"
 import type { CardData } from "@/lib/quiz/result-card-data"
 import { Button } from "@/components/ui/button"
+import { Icon } from "@/components/ui/icon"
 import { posthog } from "@/providers/posthog-provider"
 
 interface ResultPageClientProps {
@@ -114,7 +115,11 @@ export function ResultPageClient({
               className="bg-card border border-border border-l-2 border-l-[var(--brand-plum)] rounded-xl p-4"
             >
               <div className="flex items-start gap-3">
-                <span className="text-2xl leading-none mt-0.5">{card.emoji}</span>
+                <Icon
+                  name={card.icon}
+                  size={24}
+                  className="text-[var(--brand-plum)] mt-0.5 shrink-0"
+                />
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-[var(--brand-plum)] uppercase tracking-wide mb-1">
                     {card.title}

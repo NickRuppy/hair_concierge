@@ -3,15 +3,16 @@
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import { STYLING_TOOL_OPTIONS } from "@/lib/vocabulary"
+import type { IconName } from "@/components/ui/icon"
 
-const HEAT_TOOL_EMOJIS: Record<string, string> = {
-  blow_dryer: "💨",
-  flat_iron: "🔥",
-  curling_iron: "🌀",
-  wave_iron: "🌊",
-  hot_air_brush: "🌬️",
-  multi_tool: "🔧",
-  diffuser: "💫",
+const HEAT_TOOL_ICONS: Record<string, IconName> = {
+  blow_dryer: "heat-blow-dryer",
+  flat_iron: "heat-flat-iron",
+  curling_iron: "heat-curling-iron",
+  wave_iron: "heat-wave-iron",
+  hot_air_brush: "heat-hot-air-brush",
+  multi_tool: "heat-multi-tool",
+  diffuser: "heat-diffuser",
 }
 
 interface HeatToolsScreenProps {
@@ -55,7 +56,7 @@ export function HeatToolsScreen({
         {STYLING_TOOL_OPTIONS.map((option, i) => (
           <QuizOptionCard
             key={option.value}
-            emoji={HEAT_TOOL_EMOJIS[option.value] ?? ""}
+            icon={HEAT_TOOL_ICONS[option.value] ?? "heat-tool"}
             label={option.label}
             active={selected.includes(option.value)}
             onClick={() => onToggle(option.value)}

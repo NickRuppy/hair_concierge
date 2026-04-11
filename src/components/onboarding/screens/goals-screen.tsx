@@ -102,7 +102,7 @@ export function GoalsScreen({
             {goals.map((goal, i) => (
               <QuizOptionCard
                 key={goal.key}
-                emoji={goal.emoji}
+                icon={goal.icon}
                 label={goal.label}
                 description={goal.description}
                 active={selectedGoals.includes(goal.key)}

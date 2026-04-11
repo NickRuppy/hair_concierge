@@ -1,9 +1,10 @@
 "use client"
 
 import { QuizCard } from "./quiz-card"
+import { Icon, type IconName } from "@/components/ui/icon"
 
 interface QuizOptionCardProps {
-  emoji: string
+  icon: IconName
   label: string
   description?: string
   active: boolean
@@ -12,7 +13,7 @@ interface QuizOptionCardProps {
 }
 
 export function QuizOptionCard({
-  emoji,
+  icon,
   label,
   description,
   active,
@@ -23,7 +24,7 @@ export function QuizOptionCard({
     <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
       <QuizCard active={active} onClick={onClick}>
         <div className="flex items-start gap-3">
-          <span className="text-2xl leading-none mt-0.5">{emoji}</span>
+          <Icon name={icon} size={24} className="text-primary mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-base font-semibold text-foreground">{label}</p>
             {description && (

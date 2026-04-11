@@ -54,7 +54,7 @@ export function QuizResults() {
         {cardData.cards.map((card, i) => (
           <QuizProfileCard
             key={card.title}
-            emoji={card.emoji}
+            icon={card.icon}
             title={card.title}
             description={card.description}
             animationDelay={i * 80}

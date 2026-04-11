@@ -31,11 +31,11 @@ const thicknessHero: Record<string, string> = {
   coarse: "DICKE",
 }
 
-const heroEmoji: Record<string, string> = {
-  straight: "\uD83E\uDDB0",
-  wavy: "\uD83D\uDCA7",
-  curly: "\u27B0",
-  coily: "\uD83E\uDDF6",
+const heroLabel: Record<string, string> = {
+  straight: "GLATT",
+  wavy: "WELLEN",
+  curly: "LOCKEN",
+  coily: "KRAUS",
 }
 
 const balanceShort: Record<string, string> = {
@@ -89,7 +89,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ lead
 
   const thickness = thicknessHero[a.thickness ?? ""] ?? ""
   const structure = structureHero[a.structure ?? ""] ?? ""
-  const emoji = heroEmoji[a.structure ?? ""] ?? "\uD83E\uDDEC"
+  const heroText = heroLabel[a.structure ?? ""] ?? "HAAR"
 
   const finding1 = balanceShort[a.pulltest ?? ""] ?? "-"
   const finding2 = surfaceShort[a.fingertest ?? ""] ?? "-"
@@ -180,7 +180,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ lead
           {name}
         </div>
 
-        {/* Emoji in plum-rimmed circle */}
+        {/* Type label in plum-rimmed circle */}
         <div
           style={{
             display: "flex",
@@ -194,7 +194,17 @@ export async function GET(request: Request, { params }: { params: Promise<{ lead
             marginBottom: 40,
           }}
         >
-          <div style={{ display: "flex", fontSize: 130 }}>{emoji}</div>
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "Playfair Display",
+              fontSize: 48,
+              color: "#6B50A0",
+              letterSpacing: 4,
+            }}
+          >
+            {heroText}
+          </div>
         </div>
 
         {/* Hair type — THE hero result */}
@@ -261,7 +271,17 @@ export async function GET(request: Request, { params }: { params: Promise<{ lead
               borderTop: "4px solid #6B50A0",
             }}
           >
-            <div style={{ display: "flex", fontSize: 48, marginBottom: 14 }}>{"\u2696\uFE0F"}</div>
+            <div
+              style={{
+                display: "flex",
+                fontFamily: "Playfair Display",
+                fontSize: 32,
+                color: "#6B50A0",
+                marginBottom: 14,
+              }}
+            >
+              {"BAL"}
+            </div>
             <div
               style={{
                 display: "flex",
@@ -288,7 +308,17 @@ export async function GET(request: Request, { params }: { params: Promise<{ lead
               borderTop: "4px solid #6B50A0",
             }}
           >
-            <div style={{ display: "flex", fontSize: 48, marginBottom: 14 }}>{"\uD83D\uDD2C"}</div>
+            <div
+              style={{
+                display: "flex",
+                fontFamily: "Playfair Display",
+                fontSize: 32,
+                color: "#6B50A0",
+                marginBottom: 14,
+              }}
+            >
+              {"OBF"}
+            </div>
             <div
               style={{
                 display: "flex",
@@ -315,7 +345,17 @@ export async function GET(request: Request, { params }: { params: Promise<{ lead
               borderTop: "4px solid #6B50A0",
             }}
           >
-            <div style={{ display: "flex", fontSize: 48, marginBottom: 14 }}>{"\uD83E\uDDF4"}</div>
+            <div
+              style={{
+                display: "flex",
+                fontFamily: "Playfair Display",
+                fontSize: 32,
+                color: "#6B50A0",
+                marginBottom: 14,
+              }}
+            >
+              {"KPF"}
+            </div>
             <div
               style={{
                 display: "flex",

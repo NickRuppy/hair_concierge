@@ -1,25 +1,27 @@
 export type QuizStep =
-  | 1   // landing
-  | 2   // haartextur
-  | 3   // haarstaerke
-  | 4   // oberflaeche
-  | 5   // zugtest
-  | 6   // kopfhaut
-  | 7   // chemische behandlung
-  | 9   // lead capture
-  | 10  // analysis
-  | 11  // results
-  | 14  // welcome
+  | 1 // landing
+  | 2 // haartextur
+  | 3 // haarstaerke
+  | 4 // oberflaeche
+  | 5 // zugtest
+  | 6 // kopfhaut
+  | 7 // chemische behandlung
+  | 9 // lead capture
+  | 10 // analysis
+  | 11 // results
+  | 14 // welcome
 
 export type LeadCaptureSubStep = "name" | "email" | "consent"
 
 export type SelectionMode = "single" | "multi"
 
+import type { IconName } from "@/components/ui/icon"
+
 export interface QuizOption {
   value: string
   label: string
   description?: string
-  emoji: string
+  icon: IconName
 }
 
 export interface QuizQuestion {

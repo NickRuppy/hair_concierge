@@ -105,7 +105,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
         {question.options.map((opt, i) => (
           <QuizOptionCard
             key={opt.value}
-            emoji={opt.emoji}
+            icon={opt.icon}
             label={opt.label}
             description={opt.description}
             active={isSelected(opt.value)}

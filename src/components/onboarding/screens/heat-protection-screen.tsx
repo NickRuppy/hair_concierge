@@ -39,14 +39,14 @@ export function HeatProtectionScreen({ selected, onSelect, onBack }: HeatProtect
 
       <div className="space-y-3">
         <QuizOptionCard
-          emoji="🛡️"
+          icon="heat-protection-yes"
           label="Ja"
           active={localSelected === true}
           onClick={() => handleSelect(true)}
           animationDelay={100}
         />
         <QuizOptionCard
-          emoji="❌"
+          icon="heat-protection-no"
           label="Nein"
           active={localSelected === false}
           onClick={() => handleSelect(false)}

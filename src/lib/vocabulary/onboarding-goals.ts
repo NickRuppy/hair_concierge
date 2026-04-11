@@ -1,11 +1,12 @@
 import type { Goal } from "./concerns-goals"
 import type { HairTexture } from "./hair-types"
+import type { IconName } from "@/components/ui/icon"
 
 export interface OnboardingGoal {
   key: Goal
   label: string
   description: string
-  emoji: string
+  icon: IconName
 }
 
 export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
@@ -14,25 +15,25 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       key: "healthy_scalp",
       label: "Weniger schnell nachfetten",
       description: "Laengere Frische zwischen den Waeschen",
-      emoji: "⏳",
+      icon: "goal-less-washing",
     },
     {
       key: "less_frizz",
       label: "Anti-Frizz & Geschmeidigkeit",
       description: "Glatter Fall ohne Kraeuselung",
-      emoji: "✨",
+      icon: "goal-smoothness",
     },
     {
       key: "shine",
       label: "Mehr Glanz",
       description: "Sichtbar glaenzenderes, ruhigeres Finish",
-      emoji: "🌟",
+      icon: "goal-shine",
     },
     {
       key: "less_split_ends",
       label: "Weniger Spliss",
       description: "Gesunde Spitzen, weniger Haarbruch",
-      emoji: "✂️",
+      icon: "goal-split-ends",
     },
   ],
   wavy: [
@@ -40,31 +41,31 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       key: "curl_definition",
       label: "Wellen-Definition",
       description: "Gleichmaessige, sichtbare Wellen",
-      emoji: "🌊",
+      icon: "goal-definition",
     },
     {
       key: "moisture",
       label: "Leichte Feuchtigkeit",
       description: "Hydration ohne Beschwerung",
-      emoji: "💧",
+      icon: "goal-moisture",
     },
     {
       key: "shine",
       label: "Mehr Glanz",
       description: "Glaenzenderes, gesuender wirkendes Haar",
-      emoji: "✨",
+      icon: "goal-shine",
     },
     {
       key: "less_frizz",
       label: "Weniger Frizz",
       description: "Kontrolle ohne Beschwerung",
-      emoji: "🌀",
+      icon: "goal-frizz",
     },
     {
       key: "less_split_ends",
       label: "Weniger Spliss",
       description: "Gesunde Spitzen, weniger Haarbruch",
-      emoji: "✂️",
+      icon: "goal-split-ends",
     },
   ],
   curly: [
@@ -72,31 +73,31 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       key: "curl_definition",
       label: "Locken-Clumping",
       description: "Definierte Lockenbuendel statt Frizz",
-      emoji: "🔄",
+      icon: "goal-definition",
     },
     {
       key: "moisture",
       label: "Intensive Feuchtigkeit",
       description: "Tiefenwirksame Pflege fuer trockene Locken",
-      emoji: "💦",
+      icon: "goal-moisture",
     },
     {
       key: "shine",
       label: "Mehr Glanz",
       description: "Mehr Reflexion und weniger stumpfer Look",
-      emoji: "✨",
+      icon: "goal-shine",
     },
     {
       key: "less_split_ends",
       label: "Weniger Spliss",
       description: "Gesunde Spitzen, weniger Haarbruch",
-      emoji: "✂️",
+      icon: "goal-split-ends",
     },
     {
       key: "less_frizz",
       label: "Weniger Frizz",
       description: "Kontrolle und Definition statt Kraeuselung",
-      emoji: "🌀",
+      icon: "goal-frizz",
     },
   ],
   coily: [
@@ -104,25 +105,25 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
       key: "moisture",
       label: "Feuchtigkeit versiegeln",
       description: "Feuchtigkeit einschliessen und bewahren",
-      emoji: "🔒",
+      icon: "goal-moisture",
     },
     {
       key: "healthy_scalp",
       label: "Kopfhaut beruhigen",
       description: "Reizfreie, ausgeglichene Kopfhaut",
-      emoji: "🌱",
+      icon: "goal-scalp-health",
     },
     {
       key: "healthier_hair",
       label: "Gesuenderes Haar",
       description: "Mehr Widerstandsfaehigkeit und weniger Haarbruch",
-      emoji: "🛡️",
+      icon: "goal-repair",
     },
     {
       key: "less_split_ends",
       label: "Weniger Spliss",
       description: "Gesunde Spitzen, weniger Haarbruch",
-      emoji: "✂️",
+      icon: "goal-split-ends",
     },
   ],
 }

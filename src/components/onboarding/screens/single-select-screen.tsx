@@ -3,11 +3,12 @@
 import { useRef, useState } from "react"
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
+import type { IconName } from "@/components/ui/icon"
 
 interface SingleSelectScreenProps {
   title: string
   subtitle?: string
-  options: { value: string; label: string; emoji: string }[]
+  options: { value: string; label: string; icon: IconName }[]
   selected: string | null
   onSelect: (value: string) => void
   onBack: () => void
@@ -60,7 +61,7 @@ export function SingleSelectScreen({
         {options.map((option, i) => (
           <QuizOptionCard
             key={option.value}
-            emoji={option.emoji}
+            icon={option.icon}
             label={option.label}
             active={localSelected === option.value}
             onClick={() => handleSelect(option.value)}
