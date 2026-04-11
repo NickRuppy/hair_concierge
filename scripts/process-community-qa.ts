@@ -1,7 +1,7 @@
 /**
  * Community DM Chat Processing Pipeline
  *
- * Parses Tom's Skool DM conversations, classifies hair-care relevance,
+ * Parses community DM conversations, classifies hair-care relevance,
  * cleans exchanges, extracts metadata, and outputs structured markdown
  * files ready for the ingest-markdown.ts pipeline.
  *
@@ -60,7 +60,7 @@ interface RawMessage {
   time: string
   text: string
   date: string | null
-  isTom: boolean
+  isAdvisor: boolean
 }
 
 interface Chat {
@@ -73,7 +73,7 @@ interface Exchange {
   chatId: number
   exchangeIndex: number
   memberMessages: RawMessage[]
-  tomMessages: RawMessage[]
+  advisorMessages: RawMessage[]
   dateRange: string
 }
 
@@ -128,7 +128,7 @@ function parseChats(raw: string): Chat[] {
           time: currentTime,
           text,
           date: currentDate,
-          isTom: currentSender.includes("Tom Hannemann"),
+          isAdvisor: false,
         })
       }
       bodyLines = []
@@ -146,7 +146,7 @@ function parseChats(raw: string): Chat[] {
           time: "unknown",
           text,
           date: currentDate,
-          isTom: false,
+          isAdvisor: false,
         })
       }
       bareTextLines = []
@@ -198,11 +198,6 @@ function parseChats(raw: string): Chat[] {
       currentSender = senderMatch[1]
       currentSenderUrl = senderMatch[2]
 
-      // Track member name (first non-Tom sender)
-      if (!currentSender.includes("Tom Hannemann") && !currentChat.memberName) {
-        currentChat.memberName = currentSender
-      }
-
       continue
     }
 
@@ -221,7 +216,7 @@ function parseChats(raw: string): Chat[] {
     if (!trimmed) continue
 
     // Skip title line
-    if (trimmed === "# Chats Tom") continue
+    if (/^# Chats\b/.test(trimmed)) continue
 
     // If we're right after a chat header and haven't seen a sender yet, this is bare text
     if (pendingFirstMessage && !currentSender) {
@@ -251,14 +246,61 @@ function parseChats(raw: string): Chat[] {
 
     // If memberName wasn't set (bare text start), try to find from messages
     if (!chat.memberName) {
-      const firstMember = chat.messages.find((m) => !m.isTom)
+      const firstMember = chat.messages.find((m) => !m.isAdvisor)
       if (firstMember) {
         chat.memberName = firstMember.sender
       }
     }
   }
 
+  const advisorSender = inferAdvisorSender(chats)
+  if (advisorSender) {
+    for (const chat of chats) {
+      chat.messages = chat.messages.map((message) => ({
+        ...message,
+        isAdvisor: message.sender === advisorSender,
+      }))
+
+      if (!chat.memberName) {
+        const firstMember = chat.messages.find((message) => !message.isAdvisor)
+        if (firstMember) {
+          chat.memberName = firstMember.sender
+        }
+      }
+    }
+  }
+
   return chats
+}
+
+function inferAdvisorSender(chats: Chat[]): string | null {
+  const appearances = new Map<string, Set<number>>()
+
+  for (const chat of chats) {
+    for (const message of chat.messages) {
+      const sender = message.sender.trim()
+      if (!sender || sender === "Unknown") continue
+      if (!appearances.has(sender)) {
+        appearances.set(sender, new Set())
+      }
+      appearances.get(sender)!.add(chat.chatId)
+    }
+  }
+
+  let inferred: string | null = null
+  let maxChats = 0
+
+  for (const [sender, chatIds] of appearances) {
+    if (chatIds.size > maxChats) {
+      inferred = sender
+      maxChats = chatIds.size
+    }
+  }
+
+  // The advisor must appear in more than half the chats to be credible
+  if (maxChats <= chats.length / 2) return null
+
+  return inferred
 }
 
 function mergeConsecutiveMessages(messages: RawMessage[]): RawMessage[] {
@@ -291,25 +333,25 @@ function groupExchanges(chat: Chat): Exchange[] {
   let exchangeIdx = 0
 
   for (const msg of chat.messages) {
-    if (msg.isTom) {
-      // Tom is responding — pair with accumulated member messages
+    if (msg.isAdvisor) {
+      // Advisor is responding — pair with accumulated member messages
       if (memberMsgs.length > 0 || exchanges.length === 0) {
         const exchange: Exchange = {
           chatId: chat.chatId,
           exchangeIndex: exchangeIdx++,
           memberMessages: [...memberMsgs],
-          tomMessages: [msg],
+          advisorMessages: [msg],
           dateRange: buildDateRange(memberMsgs, [msg]),
         }
         exchanges.push(exchange)
         memberMsgs = []
       } else {
-        // Tom sends another message without new member question — append to last exchange
+        // Advisor sends another message without new member question — append to last exchange
         const lastExchange = exchanges[exchanges.length - 1]
-        lastExchange.tomMessages.push(msg)
+        lastExchange.advisorMessages.push(msg)
         lastExchange.dateRange = buildDateRange(
           lastExchange.memberMessages,
-          lastExchange.tomMessages
+          lastExchange.advisorMessages
         )
       }
     } else {
@@ -317,14 +359,14 @@ function groupExchanges(chat: Chat): Exchange[] {
     }
   }
 
-  // Remaining member messages with no Tom response — skip
-  // (unanswered questions aren't useful without Tom's answer)
+  // Remaining member messages with no advisor response — skip
+  // (unanswered questions aren't useful without the advisor answer)
 
   return exchanges
 }
 
-function buildDateRange(memberMsgs: RawMessage[], tomMsgs: RawMessage[]): string {
-  const allDates = [...memberMsgs, ...tomMsgs]
+function buildDateRange(memberMsgs: RawMessage[], advisorMsgs: RawMessage[]): string {
+  const allDates = [...memberMsgs, ...advisorMsgs]
     .map((m) => m.date)
     .filter((d): d is string => d !== null)
 
@@ -339,7 +381,7 @@ function buildDateRange(memberMsgs: RawMessage[], tomMsgs: RawMessage[]): string
 // Step 3: AI Classification
 // ---------------------------------------------------------------------------
 
-const CLASSIFICATION_PROMPT = `Du bist ein Klassifikator für Haarpflege-Inhalte. Bewerte den folgenden Chat-Austausch zwischen einem Community-Mitglied und Tom Hannemann (Haarpflege-Experte).
+const CLASSIFICATION_PROMPT = `Du bist ein Klassifikator fuer Haarpflege-Inhalte. Bewerte den folgenden Chat-Austausch zwischen einem Community-Mitglied und einem Haarpflege-Berater.
 
 Klassifiziere als RELEVANT wenn der Austausch mindestens eines enthält:
 - Haarpflege-Ratschläge oder -Tipps
@@ -426,7 +468,7 @@ async function classifyBatch(exchanges: Exchange[]): Promise<Map<string, Classif
 // Step 4: AI Cleaning + Context Header + Metadata Extraction
 // ---------------------------------------------------------------------------
 
-const PROCESSING_PROMPT = `Du erhältst einen Chat-Austausch zwischen einem Community-Mitglied und Tom Hannemann (Haarpflege-Experte), zusammen mit dem bisherigen Gesprächsverlauf für Kontext.
+const PROCESSING_PROMPT = `Du erhältst einen Chat-Austausch zwischen einem Community-Mitglied und einem Haarpflege-Berater, zusammen mit dem bisherigen Gesprächsverlauf für Kontext.
 
 WICHTIG: Verwende "Das Mitglied" statt des Namens der Person. Nenne niemals den echten Namen des Mitglieds.
 
@@ -442,11 +484,11 @@ Aufgaben:
    - Bewahre den natürlichen Gesprächston
    - Entferne Emojis
 
-3. ANTWORT BEREINIGEN: Bereinige Toms Antwort:
+3. ANTWORT BEREINIGEN: Bereinige die Antwort des Beraters:
    - Gleiche Regeln wie oben
    - Behalte Produkt-Links (dm.de, Amazon etc.) bei
    - Entferne Rabattcodes und Affiliate-Hinweise (z.B. "mit meinem Code")
-   - Behalte Toms persönlichen Stil bei
+   - Behalte den persoenlichen Stil des Beraters bei
 
 4. METADATEN EXTRAHIEREN als JSON:
    - topics: Array von Themen-Stichworten auf Deutsch (z.B. ["Spliss", "Kolaplex", "Haarschnitt"])
@@ -552,9 +594,9 @@ function formatExchangeForAI(exchange: Exchange): string {
     parts.push(`[Mitglied]:\n${memberText}`)
   }
 
-  if (exchange.tomMessages.length > 0) {
-    const tomText = exchange.tomMessages.map((m) => m.text).join("\n")
-    parts.push(`[Tom Hannemann]:\n${tomText}`)
+  if (exchange.advisorMessages.length > 0) {
+    const advisorText = exchange.advisorMessages.map((m) => m.text).join("\n")
+    parts.push(`[Berater]:\n${advisorText}`)
   }
 
   return parts.join("\n\n")
@@ -609,7 +651,7 @@ function writeOutputFile(
     `source_type: "community_qa"`,
     `chat_id: "${chat.chatId}"`,
     `exchange_count: "${processedExchanges.length}"`,
-    `speaker: "Tom"`,
+    `speaker: "advisor"`,
     `language: "de"`,
     "---",
   ].join("\n")

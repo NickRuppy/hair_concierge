@@ -6,7 +6,7 @@
 ---
 
 ## 1. Brand Philosophy & Mood
-**Context:** Based on "Brief / Moodboard from Tom"
+**Context:** Based on the legacy launch moodboard
 
 The web application should feel like a backstage pass mixed with a masterclass. It bridges the gap between professional hair/beauty education and high-energy entertainment.
 
@@ -109,9 +109,9 @@ Use these assets for success messages, tip pop-ups, or level progression:
 ---
 
 ## 7. Character Usage
-**Context:** Based on "Character Element 'Tom'"
+**Context:** Based on the illustrated advisor character
 
-* **The Avatar:** Use the illustrated "Tom" character for system messages or empty states (e.g., "No internet connection").
+* **The Avatar:** Use the illustrated advisor character for system messages or empty states (e.g., "No internet connection").
 * **Style:** Vector illustration, denim jacket, glasses. Avoid photorealistic stock photos for generic UI elements; use the illustration style.
 
 ---

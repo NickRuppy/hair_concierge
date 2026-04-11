@@ -104,9 +104,9 @@ export function buildProductListChunks(
     })
 
     const content =
-      `Toms Produktempfehlungen: ${category} fuer ${thicknessLabel} bei ${concernLabel}\n\n` +
-      `Folgende ${category}-Produkte empfiehlt Tom Hannemann fuer Menschen mit ${thicknessLabel} ` +
-      `und dem Anliegen "${concernLabel}":\n\n` +
+      `Produktempfehlungen: ${category} fuer ${thicknessLabel} bei ${concernLabel}\n\n` +
+      `Folgende ${category}-Produkte sind fuer Menschen mit ${thicknessLabel} ` +
+      `und dem Anliegen "${concernLabel}" geeignet:\n\n` +
       productLines.join("\n") +
       `\n\nInsgesamt ${products.length} empfohlene Produkte in dieser Kategorie.`
 

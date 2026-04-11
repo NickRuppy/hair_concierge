@@ -19,7 +19,7 @@ export function QuizLanding() {
           FINDE IN 2 MINUTEN HERAUS, WAS DEINE HAARE WIRKLICH BRAUCHEN
         </h1>
         <p className="text-base text-white/60 mb-6 leading-relaxed">
-          TomBot analysiert dein Haar nach der Methode von Haar-Experte Tom Hannemann und sagt dir, was DEINE Haare tatsaechlich brauchen.
+          Hair Concierge analysiert dein Haar und zeigt dir, was DEINE Haare tatsaechlich brauchen.
         </p>
         <ul className="space-y-3 mb-8">
           {bullets.map((text) => (

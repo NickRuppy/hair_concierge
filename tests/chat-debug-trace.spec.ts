@@ -115,7 +115,7 @@ function createProduct(overrides: Partial<Product> = {}): Product {
     brand: "HC",
     description: null,
     short_description: "Leichter Conditioner",
-    tom_take: null,
+
     category: "conditioner",
     affiliate_link: null,
     image_url: null,

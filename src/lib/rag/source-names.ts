@@ -100,8 +100,8 @@ export function formatSourceName(sourceName: string): string {
   // QA: "qa/haeufige-fragen.md"
   if (sourceName.startsWith("qa/")) return "Haeufige Fragen (FAQ)"
 
-  // Stories: "stories/story-tom.md"
-  if (sourceName.startsWith("stories/")) return "Toms Geschichte"
+  // Stories: "stories/story-*.md"
+  if (sourceName.startsWith("stories/")) return "Praxisbericht"
 
   // Fallback: title-case the last path segment
   const lastSegment = sourceName.split("/").pop()?.replace(".md", "") ?? sourceName

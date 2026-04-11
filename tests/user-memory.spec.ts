@@ -58,7 +58,6 @@ function createProduct(id: string, name: string): Product {
     brand: "Test",
     description: null,
     short_description: null,
-    tom_take: null,
     category: "Oel",
     affiliate_link: null,
     image_url: null,

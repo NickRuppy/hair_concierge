@@ -7,7 +7,7 @@ async function login(page: Page) {
   await page.goto(`${BASE}/auth`, { waitUntil: "domcontentloaded" })
 
   // Wait for login form
-  await expect(page.getByText("TomBot").first()).toBeVisible({ timeout: 15000 })
+  await expect(page.getByText("Hair Concierge").first()).toBeVisible({ timeout: 15000 })
 
   // Fill credentials
   await page.locator('input[type="email"]').fill("qa-test@hairconscierge.test")
@@ -52,7 +52,7 @@ test.describe("Conditioner Recommendation Flow", () => {
   test("Test 1: Login and verify profile", async () => {
     // Step 1: Navigate to auth page
     await page.goto(`${BASE}/auth`, { waitUntil: "domcontentloaded" })
-    await expect(page.getByText("TomBot").first()).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText("Hair Concierge").first()).toBeVisible({ timeout: 15000 })
     await screenshotStep(page, "01-auth-page-loaded")
 
     // Step 2: Fill login form

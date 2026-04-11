@@ -4,12 +4,12 @@ Date: 2026-03-30
 
 ## Context
 
-The product currently appears in the codebase and existing docs as `TomBot`, but launch naming now needs to be treated as a fresh decision.
+The product currently appears in the codebase and existing docs as a legacy advisor-branded experience, but launch naming now needs to be treated as a fresh decision.
 
 This sprint assumes:
 
-- no Tom-linked naming for launch
-- no adjacency to `The Beautiful People` unless that is later confirmed safe
+- no advisor-linked naming for launch
+- no adjacency to legacy brand families unless that is later confirmed safe
 - screening is intentionally deferred until a clear favorite emerges
 - the core name should stay suggestive rather than literal
 
@@ -29,7 +29,7 @@ This document is creative direction only. It does not rename product copy in the
 
 - `bot`, `AI`, `lab`, `clinic`, `genius`, or similar category cliches
 - literal `Hair` or `Haar` names in the core mark unless a standout exception appears later
-- names that depend on Tom's personal authority to make sense
+- names that depend on a specific advisor's personal authority to make sense
 - names that feel too narrow for a future platform
 
 ### Naming lens for this round
@@ -144,7 +144,7 @@ These are the strongest options based on immediate brand fit only. Screening, do
 
 ### Recommended winner: `Avenor`
 
-`Avenor` is the strongest first pick because it sounds like an actual premium brand, stays independent from Tom, and has enough gravity to carry a broader platform story later. It does not overpromise one feature, and it leaves room for the product to evolve without forcing a rename.
+`Avenor` is the strongest first pick because it sounds like an actual premium brand, stays independent from advisor-led legacy branding, and has enough gravity to carry a broader platform story later. It does not overpromise one feature, and it leaves room for the product to evolve without forcing a rename.
 
 ### Strong alternates
 

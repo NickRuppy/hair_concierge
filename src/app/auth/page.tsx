@@ -47,8 +47,8 @@ export default function AuthPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
-            <h1 className="font-header text-4xl tracking-tight text-foreground">TomBot</h1>
-            <p className="text-lg text-muted-foreground">Dein persoenlicher Haar-Experte — powered by AI</p>
+            <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+            <p className="text-lg text-muted-foreground">Personalisierte Haarpflege-Beratung</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
             <div className="space-y-4">
@@ -81,8 +81,8 @@ export default function AuthPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
-            <h1 className="font-header text-4xl tracking-tight text-foreground">TomBot</h1>
-            <p className="text-lg text-muted-foreground">Dein persoenlicher Haar-Experte — powered by AI</p>
+            <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+            <p className="text-lg text-muted-foreground">Personalisierte Haarpflege-Beratung</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
             <div className="space-y-4">
@@ -115,10 +115,10 @@ export default function AuthPage() {
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
           <h1 className="font-header text-4xl tracking-tight text-foreground">
-            {copy?.heading ?? "TomBot"}
+            {copy?.heading ?? "Hair Concierge"}
           </h1>
           <p className="text-lg text-muted-foreground">
-            {copy?.subtext ?? "Dein persoenlicher Haar-Experte — powered by AI"}
+            {copy?.subtext ?? "Personalisierte Haarpflege-Beratung"}
           </p>
         </div>
 

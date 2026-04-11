@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lead = await getLead(leadId)
 
   if (!lead) {
-    return { title: "Nicht gefunden — TomBot" }
+    return { title: "Nicht gefunden — Hair Concierge" }
   }
 
   const name = lead.name as string
@@ -44,10 +44,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
 
   return {
-    title: `${name}s Haar-Diagnose — TomBot`,
+    title: `${name}s Haar-Diagnose — Hair Concierge`,
     description: quote,
     openGraph: {
-      title: `${name}s Haar-Diagnose — TomBot`,
+      title: `${name}s Haar-Diagnose — Hair Concierge`,
       description: quote,
       images: [
         {
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${name}s Haar-Diagnose — TomBot`,
+      title: `${name}s Haar-Diagnose — Hair Concierge`,
       description: quote,
       images: [`${siteUrl}/api/og/result/${leadId}`],
     },

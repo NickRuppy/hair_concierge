@@ -92,7 +92,7 @@ This review is intentionally product-facing and implementation-aware, but not an
 | `Was machst du nach dem Waschen?` | `post_wash_actions` | `keep`, `reword`, `raise prominence`, `clarify regularity` | The wording sounds like a one-time event even though the data is meant to represent recurring styling context. | Users may under-select or skip it even though it materially affects leave-in logic. | Reword to `Was kommt bei dir nach dem Waschen regelmäßig vor?` and keep multi-select. Make at least one response expected, or add a clear fallback option. | Copy + layout + future logic | Quality up, ambiguity down |
 | `Wie detailliert soll deine Routine sein?` | `routine_preference` | `keep`, `reorder`, `reword` | This is a future-state output preference living on a current-state routine screen. | The user has to switch mental models from `Was mache ich?` to `Was wünsche ich mir?` mid-screen. | Move it to the goals screen and rename it to something output-centered such as `Wie aufwendig darf dein Plan sein?` | Copy + flow | Clarity up, completion up |
 | `Wie viel Volumen willst du?` | `desired_volume`, derived `volume` goal | `keep`, `move earlier`, `deduplicate` | This is a strong, user-centered question, but it sits too late in the overall flow and duplicates the visible `Mehr Volumen` goal chip. | The best motivation lever arrives after lower-motivation diagnostic refinements, and the duplication wastes attention. | Make this part of the first onboarding screen. Do not also present `Mehr Volumen` as a visible secondary goal on that same path. | Flow + future logic | Motivation up, redundancy down |
-| `Was ist dir ausserdem wichtig?` | `goals` | `rework`, `reword`, `clarify selection model` | The current goal list is texture-filtered so aggressively that valid user intent can disappear. | Users may feel the product is telling them what they should want instead of listening. | Replace hard filtering with relevance sorting. Ask one primary goal first: `Womit soll TomBot starten?` Then allow optional extras. Keep texture as ranking, not exclusion. | Copy + flow + future logic | Relevance up, trust up, goal quality up |
+| `Was ist dir ausserdem wichtig?` | `goals` | `rework`, `reword`, `clarify selection model` | The current goal list is texture-filtered so aggressively that valid user intent can disappear. | Users may feel the product is telling them what they should want instead of listening. | Replace hard filtering with relevance sorting. Ask one primary goal first: `Womit soll Hair Concierge starten?` Then allow optional extras. Keep texture as ranking, not exclusion. | Copy + flow + future logic | Relevance up, trust up, goal quality up |
 
 ## Handoff Findings
 
@@ -149,7 +149,7 @@ Why this order is stronger:
   - `Noch 3 kurze Schritte bis zu deinem vollständigen Profil`
 - Preserve entered email and default to the most likely mode.
 - The screen should explain why account creation happens here:
-  - `Damit dein Profil gespeichert bleibt und TomBot darauf aufbauen kann.`
+  - `Damit dein Profil gespeichert bleibt und deine Beratung darauf aufbauen kann.`
 
 ### 5. Onboarding: three coherent steps
 
@@ -162,7 +162,7 @@ Collect:
 
 Recommended shape:
 - Mandatory: `Wie viel Volumen willst du?`
-- Mandatory: `Womit soll TomBot zuerst starten?`
+- Mandatory: `Womit soll Hair Concierge zuerst starten?`
 - Optional: `Was ist dir zusätzlich wichtig?`
 - Mandatory: `Wie aufwendig darf dein Plan sein?`
 
@@ -199,7 +199,7 @@ Collect:
 Recommended shape:
 - Title example: `Zum Schluss noch 2 Dinge für das Feintuning`
 - Explain the purpose directly:
-  - `Damit TomBot Produktgewicht und Belastung besser einschätzen kann.`
+  - `Damit Hair Concierge Produktgewicht und Belastung besser einschaetzen kann.`
 
 Why this belongs last:
 - These are valuable refiners, but low-emotion asks.

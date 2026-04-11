@@ -45,7 +45,7 @@ export function QuizWelcome() {
           Noch 3 kurze Schritte bis zu deinem vollstaendigen Profil
         </p>
         <p className="text-sm text-white/40 mb-8 leading-relaxed">
-          Damit dein Profil gespeichert bleibt und TomBot darauf aufbauen kann.
+          Damit dein Profil gespeichert bleibt und deine Beratung darauf aufbauen kann.
         </p>
 
         <AuthForm

@@ -96,7 +96,7 @@ const PROFILE_FIELDS: ProfileFieldDef[] = [
   {
     key: "desired_volume",
     label: "Gewuenschtes Volumen",
-    helpText: "Steuert, ob TomBot eher Ruhe oder mehr Fuelle priorisiert",
+    helpText: "Steuert, ob eher Ruhe oder mehr Fuelle priorisiert wird",
     getValue: (hp) => {
       const fallbackVolume = hp?.desired_volume ?? (hp?.goals?.includes("volume") ? "more" : null)
       return fallbackVolume ? DESIRED_VOLUME_LABELS[fallbackVolume] ?? fallbackVolume : null
@@ -680,7 +680,7 @@ export default function ProfilePage() {
                     <div>
                       <label className="mb-1 block text-sm font-medium">Gewuenschtes Volumen</label>
                       <p className="mb-2 text-xs text-muted-foreground">
-                        Soll TomBot eher auf weniger, ausgeglichenes oder mehr Volumen optimieren?
+                        Soll eher auf weniger, ausgeglichenes oder mehr Volumen optimiert werden?
                       </p>
                       <SegmentedControl
                         options={DESIRED_VOLUME_OPTIONS}
@@ -1057,7 +1057,7 @@ export default function ProfilePage() {
         <section className="mt-6 rounded-xl border bg-card p-6">
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-lg font-semibold">Was TomBot sich merkt</h2>
+              <h2 className="text-lg font-semibold">Was sich dein Profil merkt</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Diese Haarpflege-Erinnerungen helfen bei Antworten und Produktempfehlungen.
               </p>
@@ -1074,8 +1074,8 @@ export default function ProfilePage() {
             <p className="text-sm text-muted-foreground">Erinnerungen werden geladen...</p>
           ) : memoryEntries.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Noch keine gespeicherten Erinnerungen. Wenn du TomBot im Chat konkrete
-              Haarpflege-Infos gibst, kann er sie hier ablegen.
+              Noch keine gespeicherten Erinnerungen. Wenn du im Chat konkrete
+              Haarpflege-Infos gibst, koennen sie hier abgelegt werden.
             </p>
           ) : (
             <div className="divide-y">

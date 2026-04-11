@@ -339,18 +339,6 @@ export function ProductDetailDrawer({
             </div>
           )}
 
-          {/* Tom's take */}
-          {product.tom_take && (
-            <div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Toms Meinung
-              </p>
-              <p className="text-sm italic text-foreground">
-                &ldquo;{product.tom_take}&rdquo;
-              </p>
-            </div>
-          )}
-
           {/* Description */}
           {description && (
             <div>

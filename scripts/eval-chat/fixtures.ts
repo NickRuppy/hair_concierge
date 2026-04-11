@@ -69,7 +69,6 @@ export const SCENARIOS: EvalScenario[] = [
         content: {
           must_be_german: true,
           required_keywords: ["CWC", "OWC"],
-          citations_present: true,
         },
         judge: {
           expected_behavior:

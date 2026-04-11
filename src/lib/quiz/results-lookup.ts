@@ -80,4 +80,4 @@ export const shareQuoteFallback: Record<string, string> = {
 
 // --- Hope text (always the same) ---
 export const hopeText =
-  "Das Gute: Deine Haare sind nicht hoffnungslos. Sie brauchen die richtige Reihenfolge aus Reinigung, Pflege und Schutz. Im naechsten Schritt legt TomBot noch deine Ziele und deine Wunsch-Routine fest."
+  "Das Gute: Deine Haare sind nicht hoffnungslos. Sie brauchen die richtige Reihenfolge aus Reinigung, Pflege und Schutz. Im naechsten Schritt schaerfen wir noch deine Ziele und deine Wunsch-Routine."

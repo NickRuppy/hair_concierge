@@ -1,7 +1,7 @@
 /**
  * Q&A Validation Test
  *
- * Sends curated questions from Tom's community Q&A through the Hair Concierge
+ * Sends curated questions from the legacy community Q&A set through Hair Concierge
  * chat and captures AI responses for manual comparison.
  *
  * Usage:
@@ -21,7 +21,7 @@ interface QAFixture {
   chat_id: string
   context: string
   question: string
-  tom_answer: string
+  reference_answer: string
   hair_texture: string | null
   topics: string[]
   is_standalone: boolean
@@ -30,7 +30,7 @@ interface QAFixture {
 interface QATestResult {
   fixture_id: string
   question: string
-  tom_answer: string
+  reference_answer: string
   ai_answer: string
   timestamp: string
   error?: string
@@ -69,6 +69,7 @@ function loadFixtures(): QAFixture[] {
       `Fixtures not found at ${FIXTURES_PATH}. Run: npm run test:extract`
     )
   }
+
   return JSON.parse(fs.readFileSync(FIXTURES_PATH, "utf-8"))
 }
 
@@ -125,7 +126,7 @@ test.describe("Q&A Validation", () => {
       const result: QATestResult = {
         fixture_id: fixture.id,
         question: fixture.question,
-        tom_answer: fixture.tom_answer,
+        reference_answer: fixture.reference_answer,
         ai_answer: "",
         timestamp: new Date().toISOString(),
       }

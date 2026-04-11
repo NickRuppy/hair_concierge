@@ -193,7 +193,7 @@ test.describe("Deployed App E2E Tests", () => {
         page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })
       ).toBeVisible({ timeout: 15000 })
     } else {
-      await expect(page.getByText("TomBot")).toBeVisible({ timeout: 15000 })
+      await expect(page.getByText("Hair Concierge")).toBeVisible({ timeout: 15000 })
     }
   })
 
@@ -220,8 +220,8 @@ test.describe("Deployed App E2E Tests", () => {
   test("auth page renders login/signup form", async ({ page }) => {
     await page.goto("/auth", { waitUntil: "domcontentloaded" })
 
-    // Should show the TomBot branding
-    await expect(page.getByText("TomBot").first()).toBeVisible({
+    // Should show the Hair Concierge branding
+    await expect(page.getByText("Hair Concierge").first()).toBeVisible({
       timeout: 15000,
     })
 
@@ -259,7 +259,7 @@ test.describe("Deployed App E2E Tests", () => {
 
   test("auth page: switch between login and signup tabs", async ({ page }) => {
     await page.goto("/auth", { waitUntil: "networkidle" })
-    await expect(page.getByText("TomBot").first()).toBeVisible({
+    await expect(page.getByText("Hair Concierge").first()).toBeVisible({
       timeout: 15000,
     })
 

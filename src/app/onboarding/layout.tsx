@@ -43,7 +43,7 @@ function OnboardingBrandPanel() {
       {/* Content */}
       <div className="relative z-10 max-w-[360px] text-center">
         <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-          TOM<br />BOT
+          HAIR<br />CONCIERGE
         </h2>
         <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
         <p className="text-lg text-white/50 leading-relaxed">
