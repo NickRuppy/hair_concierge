@@ -21,6 +21,14 @@ For trivial tasks (single file, <20 lines changed), skip the options table and p
 
 Before invoking `executing-plans` or `subagent-driven-development`, always invoke the `branch-gate` skill first. This is mandatory — no exceptions.
 
+## Git Workflow
+
+- Default to repo-local worktrees for new implementation work, fixes, and parallel investigations
+- Treat the root checkout as the stable base checkout; do not switch branches in place for new tasks unless the user explicitly asks
+- Create task worktrees under `.worktrees/<slug>` on branches `codex/<slug>`, based on `origin/main` when available
+- Use `npm run worktree:new -- <slug>` to create a bootstrapped worktree
+- Use `npm run dev:worktree` inside a worktree so parallel runs do not fight over the same port
+
 ## Project Conventions
 
 - All UI text is in German

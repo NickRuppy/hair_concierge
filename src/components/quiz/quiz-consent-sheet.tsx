@@ -31,7 +31,9 @@ export function QuizConsentSheet({ open, saving, onConsent }: QuizConsentSheetPr
           Experten-Tipps, Produkt-News und exklusive Angebote.
         </p>
         <p className="text-center text-xs text-white/38 mb-6 leading-relaxed">
-          Du kannst dich jederzeit abmelden ueber den Link in unseren E-Mails. Unsere Datenschutzerklaerung findest du hier.
+          Du kannst dich jederzeit abmelden über den Link in unseren E-Mails. Unsere{" "}
+          <a href="/datenschutz" target="_blank" className="underline hover:text-white/60">Datenschutzerklärung</a>{" "}
+          findest du hier.
         </p>
 
         <Button

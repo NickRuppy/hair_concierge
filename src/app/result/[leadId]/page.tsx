@@ -39,7 +39,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const name = lead.name as string
   const quote = (lead.share_quote as string) || "Finde heraus, was deine Haare wirklich brauchen."
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
 
   return {
     title: `${name}s Haar-Diagnose — Hair Concierge`,
