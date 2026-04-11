@@ -7,19 +7,19 @@ export function QuizBrandPanel() {
   const leadCaptureSubStep = useQuizStore((s) => s.leadCaptureSubStep)
 
   const QUESTION_NUMBER_MAP: Record<number, number> = {
-    2: 1,  // texture
-    3: 2,  // thickness
-    4: 3,  // surface
-    5: 4,  // pull
-    7: 5,  // chemical
-    6: 6,  // scalp
+    2: 1, // texture
+    3: 2, // thickness
+    4: 3, // surface
+    5: 4, // pull
+    7: 5, // chemical
+    6: 6, // scalp
   }
   const questionNumber = QUESTION_NUMBER_MAP[step] ?? null
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center px-12">
-      {/* Charcoal base + noise texture */}
-      <div className="absolute inset-0 bg-[#1A1618]" />
+      {/* Light plum base */}
+      <div className="absolute inset-0 bg-background" />
       <div
         className="absolute inset-0 opacity-[0.03]"
         style={{
@@ -29,11 +29,12 @@ export function QuizBrandPanel() {
         }}
       />
 
-      {/* Yellow brush-stroke accent */}
+      {/* Plum brush-stroke accent */}
       <div
         className="absolute left-[-20%] top-[15%] h-[300px] w-[140%] rotate-[-8deg] opacity-[0.07]"
         style={{
-          background: "linear-gradient(90deg, transparent, #FFBE10 30%, #F5C518 70%, transparent)",
+          background:
+            "linear-gradient(90deg, transparent, var(--brand-plum) 30%, var(--brand-plum-dark) 70%, transparent)",
           borderRadius: "50%",
           filter: "blur(40px)",
         }}
@@ -55,12 +56,13 @@ export function QuizBrandPanel() {
 function LandingPanel() {
   return (
     <>
-      <h1 className="font-header text-6xl leading-[0.95] text-white mb-6">
-        HAIR<br />
-        CONCIERGE
+      <h1 className="font-header text-6xl leading-[0.95] text-foreground mb-6">
+        Hair
+        <br />
+        Concierge
       </h1>
-      <div className="mx-auto mb-6 h-1 w-16 rounded-full bg-[#F5C518]" />
-      <p className="text-lg text-white/50 leading-relaxed">
+      <div className="mx-auto mb-6 h-1 w-16 rounded-full bg-[var(--brand-plum)]" />
+      <p className="text-lg text-muted-foreground leading-relaxed">
         Dein Haar verdient mehr als Raten.
         <br />
         Finde heraus, was es wirklich braucht.
@@ -72,16 +74,19 @@ function LandingPanel() {
 function QuestionPanel({ questionNumber }: { questionNumber: number }) {
   return (
     <>
-      <div className="mb-6 font-header text-sm tracking-[0.2em] text-[#F5C518]">
+      <div className="mb-6 font-header text-sm tracking-[0.2em] text-[var(--brand-plum)]">
         FRAGE {questionNumber} VON 6
       </div>
-      <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-        HAIR<br />CONCIERGE
+      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
+        Hair
+        <br />
+        Concierge
       </h2>
-      <div className="mx-auto mb-4 h-1 w-12 rounded-full bg-[#F5C518]/40" />
-      <p className="text-sm text-white/40">
-        Personalisierte Haarpflege-Beratung
-      </p>
+      <div
+        className="mx-auto mb-4 h-1 w-12 rounded-full"
+        style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
+      />
+      <p className="text-sm text-[var(--text-caption)]">Personalisierte Haarpflege-Beratung</p>
     </>
   )
 }
@@ -89,14 +94,17 @@ function QuestionPanel({ questionNumber }: { questionNumber: number }) {
 function LeadCapturePanel({ subStep }: { subStep: string }) {
   return (
     <>
-      <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-        HAIR<br />CONCIERGE
+      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
+        Hair
+        <br />
+        Concierge
       </h2>
-      <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
-      <p className="text-lg text-white/50 leading-relaxed">
-        {subStep === "consent"
-          ? "Gleich hast du deinen Plan."
-          : "Dein Profil ist fast fertig."}
+      <div
+        className="mx-auto mb-6 h-1 w-12 rounded-full"
+        style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
+      />
+      <p className="text-lg text-muted-foreground leading-relaxed">
+        {subStep === "consent" ? "Gleich hast du deinen Plan." : "Dein Profil ist fast fertig."}
       </p>
     </>
   )
@@ -105,12 +113,17 @@ function LeadCapturePanel({ subStep }: { subStep: string }) {
 function AnalysisPanel() {
   return (
     <>
-      <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-        HAIR<br />CONCIERGE
+      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
+        Hair
+        <br />
+        Concierge
       </h2>
-      <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
-      <p className="font-header text-2xl tracking-wider text-[#F5C518] animate-pulse">
-        ANALYSIERE...
+      <div
+        className="mx-auto mb-6 h-1 w-12 rounded-full"
+        style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
+      />
+      <p className="font-header text-2xl tracking-wider text-[var(--brand-plum)] animate-pulse">
+        Analysiere...
       </p>
     </>
   )
@@ -119,13 +132,16 @@ function AnalysisPanel() {
 function ResultsPanel() {
   return (
     <>
-      <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-        HAIR<br />CONCIERGE
+      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
+        Hair
+        <br />
+        Concierge
       </h2>
-      <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
-      <p className="text-lg text-white/50 leading-relaxed">
-        Deine Diagnose
-      </p>
+      <div
+        className="mx-auto mb-6 h-1 w-12 rounded-full"
+        style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
+      />
+      <p className="text-lg text-muted-foreground leading-relaxed">Deine Diagnose</p>
     </>
   )
 }
@@ -133,13 +149,16 @@ function ResultsPanel() {
 function WelcomePanel() {
   return (
     <>
-      <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-        HAIR<br />CONCIERGE
+      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
+        Hair
+        <br />
+        Concierge
       </h2>
-      <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
-      <p className="text-lg text-white/50 leading-relaxed">
-        Dein naechster Schritt
-      </p>
+      <div
+        className="mx-auto mb-6 h-1 w-12 rounded-full"
+        style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
+      />
+      <p className="text-lg text-muted-foreground leading-relaxed">Dein naechster Schritt</p>
     </>
   )
 }

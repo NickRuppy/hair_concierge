@@ -20,7 +20,9 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <Link href="/chat" className="flex items-center gap-2">
-          <span className="font-header text-2xl tracking-wide text-primary">Hair Concierge</span>
+          <span className="font-header text-2xl tracking-wide text-[var(--text-heading)]">
+            Hair Concierge
+          </span>
         </Link>
 
         {/* Desktop nav */}
@@ -52,6 +54,7 @@ export function Header() {
         <button
           className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent md:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Menü öffnen"
         >
           <Menu className="h-5 w-5" />
         </button>
@@ -61,28 +64,16 @@ export function Header() {
       {menuOpen && (
         <div className="border-t bg-background p-4 md:hidden">
           <nav className="flex flex-col gap-1">
-            <MobileNavLink
-              href="/chat"
-              current={pathname}
-              onClick={() => setMenuOpen(false)}
-            >
+            <MobileNavLink href="/chat" current={pathname} onClick={() => setMenuOpen(false)}>
               <MessageCircle className="mr-2 h-4 w-4" />
               Chat
             </MobileNavLink>
-            <MobileNavLink
-              href="/profile"
-              current={pathname}
-              onClick={() => setMenuOpen(false)}
-            >
+            <MobileNavLink href="/profile" current={pathname} onClick={() => setMenuOpen(false)}>
               <User className="mr-2 h-4 w-4" />
               Profil
             </MobileNavLink>
             {profile?.is_admin && (
-              <MobileNavLink
-                href="/admin"
-                current={pathname}
-                onClick={() => setMenuOpen(false)}
-              >
+              <MobileNavLink href="/admin" current={pathname} onClick={() => setMenuOpen(false)}>
                 <Shield className="mr-2 h-4 w-4" />
                 Admin
               </MobileNavLink>

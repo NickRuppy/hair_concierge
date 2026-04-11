@@ -69,7 +69,7 @@ export default function AdminDashboard() {
       label: "Produkte",
       value: stats.productCount,
       icon: Package,
-      color: "text-secondary",
+      color: "text-primary",
     },
     {
       label: "Artikel",
@@ -86,16 +86,11 @@ export default function AdminDashboard() {
         {cards.map((card) => {
           const Icon = card.icon
           return (
-            <div
-              key={card.label}
-              className="rounded-xl border bg-card p-6 shadow-sm"
-            >
+            <div key={card.label} className="rounded-xl border bg-card p-6 shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{card.label}</p>
-                  <p className="mt-1 text-3xl font-bold">
-                    {loading ? "—" : card.value}
-                  </p>
+                  <p className="mt-1 text-3xl font-bold">{loading ? "—" : card.value}</p>
                 </div>
                 <Icon className={`h-8 w-8 ${card.color} opacity-80`} />
               </div>

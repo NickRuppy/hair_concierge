@@ -1,6 +1,6 @@
 export default function OnboardingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-[100dvh] bg-[#231F20]">
+    <div className="flex min-h-[100dvh] bg-background">
       {/* Left panel — brand (hidden on mobile) */}
       <div className="sticky top-0 hidden h-screen w-1/2 items-center justify-center overflow-hidden md:flex">
         <OnboardingBrandPanel />
@@ -8,9 +8,7 @@ export default function OnboardingLayout({ children }: { children: React.ReactNo
 
       {/* Right panel — onboarding content (full-width on mobile) */}
       <div className="w-full overflow-y-auto md:w-1/2">
-        <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">
-          {children}
-        </div>
+        <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">{children}</div>
       </div>
     </div>
   )
@@ -20,7 +18,7 @@ function OnboardingBrandPanel() {
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center px-12">
       {/* Charcoal base + noise texture */}
-      <div className="absolute inset-0 bg-[#1A1618]" />
+      <div className="absolute inset-0 bg-background" />
       <div
         className="absolute inset-0 opacity-[0.03]"
         style={{
@@ -34,7 +32,8 @@ function OnboardingBrandPanel() {
       <div
         className="absolute left-[-20%] top-[15%] h-[300px] w-[140%] rotate-[-8deg] opacity-[0.07]"
         style={{
-          background: "linear-gradient(90deg, transparent, #FFBE10 30%, #F5C518 70%, transparent)",
+          background:
+            "linear-gradient(90deg, transparent, var(--brand-plum) 30%, var(--brand-plum-dark) 70%, transparent)",
           borderRadius: "50%",
           filter: "blur(40px)",
         }}
@@ -42,13 +41,13 @@ function OnboardingBrandPanel() {
 
       {/* Content */}
       <div className="relative z-10 max-w-[360px] text-center">
-        <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-          HAIR<br />CONCIERGE
+        <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
+          Hair
+          <br />
+          Concierge
         </h2>
-        <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
-        <p className="text-lg text-white/50 leading-relaxed">
-          Dein Haar, dein Plan.
-        </p>
+        <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[var(--brand-plum)]/40" />
+        <p className="text-lg text-muted-foreground leading-relaxed">Dein Haar, dein Plan.</p>
       </div>
     </div>
   )

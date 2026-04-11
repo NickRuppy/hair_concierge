@@ -1,18 +1,25 @@
 import type { Metadata, Viewport } from "next"
-import { Bebas_Neue, Montserrat } from "next/font/google"
+import { Playfair_Display, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
 import { AuthProvider } from "@/providers/auth-provider"
 import { PostHogClientProvider } from "@/providers/posthog-provider"
 import { ToastProvider } from "@/providers/toast-provider"
 import "./globals.css"
 
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  variable: "--font-bebas-neue",
+const playfairDisplay = Playfair_Display({
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair-display",
   subsets: ["latin"],
 })
 
-const montserrat = Montserrat({
-  variable: "--font-body",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta-sans",
+  subsets: ["latin"],
+})
+
+const ibmPlexMono = IBM_Plex_Mono({
+  weight: ["400", "500"],
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
 })
 
@@ -24,7 +31,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#231F20",
+  themeColor: "#FDFBF9",
 }
 
 export const metadata: Metadata = {
@@ -41,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body
-        className={`${bebasNeue.variable} ${montserrat.variable} antialiased`}
+        className={`${playfairDisplay.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} antialiased`}
       >
         <AuthProvider>
           <PostHogClientProvider>

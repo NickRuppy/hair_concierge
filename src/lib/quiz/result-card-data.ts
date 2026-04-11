@@ -9,9 +9,11 @@ import {
 } from "./results-lookup"
 import { normalizeStoredQuizAnswers } from "./normalization"
 
+import type { IconName } from "@/components/ui/icon"
+
 export interface CardData {
   haartypLabel: string
-  cards: { emoji: string; title: string; description: string }[]
+  cards: { icon: IconName; title: string; description: string }[]
   /** Short summary line: "Wellig · Fein · Trocken" */
   summaryLine: string
 }
@@ -40,32 +42,31 @@ export function buildCardData(rawAnswers: QuizAnswers): CardData {
 
   const scalpDesc =
     (scalpTypeResults[answers.scalp_type ?? ""] ?? "") +
-    (scalpConditionResults[answers.scalp_condition ?? ""] ?? "") ||
-    "Keine Angaben zur Kopfhaut."
+      (scalpConditionResults[answers.scalp_condition ?? ""] ?? "") || "Keine Angaben zur Kopfhaut."
 
   const cards = [
     {
-      emoji: "\uD83E\uDDEC",
+      icon: "result-dna" as const,
       title: "Haartyp",
       description: getHaartypLabel(answers),
     },
     {
-      emoji: "\uD83D\uDCD0",
+      icon: "result-clipboard" as const,
       title: "Haarstaerke",
       description: thicknessResults[answers.thickness ?? ""] ?? "",
     },
     {
-      emoji: "\uD83D\uDD2C",
+      icon: "result-microscope" as const,
       title: "Oberflaeche",
       description: surfaceResults[answers.fingertest ?? ""] ?? "",
     },
     {
-      emoji: "\u2696\uFE0F",
+      icon: "result-balance" as const,
       title: "Protein vs. Feuchtigkeit",
       description: pullTestResults[answers.pulltest ?? ""] ?? "",
     },
     {
-      emoji: "\uD83E\uDDF4",
+      icon: "result-scalp" as const,
       title: "Kopfhaut",
       description: scalpDesc,
     },

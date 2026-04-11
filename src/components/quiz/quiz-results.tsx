@@ -1,9 +1,7 @@
 "use client"
 
 import { useQuizStore } from "@/lib/quiz/store"
-import {
-  hopeText,
-} from "@/lib/quiz/results-lookup"
+import { hopeText } from "@/lib/quiz/results-lookup"
 import { QuizProfileCard } from "./quiz-profile-card"
 import { QuizCard } from "./quiz-card"
 import { Button } from "@/components/ui/button"
@@ -29,19 +27,26 @@ export function QuizResults() {
       {/* Inline brand mark (replaces left panel on results page) */}
       <div className="flex items-center gap-2 mb-6">
         <div className="flex gap-[3px]">
-          <div className="w-[3px] h-5 bg-[#F5C518] rounded-full" />
-          <div className="w-[3px] h-5 bg-[#F5C518]/60 rounded-full" />
-          <div className="w-[3px] h-5 bg-[#F5C518]/30 rounded-full" />
+          <div className="w-[3px] h-5 bg-[var(--brand-plum)] rounded-full" />
+          <div
+            className="w-[3px] h-5 rounded-full"
+            style={{ background: "rgba(var(--brand-plum-rgb), 0.6)" }}
+          />
+          <div
+            className="w-[3px] h-5 rounded-full"
+            style={{ background: "rgba(var(--brand-plum-rgb), 0.3)" }}
+          />
         </div>
-        <span className="font-header text-sm text-white/50 tracking-widest">HAIR CONCIERGE</span>
+        <span className="font-header text-sm text-muted-foreground tracking-widest">HAIR CONCIERGE</span>
       </div>
 
       {/* Header */}
-      <h2 className="font-header text-3xl text-white mb-1">
+      <h2 className="font-header text-3xl text-foreground mb-1">
         {lead.name.toUpperCase()}, DEIN HAARPROFIL
       </h2>
-      <p className="text-base text-white/60 mb-5">
-        Dein Profil ist fast fertig — im naechsten Schritt geht es weiter mit deinen Zielen und deiner Routine.
+      <p className="text-base text-muted-foreground mb-5">
+        Dein Profil ist fast fertig — im naechsten Schritt geht es weiter mit deinen Zielen und
+        deiner Routine.
       </p>
 
       {/* Profile cards — responsive grid */}
@@ -49,7 +54,7 @@ export function QuizResults() {
         {cardData.cards.map((card, i) => (
           <QuizProfileCard
             key={card.title}
-            emoji={card.emoji}
+            icon={card.icon}
             title={card.title}
             description={card.description}
             animationDelay={i * 80}
@@ -60,17 +65,17 @@ export function QuizResults() {
       {/* Aha-Moment box — full width */}
       {aiInsight && (
         <div className="animate-fade-in-up mb-6" style={{ animationDelay: "500ms" }}>
-          <QuizCard className="border-[#F5C518]/20">
-            <p className="text-xs font-semibold text-[#F5C518] uppercase tracking-wide mb-2">
+          <QuizCard className="border-[var(--brand-plum)]/20">
+            <p className="text-xs font-semibold text-[var(--brand-plum)] uppercase tracking-wide mb-2">
               WAS BISHER WAHRSCHEINLICH SCHIEF LIEF
             </p>
-            <p className="text-sm text-white/80 leading-relaxed">{aiInsight}</p>
+            <p className="text-sm text-foreground leading-relaxed">{aiInsight}</p>
           </QuizCard>
         </div>
       )}
 
       {/* Hope text */}
-      <p className="text-base text-white/60 leading-relaxed mb-6">{hopeText}</p>
+      <p className="text-base text-muted-foreground leading-relaxed mb-6">{hopeText}</p>
 
       {/* CTA */}
       <div className="flex flex-col gap-3 sm:max-w-md sm:mx-auto w-full">
@@ -89,7 +94,7 @@ export function QuizResults() {
               window.open(`/result/${leadId}`, "_blank")
             }}
             variant="outline"
-            className="w-full h-12 text-sm font-bold tracking-wide rounded-xl border-white/20 text-white hover:bg-white/10"
+            className="w-full h-12 text-sm font-bold tracking-wide rounded-xl border-border text-foreground hover:bg-muted"
           >
             ERGEBNIS TEILEN
           </Button>

@@ -27,7 +27,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
   const currentValue = answers[answerKey]
 
   const [localSelection, setLocalSelection] = useState<string | string[]>(
-    currentValue ?? (question.selectionMode === "multi" ? [] : "")
+    currentValue ?? (question.selectionMode === "multi" ? [] : ""),
   )
   const [advancing, setAdvancing] = useState(false)
 
@@ -41,7 +41,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
         goNext()
       }, 400)
     },
-    [answerKey, setAnswer, goNext, advancing]
+    [answerKey, setAnswer, goNext, advancing],
   )
 
   const handleMultiSelect = useCallback(
@@ -61,7 +61,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
         return [...arr, value]
       })
     },
-    [answerKey, question.maxSelections]
+    [answerKey, question.maxSelections],
   )
 
   const handleMultiContinue = () => {
@@ -80,33 +80,33 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
     <div className="flex flex-col" key={question.step}>
       {/* Back button + progress */}
       <div className="flex items-center gap-3 mb-4">
-        <button onClick={goBack} className="flex min-h-[44px] min-w-[44px] items-center justify-center text-white/60 hover:text-white transition-colors">
+        <button
+          onClick={goBack}
+          aria-label="Zurück"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+        >
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
           <QuizProgressBar current={question.questionNumber} total={6} />
         </div>
-        <span className="text-sm text-white/38 tabular-nums">
+        <span className="text-sm text-[var(--text-caption)] tabular-nums">
           {question.questionNumber}/6
         </span>
       </div>
 
       {/* Title */}
-      <h2 className="font-header text-3xl leading-tight text-white mb-2">
-        {question.title}
-      </h2>
+      <h2 className="font-header text-3xl leading-tight text-foreground mb-2">{question.title}</h2>
 
       {/* Instruction */}
-      <p className="text-sm text-white/60 leading-relaxed mb-5">
-        {question.instruction}
-      </p>
+      <p className="text-sm text-muted-foreground leading-relaxed mb-5">{question.instruction}</p>
 
       {/* Options */}
       <div className="space-y-3 flex-1">
         {question.options.map((opt, i) => (
           <QuizOptionCard
             key={opt.value}
-            emoji={opt.emoji}
+            icon={opt.icon}
             label={opt.label}
             description={opt.description}
             active={isSelected(opt.value)}
@@ -129,15 +129,13 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
             variant="unstyled"
             className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${multiHasSelection ? "quiz-btn-primary" : "disabled:opacity-40"}`}
           >
-            WEITER
+            Weiter
           </Button>
         </div>
       )}
 
       {/* Motivation text */}
-      <p className="mt-3 text-center text-sm text-white/38">
-        {question.motivation}
-      </p>
+      <p className="mt-3 text-center text-sm text-[var(--text-caption)]">{question.motivation}</p>
     </div>
   )
 }

@@ -23,10 +23,7 @@ import {
   LEAVE_IN_STYLING_CONTEXT_LABELS,
   LEAVE_IN_WEIGHT_LABELS,
 } from "@/lib/leave-in/constants"
-import {
-  OIL_SUBTYPE_LABELS,
-  OIL_USE_MODE_LABELS,
-} from "@/lib/oil/constants"
+import { OIL_SUBTYPE_LABELS, OIL_USE_MODE_LABELS } from "@/lib/oil/constants"
 import { ProductImage } from "./product-image"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -59,20 +56,14 @@ export function ProductDetailDrawer({
     <BottomSheet open={open} onOpenChange={onOpenChange}>
       <BottomSheetContent>
         <BottomSheetHeader className="gap-4 pb-4">
-          <ProductImage
-            imageUrl={product.image_url}
-            category={product.category}
-            size="lg"
-          />
+          <ProductImage imageUrl={product.image_url} category={product.category} size="lg" />
           <div className="min-w-0 flex-1">
             {product.brand && (
-              <p className="text-sm font-medium text-muted-foreground">
-                {product.brand}
-              </p>
+              <p className="text-sm font-medium text-muted-foreground">{product.brand}</p>
             )}
             <BottomSheetTitle className="text-lg">{product.name}</BottomSheetTitle>
             {product.category && (
-              <Badge variant="secondary" className="mt-2">
+              <Badge variant="default" className="mt-2">
                 {product.category}
               </Badge>
             )}
@@ -83,9 +74,7 @@ export function ProductDetailDrawer({
           {/* Personalization */}
           {personalization && (
             <div className="rounded-lg bg-primary/10 px-4 py-3">
-              <p className="text-sm font-medium text-primary">
-                {personalization}
-              </p>
+              <p className="text-sm font-medium text-primary">{personalization}</p>
             </div>
           )}
 
@@ -145,18 +134,30 @@ export function ProductDetailDrawer({
                     <div className="mt-1 flex flex-wrap gap-1.5">
                       {product.recommendation_meta.matched_profile.thickness && (
                         <Badge variant="outline" className="text-xs">
-                          {HAIR_THICKNESS_LABELS[product.recommendation_meta.matched_profile.thickness]}
+                          {
+                            HAIR_THICKNESS_LABELS[
+                              product.recommendation_meta.matched_profile.thickness
+                            ]
+                          }
                         </Badge>
                       )}
                       {product.recommendation_meta.matched_profile.scalp_type && (
                         <Badge variant="outline" className="text-xs">
-                          {SCALP_TYPE_LABELS[product.recommendation_meta.matched_profile.scalp_type]}
+                          {
+                            SCALP_TYPE_LABELS[
+                              product.recommendation_meta.matched_profile.scalp_type
+                            ]
+                          }
                         </Badge>
                       )}
                       {product.recommendation_meta.matched_profile.scalp_condition &&
                         product.recommendation_meta.matched_profile.scalp_condition !== "none" && (
                           <Badge variant="outline" className="text-xs">
-                            {SCALP_CONDITION_LABELS[product.recommendation_meta.matched_profile.scalp_condition]}
+                            {
+                              SCALP_CONDITION_LABELS[
+                                product.recommendation_meta.matched_profile.scalp_condition
+                              ]
+                            }
                           </Badge>
                         )}
                     </div>
@@ -170,9 +171,12 @@ export function ProductDetailDrawer({
                       <div>
                         <p className="text-xs font-medium text-muted-foreground">Pflegefokus</p>
                         <p className="text-sm text-foreground">
-                          {product.recommendation_meta.matched_balance_need === "moisture" && "Feuchtigkeit"}
-                          {product.recommendation_meta.matched_balance_need === "balanced" && "Ausgewogene Pflege"}
-                          {product.recommendation_meta.matched_balance_need === "protein" && "Protein"}
+                          {product.recommendation_meta.matched_balance_need === "moisture" &&
+                            "Feuchtigkeit"}
+                          {product.recommendation_meta.matched_balance_need === "balanced" &&
+                            "Ausgewogene Pflege"}
+                          {product.recommendation_meta.matched_balance_need === "protein" &&
+                            "Protein"}
                         </p>
                       </div>
                     )}
@@ -188,7 +192,11 @@ export function ProductDetailDrawer({
                       <div>
                         <p className="text-xs font-medium text-muted-foreground">Repair-Level</p>
                         <p className="text-sm text-foreground">
-                          {CONDITIONER_REPAIR_LEVEL_LABELS[product.recommendation_meta.matched_repair_level]}
+                          {
+                            CONDITIONER_REPAIR_LEVEL_LABELS[
+                              product.recommendation_meta.matched_repair_level
+                            ]
+                          }
                         </p>
                       </div>
                     )}
@@ -196,7 +204,11 @@ export function ProductDetailDrawer({
                       <div>
                         <p className="text-xs font-medium text-muted-foreground">Zugtest</p>
                         <p className="text-sm text-foreground">
-                          {PROTEIN_MOISTURE_LABELS[product.recommendation_meta.matched_profile.protein_moisture_balance]}
+                          {
+                            PROTEIN_MOISTURE_LABELS[
+                              product.recommendation_meta.matched_profile.protein_moisture_balance
+                            ]
+                          }
                         </p>
                       </div>
                     )}
@@ -207,7 +219,11 @@ export function ProductDetailDrawer({
                     <div className="mt-1 flex flex-wrap gap-1.5">
                       {product.recommendation_meta.matched_profile.thickness && (
                         <Badge variant="outline" className="text-xs">
-                          {HAIR_THICKNESS_LABELS[product.recommendation_meta.matched_profile.thickness]}
+                          {
+                            HAIR_THICKNESS_LABELS[
+                              product.recommendation_meta.matched_profile.thickness
+                            ]
+                          }
                         </Badge>
                       )}
                       {product.recommendation_meta.matched_profile.density && (
@@ -217,14 +233,20 @@ export function ProductDetailDrawer({
                       )}
                       {product.recommendation_meta.matched_profile.cuticle_condition && (
                         <Badge variant="outline" className="text-xs">
-                          {CUTICLE_CONDITION_LABELS[product.recommendation_meta.matched_profile.cuticle_condition]}
+                          {
+                            CUTICLE_CONDITION_LABELS[
+                              product.recommendation_meta.matched_profile.cuticle_condition
+                            ]
+                          }
                         </Badge>
                       )}
-                      {product.recommendation_meta.matched_profile.chemical_treatment.map((treatment) => (
-                        <Badge key={treatment} variant="outline" className="text-xs">
-                          {CHEMICAL_TREATMENT_LABELS[treatment] ?? treatment}
-                        </Badge>
-                      ))}
+                      {product.recommendation_meta.matched_profile.chemical_treatment.map(
+                        (treatment) => (
+                          <Badge key={treatment} variant="outline" className="text-xs">
+                            {CHEMICAL_TREATMENT_LABELS[treatment] ?? treatment}
+                          </Badge>
+                        ),
+                      )}
                     </div>
                   </div>
                 </>
@@ -244,15 +266,25 @@ export function ProductDetailDrawer({
                       <div>
                         <p className="text-xs font-medium text-muted-foreground">Styling-Kontext</p>
                         <p className="text-sm text-foreground">
-                          {LEAVE_IN_STYLING_CONTEXT_LABELS[product.recommendation_meta.styling_context]}
+                          {
+                            LEAVE_IN_STYLING_CONTEXT_LABELS[
+                              product.recommendation_meta.styling_context
+                            ]
+                          }
                         </p>
                       </div>
                     )}
                     {product.recommendation_meta.conditioner_relationship && (
                       <div>
-                        <p className="text-xs font-medium text-muted-foreground">Conditioner-Rolle</p>
+                        <p className="text-xs font-medium text-muted-foreground">
+                          Conditioner-Rolle
+                        </p>
                         <p className="text-sm text-foreground">
-                          {LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[product.recommendation_meta.conditioner_relationship]}
+                          {
+                            LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[
+                              product.recommendation_meta.conditioner_relationship
+                            ]
+                          }
                         </p>
                       </div>
                     )}
@@ -271,12 +303,20 @@ export function ProductDetailDrawer({
                     <div className="mt-1 flex flex-wrap gap-1.5">
                       {product.recommendation_meta.matched_profile.hair_texture && (
                         <Badge variant="outline" className="text-xs">
-                          {HAIR_TEXTURE_LABELS[product.recommendation_meta.matched_profile.hair_texture]}
+                          {
+                            HAIR_TEXTURE_LABELS[
+                              product.recommendation_meta.matched_profile.hair_texture
+                            ]
+                          }
                         </Badge>
                       )}
                       {product.recommendation_meta.matched_profile.thickness && (
                         <Badge variant="outline" className="text-xs">
-                          {HAIR_THICKNESS_LABELS[product.recommendation_meta.matched_profile.thickness]}
+                          {
+                            HAIR_THICKNESS_LABELS[
+                              product.recommendation_meta.matched_profile.thickness
+                            ]
+                          }
                         </Badge>
                       )}
                       {product.recommendation_meta.matched_profile.density && (
@@ -286,14 +326,20 @@ export function ProductDetailDrawer({
                       )}
                       {product.recommendation_meta.matched_profile.cuticle_condition && (
                         <Badge variant="outline" className="text-xs">
-                          {CUTICLE_CONDITION_LABELS[product.recommendation_meta.matched_profile.cuticle_condition]}
+                          {
+                            CUTICLE_CONDITION_LABELS[
+                              product.recommendation_meta.matched_profile.cuticle_condition
+                            ]
+                          }
                         </Badge>
                       )}
-                      {product.recommendation_meta.matched_profile.chemical_treatment.map((treatment) => (
-                        <Badge key={treatment} variant="outline" className="text-xs">
-                          {CHEMICAL_TREATMENT_LABELS[treatment] ?? treatment}
-                        </Badge>
-                      ))}
+                      {product.recommendation_meta.matched_profile.chemical_treatment.map(
+                        (treatment) => (
+                          <Badge key={treatment} variant="outline" className="text-xs">
+                            {CHEMICAL_TREATMENT_LABELS[treatment] ?? treatment}
+                          </Badge>
+                        ),
+                      )}
                     </div>
                   </div>
                 </>
@@ -324,7 +370,11 @@ export function ProductDetailDrawer({
                     <div className="mt-1 flex flex-wrap gap-1.5">
                       {product.recommendation_meta.matched_profile.thickness && (
                         <Badge variant="outline" className="text-xs">
-                          {HAIR_THICKNESS_LABELS[product.recommendation_meta.matched_profile.thickness]}
+                          {
+                            HAIR_THICKNESS_LABELS[
+                              product.recommendation_meta.matched_profile.thickness
+                            ]
+                          }
                         </Badge>
                       )}
                       {product.recommendation_meta.adjunct_scalp_support && (
@@ -389,7 +439,7 @@ export function ProductDetailDrawer({
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {product.tags.map((t) => (
-                  <Badge key={t} variant="secondary" className="text-xs">
+                  <Badge key={t} variant="default" className="text-xs">
                     {t}
                   </Badge>
                 ))}

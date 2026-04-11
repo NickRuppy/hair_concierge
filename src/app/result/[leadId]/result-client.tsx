@@ -4,6 +4,7 @@ import { useEffect, useCallback, useMemo } from "react"
 import Link from "next/link"
 import type { CardData } from "@/lib/quiz/result-card-data"
 import { Button } from "@/components/ui/button"
+import { Icon } from "@/components/ui/icon"
 import { posthog } from "@/providers/posthog-provider"
 
 interface ResultPageClientProps {
@@ -23,12 +24,9 @@ export function ResultPageClient({
 }: ResultPageClientProps) {
   const resultUrl = useMemo(
     () => (typeof window !== "undefined" ? `${window.location.origin}/result/${leadId}` : ""),
-    [leadId]
+    [leadId],
   )
-  const canShare = useMemo(
-    () => typeof navigator !== "undefined" && !!navigator.share,
-    []
-  )
+  const canShare = useMemo(() => typeof navigator !== "undefined" && !!navigator.share, [])
 
   useEffect(() => {
     posthog.capture("result_page_viewed", { leadId })
@@ -71,11 +69,13 @@ export function ResultPageClient({
   const handleNativeShare = useCallback(async () => {
     posthog.capture("result_shared", { method: "native", leadId })
     if (navigator.share) {
-      await navigator.share({
-        title: `${name}s Haar-Diagnose — Hair Concierge`,
-        text: shareQuote || "Schau dir meine Haar-Diagnose an!",
-        url: resultUrl,
-      }).catch(() => {})
+      await navigator
+        .share({
+          title: `${name}s Haar-Diagnose — Hair Concierge`,
+          text: shareQuote || "Schau dir meine Haar-Diagnose an!",
+          url: resultUrl,
+        })
+        .catch(() => {})
     }
   }, [leadId, name, shareQuote, resultUrl])
 
@@ -84,26 +84,26 @@ export function ResultPageClient({
     : "#"
 
   return (
-    <div className="min-h-screen bg-[#231F20] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
         {/* Brand mark */}
         <div className="flex items-center gap-2 mb-8">
           <div className="flex gap-[3px]">
-            <div className="w-[3px] h-5 bg-[#F5C518] rounded-full" />
-            <div className="w-[3px] h-5 bg-[#F5C518]/60 rounded-full" />
-            <div className="w-[3px] h-5 bg-[#F5C518]/30 rounded-full" />
+            <div className="w-[3px] h-5 bg-[var(--brand-plum)] rounded-full" />
+            <div className="w-[3px] h-5 bg-[var(--brand-plum)]/60 rounded-full" />
+            <div className="w-[3px] h-5 bg-[var(--brand-plum)]/30 rounded-full" />
           </div>
-          <span className="font-header text-sm text-white/50 tracking-widest">
+          <span className="font-header text-sm text-[var(--text-sub)] tracking-widest">
             HAIR CONCIERGE
           </span>
         </div>
 
         {/* Headline */}
-        <h1 className="font-header text-3xl sm:text-4xl text-white mb-2">
+        <h1 className="font-header text-3xl sm:text-4xl text-foreground mb-2">
           {name.toUpperCase()}, DEINE HAAR-DIAGNOSE
         </h1>
-        <p className="text-base text-white/60 mb-2">{cardData.summaryLine}</p>
-        <p className="text-sm text-white/40 mb-6">
+        <p className="text-base text-muted-foreground mb-2">{cardData.summaryLine}</p>
+        <p className="text-sm text-[var(--text-sub)] mb-6">
           Basierend auf dem Haar-Quiz von Hair Concierge
         </p>
 
@@ -112,19 +112,19 @@ export function ResultPageClient({
           {cardData.cards.map((card) => (
             <div
               key={card.title}
-              className="bg-white/[0.04] border border-white/[0.08] border-l-2 border-l-[#F5C518] rounded-xl p-4"
+              className="bg-card border border-border border-l-2 border-l-[var(--brand-plum)] rounded-xl p-4"
             >
               <div className="flex items-start gap-3">
-                <span className="text-2xl leading-none mt-0.5">
-                  {card.emoji}
-                </span>
+                <Icon
+                  name={card.icon}
+                  size={24}
+                  className="text-[var(--brand-plum)] mt-0.5 shrink-0"
+                />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-[#F5C518] uppercase tracking-wide mb-1">
+                  <p className="text-xs font-semibold text-[var(--brand-plum)] uppercase tracking-wide mb-1">
                     {card.title}
                   </p>
-                  <p className="text-sm text-white/80 leading-relaxed">
-                    {card.description}
-                  </p>
+                  <p className="text-sm text-foreground leading-relaxed">{card.description}</p>
                 </div>
               </div>
             </div>
@@ -133,11 +133,11 @@ export function ResultPageClient({
 
         {/* Result highlight */}
         {shareQuote && (
-          <div className="border-2 border-[#F5C518]/30 rounded-xl p-5 mb-8">
-            <p className="text-xs font-semibold text-[#F5C518] uppercase tracking-wide mb-2">
+          <div className="border-2 border-[var(--brand-plum)]/30 rounded-xl p-5 mb-8">
+            <p className="text-xs font-semibold text-[var(--brand-plum)] uppercase tracking-wide mb-2">
               EINSCHAETZUNG
             </p>
-            <p className="text-base text-white/90 leading-relaxed italic">
+            <p className="text-base text-foreground leading-relaxed italic">
               &ldquo;{shareQuote}&rdquo;
             </p>
           </div>
@@ -145,21 +145,17 @@ export function ResultPageClient({
 
         {/* AI Insight */}
         {aiInsight && (
-          <div className="bg-white/[0.04] border border-[#F5C518]/20 rounded-xl p-5 mb-8">
-            <p className="text-xs font-semibold text-[#F5C518] uppercase tracking-wide mb-2">
+          <div className="bg-muted border border-[var(--brand-plum)]/20 rounded-xl p-5 mb-8">
+            <p className="text-xs font-semibold text-[var(--brand-plum)] uppercase tracking-wide mb-2">
               WAS BISHER WAHRSCHEINLICH SCHIEF LIEF
             </p>
-            <p className="text-sm text-white/80 leading-relaxed">
-              {aiInsight}
-            </p>
+            <p className="text-sm text-foreground leading-relaxed">{aiInsight}</p>
           </div>
         )}
 
         {/* Share section */}
-        <div className="border-t border-white/10 pt-8 mb-8">
-          <p className="text-sm text-white/50 mb-4 text-center">
-            Teile deine Diagnose
-          </p>
+        <div className="border-t border-border pt-8 mb-8">
+          <p className="text-sm text-[var(--text-sub)] mb-4 text-center">Teile deine Diagnose</p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               onClick={handleDownload}
@@ -173,7 +169,7 @@ export function ResultPageClient({
               <Button
                 onClick={handleNativeShare}
                 variant="outline"
-                className="flex-1 h-12 text-sm font-bold tracking-wide rounded-xl border-white/20 text-white hover:bg-white/10"
+                className="flex-1 h-12 text-sm font-bold tracking-wide rounded-xl"
               >
                 TEILEN
               </Button>
@@ -189,19 +185,19 @@ export function ResultPageClient({
                   leadId,
                 })
               }
-              className="flex-1 h-12 inline-flex items-center justify-center text-sm font-bold tracking-wide rounded-xl border border-white/20 text-white hover:bg-white/10 transition-colors"
+              className="flex-1 h-12 inline-flex items-center justify-center text-sm font-bold tracking-wide rounded-xl border border-border text-foreground hover:bg-muted transition-colors"
             >
               WHATSAPP
             </a>
           </div>
-          <p className="text-xs text-white/30 text-center mt-3">
+          <p className="text-xs text-[var(--text-caption)] text-center mt-3">
             Speichere das Bild und poste es in deiner Instagram Story!
           </p>
         </div>
 
         {/* CTA for viewers */}
         <div className="text-center">
-          <p className="text-lg text-white/60 mb-4">
+          <p className="text-lg text-muted-foreground mb-4">
             Was passt zu DEINEM Haar?
           </p>
           <Link href="/quiz">
@@ -209,7 +205,7 @@ export function ResultPageClient({
               variant="unstyled"
               className="quiz-btn-primary w-full sm:max-w-md h-14 text-base font-bold tracking-wide rounded-xl"
             >
-              QUIZ STARTEN
+              Quiz starten
             </Button>
           </Link>
         </div>

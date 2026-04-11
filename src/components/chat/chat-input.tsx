@@ -61,7 +61,8 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           data-testid="chat-send"
           onClick={handleSubmit}
           disabled={disabled || !message.trim()}
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+          aria-label="Nachricht senden"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-secondary text-secondary-foreground transition-colors hover:bg-secondary/90 disabled:opacity-50"
         >
           <Send className="h-5 w-5" />
         </button>

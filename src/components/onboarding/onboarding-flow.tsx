@@ -53,60 +53,65 @@ import type {
   NightProtection,
 } from "@/lib/vocabulary/onboarding-care"
 
+import type { IconName } from "@/components/ui/icon"
+
 /* ── Product checklist options ── */
 
-const BASIC_PRODUCT_OPTIONS = [
-  { value: "shampoo", label: "Shampoo", emoji: "\u{1F9F4}" },
-  { value: "conditioner", label: "Conditioner", emoji: "\u{1F4A7}" },
-  { value: "leave_in", label: "Leave-in", emoji: "\u2728" },
-  { value: "oil", label: "\u00D6l", emoji: "\u{1FAD2}" },
-  { value: "mask", label: "Maske", emoji: "\u{1F3AD}" },
+const BASIC_PRODUCT_OPTIONS: { value: string; label: string; icon: IconName }[] = [
+  { value: "shampoo", label: "Shampoo", icon: "product-shampoo" },
+  { value: "conditioner", label: "Conditioner", icon: "product-conditioner" },
+  { value: "leave_in", label: "Leave-in", icon: "product-leave-in" },
+  { value: "oil", label: "\u00D6l", icon: "product-oil" },
+  { value: "mask", label: "Maske", icon: "product-mask" },
 ]
 
-const EXTRA_PRODUCT_OPTIONS = [
-  { value: "peeling", label: "Peeling (Serum/Scrub)", emoji: "🧹" },
-  { value: "dry_shampoo", label: "Trockenshampoo", emoji: "🌬️" },
-  { value: "bondbuilder", label: "Bondbuilder", emoji: "🔗" },
-  { value: "deep_cleansing_shampoo", label: "Tiefenreinigungsshampoo", emoji: "🫧" },
+const EXTRA_PRODUCT_OPTIONS: { value: string; label: string; icon: IconName }[] = [
+  { value: "peeling", label: "Peeling (Serum/Scrub)", icon: "product-peeling" },
+  { value: "dry_shampoo", label: "Trockenshampoo", icon: "product-dry-shampoo" },
+  { value: "bondbuilder", label: "Bondbuilder", icon: "product-bond-builder" },
+  {
+    value: "deep_cleansing_shampoo",
+    label: "Tiefenreinigungsshampoo",
+    icon: "product-deep-cleansing",
+  },
 ]
 
-/* ── Care habit emojis ── */
+/* ── Care habit icon maps ── */
 
-const TOWEL_MATERIAL_EMOJIS: Record<string, string> = {
-  frottee: "\u{1F6C1}",
-  mikrofaser: "\u2728",
-  tshirt: "\u{1F455}",
-  turban_mikrofaser: "\u{1F473}\u200D\u2640\uFE0F",
+const TOWEL_MATERIAL_ICONS: Record<string, IconName> = {
+  frottee: "towel-frottee",
+  mikrofaser: "towel-mikrofaser",
+  tshirt: "towel-tshirt",
+  turban_mikrofaser: "towel-turban",
 }
 
-const TOWEL_TECHNIQUE_EMOJIS: Record<string, string> = {
-  rubbeln: "\u{1F932}",
-  tupfen: "\u{1F446}",
+const TOWEL_TECHNIQUE_ICONS: Record<string, IconName> = {
+  rubbeln: "technique-rubbeln",
+  tupfen: "technique-tupfen",
 }
 
-const DRYING_METHOD_EMOJIS: Record<string, string> = {
-  air_dry: "\u{1F32C}\uFE0F",
-  blow_dry: "\u{1F4A8}",
-  blow_dry_diffuser: "\u{1F300}",
+const DRYING_METHOD_ICONS: Record<string, IconName> = {
+  air_dry: "drying-air",
+  blow_dry: "drying-blow",
+  blow_dry_diffuser: "drying-diffuser",
 }
 
-const BRUSH_TYPE_EMOJIS: Record<string, string> = {
-  wide_tooth_comb: "\u{1FAE6}",
-  detangling: "\u{1F513}",
-  paddle: "\u{1F3D3}",
-  round: "\u2B55",
-  boar_bristle: "\u{1F417}",
-  fingers: "\u{1F590}\uFE0F",
-  none_regular: "\u274C",
+const BRUSH_TYPE_ICONS: Record<string, IconName> = {
+  wide_tooth_comb: "brush-wide-tooth",
+  detangling: "brush-detangling",
+  paddle: "brush-paddle",
+  round: "brush-round",
+  boar_bristle: "brush-boar-bristle",
+  fingers: "brush-fingers",
+  none_regular: "brush-none",
 }
 
-const NIGHT_PROTECTION_EMOJIS: Record<string, string> = {
-  silk_satin_pillow: "\u{1F6CF}\uFE0F",
-  silk_satin_bonnet: "\u{1F3A9}",
-  loose_braid: "\u{1FAA2}",
-  loose_bun: "\u{1F4AB}",
-  pineapple: "\u{1F34D}",
-  tight_hairstyles: "\u26A0\uFE0F",
+const NIGHT_PROTECTION_ICONS: Record<string, IconName> = {
+  silk_satin_pillow: "night-silk-pillow",
+  silk_satin_bonnet: "night-silk-bonnet",
+  loose_braid: "night-loose-braid",
+  loose_bun: "night-loose-bun",
+  pineapple: "night-pineapple",
 }
 
 /* ── Label map for drilldown categories ── */
@@ -253,7 +258,10 @@ export function OnboardingFlow({
         .eq("user_id", userId)
 
       const existingMap = new Map(
-        (existing ?? []).map((r: Record<string, unknown>) => [r.category as string, r.id as string]),
+        (existing ?? []).map((r: Record<string, unknown>) => [
+          r.category as string,
+          r.id as string,
+        ]),
       )
 
       // Upsert selected categories
@@ -267,10 +275,7 @@ export function OnboardingFlow({
         }
 
         if (existingMap.has(cat)) {
-          await supabase
-            .from("user_product_usage")
-            .update(payload)
-            .eq("id", existingMap.get(cat))
+          await supabase.from("user_product_usage").update(payload).eq("id", existingMap.get(cat))
         } else {
           await supabase.from("user_product_usage").insert(payload)
         }
@@ -282,10 +287,7 @@ export function OnboardingFlow({
         .map((r: Record<string, unknown>) => r.id as string)
 
       if (toDelete.length > 0) {
-        await supabase
-          .from("user_product_usage")
-          .delete()
-          .in("id", toDelete)
+        await supabase.from("user_product_usage").delete().in("id", toDelete)
       }
     },
     [userId],
@@ -315,183 +317,174 @@ export function OnboardingFlow({
       }, 10000)
 
       try {
-      const state = useOnboardingStore.getState()
-      const supabase = createClient()
+        const state = useOnboardingStore.getState()
+        const supabase = createClient()
 
-      switch (completedStep) {
-        case "welcome":
-          // No data to save, just advance
-          break
+        switch (completedStep) {
+          case "welcome":
+            // No data to save, just advance
+            break
 
-        case "products_basics":
-        case "products_extras": {
-          const allProducts = [
-            ...state.selectedBasicProducts,
-            ...state.selectedExtraProducts,
-          ]
-          await saveProductUsage(allProducts)
-          break
-        }
-
-        case "product_drilldown": {
-          const categories = state.drilldownCategories()
-          const currentCat = categories[state.currentDrilldownIndex]
-          if (!currentCat) break
-
-          const drilldown = state.productDrilldowns[currentCat]
-          if (!drilldown) break
-
-          // Update the specific product usage row
-          await supabase
-            .from("user_product_usage")
-            .update({
-              product_name: drilldown.productName,
-              frequency_range: drilldown.frequency,
-            })
-            .eq("user_id", userId)
-            .eq("category", currentCat)
-
-          // If shampoo, also update wash_frequency
-          if (currentCat === "shampoo" && drilldown.frequency) {
-            await saveHairProfile({
-              wash_frequency: mapShampooFrequency(drilldown.frequency),
-            })
+          case "products_basics":
+          case "products_extras": {
+            const allProducts = [...state.selectedBasicProducts, ...state.selectedExtraProducts]
+            await saveProductUsage(allProducts)
+            break
           }
-          break
-        }
 
-        case "heat_tools": {
-          await saveHairProfile({
-            styling_tools: state.selectedHeatTools,
-          })
-          // If no heat tools, clear heat-related fields
-          if (state.selectedHeatTools.length === 0) {
-            await saveHairProfile({
-              heat_styling: "never",
-              uses_heat_protection: false,
-            })
+          case "product_drilldown": {
+            const categories = state.drilldownCategories()
+            const currentCat = categories[state.currentDrilldownIndex]
+            if (!currentCat) break
+
+            const drilldown = state.productDrilldowns[currentCat]
+            if (!drilldown) break
+
+            // Update the specific product usage row
+            await supabase
+              .from("user_product_usage")
+              .update({
+                product_name: drilldown.productName,
+                frequency_range: drilldown.frequency,
+              })
+              .eq("user_id", userId)
+              .eq("category", currentCat)
+
+            // If shampoo, also update wash_frequency
+            if (currentCat === "shampoo" && drilldown.frequency) {
+              await saveHairProfile({
+                wash_frequency: mapShampooFrequency(drilldown.frequency),
+              })
+            }
+            break
           }
-          break
-        }
 
-        case "heat_frequency": {
-          if (state.heatFrequency) {
+          case "heat_tools": {
             await saveHairProfile({
-              heat_styling: mapHeatFrequency(state.heatFrequency),
+              styling_tools: state.selectedHeatTools,
             })
+            // If no heat tools, clear heat-related fields
+            if (state.selectedHeatTools.length === 0) {
+              await saveHairProfile({
+                heat_styling: "never",
+                uses_heat_protection: false,
+              })
+            }
+            break
           }
-          break
+
+          case "heat_frequency": {
+            if (state.heatFrequency) {
+              await saveHairProfile({
+                heat_styling: mapHeatFrequency(state.heatFrequency),
+              })
+            }
+            break
+          }
+
+          case "heat_protection": {
+            await saveHairProfile({
+              uses_heat_protection: state.usesHeatProtection,
+            })
+            break
+          }
+
+          case "interstitial":
+            // No data to save
+            break
+
+          case "towel_material": {
+            await saveHairProfile({
+              towel_material: state.towelMaterial,
+            })
+            break
+          }
+
+          case "towel_technique": {
+            await saveHairProfile({
+              towel_technique: state.towelTechnique,
+            })
+            break
+          }
+
+          case "drying_method": {
+            const postWashActions = derivePostWashActions(
+              state.dryingMethod,
+              state.selectedHeatTools.length > 0,
+            )
+            const reconciledTools = reconcileDiffusor(state.selectedHeatTools, state.dryingMethod)
+            await saveHairProfile({
+              drying_method: state.dryingMethod,
+              post_wash_actions: postWashActions,
+              styling_tools: reconciledTools,
+            })
+            break
+          }
+
+          case "brush_type": {
+            await saveHairProfile({
+              brush_type: state.brushType,
+            })
+            break
+          }
+
+          case "night_protection": {
+            const stressFactors = deriveMechanicalStressFactors(
+              state.towelTechnique,
+              state.brushType,
+              state.nightProtection,
+            )
+            const answeredFields = await mergeAnsweredFields(supabase, userId, [
+              "towel_material",
+              "towel_technique",
+              "drying_method",
+              "brush_type",
+              "night_protection",
+              "styling_tools",
+              "uses_heat_protection",
+            ])
+            await saveHairProfile({
+              night_protection: state.nightProtection,
+              mechanical_stress_factors: stressFactors,
+              answered_fields: answeredFields,
+            })
+            break
+          }
+
+          case "goals": {
+            const derivedGoals = deriveOnboardingGoals(
+              state.selectedGoals as Goal[],
+              state.desiredVolume,
+            )
+            const routineProducts = mapProductChecklistToRoutineProducts(
+              state.allSelectedProducts(),
+            )
+            await saveHairProfile({
+              goals: derivedGoals,
+              desired_volume: state.desiredVolume,
+              current_routine_products: routineProducts,
+            })
+            await supabase.from("profiles").update({ onboarding_completed: true }).eq("id", userId)
+            posthog.capture("onboarding_completed", { userId })
+            break
+          }
+
+          case "celebration": {
+            await supabase
+              .from("profiles")
+              .update({ has_seen_completion_popup: true })
+              .eq("id", userId)
+            router.push("/chat")
+            return // Don't advance step
+          }
         }
 
-        case "heat_protection": {
-          await saveHairProfile({
-            uses_heat_protection: state.usesHeatProtection,
-          })
-          break
-        }
+        // Advance the store
+        state.goNext()
 
-        case "interstitial":
-          // No data to save
-          break
-
-        case "towel_material": {
-          await saveHairProfile({
-            towel_material: state.towelMaterial,
-          })
-          break
-        }
-
-        case "towel_technique": {
-          await saveHairProfile({
-            towel_technique: state.towelTechnique,
-          })
-          break
-        }
-
-        case "drying_method": {
-          const postWashActions = derivePostWashActions(
-            state.dryingMethod,
-            state.selectedHeatTools.length > 0,
-          )
-          const reconciledTools = reconcileDiffusor(
-            state.selectedHeatTools,
-            state.dryingMethod,
-          )
-          await saveHairProfile({
-            drying_method: state.dryingMethod,
-            post_wash_actions: postWashActions,
-            styling_tools: reconciledTools,
-          })
-          break
-        }
-
-        case "brush_type": {
-          await saveHairProfile({
-            brush_type: state.brushType,
-          })
-          break
-        }
-
-        case "night_protection": {
-          const stressFactors = deriveMechanicalStressFactors(
-            state.towelTechnique,
-            state.brushType,
-            state.nightProtection,
-          )
-          const answeredFields = await mergeAnsweredFields(supabase, userId, [
-            "towel_material",
-            "towel_technique",
-            "drying_method",
-            "brush_type",
-            "night_protection",
-            "styling_tools",
-            "uses_heat_protection",
-          ])
-          await saveHairProfile({
-            night_protection: state.nightProtection,
-            mechanical_stress_factors: stressFactors,
-            answered_fields: answeredFields,
-          })
-          break
-        }
-
-        case "goals": {
-          const derivedGoals = deriveOnboardingGoals(
-            state.selectedGoals as Goal[],
-            state.desiredVolume,
-          )
-          const routineProducts = mapProductChecklistToRoutineProducts(
-            state.allSelectedProducts(),
-          )
-          await saveHairProfile({
-            goals: derivedGoals,
-            desired_volume: state.desiredVolume,
-            current_routine_products: routineProducts,
-          })
-          await supabase
-            .from("profiles")
-            .update({ onboarding_completed: true })
-            .eq("id", userId)
-          posthog.capture("onboarding_completed", { userId })
-          break
-        }
-
-        case "celebration": {
-          await supabase
-            .from("profiles")
-            .update({ has_seen_completion_popup: true })
-            .eq("id", userId)
-          router.push("/chat")
-          return // Don't advance step
-        }
-      }
-
-      // Advance the store
-      state.goNext()
-
-      // Save the new step (after goNext)
-      const nextStep = useOnboardingStore.getState().currentStep
-      await saveOnboardingStep(nextStep)
+        // Save the new step (after goNext)
+        const nextStep = useOnboardingStore.getState().currentStep
+        await saveOnboardingStep(nextStep)
       } catch (err) {
         console.error("Failed to save onboarding step:", err)
         toast({ title: "Fehler beim Speichern. Bitte versuche es erneut.", variant: "destructive" })
@@ -565,41 +558,43 @@ export function OnboardingFlow({
     return null
   }
 
-  // ── Add emojis to options ──
+  // ── Add icons to options ──
 
-  const towelMaterialWithEmoji = TOWEL_MATERIAL_OPTIONS.map((o) => ({
+  const fallbackIcon: IconName = "help"
+
+  const towelMaterialWithIcon = TOWEL_MATERIAL_OPTIONS.map((o) => ({
     ...o,
-    emoji: TOWEL_MATERIAL_EMOJIS[o.value] ?? "",
+    icon: TOWEL_MATERIAL_ICONS[o.value] ?? fallbackIcon,
   }))
 
-  const towelTechniqueWithEmoji = TOWEL_TECHNIQUE_OPTIONS.map((o) => ({
+  const towelTechniqueWithIcon = TOWEL_TECHNIQUE_OPTIONS.map((o) => ({
     ...o,
-    emoji: TOWEL_TECHNIQUE_EMOJIS[o.value] ?? "",
+    icon: TOWEL_TECHNIQUE_ICONS[o.value] ?? fallbackIcon,
   }))
 
-  const dryingMethodWithEmoji = DRYING_METHOD_OPTIONS.map((o) => ({
+  const dryingMethodWithIcon = DRYING_METHOD_OPTIONS.map((o) => ({
     ...o,
-    emoji: DRYING_METHOD_EMOJIS[o.value] ?? "",
+    icon: DRYING_METHOD_ICONS[o.value] ?? fallbackIcon,
   }))
 
-  const brushTypeWithEmoji = BRUSH_TYPE_OPTIONS.map((o) => ({
+  const brushTypeWithIcon = BRUSH_TYPE_OPTIONS.map((o) => ({
     ...o,
-    emoji: BRUSH_TYPE_EMOJIS[o.value] ?? "",
+    icon: BRUSH_TYPE_ICONS[o.value] ?? fallbackIcon,
   }))
 
-  const nightProtectionWithEmoji = NIGHT_PROTECTION_OPTIONS
-    .filter((o) => o.value !== "tight_hairstyles")
-    .map((o) => ({
-      ...o,
-      emoji: NIGHT_PROTECTION_EMOJIS[o.value] ?? "",
-    }))
+  const nightProtectionWithIcon = NIGHT_PROTECTION_OPTIONS.filter(
+    (o) => o.value !== "tight_hairstyles",
+  ).map((o) => ({
+    ...o,
+    icon: NIGHT_PROTECTION_ICONS[o.value] ?? fallbackIcon,
+  }))
 
   // ── Drilldown helpers ──
 
   const drilldownCategories = store.drilldownCategories()
   const currentCategory = drilldownCategories[store.currentDrilldownIndex]
   const currentDrilldown = currentCategory
-    ? store.productDrilldowns[currentCategory] ?? { productName: "", frequency: null }
+    ? (store.productDrilldowns[currentCategory] ?? { productName: "", frequency: null })
     : { productName: "", frequency: null }
 
   // ── Screen rendering ──
@@ -607,9 +602,7 @@ export function OnboardingFlow({
   function renderScreen() {
     switch (store.currentStep) {
       case "welcome":
-        return (
-          <WelcomeScreen onContinue={() => handleStepComplete("welcome")} />
-        )
+        return <WelcomeScreen onContinue={() => handleStepComplete("welcome")} />
 
       case "products_basics":
         return (
@@ -717,7 +710,7 @@ export function OnboardingFlow({
         return (
           <SingleSelectScreen
             title="Womit trocknest du dein Haar?"
-            options={towelMaterialWithEmoji}
+            options={towelMaterialWithIcon}
             selected={store.towelMaterial}
             onSelect={(val) => {
               store.setTowelMaterial(val as TowelMaterial)
@@ -732,7 +725,7 @@ export function OnboardingFlow({
           <SingleSelectScreen
             title="Wie trocknest du?"
             subtitle="Rubbeln oder sanft tupfen?"
-            options={towelTechniqueWithEmoji}
+            options={towelTechniqueWithIcon}
             selected={store.towelTechnique}
             onSelect={(val) => {
               store.setTowelTechnique(val as TowelTechnique)
@@ -747,7 +740,7 @@ export function OnboardingFlow({
           <MultiSelectScreen
             title="Wie trocknest du dein Haar?"
             subtitle="Mehrfachauswahl moeglich."
-            options={dryingMethodWithEmoji}
+            options={dryingMethodWithIcon}
             selected={store.dryingMethod}
             onToggle={toggleDryingMethod}
             onContinue={() => handleStepComplete("drying_method")}
@@ -759,7 +752,7 @@ export function OnboardingFlow({
         return (
           <SingleSelectScreen
             title="Welche Buerste nutzt du?"
-            options={brushTypeWithEmoji}
+            options={brushTypeWithIcon}
             selected={store.brushType}
             onSelect={(val) => {
               store.setBrushType(val as BrushType)
@@ -774,7 +767,7 @@ export function OnboardingFlow({
           <MultiSelectScreen
             title="Wie schuetzt du dein Haar nachts?"
             subtitle="Mehrfachauswahl moeglich."
-            options={nightProtectionWithEmoji}
+            options={nightProtectionWithIcon}
             selected={store.nightProtection}
             onToggle={toggleNightProtection}
             onContinue={() => handleStepComplete("night_protection")}
@@ -801,11 +794,7 @@ export function OnboardingFlow({
         )
 
       case "celebration":
-        return (
-          <CelebrationPopup
-            onDismiss={() => handleStepComplete("celebration")}
-          />
-        )
+        return <CelebrationPopup onDismiss={() => handleStepComplete("celebration")} />
 
       default:
         return null

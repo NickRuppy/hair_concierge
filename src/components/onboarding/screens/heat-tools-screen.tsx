@@ -3,15 +3,16 @@
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import { STYLING_TOOL_OPTIONS } from "@/lib/vocabulary"
+import type { IconName } from "@/components/ui/icon"
 
-const HEAT_TOOL_EMOJIS: Record<string, string> = {
-  blow_dryer: "💨",
-  flat_iron: "🔥",
-  curling_iron: "🌀",
-  wave_iron: "🌊",
-  hot_air_brush: "🌬️",
-  multi_tool: "🔧",
-  diffuser: "💫",
+const HEAT_TOOL_ICONS: Record<string, IconName> = {
+  blow_dryer: "heat-blow-dryer",
+  flat_iron: "heat-flat-iron",
+  curling_iron: "heat-curling-iron",
+  wave_iron: "heat-wave-iron",
+  hot_air_brush: "heat-hot-air-brush",
+  multi_tool: "heat-multi-tool",
+  diffuser: "heat-diffuser",
 }
 
 interface HeatToolsScreenProps {
@@ -35,17 +36,18 @@ export function HeatToolsScreen({
     <div>
       <button
         onClick={onBack}
-        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-white/60 hover:text-white transition-colors mb-2"
+        aria-label="Zurück"
+        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors mb-2"
       >
         <ArrowLeft className="h-5 w-5" />
       </button>
 
-      <h1 className="animate-fade-in-up font-header text-3xl leading-tight text-white mb-2">
+      <h1 className="animate-fade-in-up font-header text-3xl leading-tight text-foreground mb-2">
         Welche Hitzetools nutzt du?
       </h1>
 
       <p
-        className="animate-fade-in-up text-sm text-white/50 mb-6"
+        className="animate-fade-in-up text-sm text-[var(--text-sub)] mb-6"
         style={{ animationDelay: "50ms" }}
       >
         Mehrfachauswahl moeglich.
@@ -55,7 +57,7 @@ export function HeatToolsScreen({
         {STYLING_TOOL_OPTIONS.map((option, i) => (
           <QuizOptionCard
             key={option.value}
-            emoji={HEAT_TOOL_EMOJIS[option.value] ?? ""}
+            icon={HEAT_TOOL_ICONS[option.value] ?? "heat-tool"}
             label={option.label}
             active={selected.includes(option.value)}
             onClick={() => onToggle(option.value)}
@@ -71,7 +73,7 @@ export function HeatToolsScreen({
         <button
           type="button"
           onClick={onNone}
-          className="rounded-full border border-white/20 px-3 py-1.5 text-sm text-white/70 transition-colors hover:border-white/35 hover:text-white"
+          className="rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground"
         >
           Nichts davon
         </button>
@@ -86,7 +88,7 @@ export function HeatToolsScreen({
           disabled={!hasSelection}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          WEITER
+          Weiter
         </button>
       </div>
     </div>
