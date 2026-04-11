@@ -160,9 +160,7 @@ async function retrieveHybrid(
     scores.set(lexicalIds[i], (scores.get(lexicalIds[i]) ?? 0) + 1 / (K + i + 1))
   }
 
-  return [...scores.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([id]) => id)
+  return [...scores.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id)
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────────
@@ -256,7 +254,12 @@ async function main() {
   }
 
   // Save results
-  const reportPath = path.join(process.cwd(), "tests/results", `retrieval-eval-${new Date().toISOString().slice(0, 10)}.json`)
+  const reportPath = path.join(
+    process.cwd(),
+    "test-results",
+    "retrieval",
+    `retrieval-eval-${new Date().toISOString().slice(0, 10)}.json`,
+  )
   fs.mkdirSync(path.dirname(reportPath), { recursive: true })
   fs.writeFileSync(reportPath, JSON.stringify(results, null, 2))
   console.log(`\nDetailed results saved to: ${reportPath}`)

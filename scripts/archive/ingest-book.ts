@@ -4,7 +4,7 @@
  * with header-aware chunking, rich metadata, and context prepending.
  *
  * Original: Book PDF Ingestion Script
- * Usage: npx tsx scripts/ingest-book.ts
+ * Archived usage: npx tsx scripts/archive/ingest-book.ts
  * Expects: data/book.pdf
  */
 
@@ -17,7 +17,7 @@ const pdfParse = require("pdf-parse")
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 )
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
@@ -65,7 +65,7 @@ async function generateEmbeddings(texts: string[]): Promise<number[][]> {
   for (let i = 0; i < texts.length; i += EMBEDDING_BATCH_SIZE) {
     const batch = texts.slice(i, i + EMBEDDING_BATCH_SIZE)
     console.log(
-      `  Embedding batch ${Math.floor(i / EMBEDDING_BATCH_SIZE) + 1}/${Math.ceil(texts.length / EMBEDDING_BATCH_SIZE)}...`
+      `  Embedding batch ${Math.floor(i / EMBEDDING_BATCH_SIZE) + 1}/${Math.ceil(texts.length / EMBEDDING_BATCH_SIZE)}...`,
     )
 
     const response = await openai.embeddings.create({
@@ -105,10 +105,7 @@ async function main() {
 
   console.log("Storing in database...")
   // Delete existing book chunks
-  await supabase
-    .from("content_chunks")
-    .delete()
-    .eq("source_type", "book")
+  await supabase.from("content_chunks").delete().eq("source_type", "book")
 
   // Insert in batches
   const batchSize = 50
@@ -127,7 +124,9 @@ async function main() {
     if (error) {
       console.error(`Error inserting batch at index ${i}:`, error)
     } else {
-      console.log(`  Inserted batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(chunks.length / batchSize)}`)
+      console.log(
+        `  Inserted batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(chunks.length / batchSize)}`,
+      )
     }
   }
 

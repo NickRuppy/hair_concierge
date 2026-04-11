@@ -9,12 +9,13 @@ const supabase = createClient()
 
 export function useHairProfile() {
   const { user } = useAuth()
+  const userId = user?.id
   const [hairProfile, setHairProfile] = useState<HairProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
-      if (!user) {
+      if (!userId) {
         setLoading(false)
         return
       }
@@ -22,7 +23,7 @@ export function useHairProfile() {
         const { data } = await supabase
           .from("hair_profiles")
           .select("*")
-          .eq("user_id", user.id)
+          .eq("user_id", userId)
           .maybeSingle()
         setHairProfile(data)
       } catch (err) {
@@ -32,7 +33,7 @@ export function useHairProfile() {
       }
     }
     load()
-  }, [user?.id])
+  }, [userId])
 
   return { hairProfile, loading }
 }

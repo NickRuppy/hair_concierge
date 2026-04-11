@@ -8,7 +8,7 @@
  *   1. npm run dev  (start the dev server)
  *   2. npm run test:extract  (generate fixtures if not already done)
  *   3. npm run test:qa  (run this test)
- *   4. Review results in tests/results/qa-responses-{timestamp}.json
+ *   4. Review results in test-results/qa-validation/qa-responses-{timestamp}.json
  */
 
 import { test } from "@playwright/test"
@@ -61,13 +61,11 @@ const CURATED_IDS = [
 
 // Load fixtures
 const FIXTURES_PATH = path.resolve("tests/fixtures/qa-pairs.json")
-const RESULTS_DIR = path.resolve("tests/results")
+const RESULTS_DIR = path.resolve("test-results/qa-validation")
 
 function loadFixtures(): QAFixture[] {
   if (!fs.existsSync(FIXTURES_PATH)) {
-    throw new Error(
-      `Fixtures not found at ${FIXTURES_PATH}. Run: npm run test:extract`
-    )
+    throw new Error(`Fixtures not found at ${FIXTURES_PATH}. Run: npm run test:extract`)
   }
 
   return JSON.parse(fs.readFileSync(FIXTURES_PATH, "utf-8"))
@@ -120,7 +118,7 @@ test.describe("Q&A Validation", () => {
     for (let i = 0; i < fixtures.length; i++) {
       const fixture = fixtures[i]
       console.log(
-        `\n[${i + 1}/${fixtures.length}] ${fixture.id}: ${fixture.question.slice(0, 60)}...`
+        `\n[${i + 1}/${fixtures.length}] ${fixture.id}: ${fixture.question.slice(0, 60)}...`,
       )
 
       const result: QATestResult = {
@@ -150,9 +148,7 @@ test.describe("Q&A Validation", () => {
         await sendBtn.click()
 
         // Wait for the assistant message to appear and stabilize
-        const assistantMsg = page.locator(
-          '[data-testid="message-assistant"]'
-        ).last()
+        const assistantMsg = page.locator('[data-testid="message-assistant"]').last()
         await assistantMsg.waitFor({ state: "visible", timeout: 30_000 })
 
         // Poll until content stabilizes (no changes for 1.5s) or timeout at 90s
@@ -164,8 +160,7 @@ test.describe("Q&A Validation", () => {
         const startTime = Date.now()
 
         while (Date.now() - startTime < maxWaitMs) {
-          const currentText =
-            (await assistantMsg.textContent()) ?? ""
+          const currentText = (await assistantMsg.textContent()) ?? ""
 
           if (currentText === previousText && currentText.length > 0) {
             stableCount++
@@ -180,11 +175,10 @@ test.describe("Q&A Validation", () => {
 
         result.ai_answer = previousText.trim()
         console.log(
-          `  AI response (${result.ai_answer.length} chars): ${result.ai_answer.slice(0, 100)}...`
+          `  AI response (${result.ai_answer.length} chars): ${result.ai_answer.slice(0, 100)}...`,
         )
       } catch (err) {
-        result.error =
-          err instanceof Error ? err.message : String(err)
+        result.error = err instanceof Error ? err.message : String(err)
         console.error(`  ERROR: ${result.error}`)
       }
 
