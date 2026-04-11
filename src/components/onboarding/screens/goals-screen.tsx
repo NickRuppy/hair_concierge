@@ -31,6 +31,7 @@ export function GoalsScreen({
     <div>
       <button
         onClick={onBack}
+        aria-label="Zurück"
         className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors mb-2"
       >
         <ArrowLeft className="h-5 w-5" />
@@ -119,7 +120,7 @@ export function GoalsScreen({
         style={{ animationDelay: `${380 + goals.length * 80 + 60}ms` }}
       >
         {!desiredVolume && (
-          <p className="mb-3 text-sm text-[var(--brand-coral)]">
+          <p className="mb-3 text-sm text-secondary">
             Bitte waehle zuerst aus, wie viel Volumen du dir wuenschst.
           </p>
         )}

@@ -53,6 +53,8 @@
   --popover-foreground: 15 6% 22%;
   --primary: 262 34% 47%;
   --primary-foreground: 0 0% 100%;
+  /* Coral — passes WCAG 1.4.11 (3:1) for UI controls.
+     Do NOT pair with small body text on light backgrounds. */
   --secondary: 355 52% 61%;
   --secondary-foreground: 0 0% 100%;
   --muted: 262 40% 95%;
@@ -87,7 +89,7 @@
   --text-heading: #2A1845;
   --text-body: #3A3835;
   --text-sub: #6A6560;
-  --text-caption: #827E78;
+  --text-caption: #736F69;
 
   /* Typography scale — mobile-first */
   --type-display: 28px;   --type-display-lh: 1.2;   --type-display-weight: 500;
@@ -188,6 +190,7 @@
     box-shadow: 0 0 20px rgba(var(--brand-plum-rgb), 0.08);
   }
 
+  /* Brand coral — meets WCAG 1.4.11 for non-text UI (buttons >= 3:1) */
   .quiz-btn-primary {
     background: var(--brand-coral);
     color: hsl(var(--primary-foreground));

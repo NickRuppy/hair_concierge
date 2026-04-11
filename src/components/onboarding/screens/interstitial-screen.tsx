@@ -12,6 +12,7 @@ export function InterstitialScreen({ onContinue, onBack }: InterstitialScreenPro
     <div>
       <button
         onClick={onBack}
+        aria-label="Zurück"
         className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors mb-2"
       >
         <ArrowLeft className="h-5 w-5" />

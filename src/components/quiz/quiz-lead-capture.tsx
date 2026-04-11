@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { QuizConsentSheet } from "./quiz-consent-sheet"
 import { ArrowLeft } from "lucide-react"
+import { Icon } from "@/components/ui/icon"
 import { posthog } from "@/providers/posthog-provider"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 
@@ -92,7 +93,8 @@ export function QuizLeadCapture() {
       <div className="flex items-center gap-3 mb-4">
         <button
           onClick={handleBack}
-          className="text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Zurück"
+          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
@@ -164,7 +166,7 @@ export function QuizLeadCapture() {
             }}
           />
           <div className="flex items-start gap-2 mb-4">
-            <span className="text-sm">&#128274;</span>
+            <Icon name="lock" size={16} className="text-[var(--text-caption)] shrink-0 mt-0.5" />
             <p className="text-sm text-[var(--text-caption)] leading-relaxed">
               Wir schuetzen deine Daten und nehmen Datenschutz sehr ernst – kein Spam.
             </p>

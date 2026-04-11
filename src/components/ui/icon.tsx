@@ -28,6 +28,8 @@ import {
   Palette,
   ThermometerSun,
   Shield,
+  Mail,
+  Lock,
   Beaker,
   Scale,
   Dna,
@@ -98,6 +100,8 @@ const iconMap = {
   user: User,
   help: HelpCircle,
   clock: Clock,
+  mail: Mail,
+  lock: Lock,
   // Scalp
   "scalp-oily": Droplets,
   "scalp-dry": Mountain,

@@ -42,7 +42,7 @@ export function OnboardingProgressBar({ currentStep }: OnboardingProgressBarProp
           const isCurrent = index === currentSection
 
           return (
-            <div key={index} className="h-[4px] flex-1 rounded-full overflow-hidden bg-white/10">
+            <div key={index} className="h-[4px] flex-1 rounded-full overflow-hidden bg-border">
               {(isCompleted || isCurrent) && (
                 <div
                   className="h-full rounded-full transition-all duration-500 ease-out"

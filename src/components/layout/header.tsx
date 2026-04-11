@@ -54,6 +54,7 @@ export function Header() {
         <button
           className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent md:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Menü öffnen"
         >
           <Menu className="h-5 w-5" />
         </button>

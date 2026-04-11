@@ -2,6 +2,7 @@
 
 import { QuizCard } from "./quiz-card"
 import { Button } from "@/components/ui/button"
+import { Icon } from "@/components/ui/icon"
 
 interface QuizConsentSheetProps {
   open: boolean
@@ -20,7 +21,7 @@ export function QuizConsentSheet({ open, saving, onConsent }: QuizConsentSheetPr
           className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full"
           style={{ background: "rgba(var(--brand-plum-rgb), 0.15)" }}
         >
-          <span className="text-2xl">&#9993;&#65039;</span>
+          <Icon name="mail" size={24} className="text-[var(--brand-plum)]" />
         </div>
 
         <h3 className="font-header text-center text-xl text-foreground mb-2">
