@@ -1,10 +1,5 @@
-import type { HairProfile, HairTexture, HairThickness, Concern, Goal } from "@/lib/types"
-import {
-  HAIR_TEXTURE_ADJECTIVE,
-  HAIR_THICKNESS_ADJECTIVE,
-  HAIR_TEXTURE_LABELS,
-  HAIR_THICKNESS_LABELS,
-} from "@/lib/vocabulary"
+import type { HairProfile, HairTexture, Concern, Goal } from "@/lib/types"
+import { HAIR_TEXTURE_ADJECTIVE, HAIR_THICKNESS_ADJECTIVE } from "@/lib/vocabulary"
 
 const FALLBACK_PROMPTS = [
   "Welche Routine empfiehlst du für lockiges Haar?",
@@ -22,24 +17,18 @@ function getTemplatePrompts(profile: HairProfile): string[] {
 
   if (ht && tx) {
     prompts.push(
-      `Welche Pflegeroutine passt am besten zu meinem ${HAIR_TEXTURE_ADJECTIVE[ht]}, ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar?`
+      `Welche Pflegeroutine passt am besten zu meinem ${HAIR_TEXTURE_ADJECTIVE[ht]}, ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar?`,
     )
     prompts.push(
-      `Was sind die besten Produkte für ${HAIR_TEXTURE_ADJECTIVE[ht]} und ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar?`
+      `Was sind die besten Produkte für ${HAIR_TEXTURE_ADJECTIVE[ht]} und ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar?`,
     )
   }
   if (ht) {
-    prompts.push(
-      `Welche Pflegeroutine empfiehlst du für ${HAIR_TEXTURE_ADJECTIVE[ht]} Haar?`
-    )
-    prompts.push(
-      `Wie style ich ${HAIR_TEXTURE_ADJECTIVE[ht]} Haar am besten?`
-    )
+    prompts.push(`Welche Pflegeroutine empfiehlst du für ${HAIR_TEXTURE_ADJECTIVE[ht]} Haar?`)
+    prompts.push(`Wie style ich ${HAIR_TEXTURE_ADJECTIVE[ht]} Haar am besten?`)
   }
   if (tx) {
-    prompts.push(
-      `Worauf sollte ich bei ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar besonders achten?`
-    )
+    prompts.push(`Worauf sollte ich bei ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar besonders achten?`)
   }
 
   // Always have at least one generic template
@@ -64,7 +53,10 @@ const POOL_PROMPTS: PoolPrompt[] = [
   { text: "Wie werde ich Schuppen endlich los?", concerns: ["dandruff"] },
   { text: "Meine Kopfhaut fettet so schnell nach — was hilft?", concerns: ["oily_scalp"] },
   { text: "Wie kann ich Haarausfall vorbeugen?", concerns: ["hair_loss"] },
-  { text: "Mein Haar ist durch Färben strapaziert — wie repariere ich es?", concerns: ["hair_damage", "colored"] },
+  {
+    text: "Mein Haar ist durch Färben strapaziert — wie repariere ich es?",
+    concerns: ["hair_damage", "colored"],
+  },
   { text: "Was hilft wirklich gegen Frizz?", concerns: ["frizz"] },
   { text: "Mein Haar wird immer dünner — welche Produkte stärken es?", concerns: ["thinning"] },
   { text: "Wie schütze ich meine Haarfarbe vor dem Verblassen?", concerns: ["colored"] },
@@ -112,7 +104,13 @@ function matchesProfile(prompt: PoolPrompt, profile: HairProfile): boolean {
 /* ── Main export ── */
 
 export function generateSuggestedPrompts(profile: HairProfile | null): string[] {
-  if (!profile || (!profile.hair_texture && !profile.thickness && (profile.concerns ?? []).length === 0 && (profile.goals ?? []).length === 0)) {
+  if (
+    !profile ||
+    (!profile.hair_texture &&
+      !profile.thickness &&
+      (profile.concerns ?? []).length === 0 &&
+      (profile.goals ?? []).length === 0)
+  ) {
     return FALLBACK_PROMPTS
   }
 

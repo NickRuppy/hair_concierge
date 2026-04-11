@@ -17,11 +17,7 @@ export function buildReport(
   )
   const assertionFailures = scenarios.reduce(
     (sum, s) =>
-      sum +
-      s.turns.reduce(
-        (ts, t) => ts + t.assertions.filter((a) => !a.passed).length,
-        0,
-      ),
+      sum + s.turns.reduce((ts, t) => ts + t.assertions.filter((a) => !a.passed).length, 0),
     0,
   )
 
@@ -41,15 +37,12 @@ export function buildReport(
 }
 
 export function writeReport(report: EvalReport): string {
-  const dir = path.join(process.cwd(), "tests", "results")
+  const dir = path.join(process.cwd(), "test-results", "chat-eval")
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true })
   }
 
-  const timestamp = new Date()
-    .toISOString()
-    .replace(/[:.]/g, "-")
-    .slice(0, 19)
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)
   const filePath = path.join(dir, `chat-eval-${timestamp}.json`)
   fs.writeFileSync(filePath, JSON.stringify(report, null, 2))
   return filePath
@@ -82,9 +75,7 @@ export function printSummary(report: EvalReport): void {
           )
         }
         if (turn.judge_result && turn.judge_result.verdict === "fail") {
-          console.log(
-            `        turn ${turn.turn_index}: [judge] ${turn.judge_result.reasoning}`,
-          )
+          console.log(`        turn ${turn.turn_index}: [judge] ${turn.judge_result.reasoning}`)
           for (const issue of turn.judge_result.issues) {
             console.log(`          - ${issue}`)
           }
