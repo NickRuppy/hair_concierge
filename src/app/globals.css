@@ -88,6 +88,44 @@
   --text-body: #3A3835;
   --text-sub: #6A6560;
   --text-caption: #827E78;
+
+  /* Typography scale — mobile-first */
+  --type-display: 28px;   --type-display-lh: 1.2;   --type-display-weight: 500;
+  --type-h1: 24px;        --type-h1-lh: 1.25;       --type-h1-weight: 500;
+  --type-h2: 20px;        --type-h2-lh: 1.3;        --type-h2-weight: 700;
+  --type-h3: 17px;        --type-h3-lh: 1.35;       --type-h3-weight: 600;
+  --type-body: 16px;      --type-body-lh: 1.6;      --type-body-weight: 400;
+  --type-body-sm: 14px;   --type-body-sm-lh: 1.55;  --type-body-sm-weight: 400;
+  --type-button: 14px;    --type-button-weight: 600;
+  --type-numbers: 18px;   --type-numbers-lh: 1.2;   --type-numbers-weight: 700;
+  --type-caption: 12px;   --type-caption-lh: 1.4;   --type-caption-weight: 400;
+  --type-label: 10px;     --type-label-lh: 1.3;     --type-label-weight: 500;
+  --type-overline: 9px;   --type-overline-lh: 1.3;  --type-overline-weight: 500;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --type-display: 36px;
+    --type-h1: 28px;
+    --type-h2: 22px;
+    --type-h3: 18px;
+    --type-numbers: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --type-display: 48px;
+    --type-h1: 36px;
+    --type-h2: 28px;
+    --type-h3: 22px;
+    --type-body: 18px;
+    --type-body-sm: 16px;
+    --type-button: 16px;
+    --type-numbers: 24px;
+    --type-caption: 13px;
+    --type-label: 11px;
+  }
 }
 
 @layer base {
@@ -111,6 +149,16 @@
     font-weight: 500;
     letter-spacing: normal;
   }
+}
+
+/* Typography utility classes */
+@layer components {
+  .type-display { font-family: var(--font-display); font-size: var(--type-display); line-height: var(--type-display-lh); font-weight: var(--type-display-weight); }
+  .type-h1 { font-family: var(--font-display); font-size: var(--type-h1); line-height: var(--type-h1-lh); font-weight: var(--type-h1-weight); }
+  .type-h2 { font-family: var(--font-body); font-size: var(--type-h2); line-height: var(--type-h2-lh); font-weight: var(--type-h2-weight); }
+  .type-h3 { font-family: var(--font-body); font-size: var(--type-h3); line-height: var(--type-h3-lh); font-weight: var(--type-h3-weight); }
+  .type-label { font-family: var(--font-mono); font-size: var(--type-label); line-height: var(--type-label-lh); font-weight: var(--type-label-weight); text-transform: uppercase; }
+  .type-overline { font-family: var(--font-mono); font-size: var(--type-overline); line-height: var(--type-overline-lh); font-weight: var(--type-overline-weight); text-transform: uppercase; }
 }
 
 /* Quiz component styles — wrapped in @layer so Tailwind v4 preserves them */
@@ -137,7 +185,7 @@
 
   .quiz-btn-primary {
     background: var(--brand-coral);
-    color: #FFFFFF;
+    color: hsl(var(--primary-foreground));
     font-family: var(--font-body), Arial, Helvetica, sans-serif;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }

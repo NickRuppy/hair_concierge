@@ -47,7 +47,7 @@ export function HeatFrequencyScreen({ selected, onSelect, onBack }: HeatFrequenc
               onClick={() => handleSelect(option.value)}
               className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
                 localSelected === option.value
-                  ? "border-[var(--brand-coral)] bg-[var(--brand-coral)] text-white"
+                  ? "border-[var(--brand-coral)] bg-[var(--brand-coral)] text-primary-foreground"
                   : "border-border text-muted-foreground hover:border-border hover:text-foreground"
               }`}
             >

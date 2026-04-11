@@ -214,7 +214,7 @@ export function QuizScalpQuestion() {
             onClick={() => handleGateAnswer("nein")}
             className={`flex-1 h-14 rounded-xl text-base font-bold tracking-wide transition-all duration-200 ${
               conditionAnswer === "nein"
-                ? "bg-[var(--brand-coral)] text-white scale-[1.02]"
+                ? "bg-[var(--brand-coral)] text-primary-foreground scale-[1.02]"
                 : "bg-muted text-foreground hover:bg-muted/80 border border-border"
             }`}
           >
@@ -224,7 +224,7 @@ export function QuizScalpQuestion() {
             onClick={() => handleGateAnswer("ja")}
             className={`flex-1 h-14 rounded-xl text-base font-bold tracking-wide transition-all duration-200 ${
               conditionAnswer === "ja"
-                ? "bg-[var(--brand-coral)] text-white scale-[1.02]"
+                ? "bg-[var(--brand-coral)] text-primary-foreground scale-[1.02]"
                 : "bg-muted text-foreground hover:bg-muted/80 border border-border"
             }`}
           >

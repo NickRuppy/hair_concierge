@@ -32,11 +32,11 @@ export function QuizOptionCard({
             )}
           </div>
           {active && (
-            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--brand-plum)]">
+            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--brand-plum)] text-primary-foreground">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path
                   d="M2.5 6L5 8.5L9.5 4"
-                  stroke="#FFFFFF"
+                  stroke="currentColor"
                   strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"

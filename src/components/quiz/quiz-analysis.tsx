@@ -79,7 +79,7 @@ export function QuizAnalysis() {
               <div className="flex h-7 w-7 shrink-0 items-center justify-center">
                 {done ? (
                   <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--brand-plum)]">
-                    <Check className="h-4 w-4 text-white" />
+                    <Check className="h-4 w-4 text-primary-foreground" />
                   </div>
                 ) : active ? (
                   <Loader2 className="h-6 w-6 animate-spin text-[var(--brand-plum)]" />

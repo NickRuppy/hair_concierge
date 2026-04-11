@@ -1,13 +1,6 @@
 "use client"
 
-import {
-  useState,
-  useRef,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  type ReactNode,
-} from "react"
+import { useState, useRef, useCallback, useEffect, useLayoutEffect, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 import type { Product, HairProfile } from "@/lib/types"
 import { ProductImage } from "./product-image"
@@ -89,7 +82,7 @@ export function ProductPopover({
     const centerX = triggerRect.left + triggerRect.width / 2
     const left = Math.max(
       8,
-      Math.min(centerX - popoverWidth / 2, window.innerWidth - popoverWidth - 8)
+      Math.min(centerX - popoverWidth / 2, window.innerWidth - popoverWidth - 8),
     )
 
     // Position above trigger; if popover ref is available use its height
@@ -124,26 +117,17 @@ export function ProductPopover({
       >
         {/* Header: image + brand + name + category */}
         <span className="flex items-start gap-3">
-          <ProductImage
-            imageUrl={product.image_url}
-            category={product.category}
-            size="sm"
-          />
+          <ProductImage imageUrl={product.image_url} category={product.category} size="sm" />
           <span className="flex min-w-0 flex-1 flex-col gap-0.5">
             {product.brand && (
               <span className="block text-[11px] font-medium text-muted-foreground">
                 {product.brand}
               </span>
             )}
-            <span className="block text-sm font-semibold leading-tight">
-              {product.name}
-            </span>
+            <span className="block text-sm font-semibold leading-tight">{product.name}</span>
             {product.category && (
               <span className="mt-0.5 block">
-                <Badge
-                  variant="secondary"
-                  className="text-[10px] px-1.5 py-0"
-                >
+                <Badge variant="default" className="text-[10px] px-1.5 py-0">
                   {product.category}
                 </Badge>
               </span>
@@ -154,9 +138,7 @@ export function ProductPopover({
         {/* Personalization */}
         {personalization && (
           <span className="mt-2 block rounded-md bg-primary/10 px-2.5 py-1.5">
-            <span className="block text-xs font-medium text-primary">
-              {personalization}
-            </span>
+            <span className="block text-xs font-medium text-primary">{personalization}</span>
           </span>
         )}
 
@@ -169,9 +151,7 @@ export function ProductPopover({
           ) : (
             <span />
           )}
-          <span className="text-[11px] text-muted-foreground">
-            Klicken f&uuml;r Details &rarr;
-          </span>
+          <span className="text-[11px] text-muted-foreground">Klicken f&uuml;r Details &rarr;</span>
         </span>
       </button>
     </div>

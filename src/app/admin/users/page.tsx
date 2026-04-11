@@ -43,7 +43,9 @@ export default function AdminUsersPage() {
 
     const parts: string[] = []
     if (hp.hair_texture) {
-      parts.push(HAIR_TEXTURE_LABELS[hp.hair_texture as keyof typeof HAIR_TEXTURE_LABELS] ?? hp.hair_texture)
+      parts.push(
+        HAIR_TEXTURE_LABELS[hp.hair_texture as keyof typeof HAIR_TEXTURE_LABELS] ?? hp.hair_texture,
+      )
     }
     if (hp.concerns && hp.concerns.length > 0) {
       parts.push(`${hp.concerns.length} Probleme`)
@@ -79,26 +81,31 @@ export default function AdminUsersPage() {
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Email</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Admin</th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Haarprofil</th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Erstellt am</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                  Haarprofil
+                </th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                  Erstellt am
+                </th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => {
                 const hairSummary = getHairSummary(user)
                 return (
-                  <tr key={user.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                  <tr
+                    key={user.id}
+                    className="border-b last:border-0 hover:bg-muted/30 transition-colors"
+                  >
                     <td className="px-4 py-3 font-medium text-foreground">
                       {user.full_name || "—"}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {user.email}
-                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">{user.email}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                           user.is_admin
-                            ? "bg-secondary/20 text-secondary"
+                            ? "bg-primary/10 text-primary"
                             : "bg-muted text-muted-foreground"
                         }`}
                       >
