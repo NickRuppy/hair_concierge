@@ -28,7 +28,7 @@ export const quizQuestions: QuizQuestion[] = [
       { value: "coarse", label: "Dick", description: "Deutlich spuerbar \u2013 dicker als ein Naehfaden", emoji: "\uD83D\uDCAA" },
     ],
     selectionMode: "single",
-    motivation: "Klasse \u2013 du hilfst TomBot, deine Haare richtig einzuschaetzen.",
+    motivation: "Klasse \u2013 du hilfst uns, deine Haare richtig einzuschaetzen.",
   },
   {
     step: 4,

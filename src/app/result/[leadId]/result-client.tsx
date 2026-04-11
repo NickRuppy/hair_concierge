@@ -72,7 +72,7 @@ export function ResultPageClient({
     posthog.capture("result_shared", { method: "native", leadId })
     if (navigator.share) {
       await navigator.share({
-        title: `${name}s Haar-Diagnose — TomBot`,
+        title: `${name}s Haar-Diagnose — Hair Concierge`,
         text: shareQuote || "Schau dir meine Haar-Diagnose an!",
         url: resultUrl,
       }).catch(() => {})
@@ -94,7 +94,7 @@ export function ResultPageClient({
             <div className="w-[3px] h-5 bg-[#F5C518]/30 rounded-full" />
           </div>
           <span className="font-header text-sm text-white/50 tracking-widest">
-            TOM BOT
+            HAIR CONCIERGE
           </span>
         </div>
 
@@ -104,7 +104,7 @@ export function ResultPageClient({
         </h1>
         <p className="text-base text-white/60 mb-2">{cardData.summaryLine}</p>
         <p className="text-sm text-white/40 mb-6">
-          Basierend auf dem Haar-Quiz von TomBot
+          Basierend auf dem Haar-Quiz von Hair Concierge
         </p>
 
         {/* Profile cards */}
@@ -131,11 +131,11 @@ export function ResultPageClient({
           ))}
         </div>
 
-        {/* Tom's quote */}
+        {/* Result highlight */}
         {shareQuote && (
           <div className="border-2 border-[#F5C518]/30 rounded-xl p-5 mb-8">
             <p className="text-xs font-semibold text-[#F5C518] uppercase tracking-wide mb-2">
-              TOM SAGT
+              EINSCHAETZUNG
             </p>
             <p className="text-base text-white/90 leading-relaxed italic">
               &ldquo;{shareQuote}&rdquo;
@@ -202,7 +202,7 @@ export function ResultPageClient({
         {/* CTA for viewers */}
         <div className="text-center">
           <p className="text-lg text-white/60 mb-4">
-            Was sagt Tom zu DEINEM Haar?
+            Was passt zu DEINEM Haar?
           </p>
           <Link href="/quiz">
             <Button

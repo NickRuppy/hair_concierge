@@ -533,7 +533,7 @@ The consultation is divided into **4 main sections**, each introduced by a full-
 | # | Prose Question | Signal | Our Decision | Our Coverage |
 |---|---------------|--------|-------------|-------------|
 | **Section 1: Hair & Scalp** | | | | |
-| 1.1 | Hair Length | LOW | Skip as question; general dosage guidance instead | Not needed — **Ask Tom** |
+| 1.1 | Hair Length | LOW | Skip as question; general dosage guidance instead | Not needed — **Domain review** |
 | 1.2 | Hair Texture (10 types) | HIGH | Essential | `hair_texture` (4 types) |
 | 1.3 | Oily/Dry Spectrum | MEDIUM | Our scalp_type is more precise | `scalp_type` |
 | 1.4 | Split Ends | MEDIUM | Don't ask; add "Weniger Spliss" to goals | Goals list update needed |
@@ -546,7 +546,7 @@ The consultation is divided into **4 main sections**, each introduced by a full-
 | 1.11 | Scalp Oily/Dry | HIGH | Redundant with scalp_type | `scalp_type` covers it |
 | 1.12 | Flakiness | MED-HIGH | Covered by scalp_condition | `scalp_condition` (dandruff/dry_flakes) |
 | 1.13 | Scalp Sensitivity | HIGH | Covered by scalp_condition | `scalp_condition` (irritated) |
-| 1.14 | Gray Hair % | MEDIUM | Skip for now | Not needed — **Ask Tom** |
+| 1.14 | Gray Hair % | MEDIUM | Skip for now | Not needed — **Domain review** |
 | **Section 2: Treatments** | | | | |
 | 2.1 | Section Intro | N/A | Skip — keep flow lean | Not needed |
 | 2.2 | Color-Treated | HIGH | Essential | `chemical_treatment` |
@@ -554,7 +554,7 @@ The consultation is divided into **4 main sections**, each introduced by a full-
 | 2.4 | Products & Styling Tools | MED-HIGH | Adapt — ask routine with frequencies | **GAP — expand current_routine_products** |
 | 2.5 | Hair Styles Worn | MEDIUM | Simplify to mechanical stress question | **GAP — add mechanical stress question** |
 | 2.6 | Hold Level | MEDIUM | Skip — no styling products yet | Not needed |
-| 2.7 | Routine Preference | LOW/UX | Skip — Tom's philosophy: always minimal | `routine_preference` exists but Tom overrides |
+| 2.7 | Routine Preference | LOW/UX | Skip — current philosophy: always minimal | `routine_preference` exists but current defaults override it |
 | **Section 3: Lifestyle** | | | | |
 | 3.1 | Section Intro | N/A | Skip | Not needed |
 | 3.2 | Age | MEDIUM | Skip | Not needed |
@@ -568,7 +568,7 @@ The consultation is divided into **4 main sections**, each introduced by a full-
 | 3.10 | Environmental Data | N/A | Skip | Not needed |
 | **Section 4: Preferences & Goals** | | | | |
 | 4.1 | Section Intro | N/A | Skip | Not needed |
-| 4.2 | Ingredient Preferences | MEDIUM | Skip for now | Not needed — **Ask Tom** |
+| 4.2 | Ingredient Preferences | MEDIUM | Skip for now | Not needed — **Domain review** |
 | 4.3 | Fragrance | LOW | Skip | Not needed |
 | 4.4 | Hair Goals | HIGH | Essential — adapt for our goal list | `goals` (needs update) |
 
@@ -579,7 +579,7 @@ The consultation is divided into **4 main sections**, each introduced by a full-
 | Prose questions we **already cover** | **12** (texture, thickness, oily/dry, scalp condition x2, density, chemical treatment x2, goals, routine products, desired volume, post-wash actions) |
 | Prose questions we **will add** | **3** (wash frequency, mechanical stress, expanded routine w/ frequencies) |
 | Prose questions we **skip intentionally** | **10** (length, shedding, genetic loss, oil speed, gray, hold, age, hormones, diet, water, odor, stress, exercise, zip, environment, fragrance) |
-| Prose questions that are **Tom questions** | **3** (hair length needed?, gray hair needed?, ingredient filters in product table?) |
+| Prose questions that are **domain-review questions** | **3** (hair length needed?, gray hair needed?, ingredient filters in product table?) |
 
 We cover 12 of Prose's 25 questions with ~10 questions — extracting the same signal with less than half the questions. The 10 we skip are mostly LOW-signal (supplement upsells, lifestyle marketing, engagement pages).
 
@@ -590,7 +590,7 @@ We cover 12 of Prose's 25 questions with ~10 questions — extracting the same s
 3. **Expand current routine** — add frequency inputs for shampoo, conditioner, heat tools
 4. **Update goals list** — add "Weniger Spliss", drop supplement-related, brainstorm final set
 
-### Questions for Tom
+### Questions for Domain Review
 
 1. Do we need to ask for **hair length or hair style**?
 2. Is **gray hair %** relevant for our recommendation logic?

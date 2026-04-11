@@ -6,7 +6,14 @@ import { ahaFallback, shareQuoteFallback } from "@/lib/quiz/results-lookup"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import { getLeadStatusAfterAnalyze } from "@/lib/quiz/lead-lifecycle"
 
-const openai = new OpenAI()
+let openai: OpenAI | null = null
+
+function getOpenAIClient() {
+  if (!openai) {
+    openai = new OpenAI()
+  }
+  return openai
+}
 
 const rateLimits = new Map<string, { count: number; resetAt: number }>()
 const RATE_LIMIT = 5
@@ -70,7 +77,7 @@ export async function POST(request: Request) {
     let insight: string
     let shareQuote: string
     try {
-      const completion = await openai.chat.completions.create({
+      const completion = await getOpenAIClient().chat.completions.create({
         model: "gpt-4o",
         temperature: 0.7,
         max_tokens: 350,
@@ -79,7 +86,7 @@ export async function POST(request: Request) {
           {
             role: "system",
             content:
-              'Du bist TomBot, ein erfahrener Haar-Experte. Antworte als JSON mit zwei Feldern:\n\n1. "insight": Ein kurzer, persoenlicher Aha-Moment (2-3 Saetze). Erklaere, was bei der bisherigen Haarpflege wahrscheinlich schief lief. Sei direkt und empathisch. Verwende den Vornamen.\n\n2. "share_quote": Ein punchiger Satz (max 15 Woerter) von Tom ueber dieses Haar — motivierend, persoenlich, geeignet fuer eine Instagram-Story-Karte. Kein Hashtag, keine Emojis.\n\nBeispiel: {"insight": "Lisa, deine Haare ...", "share_quote": "Deine Locken brauchen Protein, nicht noch mehr Feuchtigkeit."}',
+              'Du bist ein erfahrener Haarpflege-Berater fuer Hair Concierge. Antworte als JSON mit zwei Feldern:\n\n1. "insight": Ein kurzer, persoenlicher Aha-Moment (2-3 Saetze). Erklaere, was bei der bisherigen Haarpflege wahrscheinlich schief lief. Sei direkt und empathisch. Verwende den Vornamen.\n\n2. "share_quote": Ein punchiger Satz (max 15 Woerter) ueber dieses Haar — motivierend, persoenlich, geeignet fuer eine Instagram-Story-Karte. Kein Hashtag, keine Emojis.\n\nBeispiel: {"insight": "Lisa, deine Haare ...", "share_quote": "Deine Locken brauchen Protein, nicht noch mehr Feuchtigkeit."}',
           },
           {
             role: "user",

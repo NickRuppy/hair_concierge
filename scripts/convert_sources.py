@@ -7,8 +7,8 @@ Usage:
     python3 scripts/convert_sources.py
 
 Reads from:
-    data/20260206_tom_data_complete.docx
-    data/Buchsatz_Hannemann_P1.pdf
+    the source DOCX file in the project root or data folder
+    the source book PDF in the data folder
     data/*.vtt
 
 Writes to:
@@ -25,9 +25,23 @@ import openpyxl
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
-DOCX_PATH = BASE_DIR / "20260206_tom_data_complete.docx"
-PDF_PATH = DATA_DIR / "Buchsatz_Hannemann_P1.pdf"
 MD_DIR = DATA_DIR / "markdown"
+
+
+def find_source_file(patterns: list[str], roots: list[Path]) -> Path:
+    """Return the first matching source file from the configured search roots."""
+    for root in roots:
+        for pattern in patterns:
+            matches = sorted(root.glob(pattern))
+            if matches:
+                return matches[0]
+    joined_patterns = ", ".join(patterns)
+    joined_roots = ", ".join(str(root) for root in roots)
+    raise FileNotFoundError(f"No source file found for patterns [{joined_patterns}] in [{joined_roots}]")
+
+
+DOCX_PATH = find_source_file(["*data*complete*.docx", "*.docx"], [BASE_DIR, DATA_DIR])
+PDF_PATH = find_source_file(["*Buchsatz*.pdf", "*book*.pdf", "*.pdf"], [DATA_DIR])
 
 
 def slugify(text: str) -> str:
@@ -99,12 +113,11 @@ def parse_docx():
             convert_qa(paras, start, end)
         elif title.startswith("Linksammlung"):
             convert_links(paras, start, end, title)
-        elif title == "Produklisten Tom":
+        elif title.startswith("Produklisten"):
             convert_products(paras, start, end)
-        elif title == "Story Tom":
+        elif title.startswith("Story"):
             convert_story(paras, start, end)
-        elif title in ("Call Recordings", "Buch Tom", "Ton Tom Beispiele",
-                       "Link Sammlungen", "Graphiken Tom"):
+        elif title in ("Call Recordings", "Link Sammlungen") or title.startswith(("Buch", "Ton", "Graphiken")):
             print(f"  Skipping placeholder section: {title}")
         else:
             print(f"  WARNING: Unknown section '{title}' (paras {start}-{end})")
@@ -147,7 +160,7 @@ def convert_course_transcripts(paras, start, end, title, subfolder, course_name)
         write_md(out_dir / f"{slugify(title)}.md", {
             "source_type": "transcript",
             "course": course_name,
-            "speaker": "Tom",
+            "speaker": "advisor",
             "language": "de",
         }, f"# {title}\n\n{content}")
         return
@@ -160,7 +173,7 @@ def convert_course_transcripts(paras, start, end, title, subfolder, course_name)
             "source_type": "transcript",
             "course": course_name,
             "module": f"{mod_num} {mod_name}",
-            "speaker": "Tom",
+            "speaker": "advisor",
             "language": "de",
         }, f"# {mod_name}\n\n{content}")
 
@@ -207,7 +220,7 @@ def convert_basics2(paras, start, end):
             "source_type": "transcript",
             "course": "Haarpflege Basics 2",
             "module": sec_title,
-            "speaker": "Tom",
+            "speaker": "advisor",
             "language": "de",
         }, f"# {sec_title}\n\n{content}")
 
@@ -249,7 +262,7 @@ def is_question_start(text: str) -> bool:
     """Check if a line looks like the start of a new question/message."""
     greetings = [
         'Hey ', 'Hey,', 'Hey!', 'Hallo', 'Hi ', 'Hi,', 'Hi!',
-        'SOS', 'Lieber Tom', 'Liebe Tom', 'Moin', 'Guten Tag',
+        'SOS', 'Lieber', 'Liebe', 'Moin', 'Guten Tag',
         'Servus', 'Halloooo', 'Hallöchen', 'Huhu', 'Huhuu',
     ]
     return any(text.startswith(g) for g in greetings)
@@ -296,8 +309,8 @@ def convert_qa(paras, start, end):
 
     write_md(out_path, {
         "source_type": "qa",
-        "content": "Community-Fragen an Tom",
-        "speaker": "Community + Tom",
+        "content": "Community-Fragen an den Berater",
+        "speaker": "Community + advisor",
         "language": "de",
     }, f"# Häufige Fragen\n\n" + "\n\n---\n\n".join(content_parts))
     print(f"    ({len(questions)} questions extracted)")
@@ -373,24 +386,24 @@ def convert_products(paras, start, end):
 
     write_md(out_path, {
         "source_type": "product_list",
-        "content": "Toms Produktlisten-Kategorien",
+        "content": "Produktlisten-Kategorien",
         "language": "de",
-    }, f"# Produktlisten Tom\n\n" + "\n".join(lines))
+    }, f"# Produktlisten\n\n" + "\n".join(lines))
 
 
 def convert_story(paras, start, end):
-    """Convert Story Tom section (timestamped narrative transcript)."""
-    print(f"\n  Processing: Story Tom")
-    out_path = MD_DIR / "stories" / "story-tom.md"
+    """Convert story section (timestamped narrative transcript)."""
+    print(f"\n  Processing: Story")
+    out_path = MD_DIR / "stories" / "story-guide.md"
 
     content = merge_transcript_paragraphs(paras, start + 1, end)
 
     write_md(out_path, {
         "source_type": "narrative",
-        "content": "Tom erzählt - Live Call Narratives",
-        "speaker": "Tom",
+        "content": "Narrative Live-Call-Inhalte",
+        "speaker": "advisor",
         "language": "de",
-    }, f"# Story Tom\n\n{content}")
+    }, f"# Story\n\n{content}")
 
 
 # ---------------------------------------------------------------------------
@@ -410,7 +423,7 @@ def parse_pdf():
 
     # Chapter metadata for semantic topic descriptions
     chapter_topics = {
-        1: "Toms Hintergrund und Werdegang",
+        1: "Hintergrund und Werdegang des Autors",
         2: "Schönheitsideale und gesellschaftlicher Druck",
         3: "Aktuelle Haartrends und Moden",
         4: "Die Friseurbranche und Salonkultur",
@@ -471,11 +484,11 @@ def parse_pdf():
 
         write_md(out_dir / filename, {
             "source_type": "book",
-            "book": "The Beautiful People - Tom Hannemann",
+            "book": "Interne Haarpflege-Referenz",
             "chapter": str(chapter_num),
             "chapter_title": chapter_title.title(),
             "topic": topic,
-            "speaker": "Tom",
+            "speaker": "advisor",
             "language": "de",
         }, f"# Kapitel {chapter_num}: {chapter_title.title()}\n\n{cleaned}")
 
@@ -485,9 +498,9 @@ def parse_pdf():
         author_text = clean_pdf_text(author_match.group(1).strip().split('\n'))
         write_md(out_dir / "ueber-den-autor.md", {
             "source_type": "book",
-            "book": "The Beautiful People - Tom Hannemann",
+            "book": "Interne Haarpflege-Referenz",
             "chapter": "Autor",
-            "topic": "Über Tom Hannemann",
+            "topic": "Über den Autor",
             "language": "de",
         }, f"# Über den Autor\n\n{author_text}")
 

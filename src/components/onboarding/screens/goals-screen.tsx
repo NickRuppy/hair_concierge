@@ -94,7 +94,7 @@ export function GoalsScreen({
               Was ist dir ausserdem wichtig?
             </h2>
             <p className="text-sm text-white/50">
-              Optional. TomBot nutzt diese Auswahl fuer deinen ersten Plan.
+              Optional. Diese Auswahl hilft beim ersten Plan.
             </p>
           </div>
 

@@ -56,9 +56,8 @@ function LandingPanel() {
   return (
     <>
       <h1 className="font-header text-6xl leading-[0.95] text-white mb-6">
-        THE.<br />
-        BEAUTIFUL.<br />
-        PEOPLE.
+        HAIR<br />
+        CONCIERGE
       </h1>
       <div className="mx-auto mb-6 h-1 w-16 rounded-full bg-[#F5C518]" />
       <p className="text-lg text-white/50 leading-relaxed">
@@ -77,11 +76,11 @@ function QuestionPanel({ questionNumber }: { questionNumber: number }) {
         FRAGE {questionNumber} VON 6
       </div>
       <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-        TOM<br />BOT
+        HAIR<br />CONCIERGE
       </h2>
       <div className="mx-auto mb-4 h-1 w-12 rounded-full bg-[#F5C518]/40" />
       <p className="text-sm text-white/40">
-        Dein persoenlicher Haar-Experte
+        Personalisierte Haarpflege-Beratung
       </p>
     </>
   )
@@ -91,7 +90,7 @@ function LeadCapturePanel({ subStep }: { subStep: string }) {
   return (
     <>
       <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-        TOM<br />BOT
+        HAIR<br />CONCIERGE
       </h2>
       <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
       <p className="text-lg text-white/50 leading-relaxed">
@@ -107,7 +106,7 @@ function AnalysisPanel() {
   return (
     <>
       <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-        TOM<br />BOT
+        HAIR<br />CONCIERGE
       </h2>
       <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
       <p className="font-header text-2xl tracking-wider text-[#F5C518] animate-pulse">
@@ -121,7 +120,7 @@ function ResultsPanel() {
   return (
     <>
       <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-        TOM<br />BOT
+        HAIR<br />CONCIERGE
       </h2>
       <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
       <p className="text-lg text-white/50 leading-relaxed">
@@ -135,7 +134,7 @@ function WelcomePanel() {
   return (
     <>
       <h2 className="font-header text-5xl leading-[0.95] text-white mb-6">
-        TOM<br />BOT
+        HAIR<br />CONCIERGE
       </h2>
       <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[#F5C518]/40" />
       <p className="text-lg text-white/50 leading-relaxed">

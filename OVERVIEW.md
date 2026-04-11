@@ -1,8 +1,8 @@
-# Hair Concierge (TomBot) — Architecture Overview
+# Hair Concierge — Architecture Overview
 
 ## What It Is
 
-A personalized AI hair care recommendation platform built around **Tom Hannemann** (German hair care expert, 1.5M DACH followers). Users take a diagnostic quiz, complete a post-auth onboarding to build a detailed hair profile, then receive expert product recommendations and hair care advice via a conversational AI chat — all in Tom's voice and methodology.
+A personalized AI hair care recommendation platform built around profile-aware diagnostics, deterministic recommendation logic, and contextual AI guidance. Users take a diagnostic quiz, complete a post-auth onboarding to build a detailed hair profile, then receive product recommendations and hair care advice via a conversational AI chat with citations.
 
 **Target:** German-speaking hair care enthusiasts. All UI text is in German.
 
@@ -60,7 +60,7 @@ graph TB
         Router["Intent Router<br/>(classify user intent)"]
         Retriever["Hybrid Retriever<br/>(dense + lexical + RRF)"]
         ProductMatcher["Product Matcher<br/>(category-specific)"]
-        Synthesizer["Synthesizer<br/>(Tom's voice + citations)"]
+        Synthesizer["Synthesizer<br/>(advisor tone + citations)"]
 
         Router --> Retriever
         Retriever --> ProductMatcher
@@ -142,7 +142,7 @@ flowchart LR
 2. **Lead capture** — name + email stored in `leads` table
 3. **Auth** — Supabase OAuth (Google, etc.) + email signup; lead data linked to new user
 4. **Onboarding** (post-auth) — additional profile fields: wash frequency, goals, density, mechanical stress
-5. **Chat** — streaming SSE responses, RAG-powered, Tom's personality and methodology
+5. **Chat** — streaming SSE responses, RAG-powered, advisor-style guidance
 
 ---
 
@@ -167,7 +167,7 @@ flowchart TD
     Match --> Eligibility["Check eligibility<br/>(per category rules)"]
     Eligibility --> Score["Score & rank<br/>(profile-aware)"]
 
-    Score --> Synth["Synthesize Response<br/>(Tom's voice + citations)"]
+    Score --> Synth["Synthesize Response<br/>(advisor tone + citations)"]
     Synth --> Stream["Stream via SSE<br/>to client"]
     Stream --> Save["Save to DB"]
 ```

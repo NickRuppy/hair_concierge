@@ -13,7 +13,7 @@ export function CelebrationPopup({ onDismiss }: CelebrationPopupProps) {
         </h2>
 
         <p className="text-base text-white/70 leading-relaxed mb-8">
-          Dein Haarprofil ist komplett. TomBot kennt dich jetzt und kann dir
+          Dein Haarprofil ist komplett. Hair Concierge kann dir jetzt
           personalisierte Empfehlungen geben.
         </p>
 

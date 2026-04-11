@@ -160,7 +160,7 @@ export function ProductPopover({
           </span>
         )}
 
-        {/* Tom's take */}
+        {/* Short product note */}
         {product.tom_take && (
           <span className="mt-2 block">
             <span className="block text-xs italic text-muted-foreground line-clamp-2">

@@ -12,7 +12,7 @@ interface QAFixture {
   chat_id: string
   context: string
   question: string
-  tom_answer: string
+  reference_answer: string
   hair_texture: string | null
   topics: string[]
   is_standalone: boolean
@@ -60,7 +60,7 @@ function parseExchanges(content: string, chatId: string): QAFixture[] {
 
     const context = contextMatch?.[1]?.trim() ?? ""
     const question = questionMatch[1].trim()
-    const tomAnswer = answerMatch[1].trim()
+    const referenceAnswer = answerMatch[1].trim()
 
     // Parse metadata
     let hairTexture: string | null = null
@@ -89,7 +89,7 @@ function parseExchanges(content: string, chatId: string): QAFixture[] {
       chat_id: chatId,
       context,
       question,
-      tom_answer: tomAnswer,
+      reference_answer: referenceAnswer,
       hair_texture: hairTexture,
       topics,
       is_standalone: isStandalone,

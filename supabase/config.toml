@@ -174,15 +174,15 @@ host = "smtp-relay.brevo.com"
 port = 587
 user = "env(BREVO_SMTP_USER)"
 pass = "env(BREVO_SMTP_KEY)"
-admin_email = "tom@tomhannemann.de"
-sender_name = "Tom Hannemann"
+admin_email = "env(BREVO_SMTP_SENDER)"
+sender_name = "Hair Concierge"
 
 [auth.email.template.confirmation]
-subject = "TomBot – E-Mail bestaetigen"
+subject = "Hair Concierge – E-Mail bestaetigen"
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = "TomBot – Passwort zuruecksetzen"
+subject = "Hair Concierge – Passwort zuruecksetzen"
 content_path = "./supabase/templates/recovery.html"
 
 [auth.sms]

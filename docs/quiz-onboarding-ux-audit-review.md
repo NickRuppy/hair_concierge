@@ -29,7 +29,7 @@ The original audit proposes re-sequencing and re-grouping the quiz + onboarding 
 
 ## Remaining Questions — RESOLVED (2026-03-25)
 
-1. ~~**Primary goal as pipeline signal:**~~ **Resolved:** No extra page. The existing goals page collects hair goals. TomBot picks up the user's stated goals and reflects them in the UX (e.g., opening the chat around their goals). This is a UX/prompt concern — no `primary_goal` DB column or pipeline change needed.
+1. ~~**Primary goal as pipeline signal:**~~ **Resolved:** No extra page. The existing goals page collects hair goals. Hair Concierge picks up the user's stated goals and reflects them in the UX (e.g., opening the chat around their goals). This is a UX/prompt concern — no `primary_goal` DB column or pipeline change needed.
 2. ~~**`desired_volume` vs `volume` goal:**~~ **Resolved:** Current design is fine. `desired_volume` stays as the required field; `deriveOnboardingGoals` auto-injects `"volume"` when `desired_volume === "more"`. Volume chip already removed from straight goals in Phase 2. Internal engineering concern, not a product question.
 3. ~~**Goal determinism:**~~ **Resolved:** Deferred. A logic for how stated goals are processed in the pipeline will follow as separate work.
 4. ~~**Scalp reframe mapping:**~~ **Resolved:** Current labels and descriptions are fine as-is. The observable-behavior framing already exists in the option descriptions (e.g., "Ansaetze werden nach 1-2 Tagen oelig"). Internal values unchanged.
@@ -58,8 +58,8 @@ The original audit proposes re-sequencing and re-grouping the quiz + onboarding 
 - Phase 4 file list was wrong: `QuizStep` in `quiz/types.ts` not `src/lib/types.ts`; missing `quiz/store.ts`, `quiz-brand-panel.tsx`, `quiz-scalp-question.tsx` progress
 - Phase 5+6 undercounted route references: missing onboarding page redirects, component `router.push()` calls, auth callback/confirm legs
 - Phase 1 file list was wrong: copy lives in `questions.ts`, `quiz-scalp-question.tsx`, `quiz-results.tsx`, `quiz-brand-panel.tsx` — not just "quiz step components"
-- Tom Q1 (labels vs internal values) was engineering, not product — replaced with mapping question
-- Tom Q4 (`routine_preference` impact) was already answerable from code — replaced with goal determinism question
+- Prior Q1 (labels vs internal values) was engineering, not product — replaced with mapping question
+- Prior Q4 (`routine_preference` impact) was already answerable from code — replaced with goal determinism question
 
 ---
 
@@ -103,7 +103,7 @@ The original audit proposes re-sequencing and re-grouping the quiz + onboarding 
 - ~~Frame surface + pull tests as "Mini-Haarcheck 1/2 von 2"~~
 - ~~Add pull test helper: "Ziehe nur leicht. Uns geht es um die Tendenz, nicht um Perfektion."~~
 - ~~Update results copy to signal continuation: "Dein Profil ist fast fertig"~~
-- **Note:** Scalp type option labels (Fettig/Ausgeglichen/Trocken) were NOT changed — exact observable-oiling-cadence mapping still pending Tom's answer to Remaining Question #4.
+- **Note:** Scalp type option labels (Fettig/Ausgeglichen/Trocken) were NOT changed — exact observable-oiling-cadence mapping still pending domain-review input on Remaining Question #4.
 - Files:
   - `src/lib/quiz/questions.ts` (question titles, descriptions, option labels)
   - `src/components/quiz/quiz-scalp-question.tsx` (scalp labels, follow-up wording)
@@ -176,7 +176,7 @@ The original audit proposes re-sequencing and re-grouping the quiz + onboarding 
 - Dark theme matching quiz chrome
 - Heading: "Profil speichern & weitermachen"
 - Remaining steps indicator: "Noch 3 kurze Schritte bis zu deinem vollstaendigen Profil"
-- Explain why: "Damit dein Profil gespeichert bleibt und TomBot darauf aufbauen kann."
+- Explain why: "Damit dein Profil gespeichert bleibt und deine Beratung darauf aufbauen kann."
 - Update ALL hardcoded `/onboarding/density` references:
   - `src/app/auth/page.tsx` (redirect after login)
   - `src/app/api/auth/callback/route.ts` (OAuth callback redirect)
@@ -193,7 +193,7 @@ The original audit proposes re-sequencing and re-grouping the quiz + onboarding 
 - Keep `curl_definition` hidden for `straight` as sole hard exclusion
 - Show curated onboarding goal subset (not all enum values), sorted by texture relevance
 - Mark top 3-4 as "Besonders relevant fuer dein Haarprofil"
-- No extra "primary goal" page — TomBot picks up the user's stated goals and reflects them in the chat UX (prompt/conversation concern, no `primary_goal` DB column needed)
+- No extra "primary goal" page — Hair Concierge picks up the user's stated goals and reflects them in the chat UX (prompt/conversation concern, no `primary_goal` DB column needed)
 - ~~Handle `volume` dedup~~ — resolved in Phase 2 (chip removed, auto-inject via `deriveOnboardingGoals` stays)
 - Goal none-handling (if needed) belongs here, not in Phase 3
 - Goal-to-pipeline processing logic is separate future work

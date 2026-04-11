@@ -1,5 +1,5 @@
 -- Add community_qa (1.0x) to authority weighting in match_content_chunks.
--- Same tier as qa and narrative — direct personalized advice from Tom.
+-- Same tier as qa and narrative — direct personalized advisor guidance.
 
 -- Update source_type constraint to allow community_qa
 ALTER TABLE content_chunks DROP CONSTRAINT IF EXISTS content_chunks_source_type_check;

@@ -6,7 +6,7 @@
  * - Fix remaining context-dependent transcription errors
  * - Trim conversational filler (also, halt, eben, quasi, repeated false starts)
  * - Merge fragmented sentences into complete ones
- * - Preserve Tom's teaching voice and personality
+ * - Preserve the speaker's teaching voice and personality
  * - For live calls: preserve Q&A structure (each caller's question = a section)
  *
  * Usage: npx tsx scripts/ai-cleanup.ts [--dry-run] [--file <path>] [--start-from <path>] [--only-failed]
@@ -75,7 +75,7 @@ function getOpenAI() {
 
 const COURSE_TRANSCRIPT_PROMPT = `Du bist ein professioneller Redakteur für deutschsprachige Bildungsinhalte zum Thema Haarpflege.
 
-Deine Aufgabe: Bereinige und strukturiere dieses automatisch transkribierte Kursmodul. Der Sprecher ist Tom Hannemann, ein Haarpflege-Experte.
+Deine Aufgabe: Bereinige und strukturiere dieses automatisch transkribierte Kursmodul. Der Sprecher ist ein Haarpflege-Experte.
 
 ## Regeln
 
@@ -91,13 +91,13 @@ Deine Aufgabe: Bereinige und strukturiere dieses automatisch transkribierte Kurs
    - Entferne Füllwörter (also, halt, eben, quasi, im Endeffekt, im Grunde, tatsächlich) wo sie keinen Mehrwert haben
    - Verschmelze fragmentierte Sätze zu vollständigen Sätzen
    - Entferne Wiederholungen und Fehlstarts
-   - Behalte aber Toms lockeren, persönlichen Unterrichtsstil bei
+   - Behalte aber den lockeren, persoenlichen Unterrichtsstil des Sprechers bei
 
 4. **Absätze bilden**: Jeder Absatz sollte ein zusammenhängendes Thema behandeln (ca. 200-400 Wörter). Zwischen Absätzen eine Leerzeile.
 
 5. **NICHT verändern**:
    - Keine neuen Informationen hinzufügen
-   - Toms Persönlichkeit, Humor und Metaphern beibehalten ("eierlegende Wollmilchsau", "Freunde der Nacht" etc.)
+   - Persoenlichkeit, Humor und Metaphern des Sprechers beibehalten ("eierlegende Wollmilchsau", "Freunde der Nacht" etc.)
    - Faktische Aussagen, Produktempfehlungen und technische Erklärungen nicht verändern
    - YAML-Frontmatter unverändert lassen
    - Die \`# Hauptüberschrift\` beibehalten
@@ -111,7 +111,7 @@ Deine Aufgabe: Bereinige und strukturiere dieses automatisch transkribierte Kurs
 
 const LIVE_CALL_PROMPT = `Du bist ein professioneller Redakteur für deutschsprachige Bildungsinhalte zum Thema Haarpflege.
 
-Deine Aufgabe: Bereinige und strukturiere dieses automatisch transkribierte Live-Call-Protokoll. Der Hauptsprecher ist Tom Hannemann, ein Haarpflege-Experte. Teilnehmer stellen Fragen.
+Deine Aufgabe: Bereinige und strukturiere dieses automatisch transkribierte Live-Call-Protokoll. Der Hauptsprecher ist ein Haarpflege-Experte. Teilnehmer stellen Fragen.
 
 ## Regeln
 
@@ -120,7 +120,7 @@ Deine Aufgabe: Bereinige und strukturiere dieses automatisch transkribierte Live
    - "## L'Oreal Elvital Midnight Oil Magic - Bewertung"
    - "## Nicoles Conditioner-Frage"
 
-2. **Sprecherkennzeichnung beibehalten**: Behalte \`**Name:**\` für Sprecherwechsel bei. Bei langen Monologen von Tom kann die Kennzeichnung entfallen.
+2. **Sprecherkennzeichnung beibehalten**: Behalte \`**Name:**\` fuer Sprecherwechsel bei. Bei langen Monologen des Hauptsprechers kann die Kennzeichnung entfallen.
 
 3. **Transkriptionsfehler korrigieren**: (gleiche Regeln wie für Kursmodule)
    - Haar-Komposita, chemische Begriffe, Produktnamen, englische Lehnwörter
@@ -130,9 +130,9 @@ Deine Aufgabe: Bereinige und strukturiere dieses automatisch transkribierte Live
    - Verschmelze fragmentierte Sätze
    - Entferne Wiederholungen und Fehlstarts
    - Kurzantworten der Teilnehmer zusammenfassen oder entfernen wenn sie keinen Inhalt haben
-   - Behalte Toms lockeren Unterrichtsstil bei
+   - Behalte den lockeren Unterrichtsstil des Hauptsprechers bei
 
-5. **Empfehlungen hervorheben**: Wenn Tom eine klare Empfehlung gibt, formatiere sie als:
+5. **Empfehlungen hervorheben**: Wenn der Hauptsprecher eine klare Empfehlung gibt, formatiere sie als:
    \`**Empfehlung:** ...\`
 
 6. **NICHT verändern**:

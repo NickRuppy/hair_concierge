@@ -145,7 +145,7 @@ export async function GET(
               <div style={{ width: 5, height: 24, backgroundColor: "#7A6010", borderRadius: 3 }} />
             </div>
             <div style={{ display: "flex", fontFamily: "Bebas Neue", fontSize: 22, color: "#666", letterSpacing: 6 }}>
-              TOM BOT
+              HAIR CONCIERGE
             </div>
           </div>
 
@@ -254,23 +254,20 @@ export async function GET(
             </div>
           </div>
 
-          {/* Tom quote — flex: 1 absorbs remaining space */}
+          {/* Result highlight — flex: 1 absorbs remaining space */}
           <div style={{ display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%", padding: "0 20px" }}>
             <div style={{ display: "flex", fontSize: 18, color: "#F5C518", letterSpacing: 5, marginBottom: 16 }}>
-              TOM SAGT
+              EINSCHAETZUNG
             </div>
             <div style={{ display: "flex", fontSize: 40, color: "#ccc", lineHeight: 1.5, marginBottom: 20 }}>
               {'"'}{quote}{'"'}
-            </div>
-            <div style={{ display: "flex", fontSize: 22, color: "#F5C518", letterSpacing: 5 }}>
-              -- TOM
             </div>
           </div>
 
           {/* CTA */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
             <div style={{ display: "flex", fontSize: 26, color: "#666" }}>
-              Was sagt Tom zu DEINEM Haar?
+              Was passt zu DEINEM Haar?
             </div>
             <div
               style={{
@@ -287,7 +284,7 @@ export async function GET(
               QUIZ STARTEN
             </div>
             <div style={{ display: "flex", fontSize: 20, color: "#444", marginTop: 4 }}>
-              tombot.de/quiz
+              {new URL(request.url).origin.replace(/^https?:\/\//, "")}
             </div>
           </div>
         </div>

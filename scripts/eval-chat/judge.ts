@@ -31,7 +31,7 @@ export async function runJudge(
         .join("\n")
     : "(no done event)"
 
-  const prompt = `Du bist ein Qualitaetspruefer fuer einen deutschen Haarpflege-Chatbot namens TomBot.
+  const prompt = `Du bist ein Qualitaetspruefer fuer einen deutschen Haarpflege-Chatbot namens Hair Concierge.
 Bewerte ob die Antwort des Assistenten das erwartete Verhalten erfuellt.
 
 ## Nutzernachricht

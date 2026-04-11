@@ -33,7 +33,7 @@ export function QuizResults() {
           <div className="w-[3px] h-5 bg-[#F5C518]/60 rounded-full" />
           <div className="w-[3px] h-5 bg-[#F5C518]/30 rounded-full" />
         </div>
-        <span className="font-header text-sm text-white/50 tracking-widest">TOM BOT</span>
+        <span className="font-header text-sm text-white/50 tracking-widest">HAIR CONCIERGE</span>
       </div>
 
       {/* Header */}

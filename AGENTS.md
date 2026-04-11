@@ -23,7 +23,7 @@ Use for:
 
 Rules:
 
-- Keep this lane fully separate from Tom's expertise unless the user explicitly asks for a comparison
+- Keep this lane fully separate from internal methodology unless the user explicitly asks for a comparison
 - Prefer scientific evidence, consensus, regulatory guidance, and reputable professional practice
 - It is valid to conclude that evidence is weak or inconclusive
 - Default output shape:
@@ -49,11 +49,11 @@ When a category or spec change needs both research and implementation logic, use
 
 ### Do not mix these lanes by default
 
-- External evidence lane: consensus-first, non-Tom
-- Tom methodology lane: based on Tom materials, product tables, and project sources
-- Reconciliation lane: only when the user explicitly wants Tom's guidance compared against external evidence
+- External evidence lane: consensus-first, independent of internal guidance
+- Internal guidance lane: based on internal source materials, product tables, and project sources
+- Reconciliation lane: only when the user explicitly wants internal guidance compared against external evidence
 
-If the task is about matching or preserving Tom's advice, do not route it through `hair-care-expert` unless the user explicitly wants a second opinion.
+If the task is about matching or preserving current internal recommendation logic, do not route it through `hair-care-expert` unless the user explicitly wants a second opinion.
 
 ## Plan Mode
 
@@ -87,4 +87,4 @@ For trivial tasks (single file, <20 lines changed), skip the options table and p
 
 - Put implementation plans in `plans/` when a written plan is needed
 - Put reusable project docs in `docs/` when they should outlive the current task
-- Only add to `questions-for-tom.md` when the question is specifically for Tom and cannot be resolved from external evidence or local project context
+- Only add to `questions-for-domain-review.md` when the question requires internal domain review and cannot be resolved from external evidence or local project context

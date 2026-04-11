@@ -339,11 +339,11 @@ export function ProductDetailDrawer({
             </div>
           )}
 
-          {/* Tom's take */}
+          {/* Short product note */}
           {product.tom_take && (
             <div>
               <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Toms Meinung
+                Kurze Einordnung
               </p>
               <p className="text-sm italic text-foreground">
                 &ldquo;{product.tom_take}&rdquo;

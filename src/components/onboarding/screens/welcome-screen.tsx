@@ -10,7 +10,7 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
       <h1
         className="animate-fade-in-up font-header text-3xl leading-tight text-white mb-4"
       >
-        Willkommen bei TomBot!
+        Willkommen bei Hair Concierge!
       </h1>
 
       <p

@@ -36,14 +36,14 @@ const extractionResponseSchema = z.object({
   memories: z.array(extractedMemorySchema).default([]),
 })
 
-export const MEMORY_EXTRACTION_JSON_PROMPT = `Du bist ein Analyse-Assistent fuer TomBot. Extrahiere dauerhafte, haarspezifische Erinnerungen aus einem Gespraech.
+export const MEMORY_EXTRACTION_JSON_PROMPT = `Du bist ein Analyse-Assistent fuer Hair Concierge. Extrahiere dauerhafte, haarspezifische Erinnerungen aus einem Gespraech.
 
 Antworte NUR als JSON:
 {"memories":[{"kind":"preference|routine|product_experience|hair_history|progress|sensitivity|medical_context|other","memory_key":"stabiler_key","content":"deutscher Satz","evidence":"kurzes Nutzerzitat","confidence":0.0,"product_names":["..."],"sentiment":"positive|negative|neutral"}]}
 
 Regeln:
 - Speichere nur Fakten, die der NUTZER explizit sagt oder bestaetigt.
-- Speichere keine Empfehlungen, Erklaerungen oder Annahmen von Tom.
+- Speichere keine Empfehlungen, Erklaerungen oder Annahmen des Assistenten.
 - Speichere nur hair-care-relevante Fakten: Vorlieben, Routine, Produkterfahrungen, Haarhistorie, Fortschritt, Reaktionen, Sensitivitaeten.
 - Medizinisch angrenzende Fakten wie Haarausfall, Kopfhautbeschwerden, Schwangerschaft, Medikamente oder Allergien nur speichern, wenn der Nutzer sie explizit als relevant nennt.
 - Keine Smalltalk-Fakten, keine allgemeinen Lebensdetails ohne Haarpflegebezug.
@@ -123,7 +123,7 @@ export async function extractConversationMemory(
     )
 
     const transcript = messages
-      .map((message) => `${message.role === "user" ? "Nutzer" : "Tom"}: ${message.content ?? ""}`)
+      .map((message) => `${message.role === "user" ? "Nutzer" : "Assistent"}: ${message.content ?? ""}`)
       .join("\n")
 
     const prompt = [

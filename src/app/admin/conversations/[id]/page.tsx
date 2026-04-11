@@ -456,7 +456,7 @@ export default function AdminConversationDetailPage() {
                         {msg.role === "user"
                           ? "Nutzer"
                           : msg.role === "assistant"
-                            ? "TomBot"
+                            ? "Hair Concierge"
                             : "System"}
                       </span>
                       <span className="text-xs opacity-50">
