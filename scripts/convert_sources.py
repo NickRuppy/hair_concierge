@@ -342,7 +342,7 @@ def convert_links(paras, start, end, title):
         if sub_match:
             # Flush current to file and start new one
             if lines:
-                content = "\n".join(lines)
+                content = sanitize_legacy_public_branding("\n".join(lines))
                 write_md(out_path, {
                     "source_type": "product_links",
                     "content_type": "Live-Call Linksammlung",
@@ -365,7 +365,7 @@ def convert_links(paras, start, end, title):
             lines.append(text)
 
     if lines:
-        content = "\n".join(lines)
+        content = sanitize_legacy_public_branding("\n".join(lines))
         write_md(out_path, {
             "source_type": "product_links",
             "content_type": "Live-Call Linksammlung",
@@ -538,7 +538,35 @@ def clean_pdf_text(lines: list[str]) -> str:
         joined = re.sub(r' +', ' ', joined)
         result.append(joined.strip())
 
-    return "\n\n".join(result)
+    return sanitize_legacy_public_branding("\n\n".join(result))
+
+
+def sanitize_legacy_public_branding(text: str) -> str:
+    """Remove legacy public-brand references from imported source text."""
+    replacements = [
+        (
+            r"Mein Name ist Tom Hannemann, ich bin Hairstylist, Friseurtrainer und leidenschaftlicher Klugscheißer und mein Kanal heißt @_the\.beautiful\.people\.",
+            "Ich arbeite seit vielen Jahren als Hairstylist und Friseurtrainer und teile dieses Wissen hier in konzentrierter Form.",
+        ),
+        (
+            r"Wie auch ihr einer dieser beautiful people werdet, das sage ich euch jetzt\.",
+            "Wie ihr euer Haar besser versteht und sinnvoll pflegt, erkläre ich euch jetzt.",
+        ),
+        (
+            r"@_the\.beautiful\.people",
+            "dieses Projekt",
+        ),
+        (
+            r"(?im)^- <https://www\.tiktok\.com/@\.the\.beautiful\.people/video/[^\n>]+>\s*$",
+            "- Link entfernt",
+        ),
+    ]
+
+    sanitized = text
+    for pattern, replacement in replacements:
+        sanitized = re.sub(pattern, replacement, sanitized, flags=re.IGNORECASE)
+
+    return sanitized
 
 
 # ---------------------------------------------------------------------------
