@@ -31,6 +31,14 @@ import {
   Mail,
   Lock,
   Beaker,
+  Timer,
+  Feather,
+  Sun,
+  SplitSquareVertical,
+  Grip,
+  CloudRain,
+  MoveRight,
+  Fingerprint,
   Scale,
   Dna,
   Ban,
@@ -42,12 +50,12 @@ import {
 // swappable to custom SVG components later in this single file.
 const iconMap = {
   // Hair texture
-  "hair-straight": Waves,
-  "hair-wavy": Wind,
+  "hair-straight": MoveRight,
+  "hair-wavy": Waves,
   "hair-curly": CircleDot,
-  "hair-coily": Flame,
+  "hair-coily": Fingerprint,
   // Hair thickness
-  "hair-fine": Scissors,
+  "hair-fine": Feather,
   "hair-normal": Hand,
   "hair-coarse": Dumbbell,
   // Surface feel
@@ -141,19 +149,19 @@ const iconMap = {
   "night-pineapple": FlameKindling,
   // Goals
   "goal-moisture": Droplets,
-  "goal-shine": Sparkles,
+  "goal-shine": Sun,
   "goal-volume": Wind,
-  "goal-repair": Shield,
-  "goal-definition": CircleDot,
-  "goal-frizz": Waves,
+  "goal-repair": Wrench,
+  "goal-definition": Grip,
+  "goal-frizz": CloudRain,
   "goal-growth": Dna,
-  "goal-split-ends": Scissors,
+  "goal-split-ends": SplitSquareVertical,
   "goal-color-protection": Palette,
-  "goal-scalp-health": FlameKindling,
-  "goal-smoothness": Hand,
+  "goal-scalp-health": Shield,
+  "goal-smoothness": Feather,
   "goal-strength": Dumbbell,
-  "goal-time-saving": Clock,
-  "goal-less-washing": ShowerHead,
+  "goal-time-saving": Timer,
+  "goal-less-washing": Timer,
 } satisfies Record<string, LucideIcon>
 
 export type IconName = keyof typeof iconMap

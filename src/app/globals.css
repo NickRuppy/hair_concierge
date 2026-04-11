@@ -195,6 +195,7 @@
     background: var(--brand-coral);
     color: hsl(var(--primary-foreground));
     font-family: var(--font-body), Arial, Helvetica, sans-serif;
+    border-radius: var(--radius-md);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
