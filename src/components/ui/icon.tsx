@@ -168,6 +168,7 @@ export function Icon({ name, className, size = 20, "aria-label": ariaLabel }: Ic
     <LucideComponent
       className={className}
       size={size}
+      strokeWidth={1.5}
       aria-label={ariaLabel}
       aria-hidden={!ariaLabel}
     />
