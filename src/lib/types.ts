@@ -38,11 +38,7 @@ import type {
   ConditionerWeight,
   ConditionerRepairLevel,
 } from "@/lib/conditioner/constants"
-import type {
-  OilNoRecommendationReason,
-  OilSubtype,
-  OilUseMode,
-} from "@/lib/oil/constants"
+import type { OilNoRecommendationReason, OilSubtype, OilUseMode } from "@/lib/oil/constants"
 import type { ShampooBucket, ShampooBucketPair } from "@/lib/shampoo/constants"
 
 export type {
@@ -290,7 +286,11 @@ export interface OilRecommendationMetadata extends BaseRecommendationMetadata {
 
 export type MaskType = "protein" | "moisture" | "performance"
 export type MaskNeedStrength = 1 | 2 | 3
-export type MaskSignal = "chemical_treatment" | "heat_styling" | "protein_moisture_balance" | "mechanical_stress"
+export type MaskSignal =
+  | "chemical_treatment"
+  | "heat_styling"
+  | "protein_moisture_balance"
+  | "mechanical_stress"
 
 export interface MaskRecommendationMetadata extends BaseRecommendationMetadata {
   category: "mask"
@@ -421,6 +421,10 @@ export interface RoutineContext {
   inventory_complete: boolean
   has_between_wash_days: boolean
   has_buildup_signals: boolean
+  has_scalp_clarify_signals: boolean
+  has_hair_reset_signals: boolean
+  has_hard_reset_signals: boolean
+  has_sensitive_scalp_signals: boolean
   has_dryness_damage_signals: boolean
   has_damage_signals: boolean
   has_bond_builder_signals: boolean
@@ -647,11 +651,11 @@ export interface ContentChunk {
 }
 
 export interface CitationSource {
-  index: number          // 1-based, matches [1] markers
-  source_type: string    // "book", "product_list", etc.
-  label: string          // German: "Fachbuch", "Produktmatrix"
+  index: number // 1-based, matches [1] markers
+  source_type: string // "book", "product_list", etc.
+  label: string // German: "Fachbuch", "Produktmatrix"
   source_name: string | null
-  snippet: string        // First ~200 chars of chunk content
+  snippet: string // First ~200 chars of chunk content
 }
 
 export type IntentType =
@@ -663,7 +667,14 @@ export type IntentType =
   | "general_chat"
   | "followup"
 
-export type ProductCategory = "shampoo" | "conditioner" | "mask" | "oil" | "leave_in" | "routine" | null
+export type ProductCategory =
+  | "shampoo"
+  | "conditioner"
+  | "mask"
+  | "oil"
+  | "leave_in"
+  | "routine"
+  | null
 
 export type RetrievalMode = "faq" | "hybrid" | "hybrid_plus_graph" | "product_sql_plus_hybrid"
 
@@ -686,13 +697,21 @@ export interface RouterDecision {
   retrieval_mode: RetrievalMode
   needs_clarification: boolean
   clarification_reason?: string
-  slot_completeness: number          // 0–1
+  slot_completeness: number // 0–1
   confidence: number
-  policy_overrides: string[]         // e.g. ["low_confidence", "missing_slots"]
+  policy_overrides: string[] // e.g. ["low_confidence", "missing_slots"]
 }
 
 export interface ChatSSEEvent {
-  type: "conversation_id" | "content_delta" | "product_recommendations" | "sources" | "confidence" | "retrieval_debug" | "done" | "error"
+  type:
+    | "conversation_id"
+    | "content_delta"
+    | "product_recommendations"
+    | "sources"
+    | "confidence"
+    | "retrieval_debug"
+    | "done"
+    | "error"
   data: unknown
 }
 
