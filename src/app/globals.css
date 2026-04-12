@@ -227,6 +227,11 @@
   animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Chat message entrance — snappier variant for conversational context */
+.animate-fade-in-up-fast {
+  animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* Scale-in animation for popups */
 @keyframes scaleIn {
   from {
@@ -264,6 +269,25 @@
   to { opacity: 0; }
 }
 
+/* Sidebar slide animations */
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideOutLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.animate-slide-out-left {
+  animation: slideOutLeft 0.25s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
 /* Comb sway animation for loading indicator */
 @keyframes combSway {
   0%, 100% { transform: rotate(-15deg); }
@@ -288,4 +312,37 @@
   --tw-prose-code: var(--text-heading);
   --tw-prose-pre-code: var(--text-body);
   --tw-prose-pre-bg: var(--brand-plum-ice);
+}
+
+/* Brand selection + scrollbar */
+::selection {
+  background: rgba(var(--brand-plum-rgb), 0.2);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--brand-plum-rgb), 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--brand-plum-rgb), 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in-up-fast,
+  .animate-scale-in,
+  .animate-comb-sway,
+  .animate-slide-in-left,
+  .animate-slide-out-left {
+    animation: none !important;
+  }
 }

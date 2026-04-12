@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useMemo, useRef, type ReactNode } from "react"
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
+import { format } from "date-fns"
 import posthog from "posthog-js"
 import type { Message, CitationSource, Product, HairProfile } from "@/lib/types"
 import type { Components } from "react-markdown"
@@ -8,6 +9,8 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { CitationBadge } from "./citation-badge"
 import { ProductPopover } from "./product-popover"
+import { CombIcon } from "@/components/ui/comb-icon"
+import { ProductCard } from "./product-card"
 
 /**
  * Renumbers [N] citation markers in content so they appear as [1], [2], [3]
@@ -15,7 +18,7 @@ import { ProductPopover } from "./product-popover"
  */
 function renumberCitations(
   content: string,
-  sources: CitationSource[]
+  sources: CitationSource[],
 ): { content: string; sources: CitationSource[] } {
   if (sources.length === 0) return { content, sources }
 
@@ -73,16 +76,15 @@ interface ChatMessageProps {
   message: Message
   hairProfile: HairProfile | null
   onProductClick?: (product: Product) => void
+  /** True for messages appended during this session (not history loads) */
+  isNew?: boolean
 }
 
 /**
  * Splits a text string on [N] markers and interleaves CitationBadge components
  * for any N that exists in the sourceMap.
  */
-function renderWithCitations(
-  text: string,
-  sourceMap: Map<number, CitationSource>
-): ReactNode[] {
+function renderWithCitations(text: string, sourceMap: Map<number, CitationSource>): ReactNode[] {
   const parts = text.split(/\[(\d+)\]/g)
   const result: ReactNode[] = []
 
@@ -113,7 +115,7 @@ function renderWithProductMentions(
   nodes: ReactNode[],
   productMap: Map<string, Product>,
   hairProfile: HairProfile | null,
-  onProductClick?: (product: Product) => void
+  onProductClick?: (product: Product) => void,
 ): ReactNode[] {
   if (productMap.size === 0 || !onProductClick) return nodes
 
@@ -126,9 +128,7 @@ function renderWithProductMentions(
     }
 
     // Try to find product names in text, sorted by length (longest first to avoid partial matches)
-    const names = Array.from(productMap.keys()).sort(
-      (a, b) => b.length - a.length
-    )
+    const names = Array.from(productMap.keys()).sort((a, b) => b.length - a.length)
     let remaining = node
     let key = 0
 
@@ -170,7 +170,7 @@ function renderWithProductMentions(
           >
             {matchedName}
           </button>
-        </ProductPopover>
+        </ProductPopover>,
       )
 
       remaining = remaining.slice(earliest + matchedName.length)
@@ -191,7 +191,7 @@ function processChildren(
   sourceMap: Map<number, CitationSource>,
   productMap: Map<string, Product>,
   hairProfile: HairProfile | null,
-  onProductClick?: (product: Product) => void
+  onProductClick?: (product: Product) => void,
 ): ReactNode {
   if (typeof children === "string") {
     const cited = renderWithCitations(children, sourceMap)
@@ -216,7 +216,7 @@ function processChildren(
         sourceMap,
         productMap,
         hairProfile,
-        onProductClick
+        onProductClick,
       )
       // Clone the element with processed children
       return { ...element, props: { ...element.props, children: processed } }
@@ -225,12 +225,12 @@ function processChildren(
   return children
 }
 
-export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessageProps) {
+export function ChatMessage({ message, hairProfile, onProductClick, isNew }: ChatMessageProps) {
   const isUser = message.role === "user"
 
   const { content: renumberedContent, sources } = useMemo(
     () => renumberCitations(message.content ?? "", message.rag_context?.sources ?? []),
-    [message.content, message.rag_context?.sources]
+    [message.content, message.rag_context?.sources],
   )
 
   const sourceMap = new Map(sources.map((s) => [s.index, s]))
@@ -250,6 +250,9 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
     }
   }, [products.length])
 
+  const [showAllProducts, setShowAllProducts] = useState(false)
+  const visibleProducts = showAllProducts ? products : products.slice(0, 3)
+
   const hasEnhancements = sources.length > 0 || productMap.size > 0
 
   // Build custom markdown components that inject citation badges + product mentions
@@ -257,16 +260,12 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
     ? {
         p({ children }) {
           return (
-            <p>
-              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
-            </p>
+            <p>{processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}</p>
           )
         },
         li({ children }) {
           return (
-            <li>
-              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
-            </li>
+            <li>{processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}</li>
           )
         },
         strong({ children }) {
@@ -278,9 +277,7 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
         },
         em({ children }) {
           return (
-            <em>
-              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
-            </em>
+            <em>{processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}</em>
           )
         },
       }
@@ -289,40 +286,35 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
   return (
     <div
       data-testid={isUser ? "message-user" : "message-assistant"}
-      className={`flex gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}`}
+      className={`flex gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}${isNew ? " animate-fade-in-up-fast" : ""}`}
     >
       {/* Avatar */}
       <div
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
           isUser
-            ? "bg-primary text-primary-foreground"
-            : "bg-primary text-primary-foreground"
+            ? "bg-secondary text-[var(--brand-plum-darkest)]"
+            : "bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(var(--brand-plum-rgb),0.25)]"
         }`}
       >
-        {isUser ? "Du" : "HC"}
+        {isUser ? "Du" : <CombIcon className="h-4 w-4 text-primary-foreground" />}
       </div>
 
       {/* Content */}
       <div
-        className={`max-w-[80%] space-y-2 ${isUser ? "items-end" : "items-start"}`}
+        className={`flex max-w-[80%] flex-col space-y-2 ${isUser ? "items-end" : "items-start"}`}
       >
         {/* Text content */}
         {message.content && (
           <div
-            className={`rounded-2xl px-4 py-2.5 ${
-              isUser
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-foreground"
+            className={`rounded-2xl px-4 py-2.5 shadow-sm ${
+              isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
             }`}
           >
             {isUser ? (
-              <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+              <p className="type-body-sm whitespace-pre-wrap">{message.content}</p>
             ) : (
               <div className="prose prose-sm max-w-none">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={markdownComponents}
-                >
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                   {renumberedContent}
                 </ReactMarkdown>
               </div>
@@ -332,7 +324,7 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
 
         {/* Sources footer */}
         {sources.length > 0 && (
-          <details className="text-xs text-muted-foreground px-1">
+          <details className="type-caption text-muted-foreground px-1">
             <summary className="cursor-pointer hover:text-foreground transition-colors">
               {sources.length} {sources.length === 1 ? "Quelle" : "Quellen"}
             </summary>
@@ -345,6 +337,37 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
               ))}
             </ul>
           </details>
+        )}
+
+        {/* Product recommendation cards */}
+        {products.length > 0 && onProductClick && (
+          <div className="flex flex-col gap-1.5 pt-1">
+            {visibleProducts.map((p, i) => (
+              <div
+                key={p.id}
+                className="animate-fade-in-up-fast"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                <ProductCard product={p} onClick={onProductClick} />
+              </div>
+            ))}
+            {products.length > 3 && !showAllProducts && (
+              <button
+                type="button"
+                onClick={() => setShowAllProducts(true)}
+                className="type-caption text-primary hover:underline text-left px-1"
+              >
+                +{products.length - 3} weitere Empfehlungen
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Timestamp */}
+        {message.created_at && (
+          <span className="type-caption text-muted-foreground px-1">
+            {format(new Date(message.created_at), "HH:mm")}
+          </span>
         )}
       </div>
     </div>
