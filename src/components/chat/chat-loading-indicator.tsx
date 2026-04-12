@@ -24,8 +24,8 @@ export function ChatLoadingIndicator() {
 
   return (
     <div className="flex gap-3 animate-fade-in-up-fast">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-        HC
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(var(--brand-plum-rgb),0.25)]">
+        <CombIcon className="h-4 w-4 text-primary-foreground" />
       </div>
       <div className="flex items-center gap-2 rounded-2xl bg-muted px-4 py-2.5">
         <CombIcon className="animate-comb-sway text-muted-foreground" />

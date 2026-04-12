@@ -8,6 +8,7 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { CitationBadge } from "./citation-badge"
 import { ProductPopover } from "./product-popover"
+import { CombIcon } from "@/components/ui/comb-icon"
 
 /**
  * Renumbers [N] citation markers in content so they appear as [1], [2], [3]
@@ -285,18 +286,22 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
       {/* Avatar */}
       <div
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-          isUser ? "bg-primary text-primary-foreground" : "bg-primary text-primary-foreground"
+          isUser
+            ? "bg-secondary text-secondary-foreground"
+            : "bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(var(--brand-plum-rgb),0.25)]"
         }`}
       >
-        {isUser ? "Du" : "HC"}
+        {isUser ? "Du" : <CombIcon className="h-4 w-4 text-primary-foreground" />}
       </div>
 
       {/* Content */}
-      <div className={`max-w-[80%] space-y-2 ${isUser ? "items-end" : "items-start"}`}>
+      <div
+        className={`flex max-w-[80%] flex-col space-y-2 ${isUser ? "items-end" : "items-start"}`}
+      >
         {/* Text content */}
         {message.content && (
           <div
-            className={`rounded-2xl px-4 py-2.5 ${
+            className={`rounded-2xl px-4 py-2.5 shadow-sm ${
               isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
             }`}
           >

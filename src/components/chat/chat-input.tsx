@@ -40,7 +40,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
   }
 
   return (
-    <div className="border-t bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+    <div className="bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
       <div className="flex items-end gap-2">
         {/* Text input */}
         <textarea
@@ -62,7 +62,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           onClick={handleSubmit}
           disabled={disabled || !message.trim()}
           aria-label="Nachricht senden"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-secondary text-secondary-foreground transition-colors hover:bg-secondary/90 disabled:opacity-50"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-secondary text-secondary-foreground transition-all duration-150 hover:bg-secondary/90 hover:shadow-[0_2px_12px_rgba(var(--brand-coral-rgb),0.25)] active:scale-95 disabled:opacity-50"
         >
           <Send className="h-5 w-5" />
         </button>
