@@ -227,6 +227,22 @@
   animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Chat message entrance — snappier variant for conversational context */
+@keyframes fadeInUpFast {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up-fast {
+  animation: fadeInUpFast 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* Scale-in animation for popups */
 @keyframes scaleIn {
   from {

@@ -15,7 +15,7 @@ import { ProductPopover } from "./product-popover"
  */
 function renumberCitations(
   content: string,
-  sources: CitationSource[]
+  sources: CitationSource[],
 ): { content: string; sources: CitationSource[] } {
   if (sources.length === 0) return { content, sources }
 
@@ -73,16 +73,15 @@ interface ChatMessageProps {
   message: Message
   hairProfile: HairProfile | null
   onProductClick?: (product: Product) => void
+  /** True for messages appended during this session (not history loads) */
+  isNew?: boolean
 }
 
 /**
  * Splits a text string on [N] markers and interleaves CitationBadge components
  * for any N that exists in the sourceMap.
  */
-function renderWithCitations(
-  text: string,
-  sourceMap: Map<number, CitationSource>
-): ReactNode[] {
+function renderWithCitations(text: string, sourceMap: Map<number, CitationSource>): ReactNode[] {
   const parts = text.split(/\[(\d+)\]/g)
   const result: ReactNode[] = []
 
@@ -113,7 +112,7 @@ function renderWithProductMentions(
   nodes: ReactNode[],
   productMap: Map<string, Product>,
   hairProfile: HairProfile | null,
-  onProductClick?: (product: Product) => void
+  onProductClick?: (product: Product) => void,
 ): ReactNode[] {
   if (productMap.size === 0 || !onProductClick) return nodes
 
@@ -126,9 +125,7 @@ function renderWithProductMentions(
     }
 
     // Try to find product names in text, sorted by length (longest first to avoid partial matches)
-    const names = Array.from(productMap.keys()).sort(
-      (a, b) => b.length - a.length
-    )
+    const names = Array.from(productMap.keys()).sort((a, b) => b.length - a.length)
     let remaining = node
     let key = 0
 
@@ -170,7 +167,7 @@ function renderWithProductMentions(
           >
             {matchedName}
           </button>
-        </ProductPopover>
+        </ProductPopover>,
       )
 
       remaining = remaining.slice(earliest + matchedName.length)
@@ -191,7 +188,7 @@ function processChildren(
   sourceMap: Map<number, CitationSource>,
   productMap: Map<string, Product>,
   hairProfile: HairProfile | null,
-  onProductClick?: (product: Product) => void
+  onProductClick?: (product: Product) => void,
 ): ReactNode {
   if (typeof children === "string") {
     const cited = renderWithCitations(children, sourceMap)
@@ -216,7 +213,7 @@ function processChildren(
         sourceMap,
         productMap,
         hairProfile,
-        onProductClick
+        onProductClick,
       )
       // Clone the element with processed children
       return { ...element, props: { ...element.props, children: processed } }
@@ -225,12 +222,12 @@ function processChildren(
   return children
 }
 
-export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessageProps) {
+export function ChatMessage({ message, hairProfile, onProductClick, isNew }: ChatMessageProps) {
   const isUser = message.role === "user"
 
   const { content: renumberedContent, sources } = useMemo(
     () => renumberCitations(message.content ?? "", message.rag_context?.sources ?? []),
-    [message.content, message.rag_context?.sources]
+    [message.content, message.rag_context?.sources],
   )
 
   const sourceMap = new Map(sources.map((s) => [s.index, s]))
@@ -257,16 +254,12 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
     ? {
         p({ children }) {
           return (
-            <p>
-              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
-            </p>
+            <p>{processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}</p>
           )
         },
         li({ children }) {
           return (
-            <li>
-              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
-            </li>
+            <li>{processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}</li>
           )
         },
         strong({ children }) {
@@ -278,9 +271,7 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
         },
         em({ children }) {
           return (
-            <em>
-              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
-            </em>
+            <em>{processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}</em>
           )
         },
       }
@@ -289,40 +280,31 @@ export function ChatMessage({ message, hairProfile, onProductClick }: ChatMessag
   return (
     <div
       data-testid={isUser ? "message-user" : "message-assistant"}
-      className={`flex gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}`}
+      className={`flex gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}${isNew ? " animate-fade-in-up-fast" : ""}`}
     >
       {/* Avatar */}
       <div
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-          isUser
-            ? "bg-primary text-primary-foreground"
-            : "bg-primary text-primary-foreground"
+          isUser ? "bg-primary text-primary-foreground" : "bg-primary text-primary-foreground"
         }`}
       >
         {isUser ? "Du" : "HC"}
       </div>
 
       {/* Content */}
-      <div
-        className={`max-w-[80%] space-y-2 ${isUser ? "items-end" : "items-start"}`}
-      >
+      <div className={`max-w-[80%] space-y-2 ${isUser ? "items-end" : "items-start"}`}>
         {/* Text content */}
         {message.content && (
           <div
             className={`rounded-2xl px-4 py-2.5 ${
-              isUser
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-foreground"
+              isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
             }`}
           >
             {isUser ? (
               <p className="text-sm whitespace-pre-wrap">{message.content}</p>
             ) : (
               <div className="prose prose-sm max-w-none">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={markdownComponents}
-                >
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                   {renumberedContent}
                 </ReactMarkdown>
               </div>

@@ -44,7 +44,7 @@ export function ChatLoadingIndicator() {
   const message = pickRandomMessage()
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 animate-fade-in-up-fast">
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
         HC
       </div>
