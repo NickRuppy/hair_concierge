@@ -13,7 +13,6 @@ import type {
   LeaveInDecision,
   OilDecision,
   MaskDecision,
-  RoutinePlan,
 } from "@/lib/types"
 import type { PipelineTraceDraft } from "@/lib/rag/debug-trace"
 import type { UserMemoryContext } from "@/lib/rag/user-memory"
