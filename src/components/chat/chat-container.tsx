@@ -10,7 +10,9 @@ import { ChatLoadingIndicator } from "./chat-loading-indicator"
 import { ProductDetailDrawer } from "./product-detail-drawer"
 import { ConversationSidebar } from "./conversation-sidebar"
 import { useEffect, useMemo, useRef, useState, useCallback } from "react"
-import { Menu, Sparkles } from "lucide-react"
+import { Menu } from "lucide-react"
+import { CombIcon } from "@/components/ui/comb-icon"
+import { Icon } from "@/components/ui/icon"
 import type { Product } from "@/lib/types"
 
 export function ChatContainer() {
@@ -139,21 +141,30 @@ export function ChatContainer() {
         <div className="flex-1 overflow-y-auto">
           {isEmpty ? (
             <div className="flex h-full flex-col items-center justify-center px-4">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
-                <Sparkles className="h-8 w-8 text-primary-foreground" />
+              <div className="animate-scale-in mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
+                <CombIcon className="h-8 w-8 text-primary-foreground" />
               </div>
-              <h2 className="mb-2 text-2xl font-bold">{greeting}</h2>
-              <p className="mb-8 max-w-md text-center text-sm text-muted-foreground">
+              <h2 className="animate-fade-in-up mb-2 type-h2" style={{ animationDelay: "150ms" }}>
+                {greeting}
+              </h2>
+              <p
+                className="animate-fade-in-up mb-8 max-w-md text-center text-sm text-muted-foreground"
+                style={{ animationDelay: "250ms" }}
+              >
                 Frag mich alles rund ums Thema Haare — von Pflege-Tipps bis Produktempfehlungen!
               </p>
               <div className="grid w-full max-w-lg grid-cols-1 gap-2 sm:grid-cols-2">
-                {suggestedPrompts.map((prompt) => (
+                {suggestedPrompts.map((prompt, index) => (
                   <button
-                    key={prompt}
-                    onClick={() => sendMessage(prompt)}
-                    className="rounded-xl border px-4 py-3 text-left text-sm transition-colors hover:bg-accent"
+                    key={prompt.text}
+                    onClick={() => sendMessage(prompt.text)}
+                    className="animate-fade-in-up flex items-start gap-2.5 rounded-xl border px-4 py-3 text-left text-sm transition-all duration-200 hover:border-primary/40 hover:bg-accent hover:shadow-sm hover:-translate-y-0.5"
+                    style={{ animationDelay: `${350 + index * 80}ms` }}
                   >
-                    {prompt}
+                    {prompt.icon && (
+                      <Icon name={prompt.icon} size={18} className="shrink-0 text-primary" />
+                    )}
+                    {prompt.text}
                   </button>
                 ))}
               </div>
