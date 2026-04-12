@@ -34,7 +34,8 @@ export function ChatContainer() {
   const { hairProfile } = useHairProfile()
   const suggestedPrompts = useMemo(() => generateSuggestedPrompts(hairProfile), [hairProfile])
 
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarState, setSidebarState] = useState<"closed" | "open" | "closing">("closed")
+  const sidebarPanelRef = useRef<HTMLDivElement>(null)
   const [drawerProduct, setDrawerProduct] = useState<Product | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -81,6 +82,44 @@ export function ChatContainer() {
     }
   }, [messages, hasNewMessages])
 
+  const openSidebar = useCallback(() => setSidebarState("open"), [])
+  const closeSidebar = useCallback(() => setSidebarState("closing"), [])
+
+  // Focus trap + Escape for mobile sidebar
+  useEffect(() => {
+    if (sidebarState !== "open") return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeSidebar()
+        return
+      }
+
+      if (e.key !== "Tab") return
+      const panel = sidebarPanelRef.current
+      if (!panel) return
+
+      const focusable = panel.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )
+      if (focusable.length === 0) return
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown)
+    return () => document.removeEventListener("keydown", handleKeyDown)
+  }, [sidebarState, closeSidebar])
+
   const handleProductClick = useCallback((product: Product) => {
     setDrawerProduct(product)
     setDrawerOpen(true)
@@ -107,17 +146,37 @@ export function ChatContainer() {
       </div>
 
       {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-          <div className="relative w-72">
+      {sidebarState !== "closed" && (
+        <div
+          className="fixed inset-0 z-50 flex md:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Unterhaltungen"
+        >
+          <div
+            className={`absolute inset-0 bg-black/50 ${
+              sidebarState === "closing"
+                ? "animate-[backdropFadeOut_0.25s_ease_both]"
+                : "animate-[backdropFadeIn_0.25s_ease_both]"
+            }`}
+            onClick={closeSidebar}
+          />
+          <div
+            ref={sidebarPanelRef}
+            className={`relative w-72 ${
+              sidebarState === "closing" ? "animate-slide-out-left" : "animate-slide-in-left"
+            }`}
+            onAnimationEnd={() => {
+              if (sidebarState === "closing") setSidebarState("closed")
+            }}
+          >
             <ConversationSidebar
               conversations={conversations}
               currentId={currentConversationId}
               onSelect={loadConversation}
               onNew={startNewConversation}
               onDelete={deleteConversation}
-              onClose={() => setSidebarOpen(false)}
+              onClose={closeSidebar}
               isMobile
             />
           </div>
@@ -129,12 +188,13 @@ export function ChatContainer() {
         {/* Mobile header */}
         <div className="flex items-center gap-2 border-b p-3 md:hidden">
           <button
-            onClick={() => setSidebarOpen(true)}
+            onClick={openSidebar}
             className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent"
+            aria-label="Unterhaltungen öffnen"
           >
             <Menu className="h-5 w-5" />
           </button>
-          <span className="text-sm font-medium">
+          <span className="type-body-sm font-medium">
             {currentConversationId ? "Chat" : "Neuer Chat"}
           </span>
         </div>
@@ -167,7 +227,7 @@ export function ChatContainer() {
                 {greeting}
               </h2>
               <p
-                className="animate-fade-in-up mb-8 max-w-md text-center text-sm text-muted-foreground"
+                className="animate-fade-in-up mb-8 max-w-md text-center type-body-sm text-muted-foreground"
                 style={{ animationDelay: "250ms" }}
               >
                 Frag mich alles rund ums Thema Haare — von Pflege-Tipps bis Produktempfehlungen!
@@ -177,7 +237,7 @@ export function ChatContainer() {
                   <button
                     key={prompt.text}
                     onClick={() => sendMessage(prompt.text)}
-                    className="animate-fade-in-up flex items-start gap-2.5 rounded-xl border px-4 py-3 text-left text-sm transition-all duration-200 hover:border-primary/40 hover:bg-accent hover:shadow-sm hover:-translate-y-0.5"
+                    className="animate-fade-in-up flex items-start gap-2.5 rounded-xl border px-4 py-3 text-left type-body-sm transition-all duration-200 hover:border-primary/40 hover:bg-accent hover:shadow-sm hover:-translate-y-0.5"
                     style={{ animationDelay: `${350 + index * 80}ms` }}
                   >
                     {prompt.icon && (

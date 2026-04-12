@@ -308,7 +308,7 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
             }`}
           >
             {isUser ? (
-              <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+              <p className="type-body-sm whitespace-pre-wrap">{message.content}</p>
             ) : (
               <div className="prose prose-sm max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
@@ -321,7 +321,7 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
 
         {/* Sources footer */}
         {sources.length > 0 && (
-          <details className="text-xs text-muted-foreground px-1">
+          <details className="type-caption text-muted-foreground px-1">
             <summary className="cursor-pointer hover:text-foreground transition-colors">
               {sources.length} {sources.length === 1 ? "Quelle" : "Quellen"}
             </summary>

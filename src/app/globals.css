@@ -280,6 +280,25 @@
   to { opacity: 0; }
 }
 
+/* Sidebar slide animations */
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideOutLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.animate-slide-out-left {
+  animation: slideOutLeft 0.25s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
 /* Comb sway animation for loading indicator */
 @keyframes combSway {
   0%, 100% { transform: rotate(-15deg); }

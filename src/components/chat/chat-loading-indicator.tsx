@@ -29,7 +29,7 @@ export function ChatLoadingIndicator() {
       </div>
       <div className="flex items-center gap-2 rounded-2xl bg-muted px-4 py-2.5">
         <CombIcon className="animate-comb-sway text-muted-foreground" />
-        <span className="text-sm text-muted-foreground">{message}</span>
+        <span className="type-body-sm text-muted-foreground">{message}</span>
       </div>
     </div>
   )
