@@ -10,6 +10,7 @@ import remarkGfm from "remark-gfm"
 import { CitationBadge } from "./citation-badge"
 import { ProductPopover } from "./product-popover"
 import { CombIcon } from "@/components/ui/comb-icon"
+import { ProductCard } from "./product-card"
 
 /**
  * Renumbers [N] citation markers in content so they appear as [1], [2], [3]
@@ -333,6 +334,29 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
               ))}
             </ul>
           </details>
+        )}
+
+        {/* Product recommendation cards */}
+        {products.length > 0 && onProductClick && (
+          <div className="flex flex-col gap-1.5 pt-1">
+            {products.slice(0, 3).map((p, i) => (
+              <div
+                key={p.id}
+                className="animate-fade-in-up-fast"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                <ProductCard product={p} onClick={onProductClick} />
+              </div>
+            ))}
+            {products.length > 3 && (
+              <button
+                type="button"
+                className="type-caption text-primary hover:underline text-left px-1"
+              >
+                +{products.length - 3} weitere Empfehlungen
+              </button>
+            )}
+          </div>
         )}
 
         {/* Timestamp */}
