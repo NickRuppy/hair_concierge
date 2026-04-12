@@ -38,6 +38,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
@@ -974,7 +975,7 @@ export default function ProfilePage() {
     )
   }
 
-  if (authLoading || loading) {
+  if (authLoading) {
     return (
       <>
         <Header />
@@ -1032,300 +1033,340 @@ export default function ProfilePage() {
             </p>
           </div>
 
-          {!editing ? (
+          {!editing && !loading ? (
             <Button type="button" onClick={() => setEditing(true)} className="w-auto">
               Bearbeiten
             </Button>
           ) : null}
         </div>
 
-        <Card className="mb-6 border-primary/10">
-          <CardHeader className="pb-4">
-            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <CardTitle className="text-xl text-[var(--text-heading)]">
-                  So baut sich dein Profil auf
-                </CardTitle>
-                <CardDescription className="mt-2 max-w-2xl text-sm">
-                  {readinessCopy}
-                </CardDescription>
-              </div>
-              <Badge className="w-fit px-3 py-1 text-xs">
-                {activeStepCount} von {overallStepCount} Bausteinen aktiv
-              </Badge>
+        {loading ? (
+          <>
+            <Card className="mb-6 border-primary/10">
+              <CardHeader className="pb-4">
+                <Skeleton className="h-6 w-48" />
+                <Skeleton className="mt-2 h-4 w-80" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="mb-4 h-2 w-full rounded-full" />
+                <div className="grid gap-3 md:grid-cols-4">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <Skeleton key={i} className="h-20 rounded-xl" />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            <div className="space-y-6">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Card key={i}>
+                  <CardHeader className="pb-4">
+                    <Skeleton className="h-6 w-40" />
+                    <Skeleton className="mt-2 h-4 w-64" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {Array.from({ length: 4 }).map((_, j) => (
+                        <Skeleton key={j} className="h-16 rounded-xl" />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-4 h-2 overflow-hidden rounded-full bg-muted">
-              <div
-                className="h-full rounded-full bg-primary transition-all"
-                style={{ width: `${overallPercent}%` }}
-              />
-            </div>
+          </>
+        ) : (
+          <>
+            <Card className="mb-6 border-primary/10">
+              <CardHeader className="pb-4">
+                <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                  <div>
+                    <CardTitle className="text-xl text-[var(--text-heading)]">
+                      So baut sich dein Profil auf
+                    </CardTitle>
+                    <CardDescription className="mt-2 max-w-2xl text-sm">
+                      {readinessCopy}
+                    </CardDescription>
+                  </div>
+                  <Badge className="w-fit px-3 py-1 text-xs">
+                    {activeStepCount} von {overallStepCount} Bausteinen aktiv
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4 h-2 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all"
+                    style={{ width: `${overallPercent}%` }}
+                  />
+                </div>
 
-            <div className="grid gap-3 md:grid-cols-4">
-              <JourneyStepCard
-                label="Haar-Check"
-                status={baselineFilled.length === 0 ? "Offen" : "Aktiv"}
-                summary={
-                  baselineFilled.length === 0
-                    ? "Noch keine Basisdaten vorhanden."
-                    : `${baselineFilled.length}/${baselineFields.length} Signale vorhanden`
-                }
-                active={baselineFilled.length > 0}
-              />
-              <JourneyStepCard
-                label="Ziele"
-                status={goalFilled.length === 0 ? "Offen" : "Aktiv"}
-                summary={
-                  goalFilled.length === 0
-                    ? "Noch keine Prioritäten gesetzt."
-                    : `${goalFilled.length}/${goalFields.length} Signale vorhanden`
-                }
-                active={goalFilled.length > 0}
-              />
-              <JourneyStepCard
-                label="Alltag"
-                status={routineFilled.length === 0 ? "Offen" : "Aktiv"}
-                summary={
-                  routineFilled.length === 0
-                    ? "Noch keine Routinedaten vorhanden."
-                    : `${routineFilled.length}/${routineFields.length} Signale vorhanden`
-                }
-                active={routineFilled.length > 0}
-              />
-              <JourneyStepCard
-                label="Merkt sich"
-                status={memoryEnabled ? "Aktiv" : "Pausiert"}
-                summary={
-                  memoryEnabled
-                    ? memoryEntries.length > 0
-                      ? `${memoryEntries.length} gespeicherte Erinnerungen`
-                      : "Bereit, neue Chat-Erinnerungen zu speichern"
-                    : "Chat-Erinnerungen sind aktuell ausgeschaltet"
-                }
-                active={memoryEnabled}
-              />
+                <div className="grid gap-3 md:grid-cols-4">
+                  <JourneyStepCard
+                    label="Haar-Check"
+                    status={baselineFilled.length === 0 ? "Offen" : "Aktiv"}
+                    summary={
+                      baselineFilled.length === 0
+                        ? "Noch keine Basisdaten vorhanden."
+                        : `${baselineFilled.length}/${baselineFields.length} Signale vorhanden`
+                    }
+                    active={baselineFilled.length > 0}
+                  />
+                  <JourneyStepCard
+                    label="Ziele"
+                    status={goalFilled.length === 0 ? "Offen" : "Aktiv"}
+                    summary={
+                      goalFilled.length === 0
+                        ? "Noch keine Prioritäten gesetzt."
+                        : `${goalFilled.length}/${goalFields.length} Signale vorhanden`
+                    }
+                    active={goalFilled.length > 0}
+                  />
+                  <JourneyStepCard
+                    label="Alltag"
+                    status={routineFilled.length === 0 ? "Offen" : "Aktiv"}
+                    summary={
+                      routineFilled.length === 0
+                        ? "Noch keine Routinedaten vorhanden."
+                        : `${routineFilled.length}/${routineFields.length} Signale vorhanden`
+                    }
+                    active={routineFilled.length > 0}
+                  />
+                  <JourneyStepCard
+                    label="Merkt sich"
+                    status={memoryEnabled ? "Aktiv" : "Pausiert"}
+                    summary={
+                      memoryEnabled
+                        ? memoryEntries.length > 0
+                          ? `${memoryEntries.length} gespeicherte Erinnerungen`
+                          : "Bereit, neue Chat-Erinnerungen zu speichern"
+                        : "Chat-Erinnerungen sind aktuell ausgeschaltet"
+                    }
+                    active={memoryEnabled}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="space-y-6">
+              <Card>
+                <CardHeader className="pb-4">
+                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <CardTitle className="text-xl text-[var(--text-heading)]">
+                        {PROFILE_SECTION_META[0].title}
+                      </CardTitle>
+                      <CardDescription className="mt-2 text-sm">
+                        {PROFILE_SECTION_META[0].description}
+                      </CardDescription>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => router.push("/quiz")}
+                    >
+                      Haar-Check aktualisieren
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {baselineFilled.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {baselineFilled.map((field) => (
+                        <ProfileFieldCard
+                          key={field.key}
+                          field={field}
+                          onClick={!editing ? () => openFieldFlow(field) : undefined}
+                          actionLabel={!editing ? getFieldActionLabel(field) : undefined}
+                        />
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {(baselineSparse || editing) && (
+                    <InlinePromptCard
+                      title="Ausgangslage wird über den Haar-Check gepflegt"
+                      text={
+                        baselineSparse
+                          ? "Damit Diagnose- und Strukturdaten konsistent bleiben, startest du diese Basis nicht direkt hier, sondern über den Haar-Check."
+                          : "Diese Felder bleiben absichtlich read-only im Profil. Für Änderungen führst du den Haar-Check erneut durch."
+                      }
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => router.push("/quiz")}
+                        >
+                          Haar-Check starten
+                        </Button>
+                      }
+                    />
+                  )}
+
+                  {!editing && baselineMissing.length > 0 && !baselineSparse ? (
+                    <InlinePromptCard
+                      title="Ein Teil der Basis fehlt noch"
+                      text={`Noch offen: ${baselineMissing.map((field) => field.label).join(", ")}`}
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => router.push("/quiz")}
+                        >
+                          Basis ergänzen
+                        </Button>
+                      }
+                    />
+                  ) : null}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl text-[var(--text-heading)]">
+                    {PROFILE_SECTION_META[1].title}
+                  </CardTitle>
+                  <CardDescription className="mt-2 text-sm">
+                    {PROFILE_SECTION_META[1].description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {editing ? (
+                    <div className="grid gap-4 xl:grid-cols-3">
+                      {goalFields.map((field) => (
+                        <ProfileFieldCard key={field.key} field={field}>
+                          {renderInlineEditor(field)}
+                        </ProfileFieldCard>
+                      ))}
+                    </div>
+                  ) : goalFilled.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {goalFilled.map((field) => (
+                        <ProfileFieldCard
+                          key={field.key}
+                          field={field}
+                          onClick={() => openFieldFlow(field)}
+                          actionLabel={getFieldActionLabel(field)}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <InlinePromptCard
+                      title="Noch keine Ziele gesetzt"
+                      text="Wähle mindestens dein gewünschtes Volumen oder ein relevantes Ziel, damit der erste Plan klarer priorisieren kann."
+                    />
+                  )}
+
+                  {!editing && goalMissing.length > 0 ? (
+                    <InlinePromptCard
+                      title="Ziele schärfen"
+                      text={`Noch offen: ${goalMissing.map((field) => field.label).join(", ")}`}
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => setEditing(true)}
+                        >
+                          Ziele bearbeiten
+                        </Button>
+                      }
+                    />
+                  ) : null}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-4">
+                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <CardTitle className="text-xl text-[var(--text-heading)]">
+                        {PROFILE_SECTION_META[2].title}
+                      </CardTitle>
+                      <CardDescription className="mt-2 text-sm">
+                        {PROFILE_SECTION_META[2].description}
+                      </CardDescription>
+                    </div>
+                    {editing ? (
+                      <Button
+                        type="button"
+                        variant={routineDetailsOpen ? "default" : "outline"}
+                        className="w-auto"
+                        onClick={() => setRoutineDetailsOpen((current) => !current)}
+                      >
+                        {routineDetailsOpen
+                          ? "Routine-Details ausblenden"
+                          : "Routine-Details bearbeiten"}
+                      </Button>
+                    ) : null}
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {editing ? (
+                    <div className="grid gap-4 xl:grid-cols-3">
+                      {routineSimpleFields.map((field) => (
+                        <ProfileFieldCard key={field.key} field={field}>
+                          {renderInlineEditor(field)}
+                        </ProfileFieldCard>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {routineFilled.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {(editing
+                        ? routineDetailFields.filter((field) => field.value !== null)
+                        : routineFilled
+                      ).map((field) => (
+                        <ProfileFieldCard
+                          key={field.key}
+                          field={field}
+                          onClick={!editing ? () => openFieldFlow(field) : undefined}
+                          actionLabel={!editing ? getFieldActionLabel(field) : undefined}
+                        />
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {editing && routineDetailsOpen ? renderRoutineDetailsEditor() : null}
+
+                  {!editing && routineFilled.length === 0 ? (
+                    <InlinePromptCard
+                      title="Alltags-Signale fehlen noch"
+                      text="Waschhäufigkeit, Hitzemuster und Routinedetails machen Empfehlungen deutlich realistischer."
+                    />
+                  ) : null}
+
+                  {!editing && routineMissing.length > 0 ? (
+                    <InlinePromptCard
+                      title="Alltag weiter schärfen"
+                      text={`Noch offen: ${routineMissing
+                        .map((field) => field.label)
+                        .slice(0, 6)
+                        .join(
+                          ", ",
+                        )}${routineMissing.length > 6 ? ` und ${routineMissing.length - 6} weitere` : ""}`}
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => setEditing(true)}
+                        >
+                          Alltag bearbeiten
+                        </Button>
+                      }
+                    />
+                  ) : null}
+                </CardContent>
+              </Card>
             </div>
-          </CardContent>
-        </Card>
+          </>
+        )}
 
         <div className="space-y-6">
-          <Card>
-            <CardHeader className="pb-4">
-              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div>
-                  <CardTitle className="text-xl text-[var(--text-heading)]">
-                    {PROFILE_SECTION_META[0].title}
-                  </CardTitle>
-                  <CardDescription className="mt-2 text-sm">
-                    {PROFILE_SECTION_META[0].description}
-                  </CardDescription>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-auto"
-                  onClick={() => router.push("/quiz")}
-                >
-                  Haar-Check aktualisieren
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {baselineFilled.length > 0 ? (
-                <div className="grid gap-4 md:grid-cols-2">
-                  {baselineFilled.map((field) => (
-                    <ProfileFieldCard
-                      key={field.key}
-                      field={field}
-                      onClick={!editing ? () => openFieldFlow(field) : undefined}
-                      actionLabel={!editing ? getFieldActionLabel(field) : undefined}
-                    />
-                  ))}
-                </div>
-              ) : null}
-
-              {(baselineSparse || editing) && (
-                <InlinePromptCard
-                  title="Ausgangslage wird über den Haar-Check gepflegt"
-                  text={
-                    baselineSparse
-                      ? "Damit Diagnose- und Strukturdaten konsistent bleiben, startest du diese Basis nicht direkt hier, sondern über den Haar-Check."
-                      : "Diese Felder bleiben absichtlich read-only im Profil. Für Änderungen führst du den Haar-Check erneut durch."
-                  }
-                  action={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() => router.push("/quiz")}
-                    >
-                      Haar-Check starten
-                    </Button>
-                  }
-                />
-              )}
-
-              {!editing && baselineMissing.length > 0 && !baselineSparse ? (
-                <InlinePromptCard
-                  title="Ein Teil der Basis fehlt noch"
-                  text={`Noch offen: ${baselineMissing.map((field) => field.label).join(", ")}`}
-                  action={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() => router.push("/quiz")}
-                    >
-                      Basis ergänzen
-                    </Button>
-                  }
-                />
-              ) : null}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl text-[var(--text-heading)]">
-                {PROFILE_SECTION_META[1].title}
-              </CardTitle>
-              <CardDescription className="mt-2 text-sm">
-                {PROFILE_SECTION_META[1].description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {editing ? (
-                <div className="grid gap-4 xl:grid-cols-3">
-                  {goalFields.map((field) => (
-                    <ProfileFieldCard key={field.key} field={field}>
-                      {renderInlineEditor(field)}
-                    </ProfileFieldCard>
-                  ))}
-                </div>
-              ) : goalFilled.length > 0 ? (
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {goalFilled.map((field) => (
-                    <ProfileFieldCard
-                      key={field.key}
-                      field={field}
-                      onClick={() => openFieldFlow(field)}
-                      actionLabel={getFieldActionLabel(field)}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <InlinePromptCard
-                  title="Noch keine Ziele gesetzt"
-                  text="Wähle mindestens dein gewünschtes Volumen oder ein relevantes Ziel, damit der erste Plan klarer priorisieren kann."
-                />
-              )}
-
-              {!editing && goalMissing.length > 0 ? (
-                <InlinePromptCard
-                  title="Ziele schärfen"
-                  text={`Noch offen: ${goalMissing.map((field) => field.label).join(", ")}`}
-                  action={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() => setEditing(true)}
-                    >
-                      Ziele bearbeiten
-                    </Button>
-                  }
-                />
-              ) : null}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-4">
-              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div>
-                  <CardTitle className="text-xl text-[var(--text-heading)]">
-                    {PROFILE_SECTION_META[2].title}
-                  </CardTitle>
-                  <CardDescription className="mt-2 text-sm">
-                    {PROFILE_SECTION_META[2].description}
-                  </CardDescription>
-                </div>
-                {editing ? (
-                  <Button
-                    type="button"
-                    variant={routineDetailsOpen ? "default" : "outline"}
-                    className="w-auto"
-                    onClick={() => setRoutineDetailsOpen((current) => !current)}
-                  >
-                    {routineDetailsOpen
-                      ? "Routine-Details ausblenden"
-                      : "Routine-Details bearbeiten"}
-                  </Button>
-                ) : null}
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {editing ? (
-                <div className="grid gap-4 xl:grid-cols-3">
-                  {routineSimpleFields.map((field) => (
-                    <ProfileFieldCard key={field.key} field={field}>
-                      {renderInlineEditor(field)}
-                    </ProfileFieldCard>
-                  ))}
-                </div>
-              ) : null}
-
-              {routineFilled.length > 0 ? (
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {(editing
-                    ? routineDetailFields.filter((field) => field.value !== null)
-                    : routineFilled
-                  ).map((field) => (
-                    <ProfileFieldCard
-                      key={field.key}
-                      field={field}
-                      onClick={!editing ? () => openFieldFlow(field) : undefined}
-                      actionLabel={!editing ? getFieldActionLabel(field) : undefined}
-                    />
-                  ))}
-                </div>
-              ) : null}
-
-              {editing && routineDetailsOpen ? renderRoutineDetailsEditor() : null}
-
-              {!editing && routineFilled.length === 0 ? (
-                <InlinePromptCard
-                  title="Alltags-Signale fehlen noch"
-                  text="Waschhäufigkeit, Hitzemuster und Routinedetails machen Empfehlungen deutlich realistischer."
-                />
-              ) : null}
-
-              {!editing && routineMissing.length > 0 ? (
-                <InlinePromptCard
-                  title="Alltag weiter schärfen"
-                  text={`Noch offen: ${routineMissing
-                    .map((field) => field.label)
-                    .slice(0, 6)
-                    .join(
-                      ", ",
-                    )}${routineMissing.length > 6 ? ` und ${routineMissing.length - 6} weitere` : ""}`}
-                  action={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() => setEditing(true)}
-                    >
-                      Alltag bearbeiten
-                    </Button>
-                  }
-                />
-              ) : null}
-            </CardContent>
-          </Card>
-
           <Card>
             <CardHeader className="pb-4">
               <div className="flex items-start justify-between gap-4">
