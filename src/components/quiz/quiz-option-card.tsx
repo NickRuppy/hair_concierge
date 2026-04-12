@@ -8,6 +8,7 @@ interface QuizOptionCardProps {
   label: string
   description?: string
   active: boolean
+  disabled?: boolean
   onClick: () => void
   animationDelay?: number
 }
@@ -17,12 +18,13 @@ export function QuizOptionCard({
   label,
   description,
   active,
+  disabled,
   onClick,
   animationDelay = 0,
 }: QuizOptionCardProps) {
   return (
     <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
-      <QuizCard active={active} onClick={onClick}>
+      <QuizCard active={active} disabled={disabled} onClick={onClick}>
         <div className="flex items-start gap-3">
           <Icon name={icon} size={24} className="text-primary mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">

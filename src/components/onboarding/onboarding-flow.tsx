@@ -155,8 +155,17 @@ export function OnboardingFlow({
   const { toast } = useToast()
   const store = useOnboardingStore()
   const [hydrated, setHydrated] = useState(false)
+  const [savingStep, setSavingStep] = useState<OnboardingStep | null>(null)
   const initRef = useRef(false)
-  const savingRef = useRef(false)
+  const savingStepsRef = useRef<Set<OnboardingStep>>(new Set())
+  const stepSaveTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+
+  // Clean up debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      clearTimeout(stepSaveTimerRef.current)
+    }
+  }, [])
 
   // ── Initialization: hydrate store from server data ──
 
@@ -308,13 +317,9 @@ export function OnboardingFlow({
 
   const handleStepComplete = useCallback(
     async (completedStep: OnboardingStep) => {
-      if (savingRef.current) return
-      savingRef.current = true
-
-      // Safety net: auto-reset after 10s in case a save hangs
-      const safetyTimeout = setTimeout(() => {
-        savingRef.current = false
-      }, 10000)
+      if (savingStepsRef.current.has(completedStep)) return
+      savingStepsRef.current.add(completedStep)
+      setSavingStep(completedStep)
 
       try {
         const state = useOnboardingStore.getState()
@@ -482,15 +487,22 @@ export function OnboardingFlow({
         // Advance the store
         state.goNext()
 
-        // Save the new step (after goNext)
+        // Persist step progress in background (non-blocking).
+        // Debounce so rapid step transitions only write the latest step,
+        // preventing an older in-flight request from overwriting a newer one.
+        clearTimeout(stepSaveTimerRef.current)
         const nextStep = useOnboardingStore.getState().currentStep
-        await saveOnboardingStep(nextStep)
+        stepSaveTimerRef.current = setTimeout(() => {
+          saveOnboardingStep(nextStep).catch((err) => {
+            console.error("Failed to persist onboarding step:", err)
+          })
+        }, 50)
       } catch (err) {
         console.error("Failed to save onboarding step:", err)
         toast({ title: "Fehler beim Speichern. Bitte versuche es erneut.", variant: "destructive" })
       } finally {
-        clearTimeout(safetyTimeout)
-        savingRef.current = false
+        savingStepsRef.current.delete(completedStep)
+        setSavingStep(null)
       }
     },
     [userId, router, toast, saveProductUsage, saveHairProfile, saveOnboardingStep],
@@ -614,6 +626,7 @@ export function OnboardingFlow({
             onToggle={toggleBasicProduct}
             onContinue={() => handleStepComplete("products_basics")}
             onBack={() => store.goBack()}
+            isSaving={savingStep === "products_basics"}
           />
         )
 
@@ -632,6 +645,7 @@ export function OnboardingFlow({
               store.setSelectedExtraProducts([])
               handleStepComplete("products_extras")
             }}
+            isSaving={savingStep === "products_extras"}
           />
         )
 
@@ -671,6 +685,7 @@ export function OnboardingFlow({
               store.setSelectedHeatTools([])
               handleStepComplete("heat_tools")
             }}
+            isSaving={savingStep === "heat_tools"}
           />
         )
 
@@ -745,6 +760,7 @@ export function OnboardingFlow({
             onToggle={toggleDryingMethod}
             onContinue={() => handleStepComplete("drying_method")}
             onBack={() => store.goBack()}
+            isSaving={savingStep === "drying_method"}
           />
         )
 
@@ -777,6 +793,7 @@ export function OnboardingFlow({
               store.setNightProtection([])
               handleStepComplete("night_protection")
             }}
+            isSaving={savingStep === "night_protection"}
           />
         )
 
@@ -790,6 +807,7 @@ export function OnboardingFlow({
             onVolumeChange={(vol) => store.setDesiredVolume(vol)}
             onContinue={() => handleStepComplete("goals")}
             onBack={() => store.goBack()}
+            isSaving={savingStep === "goals"}
           />
         )
 

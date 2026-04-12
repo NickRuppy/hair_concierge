@@ -4,7 +4,20 @@ import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import { getOnboardingGoalCards } from "@/lib/onboarding/goal-flow"
 import { DESIRED_VOLUME_LABELS } from "@/lib/types"
+import type { IconName } from "@/components/ui/icon"
 import type { HairTexture, DesiredVolume } from "@/lib/vocabulary"
+
+const VOLUME_ICONS: Record<DesiredVolume, IconName> = {
+  less: "goal-smoothness",
+  balanced: "result-balance",
+  more: "goal-volume",
+}
+
+const VOLUME_DESCRIPTIONS: Record<DesiredVolume, string> = {
+  less: "Ruhiger, glatter und kompakter im Fall.",
+  balanced: "Natuerlich, kontrolliert und ohne Extreme.",
+  more: "Mehr Fuelle, Lift und sichtbare Bewegung.",
+}
 
 interface GoalsScreenProps {
   hairTexture: HairTexture | null
@@ -14,6 +27,7 @@ interface GoalsScreenProps {
   onVolumeChange: (vol: DesiredVolume) => void
   onContinue: () => void
   onBack: () => void
+  isSaving?: boolean
 }
 
 export function GoalsScreen({
@@ -24,6 +38,7 @@ export function GoalsScreen({
   onVolumeChange,
   onContinue,
   onBack,
+  isSaving,
 }: GoalsScreenProps) {
   const goals = hairTexture ? getOnboardingGoalCards(hairTexture) : []
 
@@ -31,8 +46,9 @@ export function GoalsScreen({
     <div>
       <button
         onClick={onBack}
+        disabled={isSaving}
         aria-label="Zurück"
-        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors mb-2"
+        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors mb-2 disabled:opacity-40"
       >
         <ArrowLeft className="h-5 w-5" />
       </button>
@@ -58,32 +74,19 @@ export function GoalsScreen({
             PFLICHT
           </span>
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {(["less", "balanced", "more"] as const).map((value, i) => {
-            const active = desiredVolume === value
-            return (
-              <button
-                key={value}
-                type="button"
-                onClick={() => onVolumeChange(value)}
-                className={`rounded-2xl border px-4 py-4 text-left transition-all duration-200 ${
-                  active
-                    ? "border-[var(--brand-plum)] bg-[var(--brand-plum)]/15 text-foreground shadow-[0_0_0_1px_rgba(var(--brand-plum-rgb),0.18)]"
-                    : "border-border bg-muted text-foreground/75 hover:border-border hover:bg-muted"
-                }`}
-                style={{ animationDelay: `${140 + i * 60}ms` }}
-              >
-                <div className="mb-2 text-xs font-semibold tracking-[0.16em] text-[var(--brand-plum)]">
-                  {DESIRED_VOLUME_LABELS[value].toUpperCase()}
-                </div>
-                <div className="text-sm leading-relaxed">
-                  {value === "less" && "Ruhiger, glatter und kompakter im Fall."}
-                  {value === "balanced" && "Natuerlich, kontrolliert und ohne Extreme."}
-                  {value === "more" && "Mehr Fuelle, Lift und sichtbare Bewegung."}
-                </div>
-              </button>
-            )
-          })}
+        <div className="space-y-3">
+          {(["less", "balanced", "more"] as const).map((value, i) => (
+            <QuizOptionCard
+              key={value}
+              icon={VOLUME_ICONS[value]}
+              label={DESIRED_VOLUME_LABELS[value]}
+              description={VOLUME_DESCRIPTIONS[value]}
+              active={desiredVolume === value}
+              disabled={isSaving}
+              onClick={() => onVolumeChange(value)}
+              animationDelay={140 + i * 60}
+            />
+          ))}
         </div>
       </div>
 
@@ -107,6 +110,7 @@ export function GoalsScreen({
                 label={goal.label}
                 description={goal.description}
                 active={selectedGoals.includes(goal.key)}
+                disabled={isSaving}
                 onClick={() => onGoalToggle(goal.key)}
                 animationDelay={380 + i * 80}
               />
@@ -126,10 +130,10 @@ export function GoalsScreen({
         )}
         <button
           onClick={onContinue}
-          disabled={!desiredVolume}
+          disabled={!desiredVolume || isSaving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Weiter
+          {isSaving ? "Speichern..." : "Weiter"}
         </button>
       </div>
     </div>

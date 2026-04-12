@@ -21,6 +21,7 @@ interface HeatToolsScreenProps {
   onContinue: () => void
   onBack: () => void
   onNone: () => void
+  isSaving?: boolean
 }
 
 export function HeatToolsScreen({
@@ -29,6 +30,7 @@ export function HeatToolsScreen({
   onContinue,
   onBack,
   onNone,
+  isSaving,
 }: HeatToolsScreenProps) {
   const hasSelection = selected.length > 0
 
@@ -36,8 +38,9 @@ export function HeatToolsScreen({
     <div>
       <button
         onClick={onBack}
+        disabled={isSaving}
         aria-label="Zurück"
-        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors mb-2"
+        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors mb-2 disabled:opacity-40"
       >
         <ArrowLeft className="h-5 w-5" />
       </button>
@@ -60,6 +63,7 @@ export function HeatToolsScreen({
             icon={HEAT_TOOL_ICONS[option.value] ?? "heat-tool"}
             label={option.label}
             active={selected.includes(option.value)}
+            disabled={isSaving}
             onClick={() => onToggle(option.value)}
             animationDelay={100 + i * 60}
           />
@@ -73,7 +77,8 @@ export function HeatToolsScreen({
         <button
           type="button"
           onClick={onNone}
-          className="rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground"
+          disabled={isSaving}
+          className="rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground disabled:opacity-40"
         >
           Nichts davon
         </button>
@@ -85,10 +90,10 @@ export function HeatToolsScreen({
       >
         <button
           onClick={onContinue}
-          disabled={!hasSelection}
+          disabled={!hasSelection || isSaving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Weiter
+          {isSaving ? "Speichern..." : "Weiter"}
         </button>
       </div>
     </div>
