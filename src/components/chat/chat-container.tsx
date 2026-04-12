@@ -156,7 +156,9 @@ export function ChatContainer() {
 
   const firstName = profile?.full_name?.split(" ")[0] || null
   const hour = new Date().getHours()
-  const timeGreeting = hour < 12 ? "Guten Morgen" : hour < 18 ? "Guten Tag" : "Guten Abend"
+  let timeGreeting = "Guten Abend"
+  if (hour < 12) timeGreeting = "Guten Morgen"
+  else if (hour < 18) timeGreeting = "Guten Tag"
   const greeting = firstName ? `${timeGreeting}, ${firstName}` : timeGreeting
 
   const isEmpty = messages.length === 0
@@ -292,11 +294,9 @@ export function ChatContainer() {
                   const dateChanged =
                     !prevDate || msgDate.toDateString() !== prevDate.toDateString()
                   if (dateChanged) {
-                    const label = isToday(msgDate)
-                      ? "Heute"
-                      : isYesterday(msgDate)
-                        ? "Gestern"
-                        : format(msgDate, "dd. MMM", { locale: de })
+                    let label = format(msgDate, "dd. MMM", { locale: de })
+                    if (isToday(msgDate)) label = "Heute"
+                    else if (isYesterday(msgDate)) label = "Gestern"
                     dateSeparator = (
                       <div className="flex items-center gap-3 py-2">
                         <div className="h-px flex-1 bg-border" />

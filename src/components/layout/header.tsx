@@ -69,19 +69,19 @@ export function Header() {
       {menuOpen && (
         <div className="border-t bg-background p-4 md:hidden">
           <nav className="flex flex-col gap-1">
-            <MobileNavLink href="/chat" current={pathname} onClick={() => setMenuOpen(false)}>
+            <NavLink href="/chat" current={pathname} onClick={() => setMenuOpen(false)} mobile>
               <MessageCircle className="mr-2 h-4 w-4" />
               Chat
-            </MobileNavLink>
-            <MobileNavLink href="/profile" current={pathname} onClick={() => setMenuOpen(false)}>
+            </NavLink>
+            <NavLink href="/profile" current={pathname} onClick={() => setMenuOpen(false)} mobile>
               <User className="mr-2 h-4 w-4" />
               Profil
-            </MobileNavLink>
+            </NavLink>
             {profile?.is_admin && (
-              <MobileNavLink href="/admin" current={pathname} onClick={() => setMenuOpen(false)}>
+              <NavLink href="/admin" current={pathname} onClick={() => setMenuOpen(false)} mobile>
                 <Shield className="mr-2 h-4 w-4" />
                 Admin
-              </MobileNavLink>
+              </NavLink>
             )}
             <button
               onClick={() => {
@@ -103,36 +103,14 @@ export function Header() {
 function NavLink({
   href,
   current,
-  children,
-}: {
-  href: string
-  current: string
-  children: React.ReactNode
-}) {
-  const isActive = current === href || current.startsWith(href + "/")
-  return (
-    <Link
-      href={href}
-      className={`inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-        isActive
-          ? "bg-accent text-accent-foreground"
-          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-      }`}
-    >
-      {children}
-    </Link>
-  )
-}
-
-function MobileNavLink({
-  href,
-  current,
   onClick,
+  mobile,
   children,
 }: {
   href: string
   current: string
-  onClick: () => void
+  onClick?: () => void
+  mobile?: boolean
   children: React.ReactNode
 }) {
   const isActive = current === href || current.startsWith(href + "/")
@@ -140,7 +118,7 @@ function MobileNavLink({
     <Link
       href={href}
       onClick={onClick}
-      className={`inline-flex items-center rounded-md px-3 py-3 text-sm font-medium transition-colors ${
+      className={`inline-flex items-center rounded-md px-3 ${mobile ? "py-3" : "py-2"} text-sm font-medium transition-colors ${
         isActive
           ? "bg-accent text-accent-foreground"
           : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"

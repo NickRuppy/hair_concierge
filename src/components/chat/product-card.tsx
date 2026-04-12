@@ -9,7 +9,7 @@ interface ProductCardProps {
 /** Maps product.category to the icon name in our icon system. */
 function categoryIconName(category: string | null): IconName {
   if (!category) return "product-shampoo"
-  const mapped = `product-${category.replace("_", "-")}` as IconName
+  const mapped = `product-${category.replaceAll("_", "-")}` as IconName
   // Check if the mapped name is a valid icon; fall back otherwise.
   const validIcons: IconName[] = [
     "product-shampoo",

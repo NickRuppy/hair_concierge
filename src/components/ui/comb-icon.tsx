@@ -14,6 +14,7 @@ export function CombIcon({ className }: CombIconProps) {
       strokeWidth={1.5}
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-hidden="true"
     >
       {/* Handle */}
       <rect x="3" y="4" width="4" height="16" rx="1" />
