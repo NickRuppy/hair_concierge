@@ -1,13 +1,4 @@
 import { createClient } from "@/lib/supabase/server"
-import { createAdminClient } from "@/lib/supabase/admin"
-import { runPipeline } from "@/lib/rag/pipeline"
-import { buildAssistantRagContext, buildDoneEventData } from "@/lib/rag/chat-response"
-import { extractConversationMemory } from "@/lib/rag/memory-extractor"
-import {
-  buildRetrievalDebugEventData,
-  finalizeChatTurnTrace,
-} from "@/lib/rag/debug-trace"
-import { chatMessageSchema } from "@/lib/validators"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
@@ -44,6 +35,7 @@ async function persistConversationTurnTrace(params: {
   trace: unknown
 }) {
   try {
+    const { createAdminClient } = await import("@/lib/supabase/admin")
     const admin = createAdminClient()
     const { error } = await admin.from("conversation_turn_traces").insert(params)
     if (error) {
@@ -67,9 +59,25 @@ export async function POST(request: Request) {
   if (!checkRateLimit(user.id)) {
     return NextResponse.json(
       { error: "Zu viele Nachrichten. Bitte warte einen Moment." },
-      { status: 429 }
+      { status: 429 },
     )
   }
+
+  const [
+    { createAdminClient },
+    { runPipeline },
+    { buildAssistantRagContext, buildDoneEventData },
+    { extractConversationMemory },
+    { buildRetrievalDebugEventData, finalizeChatTurnTrace },
+    { chatMessageSchema },
+  ] = await Promise.all([
+    import("@/lib/supabase/admin"),
+    import("@/lib/rag/pipeline"),
+    import("@/lib/rag/chat-response"),
+    import("@/lib/rag/memory-extractor"),
+    import("@/lib/rag/debug-trace"),
+    import("@/lib/validators"),
+  ])
 
   const body = await request.json()
   const parsed = chatMessageSchema.safeParse(body)
@@ -77,7 +85,7 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Ungültige Nachricht", details: parsed.error.flatten() },
-      { status: 400 }
+      { status: 400 },
     )
   }
 
@@ -126,8 +134,8 @@ export async function POST(request: Request) {
         // Send conversation ID first
         controller.enqueue(
           encoder.encode(
-            `data: ${JSON.stringify({ type: "conversation_id", data: conversationId })}\n\n`
-          )
+            `data: ${JSON.stringify({ type: "conversation_id", data: conversationId })}\n\n`,
+          ),
         )
 
         // Send router confidence event
@@ -139,8 +147,8 @@ export async function POST(request: Request) {
                 confidence: routerDecision.confidence,
                 retrieval_mode: routerDecision.retrieval_mode,
               },
-            })}\n\n`
-          )
+            })}\n\n`,
+          ),
         )
 
         controller.enqueue(
@@ -148,8 +156,8 @@ export async function POST(request: Request) {
             `data: ${JSON.stringify({
               type: "retrieval_debug",
               data: buildRetrievalDebugEventData(debugTrace),
-            })}\n\n`
-          )
+            })}\n\n`,
+          ),
         )
 
         const reader = stream.getReader()
@@ -165,30 +173,27 @@ export async function POST(request: Request) {
             fullContent += text
 
             controller.enqueue(
-              encoder.encode(
-                `data: ${JSON.stringify({ type: "content_delta", data: text })}\n\n`
-              )
+              encoder.encode(`data: ${JSON.stringify({ type: "content_delta", data: text })}\n\n`),
             )
           }
 
           // Send matched products — suppress during clarification rounds
-          const productsToSend = !routerDecision.needs_clarification && matchedProducts.length > 0
-            ? matchedProducts.slice(0, 3)
-            : []
+          const productsToSend =
+            !routerDecision.needs_clarification && matchedProducts.length > 0
+              ? matchedProducts.slice(0, 3)
+              : []
           if (productsToSend.length > 0) {
             controller.enqueue(
               encoder.encode(
-                `data: ${JSON.stringify({ type: "product_recommendations", data: productsToSend })}\n\n`
-              )
+                `data: ${JSON.stringify({ type: "product_recommendations", data: productsToSend })}\n\n`,
+              ),
             )
           }
 
           // Send citation sources
           if (sources.length > 0) {
             controller.enqueue(
-              encoder.encode(
-                `data: ${JSON.stringify({ type: "sources", data: sources })}\n\n`
-              )
+              encoder.encode(`data: ${JSON.stringify({ type: "sources", data: sources })}\n\n`),
             )
           }
 
@@ -263,18 +268,17 @@ export async function POST(request: Request) {
                   routerDecision,
                   categoryDecision,
                 }),
-              })}\n\n`
-            )
+              })}\n\n`,
+            ),
           )
         } catch (error) {
           controller.enqueue(
             encoder.encode(
-              `data: ${JSON.stringify({ type: "error", data: { message: "Stream-Fehler aufgetreten" } })}\n\n`
-            )
+              `data: ${JSON.stringify({ type: "error", data: { message: "Stream-Fehler aufgetreten" } })}\n\n`,
+            ),
           )
 
-          const errorMessage =
-            error instanceof Error ? error.message : "Unbekannter Stream-Fehler"
+          const errorMessage = error instanceof Error ? error.message : "Unbekannter Stream-Fehler"
           const failedTrace = finalizeChatTurnTrace(debugTrace, {
             assistant_content: fullContent,
             sources,
@@ -308,10 +312,7 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error("Chat pipeline error:", error)
-    return NextResponse.json(
-      { error: fehler("Verarbeitung") },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: fehler("Verarbeitung") }, { status: 500 })
   }
 }
 

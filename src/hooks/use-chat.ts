@@ -20,40 +20,59 @@ export function useChat(): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>([])
   const [isStreaming, setIsStreaming] = useState(false)
   const [conversations, setConversations] = useState<Conversation[]>([])
-  const [currentConversationId, setCurrentConversationId] = useState<
-    string | null
-  >(null)
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null)
   const abortRef = useRef<AbortController | null>(null)
 
   const loadConversations = useCallback(async () => {
-    const res = await fetch("/api/chat")
-    if (res.ok) {
+    try {
+      const res = await fetch("/api/chat")
+      if (!res.ok) {
+        console.error("Fehler beim Laden der Unterhaltungen:", res.status, res.statusText)
+        return
+      }
+
       const data = await res.json()
       setConversations(data.conversations || [])
+    } catch (error) {
+      console.error("Fehler beim Laden der Unterhaltungen:", error)
     }
   }, [])
 
   const loadConversation = useCallback(async (id: string) => {
-    const res = await fetch(`/api/chat/${id}`)
-    if (res.ok) {
+    try {
+      const res = await fetch(`/api/chat/${id}`)
+      if (!res.ok) {
+        console.error("Fehler beim Laden der Unterhaltung:", res.status, res.statusText)
+        return
+      }
+
       const data = await res.json()
       setMessages(data.messages || [])
       setCurrentConversationId(id)
+    } catch (error) {
+      console.error("Fehler beim Laden der Unterhaltung:", error)
     }
   }, [])
 
   const deleteConversation = useCallback(
     async (id: string) => {
-      const res = await fetch(`/api/chat/${id}`, { method: "DELETE" })
-      if (res.ok) {
+      try {
+        const res = await fetch(`/api/chat/${id}`, { method: "DELETE" })
+        if (!res.ok) {
+          console.error("Fehler beim Loeschen der Unterhaltung:", res.status, res.statusText)
+          return
+        }
+
         setConversations((prev) => prev.filter((c) => c.id !== id))
         if (currentConversationId === id) {
           setMessages([])
           setCurrentConversationId(null)
         }
+      } catch (error) {
+        console.error("Fehler beim Loeschen der Unterhaltung:", error)
       }
     },
-    [currentConversationId]
+    [currentConversationId],
   )
 
   const startNewConversation = useCallback(() => {
@@ -220,8 +239,7 @@ export function useChat(): UseChatReturn {
             if (last && last.role === "assistant" && !last.content) {
               updated[updated.length - 1] = {
                 ...last,
-                content:
-                  "Entschuldigung, es gab einen Fehler. Bitte versuche es erneut.",
+                content: "Entschuldigung, es gab einen Fehler. Bitte versuche es erneut.",
               }
             }
             return updated
@@ -232,7 +250,7 @@ export function useChat(): UseChatReturn {
         abortRef.current = null
       }
     },
-    [currentConversationId, isStreaming, loadConversations, messages.length]
+    [currentConversationId, isStreaming, loadConversations, messages.length],
   )
 
   return {
