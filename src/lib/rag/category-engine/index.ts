@@ -1,4 +1,4 @@
-import type { HairProfile, ProductCategory } from "@/lib/types"
+import type { HairProfile, IntentType, ProductCategory } from "@/lib/types"
 import type { CategoryDecisions } from "@/lib/rag/contracts"
 import {
   buildShampooDecision,
@@ -89,23 +89,15 @@ export function buildCategoryClarificationQuestions(
  * Returns undefined if no category-specific filter applies.
  */
 export function buildCategoryRetrievalFilter(
-  intent: string,
+  intent: IntentType,
   productCategory: ProductCategory,
   decisions: CategoryDecisions,
   hairProfile: HairProfile | null,
 ): Record<string, string> | undefined {
-  const shampooFilter = buildShampooRetrievalFilter(
-    intent as Parameters<typeof buildShampooRetrievalFilter>[0],
-    productCategory,
-    decisions.shampoo,
-  )
+  const shampooFilter = buildShampooRetrievalFilter(intent, productCategory, decisions.shampoo)
   if (shampooFilter) return shampooFilter
 
-  const oilFilter = buildOilRetrievalFilter(
-    intent as Parameters<typeof buildOilRetrievalFilter>[0],
-    productCategory,
-    decisions.oil,
-  )
+  const oilFilter = buildOilRetrievalFilter(intent, productCategory, decisions.oil)
   if (oilFilter) return oilFilter
 
   // Conditioner concern code filter

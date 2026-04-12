@@ -328,7 +328,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       memoryContext,
       shouldPlanRoutine: false,
     })
-    matchedProducts = selectionResult.products as Product[]
+    matchedProducts = selectionResult.products
 
     // Merge updated decisions back
     if (selectionResult.updatedDecisions.shampoo) {
