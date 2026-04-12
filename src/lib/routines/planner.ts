@@ -7,7 +7,10 @@ import {
   WASH_FREQUENCY_LABELS,
 } from "@/lib/vocabulary"
 import { CONDITIONER_REPAIR_LEVEL_LABELS } from "@/lib/conditioner/constants"
-import { LEAVE_IN_NEED_BUCKET_LABELS, LEAVE_IN_STYLING_CONTEXT_LABELS } from "@/lib/leave-in/constants"
+import {
+  LEAVE_IN_NEED_BUCKET_LABELS,
+  LEAVE_IN_STYLING_CONTEXT_LABELS,
+} from "@/lib/leave-in/constants"
 import {
   buildBrushToolsSlot,
   hasBrushToolsNeed,
@@ -65,6 +68,65 @@ const CLARIFY_TERMS = [
   "hard water",
 ]
 
+const SCALP_TERMS = ["kopfhaut", "ansatz", "ansaetze", "scalp"]
+
+const SCALP_CLARIFY_TERMS = [
+  "nachfetten",
+  "fettig",
+  "oelig",
+  "oily roots",
+  "talg",
+  "dry shampoo",
+  "trockenshampoo",
+]
+
+const HARD_WATER_TERMS = [
+  "hartes wasser",
+  "hard water",
+  "kalk",
+  "mineralablagerung",
+  "mineral build up",
+  "mineral buildup",
+]
+
+const SWIMMING_TERMS = ["chlor", "chlorwasser", "pool", "schwimmen", "schwimmbad", "swimming"]
+
+const CO_WASH_TERMS = [
+  "co-wash",
+  "cowash",
+  "co wash",
+  "nur conditioner",
+  "nur spuelung",
+  "nur spulung",
+]
+
+const HAIR_RESET_TERMS = [
+  "wachsig",
+  "waxy",
+  "ueberpflegt",
+  "uberpflegt",
+  "coated",
+  "belegt",
+  "produktrotation",
+  "product rotation",
+  "zu viele produkte",
+  "nichts zieht mehr ein",
+  "ueberlagert",
+  "uberlagert",
+]
+
+const HARD_RESET_TERMS = [
+  "hard reset",
+  "wachsig",
+  "waxy",
+  "ueberpflegt",
+  "uberpflegt",
+  "nichts zieht mehr ein",
+  "zu viele produkte",
+]
+
+const SENSITIVE_SCALP_TERMS = ["juck", "itch", "schuppen", "seborr", "seb derm"]
+
 const OILING_TERMS = [
   "hair oiling",
   "hairoiling",
@@ -77,13 +139,7 @@ const OILING_TERMS = [
   "oiling routine",
 ]
 
-const BOND_BUILDER_TERMS = [
-  "bond builder",
-  "bond repair",
-  "olaplex",
-  "k18",
-  "bonding",
-]
+const BOND_BUILDER_TERMS = ["bond builder", "bond repair", "olaplex", "k18", "bonding"]
 
 const REFRESH_TERMS = [
   "lockenrefresh",
@@ -95,18 +151,9 @@ const REFRESH_TERMS = [
   "naechster tag",
 ]
 
-const CWC_TERMS = [
-  "cwc",
-  "cwc methode",
-  "conditioner wash conditioner",
-]
+const CWC_TERMS = ["cwc", "cwc methode", "conditioner wash conditioner"]
 
-const OWC_TERMS = [
-  "owc",
-  "owc methode",
-  "oel waschen conditioner",
-  "oil wash conditioner",
-]
+const OWC_TERMS = ["owc", "owc methode", "oel waschen conditioner", "oil wash conditioner"]
 
 const CWC_OWC_COMPARISON_TERMS = [
   "cwc oder owc",
@@ -216,24 +263,109 @@ function hasBetweenWashDays(washFrequency: HairProfile["wash_frequency"]): boole
   return washFrequency !== null && washFrequency !== "daily"
 }
 
-function hasBuildupSignals(profile: HairProfile | null, normalizedMessage: string): boolean {
-  const heavyProductCount = (profile?.current_routine_products ?? []).filter((entry) =>
-    HEAVY_ROUTINE_PRODUCTS.has(entry)
-  ).length
+function getCombinedRoutineText(profile: HairProfile | null, normalizedMessage: string): string {
   const productText = normalizeText(profile?.products_used ?? "")
-  const combinedText = `${normalizedMessage} ${productText}`.trim()
-  const usesHairOiling = (profile?.current_routine_products ?? []).includes("oil") || includesAny(combinedText, OILING_TERMS)
+  return `${normalizedMessage} ${productText}`.trim()
+}
+
+function countHeavyRoutineProducts(profile: HairProfile | null): number {
+  return (profile?.current_routine_products ?? []).filter((entry) =>
+    HEAVY_ROUTINE_PRODUCTS.has(entry),
+  ).length
+}
+
+function hasHairOilingUsage(profile: HairProfile | null, combinedText: string): boolean {
+  return (
+    (profile?.current_routine_products ?? []).includes("oil") ||
+    includesAny(combinedText, OILING_TERMS)
+  )
+}
+
+function hasSensitiveScalpSignals(profile: HairProfile | null, combinedText: string): boolean {
+  return (
+    profile?.scalp_condition === "irritated" ||
+    profile?.scalp_condition === "dry_flakes" ||
+    profile?.scalp_condition === "dandruff" ||
+    includesAny(combinedText, SENSITIVE_SCALP_TERMS)
+  )
+}
+
+function hasScalpClarifySignals(profile: HairProfile | null, normalizedMessage: string): boolean {
+  const combinedText = getCombinedRoutineText(profile, normalizedMessage)
+  const explicitScalpClarify =
+    includesAny(normalizedMessage, CLARIFY_TERMS) && includesAny(combinedText, SCALP_TERMS)
 
   return (
-    includesAny(normalizedMessage, CLARIFY_TERMS) ||
+    explicitScalpClarify ||
     profile?.scalp_type === "oily" ||
     (profile?.concerns ?? []).includes("oily_scalp") ||
-    (profile?.goals ?? []).includes("volume") ||
-    heavyProductCount >= 2 ||
-    usesHairOiling ||
-    includesAny(combinedText, HEAVY_STYLING_TERMS) ||
+    includesAny(combinedText, SCALP_CLARIFY_TERMS)
+  )
+}
+
+function hasHairResetSignals(profile: HairProfile | null, normalizedMessage: string): boolean {
+  const heavyProductCount = countHeavyRoutineProducts(profile)
+  const combinedText = getCombinedRoutineText(profile, normalizedMessage)
+  const explicitHairReset =
+    includesAny(normalizedMessage, CLARIFY_TERMS) && !includesAny(combinedText, SCALP_TERMS)
+  const hasHardWaterExposure = includesAny(combinedText, HARD_WATER_TERMS)
+  const hasSwimmingExposure = includesAny(combinedText, SWIMMING_TERMS)
+  const hasCoWashBurden = includesAny(combinedText, CO_WASH_TERMS)
+  const hasHairOiling = hasHairOilingUsage(profile, combinedText)
+  const hasHeavyStyling = includesAny(combinedText, HEAVY_STYLING_TERMS)
+  const hasOverloadLanguage =
     includesAny(combinedText, UNDERPERFORMING_ROUTINE_TERMS) ||
-    includesAny(combinedText, WASH_LESS_TERMS)
+    includesAny(combinedText, HAIR_RESET_TERMS)
+  const hasLowWashBurden =
+    includesAny(combinedText, WASH_LESS_TERMS) &&
+    (heavyProductCount >= 2 || hasHeavyStyling || hasHairOiling)
+  const hasVolumeSupportedReset =
+    (profile?.goals ?? []).includes("volume") &&
+    (heavyProductCount >= 1 ||
+      hasHeavyStyling ||
+      hasOverloadLanguage ||
+      hasHardWaterExposure ||
+      hasSwimmingExposure ||
+      hasCoWashBurden)
+
+  return (
+    explicitHairReset ||
+    hasHardWaterExposure ||
+    hasSwimmingExposure ||
+    hasCoWashBurden ||
+    hasOverloadLanguage ||
+    heavyProductCount >= 2 ||
+    hasHairOiling ||
+    hasHeavyStyling ||
+    hasLowWashBurden ||
+    hasVolumeSupportedReset
+  )
+}
+
+function hasHardResetSignals(profile: HairProfile | null, normalizedMessage: string): boolean {
+  const heavyProductCount = countHeavyRoutineProducts(profile)
+  const combinedText = getCombinedRoutineText(profile, normalizedMessage)
+  const hasHardWaterExposure = includesAny(combinedText, HARD_WATER_TERMS)
+  const hasSwimmingExposure = includesAny(combinedText, SWIMMING_TERMS)
+  const hasCoWashBurden = includesAny(combinedText, CO_WASH_TERMS)
+  const hasHairOiling = hasHairOilingUsage(profile, combinedText)
+  const hasHeavyStyling = includesAny(combinedText, HEAVY_STYLING_TERMS)
+  const hasHardResetLanguage =
+    includesAny(combinedText, HARD_RESET_TERMS) || includesAny(combinedText, HAIR_RESET_TERMS)
+  const overloadCount = [
+    heavyProductCount >= 2,
+    hasHairOiling,
+    hasHeavyStyling,
+    hasHardWaterExposure,
+    hasSwimmingExposure,
+    hasCoWashBurden,
+  ].filter(Boolean).length
+
+  return (
+    hasHardResetLanguage ||
+    heavyProductCount >= 3 ||
+    (heavyProductCount >= 2 && hasHeavyStyling) ||
+    overloadCount >= 3
   )
 }
 
@@ -323,9 +455,7 @@ function deriveBondBuilderSeverity(profile: HairProfile | null): "moderate" | "s
 }
 
 function hasOilWeightRisk(profile: HairProfile | null): boolean {
-  return (
-    (profile?.thickness === "fine" && profile?.density === "high")
-  )
+  return profile?.thickness === "fine" && profile?.density === "high"
 }
 
 function hasFrequentWashNeed(washFrequency: HairProfile["wash_frequency"]): boolean {
@@ -337,34 +467,21 @@ function hasMechanicalStressNeed(profile: HairProfile | null): boolean {
 }
 
 function hasWashProtectionNeed(profile: HairProfile | null): boolean {
-  return (
-    hasDrynessDamageSignals(profile) ||
-    hasMechanicalStressNeed(profile)
-  )
+  return hasDrynessDamageSignals(profile) || hasMechanicalStressNeed(profile)
 }
 
 function hasStrongDrynessDamageCluster(profile: HairProfile | null): boolean {
   const concerns = new Set(profile?.concerns ?? [])
 
-  return (
-    concerns.has("dryness") ||
-    concerns.has("hair_damage") ||
-    concerns.has("split_ends")
-  )
+  return concerns.has("dryness") || concerns.has("hair_damage") || concerns.has("split_ends")
 }
 
-function countOwcSupportSignals(
-  profile: HairProfile | null,
-  context: RoutineContext,
-): number {
+function countOwcSupportSignals(profile: HairProfile | null, context: RoutineContext): number {
   const treatments = new Set(profile?.chemical_treatment ?? [])
   let count = 0
 
   if (treatments.has("colored") || treatments.has("bleached")) count++
-  if (
-    profile?.cuticle_condition === "rough" ||
-    profile?.cuticle_condition === "slightly_rough"
-  ) {
+  if (profile?.cuticle_condition === "rough" || profile?.cuticle_condition === "slightly_rough") {
     count++
   }
   if (hasStrongDrynessDamageCluster(profile)) count++
@@ -375,17 +492,10 @@ function countOwcSupportSignals(
 }
 
 function hasOwcProactiveBlock(context: RoutineContext): boolean {
-  return (
-    context.has_oil_weight_risk ||
-    context.scalp_type === "oily" ||
-    context.has_buildup_signals
-  )
+  return context.has_oil_weight_risk || context.scalp_type === "oily" || context.has_buildup_signals
 }
 
-function hasOwcFit(
-  profile: HairProfile | null,
-  context: RoutineContext,
-): boolean {
+function hasOwcFit(profile: HairProfile | null, context: RoutineContext): boolean {
   if (!context.has_wash_protection_need) return false
 
   switch (profile?.hair_texture) {
@@ -529,11 +639,12 @@ function getExplicitTopicIds(message: string): RoutineTopicId[] {
   return topics
 }
 
-export function deriveRoutineContext(
-  profile: HairProfile | null,
-  message: string,
-): RoutineContext {
+export function deriveRoutineContext(profile: HairProfile | null, message: string): RoutineContext {
   const normalizedMessage = normalizeText(message)
+  const combinedText = getCombinedRoutineText(profile, normalizedMessage)
+  const hasScalpClarify = hasScalpClarifySignals(profile, normalizedMessage)
+  const hasHairReset = hasHairResetSignals(profile, normalizedMessage)
+  const hasSensitiveScalp = hasSensitiveScalpSignals(profile, combinedText)
   const explicitTopicIds = getExplicitTopicIds(message)
   const primaryFocuses = buildPrimaryFocuses(profile, explicitTopicIds)
   const organizerComplete =
@@ -546,8 +657,7 @@ export function deriveRoutineContext(
     Boolean(profile?.scalp_type) ||
     (profile?.current_routine_products?.length ?? 0) > 0
   const inventoryComplete =
-    (profile?.current_routine_products?.length ?? 0) > 0 ||
-    Boolean(profile?.products_used?.trim())
+    (profile?.current_routine_products?.length ?? 0) > 0 || Boolean(profile?.products_used?.trim())
 
   return {
     hair_texture: profile?.hair_texture ?? null,
@@ -572,7 +682,11 @@ export function deriveRoutineContext(
     cadence_complete: cadenceComplete,
     inventory_complete: inventoryComplete,
     has_between_wash_days: hasBetweenWashDays(profile?.wash_frequency ?? null),
-    has_buildup_signals: hasBuildupSignals(profile, normalizedMessage),
+    has_buildup_signals: hasScalpClarify || hasHairReset,
+    has_scalp_clarify_signals: hasScalpClarify,
+    has_hair_reset_signals: hasHairReset,
+    has_hard_reset_signals: hasHardResetSignals(profile, normalizedMessage) && !hasSensitiveScalp,
+    has_sensitive_scalp_signals: hasSensitiveScalp,
     has_dryness_damage_signals: hasDrynessDamageSignals(profile),
     has_damage_signals: hasDamageSignals(profile),
     has_bond_builder_signals: hasBondBuilderSignals(profile),
@@ -612,9 +726,10 @@ function hasProactiveHairOilingFit(context: RoutineContext): boolean {
 
 function hasScalpHairOilingFit(context: RoutineContext): boolean {
   return (
-    context.scalp_type === "dry" ||
-    context.scalp_condition === "dry_flakes" ||
-    context.scalp_condition === "dandruff"
+    context.scalp_type === "dry" &&
+    context.scalp_condition !== "dry_flakes" &&
+    context.scalp_condition !== "dandruff" &&
+    context.scalp_condition !== "irritated"
   )
 }
 
@@ -627,12 +742,7 @@ export function activateRoutineTopics(
   const activations: RoutineTopicActivation[] = []
   const seen = new Set<RoutineTopicId>()
 
-  const push = (
-    id: RoutineTopicId,
-    reason: string,
-    priority: number,
-    instructionOnly: boolean,
-  ) => {
+  const push = (id: RoutineTopicId, reason: string, priority: number, instructionOnly: boolean) => {
     if (seen.has(id)) return
     seen.add(id)
     activations.push(createTopicActivation(id, reason, priority, instructionOnly))
@@ -640,29 +750,21 @@ export function activateRoutineTopics(
 
   const baseTopicId = getBaseRoutineTopicId(profile)
   if (baseTopicId) {
-    push(
-      baseTopicId,
-      "Das Haarmuster legt die Grundstruktur der Routine fest.",
-      10,
-      false,
-    )
+    push(baseTopicId, "Das Haarmuster legt die Grundstruktur der Routine fest.", 10, false)
   }
 
   const explicit = new Set(context.explicit_topic_ids)
   const washProtectionSelection = selectWashProtectionTopic(profile, context, message)
 
-  if (
-    explicit.has("tiefenreinigung") ||
-    context.has_buildup_signals
-  ) {
-    push(
-      "tiefenreinigung",
-      explicit.has("tiefenreinigung")
-        ? "Die Frage zielt direkt auf Build-up oder Tiefenreinigung."
-        : "Kopfhaut- oder Build-up-Signale sprechen fuer einen gelegentlichen Reset.",
-      30,
-      true,
-    )
+  if (explicit.has("tiefenreinigung") || context.has_buildup_signals) {
+    const clarifyReason = explicit.has("tiefenreinigung")
+      ? "Die Frage zielt direkt auf Build-up oder Tiefenreinigung."
+      : context.has_scalp_clarify_signals && context.has_hair_reset_signals
+        ? "Kopfhaut- und Rueckstands-Signale sprechen fuer einen gezielten Reset."
+        : context.has_scalp_clarify_signals
+          ? "Kopfhaut- und Sebum-Signale sprechen fuer eine gezielte Kopfhaut-Tiefenreinigung."
+          : "Rueckstaende, Produktueberlagerung oder Mineralien sprechen fuer einen gezielten Reset."
+    push("tiefenreinigung", clarifyReason, 30, true)
   }
 
   if (
@@ -718,11 +820,9 @@ export function activateRoutineTopics(
 
   if (
     explicit.has("lockenrefresh") ||
-    (
-      context.has_between_wash_days &&
+    (context.has_between_wash_days &&
       context.hair_texture !== null &&
-      CURLY_TEXTURES.has(context.hair_texture)
-    )
+      CURLY_TEXTURES.has(context.hair_texture))
   ) {
     push(
       "lockenrefresh",
@@ -737,8 +837,7 @@ export function activateRoutineTopics(
   if (washProtectionSelection.topicId) {
     const topicId = washProtectionSelection.topicId
     const explicitRequest =
-      (topicId === "cwc" && explicit.has("cwc")) ||
-      (topicId === "owc" && explicit.has("owc"))
+      (topicId === "cwc" && explicit.has("cwc")) || (topicId === "owc" && explicit.has("owc"))
 
     let reason: string
     if (washProtectionSelection.compareMode) {
@@ -766,7 +865,7 @@ export function buildRoutineClarificationQuestions(
 
   if (!context.organizer_complete) {
     questions.push(
-      "Was soll deine Routine gerade vor allem leisten - weniger Frizz, mehr Feuchtigkeit, Definition, Reparatur oder eher etwas fuer die Kopfhaut?"
+      "Was soll deine Routine gerade vor allem leisten - weniger Frizz, mehr Feuchtigkeit, Definition, Reparatur oder eher etwas fuer die Kopfhaut?",
     )
   }
 
@@ -776,7 +875,7 @@ export function buildRoutineClarificationQuestions(
 
   if (!context.inventory_complete) {
     questions.push(
-      "Welche Schritte sind aktuell schon fest in deiner Routine - Shampoo, Conditioner, Leave-in, Maske oder Oel?"
+      "Welche Schritte sind aktuell schon fest in deiner Routine - Shampoo, Conditioner, Leave-in, Maske oder Oel?",
     )
   }
 
@@ -787,11 +886,17 @@ export function buildRoutineClarificationQuestions(
   return questions.slice(0, 3)
 }
 
-function hasCurrentProduct(profile: HairProfile | null, product: HairProfile["current_routine_products"][number]): boolean {
+function hasCurrentProduct(
+  profile: HairProfile | null,
+  product: HairProfile["current_routine_products"][number],
+): boolean {
   return (profile?.current_routine_products ?? []).includes(product)
 }
 
-function buildSectionSummary(phase: RoutinePlanSection["phase"], profile: HairProfile | null): string {
+function buildSectionSummary(
+  phase: RoutinePlanSection["phase"],
+  profile: HairProfile | null,
+): string {
   if (phase === "base_wash") {
     const washLabel = profile?.wash_frequency
       ? (WASH_FREQUENCY_LABELS[profile.wash_frequency] ?? profile.wash_frequency)
@@ -806,7 +911,10 @@ function buildSectionSummary(phase: RoutinePlanSection["phase"], profile: HairPr
   return "Das sind optionale oder gelegentliche Bausteine, die nur bei Bedarf dazukommen."
 }
 
-function pushSlot(sections: Map<RoutinePlanSection["phase"], RoutineSlotAdvice[]>, slot: RoutineSlotAdvice): void {
+function pushSlot(
+  sections: Map<RoutinePlanSection["phase"], RoutineSlotAdvice[]>,
+  slot: RoutineSlotAdvice,
+): void {
   sections.set(slot.phase, [...(sections.get(slot.phase) ?? []), slot])
 }
 
@@ -848,6 +956,130 @@ function buildCwcTechniqueSlot(): RoutineSlotAdvice {
     product_linkable: false,
     product_query: null,
     attachment_priority: 92,
+  }
+}
+
+function buildScalpClarifySlot(
+  context: RoutineContext,
+  shampooPresent: boolean,
+): RoutineSlotAdvice {
+  const rationale = [
+    "Hier geht es primaer um Talg, Kopfhaut-Rueckstaende und schnell belegte Ansaetze - nicht um einen Voll-Reset fuer die Laengen.",
+    context.has_sensitive_scalp_signals
+      ? "Bei sensibler Kopfhaut lieber sanft und gezielt reinigen statt die Intensitaet hochzuziehen."
+      : "Wenn der Ansatz schnell nachfettet oder Dry-Shampoo-Reste sitzen, kann punktuell auch ein sanftes Scalp-Exfoliant vor der Waesche sinnvoll sein.",
+  ]
+
+  const caveats = context.has_sensitive_scalp_signals
+    ? [
+        "Bei juckender, schuppiger oder gereizter Kopfhaut eher konservativ bleiben und bevorzugt ein gezieltes Kopfhaut-Shampoo priorisieren.",
+      ]
+    : []
+
+  return {
+    id: "occasional-scalp-clarify",
+    kind: "instruction",
+    phase: "occasional",
+    label: "Kopfhaut-Tiefenreinigung",
+    action: shampooPresent ? "adjust" : "add",
+    category: null,
+    cadence:
+      context.scalp_type === "oily"
+        ? "alle 1-2 Wochen nach Bedarf"
+        : "punktuell bei belegtem Ansatz",
+    rationale,
+    caveats,
+    topic_ids: ["tiefenreinigung"],
+    product_linkable: false,
+    product_query: null,
+    attachment_priority: 95,
+  }
+}
+
+function buildHairResetSlot(params: {
+  context: RoutineContext
+  shampooPresent: boolean
+  bondBuilderDriven: boolean
+  educational: boolean
+}): RoutineSlotAdvice {
+  const { context, shampooPresent, bondBuilderDriven, educational } = params
+
+  const rationale = bondBuilderDriven
+    ? [
+        "Bond Builder brauchen saubere Haarstruktur - Rueckstaende koennen die Aufnahme blockieren.",
+        "Vor Bond Builder ist ein Haar-Reset oft sinnvoller als noch mehr Produkt auf ueberlagerte Laengen zu schichten.",
+        "Danach immer Conditioner oder Maske einplanen, damit die Laengen nicht stumpf bleiben.",
+      ]
+    : educational
+      ? [
+          "Tiefenreinigung ist ein gezielter Reset fuer Rueckstaende auf Haar und Kopfhaut, kein Pflichtschritt fuer jede Routine.",
+          "Fuer die Laengen wird sie vor allem dann spannend, wenn Produkte, Mineralien oder Poolwasser die Haare schwer oder stumpf machen.",
+          "Danach immer Conditioner oder Maske einplanen, damit die Laengen wieder geschmeidig werden.",
+        ]
+      : [
+          "Hier geht es vor allem um Rueckstaende auf Laengen und Spitzen - etwa durch Leave-ins, Oele, Styling, Mineralien oder Poolwasser.",
+          "Ein Haar-Reset schafft wieder eine saubere Basis, wenn sich die Haare wachsig, belegt oder ueberpflegt anfuehlen.",
+          "Danach immer Conditioner oder Maske einplanen, damit die Laengen nicht stumpf bleiben.",
+        ]
+
+  rationale.push(
+    "Auf sauberem Haar greifen Pflege oder farbauffrischende Produkte oft gleichmaessiger - das ist ein Bonus, kein Pflichtargument.",
+  )
+
+  const caveats = context.has_sensitive_scalp_signals
+    ? [
+        "Die Kopfhaut wirkt eher sensibel - deshalb gezielt reinigen und die Intensitaet nicht unnoetig hochziehen.",
+      ]
+    : []
+
+  return {
+    id: "occasional-hair-reset",
+    kind: "instruction",
+    phase: "occasional",
+    label: "Haar-Reset / Tiefenreinigung",
+    action: shampooPresent ? "adjust" : "add",
+    category: null,
+    cadence: educational
+      ? "bei deutlichem Build-up nach Bedarf"
+      : "alle 2-3 Wochen oder bei Build-up",
+    rationale,
+    caveats,
+    topic_ids: ["tiefenreinigung"],
+    product_linkable: false,
+    product_query: null,
+    attachment_priority: 96,
+  }
+}
+
+function buildHardResetSlot(context: RoutineContext): RoutineSlotAdvice {
+  const caveats = [
+    "Nur fuer echte Ueberlagerung - nicht als Standard fuer jede Waesche etablieren.",
+  ]
+
+  if (context.has_sensitive_scalp_signals) {
+    caveats.push(
+      "Bei schuppiger, trockener oder gereizter Kopfhaut lieber beim normalen Haar-Reset bleiben.",
+    )
+  }
+
+  return {
+    id: "occasional-hard-reset",
+    kind: "instruction",
+    phase: "occasional",
+    label: "Hard Reset",
+    action: "add",
+    category: null,
+    cadence: "selten und nur bei deutlicher Ueberlagerung",
+    rationale: [
+      "Das ist die Eskalationsstufe fuer wirklich belegte, wachsig wirkende oder deutlich ueberpflegte Haare.",
+      "Wenn viele Produkte rotieren oder kaum noch etwas sauber einzieht, kann punktuell ein staerkerer Reset sinnvoll sein.",
+      "Danach immer Conditioner oder Maske einplanen, damit die Haare nicht quietschig oder stumpf bleiben.",
+    ],
+    caveats,
+    topic_ids: ["tiefenreinigung"],
+    product_linkable: false,
+    product_query: null,
+    attachment_priority: 97,
   }
 }
 
@@ -896,11 +1128,15 @@ function buildOwcTechniqueSlot(
   ]
 
   if (profile?.hair_texture === "straight") {
-    caveats.unshift("OWC ist bei glattem Haar meist nicht die erste Wahl und eher ein gezielter Test als ein Default.")
+    caveats.unshift(
+      "OWC ist bei glattem Haar meist nicht die erste Wahl und eher ein gezielter Test als ein Default.",
+    )
   }
 
   if (context.has_oil_weight_risk) {
-    caveats.push("Das Profil hat ein hoeheres Beschwerungsrisiko — lieber mit minimaler Menge starten.")
+    caveats.push(
+      "Das Profil hat ein hoeheres Beschwerungsrisiko — lieber mit minimaler Menge starten.",
+    )
   }
 
   return {
@@ -947,7 +1183,12 @@ function buildRoutineSlots(
   const leaveInPresent = hasCurrentProduct(profile, "leave_in")
   const maskPresent = hasCurrentProduct(profile, "mask")
   const oilPresent = hasCurrentProduct(profile, "oil")
-  const { shampoo: shampooDecision, conditioner: conditionerDecision, leave_in: leaveInDecision, mask: maskDecision } = decisionContext
+  const {
+    shampoo: shampooDecision,
+    conditioner: conditionerDecision,
+    leave_in: leaveInDecision,
+    mask: maskDecision,
+  } = decisionContext
 
   pushSlot(sections, {
     id: "base-shampoo",
@@ -967,7 +1208,8 @@ function buildRoutineSlots(
     ],
     caveats: [],
     topic_ids: activations[0] ? [activations[0].id] : [],
-    product_linkable: !shampooPresent && shampooDecision.eligible && Boolean(shampooDecision.matched_bucket),
+    product_linkable:
+      !shampooPresent && shampooDecision.eligible && Boolean(shampooDecision.matched_bucket),
     product_query: "Ich suche ein Shampoo fuer meine regulaeren Waschtage.",
     attachment_priority: 50,
   })
@@ -975,29 +1217,29 @@ function buildRoutineSlots(
   const conditionerReasons = ["Conditioner bleibt der feste Pflegeanker nach jeder Waesche."]
   if (conditionerDecision.matched_balance_need) {
     conditionerReasons.push(
-      `Der Conditioner sollte vor allem ${conditionerDecision.matched_balance_need === "balanced"
-        ? "ausgewogen pflegen"
-        : conditionerDecision.matched_balance_need === "moisture"
-          ? "mehr Feuchtigkeit liefern"
-          : "mehr Struktur und Repair geben"}.`
+      `Der Conditioner sollte vor allem ${
+        conditionerDecision.matched_balance_need === "balanced"
+          ? "ausgewogen pflegen"
+          : conditionerDecision.matched_balance_need === "moisture"
+            ? "mehr Feuchtigkeit liefern"
+            : "mehr Struktur und Repair geben"
+      }.`,
     )
   }
   if (conditionerDecision.matched_repair_level) {
     conditionerReasons.push(
-      `Der Repair-Fokus liegt eher bei ${CONDITIONER_REPAIR_LEVEL_LABELS[conditionerDecision.matched_repair_level]}.`
+      `Der Repair-Fokus liegt eher bei ${CONDITIONER_REPAIR_LEVEL_LABELS[conditionerDecision.matched_repair_level]}.`,
     )
   }
 
-  const conditionerAction: RoutineSlotAction =
-    conditionerPresent
-      ? (
-        conditionerDecision.matched_balance_need && conditionerDecision.matched_balance_need !== "balanced"
-          ? "upgrade"
-          : conditionerDecision.matched_repair_level === "high"
-            ? "upgrade"
-            : "keep"
-      )
-      : "add"
+  const conditionerAction: RoutineSlotAction = conditionerPresent
+    ? conditionerDecision.matched_balance_need &&
+      conditionerDecision.matched_balance_need !== "balanced"
+      ? "upgrade"
+      : conditionerDecision.matched_repair_level === "high"
+        ? "upgrade"
+        : "keep"
+    : "add"
 
   pushSlot(sections, {
     id: "base-conditioner",
@@ -1086,21 +1328,19 @@ function buildRoutineSlots(
 
   if (shouldUseLeaveIn || leaveInPresent) {
     const leaveInAction: RoutineSlotAction =
-      !shouldUseLeaveIn && leaveInPresent
-        ? "avoid"
-        : leaveInPresent
-          ? "adjust"
-          : "add"
+      !shouldUseLeaveIn && leaveInPresent ? "avoid" : leaveInPresent ? "adjust" : "add"
 
-    const leaveInReasons = ["Ein Leave-in oder Finish-Schritt macht die Routine nach dem Waschen runder."]
+    const leaveInReasons = [
+      "Ein Leave-in oder Finish-Schritt macht die Routine nach dem Waschen runder.",
+    ]
     if (leaveInDecision.need_bucket) {
       leaveInReasons.push(
-        `Der Schwerpunkt liegt eher auf ${LEAVE_IN_NEED_BUCKET_LABELS[leaveInDecision.need_bucket]}.`
+        `Der Schwerpunkt liegt eher auf ${LEAVE_IN_NEED_BUCKET_LABELS[leaveInDecision.need_bucket]}.`,
       )
     }
     if (leaveInDecision.styling_context) {
       leaveInReasons.push(
-        `Der Finish-Schritt soll vor allem fuer ${LEAVE_IN_STYLING_CONTEXT_LABELS[leaveInDecision.styling_context]} passen.`
+        `Der Finish-Schritt soll vor allem fuer ${LEAVE_IN_STYLING_CONTEXT_LABELS[leaveInDecision.styling_context]} passen.`,
       )
     }
 
@@ -1116,10 +1356,10 @@ function buildRoutineSlots(
       caveats: [],
       topic_ids: activeTopicIds.has("lockenrefresh")
         ? ["lockenrefresh"]
-        : (activations[0] ? [activations[0].id] : []),
-      product_linkable:
-        leaveInAction === "add" &&
-        leaveInDecision.eligible,
+        : activations[0]
+          ? [activations[0].id]
+          : [],
+      product_linkable: leaveInAction === "add" && leaveInDecision.eligible,
       product_query: "Ich suche ein Leave-in fuer meine Routine nach dem Waschen.",
       attachment_priority: 10,
     })
@@ -1140,9 +1380,15 @@ function buildRoutineSlots(
     const refreshCaveats: string[] = []
 
     if (hasRefreshDrynessNeed(profile)) {
-      refreshRationale.splice(2, 0, "Bei Bedarf vorher etwas Leave-In in trockene Laengen einarbeiten (siehe Leave-In-Slot).")
+      refreshRationale.splice(
+        2,
+        0,
+        "Bei Bedarf vorher etwas Leave-In in trockene Laengen einarbeiten (siehe Leave-In-Slot).",
+      )
       if (profile?.thickness === "fine") {
-        refreshCaveats.push("Bei feinem Haar reicht oft schon ein minimaler Tropfen Leave-In, damit die Locken nicht beschwert werden.")
+        refreshCaveats.push(
+          "Bei feinem Haar reicht oft schon ein minimaler Tropfen Leave-In, damit die Locken nicht beschwert werden.",
+        )
       }
     }
 
@@ -1173,27 +1419,21 @@ function buildRoutineSlots(
       kind: "product_slot",
       phase: "occasional",
       label: "Maske / Kur",
-      action: !maskDecision.needs_mask
-        ? "avoid"
-        : maskPresent
-          ? "adjust"
-          : "add",
+      action: !maskDecision.needs_mask ? "avoid" : maskPresent ? "adjust" : "add",
       category: "mask",
-      cadence: maskDecision.needs_mask ? buildMaskCadence(maskDecision.need_strength) : "vorerst nicht fest einplanen",
+      cadence: maskDecision.needs_mask
+        ? buildMaskCadence(maskDecision.need_strength)
+        : "vorerst nicht fest einplanen",
       rationale: maskDecision.needs_mask
         ? [
-          "Eine Maske bleibt Zusatzpflege und wird nur bei echtem Bedarf fest eingeplant.",
-          maskDecision.mask_type
-            ? `Der Fokus liegt eher auf ${MASK_TYPE_LABELS[maskDecision.mask_type] ?? maskDecision.mask_type}.`
-            : "Die Maske wird ueber Bedarf und Vertraeglichkeit gesteuert.",
-        ]
-        : [
-          "Aktuell sprechen die Profilsignale nicht fuer eine feste Masken-Rolle in der Routine.",
-        ],
+            "Eine Maske bleibt Zusatzpflege und wird nur bei echtem Bedarf fest eingeplant.",
+            maskDecision.mask_type
+              ? `Der Fokus liegt eher auf ${MASK_TYPE_LABELS[maskDecision.mask_type] ?? maskDecision.mask_type}.`
+              : "Die Maske wird ueber Bedarf und Vertraeglichkeit gesteuert.",
+          ]
+        : ["Aktuell sprechen die Profilsignale nicht fuer eine feste Masken-Rolle in der Routine."],
       caveats: [],
-      topic_ids: activeTopicIds.has("bond_builder")
-        ? ["bond_builder"]
-        : [],
+      topic_ids: activeTopicIds.has("bond_builder") ? ["bond_builder"] : [],
       product_linkable: !maskPresent && maskDecision.needs_mask && Boolean(maskDecision.mask_type),
       product_query: "Ich suche eine Maske fuer meine Routine.",
       attachment_priority: 30,
@@ -1202,34 +1442,31 @@ function buildRoutineSlots(
 
   if (activeTopicIds.has("tiefenreinigung")) {
     const bondBuilderDriven = activeTopicIds.has("bond_builder")
-    pushSlot(sections, {
-      id: "occasional-clarify",
-      kind: "instruction",
-      phase: "occasional",
-      label: "Tiefenreinigung / Reset",
-      action: shampooPresent ? "adjust" : "add",
-      category: null,
-      cadence: context.scalp_type === "oily" ? "alle 1-2 Wochen nach Bedarf" : "alle 2-3 Wochen oder bei Build-up",
-      rationale: bondBuilderDriven
-        ? [
-          "Bond Builder brauchen saubere Haarstruktur — Rueckstaende blockieren die Aufnahme.",
-          "Tiefenreinigung vor dem Bond Builder sorgt fuer maximale Wirkung.",
-        ]
-        : [
-          "Tiefenreinigung ist ein gezielter Reset und kein Pflichtschritt fuer jede Waesche.",
-          "Sie wird vor allem dann relevant, wenn Kopfhaut, Build-up oder Produktueberlagerung die Routine schwerer machen.",
-        ],
-      caveats: (
-        context.scalp_condition === "irritated" ||
-        context.scalp_condition === "dry_flakes"
+    const educationalClarify =
+      context.explicit_topic_ids.includes("tiefenreinigung") &&
+      !context.has_scalp_clarify_signals &&
+      !context.has_hair_reset_signals &&
+      !bondBuilderDriven
+
+    if (context.has_scalp_clarify_signals) {
+      pushSlot(sections, buildScalpClarifySlot(context, shampooPresent))
+    }
+
+    if (context.has_hair_reset_signals || bondBuilderDriven || educationalClarify) {
+      pushSlot(
+        sections,
+        buildHairResetSlot({
+          context,
+          shampooPresent,
+          bondBuilderDriven,
+          educational: educationalClarify,
+        }),
       )
-        ? ["Bei gereizter oder trockener Kopfhaut vorsichtig bleiben und nicht ueberziehen."]
-        : [],
-      topic_ids: ["tiefenreinigung"],
-      product_linkable: false,
-      product_query: null,
-      attachment_priority: 95,
-    })
+    }
+
+    if (context.has_hard_reset_signals) {
+      pushSlot(sections, buildHardResetSlot(context))
+    }
   }
 
   if ((activeTopicIds.has("hair_oiling") || oilPresent) && activeWashProtectionTopic !== "owc") {
@@ -1243,21 +1480,25 @@ function buildRoutineSlots(
     const oilRationale = [
       "Hair Oiling bleibt ein optionaler Pre-Wash-Baustein und keine Pflicht fuer jede Routine.",
       hasScalpHairOilingFit(context)
-        ? "Es kann sowohl die Kopfhautbalance unterstuetzen als auch Laengen und Spitzen vor der Waesche schuetzen."
+        ? "Es kann trockene, nicht entzuendliche Kopfhaut sanft unterstuetzen und gleichzeitig Laengen und Spitzen vor der Waesche schuetzen."
         : "Es ist vor allem dann sinnvoll, wenn Trockenheit oder Oberflaechenschaeden ein Thema sind.",
     ]
     if (oilActive) {
       oilRationale.push(
-        "Wichtig beim Auswaschen: Shampoo zuerst auf trockenes Haar auftragen, dann erst mit Wasser ausspuelen."
+        "Wichtig beim Auswaschen: Shampoo zuerst auf trockenes Haar auftragen, dann erst mit Wasser ausspuelen.",
       )
     }
 
     const oilCaveats: string[] = []
     if (context.scalp_condition === "irritated") {
-      oilCaveats.push("Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht ueberladen.")
+      oilCaveats.push(
+        "Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht ueberladen.",
+      )
     }
     if (oilActive) {
-      oilCaveats.push("Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.")
+      oilCaveats.push(
+        "Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.",
+      )
     }
 
     pushSlot(sections, {
@@ -1306,30 +1547,37 @@ function buildRoutineSlots(
       const treatments = new Set(profile?.chemical_treatment ?? [])
       const hasChemical = treatments.has("bleached") || treatments.has("colored")
 
-      const bondRationale: string[] = severity === "severe"
-        ? [
-          "Die Kombination aus K18 und Olaplex kann die Reparatur deutlich verstaerken — K18 fuer Laengsverbindungen, Olaplex fuer Querverbindungen.",
-        ]
-        : hasChemical
+      const bondRationale: string[] =
+        severity === "severe"
           ? [
-            "Bond Builder kann hier gezielt unterstuetzen.",
-            "Bei chemischer Belastung kann Olaplex (Querverbindungen) besonders sinnvoll sein.",
-          ]
-          : [
-            "Bond Builder kann hier gezielt unterstuetzen.",
-            "Bei allgemeiner Schaedigung ohne Chemie ist K18 (Laengsverbindungen) oft der bessere Einstieg.",
-          ]
+              "Die Kombination aus K18 und Olaplex kann die Reparatur deutlich verstaerken — K18 fuer Laengsverbindungen, Olaplex fuer Querverbindungen.",
+            ]
+          : hasChemical
+            ? [
+                "Bond Builder kann hier gezielt unterstuetzen.",
+                "Bei chemischer Belastung kann Olaplex (Querverbindungen) besonders sinnvoll sein.",
+              ]
+            : [
+                "Bond Builder kann hier gezielt unterstuetzen.",
+                "Bei allgemeiner Schaedigung ohne Chemie ist K18 (Laengsverbindungen) oft der bessere Einstieg.",
+              ]
 
       const bondCaveats: string[] = [
         "Zu haeufige Anwendung kann das Haar steif und sproede machen — Pausen einhalten.",
       ]
 
       if (profile?.protein_moisture_balance === "snaps") {
-        bondCaveats.push("Die Haare reissen aktuell leicht — ein professionelles Beratungsgespraech kann hier zusaetzlich helfen.")
+        bondCaveats.push(
+          "Die Haare reissen aktuell leicht — ein professionelles Beratungsgespraech kann hier zusaetzlich helfen.",
+        )
       } else if (profile?.protein_moisture_balance === "stretches_stays") {
-        bondCaveats.push("Bond Builder und Protein koennen parallel laufen, solange die Haare noch ueberdehnt sind.")
+        bondCaveats.push(
+          "Bond Builder und Protein koennen parallel laufen, solange die Haare noch ueberdehnt sind.",
+        )
       } else if (profile?.protein_moisture_balance === "stretches_bounces") {
-        bondCaveats.push("Die Haare sind aktuell stabil — Protein-Behandlungen dazu sind nicht mehr noetig, Feuchtigkeit reicht.")
+        bondCaveats.push(
+          "Die Haare sind aktuell stabil — Protein-Behandlungen dazu sind nicht mehr noetig, Feuchtigkeit reicht.",
+        )
       }
 
       pushSlot(sections, {
@@ -1391,10 +1639,7 @@ export function buildRoutinePlan(
   }
 }
 
-export function buildRoutineRetrievalSubqueries(
-  message: string,
-  plan: RoutinePlan,
-): string[] {
+export function buildRoutineRetrievalSubqueries(message: string, plan: RoutinePlan): string[] {
   const focusSummary = plan.primary_focuses
     .filter((focus) => !(focus.kind === "topic" && (focus.code === "cwc" || focus.code === "owc")))
     .slice(0, 2)
@@ -1409,9 +1654,7 @@ export function buildRoutineRetrievalSubqueries(
   }
 
   for (const topic of plan.active_topics) {
-    const query = focusSummary
-      ? `${topic.label} ${focusSummary}`
-      : topic.label
+    const query = focusSummary ? `${topic.label} ${focusSummary}` : topic.label
     queries.add(query)
   }
 
@@ -1428,10 +1671,7 @@ export function buildRoutineRetrievalSubqueries(
 export function getRoutineAutofillSlots(plan: RoutinePlan): RoutineSlotAdvice[] {
   return plan.sections
     .flatMap((section) => section.slots)
-    .filter((slot) =>
-      slot.product_linkable &&
-      (slot.action === "add" || slot.action === "upgrade")
-    )
+    .filter((slot) => slot.product_linkable && (slot.action === "add" || slot.action === "upgrade"))
     .sort((a, b) => a.attachment_priority - b.attachment_priority)
 }
 
