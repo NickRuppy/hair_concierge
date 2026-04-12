@@ -14,6 +14,7 @@ interface ProductChecklistScreenProps {
   onBack: () => void
   noneLabel?: string
   onNone?: () => void
+  isSaving?: boolean
 }
 
 export function ProductChecklistScreen({
@@ -26,6 +27,7 @@ export function ProductChecklistScreen({
   onBack,
   noneLabel,
   onNone,
+  isSaving,
 }: ProductChecklistScreenProps) {
   const hasSelection = selected.length > 0
 
@@ -33,8 +35,9 @@ export function ProductChecklistScreen({
     <div>
       <button
         onClick={onBack}
+        disabled={isSaving}
         aria-label="Zurück"
-        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors mb-2"
+        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors mb-2 disabled:opacity-40"
       >
         <ArrowLeft className="h-5 w-5" />
       </button>
@@ -57,6 +60,7 @@ export function ProductChecklistScreen({
             icon={option.icon}
             label={option.label}
             active={selected.includes(option.value)}
+            disabled={isSaving}
             onClick={() => onToggle(option.value)}
             animationDelay={100 + i * 60}
           />
@@ -71,7 +75,8 @@ export function ProductChecklistScreen({
           <button
             type="button"
             onClick={onNone}
-            className="rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground"
+            disabled={isSaving}
+            className="rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground disabled:opacity-40"
           >
             {noneLabel}
           </button>
@@ -84,10 +89,10 @@ export function ProductChecklistScreen({
       >
         <button
           onClick={onContinue}
-          disabled={!hasSelection}
+          disabled={!hasSelection || isSaving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Weiter
+          {isSaving ? "Speichern..." : "Weiter"}
         </button>
       </div>
     </div>

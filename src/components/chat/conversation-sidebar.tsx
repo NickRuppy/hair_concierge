@@ -31,7 +31,10 @@ export function ConversationSidebar({
         <h2 className="type-body-sm font-semibold text-sidebar-foreground">Unterhaltungen</h2>
         <div className="flex items-center gap-1">
           <button
-            onClick={onNew}
+            onClick={() => {
+              onNew()
+              if (isMobile && onClose) onClose()
+            }}
             className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-sidebar-foreground transition-colors hover:bg-sidebar-accent"
             aria-label="Neue Unterhaltung"
           >
