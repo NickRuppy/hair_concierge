@@ -1,242 +1,289 @@
 "use client"
 
+import { useEffect, useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
+import { Header } from "@/components/layout/header"
 import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
-import { Header } from "@/components/layout/header"
+import { createClient } from "@/lib/supabase/client"
 import {
-  HAIR_TEXTURE_OPTIONS,
-  HAIR_THICKNESS_OPTIONS,
-  HAIR_DENSITY_OPTIONS,
-  WASH_FREQUENCY_OPTIONS,
-  HEAT_STYLING_OPTIONS,
-  STYLING_TOOL_OPTIONS,
   CONCERN_OPTIONS,
-  CONCERN_LABELS,
-  GOAL_OPTIONS,
-  GOAL_LABELS,
   DESIRED_VOLUME_OPTIONS,
-  DESIRED_VOLUME_LABELS,
-  HAIR_DENSITY_LABELS,
-  STYLING_TOOL_LABELS,
-  CUTICLE_CONDITION_LABELS,
-  PROTEIN_MOISTURE_LABELS,
-  SCALP_TYPE_LABELS,
-  SCALP_CONDITION_LABELS,
-  CHEMICAL_TREATMENT_LABELS,
+  GOAL_OPTIONS,
+  HEAT_STYLING_OPTIONS,
   POST_WASH_ACTION_OPTIONS,
   ROUTINE_PRODUCT_OPTIONS,
+  STYLING_TOOL_OPTIONS,
+  WASH_FREQUENCY_OPTIONS,
 } from "@/lib/types"
 import type { Goal, HairProfile, UserMemoryEntry } from "@/lib/types"
-import { createClient } from "@/lib/supabase/client"
-import { useEffect, useMemo, useState } from "react"
+import {
+  fehler,
+  BRUSH_TYPE_OPTIONS,
+  DRYING_METHOD_OPTIONS,
+  NIGHT_PROTECTION_OPTIONS,
+  TOWEL_MATERIAL_OPTIONS,
+  TOWEL_TECHNIQUE_OPTIONS,
+} from "@/lib/vocabulary"
+import { deriveOnboardingGoals } from "@/lib/onboarding/goal-flow"
+import {
+  PROFILE_FIELD_CONFIG,
+  PROFILE_JOURNEY_STEPS,
+  PROFILE_SECTION_META,
+  type ProfileFieldConfig,
+  type ProfileFieldValue,
+} from "@/lib/profile/section-config"
+import { cn } from "@/lib/utils"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion"
-import { Badge } from "@/components/ui/badge"
-import {
-  fehler,
-  TOWEL_MATERIAL_OPTIONS,
-  TOWEL_MATERIAL_LABELS,
-  TOWEL_TECHNIQUE_OPTIONS,
-  TOWEL_TECHNIQUE_LABELS,
-  DRYING_METHOD_OPTIONS,
-  DRYING_METHOD_LABELS,
-  BRUSH_TYPE_OPTIONS,
-  BRUSH_TYPE_LABELS,
-  NIGHT_PROTECTION_OPTIONS,
-  NIGHT_PROTECTION_LABELS,
-} from "@/lib/vocabulary"
-import { deriveOnboardingGoals } from "@/lib/onboarding/goal-flow"
-
-type ProfileFieldDef = {
-  key: string
-  label: string
-  helpText: string
-  getValue: (hp: HairProfile | null) => string | null
-}
-
-const EDITABLE_GOAL_OPTIONS = GOAL_OPTIONS.filter((option) => option.value !== "volume")
-
-const PROFILE_FIELDS: ProfileFieldDef[] = [
-  {
-    key: "hair_texture",
-    label: "Haartyp",
-    helpText: "Grundlage für alle Empfehlungen",
-    getValue: (hp) =>
-      HAIR_TEXTURE_OPTIONS.find((o) => o.value === hp?.hair_texture)?.label ?? null,
-  },
-  {
-    key: "thickness",
-    label: "Haarstruktur",
-    helpText: "Bestimmt die richtige Produktwahl",
-    getValue: (hp) =>
-      HAIR_THICKNESS_OPTIONS.find((o) => o.value === hp?.thickness)?.label ??
-      null,
-  },
-  {
-    key: "density",
-    label: "Haardichte",
-    helpText: "Hilft bei Gewicht und Reichhaltigkeit von Pflegeprodukten",
-    getValue: (hp) =>
-      hp?.density ? HAIR_DENSITY_LABELS[hp.density] ?? hp.density : null,
-  },
-  {
-    key: "concerns",
-    label: "Probleme",
-    helpText: "Hilft uns, gezielt Lösungen zu finden",
-    getValue: (hp) =>
-      hp?.concerns?.length ? hp.concerns.map((c) => CONCERN_LABELS[c] ?? c).join(", ") : null,
-  },
-  {
-    key: "desired_volume",
-    label: "Gewuenschtes Volumen",
-    helpText: "Steuert, ob eher Ruhe oder mehr Fuelle priorisiert wird",
-    getValue: (hp) => {
-      const fallbackVolume = hp?.desired_volume ?? (hp?.goals?.includes("volume") ? "more" : null)
-      return fallbackVolume ? DESIRED_VOLUME_LABELS[fallbackVolume] ?? fallbackVolume : null
-    },
-  },
-  {
-    key: "wash_frequency",
-    label: "Wasch-Häufigkeit",
-    helpText: "Für eine passende Pflegeroutine",
-    getValue: (hp) =>
-      WASH_FREQUENCY_OPTIONS.find((o) => o.value === hp?.wash_frequency)
-        ?.label ?? null,
-  },
-  {
-    key: "heat_styling",
-    label: "Hitze-Styling",
-    helpText: "Beeinflusst den Pflegebedarf",
-    getValue: (hp) =>
-      HEAT_STYLING_OPTIONS.find((o) => o.value === hp?.heat_styling)?.label ??
-      null,
-  },
-  {
-    key: "styling_tools",
-    label: "Styling-Tools",
-    helpText: "Für passende Styling-Tipps",
-    getValue: (hp) =>
-      hp?.styling_tools?.length ? hp.styling_tools.map((t) => STYLING_TOOL_LABELS[t] ?? t).join(", ") : null,
-  },
-  {
-    key: "towel_material",
-    label: "Handtuch",
-    helpText: "Welches Material nutzt du zum Trocknen",
-    getValue: (hp) => hp?.towel_material ? TOWEL_MATERIAL_LABELS[hp.towel_material] ?? hp.towel_material : null,
-  },
-  {
-    key: "towel_technique",
-    label: "Trocknungstechnik",
-    helpText: "Wie du dein Haar nach dem Waschen trocknest",
-    getValue: (hp) => hp?.towel_technique ? TOWEL_TECHNIQUE_LABELS[hp.towel_technique] ?? hp.towel_technique : null,
-  },
-  {
-    key: "drying_method",
-    label: "Trocknungsmethode",
-    helpText: "Lufttrocknen, Föhnen oder beides",
-    getValue: (hp) => hp?.drying_method?.length ? hp.drying_method.map((d) => DRYING_METHOD_LABELS[d] ?? d).join(", ") : null,
-  },
-  {
-    key: "brush_type",
-    label: "Bürste",
-    helpText: "Welche Bürste du regelmässig nutzt",
-    getValue: (hp) => hp?.brush_type ? BRUSH_TYPE_LABELS[hp.brush_type] ?? hp.brush_type : null,
-  },
-  {
-    key: "night_protection",
-    label: "Nachtschutz",
-    helpText: "Wie du dein Haar nachts schützt",
-    getValue: (hp) => hp?.night_protection?.length ? hp.night_protection.map((n) => NIGHT_PROTECTION_LABELS[n] ?? n).join(", ") : null,
-  },
-  {
-    key: "uses_heat_protection",
-    label: "Hitzeschutz",
-    helpText: "Ob du Hitzeschutz verwendest",
-    getValue: (hp) => hp?.uses_heat_protection != null ? (hp.uses_heat_protection ? "Ja" : "Nein") : null,
-  },
-  {
-    key: "post_wash_actions",
-    label: "Nach dem Waschen",
-    helpText: "Steuert Leave-in- und Styling-Empfehlungen",
-    getValue: (hp) =>
-      hp?.post_wash_actions?.length
-        ? hp.post_wash_actions
-            .map((item) => POST_WASH_ACTION_OPTIONS.find((o) => o.value === item)?.label ?? item)
-            .join(", ")
-        : null,
-  },
-  {
-    key: "current_routine_products",
-    label: "Produkte in Routine",
-    helpText: "Hilft bei sinnvoller Ergänzung statt Verdopplung",
-    getValue: (hp) =>
-      hp?.current_routine_products?.length
-        ? hp.current_routine_products
-            .map((item) => ROUTINE_PRODUCT_OPTIONS.find((o) => o.value === item)?.label ?? item)
-            .join(", ")
-        : null,
-  },
-  {
-    key: "products_used",
-    label: "Verwendete Produkte",
-    helpText: "Vermeidet doppelte Empfehlungen",
-    getValue: (hp) => hp?.products_used || null,
-  },
-  {
-    key: "goals",
-    label: "Ziele",
-    helpText: "Richtet unsere Empfehlungen aus",
-    getValue: (hp) => {
-      const displayGoals = hp?.goals?.filter((goal) => goal !== "volume") ?? []
-      return displayGoals.length
-        ? displayGoals.map((g) => GOAL_LABELS[g] ?? g).join(", ")
-        : null
-    },
-  },
-]
-
-const FIELD_TO_SECTION: Record<string, string> = {
-  hair_texture: "haartyp",
-  thickness: "haartyp",
-  density: "haartyp",
-  concerns: "probleme",
-  desired_volume: "probleme",
-  goals: "probleme",
-  wash_frequency: "routine",
-  heat_styling: "routine",
-  styling_tools: "routine",
-  towel_material: "routine",
-  towel_technique: "routine",
-  drying_method: "routine",
-  brush_type: "routine",
-  night_protection: "routine",
-  uses_heat_protection: "routine",
-  post_wash_actions: "routine",
-  current_routine_products: "routine",
-  products_used: "routine",
-}
 
 type MemoryApiResponse = {
   settings: { memory_enabled: boolean }
   entries: UserMemoryEntry[]
 }
 
+type ProfileFormData = {
+  hair_texture: string
+  thickness: string
+  density: string
+  concerns: string[]
+  desired_volume: string
+  wash_frequency: string
+  heat_styling: string
+  styling_tools: string[]
+  towel_material: string
+  towel_technique: string
+  drying_method: string[]
+  brush_type: string
+  night_protection: string[]
+  uses_heat_protection: boolean
+  post_wash_actions: string[]
+  current_routine_products: string[]
+  products_used: string
+  goals: string[]
+  additional_notes: string
+}
+
+type StructuredField = ProfileFieldConfig & { value: ProfileFieldValue }
+
+const EDITABLE_GOAL_OPTIONS = GOAL_OPTIONS.filter((option) => option.value !== "volume")
+
+const HEAT_PROTECTION_OPTIONS = [
+  { value: "yes", label: "Ja" },
+  { value: "no", label: "Nein" },
+]
+
+const ROUTINE_DETAIL_FIELD_KEYS = new Set([
+  "styling_tools",
+  "towel_material",
+  "towel_technique",
+  "drying_method",
+  "brush_type",
+  "night_protection",
+  "post_wash_actions",
+  "current_routine_products",
+  "products_used",
+  "additional_notes",
+])
+
+function createFormData(profile: HairProfile | null): ProfileFormData {
+  const storedGoals = profile?.goals ?? []
+
+  return {
+    hair_texture: profile?.hair_texture || "",
+    thickness: profile?.thickness || "",
+    density: profile?.density || "",
+    concerns: profile?.concerns || [],
+    desired_volume: profile?.desired_volume || (storedGoals.includes("volume") ? "more" : ""),
+    wash_frequency: profile?.wash_frequency || "",
+    heat_styling: profile?.heat_styling || "",
+    styling_tools: profile?.styling_tools || [],
+    towel_material: profile?.towel_material || "",
+    towel_technique: profile?.towel_technique || "",
+    drying_method: profile?.drying_method || [],
+    brush_type: profile?.brush_type || "",
+    night_protection: profile?.night_protection || [],
+    uses_heat_protection: profile?.uses_heat_protection ?? false,
+    post_wash_actions: profile?.post_wash_actions || [],
+    current_routine_products: profile?.current_routine_products || [],
+    products_used: profile?.products_used || "",
+    goals: storedGoals.filter((goal) => goal !== "volume"),
+    additional_notes: profile?.additional_notes || "",
+  }
+}
+
+function toggleArrayItem(items: string[], item: string) {
+  return items.includes(item) ? items.filter((entry) => entry !== item) : [...items, item]
+}
+
+function SourceBadge({ label }: { label: StructuredField["sourceLabel"] }) {
+  return (
+    <Badge
+      variant="outline"
+      className="border-primary/15 bg-muted/60 px-2 py-1 text-[10px] font-medium tracking-[0.12em] text-muted-foreground uppercase"
+    >
+      {label}
+    </Badge>
+  )
+}
+
+function JourneyStepCard({
+  label,
+  status,
+  summary,
+  active,
+}: {
+  label: string
+  status: string
+  summary: string
+  active: boolean
+}) {
+  return (
+    <div
+      className={cn(
+        "rounded-xl border p-4 transition-colors",
+        active ? "border-primary/20 bg-primary/[0.06]" : "border-border bg-card/70",
+      )}
+    >
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="text-sm font-semibold text-[var(--text-heading)]">{label}</p>
+        <span
+          className={cn(
+            "inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold",
+            active ? "bg-primary/12 text-primary" : "bg-muted text-muted-foreground",
+          )}
+        >
+          {status}
+        </span>
+      </div>
+      <p className="text-sm text-muted-foreground">{summary}</p>
+    </div>
+  )
+}
+
+function ProfileFieldCard({
+  field,
+  children,
+  onClick,
+  actionLabel,
+}: {
+  field: StructuredField
+  children?: React.ReactNode
+  onClick?: () => void
+  actionLabel?: string
+}) {
+  const interactive = Boolean(onClick)
+
+  return (
+    <div
+      role={interactive ? "button" : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={
+        interactive
+          ? (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault()
+                onClick?.()
+              }
+            }
+          : undefined
+      }
+      className={cn(
+        "rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm transition-colors",
+        interactive
+          ? "cursor-pointer hover:border-primary/30 hover:bg-primary/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          : "",
+      )}
+    >
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-[var(--text-heading)]">{field.label}</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{field.helpText}</p>
+        </div>
+        <SourceBadge label={field.sourceLabel} />
+      </div>
+
+      {children ?? <ProfileFieldValue value={field.value} displayMode={field.displayMode} />}
+
+      {interactive && actionLabel ? (
+        <div className="mt-4 flex items-center justify-between gap-2 text-xs font-medium text-primary">
+          <span>{actionLabel}</span>
+          <span aria-hidden="true">→</span>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+function ProfileFieldValue({
+  value,
+  displayMode,
+}: {
+  value: ProfileFieldValue
+  displayMode: StructuredField["displayMode"]
+}) {
+  if (value == null) {
+    return <p className="text-sm text-muted-foreground">Noch offen</p>
+  }
+
+  if (displayMode === "badges") {
+    const items = Array.isArray(value) ? value : [value]
+
+    return (
+      <div className="flex flex-wrap gap-2">
+        {items.map((item) => (
+          <Badge
+            key={item}
+            variant="outline"
+            className="border-primary/20 bg-primary/[0.04] px-3 py-1 text-xs text-foreground"
+          >
+            {item}
+          </Badge>
+        ))}
+      </div>
+    )
+  }
+
+  return <p className="text-sm leading-relaxed text-foreground">{value}</p>
+}
+
+function InlinePromptCard({
+  title,
+  text,
+  action,
+}: {
+  title: string
+  text: string
+  action?: React.ReactNode
+}) {
+  return (
+    <div className="rounded-xl border border-dashed border-border bg-muted/40 p-4">
+      <p className="text-sm font-semibold text-[var(--text-heading)]">{title}</p>
+      <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+      {action ? <div className="mt-4">{action}</div> : null}
+    </div>
+  )
+}
+
 export default function ProfilePage() {
+  const router = useRouter()
   const { user, profile, loading: authLoading, signOut } = useAuth()
   const { toast } = useToast()
   const supabase = createClient()
+
   const [hairProfile, setHairProfile] = useState<HairProfile | null>(null)
+  const [formData, setFormData] = useState<ProfileFormData>(() => createFormData(null))
   const [editing, setEditing] = useState(false)
-  const [editSection, setEditSection] = useState<string | null>(null)
+  const [routineDetailsOpen, setRoutineDetailsOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+
   const [memoryEntries, setMemoryEntries] = useState<UserMemoryEntry[]>([])
   const [memoryEnabled, setMemoryEnabled] = useState(true)
   const [memoryLoading, setMemoryLoading] = useState(true)
@@ -244,73 +291,31 @@ export default function ProfilePage() {
   const [editingMemoryId, setEditingMemoryId] = useState<string | null>(null)
   const [memoryDraft, setMemoryDraft] = useState("")
 
-  // Edit form state
-  const [formData, setFormData] = useState({
-    hair_texture: "",
-    thickness: "",
-    density: "",
-    concerns: [] as string[],
-    desired_volume: "",
-    wash_frequency: "",
-    heat_styling: "",
-    styling_tools: [] as string[],
-    towel_material: "",
-    towel_technique: "",
-    drying_method: [] as string[],
-    brush_type: "",
-    night_protection: [] as string[],
-    uses_heat_protection: false,
-    post_wash_actions: [] as string[],
-    current_routine_products: [] as string[],
-    products_used: "",
-    goals: [] as string[],
-    additional_notes: "",
-  })
-
   useEffect(() => {
     async function loadProfile() {
       if (!user) {
         setLoading(false)
         return
       }
+
       setLoading(true)
+
       try {
         const { data } = await supabase
           .from("hair_profiles")
           .select("*")
           .eq("user_id", user.id)
           .maybeSingle()
-        if (data) {
-          setHairProfile(data)
-          const storedGoals = data.goals || []
-          setFormData({
-            hair_texture: data.hair_texture || "",
-            thickness: data.thickness || "",
-            density: data.density || "",
-            concerns: data.concerns || [],
-            desired_volume: data.desired_volume || (storedGoals.includes("volume") ? "more" : ""),
-            wash_frequency: data.wash_frequency || "",
-            heat_styling: data.heat_styling || "",
-            styling_tools: data.styling_tools || [],
-            towel_material: data.towel_material || "",
-            towel_technique: data.towel_technique || "",
-            drying_method: data.drying_method || [],
-            brush_type: data.brush_type || "",
-            night_protection: data.night_protection || [],
-            uses_heat_protection: data.uses_heat_protection ?? false,
-            post_wash_actions: data.post_wash_actions || [],
-            current_routine_products: data.current_routine_products || [],
-            products_used: data.products_used || "",
-            goals: storedGoals.filter((goal: string) => goal !== "volume"),
-            additional_notes: data.additional_notes || "",
-          })
-        }
-      } catch (err) {
-        console.error("Error loading profile:", err)
+
+        setHairProfile(data ?? null)
+        setFormData(createFormData(data ?? null))
+      } catch (error) {
+        console.error("Error loading profile:", error)
       } finally {
         setLoading(false)
       }
     }
+
     loadProfile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id])
@@ -323,14 +328,16 @@ export default function ProfilePage() {
       }
 
       setMemoryLoading(true)
+
       try {
-        const res = await fetch("/api/memory")
-        if (!res.ok) throw new Error("Memory konnte nicht geladen werden")
-        const data = (await res.json()) as MemoryApiResponse
+        const response = await fetch("/api/memory")
+        if (!response.ok) throw new Error("Memory konnte nicht geladen werden")
+
+        const data = (await response.json()) as MemoryApiResponse
         setMemoryEnabled(data.settings.memory_enabled)
         setMemoryEntries(data.entries ?? [])
-      } catch (err) {
-        console.error("Error loading memory:", err)
+      } catch (error) {
+        console.error("Error loading memory:", error)
       } finally {
         setMemoryLoading(false)
       }
@@ -339,40 +346,67 @@ export default function ProfilePage() {
     loadMemory()
   }, [user])
 
-  // Pre-compute field values for read-mode display
-  const fieldValues = useMemo(
+  const structuredFields = useMemo<StructuredField[]>(
     () =>
-      PROFILE_FIELDS.map((f) => ({
-        ...f,
-        value: f.getValue(hairProfile),
+      PROFILE_FIELD_CONFIG.map((field) => ({
+        ...field,
+        value: field.getValue(hairProfile),
       })),
-    [hairProfile]
+    [hairProfile],
   )
-  const filledFields = fieldValues.filter((f) => f.value !== null)
-  const emptyFields = fieldValues.filter((f) => f.value === null)
 
-  // Check if any diagnostic data exists
-  const hasDiagnostics =
-    !!hairProfile?.cuticle_condition ||
-    !!hairProfile?.protein_moisture_balance ||
-    !!hairProfile?.scalp_type ||
-    !!hairProfile?.scalp_condition ||
-    (hairProfile?.chemical_treatment?.length ?? 0) > 0
+  const fieldsBySection = useMemo(() => {
+    return {
+      baseline: structuredFields.filter((field) => field.sectionKey === "baseline"),
+      goals: structuredFields.filter((field) => field.sectionKey === "goals"),
+      routine: structuredFields.filter((field) => field.sectionKey === "routine"),
+    }
+  }, [structuredFields])
+
+  const baselineFields = fieldsBySection.baseline
+  const goalFields = fieldsBySection.goals
+  const routineFields = fieldsBySection.routine
+  const routineSimpleFields = routineFields.filter((field) => field.editMode === "inline")
+  const routineDetailFields = routineFields.filter((field) =>
+    ROUTINE_DETAIL_FIELD_KEYS.has(field.key),
+  )
+
+  const baselineFilled = baselineFields.filter((field) => field.value !== null)
+  const goalFilled = goalFields.filter((field) => field.value !== null)
+  const routineFilled = routineFields.filter((field) => field.value !== null)
+
+  const baselineMissing = baselineFields.filter((field) => field.value === null)
+  const goalMissing = goalFields.filter((field) => field.value === null)
+  const routineMissing = routineFields.filter((field) => field.value === null)
+
+  const baselineSparse = baselineFilled.length < 3
+  const overallStepCount = PROFILE_JOURNEY_STEPS.length
+  const activeStepCount = [
+    baselineFilled.length > 0,
+    goalFilled.length > 0,
+    routineFilled.length > 0,
+    memoryEnabled,
+  ].filter(Boolean).length
+  const overallPercent = (activeStepCount / overallStepCount) * 100
+
+  const readinessCopy =
+    activeStepCount >= 3
+      ? "Dein Profil ist schon belastbar genug für deutlich präzisere Empfehlungen."
+      : activeStepCount === 2
+        ? "Die Basis steht. Mit noch etwas mehr Kontext werden Empfehlungen spürbar schärfer."
+        : "Mit ein paar gezielten Angaben kann Hair Concierge deutlich kohärenter beraten."
 
   async function handleSave() {
     if (!user) return
+
     setSaving(true)
 
     try {
       const desiredVolume = formData.desired_volume
         ? (formData.desired_volume as NonNullable<HairProfile["desired_volume"]>)
         : null
-      const derivedGoals = deriveOnboardingGoals(
-        formData.goals as Goal[],
-        desiredVolume
-      )
+      const derivedGoals = deriveOnboardingGoals(formData.goals as Goal[], desiredVolume)
 
-      // Convert empty strings to null so CHECK constraints don't reject them
       const payload = {
         user_id: user.id,
         hair_texture: formData.hair_texture || null,
@@ -405,23 +439,26 @@ export default function ProfilePage() {
 
       if (error) {
         toast({ title: fehler("Speichern"), variant: "destructive" })
-      } else {
-        setHairProfile(data)
-        setEditing(false)
-        toast({ title: "Profil gespeichert!" })
+        return
       }
-    } catch (err) {
-      console.error("Error saving profile:", err)
+
+      setHairProfile(data)
+      setFormData(createFormData(data))
+      setEditing(false)
+      setRoutineDetailsOpen(false)
+      toast({ title: "Profil gespeichert!" })
+    } catch (error) {
+      console.error("Error saving profile:", error)
       toast({ title: fehler("Speichern"), variant: "destructive" })
     } finally {
       setSaving(false)
     }
   }
 
-  function toggleArrayItem(arr: string[], item: string) {
-    return arr.includes(item)
-      ? arr.filter((i) => i !== item)
-      : [...arr, item]
+  function handleCancelEditing() {
+    setFormData(createFormData(hairProfile))
+    setEditing(false)
+    setRoutineDetailsOpen(false)
   }
 
   async function handleMemoryToggle(checked: boolean) {
@@ -429,16 +466,16 @@ export default function ProfilePage() {
     setMemorySaving(true)
 
     try {
-      const res = await fetch("/api/memory", {
+      const response = await fetch("/api/memory", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ memory_enabled: checked }),
       })
 
-      if (!res.ok) throw new Error("Memory setting failed")
+      if (!response.ok) throw new Error("Memory setting failed")
       toast({ title: checked ? "Erinnerungen aktiviert" : "Erinnerungen pausiert" })
-    } catch (err) {
-      console.error("Error saving memory setting:", err)
+    } catch (error) {
+      console.error("Error saving memory setting:", error)
       setMemoryEnabled(!checked)
       toast({ title: fehler("Speichern"), variant: "destructive" })
     } finally {
@@ -456,23 +493,25 @@ export default function ProfilePage() {
     if (!content) return
 
     setMemorySaving(true)
+
     try {
-      const res = await fetch(`/api/memory/${memoryId}`, {
+      const response = await fetch(`/api/memory/${memoryId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content }),
       })
 
-      if (!res.ok) throw new Error("Memory update failed")
-      const data = (await res.json()) as { memory: UserMemoryEntry }
+      if (!response.ok) throw new Error("Memory update failed")
+
+      const data = (await response.json()) as { memory: UserMemoryEntry }
       setMemoryEntries((entries) =>
-        entries.map((entry) => entry.id === memoryId ? data.memory : entry)
+        entries.map((entry) => (entry.id === memoryId ? data.memory : entry)),
       )
       setEditingMemoryId(null)
       setMemoryDraft("")
       toast({ title: "Erinnerung gespeichert" })
-    } catch (err) {
-      console.error("Error saving memory:", err)
+    } catch (error) {
+      console.error("Error saving memory:", error)
       toast({ title: fehler("Speichern"), variant: "destructive" })
     } finally {
       setMemorySaving(false)
@@ -481,21 +520,458 @@ export default function ProfilePage() {
 
   async function handleDeleteMemory(memoryId: string) {
     setMemorySaving(true)
+
     try {
-      const res = await fetch(`/api/memory/${memoryId}`, { method: "DELETE" })
-      if (!res.ok) throw new Error("Memory delete failed")
+      const response = await fetch(`/api/memory/${memoryId}`, { method: "DELETE" })
+      if (!response.ok) throw new Error("Memory delete failed")
+
       setMemoryEntries((entries) => entries.filter((entry) => entry.id !== memoryId))
       if (editingMemoryId === memoryId) {
         setEditingMemoryId(null)
         setMemoryDraft("")
       }
+
       toast({ title: "Erinnerung gelöscht" })
-    } catch (err) {
-      console.error("Error deleting memory:", err)
+    } catch (error) {
+      console.error("Error deleting memory:", error)
       toast({ title: fehler("Löschen"), variant: "destructive" })
     } finally {
       setMemorySaving(false)
     }
+  }
+
+  function openFieldFlow(field: StructuredField) {
+    setEditing(true)
+    setRoutineDetailsOpen(
+      field.sectionKey === "routine" && ROUTINE_DETAIL_FIELD_KEYS.has(field.key),
+    )
+  }
+
+  function getFieldActionLabel(field: StructuredField) {
+    if (field.sectionKey === "baseline") {
+      return "Zur Aktualisierung öffnen"
+    }
+
+    if (field.sectionKey === "routine" && ROUTINE_DETAIL_FIELD_KEYS.has(field.key)) {
+      return "Routine-Details öffnen"
+    }
+
+    return "Zum Bearbeiten öffnen"
+  }
+
+  function renderInlineEditor(field: StructuredField) {
+    switch (field.key) {
+      case "desired_volume":
+        return (
+          <SegmentedControl
+            options={DESIRED_VOLUME_OPTIONS}
+            value={formData.desired_volume}
+            onChange={(value) => setFormData((current) => ({ ...current, desired_volume: value }))}
+          />
+        )
+      case "concerns":
+        return (
+          <div className="flex flex-wrap gap-2">
+            {CONCERN_OPTIONS.map((option) => {
+              const active = formData.concerns.includes(option.value)
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() =>
+                    setFormData((current) => ({
+                      ...current,
+                      concerns: toggleArrayItem(current.concerns, option.value),
+                    }))
+                  }
+                  className={cn(
+                    "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                    active
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border hover:bg-muted",
+                  )}
+                >
+                  {option.label}
+                </button>
+              )
+            })}
+          </div>
+        )
+      case "goals":
+        return (
+          <div className="flex flex-wrap gap-2">
+            {EDITABLE_GOAL_OPTIONS.map((option) => {
+              const active = formData.goals.includes(option.value)
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() =>
+                    setFormData((current) => ({
+                      ...current,
+                      goals: toggleArrayItem(current.goals, option.value),
+                    }))
+                  }
+                  className={cn(
+                    "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                    active
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border hover:bg-muted",
+                  )}
+                >
+                  {option.label}
+                </button>
+              )
+            })}
+          </div>
+        )
+      case "wash_frequency":
+        return (
+          <SegmentedControl
+            options={WASH_FREQUENCY_OPTIONS}
+            value={formData.wash_frequency}
+            onChange={(value) => setFormData((current) => ({ ...current, wash_frequency: value }))}
+          />
+        )
+      case "heat_styling":
+        return (
+          <SegmentedControl
+            options={HEAT_STYLING_OPTIONS}
+            value={formData.heat_styling}
+            onChange={(value) => setFormData((current) => ({ ...current, heat_styling: value }))}
+          />
+        )
+      case "uses_heat_protection":
+        return (
+          <SegmentedControl
+            options={HEAT_PROTECTION_OPTIONS}
+            value={formData.uses_heat_protection ? "yes" : "no"}
+            onChange={(value) =>
+              setFormData((current) => ({
+                ...current,
+                uses_heat_protection: value === "yes",
+              }))
+            }
+          />
+        )
+      default:
+        return <ProfileFieldValue value={field.value} displayMode={field.displayMode} />
+    }
+  }
+
+  function renderRoutineDetailsEditor() {
+    return (
+      <div className="rounded-2xl border border-primary/15 bg-muted/40 p-5">
+        <div className="mb-5">
+          <p className="text-sm font-semibold text-[var(--text-heading)]">
+            Routine-Details im Fokus
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Hier ergänzt du die tieferen Alltags-Signale, die nicht bei jedem Profil sofort nötig
+            sind.
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <p className="mb-2 text-sm font-semibold text-[var(--text-heading)]">
+                Styling &amp; Schutz
+              </p>
+              <p className="mb-3 text-xs text-muted-foreground">
+                Welche Tools du nutzt und wie du dein Haar tagsüber oder nachts schützt.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <p className="mb-2 text-sm font-medium">Styling-Tools</p>
+                <div className="flex flex-wrap gap-2">
+                  {STYLING_TOOL_OPTIONS.map((option) => {
+                    const active = formData.styling_tools.includes(option.value)
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() =>
+                          setFormData((current) => ({
+                            ...current,
+                            styling_tools: toggleArrayItem(current.styling_tools, option.value),
+                          }))
+                        }
+                        className={cn(
+                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                          active
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border hover:bg-card",
+                        )}
+                      >
+                        {option.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-2 text-sm font-medium">Bürste</p>
+                <div className="flex flex-wrap gap-2">
+                  {BRUSH_TYPE_OPTIONS.map((option) => {
+                    const active = formData.brush_type === option.value
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() =>
+                          setFormData((current) => ({ ...current, brush_type: option.value }))
+                        }
+                        className={cn(
+                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                          active
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border hover:bg-card",
+                        )}
+                      >
+                        {option.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-2 text-sm font-medium">Nachtschutz</p>
+                <div className="flex flex-wrap gap-2">
+                  {NIGHT_PROTECTION_OPTIONS.map((option) => {
+                    const active = formData.night_protection.includes(option.value)
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() =>
+                          setFormData((current) => ({
+                            ...current,
+                            night_protection: toggleArrayItem(
+                              current.night_protection,
+                              option.value,
+                            ),
+                          }))
+                        }
+                        className={cn(
+                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                          active
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border hover:bg-card",
+                        )}
+                      >
+                        {option.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <p className="mb-2 text-sm font-semibold text-[var(--text-heading)]">Trocknen</p>
+              <p className="mb-3 text-xs text-muted-foreground">
+                Material, Technik und Nach-dem-Waschen-Muster liefern oft die fehlenden Frizz- und
+                Schutzsignale.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <p className="mb-2 text-sm font-medium">Handtuch</p>
+                <div className="flex flex-wrap gap-2">
+                  {TOWEL_MATERIAL_OPTIONS.map((option) => {
+                    const active = formData.towel_material === option.value
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() =>
+                          setFormData((current) => ({ ...current, towel_material: option.value }))
+                        }
+                        className={cn(
+                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                          active
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border hover:bg-card",
+                        )}
+                      >
+                        {option.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-2 text-sm font-medium">Trocknungstechnik</p>
+                <div className="flex flex-wrap gap-2">
+                  {TOWEL_TECHNIQUE_OPTIONS.map((option) => {
+                    const active = formData.towel_technique === option.value
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() =>
+                          setFormData((current) => ({ ...current, towel_technique: option.value }))
+                        }
+                        className={cn(
+                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                          active
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border hover:bg-card",
+                        )}
+                      >
+                        {option.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-2 text-sm font-medium">Trocknungsmethode</p>
+                <div className="flex flex-wrap gap-2">
+                  {DRYING_METHOD_OPTIONS.map((option) => {
+                    const active = formData.drying_method.includes(option.value)
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() =>
+                          setFormData((current) => ({
+                            ...current,
+                            drying_method: toggleArrayItem(current.drying_method, option.value),
+                          }))
+                        }
+                        className={cn(
+                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                          active
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border hover:bg-card",
+                        )}
+                      >
+                        {option.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-2 text-sm font-medium">Nach dem Waschen</p>
+                <div className="flex flex-wrap gap-2">
+                  {POST_WASH_ACTION_OPTIONS.map((option) => {
+                    const active = formData.post_wash_actions.includes(option.value)
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() =>
+                          setFormData((current) => ({
+                            ...current,
+                            post_wash_actions: toggleArrayItem(
+                              current.post_wash_actions,
+                              option.value,
+                            ),
+                          }))
+                        }
+                        className={cn(
+                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                          active
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border hover:bg-card",
+                        )}
+                      >
+                        {option.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <p className="mb-2 text-sm font-semibold text-[var(--text-heading)]">
+                Produkte &amp; Notizen
+              </p>
+              <p className="mb-3 text-xs text-muted-foreground">
+                Was bereits genutzt wird und welche Freitext-Hinweise wichtig bleiben sollen.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <p className="mb-2 text-sm font-medium">Produkte in Routine</p>
+                <div className="flex flex-wrap gap-2">
+                  {ROUTINE_PRODUCT_OPTIONS.map((option) => {
+                    const active = formData.current_routine_products.includes(option.value)
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() =>
+                          setFormData((current) => ({
+                            ...current,
+                            current_routine_products: toggleArrayItem(
+                              current.current_routine_products,
+                              option.value,
+                            ),
+                          }))
+                        }
+                        className={cn(
+                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                          active
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border hover:bg-card",
+                        )}
+                      >
+                        {option.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-2 text-sm font-medium">Verwendete Produkte</p>
+                <Textarea
+                  value={formData.products_used}
+                  onChange={(event) =>
+                    setFormData((current) => ({ ...current, products_used: event.target.value }))
+                  }
+                  rows={3}
+                  placeholder="z. B. Olaplex No. 3, Moroccanoil, Balea ..."
+                />
+              </div>
+
+              <div>
+                <p className="mb-2 text-sm font-medium">Zusätzliche Hinweise</p>
+                <Textarea
+                  value={formData.additional_notes}
+                  onChange={(event) =>
+                    setFormData((current) => ({
+                      ...current,
+                      additional_notes: event.target.value,
+                    }))
+                  }
+                  rows={3}
+                  placeholder="Gibt es noch etwas, das Hair Concierge im Alltag berücksichtigen soll?"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (authLoading || loading) {
@@ -512,702 +988,469 @@ export default function ProfilePage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-2xl px-4 py-8">
-        <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Mein Profil</h1>
-          {!editing ? (
-            <button
-              onClick={() => { setEditSection(null); setEditing(true) }}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-            >
-              Bearbeiten
-            </button>
-          ) : (
-            <div className="flex gap-2">
-              <button
-                onClick={() => setEditing(false)}
-                className="rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent"
-              >
-                Abbrechen
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
-              >
-                {saving ? "Speichere..." : "Speichern"}
-              </button>
-            </div>
-          )}
-        </div>
+      <main className="mx-auto max-w-5xl px-4 py-8">
+        {editing ? (
+          <div className="sticky top-16 z-30 mb-6">
+            <div className="rounded-2xl border border-primary/20 bg-background/95 p-4 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/80">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-[var(--text-heading)]">
+                    Du bearbeitest dein Profil
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Änderungen werden erst übernommen, wenn du speicherst.
+                  </p>
+                </div>
 
-        {/* Account Info */}
-        <section className="mb-6 rounded-xl border bg-card p-6">
-          <h2 className="mb-4 text-lg font-semibold">Account</h2>
-          <div className="flex items-center gap-4">
-            {profile?.avatar_url && (
-              <img
-                src={profile.avatar_url}
-                alt="Avatar"
-                className="h-12 w-12 rounded-full"
-              />
-            )}
-            <div>
-              <p className="font-medium">{profile?.full_name || "—"}</p>
-              <p className="text-sm text-muted-foreground">{profile?.email}</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Hair Profile */}
-        <section className="rounded-xl border bg-card p-6">
-          <h2 className="mb-4 text-lg font-semibold">Haar-Profil</h2>
-
-          {editing ? (
-            <Accordion
-              type="multiple"
-              defaultValue={editSection ? [editSection] : ["haartyp", "probleme", "routine"]}
-            >
-              {/* Section 1: Haartyp */}
-              <AccordionItem value="haartyp">
-                <AccordionTrigger>Haartyp</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-6">
-                    {/* Hair Type */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Haartyp</label>
-                      <div className="flex flex-wrap gap-2">
-                        {HAIR_TEXTURE_OPTIONS.map((opt) => (
-                          <button
-                            key={opt.value}
-                            onClick={() =>
-                              setFormData((f) => ({ ...f, hair_texture: opt.value }))
-                            }
-                            className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
-                              formData.hair_texture === opt.value
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "hover:bg-accent"
-                            }`}
-                          >
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Hair Texture */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Haarstruktur</label>
-                      <div className="flex flex-wrap gap-2">
-                        {HAIR_THICKNESS_OPTIONS.map((opt) => (
-                          <button
-                            key={opt.value}
-                            onClick={() =>
-                              setFormData((f) => ({ ...f, thickness: opt.value }))
-                            }
-                            className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
-                              formData.thickness === opt.value
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "hover:bg-accent"
-                            }`}
-                          >
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Haardichte</label>
-                      <p className="mb-3 text-xs text-muted-foreground">
-                        Wie viele Haare du pro Flaeche hast, nicht wie dick ein einzelnes Haar ist.
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {HAIR_DENSITY_OPTIONS.map((opt) => (
-                          <button
-                            key={opt.value}
-                            onClick={() =>
-                              setFormData((f) => ({ ...f, density: opt.value }))
-                            }
-                            className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
-                              formData.density === opt.value
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "hover:bg-accent"
-                            }`}
-                          >
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Section 2: Probleme & Ziele */}
-              <AccordionItem value="probleme">
-                <AccordionTrigger>Probleme &amp; Ziele</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-6">
-                    {/* Concerns */}
-                    <div>
-                      <label className="mb-1 block text-sm font-medium">Probleme</label>
-                      <p className="mb-2 text-xs text-muted-foreground">
-                        Wähle alle zutreffenden Probleme aus
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {CONCERN_OPTIONS.map((opt) => (
-                          <button
-                            key={opt.value}
-                            onClick={() =>
-                              setFormData((f) => ({
-                                ...f,
-                                concerns: toggleArrayItem(f.concerns, opt.value),
-                              }))
-                            }
-                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                              formData.concerns.includes(opt.value)
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "hover:bg-accent"
-                            }`}
-                          >
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="mb-1 block text-sm font-medium">Gewuenschtes Volumen</label>
-                      <p className="mb-2 text-xs text-muted-foreground">
-                        Soll eher auf weniger, ausgeglichenes oder mehr Volumen optimiert werden?
-                      </p>
-                      <SegmentedControl
-                        options={DESIRED_VOLUME_OPTIONS}
-                        value={formData.desired_volume}
-                        onChange={(v) =>
-                          setFormData((f) => ({ ...f, desired_volume: v }))
-                        }
-                      />
-                    </div>
-
-                    {/* Goals */}
-                    <div>
-                      <label className="mb-1 block text-sm font-medium">Weitere Ziele</label>
-                      <p className="mb-2 text-xs text-muted-foreground">
-                        Waehle die zusaetzlichen Ziele, die neben dem Volumen wichtig sind.
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {EDITABLE_GOAL_OPTIONS.map((opt) => (
-                          <button
-                            key={opt.value}
-                            onClick={() =>
-                              setFormData((f) => ({
-                                ...f,
-                                goals: toggleArrayItem(f.goals, opt.value),
-                              }))
-                            }
-                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                              formData.goals.includes(opt.value)
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "hover:bg-accent"
-                            }`}
-                          >
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              {/* Section 3: Pflege-Routine */}
-              <AccordionItem value="routine">
-                <AccordionTrigger>Pflege-Routine</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-6">
-                    {/* Wash Frequency */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Wasch-Häufigkeit</label>
-                      <SegmentedControl
-                        options={WASH_FREQUENCY_OPTIONS}
-                        value={formData.wash_frequency}
-                        onChange={(v) =>
-                          setFormData((f) => ({ ...f, wash_frequency: v }))
-                        }
-                      />
-                    </div>
-
-                    {/* Heat Styling */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Hitze-Styling</label>
-                      <SegmentedControl
-                        options={HEAT_STYLING_OPTIONS}
-                        value={formData.heat_styling}
-                        onChange={(v) =>
-                          setFormData((f) => ({ ...f, heat_styling: v }))
-                        }
-                      />
-                    </div>
-
-                    {/* Styling Tools */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Styling-Tools</label>
-                      <div className="flex flex-wrap gap-2">
-                        {STYLING_TOOL_OPTIONS.map((opt) => (
-                          <button
-                            key={opt.value}
-                            onClick={() =>
-                              setFormData((f) => ({
-                                ...f,
-                                styling_tools: toggleArrayItem(f.styling_tools, opt.value),
-                              }))
-                            }
-                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                              formData.styling_tools.includes(opt.value)
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "hover:bg-accent"
-                            }`}
-                          >
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Towel Material */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Handtuch</label>
-                      <div className="flex flex-wrap gap-2">
-                        {TOWEL_MATERIAL_OPTIONS.map((opt) => (
-                          <button key={opt.value} onClick={() => setFormData((f) => ({ ...f, towel_material: opt.value }))}
-                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${formData.towel_material === opt.value ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Towel Technique */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Trocknungstechnik</label>
-                      <div className="flex flex-wrap gap-2">
-                        {TOWEL_TECHNIQUE_OPTIONS.map((opt) => (
-                          <button key={opt.value} onClick={() => setFormData((f) => ({ ...f, towel_technique: opt.value }))}
-                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${formData.towel_technique === opt.value ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Drying Method */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Trocknungsmethode</label>
-                      <div className="flex flex-wrap gap-2">
-                        {DRYING_METHOD_OPTIONS.map((opt) => (
-                          <button key={opt.value} onClick={() => setFormData((f) => ({ ...f, drying_method: toggleArrayItem(f.drying_method, opt.value) }))}
-                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${formData.drying_method.includes(opt.value) ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Brush Type */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Bürste</label>
-                      <div className="flex flex-wrap gap-2">
-                        {BRUSH_TYPE_OPTIONS.map((opt) => (
-                          <button key={opt.value} onClick={() => setFormData((f) => ({ ...f, brush_type: opt.value }))}
-                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${formData.brush_type === opt.value ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Night Protection */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Nachtschutz</label>
-                      <div className="flex flex-wrap gap-2">
-                        {NIGHT_PROTECTION_OPTIONS.map((opt) => (
-                          <button key={opt.value} onClick={() => setFormData((f) => ({ ...f, night_protection: toggleArrayItem(f.night_protection, opt.value) }))}
-                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${formData.night_protection.includes(opt.value) ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Uses Heat Protection */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">Hitzeschutz</label>
-                      <div className="flex gap-2">
-                        <button onClick={() => setFormData((f) => ({ ...f, uses_heat_protection: true }))}
-                          className={`rounded-lg border px-4 py-2 text-sm transition-colors ${formData.uses_heat_protection ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
-                          Ja
-                        </button>
-                        <button onClick={() => setFormData((f) => ({ ...f, uses_heat_protection: false }))}
-                          className={`rounded-lg border px-4 py-2 text-sm transition-colors ${!formData.uses_heat_protection ? "border-primary bg-primary/10 text-primary" : "hover:bg-accent"}`}>
-                          Nein
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Nach dem Waschen */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">
-                        Nach dem Waschen
-                      </label>
-                      <p className="mb-2 text-xs text-muted-foreground">
-                        Waehle alle Aktionen, die auf dich zutreffen.
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {POST_WASH_ACTION_OPTIONS.map((option) => (
-                          <button
-                            key={option.value}
-                            onClick={() =>
-                              setFormData((f) => ({
-                                ...f,
-                                post_wash_actions: toggleArrayItem(
-                                  f.post_wash_actions,
-                                  option.value
-                                ),
-                              }))
-                            }
-                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                              formData.post_wash_actions.includes(option.value)
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "hover:bg-accent"
-                            }`}
-                          >
-                            {option.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">
-                        Welche Produkte sind Teil deiner Routine?
-                      </label>
-                      <div className="flex flex-wrap gap-2">
-                        {ROUTINE_PRODUCT_OPTIONS.map((option) => (
-                          <button
-                            key={option.value}
-                            onClick={() =>
-                              setFormData((f) => ({
-                                ...f,
-                                current_routine_products: toggleArrayItem(
-                                  f.current_routine_products,
-                                  option.value
-                                ),
-                              }))
-                            }
-                            className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
-                              formData.current_routine_products.includes(option.value)
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "hover:bg-accent"
-                            }`}
-                          >
-                            {option.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Products Used */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">
-                        Aktuell verwendete Produkte
-                      </label>
-                      <textarea
-                        value={formData.products_used}
-                        onChange={(e) =>
-                          setFormData((f) => ({ ...f, products_used: e.target.value }))
-                        }
-                        placeholder="z.B. Olaplex No. 3, Moroccanoil..."
-                        className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
-                        rows={3}
-                      />
-                    </div>
-
-                    {/* Additional Notes */}
-                    <div>
-                      <label className="mb-2 block text-sm font-medium">
-                        Zusätzliche Hinweise
-                      </label>
-                      <textarea
-                        value={formData.additional_notes || ""}
-                        onChange={(e) =>
-                          setFormData((f) => ({
-                            ...f,
-                            additional_notes: e.target.value,
-                          }))
-                        }
-                        placeholder="Gibt es noch etwas, das wir wissen sollten?"
-                        className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
-                        rows={3}
-                      />
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ) : (
-            <div className="space-y-6">
-              {/* Progress bar */}
-              <div>
-                <p className="mb-1.5 text-sm text-muted-foreground">
-                  {filledFields.length} von {PROFILE_FIELDS.length} Angaben
-                </p>
-                <div
-                  className="h-2 w-full overflow-hidden rounded-full bg-muted"
-                  role="progressbar"
-                  aria-valuenow={filledFields.length}
-                  aria-valuemin={0}
-                  aria-valuemax={PROFILE_FIELDS.length}
-                  aria-label={`${filledFields.length} von ${PROFILE_FIELDS.length} Angaben ausgefüllt`}
-                >
-                  <div
-                    className="h-full rounded-full bg-primary transition-all"
-                    style={{
-                      width: `${(filledFields.length / PROFILE_FIELDS.length) * 100}%`,
-                    }}
-                  />
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-auto"
+                    onClick={handleCancelEditing}
+                  >
+                    Abbrechen
+                  </Button>
+                  <Button type="button" className="w-auto" onClick={handleSave} disabled={saving}>
+                    {saving ? "Speichere..." : "Speichern"}
+                  </Button>
                 </div>
               </div>
-
-              {/* Filled fields as tags */}
-              {filledFields.length > 0 ? (
-                <div>
-                  <h3 className="mb-3 text-sm font-semibold">
-                    Dein Haar-Profil
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {filledFields.map((f) => (
-                      <button
-                        key={f.key}
-                        onClick={() => {
-                          setEditSection(FIELD_TO_SECTION[f.key] ?? null)
-                          setEditing(true)
-                        }}
-                        className="cursor-pointer rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm transition-colors hover:bg-primary/20"
-                      >
-                        <span className="font-medium">{f.label}:</span>{" "}
-                        {f.value}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  Noch keine Angaben vorhanden. Klicke auf
-                  &ldquo;Bearbeiten&rdquo; oder starte das Quiz, um dein
-                  Profil zu erstellen.
-                </p>
-              )}
-
-              {/* Additional notes (outside progress tracking) */}
-              {hairProfile?.additional_notes && (
-                <div className="rounded-lg border bg-muted/50 px-4 py-3">
-                  <p className="mb-1 text-sm font-medium">Zusätzliche Hinweise</p>
-                  <p className="text-sm text-muted-foreground">
-                    {hairProfile.additional_notes}
-                  </p>
-                </div>
-              )}
-
-              {/* Empty fields as actionable cards */}
-              {emptyFields.length > 0 && (
-                <div>
-                  <h3 className="mb-1 text-sm font-semibold">
-                    Profil vervollständigen
-                  </h3>
-                  <p className="mb-3 text-xs text-muted-foreground">
-                    Je mehr wir wissen, desto besser unsere Empfehlungen
-                  </p>
-                  <div className="space-y-2">
-                    {emptyFields.map((f) => (
-                      <button
-                        key={f.key}
-                        onClick={() => { setEditSection(null); setEditing(true) }}
-                        className="flex w-full items-center gap-3 rounded-lg border border-dashed border-muted-foreground/30 px-4 py-3 text-left transition-colors hover:bg-accent"
-                      >
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-sm text-muted-foreground">
-                          +
-                        </span>
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium">{f.label}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {f.helpText}
-                          </p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
-          )}
-        </section>
+          </div>
+        ) : null}
 
-        <section className="mt-6 rounded-xl border bg-card p-6">
-          <div className="mb-4 flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-semibold">Was sich dein Profil merkt</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Diese Haarpflege-Erinnerungen helfen bei Antworten und Produktempfehlungen.
-              </p>
-            </div>
-            <Switch
-              checked={memoryEnabled}
-              disabled={memoryLoading || memorySaving}
-              onCheckedChange={handleMemoryToggle}
-              aria-label="Erinnerungen aktivieren"
-            />
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="type-overline text-primary">Profilübersicht</p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text-heading)]">
+              Mein Profil
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+              Hier siehst du denselben roten Faden wie im Quiz und Onboarding: Ausgangslage, Ziele,
+              Alltag und das, was Hair Concierge mit der Zeit dazulernt.
+            </p>
           </div>
 
-          {memoryLoading ? (
-            <p className="text-sm text-muted-foreground">Erinnerungen werden geladen...</p>
-          ) : memoryEntries.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Noch keine gespeicherten Erinnerungen. Wenn du im Chat konkrete
-              Haarpflege-Infos gibst, koennen sie hier abgelegt werden.
-            </p>
-          ) : (
-            <div className="divide-y">
-              {memoryEntries.map((entry) => (
-                <div key={entry.id} className="py-4 first:pt-0 last:pb-0">
-                  {editingMemoryId === entry.id ? (
-                    <div className="space-y-3">
-                      <Textarea
-                        value={memoryDraft}
-                        onChange={(event) => setMemoryDraft(event.target.value)}
-                        rows={3}
-                        maxLength={500}
-                      />
-                      <div className="flex gap-2">
-                        <button
-                          type="button"
-                          onClick={() => handleSaveMemory(entry.id)}
-                          disabled={memorySaving || !memoryDraft.trim()}
-                          className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
-                        >
-                          Speichern
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditingMemoryId(null)
-                            setMemoryDraft("")
-                          }}
-                          className="rounded-lg border px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
-                        >
-                          Abbrechen
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="min-w-0">
-                        <p className="text-sm">{entry.content}</p>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          Aktualisiert am{" "}
-                          {new Date(entry.updated_at).toLocaleDateString("de-DE")}
-                        </p>
-                      </div>
-                      <div className="flex shrink-0 gap-2">
-                        <button
-                          type="button"
-                          onClick={() => startEditingMemory(entry)}
-                          className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-                        >
-                          Bearbeiten
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteMemory(entry.id)}
-                          disabled={memorySaving}
-                          className="text-xs font-medium text-muted-foreground transition-colors hover:text-destructive disabled:opacity-50"
-                        >
-                          Löschen
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+          {!editing ? (
+            <Button type="button" onClick={() => setEditing(true)} className="w-auto">
+              Bearbeiten
+            </Button>
+          ) : null}
+        </div>
 
-        {/* Diagnose section — read-only, shown in both modes */}
-        {hasDiagnostics && (
-          <section className="mt-6 rounded-xl border bg-card p-6">
-            <h2 className="mb-4 text-lg font-semibold">Diagnose</h2>
-            <div className="space-y-3">
-              {hairProfile?.cuticle_condition && (
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Schuppenschicht</span>
-                  <Badge variant="outline">
-                    {CUTICLE_CONDITION_LABELS[hairProfile.cuticle_condition] ??
-                      hairProfile.cuticle_condition}
-                  </Badge>
-                </div>
-              )}
-              {hairProfile?.protein_moisture_balance && (
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Protein / Feuchtigkeit</span>
-                  <Badge variant="outline">
-                    {PROTEIN_MOISTURE_LABELS[hairProfile.protein_moisture_balance] ??
-                      hairProfile.protein_moisture_balance}
-                  </Badge>
-                </div>
-              )}
-              {hairProfile?.scalp_type && (
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Kopfhauttyp</span>
-                  <Badge variant="outline">
-                    {SCALP_TYPE_LABELS[hairProfile.scalp_type] ??
-                      hairProfile.scalp_type}
-                  </Badge>
-                </div>
-              )}
-              {hairProfile?.scalp_condition && hairProfile.scalp_condition !== "none" && (
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Kopfhautbeschwerden</span>
-                  <Badge variant="outline">
-                    {SCALP_CONDITION_LABELS[hairProfile.scalp_condition as keyof typeof SCALP_CONDITION_LABELS] ??
-                      hairProfile.scalp_condition}
-                  </Badge>
-                </div>
-              )}
-              {hairProfile?.chemical_treatment &&
-                hairProfile.chemical_treatment.length > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Behandlung</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {hairProfile.chemical_treatment.map((t) => (
-                        <Badge key={t} variant="outline">
-                          {CHEMICAL_TREATMENT_LABELS[t] ?? t}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
+        <Card className="mb-6 border-primary/10">
+          <CardHeader className="pb-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <CardTitle className="text-xl text-[var(--text-heading)]">
+                  So baut sich dein Profil auf
+                </CardTitle>
+                <CardDescription className="mt-2 max-w-2xl text-sm">
+                  {readinessCopy}
+                </CardDescription>
+              </div>
+              <Badge className="w-fit px-3 py-1 text-xs">
+                {activeStepCount} von {overallStepCount} Bausteinen aktiv
+              </Badge>
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">
-              Mach das Quiz erneut, um deine Diagnose zu aktualisieren.
-            </p>
-          </section>
-        )}
+          </CardHeader>
+          <CardContent>
+            <div className="mb-4 h-2 overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-primary transition-all"
+                style={{ width: `${overallPercent}%` }}
+              />
+            </div>
 
-        {/* Sign out button */}
+            <div className="grid gap-3 md:grid-cols-4">
+              <JourneyStepCard
+                label="Haar-Check"
+                status={baselineFilled.length === 0 ? "Offen" : "Aktiv"}
+                summary={
+                  baselineFilled.length === 0
+                    ? "Noch keine Basisdaten vorhanden."
+                    : `${baselineFilled.length}/${baselineFields.length} Signale vorhanden`
+                }
+                active={baselineFilled.length > 0}
+              />
+              <JourneyStepCard
+                label="Ziele"
+                status={goalFilled.length === 0 ? "Offen" : "Aktiv"}
+                summary={
+                  goalFilled.length === 0
+                    ? "Noch keine Prioritäten gesetzt."
+                    : `${goalFilled.length}/${goalFields.length} Signale vorhanden`
+                }
+                active={goalFilled.length > 0}
+              />
+              <JourneyStepCard
+                label="Alltag"
+                status={routineFilled.length === 0 ? "Offen" : "Aktiv"}
+                summary={
+                  routineFilled.length === 0
+                    ? "Noch keine Routinedaten vorhanden."
+                    : `${routineFilled.length}/${routineFields.length} Signale vorhanden`
+                }
+                active={routineFilled.length > 0}
+              />
+              <JourneyStepCard
+                label="Merkt sich"
+                status={memoryEnabled ? "Aktiv" : "Pausiert"}
+                summary={
+                  memoryEnabled
+                    ? memoryEntries.length > 0
+                      ? `${memoryEntries.length} gespeicherte Erinnerungen`
+                      : "Bereit, neue Chat-Erinnerungen zu speichern"
+                    : "Chat-Erinnerungen sind aktuell ausgeschaltet"
+                }
+                active={memoryEnabled}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <CardTitle className="text-xl text-[var(--text-heading)]">
+                    {PROFILE_SECTION_META[0].title}
+                  </CardTitle>
+                  <CardDescription className="mt-2 text-sm">
+                    {PROFILE_SECTION_META[0].description}
+                  </CardDescription>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-auto"
+                  onClick={() => router.push("/quiz")}
+                >
+                  Haar-Check aktualisieren
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {baselineFilled.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2">
+                  {baselineFilled.map((field) => (
+                    <ProfileFieldCard
+                      key={field.key}
+                      field={field}
+                      onClick={!editing ? () => openFieldFlow(field) : undefined}
+                      actionLabel={!editing ? getFieldActionLabel(field) : undefined}
+                    />
+                  ))}
+                </div>
+              ) : null}
+
+              {(baselineSparse || editing) && (
+                <InlinePromptCard
+                  title="Ausgangslage wird über den Haar-Check gepflegt"
+                  text={
+                    baselineSparse
+                      ? "Damit Diagnose- und Strukturdaten konsistent bleiben, startest du diese Basis nicht direkt hier, sondern über den Haar-Check."
+                      : "Diese Felder bleiben absichtlich read-only im Profil. Für Änderungen führst du den Haar-Check erneut durch."
+                  }
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => router.push("/quiz")}
+                    >
+                      Haar-Check starten
+                    </Button>
+                  }
+                />
+              )}
+
+              {!editing && baselineMissing.length > 0 && !baselineSparse ? (
+                <InlinePromptCard
+                  title="Ein Teil der Basis fehlt noch"
+                  text={`Noch offen: ${baselineMissing.map((field) => field.label).join(", ")}`}
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => router.push("/quiz")}
+                    >
+                      Basis ergänzen
+                    </Button>
+                  }
+                />
+              ) : null}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl text-[var(--text-heading)]">
+                {PROFILE_SECTION_META[1].title}
+              </CardTitle>
+              <CardDescription className="mt-2 text-sm">
+                {PROFILE_SECTION_META[1].description}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {editing ? (
+                <div className="grid gap-4 xl:grid-cols-3">
+                  {goalFields.map((field) => (
+                    <ProfileFieldCard key={field.key} field={field}>
+                      {renderInlineEditor(field)}
+                    </ProfileFieldCard>
+                  ))}
+                </div>
+              ) : goalFilled.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {goalFilled.map((field) => (
+                    <ProfileFieldCard
+                      key={field.key}
+                      field={field}
+                      onClick={() => openFieldFlow(field)}
+                      actionLabel={getFieldActionLabel(field)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <InlinePromptCard
+                  title="Noch keine Ziele gesetzt"
+                  text="Wähle mindestens dein gewünschtes Volumen oder ein relevantes Ziel, damit der erste Plan klarer priorisieren kann."
+                />
+              )}
+
+              {!editing && goalMissing.length > 0 ? (
+                <InlinePromptCard
+                  title="Ziele schärfen"
+                  text={`Noch offen: ${goalMissing.map((field) => field.label).join(", ")}`}
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => setEditing(true)}
+                    >
+                      Ziele bearbeiten
+                    </Button>
+                  }
+                />
+              ) : null}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <CardTitle className="text-xl text-[var(--text-heading)]">
+                    {PROFILE_SECTION_META[2].title}
+                  </CardTitle>
+                  <CardDescription className="mt-2 text-sm">
+                    {PROFILE_SECTION_META[2].description}
+                  </CardDescription>
+                </div>
+                {editing ? (
+                  <Button
+                    type="button"
+                    variant={routineDetailsOpen ? "default" : "outline"}
+                    className="w-auto"
+                    onClick={() => setRoutineDetailsOpen((current) => !current)}
+                  >
+                    {routineDetailsOpen
+                      ? "Routine-Details ausblenden"
+                      : "Routine-Details bearbeiten"}
+                  </Button>
+                ) : null}
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {editing ? (
+                <div className="grid gap-4 xl:grid-cols-3">
+                  {routineSimpleFields.map((field) => (
+                    <ProfileFieldCard key={field.key} field={field}>
+                      {renderInlineEditor(field)}
+                    </ProfileFieldCard>
+                  ))}
+                </div>
+              ) : null}
+
+              {routineFilled.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {(editing
+                    ? routineDetailFields.filter((field) => field.value !== null)
+                    : routineFilled
+                  ).map((field) => (
+                    <ProfileFieldCard
+                      key={field.key}
+                      field={field}
+                      onClick={!editing ? () => openFieldFlow(field) : undefined}
+                      actionLabel={!editing ? getFieldActionLabel(field) : undefined}
+                    />
+                  ))}
+                </div>
+              ) : null}
+
+              {editing && routineDetailsOpen ? renderRoutineDetailsEditor() : null}
+
+              {!editing && routineFilled.length === 0 ? (
+                <InlinePromptCard
+                  title="Alltags-Signale fehlen noch"
+                  text="Waschhäufigkeit, Hitzemuster und Routinedetails machen Empfehlungen deutlich realistischer."
+                />
+              ) : null}
+
+              {!editing && routineMissing.length > 0 ? (
+                <InlinePromptCard
+                  title="Alltag weiter schärfen"
+                  text={`Noch offen: ${routineMissing
+                    .map((field) => field.label)
+                    .slice(0, 6)
+                    .join(
+                      ", ",
+                    )}${routineMissing.length > 6 ? ` und ${routineMissing.length - 6} weitere` : ""}`}
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => setEditing(true)}
+                    >
+                      Alltag bearbeiten
+                    </Button>
+                  }
+                />
+              ) : null}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <CardTitle className="text-xl text-[var(--text-heading)]">
+                    {PROFILE_SECTION_META[3].title}
+                  </CardTitle>
+                  <CardDescription className="mt-2 text-sm">
+                    {PROFILE_SECTION_META[3].description}
+                  </CardDescription>
+                </div>
+                <Switch
+                  checked={memoryEnabled}
+                  disabled={memoryLoading || memorySaving}
+                  onCheckedChange={handleMemoryToggle}
+                  aria-label="Erinnerungen aktivieren"
+                />
+              </div>
+            </CardHeader>
+            <CardContent>
+              {memoryLoading ? (
+                <p className="text-sm text-muted-foreground">Erinnerungen werden geladen...</p>
+              ) : memoryEntries.length === 0 ? (
+                <InlinePromptCard
+                  title="Noch keine gespeicherten Erinnerungen"
+                  text="Wenn du im Chat konkrete Haarpflege-Infos gibst, können sie hier als langfristiger Kontext auftauchen."
+                />
+              ) : (
+                <div className="divide-y">
+                  {memoryEntries.map((entry) => (
+                    <div key={entry.id} className="py-4 first:pt-0 last:pb-0">
+                      {editingMemoryId === entry.id ? (
+                        <div className="space-y-3">
+                          <Textarea
+                            value={memoryDraft}
+                            onChange={(event) => setMemoryDraft(event.target.value)}
+                            rows={3}
+                            maxLength={500}
+                          />
+                          <div className="flex flex-wrap gap-2">
+                            <Button
+                              type="button"
+                              className="w-auto"
+                              onClick={() => handleSaveMemory(entry.id)}
+                              disabled={memorySaving || !memoryDraft.trim()}
+                            >
+                              Speichern
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="w-auto"
+                              onClick={() => {
+                                setEditingMemoryId(null)
+                                setMemoryDraft("")
+                              }}
+                            >
+                              Abbrechen
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="min-w-0">
+                            <p className="text-sm text-foreground">{entry.content}</p>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              Aktualisiert am{" "}
+                              {new Date(entry.updated_at).toLocaleDateString("de-DE")}
+                            </p>
+                          </div>
+                          <div className="flex shrink-0 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => startEditingMemory(entry)}
+                              className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                              Bearbeiten
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteMemory(entry.id)}
+                              disabled={memorySaving}
+                              className="text-xs font-medium text-muted-foreground transition-colors hover:text-destructive disabled:opacity-50"
+                            >
+                              Löschen
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="bg-muted/35">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg text-[var(--text-heading)]">Account</CardTitle>
+              <CardDescription className="mt-1 text-sm">
+                Dein Zugang bleibt bewusst sekundär, damit das Profil mit deiner Haarreise startet.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={profile?.avatar_url ?? undefined} alt="Avatar" />
+                  <AvatarFallback>
+                    {(profile?.full_name || profile?.email || "HC").slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-sm font-semibold text-[var(--text-heading)]">
+                    {profile?.full_name || "—"}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{profile?.email}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="mt-8 text-center">
           <button
+            type="button"
             onClick={signOut}
             className="text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
