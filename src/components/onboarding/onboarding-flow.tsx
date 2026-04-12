@@ -160,6 +160,13 @@ export function OnboardingFlow({
   const savingStepsRef = useRef<Set<OnboardingStep>>(new Set())
   const stepSaveTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
+  // Clean up debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      clearTimeout(stepSaveTimerRef.current)
+    }
+  }, [])
+
   // ── Initialization: hydrate store from server data ──
 
   useEffect(() => {
