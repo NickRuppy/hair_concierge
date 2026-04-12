@@ -10,6 +10,8 @@ import { ChatLoadingIndicator } from "./chat-loading-indicator"
 import { ProductDetailDrawer } from "./product-detail-drawer"
 import { ConversationSidebar } from "./conversation-sidebar"
 import { useEffect, useMemo, useRef, useState, useCallback } from "react"
+import { format, isToday, isYesterday } from "date-fns"
+import { de } from "date-fns/locale"
 import { Menu } from "lucide-react"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { Icon } from "@/components/ui/icon"
@@ -138,9 +140,26 @@ export function ChatContainer() {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="relative flex-1 overflow-y-auto">
+          {/* Atmospheric layers */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.015]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+              backgroundRepeat: "repeat",
+              backgroundSize: "256px 256px",
+            }}
+          />
+          <div
+            className="pointer-events-none absolute left-1/2 top-0 h-[300px] w-[120%] -translate-x-1/2"
+            style={{
+              background:
+                "radial-gradient(ellipse at 50% 0%, rgba(var(--brand-plum-rgb), 0.03), transparent 70%)",
+            }}
+          />
+
           {isEmpty ? (
-            <div className="flex h-full flex-col items-center justify-center px-4">
+            <div className="relative z-[1] flex h-full flex-col items-center justify-center px-4">
               <div className="animate-scale-in mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
                 <CombIcon className="h-8 w-8 text-primary-foreground" />
               </div>
@@ -170,19 +189,45 @@ export function ChatContainer() {
               </div>
             </div>
           ) : (
-            <div className="mx-auto max-w-3xl space-y-4 p-4">
-              {messages.map((msg) => {
+            <div className="relative z-[1] mx-auto max-w-3xl space-y-4 p-4">
+              {messages.map((msg, idx) => {
                 // Don't render empty assistant placeholder — streaming indicator handles it
                 if (msg.role === "assistant" && !msg.content) return null
 
+                // Date separator: show when date changes from previous message
+                let dateSeparator: React.ReactNode = null
+                if (msg.created_at) {
+                  const msgDate = new Date(msg.created_at)
+                  const prevMsg = idx > 0 ? messages[idx - 1] : null
+                  const prevDate = prevMsg?.created_at ? new Date(prevMsg.created_at) : null
+                  const dateChanged =
+                    !prevDate || msgDate.toDateString() !== prevDate.toDateString()
+                  if (dateChanged) {
+                    const label = isToday(msgDate)
+                      ? "Heute"
+                      : isYesterday(msgDate)
+                        ? "Gestern"
+                        : format(msgDate, "dd. MMM", { locale: de })
+                    dateSeparator = (
+                      <div className="flex items-center gap-3 py-2">
+                        <div className="h-px flex-1 bg-border" />
+                        <span className="type-caption text-muted-foreground">{label}</span>
+                        <div className="h-px flex-1 bg-border" />
+                      </div>
+                    )
+                  }
+                }
+
                 return (
-                  <ChatMessage
-                    key={msg.id}
-                    message={msg}
-                    hairProfile={hairProfile}
-                    onProductClick={handleProductClick}
-                    isNew={newMessageIds.has(msg.id)}
-                  />
+                  <div key={msg.id}>
+                    {dateSeparator}
+                    <ChatMessage
+                      message={msg}
+                      hairProfile={hairProfile}
+                      onProductClick={handleProductClick}
+                      isNew={newMessageIds.has(msg.id)}
+                    />
+                  </div>
                 )
               })}
 

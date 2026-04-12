@@ -17,9 +17,14 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 relative bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-primary/20 after:to-transparent">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <Link href="/chat" className="flex items-center gap-2">
+          <div className="flex items-center gap-[3px]">
+            <span className="h-3.5 w-[3px] rounded-sm bg-primary" />
+            <span className="h-3.5 w-[3px] rounded-sm bg-primary/60" />
+            <span className="h-3.5 w-[3px] rounded-sm bg-primary/30" />
+          </div>
           <span className="font-header text-2xl tracking-wide text-[var(--text-heading)]">
             Hair Concierge
           </span>

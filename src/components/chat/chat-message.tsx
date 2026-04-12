@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, type ReactNode } from "react"
+import { format } from "date-fns"
 import posthog from "posthog-js"
 import type { Message, CitationSource, Product, HairProfile } from "@/lib/types"
 import type { Components } from "react-markdown"
@@ -332,6 +333,13 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
               ))}
             </ul>
           </details>
+        )}
+
+        {/* Timestamp */}
+        {message.created_at && (
+          <span className="type-caption text-muted-foreground px-1">
+            {format(new Date(message.created_at), "HH:mm")}
+          </span>
         )}
       </div>
     </div>

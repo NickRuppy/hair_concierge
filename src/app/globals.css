@@ -305,3 +305,25 @@
   --tw-prose-pre-code: var(--text-body);
   --tw-prose-pre-bg: var(--brand-plum-ice);
 }
+
+/* Brand selection + scrollbar */
+::selection {
+  background: rgba(var(--brand-plum-rgb), 0.2);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--brand-plum-rgb), 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--brand-plum-rgb), 0.35);
+}
