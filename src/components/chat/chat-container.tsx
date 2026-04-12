@@ -229,7 +229,7 @@ export function ChatContainer() {
         </div>
 
         {/* Messages */}
-        <div className="relative flex-1 overflow-y-auto">
+        <div className="relative flex-1 overflow-y-auto overflow-x-hidden">
           {/* Atmospheric layers */}
           <div
             className="pointer-events-none absolute inset-0 opacity-[0.015]"
