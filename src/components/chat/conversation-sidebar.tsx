@@ -93,6 +93,11 @@ export function ConversationSidebar({
                       e.stopPropagation()
                       onDelete(conv.id)
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.stopPropagation()
+                      }
+                    }}
                     className="shrink-0 rounded p-1.5 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive md:p-1"
                     aria-label="Unterhaltung löschen"
                   >

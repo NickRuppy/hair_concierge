@@ -346,3 +346,14 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(var(--brand-plum-rgb), 0.35);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in-up-fast,
+  .animate-scale-in,
+  .animate-comb-sway,
+  .animate-slide-in-left,
+  .animate-slide-out-left {
+    animation: none !important;
+  }
+}

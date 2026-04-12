@@ -69,6 +69,16 @@ export function ChatContainer() {
 
   const hasNewMessages = currentCount > 0 && newMessageIds.size > 0
 
+  // Clear newMessageIds after animation completes so streaming deltas don't get smooth-scroll
+  useEffect(() => {
+    if (newMessageIds.size > 0) {
+      const timer = setTimeout(() => {
+        setNewMessageIds(new Set())
+      }, 400) // match fadeInUpFast duration (300ms) + buffer
+      return () => clearTimeout(timer)
+    }
+  }, [newMessageIds])
+
   useEffect(() => {
     loadConversations()
   }, [loadConversations])
@@ -82,7 +92,12 @@ export function ChatContainer() {
     }
   }, [messages, hasNewMessages])
 
-  const openSidebar = useCallback(() => setSidebarState("open"), [])
+  const triggerRef = useRef<HTMLElement | null>(null)
+
+  const openSidebar = useCallback(() => {
+    triggerRef.current = document.activeElement as HTMLElement
+    setSidebarState("open")
+  }, [])
   const closeSidebar = useCallback(() => setSidebarState("closing"), [])
 
   // Focus trap + Escape for mobile sidebar
@@ -119,6 +134,20 @@ export function ChatContainer() {
     document.addEventListener("keydown", handleKeyDown)
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [sidebarState, closeSidebar])
+
+  // Move focus into sidebar on open, restore to trigger on close
+  useEffect(() => {
+    if (sidebarState === "open" && sidebarPanelRef.current) {
+      const first = sidebarPanelRef.current.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )
+      first?.focus()
+    }
+    if (sidebarState === "closed" && triggerRef.current) {
+      triggerRef.current.focus()
+      triggerRef.current = null
+    }
+  }, [sidebarState])
 
   const handleProductClick = useCallback((product: Product) => {
     setDrawerProduct(product)

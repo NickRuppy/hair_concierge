@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, type ReactNode } from "react"
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { format } from "date-fns"
 import posthog from "posthog-js"
 import type { Message, CitationSource, Product, HairProfile } from "@/lib/types"
@@ -250,6 +250,9 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
     }
   }, [products.length])
 
+  const [showAllProducts, setShowAllProducts] = useState(false)
+  const visibleProducts = showAllProducts ? products : products.slice(0, 3)
+
   const hasEnhancements = sources.length > 0 || productMap.size > 0
 
   // Build custom markdown components that inject citation badges + product mentions
@@ -289,7 +292,7 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
       <div
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
           isUser
-            ? "bg-secondary text-secondary-foreground"
+            ? "bg-secondary text-[var(--brand-plum-darkest)]"
             : "bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(var(--brand-plum-rgb),0.25)]"
         }`}
       >
@@ -339,7 +342,7 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
         {/* Product recommendation cards */}
         {products.length > 0 && onProductClick && (
           <div className="flex flex-col gap-1.5 pt-1">
-            {products.slice(0, 3).map((p, i) => (
+            {visibleProducts.map((p, i) => (
               <div
                 key={p.id}
                 className="animate-fade-in-up-fast"
@@ -348,9 +351,10 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
                 <ProductCard product={p} onClick={onProductClick} />
               </div>
             ))}
-            {products.length > 3 && (
+            {products.length > 3 && !showAllProducts && (
               <button
                 type="button"
+                onClick={() => setShowAllProducts(true)}
                 className="type-caption text-primary hover:underline text-left px-1"
               >
                 +{products.length - 3} weitere Empfehlungen
