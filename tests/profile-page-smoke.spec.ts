@@ -109,8 +109,8 @@ test.describe.serial("Profile page smoke", () => {
     await memorySwitch.click()
     await expect(memorySwitch).toHaveAttribute("aria-checked", "false")
 
-    const volumeCard = page.locator('[role="button"]').filter({ hasText: "Gewünschtes Volumen" })
-    await volumeCard.first().click()
+    const goalsCard = page.locator('[role="button"]').filter({ hasText: "Weitere Ziele" })
+    await goalsCard.first().click()
     await expect(page.getByRole("button", { name: "Haar-Check aktualisieren" })).toBeVisible()
     await expect(page.getByText("Du bearbeitest dein Profil")).toBeVisible()
 
@@ -120,13 +120,12 @@ test.describe.serial("Profile page smoke", () => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
     await expect(page.getByRole("button", { name: "Speichern" })).toBeVisible()
 
-    await page.getByRole("radio", { name: /^Mehr$/ }).click()
     await page.getByRole("radio", { name: "Alle 2-3 Tage" }).click()
     await page.getByRole("button", { name: "Speichern" }).click()
 
     const washCard = page.locator("div.rounded-xl").filter({ hasText: "Wasch-Häufigkeit" })
 
-    await expect(volumeCard.first()).toContainText("Mehr")
+    await expect(goalsCard.first()).toContainText("Mehr Glanz")
     await expect(washCard.first()).toContainText("Alle 2-3 Tage")
 
     const routineProductsCard = page

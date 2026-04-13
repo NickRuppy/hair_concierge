@@ -79,27 +79,19 @@ export {
   ROUTINE_PRODUCT_LABELS,
   ROUTINE_PRODUCT_OPTIONS,
 } from "../leave-in/constants"
-export type {
-  PostWashAction,
-  RoutinePreference,
-  RoutineProduct,
-} from "../leave-in/constants"
+export type { PostWashAction, RoutinePreference, RoutineProduct } from "../leave-in/constants"
 
-export {
-  SOURCE_TYPES,
-  SOURCE_TYPE_LABELS,
-} from "./source-labels"
+export { SOURCE_TYPES, SOURCE_TYPE_LABELS } from "./source-labels"
 export type { SourceType } from "./source-labels"
 
-export {
-  ERR_UNAUTHORIZED,
-  ERR_FORBIDDEN,
-  ERR_INVALID_DATA,
-  fehler,
-} from "./errors"
+export { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "./errors"
 
-export { ONBOARDING_GOALS } from "./onboarding-goals"
-export type { OnboardingGoal } from "./onboarding-goals"
+export {
+  TEXTURE_GOAL_PRIORITY,
+  GOAL_LABEL_OVERRIDES,
+  getOrderedGoals,
+  getGoalLabel,
+} from "./onboarding-goals"
 
 export {
   PRODUCT_FREQUENCIES,
