@@ -151,7 +151,8 @@ export const INTENT_CLASSIFICATION_PROMPT = `Klassifiziere die Absicht der folge
 Antworte NUR mit validem JSON.
 Beispiel: {"intent": "product_recommendation", "category": "shampoo", "complexity": "multi_constraint", "confidence": 0.85, "filters": {"problem": "fettige Kopfhaut", "duration": null, "products_tried": null, "routine": null, "special_circumstances": null}, "needs_clarification": true}
 
-Klassifiziere die folgende Nutzer-Nachricht:`
+{{HISTORY_PREFIX}}Klassifiziere die folgende Nutzer-Nachricht:
+{{MESSAGE}}`
 
 /**
  * Prompt for generating a short German conversation title from the first message.
@@ -160,7 +161,7 @@ export const TITLE_GENERATION_PROMPT = `Generiere einen kurzen, praegnanten deut
 
 Antworte NUR mit dem Titel, ohne Anfuehrungszeichen oder zusaetzliche Erklaerung.
 
-Nachricht: `
+Nachricht: {{MESSAGE}}`
 
 /**
  * Prompt for extracting durable memory from a conversation.
@@ -187,3 +188,23 @@ Format: Kompakte Stichpunktliste auf Deutsch. Jeder Punkt beginnt mit "- ".
 Maximal 1500 Zeichen. Keine Ueberschriften, keine Nummerierung.
 
 Wenn es nichts Neues zu extrahieren gibt, antworte mit: KEINE_NEUEN_FAKTEN`
+
+export const MEMORY_EXTRACTION_JSON_PROMPT = `Du bist ein Analyse-Assistent fuer Hair Concierge. Extrahiere dauerhafte, haarspezifische Erinnerungen aus einem Gespraech.
+
+Antworte NUR als JSON:
+{"memories":[{"kind":"preference|routine|product_experience|hair_history|progress|sensitivity|medical_context|other","memory_key":"stabiler_key","content":"deutscher Satz","evidence":"kurzes Nutzerzitat","confidence":0.0,"product_names":["..."],"sentiment":"positive|negative|neutral"}]}
+
+Regeln:
+- Speichere nur Fakten, die der NUTZER explizit sagt oder bestaetigt.
+- Speichere keine Empfehlungen, Erklaerungen oder Annahmen des Assistenten.
+- Speichere nur hair-care-relevante Fakten: Vorlieben, Routine, Produkterfahrungen, Haarhistorie, Fortschritt, Reaktionen, Sensitivitaeten.
+- Medizinisch angrenzende Fakten wie Haarausfall, Kopfhautbeschwerden, Schwangerschaft, Medikamente oder Allergien nur speichern, wenn der Nutzer sie explizit als relevant nennt.
+- Keine Smalltalk-Fakten, keine allgemeinen Lebensdetails ohne Haarpflegebezug.
+- Bei Produkterfahrungen setze product_names und sentiment. Negative sentiment bedeutet: Produkt nicht wieder priorisieren.
+- memory_key muss stabil sein, z.B. "product:olaplex_no_3", "preference:duft", "routine:wash_frequency". Bei neuem Widerspruch denselben memory_key verwenden, damit die neueste Aussage gewinnt.
+- Wenn nichts Neues speicherwuerdig ist: {"memories":[]}.
+
+{{EXISTING_MEMORY_SECTION}}
+
+Gespraech:
+{{TRANSCRIPT}}`

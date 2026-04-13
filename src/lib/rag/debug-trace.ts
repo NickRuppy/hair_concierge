@@ -9,6 +9,7 @@ import type {
   CitationSource,
   ClassificationResult,
   HairProfile,
+  LangfusePromptReference,
   Product,
   ProductCategory,
   RoutinePlan,
@@ -38,6 +39,10 @@ export interface PipelineTraceDraft {
     category_decision: CategoryDecision | null
     matched_products: ChatMatchedProductTrace[]
   }
+  prompt_refs: {
+    classification: LangfusePromptReference
+    synthesis: LangfusePromptReference
+  }
   prompt: ChatPromptSnapshot
   latencies_ms: ChatTraceLatencyBreakdown
 }
@@ -48,9 +53,7 @@ function toContentPreview(content: string): string {
     : content
 }
 
-export function buildRetrievedChunkTrace(
-  chunks: RetrievedChunk[],
-): ChatRetrievedChunkTrace[] {
+export function buildRetrievedChunkTrace(chunks: RetrievedChunk[]): ChatRetrievedChunkTrace[] {
   return chunks.map((chunk) => ({
     chunk_id: chunk.id,
     source_type: chunk.source_type,
@@ -65,9 +68,7 @@ export function buildRetrievedChunkTrace(
   }))
 }
 
-export function buildMatchedProductTrace(
-  products: Product[],
-): ChatMatchedProductTrace[] {
+export function buildMatchedProductTrace(products: Product[]): ChatMatchedProductTrace[] {
   return products.map((product) => ({
     id: product.id,
     name: product.name,
@@ -98,6 +99,7 @@ export function buildPipelineTraceDraft(params: {
   routine_plan?: RoutinePlan
   category_decision?: CategoryDecision
   matched_products?: Product[]
+  classification_prompt_ref: LangfusePromptReference
   prompt: ChatPromptSnapshot
   latencies_ms: ChatTraceLatencyBreakdown
 }): PipelineTraceDraft {
@@ -121,6 +123,7 @@ export function buildPipelineTraceDraft(params: {
     routine_plan,
     category_decision,
     matched_products,
+    classification_prompt_ref,
     prompt,
     latencies_ms,
   } = params
@@ -155,6 +158,10 @@ export function buildPipelineTraceDraft(params: {
       category_decision: category_decision ?? null,
       matched_products: buildMatchedProductTrace(matched_products ?? []),
     },
+    prompt_refs: {
+      classification: classification_prompt_ref,
+      synthesis: prompt.prompt_ref,
+    },
     prompt,
     latencies_ms,
   }
@@ -173,7 +180,16 @@ export function finalizeChatTurnTrace(
     total_ms?: number
   },
 ): ChatTurnTrace {
-  const { assistant_content, sources, product_count, status, error, completed_at, stream_read_ms, total_ms } = params
+  const {
+    assistant_content,
+    sources,
+    product_count,
+    status,
+    error,
+    completed_at,
+    stream_read_ms,
+    total_ms,
+  } = params
 
   return {
     trace_version: CHAT_TURN_TRACE_VERSION,
@@ -193,6 +209,7 @@ export function finalizeChatTurnTrace(
     memory_context: draft.memory_context,
     retrieval: draft.retrieval,
     decision_context: draft.decision_context,
+    prompt_refs: draft.prompt_refs,
     prompt: draft.prompt,
     response: {
       assistant_content,
@@ -208,9 +225,7 @@ export function finalizeChatTurnTrace(
   }
 }
 
-export function buildRetrievalDebugEventData(
-  draft: PipelineTraceDraft,
-): Record<string, unknown> {
+export function buildRetrievalDebugEventData(draft: PipelineTraceDraft): Record<string, unknown> {
   return {
     request_id: draft.request_id,
     intent: draft.intent,

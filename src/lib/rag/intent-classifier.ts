@@ -1,6 +1,17 @@
-import { getOpenAI } from "@/lib/openai/client"
-import { INTENT_CLASSIFICATION_PROMPT } from "@/lib/rag/prompts"
-import type { IntentType, ClassificationResult, ProductCategory, RetrievalMode, Message } from "@/lib/types"
+import { getObservedOpenAI } from "@/lib/openai/client"
+import {
+  buildLangfusePromptConfig,
+  getManagedTextPrompt,
+  LANGFUSE_PROMPTS,
+} from "@/lib/langfuse/prompts"
+import type {
+  IntentType,
+  ClassificationResult,
+  ProductCategory,
+  RetrievalMode,
+  Message,
+  LangfusePromptReference,
+} from "@/lib/types"
 
 const VALID_INTENTS: IntentType[] = [
   "product_recommendation",
@@ -22,7 +33,12 @@ const VALID_CATEGORIES: ProductCategory[] = [
 ]
 
 const VALID_COMPLEXITIES = ["simple", "multi_constraint", "multi_hop"] as const
-const VALID_RETRIEVAL_MODES: RetrievalMode[] = ["faq", "hybrid", "hybrid_plus_graph", "product_sql_plus_hybrid"]
+const VALID_RETRIEVAL_MODES: RetrievalMode[] = [
+  "faq",
+  "hybrid",
+  "hybrid_plus_graph",
+  "product_sql_plus_hybrid",
+]
 
 const DEFAULT_CLASSIFICATION: ClassificationResult = {
   intent: "general_chat",
@@ -32,6 +48,13 @@ const DEFAULT_CLASSIFICATION: ClassificationResult = {
   retrieval_mode: "hybrid",
   normalized_filters: {},
   router_confidence: 0.5,
+}
+
+const FALLBACK_PROMPT_REF: LangfusePromptReference = {
+  name: LANGFUSE_PROMPTS.intentClassifier.name,
+  version: null,
+  label: "fallback",
+  is_fallback: true,
 }
 
 /** Max prior messages to include for follow-up context */
@@ -71,20 +94,26 @@ function buildHistoryContext(history: Message[]): string {
 export async function classifyIntent(
   message: string,
   conversationHistory: Message[] = [],
-): Promise<ClassificationResult> {
+): Promise<{ result: ClassificationResult; promptRef: LangfusePromptReference }> {
   try {
     const historyPrefix = buildHistoryContext(conversationHistory)
+    const managedPrompt = await getManagedTextPrompt(LANGFUSE_PROMPTS.intentClassifier, {
+      HISTORY_PREFIX: historyPrefix,
+      MESSAGE: message,
+    })
 
-    const response = await getOpenAI().chat.completions.create({
+    const response = await getObservedOpenAI({
+      generationName: "intent-classification-llm",
+      generationMetadata: {
+        prompt_label: managedPrompt.ref.label,
+      },
+      langfusePrompt: buildLangfusePromptConfig(managedPrompt.ref),
+    }).chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: INTENT_CLASSIFICATION_PROMPT,
-        },
-        {
-          role: "user",
-          content: historyPrefix + message,
+          content: managedPrompt.text,
         },
       ],
       response_format: { type: "json_object" },
@@ -106,11 +135,18 @@ export async function classifyIntent(
     }
 
     // Parse filters: extract known slot keys, ignore unknown
-    const rawFilters = (typeof parsed.filters === "object" && parsed.filters !== null)
-      ? parsed.filters as Record<string, unknown>
-      : {}
+    const rawFilters =
+      typeof parsed.filters === "object" && parsed.filters !== null
+        ? (parsed.filters as Record<string, unknown>)
+        : {}
     const normalized_filters: Record<string, string | string[] | null> = {}
-    for (const key of ["problem", "duration", "products_tried", "routine", "special_circumstances"]) {
+    for (const key of [
+      "problem",
+      "duration",
+      "products_tried",
+      "routine",
+      "special_circumstances",
+    ]) {
       const val = rawFilters[key]
       if (typeof val === "string" && val.trim()) {
         normalized_filters[key] = val.trim()
@@ -121,24 +157,30 @@ export async function classifyIntent(
       }
     }
 
-    const needs_clarification = typeof parsed.needs_clarification === "boolean"
-      ? parsed.needs_clarification
-      : false
+    const needs_clarification =
+      typeof parsed.needs_clarification === "boolean" ? parsed.needs_clarification : false
 
     // Retrieval mode suggestion from LLM (router policy may override)
-    const retrieval_mode = VALID_RETRIEVAL_MODES.find((v) => v === parsed.retrieval_mode) ?? "hybrid"
+    const retrieval_mode =
+      VALID_RETRIEVAL_MODES.find((v) => v === parsed.retrieval_mode) ?? "hybrid"
 
     return {
-      intent,
-      product_category: category,
-      complexity,
-      needs_clarification,
-      retrieval_mode,
-      normalized_filters,
-      router_confidence: confidence,
+      result: {
+        intent,
+        product_category: category,
+        complexity,
+        needs_clarification,
+        retrieval_mode,
+        normalized_filters,
+        router_confidence: confidence,
+      },
+      promptRef: managedPrompt.ref,
     }
   } catch (error) {
     console.error("Intent classification failed, defaulting to general_chat:", error)
-    return { ...DEFAULT_CLASSIFICATION }
+    return {
+      result: { ...DEFAULT_CLASSIFICATION },
+      promptRef: FALLBACK_PROMPT_REF,
+    }
   }
 }

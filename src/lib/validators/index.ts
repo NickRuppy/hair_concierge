@@ -15,10 +15,7 @@ import {
   BRUSH_TYPES,
   NIGHT_PROTECTIONS,
 } from "@/lib/vocabulary"
-import {
-  CONDITIONER_WEIGHTS,
-  CONDITIONER_REPAIR_LEVELS,
-} from "@/lib/conditioner/constants"
+import { CONDITIONER_WEIGHTS, CONDITIONER_REPAIR_LEVELS } from "@/lib/conditioner/constants"
 import {
   POST_WASH_ACTIONS,
   ROUTINE_PREFERENCES,
@@ -62,17 +59,18 @@ export const hairProfileFullSchema = z.object({
   additional_notes: z.string().nullable().default(null),
 })
 
-const leaveInSpecsSchema = z.object({
-  format: z.enum(LEAVE_IN_FORMATS),
-  weight: z.enum(LEAVE_IN_WEIGHTS),
-  roles: z.array(z.enum(LEAVE_IN_ROLES)).default([]),
-  provides_heat_protection: z.boolean().default(false),
-  heat_protection_max_c: z.number().int().nullable().default(null),
-  heat_activation_required: z.boolean().default(false),
-  care_benefits: z.array(z.enum(LEAVE_IN_CARE_BENEFITS)).default([]),
-  ingredient_flags: z.array(z.enum(LEAVE_IN_INGREDIENT_FLAGS)).default([]),
-  application_stage: z.array(z.enum(LEAVE_IN_APPLICATION_STAGES)).default(["towel_dry"]),
-})
+const leaveInSpecsSchema = z
+  .object({
+    format: z.enum(LEAVE_IN_FORMATS),
+    weight: z.enum(LEAVE_IN_WEIGHTS),
+    roles: z.array(z.enum(LEAVE_IN_ROLES)).default([]),
+    provides_heat_protection: z.boolean().default(false),
+    heat_protection_max_c: z.number().int().nullable().default(null),
+    heat_activation_required: z.boolean().default(false),
+    care_benefits: z.array(z.enum(LEAVE_IN_CARE_BENEFITS)).default([]),
+    ingredient_flags: z.array(z.enum(LEAVE_IN_INGREDIENT_FLAGS)).default([]),
+    application_stage: z.array(z.enum(LEAVE_IN_APPLICATION_STAGES)).default(["towel_dry"]),
+  })
   .superRefine((value, ctx) => {
     if (value.heat_protection_max_c !== null && !value.provides_heat_protection) {
       ctx.addIssue({
@@ -81,10 +79,7 @@ const leaveInSpecsSchema = z.object({
         message: "heat_protection_max_c requires provides_heat_protection = true",
       })
     }
-    if (
-      value.heat_activation_required &&
-      !value.roles.includes("styling_prep")
-    ) {
+    if (value.heat_activation_required && !value.roles.includes("styling_prep")) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["roles"],
@@ -108,13 +103,13 @@ const conditionerSpecsSchema = z.object({
 })
 
 const nullableTextField = z.preprocess(
-  (value) => value === "" ? null : value,
-  z.string().nullable().optional()
+  (value) => (value === "" ? null : value),
+  z.string().nullable().optional(),
 )
 
 const nullableUrlField = z.preprocess(
-  (value) => value === "" ? null : value,
-  z.string().url().nullable().optional()
+  (value) => (value === "" ? null : value),
+  z.string().url().nullable().optional(),
 )
 
 const nullablePriceField = z.preprocess((value) => {
@@ -127,23 +122,29 @@ export const chatMessageSchema = z.object({
   conversation_id: z.string().uuid().optional(),
 })
 
-export const productSchema = z.object({
-  name: z.string().min(1, "Name ist erforderlich."),
-  brand: nullableTextField.default(null),
-  description: nullableTextField.default(null),
-  category: nullableTextField.default(null),
-  affiliate_link: nullableUrlField.default(null),
-  image_url: nullableUrlField.default(null),
-  price_eur: nullablePriceField.default(null),
-  tags: z.array(z.string()).default([]),
-  suitable_thicknesses: z.array(z.string()).default([]),
-  suitable_concerns: z.array(z.string()).default([]),
-  is_active: z.boolean().default(true),
-  sort_order: z.number().int().default(0),
-  conditioner_specs: conditionerSpecsSchema.nullable().optional(),
-  leave_in_specs: leaveInSpecsSchema.nullable().optional(),
-  mask_specs: maskSpecsSchema.nullable().optional(),
+export const chatFeedbackSchema = z.object({
+  message_id: z.string().uuid(),
+  score: z.union([z.literal(-1), z.literal(1)]),
 })
+
+export const productSchema = z
+  .object({
+    name: z.string().min(1, "Name ist erforderlich."),
+    brand: nullableTextField.default(null),
+    description: nullableTextField.default(null),
+    category: nullableTextField.default(null),
+    affiliate_link: nullableUrlField.default(null),
+    image_url: nullableUrlField.default(null),
+    price_eur: nullablePriceField.default(null),
+    tags: z.array(z.string()).default([]),
+    suitable_thicknesses: z.array(z.string()).default([]),
+    suitable_concerns: z.array(z.string()).default([]),
+    is_active: z.boolean().default(true),
+    sort_order: z.number().int().default(0),
+    conditioner_specs: conditionerSpecsSchema.nullable().optional(),
+    leave_in_specs: leaveInSpecsSchema.nullable().optional(),
+    mask_specs: maskSpecsSchema.nullable().optional(),
+  })
   .superRefine((value, ctx) => {
     if (!isOilCategory(value.category)) return
 
@@ -209,6 +210,7 @@ export const articleSchema = z.object({
 
 export type HairProfileFull = z.infer<typeof hairProfileFullSchema>
 export type ChatMessage = z.infer<typeof chatMessageSchema>
+export type ChatFeedbackInput = z.infer<typeof chatFeedbackSchema>
 export type ProductInput = z.infer<typeof productSchema>
 export type QuoteInput = z.infer<typeof quoteSchema>
 export type ArticleInput = z.infer<typeof articleSchema>

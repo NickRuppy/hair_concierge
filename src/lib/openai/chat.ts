@@ -1,5 +1,6 @@
-import { getOpenAI } from "@/lib/openai/client"
+import { getObservedOpenAI } from "@/lib/openai/client"
 import type OpenAI from "openai"
+import type { LangfuseConfig as LangfuseOpenAIConfig } from "@langfuse/openai"
 
 export const DEFAULT_CHAT_COMPLETION_MODEL = "gpt-4o"
 export const DEFAULT_CHAT_COMPLETION_TEMPERATURE = 0.7
@@ -8,6 +9,7 @@ export interface StreamChatCompletionParams {
   messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[]
   model?: string
   temperature?: number
+  langfuseConfig?: LangfuseOpenAIConfig
 }
 
 /**
@@ -20,8 +22,9 @@ export async function streamChatCompletion({
   messages,
   model = DEFAULT_CHAT_COMPLETION_MODEL,
   temperature = DEFAULT_CHAT_COMPLETION_TEMPERATURE,
+  langfuseConfig,
 }: StreamChatCompletionParams): Promise<ReadableStream<Uint8Array>> {
-  const response = await getOpenAI().chat.completions.create({
+  const response = await getObservedOpenAI(langfuseConfig).chat.completions.create({
     model,
     messages,
     temperature,

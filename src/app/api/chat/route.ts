@@ -1,5 +1,15 @@
 import { createClient } from "@/lib/supabase/server"
 import { checkRateLimit, CHAT_RATE_LIMIT } from "@/lib/rate-limit"
+import { propagateAttributes, startObservation } from "@langfuse/tracing"
+import { context as otelContext, trace as otelTrace } from "@opentelemetry/api"
+import {
+  ensureLangfuseTracing,
+  flushLangfuseClient,
+  getLangfuseClient,
+  getLangfuseRelease,
+  resolveLangfuseTraceId,
+} from "@/lib/openai/client"
+import { sanitizeLangfuseText } from "@/lib/langfuse/masking"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
@@ -10,6 +20,8 @@ async function persistConversationTurnTrace(params: {
   user_id: string
   user_message_id: string | null
   assistant_message_id: string | null
+  langfuse_trace_id: string | null
+  langfuse_trace_url: string | null
   status: "completed" | "failed"
   trace: unknown
 }) {
@@ -51,6 +63,7 @@ export async function POST(request: Request) {
     { extractConversationMemory },
     { buildRetrievalDebugEventData, finalizeChatTurnTrace },
     { chatMessageSchema },
+    { generateConversationTitle },
   ] = await Promise.all([
     import("@/lib/supabase/admin"),
     import("@/lib/rag/pipeline"),
@@ -58,6 +71,7 @@ export async function POST(request: Request) {
     import("@/lib/rag/memory-extractor"),
     import("@/lib/rag/debug-trace"),
     import("@/lib/validators"),
+    import("@/lib/rag/title-generator"),
   ])
 
   const body = await request.json()
@@ -73,11 +87,69 @@ export async function POST(request: Request) {
   const { message, conversation_id } = parsed.data
   const requestId = crypto.randomUUID()
   const requestStart = performance.now()
+  let chatObservation: ReturnType<typeof startObservation> | null = null
 
   try {
+    const admin = createAdminClient()
+    let conversationId = conversation_id ?? null
+
+    if (!conversationId) {
+      const { data: createdConversation, error: conversationError } = await admin
+        .from("conversations")
+        .insert({
+          user_id: user.id,
+          title: null,
+          is_active: true,
+        })
+        .select("id")
+        .single()
+
+      if (conversationError || !createdConversation) {
+        throw new Error(`Failed to create conversation: ${conversationError?.message}`)
+      }
+
+      conversationId = createdConversation.id
+      generateConversationTitle(createdConversation.id, message).catch(() => {})
+    }
+    const activeConversationId = conversationId
+    if (!activeConversationId) {
+      throw new Error("Conversation id missing after creation")
+    }
+
+    ensureLangfuseTracing()
+
+    chatObservation = startObservation(
+      "production-chat-turn",
+      {
+        input: {
+          user_message: sanitizeLangfuseText(message),
+          conversation_id: activeConversationId,
+        },
+        metadata: {
+          feature: "production_chat",
+          request_id: requestId,
+        },
+      },
+      { asType: "chain" },
+    )
+    const activeChatObservation = chatObservation
+    const parentContext = otelTrace.setSpan(otelContext.active(), activeChatObservation.otelSpan)
+    const langfuseTraceId = resolveLangfuseTraceId(activeChatObservation)
+    const traceUrlPromise = langfuseTraceId
+      ? (getLangfuseClient()
+          ?.getTraceUrl(langfuseTraceId)
+          .catch(() => null) ?? null)
+      : null
+
+    if (!langfuseTraceId && getLangfuseClient()) {
+      console.warn("Langfuse trace id unavailable for chat turn", {
+        requestId,
+        conversationId: activeConversationId,
+      })
+    }
+
     const {
       stream,
-      conversationId,
       intent,
       matchedProducts,
       sources,
@@ -85,21 +157,38 @@ export async function POST(request: Request) {
       routerDecision,
       categoryDecision,
       debugTrace,
-    } = await runPipeline({
-      message,
-      conversationId: conversation_id,
-      userId: user.id,
-      requestId,
-    })
+    } = await otelContext.with(parentContext, async () =>
+      propagateAttributes(
+        {
+          userId: user.id,
+          sessionId: activeConversationId,
+          version: getLangfuseRelease(),
+          traceName: "production-chat-turn",
+          tags: ["production-chat"],
+          metadata: {
+            conversation_id: activeConversationId,
+            request_id: requestId,
+            route: "/api/chat",
+          },
+        },
+        async () =>
+          runPipeline({
+            message,
+            conversationId: activeConversationId,
+            userId: user.id,
+            requestId,
+          }),
+      ),
+    )
 
     // Save user message
-    const admin = createAdminClient()
     const { data: userMessageRow, error: userMessageError } = await admin
       .from("messages")
       .insert({
-        conversation_id: conversationId,
+        conversation_id: activeConversationId,
         role: "user",
         content: message,
+        langfuse_trace_id: langfuseTraceId,
       })
       .select("id")
       .single()
@@ -115,7 +204,16 @@ export async function POST(request: Request) {
         // Send conversation ID first
         controller.enqueue(
           encoder.encode(
-            `data: ${JSON.stringify({ type: "conversation_id", data: conversationId })}\n\n`,
+            `data: ${JSON.stringify({ type: "conversation_id", data: activeConversationId })}\n\n`,
+          ),
+        )
+
+        controller.enqueue(
+          encoder.encode(
+            `data: ${JSON.stringify({
+              type: "langfuse_trace",
+              data: { trace_id: langfuseTraceId },
+            })}\n\n`,
           ),
         )
 
@@ -146,112 +244,136 @@ export async function POST(request: Request) {
         const streamReadStart = performance.now()
 
         try {
-          while (true) {
-            const { done, value } = await reader.read()
-            if (done) break
+          await otelContext.with(parentContext, async () => {
+            while (true) {
+              const { done, value } = await reader.read()
+              if (done) break
 
-            const text = new TextDecoder().decode(value)
-            fullContent += text
+              const text = new TextDecoder().decode(value)
+              fullContent += text
 
-            controller.enqueue(
-              encoder.encode(`data: ${JSON.stringify({ type: "content_delta", data: text })}\n\n`),
-            )
-          }
+              controller.enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({ type: "content_delta", data: text })}\n\n`,
+                ),
+              )
+            }
 
-          // Send matched products — suppress during clarification rounds
-          const productsToSend =
-            !routerDecision.needs_clarification && matchedProducts.length > 0
-              ? matchedProducts.slice(0, 3)
-              : []
-          if (productsToSend.length > 0) {
+            const productsToSend =
+              !routerDecision.needs_clarification && matchedProducts.length > 0
+                ? matchedProducts.slice(0, 3)
+                : []
+            const langfuseTraceUrl = traceUrlPromise ? await traceUrlPromise : null
+
+            if (productsToSend.length > 0) {
+              controller.enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({ type: "product_recommendations", data: productsToSend })}\n\n`,
+                ),
+              )
+            }
+
+            if (sources.length > 0) {
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ type: "sources", data: sources })}\n\n`),
+              )
+            }
+
+            const { data: assistantMessageRow, error: assistantMessageError } = await admin
+              .from("messages")
+              .insert({
+                conversation_id: activeConversationId,
+                role: "assistant",
+                content: fullContent,
+                rag_context: buildAssistantRagContext(sources, categoryDecision),
+                product_recommendations: productsToSend.length > 0 ? productsToSend : null,
+                langfuse_trace_id: langfuseTraceId,
+                langfuse_trace_url: langfuseTraceUrl,
+              })
+              .select("id")
+              .single()
+
+            if (assistantMessageError) {
+              console.error("Failed to save assistant message:", assistantMessageError)
+            }
+
             controller.enqueue(
               encoder.encode(
-                `data: ${JSON.stringify({ type: "product_recommendations", data: productsToSend })}\n\n`,
+                `data: ${JSON.stringify({
+                  type: "assistant_message",
+                  data: {
+                    id: assistantMessageRow?.id ?? null,
+                    langfuse_trace_id: langfuseTraceId,
+                    langfuse_trace_url: langfuseTraceUrl,
+                  },
+                })}\n\n`,
               ),
             )
-          }
 
-          // Send citation sources
-          if (sources.length > 0) {
+            await admin
+              .from("conversations")
+              .update({
+                updated_at: new Date().toISOString(),
+              })
+              .eq("id", activeConversationId)
+
+            extractConversationMemory(activeConversationId, user.id).catch(() => {})
+
+            await admin
+              .from("profiles")
+              .update({
+                message_count_this_month:
+                  (await admin
+                    .from("profiles")
+                    .select("message_count_this_month")
+                    .eq("id", user.id)
+                    .single()
+                    .then((r) => r.data?.message_count_this_month || 0)) + 1,
+              })
+              .eq("id", user.id)
+
+            const completedTrace = finalizeChatTurnTrace(debugTrace, {
+              assistant_content: fullContent,
+              sources,
+              product_count: productsToSend.length,
+              status: "completed",
+              stream_read_ms: Math.round(performance.now() - streamReadStart),
+              total_ms: Math.round(performance.now() - requestStart),
+            })
+
+            persistConversationTurnTrace({
+              conversation_id: activeConversationId,
+              user_id: user.id,
+              user_message_id: userMessageRow?.id ?? null,
+              assistant_message_id: assistantMessageRow?.id ?? null,
+              langfuse_trace_id: langfuseTraceId,
+              langfuse_trace_url: langfuseTraceUrl,
+              status: "completed",
+              trace: completedTrace,
+            }).catch(() => {})
+
+            activeChatObservation.update({
+              output: {
+                status: "completed",
+                product_count: productsToSend.length,
+                assistant_preview: sanitizeLangfuseText(fullContent)?.slice(0, 500),
+              },
+            })
+
             controller.enqueue(
-              encoder.encode(`data: ${JSON.stringify({ type: "sources", data: sources })}\n\n`),
+              encoder.encode(
+                `data: ${JSON.stringify({
+                  type: "done",
+                  data: buildDoneEventData({
+                    intent,
+                    retrievalSummary,
+                    routerDecision,
+                    categoryDecision,
+                  }),
+                })}\n\n`,
+              ),
             )
-          }
-
-          // Save assistant message (with products for persistence)
-          const admin = createAdminClient()
-          const { data: assistantMessageRow, error: assistantMessageError } = await admin
-            .from("messages")
-            .insert({
-              conversation_id: conversationId,
-              role: "assistant",
-              content: fullContent,
-              rag_context: buildAssistantRagContext(sources, categoryDecision),
-              product_recommendations: productsToSend.length > 0 ? productsToSend : null,
-            })
-            .select("id")
-            .single()
-
-          if (assistantMessageError) {
-            console.error("Failed to save assistant message:", assistantMessageError)
-          }
-
-          // Update conversation updated_at
-          await admin
-            .from("conversations")
-            .update({
-              updated_at: new Date().toISOString(),
-            })
-            .eq("id", conversationId)
-
-          // Extract conversation memory (fire-and-forget)
-          extractConversationMemory(conversationId, user.id).catch(() => {})
-
-          // Increment user message count
-          await admin
-            .from("profiles")
-            .update({
-              message_count_this_month:
-                (await admin
-                  .from("profiles")
-                  .select("message_count_this_month")
-                  .eq("id", user.id)
-                  .single()
-                  .then((r) => r.data?.message_count_this_month || 0)) + 1,
-            })
-            .eq("id", user.id)
-
-          const completedTrace = finalizeChatTurnTrace(debugTrace, {
-            assistant_content: fullContent,
-            sources,
-            product_count: productsToSend.length,
-            status: "completed",
-            stream_read_ms: Math.round(performance.now() - streamReadStart),
-            total_ms: Math.round(performance.now() - requestStart),
           })
-
-          persistConversationTurnTrace({
-            conversation_id: conversationId,
-            user_id: user.id,
-            user_message_id: userMessageRow?.id ?? null,
-            assistant_message_id: assistantMessageRow?.id ?? null,
-            status: "completed",
-            trace: completedTrace,
-          }).catch(() => {})
-
-          controller.enqueue(
-            encoder.encode(
-              `data: ${JSON.stringify({
-                type: "done",
-                data: buildDoneEventData({
-                  intent,
-                  retrievalSummary,
-                  routerDecision,
-                  categoryDecision,
-                }),
-              })}\n\n`,
-            ),
-          )
         } catch (error) {
           controller.enqueue(
             encoder.encode(
@@ -259,6 +381,7 @@ export async function POST(request: Request) {
             ),
           )
 
+          const langfuseTraceUrl = traceUrlPromise ? await traceUrlPromise : null
           const errorMessage = error instanceof Error ? error.message : "Unbekannter Stream-Fehler"
           const failedTrace = finalizeChatTurnTrace(debugTrace, {
             assistant_content: fullContent,
@@ -271,15 +394,29 @@ export async function POST(request: Request) {
           })
 
           persistConversationTurnTrace({
-            conversation_id: conversationId,
+            conversation_id: activeConversationId,
             user_id: user.id,
             user_message_id: userMessageRow?.id ?? null,
             assistant_message_id: null,
+            langfuse_trace_id: langfuseTraceId,
+            langfuse_trace_url: langfuseTraceUrl,
             status: "failed",
             trace: failedTrace,
           }).catch(() => {})
+
+          activeChatObservation.update({
+            output: {
+              status: "failed",
+              assistant_preview: sanitizeLangfuseText(fullContent)?.slice(0, 500),
+            },
+            metadata: {
+              error: errorMessage,
+            },
+          })
         }
 
+        activeChatObservation.end()
+        flushLangfuseClient().catch(() => {})
         controller.close()
       },
     })
@@ -293,6 +430,17 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error("Chat pipeline error:", error)
+    if (chatObservation) {
+      chatObservation.update({
+        output: {
+          status: "failed",
+        },
+        metadata: {
+          error: error instanceof Error ? error.message : "chat_pipeline_error",
+        },
+      })
+      chatObservation.end()
+    }
     return NextResponse.json({ error: fehler("Verarbeitung") }, { status: 500 })
   }
 }

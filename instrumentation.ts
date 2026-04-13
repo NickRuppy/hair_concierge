@@ -1,6 +1,11 @@
 import * as Sentry from "@sentry/nextjs"
+import { ensureLangfuseTracing, isLangfuseConfigured } from "@/lib/langfuse/client"
 
 export async function register() {
+  if (process.env.NEXT_RUNTIME !== "edge" && isLangfuseConfigured()) {
+    ensureLangfuseTracing()
+  }
+
   Sentry.init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
     tracesSampleRate: 0.1,

@@ -1,6 +1,10 @@
-import { getOpenAI } from "@/lib/openai/client"
+import { getObservedOpenAI } from "@/lib/openai/client"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { TITLE_GENERATION_PROMPT } from "@/lib/rag/prompts"
+import {
+  buildLangfusePromptConfig,
+  getManagedTextPrompt,
+  LANGFUSE_PROMPTS,
+} from "@/lib/langfuse/prompts"
 
 /**
  * Generates a short German title for a conversation using GPT-4o-mini
@@ -8,14 +12,23 @@ import { TITLE_GENERATION_PROMPT } from "@/lib/rag/prompts"
  */
 export async function generateConversationTitle(
   conversationId: string,
-  userMessage: string
+  userMessage: string,
 ): Promise<void> {
   try {
-    const completion = await getOpenAI().chat.completions.create({
+    const managedPrompt = await getManagedTextPrompt(LANGFUSE_PROMPTS.titleGenerator, {
+      MESSAGE: userMessage,
+    })
+
+    const completion = await getObservedOpenAI({
+      generationName: "conversation-title",
+      generationMetadata: {
+        conversation_id: conversationId,
+        prompt_label: managedPrompt.ref.label,
+      },
+      langfusePrompt: buildLangfusePromptConfig(managedPrompt.ref),
+    }).chat.completions.create({
       model: "gpt-4o-mini",
-      messages: [
-        { role: "user", content: TITLE_GENERATION_PROMPT + userMessage },
-      ],
+      messages: [{ role: "user", content: managedPrompt.text }],
       max_tokens: 30,
       temperature: 0.5,
     })
@@ -24,10 +37,7 @@ export async function generateConversationTitle(
     if (!title) return
 
     const supabase = createAdminClient()
-    await supabase
-      .from("conversations")
-      .update({ title })
-      .eq("id", conversationId)
+    await supabase.from("conversations").update({ title }).eq("id", conversationId)
   } catch (error) {
     console.error("Title generation failed:", error)
   }

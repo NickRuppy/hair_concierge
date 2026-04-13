@@ -5,6 +5,7 @@ import { format } from "date-fns"
 import posthog from "posthog-js"
 import type { Message, CitationSource, Product, HairProfile } from "@/lib/types"
 import type { Components } from "react-markdown"
+import { ThumbsDown, ThumbsUp } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { CitationBadge } from "./citation-badge"
@@ -76,6 +77,7 @@ interface ChatMessageProps {
   message: Message
   hairProfile: HairProfile | null
   onProductClick?: (product: Product) => void
+  onFeedback?: (messageId: string, score: -1 | 1) => Promise<void>
   /** True for messages appended during this session (not history loads) */
   isNew?: boolean
 }
@@ -225,7 +227,13 @@ function processChildren(
   return children
 }
 
-export function ChatMessage({ message, hairProfile, onProductClick, isNew }: ChatMessageProps) {
+export function ChatMessage({
+  message,
+  hairProfile,
+  onProductClick,
+  onFeedback,
+  isNew,
+}: ChatMessageProps) {
   const isUser = message.role === "user"
 
   const { content: renumberedContent, sources } = useMemo(
@@ -251,6 +259,7 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
   }, [products.length])
 
   const [showAllProducts, setShowAllProducts] = useState(false)
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false)
   const visibleProducts = showAllProducts ? products : products.slice(0, 3)
 
   const hasEnhancements = sources.length > 0 || productMap.size > 0
@@ -365,9 +374,55 @@ export function ChatMessage({ message, hairProfile, onProductClick, isNew }: Cha
 
         {/* Timestamp */}
         {message.created_at && (
-          <span className="type-caption text-muted-foreground px-1">
-            {format(new Date(message.created_at), "HH:mm")}
-          </span>
+          <div className="flex items-center gap-2 px-1">
+            <span className="type-caption text-muted-foreground">
+              {format(new Date(message.created_at), "HH:mm")}
+            </span>
+            {!isUser && onFeedback && !message.id.startsWith("temp-") ? (
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsSubmittingFeedback(true)
+                    try {
+                      await onFeedback(message.id, 1)
+                    } finally {
+                      setIsSubmittingFeedback(false)
+                    }
+                  }}
+                  className={`rounded-full p-1 transition-colors ${
+                    message.user_feedback_score === 1
+                      ? "bg-emerald-500/10 text-emerald-700"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  }`}
+                  aria-label="Antwort positiv bewerten"
+                  disabled={isSubmittingFeedback}
+                >
+                  <ThumbsUp className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsSubmittingFeedback(true)
+                    try {
+                      await onFeedback(message.id, -1)
+                    } finally {
+                      setIsSubmittingFeedback(false)
+                    }
+                  }}
+                  className={`rounded-full p-1 transition-colors ${
+                    message.user_feedback_score === -1
+                      ? "bg-rose-500/10 text-rose-700"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  }`}
+                  aria-label="Antwort negativ bewerten"
+                  disabled={isSubmittingFeedback}
+                >
+                  <ThumbsDown className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ) : null}
+          </div>
         )}
       </div>
     </div>

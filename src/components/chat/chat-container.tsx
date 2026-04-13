@@ -25,6 +25,7 @@ export function ChatContainer() {
     conversations,
     currentConversationId,
     sendMessage,
+    submitFeedback,
     loadConversation,
     loadConversations,
     deleteConversation,
@@ -314,6 +315,7 @@ export function ChatContainer() {
                       message={msg}
                       hairProfile={hairProfile}
                       onProductClick={handleProductClick}
+                      onFeedback={submitFeedback}
                       isNew={newMessageIds.has(msg.id)}
                     />
                   </div>

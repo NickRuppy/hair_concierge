@@ -3,10 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
   const supabase = await createClient()
@@ -25,10 +22,7 @@ export async function GET(
     .single()
 
   if (!profile?.is_admin) {
-    return NextResponse.json(
-      { error: ERR_FORBIDDEN },
-      { status: 403 }
-    )
+    return NextResponse.json({ error: ERR_FORBIDDEN }, { status: 403 })
   }
 
   const admin = createAdminClient()
@@ -41,30 +35,28 @@ export async function GET(
     .single()
 
   if (convError || !conversation) {
-    return NextResponse.json(
-      { error: "Konversation nicht gefunden" },
-      { status: 404 }
-    )
+    return NextResponse.json({ error: "Konversation nicht gefunden" }, { status: 404 })
   }
 
   // Fetch messages
   const { data: messages, error: msgError } = await admin
     .from("messages")
-    .select("id, conversation_id, role, content, product_recommendations, rag_context, created_at")
+    .select(
+      "id, conversation_id, role, content, product_recommendations, rag_context, langfuse_trace_id, langfuse_trace_url, user_feedback_score, user_feedback_at, created_at",
+    )
     .eq("conversation_id", id)
     .order("created_at", { ascending: true })
 
   if (msgError) {
-    return NextResponse.json(
-      { error: fehler("Laden", "der Nachrichten") },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: fehler("Laden", "der Nachrichten") }, { status: 500 })
   }
 
   let traces: unknown[] = []
   const { data: traceRows, error: traceError } = await admin
     .from("conversation_turn_traces")
-    .select("id, conversation_id, user_id, user_message_id, assistant_message_id, status, trace, created_at, updated_at")
+    .select(
+      "id, conversation_id, user_id, user_message_id, assistant_message_id, langfuse_trace_id, langfuse_trace_url, status, trace, created_at, updated_at",
+    )
     .eq("conversation_id", id)
     .order("created_at", { ascending: true })
 

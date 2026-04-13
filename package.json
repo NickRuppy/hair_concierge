@@ -17,9 +17,18 @@
     "test:qa": "playwright test qa-validation",
     "test:chat": "tsx scripts/eval-chat/run.ts --skip-judge",
     "test:chat:judge": "tsx scripts/eval-chat/run.ts",
+    "test:chat:langfuse": "tsx scripts/eval-chat/run.ts --langfuse-publish",
+    "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
+    "langfuse:seed-datasets": "tsx scripts/langfuse/seed-datasets.ts",
+    "langfuse:setup-review-queues": "tsx scripts/langfuse/setup-review-queues.ts",
     "prepare": "husky"
   },
   "dependencies": {
+    "@langfuse/client": "^5.1.0",
+    "@langfuse/openai": "^5.1.0",
+    "@langfuse/otel": "^5.1.0",
+    "@langfuse/tracing": "^5.1.0",
+    "@opentelemetry/sdk-node": "^0.214.0",
     "@sentry/nextjs": "^10.48.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.95.3",
