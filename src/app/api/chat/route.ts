@@ -92,6 +92,7 @@ export async function POST(request: Request) {
   try {
     const admin = createAdminClient()
     let conversationId = conversation_id ?? null
+    let shouldGenerateConversationTitle = false
 
     if (!conversationId) {
       const { data: createdConversation, error: conversationError } = await admin
@@ -109,7 +110,7 @@ export async function POST(request: Request) {
       }
 
       conversationId = createdConversation.id
-      generateConversationTitle(createdConversation.id, message).catch(() => {})
+      shouldGenerateConversationTitle = true
     }
     const activeConversationId = conversationId
     if (!activeConversationId) {
@@ -145,6 +146,15 @@ export async function POST(request: Request) {
       console.warn("Langfuse trace id unavailable for chat turn", {
         requestId,
         conversationId: activeConversationId,
+      })
+    }
+
+    if (shouldGenerateConversationTitle) {
+      otelContext.with(parentContext, () => {
+        generateConversationTitle(activeConversationId, message, {
+          userId: user.id,
+          requestId,
+        }).catch(() => {})
       })
     }
 
@@ -317,7 +327,9 @@ export async function POST(request: Request) {
               })
               .eq("id", activeConversationId)
 
-            extractConversationMemory(activeConversationId, user.id).catch(() => {})
+            extractConversationMemory(activeConversationId, user.id, {
+              requestId,
+            }).catch(() => {})
 
             await admin
               .from("profiles")
