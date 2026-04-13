@@ -1,46 +1,30 @@
 "use client"
 
 import { ArrowLeft } from "lucide-react"
-import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
-import { getOnboardingGoalCards } from "@/lib/onboarding/goal-flow"
-import { DESIRED_VOLUME_LABELS } from "@/lib/types"
-import type { IconName } from "@/components/ui/icon"
-import type { HairTexture, DesiredVolume } from "@/lib/vocabulary"
-
-const VOLUME_ICONS: Record<DesiredVolume, IconName> = {
-  less: "goal-smoothness",
-  balanced: "result-balance",
-  more: "goal-volume",
-}
-
-const VOLUME_DESCRIPTIONS: Record<DesiredVolume, string> = {
-  less: "Ruhiger, glatter und kompakter im Fall.",
-  balanced: "Natürlich, kontrolliert und ohne Extreme.",
-  more: "Mehr Fülle, Lift und sichtbare Bewegung.",
-}
+import { cn } from "@/lib/utils"
+import { getOrderedGoals, getGoalLabel } from "@/lib/onboarding/goal-flow"
+import type { HairTexture } from "@/lib/vocabulary"
 
 interface GoalsScreenProps {
   hairTexture: HairTexture | null
   selectedGoals: string[]
-  desiredVolume: DesiredVolume | null
   onGoalToggle: (goal: string) => void
-  onVolumeChange: (vol: DesiredVolume) => void
   onContinue: () => void
   onBack: () => void
   isSaving?: boolean
+  maxGoals?: number
 }
 
 export function GoalsScreen({
   hairTexture,
   selectedGoals,
-  desiredVolume,
   onGoalToggle,
-  onVolumeChange,
   onContinue,
   onBack,
   isSaving,
+  maxGoals = 5,
 }: GoalsScreenProps) {
-  const goals = hairTexture ? getOnboardingGoalCards(hairTexture) : []
+  const goals = hairTexture ? getOrderedGoals(hairTexture) : []
 
   return (
     <div>
@@ -58,79 +42,63 @@ export function GoalsScreen({
       </h1>
 
       <p
-        className="animate-fade-in-up text-sm text-[var(--text-sub)] mb-8"
+        className="animate-fade-in-up text-sm text-[var(--text-sub)] mb-1"
         style={{ animationDelay: "50ms" }}
       >
-        Erst das Wunsch-Volumen, dann die Details, die dir sonst noch wichtig sind.
+        Waehle bis zu {maxGoals} Ziele.
       </p>
 
-      {/* Volume picker */}
-      <div className="mb-8 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <h2 className="font-header text-2xl leading-tight text-foreground">
-            Wie viel Volumen willst du?
-          </h2>
-          <span className="rounded-full border border-[var(--brand-plum)]/30 bg-[var(--brand-plum)]/10 px-2.5 py-1 text-[11px] font-semibold tracking-[0.14em] text-[var(--brand-plum)]">
-            PFLICHT
-          </span>
-        </div>
-        <div className="space-y-3">
-          {(["less", "balanced", "more"] as const).map((value, i) => (
-            <QuizOptionCard
-              key={value}
-              icon={VOLUME_ICONS[value]}
-              label={DESIRED_VOLUME_LABELS[value]}
-              description={VOLUME_DESCRIPTIONS[value]}
-              active={desiredVolume === value}
-              disabled={isSaving}
-              onClick={() => onVolumeChange(value)}
-              animationDelay={140 + i * 60}
-            />
-          ))}
-        </div>
+      <p
+        className="animate-fade-in-up text-sm text-[var(--text-sub)] mb-8"
+        style={{ animationDelay: "70ms" }}
+      >
+        {selectedGoals.length} / {maxGoals} gewaehlt
+      </p>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+        {goals.map((goal, i) => {
+          const isSelected = selectedGoals.includes(goal)
+          const isDisabled = isSaving || (!isSelected && selectedGoals.length >= maxGoals)
+
+          return (
+            <button
+              key={goal}
+              onClick={() => onGoalToggle(goal)}
+              disabled={isDisabled}
+              className={cn(
+                "quiz-card flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all",
+                "animate-fade-in-up",
+                isSelected && "quiz-card-active",
+                !isSelected && selectedGoals.length >= maxGoals && "opacity-40 cursor-not-allowed",
+              )}
+              style={{ animationDelay: `${100 + i * 50}ms` }}
+            >
+              <span className="text-center">{getGoalLabel(goal, hairTexture!)}</span>
+              {isSelected && (
+                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--brand-plum)] text-primary-foreground">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path
+                      d="M2.5 6L5 8.5L9.5 4"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+              )}
+            </button>
+          )
+        })}
       </div>
-
-      {/* Goal cards */}
-      {goals.length > 0 && (
-        <>
-          <div className="mb-3 animate-fade-in-up" style={{ animationDelay: "340ms" }}>
-            <h2 className="font-header text-2xl leading-tight text-foreground mb-2">
-              Was ist dir außerdem wichtig?
-            </h2>
-            <p className="text-sm text-[var(--text-sub)]">
-              Optional. Diese Auswahl hilft beim ersten Plan.
-            </p>
-          </div>
-
-          <div className="space-y-3 mb-8">
-            {goals.map((goal, i) => (
-              <QuizOptionCard
-                key={goal.key}
-                icon={goal.icon}
-                label={goal.label}
-                description={goal.description}
-                active={selectedGoals.includes(goal.key)}
-                disabled={isSaving}
-                onClick={() => onGoalToggle(goal.key)}
-                animationDelay={380 + i * 80}
-              />
-            ))}
-          </div>
-        </>
-      )}
 
       <div
         className="animate-fade-in-up"
-        style={{ animationDelay: `${380 + goals.length * 80 + 60}ms` }}
+        style={{ animationDelay: `${100 + goals.length * 50 + 60}ms` }}
       >
-        {!desiredVolume && (
-          <p className="mb-3 text-sm text-secondary">
-            Bitte wähle zuerst aus, wie viel Volumen du dir wünschst.
-          </p>
-        )}
         <button
           onClick={onContinue}
-          disabled={!desiredVolume || isSaving}
+          disabled={selectedGoals.length < 1 || isSaving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {isSaving ? "Speichern..." : "Weiter"}
