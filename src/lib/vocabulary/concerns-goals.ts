@@ -46,7 +46,7 @@ export type Goal = (typeof GOALS)[number]
 
 export const GOAL_LABELS: Record<Goal, string> = {
   volume: "Mehr Volumen",
-  healthier_hair: "Gesuenderes Haar",
+  healthier_hair: "Gesünderes Haar",
   less_frizz: "Weniger Frizz",
   color_protection: "Farbschutz",
   moisture: "Mehr Feuchtigkeit",
@@ -55,7 +55,7 @@ export const GOAL_LABELS: Record<Goal, string> = {
   curl_definition: "Locken-Definition",
   less_split_ends: "Weniger Spliss",
   less_volume: "Weniger Volumen",
-  strengthen: "Haare staerken",
+  strengthen: "Haare stärken",
   anti_breakage: "Anti-Haarbruch",
 }
 

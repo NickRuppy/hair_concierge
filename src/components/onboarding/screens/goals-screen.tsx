@@ -45,14 +45,14 @@ export function GoalsScreen({
         className="animate-fade-in-up text-sm text-[var(--text-sub)] mb-1"
         style={{ animationDelay: "50ms" }}
       >
-        Waehle bis zu {maxGoals} Ziele.
+        Wähle bis zu {maxGoals} Ziele.
       </p>
 
       <p
         className="animate-fade-in-up text-sm text-[var(--text-sub)] mb-8"
         style={{ animationDelay: "70ms" }}
       >
-        {selectedGoals.length} / {maxGoals} gewaehlt
+        {selectedGoals.length} / {maxGoals} gewählt
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
@@ -66,27 +66,32 @@ export function GoalsScreen({
               onClick={() => onGoalToggle(goal)}
               disabled={isDisabled}
               className={cn(
-                "quiz-card flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all",
+                "quiz-card flex items-center justify-center gap-2 px-3 py-3 text-sm font-medium transition-all",
                 "animate-fade-in-up",
                 isSelected && "quiz-card-active",
                 !isSelected && selectedGoals.length >= maxGoals && "opacity-40 cursor-not-allowed",
               )}
               style={{ animationDelay: `${100 + i * 50}ms` }}
             >
-              <span className="text-center">{getGoalLabel(goal, hairTexture!)}</span>
-              {isSelected && (
-                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--brand-plum)] text-primary-foreground">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path
-                      d="M2.5 6L5 8.5L9.5 4"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-              )}
+              <span className="text-center leading-tight">{getGoalLabel(goal, hairTexture!)}</span>
+              <div
+                className={cn(
+                  "flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-opacity",
+                  isSelected
+                    ? "bg-[var(--brand-plum)] text-primary-foreground opacity-100"
+                    : "opacity-0",
+                )}
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path
+                    d="M2.5 6L5 8.5L9.5 4"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
             </button>
           )
         })}
