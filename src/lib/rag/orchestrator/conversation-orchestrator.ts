@@ -340,7 +340,10 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     }
 
     conversationId = newConversation.id
-    generateConversationTitle(newConversation.id, message).catch(() => {})
+    generateConversationTitle(newConversation.id, message, {
+      userId,
+      requestId,
+    }).catch(() => {})
   }
 
   // ── Clarification branch: skip retrieval & products ────────────────

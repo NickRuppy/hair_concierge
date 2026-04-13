@@ -1,7 +1,6 @@
 import { z } from "zod"
-import { startObservation } from "@langfuse/tracing"
-import { context as otelContext, trace as otelTrace } from "@opentelemetry/api"
 import { getObservedOpenAI } from "@/lib/openai/client"
+import { runDetachedBackgroundTrace } from "@/lib/langfuse/background-trace"
 import {
   buildLangfusePromptConfig,
   getManagedTextPrompt,
@@ -45,6 +44,10 @@ const extractionResponseSchema = z.object({
   memories: z.array(extractedMemorySchema).default([]),
 })
 
+type MemoryExtractionTraceContext = {
+  requestId?: string | null
+}
+
 export function parseMemoryExtractionResult(content: string): ExtractedMemoryCandidate[] {
   try {
     const parsed = extractionResponseSchema.safeParse(JSON.parse(content))
@@ -82,6 +85,7 @@ async function markConversationExtracted(
 export async function extractConversationMemory(
   conversationId: string,
   userId: string,
+  traceContext?: MemoryExtractionTraceContext,
 ): Promise<void> {
   try {
     const supabase = createAdminClient()
@@ -112,21 +116,25 @@ export async function extractConversationMemory(
       return
     }
 
-    const observation = startObservation("memory-extraction", {
-      input: {
+    await runDetachedBackgroundTrace(
+      {
+        name: "memory-extraction",
         conversationId,
         userId,
-        messageCount: messages.length,
+        requestId: traceContext?.requestId,
+        input: {
+          conversationId,
+          userId,
+          messageCount: messages.length,
+        },
+        metadata: {
+          feature: "user-memory",
+        },
       },
-      metadata: {
-        feature: "user-memory",
-      },
-    })
-    const observationContext = otelTrace.setSpan(otelContext.active(), observation.otelSpan)
-
-    try {
-      await otelContext.with(observationContext, async () => {
-        const existingMemory = buildMemoryPromptContext(await listUserMemoryEntries(userId, supabase))
+      async (observation) => {
+        const existingMemory = buildMemoryPromptContext(
+          await listUserMemoryEntries(userId, supabase),
+        )
 
         const transcript = messages
           .map(
@@ -172,20 +180,8 @@ export async function extractConversationMemory(
             prompt: managedPrompt.ref,
           },
         })
-      })
-    } catch (error) {
-      console.error("Memory extraction failed:", error)
-      observation.update({
-        output: {
-          failed: true,
-        },
-        metadata: {
-          error: error instanceof Error ? error.message : "memory_extraction_failed",
-        },
-      })
-    } finally {
-      observation.end()
-    }
+      },
+    )
   } catch (error) {
     console.error("Memory extraction failed:", error)
   }
