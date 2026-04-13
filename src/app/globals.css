@@ -192,6 +192,11 @@
 
   /* Brand coral — meets WCAG 1.4.11 for non-text UI (buttons >= 3:1) */
   .quiz-btn-primary {
+    height: 3.5rem;
+    padding: 0 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.025em;
     background: var(--brand-coral);
     color: hsl(var(--primary-foreground));
     font-family: var(--font-body), Arial, Helvetica, sans-serif;
