@@ -15,18 +15,16 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          )
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
           })
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, options),
           )
         },
       },
-    }
+    },
   )
 
   const {
@@ -36,7 +34,17 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Public routes that don't need auth
-  const publicRoutes = ["/auth", "/api/auth/callback", "/auth/confirm", "/quiz", "/api/quiz", "/result", "/api/og"]
+  const publicRoutes = [
+    "/auth",
+    "/api/auth/callback",
+    "/auth/confirm",
+    "/quiz",
+    "/api/quiz",
+    "/result",
+    "/api/og",
+    "/datenschutz",
+    "/impressum",
+  ]
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
 
   if (!user && !isPublicRoute) {

@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { checkRateLimit, QUIZ_LEAD_RATE_LIMIT } from "@/lib/rate-limit"
 import { leadSchema } from "@/lib/quiz/validators"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import { findReusableLead } from "@/lib/quiz/lead-lifecycle"
 
-const rateLimits = new Map<string, { count: number; resetAt: number }>()
-const RATE_LIMIT = 5
-const RATE_WINDOW_MS = 60 * 60 * 1000 // 1 hour
 const DEDUPE_WINDOW_MS = 15 * 60 * 1000
 const MAX_RECENT_DUPLICATE_CANDIDATES = 10
 
@@ -14,22 +12,12 @@ function normalizeEmail(email: string): string {
   return email.trim().toLowerCase()
 }
 
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now()
-  const entry = rateLimits.get(ip)
-  if (!entry || now > entry.resetAt) {
-    rateLimits.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS })
-    return true
-  }
-  if (entry.count >= RATE_LIMIT) return false
-  entry.count++
-  return true
-}
-
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for") ?? "unknown"
-  if (!checkRateLimit(ip)) {
-    return NextResponse.json({ error: "Zu viele Anfragen" }, { status: 429 })
+  const rateCheck = await checkRateLimit(ip, QUIZ_LEAD_RATE_LIMIT)
+  if (!rateCheck.allowed) {
+    const status = rateCheck.error === "service_unavailable" ? 503 : 429
+    return NextResponse.json({ error: "Zu viele Anfragen" }, { status })
   }
 
   try {
@@ -55,8 +43,9 @@ export async function POST(request: Request) {
     }
 
     const existingLead = findReusableLead(
-      (recentLeads as Array<{ id: string; quiz_answers: Record<string, unknown> | null }> | null) ?? null,
-      quizAnswers
+      (recentLeads as Array<{ id: string; quiz_answers: Record<string, unknown> | null }> | null) ??
+        null,
+      quizAnswers,
     )
 
     if (existingLead) {

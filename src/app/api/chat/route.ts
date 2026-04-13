@@ -1,30 +1,9 @@
 import { createClient } from "@/lib/supabase/server"
+import { checkRateLimit, CHAT_RATE_LIMIT } from "@/lib/rate-limit"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
 export const maxDuration = 60
-
-// Rate limiting: simple in-memory store
-const rateLimits = new Map<string, { count: number; resetAt: number }>()
-const RATE_LIMIT = 30
-const RATE_WINDOW_MS = 60 * 1000
-
-function checkRateLimit(userId: string): boolean {
-  const now = Date.now()
-  const entry = rateLimits.get(userId)
-
-  if (!entry || now > entry.resetAt) {
-    rateLimits.set(userId, { count: 1, resetAt: now + RATE_WINDOW_MS })
-    return true
-  }
-
-  if (entry.count >= RATE_LIMIT) {
-    return false
-  }
-
-  entry.count++
-  return true
-}
 
 async function persistConversationTurnTrace(params: {
   conversation_id: string | null
@@ -56,10 +35,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: ERR_UNAUTHORIZED }, { status: 401 })
   }
 
-  if (!checkRateLimit(user.id)) {
+  const rateCheck = await checkRateLimit(user.id, CHAT_RATE_LIMIT)
+  if (!rateCheck.allowed) {
+    const status = rateCheck.error === "service_unavailable" ? 503 : 429
     return NextResponse.json(
       { error: "Zu viele Nachrichten. Bitte warte einen Moment." },
-      { status: 429 },
+      { status },
     )
   }
 
