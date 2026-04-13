@@ -17,7 +17,7 @@ async function getLead(leadId: string) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
+    { auth: { autoRefreshToken: false, persistSession: false } },
   )
 
   const { data } = await supabase
@@ -46,6 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${name}s Haar-Diagnose — Hair Concierge`,
     description: quote,
+    robots: { index: false, follow: false },
     openGraph: {
       title: `${name}s Haar-Diagnose — Hair Concierge`,
       description: quote,

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { checkRateLimit, QUIZ_ANALYZE_RATE_LIMIT } from "@/lib/rate-limit"
 import { analyzeSchema } from "@/lib/quiz/validators"
 import OpenAI from "openai"
 import { ahaFallback, shareQuoteFallback } from "@/lib/quiz/results-lookup"
@@ -15,26 +16,12 @@ function getOpenAIClient() {
   return openai
 }
 
-const rateLimits = new Map<string, { count: number; resetAt: number }>()
-const RATE_LIMIT = 5
-const RATE_WINDOW_MS = 60 * 60 * 1000 // 1 hour
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now()
-  const entry = rateLimits.get(ip)
-  if (!entry || now > entry.resetAt) {
-    rateLimits.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS })
-    return true
-  }
-  if (entry.count >= RATE_LIMIT) return false
-  entry.count++
-  return true
-}
-
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for") ?? "unknown"
-  if (!checkRateLimit(ip)) {
-    return NextResponse.json({ error: "Zu viele Anfragen" }, { status: 429 })
+  const rateCheck = await checkRateLimit(ip, QUIZ_ANALYZE_RATE_LIMIT)
+  if (!rateCheck.allowed) {
+    const status = rateCheck.error === "service_unavailable" ? 503 : 429
+    return NextResponse.json({ error: "Zu viele Anfragen" }, { status })
   }
 
   try {
@@ -98,7 +85,8 @@ export async function POST(request: Request) {
       const raw = completion.choices[0]?.message?.content?.trim() ?? ""
       const parsed = JSON.parse(raw) as { insight?: string; share_quote?: string }
       insight = parsed.insight ?? ahaFallback[pulltest] ?? ahaFallback.stretches_bounces!
-      shareQuote = parsed.share_quote ?? shareQuoteFallback[pulltest] ?? shareQuoteFallback.stretches_bounces!
+      shareQuote =
+        parsed.share_quote ?? shareQuoteFallback[pulltest] ?? shareQuoteFallback.stretches_bounces!
     } catch {
       // Fallback to static text
       insight = ahaFallback[pulltest] ?? ahaFallback.stretches_bounces!
