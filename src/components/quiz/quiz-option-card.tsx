@@ -26,7 +26,9 @@ export function QuizOptionCard({
     <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
       <QuizCard active={active} disabled={disabled} onClick={onClick}>
         <div className="flex items-start gap-3">
-          <Icon name={icon} size={24} className="text-primary mt-0.5 shrink-0" />
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(var(--brand-plum-rgb),0.1)] shrink-0">
+            <Icon name={icon} size={32} className="text-primary" />
+          </div>
           <div className="flex-1 min-w-0">
             <p className="text-base font-semibold text-foreground">{label}</p>
             {description && (

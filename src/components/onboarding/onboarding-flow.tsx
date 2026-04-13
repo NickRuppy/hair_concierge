@@ -131,7 +131,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 /* ── Custom subtitle overrides for drilldown screens ── */
 
 const CATEGORY_SUBTITLES: Record<string, string> = {
-  peeling: "Nutzt du ein Serum oder Scrub fuer deine Kopfhaut? Welches Produkt und wie oft?",
+  peeling: "Nutzt du ein Serum oder Scrub für deine Kopfhaut? Welches Produkt und wie oft?",
 }
 
 /* ── Props ── */
@@ -620,7 +620,7 @@ export function OnboardingFlow({
         return (
           <ProductChecklistScreen
             title="Deine Basis-Produkte"
-            subtitle="Welche Produkte nutzt du regelmaessig?"
+            subtitle="Welche Produkte nutzt du regelmäßig?"
             options={BASIC_PRODUCT_OPTIONS}
             selected={store.selectedBasicProducts}
             onToggle={toggleBasicProduct}
@@ -725,6 +725,7 @@ export function OnboardingFlow({
         return (
           <SingleSelectScreen
             title="Womit trocknest du dein Haar?"
+            subtitle="Dein Handtuch beeinflusst Frizz und Haarbruch mehr als du denkst."
             options={towelMaterialWithIcon}
             selected={store.towelMaterial}
             onSelect={(val) => {
@@ -754,7 +755,7 @@ export function OnboardingFlow({
         return (
           <MultiSelectScreen
             title="Wie trocknest du dein Haar?"
-            subtitle="Mehrfachauswahl moeglich."
+            subtitle="Hitze ist der größte Stressfaktor — wir passen deinen Plan daran an."
             options={dryingMethodWithIcon}
             selected={store.dryingMethod}
             onToggle={toggleDryingMethod}
@@ -767,7 +768,8 @@ export function OnboardingFlow({
       case "brush_type":
         return (
           <SingleSelectScreen
-            title="Welche Buerste nutzt du?"
+            title="Welche Bürste nutzt du?"
+            subtitle="Die falsche Bürste kann Haarbruch verursachen. Zeig uns, was du nutzt."
             options={brushTypeWithIcon}
             selected={store.brushType}
             onSelect={(val) => {
@@ -781,8 +783,8 @@ export function OnboardingFlow({
       case "night_protection":
         return (
           <MultiSelectScreen
-            title="Wie schuetzt du dein Haar nachts?"
-            subtitle="Mehrfachauswahl moeglich."
+            title="Wie schützt du dein Haar nachts?"
+            subtitle="Nachts verliert dein Haar Feuchtigkeit. Schon kleine Änderungen helfen."
             options={nightProtectionWithIcon}
             selected={store.nightProtection}
             onToggle={toggleNightProtection}

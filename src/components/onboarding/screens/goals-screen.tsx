@@ -15,8 +15,8 @@ const VOLUME_ICONS: Record<DesiredVolume, IconName> = {
 
 const VOLUME_DESCRIPTIONS: Record<DesiredVolume, string> = {
   less: "Ruhiger, glatter und kompakter im Fall.",
-  balanced: "Natuerlich, kontrolliert und ohne Extreme.",
-  more: "Mehr Fuelle, Lift und sichtbare Bewegung.",
+  balanced: "Natürlich, kontrolliert und ohne Extreme.",
+  more: "Mehr Fülle, Lift und sichtbare Bewegung.",
 }
 
 interface GoalsScreenProps {
@@ -95,7 +95,7 @@ export function GoalsScreen({
         <>
           <div className="mb-3 animate-fade-in-up" style={{ animationDelay: "340ms" }}>
             <h2 className="font-header text-2xl leading-tight text-foreground mb-2">
-              Was ist dir ausserdem wichtig?
+              Was ist dir außerdem wichtig?
             </h2>
             <p className="text-sm text-[var(--text-sub)]">
               Optional. Diese Auswahl hilft beim ersten Plan.
@@ -125,7 +125,7 @@ export function GoalsScreen({
       >
         {!desiredVolume && (
           <p className="mb-3 text-sm text-secondary">
-            Bitte waehle zuerst aus, wie viel Volumen du dir wuenschst.
+            Bitte wähle zuerst aus, wie viel Volumen du dir wünschst.
           </p>
         )}
         <button

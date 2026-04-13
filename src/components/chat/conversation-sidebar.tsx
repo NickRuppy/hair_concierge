@@ -106,7 +106,7 @@ export function ConversationSidebar({
                       className="shrink-0 rounded p-1.5 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive md:p-1"
                       aria-label="Unterhaltung löschen"
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 </li>

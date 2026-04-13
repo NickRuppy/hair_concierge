@@ -158,7 +158,7 @@ function WelcomePanel() {
         className="mx-auto mb-6 h-1 w-12 rounded-full"
         style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
       />
-      <p className="text-lg text-muted-foreground leading-relaxed">Dein naechster Schritt</p>
+      <p className="text-lg text-muted-foreground leading-relaxed">Dein nächster Schritt</p>
     </>
   )
 }

@@ -14,19 +14,19 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
     {
       key: "healthy_scalp",
       label: "Weniger schnell nachfetten",
-      description: "Laengere Frische zwischen den Waeschen",
+      description: "Längere Frische zwischen den Wäschen",
       icon: "goal-less-washing",
     },
     {
       key: "less_frizz",
       label: "Anti-Frizz & Geschmeidigkeit",
-      description: "Glatter Fall ohne Kraeuselung",
+      description: "Glatter Fall ohne Kräuselung",
       icon: "goal-smoothness",
     },
     {
       key: "shine",
       label: "Mehr Glanz",
-      description: "Sichtbar glaenzenderes, ruhigeres Finish",
+      description: "Sichtbar glänzenderes, ruhigeres Finish",
       icon: "goal-shine",
     },
     {
@@ -40,7 +40,7 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
     {
       key: "curl_definition",
       label: "Wellen-Definition",
-      description: "Gleichmaessige, sichtbare Wellen",
+      description: "Gleichmäßige, sichtbare Wellen",
       icon: "goal-definition",
     },
     {
@@ -52,7 +52,7 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
     {
       key: "shine",
       label: "Mehr Glanz",
-      description: "Glaenzenderes, gesuender wirkendes Haar",
+      description: "Glänzenderes, gesünder wirkendes Haar",
       icon: "goal-shine",
     },
     {
@@ -72,13 +72,13 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
     {
       key: "curl_definition",
       label: "Locken-Clumping",
-      description: "Definierte Lockenbuendel statt Frizz",
+      description: "Definierte Lockenbündel statt Frizz",
       icon: "goal-definition",
     },
     {
       key: "moisture",
       label: "Intensive Feuchtigkeit",
-      description: "Tiefenwirksame Pflege fuer trockene Locken",
+      description: "Tiefenwirksame Pflege für trockene Locken",
       icon: "goal-moisture",
     },
     {
@@ -96,7 +96,7 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
     {
       key: "less_frizz",
       label: "Weniger Frizz",
-      description: "Kontrolle und Definition statt Kraeuselung",
+      description: "Kontrolle und Definition statt Kräuselung",
       icon: "goal-frizz",
     },
   ],
@@ -104,7 +104,7 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
     {
       key: "moisture",
       label: "Feuchtigkeit versiegeln",
-      description: "Feuchtigkeit einschliessen und bewahren",
+      description: "Feuchtigkeit einschließen und bewahren",
       icon: "goal-moisture",
     },
     {
@@ -115,8 +115,8 @@ export const ONBOARDING_GOALS: Record<HairTexture, OnboardingGoal[]> = {
     },
     {
       key: "healthier_hair",
-      label: "Gesuenderes Haar",
-      description: "Mehr Widerstandsfaehigkeit und weniger Haarbruch",
+      label: "Gesünderes Haar",
+      description: "Mehr Widerstandsfähigkeit und weniger Haarbruch",
       icon: "goal-repair",
     },
     {
