@@ -11,6 +11,7 @@ import {
   buildRoutineClarificationQuestions,
   buildRoutinePlan,
   buildRoutineRetrievalSubqueries,
+  deriveRoutineContext,
 } from "@/lib/routines/planner"
 import { attachProductsToRoutinePlan } from "@/lib/routines/product-attachments"
 import { loadUserMemoryContext } from "@/lib/rag/user-memory"
@@ -232,7 +233,11 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
   const classification = classificationOutput.result
   const classificationPromptRef = classificationOutput.promptRef
   const { intent, product_category } = classification
-  const shouldPlanRoutine = intent === "routine_help" || product_category === "routine"
+  const hasExplicitRoutineFollowup =
+    intent === "followup" &&
+    deriveRoutineContext(hairProfile, message).explicit_topic_ids.length > 0
+  const shouldPlanRoutine =
+    intent === "routine_help" || product_category === "routine" || hasExplicitRoutineFollowup
   let routinePlan: RoutinePlan | undefined
   let routinePlanningMs = 0
   if (shouldPlanRoutine) {
