@@ -17,7 +17,7 @@ import {
   mapProductChecklistToRoutineProducts,
   reconcileDiffusor,
 } from "@/lib/onboarding/backward-compat"
-import { deriveOnboardingGoals } from "@/lib/onboarding/goal-flow"
+import { deriveVolumeFromGoals } from "@/lib/onboarding/goal-flow"
 import type { ProductFrequency } from "@/lib/vocabulary"
 import type { HairTexture, DesiredVolume } from "@/lib/vocabulary"
 import type { Goal } from "@/lib/vocabulary"
@@ -204,7 +204,15 @@ export function OnboardingFlow({
         store.setUsesHeatProtection(hairProfile.uses_heat_protection as boolean)
       }
       if (Array.isArray(hairProfile.goals)) {
-        store.setSelectedGoals(hairProfile.goals as string[])
+        const goals = hairProfile.goals as string[]
+        // Legacy resume: translate desired_volume into goal selection
+        if (hairProfile.desired_volume === "more" && !goals.includes("volume")) {
+          goals.push("volume")
+        }
+        if (hairProfile.desired_volume === "less" && !goals.includes("less_volume")) {
+          goals.push("less_volume")
+        }
+        store.setSelectedGoals(goals)
       }
       if (hairProfile.desired_volume) {
         store.setDesiredVolume(hairProfile.desired_volume as DesiredVolume)
@@ -457,16 +465,14 @@ export function OnboardingFlow({
           }
 
           case "goals": {
-            const derivedGoals = deriveOnboardingGoals(
-              state.selectedGoals as Goal[],
-              state.desiredVolume,
-            )
+            const goals = state.selectedGoals as Goal[]
+            const desiredVolume = deriveVolumeFromGoals(goals)
             const routineProducts = mapProductChecklistToRoutineProducts(
               state.allSelectedProducts(),
             )
             await saveHairProfile({
-              goals: derivedGoals,
-              desired_volume: state.desiredVolume,
+              goals,
+              desired_volume: desiredVolume,
               current_routine_products: routineProducts,
             })
             await supabase.from("profiles").update({ onboarding_completed: true }).eq("id", userId)
@@ -542,7 +548,12 @@ export function OnboardingFlow({
     if (selectedGoals.includes(goal)) {
       setSelectedGoals(selectedGoals.filter((g) => g !== goal))
     } else {
-      setSelectedGoals([...selectedGoals, goal])
+      if (selectedGoals.length >= 5) return
+      let next = [...selectedGoals]
+      if (goal === "volume") next = next.filter((g) => g !== "less_volume")
+      if (goal === "less_volume") next = next.filter((g) => g !== "volume")
+      next.push(goal)
+      setSelectedGoals(next)
     }
   }, [])
 
@@ -804,9 +815,7 @@ export function OnboardingFlow({
           <GoalsScreen
             hairTexture={(hairProfile?.hair_texture as HairTexture) ?? null}
             selectedGoals={store.selectedGoals}
-            desiredVolume={store.desiredVolume}
             onGoalToggle={toggleGoal}
-            onVolumeChange={(vol) => store.setDesiredVolume(vol)}
             onContinue={() => handleStepComplete("goals")}
             onBack={() => store.goBack()}
             isSaving={savingStep === "goals"}
