@@ -182,7 +182,7 @@ export function QuizScalpQuestion() {
                 maxHeight: isCollapsed ? 0 : 500,
                 opacity: isCollapsed ? 0 : 1,
                 marginTop: isCollapsed ? 0 : i > 0 ? 12 : 0,
-                overflow: "hidden",
+                overflow: isCollapsed ? "hidden" : "visible",
                 transition: "max-height 300ms ease, opacity 200ms ease, margin-top 300ms ease",
               }}
             >
