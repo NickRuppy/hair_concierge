@@ -10,6 +10,7 @@ interface UseChatReturn {
   conversations: Conversation[]
   currentConversationId: string | null
   sendMessage: (content: string) => Promise<void>
+  submitFeedback: (messageId: string, score: -1 | 1) => Promise<void>
   loadConversation: (id: string) => Promise<void>
   loadConversations: () => Promise<void>
   deleteConversation: (id: string) => Promise<void>
@@ -96,6 +97,10 @@ export function useChat(): UseChatReturn {
         product_recommendations: null,
         rag_context: null,
         token_usage: null,
+        langfuse_trace_id: null,
+        langfuse_trace_url: null,
+        user_feedback_score: null,
+        user_feedback_at: null,
         created_at: new Date().toISOString(),
       }
       setMessages((prev) => [...prev, userMessage])
@@ -114,6 +119,10 @@ export function useChat(): UseChatReturn {
         product_recommendations: null,
         rag_context: null,
         token_usage: null,
+        langfuse_trace_id: null,
+        langfuse_trace_url: null,
+        user_feedback_score: null,
+        user_feedback_at: null,
         created_at: new Date().toISOString(),
       }
       setMessages((prev) => [...prev, assistantMessage])
@@ -173,6 +182,19 @@ export function useChat(): UseChatReturn {
                     return updated
                   })
                   break
+                case "langfuse_trace":
+                  setMessages((prev) => {
+                    const updated = [...prev]
+                    const last = updated[updated.length - 1]
+                    if (last?.role === "assistant") {
+                      updated[updated.length - 1] = {
+                        ...last,
+                        langfuse_trace_id: event.data?.trace_id ?? null,
+                      }
+                    }
+                    return updated
+                  })
+                  break
                 case "product_recommendations":
                   setMessages((prev) => {
                     const updated = [...prev]
@@ -181,6 +203,22 @@ export function useChat(): UseChatReturn {
                       updated[updated.length - 1] = {
                         ...last,
                         product_recommendations: event.data,
+                      }
+                    }
+                    return updated
+                  })
+                  break
+                case "assistant_message":
+                  setMessages((prev) => {
+                    const updated = [...prev]
+                    const last = updated[updated.length - 1]
+                    if (last?.role === "assistant") {
+                      updated[updated.length - 1] = {
+                        ...last,
+                        id: event.data?.id ?? last.id,
+                        langfuse_trace_id: event.data?.langfuse_trace_id ?? last.langfuse_trace_id,
+                        langfuse_trace_url:
+                          event.data?.langfuse_trace_url ?? last.langfuse_trace_url,
                       }
                     }
                     return updated
@@ -253,12 +291,63 @@ export function useChat(): UseChatReturn {
     [currentConversationId, isStreaming, loadConversations, messages.length],
   )
 
+  const submitFeedback = useCallback(
+    async (messageId: string, score: -1 | 1) => {
+      const previous = messages
+
+      setMessages((prev) =>
+        prev.map((message) =>
+          message.id === messageId
+            ? {
+                ...message,
+                user_feedback_score: score,
+                user_feedback_at: new Date().toISOString(),
+              }
+            : message,
+        ),
+      )
+
+      try {
+        const res = await fetch("/api/chat/feedback", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message_id: messageId,
+            score,
+          }),
+        })
+
+        if (!res.ok) {
+          throw new Error("Feedback konnte nicht gespeichert werden")
+        }
+
+        const data = await res.json()
+        setMessages((prev) =>
+          prev.map((message) =>
+            message.id === messageId
+              ? {
+                  ...message,
+                  user_feedback_score: data.score,
+                  user_feedback_at: data.feedback_at ?? message.user_feedback_at,
+                }
+              : message,
+          ),
+        )
+      } catch (error) {
+        console.error("Fehler beim Speichern des Chat-Feedbacks:", error)
+        setMessages(previous)
+      }
+    },
+    [messages],
+  )
+
   return {
     messages,
     isStreaming,
     conversations,
     currentConversationId,
     sendMessage,
+    submitFeedback,
     loadConversation,
     loadConversations,
     deleteConversation,

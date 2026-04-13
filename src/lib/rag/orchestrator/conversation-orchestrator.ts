@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin"
+import { startObservation } from "@langfuse/tracing"
 import { classifyIntent } from "@/lib/rag/intent-classifier"
 import { evaluateRoute } from "@/lib/rag/router"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
@@ -36,6 +37,53 @@ async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; dur
   }
 }
 
+async function observeAsyncStage<T>(
+  name: string,
+  input: unknown,
+  work: () => Promise<T>,
+  options?: {
+    asType?: "span" | "chain" | "retriever"
+    output?: (result: T) => unknown
+    metadata?: Record<string, unknown>
+  },
+): Promise<T> {
+  const attributes = {
+    input,
+    metadata: options?.metadata,
+  }
+  const observation =
+    options?.asType === "chain"
+      ? startObservation(name, attributes, { asType: "chain" })
+      : options?.asType === "retriever"
+        ? startObservation(name, attributes, { asType: "retriever" })
+        : startObservation(name, attributes)
+
+  try {
+    const result = await work()
+
+    if (options?.output) {
+      observation.update({
+        output: options.output(result),
+      })
+    }
+
+    return result
+  } catch (error) {
+    observation.update({
+      output: {
+        failed: true,
+      },
+      metadata: {
+        ...(options?.metadata ?? {}),
+        error: error instanceof Error ? error.message : "unknown_stage_error",
+      },
+    })
+    throw error
+  } finally {
+    observation.end()
+  }
+}
+
 // ── Main orchestrator ────────────────────────────────────────────────────────
 
 /**
@@ -56,34 +104,84 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
   const supabase = createAdminClient()
 
   // ── Step 1: Load conversation history + hair profile + memory ─────
-  const [
-    { result: conversationData, durationMs: historyLoadMs },
-    { result: hairProfileResult, durationMs: hairProfileLoadMs },
-    { result: memoryContext, durationMs: memoryLoadMs },
-  ] = await Promise.all([
-    measureAsync(async () =>
-      conversationId
-        ? await supabase
-            .from("messages")
-            .select("*")
-            .eq("conversation_id", conversationId)
-            .order("created_at", { ascending: true })
-            .limit(10)
-            .then(({ data }) => data)
-        : null,
-    ),
-    measureAsync(
-      async () => await supabase.from("hair_profiles").select("*").eq("user_id", userId).single(),
-    ),
-    measureAsync(() => loadUserMemoryContext(userId, supabase)),
-  ])
+  const {
+    conversationData,
+    hairProfileResult,
+    memoryContext,
+    historyLoadMs,
+    hairProfileLoadMs,
+    memoryLoadMs,
+  } = await observeAsyncStage(
+    "load-chat-context",
+    {
+      conversationId,
+      userId,
+    },
+    async () => {
+      const [
+        { result: conversationData, durationMs: historyLoadMs },
+        { result: hairProfileResult, durationMs: hairProfileLoadMs },
+        { result: memoryContext, durationMs: memoryLoadMs },
+      ] = await Promise.all([
+        measureAsync(async () =>
+          conversationId
+            ? await supabase
+                .from("messages")
+                .select("*")
+                .eq("conversation_id", conversationId)
+                .order("created_at", { ascending: true })
+                .limit(10)
+                .then(({ data }) => data)
+            : null,
+        ),
+        measureAsync(
+          async () =>
+            await supabase.from("hair_profiles").select("*").eq("user_id", userId).single(),
+        ),
+        measureAsync(() => loadUserMemoryContext(userId, supabase)),
+      ])
+
+      return {
+        conversationData,
+        hairProfileResult,
+        memoryContext,
+        historyLoadMs,
+        hairProfileLoadMs,
+        memoryLoadMs,
+      }
+    },
+    {
+      output: (result) => ({
+        historyCount: (result.conversationData as Message[] | null)?.length ?? 0,
+        hasHairProfile: Boolean(result.hairProfileResult.data),
+        hasMemoryContext: Boolean(result.memoryContext.promptContext),
+      }),
+    },
+  )
   const conversationHistory: Message[] = (conversationData as Message[]) ?? []
   const hairProfile: HairProfile | null = hairProfileResult.data ?? null
 
   // ── Step 1b: Classify intent (with conversation context) ───────────
-  const { result: classification, durationMs: classificationMs } = await measureAsync(() =>
-    classifyIntent(message, conversationHistory),
+  const { result: classificationOutput, durationMs: classificationMs } = await measureAsync(() =>
+    observeAsyncStage(
+      "intent-classification-stage",
+      {
+        message,
+        conversationHistoryCount: conversationHistory.length,
+      },
+      () => classifyIntent(message, conversationHistory),
+      {
+        output: ({ result, promptRef }) => ({
+          intent: result.intent,
+          product_category: result.product_category,
+          needs_clarification: result.needs_clarification,
+          prompt: promptRef,
+        }),
+      },
+    ),
   )
+  const classification = classificationOutput.result
+  const classificationPromptRef = classificationOutput.promptRef
   const { intent, product_category } = classification
   const shouldPlanRoutine = intent === "routine_help" || product_category === "routine"
   let routinePlan: RoutinePlan | undefined
@@ -108,7 +206,23 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
 
   // ── Step 2: Evaluate routing decision ──────────────────────────────
   const routerStart = performance.now()
-  const routerDecision = evaluateRoute(classification, conversationHistory, hairProfile, message)
+  const routerDecision = await observeAsyncStage(
+    "router-decision-stage",
+    {
+      intent,
+      product_category,
+      message,
+    },
+    async () => evaluateRoute(classification, conversationHistory, hairProfile, message),
+    {
+      output: (result) => ({
+        retrieval_mode: result.retrieval_mode,
+        needs_clarification: result.needs_clarification,
+        confidence: result.confidence,
+        slot_completeness: result.slot_completeness,
+      }),
+    },
+  )
   const routerMs = Math.round(performance.now() - routerStart)
 
   emitRouterEvent({
@@ -193,32 +307,66 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     // Minimal retrieval for context (but no product matching)
     const clarificationRetrievalCount = 3
     const retrievalStart = performance.now()
-    const { chunks: ragChunks, debug: retrievalDebug } = await retrieve(message, {
-      intent,
-      hairProfile,
-      shampooConcern: decisions.shampoo?.matched_concern_code ?? null,
-      count: clarificationRetrievalCount,
-      subqueries: routinePlan ? buildRoutineRetrievalSubqueries(message, routinePlan) : undefined,
-      userId,
-    })
+    const { chunks: ragChunks, debug: retrievalDebug } = await observeAsyncStage(
+      "clarification-retrieval-stage",
+      {
+        intent,
+        retrievalCount: clarificationRetrievalCount,
+      },
+      () =>
+        retrieve(message, {
+          intent,
+          hairProfile,
+          shampooConcern: decisions.shampoo?.matched_concern_code ?? null,
+          count: clarificationRetrievalCount,
+          subqueries: routinePlan
+            ? buildRoutineRetrievalSubqueries(message, routinePlan)
+            : undefined,
+          userId,
+        }),
+      {
+        asType: "retriever",
+        output: ({ chunks, debug }) => ({
+          final_context_count: chunks.length,
+          candidate_count_before_rerank: debug.candidate_count_before_rerank,
+          fallback_used: debug.fallback_used,
+        }),
+      },
+    )
     const retrievalMs = Math.round(performance.now() - retrievalStart)
 
     const sources = buildSources(ragChunks)
 
-    const synthesisResult = await composeResponse({
-      userMessage: message,
-      conversationHistory,
-      hairProfile,
-      ragChunks,
-      intent,
-      productCategory: product_category,
-      shampooDecision: decisions.shampoo,
-      conditionerDecision: decisions.conditioner,
-      leaveInDecision: decisions.leaveIn,
-      oilDecision: decisions.oil,
-      memoryContext: memoryContext.promptContext,
-      clarificationQuestions,
-    })
+    const synthesisResult = await observeAsyncStage(
+      "clarification-synthesis-stage",
+      {
+        intent,
+        product_category,
+        clarificationQuestionCount: clarificationQuestions.length,
+      },
+      () =>
+        composeResponse({
+          userMessage: message,
+          conversationHistory,
+          hairProfile,
+          ragChunks,
+          intent,
+          productCategory: product_category,
+          shampooDecision: decisions.shampoo,
+          conditionerDecision: decisions.conditioner,
+          leaveInDecision: decisions.leaveIn,
+          oilDecision: decisions.oil,
+          memoryContext: memoryContext.promptContext,
+          clarificationQuestions,
+        }),
+      {
+        asType: "chain",
+        output: (result) => ({
+          model: result.debug.prompt.model,
+          prompt_ref: result.debug.prompt.prompt_ref,
+        }),
+      },
+    )
     const categoryDecision = getPrimaryCategoryDecision(decisions)
     const debugTrace = buildPipelineTraceDraft({
       request_id: requestId,
@@ -240,6 +388,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       routine_plan: routinePlan,
       category_decision: categoryDecision,
       matched_products: [],
+      classification_prompt_ref: classificationPromptRef,
       prompt: synthesisResult.debug.prompt,
       latencies_ms: {
         classification_ms: classificationMs,
@@ -286,15 +435,33 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
   const retrievalCount = routerDecision.retrieval_mode === "faq" ? 3 : 5
 
   const retrievalStart = performance.now()
-  const { chunks: ragChunks, debug: retrievalDebug } = await retrieve(message, {
-    intent,
-    hairProfile,
-    metadataFilter,
-    shampooConcern: decisions.shampoo?.matched_concern_code ?? null,
-    count: retrievalCount,
-    subqueries: routinePlan ? buildRoutineRetrievalSubqueries(message, routinePlan) : undefined,
-    userId,
-  })
+  const { chunks: ragChunks, debug: retrievalDebug } = await observeAsyncStage(
+    "chat-retrieval-stage",
+    {
+      intent,
+      product_category,
+      retrievalCount,
+      metadataFilter,
+    },
+    () =>
+      retrieve(message, {
+        intent,
+        hairProfile,
+        metadataFilter,
+        shampooConcern: decisions.shampoo?.matched_concern_code ?? null,
+        count: retrievalCount,
+        subqueries: routinePlan ? buildRoutineRetrievalSubqueries(message, routinePlan) : undefined,
+        userId,
+      }),
+    {
+      asType: "retriever",
+      output: ({ chunks, debug }) => ({
+        final_context_count: chunks.length,
+        candidate_count_before_rerank: debug.candidate_count_before_rerank,
+        fallback_used: debug.fallback_used,
+      }),
+    },
+  )
   const retrievalMs = Math.round(performance.now() - retrievalStart)
 
   // ── Build enriched citation sources from retrieved chunks ──────────
@@ -305,12 +472,25 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
   let maskDecision: MaskDecision | undefined
   const productMatchingStart = performance.now()
   if (shouldPlanRoutine && routinePlan) {
-    const routineResult = await attachProductsToRoutinePlan({
-      plan: routinePlan,
-      hairProfile,
-      memoryContext,
-      supabase,
-    })
+    const routineResult = await observeAsyncStage(
+      "routine-product-selection-stage",
+      {
+        focusCount: routinePlan.primary_focuses.length,
+      },
+      () =>
+        attachProductsToRoutinePlan({
+          plan: routinePlan!,
+          hairProfile,
+          memoryContext,
+          supabase,
+        }),
+      {
+        asType: "chain",
+        output: (result) => ({
+          matched_product_count: result.matchedProducts.length,
+        }),
+      },
+    )
     routinePlan = routineResult.plan
     matchedProducts = routineResult.matchedProducts
   } else if (PRODUCT_INTENTS.includes(intent)) {
@@ -320,14 +500,28 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       decisions = { ...decisions, mask: maskDecision }
     }
 
-    const selectionResult = await selectProducts({
-      category: product_category,
-      message,
-      hairProfile,
-      decisions,
-      memoryContext,
-      shouldPlanRoutine: false,
-    })
+    const selectionResult = await observeAsyncStage(
+      "product-selection-stage",
+      {
+        product_category,
+        intent,
+      },
+      () =>
+        selectProducts({
+          category: product_category,
+          message,
+          hairProfile,
+          decisions,
+          memoryContext,
+          shouldPlanRoutine: false,
+        }),
+      {
+        asType: "chain",
+        output: (result) => ({
+          matched_product_count: result.products.length,
+        }),
+      },
+    )
     matchedProducts = selectionResult.products
 
     // Merge updated decisions back
@@ -352,22 +546,38 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
   // Note: memory constraints for non-routine are already applied inside selectProducts()
 
   // ── Step 5: Synthesize streaming response ──────────────────────────
-  const synthesisResult = await composeResponse({
-    userMessage: message,
-    conversationHistory,
-    hairProfile,
-    ragChunks,
-    products: matchedProducts,
-    intent,
-    productCategory: product_category,
-    maskDecision: product_category === "mask" ? maskDecision : undefined,
-    shampooDecision: decisions.shampoo,
-    conditionerDecision: decisions.conditioner,
-    leaveInDecision: decisions.leaveIn,
-    oilDecision: decisions.oil,
-    routinePlan,
-    memoryContext: memoryContext.promptContext,
-  })
+  const synthesisResult = await observeAsyncStage(
+    "chat-synthesis-stage",
+    {
+      intent,
+      product_category,
+      matched_product_count: matchedProducts?.length ?? 0,
+    },
+    () =>
+      composeResponse({
+        userMessage: message,
+        conversationHistory,
+        hairProfile,
+        ragChunks,
+        products: matchedProducts,
+        intent,
+        productCategory: product_category,
+        maskDecision: product_category === "mask" ? maskDecision : undefined,
+        shampooDecision: decisions.shampoo,
+        conditionerDecision: decisions.conditioner,
+        leaveInDecision: decisions.leaveIn,
+        oilDecision: decisions.oil,
+        routinePlan,
+        memoryContext: memoryContext.promptContext,
+      }),
+    {
+      asType: "chain",
+      output: (result) => ({
+        model: result.debug.prompt.model,
+        prompt_ref: result.debug.prompt.prompt_ref,
+      }),
+    },
+  )
   const categoryDecision = getPrimaryCategoryDecision(decisions)
   const debugTrace = buildPipelineTraceDraft({
     request_id: requestId,
@@ -388,6 +598,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     routine_plan: routinePlan,
     category_decision: categoryDecision,
     matched_products: matchedProducts ?? [],
+    classification_prompt_ref: classificationPromptRef,
     prompt: synthesisResult.debug.prompt,
     latencies_ms: {
       classification_ms: classificationMs,

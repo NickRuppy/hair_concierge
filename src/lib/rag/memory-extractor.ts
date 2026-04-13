@@ -1,5 +1,12 @@
 import { z } from "zod"
-import { getOpenAI } from "@/lib/openai/client"
+import { startObservation } from "@langfuse/tracing"
+import { context as otelContext, trace as otelTrace } from "@opentelemetry/api"
+import { getObservedOpenAI } from "@/lib/openai/client"
+import {
+  buildLangfusePromptConfig,
+  getManagedTextPrompt,
+  LANGFUSE_PROMPTS,
+} from "@/lib/langfuse/prompts"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
   buildMemoryPromptContext,
@@ -9,6 +16,8 @@ import {
   type ExtractedMemoryCandidate,
 } from "@/lib/rag/user-memory"
 import type { UserMemoryKind } from "@/lib/types"
+
+export { MEMORY_EXTRACTION_JSON_PROMPT } from "@/lib/rag/prompts"
 
 const MIN_USER_MESSAGES = 3
 
@@ -36,21 +45,6 @@ const extractionResponseSchema = z.object({
   memories: z.array(extractedMemorySchema).default([]),
 })
 
-export const MEMORY_EXTRACTION_JSON_PROMPT = `Du bist ein Analyse-Assistent fuer Hair Concierge. Extrahiere dauerhafte, haarspezifische Erinnerungen aus einem Gespraech.
-
-Antworte NUR als JSON:
-{"memories":[{"kind":"preference|routine|product_experience|hair_history|progress|sensitivity|medical_context|other","memory_key":"stabiler_key","content":"deutscher Satz","evidence":"kurzes Nutzerzitat","confidence":0.0,"product_names":["..."],"sentiment":"positive|negative|neutral"}]}
-
-Regeln:
-- Speichere nur Fakten, die der NUTZER explizit sagt oder bestaetigt.
-- Speichere keine Empfehlungen, Erklaerungen oder Annahmen des Assistenten.
-- Speichere nur hair-care-relevante Fakten: Vorlieben, Routine, Produkterfahrungen, Haarhistorie, Fortschritt, Reaktionen, Sensitivitaeten.
-- Medizinisch angrenzende Fakten wie Haarausfall, Kopfhautbeschwerden, Schwangerschaft, Medikamente oder Allergien nur speichern, wenn der Nutzer sie explizit als relevant nennt.
-- Keine Smalltalk-Fakten, keine allgemeinen Lebensdetails ohne Haarpflegebezug.
-- Bei Produkterfahrungen setze product_names und sentiment. Negative sentiment bedeutet: Produkt nicht wieder priorisieren.
-- memory_key muss stabil sein, z.B. "product:olaplex_no_3", "preference:duft", "routine:wash_frequency". Bei neuem Widerspruch denselben memory_key verwenden, damit die neueste Aussage gewinnt.
-- Wenn nichts Neues speicherwuerdig ist: {"memories":[]}.`
-
 export function parseMemoryExtractionResult(content: string): ExtractedMemoryCandidate[] {
   try {
     const parsed = extractionResponseSchema.safeParse(JSON.parse(content))
@@ -73,7 +67,7 @@ export function parseMemoryExtractionResult(content: string): ExtractedMemoryCan
 async function markConversationExtracted(
   conversationId: string,
   messageCount: number,
-  supabase: ReturnType<typeof createAdminClient>
+  supabase: ReturnType<typeof createAdminClient>,
 ) {
   await supabase
     .from("conversations")
@@ -87,7 +81,7 @@ async function markConversationExtracted(
  */
 export async function extractConversationMemory(
   conversationId: string,
-  userId: string
+  userId: string,
 ): Promise<void> {
   try {
     const supabase = createAdminClient()
@@ -118,36 +112,80 @@ export async function extractConversationMemory(
       return
     }
 
-    const existingMemory = buildMemoryPromptContext(
-      await listUserMemoryEntries(userId, supabase)
-    )
-
-    const transcript = messages
-      .map((message) => `${message.role === "user" ? "Nutzer" : "Assistent"}: ${message.content ?? ""}`)
-      .join("\n")
-
-    const prompt = [
-      MEMORY_EXTRACTION_JSON_PROMPT,
-      existingMemory ? `\nBestehende aktive Erinnerungen:\n${existingMemory}` : "",
-      `\nGespraech:\n${transcript}`,
-    ].join("\n")
-
-    const completion = await getOpenAI().chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      max_tokens: 800,
-      temperature: 0.1,
-      response_format: { type: "json_object" },
+    const observation = startObservation("memory-extraction", {
+      input: {
+        conversationId,
+        userId,
+        messageCount: messages.length,
+      },
+      metadata: {
+        feature: "user-memory",
+      },
     })
+    const observationContext = otelTrace.setSpan(otelContext.active(), observation.otelSpan)
 
-    const content = completion.choices[0]?.message?.content
-    const memories = content ? parseMemoryExtractionResult(content) : []
+    try {
+      await otelContext.with(observationContext, async () => {
+        const existingMemory = buildMemoryPromptContext(await listUserMemoryEntries(userId, supabase))
 
-    if (memories.length > 0) {
-      await insertExtractedMemories(userId, conversationId, memories, supabase)
+        const transcript = messages
+          .map(
+            (message) =>
+              `${message.role === "user" ? "Nutzer" : "Assistent"}: ${message.content ?? ""}`,
+          )
+          .join("\n")
+
+        const managedPrompt = await getManagedTextPrompt(LANGFUSE_PROMPTS.memoryExtraction, {
+          EXISTING_MEMORY_SECTION: existingMemory
+            ? `Bestehende aktive Erinnerungen:\n${existingMemory}`
+            : "Keine bestehenden aktiven Erinnerungen.",
+          TRANSCRIPT: transcript,
+        })
+
+        const completion = await getObservedOpenAI({
+          generationName: "memory-extraction-json",
+          generationMetadata: {
+            conversation_id: conversationId,
+            prompt_label: managedPrompt.ref.label,
+          },
+          langfusePrompt: buildLangfusePromptConfig(managedPrompt.ref),
+        }).chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [{ role: "user", content: managedPrompt.text }],
+          max_tokens: 800,
+          temperature: 0.1,
+          response_format: { type: "json_object" },
+        })
+
+        const content = completion.choices[0]?.message?.content
+        const memories = content ? parseMemoryExtractionResult(content) : []
+
+        if (memories.length > 0) {
+          await insertExtractedMemories(userId, conversationId, memories, supabase)
+        }
+
+        await markConversationExtracted(conversationId, messages.length, supabase)
+        observation.update({
+          output: {
+            skipped: false,
+            memoryCount: memories.length,
+            prompt: managedPrompt.ref,
+          },
+        })
+      })
+    } catch (error) {
+      console.error("Memory extraction failed:", error)
+      observation.update({
+        output: {
+          failed: true,
+        },
+        metadata: {
+          error: error instanceof Error ? error.message : "memory_extraction_failed",
+        },
+      })
+    } finally {
+      observation.end()
     }
-
-    await markConversationExtracted(conversationId, messages.length, supabase)
   } catch (error) {
     console.error("Memory extraction failed:", error)
   }

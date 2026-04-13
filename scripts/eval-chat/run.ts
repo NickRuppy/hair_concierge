@@ -14,13 +14,10 @@ import path from "path"
 // ── Load .env.local (same pattern as eval-retrieval.ts) ──────────────────
 const envPath = path.join(process.cwd(), ".env.local")
 if (fs.existsSync(envPath)) {
-  for (const line of fs
-    .readFileSync(envPath, "utf-8")
-    .replace(/\r/g, "")
-    .split("\n")) {
+  for (const line of fs.readFileSync(envPath, "utf-8").replace(/\r/g, "").split("\n")) {
     const match = line.match(/^([^#=]+)=(.*)$/)
     if (match && !process.env[match[1].trim()]) {
-      process.env[match[1].trim()] = match[2].trim()
+      process.env[match[1].trim()] = match[2].trim().replace(/^"(.*)"$/, "$1")
     }
   }
 }
@@ -29,17 +26,18 @@ import { SCENARIOS } from "./fixtures"
 import {
   createTestSession,
   upsertHairProfile,
-  clearConversations,
   sendMessage,
   fetchLatestAssistantMessage,
 } from "./client"
 import { runMetadataAssertions, runContentAssertions } from "./assertions"
-import { runJudge } from "./judge"
+import { runJudge, runQualityRubric } from "./judge"
+import { publishEvalExperiment } from "./langfuse"
 import { buildReport, writeReport, printSummary } from "./report"
 import type {
   ScenarioResult,
   TurnResult,
   AssertionResult,
+  LangfuseExperimentSummary,
 } from "./types"
 
 // ── CLI args ─────────────────────────────────────────────────────────────
@@ -49,6 +47,9 @@ function parseArgs() {
   let baseUrl = "http://localhost:3000"
   let scenarioFilter: string | null = null
   let skipJudge = false
+  let langfusePublish = process.env.LANGFUSE_EVAL_PUBLISH === "1"
+  let langfuseRunName: string | null = null
+  let langfuseExperimentName = "Hair Concierge Chat Eval"
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--base-url" && args[i + 1]) {
@@ -57,16 +58,36 @@ function parseArgs() {
       scenarioFilter = args[++i]
     } else if (args[i] === "--skip-judge") {
       skipJudge = true
+    } else if (args[i] === "--langfuse-publish") {
+      langfusePublish = true
+    } else if (args[i] === "--langfuse-run-name" && args[i + 1]) {
+      langfuseRunName = args[++i]
+    } else if (args[i] === "--langfuse-experiment-name" && args[i + 1]) {
+      langfuseExperimentName = args[++i]
     }
   }
 
-  return { baseUrl, scenarioFilter, skipJudge }
+  return {
+    baseUrl,
+    scenarioFilter,
+    skipJudge,
+    langfusePublish,
+    langfuseRunName,
+    langfuseExperimentName,
+  }
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────
 
 async function main() {
-  const { baseUrl, scenarioFilter, skipJudge } = parseArgs()
+  const {
+    baseUrl,
+    scenarioFilter,
+    skipJudge,
+    langfusePublish,
+    langfuseRunName,
+    langfuseExperimentName,
+  } = parseArgs()
   const startTime = Date.now()
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -80,9 +101,7 @@ async function main() {
     process.exit(1)
   }
 
-  const scenarios = scenarioFilter
-    ? SCENARIOS.filter((s) => s.id === scenarioFilter)
-    : SCENARIOS
+  const scenarios = scenarioFilter ? SCENARIOS.filter((s) => s.id === scenarioFilter) : SCENARIOS
 
   if (scenarios.length === 0) {
     console.error(`No scenario found with id "${scenarioFilter}"`)
@@ -94,16 +113,13 @@ async function main() {
   )
 
   const results: ScenarioResult[] = []
+  let langfuseExperiment: LangfuseExperimentSummary | null = null
 
   for (const scenario of scenarios) {
     console.log(`\n--- ${scenario.id}: ${scenario.name} ---`)
 
     // Fresh user per scenario (isolates state)
-    const session = await createTestSession(
-      supabaseUrl,
-      serviceRoleKey,
-      anonKey,
-    )
+    const session = await createTestSession(supabaseUrl, serviceRoleKey, anonKey)
 
     try {
       await upsertHairProfile(session.admin, session.userId, scenario.hair_profile)
@@ -147,10 +163,7 @@ async function main() {
         if (conversationId && sse.content.length > 0) {
           // Small delay to let async persistence complete
           await new Promise((r) => setTimeout(r, 1000))
-          const dbMsg = await fetchLatestAssistantMessage(
-            session.admin,
-            conversationId,
-          )
+          const dbMsg = await fetchLatestAssistantMessage(session.admin, conversationId)
           if (dbMsg) {
             const dbSourceCount = dbMsg.rag_context?.sources
               ? (dbMsg.rag_context.sources as unknown[]).length
@@ -182,9 +195,7 @@ async function main() {
             sse,
             turn.judge,
             scenario.hair_profile,
-            conversationHistory.length > 0
-              ? conversationHistory.join("\n")
-              : undefined,
+            conversationHistory.length > 0 ? conversationHistory.join("\n") : undefined,
           )
 
           assertions.push({
@@ -196,6 +207,15 @@ async function main() {
           })
         }
 
+        const qualityRubric = skipJudge
+          ? null
+          : await runQualityRubric(
+              turn.message,
+              sse,
+              scenario.hair_profile,
+              conversationHistory.length > 0 ? conversationHistory.join("\n") : undefined,
+            )
+
         const allPassed = assertions.every((a) => a.passed)
         const failCount = assertions.filter((a) => !a.passed).length
 
@@ -206,9 +226,7 @@ async function main() {
 
         if (!allPassed) {
           for (const f of assertions.filter((a) => !a.passed)) {
-            console.log(
-              `      [${f.tier}] ${f.name}: expected ${f.expected}, got ${f.actual}`,
-            )
+            console.log(`      [${f.tier}] ${f.name}: expected ${f.expected}, got ${f.actual}`)
           }
         }
 
@@ -218,15 +236,14 @@ async function main() {
           sse_result: sse,
           assertions,
           judge_result: judgeResult,
+          quality_rubric: qualityRubric,
           all_passed: allPassed,
         })
 
         // Build conversation context for judge
         conversationHistory.push(`Nutzer: ${turn.message}`)
         if (sse.content) {
-          conversationHistory.push(
-            `Assistent: ${sse.content.slice(0, 200)}`,
-          )
+          conversationHistory.push(`Assistent: ${sse.content.slice(0, 200)}`)
         }
       }
 
@@ -242,8 +259,31 @@ async function main() {
     }
   }
 
+  if (langfusePublish) {
+    try {
+      langfuseExperiment = await publishEvalExperiment({
+        baseUrl,
+        scenarios,
+        results,
+        skipJudge,
+        experimentName: langfuseExperimentName,
+        runName: langfuseRunName ?? undefined,
+      })
+      console.log(
+        `Langfuse experiment published: ${langfuseExperiment.run_name} (${langfuseExperiment.experiment_id})`,
+      )
+      if (langfuseExperiment.dataset_run_url) {
+        console.log(`Langfuse URL: ${langfuseExperiment.dataset_run_url}`)
+      }
+    } catch (error) {
+      console.error(
+        `Failed to publish Langfuse experiment: ${error instanceof Error ? error.message : String(error)}`,
+      )
+    }
+  }
+
   // Write report
-  const report = buildReport(results, baseUrl, startTime)
+  const report = buildReport(results, baseUrl, startTime, langfuseExperiment)
   const reportPath = writeReport(report)
   printSummary(report)
   console.log(`Report: ${reportPath}`)

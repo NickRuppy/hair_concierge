@@ -3,6 +3,12 @@ import {
   DEFAULT_CHAT_COMPLETION_TEMPERATURE,
   streamChatCompletion,
 } from "@/lib/openai/chat"
+import {
+  buildLangfusePromptConfig,
+  getManagedTextPromptTemplate,
+  LANGFUSE_PROMPTS,
+} from "@/lib/langfuse/prompts"
+import { getLangfuseEnvironment } from "@/lib/openai/client"
 import { SYSTEM_PROMPT } from "@/lib/rag/prompts"
 import {
   CONDITIONER_REPAIR_LEVEL_LABELS,
@@ -1025,8 +1031,9 @@ export function buildSystemPrompt(
   routinePlan?: RoutinePlan,
   memoryContext?: string | null,
   clarificationQuestions?: string[],
+  basePromptTemplate = SYSTEM_PROMPT,
 ): string {
-  let prompt = SYSTEM_PROMPT
+  let prompt = basePromptTemplate
 
   // Inject category-specific reasoning instructions
   if (productCategory && CATEGORY_REASONING_PROMPTS[productCategory]) {
@@ -1095,6 +1102,7 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
   } = params
 
   const promptBuildStart = performance.now()
+  const managedPrompt = await getManagedTextPromptTemplate(LANGFUSE_PROMPTS.chatSystem)
   const systemPrompt = buildSystemPrompt(
     hairProfile,
     ragChunks,
@@ -1108,6 +1116,7 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     routinePlan,
     memoryContext,
     clarificationQuestions,
+    managedPrompt.template,
   )
 
   // Build the messages array for the API call
@@ -1151,6 +1160,15 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     messages,
     model: DEFAULT_CHAT_COMPLETION_MODEL,
     temperature: DEFAULT_CHAT_COMPLETION_TEMPERATURE,
+    langfuseConfig: {
+      generationName: "chat-response",
+      generationMetadata: {
+        environment: getLangfuseEnvironment(),
+        prompt_label: managedPrompt.ref.label,
+        prompt_is_fallback: String(managedPrompt.ref.is_fallback),
+      },
+      langfusePrompt: buildLangfusePromptConfig(managedPrompt.ref),
+    },
   })
   const streamSetupMs = Math.round(performance.now() - streamSetupStart)
 
@@ -1160,6 +1178,7 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
       prompt: {
         model: DEFAULT_CHAT_COMPLETION_MODEL,
         temperature: DEFAULT_CHAT_COMPLETION_TEMPERATURE,
+        prompt_ref: managedPrompt.ref,
         system_prompt: systemPrompt,
         messages: promptMessages,
       },

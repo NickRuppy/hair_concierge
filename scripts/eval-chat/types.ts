@@ -73,6 +73,9 @@ export interface EvalScenario {
 
 export interface SSEResult {
   conversation_id: string | null
+  assistant_message_id: string | null
+  langfuse_trace_id: string | null
+  langfuse_trace_url: string | null
   content: string
   done_data: Record<string, unknown> | null
   sources: unknown[]
@@ -96,12 +99,23 @@ export interface JudgeVerdict {
   issues: string[]
 }
 
+export interface QualityRubricResult {
+  groundedness: number
+  recommendation_relevance: number
+  clarification_quality: number
+  overclaim_risk: number
+  overall_quality: number
+  summary: string
+  issues: string[]
+}
+
 export interface TurnResult {
   turn_index: number
   message: string
   sse_result: SSEResult
   assertions: AssertionResult[]
   judge_result: JudgeVerdict | null
+  quality_rubric: QualityRubricResult | null
   all_passed: boolean
 }
 
@@ -112,10 +126,18 @@ export interface ScenarioResult {
   turns: TurnResult[]
 }
 
+export interface LangfuseExperimentSummary {
+  experiment_id: string
+  run_name: string
+  dataset_run_id?: string
+  dataset_run_url?: string
+}
+
 export interface EvalReport {
   timestamp: string
   base_url: string
   duration_ms: number
+  langfuse_experiment?: LangfuseExperimentSummary | null
   summary: {
     total_scenarios: number
     passed: number

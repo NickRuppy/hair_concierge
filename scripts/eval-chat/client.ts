@@ -14,8 +14,7 @@ const MAX_CHUNK_SIZE = 3180
 
 // ── Base64URL encoding (matches @supabase/ssr) ───────────────────────────
 
-const TO_BASE64URL =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".split("")
+const TO_BASE64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".split("")
 
 function stringToBase64URL(str: string): string {
   const base64: string[] = []
@@ -84,9 +83,7 @@ function buildAuthCookies(sessionJSON: string): string {
     remaining = remaining.slice(head.length)
   }
 
-  return chunks
-    .map((value, i) => `${COOKIE_NAME}.${i}=${encodeURIComponent(value)}`)
-    .join("; ")
+  return chunks.map((value, i) => `${COOKIE_NAME}.${i}=${encodeURIComponent(value)}`).join("; ")
 }
 
 // ── Test user management ─────────────────────────────────────────────────
@@ -110,13 +107,12 @@ export async function createTestSession(
   const email = `eval-chat-${Date.now()}@test.hairconscierge.dev`
   const password = "eval-test-password-2026"
 
-  const { data: userData, error: createErr } =
-    await admin.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-      user_metadata: { full_name: "Eval Test User" },
-    })
+  const { data: userData, error: createErr } = await admin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { full_name: "Eval Test User" },
+  })
 
   if (createErr || !userData.user) {
     throw new Error(`Failed to create test user: ${createErr?.message}`)
@@ -136,8 +132,10 @@ export async function createTestSession(
     auth: { autoRefreshToken: false, persistSession: false },
   })
 
-  const { data: signInData, error: signInErr } =
-    await anonClient.auth.signInWithPassword({ email, password })
+  const { data: signInData, error: signInErr } = await anonClient.auth.signInWithPassword({
+    email,
+    password,
+  })
 
   if (signInErr || !signInData.session) {
     throw new Error(`Failed to sign in test user: ${signInErr?.message}`)
@@ -179,10 +177,7 @@ export async function upsertHairProfile(
   })
 }
 
-export async function clearConversations(
-  admin: SupabaseClient,
-  userId: string,
-): Promise<void> {
+export async function clearConversations(admin: SupabaseClient, userId: string): Promise<void> {
   const { data: conversations } = await admin
     .from("conversations")
     .select("id")
@@ -224,6 +219,9 @@ export async function sendMessage(
     const text = await response.text().catch(() => "(empty body)")
     return {
       conversation_id: null,
+      assistant_message_id: null,
+      langfuse_trace_id: null,
+      langfuse_trace_url: null,
       content: "",
       done_data: null,
       sources: [],
@@ -236,6 +234,9 @@ export async function sendMessage(
   // Parse SSE stream
   const result: SSEResult = {
     conversation_id: null,
+    assistant_message_id: null,
+    langfuse_trace_id: null,
+    langfuse_trace_url: null,
     content: "",
     done_data: null,
     sources: [],
@@ -264,6 +265,9 @@ export async function sendMessage(
           case "conversation_id":
             result.conversation_id = event.data
             break
+          case "langfuse_trace":
+            result.langfuse_trace_id = event.data?.trace_id ?? null
+            break
           case "content_delta":
             result.content += event.data
             break
@@ -272,6 +276,11 @@ export async function sendMessage(
             break
           case "sources":
             result.sources = event.data
+            break
+          case "assistant_message":
+            result.assistant_message_id = event.data?.id ?? null
+            result.langfuse_trace_id = event.data?.langfuse_trace_id ?? result.langfuse_trace_id
+            result.langfuse_trace_url = event.data?.langfuse_trace_url ?? null
             break
           case "done":
             result.done_data = event.data
@@ -291,8 +300,7 @@ export async function sendMessage(
     try {
       const event = JSON.parse(buffer.slice(6))
       if (event.type === "done") result.done_data = event.data
-      if (event.type === "error")
-        result.error = event.data?.message ?? "Unknown SSE error"
+      if (event.type === "error") result.error = event.data?.message ?? "Unknown SSE error"
     } catch {
       // ignore
     }
@@ -308,13 +316,19 @@ export async function fetchLatestAssistantMessage(
   admin: SupabaseClient,
   conversationId: string,
 ): Promise<{
+  id: string
   content: string | null
   product_recommendations: unknown[] | null
   rag_context: { sources?: unknown[]; category_decision?: unknown } | null
+  langfuse_trace_id: string | null
+  langfuse_trace_url: string | null
+  user_feedback_score: number | null
 } | null> {
   const { data } = await admin
     .from("messages")
-    .select("content, product_recommendations, rag_context")
+    .select(
+      "id, content, product_recommendations, rag_context, langfuse_trace_id, langfuse_trace_url, user_feedback_score",
+    )
     .eq("conversation_id", conversationId)
     .eq("role", "assistant")
     .order("created_at", { ascending: false })

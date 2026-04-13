@@ -14,6 +14,10 @@ interface MessageRow {
   content: string | null
   created_at: string
   rag_context?: MessageRagContext | null
+  langfuse_trace_id?: string | null
+  langfuse_trace_url?: string | null
+  user_feedback_score?: -1 | 1 | null
+  user_feedback_at?: string | null
 }
 
 interface ConversationDetail {
@@ -71,7 +75,9 @@ function TraceBadge({
         : "bg-muted text-muted-foreground border-border"
 
   return (
-    <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${className}`}>
+    <span
+      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${className}`}
+    >
       {label}
     </span>
   )
@@ -97,9 +103,17 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
           <span className="text-xs text-muted-foreground">
             Gesamt: {formatDuration(totalLatency)}
           </span>
-          <span className="text-xs text-muted-foreground">
-            Request: {trace.request_id}
-          </span>
+          <span className="text-xs text-muted-foreground">Request: {trace.request_id}</span>
+          {traceRecord.langfuse_trace_url ? (
+            <a
+              href={traceRecord.langfuse_trace_url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs text-primary underline underline-offset-2"
+            >
+              Langfuse
+            </a>
+          ) : null}
         </div>
       </summary>
 
@@ -133,9 +147,7 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
 
           <div className="rounded-lg border bg-card p-3">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Produkte</p>
-            <p className="mt-1 font-medium text-foreground">
-              {matchedProducts.length} gematcht
-            </p>
+            <p className="mt-1 font-medium text-foreground">{matchedProducts.length} gematcht</p>
             <p className="mt-1 text-xs text-muted-foreground">
               Routine-Plan: {trace.decision_context.should_plan_routine ? "ja" : "nein"}
             </p>
@@ -196,9 +208,7 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
           <div className="rounded-lg border bg-card p-3">
             <p className="text-xs text-muted-foreground">
               Subqueries:{" "}
-              {trace.retrieval.subqueries.length > 0
-                ? trace.retrieval.subqueries.join(" | ")
-                : "—"}
+              {trace.retrieval.subqueries.length > 0 ? trace.retrieval.subqueries.join(" | ") : "—"}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
               Metadata-Filter:{" "}
@@ -223,9 +233,7 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
                         Score: {chunk.weighted_similarity.toFixed(4)}
                       </span>
                       {chunk.source_name ? (
-                        <span className="text-xs text-muted-foreground">
-                          {chunk.source_name}
-                        </span>
+                        <span className="text-xs text-muted-foreground">{chunk.source_name}</span>
                       ) : null}
                     </div>
                     <p className="mt-2 whitespace-pre-wrap text-sm text-foreground">
@@ -244,7 +252,9 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
           </p>
           <div className="rounded-lg border bg-card p-3">
             {matchedProducts.length === 0 ? (
-              <p className="text-xs text-muted-foreground">Keine Produktmatches fuer diesen Turn.</p>
+              <p className="text-xs text-muted-foreground">
+                Keine Produktmatches fuer diesen Turn.
+              </p>
             ) : (
               <div className="space-y-2">
                 {matchedProducts.map((product) => (
@@ -278,6 +288,11 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
             <p className="text-xs text-muted-foreground">
               Modell: {trace.prompt.model} · Temperatur: {trace.prompt.temperature}
             </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Prompt: {trace.prompt.prompt_ref.name} · Version:{" "}
+              {trace.prompt.prompt_ref.version ?? "fallback"} · Label:{" "}
+              {trace.prompt.prompt_ref.label}
+            </p>
             <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap rounded-md bg-background p-3 text-xs text-foreground">
               {trace.prompt.system_prompt}
             </pre>
@@ -289,7 +304,10 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
             </p>
             <div className="max-h-72 space-y-2 overflow-auto">
               {trace.prompt.messages.map((message, index) => (
-                <div key={`${message.role}-${index}`} className="rounded-md border bg-background p-3">
+                <div
+                  key={`${message.role}-${index}`}
+                  className="rounded-md border bg-background p-3"
+                >
                   <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     {message.role}
                   </p>
@@ -308,12 +326,16 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
               Entscheidungskontext
             </p>
             <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded-md bg-background p-3 text-xs text-foreground">
-              {JSON.stringify({
-                classification: trace.classification,
-                router_decision: trace.router_decision,
-                category_decision: trace.decision_context.category_decision,
-                routine_plan: trace.decision_context.routine_plan,
-              }, null, 2)}
+              {JSON.stringify(
+                {
+                  classification: trace.classification,
+                  router_decision: trace.router_decision,
+                  category_decision: trace.decision_context.category_decision,
+                  routine_plan: trace.decision_context.routine_plan,
+                },
+                null,
+                2,
+              )}
             </pre>
           </div>
 
@@ -322,12 +344,16 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
               Profil Snapshot
             </p>
             <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded-md bg-background p-3 text-xs text-foreground">
-              {JSON.stringify({
-                hair_profile_snapshot: trace.hair_profile_snapshot,
-                memory_context: trace.memory_context,
-                response: trace.response,
-                error: trace.error,
-              }, null, 2)}
+              {JSON.stringify(
+                {
+                  hair_profile_snapshot: trace.hair_profile_snapshot,
+                  memory_context: trace.memory_context,
+                  response: trace.response,
+                  error: trace.error,
+                },
+                null,
+                2,
+              )}
             </pre>
           </div>
         </div>
@@ -353,8 +379,7 @@ export default function AdminConversationDetailPage() {
         }
         setData(await res.json())
       } catch (err: unknown) {
-        const message =
-          err instanceof Error ? err.message : fehler("Laden", "der Konversation")
+        const message = err instanceof Error ? err.message : fehler("Laden", "der Konversation")
         toast({ title: message, variant: "destructive" })
       } finally {
         setLoading(false)
@@ -377,7 +402,7 @@ export default function AdminConversationDetailPage() {
 
   const orphanTraces = useMemo(
     () => (data?.traces ?? []).filter((trace) => !trace.assistant_message_id),
-    [data?.traces]
+    [data?.traces],
   )
 
   if (loading) {
@@ -411,12 +436,10 @@ export default function AdminConversationDetailPage() {
 
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold">
-              {conversation.title || "Konversation"}
-            </h1>
+            <h1 className="text-2xl font-bold">{conversation.title || "Konversation"}</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              {chatUser?.full_name || "Unbekannt"} ({chatUser?.email}) ·{" "}
-              {messages.length} Nachrichten · {formatDateTime(conversation.created_at)}
+              {chatUser?.full_name || "Unbekannt"} ({chatUser?.email}) · {messages.length}{" "}
+              Nachrichten · {formatDateTime(conversation.created_at)}
             </p>
           </div>
           <div className="rounded-xl border bg-card px-4 py-3 text-sm">
@@ -430,18 +453,14 @@ export default function AdminConversationDetailPage() {
 
       <div className="space-y-4 rounded-xl border bg-card p-4">
         {messages.length === 0 ? (
-          <p className="py-8 text-center text-muted-foreground">
-            Keine Nachrichten vorhanden.
-          </p>
+          <p className="py-8 text-center text-muted-foreground">Keine Nachrichten vorhanden.</p>
         ) : (
           messages.map((msg) => {
             const trace = traceByAssistantMessageId.get(msg.id)
 
             return (
               <div key={msg.id}>
-                <div
-                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                >
+                <div className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div
                     className={`max-w-[85%] rounded-xl px-4 py-3 ${
                       msg.role === "user"
@@ -459,9 +478,7 @@ export default function AdminConversationDetailPage() {
                             ? "Hair Concierge"
                             : "System"}
                       </span>
-                      <span className="text-xs opacity-50">
-                        {formatTime(msg.created_at)}
-                      </span>
+                      <span className="text-xs opacity-50">{formatTime(msg.created_at)}</span>
                     </div>
                     <p className="whitespace-pre-wrap text-sm leading-relaxed">
                       {msg.content || "—"}
@@ -470,6 +487,22 @@ export default function AdminConversationDetailPage() {
                       <p className="mt-2 text-xs opacity-60">
                         Quellen gespeichert: {msg.rag_context.sources.length}
                       </p>
+                    ) : null}
+                    {msg.user_feedback_score ? (
+                      <p className="mt-2 text-xs opacity-60">
+                        Feedback: {msg.user_feedback_score > 0 ? "positiv" : "negativ"}{" "}
+                        {msg.user_feedback_at ? `· ${formatTime(msg.user_feedback_at)}` : ""}
+                      </p>
+                    ) : null}
+                    {msg.langfuse_trace_url ? (
+                      <a
+                        href={msg.langfuse_trace_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 inline-block text-xs text-primary underline underline-offset-2"
+                      >
+                        Trace in Langfuse öffnen
+                      </a>
                     ) : null}
                   </div>
                 </div>

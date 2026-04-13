@@ -491,9 +491,17 @@ export interface ChatPromptMessageSnapshot {
   content: string
 }
 
+export interface LangfusePromptReference {
+  name: string
+  version: number | null
+  label: string
+  is_fallback: boolean
+}
+
 export interface ChatPromptSnapshot {
   model: string
   temperature: number
+  prompt_ref: LangfusePromptReference
   system_prompt: string
   messages: ChatPromptMessageSnapshot[]
 }
@@ -569,6 +577,10 @@ export interface ChatTurnTrace {
     category_decision: CategoryDecision | null
     matched_products: ChatMatchedProductTrace[]
   }
+  prompt_refs: {
+    classification: LangfusePromptReference
+    synthesis: LangfusePromptReference
+  }
   prompt: ChatPromptSnapshot
   response: {
     assistant_content: string
@@ -585,6 +597,8 @@ export interface ConversationTurnTrace {
   user_id: string
   user_message_id: string | null
   assistant_message_id: string | null
+  langfuse_trace_id: string | null
+  langfuse_trace_url: string | null
   status: "completed" | "failed"
   trace: ChatTurnTrace
   created_at: string
@@ -610,6 +624,10 @@ export interface Message {
   product_recommendations: Product[] | null
   rag_context: MessageRagContext | null
   token_usage: Record<string, number> | null
+  langfuse_trace_id: string | null
+  langfuse_trace_url: string | null
+  user_feedback_score: -1 | 1 | null
+  user_feedback_at: string | null
   created_at: string
 }
 

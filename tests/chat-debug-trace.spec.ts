@@ -51,9 +51,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   }
 }
 
-function createClassification(
-  overrides: Partial<ClassificationResult> = {},
-): ClassificationResult {
+function createClassification(overrides: Partial<ClassificationResult> = {}): ClassificationResult {
   return {
     intent: "routine_help",
     product_category: "routine",
@@ -72,9 +70,7 @@ function createClassification(
   }
 }
 
-function createRouterDecision(
-  overrides: Partial<RouterDecision> = {},
-): RouterDecision {
+function createRouterDecision(overrides: Partial<RouterDecision> = {}): RouterDecision {
   return {
     retrieval_mode: "hybrid",
     needs_clarification: false,
@@ -86,9 +82,7 @@ function createRouterDecision(
   }
 }
 
-function createRetrievedChunk(
-  overrides: Partial<RetrievedChunk> = {},
-): RetrievedChunk {
+function createRetrievedChunk(overrides: Partial<RetrievedChunk> = {}): RetrievedChunk {
   return {
     id: "chunk-1",
     source_type: "book",
@@ -239,6 +233,12 @@ function createPromptSnapshot(): ChatPromptSnapshot {
   return {
     model: "gpt-4o",
     temperature: 0.7,
+    prompt_ref: {
+      name: "hair-concierge-chat-system",
+      version: 3,
+      label: "staging",
+      is_fallback: false,
+    },
     system_prompt: "System prompt snapshot",
     messages: [
       { role: "system", content: "System prompt snapshot" },
@@ -275,6 +275,12 @@ test.describe("Chat debug trace", () => {
       should_plan_routine: true,
       routine_plan: createRoutinePlan(),
       matched_products: [createProduct()],
+      classification_prompt_ref: {
+        name: "hair-concierge-intent-classifier",
+        version: 2,
+        label: "staging",
+        is_fallback: false,
+      },
       prompt: createPromptSnapshot(),
       latencies_ms: {
         classification_ms: 20,
@@ -294,7 +300,7 @@ test.describe("Chat debug trace", () => {
     expect(draft.retrieval.subqueries).toEqual(["OWC", "Frizz in Wellen"])
     expect(draft.retrieval.chunks[0].content_preview).toContain("Wash-Day-Technik")
     expect(draft.decision_context.matched_products[0].top_reasons).toContain(
-      "leicht genug fuer feines Haar"
+      "leicht genug fuer feines Haar",
     )
   })
 
@@ -325,6 +331,12 @@ test.describe("Chat debug trace", () => {
       should_plan_routine: true,
       routine_plan: createRoutinePlan(),
       matched_products: [],
+      classification_prompt_ref: {
+        name: "hair-concierge-intent-classifier",
+        version: 2,
+        label: "staging",
+        is_fallback: false,
+      },
       prompt: createPromptSnapshot(),
       latencies_ms: {
         classification_ms: 12,

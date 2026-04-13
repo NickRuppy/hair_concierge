@@ -4,12 +4,13 @@
 
 import fs from "fs"
 import path from "path"
-import type { EvalReport, ScenarioResult } from "./types"
+import type { EvalReport, LangfuseExperimentSummary, ScenarioResult } from "./types"
 
 export function buildReport(
   scenarios: ScenarioResult[],
   baseUrl: string,
   startTime: number,
+  langfuseExperiment: LangfuseExperimentSummary | null = null,
 ): EvalReport {
   const totalAssertions = scenarios.reduce(
     (sum, s) => sum + s.turns.reduce((ts, t) => ts + t.assertions.length, 0),
@@ -25,6 +26,7 @@ export function buildReport(
     timestamp: new Date().toISOString(),
     base_url: baseUrl,
     duration_ms: Date.now() - startTime,
+    langfuse_experiment: langfuseExperiment,
     summary: {
       total_scenarios: scenarios.length,
       passed: scenarios.filter((s) => s.passed).length,
@@ -60,6 +62,12 @@ export function printSummary(report: EvalReport): void {
     `  Assertions: ${summary.total_assertions - summary.assertion_failures}/${summary.total_assertions} passed`,
   )
   console.log(`  Duration: ${(report.duration_ms / 1000).toFixed(1)}s`)
+  if (report.langfuse_experiment) {
+    console.log(`  Langfuse run: ${report.langfuse_experiment.run_name}`)
+    if (report.langfuse_experiment.dataset_run_url) {
+      console.log(`  Langfuse URL: ${report.langfuse_experiment.dataset_run_url}`)
+    }
+  }
   console.log("")
 
   for (const scenario of scenarios) {
