@@ -80,6 +80,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
     if (!userId) return
 
+    await admin.from("user_product_usage").delete().eq("user_id", userId)
     await admin.from("hair_profiles").delete().eq("user_id", userId)
     await admin.from("profiles").delete().eq("id", userId)
     await admin.auth.admin.deleteUser(userId)
@@ -198,50 +199,72 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.locator('input[type="password"]:visible').fill(password)
       await page.getByRole("button", { name: /^Anmelden$/ }).click()
 
-      // Should land on goals page
-      await page.waitForURL(/\/onboarding\/goals(\?.*)?$/, {
+      // Should land on onboarding (single-page flow)
+      await page.waitForURL(/\/onboarding(\?.*)?$/, {
         timeout: 30_000,
         waitUntil: "domcontentloaded",
       })
-      await expect(
-        page.getByText("Wie viel Volumen willst du?", { exact: false })
-      ).toBeVisible()
     })
 
-    await test.step("Complete goals, profile, routine and verify database state", async () => {
-      // Goals page: select volume, secondary goal, routine preference
-      await page
-        .getByRole("button", {
-          name: /^MEHR Mehr Fuelle, Lift und sichtbare Bewegung\.$/,
-        })
-        .click()
-      await page.getByRole("button", { name: /Mehr Glanz/i }).click()
-      await page.getByRole("button", { name: /Ausgewogen/i }).click()
-      await page.getByRole("button", { name: /WEITER ZUM PROFIL/i }).click()
+    await test.step("Complete onboarding flow through goals and verify database state", async () => {
+      // Welcome screen
+      await expect(page.getByRole("button", { name: /LOS GEHT/i })).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /LOS GEHT/i }).click()
 
-      // Profile page: select density
-      await page.waitForURL(/\/onboarding\/profile(\?.*)?$/, {
-        timeout: 30_000,
-        waitUntil: "domcontentloaded",
-      })
-      await expect(
-        page.getByText("Wie dicht ist dein", { exact: false })
-      ).toBeVisible()
-      await page.getByRole("button", { name: /Mittlere Dichte/i }).click()
-      await page.getByRole("button", { name: /^WEITER$/ }).click()
-
-      // Routine page: select wash frequency, products, post-wash actions
-      await page.waitForURL(/\/onboarding\/routine(\?.*)?$/, {
-        timeout: 30_000,
-        waitUntil: "domcontentloaded",
-      })
-      await expect(
-        page.getByText("Wie oft waeschst du deine Haare regelmaessig?", { exact: false })
-      ).toBeVisible()
-      await page.getByRole("button", { name: /^Alle 2-3 Tage$/ }).click()
+      // Products basics: select Conditioner
+      await expect(page.getByText("Deine Basis-Produkte", { exact: false })).toBeVisible({ timeout: 10_000 })
       await page.getByRole("button", { name: /^Conditioner$/i }).click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
+
+      // Products extras: skip
+      await expect(page.getByText("Weitere Produkte", { exact: false })).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /Nichts davon/i }).click()
+
+      // Product drilldown: conditioner — select a frequency
+      await expect(page.getByText("Dein Conditioner", { exact: false })).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /1-2x pro Woche/i }).click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
+
+      // Heat tools: skip (no heat tools)
+      await expect(page.getByText("Welche Hitzetools nutzt du?", { exact: false })).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /Nichts davon/i }).click()
+
+      // Interstitial: continue
+      await expect(page.getByText("Fast geschafft!", { exact: false })).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
+
+      // Towel material: select Frottee (single-select, auto-advances)
+      await expect(page.getByText("Womit trocknest du dein Haar?", { exact: false })).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /Frottee-Handtuch/i }).click()
+
+      // Towel technique: select Rubbeln (single-select, auto-advances)
+      await expect(page.getByText("Wie trocknest du?", { exact: false })).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /^Rubbeln$/i }).click()
+
+      // Drying method: select Lufttrocknen (multi-select, needs Weiter)
+      await expect(page.getByText("Wie trocknest du dein Haar?", { exact: false })).toBeVisible({ timeout: 10_000 })
       await page.getByRole("button", { name: /Lufttrocknen/i }).click()
-      await page.getByRole("button", { name: /PROFIL ABSCHLIESSEN/i }).click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
+
+      // Brush type: select Grobzinkiger Kamm (single-select, auto-advances)
+      await expect(page.getByText("Welche Bürste", { exact: false })).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /Grobzinkiger Kamm/i }).click()
+
+      // Night protection: skip
+      await expect(page.getByText("Wie schützt du dein Haar nachts?", { exact: false })).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /Nichts davon/i }).click()
+
+      // Goals page: select goals from the chip grid
+      await expect(
+        page.getByText("Deine Haarziele", { exact: false })
+      ).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /Mehr Volumen/i }).click()
+      await page.getByRole("button", { name: /Mehr Glanz/i }).click()
+      await page.getByRole("button", { name: /^Weiter$/ }).click()
+
+      // Celebration popup
+      await expect(page.getByRole("button", { name: /ZUM CHAT/i })).toBeVisible({ timeout: 10_000 })
+      await page.getByRole("button", { name: /ZUM CHAT/i }).click()
 
       // Should land on chat
       await page.waitForURL("**/chat", { timeout: 30_000 })
@@ -281,14 +304,11 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(hairProfile).toMatchObject({
         hair_texture: "wavy",
         thickness: "normal",
-        density: "medium",
         cuticle_condition: "slightly_rough",
         protein_moisture_balance: "stretches_stays",
         scalp_type: "dry",
         scalp_condition: "dry_flakes",
         desired_volume: "more",
-        routine_preference: "balanced",
-        wash_frequency: "every_2_3_days",
       })
       expect(hairProfile?.chemical_treatment).toEqual(["colored", "bleached"])
       expect(hairProfile?.goals).toEqual(expect.arrayContaining(["shine", "volume"]))
@@ -309,14 +329,11 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(initialProfile).toMatchObject({
         hair_texture: "wavy",
         thickness: "normal",
-        density: "medium",
         cuticle_condition: "slightly_rough",
         protein_moisture_balance: "stretches_stays",
         scalp_type: "dry",
         scalp_condition: "dry_flakes",
         desired_volume: "more",
-        routine_preference: "balanced",
-        wash_frequency: "every_2_3_days",
       })
       expect(initialProfile?.chemical_treatment).toEqual(["colored", "bleached"])
       expect(initialProfile?.goals).toEqual(expect.arrayContaining(["shine", "volume"]))
@@ -392,14 +409,12 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.locator('input[type="password"]:visible').fill(password)
       await page.getByRole("button", { name: /^Anmelden$/ }).click()
 
-      // Should land on goals page
-      await page.waitForURL(/\/onboarding\/goals(\?.*)?$/, {
+      // Returning user with completed onboarding: lead is linked during the
+      // /onboarding server-side load, then redirect to /chat since onboarding_completed is true
+      await page.waitForURL("**/chat", {
         timeout: 30_000,
         waitUntil: "domcontentloaded",
       })
-      await expect(
-        page.getByText("Wie viel Volumen willst du?", { exact: false })
-      ).toBeVisible()
     })
 
     await test.step("Verify the latest lead links and diagnostics are overwritten", async () => {
@@ -441,15 +456,12 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(hairProfile).toMatchObject({
         hair_texture: "straight",
         thickness: "fine",
-        density: "medium",
         cuticle_condition: "smooth",
         protein_moisture_balance: "snaps",
         scalp_type: "oily",
         scalp_condition: "none",
-        // Goals and routine data from first run remain (user hasn't re-submitted these pages)
+        // Goals and onboarding data from first run remain (user hasn't re-submitted onboarding)
         desired_volume: "more",
-        routine_preference: "balanced",
-        wash_frequency: "every_2_3_days",
       })
       expect(hairProfile?.chemical_treatment).toEqual(["natural"])
       // Goals stay from first run since user didn't re-save goals page
