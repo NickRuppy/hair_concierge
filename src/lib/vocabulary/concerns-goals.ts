@@ -38,6 +38,9 @@ export const GOALS = [
   "shine",
   "curl_definition",
   "less_split_ends",
+  "less_volume",
+  "strengthen",
+  "anti_breakage",
 ] as const
 export type Goal = (typeof GOALS)[number]
 
@@ -51,6 +54,9 @@ export const GOAL_LABELS: Record<Goal, string> = {
   shine: "Mehr Glanz",
   curl_definition: "Locken-Definition",
   less_split_ends: "Weniger Spliss",
+  less_volume: "Weniger Volumen",
+  strengthen: "Haare staerken",
+  anti_breakage: "Anti-Haarbruch",
 }
 
 export const GOAL_OPTIONS = GOALS.map((value) => ({
