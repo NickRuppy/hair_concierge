@@ -8,7 +8,7 @@ import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 const steps = [
   "Haarstruktur wird analysiert ...",
   "Protein-Feuchtigkeits-Balance wird berechnet ...",
-  "Dein persoenliches Profil wird erstellt ...",
+  "Dein persönliches Profil wird erstellt ...",
 ]
 
 const STEP_DELAY = 1200

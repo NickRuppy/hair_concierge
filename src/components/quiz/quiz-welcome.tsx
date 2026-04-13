@@ -23,11 +23,11 @@ export function QuizWelcome() {
           >
             <Mail className="h-6 w-6 text-[var(--brand-plum)]" />
           </div>
-          <h2 className="font-header text-2xl text-foreground mb-2">Pruefe dein Postfach</h2>
+          <h2 className="font-header text-2xl text-foreground mb-2">Prüfe dein Postfach</h2>
           <p className="text-sm text-muted-foreground mb-4">
             {emailSent.type === "confirm" ? (
               <>
-                Wir haben eine Bestaetigungs-E-Mail an{" "}
+                Wir haben eine Bestätigungs-E-Mail an{" "}
                 <span className="font-medium text-foreground">{emailSent.email}</span> gesendet.
                 Klicke auf den Link, um dein Konto zu aktivieren.
               </>
@@ -35,7 +35,7 @@ export function QuizWelcome() {
               <>
                 Wir haben eine E-Mail an{" "}
                 <span className="font-medium text-foreground">{emailSent.email}</span> gesendet.
-                Klicke auf den Link, um dein Passwort zurueckzusetzen.
+                Klicke auf den Link, um dein Passwort zurückzusetzen.
               </>
             )}
           </p>
@@ -43,7 +43,7 @@ export function QuizWelcome() {
             onClick={() => setEmailSent(null)}
             className="text-sm text-[var(--brand-plum)] hover:underline"
           >
-            Zurueck
+            Zurück
           </button>
         </div>
       </div>
@@ -57,7 +57,7 @@ export function QuizWelcome() {
           Profil speichern &amp; weitermachen
         </h2>
         <p className="text-base text-muted-foreground mb-2 leading-relaxed">
-          Noch 3 kurze Schritte bis zu deinem vollstaendigen Profil
+          Noch 3 kurze Schritte bis zu deinem vollständigen Profil
         </p>
         <p className="text-sm text-[var(--text-sub)] mb-8 leading-relaxed">
           Damit dein Profil gespeichert bleibt und deine Beratung darauf aufbauen kann.

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 const bullets = [
   "Individuelle Analyse statt pauschaler Tipps",
   "Versteht Ursachen wie Proteinmangel, Trockenheit oder Kopfhautstress",
-  "Bereitet deinen persoenlichen Pflegeplan vor",
+  "Bereitet deinen persönlichen Pflegeplan vor",
 ]
 
 export function QuizLanding() {
@@ -19,7 +19,7 @@ export function QuizLanding() {
           Finde in 2 Minuten heraus, was deine Haare wirklich brauchen
         </h1>
         <p className="text-base text-muted-foreground mb-6 leading-relaxed">
-          Hair Concierge analysiert dein Haar und zeigt dir, was DEINE Haare tatsaechlich brauchen.
+          Hair Concierge analysiert dein Haar und zeigt dir, was deine Haare tatsächlich brauchen.
         </p>
         <ul className="space-y-3 mb-8">
           {bullets.map((text) => (

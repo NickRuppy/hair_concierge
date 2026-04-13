@@ -37,7 +37,9 @@ export function QuizResults() {
             style={{ background: "rgba(var(--brand-plum-rgb), 0.3)" }}
           />
         </div>
-        <span className="font-header text-sm text-muted-foreground tracking-widest">HAIR CONCIERGE</span>
+        <span className="font-header text-sm text-muted-foreground tracking-widest">
+          HAIR CONCIERGE
+        </span>
       </div>
 
       {/* Header */}
@@ -45,7 +47,7 @@ export function QuizResults() {
         {lead.name.toUpperCase()}, DEIN HAARPROFIL
       </h2>
       <p className="text-base text-muted-foreground mb-5">
-        Dein Profil ist fast fertig — im naechsten Schritt geht es weiter mit deinen Zielen und
+        Dein Profil ist fast fertig — im nächsten Schritt geht es weiter mit deinen Zielen und
         deiner Routine.
       </p>
 

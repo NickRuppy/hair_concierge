@@ -120,14 +120,14 @@ export function QuizLeadCapture() {
           </svg>
         </span>
         <span className="text-base font-medium text-foreground">
-          Dein persoenlicher Pflegeplan ist bereit!
+          Dein persönlicher Pflegeplan ist bereit!
         </span>
       </div>
 
       {/* Sub-step content */}
       {leadCaptureSubStep === "name" && (
         <div className="animate-fade-in-up flex-1 flex flex-col">
-          <h2 className="font-header text-3xl text-foreground mb-6">Wie heisst du?</h2>
+          <h2 className="font-header text-3xl text-foreground mb-6">Wie heißt du?</h2>
           <Input
             value={lead.name}
             onChange={(e) => setLeadField("name", e.target.value)}
@@ -168,7 +168,7 @@ export function QuizLeadCapture() {
           <div className="flex items-start gap-2 mb-4">
             <Icon name="lock" size={16} className="text-[var(--text-caption)] shrink-0 mt-0.5" />
             <p className="text-sm text-[var(--text-caption)] leading-relaxed">
-              Wir schuetzen deine Daten und nehmen Datenschutz sehr ernst – kein Spam.
+              Wir schützen deine Daten und nehmen Datenschutz sehr ernst – kein Spam.
             </p>
           </div>
           {error && <p className="text-sm text-red-400 mb-2">{error}</p>}

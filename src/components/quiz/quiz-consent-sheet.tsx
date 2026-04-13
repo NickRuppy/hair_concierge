@@ -25,7 +25,7 @@ export function QuizConsentSheet({ open, saving, onConsent }: QuizConsentSheetPr
         </div>
 
         <h3 className="font-header text-center text-xl text-foreground mb-2">
-          Duerfen wir dir Haarpflege-Tipps schicken?
+          Dürfen wir dir Haarpflege-Tipps schicken?
         </h3>
 
         {/* Plum divider */}

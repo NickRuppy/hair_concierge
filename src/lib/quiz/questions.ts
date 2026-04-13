@@ -4,14 +4,14 @@ export const quizQuestions: QuizQuestion[] = [
   {
     step: 2,
     questionNumber: 1,
-    title: "Was ist deine natuerliche Haartextur?",
+    title: "Was ist deine natürliche Haartextur?",
     instruction:
-      "Mach eine Straehne tropfnass, druecke sie oben zusammen und lass los \u2013 was passiert?",
+      "Mach eine Strähne tropfnass, drücke sie oben zusammen und lass los \u2013 was passiert?",
     options: [
       {
         value: "straight",
         label: "Glatt",
-        description: "Die Straehne haengt glatt runter",
+        description: "Die Strähne hängt glatt runter",
         icon: "hair-straight",
       },
       {
@@ -34,54 +34,54 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Super, du bist gerade erst gestartet. Noch 5 kurze Fragen.",
+    motivation: "Super — noch 5 kurze Fragen.",
   },
   {
     step: 3,
     questionNumber: 2,
     title: "Wie dick sind deine einzelnen Haare?",
     instruction:
-      "Nimm ein einzelnes Haar und halte es zwischen Daumen und Zeigefinger. Vergleiche es mit einem Naehfaden \u2013 das ist der beste Referenzpunkt.\n\nGemeint ist ein einzelnes Haar, nicht wie viele Haare du insgesamt hast.",
+      "Nimm ein einzelnes Haar und halte es zwischen Daumen und Zeigefinger. Vergleiche es mit einem Nähfaden \u2013 das ist der beste Referenzpunkt.\n\nGemeint ist ein einzelnes Haar, nicht wie viele Haare du insgesamt hast.",
     options: [
       {
         value: "fine",
         label: "Fein",
-        description: "Kaum spuerbar \u2013 duenner als ein Naehfaden",
+        description: "Kaum spürbar \u2013 dünner als ein Nähfaden",
         icon: "hair-fine",
       },
       {
         value: "normal",
         label: "Mittel",
-        description: "Spuerbar \u2013 aehnlich wie ein Naehfaden",
+        description: "Spürbar \u2013 ähnlich wie ein Nähfaden",
         icon: "hair-normal",
       },
       {
         value: "coarse",
         label: "Dick",
-        description: "Deutlich spuerbar \u2013 dicker als ein Naehfaden",
+        description: "Deutlich spürbar \u2013 dicker als ein Nähfaden",
         icon: "hair-coarse",
       },
     ],
     selectionMode: "single",
-    motivation: "Klasse \u2013 du hilfst uns, deine Haare richtig einzuschaetzen.",
+    motivation: "Klasse — schon ein besseres Bild.",
   },
   {
     step: 4,
     questionNumber: 3,
-    title: "Wie fuehlt sich dein Haar an?",
+    title: "Wie fühlt sich dein Haar an?",
     instruction:
-      "Nimm ein gewaschenes, trockenes Haar aus deiner Buerste \u2013 es darf kein Produkt mehr drauf sein. Schliesse die Augen und fahre ganz langsam mit zwei Fingern von der Wurzel zur Spitze. Konzentrier dich darauf, was du fuehlst:",
+      "Nimm ein gewaschenes, trockenes Haar aus deiner Bürste \u2013 es darf kein Produkt mehr drauf sein. Schließ die Augen und fahre ganz langsam mit zwei Fingern von der Wurzel zur Spitze. Konzentrier dich darauf, was du fühlst:",
     options: [
       {
         value: "glatt",
         label: "Glatt wie Glas",
-        description: "Die Finger gleiten gleichmaessig durch",
+        description: "Die Finger gleiten gleichmäßig durch",
         icon: "surface-smooth",
       },
       {
         value: "leicht_uneben",
         label: "Leicht uneben",
-        description: "Kleine Huegel spuerbar, nicht durchgehend",
+        description: "Kleine Hügel spürbar, nicht durchgehend",
         icon: "surface-uneven",
       },
       {
@@ -92,43 +92,43 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Top, schon ein gutes Stueck geschafft.",
+    motivation: "Top — über die Hälfte geschafft.",
   },
   {
     step: 5,
     questionNumber: 4,
     title: "Wie elastisch ist dein Haar?",
     instruction:
-      "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefuehl, nicht reissen. Beobachte genau, was passiert:\n\nZiehe nur leicht. Uns geht es um die Tendenz, nicht um Perfektion.",
+      "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefühl, nicht reißen. Beobachte genau, was passiert:\n\nZiehe nur leicht. Uns geht es um die Tendenz, nicht um Perfektion.",
     options: [
       {
         value: "stretches_bounces",
-        label: "Dehnt sich und geht zurueck",
-        description: "Federt in den Ursprungszustand zurueck",
+        label: "Dehnt sich und geht zurück",
+        description: "Federt in den Ursprungszustand zurück",
         icon: "elastic-bounces",
       },
       {
         value: "stretches_stays",
         label: "Dehnt sich, bleibt ausgeleiert",
-        description: "Kommt nicht mehr zurueck \u2013 bleibt laenglich",
+        description: "Kommt nicht mehr zurück \u2013 bleibt länglich",
         icon: "elastic-stays",
       },
       {
         value: "snaps",
-        label: "Reisst sofort",
+        label: "Reißt sofort",
         description: "Bricht bei leichtem Zug direkt ab",
         icon: "elastic-snaps",
       },
     ],
     selectionMode: "single",
-    motivation: "Gut gemacht \u2013 noch 2 Fragen.",
+    motivation: "Gut gemacht — noch 2 Fragen.",
   },
   {
     step: 7,
     questionNumber: 5,
     title: "Sind deine Haare chemisch behandelt?",
     instruction:
-      "Chemische Prozesse wie Blondieren oder Faerben veraendern die innere Struktur deiner Haare grundlegend. Blondieren bricht Brueckenverbindungen auf und entzieht Protein \u2013 das muss in der Pflege ausgeglichen werden.",
+      "Chemische Prozesse wie Blondieren oder Färben verändern die innere Struktur deiner Haare grundlegend. Blondieren bricht Brückenverbindungen auf und entzieht Protein \u2013 das muss in der Pflege ausgeglichen werden.",
     options: [
       {
         value: "natur",
@@ -138,19 +138,19 @@ export const quizQuestions: QuizQuestion[] = [
       },
       {
         value: "gefaerbt",
-        label: "Gefaerbt / Getoent",
-        description: "Farbveraenderung, aber kein Aufhellen",
+        label: "Gefärbt / Getönt",
+        description: "Farbveränderung, aber kein Aufhellen",
         icon: "treatment-colored",
       },
       {
         value: "blondiert",
         label: "Blondiert / Aufgehellt",
-        description: "Gebleacht, Straehnchen oder Balayage",
+        description: "Gebleacht, Strähnchen oder Balayage",
         icon: "treatment-lightened",
       },
     ],
     selectionMode: "multi",
-    motivation: "Fast geschafft \u2013 noch eine letzte Frage.",
+    motivation: "Fast geschafft!",
   },
 ]
 

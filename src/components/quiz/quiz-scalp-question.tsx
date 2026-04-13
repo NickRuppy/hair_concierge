@@ -14,7 +14,7 @@ const SCALP_TYPES: { value: string; label: string; description: string; icon: Ic
   {
     value: "fettig",
     label: "Fettig",
-    description: "Ansaetze werden nach 1-2 Tagen oelig",
+    description: "Ansätze werden nach 1-2 Tagen ölig",
     icon: "scalp-oily",
   },
   {
@@ -26,7 +26,7 @@ const SCALP_TYPES: { value: string; label: string; description: string; icon: Ic
   {
     value: "trocken",
     label: "Trocken",
-    description: "Spannt gelegentlich, fuehlt sich rau an",
+    description: "Spannt gelegentlich, fühlt sich rau an",
     icon: "scalp-dry",
   },
 ]
@@ -35,19 +35,19 @@ const SCALP_CONDITIONS: { value: string; label: string; description: string; ico
   {
     value: "schuppen",
     label: "Schuppen",
-    description: "Weisse oder gelbliche Flocken",
-    icon: "scalp-sensitive",
+    description: "Weiße oder gelbliche Flocken",
+    icon: "scalp-flaky",
   },
   {
     value: "trockene_schuppen",
     label: "Trockene Schuppen",
-    description: "Kleine, weisse, trockene Flocken — Kopfhaut spannt",
-    icon: "scalp-dry",
+    description: "Kleine, weiße, trockene Flocken — Kopfhaut spannt",
+    icon: "scalp-dry-flakes",
   },
   {
     value: "gereizt",
     label: "Gereizte Kopfhaut",
-    description: "Jucken, Roetungen oder Brennen",
+    description: "Jucken, Rötungen oder Brennen",
     icon: "scalp-irritated",
   },
 ]
@@ -164,10 +164,10 @@ export function QuizScalpQuestion() {
 
       {/* Title + instruction — always visible */}
       <h2 className="font-header text-3xl leading-tight text-foreground mb-2">
-        Wie schnell fetten deine Ansaetze nach?
+        Wie schnell fetten deine Ansätze nach?
       </h2>
       <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-        Deine Gesichtshaut gibt dir einen guten Hinweis — oelige T-Zone deutet auf fettige Kopfhaut
+        Deine Gesichtshaut gibt dir einen guten Hinweis — ölige T-Zone deutet auf fettige Kopfhaut
         hin.
       </p>
 
@@ -206,7 +206,7 @@ export function QuizScalpQuestion() {
         className={phase === "type" ? "hidden" : animateGate ? "mt-5 animate-fade-in-up" : "mt-5"}
       >
         <h2 className="font-header text-2xl leading-tight text-foreground mb-2">
-          Hast du zusaetzlich Beschwerden wie Schuppen, Juckreiz oder Roetungen?
+          Hast du zusätzlich Beschwerden wie Schuppen, Juckreiz oder Rötungen?
         </h2>
 
         <div className="flex gap-3">
@@ -243,7 +243,7 @@ export function QuizScalpQuestion() {
           Was ist aktuell dein Hauptproblem?
         </h2>
         <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-          Waehle die Beschwerde, die am besten zu dir passt.
+          Wähle die Beschwerde, die am besten zu dir passt.
         </p>
 
         <div className="space-y-3">
@@ -263,7 +263,7 @@ export function QuizScalpQuestion() {
 
       {/* Motivation text — always anchored at bottom */}
       <p className="mt-3 text-center text-sm text-[var(--text-caption)]">
-        Letzte Frage – gleich siehst du dein Profil.
+        Letzte Frage — gleich siehst du dein Profil.
       </p>
     </div>
   )

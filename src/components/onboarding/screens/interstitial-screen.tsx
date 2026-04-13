@@ -26,8 +26,8 @@ export function InterstitialScreen({ onContinue, onBack }: InterstitialScreenPro
         className="animate-fade-in-up text-base text-muted-foreground leading-relaxed mb-10"
         style={{ animationDelay: "100ms" }}
       >
-        Jetzt noch ein paar Fragen zu deinem Alltag — wie du dein Haar trocknest, buerstest und
-        schuetzt.
+        Jetzt noch ein paar Fragen zu deinem Alltag — wie du dein Haar trocknest, bürstest und
+        schützt.
       </p>
 
       <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>

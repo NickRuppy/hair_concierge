@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuth } from "@/providers/auth-provider"
-import { Menu, MessageCircle, User, LogOut, Shield } from "lucide-react"
+import { Menu, MessageCircle, User, LogOut, Shield, CircleUserRound } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -61,7 +61,7 @@ export function Header() {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Menü öffnen"
         >
-          <Menu className="h-5 w-5" />
+          <CircleUserRound className="h-5 w-5" />
         </button>
       </div>
 
@@ -70,16 +70,16 @@ export function Header() {
         <div className="border-t bg-background p-4 md:hidden">
           <nav className="flex flex-col gap-1">
             <NavLink href="/chat" current={pathname} onClick={() => setMenuOpen(false)} mobile>
-              <MessageCircle className="mr-2 h-4 w-4" />
+              <MessageCircle className="mr-1.5 h-4 w-4" />
               Chat
             </NavLink>
             <NavLink href="/profile" current={pathname} onClick={() => setMenuOpen(false)} mobile>
-              <User className="mr-2 h-4 w-4" />
+              <User className="mr-1.5 h-4 w-4" />
               Profil
             </NavLink>
             {profile?.is_admin && (
               <NavLink href="/admin" current={pathname} onClick={() => setMenuOpen(false)} mobile>
-                <Shield className="mr-2 h-4 w-4" />
+                <Shield className="mr-1.5 h-4 w-4" />
                 Admin
               </NavLink>
             )}
@@ -90,7 +90,7 @@ export function Header() {
               }}
               className="inline-flex items-center rounded-md px-3 py-3 text-sm text-muted-foreground transition-colors hover:bg-accent"
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="mr-1.5 h-4 w-4" />
               Abmelden
             </button>
           </nav>
