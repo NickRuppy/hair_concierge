@@ -25,7 +25,7 @@ import {
   TOWEL_MATERIAL_OPTIONS,
   TOWEL_TECHNIQUE_OPTIONS,
 } from "@/lib/vocabulary"
-import { deriveOnboardingGoals } from "@/lib/onboarding/goal-flow"
+import { deriveVolumeFromGoals } from "@/lib/onboarding/goal-flow"
 import {
   PROFILE_FIELD_CONFIG,
   PROFILE_JOURNEY_STEPS,
@@ -72,7 +72,7 @@ type ProfileFormData = {
 
 type StructuredField = ProfileFieldConfig & { value: ProfileFieldValue }
 
-const EDITABLE_GOAL_OPTIONS = GOAL_OPTIONS.filter((option) => option.value !== "volume")
+const EDITABLE_GOAL_OPTIONS = GOAL_OPTIONS
 
 const HEAT_PROTECTION_OPTIONS = [
   { value: "yes", label: "Ja" },
@@ -100,7 +100,7 @@ function createFormData(profile: HairProfile | null): ProfileFormData {
     thickness: profile?.thickness || "",
     density: profile?.density || "",
     concerns: profile?.concerns || [],
-    desired_volume: profile?.desired_volume || (storedGoals.includes("volume") ? "more" : ""),
+    desired_volume: profile?.desired_volume || "",
     wash_frequency: profile?.wash_frequency || "",
     heat_styling: profile?.heat_styling || "",
     styling_tools: profile?.styling_tools || [],
@@ -113,7 +113,7 @@ function createFormData(profile: HairProfile | null): ProfileFormData {
     post_wash_actions: profile?.post_wash_actions || [],
     current_routine_products: profile?.current_routine_products || [],
     products_used: profile?.products_used || "",
-    goals: storedGoals.filter((goal) => goal !== "volume"),
+    goals: storedGoals,
     additional_notes: profile?.additional_notes || "",
   }
 }
@@ -403,10 +403,8 @@ export default function ProfilePage() {
     setSaving(true)
 
     try {
-      const desiredVolume = formData.desired_volume
-        ? (formData.desired_volume as NonNullable<HairProfile["desired_volume"]>)
-        : null
-      const derivedGoals = deriveOnboardingGoals(formData.goals as Goal[], desiredVolume)
+      const goals = formData.goals as Goal[]
+      const derivedVolume = deriveVolumeFromGoals(goals)
 
       const payload = {
         user_id: user.id,
@@ -414,7 +412,7 @@ export default function ProfilePage() {
         thickness: formData.thickness || null,
         density: formData.density || null,
         concerns: formData.concerns,
-        desired_volume: desiredVolume,
+        desired_volume: derivedVolume,
         wash_frequency: formData.wash_frequency || null,
         heat_styling: formData.heat_styling || null,
         styling_tools: formData.styling_tools,
@@ -427,7 +425,7 @@ export default function ProfilePage() {
         post_wash_actions: formData.post_wash_actions,
         current_routine_products: formData.current_routine_products,
         products_used: formData.products_used || null,
-        goals: derivedGoals,
+        goals,
         additional_notes: formData.additional_notes || null,
         updated_at: new Date().toISOString(),
       }
@@ -603,21 +601,31 @@ export default function ProfilePage() {
           <div className="flex flex-wrap gap-2">
             {EDITABLE_GOAL_OPTIONS.map((option) => {
               const active = formData.goals.includes(option.value)
+              const atMax = !active && formData.goals.length >= 5
               return (
                 <button
                   key={option.value}
                   type="button"
+                  disabled={atMax}
                   onClick={() =>
-                    setFormData((current) => ({
-                      ...current,
-                      goals: toggleArrayItem(current.goals, option.value),
-                    }))
+                    setFormData((current) => {
+                      if (current.goals.includes(option.value)) {
+                        return { ...current, goals: current.goals.filter((g) => g !== option.value) }
+                      }
+                      if (current.goals.length >= 5) return current
+                      let next = [...current.goals]
+                      if (option.value === "volume") next = next.filter((g) => g !== "less_volume")
+                      if (option.value === "less_volume") next = next.filter((g) => g !== "volume")
+                      next.push(option.value)
+                      return { ...current, goals: next }
+                    })
                   }
                   className={cn(
                     "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
                     active
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-border hover:bg-muted",
+                    atMax && "opacity-40 cursor-not-allowed",
                   )}
                 >
                   {option.label}

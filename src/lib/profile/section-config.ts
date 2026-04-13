@@ -232,7 +232,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     displayMode: "badges",
     editMode: "inline",
     getValue: (profile) => {
-      const goals = profile?.goals?.filter((goal) => goal !== "volume") ?? []
+      const goals = profile?.goals ?? []
       return goals.length ? goals.map((goal) => GOAL_LABELS[goal] ?? goal) : null
     },
   },
