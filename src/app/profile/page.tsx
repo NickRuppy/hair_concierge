@@ -8,7 +8,7 @@ import { useToast } from "@/providers/toast-provider"
 import { createClient } from "@/lib/supabase/client"
 import {
   CONCERN_OPTIONS,
-  DESIRED_VOLUME_OPTIONS,
+
   GOAL_OPTIONS,
   HEAT_STYLING_OPTIONS,
   POST_WASH_ACTION_OPTIONS,
@@ -560,14 +560,6 @@ export default function ProfilePage() {
 
   function renderInlineEditor(field: StructuredField) {
     switch (field.key) {
-      case "desired_volume":
-        return (
-          <SegmentedControl
-            options={DESIRED_VOLUME_OPTIONS}
-            value={formData.desired_volume}
-            onChange={(value) => setFormData((current) => ({ ...current, desired_volume: value }))}
-          />
-        )
       case "concerns":
         return (
           <div className="flex flex-wrap gap-2">

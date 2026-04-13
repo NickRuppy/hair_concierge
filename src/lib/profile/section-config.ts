@@ -215,7 +215,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     sectionKey: "goals",
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
-    editMode: "inline",
+    editMode: "read_only",
     getValue: (profile) => {
       const fallback =
         profile?.desired_volume ?? (profile?.goals?.includes("volume") ? "more" : null)
