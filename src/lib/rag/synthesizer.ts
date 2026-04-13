@@ -1161,7 +1161,7 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     model: DEFAULT_CHAT_COMPLETION_MODEL,
     temperature: DEFAULT_CHAT_COMPLETION_TEMPERATURE,
     langfuseConfig: {
-      generationName: "chat-response",
+      generationName: "chat-response-generation",
       generationMetadata: {
         environment: getLangfuseEnvironment(),
         prompt_label: managedPrompt.ref.label,

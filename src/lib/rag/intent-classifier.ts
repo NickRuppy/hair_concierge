@@ -103,7 +103,7 @@ export async function classifyIntent(
     })
 
     const response = await getObservedOpenAI({
-      generationName: "intent-classification",
+      generationName: "intent-classification-llm",
       generationMetadata: {
         prompt_label: managedPrompt.ref.label,
       },

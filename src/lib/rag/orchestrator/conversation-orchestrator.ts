@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin"
 import { startObservation } from "@langfuse/tracing"
+import { context as otelContext, trace as otelTrace } from "@opentelemetry/api"
 import { classifyIntent } from "@/lib/rag/intent-classifier"
 import { evaluateRoute } from "@/lib/rag/router"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
@@ -24,7 +25,14 @@ import { retrieve, buildSources } from "@/lib/rag/retrieval/retrieval-service"
 import { composeResponse } from "@/lib/rag/response/response-composer"
 import { selectProducts } from "@/lib/rag/selection/product-selection-service"
 import type { PipelineParams, PipelineResult, CategoryDecisions } from "@/lib/rag/contracts"
-import type { Message, HairProfile, MaskDecision, RoutinePlan, Product } from "@/lib/types"
+import type {
+  Message,
+  HairProfile,
+  MaskDecision,
+  RoutinePlan,
+  Product,
+  CategoryDecision,
+} from "@/lib/types"
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -59,7 +67,8 @@ async function observeAsyncStage<T>(
         : startObservation(name, attributes)
 
   try {
-    const result = await work()
+    const observationContext = otelTrace.setSpan(otelContext.active(), observation.otelSpan)
+    const result = await otelContext.with(observationContext, work)
 
     if (options?.output) {
       observation.update({
@@ -82,6 +91,46 @@ async function observeAsyncStage<T>(
   } finally {
     observation.end()
   }
+}
+
+function summarizeCategoryDecision(
+  decision: CategoryDecision | undefined,
+): Record<string, unknown> | null {
+  if (!decision) return null
+
+  const summary: Record<string, unknown> = {
+    category: decision.category,
+    eligible: decision.eligible,
+    missing_profile_fields: decision.missing_profile_fields,
+    no_catalog_match: decision.no_catalog_match,
+  }
+
+  if (decision.category === "shampoo") {
+    summary.matched_bucket = decision.matched_bucket
+    summary.matched_concern_code = decision.matched_concern_code
+  }
+
+  if (decision.category === "conditioner") {
+    summary.matched_balance_need = decision.matched_balance_need
+    summary.matched_weight = decision.matched_weight
+    summary.matched_repair_level = decision.matched_repair_level
+  }
+
+  if (decision.category === "leave_in") {
+    summary.need_bucket = decision.need_bucket
+    summary.styling_context = decision.styling_context
+    summary.conditioner_relationship = decision.conditioner_relationship
+    summary.matched_weight = decision.matched_weight
+  }
+
+  if (decision.category === "oil") {
+    summary.matched_subtype = decision.matched_subtype
+    summary.use_mode = decision.use_mode
+    summary.no_recommendation = decision.no_recommendation
+    summary.no_recommendation_reason = decision.no_recommendation_reason
+  }
+
+  return summary
 }
 
 // ── Main orchestrator ────────────────────────────────────────────────────────
@@ -216,10 +265,15 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     async () => evaluateRoute(classification, conversationHistory, hairProfile, message),
     {
       output: (result) => ({
-        retrieval_mode: result.retrieval_mode,
-        needs_clarification: result.needs_clarification,
+        classifier_retrieval_mode: classification.retrieval_mode,
+        classifier_needs_clarification: classification.needs_clarification,
+        final_retrieval_mode: result.retrieval_mode,
+        final_needs_clarification: result.needs_clarification,
         confidence: result.confidence,
         slot_completeness: result.slot_completeness,
+        clarification_reason: result.clarification_reason ?? null,
+        policy_overrides: result.policy_overrides,
+        category_requirements: summarizeCategoryDecision(getPrimaryCategoryDecision(decisions)),
       }),
     },
   )
