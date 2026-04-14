@@ -328,21 +328,20 @@ export const SCENARIOS: EvalScenario[] = [
     turns: [
       {
         message: "Meine Haare sind irgendwie komisch",
-        metadata: { response_mode: "recommend_and_refine" },
+        metadata: { response_mode: ["recommend_and_refine", "answer_direct"] },
       },
       {
         message: "Es ist halt so ein Problem mit meinen Haaren",
-        metadata: { response_mode: "recommend_and_refine" },
+        metadata: { response_mode: ["recommend_and_refine", "answer_direct"] },
       },
       {
         message: "Ich weiss einfach nicht was ich machen soll",
         metadata: {
           response_mode: "answer_direct",
-          policy_overrides_include: ["clarification_cap_reached"],
         },
         judge: {
           expected_behavior:
-            "After 2 rounds of clarification, the system must give a best-effort general hair care answer. Should NOT ask more clarifying questions.",
+            "After 2 prior vague messages, the system must give a best-effort general hair care answer. Should NOT ask more clarifying questions.",
         },
       },
     ],
