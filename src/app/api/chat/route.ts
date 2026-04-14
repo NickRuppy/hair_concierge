@@ -270,7 +270,7 @@ export async function POST(request: Request) {
             }
 
             const productsToSend =
-              !routerDecision.needs_clarification && matchedProducts.length > 0
+              routerDecision.response_mode !== "clarify_only" && matchedProducts.length > 0
                 ? matchedProducts.slice(0, 3)
                 : []
             const langfuseTraceUrl = traceUrlPromise ? await traceUrlPromise : null
@@ -295,7 +295,11 @@ export async function POST(request: Request) {
                 conversation_id: activeConversationId,
                 role: "assistant",
                 content: fullContent,
-                rag_context: buildAssistantRagContext(sources, categoryDecision),
+                rag_context: buildAssistantRagContext(
+                  sources,
+                  categoryDecision,
+                  routerDecision.response_mode,
+                ),
                 product_recommendations: productsToSend.length > 0 ? productsToSend : null,
                 langfuse_trace_id: langfuseTraceId,
                 langfuse_trace_url: langfuseTraceUrl,

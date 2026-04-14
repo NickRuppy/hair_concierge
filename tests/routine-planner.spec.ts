@@ -698,7 +698,7 @@ test.describe("Routine planner", () => {
       "Welche Routine passt zu mir?",
     )
 
-    expect(routerDecision.needs_clarification).toBe(true)
+    expect(routerDecision.response_mode).toBe("clarify_only")
     expect(routerDecision.policy_overrides).toContain("missing_routine_frame")
   })
 
@@ -716,7 +716,7 @@ test.describe("Routine planner", () => {
       "Welche Routine passt zu mir?",
     )
 
-    expect(routerDecision.needs_clarification).toBe(true)
+    expect(routerDecision.response_mode).toBe("clarify_only")
     expect(routerDecision.policy_overrides).toContain("missing_routine_frame")
   })
 
@@ -733,7 +733,7 @@ test.describe("Routine planner", () => {
       "Welche Routine passt zu mir?",
     )
 
-    expect(routerDecision.needs_clarification).toBe(false)
+    expect(routerDecision.response_mode).not.toBe("clarify_only")
     expect(routerDecision.policy_overrides).not.toContain("missing_routine_frame")
   })
 

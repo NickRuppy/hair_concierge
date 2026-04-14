@@ -2,12 +2,7 @@
  * Chat Evaluation Harness — Three-Tier Assertion Engine
  */
 
-import type {
-  SSEResult,
-  MetadataAssertions,
-  ContentHeuristics,
-  AssertionResult,
-} from "./types"
+import type { SSEResult, MetadataAssertions, ContentHeuristics, AssertionResult } from "./types"
 
 // ── Tier 1: Metadata assertions (deterministic) ─────────────────────────
 
@@ -20,9 +15,7 @@ export function runMetadataAssertions(
 
   if (expected.intent !== undefined) {
     const actual = done.intent as string | undefined
-    const allowed = Array.isArray(expected.intent)
-      ? expected.intent
-      : [expected.intent]
+    const allowed = Array.isArray(expected.intent) ? expected.intent : [expected.intent]
     results.push({
       tier: "metadata",
       name: "intent",
@@ -40,6 +33,20 @@ export function runMetadataAssertions(
     results.push({
       tier: "metadata",
       name: "retrieval_mode",
+      passed: actual !== undefined && allowed.includes(actual),
+      expected: allowed.join(" | "),
+      actual: actual ?? "(missing)",
+    })
+  }
+
+  if (expected.response_mode !== undefined) {
+    const actual = done.response_mode as string | undefined
+    const allowed = Array.isArray(expected.response_mode)
+      ? expected.response_mode
+      : [expected.response_mode]
+    results.push({
+      tier: "metadata",
+      name: "response_mode",
       passed: actual !== undefined && allowed.includes(actual),
       expected: allowed.join(" | "),
       actual: actual ?? "(missing)",
@@ -105,6 +112,28 @@ export function runMetadataAssertions(
     })
   }
 
+  if (expected.product_count_min !== undefined) {
+    const actual = sse.products.length
+    results.push({
+      tier: "metadata",
+      name: "product_count_min",
+      passed: actual >= expected.product_count_min,
+      expected: `>= ${expected.product_count_min}`,
+      actual: String(actual),
+    })
+  }
+
+  if (expected.product_count_max !== undefined) {
+    const actual = sse.products.length
+    results.push({
+      tier: "metadata",
+      name: "product_count_max",
+      passed: actual <= expected.product_count_max,
+      expected: `<= ${expected.product_count_max}`,
+      actual: String(actual),
+    })
+  }
+
   return results
 }
 
@@ -138,9 +167,7 @@ export function runContentAssertions(
 
   if (expected.must_be_german) {
     const lower = content.toLowerCase()
-    const germanHits = GERMAN_MARKERS.filter((w) =>
-      lower.includes(w.toLowerCase()),
-    )
+    const germanHits = GERMAN_MARKERS.filter((w) => lower.includes(w.toLowerCase()))
     results.push({
       tier: "content",
       name: "must_be_german",
@@ -163,9 +190,7 @@ export function runContentAssertions(
 
   if (expected.required_keywords) {
     const lower = content.toLowerCase()
-    const found = expected.required_keywords.filter((kw) =>
-      lower.includes(kw.toLowerCase()),
-    )
+    const found = expected.required_keywords.filter((kw) => lower.includes(kw.toLowerCase()))
     results.push({
       tier: "content",
       name: "required_keywords",
@@ -177,9 +202,7 @@ export function runContentAssertions(
 
   if (expected.forbidden_keywords) {
     const lower = content.toLowerCase()
-    const found = expected.forbidden_keywords.filter((kw) =>
-      lower.includes(kw.toLowerCase()),
-    )
+    const found = expected.forbidden_keywords.filter((kw) => lower.includes(kw.toLowerCase()))
     results.push({
       tier: "content",
       name: "forbidden_keywords",

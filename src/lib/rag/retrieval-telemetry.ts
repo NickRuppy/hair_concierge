@@ -28,11 +28,13 @@ export interface RetrievalEvent {
  * No raw PII is included — only aggregate counts, latencies, and source types.
  */
 export function emitRetrievalEvent(event: RetrievalEvent): void {
-  console.log(JSON.stringify({
-    _type: "retrieval_telemetry",
-    timestamp: new Date().toISOString(),
-    ...event,
-  }))
+  console.log(
+    JSON.stringify({
+      _type: "retrieval_telemetry",
+      timestamp: new Date().toISOString(),
+      ...event,
+    }),
+  )
 }
 
 // ── Router telemetry (Phase 2) ──────────────────────────────────────────────
@@ -49,7 +51,7 @@ export interface RouterEvent {
   intent?: IntentType
   retrieval_mode: RetrievalMode
   router_confidence: number
-  needs_clarification: boolean
+  response_mode: string
   slot_completeness?: number
   policy_overrides?: string[]
   stage_latency_ms: number
@@ -60,20 +62,19 @@ export interface RouterEvent {
  * Same pattern as emitRetrievalEvent — no PII, only aggregate data.
  */
 export function emitRouterEvent(event: RouterEvent): void {
-  console.log(JSON.stringify({
-    _type: "router_telemetry",
-    timestamp: new Date().toISOString(),
-    ...event,
-  }))
+  console.log(
+    JSON.stringify({
+      _type: "router_telemetry",
+      timestamp: new Date().toISOString(),
+      ...event,
+    }),
+  )
 }
 
 /**
  * Extracts the top N most common source types from a list of chunks.
  */
-export function topSourceTypes(
-  chunks: { source_type: string }[],
-  n = 3,
-): string[] {
+export function topSourceTypes(chunks: { source_type: string }[], n = 3): string[] {
   const counts = new Map<string, number>()
   for (const c of chunks) {
     counts.set(c.source_type, (counts.get(c.source_type) ?? 0) + 1)

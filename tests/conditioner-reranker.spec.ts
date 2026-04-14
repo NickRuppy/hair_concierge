@@ -50,10 +50,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   }
 }
 
-function createCandidate(
-  id: string,
-  overrides: Partial<MatchedProduct> = {}
-): MatchedProduct {
+function createCandidate(id: string, overrides: Partial<MatchedProduct> = {}): MatchedProduct {
   return {
     id,
     name: `Conditioner ${id}`,
@@ -80,7 +77,7 @@ function createCandidate(
 
 function createSpec(
   productId: string,
-  overrides: Partial<ProductConditionerSpecs> = {}
+  overrides: Partial<ProductConditionerSpecs> = {},
 ): ProductConditionerSpecs {
   return {
     product_id: productId,
@@ -96,7 +93,7 @@ test.describe("Conditioner reranker", () => {
       createProfile({
         thickness: null,
         protein_moisture_balance: null,
-      })
+      }),
     )
 
     expect(buildConditionerClarificationQuestions(decision)).toEqual([
@@ -111,8 +108,8 @@ test.describe("Conditioner reranker", () => {
         createProfile({
           cuticle_condition: "smooth",
           chemical_treatment: ["natural"],
-        })
-      )
+        }),
+      ),
     ).toBe("low")
 
     expect(
@@ -120,8 +117,8 @@ test.describe("Conditioner reranker", () => {
         createProfile({
           cuticle_condition: "slightly_rough",
           chemical_treatment: ["colored"],
-        })
-      )
+        }),
+      ),
     ).toBe("medium")
 
     expect(
@@ -129,8 +126,8 @@ test.describe("Conditioner reranker", () => {
         createProfile({
           cuticle_condition: "rough",
           chemical_treatment: ["natural"],
-        })
-      )
+        }),
+      ),
     ).toBe("high")
 
     expect(
@@ -138,19 +135,33 @@ test.describe("Conditioner reranker", () => {
         createProfile({
           cuticle_condition: "slightly_rough",
           chemical_treatment: ["bleached"],
-        })
-      )
+        }),
+      ),
     ).toBe("high")
   })
 
   test("expected conditioner weight follows thickness and density grid", () => {
-    expect(deriveExpectedConditionerWeight(createProfile({ thickness: "fine", density: "low" }))).toBe("light")
-    expect(deriveExpectedConditionerWeight(createProfile({ thickness: "fine", density: "high" }))).toBe("medium")
-    expect(deriveExpectedConditionerWeight(createProfile({ thickness: "normal", density: "low" }))).toBe("light")
-    expect(deriveExpectedConditionerWeight(createProfile({ thickness: "normal", density: "medium" }))).toBe("medium")
-    expect(deriveExpectedConditionerWeight(createProfile({ thickness: "normal", density: "high" }))).toBe("rich")
-    expect(deriveExpectedConditionerWeight(createProfile({ thickness: "coarse", density: "low" }))).toBe("medium")
-    expect(deriveExpectedConditionerWeight(createProfile({ thickness: "coarse", density: "high" }))).toBe("rich")
+    expect(
+      deriveExpectedConditionerWeight(createProfile({ thickness: "fine", density: "low" })),
+    ).toBe("light")
+    expect(
+      deriveExpectedConditionerWeight(createProfile({ thickness: "fine", density: "high" })),
+    ).toBe("medium")
+    expect(
+      deriveExpectedConditionerWeight(createProfile({ thickness: "normal", density: "low" })),
+    ).toBe("light")
+    expect(
+      deriveExpectedConditionerWeight(createProfile({ thickness: "normal", density: "medium" })),
+    ).toBe("medium")
+    expect(
+      deriveExpectedConditionerWeight(createProfile({ thickness: "normal", density: "high" })),
+    ).toBe("rich")
+    expect(
+      deriveExpectedConditionerWeight(createProfile({ thickness: "coarse", density: "low" })),
+    ).toBe("medium")
+    expect(
+      deriveExpectedConditionerWeight(createProfile({ thickness: "coarse", density: "high" })),
+    ).toBe("rich")
   })
 
   test("weight fit reorders otherwise similar candidates without changing strict baseline eligibility", () => {
@@ -162,7 +173,7 @@ test.describe("Conditioner reranker", () => {
         cuticle_condition: "smooth",
         chemical_treatment: ["natural"],
       }),
-      3
+      3,
     )
 
     const results = rerankConditionerProducts(
@@ -176,7 +187,7 @@ test.describe("Conditioner reranker", () => {
         createSpec("medium", { weight: "medium", repair_level: "low" }),
         createSpec("rich", { weight: "rich", repair_level: "low" }),
       ],
-      decision
+      decision,
     )
 
     expect(decision.eligible).toBe(true)
@@ -193,7 +204,7 @@ test.describe("Conditioner reranker", () => {
         cuticle_condition: "rough",
         chemical_treatment: ["bleached"],
       }),
-      3
+      3,
     )
 
     const results = rerankConditionerProducts(
@@ -207,7 +218,7 @@ test.describe("Conditioner reranker", () => {
         createSpec("medium", { weight: "medium", repair_level: "medium" }),
         createSpec("high", { weight: "medium", repair_level: "high" }),
       ],
-      decision
+      decision,
     )
 
     expect(results.map((product) => product.id)).toEqual(["high", "medium", "low"])
@@ -215,7 +226,7 @@ test.describe("Conditioner reranker", () => {
       expect.objectContaining({
         category: "conditioner",
         matched_repair_level: "high",
-      })
+      }),
     )
   })
 
@@ -226,7 +237,7 @@ test.describe("Conditioner reranker", () => {
         cuticle_condition: null,
         chemical_treatment: [],
       }),
-      2
+      2,
     )
 
     const results = rerankConditionerProducts(
@@ -238,7 +249,7 @@ test.describe("Conditioner reranker", () => {
         createSpec("higher-base", { weight: "rich", repair_level: "high" }),
         createSpec("lower-base", { weight: "light", repair_level: "low" }),
       ],
-      decision
+      decision,
     )
 
     expect(decision.matched_weight).toBeNull()
@@ -248,7 +259,7 @@ test.describe("Conditioner reranker", () => {
       expect.objectContaining({
         category: "conditioner",
         matched_weight: null,
-      })
+      }),
     )
   })
 
@@ -259,7 +270,7 @@ test.describe("Conditioner reranker", () => {
         density: "medium",
         protein_moisture_balance: "stretches_bounces",
       }),
-      2
+      2,
     )
 
     const results = rerankConditionerProducts(
@@ -268,13 +279,13 @@ test.describe("Conditioner reranker", () => {
         createCandidate("second", { combined_score: 0.78, similarity: 0.78, sort_order: 2 }),
       ],
       [],
-      decision
+      decision,
     )
 
     expect(results.map((product) => product.id)).toEqual(["first", "second"])
     expect(results[0]?.conditioner_specs ?? null).toBeNull()
     expect(results[0]?.recommendation_meta?.tradeoffs).toContain(
-      "Fuer dieses Produkt fehlt noch die volle Conditioner-Spezifikation."
+      "Fuer dieses Produkt fehlt noch die volle Conditioner-Spezifikation.",
     )
   })
 
@@ -287,7 +298,7 @@ test.describe("Conditioner reranker", () => {
         cuticle_condition: "rough",
         chemical_treatment: ["colored"],
       }),
-      1
+      1,
     )
 
     const ragContext = buildAssistantRagContext([], categoryDecision)
@@ -296,7 +307,7 @@ test.describe("Conditioner reranker", () => {
       retrievalSummary: { final_context_count: 0 },
       routerDecision: {
         retrieval_mode: "product_sql_plus_hybrid",
-        needs_clarification: false,
+        response_mode: "answer_direct" as const,
         slot_completeness: 1,
         confidence: 0.93,
         policy_overrides: [],
@@ -312,14 +323,16 @@ test.describe("Conditioner reranker", () => {
       expect.objectContaining({
         intent: "product_recommendation",
         category_decision: categoryDecision,
-      })
+      }),
     )
   })
 
   test("intent prompt routes Haarkur to mask instead of conditioner", () => {
     expect(INTENT_CLASSIFICATION_PROMPT).toContain("- conditioner: Conditioner, Spuelung")
     expect(INTENT_CLASSIFICATION_PROMPT).toContain("- mask: Haarmaske, Haarkur, Tiefenpflege")
-    expect(INTENT_CLASSIFICATION_PROMPT).not.toContain("- conditioner: Conditioner, Spuelung, Haarkur")
+    expect(INTENT_CLASSIFICATION_PROMPT).not.toContain(
+      "- conditioner: Conditioner, Spuelung, Haarkur",
+    )
   })
 
   test("conditioner category detection accepts the live drogerie bucket", () => {

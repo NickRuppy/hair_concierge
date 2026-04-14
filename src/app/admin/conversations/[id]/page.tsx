@@ -122,7 +122,16 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
           <div className="rounded-lg border bg-card p-3">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Routing</p>
             <p className="mt-1 font-medium text-foreground">
-              {trace.router_decision.needs_clarification ? "Klaerungsrunde" : "Direkte Antwort"}
+              {(() => {
+                const rd = trace.router_decision as unknown as Record<string, unknown>
+                const mode =
+                  rd.response_mode ?? (rd.needs_clarification ? "clarify_only" : "answer_direct")
+                return mode === "clarify_only"
+                  ? "Klaerungsrunde"
+                  : mode === "recommend_and_refine"
+                    ? "Empfehlen & Verfeinern"
+                    : "Direkte Antwort"
+              })()}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
               Confidence: {trace.router_decision.confidence.toFixed(2)}

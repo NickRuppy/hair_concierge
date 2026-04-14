@@ -32,8 +32,7 @@ export const SCENARIOS: EvalScenario[] = [
     hair_profile: { ...FULL_PROFILE },
     turns: [
       {
-        message:
-          "Welche Pflegeroutine empfiehlst du für welliges Haar?",
+        message: "Welche Pflegeroutine empfiehlst du für welliges Haar?",
       },
       {
         message: "und owc testen?",
@@ -88,7 +87,7 @@ export const SCENARIOS: EvalScenario[] = [
       {
         message: "Welches Shampoo empfiehlst du mir?",
         metadata: {
-          needs_clarification: true,
+          response_mode: "clarify_only",
           policy_overrides_include: ["missing_shampoo_profile"],
         },
         content: {
@@ -111,7 +110,7 @@ export const SCENARIOS: EvalScenario[] = [
       {
         message: "Kannst du mir einen guten Conditioner empfehlen?",
         metadata: {
-          needs_clarification: true,
+          response_mode: "clarify_only",
           policy_overrides_include: ["missing_conditioner_profile"],
         },
         content: { must_be_german: true },
@@ -132,7 +131,7 @@ export const SCENARIOS: EvalScenario[] = [
       {
         message: "Ich suche ein Leave-in Produkt",
         metadata: {
-          needs_clarification: true,
+          response_mode: "clarify_only",
           policy_overrides_include: ["missing_leave_in_profile"],
         },
         content: { must_be_german: true },
@@ -153,7 +152,7 @@ export const SCENARIOS: EvalScenario[] = [
       {
         message: "Welches Haaröl passt zu mir?",
         metadata: {
-          needs_clarification: true,
+          response_mode: "clarify_only",
           policy_overrides_include: ["missing_oil_profile"],
         },
         content: { must_be_german: true },
@@ -175,7 +174,7 @@ export const SCENARIOS: EvalScenario[] = [
       {
         message: "Meine Haare sind trocken",
         metadata: {
-          needs_clarification: true,
+          response_mode: ["recommend_and_refine", "answer_direct"],
         },
         content: {
           must_be_german: true,
@@ -183,7 +182,7 @@ export const SCENARIOS: EvalScenario[] = [
         },
         judge: {
           expected_behavior:
-            "Should ask follow-up questions (duration, current routine, products tried). Should NOT jump to product recommendations from this vague input.",
+            "Should give a substantive answer. If products are available, may include tentative recommendations alongside follow-up questions.",
         },
       },
     ],
@@ -247,10 +246,9 @@ export const SCENARIOS: EvalScenario[] = [
     },
     turns: [
       {
-        message:
-          "Meine Haare brechen ständig ab und fühlen sich strohig an. Was kann ich tun?",
+        message: "Meine Haare brechen ständig ab und fühlen sich strohig an. Was kann ich tun?",
         metadata: {
-          needs_clarification: false,
+          response_mode: ["recommend_and_refine", "answer_direct"],
           source_count_min: 1,
         },
         content: {
@@ -264,26 +262,82 @@ export const SCENARIOS: EvalScenario[] = [
     ],
   },
 
+  // ── Recommend & refine ───────────────────────────────────────────────────
+  {
+    id: "shampoo-recommend-and-refine",
+    name: "Shampoo request with complete profile gets products + follow-ups",
+    description:
+      "Complete profile + shampoo request should produce products alongside follow-up questions",
+    hair_profile: { ...FULL_PROFILE },
+    turns: [
+      {
+        message: "Ich brauche ein Shampoo",
+        metadata: {
+          response_mode: ["recommend_and_refine", "answer_direct"],
+          product_count_min: 1,
+        },
+        content: { must_be_german: true },
+        judge: {
+          expected_behavior:
+            "Should give a shampoo recommendation. May also ask 1-2 follow-up questions to refine. Must NOT withhold products or only ask clarifying questions.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "recommend-refine-no-match",
+    name: "Recommend & refine with unlikely catalog match",
+    description:
+      "Profile combination unlikely to match catalog — should still attempt recommendations or explain lack of matches",
+    hair_profile: {
+      ...FULL_PROFILE,
+      hair_texture: "coily",
+      thickness: "coarse",
+      density: "high",
+      concerns: ["extreme_shrinkage"],
+      protein_moisture_balance: "snaps",
+      cuticle_condition: "rough",
+      scalp_type: "oily",
+      scalp_condition: "dandruff",
+      chemical_treatment: ["relaxed"],
+      goals: ["length_retention"],
+    },
+    turns: [
+      {
+        message: "Ich brauche ein Leave-in für meine Haare",
+        metadata: {
+          response_mode: ["recommend_and_refine", "answer_direct"],
+          product_count_max: 3,
+        },
+        content: { must_be_german: true },
+        judge: {
+          expected_behavior:
+            "With a rare profile combination, should either offer best-available leave-in products with caveats, or explain why no perfect match exists and ask refining questions. Must not hallucinate products.",
+        },
+      },
+    ],
+  },
+
   // ── Clarification cap ────────────────────────────────────────────────────
   {
     id: "clarification-cap",
     name: "Clarification cap after 3 vague messages",
-    description:
-      "After 2 clarification rounds, 3rd message should get a real answer (cap at 2)",
+    description: "After 2 clarification rounds, 3rd message should get a real answer (cap at 2)",
     hair_profile: { ...FULL_PROFILE },
     turns: [
       {
         message: "Meine Haare sind irgendwie komisch",
-        metadata: { needs_clarification: true },
+        metadata: { response_mode: "recommend_and_refine" },
       },
       {
         message: "Es ist halt so ein Problem mit meinen Haaren",
-        metadata: { needs_clarification: true },
+        metadata: { response_mode: "recommend_and_refine" },
       },
       {
         message: "Ich weiss einfach nicht was ich machen soll",
         metadata: {
-          needs_clarification: false,
+          response_mode: "answer_direct",
           policy_overrides_include: ["clarification_cap_reached"],
         },
         judge: {

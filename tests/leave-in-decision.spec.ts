@@ -48,10 +48,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   }
 }
 
-function createCandidate(
-  id: string,
-  overrides: Partial<MatchedProduct> = {}
-): MatchedProduct {
+function createCandidate(id: string, overrides: Partial<MatchedProduct> = {}): MatchedProduct {
   return {
     id,
     name: `Leave-in ${id}`,
@@ -78,7 +75,7 @@ function createCandidate(
 
 function createSpec(
   productId: string,
-  overrides: Partial<ProductLeaveInSpecs> = {}
+  overrides: Partial<ProductLeaveInSpecs> = {},
 ): ProductLeaveInSpecs {
   return {
     product_id: productId,
@@ -106,7 +103,7 @@ test.describe("Leave-in strict decision flow", () => {
         concerns: [],
         post_wash_actions: ["non_heat_styling"],
       }),
-      2
+      2,
     )
 
     expect(decision.category).toBe("leave_in")
@@ -130,7 +127,7 @@ test.describe("Leave-in strict decision flow", () => {
         goals: [],
         post_wash_actions: [],
         heat_styling: "never",
-      })
+      }),
     )
 
     expect(decision.missing_profile_fields).toEqual([
@@ -156,19 +153,23 @@ test.describe("Leave-in strict decision flow", () => {
 
   test("conditioner relationship follows thickness and density rule", () => {
     expect(
-      buildLeaveInDecision(createProfile({ thickness: "fine", density: "high" })).conditioner_relationship
+      buildLeaveInDecision(createProfile({ thickness: "fine", density: "high" }))
+        .conditioner_relationship,
     ).toBe("replacement_capable")
 
     expect(
-      buildLeaveInDecision(createProfile({ thickness: "normal", density: "low" })).conditioner_relationship
+      buildLeaveInDecision(createProfile({ thickness: "normal", density: "low" }))
+        .conditioner_relationship,
     ).toBe("replacement_capable")
 
     expect(
-      buildLeaveInDecision(createProfile({ thickness: "normal", density: "medium" })).conditioner_relationship
+      buildLeaveInDecision(createProfile({ thickness: "normal", density: "medium" }))
+        .conditioner_relationship,
     ).toBe("booster_only")
 
     expect(
-      buildLeaveInDecision(createProfile({ thickness: "coarse", density: "high" })).conditioner_relationship
+      buildLeaveInDecision(createProfile({ thickness: "coarse", density: "high" }))
+        .conditioner_relationship,
     ).toBe("booster_only")
   })
 
@@ -178,7 +179,7 @@ test.describe("Leave-in strict decision flow", () => {
         density: null,
         concerns: [],
         goals: [],
-      })
+      }),
     )
 
     expect(buildLeaveInClarificationQuestions(decision)).toEqual([
@@ -211,10 +212,10 @@ test.describe("Leave-in strict decision flow", () => {
         density: "medium",
         concerns: ["dryness"],
         post_wash_actions: ["air_dry"],
-      })
+      }),
     )
 
-    expect(routerDecision.needs_clarification).toBe(false)
+    expect(routerDecision.response_mode).not.toBe("clarify_only")
     expect(routerDecision.slot_completeness).toBe(1)
     expect(routerDecision.policy_overrides).toContain("category_product_mode")
   })
@@ -227,14 +228,11 @@ test.describe("Leave-in strict decision flow", () => {
         concerns: ["dryness"],
         post_wash_actions: ["air_dry"],
       }),
-      2
+      2,
     )
 
     const results = rerankLeaveInProducts(
-      [
-        createCandidate("replacement"),
-        createCandidate("booster", { sort_order: 2 }),
-      ],
+      [createCandidate("replacement"), createCandidate("booster", { sort_order: 2 })],
       [
         createSpec("replacement", {
           roles: ["replacement_conditioner"],
@@ -245,7 +243,7 @@ test.describe("Leave-in strict decision flow", () => {
           weight: "medium",
         }),
       ],
-      decision
+      decision,
     )
 
     expect(results.map((product) => product.id)).toEqual(["booster"])
@@ -254,7 +252,7 @@ test.describe("Leave-in strict decision flow", () => {
         category: "leave_in",
         conditioner_relationship: "booster_only",
         need_bucket: "moisture_anti_frizz",
-      })
+      }),
     )
   })
 
