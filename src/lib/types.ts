@@ -484,6 +484,7 @@ export interface RoutinePlan {
 export interface MessageRagContext {
   sources: CitationSource[]
   category_decision?: CategoryDecision | null
+  response_mode?: ResponseMode | null
 }
 
 export interface ChatPromptMessageSnapshot {
@@ -696,6 +697,8 @@ export type ProductCategory =
 
 export type RetrievalMode = "faq" | "hybrid" | "hybrid_plus_graph" | "product_sql_plus_hybrid"
 
+export type ResponseMode = "clarify_only" | "recommend_and_refine" | "answer_direct"
+
 export interface ClassificationResult {
   intent: IntentType
   product_category: ProductCategory
@@ -713,7 +716,7 @@ export interface ClassificationResult {
 
 export interface RouterDecision {
   retrieval_mode: RetrievalMode
-  needs_clarification: boolean
+  response_mode: ResponseMode
   clarification_reason?: string
   slot_completeness: number // 0–1
   confidence: number

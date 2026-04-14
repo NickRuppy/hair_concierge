@@ -51,10 +51,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   }
 }
 
-function createCandidate(
-  id: string,
-  overrides: Partial<MatchedProduct> = {}
-): MatchedProduct {
+function createCandidate(id: string, overrides: Partial<MatchedProduct> = {}): MatchedProduct {
   return {
     id,
     name: `Shampoo ${id}`,
@@ -81,7 +78,7 @@ function createCandidate(
 
 function createChunk(
   metadata: Record<string, unknown>,
-  overrides: Partial<RetrievedChunk> = {}
+  overrides: Partial<RetrievedChunk> = {},
 ): RetrievedChunk {
   return {
     id: `chunk-${Math.random()}`,
@@ -106,7 +103,7 @@ test.describe("Shampoo Flow alignment", () => {
         scalp_type: "oily",
         scalp_condition: "dandruff",
       }),
-      2
+      2,
     )
 
     expect(decision.category).toBe("shampoo")
@@ -128,20 +125,22 @@ test.describe("Shampoo Flow alignment", () => {
   })
 
   test("missing shampoo fields are reported precisely and in stable order", () => {
-    expect(
-      buildShampooDecision(createProfile({ thickness: null })).missing_profile_fields
-    ).toEqual(["thickness"])
+    expect(buildShampooDecision(createProfile({ thickness: null })).missing_profile_fields).toEqual(
+      ["thickness"],
+    )
 
     expect(
-      buildShampooDecision(createProfile({ scalp_type: null })).missing_profile_fields
+      buildShampooDecision(createProfile({ scalp_type: null })).missing_profile_fields,
     ).toEqual(["scalp_type"])
 
     expect(
-      buildShampooDecision(createProfile({ scalp_condition: null })).missing_profile_fields
+      buildShampooDecision(createProfile({ scalp_condition: null })).missing_profile_fields,
     ).toEqual(["scalp_condition"])
 
     expect(
-      buildShampooDecision(createProfile({ thickness: null, scalp_type: null, scalp_condition: null })).missing_profile_fields
+      buildShampooDecision(
+        createProfile({ thickness: null, scalp_type: null, scalp_condition: null }),
+      ).missing_profile_fields,
     ).toEqual(["thickness", "scalp_type", "scalp_condition"])
   })
 
@@ -152,7 +151,7 @@ test.describe("Shampoo Flow alignment", () => {
         scalp_type: "dry",
         scalp_condition: "dry_flakes",
       }),
-      0
+      0,
     )
 
     expect(decision.eligible).toBe(true)
@@ -168,7 +167,7 @@ test.describe("Shampoo Flow alignment", () => {
         scalp_type: null,
         scalp_condition: "dandruff",
       }),
-      2
+      2,
     )
 
     expect(decision.eligible).toBe(true)
@@ -185,21 +184,21 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "normal",
         scalp_type: "oily",
         scalp_condition: "dandruff",
-      })
+      }),
     )
     const dryDandruff = buildShampooDecision(
       createProfile({
         thickness: "normal",
         scalp_type: "dry",
         scalp_condition: "dandruff",
-      })
+      }),
     )
     const balancedIrritated = buildShampooDecision(
       createProfile({
         thickness: "normal",
         scalp_type: "balanced",
         scalp_condition: "irritated",
-      })
+      }),
     )
 
     expect(oilyDandruff.matched_bucket).toBe("schuppen")
@@ -213,14 +212,14 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "fine",
         scalp_type: "oily",
         scalp_condition: "dandruff",
-      })
+      }),
     )
     const recovered = buildShampooDecision(
       createProfile({
         thickness: "fine",
         scalp_type: "oily",
         scalp_condition: "none",
-      })
+      }),
     )
 
     expect(activeIssue.matched_bucket).toBe("schuppen")
@@ -232,7 +231,7 @@ test.describe("Shampoo Flow alignment", () => {
       createProfile({
         thickness: null,
         scalp_condition: null,
-      })
+      }),
     )
 
     expect(buildShampooClarificationQuestions(decision)).toEqual([
@@ -247,7 +246,7 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "fine",
         scalp_type: null,
         scalp_condition: "irritated",
-      })
+      }),
     )
 
     expect(decision.eligible).toBe(true)
@@ -260,7 +259,7 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "fine",
         scalp_type: "oily",
         scalp_condition: "none",
-      })
+      }),
     )
 
     expect(buildShampooRetrievalFilter("product_recommendation", "shampoo", decision)).toEqual({
@@ -276,7 +275,9 @@ test.describe("Shampoo Flow alignment", () => {
       concern: "dehydriert-fettig",
     })
     expect(buildShampooRetrievalFilter("general_chat", "shampoo", decision)).toBeUndefined()
-    expect(buildShampooRetrievalFilter("product_recommendation", "conditioner", decision)).toBeUndefined()
+    expect(
+      buildShampooRetrievalFilter("product_recommendation", "conditioner", decision),
+    ).toBeUndefined()
   })
 
   test("router does not ask generic slot questions when the shampoo triple is complete", () => {
@@ -301,10 +302,10 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "fine",
         scalp_type: "oily",
         scalp_condition: "none",
-      })
+      }),
     )
 
-    expect(routerDecision.needs_clarification).toBe(false)
+    expect(routerDecision.response_mode).not.toBe("clarify_only")
     expect(routerDecision.slot_completeness).toBe(1)
     expect(routerDecision.policy_overrides).toContain("category_product_mode")
     expect(routerDecision.policy_overrides).not.toContain("missing_slots")
@@ -332,10 +333,10 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "fine",
         scalp_type: null,
         scalp_condition: "dandruff",
-      })
+      }),
     )
 
-    expect(routerDecision.needs_clarification).toBe(false)
+    expect(routerDecision.response_mode).not.toBe("clarify_only")
     expect(routerDecision.slot_completeness).toBe(1)
     expect(routerDecision.policy_overrides).toContain("category_product_mode")
     expect(routerDecision.policy_overrides).not.toContain("missing_shampoo_profile")
@@ -363,10 +364,10 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "fine",
         scalp_type: "oily",
         scalp_condition: null,
-      })
+      }),
     )
 
-    expect(routerDecision.needs_clarification).toBe(true)
+    expect(routerDecision.response_mode).toBe("clarify_only")
     expect(routerDecision.slot_completeness).toBeCloseTo(2 / 3, 5)
     expect(routerDecision.policy_overrides).toContain("missing_shampoo_profile")
   })
@@ -404,8 +405,12 @@ test.describe("Shampoo Flow alignment", () => {
     }
 
     expect(product.recommendation_meta.matched_bucket).toBe("irritationen")
-    expect(product.recommendation_meta?.top_reasons).toEqual(noisyProduct.recommendation_meta?.top_reasons)
-    expect(product.recommendation_meta?.top_reasons.join(" ")).not.toMatch(/coily|growth|taeglich|bleached|frizz|breakage/i)
+    expect(product.recommendation_meta?.top_reasons).toEqual(
+      noisyProduct.recommendation_meta?.top_reasons,
+    )
+    expect(product.recommendation_meta?.top_reasons.join(" ")).not.toMatch(
+      /coily|growth|taeglich|bleached|frizz|breakage/i,
+    )
   })
 
   test("shampoo concern boost improves retrieval ranking for matching chunks", () => {
@@ -441,7 +446,7 @@ test.describe("Shampoo Flow alignment", () => {
         expect.objectContaining({ thickness: "fine", concern: "schuppen" }),
         expect.objectContaining({ thickness: "coarse", concern: "dehydriert-fettig" }),
         expect.objectContaining({ thickness: "coarse", concern: "schuppen" }),
-      ])
+      ]),
     )
   })
 
@@ -486,7 +491,7 @@ test.describe("Shampoo Flow alignment", () => {
         name: "Broken Exact Pair Shampoo",
         category: "Shampoo",
         shampoo_bucket_pairs: [{ thickness: "fine", shampoo_bucket: "nicht-echt" }],
-      })
+      }),
     ).toThrow(/ungueltigen Shampoo-Bucket/i)
   })
 
@@ -519,7 +524,7 @@ test.describe("Shampoo Flow alignment", () => {
         scalp_type: "oily",
         scalp_condition: "none",
       }),
-      0
+      0,
     )
     const ragContext = buildAssistantRagContext([], categoryDecision)
     const donePayload = buildDoneEventData({
@@ -527,7 +532,7 @@ test.describe("Shampoo Flow alignment", () => {
       retrievalSummary: { final_context_count: 0 },
       routerDecision: {
         retrieval_mode: "product_sql_plus_hybrid",
-        needs_clarification: false,
+        response_mode: "answer_direct" as const,
         slot_completeness: 0.8,
         confidence: 0.9,
         policy_overrides: [],
@@ -544,7 +549,7 @@ test.describe("Shampoo Flow alignment", () => {
         intent: "product_recommendation",
         final_context_count: 0,
         category_decision: categoryDecision,
-      })
+      }),
     )
   })
 
@@ -554,7 +559,7 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "fine",
         scalp_type: "balanced",
         scalp_condition: "dandruff",
-      })
+      }),
     )
     expect(balanced.matched_bucket).toBe("schuppen")
     expect(balanced.secondary_bucket).toBe("normal")
@@ -564,7 +569,7 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "fine",
         scalp_type: "oily",
         scalp_condition: "dandruff",
-      })
+      }),
     )
     expect(oily.matched_bucket).toBe("schuppen")
     expect(oily.secondary_bucket).toBe("dehydriert-fettig")
@@ -576,7 +581,7 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "fine",
         scalp_type: "oily",
         scalp_condition: "none",
-      })
+      }),
     )
     expect(none.secondary_bucket).toBeNull()
 
@@ -585,7 +590,7 @@ test.describe("Shampoo Flow alignment", () => {
         thickness: "fine",
         scalp_type: "balanced",
         scalp_condition: "irritated",
-      })
+      }),
     )
     expect(irritated.secondary_bucket).toBeNull()
   })
@@ -598,7 +603,7 @@ test.describe("Mask weighted signal scoring", () => {
         chemical_treatment: ["bleached"],
         heat_styling: "daily",
         protein_moisture_balance: "stretches_bounces",
-      })
+      }),
     )
 
     expect(decision.needs_mask).toBe(true)
@@ -615,7 +620,7 @@ test.describe("Mask weighted signal scoring", () => {
         chemical_treatment: ["bleached"],
         heat_styling: "never",
         protein_moisture_balance: "snaps",
-      })
+      }),
     )
 
     expect(decision.needs_mask).toBe(true)
@@ -630,7 +635,7 @@ test.describe("Mask weighted signal scoring", () => {
         chemical_treatment: ["natural"],
         heat_styling: "daily",
         protein_moisture_balance: "stretches_bounces",
-      })
+      }),
     )
 
     expect(decision.needs_mask).toBe(true)
@@ -645,7 +650,7 @@ test.describe("Mask weighted signal scoring", () => {
         chemical_treatment: ["colored"],
         heat_styling: "never",
         protein_moisture_balance: "stretches_bounces",
-      })
+      }),
     )
 
     expect(decision.needs_mask).toBe(true)
@@ -659,7 +664,7 @@ test.describe("Mask weighted signal scoring", () => {
         chemical_treatment: ["natural"],
         heat_styling: "never",
         protein_moisture_balance: "stretches_bounces",
-      })
+      }),
     )
 
     expect(decision.needs_mask).toBe(false)

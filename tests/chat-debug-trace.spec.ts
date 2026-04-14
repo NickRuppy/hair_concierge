@@ -73,7 +73,7 @@ function createClassification(overrides: Partial<ClassificationResult> = {}): Cl
 function createRouterDecision(overrides: Partial<RouterDecision> = {}): RouterDecision {
   return {
     retrieval_mode: "hybrid",
-    needs_clarification: false,
+    response_mode: "answer_direct" as const,
     clarification_reason: undefined,
     slot_completeness: 0.8,
     confidence: 0.91,

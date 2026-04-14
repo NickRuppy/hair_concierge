@@ -13,6 +13,7 @@ export interface ProductionTraceCandidate {
   intent: string | null
   productCategory: string | null
   retrievalMode: string | null
+  responseMode: string | null
   needsClarification: boolean | null
   promptVersion: number | null
   promptLabel: string | null
@@ -167,10 +168,21 @@ export async function fetchProductionTraceCandidates(
         intent: trace.intent ?? null,
         productCategory: trace.product_category ?? null,
         retrievalMode: trace.router_decision?.retrieval_mode ?? null,
+        responseMode:
+          trace.router_decision?.response_mode ??
+          (typeof trace.router_decision?.needs_clarification === "boolean"
+            ? trace.router_decision.needs_clarification
+              ? "clarify_only"
+              : "answer_direct"
+            : null),
         needsClarification:
           typeof trace.router_decision?.needs_clarification === "boolean"
             ? trace.router_decision.needs_clarification
-            : null,
+            : trace.router_decision?.response_mode === "clarify_only"
+              ? true
+              : trace.router_decision?.response_mode
+                ? false
+                : null,
         promptVersion: trace.prompt_refs?.synthesis?.version ?? null,
         promptLabel: trace.prompt_refs?.synthesis?.label ?? null,
         promptIsFallback:

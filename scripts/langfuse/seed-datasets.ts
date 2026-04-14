@@ -133,6 +133,7 @@ async function seedProductionDataset(
         intent: candidate.intent,
         product_category: candidate.productCategory,
         retrieval_mode: candidate.retrievalMode,
+        response_mode: candidate.responseMode,
         needs_clarification: candidate.needsClarification,
         prompt_version: candidate.promptVersion,
         prompt_label: candidate.promptLabel,

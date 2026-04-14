@@ -84,6 +84,8 @@ export interface SynthesizeParams {
   memoryContext?: string | null
   /** Slot-aware clarification questions from the router (replaces consultationMode) */
   clarificationQuestions?: string[]
+  /** Follow-up questions for recommend_and_refine mode (products ARE shown alongside) */
+  followupQuestions?: string[]
 }
 
 export interface SynthesisResult {
@@ -100,6 +102,19 @@ function appendMemoryContext(profileText: string, memoryContext?: string | null)
   return `${profileText}\n\nErinnerungen aus frueheren Gespraechen:\n${memoryContext}`
 }
 
+function appendFollowupQuestions(profileText: string, followupQuestions?: string[]): string {
+  if (!followupQuestions || followupQuestions.length === 0) return profileText
+  let result = profileText
+  result +=
+    "\n\n(HINWEIS: Gib eine erste Produktempfehlung basierend auf dem vorhandenen Kontext. Stelle dabei auch diese Rueckfragen, um die Empfehlung im naechsten Schritt zu verfeinern:"
+  for (const q of followupQuestions) {
+    result += `\n- ${q}`
+  }
+  result +=
+    "\nFormuliere die Empfehlung als vorsichtige erste Einschaetzung, nicht als finale Antwort.)"
+  return result
+}
+
 /**
  * Formats the user's hair profile into a human-readable German summary
  * for injection into the system prompt.
@@ -108,6 +123,7 @@ function formatUserProfile(
   profile: HairProfile | null,
   clarificationQuestions?: string[],
   memoryContext?: string | null,
+  followupQuestions?: string[],
 ): string {
   if (!profile) {
     return appendMemoryContext(
@@ -239,13 +255,14 @@ function formatUserProfile(
     result += ")"
   }
 
-  return result
+  return appendFollowupQuestions(result, followupQuestions)
 }
 
 function formatShampooProfile(
   profile: HairProfile | null,
   clarificationQuestions?: string[],
   memoryContext?: string | null,
+  followupQuestions?: string[],
 ): string {
   if (!profile) {
     return appendMemoryContext(
@@ -296,7 +313,7 @@ function formatShampooProfile(
     result += ")"
   }
 
-  return result
+  return appendFollowupQuestions(result, followupQuestions)
 }
 
 /**
@@ -1032,6 +1049,7 @@ export function buildSystemPrompt(
   memoryContext?: string | null,
   clarificationQuestions?: string[],
   basePromptTemplate = SYSTEM_PROMPT,
+  followupQuestions?: string[],
 ): string {
   let prompt = basePromptTemplate
 
@@ -1042,8 +1060,8 @@ export function buildSystemPrompt(
 
   const userProfileContext =
     productCategory === "shampoo"
-      ? formatShampooProfile(hairProfile, clarificationQuestions, memoryContext)
-      : formatUserProfile(hairProfile, clarificationQuestions, memoryContext)
+      ? formatShampooProfile(hairProfile, clarificationQuestions, memoryContext, followupQuestions)
+      : formatUserProfile(hairProfile, clarificationQuestions, memoryContext, followupQuestions)
 
   prompt = prompt.replace("{{USER_PROFILE}}", userProfileContext)
 
@@ -1099,6 +1117,7 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     routinePlan,
     memoryContext,
     clarificationQuestions,
+    followupQuestions,
   } = params
 
   const promptBuildStart = performance.now()
@@ -1117,6 +1136,7 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     memoryContext,
     clarificationQuestions,
     managedPrompt.template,
+    followupQuestions,
   )
 
   // Build the messages array for the API call

@@ -231,7 +231,7 @@ export function buildRetrievalDebugEventData(draft: PipelineTraceDraft): Record<
     intent: draft.intent,
     product_category: draft.product_category,
     retrieval_mode: draft.router_decision.retrieval_mode,
-    needs_clarification: draft.router_decision.needs_clarification,
+    response_mode: draft.router_decision.response_mode,
     clarification_questions: draft.clarification_questions,
     policy_overrides: draft.router_decision.policy_overrides,
     subqueries: draft.retrieval.subqueries,

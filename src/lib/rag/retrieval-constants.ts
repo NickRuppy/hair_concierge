@@ -61,11 +61,11 @@ export const SHAMPOO_CONCERN_MATCH_BOOST = 1.12
 export const COMMUNITY_QA_PRODUCT_BOOST = 1.25
 
 // ── Router (Phase 2) ────────────────────────────────────────────────────────
-/** Minimum confidence for the router to proceed without clarification */
-export const ROUTER_CONFIDENCE_THRESHOLD = 0.72
+/** Confidence below this triggers recommend_and_refine (follow-up questions alongside products) */
+export const ROUTER_CONFIDENCE_THRESHOLD = 0.5
 
-/** Minimum filled slots required for product/routine intents */
-export const ROUTER_MIN_SLOTS_PRODUCT = 2
+/** Minimum filled slots for known-category product intents (null category uses max(this, 2)) */
+export const ROUTER_MIN_SLOTS_PRODUCT = 1
 
 /** Maximum clarification rounds before forcing a best-effort answer */
 export const ROUTER_MAX_CLARIFICATION_ROUNDS = 2

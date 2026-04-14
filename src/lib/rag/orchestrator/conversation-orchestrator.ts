@@ -273,7 +273,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         classifier_retrieval_mode: classification.retrieval_mode,
         classifier_needs_clarification: classification.needs_clarification,
         final_retrieval_mode: result.retrieval_mode,
-        final_needs_clarification: result.needs_clarification,
+        final_response_mode: result.response_mode,
         confidence: result.confidence,
         slot_completeness: result.slot_completeness,
         clarification_reason: result.clarification_reason ?? null,
@@ -290,7 +290,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     intent,
     retrieval_mode: routerDecision.retrieval_mode,
     router_confidence: routerDecision.confidence,
-    needs_clarification: routerDecision.needs_clarification,
+    response_mode: routerDecision.response_mode,
     slot_completeness: routerDecision.slot_completeness,
     policy_overrides: routerDecision.policy_overrides,
     stage_latency_ms: routerMs,
@@ -304,20 +304,20 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       intent,
       retrieval_mode: routerDecision.retrieval_mode,
       router_confidence: routerDecision.confidence,
-      needs_clarification: routerDecision.needs_clarification,
+      response_mode: routerDecision.response_mode,
       policy_overrides: routerDecision.policy_overrides,
       stage_latency_ms: 0,
     })
   }
 
-  if (routerDecision.needs_clarification) {
+  if (routerDecision.response_mode === "clarify_only") {
     emitRouterEvent({
       event: "router_clarification_triggered",
       conversation_id: conversationId,
       intent,
       retrieval_mode: routerDecision.retrieval_mode,
       router_confidence: routerDecision.confidence,
-      needs_clarification: true,
+      response_mode: "clarify_only",
       slot_completeness: routerDecision.slot_completeness,
       stage_latency_ms: 0,
     })
@@ -352,7 +352,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
   }
 
   // ── Clarification branch: skip retrieval & products ────────────────
-  if (routerDecision.needs_clarification) {
+  if (routerDecision.response_mode === "clarify_only") {
     const routineClarificationQuestions = shouldPlanRoutine
       ? buildRoutineClarificationQuestions(hairProfile, message)
       : undefined
@@ -607,6 +607,26 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
 
   // Note: memory constraints for non-routine are already applied inside selectProducts()
 
+  // ── Follow-up questions for recommend_and_refine mode ──────────────
+  let followupQuestions: string[] | undefined
+  if (
+    routerDecision.response_mode === "recommend_and_refine" &&
+    matchedProducts &&
+    matchedProducts.length > 0
+  ) {
+    const routineClarificationQuestions = shouldPlanRoutine
+      ? buildRoutineClarificationQuestions(hairProfile, message)
+      : undefined
+    followupQuestions = buildCategoryClarificationQuestions(
+      product_category,
+      decisions,
+      shouldPlanRoutine,
+      routineClarificationQuestions,
+      classification,
+      hairProfile,
+    )
+  }
+
   // ── Step 5: Synthesize streaming response ──────────────────────────
   const synthesisResult = await observeAsyncStage(
     "chat-synthesis-stage",
@@ -631,6 +651,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         oilDecision: decisions.oil,
         routinePlan,
         memoryContext: memoryContext.promptContext,
+        followupQuestions,
       }),
     {
       asType: "chain",

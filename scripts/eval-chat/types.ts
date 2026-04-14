@@ -25,6 +25,8 @@ export interface MetadataAssertions {
   intent?: string | string[]
   /** Exact match or one-of array */
   retrieval_mode?: string | string[]
+  /** Exact match or one-of array for response mode */
+  response_mode?: string | string[]
   /** All of these must be present in policy_overrides */
   policy_overrides_include?: string[]
   /** None of these may be present in policy_overrides */
@@ -32,6 +34,8 @@ export interface MetadataAssertions {
   needs_clarification?: boolean
   source_count_min?: number
   source_count_max?: number
+  product_count_min?: number
+  product_count_max?: number
   /** Partial match against category_decision object */
   category_decision?: Record<string, unknown>
 }

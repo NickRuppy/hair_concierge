@@ -6,12 +6,16 @@ test.describe("Core user flows — smoke test @ci", () => {
     // After redirect chain settles, URL should contain /quiz
     expect(page.url()).toContain("/quiz")
     // Page should have loaded successfully
-    expect(response?.ok() || response?.status() === 304 || page.url().includes("/quiz")).toBeTruthy()
+    expect(
+      response?.ok() || response?.status() === 304 || page.url().includes("/quiz"),
+    ).toBeTruthy()
     // Take a screenshot as evidence
     await page.screenshot({ path: "tests/screenshots/01-homepage-redirect.png", fullPage: true })
   })
 
-  test("2. Quiz page loads with intro and first quiz step after clicking start", async ({ page }) => {
+  test("2. Quiz page loads with intro and first quiz step after clicking start", async ({
+    page,
+  }) => {
     await page.goto("/quiz", { waitUntil: "networkidle" })
     expect(page.url()).toContain("/quiz")
 
@@ -77,7 +81,9 @@ test.describe("Core user flows — smoke test @ci", () => {
     await page.waitForTimeout(2000)
 
     // Should have an email input
-    const emailInput = page.locator('input[type="email"], input[name="email"], input[placeholder*="mail" i]')
+    const emailInput = page.locator(
+      'input[type="email"], input[name="email"], input[placeholder*="mail" i]',
+    )
     await expect(emailInput.first()).toBeVisible({ timeout: 10000 })
 
     // Should have a password input
@@ -85,7 +91,9 @@ test.describe("Core user flows — smoke test @ci", () => {
     await expect(passwordInput.first()).toBeVisible({ timeout: 10000 })
 
     // Should have a submit button
-    const submitButton = page.locator('button[type="submit"], button:has-text("Anmelden"), button:has-text("Login"), button:has-text("Einloggen")')
+    const submitButton = page.locator(
+      'button[type="submit"], button:has-text("Anmelden"), button:has-text("Login"), button:has-text("Einloggen")',
+    )
     const submitCount = await submitButton.count()
     console.log(`Found ${submitCount} submit-like buttons`)
     expect(submitCount).toBeGreaterThan(0)
@@ -105,9 +113,10 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
     // This is a compile-time check — if the test file compiles, types are correct.
     // Import types to verify they exist and are compatible.
     type RetrievalMode = "faq" | "hybrid" | "hybrid_plus_graph" | "product_sql_plus_hybrid"
+    type ResponseMode = "clarify_only" | "recommend_and_refine" | "answer_direct"
     type RouterDecision = {
       retrieval_mode: RetrievalMode
-      needs_clarification: boolean
+      response_mode: ResponseMode
       clarification_reason?: string
       slot_completeness: number
       confidence: number
@@ -116,14 +125,14 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
 
     const decision: RouterDecision = {
       retrieval_mode: "hybrid",
-      needs_clarification: false,
+      response_mode: "answer_direct",
       slot_completeness: 0.6,
       confidence: 0.85,
       policy_overrides: [],
     }
 
     expect(decision.retrieval_mode).toBe("hybrid")
-    expect(decision.needs_clarification).toBe(false)
+    expect(decision.response_mode).toBe("answer_direct")
     expect(decision.confidence).toBeGreaterThan(0)
     expect(decision.policy_overrides).toEqual([])
   })
@@ -133,7 +142,15 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
     // the expected event types (requires auth — skip if not available)
     const response = await page.goto("/auth", { waitUntil: "networkidle" })
     // This test validates the event type union at compile time
-    type SSEEventType = "conversation_id" | "content_delta" | "product_recommendations" | "sources" | "confidence" | "retrieval_debug" | "done" | "error"
+    type SSEEventType =
+      | "conversation_id"
+      | "content_delta"
+      | "product_recommendations"
+      | "sources"
+      | "confidence"
+      | "retrieval_debug"
+      | "done"
+      | "error"
 
     const validTypes: SSEEventType[] = [
       "conversation_id",
@@ -156,7 +173,13 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
     const ROUTER_CONFIDENCE_THRESHOLD = 0.72
     const ROUTER_MIN_SLOTS_PRODUCT = 2
     const ROUTER_MAX_CLARIFICATION_ROUNDS = 2
-    const ROUTER_SLOT_KEYS = ["problem", "duration", "products_tried", "routine", "special_circumstances"]
+    const ROUTER_SLOT_KEYS = [
+      "problem",
+      "duration",
+      "products_tried",
+      "routine",
+      "special_circumstances",
+    ]
 
     expect(ROUTER_CONFIDENCE_THRESHOLD).toBeGreaterThan(0.5)
     expect(ROUTER_CONFIDENCE_THRESHOLD).toBeLessThan(1.0)
@@ -174,7 +197,8 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
       duration: "Seit wann fällt dir das auf? Hat sich kürzlich was verändert?",
       products_tried: "Was benutzt du aktuell so? Shampoo, Conditioner, irgendwas Leave-in?",
       routine: "Wie sieht deine Routine aus? Wie oft wäschst du deine Haare?",
-      special_circumstances: "Gibt es besondere Umstände — Färben, Hitze, Schwangerschaft, Medikamente?",
+      special_circumstances:
+        "Gibt es besondere Umstände — Färben, Hitze, Schwangerschaft, Medikamente?",
     }
 
     for (const [slot, question] of Object.entries(questions)) {
@@ -192,13 +216,20 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
       complexity: "simple" as const,
       needs_clarification: true,
       retrieval_mode: "hybrid" as const,
-      normalized_filters: { problem: null, duration: null, products_tried: null, routine: null, special_circumstances: null },
+      normalized_filters: {
+        problem: null,
+        duration: null,
+        products_tried: null,
+        routine: null,
+        special_circumstances: null,
+      },
       router_confidence: 0.55,
     }
 
     // With 0 filled slots out of 5, slot_completeness = 0
-    const filledSlots = Object.values(vagueClassification.normalized_filters)
-      .filter(v => v !== null && v !== undefined).length
+    const filledSlots = Object.values(vagueClassification.normalized_filters).filter(
+      (v) => v !== null && v !== undefined,
+    ).length
     expect(filledSlots).toBe(0)
 
     // Confidence below threshold
@@ -227,8 +258,9 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
     }
 
     // 4 out of 5 slots filled
-    const filledSlots = Object.values(detailedClassification.normalized_filters)
-      .filter(v => v !== null && v !== undefined).length
+    const filledSlots = Object.values(detailedClassification.normalized_filters).filter(
+      (v) => v !== null && v !== undefined,
+    ).length
     expect(filledSlots).toBe(4)
     expect(filledSlots).toBeGreaterThanOrEqual(2) // >= ROUTER_MIN_SLOTS_PRODUCT
 

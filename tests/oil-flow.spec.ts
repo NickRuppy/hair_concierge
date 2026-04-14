@@ -47,10 +47,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   }
 }
 
-function createCandidate(
-  id: string,
-  overrides: Partial<MatchedProduct> = {}
-): MatchedProduct {
+function createCandidate(id: string, overrides: Partial<MatchedProduct> = {}): MatchedProduct {
   return {
     id,
     name: `Oel ${id}`,
@@ -84,7 +81,7 @@ test.describe("Oil structured recommendation flow", () => {
         scalp_condition: "dry_flakes",
       }),
       "Ich moechte Hair Oiling fuer meine trockene Kopfhaut vor dem Waschen machen.",
-      2
+      2,
     )
 
     expect(decision.category).toBe("oil")
@@ -101,11 +98,11 @@ test.describe("Oil structured recommendation flow", () => {
   test("styling and dry-oil intents stay separated", () => {
     const stylingDecision = buildOilDecision(
       createProfile({ thickness: "normal" }),
-      "Ich suche ein Styling-Oel als Finish gegen Frizz und fuer mehr Glanz."
+      "Ich suche ein Styling-Oel als Finish gegen Frizz und fuer mehr Glanz.",
     )
     const dryOilDecision = buildOilDecision(
       createProfile({ thickness: "fine" }),
-      "Ich brauche ein leichtes Trockenöl, das nicht beschwert."
+      "Ich brauche ein leichtes Trockenöl, das nicht beschwert.",
     )
 
     expect(stylingDecision.matched_subtype).toBe("styling-oel")
@@ -117,7 +114,7 @@ test.describe("Oil structured recommendation flow", () => {
   test("explicit subtype wins over generic lightweight wording", () => {
     const decision = buildOilDecision(
       createProfile({ thickness: "fine" }),
-      "Ich suche ein leichtes Styling-Oel gegen Frizz."
+      "Ich suche ein leichtes Styling-Oel gegen Frizz.",
     )
 
     expect(decision.eligible).toBe(true)
@@ -128,7 +125,7 @@ test.describe("Oil structured recommendation flow", () => {
   test("scalp and hair-oiling intent overrides styling language", () => {
     const decision = buildOilDecision(
       createProfile({ thickness: "normal" }),
-      "Ich will ein Oel fuer die Kopfhaut vor dem Waschen, aber auch gegen Frizz."
+      "Ich will ein Oel fuer die Kopfhaut vor dem Waschen, aber auch gegen Frizz.",
     )
 
     expect(decision.eligible).toBe(true)
@@ -139,7 +136,7 @@ test.describe("Oil structured recommendation flow", () => {
   test("missing oil fields are reported in stable order", () => {
     const decision = buildOilDecision(
       createProfile({ thickness: null }),
-      "Welches Haaroel passt zu mir?"
+      "Welches Haaroel passt zu mir?",
     )
 
     expect(decision.eligible).toBe(false)
@@ -153,7 +150,7 @@ test.describe("Oil structured recommendation flow", () => {
   test("therapy-oil requests can produce an explicit no-oil outcome", () => {
     const decision = buildOilDecision(
       createProfile({ thickness: "fine" }),
-      "Ich suche ein Rosmarinöl fuer Hair Oiling auf der Kopfhaut."
+      "Ich suche ein Rosmarinöl fuer Hair Oiling auf der Kopfhaut.",
     )
 
     expect(decision.eligible).toBe(true)
@@ -166,7 +163,7 @@ test.describe("Oil structured recommendation flow", () => {
   test("catalog natural oils like Moringaoel are not blocked as therapy-oils", () => {
     const decision = buildOilDecision(
       createProfile({ thickness: "normal" }),
-      "Ich suche Moringaöl fuer Hair Oiling."
+      "Ich suche Moringaöl fuer Hair Oiling.",
     )
 
     expect(decision.eligible).toBe(true)
@@ -178,7 +175,7 @@ test.describe("Oil structured recommendation flow", () => {
   test("non-oil category needs can produce an explicit no-oil outcome", () => {
     const decision = buildOilDecision(
       createProfile({ thickness: "fine" }),
-      "Ich suche ein Styling-Oel mit Hitzeschutz statt Leave-in."
+      "Ich suche ein Styling-Oel mit Hitzeschutz statt Leave-in.",
     )
 
     expect(decision.eligible).toBe(true)
@@ -190,7 +187,7 @@ test.describe("Oil structured recommendation flow", () => {
   test("eligible oil decisions expose an exact retrieval filter", () => {
     const decision = buildOilDecision(
       createProfile({ thickness: "coarse" }),
-      "Ich moechte ein Oel als Finish gegen Frizz und fuer mehr Glanz."
+      "Ich moechte ein Oel als Finish gegen Frizz und fuer mehr Glanz.",
     )
 
     expect(buildOilRetrievalFilter("product_recommendation", "oil", decision)).toEqual({
@@ -203,7 +200,7 @@ test.describe("Oil structured recommendation flow", () => {
     const decision = buildOilDecision(
       createProfile({ thickness: "fine" }),
       "Ich brauche ein leichtes Trockenoel, das nicht beschwert.",
-      2
+      2,
     )
 
     const results = annotateOilRecommendations(
@@ -216,7 +213,7 @@ test.describe("Oil structured recommendation flow", () => {
           sort_order: 2,
         }),
       ],
-      decision
+      decision,
     )
 
     expect(results).toHaveLength(2)
@@ -226,7 +223,7 @@ test.describe("Oil structured recommendation flow", () => {
         matched_subtype: "trocken-oel",
         use_mode: "light_finish",
         matched_profile: { thickness: "fine" },
-      })
+      }),
     )
   })
 
@@ -249,10 +246,10 @@ test.describe("Oil structured recommendation flow", () => {
       },
       [],
       createProfile({ thickness: "fine" }),
-      "Ich brauche ein leichtes Trockenoel, das nicht beschwert."
+      "Ich brauche ein leichtes Trockenoel, das nicht beschwert.",
     )
 
-    expect(routerDecision.needs_clarification).toBe(false)
+    expect(routerDecision.response_mode).not.toBe("clarify_only")
     expect(routerDecision.slot_completeness).toBe(1)
     expect(routerDecision.policy_overrides).toContain("category_product_mode")
   })
@@ -264,7 +261,7 @@ test.describe("Oil structured recommendation flow", () => {
         density: "low",
         hair_texture: "straight",
       }),
-      "Ich suche ein Oel als Finish gegen Frizz und fuer mehr Glanz."
+      "Ich suche ein Oel als Finish gegen Frizz und fuer mehr Glanz.",
     )
     const changedDecision = buildOilDecision(
       createProfile({
@@ -273,7 +270,7 @@ test.describe("Oil structured recommendation flow", () => {
         hair_texture: "coily",
         chemical_treatment: ["bleached"],
       }),
-      "Ich suche ein Oel als Finish gegen Frizz und fuer mehr Glanz."
+      "Ich suche ein Oel als Finish gegen Frizz und fuer mehr Glanz.",
     )
 
     expect(baseDecision.matched_subtype).toBe("styling-oel")
