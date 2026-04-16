@@ -296,7 +296,6 @@ async function main() {
 
   const payload = rows.map(({ product_id, weight, concentration, balance_direction }) => ({
     product_id,
-    format: null,
     weight,
     concentration,
     balance_direction,

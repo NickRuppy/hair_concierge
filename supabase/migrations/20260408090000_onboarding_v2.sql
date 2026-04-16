@@ -28,28 +28,23 @@ BEGIN
   ELSIF onboarding_step_type IN ('smallint', 'integer', 'bigint') THEN
     ALTER TABLE profiles
       ALTER COLUMN onboarding_step TYPE text USING COALESCE(
-        CASE
-          WHEN onboarding_step <= 1 THEN 'welcome'
-          WHEN onboarding_step = 2 THEN 'products_basics'
-          WHEN onboarding_step = 3 THEN 'heat_tools'
-          ELSE 'goals'
-        END,
+        'welcome',
         'welcome'
       ),
       ALTER COLUMN onboarding_step SET DEFAULT 'welcome';
   ELSE
     UPDATE profiles
-    SET onboarding_step = COALESCE(
-      CASE onboarding_step
-        WHEN '1' THEN 'welcome'
-        WHEN '2' THEN 'products_basics'
-        WHEN '3' THEN 'heat_tools'
-        WHEN '4' THEN 'goals'
-        WHEN 'complete' THEN 'goals'
-        ELSE onboarding_step
-      END,
-      'welcome'
-    )
+      SET onboarding_step = COALESCE(
+        CASE onboarding_step
+          WHEN '1' THEN 'welcome'
+          WHEN '2' THEN 'welcome'
+          WHEN '3' THEN 'welcome'
+          WHEN '4' THEN 'welcome'
+          WHEN 'complete' THEN 'welcome'
+          ELSE onboarding_step
+        END,
+        'welcome'
+      )
     WHERE onboarding_step IS NULL OR onboarding_step IN ('1', '2', '3', '4', 'complete');
 
     ALTER TABLE profiles ALTER COLUMN onboarding_step SET DEFAULT 'welcome';
