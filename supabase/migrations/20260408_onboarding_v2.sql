@@ -5,49 +5,18 @@
 --   3. Add care-habit columns to hair_profiles
 --   4. Create user_product_usage table with RLS
 
--- 1. Ensure onboarding_step is text type with 'welcome' default.
---    Legacy onboarding used a 4-step integer wizard:
---      1 = hair profile intro
---      2 = concerns
---      3 = routine
---      4 = goals / completion
---    Map those coarse progress markers into the current string-based flow.
+-- 1. Ensure onboarding_step is text type with 'welcome' default
+--    Handles both: column exists as integer (convert) or doesn't exist (add)
 DO $$
-DECLARE
-  onboarding_step_type text;
 BEGIN
-  SELECT data_type
-  INTO onboarding_step_type
-  FROM information_schema.columns
-  WHERE table_schema = 'public'
-    AND table_name = 'profiles'
-    AND column_name = 'onboarding_step';
-
-  IF onboarding_step_type IS NULL THEN
-    ALTER TABLE profiles ADD COLUMN onboarding_step text DEFAULT 'welcome';
-  ELSIF onboarding_step_type IN ('smallint', 'integer', 'bigint') THEN
-    ALTER TABLE profiles
-      ALTER COLUMN onboarding_step TYPE text USING COALESCE(
-        'welcome',
-        'welcome'
-      ),
-      ALTER COLUMN onboarding_step SET DEFAULT 'welcome';
-  ELSE
-    UPDATE profiles
-      SET onboarding_step = COALESCE(
-        CASE onboarding_step
-          WHEN '1' THEN 'welcome'
-          WHEN '2' THEN 'welcome'
-          WHEN '3' THEN 'welcome'
-          WHEN '4' THEN 'welcome'
-          WHEN 'complete' THEN 'welcome'
-          ELSE onboarding_step
-        END,
-        'welcome'
-      )
-    WHERE onboarding_step IS NULL OR onboarding_step IN ('1', '2', '3', '4', 'complete');
-
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'profiles' AND column_name = 'onboarding_step'
+  ) THEN
+    ALTER TABLE profiles ALTER COLUMN onboarding_step TYPE text USING 'welcome';
     ALTER TABLE profiles ALTER COLUMN onboarding_step SET DEFAULT 'welcome';
+  ELSE
+    ALTER TABLE profiles ADD COLUMN onboarding_step text DEFAULT 'welcome';
   END IF;
 END $$;
 

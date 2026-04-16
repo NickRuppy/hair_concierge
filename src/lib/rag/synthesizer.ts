@@ -348,6 +348,15 @@ const PRODUCT_SECTION_HEADERS: Record<string, string> = {
   peeling: "Passende Peelings aus unserer Datenbank",
 }
 
+const SUPPORT_CATEGORY_NOT_RECOMMENDED_LABELS: Partial<
+  Record<Exclude<ProductCategory, null>, string>
+> = {
+  bondbuilder: "kein Bondbuilder",
+  deep_cleansing_shampoo: "kein Tiefenreinigungs-Shampoo",
+  dry_shampoo: "kein Trockenshampoo",
+  peeling: "kein Peeling",
+}
+
 const MASK_STRENGTH_LABELS: Record<string, string> = {
   "1": "leicht",
   "2": "mittel",
@@ -656,6 +665,10 @@ function formatProducts(
   clarificationQuestions?: string[],
 ): string {
   const categoryDecisionBlock = formatEngineCategoryDecision(categoryDecision)
+  const supportCategoryNoRecommendationLabel =
+    productCategory && categoryDecision?.category === productCategory && !categoryDecision.relevant
+      ? SUPPORT_CATEGORY_NOT_RECOMMENDED_LABELS[productCategory]
+      : null
 
   if (products.length === 0) {
     if (clarificationQuestions && clarificationQuestions.length > 0) {
@@ -676,6 +689,10 @@ function formatProducts(
       categoryDecision.noRecommendationReason
     ) {
       return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Oel empfohlen wird. Begruende das nur mit dem Engine-Entscheidungsblock. Nenne KEINE konkreten Oele und improvisiere keinen Therapie-Oel-Ersatz.`
+    }
+
+    if (supportCategoryNoRecommendationLabel) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell ${supportCategoryNoRecommendationLabel} empfohlen ist. Begruende das nur mit dem Engine-Entscheidungsblock. Nenne in diesem Fall KEINE konkreten Produkte und behandle das nicht als Katalog-No-Match.`
     }
 
     return `${categoryDecisionBlock}\n\nKeine passenden Produkte in der Datenbank gefunden. Nenne KEINE konkreten Produktnamen — sage dem Nutzer ehrlich, dass du gerade kein passendes Produkt parat hast, und bitte um genauere Angaben.`
