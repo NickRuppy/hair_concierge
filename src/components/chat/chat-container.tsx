@@ -262,7 +262,8 @@ export function ChatContainer() {
                 className="animate-fade-in-up mb-8 max-w-md text-center type-body-sm text-muted-foreground"
                 style={{ animationDelay: "250ms" }}
               >
-                Frag mich alles rund ums Thema Haare — von Pflege-Tipps bis Produktempfehlungen!
+                Frag mich nach deiner Routine, passenden Produkten oder dem nächsten sinnvollen
+                Schritt für dein Haarprofil.
               </p>
               <div className="grid w-full max-w-lg grid-cols-1 gap-2 sm:grid-cols-2">
                 {suggestedPrompts.map((prompt, index) => (

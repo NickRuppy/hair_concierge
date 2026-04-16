@@ -1,5 +1,4 @@
-import type { HairProfile, HairTexture, Concern, Goal } from "@/lib/types"
-import { HAIR_TEXTURE_ADJECTIVE, HAIR_THICKNESS_ADJECTIVE } from "@/lib/vocabulary"
+import type { HairProfile, HairTexture, Concern, Goal, RoutineProduct } from "@/lib/types"
 import type { IconName } from "@/components/ui/icon"
 
 export interface SuggestedPrompt {
@@ -8,13 +7,14 @@ export interface SuggestedPrompt {
 }
 
 const FALLBACK_PROMPTS: SuggestedPrompt[] = [
-  { text: "Welche Routine empfiehlst du für lockiges Haar?", icon: "hair-curly" },
-  { text: "Was hilft gegen Spliss?", icon: "goal-split-ends" },
-  { text: "Kannst du mir ein gutes Shampoo empfehlen?", icon: "product-shampoo" },
-  { text: "Wie bekomme ich mehr Volumen?", icon: "goal-volume" },
+  { text: "Welche Routine passt am besten zu meinem Haar?", icon: "product-shampoo" },
+  { text: "Welches Shampoo passt zu meiner Kopfhaut?", icon: "product-shampoo" },
+  {
+    text: "Welcher Conditioner passt gerade am besten zu meinem Haar?",
+    icon: "product-conditioner",
+  },
+  { text: "Was hilft gegen Frizz?", icon: "goal-frizz" },
 ]
-
-/* ── Slot 1: Template prompts (one picked based on available profile data) ── */
 
 const TEXTURE_ICON: Record<HairTexture, IconName> = {
   straight: "hair-straight",
@@ -23,217 +23,197 @@ const TEXTURE_ICON: Record<HairTexture, IconName> = {
   coily: "hair-coily",
 }
 
-function getTemplatePrompts(profile: HairProfile): SuggestedPrompt[] {
-  const prompts: SuggestedPrompt[] = []
-  const ht = profile.hair_texture
-  const tx = profile.thickness
-
-  if (ht && tx) {
-    prompts.push({
-      text: `Welche Pflegeroutine passt am besten zu meinem ${HAIR_TEXTURE_ADJECTIVE[ht]}, ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar?`,
-      icon: TEXTURE_ICON[ht],
-    })
-    prompts.push({
-      text: `Was sind die besten Produkte für ${HAIR_TEXTURE_ADJECTIVE[ht]} und ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar?`,
-      icon: TEXTURE_ICON[ht],
-    })
-  }
-  if (ht) {
-    prompts.push({
-      text: `Welche Pflegeroutine empfiehlst du für ${HAIR_TEXTURE_ADJECTIVE[ht]} Haar?`,
-      icon: TEXTURE_ICON[ht],
-    })
-    prompts.push({
-      text: `Wie style ich ${HAIR_TEXTURE_ADJECTIVE[ht]} Haar am besten?`,
-      icon: TEXTURE_ICON[ht],
-    })
-  }
-  if (tx) {
-    prompts.push({
-      text: `Worauf sollte ich bei ${HAIR_THICKNESS_ADJECTIVE[tx]} Haar besonders achten?`,
-      icon: "product-shampoo",
-    })
-  }
-
-  // Always have at least one generic template
-  prompts.push({
-    text: "Welche Pflegeroutine würdest du mir persönlich empfehlen?",
-    icon: "product-shampoo",
-  })
-
-  return prompts
+function hasTexturedHair(profile: HairProfile): boolean {
+  return (
+    profile.hair_texture === "wavy" ||
+    profile.hair_texture === "curly" ||
+    profile.hair_texture === "coily"
+  )
 }
 
-/* ── Slots 2-4: Pool prompts tagged by concern / goal / hair type ── */
-
-interface PoolPrompt {
-  text: string
-  icon?: IconName
-  concerns?: Concern[]
-  goals?: Goal[]
-  hairTextures?: HairTexture[]
+function hasConcern(profile: HairProfile, concern: Concern): boolean {
+  return (profile.concerns ?? []).includes(concern)
 }
 
-const POOL_PROMPTS: PoolPrompt[] = [
-  // Concern-based
-  {
-    text: "Meine Haare sind so trocken — welche Pflege hilft wirklich?",
-    icon: "goal-moisture",
-    concerns: ["dryness"],
-  },
-  {
-    text: "Was kann ich gegen Spliss an den Spitzen tun?",
-    icon: "goal-split-ends",
-    concerns: ["split_ends"],
-  },
-  {
-    text: "Wie werde ich Schuppen endlich los?",
-    icon: "scalp-dry",
-    concerns: ["dandruff"],
-  },
-  {
-    text: "Meine Kopfhaut fettet so schnell nach — was hilft?",
-    icon: "scalp-oily",
-    concerns: ["oily_scalp"],
-  },
-  {
-    text: "Wie kann ich Haarausfall vorbeugen?",
-    icon: "goal-growth",
-    concerns: ["hair_loss"],
-  },
-  {
-    text: "Mein Haar ist durch Färben strapaziert — wie repariere ich es?",
-    icon: "goal-color-protection",
-    concerns: ["hair_damage", "colored"],
-  },
-  { text: "Was hilft wirklich gegen Frizz?", icon: "goal-frizz", concerns: ["frizz"] },
-  {
-    text: "Mein Haar wird immer dünner — welche Produkte stärken es?",
-    icon: "goal-growth",
-    concerns: ["thinning"],
-  },
-  {
-    text: "Wie schütze ich meine Haarfarbe vor dem Verblassen?",
-    icon: "goal-color-protection",
-    concerns: ["colored"],
-  },
+function hasGoal(profile: HairProfile, goal: Goal): boolean {
+  return (profile.goals ?? []).includes(goal)
+}
 
-  // Goal-based
-  {
-    text: "Wie bekomme ich mehr Volumen in meine Haare?",
-    icon: "goal-volume",
-    goals: ["volume"],
-  },
-  { text: "Was kann ich tun, damit mein Haar schneller wächst?", icon: "goal-growth" },
-  {
-    text: "Wie definiere ich meine Locken am besten?",
-    icon: "hair-curly",
-    goals: ["curl_definition"],
-  },
-  { text: "Welche Produkte sorgen für mehr Glanz?", icon: "goal-shine", goals: ["shine"] },
-  {
-    text: "Wie bringe ich mehr Feuchtigkeit in mein Haar?",
-    icon: "goal-moisture",
-    goals: ["moisture"],
-  },
-  {
-    text: "Was hilft für eine gesunde Kopfhaut?",
-    icon: "goal-scalp-health",
-    goals: ["healthy_scalp"],
-  },
-  {
-    text: "Wie bekomme ich meine Haare gesünder?",
-    icon: "goal-repair",
-    goals: ["healthier_hair"],
-  },
-  { text: "Wie reduziere ich Frizz dauerhaft?", icon: "goal-frizz", goals: ["less_frizz"] },
-  {
-    text: "Wie schütze ich meine Farbe am besten?",
-    icon: "goal-color-protection",
-    goals: ["color_protection"],
-  },
-  {
-    text: "Was hilft wirklich gegen Spliss und abgebrochene Spitzen?",
-    icon: "goal-split-ends",
-    goals: ["less_split_ends"],
-  },
+function hasRoutineProduct(profile: HairProfile, product: RoutineProduct): boolean {
+  return (profile.current_routine_products ?? []).includes(product)
+}
 
-  // Hair-texture-based
-  {
-    text: "Wie style ich Locken ohne Hitze?",
-    icon: "hair-curly",
-    hairTextures: ["curly", "coily"],
-  },
-  {
-    text: "Wie pflege ich welliges Haar, ohne es zu beschweren?",
-    icon: "hair-wavy",
-    hairTextures: ["wavy"],
-  },
-  {
-    text: "Welche Leave-in-Produkte eignen sich für glattes Haar?",
-    icon: "hair-straight",
-    hairTextures: ["straight"],
-  },
-  {
-    text: "Welche Schlafschutz-Routine eignet sich für Locken?",
-    icon: "hair-curly",
-    hairTextures: ["curly", "coily"],
-  },
-]
+function hasMeaningfulProfile(profile: HairProfile | null): profile is HairProfile {
+  if (!profile) return false
 
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
+  return Boolean(
+    profile.hair_texture ||
+    profile.thickness ||
+    profile.density ||
+    profile.scalp_type ||
+    (profile.scalp_condition && profile.scalp_condition !== "none") ||
+    profile.protein_moisture_balance ||
+    profile.cuticle_condition ||
+    profile.wash_frequency ||
+    profile.heat_styling ||
+    profile.desired_volume ||
+    profile.routine_preference ||
+    (profile.concerns ?? []).length > 0 ||
+    (profile.goals ?? []).length > 0 ||
+    (profile.chemical_treatment ?? []).length > 0 ||
+    (profile.current_routine_products ?? []).length > 0 ||
+    (profile.post_wash_actions ?? []).length > 0,
+  )
+}
+
+function hasHeatOrStylingSignal(profile: HairProfile): boolean {
+  return Boolean(
+    (profile.heat_styling && profile.heat_styling !== "never") ||
+    (profile.post_wash_actions ?? []).includes("heat_tool_styling") ||
+    (profile.post_wash_actions ?? []).includes("non_heat_styling") ||
+    (profile.styling_tools ?? []).length > 0 ||
+    hasRoutineProduct(profile, "heat_protectant"),
+  )
+}
+
+function hasLeaveInSignals(profile: HairProfile): boolean {
+  return Boolean(
+    hasHeatOrStylingSignal(profile) ||
+    hasRoutineProduct(profile, "leave_in") ||
+    hasGoal(profile, "less_frizz") ||
+    hasGoal(profile, "curl_definition") ||
+    hasConcern(profile, "frizz"),
+  )
+}
+
+function hasDamageSignals(profile: HairProfile): boolean {
+  return Boolean(
+    profile.cuticle_condition === "slightly_rough" ||
+    profile.cuticle_condition === "rough" ||
+    profile.protein_moisture_balance === "snaps" ||
+    hasConcern(profile, "dryness") ||
+    hasConcern(profile, "hair_damage") ||
+    hasConcern(profile, "split_ends") ||
+    hasGoal(profile, "moisture") ||
+    hasGoal(profile, "anti_breakage") ||
+    profile.chemical_treatment.includes("colored") ||
+    profile.chemical_treatment.includes("bleached"),
+  )
+}
+
+function buildRoutinePrompt(profile: HairProfile): SuggestedPrompt {
+  return {
+    text: "Welche Routine passt am besten zu meinem Haarprofil?",
+    icon: profile.hair_texture ? TEXTURE_ICON[profile.hair_texture] : "product-shampoo",
   }
-  return a
 }
 
-function matchesProfile(prompt: PoolPrompt, profile: HairProfile): boolean {
-  const concerns = profile.concerns ?? []
-  const goals = profile.goals ?? []
-  const ht = profile.hair_texture
+function buildScalpPrompt(profile: HairProfile): SuggestedPrompt {
+  if (profile.scalp_condition === "dry_flakes") {
+    return { text: "Was hilft bei trockenen Schuppen?", icon: "scalp-dry-flakes" }
+  }
 
-  if (prompt.concerns?.some((c) => concerns.includes(c))) return true
-  if (prompt.goals?.some((g) => goals.includes(g))) return true
-  if (prompt.hairTextures && ht && prompt.hairTextures.includes(ht)) return true
+  if (profile.scalp_condition === "irritated") {
+    return { text: "Was hilft bei gereizter Kopfhaut?", icon: "scalp-irritated" }
+  }
 
-  return false
-}
+  if (profile.scalp_condition === "dandruff" || hasConcern(profile, "dandruff")) {
+    return { text: "Was hilft bei Schuppen?", icon: "scalp-flaky" }
+  }
 
-/* ── Main export ── */
-
-export function generateSuggestedPrompts(profile: HairProfile | null): SuggestedPrompt[] {
   if (
-    !profile ||
-    (!profile.hair_texture &&
-      !profile.thickness &&
-      (profile.concerns ?? []).length === 0 &&
-      (profile.goals ?? []).length === 0)
+    profile.scalp_type === "oily" ||
+    hasConcern(profile, "oily_scalp") ||
+    profile.wash_frequency === "daily"
   ) {
-    return FALLBACK_PROMPTS
-  }
-
-  // Slot 1: pick one random template prompt
-  const templates = getTemplatePrompts(profile)
-  const template = templates[Math.floor(Math.random() * templates.length)]
-
-  // Slots 2-4: pick 3 from the filtered pool
-  const matched = POOL_PROMPTS.filter((p) => matchesProfile(p, profile))
-  const pool = matched.length >= 3 ? matched : [...matched, ...POOL_PROMPTS]
-  const unique = shuffle(pool).filter((p) => p.text !== template.text)
-
-  // Deduplicate
-  const seen = new Set<string>([template.text])
-  const picked: SuggestedPrompt[] = []
-  for (const p of unique) {
-    if (picked.length >= 3) break
-    if (!seen.has(p.text)) {
-      seen.add(p.text)
-      picked.push({ text: p.text, icon: p.icon })
+    return {
+      text: "Welches Shampoo passt zu meinem schnell fettenden Ansatz?",
+      icon: "scalp-oily",
     }
   }
 
-  return [template, ...picked]
+  return {
+    text: "Welches Shampoo passt zu meiner Kopfhaut?",
+    icon: profile.scalp_type === "dry" ? "scalp-dry" : "product-shampoo",
+  }
+}
+
+function buildCarePrompt(profile: HairProfile): SuggestedPrompt {
+  if (profile.protein_moisture_balance === "snaps") {
+    return {
+      text: "Welcher Conditioner passt bei Feuchtigkeitsmangel?",
+      icon: "goal-moisture",
+    }
+  }
+
+  if (
+    hasRoutineProduct(profile, "conditioner") &&
+    (hasLeaveInSignals(profile) || hasTexturedHair(profile))
+  ) {
+    return {
+      text: "Welcher Leave-in passt zu meinem Styling-Alltag?",
+      icon: "product-leave-in",
+    }
+  }
+
+  if (profile.thickness && profile.protein_moisture_balance) {
+    return {
+      text: "Welcher Conditioner passt gerade am besten zu meinem Haar?",
+      icon: "product-conditioner",
+    }
+  }
+
+  if (hasLeaveInSignals(profile)) {
+    return {
+      text: "Welcher Leave-in passt zu meinem Styling-Alltag?",
+      icon: "product-leave-in",
+    }
+  }
+
+  if (hasDamageSignals(profile)) {
+    return {
+      text: "Brauche ich eher Maske oder Leave-in für meine Längen?",
+      icon: "product-mask",
+    }
+  }
+
+  return {
+    text: "Welcher Conditioner passt gerade am besten zu meinem Haar?",
+    icon: "product-conditioner",
+  }
+}
+
+function buildOutcomePrompt(profile: HairProfile): SuggestedPrompt {
+  if (hasConcern(profile, "frizz") || hasGoal(profile, "less_frizz")) {
+    return { text: "Was hilft gegen Frizz bei meinem Haarprofil?", icon: "goal-frizz" }
+  }
+
+  if (profile.desired_volume === "more" || hasGoal(profile, "volume")) {
+    return {
+      text: "Wie bekomme ich mehr Volumen, ohne zu beschweren?",
+      icon: "goal-volume",
+    }
+  }
+
+  if (hasTexturedHair(profile) && hasDamageSignals(profile)) {
+    return { text: "Was hilft gegen Frizz bei meinem Haarprofil?", icon: "goal-frizz" }
+  }
+
+  return {
+    text: "Was ist der nächste sinnvolle Schritt für mein Haarprofil?",
+    icon: "arrow-right",
+  }
+}
+
+export function generateSuggestedPrompts(profile: HairProfile | null): SuggestedPrompt[] {
+  if (!hasMeaningfulProfile(profile)) {
+    return FALLBACK_PROMPTS
+  }
+
+  return [
+    buildRoutinePrompt(profile),
+    buildScalpPrompt(profile),
+    buildCarePrompt(profile),
+    buildOutcomePrompt(profile),
+  ]
 }
