@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter, useSearchParams } from "next/navigation"
 import { useQuizStore } from "@/lib/quiz/store"
 import { hopeText } from "@/lib/quiz/results-lookup"
 import { QuizProfileCard } from "./quiz-profile-card"
@@ -7,10 +8,16 @@ import { QuizCard } from "./quiz-card"
 import { Button } from "@/components/ui/button"
 import { posthog } from "@/providers/posthog-provider"
 import { buildCardData } from "@/lib/quiz/result-card-data"
+import { useAuth } from "@/providers/auth-provider"
 
 export function QuizResults() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const { user } = useAuth()
   const { lead, answers, aiInsight, leadId, goNext } = useQuizStore()
   const cardData = buildCardData(answers)
+  const returnTo = searchParams.get("returnTo")
+  const isRetakeMode = searchParams.get("mode") === "retake"
 
   const handleStart = () => {
     posthog.capture("quiz_completed", {
@@ -19,6 +26,15 @@ export function QuizResults() {
       scalp_type: answers.scalp_type,
       scalp_condition: answers.scalp_condition,
     })
+
+    if (user && isRetakeMode && leadId) {
+      const nextUrl = new URL("/onboarding", window.location.origin)
+      nextUrl.searchParams.set("lead", leadId)
+      nextUrl.searchParams.set("returnTo", returnTo?.startsWith("/") ? returnTo : "/profile")
+      router.push(`${nextUrl.pathname}${nextUrl.search}`)
+      return
+    }
+
     goNext()
   }
 

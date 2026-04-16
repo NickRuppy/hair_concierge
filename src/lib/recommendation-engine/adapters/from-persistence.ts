@@ -1,4 +1,8 @@
 import type { HairProfile } from "@/lib/types"
+import {
+  deriveWashFrequencyFromRoutineItems,
+  type RoutineInventoryLike,
+} from "@/lib/hair-profile/derived"
 import type { ProductFrequency } from "@/lib/vocabulary"
 import type {
   InventoryCategory,
@@ -79,7 +83,10 @@ function emptyRawHairProfileInput(): RawHairProfileInput {
   }
 }
 
-function buildRawHairProfileInput(profile: HairProfile | null): RawHairProfileInput {
+function buildRawHairProfileInput(
+  profile: HairProfile | null,
+  routineItems: RoutineInventoryLike[],
+): RawHairProfileInput {
   if (!profile) {
     return emptyRawHairProfileInput()
   }
@@ -90,7 +97,7 @@ function buildRawHairProfileInput(profile: HairProfile | null): RawHairProfileIn
     density: profile.density,
     concerns: profile.concerns ?? [],
     goals: profile.goals ?? [],
-    wash_frequency: profile.wash_frequency,
+    wash_frequency: deriveWashFrequencyFromRoutineItems(routineItems, profile.wash_frequency),
     heat_styling: profile.heat_styling,
     styling_tools: profile.styling_tools ?? [],
     cuticle_condition: profile.cuticle_condition,
@@ -166,7 +173,7 @@ export function adaptRecommendationInputFromPersistence(
 
   return {
     input: {
-      profile: buildRawHairProfileInput(profile),
+      profile: buildRawHairProfileInput(profile, routineItems),
       routineInventory: [...supportedItems.values()],
     },
     unsupportedRoutineCategories,

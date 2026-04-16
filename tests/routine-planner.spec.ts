@@ -695,6 +695,7 @@ test.describe("Routine planner", () => {
         scalp_type: null,
         current_routine_products: [],
       }),
+      [],
       "Welche Routine passt zu mir?",
     )
 
@@ -713,6 +714,7 @@ test.describe("Routine planner", () => {
         current_routine_products: [],
         products_used: null,
       }),
+      [],
       "Welche Routine passt zu mir?",
     )
 
@@ -730,6 +732,7 @@ test.describe("Routine planner", () => {
         wash_frequency: "every_2_3_days",
         current_routine_products: ["shampoo", "conditioner"],
       }),
+      [],
       "Welche Routine passt zu mir?",
     )
 

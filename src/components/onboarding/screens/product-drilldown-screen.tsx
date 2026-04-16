@@ -14,6 +14,7 @@ interface ProductDrilldownScreenProps {
   onFrequencyChange: (freq: ProductFrequency) => void
   onContinue: () => void
   onBack: () => void
+  continueLabel?: string
 }
 
 export function ProductDrilldownScreen({
@@ -25,6 +26,7 @@ export function ProductDrilldownScreen({
   onFrequencyChange,
   onContinue,
   onBack,
+  continueLabel = "Weiter",
 }: ProductDrilldownScreenProps) {
   return (
     <div>
@@ -85,7 +87,7 @@ export function ProductDrilldownScreen({
           disabled={!frequency}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Weiter
+          {continueLabel}
         </button>
       </div>
     </div>

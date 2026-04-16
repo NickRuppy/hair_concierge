@@ -303,6 +303,7 @@ test.describe("Shampoo Flow alignment", () => {
         scalp_type: "oily",
         scalp_condition: "none",
       }),
+      [],
     )
 
     expect(routerDecision.response_mode).not.toBe("clarify_only")
@@ -334,6 +335,7 @@ test.describe("Shampoo Flow alignment", () => {
         scalp_type: null,
         scalp_condition: "dandruff",
       }),
+      [],
     )
 
     expect(routerDecision.response_mode).not.toBe("clarify_only")
@@ -365,6 +367,7 @@ test.describe("Shampoo Flow alignment", () => {
         scalp_type: "oily",
         scalp_condition: null,
       }),
+      [],
     )
 
     expect(routerDecision.response_mode).toBe("clarify_only")

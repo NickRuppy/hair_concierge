@@ -213,6 +213,7 @@ test.describe("Leave-in strict decision flow", () => {
         concerns: ["dryness"],
         post_wash_actions: ["air_dry"],
       }),
+      [],
     )
 
     expect(routerDecision.response_mode).not.toBe("clarify_only")

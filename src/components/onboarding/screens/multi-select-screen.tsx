@@ -15,6 +15,7 @@ interface MultiSelectScreenProps {
   noneLabel?: string
   onNone?: () => void
   isSaving?: boolean
+  continueLabel?: string
 }
 
 export function MultiSelectScreen({
@@ -28,6 +29,7 @@ export function MultiSelectScreen({
   noneLabel,
   onNone,
   isSaving,
+  continueLabel = "Weiter",
 }: MultiSelectScreenProps) {
   const hasSelection = selected.length > 0
 
@@ -94,7 +96,7 @@ export function MultiSelectScreen({
           disabled={!hasSelection || isSaving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {isSaving ? "Speichern..." : "Weiter"}
+          {isSaving ? "Speichern..." : continueLabel}
         </button>
       </div>
     </div>

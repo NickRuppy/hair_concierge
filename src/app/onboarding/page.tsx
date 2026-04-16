@@ -3,9 +3,63 @@ import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
+import { getOnboardingEditScope, type OnboardingStep } from "@/lib/onboarding/store"
 
 interface OnboardingPageProps {
-  searchParams: Promise<{ lead?: string | string[] }>
+  searchParams: Promise<{
+    lead?: string | string[]
+    step?: string | string[]
+    returnTo?: string | string[]
+    category?: string | string[]
+    editMode?: string | string[]
+  }>
+}
+
+const VALID_ONBOARDING_STEPS = new Set<OnboardingStep>([
+  "welcome",
+  "products_basics",
+  "products_extras",
+  "product_drilldown",
+  "heat_tools",
+  "heat_frequency",
+  "heat_protection",
+  "interstitial",
+  "towel_material",
+  "towel_technique",
+  "drying_method",
+  "brush_type",
+  "night_protection",
+  "goals",
+  "celebration",
+])
+
+function resolveOnboardingStep(value: string | string[] | undefined): OnboardingStep | null {
+  const candidate = Array.isArray(value) ? value[0] : value
+  if (!candidate || !VALID_ONBOARDING_STEPS.has(candidate as OnboardingStep)) {
+    return null
+  }
+  return candidate as OnboardingStep
+}
+
+function resolveReturnTo(value: string | string[] | undefined): string | null {
+  const candidate = Array.isArray(value) ? value[0] : value
+  if (!candidate || !candidate.startsWith("/")) {
+    return null
+  }
+  return candidate
+}
+
+function resolveDrilldownCategory(value: string | string[] | undefined): string | null {
+  const candidate = Array.isArray(value) ? value[0] : value
+  if (!candidate?.trim()) {
+    return null
+  }
+  return candidate.trim()
+}
+
+function resolveSingleStepEdit(value: string | string[] | undefined) {
+  const candidate = Array.isArray(value) ? value[0] : value
+  return candidate === "single-step"
 }
 
 export default async function OnboardingPage({ searchParams }: OnboardingPageProps) {
@@ -15,8 +69,16 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
   const leadId = Array.isArray(resolvedSearchParams.lead)
     ? resolvedSearchParams.lead[0]
     : resolvedSearchParams.lead
+  const forcedStep = resolveOnboardingStep(resolvedSearchParams.step)
+  const returnTo = resolveReturnTo(resolvedSearchParams.returnTo)
+  const initialDrilldownCategory = resolveDrilldownCategory(resolvedSearchParams.category)
+  const singleStepEdit = resolveSingleStepEdit(resolvedSearchParams.editMode)
+  const editScope =
+    returnTo && forcedStep && !singleStepEdit ? getOnboardingEditScope(forcedStep) : null
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) {
     redirect("/auth?next=/onboarding")
   }
@@ -38,8 +100,8 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
     .single()
 
   // If already completed, redirect to chat
-  if (profileRow?.onboarding_completed) {
-    redirect("/chat")
+  if (profileRow?.onboarding_completed && !forcedStep) {
+    redirect(returnTo ?? "/chat")
   }
 
   // Fetch hair profile for pre-filling
@@ -58,9 +120,15 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
   return (
     <OnboardingFlow
       userId={user.id}
-      initialStep={(profileRow?.onboarding_step as string) ?? "welcome"}
+      initialStep={forcedStep ?? (profileRow?.onboarding_step as string) ?? "welcome"}
       hairProfile={hairProfile}
       productUsage={productUsage ?? []}
+      returnTo={returnTo}
+      editScope={editScope}
+      singleStepEdit={singleStepEdit}
+      initialDrilldownCategory={
+        forcedStep === "product_drilldown" ? initialDrilldownCategory : null
+      }
     />
   )
 }
