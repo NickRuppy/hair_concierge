@@ -5,7 +5,9 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 if (!supabaseUrl || !serviceRoleKey) {
-  throw new Error("NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required for conditioner chat E2E tests")
+  throw new Error(
+    "NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required for conditioner chat E2E tests",
+  )
 }
 
 const admin = createClient(supabaseUrl, serviceRoleKey, {
@@ -37,12 +39,11 @@ type AssistantMessageRecord = {
   rag_context: {
     category_decision?: {
       category?: string
-      eligible?: boolean
-      used_density?: boolean
-      matched_weight?: string | null
-      matched_repair_level?: string | null
-      matched_profile?: {
-        density?: string | null
+      relevant?: boolean
+      action?: string | null
+      targetProfile?: {
+        weight?: string | null
+        repairLevel?: string | null
       }
     } | null
   } | null
@@ -121,7 +122,7 @@ async function sendChatMessage(page: Page, message: string) {
     (initialCount) =>
       document.querySelectorAll('[data-testid="message-assistant"]').length > initialCount,
     assistantCountBefore,
-    { timeout: 30_000 }
+    { timeout: 30_000 },
   )
 
   let stableTicks = 0
@@ -194,17 +195,15 @@ test.describe.serial("Conditioner chat E2E", () => {
       throw new Error("Failed to create conditioner E2E user")
     }
 
-    const { error: profileError } = await admin
-      .from("profiles")
-      .upsert(
-        {
-          id: userId,
-          email,
-          full_name: fullName,
-          onboarding_completed: true,
-        },
-        { onConflict: "id" }
-      )
+    const { error: profileError } = await admin.from("profiles").upsert(
+      {
+        id: userId,
+        email,
+        full_name: fullName,
+        onboarding_completed: true,
+      },
+      { onConflict: "id" },
+    )
 
     if (profileError) throw profileError
 
@@ -222,28 +221,26 @@ test.describe.serial("Conditioner chat E2E", () => {
     }
 
     const specsByName = new Map(
-      (seededProducts ?? []).map((product) => [product.name, product.id] as const)
+      (seededProducts ?? []).map((product) => [product.name, product.id] as const),
     )
 
-    const { error: specError } = await admin
-      .from("product_conditioner_rerank_specs")
-      .upsert([
-        {
-          product_id: specsByName.get("Balea Natural Beauty Hibiskus"),
-          weight: "light",
-          repair_level: "medium",
-        },
-        {
-          product_id: specsByName.get("Sante Intense Hydrating Conditioner"),
-          weight: "medium",
-          repair_level: "high",
-        },
-        {
-          product_id: specsByName.get("Pantene Hydra Glow (Silikone)"),
-          weight: "rich",
-          repair_level: "low",
-        },
-      ])
+    const { error: specError } = await admin.from("product_conditioner_rerank_specs").upsert([
+      {
+        product_id: specsByName.get("Balea Natural Beauty Hibiskus"),
+        weight: "light",
+        repair_level: "medium",
+      },
+      {
+        product_id: specsByName.get("Sante Intense Hydrating Conditioner"),
+        weight: "medium",
+        repair_level: "high",
+      },
+      {
+        product_id: specsByName.get("Pantene Hydra Glow (Silikone)"),
+        weight: "rich",
+        repair_level: "low",
+      },
+    ])
 
     if (specError) throw specError
   })
@@ -269,66 +266,71 @@ test.describe.serial("Conditioner chat E2E", () => {
     await clearUserConversations(userId)
   })
 
-  test("full conditioner profile returns recommendations with conditioner metadata", async ({ page }) => {
+  test("full conditioner profile returns recommendations with conditioner metadata", async ({
+    page,
+  }) => {
     if (!userId) throw new Error("Missing conditioner E2E user")
     const currentUserId = userId
 
-    const { error: profileError } = await admin
-      .from("hair_profiles")
-      .upsert(
-        {
-          user_id: currentUserId,
-          hair_texture: "straight",
-          thickness: "fine",
-          density: "low",
-          concerns: [],
-          products_used: null,
-          wash_frequency: "every_2_3_days",
-          heat_styling: "rarely",
-          styling_tools: [],
-          goals: ["shine"],
-          cuticle_condition: "slightly_rough",
-          protein_moisture_balance: "snaps",
-          scalp_type: "balanced",
-          scalp_condition: "none",
-          chemical_treatment: ["colored"],
-          desired_volume: "balanced",
-          post_wash_actions: [],
-          routine_preference: "balanced",
-          current_routine_products: ["conditioner"],
-          additional_notes: "Bitte nichts Schweres.",
-          conversation_memory: null,
-        },
-        { onConflict: "user_id" }
-      )
+    const { error: profileError } = await admin.from("hair_profiles").upsert(
+      {
+        user_id: currentUserId,
+        hair_texture: "straight",
+        thickness: "fine",
+        density: "low",
+        concerns: [],
+        products_used: null,
+        wash_frequency: "every_2_3_days",
+        heat_styling: "rarely",
+        styling_tools: [],
+        goals: ["shine"],
+        cuticle_condition: "slightly_rough",
+        protein_moisture_balance: "snaps",
+        scalp_type: "balanced",
+        scalp_condition: "none",
+        chemical_treatment: ["colored"],
+        desired_volume: "balanced",
+        post_wash_actions: [],
+        routine_preference: "balanced",
+        current_routine_products: ["conditioner"],
+        additional_notes: "Bitte nichts Schweres.",
+        conversation_memory: null,
+      },
+      { onConflict: "user_id" },
+    )
 
     if (profileError) throw profileError
 
     await login(page, email, password)
     const responseText = await sendChatMessage(
       page,
-      "Seit drei Monaten sind meine Laengen trocken, ich wasche zweimal pro Woche, benutze aktuell Shampoo und Conditioner aus der Drogerie und meine Haare sind gefaerbt. Welchen leichten Conditioner empfiehlst du mir bei Feuchtigkeitsmangel?"
+      "Seit drei Monaten sind meine Laengen trocken, ich wasche zweimal pro Woche, benutze aktuell Shampoo und Conditioner aus der Drogerie und meine Haare sind gefaerbt. Welchen leichten Conditioner empfiehlst du mir bei Feuchtigkeitsmangel?",
     )
 
     expect(responseText.toLowerCase()).toContain("conditioner")
     expect(responseText.toLowerCase()).toMatch(/haar|pflege|feuchtigkeit/)
 
     await expect
-      .poll(async () => {
-        const message = await fetchLatestAssistantMessage(currentUserId)
-        return message?.product_recommendations?.length ?? 0
-      }, { timeout: 30_000 })
+      .poll(
+        async () => {
+          const message = await fetchLatestAssistantMessage(currentUserId)
+          return message?.product_recommendations?.length ?? 0
+        },
+        { timeout: 30_000 },
+      )
       .toBeGreaterThan(0)
 
     const assistantMessage = await fetchLatestAssistantMessage(currentUserId)
     expect(assistantMessage?.rag_context?.category_decision).toEqual(
       expect.objectContaining({
         category: "conditioner",
-        eligible: true,
-        used_density: true,
-        matched_weight: "light",
-        matched_repair_level: "medium",
-      })
+        relevant: true,
+        action: "replace",
+        targetProfile: expect.objectContaining({
+          weight: "light",
+          repairLevel: "medium",
+        }),
+      }),
     )
     expect(assistantMessage?.product_recommendations?.[0]?.recommendation_meta).toEqual(
       expect.objectContaining({
@@ -338,74 +340,78 @@ test.describe.serial("Conditioner chat E2E", () => {
         matched_profile: expect.objectContaining({
           density: "low",
         }),
-      })
+      }),
     )
   })
 
-  test("missing density still returns conditioner recommendations via soft fallback", async ({ page }) => {
+  test("missing density still returns conditioner recommendations via soft fallback", async ({
+    page,
+  }) => {
     if (!userId) throw new Error("Missing conditioner E2E user")
     const currentUserId = userId
 
-    const { error: profileError } = await admin
-      .from("hair_profiles")
-      .upsert(
-        {
-          user_id: currentUserId,
-          hair_texture: "straight",
-          thickness: "fine",
-          density: null,
-          concerns: [],
-          products_used: null,
-          wash_frequency: "every_2_3_days",
-          heat_styling: "rarely",
-          styling_tools: [],
-          goals: ["shine"],
-          cuticle_condition: "slightly_rough",
-          protein_moisture_balance: "snaps",
-          scalp_type: "balanced",
-          scalp_condition: "none",
-          chemical_treatment: ["colored"],
-          desired_volume: "balanced",
-          post_wash_actions: [],
-          routine_preference: "balanced",
-          current_routine_products: ["conditioner"],
-          additional_notes: "Bitte nichts Schweres.",
-          conversation_memory: null,
-        },
-        { onConflict: "user_id" }
-      )
+    const { error: profileError } = await admin.from("hair_profiles").upsert(
+      {
+        user_id: currentUserId,
+        hair_texture: "straight",
+        thickness: "fine",
+        density: null,
+        concerns: [],
+        products_used: null,
+        wash_frequency: "every_2_3_days",
+        heat_styling: "rarely",
+        styling_tools: [],
+        goals: ["shine"],
+        cuticle_condition: "slightly_rough",
+        protein_moisture_balance: "snaps",
+        scalp_type: "balanced",
+        scalp_condition: "none",
+        chemical_treatment: ["colored"],
+        desired_volume: "balanced",
+        post_wash_actions: [],
+        routine_preference: "balanced",
+        current_routine_products: ["conditioner"],
+        additional_notes: "Bitte nichts Schweres.",
+        conversation_memory: null,
+      },
+      { onConflict: "user_id" },
+    )
 
     if (profileError) throw profileError
 
     await login(page, email, password)
     const responseText = await sendChatMessage(
       page,
-      "Seit einigen Wochen sind meine Laengen trocken, ich wasche zweimal pro Woche, benutze gerade Drogerie-Shampoo und einen beliebigen Conditioner und meine Haare sind gefaerbt. Welchen Conditioner empfiehlst du mir?"
+      "Seit einigen Wochen sind meine Laengen trocken, ich wasche zweimal pro Woche, benutze gerade Drogerie-Shampoo und einen beliebigen Conditioner und meine Haare sind gefaerbt. Welchen Conditioner empfiehlst du mir?",
     )
 
     expect(responseText.toLowerCase()).toMatch(/conditioner|pflege|laengen/)
 
     await expect
-      .poll(async () => {
-        const message = await fetchLatestAssistantMessage(currentUserId)
-        return message?.product_recommendations?.length ?? 0
-      }, { timeout: 30_000 })
+      .poll(
+        async () => {
+          const message = await fetchLatestAssistantMessage(currentUserId)
+          return message?.product_recommendations?.length ?? 0
+        },
+        { timeout: 30_000 },
+      )
       .toBeGreaterThan(0)
 
     const assistantMessage = await fetchLatestAssistantMessage(currentUserId)
     expect(assistantMessage?.rag_context?.category_decision).toEqual(
       expect.objectContaining({
         category: "conditioner",
-        eligible: true,
-        used_density: false,
-        matched_weight: null,
-      })
+        relevant: true,
+        targetProfile: expect.objectContaining({
+          weight: null,
+        }),
+      }),
     )
     expect(assistantMessage?.product_recommendations?.[0]?.recommendation_meta).toEqual(
       expect.objectContaining({
         category: "conditioner",
         matched_weight: null,
-      })
+      }),
     )
   })
 })

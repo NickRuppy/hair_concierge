@@ -1,3 +1,5 @@
+import type { ProductBalanceTarget } from "@/lib/product-specs/constants"
+
 export const CONDITIONER_WEIGHTS = ["light", "medium", "rich"] as const
 export type ConditionerWeight = (typeof CONDITIONER_WEIGHTS)[number]
 
@@ -26,6 +28,7 @@ export interface ProductConditionerSpecs {
   product_id: string
   weight: ConditionerWeight
   repair_level: ConditionerRepairLevel
+  balance_direction: ProductBalanceTarget | null
   created_at?: string
   updated_at?: string
 }

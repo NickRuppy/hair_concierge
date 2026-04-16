@@ -17,10 +17,11 @@ import {
   hasExplicitBrushToolsRequest,
 } from "@/lib/routines/brush-tools"
 import { CURLY_TEXTURES } from "@/lib/routines/constants"
-import { buildConditionerDecision } from "@/lib/rag/conditioner-decision"
-import { buildLeaveInDecision } from "@/lib/rag/leave-in-decision"
-import { deriveMaskDecision } from "@/lib/rag/mask-reranker"
-import { buildShampooDecision } from "@/lib/rag/shampoo-decision"
+import {
+  buildRecommendationEngineRuntimeFromPersistence,
+  buildRecommendationRequestContext,
+} from "@/lib/recommendation-engine"
+import { buildRoutineItemsFromCurrentRoutineProducts } from "@/lib/recommendation-engine/adapters/from-persistence"
 import type {
   HairProfile,
   RoutineContext,
@@ -924,12 +925,68 @@ function buildMaskCadence(maskStrength: number): string {
   return "alle 4-5 Waeschen"
 }
 
-function buildRoutineDecisionContext(profile: HairProfile | null): RoutineDecisionContext {
+function getRoutineLeaveInNeedLabel(
+  need:
+    | NonNullable<
+        ReturnType<
+          typeof buildRecommendationEngineRuntimeFromPersistence
+        >["categories"]["leaveIn"]["targetProfile"]
+      >["needBucket"]
+    | null,
+): string | null {
+  switch (need) {
+    case "heat_protect":
+      return LEAVE_IN_NEED_BUCKET_LABELS.heat_protect
+    case "curl_definition":
+      return LEAVE_IN_NEED_BUCKET_LABELS.curl_definition
+    case "repair":
+      return LEAVE_IN_NEED_BUCKET_LABELS.repair
+    case "detangle_smooth":
+      return "Feuchtigkeit & Anti-Frizz"
+    default:
+      return null
+  }
+}
+
+function getRoutineMaskTypeLabel(
+  balance:
+    | NonNullable<
+        ReturnType<
+          typeof buildRecommendationEngineRuntimeFromPersistence
+        >["categories"]["mask"]["targetProfile"]
+      >["balance"]
+    | null,
+): string | null {
+  switch (balance) {
+    case "protein":
+      return MASK_TYPE_LABELS.protein
+    case "moisture":
+      return MASK_TYPE_LABELS.moisture
+    case "balanced":
+      return MASK_TYPE_LABELS.performance
+    default:
+      return null
+  }
+}
+
+function buildRoutineDecisionContext(
+  profile: HairProfile | null,
+  message: string,
+): RoutineDecisionContext {
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(
+    profile,
+    buildRoutineItemsFromCurrentRoutineProducts(profile),
+    buildRecommendationRequestContext({
+      requestedCategory: "routine",
+      message,
+    }),
+  )
+
   return {
-    shampoo: buildShampooDecision(profile),
-    conditioner: buildConditionerDecision(profile),
-    leave_in: buildLeaveInDecision(profile),
-    mask: deriveMaskDecision(profile),
+    shampoo: runtime.categories.shampoo,
+    conditioner: runtime.categories.conditioner,
+    leave_in: runtime.categories.leaveIn,
+    mask: runtime.categories.mask,
   }
 }
 
@@ -1209,34 +1266,36 @@ function buildRoutineSlots(
     caveats: [],
     topic_ids: activations[0] ? [activations[0].id] : [],
     product_linkable:
-      !shampooPresent && shampooDecision.eligible && Boolean(shampooDecision.matched_bucket),
+      !shampooPresent &&
+      shampooDecision.relevant &&
+      Boolean(shampooDecision.targetProfile?.shampooBucket),
     product_query: "Ich suche ein Shampoo fuer meine regulaeren Waschtage.",
     attachment_priority: 50,
   })
 
   const conditionerReasons = ["Conditioner bleibt der feste Pflegeanker nach jeder Waesche."]
-  if (conditionerDecision.matched_balance_need) {
+  if (conditionerDecision.targetProfile?.balance) {
     conditionerReasons.push(
       `Der Conditioner sollte vor allem ${
-        conditionerDecision.matched_balance_need === "balanced"
+        conditionerDecision.targetProfile.balance === "balanced"
           ? "ausgewogen pflegen"
-          : conditionerDecision.matched_balance_need === "moisture"
+          : conditionerDecision.targetProfile.balance === "moisture"
             ? "mehr Feuchtigkeit liefern"
             : "mehr Struktur und Repair geben"
       }.`,
     )
   }
-  if (conditionerDecision.matched_repair_level) {
+  if (conditionerDecision.targetProfile?.repairLevel) {
     conditionerReasons.push(
-      `Der Repair-Fokus liegt eher bei ${CONDITIONER_REPAIR_LEVEL_LABELS[conditionerDecision.matched_repair_level]}.`,
+      `Der Repair-Fokus liegt eher bei ${CONDITIONER_REPAIR_LEVEL_LABELS[conditionerDecision.targetProfile.repairLevel]}.`,
     )
   }
 
   const conditionerAction: RoutineSlotAction = conditionerPresent
-    ? conditionerDecision.matched_balance_need &&
-      conditionerDecision.matched_balance_need !== "balanced"
+    ? conditionerDecision.targetProfile?.balance &&
+      conditionerDecision.targetProfile.balance !== "balanced"
       ? "upgrade"
-      : conditionerDecision.matched_repair_level === "high"
+      : conditionerDecision.targetProfile?.repairLevel === "high"
         ? "upgrade"
         : "keep"
     : "add"
@@ -1254,7 +1313,7 @@ function buildRoutineSlots(
     topic_ids: activations[0] ? [activations[0].id] : [],
     product_linkable:
       (conditionerAction === "add" || conditionerAction === "upgrade") &&
-      conditionerDecision.eligible,
+      conditionerDecision.relevant,
     product_query: "Ich suche einen Conditioner fuer meine Basisroutine.",
     attachment_priority: 20,
   })
@@ -1318,7 +1377,7 @@ function buildRoutineSlots(
   }
 
   const shouldUseLeaveIn =
-    Boolean(leaveInDecision.need_bucket) ||
+    Boolean(leaveInDecision.targetProfile?.needBucket) ||
     activeTopicIds.has("lockenrefresh") ||
     context.goals.includes("less_frizz") ||
     context.goals.includes("moisture") ||
@@ -1333,14 +1392,14 @@ function buildRoutineSlots(
     const leaveInReasons = [
       "Ein Leave-in oder Finish-Schritt macht die Routine nach dem Waschen runder.",
     ]
-    if (leaveInDecision.need_bucket) {
+    if (leaveInDecision.targetProfile?.needBucket) {
       leaveInReasons.push(
-        `Der Schwerpunkt liegt eher auf ${LEAVE_IN_NEED_BUCKET_LABELS[leaveInDecision.need_bucket]}.`,
+        `Der Schwerpunkt liegt eher auf ${getRoutineLeaveInNeedLabel(leaveInDecision.targetProfile.needBucket) ?? leaveInDecision.targetProfile.needBucket}.`,
       )
     }
-    if (leaveInDecision.styling_context) {
+    if (leaveInDecision.targetProfile?.stylingContext) {
       leaveInReasons.push(
-        `Der Finish-Schritt soll vor allem fuer ${LEAVE_IN_STYLING_CONTEXT_LABELS[leaveInDecision.styling_context]} passen.`,
+        `Der Finish-Schritt soll vor allem fuer ${LEAVE_IN_STYLING_CONTEXT_LABELS[leaveInDecision.targetProfile.stylingContext]} passen.`,
       )
     }
 
@@ -1359,7 +1418,7 @@ function buildRoutineSlots(
         : activations[0]
           ? [activations[0].id]
           : [],
-      product_linkable: leaveInAction === "add" && leaveInDecision.eligible,
+      product_linkable: leaveInAction === "add" && leaveInDecision.relevant,
       product_query: "Ich suche ein Leave-in fuer meine Routine nach dem Waschen.",
       attachment_priority: 10,
     })
@@ -1413,28 +1472,29 @@ function buildRoutineSlots(
     pushSlot(sections, buildBrushToolsSlot(profile, context, normalizeText(message)))
   }
 
-  if (maskDecision.needs_mask || maskPresent) {
+  if (maskDecision.relevant || maskPresent) {
     pushSlot(sections, {
       id: "occasional-mask",
       kind: "product_slot",
       phase: "occasional",
       label: "Maske / Kur",
-      action: !maskDecision.needs_mask ? "avoid" : maskPresent ? "adjust" : "add",
+      action: !maskDecision.relevant ? "avoid" : maskPresent ? "adjust" : "add",
       category: "mask",
-      cadence: maskDecision.needs_mask
-        ? buildMaskCadence(maskDecision.need_strength)
+      cadence: maskDecision.relevant
+        ? buildMaskCadence(maskDecision.targetProfile?.needStrength ?? 0)
         : "vorerst nicht fest einplanen",
-      rationale: maskDecision.needs_mask
+      rationale: maskDecision.relevant
         ? [
             "Eine Maske bleibt Zusatzpflege und wird nur bei echtem Bedarf fest eingeplant.",
-            maskDecision.mask_type
-              ? `Der Fokus liegt eher auf ${MASK_TYPE_LABELS[maskDecision.mask_type] ?? maskDecision.mask_type}.`
+            getRoutineMaskTypeLabel(maskDecision.targetProfile?.balance ?? null)
+              ? `Der Fokus liegt eher auf ${getRoutineMaskTypeLabel(maskDecision.targetProfile?.balance ?? null)}.`
               : "Die Maske wird ueber Bedarf und Vertraeglichkeit gesteuert.",
           ]
         : ["Aktuell sprechen die Profilsignale nicht fuer eine feste Masken-Rolle in der Routine."],
       caveats: [],
       topic_ids: activeTopicIds.has("bond_builder") ? ["bond_builder"] : [],
-      product_linkable: !maskPresent && maskDecision.needs_mask && Boolean(maskDecision.mask_type),
+      product_linkable:
+        !maskPresent && maskDecision.relevant && Boolean(maskDecision.targetProfile?.balance),
       product_query: "Ich suche eine Maske fuer meine Routine.",
       attachment_priority: 30,
     })
@@ -1609,7 +1669,7 @@ export function buildRoutinePlan(
   const context = deriveRoutineContext(profile, message)
   const activeTopics = activateRoutineTopics(profile, message, context)
   const compareMode = isCwcOwcComparisonRequest(message)
-  const decisionContext = buildRoutineDecisionContext(profile)
+  const decisionContext = buildRoutineDecisionContext(profile, message)
   const sectionSlots = buildRoutineSlots(profile, context, message, activeTopics, decisionContext, {
     usesBondBuilder: options.usesBondBuilder ?? false,
   })

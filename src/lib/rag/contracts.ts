@@ -1,11 +1,11 @@
 import type {
+  ChatCategoryDecision,
   IntentType,
   Message,
   HairProfile,
   Product,
   EnrichedCitationSource,
   RouterDecision,
-  CategoryDecision,
   ClassificationResult,
   ProductCategory,
   ShampooDecision,
@@ -33,7 +33,8 @@ export interface PipelineResult {
   matchedProducts: Product[]
   sources: EnrichedCitationSource[]
   routerDecision: RouterDecision
-  categoryDecision?: CategoryDecision
+  categoryDecision?: ChatCategoryDecision
+  engineTrace?: import("@/lib/types").RecommendationEngineTrace
   retrievalSummary: {
     final_context_count: number
   }

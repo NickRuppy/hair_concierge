@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { isBondbuilderCategory } from "@/lib/bondbuilder/constants"
 import {
   HAIR_TEXTURES,
   HAIR_THICKNESSES,
@@ -16,6 +17,8 @@ import {
   NIGHT_PROTECTIONS,
 } from "@/lib/vocabulary"
 import { CONDITIONER_WEIGHTS, CONDITIONER_REPAIR_LEVELS } from "@/lib/conditioner/constants"
+import { isDeepCleansingShampooCategory } from "@/lib/deep-cleansing-shampoo/constants"
+import { isDryShampooCategory } from "@/lib/dry-shampoo/constants"
 import {
   POST_WASH_ACTIONS,
   ROUTINE_PREFERENCES,
@@ -35,6 +38,14 @@ import {
   MASK_INGREDIENT_FLAGS,
 } from "@/lib/mask/constants"
 import { OIL_SUBTYPES, isOilCategory } from "@/lib/oil/constants"
+import { isPeelingCategory } from "@/lib/peeling/constants"
+import {
+  PRODUCT_BALANCE_TARGETS,
+  PRODUCT_BOND_APPLICATION_MODES,
+  PRODUCT_BOND_REPAIR_INTENSITIES,
+  PRODUCT_PEELING_TYPES,
+  PRODUCT_SCALP_TYPE_FOCUSES,
+} from "@/lib/product-specs/constants"
 
 export const hairProfileFullSchema = z.object({
   hair_texture: z.enum(HAIR_TEXTURES).nullable(),
@@ -89,9 +100,10 @@ const leaveInSpecsSchema = z
   })
 
 const maskSpecsSchema = z.object({
-  format: z.enum(MASK_FORMATS),
+  format: z.enum(MASK_FORMATS).nullable().default(null),
   weight: z.enum(MASK_WEIGHTS),
   concentration: z.enum(MASK_CONCENTRATIONS),
+  balance_direction: z.enum(PRODUCT_BALANCE_TARGETS).nullable().default(null),
   benefits: z.array(z.enum(MASK_BENEFITS)).default([]),
   ingredient_flags: z.array(z.enum(MASK_INGREDIENT_FLAGS)).default([]),
   leave_on_minutes: z.number().int().min(1).max(60).default(10),
@@ -100,6 +112,25 @@ const maskSpecsSchema = z.object({
 const conditionerSpecsSchema = z.object({
   weight: z.enum(CONDITIONER_WEIGHTS),
   repair_level: z.enum(CONDITIONER_REPAIR_LEVELS),
+  balance_direction: z.enum(PRODUCT_BALANCE_TARGETS).nullable().default(null),
+})
+
+const bondbuilderSpecsSchema = z.object({
+  bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES),
+  application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES),
+})
+
+const deepCleansingShampooSpecsSchema = z.object({
+  scalp_type_focus: z.enum(PRODUCT_SCALP_TYPE_FOCUSES),
+})
+
+const dryShampooSpecsSchema = z.object({
+  scalp_type_focus: z.enum(["oily", "balanced"] as const),
+})
+
+const peelingSpecsSchema = z.object({
+  scalp_type_focus: z.enum(PRODUCT_SCALP_TYPE_FOCUSES),
+  peeling_type: z.enum(PRODUCT_PEELING_TYPES),
 })
 
 const nullableTextField = z.preprocess(
@@ -144,8 +175,44 @@ export const productSchema = z
     conditioner_specs: conditionerSpecsSchema.nullable().optional(),
     leave_in_specs: leaveInSpecsSchema.nullable().optional(),
     mask_specs: maskSpecsSchema.nullable().optional(),
+    bondbuilder_specs: bondbuilderSpecsSchema.nullable().optional(),
+    deep_cleansing_shampoo_specs: deepCleansingShampooSpecsSchema.nullable().optional(),
+    dry_shampoo_specs: dryShampooSpecsSchema.nullable().optional(),
+    peeling_specs: peelingSpecsSchema.nullable().optional(),
   })
   .superRefine((value, ctx) => {
+    if (isBondbuilderCategory(value.category) && !value.bondbuilder_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["bondbuilder_specs"],
+        message: "Bondbuilder-Spezifikation ist erforderlich.",
+      })
+    }
+
+    if (isDeepCleansingShampooCategory(value.category) && !value.deep_cleansing_shampoo_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["deep_cleansing_shampoo_specs"],
+        message: "Tiefenreinigungs-Spezifikation ist erforderlich.",
+      })
+    }
+
+    if (isDryShampooCategory(value.category) && !value.dry_shampoo_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["dry_shampoo_specs"],
+        message: "Trockenshampoo-Spezifikation ist erforderlich.",
+      })
+    }
+
+    if (isPeelingCategory(value.category) && !value.peeling_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["peeling_specs"],
+        message: "Peeling-Spezifikation ist erforderlich.",
+      })
+    }
+
     if (!isOilCategory(value.category)) return
 
     if (value.suitable_thicknesses.length === 0) {

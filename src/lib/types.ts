@@ -38,7 +38,29 @@ import type {
   ConditionerWeight,
   ConditionerRepairLevel,
 } from "@/lib/conditioner/constants"
+import type { ProductBondbuilderSpecs } from "@/lib/bondbuilder/constants"
+import type { ProductDeepCleansingShampooSpecs } from "@/lib/deep-cleansing-shampoo/constants"
+import type { ProductDryShampooSpecs } from "@/lib/dry-shampoo/constants"
 import type { OilNoRecommendationReason, OilSubtype, OilUseMode } from "@/lib/oil/constants"
+import type { ProductPeelingSpecs } from "@/lib/peeling/constants"
+import type {
+  ProductBondApplicationMode,
+  ProductBondRepairIntensity,
+  ProductPeelingType,
+  ProductScalpTypeFocus,
+} from "@/lib/product-specs/constants"
+import type {
+  CareNeedAssessment as RecommendationEngineCareNeedAssessment,
+  CategoryDecision as RecommendationEngineCategoryDecision,
+  ConditionerCategoryDecision as RecommendationEngineConditionerCategoryDecision,
+  DamageAssessment as RecommendationEngineDamageAssessment,
+  DamageLevel,
+  InterventionPlan as RecommendationEngineInterventionPlan,
+  LeaveInCategoryDecision as RecommendationEngineLeaveInCategoryDecision,
+  MaskCategoryDecision as RecommendationEngineMaskCategoryDecision,
+  RecommendationRequestContext as RecommendationEngineRequestContext,
+  ShampooCategoryDecision as RecommendationEngineShampooCategoryDecision,
+} from "@/lib/recommendation-engine/types"
 import type { ShampooBucket, ShampooBucketPair } from "@/lib/shampoo/constants"
 
 export type {
@@ -199,13 +221,26 @@ export interface Product {
   conditioner_specs?: ProductConditionerSpecs | null
   leave_in_specs?: ProductLeaveInSpecs | null
   mask_specs?: ProductMaskSpecs | null
+  bondbuilder_specs?: ProductBondbuilderSpecs | null
+  deep_cleansing_shampoo_specs?: ProductDeepCleansingShampooSpecs | null
+  dry_shampoo_specs?: ProductDryShampooSpecs | null
+  peeling_specs?: ProductPeelingSpecs | null
   recommendation_meta?: RecommendationMetadata | null
   created_at: string
   updated_at: string
 }
 
 export interface BaseRecommendationMetadata {
-  category: "shampoo" | "conditioner" | "leave_in" | "mask" | "oil"
+  category:
+    | "shampoo"
+    | "conditioner"
+    | "leave_in"
+    | "mask"
+    | "oil"
+    | "bondbuilder"
+    | "deep_cleansing_shampoo"
+    | "dry_shampoo"
+    | "peeling"
   score: number
   top_reasons: string[]
   tradeoffs: string[]
@@ -298,12 +333,39 @@ export interface MaskRecommendationMetadata extends BaseRecommendationMetadata {
   need_strength: MaskNeedStrength
 }
 
+export interface BondbuilderRecommendationMetadata extends BaseRecommendationMetadata {
+  category: "bondbuilder"
+  matched_intensity: ProductBondRepairIntensity | null
+  application_mode: ProductBondApplicationMode | null
+}
+
+export interface DeepCleansingShampooRecommendationMetadata extends BaseRecommendationMetadata {
+  category: "deep_cleansing_shampoo"
+  scalp_type_focus: ProductScalpTypeFocus | null
+  reset_need_level: DamageLevel
+}
+
+export interface DryShampooRecommendationMetadata extends BaseRecommendationMetadata {
+  category: "dry_shampoo"
+  scalp_type_focus: Exclude<ProductScalpTypeFocus, "dry"> | null
+}
+
+export interface PeelingRecommendationMetadata extends BaseRecommendationMetadata {
+  category: "peeling"
+  scalp_type_focus: ProductScalpTypeFocus | null
+  peeling_type: ProductPeelingType | null
+}
+
 export type RecommendationMetadata =
   | ShampooRecommendationMetadata
   | ConditionerRecommendationMetadata
   | LeaveInRecommendationMetadata
   | OilRecommendationMetadata
   | MaskRecommendationMetadata
+  | BondbuilderRecommendationMetadata
+  | DeepCleansingShampooRecommendationMetadata
+  | DryShampooRecommendationMetadata
+  | PeelingRecommendationMetadata
 
 export interface ShampooDecision {
   category: "shampoo"
@@ -364,6 +426,16 @@ export interface OilDecision {
 }
 
 export type CategoryDecision = ShampooDecision | ConditionerDecision | LeaveInDecision | OilDecision
+
+export type ChatCategoryDecision = CategoryDecision | RecommendationEngineCategoryDecision
+
+export interface RecommendationEngineTrace {
+  request_context: RecommendationEngineRequestContext
+  damage: RecommendationEngineDamageAssessment
+  care_needs: RecommendationEngineCareNeedAssessment
+  intervention_plan: RecommendationEngineInterventionPlan
+  unsupported_routine_categories: string[]
+}
 
 export interface MaskDecision {
   needs_mask: boolean
@@ -466,10 +538,10 @@ export interface RoutinePlanSection {
 }
 
 export interface RoutineDecisionContext {
-  shampoo: ShampooDecision
-  conditioner: ConditionerDecision
-  leave_in: LeaveInDecision
-  mask: MaskDecision
+  shampoo: RecommendationEngineShampooCategoryDecision
+  conditioner: RecommendationEngineConditionerCategoryDecision
+  leave_in: RecommendationEngineLeaveInCategoryDecision
+  mask: RecommendationEngineMaskCategoryDecision
 }
 
 export interface RoutinePlan {
@@ -483,7 +555,8 @@ export interface RoutinePlan {
 
 export interface MessageRagContext {
   sources: CitationSource[]
-  category_decision?: CategoryDecision | null
+  category_decision?: ChatCategoryDecision | null
+  engine_trace?: RecommendationEngineTrace | null
   response_mode?: ResponseMode | null
 }
 
@@ -532,6 +605,7 @@ export interface ChatMatchedProductTrace {
 export interface ChatTraceLatencyBreakdown {
   classification_ms: number
   hair_profile_load_ms: number
+  routine_inventory_load_ms?: number
   memory_load_ms: number
   routine_planning_ms: number
   history_load_ms: number
@@ -575,7 +649,8 @@ export interface ChatTurnTrace {
   decision_context: {
     should_plan_routine: boolean
     routine_plan: RoutinePlan | null
-    category_decision: CategoryDecision | null
+    category_decision: ChatCategoryDecision | null
+    engine_trace: RecommendationEngineTrace | null
     matched_products: ChatMatchedProductTrace[]
   }
   prompt_refs: {
@@ -692,6 +767,10 @@ export type ProductCategory =
   | "mask"
   | "oil"
   | "leave_in"
+  | "bondbuilder"
+  | "deep_cleansing_shampoo"
+  | "dry_shampoo"
+  | "peeling"
   | "routine"
   | null
 

@@ -166,6 +166,7 @@ export async function POST(request: Request) {
       retrievalSummary,
       routerDecision,
       categoryDecision,
+      engineTrace,
       debugTrace,
     } = await otelContext.with(parentContext, async () =>
       propagateAttributes(
@@ -298,6 +299,7 @@ export async function POST(request: Request) {
                 rag_context: buildAssistantRagContext(
                   sources,
                   categoryDecision,
+                  engineTrace,
                   routerDecision.response_mode,
                 ),
                 product_recommendations: productsToSend.length > 0 ? productsToSend : null,

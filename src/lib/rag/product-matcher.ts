@@ -1,7 +1,11 @@
+import { BONDBUILDER_DB_CATEGORIES } from "@/lib/bondbuilder/constants"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { generateEmbedding } from "@/lib/openai/embeddings"
 import { CONDITIONER_DB_CATEGORIES } from "@/lib/conditioner/constants"
+import { DEEP_CLEANSING_SHAMPOO_DB_CATEGORIES } from "@/lib/deep-cleansing-shampoo/constants"
+import { DRY_SHAMPOO_DB_CATEGORIES } from "@/lib/dry-shampoo/constants"
 import { OIL_DB_CATEGORIES, type OilSubtype } from "@/lib/oil/constants"
+import { PEELING_DB_CATEGORIES } from "@/lib/peeling/constants"
 import type { Product, ProductCategory, ShampooBucket } from "@/lib/types"
 
 export interface MatchedProduct extends Product {
@@ -17,12 +21,16 @@ const CATEGORY_DB_MAP: Record<string, string[]> = {
   mask: ["Maske"],
   oil: [...OIL_DB_CATEGORIES],
   leave_in: ["Leave-in", "Leave-In", "Leave in", "leave_in"],
+  bondbuilder: [...BONDBUILDER_DB_CATEGORIES],
+  deep_cleansing_shampoo: [...DEEP_CLEANSING_SHAMPOO_DB_CATEGORIES],
+  dry_shampoo: [...DRY_SHAMPOO_DB_CATEGORIES],
+  peeling: [...PEELING_DB_CATEGORIES],
 }
 
 export interface ProductMatchParams {
   query: string
-  thickness?: string       // fine/normal/coarse
-  concerns?: string[]      // already-mapped product concern codes
+  thickness?: string // fine/normal/coarse
+  concerns?: string[] // already-mapped product concern codes
   category?: ProductCategory
   count?: number
 }
@@ -60,23 +68,19 @@ export interface OilMatchParams {
  * Matches products from the vector store based on a semantic query,
  * with optional category pre-filtering and profile-based scoring.
  */
-export async function matchProducts(
-  params: ProductMatchParams
-): Promise<MatchedProduct[]> {
+export async function matchProducts(params: ProductMatchParams): Promise<MatchedProduct[]> {
   const { query, thickness, concerns = [], category, count = 5 } = params
 
   try {
     const embedding = await generateEmbedding(query)
     const supabase = createAdminClient()
 
-    const categoryFilter = category && CATEGORY_DB_MAP[category]
-      ? CATEGORY_DB_MAP[category]
-      : null
+    const categoryFilter = category && CATEGORY_DB_MAP[category] ? CATEGORY_DB_MAP[category] : null
 
     const rpcParams: Record<string, unknown> = {
       query_embedding: embedding,
       match_count: count,
-      user_hair_texture: null,         // legacy param, unused
+      user_hair_texture: null, // legacy param, unused
       user_concerns: concerns,
       category_filter: categoryFilter,
       user_thickness: thickness ?? null,
@@ -100,9 +104,7 @@ export async function matchProducts(
  * Matches shampoos using strict matrix buckets:
  * thickness + shampoo_bucket must both match.
  */
-export async function matchShampooProducts(
-  params: ShampooMatchParams
-): Promise<MatchedProduct[]> {
+export async function matchShampooProducts(params: ShampooMatchParams): Promise<MatchedProduct[]> {
   const { query, thickness, shampooBucket, count = 5 } = params
 
   try {
@@ -134,7 +136,7 @@ export async function matchShampooProducts(
  * thickness + protein_moisture_balance must both match.
  */
 export async function matchConditionerProducts(
-  params: ConditionerMatchParams
+  params: ConditionerMatchParams,
 ): Promise<MatchedProduct[]> {
   const { query, thickness, proteinMoistureBalance, count = 5 } = params
 
@@ -166,9 +168,7 @@ export async function matchConditionerProducts(
  * Matches leave-ins using strict eligibility triples:
  * thickness + leave_in_need_bucket + styling_context must all match.
  */
-export async function matchLeaveInProducts(
-  params: LeaveInMatchParams
-): Promise<MatchedProduct[]> {
+export async function matchLeaveInProducts(params: LeaveInMatchParams): Promise<MatchedProduct[]> {
   const { query, thickness, needBucket, stylingContext, count = 10 } = params
 
   try {
@@ -200,9 +200,7 @@ export async function matchLeaveInProducts(
  * Matches oils using strict eligibility pairs:
  * thickness + oil_subtype must both match.
  */
-export async function matchOilProducts(
-  params: OilMatchParams
-): Promise<MatchedProduct[]> {
+export async function matchOilProducts(params: OilMatchParams): Promise<MatchedProduct[]> {
   const { query, thickness, oilSubtype, count = 10 } = params
 
   try {

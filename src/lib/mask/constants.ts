@@ -1,3 +1,5 @@
+import type { ProductBalanceTarget } from "@/lib/product-specs/constants"
+
 export const MASK_FORMATS = ["gel", "lotion", "cream", "butter"] as const
 export type MaskFormat = (typeof MASK_FORMATS)[number]
 
@@ -31,9 +33,10 @@ export type MaskIngredientFlag = (typeof MASK_INGREDIENT_FLAGS)[number]
 
 export interface ProductMaskSpecs {
   product_id: string
-  format: MaskFormat
+  format: MaskFormat | null
   weight: MaskWeight
   concentration: MaskConcentration
+  balance_direction: ProductBalanceTarget | null
   benefits: MaskBenefit[]
   ingredient_flags: MaskIngredientFlag[]
   leave_on_minutes: number

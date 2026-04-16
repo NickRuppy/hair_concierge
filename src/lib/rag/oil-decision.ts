@@ -5,9 +5,13 @@ import {
   OIL_SUBTYPE_LABELS,
   OIL_USE_MODE_LABELS,
   type OilNoRecommendationReason,
-  type OilSubtype,
-  type OilUseMode,
 } from "@/lib/oil/constants"
+import {
+  hasOilAdjunctScalpSupport,
+  inferOilNoRecommendationReason,
+  inferOilPurposeFromMessage,
+  mapOilPurposeToSubtype,
+} from "@/lib/oil/purpose"
 import type {
   HairProfile,
   IntentType,
@@ -25,225 +29,17 @@ const OIL_CLARIFICATION_QUESTIONS: Record<OilProfileField, string> = {
 
 const OIL_FIELD_ORDER: OilProfileField[] = ["thickness", "oil_purpose"]
 
-const NATURAL_OIL_INTENT_TERMS = [
-  "hair oiling",
-  "hairoiling",
-  "scalp oiling",
-  "scalp-oiling",
-  "kopfhaut",
-  "applikator",
-  "applicator",
-  "massage",
-  "massieren",
-  "vor dem waschen",
-  "pre wash",
-  "pre-wash",
-  "einwirken",
-]
-
-const NATURAL_OIL_EXPLICIT_TERMS = [
-  "naturöl",
-  "natueroel",
-  "natural oil",
-  "basisöl",
-  "basisoel",
-  "pures öl",
-  "pures oel",
-]
-
-const THERAPY_OIL_BRAND_TERMS = [
-  "neqi rosemary",
-  "keralz",
-  "no. 17",
-  "her homie",
-]
-
-const THERAPY_OIL_INGREDIENT_TERMS = [
-  "rosemary oil",
-  "rosmarinöl",
-  "rosmarinoel",
-  "tea tree oil",
-  "teebaumöl",
-  "teebaumoel",
-  "peppermint oil",
-  "pfefferminzöl",
-  "pfefferminzoel",
-]
-
-const DRY_OIL_EXPLICIT_TERMS = [
-  "trockenöl",
-  "trockenoel",
-  "trocken-oel",
-  "dry oil",
-  "dry-oil",
-]
-
-const DRY_OIL_CONTEXT_TERMS = [
-  "leicht",
-  "lightweight",
-  "weightless",
-  "schwerelos",
-  "nicht beschweren",
-  "nicht fettig",
-  "ohne zu fetten",
-  "schnell einziehen",
-  "refresh",
-  "auffrischen",
-]
-
-const STYLING_OIL_EXPLICIT_TERMS = [
-  "stylingöl",
-  "stylingoel",
-  "styling-oel",
-  "styling oil",
-]
-
-const STYLING_OIL_CONTEXT_TERMS = [
-  "finish",
-  "glanz",
-  "shine",
-  "frizz",
-  "flyaways",
-  "smooth",
-  "smoothing",
-  "glätten",
-  "glaenzen",
-  "gloss",
-  "spitzen versiegeln",
-  "spitzen",
-]
-
-const NON_OIL_CATEGORY_TERMS = [
-  "hitzeschutz",
-  "leave-in",
-  "leave in",
-  "conditioner",
-  "spuelung",
-  "spülung",
-  "maske",
-  "haarkur",
-]
-
 const THICKNESS_REASON_LABELS = {
   fine: "feinem",
   normal: "mittelstarkem",
   coarse: "dickem",
 } as const
 
-function normalizeText(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-}
-
-function includesAny(text: string, terms: string[]): boolean {
-  return terms.some((term) => text.includes(normalizeText(term)))
-}
-
-function inferOilSubtype(message: string): OilSubtype | null {
-  const text = normalizeText(message)
-
-  if (includesAny(text, NATURAL_OIL_INTENT_TERMS)) {
-    return "natuerliches-oel"
-  }
-
-  if (includesAny(text, NATURAL_OIL_EXPLICIT_TERMS)) {
-    return "natuerliches-oel"
-  }
-
-  if (includesAny(text, STYLING_OIL_EXPLICIT_TERMS)) {
-    return "styling-oel"
-  }
-
-  if (includesAny(text, DRY_OIL_EXPLICIT_TERMS)) {
-    return "trocken-oel"
-  }
-
-  if (
-    includesAny(text, THERAPY_OIL_BRAND_TERMS) ||
-    includesAny(text, THERAPY_OIL_INGREDIENT_TERMS)
-  ) {
-    return "natuerliches-oel"
-  }
-
-  if (includesAny(text, STYLING_OIL_CONTEXT_TERMS)) {
-    return "styling-oel"
-  }
-
-  if (includesAny(text, DRY_OIL_CONTEXT_TERMS)) {
-    return "trocken-oel"
-  }
-
-  return null
-}
-
-function inferUseMode(
-  subtype: OilSubtype | null,
-): OilUseMode | null {
-  if (!subtype) return null
-
-  if (subtype === "natuerliches-oel") {
-    return "pre_wash_oiling"
-  }
-
-  if (subtype === "trocken-oel") {
-    return "light_finish"
-  }
-
-  return "styling_finish"
-}
-
-function inferNoRecommendationReason(
-  subtype: OilSubtype | null,
-  message: string,
-): OilNoRecommendationReason | null {
-  const text = normalizeText(message)
-
-  if (
-    subtype === "natuerliches-oel" &&
-    (
-      includesAny(text, THERAPY_OIL_BRAND_TERMS) ||
-      includesAny(text, THERAPY_OIL_INGREDIENT_TERMS)
-    )
-  ) {
-    return "therapy_oil_missing"
-  }
-
-  if (
-    subtype !== "natuerliches-oel" &&
-    includesAny(text, NON_OIL_CATEGORY_TERMS) &&
-    !includesAny(text, NATURAL_OIL_INTENT_TERMS)
-  ) {
-    return "better_non_oil_category"
-  }
-
-  return null
-}
-
-function hasScalpSignals(profile: HairProfile | null, message: string): boolean {
-  const text = normalizeText(message)
-  return (
-    text.includes("kopfhaut") ||
-    text.includes("scalp") ||
-    text.includes("juck") ||
-    text.includes("schuppen") ||
-    profile?.scalp_condition === "dandruff" ||
-    profile?.scalp_condition === "dry_flakes" ||
-    profile?.scalp_condition === "irritated" ||
-    profile?.scalp_type === "dry" ||
-    profile?.scalp_type === "oily"
-  )
-}
-
-function getMissingProfileFields(
-  profile: HairProfile | null,
-  message: string,
-): OilProfileField[] {
+function getMissingProfileFields(profile: HairProfile | null, message: string): OilProfileField[] {
   const missing: OilProfileField[] = []
 
   if (!profile?.thickness) missing.push("thickness")
-  if (!inferOilSubtype(message)) missing.push("oil_purpose")
+  if (!inferOilPurposeFromMessage(message)) missing.push("oil_purpose")
 
   return missing
 }
@@ -280,13 +76,12 @@ export function buildOilDecision(
   candidateCount = 0,
 ): OilDecision {
   const missingProfileFields = getMissingProfileFields(profile, message)
-  const matchedSubtype = inferOilSubtype(message)
-  const useMode = inferUseMode(matchedSubtype)
-  const noRecommendationReason = inferNoRecommendationReason(matchedSubtype, message)
+  const purpose = inferOilPurposeFromMessage(message)
+  const matchedSubtype = mapOilPurposeToSubtype(purpose)
+  const useMode = purpose
+  const noRecommendationReason = inferOilNoRecommendationReason(purpose, message)
   const eligible = missingProfileFields.length === 0
-  const adjunctScalpSupport =
-    matchedSubtype === "natuerliches-oel" &&
-    hasScalpSignals(profile, message)
+  const adjunctScalpSupport = hasOilAdjunctScalpSupport(profile, purpose, message)
 
   return {
     category: "oil",
@@ -306,9 +101,9 @@ export function buildOilDecision(
 }
 
 export function buildOilClarificationQuestions(decision: OilDecision): string[] {
-  return OIL_FIELD_ORDER
-    .filter((field) => decision.missing_profile_fields.includes(field))
-    .map((field) => OIL_CLARIFICATION_QUESTIONS[field])
+  return OIL_FIELD_ORDER.filter((field) => decision.missing_profile_fields.includes(field)).map(
+    (field) => OIL_CLARIFICATION_QUESTIONS[field],
+  )
 }
 
 export function buildOilRetrievalFilter(
@@ -320,7 +115,11 @@ export function buildOilRetrievalFilter(
     return undefined
   }
 
-  if (!decision.matched_profile.thickness || !decision.matched_subtype || decision.no_recommendation) {
+  if (
+    !decision.matched_profile.thickness ||
+    !decision.matched_subtype ||
+    decision.no_recommendation
+  ) {
     return undefined
   }
 
@@ -348,7 +147,9 @@ export function annotateOilRecommendations(
     ]
 
     const tradeoffs = decision.adjunct_scalp_support
-      ? ["Bei aktiven Kopfhautproblemen bleibt Shampoo oder ein Scalp-Treatment der primaere Hebel."]
+      ? [
+          "Bei aktiven Kopfhautproblemen bleibt Shampoo oder ein Scalp-Treatment der primaere Hebel.",
+        ]
       : []
 
     const recommendationMeta: OilRecommendationMetadata = {
@@ -370,7 +171,9 @@ export function annotateOilRecommendations(
   })
 }
 
-export function getOilNoRecommendationMessage(reason: OilNoRecommendationReason | null): string | null {
+export function getOilNoRecommendationMessage(
+  reason: OilNoRecommendationReason | null,
+): string | null {
   if (!reason) return null
   return OIL_NO_RECOMMENDATION_LABELS[reason]
 }

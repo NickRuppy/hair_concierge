@@ -29,6 +29,10 @@ const VALID_CATEGORIES: ProductCategory[] = [
   "mask",
   "oil",
   "leave_in",
+  "bondbuilder",
+  "deep_cleansing_shampoo",
+  "dry_shampoo",
+  "peeling",
   "routine",
 ]
 

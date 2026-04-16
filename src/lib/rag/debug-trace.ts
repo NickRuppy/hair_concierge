@@ -1,6 +1,6 @@
 import type { RetrieveContextDebug, RetrievedChunk } from "@/lib/rag/retriever"
 import type {
-  CategoryDecision,
+  ChatCategoryDecision,
   ChatMatchedProductTrace,
   ChatPromptSnapshot,
   ChatRetrievedChunkTrace,
@@ -12,6 +12,7 @@ import type {
   LangfusePromptReference,
   Product,
   ProductCategory,
+  RecommendationEngineTrace,
   RoutinePlan,
   RouterDecision,
 } from "@/lib/types"
@@ -36,7 +37,8 @@ export interface PipelineTraceDraft {
   decision_context: {
     should_plan_routine: boolean
     routine_plan: RoutinePlan | null
-    category_decision: CategoryDecision | null
+    category_decision: ChatCategoryDecision | null
+    engine_trace: RecommendationEngineTrace | null
     matched_products: ChatMatchedProductTrace[]
   }
   prompt_refs: {
@@ -97,7 +99,8 @@ export function buildPipelineTraceDraft(params: {
   retrieved_chunks: RetrievedChunk[]
   should_plan_routine: boolean
   routine_plan?: RoutinePlan
-  category_decision?: CategoryDecision
+  category_decision?: ChatCategoryDecision
+  engine_trace?: RecommendationEngineTrace | null
   matched_products?: Product[]
   classification_prompt_ref: LangfusePromptReference
   prompt: ChatPromptSnapshot
@@ -122,6 +125,7 @@ export function buildPipelineTraceDraft(params: {
     should_plan_routine,
     routine_plan,
     category_decision,
+    engine_trace,
     matched_products,
     classification_prompt_ref,
     prompt,
@@ -156,6 +160,7 @@ export function buildPipelineTraceDraft(params: {
       should_plan_routine,
       routine_plan: routine_plan ?? null,
       category_decision: category_decision ?? null,
+      engine_trace: engine_trace ?? null,
       matched_products: buildMatchedProductTrace(matched_products ?? []),
     },
     prompt_refs: {

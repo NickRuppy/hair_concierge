@@ -42,10 +42,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   }
 }
 
-function createCandidate(
-  id: string,
-  overrides: Partial<MatchedProduct> = {}
-): MatchedProduct {
+function createCandidate(id: string, overrides: Partial<MatchedProduct> = {}): MatchedProduct {
   return {
     id,
     name: `Maske ${id}`,
@@ -72,13 +69,14 @@ function createCandidate(
 
 function createSpec(
   productId: string,
-  overrides: Partial<ProductMaskSpecs> = {}
+  overrides: Partial<ProductMaskSpecs> = {},
 ): ProductMaskSpecs {
   return {
     product_id: productId,
     format: "cream",
     weight: "medium",
     concentration: "medium",
+    balance_direction: null,
     benefits: [],
     ingredient_flags: [],
     leave_on_minutes: 10,
@@ -93,7 +91,7 @@ test.describe("Mask Flow v2", () => {
         chemical_treatment: ["natural"],
         heat_styling: "rarely",
         protein_moisture_balance: "stretches_bounces",
-      })
+      }),
     )
 
     expect(decision.needs_mask).toBe(false)
@@ -108,21 +106,21 @@ test.describe("Mask Flow v2", () => {
         chemical_treatment: ["colored"],
         heat_styling: "never",
         protein_moisture_balance: "stretches_bounces",
-      })
+      }),
     )
     const heatOnly = deriveMaskDecision(
       createProfile({
         chemical_treatment: ["natural"],
         heat_styling: "daily",
         protein_moisture_balance: "stretches_bounces",
-      })
+      }),
     )
     const balanceOnly = deriveMaskDecision(
       createProfile({
         chemical_treatment: ["natural"],
         heat_styling: "never",
         protein_moisture_balance: "snaps",
-      })
+      }),
     )
 
     expect(chemicalOnly.needs_mask).toBe(true)
@@ -139,16 +137,17 @@ test.describe("Mask Flow v2", () => {
   })
 
   test("protein moisture balance maps to the correct mask type", () => {
-    expect(
-      deriveMaskDecision(createProfile({ protein_moisture_balance: "snaps" })).mask_type
-    ).toBe("moisture")
+    expect(deriveMaskDecision(createProfile({ protein_moisture_balance: "snaps" })).mask_type).toBe(
+      "moisture",
+    )
 
     expect(
-      deriveMaskDecision(createProfile({ protein_moisture_balance: "stretches_stays" })).mask_type
+      deriveMaskDecision(createProfile({ protein_moisture_balance: "stretches_stays" })).mask_type,
     ).toBe("protein")
 
     expect(
-      deriveMaskDecision(createProfile({ protein_moisture_balance: "stretches_bounces" })).mask_type
+      deriveMaskDecision(createProfile({ protein_moisture_balance: "stretches_bounces" }))
+        .mask_type,
     ).toBe("performance")
   })
 
@@ -172,7 +171,7 @@ test.describe("Mask Flow v2", () => {
         chemical_treatment: ["natural"],
         heat_styling: "never",
         protein_moisture_balance: "stretches_stays",
-      })
+      }),
     )
     const strength2 = rerankMaskProducts(
       candidates,
@@ -182,7 +181,7 @@ test.describe("Mask Flow v2", () => {
         chemical_treatment: ["colored"],
         heat_styling: "never",
         protein_moisture_balance: "stretches_stays",
-      })
+      }),
     )
     const strength3 = rerankMaskProducts(
       candidates,
@@ -192,7 +191,7 @@ test.describe("Mask Flow v2", () => {
         chemical_treatment: ["colored"],
         heat_styling: "daily",
         protein_moisture_balance: "stretches_stays",
-      })
+      }),
     )
 
     expect(strength1[0]?.id).toBe("low")
@@ -217,7 +216,7 @@ test.describe("Mask Flow v2", () => {
         chemical_treatment: ["bleached"],
         heat_styling: "daily",
         protein_moisture_balance: "stretches_stays",
-      })
+      }),
     )
 
     expect(results.map((product) => product.id)).toEqual(["light", "medium"])
@@ -244,7 +243,7 @@ test.describe("Mask Flow v2", () => {
         chemical_treatment: ["natural"],
         heat_styling: "never",
         protein_moisture_balance: "stretches_stays",
-      })
+      }),
     )
     const coarseResults = rerankMaskProducts(
       candidates,
@@ -254,7 +253,7 @@ test.describe("Mask Flow v2", () => {
         chemical_treatment: ["natural"],
         heat_styling: "never",
         protein_moisture_balance: "stretches_stays",
-      })
+      }),
     )
 
     expect(normalResults[0]?.id).toBe("medium")
