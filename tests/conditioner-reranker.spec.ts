@@ -83,6 +83,7 @@ function createSpec(
     product_id: productId,
     weight: "medium",
     repair_level: "medium",
+    balance_direction: null,
     ...overrides,
   }
 }
@@ -318,6 +319,8 @@ test.describe("Conditioner reranker", () => {
     expect(ragContext).toEqual({
       sources: [],
       category_decision: categoryDecision,
+      engine_trace: null,
+      response_mode: null,
     })
     expect(donePayload).toEqual(
       expect.objectContaining({

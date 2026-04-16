@@ -7,10 +7,15 @@ import type {
   RetrievalMode,
   ResponseMode,
 } from "@/lib/types"
-import { buildLeaveInDecision } from "@/lib/rag/leave-in-decision"
-import { buildOilDecision } from "@/lib/rag/oil-decision"
+import {
+  buildRecommendationEngineRuntimeForChat,
+  getLeaveInMissingProfileFields,
+  getOilMissingProfileFields,
+  getShampooMissingProfileFields,
+  getShampooProfileCompleteness,
+  type RecommendationEngineRuntime,
+} from "@/lib/recommendation-engine"
 import { deriveRoutineContext } from "@/lib/routines/planner"
-import { getShampooProfileCompleteness, isShampooProfileEligible } from "@/lib/rag/shampoo-decision"
 import {
   ROUTER_CONFIDENCE_THRESHOLD,
   ROUTER_MIN_SLOTS_PRODUCT,
@@ -50,6 +55,7 @@ function computeSlotCompleteness(
   intent: IntentType,
   filters: Record<string, string | string[] | null>,
   productCategory: string | null,
+  runtime: RecommendationEngineRuntime,
   hairProfile: HairProfile | null,
   userMessage = "",
 ): { score: number; rawCount: number } {
@@ -76,8 +82,7 @@ function computeSlotCompleteness(
   }
 
   if (productCategory === "leave_in") {
-    const decision = buildLeaveInDecision(hairProfile)
-    const filledCount = 5 - decision.missing_profile_fields.length
+    const filledCount = 5 - getLeaveInMissingProfileFields({ runtime, hairProfile }).length
 
     return {
       score: filledCount / 5,
@@ -86,8 +91,7 @@ function computeSlotCompleteness(
   }
 
   if (productCategory === "oil") {
-    const decision = buildOilDecision(hairProfile, userMessage)
-    const filledCount = 2 - decision.missing_profile_fields.length
+    const filledCount = 2 - getOilMissingProfileFields({ runtime, hairProfile }).length
 
     return {
       score: filledCount / 2,
@@ -131,6 +135,14 @@ export function evaluateRoute(
   try {
     const { intent, product_category, complexity, router_confidence, normalized_filters } =
       classification
+    const shouldPlanRoutine = intent === "routine_help" || product_category === "routine"
+    const runtime = buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: product_category,
+      shouldPlanRoutine,
+      message: userMessage,
+    })
     const overrides: string[] = []
     let retrieval_mode: RetrievalMode = classification.retrieval_mode
     // Do NOT seed from classifier's needs_clarification — router decides independently
@@ -141,13 +153,16 @@ export function evaluateRoute(
       intent,
       normalized_filters,
       product_category,
+      runtime,
       hairProfile,
       userMessage,
     )
-    const leaveInDecision =
-      product_category === "leave_in" ? buildLeaveInDecision(hairProfile) : null
-    const oilDecision =
-      product_category === "oil" ? buildOilDecision(hairProfile, userMessage) : null
+    const leaveInMissingFields =
+      product_category === "leave_in"
+        ? getLeaveInMissingProfileFields({ runtime, hairProfile })
+        : []
+    const oilMissingFields =
+      product_category === "oil" ? getOilMissingProfileFields({ runtime, hairProfile }) : []
 
     // ── Rule 2: FAQ shortcut ───────────────────────────────────────────
     if (complexity === "simple" && router_confidence >= 0.9 && !PRODUCT_INTENTS.includes(intent)) {
@@ -162,14 +177,18 @@ export function evaluateRoute(
         product_category === "conditioner" ||
         product_category === "mask" ||
         product_category === "leave_in" ||
-        product_category === "oil")
+        product_category === "oil" ||
+        product_category === "bondbuilder" ||
+        product_category === "deep_cleansing_shampoo" ||
+        product_category === "dry_shampoo" ||
+        product_category === "peeling")
     ) {
       retrieval_mode = "product_sql_plus_hybrid"
       overrides.push("category_product_mode")
     }
 
     // ── Rules 3b-3e: Mandatory profile gates → clarify_only ─────────────
-    const shampooProfileEligible = isShampooProfileEligible(hairProfile)
+    const shampooProfileEligible = getShampooMissingProfileFields(hairProfile).length === 0
     if (
       PRODUCT_INTENTS.includes(intent) &&
       product_category === "shampoo" &&
@@ -197,8 +216,7 @@ export function evaluateRoute(
     if (
       PRODUCT_INTENTS.includes(intent) &&
       product_category === "leave_in" &&
-      leaveInDecision &&
-      !leaveInDecision.eligible
+      leaveInMissingFields.length > 0
     ) {
       responseMode = "clarify_only"
       clarification_reason = clarification_reason
@@ -210,8 +228,7 @@ export function evaluateRoute(
     if (
       PRODUCT_INTENTS.includes(intent) &&
       product_category === "oil" &&
-      oilDecision &&
-      !oilDecision.eligible
+      oilMissingFields.length > 0
     ) {
       responseMode = "clarify_only"
       clarification_reason = clarification_reason

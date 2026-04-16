@@ -18,11 +18,7 @@ export const POST_WASH_ACTION_OPTIONS = POST_WASH_ACTIONS.map((value) => ({
   label: POST_WASH_ACTION_LABELS[value],
 }))
 
-export const ROUTINE_PREFERENCES = [
-  "minimal",
-  "balanced",
-  "advanced",
-] as const
+export const ROUTINE_PREFERENCES = ["minimal", "balanced", "advanced"] as const
 export type RoutinePreference = (typeof ROUTINE_PREFERENCES)[number]
 
 export const ROUTINE_PREFERENCE_LABELS = {
@@ -64,13 +60,7 @@ export const ROUTINE_PRODUCT_OPTIONS = ROUTINE_PRODUCTS.map((value) => ({
   label: ROUTINE_PRODUCT_LABELS[value],
 }))
 
-export const LEAVE_IN_FORMATS = [
-  "spray",
-  "milk",
-  "lotion",
-  "cream",
-  "serum",
-] as const
+export const LEAVE_IN_FORMATS = ["spray", "milk", "lotion", "cream", "serum"] as const
 export type LeaveInFormat = (typeof LEAVE_IN_FORMATS)[number]
 
 export const LEAVE_IN_WEIGHTS = ["light", "medium", "rich"] as const
@@ -126,11 +116,7 @@ export const LEAVE_IN_NEED_BUCKET_LABELS = {
   shine_protect: "Glanz & Schutz",
 } as const satisfies Record<LeaveInNeedBucket, string>
 
-export const LEAVE_IN_STYLING_CONTEXTS = [
-  "air_dry",
-  "non_heat_style",
-  "heat_style",
-] as const
+export const LEAVE_IN_STYLING_CONTEXTS = ["air_dry", "non_heat_style", "heat_style"] as const
 export type LeaveInStylingContext = (typeof LEAVE_IN_STYLING_CONTEXTS)[number]
 
 export const LEAVE_IN_STYLING_CONTEXT_LABELS = {
@@ -139,16 +125,28 @@ export const LEAVE_IN_STYLING_CONTEXT_LABELS = {
   heat_style: "Styling mit Hitze/Foehn",
 } as const satisfies Record<LeaveInStylingContext, string>
 
-export const LEAVE_IN_CONDITIONER_RELATIONSHIPS = [
-  "replacement_capable",
-  "booster_only",
-] as const
+export const LEAVE_IN_CONDITIONER_RELATIONSHIPS = ["replacement_capable", "booster_only"] as const
 export type LeaveInConditionerRelationship = (typeof LEAVE_IN_CONDITIONER_RELATIONSHIPS)[number]
 
 export const LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS = {
   replacement_capable: "Kann Conditioner ersetzen",
   booster_only: "Nur als Booster zusaetzlich zum Conditioner",
 } as const satisfies Record<LeaveInConditionerRelationship, string>
+
+export const LEAVE_IN_FIT_CARE_BENEFITS = [
+  "heat_protect",
+  "curl_definition",
+  "repair",
+  "detangle_smooth",
+] as const
+export type LeaveInFitCareBenefit = (typeof LEAVE_IN_FIT_CARE_BENEFITS)[number]
+
+export const LEAVE_IN_FIT_CARE_BENEFIT_LABELS = {
+  heat_protect: "Hitzeschutz",
+  curl_definition: "Locken- oder Wellen-Definition",
+  repair: "Repair",
+  detangle_smooth: "Entwirrt und glaettet",
+} as const satisfies Record<LeaveInFitCareBenefit, string>
 
 export const LEAVE_IN_INGREDIENT_FLAGS = [
   "silicones",
@@ -178,6 +176,15 @@ export interface ProductLeaveInSpecs {
   care_benefits: LeaveInCareBenefit[]
   ingredient_flags: LeaveInIngredientFlag[]
   application_stage: LeaveInApplicationStage[]
+  created_at?: string
+  updated_at?: string
+}
+
+export interface ProductLeaveInFitSpecs {
+  product_id: string
+  weight: LeaveInWeight
+  conditioner_relationship: LeaveInConditionerRelationship
+  care_benefits: LeaveInFitCareBenefit[]
   created_at?: string
   updated_at?: string
 }

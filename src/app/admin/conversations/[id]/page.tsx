@@ -340,6 +340,7 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
                   classification: trace.classification,
                   router_decision: trace.router_decision,
                   category_decision: trace.decision_context.category_decision,
+                  engine_trace: trace.decision_context.engine_trace,
                   routine_plan: trace.decision_context.routine_plan,
                 },
                 null,

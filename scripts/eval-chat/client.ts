@@ -192,6 +192,50 @@ export async function clearConversations(admin: SupabaseClient, userId: string):
 
 // ── SSE stream parsing ──────────────────────────────────────────────────
 
+const MAX_SEND_RETRIES = 3
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function parseRetryAfterMs(response: Response): number | null {
+  const retryAfterMs = response.headers.get("retry-after-ms")
+  if (retryAfterMs) {
+    const parsed = Number(retryAfterMs)
+    if (Number.isFinite(parsed) && parsed > 0) return parsed
+  }
+
+  const retryAfter = response.headers.get("retry-after")
+  if (!retryAfter) return null
+
+  const seconds = Number(retryAfter)
+  if (Number.isFinite(seconds) && seconds > 0) {
+    return seconds * 1000
+  }
+
+  return null
+}
+
+function getTransientRetryDelayMs(response: Response, bodyPreview: string): number | null {
+  if (response.status === 429) {
+    return Math.max(1000, parseRetryAfterMs(response) ?? 5000)
+  }
+
+  const location = response.headers.get("location") ?? bodyPreview.trim()
+  if (
+    (response.status === 302 || response.status === 303 || response.status === 307) &&
+    (location.startsWith("/quiz") || location.startsWith("/auth"))
+  ) {
+    return 750
+  }
+
+  if (response.status === 401) {
+    return 750
+  }
+
+  return null
+}
+
 export async function sendMessage(
   baseUrl: string,
   cookie: string,
@@ -203,20 +247,104 @@ export async function sendMessage(
   const body: Record<string, string> = { message }
   if (conversationId) body.conversation_id = conversationId
 
-  const response = await fetch(`${baseUrl}/api/chat`, {
-    method: "POST",
-    headers: {
-      Cookie: cookie,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-    redirect: "manual",
-  })
+  for (let attempt = 1; attempt <= MAX_SEND_RETRIES; attempt++) {
+    const response = await fetch(`${baseUrl}/api/chat`, {
+      method: "POST",
+      headers: {
+        Accept: "text/event-stream",
+        Cookie: cookie,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+      redirect: "manual",
+    })
 
-  // Check for non-SSE responses (auth redirect, JSON error, etc.)
-  const contentType = response.headers.get("content-type") ?? ""
-  if (response.status !== 200 || !contentType.includes("text/event-stream")) {
+    const contentType = response.headers.get("content-type") ?? ""
+    if (response.status === 200 && contentType.includes("text/event-stream")) {
+      const result: SSEResult = {
+        conversation_id: null,
+        assistant_message_id: null,
+        langfuse_trace_id: null,
+        langfuse_trace_url: null,
+        content: "",
+        done_data: null,
+        sources: [],
+        products: [],
+        error: null,
+        latency_ms: 0,
+      }
+
+      const reader = response.body!.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ""
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        buffer += decoder.decode(value, { stream: true })
+        const frames = buffer.split("\n\n")
+        buffer = frames.pop() || ""
+
+        for (const frame of frames) {
+          if (!frame.startsWith("data: ")) continue
+          try {
+            const event = JSON.parse(frame.slice(6))
+            switch (event.type) {
+              case "conversation_id":
+                result.conversation_id = event.data
+                break
+              case "langfuse_trace":
+                result.langfuse_trace_id = event.data?.trace_id ?? null
+                break
+              case "content_delta":
+                result.content += event.data
+                break
+              case "product_recommendations":
+                result.products = event.data
+                break
+              case "sources":
+                result.sources = event.data
+                break
+              case "assistant_message":
+                result.assistant_message_id = event.data?.id ?? null
+                result.langfuse_trace_id = event.data?.langfuse_trace_id ?? result.langfuse_trace_id
+                result.langfuse_trace_url = event.data?.langfuse_trace_url ?? null
+                break
+              case "done":
+                result.done_data = event.data
+                break
+              case "error":
+                result.error = event.data?.message ?? "Unknown SSE error"
+                break
+            }
+          } catch {
+            // Skip malformed frames
+          }
+        }
+      }
+
+      if (buffer.startsWith("data: ")) {
+        try {
+          const event = JSON.parse(buffer.slice(6))
+          if (event.type === "done") result.done_data = event.data
+          if (event.type === "error") result.error = event.data?.message ?? "Unknown SSE error"
+        } catch {
+          // ignore
+        }
+      }
+
+      result.latency_ms = Date.now() - start
+      return result
+    }
+
     const text = await response.text().catch(() => "(empty body)")
+    const retryDelayMs = getTransientRetryDelayMs(response, text)
+    if (retryDelayMs !== null && attempt < MAX_SEND_RETRIES) {
+      await wait(retryDelayMs * attempt)
+      continue
+    }
+
     return {
       conversation_id: null,
       assistant_message_id: null,
@@ -231,8 +359,7 @@ export async function sendMessage(
     }
   }
 
-  // Parse SSE stream
-  const result: SSEResult = {
+  return {
     conversation_id: null,
     assistant_message_id: null,
     langfuse_trace_id: null,
@@ -241,73 +368,9 @@ export async function sendMessage(
     done_data: null,
     sources: [],
     products: [],
-    error: null,
-    latency_ms: 0,
+    error: "Request failed after retries",
+    latency_ms: Date.now() - start,
   }
-
-  const reader = response.body!.getReader()
-  const decoder = new TextDecoder()
-  let buffer = ""
-
-  while (true) {
-    const { done, value } = await reader.read()
-    if (done) break
-
-    buffer += decoder.decode(value, { stream: true })
-    const frames = buffer.split("\n\n")
-    buffer = frames.pop() || ""
-
-    for (const frame of frames) {
-      if (!frame.startsWith("data: ")) continue
-      try {
-        const event = JSON.parse(frame.slice(6))
-        switch (event.type) {
-          case "conversation_id":
-            result.conversation_id = event.data
-            break
-          case "langfuse_trace":
-            result.langfuse_trace_id = event.data?.trace_id ?? null
-            break
-          case "content_delta":
-            result.content += event.data
-            break
-          case "product_recommendations":
-            result.products = event.data
-            break
-          case "sources":
-            result.sources = event.data
-            break
-          case "assistant_message":
-            result.assistant_message_id = event.data?.id ?? null
-            result.langfuse_trace_id = event.data?.langfuse_trace_id ?? result.langfuse_trace_id
-            result.langfuse_trace_url = event.data?.langfuse_trace_url ?? null
-            break
-          case "done":
-            result.done_data = event.data
-            break
-          case "error":
-            result.error = event.data?.message ?? "Unknown SSE error"
-            break
-        }
-      } catch {
-        // Skip malformed frames
-      }
-    }
-  }
-
-  // Flush remaining buffer
-  if (buffer.startsWith("data: ")) {
-    try {
-      const event = JSON.parse(buffer.slice(6))
-      if (event.type === "done") result.done_data = event.data
-      if (event.type === "error") result.error = event.data?.message ?? "Unknown SSE error"
-    } catch {
-      // ignore
-    }
-  }
-
-  result.latency_ms = Date.now() - start
-  return result
 }
 
 // ── DB verification helpers ─────────────────────────────────────────────

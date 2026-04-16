@@ -1,24 +1,27 @@
 import type {
+  ChatCategoryDecision,
   IntentType,
   MessageRagContext,
+  RecommendationEngineTrace,
   ResponseMode,
   RouterDecision,
-  CategoryDecision,
   CitationSource,
 } from "@/lib/types"
 
 export function buildAssistantRagContext(
   sources: CitationSource[],
-  categoryDecision?: CategoryDecision,
+  categoryDecision?: ChatCategoryDecision,
+  engineTrace?: RecommendationEngineTrace | null,
   responseMode?: ResponseMode,
 ): MessageRagContext | null {
-  if (sources.length === 0 && !categoryDecision && !responseMode) {
+  if (sources.length === 0 && !categoryDecision && !engineTrace && !responseMode) {
     return null
   }
 
   return {
     sources,
     category_decision: categoryDecision ?? null,
+    engine_trace: engineTrace ?? null,
     response_mode: responseMode ?? null,
   }
 }
@@ -27,7 +30,7 @@ export function buildDoneEventData(params: {
   intent: IntentType
   retrievalSummary: { final_context_count: number }
   routerDecision: RouterDecision
-  categoryDecision?: CategoryDecision
+  categoryDecision?: ChatCategoryDecision
 }): Record<string, unknown> {
   const { intent, retrievalSummary, routerDecision, categoryDecision } = params
 

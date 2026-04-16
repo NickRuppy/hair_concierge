@@ -38,7 +38,6 @@ import {
   HAIR_DENSITY_LABELS,
   HAIR_TEXTURE_LABELS,
   HAIR_THICKNESS_LABELS,
-  PROTEIN_MOISTURE_LABELS,
   SCALP_TYPE_LABELS,
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
@@ -65,6 +64,7 @@ import type {
   ChatPromptMessageSnapshot,
   ChatPromptSnapshot,
 } from "@/lib/types"
+import type { CategoryDecision as RecommendationEngineCategoryDecision } from "@/lib/recommendation-engine/types"
 import type OpenAI from "openai"
 
 export interface SynthesizeParams {
@@ -80,6 +80,7 @@ export interface SynthesizeParams {
   conditionerDecision?: ConditionerDecision
   leaveInDecision?: LeaveInDecision
   oilDecision?: OilDecision
+  categoryDecision?: RecommendationEngineCategoryDecision | null
   routinePlan?: RoutinePlan
   memoryContext?: string | null
   /** Slot-aware clarification questions from the router (replaces consultationMode) */
@@ -341,6 +342,19 @@ const PRODUCT_SECTION_HEADERS: Record<string, string> = {
   mask: "Passende Masken aus unserer Datenbank",
   leave_in: "Passende Leave-ins aus unserer Datenbank",
   oil: "Passende Oele aus unserer Datenbank",
+  bondbuilder: "Passende Bondbuilder aus unserer Datenbank",
+  deep_cleansing_shampoo: "Passende Tiefenreinigungs-Shampoos aus unserer Datenbank",
+  dry_shampoo: "Passende Trockenshampoos aus unserer Datenbank",
+  peeling: "Passende Peelings aus unserer Datenbank",
+}
+
+const SUPPORT_CATEGORY_NOT_RECOMMENDED_LABELS: Partial<
+  Record<Exclude<ProductCategory, null>, string>
+> = {
+  bondbuilder: "kein Bondbuilder",
+  deep_cleansing_shampoo: "kein Tiefenreinigungs-Shampoo",
+  dry_shampoo: "kein Trockenshampoo",
+  peeling: "kein Peeling",
 }
 
 const MASK_STRENGTH_LABELS: Record<string, string> = {
@@ -355,129 +369,11 @@ const MASK_TYPE_LABELS: Record<string, string> = {
   performance: "Performance",
 }
 
-const MASK_SIGNAL_LABELS: Record<string, string> = {
-  chemical_treatment: "chemische Behandlung",
-  heat_styling: "regelmaessiges Hitzestyling",
-  protein_moisture_balance: "Protein-/Feuchtigkeits-Balance",
-  mechanical_stress: "mechanische Belastung",
-}
-
-function formatMaskDecision(maskDecision?: MaskDecision): string {
-  if (!maskDecision) return ""
-
-  const parts = ["\n\nMasken-Entscheidung:"]
-  parts.push(`- Maske noetig: ${maskDecision.needs_mask ? "ja" : "nein"}`)
-
-  if (maskDecision.needs_mask) {
-    if (maskDecision.need_strength > 0) {
-      const strengthLabel =
-        MASK_STRENGTH_LABELS[String(maskDecision.need_strength)] ??
-        String(maskDecision.need_strength)
-      parts.push(`- Staerke: ${strengthLabel}`)
-    }
-    if (maskDecision.mask_type) {
-      const maskTypeLabel = MASK_TYPE_LABELS[maskDecision.mask_type] ?? maskDecision.mask_type
-      parts.push(`- Maskentyp: ${maskTypeLabel}`)
-    }
-  } else {
-    parts.push("- Hinweis: Basierend auf deinem Profil brauchst du aktuell keine Maske.")
-  }
-
-  if (maskDecision.active_signals.length > 0) {
-    parts.push(
-      `- Aktive Signale: ${maskDecision.active_signals
-        .map((signal) => MASK_SIGNAL_LABELS[signal] ?? signal)
-        .join(", ")}`,
-    )
-  }
-
-  return parts.join("\n")
-}
-
-const SHAMPOO_FIELD_LABELS: Record<string, string> = {
-  thickness: "Haardicke",
-  scalp_type: "Kopfhaut-Typ",
-  scalp_condition: "Kopfhaut-Beschwerden",
-}
-
-function formatShampooDecision(shampooDecision?: ShampooDecision): string {
-  if (!shampooDecision) return ""
-
-  const parts = ["\n\nShampoo-Entscheidung:"]
-  parts.push(`- Profil ausreichend: ${shampooDecision.eligible ? "ja" : "nein"}`)
-
-  if (shampooDecision.matched_profile.thickness) {
-    parts.push(
-      `- Haardicke: ${HAIR_THICKNESS_LABELS[shampooDecision.matched_profile.thickness] ?? shampooDecision.matched_profile.thickness}`,
-    )
-  }
-  if (shampooDecision.matched_profile.scalp_type) {
-    parts.push(
-      `- Kopfhaut-Typ: ${SCALP_TYPE_LABELS[shampooDecision.matched_profile.scalp_type] ?? shampooDecision.matched_profile.scalp_type}`,
-    )
-  }
-  if (shampooDecision.matched_profile.scalp_condition) {
-    parts.push(
-      `- Kopfhaut-Beschwerden: ${SCALP_CONDITION_LABELS[shampooDecision.matched_profile.scalp_condition] ?? shampooDecision.matched_profile.scalp_condition}`,
-    )
-  }
-  if (shampooDecision.matched_bucket) {
-    parts.push(
-      `- Shampoo-Bucket: ${SHAMPOO_BUCKET_LABELS[shampooDecision.matched_bucket] ?? shampooDecision.matched_bucket}`,
-    )
-  }
-  if (shampooDecision.matched_concern_code) {
-    parts.push(`- Wissensbasis-Fokus: ${shampooDecision.matched_concern_code}`)
-  }
-  if (shampooDecision.secondary_bucket) {
-    parts.push(
-      `- Basis-Shampoo-Bucket (Rotation): ${SHAMPOO_BUCKET_LABELS[shampooDecision.secondary_bucket] ?? shampooDecision.secondary_bucket}`,
-    )
-  }
-  if (shampooDecision.matched_profile.scalp_condition === "dry_flakes") {
-    parts.push(
-      "- Hinweis: Trockene Schuppen ordnen wir dem trockenen Shampoo-Bucket zu. Wenn die Schueppchen nach 4-6 Wochen nicht besser werden, empfehlen wir einen Dermatologen aufzusuchen.",
-    )
-  }
-
-  if (!shampooDecision.eligible) {
-    parts.push(
-      `- Fehlende Felder: ${shampooDecision.missing_profile_fields
-        .map((field) => SHAMPOO_FIELD_LABELS[field] ?? field)
-        .join(", ")}`,
-    )
-  } else if (shampooDecision.no_catalog_match) {
-    parts.push("- Katalogstatus: kein exakter Shampoo-Match fuer dieses Profil vorhanden")
-  } else {
-    parts.push(`- Exakte Shampoo-Kandidaten: ${shampooDecision.candidate_count}`)
-  }
-
-  return parts.join("\n")
-}
-
-const CONDITIONER_FIELD_LABELS: Record<string, string> = {
-  thickness: "Haardicke",
-  protein_moisture_balance: "Zugtest",
-}
-
 const CONDITIONER_BALANCE_LABELS = {
   moisture: "Feuchtigkeit",
   balanced: "ausgewogene Pflege",
   protein: "Protein",
 } as const
-
-const LEAVE_IN_FIELD_LABELS: Record<string, string> = {
-  hair_texture: "Haarmuster",
-  thickness: "Haardicke",
-  density: "Haardichte",
-  care_signal: "Pflegefokus",
-  styling_signal: "Styling-Kontext",
-}
-
-const OIL_FIELD_LABELS: Record<string, string> = {
-  thickness: "Haardicke",
-  oil_purpose: "Oel-Zweck",
-}
 
 const ROUTINE_ACTION_LABELS = {
   keep: "beibehalten",
@@ -487,157 +383,198 @@ const ROUTINE_ACTION_LABELS = {
   avoid: "gerade eher weniger geeignet",
 } as const
 
-function formatConditionerDecision(conditionerDecision?: ConditionerDecision): string {
-  if (!conditionerDecision) return ""
+const ENGINE_ACTION_LABELS = {
+  add: "neu einfuehren",
+  replace: "ersetzen",
+  increase_frequency: "haeufiger nutzen",
+  decrease_frequency: "seltener nutzen",
+  keep: "beibehalten",
+  remove: "entfernen",
+  behavior_change_only: "vor allem ueber Verhalten loesen",
+} as const
 
-  const parts = ["\n\nConditioner-Entscheidung:"]
-  parts.push(`- Profil ausreichend: ${conditionerDecision.eligible ? "ja" : "nein"}`)
+const ENGINE_BALANCE_LABELS = {
+  moisture: "Feuchtigkeit",
+  balanced: "ausgewogene Pflege",
+  protein: "Protein",
+} as const
 
-  if (conditionerDecision.matched_profile.thickness) {
-    parts.push(
-      `- Haardicke: ${HAIR_THICKNESS_LABELS[conditionerDecision.matched_profile.thickness] ?? conditionerDecision.matched_profile.thickness}`,
-    )
-  }
-  if (conditionerDecision.matched_profile.density) {
-    parts.push(
-      `- Haardichte: ${HAIR_DENSITY_LABELS[conditionerDecision.matched_profile.density] ?? conditionerDecision.matched_profile.density}`,
-    )
-  }
-  if (conditionerDecision.matched_profile.protein_moisture_balance) {
-    parts.push(
-      `- Zugtest: ${PROTEIN_MOISTURE_LABELS[conditionerDecision.matched_profile.protein_moisture_balance] ?? conditionerDecision.matched_profile.protein_moisture_balance}`,
-    )
-  }
-  if (conditionerDecision.matched_balance_need) {
-    parts.push(
-      `- Pflegefokus: ${CONDITIONER_BALANCE_LABELS[conditionerDecision.matched_balance_need]}`,
-    )
-  }
-  if (conditionerDecision.matched_weight) {
-    parts.push(
-      `- Erwartetes Gewicht: ${CONDITIONER_WEIGHT_LABELS[conditionerDecision.matched_weight]}`,
-    )
-  }
-  if (conditionerDecision.matched_repair_level) {
-    parts.push(
-      `- Repair-Level: ${CONDITIONER_REPAIR_LEVEL_LABELS[conditionerDecision.matched_repair_level]}`,
-    )
-  }
-  if (conditionerDecision.matched_concern_code) {
-    parts.push(`- Wissensbasis-Fokus: ${conditionerDecision.matched_concern_code}`)
-  }
+const ENGINE_WEIGHT_LABELS = {
+  light: "leicht",
+  medium: "mittel",
+  rich: "reichhaltig",
+} as const
 
-  if (!conditionerDecision.eligible) {
-    parts.push(
-      `- Fehlende Felder: ${conditionerDecision.missing_profile_fields
-        .map((field) => CONDITIONER_FIELD_LABELS[field] ?? field)
-        .join(", ")}`,
-    )
-  } else if (conditionerDecision.no_catalog_match) {
-    parts.push("- Katalogstatus: kein exakter Conditioner-Match fuer dieses Profil vorhanden")
-  } else {
-    parts.push(`- Exakte Conditioner-Kandidaten: ${conditionerDecision.candidate_count}`)
-  }
+const ENGINE_REPAIR_LABELS = {
+  low: "niedrig",
+  medium: "mittel",
+  high: "hoch",
+} as const
 
-  if (!conditionerDecision.used_density) {
-    parts.push(
-      "- Hinweis: Die Haardichte fehlt noch, deshalb bleibt das Produktgewicht vorerst ein Soft-Signal.",
-    )
-  }
+const BOND_REPAIR_LABELS = {
+  maintenance: "maintenance",
+  intensive: "intensiv",
+} as const
 
-  return parts.join("\n")
+const BOND_APPLICATION_LABELS = {
+  pre_shampoo: "vor dem Waschen",
+  post_wash_leave_in: "nach der Waesche / Leave-in",
+} as const
+
+const PEELING_TYPE_LABELS = {
+  acid_serum: "saeurebasiertes Peeling",
+  physical_scrub: "mechanisches Peeling",
+} as const
+
+function formatEngineInventoryLine(
+  decision: RecommendationEngineCategoryDecision,
+  parts: string[],
+): void {
+  if (!decision.currentInventory) return
+
+  const inventory = [
+    decision.currentInventory.productName,
+    decision.currentInventory.frequencyBand,
+  ].filter(Boolean)
+
+  if (inventory.length > 0) {
+    parts.push(`- Aktuelle Routine: ${inventory.join(" | ")}`)
+  }
 }
 
-function formatLeaveInDecision(leaveInDecision?: LeaveInDecision): string {
-  if (!leaveInDecision) return ""
+function formatEngineCategoryDecision(
+  categoryDecision?: RecommendationEngineCategoryDecision | null,
+): string {
+  if (!categoryDecision) return ""
 
-  const parts = ["\n\nLeave-in-Entscheidung:"]
-  parts.push(`- Profil ausreichend: ${leaveInDecision.eligible ? "ja" : "nein"}`)
+  const parts = ["\n\nEngine-Entscheidung:"]
+  parts.push(`- Kategorie: ${categoryDecision.category}`)
+  parts.push(`- Relevant: ${categoryDecision.relevant ? "ja" : "nein"}`)
 
-  if (leaveInDecision.matched_profile.hair_texture) {
-    parts.push(
-      `- Haarmuster: ${HAIR_TEXTURE_LABELS[leaveInDecision.matched_profile.hair_texture] ?? leaveInDecision.matched_profile.hair_texture}`,
-    )
-  }
-  if (leaveInDecision.matched_profile.thickness) {
-    parts.push(
-      `- Haardicke: ${HAIR_THICKNESS_LABELS[leaveInDecision.matched_profile.thickness] ?? leaveInDecision.matched_profile.thickness}`,
-    )
-  }
-  if (leaveInDecision.matched_profile.density) {
-    parts.push(
-      `- Haardichte: ${HAIR_DENSITY_LABELS[leaveInDecision.matched_profile.density] ?? leaveInDecision.matched_profile.density}`,
-    )
-  }
-  if (leaveInDecision.need_bucket) {
-    parts.push(`- Pflegefokus: ${LEAVE_IN_NEED_BUCKET_LABELS[leaveInDecision.need_bucket]}`)
-  }
-  if (leaveInDecision.styling_context) {
-    parts.push(
-      `- Styling-Kontext: ${LEAVE_IN_STYLING_CONTEXT_LABELS[leaveInDecision.styling_context]}`,
-    )
-  }
-  if (leaveInDecision.conditioner_relationship) {
-    parts.push(
-      `- Conditioner-Rolle: ${LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[leaveInDecision.conditioner_relationship]}`,
-    )
-  }
-  if (leaveInDecision.matched_weight) {
-    parts.push(`- Erwartetes Gewicht: ${LEAVE_IN_WEIGHT_LABELS[leaveInDecision.matched_weight]}`)
+  if (categoryDecision.action) {
+    parts.push(`- Aktion: ${ENGINE_ACTION_LABELS[categoryDecision.action]}`)
   }
 
-  if (!leaveInDecision.eligible) {
-    parts.push(
-      `- Fehlende Felder: ${leaveInDecision.missing_profile_fields
-        .map((field) => LEAVE_IN_FIELD_LABELS[field] ?? field)
-        .join(", ")}`,
-    )
-  } else if (leaveInDecision.no_catalog_match) {
-    parts.push("- Katalogstatus: kein exakter Leave-in-Match fuer dieses Profil vorhanden")
-  } else {
-    parts.push(`- Exakte Leave-in-Kandidaten: ${leaveInDecision.candidate_count}`)
+  formatEngineInventoryLine(categoryDecision, parts)
+
+  if (categoryDecision.planReasonCodes.length > 0) {
+    parts.push(`- Grundsignale: ${categoryDecision.planReasonCodes.join(", ")}`)
   }
 
-  return parts.join("\n")
-}
-
-function formatOilDecision(oilDecision?: OilDecision): string {
-  if (!oilDecision) return ""
-
-  const parts = ["\n\nOel-Entscheidung:"]
-  parts.push(`- Profil ausreichend: ${oilDecision.eligible ? "ja" : "nein"}`)
-
-  if (oilDecision.matched_profile.thickness) {
-    parts.push(
-      `- Haardicke: ${HAIR_THICKNESS_LABELS[oilDecision.matched_profile.thickness] ?? oilDecision.matched_profile.thickness}`,
-    )
-  }
-  if (oilDecision.matched_subtype) {
-    parts.push(`- Oel-Typ: ${OIL_SUBTYPE_LABELS[oilDecision.matched_subtype]}`)
-  }
-  if (oilDecision.use_mode) {
-    parts.push(`- Anwendung: ${OIL_USE_MODE_LABELS[oilDecision.use_mode]}`)
-  }
-  if (oilDecision.adjunct_scalp_support) {
-    parts.push(
-      "- Kopfhaut-Hinweis: Oel nur als unterstuetzende Zusatzpflege einordnen, nicht als primaeren Behandlungsweg.",
-    )
+  if (categoryDecision.notes.length > 0) {
+    parts.push(`- Hinweise: ${categoryDecision.notes.join(", ")}`)
   }
 
-  if (!oilDecision.eligible) {
-    parts.push(
-      `- Fehlende Felder: ${oilDecision.missing_profile_fields
-        .map((field) => OIL_FIELD_LABELS[field] ?? field)
-        .join(", ")}`,
-    )
-  } else if (oilDecision.no_recommendation && oilDecision.no_recommendation_reason) {
-    parts.push(
-      `- Kein Oel empfohlen: ${OIL_NO_RECOMMENDATION_LABELS[oilDecision.no_recommendation_reason]}`,
-    )
-  } else if (oilDecision.no_catalog_match) {
-    parts.push("- Katalogstatus: kein exakter Oel-Match fuer Haardicke und Oel-Typ vorhanden")
-  } else {
-    parts.push(`- Exakte Oel-Kandidaten: ${oilDecision.candidate_count}`)
+  switch (categoryDecision.category) {
+    case "shampoo":
+      if (categoryDecision.targetProfile?.shampooBucket) {
+        parts.push(
+          `- Haupt-Bucket: ${SHAMPOO_BUCKET_LABELS[categoryDecision.targetProfile.shampooBucket] ?? categoryDecision.targetProfile.shampooBucket}`,
+        )
+      }
+      if (categoryDecision.targetProfile?.secondaryBucket) {
+        parts.push(
+          `- Sekundaer-Bucket: ${SHAMPOO_BUCKET_LABELS[categoryDecision.targetProfile.secondaryBucket] ?? categoryDecision.targetProfile.secondaryBucket}`,
+        )
+      }
+      if (categoryDecision.targetProfile?.scalpRoute) {
+        parts.push(`- Kopfhaut-Route: ${categoryDecision.targetProfile.scalpRoute}`)
+      }
+      break
+    case "conditioner":
+      if (categoryDecision.targetProfile?.balance) {
+        parts.push(
+          `- Pflegefokus: ${ENGINE_BALANCE_LABELS[categoryDecision.targetProfile.balance]}`,
+        )
+      }
+      if (categoryDecision.targetProfile?.repairLevel) {
+        parts.push(
+          `- Repair-Level: ${ENGINE_REPAIR_LABELS[categoryDecision.targetProfile.repairLevel]}`,
+        )
+      }
+      if (categoryDecision.targetProfile?.weight) {
+        parts.push(`- Gewicht: ${ENGINE_WEIGHT_LABELS[categoryDecision.targetProfile.weight]}`)
+      }
+      break
+    case "mask":
+      if (categoryDecision.targetProfile?.balance) {
+        parts.push(
+          `- Pflegefokus: ${ENGINE_BALANCE_LABELS[categoryDecision.targetProfile.balance]}`,
+        )
+      }
+      if (categoryDecision.targetProfile?.repairLevel) {
+        parts.push(
+          `- Repair-Level: ${ENGINE_REPAIR_LABELS[categoryDecision.targetProfile.repairLevel]}`,
+        )
+      }
+      if (categoryDecision.targetProfile?.weight) {
+        parts.push(`- Gewicht: ${ENGINE_WEIGHT_LABELS[categoryDecision.targetProfile.weight]}`)
+      }
+      parts.push(`- Masken-Staerke: ${categoryDecision.targetProfile?.needStrength ?? 0}`)
+      break
+    case "leave_in":
+      if (categoryDecision.targetProfile?.needBucket) {
+        parts.push(`- Pflegefokus: ${categoryDecision.targetProfile.needBucket}`)
+      }
+      if (categoryDecision.targetProfile?.stylingContext) {
+        parts.push(`- Styling-Kontext: ${categoryDecision.targetProfile.stylingContext}`)
+      }
+      if (categoryDecision.targetProfile?.conditionerRelationship) {
+        parts.push(`- Conditioner-Rolle: ${categoryDecision.targetProfile.conditionerRelationship}`)
+      }
+      if (categoryDecision.targetProfile?.weight) {
+        parts.push(`- Gewicht: ${ENGINE_WEIGHT_LABELS[categoryDecision.targetProfile.weight]}`)
+      }
+      break
+    case "oil":
+      if (categoryDecision.targetProfile?.purpose) {
+        parts.push(`- Oel-Zweck: ${OIL_USE_MODE_LABELS[categoryDecision.targetProfile.purpose]}`)
+      }
+      if (categoryDecision.targetProfile?.matcherSubtype) {
+        parts.push(
+          `- Oel-Typ: ${OIL_SUBTYPE_LABELS[categoryDecision.targetProfile.matcherSubtype]}`,
+        )
+      }
+      parts.push(`- Klaerung noetig: ${categoryDecision.clarificationNeeded ? "ja" : "nein"}`)
+      if (categoryDecision.noRecommendationReason) {
+        parts.push(
+          `- Kein Oel empfohlen: ${OIL_NO_RECOMMENDATION_LABELS[categoryDecision.noRecommendationReason]}`,
+        )
+      }
+      break
+    case "bondbuilder":
+      if (categoryDecision.targetProfile?.bondRepairIntensity) {
+        parts.push(
+          `- Bond-Intensitaet: ${BOND_REPAIR_LABELS[categoryDecision.targetProfile.bondRepairIntensity]}`,
+        )
+      }
+      if (categoryDecision.targetProfile?.applicationMode) {
+        parts.push(
+          `- Einsatzmodus: ${BOND_APPLICATION_LABELS[categoryDecision.targetProfile.applicationMode]}`,
+        )
+      }
+      break
+    case "deep_cleansing_shampoo":
+      if (categoryDecision.targetProfile?.scalpTypeFocus) {
+        parts.push(`- Kopfhaut-Fokus: ${categoryDecision.targetProfile.scalpTypeFocus}`)
+      }
+      parts.push(`- Reset-Bedarf: ${categoryDecision.targetProfile?.resetNeedLevel ?? "none"}`)
+      break
+    case "dry_shampoo":
+      if (categoryDecision.targetProfile?.scalpTypeFocus) {
+        parts.push(`- Kopfhaut-Fokus: ${categoryDecision.targetProfile.scalpTypeFocus}`)
+      }
+      break
+    case "peeling":
+      if (categoryDecision.targetProfile?.scalpTypeFocus) {
+        parts.push(`- Kopfhaut-Fokus: ${categoryDecision.targetProfile.scalpTypeFocus}`)
+      }
+      if (categoryDecision.targetProfile?.peelingType) {
+        parts.push(
+          `- Peeling-Typ: ${PEELING_TYPE_LABELS[categoryDecision.targetProfile.peelingType]}`,
+        )
+      }
+      break
   }
 
   return parts.join("\n")
@@ -724,70 +661,38 @@ function formatRoutinePlan(routinePlan?: RoutinePlan): string {
 function formatProducts(
   products: Product[],
   productCategory?: ProductCategory,
-  maskDecision?: MaskDecision,
-  shampooDecision?: ShampooDecision,
-  conditionerDecision?: ConditionerDecision,
-  leaveInDecision?: LeaveInDecision,
-  oilDecision?: OilDecision,
+  categoryDecision?: RecommendationEngineCategoryDecision | null,
+  clarificationQuestions?: string[],
 ): string {
-  const maskDecisionBlock = productCategory === "mask" ? formatMaskDecision(maskDecision) : ""
-  const shampooDecisionBlock =
-    productCategory === "shampoo" ? formatShampooDecision(shampooDecision) : ""
-  const conditionerDecisionBlock =
-    productCategory === "conditioner" ? formatConditionerDecision(conditionerDecision) : ""
-  const leaveInDecisionBlock =
-    productCategory === "leave_in" ? formatLeaveInDecision(leaveInDecision) : ""
-  const oilDecisionBlock = productCategory === "oil" ? formatOilDecision(oilDecision) : ""
-  const categoryDecisionBlock =
-    shampooDecisionBlock ||
-    conditionerDecisionBlock ||
-    leaveInDecisionBlock ||
-    oilDecisionBlock ||
-    maskDecisionBlock
+  const categoryDecisionBlock = formatEngineCategoryDecision(categoryDecision)
+  const supportCategoryNoRecommendationLabel =
+    productCategory && categoryDecision?.category === productCategory && !categoryDecision.relevant
+      ? SUPPORT_CATEGORY_NOT_RECOMMENDED_LABELS[productCategory]
+      : null
 
   if (products.length === 0) {
-    if (productCategory === "mask" && maskDecision && !maskDecision.needs_mask) {
-      return `${maskDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell keine Maske noetig ist. Nenne in diesem Fall KEINE konkreten Maskenprodukte.`
+    if (clarificationQuestions && clarificationQuestions.length > 0) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Stelle nur die fehlenden Rueckfragen, nenne keine Produkte und behandle das nicht als Katalog-No-Match.`
     }
 
-    if (productCategory === "shampoo" && shampooDecision && !shampooDecision.eligible) {
-      return `${categoryDecisionBlock}\n\nWICHTIG: Frage nur nach den fehlenden Shampoo-Profilfeldern. Nenne keine Produkte und behandle das NICHT als Katalog-No-Match.`
-    }
-
-    if (productCategory === "shampoo" && shampooDecision?.no_catalog_match) {
-      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Shampoo in der Datenbank exakt zu Haardicke und dem abgeleiteten Shampoo-Bucket passt. Weiche NICHT auf andere Kopfhaut-Buckets aus und nenne KEINE konkreten Shampoo-Produkte.`
-    }
-
-    if (productCategory === "conditioner" && conditionerDecision && !conditionerDecision.eligible) {
-      return `${categoryDecisionBlock}\n\nWICHTIG: Frage nur nach den fehlenden Conditioner-Profilfeldern. Nenne keine Produkte und behandle das NICHT als Katalog-No-Match.`
-    }
-
-    if (productCategory === "conditioner" && conditionerDecision?.no_catalog_match) {
-      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Conditioner in der Datenbank exakt zu Haardicke und Zugtest-Ergebnis passt. Weiche NICHT auf andere Protein-/Feuchtigkeits-Buckets aus und nenne KEINE konkreten Conditioner-Produkte.`
-    }
-
-    if (productCategory === "leave_in" && leaveInDecision && !leaveInDecision.eligible) {
-      return `${categoryDecisionBlock}\n\nWICHTIG: Frage nur nach den fehlenden Leave-in-Profilfeldern. Nenne keine Produkte und behandle das NICHT als Katalog-No-Match.`
-    }
-
-    if (productCategory === "leave_in" && leaveInDecision?.no_catalog_match) {
-      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Leave-in in der Datenbank exakt zu Haardicke, Haardichte, Pflegefokus und Styling-Kontext passt. Weiche NICHT auf andere Leave-in-Buckets aus und nenne KEINE konkreten Leave-ins.`
-    }
-
-    if (productCategory === "oil" && oilDecision && !oilDecision.eligible) {
-      return `${categoryDecisionBlock}\n\nWICHTIG: Frage nur nach den fehlenden Oel-Feldern. Klaere ausschliesslich Haardicke und Oel-Zweck. Nenne keine Produkte und behandle das NICHT als Katalog-No-Match.`
+    if (
+      productCategory === "mask" &&
+      categoryDecision?.category === "mask" &&
+      !categoryDecision.relevant
+    ) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell keine Maske noetig ist. Nenne in diesem Fall KEINE konkreten Maskenprodukte.`
     }
 
     if (
       productCategory === "oil" &&
-      oilDecision?.no_recommendation &&
-      oilDecision.no_recommendation_reason
+      categoryDecision?.category === "oil" &&
+      categoryDecision.noRecommendationReason
     ) {
-      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Oel empfohlen wird. Begruende das nur mit dem Oel-Entscheidungsblock. Nenne KEINE konkreten Oele und improvisiere keinen Therapie-Oel-Ersatz.`
+      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Oel empfohlen wird. Begruende das nur mit dem Engine-Entscheidungsblock. Nenne KEINE konkreten Oele und improvisiere keinen Therapie-Oel-Ersatz.`
     }
 
-    if (productCategory === "oil" && oilDecision?.no_catalog_match) {
-      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell kein Oel in der Datenbank exakt zu Haardicke und Oel-Typ passt. Weiche NICHT auf andere Oel-Typen oder andere Haardicken aus und nenne KEINE konkreten Oele.`
+    if (supportCategoryNoRecommendationLabel) {
+      return `${categoryDecisionBlock}\n\nWICHTIG: Sage klar, dass aktuell ${supportCategoryNoRecommendationLabel} empfohlen ist. Begruende das nur mit dem Engine-Entscheidungsblock. Nenne in diesem Fall KEINE konkreten Produkte und behandle das nicht als Katalog-No-Match.`
     }
 
     return `${categoryDecisionBlock}\n\nKeine passenden Produkte in der Datenbank gefunden. Nenne KEINE konkreten Produktnamen — sage dem Nutzer ehrlich, dass du gerade kein passendes Produkt parat hast, und bitte um genauere Angaben.`
@@ -1050,6 +955,7 @@ export function buildSystemPrompt(
   clarificationQuestions?: string[],
   basePromptTemplate = SYSTEM_PROMPT,
   followupQuestions?: string[],
+  categoryDecision?: RecommendationEngineCategoryDecision | null,
 ): string {
   let prompt = basePromptTemplate
 
@@ -1071,6 +977,7 @@ export function buildSystemPrompt(
   }
   if (
     (products ||
+      categoryDecision ||
       maskDecision ||
       shampooDecision ||
       conditionerDecision ||
@@ -1081,11 +988,8 @@ export function buildSystemPrompt(
     ragContext += formatProducts(
       products ?? [],
       productCategory,
-      maskDecision,
-      shampooDecision,
-      conditionerDecision,
-      leaveInDecision,
-      oilDecision,
+      categoryDecision,
+      clarificationQuestions,
     )
   }
   prompt = prompt.replace("{{RAG_CONTEXT}}", ragContext)
@@ -1114,6 +1018,7 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     conditionerDecision,
     leaveInDecision,
     oilDecision,
+    categoryDecision,
     routinePlan,
     memoryContext,
     clarificationQuestions,
@@ -1137,6 +1042,7 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     clarificationQuestions,
     managedPrompt.template,
     followupQuestions,
+    categoryDecision,
   )
 
   // Build the messages array for the API call

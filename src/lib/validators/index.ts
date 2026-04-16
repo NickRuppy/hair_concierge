@@ -1,4 +1,6 @@
 import { z } from "zod"
+import { isBondbuilderCategory } from "@/lib/bondbuilder/constants"
+import { isConditionerCategory } from "@/lib/conditioner/constants"
 import {
   HAIR_TEXTURES,
   HAIR_THICKNESSES,
@@ -16,25 +18,27 @@ import {
   NIGHT_PROTECTIONS,
 } from "@/lib/vocabulary"
 import { CONDITIONER_WEIGHTS, CONDITIONER_REPAIR_LEVELS } from "@/lib/conditioner/constants"
+import { isDeepCleansingShampooCategory } from "@/lib/deep-cleansing-shampoo/constants"
+import { isDryShampooCategory } from "@/lib/dry-shampoo/constants"
 import {
   POST_WASH_ACTIONS,
   ROUTINE_PREFERENCES,
   ROUTINE_PRODUCTS,
-  LEAVE_IN_FORMATS,
   LEAVE_IN_WEIGHTS,
-  LEAVE_IN_ROLES,
-  LEAVE_IN_CARE_BENEFITS,
-  LEAVE_IN_INGREDIENT_FLAGS,
-  LEAVE_IN_APPLICATION_STAGES,
+  LEAVE_IN_CONDITIONER_RELATIONSHIPS,
+  LEAVE_IN_FIT_CARE_BENEFITS,
+  isLeaveInCategory,
 } from "@/lib/leave-in/constants"
-import {
-  MASK_FORMATS,
-  MASK_WEIGHTS,
-  MASK_CONCENTRATIONS,
-  MASK_BENEFITS,
-  MASK_INGREDIENT_FLAGS,
-} from "@/lib/mask/constants"
+import { MASK_WEIGHTS, MASK_CONCENTRATIONS, isMaskCategory } from "@/lib/mask/constants"
 import { OIL_SUBTYPES, isOilCategory } from "@/lib/oil/constants"
+import { isPeelingCategory } from "@/lib/peeling/constants"
+import {
+  PRODUCT_BALANCE_TARGETS,
+  PRODUCT_BOND_APPLICATION_MODES,
+  PRODUCT_BOND_REPAIR_INTENSITIES,
+  PRODUCT_PEELING_TYPES,
+  PRODUCT_SCALP_TYPE_FOCUSES,
+} from "@/lib/product-specs/constants"
 
 export const hairProfileFullSchema = z.object({
   hair_texture: z.enum(HAIR_TEXTURES).nullable(),
@@ -59,47 +63,40 @@ export const hairProfileFullSchema = z.object({
   additional_notes: z.string().nullable().default(null),
 })
 
-const leaveInSpecsSchema = z
-  .object({
-    format: z.enum(LEAVE_IN_FORMATS),
-    weight: z.enum(LEAVE_IN_WEIGHTS),
-    roles: z.array(z.enum(LEAVE_IN_ROLES)).default([]),
-    provides_heat_protection: z.boolean().default(false),
-    heat_protection_max_c: z.number().int().nullable().default(null),
-    heat_activation_required: z.boolean().default(false),
-    care_benefits: z.array(z.enum(LEAVE_IN_CARE_BENEFITS)).default([]),
-    ingredient_flags: z.array(z.enum(LEAVE_IN_INGREDIENT_FLAGS)).default([]),
-    application_stage: z.array(z.enum(LEAVE_IN_APPLICATION_STAGES)).default(["towel_dry"]),
-  })
-  .superRefine((value, ctx) => {
-    if (value.heat_protection_max_c !== null && !value.provides_heat_protection) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["heat_protection_max_c"],
-        message: "heat_protection_max_c requires provides_heat_protection = true",
-      })
-    }
-    if (value.heat_activation_required && !value.roles.includes("styling_prep")) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["roles"],
-        message: "heat_activation_required requires styling_prep role",
-      })
-    }
-  })
+const leaveInSpecsSchema = z.object({
+  weight: z.enum(LEAVE_IN_WEIGHTS),
+  conditioner_relationship: z.enum(LEAVE_IN_CONDITIONER_RELATIONSHIPS),
+  care_benefits: z.array(z.enum(LEAVE_IN_FIT_CARE_BENEFITS)).default([]),
+})
 
 const maskSpecsSchema = z.object({
-  format: z.enum(MASK_FORMATS),
   weight: z.enum(MASK_WEIGHTS),
   concentration: z.enum(MASK_CONCENTRATIONS),
-  benefits: z.array(z.enum(MASK_BENEFITS)).default([]),
-  ingredient_flags: z.array(z.enum(MASK_INGREDIENT_FLAGS)).default([]),
-  leave_on_minutes: z.number().int().min(1).max(60).default(10),
+  balance_direction: z.enum(PRODUCT_BALANCE_TARGETS).nullable().default(null),
 })
 
 const conditionerSpecsSchema = z.object({
   weight: z.enum(CONDITIONER_WEIGHTS),
   repair_level: z.enum(CONDITIONER_REPAIR_LEVELS),
+  balance_direction: z.enum(PRODUCT_BALANCE_TARGETS).nullable().default(null),
+})
+
+const bondbuilderSpecsSchema = z.object({
+  bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES),
+  application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES),
+})
+
+const deepCleansingShampooSpecsSchema = z.object({
+  scalp_type_focus: z.enum(PRODUCT_SCALP_TYPE_FOCUSES),
+})
+
+const dryShampooSpecsSchema = z.object({
+  scalp_type_focus: z.enum(["oily", "balanced"] as const),
+})
+
+const peelingSpecsSchema = z.object({
+  scalp_type_focus: z.enum(PRODUCT_SCALP_TYPE_FOCUSES),
+  peeling_type: z.enum(PRODUCT_PEELING_TYPES),
 })
 
 const nullableTextField = z.preprocess(
@@ -144,8 +141,68 @@ export const productSchema = z
     conditioner_specs: conditionerSpecsSchema.nullable().optional(),
     leave_in_specs: leaveInSpecsSchema.nullable().optional(),
     mask_specs: maskSpecsSchema.nullable().optional(),
+    bondbuilder_specs: bondbuilderSpecsSchema.nullable().optional(),
+    deep_cleansing_shampoo_specs: deepCleansingShampooSpecsSchema.nullable().optional(),
+    dry_shampoo_specs: dryShampooSpecsSchema.nullable().optional(),
+    peeling_specs: peelingSpecsSchema.nullable().optional(),
   })
   .superRefine((value, ctx) => {
+    if (isConditionerCategory(value.category) && !value.conditioner_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["conditioner_specs"],
+        message: "Conditioner-Spezifikation ist erforderlich.",
+      })
+    }
+
+    if (isLeaveInCategory(value.category) && !value.leave_in_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["leave_in_specs"],
+        message: "Leave-in-Spezifikation ist erforderlich.",
+      })
+    }
+
+    if (isMaskCategory(value.category) && !value.mask_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["mask_specs"],
+        message: "Masken-Spezifikation ist erforderlich.",
+      })
+    }
+
+    if (isBondbuilderCategory(value.category) && !value.bondbuilder_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["bondbuilder_specs"],
+        message: "Bondbuilder-Spezifikation ist erforderlich.",
+      })
+    }
+
+    if (isDeepCleansingShampooCategory(value.category) && !value.deep_cleansing_shampoo_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["deep_cleansing_shampoo_specs"],
+        message: "Tiefenreinigungs-Spezifikation ist erforderlich.",
+      })
+    }
+
+    if (isDryShampooCategory(value.category) && !value.dry_shampoo_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["dry_shampoo_specs"],
+        message: "Trockenshampoo-Spezifikation ist erforderlich.",
+      })
+    }
+
+    if (isPeelingCategory(value.category) && !value.peeling_specs) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["peeling_specs"],
+        message: "Peeling-Spezifikation ist erforderlich.",
+      })
+    }
+
     if (!isOilCategory(value.category)) return
 
     if (value.suitable_thicknesses.length === 0) {

@@ -987,6 +987,38 @@ test.describe("Routine planner", () => {
     expect(prompt).not.toContain("Routine-Detailgrad")
   })
 
+  test("product prompt uses not-recommended wording for explicit support categories", () => {
+    const prompt = buildSystemPrompt(
+      createProfile(),
+      [createChunk()],
+      [],
+      "bondbuilder",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      null,
+      undefined,
+      undefined,
+      undefined,
+      {
+        category: "bondbuilder",
+        relevant: false,
+        action: null,
+        planReasonCodes: [],
+        currentInventory: null,
+        targetProfile: null,
+        notes: ["bond_builder_low_relevance_currently"],
+      },
+    )
+
+    expect(prompt).toContain("aktuell kein Bondbuilder empfohlen ist")
+    expect(prompt).toContain("nicht als Katalog-No-Match")
+    expect(prompt).not.toContain("Keine passenden Produkte in der Datenbank gefunden")
+  })
+
   test.describe("Bond builder logic", () => {
     test("colored alone does NOT activate bond builder", () => {
       const topics = activateRoutineTopics(

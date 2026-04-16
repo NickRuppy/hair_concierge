@@ -543,6 +543,8 @@ test.describe("Shampoo Flow alignment", () => {
     expect(ragContext).toEqual({
       sources: [],
       category_decision: categoryDecision,
+      engine_trace: null,
+      response_mode: null,
     })
     expect(donePayload).toEqual(
       expect.objectContaining({
