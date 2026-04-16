@@ -22,6 +22,8 @@ interface HeatToolsScreenProps {
   onBack: () => void
   onNone: () => void
   isSaving?: boolean
+  noneLabel?: string
+  continueLabel?: string
 }
 
 export function HeatToolsScreen({
@@ -31,6 +33,8 @@ export function HeatToolsScreen({
   onBack,
   onNone,
   isSaving,
+  noneLabel = "Nichts davon",
+  continueLabel = "Weiter",
 }: HeatToolsScreenProps) {
   const hasSelection = selected.length > 0
 
@@ -80,7 +84,7 @@ export function HeatToolsScreen({
           disabled={isSaving}
           className="rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground disabled:opacity-40"
         >
-          Nichts davon
+          {noneLabel}
         </button>
       </div>
 
@@ -93,7 +97,7 @@ export function HeatToolsScreen({
           disabled={!hasSelection || isSaving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {isSaving ? "Speichern..." : "Weiter"}
+          {isSaving ? "Speichern..." : continueLabel}
         </button>
       </div>
     </div>

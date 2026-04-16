@@ -152,7 +152,7 @@ function formatUserProfile(
   if (profile.goals.length > 0) {
     parts.push(`Ziele: ${profile.goals.map((g) => GOAL_LABELS[g] ?? g).join(", ")}`)
   }
-  if (profile.desired_volume) {
+  if ((profile.goals?.length ?? 0) === 0 && profile.desired_volume) {
     parts.push(
       `Gewuenschtes Volumen: ${DESIRED_VOLUME_LABELS[profile.desired_volume] ?? profile.desired_volume}`,
     )
@@ -228,7 +228,7 @@ function formatUserProfile(
   if (profile.uses_heat_protection) {
     parts.push("Verwendet Hitzeschutz: Ja")
   }
-  if (profile.products_used) {
+  if ((profile.current_routine_products ?? []).length === 0 && profile.products_used) {
     parts.push(`Aktuelle Produkte: ${profile.products_used}`)
   }
   if (profile.additional_notes) {

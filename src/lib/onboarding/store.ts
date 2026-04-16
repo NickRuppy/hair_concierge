@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
+import type { HeatStyling, ProductFrequency } from "@/lib/vocabulary/frequencies"
 import type {
   TowelMaterial,
   TowelTechnique,
@@ -28,6 +28,31 @@ export type OnboardingStep =
   | "goals"
   | "celebration"
 
+export type OnboardingEditScope = "products" | "styling" | "routine" | "goals"
+
+export function getOnboardingEditScope(step: OnboardingStep): OnboardingEditScope | null {
+  switch (step) {
+    case "products_basics":
+    case "products_extras":
+    case "product_drilldown":
+      return "products"
+    case "heat_tools":
+    case "heat_frequency":
+    case "heat_protection":
+      return "styling"
+    case "towel_material":
+    case "towel_technique":
+    case "drying_method":
+    case "brush_type":
+    case "night_protection":
+      return "routine"
+    case "goals":
+      return "goals"
+    default:
+      return null
+  }
+}
+
 /* ── Linear step order (branch-free segments) ── */
 
 const LINEAR_BEFORE_HEAT: OnboardingStep[] = [
@@ -38,10 +63,7 @@ const LINEAR_BEFORE_HEAT: OnboardingStep[] = [
   "heat_tools",
 ]
 
-const HEAT_BRANCH: OnboardingStep[] = [
-  "heat_frequency",
-  "heat_protection",
-]
+const HEAT_BRANCH: OnboardingStep[] = ["heat_frequency", "heat_protection"]
 
 const LINEAR_AFTER_HEAT: OnboardingStep[] = [
   "interstitial",
@@ -62,15 +84,12 @@ interface OnboardingState {
   // Product usage
   selectedBasicProducts: string[]
   selectedExtraProducts: string[]
-  productDrilldowns: Record<
-    string,
-    { productName: string; frequency: ProductFrequency | null }
-  >
+  productDrilldowns: Record<string, { productName: string; frequency: ProductFrequency | null }>
   currentDrilldownIndex: number
 
   // Heat styling
   selectedHeatTools: string[]
-  heatFrequency: ProductFrequency | null
+  heatFrequency: HeatStyling | null
   usesHeatProtection: boolean | null
 
   // Care habits
@@ -98,7 +117,7 @@ interface OnboardingState {
   ) => void
   setCurrentDrilldownIndex: (index: number) => void
   setSelectedHeatTools: (tools: string[]) => void
-  setHeatFrequency: (freq: ProductFrequency | null) => void
+  setHeatFrequency: (freq: HeatStyling | null) => void
   setUsesHeatProtection: (val: boolean | null) => void
   setTowelMaterial: (val: TowelMaterial | null) => void
   setTowelTechnique: (val: TowelTechnique | null) => void
@@ -145,7 +164,7 @@ const initialData = {
   currentDrilldownIndex: 0,
 
   selectedHeatTools: [] as string[],
-  heatFrequency: null as ProductFrequency | null,
+  heatFrequency: null as HeatStyling | null,
   usesHeatProtection: null as boolean | null,
 
   towelMaterial: null as TowelMaterial | null,
@@ -248,10 +267,8 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
 
   // ── Setters ──
 
-  setSelectedBasicProducts: (products) =>
-    set({ selectedBasicProducts: products }),
-  setSelectedExtraProducts: (products) =>
-    set({ selectedExtraProducts: products }),
+  setSelectedBasicProducts: (products) => set({ selectedBasicProducts: products }),
+  setSelectedExtraProducts: (products) => set({ selectedExtraProducts: products }),
   setProductDrilldown: (category, data) =>
     set((s) => ({
       productDrilldowns: { ...s.productDrilldowns, [category]: data },
@@ -278,13 +295,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
 
 /* ── Build the full linear order including/excluding heat branch ── */
 
-function buildFullOrder(state: {
-  selectedHeatTools: string[]
-}): OnboardingStep[] {
+function buildFullOrder(state: { selectedHeatTools: string[] }): OnboardingStep[] {
   const hasHeat = state.selectedHeatTools.length > 0
-  return [
-    ...LINEAR_BEFORE_HEAT,
-    ...(hasHeat ? HEAT_BRANCH : []),
-    ...LINEAR_AFTER_HEAT,
-  ]
+  return [...LINEAR_BEFORE_HEAT, ...(hasHeat ? HEAT_BRANCH : []), ...LINEAR_AFTER_HEAT]
 }

@@ -1,168 +1,312 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/layout/header"
-import { useAuth } from "@/providers/auth-provider"
-import { useToast } from "@/providers/toast-provider"
-import { createClient } from "@/lib/supabase/client"
-import {
-  CONCERN_OPTIONS,
-
-  GOAL_OPTIONS,
-  HEAT_STYLING_OPTIONS,
-  POST_WASH_ACTION_OPTIONS,
-  ROUTINE_PRODUCT_OPTIONS,
-  STYLING_TOOL_OPTIONS,
-  WASH_FREQUENCY_OPTIONS,
-} from "@/lib/types"
-import type { Goal, HairProfile, UserMemoryEntry } from "@/lib/types"
-import {
-  fehler,
-  BRUSH_TYPE_OPTIONS,
-  DRYING_METHOD_OPTIONS,
-  NIGHT_PROTECTION_OPTIONS,
-  TOWEL_MATERIAL_OPTIONS,
-  TOWEL_TECHNIQUE_OPTIONS,
-} from "@/lib/vocabulary"
-import { deriveVolumeFromGoals } from "@/lib/onboarding/goal-flow"
-import {
-  PROFILE_FIELD_CONFIG,
-  PROFILE_JOURNEY_STEPS,
-  PROFILE_SECTION_META,
-  type ProfileFieldConfig,
-  type ProfileFieldValue,
-} from "@/lib/profile/section-config"
-import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
 import { SegmentedControl } from "@/components/ui/segmented-control"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
+import type { OnboardingStep } from "@/lib/onboarding/store"
+import {
+  PROFILE_FIELD_CONFIG,
+  PROFILE_SECTION_META,
+  type ProfileEditTarget,
+  type ProfileFieldConfig,
+  type ProfileFieldDisplayMode,
+  type ProfileFieldValue,
+  type ProfileJourneySectionKey,
+} from "@/lib/profile/section-config"
+import { createClient } from "@/lib/supabase/client"
+import type { ChemicalTreatment, HairProfile, UserMemoryEntry } from "@/lib/types"
+import {
+  CHEMICAL_TREATMENT_LABELS,
+  HAIR_TEXTURE_OPTIONS,
+  HAIR_THICKNESS_OPTIONS,
+  SCALP_CONDITION_LABELS,
+  SCALP_TYPE_LABELS,
+} from "@/lib/types"
+import { PRODUCT_FREQUENCY_LABELS, type ProductFrequency, fehler } from "@/lib/vocabulary"
+import { cn } from "@/lib/utils"
+import { useAuth } from "@/providers/auth-provider"
+import { useToast } from "@/providers/toast-provider"
 
 type MemoryApiResponse = {
   settings: { memory_enabled: boolean }
   entries: UserMemoryEntry[]
 }
 
-type ProfileFormData = {
-  hair_texture: string
-  thickness: string
-  density: string
-  concerns: string[]
-  desired_volume: string
-  wash_frequency: string
-  heat_styling: string
-  styling_tools: string[]
-  towel_material: string
-  towel_technique: string
-  drying_method: string[]
-  brush_type: string
-  night_protection: string[]
-  uses_heat_protection: boolean
-  post_wash_actions: string[]
-  current_routine_products: string[]
-  products_used: string
-  goals: string[]
-  additional_notes: string
+type UserProductUsageRow = {
+  id: string
+  category: string
+  product_name: string | null
+  frequency_range: ProductFrequency | null
 }
 
 type StructuredField = ProfileFieldConfig & { value: ProfileFieldValue }
 
-const EDITABLE_GOAL_OPTIONS = GOAL_OPTIONS
+type JourneyField = {
+  key: string
+  label: string
+  helpText: string
+  displayMode: ProfileFieldDisplayMode
+  value: ProfileFieldValue
+  editTarget: ProfileEditTarget | null
+}
 
-const HEAT_PROTECTION_OPTIONS = [
-  { value: "yes", label: "Ja" },
-  { value: "no", label: "Nein" },
+type ProductDetailRow = {
+  key: string
+  category: string
+  categoryLabel: string
+  productName: string | null
+  frequencyLabel: string | null
+  isComplete: boolean
+}
+
+type QuizDraft = {
+  hair_texture: string
+  thickness: string
+  cuticle_condition: string
+  protein_moisture_balance: string
+  scalp_type: string
+  scalp_condition: string
+  chemical_treatment: ChemicalTreatment[]
+}
+
+type QuizSaveNotice =
+  | { variant: "success"; title: string; description: string }
+  | { variant: "error"; title: string; description: string }
+
+const SECTION_META_BY_KEY = Object.fromEntries(
+  PROFILE_SECTION_META.map((meta) => [meta.key, meta]),
+) as Record<ProfileJourneySectionKey, (typeof PROFILE_SECTION_META)[number]>
+
+const PRODUCT_ORDER_INDEX = new Map(
+  PRODUCT_CATEGORY_ORDER.map((category, index) => [category, index]),
+)
+
+const QUIZ_SURFACE_OPTIONS = [
+  { value: "smooth", label: "Glatt wie Glas" },
+  { value: "slightly_rough", label: "Leicht uneben" },
+  { value: "rough", label: "Rau und huckelig" },
 ]
 
-const ROUTINE_DETAIL_FIELD_KEYS = new Set([
-  "styling_tools",
-  "towel_material",
-  "towel_technique",
-  "drying_method",
-  "brush_type",
-  "night_protection",
-  "post_wash_actions",
-  "current_routine_products",
-  "products_used",
-  "additional_notes",
-])
+const QUIZ_ELASTICITY_OPTIONS = [
+  { value: "stretches_bounces", label: "Dehnt sich und geht zurück" },
+  { value: "stretches_stays", label: "Dehnt sich, bleibt ausgeleiert" },
+  { value: "snaps", label: "Reißt sofort" },
+]
 
-function createFormData(profile: HairProfile | null): ProfileFormData {
-  const storedGoals = profile?.goals ?? []
+const QUIZ_SCALP_TYPE_OPTIONS = [
+  { value: "oily", label: SCALP_TYPE_LABELS.oily },
+  { value: "balanced", label: SCALP_TYPE_LABELS.balanced },
+  { value: "dry", label: SCALP_TYPE_LABELS.dry },
+]
 
+const QUIZ_SCALP_CONDITION_OPTIONS = [
+  { value: "none", label: SCALP_CONDITION_LABELS.none },
+  { value: "dandruff", label: SCALP_CONDITION_LABELS.dandruff },
+  { value: "dry_flakes", label: SCALP_CONDITION_LABELS.dry_flakes },
+  { value: "irritated", label: SCALP_CONDITION_LABELS.irritated },
+]
+
+const QUIZ_CHEMICAL_TREATMENT_OPTIONS: Array<{ value: ChemicalTreatment; label: string }> = [
+  { value: "natural", label: CHEMICAL_TREATMENT_LABELS.natural },
+  { value: "colored", label: CHEMICAL_TREATMENT_LABELS.colored },
+  { value: "bleached", label: CHEMICAL_TREATMENT_LABELS.bleached },
+]
+
+function buildOnboardingHref(
+  step: OnboardingStep,
+  options?: { category?: string | null; singleStep?: boolean },
+) {
+  const params = new URLSearchParams({
+    step,
+    returnTo: "/profile",
+  })
+
+  if (options?.category) {
+    params.set("category", options.category)
+  }
+
+  if (options?.singleStep) {
+    params.set("editMode", "single-step")
+  }
+
+  return `/onboarding?${params.toString()}`
+}
+
+function getFieldActionLabel(target: ProfileEditTarget | null) {
+  if (!target) return undefined
+  return "Bearbeiten"
+}
+
+function createQuizDraft(profile: HairProfile | null): QuizDraft {
   return {
-    hair_texture: profile?.hair_texture || "",
-    thickness: profile?.thickness || "",
-    density: profile?.density || "",
-    concerns: profile?.concerns || [],
-    desired_volume: profile?.desired_volume || "",
-    wash_frequency: profile?.wash_frequency || "",
-    heat_styling: profile?.heat_styling || "",
-    styling_tools: profile?.styling_tools || [],
-    towel_material: profile?.towel_material || "",
-    towel_technique: profile?.towel_technique || "",
-    drying_method: profile?.drying_method || [],
-    brush_type: profile?.brush_type || "",
-    night_protection: profile?.night_protection || [],
-    uses_heat_protection: profile?.uses_heat_protection ?? false,
-    post_wash_actions: profile?.post_wash_actions || [],
-    current_routine_products: profile?.current_routine_products || [],
-    products_used: profile?.products_used || "",
-    goals: storedGoals,
-    additional_notes: profile?.additional_notes || "",
+    hair_texture: profile?.hair_texture ?? "",
+    thickness: profile?.thickness ?? "",
+    cuticle_condition: profile?.cuticle_condition ?? "",
+    protein_moisture_balance: profile?.protein_moisture_balance ?? "",
+    scalp_type: profile?.scalp_type ?? "",
+    scalp_condition: profile?.scalp_condition ?? "",
+    chemical_treatment: profile?.chemical_treatment ?? [],
   }
 }
 
-function toggleArrayItem(items: string[], item: string) {
-  return items.includes(item) ? items.filter((entry) => entry !== item) : [...items, item]
+function createLocalHairProfile(
+  currentProfile: HairProfile | null,
+  userId: string,
+  fields: Partial<HairProfile>,
+): HairProfile {
+  const now = fields.updated_at ?? new Date().toISOString()
+
+  return {
+    id: currentProfile?.id ?? `local-${userId}`,
+    user_id: userId,
+    hair_texture: currentProfile?.hair_texture ?? null,
+    thickness: currentProfile?.thickness ?? null,
+    density: currentProfile?.density ?? null,
+    concerns: currentProfile?.concerns ?? [],
+    products_used: currentProfile?.products_used ?? null,
+    wash_frequency: currentProfile?.wash_frequency ?? null,
+    heat_styling: currentProfile?.heat_styling ?? null,
+    styling_tools: currentProfile?.styling_tools ?? [],
+    goals: currentProfile?.goals ?? [],
+    cuticle_condition: currentProfile?.cuticle_condition ?? null,
+    protein_moisture_balance: currentProfile?.protein_moisture_balance ?? null,
+    scalp_type: currentProfile?.scalp_type ?? null,
+    scalp_condition: currentProfile?.scalp_condition ?? null,
+    chemical_treatment: currentProfile?.chemical_treatment ?? [],
+    desired_volume: currentProfile?.desired_volume ?? null,
+    post_wash_actions: currentProfile?.post_wash_actions ?? [],
+    routine_preference: currentProfile?.routine_preference ?? null,
+    current_routine_products: currentProfile?.current_routine_products ?? [],
+    mechanical_stress_factors: currentProfile?.mechanical_stress_factors ?? [],
+    towel_material: currentProfile?.towel_material ?? null,
+    towel_technique: currentProfile?.towel_technique ?? null,
+    drying_method: currentProfile?.drying_method ?? [],
+    brush_type: currentProfile?.brush_type ?? null,
+    night_protection: currentProfile?.night_protection ?? [],
+    uses_heat_protection: currentProfile?.uses_heat_protection ?? false,
+    additional_notes: currentProfile?.additional_notes ?? null,
+    conversation_memory: currentProfile?.conversation_memory ?? null,
+    created_at: currentProfile?.created_at ?? now,
+    updated_at: now,
+    ...fields,
+  }
 }
 
-function SourceBadge({ label }: { label: StructuredField["sourceLabel"] }) {
+function toggleChemicalTreatment(
+  currentValues: ChemicalTreatment[],
+  treatment: ChemicalTreatment,
+): ChemicalTreatment[] {
+  if (treatment === "natural") {
+    return currentValues.includes("natural") ? [] : ["natural"]
+  }
+
+  const withoutNatural = currentValues.filter((value) => value !== "natural")
+
+  if (withoutNatural.includes(treatment)) {
+    return withoutNatural.filter((value) => value !== treatment)
+  }
+
+  return [...withoutNatural, treatment]
+}
+
+function createProductRows(rows: UserProductUsageRow[]): ProductDetailRow[] {
+  return [...rows]
+    .sort((left, right) => {
+      const leftIndex = PRODUCT_ORDER_INDEX.get(left.category) ?? Number.MAX_SAFE_INTEGER
+      const rightIndex = PRODUCT_ORDER_INDEX.get(right.category) ?? Number.MAX_SAFE_INTEGER
+      return leftIndex - rightIndex
+    })
+    .map((row) => {
+      const productName = row.product_name?.trim() || null
+      const frequencyLabel = row.frequency_range
+        ? PRODUCT_FREQUENCY_LABELS[row.frequency_range]
+        : null
+
+      return {
+        key: row.id,
+        category: row.category,
+        categoryLabel: PRODUCT_CATEGORY_LABELS[row.category] ?? row.category,
+        productName,
+        frequencyLabel,
+        isComplete: Boolean(productName && frequencyLabel),
+      }
+    })
+}
+
+function getCompletionLabel(filled: number, total: number) {
+  if (total === 0 || filled === 0) return "Offen"
+  return `${filled}/${total} vollständig`
+}
+
+function getProductCompletionLabel(rows: ProductDetailRow[], onboardingCompleted: boolean) {
+  if (rows.length === 0) {
+    return onboardingCompleted ? "Noch leer" : "Offen"
+  }
+
+  const completeCount = rows.filter((row) => row.isComplete).length
+  return `${completeCount}/${rows.length} vollständig`
+}
+
+function getOpenItemsTitle(count: number, singular: string, plural: string) {
+  const label = count === 1 ? singular : plural
+  return `Noch ${count} ${label} offen`
+}
+
+function SectionStatusBadge({ label }: { label: string }) {
   return (
     <Badge
       variant="outline"
-      className="border-primary/15 bg-muted/60 px-2 py-1 text-[10px] font-medium tracking-[0.12em] text-muted-foreground uppercase"
+      className="border-primary/15 bg-primary/[0.05] px-3 py-1 text-xs font-medium text-primary"
     >
       {label}
     </Badge>
   )
 }
 
-function JourneyStepCard({
-  label,
+function SectionHeader({
+  title,
+  description,
   status,
-  summary,
-  active,
+  action,
 }: {
-  label: string
+  title: string
+  description: string
   status: string
-  summary: string
-  active: boolean
+  action?: ReactNode
 }) {
   return (
-    <div
-      className={cn(
-        "rounded-xl border p-4 transition-colors",
-        active ? "border-primary/20 bg-primary/[0.06]" : "border-border bg-card/70",
-      )}
-    >
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-[var(--text-heading)]">{label}</p>
-        <span
-          className={cn(
-            "inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold",
-            active ? "bg-primary/12 text-primary" : "bg-muted text-muted-foreground",
-          )}
-        >
-          {status}
-        </span>
+    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+      <div>
+        <div className="flex flex-wrap items-center gap-3">
+          <CardTitle className="text-xl text-[var(--text-heading)]">{title}</CardTitle>
+          <SectionStatusBadge label={status} />
+        </div>
+        <CardDescription className="mt-2 max-w-2xl text-sm">{description}</CardDescription>
       </div>
-      <p className="text-sm text-muted-foreground">{summary}</p>
+      {action}
+    </div>
+  )
+}
+
+function SectionGridSkeleton({ count, className }: { count: number; className?: string }) {
+  return (
+    <div className={cn("grid gap-4", className)}>
+      {Array.from({ length: count }).map((_, index) => (
+        <div key={index} className="rounded-xl border border-border/70 bg-card/70 p-4">
+          <Skeleton className="h-4 w-28" />
+          <Skeleton className="mt-2 h-3 w-48" />
+          <Skeleton className="mt-5 h-8 w-full" />
+        </div>
+      ))}
     </div>
   )
 }
@@ -172,11 +316,13 @@ function ProfileFieldCard({
   children,
   onClick,
   actionLabel,
+  className,
 }: {
-  field: StructuredField
-  children?: React.ReactNode
+  field: JourneyField
+  children?: ReactNode
   onClick?: () => void
   actionLabel?: string
+  className?: string
 }) {
   const interactive = Boolean(onClick)
 
@@ -200,14 +346,12 @@ function ProfileFieldCard({
         interactive
           ? "cursor-pointer hover:border-primary/30 hover:bg-primary/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           : "",
+        className,
       )}
     >
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-[var(--text-heading)]">{field.label}</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{field.helpText}</p>
-        </div>
-        <SourceBadge label={field.sourceLabel} />
+      <div className="mb-3 min-w-0">
+        <p className="text-sm font-semibold text-[var(--text-heading)]">{field.label}</p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{field.helpText}</p>
       </div>
 
       {children ?? <ProfileFieldValue value={field.value} displayMode={field.displayMode} />}
@@ -227,7 +371,7 @@ function ProfileFieldValue({
   displayMode,
 }: {
   value: ProfileFieldValue
-  displayMode: StructuredField["displayMode"]
+  displayMode: ProfileFieldDisplayMode
 }) {
   if (value == null) {
     return <p className="text-sm text-muted-foreground">Noch offen</p>
@@ -261,7 +405,7 @@ function InlinePromptCard({
 }: {
   title: string
   text: string
-  action?: React.ReactNode
+  action?: ReactNode
 }) {
   return (
     <div className="rounded-xl border border-dashed border-border bg-muted/40 p-4">
@@ -272,18 +416,43 @@ function InlinePromptCard({
   )
 }
 
+function QuizEditorField({
+  title,
+  text,
+  children,
+  className,
+}: {
+  title: string
+  text: string
+  children: ReactNode
+  className?: string
+}) {
+  return (
+    <div className={cn("rounded-xl border border-border/80 bg-card/80 p-4", className)}>
+      <p className="text-sm font-semibold text-[var(--text-heading)]">{title}</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{text}</p>
+      <div className="mt-4">{children}</div>
+    </div>
+  )
+}
+
 export default function ProfilePage() {
   const router = useRouter()
-  const { user, profile, loading: authLoading, signOut } = useAuth()
+  const { user, profile, loading: authLoading } = useAuth()
   const { toast } = useToast()
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
+  const userId = user?.id ?? null
 
   const [hairProfile, setHairProfile] = useState<HairProfile | null>(null)
-  const [formData, setFormData] = useState<ProfileFormData>(() => createFormData(null))
-  const [editing, setEditing] = useState(false)
-  const [routineDetailsOpen, setRoutineDetailsOpen] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
+  const [profileLoading, setProfileLoading] = useState(true)
+  const [productUsage, setProductUsage] = useState<UserProductUsageRow[]>([])
+  const [productsLoading, setProductsLoading] = useState(true)
+  const [quizEditing, setQuizEditing] = useState(false)
+  const [quizSaving, setQuizSaving] = useState(false)
+  const [quizDraft, setQuizDraft] = useState<QuizDraft>(() => createQuizDraft(null))
+  const [quizNotice, setQuizNotice] = useState<QuizSaveNotice | null>(null)
+  const [pendingQuizFocusKey, setPendingQuizFocusKey] = useState<string | null>(null)
+  const quizFieldRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
   const [memoryEntries, setMemoryEntries] = useState<UserMemoryEntry[]>([])
   const [memoryEnabled, setMemoryEnabled] = useState(true)
@@ -293,38 +462,131 @@ export default function ProfilePage() {
   const [memoryDraft, setMemoryDraft] = useState("")
 
   useEffect(() => {
-    async function loadProfile() {
-      if (!user) {
-        setLoading(false)
+    let active = true
+
+    async function loadHairProfile() {
+      if (!userId) {
+        if (active) {
+          setHairProfile(null)
+          setProfileLoading(false)
+        }
         return
       }
 
-      setLoading(true)
+      setProfileLoading(true)
 
       try {
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from("hair_profiles")
           .select("*")
-          .eq("user_id", user.id)
+          .eq("user_id", userId)
           .maybeSingle()
 
+        if (error) throw error
+        if (!active) return
+
         setHairProfile(data ?? null)
-        setFormData(createFormData(data ?? null))
       } catch (error) {
-        console.error("Error loading profile:", error)
+        console.error("Error loading hair profile:", error)
+        if (active) {
+          setHairProfile(null)
+        }
       } finally {
-        setLoading(false)
+        if (active) {
+          setProfileLoading(false)
+        }
       }
     }
 
-    loadProfile()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id])
+    loadHairProfile()
+
+    return () => {
+      active = false
+    }
+  }, [supabase, userId])
 
   useEffect(() => {
+    let active = true
+
+    async function loadProductUsage() {
+      if (!userId) {
+        if (active) {
+          setProductUsage([])
+          setProductsLoading(false)
+        }
+        return
+      }
+
+      setProductsLoading(true)
+
+      try {
+        const { data, error } = await supabase
+          .from("user_product_usage")
+          .select("id, category, product_name, frequency_range")
+          .eq("user_id", userId)
+
+        if (error) throw error
+        if (!active) return
+
+        setProductUsage((data as UserProductUsageRow[] | null) ?? [])
+      } catch (error) {
+        console.error("Error loading product usage:", error)
+        if (active) {
+          setProductUsage([])
+        }
+      } finally {
+        if (active) {
+          setProductsLoading(false)
+        }
+      }
+    }
+
+    loadProductUsage()
+
+    return () => {
+      active = false
+    }
+  }, [supabase, userId])
+
+  useEffect(() => {
+    if (!quizEditing) {
+      setQuizDraft(createQuizDraft(hairProfile))
+    }
+  }, [hairProfile, quizEditing])
+
+  useEffect(() => {
+    if (quizNotice?.variant !== "success") return
+
+    const timeoutId = window.setTimeout(() => {
+      setQuizNotice((current) => (current?.variant === "success" ? null : current))
+    }, 4000)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [quizNotice])
+
+  useEffect(() => {
+    if (!quizEditing || !pendingQuizFocusKey) return
+
+    const target = quizFieldRefs.current[pendingQuizFocusKey]
+    if (!target) return
+
+    const frameId = window.requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "center" })
+      setPendingQuizFocusKey(null)
+    })
+
+    return () => window.cancelAnimationFrame(frameId)
+  }, [pendingQuizFocusKey, quizEditing])
+
+  useEffect(() => {
+    let active = true
+
     async function loadMemory() {
-      if (!user) {
-        setMemoryLoading(false)
+      if (!userId) {
+        if (active) {
+          setMemoryEntries([])
+          setMemoryLoading(false)
+        }
         return
       }
 
@@ -335,17 +597,25 @@ export default function ProfilePage() {
         if (!response.ok) throw new Error("Memory konnte nicht geladen werden")
 
         const data = (await response.json()) as MemoryApiResponse
+        if (!active) return
+
         setMemoryEnabled(data.settings.memory_enabled)
         setMemoryEntries(data.entries ?? [])
       } catch (error) {
         console.error("Error loading memory:", error)
       } finally {
-        setMemoryLoading(false)
+        if (active) {
+          setMemoryLoading(false)
+        }
       }
     }
 
     loadMemory()
-  }, [user])
+
+    return () => {
+      active = false
+    }
+  }, [userId])
 
   const structuredFields = useMemo<StructuredField[]>(
     () =>
@@ -356,108 +626,111 @@ export default function ProfilePage() {
     [hairProfile],
   )
 
-  const fieldsBySection = useMemo(() => {
-    return {
-      baseline: structuredFields.filter((field) => field.sectionKey === "baseline"),
-      goals: structuredFields.filter((field) => field.sectionKey === "goals"),
-      routine: structuredFields.filter((field) => field.sectionKey === "routine"),
-    }
-  }, [structuredFields])
+  const quizFields = structuredFields.filter((field) => field.sectionKey === "quiz")
+  const stylingFields = structuredFields.filter((field) => field.sectionKey === "styling")
+  const routineFields = structuredFields.filter((field) => field.sectionKey === "routine")
+  const goalsFields = structuredFields.filter((field) => field.sectionKey === "goals")
+  const goalsField = goalsFields[0] ?? null
+  const productRows = useMemo(() => createProductRows(productUsage), [productUsage])
 
-  const baselineFields = fieldsBySection.baseline
-  const goalFields = fieldsBySection.goals
-  const routineFields = fieldsBySection.routine
-  const routineSimpleFields = routineFields.filter((field) => field.editMode === "inline")
-  const routineDetailFields = routineFields.filter((field) =>
-    ROUTINE_DETAIL_FIELD_KEYS.has(field.key),
-  )
-
-  const baselineFilled = baselineFields.filter((field) => field.value !== null)
-  const goalFilled = goalFields.filter((field) => field.value !== null)
+  const quizFilled = quizFields.filter((field) => field.value !== null)
+  const quizMissing = quizFields.filter((field) => field.value === null)
+  const stylingFilled = stylingFields.filter((field) => field.value !== null)
+  const stylingMissing = stylingFields.filter((field) => field.value === null)
   const routineFilled = routineFields.filter((field) => field.value !== null)
-
-  const baselineMissing = baselineFields.filter((field) => field.value === null)
-  const goalMissing = goalFields.filter((field) => field.value === null)
   const routineMissing = routineFields.filter((field) => field.value === null)
+  const goalsFilled = goalsFields.filter((field) => field.value !== null)
+  const selectedProductCategories = productRows.map((row) => row.categoryLabel)
+  const incompleteProductRows = productRows.filter((row) => !row.isComplete)
 
-  const baselineSparse = baselineFilled.length < 3
-  const overallStepCount = PROFILE_JOURNEY_STEPS.length
-  const activeStepCount = [
-    baselineFilled.length > 0,
-    goalFilled.length > 0,
-    routineFilled.length > 0,
-    memoryEnabled,
-  ].filter(Boolean).length
-  const overallPercent = (activeStepCount / overallStepCount) * 100
-
-  const readinessCopy =
-    activeStepCount >= 3
-      ? "Dein Profil ist schon belastbar genug für deutlich präzisere Empfehlungen."
-      : activeStepCount === 2
-        ? "Die Basis steht. Mit noch etwas mehr Kontext werden Empfehlungen spürbar schärfer."
-        : "Mit ein paar gezielten Angaben kann Hair Concierge deutlich kohärenter beraten."
-
-  async function handleSave() {
-    if (!user) return
-
-    setSaving(true)
-
-    try {
-      const goals = formData.goals as Goal[]
-      const derivedVolume = deriveVolumeFromGoals(goals)
-
-      const payload = {
-        user_id: user.id,
-        hair_texture: formData.hair_texture || null,
-        thickness: formData.thickness || null,
-        density: formData.density || null,
-        concerns: formData.concerns,
-        desired_volume: derivedVolume,
-        wash_frequency: formData.wash_frequency || null,
-        heat_styling: formData.heat_styling || null,
-        styling_tools: formData.styling_tools,
-        towel_material: formData.towel_material || null,
-        towel_technique: formData.towel_technique || null,
-        drying_method: formData.drying_method,
-        brush_type: formData.brush_type || null,
-        night_protection: formData.night_protection,
-        uses_heat_protection: formData.uses_heat_protection,
-        post_wash_actions: formData.post_wash_actions,
-        current_routine_products: formData.current_routine_products,
-        products_used: formData.products_used || null,
-        goals,
-        additional_notes: formData.additional_notes || null,
-        updated_at: new Date().toISOString(),
-      }
-
-      const { data, error } = await supabase
-        .from("hair_profiles")
-        .upsert(payload, { onConflict: "user_id" })
-        .select()
-        .single()
-
-      if (error) {
-        toast({ title: fehler("Speichern"), variant: "destructive" })
-        return
-      }
-
-      setHairProfile(data)
-      setFormData(createFormData(data))
-      setEditing(false)
-      setRoutineDetailsOpen(false)
-      toast({ title: "Profil gespeichert!" })
-    } catch (error) {
-      console.error("Error saving profile:", error)
-      toast({ title: fehler("Speichern"), variant: "destructive" })
-    } finally {
-      setSaving(false)
+  function startQuizEditing(fieldKey?: string) {
+    setQuizNotice(null)
+    if (fieldKey) {
+      setPendingQuizFocusKey(fieldKey)
     }
+    setQuizEditing(true)
   }
 
-  function handleCancelEditing() {
-    setFormData(createFormData(hairProfile))
-    setEditing(false)
-    setRoutineDetailsOpen(false)
+  function openTarget(target: ProfileEditTarget | null, fieldKey?: string) {
+    if (!target) return
+
+    if (target.kind === "quiz") {
+      startQuizEditing(fieldKey)
+      return
+    }
+
+    router.push(buildOnboardingHref(target.step, { singleStep: true }))
+  }
+
+  function resetQuizEditing() {
+    setQuizDraft(createQuizDraft(hairProfile))
+    setQuizEditing(false)
+    setPendingQuizFocusKey(null)
+  }
+
+  async function handleSaveQuiz() {
+    if (!userId) return
+
+    setQuizSaving(true)
+    setQuizNotice(null)
+
+    const quizPayload: Pick<
+      HairProfile,
+      | "hair_texture"
+      | "thickness"
+      | "cuticle_condition"
+      | "protein_moisture_balance"
+      | "scalp_type"
+      | "scalp_condition"
+      | "chemical_treatment"
+    > & { updated_at: string } = {
+      hair_texture: (quizDraft.hair_texture || null) as HairProfile["hair_texture"],
+      thickness: (quizDraft.thickness || null) as HairProfile["thickness"],
+      cuticle_condition: (quizDraft.cuticle_condition || null) as HairProfile["cuticle_condition"],
+      protein_moisture_balance: (quizDraft.protein_moisture_balance ||
+        null) as HairProfile["protein_moisture_balance"],
+      scalp_type: (quizDraft.scalp_type || null) as HairProfile["scalp_type"],
+      scalp_condition: (quizDraft.scalp_condition || null) as HairProfile["scalp_condition"],
+      chemical_treatment: quizDraft.chemical_treatment,
+      updated_at: new Date().toISOString(),
+    }
+
+    try {
+      const { error } = await supabase.from("hair_profiles").upsert(
+        {
+          user_id: userId,
+          ...quizPayload,
+        },
+        { onConflict: "user_id" },
+      )
+
+      if (error) throw error
+
+      const nextProfile = createLocalHairProfile(hairProfile, userId, quizPayload)
+      setHairProfile(nextProfile)
+      setQuizDraft(createQuizDraft(nextProfile))
+      setQuizEditing(false)
+      setQuizNotice({
+        variant: "success",
+        title: "Haar-Check gespeichert",
+        description:
+          "Deine Antworten sind direkt aktualisiert und fließen ab jetzt in dein Profil ein.",
+      })
+      toast({
+        title: "Haar-Check gespeichert",
+        description: "Dein Profil wurde aktualisiert.",
+      })
+    } catch (error) {
+      console.error("Error saving quiz data:", error)
+      setQuizNotice({
+        variant: "error",
+        title: "Speichern fehlgeschlagen",
+        description: "Bitte versuche es noch einmal. Deine bisherigen Angaben bleiben erhalten.",
+      })
+      toast({ title: fehler("Speichern"), variant: "destructive" })
+    } finally {
+      setQuizSaving(false)
+    }
   }
 
   async function handleMemoryToggle(checked: boolean) {
@@ -539,442 +812,6 @@ export default function ProfilePage() {
     }
   }
 
-  function openFieldFlow(field: StructuredField) {
-    setEditing(true)
-    setRoutineDetailsOpen(
-      field.sectionKey === "routine" && ROUTINE_DETAIL_FIELD_KEYS.has(field.key),
-    )
-  }
-
-  function getFieldActionLabel(field: StructuredField) {
-    if (field.sectionKey === "baseline") {
-      return "Zur Aktualisierung öffnen"
-    }
-
-    if (field.sectionKey === "routine" && ROUTINE_DETAIL_FIELD_KEYS.has(field.key)) {
-      return "Routine-Details öffnen"
-    }
-
-    return "Zum Bearbeiten öffnen"
-  }
-
-  function renderInlineEditor(field: StructuredField) {
-    switch (field.key) {
-      case "concerns":
-        return (
-          <div className="flex flex-wrap gap-2">
-            {CONCERN_OPTIONS.map((option) => {
-              const active = formData.concerns.includes(option.value)
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() =>
-                    setFormData((current) => ({
-                      ...current,
-                      concerns: toggleArrayItem(current.concerns, option.value),
-                    }))
-                  }
-                  className={cn(
-                    "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                    active
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border hover:bg-muted",
-                  )}
-                >
-                  {option.label}
-                </button>
-              )
-            })}
-          </div>
-        )
-      case "goals":
-        return (
-          <div className="flex flex-wrap gap-2">
-            {EDITABLE_GOAL_OPTIONS.map((option) => {
-              const active = formData.goals.includes(option.value)
-              const atMax = !active && formData.goals.length >= 5
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  disabled={atMax}
-                  onClick={() =>
-                    setFormData((current) => {
-                      if (current.goals.includes(option.value)) {
-                        return { ...current, goals: current.goals.filter((g) => g !== option.value) }
-                      }
-                      if (current.goals.length >= 5) return current
-                      let next = [...current.goals]
-                      if (option.value === "volume") next = next.filter((g) => g !== "less_volume")
-                      if (option.value === "less_volume") next = next.filter((g) => g !== "volume")
-                      next.push(option.value)
-                      return { ...current, goals: next }
-                    })
-                  }
-                  className={cn(
-                    "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                    active
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border hover:bg-muted",
-                    atMax && "opacity-40 cursor-not-allowed",
-                  )}
-                >
-                  {option.label}
-                </button>
-              )
-            })}
-          </div>
-        )
-      case "wash_frequency":
-        return (
-          <SegmentedControl
-            options={WASH_FREQUENCY_OPTIONS}
-            value={formData.wash_frequency}
-            onChange={(value) => setFormData((current) => ({ ...current, wash_frequency: value }))}
-          />
-        )
-      case "heat_styling":
-        return (
-          <SegmentedControl
-            options={HEAT_STYLING_OPTIONS}
-            value={formData.heat_styling}
-            onChange={(value) => setFormData((current) => ({ ...current, heat_styling: value }))}
-          />
-        )
-      case "uses_heat_protection":
-        return (
-          <SegmentedControl
-            options={HEAT_PROTECTION_OPTIONS}
-            value={formData.uses_heat_protection ? "yes" : "no"}
-            onChange={(value) =>
-              setFormData((current) => ({
-                ...current,
-                uses_heat_protection: value === "yes",
-              }))
-            }
-          />
-        )
-      default:
-        return <ProfileFieldValue value={field.value} displayMode={field.displayMode} />
-    }
-  }
-
-  function renderRoutineDetailsEditor() {
-    return (
-      <div className="rounded-2xl border border-primary/15 bg-muted/40 p-5">
-        <div className="mb-5">
-          <p className="text-sm font-semibold text-[var(--text-heading)]">
-            Routine-Details im Fokus
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Hier ergänzt du die tieferen Alltags-Signale, die nicht bei jedem Profil sofort nötig
-            sind.
-          </p>
-        </div>
-
-        <div className="space-y-6">
-          <div className="space-y-4">
-            <div>
-              <p className="mb-2 text-sm font-semibold text-[var(--text-heading)]">
-                Styling &amp; Schutz
-              </p>
-              <p className="mb-3 text-xs text-muted-foreground">
-                Welche Tools du nutzt und wie du dein Haar tagsüber oder nachts schützt.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <div>
-                <p className="mb-2 text-sm font-medium">Styling-Tools</p>
-                <div className="flex flex-wrap gap-2">
-                  {STYLING_TOOL_OPTIONS.map((option) => {
-                    const active = formData.styling_tools.includes(option.value)
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() =>
-                          setFormData((current) => ({
-                            ...current,
-                            styling_tools: toggleArrayItem(current.styling_tools, option.value),
-                          }))
-                        }
-                        className={cn(
-                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                          active
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border hover:bg-card",
-                        )}
-                      >
-                        {option.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <p className="mb-2 text-sm font-medium">Bürste</p>
-                <div className="flex flex-wrap gap-2">
-                  {BRUSH_TYPE_OPTIONS.map((option) => {
-                    const active = formData.brush_type === option.value
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() =>
-                          setFormData((current) => ({ ...current, brush_type: option.value }))
-                        }
-                        className={cn(
-                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                          active
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border hover:bg-card",
-                        )}
-                      >
-                        {option.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <p className="mb-2 text-sm font-medium">Nachtschutz</p>
-                <div className="flex flex-wrap gap-2">
-                  {NIGHT_PROTECTION_OPTIONS.map((option) => {
-                    const active = formData.night_protection.includes(option.value)
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() =>
-                          setFormData((current) => ({
-                            ...current,
-                            night_protection: toggleArrayItem(
-                              current.night_protection,
-                              option.value,
-                            ),
-                          }))
-                        }
-                        className={cn(
-                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                          active
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border hover:bg-card",
-                        )}
-                      >
-                        {option.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <p className="mb-2 text-sm font-semibold text-[var(--text-heading)]">Trocknen</p>
-              <p className="mb-3 text-xs text-muted-foreground">
-                Material, Technik und Nach-dem-Waschen-Muster liefern oft die fehlenden Frizz- und
-                Schutzsignale.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <div>
-                <p className="mb-2 text-sm font-medium">Handtuch</p>
-                <div className="flex flex-wrap gap-2">
-                  {TOWEL_MATERIAL_OPTIONS.map((option) => {
-                    const active = formData.towel_material === option.value
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() =>
-                          setFormData((current) => ({ ...current, towel_material: option.value }))
-                        }
-                        className={cn(
-                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                          active
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border hover:bg-card",
-                        )}
-                      >
-                        {option.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <p className="mb-2 text-sm font-medium">Trocknungstechnik</p>
-                <div className="flex flex-wrap gap-2">
-                  {TOWEL_TECHNIQUE_OPTIONS.map((option) => {
-                    const active = formData.towel_technique === option.value
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() =>
-                          setFormData((current) => ({ ...current, towel_technique: option.value }))
-                        }
-                        className={cn(
-                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                          active
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border hover:bg-card",
-                        )}
-                      >
-                        {option.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <p className="mb-2 text-sm font-medium">Trocknungsmethode</p>
-                <div className="flex flex-wrap gap-2">
-                  {DRYING_METHOD_OPTIONS.map((option) => {
-                    const active = formData.drying_method.includes(option.value)
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() =>
-                          setFormData((current) => ({
-                            ...current,
-                            drying_method: toggleArrayItem(current.drying_method, option.value),
-                          }))
-                        }
-                        className={cn(
-                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                          active
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border hover:bg-card",
-                        )}
-                      >
-                        {option.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <p className="mb-2 text-sm font-medium">Nach dem Waschen</p>
-                <div className="flex flex-wrap gap-2">
-                  {POST_WASH_ACTION_OPTIONS.map((option) => {
-                    const active = formData.post_wash_actions.includes(option.value)
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() =>
-                          setFormData((current) => ({
-                            ...current,
-                            post_wash_actions: toggleArrayItem(
-                              current.post_wash_actions,
-                              option.value,
-                            ),
-                          }))
-                        }
-                        className={cn(
-                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                          active
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border hover:bg-card",
-                        )}
-                      >
-                        {option.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <p className="mb-2 text-sm font-semibold text-[var(--text-heading)]">
-                Produkte &amp; Notizen
-              </p>
-              <p className="mb-3 text-xs text-muted-foreground">
-                Was bereits genutzt wird und welche Freitext-Hinweise wichtig bleiben sollen.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <div>
-                <p className="mb-2 text-sm font-medium">Produkte in Routine</p>
-                <div className="flex flex-wrap gap-2">
-                  {ROUTINE_PRODUCT_OPTIONS.map((option) => {
-                    const active = formData.current_routine_products.includes(option.value)
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() =>
-                          setFormData((current) => ({
-                            ...current,
-                            current_routine_products: toggleArrayItem(
-                              current.current_routine_products,
-                              option.value,
-                            ),
-                          }))
-                        }
-                        className={cn(
-                          "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                          active
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border hover:bg-card",
-                        )}
-                      >
-                        {option.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <p className="mb-2 text-sm font-medium">Verwendete Produkte</p>
-                <Textarea
-                  value={formData.products_used}
-                  onChange={(event) =>
-                    setFormData((current) => ({ ...current, products_used: event.target.value }))
-                  }
-                  rows={3}
-                  placeholder="z. B. Olaplex No. 3, Moroccanoil, Balea ..."
-                />
-              </div>
-
-              <div>
-                <p className="mb-2 text-sm font-medium">Zusätzliche Hinweise</p>
-                <Textarea
-                  value={formData.additional_notes}
-                  onChange={(event) =>
-                    setFormData((current) => ({
-                      ...current,
-                      additional_notes: event.target.value,
-                    }))
-                  }
-                  rows={3}
-                  placeholder="Gibt es noch etwas, das Hair Concierge im Alltag berücksichtigen soll?"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   if (authLoading) {
     return (
       <>
@@ -990,392 +827,737 @@ export default function ProfilePage() {
     <>
       <Header />
       <main className="mx-auto max-w-5xl px-4 py-8">
-        {editing ? (
-          <div className="sticky top-16 z-30 mb-6">
-            <div className="rounded-2xl border border-primary/20 bg-background/95 p-4 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/80">
-              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-[var(--text-heading)]">
-                    Du bearbeitest dein Profil
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Änderungen werden erst übernommen, wenn du speicherst.
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-auto"
-                    onClick={handleCancelEditing}
-                  >
-                    Abbrechen
-                  </Button>
-                  <Button type="button" className="w-auto" onClick={handleSave} disabled={saving}>
-                    {saving ? "Speichere..." : "Speichern"}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : null}
-
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="type-overline text-primary">Profilübersicht</p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text-heading)]">
-              Mein Profil
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Hier siehst du denselben roten Faden wie im Quiz und Onboarding: Ausgangslage, Ziele,
-              Alltag und das, was Hair Concierge mit der Zeit dazulernt.
-            </p>
-          </div>
-
-          {!editing && !loading ? (
-            <Button type="button" onClick={() => setEditing(true)} className="w-auto">
-              Bearbeiten
-            </Button>
-          ) : null}
+        <div className="mb-8">
+          <p className="type-overline text-primary">Profilübersicht</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text-heading)]">
+            Mein Profil
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Je vollständiger dein Profil ist, desto besser werden Empfehlungen. Jeder Abschnitt
+            zeigt dir direkt, wie viel schon da ist und was noch ergänzt werden kann.
+          </p>
         </div>
-
-        {loading ? (
-          <>
-            <Card className="mb-6 border-primary/10">
-              <CardHeader className="pb-4">
-                <Skeleton className="h-6 w-48" />
-                <Skeleton className="mt-2 h-4 w-80" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="mb-4 h-2 w-full rounded-full" />
-                <div className="grid gap-3 md:grid-cols-4">
-                  {Array.from({ length: 4 }).map((_, i) => (
-                    <Skeleton key={i} className="h-20 rounded-xl" />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-            <div className="space-y-6">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Card key={i}>
-                  <CardHeader className="pb-4">
-                    <Skeleton className="h-6 w-40" />
-                    <Skeleton className="mt-2 h-4 w-64" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {Array.from({ length: 4 }).map((_, j) => (
-                        <Skeleton key={j} className="h-16 rounded-xl" />
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </>
-        ) : (
-          <>
-            <Card className="mb-6 border-primary/10">
-              <CardHeader className="pb-4">
-                <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                  <div>
-                    <CardTitle className="text-xl text-[var(--text-heading)]">
-                      So baut sich dein Profil auf
-                    </CardTitle>
-                    <CardDescription className="mt-2 max-w-2xl text-sm">
-                      {readinessCopy}
-                    </CardDescription>
-                  </div>
-                  <Badge className="w-fit px-3 py-1 text-xs">
-                    {activeStepCount} von {overallStepCount} Bausteinen aktiv
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="mb-4 h-2 overflow-hidden rounded-full bg-muted">
-                  <div
-                    className="h-full rounded-full bg-primary transition-all"
-                    style={{ width: `${overallPercent}%` }}
-                  />
-                </div>
-
-                <div className="grid gap-3 md:grid-cols-4">
-                  <JourneyStepCard
-                    label="Haar-Check"
-                    status={baselineFilled.length === 0 ? "Offen" : "Aktiv"}
-                    summary={
-                      baselineFilled.length === 0
-                        ? "Noch keine Basisdaten vorhanden."
-                        : `${baselineFilled.length}/${baselineFields.length} Signale vorhanden`
-                    }
-                    active={baselineFilled.length > 0}
-                  />
-                  <JourneyStepCard
-                    label="Ziele"
-                    status={goalFilled.length === 0 ? "Offen" : "Aktiv"}
-                    summary={
-                      goalFilled.length === 0
-                        ? "Noch keine Prioritäten gesetzt."
-                        : `${goalFilled.length}/${goalFields.length} Signale vorhanden`
-                    }
-                    active={goalFilled.length > 0}
-                  />
-                  <JourneyStepCard
-                    label="Alltag"
-                    status={routineFilled.length === 0 ? "Offen" : "Aktiv"}
-                    summary={
-                      routineFilled.length === 0
-                        ? "Noch keine Routinedaten vorhanden."
-                        : `${routineFilled.length}/${routineFields.length} Signale vorhanden`
-                    }
-                    active={routineFilled.length > 0}
-                  />
-                  <JourneyStepCard
-                    label="Merkt sich"
-                    status={memoryEnabled ? "Aktiv" : "Pausiert"}
-                    summary={
-                      memoryEnabled
-                        ? memoryEntries.length > 0
-                          ? `${memoryEntries.length} gespeicherte Erinnerungen`
-                          : "Bereit, neue Chat-Erinnerungen zu speichern"
-                        : "Chat-Erinnerungen sind aktuell ausgeschaltet"
-                    }
-                    active={memoryEnabled}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="space-y-6">
-              <Card>
-                <CardHeader className="pb-4">
-                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                    <div>
-                      <CardTitle className="text-xl text-[var(--text-heading)]">
-                        {PROFILE_SECTION_META[0].title}
-                      </CardTitle>
-                      <CardDescription className="mt-2 text-sm">
-                        {PROFILE_SECTION_META[0].description}
-                      </CardDescription>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() => router.push("/quiz")}
-                    >
-                      Haar-Check aktualisieren
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {baselineFilled.length > 0 ? (
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {baselineFilled.map((field) => (
-                        <ProfileFieldCard
-                          key={field.key}
-                          field={field}
-                          onClick={!editing ? () => openFieldFlow(field) : undefined}
-                          actionLabel={!editing ? getFieldActionLabel(field) : undefined}
-                        />
-                      ))}
-                    </div>
-                  ) : null}
-
-                  {(baselineSparse || editing) && (
-                    <InlinePromptCard
-                      title="Ausgangslage wird über den Haar-Check gepflegt"
-                      text={
-                        baselineSparse
-                          ? "Damit Diagnose- und Strukturdaten konsistent bleiben, startest du diese Basis nicht direkt hier, sondern über den Haar-Check."
-                          : "Diese Felder bleiben absichtlich read-only im Profil. Für Änderungen führst du den Haar-Check erneut durch."
-                      }
-                      action={
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-auto"
-                          onClick={() => router.push("/quiz")}
-                        >
-                          Haar-Check starten
-                        </Button>
-                      }
-                    />
-                  )}
-
-                  {!editing && baselineMissing.length > 0 && !baselineSparse ? (
-                    <InlinePromptCard
-                      title="Ein Teil der Basis fehlt noch"
-                      text={`Noch offen: ${baselineMissing.map((field) => field.label).join(", ")}`}
-                      action={
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-auto"
-                          onClick={() => router.push("/quiz")}
-                        >
-                          Basis ergänzen
-                        </Button>
-                      }
-                    />
-                  ) : null}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-xl text-[var(--text-heading)]">
-                    {PROFILE_SECTION_META[1].title}
-                  </CardTitle>
-                  <CardDescription className="mt-2 text-sm">
-                    {PROFILE_SECTION_META[1].description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {editing ? (
-                    <div className="grid gap-4 xl:grid-cols-3">
-                      {goalFields.map((field) => (
-                        <ProfileFieldCard key={field.key} field={field}>
-                          {renderInlineEditor(field)}
-                        </ProfileFieldCard>
-                      ))}
-                    </div>
-                  ) : goalFilled.length > 0 ? (
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                      {goalFilled.map((field) => (
-                        <ProfileFieldCard
-                          key={field.key}
-                          field={field}
-                          onClick={() => openFieldFlow(field)}
-                          actionLabel={getFieldActionLabel(field)}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <InlinePromptCard
-                      title="Noch keine Ziele gesetzt"
-                      text="Wähle mindestens dein gewünschtes Volumen oder ein relevantes Ziel, damit der erste Plan klarer priorisieren kann."
-                    />
-                  )}
-
-                  {!editing && goalMissing.length > 0 ? (
-                    <InlinePromptCard
-                      title="Ziele schärfen"
-                      text={`Noch offen: ${goalMissing.map((field) => field.label).join(", ")}`}
-                      action={
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-auto"
-                          onClick={() => setEditing(true)}
-                        >
-                          Ziele bearbeiten
-                        </Button>
-                      }
-                    />
-                  ) : null}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-4">
-                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                    <div>
-                      <CardTitle className="text-xl text-[var(--text-heading)]">
-                        {PROFILE_SECTION_META[2].title}
-                      </CardTitle>
-                      <CardDescription className="mt-2 text-sm">
-                        {PROFILE_SECTION_META[2].description}
-                      </CardDescription>
-                    </div>
-                    {editing ? (
-                      <Button
-                        type="button"
-                        variant={routineDetailsOpen ? "default" : "outline"}
-                        className="w-auto"
-                        onClick={() => setRoutineDetailsOpen((current) => !current)}
-                      >
-                        {routineDetailsOpen
-                          ? "Routine-Details ausblenden"
-                          : "Routine-Details bearbeiten"}
-                      </Button>
-                    ) : null}
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {editing ? (
-                    <div className="grid gap-4 xl:grid-cols-3">
-                      {routineSimpleFields.map((field) => (
-                        <ProfileFieldCard key={field.key} field={field}>
-                          {renderInlineEditor(field)}
-                        </ProfileFieldCard>
-                      ))}
-                    </div>
-                  ) : null}
-
-                  {routineFilled.length > 0 ? (
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                      {(editing
-                        ? routineDetailFields.filter((field) => field.value !== null)
-                        : routineFilled
-                      ).map((field) => (
-                        <ProfileFieldCard
-                          key={field.key}
-                          field={field}
-                          onClick={!editing ? () => openFieldFlow(field) : undefined}
-                          actionLabel={!editing ? getFieldActionLabel(field) : undefined}
-                        />
-                      ))}
-                    </div>
-                  ) : null}
-
-                  {editing && routineDetailsOpen ? renderRoutineDetailsEditor() : null}
-
-                  {!editing && routineFilled.length === 0 ? (
-                    <InlinePromptCard
-                      title="Alltags-Signale fehlen noch"
-                      text="Waschhäufigkeit, Hitzemuster und Routinedetails machen Empfehlungen deutlich realistischer."
-                    />
-                  ) : null}
-
-                  {!editing && routineMissing.length > 0 ? (
-                    <InlinePromptCard
-                      title="Alltag weiter schärfen"
-                      text={`Noch offen: ${routineMissing
-                        .map((field) => field.label)
-                        .slice(0, 6)
-                        .join(
-                          ", ",
-                        )}${routineMissing.length > 6 ? ` und ${routineMissing.length - 6} weitere` : ""}`}
-                      action={
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-auto"
-                          onClick={() => setEditing(true)}
-                        >
-                          Alltag bearbeiten
-                        </Button>
-                      }
-                    />
-                  ) : null}
-                </CardContent>
-              </Card>
-            </div>
-          </>
-        )}
 
         <div className="space-y-6">
           <Card>
             <CardHeader className="pb-4">
-              <div className="flex items-start justify-between gap-4">
+              <SectionHeader
+                title={SECTION_META_BY_KEY.quiz.title}
+                description="Deine Antworten aus dem Haar-Check. Du kannst sie hier direkt pflegen, ohne den Flow noch einmal neu zu starten."
+                status={
+                  profileLoading
+                    ? "Wird geladen"
+                    : getCompletionLabel(quizFilled.length, quizFields.length)
+                }
+                action={
+                  !quizEditing ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => startQuizEditing()}
+                    >
+                      Haar-Check bearbeiten
+                    </Button>
+                  ) : undefined
+                }
+              />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {quizNotice ? (
+                <div
+                  className={cn(
+                    "rounded-xl border px-4 py-3",
+                    quizNotice.variant === "success"
+                      ? "border-primary/20 bg-primary/[0.05]"
+                      : "border-destructive/20 bg-destructive/5",
+                  )}
+                >
+                  <p className="text-sm font-semibold text-[var(--text-heading)]">
+                    {quizNotice.title}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">{quizNotice.description}</p>
+                </div>
+              ) : null}
+
+              {profileLoading ? (
+                <SectionGridSkeleton count={6} className="md:grid-cols-2 xl:grid-cols-3" />
+              ) : quizEditing ? (
+                <div className="rounded-2xl border border-primary/15 bg-muted/35 p-5">
+                  <div className="mb-5">
+                    <p className="text-sm font-semibold text-[var(--text-heading)]">
+                      Haar-Check direkt im Profil aktualisieren
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      So musst du nicht noch einmal durch Login- oder Marketing-Schritte. Passe nur
+                      die Antworten an, die sich ändern sollen.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-4 xl:grid-cols-2">
+                    <div
+                      ref={(node) => {
+                        quizFieldRefs.current.hair_texture = node
+                      }}
+                    >
+                      <QuizEditorField
+                        title="Haartextur"
+                        text="Wie dein Haar natürlich fällt, wenn es nass ist."
+                      >
+                        <SegmentedControl
+                          options={HAIR_TEXTURE_OPTIONS}
+                          value={quizDraft.hair_texture}
+                          onChange={(value) =>
+                            setQuizDraft((current) => ({ ...current, hair_texture: value }))
+                          }
+                        />
+                      </QuizEditorField>
+                    </div>
+
+                    <div
+                      ref={(node) => {
+                        quizFieldRefs.current.thickness = node
+                      }}
+                    >
+                      <QuizEditorField
+                        title="Haar-Dicke"
+                        text="Wie dick ein einzelnes Haar im Vergleich zu einem Nähfaden ist."
+                      >
+                        <SegmentedControl
+                          options={HAIR_THICKNESS_OPTIONS}
+                          value={quizDraft.thickness}
+                          onChange={(value) =>
+                            setQuizDraft((current) => ({ ...current, thickness: value }))
+                          }
+                        />
+                      </QuizEditorField>
+                    </div>
+
+                    <div
+                      ref={(node) => {
+                        quizFieldRefs.current.cuticle_condition = node
+                      }}
+                    >
+                      <QuizEditorField
+                        title="Oberfläche"
+                        text="Wie sich dein Haar im Finger-Test anfühlt."
+                      >
+                        <SegmentedControl
+                          options={QUIZ_SURFACE_OPTIONS}
+                          value={quizDraft.cuticle_condition}
+                          onChange={(value) =>
+                            setQuizDraft((current) => ({ ...current, cuticle_condition: value }))
+                          }
+                        />
+                      </QuizEditorField>
+                    </div>
+
+                    <div
+                      ref={(node) => {
+                        quizFieldRefs.current.protein_moisture_balance = node
+                      }}
+                    >
+                      <QuizEditorField
+                        title="Elastizität"
+                        text="Wie dein Haar im Zug-Test reagiert."
+                      >
+                        <SegmentedControl
+                          options={QUIZ_ELASTICITY_OPTIONS}
+                          value={quizDraft.protein_moisture_balance}
+                          onChange={(value) =>
+                            setQuizDraft((current) => ({
+                              ...current,
+                              protein_moisture_balance: value,
+                            }))
+                          }
+                        />
+                      </QuizEditorField>
+                    </div>
+
+                    <div
+                      ref={(node) => {
+                        quizFieldRefs.current.scalp_type = node
+                      }}
+                    >
+                      <QuizEditorField
+                        title="Kopfhauttyp"
+                        text="Wie sich deine Kopfhaut zwischen den Haarwäschen verhält."
+                      >
+                        <SegmentedControl
+                          options={QUIZ_SCALP_TYPE_OPTIONS}
+                          value={quizDraft.scalp_type}
+                          onChange={(value) =>
+                            setQuizDraft((current) => ({ ...current, scalp_type: value }))
+                          }
+                        />
+                      </QuizEditorField>
+                    </div>
+
+                    <div
+                      ref={(node) => {
+                        quizFieldRefs.current.scalp_condition = node
+                      }}
+                    >
+                      <QuizEditorField
+                        title="Kopfhaut-Beschwerden"
+                        text="Ob aktuell Schuppen oder Reizungen dabei sind."
+                      >
+                        <SegmentedControl
+                          options={QUIZ_SCALP_CONDITION_OPTIONS}
+                          value={quizDraft.scalp_condition}
+                          onChange={(value) =>
+                            setQuizDraft((current) => ({ ...current, scalp_condition: value }))
+                          }
+                        />
+                      </QuizEditorField>
+                    </div>
+
+                    <div
+                      ref={(node) => {
+                        quizFieldRefs.current.chemical_treatment = node
+                      }}
+                      className="xl:col-span-2"
+                    >
+                      <QuizEditorField
+                        title="Chemische Behandlungen"
+                        text="Was dein Haar in der Vergangenheit chemisch mitgemacht hat."
+                      >
+                        <div className="flex flex-wrap gap-2">
+                          {QUIZ_CHEMICAL_TREATMENT_OPTIONS.map((option) => {
+                            const active = quizDraft.chemical_treatment.includes(option.value)
+
+                            return (
+                              <button
+                                key={option.value}
+                                type="button"
+                                onClick={() =>
+                                  setQuizDraft((current) => ({
+                                    ...current,
+                                    chemical_treatment: toggleChemicalTreatment(
+                                      current.chemical_treatment,
+                                      option.value,
+                                    ),
+                                  }))
+                                }
+                                className={cn(
+                                  "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                                  active
+                                    ? "border-primary bg-primary/10 text-primary"
+                                    : "border-border hover:bg-muted",
+                                )}
+                              >
+                                {option.label}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </QuizEditorField>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      className="w-auto"
+                      onClick={handleSaveQuiz}
+                      disabled={quizSaving}
+                    >
+                      {quizSaving ? "Speichern..." : "Haar-Check speichern"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={resetQuizEditing}
+                      disabled={quizSaving}
+                    >
+                      Abbrechen
+                    </Button>
+                  </div>
+                </div>
+              ) : quizFilled.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {quizFilled.map((field) => (
+                    <ProfileFieldCard
+                      key={field.key}
+                      field={field}
+                      onClick={() => openTarget(field.editTarget, field.key)}
+                      actionLabel={getFieldActionLabel(field.editTarget)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <InlinePromptCard
+                  title="Noch keine Quiz-Antworten sichtbar"
+                  text="Sobald du hier Angaben hinterlegst, erscheint der Haar-Check in derselben Reihenfolge wie in der Quiz-Logik."
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => startQuizEditing()}
+                    >
+                      Haar-Check jetzt ausfüllen
+                    </Button>
+                  }
+                />
+              )}
+
+              {!profileLoading &&
+              !quizEditing &&
+              quizFilled.length > 0 &&
+              quizMissing.length > 0 ? (
+                <InlinePromptCard
+                  title={getOpenItemsTitle(quizMissing.length, "Angabe", "Angaben")}
+                  text="Du kannst die fehlenden Antworten direkt hier ergänzen."
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => startQuizEditing()}
+                    >
+                      Fehlende Antworten ergänzen
+                    </Button>
+                  }
+                />
+              ) : null}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-4">
+              <SectionHeader
+                title={SECTION_META_BY_KEY.products.title}
+                description="Welche Produktkategorien du aktuell nutzt und welche Produktdetails im Onboarding festgehalten wurden."
+                status={
+                  productsLoading
+                    ? "Wird geladen"
+                    : getProductCompletionLabel(productRows, Boolean(profile?.onboarding_completed))
+                }
+                action={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-auto"
+                    onClick={() => router.push(buildOnboardingHref("products_basics"))}
+                  >
+                    Produkte bearbeiten
+                  </Button>
+                }
+              />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {productsLoading ? (
+                <div className="space-y-4">
+                  <div className="rounded-xl border border-border/80 bg-card/80 p-4">
+                    <Skeleton className="h-4 w-36" />
+                    <Skeleton className="mt-2 h-3 w-56" />
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {Array.from({ length: 4 }).map((_, index) => (
+                        <Skeleton key={index} className="h-8 w-24 rounded-full" />
+                      ))}
+                    </div>
+                  </div>
+                  <SectionGridSkeleton count={3} className="md:grid-cols-3" />
+                </div>
+              ) : productRows.length > 0 ? (
+                <div className="space-y-4">
+                  <div className="rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-[var(--text-heading)]">
+                        Ausgewählte Kategorien
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        Damit ist auf einen Blick sichtbar, welche Produkttypen du überhaupt im
+                        Alltag nutzt.
+                      </p>
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {selectedProductCategories.map((category) => (
+                        <Badge
+                          key={category}
+                          variant="outline"
+                          className="border-primary/20 bg-primary/[0.04] px-3 py-1 text-xs text-foreground"
+                        >
+                          {category}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="hidden overflow-hidden rounded-xl border border-border/80 md:block">
+                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.9fr)] gap-4 bg-muted/35 px-4 py-3 text-xs font-semibold tracking-[0.08em] text-muted-foreground uppercase">
+                      <span>Kategorie</span>
+                      <span>Produkt</span>
+                      <span>Häufigkeit</span>
+                    </div>
+
+                    {productRows.map((row) => (
+                      <button
+                        key={row.key}
+                        type="button"
+                        onClick={() =>
+                          router.push(
+                            buildOnboardingHref("product_drilldown", {
+                              category: row.category,
+                              singleStep: true,
+                            }),
+                          )
+                        }
+                        className="grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.9fr)] gap-4 border-t border-border/70 px-4 py-4 text-left transition-colors hover:bg-primary/[0.04]"
+                      >
+                        <div>
+                          <p className="text-sm font-semibold text-[var(--text-heading)]">
+                            {row.categoryLabel}
+                          </p>
+                          {!row.isComplete ? (
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              Details fehlen noch
+                            </p>
+                          ) : null}
+                        </div>
+                        <p
+                          className={cn(
+                            "text-sm",
+                            row.productName ? "text-foreground" : "text-muted-foreground",
+                          )}
+                        >
+                          {row.productName ?? "Noch offen"}
+                        </p>
+                        <p
+                          className={cn(
+                            "text-sm",
+                            row.frequencyLabel ? "text-foreground" : "text-muted-foreground",
+                          )}
+                        >
+                          {row.frequencyLabel ?? "Noch offen"}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="grid gap-3 md:hidden">
+                    {productRows.map((row) => (
+                      <button
+                        key={row.key}
+                        type="button"
+                        onClick={() =>
+                          router.push(
+                            buildOnboardingHref("product_drilldown", {
+                              category: row.category,
+                              singleStep: true,
+                            }),
+                          )
+                        }
+                        className="rounded-xl border border-border/80 bg-card/80 p-4 text-left shadow-sm transition-colors hover:bg-primary/[0.04]"
+                      >
+                        <p className="text-sm font-semibold text-[var(--text-heading)]">
+                          {row.categoryLabel}
+                        </p>
+                        <div className="mt-3 space-y-2 text-sm">
+                          <p>
+                            <span className="text-muted-foreground">Produkt:</span>{" "}
+                            <span
+                              className={
+                                row.productName ? "text-foreground" : "text-muted-foreground"
+                              }
+                            >
+                              {row.productName ?? "Noch offen"}
+                            </span>
+                          </p>
+                          <p>
+                            <span className="text-muted-foreground">Häufigkeit:</span>{" "}
+                            <span
+                              className={
+                                row.frequencyLabel ? "text-foreground" : "text-muted-foreground"
+                              }
+                            >
+                              {row.frequencyLabel ?? "Noch offen"}
+                            </span>
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <InlinePromptCard
+                  title={
+                    profile?.onboarding_completed
+                      ? "Noch keine Produkte ausgewählt"
+                      : "Noch keine Produktangaben vorhanden"
+                  }
+                  text={
+                    profile?.onboarding_completed
+                      ? "Im aktuellen Onboarding-Stand wurden noch keine Produktkategorien gespeichert."
+                      : "Sobald du den Produktteil im Onboarding durchläufst, erscheint hier eine klare Übersicht nach Kategorie, Produkt und Häufigkeit."
+                  }
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => router.push(buildOnboardingHref("products_basics"))}
+                    >
+                      Produktteil öffnen
+                    </Button>
+                  }
+                />
+              )}
+
+              {!productsLoading && incompleteProductRows.length > 0 ? (
+                <InlinePromptCard
+                  title={getOpenItemsTitle(
+                    incompleteProductRows.length,
+                    "Produktdetail",
+                    "Produktdetails",
+                  )}
+                  text="Öffne den Produktteil, um die fehlenden Angaben zu ergänzen."
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() =>
+                        router.push(
+                          buildOnboardingHref("product_drilldown", {
+                            category: incompleteProductRows[0]?.category ?? null,
+                          }),
+                        )
+                      }
+                    >
+                      Details ergänzen
+                    </Button>
+                  }
+                />
+              ) : null}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-4">
+              <SectionHeader
+                title={SECTION_META_BY_KEY.styling.title}
+                description={SECTION_META_BY_KEY.styling.description}
+                status={
+                  profileLoading
+                    ? "Wird geladen"
+                    : getCompletionLabel(stylingFilled.length, stylingFields.length)
+                }
+                action={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-auto"
+                    onClick={() => router.push(buildOnboardingHref("heat_tools"))}
+                  >
+                    Styling bearbeiten
+                  </Button>
+                }
+              />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {profileLoading ? (
+                <SectionGridSkeleton count={3} className="md:grid-cols-2 xl:grid-cols-3" />
+              ) : stylingFilled.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {stylingFilled.map((field) => (
+                    <ProfileFieldCard
+                      key={field.key}
+                      field={field}
+                      onClick={() => openTarget(field.editTarget)}
+                      actionLabel={getFieldActionLabel(field.editTarget)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <InlinePromptCard
+                  title="Noch keine Styling-Angaben vorhanden"
+                  text="Hitzetools, Frequenz und Hitzeschutz erscheinen hier, sobald du den Styling-Teil des Onboardings speicherst."
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => router.push(buildOnboardingHref("heat_tools"))}
+                    >
+                      Styling öffnen
+                    </Button>
+                  }
+                />
+              )}
+
+              {!profileLoading && stylingFilled.length > 0 && stylingMissing.length > 0 ? (
+                <InlinePromptCard
+                  title={getOpenItemsTitle(stylingMissing.length, "Angabe", "Angaben")}
+                  text="Im Styling-Teil kannst du die fehlenden Angaben ergänzen."
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => router.push(buildOnboardingHref("heat_tools"))}
+                    >
+                      Styling ergänzen
+                    </Button>
+                  }
+                />
+              ) : null}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-4">
+              <SectionHeader
+                title={SECTION_META_BY_KEY.routine.title}
+                description={SECTION_META_BY_KEY.routine.description}
+                status={
+                  profileLoading
+                    ? "Wird geladen"
+                    : getCompletionLabel(routineFilled.length, routineFields.length)
+                }
+                action={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-auto"
+                    onClick={() => router.push(buildOnboardingHref("towel_material"))}
+                  >
+                    Alltag bearbeiten
+                  </Button>
+                }
+              />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {profileLoading ? (
+                <SectionGridSkeleton count={5} className="md:grid-cols-2 xl:grid-cols-3" />
+              ) : routineFilled.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {routineFilled.map((field) => (
+                    <ProfileFieldCard
+                      key={field.key}
+                      field={field}
+                      onClick={() => openTarget(field.editTarget)}
+                      actionLabel={getFieldActionLabel(field.editTarget)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <InlinePromptCard
+                  title="Noch keine Alltagsangaben vorhanden"
+                  text="Trocknen, Bürste und Nachtschutz erscheinen hier, sobald du den Alltagsteil im Onboarding speicherst."
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => router.push(buildOnboardingHref("towel_material"))}
+                    >
+                      Alltag öffnen
+                    </Button>
+                  }
+                />
+              )}
+
+              {!profileLoading && routineFilled.length > 0 && routineMissing.length > 0 ? (
+                <InlinePromptCard
+                  title={getOpenItemsTitle(routineMissing.length, "Angabe", "Angaben")}
+                  text="Im Alltag-Teil kannst du die fehlenden Angaben ergänzen."
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => router.push(buildOnboardingHref("towel_material"))}
+                    >
+                      Alltag ergänzen
+                    </Button>
+                  }
+                />
+              ) : null}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-4">
+              <SectionHeader
+                title={SECTION_META_BY_KEY.goals.title}
+                description={SECTION_META_BY_KEY.goals.description}
+                status={
+                  profileLoading
+                    ? "Wird geladen"
+                    : getCompletionLabel(goalsFilled.length, goalsFields.length)
+                }
+                action={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-auto"
+                    onClick={() => router.push(buildOnboardingHref("goals"))}
+                  >
+                    Ziele bearbeiten
+                  </Button>
+                }
+              />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {profileLoading ? (
+                <div className="rounded-xl border border-border/70 bg-card/70 p-4">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="mt-2 h-3 w-56" />
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Skeleton key={index} className="h-8 w-28 rounded-full" />
+                    ))}
+                  </div>
+                </div>
+              ) : goalsField?.value ? (
+                <ProfileFieldCard
+                  field={goalsField}
+                  className="max-w-3xl"
+                  onClick={() => openTarget(goalsField.editTarget)}
+                  actionLabel={getFieldActionLabel(goalsField.editTarget)}
+                >
+                  <ProfileFieldValue
+                    value={goalsField.value}
+                    displayMode={goalsField.displayMode}
+                  />
+                </ProfileFieldCard>
+              ) : (
+                <InlinePromptCard
+                  title="Noch keine Ziele gewählt"
+                  text="Hier landen genau die Haarziele aus dem letzten Onboarding-Schritt, sobald du sie speicherst."
+                  action={
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-auto"
+                      onClick={() => router.push(buildOnboardingHref("goals"))}
+                    >
+                      Ziele öffnen
+                    </Button>
+                  }
+                />
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div>
-                  <CardTitle className="text-xl text-[var(--text-heading)]">
-                    {PROFILE_SECTION_META[3].title}
-                  </CardTitle>
-                  <CardDescription className="mt-2 text-sm">
-                    {PROFILE_SECTION_META[3].description}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <CardTitle className="text-xl text-[var(--text-heading)]">
+                      {SECTION_META_BY_KEY.memory.title}
+                    </CardTitle>
+                    <SectionStatusBadge
+                      label={memoryLoading ? "Wird geladen" : memoryEnabled ? "Aktiv" : "Pausiert"}
+                    />
+                  </div>
+                  <CardDescription className="mt-2 max-w-2xl text-sm">
+                    {SECTION_META_BY_KEY.memory.description}
                   </CardDescription>
                 </div>
                 <Switch
@@ -1467,7 +1649,8 @@ export default function ProfilePage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg text-[var(--text-heading)]">Account</CardTitle>
               <CardDescription className="mt-1 text-sm">
-                Dein Zugang bleibt bewusst sekundär, damit das Profil mit deiner Haarreise startet.
+                Dein Zugang bleibt bewusst sekundär, damit das Profil weiterhin mit deiner Haarreise
+                startet.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1487,16 +1670,6 @@ export default function ProfilePage() {
               </div>
             </CardContent>
           </Card>
-        </div>
-
-        <div className="mt-8 text-center">
-          <button
-            type="button"
-            onClick={signOut}
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Abmelden
-          </button>
         </div>
       </main>
     </>

@@ -13,6 +13,7 @@ import {
   getOilMissingProfileFields,
   getShampooMissingProfileFields,
   getShampooProfileCompleteness,
+  type PersistenceRoutineItemRow,
   type RecommendationEngineRuntime,
 } from "@/lib/recommendation-engine"
 import { deriveRoutineContext } from "@/lib/routines/planner"
@@ -130,6 +131,7 @@ export function evaluateRoute(
   classification: ClassificationResult,
   conversationHistory: Message[],
   hairProfile: HairProfile | null,
+  routineItems: PersistenceRoutineItemRow[],
   userMessage = "",
 ): RouterDecision {
   try {
@@ -138,7 +140,7 @@ export function evaluateRoute(
     const shouldPlanRoutine = intent === "routine_help" || product_category === "routine"
     const runtime = buildRecommendationEngineRuntimeForChat({
       hairProfile,
-      routineItems: [],
+      routineItems,
       productCategory: product_category,
       shouldPlanRoutine,
       message: userMessage,

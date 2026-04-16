@@ -32,6 +32,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
+  const isQuizRetake = pathname === "/quiz" && request.nextUrl.searchParams.get("mode") === "retake"
 
   // Public routes that don't need auth
   const publicRoutes = [
@@ -78,7 +79,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Redirect authenticated users away from auth page and quiz
-  if (pathname === "/auth" || pathname === "/quiz") {
+  if ((pathname === "/auth" || pathname === "/quiz") && !isQuizRetake) {
     // Check if user has completed onboarding
     const { data: profile } = await supabase
       .from("profiles")

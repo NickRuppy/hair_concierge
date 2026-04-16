@@ -15,6 +15,7 @@ interface ProductChecklistScreenProps {
   noneLabel?: string
   onNone?: () => void
   isSaving?: boolean
+  continueLabel?: string
 }
 
 export function ProductChecklistScreen({
@@ -28,6 +29,7 @@ export function ProductChecklistScreen({
   noneLabel,
   onNone,
   isSaving,
+  continueLabel = "Weiter",
 }: ProductChecklistScreenProps) {
   const hasSelection = selected.length > 0
 
@@ -92,7 +94,7 @@ export function ProductChecklistScreen({
           disabled={!hasSelection || isSaving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {isSaving ? "Speichern..." : "Weiter"}
+          {isSaving ? "Speichern..." : continueLabel}
         </button>
       </div>
     </div>

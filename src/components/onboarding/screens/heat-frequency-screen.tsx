@@ -2,12 +2,12 @@
 
 import { useRef, useState } from "react"
 import { ArrowLeft } from "lucide-react"
-import { PRODUCT_FREQUENCY_OPTIONS } from "@/lib/vocabulary"
-import type { ProductFrequency } from "@/lib/vocabulary"
+import { HEAT_STYLING_OPTIONS } from "@/lib/vocabulary"
+import type { HeatStyling } from "@/lib/vocabulary"
 
 interface HeatFrequencyScreenProps {
-  selected: ProductFrequency | null
-  onSelect: (freq: ProductFrequency) => void
+  selected: HeatStyling | null
+  onSelect: (freq: HeatStyling) => void
   onBack: () => void
 }
 
@@ -15,7 +15,7 @@ export function HeatFrequencyScreen({ selected, onSelect, onBack }: HeatFrequenc
   const advancingRef = useRef(false)
   const [localSelected, setLocalSelected] = useState(selected)
 
-  function handleSelect(freq: ProductFrequency) {
+  function handleSelect(freq: HeatStyling) {
     if (advancingRef.current) return
     advancingRef.current = true
     setLocalSelected(freq)
@@ -41,7 +41,7 @@ export function HeatFrequencyScreen({ selected, onSelect, onBack }: HeatFrequenc
 
       <div className="animate-fade-in-up mt-6" style={{ animationDelay: "100ms" }}>
         <div className="flex flex-wrap gap-2">
-          {PRODUCT_FREQUENCY_OPTIONS.map((option) => (
+          {HEAT_STYLING_OPTIONS.map((option) => (
             <button
               key={option.value}
               type="button"

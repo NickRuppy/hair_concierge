@@ -14,6 +14,7 @@ import {
   deriveRoutineContext,
 } from "@/lib/routines/planner"
 import { attachProductsToRoutinePlan } from "@/lib/routines/product-attachments"
+import { hydrateHairProfileForConsumers } from "@/lib/hair-profile/derived"
 import { loadUserMemoryContext } from "@/lib/rag/user-memory"
 import {
   buildEngineClarificationQuestions,
@@ -172,7 +173,10 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     },
   )
   const conversationHistory: Message[] = (conversationData as Message[]) ?? []
-  const hairProfile: HairProfile | null = hairProfileResult.data ?? null
+  const hairProfile: HairProfile | null = hydrateHairProfileForConsumers(
+    (hairProfileResult.data as HairProfile | null) ?? null,
+    routineItems,
+  )
 
   // ── Step 1b: Classify intent (with conversation context) ───────────
   const { result: classificationOutput, durationMs: classificationMs } = await measureAsync(() =>
@@ -234,7 +238,8 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       product_category,
       message,
     },
-    async () => evaluateRoute(classification, conversationHistory, hairProfile, message),
+    async () =>
+      evaluateRoute(classification, conversationHistory, hairProfile, routineItems, message),
     {
       output: (result) => ({
         classifier_retrieval_mode: classification.retrieval_mode,

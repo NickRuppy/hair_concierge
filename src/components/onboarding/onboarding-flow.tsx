@@ -6,20 +6,21 @@ import posthog from "posthog-js"
 import { useToast } from "@/providers/toast-provider"
 import { createClient } from "@/lib/supabase/client"
 import { useOnboardingStore } from "@/lib/onboarding/store"
-import type { OnboardingStep } from "@/lib/onboarding/store"
+import type { OnboardingEditScope, OnboardingStep } from "@/lib/onboarding/store"
 import { OnboardingProgressBar } from "@/components/onboarding/onboarding-progress-bar"
 import { mergeAnsweredFields } from "@/lib/onboarding/answered-fields"
 import {
-  mapShampooFrequency,
-  mapHeatFrequency,
   deriveMechanicalStressFactors,
   derivePostWashActions,
-  mapProductChecklistToRoutineProducts,
   reconcileDiffusor,
 } from "@/lib/onboarding/backward-compat"
-import { deriveVolumeFromGoals } from "@/lib/onboarding/goal-flow"
+import {
+  BASIC_PRODUCT_OPTIONS,
+  EXTRA_PRODUCT_OPTIONS,
+  PRODUCT_CATEGORY_LABELS,
+} from "@/lib/onboarding/product-options"
 import type { ProductFrequency } from "@/lib/vocabulary"
-import type { HairTexture, DesiredVolume } from "@/lib/vocabulary"
+import type { HairTexture, DesiredVolume, HeatStyling } from "@/lib/vocabulary"
 import type { Goal } from "@/lib/vocabulary"
 
 // Import all screens
@@ -54,27 +55,6 @@ import type {
 } from "@/lib/vocabulary/onboarding-care"
 
 import type { IconName } from "@/components/ui/icon"
-
-/* ── Product checklist options ── */
-
-const BASIC_PRODUCT_OPTIONS: { value: string; label: string; icon: IconName }[] = [
-  { value: "shampoo", label: "Shampoo", icon: "product-shampoo" },
-  { value: "conditioner", label: "Conditioner", icon: "product-conditioner" },
-  { value: "leave_in", label: "Leave-in", icon: "product-leave-in" },
-  { value: "oil", label: "\u00D6l", icon: "product-oil" },
-  { value: "mask", label: "Maske", icon: "product-mask" },
-]
-
-const EXTRA_PRODUCT_OPTIONS: { value: string; label: string; icon: IconName }[] = [
-  { value: "peeling", label: "Peeling (Serum/Scrub)", icon: "product-peeling" },
-  { value: "dry_shampoo", label: "Trockenshampoo", icon: "product-dry-shampoo" },
-  { value: "bondbuilder", label: "Bondbuilder", icon: "product-bond-builder" },
-  {
-    value: "deep_cleansing_shampoo",
-    label: "Tiefenreinigungsshampoo",
-    icon: "product-deep-cleansing",
-  },
-]
 
 /* ── Care habit icon maps ── */
 
@@ -116,18 +96,6 @@ const NIGHT_PROTECTION_ICONS: Record<string, IconName> = {
 
 /* ── Label map for drilldown categories ── */
 
-const CATEGORY_LABELS: Record<string, string> = {
-  shampoo: "Shampoo",
-  conditioner: "Conditioner",
-  leave_in: "Leave-in",
-  oil: "Öl",
-  mask: "Maske",
-  peeling: "Peeling",
-  dry_shampoo: "Trockenshampoo",
-  bondbuilder: "Bondbuilder",
-  deep_cleansing_shampoo: "Tiefenreinigungsshampoo",
-}
-
 /* ── Custom subtitle overrides for drilldown screens ── */
 
 const CATEGORY_SUBTITLES: Record<string, string> = {
@@ -141,6 +109,77 @@ interface OnboardingFlowProps {
   initialStep: string
   hairProfile: Record<string, unknown> | null
   productUsage: Array<Record<string, unknown>>
+  returnTo?: string | null
+  editScope?: OnboardingEditScope | null
+  singleStepEdit?: boolean
+  initialDrilldownCategory?: string | null
+}
+
+type OnboardingStateSnapshot = ReturnType<typeof useOnboardingStore.getState>
+
+function shouldReturnAfterScopeStep(
+  completedStep: OnboardingStep,
+  state: OnboardingStateSnapshot,
+  editScope: OnboardingEditScope | null,
+) {
+  switch (editScope) {
+    case "products": {
+      const lastDrilldownIndex = state.drilldownCategories().length - 1
+      return (
+        completedStep === "product_drilldown" && state.currentDrilldownIndex >= lastDrilldownIndex
+      )
+    }
+    case "styling":
+      return (
+        (completedStep === "heat_tools" && state.selectedHeatTools.length === 0) ||
+        completedStep === "heat_protection"
+      )
+    case "routine":
+      return completedStep === "night_protection"
+    case "goals":
+      return completedStep === "goals"
+    default:
+      return false
+  }
+}
+
+function getFinalContinueLabel(
+  currentStep: OnboardingStep,
+  state: OnboardingStateSnapshot,
+  editScope: OnboardingEditScope | null,
+  singleStepEdit: boolean,
+  returnTo: string | null,
+) {
+  if (!returnTo) return "Weiter"
+
+  if (
+    singleStepEdit &&
+    (currentStep === "product_drilldown" ||
+      currentStep === "heat_tools" ||
+      currentStep === "drying_method" ||
+      currentStep === "night_protection" ||
+      currentStep === "goals")
+  ) {
+    return "Speichern und zurück zum Profil"
+  }
+
+  if (currentStep === "goals") {
+    return "Speichern und zurück zum Profil"
+  }
+
+  if (currentStep === "night_protection" && editScope === "routine") {
+    return "Speichern und zurück zum Profil"
+  }
+
+  if (
+    currentStep === "product_drilldown" &&
+    editScope === "products" &&
+    shouldReturnAfterScopeStep(currentStep, state, editScope)
+  ) {
+    return "Speichern und zurück zum Profil"
+  }
+
+  return "Weiter"
 }
 
 /* ── Component ── */
@@ -150,6 +189,10 @@ export function OnboardingFlow({
   initialStep,
   hairProfile,
   productUsage,
+  returnTo = null,
+  editScope = null,
+  singleStepEdit = false,
+  initialDrilldownCategory = null,
 }: OnboardingFlowProps) {
   const router = useRouter()
   const { toast } = useToast()
@@ -184,6 +227,9 @@ export function OnboardingFlow({
     if (hairProfile) {
       if (Array.isArray(hairProfile.styling_tools) && hairProfile.styling_tools.length > 0) {
         store.setSelectedHeatTools(hairProfile.styling_tools as string[])
+      }
+      if (hairProfile.heat_styling) {
+        store.setHeatFrequency(hairProfile.heat_styling as HeatStyling)
       }
       if (hairProfile.towel_material) {
         store.setTowelMaterial(hairProfile.towel_material as TowelMaterial)
@@ -241,6 +287,14 @@ export function OnboardingFlow({
 
       if (basics.length > 0) store.setSelectedBasicProducts(basics)
       if (extras.length > 0) store.setSelectedExtraProducts(extras)
+
+      if (step === "product_drilldown" && initialDrilldownCategory) {
+        const orderedCategories = [...basics, ...extras]
+        const targetIndex = orderedCategories.indexOf(initialDrilldownCategory)
+        if (targetIndex >= 0) {
+          store.setCurrentDrilldownIndex(targetIndex)
+        }
+      }
     }
 
     setHydrated(true)
@@ -269,10 +323,12 @@ export function OnboardingFlow({
       const drilldowns = useOnboardingStore.getState().productDrilldowns
 
       // Get existing rows
-      const { data: existing } = await supabase
+      const { data: existing, error: existingError } = await supabase
         .from("user_product_usage")
         .select("id, category")
         .eq("user_id", userId)
+
+      if (existingError) throw existingError
 
       const existingMap = new Map(
         (existing ?? []).map((r: Record<string, unknown>) => [
@@ -292,9 +348,14 @@ export function OnboardingFlow({
         }
 
         if (existingMap.has(cat)) {
-          await supabase.from("user_product_usage").update(payload).eq("id", existingMap.get(cat))
+          const { error: updateError } = await supabase
+            .from("user_product_usage")
+            .update(payload)
+            .eq("id", existingMap.get(cat))
+          if (updateError) throw updateError
         } else {
-          await supabase.from("user_product_usage").insert(payload)
+          const { error: insertError } = await supabase.from("user_product_usage").insert(payload)
+          if (insertError) throw insertError
         }
       }
 
@@ -304,7 +365,11 @@ export function OnboardingFlow({
         .map((r: Record<string, unknown>) => r.id as string)
 
       if (toDelete.length > 0) {
-        await supabase.from("user_product_usage").delete().in("id", toDelete)
+        const { error: deleteError } = await supabase
+          .from("user_product_usage")
+          .delete()
+          .in("id", toDelete)
+        if (deleteError) throw deleteError
       }
     },
     [userId],
@@ -342,6 +407,9 @@ export function OnboardingFlow({
           case "products_extras": {
             const allProducts = [...state.selectedBasicProducts, ...state.selectedExtraProducts]
             await saveProductUsage(allProducts)
+            await saveHairProfile({
+              current_routine_products: [],
+            })
             break
           }
 
@@ -354,7 +422,7 @@ export function OnboardingFlow({
             if (!drilldown) break
 
             // Update the specific product usage row
-            await supabase
+            const { error: productUsageError } = await supabase
               .from("user_product_usage")
               .update({
                 product_name: drilldown.productName,
@@ -363,10 +431,12 @@ export function OnboardingFlow({
               .eq("user_id", userId)
               .eq("category", currentCat)
 
-            // If shampoo, also update wash_frequency
-            if (currentCat === "shampoo" && drilldown.frequency) {
+            if (productUsageError) throw productUsageError
+
+            // Clear the legacy mirror; shampoo cadence now comes from user_product_usage.
+            if (currentCat === "shampoo") {
               await saveHairProfile({
-                wash_frequency: mapShampooFrequency(drilldown.frequency),
+                wash_frequency: null,
               })
             }
             break
@@ -389,7 +459,7 @@ export function OnboardingFlow({
           case "heat_frequency": {
             if (state.heatFrequency) {
               await saveHairProfile({
-                heat_styling: mapHeatFrequency(state.heatFrequency),
+                heat_styling: state.heatFrequency,
               })
             }
             break
@@ -466,28 +536,52 @@ export function OnboardingFlow({
 
           case "goals": {
             const goals = state.selectedGoals as Goal[]
-            const desiredVolume = deriveVolumeFromGoals(goals)
-            const routineProducts = mapProductChecklistToRoutineProducts(
-              state.allSelectedProducts(),
-            )
             await saveHairProfile({
               goals,
-              desired_volume: desiredVolume,
-              current_routine_products: routineProducts,
+              desired_volume: null,
+              current_routine_products: [],
             })
-            await supabase.from("profiles").update({ onboarding_completed: true }).eq("id", userId)
-            posthog.capture("onboarding_completed", { userId })
+            const { error: onboardingCompletedError } = await supabase
+              .from("profiles")
+              .update({ onboarding_completed: true })
+              .eq("id", userId)
+
+            if (onboardingCompletedError) throw onboardingCompletedError
+
+            if (!returnTo) {
+              posthog.capture("onboarding_completed", { userId })
+            }
+            if (returnTo) {
+              window.location.assign(returnTo)
+              return
+            }
             break
           }
 
           case "celebration": {
-            await supabase
+            const { error: completionPopupError } = await supabase
               .from("profiles")
               .update({ has_seen_completion_popup: true })
               .eq("id", userId)
+
+            if (completionPopupError) throw completionPopupError
+            if (returnTo) {
+              window.location.assign(returnTo)
+              return
+            }
             router.push("/chat")
             return // Don't advance step
           }
+        }
+
+        if (returnTo && singleStepEdit) {
+          window.location.assign(returnTo)
+          return
+        }
+
+        if (returnTo && shouldReturnAfterScopeStep(completedStep, state, editScope)) {
+          window.location.assign(returnTo)
+          return
         }
 
         // Advance the store
@@ -511,7 +605,17 @@ export function OnboardingFlow({
         setSavingStep(null)
       }
     },
-    [userId, router, toast, saveProductUsage, saveHairProfile, saveOnboardingStep],
+    [
+      userId,
+      router,
+      toast,
+      saveProductUsage,
+      saveHairProfile,
+      saveOnboardingStep,
+      returnTo,
+      editScope,
+      singleStepEdit,
+    ],
   )
 
   // ── Toggle helpers ──
@@ -619,6 +723,15 @@ export function OnboardingFlow({
   const currentDrilldown = currentCategory
     ? (store.productDrilldowns[currentCategory] ?? { productName: "", frequency: null })
     : { productName: "", frequency: null }
+  const backTarget = singleStepEdit && returnTo ? returnTo : null
+
+  function handleBack() {
+    if (backTarget) {
+      window.location.assign(backTarget)
+      return
+    }
+    store.goBack()
+  }
 
   // ── Screen rendering ──
 
@@ -636,7 +749,7 @@ export function OnboardingFlow({
             selected={store.selectedBasicProducts}
             onToggle={toggleBasicProduct}
             onContinue={() => handleStepComplete("products_basics")}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
             isSaving={savingStep === "products_basics"}
           />
         )
@@ -650,7 +763,7 @@ export function OnboardingFlow({
             selected={store.selectedExtraProducts}
             onToggle={toggleExtraProduct}
             onContinue={() => handleStepComplete("products_extras")}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
             noneLabel="Nichts davon"
             onNone={() => {
               store.setSelectedExtraProducts([])
@@ -664,7 +777,7 @@ export function OnboardingFlow({
         return currentCategory ? (
           <ProductDrilldownScreen
             category={currentCategory}
-            categoryLabel={CATEGORY_LABELS[currentCategory] ?? currentCategory}
+            categoryLabel={PRODUCT_CATEGORY_LABELS[currentCategory] ?? currentCategory}
             subtitle={CATEGORY_SUBTITLES[currentCategory]}
             productName={currentDrilldown.productName}
             frequency={currentDrilldown.frequency}
@@ -681,7 +794,14 @@ export function OnboardingFlow({
               })
             }
             onContinue={() => handleStepComplete("product_drilldown")}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
+            continueLabel={getFinalContinueLabel(
+              "product_drilldown",
+              store,
+              editScope,
+              singleStepEdit,
+              returnTo,
+            )}
           />
         ) : null
 
@@ -691,12 +811,24 @@ export function OnboardingFlow({
             selected={store.selectedHeatTools}
             onToggle={toggleHeatTool}
             onContinue={() => handleStepComplete("heat_tools")}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
             onNone={() => {
               store.setSelectedHeatTools([])
               handleStepComplete("heat_tools")
             }}
             isSaving={savingStep === "heat_tools"}
+            noneLabel={
+              editScope === "styling" || singleStepEdit
+                ? "Keine Hitzetools speichern"
+                : "Nichts davon"
+            }
+            continueLabel={getFinalContinueLabel(
+              "heat_tools",
+              store,
+              editScope,
+              singleStepEdit,
+              returnTo,
+            )}
           />
         )
 
@@ -708,7 +840,7 @@ export function OnboardingFlow({
               store.setHeatFrequency(freq)
               handleStepComplete("heat_frequency")
             }}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
           />
         )
 
@@ -720,7 +852,7 @@ export function OnboardingFlow({
               store.setUsesHeatProtection(val)
               handleStepComplete("heat_protection")
             }}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
           />
         )
 
@@ -728,7 +860,7 @@ export function OnboardingFlow({
         return (
           <InterstitialScreen
             onContinue={() => handleStepComplete("interstitial")}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
           />
         )
 
@@ -743,7 +875,7 @@ export function OnboardingFlow({
               store.setTowelMaterial(val as TowelMaterial)
               handleStepComplete("towel_material")
             }}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
           />
         )
 
@@ -758,7 +890,7 @@ export function OnboardingFlow({
               store.setTowelTechnique(val as TowelTechnique)
               handleStepComplete("towel_technique")
             }}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
           />
         )
 
@@ -771,8 +903,15 @@ export function OnboardingFlow({
             selected={store.dryingMethod}
             onToggle={toggleDryingMethod}
             onContinue={() => handleStepComplete("drying_method")}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
             isSaving={savingStep === "drying_method"}
+            continueLabel={getFinalContinueLabel(
+              "drying_method",
+              store,
+              editScope,
+              singleStepEdit,
+              returnTo,
+            )}
           />
         )
 
@@ -787,7 +926,7 @@ export function OnboardingFlow({
               store.setBrushType(val as BrushType)
               handleStepComplete("brush_type")
             }}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
           />
         )
 
@@ -800,13 +939,24 @@ export function OnboardingFlow({
             selected={store.nightProtection}
             onToggle={toggleNightProtection}
             onContinue={() => handleStepComplete("night_protection")}
-            onBack={() => store.goBack()}
-            noneLabel="Nichts davon"
+            onBack={handleBack}
+            noneLabel={
+              editScope === "routine" || singleStepEdit
+                ? "Ohne Nachtschutz speichern"
+                : "Nichts davon"
+            }
             onNone={() => {
               store.setNightProtection([])
               handleStepComplete("night_protection")
             }}
             isSaving={savingStep === "night_protection"}
+            continueLabel={getFinalContinueLabel(
+              "night_protection",
+              store,
+              editScope,
+              singleStepEdit,
+              returnTo,
+            )}
           />
         )
 
@@ -817,8 +967,15 @@ export function OnboardingFlow({
             selectedGoals={store.selectedGoals}
             onGoalToggle={toggleGoal}
             onContinue={() => handleStepComplete("goals")}
-            onBack={() => store.goBack()}
+            onBack={handleBack}
             isSaving={savingStep === "goals"}
+            continueLabel={getFinalContinueLabel(
+              "goals",
+              store,
+              editScope,
+              singleStepEdit,
+              returnTo,
+            )}
           />
         )
 

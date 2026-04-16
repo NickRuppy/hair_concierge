@@ -13,6 +13,7 @@ interface GoalsScreenProps {
   onBack: () => void
   isSaving?: boolean
   maxGoals?: number
+  continueLabel?: string
 }
 
 export function GoalsScreen({
@@ -23,6 +24,7 @@ export function GoalsScreen({
   onBack,
   isSaving,
   maxGoals = 5,
+  continueLabel = "Weiter",
 }: GoalsScreenProps) {
   const goals = hairTexture ? getOrderedGoals(hairTexture) : []
 
@@ -106,7 +108,7 @@ export function GoalsScreen({
           disabled={selectedGoals.length < 1 || isSaving}
           className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {isSaving ? "Speichern..." : "Weiter"}
+          {isSaving ? "Speichern..." : continueLabel}
         </button>
       </div>
     </div>

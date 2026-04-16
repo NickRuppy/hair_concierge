@@ -246,6 +246,7 @@ test.describe("Oil structured recommendation flow", () => {
       },
       [],
       createProfile({ thickness: "fine" }),
+      [],
       "Ich brauche ein leichtes Trockenoel, das nicht beschwert.",
     )
 

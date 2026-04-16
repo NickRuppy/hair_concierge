@@ -1,22 +1,18 @@
 import {
   CHEMICAL_TREATMENT_LABELS,
-  CONCERN_LABELS,
   CUTICLE_CONDITION_LABELS,
-  DESIRED_VOLUME_LABELS,
   GOAL_LABELS,
-  HAIR_DENSITY_LABELS,
   HAIR_TEXTURE_OPTIONS,
   HAIR_THICKNESS_OPTIONS,
   HEAT_STYLING_OPTIONS,
-  POST_WASH_ACTION_OPTIONS,
   PROTEIN_MOISTURE_LABELS,
-  ROUTINE_PRODUCT_OPTIONS,
   SCALP_CONDITION_LABELS,
   SCALP_TYPE_LABELS,
   STYLING_TOOL_LABELS,
-  WASH_FREQUENCY_OPTIONS,
 } from "@/lib/types"
 import type { HairProfile } from "@/lib/types"
+import { getGoalLabel, getOrderedGoals } from "@/lib/onboarding/goal-flow"
+import type { OnboardingStep } from "@/lib/onboarding/store"
 import {
   BRUSH_TYPE_LABELS,
   DRYING_METHOD_LABELS,
@@ -25,20 +21,27 @@ import {
   TOWEL_TECHNIQUE_LABELS,
 } from "@/lib/vocabulary"
 
-export type ProfileJourneySectionKey = "baseline" | "goals" | "routine" | "memory"
-export type ProfileFieldSourceLabel = "Aus Haar-Check" | "Aus Onboarding" | "Aus Chat"
+export type ProfileJourneySectionKey =
+  | "quiz"
+  | "products"
+  | "styling"
+  | "routine"
+  | "goals"
+  | "memory"
+export type ProfileFieldSourceLabel = "Aus Haar-Check" | "Aus Onboarding"
 export type ProfileFieldDisplayMode = "text" | "badges"
-export type ProfileFieldEditMode = "read_only" | "inline" | "section"
 export type ProfileFieldValue = string | string[] | null
+
+export type ProfileEditTarget = { kind: "quiz" } | { kind: "onboarding"; step: OnboardingStep }
 
 export type ProfileFieldConfig = {
   key: string
   label: string
   helpText: string
-  sectionKey: Exclude<ProfileJourneySectionKey, "memory">
+  sectionKey: Exclude<ProfileJourneySectionKey, "products" | "memory">
   sourceLabel: ProfileFieldSourceLabel
   displayMode: ProfileFieldDisplayMode
-  editMode: ProfileFieldEditMode
+  editTarget: ProfileEditTarget
   getValue: (profile: HairProfile | null) => ProfileFieldValue
 }
 
@@ -58,28 +61,67 @@ function optionLabel(
 
 function optionLabels(
   values: string[] | null | undefined,
-  options: Array<{ value: string; label: string }>,
+  labels: Record<string, string>,
 ): string[] | null {
   if (!values || values.length === 0) return null
-  return values.map((value) => optionLabel(value, options) ?? value)
+  return values.map((value) => labels[value] ?? value)
+}
+
+function orderedGoalLabels(profile: HairProfile | null): string[] | null {
+  if (!profile) return null
+
+  const selectedGoals = new Set(profile.goals ?? [])
+
+  if (profile.desired_volume === "more") {
+    selectedGoals.add("volume")
+  }
+
+  if (profile.desired_volume === "less") {
+    selectedGoals.add("less_volume")
+  }
+
+  if (selectedGoals.size === 0) return null
+
+  const ordered =
+    profile.hair_texture != null
+      ? getOrderedGoals(profile.hair_texture).filter((goal) => selectedGoals.has(goal))
+      : []
+
+  const remainder = Array.from(selectedGoals).filter((goal) => !ordered.includes(goal))
+  const goals = [...ordered, ...remainder]
+
+  return goals.map((goal) =>
+    profile.hair_texture != null
+      ? getGoalLabel(goal, profile.hair_texture)
+      : (GOAL_LABELS[goal] ?? goal),
+  )
 }
 
 export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
   {
-    key: "baseline",
-    title: "Deine Ausgangslage",
-    description:
-      "Was Hair Concierge aus Haar-Check und Profilbasis über Struktur, Diagnose und Behandlungen weiß.",
+    key: "quiz",
+    title: "Haar-Check",
+    description: "Die Antworten aus deinem Haar-Check in derselben Reihenfolge wie im Quiz.",
   },
   {
-    key: "goals",
-    title: "Deine Ziele",
-    description: "Worauf dein Plan ausgerichtet wird und welche Themen dir aktuell wichtig sind.",
+    key: "products",
+    title: "Produkte",
+    description: "Welche Produkte du im Onboarding ausgewählt und genauer beschrieben hast.",
+  },
+  {
+    key: "styling",
+    title: "Styling",
+    description: "Hitzetools, Frequenz und Hitzeschutz aus dem Styling-Teil des Onboardings.",
   },
   {
     key: "routine",
-    title: "Dein Alltag",
-    description: "Wie du dein Haar im Alltag pflegst, trocknest und mit Produkten unterstützt.",
+    title: "Alltag",
+    description: "Trocknen, Bürste und Nachtschutz aus dem Alltagsteil deines Onboardings.",
+  },
+  {
+    key: "goals",
+    title: "Ziele",
+    description: "Deine ausgewählten Haarziele aus dem letzten Onboarding-Schritt.",
   },
   {
     key: "memory",
@@ -90,52 +132,43 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
 ]
 
 export const PROFILE_JOURNEY_STEPS = [
-  { key: "baseline", label: "Haar-Check" },
-  { key: "goals", label: "Ziele" },
+  { key: "quiz", label: "Haar-Check" },
+  { key: "products", label: "Produkte" },
+  { key: "styling", label: "Styling" },
   { key: "routine", label: "Alltag" },
+  { key: "goals", label: "Ziele" },
   { key: "memory", label: "Merkt sich" },
 ] as const
 
 export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "hair_texture",
-    label: "Haartyp",
-    helpText: "Grundlage für die Kategorie- und Stylinglogik.",
-    sectionKey: "baseline",
+    label: "Haartextur",
+    helpText: "Dein erster Quiz-Schritt zur natürlichen Haarstruktur.",
+    sectionKey: "quiz",
     sourceLabel: "Aus Haar-Check",
     displayMode: "badges",
-    editMode: "read_only",
+    editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.hair_texture, HAIR_TEXTURE_OPTIONS),
   },
   {
     key: "thickness",
-    label: "Haarstruktur",
-    helpText: "Steuert vor allem Gewicht und Reichhaltigkeit von Empfehlungen.",
-    sectionKey: "baseline",
+    label: "Haar-Dicke",
+    helpText: "Dein zweiter Quiz-Schritt zur Dicke eines einzelnen Haares.",
+    sectionKey: "quiz",
     sourceLabel: "Aus Haar-Check",
     displayMode: "badges",
-    editMode: "read_only",
+    editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.thickness, HAIR_THICKNESS_OPTIONS),
   },
   {
-    key: "density",
-    label: "Haardichte",
-    helpText: "Hilft bei Volumen- und Gewichtsentscheidungen.",
-    sectionKey: "baseline",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
-    editMode: "read_only",
-    getValue: (profile) =>
-      profile?.density ? (HAIR_DENSITY_LABELS[profile.density] ?? profile.density) : null,
-  },
-  {
     key: "cuticle_condition",
-    label: "Schuppenschicht",
-    helpText: "Zeigt, wie glatt oder aufgeraut die Haaroberfläche ist.",
-    sectionKey: "baseline",
+    label: "Oberfläche",
+    helpText: "Das Ergebnis aus dem Finger-Test im Quiz.",
+    sectionKey: "quiz",
     sourceLabel: "Aus Haar-Check",
     displayMode: "badges",
-    editMode: "read_only",
+    editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.cuticle_condition
         ? (CUTICLE_CONDITION_LABELS[profile.cuticle_condition] ?? profile.cuticle_condition)
@@ -143,12 +176,12 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   },
   {
     key: "protein_moisture_balance",
-    label: "Protein / Feuchtigkeit",
-    helpText: "Signal für Balance zwischen Stabilität und Hydration.",
-    sectionKey: "baseline",
+    label: "Elastizität",
+    helpText: "Das Ergebnis aus dem Zug-Test im Quiz.",
+    sectionKey: "quiz",
     sourceLabel: "Aus Haar-Check",
     displayMode: "badges",
-    editMode: "read_only",
+    editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.protein_moisture_balance
         ? (PROTEIN_MOISTURE_LABELS[profile.protein_moisture_balance] ??
@@ -158,36 +191,35 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "scalp_type",
     label: "Kopfhauttyp",
-    helpText: "Bestimmt mit, wie sanft oder regulierend Shampoo ausfallen sollte.",
-    sectionKey: "baseline",
+    helpText: "Deine Angabe aus dem Kopfhaut-Schritt im Quiz.",
+    sectionKey: "quiz",
     sourceLabel: "Aus Haar-Check",
     displayMode: "badges",
-    editMode: "read_only",
+    editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.scalp_type ? (SCALP_TYPE_LABELS[profile.scalp_type] ?? profile.scalp_type) : null,
   },
   {
     key: "scalp_condition",
-    label: "Kopfhautbeschwerden",
-    helpText: "Spezifische Beschwerden werden gesondert berücksichtigt.",
-    sectionKey: "baseline",
+    label: "Kopfhaut-Beschwerden",
+    helpText: "Deine optionalen Beschwerden aus demselben Kopfhaut-Schritt.",
+    sectionKey: "quiz",
     sourceLabel: "Aus Haar-Check",
     displayMode: "badges",
-    editMode: "read_only",
+    editTarget: { kind: "quiz" },
     getValue: (profile) =>
-      profile?.scalp_condition && profile.scalp_condition !== "none"
-        ? (SCALP_CONDITION_LABELS[profile.scalp_condition as keyof typeof SCALP_CONDITION_LABELS] ??
-          profile.scalp_condition)
+      profile?.scalp_condition
+        ? (SCALP_CONDITION_LABELS[profile.scalp_condition] ?? profile.scalp_condition)
         : null,
   },
   {
     key: "chemical_treatment",
-    label: "Behandlungen",
-    helpText: "Zeigt, ob Farbe, Blondierung oder andere chemische Prozesse mitspielen.",
-    sectionKey: "baseline",
+    label: "Chemische Behandlungen",
+    helpText: "Deine Auswahl aus dem letzten Quiz-Schritt.",
+    sectionKey: "quiz",
     sourceLabel: "Aus Haar-Check",
     displayMode: "badges",
-    editMode: "read_only",
+    editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.chemical_treatment?.length
         ? profile.chemical_treatment.map(
@@ -196,98 +228,54 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
         : null,
   },
   {
-    key: "concerns",
-    label: "Probleme",
-    helpText: "Themen, die Hair Concierge sichtbar priorisieren soll.",
-    sectionKey: "goals",
-    sourceLabel: "Aus Haar-Check",
-    displayMode: "badges",
-    editMode: "inline",
-    getValue: (profile) =>
-      profile?.concerns?.length
-        ? profile.concerns.map((concern) => CONCERN_LABELS[concern] ?? concern)
-        : null,
-  },
-  {
-    key: "desired_volume",
-    label: "Gewünschtes Volumen",
-    helpText: "Legt fest, ob eher Ruhe, Balance oder mehr Fülle bevorzugt wird.",
-    sectionKey: "goals",
+    key: "styling_tools",
+    label: "Hitzetools",
+    helpText: "Welche Hitzetools du im Styling-Teil ausgewählt hast.",
+    sectionKey: "styling",
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
-    editMode: "read_only",
+    editTarget: { kind: "onboarding", step: "heat_tools" },
     getValue: (profile) => {
-      const fallback =
-        profile?.desired_volume ?? (profile?.goals?.includes("volume") ? "more" : null)
+      if (profile?.styling_tools?.length) {
+        return optionLabels(profile.styling_tools, STYLING_TOOL_LABELS)
+      }
 
-      return fallback ? (DESIRED_VOLUME_LABELS[fallback] ?? fallback) : null
+      if (profile?.heat_styling === "never") {
+        return "Keine Hitzetools"
+      }
+
+      return null
     },
-  },
-  {
-    key: "goals",
-    label: "Weitere Ziele",
-    helpText: "Zusätzliche Ziele für den ersten Plan und spätere Empfehlungen.",
-    sectionKey: "goals",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
-    editMode: "inline",
-    getValue: (profile) => {
-      const goals = profile?.goals ?? []
-      return goals.length ? goals.map((goal) => GOAL_LABELS[goal] ?? goal) : null
-    },
-  },
-  {
-    key: "wash_frequency",
-    label: "Wasch-Häufigkeit",
-    helpText: "Ein wichtiger Taktgeber für Routine- und Shampoo-Empfehlungen.",
-    sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
-    editMode: "inline",
-    getValue: (profile) => optionLabel(profile?.wash_frequency, WASH_FREQUENCY_OPTIONS),
   },
   {
     key: "heat_styling",
-    label: "Hitze-Styling",
-    helpText: "Zeigt, wie stark Hitze den Pflegebedarf beeinflusst.",
-    sectionKey: "routine",
+    label: "Styling-Frequenz",
+    helpText: "Wie oft du Hitze einsetzt, wenn du Tools nutzt.",
+    sectionKey: "styling",
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
-    editMode: "inline",
+    editTarget: { kind: "onboarding", step: "heat_frequency" },
     getValue: (profile) => optionLabel(profile?.heat_styling, HEAT_STYLING_OPTIONS),
   },
   {
     key: "uses_heat_protection",
     label: "Hitzeschutz",
-    helpText: "Wichtig für die Bewertung von Belastung und Schutzlücken.",
-    sectionKey: "routine",
+    helpText: "Deine Antwort aus dem Hitzeschutz-Schritt.",
+    sectionKey: "styling",
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
-    editMode: "inline",
+    editTarget: { kind: "onboarding", step: "heat_protection" },
     getValue: (profile) =>
       profile?.uses_heat_protection != null ? (profile.uses_heat_protection ? "Ja" : "Nein") : null,
   },
   {
-    key: "styling_tools",
-    label: "Styling-Tools",
-    helpText: "Welche Tools regelmäßig genutzt werden, beeinflusst Styling- und Schutz-Tipps.",
-    sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
-    editMode: "section",
-    getValue: (profile) =>
-      profile?.styling_tools?.length
-        ? profile.styling_tools.map((tool) => STYLING_TOOL_LABELS[tool] ?? tool)
-        : null,
-  },
-  {
     key: "towel_material",
-    label: "Handtuch",
-    helpText: "Das Material kann Frizz und mechanische Reibung beeinflussen.",
+    label: "Handtuch-Material",
+    helpText: "Womit du dein Haar im Alltag trocknest.",
     sectionKey: "routine",
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
-    editMode: "section",
+    editTarget: { kind: "onboarding", step: "towel_material" },
     getValue: (profile) =>
       profile?.towel_material
         ? (TOWEL_MATERIAL_LABELS[profile.towel_material] ?? profile.towel_material)
@@ -296,11 +284,11 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "towel_technique",
     label: "Trocknungstechnik",
-    helpText: "Wie du trocknest, beeinflusst Frizz, Spannkraft und Schutz.",
+    helpText: "Wie du dein Haar direkt nach dem Waschen trocknest.",
     sectionKey: "routine",
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
-    editMode: "section",
+    editTarget: { kind: "onboarding", step: "towel_technique" },
     getValue: (profile) =>
       profile?.towel_technique
         ? (TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique)
@@ -309,80 +297,52 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "drying_method",
     label: "Trocknungsmethode",
-    helpText: "Zeigt, ob Lufttrocknen, Föhnen oder beides dominieren.",
+    helpText: "Ob du Lufttrocknen, Föhnen oder beides gewählt hast.",
     sectionKey: "routine",
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
-    editMode: "section",
-    getValue: (profile) =>
-      profile?.drying_method?.length
-        ? profile.drying_method.map((method) => DRYING_METHOD_LABELS[method] ?? method)
-        : null,
+    editTarget: { kind: "onboarding", step: "drying_method" },
+    getValue: (profile) => optionLabels(profile?.drying_method, DRYING_METHOD_LABELS),
   },
   {
     key: "brush_type",
     label: "Bürste",
-    helpText: "Die Bürstenwahl beeinflusst Spannung, Glätte und mechanische Belastung.",
+    helpText: "Deine Bürsten-Auswahl aus dem Alltagsteil.",
     sectionKey: "routine",
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
-    editMode: "section",
+    editTarget: { kind: "onboarding", step: "brush_type" },
     getValue: (profile) =>
       profile?.brush_type ? (BRUSH_TYPE_LABELS[profile.brush_type] ?? profile.brush_type) : null,
   },
   {
     key: "night_protection",
     label: "Nachtschutz",
-    helpText: "Wie du dein Haar nachts schützt, beeinflusst Reibung und Formhaltbarkeit.",
+    helpText: "Wie du dein Haar nachts schützt.",
     sectionKey: "routine",
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
-    editMode: "section",
-    getValue: (profile) =>
-      profile?.night_protection?.length
-        ? profile.night_protection.map(
-            (protection) => NIGHT_PROTECTION_LABELS[protection] ?? protection,
-          )
-        : null,
+    editTarget: { kind: "onboarding", step: "night_protection" },
+    getValue: (profile) => {
+      if (profile?.night_protection?.length) {
+        return optionLabels(profile.night_protection, NIGHT_PROTECTION_LABELS)
+      }
+
+      if ((profile?.goals?.length ?? 0) > 0 || profile?.desired_volume != null) {
+        return "Nichts davon"
+      }
+
+      return null
+    },
   },
   {
-    key: "post_wash_actions",
-    label: "Nach dem Waschen",
-    helpText: "Hilft bei Leave-in-, Schutz- und Styling-Empfehlungen.",
-    sectionKey: "routine",
+    key: "goals",
+    label: "Deine Haarziele",
+    helpText: "Genau die Ziele, die du im letzten Onboarding-Schritt ausgewählt hast.",
+    sectionKey: "goals",
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
-    editMode: "section",
-    getValue: (profile) => optionLabels(profile?.post_wash_actions, POST_WASH_ACTION_OPTIONS),
-  },
-  {
-    key: "current_routine_products",
-    label: "Produkte in Routine",
-    helpText: "Verhindert doppelte Vorschläge und zeigt, was schon im Alltag verankert ist.",
-    sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
-    editMode: "section",
-    getValue: (profile) => optionLabels(profile?.current_routine_products, ROUTINE_PRODUCT_OPTIONS),
-  },
-  {
-    key: "products_used",
-    label: "Verwendete Produkte",
-    helpText: "Freie Produkthinweise aus deinem Profil oder aus Gesprächen.",
-    sectionKey: "routine",
-    sourceLabel: "Aus Chat",
-    displayMode: "text",
-    editMode: "section",
-    getValue: (profile) => profile?.products_used || null,
-  },
-  {
-    key: "additional_notes",
-    label: "Zusätzliche Hinweise",
-    helpText: "Freitext für Dinge, die in den Standardfeldern keinen guten Platz haben.",
-    sectionKey: "routine",
-    sourceLabel: "Aus Chat",
-    displayMode: "text",
-    editMode: "section",
-    getValue: (profile) => profile?.additional_notes || null,
+    editTarget: { kind: "onboarding", step: "goals" },
+    getValue: (profile) => orderedGoalLabels(profile),
   },
 ]
