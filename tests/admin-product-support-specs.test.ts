@@ -35,6 +35,36 @@ test("product schema accepts bondbuilder support specs", () => {
   assert.equal(parsed.success, true)
 })
 
+test("product schema accepts canonical leave-in fit specs", () => {
+  const parsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Leave-in",
+      leave_in_specs: {
+        weight: "light",
+        conditioner_relationship: "replacement_capable",
+        care_benefits: ["heat_protect", "repair"],
+      },
+    }),
+  )
+
+  assert.equal(parsed.success, true)
+})
+
+test("product schema accepts engine-native mask specs", () => {
+  const parsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Maske",
+      mask_specs: {
+        weight: "medium",
+        concentration: "high",
+        balance_direction: "moisture",
+      },
+    }),
+  )
+
+  assert.equal(parsed.success, true)
+})
+
 test("product schema requires deep-cleansing specs for deep-cleansing products", () => {
   const parsed = productSchema.safeParse(
     buildBaseProduct({

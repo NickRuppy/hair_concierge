@@ -205,35 +205,11 @@ test("oil decision resolves normalized request purpose before category logic run
   })
 })
 
-test("oil decision can fall back to stored routine purpose when the current ask is vague", () => {
-  const { normalized } = buildEngineState(LOW_DAMAGE_PROFILE, [
-    {
-      category: "oil",
-      product_name: "Routine Oil",
-      frequency_range: "1_2x",
-    },
-  ])
-
-  const decision = buildOilCategoryDecision(normalized, {
-    requestedCategory: "oil",
-    oilPurpose: null,
-    storedRoutineOilPurpose: "styling_finish",
-    oilNoRecommendationReason: null,
-  })
-
-  assert.equal(decision.relevant, true)
-  assert.equal(decision.clarificationNeeded, false)
-  assert.equal(decision.targetProfile?.purposeSource, "stored_routine")
-  assert.equal(decision.targetProfile?.matcherSubtype, "styling-oel")
-  assert.ok(decision.notes.includes("oil_purpose_defaulted_from_stored_routine"))
-})
-
-test("oil decision asks for clarification when no current or stored purpose is available", () => {
+test("oil decision asks for clarification when no explicit purpose is available", () => {
   const { normalized } = buildEngineState(LOW_DAMAGE_PROFILE, [])
   const decision = buildOilCategoryDecision(normalized, {
     requestedCategory: "oil",
     oilPurpose: null,
-    storedRoutineOilPurpose: null,
     oilNoRecommendationReason: null,
   })
 

@@ -73,13 +73,9 @@ function createSpec(
 ): ProductMaskSpecs {
   return {
     product_id: productId,
-    format: "cream",
     weight: "medium",
     concentration: "medium",
     balance_direction: null,
-    benefits: [],
-    ingredient_flags: [],
-    leave_on_minutes: 10,
     ...overrides,
   }
 }

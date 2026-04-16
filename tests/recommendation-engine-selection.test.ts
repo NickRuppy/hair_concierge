@@ -115,23 +115,15 @@ test("engine mask reranking rewards complete fit metadata over unknown balance",
   const specs: ProductMaskSpecs[] = [
     {
       product_id: "unknown",
-      format: "cream",
       weight: "medium",
       concentration: "high",
       balance_direction: null,
-      benefits: [],
-      ingredient_flags: [],
-      leave_on_minutes: 10,
     },
     {
       product_id: "ideal",
-      format: "cream",
       weight: "medium",
       concentration: "high",
       balance_direction: "moisture",
-      benefits: [],
-      ingredient_flags: [],
-      leave_on_minutes: 10,
     },
   ]
 

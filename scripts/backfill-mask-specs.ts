@@ -210,24 +210,35 @@ const MASK_BACKFILL_BY_NAME: Record<string, MaskBackfillSpec> = {
 async function removeDuplicateMask() {
   const { data: duplicates, error: duplicateQueryError } = await supabase
     .from("products")
-    .select("id,name")
+    .select("id,name,created_at,updated_at")
     .eq("category", "Maske")
     .eq("name", DUPLICATE_MASK_NAME)
+    .order("created_at", { ascending: true })
+    .order("updated_at", { ascending: true })
+    .order("id", { ascending: true })
 
   if (duplicateQueryError) throw duplicateQueryError
-  if (!duplicates || duplicates.length === 0) return 0
+  if (!duplicates || duplicates.length < 2) return 0
 
-  const duplicateIds = duplicates.map((product) => product.id)
-  const { error: deleteError } = await supabase.from("products").delete().in("id", duplicateIds)
+  if (duplicates.length > 2) {
+    throw new Error(
+      `Expected at most two ${DUPLICATE_MASK_NAME} rows, found ${duplicates.length}. Resolve the duplicate manually before running the backfill.`,
+    )
+  }
+
+  const duplicate = duplicates[1]
+  if (!duplicate) return 0
+
+  const { error: deleteError } = await supabase.from("products").delete().eq("id", duplicate.id)
   if (deleteError) throw deleteError
 
-  return duplicateIds.length
+  return 1
 }
 
 async function fetchMasks() {
   const { data, error } = await supabase
     .from("products")
-    .select("id,name,brand,suitable_concerns,suitable_thicknesses")
+    .select("id,name,brand,created_at,updated_at,suitable_concerns,suitable_thicknesses")
     .eq("category", "Maske")
     .order("name")
 
@@ -250,7 +261,7 @@ async function main() {
     .filter((product) => !MASK_BACKFILL_BY_NAME[product.name])
     .map((product) => product.name)
 
-  const extraMappings = [...mappedNames].filter(
+  const extraMappings = Array.from(mappedNames).filter(
     (name) => !masks.some((product) => product.name === name),
   )
 
@@ -289,9 +300,6 @@ async function main() {
     weight,
     concentration,
     balance_direction,
-    benefits: [],
-    ingredient_flags: [],
-    leave_on_minutes: 10,
   }))
 
   const { error } = await supabase

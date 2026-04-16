@@ -13,17 +13,59 @@ import { isMaskCategory } from "@/lib/mask/constants"
 import { isPeelingCategory } from "@/lib/peeling/constants"
 import { SHAMPOO_SOURCE_MANAGED_MESSAGE, isShampooCategory } from "@/lib/shampoo/constants"
 
+const STRUCTURED_SPEC_TABLES = [
+  "product_conditioner_rerank_specs",
+  "product_leave_in_fit_specs",
+  "product_leave_in_specs",
+  "product_mask_specs",
+  "product_bondbuilder_specs",
+  "product_deep_cleansing_shampoo_specs",
+  "product_dry_shampoo_specs",
+  "product_peeling_specs",
+] as const
+
 async function deleteStructuredProductSpecs(
   supabase: Awaited<ReturnType<typeof createClient>>,
   productId: string,
+  tables: readonly string[] = STRUCTURED_SPEC_TABLES,
 ) {
-  await supabase.from("product_conditioner_rerank_specs").delete().eq("product_id", productId)
-  await supabase.from("product_leave_in_specs").delete().eq("product_id", productId)
-  await supabase.from("product_mask_specs").delete().eq("product_id", productId)
-  await supabase.from("product_bondbuilder_specs").delete().eq("product_id", productId)
-  await supabase.from("product_deep_cleansing_shampoo_specs").delete().eq("product_id", productId)
-  await supabase.from("product_dry_shampoo_specs").delete().eq("product_id", productId)
-  await supabase.from("product_peeling_specs").delete().eq("product_id", productId)
+  for (const table of tables) {
+    await supabase.from(table).delete().eq("product_id", productId)
+  }
+}
+
+function getObsoleteStructuredSpecTables(category: string | null) {
+  return STRUCTURED_SPEC_TABLES.filter((table) => {
+    if (table === "product_leave_in_specs") {
+      return true
+    }
+
+    if (table === "product_conditioner_rerank_specs") {
+      return !isConditionerCategory(category)
+    }
+
+    if (table === "product_leave_in_fit_specs") {
+      return !isLeaveInCategory(category)
+    }
+
+    if (table === "product_mask_specs") {
+      return !isMaskCategory(category)
+    }
+
+    if (table === "product_bondbuilder_specs") {
+      return !isBondbuilderCategory(category)
+    }
+
+    if (table === "product_deep_cleansing_shampoo_specs") {
+      return !isDeepCleansingShampooCategory(category)
+    }
+
+    if (table === "product_dry_shampoo_specs") {
+      return !isDryShampooCategory(category)
+    }
+
+    return !isPeelingCategory(category)
+  })
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -83,9 +125,125 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     ...productPayload
   } = parsed.data
 
+  const nextCategory = parsed.data.category
+  const updatedAt = new Date().toISOString()
+
+  if (isConditionerCategory(nextCategory) && conditioner_specs) {
+    const { error: conditionerSpecsError } = await supabase
+      .from("product_conditioner_rerank_specs")
+      .upsert({
+        product_id: id,
+        ...conditioner_specs,
+        updated_at: updatedAt,
+      })
+
+    if (conditionerSpecsError) {
+      return NextResponse.json(
+        { error: fehler("Speichern", "der Conditioner-Spezifikation") },
+        { status: 500 },
+      )
+    }
+  }
+
+  if (isLeaveInCategory(nextCategory) && leave_in_specs) {
+    const { error: specsError } = await supabase.from("product_leave_in_fit_specs").upsert({
+      product_id: id,
+      ...leave_in_specs,
+      updated_at: updatedAt,
+    })
+
+    if (specsError) {
+      return NextResponse.json(
+        { error: fehler("Speichern", "der Leave-in-Spezifikation") },
+        { status: 500 },
+      )
+    }
+  }
+
+  if (isMaskCategory(nextCategory) && mask_specs) {
+    const { error: maskSpecsError } = await supabase.from("product_mask_specs").upsert({
+      product_id: id,
+      ...mask_specs,
+      updated_at: updatedAt,
+    })
+
+    if (maskSpecsError) {
+      return NextResponse.json(
+        { error: fehler("Speichern", "der Masken-Spezifikation") },
+        { status: 500 },
+      )
+    }
+  }
+
+  if (isBondbuilderCategory(nextCategory) && bondbuilder_specs) {
+    const { error: bondbuilderSpecsError } = await supabase
+      .from("product_bondbuilder_specs")
+      .upsert({
+        product_id: id,
+        ...bondbuilder_specs,
+        updated_at: updatedAt,
+      })
+
+    if (bondbuilderSpecsError) {
+      return NextResponse.json(
+        { error: fehler("Speichern", "der Bondbuilder-Spezifikation") },
+        { status: 500 },
+      )
+    }
+  }
+
+  if (isDeepCleansingShampooCategory(nextCategory) && deep_cleansing_shampoo_specs) {
+    const { error: deepCleansingShampooSpecsError } = await supabase
+      .from("product_deep_cleansing_shampoo_specs")
+      .upsert({
+        product_id: id,
+        ...deep_cleansing_shampoo_specs,
+        updated_at: updatedAt,
+      })
+
+    if (deepCleansingShampooSpecsError) {
+      return NextResponse.json(
+        { error: fehler("Speichern", "der Tiefenreinigungs-Spezifikation") },
+        { status: 500 },
+      )
+    }
+  }
+
+  if (isDryShampooCategory(nextCategory) && dry_shampoo_specs) {
+    const { error: dryShampooSpecsError } = await supabase
+      .from("product_dry_shampoo_specs")
+      .upsert({
+        product_id: id,
+        ...dry_shampoo_specs,
+        updated_at: updatedAt,
+      })
+
+    if (dryShampooSpecsError) {
+      return NextResponse.json(
+        { error: fehler("Speichern", "der Trockenshampoo-Spezifikation") },
+        { status: 500 },
+      )
+    }
+  }
+
+  if (isPeelingCategory(nextCategory) && peeling_specs) {
+    const { error: peelingSpecsError } = await supabase.from("product_peeling_specs").upsert({
+      product_id: id,
+      ...peeling_specs,
+      updated_at: updatedAt,
+    })
+
+    if (peelingSpecsError) {
+      return NextResponse.json(
+        { error: fehler("Speichern", "der Peeling-Spezifikation") },
+        { status: 500 },
+      )
+    }
+  }
+
   const { data: product, error } = await supabase
     .from("products")
-    .update({ ...productPayload, updated_at: new Date().toISOString() })
+    .update({ ...productPayload, updated_at: updatedAt })
     .eq("id", id)
     .select()
     .single()
@@ -103,119 +261,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     existing.category !== productPayload.category ||
     JSON.stringify(existing.tags) !== JSON.stringify(productPayload.tags)
 
-  await deleteStructuredProductSpecs(supabase, product.id)
-
-  if (isConditionerCategory(product.category) && conditioner_specs) {
-    const { error: conditionerSpecsError } = await supabase
-      .from("product_conditioner_rerank_specs")
-      .upsert({
-        product_id: product.id,
-        ...conditioner_specs,
-        updated_at: new Date().toISOString(),
-      })
-
-    if (conditionerSpecsError) {
-      return NextResponse.json(
-        { error: fehler("Speichern", "der Conditioner-Spezifikation") },
-        { status: 500 },
-      )
-    }
-  }
-
-  if (isLeaveInCategory(product.category) && leave_in_specs) {
-    const { error: specsError } = await supabase.from("product_leave_in_specs").upsert({
-      product_id: product.id,
-      ...leave_in_specs,
-      updated_at: new Date().toISOString(),
-    })
-
-    if (specsError) {
-      return NextResponse.json(
-        { error: fehler("Speichern", "der Leave-in-Spezifikation") },
-        { status: 500 },
-      )
-    }
-  }
-
-  if (isMaskCategory(product.category) && mask_specs) {
-    const { error: maskSpecsError } = await supabase.from("product_mask_specs").upsert({
-      product_id: product.id,
-      ...mask_specs,
-      updated_at: new Date().toISOString(),
-    })
-
-    if (maskSpecsError) {
-      return NextResponse.json(
-        { error: fehler("Speichern", "der Masken-Spezifikation") },
-        { status: 500 },
-      )
-    }
-  }
-
-  if (isBondbuilderCategory(product.category) && bondbuilder_specs) {
-    const { error: bondbuilderSpecsError } = await supabase
-      .from("product_bondbuilder_specs")
-      .upsert({
-        product_id: product.id,
-        ...bondbuilder_specs,
-        updated_at: new Date().toISOString(),
-      })
-
-    if (bondbuilderSpecsError) {
-      return NextResponse.json(
-        { error: fehler("Speichern", "der Bondbuilder-Spezifikation") },
-        { status: 500 },
-      )
-    }
-  }
-
-  if (isDeepCleansingShampooCategory(product.category) && deep_cleansing_shampoo_specs) {
-    const { error: deepCleansingShampooSpecsError } = await supabase
-      .from("product_deep_cleansing_shampoo_specs")
-      .upsert({
-        product_id: product.id,
-        ...deep_cleansing_shampoo_specs,
-        updated_at: new Date().toISOString(),
-      })
-
-    if (deepCleansingShampooSpecsError) {
-      return NextResponse.json(
-        { error: fehler("Speichern", "der Tiefenreinigungs-Spezifikation") },
-        { status: 500 },
-      )
-    }
-  }
-
-  if (isDryShampooCategory(product.category) && dry_shampoo_specs) {
-    const { error: dryShampooSpecsError } = await supabase
-      .from("product_dry_shampoo_specs")
-      .upsert({
-        product_id: product.id,
-        ...dry_shampoo_specs,
-        updated_at: new Date().toISOString(),
-      })
-
-    if (dryShampooSpecsError) {
-      return NextResponse.json(
-        { error: fehler("Speichern", "der Trockenshampoo-Spezifikation") },
-        { status: 500 },
-      )
-    }
-  }
-
-  if (isPeelingCategory(product.category) && peeling_specs) {
-    const { error: peelingSpecsError } = await supabase.from("product_peeling_specs").upsert({
-      product_id: product.id,
-      ...peeling_specs,
-      updated_at: new Date().toISOString(),
-    })
-
-    if (peelingSpecsError) {
-      return NextResponse.json(
-        { error: fehler("Speichern", "der Peeling-Spezifikation") },
-        { status: 500 },
-      )
-    }
+  try {
+    await deleteStructuredProductSpecs(
+      supabase,
+      product.id,
+      getObsoleteStructuredSpecTables(nextCategory),
+    )
+  } catch (cleanupError) {
+    console.error("Failed to delete obsolete product specs:", cleanupError)
   }
 
   if (embeddingFieldsChanged) {
@@ -258,7 +311,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   }
   if (isLeaveInCategory(product.category)) {
     const { data: specs } = await supabase
-      .from("product_leave_in_specs")
+      .from("product_leave_in_fit_specs")
       .select("*")
       .eq("product_id", product.id)
       .single()

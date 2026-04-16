@@ -220,7 +220,7 @@ export function getOilMissingProfileFields(params: {
   const missing: Array<"thickness" | "oil_purpose"> = []
 
   if (!hairProfile?.thickness) missing.push("thickness")
-  if (!runtime.requestContext.oilPurpose && !runtime.requestContext.storedRoutineOilPurpose) {
+  if (!runtime.requestContext.oilPurpose) {
     missing.push("oil_purpose")
   }
 

@@ -11,7 +11,7 @@ import {
   type ProductDeepCleansingShampooSpecs,
 } from "@/lib/deep-cleansing-shampoo/constants"
 import { isDryShampooCategory, type ProductDryShampooSpecs } from "@/lib/dry-shampoo/constants"
-import { isLeaveInCategory, type ProductLeaveInSpecs } from "@/lib/leave-in/constants"
+import { isLeaveInCategory, type ProductLeaveInFitSpecs } from "@/lib/leave-in/constants"
 import { isMaskCategory, type ProductMaskSpecs } from "@/lib/mask/constants"
 import {
   SHAMPOO_BUCKETS,
@@ -125,15 +125,15 @@ export async function GET() {
     )
   }
 
-  let specsByProductId = new Map<string, ProductLeaveInSpecs>()
+  let specsByProductId = new Map<string, ProductLeaveInFitSpecs>()
   if (leaveInIds.length > 0) {
     const { data: specs } = await supabase
-      .from("product_leave_in_specs")
+      .from("product_leave_in_fit_specs")
       .select("*")
       .in("product_id", leaveInIds)
 
     specsByProductId = new Map(
-      ((specs || []) as ProductLeaveInSpecs[]).map((spec) => [spec.product_id, spec]),
+      ((specs || []) as ProductLeaveInFitSpecs[]).map((spec) => [spec.product_id, spec]),
     )
   }
 
@@ -285,7 +285,7 @@ export async function POST(request: Request) {
   }
 
   if (isLeaveInCategory(product.category) && leave_in_specs) {
-    const { error: specsError } = await supabase.from("product_leave_in_specs").upsert({
+    const { error: specsError } = await supabase.from("product_leave_in_fit_specs").upsert({
       product_id: product.id,
       ...leave_in_specs,
     })

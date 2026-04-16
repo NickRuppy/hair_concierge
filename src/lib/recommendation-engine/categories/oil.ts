@@ -3,41 +3,14 @@ import type {
   OilCategoryDecision,
   RecommendationRequestContext,
   NormalizedProfile,
-  OilPurposeSource,
 } from "@/lib/recommendation-engine/types"
-
-function resolveOilPurpose(requestContext: RecommendationRequestContext): {
-  purpose: RecommendationRequestContext["oilPurpose"]
-  purposeSource: OilPurposeSource
-} {
-  if (requestContext.oilPurpose) {
-    return {
-      purpose: requestContext.oilPurpose,
-      purposeSource: "request",
-    }
-  }
-
-  if (requestContext.storedRoutineOilPurpose) {
-    return {
-      purpose: requestContext.storedRoutineOilPurpose,
-      purposeSource: "stored_routine",
-    }
-  }
-
-  return {
-    purpose: null,
-    purposeSource: "missing",
-  }
-}
 
 export function buildOilCategoryDecision(
   profile: NormalizedProfile,
   requestContext: RecommendationRequestContext,
 ): OilCategoryDecision {
   const oilRequested =
-    requestContext.requestedCategory === "oil" ||
-    requestContext.oilPurpose !== null ||
-    requestContext.storedRoutineOilPurpose !== null
+    requestContext.requestedCategory === "oil" || requestContext.oilPurpose !== null
 
   if (!oilRequested) {
     return {
@@ -53,7 +26,7 @@ export function buildOilCategoryDecision(
     }
   }
 
-  const { purpose, purposeSource } = resolveOilPurpose(requestContext)
+  const purpose = requestContext.oilPurpose
 
   if (!purpose) {
     return {
@@ -88,10 +61,10 @@ export function buildOilCategoryDecision(
       purpose,
       matcherSubtype,
       adjunctScalpSupport,
-      purposeSource,
+      purposeSource: "request",
     },
     clarificationNeeded: false,
     noRecommendationReason: requestContext.oilNoRecommendationReason,
-    notes: purposeSource === "stored_routine" ? ["oil_purpose_defaulted_from_stored_routine"] : [],
+    notes: [],
   }
 }

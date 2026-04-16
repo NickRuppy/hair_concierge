@@ -26,7 +26,7 @@ import type {
   NightProtection,
 } from "@/lib/vocabulary"
 import type {
-  ProductLeaveInSpecs,
+  ProductLeaveInFitSpecs,
   LeaveInNeedBucket,
   LeaveInStylingContext,
   LeaveInConditionerRelationship,
@@ -219,7 +219,7 @@ export interface Product {
   is_active: boolean
   sort_order: number
   conditioner_specs?: ProductConditionerSpecs | null
-  leave_in_specs?: ProductLeaveInSpecs | null
+  leave_in_specs?: ProductLeaveInFitSpecs | null
   mask_specs?: ProductMaskSpecs | null
   bondbuilder_specs?: ProductBondbuilderSpecs | null
   deep_cleansing_shampoo_specs?: ProductDeepCleansingShampooSpecs | null

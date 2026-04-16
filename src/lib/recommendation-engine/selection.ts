@@ -460,12 +460,6 @@ function buildOilTopReasons(
     )
   }
 
-  if (decision.targetProfile?.purposeSource === "stored_routine") {
-    tradeoffs.push(
-      "Der Oel-Zweck wurde aus deiner bestehenden Routine uebernommen, weil die aktuelle Anfrage nicht genauer war.",
-    )
-  }
-
   if (decision.targetProfile?.adjunctScalpSupport) {
     tradeoffs.push(
       "Bei aktiven Kopfhautproblemen bleibt Shampoo oder ein Scalp-Treatment der primaere Hebel.",
@@ -863,8 +857,11 @@ function mapBalanceToMaskType(
 }
 
 function buildMaskUsageHint(spec: ProductMaskSpecs | null): string {
-  const leaveOn = spec?.leave_on_minutes ?? 10
-  return `Nach dem Shampoo in die Laengen und Spitzen geben, ${leaveOn} Minuten einwirken lassen, ausspuelen und danach Conditioner verwenden.`
+  if (!spec) {
+    return "Nach dem Shampoo in die Laengen und Spitzen geben, gruendlich ausspuelen und danach Conditioner verwenden."
+  }
+
+  return "Nach dem Shampoo in die Laengen und Spitzen geben, gruendlich ausspuelen und danach Conditioner verwenden."
 }
 
 export function rerankMaskProductsWithEngine(params: {

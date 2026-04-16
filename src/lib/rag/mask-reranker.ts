@@ -41,7 +41,9 @@ const ACTIVE_HEAT_STYLING = new Set(["daily", "several_weekly", "once_weekly"])
 const ACTIVE_CHEMICAL_TREATMENTS = new Set(["colored", "bleached"])
 const ACTIVE_BALANCE_STATES = new Set(["snaps", "stretches_stays"])
 
-function deriveMaskType(balance: HairProfile["protein_moisture_balance"] | null | undefined): MaskType | null {
+function deriveMaskType(
+  balance: HairProfile["protein_moisture_balance"] | null | undefined,
+): MaskType | null {
   switch (balance) {
     case "snaps":
       return "moisture"
@@ -76,7 +78,10 @@ export function deriveMaskDecision(profile: HairProfile | null): MaskDecision {
     totalWeight += chemWeight
   }
 
-  if (profile.protein_moisture_balance && ACTIVE_BALANCE_STATES.has(profile.protein_moisture_balance)) {
+  if (
+    profile.protein_moisture_balance &&
+    ACTIVE_BALANCE_STATES.has(profile.protein_moisture_balance)
+  ) {
     activeSignals.push("protein_moisture_balance")
     signalWeights.protein_moisture_balance = 2
     totalWeight += 2
@@ -97,19 +102,15 @@ export function deriveMaskDecision(profile: HairProfile | null): MaskDecision {
   }
 
   const needStrength: MaskDecision["need_strength"] =
-    totalWeight === 0 ? 0
-    : totalWeight <= 2 ? 1
-    : totalWeight <= 4 ? 2
-    : 3
+    totalWeight === 0 ? 0 : totalWeight <= 2 ? 1 : totalWeight <= 4 ? 2 : 3
 
   return {
     needs_mask: totalWeight > 0,
     need_strength: needStrength,
     mask_type: deriveMaskType(profile.protein_moisture_balance),
     active_signals: activeSignals,
-    signal_weights: activeSignals.length > 0
-      ? signalWeights as Record<MaskSignal, number>
-      : undefined,
+    signal_weights:
+      activeSignals.length > 0 ? (signalWeights as Record<MaskSignal, number>) : undefined,
   }
 }
 
@@ -144,7 +145,7 @@ function scoreWeightFit(thickness: string | null, weight: ProductMaskSpecs["weig
 
 function scoreConcentrationFit(
   needStrength: MaskDecision["need_strength"],
-  concentration: ProductMaskSpecs["concentration"]
+  concentration: ProductMaskSpecs["concentration"],
 ): ConcentrationScore {
   if (needStrength <= 0) {
     return { fit: "last", points: 0 }
@@ -168,7 +169,7 @@ function scoreConcentrationFit(
 function buildUsageHint(spec: ProductMaskSpecs): string {
   return [
     "Nach dem Shampoo in die Laengen und Spitzen geben (nicht auf die Kopfhaut),",
-    `${spec.leave_on_minutes} Minuten einwirken lassen, ausspuelen und danach Conditioner verwenden.`,
+    "gruendlich ausspuelen und danach Conditioner verwenden.",
     "Etwa alle 3-5 Waeschen.",
   ].join(" ")
 }
@@ -197,7 +198,7 @@ export function rerankMaskProducts(
   candidates: MatchedProduct[],
   specs: ProductMaskSpecs[],
   hairProfile: HairProfile | null,
-  decision: MaskDecision = deriveMaskDecision(hairProfile)
+  decision: MaskDecision = deriveMaskDecision(hairProfile),
 ): MatchedProduct[] {
   if (!decision.needs_mask || !decision.mask_type) {
     return []
@@ -326,7 +327,7 @@ export function rerankMaskProducts(
       returned_count: scored.length,
       top_factors: scored[0]?.recommendation_meta.top_reasons ?? [],
       top_tradeoffs: scored[0]?.recommendation_meta.tradeoffs ?? [],
-    })
+    }),
   )
 
   return scored.slice(0, 3).map((product) => {

@@ -68,7 +68,6 @@ export type ConfidenceLevel = (typeof CONFIDENCE_LEVELS)[number]
 export interface RecommendationRequestContext {
   requestedCategory: EngineCategoryId | null
   oilPurpose: OilPurpose | null
-  storedRoutineOilPurpose: OilPurpose | null
   oilNoRecommendationReason: OilNoRecommendationReason | null
 }
 
@@ -246,7 +245,7 @@ export interface ShampooTargetProfile {
 
 export type ShampooCategoryDecision = CategoryDecisionBase<"shampoo", ShampooTargetProfile>
 
-export type OilPurposeSource = "request" | "stored_routine" | "missing"
+export type OilPurposeSource = "request" | "missing"
 
 export interface OilTargetProfile {
   purpose: OilPurpose | null

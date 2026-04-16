@@ -26,22 +26,14 @@ import {
   PRODUCT_SCALP_TYPE_FOCUS_LABELS,
 } from "@/lib/product-specs/constants"
 import {
-  LEAVE_IN_FORMATS,
   LEAVE_IN_WEIGHTS,
-  LEAVE_IN_ROLES,
-  LEAVE_IN_CARE_BENEFITS,
-  LEAVE_IN_INGREDIENT_FLAGS,
-  LEAVE_IN_APPLICATION_STAGES,
+  LEAVE_IN_CONDITIONER_RELATIONSHIPS,
+  LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS,
+  LEAVE_IN_FIT_CARE_BENEFITS,
+  LEAVE_IN_FIT_CARE_BENEFIT_LABELS,
   isLeaveInCategory,
 } from "@/lib/leave-in/constants"
-import {
-  MASK_FORMATS,
-  MASK_WEIGHTS,
-  MASK_CONCENTRATIONS,
-  MASK_BENEFITS,
-  MASK_INGREDIENT_FLAGS,
-  isMaskCategory,
-} from "@/lib/mask/constants"
+import { MASK_WEIGHTS, MASK_CONCENTRATIONS, isMaskCategory } from "@/lib/mask/constants"
 import { OIL_SUBTYPE_OPTIONS, isOilCategory } from "@/lib/oil/constants"
 import { isPeelingCategory } from "@/lib/peeling/constants"
 import {
@@ -51,25 +43,15 @@ import {
 } from "@/lib/shampoo/constants"
 
 interface LeaveInSpecForm {
-  format: string
   weight: string
-  roles: string[]
-  provides_heat_protection: boolean
-  heat_protection_max_c: string
-  heat_activation_required: boolean
+  conditioner_relationship: string
   care_benefits: string[]
-  ingredient_flags: string[]
-  application_stage: string[]
 }
 
 interface MaskSpecForm {
-  format: string
   weight: string
   concentration: string
   balance_direction: string
-  benefits: string[]
-  ingredient_flags: string[]
-  leave_on_minutes: string
 }
 
 interface ConditionerSpecForm {
@@ -120,25 +102,15 @@ interface ProductForm {
 }
 
 const emptyLeaveInSpecs: LeaveInSpecForm = {
-  format: "spray",
   weight: "light",
-  roles: [],
-  provides_heat_protection: false,
-  heat_protection_max_c: "",
-  heat_activation_required: false,
+  conditioner_relationship: "replacement_capable",
   care_benefits: [],
-  ingredient_flags: [],
-  application_stage: ["towel_dry"],
 }
 
 const emptyMaskSpecs: MaskSpecForm = {
-  format: "",
   weight: "medium",
   concentration: "low",
   balance_direction: "",
-  benefits: [],
-  ingredient_flags: [],
-  leave_on_minutes: "10",
 }
 
 const emptyConditionerSpecs: ConditionerSpecForm = {
@@ -236,18 +208,9 @@ export default function AdminProductsPage() {
   function handleEdit(product: Product) {
     const leaveInSpecs = product.leave_in_specs
       ? {
-          format: product.leave_in_specs.format,
           weight: product.leave_in_specs.weight,
-          roles: product.leave_in_specs.roles || [],
-          provides_heat_protection: product.leave_in_specs.provides_heat_protection,
-          heat_protection_max_c:
-            product.leave_in_specs.heat_protection_max_c != null
-              ? String(product.leave_in_specs.heat_protection_max_c)
-              : "",
-          heat_activation_required: product.leave_in_specs.heat_activation_required,
+          conditioner_relationship: product.leave_in_specs.conditioner_relationship,
           care_benefits: product.leave_in_specs.care_benefits || [],
-          ingredient_flags: product.leave_in_specs.ingredient_flags || [],
-          application_stage: product.leave_in_specs.application_stage || ["towel_dry"],
         }
       : isLeaveInCategory(product.category || "")
         ? { ...emptyLeaveInSpecs }
@@ -255,13 +218,9 @@ export default function AdminProductsPage() {
 
     const maskSpecs = product.mask_specs
       ? {
-          format: product.mask_specs.format ?? "",
           weight: product.mask_specs.weight,
           concentration: product.mask_specs.concentration,
           balance_direction: product.mask_specs.balance_direction ?? "",
-          benefits: product.mask_specs.benefits || [],
-          ingredient_flags: product.mask_specs.ingredient_flags || [],
-          leave_on_minutes: String(product.mask_specs.leave_on_minutes ?? 10),
         }
       : isMaskCategory(product.category || "")
         ? { ...emptyMaskSpecs }
@@ -353,13 +312,10 @@ export default function AdminProductsPage() {
     })
   }
 
-  function toggleLeaveInArrayField(
-    field: "roles" | "care_benefits" | "ingredient_flags" | "application_stage",
-    value: string,
-  ) {
+  function toggleLeaveInCareBenefit(value: string) {
     setForm((prev) => {
       if (!prev.leave_in_specs) return prev
-      const current = prev.leave_in_specs[field]
+      const current = prev.leave_in_specs.care_benefits
       const next = current.includes(value)
         ? current.filter((entry) => entry !== value)
         : [...current, value]
@@ -367,24 +323,7 @@ export default function AdminProductsPage() {
         ...prev,
         leave_in_specs: {
           ...prev.leave_in_specs,
-          [field]: next,
-        },
-      }
-    })
-  }
-
-  function toggleMaskArrayField(field: "benefits" | "ingredient_flags", value: string) {
-    setForm((prev) => {
-      if (!prev.mask_specs) return prev
-      const current = prev.mask_specs[field]
-      const next = current.includes(value)
-        ? current.filter((entry) => entry !== value)
-        : [...current, value]
-      return {
-        ...prev,
-        mask_specs: {
-          ...prev.mask_specs,
-          [field]: next,
+          care_benefits: next,
         },
       }
     })
@@ -524,31 +463,17 @@ export default function AdminProductsPage() {
         leave_in_specs:
           leaveInEnabled && form.leave_in_specs
             ? {
-                format: form.leave_in_specs.format,
                 weight: form.leave_in_specs.weight,
-                roles: form.leave_in_specs.roles,
-                provides_heat_protection: form.leave_in_specs.provides_heat_protection,
-                heat_protection_max_c: form.leave_in_specs.heat_protection_max_c
-                  ? parseInt(form.leave_in_specs.heat_protection_max_c, 10)
-                  : null,
-                heat_activation_required: form.leave_in_specs.heat_activation_required,
+                conditioner_relationship: form.leave_in_specs.conditioner_relationship,
                 care_benefits: form.leave_in_specs.care_benefits,
-                ingredient_flags: form.leave_in_specs.ingredient_flags,
-                application_stage: form.leave_in_specs.application_stage,
               }
             : null,
         mask_specs:
           maskEnabled && form.mask_specs
             ? {
-                format: form.mask_specs.format || null,
                 weight: form.mask_specs.weight,
                 concentration: form.mask_specs.concentration,
                 balance_direction: form.mask_specs.balance_direction || null,
-                benefits: form.mask_specs.benefits,
-                ingredient_flags: form.mask_specs.ingredient_flags,
-                leave_on_minutes: form.mask_specs.leave_on_minutes
-                  ? parseInt(form.mask_specs.leave_on_minutes, 10)
-                  : 10,
               }
             : null,
         bondbuilder_specs:
@@ -959,35 +884,11 @@ export default function AdminProductsPage() {
                 <div>
                   <h3 className="text-sm font-semibold text-foreground">Leave-in Spezifikation</h3>
                   <p className="text-xs text-muted-foreground">
-                    Strukturierte Felder fuer deterministisches Leave-in-Reranking.
+                    Kanonische Felder fuer das neue Leave-in-Fit der Recommendation Engine.
                   </p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Format
-                    </label>
-                    <select
-                      value={form.leave_in_specs.format}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          leave_in_specs: prev.leave_in_specs
-                            ? { ...prev.leave_in_specs, format: e.target.value }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    >
-                      {LEAVE_IN_FORMATS.map((value) => (
-                        <option key={value} value={value}>
-                          {value}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
                   <div>
                     <label className="mb-1 block text-xs font-medium text-muted-foreground">
                       Gewicht
@@ -1011,177 +912,52 @@ export default function AdminProductsPage() {
                       ))}
                     </select>
                   </div>
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
-                    Rollen
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {LEAVE_IN_ROLES.map((role) => (
-                      <button
-                        key={role}
-                        type="button"
-                        onClick={() => toggleLeaveInArrayField("roles", role)}
-                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                          form.leave_in_specs?.roles.includes(role)
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
-                        }`}
-                      >
-                        {role}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id="provides_heat_protection"
-                      checked={form.leave_in_specs.provides_heat_protection}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          leave_in_specs: prev.leave_in_specs
-                            ? {
-                                ...prev.leave_in_specs,
-                                provides_heat_protection: e.target.checked,
-                                heat_protection_max_c: e.target.checked
-                                  ? prev.leave_in_specs.heat_protection_max_c
-                                  : "",
-                              }
-                            : null,
-                        }))
-                      }
-                      className="h-4 w-4 rounded border-input"
-                    />
-                    <label
-                      htmlFor="provides_heat_protection"
-                      className="text-xs font-medium text-foreground"
-                    >
-                      Bietet Hitzeschutz
-                    </label>
-                  </div>
 
                   <div>
                     <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Hitzeschutz bis (C)
+                      Conditioner-Beziehung
                     </label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={form.leave_in_specs.heat_protection_max_c}
+                    <select
+                      value={form.leave_in_specs.conditioner_relationship}
                       onChange={(e) =>
                         setForm((prev) => ({
                           ...prev,
                           leave_in_specs: prev.leave_in_specs
                             ? {
                                 ...prev.leave_in_specs,
-                                heat_protection_max_c: e.target.value,
+                                conditioner_relationship: e.target.value,
                               }
                             : null,
                         }))
                       }
-                      disabled={!form.leave_in_specs.provides_heat_protection}
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {LEAVE_IN_CONDITIONER_RELATIONSHIPS.map((value) => (
+                        <option key={value} value={value}>
+                          {LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[value]}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="heat_activation_required"
-                    checked={form.leave_in_specs.heat_activation_required}
-                    onChange={(e) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        leave_in_specs: prev.leave_in_specs
-                          ? {
-                              ...prev.leave_in_specs,
-                              heat_activation_required: e.target.checked,
-                              roles: e.target.checked
-                                ? prev.leave_in_specs.roles.includes("styling_prep")
-                                  ? prev.leave_in_specs.roles
-                                  : [...prev.leave_in_specs.roles, "styling_prep"]
-                                : prev.leave_in_specs.roles,
-                            }
-                          : null,
-                      }))
-                    }
-                    className="h-4 w-4 rounded border-input"
-                  />
-                  <label
-                    htmlFor="heat_activation_required"
-                    className="text-xs font-medium text-foreground"
-                  >
-                    Hitzeaktivierung erforderlich
-                  </label>
                 </div>
 
                 <div>
                   <label className="mb-2 block text-xs font-medium text-muted-foreground">
-                    Care Benefits
+                    Care-Benefits
                   </label>
                   <div className="flex flex-wrap gap-2">
-                    {LEAVE_IN_CARE_BENEFITS.map((benefit) => (
+                    {LEAVE_IN_FIT_CARE_BENEFITS.map((benefit) => (
                       <button
                         key={benefit}
                         type="button"
-                        onClick={() => toggleLeaveInArrayField("care_benefits", benefit)}
+                        onClick={() => toggleLeaveInCareBenefit(benefit)}
                         className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                           form.leave_in_specs?.care_benefits.includes(benefit)
                             ? "bg-primary text-primary-foreground"
                             : "bg-muted text-muted-foreground hover:bg-muted/80"
                         }`}
                       >
-                        {benefit}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
-                    Ingredient Flags
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {LEAVE_IN_INGREDIENT_FLAGS.map((flag) => (
-                      <button
-                        key={flag}
-                        type="button"
-                        onClick={() => toggleLeaveInArrayField("ingredient_flags", flag)}
-                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                          form.leave_in_specs?.ingredient_flags.includes(flag)
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
-                        }`}
-                      >
-                        {flag}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
-                    Anwendungsschritte
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {LEAVE_IN_APPLICATION_STAGES.map((stage) => (
-                      <button
-                        key={stage}
-                        type="button"
-                        onClick={() => toggleLeaveInArrayField("application_stage", stage)}
-                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                          form.leave_in_specs?.application_stage.includes(stage)
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
-                        }`}
-                      >
-                        {stage}
+                        {LEAVE_IN_FIT_CARE_BENEFIT_LABELS[benefit]}
                       </button>
                     ))}
                   </div>
@@ -1194,36 +970,11 @@ export default function AdminProductsPage() {
                 <div>
                   <h3 className="text-sm font-semibold text-foreground">Masken-Spezifikation</h3>
                   <p className="text-xs text-muted-foreground">
-                    Strukturierte Felder fuer deterministisches Masken-Reranking.
+                    Nur die Felder, die die neue Recommendation Engine wirklich verwendet.
                   </p>
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-4">
-                  <div>
-                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                      Format (optional)
-                    </label>
-                    <select
-                      value={form.mask_specs.format}
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          mask_specs: prev.mask_specs
-                            ? { ...prev.mask_specs, format: e.target.value }
-                            : null,
-                        }))
-                      }
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    >
-                      <option value="">Nicht gepflegt</option>
-                      {MASK_FORMATS.map((value) => (
-                        <option key={value} value={value}>
-                          {value}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
+                <div className="grid gap-4 sm:grid-cols-3">
                   <div>
                     <label className="mb-1 block text-xs font-medium text-muted-foreground">
                       Gewicht
@@ -1299,71 +1050,6 @@ export default function AdminProductsPage() {
                       ))}
                     </select>
                   </div>
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
-                    Benefits
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {MASK_BENEFITS.map((benefit) => (
-                      <button
-                        key={benefit}
-                        type="button"
-                        onClick={() => toggleMaskArrayField("benefits", benefit)}
-                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                          form.mask_specs?.benefits.includes(benefit)
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
-                        }`}
-                      >
-                        {benefit}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-xs font-medium text-muted-foreground">
-                    Ingredient Flags
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {MASK_INGREDIENT_FLAGS.map((flag) => (
-                      <button
-                        key={flag}
-                        type="button"
-                        onClick={() => toggleMaskArrayField("ingredient_flags", flag)}
-                        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                          form.mask_specs?.ingredient_flags.includes(flag)
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
-                        }`}
-                      >
-                        {flag}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                    Einwirkzeit (Minuten)
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="60"
-                    value={form.mask_specs.leave_on_minutes}
-                    onChange={(e) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        mask_specs: prev.mask_specs
-                          ? { ...prev.mask_specs, leave_on_minutes: e.target.value }
-                          : null,
-                      }))
-                    }
-                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                  />
                 </div>
               </div>
             )}
