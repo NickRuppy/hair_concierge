@@ -3,6 +3,7 @@
 import { useAuth } from "@/providers/auth-provider"
 import { createClient } from "@/lib/supabase/client"
 import type { HairProfile } from "@/lib/types"
+import { hydrateHairProfileForConsumers } from "@/lib/hair-profile/derived"
 import { useEffect, useState } from "react"
 
 const supabase = createClient()
@@ -20,12 +21,17 @@ export function useHairProfile() {
         return
       }
       try {
-        const { data } = await supabase
-          .from("hair_profiles")
-          .select("*")
-          .eq("user_id", userId)
-          .maybeSingle()
-        setHairProfile(data)
+        const [{ data: profile }, { data: routineItems }] = await Promise.all([
+          supabase.from("hair_profiles").select("*").eq("user_id", userId).maybeSingle(),
+          supabase
+            .from("user_product_usage")
+            .select("category, product_name, frequency_range")
+            .eq("user_id", userId),
+        ])
+
+        setHairProfile(
+          hydrateHairProfileForConsumers(profile as HairProfile | null, routineItems ?? []),
+        )
       } catch (err) {
         console.error("Error loading hair profile:", err)
       } finally {

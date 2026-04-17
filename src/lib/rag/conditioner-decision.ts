@@ -5,7 +5,7 @@ import {
   type ProductConditionerSpecs,
 } from "@/lib/conditioner/constants"
 import { mapProteinMoistureToConcernCode } from "@/lib/rag/conditioner-mapper"
-import { deriveMechanicalStressLevel } from "@/lib/vocabulary"
+import { deriveMechanicalStressLevelFromBehaviors } from "@/lib/profile/signal-derivations"
 import type {
   ConditionerBalanceNeed,
   ConditionerDecision,
@@ -22,10 +22,7 @@ const CONDITIONER_CLARIFICATION_QUESTIONS: Record<ConditionerProfileField, strin
     "Hast du mal den Zugtest gemacht? Einzelnes Haar ziehen - bricht es direkt, dehnt es sich, oder federt es zurueck?",
 }
 
-const CONDITIONER_FIELD_ORDER: ConditionerProfileField[] = [
-  "thickness",
-  "protein_moisture_balance",
-]
+const CONDITIONER_FIELD_ORDER: ConditionerProfileField[] = ["thickness", "protein_moisture_balance"]
 
 const THICKNESS_REASON_LABELS = {
   fine: "feinem",
@@ -126,7 +123,11 @@ export function deriveConditionerRepairLevel(
     level = "low"
   }
 
-  const stressLevel = deriveMechanicalStressLevel(profile?.mechanical_stress_factors ?? [])
+  const stressLevel = deriveMechanicalStressLevelFromBehaviors(
+    profile?.towel_technique,
+    profile?.brush_type,
+    profile?.night_protection,
+  )
   if (stressLevel === "high") {
     level = maxRepairLevel(level, "medium")
   } else if (stressLevel === "medium") {
@@ -189,9 +190,9 @@ export function buildConditionerDecision(
 }
 
 export function buildConditionerClarificationQuestions(decision: ConditionerDecision): string[] {
-  return CONDITIONER_FIELD_ORDER
-    .filter((field) => decision.missing_profile_fields.includes(field))
-    .map((field) => CONDITIONER_CLARIFICATION_QUESTIONS[field])
+  return CONDITIONER_FIELD_ORDER.filter((field) =>
+    decision.missing_profile_fields.includes(field),
+  ).map((field) => CONDITIONER_CLARIFICATION_QUESTIONS[field])
 }
 
 type ScoreEntry = {

@@ -2,7 +2,7 @@
 
 import { ArrowLeft } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { getOrderedGoals, getGoalLabel } from "@/lib/onboarding/goal-flow"
+import { getAvailableGoals, getAvailableGoalLabel } from "@/lib/onboarding/goal-flow"
 import type { HairTexture } from "@/lib/vocabulary"
 
 interface GoalsScreenProps {
@@ -26,7 +26,7 @@ export function GoalsScreen({
   maxGoals = 5,
   continueLabel = "Weiter",
 }: GoalsScreenProps) {
-  const goals = hairTexture ? getOrderedGoals(hairTexture) : []
+  const goals = getAvailableGoals(hairTexture)
 
   return (
     <div>
@@ -75,7 +75,9 @@ export function GoalsScreen({
               )}
               style={{ animationDelay: `${100 + i * 50}ms` }}
             >
-              <span className="text-center leading-tight">{getGoalLabel(goal, hairTexture!)}</span>
+              <span className="text-center leading-tight">
+                {getAvailableGoalLabel(goal, hairTexture)}
+              </span>
               <div
                 className={cn(
                   "flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-opacity",

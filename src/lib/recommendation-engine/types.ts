@@ -9,9 +9,7 @@ import type {
   HairTexture,
   HairThickness,
   HeatStyling,
-  MechanicalStressFactor,
   NightProtection,
-  PostWashAction,
   ProductFrequency,
   ProteinMoistureBalance,
   ScalpCondition,
@@ -85,19 +83,17 @@ export interface RawHairProfileInput {
   goals: Goal[]
   wash_frequency: WashFrequency | null
   heat_styling: HeatStyling | null
-  styling_tools: StylingTool[]
+  styling_tools: StylingTool[] | null
   cuticle_condition: CuticleCondition | null
   protein_moisture_balance: ProteinMoistureBalance | null
   scalp_type: ScalpType | null
   scalp_condition: ScalpCondition | null
   chemical_treatment: ChemicalTreatment[]
-  post_wash_actions: PostWashAction[]
-  mechanical_stress_factors: MechanicalStressFactor[]
   towel_material: TowelMaterial | null
   towel_technique: TowelTechnique | null
-  drying_method: DryingMethod[]
+  drying_method: DryingMethod | null
   brush_type: BrushType | null
-  night_protection: NightProtection[]
+  night_protection: NightProtection[] | null
   uses_heat_protection: boolean
 }
 
@@ -123,19 +119,17 @@ export interface NormalizedProfile {
   goals: Goal[]
   washFrequency: WashFrequency | null
   heatStyling: HeatStyling | null
-  stylingTools: StylingTool[]
+  stylingTools: StylingTool[] | null
   cuticleCondition: CuticleCondition | null
   proteinMoistureBalance: ProteinMoistureBalance | null
   scalpType: ScalpType | null
   scalpCondition: ScalpCondition | null
   chemicalTreatment: ChemicalTreatment[]
-  postWashActions: PostWashAction[]
-  mechanicalStressFactors: MechanicalStressFactor[]
   towelMaterial: TowelMaterial | null
   towelTechnique: TowelTechnique | null
-  dryingMethod: DryingMethod[]
+  dryingMethod: DryingMethod | null
   brushType: BrushType | null
-  nightProtection: NightProtection[]
+  nightProtection: NightProtection[] | null
   usesHeatProtection: boolean
   routineInventory: RoutineInventory
 }
@@ -223,7 +217,7 @@ export interface MaskTargetProfile {
 
 export type MaskCategoryDecision = CategoryDecisionBase<"mask", MaskTargetProfile>
 
-export type LeaveInStylingContext = "air_dry" | "non_heat_style" | "heat_style"
+export type LeaveInStylingContext = "air_dry" | "heat_style"
 export type LeaveInConditionerRelationship = "replacement_capable" | "booster_only"
 
 export interface LeaveInTargetProfile {

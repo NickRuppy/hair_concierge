@@ -51,8 +51,8 @@ export function deriveWashFrequencyFromRoutineItems(
 
 export function deriveCurrentRoutineProductsFromRoutineItems(
   routineItems: RoutineInventoryLike[],
-  fallback: RoutineProduct[] = [],
-): RoutineProduct[] {
+  fallback: RoutineProduct[] | null = null,
+): RoutineProduct[] | null {
   const categories = Array.from(
     new Set(
       routineItems
@@ -103,7 +103,7 @@ export function hydrateHairProfileForConsumers(
     wash_frequency: deriveWashFrequencyFromRoutineItems(routineItems, profile.wash_frequency),
     current_routine_products: deriveCurrentRoutineProductsFromRoutineItems(
       routineItems,
-      profile.current_routine_products ?? [],
+      profile.current_routine_products ?? null,
     ),
     products_used: deriveProductsUsedFromRoutineItems(routineItems, profile.products_used),
     desired_volume: deriveDesiredVolumeFromGoals(profile.goals, profile.desired_volume),

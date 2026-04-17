@@ -1,4 +1,4 @@
-import type { HairProfile } from "@/lib/types"
+import type { HairProfile, RoutineProduct } from "@/lib/types"
 import {
   deriveWashFrequencyFromRoutineItems,
   type RoutineInventoryLike,
@@ -47,10 +47,10 @@ export interface AdaptedRecommendationInput {
   unsupportedRoutineCategories: string[]
 }
 
-export function buildRoutineItemsFromCurrentRoutineProducts(
-  profile: HairProfile | null,
+export function buildRoutineItemsFromInventoryCategories(
+  categories: RoutineProduct[] | null | undefined,
 ): PersistenceRoutineItemRow[] {
-  return (profile?.current_routine_products ?? []).map((category) => ({
+  return (categories ?? []).map((category) => ({
     category,
     product_name: null,
     frequency_range: null,
@@ -66,19 +66,17 @@ function emptyRawHairProfileInput(): RawHairProfileInput {
     goals: [],
     wash_frequency: null,
     heat_styling: null,
-    styling_tools: [],
+    styling_tools: null,
     cuticle_condition: null,
     protein_moisture_balance: null,
     scalp_type: null,
     scalp_condition: null,
     chemical_treatment: [],
-    post_wash_actions: [],
-    mechanical_stress_factors: [],
     towel_material: null,
     towel_technique: null,
-    drying_method: [],
+    drying_method: null,
     brush_type: null,
-    night_protection: [],
+    night_protection: null,
     uses_heat_protection: false,
   }
 }
@@ -99,19 +97,17 @@ function buildRawHairProfileInput(
     goals: profile.goals ?? [],
     wash_frequency: deriveWashFrequencyFromRoutineItems(routineItems, profile.wash_frequency),
     heat_styling: profile.heat_styling,
-    styling_tools: profile.styling_tools ?? [],
+    styling_tools: profile.styling_tools ?? null,
     cuticle_condition: profile.cuticle_condition,
     protein_moisture_balance: profile.protein_moisture_balance,
     scalp_type: profile.scalp_type,
     scalp_condition: profile.scalp_condition,
     chemical_treatment: profile.chemical_treatment ?? [],
-    post_wash_actions: profile.post_wash_actions ?? [],
-    mechanical_stress_factors: profile.mechanical_stress_factors ?? [],
     towel_material: profile.towel_material,
     towel_technique: profile.towel_technique,
-    drying_method: profile.drying_method ?? [],
+    drying_method: profile.drying_method,
     brush_type: profile.brush_type,
-    night_protection: profile.night_protection ?? [],
+    night_protection: profile.night_protection ?? null,
     uses_heat_protection: profile.uses_heat_protection ?? false,
   }
 }

@@ -19,6 +19,7 @@ import {
   LEAVE_IN_NEED_BUCKET_LABELS,
   LEAVE_IN_WEIGHT_LABELS,
 } from "@/lib/leave-in/constants"
+import { deriveLeaveInStylingContextFromStages } from "@/lib/profile/signal-derivations"
 
 const LEAVE_IN_CLARIFICATION_QUESTIONS: Record<LeaveInProfileField, string> = {
   hair_texture: "Ist dein Haar eher glatt, wellig, lockig oder kraus?",
@@ -67,28 +68,13 @@ function toBaseScore(product: MatchedProduct): number {
 }
 
 export function deriveLeaveInStylingContext(
-  profile: HairProfile | null
+  profile: HairProfile | null,
 ): LeaveInStylingContext | null {
-  const actions = profile?.post_wash_actions ?? []
-
-  if (actions.length > 0) {
-    if (actions.includes("blow_dry_only") || actions.includes("heat_tool_styling")) {
-      return "heat_style"
-    }
-    if (actions.includes("non_heat_styling")) {
-      return "non_heat_style"
-    }
-    if (actions.includes("air_dry")) {
-      return "air_dry"
-    }
-    return null
-  }
-
-  if (!profile?.heat_styling || profile.heat_styling === "never") {
-    return null
-  }
-
-  return "heat_style"
+  return deriveLeaveInStylingContextFromStages(
+    profile?.drying_method,
+    profile?.heat_styling,
+    profile?.styling_tools,
+  )
 }
 
 export function deriveLeaveInNeedBucket(
@@ -144,7 +130,7 @@ export function deriveLeaveInNeedBucket(
 }
 
 export function deriveLeaveInConditionerRelationship(
-  profile: HairProfile | null
+  profile: HairProfile | null,
 ): LeaveInConditionerRelationship | null {
   if (!profile?.thickness || !profile.density) return null
 
@@ -206,9 +192,9 @@ export function buildLeaveInDecision(
 }
 
 export function buildLeaveInClarificationQuestions(decision: LeaveInDecision): string[] {
-  return LEAVE_IN_FIELD_ORDER
-    .filter((field) => decision.missing_profile_fields.includes(field))
-    .map((field) => LEAVE_IN_CLARIFICATION_QUESTIONS[field])
+  return LEAVE_IN_FIELD_ORDER.filter((field) =>
+    decision.missing_profile_fields.includes(field),
+  ).map((field) => LEAVE_IN_CLARIFICATION_QUESTIONS[field])
 }
 
 function isReplacementOnly(spec: ProductLeaveInSpecs): boolean {
@@ -228,7 +214,7 @@ function supportsBoosterUse(spec: ProductLeaveInSpecs): boolean {
 function filterCandidatesByRelationship(
   candidates: MatchedProduct[],
   specsByProductId: Map<string, ProductLeaveInSpecs>,
-  relationship: LeaveInConditionerRelationship | null
+  relationship: LeaveInConditionerRelationship | null,
 ): MatchedProduct[] {
   return candidates.filter((candidate) => {
     const spec = specsByProductId.get(candidate.id)
@@ -244,7 +230,7 @@ function filterCandidatesByRelationship(
 
 function scoreWeightFit(
   expectedWeight: LeaveInWeight | null,
-  actualWeight: LeaveInWeight
+  actualWeight: LeaveInWeight,
 ): { points: number; positive?: string; negative?: string } {
   if (!expectedWeight) return { points: 0 }
 
@@ -276,10 +262,7 @@ function scoreWeightFit(
   }
 }
 
-function buildUsageHint(
-  decision: LeaveInDecision,
-  spec: ProductLeaveInSpecs
-): string {
+function buildUsageHint(decision: LeaveInDecision, spec: ProductLeaveInSpecs): string {
   const stages = new Set(spec.application_stage ?? [])
 
   if (decision.styling_context === "heat_style") {
@@ -297,10 +280,6 @@ function buildUsageHint(
     return "Nach dem Conditioner sparsam in die Laengen und Spitzen geben und als zusaetzlichen Booster nutzen."
   }
 
-  if (decision.styling_context === "non_heat_style") {
-    return "Ins handtuchtrockene Haar geben und dann ohne Hitze stylen."
-  }
-
   if (stages.has("dry_hair") || stages.has("post_style")) {
     return "Nur sparsam in Laengen und Spitzen geben und gleichmaessig verteilen."
   }
@@ -316,7 +295,7 @@ type ScoreEntry = {
 export function rerankLeaveInProducts(
   candidates: MatchedProduct[],
   specs: ProductLeaveInSpecs[],
-  decision: LeaveInDecision
+  decision: LeaveInDecision,
 ): MatchedProduct[] {
   if (!decision.eligible || !decision.need_bucket || !decision.conditioner_relationship) {
     return []
@@ -328,7 +307,7 @@ export function rerankLeaveInProducts(
   const filtered = filterCandidatesByRelationship(
     candidates,
     specsByProductId,
-    decision.conditioner_relationship
+    decision.conditioner_relationship,
   )
 
   type ScoredLeaveInProduct = MatchedProduct & {
@@ -374,7 +353,8 @@ export function rerankLeaveInProducts(
         if (isReplacementOnly(spec)) {
           negatives.push({
             points: -12,
-            reason: "Ist eher als Conditioner-Ersatz angelegt und fuer Booster-Nutzung weniger passend.",
+            reason:
+              "Ist eher als Conditioner-Ersatz angelegt und fuer Booster-Nutzung weniger passend.",
           })
         }
       }
@@ -391,16 +371,6 @@ export function rerankLeaveInProducts(
         positives.push({
           points: 8,
           reason: "Bringt den noetigen Hitzeschutz fuer dein Styling mit.",
-        })
-      }
-
-      if (
-        decision.styling_context === "non_heat_style" &&
-        (spec.roles ?? []).includes("styling_prep")
-      ) {
-        positives.push({
-          points: 5,
-          reason: "Unterstuetzt dein Styling ohne Hitze.",
         })
       }
     }
@@ -422,18 +392,21 @@ export function rerankLeaveInProducts(
         .sort((a, b) => a.points - b.points)
         .slice(0, 3)
         .map((entry) => entry.reason),
-      usage_hint: buildUsageHint(decision, spec ?? {
-        product_id: product.id,
-        format: "lotion",
-        weight: decision.matched_weight ?? "medium",
-        roles: [],
-        provides_heat_protection: false,
-        heat_protection_max_c: null,
-        heat_activation_required: false,
-        care_benefits: [],
-        ingredient_flags: [],
-        application_stage: ["towel_dry"],
-      }),
+      usage_hint: buildUsageHint(
+        decision,
+        spec ?? {
+          product_id: product.id,
+          format: "lotion",
+          weight: decision.matched_weight ?? "medium",
+          roles: [],
+          provides_heat_protection: false,
+          heat_protection_max_c: null,
+          heat_activation_required: false,
+          care_benefits: [],
+          ingredient_flags: [],
+          application_stage: ["towel_dry"],
+        },
+      ),
       matched_profile: decision.matched_profile,
       need_bucket: needBucket,
       styling_context: decision.styling_context,

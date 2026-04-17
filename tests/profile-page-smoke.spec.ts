@@ -15,6 +15,25 @@ const admin = createClient(supabaseUrl, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false },
 })
 
+async function upsertHairProfileWithDryingCompat(payload: Record<string, unknown>) {
+  const { error } = await admin.from("hair_profiles").upsert(payload, { onConflict: "user_id" })
+
+  if (error?.code === "22P02" && typeof payload.drying_method === "string") {
+    const { error: retryError } = await admin.from("hair_profiles").upsert(
+      {
+        ...payload,
+        drying_method: [payload.drying_method],
+      },
+      { onConflict: "user_id" },
+    )
+
+    if (!retryError) return
+    throw retryError
+  }
+
+  if (error) throw error
+}
+
 test.describe.serial("Profile page smoke", () => {
   const email = `playwright-profile-${Date.now()}@hairconscierge.test`
   const password = "Playwright123!"
@@ -49,33 +68,27 @@ test.describe.serial("Profile page smoke", () => {
 
     if (profileError) throw profileError
 
-    const { error: hairProfileError } = await admin.from("hair_profiles").upsert(
-      {
-        user_id: userId,
-        hair_texture: "wavy",
-        thickness: "fine",
-        wash_frequency: "once_weekly",
-        heat_styling: "once_weekly",
-        styling_tools: ["flat_iron"],
-        uses_heat_protection: true,
-        cuticle_condition: "smooth",
-        protein_moisture_balance: "stretches_bounces",
-        scalp_type: "oily",
-        scalp_condition: "none",
-        chemical_treatment: ["bleached"],
-        towel_material: "frottee",
-        towel_technique: "tupfen",
-        drying_method: ["air_dry"],
-        brush_type: "wide_tooth_comb",
-        night_protection: [],
-        goals: ["shine", "volume"],
-        desired_volume: "more",
-        current_routine_products: ["conditioner"],
-      },
-      { onConflict: "user_id" },
-    )
-
-    if (hairProfileError) throw hairProfileError
+    await upsertHairProfileWithDryingCompat({
+      user_id: userId,
+      hair_texture: "wavy",
+      thickness: "fine",
+      wash_frequency: "once_weekly",
+      heat_styling: "once_weekly",
+      styling_tools: ["flat_iron"],
+      uses_heat_protection: true,
+      cuticle_condition: "smooth",
+      protein_moisture_balance: "stretches_bounces",
+      scalp_type: "oily",
+      scalp_condition: "none",
+      chemical_treatment: ["bleached"],
+      towel_material: "frottee",
+      towel_technique: "tupfen",
+      drying_method: "air_dry",
+      brush_type: "wide_tooth_comb",
+      night_protection: [],
+      goals: ["shine", "volume"],
+      desired_volume: "more",
+    })
 
     const { error: productUsageError } = await admin.from("user_product_usage").insert([
       {
@@ -179,13 +192,22 @@ test.describe.serial("Profile page smoke", () => {
 
     const { data: goalsCleanupRow, error: goalsCleanupError } = await admin
       .from("hair_profiles")
-      .select("desired_volume, current_routine_products")
+      .select("desired_volume")
       .eq("user_id", userId!)
       .single()
 
     if (goalsCleanupError) throw goalsCleanupError
     expect(goalsCleanupRow?.desired_volume).toBeNull()
-    expect(goalsCleanupRow?.current_routine_products ?? []).toEqual([])
+
+    const { data: routineRows, error: routineRowsError } = await admin
+      .from("user_product_usage")
+      .select("category")
+      .eq("user_id", userId!)
+
+    if (routineRowsError) throw routineRowsError
+    expect((routineRows ?? []).map((row) => row.category).sort()).toEqual(
+      expect.arrayContaining(["conditioner", "dry_shampoo", "shampoo"]),
+    )
 
     const shampooDetailRow = page
       .getByRole("button")

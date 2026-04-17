@@ -6,6 +6,7 @@ import type {
   NormalizedProfile,
   RepairPriority,
 } from "@/lib/recommendation-engine/types"
+import { isExplicitNoneArray } from "@/lib/profile/signal-derivations"
 import { scoreToDamageLevel } from "@/lib/recommendation-engine/utils/levels"
 
 function deriveBalanceDirection(profile: NormalizedProfile): BalanceDirection | null {
@@ -153,11 +154,13 @@ export function buildDamageAssessment(profile: NormalizedProfile): DamageAssessm
     activeDamageDrivers.push("high_stress_brush")
   }
 
-  if (profile.nightProtection.length === 0) {
+  if (isExplicitNoneArray(profile.nightProtection)) {
     mechanicalScore += 1
     activeDamageDrivers.push("missing_night_protection")
-  } else {
+  } else if ((profile.nightProtection?.length ?? 0) > 0) {
     activeProtectiveFactors.push("night_protection_present")
+  } else {
+    missingInputs.push("night_protection")
   }
 
   const structuralLevel = scoreToDamageLevel(structuralScore)

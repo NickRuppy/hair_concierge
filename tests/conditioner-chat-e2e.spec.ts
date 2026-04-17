@@ -256,6 +256,7 @@ test.describe.serial("Conditioner chat E2E", () => {
     if (!userId) return
 
     await clearUserConversations(userId)
+    await admin.from("user_product_usage").delete().eq("user_id", userId)
     await admin.from("hair_profiles").delete().eq("user_id", userId)
     await admin.from("profiles").delete().eq("id", userId)
     await admin.auth.admin.deleteUser(userId)
@@ -264,6 +265,7 @@ test.describe.serial("Conditioner chat E2E", () => {
   test.beforeEach(async () => {
     if (!userId) throw new Error("Missing conditioner E2E user")
     await clearUserConversations(userId)
+    await admin.from("user_product_usage").delete().eq("user_id", userId)
   })
 
   test("full conditioner profile returns recommendations with conditioner metadata", async ({
@@ -290,9 +292,7 @@ test.describe.serial("Conditioner chat E2E", () => {
         scalp_condition: "none",
         chemical_treatment: ["colored"],
         desired_volume: "balanced",
-        post_wash_actions: [],
         routine_preference: "balanced",
-        current_routine_products: ["conditioner"],
         additional_notes: "Bitte nichts Schweres.",
         conversation_memory: null,
       },
@@ -300,6 +300,15 @@ test.describe.serial("Conditioner chat E2E", () => {
     )
 
     if (profileError) throw profileError
+
+    const { error: usageError } = await admin.from("user_product_usage").insert({
+      user_id: currentUserId,
+      category: "conditioner",
+      product_name: "Conditioner",
+      frequency_range: "1_2x",
+    })
+
+    if (usageError) throw usageError
 
     await login(page, email, password)
     const responseText = await sendChatMessage(
@@ -368,9 +377,7 @@ test.describe.serial("Conditioner chat E2E", () => {
         scalp_condition: "none",
         chemical_treatment: ["colored"],
         desired_volume: "balanced",
-        post_wash_actions: [],
         routine_preference: "balanced",
-        current_routine_products: ["conditioner"],
         additional_notes: "Bitte nichts Schweres.",
         conversation_memory: null,
       },
@@ -378,6 +385,15 @@ test.describe.serial("Conditioner chat E2E", () => {
     )
 
     if (profileError) throw profileError
+
+    const { error: usageError } = await admin.from("user_product_usage").insert({
+      user_id: currentUserId,
+      category: "conditioner",
+      product_name: "Conditioner",
+      frequency_range: "1_2x",
+    })
+
+    if (usageError) throw usageError
 
     await login(page, email, password)
     const responseText = await sendChatMessage(

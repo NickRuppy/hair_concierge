@@ -21,9 +21,7 @@ import { CONDITIONER_WEIGHTS, CONDITIONER_REPAIR_LEVELS } from "@/lib/conditione
 import { isDeepCleansingShampooCategory } from "@/lib/deep-cleansing-shampoo/constants"
 import { isDryShampooCategory } from "@/lib/dry-shampoo/constants"
 import {
-  POST_WASH_ACTIONS,
   ROUTINE_PREFERENCES,
-  ROUTINE_PRODUCTS,
   LEAVE_IN_WEIGHTS,
   LEAVE_IN_CONDITIONER_RELATIONSHIPS,
   LEAVE_IN_FIT_CARE_BENEFITS,
@@ -48,17 +46,15 @@ export const hairProfileFullSchema = z.object({
   products_used: z.string().nullable().default(null),
   wash_frequency: z.enum(WASH_FREQUENCIES).nullable().default(null),
   heat_styling: z.enum(HEAT_STYLING_LEVELS).nullable().default(null),
-  styling_tools: z.array(z.enum(STYLING_TOOLS)).default([]),
+  styling_tools: z.array(z.enum(STYLING_TOOLS)).nullable().default(null),
   desired_volume: z.enum(DESIRED_VOLUME_LEVELS).nullable().default(null),
-  post_wash_actions: z.array(z.enum(POST_WASH_ACTIONS)).default([]),
   routine_preference: z.enum(ROUTINE_PREFERENCES).nullable().default(null),
-  current_routine_products: z.array(z.enum(ROUTINE_PRODUCTS)).default([]),
   goals: z.array(z.enum(GOALS)).default([]),
   towel_material: z.enum(TOWEL_MATERIALS).nullable().default(null),
   towel_technique: z.enum(TOWEL_TECHNIQUES).nullable().default(null),
-  drying_method: z.array(z.enum(DRYING_METHODS)).default([]),
+  drying_method: z.enum(DRYING_METHODS).nullable().default(null),
   brush_type: z.enum(BRUSH_TYPES).nullable().default(null),
-  night_protection: z.array(z.enum(NIGHT_PROTECTIONS)).default([]),
+  night_protection: z.array(z.enum(NIGHT_PROTECTIONS)).nullable().default(null),
   uses_heat_protection: z.boolean().default(false),
   additional_notes: z.string().nullable().default(null),
 })

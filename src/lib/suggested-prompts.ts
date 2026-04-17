@@ -1,5 +1,6 @@
 import type { HairProfile, HairTexture, Concern, Goal, RoutineProduct } from "@/lib/types"
 import type { IconName } from "@/components/ui/icon"
+import { deriveLeaveInStylingContextFromStages } from "@/lib/profile/signal-derivations"
 
 export interface SuggestedPrompt {
   text: string
@@ -62,15 +63,21 @@ function hasMeaningfulProfile(profile: HairProfile | null): profile is HairProfi
     (profile.goals ?? []).length > 0 ||
     (profile.chemical_treatment ?? []).length > 0 ||
     (profile.current_routine_products ?? []).length > 0 ||
-    (profile.post_wash_actions ?? []).length > 0,
+    profile.drying_method ||
+    (profile.styling_tools ?? []).length > 0,
   )
 }
 
 function hasHeatOrStylingSignal(profile: HairProfile): boolean {
+  const stylingContext = deriveLeaveInStylingContextFromStages(
+    profile.drying_method,
+    profile.heat_styling,
+    profile.styling_tools,
+  )
+
   return Boolean(
     (profile.heat_styling && profile.heat_styling !== "never") ||
-    (profile.post_wash_actions ?? []).includes("heat_tool_styling") ||
-    (profile.post_wash_actions ?? []).includes("non_heat_styling") ||
+    stylingContext !== null ||
     (profile.styling_tools ?? []).length > 0 ||
     hasRoutineProduct(profile, "heat_protectant"),
   )
