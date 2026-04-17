@@ -27,10 +27,14 @@ export function QuizResults() {
       scalp_condition: answers.scalp_condition,
     })
 
-    if (user && isRetakeMode && leadId) {
+    if (user && leadId) {
       const nextUrl = new URL("/onboarding", window.location.origin)
       nextUrl.searchParams.set("lead", leadId)
-      nextUrl.searchParams.set("returnTo", returnTo?.startsWith("/") ? returnTo : "/profile")
+
+      if (isRetakeMode) {
+        nextUrl.searchParams.set("returnTo", returnTo?.startsWith("/") ? returnTo : "/profile")
+      }
+
       router.push(`${nextUrl.pathname}${nextUrl.search}`)
       return
     }

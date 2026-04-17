@@ -98,4 +98,70 @@ test.describe.serial("Authenticated intake routing", () => {
     expect(visitedPathnames).not.toContain("/onboarding")
     await expect(page.getByRole("button", { name: /Quiz starten/i })).toBeVisible()
   })
+
+  test("signed-in quiz completion skips auth and lands in onboarding", async ({ page }) => {
+    await page.goto("/auth", { waitUntil: "networkidle" })
+    await page.locator('input[type="email"]:visible').fill(email)
+    await page.locator('input[type="password"]:visible').fill(password)
+    await page.getByRole("button", { name: /^Anmelden$/ }).click()
+
+    await page.waitForURL("**/quiz", {
+      timeout: 30_000,
+      waitUntil: "domcontentloaded",
+    })
+
+    await page.getByRole("button", { name: /Quiz starten/i }).click()
+    await page.getByText("Wellig").first().click()
+    await page.getByText("Mittel").first().click()
+    await page.getByText("Leicht uneben").click()
+    await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
+
+    await expect(
+      page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false }),
+    ).toBeVisible()
+    await page
+      .locator(".quiz-card")
+      .filter({ has: page.getByText(/Gefärbt\s*\/\s*Getönt/i) })
+      .click()
+    await page.getByRole("button", { name: /^Weiter$/i }).click()
+
+    await page
+      .locator(".quiz-card")
+      .filter({ has: page.getByText(/^Trocken$/) })
+      .click()
+    await page.getByRole("button", { name: "NEIN" }).click()
+
+    await page.getByPlaceholder("Dein Vorname").fill("Playwright Intake")
+    await page.getByRole("button", { name: /^Weiter$/i }).click()
+
+    await page.getByPlaceholder("name@beispiel.de").fill(email)
+    await page.getByRole("button", { name: /^Weiter$/i }).click()
+
+    await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
+
+    await expect(page.getByRole("button", { name: /ZIELE UND ROUTINE FESTLEGEN/i })).toBeVisible({
+      timeout: 45_000,
+    })
+    await page.getByRole("button", { name: /ZIELE UND ROUTINE FESTLEGEN/i }).click()
+
+    await page.waitForURL(/\/onboarding\?lead=/, {
+      timeout: 30_000,
+      waitUntil: "domcontentloaded",
+    })
+
+    await expect(page.getByRole("button", { name: /LOS GEHT/i })).toBeVisible({
+      timeout: 15_000,
+    })
+    await expect(page.getByText("PROFIL SPEICHERN", { exact: false })).toHaveCount(0)
+
+    await expect
+      .poll(
+        async () => {
+          const lead = await fetchLatestLead()
+          return lead?.status ?? null
+        },
+        { timeout: 30_000 },
+      )
+      .toBe("linked")
+  })
 })
