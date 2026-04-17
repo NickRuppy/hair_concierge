@@ -80,6 +80,7 @@ test.describe.serial("Authenticated intake routing", () => {
     })
 
     await page.goto("/auth", { waitUntil: "networkidle" })
+    const appOrigin = new URL(page.url()).origin
     await page.locator('input[type="email"]:visible').fill(email)
     await page.locator('input[type="password"]:visible').fill(password)
     await page.getByRole("button", { name: /^Anmelden$/ }).click()
@@ -90,7 +91,7 @@ test.describe.serial("Authenticated intake routing", () => {
     })
 
     const visitedPathnames = visitedUrls
-      .filter((url) => url.startsWith("http://localhost:3000/"))
+      .filter((url) => new URL(url).origin === appOrigin)
       .map((url) => new URL(url).pathname)
 
     expect(visitedPathnames.at(-1)).toBe("/quiz")
