@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
+import { getAuthenticatedAppRedirect, resolveIntakeState } from "@/lib/auth/intake-state"
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -33,6 +34,8 @@ export async function updateSession(request: NextRequest) {
 
   const { pathname } = request.nextUrl
   const isQuizRetake = pathname === "/quiz" && request.nextUrl.searchParams.get("mode") === "retake"
+  const needsAuthenticatedAppRouting =
+    pathname === "/auth" || pathname === "/quiz" || pathname === "/chat" || pathname === "/"
 
   // Public routes that don't need auth
   const publicRoutes = [
@@ -78,38 +81,35 @@ export async function updateSession(request: NextRequest) {
     })
   }
 
-  // Redirect authenticated users away from auth page and quiz
-  if ((pathname === "/auth" || pathname === "/quiz") && !isQuizRetake) {
-    // Check if user has completed onboarding
+  if (needsAuthenticatedAppRouting) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("onboarding_completed")
       .eq("id", user.id)
-      .single()
+      .maybeSingle()
 
-    const url = request.nextUrl.clone()
-    if (!profile?.onboarding_completed) {
-      url.pathname = "/onboarding"
-      // Preserve lead ID if present
-      const leadId = request.nextUrl.searchParams.get("lead")
-      if (leadId) url.searchParams.set("lead", leadId)
-    } else {
-      url.pathname = "/chat"
-    }
-    return NextResponse.redirect(url)
-  }
+    const { data: hairProfile } = await supabase
+      .from("hair_profiles")
+      .select(
+        "hair_texture, thickness, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment",
+      )
+      .eq("user_id", user.id)
+      .maybeSingle()
 
-  // Redirect authenticated users who haven't completed onboarding away from chat
-  if (pathname === "/chat" || pathname === "/") {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("onboarding_completed")
-      .eq("id", user.id)
-      .single()
+    const intakeState = resolveIntakeState(profile, hairProfile)
+    const redirectPath = getAuthenticatedAppRedirect(pathname, intakeState, { isQuizRetake })
 
-    if (!profile?.onboarding_completed) {
+    if (redirectPath) {
       const url = request.nextUrl.clone()
-      url.pathname = "/onboarding"
+      url.pathname = redirectPath
+      if (redirectPath === "/onboarding") {
+        const leadId = request.nextUrl.searchParams.get("lead")
+        if (leadId) {
+          url.searchParams.set("lead", leadId)
+        }
+      } else {
+        url.searchParams.delete("lead")
+      }
       return NextResponse.redirect(url)
     }
   }
