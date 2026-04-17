@@ -1,5 +1,5 @@
 import {
-  buildRoutineItemsFromCurrentRoutineProducts,
+  buildRoutineItemsFromInventoryCategories,
   loadRoutineItemsForEngine,
   selectConditionerProductsWithEngine,
   selectLeaveInProductsWithEngine,
@@ -29,7 +29,7 @@ async function loadRoutineItemsForRoutineAttachments(
     }
   }
 
-  return buildRoutineItemsFromCurrentRoutineProducts(hairProfile)
+  return buildRoutineItemsFromInventoryCategories(hairProfile?.current_routine_products)
 }
 
 async function attachProductsForSlot(

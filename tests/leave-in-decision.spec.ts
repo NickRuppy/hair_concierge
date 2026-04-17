@@ -30,13 +30,11 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     scalp_condition: "none",
     chemical_treatment: ["natural"],
     desired_volume: "balanced",
-    post_wash_actions: ["air_dry"],
     routine_preference: "balanced",
     current_routine_products: ["shampoo", "conditioner"],
-    mechanical_stress_factors: [],
     towel_material: null,
     towel_technique: null,
-    drying_method: [],
+    drying_method: "air_dry",
     brush_type: null,
     night_protection: [],
     uses_heat_protection: false,
@@ -101,7 +99,7 @@ test.describe("Leave-in strict decision flow", () => {
         density: "high",
         goals: ["curl_definition"],
         concerns: [],
-        post_wash_actions: ["non_heat_styling"],
+        drying_method: "air_dry",
       }),
       2,
     )
@@ -110,7 +108,7 @@ test.describe("Leave-in strict decision flow", () => {
     expect(decision.eligible).toBe(true)
     expect(decision.missing_profile_fields).toEqual([])
     expect(decision.need_bucket).toBe("curl_definition")
-    expect(decision.styling_context).toBe("non_heat_style")
+    expect(decision.styling_context).toBe("air_dry")
     expect(decision.conditioner_relationship).toBe("replacement_capable")
     expect(decision.matched_weight).toBe("medium")
     expect(decision.candidate_count).toBe(2)
@@ -125,7 +123,7 @@ test.describe("Leave-in strict decision flow", () => {
         density: null,
         concerns: [],
         goals: [],
-        post_wash_actions: [],
+        drying_method: null,
         heat_styling: "never",
       }),
     )
@@ -143,12 +141,24 @@ test.describe("Leave-in strict decision flow", () => {
     const profile = createProfile({
       concerns: [],
       goals: [],
-      post_wash_actions: ["blow_dry_only"],
+      drying_method: "blow_dry",
     })
 
     expect(deriveLeaveInStylingContext(profile)).toBe("heat_style")
     expect(deriveLeaveInNeedBucket(profile)).toBe("heat_protect")
     expect(buildLeaveInDecision(profile).missing_profile_fields).toEqual([])
+  })
+
+  test("dominant drying route can provide styling context without post-wash compatibility data", () => {
+    const profile = createProfile({
+      concerns: [],
+      goals: [],
+      drying_method: "blow_dry",
+      heat_styling: "never",
+    })
+
+    expect(deriveLeaveInStylingContext(profile)).toBe("heat_style")
+    expect(deriveLeaveInNeedBucket(profile)).toBe("heat_protect")
   })
 
   test("conditioner relationship follows thickness and density rule", () => {
@@ -211,7 +221,7 @@ test.describe("Leave-in strict decision flow", () => {
         thickness: "normal",
         density: "medium",
         concerns: ["dryness"],
-        post_wash_actions: ["air_dry"],
+        drying_method: "air_dry",
       }),
       [],
     )
@@ -227,7 +237,7 @@ test.describe("Leave-in strict decision flow", () => {
         thickness: "normal",
         density: "medium",
         concerns: ["dryness"],
-        post_wash_actions: ["air_dry"],
+        drying_method: "air_dry",
       }),
       2,
     )
@@ -262,7 +272,7 @@ test.describe("Leave-in strict decision flow", () => {
       thickness: "normal",
       density: "medium",
       concerns: ["dryness"],
-      post_wash_actions: ["air_dry"],
+      drying_method: "air_dry",
       current_routine_products: ["shampoo", "conditioner"],
       routine_preference: "balanced",
     })

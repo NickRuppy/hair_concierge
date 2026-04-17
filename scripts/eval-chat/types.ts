@@ -14,10 +14,18 @@ export interface HairProfileOverrides {
   chemical_treatment?: string[]
   wash_frequency?: string | null
   heat_styling?: string | null
+  drying_method?: string | null
+  towel_technique?: string | null
+  brush_type?: string | null
+  night_protection?: string[] | null
   goals?: string[]
-  mechanical_stress_factors?: string[]
-  current_routine_products?: string[]
   onboarding_completed?: boolean
+}
+
+export interface RoutineInventorySeed {
+  category: string
+  product_name?: string | null
+  frequency_range?: string | null
 }
 
 export interface MetadataAssertions {
@@ -70,6 +78,7 @@ export interface EvalScenario {
   name: string
   description: string
   hair_profile: HairProfileOverrides
+  routine_inventory?: RoutineInventorySeed[]
   turns: EvalTurn[]
 }
 

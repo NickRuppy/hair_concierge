@@ -95,7 +95,7 @@ interface OnboardingState {
   // Care habits
   towelMaterial: TowelMaterial | null
   towelTechnique: TowelTechnique | null
-  dryingMethod: DryingMethod[]
+  dryingMethod: DryingMethod | null
   brushType: BrushType | null
   nightProtection: NightProtection[]
 
@@ -121,7 +121,7 @@ interface OnboardingState {
   setUsesHeatProtection: (val: boolean | null) => void
   setTowelMaterial: (val: TowelMaterial | null) => void
   setTowelTechnique: (val: TowelTechnique | null) => void
-  setDryingMethod: (val: DryingMethod[]) => void
+  setDryingMethod: (val: DryingMethod | null) => void
   setBrushType: (val: BrushType | null) => void
   setNightProtection: (val: NightProtection[]) => void
   setSelectedGoals: (goals: string[]) => void
@@ -169,7 +169,7 @@ const initialData = {
 
   towelMaterial: null as TowelMaterial | null,
   towelTechnique: null as TowelTechnique | null,
-  dryingMethod: [] as DryingMethod[],
+  dryingMethod: null as DryingMethod | null,
   brushType: null as BrushType | null,
   nightProtection: [] as NightProtection[],
 

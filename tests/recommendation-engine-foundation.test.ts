@@ -65,6 +65,21 @@ test("low-damage fixture yields low repair need with protective factors", () => 
   assert.ok(damage.activeProtectiveFactors.includes("night_protection_present"))
 })
 
+test("unknown night protection is not treated like explicit lack of protection", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      night_protection: null,
+    } as never,
+    [],
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+  const damage = buildDamageAssessment(normalized)
+
+  assert.ok(!damage.activeDamageDrivers.includes("missing_night_protection"))
+  assert.ok(!damage.activeProtectiveFactors.includes("night_protection_present"))
+})
+
 test("low-damage fixture keeps care needs conservative", () => {
   const adapted = adaptRecommendationInputFromPersistence(LOW_DAMAGE_PROFILE, [])
   const normalized = normalizeRecommendationInput(adapted.input)

@@ -1,10 +1,9 @@
-import type {
-  HairProfile,
-  RoutineContext,
-  RoutineSlotAction,
-  RoutineSlotAdvice,
-} from "@/lib/types"
+import type { HairProfile, RoutineContext, RoutineSlotAction, RoutineSlotAdvice } from "@/lib/types"
 import { CURLY_TEXTURES } from "@/lib/routines/constants"
+import {
+  deriveLeaveInStylingContextFromStages,
+  hasDirectMechanicalStressSignals,
+} from "@/lib/profile/signal-derivations"
 
 const BRUSH_TOOLS_TERMS = [
   "buerste",
@@ -78,14 +77,7 @@ const REFRESH_TOOL_TERMS = [
   "auffrischen",
 ]
 
-const SECTIONING_TERMS = [
-  "stielkamm",
-  "abteilen",
-  "scheitel",
-  "sektion",
-  "zopf",
-  "hochstecken",
-]
+const SECTIONING_TERMS = ["stielkamm", "abteilen", "scheitel", "sektion", "zopf", "hochstecken"]
 
 function normalizeText(value: string): string {
   return value
@@ -110,7 +102,11 @@ export function hasBrushToolsNeed(
   context: RoutineContext,
 ): boolean {
   return (
-    context.mechanical_stress_factors.includes("rough_brushing") ||
+    hasDirectMechanicalStressSignals(
+      profile?.towel_technique,
+      profile?.brush_type,
+      profile?.night_protection,
+    ) ||
     profile?.brush_type === "paddle" ||
     profile?.brush_type === "round" ||
     profile?.brush_type === "boar_bristle" ||
@@ -124,8 +120,18 @@ export function buildBrushToolsSlot(
   normalizedMessage: string,
 ): RoutineSlotAdvice {
   const explicitBrushRequest = hasExplicitBrushToolsRequest(normalizedMessage)
+  const hasMechanicalStressSignals = hasDirectMechanicalStressSignals(
+    profile?.towel_technique,
+    profile?.brush_type,
+    profile?.night_protection,
+  )
+  const stylingContext = deriveLeaveInStylingContextFromStages(
+    profile?.drying_method,
+    profile?.heat_styling,
+    profile?.styling_tools,
+  )
   const wetDetanglingRelevant =
-    context.mechanical_stress_factors.includes("rough_brushing") ||
+    hasMechanicalStressSignals ||
     includesAny(normalizedMessage, DETANGLING_TERMS) ||
     explicitBrushRequest
   const scalpToolRelevant =
@@ -133,13 +139,10 @@ export function buildBrushToolsSlot(
     context.explicit_topic_ids.includes("hair_oiling")
   const refreshToolRelevant =
     includesAny(normalizedMessage, REFRESH_TOOL_TERMS) ||
-    (
-      context.has_between_wash_days &&
+    (context.has_between_wash_days &&
       context.hair_texture !== null &&
-      CURLY_TEXTURES.has(context.hair_texture)
-    )
-  const sectioningRelevant =
-    includesAny(normalizedMessage, SECTIONING_TERMS)
+      CURLY_TEXTURES.has(context.hair_texture))
+  const sectioningRelevant = includesAny(normalizedMessage, SECTIONING_TERMS)
   const dryStylingBrushRelevant =
     profile?.brush_type === "paddle" ||
     profile?.brush_type === "round" ||
@@ -149,54 +152,54 @@ export function buildBrushToolsSlot(
 
   if (wetDetanglingRelevant) {
     rationale.push(
-      "Zum Entwirren im nassen oder feuchten Zustand lieber mit Slip arbeiten - Conditioner oder ein leichtes Leave-in helfen beim Gleiten."
+      "Zum Entwirren im nassen oder feuchten Zustand lieber mit Slip arbeiten - Conditioner oder ein leichtes Leave-in helfen beim Gleiten.",
     )
     rationale.push(
-      "Beim Entwirren immer in den Spitzen anfangen und von unten nach oben arbeiten; bei dichterem oder stark verknotetem Haar lieber in Sektionen."
+      "Beim Entwirren immer in den Spitzen anfangen und von unten nach oben arbeiten; bei dichterem oder stark verknotetem Haar lieber in Sektionen.",
     )
     rationale.push(
-      "Eine weiche Detangling-Buerste oder ein grobzinkiger Kamm ist hier meist die sicherere Basis als eine straffere Stylingbuerste."
+      "Eine weiche Detangling-Buerste oder ein grobzinkiger Kamm ist hier meist die sicherere Basis als eine straffere Stylingbuerste.",
     )
   }
 
   if (dryStylingBrushRelevant) {
     rationale.push(
-      "Paddle- und Rundbuersten eher fuer trockenes Styling, Foehnen und Formen nutzen - nicht als Standard fuer nasses Entwirren."
+      "Paddle- und Rundbuersten eher fuer trockenes Styling, Foehnen und Formen nutzen - nicht als Standard fuer nasses Entwirren.",
     )
   }
 
   if (scalpToolRelevant) {
     rationale.push(
-      "Fuer Kopfhaut-Oel oder -Seren lieber scheitelweise mit Applikatorflasche oder Kamm-Applikator arbeiten und sparsam dosieren."
+      "Fuer Kopfhaut-Oel oder -Seren lieber scheitelweise mit Applikatorflasche oder Kamm-Applikator arbeiten und sparsam dosieren.",
     )
     rationale.push(
-      "Eine Scalp-Brush bleibt optional: eher locker fuehren und die Kopfhaut sanft bewegen statt mit Druck ueber die Haut zu schrubben."
+      "Eine Scalp-Brush bleibt optional: eher locker fuehren und die Kopfhaut sanft bewegen statt mit Druck ueber die Haut zu schrubben.",
     )
   }
 
   if (refreshToolRelevant) {
     rationale.push(
-      "Fuer Wellen oder Locken zwischen den Waeschen reicht oft Wasser aus einer Spruehflasche zum Reaktivieren, bevor weiteres Produkt dazukommt."
+      "Fuer Wellen oder Locken zwischen den Waeschen reicht oft Wasser aus einer Spruehflasche zum Reaktivieren, bevor weiteres Produkt dazukommt.",
     )
   }
 
   if (sectioningRelevant) {
     rationale.push(
-      "Ein Stielkamm ist vor allem zum Abteilen, Scheitel ziehen und Hochstecken sinnvoll - nicht zum groben Entwirren."
+      "Ein Stielkamm ist vor allem zum Abteilen, Scheitel ziehen und Hochstecken sinnvoll - nicht zum groben Entwirren.",
     )
   }
 
   if (rationale.length === 0) {
     rationale.push(
-      "Buersten und Tools sollten immer nach Funktion gewaehlt werden: schonendes Entwirren, sauberes Abteilen oder gezieltes Styling."
+      "Buersten und Tools sollten immer nach Funktion gewaehlt werden: schonendes Entwirren, sauberes Abteilen oder gezieltes Styling.",
     )
     rationale.push(
-      "Je mehr Reibung und Zug entstehen, desto wichtiger werden weiche Tools, Slip und ein ruhiges Arbeiten in kleinen Abschnitten."
+      "Je mehr Reibung und Zug entstehen, desto wichtiger werden weiche Tools, Slip und ein ruhiges Arbeiten in kleinen Abschnitten.",
     )
   }
 
   const caveats: string[] = [
-    "Tools regelmaessig reinigen und nicht teilen, damit Rueckstaende und Kopfhautthemen nicht mitgeschleppt werden."
+    "Tools regelmaessig reinigen und nicht teilen, damit Rueckstaende und Kopfhautthemen nicht mitgeschleppt werden.",
   ]
 
   if (
@@ -205,26 +208,22 @@ export function buildBrushToolsSlot(
     context.scalp_condition === "dandruff"
   ) {
     caveats.push(
-      "Bei gereizter oder schuppiger Kopfhaut auf harte Scalp-Brushes, viel Druck und Reibung verzichten."
+      "Bei gereizter oder schuppiger Kopfhaut auf harte Scalp-Brushes, viel Druck und Reibung verzichten.",
     )
   }
 
-  if (
-    context.concerns.includes("hair_loss") ||
-    context.concerns.includes("thinning")
-  ) {
+  if (context.concerns.includes("hair_loss") || context.concerns.includes("thinning")) {
     caveats.push(
-      "Bei Haarausfall oder Ausduennung lieber besonders sanft arbeiten und keine aggressive Kopfhautmassage oder ruckartiges Entwirren empfehlen."
+      "Bei Haarausfall oder Ausduennung lieber besonders sanft arbeiten und keine aggressive Kopfhautmassage oder ruckartiges Entwirren empfehlen.",
     )
   }
 
   if (
-    context.post_wash_actions.includes("heat_tool_styling") ||
-    context.post_wash_actions.includes("blow_dry_only") ||
+    stylingContext === "heat_style" ||
     (context.heat_styling !== null && context.heat_styling !== "never")
   ) {
     caveats.push(
-      "Beim Foehnen mit Buerste lieber mit Hitzeschutz und moderater Temperatur arbeiten, damit das Tool nicht zusaetzlich Schaden verstaerkt."
+      "Beim Foehnen mit Buerste lieber mit Hitzeschutz und moderater Temperatur arbeiten, damit das Tool nicht zusaetzlich Schaden verstaerkt.",
     )
   }
 
@@ -232,7 +231,7 @@ export function buildBrushToolsSlot(
     profile?.brush_type === "paddle" ||
     profile?.brush_type === "round" ||
     profile?.brush_type === "boar_bristle" ||
-    context.mechanical_stress_factors.length > 0
+    hasMechanicalStressSignals
   const action: RoutineSlotAction = needsAdjustment ? "adjust" : "add"
 
   return {

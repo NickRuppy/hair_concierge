@@ -1,16 +1,10 @@
-export const POST_WASH_ACTIONS = [
-  "air_dry",
-  "blow_dry_only",
-  "heat_tool_styling",
-  "non_heat_styling",
-] as const
+export const POST_WASH_ACTIONS = ["air_dry", "blow_dry_only", "heat_tool_styling"] as const
 export type PostWashAction = (typeof POST_WASH_ACTIONS)[number]
 
 export const POST_WASH_ACTION_LABELS = {
   air_dry: "Lufttrocknen",
   blow_dry_only: "Nur Foehnen",
   heat_tool_styling: "Hitzetools (z.B. Glaetteisen)",
-  non_heat_styling: "Styling ohne Hitze",
 } as const satisfies Record<PostWashAction, string>
 
 export const POST_WASH_ACTION_OPTIONS = POST_WASH_ACTIONS.map((value) => ({
@@ -116,12 +110,11 @@ export const LEAVE_IN_NEED_BUCKET_LABELS = {
   shine_protect: "Glanz & Schutz",
 } as const satisfies Record<LeaveInNeedBucket, string>
 
-export const LEAVE_IN_STYLING_CONTEXTS = ["air_dry", "non_heat_style", "heat_style"] as const
+export const LEAVE_IN_STYLING_CONTEXTS = ["air_dry", "heat_style"] as const
 export type LeaveInStylingContext = (typeof LEAVE_IN_STYLING_CONTEXTS)[number]
 
 export const LEAVE_IN_STYLING_CONTEXT_LABELS = {
   air_dry: "Lufttrocknen",
-  non_heat_style: "Styling ohne Hitze",
   heat_style: "Styling mit Hitze/Foehn",
 } as const satisfies Record<LeaveInStylingContext, string>
 

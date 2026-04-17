@@ -1,9 +1,13 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { deriveVolumeFromGoals } from "../src/lib/onboarding/goal-flow"
+import {
+  deriveVolumeFromGoals,
+  getAvailableGoalLabel,
+  getAvailableGoals,
+} from "../src/lib/onboarding/goal-flow"
 import { getOrderedGoals, getGoalLabel } from "../src/lib/vocabulary/onboarding-goals"
-import { GOALS } from "../src/lib/vocabulary/concerns-goals"
+import { GOALS, GOAL_LABELS } from "../src/lib/vocabulary/concerns-goals"
 
 // --- deriveVolumeFromGoals ---
 
@@ -23,6 +27,14 @@ test("empty goals derives desired_volume 'balanced'", () => {
   assert.equal(deriveVolumeFromGoals([]), "balanced")
 })
 
+test("getAvailableGoals falls back to the full goal list when texture is unknown", () => {
+  assert.deepEqual(getAvailableGoals(null), GOALS)
+})
+
+test("getAvailableGoalLabel falls back to the default goal label when texture is unknown", () => {
+  assert.equal(getAvailableGoalLabel("curl_definition", null), GOAL_LABELS.curl_definition)
+})
+
 // --- getOrderedGoals ---
 
 test("getOrderedGoals returns all goals with no duplicates", () => {
@@ -35,17 +47,35 @@ test("getOrderedGoals returns all goals with no duplicates", () => {
 
 test("getOrderedGoals puts priority goals first for straight", () => {
   const ordered = getOrderedGoals("straight")
-  assert.deepEqual(ordered.slice(0, 5), ["volume", "shine", "less_frizz", "healthy_scalp", "less_split_ends"])
+  assert.deepEqual(ordered.slice(0, 5), [
+    "volume",
+    "shine",
+    "less_frizz",
+    "healthy_scalp",
+    "less_split_ends",
+  ])
 })
 
 test("getOrderedGoals puts priority goals first for curly", () => {
   const ordered = getOrderedGoals("curly")
-  assert.deepEqual(ordered.slice(0, 5), ["curl_definition", "moisture", "less_frizz", "strengthen", "less_split_ends"])
+  assert.deepEqual(ordered.slice(0, 5), [
+    "curl_definition",
+    "moisture",
+    "less_frizz",
+    "strengthen",
+    "less_split_ends",
+  ])
 })
 
 test("getOrderedGoals puts priority goals first for coily", () => {
   const ordered = getOrderedGoals("coily")
-  assert.deepEqual(ordered.slice(0, 5), ["moisture", "strengthen", "anti_breakage", "healthy_scalp", "healthier_hair"])
+  assert.deepEqual(ordered.slice(0, 5), [
+    "moisture",
+    "strengthen",
+    "anti_breakage",
+    "healthy_scalp",
+    "healthier_hair",
+  ])
 })
 
 // --- getGoalLabel ---

@@ -122,7 +122,12 @@ async function main() {
     const session = await createTestSession(supabaseUrl, serviceRoleKey, anonKey)
 
     try {
-      await upsertHairProfile(session.admin, session.userId, scenario.hair_profile)
+      await upsertHairProfile(
+        session.admin,
+        session.userId,
+        scenario.hair_profile,
+        scenario.routine_inventory ?? [],
+      )
 
       let conversationId: string | null = null
       const turnResults: TurnResult[] = []
@@ -195,6 +200,7 @@ async function main() {
             sse,
             turn.judge,
             scenario.hair_profile,
+            scenario.routine_inventory,
             conversationHistory.length > 0 ? conversationHistory.join("\n") : undefined,
           )
 
@@ -213,6 +219,7 @@ async function main() {
               turn.message,
               sse,
               scenario.hair_profile,
+              scenario.routine_inventory,
               conversationHistory.length > 0 ? conversationHistory.join("\n") : undefined,
             )
 

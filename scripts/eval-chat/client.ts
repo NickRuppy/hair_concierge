@@ -5,7 +5,7 @@
  */
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
-import type { SSEResult, HairProfileOverrides } from "./types"
+import type { SSEResult, HairProfileOverrides, RoutineInventorySeed } from "./types"
 
 const PROJECT_REF = "pqdkhefxsxkyeqelqegq"
 const COOKIE_NAME = `sb-${PROJECT_REF}-auth-token`
@@ -155,6 +155,7 @@ export async function createTestSession(
     }
     await admin.from("conversations").delete().eq("user_id", userId)
     await admin.from("user_memory_entries").delete().eq("user_id", userId)
+    await admin.from("user_product_usage").delete().eq("user_id", userId)
     await admin.from("hair_profiles").delete().eq("user_id", userId)
     await admin.from("profiles").delete().eq("id", userId)
     await admin.auth.admin.deleteUser(userId)
@@ -163,18 +164,88 @@ export async function createTestSession(
   return { cookie, userId, admin, cleanup }
 }
 
+type EvalHairProfileRow = Record<string, unknown> & { user_id: string }
+
+type EvalRoutineUsageRow = {
+  user_id: string
+  category: string
+  product_name: string | null
+  frequency_range: string | null
+}
+
+function formatWriteError(context: string, error: { message: string } | null): string {
+  return error ? `${context}: ${error.message}` : context
+}
+
+export function buildEvalSeedPayloads(
+  userId: string,
+  overrides: HairProfileOverrides,
+  routineInventory: RoutineInventorySeed[] = [],
+): {
+  hairProfileRow: EvalHairProfileRow
+  routineUsageRows: EvalRoutineUsageRow[]
+} {
+  const profileFields = { ...overrides }
+  delete profileFields.onboarding_completed
+  const normalizedProfileFields = Object.fromEntries(
+    Object.entries(profileFields).filter(([, value]) => value !== undefined),
+  )
+
+  return {
+    hairProfileRow: {
+      user_id: userId,
+      ...normalizedProfileFields,
+    },
+    routineUsageRows: routineInventory.map((item) => ({
+      user_id: userId,
+      category: item.category,
+      product_name: item.product_name ?? null,
+      frequency_range: item.frequency_range ?? null,
+    })),
+  }
+}
+
 export async function upsertHairProfile(
   admin: SupabaseClient,
   userId: string,
   overrides: HairProfileOverrides,
+  routineInventory: RoutineInventorySeed[] = [],
 ): Promise<void> {
-  // Delete existing then insert fresh
-  await admin.from("hair_profiles").delete().eq("user_id", userId)
-  const { onboarding_completed: _, ...profileFields } = overrides
-  await admin.from("hair_profiles").insert({
-    user_id: userId,
-    ...profileFields,
-  })
+  const { hairProfileRow, routineUsageRows } = buildEvalSeedPayloads(
+    userId,
+    overrides,
+    routineInventory,
+  )
+
+  const { error: deleteProfileError } = await admin
+    .from("hair_profiles")
+    .delete()
+    .eq("user_id", userId)
+  if (deleteProfileError) {
+    throw new Error(formatWriteError("Failed to clear eval hair profile", deleteProfileError))
+  }
+
+  const { error: deleteUsageError } = await admin
+    .from("user_product_usage")
+    .delete()
+    .eq("user_id", userId)
+  if (deleteUsageError) {
+    throw new Error(formatWriteError("Failed to clear eval routine inventory", deleteUsageError))
+  }
+
+  const { error: insertProfileError } = await admin.from("hair_profiles").insert(hairProfileRow)
+  if (insertProfileError) {
+    throw new Error(formatWriteError("Failed to seed eval hair profile", insertProfileError))
+  }
+
+  if (routineUsageRows.length === 0) return
+
+  const { error: insertUsageError } = await admin
+    .from("user_product_usage")
+    .insert(routineUsageRows)
+  if (insertUsageError) {
+    throw new Error(formatWriteError("Failed to seed eval routine inventory", insertUsageError))
+  }
 }
 
 export async function clearConversations(admin: SupabaseClient, userId: string): Promise<void> {

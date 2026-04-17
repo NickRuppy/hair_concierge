@@ -8,12 +8,6 @@ import { createClient } from "@/lib/supabase/client"
 import { useOnboardingStore } from "@/lib/onboarding/store"
 import type { OnboardingEditScope, OnboardingStep } from "@/lib/onboarding/store"
 import { OnboardingProgressBar } from "@/components/onboarding/onboarding-progress-bar"
-import { mergeAnsweredFields } from "@/lib/onboarding/answered-fields"
-import {
-  deriveMechanicalStressFactors,
-  derivePostWashActions,
-  reconcileDiffusor,
-} from "@/lib/onboarding/backward-compat"
 import {
   BASIC_PRODUCT_OPTIONS,
   EXTRA_PRODUCT_OPTIONS,
@@ -237,8 +231,10 @@ export function OnboardingFlow({
       if (hairProfile.towel_technique) {
         store.setTowelTechnique(hairProfile.towel_technique as TowelTechnique)
       }
-      if (Array.isArray(hairProfile.drying_method)) {
-        store.setDryingMethod(hairProfile.drying_method as DryingMethod[])
+      if (typeof hairProfile.drying_method === "string") {
+        store.setDryingMethod(hairProfile.drying_method as DryingMethod)
+      } else if (Array.isArray(hairProfile.drying_method) && hairProfile.drying_method.length > 0) {
+        store.setDryingMethod(hairProfile.drying_method[0] as DryingMethod)
       }
       if (hairProfile.brush_type) {
         store.setBrushType(hairProfile.brush_type as BrushType)
@@ -378,9 +374,20 @@ export function OnboardingFlow({
   const saveHairProfile = useCallback(
     async (fields: Record<string, unknown>) => {
       const supabase = createClient()
+      const payload = { user_id: userId, ...fields }
       const { error } = await supabase
         .from("hair_profiles")
-        .upsert({ user_id: userId, ...fields }, { onConflict: "user_id" })
+        .upsert(payload, { onConflict: "user_id" })
+
+      if (error && error.code === "22P02" && typeof fields.drying_method === "string") {
+        const { error: retryError } = await supabase
+          .from("hair_profiles")
+          .upsert({ ...payload, drying_method: [fields.drying_method] }, { onConflict: "user_id" })
+
+        if (!retryError) return
+        throw retryError
+      }
+
       if (error) throw error
     },
     [userId],
@@ -407,9 +414,6 @@ export function OnboardingFlow({
           case "products_extras": {
             const allProducts = [...state.selectedBasicProducts, ...state.selectedExtraProducts]
             await saveProductUsage(allProducts)
-            await saveHairProfile({
-              current_routine_products: [],
-            })
             break
           }
 
@@ -491,15 +495,8 @@ export function OnboardingFlow({
           }
 
           case "drying_method": {
-            const postWashActions = derivePostWashActions(
-              state.dryingMethod,
-              state.selectedHeatTools.length > 0,
-            )
-            const reconciledTools = reconcileDiffusor(state.selectedHeatTools, state.dryingMethod)
             await saveHairProfile({
               drying_method: state.dryingMethod,
-              post_wash_actions: postWashActions,
-              styling_tools: reconciledTools,
             })
             break
           }
@@ -512,24 +509,8 @@ export function OnboardingFlow({
           }
 
           case "night_protection": {
-            const stressFactors = deriveMechanicalStressFactors(
-              state.towelTechnique,
-              state.brushType,
-              state.nightProtection,
-            )
-            const answeredFields = await mergeAnsweredFields(supabase, userId, [
-              "towel_material",
-              "towel_technique",
-              "drying_method",
-              "brush_type",
-              "night_protection",
-              "styling_tools",
-              "uses_heat_protection",
-            ])
             await saveHairProfile({
               night_protection: state.nightProtection,
-              mechanical_stress_factors: stressFactors,
-              answered_fields: answeredFields,
             })
             break
           }
@@ -539,7 +520,6 @@ export function OnboardingFlow({
             await saveHairProfile({
               goals,
               desired_volume: null,
-              current_routine_products: [],
             })
             const { error: onboardingCompletedError } = await supabase
               .from("profiles")
@@ -667,15 +647,6 @@ export function OnboardingFlow({
       setNightProtection(nightProtection.filter((v) => v !== value))
     } else {
       setNightProtection([...nightProtection, value as NightProtection])
-    }
-  }, [])
-
-  const toggleDryingMethod = useCallback((value: string) => {
-    const { dryingMethod, setDryingMethod } = useOnboardingStore.getState()
-    if (dryingMethod.includes(value as DryingMethod)) {
-      setDryingMethod(dryingMethod.filter((v) => v !== value))
-    } else {
-      setDryingMethod([...dryingMethod, value as DryingMethod])
     }
   }, [])
 
@@ -896,22 +867,16 @@ export function OnboardingFlow({
 
       case "drying_method":
         return (
-          <MultiSelectScreen
-            title="Wie trocknest du dein Haar?"
+          <SingleSelectScreen
+            title="Wie trocknest du dein Haar hauptsächlich?"
             subtitle="Hitze ist der größte Stressfaktor — wir passen deinen Plan daran an."
             options={dryingMethodWithIcon}
             selected={store.dryingMethod}
-            onToggle={toggleDryingMethod}
-            onContinue={() => handleStepComplete("drying_method")}
+            onSelect={(val) => {
+              store.setDryingMethod(val as DryingMethod)
+              handleStepComplete("drying_method")
+            }}
             onBack={handleBack}
-            isSaving={savingStep === "drying_method"}
-            continueLabel={getFinalContinueLabel(
-              "drying_method",
-              store,
-              editScope,
-              singleStepEdit,
-              returnTo,
-            )}
           />
         )
 

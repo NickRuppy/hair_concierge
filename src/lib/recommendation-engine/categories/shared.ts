@@ -12,6 +12,7 @@ import type {
   PeelingType,
   ScalpTypeFocus,
 } from "@/lib/recommendation-engine/types"
+import { deriveLeaveInStylingContextFromStages } from "@/lib/profile/signal-derivations"
 import type { ProductFrequency } from "@/lib/vocabulary"
 
 const PRODUCT_FREQUENCY_RANK: Record<ProductFrequency, number> = {
@@ -272,13 +273,18 @@ export function deriveBondRepairIntensity(damage: DamageAssessment): BondRepairI
 }
 
 export function deriveBondApplicationMode(profile: NormalizedProfile): BondApplicationMode | null {
-  if (!profile.postWashActions.length && profile.heatStyling === null) return null
+  const stylingContext = deriveLeaveInStylingContextFromStages(
+    profile.dryingMethod,
+    profile.heatStyling,
+    profile.stylingTools,
+  )
+
+  if (stylingContext === null && profile.heatStyling === null) return null
 
   if (
     profile.heatStyling === "daily" ||
     profile.heatStyling === "several_weekly" ||
-    profile.postWashActions.includes("heat_tool_styling") ||
-    profile.postWashActions.includes("blow_dry_only")
+    stylingContext === "heat_style"
   ) {
     return "post_wash_leave_in"
   }

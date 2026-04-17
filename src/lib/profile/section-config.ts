@@ -302,7 +302,10 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     sourceLabel: "Aus Onboarding",
     displayMode: "badges",
     editTarget: { kind: "onboarding", step: "drying_method" },
-    getValue: (profile) => optionLabels(profile?.drying_method, DRYING_METHOD_LABELS),
+    getValue: (profile) =>
+      profile?.drying_method
+        ? (DRYING_METHOD_LABELS[profile.drying_method] ?? profile.drying_method)
+        : null,
   },
   {
     key: "brush_type",
@@ -327,8 +330,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
       if (profile?.night_protection?.length) {
         return optionLabels(profile.night_protection, NIGHT_PROTECTION_LABELS)
       }
-
-      if ((profile?.goals?.length ?? 0) > 0 || profile?.desired_volume != null) {
+      if (Array.isArray(profile?.night_protection)) {
         return "Nichts davon"
       }
 

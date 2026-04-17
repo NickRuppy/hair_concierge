@@ -2,7 +2,7 @@
  * Chat Evaluation Harness — Test Scenario Fixtures
  */
 
-import type { EvalScenario, HairProfileOverrides } from "./types"
+import type { EvalScenario, HairProfileOverrides, RoutineInventorySeed } from "./types"
 
 const FULL_PROFILE: HairProfileOverrides = {
   hair_texture: "wavy",
@@ -16,11 +16,26 @@ const FULL_PROFILE: HairProfileOverrides = {
   chemical_treatment: ["colored"],
   wash_frequency: "every_2_3_days",
   heat_styling: "rarely",
+  drying_method: "air_dry",
+  towel_technique: "rubbeln",
+  brush_type: "paddle",
+  night_protection: [],
   goals: ["shine"],
-  mechanical_stress_factors: ["towel_rubbing", "rough_brushing"],
-  current_routine_products: ["shampoo", "conditioner"],
   onboarding_completed: true,
 }
+
+const FULL_ROUTINE_INVENTORY: RoutineInventorySeed[] = [
+  {
+    category: "shampoo",
+    product_name: "Eval Shampoo",
+    frequency_range: "3_4x",
+  },
+  {
+    category: "conditioner",
+    product_name: "Eval Conditioner",
+    frequency_range: "3_4x",
+  },
+]
 
 export const SCENARIOS: EvalScenario[] = [
   // ── Regression: ÖWC follow-up ──────────────────────────────────────────
@@ -30,6 +45,7 @@ export const SCENARIOS: EvalScenario[] = [
     description:
       "Multi-turn: context-setting message then short follow-up 'und owc testen?' — must not misclassify as product query",
     hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Welche Pflegeroutine empfiehlst du für welliges Haar?",
@@ -58,6 +74,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "CWC vs OWC comparison",
     description: "Direct comparison question — should discuss both methods",
     hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Was ist der Unterschied zwischen CWC und OWC?",
@@ -83,6 +100,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "Shampoo request with missing thickness",
     description: "Profile lacks thickness — must trigger clarification",
     hair_profile: { ...FULL_PROFILE, thickness: null, scalp_type: null },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Welches Shampoo empfiehlst du mir?",
@@ -106,6 +124,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "Conditioner request with missing protein/moisture balance",
     description: "Profile lacks protein_moisture_balance — must trigger clarification",
     hair_profile: { ...FULL_PROFILE, protein_moisture_balance: null },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Kannst du mir einen guten Conditioner empfehlen?",
@@ -127,6 +146,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "Leave-in request with missing fields",
     description: "Profile lacks texture + density — must trigger clarification",
     hair_profile: { ...FULL_PROFILE, hair_texture: null, density: null },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Ich suche ein Leave-in Produkt",
@@ -148,6 +168,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "Oil request with missing thickness",
     description: "Profile lacks thickness — must trigger clarification",
     hair_profile: { ...FULL_PROFILE, thickness: null },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Welches Haaröl passt zu mir?",
@@ -170,6 +191,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "Vague opening message",
     description: "Underdefined message should trigger clarification",
     hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Meine Haare sind trocken",
@@ -194,6 +216,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "Simple FAQ question",
     description: "Straightforward question — should use FAQ shortcut",
     hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Wie oft sollte ich meine Haare waschen?",
@@ -218,6 +241,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "Medical concern redirect",
     description: "Severe hair loss should mention dermatologist",
     hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Ich verliere extrem viele Haare seit Wochen und es wird nicht besser",
@@ -244,6 +268,7 @@ export const SCENARIOS: EvalScenario[] = [
       cuticle_condition: "rough",
       protein_moisture_balance: "snaps",
     },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Meine Haare brechen ständig ab und fühlen sich strohig an. Was kann ich tun?",
@@ -269,6 +294,7 @@ export const SCENARIOS: EvalScenario[] = [
     description:
       "Complete profile + shampoo request should produce products alongside follow-up questions",
     hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Ich brauche ein Shampoo",
@@ -303,6 +329,7 @@ export const SCENARIOS: EvalScenario[] = [
       chemical_treatment: ["relaxed"],
       goals: ["length_retention"],
     },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Ich brauche ein Leave-in für meine Haare",
@@ -325,6 +352,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "Clarification cap after 3 vague messages",
     description: "After 2 clarification rounds, 3rd message should get a real answer (cap at 2)",
     hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Meine Haare sind irgendwie komisch",

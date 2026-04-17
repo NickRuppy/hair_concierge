@@ -17,11 +17,12 @@ import {
   hasExplicitBrushToolsRequest,
 } from "@/lib/routines/brush-tools"
 import { CURLY_TEXTURES } from "@/lib/routines/constants"
+import { hasDirectMechanicalStressSignals } from "@/lib/profile/signal-derivations"
 import {
   buildRecommendationEngineRuntimeFromPersistence,
   buildRecommendationRequestContext,
 } from "@/lib/recommendation-engine"
-import { buildRoutineItemsFromCurrentRoutineProducts } from "@/lib/recommendation-engine/adapters/from-persistence"
+import { buildRoutineItemsFromInventoryCategories } from "@/lib/recommendation-engine/adapters/from-persistence"
 import type {
   HairProfile,
   RoutineContext,
@@ -464,7 +465,11 @@ function hasFrequentWashNeed(washFrequency: HairProfile["wash_frequency"]): bool
 }
 
 function hasMechanicalStressNeed(profile: HairProfile | null): boolean {
-  return (profile?.mechanical_stress_factors?.length ?? 0) > 0
+  return hasDirectMechanicalStressSignals(
+    profile?.towel_technique,
+    profile?.brush_type,
+    profile?.night_protection,
+  )
 }
 
 function hasWashProtectionNeed(profile: HairProfile | null): boolean {
@@ -487,7 +492,7 @@ function countOwcSupportSignals(profile: HairProfile | null, context: RoutineCon
   }
   if (hasStrongDrynessDamageCluster(profile)) count++
   if (hasFrequentWashNeed(context.wash_frequency)) count++
-  if (context.mechanical_stress_factors.length > 0) count++
+  if (hasMechanicalStressNeed(profile)) count++
 
   return count
 }
@@ -666,6 +671,8 @@ export function deriveRoutineContext(profile: HairProfile | null, message: strin
     density: profile?.density ?? null,
     wash_frequency: profile?.wash_frequency ?? null,
     heat_styling: profile?.heat_styling ?? null,
+    styling_tools: profile?.styling_tools ?? null,
+    drying_method: profile?.drying_method ?? null,
     scalp_type: profile?.scalp_type ?? null,
     scalp_condition: profile?.scalp_condition ?? null,
     cuticle_condition: profile?.cuticle_condition ?? null,
@@ -673,8 +680,6 @@ export function deriveRoutineContext(profile: HairProfile | null, message: strin
     concerns: profile?.concerns ?? [],
     goals: profile?.goals ?? [],
     chemical_treatment: profile?.chemical_treatment ?? [],
-    post_wash_actions: profile?.post_wash_actions ?? [],
-    mechanical_stress_factors: profile?.mechanical_stress_factors ?? [],
     current_routine_products: profile?.current_routine_products ?? [],
     products_used: profile?.products_used ?? null,
     explicit_topic_ids: explicitTopicIds,
@@ -889,7 +894,7 @@ export function buildRoutineClarificationQuestions(
 
 function hasCurrentProduct(
   profile: HairProfile | null,
-  product: HairProfile["current_routine_products"][number],
+  product: NonNullable<HairProfile["current_routine_products"]>[number],
 ): boolean {
   return (profile?.current_routine_products ?? []).includes(product)
 }
@@ -975,7 +980,7 @@ function buildRoutineDecisionContext(
 ): RoutineDecisionContext {
   const runtime = buildRecommendationEngineRuntimeFromPersistence(
     profile,
-    buildRoutineItemsFromCurrentRoutineProducts(profile),
+    buildRoutineItemsFromInventoryCategories(profile?.current_routine_products),
     buildRecommendationRequestContext({
       requestedCategory: "routine",
       message,

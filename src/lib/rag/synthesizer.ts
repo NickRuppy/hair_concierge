@@ -41,7 +41,6 @@ import {
   SCALP_TYPE_LABELS,
   SCALP_CONDITION_LABELS,
   CHEMICAL_TREATMENT_LABELS,
-  MECHANICAL_STRESS_FACTOR_LABELS,
   TOWEL_MATERIAL_LABELS,
   TOWEL_TECHNIQUE_LABELS,
   DRYING_METHOD_LABELS,
@@ -165,13 +164,10 @@ function formatUserProfile(
   if (profile.heat_styling) {
     parts.push(`Hitzestyling: ${HEAT_STYLING_LABELS[profile.heat_styling] ?? profile.heat_styling}`)
   }
-  if (profile.styling_tools.length > 0) {
+  if ((profile.styling_tools?.length ?? 0) > 0) {
     parts.push(
-      `Styling-Tools: ${profile.styling_tools.map((t) => STYLING_TOOL_LABELS[t] ?? t).join(", ")}`,
+      `Styling-Tools: ${(profile.styling_tools ?? []).map((t) => STYLING_TOOL_LABELS[t] ?? t).join(", ")}`,
     )
-  }
-  if ((profile.post_wash_actions ?? []).length > 0) {
-    parts.push(`Nach dem Waschen: ${(profile.post_wash_actions ?? []).join(", ")}`)
   }
   if ((profile.current_routine_products ?? []).length > 0) {
     parts.push(`Aktuelle Routine-Produkte: ${(profile.current_routine_products ?? []).join(", ")}`)
@@ -197,11 +193,6 @@ function formatUserProfile(
       `Chemische Behandlung: ${profile.chemical_treatment.map((t) => CHEMICAL_TREATMENT_LABELS[t] ?? t).join(", ")}`,
     )
   }
-  if (profile.mechanical_stress_factors?.length > 0) {
-    parts.push(
-      `Mechanische Belastung: ${profile.mechanical_stress_factors.map((f) => MECHANICAL_STRESS_FACTOR_LABELS[f] ?? f).join(", ")}`,
-    )
-  }
   if (profile.towel_material) {
     parts.push(
       `Handtuch: ${TOWEL_MATERIAL_LABELS[profile.towel_material] ?? profile.towel_material}`,
@@ -212,17 +203,17 @@ function formatUserProfile(
       `Trocknungstechnik: ${TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique}`,
     )
   }
-  if (profile.drying_method?.length > 0) {
+  if (profile.drying_method) {
     parts.push(
-      `Trocknungsmethode: ${profile.drying_method.map((d) => DRYING_METHOD_LABELS[d] ?? d).join(", ")}`,
+      `Trocknungsmethode: ${DRYING_METHOD_LABELS[profile.drying_method] ?? profile.drying_method}`,
     )
   }
   if (profile.brush_type) {
     parts.push(`Bürste: ${BRUSH_TYPE_LABELS[profile.brush_type] ?? profile.brush_type}`)
   }
-  if (profile.night_protection?.length > 0) {
+  if ((profile.night_protection?.length ?? 0) > 0) {
     parts.push(
-      `Nachtschutz: ${profile.night_protection.map((n) => NIGHT_PROTECTION_LABELS[n] ?? n).join(", ")}`,
+      `Nachtschutz: ${(profile.night_protection ?? []).map((n) => NIGHT_PROTECTION_LABELS[n] ?? n).join(", ")}`,
     )
   }
   if (profile.uses_heat_protection) {

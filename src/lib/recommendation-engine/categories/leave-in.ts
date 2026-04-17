@@ -14,6 +14,7 @@ import type {
   LeaveInCareBenefit,
   LeaveInRole,
 } from "@/lib/leave-in/constants"
+import { deriveLeaveInStylingContextFromStages } from "@/lib/profile/signal-derivations"
 import {
   compareWeightFit,
   deriveTargetWeight,
@@ -36,22 +37,11 @@ const LEAVE_IN_CARE_TARGET_PRIORITY: LeaveInCareTarget[] = [
 ]
 
 function deriveLeaveInStylingContext(profile: NormalizedProfile): LeaveInStylingContext | null {
-  const actions = profile.postWashActions
-
-  if (actions.includes("blow_dry_only") || actions.includes("heat_tool_styling")) {
-    return "heat_style"
-  }
-  if (actions.includes("non_heat_styling")) {
-    return "non_heat_style"
-  }
-  if (actions.includes("air_dry")) {
-    return "air_dry"
-  }
-  if (profile.heatStyling && profile.heatStyling !== "never") {
-    return "heat_style"
-  }
-
-  return null
+  return deriveLeaveInStylingContextFromStages(
+    profile.dryingMethod,
+    profile.heatStyling,
+    profile.stylingTools,
+  )
 }
 
 function deriveLeaveInNeedBucket(

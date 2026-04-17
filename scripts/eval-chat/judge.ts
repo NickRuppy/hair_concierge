@@ -9,6 +9,7 @@ import type {
   JudgeVerdict,
   HairProfileOverrides,
   QualityRubricResult,
+  RoutineInventorySeed,
 } from "./types"
 
 let _openai: OpenAI | null = null
@@ -41,12 +42,23 @@ export async function runJudge(
   sse: SSEResult,
   spec: JudgeSpec,
   profile: HairProfileOverrides,
+  routineInventory?: RoutineInventorySeed[],
   conversationContext?: string,
 ): Promise<JudgeVerdict> {
   const profileSummary = Object.entries(profile)
     .filter(([, v]) => v !== null && v !== undefined)
     .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(", ") : v}`)
     .join("\n")
+
+  const routineSummary =
+    routineInventory && routineInventory.length > 0
+      ? routineInventory
+          .map((item) => {
+            const details = [item.product_name, item.frequency_range].filter(Boolean).join(" | ")
+            return details ? `${item.category}: ${details}` : item.category
+          })
+          .join("\n")
+      : "(keine gespeicherte Routine)"
 
   const metadataSummary = sse.done_data
     ? Object.entries(sse.done_data)
@@ -63,6 +75,9 @@ ${conversationContext ? `\n## Gespraechsverlauf\n${conversationContext}` : ""}
 
 ## Haarprofil
 ${profileSummary}
+
+## Gespeicherte Routine
+${routineSummary}
 
 ## Assistent-Antwort
 ${sse.content.slice(0, 2000)}
@@ -106,12 +121,23 @@ export async function runQualityRubric(
   message: string,
   sse: SSEResult,
   profile: HairProfileOverrides,
+  routineInventory?: RoutineInventorySeed[],
   conversationContext?: string,
 ): Promise<QualityRubricResult> {
   const profileSummary = Object.entries(profile)
     .filter(([, v]) => v !== null && v !== undefined)
     .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(", ") : v}`)
     .join("\n")
+
+  const routineSummary =
+    routineInventory && routineInventory.length > 0
+      ? routineInventory
+          .map((item) => {
+            const details = [item.product_name, item.frequency_range].filter(Boolean).join(" | ")
+            return details ? `${item.category}: ${details}` : item.category
+          })
+          .join("\n")
+      : "(keine gespeicherte Routine)"
 
   const metadataSummary = sse.done_data
     ? Object.entries(sse.done_data)
@@ -128,6 +154,9 @@ ${conversationContext ? `\n## Gespraechsverlauf\n${conversationContext}` : ""}
 
 ## Haarprofil
 ${profileSummary}
+
+## Gespeicherte Routine
+${routineSummary}
 
 ## Assistent-Antwort
 ${sse.content.slice(0, 3000)}

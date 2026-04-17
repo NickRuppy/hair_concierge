@@ -15,10 +15,8 @@ import type {
   ScalpCondition,
   ChemicalTreatment,
   DesiredVolume,
-  PostWashAction,
   RoutinePreference,
   RoutineProduct,
-  MechanicalStressFactor,
   TowelMaterial,
   TowelTechnique,
   DryingMethod,
@@ -78,7 +76,6 @@ export type {
   ScalpCondition,
   ChemicalTreatment,
   DesiredVolume,
-  PostWashAction,
   RoutinePreference,
   RoutineProduct,
   ShampooBucket,
@@ -105,7 +102,6 @@ export {
   CHEMICAL_TREATMENT_LABELS,
   DESIRED_VOLUME_LABELS,
   DESIRED_VOLUME_OPTIONS,
-  POST_WASH_ACTION_OPTIONS,
   ROUTINE_PREFERENCE_OPTIONS,
   ROUTINE_PRODUCT_OPTIONS,
 } from "@/lib/vocabulary"
@@ -137,7 +133,7 @@ export interface HairProfile {
   products_used: string | null
   wash_frequency: WashFrequency | null
   heat_styling: HeatStyling | null
-  styling_tools: StylingTool[]
+  styling_tools: StylingTool[] | null
   goals: Goal[]
   cuticle_condition: CuticleCondition | null
   protein_moisture_balance: ProteinMoistureBalance | null
@@ -145,15 +141,13 @@ export interface HairProfile {
   scalp_condition: ScalpCondition | null
   chemical_treatment: ChemicalTreatment[]
   desired_volume: DesiredVolume | null
-  post_wash_actions: PostWashAction[]
   routine_preference: RoutinePreference | null
-  current_routine_products: RoutineProduct[]
-  mechanical_stress_factors: MechanicalStressFactor[]
+  current_routine_products: RoutineProduct[] | null
   towel_material: TowelMaterial | null
   towel_technique: TowelTechnique | null
-  drying_method: DryingMethod[]
+  drying_method: DryingMethod | null
   brush_type: BrushType | null
-  night_protection: NightProtection[]
+  night_protection: NightProtection[] | null
   uses_heat_protection: boolean
   additional_notes: string | null
   conversation_memory: string | null
@@ -475,6 +469,8 @@ export interface RoutineContext {
   density: HairDensity | null
   wash_frequency: WashFrequency | null
   heat_styling: HeatStyling | null
+  styling_tools: StylingTool[] | null
+  drying_method: DryingMethod | null
   scalp_type: ScalpType | null
   scalp_condition: ScalpCondition | null
   cuticle_condition: CuticleCondition | null
@@ -482,8 +478,6 @@ export interface RoutineContext {
   concerns: Concern[]
   goals: Goal[]
   chemical_treatment: ChemicalTreatment[]
-  post_wash_actions: PostWashAction[]
-  mechanical_stress_factors: MechanicalStressFactor[]
   current_routine_products: RoutineProduct[]
   products_used: string | null
   explicit_topic_ids: RoutineTopicId[]

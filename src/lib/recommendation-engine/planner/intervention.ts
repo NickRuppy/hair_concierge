@@ -6,6 +6,7 @@ import type {
   InterventionStep,
   NormalizedProfile,
 } from "@/lib/recommendation-engine/types"
+import { isExplicitNoneArray } from "@/lib/profile/signal-derivations"
 import {
   deriveBuildupResetNeed,
   getRoutineFrequencyBand,
@@ -441,7 +442,7 @@ export function buildInterventionPlan(
   if (profile.brushType === "paddle" || profile.brushType === "round") {
     behaviorReasons.push("rough_brushing")
   }
-  if (profile.nightProtection.length === 0) {
+  if (isExplicitNoneArray(profile.nightProtection)) {
     behaviorReasons.push("insufficient_night_protection")
   }
 

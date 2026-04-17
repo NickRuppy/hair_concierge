@@ -96,6 +96,7 @@ function buildItems(
           turn_index: turnResult.turn_index,
           message: turnResult.message,
           hair_profile: scenario.hair_profile,
+          routine_inventory: scenario.routine_inventory ?? [],
           base_url: baseUrl,
         },
         expectedOutput: {
