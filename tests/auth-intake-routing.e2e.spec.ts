@@ -72,6 +72,13 @@ test.describe.serial("Authenticated intake routing", () => {
   })
 
   test("login routes quizless users to /quiz instead of /onboarding", async ({ page }) => {
+    const visitedUrls: string[] = []
+    page.on("framenavigated", (frame) => {
+      if (frame === page.mainFrame()) {
+        visitedUrls.push(frame.url())
+      }
+    })
+
     await page.goto("/auth", { waitUntil: "networkidle" })
     await page.locator('input[type="email"]:visible').fill(email)
     await page.locator('input[type="password"]:visible').fill(password)
@@ -82,6 +89,12 @@ test.describe.serial("Authenticated intake routing", () => {
       waitUntil: "domcontentloaded",
     })
 
+    const visitedPathnames = visitedUrls
+      .filter((url) => url.startsWith("http://localhost:3000/"))
+      .map((url) => new URL(url).pathname)
+
+    expect(visitedPathnames.at(-1)).toBe("/quiz")
+    expect(visitedPathnames).not.toContain("/onboarding")
     await expect(page.getByRole("button", { name: /Quiz starten/i })).toBeVisible()
   })
 })
