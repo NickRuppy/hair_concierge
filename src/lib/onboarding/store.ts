@@ -7,7 +7,6 @@ import type {
   BrushType,
   NightProtection,
 } from "@/lib/vocabulary/onboarding-care"
-import type { DesiredVolume } from "@/lib/vocabulary/profile-labels"
 
 /* ── Step type ── */
 
@@ -25,10 +24,9 @@ export type OnboardingStep =
   | "drying_method"
   | "brush_type"
   | "night_protection"
-  | "goals"
   | "celebration"
 
-export type OnboardingEditScope = "products" | "styling" | "routine" | "goals"
+export type OnboardingEditScope = "products" | "styling" | "routine"
 
 export function getOnboardingEditScope(step: OnboardingStep): OnboardingEditScope | null {
   switch (step) {
@@ -46,8 +44,6 @@ export function getOnboardingEditScope(step: OnboardingStep): OnboardingEditScop
     case "brush_type":
     case "night_protection":
       return "routine"
-    case "goals":
-      return "goals"
     default:
       return null
   }
@@ -72,7 +68,6 @@ const LINEAR_AFTER_HEAT: OnboardingStep[] = [
   "drying_method",
   "brush_type",
   "night_protection",
-  "goals",
   "celebration",
 ]
 
@@ -99,10 +94,6 @@ interface OnboardingState {
   brushType: BrushType | null
   nightProtection: NightProtection[]
 
-  // Goals
-  selectedGoals: string[]
-  desiredVolume: DesiredVolume | null
-
   // Navigation
   goNext: () => void
   goBack: () => void
@@ -124,8 +115,6 @@ interface OnboardingState {
   setDryingMethod: (val: DryingMethod | null) => void
   setBrushType: (val: BrushType | null) => void
   setNightProtection: (val: NightProtection[]) => void
-  setSelectedGoals: (goals: string[]) => void
-  setDesiredVolume: (val: DesiredVolume | null) => void
 
   // Computed helpers
   allSelectedProducts: () => string[]
@@ -172,9 +161,6 @@ const initialData = {
   dryingMethod: null as DryingMethod | null,
   brushType: null as BrushType | null,
   nightProtection: [] as NightProtection[],
-
-  selectedGoals: [] as string[],
-  desiredVolume: null as DesiredVolume | null,
 }
 
 /* ── Store ── */
@@ -282,8 +268,6 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   setDryingMethod: (val) => set({ dryingMethod: val }),
   setBrushType: (val) => set({ brushType: val }),
   setNightProtection: (val) => set({ nightProtection: val }),
-  setSelectedGoals: (goals) => set({ selectedGoals: goals }),
-  setDesiredVolume: (val) => set({ desiredVolume: val }),
 
   // ── Computed ──
 

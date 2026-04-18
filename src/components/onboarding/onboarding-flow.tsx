@@ -14,8 +14,7 @@ import {
   PRODUCT_CATEGORY_LABELS,
 } from "@/lib/onboarding/product-options"
 import type { ProductFrequency } from "@/lib/vocabulary"
-import type { HairTexture, DesiredVolume, HeatStyling } from "@/lib/vocabulary"
-import type { Goal } from "@/lib/vocabulary"
+import type { HeatStyling } from "@/lib/vocabulary"
 
 // Import all screens
 import {
@@ -28,7 +27,6 @@ import {
   InterstitialScreen,
   SingleSelectScreen,
   MultiSelectScreen,
-  GoalsScreen,
   CelebrationPopup,
 } from "@/components/onboarding/screens"
 
@@ -130,8 +128,6 @@ function shouldReturnAfterScopeStep(
       )
     case "routine":
       return completedStep === "night_protection"
-    case "goals":
-      return completedStep === "goals"
     default:
       return false
   }
@@ -151,13 +147,8 @@ function getFinalContinueLabel(
     (currentStep === "product_drilldown" ||
       currentStep === "heat_tools" ||
       currentStep === "drying_method" ||
-      currentStep === "night_protection" ||
-      currentStep === "goals")
+      currentStep === "night_protection")
   ) {
-    return "Speichern und zurück zum Profil"
-  }
-
-  if (currentStep === "goals") {
     return "Speichern und zurück zum Profil"
   }
 
@@ -244,20 +235,6 @@ export function OnboardingFlow({
       }
       if (hairProfile.uses_heat_protection != null) {
         store.setUsesHeatProtection(hairProfile.uses_heat_protection as boolean)
-      }
-      if (Array.isArray(hairProfile.goals)) {
-        const goals = hairProfile.goals as string[]
-        // Legacy resume: translate desired_volume into goal selection
-        if (hairProfile.desired_volume === "more" && !goals.includes("volume")) {
-          goals.push("volume")
-        }
-        if (hairProfile.desired_volume === "less" && !goals.includes("less_volume")) {
-          goals.push("less_volume")
-        }
-        store.setSelectedGoals(goals)
-      }
-      if (hairProfile.desired_volume) {
-        store.setDesiredVolume(hairProfile.desired_volume as DesiredVolume)
       }
     }
 
@@ -512,15 +489,6 @@ export function OnboardingFlow({
             await saveHairProfile({
               night_protection: state.nightProtection,
             })
-            break
-          }
-
-          case "goals": {
-            const goals = state.selectedGoals as Goal[]
-            await saveHairProfile({
-              goals,
-              desired_volume: null,
-            })
             const { error: onboardingCompletedError } = await supabase
               .from("profiles")
               .update({ onboarding_completed: true })
@@ -530,10 +498,6 @@ export function OnboardingFlow({
 
             if (!returnTo) {
               posthog.capture("onboarding_completed", { userId })
-            }
-            if (returnTo) {
-              window.location.assign(returnTo)
-              return
             }
             break
           }
@@ -624,20 +588,6 @@ export function OnboardingFlow({
       setSelectedHeatTools(selectedHeatTools.filter((t) => t !== tool))
     } else {
       setSelectedHeatTools([...selectedHeatTools, tool])
-    }
-  }, [])
-
-  const toggleGoal = useCallback((goal: string) => {
-    const { selectedGoals, setSelectedGoals } = useOnboardingStore.getState()
-    if (selectedGoals.includes(goal)) {
-      setSelectedGoals(selectedGoals.filter((g) => g !== goal))
-    } else {
-      if (selectedGoals.length >= 5) return
-      let next = [...selectedGoals]
-      if (goal === "volume") next = next.filter((g) => g !== "less_volume")
-      if (goal === "less_volume") next = next.filter((g) => g !== "volume")
-      next.push(goal)
-      setSelectedGoals(next)
     }
   }, [])
 
@@ -917,25 +867,6 @@ export function OnboardingFlow({
             isSaving={savingStep === "night_protection"}
             continueLabel={getFinalContinueLabel(
               "night_protection",
-              store,
-              editScope,
-              singleStepEdit,
-              returnTo,
-            )}
-          />
-        )
-
-      case "goals":
-        return (
-          <GoalsScreen
-            hairTexture={(hairProfile?.hair_texture as HairTexture) ?? null}
-            selectedGoals={store.selectedGoals}
-            onGoalToggle={toggleGoal}
-            onContinue={() => handleStepComplete("goals")}
-            onBack={handleBack}
-            isSaving={savingStep === "goals"}
-            continueLabel={getFinalContinueLabel(
-              "goals",
               store,
               editScope,
               singleStepEdit,

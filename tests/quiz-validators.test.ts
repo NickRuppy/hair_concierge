@@ -77,3 +77,48 @@ test("quiz schema rejects free-text notes above 50 characters", () => {
 
   assert.equal(parsed.success, false)
 })
+
+test("quiz schema accepts up to 5 goals", () => {
+  const parsed = quizAnswersSchema.parse({
+    ...createBaseAnswers(),
+    goals: ["volume", "shine", "less_frizz", "moisture", "healthy_scalp"],
+  })
+
+  assert.equal(parsed.goals?.length, 5)
+})
+
+test("quiz schema rejects more than 5 goals", () => {
+  assert.throws(() =>
+    quizAnswersSchema.parse({
+      ...createBaseAnswers(),
+      goals: ["volume", "shine", "less_frizz", "moisture", "healthy_scalp", "strengthen"],
+    }),
+  )
+})
+
+test("quiz schema rejects unknown goal values", () => {
+  assert.throws(() =>
+    quizAnswersSchema.parse({
+      ...createBaseAnswers(),
+      goals: ["volume", "unknown_goal"],
+    }),
+  )
+})
+
+test("quiz schema rejects volume + less_volume together", () => {
+  assert.throws(() =>
+    quizAnswersSchema.parse({
+      ...createBaseAnswers(),
+      goals: ["volume", "less_volume"],
+    }),
+  )
+})
+
+test("quiz schema rejects duplicate goals", () => {
+  assert.throws(() =>
+    quizAnswersSchema.parse({
+      ...createBaseAnswers(),
+      goals: ["volume", "volume"],
+    }),
+  )
+})

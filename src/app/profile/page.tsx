@@ -680,6 +680,11 @@ export default function ProfilePage() {
       return
     }
 
+    if (target.kind === "profile-edit-goals") {
+      router.push("/profile/edit/goals")
+      return
+    }
+
     router.push(buildOnboardingHref(target.step, { singleStep: true }))
   }
 
@@ -1607,7 +1612,7 @@ export default function ProfilePage() {
                     type="button"
                     variant="outline"
                     className="w-auto"
-                    onClick={() => router.push(buildOnboardingHref("goals"))}
+                    onClick={() => router.push("/profile/edit/goals")}
                   >
                     Ziele bearbeiten
                   </Button>
@@ -1640,13 +1645,15 @@ export default function ProfilePage() {
               ) : (
                 <InlinePromptCard
                   title="Noch keine Ziele gewählt"
-                  text="Hier landen genau die Haarziele aus dem letzten Onboarding-Schritt, sobald du sie speicherst."
+                  text={
+                    "Hier landen deine Haarziele, sobald du sie im Haar-Check oder unter „Ziele bearbeiten\u201C speicherst."
+                  }
                   action={
                     <Button
                       type="button"
                       variant="outline"
                       className="w-auto"
-                      onClick={() => router.push(buildOnboardingHref("goals"))}
+                      onClick={() => router.push("/profile/edit/goals")}
                     >
                       Ziele öffnen
                     </Button>

@@ -1,4 +1,7 @@
 import type { QuizAnswers } from "./types"
+import { GOALS } from "@/lib/vocabulary/concerns-goals"
+
+const MAX_GOALS = 5
 
 export const QUIZ_STRUCTURE_VALUES = ["straight", "wavy", "curly", "coily"] as const
 export const QUIZ_THICKNESS_VALUES = ["fine", "normal", "coarse"] as const
@@ -67,6 +70,29 @@ function normalizeConcernOtherText(value: unknown): string | undefined {
   if (trimmed.length === 0) return undefined
 
   return trimmed
+}
+
+function normalizeGoals(raw: unknown): QuizAnswers["goals"] {
+  if (!Array.isArray(raw)) return undefined
+
+  const allowed = new Set<string>(GOALS)
+  const seen = new Set<string>()
+
+  // Walk input in user-chosen order so first-seen wins for the volume↔less_volume
+  // mutual exclusion and the max-5 cap. Then emit in canonical GOALS order so
+  // semantically-equal selections compare equal in `findReusableLead` JSON dedupe.
+  for (const value of raw) {
+    if (typeof value !== "string") continue
+    if (!allowed.has(value)) continue
+    if (seen.has(value)) continue
+    if (value === "less_volume" && seen.has("volume")) continue
+    if (value === "volume" && seen.has("less_volume")) continue
+    seen.add(value)
+    if (seen.size >= MAX_GOALS) break
+  }
+
+  if (seen.size === 0) return undefined
+  return GOALS.filter((g) => seen.has(g))
 }
 
 export function toggleTreatmentSelection(current: string[], value: string): string[] {
@@ -186,6 +212,7 @@ export function normalizeStoredQuizAnswers(
     concerns: sortConcerns(source.concerns) ?? [],
     concerns_other_text: normalizeConcernOtherText(source.concerns_other_text),
     treatment: sortTreatments(source.treatment),
+    goals: normalizeGoals(source.goals),
   }
 }
 
@@ -195,6 +222,7 @@ export function canonicalizeQuizAnswers(answers: QuizAnswers): QuizAnswers {
     concerns: sortConcerns(answers.concerns),
     concerns_other_text: normalizeConcernOtherText(answers.concerns_other_text),
     treatment: sortTreatments(answers.treatment),
+    goals: normalizeGoals(answers.goals),
   }
 
   if (normalized.has_scalp_issue !== true) {

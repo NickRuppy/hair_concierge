@@ -39,12 +39,12 @@ export const CHAT_RATE_LIMIT: RateLimitConfig = {
 
 export const QUIZ_LEAD_RATE_LIMIT: RateLimitConfig = {
   prefix: "quiz-lead",
-  limit: 5,
+  limit: 20,
   windowMs: 3_600_000,
 }
 
 export const QUIZ_ANALYZE_RATE_LIMIT: RateLimitConfig = {
   prefix: "quiz-analyze",
-  limit: 5,
+  limit: 20,
   windowMs: 3_600_000,
 }

@@ -67,8 +67,7 @@ export function QuizResults() {
         {lead.name.toUpperCase()}, DEIN HAARPROFIL
       </h2>
       <p className="text-base text-muted-foreground mb-5">
-        Dein Profil ist fast fertig — im nächsten Schritt geht es weiter mit deinen Zielen und
-        deiner Routine.
+        Dein Profil ist fast fertig — als Nächstes bauen wir deine persönliche Routine auf.
       </p>
 
       {/* Profile cards — responsive grid */}
@@ -106,7 +105,7 @@ export function QuizResults() {
           variant="unstyled"
           className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
         >
-          ZIELE UND ROUTINE FESTLEGEN
+          ROUTINE FESTLEGEN
         </Button>
 
         {leadId && (

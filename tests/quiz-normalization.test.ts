@@ -127,3 +127,77 @@ test("canonicalization drops invalid natur conflicts", () => {
   assert.equal(canonical.concerns_other_text, undefined)
   assert.deepEqual(canonical.treatment, ["gefaerbt", "blondiert"])
 })
+
+test("goals are passed through when valid (sorted to canonical GOALS order)", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    structure: "curly",
+    goals: ["volume", "shine", "less_frizz"],
+  })
+
+  // GOALS index: volume=0, less_frizz=2, shine=6
+  assert.deepEqual(normalized.goals, ["volume", "less_frizz", "shine"])
+})
+
+test("two goal lists with the same items in different order normalize equal", () => {
+  const a = normalizeStoredQuizAnswers({ goals: ["shine", "volume", "moisture"] })
+  const b = normalizeStoredQuizAnswers({ goals: ["moisture", "volume", "shine"] })
+  assert.deepEqual(a.goals, b.goals)
+})
+
+test("invalid goal values are filtered out", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    goals: ["volume", "not_a_goal", "shine", 42 as unknown as string],
+  })
+
+  // volume=0, shine=6
+  assert.deepEqual(normalized.goals, ["volume", "shine"])
+})
+
+test("goals are capped at 5 (first-seen wins, then sorted canonically)", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    goals: [
+      "volume",
+      "shine",
+      "less_frizz",
+      "moisture",
+      "healthy_scalp",
+      "strengthen",
+      "anti_breakage",
+    ],
+  })
+
+  assert.equal(normalized.goals?.length, 5)
+  // First 5 input items kept (strengthen + anti_breakage dropped), then re-sorted by GOALS index
+  assert.deepEqual(normalized.goals, ["volume", "less_frizz", "moisture", "healthy_scalp", "shine"])
+})
+
+test("goals drop the conflicting volume/less_volume pair (keeps first occurrence)", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    goals: ["volume", "shine", "less_volume"],
+  })
+
+  // less_volume blocked because volume seen first; output sorted: volume=0, shine=6
+  assert.deepEqual(normalized.goals, ["volume", "shine"])
+})
+
+test("missing or empty goals normalize to undefined", () => {
+  assert.equal(normalizeStoredQuizAnswers({}).goals, undefined)
+  assert.equal(normalizeStoredQuizAnswers({ goals: [] }).goals, undefined)
+  assert.equal(normalizeStoredQuizAnswers({ goals: ["nope"] }).goals, undefined)
+})
+
+test("canonicalization carries goals through in canonical GOALS order", () => {
+  const canonical = canonicalizeQuizAnswers({
+    structure: "wavy",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    scalp_type: "ausgeglichen",
+    scalp_condition: "keine",
+    treatment: ["natur"],
+    goals: ["moisture", "less_frizz"],
+  })
+
+  // less_frizz=2, moisture=4
+  assert.deepEqual(canonical.goals, ["less_frizz", "moisture"])
+})
