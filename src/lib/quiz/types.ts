@@ -10,6 +10,7 @@ export type QuizStep =
   | 9 // lead capture
   | 10 // analysis
   | 11 // results
+  | 12 // goals
   | 14 // welcome
 
 export type LeadCaptureSubStep = "name" | "email" | "consent"
@@ -48,6 +49,7 @@ export interface QuizAnswers {
   concerns?: ProfileConcern[]
   concerns_other_text?: string
   treatment?: string[]
+  goals?: string[]
 }
 
 export interface LeadData {

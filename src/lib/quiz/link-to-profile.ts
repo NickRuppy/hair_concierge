@@ -126,10 +126,13 @@ export async function linkQuizToProfile(
     profileData.chemical_treatment = answers.treatment.map((t: string) => TREATMENT_MAP[t] ?? t)
   }
 
+  const incomingGoals =
+    Array.isArray(answers.goals) && answers.goals.length > 0 ? (answers.goals as string[]) : null
+
   // --- Check if hair_profiles row already exists ---
   const { data: existing, error: fetchErr } = await admin
     .from("hair_profiles")
-    .select("id")
+    .select("id, goals")
     .eq("user_id", userId)
     .single()
 
@@ -140,6 +143,14 @@ export async function linkQuizToProfile(
   if (existing) {
     const updates = { ...profileData }
     delete updates.user_id
+
+    // Only write goals if user has none yet — never clobber existing goals from
+    // a stale unlinked lead matched via the email fallback above.
+    const existingGoals = (existing as { goals: string[] | null }).goals
+    if (incomingGoals && (!existingGoals || existingGoals.length === 0)) {
+      updates.goals = incomingGoals
+      updates.desired_volume = null
+    }
 
     if (Object.keys(updates).length > 0) {
       const { error: updateErr } = await admin
@@ -153,6 +164,10 @@ export async function linkQuizToProfile(
     }
   } else {
     // Create new hair_profiles row
+    if (incomingGoals) {
+      profileData.goals = incomingGoals
+      profileData.desired_volume = null
+    }
     const { error: insertErr } = await admin.from("hair_profiles").insert(profileData)
     if (insertErr) {
       throw new Error(`hair_profiles insert failed: ${insertErr.message}`)

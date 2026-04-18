@@ -1,6 +1,6 @@
 import type { QuizQuestion } from "./types"
 
-export const QUIZ_TOTAL_QUESTIONS = 7
+export const QUIZ_TOTAL_QUESTIONS = 8
 
 export const quizQuestions: QuizQuestion[] = [
   {
@@ -200,7 +200,7 @@ export const quizQuestions: QuizQuestion[] = [
     ],
     selectionMode: "multi",
     maxSelections: 3,
-    motivation: "Geschafft — dein Pflegeplan ist gleich da.",
+    motivation: "Fast geschafft — eine Frage noch.",
   },
 ]
 

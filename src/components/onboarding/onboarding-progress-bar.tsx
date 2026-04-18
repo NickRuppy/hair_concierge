@@ -2,7 +2,7 @@
 
 import type { OnboardingStep } from "@/lib/onboarding/store"
 
-const SECTION_LABELS = ["Produkte", "Styling", "Alltag", "Ziele"] as const
+const SECTION_LABELS = ["Produkte", "Styling", "Alltag"] as const
 
 const STEP_SECTIONS: Record<OnboardingStep, number> = {
   // Section 0: Produkte
@@ -21,9 +21,7 @@ const STEP_SECTIONS: Record<OnboardingStep, number> = {
   drying_method: 2,
   brush_type: 2,
   night_protection: 2,
-  // Section 3: Ziele
-  goals: 3,
-  celebration: 3,
+  celebration: 2,
 }
 
 interface OnboardingProgressBarProps {

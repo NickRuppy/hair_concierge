@@ -10,6 +10,7 @@ import { QuizConcernsQuestion } from "@/components/quiz/quiz-concerns-question"
 import { QuizLeadCapture } from "@/components/quiz/quiz-lead-capture"
 import { QuizAnalysis } from "@/components/quiz/quiz-analysis"
 import { QuizResults } from "@/components/quiz/quiz-results"
+import { QuizGoals } from "@/components/quiz/quiz-goals"
 import { QuizWelcome } from "@/components/quiz/quiz-welcome"
 import { posthog } from "@/providers/posthog-provider"
 
@@ -25,6 +26,7 @@ const STEP_NAMES: Record<number, string> = {
   9: "lead_capture",
   10: "analysis",
   11: "results",
+  12: "goals",
   14: "auth_transition",
 }
 
@@ -57,6 +59,8 @@ export default function QuizPage() {
       return <QuizAnalysis />
     case 11:
       return <QuizResults />
+    case 12:
+      return <QuizGoals />
     case 14:
       return <QuizWelcome />
     default:

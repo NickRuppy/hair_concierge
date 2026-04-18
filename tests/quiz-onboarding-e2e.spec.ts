@@ -108,16 +108,16 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(page.getByText("HAARTEXTUR", { exact: false })).toBeVisible()
 
       await page.getByText("Wellig").first().click()
-      await expect(page.getByText("2/7")).toBeVisible()
+      await expect(page.getByText("2/8")).toBeVisible()
 
       await page.getByText("Mittel").first().click()
-      await expect(page.getByText("3/7")).toBeVisible()
+      await expect(page.getByText("3/8")).toBeVisible()
 
       await page.getByText("Leicht uneben").click()
-      await expect(page.getByText("4/7")).toBeVisible()
+      await expect(page.getByText("4/8")).toBeVisible()
 
       await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
-      await expect(page.getByText("5/7")).toBeVisible()
+      await expect(page.getByText("5/8")).toBeVisible()
 
       await expect(
         page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false }),
@@ -148,7 +148,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       // Scalp question (6/7)
-      await expect(page.getByText("6/7")).toBeVisible()
+      await expect(page.getByText("6/8")).toBeVisible()
       await page
         .locator(".quiz-card")
         .filter({ has: page.getByText(/^Trocken$/) })
@@ -157,10 +157,19 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: "JA" }).click()
       await page.getByText("Trockene Schuppen").click()
 
-      await expect(page.getByText("7/7")).toBeVisible()
+      await expect(page.getByText("7/8")).toBeVisible()
       await expect(page.getByText(/Welche Haarprobleme/i)).toBeVisible()
       await page.getByText("Trockenheit").click()
       await page.getByText("Frizz").click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
+
+      // New step 12: Goals — picked between concerns and lead capture so the
+      // analyse step can already use them and the lead row stores them once.
+      await expect(page.getByText("Deine Haarziele", { exact: false })).toBeVisible({
+        timeout: 10_000,
+      })
+      await page.getByRole("button", { name: /Mehr Volumen/i }).click()
+      await page.getByRole("button", { name: /Mehr Glanz/i }).click()
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       await page.getByPlaceholder("Dein Vorname").fill("Playwright")
@@ -173,7 +182,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
     })
 
     await test.step("Verify the lead is analyzed before auth", async () => {
-      await expect(page.getByRole("button", { name: /ZIELE UND ROUTINE FESTLEGEN/i })).toBeVisible({
+      await expect(page.getByRole("button", { name: /ROUTINE FESTLEGEN/i })).toBeVisible({
         timeout: 45_000,
       })
 
@@ -200,7 +209,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
     await test.step("Authenticate via inline auth on quiz-welcome", async () => {
       // Advance from results to welcome (step 14 — inline auth)
-      await page.getByRole("button", { name: /ZIELE UND ROUTINE FESTLEGEN/i }).click()
+      await page.getByRole("button", { name: /ROUTINE FESTLEGEN/i }).click()
 
       // Welcome page now shows inline dark auth form
       await expect(page.getByText("PROFIL SPEICHERN", { exact: false })).toBeVisible({
@@ -283,19 +292,12 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       })
       await page.getByRole("button", { name: /Grobzinkiger Kamm/i }).click()
 
-      // Night protection: skip
+      // Night protection: skip — this is now the last data step; "Nichts davon"
+      // both saves an empty selection AND flips onboarding_completed=true.
       await expect(
         page.getByText("Wie schützt du dein Haar nachts?", { exact: false }),
       ).toBeVisible({ timeout: 10_000 })
       await page.getByRole("button", { name: /Nichts davon/i }).click()
-
-      // Goals page: select goals from the chip grid
-      await expect(page.getByText("Deine Haarziele", { exact: false })).toBeVisible({
-        timeout: 10_000,
-      })
-      await page.getByRole("button", { name: /Mehr Volumen/i }).click()
-      await page.getByRole("button", { name: /Mehr Glanz/i }).click()
-      await page.getByRole("button", { name: /^Weiter$/ }).click()
 
       // Celebration popup
       await expect(page.getByRole("button", { name: /ZUM CHAT/i })).toBeVisible({ timeout: 10_000 })
@@ -421,29 +423,39 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       )
 
       await page.getByRole("button", { name: /^Weiter$/i }).click()
-      await expect(page.getByText("6/7")).toBeVisible()
+      await expect(page.getByText("6/8")).toBeVisible()
       await page
         .locator(".quiz-card")
         .filter({ has: page.getByText(/^Fettig$/) })
         .click()
       await page.getByRole("button", { name: "NEIN" }).click()
-      await expect(page.getByText("7/7")).toBeVisible()
+      await expect(page.getByText("7/8")).toBeVisible()
       await page.getByLabel("Etwas anderes?").fill("verklebt schnell")
       await page.getByRole("button", { name: /^Weiter$/i }).click()
+
+      // New step 12: Goals — sits between concerns and lead capture. Picks
+      // here are persisted to leads.quiz_answers but the clobber guard in
+      // linkQuizToProfile keeps the existing user's hair_profiles.goals.
+      await expect(page.getByText("Deine Haarziele", { exact: false })).toBeVisible({
+        timeout: 10_000,
+      })
+      await page.getByRole("button", { name: /Mehr Glanz/i }).click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
+
       await page.getByPlaceholder("Dein Vorname").fill("Playwright Return")
       await page.getByRole("button", { name: /^Weiter$/i }).click()
       await page.getByPlaceholder("name@beispiel.de").fill(email)
       await page.getByRole("button", { name: /^Weiter$/i }).click()
       await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
 
-      await expect(page.getByRole("button", { name: /ZIELE UND ROUTINE FESTLEGEN/i })).toBeVisible({
+      await expect(page.getByRole("button", { name: /ROUTINE FESTLEGEN/i })).toBeVisible({
         timeout: 45_000,
       })
     })
 
     await test.step("Log back in via inline auth and relink the new lead", async () => {
-      // Advance to welcome (inline auth)
-      await page.getByRole("button", { name: /ZIELE UND ROUTINE FESTLEGEN/i }).click()
+      // Advance from results into the welcome/auth step
+      await page.getByRole("button", { name: /ROUTINE FESTLEGEN/i }).click()
 
       await expect(page.getByText("PROFIL SPEICHERN", { exact: false })).toBeVisible({
         timeout: 15_000,

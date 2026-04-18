@@ -30,7 +30,6 @@ const VALID_ONBOARDING_STEPS = new Set<OnboardingStep>([
   "drying_method",
   "brush_type",
   "night_protection",
-  "goals",
   "celebration",
 ])
 

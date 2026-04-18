@@ -9,6 +9,7 @@ import {
   QUIZ_SCALP_CONDITION_VALUES,
   QUIZ_TREATMENT_VALUES,
 } from "./normalization"
+import { GOALS } from "@/lib/vocabulary/concerns-goals"
 
 export const quizAnswersSchema = z
   .object({
@@ -24,6 +25,11 @@ export const quizAnswersSchema = z
     treatment: z
       .array(z.enum(QUIZ_TREATMENT_VALUES))
       .min(1, "Bitte waehle mindestens eine Behandlung"),
+    goals: z
+      .array(z.enum(GOALS))
+      .min(1, "Bitte waehle mindestens ein Ziel")
+      .max(5, "Bitte waehle hoechstens fuenf Ziele")
+      .optional(),
   })
   .strict()
   .superRefine((answers, ctx) => {
@@ -65,6 +71,24 @@ export const quizAnswersSchema = z
         message: "Ohne aktive Kopfhaut-Beschwerde darf kein Problem gesetzt sein",
         path: ["scalp_condition"],
       })
+    }
+
+    if (answers.goals) {
+      if (new Set(answers.goals).size !== answers.goals.length) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Ziele duerfen nicht doppelt vorkommen",
+          path: ["goals"],
+        })
+      }
+
+      if (answers.goals.includes("volume") && answers.goals.includes("less_volume")) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Mehr und weniger Volumen schliessen sich aus",
+          path: ["goals"],
+        })
+      }
     }
   })
 

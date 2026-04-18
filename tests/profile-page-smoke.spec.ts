@@ -61,7 +61,7 @@ test.describe.serial("Profile page smoke", () => {
         email,
         full_name: fullName,
         onboarding_completed: true,
-        onboarding_step: "goals",
+        onboarding_step: "celebration",
       },
       { onConflict: "id" },
     )
@@ -188,7 +188,7 @@ test.describe.serial("Profile page smoke", () => {
     ).toBeVisible()
 
     await page.getByRole("button", { name: "Ziele bearbeiten" }).click()
-    await page.waitForURL(/\/onboarding\?step=goals&returnTo=%2Fprofile$/, { timeout: 15000 })
+    await page.waitForURL(/\/profile\/edit\/goals(\?.*)?$/, { timeout: 15000 })
     await expect(page.getByText("Deine Haarziele", { exact: false })).toBeVisible()
     await page.getByRole("button", { name: "Speichern und zurück zum Profil" }).click()
     await page.waitForURL(/\/profile$/, { timeout: 30000 })

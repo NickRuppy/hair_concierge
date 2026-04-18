@@ -33,7 +33,10 @@ export type ProfileFieldSourceLabel = "Aus Haar-Check" | "Aus Onboarding"
 export type ProfileFieldDisplayMode = "text" | "badges"
 export type ProfileFieldValue = string | string[] | null
 
-export type ProfileEditTarget = { kind: "quiz" } | { kind: "onboarding"; step: OnboardingStep }
+export type ProfileEditTarget =
+  | { kind: "quiz" }
+  | { kind: "onboarding"; step: OnboardingStep }
+  | { kind: "profile-edit-goals" }
 
 export type ProfileFieldConfig = {
   key: string
@@ -122,7 +125,7 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
   {
     key: "goals",
     title: "Ziele",
-    description: "Deine ausgewählten Haarziele aus dem letzten Onboarding-Schritt.",
+    description: "Deine ausgewählten Haarziele aus dem Haar-Check.",
   },
   {
     key: "memory",
@@ -357,11 +360,11 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "goals",
     label: "Deine Haarziele",
-    helpText: "Genau die Ziele, die du im letzten Onboarding-Schritt ausgewählt hast.",
+    helpText: "Genau die Ziele, die du im Haar-Check ausgewählt hast.",
     sectionKey: "goals",
-    sourceLabel: "Aus Onboarding",
+    sourceLabel: "Aus Haar-Check",
     displayMode: "badges",
-    editTarget: { kind: "onboarding", step: "goals" },
+    editTarget: { kind: "profile-edit-goals" },
     getValue: (profile) => orderedGoalLabels(profile),
   },
 ]
