@@ -24,6 +24,15 @@ test("quiz schema accepts an empty concern array with a negative scalp gate", ()
   assert.equal(parsed.scalp_condition, undefined)
 })
 
+test("quiz schema accepts free-text-only concern notes", () => {
+  const parsed = quizAnswersSchema.parse({
+    ...createBaseAnswers(),
+    concerns_other_text: "statische Haare",
+  })
+
+  assert.equal(parsed.concerns_other_text, "statische Haare")
+})
+
 test("quiz schema rejects more than three concerns", () => {
   assert.throws(() =>
     quizAnswersSchema.parse({
@@ -58,4 +67,13 @@ test("quiz schema does not use colored as a concern code", () => {
       concerns: ["colored"],
     }),
   )
+})
+
+test("quiz schema rejects free-text notes above 50 characters", () => {
+  const parsed = quizAnswersSchema.safeParse({
+    ...createBaseAnswers(),
+    concerns_other_text: "x".repeat(51),
+  })
+
+  assert.equal(parsed.success, false)
 })

@@ -46,6 +46,7 @@ export interface QuizAnswers {
   has_scalp_issue?: boolean
   scalp_condition?: string
   concerns?: ProfileConcern[]
+  concerns_other_text?: string
   treatment?: string[]
 }
 

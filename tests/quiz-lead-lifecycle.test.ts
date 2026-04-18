@@ -65,6 +65,39 @@ test("dedupe still reuses a legacy lead missing the new scalp gate and concern f
   assert.equal(reusableLead?.id, "lead-legacy")
 })
 
+test("dedupe distinguishes concern notes with different text", () => {
+  const reusableLead = findReusableLead(
+    [
+      {
+        id: "lead-1",
+        quiz_answers: {
+          structure: "curly",
+          thickness: "normal",
+          fingertest: "rau",
+          pulltest: "ueberdehnt",
+          scalp_type: "fettig",
+          concerns: [],
+          concerns_other_text: "statische Haare",
+          treatment: ["gefaerbt"],
+        },
+      },
+    ],
+    {
+      structure: "curly",
+      thickness: "normal",
+      fingertest: "rau",
+      pulltest: "stretches_stays",
+      scalp_type: "fettig",
+      has_scalp_issue: false,
+      concerns: [],
+      concerns_other_text: "verklebt schnell",
+      treatment: ["gefaerbt"],
+    },
+  )
+
+  assert.equal(reusableLead, null)
+})
+
 test("analyze status transitions to analyzed before linking and linked afterwards", () => {
   assert.equal(getLeadStatusAfterAnalyze(null), "analyzed")
   assert.equal(getLeadStatusAfterAnalyze("user-123"), "linked")

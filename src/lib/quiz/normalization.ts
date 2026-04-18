@@ -60,6 +60,15 @@ function sortConcerns(concerns: unknown): QuizAnswers["concerns"] | undefined {
   return unique.slice(0, 3)
 }
 
+function normalizeConcernOtherText(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined
+
+  const trimmed = value.trim()
+  if (trimmed.length === 0) return undefined
+
+  return trimmed
+}
+
 export function toggleTreatmentSelection(current: string[], value: string): string[] {
   if (!QUIZ_TREATMENT_VALUES.includes(value as (typeof QUIZ_TREATMENT_VALUES)[number])) {
     return current
@@ -175,6 +184,7 @@ export function normalizeStoredQuizAnswers(
     has_scalp_issue: hasScalpIssue,
     scalp_condition: scalpCondition,
     concerns: sortConcerns(source.concerns) ?? [],
+    concerns_other_text: normalizeConcernOtherText(source.concerns_other_text),
     treatment: sortTreatments(source.treatment),
   }
 }
@@ -183,6 +193,7 @@ export function canonicalizeQuizAnswers(answers: QuizAnswers): QuizAnswers {
   const normalized = {
     ...normalizeStoredQuizAnswers(answers),
     concerns: sortConcerns(answers.concerns),
+    concerns_other_text: normalizeConcernOtherText(answers.concerns_other_text),
     treatment: sortTreatments(answers.treatment),
   }
 

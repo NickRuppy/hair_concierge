@@ -80,6 +80,24 @@ test("stored answers without the new concern or scalp gate fields backfill clean
   assert.deepEqual(normalized.concerns, [])
 })
 
+test("free-text concern notes are trimmed and empty strings are removed", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    concerns: [],
+    concerns_other_text: "  statische Haare  ",
+  })
+
+  assert.equal(normalized.concerns_other_text, "statische Haare")
+})
+
+test("blank free-text concern notes normalize to undefined", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    concerns: [],
+    concerns_other_text: "   ",
+  })
+
+  assert.equal(normalized.concerns_other_text, undefined)
+})
+
 test("none stays exclusive and concern selection caps at three entries", () => {
   let selected = toggleConcernSelection([], "hair_damage")
   selected = toggleConcernSelection(selected, "split_ends")
@@ -106,5 +124,6 @@ test("canonicalization drops invalid natur conflicts", () => {
   assert.equal(canonical.has_scalp_issue, false)
   assert.equal(canonical.scalp_condition, undefined)
   assert.deepEqual(canonical.concerns, ["breakage", "dryness", "frizz"])
+  assert.equal(canonical.concerns_other_text, undefined)
   assert.deepEqual(canonical.treatment, ["gefaerbt", "blondiert"])
 })

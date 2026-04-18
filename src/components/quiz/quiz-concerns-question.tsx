@@ -13,6 +13,7 @@ export function QuizConcernsQuestion() {
   const question = getQuestionByStep(8)
   const { answers, setAnswer, goBack, goNext } = useQuizStore()
   const [localSelection, setLocalSelection] = useState<string[]>(answers.concerns ?? [])
+  const [otherText, setOtherText] = useState(answers.concerns_other_text ?? "")
 
   const handleToggle = useCallback((value: string) => {
     setLocalSelection((current) => toggleConcernSelection(current, value))
@@ -21,19 +22,23 @@ export function QuizConcernsQuestion() {
   const handleNone = useCallback(() => {
     setLocalSelection([])
     setAnswer("concerns", [])
+    setAnswer("concerns_other_text", otherText.trim() || undefined)
     window.setTimeout(() => {
       goNext()
     }, 250)
-  }, [goNext, setAnswer])
+  }, [goNext, otherText, setAnswer])
 
   const handleContinue = useCallback(() => {
     setAnswer("concerns", localSelection)
+    setAnswer("concerns_other_text", otherText.trim() || undefined)
     goNext()
-  }, [goNext, localSelection, setAnswer])
+  }, [goNext, localSelection, otherText, setAnswer])
 
   if (!question) return null
 
   const hasSelection = localSelection.length > 0
+  const hasTypedNote = otherText.trim().length > 0
+  const canContinue = hasSelection || hasTypedNote
 
   return (
     <div className="flex flex-col" key="quiz-concerns-question">
@@ -80,15 +85,25 @@ export function QuizConcernsQuestion() {
       </div>
 
       <div className="mt-4 space-y-3">
-        <Button
-          type="button"
-          onClick={handleContinue}
-          disabled={!hasSelection}
-          variant="unstyled"
-          className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${hasSelection ? "quiz-btn-primary" : "disabled:opacity-40"}`}
-        >
-          Weiter
-        </Button>
+        <div>
+          <label
+            htmlFor="quiz-concerns-other-text"
+            className="mb-2 block text-sm font-medium text-foreground"
+          >
+            Etwas anderes?
+          </label>
+          <textarea
+            id="quiz-concerns-other-text"
+            value={otherText}
+            onChange={(event) => setOtherText(event.target.value.slice(0, 50))}
+            maxLength={50}
+            rows={2}
+            className="h-[78.75px] min-h-[78.75px] w-full overflow-y-auto rounded-xl border border-border bg-background px-[18px] py-[14px] text-base font-semibold leading-relaxed text-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+          />
+          <p className="mt-2 text-right text-xs text-[var(--text-caption)]">
+            {otherText.length}/50
+          </p>
+        </div>
 
         <button
           type="button"
@@ -97,6 +112,16 @@ export function QuizConcernsQuestion() {
         >
           Nichts davon
         </button>
+
+        <Button
+          type="button"
+          onClick={handleContinue}
+          disabled={!canContinue}
+          variant="unstyled"
+          className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${canContinue ? "quiz-btn-primary" : "disabled:opacity-40"}`}
+        >
+          Weiter
+        </Button>
       </div>
 
       <p className="mt-3 text-center text-sm text-[var(--text-caption)]">{question.motivation}</p>

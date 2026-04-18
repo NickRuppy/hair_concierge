@@ -428,7 +428,8 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         .click()
       await page.getByRole("button", { name: "NEIN" }).click()
       await expect(page.getByText("7/7")).toBeVisible()
-      await page.getByRole("button", { name: /Nichts davon/i }).click()
+      await page.getByLabel("Etwas anderes?").fill("verklebt schnell")
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
       await page.getByPlaceholder("Dein Vorname").fill("Playwright Return")
       await page.getByRole("button", { name: /^Weiter$/i }).click()
       await page.getByPlaceholder("name@beispiel.de").fill(email)
@@ -496,6 +497,12 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       rerunLeadId = (await fetchLatestLead())?.id ?? null
       expect(rerunLeadId).not.toBeNull()
       expect(rerunLeadId).not.toBe(firstLeadId)
+
+      const latestLead = await fetchLatestLead()
+      expect(latestLead?.quiz_answers).toMatchObject({
+        concerns: [],
+        concerns_other_text: "verklebt schnell",
+      })
 
       // Diagnostic fields should be overwritten with the new quiz answers
       await expect
