@@ -131,6 +131,10 @@ test.describe.serial("Authenticated intake routing", () => {
       .click()
     await page.getByRole("button", { name: "NEIN" }).click()
 
+    await expect(page.getByText(/Welche Haarprobleme/i)).toBeVisible()
+    await page.getByText("Trockenheit").click()
+    await page.getByRole("button", { name: /^Weiter$/i }).click()
+
     await page.getByPlaceholder("Dein Vorname").fill("Playwright Intake")
     await page.getByRole("button", { name: /^Weiter$/i }).click()
 

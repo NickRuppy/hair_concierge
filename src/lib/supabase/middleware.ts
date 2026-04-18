@@ -91,7 +91,7 @@ export async function updateSession(request: NextRequest) {
     const { data: hairProfile } = await supabase
       .from("hair_profiles")
       .select(
-        "hair_texture, thickness, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment",
+        "hair_texture, thickness, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns",
       )
       .eq("user_id", user.id)
       .maybeSingle()

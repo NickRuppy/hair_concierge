@@ -15,15 +15,21 @@ const completeQuizProfile = {
   scalp_type: "dry",
   scalp_condition: "dry_flakes",
   chemical_treatment: ["colored"],
+  concerns: ["dryness"],
 }
 
 test("hasQuizDiagnostics returns false when hair profile is missing", () => {
   assert.equal(hasQuizDiagnostics(null), false)
 })
 
-test("hasQuizDiagnostics requires every quiz-written field", () => {
-  assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, scalp_condition: null }), false)
+test("hasQuizDiagnostics accepts a completed no-issue scalp answer", () => {
+  assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, scalp_condition: null }), true)
+})
+
+test("hasQuizDiagnostics requires every other quiz-written field", () => {
   assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, chemical_treatment: [] }), false)
+  assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, concerns: null }), false)
+  assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, concerns: undefined }), false)
 })
 
 test("resolveIntakeState returns ready when onboarding is already completed", () => {

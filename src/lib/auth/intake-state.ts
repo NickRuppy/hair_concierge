@@ -1,43 +1,21 @@
-export type IntakeState = "needs_quiz" | "needs_onboarding" | "ready"
+import {
+  hasCompletedQuizDiagnostics,
+  type PersistedQuizDiagnosticsProfile,
+} from "@/lib/quiz/completion"
 
-type QuizDiagnosticsProfile = {
-  hair_texture?: string | null
-  thickness?: string | null
-  cuticle_condition?: string | null
-  protein_moisture_balance?: string | null
-  scalp_type?: string | null
-  scalp_condition?: string | null
-  chemical_treatment?: string[] | null
-} | null
+export type IntakeState = "needs_quiz" | "needs_onboarding" | "ready"
 
 type ProfileRow = {
   onboarding_completed?: boolean | null
 } | null
 
-export function hasQuizDiagnostics(profile: QuizDiagnosticsProfile): boolean {
-  if (!profile) {
-    return false
-  }
-
-  const requiredFields = [
-    profile.hair_texture,
-    profile.thickness,
-    profile.cuticle_condition,
-    profile.protein_moisture_balance,
-    profile.scalp_type,
-    profile.scalp_condition,
-  ]
-
-  return (
-    requiredFields.every((value) => typeof value === "string" && value.length > 0) &&
-    Array.isArray(profile.chemical_treatment) &&
-    profile.chemical_treatment.length > 0
-  )
+export function hasQuizDiagnostics(profile: PersistedQuizDiagnosticsProfile): boolean {
+  return hasCompletedQuizDiagnostics(profile)
 }
 
 export function resolveIntakeState(
   profile: ProfileRow,
-  hairProfile: QuizDiagnosticsProfile,
+  hairProfile: PersistedQuizDiagnosticsProfile,
 ): IntakeState {
   if (profile?.onboarding_completed) {
     return "ready"
