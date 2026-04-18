@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import { getOnboardingEditScope, type OnboardingStep } from "@/lib/onboarding/store"
+import { resolveIntakeState } from "@/lib/auth/intake-state"
 
 interface OnboardingPageProps {
   searchParams: Promise<{
@@ -99,17 +100,22 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
     .eq("id", user.id)
     .single()
 
-  // If already completed, redirect to chat
-  if (profileRow?.onboarding_completed && !forcedStep) {
-    redirect(returnTo ?? "/chat")
-  }
-
   // Fetch hair profile for pre-filling
   const { data: hairProfile } = await admin
     .from("hair_profiles")
     .select("*")
     .eq("user_id", user.id)
-    .single()
+    .maybeSingle()
+
+  const intakeState = resolveIntakeState(profileRow, hairProfile)
+
+  if (intakeState === "needs_quiz") {
+    redirect("/quiz")
+  }
+
+  if (intakeState === "ready" && !forcedStep) {
+    redirect(returnTo ?? "/chat")
+  }
 
   // Fetch existing product usage
   const { data: productUsage } = await admin
