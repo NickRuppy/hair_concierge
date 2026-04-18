@@ -23,9 +23,10 @@ import {
   type ProfileJourneySectionKey,
 } from "@/lib/profile/section-config"
 import { createClient } from "@/lib/supabase/client"
-import type { ChemicalTreatment, HairProfile, UserMemoryEntry } from "@/lib/types"
+import type { ChemicalTreatment, HairProfile, ProfileConcern, UserMemoryEntry } from "@/lib/types"
 import {
   CHEMICAL_TREATMENT_LABELS,
+  PROFILE_CONCERN_LABELS,
   HAIR_TEXTURE_OPTIONS,
   HAIR_THICKNESS_OPTIONS,
   SCALP_CONDITION_LABELS,
@@ -73,9 +74,10 @@ type QuizDraft = {
   thickness: string
   cuticle_condition: string
   protein_moisture_balance: string
+  chemical_treatment: ChemicalTreatment[]
   scalp_type: string
   scalp_condition: string
-  chemical_treatment: ChemicalTreatment[]
+  concerns: ProfileConcern[]
 }
 
 type QuizSaveNotice =
@@ -109,7 +111,6 @@ const QUIZ_SCALP_TYPE_OPTIONS = [
 ]
 
 const QUIZ_SCALP_CONDITION_OPTIONS = [
-  { value: "none", label: SCALP_CONDITION_LABELS.none },
   { value: "dandruff", label: SCALP_CONDITION_LABELS.dandruff },
   { value: "dry_flakes", label: SCALP_CONDITION_LABELS.dry_flakes },
   { value: "irritated", label: SCALP_CONDITION_LABELS.irritated },
@@ -119,6 +120,15 @@ const QUIZ_CHEMICAL_TREATMENT_OPTIONS: Array<{ value: ChemicalTreatment; label: 
   { value: "natural", label: CHEMICAL_TREATMENT_LABELS.natural },
   { value: "colored", label: CHEMICAL_TREATMENT_LABELS.colored },
   { value: "bleached", label: CHEMICAL_TREATMENT_LABELS.bleached },
+]
+
+const QUIZ_CONCERN_OPTIONS: Array<{ value: ProfileConcern; label: string }> = [
+  { value: "hair_damage", label: PROFILE_CONCERN_LABELS.hair_damage },
+  { value: "split_ends", label: PROFILE_CONCERN_LABELS.split_ends },
+  { value: "breakage", label: PROFILE_CONCERN_LABELS.breakage },
+  { value: "dryness", label: PROFILE_CONCERN_LABELS.dryness },
+  { value: "frizz", label: PROFILE_CONCERN_LABELS.frizz },
+  { value: "tangling", label: PROFILE_CONCERN_LABELS.tangling },
 ]
 
 function buildOnboardingHref(
@@ -152,9 +162,10 @@ function createQuizDraft(profile: HairProfile | null): QuizDraft {
     thickness: profile?.thickness ?? "",
     cuticle_condition: profile?.cuticle_condition ?? "",
     protein_moisture_balance: profile?.protein_moisture_balance ?? "",
+    chemical_treatment: profile?.chemical_treatment ?? [],
     scalp_type: profile?.scalp_type ?? "",
     scalp_condition: profile?.scalp_condition ?? "",
-    chemical_treatment: profile?.chemical_treatment ?? [],
+    concerns: profile?.concerns ?? [],
   }
 }
 
@@ -214,6 +225,18 @@ function toggleChemicalTreatment(
   }
 
   return [...withoutNatural, treatment]
+}
+
+function toggleConcern(currentValues: ProfileConcern[], concern: ProfileConcern): ProfileConcern[] {
+  if (currentValues.includes(concern)) {
+    return currentValues.filter((value) => value !== concern)
+  }
+
+  if (currentValues.length >= 3) {
+    return currentValues
+  }
+
+  return [...currentValues, concern]
 }
 
 function createProductRows(rows: UserProductUsageRow[]): ProductDetailRow[] {
@@ -678,6 +701,7 @@ export default function ProfilePage() {
       | "thickness"
       | "cuticle_condition"
       | "protein_moisture_balance"
+      | "concerns"
       | "scalp_type"
       | "scalp_condition"
       | "chemical_treatment"
@@ -687,6 +711,7 @@ export default function ProfilePage() {
       cuticle_condition: (quizDraft.cuticle_condition || null) as HairProfile["cuticle_condition"],
       protein_moisture_balance: (quizDraft.protein_moisture_balance ||
         null) as HairProfile["protein_moisture_balance"],
+      concerns: quizDraft.concerns,
       scalp_type: (quizDraft.scalp_type || null) as HairProfile["scalp_type"],
       scalp_condition: (quizDraft.scalp_condition || null) as HairProfile["scalp_condition"],
       chemical_treatment: quizDraft.chemical_treatment,
@@ -974,44 +999,6 @@ export default function ProfilePage() {
 
                     <div
                       ref={(node) => {
-                        quizFieldRefs.current.scalp_type = node
-                      }}
-                    >
-                      <QuizEditorField
-                        title="Kopfhauttyp"
-                        text="Wie sich deine Kopfhaut zwischen den Haarwäschen verhält."
-                      >
-                        <SegmentedControl
-                          options={QUIZ_SCALP_TYPE_OPTIONS}
-                          value={quizDraft.scalp_type}
-                          onChange={(value) =>
-                            setQuizDraft((current) => ({ ...current, scalp_type: value }))
-                          }
-                        />
-                      </QuizEditorField>
-                    </div>
-
-                    <div
-                      ref={(node) => {
-                        quizFieldRefs.current.scalp_condition = node
-                      }}
-                    >
-                      <QuizEditorField
-                        title="Kopfhaut-Beschwerden"
-                        text="Ob aktuell Schuppen oder Reizungen dabei sind."
-                      >
-                        <SegmentedControl
-                          options={QUIZ_SCALP_CONDITION_OPTIONS}
-                          value={quizDraft.scalp_condition}
-                          onChange={(value) =>
-                            setQuizDraft((current) => ({ ...current, scalp_condition: value }))
-                          }
-                        />
-                      </QuizEditorField>
-                    </div>
-
-                    <div
-                      ref={(node) => {
                         quizFieldRefs.current.chemical_treatment = node
                       }}
                       className="xl:col-span-2"
@@ -1039,6 +1026,133 @@ export default function ProfilePage() {
                                 }
                                 className={cn(
                                   "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                                  active
+                                    ? "border-primary bg-primary/10 text-primary"
+                                    : "border-border hover:bg-muted",
+                                )}
+                              >
+                                {option.label}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </QuizEditorField>
+                    </div>
+
+                    <div
+                      ref={(node) => {
+                        quizFieldRefs.current.scalp_type = node
+                      }}
+                    >
+                      <QuizEditorField
+                        title="Kopfhauttyp"
+                        text="Wie sich deine Kopfhaut zwischen den Haarwäschen verhält."
+                      >
+                        <SegmentedControl
+                          options={QUIZ_SCALP_TYPE_OPTIONS}
+                          value={quizDraft.scalp_type}
+                          onChange={(value) =>
+                            setQuizDraft((current) => ({ ...current, scalp_type: value }))
+                          }
+                        />
+                      </QuizEditorField>
+                    </div>
+
+                    <div
+                      ref={(node) => {
+                        quizFieldRefs.current.scalp_condition = node
+                      }}
+                    >
+                      <QuizEditorField
+                        title="Kopfhaut-Beschwerden"
+                        text="Wähle eine aktive Beschwerde oder markiere, dass aktuell nichts davon zutrifft."
+                      >
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setQuizDraft((current) => ({ ...current, scalp_condition: "" }))
+                            }
+                            className={cn(
+                              "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                              quizDraft.scalp_condition === ""
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "border-border hover:bg-muted",
+                            )}
+                          >
+                            Keine Beschwerden
+                          </button>
+                          {QUIZ_SCALP_CONDITION_OPTIONS.map((option) => {
+                            const active = quizDraft.scalp_condition === option.value
+
+                            return (
+                              <button
+                                key={option.value}
+                                type="button"
+                                onClick={() =>
+                                  setQuizDraft((current) => ({
+                                    ...current,
+                                    scalp_condition:
+                                      current.scalp_condition === option.value ? "" : option.value,
+                                  }))
+                                }
+                                className={cn(
+                                  "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                                  active
+                                    ? "border-primary bg-primary/10 text-primary"
+                                    : "border-border hover:bg-muted",
+                                )}
+                              >
+                                {option.label}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </QuizEditorField>
+                    </div>
+
+                    <div
+                      ref={(node) => {
+                        quizFieldRefs.current.concerns = node
+                      }}
+                      className="xl:col-span-2"
+                    >
+                      <QuizEditorField
+                        title="Haar-Bedenken"
+                        text="Bis zu drei aktuelle Themen für deine Längen und Spitzen."
+                      >
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setQuizDraft((current) => ({ ...current, concerns: [] }))
+                            }
+                            className={cn(
+                              "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                              quizDraft.concerns.length === 0
+                                ? "border-primary bg-primary/10 text-primary"
+                                : "border-border hover:bg-muted",
+                            )}
+                          >
+                            Nichts davon
+                          </button>
+                          {QUIZ_CONCERN_OPTIONS.map((option) => {
+                            const active = quizDraft.concerns.includes(option.value)
+                            const disabled = !active && quizDraft.concerns.length >= 3
+
+                            return (
+                              <button
+                                key={option.value}
+                                type="button"
+                                disabled={disabled}
+                                onClick={() =>
+                                  setQuizDraft((current) => ({
+                                    ...current,
+                                    concerns: toggleConcern(current.concerns, option.value),
+                                  }))
+                                }
+                                className={cn(
+                                  "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors disabled:opacity-40",
                                   active
                                     ? "border-primary bg-primary/10 text-primary"
                                     : "border-border hover:bg-muted",

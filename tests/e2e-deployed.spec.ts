@@ -2,9 +2,7 @@ import { test, expect } from "@playwright/test"
 
 test.describe("Deployed App E2E Tests", () => {
   // ─── 1. Homepage / Navigation ───────────────────────────────
-  test("homepage redirects unauthenticated users to /quiz", async ({
-    page,
-  }) => {
+  test("homepage redirects unauthenticated users to /quiz", async ({ page }) => {
     const response = await page.goto("/", { waitUntil: "domcontentloaded" })
     expect(response?.status()).toBeLessThan(500)
 
@@ -24,127 +22,113 @@ test.describe("Deployed App E2E Tests", () => {
     await expect(page).toHaveURL(/\/quiz/)
 
     // Should show the quiz landing content
-    await expect(
-      page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })).toBeVisible({
+      timeout: 15000,
+    })
 
     // "QUIZ STARTEN" button should exist
-    await expect(
-      page.getByRole("button", { name: /QUIZ STARTEN/i })
-    ).toBeVisible()
+    await expect(page.getByRole("button", { name: /QUIZ STARTEN/i })).toBeVisible()
 
     // Key bullet points should be present
-    await expect(
-      page.getByText("Individuelle Analyse", { exact: false })
-    ).toBeVisible()
+    await expect(page.getByText("Individuelle Analyse", { exact: false })).toBeVisible()
   })
 
-  test("quiz flow: start quiz and navigate through first 4 questions", async ({
-    page,
-  }) => {
+  test("quiz flow: start quiz and navigate through first 4 questions", async ({ page }) => {
     await page.goto("/quiz", { waitUntil: "networkidle" })
-    await expect(
-      page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })).toBeVisible({
+      timeout: 15000,
+    })
 
     // Click "QUIZ STARTEN" — use force click and wait for transition
     const startButton = page.getByRole("button", { name: /QUIZ STARTEN/i })
     await startButton.waitFor({ state: "visible" })
     await startButton.click()
 
-    // Step 1: Hair texture question (question 1/6)
-    await expect(
-      page.getByText("HAARTEXTUR", { exact: false })
-    ).toBeVisible({ timeout: 15000 })
+    // Step 1: Hair texture question (question 1/7)
+    await expect(page.getByText(/Haartextur/i)).toBeVisible({ timeout: 15000 })
 
     // Click "Glatt" option — should auto-advance after 400ms
     await page.getByText("Glatt").first().click()
 
-    // Step 2: Hair thickness (question 2/6)
-    await expect(
-      page.getByText("WIE DICK SIND DEINE EINZELNEN HAARE?", { exact: false })
-    ).toBeVisible({ timeout: 10000 })
-    await expect(page.getByText("2/6")).toBeVisible()
+    // Step 2: Hair thickness (question 2/7)
+    await expect(page.getByText(/Wie dick sind deine einzelnen Haare/i)).toBeVisible({
+      timeout: 10000,
+    })
+    await expect(page.getByText("2/7")).toBeVisible()
 
     // Click "Mittel"
     await page.getByText("Mittel").first().click()
 
-    // Step 3: Surface test (question 3/6)
-    await expect(
-      page.getByText("WIE FUEHLT SICH DEIN HAAR AN?", { exact: false })
-    ).toBeVisible({ timeout: 10000 })
-    await expect(page.getByText("3/6")).toBeVisible()
+    // Step 3: Surface test (question 3/7)
+    await expect(page.getByText(/Wie fühlt sich dein Haar an/i)).toBeVisible({
+      timeout: 10000,
+    })
+    await expect(page.getByText("3/7")).toBeVisible()
 
     // Click "Glatt wie Glas"
     await page.getByText("Glatt wie Glas").click()
 
-    // Step 4: Pull test (question 4/6)
-    await expect(
-      page.getByText("WIE ELASTISCH IST DEIN HAAR?", { exact: false })
-    ).toBeVisible({ timeout: 10000 })
-    await expect(page.getByText("4/6")).toBeVisible()
+    // Step 4: Pull test (question 4/7)
+    await expect(page.getByText("WIE ELASTISCH IST DEIN HAAR?", { exact: false })).toBeVisible({
+      timeout: 10000,
+    })
+    await expect(page.getByText("4/7")).toBeVisible()
   })
 
-  test("quiz flow: navigate through scalp question progressive disclosure", async ({
-    page,
-  }) => {
+  test("quiz flow: navigate through scalp question progressive disclosure", async ({ page }) => {
     await page.goto("/quiz", { waitUntil: "networkidle" })
-    await expect(
-      page.getByRole("button", { name: /QUIZ STARTEN/i })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(page.getByRole("button", { name: /QUIZ STARTEN/i })).toBeVisible({
+      timeout: 15000,
+    })
 
-    // Navigate to scalp question (step 6, question 6/6)
+    // Navigate to scalp question (step 6, question 6/7)
     // Steps: start -> Q1(texture) -> Q2(thickness) -> Q3(surface) -> Q4(pull) -> Q5(chemical) -> Q6(scalp)
     const startBtn = page.getByRole("button", { name: /QUIZ STARTEN/i })
     await startBtn.waitFor({ state: "visible" })
     await startBtn.click()
     // Wait for question title instead of counter (more reliable)
-    await expect(
-      page.getByText("HAARTEXTUR", { exact: false })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText(/Haartextur/i)).toBeVisible({ timeout: 15000 })
 
     await page.getByText("Glatt").first().click()
-    await expect(page.getByText("2/6")).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText("2/7")).toBeVisible({ timeout: 10000 })
 
     await page.getByText("Mittel").first().click()
-    await expect(page.getByText("3/6")).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText("3/7")).toBeVisible({ timeout: 10000 })
 
     await page.getByText("Glatt wie Glas").click()
-    await expect(page.getByText("4/6")).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText("4/7")).toBeVisible({ timeout: 10000 })
 
-    await page.getByText("Dehnt sich und geht zurueck").click()
-    await expect(page.getByText("5/6")).toBeVisible({ timeout: 10000 })
+    await page.getByText("Dehnt sich und geht zurück").click()
+    await expect(page.getByText("5/7")).toBeVisible({ timeout: 10000 })
 
-    // Chemical treatment (question 5/6)
+    // Chemical treatment (question 5/7)
     await expect(
-      page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false })
+      page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false }),
     ).toBeVisible({ timeout: 10000 })
     await page.locator(".quiz-card", { hasText: "Naturhaar" }).click()
-    await page.getByRole("button", { name: /^WEITER$/ }).click()
+    await page.getByRole("button", { name: /^Weiter$/i }).click()
 
-    // Should be on scalp type question (6/6)
-    await expect(page.getByText("6/6")).toBeVisible({ timeout: 10000 })
+    // Should be on scalp type question (6/7)
+    await expect(page.getByText("6/7")).toBeVisible({ timeout: 10000 })
     await expect(
-      page.getByText("ANSAETZE", { exact: false })
+      page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
     ).toBeVisible({ timeout: 10000 })
 
     // Select a scalp type — should reveal gate question
     await page.getByText("Ausgeglichen").click()
 
     // Gate question should appear
-    await expect(
-      page.getByText("BESCHWERDEN WIE SCHUPPEN", { exact: false })
-    ).toBeVisible({ timeout: 5000 })
+    await expect(page.getByText("BESCHWERDEN WIE SCHUPPEN", { exact: false })).toBeVisible({
+      timeout: 5000,
+    })
 
-    // Click "NEIN" to skip condition
-    await page
-      .getByRole("button", { name: "NEIN" })
-      .click()
+    // Click "NEIN" to skip condition and advance to the new concerns page
+    await page.getByRole("button", { name: "NEIN" }).click()
+    await expect(page.getByText("7/7")).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText(/Welche Haarprobleme/i)).toBeVisible({ timeout: 10000 })
   })
 
-  test("quiz flow: back button works from question to landing", async ({
-    page,
-  }) => {
+  test("quiz flow: back button works from question to landing", async ({ page }) => {
     await page.goto("/quiz", { waitUntil: "networkidle" })
     const startBtn = page.getByRole("button", { name: /QUIZ STARTEN/i })
     await startBtn.waitFor({ state: "visible", timeout: 15000 })
@@ -153,9 +137,7 @@ test.describe("Deployed App E2E Tests", () => {
     await startBtn.click()
 
     // Should be on question 1 — wait for the question title
-    await expect(
-      page.getByText("HAARTEXTUR", { exact: false })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText(/Haartextur/i)).toBeVisible({ timeout: 15000 })
 
     // Click the back arrow button (the ArrowLeft svg button)
     await page
@@ -164,15 +146,13 @@ test.describe("Deployed App E2E Tests", () => {
       .click()
 
     // Should go back to landing
-    await expect(
-      page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })
-    ).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })).toBeVisible({
+      timeout: 10000,
+    })
   })
 
   // ─── 3. Chat Page ──────────────────────────────────────────
-  test("chat page redirects unauthenticated users (no crash)", async ({
-    page,
-  }) => {
+  test("chat page redirects unauthenticated users (no crash)", async ({ page }) => {
     const response = await page.goto("/chat", {
       waitUntil: "domcontentloaded",
     })
@@ -189,18 +169,16 @@ test.describe("Deployed App E2E Tests", () => {
     expect(redirectedToQuiz || redirectedToAuth).toBe(true)
 
     if (redirectedToQuiz) {
-      await expect(
-        page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })
-      ).toBeVisible({ timeout: 15000 })
+      await expect(page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })).toBeVisible({
+        timeout: 15000,
+      })
     } else {
       await expect(page.getByText("Hair Concierge")).toBeVisible({ timeout: 15000 })
     }
   })
 
   // ─── 4. Profile Page ───────────────────────────────────────
-  test("profile page redirects unauthenticated users (no crash)", async ({
-    page,
-  }) => {
+  test("profile page redirects unauthenticated users (no crash)", async ({ page }) => {
     const response = await page.goto("/profile", {
       waitUntil: "domcontentloaded",
     })
@@ -226,9 +204,7 @@ test.describe("Deployed App E2E Tests", () => {
     })
 
     // Should show the subtitle
-    await expect(
-      page.getByText("Haar-Experte", { exact: false })
-    ).toBeVisible()
+    await expect(page.getByText("Haar-Experte", { exact: false })).toBeVisible()
 
     // Should show login tab
     await expect(page.getByText("Anmelden").first()).toBeVisible()
@@ -237,9 +213,7 @@ test.describe("Deployed App E2E Tests", () => {
     await expect(page.getByText("Registrieren").first()).toBeVisible()
 
     // Should show Google login button
-    await expect(
-      page.getByText("Mit Google anmelden", { exact: false })
-    ).toBeVisible()
+    await expect(page.getByText("Mit Google anmelden", { exact: false })).toBeVisible()
 
     // Should show email input
     await expect(page.locator('input[type="email"]')).toBeVisible()
@@ -248,9 +222,7 @@ test.describe("Deployed App E2E Tests", () => {
     await expect(page.locator('input[type="password"]')).toBeVisible()
 
     // Should show "Passwort vergessen?" link
-    await expect(
-      page.getByText("Passwort vergessen?", { exact: false })
-    ).toBeVisible()
+    await expect(page.getByText("Passwort vergessen?", { exact: false })).toBeVisible()
 
     // Footer with Impressum and Datenschutz
     await expect(page.getByText("Impressum")).toBeVisible()
@@ -269,9 +241,9 @@ test.describe("Deployed App E2E Tests", () => {
     await regTab.click()
 
     // Wait for the signup panel to render — use tabpanel check
-    await expect(
-      page.getByRole("button", { name: /Konto erstellen/i })
-    ).toBeVisible({ timeout: 10000 })
+    await expect(page.getByRole("button", { name: /Konto erstellen/i })).toBeVisible({
+      timeout: 10000,
+    })
 
     // Signup form should show 2 password fields (password + confirm)
     const passwordInputs = page.locator('input[type="password"]')
@@ -281,9 +253,9 @@ test.describe("Deployed App E2E Tests", () => {
     await page.getByRole("tab", { name: "Anmelden" }).click()
 
     // Wait for login panel
-    await expect(
-      page.getByText("Passwort vergessen?", { exact: false })
-    ).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText("Passwort vergessen?", { exact: false })).toBeVisible({
+      timeout: 10000,
+    })
 
     // Should show single password field
     await expect(passwordInputs).toHaveCount(1, { timeout: 5000 })
@@ -324,9 +296,7 @@ test.describe("Deployed App E2E Tests", () => {
     const startBtnErr = page.getByRole("button", { name: /QUIZ STARTEN/i })
     await startBtnErr.waitFor({ state: "visible", timeout: 15000 })
     await startBtnErr.click()
-    await expect(
-      page.getByText("HAARTEXTUR", { exact: false })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText("HAARTEXTUR", { exact: false })).toBeVisible({ timeout: 15000 })
 
     await page.getByText("Glatt").first().click()
     await expect(page.getByText("2/7")).toBeVisible({ timeout: 10000 })

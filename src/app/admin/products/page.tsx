@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
 import type { Product, ShampooBucketPair } from "@/lib/types"
-import { HAIR_THICKNESS_OPTIONS, CONCERN_OPTIONS } from "@/lib/types"
+import { HAIR_THICKNESS_OPTIONS } from "@/lib/types"
 import { isBondbuilderCategory } from "@/lib/bondbuilder/constants"
 import { fehler } from "@/lib/vocabulary"
 import {
@@ -25,6 +25,7 @@ import {
   PRODUCT_SCALP_TYPE_FOCUSES,
   PRODUCT_SCALP_TYPE_FOCUS_LABELS,
 } from "@/lib/product-specs/constants"
+import { getAllowedProductConcernOptions } from "@/lib/product-specs/concern-taxonomy"
 import {
   LEAVE_IN_WEIGHTS,
   LEAVE_IN_CONDITIONER_RELATIONSHIPS,
@@ -174,7 +175,9 @@ export default function AdminProductsPage() {
   const isSourceManagedShampoo = isShampooCategory(form.category)
   const isExistingSourceManagedShampoo = isShampooCategory(editingProduct?.category)
   const oilCategorySelected = isOilCategory(form.category)
-  const concernOptions = oilCategorySelected ? OIL_SUBTYPE_OPTIONS : CONCERN_OPTIONS
+  const concernOptions = oilCategorySelected
+    ? OIL_SUBTYPE_OPTIONS
+    : getAllowedProductConcernOptions(form.category)
 
   async function loadProducts() {
     try {
@@ -338,10 +341,17 @@ export default function AdminProductsPage() {
     const dryShampoo = isDryShampooCategory(value)
     const peeling = isPeelingCategory(value)
     const oil = isOilCategory(value)
+    const allowedConcernValues: Set<string> = new Set(
+      (oil ? OIL_SUBTYPE_OPTIONS : getAllowedProductConcernOptions(value)).map(
+        (option) => option.value,
+      ),
+    )
     setForm((prev) => ({
       ...prev,
       category: value,
-      suitable_concerns: oil === isOilCategory(prev.category) ? prev.suitable_concerns : [],
+      suitable_concerns: prev.suitable_concerns.filter((concern) =>
+        allowedConcernValues.has(concern),
+      ),
       conditioner_specs: conditioner
         ? (prev.conditioner_specs ?? { ...emptyConditionerSpecs })
         : null,

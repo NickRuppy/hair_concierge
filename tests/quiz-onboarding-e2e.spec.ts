@@ -41,7 +41,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
     const { data, error } = await admin
       .from("hair_profiles")
       .select(
-        "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, desired_volume, goals, drying_method, routine_preference, wash_frequency",
+        "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns, desired_volume, goals, drying_method, routine_preference, wash_frequency",
       )
       .eq("user_id", userId)
       .maybeSingle()
@@ -102,22 +102,22 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
   test("quiz hands off into onboarding and persists linked diagnostics", async ({ page }) => {
     await test.step("Complete the quiz and lead capture", async () => {
-      await page.goto("/quiz", { waitUntil: "networkidle" })
+      await page.goto("/quiz", { waitUntil: "domcontentloaded" })
 
       await page.getByRole("button", { name: /QUIZ STARTEN/i }).click()
       await expect(page.getByText("HAARTEXTUR", { exact: false })).toBeVisible()
 
       await page.getByText("Wellig").first().click()
-      await expect(page.getByText("2/6")).toBeVisible()
+      await expect(page.getByText("2/7")).toBeVisible()
 
       await page.getByText("Mittel").first().click()
-      await expect(page.getByText("3/6")).toBeVisible()
+      await expect(page.getByText("3/7")).toBeVisible()
 
       await page.getByText("Leicht uneben").click()
-      await expect(page.getByText("4/6")).toBeVisible()
+      await expect(page.getByText("4/7")).toBeVisible()
 
       await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
-      await expect(page.getByText("5/6")).toBeVisible()
+      await expect(page.getByText("5/7")).toBeVisible()
 
       await expect(
         page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false }),
@@ -125,7 +125,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
       const naturCard = page.locator(".quiz-card", { hasText: "Naturhaar" })
       const coloredCard = page.locator(".quiz-card", {
-        hasText: "Gefaerbt / Getoent",
+        hasText: "Gefärbt / Getönt",
       })
       const bleachedCard = page.locator(".quiz-card", {
         hasText: "Blondiert / Aufgehellt",
@@ -138,17 +138,17 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(page.locator(".quiz-card-active", { hasText: "Naturhaar" })).toHaveCount(0)
 
       await bleachedCard.click()
-      await expect(
-        page.locator(".quiz-card-active", { hasText: "Gefaerbt / Getoent" }),
-      ).toHaveCount(1)
+      await expect(page.locator(".quiz-card-active", { hasText: "Gefärbt / Getönt" })).toHaveCount(
+        1,
+      )
       await expect(
         page.locator(".quiz-card-active", { hasText: "Blondiert / Aufgehellt" }),
       ).toHaveCount(1)
 
-      await page.getByRole("button", { name: /^WEITER$/ }).click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
 
-      // Scalp question (6/6)
-      await expect(page.getByText("6/6")).toBeVisible()
+      // Scalp question (6/7)
+      await expect(page.getByText("6/7")).toBeVisible()
       await page
         .locator(".quiz-card")
         .filter({ has: page.getByText(/^Trocken$/) })
@@ -157,11 +157,17 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: "JA" }).click()
       await page.getByText("Trockene Schuppen").click()
 
+      await expect(page.getByText("7/7")).toBeVisible()
+      await expect(page.getByText(/Welche Haarprobleme/i)).toBeVisible()
+      await page.getByText("Trockenheit").click()
+      await page.getByText("Frizz").click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
+
       await page.getByPlaceholder("Dein Vorname").fill("Playwright")
-      await page.getByRole("button", { name: /^WEITER$/ }).click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       await page.getByPlaceholder("name@beispiel.de").fill(email)
-      await page.getByRole("button", { name: /^WEITER$/ }).click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
     })
@@ -263,12 +269,13 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       })
       await page.getByRole("button", { name: /^Rubbeln$/i }).click()
 
-      // Drying method: select Lufttrocknen (multi-select, needs Weiter)
-      await expect(page.getByText("Wie trocknest du dein Haar?", { exact: false })).toBeVisible({
+      // Drying method: select Lufttrocknen (single-select, auto-advances)
+      await expect(
+        page.getByText("Wie trocknest du dein Haar hauptsächlich?", { exact: false }),
+      ).toBeVisible({
         timeout: 10_000,
       })
       await page.getByRole("button", { name: /Lufttrocknen/i }).click()
-      await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       // Brush type: select Grobzinkiger Kamm (single-select, auto-advances)
       await expect(page.getByText("Welche Bürste", { exact: false })).toBeVisible({
@@ -333,11 +340,11 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         .poll(
           async () => {
             const profile = await fetchHairProfile()
-            return profile?.desired_volume ?? null
+            return profile?.goals?.includes("volume") ?? false
           },
           { timeout: 30_000 },
         )
-        .toBe("more")
+        .toBe(true)
 
       const hairProfile = await fetchHairProfile()
 
@@ -348,9 +355,10 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         protein_moisture_balance: "stretches_stays",
         scalp_type: "dry",
         scalp_condition: "dry_flakes",
-        desired_volume: "more",
+        desired_volume: null,
       })
       expect(hairProfile?.chemical_treatment).toEqual(["colored", "bleached"])
+      expect(hairProfile?.concerns).toEqual(["dryness", "frizz"])
       expect(hairProfile?.goals).toEqual(expect.arrayContaining(["shine", "volume"]))
       expect(hairProfile?.drying_method).toBe("air_dry")
       expect(await fetchRoutineCategories()).toEqual(["conditioner"])
@@ -373,9 +381,10 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         protein_moisture_balance: "stretches_stays",
         scalp_type: "dry",
         scalp_condition: "dry_flakes",
-        desired_volume: "more",
+        desired_volume: null,
       })
       expect(initialProfile?.chemical_treatment).toEqual(["colored", "bleached"])
+      expect(initialProfile?.concerns).toEqual(["dryness", "frizz"])
       expect(initialProfile?.goals).toEqual(expect.arrayContaining(["shine", "volume"]))
       expect(initialProfile?.drying_method).toBe("air_dry")
       expect(await fetchRoutineCategories()).toEqual(["conditioner"])
@@ -383,19 +392,13 @@ test.describe.serial("Quiz to onboarding E2E", () => {
     })
 
     await test.step("Retake the quiz with different diagnostics", async () => {
-      await page.goto("/quiz", { waitUntil: "networkidle" })
+      await page.goto("/quiz", { waitUntil: "domcontentloaded" })
 
       await page.getByRole("button", { name: /QUIZ STARTEN/i }).click()
       await page.getByText("Glatt").first().click()
       await page.getByText("Fein").first().click()
       await page.getByText("Glatt wie Glas").click()
-      await page.getByText("Reisst sofort").click()
-
-      await page
-        .locator(".quiz-card")
-        .filter({ has: page.getByText(/^Fettig$/) })
-        .click()
-      await page.getByRole("button", { name: "NEIN" }).click()
+      await page.getByText("Reißt sofort").click()
 
       await expect(
         page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false }),
@@ -403,25 +406,33 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
       const naturCard = page.locator(".quiz-card", { hasText: "Naturhaar" })
       const coloredCard = page.locator(".quiz-card", {
-        hasText: "Gefaerbt / Getoent",
+        hasText: "Gefärbt / Getönt",
       })
 
       await coloredCard.click()
-      await expect(
-        page.locator(".quiz-card-active", { hasText: "Gefaerbt / Getoent" }),
-      ).toHaveCount(1)
+      await expect(page.locator(".quiz-card-active", { hasText: "Gefärbt / Getönt" })).toHaveCount(
+        1,
+      )
 
       await naturCard.click()
       await expect(page.locator(".quiz-card-active", { hasText: "Naturhaar" })).toHaveCount(1)
-      await expect(
-        page.locator(".quiz-card-active", { hasText: "Gefaerbt / Getoent" }),
-      ).toHaveCount(0)
+      await expect(page.locator(".quiz-card-active", { hasText: "Gefärbt / Getönt" })).toHaveCount(
+        0,
+      )
 
-      await page.getByRole("button", { name: /^WEITER$/ }).click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
+      await expect(page.getByText("6/7")).toBeVisible()
+      await page
+        .locator(".quiz-card")
+        .filter({ has: page.getByText(/^Fettig$/) })
+        .click()
+      await page.getByRole("button", { name: "NEIN" }).click()
+      await expect(page.getByText("7/7")).toBeVisible()
+      await page.getByRole("button", { name: /Nichts davon/i }).click()
       await page.getByPlaceholder("Dein Vorname").fill("Playwright Return")
-      await page.getByRole("button", { name: /^WEITER$/ }).click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
       await page.getByPlaceholder("name@beispiel.de").fill(email)
-      await page.getByRole("button", { name: /^WEITER$/ }).click()
+      await page.getByRole("button", { name: /^Weiter$/i }).click()
       await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
 
       await expect(page.getByRole("button", { name: /ZIELE UND ROUTINE FESTLEGEN/i })).toBeVisible({
@@ -505,11 +516,12 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         cuticle_condition: "smooth",
         protein_moisture_balance: "snaps",
         scalp_type: "oily",
-        scalp_condition: "none",
+        scalp_condition: null,
         // Goals and onboarding data from first run remain (user hasn't re-submitted onboarding)
-        desired_volume: "more",
+        desired_volume: null,
       })
       expect(hairProfile?.chemical_treatment).toEqual(["natural"])
+      expect(hairProfile?.concerns).toEqual([])
       // Goals stay from first run since user didn't re-save goals page
       expect(hairProfile?.goals).toEqual(expect.arrayContaining(["shine", "volume"]))
       expect(hairProfile?.drying_method).toBe("air_dry")

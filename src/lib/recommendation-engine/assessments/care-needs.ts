@@ -39,6 +39,7 @@ export function buildCareNeedAssessment(
   if (profile.cuticleCondition === "rough") smoothingScore += 1
 
   if (profile.concerns.includes("frizz")) detanglingScore += 1
+  if (profile.concerns.includes("tangling")) detanglingScore += 2
   if (damage.repairPriority === "high") detanglingScore += 2
   if (profile.cuticleCondition === "slightly_rough") detanglingScore += 1
   if (profile.cuticleCondition === "rough") detanglingScore += 2

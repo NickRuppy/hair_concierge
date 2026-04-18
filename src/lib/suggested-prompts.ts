@@ -1,4 +1,4 @@
-import type { HairProfile, HairTexture, Concern, Goal, RoutineProduct } from "@/lib/types"
+import type { HairProfile, HairTexture, Goal, ProfileConcern, RoutineProduct } from "@/lib/types"
 import type { IconName } from "@/components/ui/icon"
 import { deriveLeaveInStylingContextFromStages } from "@/lib/profile/signal-derivations"
 
@@ -32,7 +32,7 @@ function hasTexturedHair(profile: HairProfile): boolean {
   )
 }
 
-function hasConcern(profile: HairProfile, concern: Concern): boolean {
+function hasConcern(profile: HairProfile, concern: ProfileConcern): boolean {
   return (profile.concerns ?? []).includes(concern)
 }
 
@@ -52,7 +52,7 @@ function hasMeaningfulProfile(profile: HairProfile | null): profile is HairProfi
     profile.thickness ||
     profile.density ||
     profile.scalp_type ||
-    (profile.scalp_condition && profile.scalp_condition !== "none") ||
+    profile.scalp_condition ||
     profile.protein_moisture_balance ||
     profile.cuticle_condition ||
     profile.wash_frequency ||
@@ -101,6 +101,7 @@ function hasDamageSignals(profile: HairProfile): boolean {
     hasConcern(profile, "dryness") ||
     hasConcern(profile, "hair_damage") ||
     hasConcern(profile, "split_ends") ||
+    hasConcern(profile, "breakage") ||
     hasGoal(profile, "moisture") ||
     hasGoal(profile, "anti_breakage") ||
     profile.chemical_treatment.includes("colored") ||

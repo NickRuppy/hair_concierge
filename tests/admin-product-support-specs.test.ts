@@ -109,3 +109,55 @@ test("product schema accepts peeling specs with canonical peeling type", () => {
 
   assert.equal(parsed.success, true)
 })
+
+test("product schema rejects profile-only concerns on products", () => {
+  const parsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Leave-in",
+      suitable_concerns: ["hair_loss"],
+      leave_in_specs: {
+        weight: "light",
+        conditioner_relationship: "replacement_capable",
+        care_benefits: ["repair"],
+      },
+    }),
+  )
+
+  assert.equal(parsed.success, false)
+})
+
+test("product schema allows tangling on leave-in but not on shampoo", () => {
+  const leaveInParsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Leave-in",
+      suitable_concerns: ["tangling"],
+      leave_in_specs: {
+        weight: "light",
+        conditioner_relationship: "replacement_capable",
+        care_benefits: ["repair"],
+      },
+    }),
+  )
+
+  assert.equal(leaveInParsed.success, true)
+
+  const shampooParsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Shampoo",
+      suitable_concerns: ["tangling"],
+    }),
+  )
+
+  assert.equal(shampooParsed.success, false)
+})
+
+test("product schema allows dryness on shampoo", () => {
+  const parsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Shampoo",
+      suitable_concerns: ["dryness"],
+    }),
+  )
+
+  assert.equal(parsed.success, true)
+})

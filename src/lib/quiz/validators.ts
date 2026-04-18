@@ -4,6 +4,7 @@ import {
   QUIZ_THICKNESS_VALUES,
   QUIZ_FINGERTEST_VALUES,
   QUIZ_PULLTEST_VALUES,
+  QUIZ_CONCERN_VALUES,
   QUIZ_SCALP_TYPE_VALUES,
   QUIZ_SCALP_CONDITION_VALUES,
   QUIZ_TREATMENT_VALUES,
@@ -16,8 +17,12 @@ export const quizAnswersSchema = z
     fingertest: z.enum(QUIZ_FINGERTEST_VALUES),
     pulltest: z.enum(QUIZ_PULLTEST_VALUES),
     scalp_type: z.enum(QUIZ_SCALP_TYPE_VALUES),
-    scalp_condition: z.enum(QUIZ_SCALP_CONDITION_VALUES),
-    treatment: z.array(z.enum(QUIZ_TREATMENT_VALUES)).min(1, "Bitte waehle mindestens eine Behandlung"),
+    has_scalp_issue: z.boolean(),
+    scalp_condition: z.enum(QUIZ_SCALP_CONDITION_VALUES).optional(),
+    concerns: z.array(z.enum(QUIZ_CONCERN_VALUES)).max(3, "Bitte waehle hoechstens drei Bedenken"),
+    treatment: z
+      .array(z.enum(QUIZ_TREATMENT_VALUES))
+      .min(1, "Bitte waehle mindestens eine Behandlung"),
   })
   .strict()
   .superRefine((answers, ctx) => {
@@ -34,6 +39,30 @@ export const quizAnswersSchema = z
         code: z.ZodIssueCode.custom,
         message: "Naturhaar kann nicht mit chemischen Behandlungen kombiniert werden",
         path: ["treatment"],
+      })
+    }
+
+    if (new Set(answers.concerns).size !== answers.concerns.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Bedenken duerfen nicht doppelt vorkommen",
+        path: ["concerns"],
+      })
+    }
+
+    if (answers.has_scalp_issue && !answers.scalp_condition) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Bitte waehle eine konkrete Kopfhaut-Beschwerde",
+        path: ["scalp_condition"],
+      })
+    }
+
+    if (!answers.has_scalp_issue && answers.scalp_condition) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Ohne aktive Kopfhaut-Beschwerde darf kein Problem gesetzt sein",
+        path: ["scalp_condition"],
       })
     }
   })

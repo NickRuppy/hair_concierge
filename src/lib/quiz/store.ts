@@ -12,7 +12,7 @@ interface QuizState {
 
   goNext: () => void
   goBack: () => void
-  setAnswer: (key: keyof QuizAnswers, value: string | string[]) => void
+  setAnswer: (key: keyof QuizAnswers, value: string | string[] | boolean | undefined) => void
   setLeadField: <K extends keyof LeadData>(key: K, value: LeadData[K]) => void
   setLeadId: (id: string) => void
   setAiInsight: (insight: string) => void
@@ -22,7 +22,7 @@ interface QuizState {
   reset: () => void
 }
 
-const STEP_ORDER: QuizStep[] = [1, 2, 3, 4, 5, 7, 6, 9, 10, 11, 14]
+const STEP_ORDER: QuizStep[] = [1, 2, 3, 4, 5, 7, 6, 8, 9, 10, 11, 14]
 
 function nextStep(current: QuizStep): QuizStep {
   const idx = STEP_ORDER.indexOf(current)
@@ -51,10 +51,18 @@ export const useQuizStore = create<QuizState>((set) => ({
   goBack: () => set((s) => ({ step: prevStep(s.step) })),
 
   setAnswer: (key, value) =>
-    set((s) => ({ answers: { ...s.answers, [key]: value } })),
+    set((s) => {
+      const nextAnswers = { ...s.answers } as QuizAnswers
+      if (value === undefined) {
+        delete (nextAnswers as Record<string, unknown>)[key]
+      } else {
+        ;(nextAnswers as Record<string, unknown>)[key] = value
+      }
 
-  setLeadField: (key, value) =>
-    set((s) => ({ lead: { ...s.lead, [key]: value } })),
+      return { answers: nextAnswers }
+    }),
+
+  setLeadField: (key, value) => set((s) => ({ lead: { ...s.lead, [key]: value } })),
 
   setLeadId: (id) => set({ leadId: id }),
   setAiInsight: (insight) => set({ aiInsight: insight }),

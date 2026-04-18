@@ -9,6 +9,38 @@ import type {
 import { isExplicitNoneArray } from "@/lib/profile/signal-derivations"
 import { scoreToDamageLevel } from "@/lib/recommendation-engine/utils/levels"
 
+function deriveStructuralConcernContribution(profile: NormalizedProfile): {
+  score: number
+  drivers: string[]
+} {
+  const drivers: string[] = []
+  const concerns = new Set(profile.concerns)
+
+  if (concerns.has("breakage")) {
+    drivers.push("concern_breakage")
+  }
+  if (concerns.has("hair_damage")) {
+    drivers.push("concern_hair_damage")
+  }
+  if (concerns.has("split_ends")) {
+    drivers.push("concern_split_ends")
+  }
+
+  if (drivers.length >= 2) {
+    drivers.push("concern_structural_cluster")
+  }
+
+  let score = 0
+  if (concerns.has("breakage")) score += 4
+  if (concerns.has("hair_damage")) score += 3
+  if (concerns.has("split_ends")) score += 2
+
+  return {
+    score: Math.min(score, 5),
+    drivers,
+  }
+}
+
 function deriveBalanceDirection(profile: NormalizedProfile): BalanceDirection | null {
   switch (profile.proteinMoistureBalance) {
     case "stretches_stays":
@@ -108,6 +140,10 @@ export function buildDamageAssessment(profile: NormalizedProfile): DamageAssessm
     structuralScore += 2
     activeDamageDrivers.push("colored_hair")
   }
+
+  const structuralConcernContribution = deriveStructuralConcernContribution(profile)
+  structuralScore += structuralConcernContribution.score
+  activeDamageDrivers.push(...structuralConcernContribution.drivers)
 
   switch (profile.heatStyling) {
     case "daily":

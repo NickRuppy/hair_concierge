@@ -131,3 +131,62 @@ test("severe-damage fixture drives high care needs and heat protection urgency",
   assert.equal(careNeeds.thermalProtectionNeed, "severe")
   assert.equal(careNeeds.volumeDirection, "neutral")
 })
+
+test("structural concern cluster caps additive damage and makes breakage the strongest signal", () => {
+  const breakageOnly = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        concerns: ["breakage"],
+      },
+      [],
+    ).input,
+  )
+  const hairDamageOnly = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        concerns: ["hair_damage"],
+      },
+      [],
+    ).input,
+  )
+  const allStructuralConcerns = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        concerns: ["breakage", "hair_damage", "split_ends"],
+      },
+      [],
+    ).input,
+  )
+
+  const breakageDamage = buildDamageAssessment(breakageOnly)
+  const hairDamage = buildDamageAssessment(hairDamageOnly)
+  const stackedDamage = buildDamageAssessment(allStructuralConcerns)
+
+  assert.equal(breakageDamage.structuralLevel, "high")
+  assert.equal(hairDamage.structuralLevel, "moderate")
+  assert.equal(stackedDamage.structuralLevel, "high")
+  assert.ok(breakageDamage.activeDamageDrivers.includes("concern_breakage"))
+  assert.ok(stackedDamage.activeDamageDrivers.includes("concern_structural_cluster"))
+})
+
+test("tangling raises detangling need without inflating structural damage", () => {
+  const normalized = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        concerns: ["tangling"],
+      },
+      [],
+    ).input,
+  )
+  const damage = buildDamageAssessment(normalized)
+  const careNeeds = buildCareNeedAssessment(normalized, damage)
+
+  assert.equal(damage.structuralLevel, "none")
+  assert.equal(careNeeds.hydrationNeed, "none")
+  assert.equal(careNeeds.smoothingNeed, "none")
+  assert.equal(careNeeds.detanglingNeed, "moderate")
+})

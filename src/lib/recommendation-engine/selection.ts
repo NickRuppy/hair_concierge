@@ -21,6 +21,7 @@ import type { LeaveInNeedBucket } from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
 import { OIL_PURPOSE_LABELS, type OilPurpose, type OilSubtype } from "@/lib/oil/constants"
 import type { ProductPeelingSpecs } from "@/lib/peeling/constants"
+import { getProductConcernCodesForProfileSignals } from "@/lib/product-specs/concern-taxonomy"
 import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
 import {
   matchConditionerProducts,
@@ -930,14 +931,26 @@ function mapBalanceTargetToConcernCodes(
   }
 }
 
-function buildMaskConcernSearchOrderFromEngine(decision: MaskCategoryDecision): string[] {
+function mergeConcernSearchCodes(...lists: Array<readonly string[]>): string[] {
+  return [...new Set(lists.flatMap((list) => list).filter(Boolean))]
+}
+
+function buildMaskConcernSearchOrderFromEngine(
+  decision: MaskCategoryDecision,
+  hairProfile: HairProfile | null,
+): string[] {
+  const profileConcernCodes = getProductConcernCodesForProfileSignals(
+    "mask",
+    hairProfile?.concerns ?? [],
+  )
+
   if (!decision.targetProfile?.balance || decision.targetProfile.balance === "balanced") {
-    return ["performance"]
+    return mergeConcernSearchCodes(profileConcernCodes, ["performance"])
   }
 
   return decision.targetProfile.balance === "moisture"
-    ? ["feuchtigkeit", "performance"]
-    : ["protein", "performance"]
+    ? mergeConcernSearchCodes(profileConcernCodes, ["feuchtigkeit", "performance"])
+    : mergeConcernSearchCodes(profileConcernCodes, ["protein", "performance"])
 }
 
 export async function loadRoutineItemsForEngine(
@@ -969,10 +982,15 @@ export async function selectConditionerProductsWithEngine(params: {
   const decision = runtime.categories.conditioner
   if (!decision.relevant || !decision.targetProfile) return []
 
+  const exactConcernCodes = mergeConcernSearchCodes(
+    mapBalanceTargetToConcernCodes(decision.targetProfile.balance),
+    getProductConcernCodesForProfileSignals("conditioner", hairProfile?.concerns ?? []),
+  )
+
   const genericCandidates = await matchProducts({
     query: message,
     thickness: hairProfile?.thickness ?? undefined,
-    concerns: mapBalanceTargetToConcernCodes(decision.targetProfile.balance),
+    concerns: exactConcernCodes,
     category: "conditioner",
     count: CANDIDATE_COUNT,
   })
@@ -1182,6 +1200,10 @@ export async function selectLeaveInProductsWithEngine(params: {
   if (!decision.relevant || !decision.targetProfile) return []
 
   const legacyNeedBucket = mapEngineLeaveInNeedToLegacy(decision.targetProfile.needBucket)
+  const exactConcernCodes = mergeConcernSearchCodes(
+    legacyNeedBucket ? [legacyNeedBucket] : [],
+    getProductConcernCodesForProfileSignals("leave_in", hairProfile?.concerns ?? []),
+  )
   const strictCandidates =
     hairProfile?.thickness && legacyNeedBucket && decision.targetProfile.stylingContext
       ? await matchLeaveInProducts({
@@ -1196,7 +1218,7 @@ export async function selectLeaveInProductsWithEngine(params: {
   const genericCandidates = await matchProducts({
     query: message,
     thickness: hairProfile?.thickness ?? undefined,
-    concerns: legacyNeedBucket ? [legacyNeedBucket] : [],
+    concerns: exactConcernCodes,
     category: "leave_in",
     count: CANDIDATE_COUNT,
   })
@@ -1238,7 +1260,7 @@ export async function selectMaskProductsWithEngine(params: {
 
   const supabase = createAdminClient()
 
-  for (const concernCode of buildMaskConcernSearchOrderFromEngine(decision)) {
+  for (const concernCode of buildMaskConcernSearchOrderFromEngine(decision, hairProfile)) {
     const candidates = await matchProducts({
       query: message,
       thickness: hairProfile?.thickness ?? undefined,
@@ -1289,10 +1311,15 @@ export async function selectBondbuilderProductsWithEngine(params: {
   const decision = runtime.categories.bondbuilder
   if (!decision.relevant || !decision.targetProfile) return []
 
+  const exactConcernCodes = mergeConcernSearchCodes(
+    ["repair"],
+    getProductConcernCodesForProfileSignals("bondbuilder", hairProfile?.concerns ?? []),
+  )
+
   const candidates = await matchProducts({
     query: message,
     thickness: hairProfile?.thickness ?? undefined,
-    concerns: ["repair"],
+    concerns: exactConcernCodes,
     category: "bondbuilder",
     count: CANDIDATE_COUNT,
   })
@@ -1333,10 +1360,15 @@ export async function selectDeepCleansingShampooProductsWithEngine(params: {
   const decision = runtime.categories.deepCleansingShampoo
   if (!decision.relevant || !decision.targetProfile) return []
 
+  const exactConcernCodes = mergeConcernSearchCodes(
+    ["healthy_scalp"],
+    getProductConcernCodesForProfileSignals("deep_cleansing_shampoo", hairProfile?.concerns ?? []),
+  )
+
   const candidates = await matchProducts({
     query: message,
     thickness: hairProfile?.thickness ?? undefined,
-    concerns: ["healthy_scalp"],
+    concerns: exactConcernCodes,
     category: "deep_cleansing_shampoo",
     count: CANDIDATE_COUNT,
   })
@@ -1377,10 +1409,15 @@ export async function selectDryShampooProductsWithEngine(params: {
   const decision = runtime.categories.dryShampoo
   if (!decision.relevant || !decision.targetProfile) return []
 
+  const exactConcernCodes = mergeConcernSearchCodes(
+    ["oily_scalp"],
+    getProductConcernCodesForProfileSignals("dry_shampoo", hairProfile?.concerns ?? []),
+  )
+
   const candidates = await matchProducts({
     query: message,
     thickness: hairProfile?.thickness ?? undefined,
-    concerns: ["oily_scalp"],
+    concerns: exactConcernCodes,
     category: "dry_shampoo",
     count: CANDIDATE_COUNT,
   })
@@ -1421,10 +1458,15 @@ export async function selectPeelingProductsWithEngine(params: {
   const decision = runtime.categories.peeling
   if (!decision.relevant || !decision.targetProfile) return []
 
+  const exactConcernCodes = mergeConcernSearchCodes(
+    ["healthy_scalp"],
+    getProductConcernCodesForProfileSignals("peeling", hairProfile?.concerns ?? []),
+  )
+
   const candidates = await matchProducts({
     query: message,
     thickness: hairProfile?.thickness ?? undefined,
-    concerns: ["healthy_scalp"],
+    concerns: exactConcernCodes,
     category: "peeling",
     count: CANDIDATE_COUNT,
   })

@@ -5,14 +5,10 @@ type SlotKey = (typeof ROUTER_SLOT_KEYS)[number]
 
 /** German question templates for each missing information slot */
 const SLOT_QUESTIONS: Record<SlotKey, string> = {
-  problem:
-    "Was genau ist dein Anliegen? Beschreib mir mal, was dich an deinen Haaren stört.",
-  duration:
-    "Seit wann fällt dir das auf? Hat sich kürzlich was verändert?",
-  products_tried:
-    "Was benutzt du aktuell so? Shampoo, Conditioner, irgendwas Leave-in?",
-  routine:
-    "Wie sieht deine Routine aus? Wie oft wäschst du deine Haare?",
+  problem: "Was genau ist dein Anliegen? Beschreib mir mal, was dich an deinen Haaren stört.",
+  duration: "Seit wann fällt dir das auf? Hat sich kürzlich was verändert?",
+  products_tried: "Was benutzt du aktuell so? Shampoo, Conditioner, irgendwas Leave-in?",
+  routine: "Wie sieht deine Routine aus? Wie oft wäschst du deine Haare?",
   special_circumstances:
     "Gibt es besondere Umstände — Färben, Hitze, Schwangerschaft, Medikamente?",
 }
@@ -22,8 +18,7 @@ const SCALP_QUESTION =
   "Wie würdest du deine Kopfhaut beschreiben — eher fettig, trocken, oder ausgeglichen?"
 const SCALP_CONDITION_QUESTION =
   "Hast du aktuell Kopfhautbeschwerden — keine, Schuppen, trockene Schuppen oder gereizte Kopfhaut?"
-const THICKNESS_QUESTION =
-  "Ist dein Haar eher fein, mittel oder dick?"
+const THICKNESS_QUESTION = "Ist dein Haar eher fein, mittel oder dick?"
 const PROTEIN_MOISTURE_QUESTION =
   "Hast du mal den Zugtest gemacht? Einzelnes Haar ziehen — bricht es direkt, dehnt es sich, oder federt es zurück?"
 
@@ -39,9 +34,7 @@ const SLOT_PRIORITY: SlotKey[] = [
 /**
  * Determines which information slots are missing from the classification filters.
  */
-function getMissingSlots(
-  filters: Record<string, string | string[] | null>,
-): SlotKey[] {
+function getMissingSlots(filters: Record<string, string | string[] | null>): SlotKey[] {
   const missing: SlotKey[] = []
   for (const key of ROUTER_SLOT_KEYS) {
     const val = filters[key]
@@ -79,10 +72,8 @@ export function buildClarificationQuestions(
     if (!hairProfile?.thickness) {
       questions.push(THICKNESS_QUESTION)
     }
-    if (!hairProfile?.scalp_type) {
+    if (!hairProfile?.scalp_type && !hairProfile?.scalp_condition) {
       questions.push(SCALP_QUESTION)
-    }
-    if (!hairProfile?.scalp_condition) {
       questions.push(SCALP_CONDITION_QUESTION)
     }
   }

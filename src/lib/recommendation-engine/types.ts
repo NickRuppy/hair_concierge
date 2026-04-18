@@ -1,7 +1,7 @@
 import type {
   BrushType,
   ChemicalTreatment,
-  Concern,
+  ProfileConcern,
   CuticleCondition,
   DryingMethod,
   Goal,
@@ -79,7 +79,7 @@ export interface RawHairProfileInput {
   hair_texture: HairTexture | null
   thickness: HairThickness | null
   density: HairDensity | null
-  concerns: Concern[]
+  concerns: ProfileConcern[]
   goals: Goal[]
   wash_frequency: WashFrequency | null
   heat_styling: HeatStyling | null
@@ -115,7 +115,7 @@ export interface NormalizedProfile {
   hairTexture: HairTexture | null
   thickness: HairThickness | null
   density: HairDensity | null
-  concerns: Concern[]
+  concerns: ProfileConcern[]
   goals: Goal[]
   washFrequency: WashFrequency | null
   heatStyling: HeatStyling | null

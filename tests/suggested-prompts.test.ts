@@ -151,3 +151,20 @@ test("falls back to mask versus leave-in when damage is present but conditioner 
     ],
   )
 })
+
+test("breakage counts as a damage signal even without legacy damage tags", () => {
+  const profile = makeProfile({
+    scalp_type: "balanced",
+    concerns: ["breakage"],
+  })
+
+  assert.deepEqual(
+    generateSuggestedPrompts(profile).map((prompt) => prompt.text),
+    [
+      "Welche Routine passt am besten zu meinem Haarprofil?",
+      "Welches Shampoo passt zu meiner Kopfhaut?",
+      "Brauche ich eher Maske oder Leave-in für meine Längen?",
+      "Was ist der nächste sinnvolle Schritt für mein Haarprofil?",
+    ],
+  )
+})

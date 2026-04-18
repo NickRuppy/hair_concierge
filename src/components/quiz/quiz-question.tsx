@@ -8,6 +8,7 @@ import { QuizProgressBar } from "./quiz-progress-bar"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import { toggleTreatmentSelection } from "@/lib/quiz/normalization"
+import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 
 const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswers> = {
   2: "structure",
@@ -27,7 +28,13 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
   const currentValue = answers[answerKey]
 
   const [localSelection, setLocalSelection] = useState<string | string[]>(
-    currentValue ?? (question.selectionMode === "multi" ? [] : ""),
+    question.selectionMode === "multi"
+      ? Array.isArray(currentValue)
+        ? currentValue
+        : []
+      : typeof currentValue === "string"
+        ? currentValue
+        : "",
   )
   const [advancing, setAdvancing] = useState(false)
 
@@ -88,10 +95,10 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={question.questionNumber} total={6} />
+          <QuizProgressBar current={question.questionNumber} total={QUIZ_TOTAL_QUESTIONS} />
         </div>
         <span className="text-sm text-[var(--text-caption)] tabular-nums">
-          {question.questionNumber}/6
+          {question.questionNumber}/{QUIZ_TOTAL_QUESTIONS}
         </span>
       </div>
 

@@ -1,5 +1,5 @@
 import {
-  CONCERN_LABELS,
+  PROFILE_CONCERN_LABELS,
   GOAL_LABELS,
   HAIR_TEXTURE_LABELS,
   SCALP_CONDITION_LABELS,
@@ -230,6 +230,8 @@ function hasRefreshDrynessNeed(profile: HairProfile | null): boolean {
   return (
     concerns.includes("dryness") ||
     concerns.includes("hair_damage") ||
+    concerns.includes("breakage") ||
+    concerns.includes("tangling") ||
     goals.includes("healthier_hair") ||
     profile?.cuticle_condition === "rough" ||
     (profile?.chemical_treatment ?? []).some((t) => t !== "natural")
@@ -380,6 +382,7 @@ function hasDrynessDamageSignals(profile: HairProfile | null): boolean {
     concerns.has("dryness") ||
     concerns.has("hair_damage") ||
     concerns.has("split_ends") ||
+    concerns.has("breakage") ||
     concerns.has("frizz") ||
     goals.has("moisture") ||
     goals.has("less_frizz") ||
@@ -405,6 +408,7 @@ function hasDamageSignals(profile: HairProfile | null): boolean {
 
   return (
     profile?.protein_moisture_balance === "snaps" ||
+    concerns.has("breakage") ||
     concerns.has("hair_damage") ||
     concerns.has("split_ends") ||
     profile?.cuticle_condition === "rough" ||
@@ -422,6 +426,7 @@ function hasBondBuilderSignals(profile: HairProfile | null): boolean {
   const hasColoredOnly =
     treatments.has("colored") &&
     !treatments.has("bleached") &&
+    !concerns.has("breakage") &&
     !concerns.has("hair_damage") &&
     !concerns.has("split_ends") &&
     profile?.cuticle_condition !== "rough" &&
@@ -439,6 +444,7 @@ function countDamageSignals(profile: HairProfile | null): number {
   if (treatments.has("bleached")) count++
   if (treatments.has("colored")) count++
   if (profile?.cuticle_condition === "rough") count++
+  if (concerns.has("breakage")) count++
   if (concerns.has("hair_damage")) count++
   if (concerns.has("split_ends")) count++
   if (hasFrequentUnprotectedHeat(profile)) count++
@@ -479,7 +485,12 @@ function hasWashProtectionNeed(profile: HairProfile | null): boolean {
 function hasStrongDrynessDamageCluster(profile: HairProfile | null): boolean {
   const concerns = new Set(profile?.concerns ?? [])
 
-  return concerns.has("dryness") || concerns.has("hair_damage") || concerns.has("split_ends")
+  return (
+    concerns.has("dryness") ||
+    concerns.has("breakage") ||
+    concerns.has("hair_damage") ||
+    concerns.has("split_ends")
+  )
 }
 
 function countOwcSupportSignals(profile: HairProfile | null, context: RoutineContext): number {
@@ -593,7 +604,7 @@ function buildPrimaryFocuses(
     pushFocus({
       kind: "concern",
       code: concern,
-      label: CONCERN_LABELS[concern] ?? concern,
+      label: PROFILE_CONCERN_LABELS[concern] ?? concern,
     })
   }
 
@@ -605,7 +616,7 @@ function buildPrimaryFocuses(
     })
   }
 
-  if (profile?.scalp_condition && profile.scalp_condition !== "none") {
+  if (profile?.scalp_condition) {
     pushFocus({
       kind: "scalp",
       code: profile.scalp_condition,
@@ -720,6 +731,7 @@ function createTopicActivation(
 function hasProactiveHairOilingFit(context: RoutineContext): boolean {
   return (
     context.concerns.includes("dryness") ||
+    context.concerns.includes("breakage") ||
     context.concerns.includes("hair_damage") ||
     context.concerns.includes("split_ends") ||
     context.goals.includes("moisture") ||
@@ -1388,7 +1400,8 @@ function buildRoutineSlots(
     context.goals.includes("moisture") ||
     context.goals.includes("curl_definition") ||
     context.concerns.includes("frizz") ||
-    context.concerns.includes("dryness")
+    context.concerns.includes("dryness") ||
+    context.concerns.includes("tangling")
 
   if (shouldUseLeaveIn || leaveInPresent) {
     const leaveInAction: RoutineSlotAction =

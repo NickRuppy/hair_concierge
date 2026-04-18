@@ -72,6 +72,7 @@ test.describe.serial("Profile page smoke", () => {
       user_id: userId,
       hair_texture: "wavy",
       thickness: "fine",
+      concerns: [],
       wash_frequency: "once_weekly",
       heat_styling: "once_weekly",
       styling_tools: ["flat_iron"],
@@ -79,7 +80,7 @@ test.describe.serial("Profile page smoke", () => {
       cuticle_condition: "smooth",
       protein_moisture_balance: "stretches_bounces",
       scalp_type: "oily",
-      scalp_condition: "none",
+      scalp_condition: null,
       chemical_treatment: ["bleached"],
       towel_material: "frottee",
       towel_technique: "tupfen",
@@ -163,7 +164,7 @@ test.describe.serial("Profile page smoke", () => {
     await expect(page.getByText("Weitere Produkte")).toHaveCount(0)
     await expect(page.getByText("Aus Haar-Check")).toHaveCount(0)
     await expect(page.getByText("Aus Onboarding")).toHaveCount(0)
-    await expect(page.getByText("7/7 vollständig")).toBeVisible()
+    await expect(page.getByText("8/8 vollständig")).toBeVisible()
 
     const memorySwitch = page.getByRole("switch", { name: "Erinnerungen aktivieren" })
     await expect(memorySwitch).toHaveAttribute("aria-checked", "true")
@@ -176,12 +177,15 @@ test.describe.serial("Profile page smoke", () => {
     await expect(page).toHaveURL(`${baseUrl}/profile`)
     await expect(page.getByText("Haar-Check direkt im Profil aktualisieren")).toBeVisible()
     await expect(page.getByRole("button", { name: "Haar-Check speichern" })).toBeVisible()
-    await page.getByRole("radio", { name: "Keine Beschwerden" }).click()
+    await page.getByRole("button", { name: "Keine Beschwerden" }).click()
     await page.getByRole("button", { name: "Naturhaar" }).click()
     await page.getByRole("button", { name: "Haar-Check speichern" }).click()
     await expect(page.getByText("Haar-Check gespeichert").first()).toBeVisible()
     await expect(page.getByText("Keine Beschwerden")).toBeVisible()
     await expect(page.getByText("Naturhaar")).toBeVisible()
+    await expect(
+      page.getByRole("button").filter({ hasText: "Haar-Bedenken" }).getByText("Nichts davon"),
+    ).toBeVisible()
 
     await page.getByRole("button", { name: "Ziele bearbeiten" }).click()
     await page.waitForURL(/\/onboarding\?step=goals&returnTo=%2Fprofile$/, { timeout: 15000 })

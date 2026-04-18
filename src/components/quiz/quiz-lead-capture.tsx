@@ -10,6 +10,7 @@ import { ArrowLeft } from "lucide-react"
 import { Icon } from "@/components/ui/icon"
 import { posthog } from "@/providers/posthog-provider"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
+import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -99,7 +100,7 @@ export function QuizLeadCapture() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={6} total={6} />
+          <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
         </div>
       </div>
 

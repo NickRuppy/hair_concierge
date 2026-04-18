@@ -2,6 +2,7 @@
 
 import type { Product, HairProfile } from "@/lib/types"
 import { getPersonalizationSentence } from "@/lib/product-utils"
+import { getCatalogConcernLabel } from "@/lib/product-specs/concern-taxonomy"
 import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
 import {
   HAIR_TEXTURE_LABELS,
@@ -150,16 +151,15 @@ export function ProductDetailDrawer({
                           }
                         </Badge>
                       )}
-                      {product.recommendation_meta.matched_profile.scalp_condition &&
-                        product.recommendation_meta.matched_profile.scalp_condition !== "none" && (
-                          <Badge variant="outline" className="text-xs">
-                            {
-                              SCALP_CONDITION_LABELS[
-                                product.recommendation_meta.matched_profile.scalp_condition
-                              ]
-                            }
-                          </Badge>
-                        )}
+                      {product.recommendation_meta.matched_profile.scalp_condition && (
+                        <Badge variant="outline" className="text-xs">
+                          {
+                            SCALP_CONDITION_LABELS[
+                              product.recommendation_meta.matched_profile.scalp_condition
+                            ]
+                          }
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </>
@@ -424,7 +424,7 @@ export function ProductDetailDrawer({
               <div className="flex flex-wrap gap-1.5">
                 {product.suitable_concerns.map((c) => (
                   <Badge key={c} variant="outline" className="text-xs">
-                    {OIL_SUBTYPE_LABELS[c as keyof typeof OIL_SUBTYPE_LABELS] ?? c}
+                    {getCatalogConcernLabel(c)}
                   </Badge>
                 ))}
               </div>

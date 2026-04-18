@@ -11,14 +11,14 @@ export {
 export type { HairTexture, HairThickness } from "./hair-types"
 
 export {
-  CONCERNS,
-  CONCERN_LABELS,
-  CONCERN_OPTIONS,
+  PROFILE_CONCERNS,
+  PROFILE_CONCERN_LABELS,
+  PROFILE_CONCERN_OPTIONS,
   GOALS,
   GOAL_LABELS,
   GOAL_OPTIONS,
 } from "./concerns-goals"
-export type { Concern, Goal } from "./concerns-goals"
+export type { ProfileConcern, Goal } from "./concerns-goals"
 
 export {
   WASH_FREQUENCIES,

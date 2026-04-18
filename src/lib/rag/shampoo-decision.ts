@@ -1,7 +1,4 @@
-import {
-  SCALP_CONDITION_LABELS,
-  SCALP_TYPE_LABELS,
-} from "@/lib/vocabulary"
+import { SCALP_CONDITION_LABELS, SCALP_TYPE_LABELS } from "@/lib/vocabulary"
 import { PRODUCT_INTENTS } from "@/lib/rag/retrieval-constants"
 import {
   deriveShampooBucket,
@@ -20,8 +17,10 @@ import type { MatchedProduct } from "@/lib/rag/product-matcher"
 
 const SHAMPOO_CLARIFICATION_QUESTIONS: Record<ShampooProfileField, string> = {
   thickness: "Ist dein Haar eher fein, mittel oder dick?",
-  scalp_type: "Wie wuerdest du deine Kopfhaut beschreiben - eher fettig, trocken oder ausgeglichen?",
-  scalp_condition: "Hast du aktuell Kopfhautbeschwerden - keine, Schuppen, trockene Schuppen oder gereizte Kopfhaut?",
+  scalp_type:
+    "Wie wuerdest du deine Kopfhaut beschreiben - eher fettig, trocken oder ausgeglichen?",
+  scalp_condition:
+    "Hast du aktuell Kopfhautbeschwerden - keine, Schuppen, trockene Schuppen oder gereizte Kopfhaut?",
 }
 
 const SHAMPOO_FIELD_ORDER: ShampooProfileField[] = ["thickness", "scalp_type", "scalp_condition"]
@@ -32,15 +31,23 @@ const THICKNESS_REASON_LABELS = {
 } as const
 
 export function isShampooScalpTypeRequired(profile: HairProfile | null): boolean {
-  return !profile?.scalp_condition || profile.scalp_condition === "none"
+  return !profile?.scalp_condition && !profile?.scalp_type
 }
 
-export function getRequiredShampooProfileFields(profile: HairProfile | null): ShampooProfileField[] {
-  return SHAMPOO_FIELD_ORDER.filter((field) => {
-    if (field === "thickness" || field === "scalp_condition") return true
-    if (field === "scalp_type") return isShampooScalpTypeRequired(profile)
-    return false
-  })
+export function getRequiredShampooProfileFields(
+  profile: HairProfile | null,
+): ShampooProfileField[] {
+  const required: ShampooProfileField[] = ["thickness"]
+
+  if (!profile?.scalp_condition && !profile?.scalp_type) {
+    required.push("scalp_type", "scalp_condition")
+  } else if (profile?.scalp_condition) {
+    required.push("scalp_condition")
+  } else {
+    required.push("scalp_type")
+  }
+
+  return required
 }
 
 export function getMissingShampooProfileFields(profile: HairProfile | null): ShampooProfileField[] {
@@ -51,9 +58,11 @@ export function isShampooProfileEligible(profile: HairProfile | null): boolean {
   return getMissingShampooProfileFields(profile).length === 0
 }
 
-export function getShampooProfileCompleteness(
-  profile: HairProfile | null
-): { filledCount: number; totalCount: number; score: number } {
+export function getShampooProfileCompleteness(profile: HairProfile | null): {
+  filledCount: number
+  totalCount: number
+  score: number
+} {
   const requiredFields = getRequiredShampooProfileFields(profile)
   const filledCount = requiredFields.filter((field) => Boolean(profile?.[field])).length
 
@@ -76,7 +85,7 @@ function toBaseScore(product: MatchedProduct): number {
 
 export function buildShampooDecision(
   profile: HairProfile | null,
-  candidateCount = 0
+  candidateCount = 0,
 ): ShampooDecision {
   const missingProfileFields = getMissingShampooProfileFields(profile)
   const matchedBucket = deriveShampooBucket(profile?.scalp_type, profile?.scalp_condition)
@@ -89,9 +98,8 @@ export function buildShampooDecision(
   const eligible = isShampooProfileEligible(profile)
 
   // Dandruff users get a secondary scalp-type-based bucket for rotation
-  const secondaryBucket = profile?.scalp_condition === "dandruff"
-    ? deriveScalpTypeBucket(profile?.scalp_type)
-    : null
+  const secondaryBucket =
+    profile?.scalp_condition === "dandruff" ? deriveScalpTypeBucket(profile?.scalp_type) : null
 
   return {
     category: "shampoo",
@@ -111,15 +119,15 @@ export function buildShampooDecision(
 }
 
 export function buildShampooClarificationQuestions(decision: ShampooDecision): string[] {
-  return SHAMPOO_FIELD_ORDER
-    .filter((field) => decision.missing_profile_fields.includes(field))
-    .map((field) => SHAMPOO_CLARIFICATION_QUESTIONS[field])
+  return SHAMPOO_FIELD_ORDER.filter((field) => decision.missing_profile_fields.includes(field)).map(
+    (field) => SHAMPOO_CLARIFICATION_QUESTIONS[field],
+  )
 }
 
 export function buildShampooRetrievalFilter(
   intent: IntentType,
   productCategory: ProductCategory,
-  decision?: ShampooDecision
+  decision?: ShampooDecision,
 ): Record<string, string> | undefined {
   if (!decision || productCategory !== "shampoo" || !PRODUCT_INTENTS.includes(intent)) {
     return undefined
@@ -139,7 +147,7 @@ export function buildShampooRetrievalFilter(
 
 export function annotateShampooRecommendations(
   candidates: MatchedProduct[],
-  decision: ShampooDecision
+  decision: ShampooDecision,
 ): MatchedProduct[] {
   return candidates.map((product) => {
     const thicknessReason = decision.matched_profile.thickness
@@ -148,13 +156,11 @@ export function annotateShampooRecommendations(
     const bucketReason = decision.matched_bucket
       ? `Der aktuelle Shampoo-Bucket ist ${SHAMPOO_BUCKET_LABELS[decision.matched_bucket]}.`
       : "Passt zum aktuellen Shampoo-Fokus."
-    const scalpPriorityReason =
-      decision.matched_profile.scalp_condition &&
-      decision.matched_profile.scalp_condition !== "none"
-        ? `Solange ${SCALP_CONDITION_LABELS[decision.matched_profile.scalp_condition] ?? decision.matched_profile.scalp_condition} aktiv ist, priorisieren wir diesen Shampoo-Fokus vor dem normalen Kopfhauttyp.`
-        : decision.matched_profile.scalp_type
-          ? `Ohne akute Kopfhautbeschwerden richtet sich die Auswahl nach deinem Kopfhauttyp: ${SCALP_TYPE_LABELS[decision.matched_profile.scalp_type] ?? decision.matched_profile.scalp_type}.`
-          : "Ohne akute Kopfhautbeschwerden richtet sich die Auswahl nach deinem Kopfhauttyp."
+    const scalpPriorityReason = decision.matched_profile.scalp_condition
+      ? `Solange ${SCALP_CONDITION_LABELS[decision.matched_profile.scalp_condition] ?? decision.matched_profile.scalp_condition} aktiv ist, priorisieren wir diesen Shampoo-Fokus vor dem normalen Kopfhauttyp.`
+      : decision.matched_profile.scalp_type
+        ? `Ohne akute Kopfhautbeschwerden richtet sich die Auswahl nach deinem Kopfhauttyp: ${SCALP_TYPE_LABELS[decision.matched_profile.scalp_type] ?? decision.matched_profile.scalp_type}.`
+        : "Ohne akute Kopfhautbeschwerden richtet sich die Auswahl nach deinem Kopfhauttyp."
 
     const recommendationMeta: ShampooRecommendationMetadata = {
       category: "shampoo",

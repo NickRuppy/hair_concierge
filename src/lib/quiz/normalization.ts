@@ -3,17 +3,16 @@ import type { QuizAnswers } from "./types"
 export const QUIZ_STRUCTURE_VALUES = ["straight", "wavy", "curly", "coily"] as const
 export const QUIZ_THICKNESS_VALUES = ["fine", "normal", "coarse"] as const
 export const QUIZ_FINGERTEST_VALUES = ["glatt", "leicht_uneben", "rau"] as const
-export const QUIZ_PULLTEST_VALUES = [
-  "stretches_bounces",
-  "stretches_stays",
-  "snaps",
-] as const
+export const QUIZ_PULLTEST_VALUES = ["stretches_bounces", "stretches_stays", "snaps"] as const
 export const QUIZ_SCALP_TYPE_VALUES = ["fettig", "ausgeglichen", "trocken"] as const
-export const QUIZ_SCALP_CONDITION_VALUES = [
-  "keine",
-  "schuppen",
-  "trockene_schuppen",
-  "gereizt",
+export const QUIZ_SCALP_CONDITION_VALUES = ["schuppen", "trockene_schuppen", "gereizt"] as const
+export const QUIZ_CONCERN_VALUES = [
+  "hair_damage",
+  "split_ends",
+  "breakage",
+  "dryness",
+  "frizz",
+  "tangling",
 ] as const
 export const QUIZ_TREATMENT_VALUES = ["natur", "gefaerbt", "blondiert"] as const
 
@@ -21,6 +20,7 @@ type StoredQuizAnswers = Partial<QuizAnswers> & {
   goals?: string[]
   scalp?: string
   pulltest?: string
+  concerns?: string[]
   treatment?: string[]
 }
 
@@ -32,7 +32,7 @@ const LEGACY_PULLTEST_MAP: Record<string, QuizAnswers["pulltest"]> = {
 
 function isAllowedValue<T extends readonly string[]>(
   value: unknown,
-  allowed: T
+  allowed: T,
 ): value is T[number] {
   return typeof value === "string" && allowed.includes(value)
 }
@@ -40,9 +40,7 @@ function isAllowedValue<T extends readonly string[]>(
 function sortTreatments(treatment: unknown): QuizAnswers["treatment"] | undefined {
   if (!Array.isArray(treatment)) return undefined
 
-  const unique = QUIZ_TREATMENT_VALUES.filter((value) =>
-    treatment.includes(value)
-  )
+  const unique = QUIZ_TREATMENT_VALUES.filter((value) => treatment.includes(value))
 
   if (unique.length === 0) return undefined
   if (unique.includes("natur") && unique.length > 1) {
@@ -52,10 +50,17 @@ function sortTreatments(treatment: unknown): QuizAnswers["treatment"] | undefine
   return [...unique]
 }
 
-export function toggleTreatmentSelection(
-  current: string[],
-  value: string
-): string[] {
+function sortConcerns(concerns: unknown): QuizAnswers["concerns"] | undefined {
+  if (!Array.isArray(concerns)) return undefined
+
+  const unique = QUIZ_CONCERN_VALUES.filter((value) => concerns.includes(value))
+
+  if (unique.length === 0) return []
+
+  return unique.slice(0, 3)
+}
+
+export function toggleTreatmentSelection(current: string[], value: string): string[] {
   if (!QUIZ_TREATMENT_VALUES.includes(value as (typeof QUIZ_TREATMENT_VALUES)[number])) {
     return current
   }
@@ -83,7 +88,32 @@ export function toggleTreatmentSelection(
   return sortTreatments([...set]) ?? []
 }
 
-export function normalizeStoredQuizAnswers(raw: StoredQuizAnswers | Record<string, unknown> | null | undefined): QuizAnswers {
+export function toggleConcernSelection(
+  current: string[],
+  value: string,
+): NonNullable<QuizAnswers["concerns"]> {
+  if (value === "none") {
+    return []
+  }
+
+  if (!QUIZ_CONCERN_VALUES.includes(value as (typeof QUIZ_CONCERN_VALUES)[number])) {
+    return sortConcerns(current) ?? []
+  }
+
+  const set = new Set(current)
+
+  if (set.has(value)) {
+    set.delete(value)
+  } else if (set.size < 3) {
+    set.add(value)
+  }
+
+  return sortConcerns([...set]) ?? []
+}
+
+export function normalizeStoredQuizAnswers(
+  raw: StoredQuizAnswers | Record<string, unknown> | null | undefined,
+): QuizAnswers {
   const source = (raw ?? {}) as StoredQuizAnswers
 
   const pulltest = isAllowedValue(source.pulltest, QUIZ_PULLTEST_VALUES)
@@ -98,22 +128,36 @@ export function normalizeStoredQuizAnswers(raw: StoredQuizAnswers | Record<strin
   let scalpCondition = isAllowedValue(source.scalp_condition, QUIZ_SCALP_CONDITION_VALUES)
     ? source.scalp_condition
     : undefined
+  let hasScalpIssue =
+    typeof source.has_scalp_issue === "boolean" ? source.has_scalp_issue : undefined
 
   if (!scalpType && typeof source.scalp === "string") {
     if (source.scalp === "fettig_schuppen") {
       scalpType = "fettig"
       scalpCondition = "schuppen"
+      hasScalpIssue = true
     } else if (source.scalp === "unauffaellig") {
       scalpType = "ausgeglichen"
-      scalpCondition = "keine"
+      hasScalpIssue = false
     } else if (isAllowedValue(source.scalp, QUIZ_SCALP_TYPE_VALUES)) {
       scalpType = source.scalp
-      scalpCondition = "keine"
+      hasScalpIssue = false
     }
   }
 
-  if (scalpType && !scalpCondition) {
-    scalpCondition = "keine"
+  if (source.scalp_condition === "keine") {
+    hasScalpIssue = false
+    scalpCondition = undefined
+  } else if (scalpCondition && hasScalpIssue !== false) {
+    hasScalpIssue = true
+  }
+
+  if (hasScalpIssue === undefined && scalpType && !scalpCondition) {
+    hasScalpIssue = false
+  }
+
+  if (hasScalpIssue === false) {
+    scalpCondition = undefined
   }
 
   return {
@@ -128,18 +172,29 @@ export function normalizeStoredQuizAnswers(raw: StoredQuizAnswers | Record<strin
       : undefined,
     pulltest,
     scalp_type: scalpType,
+    has_scalp_issue: hasScalpIssue,
     scalp_condition: scalpCondition,
+    concerns: sortConcerns(source.concerns) ?? [],
     treatment: sortTreatments(source.treatment),
   }
 }
 
 export function canonicalizeQuizAnswers(answers: QuizAnswers): QuizAnswers {
-  return {
+  const normalized = {
     ...normalizeStoredQuizAnswers(answers),
+    concerns: sortConcerns(answers.concerns),
     treatment: sortTreatments(answers.treatment),
   }
+
+  if (normalized.has_scalp_issue !== true) {
+    normalized.scalp_condition = undefined
+  }
+
+  return normalized
 }
 
 export function areQuizAnswersEqual(left: QuizAnswers, right: QuizAnswers): boolean {
-  return JSON.stringify(canonicalizeQuizAnswers(left)) === JSON.stringify(canonicalizeQuizAnswers(right))
+  return (
+    JSON.stringify(canonicalizeQuizAnswers(left)) === JSON.stringify(canonicalizeQuizAnswers(right))
+  )
 }

@@ -1,5 +1,6 @@
 import {
   CHEMICAL_TREATMENT_LABELS,
+  PROFILE_CONCERN_LABELS,
   CUTICLE_CONDITION_LABELS,
   GOAL_LABELS,
   HAIR_TEXTURE_OPTIONS,
@@ -189,6 +190,21 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
         : null,
   },
   {
+    key: "chemical_treatment",
+    label: "Chemische Behandlungen",
+    helpText: "Deine Auswahl aus dem Behandlungs-Schritt im Quiz.",
+    sectionKey: "quiz",
+    sourceLabel: "Aus Haar-Check",
+    displayMode: "badges",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) =>
+      profile?.chemical_treatment?.length
+        ? profile.chemical_treatment.map(
+            (treatment) => CHEMICAL_TREATMENT_LABELS[treatment] ?? treatment,
+          )
+        : null,
+  },
+  {
     key: "scalp_type",
     label: "Kopfhauttyp",
     helpText: "Deine Angabe aus dem Kopfhaut-Schritt im Quiz.",
@@ -202,7 +218,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "scalp_condition",
     label: "Kopfhaut-Beschwerden",
-    helpText: "Deine optionalen Beschwerden aus demselben Kopfhaut-Schritt.",
+    helpText: "Ob du aktive Kopfhaut-Beschwerden angegeben hast.",
     sectionKey: "quiz",
     sourceLabel: "Aus Haar-Check",
     displayMode: "badges",
@@ -210,22 +226,23 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     getValue: (profile) =>
       profile?.scalp_condition
         ? (SCALP_CONDITION_LABELS[profile.scalp_condition] ?? profile.scalp_condition)
-        : null,
+        : profile?.scalp_type
+          ? "Keine Beschwerden"
+          : null,
   },
   {
-    key: "chemical_treatment",
-    label: "Chemische Behandlungen",
-    helpText: "Deine Auswahl aus dem letzten Quiz-Schritt.",
+    key: "concerns",
+    label: "Haar-Bedenken",
+    helpText: "Deine Auswahl aus dem Bedenken-Schritt nach der Kopfhaut.",
     sectionKey: "quiz",
     sourceLabel: "Aus Haar-Check",
     displayMode: "badges",
     editTarget: { kind: "quiz" },
-    getValue: (profile) =>
-      profile?.chemical_treatment?.length
-        ? profile.chemical_treatment.map(
-            (treatment) => CHEMICAL_TREATMENT_LABELS[treatment] ?? treatment,
-          )
-        : null,
+    getValue: (profile) => {
+      if (!profile) return null
+      if (profile.concerns.length === 0) return "Nichts davon"
+      return optionLabels(profile.concerns, PROFILE_CONCERN_LABELS)
+    },
   },
   {
     key: "styling_tools",

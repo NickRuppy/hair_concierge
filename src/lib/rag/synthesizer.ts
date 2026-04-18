@@ -28,7 +28,7 @@ import {
 import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
 import {
   SOURCE_TYPE_LABELS,
-  CONCERN_LABELS,
+  PROFILE_CONCERN_LABELS,
   GOAL_LABELS,
   DESIRED_VOLUME_LABELS,
   STYLING_TOOL_LABELS,
@@ -145,7 +145,9 @@ function formatUserProfile(
   }
   if (profile.concerns.length > 0) {
     parts.push(
-      `Probleme/Bedenken: ${profile.concerns.map((c) => CONCERN_LABELS[c] ?? c).join(", ")}`,
+      `Probleme/Bedenken: ${profile.concerns
+        .map((c) => PROFILE_CONCERN_LABELS[c] ?? c)
+        .join(", ")}`,
     )
   }
   if (profile.goals.length > 0) {
@@ -183,7 +185,7 @@ function formatUserProfile(
   if (profile.scalp_type) {
     parts.push(`Kopfhaut-Typ: ${SCALP_TYPE_LABELS[profile.scalp_type] ?? profile.scalp_type}`)
   }
-  if (profile.scalp_condition && profile.scalp_condition !== "none") {
+  if (profile.scalp_condition) {
     parts.push(
       `Kopfhaut-Beschwerden: ${SCALP_CONDITION_LABELS[profile.scalp_condition] ?? profile.scalp_condition}`,
     )
@@ -272,11 +274,9 @@ function formatShampooProfile(
     parts.push(`Kopfhaut-Typ: ${SCALP_TYPE_LABELS[profile.scalp_type] ?? profile.scalp_type}`)
   }
   if (profile.scalp_condition) {
-    const scalpConditionLabel =
-      profile.scalp_condition === "none"
-        ? "keine"
-        : (SCALP_CONDITION_LABELS[profile.scalp_condition] ?? profile.scalp_condition)
-    parts.push(`Kopfhaut-Beschwerden: ${scalpConditionLabel}`)
+    parts.push(
+      `Kopfhaut-Beschwerden: ${SCALP_CONDITION_LABELS[profile.scalp_condition] ?? profile.scalp_condition}`,
+    )
   }
 
   let result =
