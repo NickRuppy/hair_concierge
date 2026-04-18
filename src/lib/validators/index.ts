@@ -5,7 +5,7 @@ import {
   HAIR_TEXTURES,
   HAIR_THICKNESSES,
   HAIR_DENSITIES,
-  CONCERNS,
+  PROFILE_CONCERNS,
   GOALS,
   DESIRED_VOLUME_LEVELS,
   STYLING_TOOLS,
@@ -17,6 +17,7 @@ import {
   BRUSH_TYPES,
   NIGHT_PROTECTIONS,
 } from "@/lib/vocabulary"
+import { isProductConcernAllowedForCategory } from "@/lib/product-specs/concern-taxonomy"
 import { CONDITIONER_WEIGHTS, CONDITIONER_REPAIR_LEVELS } from "@/lib/conditioner/constants"
 import { isDeepCleansingShampooCategory } from "@/lib/deep-cleansing-shampoo/constants"
 import { isDryShampooCategory } from "@/lib/dry-shampoo/constants"
@@ -42,7 +43,7 @@ export const hairProfileFullSchema = z.object({
   hair_texture: z.enum(HAIR_TEXTURES).nullable(),
   thickness: z.enum(HAIR_THICKNESSES).nullable(),
   density: z.enum(HAIR_DENSITIES).nullable().default(null),
-  concerns: z.array(z.enum(CONCERNS)).default([]),
+  concerns: z.array(z.enum(PROFILE_CONCERNS)).default([]),
   products_used: z.string().nullable().default(null),
   wash_frequency: z.enum(WASH_FREQUENCIES).nullable().default(null),
   heat_styling: z.enum(HEAT_STYLING_LEVELS).nullable().default(null),
@@ -199,7 +200,19 @@ export const productSchema = z
       })
     }
 
-    if (!isOilCategory(value.category)) return
+    if (!isOilCategory(value.category)) {
+      for (const concern of value.suitable_concerns) {
+        if (!isProductConcernAllowedForCategory(value.category, concern)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["suitable_concerns"],
+            message: "Dieser Concern-Code ist fuer diese Kategorie nicht erlaubt.",
+          })
+          break
+        }
+      }
+      return
+    }
 
     if (value.suitable_thicknesses.length === 0) {
       ctx.addIssue({

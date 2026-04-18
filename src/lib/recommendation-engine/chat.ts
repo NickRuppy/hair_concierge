@@ -166,12 +166,9 @@ export function getShampooMissingProfileFields(
     missing.push("thickness")
   }
 
-  if (!profile?.scalp_condition) {
-    missing.push("scalp_condition")
-  }
-
-  if ((!profile?.scalp_condition || profile.scalp_condition === "none") && !profile?.scalp_type) {
+  if (!profile?.scalp_condition && !profile?.scalp_type) {
     missing.push("scalp_type")
+    missing.push("scalp_condition")
   }
 
   return missing
@@ -183,7 +180,7 @@ export function getShampooProfileCompleteness(profile: HairProfile | null): {
   score: number
 } {
   const missingFields = getShampooMissingProfileFields(profile)
-  const totalCount = 2 + (profile?.scalp_condition && profile.scalp_condition !== "none" ? 0 : 1)
+  const totalCount = !profile?.scalp_condition && !profile?.scalp_type ? 3 : 2
   const filledCount = totalCount - missingFields.length
 
   return {

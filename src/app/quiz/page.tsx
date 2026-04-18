@@ -6,6 +6,7 @@ import { getQuestionByStep } from "@/lib/quiz/questions"
 import { QuizLanding } from "@/components/quiz/quiz-landing"
 import { QuizQuestion } from "@/components/quiz/quiz-question"
 import { QuizScalpQuestion } from "@/components/quiz/quiz-scalp-question"
+import { QuizConcernsQuestion } from "@/components/quiz/quiz-concerns-question"
 import { QuizLeadCapture } from "@/components/quiz/quiz-lead-capture"
 import { QuizAnalysis } from "@/components/quiz/quiz-analysis"
 import { QuizResults } from "@/components/quiz/quiz-results"
@@ -20,6 +21,7 @@ const STEP_NAMES: Record<number, string> = {
   5: "pull_test",
   6: "scalp",
   7: "chemical_treatment",
+  8: "concerns",
   9: "lead_capture",
   10: "analysis",
   11: "results",
@@ -38,9 +40,10 @@ export default function QuizPage() {
 
   // Step 6: custom scalp progressive disclosure
   if (step === 6) return <QuizScalpQuestion />
+  if (step === 8) return <QuizConcernsQuestion />
 
-  // Screens 2-7: quiz questions (except 6)
-  if (step >= 2 && step <= 7) {
+  // Standard quiz question cards
+  if (step >= 2 && step <= 8) {
     const question = getQuestionByStep(step)
     if (question) return <QuizQuestion key={question.step} question={question} />
   }

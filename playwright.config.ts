@@ -21,7 +21,7 @@ export default defineConfig({
   timeout: 600_000, // 10 min — 16 sequential streaming questions + rate limit pauses
   retries: 0,
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",
     trace: "on-first-retry",
   },
   projects: [

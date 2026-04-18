@@ -99,6 +99,7 @@ export function deriveLeaveInNeedBucket(
   }
 
   if (
+    concerns.has("breakage") ||
     concerns.has("hair_damage") ||
     concerns.has("split_ends") ||
     cuticleCondition === "slightly_rough" ||
@@ -117,12 +118,7 @@ export function deriveLeaveInNeedBucket(
     return "moisture_anti_frizz"
   }
 
-  if (
-    concerns.has("colored") ||
-    goals.has("shine") ||
-    goals.has("color_protection") ||
-    treatments.has("colored")
-  ) {
+  if (goals.has("shine") || goals.has("color_protection") || treatments.has("colored")) {
     return "shine_protect"
   }
 

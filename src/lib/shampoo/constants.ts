@@ -28,14 +28,16 @@ export const SHAMPOO_BUCKET_LABELS: Record<ShampooBucket, string> = {
 }
 
 export function isShampooCategory(category?: string | null): boolean {
-  return SHAMPOO_DB_CATEGORIES.includes((category ?? "").trim() as (typeof SHAMPOO_DB_CATEGORIES)[number])
+  return SHAMPOO_DB_CATEGORIES.includes(
+    (category ?? "").trim() as (typeof SHAMPOO_DB_CATEGORIES)[number],
+  )
 }
 
 export function deriveShampooBucket(
   scalpType?: ScalpType | null,
-  scalpCondition?: ScalpCondition | null
+  scalpCondition?: ScalpCondition | null,
 ): ShampooBucket | null {
-  if (scalpCondition && scalpCondition !== "none") {
+  if (scalpCondition) {
     if (scalpCondition === "dandruff") return "schuppen"
     if (scalpCondition === "irritated") return "irritationen"
     if (scalpCondition === "dry_flakes") return "trocken"
@@ -49,9 +51,7 @@ export function deriveShampooBucket(
 }
 
 /** Derives a scalp-type-based bucket (ignoring scalp condition) for rotation pairing. */
-export function deriveScalpTypeBucket(
-  scalpType?: ScalpType | null,
-): ShampooBucket | null {
+export function deriveScalpTypeBucket(scalpType?: ScalpType | null): ShampooBucket | null {
   if (scalpType === "balanced") return "normal"
   if (scalpType === "oily") return "dehydriert-fettig"
   if (scalpType === "dry") return "trocken"

@@ -6,6 +6,7 @@ export type QuizStep =
   | 5 // zugtest
   | 6 // kopfhaut
   | 7 // chemische behandlung
+  | 8 // haar-bedenken
   | 9 // lead capture
   | 10 // analysis
   | 11 // results
@@ -16,6 +17,7 @@ export type LeadCaptureSubStep = "name" | "email" | "consent"
 export type SelectionMode = "single" | "multi"
 
 import type { IconName } from "@/components/ui/icon"
+import type { ProfileConcern } from "@/lib/vocabulary"
 
 export interface QuizOption {
   value: string
@@ -41,7 +43,10 @@ export interface QuizAnswers {
   fingertest?: string
   pulltest?: string
   scalp_type?: string
+  has_scalp_issue?: boolean
   scalp_condition?: string
+  concerns?: ProfileConcern[]
+  concerns_other_text?: string
   treatment?: string[]
 }
 

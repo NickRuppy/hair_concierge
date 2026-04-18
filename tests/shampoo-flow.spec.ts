@@ -30,7 +30,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     cuticle_condition: "smooth",
     protein_moisture_balance: "stretches_bounces",
     scalp_type: "oily",
-    scalp_condition: "none",
+    scalp_condition: null,
     chemical_treatment: ["natural"],
     desired_volume: "balanced",
     routine_preference: "balanced",
@@ -128,12 +128,9 @@ test.describe("Shampoo Flow alignment", () => {
     )
 
     expect(
-      buildShampooDecision(createProfile({ scalp_type: null })).missing_profile_fields,
-    ).toEqual(["scalp_type"])
-
-    expect(
-      buildShampooDecision(createProfile({ scalp_condition: null })).missing_profile_fields,
-    ).toEqual(["scalp_condition"])
+      buildShampooDecision(createProfile({ scalp_type: null, scalp_condition: null }))
+        .missing_profile_fields,
+    ).toEqual(["scalp_type", "scalp_condition"])
 
     expect(
       buildShampooDecision(
@@ -216,7 +213,7 @@ test.describe("Shampoo Flow alignment", () => {
       createProfile({
         thickness: "fine",
         scalp_type: "oily",
-        scalp_condition: "none",
+        scalp_condition: null,
       }),
     )
 
@@ -228,12 +225,14 @@ test.describe("Shampoo Flow alignment", () => {
     const decision = buildShampooDecision(
       createProfile({
         thickness: null,
+        scalp_type: null,
         scalp_condition: null,
       }),
     )
 
     expect(buildShampooClarificationQuestions(decision)).toEqual([
       "Ist dein Haar eher fein, mittel oder dick?",
+      "Wie wuerdest du deine Kopfhaut beschreiben - eher fettig, trocken oder ausgeglichen?",
       "Hast du aktuell Kopfhautbeschwerden - keine, Schuppen, trockene Schuppen oder gereizte Kopfhaut?",
     ])
   })
@@ -256,7 +255,7 @@ test.describe("Shampoo Flow alignment", () => {
       createProfile({
         thickness: "fine",
         scalp_type: "oily",
-        scalp_condition: "none",
+        scalp_condition: null,
       }),
     )
 
@@ -299,7 +298,7 @@ test.describe("Shampoo Flow alignment", () => {
       createProfile({
         thickness: "fine",
         scalp_type: "oily",
-        scalp_condition: "none",
+        scalp_condition: null,
       }),
       [],
     )
@@ -362,14 +361,14 @@ test.describe("Shampoo Flow alignment", () => {
       [],
       createProfile({
         thickness: "fine",
-        scalp_type: "oily",
+        scalp_type: null,
         scalp_condition: null,
       }),
       [],
     )
 
     expect(routerDecision.response_mode).toBe("clarify_only")
-    expect(routerDecision.slot_completeness).toBeCloseTo(2 / 3, 5)
+    expect(routerDecision.slot_completeness).toBeCloseTo(1 / 3, 5)
     expect(routerDecision.policy_overrides).toContain("missing_shampoo_profile")
   })
 
@@ -523,7 +522,7 @@ test.describe("Shampoo Flow alignment", () => {
       createProfile({
         thickness: "fine",
         scalp_type: "oily",
-        scalp_condition: "none",
+        scalp_condition: null,
       }),
       0,
     )
@@ -583,7 +582,7 @@ test.describe("Shampoo Flow alignment", () => {
       createProfile({
         thickness: "fine",
         scalp_type: "oily",
-        scalp_condition: "none",
+        scalp_condition: null,
       }),
     )
     expect(none.secondary_bucket).toBeNull()

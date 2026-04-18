@@ -1,5 +1,7 @@
 import type { QuizQuestion } from "./types"
 
+export const QUIZ_TOTAL_QUESTIONS = 7
+
 export const quizQuestions: QuizQuestion[] = [
   {
     step: 2,
@@ -34,7 +36,7 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Super — noch 5 kurze Fragen.",
+    motivation: "Super — noch 6 kurze Fragen.",
   },
   {
     step: 3,
@@ -121,7 +123,7 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Gut gemacht — noch 2 Fragen.",
+    motivation: "Gut gemacht — noch 3 Fragen.",
   },
   {
     step: 7,
@@ -151,6 +153,54 @@ export const quizQuestions: QuizQuestion[] = [
     ],
     selectionMode: "multi",
     motivation: "Fast geschafft!",
+  },
+  {
+    step: 8,
+    questionNumber: 7,
+    title: "Welche Haarprobleme beschäftigen dich gerade am meisten?",
+    instruction:
+      "Wähle bis zu 3 Punkte aus, die aktuell am besten zu deinen Längen und Spitzen passen.",
+    options: [
+      {
+        value: "hair_damage",
+        label: "Haarschäden",
+        description: "Die Längen wirken strapaziert und geschwächt",
+        icon: "goal-repair",
+      },
+      {
+        value: "split_ends",
+        label: "Spliss",
+        description: "Die Spitzen fasern auf oder fransen schnell aus",
+        icon: "goal-split-ends",
+      },
+      {
+        value: "breakage",
+        label: "Haarbruch",
+        description: "Haare brechen oder reißen schnell ab",
+        icon: "goal-strength",
+      },
+      {
+        value: "dryness",
+        label: "Trockenheit",
+        description: "Die Längen fühlen sich stumpf und trocken an",
+        icon: "goal-moisture",
+      },
+      {
+        value: "frizz",
+        label: "Frizz",
+        description: "Viele abstehende Härchen und wenig Geschmeidigkeit",
+        icon: "goal-frizz",
+      },
+      {
+        value: "tangling",
+        label: "Verknotungen",
+        description: "Dein Haar verheddert sich schnell und ist schwer zu entwirren",
+        icon: "goal-smoothness",
+      },
+    ],
+    selectionMode: "multi",
+    maxSelections: 3,
+    motivation: "Geschafft — dein Pflegeplan ist gleich da.",
   },
 ]
 

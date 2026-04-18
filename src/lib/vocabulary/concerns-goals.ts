@@ -1,31 +1,33 @@
-export const CONCERNS = [
+export const PROFILE_CONCERNS = [
   "hair_loss",
   "dandruff",
   "dryness",
   "oily_scalp",
   "hair_damage",
-  "colored",
   "split_ends",
+  "breakage",
   "frizz",
+  "tangling",
   "thinning",
 ] as const
-export type Concern = (typeof CONCERNS)[number]
+export type ProfileConcern = (typeof PROFILE_CONCERNS)[number]
 
-export const CONCERN_LABELS: Record<Concern, string> = {
+export const PROFILE_CONCERN_LABELS: Record<ProfileConcern, string> = {
   hair_loss: "Haarausfall",
   dandruff: "Schuppen",
   dryness: "Trockenheit",
   oily_scalp: "Fettige Kopfhaut",
   hair_damage: "Haarschaeden",
-  colored: "Coloriert",
   split_ends: "Spliss",
+  breakage: "Haarbruch",
   frizz: "Frizz",
+  tangling: "Verknotungen",
   thinning: "Duenner werdendes Haar",
 }
 
-export const CONCERN_OPTIONS = CONCERNS.map((value) => ({
+export const PROFILE_CONCERN_OPTIONS = PROFILE_CONCERNS.map((value) => ({
   value,
-  label: CONCERN_LABELS[value],
+  label: PROFILE_CONCERN_LABELS[value],
 }))
 
 export const GOALS = [

@@ -30,7 +30,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     cuticle_condition: "rough",
     protein_moisture_balance: "stretches_bounces",
     scalp_type: "balanced",
-    scalp_condition: "none",
+    scalp_condition: null,
     chemical_treatment: ["colored"],
     desired_volume: "balanced",
     routine_preference: "balanced",

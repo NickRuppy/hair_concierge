@@ -14,14 +14,18 @@ import { normalizeStoredQuizAnswers } from "./normalization"
 export async function linkQuizToProfile(
   userId: string,
   email: string | undefined,
-  leadId?: string
+  leadId?: string,
 ) {
   console.log("[linkQuizToProfile] start", { userId, email, leadId })
 
   const admin = createAdminClient()
 
   // --- Find the lead ---
-  let lead: { id: string; quiz_answers: QuizAnswers | Record<string, unknown> | null; user_id: string | null } | null = null
+  let lead: {
+    id: string
+    quiz_answers: QuizAnswers | Record<string, unknown> | null
+    user_id: string | null
+  } | null = null
 
   // Primary: direct ID lookup
   if (leadId) {
@@ -85,7 +89,8 @@ export async function linkQuizToProfile(
     leicht_uneben: "slightly_rough",
     rau: "rough",
   }
-  if (answers.fingertest) profileData.cuticle_condition = CUTICLE_MAP[answers.fingertest] ?? answers.fingertest
+  if (answers.fingertest)
+    profileData.cuticle_condition = CUTICLE_MAP[answers.fingertest] ?? answers.fingertest
   if (answers.pulltest) profileData.protein_moisture_balance = answers.pulltest
 
   // Map quiz scalp keys to English
@@ -95,7 +100,6 @@ export async function linkQuizToProfile(
     trocken: "dry",
   }
   const SCALP_CONDITION_MAP: Record<string, string> = {
-    keine: "none",
     schuppen: "dandruff",
     trockene_schuppen: "dry_flakes",
     gereizt: "irritated",
@@ -105,8 +109,12 @@ export async function linkQuizToProfile(
     profileData.scalp_type = SCALP_TYPE_MAP[answers.scalp_type] ?? answers.scalp_type
   }
   if (answers.scalp_condition) {
-    profileData.scalp_condition = SCALP_CONDITION_MAP[answers.scalp_condition] ?? answers.scalp_condition
+    profileData.scalp_condition =
+      SCALP_CONDITION_MAP[answers.scalp_condition] ?? answers.scalp_condition
+  } else if (answers.has_scalp_issue === false) {
+    profileData.scalp_condition = null
   }
+  if (answers.concerns !== undefined) profileData.concerns = answers.concerns
 
   // Map quiz chemical treatment keys to English
   const TREATMENT_MAP: Record<string, string> = {
@@ -115,9 +123,7 @@ export async function linkQuizToProfile(
     blondiert: "bleached",
   }
   if (answers.treatment) {
-    profileData.chemical_treatment = answers.treatment.map(
-      (t: string) => TREATMENT_MAP[t] ?? t
-    )
+    profileData.chemical_treatment = answers.treatment.map((t: string) => TREATMENT_MAP[t] ?? t)
   }
 
   // --- Check if hair_profiles row already exists ---

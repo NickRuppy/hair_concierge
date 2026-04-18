@@ -228,7 +228,7 @@ test("engine shampoo reranking uses backfilled cleansing intensity inside the sa
   const oilyProfile = {
     ...LOW_DAMAGE_PROFILE,
     scalp_type: "oily" as const,
-    scalp_condition: "none" as const,
+    scalp_condition: null,
   }
   const runtime = buildRecommendationEngineRuntimeFromPersistence(oilyProfile, [])
   const decision = runtime.categories.shampoo

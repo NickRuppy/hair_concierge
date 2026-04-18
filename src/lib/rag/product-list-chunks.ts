@@ -3,24 +3,8 @@ import {
   normalizeShampooBucketPairs,
   type ShampooBucketPairInput,
 } from "@/lib/shampoo/eligibility"
+import { getCatalogConcernLabel } from "@/lib/product-specs/concern-taxonomy"
 import { isShampooCategory } from "@/lib/shampoo/constants"
-
-const CONCERN_LABELS: Record<string, string> = {
-  schuppen: "Schuppen",
-  irritationen: "Kopfhautirritationen",
-  normal: "normale Pflege",
-  "dehydriert-fettig": "dehydrierte oder fettige Kopfhaut",
-  trocken: "trockene Kopfhaut",
-  protein: "Proteinbedarf",
-  feuchtigkeit: "Feuchtigkeitsbedarf",
-  performance: "Performance-Pflege",
-  nix: "allgemeine Pflege (keine besonderen Probleme)",
-  "natuerliches-oel": "natuerliche Oelpflege",
-  "styling-oel": "Styling mit Oel",
-  "trocken-oel": "Trockenoel-Pflege",
-  stylingoel: "Styling mit Oel",
-  trockenoel: "Trockenoel-Pflege",
-}
 
 const THICKNESS_LABELS: Record<string, string> = {
   fine: "feines Haar",
@@ -56,7 +40,7 @@ function uniqueValues(values: string[] | undefined, fallback: string): string[] 
 }
 
 export function buildProductListChunks(
-  allProducts: ProductListChunkProduct[]
+  allProducts: ProductListChunkProduct[],
 ): ProductListChunkData[] {
   const groups = new Map<string, ProductListChunkProduct[]>()
 
@@ -94,7 +78,7 @@ export function buildProductListChunks(
   for (const [key, products] of groups) {
     const [category, thickness, concern] = key.split("|")
     const thicknessLabel = THICKNESS_LABELS[thickness] || thickness
-    const concernLabel = CONCERN_LABELS[concern] || concern
+    const concernLabel = getCatalogConcernLabel(concern)
 
     const productLines = products.map((product) => {
       if (product.brand && product.brand !== product.name) {

@@ -5,6 +5,7 @@ import { useQuizStore } from "@/lib/quiz/store"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { ArrowLeft } from "lucide-react"
+import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 
 type Phase = "type" | "gate" | "condition"
 
@@ -57,19 +58,19 @@ export function QuizScalpQuestion() {
 
   // Restore phase from existing answers when re-entering step 6
   const [phase, setPhase] = useState<Phase>(() => {
-    if (answers.scalp_condition && answers.scalp_condition !== "keine") return "condition"
+    if (answers.has_scalp_issue === true && answers.scalp_condition) return "condition"
     if (answers.scalp_type) return "gate"
     return "type"
   })
   const [selectedType, setSelectedType] = useState(answers.scalp_type ?? "")
   const [conditionAnswer, setConditionAnswer] = useState<"ja" | "nein" | "">(() => {
     if (!answers.scalp_type) return ""
-    if (answers.scalp_condition === "keine") return "nein"
-    if (answers.scalp_condition) return "ja"
+    if (answers.has_scalp_issue === false) return "nein"
+    if (answers.has_scalp_issue === true) return "ja"
     return ""
   })
   const [selectedCondition, setSelectedCondition] = useState(
-    answers.scalp_condition && answers.scalp_condition !== "keine" ? answers.scalp_condition : "",
+    answers.has_scalp_issue === true && answers.scalp_condition ? answers.scalp_condition : "",
   )
   const [advancing, setAdvancing] = useState(false)
 
@@ -82,6 +83,8 @@ export function QuizScalpQuestion() {
       if (advancing) return
       setSelectedType(value)
       setAnswer("scalp_type", value)
+      setAnswer("has_scalp_issue", undefined)
+      setAnswer("scalp_condition", undefined)
       setAdvancing(true)
       setTimeout(() => {
         setAnimateGate(true)
@@ -97,12 +100,15 @@ export function QuizScalpQuestion() {
       if (advancing) return
       setConditionAnswer(answer)
       if (answer === "nein") {
-        setAnswer("scalp_condition", "keine")
+        setAnswer("has_scalp_issue", false)
+        setAnswer("scalp_condition", undefined)
         setAdvancing(true)
         setTimeout(() => {
           goNext()
         }, 300)
       } else {
+        setAnswer("has_scalp_issue", true)
+        setAnswer("scalp_condition", undefined)
         setAdvancing(true)
         setAnimateCondition(true)
         setPhase("condition")
@@ -116,6 +122,7 @@ export function QuizScalpQuestion() {
     (value: string) => {
       if (advancing) return
       setSelectedCondition(value)
+      setAnswer("has_scalp_issue", true)
       setAnswer("scalp_condition", value)
       setAdvancing(true)
       setTimeout(() => {
@@ -129,14 +136,16 @@ export function QuizScalpQuestion() {
     if (phase === "condition") {
       setSelectedCondition("")
       setConditionAnswer("")
-      setAnswer("scalp_condition", "")
+      setAnswer("has_scalp_issue", undefined)
+      setAnswer("scalp_condition", undefined)
       setAnimateCondition(false)
       setPhase("gate")
     } else if (phase === "gate") {
       setSelectedType("")
       setConditionAnswer("")
-      setAnswer("scalp_type", "")
-      setAnswer("scalp_condition", "")
+      setAnswer("scalp_type", undefined)
+      setAnswer("has_scalp_issue", undefined)
+      setAnswer("scalp_condition", undefined)
       setAnimateGate(false)
       setPhase("type")
     } else {
@@ -157,9 +166,11 @@ export function QuizScalpQuestion() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={6} total={6} />
+          <QuizProgressBar current={6} total={QUIZ_TOTAL_QUESTIONS} />
         </div>
-        <span className="text-sm text-[var(--text-caption)] tabular-nums">6/6</span>
+        <span className="text-sm text-[var(--text-caption)] tabular-nums">
+          6/{QUIZ_TOTAL_QUESTIONS}
+        </span>
       </div>
 
       {/* Title + instruction — always visible */}
