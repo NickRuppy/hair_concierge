@@ -59,8 +59,14 @@ function stubDeps() {
           async retrieve(_id: string) {
             return {
               id: "sub_1",
-              current_period_end: 1_800_000_000,
-              items: { data: [{ price: { interval: "month", interval_count: 1 } }] },
+              items: {
+                data: [
+                  {
+                    price: { interval: "month", interval_count: 1 },
+                    current_period_end: 1_800_000_000,
+                  },
+                ],
+              },
             } as any
           },
         },
@@ -126,9 +132,15 @@ test("subscription.updated keeps status=active when cancel_at_period_end flips",
     id: "sub_X",
     customer: "cus_X",
     status: "active",
-    current_period_end: 1_900_000_000,
     cancel_at_period_end: true,
-    items: { data: [{ price: { interval: "year", interval_count: 1 } }] },
+    items: {
+      data: [
+        {
+          price: { interval: "year", interval_count: 1 },
+          current_period_end: 1_900_000_000,
+        },
+      ],
+    },
   } as any
   await handleSubscriptionUpdated(sub, deps)
   expect((profiles["u"] as any).subscription_status).toBe("active")
@@ -153,4 +165,28 @@ test("invoice.payment_failed logs and returns (no throw)", async () => {
   const invoice = { id: "in_1", customer: "cus_1", attempt_count: 2 } as any
   await handleInvoicePaymentFailed(invoice)
   // no assertion beyond no-throw; log-only for MVP
+})
+
+test("checkout.session.completed falls back to root current_period_end when item has none", async () => {
+  const { deps, profiles } = stubDeps()
+  // override stripe.subscriptions.retrieve for this test
+  deps.stripe.subscriptions = {
+    async retrieve() {
+      return {
+        id: "sub_root",
+        current_period_end: 1_800_000_000,
+        items: { data: [{ price: { interval: "month", interval_count: 1 } }] },
+      } as any
+    },
+  } as any
+  const session = {
+    id: "cs_root",
+    customer: "cus_root",
+    customer_details: { email: "root@example.com" },
+    subscription: "sub_root",
+  } as any
+  await handleCheckoutSessionCompleted(session, deps)
+  const p = Object.values(profiles).find((x: any) => x.email === "root@example.com") as any
+  expect(p.current_period_end).toBeTruthy()
+  expect(p.subscription_status).toBe("active")
 })

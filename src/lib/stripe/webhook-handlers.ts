@@ -11,9 +11,10 @@ export interface HandlerDeps {
 /** Shape we actually read from the retrieved subscription. */
 interface RetrievedSub {
   id: string
-  current_period_end: number
+  current_period_end?: number
   items: {
     data: Array<{
+      current_period_end?: number
       price: {
         interval?: string
         interval_count?: number
@@ -71,7 +72,7 @@ export async function handleCheckoutSessionCompleted(
       stripe_subscription_id: sub.id,
       subscription_status: "active",
       subscription_interval: interval,
-      current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+      current_period_end: subPeriodEndIso(sub as unknown as RetrievedSub),
       subscription_tier_id: deps.premiumTierId,
     })
     .eq("id", userId)
@@ -82,9 +83,11 @@ interface UpdatedSub {
   id: string
   customer: string | { id: string } | null
   status: string
-  current_period_end: number
+  current_period_end?: number
+  cancel_at_period_end?: boolean
   items: {
     data: Array<{
+      current_period_end?: number
       price: {
         recurring?: { interval: string; interval_count: number }
         interval?: string
@@ -92,6 +95,21 @@ interface UpdatedSub {
       }
     }>
   }
+}
+
+/**
+ * In Stripe API version 2025-08-27.basil, current_period_end moved from the
+ * Subscription root to each SubscriptionItem. Read item first, fall back to
+ * root for older API versions.
+ */
+function subPeriodEndIso(sub: RetrievedSub | UpdatedSub): string {
+  const itemEnd = sub.items.data[0]?.current_period_end
+  const rootEnd = (sub as { current_period_end?: number }).current_period_end
+  const unix = itemEnd ?? rootEnd
+  if (typeof unix !== "number" || Number.isNaN(unix)) {
+    throw new Error("subscription has no current_period_end on item or root")
+  }
+  return new Date(unix * 1000).toISOString()
 }
 
 export async function handleSubscriptionUpdated(
@@ -110,7 +128,7 @@ export async function handleSubscriptionUpdated(
     .update({
       subscription_status: s.status,
       subscription_interval: interval,
-      current_period_end: new Date(s.current_period_end * 1000).toISOString(),
+      current_period_end: subPeriodEndIso(s),
     })
     .eq("stripe_customer_id", s.customer)
 }
