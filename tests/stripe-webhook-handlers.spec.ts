@@ -1,5 +1,10 @@
 import { expect, test } from "@playwright/test"
-import { handleCheckoutSessionCompleted } from "../src/lib/stripe/webhook-handlers"
+import {
+  handleCheckoutSessionCompleted,
+  handleSubscriptionUpdated,
+  handleSubscriptionDeleted,
+  handleInvoicePaymentFailed,
+} from "../src/lib/stripe/webhook-handlers"
 
 function stubDeps() {
   const calls: any[] = []
@@ -85,4 +90,67 @@ test("checkout.session.completed creates a new Supabase user and activates the s
   expect(p.stripe_subscription_id).toBe("sub_1")
   expect(p.subscription_tier_id).toBe("tier-premium")
   expect(p.current_period_end).toBeTruthy()
+})
+
+test("checkout.session.completed on existing email reuses the user", async () => {
+  const { deps, calls, profiles, users } = stubDeps()
+  users["ret@example.com"] = { id: "user-existing", email: "ret@example.com" }
+  profiles["user-existing"] = {
+    id: "user-existing",
+    email: "ret@example.com",
+    subscription_status: null,
+  }
+
+  const session = {
+    id: "cs_2",
+    customer: "cus_2",
+    customer_details: { email: "ret@example.com" },
+    subscription: "sub_2",
+  } as any
+  await handleCheckoutSessionCompleted(session, deps)
+
+  expect(calls.some(([op]) => op === "createUser")).toBe(false)
+  expect((profiles["user-existing"] as any).subscription_status).toBe("active")
+})
+
+test("subscription.updated keeps status=active when cancel_at_period_end flips", async () => {
+  const { deps, profiles } = stubDeps()
+  profiles["u"] = {
+    id: "u",
+    email: "x@y",
+    stripe_customer_id: "cus_X",
+    subscription_status: "active",
+    subscription_interval: "year",
+  }
+  const sub = {
+    id: "sub_X",
+    customer: "cus_X",
+    status: "active",
+    current_period_end: 1_900_000_000,
+    cancel_at_period_end: true,
+    items: { data: [{ price: { interval: "year", interval_count: 1 } }] },
+  } as any
+  await handleSubscriptionUpdated(sub, deps)
+  expect((profiles["u"] as any).subscription_status).toBe("active")
+  expect((profiles["u"] as any).current_period_end).toBeTruthy()
+})
+
+test("subscription.deleted flips profile to canceled + Free tier", async () => {
+  const { deps, profiles } = stubDeps()
+  profiles["u"] = {
+    id: "u",
+    stripe_customer_id: "cus_D",
+    subscription_status: "active",
+    subscription_tier_id: "tier-premium",
+  }
+  const sub = { id: "sub_D", customer: "cus_D", status: "canceled" } as any
+  await handleSubscriptionDeleted(sub, { ...deps, freeTierId: "tier-free" } as any)
+  expect((profiles["u"] as any).subscription_status).toBe("canceled")
+  expect((profiles["u"] as any).subscription_tier_id).toBe("tier-free")
+})
+
+test("invoice.payment_failed logs and returns (no throw)", async () => {
+  const invoice = { id: "in_1", customer: "cus_1", attempt_count: 2 } as any
+  await handleInvoicePaymentFailed(invoice)
+  // no assertion beyond no-throw; log-only for MVP
 })

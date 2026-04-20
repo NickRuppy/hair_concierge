@@ -76,3 +76,68 @@ export async function handleCheckoutSessionCompleted(
     })
     .eq("id", userId)
 }
+
+/** Narrow shape we read from a subscription event. */
+interface UpdatedSub {
+  id: string
+  customer: string | { id: string } | null
+  status: string
+  current_period_end: number
+  items: {
+    data: Array<{
+      price: {
+        recurring?: { interval: string; interval_count: number }
+        interval?: string
+        interval_count?: number
+      }
+    }>
+  }
+}
+
+export async function handleSubscriptionUpdated(
+  sub: Stripe.Subscription,
+  deps: HandlerDeps,
+): Promise<void> {
+  const s = sub as unknown as UpdatedSub
+  if (typeof s.customer !== "string") throw new Error("sub.customer not a string")
+  const price = s.items.data[0].price
+  const interval = intervalFromPrice({
+    interval: price.recurring?.interval ?? price.interval ?? "",
+    interval_count: price.recurring?.interval_count ?? price.interval_count ?? 1,
+  })
+  await deps.supabase
+    .from("profiles")
+    .update({
+      subscription_status: s.status,
+      subscription_interval: interval,
+      current_period_end: new Date(s.current_period_end * 1000).toISOString(),
+    })
+    .eq("stripe_customer_id", s.customer)
+}
+
+export interface DeleteDeps extends HandlerDeps {
+  freeTierId: string
+}
+
+export async function handleSubscriptionDeleted(
+  sub: Stripe.Subscription,
+  deps: DeleteDeps,
+): Promise<void> {
+  const customer = typeof sub.customer === "string" ? sub.customer : null
+  if (!customer) throw new Error("sub.customer not a string")
+  await deps.supabase
+    .from("profiles")
+    .update({
+      subscription_status: "canceled",
+      subscription_tier_id: deps.freeTierId,
+    })
+    .eq("stripe_customer_id", customer)
+}
+
+export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
+  console.warn("[stripe] invoice.payment_failed", {
+    invoiceId: invoice.id,
+    customer: invoice.customer,
+    attempt: invoice.attempt_count,
+  })
+}
