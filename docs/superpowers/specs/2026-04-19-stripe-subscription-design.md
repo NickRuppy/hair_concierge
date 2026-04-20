@@ -147,7 +147,8 @@ Stripe columns on `profiles` are read by the owner via existing `profiles_select
    - `subscription_interval` = `'month'` | `'quarter'` | `'year'` (derived from `interval` + `interval_count`)
    - `current_period_end` = `to_timestamp(subscription.current_period_end)`
    - `subscription_tier_id` = Premium tier UUID
-5. Idempotency: the handler is safe to replay. Upsert semantics, no side effects on duplicate calls.
+5. Call `linkQuizToProfile(userId, email, session.metadata?.lead_id)` to carry the quiz answers from `leads` into a new `hair_profiles` row. Failures are logged, not thrown — a linking error shouldn't fail fulfillment.
+6. Idempotency: the handler is safe to replay. Upsert semantics, no side effects on duplicate calls.
 
 ### `customer.subscription.updated`
 

@@ -6,6 +6,7 @@ export interface HandlerDeps {
   supabase: SupabaseClient
   stripe: Stripe
   premiumTierId: string
+  linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
 }
 
 /** Shape we actually read from the retrieved subscription. */
@@ -76,6 +77,17 @@ export async function handleCheckoutSessionCompleted(
       subscription_tier_id: deps.premiumTierId,
     })
     .eq("id", userId)
+
+  // 4. Carry quiz answers from leads into hair_profiles (fire-and-forget — a
+  //    linking failure must not fail fulfillment)
+  if (deps.linkQuizToProfile) {
+    const leadId = session.metadata?.lead_id || undefined
+    try {
+      await deps.linkQuizToProfile(userId, email, leadId)
+    } catch (err) {
+      console.error("[stripe] linkQuizToProfile failed:", err)
+    }
+  }
 }
 
 /** Narrow shape we read from a subscription event. */

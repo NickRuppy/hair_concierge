@@ -7,6 +7,7 @@ import {
   handleSubscriptionDeleted,
   handleInvoicePaymentFailed,
 } from "@/lib/stripe/webhook-handlers"
+import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import type Stripe from "stripe"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
@@ -46,7 +47,7 @@ export async function POST(req: NextRequest) {
     { auth: { persistSession: false } },
   )
   const { freeTierId, premiumTierId } = await getTierIds(supabase)
-  const deps = { supabase, stripe, premiumTierId }
+  const deps = { supabase, stripe, premiumTierId, linkQuizToProfile }
   const deleteDeps = { ...deps, freeTierId }
 
   try {
