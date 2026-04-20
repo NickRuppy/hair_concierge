@@ -153,6 +153,16 @@ export function ResultPageClient({
           </div>
         )}
 
+        {/* Primary CTA */}
+        <div className="mb-8">
+          <Link
+            href={`/pricing?lead=${leadId}`}
+            className="inline-flex w-full items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90"
+          >
+            Jetzt freischalten
+          </Link>
+        </div>
+
         {/* Share section */}
         <div className="border-t border-border pt-8 mb-8">
           <p className="text-sm text-[var(--text-sub)] mb-4 text-center">Teile deine Diagnose</p>
@@ -197,9 +207,7 @@ export function ResultPageClient({
 
         {/* CTA for viewers */}
         <div className="text-center">
-          <p className="text-lg text-muted-foreground mb-4">
-            Was passt zu DEINEM Haar?
-          </p>
+          <p className="text-lg text-muted-foreground mb-4">Was passt zu DEINEM Haar?</p>
           <Link href="/quiz">
             <Button
               variant="unstyled"
