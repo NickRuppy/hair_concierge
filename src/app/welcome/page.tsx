@@ -26,12 +26,14 @@ export default async function WelcomePage({
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { persistSession: false } },
   )
-  const { error } = await supabase.auth.admin.generateLink({
-    type: "magiclink",
+  const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { redirectTo: `${siteUrl}/onboarding` },
+    options: {
+      emailRedirectTo: `${siteUrl}/onboarding`,
+      shouldCreateUser: false,
+    },
   })
-  if (error) console.warn("[welcome] magic link generation failed:", error.message)
+  if (error) console.warn("[welcome] magic link dispatch failed:", error.message)
 
   return <WelcomeClient email={email} />
 }

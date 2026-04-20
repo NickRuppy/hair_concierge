@@ -217,9 +217,11 @@ Extend `src/lib/supabase/middleware.ts`. Gate matrix:
 | `/chat`, `/chat/*`             | **yes**  | **yes**     |
 | `/api/chat`                    | **yes**  | **yes**     |
 | `/profile`                     | yes      | no          |
-| `/api/stripe/portal-session`   | yes      | yes         |
+| `/api/stripe/portal-session`   | yes      | no          |
 
 Unauthenticated hit on a session-required route → redirect `/auth?next=<path>` (existing behaviour preserved). Authenticated but `subscription_status !== 'active'` on a sub-required route → redirect `/pricing?reason=resubscribe`.
+
+Canceled users keep portal access so they can view invoices and resubscribe via plan switch.
 
 Subscription state is read from `profiles` via the existing server-side Supabase client — no extra DB round-trip beyond what middleware already does.
 
