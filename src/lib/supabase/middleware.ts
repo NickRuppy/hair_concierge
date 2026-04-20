@@ -48,6 +48,9 @@ export async function updateSession(request: NextRequest) {
     "/api/og",
     "/datenschutz",
     "/impressum",
+    "/pricing",
+    "/welcome",
+    "/api/stripe",
   ]
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
 
@@ -80,6 +83,27 @@ export async function updateSession(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 365,
     })
   }
+
+  // --- Subscription paywall ---------------------------------------------
+  const SUB_REQUIRED_PREFIXES = ["/onboarding", "/chat", "/api/chat"]
+  const needsSub = SUB_REQUIRED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+
+  if (needsSub) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("subscription_status")
+      .eq("id", user.id)
+      .single()
+    const active =
+      profile?.subscription_status === "active" || profile?.subscription_status === "past_due"
+    if (!active) {
+      const url = request.nextUrl.clone()
+      url.pathname = "/pricing"
+      url.searchParams.set("reason", "resubscribe")
+      return NextResponse.redirect(url)
+    }
+  }
+  // --- End subscription paywall ------------------------------------------
 
   if (needsAuthenticatedAppRouting) {
     const { data: profile } = await supabase
