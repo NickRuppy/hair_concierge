@@ -119,6 +119,11 @@ export interface Profile {
   subscription_tier_id: string | null
   message_count_this_month: number
   message_count_reset_at: string | null
+  stripe_customer_id: string | null
+  stripe_subscription_id: string | null
+  subscription_status: "active" | "past_due" | "canceled" | "incomplete" | null
+  subscription_interval: "month" | "quarter" | "year" | null
+  current_period_end: string | null
   created_at: string
   updated_at: string
 }
