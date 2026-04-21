@@ -22,7 +22,8 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: npm ci
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund --prefer-offline
       - run: npm run typecheck
       - name: Lint
         run: npm run lint
