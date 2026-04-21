@@ -13,7 +13,7 @@ interface AuthFormProps {
   leadId?: string | null
   next: string
   showForgotPassword?: boolean
-  onEmailSent?: (email: string, type: "reset" | "confirm") => void
+  onEmailSent?: (email: string, type: "reset" | "confirm" | "magic_link") => void
 }
 
 function mapSupabaseError(message: string): string {
@@ -25,6 +25,17 @@ function mapSupabaseError(message: string): string {
   }
   if (message.includes("User already registered")) {
     return "Diese E-Mail ist bereits registriert. Bitte melde dich an."
+  }
+  return message
+}
+
+function mapMagicLinkError(message: string): string {
+  if (
+    message.includes("User not found") ||
+    message.includes("user not found") ||
+    message.includes("Email link is invalid or has expired")
+  ) {
+    return "Wir konnten kein Konto mit dieser E-Mail finden. Hast du schon ein Abo abgeschlossen?"
   }
   return message
 }
@@ -52,7 +63,7 @@ export function AuthForm({
   const supabase = createClient()
   const router = useRouter()
 
-  const [loading, setLoading] = useState<"email" | null>(null)
+  const [loading, setLoading] = useState<"email" | "magic_link" | null>(null)
   const [email, setEmail] = useState(defaultEmail ?? "")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -162,6 +173,35 @@ export function AuthForm({
     }
   }
 
+  async function handleMagicLink(e: React.MouseEvent) {
+    e.preventDefault()
+    const trimmedEmail = email.trim()
+    if (!trimmedEmail) {
+      setError("Bitte gib deine E-Mail-Adresse ein.")
+      return
+    }
+
+    setLoading("magic_link")
+    setError(null)
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: trimmedEmail,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/confirm`,
+        shouldCreateUser: false,
+      },
+    })
+
+    if (error) {
+      console.error("Magic link error:", error)
+      setError(mapMagicLinkError(error.message))
+      setLoading(null)
+    } else {
+      onEmailSent?.(trimmedEmail, "magic_link")
+      setLoading(null)
+    }
+  }
+
   // Forgot password sub-view
   if (view === "forgot" && showForgotPassword) {
     return (
@@ -256,18 +296,28 @@ export function AuthForm({
             </button>
           </form>
 
-          {showForgotPassword && (
+          <div className="flex flex-col gap-2">
             <button
-              onClick={() => {
-                setView("forgot")
-                setError(null)
-                setPassword("")
-              }}
-              className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+              onClick={handleMagicLink}
+              disabled={loading !== null || !email.trim()}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-transparent px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-50"
             >
-              Passwort vergessen?
+              {loading === "magic_link" ? "Wird gesendet..." : "Oder per E-Mail-Link anmelden"}
             </button>
-          )}
+
+            {showForgotPassword && (
+              <button
+                onClick={() => {
+                  setView("forgot")
+                  setError(null)
+                  setPassword("")
+                }}
+                className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+              >
+                Passwort vergessen?
+              </button>
+            )}
+          </div>
         </div>
       </TabsContent>
 
