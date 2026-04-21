@@ -28,13 +28,20 @@ export async function GET(request: Request) {
   }
 
   if (verified) {
-    const { data: { user } } = await supabase.auth.getUser()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
     if (user) {
       try {
         await linkQuizToProfile(user.id, user.email, leadId)
       } catch (e) {
         console.error("linkQuizToProfile failed:", e)
       }
+    }
+
+    // Password-reset links are typed as "recovery" — send to update-password
+    if (type === "recovery") {
+      return NextResponse.redirect(`${origin}/auth/update-password`)
     }
 
     return NextResponse.redirect(`${origin}${next}`)
