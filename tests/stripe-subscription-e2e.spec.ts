@@ -32,7 +32,10 @@ test.describe.skip("Stripe subscription golden path (manual)", () => {
       .first()
       .click()
 
-    // 4. The embedded Stripe iframe loads on /pricing/checkout — fill the card
+    // 4. The embedded Stripe iframe loads inline on /pricing — wait for the "Plan ändern" back-link
+    await expect(page.getByRole("button", { name: /Plan ändern/i })).toBeVisible({
+      timeout: 15_000,
+    })
     const frame = page.frameLocator("iframe[name^='__privateStripeFrame']").first()
     await frame.getByLabel(/Kartennummer|Card number/i).fill("4242 4242 4242 4242")
     await frame.getByLabel(/MM \/ JJ|MM \/ YY|Ablauf|Expiration/i).fill("12 / 34")

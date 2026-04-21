@@ -1,7 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import { loadStripe } from "@stripe/stripe-js"
+import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js"
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 interface Plan {
   interval: "month" | "quarter" | "year"
@@ -31,15 +35,94 @@ const PLANS: Plan[] = [
   },
 ]
 
-export function PricingCards({ leadId }: { leadId: string | null }) {
+export function PricingCards({
+  leadId,
+  initialInterval = null,
+}: {
+  leadId: string | null
+  initialInterval?: Plan["interval"] | null
+}) {
   const router = useRouter()
-  const [loading, setLoading] = useState<string | null>(null)
+  const [selectedInterval, setSelectedInterval] = useState<Plan["interval"] | null>(initialInterval)
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
-  function choose(interval: Plan["interval"]) {
-    setLoading(interval)
+  function choosePlan(interval: Plan["interval"]) {
+    setCheckoutError(null)
+    setSelectedInterval(interval)
     const params = new URLSearchParams({ interval })
     if (leadId) params.set("lead", leadId)
-    router.push(`/pricing/checkout?${params.toString()}`)
+    router.replace(`/pricing?${params.toString()}`)
+  }
+
+  function clearPlan() {
+    setSelectedInterval(null)
+    const params = new URLSearchParams()
+    if (leadId) params.set("lead", leadId)
+    const qs = params.toString()
+    router.replace(qs ? `/pricing?${qs}` : "/pricing")
+  }
+
+  const fetchClientSecret = useCallback(async () => {
+    setCheckoutError(null)
+    const res = await fetch("/api/stripe/create-checkout-session", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ interval: selectedInterval, leadId }),
+    })
+    if (!res.ok) {
+      const msg = "Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
+      setCheckoutError(msg)
+      throw new Error("failed to create checkout session")
+    }
+    const data = await res.json()
+    return data.client_secret as string
+  }, [selectedInterval, leadId])
+
+  if (selectedInterval !== null) {
+    const plan = PLANS.find((p) => p.interval === selectedInterval)!
+    return (
+      <div>
+        <div className="mb-6 flex items-center justify-between">
+          <button
+            onClick={clearPlan}
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
+            ← Plan ändern
+          </button>
+          <p className="text-sm font-medium">
+            {plan.name} – {plan.price}
+          </p>
+        </div>
+
+        {checkoutError ? (
+          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center">
+            <p className="mb-4 text-sm text-destructive">{checkoutError}</p>
+            <button
+              onClick={() => {
+                setCheckoutError(null)
+                // Re-trigger by briefly clearing and resetting interval
+                const interval = selectedInterval
+                setSelectedInterval(null)
+                setTimeout(() => setSelectedInterval(interval), 0)
+              }}
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              Erneut versuchen
+            </button>
+          </div>
+        ) : (
+          <div id="checkout" className="min-h-[600px]">
+            <EmbeddedCheckoutProvider
+              key={selectedInterval}
+              stripe={stripePromise}
+              options={{ fetchClientSecret }}
+            >
+              <EmbeddedCheckout />
+            </EmbeddedCheckoutProvider>
+          </div>
+        )}
+      </div>
+    )
   }
 
   return (
@@ -63,11 +146,10 @@ export function PricingCards({ leadId }: { leadId: string | null }) {
             {plan.savings && <p className="text-sm font-medium text-primary">{plan.savings}</p>}
           </div>
           <button
-            onClick={() => choose(plan.interval)}
-            disabled={loading !== null}
-            className="mt-6 w-full rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+            onClick={() => choosePlan(plan.interval)}
+            className="mt-6 w-full rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
-            {loading === plan.interval ? "Wird geladen…" : "Jetzt starten"}
+            Jetzt starten
           </button>
         </div>
       ))}

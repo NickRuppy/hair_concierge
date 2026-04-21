@@ -3,11 +3,16 @@ import { PricingCards } from "./pricing-cards"
 export default async function PricingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ lead?: string; reason?: string }>
+  searchParams: Promise<{ lead?: string; reason?: string; interval?: string }>
 }) {
   const sp = await searchParams
   const leadId = sp.lead ?? null
   const showResubBanner = sp.reason === "resubscribe"
+  const rawInterval = sp.interval
+  const initialInterval =
+    rawInterval === "month" || rawInterval === "quarter" || rawInterval === "year"
+      ? rawInterval
+      : null
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-12">
@@ -20,7 +25,7 @@ export default async function PricingPage({
         <h1 className="font-header text-4xl">Dein personalisierter Haar-Concierge</h1>
         <p className="mt-3 text-lg text-muted-foreground">Wähle deinen Plan — jederzeit kündbar.</p>
       </header>
-      <PricingCards leadId={leadId} />
+      <PricingCards leadId={leadId} initialInterval={initialInterval} />
     </main>
   )
 }
