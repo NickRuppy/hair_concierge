@@ -67,7 +67,10 @@ export function PricingCards({
     const res = await fetch("/api/stripe/create-checkout-session", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ interval: selectedInterval, leadId }),
+      body: JSON.stringify({
+        interval: selectedInterval,
+        ...(leadId ? { leadId } : {}),
+      }),
     })
     if (!res.ok) {
       const msg = "Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
