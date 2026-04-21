@@ -23,7 +23,14 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - name: Install dependencies
-        run: npm install --no-audit --no-fund --prefer-offline
+        run: |
+          # Regenerate lockfile on the CI platform so platform-specific optional
+          # deps (@tailwindcss/oxide-linux-x64-gnu, lightningcss-linux-x64-gnu, etc.)
+          # get resolved for linux-x64. A lockfile generated on macOS locks in the
+          # darwin-arm64 variants and won't produce working Linux installs, even
+          # with permissive `npm install`. See https://github.com/npm/cli/issues/4828.
+          rm -f package-lock.json
+          npm install --no-audit --no-fund
       - run: npm run typecheck
       - name: Lint
         run: npm run lint
