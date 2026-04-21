@@ -40,6 +40,29 @@ Use for:
 - turning a noisy recommendation flow into explicit user-facing questions
 - defining deterministic mappings, fallback rules, response metadata, and tests
 
+### `build-plan`
+
+Use for:
+
+- turning an approved design direction into a Hair Concierge implementation plan
+- keeping plan files in `plans/`
+- enforcing file maps, scope boundaries, and verification notes without extra ceremony
+
+### `ready-check`
+
+Use for:
+
+- repo-specific verification before claiming a change is ready
+- deciding when a local dev server, browser pass, `simulated-user-review`, and code review are required
+
+### `ship-it`
+
+Use for:
+
+- repo-specific finishing flow after a branch is verified
+- defaulting to commit, push, draft PR, and task-worktree cleanup
+- keeping merge and deployment as explicit follow-up decisions
+
 ### Combined workflow
 
 When a category or spec change needs both research and implementation logic, use:
@@ -55,22 +78,71 @@ When a category or spec change needs both research and implementation logic, use
 
 If the task is about matching or preserving current internal recommendation logic, do not route it through `hair-care-expert` unless the user explicitly wants a second opinion.
 
+## Feature Delivery Workflow
+
+For non-trivial feature work or behavior changes, use this order:
+
+1. `plan-grill` first to settle outcome, non-goals, constraints, and verification
+2. `superpowers:brainstorming` second to turn the aligned direction into an approved design spec
+3. `build-plan` third to write the implementation plan in `plans/`
+4. `branch-gate`, then a repo-local worktree via `npm run worktree:new -- <slug>`
+5. `superpowers:subagent-driven-development` by default; use `superpowers:executing-plans` only when the work is tightly coupled
+6. `ready-check` before claiming the branch is ready
+7. `ship-it` to finish the branch
+
+For trivial tasks, keep the flow lighter and skip the design/spec stages when they would add no real value.
+
 ## Plan Mode
 
-When entering plan mode for any task:
+When entering plan mode for any non-trivial task:
 
-1. **Options first** — Before writing a detailed plan, present 2-3 distinct implementation approaches as a comparison table:
+1. **Use `plan-grill` first** to resolve the unknowns that actually change scope, architecture, UX, or verification
+2. **Options first** — Before writing a detailed plan, present 2-3 distinct implementation approaches as a comparison table:
 
    | Approach | Complexity | Effort | Tradeoffs | Best when... |
    |----------|-----------|--------|-----------|--------------|
    | A: Name  | Low/Med/High | ~X hrs | Pro / Con | condition |
    | B: Name  | ...       | ...    | ...       | ...          |
 
-2. **Let the user choose** — Use `AskUserQuestion` with the approaches as options. Include a short recommendation if one approach is clearly better.
+3. **Let the user choose** — Use `AskUserQuestion` with the approaches as options. Include a short recommendation if one approach is clearly better.
+4. **Then plan** — Only after the user picks an approach, use `build-plan` to write the implementation plan. Do not include rejected approaches in the final plan.
 
-3. **Then plan** — Only after the user picks an approach, write the detailed plan file with implementation steps, file paths, and verification criteria. Do not include specs from rejected approaches.
+For trivial tasks (single file, under ~20 lines changed), skip the options table and plan directly if there are no meaningful unresolved decisions.
 
-For trivial tasks (single file, <20 lines changed), skip the options table and plan directly.
+## Execution Discipline
+
+- Route before you explain; start by identifying the user situation and the decision or path that applies
+- Think before coding; surface uncertainty, tradeoffs, and simpler options before implementation
+- Prefer the minimum viable change; no speculative abstractions, no parallel tracks unless explicitly requested
+- Make surgical edits; every changed line should trace back to the requested outcome
+- Define one concrete success state and verify against it, not just against activity or effort
+
+## Spec Writing Rules
+
+Design specs in `docs/superpowers/specs/` should be written for a fresh Codex or Claude Code session with no prior context on the feature.
+
+- Open with a scoping table, not a long preamble
+- Frame the problem in the user or business situation being resolved, not in internal module names
+- State one concrete promised end-state near the top
+- Choose one canonical implementation path; alternatives belong in `Rejected approaches`, not inline
+- Keep the top skim-complete, the middle execute-complete, and the bottom reference-complete
+- Make the spec self-contained enough to paste into a fresh session without requiring several other files to make sense
+- Prefer markdown-first structure with clear headings and no essential information hidden in screenshots, tabs, or visual-only artifacts
+
+## QA Rules
+
+- `ready-check` is required for UI, onboarding, recommendation, copy, and trust-facing changes
+- Those changes should be checked in a task worktree with `npm run dev:worktree`, a browser/manual pass on the changed flow, `simulated-user-review`, and code review
+- Backend-only or internal changes still need fresh automated verification and code review, but `simulated-user-review` is optional
+- If a user-facing change crosses into medically adjacent or evidence-sensitive territory, use `hair-care-expert` for a second pass
+
+## Shipping Policy
+
+- Default finish path: verify, stage, commit, push, open a draft PR
+- After a successful push and draft PR, clean up the repo-local task worktree unless the user explicitly wants to keep it
+- Merge always asks
+- Merge and deployment are separate decisions; never assume a production rollout from a push, PR, or merge
+- If merge is requested, clarify only if needed whether the user means a local merge, GitHub merge, or a separate deploy/release step
 
 ## Project Conventions
 
@@ -93,6 +165,9 @@ For trivial tasks (single file, <20 lines changed), skip the options table and p
 
 ## Working Outputs
 
-- Put implementation plans in `plans/` when a written plan is needed
+- Put design specs in `docs/superpowers/specs/`
+- Use `docs/superpowers/specs/_template.md` as the default spec shape unless a task clearly needs a leaner variant
+- Version repo-local copies of reusable workflow skills in `.claude/skills/` and keep local runtime copies in `~/.codex/skills/` aligned
+- Put implementation plans in `plans/`
 - Put reusable project docs in `docs/` when they should outlive the current task
 - Only add to `questions-for-domain-review.md` when the question requires internal domain review and cannot be resolved from external evidence or local project context
