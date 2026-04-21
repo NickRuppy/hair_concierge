@@ -11,7 +11,7 @@ export function QuizWelcome() {
 
   const [emailSent, setEmailSent] = useState<{
     email: string
-    type: "reset" | "confirm" | "magic_link"
+    type: "reset" | "magic_link"
   } | null>(null)
 
   if (emailSent) {
@@ -26,11 +26,10 @@ export function QuizWelcome() {
           </div>
           <h2 className="font-header text-2xl text-foreground mb-2">Prüfe dein Postfach</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            {emailSent.type === "confirm" ? (
+            {emailSent.type === "magic_link" ? (
               <>
-                Wir haben eine Bestätigungs-E-Mail an{" "}
+                Wir haben dir einen Login-Link an{" "}
                 <span className="font-medium text-foreground">{emailSent.email}</span> gesendet.
-                Klicke auf den Link, um dein Konto zu aktivieren.
               </>
             ) : (
               <>
@@ -65,7 +64,6 @@ export function QuizWelcome() {
         </p>
 
         <AuthForm
-          defaultTab="signup"
           defaultEmail={lead.email}
           leadId={leadId}
           next="/onboarding"

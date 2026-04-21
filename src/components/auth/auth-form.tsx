@@ -3,18 +3,19 @@
 import { createClient } from "@/lib/supabase/client"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Input } from "@/components/ui/input"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { linkLeadAction } from "@/app/auth/actions"
 
 interface AuthFormProps {
-  defaultTab: "login" | "signup"
   defaultEmail?: string
   leadId?: string | null
   next: string
   showForgotPassword?: boolean
-  onEmailSent?: (email: string, type: "reset" | "confirm" | "magic_link") => void
+  onEmailSent?: (email: string, type: "reset" | "magic_link") => void
 }
+
+type MagicLinkErrorNode = { type: "not_found" } | { type: "text"; message: string } | null
 
 function mapSupabaseError(message: string): string {
   if (message.includes("Invalid login credentials")) {
@@ -23,21 +24,25 @@ function mapSupabaseError(message: string): string {
   if (message.includes("Email not confirmed")) {
     return "Bitte bestaetige zuerst deine E-Mail-Adresse."
   }
-  if (message.includes("User already registered")) {
-    return "Diese E-Mail ist bereits registriert. Bitte melde dich an."
-  }
   return message
 }
 
-function mapMagicLinkError(message: string): string {
+function mapMagicLinkError(message: string): MagicLinkErrorNode {
   if (
+    message.includes("Signups not allowed for otp") ||
     message.includes("User not found") ||
-    message.includes("user not found") ||
-    message.includes("Email link is invalid or has expired")
+    message.includes("user not found")
   ) {
-    return "Wir konnten kein Konto mit dieser E-Mail finden. Hast du schon ein Abo abgeschlossen?"
+    return { type: "not_found" }
   }
-  return message
+  if (message.includes("Email link is invalid or has expired")) {
+    return {
+      type: "text",
+      message:
+        "Wir konnten kein Konto mit dieser E-Mail finden. Hast du schon ein Abo abgeschlossen?",
+    }
+  }
+  return { type: "text", message }
 }
 
 function buildNextDestination(next: string, leadId: string | null): string {
@@ -53,7 +58,6 @@ function buildNextDestination(next: string, leadId: string | null): string {
 }
 
 export function AuthForm({
-  defaultTab,
   defaultEmail,
   leadId,
   next,
@@ -66,15 +70,30 @@ export function AuthForm({
   const [loading, setLoading] = useState<"email" | "magic_link" | null>(null)
   const [email, setEmail] = useState(defaultEmail ?? "")
   const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
-  const [view, setView] = useState<"tabs" | "forgot">("tabs")
+  const [magicLinkError, setMagicLinkError] = useState<MagicLinkErrorNode>(null)
+  const [view, setView] = useState<"login" | "forgot">("login")
 
   const submitBtnClass =
     "inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
 
   const errorBanner = error ? (
     <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div>
+  ) : null
+
+  const magicLinkErrorBanner = magicLinkError ? (
+    <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
+      {magicLinkError.type === "not_found" ? (
+        <>
+          Kein Konto mit dieser E-Mail. Schließe zuerst dein Abo ab.{" "}
+          <Link href="/pricing" className="font-medium underline hover:no-underline">
+            Zum Abo
+          </Link>
+        </>
+      ) : (
+        magicLinkError.message
+      )}
+    </div>
   ) : null
 
   async function handleLogin(e: React.FormEvent) {
@@ -84,6 +103,7 @@ export function AuthForm({
 
     setLoading("email")
     setError(null)
+    setMagicLinkError(null)
 
     const { error } = await supabase.auth.signInWithPassword({
       email: trimmedEmail,
@@ -106,48 +126,6 @@ export function AuthForm({
         }
       }
       router.push(destination)
-    }
-  }
-
-  async function handleSignup(e: React.FormEvent) {
-    e.preventDefault()
-    const trimmedEmail = email.trim()
-    if (!trimmedEmail || !password) return
-
-    if (password.length < 8) {
-      setError("Passwort muss mindestens 8 Zeichen lang sein.")
-      return
-    }
-    if (password !== confirmPassword) {
-      setError("Passwoerter stimmen nicht ueberein.")
-      return
-    }
-
-    setLoading("email")
-    setError(null)
-
-    const redirectUrl = new URL("/auth/confirm", window.location.origin)
-    if (leadId) redirectUrl.searchParams.set("lead", leadId)
-    redirectUrl.searchParams.set("next", next)
-
-    const { data, error } = await supabase.auth.signUp({
-      email: trimmedEmail,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl.toString(),
-      },
-    })
-
-    if (error) {
-      console.error("Signup error:", error)
-      setError(mapSupabaseError(error.message))
-      setLoading(null)
-    } else if (data.user && (!data.user.identities || data.user.identities.length === 0)) {
-      setError("Diese E-Mail ist bereits registriert. Bitte melde dich an.")
-      setLoading(null)
-    } else {
-      onEmailSent?.(trimmedEmail, "confirm")
-      setLoading(null)
     }
   }
 
@@ -177,12 +155,13 @@ export function AuthForm({
     e.preventDefault()
     const trimmedEmail = email.trim()
     if (!trimmedEmail) {
-      setError("Bitte gib deine E-Mail-Adresse ein.")
+      setMagicLinkError({ type: "text", message: "Bitte gib deine E-Mail-Adresse ein." })
       return
     }
 
     setLoading("magic_link")
     setError(null)
+    setMagicLinkError(null)
 
     const { error } = await supabase.auth.signInWithOtp({
       email: trimmedEmail,
@@ -194,7 +173,7 @@ export function AuthForm({
 
     if (error) {
       console.error("Magic link error:", error)
-      setError(mapMagicLinkError(error.message))
+      setMagicLinkError(mapMagicLinkError(error.message))
       setLoading(null)
     } else {
       onEmailSent?.(trimmedEmail, "magic_link")
@@ -233,7 +212,7 @@ export function AuthForm({
         </form>
         <button
           onClick={() => {
-            setView("tabs")
+            setView("login")
             setError(null)
           }}
           className="text-sm text-primary hover:underline"
@@ -244,132 +223,70 @@ export function AuthForm({
     )
   }
 
-  // Main tabbed view
+  // Main login view
   return (
-    <Tabs
-      defaultValue={defaultTab}
-      onValueChange={() => {
-        setError(null)
-        setPassword("")
-        setConfirmPassword("")
-      }}
-    >
-      <TabsList className="mb-4 grid w-full grid-cols-2">
-        <TabsTrigger value="login">Anmelden</TabsTrigger>
-        <TabsTrigger value="signup">Registrieren</TabsTrigger>
-      </TabsList>
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold text-foreground">Anmelden</h2>
 
-      {/* Login Tab */}
-      <TabsContent value="login">
-        <div className="space-y-4">
-          {error && (
-            <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              {error}
-            </div>
-          )}
+      {errorBanner}
 
-          <form onSubmit={handleLogin} className="space-y-3">
-            <Input
-              type="email"
-              placeholder="E-Mail-Adresse"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading !== null}
-              required
-              className="h-11"
-            />
-            <Input
-              type="password"
-              placeholder="Passwort"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading !== null}
-              required
-              className="h-11"
-            />
-            <button
-              type="submit"
-              disabled={loading !== null || !email.trim() || !password}
-              className={submitBtnClass}
-            >
-              {loading === "email" ? "Wird geladen..." : "Anmelden"}
-            </button>
-          </form>
+      <form onSubmit={handleLogin} className="space-y-3">
+        <Input
+          type="email"
+          placeholder="E-Mail-Adresse"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={loading !== null}
+          required
+          className="h-11"
+        />
+        <Input
+          type="password"
+          placeholder="Passwort"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={loading !== null}
+          required
+          className="h-11"
+        />
+        <button
+          type="submit"
+          disabled={loading !== null || !email.trim() || !password}
+          className={submitBtnClass}
+        >
+          {loading === "email" ? "Wird geladen..." : "Anmelden"}
+        </button>
+      </form>
 
-          <div className="flex flex-col gap-2">
-            <button
-              onClick={handleMagicLink}
-              disabled={loading !== null || !email.trim()}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-transparent px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-50"
-            >
-              {loading === "magic_link" ? "Wird gesendet..." : "Oder per E-Mail-Link anmelden"}
-            </button>
+      <div className="relative flex items-center">
+        <div className="flex-grow border-t border-border" />
+        <span className="mx-3 flex-shrink text-xs text-muted-foreground">oder</span>
+        <div className="flex-grow border-t border-border" />
+      </div>
 
-            {showForgotPassword && (
-              <button
-                onClick={() => {
-                  setView("forgot")
-                  setError(null)
-                  setPassword("")
-                }}
-                className="text-sm text-muted-foreground hover:text-foreground hover:underline"
-              >
-                Passwort vergessen?
-              </button>
-            )}
-          </div>
-        </div>
-      </TabsContent>
+      {magicLinkErrorBanner}
 
-      {/* Signup Tab */}
-      <TabsContent value="signup">
-        <div className="space-y-4">
-          {error && (
-            <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              {error}
-            </div>
-          )}
+      <button
+        onClick={handleMagicLink}
+        disabled={loading !== null || !email.trim()}
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-transparent px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-50"
+      >
+        {loading === "magic_link" ? "Wird gesendet..." : "Login-Link per E-Mail senden"}
+      </button>
 
-          <form onSubmit={handleSignup} className="space-y-3">
-            <Input
-              type="email"
-              placeholder="E-Mail-Adresse"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading !== null}
-              required
-              className="h-11"
-            />
-            <Input
-              type="password"
-              placeholder="Passwort (min. 8 Zeichen)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading !== null}
-              required
-              minLength={8}
-              className="h-11"
-            />
-            <Input
-              type="password"
-              placeholder="Passwort bestaetigen"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              disabled={loading !== null}
-              required
-              minLength={8}
-              className="h-11"
-            />
-            <button
-              type="submit"
-              disabled={loading !== null || !email.trim() || !password || !confirmPassword}
-              className={submitBtnClass}
-            >
-              {loading === "email" ? "Wird geladen..." : "Konto erstellen"}
-            </button>
-          </form>
-        </div>
-      </TabsContent>
-    </Tabs>
+      {showForgotPassword && (
+        <button
+          onClick={() => {
+            setView("forgot")
+            setError(null)
+            setMagicLinkError(null)
+            setPassword("")
+          }}
+          className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+        >
+          Passwort vergessen?
+        </button>
+      )}
+    </div>
   )
 }
