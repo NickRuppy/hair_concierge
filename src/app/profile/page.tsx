@@ -11,6 +11,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { ManageSubscriptionButton } from "@/components/profile/manage-subscription-button"
 import { PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
 import type { OnboardingStep } from "@/lib/onboarding/store"
 import {
@@ -1763,6 +1764,25 @@ export default function ProfilePage() {
               )}
             </CardContent>
           </Card>
+
+          {profile?.stripe_customer_id && (
+            <section className="rounded-xl border bg-card p-6">
+              <h2 className="mb-3 font-header text-xl">Dein Abo</h2>
+              <p className="mb-1 text-sm text-muted-foreground">
+                Status:{" "}
+                <strong className="text-foreground">{profile.subscription_status ?? "—"}</strong>
+              </p>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Nächste Abrechnung / Laufzeitende:{" "}
+                <strong className="text-foreground">
+                  {profile.current_period_end
+                    ? new Date(profile.current_period_end).toLocaleDateString("de-DE")
+                    : "—"}
+                </strong>
+              </p>
+              <ManageSubscriptionButton />
+            </section>
+          )}
 
           <Card className="bg-muted/35">
             <CardHeader className="pb-3">
