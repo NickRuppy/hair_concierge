@@ -43,7 +43,11 @@ export async function POST(request: Request) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${siteUrl}/onboarding`,
+      // Must route through /auth/confirm — that's the only URL in Supabase's
+      // additional_redirect_urls allowlist (see supabase/config.toml) and it
+      // performs the code→session exchange + linkQuizToProfile before the
+      // final redirect to `next`.
+      emailRedirectTo: `${siteUrl}/auth/confirm?next=/onboarding`,
       shouldCreateUser: false,
     },
   })

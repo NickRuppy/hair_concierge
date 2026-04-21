@@ -41,7 +41,11 @@ export async function POST(request: Request) {
   const supabase = createAdminClient()
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${siteUrl}/auth/update-password`,
+    // Must route through /auth/confirm — only allow-listed destination in
+    // supabase/config.toml. Pass `next` explicitly because PKCE flow does not
+    // propagate the `type=recovery` query param; relying on that broke in
+    // practice. /auth/confirm exchanges the code then redirects to `next`.
+    redirectTo: `${siteUrl}/auth/confirm?next=/auth/update-password`,
   })
 
   if (error) {
