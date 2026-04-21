@@ -43,8 +43,7 @@ function mapMagicLinkError(message: string): MagicLinkErrorNode {
   if (message.includes("Email link is invalid or has expired")) {
     return {
       type: "text",
-      message:
-        "Wir konnten kein Konto mit dieser E-Mail finden. Hast du schon ein Abo abgeschlossen?",
+      message: "Der Link ist abgelaufen. Bitte fordere einen neuen an.",
     }
   }
   return { type: "text", message }
@@ -192,8 +191,8 @@ export function AuthForm({
     }
   }
 
-  async function handleMagicLink(e: React.MouseEvent) {
-    e.preventDefault()
+  async function handleMagicLink(e?: React.SyntheticEvent) {
+    e?.preventDefault()
     const trimmedEmail = email.trim()
     if (!trimmedEmail) {
       setMagicLinkError({ type: "text", message: "Bitte gib deine E-Mail-Adresse ein." })
@@ -205,20 +204,22 @@ export function AuthForm({
     setLoginErrorIsCredentials(false)
     setMagicLinkError(null)
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email: trimmedEmail,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/confirm`,
-        shouldCreateUser: false,
-      },
-    })
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: trimmedEmail,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/confirm`,
+          shouldCreateUser: false,
+        },
+      })
 
-    if (error) {
-      console.error("Magic link error:", error)
-      setMagicLinkError(mapMagicLinkError(error.message))
-      setLoading(null)
-    } else {
-      onEmailSent?.(trimmedEmail, "magic_link")
+      if (error) {
+        console.error("Magic link error:", error)
+        setMagicLinkError(mapMagicLinkError(error.message))
+      } else {
+        onEmailSent?.(trimmedEmail, "magic_link")
+      }
+    } finally {
       setLoading(null)
     }
   }

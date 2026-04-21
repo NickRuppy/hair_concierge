@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { getStripe } from "@/lib/stripe/client"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { checkRateLimit, SEND_AUTH_LINK_RATE_LIMIT } from "@/lib/rate-limit"
 
 export async function POST(request: Request) {
   let body: unknown
@@ -20,6 +21,12 @@ export async function POST(request: Request) {
   }
 
   const { email, session_id } = body as { email: string; session_id: string }
+
+  const rateCheck = await checkRateLimit(session_id, SEND_AUTH_LINK_RATE_LIMIT)
+  if (!rateCheck.allowed) {
+    const status = rateCheck.error === "service_unavailable" ? 503 : 429
+    return NextResponse.json({ error: "Zu viele Anfragen. Bitte warte kurz." }, { status })
+  }
 
   // Verify email matches the Stripe checkout session to prevent abuse
   try {

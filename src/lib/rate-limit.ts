@@ -48,3 +48,10 @@ export const QUIZ_ANALYZE_RATE_LIMIT: RateLimitConfig = {
   limit: 20,
   windowMs: 3_600_000,
 }
+
+// 3 sends per 5 minutes per Stripe session_id (conservative — most users send 1)
+export const SEND_AUTH_LINK_RATE_LIMIT: RateLimitConfig = {
+  prefix: "send-auth-link",
+  limit: 3,
+  windowMs: 5 * 60_000,
+}

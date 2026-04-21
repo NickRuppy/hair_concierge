@@ -31,10 +31,13 @@ export function WelcomeClient({ email, sessionId }: WelcomeClientProps) {
       }
       setState({ view: "sent", mode: "password" })
     } catch (err) {
-      setState({
-        view: "error",
-        message: err instanceof Error ? err.message : "Unbekannter Fehler",
-      })
+      const message =
+        err instanceof TypeError && err.message.toLowerCase().includes("fetch")
+          ? "Verbindung fehlgeschlagen. Bitte prüfe deine Internet-Verbindung und versuche es erneut."
+          : err instanceof Error
+            ? err.message
+            : "Unbekannter Fehler"
+      setState({ view: "error", message })
     } finally {
       setLoading(null)
     }
@@ -54,10 +57,13 @@ export function WelcomeClient({ email, sessionId }: WelcomeClientProps) {
       }
       setState({ view: "sent", mode: "magic_link" })
     } catch (err) {
-      setState({
-        view: "error",
-        message: err instanceof Error ? err.message : "Unbekannter Fehler",
-      })
+      const message =
+        err instanceof TypeError && err.message.toLowerCase().includes("fetch")
+          ? "Verbindung fehlgeschlagen. Bitte prüfe deine Internet-Verbindung und versuche es erneut."
+          : err instanceof Error
+            ? err.message
+            : "Unbekannter Fehler"
+      setState({ view: "error", message })
     } finally {
       setLoading(null)
     }
