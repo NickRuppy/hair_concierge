@@ -51,6 +51,11 @@ export async function updateSession(request: NextRequest) {
     "/pricing",
     "/welcome",
     "/api/stripe",
+    // /welcome calls these to dispatch setup / login-link emails before the
+    // user has signed into Supabase (they're only identified by the Stripe
+    // session_id in the request body; the route itself verifies).
+    "/api/auth/send-magic-link",
+    "/api/auth/send-setup-link",
   ]
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
 
