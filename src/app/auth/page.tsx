@@ -42,11 +42,11 @@ export default function AuthPage() {
   // Password reset email sent
   if (view === "email-sent") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
             <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
-            <p className="text-lg text-muted-foreground">Personalisierte Haarpflege-Beratung</p>
+            <p className="text-lg text-muted-foreground">Willkommen zurueck</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
             <div className="space-y-4">
@@ -76,11 +76,11 @@ export default function AuthPage() {
   // Magic link sent (passwordless sign-in)
   if (view === "magic-link-sent") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
             <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
-            <p className="text-lg text-muted-foreground">Personalisierte Haarpflege-Beratung</p>
+            <p className="text-lg text-muted-foreground">Willkommen zurueck</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
             <div className="space-y-4">
@@ -108,15 +108,11 @@ export default function AuthPage() {
 
   // Main form view
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
-          <h1 className="font-header text-4xl tracking-tight text-foreground">
-            {copy?.heading ?? "Hair Concierge"}
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            {copy?.subtext ?? "Personalisierte Haarpflege-Beratung"}
-          </p>
+          <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+          <p className="text-lg text-muted-foreground">{copy?.subtext ?? "Willkommen zurueck"}</p>
         </div>
 
         {urlError && ERROR_MESSAGES[urlError] && (
