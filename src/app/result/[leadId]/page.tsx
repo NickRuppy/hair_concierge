@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { createClient } from "@supabase/supabase-js"
-import { buildCardData } from "@/lib/quiz/result-card-data"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import { ResultPageClient } from "./result-client"
 
@@ -22,7 +21,7 @@ async function getLead(leadId: string) {
 
   const { data } = await supabase
     .from("leads")
-    .select("id, name, quiz_answers, ai_insight, share_quote")
+    .select("id, name, quiz_answers, share_quote")
     .eq("id", leadId)
     .single()
 
@@ -39,32 +38,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const name = lead.name as string
   const quote = (lead.share_quote as string) || "Finde heraus, was deine Haare wirklich brauchen."
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
 
   return {
-    title: `${name}s Haar-Diagnose — Hair Concierge`,
+    title: `${name}s Haarprofil — Hair Concierge`,
     description: quote,
     robots: { index: false, follow: false },
     openGraph: {
-      title: `${name}s Haar-Diagnose — Hair Concierge`,
+      title: `${name}s Haarprofil — Hair Concierge`,
       description: quote,
-      images: [
-        {
-          url: `${siteUrl}/api/og/result/${leadId}`,
-          width: 1080,
-          height: 1920,
-          alt: `${name}s Haar-Diagnose`,
-        },
-      ],
       type: "website",
     },
     twitter: {
-      card: "summary_large_image",
-      title: `${name}s Haar-Diagnose — Hair Concierge`,
+      card: "summary",
+      title: `${name}s Haarprofil — Hair Concierge`,
       description: quote,
-      images: [`${siteUrl}/api/og/result/${leadId}`],
     },
   }
 }
@@ -77,15 +64,12 @@ export default async function ResultPage({ params }: Props) {
     notFound()
   }
 
-  const cardData = buildCardData(lead.quiz_answers as QuizAnswers)
-
   return (
     <ResultPageClient
       leadId={lead.id}
       name={lead.name}
-      cardData={cardData}
+      quizAnswers={lead.quiz_answers as QuizAnswers}
       shareQuote={lead.share_quote || null}
-      aiInsight={lead.ai_insight || null}
     />
   )
 }

@@ -887,7 +887,12 @@ export function OnboardingFlow({
     <div>
       {store.currentStep !== "welcome" && store.currentStep !== "celebration" && (
         <div className="mb-6">
-          <OnboardingProgressBar currentStep={store.currentStep} />
+          <OnboardingProgressBar
+            currentStep={store.currentStep}
+            currentDrilldownIndex={store.currentDrilldownIndex}
+            drilldownCount={store.drilldownCategories().length}
+            selectedHeatTools={store.selectedHeatTools}
+          />
         </div>
       )}
       {renderScreen()}

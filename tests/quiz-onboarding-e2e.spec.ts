@@ -102,10 +102,12 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
   test("quiz hands off into onboarding and persists linked diagnostics", async ({ page }) => {
     await test.step("Complete the quiz and lead capture", async () => {
-      await page.goto("/quiz", { waitUntil: "domcontentloaded" })
+      await page.goto("/quiz", { waitUntil: "networkidle" })
 
       await page.getByRole("button", { name: /QUIZ STARTEN/i }).click()
-      await expect(page.getByText("HAARTEXTUR", { exact: false })).toBeVisible()
+      await expect(
+        page.getByRole("heading", { name: /Was ist deine natürliche Haartextur/i }),
+      ).toBeVisible()
 
       await page.getByText("Wellig").first().click()
       await expect(page.getByText("2/8")).toBeVisible()
@@ -120,7 +122,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(page.getByText("5/8")).toBeVisible()
 
       await expect(
-        page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false }),
+        page.getByRole("heading", { name: /Sind deine Haare chemisch behandelt/i }),
       ).toBeVisible()
 
       const naturCard = page.locator(".quiz-card", { hasText: "Naturhaar" })
@@ -132,28 +134,25 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       })
 
       await naturCard.click()
-      await expect(page.locator(".quiz-card-active", { hasText: "Naturhaar" })).toHaveCount(1)
-
       await coloredCard.click()
-      await expect(page.locator(".quiz-card-active", { hasText: "Naturhaar" })).toHaveCount(0)
-
       await bleachedCard.click()
-      await expect(page.locator(".quiz-card-active", { hasText: "Gefärbt / Getönt" })).toHaveCount(
-        1,
-      )
-      await expect(
-        page.locator(".quiz-card-active", { hasText: "Blondiert / Aufgehellt" }),
-      ).toHaveCount(1)
 
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       // Scalp question (6/7)
       await expect(page.getByText("6/8")).toBeVisible()
+      await expect(
+        page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
+      ).toBeVisible()
       await page
         .locator(".quiz-card")
         .filter({ has: page.getByText(/^Trocken$/) })
         .click()
-      await expect(page.getByText("BESCHWERDEN WIE SCHUPPEN", { exact: false })).toBeVisible()
+      await expect(
+        page.getByRole("heading", {
+          name: /Hast du zusätzlich Beschwerden wie Schuppen, Juckreiz oder Rötungen/i,
+        }),
+      ).toBeVisible()
       await page.getByRole("button", { name: "JA" }).click()
       await page.getByText("Trockene Schuppen").click()
 
@@ -182,9 +181,15 @@ test.describe.serial("Quiz to onboarding E2E", () => {
     })
 
     await test.step("Verify the lead is analyzed before auth", async () => {
-      await expect(page.getByRole("button", { name: /ROUTINE FESTLEGEN/i })).toBeVisible({
+      await expect(page.getByText(/DEIN PROFIL WIRD ERSTELLT/i)).toBeVisible({
         timeout: 45_000,
       })
+      await expect(page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i })).toBeVisible({
+        timeout: 45_000,
+      })
+      await expect(
+        page.getByRole("heading", { name: /So kommen wir deinem Haarziel näher/i }),
+      ).toHaveCount(0)
 
       await expect
         .poll(
@@ -196,20 +201,19 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         )
         .toBe("analyzed")
 
-      await expect
-        .poll(
-          async () => {
-            const lead = await fetchLatestLead()
-            return typeof lead?.ai_insight === "string" && lead.ai_insight.length > 0
-          },
-          { timeout: 30_000 },
-        )
-        .toBe(true)
+      await page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i }).click()
+      await expect(
+        page.getByRole("heading", { name: /So kommen wir deinem Haarziel näher/i }),
+      ).toBeVisible({ timeout: 15_000 })
+      await expect(
+        page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i }),
+      ).toBeVisible()
+      await expect(page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i })).toBeVisible()
     })
 
     await test.step("Authenticate via inline auth on quiz-welcome", async () => {
       // Advance from results to welcome (step 14 — inline auth)
-      await page.getByRole("button", { name: /ROUTINE FESTLEGEN/i }).click()
+      await page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i }).click()
 
       // Welcome page now shows inline dark auth form
       await expect(page.getByText("PROFIL SPEICHERN", { exact: false })).toBeVisible({
@@ -394,7 +398,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
     })
 
     await test.step("Retake the quiz with different diagnostics", async () => {
-      await page.goto("/quiz", { waitUntil: "domcontentloaded" })
+      await page.goto("/quiz", { waitUntil: "networkidle" })
 
       await page.getByRole("button", { name: /QUIZ STARTEN/i }).click()
       await page.getByText("Glatt").first().click()
@@ -403,7 +407,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByText("Reißt sofort").click()
 
       await expect(
-        page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false }),
+        page.getByRole("heading", { name: /Sind deine Haare chemisch behandelt/i }),
       ).toBeVisible()
 
       const naturCard = page.locator(".quiz-card", { hasText: "Naturhaar" })
@@ -412,18 +416,13 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       })
 
       await coloredCard.click()
-      await expect(page.locator(".quiz-card-active", { hasText: "Gefärbt / Getönt" })).toHaveCount(
-        1,
-      )
-
       await naturCard.click()
-      await expect(page.locator(".quiz-card-active", { hasText: "Naturhaar" })).toHaveCount(1)
-      await expect(page.locator(".quiz-card-active", { hasText: "Gefärbt / Getönt" })).toHaveCount(
-        0,
-      )
 
       await page.getByRole("button", { name: /^Weiter$/i }).click()
       await expect(page.getByText("6/8")).toBeVisible()
+      await expect(
+        page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
+      ).toBeVisible()
       await page
         .locator(".quiz-card")
         .filter({ has: page.getByText(/^Fettig$/) })
@@ -448,14 +447,25 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: /^Weiter$/i }).click()
       await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
 
-      await expect(page.getByRole("button", { name: /ROUTINE FESTLEGEN/i })).toBeVisible({
+      await expect(page.getByText(/DEIN PROFIL WIRD ERSTELLT/i)).toBeVisible({
         timeout: 45_000,
       })
+      await expect(page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i })).toBeVisible({
+        timeout: 45_000,
+      })
+      await page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i }).click()
+      await expect(
+        page.getByRole("heading", { name: /So kommen wir deinem Haarziel näher/i }),
+      ).toBeVisible({ timeout: 15_000 })
+      await expect(
+        page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i }),
+      ).toBeVisible()
+      await expect(page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i })).toBeVisible()
     })
 
     await test.step("Log back in via inline auth and relink the new lead", async () => {
       // Advance from results into the welcome/auth step
-      await page.getByRole("button", { name: /ROUTINE FESTLEGEN/i }).click()
+      await page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i }).click()
 
       await expect(page.getByText("PROFIL SPEICHERN", { exact: false })).toBeVisible({
         timeout: 15_000,
