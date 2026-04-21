@@ -10,7 +10,9 @@ export const runtime = "nodejs"
 
 const BodySchema = z.object({
   interval: z.enum(["month", "quarter", "year"]),
-  leadId: z.string().uuid().optional(),
+  // Accept null too — the client sends `leadId: null` when there's no ?lead=
+  // in the URL (resubscribe path). `.optional()` alone rejects null.
+  leadId: z.string().uuid().nullable().optional(),
 })
 
 export async function POST(req: NextRequest) {
