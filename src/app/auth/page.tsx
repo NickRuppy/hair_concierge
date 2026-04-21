@@ -36,22 +36,17 @@ export default function AuthPage() {
       : defaultNext
   const copy = reason && reason in REASON_COPY ? REASON_COPY[reason] : null
 
-  // Default tab: signup if coming from quiz/lead capture, login otherwise
-  const defaultTab = (from === "quiz" || leadId) && !reason ? "signup" : "login"
-
-  const [view, setView] = useState<"form" | "email-sent" | "signup-confirm" | "magic-link-sent">(
-    "form",
-  )
+  const [view, setView] = useState<"form" | "email-sent" | "magic-link-sent">("form")
   const [emailSentTo, setEmailSentTo] = useState("")
 
   // Password reset email sent
   if (view === "email-sent") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
             <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
-            <p className="text-lg text-muted-foreground">Personalisierte Haarpflege-Beratung</p>
+            <p className="text-lg text-muted-foreground">Willkommen zurueck</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
             <div className="space-y-4">
@@ -78,48 +73,14 @@ export default function AuthPage() {
     )
   }
 
-  // Signup confirmation (check email)
-  if (view === "signup-confirm") {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
-        <div className="w-full max-w-md space-y-8 text-center">
-          <div className="space-y-2">
-            <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
-            <p className="text-lg text-muted-foreground">Personalisierte Haarpflege-Beratung</p>
-          </div>
-          <div className="rounded-xl border bg-card p-8 shadow-sm">
-            <div className="space-y-4">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <Mail className="h-6 w-6 text-primary" />
-              </div>
-              <h2 className="text-lg font-semibold text-foreground">Pruefe dein Postfach</h2>
-              <p className="text-sm text-muted-foreground">
-                Wir haben eine Bestaetigungs-E-Mail an{" "}
-                <span className="font-medium text-foreground">{emailSentTo}</span> gesendet. Klicke
-                auf den Link, um dein Konto zu aktivieren.
-              </p>
-              <button
-                onClick={() => setView("form")}
-                className="text-sm text-primary hover:underline"
-              >
-                Andere E-Mail verwenden
-              </button>
-            </div>
-          </div>
-          <Footer />
-        </div>
-      </div>
-    )
-  }
-
   // Magic link sent (passwordless sign-in)
   if (view === "magic-link-sent") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
             <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
-            <p className="text-lg text-muted-foreground">Personalisierte Haarpflege-Beratung</p>
+            <p className="text-lg text-muted-foreground">Willkommen zurueck</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
             <div className="space-y-4">
@@ -147,15 +108,11 @@ export default function AuthPage() {
 
   // Main form view
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
-          <h1 className="font-header text-4xl tracking-tight text-foreground">
-            {copy?.heading ?? "Hair Concierge"}
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            {copy?.subtext ?? "Personalisierte Haarpflege-Beratung"}
-          </p>
+          <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+          <p className="text-lg text-muted-foreground">{copy?.subtext ?? "Willkommen zurueck"}</p>
         </div>
 
         {urlError && ERROR_MESSAGES[urlError] && (
@@ -166,7 +123,6 @@ export default function AuthPage() {
 
         <div className="rounded-xl border bg-card p-8 shadow-sm">
           <AuthForm
-            defaultTab={defaultTab}
             defaultEmail={searchParams.get("email") ?? undefined}
             leadId={leadId}
             next={next}
@@ -174,8 +130,7 @@ export default function AuthPage() {
             onEmailSent={(email, type) => {
               setEmailSentTo(email)
               if (type === "reset") setView("email-sent")
-              else if (type === "magic_link") setView("magic-link-sent")
-              else setView("signup-confirm")
+              else setView("magic-link-sent")
             }}
           />
         </div>

@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation"
-import { createClient } from "@supabase/supabase-js"
 import { getStripe } from "@/lib/stripe/client"
 import { WelcomeClient } from "./welcome-client"
 
@@ -20,20 +19,5 @@ export default async function WelcomePage({
   const email = session.customer_details?.email
   if (!email) redirect("/")
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { persistSession: false } },
-  )
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: `${siteUrl}/onboarding`,
-      shouldCreateUser: false,
-    },
-  })
-  if (error) console.warn("[welcome] magic link dispatch failed:", error.message)
-
-  return <WelcomeClient email={email} />
+  return <WelcomeClient email={email} sessionId={session_id} />
 }
