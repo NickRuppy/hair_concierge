@@ -17,6 +17,11 @@ interface AuthFormProps {
 
 type MagicLinkErrorNode = { type: "not_found" } | { type: "text"; message: string } | null
 
+/** True when the error message indicates bad credentials (no password set, wrong password, etc.) */
+function isInvalidCredentials(message: string): boolean {
+  return message.includes("Invalid login credentials")
+}
+
 function mapSupabaseError(message: string): string {
   if (message.includes("Invalid login credentials")) {
     return "E-Mail oder Passwort ist falsch."
@@ -71,6 +76,7 @@ export function AuthForm({
   const [email, setEmail] = useState(defaultEmail ?? "")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
+  const [loginErrorIsCredentials, setLoginErrorIsCredentials] = useState(false)
   const [magicLinkError, setMagicLinkError] = useState<MagicLinkErrorNode>(null)
   const [view, setView] = useState<"login" | "forgot">("login")
 
@@ -78,7 +84,34 @@ export function AuthForm({
     "inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
 
   const errorBanner = error ? (
-    <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div>
+    <div className="space-y-2">
+      <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div>
+      {loginErrorIsCredentials && (
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={handleMagicLink}
+            disabled={loading !== null || !email.trim()}
+            className="flex-1 rounded-md border border-border bg-transparent px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-50"
+          >
+            {loading === "magic_link" ? "Wird gesendet..." : "Login-Link senden"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setView("forgot")
+              setError(null)
+              setLoginErrorIsCredentials(false)
+              setMagicLinkError(null)
+              setPassword("")
+            }}
+            className="flex-1 rounded-md border border-border bg-transparent px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-accent"
+          >
+            Passwort zuruecksetzen
+          </button>
+        </div>
+      )}
+    </div>
   ) : null
 
   const magicLinkErrorBanner = magicLinkError ? (
@@ -103,6 +136,7 @@ export function AuthForm({
 
     setLoading("email")
     setError(null)
+    setLoginErrorIsCredentials(false)
     setMagicLinkError(null)
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -112,7 +146,13 @@ export function AuthForm({
 
     if (error) {
       console.error("Login error:", error)
-      setError(mapSupabaseError(error.message))
+      const credentialsError = isInvalidCredentials(error.message)
+      setError(
+        credentialsError
+          ? "Login nicht moeglich. Falls du noch kein Passwort festgelegt hast, kannst du auch einen Login-Link anfordern oder dein Passwort zuruecksetzen."
+          : mapSupabaseError(error.message),
+      )
+      setLoginErrorIsCredentials(credentialsError)
       setLoading(null)
     } else {
       const destination = buildNextDestination(next, leadId ?? null)
@@ -136,6 +176,7 @@ export function AuthForm({
 
     setLoading("email")
     setError(null)
+    setLoginErrorIsCredentials(false)
 
     const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
       redirectTo: `${window.location.origin}/auth/update-password`,
@@ -161,6 +202,7 @@ export function AuthForm({
 
     setLoading("magic_link")
     setError(null)
+    setLoginErrorIsCredentials(false)
     setMagicLinkError(null)
 
     const { error } = await supabase.auth.signInWithOtp({
@@ -214,6 +256,7 @@ export function AuthForm({
           onClick={() => {
             setView("login")
             setError(null)
+            setLoginErrorIsCredentials(false)
           }}
           className="text-sm text-primary hover:underline"
         >
@@ -279,6 +322,7 @@ export function AuthForm({
           onClick={() => {
             setView("forgot")
             setError(null)
+            setLoginErrorIsCredentials(false)
             setMagicLinkError(null)
             setPassword("")
           }}
