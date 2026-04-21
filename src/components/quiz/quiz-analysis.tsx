@@ -14,10 +14,11 @@ const steps = [
 const STEP_DELAY = 1200
 
 export function QuizAnalysis() {
-  const { lead, answers, leadId, setAiInsight, goNext } = useQuizStore()
+  const { lead, answers, leadId, setAiInsight, setShareQuote, goNext } = useQuizStore()
   const [completedSteps, setCompletedSteps] = useState(0)
   const [apiDone, setApiDone] = useState(false)
   const fetched = useRef(false)
+  const canReveal = completedSteps >= steps.length && apiDone
 
   // Animate checklist items
   useEffect(() => {
@@ -45,18 +46,11 @@ export function QuizAnalysis() {
       .then((r) => r.json())
       .then((data) => {
         if (data.insight) setAiInsight(data.insight)
+        if (data.shareQuote) setShareQuote(data.shareQuote)
         setApiDone(true)
       })
       .catch(() => setApiDone(true))
-  }, [leadId, lead.name, answers, setAiInsight])
-
-  // Auto-transition when both animation and API are done
-  useEffect(() => {
-    if (completedSteps >= steps.length && apiDone) {
-      const t = setTimeout(goNext, 400)
-      return () => clearTimeout(t)
-    }
-  }, [completedSteps, apiDone, goNext])
+  }, [leadId, lead.name, answers, setAiInsight, setShareQuote])
 
   return (
     <div className="flex flex-col items-center justify-center py-16 animate-fade-in-up">
@@ -94,6 +88,16 @@ export function QuizAnalysis() {
           )
         })}
       </div>
+
+      {canReveal ? (
+        <button
+          type="button"
+          onClick={goNext}
+          className="quiz-btn-primary mt-10 min-h-14 w-full max-w-md rounded-xl px-5 py-3 text-base font-bold tracking-wide"
+        >
+          MEIN HAARPROFIL ANSEHEN
+        </button>
+      ) : null}
     </div>
   )
 }
