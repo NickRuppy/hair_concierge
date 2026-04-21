@@ -39,7 +39,9 @@ export default function AuthPage() {
   // Default tab: signup if coming from quiz/lead capture, login otherwise
   const defaultTab = (from === "quiz" || leadId) && !reason ? "signup" : "login"
 
-  const [view, setView] = useState<"form" | "email-sent" | "signup-confirm">("form")
+  const [view, setView] = useState<"form" | "email-sent" | "signup-confirm" | "magic-link-sent">(
+    "form",
+  )
   const [emailSentTo, setEmailSentTo] = useState("")
 
   // Password reset email sent
@@ -110,6 +112,39 @@ export default function AuthPage() {
     )
   }
 
+  // Magic link sent (passwordless sign-in)
+  if (view === "magic-link-sent") {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+        <div className="w-full max-w-md space-y-8 text-center">
+          <div className="space-y-2">
+            <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+            <p className="text-lg text-muted-foreground">Personalisierte Haarpflege-Beratung</p>
+          </div>
+          <div className="rounded-xl border bg-card p-8 shadow-sm">
+            <div className="space-y-4">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <Mail className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="text-lg font-semibold text-foreground">Check deine E-Mails</h2>
+              <p className="text-sm text-muted-foreground">
+                Wir haben dir einen Login-Link an{" "}
+                <span className="font-medium text-foreground">{emailSentTo}</span> gesendet.
+              </p>
+              <button
+                onClick={() => setView("form")}
+                className="text-sm text-primary hover:underline"
+              >
+                Zurueck zur Anmeldung
+              </button>
+            </div>
+          </div>
+          <Footer />
+        </div>
+      </div>
+    )
+  }
+
   // Main form view
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
@@ -138,7 +173,9 @@ export default function AuthPage() {
             showForgotPassword={true}
             onEmailSent={(email, type) => {
               setEmailSentTo(email)
-              setView(type === "reset" ? "email-sent" : "signup-confirm")
+              if (type === "reset") setView("email-sent")
+              else if (type === "magic_link") setView("magic-link-sent")
+              else setView("signup-confirm")
             }}
           />
         </div>

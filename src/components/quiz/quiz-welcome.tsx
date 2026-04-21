@@ -9,9 +9,10 @@ export function QuizWelcome() {
   const lead = useQuizStore((s) => s.lead)
   const leadId = useQuizStore((s) => s.leadId)
 
-  const [emailSent, setEmailSent] = useState<{ email: string; type: "reset" | "confirm" } | null>(
-    null,
-  )
+  const [emailSent, setEmailSent] = useState<{
+    email: string
+    type: "reset" | "confirm" | "magic_link"
+  } | null>(null)
 
   if (emailSent) {
     return (
