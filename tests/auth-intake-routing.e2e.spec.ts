@@ -85,7 +85,7 @@ test.describe.serial("Authenticated intake routing", () => {
     await page.locator('input[type="password"]:visible').fill(password)
     await page.getByRole("button", { name: /^Anmelden$/ }).click()
 
-    await page.waitForURL("**/quiz", {
+    await page.waitForURL(/\/quiz(\?.*)?$/, {
       timeout: 30_000,
       waitUntil: "domcontentloaded",
     })
@@ -105,10 +105,11 @@ test.describe.serial("Authenticated intake routing", () => {
     await page.locator('input[type="password"]:visible').fill(password)
     await page.getByRole("button", { name: /^Anmelden$/ }).click()
 
-    await page.waitForURL("**/quiz", {
+    await page.waitForURL(/\/quiz(\?.*)?$/, {
       timeout: 30_000,
       waitUntil: "domcontentloaded",
     })
+    await page.waitForLoadState("networkidle")
 
     await page.getByRole("button", { name: /Quiz starten/i }).click()
     await page.getByText("Wellig").first().click()
@@ -117,7 +118,7 @@ test.describe.serial("Authenticated intake routing", () => {
     await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
 
     await expect(
-      page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false }),
+      page.getByRole("heading", { name: /Sind deine Haare chemisch behandelt/i }),
     ).toBeVisible()
     await page
       .locator(".quiz-card")
@@ -129,10 +130,21 @@ test.describe.serial("Authenticated intake routing", () => {
       .locator(".quiz-card")
       .filter({ has: page.getByText(/^Trocken$/) })
       .click()
+    await expect(
+      page.getByRole("heading", {
+        name: /Hast du zusätzlich Beschwerden wie Schuppen, Juckreiz oder Rötungen/i,
+      }),
+    ).toBeVisible()
     await page.getByRole("button", { name: "NEIN" }).click()
 
     await expect(page.getByText(/Welche Haarprobleme/i)).toBeVisible()
     await page.getByText("Trockenheit").click()
+    await page.getByRole("button", { name: /^Weiter$/i }).click()
+
+    await expect(page.getByText("Deine Haarziele", { exact: false })).toBeVisible({
+      timeout: 10_000,
+    })
+    await page.getByRole("button", { name: /Mehr Glanz/i }).click()
     await page.getByRole("button", { name: /^Weiter$/i }).click()
 
     await page.getByPlaceholder("Dein Vorname").fill("Playwright Intake")
@@ -143,15 +155,28 @@ test.describe.serial("Authenticated intake routing", () => {
 
     await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
 
-    await expect(page.getByRole("button", { name: /ZIELE UND ROUTINE FESTLEGEN/i })).toBeVisible({
+    await expect(page.getByText(/DEIN PROFIL WIRD ERSTELLT/i)).toBeVisible({
       timeout: 45_000,
     })
-    await page.getByRole("button", { name: /ZIELE UND ROUTINE FESTLEGEN/i }).click()
+    await expect(page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i })).toBeVisible({
+      timeout: 45_000,
+    })
+    await page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i }).click()
+    await expect(
+      page.getByRole("heading", { name: /So kommen wir deinem Haarziel näher/i }),
+    ).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i })).toBeVisible()
+    await expect(page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i })).toBeVisible()
+    await page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i }).click()
 
-    await page.waitForURL(/\/onboarding\?lead=/, {
+    await page.waitForURL((url) => url.pathname === "/onboarding", {
       timeout: 30_000,
       waitUntil: "domcontentloaded",
     })
+
+    const onboardingUrl = new URL(page.url())
+    expect(onboardingUrl.pathname).toBe("/onboarding")
+    expect(onboardingUrl.searchParams.get("lead")).toBeTruthy()
 
     await expect(page.getByRole("button", { name: /LOS GEHT/i })).toBeVisible({
       timeout: 15_000,

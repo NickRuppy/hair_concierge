@@ -1,20 +1,12 @@
 "use client"
 
 import { useQuizStore } from "@/lib/quiz/store"
+import { getQuizBrandPanelContent } from "@/lib/quiz/brand-panel-content"
 
 export function QuizBrandPanel() {
   const step = useQuizStore((s) => s.step)
   const leadCaptureSubStep = useQuizStore((s) => s.leadCaptureSubStep)
-
-  const QUESTION_NUMBER_MAP: Record<number, number> = {
-    2: 1, // texture
-    3: 2, // thickness
-    4: 3, // surface
-    5: 4, // pull
-    7: 5, // chemical
-    6: 6, // scalp
-  }
-  const questionNumber = QUESTION_NUMBER_MAP[step] ?? null
+  const content = getQuizBrandPanelContent(step, leadCaptureSubStep)
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center px-12">
@@ -42,18 +34,21 @@ export function QuizBrandPanel() {
 
       {/* Content */}
       <div className="relative z-10 max-w-[360px] text-center">
-        {step === 1 && <LandingPanel />}
-        {questionNumber !== null && <QuestionPanel questionNumber={questionNumber} />}
-        {step === 9 && <LeadCapturePanel subStep={leadCaptureSubStep} />}
-        {step === 10 && <AnalysisPanel />}
-        {step === 11 && <ResultsPanel />}
-        {step === 14 && <WelcomePanel />}
+        {content.variant === "landing" ? <LandingPanel description={content.description} /> : null}
+        {content.variant === "journey" ? (
+          <JourneyPanel
+            eyebrow={content.eyebrow}
+            description={content.description}
+            progressCurrent={content.progressCurrent}
+            progressComplete={content.progressComplete}
+          />
+        ) : null}
       </div>
     </div>
   )
 }
 
-function LandingPanel() {
+function LandingPanel({ description }: { description: string }) {
   return (
     <>
       <h1 className="font-header text-6xl leading-[0.95] text-foreground mb-6">
@@ -62,21 +57,29 @@ function LandingPanel() {
         Concierge
       </h1>
       <div className="mx-auto mb-6 h-1 w-16 rounded-full bg-[var(--brand-plum)]" />
-      <p className="text-lg text-muted-foreground leading-relaxed">
-        Dein Haar verdient mehr als Raten.
-        <br />
-        Finde heraus, was es wirklich braucht.
-      </p>
+      <p className="text-lg text-muted-foreground leading-relaxed">{description}</p>
     </>
   )
 }
 
-function QuestionPanel({ questionNumber }: { questionNumber: number }) {
+function JourneyPanel({
+  eyebrow,
+  description,
+  progressCurrent,
+  progressComplete,
+}: {
+  eyebrow: string | null
+  description: string
+  progressCurrent: number | null
+  progressComplete: boolean
+}) {
   return (
     <>
-      <div className="mb-6 font-header text-sm tracking-[0.2em] text-[var(--brand-plum)]">
-        FRAGE {questionNumber} VON 6
-      </div>
+      {eyebrow ? (
+        <div className="mb-5 font-header text-sm tracking-[0.2em] text-[var(--brand-plum)]">
+          {eyebrow}
+        </div>
+      ) : null}
       <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
         Hair
         <br />
@@ -86,79 +89,38 @@ function QuestionPanel({ questionNumber }: { questionNumber: number }) {
         className="mx-auto mb-4 h-1 w-12 rounded-full"
         style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
       />
-      <p className="text-sm text-[var(--text-caption)]">Personalisierte Haarpflege-Beratung</p>
+      <p className="text-base text-[var(--text-caption)] leading-relaxed">{description}</p>
+      {progressCurrent ? (
+        <DesktopJourneyProgress current={progressCurrent} complete={progressComplete} />
+      ) : null}
     </>
   )
 }
 
-function LeadCapturePanel({ subStep }: { subStep: string }) {
+function DesktopJourneyProgress({ current, complete }: { current: number; complete: boolean }) {
   return (
-    <>
-      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
-        Hair
-        <br />
-        Concierge
-      </h2>
-      <div
-        className="mx-auto mb-6 h-1 w-12 rounded-full"
-        style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
-      />
-      <p className="text-lg text-muted-foreground leading-relaxed">
-        {subStep === "consent" ? "Gleich hast du deinen Plan." : "Dein Profil ist fast fertig."}
-      </p>
-    </>
-  )
-}
+    <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+      {Array.from({ length: 8 }, (_, index) => {
+        const stepNumber = index + 1
+        const isCurrent = !complete && stepNumber === current
+        const isDone = complete || stepNumber < current
 
-function AnalysisPanel() {
-  return (
-    <>
-      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
-        Hair
-        <br />
-        Concierge
-      </h2>
-      <div
-        className="mx-auto mb-6 h-1 w-12 rounded-full"
-        style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
-      />
-      <p className="font-header text-2xl tracking-wider text-[var(--brand-plum)] animate-pulse">
-        Analysiere...
-      </p>
-    </>
-  )
-}
-
-function ResultsPanel() {
-  return (
-    <>
-      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
-        Hair
-        <br />
-        Concierge
-      </h2>
-      <div
-        className="mx-auto mb-6 h-1 w-12 rounded-full"
-        style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
-      />
-      <p className="text-lg text-muted-foreground leading-relaxed">Deine Diagnose</p>
-    </>
-  )
-}
-
-function WelcomePanel() {
-  return (
-    <>
-      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
-        Hair
-        <br />
-        Concierge
-      </h2>
-      <div
-        className="mx-auto mb-6 h-1 w-12 rounded-full"
-        style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
-      />
-      <p className="text-lg text-muted-foreground leading-relaxed">Dein nächster Schritt</p>
-    </>
+        return (
+          <span
+            key={stepNumber}
+            className={[
+              "flex h-8 min-w-8 items-center justify-center rounded-full border px-2 text-xs font-semibold tracking-[0.14em] tabular-nums transition-colors",
+              isCurrent
+                ? "border-[var(--brand-plum)] bg-[var(--brand-plum)] text-white"
+                : isDone
+                  ? "border-[rgba(var(--brand-plum-rgb),0.16)] bg-[rgba(var(--brand-plum-rgb),0.08)] text-[var(--brand-plum)]"
+                  : "border-[rgba(var(--brand-plum-rgb),0.1)] bg-transparent text-[var(--text-caption)]",
+            ].join(" ")}
+          >
+            {String(stepNumber).padStart(2, "0")}
+          </span>
+        )
+      })}
+    </div>
   )
 }

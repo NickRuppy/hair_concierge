@@ -1,21 +1,35 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
+import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
+import { buildQuizShareConfig } from "@/lib/quiz/share"
 import { useQuizStore } from "@/lib/quiz/store"
-import { hopeText } from "@/lib/quiz/results-lookup"
-import { QuizProfileCard } from "./quiz-profile-card"
-import { QuizCard } from "./quiz-card"
-import { Button } from "@/components/ui/button"
-import { posthog } from "@/providers/posthog-provider"
-import { buildCardData } from "@/lib/quiz/result-card-data"
 import { useAuth } from "@/providers/auth-provider"
+import { posthog } from "@/providers/posthog-provider"
+import { useToast } from "@/providers/toast-provider"
+import { QuizResultsView } from "./quiz-results-view"
+
+function getSafeReturnToPath(value: string | null): string | null {
+  if (!value) return null
+
+  const trimmed = value.trim()
+
+  if (!trimmed.startsWith("/")) return null
+  if (trimmed.startsWith("//")) return null
+  if (trimmed.includes("\\")) return null
+  if (/\s/.test(trimmed)) return null
+  if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(trimmed)) return null
+
+  return trimmed
+}
 
 export function QuizResults() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user } = useAuth()
-  const { lead, answers, aiInsight, leadId, goNext } = useQuizStore()
-  const cardData = buildCardData(answers)
+  const { toast } = useToast()
+  const { lead, answers, leadId, shareQuote, goNext } = useQuizStore()
+  const narrative = buildQuizResultNarrative(answers)
   const returnTo = searchParams.get("returnTo")
   const isRetakeMode = searchParams.get("mode") === "retake"
 
@@ -32,7 +46,7 @@ export function QuizResults() {
       nextUrl.searchParams.set("lead", leadId)
 
       if (isRetakeMode) {
-        nextUrl.searchParams.set("returnTo", returnTo?.startsWith("/") ? returnTo : "/profile")
+        nextUrl.searchParams.set("returnTo", getSafeReturnToPath(returnTo) ?? "/profile")
       }
 
       router.push(`${nextUrl.pathname}${nextUrl.search}`)
@@ -42,85 +56,55 @@ export function QuizResults() {
     goNext()
   }
 
+  const handleShare = async () => {
+    const share = buildQuizShareConfig({
+      leadId,
+      name: lead.name,
+      shareQuote,
+      origin: window.location.origin,
+      isMobile:
+        window.matchMedia("(max-width: 767px)").matches ||
+        /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent),
+      canNativeShare: typeof navigator !== "undefined" && typeof navigator.share === "function",
+    })
+
+    if (!share) return
+
+    if (share.mode === "native" && navigator.share) {
+      posthog.capture("quiz_result_share_clicked", { leadId, method: "native" })
+      await navigator
+        .share({
+          title: share.title,
+          text: share.text,
+          url: share.url,
+        })
+        .catch(() => {})
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(share.url)
+      posthog.capture("quiz_result_share_clicked", { leadId, method: "copy_link" })
+      toast({
+        title: "Link kopiert",
+        description: "Du kannst dein Ergebnis jetzt direkt teilen.",
+      })
+    } catch {
+      window.open(share.url, "_blank", "noopener,noreferrer")
+      posthog.capture("quiz_result_share_clicked", { leadId, method: "open_result" })
+      toast({
+        title: "Ergebnis geöffnet",
+        description: "Teile den Link direkt aus deinem Browser.",
+      })
+    }
+  }
+
   return (
-    <div className="flex flex-col pb-6 animate-fade-in-up">
-      {/* Inline brand mark (replaces left panel on results page) */}
-      <div className="flex items-center gap-2 mb-6">
-        <div className="flex gap-[3px]">
-          <div className="w-[3px] h-5 bg-[var(--brand-plum)] rounded-full" />
-          <div
-            className="w-[3px] h-5 rounded-full"
-            style={{ background: "rgba(var(--brand-plum-rgb), 0.6)" }}
-          />
-          <div
-            className="w-[3px] h-5 rounded-full"
-            style={{ background: "rgba(var(--brand-plum-rgb), 0.3)" }}
-          />
-        </div>
-        <span className="font-header text-sm text-muted-foreground tracking-widest">
-          HAIR CONCIERGE
-        </span>
-      </div>
-
-      {/* Header */}
-      <h2 className="font-header text-3xl text-foreground mb-1">
-        {lead.name.toUpperCase()}, DEIN HAARPROFIL
-      </h2>
-      <p className="text-base text-muted-foreground mb-5">
-        Dein Profil ist fast fertig — als Nächstes bauen wir deine persönliche Routine auf.
-      </p>
-
-      {/* Profile cards — responsive grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {cardData.cards.map((card, i) => (
-          <QuizProfileCard
-            key={card.title}
-            icon={card.icon}
-            title={card.title}
-            description={card.description}
-            animationDelay={i * 80}
-          />
-        ))}
-      </div>
-
-      {/* Aha-Moment box — full width */}
-      {aiInsight && (
-        <div className="animate-fade-in-up mb-6" style={{ animationDelay: "500ms" }}>
-          <QuizCard className="border-[var(--brand-plum)]/20">
-            <p className="text-xs font-semibold text-[var(--brand-plum)] uppercase tracking-wide mb-2">
-              WAS BISHER WAHRSCHEINLICH SCHIEF LIEF
-            </p>
-            <p className="text-sm text-foreground leading-relaxed">{aiInsight}</p>
-          </QuizCard>
-        </div>
-      )}
-
-      {/* Hope text */}
-      <p className="text-base text-muted-foreground leading-relaxed mb-6">{hopeText}</p>
-
-      {/* CTA */}
-      <div className="flex flex-col gap-3 sm:max-w-md sm:mx-auto w-full">
-        <Button
-          onClick={handleStart}
-          variant="unstyled"
-          className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
-        >
-          ROUTINE FESTLEGEN
-        </Button>
-
-        {leadId && (
-          <Button
-            onClick={() => {
-              posthog.capture("quiz_result_share_clicked", { leadId })
-              window.open(`/result/${leadId}`, "_blank")
-            }}
-            variant="outline"
-            className="w-full h-12 text-sm font-bold tracking-wide rounded-xl border-border text-foreground hover:bg-muted"
-          >
-            ERGEBNIS TEILEN
-          </Button>
-        )}
-      </div>
-    </div>
+    <QuizResultsView
+      name={lead.name}
+      narrative={narrative}
+      primaryAction={{ label: narrative.cta.label, onClick: handleStart }}
+      secondaryAction={leadId ? { label: "ERGEBNIS TEILEN", onClick: handleShare } : null}
+    />
   )
 }
