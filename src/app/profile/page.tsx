@@ -96,7 +96,6 @@ type ProfileSectionSummary = {
   title: string
   status: string
   isComplete: boolean
-  summary: string
   preview: SectionPreview
 }
 
@@ -774,13 +773,6 @@ export default function ProfilePage() {
       title: SECTION_META_BY_KEY.quiz.title,
       status: quizStatus,
       isComplete: !profileLoading && quizFields.length > 0 && quizMissing.length === 0,
-      summary: profileLoading
-        ? "Deine Antworten aus dem Haar-Check werden gerade geladen."
-        : quizFilled.length === 0
-          ? "Hier landen später deine Antworten zu Struktur, Kopfhaut und aktuellen Schäden."
-          : quizMissing.length === 0
-            ? "Struktur, Kopfhaut und Schäden sind komplett hinterlegt."
-            : `${quizMissing.length} Antwort${quizMissing.length === 1 ? "" : "en"} fehlen noch.`,
       preview: profileLoading
         ? {
             title: "Haar-Check wird geladen",
@@ -806,15 +798,6 @@ export default function ProfilePage() {
       title: SECTION_META_BY_KEY.products.title,
       status: productsStatus,
       isComplete: !productsLoading && productRows.length > 0 && incompleteProductRows.length === 0,
-      summary: productsLoading
-        ? "Deine aktuellen Produktkategorien und Details werden gerade geladen."
-        : productRows.length === 0
-          ? "Deine Kategorien und Produktdetails erscheinen hier, sobald du den Produktteil speicherst."
-          : incompleteProductRows.length === 0
-            ? `${productRows.length} Kategorien sind mit Produkt und Häufigkeit gepflegt.`
-            : `${incompleteProductRows.length} Produktdetail${
-                incompleteProductRows.length === 1 ? "" : "s"
-              } fehlen noch.`,
       preview: productsLoading
         ? {
             title: "Produkte werden geladen",
@@ -848,15 +831,6 @@ export default function ProfilePage() {
       title: SECTION_META_BY_KEY.styling.title,
       status: stylingStatus,
       isComplete: !profileLoading && stylingFields.length > 0 && stylingMissing.length === 0,
-      summary: profileLoading
-        ? "Styling-Signale werden gerade geladen."
-        : stylingFilled.length === 0
-          ? "Hitzetools, Frequenz und Hitzeschutz landen hier nach dem Styling-Teil."
-          : stylingMissing.length === 0
-            ? "Deine Styling-Routine ist vollständig gepflegt."
-            : `${stylingMissing.length} Styling-Angabe${
-                stylingMissing.length === 1 ? "" : "n"
-              } fehlen noch.`,
       preview: profileLoading
         ? {
             title: "Styling wird geladen",
@@ -882,15 +856,6 @@ export default function ProfilePage() {
       title: SECTION_META_BY_KEY.routine.title,
       status: routineStatus,
       isComplete: !profileLoading && routineFields.length > 0 && routineMissing.length === 0,
-      summary: profileLoading
-        ? "Alltags-Signale werden gerade geladen."
-        : routineFilled.length === 0
-          ? "Trocknen, Bürste und Nachtschutz landen hier nach dem Alltagsteil."
-          : routineMissing.length === 0
-            ? "Dein Alltagsbereich ist vollständig gepflegt."
-            : `${routineMissing.length} Alltags-Angabe${
-                routineMissing.length === 1 ? "" : "n"
-              } fehlen noch.`,
       preview: profileLoading
         ? {
             title: "Alltag wird geladen",
@@ -916,11 +881,6 @@ export default function ProfilePage() {
       title: SECTION_META_BY_KEY.goals.title,
       status: goalsStatus,
       isComplete: !profileLoading && Boolean(goalsField?.value),
-      summary: profileLoading
-        ? "Deine Haarziele werden gerade geladen."
-        : goalsField?.value
-          ? `${goalsValueCount} Ziel${goalsValueCount === 1 ? "" : "e"} sind gespeichert und jederzeit anpassbar.`
-          : "Hier landen deine ausgewählten Haarziele, sobald du sie speicherst.",
       preview: profileLoading
         ? {
             title: "Ziele werden geladen",
@@ -944,13 +904,6 @@ export default function ProfilePage() {
     title: SECTION_META_BY_KEY.memory.title,
     status: memoryStatus,
     isComplete: true,
-    summary: memoryLoading
-      ? "Die bisherigen Erinnerungen werden gerade geladen."
-      : !memoryEnabled
-        ? "Hair Concierge speichert aktuell keine langfristigen Hinweise aus dem Chat."
-        : memoryEntries.length === 0
-          ? "Hier tauchen später hilfreiche Vorlieben und Hinweise aus dem Chat auf."
-          : `${memoryEntries.length} ${memoryEntryLabel} helfen Hair Concierge, konsistenter zu antworten.`,
     preview: memoryLoading
       ? {
           title: "Erinnerungen werden geladen",
@@ -971,8 +924,6 @@ export default function ProfilePage() {
               text: "Hier kannst du prüfen, bearbeiten oder löschen, was Hair Concierge aus deinen Gesprächen behalten darf.",
             },
   }
-
-  const collapsibleSectionSummaries = [...coreSectionSummaries, memorySectionSummary]
 
   useEffect(() => {
     if (!quizEditing) return
