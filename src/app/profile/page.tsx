@@ -7,7 +7,7 @@ import { Header } from "@/components/layout/header"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
 import { SegmentedControl } from "@/components/ui/segmented-control"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Switch } from "@/components/ui/switch"
@@ -337,7 +337,7 @@ function SectionHeader({
       <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
-            <CardTitle className={titleClass}>{title}</CardTitle>
+            <h2 className={titleClass}>{title}</h2>
             <SectionStatusBadge label={status} />
           </div>
           <CardDescription className="mt-2 max-w-2xl text-sm">{description}</CardDescription>
@@ -2169,9 +2169,9 @@ export default function ProfilePage() {
 
             <Card className="mt-4 border-border/60 bg-card/60">
               <CardHeader className="pb-3">
-                <CardTitle className="font-[family-name:var(--font-display)] text-lg font-medium text-[var(--text-heading)]">
+                <h2 className="font-[family-name:var(--font-display)] text-lg font-medium text-[var(--text-heading)]">
                   Account
-                </CardTitle>
+                </h2>
                 <CardDescription className="mt-1 text-sm">
                   Dein Zugang bleibt bewusst sekundär, damit das Profil weiterhin mit deiner
                   Haarreise startet.
