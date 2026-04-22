@@ -20,7 +20,6 @@ import {
   PROFILE_SECTION_META,
   type ProfileEditTarget,
   type ProfileFieldConfig,
-  type ProfileFieldDisplayMode,
   type ProfileFieldValue,
   type ProfileJourneySectionKey,
 } from "@/lib/profile/section-config"
@@ -56,8 +55,6 @@ type StructuredField = ProfileFieldConfig & { value: ProfileFieldValue }
 type JourneyField = {
   key: string
   label: string
-  helpText: string
-  displayMode: ProfileFieldDisplayMode
   value: ProfileFieldValue
   editTarget: ProfileEditTarget | null
 }
@@ -106,8 +103,6 @@ const SECTION_META_BY_KEY = Object.fromEntries(
 const PRODUCT_ORDER_INDEX = new Map(
   PRODUCT_CATEGORY_ORDER.map((category, index) => [category, index]),
 )
-
-const PROFILE_CORE_SECTION_KEYS = ["quiz", "products", "styling", "routine", "goals"] as const
 
 const QUIZ_SURFACE_OPTIONS = [
   { value: "smooth", label: "Glatt wie Glas" },
@@ -701,7 +696,6 @@ export default function ProfilePage() {
   const goalsFilled = goalsFields.filter((field) => field.value !== null)
   const selectedProductCategories = productRows.map((row) => row.categoryLabel)
   const incompleteProductRows = productRows.filter((row) => !row.isComplete)
-  const goalsValueCount = Array.isArray(goalsField?.value) ? goalsField.value.length : 0
 
   const quizStatus = profileLoading
     ? "Wird geladen"

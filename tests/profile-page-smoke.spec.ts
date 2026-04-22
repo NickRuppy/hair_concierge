@@ -34,14 +34,6 @@ async function upsertHairProfileWithDryingCompat(payload: Record<string, unknown
   if (error) throw error
 }
 
-async function ensureSectionOpen(page: import("@playwright/test").Page, sectionLabel: string) {
-  const expandButton = page.getByRole("button", { name: `${sectionLabel} aufklappen` })
-
-  if (await expandButton.isVisible().catch(() => false)) {
-    await expandButton.click()
-  }
-}
-
 test.describe.serial("Profile page smoke", () => {
   const email = `playwright-profile-${Date.now()}@hairconscierge.test`
   const password = "Playwright123!"
@@ -70,6 +62,9 @@ test.describe.serial("Profile page smoke", () => {
         full_name: fullName,
         onboarding_completed: true,
         onboarding_step: "celebration",
+        stripe_customer_id: `cus_smoke_${userId}`,
+        subscription_status: "active",
+        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       },
       { onConflict: "id" },
     )
@@ -147,7 +142,7 @@ test.describe.serial("Profile page smoke", () => {
 
     await page.goto(`${baseUrl}/profile`, { waitUntil: "domcontentloaded" })
     await expect(page.getByRole("heading", { name: "Mein Profil" })).toBeVisible()
-    await expect(page.getByText("Profil-Fortschritt")).toBeVisible()
+    await expect(page.locator("#profile-section-quiz")).toBeVisible()
 
     const sectionPositions = await Promise.all([
       page.locator("#profile-section-quiz").boundingBox(),
@@ -178,7 +173,6 @@ test.describe.serial("Profile page smoke", () => {
     const memorySwitch = page.getByRole("switch", { name: "Erinnerungen aktivieren" })
     await expect(memorySwitch).toHaveAttribute("aria-checked", "true")
 
-    await ensureSectionOpen(page, "Haar-Check")
     const chemicalTreatmentsCard = page
       .getByRole("button")
       .filter({ hasText: "Chemische Behandlungen" })
@@ -197,7 +191,7 @@ test.describe.serial("Profile page smoke", () => {
       page.getByRole("button").filter({ hasText: "Haar-Bedenken" }).getByText("Nichts davon"),
     ).toBeVisible()
 
-    await page.getByRole("button", { name: "Ziele bearbeiten" }).click()
+    await page.getByRole("button", { name: "Ziele bearbeiten", exact: true }).click()
     await page.waitForURL(/\/profile\/edit\/goals(\?.*)?$/, { timeout: 15000 })
     await expect(page.getByText("Deine Haarziele", { exact: false })).toBeVisible()
     await page.getByRole("button", { name: "Speichern und zurück zum Profil" }).click()
@@ -213,7 +207,6 @@ test.describe.serial("Profile page smoke", () => {
     if (goalsCleanupError) throw goalsCleanupError
     expect(goalsCleanupRow?.desired_volume).toBeNull()
 
-    await ensureSectionOpen(page, "Produkte")
     const { data: routineRows, error: routineRowsError } = await admin
       .from("user_product_usage")
       .select("category")
@@ -260,7 +253,6 @@ test.describe.serial("Profile page smoke", () => {
     if (shampooUsageError) throw shampooUsageError
     expect(shampooUsageRow?.frequency_range).toBe("5_6x")
 
-    await ensureSectionOpen(page, "Alltag")
     const towelMaterialCard = page
       .getByRole("button")
       .filter({ hasText: "Handtuch-Material" })
@@ -274,7 +266,6 @@ test.describe.serial("Profile page smoke", () => {
     await page.waitForURL(/\/profile$/, { timeout: 30000 })
     await expect(page.getByText("Mikrofaser-Handtuch")).toBeVisible()
 
-    await ensureSectionOpen(page, "Styling")
     const heatFrequencyCard = page
       .getByRole("button")
       .filter({ hasText: "Styling-Frequenz" })
