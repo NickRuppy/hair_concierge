@@ -1799,30 +1799,30 @@ export default function ProfilePage() {
                       ))}
                     </div>
                   </div>
-                ) : goalsField?.value ? (
-                  <ProfileFieldCard
-                    field={goalsField}
-                    className="max-w-3xl"
+                ) : goalsField ? (
+                  <button
+                    type="button"
                     onClick={() => openTarget("goals", goalsField.editTarget)}
+                    className="flex w-full flex-wrap gap-2 rounded-[22px] border border-primary/10 bg-[hsl(var(--background))]/70 p-5 text-left transition-colors hover:border-primary/30 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    aria-label={`${goalsField.label} bearbeiten`}
                   >
-                    <ProfileFieldValue value={goalsField.value} />
-                  </ProfileFieldCard>
-                ) : (
-                  <InlinePromptCard
-                    title="Noch keine Ziele gewählt"
-                    text="Hier landen deine Haarziele, sobald du sie im Haar-Check oder unter „Ziele bearbeiten“ speicherst."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() => goToSectionStep("goals", "/profile/edit/goals")}
-                      >
-                        Ziele öffnen
-                      </Button>
-                    }
-                  />
-                )}
+                    {Array.isArray(goalsField.value) && goalsField.value.length > 0 ? (
+                      goalsField.value.map((goal) => (
+                        <Badge
+                          key={goal}
+                          variant="outline"
+                          className="rounded-full border-primary/20 bg-background px-4 py-1.5 text-sm font-semibold text-[var(--text-heading)]"
+                        >
+                          {goal}
+                        </Badge>
+                      ))
+                    ) : (
+                      <span className="text-sm text-muted-foreground">
+                        Noch keine Ziele gewählt
+                      </span>
+                    )}
+                  </button>
+                ) : null}
               </CardContent>
             </Card>
 
