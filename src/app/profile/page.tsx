@@ -696,11 +696,8 @@ export default function ProfilePage() {
   const productRows = useMemo(() => createProductRows(productUsage), [productUsage])
 
   const quizFilled = quizFields.filter((field) => field.value !== null)
-  const quizMissing = quizFields.filter((field) => field.value === null)
   const stylingFilled = stylingFields.filter((field) => field.value !== null)
-  const stylingMissing = stylingFields.filter((field) => field.value === null)
   const routineFilled = routineFields.filter((field) => field.value !== null)
-  const routineMissing = routineFields.filter((field) => field.value === null)
   const goalsFilled = goalsFields.filter((field) => field.value !== null)
   const selectedProductCategories = productRows.map((row) => row.categoryLabel)
   const incompleteProductRows = productRows.filter((row) => !row.isComplete)
@@ -1330,14 +1327,25 @@ export default function ProfilePage() {
                   </div>
                 ) : quizFilled.length > 0 ? (
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {quizFilled.map((field) => (
-                      <ProfileFieldCard
-                        key={field.key}
-                        field={field}
-                        onClick={() => openTarget("quiz", field.editTarget, field.key)}
-                        tone={field.value == null ? "attention" : "default"}
-                      />
-                    ))}
+                    {quizFields.map((field) => {
+                      const isMissing = field.value == null
+                      return (
+                        <ProfileFieldCard
+                          key={field.key}
+                          field={field}
+                          onClick={() => openTarget("quiz", field.editTarget, field.key)}
+                          tone={isMissing ? "attention" : "default"}
+                          className={isMissing ? "md:col-span-2 xl:col-span-3" : undefined}
+                        >
+                          {isMissing ? (
+                            <ProfileFieldValue
+                              value={null}
+                              emptyLabel="Noch offen — tippen zum Ergänzen"
+                            />
+                          ) : undefined}
+                        </ProfileFieldCard>
+                      )
+                    })}
                   </div>
                 ) : (
                   <InlinePromptCard
@@ -1355,26 +1363,6 @@ export default function ProfilePage() {
                     }
                   />
                 )}
-
-                {!profileLoading &&
-                !quizEditing &&
-                quizFilled.length > 0 &&
-                quizMissing.length > 0 ? (
-                  <InlinePromptCard
-                    title={getOpenItemsTitle(quizMissing.length, "Angabe", "Angaben")}
-                    text="Du kannst die fehlenden Antworten direkt hier ergänzen."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() => startQuizEditing()}
-                      >
-                        Fehlende Antworten ergänzen
-                      </Button>
-                    }
-                  />
-                ) : null}
               </CardContent>
             </Card>
 
@@ -1635,14 +1623,25 @@ export default function ProfilePage() {
                   <SectionGridSkeleton count={3} className="md:grid-cols-2 xl:grid-cols-3" />
                 ) : stylingFilled.length > 0 ? (
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {stylingFilled.map((field) => (
-                      <ProfileFieldCard
-                        key={field.key}
-                        field={field}
-                        onClick={() => openTarget("styling", field.editTarget)}
-                        tone={field.value == null ? "attention" : "default"}
-                      />
-                    ))}
+                    {stylingFields.map((field) => {
+                      const isMissing = field.value == null
+                      return (
+                        <ProfileFieldCard
+                          key={field.key}
+                          field={field}
+                          onClick={() => openTarget("styling", field.editTarget)}
+                          tone={isMissing ? "attention" : "default"}
+                          className={isMissing ? "md:col-span-2 xl:col-span-3" : undefined}
+                        >
+                          {isMissing ? (
+                            <ProfileFieldValue
+                              value={null}
+                              emptyLabel="Noch offen — tippen zum Ergänzen"
+                            />
+                          ) : undefined}
+                        </ProfileFieldCard>
+                      )
+                    })}
                   </div>
                 ) : (
                   <InlinePromptCard
@@ -1662,25 +1661,6 @@ export default function ProfilePage() {
                     }
                   />
                 )}
-
-                {!profileLoading && stylingFilled.length > 0 && stylingMissing.length > 0 ? (
-                  <InlinePromptCard
-                    title={getOpenItemsTitle(stylingMissing.length, "Angabe", "Angaben")}
-                    text="Im Styling-Teil kannst du die fehlenden Angaben ergänzen."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() =>
-                          goToSectionStep("styling", buildOnboardingHref("heat_tools"))
-                        }
-                      >
-                        Styling ergänzen
-                      </Button>
-                    }
-                  />
-                ) : null}
               </CardContent>
             </Card>
 
@@ -1718,14 +1698,25 @@ export default function ProfilePage() {
                   <SectionGridSkeleton count={5} className="md:grid-cols-2 xl:grid-cols-3" />
                 ) : routineFilled.length > 0 ? (
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {routineFilled.map((field) => (
-                      <ProfileFieldCard
-                        key={field.key}
-                        field={field}
-                        onClick={() => openTarget("routine", field.editTarget)}
-                        tone={field.value == null ? "attention" : "default"}
-                      />
-                    ))}
+                    {routineFields.map((field) => {
+                      const isMissing = field.value == null
+                      return (
+                        <ProfileFieldCard
+                          key={field.key}
+                          field={field}
+                          onClick={() => openTarget("routine", field.editTarget)}
+                          tone={isMissing ? "attention" : "default"}
+                          className={isMissing ? "md:col-span-2 xl:col-span-3" : undefined}
+                        >
+                          {isMissing ? (
+                            <ProfileFieldValue
+                              value={null}
+                              emptyLabel="Noch offen — tippen zum Ergänzen"
+                            />
+                          ) : undefined}
+                        </ProfileFieldCard>
+                      )
+                    })}
                   </div>
                 ) : (
                   <InlinePromptCard
@@ -1745,25 +1736,6 @@ export default function ProfilePage() {
                     }
                   />
                 )}
-
-                {!profileLoading && routineFilled.length > 0 && routineMissing.length > 0 ? (
-                  <InlinePromptCard
-                    title={getOpenItemsTitle(routineMissing.length, "Angabe", "Angaben")}
-                    text="Im Alltag-Teil kannst du die fehlenden Angaben ergänzen."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() =>
-                          goToSectionStep("routine", buildOnboardingHref("towel_material"))
-                        }
-                      >
-                        Alltag ergänzen
-                      </Button>
-                    }
-                  />
-                ) : null}
               </CardContent>
             </Card>
 
