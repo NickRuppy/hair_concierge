@@ -107,13 +107,7 @@ const PRODUCT_ORDER_INDEX = new Map(
   PRODUCT_CATEGORY_ORDER.map((category, index) => [category, index]),
 )
 
-const PROFILE_RECENT_SECTION_STORAGE_KEY = "profile-recent-sections"
-const PROFILE_RECENT_SECTION_LIMIT = 2
 const PROFILE_CORE_SECTION_KEYS = ["quiz", "products", "styling", "routine", "goals"] as const
-const PROFILE_SECTION_KEYS = new Set<ProfileJourneySectionKey>([
-  ...PROFILE_CORE_SECTION_KEYS,
-  "memory",
-])
 
 const QUIZ_SURFACE_OPTIONS = [
   { value: "smooth", label: "Glatt wie Glas" },
@@ -305,40 +299,6 @@ function getOpenItemsTitle(count: number, singular: string, plural: string) {
   return `Noch ${count} ${label} offen`
 }
 
-function isProfileJourneySectionKey(value: unknown): value is ProfileJourneySectionKey {
-  return typeof value === "string" && PROFILE_SECTION_KEYS.has(value as ProfileJourneySectionKey)
-}
-
-function readRecentProfileSections(): ProfileJourneySectionKey[] {
-  if (typeof window === "undefined") return []
-
-  try {
-    const rawValue = window.sessionStorage.getItem(PROFILE_RECENT_SECTION_STORAGE_KEY)
-    if (!rawValue) return []
-
-    const parsed = JSON.parse(rawValue)
-    if (!Array.isArray(parsed)) return []
-
-    return parsed.filter(isProfileJourneySectionKey)
-  } catch {
-    return []
-  }
-}
-
-function rememberRecentProfileSection(sectionKey: ProfileJourneySectionKey) {
-  if (typeof window === "undefined") return
-
-  const nextRecentSections = [
-    sectionKey,
-    ...readRecentProfileSections().filter((key) => key !== sectionKey),
-  ].slice(0, PROFILE_RECENT_SECTION_LIMIT)
-
-  window.sessionStorage.setItem(
-    PROFILE_RECENT_SECTION_STORAGE_KEY,
-    JSON.stringify(nextRecentSections),
-  )
-}
-
 function SectionStatusBadge({ label }: { label: string }) {
   return (
     <Badge
@@ -367,12 +327,17 @@ function SectionHeader({
   preview?: SectionPreview
   size?: "lg" | "sm"
 }) {
+  const titleClass =
+    size === "sm"
+      ? "font-[family-name:var(--font-display)] text-xl font-medium leading-tight text-[var(--text-heading)]"
+      : "font-[family-name:var(--font-display)] text-2xl font-medium leading-tight text-[var(--text-heading)]"
+
   return (
     <div>
       <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
-            <CardTitle className="text-xl text-[var(--text-heading)]">{title}</CardTitle>
+            <CardTitle className={titleClass}>{title}</CardTitle>
             <SectionStatusBadge label={status} />
           </div>
           <CardDescription className="mt-2 max-w-2xl text-sm">{description}</CardDescription>
@@ -381,7 +346,7 @@ function SectionHeader({
       </div>
 
       {!isOpen && preview ? (
-        <div className="mt-4 rounded-xl border border-border/70 bg-muted/35 p-4">
+        <div className="mt-4 rounded-xl border border-border/60 bg-muted/35 p-4">
           <p className="text-sm font-semibold text-[var(--text-heading)]">{preview.title}</p>
           <p className="mt-1 text-sm text-muted-foreground">{preview.text}</p>
         </div>
@@ -555,8 +520,6 @@ export default function ProfilePage() {
     "goals",
     "memory",
   ])
-  const [sectionsInitialized, setSectionsInitialized] = useState(false)
-
   const [memoryEntries, setMemoryEntries] = useState<UserMemoryEntry[]>([])
   const [memoryEnabled, setMemoryEnabled] = useState(true)
   const [memoryLoading, setMemoryLoading] = useState(true)
@@ -722,7 +685,6 @@ export default function ProfilePage() {
 
   useEffect(() => {
     setOpenSections([])
-    setSectionsInitialized(false)
   }, [userId])
 
   const structuredFields = useMemo<StructuredField[]>(
@@ -951,18 +913,15 @@ export default function ProfilePage() {
         return current.filter((key) => key !== sectionKey)
       }
 
-      rememberRecentProfileSection(sectionKey)
       return [...current, sectionKey]
     })
   }
 
-  function goToSectionStep(sectionKey: ProfileJourneySectionKey, href: string) {
-    rememberRecentProfileSection(sectionKey)
+  function goToSectionStep(_sectionKey: ProfileJourneySectionKey, href: string) {
     router.push(href)
   }
 
   function startQuizEditing(fieldKey?: string) {
-    rememberRecentProfileSection("quiz")
     ensureSectionOpen("quiz")
     setQuizNotice(null)
     if (fieldKey) {
@@ -1065,7 +1024,6 @@ export default function ProfilePage() {
   }
 
   async function handleMemoryToggle(checked: boolean) {
-    rememberRecentProfileSection("memory")
     ensureSectionOpen("memory")
     setMemoryEnabled(checked)
     setMemorySaving(true)
@@ -1089,7 +1047,6 @@ export default function ProfilePage() {
   }
 
   function startEditingMemory(entry: UserMemoryEntry) {
-    rememberRecentProfileSection("memory")
     ensureSectionOpen("memory")
     setEditingMemoryId(entry.id)
     setMemoryDraft(entry.content)
@@ -1147,11 +1104,11 @@ export default function ProfilePage() {
     }
   }
 
-  const isQuizOpen = openSections.includes("quiz")
-  const isProductsOpen = openSections.includes("products")
-  const isStylingOpen = openSections.includes("styling")
-  const isRoutineOpen = openSections.includes("routine")
-  const isGoalsOpen = openSections.includes("goals")
+  const isQuizOpen = true
+  const isProductsOpen = true
+  const isStylingOpen = true
+  const isRoutineOpen = true
+  const isGoalsOpen = true
   const isMemoryOpen = openSections.includes("memory")
   const [
     quizSectionSummary,
@@ -1216,22 +1173,6 @@ export default function ProfilePage() {
                           Haar-Check bearbeiten
                         </Button>
                       ) : null}
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                        onClick={() => toggleSection("quiz")}
-                        aria-expanded={isQuizOpen}
-                        aria-controls="profile-section-panel-quiz"
-                        aria-label={isQuizOpen ? "Haar-Check zuklappen" : "Haar-Check aufklappen"}
-                        disabled={quizEditing}
-                      >
-                        <span>{isQuizOpen ? "Weniger" : "Mehr"}</span>
-                        <ChevronDown
-                          className={cn("transition-transform", isQuizOpen ? "rotate-180" : "")}
-                        />
-                      </Button>
                     </>
                   }
                 />
@@ -1623,21 +1564,6 @@ export default function ProfilePage() {
                       >
                         Produkte bearbeiten
                       </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                        onClick={() => toggleSection("products")}
-                        aria-expanded={isProductsOpen}
-                        aria-controls="profile-section-panel-products"
-                        aria-label={isProductsOpen ? "Produkte zuklappen" : "Produkte aufklappen"}
-                      >
-                        <span>{isProductsOpen ? "Weniger" : "Mehr"}</span>
-                        <ChevronDown
-                          className={cn("transition-transform", isProductsOpen ? "rotate-180" : "")}
-                        />
-                      </Button>
                     </>
                   }
                 />
@@ -1867,21 +1793,6 @@ export default function ProfilePage() {
                       >
                         Styling bearbeiten
                       </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                        onClick={() => toggleSection("styling")}
-                        aria-expanded={isStylingOpen}
-                        aria-controls="profile-section-panel-styling"
-                        aria-label={isStylingOpen ? "Styling zuklappen" : "Styling aufklappen"}
-                      >
-                        <span>{isStylingOpen ? "Weniger" : "Mehr"}</span>
-                        <ChevronDown
-                          className={cn("transition-transform", isStylingOpen ? "rotate-180" : "")}
-                        />
-                      </Button>
                     </>
                   }
                 />
@@ -1971,21 +1882,6 @@ export default function ProfilePage() {
                       >
                         Alltag bearbeiten
                       </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                        onClick={() => toggleSection("routine")}
-                        aria-expanded={isRoutineOpen}
-                        aria-controls="profile-section-panel-routine"
-                        aria-label={isRoutineOpen ? "Alltag zuklappen" : "Alltag aufklappen"}
-                      >
-                        <span>{isRoutineOpen ? "Weniger" : "Mehr"}</span>
-                        <ChevronDown
-                          className={cn("transition-transform", isRoutineOpen ? "rotate-180" : "")}
-                        />
-                      </Button>
                     </>
                   }
                 />
@@ -2072,21 +1968,6 @@ export default function ProfilePage() {
                         onClick={() => goToSectionStep("goals", "/profile/edit/goals")}
                       >
                         Ziele bearbeiten
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                        onClick={() => toggleSection("goals")}
-                        aria-expanded={isGoalsOpen}
-                        aria-controls="profile-section-panel-goals"
-                        aria-label={isGoalsOpen ? "Ziele zuklappen" : "Ziele aufklappen"}
-                      >
-                        <span>{isGoalsOpen ? "Weniger" : "Mehr"}</span>
-                        <ChevronDown
-                          className={cn("transition-transform", isGoalsOpen ? "rotate-180" : "")}
-                        />
                       </Button>
                     </>
                   }
