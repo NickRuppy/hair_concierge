@@ -24,10 +24,6 @@ import {
   type ProfileFieldValue,
   type ProfileJourneySectionKey,
 } from "@/lib/profile/section-config"
-import {
-  getDefaultOpenProfileSections,
-  getProfileOverviewSummary,
-} from "@/lib/profile/profile-overview"
 import { createClient } from "@/lib/supabase/client"
 import type { ChemicalTreatment, HairProfile, ProfileConcern, UserMemoryEntry } from "@/lib/types"
 import {
@@ -594,7 +590,14 @@ export default function ProfilePage() {
   const [pendingQuizFocusKey, setPendingQuizFocusKey] = useState<string | null>(null)
   const quizFieldRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const sectionRefs = useRef<Partial<Record<ProfileJourneySectionKey, HTMLDivElement | null>>>({})
-  const [openSections, setOpenSections] = useState<ProfileJourneySectionKey[]>([])
+  const [openSections, setOpenSections] = useState<ProfileJourneySectionKey[]>([
+    "quiz",
+    "products",
+    "styling",
+    "routine",
+    "goals",
+    "memory",
+  ])
   const [sectionsInitialized, setSectionsInitialized] = useState(false)
 
   const [memoryEntries, setMemoryEntries] = useState<UserMemoryEntry[]>([])
@@ -1014,35 +1017,12 @@ export default function ProfilePage() {
   }
 
   const collapsibleSectionSummaries = [...coreSectionSummaries, memorySectionSummary]
-  const overviewSummary = getProfileOverviewSummary(
-    coreSectionSummaries.map(({ key, title, isComplete }) => ({
-      key,
-      title,
-      isComplete,
-    })),
-  )
-
-  useEffect(() => {
-    if (sectionsInitialized || profileLoading || productsLoading || memoryLoading) return
-
-    const defaultOpenSections = getDefaultOpenProfileSections(
-      collapsibleSectionSummaries.map(({ key, title, isComplete }) => ({
-        key,
-        title,
-        isComplete,
-      })),
-      readRecentProfileSections(),
-    )
-
-    setOpenSections(defaultOpenSections)
-    setSectionsInitialized(true)
-  }, [
-    collapsibleSectionSummaries,
-    memoryLoading,
-    productsLoading,
-    profileLoading,
-    sectionsInitialized,
-  ])
+  const overviewSummary = {
+    completeCount: coreSectionSummaries.filter((s) => s.isComplete).length,
+    totalCount: coreSectionSummaries.length,
+    allComplete: coreSectionSummaries.length > 0 && coreSectionSummaries.every((s) => s.isComplete),
+    nextSection: coreSectionSummaries.find((s) => !s.isComplete) ?? null,
+  }
 
   useEffect(() => {
     if (!quizEditing) return
