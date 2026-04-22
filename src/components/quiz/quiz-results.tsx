@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
+import { getQuizResultCta } from "@/lib/quiz/result-cta"
 import { buildQuizShareConfig } from "@/lib/quiz/share"
 import { useQuizStore } from "@/lib/quiz/store"
 import { useAuth } from "@/providers/auth-provider"
@@ -32,6 +33,8 @@ export function QuizResults() {
   const narrative = buildQuizResultNarrative(answers)
   const returnTo = searchParams.get("returnTo")
   const isRetakeMode = searchParams.get("mode") === "retake"
+  const canGoStraightToRoutine = Boolean(user && leadId)
+  const cta = getQuizResultCta({ canGoStraightToRoutine })
 
   const handleStart = () => {
     posthog.capture("quiz_completed", {
@@ -102,8 +105,8 @@ export function QuizResults() {
   return (
     <QuizResultsView
       name={lead.name}
-      narrative={narrative}
-      primaryAction={{ label: narrative.cta.label, onClick: handleStart }}
+      narrative={{ ...narrative, cta }}
+      primaryAction={{ label: cta.label, onClick: handleStart }}
       secondaryAction={leadId ? { label: "ERGEBNIS TEILEN", onClick: handleShare } : null}
     />
   )

@@ -76,12 +76,16 @@ export function QuizGoals() {
       <h2 className="font-header text-3xl leading-tight text-foreground mb-2">
         Was sind deine Haarziele?
       </h2>
-      <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-        Wähle bis zu {MAX_GOALS} Ziele, an denen wir gemeinsam arbeiten — {selectedGoals.length}/
-        {MAX_GOALS} gewählt.
-      </p>
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Wähle bis zu {MAX_GOALS} Ziele, die wir in deinem Plan priorisieren sollen.
+        </p>
+        <span className="shrink-0 rounded-full border border-primary/15 bg-primary/[0.05] px-3 py-1 text-xs font-semibold text-[var(--brand-plum)]">
+          {selectedGoals.length}/{MAX_GOALS} gewählt
+        </span>
+      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 flex-1">
+      <div className="grid auto-rows-fr grid-cols-2 gap-3 flex-1">
         {goals.map((goal, i) => {
           const isSelected = selectedGoals.includes(goal)
           const isDisabled = !isSelected && selectedGoals.length >= MAX_GOALS
@@ -93,37 +97,55 @@ export function QuizGoals() {
               onClick={() => handleToggle(goal)}
               disabled={isDisabled}
               className={cn(
-                "quiz-card relative flex items-center justify-center px-8 py-3 text-sm font-medium transition-all animate-fade-in-up",
-                isSelected && "quiz-card-active",
-                !isSelected && selectedGoals.length >= MAX_GOALS && "opacity-40 cursor-not-allowed",
+                "animate-fade-in-up flex h-full min-h-[104px] flex-col rounded-2xl border px-4 py-4 text-left transition-all duration-200",
+                isSelected
+                  ? "border-[var(--brand-plum)] bg-[rgba(var(--brand-plum-rgb),0.08)] shadow-[0_14px_36px_-28px_rgba(var(--brand-plum-rgb),0.45)]"
+                  : "border-border bg-card hover:border-primary/30 hover:bg-muted/40",
+                isDisabled && "cursor-not-allowed opacity-40",
               )}
               style={{ animationDelay: `${i * 40}ms` }}
             >
-              <span className="text-center leading-tight">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <span
+                  className={cn(
+                    "rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors",
+                    isSelected
+                      ? "bg-white/85 text-[var(--brand-plum)]"
+                      : "bg-muted text-[var(--text-caption)]",
+                  )}
+                >
+                  {isSelected ? "Ausgewählt" : "Ziel"}
+                </span>
+                <div
+                  className={cn(
+                    "flex h-6 w-6 items-center justify-center rounded-full border transition-colors",
+                    isSelected
+                      ? "border-[var(--brand-plum)] bg-[var(--brand-plum)] text-primary-foreground"
+                      : "border-border bg-white text-transparent",
+                  )}
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path
+                      d="M2.5 6L5 8.5L9.5 4"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <span className="text-[15px] font-semibold leading-snug text-foreground sm:text-base">
                 {getAvailableGoalLabel(goal, hairTexture)}
               </span>
-              <div
-                className={cn(
-                  "absolute right-2 top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full transition-opacity",
-                  isSelected
-                    ? "bg-[var(--brand-plum)] text-primary-foreground opacity-100"
-                    : "opacity-0",
-                )}
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path
-                    d="M2.5 6L5 8.5L9.5 4"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
             </button>
           )
         })}
       </div>
+
+      <p className="mt-4 text-center text-sm text-[var(--text-caption)]">
+        Du kannst deine Ziele später im Profil jederzeit anpassen.
+      </p>
 
       <div className="mt-4">
         <Button
