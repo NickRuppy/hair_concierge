@@ -168,11 +168,6 @@ function buildOnboardingHref(
   return `/onboarding?${params.toString()}`
 }
 
-function getFieldActionLabel(target: ProfileEditTarget | null) {
-  if (!target) return undefined
-  return "Bearbeiten"
-}
-
 function createQuizDraft(profile: HairProfile | null): QuizDraft {
   return {
     hair_texture: profile?.hair_texture ?? "",
@@ -373,13 +368,11 @@ function ProfileFieldCard({
   field,
   children,
   onClick,
-  actionLabel,
   className,
 }: {
   field: JourneyField
   children?: ReactNode
   onClick?: () => void
-  actionLabel?: string
   className?: string
 }) {
   const interactive = Boolean(onClick)
@@ -400,60 +393,56 @@ function ProfileFieldCard({
           : undefined
       }
       className={cn(
-        "rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm transition-colors",
+        "rounded-[22px] border border-primary/10 bg-[hsl(var(--background))]/70 p-5 transition-colors",
         interactive
-          ? "cursor-pointer hover:border-primary/30 hover:bg-primary/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          ? "cursor-pointer hover:border-primary/30 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           : "",
         className,
       )}
     >
-      <div className="mb-3 min-w-0">
-        <p className="text-sm font-semibold text-[var(--text-heading)]">{field.label}</p>
-        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{field.helpText}</p>
-      </div>
-
-      {children ?? <ProfileFieldValue value={field.value} displayMode={field.displayMode} />}
-
-      {interactive && actionLabel ? (
-        <div className="mt-4 flex items-center justify-between gap-2 text-xs font-medium text-primary">
-          <span>{actionLabel}</span>
-          <span aria-hidden="true">→</span>
-        </div>
-      ) : null}
+      <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        {field.label}
+      </p>
+      {children ?? <ProfileFieldValue value={field.value} />}
     </div>
   )
 }
 
 function ProfileFieldValue({
   value,
-  displayMode,
+  emptyLabel = "Noch offen",
 }: {
   value: ProfileFieldValue
-  displayMode: ProfileFieldDisplayMode
+  emptyLabel?: string
 }) {
-  if (value == null) {
-    return <p className="text-sm text-muted-foreground">Noch offen</p>
-  }
-
-  if (displayMode === "badges") {
-    const items = Array.isArray(value) ? value : [value]
-
+  if (value == null || (Array.isArray(value) && value.length === 0)) {
     return (
       <div className="flex flex-wrap gap-2">
-        {items.map((item) => (
-          <Badge
-            key={item}
-            variant="outline"
-            className="border-primary/20 bg-primary/[0.04] px-3 py-1 text-xs text-foreground"
-          >
-            {item}
-          </Badge>
-        ))}
+        <Badge
+          variant="outline"
+          className="rounded-full border-border/60 bg-background/60 px-3 py-1 text-xs font-medium text-muted-foreground"
+        >
+          {emptyLabel}
+        </Badge>
       </div>
     )
   }
 
-  return <p className="text-sm leading-relaxed text-foreground">{value}</p>
+  const items = Array.isArray(value) ? value : [value]
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {items.map((item) => (
+        <Badge
+          key={item}
+          variant="outline"
+          className="rounded-full border-primary/20 bg-background px-3 py-1 text-xs font-semibold text-[var(--text-heading)]"
+        >
+          {item}
+        </Badge>
+      ))}
+    </div>
+  )
 }
 
 function InlinePromptCard({
@@ -1343,7 +1332,6 @@ export default function ProfilePage() {
                         key={field.key}
                         field={field}
                         onClick={() => openTarget("quiz", field.editTarget, field.key)}
-                        actionLabel={getFieldActionLabel(field.editTarget)}
                       />
                     ))}
                   </div>
@@ -1648,7 +1636,6 @@ export default function ProfilePage() {
                         key={field.key}
                         field={field}
                         onClick={() => openTarget("styling", field.editTarget)}
-                        actionLabel={getFieldActionLabel(field.editTarget)}
                       />
                     ))}
                   </div>
@@ -1731,7 +1718,6 @@ export default function ProfilePage() {
                         key={field.key}
                         field={field}
                         onClick={() => openTarget("routine", field.editTarget)}
-                        actionLabel={getFieldActionLabel(field.editTarget)}
                       />
                     ))}
                   </div>
@@ -1818,12 +1804,8 @@ export default function ProfilePage() {
                     field={goalsField}
                     className="max-w-3xl"
                     onClick={() => openTarget("goals", goalsField.editTarget)}
-                    actionLabel={getFieldActionLabel(goalsField.editTarget)}
                   >
-                    <ProfileFieldValue
-                      value={goalsField.value}
-                      displayMode={goalsField.displayMode}
-                    />
+                    <ProfileFieldValue value={goalsField.value} />
                   </ProfileFieldCard>
                 ) : (
                   <InlinePromptCard
