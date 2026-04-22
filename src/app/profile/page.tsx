@@ -528,50 +528,6 @@ function QuizEditorField({
   )
 }
 
-function OverviewShortcutCard({
-  title,
-  status,
-  summary,
-  highlighted,
-  isOpen,
-  onClick,
-}: {
-  title: string
-  status: string
-  summary: string
-  highlighted?: boolean
-  isOpen: boolean
-  onClick: () => void
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "rounded-2xl border bg-card/85 p-4 text-left shadow-sm transition-colors hover:border-primary/30 hover:bg-primary/[0.04]",
-        highlighted ? "border-primary/25 bg-primary/[0.05]" : "border-border/80",
-      )}
-    >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-[var(--text-heading)]">{title}</p>
-          <p className="mt-1 text-xs uppercase tracking-[0.12em] text-muted-foreground">
-            {highlighted ? "Als Nächstes" : isOpen ? "Gerade offen" : "Schnellzugriff"}
-          </p>
-        </div>
-        <SectionStatusBadge label={status} />
-      </div>
-
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{summary}</p>
-
-      <div className="mt-4 flex items-center gap-2 text-xs font-medium text-primary">
-        <span>{isOpen ? "Zum offenen Bereich springen" : "Bereich öffnen"}</span>
-        <span aria-hidden="true">→</span>
-      </div>
-    </button>
-  )
-}
-
 export default function ProfilePage() {
   const router = useRouter()
   const { user, profile, loading: authLoading } = useAuth()
@@ -1017,12 +973,6 @@ export default function ProfilePage() {
   }
 
   const collapsibleSectionSummaries = [...coreSectionSummaries, memorySectionSummary]
-  const overviewSummary = {
-    completeCount: coreSectionSummaries.filter((s) => s.isComplete).length,
-    totalCount: coreSectionSummaries.length,
-    allComplete: coreSectionSummaries.length > 0 && coreSectionSummaries.every((s) => s.isComplete),
-    nextSection: coreSectionSummaries.find((s) => !s.isComplete) ?? null,
-  }
 
   useEffect(() => {
     if (!quizEditing) return
@@ -1050,15 +1000,6 @@ export default function ProfilePage() {
 
       rememberRecentProfileSection(sectionKey)
       return [...current, sectionKey]
-    })
-  }
-
-  function focusSection(sectionKey: ProfileJourneySectionKey) {
-    rememberRecentProfileSection(sectionKey)
-    ensureSectionOpen(sectionKey)
-
-    window.requestAnimationFrame(() => {
-      sectionRefs.current[sectionKey]?.scrollIntoView({ behavior: "smooth", block: "start" })
     })
   }
 
@@ -1285,79 +1226,14 @@ export default function ProfilePage() {
       <Header />
       <div className="profile-page">
         <main className="mx-auto max-w-5xl px-4 py-8">
-          <div className="mb-8">
+          <div className="mb-10">
             <p className="type-overline text-primary">Profilübersicht</p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text-heading)]">
+            <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-medium leading-[0.96] tracking-tight text-[var(--text-heading)] sm:text-5xl">
               Mein Profil
             </h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Je vollständiger dein Profil ist, desto besser werden Empfehlungen. Jeder Abschnitt
-              zeigt dir direkt, wie viel schon da ist und was noch ergänzt werden kann.
-            </p>
           </div>
 
           <div className="space-y-6">
-            <section className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-              <Card className="self-start overflow-hidden border-primary/20 bg-gradient-to-br from-primary/[0.09] via-background to-secondary/10 shadow-sm">
-                <CardContent className="p-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary/80">
-                    Profil-Fortschritt
-                  </p>
-
-                  <div className="mt-4 flex flex-wrap items-end gap-3">
-                    <div>
-                      <p className="text-3xl font-semibold tracking-tight text-[var(--text-heading)]">
-                        {overviewSummary.completeCount}/{overviewSummary.totalCount}
-                      </p>
-                      <p className="text-sm text-muted-foreground">Kernbereiche vollständig</p>
-                    </div>
-
-                    {overviewSummary.nextSection ? (
-                      <div className="rounded-xl border border-primary/15 bg-background/85 px-4 py-3">
-                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary/80">
-                          Nächster Fokus
-                        </p>
-                        <p className="mt-1 text-sm font-semibold text-[var(--text-heading)]">
-                          {overviewSummary.nextSection.title}
-                        </p>
-                      </div>
-                    ) : null}
-                  </div>
-
-                  <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                    {overviewSummary.allComplete
-                      ? "Alle Kernbereiche sind gepflegt. Öffne nur noch die Bereiche, in denen sich etwas geändert hat."
-                      : `Je klarer dein Profil ist, desto sauberer kann Hair Concierge Empfehlungen gewichten. Als Nächstes lohnt sich ${overviewSummary.nextSection?.title}.`}
-                  </p>
-
-                  {overviewSummary.nextSection ? (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="mt-5 w-auto"
-                      onClick={() => focusSection(overviewSummary.nextSection!.key)}
-                    >
-                      {overviewSummary.nextSection.title} öffnen
-                    </Button>
-                  ) : null}
-                </CardContent>
-              </Card>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                {coreSectionSummaries.map((section) => (
-                  <OverviewShortcutCard
-                    key={section.key}
-                    title={section.title}
-                    status={section.status}
-                    summary={section.summary}
-                    highlighted={overviewSummary.nextSection?.key === section.key}
-                    isOpen={openSections.includes(section.key)}
-                    onClick={() => focusSection(section.key)}
-                  />
-                ))}
-              </div>
-            </section>
-
             <Card
               id="profile-section-quiz"
               ref={(node) => {
