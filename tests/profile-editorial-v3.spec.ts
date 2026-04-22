@@ -16,13 +16,27 @@ test.describe.serial("profile editorial v3", () => {
   test.beforeAll(async () => {
     // Ensure the seeded user exists; the audit scripts created it, but CI may not.
     const { data: list } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 })
-    if (!list.users.find((u) => u.email === EMAIL)) {
-      await admin.auth.admin.createUser({
+    let user = list.users.find((u) => u.email === EMAIL)
+    if (!user) {
+      const { data: created } = await admin.auth.admin.createUser({
         email: EMAIL,
         password: PASSWORD,
         email_confirm: true,
       })
+      user = created.user ?? undefined
     }
+    if (!user) throw new Error("failed to ensure test user exists")
+
+    // Seed profile so the Mitgliedschaft subscription section renders — it is
+    // guarded by profile.stripe_customer_id in src/app/profile/page.tsx.
+    const { error: profErr } = await admin.from("profiles").upsert({
+      id: user.id,
+      stripe_customer_id: "cus_ux_audit_test",
+      subscription_status: "active",
+      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      onboarding_completed: true,
+    })
+    if (profErr) throw new Error(`profiles upsert failed: ${profErr.message}`)
   })
 
   test("renders editorial layout without the removed blocks", async ({ page }) => {

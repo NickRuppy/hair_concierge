@@ -21,6 +21,7 @@ export function ManageSubscriptionButton() {
     <button
       onClick={onClick}
       disabled={loading}
+      aria-label="Abo verwalten"
       className="rounded-lg border bg-card px-5 py-2.5 text-sm font-medium hover:bg-accent disabled:opacity-50"
     >
       {loading ? "Wird geöffnet…" : "Verwalten"}
