@@ -369,11 +369,13 @@ function ProfileFieldCard({
   children,
   onClick,
   className,
+  tone = "default",
 }: {
   field: JourneyField
   children?: ReactNode
   onClick?: () => void
   className?: string
+  tone?: "default" | "attention"
 }) {
   const interactive = Boolean(onClick)
 
@@ -397,6 +399,7 @@ function ProfileFieldCard({
         interactive
           ? "cursor-pointer hover:border-primary/30 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           : "",
+        tone === "attention" ? "border-[var(--brand-coral)]/35 bg-[var(--brand-coral-light)]" : "",
         className,
       )}
     >
@@ -1332,6 +1335,7 @@ export default function ProfilePage() {
                         key={field.key}
                         field={field}
                         onClick={() => openTarget("quiz", field.editTarget, field.key)}
+                        tone={field.value == null ? "attention" : "default"}
                       />
                     ))}
                   </div>
@@ -1636,6 +1640,7 @@ export default function ProfilePage() {
                         key={field.key}
                         field={field}
                         onClick={() => openTarget("styling", field.editTarget)}
+                        tone={field.value == null ? "attention" : "default"}
                       />
                     ))}
                   </div>
@@ -1718,6 +1723,7 @@ export default function ProfilePage() {
                         key={field.key}
                         field={field}
                         onClick={() => openTarget("routine", field.editTarget)}
+                        tone={field.value == null ? "attention" : "default"}
                       />
                     ))}
                   </div>
