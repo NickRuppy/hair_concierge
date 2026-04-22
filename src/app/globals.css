@@ -351,3 +351,12 @@
     animation: none !important;
   }
 }
+
+/* Editorial profile surface — cream base + subtle brand tints. */
+.profile-page {
+  background:
+    radial-gradient(circle at top left, rgba(var(--brand-coral-rgb), 0.08), transparent 26%),
+    radial-gradient(circle at top right, rgba(var(--brand-plum-rgb), 0.08), transparent 24%),
+    hsl(var(--background));
+  min-height: 100vh;
+}

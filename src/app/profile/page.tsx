@@ -1291,8 +1291,10 @@ export default function ProfilePage() {
     return (
       <>
         <Header />
-        <div className="flex min-h-[60vh] items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <div className="profile-page">
+          <div className="flex min-h-[60vh] items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          </div>
         </div>
       </>
     )
@@ -1301,683 +1303,507 @@ export default function ProfilePage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-5xl px-4 py-8">
-        <div className="mb-8">
-          <p className="type-overline text-primary">Profilübersicht</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text-heading)]">
-            Mein Profil
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Je vollständiger dein Profil ist, desto besser werden Empfehlungen. Jeder Abschnitt
-            zeigt dir direkt, wie viel schon da ist und was noch ergänzt werden kann.
-          </p>
-        </div>
+      <div className="profile-page">
+        <main className="mx-auto max-w-5xl px-4 py-8">
+          <div className="mb-8">
+            <p className="type-overline text-primary">Profilübersicht</p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text-heading)]">
+              Mein Profil
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+              Je vollständiger dein Profil ist, desto besser werden Empfehlungen. Jeder Abschnitt
+              zeigt dir direkt, wie viel schon da ist und was noch ergänzt werden kann.
+            </p>
+          </div>
 
-        <div className="space-y-6">
-          <section className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-            <Card className="self-start overflow-hidden border-primary/20 bg-gradient-to-br from-primary/[0.09] via-background to-secondary/10 shadow-sm">
-              <CardContent className="p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary/80">
-                  Profil-Fortschritt
-                </p>
+          <div className="space-y-6">
+            <section className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+              <Card className="self-start overflow-hidden border-primary/20 bg-gradient-to-br from-primary/[0.09] via-background to-secondary/10 shadow-sm">
+                <CardContent className="p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary/80">
+                    Profil-Fortschritt
+                  </p>
 
-                <div className="mt-4 flex flex-wrap items-end gap-3">
-                  <div>
-                    <p className="text-3xl font-semibold tracking-tight text-[var(--text-heading)]">
-                      {overviewSummary.completeCount}/{overviewSummary.totalCount}
-                    </p>
-                    <p className="text-sm text-muted-foreground">Kernbereiche vollständig</p>
+                  <div className="mt-4 flex flex-wrap items-end gap-3">
+                    <div>
+                      <p className="text-3xl font-semibold tracking-tight text-[var(--text-heading)]">
+                        {overviewSummary.completeCount}/{overviewSummary.totalCount}
+                      </p>
+                      <p className="text-sm text-muted-foreground">Kernbereiche vollständig</p>
+                    </div>
+
+                    {overviewSummary.nextSection ? (
+                      <div className="rounded-xl border border-primary/15 bg-background/85 px-4 py-3">
+                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary/80">
+                          Nächster Fokus
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-[var(--text-heading)]">
+                          {overviewSummary.nextSection.title}
+                        </p>
+                      </div>
+                    ) : null}
                   </div>
+
+                  <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                    {overviewSummary.allComplete
+                      ? "Alle Kernbereiche sind gepflegt. Öffne nur noch die Bereiche, in denen sich etwas geändert hat."
+                      : `Je klarer dein Profil ist, desto sauberer kann Hair Concierge Empfehlungen gewichten. Als Nächstes lohnt sich ${overviewSummary.nextSection?.title}.`}
+                  </p>
 
                   {overviewSummary.nextSection ? (
-                    <div className="rounded-xl border border-primary/15 bg-background/85 px-4 py-3">
-                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary/80">
-                        Nächster Fokus
-                      </p>
-                      <p className="mt-1 text-sm font-semibold text-[var(--text-heading)]">
-                        {overviewSummary.nextSection.title}
-                      </p>
-                    </div>
-                  ) : null}
-                </div>
-
-                <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                  {overviewSummary.allComplete
-                    ? "Alle Kernbereiche sind gepflegt. Öffne nur noch die Bereiche, in denen sich etwas geändert hat."
-                    : `Je klarer dein Profil ist, desto sauberer kann Hair Concierge Empfehlungen gewichten. Als Nächstes lohnt sich ${overviewSummary.nextSection?.title}.`}
-                </p>
-
-                {overviewSummary.nextSection ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="mt-5 w-auto"
-                    onClick={() => focusSection(overviewSummary.nextSection!.key)}
-                  >
-                    {overviewSummary.nextSection.title} öffnen
-                  </Button>
-                ) : null}
-              </CardContent>
-            </Card>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              {coreSectionSummaries.map((section) => (
-                <OverviewShortcutCard
-                  key={section.key}
-                  title={section.title}
-                  status={section.status}
-                  summary={section.summary}
-                  highlighted={overviewSummary.nextSection?.key === section.key}
-                  isOpen={openSections.includes(section.key)}
-                  onClick={() => focusSection(section.key)}
-                />
-              ))}
-            </div>
-          </section>
-
-          <Card
-            id="profile-section-quiz"
-            ref={(node) => {
-              sectionRefs.current.quiz = node
-            }}
-            className={cn(
-              "scroll-mt-24 overflow-hidden transition-colors",
-              isQuizOpen ? "border-primary/20" : "border-border/80",
-            )}
-          >
-            <CardHeader className="pb-4">
-              <SectionHeader
-                title={SECTION_META_BY_KEY.quiz.title}
-                description="Deine Antworten aus dem Haar-Check. Du kannst sie hier direkt pflegen, ohne den Flow noch einmal neu zu starten."
-                status={quizStatus}
-                isOpen={isQuizOpen}
-                preview={quizSectionSummary.preview}
-                controls={
-                  <>
-                    {!quizEditing ? (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() => startQuizEditing()}
-                      >
-                        Haar-Check bearbeiten
-                      </Button>
-                    ) : null}
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                      onClick={() => toggleSection("quiz")}
-                      aria-expanded={isQuizOpen}
-                      aria-controls="profile-section-panel-quiz"
-                      aria-label={isQuizOpen ? "Haar-Check zuklappen" : "Haar-Check aufklappen"}
-                      disabled={quizEditing}
-                    >
-                      <span>{isQuizOpen ? "Weniger" : "Mehr"}</span>
-                      <ChevronDown
-                        className={cn("transition-transform", isQuizOpen ? "rotate-180" : "")}
-                      />
-                    </Button>
-                  </>
-                }
-              />
-            </CardHeader>
-            {isQuizOpen ? (
-              <CardContent id="profile-section-panel-quiz" className="space-y-4">
-                {quizNotice ? (
-                  <div
-                    className={cn(
-                      "rounded-xl border px-4 py-3",
-                      quizNotice.variant === "success"
-                        ? "border-primary/20 bg-primary/[0.05]"
-                        : "border-destructive/20 bg-destructive/5",
-                    )}
-                  >
-                    <p className="text-sm font-semibold text-[var(--text-heading)]">
-                      {quizNotice.title}
-                    </p>
-                    <p className="mt-1 text-sm text-muted-foreground">{quizNotice.description}</p>
-                  </div>
-                ) : null}
-
-                {profileLoading ? (
-                  <SectionGridSkeleton count={6} className="md:grid-cols-2 xl:grid-cols-3" />
-                ) : quizEditing ? (
-                  <div className="rounded-2xl border border-primary/15 bg-muted/35 p-5">
-                    <div className="mb-5">
-                      <p className="text-sm font-semibold text-[var(--text-heading)]">
-                        Haar-Check direkt im Profil aktualisieren
-                      </p>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        So musst du nicht noch einmal durch Login- oder Marketing-Schritte. Passe
-                        nur die Antworten an, die sich ändern sollen.
-                      </p>
-                    </div>
-
-                    <div className="grid gap-4 xl:grid-cols-2">
-                      <div
-                        ref={(node) => {
-                          quizFieldRefs.current.hair_texture = node
-                        }}
-                      >
-                        <QuizEditorField
-                          title="Haartextur"
-                          text="Wie dein Haar natürlich fällt, wenn es nass ist."
-                        >
-                          <SegmentedControl
-                            options={HAIR_TEXTURE_OPTIONS}
-                            value={quizDraft.hair_texture}
-                            onChange={(value) =>
-                              setQuizDraft((current) => ({ ...current, hair_texture: value }))
-                            }
-                          />
-                        </QuizEditorField>
-                      </div>
-
-                      <div
-                        ref={(node) => {
-                          quizFieldRefs.current.thickness = node
-                        }}
-                      >
-                        <QuizEditorField
-                          title="Haar-Dicke"
-                          text="Wie dick ein einzelnes Haar im Vergleich zu einem Nähfaden ist."
-                        >
-                          <SegmentedControl
-                            options={HAIR_THICKNESS_OPTIONS}
-                            value={quizDraft.thickness}
-                            onChange={(value) =>
-                              setQuizDraft((current) => ({ ...current, thickness: value }))
-                            }
-                          />
-                        </QuizEditorField>
-                      </div>
-
-                      <div
-                        ref={(node) => {
-                          quizFieldRefs.current.cuticle_condition = node
-                        }}
-                      >
-                        <QuizEditorField
-                          title="Oberfläche"
-                          text="Wie sich dein Haar im Finger-Test anfühlt."
-                        >
-                          <SegmentedControl
-                            options={QUIZ_SURFACE_OPTIONS}
-                            value={quizDraft.cuticle_condition}
-                            onChange={(value) =>
-                              setQuizDraft((current) => ({ ...current, cuticle_condition: value }))
-                            }
-                          />
-                        </QuizEditorField>
-                      </div>
-
-                      <div
-                        ref={(node) => {
-                          quizFieldRefs.current.protein_moisture_balance = node
-                        }}
-                      >
-                        <QuizEditorField
-                          title="Elastizität"
-                          text="Wie dein Haar im Zug-Test reagiert."
-                        >
-                          <SegmentedControl
-                            options={QUIZ_ELASTICITY_OPTIONS}
-                            value={quizDraft.protein_moisture_balance}
-                            onChange={(value) =>
-                              setQuizDraft((current) => ({
-                                ...current,
-                                protein_moisture_balance: value,
-                              }))
-                            }
-                          />
-                        </QuizEditorField>
-                      </div>
-
-                      <div
-                        ref={(node) => {
-                          quizFieldRefs.current.chemical_treatment = node
-                        }}
-                        className="xl:col-span-2"
-                      >
-                        <QuizEditorField
-                          title="Chemische Behandlungen"
-                          text="Was dein Haar in der Vergangenheit chemisch mitgemacht hat."
-                        >
-                          <div className="flex flex-wrap gap-2">
-                            {QUIZ_CHEMICAL_TREATMENT_OPTIONS.map((option) => {
-                              const active = quizDraft.chemical_treatment.includes(option.value)
-
-                              return (
-                                <button
-                                  key={option.value}
-                                  type="button"
-                                  onClick={() =>
-                                    setQuizDraft((current) => ({
-                                      ...current,
-                                      chemical_treatment: toggleChemicalTreatment(
-                                        current.chemical_treatment,
-                                        option.value,
-                                      ),
-                                    }))
-                                  }
-                                  className={cn(
-                                    "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                                    active
-                                      ? "border-primary bg-primary/10 text-primary"
-                                      : "border-border hover:bg-muted",
-                                  )}
-                                >
-                                  {option.label}
-                                </button>
-                              )
-                            })}
-                          </div>
-                        </QuizEditorField>
-                      </div>
-
-                      <div
-                        ref={(node) => {
-                          quizFieldRefs.current.scalp_type = node
-                        }}
-                      >
-                        <QuizEditorField
-                          title="Kopfhauttyp"
-                          text="Wie sich deine Kopfhaut zwischen den Haarwäschen verhält."
-                        >
-                          <SegmentedControl
-                            options={QUIZ_SCALP_TYPE_OPTIONS}
-                            value={quizDraft.scalp_type}
-                            onChange={(value) =>
-                              setQuizDraft((current) => ({ ...current, scalp_type: value }))
-                            }
-                          />
-                        </QuizEditorField>
-                      </div>
-
-                      <div
-                        ref={(node) => {
-                          quizFieldRefs.current.scalp_condition = node
-                        }}
-                      >
-                        <QuizEditorField
-                          title="Kopfhaut-Beschwerden"
-                          text="Wähle eine aktive Beschwerde oder markiere, dass aktuell nichts davon zutrifft."
-                        >
-                          <div className="flex flex-wrap gap-2">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setQuizDraft((current) => ({ ...current, scalp_condition: "" }))
-                              }
-                              className={cn(
-                                "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                                quizDraft.scalp_condition === ""
-                                  ? "border-primary bg-primary/10 text-primary"
-                                  : "border-border hover:bg-muted",
-                              )}
-                            >
-                              Keine Beschwerden
-                            </button>
-                            {QUIZ_SCALP_CONDITION_OPTIONS.map((option) => {
-                              const active = quizDraft.scalp_condition === option.value
-
-                              return (
-                                <button
-                                  key={option.value}
-                                  type="button"
-                                  onClick={() =>
-                                    setQuizDraft((current) => ({
-                                      ...current,
-                                      scalp_condition:
-                                        current.scalp_condition === option.value
-                                          ? ""
-                                          : option.value,
-                                    }))
-                                  }
-                                  className={cn(
-                                    "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                                    active
-                                      ? "border-primary bg-primary/10 text-primary"
-                                      : "border-border hover:bg-muted",
-                                  )}
-                                >
-                                  {option.label}
-                                </button>
-                              )
-                            })}
-                          </div>
-                        </QuizEditorField>
-                      </div>
-
-                      <div
-                        ref={(node) => {
-                          quizFieldRefs.current.concerns = node
-                        }}
-                        className="xl:col-span-2"
-                      >
-                        <QuizEditorField
-                          title="Haar-Bedenken"
-                          text="Bis zu drei aktuelle Themen für deine Längen und Spitzen."
-                        >
-                          <div className="flex flex-wrap gap-2">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setQuizDraft((current) => ({ ...current, concerns: [] }))
-                              }
-                              className={cn(
-                                "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                                quizDraft.concerns.length === 0
-                                  ? "border-primary bg-primary/10 text-primary"
-                                  : "border-border hover:bg-muted",
-                              )}
-                            >
-                              Nichts davon
-                            </button>
-                            {QUIZ_CONCERN_OPTIONS.map((option) => {
-                              const active = quizDraft.concerns.includes(option.value)
-                              const disabled = !active && quizDraft.concerns.length >= 3
-
-                              return (
-                                <button
-                                  key={option.value}
-                                  type="button"
-                                  disabled={disabled}
-                                  onClick={() =>
-                                    setQuizDraft((current) => ({
-                                      ...current,
-                                      concerns: toggleConcern(current.concerns, option.value),
-                                    }))
-                                  }
-                                  className={cn(
-                                    "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors disabled:opacity-40",
-                                    active
-                                      ? "border-primary bg-primary/10 text-primary"
-                                      : "border-border hover:bg-muted",
-                                  )}
-                                >
-                                  {option.label}
-                                </button>
-                              )
-                            })}
-                          </div>
-                        </QuizEditorField>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 flex flex-wrap gap-2">
-                      <Button
-                        type="button"
-                        className="w-auto"
-                        onClick={handleSaveQuiz}
-                        disabled={quizSaving}
-                      >
-                        {quizSaving ? "Speichern..." : "Haar-Check speichern"}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={resetQuizEditing}
-                        disabled={quizSaving}
-                      >
-                        Abbrechen
-                      </Button>
-                    </div>
-                  </div>
-                ) : quizFilled.length > 0 ? (
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {quizFilled.map((field) => (
-                      <ProfileFieldCard
-                        key={field.key}
-                        field={field}
-                        onClick={() => openTarget("quiz", field.editTarget, field.key)}
-                        actionLabel={getFieldActionLabel(field.editTarget)}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <InlinePromptCard
-                    title="Noch keine Quiz-Antworten sichtbar"
-                    text="Sobald du hier Angaben hinterlegst, erscheint der Haar-Check in derselben Reihenfolge wie in der Quiz-Logik."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() => startQuizEditing()}
-                      >
-                        Haar-Check jetzt ausfüllen
-                      </Button>
-                    }
-                  />
-                )}
-
-                {!profileLoading &&
-                !quizEditing &&
-                quizFilled.length > 0 &&
-                quizMissing.length > 0 ? (
-                  <InlinePromptCard
-                    title={getOpenItemsTitle(quizMissing.length, "Angabe", "Angaben")}
-                    text="Du kannst die fehlenden Antworten direkt hier ergänzen."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() => startQuizEditing()}
-                      >
-                        Fehlende Antworten ergänzen
-                      </Button>
-                    }
-                  />
-                ) : null}
-              </CardContent>
-            ) : null}
-          </Card>
-
-          <Card
-            id="profile-section-products"
-            ref={(node) => {
-              sectionRefs.current.products = node
-            }}
-            className={cn(
-              "scroll-mt-24 overflow-hidden transition-colors",
-              isProductsOpen ? "border-primary/20" : "border-border/80",
-            )}
-          >
-            <CardHeader className="pb-4">
-              <SectionHeader
-                title={SECTION_META_BY_KEY.products.title}
-                description="Welche Produktkategorien du aktuell nutzt und welche Produktdetails im Onboarding festgehalten wurden."
-                status={productsStatus}
-                isOpen={isProductsOpen}
-                preview={productsSectionSummary.preview}
-                controls={
-                  <>
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-auto"
-                      onClick={() =>
-                        goToSectionStep("products", buildOnboardingHref("products_basics"))
-                      }
+                      className="mt-5 w-auto"
+                      onClick={() => focusSection(overviewSummary.nextSection!.key)}
                     >
-                      Produkte bearbeiten
+                      {overviewSummary.nextSection.title} öffnen
                     </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                      onClick={() => toggleSection("products")}
-                      aria-expanded={isProductsOpen}
-                      aria-controls="profile-section-panel-products"
-                      aria-label={isProductsOpen ? "Produkte zuklappen" : "Produkte aufklappen"}
+                  ) : null}
+                </CardContent>
+              </Card>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {coreSectionSummaries.map((section) => (
+                  <OverviewShortcutCard
+                    key={section.key}
+                    title={section.title}
+                    status={section.status}
+                    summary={section.summary}
+                    highlighted={overviewSummary.nextSection?.key === section.key}
+                    isOpen={openSections.includes(section.key)}
+                    onClick={() => focusSection(section.key)}
+                  />
+                ))}
+              </div>
+            </section>
+
+            <Card
+              id="profile-section-quiz"
+              ref={(node) => {
+                sectionRefs.current.quiz = node
+              }}
+              className={cn(
+                "scroll-mt-24 overflow-hidden transition-colors",
+                isQuizOpen ? "border-primary/20" : "border-border/80",
+              )}
+            >
+              <CardHeader className="pb-4">
+                <SectionHeader
+                  title={SECTION_META_BY_KEY.quiz.title}
+                  description="Deine Antworten aus dem Haar-Check. Du kannst sie hier direkt pflegen, ohne den Flow noch einmal neu zu starten."
+                  status={quizStatus}
+                  isOpen={isQuizOpen}
+                  preview={quizSectionSummary.preview}
+                  controls={
+                    <>
+                      {!quizEditing ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => startQuizEditing()}
+                        >
+                          Haar-Check bearbeiten
+                        </Button>
+                      ) : null}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
+                        onClick={() => toggleSection("quiz")}
+                        aria-expanded={isQuizOpen}
+                        aria-controls="profile-section-panel-quiz"
+                        aria-label={isQuizOpen ? "Haar-Check zuklappen" : "Haar-Check aufklappen"}
+                        disabled={quizEditing}
+                      >
+                        <span>{isQuizOpen ? "Weniger" : "Mehr"}</span>
+                        <ChevronDown
+                          className={cn("transition-transform", isQuizOpen ? "rotate-180" : "")}
+                        />
+                      </Button>
+                    </>
+                  }
+                />
+              </CardHeader>
+              {isQuizOpen ? (
+                <CardContent id="profile-section-panel-quiz" className="space-y-4">
+                  {quizNotice ? (
+                    <div
+                      className={cn(
+                        "rounded-xl border px-4 py-3",
+                        quizNotice.variant === "success"
+                          ? "border-primary/20 bg-primary/[0.05]"
+                          : "border-destructive/20 bg-destructive/5",
+                      )}
                     >
-                      <span>{isProductsOpen ? "Weniger" : "Mehr"}</span>
-                      <ChevronDown
-                        className={cn("transition-transform", isProductsOpen ? "rotate-180" : "")}
-                      />
-                    </Button>
-                  </>
-                }
-              />
-            </CardHeader>
-            {isProductsOpen ? (
-              <CardContent id="profile-section-panel-products" className="space-y-4">
-                {productsLoading ? (
-                  <div className="space-y-4">
-                    <div className="rounded-xl border border-border/80 bg-card/80 p-4">
-                      <Skeleton className="h-4 w-36" />
-                      <Skeleton className="mt-2 h-3 w-56" />
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {Array.from({ length: 4 }).map((_, index) => (
-                          <Skeleton key={index} className="h-8 w-24 rounded-full" />
-                        ))}
-                      </div>
+                      <p className="text-sm font-semibold text-[var(--text-heading)]">
+                        {quizNotice.title}
+                      </p>
+                      <p className="mt-1 text-sm text-muted-foreground">{quizNotice.description}</p>
                     </div>
-                    <SectionGridSkeleton count={3} className="md:grid-cols-3" />
-                  </div>
-                ) : productRows.length > 0 ? (
-                  <div className="space-y-4">
-                    <div className="rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm">
-                      <div className="min-w-0">
+                  ) : null}
+
+                  {profileLoading ? (
+                    <SectionGridSkeleton count={6} className="md:grid-cols-2 xl:grid-cols-3" />
+                  ) : quizEditing ? (
+                    <div className="rounded-2xl border border-primary/15 bg-muted/35 p-5">
+                      <div className="mb-5">
                         <p className="text-sm font-semibold text-[var(--text-heading)]">
-                          Ausgewählte Kategorien
+                          Haar-Check direkt im Profil aktualisieren
                         </p>
-                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                          Damit ist auf einen Blick sichtbar, welche Produkttypen du überhaupt im
-                          Alltag nutzt.
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          So musst du nicht noch einmal durch Login- oder Marketing-Schritte. Passe
+                          nur die Antworten an, die sich ändern sollen.
                         </p>
                       </div>
 
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {selectedProductCategories.map((category) => (
-                          <Badge
-                            key={category}
-                            variant="outline"
-                            className="border-primary/20 bg-primary/[0.04] px-3 py-1 text-xs text-foreground"
+                      <div className="grid gap-4 xl:grid-cols-2">
+                        <div
+                          ref={(node) => {
+                            quizFieldRefs.current.hair_texture = node
+                          }}
+                        >
+                          <QuizEditorField
+                            title="Haartextur"
+                            text="Wie dein Haar natürlich fällt, wenn es nass ist."
                           >
-                            {category}
-                          </Badge>
-                        ))}
+                            <SegmentedControl
+                              options={HAIR_TEXTURE_OPTIONS}
+                              value={quizDraft.hair_texture}
+                              onChange={(value) =>
+                                setQuizDraft((current) => ({ ...current, hair_texture: value }))
+                              }
+                            />
+                          </QuizEditorField>
+                        </div>
+
+                        <div
+                          ref={(node) => {
+                            quizFieldRefs.current.thickness = node
+                          }}
+                        >
+                          <QuizEditorField
+                            title="Haar-Dicke"
+                            text="Wie dick ein einzelnes Haar im Vergleich zu einem Nähfaden ist."
+                          >
+                            <SegmentedControl
+                              options={HAIR_THICKNESS_OPTIONS}
+                              value={quizDraft.thickness}
+                              onChange={(value) =>
+                                setQuizDraft((current) => ({ ...current, thickness: value }))
+                              }
+                            />
+                          </QuizEditorField>
+                        </div>
+
+                        <div
+                          ref={(node) => {
+                            quizFieldRefs.current.cuticle_condition = node
+                          }}
+                        >
+                          <QuizEditorField
+                            title="Oberfläche"
+                            text="Wie sich dein Haar im Finger-Test anfühlt."
+                          >
+                            <SegmentedControl
+                              options={QUIZ_SURFACE_OPTIONS}
+                              value={quizDraft.cuticle_condition}
+                              onChange={(value) =>
+                                setQuizDraft((current) => ({
+                                  ...current,
+                                  cuticle_condition: value,
+                                }))
+                              }
+                            />
+                          </QuizEditorField>
+                        </div>
+
+                        <div
+                          ref={(node) => {
+                            quizFieldRefs.current.protein_moisture_balance = node
+                          }}
+                        >
+                          <QuizEditorField
+                            title="Elastizität"
+                            text="Wie dein Haar im Zug-Test reagiert."
+                          >
+                            <SegmentedControl
+                              options={QUIZ_ELASTICITY_OPTIONS}
+                              value={quizDraft.protein_moisture_balance}
+                              onChange={(value) =>
+                                setQuizDraft((current) => ({
+                                  ...current,
+                                  protein_moisture_balance: value,
+                                }))
+                              }
+                            />
+                          </QuizEditorField>
+                        </div>
+
+                        <div
+                          ref={(node) => {
+                            quizFieldRefs.current.chemical_treatment = node
+                          }}
+                          className="xl:col-span-2"
+                        >
+                          <QuizEditorField
+                            title="Chemische Behandlungen"
+                            text="Was dein Haar in der Vergangenheit chemisch mitgemacht hat."
+                          >
+                            <div className="flex flex-wrap gap-2">
+                              {QUIZ_CHEMICAL_TREATMENT_OPTIONS.map((option) => {
+                                const active = quizDraft.chemical_treatment.includes(option.value)
+
+                                return (
+                                  <button
+                                    key={option.value}
+                                    type="button"
+                                    onClick={() =>
+                                      setQuizDraft((current) => ({
+                                        ...current,
+                                        chemical_treatment: toggleChemicalTreatment(
+                                          current.chemical_treatment,
+                                          option.value,
+                                        ),
+                                      }))
+                                    }
+                                    className={cn(
+                                      "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                                      active
+                                        ? "border-primary bg-primary/10 text-primary"
+                                        : "border-border hover:bg-muted",
+                                    )}
+                                  >
+                                    {option.label}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </QuizEditorField>
+                        </div>
+
+                        <div
+                          ref={(node) => {
+                            quizFieldRefs.current.scalp_type = node
+                          }}
+                        >
+                          <QuizEditorField
+                            title="Kopfhauttyp"
+                            text="Wie sich deine Kopfhaut zwischen den Haarwäschen verhält."
+                          >
+                            <SegmentedControl
+                              options={QUIZ_SCALP_TYPE_OPTIONS}
+                              value={quizDraft.scalp_type}
+                              onChange={(value) =>
+                                setQuizDraft((current) => ({ ...current, scalp_type: value }))
+                              }
+                            />
+                          </QuizEditorField>
+                        </div>
+
+                        <div
+                          ref={(node) => {
+                            quizFieldRefs.current.scalp_condition = node
+                          }}
+                        >
+                          <QuizEditorField
+                            title="Kopfhaut-Beschwerden"
+                            text="Wähle eine aktive Beschwerde oder markiere, dass aktuell nichts davon zutrifft."
+                          >
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setQuizDraft((current) => ({ ...current, scalp_condition: "" }))
+                                }
+                                className={cn(
+                                  "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                                  quizDraft.scalp_condition === ""
+                                    ? "border-primary bg-primary/10 text-primary"
+                                    : "border-border hover:bg-muted",
+                                )}
+                              >
+                                Keine Beschwerden
+                              </button>
+                              {QUIZ_SCALP_CONDITION_OPTIONS.map((option) => {
+                                const active = quizDraft.scalp_condition === option.value
+
+                                return (
+                                  <button
+                                    key={option.value}
+                                    type="button"
+                                    onClick={() =>
+                                      setQuizDraft((current) => ({
+                                        ...current,
+                                        scalp_condition:
+                                          current.scalp_condition === option.value
+                                            ? ""
+                                            : option.value,
+                                      }))
+                                    }
+                                    className={cn(
+                                      "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                                      active
+                                        ? "border-primary bg-primary/10 text-primary"
+                                        : "border-border hover:bg-muted",
+                                    )}
+                                  >
+                                    {option.label}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </QuizEditorField>
+                        </div>
+
+                        <div
+                          ref={(node) => {
+                            quizFieldRefs.current.concerns = node
+                          }}
+                          className="xl:col-span-2"
+                        >
+                          <QuizEditorField
+                            title="Haar-Bedenken"
+                            text="Bis zu drei aktuelle Themen für deine Längen und Spitzen."
+                          >
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setQuizDraft((current) => ({ ...current, concerns: [] }))
+                                }
+                                className={cn(
+                                  "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
+                                  quizDraft.concerns.length === 0
+                                    ? "border-primary bg-primary/10 text-primary"
+                                    : "border-border hover:bg-muted",
+                                )}
+                              >
+                                Nichts davon
+                              </button>
+                              {QUIZ_CONCERN_OPTIONS.map((option) => {
+                                const active = quizDraft.concerns.includes(option.value)
+                                const disabled = !active && quizDraft.concerns.length >= 3
+
+                                return (
+                                  <button
+                                    key={option.value}
+                                    type="button"
+                                    disabled={disabled}
+                                    onClick={() =>
+                                      setQuizDraft((current) => ({
+                                        ...current,
+                                        concerns: toggleConcern(current.concerns, option.value),
+                                      }))
+                                    }
+                                    className={cn(
+                                      "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors disabled:opacity-40",
+                                      active
+                                        ? "border-primary bg-primary/10 text-primary"
+                                        : "border-border hover:bg-muted",
+                                    )}
+                                  >
+                                    {option.label}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </QuizEditorField>
+                        </div>
+                      </div>
+
+                      <div className="mt-6 flex flex-wrap gap-2">
+                        <Button
+                          type="button"
+                          className="w-auto"
+                          onClick={handleSaveQuiz}
+                          disabled={quizSaving}
+                        >
+                          {quizSaving ? "Speichern..." : "Haar-Check speichern"}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={resetQuizEditing}
+                          disabled={quizSaving}
+                        >
+                          Abbrechen
+                        </Button>
                       </div>
                     </div>
-
-                    <div className="hidden overflow-hidden rounded-xl border border-border/80 md:block">
-                      <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.9fr)] gap-4 bg-muted/35 px-4 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-                        <span>Kategorie</span>
-                        <span>Produkt</span>
-                        <span>Häufigkeit</span>
-                      </div>
-
-                      {productRows.map((row) => (
-                        <button
-                          key={row.key}
-                          type="button"
-                          onClick={() =>
-                            goToSectionStep(
-                              "products",
-                              buildOnboardingHref("product_drilldown", {
-                                category: row.category,
-                                singleStep: true,
-                              }),
-                            )
-                          }
-                          className="grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.9fr)] gap-4 border-t border-border/70 px-4 py-4 text-left transition-colors hover:bg-primary/[0.04]"
-                        >
-                          <div>
-                            <p className="text-sm font-semibold text-[var(--text-heading)]">
-                              {row.categoryLabel}
-                            </p>
-                            {!row.isComplete ? (
-                              <p className="mt-1 text-xs text-muted-foreground">
-                                Details fehlen noch
-                              </p>
-                            ) : null}
-                          </div>
-                          <p
-                            className={cn(
-                              "text-sm",
-                              row.productName ? "text-foreground" : "text-muted-foreground",
-                            )}
-                          >
-                            {row.productName ?? "Noch offen"}
-                          </p>
-                          <p
-                            className={cn(
-                              "text-sm",
-                              row.frequencyLabel ? "text-foreground" : "text-muted-foreground",
-                            )}
-                          >
-                            {row.frequencyLabel ?? "Noch offen"}
-                          </p>
-                        </button>
+                  ) : quizFilled.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {quizFilled.map((field) => (
+                        <ProfileFieldCard
+                          key={field.key}
+                          field={field}
+                          onClick={() => openTarget("quiz", field.editTarget, field.key)}
+                          actionLabel={getFieldActionLabel(field.editTarget)}
+                        />
                       ))}
                     </div>
-
-                    <div className="grid gap-3 md:hidden">
-                      {productRows.map((row) => (
-                        <button
-                          key={row.key}
+                  ) : (
+                    <InlinePromptCard
+                      title="Noch keine Quiz-Antworten sichtbar"
+                      text="Sobald du hier Angaben hinterlegst, erscheint der Haar-Check in derselben Reihenfolge wie in der Quiz-Logik."
+                      action={
+                        <Button
                           type="button"
-                          onClick={() =>
-                            goToSectionStep(
-                              "products",
-                              buildOnboardingHref("product_drilldown", {
-                                category: row.category,
-                                singleStep: true,
-                              }),
-                            )
-                          }
-                          className="rounded-xl border border-border/80 bg-card/80 p-4 text-left shadow-sm transition-colors hover:bg-primary/[0.04]"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => startQuizEditing()}
                         >
-                          <p className="text-sm font-semibold text-[var(--text-heading)]">
-                            {row.categoryLabel}
-                          </p>
-                          <div className="mt-3 space-y-2 text-sm">
-                            <p>
-                              <span className="text-muted-foreground">Produkt:</span>{" "}
-                              <span
-                                className={
-                                  row.productName ? "text-foreground" : "text-muted-foreground"
-                                }
-                              >
-                                {row.productName ?? "Noch offen"}
-                              </span>
-                            </p>
-                            <p>
-                              <span className="text-muted-foreground">Häufigkeit:</span>{" "}
-                              <span
-                                className={
-                                  row.frequencyLabel ? "text-foreground" : "text-muted-foreground"
-                                }
-                              >
-                                {row.frequencyLabel ?? "Noch offen"}
-                              </span>
-                            </p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <InlinePromptCard
-                    title={
-                      profile?.onboarding_completed
-                        ? "Noch keine Produkte ausgewählt"
-                        : "Noch keine Produktangaben vorhanden"
-                    }
-                    text={
-                      profile?.onboarding_completed
-                        ? "Im aktuellen Onboarding-Stand wurden noch keine Produktkategorien gespeichert."
-                        : "Sobald du den Produktteil im Onboarding durchläufst, erscheint hier eine klare Übersicht nach Kategorie, Produkt und Häufigkeit."
-                    }
-                    action={
+                          Haar-Check jetzt ausfüllen
+                        </Button>
+                      }
+                    />
+                  )}
+
+                  {!profileLoading &&
+                  !quizEditing &&
+                  quizFilled.length > 0 &&
+                  quizMissing.length > 0 ? (
+                    <InlinePromptCard
+                      title={getOpenItemsTitle(quizMissing.length, "Angabe", "Angaben")}
+                      text="Du kannst die fehlenden Antworten direkt hier ergänzen."
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => startQuizEditing()}
+                        >
+                          Fehlende Antworten ergänzen
+                        </Button>
+                      }
+                    />
+                  ) : null}
+                </CardContent>
+              ) : null}
+            </Card>
+
+            <Card
+              id="profile-section-products"
+              ref={(node) => {
+                sectionRefs.current.products = node
+              }}
+              className={cn(
+                "scroll-mt-24 overflow-hidden transition-colors",
+                isProductsOpen ? "border-primary/20" : "border-border/80",
+              )}
+            >
+              <CardHeader className="pb-4">
+                <SectionHeader
+                  title={SECTION_META_BY_KEY.products.title}
+                  description="Welche Produktkategorien du aktuell nutzt und welche Produktdetails im Onboarding festgehalten wurden."
+                  status={productsStatus}
+                  isOpen={isProductsOpen}
+                  preview={productsSectionSummary.preview}
+                  controls={
+                    <>
                       <Button
                         type="button"
                         variant="outline"
@@ -1986,512 +1812,695 @@ export default function ProfilePage() {
                           goToSectionStep("products", buildOnboardingHref("products_basics"))
                         }
                       >
-                        Produktteil öffnen
+                        Produkte bearbeiten
                       </Button>
-                    }
-                  />
-                )}
-
-                {!productsLoading && incompleteProductRows.length > 0 ? (
-                  <InlinePromptCard
-                    title={getOpenItemsTitle(
-                      incompleteProductRows.length,
-                      "Produktdetail",
-                      "Produktdetails",
-                    )}
-                    text="Öffne den Produktteil, um die fehlenden Angaben zu ergänzen."
-                    action={
                       <Button
                         type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() =>
-                          goToSectionStep(
-                            "products",
-                            buildOnboardingHref("product_drilldown", {
-                              category: incompleteProductRows[0]?.category ?? null,
-                            }),
-                          )
-                        }
+                        variant="ghost"
+                        size="sm"
+                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
+                        onClick={() => toggleSection("products")}
+                        aria-expanded={isProductsOpen}
+                        aria-controls="profile-section-panel-products"
+                        aria-label={isProductsOpen ? "Produkte zuklappen" : "Produkte aufklappen"}
                       >
-                        Details ergänzen
+                        <span>{isProductsOpen ? "Weniger" : "Mehr"}</span>
+                        <ChevronDown
+                          className={cn("transition-transform", isProductsOpen ? "rotate-180" : "")}
+                        />
                       </Button>
-                    }
-                  />
-                ) : null}
-              </CardContent>
-            ) : null}
-          </Card>
+                    </>
+                  }
+                />
+              </CardHeader>
+              {isProductsOpen ? (
+                <CardContent id="profile-section-panel-products" className="space-y-4">
+                  {productsLoading ? (
+                    <div className="space-y-4">
+                      <div className="rounded-xl border border-border/80 bg-card/80 p-4">
+                        <Skeleton className="h-4 w-36" />
+                        <Skeleton className="mt-2 h-3 w-56" />
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {Array.from({ length: 4 }).map((_, index) => (
+                            <Skeleton key={index} className="h-8 w-24 rounded-full" />
+                          ))}
+                        </div>
+                      </div>
+                      <SectionGridSkeleton count={3} className="md:grid-cols-3" />
+                    </div>
+                  ) : productRows.length > 0 ? (
+                    <div className="space-y-4">
+                      <div className="rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm">
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-[var(--text-heading)]">
+                            Ausgewählte Kategorien
+                          </p>
+                          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                            Damit ist auf einen Blick sichtbar, welche Produkttypen du überhaupt im
+                            Alltag nutzt.
+                          </p>
+                        </div>
 
-          <Card
-            id="profile-section-styling"
-            ref={(node) => {
-              sectionRefs.current.styling = node
-            }}
-            className={cn(
-              "scroll-mt-24 overflow-hidden transition-colors",
-              isStylingOpen ? "border-primary/20" : "border-border/80",
-            )}
-          >
-            <CardHeader className="pb-4">
-              <SectionHeader
-                title={SECTION_META_BY_KEY.styling.title}
-                description={SECTION_META_BY_KEY.styling.description}
-                status={stylingStatus}
-                isOpen={isStylingOpen}
-                preview={stylingSectionSummary.preview}
-                controls={
-                  <>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() => goToSectionStep("styling", buildOnboardingHref("heat_tools"))}
-                    >
-                      Styling bearbeiten
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                      onClick={() => toggleSection("styling")}
-                      aria-expanded={isStylingOpen}
-                      aria-controls="profile-section-panel-styling"
-                      aria-label={isStylingOpen ? "Styling zuklappen" : "Styling aufklappen"}
-                    >
-                      <span>{isStylingOpen ? "Weniger" : "Mehr"}</span>
-                      <ChevronDown
-                        className={cn("transition-transform", isStylingOpen ? "rotate-180" : "")}
-                      />
-                    </Button>
-                  </>
-                }
-              />
-            </CardHeader>
-            {isStylingOpen ? (
-              <CardContent id="profile-section-panel-styling" className="space-y-4">
-                {profileLoading ? (
-                  <SectionGridSkeleton count={3} className="md:grid-cols-2 xl:grid-cols-3" />
-                ) : stylingFilled.length > 0 ? (
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {stylingFilled.map((field) => (
-                      <ProfileFieldCard
-                        key={field.key}
-                        field={field}
-                        onClick={() => openTarget("styling", field.editTarget)}
-                        actionLabel={getFieldActionLabel(field.editTarget)}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <InlinePromptCard
-                    title="Noch keine Styling-Angaben vorhanden"
-                    text="Hitzetools, Frequenz und Hitzeschutz erscheinen hier, sobald du den Styling-Teil des Onboardings speicherst."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() =>
-                          goToSectionStep("styling", buildOnboardingHref("heat_tools"))
-                        }
-                      >
-                        Styling öffnen
-                      </Button>
-                    }
-                  />
-                )}
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {selectedProductCategories.map((category) => (
+                            <Badge
+                              key={category}
+                              variant="outline"
+                              className="border-primary/20 bg-primary/[0.04] px-3 py-1 text-xs text-foreground"
+                            >
+                              {category}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
 
-                {!profileLoading && stylingFilled.length > 0 && stylingMissing.length > 0 ? (
-                  <InlinePromptCard
-                    title={getOpenItemsTitle(stylingMissing.length, "Angabe", "Angaben")}
-                    text="Im Styling-Teil kannst du die fehlenden Angaben ergänzen."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() =>
-                          goToSectionStep("styling", buildOnboardingHref("heat_tools"))
-                        }
-                      >
-                        Styling ergänzen
-                      </Button>
-                    }
-                  />
-                ) : null}
-              </CardContent>
-            ) : null}
-          </Card>
+                      <div className="hidden overflow-hidden rounded-xl border border-border/80 md:block">
+                        <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.9fr)] gap-4 bg-muted/35 px-4 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                          <span>Kategorie</span>
+                          <span>Produkt</span>
+                          <span>Häufigkeit</span>
+                        </div>
 
-          <Card
-            id="profile-section-routine"
-            ref={(node) => {
-              sectionRefs.current.routine = node
-            }}
-            className={cn(
-              "scroll-mt-24 overflow-hidden transition-colors",
-              isRoutineOpen ? "border-primary/20" : "border-border/80",
-            )}
-          >
-            <CardHeader className="pb-4">
-              <SectionHeader
-                title={SECTION_META_BY_KEY.routine.title}
-                description={SECTION_META_BY_KEY.routine.description}
-                status={routineStatus}
-                isOpen={isRoutineOpen}
-                preview={routineSectionSummary.preview}
-                controls={
-                  <>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() =>
-                        goToSectionStep("routine", buildOnboardingHref("towel_material"))
+                        {productRows.map((row) => (
+                          <button
+                            key={row.key}
+                            type="button"
+                            onClick={() =>
+                              goToSectionStep(
+                                "products",
+                                buildOnboardingHref("product_drilldown", {
+                                  category: row.category,
+                                  singleStep: true,
+                                }),
+                              )
+                            }
+                            className="grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.9fr)] gap-4 border-t border-border/70 px-4 py-4 text-left transition-colors hover:bg-primary/[0.04]"
+                          >
+                            <div>
+                              <p className="text-sm font-semibold text-[var(--text-heading)]">
+                                {row.categoryLabel}
+                              </p>
+                              {!row.isComplete ? (
+                                <p className="mt-1 text-xs text-muted-foreground">
+                                  Details fehlen noch
+                                </p>
+                              ) : null}
+                            </div>
+                            <p
+                              className={cn(
+                                "text-sm",
+                                row.productName ? "text-foreground" : "text-muted-foreground",
+                              )}
+                            >
+                              {row.productName ?? "Noch offen"}
+                            </p>
+                            <p
+                              className={cn(
+                                "text-sm",
+                                row.frequencyLabel ? "text-foreground" : "text-muted-foreground",
+                              )}
+                            >
+                              {row.frequencyLabel ?? "Noch offen"}
+                            </p>
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="grid gap-3 md:hidden">
+                        {productRows.map((row) => (
+                          <button
+                            key={row.key}
+                            type="button"
+                            onClick={() =>
+                              goToSectionStep(
+                                "products",
+                                buildOnboardingHref("product_drilldown", {
+                                  category: row.category,
+                                  singleStep: true,
+                                }),
+                              )
+                            }
+                            className="rounded-xl border border-border/80 bg-card/80 p-4 text-left shadow-sm transition-colors hover:bg-primary/[0.04]"
+                          >
+                            <p className="text-sm font-semibold text-[var(--text-heading)]">
+                              {row.categoryLabel}
+                            </p>
+                            <div className="mt-3 space-y-2 text-sm">
+                              <p>
+                                <span className="text-muted-foreground">Produkt:</span>{" "}
+                                <span
+                                  className={
+                                    row.productName ? "text-foreground" : "text-muted-foreground"
+                                  }
+                                >
+                                  {row.productName ?? "Noch offen"}
+                                </span>
+                              </p>
+                              <p>
+                                <span className="text-muted-foreground">Häufigkeit:</span>{" "}
+                                <span
+                                  className={
+                                    row.frequencyLabel ? "text-foreground" : "text-muted-foreground"
+                                  }
+                                >
+                                  {row.frequencyLabel ?? "Noch offen"}
+                                </span>
+                              </p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <InlinePromptCard
+                      title={
+                        profile?.onboarding_completed
+                          ? "Noch keine Produkte ausgewählt"
+                          : "Noch keine Produktangaben vorhanden"
                       }
-                    >
-                      Alltag bearbeiten
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                      onClick={() => toggleSection("routine")}
-                      aria-expanded={isRoutineOpen}
-                      aria-controls="profile-section-panel-routine"
-                      aria-label={isRoutineOpen ? "Alltag zuklappen" : "Alltag aufklappen"}
-                    >
-                      <span>{isRoutineOpen ? "Weniger" : "Mehr"}</span>
-                      <ChevronDown
-                        className={cn("transition-transform", isRoutineOpen ? "rotate-180" : "")}
-                      />
-                    </Button>
-                  </>
-                }
-              />
-            </CardHeader>
-            {isRoutineOpen ? (
-              <CardContent id="profile-section-panel-routine" className="space-y-4">
-                {profileLoading ? (
-                  <SectionGridSkeleton count={5} className="md:grid-cols-2 xl:grid-cols-3" />
-                ) : routineFilled.length > 0 ? (
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {routineFilled.map((field) => (
-                      <ProfileFieldCard
-                        key={field.key}
-                        field={field}
-                        onClick={() => openTarget("routine", field.editTarget)}
-                        actionLabel={getFieldActionLabel(field.editTarget)}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <InlinePromptCard
-                    title="Noch keine Alltagsangaben vorhanden"
-                    text="Trocknen, Bürste und Nachtschutz erscheinen hier, sobald du den Alltagsteil im Onboarding speicherst."
-                    action={
+                      text={
+                        profile?.onboarding_completed
+                          ? "Im aktuellen Onboarding-Stand wurden noch keine Produktkategorien gespeichert."
+                          : "Sobald du den Produktteil im Onboarding durchläufst, erscheint hier eine klare Übersicht nach Kategorie, Produkt und Häufigkeit."
+                      }
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() =>
+                            goToSectionStep("products", buildOnboardingHref("products_basics"))
+                          }
+                        >
+                          Produktteil öffnen
+                        </Button>
+                      }
+                    />
+                  )}
+
+                  {!productsLoading && incompleteProductRows.length > 0 ? (
+                    <InlinePromptCard
+                      title={getOpenItemsTitle(
+                        incompleteProductRows.length,
+                        "Produktdetail",
+                        "Produktdetails",
+                      )}
+                      text="Öffne den Produktteil, um die fehlenden Angaben zu ergänzen."
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() =>
+                            goToSectionStep(
+                              "products",
+                              buildOnboardingHref("product_drilldown", {
+                                category: incompleteProductRows[0]?.category ?? null,
+                              }),
+                            )
+                          }
+                        >
+                          Details ergänzen
+                        </Button>
+                      }
+                    />
+                  ) : null}
+                </CardContent>
+              ) : null}
+            </Card>
+
+            <Card
+              id="profile-section-styling"
+              ref={(node) => {
+                sectionRefs.current.styling = node
+              }}
+              className={cn(
+                "scroll-mt-24 overflow-hidden transition-colors",
+                isStylingOpen ? "border-primary/20" : "border-border/80",
+              )}
+            >
+              <CardHeader className="pb-4">
+                <SectionHeader
+                  title={SECTION_META_BY_KEY.styling.title}
+                  description={SECTION_META_BY_KEY.styling.description}
+                  status={stylingStatus}
+                  isOpen={isStylingOpen}
+                  preview={stylingSectionSummary.preview}
+                  controls={
+                    <>
                       <Button
                         type="button"
                         variant="outline"
                         className="w-auto"
                         onClick={() =>
-                          goToSectionStep("routine", buildOnboardingHref("towel_material"))
+                          goToSectionStep("styling", buildOnboardingHref("heat_tools"))
                         }
                       >
-                        Alltag öffnen
+                        Styling bearbeiten
                       </Button>
-                    }
-                  />
-                )}
-
-                {!profileLoading && routineFilled.length > 0 && routineMissing.length > 0 ? (
-                  <InlinePromptCard
-                    title={getOpenItemsTitle(routineMissing.length, "Angabe", "Angaben")}
-                    text="Im Alltag-Teil kannst du die fehlenden Angaben ergänzen."
-                    action={
                       <Button
                         type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() =>
-                          goToSectionStep("routine", buildOnboardingHref("towel_material"))
-                        }
+                        variant="ghost"
+                        size="sm"
+                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
+                        onClick={() => toggleSection("styling")}
+                        aria-expanded={isStylingOpen}
+                        aria-controls="profile-section-panel-styling"
+                        aria-label={isStylingOpen ? "Styling zuklappen" : "Styling aufklappen"}
                       >
-                        Alltag ergänzen
+                        <span>{isStylingOpen ? "Weniger" : "Mehr"}</span>
+                        <ChevronDown
+                          className={cn("transition-transform", isStylingOpen ? "rotate-180" : "")}
+                        />
                       </Button>
-                    }
-                  />
-                ) : null}
-              </CardContent>
-            ) : null}
-          </Card>
-
-          <Card
-            id="profile-section-goals"
-            ref={(node) => {
-              sectionRefs.current.goals = node
-            }}
-            className={cn(
-              "scroll-mt-24 overflow-hidden transition-colors",
-              isGoalsOpen ? "border-primary/20" : "border-border/80",
-            )}
-          >
-            <CardHeader className="pb-4">
-              <SectionHeader
-                title={SECTION_META_BY_KEY.goals.title}
-                description={SECTION_META_BY_KEY.goals.description}
-                status={goalsStatus}
-                isOpen={isGoalsOpen}
-                preview={goalsSectionSummary.preview}
-                controls={
-                  <>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() => goToSectionStep("goals", "/profile/edit/goals")}
-                    >
-                      Ziele bearbeiten
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                      onClick={() => toggleSection("goals")}
-                      aria-expanded={isGoalsOpen}
-                      aria-controls="profile-section-panel-goals"
-                      aria-label={isGoalsOpen ? "Ziele zuklappen" : "Ziele aufklappen"}
-                    >
-                      <span>{isGoalsOpen ? "Weniger" : "Mehr"}</span>
-                      <ChevronDown
-                        className={cn("transition-transform", isGoalsOpen ? "rotate-180" : "")}
-                      />
-                    </Button>
-                  </>
-                }
-              />
-            </CardHeader>
-            {isGoalsOpen ? (
-              <CardContent id="profile-section-panel-goals" className="space-y-4">
-                {profileLoading ? (
-                  <div className="rounded-xl border border-border/70 bg-card/70 p-4">
-                    <Skeleton className="h-4 w-32" />
-                    <Skeleton className="mt-2 h-3 w-56" />
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {Array.from({ length: 5 }).map((_, index) => (
-                        <Skeleton key={index} className="h-8 w-28 rounded-full" />
+                    </>
+                  }
+                />
+              </CardHeader>
+              {isStylingOpen ? (
+                <CardContent id="profile-section-panel-styling" className="space-y-4">
+                  {profileLoading ? (
+                    <SectionGridSkeleton count={3} className="md:grid-cols-2 xl:grid-cols-3" />
+                  ) : stylingFilled.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {stylingFilled.map((field) => (
+                        <ProfileFieldCard
+                          key={field.key}
+                          field={field}
+                          onClick={() => openTarget("styling", field.editTarget)}
+                          actionLabel={getFieldActionLabel(field.editTarget)}
+                        />
                       ))}
                     </div>
-                  </div>
-                ) : goalsField?.value ? (
-                  <ProfileFieldCard
-                    field={goalsField}
-                    className="max-w-3xl"
-                    onClick={() => openTarget("goals", goalsField.editTarget)}
-                    actionLabel={getFieldActionLabel(goalsField.editTarget)}
-                  >
-                    <ProfileFieldValue
-                      value={goalsField.value}
-                      displayMode={goalsField.displayMode}
+                  ) : (
+                    <InlinePromptCard
+                      title="Noch keine Styling-Angaben vorhanden"
+                      text="Hitzetools, Frequenz und Hitzeschutz erscheinen hier, sobald du den Styling-Teil des Onboardings speicherst."
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() =>
+                            goToSectionStep("styling", buildOnboardingHref("heat_tools"))
+                          }
+                        >
+                          Styling öffnen
+                        </Button>
+                      }
                     />
-                  </ProfileFieldCard>
-                ) : (
-                  <InlinePromptCard
-                    title="Noch keine Ziele gewählt"
-                    text="Hier landen deine Haarziele, sobald du sie im Haar-Check oder unter „Ziele bearbeiten“ speicherst."
-                    action={
+                  )}
+
+                  {!profileLoading && stylingFilled.length > 0 && stylingMissing.length > 0 ? (
+                    <InlinePromptCard
+                      title={getOpenItemsTitle(stylingMissing.length, "Angabe", "Angaben")}
+                      text="Im Styling-Teil kannst du die fehlenden Angaben ergänzen."
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() =>
+                            goToSectionStep("styling", buildOnboardingHref("heat_tools"))
+                          }
+                        >
+                          Styling ergänzen
+                        </Button>
+                      }
+                    />
+                  ) : null}
+                </CardContent>
+              ) : null}
+            </Card>
+
+            <Card
+              id="profile-section-routine"
+              ref={(node) => {
+                sectionRefs.current.routine = node
+              }}
+              className={cn(
+                "scroll-mt-24 overflow-hidden transition-colors",
+                isRoutineOpen ? "border-primary/20" : "border-border/80",
+              )}
+            >
+              <CardHeader className="pb-4">
+                <SectionHeader
+                  title={SECTION_META_BY_KEY.routine.title}
+                  description={SECTION_META_BY_KEY.routine.description}
+                  status={routineStatus}
+                  isOpen={isRoutineOpen}
+                  preview={routineSectionSummary.preview}
+                  controls={
+                    <>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-auto"
+                        onClick={() =>
+                          goToSectionStep("routine", buildOnboardingHref("towel_material"))
+                        }
+                      >
+                        Alltag bearbeiten
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
+                        onClick={() => toggleSection("routine")}
+                        aria-expanded={isRoutineOpen}
+                        aria-controls="profile-section-panel-routine"
+                        aria-label={isRoutineOpen ? "Alltag zuklappen" : "Alltag aufklappen"}
+                      >
+                        <span>{isRoutineOpen ? "Weniger" : "Mehr"}</span>
+                        <ChevronDown
+                          className={cn("transition-transform", isRoutineOpen ? "rotate-180" : "")}
+                        />
+                      </Button>
+                    </>
+                  }
+                />
+              </CardHeader>
+              {isRoutineOpen ? (
+                <CardContent id="profile-section-panel-routine" className="space-y-4">
+                  {profileLoading ? (
+                    <SectionGridSkeleton count={5} className="md:grid-cols-2 xl:grid-cols-3" />
+                  ) : routineFilled.length > 0 ? (
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {routineFilled.map((field) => (
+                        <ProfileFieldCard
+                          key={field.key}
+                          field={field}
+                          onClick={() => openTarget("routine", field.editTarget)}
+                          actionLabel={getFieldActionLabel(field.editTarget)}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <InlinePromptCard
+                      title="Noch keine Alltagsangaben vorhanden"
+                      text="Trocknen, Bürste und Nachtschutz erscheinen hier, sobald du den Alltagsteil im Onboarding speicherst."
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() =>
+                            goToSectionStep("routine", buildOnboardingHref("towel_material"))
+                          }
+                        >
+                          Alltag öffnen
+                        </Button>
+                      }
+                    />
+                  )}
+
+                  {!profileLoading && routineFilled.length > 0 && routineMissing.length > 0 ? (
+                    <InlinePromptCard
+                      title={getOpenItemsTitle(routineMissing.length, "Angabe", "Angaben")}
+                      text="Im Alltag-Teil kannst du die fehlenden Angaben ergänzen."
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() =>
+                            goToSectionStep("routine", buildOnboardingHref("towel_material"))
+                          }
+                        >
+                          Alltag ergänzen
+                        </Button>
+                      }
+                    />
+                  ) : null}
+                </CardContent>
+              ) : null}
+            </Card>
+
+            <Card
+              id="profile-section-goals"
+              ref={(node) => {
+                sectionRefs.current.goals = node
+              }}
+              className={cn(
+                "scroll-mt-24 overflow-hidden transition-colors",
+                isGoalsOpen ? "border-primary/20" : "border-border/80",
+              )}
+            >
+              <CardHeader className="pb-4">
+                <SectionHeader
+                  title={SECTION_META_BY_KEY.goals.title}
+                  description={SECTION_META_BY_KEY.goals.description}
+                  status={goalsStatus}
+                  isOpen={isGoalsOpen}
+                  preview={goalsSectionSummary.preview}
+                  controls={
+                    <>
                       <Button
                         type="button"
                         variant="outline"
                         className="w-auto"
                         onClick={() => goToSectionStep("goals", "/profile/edit/goals")}
                       >
-                        Ziele öffnen
+                        Ziele bearbeiten
                       </Button>
-                    }
-                  />
-                )}
-              </CardContent>
-            ) : null}
-          </Card>
-
-          <Card
-            id="profile-section-memory"
-            ref={(node) => {
-              sectionRefs.current.memory = node
-            }}
-            className={cn(
-              "scroll-mt-24 overflow-hidden transition-colors",
-              isMemoryOpen ? "border-primary/20" : "border-border/80",
-            )}
-          >
-            <CardHeader className="pb-4">
-              <SectionHeader
-                title={SECTION_META_BY_KEY.memory.title}
-                description={SECTION_META_BY_KEY.memory.description}
-                status={memoryStatus}
-                isOpen={isMemoryOpen}
-                preview={memorySectionSummary.preview}
-                controls={
-                  <>
-                    <Switch
-                      checked={memoryEnabled}
-                      disabled={memoryLoading || memorySaving}
-                      onCheckedChange={handleMemoryToggle}
-                      aria-label="Erinnerungen aktivieren"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
-                      onClick={() => toggleSection("memory")}
-                      aria-expanded={isMemoryOpen}
-                      aria-controls="profile-section-panel-memory"
-                      aria-label={
-                        isMemoryOpen
-                          ? "Was Hair Concierge sich merkt zuklappen"
-                          : "Was Hair Concierge sich merkt aufklappen"
-                      }
-                    >
-                      <span>{isMemoryOpen ? "Weniger" : "Mehr"}</span>
-                      <ChevronDown
-                        className={cn("transition-transform", isMemoryOpen ? "rotate-180" : "")}
-                      />
-                    </Button>
-                  </>
-                }
-              />
-            </CardHeader>
-            {isMemoryOpen ? (
-              <CardContent id="profile-section-panel-memory">
-                {memoryLoading ? (
-                  <p className="text-sm text-muted-foreground">Erinnerungen werden geladen...</p>
-                ) : memoryEntries.length === 0 ? (
-                  <InlinePromptCard
-                    title="Noch keine gespeicherten Erinnerungen"
-                    text="Wenn du im Chat konkrete Haarpflege-Infos gibst, können sie hier als langfristiger Kontext auftauchen."
-                  />
-                ) : (
-                  <div className="divide-y">
-                    {memoryEntries.map((entry) => (
-                      <div key={entry.id} className="py-4 first:pt-0 last:pb-0">
-                        {editingMemoryId === entry.id ? (
-                          <div className="space-y-3">
-                            <Textarea
-                              value={memoryDraft}
-                              onChange={(event) => setMemoryDraft(event.target.value)}
-                              rows={3}
-                              maxLength={500}
-                            />
-                            <div className="flex flex-wrap gap-2">
-                              <Button
-                                type="button"
-                                className="w-auto"
-                                onClick={() => handleSaveMemory(entry.id)}
-                                disabled={memorySaving || !memoryDraft.trim()}
-                              >
-                                Speichern
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                className="w-auto"
-                                onClick={() => {
-                                  setEditingMemoryId(null)
-                                  setMemoryDraft("")
-                                }}
-                              >
-                                Abbrechen
-                              </Button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="min-w-0">
-                              <p className="text-sm text-foreground">{entry.content}</p>
-                              <p className="mt-1 text-xs text-muted-foreground">
-                                Aktualisiert am{" "}
-                                {new Date(entry.updated_at).toLocaleDateString("de-DE")}
-                              </p>
-                            </div>
-                            <div className="flex shrink-0 gap-2">
-                              <button
-                                type="button"
-                                onClick={() => startEditingMemory(entry)}
-                                className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-                              >
-                                Bearbeiten
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteMemory(entry.id)}
-                                disabled={memorySaving}
-                                className="text-xs font-medium text-muted-foreground transition-colors hover:text-destructive disabled:opacity-50"
-                              >
-                                Löschen
-                              </button>
-                            </div>
-                          </div>
-                        )}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
+                        onClick={() => toggleSection("goals")}
+                        aria-expanded={isGoalsOpen}
+                        aria-controls="profile-section-panel-goals"
+                        aria-label={isGoalsOpen ? "Ziele zuklappen" : "Ziele aufklappen"}
+                      >
+                        <span>{isGoalsOpen ? "Weniger" : "Mehr"}</span>
+                        <ChevronDown
+                          className={cn("transition-transform", isGoalsOpen ? "rotate-180" : "")}
+                        />
+                      </Button>
+                    </>
+                  }
+                />
+              </CardHeader>
+              {isGoalsOpen ? (
+                <CardContent id="profile-section-panel-goals" className="space-y-4">
+                  {profileLoading ? (
+                    <div className="rounded-xl border border-border/70 bg-card/70 p-4">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="mt-2 h-3 w-56" />
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <Skeleton key={index} className="h-8 w-28 rounded-full" />
+                        ))}
                       </div>
-                    ))}
+                    </div>
+                  ) : goalsField?.value ? (
+                    <ProfileFieldCard
+                      field={goalsField}
+                      className="max-w-3xl"
+                      onClick={() => openTarget("goals", goalsField.editTarget)}
+                      actionLabel={getFieldActionLabel(goalsField.editTarget)}
+                    >
+                      <ProfileFieldValue
+                        value={goalsField.value}
+                        displayMode={goalsField.displayMode}
+                      />
+                    </ProfileFieldCard>
+                  ) : (
+                    <InlinePromptCard
+                      title="Noch keine Ziele gewählt"
+                      text="Hier landen deine Haarziele, sobald du sie im Haar-Check oder unter „Ziele bearbeiten“ speicherst."
+                      action={
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-auto"
+                          onClick={() => goToSectionStep("goals", "/profile/edit/goals")}
+                        >
+                          Ziele öffnen
+                        </Button>
+                      }
+                    />
+                  )}
+                </CardContent>
+              ) : null}
+            </Card>
+
+            <Card
+              id="profile-section-memory"
+              ref={(node) => {
+                sectionRefs.current.memory = node
+              }}
+              className={cn(
+                "scroll-mt-24 overflow-hidden transition-colors",
+                isMemoryOpen ? "border-primary/20" : "border-border/80",
+              )}
+            >
+              <CardHeader className="pb-4">
+                <SectionHeader
+                  title={SECTION_META_BY_KEY.memory.title}
+                  description={SECTION_META_BY_KEY.memory.description}
+                  status={memoryStatus}
+                  isOpen={isMemoryOpen}
+                  preview={memorySectionSummary.preview}
+                  controls={
+                    <>
+                      <Switch
+                        checked={memoryEnabled}
+                        disabled={memoryLoading || memorySaving}
+                        onCheckedChange={handleMemoryToggle}
+                        aria-label="Erinnerungen aktivieren"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="w-auto px-3 text-primary hover:bg-primary/[0.06]"
+                        onClick={() => toggleSection("memory")}
+                        aria-expanded={isMemoryOpen}
+                        aria-controls="profile-section-panel-memory"
+                        aria-label={
+                          isMemoryOpen
+                            ? "Was Hair Concierge sich merkt zuklappen"
+                            : "Was Hair Concierge sich merkt aufklappen"
+                        }
+                      >
+                        <span>{isMemoryOpen ? "Weniger" : "Mehr"}</span>
+                        <ChevronDown
+                          className={cn("transition-transform", isMemoryOpen ? "rotate-180" : "")}
+                        />
+                      </Button>
+                    </>
+                  }
+                />
+              </CardHeader>
+              {isMemoryOpen ? (
+                <CardContent id="profile-section-panel-memory">
+                  {memoryLoading ? (
+                    <p className="text-sm text-muted-foreground">Erinnerungen werden geladen...</p>
+                  ) : memoryEntries.length === 0 ? (
+                    <InlinePromptCard
+                      title="Noch keine gespeicherten Erinnerungen"
+                      text="Wenn du im Chat konkrete Haarpflege-Infos gibst, können sie hier als langfristiger Kontext auftauchen."
+                    />
+                  ) : (
+                    <div className="divide-y">
+                      {memoryEntries.map((entry) => (
+                        <div key={entry.id} className="py-4 first:pt-0 last:pb-0">
+                          {editingMemoryId === entry.id ? (
+                            <div className="space-y-3">
+                              <Textarea
+                                value={memoryDraft}
+                                onChange={(event) => setMemoryDraft(event.target.value)}
+                                rows={3}
+                                maxLength={500}
+                              />
+                              <div className="flex flex-wrap gap-2">
+                                <Button
+                                  type="button"
+                                  className="w-auto"
+                                  onClick={() => handleSaveMemory(entry.id)}
+                                  disabled={memorySaving || !memoryDraft.trim()}
+                                >
+                                  Speichern
+                                </Button>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="w-auto"
+                                  onClick={() => {
+                                    setEditingMemoryId(null)
+                                    setMemoryDraft("")
+                                  }}
+                                >
+                                  Abbrechen
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="min-w-0">
+                                <p className="text-sm text-foreground">{entry.content}</p>
+                                <p className="mt-1 text-xs text-muted-foreground">
+                                  Aktualisiert am{" "}
+                                  {new Date(entry.updated_at).toLocaleDateString("de-DE")}
+                                </p>
+                              </div>
+                              <div className="flex shrink-0 gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => startEditingMemory(entry)}
+                                  className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                                >
+                                  Bearbeiten
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteMemory(entry.id)}
+                                  disabled={memorySaving}
+                                  className="text-xs font-medium text-muted-foreground transition-colors hover:text-destructive disabled:opacity-50"
+                                >
+                                  Löschen
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              ) : null}
+            </Card>
+
+            {profile?.stripe_customer_id && (
+              <section className="rounded-xl border bg-card p-6">
+                <h2 className="mb-3 font-header text-xl">Dein Abo</h2>
+                <p className="mb-1 text-sm text-muted-foreground">
+                  Status:{" "}
+                  <strong className="text-foreground">{profile.subscription_status ?? "—"}</strong>
+                </p>
+                <p className="mb-4 text-sm text-muted-foreground">
+                  Nächste Abrechnung / Laufzeitende:{" "}
+                  <strong className="text-foreground">
+                    {profile.current_period_end
+                      ? new Date(profile.current_period_end).toLocaleDateString("de-DE")
+                      : "—"}
+                  </strong>
+                </p>
+                <ManageSubscriptionButton />
+              </section>
+            )}
+
+            <Card className="bg-muted/35">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg text-[var(--text-heading)]">Account</CardTitle>
+                <CardDescription className="mt-1 text-sm">
+                  Dein Zugang bleibt bewusst sekundär, damit das Profil weiterhin mit deiner
+                  Haarreise startet.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={profile?.avatar_url ?? undefined} alt="Avatar" />
+                    <AvatarFallback>
+                      {(profile?.full_name || profile?.email || "HC").slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-sm font-semibold text-[var(--text-heading)]">
+                      {profile?.full_name || "—"}
+                    </p>
+                    <p className="text-sm text-muted-foreground">{profile?.email}</p>
                   </div>
-                )}
-              </CardContent>
-            ) : null}
-          </Card>
-
-          {profile?.stripe_customer_id && (
-            <section className="rounded-xl border bg-card p-6">
-              <h2 className="mb-3 font-header text-xl">Dein Abo</h2>
-              <p className="mb-1 text-sm text-muted-foreground">
-                Status:{" "}
-                <strong className="text-foreground">{profile.subscription_status ?? "—"}</strong>
-              </p>
-              <p className="mb-4 text-sm text-muted-foreground">
-                Nächste Abrechnung / Laufzeitende:{" "}
-                <strong className="text-foreground">
-                  {profile.current_period_end
-                    ? new Date(profile.current_period_end).toLocaleDateString("de-DE")
-                    : "—"}
-                </strong>
-              </p>
-              <ManageSubscriptionButton />
-            </section>
-          )}
-
-          <Card className="bg-muted/35">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg text-[var(--text-heading)]">Account</CardTitle>
-              <CardDescription className="mt-1 text-sm">
-                Dein Zugang bleibt bewusst sekundär, damit das Profil weiterhin mit deiner Haarreise
-                startet.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-4">
-                <Avatar className="h-12 w-12">
-                  <AvatarImage src={profile?.avatar_url ?? undefined} alt="Avatar" />
-                  <AvatarFallback>
-                    {(profile?.full_name || profile?.email || "HC").slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm font-semibold text-[var(--text-heading)]">
-                    {profile?.full_name || "—"}
-                  </p>
-                  <p className="text-sm text-muted-foreground">{profile?.email}</p>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
     </>
   )
 }
