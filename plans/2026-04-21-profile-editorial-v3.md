@@ -268,9 +268,13 @@ test.describe.serial("profile editorial v3", () => {
     await expect(page.getByText("Schnellzugriff")).toHaveCount(0)
     await expect(page.getByText("Zum offenen Bereich springen")).toHaveCount(0)
 
-    // 3. No Mehr/Weniger collapse buttons
-    await expect(page.getByRole("button", { name: /aufklappen|zuklappen/ })).toHaveCount(0)
-    await expect(page.locator('[aria-expanded="false"]')).toHaveCount(0)
+    // 3. No Mehr/Weniger collapse buttons on the five core sections
+    //    (memory keeps its toggle — must not be caught by a broad selector)
+    await expect(page.getByRole("button", { name: /Haar-Check (aufklappen|zuklappen)/ })).toHaveCount(0)
+    await expect(page.getByRole("button", { name: /Produkte (aufklappen|zuklappen)/ })).toHaveCount(0)
+    await expect(page.getByRole("button", { name: /Styling (aufklappen|zuklappen)/ })).toHaveCount(0)
+    await expect(page.getByRole("button", { name: /Alltag (aufklappen|zuklappen)/ })).toHaveCount(0)
+    await expect(page.getByRole("button", { name: /Ziele (aufklappen|zuklappen)/ })).toHaveCount(0)
 
     // 4. Footer utilities still render, with the new copy
     await expect(page.getByRole("heading", { name: "Einstellungen" })).toBeVisible()
