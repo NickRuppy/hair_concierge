@@ -2341,9 +2341,7 @@ export default function ProfilePage() {
                         aria-expanded={isMemoryOpen}
                         aria-controls="profile-section-panel-memory"
                         aria-label={
-                          isMemoryOpen
-                            ? "Was Hair Concierge sich merkt zuklappen"
-                            : "Was Hair Concierge sich merkt aufklappen"
+                          isMemoryOpen ? "Erinnerungen zuklappen" : "Erinnerungen aufklappen"
                         }
                       >
                         <span>{isMemoryOpen ? "Weniger" : "Mehr"}</span>

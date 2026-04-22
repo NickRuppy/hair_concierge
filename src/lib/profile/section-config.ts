@@ -129,9 +129,8 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
   },
   {
     key: "memory",
-    title: "Was Hair Concierge sich merkt",
-    description:
-      "Langfristige Erinnerungen aus deinem Chat, damit Empfehlungen konsistenter werden.",
+    title: "Erinnerungen",
+    description: "Hinweise aus dem Chat, langfristig gespeichert.",
   },
 ]
 
@@ -141,7 +140,7 @@ export const PROFILE_JOURNEY_STEPS = [
   { key: "styling", label: "Styling" },
   { key: "routine", label: "Alltag" },
   { key: "goals", label: "Ziele" },
-  { key: "memory", label: "Merkt sich" },
+  { key: "memory", label: "Erinnerungen" },
 ] as const
 
 export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
