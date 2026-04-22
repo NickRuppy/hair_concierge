@@ -498,15 +498,7 @@ export default function ProfilePage() {
   const [quizNotice, setQuizNotice] = useState<QuizSaveNotice | null>(null)
   const [pendingQuizFocusKey, setPendingQuizFocusKey] = useState<string | null>(null)
   const quizFieldRefs = useRef<Record<string, HTMLDivElement | null>>({})
-  const sectionRefs = useRef<Partial<Record<ProfileJourneySectionKey, HTMLDivElement | null>>>({})
-  const [openSections, setOpenSections] = useState<ProfileJourneySectionKey[]>([
-    "quiz",
-    "products",
-    "styling",
-    "routine",
-    "goals",
-    "memory",
-  ])
+  const [openSections, setOpenSections] = useState<ProfileJourneySectionKey[]>(["memory"])
   const [memoryEntries, setMemoryEntries] = useState<UserMemoryEntry[]>([])
   const [memoryEnabled, setMemoryEnabled] = useState(true)
   const [memoryLoading, setMemoryLoading] = useState(true)
@@ -668,10 +660,6 @@ export default function ProfilePage() {
     return () => {
       active = false
     }
-  }, [userId])
-
-  useEffect(() => {
-    setOpenSections([])
   }, [userId])
 
   const structuredFields = useMemo<StructuredField[]>(
@@ -986,9 +974,6 @@ export default function ProfilePage() {
           <div className="space-y-6">
             <Card
               id="profile-section-quiz"
-              ref={(node) => {
-                sectionRefs.current.quiz = node
-              }}
               className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
             >
               <CardHeader className="pb-4">
@@ -1362,9 +1347,6 @@ export default function ProfilePage() {
 
             <Card
               id="profile-section-products"
-              ref={(node) => {
-                sectionRefs.current.products = node
-              }}
               className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
             >
               <CardHeader className="pb-4">
@@ -1585,9 +1567,6 @@ export default function ProfilePage() {
 
             <Card
               id="profile-section-styling"
-              ref={(node) => {
-                sectionRefs.current.styling = node
-              }}
               className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
             >
               <CardHeader className="pb-4">
@@ -1660,9 +1639,6 @@ export default function ProfilePage() {
 
             <Card
               id="profile-section-routine"
-              ref={(node) => {
-                sectionRefs.current.routine = node
-              }}
               className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
             >
               <CardHeader className="pb-4">
@@ -1735,9 +1711,6 @@ export default function ProfilePage() {
 
             <Card
               id="profile-section-goals"
-              ref={(node) => {
-                sectionRefs.current.goals = node
-              }}
               className="scroll-mt-24 overflow-hidden border-primary/20 transition-colors"
             >
               <CardHeader className="pb-4">
@@ -1806,9 +1779,6 @@ export default function ProfilePage() {
 
             <Card
               id="profile-section-memory"
-              ref={(node) => {
-                sectionRefs.current.memory = node
-              }}
               className="mt-4 overflow-hidden border-border/60 bg-card/60"
             >
               <CardHeader className="pb-4">

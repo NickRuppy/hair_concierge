@@ -29,7 +29,6 @@ export type ProfileJourneySectionKey =
   | "routine"
   | "goals"
   | "memory"
-export type ProfileFieldSourceLabel = "Aus Haar-Check" | "Aus Onboarding"
 export type ProfileFieldValue = string | string[] | null
 
 export type ProfileEditTarget =
@@ -41,7 +40,6 @@ export type ProfileFieldConfig = {
   key: string
   label: string
   sectionKey: Exclude<ProfileJourneySectionKey, "products" | "memory">
-  sourceLabel: ProfileFieldSourceLabel
   editTarget: ProfileEditTarget
   getValue: (profile: HairProfile | null) => ProfileFieldValue
 }
@@ -131,21 +129,11 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
   },
 ]
 
-export const PROFILE_JOURNEY_STEPS = [
-  { key: "quiz", label: "Haar-Check" },
-  { key: "products", label: "Produkte" },
-  { key: "styling", label: "Styling" },
-  { key: "routine", label: "Alltag" },
-  { key: "goals", label: "Ziele" },
-  { key: "memory", label: "Erinnerungen" },
-] as const
-
 export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "hair_texture",
     label: "Haartextur",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.hair_texture, HAIR_TEXTURE_OPTIONS),
   },
@@ -153,7 +141,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "thickness",
     label: "Haar-Dicke",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.thickness, HAIR_THICKNESS_OPTIONS),
   },
@@ -161,7 +148,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "cuticle_condition",
     label: "Oberfläche",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.cuticle_condition
@@ -172,7 +158,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "protein_moisture_balance",
     label: "Elastizität",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.protein_moisture_balance
@@ -184,7 +169,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "chemical_treatment",
     label: "Chemische Behandlungen",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.chemical_treatment?.length
@@ -197,7 +181,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "scalp_type",
     label: "Kopfhauttyp",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.scalp_type ? (SCALP_TYPE_LABELS[profile.scalp_type] ?? profile.scalp_type) : null,
@@ -206,7 +189,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "scalp_condition",
     label: "Kopfhaut-Beschwerden",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.scalp_condition
@@ -219,7 +201,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "concerns",
     label: "Haar-Bedenken",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
     editTarget: { kind: "quiz" },
     getValue: (profile) => {
       if (!profile) return null
@@ -231,7 +212,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "styling_tools",
     label: "Hitzetools",
     sectionKey: "styling",
-    sourceLabel: "Aus Onboarding",
     editTarget: { kind: "onboarding", step: "heat_tools" },
     getValue: (profile) => {
       if (profile?.styling_tools?.length) {
@@ -249,7 +229,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "heat_styling",
     label: "Styling-Frequenz",
     sectionKey: "styling",
-    sourceLabel: "Aus Onboarding",
     editTarget: { kind: "onboarding", step: "heat_frequency" },
     getValue: (profile) => optionLabel(profile?.heat_styling, HEAT_STYLING_OPTIONS),
   },
@@ -257,7 +236,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "uses_heat_protection",
     label: "Hitzeschutz",
     sectionKey: "styling",
-    sourceLabel: "Aus Onboarding",
     editTarget: { kind: "onboarding", step: "heat_protection" },
     getValue: (profile) =>
       profile?.uses_heat_protection != null ? (profile.uses_heat_protection ? "Ja" : "Nein") : null,
@@ -266,7 +244,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "towel_material",
     label: "Handtuch-Material",
     sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
     editTarget: { kind: "onboarding", step: "towel_material" },
     getValue: (profile) =>
       profile?.towel_material
@@ -277,7 +254,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "towel_technique",
     label: "Trocknungstechnik",
     sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
     editTarget: { kind: "onboarding", step: "towel_technique" },
     getValue: (profile) =>
       profile?.towel_technique
@@ -288,7 +264,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "drying_method",
     label: "Trocknungsmethode",
     sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
     editTarget: { kind: "onboarding", step: "drying_method" },
     getValue: (profile) =>
       profile?.drying_method
@@ -299,7 +274,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "brush_type",
     label: "Bürste",
     sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
     editTarget: { kind: "onboarding", step: "brush_type" },
     getValue: (profile) =>
       profile?.brush_type ? (BRUSH_TYPE_LABELS[profile.brush_type] ?? profile.brush_type) : null,
@@ -308,7 +282,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "night_protection",
     label: "Nachtschutz",
     sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
     editTarget: { kind: "onboarding", step: "night_protection" },
     getValue: (profile) => {
       if (profile?.night_protection?.length) {
@@ -325,7 +298,6 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "goals",
     label: "Deine Haarziele",
     sectionKey: "goals",
-    sourceLabel: "Aus Haar-Check",
     editTarget: { kind: "profile-edit-goals" },
     getValue: (profile) => orderedGoalLabels(profile),
   },
