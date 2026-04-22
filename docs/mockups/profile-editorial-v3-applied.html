@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hair Concierge – Profil (applied audit fixes)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fbf8f5;
+        --surface: rgba(255, 255, 255, 0.92);
+        --surface-strong: #ffffff;
+        --border: rgba(61, 42, 98, 0.12);
+        --border-strong: rgba(61, 42, 98, 0.18);
+        --text-heading: #2a1845;
+        --text-body: #3a3835;
+        --text-sub: #6a6560;
+        --plum: #6b50a0;
+        --plum-dark: #3d2a62;
+        --plum-ice: #f2eefa;
+        --coral: #d4616a;
+        --coral-soft: #fcecef;
+        --shadow: 0 20px 44px -34px rgba(42, 24, 69, 0.28);
+        --radius-xl: 28px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+        --radius-pill: 999px;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        background:
+          radial-gradient(circle at top left, rgba(212, 97, 106, 0.08), transparent 26%),
+          radial-gradient(circle at top right, rgba(107, 80, 160, 0.08), transparent 24%),
+          var(--bg);
+        color: var(--text-body);
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+
+      body { padding-bottom: 64px; }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        backdrop-filter: blur(18px);
+        background: rgba(251, 248, 245, 0.86);
+        border-bottom: 1px solid rgba(61, 42, 98, 0.08);
+      }
+
+      .topbar-inner, .page {
+        width: min(1120px, calc(100vw - 40px));
+        margin: 0 auto;
+      }
+
+      .topbar-inner {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-heading);
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .brand-mark { display: inline-flex; gap: 4px; }
+      .brand-mark span { width: 4px; border-radius: 999px; background: var(--plum); height: 18px; }
+      .brand-mark span:nth-child(2) { opacity: 0.65; }
+      .brand-mark span:nth-child(3) { opacity: 0.35; }
+
+      .nav { display: inline-flex; gap: 8px; align-items: center; }
+      .nav-pill { border-radius: 999px; padding: 10px 16px; font-size: 14px; color: var(--text-sub); }
+      .nav-pill.active { background: rgba(107, 80, 160, 0.09); color: var(--text-heading); font-weight: 600; }
+
+      .page { padding-top: 44px; }
+
+      .eyebrow {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--plum);
+      }
+
+      .hero h1 {
+        margin: 14px 0 10px;
+        font-family: "Playfair Display", serif;
+        font-weight: 500;
+        font-size: clamp(38px, 6vw, 54px);
+        line-height: 0.96;
+        color: var(--text-heading);
+      }
+
+      .hero p {
+        width: min(760px, 100%);
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.65;
+        color: var(--text-sub);
+      }
+
+      /* --- 3-card summary strip (replaces the progress card + shortcut grid) --- */
+      .summary-strip {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: 1.3fr 0.9fr 0.9fr;
+        gap: 14px;
+      }
+
+      .summary-card {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.82));
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        border-radius: var(--radius-xl);
+        padding: 22px 22px 20px;
+      }
+
+      .summary-card.next {
+        background: linear-gradient(145deg, rgba(252, 236, 239, 0.95), rgba(252, 236, 239, 0.7));
+        border-color: rgba(212, 97, 106, 0.22);
+      }
+
+      .summary-card.primary { display: grid; gap: 18px; }
+      .summary-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .summary-stat { display: flex; align-items: baseline; gap: 12px; }
+      .summary-stat strong { font-size: 36px; line-height: 1; color: var(--text-heading); font-family: "Playfair Display", serif; font-weight: 500; }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 34px;
+        padding: 0 14px;
+        border-radius: var(--radius-pill);
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid transparent;
+        white-space: nowrap;
+      }
+      .pill.plum { background: var(--plum-ice); border-color: rgba(107, 80, 160, 0.16); color: var(--plum); }
+      .pill.coral { background: #fff; border-color: rgba(212, 97, 106, 0.3); color: #924048; }
+
+      .summary-title { font-size: 15px; font-weight: 700; color: var(--text-heading); }
+      .summary-body { font-size: 14px; line-height: 1.6; color: var(--text-sub); }
+
+      .summary-list { display: grid; gap: 10px; }
+      .summary-list .item { display: flex; align-items: flex-start; gap: 12px; }
+      .summary-list .dot {
+        width: 9px;
+        height: 9px;
+        margin-top: 7px;
+        border-radius: 999px;
+        background: var(--coral);
+        box-shadow: 0 0 0 6px rgba(212, 97, 106, 0.11);
+      }
+
+      /* --- Sections (always open, no collapsibles) --- */
+      .stack { margin-top: 26px; display: grid; gap: 18px; }
+
+      .section {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.9));
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: flex-start;
+      }
+
+      .section-title-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .section h2 {
+        margin: 0;
+        font-family: "Playfair Display", serif;
+        font-weight: 500;
+        font-size: 26px;
+        line-height: 1.1;
+        color: var(--text-heading);
+      }
+
+      .section p { margin: 0; color: var(--text-sub); line-height: 1.6; font-size: 14px; }
+
+      .section-actions {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      .button {
+        min-height: 44px;
+        border-radius: 999px;
+        padding: 0 18px;
+        font-size: 14px;
+        font-weight: 700;
+        border: 1px solid var(--border-strong);
+        background: rgba(255, 255, 255, 0.86);
+        color: var(--text-heading);
+        cursor: pointer;
+      }
+
+      .section-grid {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      /* Field cards: click-to-edit, no visible Bearbeiten button */
+      .field-card {
+        border-radius: 22px;
+        border: 1px solid rgba(61, 42, 98, 0.1);
+        background: rgba(251, 248, 245, 0.65);
+        padding: 18px;
+        cursor: pointer;
+        transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
+      }
+      .field-card:hover {
+        border-color: rgba(107, 80, 160, 0.32);
+        background: rgba(255, 255, 255, 0.85);
+      }
+      .field-card:active { transform: translateY(1px); }
+      .field-card-label {
+        margin-bottom: 10px;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-sub);
+      }
+
+      .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 12px;
+        border-radius: var(--radius-pill);
+        background: #fff;
+        border: 1px solid rgba(107, 80, 160, 0.14);
+        color: var(--text-heading);
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .chip.muted { color: var(--text-sub); font-weight: 500; background: rgba(255, 255, 255, 0.5); }
+
+      .goals-row {
+        margin-top: 18px;
+        gap: 10px;
+      }
+      .goals-row .chip {
+        min-height: 40px;
+        padding: 0 16px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: border-color 120ms ease, background 120ms ease;
+      }
+      .goals-row .chip:hover {
+        border-color: rgba(107, 80, 160, 0.4);
+        background: var(--plum-ice);
+      }
+
+      .products-table {
+        margin-top: 18px;
+        border-radius: 24px;
+        border: 1px solid rgba(61, 42, 98, 0.1);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.72);
+      }
+      .products-table-header, .products-table-row {
+        display: grid;
+        grid-template-columns: 1.1fr 1.2fr 0.9fr;
+        gap: 12px;
+        padding: 16px 18px;
+      }
+      .products-table-header {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--text-sub);
+        background: rgba(107, 80, 160, 0.05);
+      }
+      .products-table-row {
+        border-top: 1px solid rgba(61, 42, 98, 0.08);
+        align-items: center;
+      }
+      .products-table-row strong { color: var(--text-heading); }
+
+      .two-up {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      /* Highlight the one incomplete field in coral instead of dashed purple */
+      .field-card.missing {
+        background: var(--coral-soft);
+        border-color: rgba(212, 97, 106, 0.25);
+      }
+      .field-card.missing .field-card-value {
+        color: #924048;
+        font-weight: 600;
+        font-size: 15px;
+      }
+
+      /* --- Footer utilities: Einstellungen group --- */
+      .utilities-group { margin-top: 40px; }
+
+      .utilities-divider {
+        margin-bottom: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(61, 42, 98, 0.12);
+      }
+
+      .utilities-title {
+        margin: 0;
+        font-family: "Playfair Display", serif;
+        font-weight: 500;
+        font-size: 32px;
+        line-height: 1;
+        color: var(--text-heading);
+      }
+
+      .utilities-grid {
+        margin-top: 16px;
+        display: grid;
+        gap: 14px;
+        grid-template-columns: 1fr;
+      }
+
+      .utilities-grid > .utility-card.wide { grid-column: 1 / -1; }
+
+      .utility-row {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .utility-card {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(61, 42, 98, 0.1);
+        border-radius: 22px;
+        padding: 20px;
+      }
+
+      .utility-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .utility-title {
+        margin: 0;
+        font-family: "Playfair Display", serif;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 1.15;
+        color: var(--text-heading);
+      }
+
+      .utility-sub { font-size: 13px; color: var(--text-sub); margin: 4px 0 0; line-height: 1.5; }
+
+      /* switch */
+      .switch {
+        width: 40px; height: 22px;
+        background: var(--plum);
+        border-radius: 999px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .switch::after {
+        content: "";
+        position: absolute;
+        top: 2px; right: 2px;
+        width: 18px; height: 18px;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      }
+      .switch.off { background: rgba(61,42,98,0.18); }
+      .switch.off::after { right: auto; left: 2px; }
+
+      .memory-entries { display: grid; gap: 10px; margin-top: 6px; }
+      .memory-entry {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: rgba(251, 248, 245, 0.7);
+        border: 1px solid rgba(61, 42, 98, 0.08);
+      }
+      .memory-entry p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-body); }
+      .memory-entry .date { margin-top: 4px; font-size: 11px; color: var(--text-sub); }
+      .memory-entry .actions {
+        display: inline-flex; gap: 10px; align-items: center; flex-shrink: 0;
+        font-size: 12px; color: var(--text-sub);
+      }
+      .memory-entry .actions button {
+        background: transparent; border: 0; color: var(--text-sub);
+        cursor: pointer; padding: 0; font-size: 12px;
+      }
+      .memory-entry .actions button:hover { color: var(--text-heading); }
+
+      .button.sm {
+        min-height: 36px;
+        padding: 0 14px;
+        font-size: 13px;
+      }
+
+      .account-row { display: flex; align-items: center; gap: 14px; }
+      .avatar {
+        width: 44px; height: 44px;
+        border-radius: 999px;
+        background: var(--plum-ice);
+        color: var(--plum);
+        display: inline-flex; align-items: center; justify-content: center;
+        font-weight: 700;
+        font-size: 15px;
+        flex-shrink: 0;
+      }
+      .account-meta p { margin: 0; }
+      .account-meta .name { font-size: 14px; font-weight: 700; color: var(--text-heading); }
+      .account-meta .email { font-size: 13px; color: var(--text-sub); margin-top: 2px; }
+
+      .abo-meta {
+        display: grid;
+        gap: 6px;
+        margin-top: 4px;
+        font-size: 13px;
+        color: var(--text-sub);
+      }
+      .abo-meta strong { color: var(--text-heading); font-weight: 600; }
+
+      @media (max-width: 980px) {
+        .utility-row { grid-template-columns: 1fr; }
+        .summary-strip, .two-up, .section-grid, .products-table-header, .products-table-row {
+          grid-template-columns: 1fr;
+        }
+        .section-header { flex-direction: column; }
+        .section-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+        .topbar-inner, .page { width: min(100vw - 24px, 1120px); }
+        .hero h1 { font-size: 40px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <span class="brand-mark"><span></span><span></span><span></span></span>
+          <span>Hair Concierge</span>
+        </div>
+        <nav class="nav">
+          <span class="nav-pill">Chat</span>
+          <span class="nav-pill active">Profil</span>
+          <span class="nav-pill">Abmelden</span>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="hero">
+        <div class="eyebrow">Profilübersicht</div>
+        <h1>Mein Profil</h1>
+      </section>
+
+      <!-- All sections always open. Exactly one "… bearbeiten" per section header. -->
+      <section class="stack">
+        <article class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title-row">
+                <h2>Haar-Check</h2>
+                <span class="pill plum">8/8 vollständig</span>
+              </div>
+              <p>Struktur, Kopfhaut und Schäden. Basis für alle Empfehlungen.</p>
+            </div>
+            <div class="section-actions">
+              <button class="button">Haar-Check bearbeiten</button>
+            </div>
+          </div>
+
+          <div class="section-grid">
+            <div class="field-card">
+              <div class="field-card-label">Textur</div>
+              <div class="chip-row"><span class="chip">Wellig</span></div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Haar-Dicke</div>
+              <div class="chip-row"><span class="chip">Fein</span></div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Oberfläche</div>
+              <div class="chip-row"><span class="chip">Glatt</span></div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Elastizität</div>
+              <div class="chip-row"><span class="chip">Dehnt sich und geht zurück</span></div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Chemische Behandlungen</div>
+              <div class="chip-row"><span class="chip">Blondiert</span></div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Kopfhauttyp</div>
+              <div class="chip-row"><span class="chip">Schnell fettend</span></div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Kopfhaut-Beschwerden</div>
+              <div class="chip-row"><span class="chip muted">Keine Beschwerden</span></div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Haar-Bedenken</div>
+              <div class="chip-row"><span class="chip muted">Keine aktuellen Bedenken</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title-row">
+                <h2>Produkte</h2>
+                <span class="pill plum">3/3 vollständig</span>
+              </div>
+              <p>Nicht nur Kategorien, sondern Produkte und Häufigkeit.</p>
+            </div>
+            <div class="section-actions">
+              <button class="button">Produkte bearbeiten</button>
+            </div>
+          </div>
+
+          <div class="products-table">
+            <div class="products-table-header">
+              <span>Kategorie</span>
+              <span>Produkt</span>
+              <span>Häufigkeit</span>
+            </div>
+            <div class="products-table-row">
+              <strong>Shampoo</strong>
+              <span>Daily Shampoo</span>
+              <span>1–2× pro Woche</span>
+            </div>
+            <div class="products-table-row">
+              <strong>Conditioner</strong>
+              <span>Curl Conditioner</span>
+              <span>1–2× pro Woche</span>
+            </div>
+            <div class="products-table-row">
+              <strong>Trockenshampoo</strong>
+              <span>Dry Refresh</span>
+              <span>Seltener</span>
+            </div>
+          </div>
+        </article>
+
+        <section class="two-up">
+          <article class="section">
+            <div class="section-header">
+              <div>
+                <div class="section-title-row">
+                  <h2>Styling</h2>
+                  <span class="pill plum">3/3 vollständig</span>
+                </div>
+                <p>Tools, Häufigkeit und Hitzeschutz auf einen Blick.</p>
+              </div>
+              <div class="section-actions">
+                <button class="button">Styling bearbeiten</button>
+              </div>
+            </div>
+
+            <div class="section-grid">
+              <div class="field-card">
+                <div class="field-card-label">Hitzetools</div>
+                <div class="chip-row"><span class="chip">Glätteisen</span></div>
+              </div>
+              <div class="field-card">
+                <div class="field-card-label">Frequenz</div>
+                <div class="chip-row"><span class="chip">1× pro Woche</span></div>
+              </div>
+              <div class="field-card" style="grid-column: 1 / -1">
+                <div class="field-card-label">Hitzeschutz</div>
+                <div class="chip-row"><span class="chip">Ja, aktuell eingeplant</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="section">
+            <div class="section-header">
+              <div>
+                <div class="section-title-row">
+                  <h2>Alltag</h2>
+                  <span class="pill coral">4/5 · Nachtschutz offen</span>
+                </div>
+                <p>Trocknen, Bürste und Nachtschutz, damit Routinen alltagstauglich bleiben.</p>
+              </div>
+              <div class="section-actions">
+                <button class="button">Alltag bearbeiten</button>
+              </div>
+            </div>
+
+            <div class="section-grid">
+              <div class="field-card">
+                <div class="field-card-label">Handtuch</div>
+                <div class="chip-row"><span class="chip">Frottee-Handtuch</span></div>
+              </div>
+              <div class="field-card">
+                <div class="field-card-label">Trockentechnik</div>
+                <div class="chip-row"><span class="chip">Tupfen / Scrunchen</span></div>
+              </div>
+              <div class="field-card">
+                <div class="field-card-label">Trocknung</div>
+                <div class="chip-row"><span class="chip">Lufttrocknen</span></div>
+              </div>
+              <div class="field-card">
+                <div class="field-card-label">Bürste</div>
+                <div class="chip-row"><span class="chip">Grobzinkiger Kamm</span></div>
+              </div>
+              <div class="field-card missing" style="grid-column: 1 / -1">
+                <div class="field-card-label">Nachtschutz</div>
+                <div class="chip-row"><span class="chip" style="border-color: rgba(212,97,106,0.35); color: #924048;">Noch offen — tippen zum Ergänzen</span></div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <article class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title-row">
+                <h2>Ziele</h2>
+                <span class="pill plum">4 Ziele gespeichert</span>
+              </div>
+              <p>Was dir wichtig ist — ein klarer Fokusbereich, kein separater Mini-Flow.</p>
+            </div>
+            <div class="section-actions">
+              <button class="button">Ziele bearbeiten</button>
+            </div>
+          </div>
+
+          <div class="chip-row goals-row">
+            <span class="chip">Mehr Glanz</span>
+            <span class="chip">Mehr Volumen</span>
+            <span class="chip">Weniger Frizz</span>
+            <span class="chip">Gesünderes Haargefühl</span>
+          </div>
+        </article>
+      </section>
+
+      <!--
+        Einstellungen footer group. Visually demoted (smaller serif title, muted
+        cards, tighter padding) so these utilities read as settings — not as
+        peers of Haar-Check.
+      -->
+      <section class="utilities-group">
+        <div class="utilities-divider">
+          <h2 class="utilities-title">Einstellungen</h2>
+        </div>
+
+        <div class="utilities-grid">
+          <article class="utility-card wide">
+            <div class="utility-head">
+              <div>
+                <h3 class="utility-title">Erinnerungen</h3>
+                <p class="utility-sub">Hinweise aus dem Chat, langfristig gespeichert.</p>
+              </div>
+              <div class="switch" aria-label="Erinnerungen aktiviert"></div>
+            </div>
+
+            <div class="memory-entries">
+              <div class="memory-entry">
+                <div>
+                  <p>Bevorzugt sulfatfreie Shampoos — Kopfhaut reagiert sonst gereizt.</p>
+                  <div class="date">Aktualisiert am 18.04.2026</div>
+                </div>
+                <div class="actions">
+                  <button>Bearbeiten</button>
+                  <button>Löschen</button>
+                </div>
+              </div>
+              <div class="memory-entry">
+                <div>
+                  <p>Wäscht am liebsten zweimal pro Woche mit kaltem Klarspülgang am Ende.</p>
+                  <div class="date">Aktualisiert am 12.04.2026</div>
+                </div>
+                <div class="actions">
+                  <button>Bearbeiten</button>
+                  <button>Löschen</button>
+                </div>
+              </div>
+              <div class="memory-entry">
+                <div>
+                  <p>Hat einen Föhn mit Diffusor, benutzt ihn aber nur in den Wintermonaten.</p>
+                  <div class="date">Aktualisiert am 02.04.2026</div>
+                </div>
+                <div class="actions">
+                  <button>Bearbeiten</button>
+                  <button>Löschen</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <div class="utility-row">
+            <article class="utility-card">
+              <div class="utility-head">
+                <div>
+                  <h3 class="utility-title">Mitgliedschaft</h3>
+                  <p class="utility-sub">Hair Concierge Monatlich</p>
+                </div>
+                <span class="pill plum">Aktiv</span>
+              </div>
+
+              <div class="abo-meta">
+                <div>Nächste Abrechnung: <strong>19.05.2026</strong></div>
+                <div>€14,99 pro Monat</div>
+              </div>
+
+              <div style="margin-top: 16px">
+                <button class="button sm">Verwalten</button>
+              </div>
+            </article>
+
+            <article class="utility-card">
+              <div class="utility-head">
+                <div>
+                  <h3 class="utility-title">Account</h3>
+                  <p class="utility-sub">Zugang zu deinem Hair-Concierge-Konto.</p>
+                </div>
+              </div>
+
+              <div class="account-row">
+                <span class="avatar">UX</span>
+                <div class="account-meta">
+                  <p class="name">UX Audit Test</p>
+                  <p class="email">ux-audit-test@hairconscierge.test</p>
+                </div>
+              </div>
+
+              <div style="margin-top: 16px">
+                <button class="button sm">Abmelden</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
