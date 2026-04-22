@@ -617,6 +617,11 @@ export default function ProfilePage() {
 
     const frameId = window.requestAnimationFrame(() => {
       target.scrollIntoView({ behavior: "smooth", block: "center" })
+      // Move focus into the editor so keyboard users land on a control.
+      const focusable = target.querySelector<HTMLElement>(
+        'input, textarea, select, button, [tabindex]:not([tabindex="-1"])',
+      )
+      focusable?.focus()
       setPendingQuizFocusKey(null)
     })
 
@@ -730,12 +735,6 @@ export default function ProfilePage() {
   }
 
   useEffect(() => {
-    if (!quizEditing) return
-
-    setOpenSections((current) => (current.includes("quiz") ? current : [...current, "quiz"]))
-  }, [quizEditing])
-
-  useEffect(() => {
     if (!editingMemoryId) return
 
     setOpenSections((current) => (current.includes("memory") ? current : [...current, "memory"]))
@@ -762,7 +761,6 @@ export default function ProfilePage() {
   }
 
   function startQuizEditing(fieldKey?: string) {
-    ensureSectionOpen("quiz")
     setQuizNotice(null)
     if (fieldKey) {
       setPendingQuizFocusKey(fieldKey)
@@ -1304,7 +1302,7 @@ export default function ProfilePage() {
                       </Button>
                     </div>
                   </div>
-                ) : quizFilled.length > 0 ? (
+                ) : (
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {quizFields.map((field) => {
                       const isMissing = field.value == null
@@ -1326,21 +1324,6 @@ export default function ProfilePage() {
                       )
                     })}
                   </div>
-                ) : (
-                  <InlinePromptCard
-                    title="Noch keine Quiz-Antworten sichtbar"
-                    text="Sobald du hier Angaben hinterlegst, erscheint der Haar-Check in derselben Reihenfolge wie in der Quiz-Logik."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() => startQuizEditing()}
-                      >
-                        Haar-Check jetzt ausfüllen
-                      </Button>
-                    }
-                  />
                 )}
               </CardContent>
             </Card>
@@ -1594,7 +1577,7 @@ export default function ProfilePage() {
               <CardContent className="space-y-4">
                 {profileLoading ? (
                   <SectionGridSkeleton count={3} className="md:grid-cols-2 xl:grid-cols-3" />
-                ) : stylingFilled.length > 0 ? (
+                ) : (
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {stylingFields.map((field) => {
                       const isMissing = field.value == null
@@ -1616,23 +1599,6 @@ export default function ProfilePage() {
                       )
                     })}
                   </div>
-                ) : (
-                  <InlinePromptCard
-                    title="Noch keine Styling-Angaben vorhanden"
-                    text="Hitzetools, Frequenz und Hitzeschutz erscheinen hier, sobald du den Styling-Teil des Onboardings speicherst."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() =>
-                          goToSectionStep("styling", buildOnboardingHref("heat_tools"))
-                        }
-                      >
-                        Styling öffnen
-                      </Button>
-                    }
-                  />
                 )}
               </CardContent>
             </Card>
@@ -1666,7 +1632,7 @@ export default function ProfilePage() {
               <CardContent className="space-y-4">
                 {profileLoading ? (
                   <SectionGridSkeleton count={5} className="md:grid-cols-2 xl:grid-cols-3" />
-                ) : routineFilled.length > 0 ? (
+                ) : (
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {routineFields.map((field) => {
                       const isMissing = field.value == null
@@ -1688,23 +1654,6 @@ export default function ProfilePage() {
                       )
                     })}
                   </div>
-                ) : (
-                  <InlinePromptCard
-                    title="Noch keine Alltagsangaben vorhanden"
-                    text="Trocknen, Bürste und Nachtschutz erscheinen hier, sobald du den Alltagsteil im Onboarding speicherst."
-                    action={
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-auto"
-                        onClick={() =>
-                          goToSectionStep("routine", buildOnboardingHref("towel_material"))
-                        }
-                      >
-                        Alltag öffnen
-                      </Button>
-                    }
-                  />
                 )}
               </CardContent>
             </Card>

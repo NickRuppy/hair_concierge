@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test"
 import { createClient } from "@supabase/supabase-js"
 
-const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3761"
+const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000"
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
@@ -12,25 +12,37 @@ const admin = createClient(supabaseUrl, serviceRoleKey, {
 const EMAIL = "ux-audit-test@hairconscierge.test"
 const PASSWORD = "uxAudit!Test123"
 
-test.describe.serial("profile editorial v3", () => {
+test.describe.serial("@ci profile editorial v3", () => {
   test.beforeAll(async () => {
-    // Ensure the seeded user exists; the audit scripts created it, but CI may not.
+    // Ensure the seeded user exists; mirror scripts/ux-audit-create-test-user.mjs
+    // by re-establishing a known password on every run so the shared account
+    // remains deterministic across reruns.
     const { data: list } = await admin.auth.admin.listUsers({ page: 1, perPage: 200 })
-    let user = list.users.find((u) => u.email === EMAIL)
-    if (!user) {
-      const { data: created } = await admin.auth.admin.createUser({
+    const existing = list.users.find((u) => u.email === EMAIL)
+    let userId: string
+
+    if (existing) {
+      userId = existing.id
+      const { error } = await admin.auth.admin.updateUserById(existing.id, {
+        password: PASSWORD,
+        email_confirm: true,
+      })
+      if (error) throw error
+    } else {
+      const { data, error } = await admin.auth.admin.createUser({
         email: EMAIL,
         password: PASSWORD,
         email_confirm: true,
       })
-      user = created.user ?? undefined
+      if (error) throw error
+      if (!data.user) throw new Error("failed to ensure test user exists")
+      userId = data.user.id
     }
-    if (!user) throw new Error("failed to ensure test user exists")
 
     // Seed profile so the Mitgliedschaft subscription section renders — it is
     // guarded by profile.stripe_customer_id in src/app/profile/page.tsx.
     const { error: profErr } = await admin.from("profiles").upsert({
-      id: user.id,
+      id: userId,
       stripe_customer_id: "cus_ux_audit_test",
       subscription_status: "active",
       current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),

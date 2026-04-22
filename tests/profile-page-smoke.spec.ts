@@ -34,7 +34,7 @@ async function upsertHairProfileWithDryingCompat(payload: Record<string, unknown
   if (error) throw error
 }
 
-test.describe.serial("Profile page smoke", () => {
+test.describe.serial("@ci Profile page smoke", () => {
   const email = `playwright-profile-${Date.now()}@hairconscierge.test`
   const password = "Playwright123!"
   const fullName = "Playwright Profile"
