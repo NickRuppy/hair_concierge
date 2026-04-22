@@ -29,8 +29,6 @@ export type ProfileJourneySectionKey =
   | "routine"
   | "goals"
   | "memory"
-export type ProfileFieldSourceLabel = "Aus Haar-Check" | "Aus Onboarding"
-export type ProfileFieldDisplayMode = "text" | "badges"
 export type ProfileFieldValue = string | string[] | null
 
 export type ProfileEditTarget =
@@ -41,10 +39,7 @@ export type ProfileEditTarget =
 export type ProfileFieldConfig = {
   key: string
   label: string
-  helpText: string
   sectionKey: Exclude<ProfileJourneySectionKey, "products" | "memory">
-  sourceLabel: ProfileFieldSourceLabel
-  displayMode: ProfileFieldDisplayMode
   editTarget: ProfileEditTarget
   getValue: (profile: HairProfile | null) => ProfileFieldValue
 }
@@ -129,49 +124,30 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
   },
   {
     key: "memory",
-    title: "Was Hair Concierge sich merkt",
-    description:
-      "Langfristige Erinnerungen aus deinem Chat, damit Empfehlungen konsistenter werden.",
+    title: "Erinnerungen",
+    description: "Hinweise aus dem Chat, langfristig gespeichert.",
   },
 ]
-
-export const PROFILE_JOURNEY_STEPS = [
-  { key: "quiz", label: "Haar-Check" },
-  { key: "products", label: "Produkte" },
-  { key: "styling", label: "Styling" },
-  { key: "routine", label: "Alltag" },
-  { key: "goals", label: "Ziele" },
-  { key: "memory", label: "Merkt sich" },
-] as const
 
 export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "hair_texture",
     label: "Haartextur",
-    helpText: "Dein erster Quiz-Schritt zur natürlichen Haarstruktur.",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
-    displayMode: "badges",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.hair_texture, HAIR_TEXTURE_OPTIONS),
   },
   {
     key: "thickness",
     label: "Haar-Dicke",
-    helpText: "Dein zweiter Quiz-Schritt zur Dicke eines einzelnen Haares.",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
-    displayMode: "badges",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.thickness, HAIR_THICKNESS_OPTIONS),
   },
   {
     key: "cuticle_condition",
     label: "Oberfläche",
-    helpText: "Das Ergebnis aus dem Finger-Test im Quiz.",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
-    displayMode: "badges",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.cuticle_condition
@@ -181,10 +157,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "protein_moisture_balance",
     label: "Elastizität",
-    helpText: "Das Ergebnis aus dem Zug-Test im Quiz.",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
-    displayMode: "badges",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.protein_moisture_balance
@@ -195,10 +168,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "chemical_treatment",
     label: "Chemische Behandlungen",
-    helpText: "Deine Auswahl aus dem Behandlungs-Schritt im Quiz.",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
-    displayMode: "badges",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.chemical_treatment?.length
@@ -210,10 +180,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "scalp_type",
     label: "Kopfhauttyp",
-    helpText: "Deine Angabe aus dem Kopfhaut-Schritt im Quiz.",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
-    displayMode: "badges",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.scalp_type ? (SCALP_TYPE_LABELS[profile.scalp_type] ?? profile.scalp_type) : null,
@@ -221,10 +188,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "scalp_condition",
     label: "Kopfhaut-Beschwerden",
-    helpText: "Ob du aktive Kopfhaut-Beschwerden angegeben hast.",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
-    displayMode: "badges",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
       profile?.scalp_condition
@@ -236,10 +200,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "concerns",
     label: "Haar-Bedenken",
-    helpText: "Deine Auswahl aus dem Bedenken-Schritt nach der Kopfhaut.",
     sectionKey: "quiz",
-    sourceLabel: "Aus Haar-Check",
-    displayMode: "badges",
     editTarget: { kind: "quiz" },
     getValue: (profile) => {
       if (!profile) return null
@@ -250,10 +211,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "styling_tools",
     label: "Hitzetools",
-    helpText: "Welche Hitzetools du im Styling-Teil ausgewählt hast.",
     sectionKey: "styling",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
     editTarget: { kind: "onboarding", step: "heat_tools" },
     getValue: (profile) => {
       if (profile?.styling_tools?.length) {
@@ -270,20 +228,14 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "heat_styling",
     label: "Styling-Frequenz",
-    helpText: "Wie oft du Hitze einsetzt, wenn du Tools nutzt.",
     sectionKey: "styling",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
     editTarget: { kind: "onboarding", step: "heat_frequency" },
     getValue: (profile) => optionLabel(profile?.heat_styling, HEAT_STYLING_OPTIONS),
   },
   {
     key: "uses_heat_protection",
     label: "Hitzeschutz",
-    helpText: "Deine Antwort aus dem Hitzeschutz-Schritt.",
     sectionKey: "styling",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
     editTarget: { kind: "onboarding", step: "heat_protection" },
     getValue: (profile) =>
       profile?.uses_heat_protection != null ? (profile.uses_heat_protection ? "Ja" : "Nein") : null,
@@ -291,10 +243,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "towel_material",
     label: "Handtuch-Material",
-    helpText: "Womit du dein Haar im Alltag trocknest.",
     sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
     editTarget: { kind: "onboarding", step: "towel_material" },
     getValue: (profile) =>
       profile?.towel_material
@@ -304,10 +253,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "towel_technique",
     label: "Trocknungstechnik",
-    helpText: "Wie du dein Haar direkt nach dem Waschen trocknest.",
     sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
     editTarget: { kind: "onboarding", step: "towel_technique" },
     getValue: (profile) =>
       profile?.towel_technique
@@ -317,10 +263,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "drying_method",
     label: "Trocknungsmethode",
-    helpText: "Ob du Lufttrocknen, Föhnen oder beides gewählt hast.",
     sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
     editTarget: { kind: "onboarding", step: "drying_method" },
     getValue: (profile) =>
       profile?.drying_method
@@ -330,10 +273,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "brush_type",
     label: "Bürste",
-    helpText: "Deine Bürsten-Auswahl aus dem Alltagsteil.",
     sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
     editTarget: { kind: "onboarding", step: "brush_type" },
     getValue: (profile) =>
       profile?.brush_type ? (BRUSH_TYPE_LABELS[profile.brush_type] ?? profile.brush_type) : null,
@@ -341,10 +281,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "night_protection",
     label: "Nachtschutz",
-    helpText: "Wie du dein Haar nachts schützt.",
     sectionKey: "routine",
-    sourceLabel: "Aus Onboarding",
-    displayMode: "badges",
     editTarget: { kind: "onboarding", step: "night_protection" },
     getValue: (profile) => {
       if (profile?.night_protection?.length) {
@@ -360,10 +297,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "goals",
     label: "Deine Haarziele",
-    helpText: "Genau die Ziele, die du im Haar-Check ausgewählt hast.",
     sectionKey: "goals",
-    sourceLabel: "Aus Haar-Check",
-    displayMode: "badges",
     editTarget: { kind: "profile-edit-goals" },
     getValue: (profile) => orderedGoalLabels(profile),
   },

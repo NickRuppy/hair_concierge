@@ -251,34 +251,42 @@ export function ChatContainer() {
           />
 
           {isEmpty ? (
-            <div className="relative z-[1] flex h-full flex-col items-center justify-center px-4">
-              <div className="animate-scale-in mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
-                <CombIcon className="h-8 w-8 text-primary-foreground" />
-              </div>
-              <h2 className="animate-fade-in-up mb-2 type-h2" style={{ animationDelay: "150ms" }}>
-                {greeting}
-              </h2>
-              <p
-                className="animate-fade-in-up mb-8 max-w-md text-center type-body-sm text-muted-foreground"
-                style={{ animationDelay: "250ms" }}
-              >
-                Frag mich nach deiner Routine, passenden Produkten oder dem nächsten sinnvollen
-                Schritt für dein Haarprofil.
-              </p>
-              <div className="grid w-full max-w-lg grid-cols-1 gap-2 sm:grid-cols-2">
-                {suggestedPrompts.map((prompt, index) => (
-                  <button
-                    key={prompt.text}
-                    onClick={() => sendMessage(prompt.text)}
-                    className="animate-fade-in-up flex items-start gap-2.5 rounded-xl border px-4 py-3 text-left type-body-sm transition-all duration-200 hover:border-primary/40 hover:bg-accent hover:shadow-sm hover:-translate-y-0.5"
-                    style={{ animationDelay: `${350 + index * 80}ms` }}
-                  >
-                    {prompt.icon && (
-                      <Icon name={prompt.icon} size={18} className="shrink-0 text-primary" />
-                    )}
-                    {prompt.text}
-                  </button>
-                ))}
+            <div className="relative z-[1] flex h-full flex-col px-4">
+              <div className="mx-auto mt-auto flex w-full max-w-lg flex-col items-center pb-6 pt-10 md:pb-8">
+                <div className="animate-scale-in mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
+                  <CombIcon className="h-8 w-8 text-primary-foreground" />
+                </div>
+                <h2 className="animate-fade-in-up mb-2 type-h2" style={{ animationDelay: "150ms" }}>
+                  {greeting}
+                </h2>
+                <p
+                  className="animate-fade-in-up mb-6 max-w-md text-center type-body-sm text-muted-foreground"
+                  style={{ animationDelay: "250ms" }}
+                >
+                  Frag mich nach deiner Routine, passenden Produkten oder dem nächsten sinnvollen
+                  Schritt für dein Haarprofil.
+                </p>
+                <div
+                  className="animate-fade-in-up mb-2 self-start type-label text-[11px] text-[var(--text-caption)]"
+                  style={{ animationDelay: "320ms" }}
+                >
+                  Starterfragen
+                </div>
+                <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
+                  {suggestedPrompts.map((prompt, index) => (
+                    <button
+                      key={prompt.text}
+                      onClick={() => sendMessage(prompt.text)}
+                      className="animate-fade-in-up flex items-start gap-2.5 rounded-xl border px-4 py-3 text-left type-body-sm transition-all duration-200 hover:border-primary/40 hover:bg-accent hover:shadow-sm hover:-translate-y-0.5"
+                      style={{ animationDelay: `${350 + index * 80}ms` }}
+                    >
+                      {prompt.icon && (
+                        <Icon name={prompt.icon} size={18} className="shrink-0 text-primary" />
+                      )}
+                      {prompt.text}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (

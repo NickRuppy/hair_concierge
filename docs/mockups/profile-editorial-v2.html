@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hair Concierge – Profil Mockup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fbf8f5;
+        --surface: rgba(255, 255, 255, 0.92);
+        --surface-strong: #ffffff;
+        --border: rgba(61, 42, 98, 0.12);
+        --border-strong: rgba(61, 42, 98, 0.18);
+        --text-heading: #2a1845;
+        --text-body: #3a3835;
+        --text-sub: #6a6560;
+        --plum: #6b50a0;
+        --plum-dark: #3d2a62;
+        --plum-ice: #f2eefa;
+        --coral: #d4616a;
+        --coral-soft: #fcecef;
+        --shadow: 0 20px 44px -34px rgba(42, 24, 69, 0.28);
+        --radius-xl: 28px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+        --radius-pill: 999px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background:
+          radial-gradient(circle at top left, rgba(212, 97, 106, 0.08), transparent 26%),
+          radial-gradient(circle at top right, rgba(107, 80, 160, 0.08), transparent 24%),
+          var(--bg);
+        color: var(--text-body);
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+
+      body {
+        padding-bottom: 64px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        backdrop-filter: blur(18px);
+        background: rgba(251, 248, 245, 0.86);
+        border-bottom: 1px solid rgba(61, 42, 98, 0.08);
+      }
+
+      .topbar-inner,
+      .page {
+        width: min(1120px, calc(100vw - 40px));
+        margin: 0 auto;
+      }
+
+      .topbar-inner {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-heading);
+        font-family: "Playfair Display", serif;
+        font-size: 35px;
+        line-height: 1;
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        gap: 4px;
+      }
+
+      .brand-mark span {
+        width: 4px;
+        border-radius: 999px;
+        background: var(--plum);
+      }
+
+      .brand-mark span:nth-child(1) {
+        height: 18px;
+      }
+
+      .brand-mark span:nth-child(2) {
+        height: 18px;
+        opacity: 0.65;
+      }
+
+      .brand-mark span:nth-child(3) {
+        height: 18px;
+        opacity: 0.35;
+      }
+
+      .nav {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .nav-pill {
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-size: 14px;
+        color: var(--text-sub);
+      }
+
+      .nav-pill.active {
+        background: rgba(107, 80, 160, 0.09);
+        color: var(--text-heading);
+        font-weight: 600;
+      }
+
+      .page {
+        padding-top: 44px;
+      }
+
+      .eyebrow {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--plum);
+      }
+
+      .hero h1 {
+        margin: 14px 0 10px;
+        font-family: "Playfair Display", serif;
+        font-size: clamp(38px, 6vw, 54px);
+        line-height: 0.96;
+        color: var(--text-heading);
+      }
+
+      .hero p {
+        width: min(760px, 100%);
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.65;
+        color: var(--text-sub);
+      }
+
+      .summary-strip {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: 1.3fr 0.9fr 0.9fr;
+        gap: 14px;
+      }
+
+      .summary-card {
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.82));
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        border-radius: var(--radius-xl);
+        padding: 22px 22px 20px;
+      }
+
+      .summary-card.primary {
+        display: grid;
+        gap: 18px;
+      }
+
+      .summary-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .summary-stat {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+      }
+
+      .summary-stat strong {
+        font-size: 36px;
+        line-height: 1;
+        color: var(--text-heading);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 34px;
+        padding: 0 14px;
+        border-radius: var(--radius-pill);
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid transparent;
+        white-space: nowrap;
+      }
+
+      .pill.plum {
+        background: var(--plum-ice);
+        border-color: rgba(107, 80, 160, 0.16);
+        color: var(--plum);
+      }
+
+      .pill.coral {
+        background: var(--coral-soft);
+        border-color: rgba(212, 97, 106, 0.18);
+        color: #924048;
+      }
+
+      .summary-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-heading);
+      }
+
+      .summary-body {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text-sub);
+      }
+
+      .summary-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .summary-list .item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .summary-list .dot {
+        width: 9px;
+        height: 9px;
+        margin-top: 7px;
+        border-radius: 999px;
+        background: var(--coral);
+        box-shadow: 0 0 0 6px rgba(212, 97, 106, 0.11);
+      }
+
+      .stack {
+        margin-top: 26px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .section {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.9));
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: flex-start;
+      }
+
+      .section-title-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .section h2 {
+        margin: 0;
+        font-size: 26px;
+        line-height: 1.1;
+        color: var(--text-heading);
+      }
+
+      .section p {
+        margin: 0;
+        color: var(--text-sub);
+        line-height: 1.6;
+      }
+
+      .section-actions {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      .button {
+        min-height: 44px;
+        border-radius: 999px;
+        padding: 0 18px;
+        font-size: 14px;
+        font-weight: 700;
+        border: 1px solid var(--border-strong);
+        background: rgba(255, 255, 255, 0.86);
+        color: var(--text-heading);
+      }
+
+      .button.soft {
+        background: transparent;
+        color: var(--plum);
+        font-weight: 600;
+      }
+
+      .section-grid {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .field-card,
+      .note-card {
+        border-radius: 22px;
+        border: 1px solid rgba(61, 42, 98, 0.1);
+        background: rgba(251, 248, 245, 0.65);
+        padding: 18px;
+      }
+
+      .field-card-label {
+        margin-bottom: 10px;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-sub);
+      }
+
+      .field-card-value {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.35;
+        color: var(--text-heading);
+      }
+
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 12px;
+        border-radius: var(--radius-pill);
+        background: #fff;
+        border: 1px solid rgba(107, 80, 160, 0.14);
+        color: var(--text-heading);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .products-table {
+        margin-top: 18px;
+        border-radius: 24px;
+        border: 1px solid rgba(61, 42, 98, 0.1);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .products-table-header,
+      .products-table-row {
+        display: grid;
+        grid-template-columns: 1.1fr 1.2fr 0.9fr;
+        gap: 12px;
+        padding: 16px 18px;
+      }
+
+      .products-table-header {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--text-sub);
+        background: rgba(107, 80, 160, 0.05);
+      }
+
+      .products-table-row {
+        border-top: 1px solid rgba(61, 42, 98, 0.08);
+        align-items: center;
+      }
+
+      .products-table-row strong {
+        color: var(--text-heading);
+      }
+
+      .two-up {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .subtle-line {
+        margin: 18px 0 0;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(61, 42, 98, 0.08), rgba(61, 42, 98, 0), transparent);
+      }
+
+      @media (max-width: 980px) {
+        .summary-strip,
+        .two-up,
+        .section-grid,
+        .products-table-header,
+        .products-table-row {
+          grid-template-columns: 1fr;
+        }
+
+        .section-header {
+          flex-direction: column;
+        }
+
+        .section-actions {
+          width: 100%;
+          justify-content: flex-start;
+          flex-wrap: wrap;
+        }
+
+        .topbar-inner,
+        .page {
+          width: min(100vw - 24px, 1120px);
+        }
+
+        .hero h1 {
+          font-size: 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <span class="brand-mark"><span></span><span></span><span></span></span>
+          <span>Hair Concierge</span>
+        </div>
+
+        <nav class="nav">
+          <span class="nav-pill">Chat</span>
+          <span class="nav-pill active">Profil</span>
+          <span class="nav-pill">Abmelden</span>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="hero">
+        <div class="eyebrow">Profilübersicht</div>
+        <h1>Mein Profil</h1>
+        <p>
+          Hier siehst du die Angaben, die Hair Concierge aktuell für Empfehlungen nutzt. Alles ist
+          offen lesbar, damit du schnell prüfen kannst, was noch stimmt und was du anpassen
+          möchtest.
+        </p>
+      </section>
+
+      <section class="summary-strip">
+        <article class="summary-card primary">
+          <div class="summary-meta">
+            <div class="summary-stat">
+              <strong>5/5</strong>
+              <span class="summary-title">Kernbereiche vollständig</span>
+            </div>
+            <span class="pill plum">Stand heute passend</span>
+          </div>
+
+          <div class="summary-list">
+            <div class="item">
+              <span class="dot"></span>
+              <div>
+                <div class="summary-title">Kein verstecktes Profil</div>
+                <div class="summary-body">
+                  Deine wichtigsten Angaben bleiben direkt sichtbar statt hinter mehreren
+                  Schnellzugriffen.
+                </div>
+              </div>
+            </div>
+
+            <div class="item">
+              <span class="dot"></span>
+              <div>
+                <div class="summary-title">Nur ändern, wenn sich etwas verändert</div>
+                <div class="summary-body">
+                  Das Profil ist kein Fortschrittsspiel. Es soll dir Sicherheit geben, nicht Arbeit
+                  machen.
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="summary-card">
+          <span class="pill coral">Als Nächstes relevant</span>
+          <div style="height: 14px"></div>
+          <div class="summary-title">Ziele + eigene Notiz</div>
+          <p class="summary-body" style="margin-top: 8px">
+            Ziele sollten nicht nur aus Chips bestehen. Eine kurze freie Notiz kann den eigentlichen
+            Fokus besser festhalten.
+          </p>
+        </article>
+
+        <article class="summary-card">
+          <span class="pill plum">Zuletzt aktualisiert</span>
+          <div style="height: 14px"></div>
+          <div class="summary-title">Haar-Check vor 3 Tagen</div>
+          <p class="summary-body" style="margin-top: 8px">
+            Wenn sich Struktur, Kopfhaut oder Routine geändert haben, kannst du die Angaben direkt
+            hier anpassen.
+          </p>
+        </article>
+      </section>
+
+      <section class="stack">
+        <article class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title-row">
+                <h2>Haar-Check</h2>
+                <span class="pill plum">8/8 vollständig</span>
+              </div>
+              <p>
+                Die Basis für Struktur, Schäden und Kopfhaut. Alles bleibt offen sichtbar, damit du
+                sofort siehst, ob das Profil noch zu deinem Haar passt.
+              </p>
+            </div>
+
+            <div class="section-actions">
+              <button class="button">Haar-Check bearbeiten</button>
+            </div>
+          </div>
+
+          <div class="section-grid">
+            <div class="field-card">
+              <div class="field-card-label">Textur</div>
+              <div class="field-card-value">Wellig</div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Haar-Dicke</div>
+              <div class="field-card-value">Fein</div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Oberfläche</div>
+              <div class="field-card-value">Glatt</div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Elastizität</div>
+              <div class="field-card-value">Dehnt sich und geht zurück</div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Kopfhaut</div>
+              <div class="chip-row">
+                <span class="chip">Eher ölig</span>
+                <span class="chip">Keine Beschwerden</span>
+              </div>
+            </div>
+            <div class="field-card">
+              <div class="field-card-label">Schäden & Historie</div>
+              <div class="chip-row">
+                <span class="chip">Blondiert</span>
+                <span class="chip">Keine aktuellen Haar-Bedenken</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title-row">
+                <h2>Produkte</h2>
+                <span class="pill plum">3/3 vollständig</span>
+              </div>
+              <p>
+                Nicht nur Kategorien, sondern echte Produkte und Häufigkeit. So ist schnell
+                nachvollziehbar, wovon Empfehlungen ausgehen.
+              </p>
+            </div>
+
+            <div class="section-actions">
+              <button class="button">Produkte bearbeiten</button>
+            </div>
+          </div>
+
+          <div class="products-table">
+            <div class="products-table-header">
+              <span>Kategorie</span>
+              <span>Produkt</span>
+              <span>Häufigkeit</span>
+            </div>
+            <div class="products-table-row">
+              <strong>Shampoo</strong>
+              <span>Daily Shampoo</span>
+              <span>1–2x pro Woche</span>
+            </div>
+            <div class="products-table-row">
+              <strong>Conditioner</strong>
+              <span>Curl Conditioner</span>
+              <span>1–2x pro Woche</span>
+            </div>
+            <div class="products-table-row">
+              <strong>Trockenshampoo</strong>
+              <span>Dry Refresh</span>
+              <span>Seltener</span>
+            </div>
+          </div>
+        </article>
+
+        <section class="two-up">
+          <article class="section">
+            <div class="section-header">
+              <div>
+                <div class="section-title-row">
+                  <h2>Styling</h2>
+                  <span class="pill plum">3/3 vollständig</span>
+                </div>
+                <p>Tools, Häufigkeit und Hitzeschutz auf einen Blick.</p>
+              </div>
+              <div class="section-actions">
+                <button class="button">Styling bearbeiten</button>
+              </div>
+            </div>
+
+            <div class="section-grid">
+              <div class="field-card">
+                <div class="field-card-label">Hitzetools</div>
+                <div class="chip-row"><span class="chip">Glätteisen</span></div>
+              </div>
+              <div class="field-card">
+                <div class="field-card-label">Frequenz</div>
+                <div class="field-card-value">1x pro Woche</div>
+              </div>
+              <div class="field-card" style="grid-column: 1 / -1">
+                <div class="field-card-label">Hitzeschutz</div>
+                <div class="field-card-value">Ja, aktuell eingeplant</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="section">
+            <div class="section-header">
+              <div>
+                <div class="section-title-row">
+                  <h2>Alltag</h2>
+                  <span class="pill plum">5/5 vollständig</span>
+                </div>
+                <p>Trocknen, Bürste und Nachtschutz, damit Routinen alltagstauglich bleiben.</p>
+              </div>
+              <div class="section-actions">
+                <button class="button">Alltag bearbeiten</button>
+              </div>
+            </div>
+
+            <div class="section-grid">
+              <div class="field-card">
+                <div class="field-card-label">Handtuch</div>
+                <div class="field-card-value">Frottee-Handtuch</div>
+              </div>
+              <div class="field-card">
+                <div class="field-card-label">Trockentechnik</div>
+                <div class="field-card-value">Tupfen / Scrunchen</div>
+              </div>
+              <div class="field-card">
+                <div class="field-card-label">Trocknung</div>
+                <div class="field-card-value">Lufttrocknen</div>
+              </div>
+              <div class="field-card">
+                <div class="field-card-label">Bürste</div>
+                <div class="field-card-value">Grobzinkiger Kamm</div>
+              </div>
+              <div class="field-card" style="grid-column: 1 / -1">
+                <div class="field-card-label">Nachtschutz</div>
+                <div class="field-card-value">Aktuell nichts davon</div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <article class="section">
+          <div class="section-header">
+            <div>
+              <div class="section-title-row">
+                <h2>Ziele</h2>
+                <span class="pill plum">4 Ziele gespeichert</span>
+              </div>
+              <p>
+                Ziele sollten nicht wie ein separater Mini-Flow wirken, sondern wie ein klarer
+                Fokusbereich im Profil.
+              </p>
+            </div>
+
+            <div class="section-actions">
+              <button class="button">Ziele bearbeiten</button>
+            </div>
+          </div>
+
+          <div class="section-grid">
+            <div class="field-card">
+              <div class="field-card-label">Ausgewählte Ziele</div>
+              <div class="chip-row">
+                <span class="chip">Mehr Glanz</span>
+                <span class="chip">Mehr Volumen</span>
+                <span class="chip">Weniger Frizz</span>
+                <span class="chip">Gesünderes Haargefühl</span>
+              </div>
+            </div>
+
+            <div class="note-card">
+              <div class="field-card-label">Eigene Notiz</div>
+              <div class="field-card-value">Weniger Haarbruch, ohne dass die Routine kompliziert wird.</div>
+              <p style="margin-top: 10px; font-size: 14px">
+                Diese freie Zeile macht das Ziel persönlicher als nur weitere auswählbare Chips.
+              </p>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

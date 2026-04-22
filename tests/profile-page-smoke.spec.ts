@@ -34,7 +34,7 @@ async function upsertHairProfileWithDryingCompat(payload: Record<string, unknown
   if (error) throw error
 }
 
-test.describe.serial("Profile page smoke", () => {
+test.describe.serial("@ci Profile page smoke", () => {
   const email = `playwright-profile-${Date.now()}@hairconscierge.test`
   const password = "Playwright123!"
   const fullName = "Playwright Profile"
@@ -62,6 +62,9 @@ test.describe.serial("Profile page smoke", () => {
         full_name: fullName,
         onboarding_completed: true,
         onboarding_step: "celebration",
+        stripe_customer_id: `cus_smoke_${userId}`,
+        subscription_status: "active",
+        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       },
       { onConflict: "id" },
     )
@@ -135,18 +138,19 @@ test.describe.serial("Profile page smoke", () => {
     await page.locator('input[type="email"]:visible').fill(email)
     await page.locator('input[type="password"]:visible').fill(password)
     await page.getByRole("button", { name: /^Anmelden$/ }).click()
-    await page.waitForURL(/\/chat$/, { timeout: 30000 })
+    await page.waitForURL(/\/(chat|profile|pricing)(\?.*)?$/, { timeout: 30000 })
 
     await page.goto(`${baseUrl}/profile`, { waitUntil: "domcontentloaded" })
     await expect(page.getByRole("heading", { name: "Mein Profil" })).toBeVisible()
+    await expect(page.locator("#profile-section-quiz")).toBeVisible()
 
     const sectionPositions = await Promise.all([
-      page.getByText("Haar-Check", { exact: true }).first().boundingBox(),
-      page.getByText("Produkte", { exact: true }).first().boundingBox(),
-      page.getByText("Styling", { exact: true }).first().boundingBox(),
-      page.getByText("Alltag", { exact: true }).first().boundingBox(),
-      page.getByText("Ziele", { exact: true }).first().boundingBox(),
-      page.getByText("Was Hair Concierge sich merkt", { exact: true }).first().boundingBox(),
+      page.locator("#profile-section-quiz").boundingBox(),
+      page.locator("#profile-section-products").boundingBox(),
+      page.locator("#profile-section-styling").boundingBox(),
+      page.locator("#profile-section-routine").boundingBox(),
+      page.locator("#profile-section-goals").boundingBox(),
+      page.locator("#profile-section-memory").boundingBox(),
     ])
 
     for (const box of sectionPositions) {
@@ -164,7 +168,7 @@ test.describe.serial("Profile page smoke", () => {
     await expect(page.getByText("Weitere Produkte")).toHaveCount(0)
     await expect(page.getByText("Aus Haar-Check")).toHaveCount(0)
     await expect(page.getByText("Aus Onboarding")).toHaveCount(0)
-    await expect(page.getByText("8/8 vollständig")).toBeVisible()
+    await expect(page.locator("#profile-section-quiz").getByText("8/8 vollständig")).toBeVisible()
 
     const memorySwitch = page.getByRole("switch", { name: "Erinnerungen aktivieren" })
     await expect(memorySwitch).toHaveAttribute("aria-checked", "true")
@@ -187,7 +191,7 @@ test.describe.serial("Profile page smoke", () => {
       page.getByRole("button").filter({ hasText: "Haar-Bedenken" }).getByText("Nichts davon"),
     ).toBeVisible()
 
-    await page.getByRole("button", { name: "Ziele bearbeiten" }).click()
+    await page.getByRole("button", { name: "Ziele bearbeiten", exact: true }).click()
     await page.waitForURL(/\/profile\/edit\/goals(\?.*)?$/, { timeout: 15000 })
     await expect(page.getByText("Deine Haarziele", { exact: false })).toBeVisible()
     await page.getByRole("button", { name: "Speichern und zurück zum Profil" }).click()
