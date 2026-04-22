@@ -357,6 +357,7 @@ function SectionHeader({
   controls,
   isOpen = true,
   preview,
+  size = "lg",
 }: {
   title: string
   description: string
@@ -364,6 +365,7 @@ function SectionHeader({
   controls?: ReactNode
   isOpen?: boolean
   preview?: SectionPreview
+  size?: "lg" | "sm"
 }) {
   return (
     <div>
@@ -2134,15 +2136,18 @@ export default function ProfilePage() {
               ) : null}
             </Card>
 
+            <div className="mt-12 border-t border-border/60 pt-8">
+              <h2 className="font-[family-name:var(--font-display)] text-3xl font-medium leading-none text-[var(--text-heading)]">
+                Einstellungen
+              </h2>
+            </div>
+
             <Card
               id="profile-section-memory"
               ref={(node) => {
                 sectionRefs.current.memory = node
               }}
-              className={cn(
-                "scroll-mt-24 overflow-hidden transition-colors",
-                isMemoryOpen ? "border-primary/20" : "border-border/80",
-              )}
+              className="mt-4 overflow-hidden border-border/60 bg-card/60"
             >
               <CardHeader className="pb-4">
                 <SectionHeader
@@ -2178,6 +2183,7 @@ export default function ProfilePage() {
                       </Button>
                     </>
                   }
+                  size="sm"
                 />
               </CardHeader>
               {isMemoryOpen ? (
@@ -2260,8 +2266,10 @@ export default function ProfilePage() {
             </Card>
 
             {profile?.stripe_customer_id && (
-              <section className="rounded-xl border bg-card p-6">
-                <h2 className="mb-3 font-header text-xl">Dein Abo</h2>
+              <section className="mt-4 rounded-2xl border border-border/60 bg-card/60 p-6">
+                <h2 className="mb-3 font-[family-name:var(--font-display)] text-lg font-medium text-[var(--text-heading)]">
+                  Mitgliedschaft
+                </h2>
                 <p className="mb-1 text-sm text-muted-foreground">
                   Status:{" "}
                   <strong className="text-foreground">{profile.subscription_status ?? "—"}</strong>
@@ -2278,9 +2286,11 @@ export default function ProfilePage() {
               </section>
             )}
 
-            <Card className="bg-muted/35">
+            <Card className="mt-4 border-border/60 bg-card/60">
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg text-[var(--text-heading)]">Account</CardTitle>
+                <CardTitle className="font-[family-name:var(--font-display)] text-lg font-medium text-[var(--text-heading)]">
+                  Account
+                </CardTitle>
                 <CardDescription className="mt-1 text-sm">
                   Dein Zugang bleibt bewusst sekundär, damit das Profil weiterhin mit deiner
                   Haarreise startet.
