@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import type { ProductBondbuilderSpecs } from "../src/lib/bondbuilder/constants"
-import type { ProductConditionerSpecs } from "../src/lib/conditioner/constants"
+import type { ProductConditionerRerankSpecs } from "../src/lib/conditioner/constants"
 import type { ProductDeepCleansingShampooSpecs } from "../src/lib/deep-cleansing-shampoo/constants"
 import type { ProductDryShampooSpecs } from "../src/lib/dry-shampoo/constants"
 import type { ProductLeaveInSpecs } from "../src/lib/leave-in/constants"
@@ -77,18 +77,20 @@ test("engine conditioner reranking prefers explicit target fit over higher seman
     createMatchedProduct("mismatch", "Conditioner", { combined_score: 0.88 }),
   ]
 
-  const specs: ProductConditionerSpecs[] = [
+  const specs: ProductConditionerRerankSpecs[] = [
     {
       product_id: "ideal",
       weight: "medium",
       repair_level: "high",
       balance_direction: "moisture",
+      ingredient_flags: [],
     },
     {
       product_id: "mismatch",
       weight: "rich",
       repair_level: "low",
       balance_direction: "protein",
+      ingredient_flags: [],
     },
   ]
 

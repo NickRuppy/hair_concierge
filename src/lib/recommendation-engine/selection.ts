@@ -16,7 +16,7 @@ import type {
   PeelingRecommendationMetadata,
   ShampooRecommendationMetadata,
 } from "@/lib/types"
-import type { ProductConditionerSpecs } from "@/lib/conditioner/constants"
+import type { ProductConditionerRerankSpecs } from "@/lib/conditioner/constants"
 import type { LeaveInNeedBucket } from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
 import { OIL_PURPOSE_LABELS, type OilPurpose, type OilSubtype } from "@/lib/oil/constants"
@@ -310,7 +310,7 @@ function buildConditionerUsageHint(decision: ConditionerCategoryDecision): strin
 
 export function rerankConditionerProductsWithEngine(params: {
   candidates: MatchedProduct[]
-  specs: ProductConditionerSpecs[]
+  specs: ProductConditionerRerankSpecs[]
   decision: ConditionerCategoryDecision
   hairProfile: HairProfile | null
 }): MatchedProduct[] {
@@ -1024,7 +1024,7 @@ export async function selectConditionerProductsWithEngine(params: {
 
   return rerankConditionerProductsWithEngine({
     candidates,
-    specs: (specs ?? []) as ProductConditionerSpecs[],
+    specs: (specs ?? []) as ProductConditionerRerankSpecs[],
     decision,
     hairProfile,
   })
