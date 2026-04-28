@@ -1,6 +1,7 @@
 "use client"
 
 import { CombIcon } from "@/components/ui/comb-icon"
+import { useMemo } from "react"
 
 const LOADING_MESSAGES = [
   "Durchkämmen...",
@@ -20,10 +21,10 @@ function pickRandomMessage() {
 }
 
 export function ChatLoadingIndicator() {
-  const message = pickRandomMessage()
+  const message = useMemo(() => pickRandomMessage(), [])
 
   return (
-    <div className="flex gap-3 animate-fade-in-up-fast">
+    <div className="flex animate-fade-in-up-fast gap-3" role="status" aria-live="polite">
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(var(--brand-plum-rgb),0.25)]">
         <CombIcon className="h-4 w-4 text-primary-foreground" />
       </div>
