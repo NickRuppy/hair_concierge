@@ -798,6 +798,54 @@ def convert_excel_matrices():
         convert_single_excel_matrix(xlsx_path)
 
 
+INGREDIENT_FLAG_TRAILING_PAREN = re.compile(
+    r"\s*\((Silikone|Kokos|Silikone\s*/\s*Kokos)\)\s*$",
+)
+
+
+def normalize_ingredient_paren(text: str) -> str:
+    """Normalize source typos in trailing ingredient parens.
+    'Silikon' (no trailing 'e') -> 'Silikone'. Idempotent.
+
+    Word-boundary match: only rewrite 'Silikon' followed by a non-letter
+    so we don't accidentally rewrite 'Silikone' itself.
+    """
+    return re.sub(r"\bSilikon(?![a-zA-Z])", "Silikone", text)
+
+
+def parse_ingredient_flags(name: str) -> tuple[str, list[str]]:
+    """Strip trailing (Silikone) / (Kokos) / (Silikone /Kokos) annotation
+    from a product name and return (stripped_name, flags).
+    Kokos maps to 'oils' per leave-in convention.
+
+    Assumes input has already been run through normalize_ingredient_paren()
+    so only the canonical 'Silikone' spelling is recognized.
+
+    Returns the original name and an empty list if no annotation matches.
+    """
+    m = INGREDIENT_FLAG_TRAILING_PAREN.search(name)
+    if not m:
+        return name, []
+    body = m.group(1)
+    flags: list[str] = []
+    if "Silikone" in body:
+        flags.append("silicones")
+    if "Kokos" in body:
+        flags.append("oils")
+    return name[: m.start()].rstrip(), flags
+
+
+# Module-level smoke asserts (run on import).
+assert normalize_ingredient_paren("OGX Biotin & Collagen (Silikon)") == "OGX Biotin & Collagen (Silikone)"
+assert normalize_ingredient_paren("Pomelo (Silikone)") == "Pomelo (Silikone)"  # idempotent
+assert parse_ingredient_flags("Pomelo Molecular Repair (Silikone)") == ("Pomelo Molecular Repair", ["silicones"])
+assert parse_ingredient_flags("Cantu Repair Cream (Kokos)") == ("Cantu Repair Cream", ["oils"])
+assert parse_ingredient_flags("OGX Renewing Argan Oil (Silikone /Kokos)") == ("OGX Renewing Argan Oil", ["silicones", "oils"])
+assert parse_ingredient_flags("Monday Moisture (Silikone / Kokos)") == ("Monday Moisture", ["silicones", "oils"])
+assert parse_ingredient_flags("Plain Name") == ("Plain Name", [])
+assert parse_ingredient_flags("Garnier (Drogerie)") == ("Garnier (Drogerie)", [])  # don't strip non-ingredient parens
+
+
 def parse_cell_products(cell_value) -> list[str]:
     """Extract product names from a cell value.
 
@@ -856,6 +904,7 @@ def convert_single_excel_matrix(xlsx_path: Path):
     """
     filename_stem = xlsx_path.stem  # e.g. "Produktliste Conditioner (Profi)"
     is_profi = "(Profi)" in filename_stem or "(profi)" in filename_stem
+    is_conditioner = "conditioner" in filename_stem.lower()
     category = filename_stem  # fallback: filename without extension
     print(f"\n  Processing: {filename_stem}")
 
@@ -921,6 +970,11 @@ def convert_single_excel_matrix(xlsx_path: Path):
 
         for col_idx, need_cat in enumerate(headers):
             cell_val = ws.cell(row=row, column=col_idx + 2).value
+            # Conditioner sheet only: normalize the 'Silikon' (typo, no trailing
+            # 'e') -> 'Silikone' before splitting, so the parser sees a single
+            # canonical spelling. Other matrices keep raw cell text untouched.
+            if is_conditioner and cell_val is not None:
+                cell_val = normalize_ingredient_paren(str(cell_val))
             for product_name in parse_cell_products(cell_val):
                 matrix[current_hair_texture][need_cat].append(product_name)
 
@@ -931,15 +985,19 @@ def convert_single_excel_matrix(xlsx_path: Path):
     )
     print(f"    {len(matrix)} hair textures, {len(headers)} need categories, {total_products} product entries")
 
-    generate_matrix_markdown(category, matrix)
-    generate_product_json(category, matrix)
+    generate_matrix_markdown(category, matrix, is_conditioner=is_conditioner)
+    generate_product_json(category, matrix, is_conditioner=is_conditioner)
 
 
-def generate_matrix_markdown(category: str, matrix: dict):
+def generate_matrix_markdown(category: str, matrix: dict, is_conditioner: bool = False):
     """Write one Markdown file per cell (hair_texture x concern) for precise RAG retrieval.
 
     Each file becomes a single chunk with rich metadata for hybrid search
     (metadata filtering + vector similarity).
+
+    For the conditioner matrix, trailing (Silikone)/(Kokos) annotations are
+    stripped from product names — the structured signal lives in the JSON
+    output's `ingredient_flags` field.
     """
     cat_slug = slugify(category)
     out_dir = MD_DIR / "products" / cat_slug
@@ -960,7 +1018,12 @@ def generate_matrix_markdown(category: str, matrix: dict):
             concern_display = concern_to_display(need_cat)
             filename = f"{hair_tag}-{concern_tag}.md"
 
-            product_list = ", ".join(products)
+            display_products = (
+                [parse_ingredient_flags(p)[0] for p in products]
+                if is_conditioner
+                else products
+            )
+            product_list = ", ".join(display_products)
             content = (
                 f"# {category} Produkte für {hair_display} bei {concern_display}\n\n"
                 f"Empfohlene {category}-Produkte für {hair_display} "
@@ -1001,8 +1064,13 @@ def guess_brand(product_name: str) -> str:
     return parts[0]
 
 
-def generate_product_json(category: str, matrix: dict):
-    """Write a JSON file for product catalog ingestion."""
+def generate_product_json(category: str, matrix: dict, is_conditioner: bool = False):
+    """Write a JSON file for product catalog ingestion.
+
+    For the conditioner matrix, the trailing (Silikone)/(Kokos) annotation is
+    stripped from `name` and surfaced as a structured `ingredient_flags` array
+    (`silicones` / `oils`). Empty array when no annotation was present.
+    """
     slug = slugify(category)
     out_dir = DATA_DIR / "products-from-excel"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -1016,17 +1084,24 @@ def generate_product_json(category: str, matrix: dict):
             continue
         for need_cat, products in needs.items():
             concern_tag = concern_to_slug(need_cat)
-            for product_name in products:
-                if product_name not in product_map:
-                    product_map[product_name] = {
-                        "name": product_name,
-                        "brand": guess_brand(product_name),
+            for raw_name in products:
+                if is_conditioner:
+                    clean_name, flags = parse_ingredient_flags(raw_name)
+                else:
+                    clean_name, flags = raw_name, []
+                if clean_name not in product_map:
+                    entry = {
+                        "name": clean_name,
+                        "brand": guess_brand(clean_name),
                         "category": category,
                         "suitable_thicknesses": [],
                         "suitable_concerns": [],
                         "tags": [category.lower()],
                     }
-                entry = product_map[product_name]
+                    if is_conditioner:
+                        entry["ingredient_flags"] = flags
+                    product_map[clean_name] = entry
+                entry = product_map[clean_name]
                 if hair_tag not in entry["suitable_thicknesses"]:
                     entry["suitable_thicknesses"].append(hair_tag)
                 if concern_tag not in entry["suitable_concerns"]:
