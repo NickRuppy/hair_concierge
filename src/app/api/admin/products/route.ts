@@ -5,7 +5,10 @@ import { generateEmbedding } from "@/lib/openai/embeddings"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 import { isBondbuilderCategory, type ProductBondbuilderSpecs } from "@/lib/bondbuilder/constants"
-import { isConditionerCategory, type ProductConditionerSpecs } from "@/lib/conditioner/constants"
+import {
+  isConditionerCategory,
+  type ProductConditionerRerankSpecs,
+} from "@/lib/conditioner/constants"
 import {
   isDeepCleansingShampooCategory,
   type ProductDeepCleansingShampooSpecs,
@@ -77,7 +80,7 @@ export async function GET() {
     .filter((product) => isPeelingCategory(product.category))
     .map((product) => product.id)
 
-  let conditionerSpecsByProductId = new Map<string, ProductConditionerSpecs>()
+  let conditionerSpecsByProductId = new Map<string, ProductConditionerRerankSpecs>()
   let shampooPairsByProductId = new Map<string, ShampooBucketPair[]>()
   if (shampooIds.length > 0) {
     const adminClient = createAdminClient()
@@ -121,7 +124,7 @@ export async function GET() {
       .in("product_id", conditionerIds)
 
     conditionerSpecsByProductId = new Map(
-      ((specs || []) as ProductConditionerSpecs[]).map((spec) => [spec.product_id, spec]),
+      ((specs || []) as ProductConditionerRerankSpecs[]).map((spec) => [spec.product_id, spec]),
     )
   }
 

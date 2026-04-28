@@ -38,3 +38,22 @@ export function isConditionerCategory(category: string | null | undefined): bool
   const normalized = category.trim().toLowerCase()
   return normalized.startsWith("conditioner")
 }
+
+export const CONDITIONER_INGREDIENT_FLAGS = [
+  "silicones",
+  "polymers",
+  "oils",
+  "proteins",
+  "humectants",
+] as const
+export type ConditionerIngredientFlag = (typeof CONDITIONER_INGREDIENT_FLAGS)[number]
+
+export interface ProductConditionerRerankSpecs {
+  product_id: string
+  weight: ConditionerWeight
+  repair_level: ConditionerRepairLevel
+  balance_direction: ProductBalanceTarget | null
+  ingredient_flags: ConditionerIngredientFlag[]
+  created_at?: string
+  updated_at?: string
+}

@@ -17,7 +17,7 @@ const admin = createClient(supabaseUrl, serviceRoleKey, {
 const SEEDED_CONDITIONER_NAMES = [
   "Balea Natural Beauty Hibiskus",
   "Sante Intense Hydrating Conditioner",
-  "Pantene Hydra Glow (Silikone)",
+  "Pantene Hydra Glow",
 ] as const
 
 type AssistantMessageRecord = {
@@ -236,7 +236,7 @@ test.describe.serial("Conditioner chat E2E", () => {
         repair_level: "high",
       },
       {
-        product_id: specsByName.get("Pantene Hydra Glow (Silikone)"),
+        product_id: specsByName.get("Pantene Hydra Glow"),
         weight: "rich",
         repair_level: "low",
       },
