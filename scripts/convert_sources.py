@@ -799,7 +799,7 @@ def convert_excel_matrices():
 
 
 INGREDIENT_FLAG_TRAILING_PAREN = re.compile(
-    r"\s*\((Silikone|Kokos|Silikone\s*/\s*Kokos)\)\s*$",
+    r"\s*\(((?:Silikone|Kokos)(?:\s*/\s*(?:Silikone|Kokos))?)\)\s*$",
 )
 
 
@@ -842,6 +842,12 @@ assert parse_ingredient_flags("Pomelo Molecular Repair (Silikone)") == ("Pomelo 
 assert parse_ingredient_flags("Cantu Repair Cream (Kokos)") == ("Cantu Repair Cream", ["oils"])
 assert parse_ingredient_flags("OGX Renewing Argan Oil (Silikone /Kokos)") == ("OGX Renewing Argan Oil", ["silicones", "oils"])
 assert parse_ingredient_flags("Monday Moisture (Silikone / Kokos)") == ("Monday Moisture", ["silicones", "oils"])
+# Reverse-order annotation: body lookup is order-independent (Silikone-first then Kokos),
+# so the flags list stays in canonical [silicones, oils] order regardless of input order.
+assert parse_ingredient_flags("OGX (Kokos / Silikone)") == ("OGX", ["silicones", "oils"])
+assert parse_ingredient_flags("OGX (Kokos /Silikone)") == ("OGX", ["silicones", "oils"])
+assert parse_ingredient_flags("OGX (silikone)") == ("OGX (silikone)", [])  # case-sensitive: don't strip lowercase
+assert parse_ingredient_flags("OGX") == ("OGX", [])  # no parens
 assert parse_ingredient_flags("Plain Name") == ("Plain Name", [])
 assert parse_ingredient_flags("Garnier (Drogerie)") == ("Garnier (Drogerie)", [])  # don't strip non-ingredient parens
 
