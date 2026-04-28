@@ -1074,19 +1074,18 @@ def guess_brand(product_name: str) -> str:
     return parts[0]
 
 
-def generate_product_json(category: str, matrix: dict, is_conditioner_drogerie: bool = False):
-    """Write a JSON file for product catalog ingestion.
+def build_product_json_list(
+    category: str, matrix: dict, is_conditioner_drogerie: bool = False
+) -> list[dict]:
+    """Build the product JSON list (in memory, no IO).
 
     For the conditioner-drogerie matrix, the trailing (Silikone)/(Kokos)
     annotation is stripped from `name` and surfaced as a structured
     `ingredient_flags` array (`silicones` / `oils`). Empty array when no
-    annotation was present.
+    annotation was present. If the same stripped name appears in multiple
+    cells with DIFFERENT trailing parens, all flags are merged so the result
+    is order-independent.
     """
-    slug = slugify(category)
-    out_dir = DATA_DIR / "products-from-excel"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"{slug}.json"
-
     product_map: dict[str, dict] = {}
 
     for hair_label, needs in matrix.items():
@@ -1110,15 +1109,84 @@ def generate_product_json(category: str, matrix: dict, is_conditioner_drogerie: 
                         "tags": [category.lower()],
                     }
                     if is_conditioner_drogerie:
-                        entry["ingredient_flags"] = flags
+                        entry["ingredient_flags"] = []
                     product_map[clean_name] = entry
                 entry = product_map[clean_name]
+                # Merge flags from this occurrence so that two cells with
+                # different trailing parens (e.g. one with (Silikone) and one
+                # with (Kokos)) both contribute to the product's flag list.
+                # This makes the parse order-independent.
+                if is_conditioner_drogerie:
+                    for f in flags:
+                        if f not in entry["ingredient_flags"]:
+                            entry["ingredient_flags"].append(f)
                 if hair_tag not in entry["suitable_thicknesses"]:
                     entry["suitable_thicknesses"].append(hair_tag)
                 if concern_tag not in entry["suitable_concerns"]:
                     entry["suitable_concerns"].append(concern_tag)
 
-    product_list = list(product_map.values())
+    return list(product_map.values())
+
+
+# Module-level smoke assert: same product appearing in two cells with different
+# trailing parens must merge both flags (order-independent parse).
+def _assert_ingredient_flags_merge_smoke():
+    matrix_two_cells = {
+        "Feine Haare": {
+            "Trockenheit": ["OGX Argan Oil (Silikone)"],
+            "Spliss": ["OGX Argan Oil (Kokos)"],
+        },
+    }
+    products = build_product_json_list(
+        "Conditioner (Drogerie)", matrix_two_cells, is_conditioner_drogerie=True
+    )
+    assert len(products) == 1, f"expected 1 merged product, got {len(products)}"
+    assert products[0]["name"] == "OGX Argan Oil"
+    # Both flags must be present after merge (set-equality — order depends on
+    # which cell is parsed first, but the latent bug was missing flags entirely,
+    # not flag ordering).
+    assert set(products[0]["ingredient_flags"]) == {"silicones", "oils"}, (
+        f"expected merged set {{silicones, oils}}, got {products[0]['ingredient_flags']}"
+    )
+
+    # Reverse cell order: same merge result.
+    matrix_reversed = {
+        "Feine Haare": {
+            "Spliss": ["OGX Argan Oil (Kokos)"],
+            "Trockenheit": ["OGX Argan Oil (Silikone)"],
+        },
+    }
+    products_rev = build_product_json_list(
+        "Conditioner (Drogerie)", matrix_reversed, is_conditioner_drogerie=True
+    )
+    assert set(products_rev[0]["ingredient_flags"]) == {"silicones", "oils"}
+
+    # Single-cell case: behavior unchanged — flags from that one cell are kept.
+    matrix_single = {
+        "Feine Haare": {
+            "Trockenheit": ["OGX Argan Oil (Silikone)"],
+        },
+    }
+    products_single = build_product_json_list(
+        "Conditioner (Drogerie)", matrix_single, is_conditioner_drogerie=True
+    )
+    assert products_single[0]["ingredient_flags"] == ["silicones"]
+
+
+_assert_ingredient_flags_merge_smoke()
+
+
+def generate_product_json(category: str, matrix: dict, is_conditioner_drogerie: bool = False):
+    """Write the product JSON file for catalog ingestion.
+
+    Wraps `build_product_json_list` with the file-writing side effect.
+    """
+    slug = slugify(category)
+    out_dir = DATA_DIR / "products-from-excel"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"{slug}.json"
+
+    product_list = build_product_json_list(category, matrix, is_conditioner_drogerie=is_conditioner_drogerie)
     out_path.write_text(json.dumps(product_list, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"  -> {out_path.relative_to(BASE_DIR)} ({len(product_list)} products)")
 
