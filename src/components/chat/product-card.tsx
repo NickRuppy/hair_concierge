@@ -38,7 +38,7 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
     <button
       type="button"
       onClick={() => onClick(product)}
-      className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-border bg-card p-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-sm"
+      className="flex w-full min-w-0 cursor-pointer items-center gap-3 overflow-hidden rounded-xl border border-border bg-card p-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-sm"
     >
       {/* Category icon */}
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--brand-plum-ice)]">
@@ -53,7 +53,11 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
         {product.brand && (
           <p className="truncate text-[11px] text-[var(--text-caption)]">{product.brand}</p>
         )}
-        {topReason && <p className="mt-0.5 truncate text-[11px] text-primary">{topReason}</p>}
+        {topReason && (
+          <p className="mt-0.5 whitespace-normal break-words text-[11px] leading-snug text-primary">
+            {topReason}
+          </p>
+        )}
       </div>
 
       {/* Price */}

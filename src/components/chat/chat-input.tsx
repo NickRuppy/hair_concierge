@@ -41,7 +41,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
 
   return (
     <div className="bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
-      <div className="flex items-end gap-2">
+      <div className="flex min-w-0 items-end gap-2">
         {/* Text input */}
         <textarea
           ref={textareaRef}
@@ -52,7 +52,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           onInput={handleTextareaInput}
           placeholder="Stelle eine Frage zu deinen Haaren..."
           disabled={disabled}
-          className="max-h-[200px] min-h-[40px] flex-1 resize-none rounded-lg border bg-background px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
+          className="max-h-[200px] min-h-[40px] min-w-0 flex-1 resize-none rounded-lg border bg-background px-3 py-2 text-base md:text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
           rows={1}
         />
 

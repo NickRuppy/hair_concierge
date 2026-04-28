@@ -216,7 +216,7 @@ export function ChatContainer() {
       )}
 
       {/* Main Chat Area */}
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         {/* Mobile header */}
         <div className="flex items-center gap-2 border-b p-3 md:hidden">
           <button
@@ -232,7 +232,7 @@ export function ChatContainer() {
         </div>
 
         {/* Messages */}
-        <div className="relative flex-1 overflow-y-auto overflow-x-hidden">
+        <div className="relative min-w-0 flex-1 overflow-y-auto overflow-x-hidden">
           {/* Atmospheric layers */}
           <div
             className="pointer-events-none absolute inset-0 opacity-[0.015]"
@@ -290,7 +290,7 @@ export function ChatContainer() {
               </div>
             </div>
           ) : (
-            <div className="relative z-[1] mx-auto max-w-3xl space-y-4 p-4">
+            <div className="relative z-[1] mx-auto w-full max-w-3xl space-y-4 p-4">
               {messages.map((msg, idx) => {
                 // Don't render empty assistant placeholder — streaming indicator handles it
                 if (msg.role === "assistant" && !msg.content) return null
