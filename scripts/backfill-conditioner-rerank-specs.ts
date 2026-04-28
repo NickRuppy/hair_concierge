@@ -258,9 +258,9 @@ async function main() {
   }
 
   const rows = conditioners.map((product) => {
-    if (product.suitable_concerns.length !== 1) {
+    if (product.suitable_concerns.length < 1) {
       throw new Error(
-        `${product.name} expected exactly one suitable_concern, got ${product.suitable_concerns.join(", ")}`,
+        `${product.name} expected at least one suitable_concern, got ${product.suitable_concerns.join(", ") || "<empty>"}`,
       )
     }
 
