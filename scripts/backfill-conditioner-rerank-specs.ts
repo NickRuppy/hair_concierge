@@ -1,6 +1,12 @@
 import { config as loadEnv } from "dotenv"
 import { createClient } from "@supabase/supabase-js"
 
+import type {
+  ConditionerIngredientFlag,
+  ConditionerRepairLevel,
+  ConditionerWeight,
+} from "@/lib/conditioner/constants"
+
 loadEnv({ path: ".env.local" })
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -17,59 +23,158 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
   },
 })
 
-type ConditionerWeight = "light" | "medium" | "rich"
-type ConditionerRepairLevel = "low" | "medium" | "high"
 type ProductBalanceDirection = "protein" | "moisture" | "balanced"
 
 type ConditionerBackfillSpec = {
   weight: ConditionerWeight
   repair_level: ConditionerRepairLevel
+  ingredient_flags: ConditionerIngredientFlag[]
 }
 
 const CONDITIONER_BACKFILL_BY_NAME: Record<string, ConditionerBackfillSpec> = {
-  "Alverde Glanz": { weight: "light", repair_level: "low" },
-  "Balea Aqua Hyaluron": { weight: "light", repair_level: "low" },
-  "Balea Natural Beauty Hibiskus": { weight: "light", repair_level: "low" },
-  "Balea Oil Repair": { weight: "rich", repair_level: "high" },
-  "Balea Ultra Med Sensitive": { weight: "light", repair_level: "low" },
-  "Bali Curls Moisturising (Kokos)": { weight: "rich", repair_level: "medium" },
-  "Cantu Conditioner Cream (Kokos)": { weight: "rich", repair_level: "medium" },
-  "Cantu Repair Cream (Kokos)": { weight: "rich", repair_level: "high" },
-  "Dejan Garz The Foundation (Silikone)": { weight: "rich", repair_level: "medium" },
-  "Elvital Fiber Booster (Silikone)": { weight: "medium", repair_level: "medium" },
-  "Garnier Hair Food Macadamia (Kokos)": { weight: "medium", repair_level: "low" },
-  "Garnier Wahre Schätze Aloe Vera Spülung": { weight: "light", repair_level: "low" },
-  "Gliss Kur Aqua Revive (Silikone)": { weight: "light", repair_level: "low" },
-  "Gliss Ultimate Repair Spülung (Silikone)": { weight: "medium", repair_level: "high" },
-  "Guhl Bond+ (Silikone)": { weight: "medium", repair_level: "high" },
-  "Guhl Panthenol*": { weight: "medium", repair_level: "high" },
-  "Hair Biology Full & Shining": { weight: "light", repair_level: "medium" },
-  "Hask Curl Care": { weight: "rich", repair_level: "medium" },
-  "Hask Repairing Argan Oil (Kokos)": { weight: "rich", repair_level: "medium" },
-  "Herbal Essences Aloe Vera (Silikone)": { weight: "medium", repair_level: "low" },
-  "Isana Professional Argan": { weight: "rich", repair_level: "medium" },
-  "Jean&Len Repair Keratin/Mandel": { weight: "light", repair_level: "medium" },
-  "Langhaarmädchen Beautiful Curls": { weight: "medium", repair_level: "low" },
-  "Langhaarmädchen Lovely Long": { weight: "medium", repair_level: "medium" },
-  "Monday Moisture (Silikone / Kokos)": { weight: "rich", repair_level: "low" },
-  "Neqi Moisture Mystery (Silikone)": { weight: "medium", repair_level: "medium" },
-  "Neqi Repair Reveal  (Silikone)": { weight: "medium", repair_level: "high" },
-  "Neqi Volume Victory (Silikone)": { weight: "light", repair_level: "low" },
-  "Nivea Repair": { weight: "medium", repair_level: "medium" },
-  "Nivea Volumen & Kraft": { weight: "light", repair_level: "low" },
-  "OGX Biotin & Collagen (Silikone)": { weight: "light", repair_level: "low" },
-  "OGX Keratin & Protein (Silikone)": { weight: "rich", repair_level: "high" },
-  "OGX Renewing (Silikone / Kokos)": { weight: "rich", repair_level: "medium" },
-  "OGX Renewing Argan Oil (Silikone /Kokos)": { weight: "rich", repair_level: "medium" },
-  "Pantene Hydra Glow (Silikone)": { weight: "medium", repair_level: "medium" },
-  "Pantene Miracles Bond Repair (Silikone)": { weight: "medium", repair_level: "high" },
-  "Pomelo Molecular Repair (Silikone)": { weight: "medium", repair_level: "high" },
-  "Pomélo+Co Shine Therapy Conditioner": { weight: "rich", repair_level: "medium" },
-  "SANTE Deep Repair Conditioner (Kokos)": { weight: "rich", repair_level: "high" },
-  "Sante Intense Hydrating Conditioner": { weight: "medium", repair_level: "low" },
-  "Syoss Intense Curls (Silikone)": { weight: "medium", repair_level: "medium" },
-  "Syoss Intense Keratin (Silikone)": { weight: "medium", repair_level: "high" },
-  "Wahre Schätze Argan-Mandelcreme (Silikone)": { weight: "rich", repair_level: "medium" },
+  "Alverde Glanz": { weight: "light", repair_level: "low", ingredient_flags: [] },
+  "Balea Aqua Hyaluron": { weight: "light", repair_level: "low", ingredient_flags: [] },
+  "Balea Natural Beauty Hibiskus": { weight: "light", repair_level: "low", ingredient_flags: [] },
+  "Balea Oil Repair": { weight: "rich", repair_level: "high", ingredient_flags: [] },
+  "Balea Ultra Med Sensitive": { weight: "light", repair_level: "low", ingredient_flags: [] },
+  "Bali Curls Moisturising": { weight: "rich", repair_level: "medium", ingredient_flags: ["oils"] },
+  "Cantu Conditioner Cream": { weight: "rich", repair_level: "medium", ingredient_flags: ["oils"] },
+  "Cantu Repair Cream": { weight: "rich", repair_level: "high", ingredient_flags: ["oils"] },
+  "Dejan Garz The Foundation": {
+    weight: "rich",
+    repair_level: "medium",
+    ingredient_flags: ["silicones"],
+  },
+  "Elvital Fiber Booster": {
+    weight: "medium",
+    repair_level: "medium",
+    ingredient_flags: ["silicones"],
+  },
+  "Garnier Hair Food Macadamia": {
+    weight: "medium",
+    repair_level: "low",
+    ingredient_flags: ["oils"],
+  },
+  "Garnier Wahre Schätze Aloe Vera Spülung": {
+    weight: "light",
+    repair_level: "low",
+    ingredient_flags: [],
+  },
+  "Gliss Kur Aqua Revive": {
+    weight: "light",
+    repair_level: "low",
+    ingredient_flags: ["silicones"],
+  },
+  "Gliss Ultimate Repair Spülung": {
+    weight: "medium",
+    repair_level: "high",
+    ingredient_flags: ["silicones"],
+  },
+  "Guhl Bond+": { weight: "medium", repair_level: "high", ingredient_flags: ["silicones"] },
+  "Guhl Panthenol*": { weight: "medium", repair_level: "high", ingredient_flags: [] },
+  "Hair Biology Full & Shining": { weight: "light", repair_level: "medium", ingredient_flags: [] },
+  "Hask Curl Care": { weight: "rich", repair_level: "medium", ingredient_flags: [] },
+  "Hask Repairing Argan Oil": {
+    weight: "rich",
+    repair_level: "medium",
+    ingredient_flags: ["oils"],
+  },
+  "Herbal Essences Aloe Vera": {
+    weight: "medium",
+    repair_level: "low",
+    ingredient_flags: ["silicones"],
+  },
+  "Isana Professional Argan": { weight: "rich", repair_level: "medium", ingredient_flags: [] },
+  "Jean&Len Repair Keratin/Mandel": {
+    weight: "light",
+    repair_level: "medium",
+    ingredient_flags: [],
+  },
+  "Langhaarmädchen Beautiful Curls": {
+    weight: "medium",
+    repair_level: "low",
+    ingredient_flags: [],
+  },
+  "Langhaarmädchen Lovely Long": { weight: "medium", repair_level: "medium", ingredient_flags: [] },
+  "Monday Moisture": {
+    weight: "rich",
+    repair_level: "low",
+    ingredient_flags: ["silicones", "oils"],
+  },
+  "Neqi Moisture Mystery": {
+    weight: "medium",
+    repair_level: "medium",
+    ingredient_flags: ["silicones"],
+  },
+  "Neqi Repair Reveal": { weight: "medium", repair_level: "high", ingredient_flags: ["silicones"] },
+  "Neqi Volume Victory": { weight: "light", repair_level: "low", ingredient_flags: ["silicones"] },
+  "Nivea Repair": { weight: "medium", repair_level: "medium", ingredient_flags: [] },
+  "Nivea Volumen & Kraft": { weight: "light", repair_level: "low", ingredient_flags: [] },
+  "OGX Biotin & Collagen": {
+    weight: "light",
+    repair_level: "low",
+    ingredient_flags: ["silicones"],
+  },
+  "OGX Keratin & Protein": {
+    weight: "rich",
+    repair_level: "high",
+    ingredient_flags: ["silicones"],
+  },
+  "OGX Renewing": {
+    weight: "rich",
+    repair_level: "medium",
+    ingredient_flags: ["silicones", "oils"],
+  },
+  "OGX Renewing Argan Oil": {
+    weight: "rich",
+    repair_level: "medium",
+    ingredient_flags: ["silicones", "oils"],
+  },
+  "Pantene Hydra Glow": {
+    weight: "medium",
+    repair_level: "medium",
+    ingredient_flags: ["silicones"],
+  },
+  "Pantene Miracles Bond Repair": {
+    weight: "medium",
+    repair_level: "high",
+    ingredient_flags: ["silicones"],
+  },
+  "Pomelo Molecular Repair": {
+    weight: "medium",
+    repair_level: "high",
+    ingredient_flags: ["silicones"],
+  },
+  "Pomélo+Co Shine Therapy Conditioner": {
+    weight: "rich",
+    repair_level: "medium",
+    ingredient_flags: [],
+  },
+  "SANTE Deep Repair Conditioner": {
+    weight: "rich",
+    repair_level: "high",
+    ingredient_flags: ["oils"],
+  },
+  "Sante Intense Hydrating Conditioner": {
+    weight: "medium",
+    repair_level: "low",
+    ingredient_flags: [],
+  },
+  "Syoss Intense Curls": {
+    weight: "medium",
+    repair_level: "medium",
+    ingredient_flags: ["silicones"],
+  },
+  "Syoss Intense Keratin": {
+    weight: "medium",
+    repair_level: "high",
+    ingredient_flags: ["silicones"],
+  },
+  "Wahre Schätze Argan-Mandelcreme": {
+    weight: "rich",
+    repair_level: "medium",
+    ingredient_flags: ["silicones"],
+  },
 }
 
 function deriveBalanceDirection(suitableConcerns: string[]): ProductBalanceDirection {
@@ -169,27 +274,30 @@ async function main() {
 
   console.log("Final conditioner backfill table:")
   console.table(
-    rows.map(({ product_name, balance_direction, weight, repair_level }) => ({
+    rows.map(({ product_name, balance_direction, weight, repair_level, ingredient_flags }) => ({
       product_name,
       balance_direction,
       weight,
       repair_level,
+      ingredient_flags: ingredient_flags.join(",") || "(none)",
     })),
   )
 
   const includeBalanceDirection = await hasBalanceDirectionColumn()
 
   const payload = includeBalanceDirection
-    ? rows.map(({ product_id, weight, repair_level, balance_direction }) => ({
+    ? rows.map(({ product_id, weight, repair_level, balance_direction, ingredient_flags }) => ({
         product_id,
         weight,
         repair_level,
         balance_direction,
+        ingredient_flags,
       }))
-    : rows.map(({ product_id, weight, repair_level }) => ({
+    : rows.map(({ product_id, weight, repair_level, ingredient_flags }) => ({
         product_id,
         weight,
         repair_level,
+        ingredient_flags,
       }))
 
   const { error } = await supabase
