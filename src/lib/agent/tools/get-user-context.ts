@@ -1,0 +1,205 @@
+import type { HairProfile, UserMemoryEntry } from "@/lib/types"
+import { createAdminClient } from "@/lib/supabase/admin"
+import {
+  hydrateHairProfileForConsumers,
+  type RoutineInventoryLike,
+} from "@/lib/hair-profile/derived"
+import { loadRoutineItemsForEngine } from "@/lib/recommendation-engine"
+import { loadUserMemoryContext } from "@/lib/rag/user-memory"
+import {
+  HAIR_TEXTURE_LABELS,
+  HAIR_THICKNESS_LABELS,
+  ROUTINE_PRODUCT_LABELS,
+  SCALP_TYPE_LABELS,
+  WASH_FREQUENCY_LABELS,
+} from "@/lib/vocabulary"
+import type { GuidanceId } from "@/lib/agent/contracts"
+
+export interface MissingProfileField {
+  key: "hair_texture" | "wash_frequency"
+  label: "Haarmuster" | "Waschfrequenz"
+  blocking: false
+}
+
+export interface UserContextProjection {
+  profile: HairProfile | null
+  routine_inventory: RoutineInventoryLike[]
+  relevant_memory: UserMemoryEntry[]
+  derived_signals: string[]
+  suggested_overlays: GuidanceId[]
+  missing_profile: MissingProfileField[]
+}
+
+const RELEVANT_MEMORY_LIMIT = 6
+const MINIMAL_ROUTINE_RE = /\b(simple|minimal|einfach\w*)\b/i
+const NEGATED_MINIMAL_ROUTINE_RE =
+  /\b(?:kein(?:e|en|er|em)?|keine|nicht|no)\s+(?:\w+\s+){0,2}(simple|minimal|einfach\w*)\b/i
+
+function formatRoutineProducts(
+  products: NonNullable<HairProfile["current_routine_products"]>,
+): string {
+  return products.map((product) => ROUTINE_PRODUCT_LABELS[product] ?? product).join(", ")
+}
+
+function deriveConcernSignals(hairProfile: HairProfile | null): string[] {
+  const signals: string[] = []
+
+  if (hairProfile?.concerns.includes("oily_scalp")) {
+    signals.push("Schnell fettender Ansatz")
+  }
+
+  if (hairProfile?.concerns.includes("dryness")) {
+    signals.push("Trockene Laengen")
+  }
+
+  if (hairProfile?.concerns.includes("frizz")) {
+    signals.push("Frizzige Laengen")
+  }
+
+  return signals
+}
+
+function deriveVisibleSignals(hairProfile: HairProfile | null): string[] {
+  const signals: string[] = []
+
+  if (hairProfile?.hair_texture) {
+    signals.push(
+      `Haarstruktur: ${HAIR_TEXTURE_LABELS[hairProfile.hair_texture] ?? hairProfile.hair_texture}`,
+    )
+  }
+
+  if (hairProfile?.thickness) {
+    signals.push(
+      `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`,
+    )
+  }
+
+  if (hairProfile?.scalp_type) {
+    signals.push(`Kopfhaut: ${SCALP_TYPE_LABELS[hairProfile.scalp_type] ?? hairProfile.scalp_type}`)
+  }
+
+  if (hairProfile?.wash_frequency) {
+    signals.push(
+      `Waschrhythmus: ${WASH_FREQUENCY_LABELS[hairProfile.wash_frequency] ?? hairProfile.wash_frequency}`,
+    )
+  }
+
+  signals.push(...deriveConcernSignals(hairProfile))
+
+  if ((hairProfile?.current_routine_products?.length ?? 0) > 0) {
+    const currentRoutineProducts = hairProfile?.current_routine_products ?? []
+    signals.push(`Aktuelle Routine: ${formatRoutineProducts(currentRoutineProducts)}`)
+  }
+
+  return signals
+}
+
+function deriveSuggestedOverlays(
+  hairProfile: HairProfile | null,
+  memoryEntries: UserMemoryEntry[],
+): GuidanceId[] {
+  const overlays: GuidanceId[] = []
+  const seen = new Set<GuidanceId>()
+  const addOverlay = (overlay: GuidanceId) => {
+    if (seen.has(overlay)) return
+    seen.add(overlay)
+    overlays.push(overlay)
+  }
+
+  if (hairProfile?.thickness === "fine") {
+    addOverlay("overlay:fine_hair")
+  }
+
+  if (hairProfile?.concerns.includes("oily_scalp")) {
+    addOverlay("overlay:oily_scalp")
+  }
+
+  if (hairProfile?.concerns.includes("dryness")) {
+    addOverlay("overlay:dry_lengths")
+  }
+
+  if (
+    hairProfile?.scalp_condition === "dry_flakes" ||
+    hairProfile?.scalp_condition === "irritated"
+  ) {
+    addOverlay("overlay:sensitive_scalp")
+  }
+
+  if (hairProfile?.scalp_condition === "dandruff") {
+    addOverlay("overlay:dandruff_scalp")
+  }
+
+  if (
+    memoryEntries.some(
+      (entry) =>
+        entry.kind === "preference" &&
+        MINIMAL_ROUTINE_RE.test(entry.content) &&
+        !NEGATED_MINIMAL_ROUTINE_RE.test(entry.content),
+    )
+  ) {
+    addOverlay("overlay:minimal_routine")
+  }
+
+  return overlays
+}
+
+function deriveMissingProfileFields(hairProfile: HairProfile | null): MissingProfileField[] {
+  const missing: MissingProfileField[] = []
+
+  if (!hairProfile?.hair_texture) {
+    missing.push({ key: "hair_texture", label: "Haarmuster", blocking: false })
+  }
+
+  if (!hairProfile?.wash_frequency) {
+    missing.push({ key: "wash_frequency", label: "Waschfrequenz", blocking: false })
+  }
+
+  return missing
+}
+
+export function assertHairProfileQuerySucceeded(result: {
+  data: HairProfile | null
+  error: { message: string } | null
+}): HairProfile | null {
+  if (result.error) {
+    throw new Error(`hair_profiles lookup failed: ${result.error.message}`)
+  }
+
+  return result.data
+}
+
+export function buildUserContextProjection(params: {
+  hairProfile: HairProfile | null
+  routineItems: RoutineInventoryLike[]
+  memoryEntries: UserMemoryEntry[]
+}): UserContextProjection {
+  const relevantMemory = params.memoryEntries.slice(0, RELEVANT_MEMORY_LIMIT)
+
+  return {
+    profile: params.hairProfile,
+    routine_inventory: params.routineItems,
+    relevant_memory: relevantMemory,
+    derived_signals: deriveVisibleSignals(params.hairProfile),
+    suggested_overlays: deriveSuggestedOverlays(params.hairProfile, relevantMemory),
+    missing_profile: deriveMissingProfileFields(params.hairProfile),
+  }
+}
+
+export async function getUserContext(userId: string): Promise<UserContextProjection> {
+  const admin = createAdminClient()
+
+  const [hairProfileQuery, routineItems, memoryContext] = await Promise.all([
+    admin.from("hair_profiles").select("*").eq("user_id", userId).maybeSingle(),
+    loadRoutineItemsForEngine(userId),
+    loadUserMemoryContext(userId, admin),
+  ])
+
+  const rawProfile = assertHairProfileQuerySucceeded(hairProfileQuery)
+  const hairProfile = hydrateHairProfileForConsumers(rawProfile ?? null, routineItems)
+
+  return buildUserContextProjection({
+    hairProfile,
+    routineItems,
+    memoryEntries: memoryContext.entries,
+  })
+}

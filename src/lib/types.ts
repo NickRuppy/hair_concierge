@@ -259,6 +259,9 @@ export interface ShampooRecommendationMetadata extends BaseRecommendationMetadat
   matched_profile: ShampooMatchedProfile
   matched_bucket: ShampooBucket | null
   matched_concern_code: string | null
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
+  matched_scalp_route?: "oily" | "balanced" | "dry" | "dandruff" | "dry_flakes" | "irritated" | null
+  cleansing_intensity?: "gentle" | "regular" | "clarifying" | null
 }
 
 export interface ConditionerMatchedProfile {

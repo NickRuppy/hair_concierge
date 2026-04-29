@@ -72,6 +72,10 @@ type ScoredEngineProduct = MatchedProduct & {
   _engineScore: number
 }
 
+type ScoredShampooProduct = ScoredEngineProduct & {
+  _fitStatus: CategoryFitEvaluation["status"]
+}
+
 type LeaveInRerankSpec = {
   product_id: string
 } & LeaveInFitSpec
@@ -162,6 +166,7 @@ function stripScore<T extends ScoredEngineProduct>(products: T[]): MatchedProduc
   return products.map((product) => {
     const clean = { ...product }
     Reflect.deleteProperty(clean, "_engineScore")
+    Reflect.deleteProperty(clean, "_fitStatus")
     return clean
   })
 }
@@ -205,6 +210,25 @@ function shampooSpecKey(
   return `${productId}:${shampooBucket ?? "unknown"}`
 }
 
+function mapShampooBucketToScalpRoute(
+  bucket: ShampooFitSpec["shampoo_bucket"],
+): NonNullable<ShampooRecommendationMetadata["matched_scalp_route"]> | null {
+  switch (bucket) {
+    case "dehydriert-fettig":
+      return "oily"
+    case "normal":
+      return "balanced"
+    case "trocken":
+      return "dry"
+    case "schuppen":
+      return "dandruff"
+    case "irritationen":
+      return "irritated"
+    default:
+      return null
+  }
+}
+
 function buildFitSummary(
   fit: CategoryFitEvaluation,
   idealText: string,
@@ -237,6 +261,27 @@ function buildFitSummary(
 
 function buildShampooUsageHint(): string {
   return "Im ersten Waschgang auf die Kopfhaut geben, gruendlich einmassieren und danach sauber ausspuelen."
+}
+
+function markShampooFallback(product: ScoredShampooProduct): ScoredShampooProduct {
+  const fallbackTradeoff =
+    "Fallback: Dieser Treffer passt nicht exakt zum abgeleiteten Shampoo-Fokus und erscheint nur, weil der Katalog nicht genug sichere Treffer geliefert hat."
+  const meta = product.recommendation_meta as ShampooRecommendationMetadata | null | undefined
+
+  if (!meta || meta.category !== "shampoo") {
+    return product
+  }
+
+  return {
+    ...product,
+    recommendation_meta: {
+      ...meta,
+      tradeoffs: [
+        fallbackTradeoff,
+        ...meta.tradeoffs.filter((tradeoff) => tradeoff !== fallbackTradeoff),
+      ].slice(0, 3),
+    },
+  }
 }
 
 function shampooBucketPriorityAdjustment(
@@ -282,6 +327,14 @@ function buildShampooTopReasons(
   }
   if (fit.status === "mismatch") {
     tradeoffs.push("Weicht vom aktuellen Kopfhaut-Fokus ab.")
+  }
+  if (
+    fit.status === "supportive" &&
+    fit.reasonCodes.some((reasonCode) => reasonCode.includes("cleansing_intensity_mismatch"))
+  ) {
+    tradeoffs.push(
+      "Passt zum Kopfhaut-Fokus; die Reinigungsintensitaet ist nur ein Vergleichspunkt.",
+    )
   }
 
   return {
@@ -383,7 +436,7 @@ export function rerankShampooProductsWithEngine(params: {
     specs.map((spec) => [shampooSpecKey(spec.product_id, spec.shampoo_bucket), spec] as const),
   )
 
-  const scored: ScoredEngineProduct[] = candidates.map((product) => {
+  const scored: ScoredShampooProduct[] = candidates.map((product) => {
     const matchedBucket = bucketByProductId?.get(product.id) ?? null
     const spec =
       specsByKey.get(shampooSpecKey(product.id, matchedBucket ?? targetProfile.shampooBucket)) ??
@@ -416,17 +469,33 @@ export function rerankShampooProductsWithEngine(params: {
       },
       matched_bucket: matchedBucket ?? targetProfile.shampooBucket,
       matched_concern_code: matchedBucket ?? targetProfile.shampooBucket,
+      fit_status: fit.status,
+      matched_scalp_route:
+        spec?.scalp_route ??
+        mapShampooBucketToScalpRoute(matchedBucket ?? targetProfile.shampooBucket),
+      cleansing_intensity: spec?.cleansing_intensity ?? null,
     }
 
     return {
       ...product,
       recommendation_meta: recommendationMeta,
       _engineScore: score,
+      _fitStatus: fit.status,
     }
   })
 
   scored.sort(compareScoredProducts)
-  return stripScore(scored).slice(0, SELECTION_LIMIT)
+
+  const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
+  if (acceptable.length >= SELECTION_LIMIT) {
+    return stripScore(acceptable.slice(0, SELECTION_LIMIT))
+  }
+
+  const mismatches = scored
+    .filter((product) => product._fitStatus === "mismatch")
+    .map(markShampooFallback)
+
+  return stripScore([...acceptable, ...mismatches].slice(0, SELECTION_LIMIT))
 }
 
 function buildOilUsageHint(decision: OilCategoryDecision): string {

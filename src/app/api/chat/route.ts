@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
   const [
     { createAdminClient },
-    { runPipeline },
+    { runProductionAgentPipeline },
     { buildAssistantRagContext, buildDoneEventData },
     { extractConversationMemory },
     { buildRetrievalDebugEventData, finalizeChatTurnTrace },
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     { generateConversationTitle },
   ] = await Promise.all([
     import("@/lib/supabase/admin"),
-    import("@/lib/rag/pipeline"),
+    import("@/lib/agent/production/chat-pipeline"),
     import("@/lib/rag/chat-response"),
     import("@/lib/rag/memory-extractor"),
     import("@/lib/rag/debug-trace"),
@@ -183,7 +183,7 @@ export async function POST(request: Request) {
           },
         },
         async () =>
-          runPipeline({
+          runProductionAgentPipeline({
             message,
             conversationId: activeConversationId,
             userId: user.id,

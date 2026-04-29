@@ -274,6 +274,150 @@ test("engine shampoo reranking uses backfilled cleansing intensity inside the sa
   assert.equal(reranked[0]?.id, "regular")
 })
 
+test("engine shampoo reranking treats exact normal bucket with gentle intensity as a fit", () => {
+  const balancedProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    thickness: "normal" as const,
+    scalp_type: "balanced" as const,
+    scalp_condition: null,
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(balancedProfile, [])
+  const decision = runtime.categories.shampoo
+
+  assert.equal(decision.targetProfile?.shampooBucket, "normal")
+  assert.equal(decision.targetProfile?.cleansingIntensity, "regular")
+
+  const reranked = rerankShampooProductsWithEngine({
+    candidates: [createMatchedProduct("neqi-like", "Shampoo", { combined_score: 0.74 })],
+    decision,
+    hairProfile: balancedProfile,
+    bucketByProductId: new Map([["neqi-like", "normal"]]),
+    specs: [
+      {
+        product_id: "neqi-like",
+        thickness: "normal",
+        shampoo_bucket: "normal",
+        scalp_route: "balanced",
+        cleansing_intensity: "gentle",
+      },
+    ],
+  })
+
+  const meta = reranked[0]?.recommendation_meta as ShampooRecommendationMetadata | undefined
+
+  assert.equal(reranked[0]?.id, "neqi-like")
+  assert.equal(meta?.matched_bucket, "normal")
+  assert.equal(meta?.matched_scalp_route, "balanced")
+  assert.equal(meta?.cleansing_intensity, "gentle")
+  assert.equal(meta?.fit_status, "supportive")
+  assert.doesNotMatch(meta?.tradeoffs.join("\n") ?? "", /Fallback/)
+})
+
+test("engine shampoo reranking excludes mismatches when enough acceptable fits exist", () => {
+  const oilyProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    scalp_type: "oily" as const,
+    scalp_condition: null,
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(oilyProfile, [])
+  const decision = runtime.categories.shampoo
+
+  const candidates = [
+    createMatchedProduct("mismatch", "Shampoo", { combined_score: 1 }),
+    createMatchedProduct("acceptable-1", "Shampoo", { combined_score: 0.3 }),
+    createMatchedProduct("acceptable-2", "Shampoo", { combined_score: 0.29 }),
+    createMatchedProduct("acceptable-3", "Shampoo", { combined_score: 0.28 }),
+  ]
+
+  const reranked = rerankShampooProductsWithEngine({
+    candidates,
+    decision,
+    hairProfile: oilyProfile,
+    bucketByProductId: new Map([
+      ["mismatch", "trocken"],
+      ["acceptable-1", "dehydriert-fettig"],
+      ["acceptable-2", "dehydriert-fettig"],
+      ["acceptable-3", "dehydriert-fettig"],
+    ]),
+    specs: [
+      {
+        product_id: "acceptable-1",
+        thickness: oilyProfile.thickness!,
+        shampoo_bucket: "dehydriert-fettig",
+        scalp_route: "oily",
+        cleansing_intensity: "regular",
+      },
+      {
+        product_id: "acceptable-2",
+        thickness: oilyProfile.thickness!,
+        shampoo_bucket: "dehydriert-fettig",
+        scalp_route: "oily",
+        cleansing_intensity: "regular",
+      },
+      {
+        product_id: "acceptable-3",
+        thickness: oilyProfile.thickness!,
+        shampoo_bucket: "dehydriert-fettig",
+        scalp_route: "oily",
+        cleansing_intensity: "regular",
+      },
+    ],
+  })
+
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["acceptable-1", "acceptable-2", "acceptable-3"],
+  )
+})
+
+test("engine shampoo reranking marks fallback mismatches when acceptable coverage is insufficient", () => {
+  const oilyProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    scalp_type: "oily" as const,
+    scalp_condition: null,
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(oilyProfile, [])
+  const decision = runtime.categories.shampoo
+
+  const reranked = rerankShampooProductsWithEngine({
+    candidates: [
+      createMatchedProduct("mismatch-1", "Shampoo", { combined_score: 1 }),
+      createMatchedProduct("mismatch-2", "Shampoo", { combined_score: 0.99 }),
+      createMatchedProduct("acceptable", "Shampoo", { combined_score: 0.3 }),
+    ],
+    decision,
+    hairProfile: oilyProfile,
+    bucketByProductId: new Map([
+      ["mismatch-1", "trocken"],
+      ["mismatch-2", "irritationen"],
+      ["acceptable", "dehydriert-fettig"],
+    ]),
+    specs: [
+      {
+        product_id: "acceptable",
+        thickness: oilyProfile.thickness!,
+        shampoo_bucket: "dehydriert-fettig",
+        scalp_route: "oily",
+        cleansing_intensity: "regular",
+      },
+    ],
+  })
+
+  assert.equal(reranked.length, 3)
+  assert.equal(reranked[0]?.id, "acceptable")
+
+  const fallbackTradeoffs = reranked.slice(1).map((product) => {
+    const meta = product.recommendation_meta as ShampooRecommendationMetadata | undefined
+    return meta?.tradeoffs[0] ?? ""
+  })
+
+  assert.equal(fallbackTradeoffs.length, 2)
+  for (const tradeoff of fallbackTradeoffs) {
+    assert.match(tradeoff, /Fallback/)
+    assert.match(tradeoff, /nicht exakt/)
+  }
+})
+
 test("engine oil reranking follows normalized request purpose and annotates the legacy matcher bridge", () => {
   const requestContext = buildRecommendationRequestContext({
     requestedCategory: "oil",

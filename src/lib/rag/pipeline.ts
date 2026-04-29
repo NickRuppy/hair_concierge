@@ -1,10 +1,11 @@
 /**
  * Pipeline compatibility facade.
  *
- * This file preserves the `runPipeline()` entry point that `/api/chat/route.ts` depends on.
- * All orchestration logic has moved to `orchestrator/conversation-orchestrator.ts`.
+ * This file preserves the legacy `runPipeline()` entry point for older tooling while
+ * production `/api/chat` is being moved to the bounded-agent front door.
  *
- * This facade will be removed once route.ts imports the orchestrator directly.
+ * Remove this facade with the rest of the deprecated RAG orchestration once Agent v1
+ * covers all product categories.
  */
 import { orchestrateTurn } from "@/lib/rag/orchestrator/conversation-orchestrator"
 import type { PipelineParams, PipelineResult } from "@/lib/rag/contracts"

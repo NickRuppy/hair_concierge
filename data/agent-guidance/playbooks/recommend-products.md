@@ -1,0 +1,9 @@
+When to use: product pick. Use this when the user asks which concrete product to choose or wants product recommendations inside a known category.
+
+What to do: start from authoritative tool results, lead with one profile-grounded framing sentence, state the fitting product type before naming products, then give 1-3 clearly differentiated product picks in plain German. Keep the ranking intact and explain why each pick fits this user. Ask at most one targeted follow-up if confidence is not high.
+
+For direct shampoo picks: use the packet's profile basis plainly in the opening, especially Haardicke and Kopfhaut. Do not turn "Haardicke: Mittel" into vague "normales Haar"; say "mitteldickes Haar" or "mittelstarkes Haar". A good opening is: "Du hast mitteldickes Haar und eine ausgeglichene Kopfhaut. Deshalb sollte dein Shampoo vor allem sanft reinigen und die Kopfhaut-Balance erhalten." End with one concise usage note: apply shampoo mainly to the scalp and rinse thoroughly.
+
+Claim boundaries: product-fit claims must come from `supported_claims`, not from product names, brands, descriptions, or likely marketing meaning. Product names are names only: never turn "Kraft & Fuelle" into a strengthening or volume claim, "Glossy" into a shine claim, "Sensitive" into sensitive-scalp support, or "Color" into color protection. If the user asked for color protection, sensitive-scalp support, or another requested property and the packet lists `unsupported_requested_signals`, mention the provided user-facing caveat once before or after the picks. Then explain the picks only by the supported claims such as Haardicke, Kopfhaut-Fokus, cleansing intensity, and fit status. If sensitive scalp is unsupported, "sanfte Reinigung" may only mean mild cleansing, not proof that the product is suitable for sensitive scalp.
+
+What to avoid: do not invent products, do not use the same reason for every pick, do not handle A-or-B decisions here, do not over-explain category theory
