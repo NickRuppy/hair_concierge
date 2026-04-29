@@ -5,6 +5,7 @@ const MAX_GOALS = 5
 
 export const QUIZ_STRUCTURE_VALUES = ["straight", "wavy", "curly", "coily"] as const
 export const QUIZ_THICKNESS_VALUES = ["fine", "normal", "coarse"] as const
+export const QUIZ_DENSITY_VALUES = ["low", "medium", "high"] as const
 export const QUIZ_FINGERTEST_VALUES = ["glatt", "leicht_uneben", "rau"] as const
 export const QUIZ_PULLTEST_VALUES = ["stretches_bounces", "stretches_stays", "snaps"] as const
 export const QUIZ_SCALP_TYPE_VALUES = ["fettig", "ausgeglichen", "trocken"] as const
@@ -202,6 +203,7 @@ export function normalizeStoredQuizAnswers(
     thickness: isAllowedValue(source.thickness, QUIZ_THICKNESS_VALUES)
       ? source.thickness
       : undefined,
+    density: isAllowedValue(source.density, QUIZ_DENSITY_VALUES) ? source.density : undefined,
     fingertest: isAllowedValue(source.fingertest, QUIZ_FINGERTEST_VALUES)
       ? source.fingertest
       : undefined,

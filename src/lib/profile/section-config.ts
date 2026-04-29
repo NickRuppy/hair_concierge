@@ -3,6 +3,7 @@ import {
   PROFILE_CONCERN_LABELS,
   CUTICLE_CONDITION_LABELS,
   GOAL_LABELS,
+  HAIR_DENSITY_OPTIONS,
   HAIR_TEXTURE_OPTIONS,
   HAIR_THICKNESS_OPTIONS,
   HEAT_STYLING_OPTIONS,
@@ -143,6 +144,13 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.thickness, HAIR_THICKNESS_OPTIONS),
+  },
+  {
+    key: "density",
+    label: "Haardichte",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) => optionLabel(profile?.density, HAIR_DENSITY_OPTIONS),
   },
   {
     key: "cuticle_condition",

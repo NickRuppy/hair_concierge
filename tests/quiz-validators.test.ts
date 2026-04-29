@@ -7,6 +7,7 @@ function createBaseAnswers() {
   return {
     structure: "wavy",
     thickness: "normal",
+    density: "medium",
     fingertest: "leicht_uneben",
     pulltest: "stretches_stays",
     scalp_type: "trocken",
@@ -22,6 +23,13 @@ test("quiz schema accepts an empty concern array with a negative scalp gate", ()
   assert.deepEqual(parsed.concerns, [])
   assert.equal(parsed.has_scalp_issue, false)
   assert.equal(parsed.scalp_condition, undefined)
+})
+
+test("quiz schema requires density as the third physical hair attribute", () => {
+  const answers = createBaseAnswers()
+  delete (answers as Partial<typeof answers>).density
+
+  assert.throws(() => quizAnswersSchema.parse(answers))
 })
 
 test("quiz schema accepts free-text-only concern notes", () => {

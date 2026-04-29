@@ -23,7 +23,7 @@ test.describe.serial("Authenticated intake routing", () => {
   async function fetchLatestLead() {
     const { data, error } = await admin
       .from("leads")
-      .select("id, status, user_id")
+      .select("id, status, user_id, quiz_answers")
       .eq("email", email)
       .order("created_at", { ascending: false })
       .limit(1)
@@ -31,6 +31,19 @@ test.describe.serial("Authenticated intake routing", () => {
 
     if (error) throw error
     return data
+  }
+
+  async function fetchHairProfileDensity() {
+    if (!userId) return null
+
+    const { data, error } = await admin
+      .from("hair_profiles")
+      .select("density")
+      .eq("user_id", userId)
+      .maybeSingle()
+
+    if (error) throw error
+    return data?.density ?? null
   }
 
   test.beforeAll(async () => {
@@ -53,6 +66,9 @@ test.describe.serial("Authenticated intake routing", () => {
         id: userId,
         email,
         full_name: fullName,
+        stripe_customer_id: `cus_intake_${userId}`,
+        subscription_status: "active",
+        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       },
       { onConflict: "id" },
     )
@@ -114,6 +130,7 @@ test.describe.serial("Authenticated intake routing", () => {
     await page.getByRole("button", { name: /Quiz starten/i }).click()
     await page.getByText("Wellig").first().click()
     await page.getByText("Mittel").first().click()
+    await page.getByText("Mittlere Dichte").click()
     await page.getByText("Leicht uneben").click()
     await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
 
@@ -192,5 +209,9 @@ test.describe.serial("Authenticated intake routing", () => {
         { timeout: 30_000 },
       )
       .toBe("linked")
+
+    const latestLead = await fetchLatestLead()
+    expect(latestLead?.quiz_answers).toMatchObject({ density: "medium" })
+    await expect.poll(fetchHairProfileDensity, { timeout: 30_000 }).toBe("medium")
   })
 })

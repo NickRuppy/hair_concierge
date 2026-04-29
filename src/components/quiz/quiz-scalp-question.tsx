@@ -166,10 +166,10 @@ export function QuizScalpQuestion() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={6} total={QUIZ_TOTAL_QUESTIONS} />
+          <QuizProgressBar current={7} total={QUIZ_TOTAL_QUESTIONS} />
         </div>
         <span className="text-sm text-[var(--text-caption)] tabular-nums">
-          6/{QUIZ_TOTAL_QUESTIONS}
+          7/{QUIZ_TOTAL_QUESTIONS}
         </span>
       </div>
 
@@ -273,9 +273,7 @@ export function QuizScalpQuestion() {
       </div>
 
       {/* Motivation text — always anchored at bottom */}
-      <p className="mt-3 text-center text-sm text-[var(--text-caption)]">
-        Letzte Frage — gleich siehst du dein Profil.
-      </p>
+      <p className="mt-3 text-center text-sm text-[var(--text-caption)]">Gut — noch 2 Fragen.</p>
     </div>
   )
 }

@@ -18,6 +18,7 @@ const STEP_NAMES: Record<number, string> = {
   1: "landing",
   2: "hair_texture",
   3: "hair_thickness",
+  13: "hair_density",
   4: "surface_test",
   5: "pull_test",
   6: "scalp",
@@ -45,10 +46,8 @@ export default function QuizPage() {
   if (step === 8) return <QuizConcernsQuestion />
 
   // Standard quiz question cards
-  if (step >= 2 && step <= 8) {
-    const question = getQuestionByStep(step)
-    if (question) return <QuizQuestion key={question.step} question={question} />
-  }
+  const question = getQuestionByStep(step)
+  if (question) return <QuizQuestion key={question.step} question={question} />
 
   switch (step) {
     case 1:

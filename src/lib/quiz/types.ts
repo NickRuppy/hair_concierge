@@ -2,6 +2,7 @@ export type QuizStep =
   | 1 // landing
   | 2 // haartextur
   | 3 // haarstaerke
+  | 13 // haardichte
   | 4 // oberflaeche
   | 5 // zugtest
   | 6 // kopfhaut
@@ -41,6 +42,7 @@ export interface QuizQuestion {
 export interface QuizAnswers {
   structure?: string
   thickness?: string
+  density?: string
   fingertest?: string
   pulltest?: string
   scalp_type?: string
