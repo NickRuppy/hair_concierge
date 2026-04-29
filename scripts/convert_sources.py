@@ -799,7 +799,9 @@ def convert_excel_matrices():
 
 
 INGREDIENT_FLAG_TRAILING_PAREN = re.compile(
-    r"\s*\(((?:Silikone|Kokos)(?:\s*/\s*(?:Silikone|Kokos))?)\)\s*$",
+    # Combined-form separator is either '/' (PR #52 conditioner data) or '+'
+    # (oil sheet, e.g. 'OGX Bond Protein Repair (Silikone + Kokos)').
+    r"\s*\(((?:Silikone|Kokos)(?:\s*[/+]\s*(?:Silikone|Kokos))?)\)\s*$",
 )
 
 
@@ -842,6 +844,9 @@ assert parse_ingredient_flags("Pomelo Molecular Repair (Silikone)") == ("Pomelo 
 assert parse_ingredient_flags("Cantu Repair Cream (Kokos)") == ("Cantu Repair Cream", ["oils"])
 assert parse_ingredient_flags("OGX Renewing Argan Oil (Silikone /Kokos)") == ("OGX Renewing Argan Oil", ["silicones", "oils"])
 assert parse_ingredient_flags("Monday Moisture (Silikone / Kokos)") == ("Monday Moisture", ["silicones", "oils"])
+# '+' separator variant — appears in oil sheet (e.g. OGX Bond Protein Repair).
+assert parse_ingredient_flags("OGX Bond Protein Repair (Silikone + Kokos)") == ("OGX Bond Protein Repair", ["silicones", "oils"])
+assert parse_ingredient_flags("OGX (Silikone+Kokos)") == ("OGX", ["silicones", "oils"])
 # Reverse-order annotation: body lookup is order-independent (Silikone-first then Kokos),
 # so the flags list stays in canonical [silicones, oils] order regardless of input order.
 assert parse_ingredient_flags("OGX (Kokos / Silikone)") == ("OGX", ["silicones", "oils"])
