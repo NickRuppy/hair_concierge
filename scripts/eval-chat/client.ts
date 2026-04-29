@@ -120,11 +120,14 @@ export async function createTestSession(
 
   const userId = userData.user.id
 
-  // Ensure profile exists with onboarding_completed (middleware requires it)
+  // Ensure profile exists with onboarding_completed and an active subscription —
+  // both are required by the middleware paywall (src/lib/supabase/middleware.ts).
+  // Without subscription_status="active", every /api/chat request 307s to /pricing.
   await admin.from("profiles").upsert({
     id: userId,
     full_name: "Eval Test User",
     onboarding_completed: true,
+    subscription_status: "active",
   })
 
   // Sign in to get session tokens
