@@ -1,6 +1,7 @@
 import { config as loadEnv } from "dotenv"
 import { writeFile } from "node:fs/promises"
 import { createClient } from "@supabase/supabase-js"
+import type { OilIngredientFlag } from "../src/lib/oil/constants"
 
 loadEnv({ path: ".env.local" })
 
@@ -40,7 +41,32 @@ type OilExportRow = {
 }
 
 const OIL_PURPOSE_OVERRIDE_BY_NAME: Partial<Record<string, OilPurpose>> = {
-  "Olaplex No.7 Bonding Oil (Silikone)": "styling_finish",
+  "Olaplex No.7 Bonding Oil": "styling_finish",
+}
+
+// ingredient_flags per product, derived from the regenerated oil JSON
+// (data/products-from-excel/oele.json — parser strips trailing (Silikone)/(Kokos)
+// annotations and emits the structured flags here). Products not listed get [].
+const OIL_INGREDIENT_FLAGS_BY_NAME: Partial<Record<string, OilIngredientFlag[]>> = {
+  "Balea Oil Repair Haaröl": ["silicones"],
+  "Balea Traumlocken Öl": ["silicones"],
+  "Garnier Fructis Sleek & Stay Öl": ["silicones"],
+  "Garnier Fructis Wunderöl": ["silicones"],
+  "Garnier Wahre Schätze Curl Revival Öl": ["silicones"],
+  "Jean&Len Repair Keratin & Mandel": ["silicones"],
+  "L’Oréal Elvital Öl Magique Jojoba": ["silicones"],
+  "Maria Nila True Soft Argan Oil": ["silicones"],
+  "Neqi Opulent Oil": ["silicones"],
+  "OGX Argan Oil": ["silicones"],
+  "OGX Argan weightless Öl": ["silicones"],
+  "OGX Bond Protein Repair": ["silicones", "oils"],
+  "OGX Miracle Coconut Oil": ["silicones", "oils"],
+  "Olaplex No.7 Bonding Oil": ["silicones"],
+  "Pantene Pro-V 7in1 Spray": ["silicones"],
+  "Pantene Pro-V Coconut Oil": ["silicones", "oils"],
+  "Pantene Pro-V Keratin Protect Öl": ["silicones", "oils"],
+  "Shiseido Fino Oil": ["silicones"],
+  "Urban Alchemy Smooth Serum": ["silicones"],
 }
 
 function deriveOilPurpose(productName: string, subtypes: OilSubtype[]): OilPurpose {
@@ -133,6 +159,7 @@ async function main() {
       thickness: row.thickness,
       oil_subtype: row.oil_subtype,
       oil_purpose,
+      ingredient_flags: OIL_INGREDIENT_FLAGS_BY_NAME[product.name] ?? [],
     }
   })
 
