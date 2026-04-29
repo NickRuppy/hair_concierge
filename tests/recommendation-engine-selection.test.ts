@@ -120,12 +120,14 @@ test("engine mask reranking rewards complete fit metadata over unknown balance",
       weight: "medium",
       concentration: "high",
       balance_direction: null,
+      ingredient_flags: [],
     },
     {
       product_id: "ideal",
       weight: "medium",
       concentration: "high",
       balance_direction: "moisture",
+      ingredient_flags: [],
     },
   ]
 

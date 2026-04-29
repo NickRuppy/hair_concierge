@@ -74,6 +74,7 @@ function createSpec(
     weight: "medium",
     concentration: "medium",
     balance_direction: null,
+    ingredient_flags: [],
     ...overrides,
   }
 }

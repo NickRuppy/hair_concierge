@@ -1,5 +1,14 @@
 import type { HairThickness } from "@/lib/vocabulary"
 
+export const OIL_INGREDIENT_FLAGS = [
+  "silicones",
+  "polymers",
+  "oils",
+  "proteins",
+  "humectants",
+] as const
+export type OilIngredientFlag = (typeof OIL_INGREDIENT_FLAGS)[number]
+
 export const OIL_DB_CATEGORIES = ["Öle"] as const
 
 export const OIL_SUBTYPES = ["natuerliches-oel", "styling-oel", "trocken-oel"] as const
@@ -41,6 +50,16 @@ export type OilNoRecommendationReason = (typeof OIL_NO_RECOMMENDATION_REASONS)[n
 export const OIL_NO_RECOMMENDATION_LABELS: Record<OilNoRecommendationReason, string> = {
   better_non_oil_category: "Ein anderes Produkt passt hier besser als ein Oel.",
   therapy_oil_missing: "Das passende Therapie-/Kopfhautoel ist aktuell nicht in der Datenbank.",
+}
+
+export interface ProductOilEligibility {
+  product_id: string
+  thickness: HairThickness
+  oil_subtype: OilSubtype
+  oil_purpose: OilPurpose | null
+  ingredient_flags: OilIngredientFlag[]
+  created_at?: string
+  updated_at?: string
 }
 
 export function isOilCategory(category: string | null | undefined): boolean {
