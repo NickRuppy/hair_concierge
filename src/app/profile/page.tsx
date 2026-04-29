@@ -28,6 +28,7 @@ import type { ChemicalTreatment, HairProfile, ProfileConcern, UserMemoryEntry } 
 import {
   CHEMICAL_TREATMENT_LABELS,
   PROFILE_CONCERN_LABELS,
+  HAIR_DENSITY_OPTIONS,
   HAIR_TEXTURE_OPTIONS,
   HAIR_THICKNESS_OPTIONS,
   SCALP_CONDITION_LABELS,
@@ -71,6 +72,7 @@ type ProductDetailRow = {
 type QuizDraft = {
   hair_texture: string
   thickness: string
+  density: string
   cuticle_condition: string
   protein_moisture_balance: string
   chemical_treatment: ChemicalTreatment[]
@@ -167,6 +169,7 @@ function createQuizDraft(profile: HairProfile | null): QuizDraft {
   return {
     hair_texture: profile?.hair_texture ?? "",
     thickness: profile?.thickness ?? "",
+    density: profile?.density ?? "",
     cuticle_condition: profile?.cuticle_condition ?? "",
     protein_moisture_balance: profile?.protein_moisture_balance ?? "",
     chemical_treatment: profile?.chemical_treatment ?? [],
@@ -804,6 +807,7 @@ export default function ProfilePage() {
       HairProfile,
       | "hair_texture"
       | "thickness"
+      | "density"
       | "cuticle_condition"
       | "protein_moisture_balance"
       | "concerns"
@@ -813,6 +817,7 @@ export default function ProfilePage() {
     > & { updated_at: string } = {
       hair_texture: (quizDraft.hair_texture || null) as HairProfile["hair_texture"],
       thickness: (quizDraft.thickness || null) as HairProfile["thickness"],
+      density: (quizDraft.density || null) as HairProfile["density"],
       cuticle_condition: (quizDraft.cuticle_condition || null) as HairProfile["cuticle_condition"],
       protein_moisture_balance: (quizDraft.protein_moisture_balance ||
         null) as HairProfile["protein_moisture_balance"],
@@ -1061,6 +1066,25 @@ export default function ProfilePage() {
                             value={quizDraft.thickness}
                             onChange={(value) =>
                               setQuizDraft((current) => ({ ...current, thickness: value }))
+                            }
+                          />
+                        </QuizEditorField>
+                      </div>
+
+                      <div
+                        ref={(node) => {
+                          quizFieldRefs.current.density = node
+                        }}
+                      >
+                        <QuizEditorField
+                          title="Haardichte"
+                          text="Wie viele Haare du insgesamt hast - nicht wie dick ein einzelnes Haar ist."
+                        >
+                          <SegmentedControl
+                            options={HAIR_DENSITY_OPTIONS}
+                            value={quizDraft.density}
+                            onChange={(value) =>
+                              setQuizDraft((current) => ({ ...current, density: value }))
                             }
                           />
                         </QuizEditorField>

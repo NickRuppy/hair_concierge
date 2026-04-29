@@ -10,6 +10,7 @@ import {
 const completeQuizProfile = {
   hair_texture: "wavy",
   thickness: "normal",
+  density: "medium",
   cuticle_condition: "slightly_rough",
   protein_moisture_balance: "stretches_stays",
   scalp_type: "dry",
@@ -27,6 +28,11 @@ test("hasQuizDiagnostics accepts a completed no-issue scalp answer", () => {
 })
 
 test("hasQuizDiagnostics requires every other quiz-written field", () => {
+  const missingDensityProfile: Partial<typeof completeQuizProfile> = { ...completeQuizProfile }
+  delete missingDensityProfile.density
+
+  assert.equal(hasQuizDiagnostics(missingDensityProfile), false)
+  assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, density: null }), false)
   assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, chemical_treatment: [] }), false)
   assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, concerns: null }), false)
   assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, concerns: undefined }), false)

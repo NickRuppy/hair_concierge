@@ -1,6 +1,7 @@
 type PersistedQuizDiagnosticsProfile = {
   hair_texture?: string | null
   thickness?: string | null
+  density?: string | null
   cuticle_condition?: string | null
   protein_moisture_balance?: string | null
   scalp_type?: string | null
@@ -28,6 +29,7 @@ export function hasCompletedQuizDiagnostics(profile: PersistedQuizDiagnosticsPro
   return (
     hasNonEmptyString(profile.hair_texture) &&
     hasNonEmptyString(profile.thickness) &&
+    hasNonEmptyString(profile.density) &&
     hasNonEmptyString(profile.cuticle_condition) &&
     hasNonEmptyString(profile.protein_moisture_balance) &&
     hasCompletedScalpStep(profile) &&

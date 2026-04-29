@@ -2,6 +2,7 @@ import { z } from "zod"
 import {
   QUIZ_STRUCTURE_VALUES,
   QUIZ_THICKNESS_VALUES,
+  QUIZ_DENSITY_VALUES,
   QUIZ_FINGERTEST_VALUES,
   QUIZ_PULLTEST_VALUES,
   QUIZ_CONCERN_VALUES,
@@ -15,6 +16,7 @@ export const quizAnswersSchema = z
   .object({
     structure: z.enum(QUIZ_STRUCTURE_VALUES),
     thickness: z.enum(QUIZ_THICKNESS_VALUES),
+    density: z.enum(QUIZ_DENSITY_VALUES),
     fingertest: z.enum(QUIZ_FINGERTEST_VALUES),
     pulltest: z.enum(QUIZ_PULLTEST_VALUES),
     scalp_type: z.enum(QUIZ_SCALP_TYPE_VALUES),

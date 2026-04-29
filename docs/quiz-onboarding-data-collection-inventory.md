@@ -1,6 +1,6 @@
 # Quiz And Onboarding Data Collection Inventory
 
-Checked against the current UI code plus the live Supabase schema on March 23, 2026.
+Checked against the current UI code plus the live Supabase schema on April 29, 2026.
 
 Scope notes:
 - Quiz lead-capture fields (`name`, `email`, `marketingConsent`) are excluded.
@@ -12,6 +12,7 @@ Scope notes:
 |---|---|---|---|
 | `WAS IST DEINE NATUERLICHE HAARTEXTUR?` | `Glatt` (`straight`), `Wellig` (`wavy`), `Lockig` (`curly`), `Kraus` (`coily`) | Raw: `public.leads.quiz_answers` key `structure`<br>Final: `public.hair_profiles.hair_texture` | Raw: `straight`, `wavy`, `curly`, `coily`<br>Final: `straight`, `wavy`, `curly`, `coily` |
 | `WIE DICK SIND DEINE EINZELNEN HAARE?` | `Fein` (`fine`), `Mittel` (`normal`), `Dick` (`coarse`) | Raw: `public.leads.quiz_answers` key `thickness`<br>Final: `public.hair_profiles.thickness` | Raw: `fine`, `normal`, `coarse`<br>Final: `fine`, `normal`, `coarse` |
+| `Wie dicht ist dein Haar insgesamt?` | `Wenig Haare` (`low`), `Mittlere Dichte` (`medium`), `Viele Haare` (`high`) | Raw: `public.leads.quiz_answers` key `density`<br>Final: `public.hair_profiles.density` | Raw: `low`, `medium`, `high`<br>Final: `low`, `medium`, `high` |
 | `DER OBERFLAECHENTEST` | `Glatt wie Glas` (`glatt`), `Leicht uneben` (`leicht_uneben`), `Richtig rau und huckelig` (`rau`) | Raw: `public.leads.quiz_answers` key `fingertest`<br>Final: `public.hair_profiles.cuticle_condition` | Raw: `glatt`, `leicht_uneben`, `rau`<br>Final from mapping: `smooth`, `slightly_rough`, `rough` |
 | `DER ZUGTEST` | `Dehnt sich und geht zurueck` (`stretches_bounces`), `Dehnt sich, bleibt ausgeleiert` (`stretches_stays`), `Reisst sofort` (`snaps`) | Raw: `public.leads.quiz_answers` key `pulltest`<br>Final: `public.hair_profiles.protein_moisture_balance` | Raw: `stretches_bounces`, `stretches_stays`, `snaps`<br>Final: `stretches_bounces`, `stretches_stays`, `snaps` |
 | `WIE IST DEIN KOPFHAUTTYP?` | `Fettig` (`fettig`), `Ausgeglichen` (`ausgeglichen`), `Trocken` (`trocken`) | Raw: `public.leads.quiz_answers` key `scalp_type`<br>Final: `public.hair_profiles.scalp_type` | Raw: `fettig`, `ausgeglichen`, `trocken`<br>Final from mapping: `oily`, `balanced`, `dry` |
@@ -21,11 +22,10 @@ Scope notes:
 
 ## B. Onboarding Flow
 
-Current code path is `density -> mechanical stress -> routine -> goals`.
+Current code path is `mechanical stress -> routine -> goals`. Density is now collected in quiz Q3, not owned by onboarding.
 
 | Question | Options shown to user | Storage in DB | Possible stored values |
 |---|---|---|---|
-| `Wie dicht ist dein {adjective} Haar?` | `Wenig Haare` (`low`), `Mittlere Dichte` (`medium`), `Viele Haare` (`high`) | Raw: none; writes direct<br>Final: `public.hair_profiles.density` | `low`, `medium`, `high` |
 | `Wie beanspruchst du dein Haar mechanisch?` | Multi-select: `Enge Frisuren (Zoepfe, Dutts, Extensions)` (`tight_hairstyles`), `Haeufiges oder grobes Buersten` (`rough_brushing`), `Handtuch-Rubbeln statt Tupfen` (`towel_rubbing`) | Raw: none; writes direct<br>Final: `public.hair_profiles.mechanical_stress_factors` (`text[]`) | `[]` or any subset of `tight_hairstyles`, `rough_brushing`, `towel_rubbing` |
 | `Wie oft waeschst du deine Haare?` | `Täglich` (`daily`), `Alle 2-3 Tage` (`every_2_3_days`), `1x pro Woche` (`once_weekly`), `Seltener` (`rarely`) | Raw: none; writes direct<br>Final: `public.hair_profiles.wash_frequency` | Current flow writes `daily`, `every_2_3_days`, `once_weekly`, `rarely` |
 | `Welche Produkte nutzt du aktuell?` | Multi-select: `Shampoo`, `Conditioner`, `Leave-in`, `Oel`, `Maske`, `Hitzeschutz`, `Serum`, `Scrub` | Raw: none; writes direct<br>Final: `public.hair_profiles.current_routine_products` (`text[]`) | `[]` or any subset of `shampoo`, `conditioner`, `leave_in`, `oil`, `mask`, `heat_protectant`, `serum`, `scrub` |
@@ -40,5 +40,6 @@ Current code path is `density -> mechanical stress -> routine -> goals`.
 - Current code and the live DB were more reliable than the tests here. `tests/onboarding-goal-flow.test.ts` still expects a smaller straight-hair goal set than the current UI in `src/lib/vocabulary/onboarding-goals.ts`. `tests/quiz-onboarding-e2e.spec.ts` also reflects an older onboarding path.
 - The live DB does not currently enforce all final scalar enums on `hair_profiles`. For `cuticle_condition`, `protein_moisture_balance`, `scalp_type`, `scalp_condition`, `wash_frequency`, `heat_styling`, `chemical_treatment`, and `goals`, the values above come from the current UI and mapping code, not from hard DB checks.
 - Quiz answers have a two-step lifecycle: they are first captured in `public.leads.quiz_answers`, then mapped into `public.hair_profiles` by `src/lib/quiz/link-to-profile.ts`.
+- Historical/test profiles with `public.hair_profiles.density IS NULL` are backfilled once to `medium`; future quiz completions should populate density from the user's Q3 answer rather than relying on a permanent database default.
 - Saving the final onboarding goals screen also flips `public.profiles.onboarding_completed = true`, but that flag is a side effect, not a user-selected property.
 - The broader goal enum still includes values like `color_protection`, but the current onboarding UI does not collect that value.

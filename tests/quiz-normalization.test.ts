@@ -25,6 +25,7 @@ test("legacy pulltest values are normalized", () => {
   const normalized = normalizeStoredQuizAnswers({
     structure: "curly",
     thickness: "normal",
+    density: "medium",
     fingertest: "leicht_uneben",
     pulltest: "ueberdehnt",
     scalp_type: "trocken",
@@ -33,6 +34,13 @@ test("legacy pulltest values are normalized", () => {
   })
 
   assert.equal(normalized.pulltest, "stretches_stays")
+})
+
+test("density values are normalized and invalid values are removed", () => {
+  assert.equal(normalizeStoredQuizAnswers({ density: "low" }).density, "low")
+  assert.equal(normalizeStoredQuizAnswers({ density: "medium" }).density, "medium")
+  assert.equal(normalizeStoredQuizAnswers({ density: "high" }).density, "high")
+  assert.equal(normalizeStoredQuizAnswers({ density: "unknown" }).density, undefined)
 })
 
 test("legacy scalp values still map to type and condition", () => {
@@ -112,6 +120,7 @@ test("canonicalization drops invalid natur conflicts", () => {
   const canonical = canonicalizeQuizAnswers({
     structure: "straight",
     thickness: "fine",
+    density: "low",
     fingertest: "glatt",
     pulltest: "stretches_bounces",
     scalp_type: "ausgeglichen",
@@ -122,6 +131,7 @@ test("canonicalization drops invalid natur conflicts", () => {
   })
 
   assert.equal(canonical.has_scalp_issue, false)
+  assert.equal(canonical.density, "low")
   assert.equal(canonical.scalp_condition, undefined)
   assert.deepEqual(canonical.concerns, ["breakage", "dryness", "frizz"])
   assert.equal(canonical.concerns_other_text, undefined)
