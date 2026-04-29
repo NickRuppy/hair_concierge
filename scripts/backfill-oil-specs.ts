@@ -1,7 +1,7 @@
 import { config as loadEnv } from "dotenv"
-import { writeFile } from "node:fs/promises"
+import { readFile, writeFile } from "node:fs/promises"
 import { createClient } from "@supabase/supabase-js"
-import type { OilIngredientFlag } from "../src/lib/oil/constants"
+import { OIL_INGREDIENT_FLAGS, type OilIngredientFlag } from "../src/lib/oil/constants"
 
 loadEnv({ path: ".env.local" })
 
@@ -122,9 +122,10 @@ async function main() {
     )
   }
 
-  // Validate the manual lookup maps against the live DB. Catches stale keys
-  // from product renames in either direction so the backfill fails fast
-  // instead of silently writing [] / falling through to subtype-derivation.
+  // Validate the manual lookup maps against both the live DB and the
+  // parser-emitted JSON. Catches name drift in either direction so the
+  // backfill fails fast instead of silently writing [] / falling through
+  // to subtype-derivation.
   const knownProductNames = new Set(products.map((product) => product.name))
   const orphanFlagKeys = Object.keys(OIL_INGREDIENT_FLAGS_BY_NAME).filter(
     (name) => !knownProductNames.has(name),
@@ -144,6 +145,52 @@ async function main() {
       ]
         .filter(Boolean)
         .join(" | "),
+    )
+  }
+
+  // Cross-check against parser-emitted JSON: every oil product that the
+  // parser flagged with non-empty ingredient_flags must be in the script's
+  // map. Catches "Excel updated, parser regenerated, script forgot to sync"
+  // so we can't silently overwrite ingredient_flags with [].
+  type OilJsonEntry = { name: string; ingredient_flags?: string[] }
+  const oilJsonRaw = await readFile("data/products-from-excel/oele.json", "utf8")
+  const oilJson = JSON.parse(oilJsonRaw) as OilJsonEntry[]
+  const allowedFlags = new Set<string>(OIL_INGREDIENT_FLAGS)
+  const expectedFlagBearers = oilJson.filter((entry) => (entry.ingredient_flags ?? []).length > 0)
+  const unmappedFlagged = expectedFlagBearers
+    .filter((entry) => !(entry.name in OIL_INGREDIENT_FLAGS_BY_NAME))
+    .map((entry) => `${entry.name} -> ${(entry.ingredient_flags ?? []).join(",")}`)
+  const flagsetMismatches = expectedFlagBearers
+    .filter((entry) => entry.name in OIL_INGREDIENT_FLAGS_BY_NAME)
+    .filter((entry) => {
+      const expected = (entry.ingredient_flags ?? []).slice().sort().join(",")
+      const actual = (OIL_INGREDIENT_FLAGS_BY_NAME[entry.name] ?? []).slice().sort().join(",")
+      return expected !== actual
+    })
+    .map(
+      (entry) =>
+        `${entry.name}: parser=${(entry.ingredient_flags ?? []).join(",")} script=${(OIL_INGREDIENT_FLAGS_BY_NAME[entry.name] ?? []).join(",")}`,
+    )
+  const invalidParserFlags = expectedFlagBearers.flatMap((entry) =>
+    (entry.ingredient_flags ?? [])
+      .filter((flag) => !allowedFlags.has(flag))
+      .map((flag) => `${entry.name}:${flag}`),
+  )
+  if (unmappedFlagged.length > 0 || flagsetMismatches.length > 0 || invalidParserFlags.length > 0) {
+    throw new Error(
+      [
+        unmappedFlagged.length > 0
+          ? `Parser flagged products missing from OIL_INGREDIENT_FLAGS_BY_NAME: ${unmappedFlagged.join(" | ")}`
+          : null,
+        flagsetMismatches.length > 0
+          ? `Flag set drift between parser JSON and script map: ${flagsetMismatches.join(" | ")}`
+          : null,
+        invalidParserFlags.length > 0
+          ? `Parser emitted flag value not in OIL_INGREDIENT_FLAGS enum: ${invalidParserFlags.join(", ")}`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" || "),
     )
   }
 
