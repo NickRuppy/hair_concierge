@@ -52,16 +52,6 @@ export const OIL_NO_RECOMMENDATION_LABELS: Record<OilNoRecommendationReason, str
   therapy_oil_missing: "Das passende Therapie-/Kopfhautoel ist aktuell nicht in der Datenbank.",
 }
 
-export interface ProductOilEligibility {
-  product_id: string
-  thickness: HairThickness
-  oil_subtype: OilSubtype
-  oil_purpose: OilPurpose | null
-  ingredient_flags: OilIngredientFlag[]
-  created_at?: string
-  updated_at?: string
-}
-
 export function isOilCategory(category: string | null | undefined): boolean {
   if (!category) return false
   const normalized = category.trim().toLowerCase()

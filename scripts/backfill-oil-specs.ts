@@ -122,6 +122,31 @@ async function main() {
     )
   }
 
+  // Validate the manual lookup maps against the live DB. Catches stale keys
+  // from product renames in either direction so the backfill fails fast
+  // instead of silently writing [] / falling through to subtype-derivation.
+  const knownProductNames = new Set(products.map((product) => product.name))
+  const orphanFlagKeys = Object.keys(OIL_INGREDIENT_FLAGS_BY_NAME).filter(
+    (name) => !knownProductNames.has(name),
+  )
+  const orphanOverrideKeys = Object.keys(OIL_PURPOSE_OVERRIDE_BY_NAME).filter(
+    (name) => !knownProductNames.has(name),
+  )
+  if (orphanFlagKeys.length > 0 || orphanOverrideKeys.length > 0) {
+    throw new Error(
+      [
+        orphanFlagKeys.length > 0
+          ? `Stale OIL_INGREDIENT_FLAGS_BY_NAME keys (no DB match): ${orphanFlagKeys.join(", ")}`
+          : null,
+        orphanOverrideKeys.length > 0
+          ? `Stale OIL_PURPOSE_OVERRIDE_BY_NAME keys (no DB match): ${orphanOverrideKeys.join(", ")}`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" | "),
+    )
+  }
+
   const exportRows: OilExportRow[] = products.map((product) => {
     const source_subtypes = [
       ...new Set(
