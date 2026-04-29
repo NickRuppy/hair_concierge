@@ -1,5 +1,14 @@
 import type { HairThickness } from "@/lib/vocabulary"
 
+export const OIL_INGREDIENT_FLAGS = [
+  "silicones",
+  "polymers",
+  "oils",
+  "proteins",
+  "humectants",
+] as const
+export type OilIngredientFlag = (typeof OIL_INGREDIENT_FLAGS)[number]
+
 export const OIL_DB_CATEGORIES = ["Öle"] as const
 
 export const OIL_SUBTYPES = ["natuerliches-oel", "styling-oel", "trocken-oel"] as const

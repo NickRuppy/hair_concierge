@@ -1,5 +1,6 @@
 import { config as loadEnv } from "dotenv"
 import { createClient } from "@supabase/supabase-js"
+import type { MaskIngredientFlag } from "../src/lib/mask/constants"
 
 loadEnv({ path: ".env.local" })
 
@@ -25,6 +26,7 @@ type MaskBackfillSpec = {
   balance_direction: ProductBalanceDirection
   weight: MaskWeight
   concentration: MaskConcentration
+  ingredient_flags: MaskIngredientFlag[]
 }
 
 const DUPLICATE_MASK_NAME = "Neqi Build & Boost"
@@ -34,176 +36,211 @@ const MASK_BACKFILL_BY_NAME: Record<string, MaskBackfillSpec> = {
     balance_direction: "balanced",
     weight: "medium",
     concentration: "low",
+    ingredient_flags: [],
   },
   "Balea 3 in 1 Intensivmaske": {
     balance_direction: "moisture",
     weight: "medium",
     concentration: "medium",
+    ingredient_flags: [],
   },
   "Balea Aqua Hyaluron 3 in 1": {
     balance_direction: "moisture",
     weight: "light",
     concentration: "low",
+    ingredient_flags: [],
   },
   "Balea Natural Beauty 3in1 Locken": {
     balance_direction: "moisture",
     weight: "rich",
     concentration: "medium",
+    ingredient_flags: [],
   },
   "Balea Natural Beauty reparierend.": {
     balance_direction: "protein",
     weight: "medium",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Balea Plex Care": {
     balance_direction: "protein",
     weight: "medium",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Balea Professional Glow & Shine": {
     balance_direction: "balanced",
     weight: "medium",
     concentration: "medium",
+    ingredient_flags: [],
   },
   "Balea Professionel Plexcare": {
     balance_direction: "protein",
     weight: "medium",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Bali Curls Bond Repair": {
     balance_direction: "protein",
     weight: "medium",
     concentration: "high",
+    ingredient_flags: [],
   },
-  "Bali Curls Deep Hydration (Kokos)": {
+  "Bali Curls Deep Hydration": {
     balance_direction: "moisture",
     weight: "rich",
     concentration: "medium",
+    ingredient_flags: ["oils"],
   },
   "Bali Curls SOS Protein Treatment": {
     balance_direction: "protein",
     weight: "rich",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Fructis Hair Food Aloe Vera": {
     balance_direction: "moisture",
     weight: "light",
     concentration: "low",
+    ingredient_flags: [],
   },
   "Fructis Hair Food Papaya": {
     balance_direction: "protein",
     weight: "medium",
     concentration: "medium",
+    ingredient_flags: [],
   },
   "Gliss Aqua Revive": {
     balance_direction: "balanced",
     weight: "light",
     concentration: "low",
+    ingredient_flags: [],
   },
   "Gliss Liquid Silk": {
     balance_direction: "balanced",
     weight: "light",
     concentration: "medium",
+    ingredient_flags: [],
   },
-  "Glisskur Liquid Silk (Silikone)": {
+  "Glisskur Liquid Silk": {
     balance_direction: "protein",
     weight: "light",
     concentration: "medium",
+    ingredient_flags: ["silicones"],
   },
   "Guhl 30 sec. Feuchtigkeit": {
     balance_direction: "moisture",
     weight: "medium",
     concentration: "low",
+    ingredient_flags: [],
   },
   "Guhl Panthenol +": {
     balance_direction: "protein",
     weight: "medium",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Haarkur Lamination Intense Glaze": {
     balance_direction: "balanced",
     weight: "medium",
     concentration: "low",
+    ingredient_flags: [],
   },
   "Hask Argan Deep Conditioning Treatment": {
     balance_direction: "moisture",
     weight: "rich",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Isana 3in1 Michprotein & Mandel": {
     balance_direction: "protein",
     weight: "rich",
     concentration: "medium",
+    ingredient_flags: [],
   },
   "Jean&Len Tiefenreparatur Haarkur": {
     balance_direction: "balanced",
     weight: "rich",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Neqi Build Boost": {
     balance_direction: "protein",
     weight: "medium",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Neqi Gloss Glaze": {
     balance_direction: "balanced",
     weight: "medium",
     concentration: "medium",
+    ingredient_flags: [],
   },
   "Neqi Peptide Power": {
     balance_direction: "protein",
     weight: "medium",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Neqi Repair Reveal": {
     balance_direction: "protein",
     weight: "medium",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Pantene Bond Repair": {
     balance_direction: "protein",
     weight: "medium",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Pantene Hydra Glow": {
     balance_direction: "moisture",
     weight: "medium",
     concentration: "medium",
+    ingredient_flags: [],
   },
   "Pantene Keratin Repair & Care": {
     balance_direction: "protein",
     weight: "rich",
     concentration: "high",
+    ingredient_flags: [],
   },
   "Pomélo+Co Shine Therapy": {
     balance_direction: "balanced",
     weight: "medium",
     concentration: "medium",
+    ingredient_flags: [],
   },
   "Sante Intense Hydration": {
     balance_direction: "moisture",
     weight: "light",
     concentration: "medium",
+    ingredient_flags: [],
   },
   "Schaebens Argan-Öl Haarmaske": {
     balance_direction: "balanced",
     weight: "medium",
     concentration: "medium",
+    ingredient_flags: [],
   },
   "Syoss Intense Keratin": {
     balance_direction: "protein",
     weight: "rich",
     concentration: "high",
+    ingredient_flags: [],
   },
   "WAHRE SCHÄTZE 1-MINUTE HAARKUR Argan": {
     balance_direction: "moisture",
     weight: "medium",
     concentration: "low",
+    ingredient_flags: [],
   },
   "Wahre Schätze Avocado": {
     balance_direction: "moisture",
     weight: "rich",
     concentration: "medium",
+    ingredient_flags: [],
   },
 }
 
@@ -294,12 +331,15 @@ async function main() {
     })),
   )
 
-  const payload = rows.map(({ product_id, weight, concentration, balance_direction }) => ({
-    product_id,
-    weight,
-    concentration,
-    balance_direction,
-  }))
+  const payload = rows.map(
+    ({ product_id, weight, concentration, balance_direction, ingredient_flags }) => ({
+      product_id,
+      weight,
+      concentration,
+      balance_direction,
+      ingredient_flags,
+    }),
+  )
 
   const { error } = await supabase
     .from("product_mask_specs")

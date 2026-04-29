@@ -1,6 +1,7 @@
 import { config as loadEnv } from "dotenv"
-import { writeFile } from "node:fs/promises"
+import { readFile, writeFile } from "node:fs/promises"
 import { createClient } from "@supabase/supabase-js"
+import { OIL_INGREDIENT_FLAGS, type OilIngredientFlag } from "../src/lib/oil/constants"
 
 loadEnv({ path: ".env.local" })
 
@@ -40,7 +41,32 @@ type OilExportRow = {
 }
 
 const OIL_PURPOSE_OVERRIDE_BY_NAME: Partial<Record<string, OilPurpose>> = {
-  "Olaplex No.7 Bonding Oil (Silikone)": "styling_finish",
+  "Olaplex No.7 Bonding Oil": "styling_finish",
+}
+
+// ingredient_flags per product, derived from the regenerated oil JSON
+// (data/products-from-excel/oele.json — parser strips trailing (Silikone)/(Kokos)
+// annotations and emits the structured flags here). Products not listed get [].
+const OIL_INGREDIENT_FLAGS_BY_NAME: Partial<Record<string, OilIngredientFlag[]>> = {
+  "Balea Oil Repair Haaröl": ["silicones"],
+  "Balea Traumlocken Öl": ["silicones"],
+  "Garnier Fructis Sleek & Stay Öl": ["silicones"],
+  "Garnier Fructis Wunderöl": ["silicones"],
+  "Garnier Wahre Schätze Curl Revival Öl": ["silicones"],
+  "Jean&Len Repair Keratin & Mandel": ["silicones"],
+  "L’Oréal Elvital Öl Magique Jojoba": ["silicones"],
+  "Maria Nila True Soft Argan Oil": ["silicones"],
+  "Neqi Opulent Oil": ["silicones"],
+  "OGX Argan Oil": ["silicones"],
+  "OGX Argan weightless Öl": ["silicones"],
+  "OGX Bond Protein Repair": ["silicones", "oils"],
+  "OGX Miracle Coconut Oil": ["silicones", "oils"],
+  "Olaplex No.7 Bonding Oil": ["silicones"],
+  "Pantene Pro-V 7in1 Spray": ["silicones"],
+  "Pantene Pro-V Coconut Oil": ["silicones", "oils"],
+  "Pantene Pro-V Keratin Protect Öl": ["silicones", "oils"],
+  "Shiseido Fino Oil": ["silicones"],
+  "Urban Alchemy Smooth Serum": ["silicones"],
 }
 
 function deriveOilPurpose(productName: string, subtypes: OilSubtype[]): OilPurpose {
@@ -96,6 +122,78 @@ async function main() {
     )
   }
 
+  // Validate the manual lookup maps against both the live DB and the
+  // parser-emitted JSON. Catches name drift in either direction so the
+  // backfill fails fast instead of silently writing [] / falling through
+  // to subtype-derivation.
+  const knownProductNames = new Set(products.map((product) => product.name))
+  const orphanFlagKeys = Object.keys(OIL_INGREDIENT_FLAGS_BY_NAME).filter(
+    (name) => !knownProductNames.has(name),
+  )
+  const orphanOverrideKeys = Object.keys(OIL_PURPOSE_OVERRIDE_BY_NAME).filter(
+    (name) => !knownProductNames.has(name),
+  )
+  if (orphanFlagKeys.length > 0 || orphanOverrideKeys.length > 0) {
+    throw new Error(
+      [
+        orphanFlagKeys.length > 0
+          ? `Stale OIL_INGREDIENT_FLAGS_BY_NAME keys (no DB match): ${orphanFlagKeys.join(", ")}`
+          : null,
+        orphanOverrideKeys.length > 0
+          ? `Stale OIL_PURPOSE_OVERRIDE_BY_NAME keys (no DB match): ${orphanOverrideKeys.join(", ")}`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" | "),
+    )
+  }
+
+  // Cross-check against parser-emitted JSON: every oil product that the
+  // parser flagged with non-empty ingredient_flags must be in the script's
+  // map. Catches "Excel updated, parser regenerated, script forgot to sync"
+  // so we can't silently overwrite ingredient_flags with [].
+  type OilJsonEntry = { name: string; ingredient_flags?: string[] }
+  const oilJsonRaw = await readFile("data/products-from-excel/oele.json", "utf8")
+  const oilJson = JSON.parse(oilJsonRaw) as OilJsonEntry[]
+  const allowedFlags = new Set<string>(OIL_INGREDIENT_FLAGS)
+  const expectedFlagBearers = oilJson.filter((entry) => (entry.ingredient_flags ?? []).length > 0)
+  const unmappedFlagged = expectedFlagBearers
+    .filter((entry) => !(entry.name in OIL_INGREDIENT_FLAGS_BY_NAME))
+    .map((entry) => `${entry.name} -> ${(entry.ingredient_flags ?? []).join(",")}`)
+  const flagsetMismatches = expectedFlagBearers
+    .filter((entry) => entry.name in OIL_INGREDIENT_FLAGS_BY_NAME)
+    .filter((entry) => {
+      const expected = (entry.ingredient_flags ?? []).slice().sort().join(",")
+      const actual = (OIL_INGREDIENT_FLAGS_BY_NAME[entry.name] ?? []).slice().sort().join(",")
+      return expected !== actual
+    })
+    .map(
+      (entry) =>
+        `${entry.name}: parser=${(entry.ingredient_flags ?? []).join(",")} script=${(OIL_INGREDIENT_FLAGS_BY_NAME[entry.name] ?? []).join(",")}`,
+    )
+  const invalidParserFlags = expectedFlagBearers.flatMap((entry) =>
+    (entry.ingredient_flags ?? [])
+      .filter((flag) => !allowedFlags.has(flag))
+      .map((flag) => `${entry.name}:${flag}`),
+  )
+  if (unmappedFlagged.length > 0 || flagsetMismatches.length > 0 || invalidParserFlags.length > 0) {
+    throw new Error(
+      [
+        unmappedFlagged.length > 0
+          ? `Parser flagged products missing from OIL_INGREDIENT_FLAGS_BY_NAME: ${unmappedFlagged.join(" | ")}`
+          : null,
+        flagsetMismatches.length > 0
+          ? `Flag set drift between parser JSON and script map: ${flagsetMismatches.join(" | ")}`
+          : null,
+        invalidParserFlags.length > 0
+          ? `Parser emitted flag value not in OIL_INGREDIENT_FLAGS enum: ${invalidParserFlags.join(", ")}`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" || "),
+    )
+  }
+
   const exportRows: OilExportRow[] = products.map((product) => {
     const source_subtypes = [
       ...new Set(
@@ -133,6 +231,7 @@ async function main() {
       thickness: row.thickness,
       oil_subtype: row.oil_subtype,
       oil_purpose,
+      ingredient_flags: OIL_INGREDIENT_FLAGS_BY_NAME[product.name] ?? [],
     }
   })
 

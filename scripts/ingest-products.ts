@@ -362,7 +362,10 @@ function inferLeaveInSpecs(
 
 function inferMaskSpecs(
   product: ProductInput,
-): Omit<ProductMaskSpecs, "product_id" | "created_at" | "updated_at"> {
+): Omit<ProductMaskSpecs, "product_id" | "created_at" | "updated_at" | "ingredient_flags"> {
+  // ingredient_flags is intentionally omitted: this script does not write that column.
+  // The backfill scripts are the canonical writer for ingredient_flags, and Supabase
+  // upserts only touch the columns provided — so existing values are preserved on UPDATE.
   const existing = product.mask_specs
   const normalizedName = product.name.toLowerCase()
   const concerns = new Set(product.suitable_concerns ?? [])
