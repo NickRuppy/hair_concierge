@@ -295,7 +295,7 @@ export function ChatMessage({
   return (
     <div
       data-testid={isUser ? "message-user" : "message-assistant"}
-      className={`flex gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}${isNew ? " animate-fade-in-up-fast" : ""}`}
+      className={`flex min-w-0 gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}${isNew ? " animate-fade-in-up-fast" : ""}`}
     >
       {/* Avatar */}
       <div
@@ -310,19 +310,19 @@ export function ChatMessage({
 
       {/* Content */}
       <div
-        className={`flex max-w-[80%] flex-col space-y-2 ${isUser ? "items-end" : "items-start"}`}
+        className={`flex min-w-0 max-w-[80%] flex-col space-y-2 ${isUser ? "items-end" : "items-start"}`}
       >
         {/* Text content */}
         {message.content && (
           <div
-            className={`rounded-2xl px-4 py-2.5 shadow-sm ${
+            className={`max-w-full overflow-hidden rounded-2xl px-4 py-2.5 shadow-sm ${
               isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
             }`}
           >
             {isUser ? (
-              <p className="type-body-sm whitespace-pre-wrap">{message.content}</p>
+              <p className="type-body-sm whitespace-pre-wrap break-words">{message.content}</p>
             ) : (
-              <div className="prose prose-sm max-w-none">
+              <div className="prose prose-sm max-w-none break-words">
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                   {renumberedContent}
                 </ReactMarkdown>
@@ -350,11 +350,11 @@ export function ChatMessage({
 
         {/* Product recommendation cards */}
         {products.length > 0 && onProductClick && (
-          <div className="flex flex-col gap-1.5 pt-1">
+          <div className="flex w-full min-w-0 max-w-full flex-col gap-1.5 pt-1">
             {visibleProducts.map((p, i) => (
               <div
                 key={p.id}
-                className="animate-fade-in-up-fast"
+                className="min-w-0 animate-fade-in-up-fast"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
                 <ProductCard product={p} onClick={onProductClick} />
@@ -374,7 +374,7 @@ export function ChatMessage({
 
         {/* Timestamp */}
         {message.created_at && (
-          <div className="flex items-center gap-2 px-1">
+          <div className="flex min-w-0 items-center gap-2 px-1">
             <span className="type-caption text-muted-foreground">
               {format(new Date(message.created_at), "HH:mm")}
             </span>
@@ -390,7 +390,7 @@ export function ChatMessage({
                       setIsSubmittingFeedback(false)
                     }
                   }}
-                  className={`rounded-full p-1 transition-colors ${
+                  className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors ${
                     message.user_feedback_score === 1
                       ? "bg-emerald-500/10 text-emerald-700"
                       : "text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -410,7 +410,7 @@ export function ChatMessage({
                       setIsSubmittingFeedback(false)
                     }
                   }}
-                  className={`rounded-full p-1 transition-colors ${
+                  className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors ${
                     message.user_feedback_score === -1
                       ? "bg-rose-500/10 text-rose-700"
                       : "text-muted-foreground hover:bg-accent hover:text-foreground"
