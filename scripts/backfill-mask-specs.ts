@@ -1,5 +1,6 @@
 import { config as loadEnv } from "dotenv"
 import { createClient } from "@supabase/supabase-js"
+import type { MaskIngredientFlag } from "../src/lib/mask/constants"
 
 loadEnv({ path: ".env.local" })
 
@@ -25,6 +26,7 @@ type MaskBackfillSpec = {
   balance_direction: ProductBalanceDirection
   weight: MaskWeight
   concentration: MaskConcentration
+  ingredient_flags?: MaskIngredientFlag[]
 }
 
 const DUPLICATE_MASK_NAME = "Neqi Build & Boost"
@@ -75,10 +77,11 @@ const MASK_BACKFILL_BY_NAME: Record<string, MaskBackfillSpec> = {
     weight: "medium",
     concentration: "high",
   },
-  "Bali Curls Deep Hydration (Kokos)": {
+  "Bali Curls Deep Hydration": {
     balance_direction: "moisture",
     weight: "rich",
     concentration: "medium",
+    ingredient_flags: ["oils"],
   },
   "Bali Curls SOS Protein Treatment": {
     balance_direction: "protein",
@@ -105,10 +108,11 @@ const MASK_BACKFILL_BY_NAME: Record<string, MaskBackfillSpec> = {
     weight: "light",
     concentration: "medium",
   },
-  "Glisskur Liquid Silk (Silikone)": {
+  "Glisskur Liquid Silk": {
     balance_direction: "protein",
     weight: "light",
     concentration: "medium",
+    ingredient_flags: ["silicones"],
   },
   "Guhl 30 sec. Feuchtigkeit": {
     balance_direction: "moisture",
@@ -294,12 +298,15 @@ async function main() {
     })),
   )
 
-  const payload = rows.map(({ product_id, weight, concentration, balance_direction }) => ({
-    product_id,
-    weight,
-    concentration,
-    balance_direction,
-  }))
+  const payload = rows.map(
+    ({ product_id, weight, concentration, balance_direction, ingredient_flags }) => ({
+      product_id,
+      weight,
+      concentration,
+      balance_direction,
+      ingredient_flags: ingredient_flags ?? [],
+    }),
+  )
 
   const { error } = await supabase
     .from("product_mask_specs")
