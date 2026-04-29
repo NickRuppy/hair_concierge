@@ -297,8 +297,10 @@ function deriveActiveProfileSignalsFromMessage(message: string): AgentActiveProf
   }
 
   if (
-    /\b(?:coloriert\w*|gefarbt\w*|gefaerbt\w*)\s+(?:haar\w*|laeng\w*|lang\w*)\b/.test(normalized) ||
-    /\b(?:haar\w*|laeng\w*|lang\w*)\b.{0,40}\b(?:coloriert\w*|gefarbt\w*|gefaerbt\w*)\b/.test(
+    /\b(?:coloriert\w*|gefarbt\w*|gefaerbt\w*)\b.{0,50}\b(?:haar\w*|haaren|laeng\w*|lang\w*)\b/.test(
+      normalized,
+    ) ||
+    /\b(?:haar\w*|haaren|laeng\w*|lang\w*)\b.{0,50}\b(?:coloriert\w*|gefarbt\w*|gefaerbt\w*)\b/.test(
       normalized,
     )
   ) {
@@ -465,7 +467,7 @@ function normalizeUserJobFromMessage(message: string, userJob: AgentUserJob): Ag
 
   const normalized = normalizeRouteMessage(message)
   const asksForChange =
-    /\b(?:was\s+soll\s+ich\s+(?:andern|tun|machen)|was\s+kann\s+ich\s+(?:andern|tun|machen)|woran\s+liegt|warum|was\s+lau?ft\s+falsch)\b/.test(
+    /\b(?:was\s+soll\s+ich\s+(?:andern|tun|machen)|was\s+kann\s+ich\s+(?:andern|tun|machen)|woran\s+liegt|warum|was\s+lau?ft\s+falsch|soll\s+ich\s+wechseln)\b/.test(
       normalized,
     )
   const describesProblem =
@@ -474,6 +476,25 @@ function normalizeUserJobFromMessage(message: string, userJob: AgentUserJob): Ag
     )
 
   return asksForChange && describesProblem ? "troubleshoot" : userJob
+}
+
+function isTroubleshootQuestionWithoutImmediateProductPick(
+  message: string,
+  userJob: AgentUserJob,
+  productCategory: SelectableProductCategory | null,
+): boolean {
+  if (userJob !== "troubleshoot" || productCategory !== "conditioner") return false
+
+  const normalized = normalizeRouteMessage(message)
+  const asksForReplacementAdvice = /\bsoll\s+ich\s+wechseln\b/.test(normalized)
+  const explicitPick =
+    /\b(?:welch\w*|empfiehl\w*|empfehl\w*|nehmen|kaufen|alternative)\b/.test(normalized) &&
+    /\b(?:conditioner|spulung|spuelung)\b/.test(normalized)
+  const describesTrouble =
+    /\b(?:platt|beschwert|schwer|belegt|fettig)\b/.test(normalized) &&
+    /\b(?:macht|wirkt|fuhlt|fuehlt|ist|werden|wird)\b/.test(normalized)
+
+  return describesTrouble && asksForReplacementAdvice && !explicitPick
 }
 
 function messageLooksDefinitionSeeking(message: string): boolean {
@@ -516,6 +537,7 @@ function deriveRoutineGuidanceId(params: {
 }
 
 function deriveToolPlan(params: {
+  message: string
   userJob: AgentUserJob
   productCategory: SelectableProductCategory | null
   warnings: string[]
@@ -531,6 +553,16 @@ function deriveToolPlan(params: {
     case "compare_or_decide":
     case "troubleshoot":
       if (!params.productCategory) {
+        return []
+      }
+
+      if (
+        isTroubleshootQuestionWithoutImmediateProductPick(
+          params.message,
+          params.userJob,
+          params.productCategory,
+        )
+      ) {
         return []
       }
 
@@ -639,6 +671,7 @@ export function buildAgentRoutePacket(params: {
   )
   const concerns = deriveConcernsFromActiveSignals(activeProfileSignals)
   const toolPlan = deriveToolPlan({
+    message: params.message,
     userJob,
     productCategory,
     warnings,

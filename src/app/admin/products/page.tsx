@@ -212,7 +212,11 @@ export default function AdminProductsPage() {
     const leaveInSpecs = product.leave_in_specs
       ? {
           weight: product.leave_in_specs.weight,
-          conditioner_relationship: product.leave_in_specs.conditioner_relationship,
+          conditioner_relationship:
+            product.leave_in_specs.conditioner_relationship ??
+            (product.leave_in_specs.roles.includes("replacement_conditioner")
+              ? "replacement_capable"
+              : "booster_only"),
           care_benefits: product.leave_in_specs.care_benefits || [],
         }
       : isLeaveInCategory(product.category || "")

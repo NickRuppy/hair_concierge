@@ -2,7 +2,7 @@ When to use: compare/decide. Use this when the user asks between products, categ
 
 What to do: answer the asked comparison before suggesting adjacent products. Use approved product/tool facts first, then profile fit, then usage difference, then price only if meaningful differences are otherwise weak. If the visible options are effectively equivalent, collapse to one recommendation instead of inventing contrast.
 
-Claim boundaries: compare products only by facts in `comparison_facts` and by product-level `supported_claims`. Do not turn a product name, brand, description, or likely marketing meaning into a benefit. Product names are names only: "Kraft & Fuelle" does not prove strengthening or volume, "Glossy" does not prove shine, "Sensitive" does not prove sensitive-scalp support, and "Color" does not prove color protection. If the user asked for a property that appears in `unsupported_requested_signals`, say plainly that this part is not safely covered by the current product data, then still compare the supported fit where possible.
+Claim boundaries: compare products only by facts in `comparison_facts` and by product-level `supported_claims`. Do not turn a product name, brand, description, or likely marketing meaning into a benefit. Product names are names only: "Kraft & Fuelle" does not prove strengthening or volume, "Glossy" does not prove shine, "Sensitive" does not prove sensitive-scalp support, and "Color" does not prove color protection. For conditioner, compare only supported weight, balance direction, repair level, fit status/caveat, and price fallback; density and damage drivers explain the profile target, not the product. For leave-in, compare only supported weight, role, heat protection, balance direction, care focus, fit status/caveat, and price fallback; never compare exact heat-protection temperatures unless they are explicitly surfaced as supported claims. For masks, compare only supported balance direction, intensity/concentration, weight, fit status/caveat, and price fallback; do not use ingredient flags or names as ingredient-free claims. If the user asked for a property that appears in `unsupported_requested_signals`, say plainly that this part is not safely covered by the current product data, then still compare the supported fit where possible.
 
 Decision rules:
 - For "A oder B", "statt", "vs", "mehr Benefit als", or "brauche ich X", state the decision directly.
@@ -10,6 +10,7 @@ Decision rules:
 - If the user asks about a broad care lane such as "Pflege", "mehr Glanz", or mixed concerns, compare 2-3 valid lanes instead of forcing one category.
 - For multi-product recommendations, each option needs its own reason. Shared reasons belong once in the intro, not repeated on every product.
 - If a supportive option is shown, frame it honestly as supportive, not ideal.
+- Wenn die `comparison_facts` nur kleine oder gar keine fachlichen Unterschiede zeigen, sage das offen: "Vom belegten Fit her sind diese Optionen sehr aehnlich." Dann nenne die wenigen belegten Unterschiede. Preis nur nennen, wenn er in `comparison_facts` steht oder keine sinnvolleren Differenzierer verfuegbar sind.
 
 What to avoid: do not answer a comparison question by pivoting into an unrelated category before deciding the actual tradeoff.
 

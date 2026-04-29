@@ -19,7 +19,13 @@ import type { CategoryDecision } from "@/lib/recommendation-engine/types"
 import { applyProductMemoryConstraints } from "@/lib/rag/user-memory"
 import type { MatchedProduct } from "@/lib/rag/product-matcher"
 import type { UserMemoryContext } from "@/lib/rag/user-memory"
-import type { HairProfile, ShampooRecommendationMetadata } from "@/lib/types"
+import type {
+  ConditionerRecommendationMetadata,
+  HairProfile,
+  LeaveInRecommendationMetadata,
+  MaskRecommendationMetadata,
+  ShampooRecommendationMetadata,
+} from "@/lib/types"
 import type {
   ActiveProfileSignalField,
   AgentActiveProfileSignal,
@@ -27,8 +33,23 @@ import type {
   AgentUserJob,
 } from "@/lib/agent/orchestrator/route-packet"
 import type { SelectableProductCategory } from "@/lib/agent/contracts"
+import {
+  CONDITIONER_REPAIR_LEVEL_LABELS,
+  CONDITIONER_WEIGHT_LABELS,
+} from "@/lib/conditioner/constants"
+import {
+  LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS,
+  LEAVE_IN_ROLE_LABELS,
+  LEAVE_IN_WEIGHT_LABELS,
+} from "@/lib/leave-in/constants"
 import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
-import { HAIR_THICKNESS_LABELS, SCALP_CONDITION_LABELS, SCALP_TYPE_LABELS } from "@/lib/vocabulary"
+import {
+  HAIR_DENSITY_LABELS,
+  HAIR_THICKNESS_LABELS,
+  PROTEIN_MOISTURE_LABELS,
+  SCALP_CONDITION_LABELS,
+  SCALP_TYPE_LABELS,
+} from "@/lib/vocabulary"
 
 export type { SelectableProductCategory } from "@/lib/agent/contracts"
 export type SelectProductsDecision =
@@ -50,24 +71,43 @@ export interface SelectProductsRouteContext {
   concerns?: AgentConcern[] | null
   requestedGoal?: "shine" | null
   activeProfileSignals?: AgentActiveProfileSignal[] | null
+  requestedIngredientSignals?: RequestedIngredientSignal[] | null
+  originalHairProfile?: HairProfile | null
+}
+
+export interface RequestedIngredientSignal {
+  value: string
+  evidence: string
 }
 
 export type ProductClaimEvidence = "product_spec" | "category_decision" | "profile_match"
 
+export const SUPPORTED_PRODUCT_CLAIM_FIELDS = [
+  "shampoo_bucket",
+  "scalp_route",
+  "cleansing_intensity",
+  "weight",
+  "balance_direction",
+  "repair_level",
+  "concentration",
+  "fit_status",
+  "heat_protection",
+  "conditioner_relationship",
+  "leave_in_role",
+  "care_benefit",
+] as const
+
+export type StructuredProductClaimField = (typeof SUPPORTED_PRODUCT_CLAIM_FIELDS)[number]
+
 export interface SupportedProductClaim {
-  field:
-    | ActiveProfileSignalField
-    | "shampoo_bucket"
-    | "scalp_route"
-    | "cleansing_intensity"
-    | "fit_status"
+  field: ActiveProfileSignalField | StructuredProductClaimField
   value: string
   evidence: ProductClaimEvidence
   label: string
 }
 
 export interface UnsupportedRequestedSignal {
-  field: ActiveProfileSignalField
+  field: ActiveProfileSignalField | "ingredient_preference"
   value: string
   reason: "no_structured_product_data" | "not_a_shampoo_fit_axis" | "safety_caution"
   user_message: string
@@ -143,10 +183,19 @@ function projectDisplayableProduct(
   const meta = product.recommendation_meta
   const caveat = mapDisplayableCaveat(meta?.tradeoffs?.[0] ?? null)
   const supportedClaims = buildSupportedProductClaims(product)
-  const unsupportedRequestedSignals =
-    meta?.category === "shampoo"
+  const unsupportedRequestedSignals = [
+    ...(meta?.category === "shampoo" || meta?.category === "conditioner"
       ? buildUnsupportedRequestedSignals(routeContext?.activeProfileSignals ?? [], supportedClaims)
-      : []
+      : []),
+    ...(meta?.category === "conditioner" ||
+    meta?.category === "leave_in" ||
+    meta?.category === "mask"
+      ? buildUnsupportedIngredientSignals(
+          routeContext?.requestedIngredientSignals ?? [],
+          meta.category,
+        )
+      : []),
+  ]
 
   return {
     rank,
@@ -184,9 +233,238 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
     return null
   }
 
+  if (products.every((product) => product.recommendation_meta?.category === "conditioner")) {
+    return buildConditionerComparisonFactsForSet(products)
+  }
+
+  if (products.every((product) => product.recommendation_meta?.category === "leave_in")) {
+    return buildLeaveInComparisonFactsForSet(products)
+  }
+
+  if (products.every((product) => product.recommendation_meta?.category === "mask")) {
+    return buildMaskComparisonFactsForSet(products)
+  }
+
   return Object.fromEntries(
     products.map((product) => [product.id, buildProductComparisonFacts(product)]),
   )
+}
+
+function buildConditionerComparisonFactsForSet(
+  products: MatchedProduct[],
+): Record<string, string[]> | null {
+  const factRows = products.map((product) => {
+    const meta = product.recommendation_meta as ConditionerRecommendationMetadata
+    return {
+      product,
+      meta,
+      candidates: [
+        meta.product_balance_direction
+          ? {
+              key: "balance_direction",
+              value: meta.product_balance_direction,
+              text: `Balance: ${CONDITIONER_BALANCE_LABELS[meta.product_balance_direction]}`,
+            }
+          : null,
+        meta.product_weight
+          ? {
+              key: "weight",
+              value: meta.product_weight,
+              text: `Gewicht: ${CONDITIONER_WEIGHT_LABELS[meta.product_weight]}`,
+            }
+          : null,
+        meta.product_repair_level
+          ? {
+              key: "repair_level",
+              value: meta.product_repair_level,
+              text: `Pflegeintensitaet: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`,
+            }
+          : null,
+        meta.fit_status
+          ? {
+              key: "fit_status",
+              value: `${meta.fit_status}:${
+                meta.tradeoffs.some(isFallbackCaveat) || meta.fit_status === "mismatch"
+                  ? "fallback"
+                  : "primary"
+              }`,
+              text:
+                meta.tradeoffs.some(isFallbackCaveat) || meta.fit_status === "mismatch"
+                  ? "Caveat: Fallback"
+                  : `Fit: ${CONDITIONER_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`,
+            }
+          : null,
+        typeof product.price_eur === "number"
+          ? {
+              key: "price",
+              value: String(product.price_eur),
+              text: `Preis: ${product.price_eur.toFixed(2)} EUR`,
+            }
+          : null,
+      ].filter((candidate): candidate is { key: string; value: string; text: string } =>
+        Boolean(candidate),
+      ),
+    }
+  })
+  const valuesByKey = new Map<string, Set<string>>()
+  for (const row of factRows) {
+    for (const candidate of row.candidates) {
+      const values = valuesByKey.get(candidate.key) ?? new Set<string>()
+      values.add(candidate.value)
+      valuesByKey.set(candidate.key, values)
+    }
+  }
+  const result: Record<string, string[]> = {}
+
+  for (const row of factRows) {
+    const facts: string[] = []
+    for (const candidate of row.candidates) {
+      const values = valuesByKey.get(candidate.key)
+      if (!values || values.size <= 1) continue
+      facts.push(candidate.text)
+      if (facts.length >= 2) break
+    }
+
+    if (facts.length > 0) {
+      result[row.product.id] = facts
+      continue
+    }
+
+    const fallbackPrice = row.candidates.find((candidate) => candidate.key === "price")
+    result[row.product.id] = fallbackPrice
+      ? [fallbackPrice.text]
+      : row.candidates.slice(0, 1).map((item) => item.text)
+  }
+
+  return result
+}
+
+function buildLeaveInComparisonFactsForSet(
+  products: MatchedProduct[],
+): Record<string, string[]> | null {
+  const factRows = products.map((product) => {
+    const meta = product.recommendation_meta as LeaveInRecommendationMetadata
+    return {
+      product,
+      candidates: [
+        meta.product_weight
+          ? {
+              key: "weight",
+              value: meta.product_weight,
+              text: `Gewicht: ${LEAVE_IN_WEIGHT_LABELS[meta.product_weight]}`,
+            }
+          : null,
+        meta.product_balance_direction
+          ? {
+              key: "balance_direction",
+              value: meta.product_balance_direction,
+              text: `Balance: ${CONDITIONER_BALANCE_LABELS[meta.product_balance_direction]}`,
+            }
+          : null,
+        typeof meta.provides_heat_protection === "boolean"
+          ? {
+              key: "heat_protection",
+              value: String(meta.provides_heat_protection),
+              text: `Hitzeschutz: ${meta.provides_heat_protection ? "ja" : "nein"}`,
+            }
+          : null,
+        meta.fit_status
+          ? {
+              key: "fit_status",
+              value: meta.fit_status,
+              text: `Fit: ${LEAVE_IN_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`,
+            }
+          : null,
+      ].filter((candidate): candidate is { key: string; value: string; text: string } =>
+        Boolean(candidate),
+      ),
+    }
+  })
+  const result: Record<string, string[]> = {}
+
+  for (const row of factRows) {
+    const facts: string[] = []
+    for (const candidate of row.candidates) {
+      const values = new Set(
+        factRows.map((other) => other.candidates.find((item) => item.key === candidate.key)?.value),
+      )
+      if (values.size <= 1) continue
+      facts.push(candidate.text)
+      if (facts.length >= 2) break
+    }
+
+    result[row.product.id] =
+      facts.length > 0 ? facts : row.candidates.slice(0, 1).map((item) => item.text)
+  }
+
+  return result
+}
+
+interface ComparisonFactCandidate {
+  key: string
+  value: string
+  text: string
+}
+
+function buildMaskComparisonFactsForSet(products: MatchedProduct[]): Record<string, string[]> {
+  const factRows = products.map((product) => {
+    const meta = product.recommendation_meta as MaskRecommendationMetadata
+    const candidates: Array<ComparisonFactCandidate | null> = [
+      meta.product_balance_direction
+        ? {
+            key: "balance_direction",
+            value: meta.product_balance_direction,
+            text: `Balance: ${MASK_BALANCE_LABELS[meta.product_balance_direction]}`,
+          }
+        : null,
+      meta.product_concentration
+        ? {
+            key: "concentration",
+            value: meta.product_concentration,
+            text: `Intensitaet: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`,
+          }
+        : null,
+      meta.product_weight
+        ? {
+            key: "weight",
+            value: meta.product_weight,
+            text: `Gewicht: ${MASK_WEIGHT_LABELS[meta.product_weight]}`,
+          }
+        : null,
+      meta.fit_status
+        ? {
+            key: "fit_status",
+            value: meta.fit_status,
+            text: `Fit: ${MASK_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`,
+          }
+        : null,
+    ]
+
+    return {
+      product,
+      candidates: candidates.filter((candidate): candidate is ComparisonFactCandidate =>
+        Boolean(candidate),
+      ),
+    }
+  })
+  const result: Record<string, string[]> = {}
+
+  for (const row of factRows) {
+    const facts: string[] = []
+    for (const candidate of row.candidates) {
+      const values = new Set(
+        factRows.map((other) => other.candidates.find((item) => item.key === candidate.key)?.value),
+      )
+      if (values.size <= 1) continue
+      facts.push(candidate.text)
+      if (facts.length >= 2) break
+    }
+
+    result[row.product.id] =
+      facts.length > 0 ? facts : row.candidates.slice(0, 1).map((item) => item.text)
+  }
+
+  return result
 }
 
 function isFallbackCaveat(caveat: string | null | undefined): boolean {
@@ -225,6 +503,119 @@ const SHAMPOO_FIT_STATUS_LABELS: Record<
   not_applicable: "nicht anwendbar",
 }
 
+const CONDITIONER_BALANCE_LABELS: Record<
+  NonNullable<ConditionerRecommendationMetadata["matched_balance_need"]>,
+  string
+> = {
+  moisture: "Feuchtigkeit",
+  balanced: "ausgewogene Pflege",
+  protein: "Protein",
+}
+
+const CONDITIONER_FIT_STATUS_LABELS: Record<
+  NonNullable<ConditionerRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "idealer Treffer",
+  supportive: "unterstuetzender Treffer",
+  mismatch: "Fallback-Abweichung",
+  unknown: "Daten unvollstaendig",
+  not_applicable: "nicht anwendbar",
+}
+
+const LEAVE_IN_FIT_STATUS_LABELS: Record<
+  NonNullable<LeaveInRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "idealer Treffer",
+  supportive: "unterstuetzender Treffer",
+  mismatch: "Fallback-Abweichung",
+  unknown: "Daten unvollstaendig",
+  not_applicable: "nicht anwendbar",
+}
+
+const MASK_BALANCE_LABELS: Record<
+  NonNullable<MaskRecommendationMetadata["product_balance_direction"]>,
+  string
+> = {
+  moisture: "Feuchtigkeit",
+  balanced: "Ausgewogen",
+  protein: "Protein",
+}
+
+const MASK_WEIGHT_LABELS: Record<
+  NonNullable<MaskRecommendationMetadata["product_weight"]>,
+  string
+> = {
+  light: "Leicht",
+  medium: "Mittel",
+  rich: "Reichhaltig",
+}
+
+const MASK_CONCENTRATION_LABELS: Record<
+  NonNullable<MaskRecommendationMetadata["product_concentration"]>,
+  string
+> = {
+  low: "Niedrig",
+  medium: "Mittel",
+  high: "Hoch",
+}
+
+const MASK_FIT_STATUS_LABELS: Record<
+  NonNullable<MaskRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "idealer Treffer",
+  supportive: "unterstuetzender Treffer",
+  mismatch: "Fallback-Abweichung",
+  unknown: "Daten unvollstaendig",
+  not_applicable: "nicht anwendbar",
+}
+
+const MASK_FIT_STATUS_PREFIXES: Record<
+  NonNullable<MaskRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "Idealer Treffer",
+  supportive: "Unterstuetzender Treffer",
+  mismatch: "Fallback-Treffer",
+  unknown: "Treffer mit unvollstaendigen Daten",
+  not_applicable: "Nicht anwendbarer Treffer",
+}
+
+const LEAVE_IN_FIT_STATUS_PREFIXES: Record<
+  NonNullable<LeaveInRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "Idealer Treffer",
+  supportive: "Unterstuetzender Treffer",
+  mismatch: "Fallback-Treffer",
+  unknown: "Treffer mit unvollstaendigen Daten",
+  not_applicable: "Nicht anwendbarer Treffer",
+}
+
+const LEAVE_IN_CARE_BENEFIT_LABELS: Record<string, string> = {
+  moisture: "Feuchtigkeit",
+  protein: "Protein",
+  repair: "Repair",
+  detangling: "Entwirrung",
+  anti_frizz: "Anti-Frizz",
+  shine: "Glanz",
+  curl_definition: "Definition",
+  volume: "Volumen",
+}
+
+const CONDITIONER_FIT_STATUS_PREFIXES: Record<
+  NonNullable<ConditionerRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "Idealer Treffer",
+  supportive: "Unterstuetzender Treffer",
+  mismatch: "Fallback-Treffer",
+  unknown: "Treffer mit unvollstaendigen Daten",
+  not_applicable: "Nicht anwendbarer Treffer",
+}
+
 const SHAMPOO_THICKNESS_FIT_PHRASES = {
   fine: "feines Haar",
   normal: "mitteldickes Haar",
@@ -261,6 +652,18 @@ function buildDisplayableFitReason(product: MatchedProduct): string {
     return buildShampooDisplayableFitReason(meta)
   }
 
+  if (meta?.category === "conditioner") {
+    return buildConditionerDisplayableFitReason(meta)
+  }
+
+  if (meta?.category === "leave_in") {
+    return buildLeaveInDisplayableFitReason(meta)
+  }
+
+  if (meta?.category === "mask") {
+    return buildMaskDisplayableFitReason(meta)
+  }
+
   return meta?.top_reasons?.[0] ?? "Passt von den verfuegbaren Optionen am besten."
 }
 
@@ -287,11 +690,83 @@ function buildShampooDisplayableFitReason(meta: ShampooRecommendationMetadata): 
   return `${prefix}${fitText}${intensityText}.`
 }
 
+function buildConditionerDisplayableFitReason(meta: ConditionerRecommendationMetadata): string {
+  const prefix = meta.fit_status
+    ? (CONDITIONER_FIT_STATUS_PREFIXES[meta.fit_status] ?? "Treffer")
+    : "Treffer"
+  const balance = meta.product_balance_direction
+    ? `Balance: ${CONDITIONER_BALANCE_LABELS[meta.product_balance_direction]}`
+    : null
+  const weight = meta.product_weight
+    ? `Gewicht: ${CONDITIONER_WEIGHT_LABELS[meta.product_weight]}`
+    : null
+  const repair = meta.product_repair_level
+    ? `Pflegeintensitaet: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`
+    : null
+  const targetRepair =
+    meta.matched_repair_level && meta.active_damage_drivers && meta.active_damage_drivers.length > 0
+      ? `abgeleiteter Pflegebedarf: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.matched_repair_level]}`
+      : null
+  const details = uniqueNonEmpty([balance, weight, repair, targetRepair])
+
+  return details.length > 0 ? `${prefix}; ${details.join("; ")}.` : `${prefix}.`
+}
+
+function buildLeaveInDisplayableFitReason(meta: LeaveInRecommendationMetadata): string {
+  const prefix = meta.fit_status
+    ? (LEAVE_IN_FIT_STATUS_PREFIXES[meta.fit_status] ?? "Treffer")
+    : "Treffer"
+  const weight = meta.product_weight
+    ? `Gewicht: ${LEAVE_IN_WEIGHT_LABELS[meta.product_weight]}`
+    : null
+  const balance = meta.product_balance_direction
+    ? `Balance: ${CONDITIONER_BALANCE_LABELS[meta.product_balance_direction]}`
+    : null
+  const heat =
+    typeof meta.provides_heat_protection === "boolean"
+      ? `Hitzeschutz: ${meta.provides_heat_protection ? "ja" : "nein"}`
+      : null
+  const role = meta.conditioner_relationship
+    ? `Rolle: ${LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[meta.conditioner_relationship]}`
+    : null
+  const details = uniqueNonEmpty([weight, balance, heat, role])
+
+  return details.length > 0 ? `${prefix}; ${details.join("; ")}.` : `${prefix}.`
+}
+
+function buildMaskDisplayableFitReason(meta: MaskRecommendationMetadata): string {
+  const prefix = meta.fit_status
+    ? (MASK_FIT_STATUS_PREFIXES[meta.fit_status] ?? "Treffer")
+    : "Treffer"
+  const balance = meta.product_balance_direction
+    ? `Balance: ${MASK_BALANCE_LABELS[meta.product_balance_direction]}`
+    : null
+  const concentration = meta.product_concentration
+    ? `Intensitaet: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`
+    : null
+  const weight = meta.product_weight ? `Gewicht: ${MASK_WEIGHT_LABELS[meta.product_weight]}` : null
+  const details = uniqueNonEmpty([balance, concentration, weight])
+
+  return details.length > 0 ? `${prefix}; ${details.join("; ")}.` : `${prefix}.`
+}
+
 function buildProductComparisonFacts(product: MatchedProduct): string[] {
   const meta = product.recommendation_meta
 
   if (meta?.category === "shampoo") {
     return buildShampooComparisonFacts(meta)
+  }
+
+  if (meta?.category === "conditioner") {
+    return buildConditionerComparisonFacts(product, meta)
+  }
+
+  if (meta?.category === "leave_in") {
+    return buildLeaveInComparisonFacts(product, meta)
+  }
+
+  if (meta?.category === "mask") {
+    return buildMaskComparisonFacts(product, meta)
   }
 
   return uniqueNonEmpty(meta?.top_reasons ?? []).slice(0, 3)
@@ -321,6 +796,64 @@ function buildShampooComparisonFacts(meta: ShampooRecommendationMetadata): strin
   ])
 }
 
+function buildConditionerComparisonFacts(
+  product: MatchedProduct,
+  meta: ConditionerRecommendationMetadata,
+): string[] {
+  return uniqueNonEmpty([
+    meta.product_balance_direction
+      ? `Balance: ${CONDITIONER_BALANCE_LABELS[meta.product_balance_direction]}`
+      : null,
+    meta.product_weight ? `Gewicht: ${CONDITIONER_WEIGHT_LABELS[meta.product_weight]}` : null,
+    meta.product_repair_level
+      ? `Pflegeintensitaet: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`
+      : null,
+    meta.fit_status
+      ? `Fit: ${CONDITIONER_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
+      : null,
+    meta.tradeoffs.some(isFallbackCaveat) || meta.fit_status === "mismatch"
+      ? "Caveat: Fallback"
+      : null,
+    typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
+  ]).slice(0, 2)
+}
+
+function buildLeaveInComparisonFacts(
+  product: MatchedProduct,
+  meta: LeaveInRecommendationMetadata,
+): string[] {
+  return uniqueNonEmpty([
+    meta.product_weight ? `Gewicht: ${LEAVE_IN_WEIGHT_LABELS[meta.product_weight]}` : null,
+    meta.product_balance_direction
+      ? `Balance: ${CONDITIONER_BALANCE_LABELS[meta.product_balance_direction]}`
+      : null,
+    typeof meta.provides_heat_protection === "boolean"
+      ? `Hitzeschutz: ${meta.provides_heat_protection ? "ja" : "nein"}`
+      : null,
+    meta.fit_status
+      ? `Fit: ${LEAVE_IN_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
+      : null,
+    typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
+  ]).slice(0, 2)
+}
+
+function buildMaskComparisonFacts(
+  product: MatchedProduct,
+  meta: MaskRecommendationMetadata,
+): string[] {
+  return uniqueNonEmpty([
+    meta.product_balance_direction
+      ? `Balance: ${MASK_BALANCE_LABELS[meta.product_balance_direction]}`
+      : null,
+    meta.product_concentration
+      ? `Intensitaet: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`
+      : null,
+    meta.product_weight ? `Gewicht: ${MASK_WEIGHT_LABELS[meta.product_weight]}` : null,
+    meta.fit_status ? `Fit: ${MASK_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}` : null,
+    typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
+  ]).slice(0, 2)
+}
+
 function buildClaim(
   field: SupportedProductClaim["field"],
   value: string | null | undefined,
@@ -339,6 +872,18 @@ function buildClaim(
 
 function buildSupportedProductClaims(product: MatchedProduct): SupportedProductClaim[] {
   const meta = product.recommendation_meta
+
+  if (meta?.category === "conditioner") {
+    return buildConditionerSupportedProductClaims(meta)
+  }
+
+  if (meta?.category === "leave_in") {
+    return buildLeaveInSupportedProductClaims(meta)
+  }
+
+  if (meta?.category === "mask") {
+    return buildMaskSupportedProductClaims(meta)
+  }
 
   if (meta?.category !== "shampoo") {
     return []
@@ -390,6 +935,162 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
       meta.fit_status
         ? `Fit: ${SHAMPOO_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
         : null,
+    ),
+  ])
+}
+
+function buildConditionerSupportedProductClaims(
+  meta: ConditionerRecommendationMetadata,
+): SupportedProductClaim[] {
+  return uniqueClaims([
+    buildClaim(
+      "thickness",
+      meta.matched_profile.thickness,
+      "product_spec",
+      meta.matched_profile.thickness
+        ? `Haardicke: ${
+            HAIR_THICKNESS_LABELS[meta.matched_profile.thickness] ?? meta.matched_profile.thickness
+          }`
+        : null,
+    ),
+    buildClaim(
+      "weight",
+      meta.product_weight,
+      "product_spec",
+      meta.product_weight ? `Gewicht: ${CONDITIONER_WEIGHT_LABELS[meta.product_weight]}` : null,
+    ),
+    buildClaim(
+      "balance_direction",
+      meta.product_balance_direction,
+      "product_spec",
+      meta.product_balance_direction
+        ? `Balance: ${CONDITIONER_BALANCE_LABELS[meta.product_balance_direction]}`
+        : null,
+    ),
+    buildClaim(
+      "repair_level",
+      meta.product_repair_level,
+      "product_spec",
+      meta.product_repair_level
+        ? `Pflegeintensitaet: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`
+        : null,
+    ),
+    buildClaim(
+      "fit_status",
+      meta.fit_status,
+      "category_decision",
+      meta.fit_status
+        ? `Fit: ${CONDITIONER_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
+        : null,
+    ),
+  ])
+}
+
+function buildLeaveInSupportedProductClaims(
+  meta: LeaveInRecommendationMetadata,
+): SupportedProductClaim[] {
+  const primaryRole = meta.product_roles?.[0] ?? null
+  const primaryBenefit = meta.product_care_benefits?.[0] ?? null
+
+  return uniqueClaims([
+    buildClaim(
+      "thickness",
+      meta.matched_profile.thickness,
+      "product_spec",
+      meta.matched_profile.thickness
+        ? `Haardicke: ${
+            HAIR_THICKNESS_LABELS[meta.matched_profile.thickness] ?? meta.matched_profile.thickness
+          }`
+        : null,
+    ),
+    buildClaim(
+      "weight",
+      meta.product_weight,
+      "product_spec",
+      meta.product_weight ? `Gewicht: ${LEAVE_IN_WEIGHT_LABELS[meta.product_weight]}` : null,
+    ),
+    buildClaim(
+      "balance_direction",
+      meta.product_balance_direction,
+      "product_spec",
+      meta.product_balance_direction
+        ? `Balance: ${CONDITIONER_BALANCE_LABELS[meta.product_balance_direction]}`
+        : null,
+    ),
+    buildClaim(
+      "fit_status",
+      meta.fit_status,
+      "category_decision",
+      meta.fit_status
+        ? `Fit: ${LEAVE_IN_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
+        : null,
+    ),
+    buildClaim(
+      "heat_protection",
+      typeof meta.provides_heat_protection === "boolean"
+        ? String(meta.provides_heat_protection)
+        : null,
+      "product_spec",
+      typeof meta.provides_heat_protection === "boolean"
+        ? `Hitzeschutz: ${meta.provides_heat_protection ? "ja" : "nein"}`
+        : null,
+    ),
+    buildClaim(
+      "conditioner_relationship",
+      meta.conditioner_relationship,
+      "product_spec",
+      meta.conditioner_relationship
+        ? `Rolle: ${LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[meta.conditioner_relationship]}`
+        : null,
+    ),
+    buildClaim(
+      "leave_in_role",
+      primaryRole,
+      "product_spec",
+      primaryRole ? `Leave-in-Rolle: ${LEAVE_IN_ROLE_LABELS[primaryRole]}` : null,
+    ),
+    buildClaim(
+      "care_benefit",
+      primaryBenefit,
+      "product_spec",
+      primaryBenefit
+        ? `Pflegefokus: ${LEAVE_IN_CARE_BENEFIT_LABELS[primaryBenefit] ?? primaryBenefit}`
+        : null,
+    ),
+  ])
+}
+
+function buildMaskSupportedProductClaims(
+  meta: MaskRecommendationMetadata,
+): SupportedProductClaim[] {
+  return uniqueClaims([
+    buildClaim(
+      "weight",
+      meta.product_weight,
+      "product_spec",
+      meta.product_weight ? `Gewicht: ${MASK_WEIGHT_LABELS[meta.product_weight]}` : null,
+    ),
+    buildClaim(
+      "balance_direction",
+      meta.product_balance_direction,
+      "product_spec",
+      meta.product_balance_direction
+        ? `Balance: ${MASK_BALANCE_LABELS[meta.product_balance_direction]}`
+        : null,
+    ),
+    buildClaim(
+      "concentration",
+      meta.product_concentration,
+      "product_spec",
+      meta.product_concentration
+        ? `Intensitaet: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`
+        : null,
+    ),
+    buildClaim(
+      "fit_status",
+      meta.fit_status,
+      "category_decision",
+      meta.fit_status ? `Fit: ${MASK_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}` : null,
     ),
   ])
 }
@@ -448,11 +1149,11 @@ function signalHasSupportedClaim(
 
 function userMessageForUnsupportedSignal(signal: AgentActiveProfileSignal): string {
   if (signal.field === "chemical_treatment" && signal.value === "colored") {
-    return "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Fuer deine Kopfhaut und Haardicke passen diese Optionen trotzdem."
+    return "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den belegten Fit-Daten."
   }
 
   if (signal.field === "chemical_treatment" && signal.value === "bleached") {
-    return "Zu blondiertem Haar habe ich bei diesen Shampoos aktuell keine sichere Spezialangabe. Fuer deine Kopfhaut und Haardicke passen diese Optionen trotzdem."
+    return "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den belegten Fit-Daten."
   }
 
   if (signal.field === "scalp_condition" && signal.value === "irritated") {
@@ -460,6 +1161,25 @@ function userMessageForUnsupportedSignal(signal: AgentActiveProfileSignal): stri
   }
 
   return "Zu einem Teil deiner Anfrage habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den belegten Fit-Daten."
+}
+
+function buildUnsupportedIngredientSignals(
+  signals: readonly RequestedIngredientSignal[],
+  category: "conditioner" | "leave_in" | "mask" = "conditioner",
+): UnsupportedRequestedSignal[] {
+  return uniqueUnsupportedSignals(
+    signals.map((signal) => ({
+      field: "ingredient_preference",
+      value: signal.value,
+      reason: "no_structured_product_data",
+      user_message:
+        category === "leave_in"
+          ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit."
+          : category === "mask"
+            ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Masken-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensitaet und Fit."
+            : "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensitaet und Fit.",
+    })),
+  )
 }
 
 function buildUnsupportedRequestedSignals(
@@ -703,6 +1423,8 @@ function getCategoryDecision(
 function buildProfileBasis(
   hairProfile: HairProfile | null,
   category: SelectableProductCategory | null,
+  categoryDecision: CategoryDecision | null = null,
+  routeContext: SelectProductsRouteContext | null = null,
 ): string[] {
   if (!hairProfile) return []
 
@@ -722,11 +1444,75 @@ function buildProfileBasis(
     ])
   }
 
+  if (category === "conditioner") {
+    const conditionerDecision =
+      categoryDecision?.category === "conditioner" ? categoryDecision : null
+    return uniqueNonEmpty([
+      ...buildProfileDeviationNotices({
+        originalHairProfile: routeContext?.originalHairProfile ?? null,
+        effectiveHairProfile: hairProfile,
+        activeSignals: routeContext?.activeProfileSignals ?? [],
+      }),
+      hairProfile.thickness
+        ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
+        : null,
+      hairProfile.density
+        ? `Haardichte: ${HAIR_DENSITY_LABELS[hairProfile.density] ?? hairProfile.density}`
+        : null,
+      hairProfile.protein_moisture_balance
+        ? `Protein-/Feuchtigkeitsbalance: ${
+            PROTEIN_MOISTURE_LABELS[hairProfile.protein_moisture_balance] ??
+            hairProfile.protein_moisture_balance
+          }`
+        : null,
+      conditionerDecision?.targetProfile?.weight
+        ? `Ziel-Gewicht: ${CONDITIONER_WEIGHT_LABELS[conditionerDecision.targetProfile.weight]}`
+        : null,
+      conditionerDecision?.targetProfile?.repairLevel
+        ? `Pflegebedarf: ${
+            CONDITIONER_REPAIR_LEVEL_LABELS[conditionerDecision.targetProfile.repairLevel]
+          }`
+        : null,
+      ...(conditionerDecision?.targetProfile?.activeDamageDrivers ?? []).map(
+        (driver) => `Damage-Kontext: ${driver}`,
+      ),
+    ])
+  }
+
   return uniqueNonEmpty([
     hairProfile.thickness
       ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
       : null,
   ])
+}
+
+function buildProfileDeviationNotices(params: {
+  originalHairProfile: HairProfile | null
+  effectiveHairProfile: HairProfile | null
+  activeSignals: readonly AgentActiveProfileSignal[]
+}): string[] {
+  const { originalHairProfile, effectiveHairProfile, activeSignals } = params
+  if (!originalHairProfile || !effectiveHairProfile) return []
+
+  const notices: string[] = []
+
+  for (const signal of activeSignals) {
+    if (signal.selection_effect !== "override") continue
+
+    if (signal.field === "thickness") {
+      const original = originalHairProfile.thickness
+      const effective = effectiveHairProfile.thickness
+      if (!original || !effective || original === effective) continue
+
+      notices.push(
+        `Profil-Hinweis: aktuelle Angabe Haardicke ${
+          HAIR_THICKNESS_LABELS[effective] ?? effective
+        } statt gespeichert ${HAIR_THICKNESS_LABELS[original] ?? original}`,
+      )
+    }
+  }
+
+  return notices
 }
 
 function deriveDecision(params: {
@@ -751,6 +1537,14 @@ function deriveDecision(params: {
     isShineShampooQuestion(category, routeContext) ||
     isFrizzShampooQuestion(category, routeContext)
   ) {
+    return "not_recommended"
+  }
+
+  if (isScalpOnlyConditionerQuestion(category, routeContext)) {
+    return "not_recommended"
+  }
+
+  if (isScalpOnlyMaskQuestion(category, routeContext)) {
     return "not_recommended"
   }
 
@@ -819,6 +1613,44 @@ function isScalpSymptomShampooQuestion(
   )
 }
 
+function isScalpOnlyConditionerQuestion(
+  category: SelectableProductCategory | null,
+  routeContext: SelectProductsRouteContext | null | undefined,
+): boolean {
+  if (category !== "conditioner") return false
+
+  const hasScalpConcern =
+    hasConcern(routeContext, "oily_roots") ||
+    hasConcern(routeContext, "dandruff_or_flakes") ||
+    hasConcern(routeContext, "irritation")
+  if (!hasScalpConcern) return false
+
+  return !(
+    hasConcern(routeContext, "dry_lengths") ||
+    hasConcern(routeContext, "frizz") ||
+    routeContext?.requestedGoal === "shine"
+  )
+}
+
+function isScalpOnlyMaskQuestion(
+  category: SelectableProductCategory | null,
+  routeContext: SelectProductsRouteContext | null | undefined,
+): boolean {
+  if (category !== "mask") return false
+
+  const hasScalpConcern =
+    hasConcern(routeContext, "oily_roots") ||
+    hasConcern(routeContext, "dandruff_or_flakes") ||
+    hasConcern(routeContext, "irritation")
+  if (!hasScalpConcern) return false
+
+  return !(
+    hasConcern(routeContext, "dry_lengths") ||
+    hasConcern(routeContext, "frizz") ||
+    routeContext?.requestedGoal === "shine"
+  )
+}
+
 function buildProductResponsePolicy(params: {
   category: SelectableProductCategory | null
   decision: SelectProductsDecision
@@ -862,6 +1694,22 @@ function buildProductResponsePolicy(params: {
     }
   }
 
+  if (category === "conditioner" && isScalpOnlyConditionerQuestion(category, routeContext)) {
+    return {
+      product_response_policy: "redirect_to_better_lever",
+      policy_reason:
+        "Diese Conditioner-Anfrage betrifft nur Kopfhaut, Ansatz oder Schuppen. Conditioner ist dafuer nicht der richtige Produkthebel; passender sind Kopfhaut- oder Shampoo-Einordnung.",
+    }
+  }
+
+  if (category === "mask" && isScalpOnlyMaskQuestion(category, routeContext)) {
+    return {
+      product_response_policy: "redirect_to_better_lever",
+      policy_reason:
+        "Diese Masken-Anfrage betrifft nur Kopfhaut, Ansatz oder Schuppen. Eine Haarmaske ist dafuer nicht der richtige Produkthebel; passender sind Kopfhaut- oder Shampoo-Einordnung.",
+    }
+  }
+
   if (category === "shampoo" && hasConcern(routeContext, "oily_roots")) {
     return {
       product_response_policy: "explain_then_recommend",
@@ -882,7 +1730,9 @@ function buildProductResponsePolicy(params: {
     policy_reason:
       category === "shampoo"
         ? "Shampoo wird primaer ueber Kopfhaut-Fokus und Haardicke entschieden."
-        : "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten.",
+        : category === "conditioner"
+          ? "Conditioner wird ueber Haardicke, Haardichte, Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensitaet entschieden."
+          : "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten.",
   }
 }
 
@@ -938,6 +1788,46 @@ function buildCategoryGuidance(params: {
       : "Shampoo ist hier der richtige Hebel, gesteuert ueber Kopfhaut-Fokus und Haardicke."
   }
 
+  if (category === "conditioner") {
+    if (isScalpOnlyConditionerQuestion(category, routeContext)) {
+      return "Conditioner ist fuer reine Kopfhaut-, Ansatz-, Schuppen- oder Juckreiz-Anfragen nicht der richtige Hebel. Keine Conditioner-Produkte empfehlen; zu Kopfhaut- oder Shampoo-Einordnung umleiten und Conditioner nicht als Behandlung fuer Kopfhautreizung framen."
+    }
+
+    if (decision === "not_recommended") {
+      return "Conditioner ist fuer diese Anfrage gerade nicht der wichtigste Hebel."
+    }
+
+    if (decision === "needs_more_info") {
+      return "Fuer eine Conditioner-Auswahl sind Haardicke, Haardichte und Protein-/Feuchtigkeitsbalance normalerweise Profil-Invarianten. Fehlende Angaben defensiv behandeln, nicht als normalen Chat-Pfad aufblasen."
+    }
+
+    if (decision === "no_catalog_match") {
+      return "Conditioner passt als Kategorie, aber der aktuelle Katalog liefert keinen sicheren Treffer fuer dieses Zielprofil."
+    }
+
+    return "Conditioner ist hier ein Laengenhebel: Die Auswahl folgt Haardicke, Haardichte, Ziel-Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensitaet. Dichte und Damage-Kontext duerfen die Profilableitung erklaeren, sind aber keine Produktclaims."
+  }
+
+  if (category === "mask") {
+    if (isScalpOnlyMaskQuestion(category, routeContext)) {
+      return "Masken sind Zusatzpflege fuer Laengen und Spitzen, nicht der richtige Hebel fuer reine Kopfhaut-, Ansatz-, Schuppen- oder Juckreiz-Anfragen. Keine Masken-Produkte empfehlen; zu Kopfhaut- oder Shampoo-Einordnung umleiten."
+    }
+
+    if (decision === "not_recommended") {
+      return "Eine Maske ist fuer diese Anfrage gerade nicht der wichtigste Hebel."
+    }
+
+    if (decision === "needs_more_info") {
+      return "Fuer eine Masken-Auswahl sind Haardicke, Haardichte und Protein-/Feuchtigkeitsbalance normalerweise Profil-Invarianten. Fehlende Angaben defensiv behandeln, nicht als normalen Chat-Pfad aufblasen."
+    }
+
+    if (decision === "no_catalog_match") {
+      return "Eine Maske kann als Zusatzpflege passen, aber der aktuelle Katalog liefert keinen sicheren Treffer fuer dieses Zielprofil."
+    }
+
+    return "Maske ist hier Zusatzpflege fuer Laengen und Spitzen: Die Auswahl folgt Gewicht, Protein-/Feuchtigkeitsbalance, Intensitaet und Fit. Nicht als Conditioner-Ersatz, Kopfhautbehandlung oder Schadenspraevention framen."
+  }
+
   if (decision === "not_recommended") {
     return "Diese Kategorie ist fuer die aktuelle Anfrage wahrscheinlich nicht der beste Hebel."
   }
@@ -990,13 +1880,26 @@ export function projectSelectedProducts(
   const projectedProducts = displayableProducts.map((product, index) =>
     projectDisplayableProduct(product, index + 1, routeContext),
   )
+  const packetUnsupportedSignals = uniqueUnsupportedSignals([
+    ...projectedProducts.flatMap((product) => product.unsupported_requested_signals),
+    ...(resolvedCategory === "conditioner" ||
+    resolvedCategory === "leave_in" ||
+    resolvedCategory === "mask"
+      ? buildUnsupportedIngredientSignals(
+          routeContext?.requestedIngredientSignals ?? [],
+          resolvedCategory === "leave_in" || resolvedCategory === "mask"
+            ? resolvedCategory
+            : "conditioner",
+        )
+      : []),
+  ])
 
   return {
     category: resolvedCategory,
     decision,
     product_response_policy: productPolicy.product_response_policy,
     policy_reason: productPolicy.policy_reason,
-    profile_basis: buildProfileBasis(hairProfile, resolvedCategory),
+    profile_basis: buildProfileBasis(hairProfile, resolvedCategory, categoryDecision, routeContext),
     category_guidance: buildCategoryGuidance({
       category: resolvedCategory,
       decision,
@@ -1006,9 +1909,7 @@ export function projectSelectedProducts(
     products: projectedProducts,
     comparison_facts: buildComparisonFacts(displayableProducts),
     missing_info,
-    unsupported_requested_signals: uniqueUnsupportedSignals(
-      projectedProducts.flatMap((product) => product.unsupported_requested_signals),
-    ),
+    unsupported_requested_signals: packetUnsupportedSignals,
   }
 }
 
@@ -1021,8 +1922,9 @@ async function runCategoryEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
-  const { category, message, hairProfile, routineItems } = params
+  const { category, message, hairProfile, routineItems, runtime } = params
 
   switch (category) {
     case "shampoo":
@@ -1032,7 +1934,7 @@ async function runCategoryEngine(params: {
     case "leave_in":
       return selectLeaveInProductsWithEngine({ message, hairProfile, routineItems })
     case "mask":
-      return selectMaskProductsWithEngine({ message, hairProfile, routineItems })
+      return selectMaskProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "oil":
       return selectOilProductsWithEngine({ message, hairProfile, routineItems })
     case "bondbuilder":
@@ -1089,6 +1991,30 @@ function applyShampooActiveOverrides(
   return next
 }
 
+function applyConditionerActiveOverrides(
+  hairProfile: HairProfile | null,
+  activeSignals: readonly AgentActiveProfileSignal[],
+): HairProfile | null {
+  if (!hairProfile) return null
+
+  const next: HairProfile = { ...hairProfile }
+
+  for (const signal of activeSignals) {
+    if (signal.selection_effect !== "override" && signal.selection_effect !== "caution") {
+      continue
+    }
+
+    if (
+      signal.field === "thickness" &&
+      (signal.value === "fine" || signal.value === "normal" || signal.value === "coarse")
+    ) {
+      next.thickness = signal.value
+    }
+  }
+
+  return next
+}
+
 function applyActiveProfileOverrides(params: {
   category: SelectableProductCategory
   hairProfile: HairProfile | null
@@ -1098,12 +2024,49 @@ function applyActiveProfileOverrides(params: {
     return applyShampooActiveOverrides(params.hairProfile, params.activeSignals)
   }
 
+  if (params.category === "conditioner" || params.category === "mask") {
+    return applyConditionerActiveOverrides(params.hairProfile, params.activeSignals)
+  }
+
   return params.hairProfile
+}
+
+function deriveRequestedIngredientSignals(message: string): RequestedIngredientSignal[] {
+  const normalized = message
+    .toLocaleLowerCase("de-DE")
+    .replace(/ß/g, "ss")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+  const signals: RequestedIngredientSignal[] = []
+  const add = (value: string, evidence: string) => {
+    if (!signals.some((signal) => signal.value === value)) {
+      signals.push({ value, evidence })
+    }
+  }
+
+  if (/\bsilikon(?:e|frei|frei\w*)\b|\bsilicone[-\s]?free\b/.test(normalized)) {
+    add("silicone_free", "silikonfrei")
+  }
+  if (/\bkokos(?:frei|oel|ol|nuss)?\b|\bcoconut[-\s]?free\b/.test(normalized)) {
+    add("coconut_free", "kokosfrei")
+  }
+  if (/\b(?:protein(?:frei|arm)|ohne\s+protein\w*|protein[-\s]?free)\b/.test(normalized)) {
+    add("protein_free", "proteinfrei")
+  }
+  if (/\boel(?:frei|e)?\b|\boil[-\s]?free\b/.test(normalized)) {
+    add("oil_free", "oelfrei")
+  }
+  if (/\bhumectant\w*\b|\bfeuchthaltemittel\b/.test(normalized)) {
+    add("humectant_preference", "Humectants")
+  }
+
+  return signals
 }
 
 export function createSelectProductsTool(
   options: {
     onResult?: (result: SelectProductsToolResult) => void
+    runCategoryEngine?: typeof runCategoryEngine
   } = {},
 ) {
   return async function selectProductsTool(params: {
@@ -1139,11 +2102,12 @@ export function createSelectProductsTool(
       productCategory: category,
       message,
     })
-    const products = await runCategoryEngine({
+    const products = await (options.runCategoryEngine ?? runCategoryEngine)({
       category,
       message,
       hairProfile: effectiveHairProfile,
       routineItems,
+      runtime,
     })
     const constrainedProducts = applyProductMemoryConstraints(products, memoryContext)
     const projection = projectSelectedProducts(
@@ -1156,6 +2120,11 @@ export function createSelectProductsTool(
         concerns,
         requestedGoal,
         activeProfileSignals,
+        requestedIngredientSignals:
+          category === "conditioner" || category === "leave_in" || category === "mask"
+            ? deriveRequestedIngredientSignals(message)
+            : [],
+        originalHairProfile: hairProfile,
       },
     )
 

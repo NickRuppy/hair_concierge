@@ -375,6 +375,15 @@ test("buildAgentRoutePacket extracts active signals from common German phrasing 
       ],
     }),
   })
+  const coloredAdjectivePacket = buildAgentRoutePacket({
+    message: "Welche Spuelung passt zu coloriertem, strapaziertem Haar?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "conditioner",
+      active_profile_signals: [],
+    }),
+  })
 
   assert.deepEqual(
     sensitivePacket.active_profile_signals.map((signal) => [
@@ -400,6 +409,31 @@ test("buildAgentRoutePacket extracts active signals from common German phrasing 
     ]),
     [["chemical_treatment", "colored", "qualifier"]],
   )
+  assert.deepEqual(
+    coloredAdjectivePacket.active_profile_signals.map((signal) => [
+      signal.field,
+      signal.value,
+      signal.selection_effect,
+    ]),
+    [["chemical_treatment", "colored", "qualifier"]],
+  )
+})
+
+test("buildAgentRoutePacket keeps conditioner flattening questions in troubleshoot before product picks", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Mein Conditioner macht die Haare platt, soll ich wechseln?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "compare_or_decide",
+      product_category: "conditioner",
+      evidence: ["User asks whether switching makes sense after a problem description."],
+    }),
+  })
+
+  assert.equal(packet.user_job, "troubleshoot")
+  assert.equal(packet.product_category, "conditioner")
+  assert.equal(packet.required_playbook_id, "playbook:troubleshoot_hair_issue")
+  assert.deepEqual(packet.tool_plan, [])
 })
 
 test("buildAgentRoutePacket routes deep cleansing shampoo before generic shampoo", () => {

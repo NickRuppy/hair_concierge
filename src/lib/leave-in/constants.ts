@@ -162,6 +162,7 @@ export interface ProductLeaveInSpecs {
   product_id: string
   format: LeaveInFormat
   weight: LeaveInWeight
+  conditioner_relationship?: LeaveInConditionerRelationship
   roles: LeaveInRole[]
   provides_heat_protection: boolean
   heat_protection_max_c: number | null

@@ -51,6 +51,7 @@ export async function updateSession(request: NextRequest) {
     "/pricing",
     "/welcome",
     "/api/stripe",
+    ...(process.env.NODE_ENV === "development" ? ["/labs", "/api/labs"] : []),
     // /welcome calls these to dispatch setup / login-link emails before the
     // user has signed into Supabase (they're only identified by the Stripe
     // session_id in the request body; the route itself verifies).

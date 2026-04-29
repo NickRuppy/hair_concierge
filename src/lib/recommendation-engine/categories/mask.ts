@@ -1,14 +1,13 @@
 import type {
   CategoryFitEvaluation,
+  CanonicalRepairLevel,
   DamageAssessment,
   InterventionPlan,
   MaskCategoryDecision,
   NormalizedProfile,
+  RecommendationRequestContext,
 } from "@/lib/recommendation-engine/types"
 import {
-  compareBalanceFit,
-  compareRepairLevelFit,
-  compareWeightFit,
   deriveBalanceTarget,
   deriveRepairLevel,
   deriveTargetWeight,
@@ -29,14 +28,29 @@ function deriveMaskNeedStrength(damage: DamageAssessment): 0 | 1 | 2 | 3 {
   return 0
 }
 
+function upliftRepairLevel(level: CanonicalRepairLevel | null): CanonicalRepairLevel | null {
+  switch (level) {
+    case "low":
+      return "medium"
+    case "medium":
+      return "high"
+    default:
+      return level
+  }
+}
+
 export function buildMaskCategoryDecision(
   profile: NormalizedProfile,
   damage: DamageAssessment,
   plan: InterventionPlan,
+  requestContext: RecommendationRequestContext,
 ): MaskCategoryDecision {
   const step = getPlannedStep(plan, "mask")
+  const explicitMaskRequest = requestContext.requestedCategory === "mask"
+  const needStrength = deriveMaskNeedStrength(damage)
+  const inferredMediumOrHigherNeed = needStrength >= 2
 
-  if (!step) {
+  if (!step && !explicitMaskRequest && !inferredMediumOrHigherNeed) {
     return {
       category: "mask",
       relevant: false,
@@ -50,24 +64,210 @@ export function buildMaskCategoryDecision(
 
   const notes: string[] = []
   const targetWeight = deriveTargetWeight(profile)
+  const baseRepairLevel = deriveRepairLevel(damage)
+  const repairLevel =
+    explicitMaskRequest && requestContext.maskIntensityRequest === "intensive"
+      ? upliftRepairLevel(baseRepairLevel)
+      : baseRepairLevel
   if (!targetWeight) {
     notes.push("mask_weight_needs_thickness_and_density")
   }
   notes.push("mask_concentration_is_temporary_repair_level_proxy")
 
+  if (explicitMaskRequest && needStrength < 2) {
+    notes.push("mask_explicit_request_optional_low_need")
+  }
+  if (explicitMaskRequest && requestContext.maskIntensityRequest === "intensive") {
+    notes.push("mask_explicit_intensive_request_uplift")
+  }
+
   return {
     category: "mask",
     relevant: true,
-    action: step.action,
-    planReasonCodes: step.reasonCodes,
+    action: step?.action ?? (profile.routineInventory.mask ? "keep" : "add"),
+    planReasonCodes: step
+      ? explicitMaskRequest
+        ? [...step.reasonCodes, "explicit_mask_request"]
+        : step.reasonCodes
+      : explicitMaskRequest
+        ? ["explicit_mask_request"]
+        : ["derived_medium_mask_need"],
     currentInventory: profile.routineInventory.mask,
     targetProfile: {
       balance: deriveBalanceTarget(damage),
-      repairLevel: deriveRepairLevel(damage),
+      repairLevel,
       weight: targetWeight,
-      needStrength: deriveMaskNeedStrength(damage),
+      needStrength,
+      role: needStrength >= 2 ? "fixed" : "optional",
+      intensityRequest: requestContext.maskIntensityRequest,
+      thickness: profile.thickness,
+      density: profile.density,
     },
     notes,
+  }
+}
+
+type AxisFit = "exact" | "supportive" | "mismatch" | "unknown"
+
+function evaluateMaskBalanceFit(
+  expected: NonNullable<MaskCategoryDecision["targetProfile"]>["balance"],
+  actual: MaskFitSpec["balance_direction"],
+): { fit: AxisFit; reasonCodes: string[] } {
+  if (!expected || !actual) {
+    return { fit: "unknown", reasonCodes: [] }
+  }
+
+  if (expected === actual) {
+    return { fit: "exact", reasonCodes: ["mask_balance_exact_match"] }
+  }
+
+  if (actual === "balanced") {
+    return {
+      fit: "supportive",
+      reasonCodes: ["mask_balance_close_match", "mask_balanced_bridge_supportive"],
+    }
+  }
+
+  if (expected === "balanced") {
+    return {
+      fit: "supportive",
+      reasonCodes: ["mask_balance_close_match"],
+    }
+  }
+
+  return {
+    fit: "mismatch",
+    reasonCodes: ["mask_balance_mismatch", "mask_wrong_balance_stiff_dull_risk"],
+  }
+}
+
+function evaluateMaskConcentrationFit(
+  target: NonNullable<MaskCategoryDecision["targetProfile"]>,
+  actual: "low" | "medium" | "high" | null | undefined,
+): { fit: AxisFit; reasonCodes: string[] } {
+  if (!target.repairLevel || !actual) {
+    return { fit: "unknown", reasonCodes: [] }
+  }
+
+  if (target.needStrength >= 3 || target.repairLevel === "high") {
+    if (actual === "high") {
+      return { fit: "exact", reasonCodes: ["mask_concentration_exact_match"] }
+    }
+    if (actual === "medium") {
+      return { fit: "supportive", reasonCodes: ["mask_concentration_close_match"] }
+    }
+    return {
+      fit: "mismatch",
+      reasonCodes: [
+        "mask_concentration_mismatch",
+        "mask_low_concentration_may_be_underpowered_caveat",
+      ],
+    }
+  }
+
+  if (target.intensityRequest === "intensive" && target.repairLevel === "medium") {
+    if (actual === "medium") {
+      return {
+        fit: "exact",
+        reasonCodes: [
+          "mask_concentration_exact_match",
+          "mask_optional_overcare_caveat",
+          "mask_high_intensity_use_sparingly_caveat",
+        ],
+      }
+    }
+    if (actual === "high") {
+      return {
+        fit: "supportive",
+        reasonCodes: [
+          "mask_concentration_close_match",
+          "mask_optional_overcare_caveat",
+          "mask_high_intensity_use_sparingly_caveat",
+        ],
+      }
+    }
+    return {
+      fit: "supportive",
+      reasonCodes: [
+        "mask_concentration_close_match",
+        "mask_low_concentration_may_be_underpowered_caveat",
+      ],
+    }
+  }
+
+  if (target.needStrength <= 1 || target.repairLevel === "low") {
+    if (actual === "low") {
+      return { fit: "exact", reasonCodes: ["mask_concentration_exact_match"] }
+    }
+    if (actual === "medium") {
+      return {
+        fit: "supportive",
+        reasonCodes: ["mask_concentration_close_match", "mask_optional_overcare_caveat"],
+      }
+    }
+    return {
+      fit: "mismatch",
+      reasonCodes: [
+        "mask_concentration_mismatch",
+        "mask_optional_overcare_caveat",
+        "mask_high_intensity_use_sparingly_caveat",
+      ],
+    }
+  }
+
+  if (actual === "medium") {
+    return { fit: "exact", reasonCodes: ["mask_concentration_exact_match"] }
+  }
+
+  if (actual === "high") {
+    return {
+      fit: "supportive",
+      reasonCodes: ["mask_concentration_close_match", "mask_high_intensity_use_sparingly_caveat"],
+    }
+  }
+
+  return {
+    fit: "supportive",
+    reasonCodes: [
+      "mask_concentration_close_match",
+      "mask_low_concentration_may_be_underpowered_caveat",
+    ],
+  }
+}
+
+function evaluateMaskWeightFit(
+  target: NonNullable<MaskCategoryDecision["targetProfile"]>,
+  actual: MaskFitSpec["weight"],
+): { fit: AxisFit; reasonCodes: string[] } {
+  if (!target.weight || !actual) {
+    return { fit: "unknown", reasonCodes: [] }
+  }
+
+  if (target.weight === actual) {
+    return { fit: "exact", reasonCodes: ["mask_weight_exact_match"] }
+  }
+
+  const fineOrLowDensity = target.thickness === "fine" || target.density === "low"
+  if ((fineOrLowDensity || target.weight === "light") && actual === "rich") {
+    return {
+      fit: "mismatch",
+      reasonCodes: ["mask_weight_mismatch", "mask_rich_weight_can_weigh_down_caveat"],
+    }
+  }
+
+  if (target.weight === "rich" && actual === "light") {
+    return {
+      fit: "supportive",
+      reasonCodes: ["mask_weight_close_match", "mask_light_weight_may_be_underpowered_caveat"],
+    }
+  }
+
+  return {
+    fit: "supportive",
+    reasonCodes:
+      actual === "rich"
+        ? ["mask_weight_close_match", "mask_rich_weight_can_weigh_down_caveat"]
+        : ["mask_weight_close_match"],
   }
 }
 
@@ -108,27 +308,17 @@ export function evaluateMaskFit(
     }
   }
 
-  const weightFit = compareWeightFit(decision.targetProfile.weight, spec.weight)
-  const repairFit = compareRepairLevelFit(decision.targetProfile.repairLevel, repairLevel)
-  const balanceFit = compareBalanceFit(
+  const weightFit = evaluateMaskWeightFit(decision.targetProfile, spec.weight)
+  const concentrationFit = evaluateMaskConcentrationFit(decision.targetProfile, repairLevel)
+  const balanceFit = evaluateMaskBalanceFit(
     decision.targetProfile.balance,
     spec.balance_direction ?? null,
   )
 
-  const reasonCodes: string[] = []
-  const fitStates = [weightFit, repairFit, balanceFit]
+  const axisFits = [weightFit, concentrationFit, balanceFit]
+  const reasonCodes = axisFits.flatMap((fit) => fit.reasonCodes)
 
-  if (weightFit === "exact") reasonCodes.push("mask_weight_exact_match")
-  if (repairFit === "exact") reasonCodes.push("mask_repair_exact_match")
-  if (balanceFit === "exact") reasonCodes.push("mask_balance_exact_match")
-  if (weightFit === "close") reasonCodes.push("mask_weight_close_match")
-  if (repairFit === "close") reasonCodes.push("mask_repair_close_match")
-  if (balanceFit === "close") reasonCodes.push("mask_balance_close_match")
-  if (weightFit === "mismatch") reasonCodes.push("mask_weight_mismatch")
-  if (repairFit === "mismatch") reasonCodes.push("mask_repair_mismatch")
-  if (balanceFit === "mismatch") reasonCodes.push("mask_balance_mismatch")
-
-  if (fitStates.includes("mismatch")) {
+  if (axisFits.some((fit) => fit.fit === "mismatch")) {
     return {
       status: "mismatch",
       reasonCodes,
@@ -136,7 +326,7 @@ export function evaluateMaskFit(
     }
   }
 
-  if (fitStates.every((state) => state === "exact" || state === "unknown")) {
+  if (axisFits.every((fit) => fit.fit === "exact" || fit.fit === "unknown")) {
     return {
       status: "ideal",
       reasonCodes,

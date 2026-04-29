@@ -201,6 +201,7 @@ test.describe.serial("Conditioner chat E2E", () => {
         email,
         full_name: fullName,
         onboarding_completed: true,
+        subscription_status: "active",
       },
       { onConflict: "id" },
     )
@@ -209,8 +210,9 @@ test.describe.serial("Conditioner chat E2E", () => {
 
     const { data: seededProducts, error: productError } = await admin
       .from("products")
-      .select("id, name")
+      .select("id, name, category")
       .in("name", [...SEEDED_CONDITIONER_NAMES])
+      .ilike("category", "%Conditioner%")
 
     if (productError) throw productError
 
@@ -337,7 +339,7 @@ test.describe.serial("Conditioner chat E2E", () => {
         action: "replace",
         targetProfile: expect.objectContaining({
           weight: "light",
-          repairLevel: "medium",
+          repairLevel: "high",
         }),
       }),
     )
@@ -345,7 +347,7 @@ test.describe.serial("Conditioner chat E2E", () => {
       expect.objectContaining({
         category: "conditioner",
         matched_weight: "light",
-        matched_repair_level: "medium",
+        matched_repair_level: "high",
         matched_profile: expect.objectContaining({
           density: "low",
         }),

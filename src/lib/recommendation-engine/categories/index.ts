@@ -26,7 +26,7 @@ export function buildCategoryRecommendationSet(
   return {
     shampoo: buildShampooCategoryDecision(profile, plan),
     conditioner: buildConditionerCategoryDecision(profile, damage, plan),
-    mask: buildMaskCategoryDecision(profile, damage, plan),
+    mask: buildMaskCategoryDecision(profile, damage, plan, requestContext),
     leaveIn: buildLeaveInCategoryDecision(profile, damage, careNeeds, plan),
     oil: buildOilCategoryDecision(profile, requestContext),
     bondbuilder: buildBondbuilderCategoryDecision(profile, damage, plan),

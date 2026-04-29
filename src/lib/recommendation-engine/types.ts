@@ -65,6 +65,7 @@ export type ConfidenceLevel = (typeof CONFIDENCE_LEVELS)[number]
 
 export interface RecommendationRequestContext {
   requestedCategory: EngineCategoryId | null
+  maskIntensityRequest: "intensive" | null
   oilPurpose: OilPurpose | null
   oilNoRecommendationReason: OilNoRecommendationReason | null
 }
@@ -201,6 +202,8 @@ export interface ConditionerTargetProfile {
   balance: CanonicalBalanceTarget | null
   repairLevel: CanonicalRepairLevel | null
   weight: CanonicalWeight | null
+  thickness: HairThickness | null
+  activeDamageDrivers: string[]
 }
 
 export type ConditionerCategoryDecision = CategoryDecisionBase<
@@ -213,19 +216,31 @@ export interface MaskTargetProfile {
   repairLevel: CanonicalRepairLevel | null
   weight: CanonicalWeight | null
   needStrength: 0 | 1 | 2 | 3
+  role: "fixed" | "optional"
+  intensityRequest: "intensive" | null
+  thickness: HairThickness | null
+  density: HairDensity | null
 }
 
 export type MaskCategoryDecision = CategoryDecisionBase<"mask", MaskTargetProfile>
 
 export type LeaveInStylingContext = "air_dry" | "heat_style"
+export type LeaveInHeatProtectionNeed = "none" | "moderate" | "high"
+export type LeaveInStylingPrepNeed = "none" | "definition" | "smooth_control" | "heat_style"
 export type LeaveInConditionerRelationship = "replacement_capable" | "booster_only"
 
 export interface LeaveInTargetProfile {
   needBucket: LeaveInCareTarget | null
   stylingContext: LeaveInStylingContext | null
+  heatProtectionNeed: LeaveInHeatProtectionNeed
+  stylingPrepNeed: LeaveInStylingPrepNeed
   conditionerRelationship: LeaveInConditionerRelationship | null
   weight: CanonicalWeight | null
+  balanceDirection: CanonicalBalanceTarget | null
   careBenefits: LeaveInCareTarget[]
+  applicationStageNeed: "towel_dry" | "dry_hair" | "pre_heat" | "post_style" | null
+  hasSeparateHeatProtectant: boolean
+  thickness: HairThickness | null
 }
 
 export type LeaveInCategoryDecision = CategoryDecisionBase<"leave_in", LeaveInTargetProfile>

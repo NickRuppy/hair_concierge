@@ -17,7 +17,11 @@ import type {
   ShampooRecommendationMetadata,
 } from "@/lib/types"
 import type { ProductConditionerRerankSpecs } from "@/lib/conditioner/constants"
-import type { LeaveInNeedBucket } from "@/lib/leave-in/constants"
+import type {
+  LeaveInConditionerRelationship,
+  LeaveInNeedBucket,
+  ProductLeaveInSpecs,
+} from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
 import { OIL_PURPOSE_LABELS, type OilPurpose, type OilSubtype } from "@/lib/oil/constants"
 import type { ProductPeelingSpecs } from "@/lib/peeling/constants"
@@ -49,7 +53,10 @@ import {
   type PeelingFitSpec,
   type ShampooFitSpec,
 } from "@/lib/recommendation-engine/categories"
-import { buildRecommendationEngineRuntimeFromPersistence } from "@/lib/recommendation-engine/runtime"
+import {
+  buildRecommendationEngineRuntimeFromPersistence,
+  type RecommendationEngineRuntime,
+} from "@/lib/recommendation-engine/runtime"
 import { buildRecommendationRequestContext } from "@/lib/recommendation-engine/request-context"
 import type {
   BondbuilderCategoryDecision,
@@ -72,20 +79,25 @@ type ScoredEngineProduct = MatchedProduct & {
   _engineScore: number
 }
 
+type ScoredConditionerProduct = ScoredEngineProduct & {
+  _fitStatus: CategoryFitEvaluation["status"]
+}
+
 type ScoredShampooProduct = ScoredEngineProduct & {
   _fitStatus: CategoryFitEvaluation["status"]
 }
 
-type LeaveInRerankSpec = {
-  product_id: string
-} & LeaveInFitSpec
-
-interface ProductLeaveInFitRow {
-  product_id: string
-  weight: "light" | "medium" | "rich"
-  conditioner_relationship: "replacement_capable" | "booster_only"
-  care_benefits: Array<"heat_protect" | "curl_definition" | "repair" | "detangle_smooth">
+type ScoredLeaveInProduct = ScoredEngineProduct & {
+  _fitStatus: CategoryFitEvaluation["status"]
+  _fitReasonCodes: string[]
 }
+
+type ScoredMaskProduct = ScoredEngineProduct & {
+  _fitStatus: CategoryFitEvaluation["status"]
+  _fitReasonCodes: string[]
+}
+
+type LeaveInRerankSpec = ProductLeaveInSpecs
 
 interface ProductShampooSpecRow extends ShampooFitSpec {
   product_id: string
@@ -167,40 +179,9 @@ function stripScore<T extends ScoredEngineProduct>(products: T[]): MatchedProduc
     const clean = { ...product }
     Reflect.deleteProperty(clean, "_engineScore")
     Reflect.deleteProperty(clean, "_fitStatus")
+    Reflect.deleteProperty(clean, "_fitReasonCodes")
     return clean
   })
-}
-
-function mapCanonicalLeaveInFitRow(spec: ProductLeaveInFitRow): LeaveInRerankSpec {
-  const roles: LeaveInFitSpec["roles"] =
-    spec.conditioner_relationship === "replacement_capable"
-      ? ["replacement_conditioner"]
-      : ["extension_conditioner"]
-
-  const careBenefits: LeaveInFitSpec["care_benefits"] = []
-  const applicationStage: LeaveInFitSpec["application_stage"] = []
-
-  if (spec.care_benefits.includes("heat_protect")) {
-    applicationStage.push("pre_heat")
-  }
-  if (spec.care_benefits.includes("curl_definition")) {
-    careBenefits.push("curl_definition")
-  }
-  if (spec.care_benefits.includes("repair")) {
-    careBenefits.push("repair")
-  }
-  if (spec.care_benefits.includes("detangle_smooth")) {
-    careBenefits.push("detangling")
-  }
-
-  return {
-    product_id: spec.product_id,
-    weight: spec.weight,
-    roles,
-    provides_heat_protection: spec.care_benefits.includes("heat_protect"),
-    care_benefits: careBenefits,
-    application_stage: applicationStage,
-  }
 }
 
 function shampooSpecKey(
@@ -284,6 +265,40 @@ function markShampooFallback(product: ScoredShampooProduct): ScoredShampooProduc
   }
 }
 
+function markLeaveInFallback(product: ScoredLeaveInProduct): ScoredLeaveInProduct {
+  const fallbackTradeoff =
+    "Fallback: Dieser Treffer weicht beim Leave-in-Zielprofil ab und erscheint nur, weil der Katalog nicht genug sichere Treffer geliefert hat."
+  const meta = product.recommendation_meta as LeaveInRecommendationMetadata | null | undefined
+
+  if (!meta || meta.category !== "leave_in") {
+    return product
+  }
+
+  return {
+    ...product,
+    recommendation_meta: {
+      ...meta,
+      tradeoffs: [
+        fallbackTradeoff,
+        ...meta.tradeoffs.filter((tradeoff) => tradeoff !== fallbackTradeoff),
+      ].slice(0, 3),
+    },
+  }
+}
+
+function isLeaveInFallbackEligible(reasonCodes: readonly string[]): boolean {
+  const hardMismatchCodes = new Set([
+    "leave_in_thickness_mismatch",
+    "leave_in_balance_mismatch",
+    "leave_in_relationship_mismatch",
+    "leave_in_high_heat_protection_mismatch",
+    "leave_in_heat_activation_without_heat_mismatch",
+    "leave_in_styling_prep_mismatch",
+  ])
+
+  return !reasonCodes.some((code) => hardMismatchCodes.has(code))
+}
+
 function shampooBucketPriorityAdjustment(
   decision: ShampooCategoryDecision,
   matchedBucket: NonNullable<ShampooCategoryDecision["targetProfile"]>["shampooBucket"] | null,
@@ -361,6 +376,32 @@ function buildConditionerUsageHint(decision: ConditionerCategoryDecision): strin
   return "In die Laengen und Spitzen geben, kurz einarbeiten und gruendlich ausspuelen."
 }
 
+function markConditionerFallback(product: ScoredConditionerProduct): ScoredConditionerProduct {
+  const meta = product.recommendation_meta as ConditionerRecommendationMetadata | null | undefined
+  if (!meta || meta.category !== "conditioner") return product
+
+  const fallbackTradeoff = buildConditionerFallbackTradeoff(meta)
+
+  return {
+    ...product,
+    recommendation_meta: {
+      ...meta,
+      tradeoffs: [
+        fallbackTradeoff,
+        ...meta.tradeoffs.filter((tradeoff) => tradeoff !== fallbackTradeoff),
+      ].slice(0, 3),
+    },
+  }
+}
+
+function buildConditionerFallbackTradeoff(meta: ConditionerRecommendationMetadata): string {
+  if (meta.fit_status === "unknown") {
+    return "Fallback: Dieser Conditioner hat noch unvollstaendige strukturierte Fit-Daten und erscheint nur, weil nicht genug sichere Treffer verfuegbar sind."
+  }
+
+  return "Fallback: Dieser Conditioner weicht beim abgeleiteten Conditioner-Fit sichtbar ab und erscheint nur, weil nicht genug sichere Treffer verfuegbar sind."
+}
+
 export function rerankConditionerProductsWithEngine(params: {
   candidates: MatchedProduct[]
   specs: ProductConditionerRerankSpecs[]
@@ -372,9 +413,18 @@ export function rerankConditionerProductsWithEngine(params: {
   const target = decision.targetProfile
 
   const specsByProductId = new Map(specs.map((spec) => [spec.product_id, spec]))
-  const scored: ScoredEngineProduct[] = candidates.map((product) => {
+  const scored: ScoredConditionerProduct[] = candidates.map((product) => {
     const spec = specsByProductId.get(product.id) ?? null
-    const fit = evaluateConditionerFit(decision, spec as ConditionerFitSpec | null)
+    const fitSpec: ConditionerFitSpec | null = spec
+      ? {
+          ...spec,
+          suitable_thicknesses: product.suitable_thicknesses.filter(
+            (thickness): thickness is NonNullable<HairProfile["thickness"]> =>
+              thickness === "fine" || thickness === "normal" || thickness === "coarse",
+          ),
+        }
+      : null
+    const fit = evaluateConditionerFit(decision, fitSpec)
     const { positives, tradeoffs } = buildFitSummary(
       fit,
       "Passt sehr gut zu deinem aktuellen Balance-, Repair- und Gewichtsbedarf.",
@@ -405,6 +455,11 @@ export function rerankConditionerProductsWithEngine(params: {
       matched_weight: target.weight,
       matched_repair_level: target.repairLevel,
       matched_balance_need: mapConditionerBalanceNeed(target.balance),
+      fit_status: fit.status,
+      product_weight: spec?.weight ?? null,
+      product_repair_level: spec?.repair_level ?? null,
+      product_balance_direction: mapConditionerBalanceNeed(spec?.balance_direction ?? null),
+      active_damage_drivers: target.activeDamageDrivers,
     }
 
     return {
@@ -412,11 +467,24 @@ export function rerankConditionerProductsWithEngine(params: {
       conditioner_specs: spec,
       recommendation_meta: recommendationMeta,
       _engineScore: score,
+      _fitStatus: fit.status,
     }
   })
 
   scored.sort(compareScoredProducts)
-  return stripScore(scored).slice(0, SELECTION_LIMIT)
+
+  const acceptable = scored.filter(
+    (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
+  )
+  if (acceptable.length >= SELECTION_LIMIT) {
+    return stripScore(acceptable.slice(0, SELECTION_LIMIT))
+  }
+
+  const fallback = scored
+    .filter((product) => product._fitStatus === "mismatch" || product._fitStatus === "unknown")
+    .map(markConditionerFallback)
+
+  return stripScore([...acceptable, ...fallback].slice(0, SELECTION_LIMIT))
 }
 
 export function rerankShampooProductsWithEngine(params: {
@@ -849,6 +917,30 @@ function buildLeaveInUsageHint(decision: LeaveInCategoryDecision): string {
   return "Nach dem Conditioner sparsam in die Laengen und Spitzen geben und als zusaetzlichen Booster nutzen."
 }
 
+function deriveLeaveInSpecConditionerRelationship(
+  spec: LeaveInRerankSpec | null,
+): LeaveInConditionerRelationship | null {
+  if (!spec) return null
+  return spec.roles.includes("replacement_conditioner") ? "replacement_capable" : "booster_only"
+}
+
+function deriveLeaveInProductBalanceDirection(
+  spec: LeaveInRerankSpec | null,
+): "moisture" | "protein" | "balanced" | null {
+  if (!spec) return null
+  const benefits = new Set(spec.care_benefits)
+  const proteinSignals = benefits.has("protein")
+  const moistureSignals =
+    benefits.has("moisture") ||
+    benefits.has("anti_frizz") ||
+    benefits.has("detangling") ||
+    benefits.has("shine")
+
+  if (proteinSignals && !moistureSignals) return "protein"
+  if (moistureSignals && !proteinSignals && !benefits.has("repair")) return "moisture"
+  return "balanced"
+}
+
 export function rerankLeaveInProductsWithEngine(params: {
   candidates: MatchedProduct[]
   specs: LeaveInRerankSpec[]
@@ -860,9 +952,18 @@ export function rerankLeaveInProductsWithEngine(params: {
   const target = decision.targetProfile
 
   const specsByProductId = new Map(specs.map((spec) => [spec.product_id, spec]))
-  const scored: ScoredEngineProduct[] = candidates.map((product) => {
+  const scored: ScoredLeaveInProduct[] = candidates.map((product) => {
     const spec = specsByProductId.get(product.id) ?? null
-    const fit = evaluateLeaveInFit(decision, spec as LeaveInFitSpec | null)
+    const fitSpec: LeaveInFitSpec | null = spec
+      ? {
+          ...spec,
+          suitable_thicknesses: product.suitable_thicknesses.filter(
+            (thickness): thickness is NonNullable<HairProfile["thickness"]> =>
+              thickness === "fine" || thickness === "normal" || thickness === "coarse",
+          ),
+        }
+      : null
+    const fit = evaluateLeaveInFit(decision, fitSpec)
     const { positives, tradeoffs } = buildFitSummary(
       fit,
       "Passt sehr gut zu deinem Leave-in-Zielprofil inklusive Nutzen, Beziehung zum Conditioner und Gewicht.",
@@ -892,19 +993,46 @@ export function rerankLeaveInProductsWithEngine(params: {
       },
       need_bucket: mapEngineLeaveInNeedToLegacy(target.needBucket),
       styling_context: target.stylingContext,
-      conditioner_relationship: target.conditionerRelationship,
+      conditioner_relationship: deriveLeaveInSpecConditionerRelationship(spec),
       matched_weight: target.weight,
+      fit_status: fit.status,
+      product_weight: spec?.weight ?? null,
+      product_roles: spec?.roles ?? [],
+      product_care_benefits: spec?.care_benefits ?? [],
+      provides_heat_protection: spec?.provides_heat_protection ?? null,
+      product_application_stage: spec?.application_stage ?? [],
+      heat_protection_need: target.heatProtectionNeed,
+      styling_prep_need: target.stylingPrepNeed,
+      product_balance_direction: deriveLeaveInProductBalanceDirection(spec),
     }
 
     return {
       ...product,
+      leave_in_specs: spec,
       recommendation_meta: recommendationMeta,
       _engineScore: score,
+      _fitStatus: fit.status,
+      _fitReasonCodes: fit.reasonCodes,
     }
   })
 
   scored.sort(compareScoredProducts)
-  return stripScore(scored).slice(0, SELECTION_LIMIT)
+
+  const acceptable = scored.filter(
+    (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
+  )
+  if (acceptable.length >= SELECTION_LIMIT) {
+    return stripScore(acceptable.slice(0, SELECTION_LIMIT))
+  }
+
+  const fallback = scored
+    .filter(
+      (product) =>
+        product._fitStatus === "mismatch" && isLeaveInFallbackEligible(product._fitReasonCodes),
+    )
+    .map(markLeaveInFallback)
+
+  return stripScore([...acceptable, ...fallback].slice(0, SELECTION_LIMIT))
 }
 
 function mapBalanceToMaskType(
@@ -934,6 +1062,78 @@ function buildMaskUsageHint(spec: ProductMaskSpecs | null): string {
   return "Nach dem Shampoo in die Laengen und Spitzen geben, gruendlich ausspuelen und danach Conditioner verwenden."
 }
 
+function buildMaskTradeoffs(fit: CategoryFitEvaluation): string[] {
+  const tradeoffs: string[] = []
+  const add = (message: string) => {
+    if (!tradeoffs.includes(message)) tradeoffs.push(message)
+  }
+
+  if (fit.status === "unknown") {
+    add(
+      "Die Masken-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
+    )
+  }
+
+  if (fit.status === "mismatch") {
+    add("Weicht beim Masken-Zielprofil spuerbar von deinem Bedarf ab.")
+  }
+
+  if (fit.reasonCodes.includes("mask_optional_overcare_caveat")) {
+    add(
+      "Eine Maske ist hier eher optional; zu intensive Zusatzpflege kann sonst beschweren oder die Balance kippen.",
+    )
+  }
+
+  if (fit.reasonCodes.includes("mask_high_intensity_use_sparingly_caveat")) {
+    add("Wenn du sie testest, dann eher sparsam und nicht bei jeder Waesche.")
+  }
+
+  if (fit.reasonCodes.includes("mask_wrong_balance_stiff_dull_risk")) {
+    add("Bei falscher Balance kann das Haar eher steif oder stumpf wirken.")
+  }
+
+  if (fit.reasonCodes.includes("mask_rich_weight_can_weigh_down_caveat")) {
+    add("Die reichhaltige Textur kann feines oder wenig dichtes Haar beschweren.")
+  }
+
+  if (fit.reasonCodes.includes("mask_light_weight_may_be_underpowered_caveat")) {
+    add("Die leichte Textur kann fuer sehr dichtes oder kraeftiges Haar etwas zu wenig sein.")
+  }
+
+  if (fit.reasonCodes.includes("mask_low_concentration_may_be_underpowered_caveat")) {
+    add("Die niedrige Intensitaet kann fuer staerkeren Kur-Bedarf etwas zu wenig sein.")
+  }
+
+  if (fit.missingFields.length > 0) {
+    add("Ein Teil der strukturierten Produktdaten ist noch nicht gepflegt.")
+  }
+
+  return tradeoffs.slice(0, 3)
+}
+
+function isMaskFallbackEligible(reasonCodes: string[]): boolean {
+  return reasonCodes.includes("mask_rich_weight_can_weigh_down_caveat")
+}
+
+function markMaskFallback(product: ScoredMaskProduct): ScoredMaskProduct {
+  const meta = product.recommendation_meta as MaskRecommendationMetadata | null | undefined
+  if (!meta || meta.category !== "mask") return product
+
+  const fallbackTradeoff =
+    "Fallback: Diese Maske weicht beim abgeleiteten Masken-Fit sichtbar ab und erscheint nur, weil nicht genug sichere Treffer verfuegbar sind."
+
+  return {
+    ...product,
+    recommendation_meta: {
+      ...meta,
+      tradeoffs: [
+        fallbackTradeoff,
+        ...meta.tradeoffs.filter((tradeoff) => tradeoff !== fallbackTradeoff),
+      ].slice(0, 3),
+    },
+  }
+}
+
 export function rerankMaskProductsWithEngine(params: {
   candidates: MatchedProduct[]
   specs: ProductMaskSpecs[]
@@ -944,10 +1144,10 @@ export function rerankMaskProductsWithEngine(params: {
   const target = decision.targetProfile
 
   const specsByProductId = new Map(specs.map((spec) => [spec.product_id, spec]))
-  const scored: ScoredEngineProduct[] = candidates.map((product) => {
+  const scored: ScoredMaskProduct[] = candidates.map((product) => {
     const spec = specsByProductId.get(product.id) ?? null
     const fit = evaluateMaskFit(decision, spec as MaskFitSpec | null)
-    const { positives, tradeoffs } = buildFitSummary(
+    const { positives } = buildFitSummary(
       fit,
       "Passt sehr gut zu deinem Masken-Zielprofil fuer Balance, Repair und Gewicht.",
       "Passt weitgehend zu deinem aktuellen Maskenbedarf.",
@@ -955,6 +1155,7 @@ export function rerankMaskProductsWithEngine(params: {
       "Weicht beim Masken-Zielprofil spuerbar von deinem Bedarf ab.",
     )
     const score = toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
+    const tradeoffs = buildMaskTradeoffs(fit)
 
     const recommendationMeta: MaskRecommendationMetadata = {
       category: "mask",
@@ -969,6 +1170,11 @@ export function rerankMaskProductsWithEngine(params: {
       usage_hint: buildMaskUsageHint(spec),
       mask_type: mapBalanceToMaskType(target.balance) ?? "performance",
       need_strength: target.needStrength === 0 ? 1 : target.needStrength,
+      fit_status: fit.status,
+      role: target.role,
+      product_weight: spec?.weight ?? null,
+      product_concentration: spec?.concentration ?? null,
+      product_balance_direction: spec?.balance_direction ?? null,
     }
 
     return {
@@ -976,11 +1182,27 @@ export function rerankMaskProductsWithEngine(params: {
       mask_specs: spec,
       recommendation_meta: recommendationMeta,
       _engineScore: score,
+      _fitStatus: fit.status,
+      _fitReasonCodes: fit.reasonCodes,
     }
   })
 
   scored.sort(compareScoredProducts)
-  return stripScore(scored).slice(0, SELECTION_LIMIT)
+  const acceptable = scored.filter(
+    (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
+  )
+  if (acceptable.length >= SELECTION_LIMIT) {
+    return stripScore(acceptable.slice(0, SELECTION_LIMIT))
+  }
+
+  const fallback = scored
+    .filter(
+      (product) =>
+        product._fitStatus === "mismatch" && isMaskFallbackEligible(product._fitReasonCodes),
+    )
+    .map(markMaskFallback)
+
+  return stripScore([...acceptable, ...fallback].slice(0, SELECTION_LIMIT))
 }
 
 function mapBalanceTargetToConcernCodes(
@@ -1297,7 +1519,7 @@ export async function selectLeaveInProductsWithEngine(params: {
 
   const supabase = createAdminClient()
   const { data: specs, error } = await supabase
-    .from("product_leave_in_fit_specs")
+    .from("product_leave_in_specs")
     .select("*")
     .in(
       "product_id",
@@ -1305,13 +1527,13 @@ export async function selectLeaveInProductsWithEngine(params: {
     )
 
   if (error) {
-    console.error("Failed to load leave-in fit specs for recommendation engine:", error)
+    console.error("Failed to load leave-in specs for recommendation engine:", error)
     return []
   }
 
   return rerankLeaveInProductsWithEngine({
     candidates,
-    specs: ((specs ?? []) as ProductLeaveInFitRow[]).map(mapCanonicalLeaveInFitRow),
+    specs: (specs ?? []) as ProductLeaveInSpecs[],
     decision,
     hairProfile,
   })
@@ -1321,13 +1543,24 @@ export async function selectMaskProductsWithEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime?: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
+  const runtime =
+    params.runtime ??
+    buildRecommendationEngineRuntimeFromPersistence(
+      hairProfile,
+      routineItems,
+      buildRecommendationRequestContext({
+        requestedCategory: "mask",
+        message,
+      }),
+    )
   const decision = runtime.categories.mask
   if (!decision.relevant || !decision.targetProfile) return []
 
   const supabase = createAdminClient()
+  const candidatesById = new Map<string, MatchedProduct>()
 
   for (const concernCode of buildMaskConcernSearchOrderFromEngine(decision, hairProfile)) {
     const candidates = await matchProducts({
@@ -1341,33 +1574,35 @@ export async function selectMaskProductsWithEngine(params: {
     const prioritized = candidates.filter((candidate) =>
       candidate.suitable_concerns.includes(concernCode),
     )
-    if (prioritized.length === 0) continue
-
-    const { data: specs, error } = await supabase
-      .from("product_mask_specs")
-      .select("*")
-      .in(
-        "product_id",
-        prioritized.map((candidate) => candidate.id),
-      )
-
-    if (error) {
-      console.error("Failed to load mask specs for recommendation engine:", error)
-      return []
-    }
-
-    const reranked = rerankMaskProductsWithEngine({
-      candidates: prioritized,
-      specs: (specs ?? []) as ProductMaskSpecs[],
-      decision,
-    })
-
-    if (reranked.length > 0) {
-      return reranked
+    for (const candidate of prioritized) {
+      const existing = candidatesById.get(candidate.id)
+      if (!existing || toBaseScore(candidate) > toBaseScore(existing)) {
+        candidatesById.set(candidate.id, candidate)
+      }
     }
   }
 
-  return []
+  const candidates = [...candidatesById.values()]
+  if (candidates.length === 0) return []
+
+  const { data: specs, error } = await supabase
+    .from("product_mask_specs")
+    .select("*")
+    .in(
+      "product_id",
+      candidates.map((candidate) => candidate.id),
+    )
+
+  if (error) {
+    console.error("Failed to load mask specs for recommendation engine:", error)
+    return []
+  }
+
+  return rerankMaskProductsWithEngine({
+    candidates,
+    specs: (specs ?? []) as ProductMaskSpecs[],
+    decision,
+  })
 }
 
 export async function selectBondbuilderProductsWithEngine(params: {

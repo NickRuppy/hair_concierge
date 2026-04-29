@@ -10,6 +10,7 @@ import type { SelectableProductCategory } from "../src/lib/agent/tools/select-pr
 import type { RecommendationEngineRuntime } from "../src/lib/recommendation-engine/runtime"
 import type { ShampooCategoryDecision } from "../src/lib/recommendation-engine/types"
 import type { HairProfile } from "../src/lib/types"
+import { LOW_DAMAGE_PROFILE } from "./recommendation-engine-foundation.fixtures"
 
 function createMatchedProduct(
   id: string,
@@ -87,13 +88,80 @@ function createShampooMatchedProduct(
   })
 }
 
+function createLeaveInMatchedProduct(
+  id: string,
+  score: number,
+  metadataOverrides: Record<string, unknown> = {},
+): MatchedProduct {
+  return createMatchedProduct(id, score, {
+    category: "Leave-in",
+    recommendation_meta: {
+      category: "leave_in",
+      score,
+      top_reasons: ["Passt zum Leave-in-Zielprofil"],
+      tradeoffs: [],
+      usage_hint: "Sparsam in die Laengen geben.",
+      matched_profile: {
+        hair_texture: "wavy",
+        thickness: "fine",
+        density: "medium",
+        cuticle_condition: "rough",
+        chemical_treatment: ["bleached"],
+      },
+      need_bucket: "heat_protect",
+      styling_context: "heat_style",
+      conditioner_relationship: "replacement_capable",
+      matched_weight: "medium",
+      fit_status: "ideal",
+      product_weight: "medium",
+      product_roles: ["replacement_conditioner", "styling_prep"],
+      product_care_benefits: ["moisture", "anti_frizz"],
+      provides_heat_protection: true,
+      product_application_stage: ["towel_dry", "pre_heat"],
+      heat_protection_need: "high",
+      styling_prep_need: "heat_style",
+      product_balance_direction: "moisture",
+      ...metadataOverrides,
+    },
+  })
+}
+
+function createMaskMatchedProduct(
+  id: string,
+  score: number,
+  metadataOverrides: Record<string, unknown> = {},
+): MatchedProduct {
+  return createMatchedProduct(id, score, {
+    category: "Maske",
+    recommendation_meta: {
+      category: "mask",
+      score,
+      top_reasons: ["Passt zum Masken-Zielprofil"],
+      tradeoffs: [],
+      usage_hint:
+        "Nach dem Shampoo in die Laengen und Spitzen geben, gruendlich ausspuelen und danach Conditioner verwenden.",
+      mask_type: "protein",
+      need_strength: 2,
+      fit_status: "ideal",
+      role: "fixed",
+      product_weight: "medium",
+      product_concentration: "medium",
+      product_balance_direction: "protein",
+      ...metadataOverrides,
+    },
+  })
+}
+
 function createRuntimeStub(
   overrides: Partial<RecommendationEngineRuntime> = {},
 ): RecommendationEngineRuntime {
   return {
     rawInput: {} as RecommendationEngineRuntime["rawInput"],
     requestContext: {
+      requestedCategory: null,
+      maskIntensityRequest: null,
       oilPurpose: null,
+      oilNoRecommendationReason: null,
     } as RecommendationEngineRuntime["requestContext"],
     normalized: {} as RecommendationEngineRuntime["normalized"],
     damage: {} as RecommendationEngineRuntime["damage"],
@@ -316,7 +384,7 @@ test("projectSelectedProducts still recommends explicit non-shampoo products whe
   assert.equal(result.products.length, 1)
 })
 
-test("projectSelectedProducts does not emit shampoo-only unsupported-signal caveats for non-shampoo categories", () => {
+test("projectSelectedProducts emits conditioner unsupported-signal caveats without making claims", () => {
   const result = projectSelectedProducts(
     [createMatchedProduct("p-conditioner", 0.94)],
     {
@@ -342,8 +410,682 @@ test("projectSelectedProducts does not emit shampoo-only unsupported-signal cave
 
   assert.equal(result.category, "conditioner")
   assert.equal(result.products.length, 1)
-  assert.deepEqual(result.products[0].unsupported_requested_signals, [])
-  assert.deepEqual(result.unsupported_requested_signals, [])
+  assert.deepEqual(
+    result.products[0].unsupported_requested_signals.map((signal) => [
+      signal.field,
+      signal.value,
+      signal.reason,
+    ]),
+    [["chemical_treatment", "colored", "no_structured_product_data"]],
+  )
+  assert.deepEqual(
+    result.products[0].supported_claims.some((claim) => claim.field === "chemical_treatment"),
+    false,
+  )
+})
+
+test("projectSelectedProducts exposes conditioner claims without density or damage drivers", () => {
+  const result = projectSelectedProducts(
+    [
+      createMatchedProduct("p-conditioner", 0.94, {
+        recommendation_meta: {
+          category: "conditioner",
+          score: 94,
+          top_reasons: ["Passt zum Conditioner-Zielprofil"],
+          tradeoffs: [],
+          usage_hint: "In die Laengen geben.",
+          matched_profile: {
+            thickness: "fine",
+            density: "low",
+            protein_moisture_balance: "snaps",
+            cuticle_condition: null,
+            chemical_treatment: ["bleached"],
+          },
+          matched_weight: "light",
+          matched_repair_level: "high",
+          matched_balance_need: "moisture",
+          fit_status: "ideal",
+          product_weight: "light",
+          product_repair_level: "high",
+          product_balance_direction: "moisture",
+          active_damage_drivers: ["bleached_hair"],
+        },
+      }),
+      createMatchedProduct("p-balanced", 0.88, {
+        recommendation_meta: {
+          category: "conditioner",
+          score: 88,
+          top_reasons: ["Supportive Balance"],
+          tradeoffs: ["Etwas breiter als dein Feuchtigkeitsfokus."],
+          usage_hint: "In die Laengen geben.",
+          matched_profile: {
+            thickness: "fine",
+            density: "low",
+            protein_moisture_balance: "snaps",
+            cuticle_condition: null,
+            chemical_treatment: ["bleached"],
+          },
+          matched_weight: "light",
+          matched_repair_level: "medium",
+          matched_balance_need: "moisture",
+          fit_status: "supportive",
+          product_weight: "light",
+          product_repair_level: "medium",
+          product_balance_direction: "balanced",
+          active_damage_drivers: ["bleached_hair"],
+        },
+      }),
+    ],
+    {
+      thickness: "fine",
+      density: "low",
+      protein_moisture_balance: "snaps",
+    } as HairProfile,
+    "conditioner",
+    createRuntimeStub(),
+    {
+      userJob: "product_pick",
+      concerns: ["dry_lengths"],
+      requestedIngredientSignals: [{ value: "silicone_free", evidence: "silikonfrei" }],
+    },
+  )
+
+  assert.equal(result.decision, "recommended")
+  assert.deepEqual(
+    result.products[0].supported_claims.map((claim) => claim.field),
+    ["thickness", "weight", "balance_direction", "repair_level", "fit_status"],
+  )
+  assert.equal(
+    result.products[0].supported_claims.some(
+      (claim) => claim.field === "density" || claim.field === "chemical_treatment",
+    ),
+    false,
+  )
+  assert.deepEqual(result.unsupported_requested_signals[0], {
+    field: "ingredient_preference",
+    value: "silicone_free",
+    reason: "no_structured_product_data",
+    user_message:
+      "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensitaet und Fit.",
+  })
+  assert.deepEqual(result.comparison_facts, {
+    "p-conditioner": ["Balance: Feuchtigkeit", "Pflegeintensitaet: Intensiv"],
+    "p-balanced": ["Balance: ausgewogene Pflege", "Pflegeintensitaet: Mittel"],
+  })
+})
+
+test("projectSelectedProducts adds conditioner profile deviation notice when message overrides thickness", () => {
+  const runtime = createRuntimeStub()
+  runtime.categories.conditioner = {
+    category: "conditioner",
+    relevant: true,
+    action: "replace",
+    planReasonCodes: ["repair_need_present"],
+    currentInventory: null,
+    targetProfile: {
+      balance: "moisture",
+      repairLevel: "high",
+      weight: "light",
+      thickness: "fine",
+      activeDamageDrivers: [],
+    },
+    notes: [],
+  } as RecommendationEngineRuntime["categories"]["conditioner"]
+
+  const result = projectSelectedProducts(
+    [
+      createMatchedProduct("p-conditioner", 0.94, {
+        recommendation_meta: {
+          category: "conditioner",
+          score: 94,
+          top_reasons: ["Passt zum leichteren Zielprofil"],
+          tradeoffs: [],
+          usage_hint: "In die Laengen geben.",
+          matched_profile: {
+            thickness: "fine",
+            density: "medium",
+            protein_moisture_balance: "snaps",
+            cuticle_condition: null,
+            chemical_treatment: [],
+          },
+          matched_weight: "light",
+          matched_repair_level: "high",
+          matched_balance_need: "moisture",
+          fit_status: "ideal",
+          product_weight: "light",
+          product_repair_level: "high",
+          product_balance_direction: "moisture",
+          active_damage_drivers: [],
+        },
+      }),
+    ],
+    {
+      thickness: "fine",
+      density: "medium",
+      protein_moisture_balance: "snaps",
+    } as HairProfile,
+    "conditioner",
+    runtime,
+    {
+      userJob: "product_pick",
+      concerns: [],
+      originalHairProfile: {
+        thickness: "normal",
+        density: "medium",
+        protein_moisture_balance: "snaps",
+      } as HairProfile,
+      activeProfileSignals: [
+        {
+          field: "thickness",
+          value: "fine",
+          source: "message",
+          selection_effect: "override",
+          evidence: "feines Haar",
+        },
+      ],
+    },
+  )
+
+  assert.deepEqual(result.profile_basis, [
+    "Profil-Hinweis: aktuelle Angabe Haardicke Fein statt gespeichert Mittel",
+    "Haardicke: Fein",
+    "Haardichte: Mittlere Dichte",
+    "Protein-/Feuchtigkeitsbalance: Feuchtigkeitsmangel",
+    "Ziel-Gewicht: Leicht",
+    "Pflegebedarf: Intensiv",
+  ])
+})
+
+test("projectSelectedProducts keeps unsupported color requests out of conditioner claims", () => {
+  const result = projectSelectedProducts(
+    [createMatchedProduct("p-conditioner", 0.94)],
+    {
+      thickness: "normal",
+      chemical_treatment: ["colored"],
+    } as HairProfile,
+    "conditioner",
+    createRuntimeStub(),
+    {
+      userJob: "product_pick",
+      concerns: [],
+      activeProfileSignals: [
+        {
+          field: "chemical_treatment",
+          value: "colored",
+          source: "message",
+          selection_effect: "qualifier",
+          evidence: "coloriertem Haar",
+        },
+      ],
+    },
+  )
+
+  assert.deepEqual(
+    result.unsupported_requested_signals.map((signal) => [
+      signal.field,
+      signal.value,
+      signal.reason,
+    ]),
+    [["chemical_treatment", "colored", "no_structured_product_data"]],
+  )
+  assert.equal(
+    result.products[0]?.supported_claims.some((claim) => claim.field === "chemical_treatment"),
+    false,
+  )
+})
+
+test("projectSelectedProducts uses price only as conditioner comparison fallback", () => {
+  const result = projectSelectedProducts(
+    [
+      createMatchedProduct("p-1", 0.94, {
+        price_eur: 12.99,
+        recommendation_meta: {
+          category: "conditioner",
+          score: 94,
+          top_reasons: ["Passt zum Zielprofil"],
+          tradeoffs: [],
+          usage_hint: "In die Laengen geben.",
+          matched_profile: {
+            thickness: "normal",
+            density: "medium",
+            protein_moisture_balance: "snaps",
+            cuticle_condition: null,
+            chemical_treatment: [],
+          },
+          matched_weight: "medium",
+          matched_repair_level: "high",
+          matched_balance_need: "moisture",
+          fit_status: "ideal",
+          product_weight: "medium",
+          product_repair_level: "high",
+          product_balance_direction: "moisture",
+          active_damage_drivers: [],
+        },
+      }),
+      createMatchedProduct("p-2", 0.91, {
+        price_eur: 6.99,
+        recommendation_meta: {
+          category: "conditioner",
+          score: 91,
+          top_reasons: ["Passt ebenfalls zum Zielprofil"],
+          tradeoffs: [],
+          usage_hint: "In die Laengen geben.",
+          matched_profile: {
+            thickness: "normal",
+            density: "medium",
+            protein_moisture_balance: "snaps",
+            cuticle_condition: null,
+            chemical_treatment: [],
+          },
+          matched_weight: "medium",
+          matched_repair_level: "high",
+          matched_balance_need: "moisture",
+          fit_status: "ideal",
+          product_weight: "medium",
+          product_repair_level: "high",
+          product_balance_direction: "moisture",
+          active_damage_drivers: [],
+        },
+      }),
+    ],
+    {
+      thickness: "normal",
+      density: "medium",
+      protein_moisture_balance: "snaps",
+    } as HairProfile,
+    "conditioner",
+    createRuntimeStub(),
+    { userJob: "compare_or_decide", concerns: [] },
+  )
+
+  assert.deepEqual(result.comparison_facts, {
+    "p-1": ["Preis: 12.99 EUR"],
+    "p-2": ["Preis: 6.99 EUR"],
+  })
+})
+
+test("projectSelectedProducts exposes leave-in claims and unsupported ingredient caveats", () => {
+  const result = projectSelectedProducts(
+    [
+      createLeaveInMatchedProduct("p-leave-in", 0.94),
+      createLeaveInMatchedProduct("p-balanced", 0.88, {
+        product_weight: "light",
+        fit_status: "supportive",
+        product_balance_direction: "balanced",
+        provides_heat_protection: true,
+      }),
+    ],
+    {
+      hair_texture: "wavy",
+      thickness: "fine",
+      density: "medium",
+      protein_moisture_balance: "snaps",
+      chemical_treatment: ["bleached"],
+    } as HairProfile,
+    "leave_in",
+    createRuntimeStub(),
+    {
+      userJob: "product_pick",
+      concerns: ["frizz"],
+      requestedIngredientSignals: [{ value: "silicone_free", evidence: "silikonfrei" }],
+    },
+  )
+
+  assert.equal(result.decision, "recommended")
+  assert.deepEqual(
+    result.products[0].supported_claims.map((claim) => claim.field),
+    [
+      "thickness",
+      "weight",
+      "balance_direction",
+      "fit_status",
+      "heat_protection",
+      "conditioner_relationship",
+      "leave_in_role",
+      "care_benefit",
+    ],
+  )
+  assert.equal(
+    result.products[0].supported_claims.some(
+      (claim) => claim.field === "chemical_treatment" || claim.field === "density",
+    ),
+    false,
+  )
+  assert.deepEqual(result.unsupported_requested_signals[0], {
+    field: "ingredient_preference",
+    value: "silicone_free",
+    reason: "no_structured_product_data",
+    user_message:
+      "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit.",
+  })
+  assert.deepEqual(result.comparison_facts, {
+    "p-leave-in": ["Gewicht: Mittel", "Balance: Feuchtigkeit"],
+    "p-balanced": ["Gewicht: Leicht", "Balance: ausgewogene Pflege"],
+  })
+})
+
+test("selectProducts recommends conditioner for low-need balanced profile with existing conditioner", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "conditioner")
+      assert.equal(runtime.categories.conditioner.relevant, true)
+      assert.equal(runtime.categories.conditioner.action, "keep")
+      assert.equal(runtime.categories.conditioner.targetProfile?.balance, "balanced")
+      assert.equal(runtime.categories.conditioner.targetProfile?.repairLevel, "low")
+      assert.equal(runtime.categories.conditioner.targetProfile?.weight, "medium")
+
+      return [
+        createMatchedProduct("light-balanced", 0.94, {
+          name: "Light Balanced Conditioner",
+          recommendation_meta: {
+            category: "conditioner",
+            score: 94,
+            top_reasons: ["Passt zu einem leichten, ausgewogenen Conditioner-Zielprofil."],
+            tradeoffs: [],
+            usage_hint: "In die Laengen geben.",
+            matched_profile: {
+              thickness: "fine",
+              density: "medium",
+              protein_moisture_balance: "stretches_bounces",
+              cuticle_condition: "smooth",
+              chemical_treatment: [],
+            },
+            matched_weight: "medium",
+            matched_repair_level: "low",
+            matched_balance_need: "balanced",
+            fit_status: "ideal",
+            product_weight: "medium",
+            product_repair_level: "low",
+            product_balance_direction: "balanced",
+            active_damage_drivers: [],
+          },
+        }),
+      ]
+    },
+  })
+
+  const result = await tool({
+    category: "conditioner",
+    message: "Welche Spuelung passt zu meinem feinen Haar, ohne es zu beschweren?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "normal",
+      density: "medium",
+      protein_moisture_balance: "stretches_bounces",
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [
+      {
+        category: "conditioner",
+        product_name: "Current Conditioner",
+        frequency_range: "3_4x",
+      },
+    ],
+    userJob: "product_pick",
+    concerns: [],
+    activeProfileSignals: [
+      {
+        field: "thickness",
+        value: "fine",
+        source: "message",
+        selection_effect: "override",
+        evidence: "feines Haar",
+      },
+    ],
+  })
+
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.product_response_policy, "recommend")
+  assert.deepEqual(
+    result.products.map((product) => product.name),
+    ["Light Balanced Conditioner"],
+  )
+  assert.ok(result.profile_basis.includes("Haardicke: Fein"))
+  assert.ok(result.profile_basis.includes("Ziel-Gewicht: Mittel"))
+  assert.ok(result.profile_basis.includes("Pflegebedarf: Leicht"))
+})
+
+test("selectProducts keeps silicone-free unsupported while still recommending conditioner", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async () => [
+      createMatchedProduct("balanced", 0.94, {
+        name: "Balanced Conditioner",
+        recommendation_meta: {
+          category: "conditioner",
+          score: 94,
+          top_reasons: ["Passt zum ausgewogenen Conditioner-Zielprofil."],
+          tradeoffs: [],
+          usage_hint: "In die Laengen geben.",
+          matched_profile: {
+            thickness: "normal",
+            density: "medium",
+            protein_moisture_balance: "stretches_bounces",
+            cuticle_condition: "smooth",
+            chemical_treatment: [],
+          },
+          matched_weight: "medium",
+          matched_repair_level: "low",
+          matched_balance_need: "balanced",
+          fit_status: "ideal",
+          product_weight: "medium",
+          product_repair_level: "low",
+          product_balance_direction: "balanced",
+          active_damage_drivers: [],
+        },
+      }),
+    ],
+  })
+
+  const result = await tool({
+    category: "conditioner",
+    message: "Welchen silikonfreien Conditioner empfiehlst du mir?",
+    hairProfile: LOW_DAMAGE_PROFILE,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [
+      {
+        category: "conditioner",
+        product_name: "Current Conditioner",
+        frequency_range: "3_4x",
+      },
+    ],
+    userJob: "product_pick",
+    concerns: [],
+  })
+
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.products.length, 1)
+  assert.deepEqual(
+    result.unsupported_requested_signals.map((signal) => [signal.field, signal.value]),
+    [["ingredient_preference", "silicone_free"]],
+  )
+  assert.deepEqual(
+    result.products[0]?.unsupported_requested_signals.map((signal) => [signal.field, signal.value]),
+    [["ingredient_preference", "silicone_free"]],
+  )
+})
+
+test("projectSelectedProducts exposes conditioner ingredient caveat even with no products", () => {
+  const result = projectSelectedProducts(
+    [],
+    LOW_DAMAGE_PROFILE,
+    "conditioner",
+    createRuntimeStub(),
+    {
+      userJob: "product_pick",
+      concerns: [],
+      requestedIngredientSignals: [{ value: "silicone_free", evidence: "silikonfrei" }],
+    },
+  )
+
+  assert.equal(result.decision, "no_catalog_match")
+  assert.deepEqual(
+    result.unsupported_requested_signals.map((signal) => [signal.field, signal.value]),
+    [["ingredient_preference", "silicone_free"]],
+  )
+})
+
+test("projectSelectedProducts exposes mask ingredient caveat even with no products", () => {
+  const result = projectSelectedProducts([], LOW_DAMAGE_PROFILE, "mask", createRuntimeStub(), {
+    userJob: "product_pick",
+    concerns: [],
+    requestedIngredientSignals: [{ value: "silicone_free", evidence: "silikonfreie Maske" }],
+  })
+
+  assert.deepEqual(
+    result.unsupported_requested_signals.map((signal) => [signal.field, signal.value]),
+    [["ingredient_preference", "silicone_free"]],
+  )
+  assert.match(result.unsupported_requested_signals[0]?.user_message ?? "", /Masken-Auswahl/)
+})
+
+test("selectProducts tool carries unsupported ingredient caveats for leave-in requests", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async () => [createLeaveInMatchedProduct("p-leave-in", 0.94)],
+  })
+
+  const result = await tool({
+    category: "leave_in",
+    message: "Ich suche ein silikonfreies Leave-in.",
+    hairProfile: {
+      hair_texture: "wavy",
+      thickness: "fine",
+      density: "medium",
+      protein_moisture_balance: "snaps",
+      concerns: ["frizz"],
+      chemical_treatment: [],
+      uses_heat_protection: false,
+    } as unknown as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+  })
+
+  assert.deepEqual(result.unsupported_requested_signals[0], {
+    field: "ingredient_preference",
+    value: "silicone_free",
+    reason: "no_structured_product_data",
+    user_message:
+      "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit.",
+  })
+})
+
+test("selectProducts tool passes request-aware mask runtime into category engine", async () => {
+  const observed: { runtime?: RecommendationEngineRuntime } = {}
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async (params: { runtime?: RecommendationEngineRuntime }) => {
+      observed.runtime = params.runtime
+      return []
+    },
+  })
+
+  await tool({
+    category: "mask",
+    message: "Welche intensive Maske passt zu mir?",
+    hairProfile: LOW_DAMAGE_PROFILE,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+  })
+
+  const runtime = observed.runtime
+  assert.ok(runtime)
+  assert.equal(runtime.requestContext.requestedCategory, "mask")
+  assert.equal(runtime.requestContext.maskIntensityRequest, "intensive")
+  assert.equal(runtime.categories.mask.relevant, true)
+  assert.equal(runtime.categories.mask.targetProfile?.role, "optional")
+  assert.equal(runtime.categories.mask.targetProfile?.repairLevel, "medium")
+})
+
+test("projectSelectedProducts exposes mask claims and unsupported ingredient caveats", () => {
+  const result = projectSelectedProducts(
+    [
+      createMaskMatchedProduct("p-mask-1", 0.94),
+      createMaskMatchedProduct("p-mask-2", 0.88, {
+        fit_status: "supportive",
+        role: "optional",
+        product_weight: "rich",
+        product_concentration: "high",
+        product_balance_direction: "balanced",
+        tradeoffs: ["Wenn du sie testest, dann eher sparsam und nicht bei jeder Waesche."],
+      }),
+    ],
+    LOW_DAMAGE_PROFILE,
+    "mask",
+    createRuntimeStub(),
+    {
+      requestedIngredientSignals: [{ value: "silicone_free", evidence: "silikonfrei" }],
+    },
+  )
+
+  assert.deepEqual(
+    result.products[0].supported_claims.map((claim) => claim.field),
+    ["weight", "balance_direction", "concentration", "fit_status"],
+  )
+  assert.deepEqual(result.unsupported_requested_signals[0], {
+    field: "ingredient_preference",
+    value: "silicone_free",
+    reason: "no_structured_product_data",
+    user_message:
+      "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Masken-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensitaet und Fit.",
+  })
+  assert.deepEqual(result.comparison_facts, {
+    "p-mask-1": ["Balance: Protein", "Intensitaet: Mittel"],
+    "p-mask-2": ["Balance: Ausgewogen", "Intensitaet: Hoch"],
+  })
+})
+
+test("projectSelectedProducts redirects scalp-only conditioner requests without products", () => {
+  const result = projectSelectedProducts(
+    [createMatchedProduct("p-conditioner", 0.94)],
+    { thickness: "normal" } as HairProfile,
+    "conditioner",
+    createRuntimeStub(),
+    {
+      userJob: "product_pick",
+      concerns: ["irritation"],
+    },
+  )
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+  assert.deepEqual(result.products, [])
+  assert.match(result.category_guidance, /Kopfhaut/)
+})
+
+test("projectSelectedProducts redirects scalp-only mask requests without products", () => {
+  const result = projectSelectedProducts(
+    [createMaskMatchedProduct("p-mask", 0.9)],
+    { thickness: "normal" } as HairProfile,
+    "mask",
+    createRuntimeStub(),
+    {
+      userJob: "product_pick",
+      concerns: ["dandruff_or_flakes"],
+    },
+  )
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+  assert.deepEqual(result.products, [])
+  assert.match(result.category_guidance, /Kopfhaut/)
 })
 
 test("projectSelectedProducts returns explain-then-recommend policy for oily roots", () => {
@@ -817,7 +1559,7 @@ test("projectSelectedProducts exposes per-product shampoo claims from structured
       [
         "chemical_treatment",
         "colored",
-        "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Fuer deine Kopfhaut und Haardicke passen diese Optionen trotzdem.",
+        "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den belegten Fit-Daten.",
       ],
       [
         "scalp_condition",

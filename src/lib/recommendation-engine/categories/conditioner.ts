@@ -14,11 +14,13 @@ import {
   deriveTargetWeight,
   getPlannedStep,
 } from "@/lib/recommendation-engine/categories/shared"
+import type { HairThickness } from "@/lib/vocabulary"
 
 export interface ConditionerFitSpec {
   weight: "light" | "medium" | "rich" | null
   repair_level: "low" | "medium" | "high" | null
   balance_direction?: "protein" | "moisture" | "balanced" | null
+  suitable_thicknesses?: HairThickness[] | null
 }
 
 export function buildConditionerCategoryDecision(
@@ -27,35 +29,31 @@ export function buildConditionerCategoryDecision(
   plan: InterventionPlan,
 ): ConditionerCategoryDecision {
   const step = getPlannedStep(plan, "conditioner")
-
-  if (!step) {
-    return {
-      category: "conditioner",
-      relevant: false,
-      action: null,
-      planReasonCodes: [],
-      currentInventory: profile.routineInventory.conditioner,
-      targetProfile: null,
-      notes: [],
-    }
-  }
-
+  const hasConditioner = profile.routineInventory.conditioner !== null
   const notes: string[] = []
   const targetWeight = deriveTargetWeight(profile)
   if (!targetWeight) {
     notes.push("conditioner_weight_needs_thickness_and_density")
   }
+  if (!profile.thickness) {
+    notes.push("conditioner_profile_thickness_missing")
+  }
 
   return {
     category: "conditioner",
     relevant: true,
-    action: step.action,
-    planReasonCodes: step.reasonCodes,
+    action: step?.action ?? (hasConditioner ? "keep" : "add"),
+    planReasonCodes: step?.reasonCodes ?? [
+      "baseline_core_care",
+      hasConditioner ? "conditioner_already_present" : "missing_conditioner_inventory",
+    ],
     currentInventory: profile.routineInventory.conditioner,
     targetProfile: {
       balance: deriveBalanceTarget(damage),
       repairLevel: deriveRepairLevel(damage),
       weight: targetWeight,
+      thickness: profile.thickness,
+      activeDamageDrivers: damage.activeDamageDrivers,
     },
     notes,
   }
@@ -87,6 +85,12 @@ export function evaluateConditionerFit(
   if (decision.targetProfile.balance && !spec.balance_direction) {
     missingFields.push("balance_direction")
   }
+  if (
+    decision.targetProfile.thickness &&
+    (!spec.suitable_thicknesses || spec.suitable_thicknesses.length === 0)
+  ) {
+    missingFields.push("suitable_thicknesses")
+  }
 
   if (missingFields.length > 0) {
     return {
@@ -102,10 +106,21 @@ export function evaluateConditionerFit(
     decision.targetProfile.balance,
     spec.balance_direction ?? null,
   )
+  const thicknessFit =
+    decision.targetProfile.thickness &&
+    spec.suitable_thicknesses &&
+    spec.suitable_thicknesses.length > 0
+      ? spec.suitable_thicknesses.includes(decision.targetProfile.thickness)
+        ? "exact"
+        : "mismatch"
+      : "unknown"
 
   const reasonCodes: string[] = []
-  const fitStates = [weightFit, repairFit, balanceFit]
+  const fitStates = [weightFit, repairFit, balanceFit, thicknessFit]
 
+  if (thicknessFit === "exact") reasonCodes.push("conditioner_thickness_exact_match")
+  if (thicknessFit === "unknown") reasonCodes.push("conditioner_thickness_unknown")
+  if (thicknessFit === "mismatch") reasonCodes.push("conditioner_thickness_mismatch")
   if (weightFit === "exact") reasonCodes.push("conditioner_weight_exact_match")
   if (repairFit === "exact") reasonCodes.push("conditioner_repair_exact_match")
   if (balanceFit === "exact") reasonCodes.push("conditioner_balance_exact_match")
