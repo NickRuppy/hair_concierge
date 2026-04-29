@@ -72,7 +72,7 @@ function spec(
 }
 
 const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
-  "Acina Hyaluron 2.0 (Silikone)": spec(
+  "Acina Hyaluron 2.0": spec(
     "lotion",
     "light",
     ["extension_conditioner"],
@@ -90,7 +90,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     [],
     ["towel_dry"],
   ),
-  "Authentic Beauty Concept Hydrate Spray (Silikone)": spec(
+  "Authentic Beauty Concept Hydrate Spray": spec(
     "spray",
     "light",
     ["extension_conditioner"],
@@ -108,7 +108,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["humectants"],
     ["towel_dry"],
   ),
-  "Cantu Leave-In Conditioning Repair Cream (Kokos)": spec(
+  "Cantu Leave-In Conditioning Repair Cream": spec(
     "cream",
     "rich",
     ["extension_conditioner"],
@@ -117,7 +117,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["oils"],
     ["towel_dry"],
   ),
-  "Cantu Leave-In Repair Cream (Kokos)": spec(
+  "Cantu Leave-In Repair Cream": spec(
     "cream",
     "rich",
     ["extension_conditioner"],
@@ -126,7 +126,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["oils"],
     ["towel_dry"],
   ),
-  "Color WOW Money Mist (Silikone)": spec(
+  "Color WOW Money Mist": spec(
     "spray",
     "light",
     ["extension_conditioner", "styling_prep"],
@@ -162,7 +162,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["proteins"],
     ["towel_dry"],
   ),
-  "Elvital Öl Magique Serum (Silikone)": spec(
+  "Elvital Öl Magique Serum": spec(
     "serum",
     "rich",
     ["oil_replacement"],
@@ -171,7 +171,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones", "oils"],
     ["towel_dry", "dry_hair", "post_style"],
   ),
-  "EVO Day of Grace Leave-In (Silikone)": spec(
+  "EVO Day of Grace Leave-In": spec(
     "lotion",
     "light",
     ["extension_conditioner", "styling_prep"],
@@ -181,7 +181,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["towel_dry", "pre_heat"],
     221,
   ),
-  "EVO Happy Campers (Silikone)": spec(
+  "EVO Happy Campers": spec(
     "lotion",
     "medium",
     ["extension_conditioner", "styling_prep"],
@@ -190,7 +190,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones"],
     ["towel_dry"],
   ),
-  "EVO Head Mistress (Silikone)": spec(
+  "EVO Head Mistress": spec(
     "cream",
     "light",
     ["extension_conditioner", "styling_prep"],
@@ -235,7 +235,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["humectants"],
     ["towel_dry"],
   ),
-  "It’s a 10 Miracle Leave-In  (Silikone)": spec(
+  "It’s a 10 Miracle Leave-In": spec(
     "spray",
     "medium",
     ["extension_conditioner", "styling_prep"],
@@ -244,7 +244,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones"],
     ["towel_dry", "pre_heat"],
   ),
-  "It’s a 10 Miracle Leave-In Lite (Silikone)": spec(
+  "It’s a 10 Miracle Leave-In Lite": spec(
     "spray",
     "light",
     ["extension_conditioner", "styling_prep"],
@@ -262,7 +262,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     [],
     ["towel_dry"],
   ),
-  "Kevin Murphy Young Again (Silikone)": spec(
+  "Kevin Murphy Young Again": spec(
     "serum",
     "medium",
     ["oil_replacement"],
@@ -289,7 +289,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["oils"],
     ["towel_dry"],
   ),
-  "Maria Nila Structure Repair (Silikone)": spec(
+  "Maria Nila Structure Repair": spec(
     "lotion",
     "medium",
     ["extension_conditioner"],
@@ -298,7 +298,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones"],
     ["towel_dry"],
   ),
-  "Maria Nila Structure Repair Leave-In (Silikone)": spec(
+  "Maria Nila Structure Repair Leave-In": spec(
     "lotion",
     "light",
     ["extension_conditioner"],
@@ -316,7 +316,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["oils"],
     ["towel_dry"],
   ),
-  "Moroccanoil All In One Leave In Conditioner (Silikone)": spec(
+  "Moroccanoil All In One Leave In Conditioner": spec(
     "spray",
     "medium",
     ["extension_conditioner", "styling_prep"],
@@ -325,7 +325,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones"],
     ["towel_dry", "pre_heat"],
   ),
-  "Neqi Moisture Mystery (Silikone)": spec(
+  "Neqi Moisture Mystery": spec(
     "lotion",
     "medium",
     ["extension_conditioner"],
@@ -334,7 +334,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones", "humectants"],
     ["towel_dry"],
   ),
-  "Olaplex No.5 Leave-In (Silikone)": spec(
+  "Olaplex No.5 Leave-In": spec(
     "lotion",
     "light",
     ["extension_conditioner", "styling_prep"],
@@ -344,7 +344,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["towel_dry", "pre_heat"],
     232,
   ),
-  "Olaplex No.6 Bond Smoother (Silikone)": spec(
+  "Olaplex No.6 Bond Smoother": spec(
     "cream",
     "medium",
     ["extension_conditioner", "styling_prep"],
@@ -354,7 +354,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["towel_dry", "pre_heat"],
     232,
   ),
-  "OUAI Leave In Conditioner (Silikone)": spec(
+  "OUAI Leave In Conditioner": spec(
     "spray",
     "medium",
     ["extension_conditioner", "styling_prep"],
@@ -364,7 +364,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["towel_dry", "pre_heat"],
     232,
   ),
-  "Pantene Bonding Leave-In (Silikone)": spec(
+  "Pantene Bonding Leave-In": spec(
     "lotion",
     "medium",
     ["extension_conditioner"],
@@ -373,7 +373,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones"],
     ["towel_dry"],
   ),
-  "Pantene Hydra Glow Leave-In (Silikone)": spec(
+  "Pantene Hydra Glow Leave-In": spec(
     "lotion",
     "medium",
     ["extension_conditioner"],
@@ -382,7 +382,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones"],
     ["towel_dry"],
   ),
-  "Pantene Pro-V Keratin Protect 10-in-1 Spray (Silikone)": spec(
+  "Pantene Pro-V Keratin Protect 10-in-1 Spray": spec(
     "spray",
     "light",
     ["extension_conditioner", "styling_prep"],
@@ -400,7 +400,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     [],
     ["towel_dry"],
   ),
-  "Redken Acidic Color Gloss Leave-In (Silikone)": spec(
+  "Redken Acidic Color Gloss Leave-In": spec(
     "spray",
     "light",
     ["extension_conditioner", "styling_prep"],
@@ -410,7 +410,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["towel_dry", "pre_heat"],
     230,
   ),
-  "Redken All Soft Mega Curls Leave-In (Silikone)": spec(
+  "Redken All Soft Mega Curls Leave-In": spec(
     "lotion",
     "rich",
     ["extension_conditioner", "styling_prep"],
@@ -419,7 +419,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones"],
     ["towel_dry"],
   ),
-  "Redken Extreme Anti-Snap (Silikone)": spec(
+  "Redken Extreme Anti-Snap": spec(
     "lotion",
     "medium",
     ["extension_conditioner"],
@@ -428,7 +428,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones"],
     ["towel_dry"],
   ),
-  "Redken One United (Silikone)": spec(
+  "Redken One United": spec(
     "spray",
     "light",
     ["extension_conditioner", "replacement_conditioner", "styling_prep"],
@@ -438,7 +438,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["towel_dry", "dry_hair", "pre_heat", "post_style"],
     230,
   ),
-  "Urban Alchemy Repair (Silikone)": spec(
+  "Urban Alchemy Repair": spec(
     "lotion",
     "medium",
     ["extension_conditioner"],
@@ -447,7 +447,7 @@ const LEAVE_IN_BACKFILL_BY_NAME: Record<string, LeaveInBackfillSpec> = {
     ["silicones"],
     ["towel_dry"],
   ),
-  "Wella Ultimate Repair Leave-In (Silikone)": spec(
+  "Wella Ultimate Repair Leave-In": spec(
     "lotion",
     "medium",
     ["extension_conditioner", "styling_prep"],
