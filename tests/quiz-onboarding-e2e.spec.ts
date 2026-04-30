@@ -82,6 +82,9 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         id: userId,
         email,
         full_name: fullName,
+        stripe_customer_id: `cus_quiz_${userId}`,
+        subscription_status: "active",
+        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       },
       { onConflict: "id" },
     )
@@ -110,16 +113,19 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       ).toBeVisible()
 
       await page.getByText("Wellig").first().click()
-      await expect(page.getByText("2/8")).toBeVisible()
+      await expect(page.getByText("2/9")).toBeVisible()
 
       await page.getByText("Mittel").first().click()
-      await expect(page.getByText("3/8")).toBeVisible()
+      await expect(page.getByText("3/9")).toBeVisible()
+
+      await page.getByText("Mittlere Dichte").click()
+      await expect(page.getByText("4/9")).toBeVisible()
 
       await page.getByText("Leicht uneben").click()
-      await expect(page.getByText("4/8")).toBeVisible()
+      await expect(page.getByText("5/9")).toBeVisible()
 
       await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
-      await expect(page.getByText("5/8")).toBeVisible()
+      await expect(page.getByText("6/9")).toBeVisible()
 
       await expect(
         page.getByRole("heading", { name: /Sind deine Haare chemisch behandelt/i }),
@@ -139,8 +145,8 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
-      // Scalp question (6/7)
-      await expect(page.getByText("6/8")).toBeVisible()
+      // Scalp question (7/9)
+      await expect(page.getByText("7/9")).toBeVisible()
       await expect(
         page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
       ).toBeVisible()
@@ -156,7 +162,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: "JA" }).click()
       await page.getByText("Trockene Schuppen").click()
 
-      await expect(page.getByText("7/8")).toBeVisible()
+      await expect(page.getByText("8/9")).toBeVisible()
       await expect(page.getByText(/Welche Haarprobleme/i)).toBeVisible()
       await page.getByText("Trockenheit").click()
       await page.getByText("Frizz").click()
@@ -208,23 +214,33 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(
         page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i }),
       ).toBeVisible()
-      await expect(page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i })).toBeVisible()
+      await expect(page.getByRole("button", { name: /PLAN FREISCHALTEN/i })).toBeVisible()
     })
 
     await test.step("Authenticate via inline auth on quiz-welcome", async () => {
-      // Advance from results to welcome (step 14 — inline auth)
-      await page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i }).click()
-
-      // Welcome page now shows inline dark auth form
-      await expect(page.getByText("PROFIL SPEICHERN", { exact: false })).toBeVisible({
+      // Public result CTA now hands anonymous users to pricing. The test then
+      // uses the auth page directly with the latest lead id so it can verify
+      // quiz-to-profile linking without exercising Stripe checkout.
+      await page.getByRole("button", { name: /PLAN FREISCHALTEN/i }).click()
+      await page.waitForURL(/\/pricing(\?.*)?$/, {
         timeout: 15_000,
+        waitUntil: "domcontentloaded",
       })
 
-      // Switch to login tab and authenticate
-      await page.getByRole("tab", { name: "Anmelden" }).click()
-      await page.locator('input[type="email"]:visible').fill(email)
-      await page.locator('input[type="password"]:visible').fill(password)
-      await page.getByRole("button", { name: /^Anmelden$/ }).click()
+      const latestLead = await fetchLatestLead()
+      expect(latestLead?.id).toBeTruthy()
+      await page.goto(`/auth?next=/onboarding&lead=${latestLead!.id}`, {
+        waitUntil: "networkidle",
+      })
+
+      // Authenticate on the login form
+      await page.getByPlaceholder("E-Mail-Adresse").fill(email)
+      await expect(page.getByPlaceholder("E-Mail-Adresse")).toHaveValue(email)
+      await page.getByPlaceholder("Passwort").fill(password)
+      await expect(page.getByPlaceholder("Passwort")).toHaveValue(password)
+      const loginButton = page.getByRole("button", { name: /^Anmelden$/ })
+      await expect(loginButton).toBeEnabled()
+      await loginButton.click()
 
       // Should land on onboarding (single-page flow)
       await page.waitForURL(/\/onboarding(\?.*)?$/, {
@@ -342,6 +358,11 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         .not.toBeNull()
 
       // Verify hair profile data
+      const latestLead = await fetchLatestLead()
+      expect(latestLead?.quiz_answers).toMatchObject({
+        density: "medium",
+      })
+
       await expect
         .poll(
           async () => {
@@ -357,6 +378,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(hairProfile).toMatchObject({
         hair_texture: "wavy",
         thickness: "normal",
+        density: "medium",
         cuticle_condition: "slightly_rough",
         protein_moisture_balance: "stretches_stays",
         scalp_type: "dry",
@@ -383,6 +405,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(initialProfile).toMatchObject({
         hair_texture: "wavy",
         thickness: "normal",
+        density: "medium",
         cuticle_condition: "slightly_rough",
         protein_moisture_balance: "stretches_stays",
         scalp_type: "dry",
@@ -402,8 +425,13 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
       await page.getByRole("button", { name: /QUIZ STARTEN/i }).click()
       await page.getByText("Glatt").first().click()
-      await page.getByText("Fein").first().click()
+      await expect(page.getByText("2/9")).toBeVisible()
+      await page.getByRole("button", { name: /Fein Kaum spürbar/i }).click()
+      await expect(page.getByText("3/9")).toBeVisible()
+      await page.getByText("Wenig Haare").click()
+      await expect(page.getByText("4/9")).toBeVisible()
       await page.getByText("Glatt wie Glas").click()
+      await expect(page.getByText("5/9")).toBeVisible()
       await page.getByText("Reißt sofort").click()
 
       await expect(
@@ -419,7 +447,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await naturCard.click()
 
       await page.getByRole("button", { name: /^Weiter$/i }).click()
-      await expect(page.getByText("6/8")).toBeVisible()
+      await expect(page.getByText("7/9")).toBeVisible()
       await expect(
         page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
       ).toBeVisible()
@@ -428,8 +456,9 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         .filter({ has: page.getByText(/^Fettig$/) })
         .click()
       await page.getByRole("button", { name: "NEIN" }).click()
-      await expect(page.getByText("7/8")).toBeVisible()
-      await page.getByLabel("Etwas anderes?").fill("verklebt schnell")
+      await expect(page.getByText("8/9")).toBeVisible()
+      await page.getByRole("button", { name: "Etwas anderes ergänzen" }).click()
+      await page.getByLabel("Eigene Notiz").fill("verklebt schnell")
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       // New step 12: Goals — sits between concerns and lead capture. Picks
@@ -460,22 +489,32 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(
         page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i }),
       ).toBeVisible()
-      await expect(page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i })).toBeVisible()
+      await expect(page.getByRole("button", { name: /PLAN FREISCHALTEN/i })).toBeVisible()
     })
 
     await test.step("Log back in via inline auth and relink the new lead", async () => {
-      // Advance from results into the welcome/auth step
-      await page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i }).click()
-
-      await expect(page.getByText("PROFIL SPEICHERN", { exact: false })).toBeVisible({
+      // Advance from public results to pricing, then authenticate directly with
+      // the latest lead id to verify relinking without exercising Stripe checkout.
+      await page.getByRole("button", { name: /PLAN FREISCHALTEN/i }).click()
+      await page.waitForURL(/\/pricing(\?.*)?$/, {
         timeout: 15_000,
+        waitUntil: "domcontentloaded",
+      })
+
+      const latestLead = await fetchLatestLead()
+      expect(latestLead?.id).toBeTruthy()
+      await page.goto(`/auth?next=/onboarding&lead=${latestLead!.id}`, {
+        waitUntil: "networkidle",
       })
 
       // Log in with existing credentials
-      await page.getByRole("tab", { name: "Anmelden" }).click()
-      await page.locator('input[type="email"]:visible').fill(email)
-      await page.locator('input[type="password"]:visible').fill(password)
-      await page.getByRole("button", { name: /^Anmelden$/ }).click()
+      await page.getByPlaceholder("E-Mail-Adresse").fill(email)
+      await expect(page.getByPlaceholder("E-Mail-Adresse")).toHaveValue(email)
+      await page.getByPlaceholder("Passwort").fill(password)
+      await expect(page.getByPlaceholder("Passwort")).toHaveValue(password)
+      const loginButton = page.getByRole("button", { name: /^Anmelden$/ })
+      await expect(loginButton).toBeEnabled()
+      await loginButton.click()
 
       // Returning user with completed onboarding: lead is linked during the
       // /onboarding server-side load, then redirect to /chat since onboarding_completed is true
@@ -522,6 +561,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
       const latestLead = await fetchLatestLead()
       expect(latestLead?.quiz_answers).toMatchObject({
+        density: "low",
         concerns: [],
         concerns_other_text: "verklebt schnell",
       })
@@ -542,6 +582,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(hairProfile).toMatchObject({
         hair_texture: "straight",
         thickness: "fine",
+        density: "low",
         cuticle_condition: "smooth",
         protein_moisture_balance: "snaps",
         scalp_type: "oily",

@@ -75,6 +75,7 @@ test.describe.serial("@ci Profile page smoke", () => {
       user_id: userId,
       hair_texture: "wavy",
       thickness: "fine",
+      density: "medium",
       concerns: [],
       wash_frequency: "once_weekly",
       heat_styling: "once_weekly",
@@ -168,7 +169,13 @@ test.describe.serial("@ci Profile page smoke", () => {
     await expect(page.getByText("Weitere Produkte")).toHaveCount(0)
     await expect(page.getByText("Aus Haar-Check")).toHaveCount(0)
     await expect(page.getByText("Aus Onboarding")).toHaveCount(0)
-    await expect(page.locator("#profile-section-quiz").getByText("8/8 vollständig")).toBeVisible()
+    await expect(page.locator("#profile-section-quiz").getByText("9/9 vollständig")).toBeVisible()
+    await expect(
+      page
+        .getByRole("button")
+        .filter({ hasText: "Haardichte" })
+        .filter({ hasText: "Mittlere Dichte" }),
+    ).toBeVisible()
 
     const memorySwitch = page.getByRole("switch", { name: "Erinnerungen aktivieren" })
     await expect(memorySwitch).toHaveAttribute("aria-checked", "true")
@@ -181,15 +188,28 @@ test.describe.serial("@ci Profile page smoke", () => {
     await expect(page).toHaveURL(`${baseUrl}/profile`)
     await expect(page.getByText("Haar-Check direkt im Profil aktualisieren")).toBeVisible()
     await expect(page.getByRole("button", { name: "Haar-Check speichern" })).toBeVisible()
+    await page.getByRole("radio", { name: "Viele Haare" }).click()
     await page.getByRole("button", { name: "Keine Beschwerden" }).click()
     await page.getByRole("button", { name: "Naturhaar" }).click()
     await page.getByRole("button", { name: "Haar-Check speichern" }).click()
     await expect(page.getByText("Haar-Check gespeichert").first()).toBeVisible()
+    await expect(
+      page.getByRole("button").filter({ hasText: "Haardichte" }).getByText("Viele Haare"),
+    ).toBeVisible()
     await expect(page.getByText("Keine Beschwerden")).toBeVisible()
     await expect(page.getByText("Naturhaar")).toBeVisible()
     await expect(
       page.getByRole("button").filter({ hasText: "Haar-Bedenken" }).getByText("Nichts davon"),
     ).toBeVisible()
+
+    const { data: densityRow, error: densityError } = await admin
+      .from("hair_profiles")
+      .select("density")
+      .eq("user_id", userId!)
+      .single()
+
+    if (densityError) throw densityError
+    expect(densityRow?.density).toBe("high")
 
     await page.getByRole("button", { name: "Ziele bearbeiten", exact: true }).click()
     await page.waitForURL(/\/profile\/edit\/goals(\?.*)?$/, { timeout: 15000 })

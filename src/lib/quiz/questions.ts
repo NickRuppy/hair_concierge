@@ -1,6 +1,6 @@
 import type { QuizQuestion } from "./types"
 
-export const QUIZ_TOTAL_QUESTIONS = 8
+export const QUIZ_TOTAL_QUESTIONS = 9
 
 export const quizQuestions: QuizQuestion[] = [
   {
@@ -36,7 +36,7 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Super — noch 6 kurze Fragen.",
+    motivation: "Super — noch 7 kurze Fragen.",
   },
   {
     step: 3,
@@ -68,8 +68,37 @@ export const quizQuestions: QuizQuestion[] = [
     motivation: "Klasse — schon ein besseres Bild.",
   },
   {
-    step: 4,
+    step: 13,
     questionNumber: 3,
+    title: "Wie dicht ist dein Haar insgesamt?",
+    instruction:
+      "Jetzt geht es nicht mehr um ein einzelnes Haar, sondern um die Haarmenge auf dem Kopf. Schau zum Beispiel auf Scheitel, Zopf-Umfang und wie viel Kopfhaut sichtbar ist.",
+    options: [
+      {
+        value: "low",
+        label: "Wenig Haare",
+        description: "Der Scheitel wirkt breiter oder die Kopfhaut scheint schnell durch.",
+        icon: "hair-fine",
+      },
+      {
+        value: "medium",
+        label: "Mittlere Dichte",
+        description: "Du hast weder auffällig wenig noch auffällig viele Haare.",
+        icon: "hair-normal",
+      },
+      {
+        value: "high",
+        label: "Viele Haare",
+        description: "Dein Haar fühlt sich insgesamt voll an, ein Zopf wirkt eher dick.",
+        icon: "hair-coarse",
+      },
+    ],
+    selectionMode: "single",
+    motivation: "Genau — jetzt kennen wir die wichtigsten Grunddaten.",
+  },
+  {
+    step: 4,
+    questionNumber: 4,
     title: "Wie fühlt sich dein Haar an?",
     instruction:
       "Nimm ein gewaschenes, trockenes Haar aus deiner Bürste \u2013 es darf kein Produkt mehr drauf sein. Schließ die Augen und fahre ganz langsam mit zwei Fingern von der Wurzel zur Spitze. Konzentrier dich darauf, was du fühlst:",
@@ -94,11 +123,11 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Top — über die Hälfte geschafft.",
+    motivation: "Top — weiter geht's.",
   },
   {
     step: 5,
-    questionNumber: 4,
+    questionNumber: 5,
     title: "Wie elastisch ist dein Haar?",
     instruction:
       "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefühl, nicht reißen. Beobachte genau, was passiert:\n\nZiehe nur leicht. Uns geht es um die Tendenz, nicht um Perfektion.",
@@ -123,11 +152,11 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Gut gemacht — noch 3 Fragen.",
+    motivation: "Gut gemacht — noch 4 Fragen.",
   },
   {
     step: 7,
-    questionNumber: 5,
+    questionNumber: 6,
     title: "Sind deine Haare chemisch behandelt?",
     instruction:
       "Chemische Prozesse wie Blondieren oder Färben verändern die innere Struktur deiner Haare grundlegend. Blondieren bricht Brückenverbindungen auf und entzieht Protein \u2013 das muss in der Pflege ausgeglichen werden.",
@@ -156,7 +185,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     step: 8,
-    questionNumber: 7,
+    questionNumber: 8,
     title: "Welche Haarprobleme beschäftigen dich gerade am meisten?",
     instruction:
       "Wähle bis zu 3 Punkte aus, die aktuell am besten zu deinen Längen und Spitzen passen.",

@@ -13,6 +13,7 @@ import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswers> = {
   2: "structure",
   3: "thickness",
+  13: "density",
   4: "fingertest",
   5: "pulltest",
   7: "treatment",

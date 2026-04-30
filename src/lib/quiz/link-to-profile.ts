@@ -2,6 +2,24 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import type { QuizAnswers } from "./types"
 import { normalizeStoredQuizAnswers } from "./normalization"
 
+export function resolveProfileDensityFromQuizAnswers(answers: QuizAnswers): string | undefined {
+  if (answers.density) return answers.density
+
+  const hasCompleteLegacyDiagnostics =
+    Boolean(answers.structure) &&
+    Boolean(answers.thickness) &&
+    Boolean(answers.fingertest) &&
+    Boolean(answers.pulltest) &&
+    Boolean(answers.scalp_type) &&
+    typeof answers.has_scalp_issue === "boolean" &&
+    (!answers.has_scalp_issue || Boolean(answers.scalp_condition)) &&
+    Array.isArray(answers.treatment) &&
+    answers.treatment.length > 0 &&
+    Array.isArray(answers.concerns)
+
+  return hasCompleteLegacyDiagnostics ? "medium" : undefined
+}
+
 /**
  * After a user authenticates, link their quiz lead data to their profile.
  *
@@ -83,6 +101,8 @@ export async function linkQuizToProfile(
 
   if (answers.structure) profileData.hair_texture = answers.structure
   if (answers.thickness) profileData.thickness = answers.thickness
+  const density = resolveProfileDensityFromQuizAnswers(answers)
+  if (density) profileData.density = density
   // Map quiz cuticle condition keys to English
   const CUTICLE_MAP: Record<string, string> = {
     glatt: "smooth",

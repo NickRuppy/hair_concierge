@@ -2,6 +2,7 @@
 
 import { useQuizStore } from "@/lib/quiz/store"
 import { getQuizBrandPanelContent } from "@/lib/quiz/brand-panel-content"
+import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 
 export function QuizBrandPanel() {
   const step = useQuizStore((s) => s.step)
@@ -100,7 +101,7 @@ function JourneyPanel({
 function DesktopJourneyProgress({ current, complete }: { current: number; complete: boolean }) {
   return (
     <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
-      {Array.from({ length: 8 }, (_, index) => {
+      {Array.from({ length: QUIZ_TOTAL_QUESTIONS }, (_, index) => {
         const stepNumber = index + 1
         const isCurrent = !complete && stepNumber === current
         const isDone = complete || stepNumber < current
