@@ -1,4 +1,4 @@
-import { runCurrentChatComparisonForUser } from "@/lib/agent/compare/run-current-chat"
+import { runCurrentChatComparisonForUser } from "@/lib/agent/compare/current-disabled"
 import { runShadowAgentComparisonForUser } from "@/lib/agent/compare/run-shadow-agent"
 import { loadCompareUserSnapshot, listEligibleCompareUsers } from "@/lib/agent/compare/test-users"
 import type {

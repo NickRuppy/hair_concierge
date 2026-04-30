@@ -465,11 +465,8 @@ function mergeActiveProfileSignals(
     addActiveSignal(result, signal)
   }
 
-  const messageKeys = new Set(messageSignals.map((signal) => `${signal.field}:${signal.value}`))
   for (const signal of classifierSignals) {
-    if (messageKeys.has(`${signal.field}:${signal.value}`)) {
-      addActiveSignal(result, signal)
-    }
+    addActiveSignal(result, signal)
   }
 
   return result
@@ -511,6 +508,40 @@ function inferDirectProductCategoryFromMessage(
       /\b(?:spulung|spuelung|conditioner)\b/.test(normalized)
 
     return asksForLeaveInComparison || asksForConditionerReplacement ? "leave_in" : null
+  }
+
+  const mentionsConditioner = /\bconditioners?\b|\bsp(?:u|ue)lung\w*\b/.test(normalized)
+  if (mentionsConditioner) {
+    const directConditionerAskPatterns = [
+      /\bwelch\w*\s+(?:andere?s?\s+|passende?s?\s+)?(?:conditioners?|sp(?:u|ue)lung\w*)\b/,
+      /\bpassende?n?\s+(?:conditioners?|sp(?:u|ue)lung\w*)\b/,
+      /\b(?:conditioners?|sp(?:u|ue)lung\w*)\s+(?:empfehlen|empfehlung|empfiehl)/,
+      /\bempfiehl\w*\s+(?:mir\s+)?(?:ein\w*\s+)?(?:conditioners?|sp(?:u|ue)lung\w*)\b/,
+      /\b(?:conditioners?|sp(?:u|ue)lung\w*)\s+soll(?:te)?\s+ich\s+(?:nehmen|kaufen|waehlen|nutzen|verwenden)\b/,
+      /\b(?:vergleich|vergleiche|vergleichen)\b.*\b(?:conditioners?|sp(?:u|ue)lung\w*)\b/,
+      /\b(?:conditioners?|sp(?:u|ue)lung\w*)\b.*\b(?:vergleich|vergleiche|vergleichen)\b/,
+    ]
+
+    if (directConditionerAskPatterns.some((pattern) => pattern.test(normalized))) {
+      return "conditioner"
+    }
+  }
+
+  const mentionsOil = /\b(?:haar)?(?:ol|oel)\w*\b|\boils?\b/.test(normalized)
+  if (mentionsOil) {
+    const directOilAskPatterns = [
+      /\bwelch\w*\s+(?:andere?s?\s+|passende?s?\s+)?(?:(?:haar)?(?:ol|oel)\w*|oils?)\b/,
+      /\bpassende?n?\s+(?:(?:haar)?(?:ol|oel)\w*|oils?)\b/,
+      /\b(?:(?:haar)?(?:ol|oel)\w*|oils?)\s+(?:empfehlen|empfehlung|empfiehl)/,
+      /\bempfiehl\w*\s+(?:mir\s+)?(?:ein\w*\s+)?(?:(?:haar)?(?:ol|oel)\w*|oils?)\b/,
+      /\b(?:(?:haar)?(?:ol|oel)\w*|oils?)\s+soll(?:te)?\s+ich\s+(?:nehmen|kaufen|waehlen|nutzen|verwenden)\b/,
+      /\b(?:vergleich|vergleiche|vergleichen)\b.*\b(?:(?:haar)?(?:ol|oel)\w*|oils?)\b/,
+      /\b(?:(?:haar)?(?:ol|oel)\w*|oils?)\b.*\b(?:vergleich|vergleiche|vergleichen)\b/,
+    ]
+
+    if (directOilAskPatterns.some((pattern) => pattern.test(normalized))) {
+      return "oil"
+    }
   }
 
   if (

@@ -1,4 +1,3 @@
-import { buildClarificationQuestions } from "@/lib/rag/clarification"
 import type {
   ClassificationResult,
   HairProfile,
@@ -6,7 +5,6 @@ import type {
   ProductCategory,
   RecommendationEngineTrace,
 } from "@/lib/types"
-import { PRODUCT_INTENTS } from "@/lib/rag/retrieval-constants"
 import { buildRecommendationRequestContext } from "@/lib/recommendation-engine/request-context"
 import {
   buildRecommendationEngineRuntimeFromPersistence,
@@ -14,6 +12,38 @@ import {
 } from "@/lib/recommendation-engine/runtime"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
 import type { CategoryDecision, EngineCategoryId } from "@/lib/recommendation-engine/types"
+
+const PRODUCT_INTENTS: readonly IntentType[] = [
+  "product_recommendation",
+  "routine_help",
+  "hair_care_advice",
+]
+
+const ROUTER_SLOT_KEYS = [
+  "problem",
+  "duration",
+  "products_tried",
+  "routine",
+  "special_circumstances",
+] as const
+
+type RouterSlotKey = (typeof ROUTER_SLOT_KEYS)[number]
+
+const SLOT_QUESTIONS: Record<RouterSlotKey, string> = {
+  problem: "Was genau ist dein Anliegen? Beschreib mir, was dich an deinen Haaren stoert.",
+  duration: "Seit wann faellt dir das auf? Hat sich kuerzlich etwas veraendert?",
+  products_tried: "Was benutzt du aktuell - Shampoo, Conditioner oder Leave-in?",
+  routine: "Wie sieht deine Routine aus? Wie oft waeschst du deine Haare?",
+  special_circumstances: "Gibt es besondere Umstaende wie Faerben, Hitze oder Medikamente?",
+}
+
+const SLOT_PRIORITY: RouterSlotKey[] = [
+  "problem",
+  "routine",
+  "products_tried",
+  "duration",
+  "special_circumstances",
+]
 
 const SHAMPOO_CLARIFICATION_QUESTIONS = {
   thickness: "Ist dein Haar eher fein, mittel oder dick?",
@@ -44,6 +74,54 @@ const OIL_CLARIFICATION_QUESTIONS = {
   oil_purpose:
     "Wofuer moechtest du das Oel vor allem nutzen - fuer Hair Oiling vor dem Waschen, als Styling-Finish gegen Frizz/mehr Glanz oder als leichtes Trocken-Oel?",
 } as const
+
+function getMissingRouterSlots(filters: Record<string, string | string[] | null>): RouterSlotKey[] {
+  return ROUTER_SLOT_KEYS.filter((key) => {
+    const value = filters[key]
+    return (
+      value === null ||
+      value === undefined ||
+      (typeof value === "string" && value.trim() === "") ||
+      (Array.isArray(value) && value.length === 0)
+    )
+  })
+}
+
+function buildFallbackClarificationQuestions(params: {
+  filters: Record<string, string | string[] | null>
+  productCategory: ProductCategory
+  hairProfile: HairProfile | null
+}): string[] {
+  const questions: string[] = []
+
+  if (params.productCategory === "shampoo") {
+    questions.push(
+      ...getShampooMissingProfileFields(params.hairProfile).map(
+        (field) => SHAMPOO_CLARIFICATION_QUESTIONS[field],
+      ),
+    )
+  }
+
+  if (params.productCategory === "conditioner") {
+    if (!params.hairProfile?.thickness) {
+      questions.push(CONDITIONER_CLARIFICATION_QUESTIONS.thickness)
+    }
+    if (!params.hairProfile?.protein_moisture_balance) {
+      questions.push(CONDITIONER_CLARIFICATION_QUESTIONS.protein_moisture_balance)
+    }
+  }
+
+  for (const slot of SLOT_PRIORITY) {
+    if (questions.length >= 3) break
+    if (!getMissingRouterSlots(params.filters).includes(slot)) continue
+    const question = SLOT_QUESTIONS[slot]
+    if (!questions.includes(question)) {
+      questions.push(question)
+    }
+  }
+
+  return questions.slice(0, 3)
+}
 
 export function toEngineRequestedCategory(
   productCategory: ProductCategory,
@@ -269,11 +347,11 @@ export function buildEngineClarificationQuestions(params: {
         (field) => OIL_CLARIFICATION_QUESTIONS[field],
       )
     default:
-      return buildClarificationQuestions(
-        classification.normalized_filters,
+      return buildFallbackClarificationQuestions({
+        filters: classification.normalized_filters,
         productCategory,
         hairProfile,
-      )
+      })
   }
 }
 

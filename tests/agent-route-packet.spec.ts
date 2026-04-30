@@ -438,6 +438,51 @@ test("buildAgentRoutePacket preserves active profile signals from real German sh
   )
 })
 
+test("buildAgentRoutePacket preserves valid classifier-only active profile signals", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Welches Shampoo passt zu mir?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "shampoo",
+      active_profile_signals: [
+        {
+          field: "thickness",
+          value: "fine",
+          source: "message",
+          selection_effect: "qualifier",
+          evidence: "feines Haar",
+        },
+        {
+          field: "concerns",
+          value: "frizz",
+          source: "message",
+          selection_effect: "redirect",
+          evidence: "Frizz",
+        },
+      ],
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) =>
+        signal.field === "thickness" &&
+        signal.value === "fine" &&
+        signal.selection_effect === "qualifier",
+    ),
+  )
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) =>
+        signal.field === "concerns" &&
+        signal.value === "frizz" &&
+        signal.selection_effect === "redirect",
+    ),
+  )
+  assert.deepEqual(packet.concerns, ["frizz"])
+})
+
 test("buildAgentRoutePacket detects fine-hair phrasing in mask requests", () => {
   const packet = buildAgentRoutePacket({
     message: "Meine Haare sind fein und trocken. Gibt es eine leichte Maske?",
@@ -735,6 +780,52 @@ test("buildAgentRoutePacket routes deep cleansing shampoo before generic shampoo
     "overlay:dry_lengths",
     "topic:deep_cleansing",
   ])
+})
+
+test("buildAgentRoutePacket infers conditioner for clear product asks with null classifier category", () => {
+  const messages = [
+    "Welcher Conditioner passt zu mir?",
+    "Welche Spuelung passt zu mir?",
+    "Welche Spülung passt zu mir?",
+  ]
+
+  for (const message of messages) {
+    const packet = buildAgentRoutePacket({
+      message,
+      userContext: createContext(),
+      classification: createClassification({
+        user_job: "product_pick",
+        product_category: null,
+      }),
+    })
+
+    assert.equal(packet.product_category, "conditioner", message)
+    assert.deepEqual(packet.tool_plan, ["select_products"], message)
+  }
+})
+
+test("buildAgentRoutePacket infers oil for clear product asks with null classifier category", () => {
+  const messages = [
+    "Welches Oil passt zu mir?",
+    "Welches Oel passt zu mir?",
+    "Welches Öl passt zu mir?",
+    "Welches Haaroel passt zu mir?",
+    "Welches Haaröl passt zu mir?",
+  ]
+
+  for (const message of messages) {
+    const packet = buildAgentRoutePacket({
+      message,
+      userContext: createContext(),
+      classification: createClassification({
+        user_job: "product_pick",
+        product_category: null,
+      }),
+    })
+
+    assert.equal(packet.product_category, "oil", message)
+    assert.deepEqual(packet.tool_plan, ["select_products"], message)
+  }
 })
 
 test("buildAgentRoutePacket keeps oily-root oil suitability conceptual", () => {

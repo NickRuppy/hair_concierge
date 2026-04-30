@@ -411,7 +411,7 @@ test("projectSelectedProducts still recommends explicit non-shampoo products whe
 
   const result = projectSelectedProducts(
     [createMatchedProduct("p-1", 0.94)],
-    { thickness: "normal" } as HairProfile,
+    { thickness: "normal", protein_moisture_balance: "stretches_bounces" } as HairProfile,
     "conditioner",
     runtime,
     { userJob: "product_pick", concerns: [] },
@@ -427,6 +427,7 @@ test("projectSelectedProducts emits conditioner unsupported-signal caveats witho
     [createMatchedProduct("p-conditioner", 0.94)],
     {
       thickness: "normal",
+      protein_moisture_balance: "stretches_bounces",
       chemical_treatment: ["colored"],
     } as HairProfile,
     "conditioner",
@@ -531,7 +532,7 @@ test("projectSelectedProducts exposes conditioner claims without density or dama
   assert.equal(result.decision, "recommended")
   assert.deepEqual(
     result.products[0].supported_claims.map((claim) => claim.field),
-    ["thickness", "weight", "balance_direction", "repair_level", "fit_status"],
+    ["weight", "balance_direction", "repair_level", "fit_status"],
   )
   assert.equal(
     result.products[0].supported_claims.some(
@@ -639,6 +640,7 @@ test("projectSelectedProducts keeps unsupported color requests out of conditione
     [createMatchedProduct("p-conditioner", 0.94)],
     {
       thickness: "normal",
+      protein_moisture_balance: "stretches_bounces",
       chemical_treatment: ["colored"],
     } as HairProfile,
     "conditioner",
@@ -774,7 +776,6 @@ test("projectSelectedProducts exposes leave-in claims and unsupported ingredient
   assert.deepEqual(
     result.products[0].supported_claims.map((claim) => claim.field),
     [
-      "thickness",
       "format",
       "weight",
       "balance_direction",
@@ -860,7 +861,89 @@ test("selectProducts applies leave-in thickness overrides and surfaces profile d
   assert.equal(observed.thickness, "fine")
   assert.ok(result.profile_basis.includes("Haardicke: Fein"))
   assert.ok(result.profile_basis.some((line) => line.startsWith("Profil-Hinweis:")))
-  assert.equal(result.products[0]?.supported_claims[0]?.label, "Haardicke: Fein")
+  assert.equal(
+    result.products[0]?.supported_claims.some((claim) => claim.field === "thickness"),
+    false,
+  )
+})
+
+test("selectProducts applies leave-in texture and density overrides with profile notices", async () => {
+  const observed: {
+    hairTexture?: HairProfile["hair_texture"]
+    density?: HairProfile["density"]
+  } = {}
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, hairProfile }) => {
+      assert.equal(category, "leave_in")
+      observed.hairTexture = hairProfile?.hair_texture ?? null
+      observed.density = hairProfile?.density ?? null
+      return [
+        createLeaveInMatchedProduct("low-density-curl-leave-in", 0.94, {
+          matched_profile: {
+            hair_texture: "curly",
+            thickness: "normal",
+            density: "low",
+            cuticle_condition: null,
+            chemical_treatment: [],
+          },
+          product_weight: "light",
+        }),
+      ]
+    },
+  })
+
+  const result = await tool({
+    category: "leave_in",
+    message: "Aktuell sind meine Haare lockig und eher wenig dicht. Welches Leave-in passt?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      hair_texture: "wavy",
+      thickness: "normal",
+      density: "medium",
+      concerns: ["frizz"],
+      uses_heat_protection: false,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    userJob: "product_pick",
+    concerns: [],
+    activeProfileSignals: [
+      {
+        field: "hair_texture",
+        value: "curly",
+        source: "message",
+        selection_effect: "override",
+        evidence: "lockig",
+      },
+      {
+        field: "density",
+        value: "low",
+        source: "message",
+        selection_effect: "override",
+        evidence: "wenig dicht",
+      },
+    ],
+  })
+
+  assert.equal(observed.hairTexture, "curly")
+  assert.equal(observed.density, "low")
+  assert.ok(
+    result.profile_basis.includes(
+      "Profil-Hinweis: aktuelle Angabe Haarmuster Lockig statt gespeichert Wellig",
+    ),
+  )
+  assert.ok(
+    result.profile_basis.includes(
+      "Profil-Hinweis: aktuelle Angabe Haardichte Wenig Haare statt gespeichert Mittlere Dichte",
+    ),
+  )
+  assert.ok(result.profile_basis.includes("Haarmuster: Lockig"))
+  assert.ok(result.profile_basis.includes("Haardichte: Wenig Haare"))
 })
 
 test("selectProducts applies leave-in heat tool overrides to the runtime", async () => {
@@ -1383,6 +1466,64 @@ test("projectSelectedProducts exposes mask claims and unsupported ingredient cav
   })
 })
 
+test("projectSelectedProducts preserves unsupported active qualifiers for mask products", () => {
+  const result = projectSelectedProducts(
+    [createMaskMatchedProduct("p-mask-bleached", 0.94)],
+    { ...LOW_DAMAGE_PROFILE, chemical_treatment: ["bleached"] } as HairProfile,
+    "mask",
+    createRuntimeStub(),
+    {
+      activeProfileSignals: [
+        {
+          field: "chemical_treatment",
+          value: "bleached",
+          source: "message",
+          selection_effect: "qualifier",
+          evidence: "blondierte Laengen",
+        },
+      ],
+    },
+  )
+
+  assert.deepEqual(result.products[0].unsupported_requested_signals[0], {
+    field: "chemical_treatment",
+    value: "bleached",
+    reason: "no_structured_product_data",
+    user_message:
+      "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den belegten Fit-Daten.",
+  })
+  assert.deepEqual(result.unsupported_requested_signals[0], {
+    field: "chemical_treatment",
+    value: "bleached",
+    reason: "no_structured_product_data",
+    user_message:
+      "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den belegten Fit-Daten.",
+  })
+})
+
+test("projectSelectedProducts preserves unsupported active qualifiers without displayable products", () => {
+  const result = projectSelectedProducts([], LOW_DAMAGE_PROFILE, "mask", createRuntimeStub(), {
+    activeProfileSignals: [
+      {
+        field: "chemical_treatment",
+        value: "colored",
+        source: "message",
+        selection_effect: "qualifier",
+        evidence: "coloriertes Haar",
+      },
+    ],
+  })
+
+  assert.equal(result.products.length, 0)
+  assert.deepEqual(result.unsupported_requested_signals[0], {
+    field: "chemical_treatment",
+    value: "colored",
+    reason: "no_structured_product_data",
+    user_message:
+      "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den belegten Fit-Daten.",
+  })
+})
+
 test("projectSelectedProducts exposes mask profile basis with balance and target axes", () => {
   const runtime = createRuntimeStub()
   runtime.categories.mask = {
@@ -1552,6 +1693,108 @@ test("projectSelectedProducts returns no_catalog_match when shampoo fits but no 
   assert.match(result.category_guidance, /Katalog/)
   assert.deepEqual(result.products, [])
   assert.deepEqual(result.missing_info, [])
+})
+
+test("projectSelectedProducts blocks conditioner products when required profile info is missing", () => {
+  const result = projectSelectedProducts(
+    [createMatchedProduct("p-conditioner", 0.94)],
+    { protein_moisture_balance: "snaps" } as HairProfile,
+    "conditioner",
+    createRuntimeStub(),
+  )
+
+  assert.equal(result.decision, "needs_more_info")
+  assert.equal(result.product_response_policy, "needs_more_info")
+  assert.deepEqual(result.products, [])
+  assert.deepEqual(result.missing_info, [
+    {
+      key: "thickness",
+      label: "Haardicke",
+      blocking: true,
+      detail: "Ohne Haardicke kann die Conditioner-Auswahl nicht sinnvoll eingegrenzt werden.",
+    },
+  ])
+})
+
+test("projectSelectedProducts blocks conditioner products when protein balance is missing", () => {
+  const result = projectSelectedProducts(
+    [createMatchedProduct("p-conditioner", 0.94)],
+    { thickness: "fine" } as HairProfile,
+    "conditioner",
+    createRuntimeStub(),
+  )
+
+  assert.equal(result.decision, "needs_more_info")
+  assert.deepEqual(result.products, [])
+  assert.deepEqual(result.missing_info, [
+    {
+      key: "protein_moisture_balance",
+      label: "Protein-/Feuchtigkeitsbalance",
+      blocking: true,
+      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Conditioner-Auswahl.",
+    },
+  ])
+})
+
+test("projectSelectedProducts blocks mask products when protein balance is missing", () => {
+  const result = projectSelectedProducts(
+    [createMaskMatchedProduct("p-mask", 0.94)],
+    { thickness: "fine" } as HairProfile,
+    "mask",
+    createRuntimeStub(),
+  )
+
+  assert.equal(result.decision, "needs_more_info")
+  assert.deepEqual(result.products, [])
+  assert.deepEqual(result.missing_info, [
+    {
+      key: "protein_moisture_balance",
+      label: "Protein-/Feuchtigkeitsbalance",
+      blocking: true,
+      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Masken-Auswahl.",
+    },
+  ])
+})
+
+test("projectSelectedProducts preserves oil no-recommendation decisions as redirects", () => {
+  const runtime = createRuntimeStub({
+    requestContext: {
+      ...createRuntimeStub().requestContext,
+      requestedCategory: "oil",
+      oilPurpose: null,
+      oilNoRecommendationReason: "overload_risk",
+    },
+  })
+  runtime.categories.oil = {
+    category: "oil",
+    relevant: true,
+    action: "decrease_frequency",
+    planReasonCodes: ["oil_overload_suppress_products"],
+    currentInventory: {
+      category: "oil",
+      present: true,
+      productName: "Current Oil",
+      frequencyBand: "3_4x",
+    },
+    targetProfile: null,
+    clarificationNeeded: false,
+    noRecommendationReason: "overload_risk",
+    notes: ["oil_overload_suppress_products"],
+  } as RecommendationEngineRuntime["categories"]["oil"]
+
+  const result = projectSelectedProducts(
+    [],
+    { ...LOW_DAMAGE_PROFILE, thickness: "fine", density: "low" } as HairProfile,
+    "oil",
+    runtime,
+  )
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+  assert.deepEqual(result.products, [])
+  assert.deepEqual(result.missing_info, [])
+  assert.match(result.policy_reason, /unterdrueckt Produkte/)
+  assert.match(result.category_guidance, /Build-up|weniger Oel|Keine Oel-Produkte/)
 })
 
 test("projectSelectedProducts returns not_recommended when shampoo is not the right lever", () => {
@@ -2095,7 +2338,13 @@ test("projectSelectedProducts exposes oil claims, caveats, and lean comparison f
       density: "low",
     } as HairProfile,
     "oil",
-    createRuntimeStub(),
+    createRuntimeStub({
+      requestContext: {
+        ...createRuntimeStub().requestContext,
+        requestedCategory: "oil",
+        oilPurpose: "light_finish",
+      },
+    }),
     {
       requestedIngredientSignals: [{ value: "silikonfrei", evidence: "silikonfrei" }],
     },
@@ -2104,7 +2353,7 @@ test("projectSelectedProducts exposes oil claims, caveats, and lean comparison f
   assert.equal(result.decision, "recommended")
   assert.deepEqual(
     result.products[0].supported_claims.map((claim) => claim.field),
-    ["thickness", "oil_purpose", "oil_subtype", "fit_status"],
+    ["oil_purpose", "oil_subtype", "fit_status"],
   )
   assert.match(result.products[0].fit_reason, /Leichtes Finish/)
   assert.deepEqual(result.comparison_facts, {
@@ -2190,7 +2439,57 @@ test("selectProducts applies oil thickness overrides to hard-gated oil selection
   })
 
   assert.equal(observed.thickness, "fine")
-  assert.equal(result.products[0]?.supported_claims[0]?.label, "Haardicke: Fein")
+  assert.equal(
+    result.products[0]?.supported_claims.some((claim) => claim.field === "thickness"),
+    false,
+  )
+})
+
+test("selectProducts applies oil density overrides to density-weight caution", async () => {
+  const observed: { density?: HairProfile["density"] } = {}
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, hairProfile, runtime }) => {
+      assert.equal(category, "oil")
+      observed.density = hairProfile?.density ?? null
+      assert.equal(runtime.categories.oil.targetProfile?.densityWeightCaution, true)
+      return [createOilMatchedProduct("low-density-oil", 0.94)]
+    },
+  })
+
+  const result = await tool({
+    category: "oil",
+    message: "Meine Haare sind gerade wenig dicht. Welches Haaroel passt als leichtes Finish?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "normal",
+      density: "medium",
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    activeProfileSignals: [
+      {
+        field: "density",
+        value: "low",
+        source: "message",
+        selection_effect: "override",
+        evidence: "wenig dicht",
+      },
+    ],
+  })
+
+  assert.equal(observed.density, "low")
+  assert.ok(
+    result.profile_basis.includes(
+      "Profil-Hinweis: aktuelle Angabe Haardichte Wenig Haare statt gespeichert Mittlere Dichte",
+    ),
+  )
+  assert.ok(result.profile_basis.includes("Haardichte: Wenig Haare"))
+  assert.ok(result.profile_basis.includes("Gewichts-Caveat: sehr sparsam dosieren."))
 })
 
 test("selectProducts treats non-greasy fine-hair oil wording as a light finish target", async () => {
@@ -2236,14 +2535,20 @@ test("selectProducts treats non-greasy fine-hair oil wording as a light finish t
   })
 
   assert.equal(result.decision, "recommended")
-  assert.equal(result.products[0]?.supported_claims[0]?.label, "Haardicke: Fein")
-  assert.equal(result.products[0]?.supported_claims[1]?.label, "Oel-Zweck: Leichtes Finish")
+  assert.equal(result.products[0]?.supported_claims[0]?.label, "Oel-Zweck: Leichtes Finish")
 })
 
-test("projectSelectedProducts does not fabricate generic missing-info for explicit default-branch categories", () => {
+test("projectSelectedProducts uses mask-specific missing-info for explicit mask requests", () => {
   const result = projectSelectedProducts([], { thickness: "normal" } as HairProfile, "mask")
 
-  assert.deepEqual(result.missing_info, [])
+  assert.deepEqual(result.missing_info, [
+    {
+      key: "protein_moisture_balance",
+      label: "Protein-/Feuchtigkeitsbalance",
+      blocking: true,
+      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Masken-Auswahl.",
+    },
+  ])
 })
 
 test("selectProducts tool only accepts engine-backed categories", () => {

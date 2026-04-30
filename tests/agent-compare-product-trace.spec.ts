@@ -551,7 +551,7 @@ test("judgment route accepts newer leave-in and mask supported claim fields", as
   }))
 
 test("real-user current comparison is marked ephemeral in debug output", async () => {
-  const { buildCurrentDebugLines } = await import("../src/lib/agent/compare/run-current-chat")
+  const { buildCurrentDebugLines } = await import("../src/lib/agent/compare/current-disabled")
 
   const lines = buildCurrentDebugLines(
     {

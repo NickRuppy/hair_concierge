@@ -47,14 +47,25 @@ import {
 } from "@/lib/leave-in/constants"
 import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
 import {
+  HAIR_DENSITIES,
   HAIR_DENSITY_LABELS,
+  HAIR_TEXTURE_LABELS,
+  HAIR_TEXTURES,
   HAIR_THICKNESS_LABELS,
+  HAIR_THICKNESSES,
   HEAT_STYLING_LEVELS,
   PROTEIN_MOISTURE_LABELS,
+  SCALP_CONDITIONS,
   SCALP_CONDITION_LABELS,
+  SCALP_TYPES,
   SCALP_TYPE_LABELS,
   STYLING_TOOLS,
   type HeatStyling,
+  type HairDensity,
+  type HairTexture,
+  type HairThickness,
+  type ScalpCondition,
+  type ScalpType,
   type StylingTool,
 } from "@/lib/vocabulary"
 
@@ -200,9 +211,7 @@ function projectDisplayableProduct(
   const caveat = mapDisplayableCaveat(meta?.tradeoffs?.[0] ?? null)
   const supportedClaims = buildSupportedProductClaims(product)
   const unsupportedRequestedSignals = [
-    ...(meta?.category === "shampoo" || meta?.category === "conditioner"
-      ? buildUnsupportedRequestedSignals(routeContext?.activeProfileSignals ?? [], supportedClaims)
-      : []),
+    ...buildUnsupportedRequestedSignals(routeContext?.activeProfileSignals ?? [], supportedClaims),
     ...(meta?.category === "conditioner" ||
     meta?.category === "leave_in" ||
     meta?.category === "mask" ||
@@ -1097,16 +1106,6 @@ function buildConditionerSupportedProductClaims(
 ): SupportedProductClaim[] {
   return uniqueClaims([
     buildClaim(
-      "thickness",
-      meta.matched_profile.thickness,
-      "product_spec",
-      meta.matched_profile.thickness
-        ? `Haardicke: ${
-            HAIR_THICKNESS_LABELS[meta.matched_profile.thickness] ?? meta.matched_profile.thickness
-          }`
-        : null,
-    ),
-    buildClaim(
       "weight",
       meta.product_weight,
       "product_spec",
@@ -1146,16 +1145,6 @@ function buildLeaveInSupportedProductClaims(
   const primaryBenefit = meta.product_care_benefits?.[0] ?? null
 
   return uniqueClaims([
-    buildClaim(
-      "thickness",
-      meta.matched_profile.thickness,
-      "product_spec",
-      meta.matched_profile.thickness
-        ? `Haardicke: ${
-            HAIR_THICKNESS_LABELS[meta.matched_profile.thickness] ?? meta.matched_profile.thickness
-          }`
-        : null,
-    ),
     buildClaim(
       "format",
       meta.product_format,
@@ -1256,16 +1245,6 @@ function buildMaskSupportedProductClaims(
 
 function buildOilSupportedProductClaims(meta: OilRecommendationMetadata): SupportedProductClaim[] {
   return uniqueClaims([
-    buildClaim(
-      "thickness",
-      meta.matched_profile.thickness,
-      "product_spec",
-      meta.matched_profile.thickness
-        ? `Haardicke: ${
-            HAIR_THICKNESS_LABELS[meta.matched_profile.thickness] ?? meta.matched_profile.thickness
-          }`
-        : null,
-    ),
     buildClaim(
       "oil_purpose",
       meta.use_mode,
@@ -1471,8 +1450,29 @@ function buildConditionerMissingInfo(
       return {
         key: field,
         label: "Protein-/Feuchtigkeitsbalance",
-        blocking: false,
+        blocking: true,
         detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Conditioner-Auswahl.",
+      }
+  }
+}
+
+function buildMaskMissingInfo(
+  field: "thickness" | "protein_moisture_balance",
+): SelectedProductsMissingInfo {
+  switch (field) {
+    case "thickness":
+      return {
+        key: field,
+        label: "Haardicke",
+        blocking: true,
+        detail: "Ohne Haardicke kann die Masken-Auswahl nicht sinnvoll eingegrenzt werden.",
+      }
+    case "protein_moisture_balance":
+      return {
+        key: field,
+        label: "Protein-/Feuchtigkeitsbalance",
+        blocking: true,
+        detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Masken-Auswahl.",
       }
   }
 }
@@ -1590,15 +1590,32 @@ function deriveMissingInfoForEmptySelection(params: {
       }
 
       return getLeaveInMissingProfileFields({ runtime, hairProfile }).map(buildLeaveInMissingInfo)
+    case "mask":
+      return deriveConditionerMissingProfileFields(hairProfile).map(buildMaskMissingInfo)
     case "oil":
       if (!runtime) {
         return deriveGenericMissingInfo(hairProfile)
+      }
+
+      if (runtime.categories.oil.noRecommendationReason) {
+        return []
       }
 
       return getOilMissingProfileFields({ runtime, hairProfile }).map(buildOilMissingInfo)
     default:
       return explicitCategoryProvided ? [] : deriveGenericMissingInfo(hairProfile)
   }
+}
+
+function isOilNoRecommendationDecision(
+  category: SelectableProductCategory | null,
+  categoryDecision: CategoryDecision | null,
+): boolean {
+  return (
+    category === "oil" &&
+    categoryDecision?.category === "oil" &&
+    Boolean(categoryDecision.noRecommendationReason)
+  )
 }
 
 function getCategoryDecision(
@@ -1639,6 +1656,11 @@ function buildProfileBasis(
 
   if (category === "shampoo") {
     return uniqueNonEmpty([
+      ...buildProfileDeviationNotices({
+        originalHairProfile: routeContext?.originalHairProfile ?? null,
+        effectiveHairProfile: hairProfile,
+        activeSignals: routeContext?.activeProfileSignals ?? [],
+      }),
       hairProfile.thickness
         ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
         : null,
@@ -1699,6 +1721,12 @@ function buildProfileBasis(
       hairProfile.thickness
         ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
         : null,
+      hairProfile.hair_texture
+        ? `Haarmuster: ${HAIR_TEXTURE_LABELS[hairProfile.hair_texture] ?? hairProfile.hair_texture}`
+        : null,
+      hairProfile.density
+        ? `Haardichte: ${HAIR_DENSITY_LABELS[hairProfile.density] ?? hairProfile.density}`
+        : null,
       leaveInDecision?.targetProfile?.heatProtectionNeed &&
       leaveInDecision.targetProfile.heatProtectionNeed !== "none"
         ? `Hitzeschutz-Bedarf: ${
@@ -1756,6 +1784,29 @@ function buildProfileBasis(
     ])
   }
 
+  if (category === "oil") {
+    const oilDecision = categoryDecision?.category === "oil" ? categoryDecision : null
+    return uniqueNonEmpty([
+      ...buildProfileDeviationNotices({
+        originalHairProfile: routeContext?.originalHairProfile ?? null,
+        effectiveHairProfile: hairProfile,
+        activeSignals: routeContext?.activeProfileSignals ?? [],
+      }),
+      hairProfile.thickness
+        ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
+        : null,
+      hairProfile.density
+        ? `Haardichte: ${HAIR_DENSITY_LABELS[hairProfile.density] ?? hairProfile.density}`
+        : null,
+      oilDecision?.targetProfile?.purpose
+        ? `Oel-Zweck: ${OIL_PURPOSE_LABELS[oilDecision.targetProfile.purpose]}`
+        : null,
+      oilDecision?.targetProfile?.densityWeightCaution
+        ? "Gewichts-Caveat: sehr sparsam dosieren."
+        : null,
+    ])
+  }
+
   return uniqueNonEmpty([
     hairProfile.thickness
       ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
@@ -1782,14 +1833,80 @@ function buildProfileDeviationNotices(params: {
       if (!original || !effective || original === effective) continue
 
       notices.push(
-        `Profil-Hinweis: aktuelle Angabe Haardicke ${
-          HAIR_THICKNESS_LABELS[effective] ?? effective
-        } statt gespeichert ${HAIR_THICKNESS_LABELS[original] ?? original}`,
+        buildProfileDeviationNotice({
+          label: "Haardicke",
+          current: HAIR_THICKNESS_LABELS[effective] ?? effective,
+          stored: HAIR_THICKNESS_LABELS[original] ?? original,
+        }),
+      )
+    }
+
+    if (signal.field === "hair_texture") {
+      const original = originalHairProfile.hair_texture
+      const effective = effectiveHairProfile.hair_texture
+      if (!original || !effective || original === effective) continue
+
+      notices.push(
+        buildProfileDeviationNotice({
+          label: "Haarmuster",
+          current: HAIR_TEXTURE_LABELS[effective] ?? effective,
+          stored: HAIR_TEXTURE_LABELS[original] ?? original,
+        }),
+      )
+    }
+
+    if (signal.field === "density") {
+      const original = originalHairProfile.density
+      const effective = effectiveHairProfile.density
+      if (!original || !effective || original === effective) continue
+
+      notices.push(
+        buildProfileDeviationNotice({
+          label: "Haardichte",
+          current: HAIR_DENSITY_LABELS[effective] ?? effective,
+          stored: HAIR_DENSITY_LABELS[original] ?? original,
+        }),
+      )
+    }
+
+    if (signal.field === "scalp_type") {
+      const original = originalHairProfile.scalp_type
+      const effective = effectiveHairProfile.scalp_type
+      if (!original || !effective || original === effective) continue
+
+      notices.push(
+        buildProfileDeviationNotice({
+          label: "Kopfhaut",
+          current: SCALP_TYPE_LABELS[effective] ?? effective,
+          stored: SCALP_TYPE_LABELS[original] ?? original,
+        }),
+      )
+    }
+
+    if (signal.field === "scalp_condition") {
+      const original = originalHairProfile.scalp_condition
+      const effective = effectiveHairProfile.scalp_condition
+      if (!original || !effective || original === effective) continue
+
+      notices.push(
+        buildProfileDeviationNotice({
+          label: "Kopfhaut-Beschwerden",
+          current: SCALP_CONDITION_LABELS[effective] ?? effective,
+          stored: SCALP_CONDITION_LABELS[original] ?? original,
+        }),
       )
     }
   }
 
   return notices
+}
+
+function buildProfileDeviationNotice(params: {
+  label: string
+  current: string
+  stored: string
+}): string {
+  return `Profil-Hinweis: aktuelle Angabe ${params.label} ${params.current} statt gespeichert ${params.stored}`
 }
 
 function deriveDecision(params: {
@@ -1825,7 +1942,11 @@ function deriveDecision(params: {
     return "not_recommended"
   }
 
-  if (products.length === 0 && missingInfo.some((item) => item.blocking)) {
+  if (isOilNoRecommendationDecision(category, categoryDecision)) {
+    return "not_recommended"
+  }
+
+  if (missingInfo.some((item) => item.blocking)) {
     return "needs_more_info"
   }
 
@@ -1931,6 +2052,7 @@ function isScalpOnlyMaskQuestion(
 function buildProductResponsePolicy(params: {
   category: SelectableProductCategory | null
   decision: SelectProductsDecision
+  categoryDecision: CategoryDecision | null
   routeContext?: SelectProductsRouteContext | null
 }): { product_response_policy: ProductResponsePolicy; policy_reason: string } {
   const { category, decision, routeContext } = params
@@ -1984,6 +2106,14 @@ function buildProductResponsePolicy(params: {
       product_response_policy: "redirect_to_better_lever",
       policy_reason:
         "Diese Masken-Anfrage betrifft nur Kopfhaut, Ansatz oder Schuppen. Eine Haarmaske ist dafuer nicht der richtige Produkthebel; passender sind Kopfhaut- oder Shampoo-Einordnung.",
+    }
+  }
+
+  if (isOilNoRecommendationDecision(category, params.categoryDecision ?? null)) {
+    return {
+      product_response_policy: "redirect_to_better_lever",
+      policy_reason:
+        "Die Oel-Entscheidung unterdrueckt Produkte bewusst und leitet zu einem besseren Hebel oder zu weniger Oel-Nutzung um.",
     }
   }
 
@@ -2115,6 +2245,24 @@ function buildCategoryGuidance(params: {
     return "Maske ist hier Zusatzpflege fuer Laengen und Spitzen: Die Auswahl folgt Gewicht, Protein-/Feuchtigkeitsbalance, Intensitaet und Fit. Nicht als Conditioner-Ersatz, Kopfhautbehandlung oder Schadenspraevention framen."
   }
 
+  if (category === "oil" && categoryDecision?.category === "oil") {
+    if (categoryDecision.noRecommendationReason === "overload_risk") {
+      return "Ein neues Oel ist hier nicht der richtige Hebel: Die aktuelle Logik sieht ein Beschwerungs- oder Build-up-Risiko. Keine Oel-Produkte empfehlen; stattdessen weniger Oel, weniger Layering oder Reset-Pflege erklaeren."
+    }
+
+    if (categoryDecision.noRecommendationReason === "scalp_treatment_needed") {
+      return "Oel ist hier nicht als Kopfhautbehandlung zu empfehlen. Keine Oel-Produkte empfehlen; zu Kopfhaut- oder Shampoo-Einordnung umleiten."
+    }
+
+    if (categoryDecision.noRecommendationReason === "therapy_oil_missing") {
+      return "Fuer Wachstums-, Haarverlust- oder Therapie-Oel-Anfragen gibt es in dieser Produktauswahl keinen sicheren kosmetischen Produktpfad. Keine Oel-Produkte empfehlen und keine medizinischen Versprechen machen."
+    }
+
+    if (categoryDecision.noRecommendationReason === "better_non_oil_category") {
+      return "Oel ist fuer diese Anfrage nicht der beste Produkthebel. Keine Oel-Produkte empfehlen; zu Leave-in, Conditioner, Maske oder passender Kopfhautpflege umleiten."
+    }
+  }
+
   if (decision === "not_recommended") {
     return "Diese Kategorie ist fuer die aktuelle Anfrage wahrscheinlich nicht der beste Hebel."
   }
@@ -2141,16 +2289,12 @@ export function projectSelectedProducts(
   const resolvedCategory: SelectableProductCategory | null =
     category ?? topProduct?.recommendation_meta?.category ?? null
   const categoryDecision = getCategoryDecision(runtime, resolvedCategory)
-  const missing_info = (
-    products.length === 0
-      ? deriveMissingInfoForEmptySelection({
-          category: resolvedCategory,
-          explicitCategoryProvided: category !== null,
-          hairProfile,
-          runtime,
-        })
-      : []
-  ).filter((item) => item.blocking)
+  const missing_info = deriveMissingInfoForEmptySelection({
+    category: resolvedCategory,
+    explicitCategoryProvided: category !== null,
+    hairProfile,
+    runtime,
+  }).filter((item) => item.blocking)
   const decision = deriveDecision({
     products,
     category: resolvedCategory,
@@ -2161,6 +2305,7 @@ export function projectSelectedProducts(
   const productPolicy = buildProductResponsePolicy({
     category: resolvedCategory,
     decision,
+    categoryDecision,
     routeContext,
   })
   const displayableProducts = decision === "recommended" ? products.slice(0, 3) : []
@@ -2168,6 +2313,10 @@ export function projectSelectedProducts(
     projectDisplayableProduct(product, index + 1, routeContext),
   )
   const packetUnsupportedSignals = uniqueUnsupportedSignals([
+    ...buildUnsupportedRequestedSignals(
+      routeContext?.activeProfileSignals ?? [],
+      projectedProducts.flatMap((product) => product.supported_claims),
+    ),
     ...projectedProducts.flatMap((product) => product.unsupported_requested_signals),
     ...(resolvedCategory === "conditioner" ||
     resolvedCategory === "leave_in" ||
@@ -2252,33 +2401,7 @@ function applyShampooActiveOverrides(
   const next: HairProfile = { ...hairProfile }
 
   for (const signal of activeSignals) {
-    if (signal.selection_effect !== "override" && signal.selection_effect !== "caution") {
-      continue
-    }
-
-    if (
-      signal.field === "thickness" &&
-      (signal.value === "fine" || signal.value === "normal" || signal.value === "coarse")
-    ) {
-      next.thickness = signal.value
-    }
-
-    if (
-      signal.field === "scalp_type" &&
-      (signal.value === "oily" || signal.value === "balanced" || signal.value === "dry")
-    ) {
-      next.scalp_type = signal.value
-      if (signal.selection_effect === "override") {
-        next.scalp_condition = null
-      }
-    }
-
-    if (
-      signal.field === "scalp_condition" &&
-      (signal.value === "dandruff" || signal.value === "dry_flakes" || signal.value === "irritated")
-    ) {
-      next.scalp_condition = signal.value
-    }
+    applyPhysicalProfileOverride(next, signal)
   }
 
   return next
@@ -2293,16 +2416,7 @@ function applyConditionerActiveOverrides(
   const next: HairProfile = { ...hairProfile }
 
   for (const signal of activeSignals) {
-    if (signal.selection_effect !== "override" && signal.selection_effect !== "caution") {
-      continue
-    }
-
-    if (
-      signal.field === "thickness" &&
-      (signal.value === "fine" || signal.value === "normal" || signal.value === "coarse")
-    ) {
-      next.thickness = signal.value
-    }
+    applyPhysicalProfileOverride(next, signal)
   }
 
   return next
@@ -2314,6 +2428,57 @@ function isStylingTool(value: string): value is StylingTool {
 
 function isHeatStyling(value: string): value is HeatStyling {
   return (HEAT_STYLING_LEVELS as readonly string[]).includes(value)
+}
+
+function isHairThickness(value: string): value is HairThickness {
+  return (HAIR_THICKNESSES as readonly string[]).includes(value)
+}
+
+function isHairTexture(value: string): value is HairTexture {
+  return (HAIR_TEXTURES as readonly string[]).includes(value)
+}
+
+function isHairDensity(value: string): value is HairDensity {
+  return (HAIR_DENSITIES as readonly string[]).includes(value)
+}
+
+function isScalpType(value: string): value is ScalpType {
+  return (SCALP_TYPES as readonly string[]).includes(value)
+}
+
+function isScalpCondition(value: string): value is ScalpCondition {
+  return (SCALP_CONDITIONS as readonly string[]).includes(value)
+}
+
+function shouldApplyProfileOverride(signal: AgentActiveProfileSignal): boolean {
+  return signal.selection_effect === "override" || signal.selection_effect === "caution"
+}
+
+function applyPhysicalProfileOverride(next: HairProfile, signal: AgentActiveProfileSignal): void {
+  if (!shouldApplyProfileOverride(signal)) return
+
+  if (signal.field === "thickness" && isHairThickness(signal.value)) {
+    next.thickness = signal.value
+  }
+
+  if (signal.field === "hair_texture" && isHairTexture(signal.value)) {
+    next.hair_texture = signal.value
+  }
+
+  if (signal.field === "density" && isHairDensity(signal.value)) {
+    next.density = signal.value
+  }
+
+  if (signal.field === "scalp_type" && isScalpType(signal.value)) {
+    next.scalp_type = signal.value
+    if (signal.selection_effect === "override") {
+      next.scalp_condition = null
+    }
+  }
+
+  if (signal.field === "scalp_condition" && isScalpCondition(signal.value)) {
+    next.scalp_condition = signal.value
+  }
 }
 
 function applyLeaveInActiveOverrides(
@@ -2328,16 +2493,7 @@ function applyLeaveInActiveOverrides(
   }
 
   for (const signal of activeSignals) {
-    if (signal.selection_effect !== "override" && signal.selection_effect !== "caution") {
-      continue
-    }
-
-    if (
-      signal.field === "thickness" &&
-      (signal.value === "fine" || signal.value === "normal" || signal.value === "coarse")
-    ) {
-      next.thickness = signal.value
-    }
+    applyPhysicalProfileOverride(next, signal)
 
     if (signal.field === "styling_tools" && isStylingTool(signal.value)) {
       const tools = new Set(next.styling_tools ?? [])

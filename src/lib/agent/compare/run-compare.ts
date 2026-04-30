@@ -1,5 +1,5 @@
 import { AGENT_COMPARE_SCENARIOS } from "./scenarios"
-import { runCurrentChatComparison } from "./run-current-chat"
+import { runCurrentChatComparison } from "./current-disabled"
 import { runShadowAgentComparison } from "./run-shadow-agent"
 import type {
   AgentCompareRequest,
