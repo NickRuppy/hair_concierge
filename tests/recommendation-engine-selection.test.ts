@@ -783,6 +783,110 @@ test("engine leave-in reranking honors explicit spray and cream comparison reque
   )
 })
 
+test("engine leave-in reranking prefers integrated heat bonus when separate heat protectant exists", () => {
+  const profile = {
+    ...LOW_DAMAGE_PROFILE,
+    hair_texture: "wavy" as const,
+    thickness: "normal" as const,
+    density: "medium" as const,
+    protein_moisture_balance: "stretches_stays" as const,
+    styling_tools: ["blow_dryer"] as HairProfile["styling_tools"],
+    heat_styling: "daily" as const,
+    uses_heat_protection: false,
+  }
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "leave_in",
+    message: "Ich föhne nur und habe schon einen separaten Hitzeschutz. Welches Leave-in passt?",
+  })
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(profile, [], requestContext)
+  const decision = runtime.categories.leaveIn
+
+  assert.equal(decision.targetProfile?.heatProtectionNeed, "moderate")
+  assert.equal(decision.targetProfile?.hasSeparateHeatProtectant, true)
+
+  const candidates = [
+    createMatchedProduct("care-only-1", "Leave-in", {
+      combined_score: 0.98,
+      suitable_thicknesses: ["normal"],
+    }),
+    createMatchedProduct("care-only-2", "Leave-in", {
+      combined_score: 0.97,
+      suitable_thicknesses: ["normal"],
+    }),
+    createMatchedProduct("care-only-3", "Leave-in", {
+      combined_score: 0.96,
+      suitable_thicknesses: ["normal"],
+    }),
+    createMatchedProduct("two-in-one", "Leave-in", {
+      combined_score: 0,
+      suitable_thicknesses: ["normal"],
+    }),
+  ]
+
+  const specs: ProductLeaveInSpecs[] = [
+    {
+      product_id: "care-only-1",
+      format: "lotion",
+      weight: "medium",
+      roles: ["extension_conditioner"],
+      provides_heat_protection: false,
+      heat_protection_max_c: null,
+      heat_activation_required: false,
+      care_benefits: ["repair", "anti_frizz"],
+      ingredient_flags: [],
+      application_stage: ["towel_dry"],
+    },
+    {
+      product_id: "care-only-2",
+      format: "lotion",
+      weight: "medium",
+      roles: ["extension_conditioner"],
+      provides_heat_protection: false,
+      heat_protection_max_c: null,
+      heat_activation_required: false,
+      care_benefits: ["repair", "anti_frizz"],
+      ingredient_flags: [],
+      application_stage: ["towel_dry"],
+    },
+    {
+      product_id: "care-only-3",
+      format: "lotion",
+      weight: "medium",
+      roles: ["extension_conditioner"],
+      provides_heat_protection: false,
+      heat_protection_max_c: null,
+      heat_activation_required: false,
+      care_benefits: ["repair", "anti_frizz"],
+      ingredient_flags: [],
+      application_stage: ["towel_dry"],
+    },
+    {
+      product_id: "two-in-one",
+      format: "lotion",
+      weight: "medium",
+      roles: ["extension_conditioner", "styling_prep"],
+      provides_heat_protection: true,
+      heat_protection_max_c: null,
+      heat_activation_required: false,
+      care_benefits: ["repair", "detangling", "anti_frizz"],
+      ingredient_flags: [],
+      application_stage: ["towel_dry", "pre_heat"],
+    },
+  ]
+
+  const reranked = rerankLeaveInProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    hairProfile: profile,
+  })
+
+  assert.equal(reranked[0]?.id, "two-in-one")
+  const meta = reranked[0]?.recommendation_meta as LeaveInRecommendationMetadata | undefined
+  assert.equal(meta?.provides_heat_protection, true)
+  assert.ok(meta?.top_reasons.some((reason) => reason.includes("Produkt weniger")))
+})
+
 test("engine leave-in metadata exposes product conditioner relationship, not target relationship", () => {
   const boosterProfile = {
     ...SEVERE_DAMAGE_PROFILE,

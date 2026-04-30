@@ -1705,6 +1705,10 @@ function buildProfileBasis(
             leaveInDecision.targetProfile.heatProtectionNeed === "high" ? "Hoch" : "Moderat"
           }`
         : null,
+      leaveInDecision?.targetProfile?.hasSeparateHeatProtectant &&
+      leaveInDecision.targetProfile.heatProtectionNeed === "moderate"
+        ? "Separater Hitzeschutz vorhanden: Leave-in-Hitzeschutz ist Bonus, kein Muss."
+        : null,
       leaveInDecision?.targetProfile?.conditionerRelationship
         ? `Leave-in-Rolle im Profil: ${
             LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[
@@ -2079,6 +2083,16 @@ function buildCategoryGuidance(params: {
     }
 
     return "Conditioner ist hier ein Laengenhebel: Die Auswahl folgt Haardicke, Haardichte, Ziel-Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensitaet. Dichte und Damage-Kontext duerfen die Profilableitung erklaeren, sind aber keine Produktclaims."
+  }
+
+  if (category === "leave_in") {
+    const leaveInDecision = categoryDecision?.category === "leave_in" ? categoryDecision : null
+    if (
+      leaveInDecision?.targetProfile?.hasSeparateHeatProtectant &&
+      leaveInDecision.targetProfile.heatProtectionNeed === "moderate"
+    ) {
+      return "Der Nutzer hat bereits separaten Hitzeschutz. Fuer Foehnen ist integrierter Leave-in-Hitzeschutz ein Bonus, kein Muss. Sage im Einstieg ausdruecklich, dass diese Zwei-in-eins-Route ein Produkt weniger in der Routine bedeuten kann: Leave-in-Pflege plus Foehnschutz in einem Produkt. Sage auch, dass der Nutzer den separaten Hitzeschutz behalten kann; dann sind Leave-ins ohne eigenen Hitzeschutz weiterhin normale Pflege-Booster."
+    }
   }
 
   if (category === "mask") {

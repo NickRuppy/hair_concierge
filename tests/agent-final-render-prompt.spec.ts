@@ -28,6 +28,13 @@ test("final render prompt preserves spray versus cream leave-in comparisons", ()
   assert.match(AGENT_FINAL_RENDER_PROMPT, /Ersetze das Spray nicht durch eine Lotion/)
 })
 
+test("final render prompt explains the one-less-product value of integrated leave-in heat protection", () => {
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /verwende im Einstieg ausdruecklich/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /ein Produkt weniger/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /Zwei-in-eins-Route/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /separaten Hitzeschutz behalten/)
+})
+
 test("final render prompt requires profile deviation notices up front", () => {
   assert.match(AGENT_FINAL_RENDER_PROMPT, /Pflicht: Wenn selected_products\.profile_basis/)
   assert.match(AGENT_FINAL_RENDER_PROMPT, /Profil-Hinweis:/)

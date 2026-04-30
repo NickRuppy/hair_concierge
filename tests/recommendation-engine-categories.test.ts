@@ -251,6 +251,35 @@ test("explicit leave-in heat-protection wording builds a heat target without sty
   assert.ok(categories.leaveIn.targetProfile?.careBenefits.includes("heat_protect"))
 })
 
+test("separate heat protectant wording keeps blow-dry leave-in heat protection as a bonus", () => {
+  const blowDryProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    heat_styling: "daily" as const,
+    styling_tools: ["blow_dryer"] as HairProfile["styling_tools"],
+    drying_method: "air_dry" as const,
+    uses_heat_protection: false,
+  }
+  const { normalized, damage, careNeeds, plan } = buildEngineState(blowDryProfile, [])
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "leave_in",
+    message: "Ich föhne nur und habe schon einen separaten Hitzeschutz. Welches Leave-in passt?",
+  })
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    requestContext,
+  )
+
+  assert.equal(requestContext.leaveInSeparateHeatProtectantMentioned, true)
+  assert.equal(requestContext.leaveInHeatProtectionRequest, null)
+  assert.equal(categories.leaveIn.relevant, true)
+  assert.equal(categories.leaveIn.targetProfile?.heatProtectionNeed, "moderate")
+  assert.equal(categories.leaveIn.targetProfile?.stylingPrepNeed, "none")
+  assert.equal(categories.leaveIn.targetProfile?.hasSeparateHeatProtectant, true)
+})
+
 test("explicit fine weighed-down leave-in requests target light booster products", () => {
   const fineProfile = {
     ...LOW_DAMAGE_PROFILE,
@@ -744,6 +773,7 @@ test("oil decision asks for clarification when no explicit purpose is available"
     requestedCategory: "oil",
     maskIntensityRequest: null,
     leaveInHeatProtectionRequest: null,
+    leaveInSeparateHeatProtectantMentioned: false,
     leaveInWeightRequest: null,
     leaveInConditionerRelationshipRequest: null,
     leaveInRequestedFormats: [],

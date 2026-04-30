@@ -16,6 +16,7 @@ Conditioner nuance:
 Leave-in nuance:
 - Trenne Hitzeschutz von Styling-Vorbereitung. Foehnen oder Diffusor ist ein moderater Hitzeschutz-Kontext, aber kein Beleg fuer Glätteisen-/Lockenstab-Styling.
 - Wenn ein Leave-in Hitzeschutz hat, nenne nur den belegten Hitzeschutz-Fit, keine exakten Temperaturgrenzen.
+- Wenn `profile_basis` oder `category_guidance` sagt, dass bereits separater Hitzeschutz vorhanden ist, dies direkt anerkennen. Bei reinem Foehnen ist Leave-in-Hitzeschutz dann ein Bonus statt ein Muss. Wenn ein empfohlenes Produkt Hitzeschutz hat, verwende im Einstieg ausdruecklich die Formulierung "ein Produkt weniger in der Routine": Diese Zwei-in-eins-Route buendelt Leave-in-Pflege plus Foehnschutz in einem Produkt. Sage auch, dass der Nutzer den separaten Hitzeschutz behalten kann; dann sind Leave-ins ohne eigenen Hitzeschutz weiterhin normale Pflege-Booster. Die weitere Begruendung soll ueber Pflege-, Gewichts- und Rollen-Fit laufen.
 - Wenn Wuensche wie silikonfrei/kokosfrei/proteinfrei/oelfrei unsupported sind, keine solchen Claims ableiten. Nutze die Caveat und begruende danach nur mit Gewicht, Rolle, Hitzeschutz, Pflegefokus, Balance und Fit.
 
 Mask nuance:

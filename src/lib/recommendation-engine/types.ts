@@ -68,6 +68,7 @@ export interface RecommendationRequestContext {
   requestedCategory: EngineCategoryId | null
   maskIntensityRequest: "intensive" | null
   leaveInHeatProtectionRequest: Exclude<LeaveInHeatProtectionNeed, "none"> | null
+  leaveInSeparateHeatProtectantMentioned: boolean
   leaveInWeightRequest: CanonicalWeight | null
   leaveInConditionerRelationshipRequest: LeaveInConditionerRelationship | null
   leaveInRequestedFormats: LeaveInFormat[]

@@ -324,6 +324,8 @@ export function buildLeaveInCategoryDecision(
 
   const heatProtectionNeed =
     requestContext?.leaveInHeatProtectionRequest ?? deriveHeatProtectionNeed(profile)
+  const hasSeparateHeatProtection =
+    requestContext?.leaveInSeparateHeatProtectantMentioned || hasSeparateHeatProtectant(profile)
   const needBucket = deriveLeaveInNeedBucket(profile, damage, careNeeds, heatProtectionNeed)
   const stylingPrepNeed =
     heatProtectionNeed === "high" ? "heat_style" : deriveStylingPrepNeed(profile, careNeeds)
@@ -349,7 +351,7 @@ export function buildLeaveInCategoryDecision(
       balanceDirection: deriveBalanceTarget(damage),
       careBenefits,
       applicationStageNeed: heatProtectionNeed !== "none" ? "pre_heat" : null,
-      hasSeparateHeatProtectant: hasSeparateHeatProtectant(profile),
+      hasSeparateHeatProtectant: hasSeparateHeatProtection,
       thickness: profile.thickness,
     },
     notes,

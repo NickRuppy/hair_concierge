@@ -9,6 +9,7 @@ export function emptyRecommendationRequestContext(): RecommendationRequestContex
     requestedCategory: null,
     maskIntensityRequest: null,
     leaveInHeatProtectionRequest: null,
+    leaveInSeparateHeatProtectantMentioned: false,
     leaveInWeightRequest: null,
     leaveInConditionerRelationshipRequest: null,
     leaveInRequestedFormats: [],
@@ -109,11 +110,40 @@ function inferLeaveInHeatProtectionRequestFromMessage(message: string): "high" |
   return null
 }
 
+function inferLeaveInSeparateHeatProtectantMentionedFromMessage(message: string): boolean {
+  const normalized = normalizeMessage(message)
+
+  if (
+    !/\bhitzeschutz\w*\b|\bhitze\s*schutz\w*\b|\bwaermeschutz\w*\b|\bthermoschutz\w*\b|\bheat[-\s]?protect\w*\b/.test(
+      normalized,
+    )
+  ) {
+    return false
+  }
+
+  return (
+    /\b(?:habe|hab|nutze|benutze|verwende|nehm(?:e)?)\b.{0,80}\b(?:schon|bereits|separat\w*|eigen\w*|extra)\b.{0,80}\b(?:hitzeschutz\w*|hitze\s*schutz\w*|waermeschutz\w*|thermoschutz\w*|heat[-\s]?protect\w*)\b/.test(
+      normalized,
+    ) ||
+    /\b(?:schon|bereits|separat\w*|eigen\w*|extra)\b.{0,80}\b(?:hitzeschutz\w*|hitze\s*schutz\w*|waermeschutz\w*|thermoschutz\w*|heat[-\s]?protect\w*)\b/.test(
+      normalized,
+    ) ||
+    /\b(?:hitzeschutz\w*|hitze\s*schutz\w*|waermeschutz\w*|thermoschutz\w*|heat[-\s]?protect\w*)\b.{0,80}\b(?:schon|bereits|separat\w*|eigen\w*|extra)\b/.test(
+      normalized,
+    )
+  )
+}
+
 export function buildRecommendationRequestContext(params: {
   requestedCategory: EngineCategoryId | null
   message: string
 }): RecommendationRequestContext {
   const { requestedCategory, message } = params
+  const supportsLeaveInRequests =
+    requestedCategory === "leave_in" || requestedCategory === "routine"
+  const leaveInSeparateHeatProtectantMentioned = supportsLeaveInRequests
+    ? inferLeaveInSeparateHeatProtectantMentionedFromMessage(message)
+    : false
   const oilPurpose =
     requestedCategory === "oil" || requestedCategory === "routine"
       ? inferOilPurposeFromMessage(message)
@@ -126,21 +156,19 @@ export function buildRecommendationRequestContext(params: {
         ? inferMaskIntensityRequestFromMessage(message)
         : null,
     leaveInHeatProtectionRequest:
-      requestedCategory === "leave_in" || requestedCategory === "routine"
+      supportsLeaveInRequests && !leaveInSeparateHeatProtectantMentioned
         ? inferLeaveInHeatProtectionRequestFromMessage(message)
         : null,
-    leaveInWeightRequest:
-      requestedCategory === "leave_in" || requestedCategory === "routine"
-        ? inferLeaveInWeightRequestFromMessage(message)
-        : null,
-    leaveInConditionerRelationshipRequest:
-      requestedCategory === "leave_in" || requestedCategory === "routine"
-        ? inferLeaveInConditionerRelationshipRequestFromMessage(message)
-        : null,
-    leaveInRequestedFormats:
-      requestedCategory === "leave_in" || requestedCategory === "routine"
-        ? inferLeaveInRequestedFormatsFromMessage(message)
-        : [],
+    leaveInSeparateHeatProtectantMentioned,
+    leaveInWeightRequest: supportsLeaveInRequests
+      ? inferLeaveInWeightRequestFromMessage(message)
+      : null,
+    leaveInConditionerRelationshipRequest: supportsLeaveInRequests
+      ? inferLeaveInConditionerRelationshipRequestFromMessage(message)
+      : null,
+    leaveInRequestedFormats: supportsLeaveInRequests
+      ? inferLeaveInRequestedFormatsFromMessage(message)
+      : [],
     oilPurpose,
     oilNoRecommendationReason:
       requestedCategory === "oil" || requestedCategory === "routine"

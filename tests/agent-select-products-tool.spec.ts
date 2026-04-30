@@ -194,6 +194,7 @@ function createRuntimeStub(
       requestedCategory: null,
       maskIntensityRequest: null,
       leaveInHeatProtectionRequest: null,
+      leaveInSeparateHeatProtectantMentioned: false,
       leaveInWeightRequest: null,
       leaveInConditionerRelationshipRequest: null,
       leaveInRequestedFormats: [],
@@ -1003,6 +1004,63 @@ test("selectProducts builds a leave-in heat target from generic Hitzeschutz word
   })
 
   assert.equal(result.decision, "recommended")
+})
+
+test("selectProducts treats separate heat protectant as a leave-in bonus for blow-dry-only requests", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "leave_in")
+      assert.equal(runtime.requestContext.leaveInSeparateHeatProtectantMentioned, true)
+      assert.equal(runtime.requestContext.leaveInHeatProtectionRequest, null)
+      assert.equal(runtime.categories.leaveIn.relevant, true)
+      assert.equal(runtime.categories.leaveIn.targetProfile?.heatProtectionNeed, "moderate")
+      assert.equal(runtime.categories.leaveIn.targetProfile?.stylingPrepNeed, "none")
+      assert.equal(runtime.categories.leaveIn.targetProfile?.hasSeparateHeatProtectant, true)
+      return [createLeaveInMatchedProduct("care-leave-in", 0.94)]
+    },
+  })
+
+  const result = await tool({
+    category: "leave_in",
+    message: "Ich föhne nur und habe schon einen separaten Hitzeschutz. Welches Leave-in passt?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "coarse",
+      density: "medium",
+      concerns: [],
+      goals: [],
+      heat_styling: "daily",
+      styling_tools: [],
+      drying_method: "air_dry",
+      uses_heat_protection: false,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    activeProfileSignals: [
+      {
+        field: "styling_tools",
+        value: "blow_dryer",
+        source: "message",
+        selection_effect: "override",
+        evidence: "föhne",
+      },
+    ],
+  })
+
+  assert.equal(result.decision, "recommended")
+  assert.ok(
+    result.profile_basis.includes(
+      "Separater Hitzeschutz vorhanden: Leave-in-Hitzeschutz ist Bonus, kein Muss.",
+    ),
+  )
+  assert.match(result.category_guidance, /im Einstieg ausdruecklich/)
+  assert.match(result.category_guidance, /ein Produkt weniger/)
+  assert.match(result.category_guidance, /separaten Hitzeschutz behalten/)
 })
 
 test("selectProducts marks exact leave-in heat temperatures unsupported", async () => {

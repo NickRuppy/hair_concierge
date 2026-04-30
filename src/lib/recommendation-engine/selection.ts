@@ -308,6 +308,36 @@ function isLeaveInFormatFallbackEligible(reasonCodes: readonly string[]): boolea
   return isLeaveInFallbackEligible(reasonCodes)
 }
 
+function shouldPreferIntegratedLeaveInHeatBonus(
+  target: LeaveInCategoryDecision["targetProfile"],
+): boolean {
+  return target?.heatProtectionNeed === "moderate" && target.hasSeparateHeatProtectant
+}
+
+function hasIntegratedLeaveInHeatBonus(product: ScoredLeaveInProduct): boolean {
+  const meta = product.recommendation_meta as LeaveInRecommendationMetadata | null | undefined
+  return meta?.provides_heat_protection === true
+}
+
+function prioritizeIntegratedLeaveInHeatBonus(
+  products: ScoredLeaveInProduct[],
+  target: LeaveInCategoryDecision["targetProfile"],
+): ScoredLeaveInProduct[] {
+  if (!shouldPreferIntegratedLeaveInHeatBonus(target)) return products
+
+  const heatBonusIndex = products.findIndex(hasIntegratedLeaveInHeatBonus)
+  if (heatBonusIndex <= 0) return products
+
+  const heatBonusProduct = products[heatBonusIndex]
+  if (!heatBonusProduct) return products
+
+  return [
+    heatBonusProduct,
+    ...products.slice(0, heatBonusIndex),
+    ...products.slice(heatBonusIndex + 1),
+  ]
+}
+
 function shampooBucketPriorityAdjustment(
   decision: ShampooCategoryDecision,
   matchedBucket: NonNullable<ShampooCategoryDecision["targetProfile"]>["shampooBucket"] | null,
@@ -1055,16 +1085,23 @@ export function rerankLeaveInProductsWithEngine(params: {
       "Weicht bei Nutzen, Hitzeschutz oder Conditioner-Rolle zu deutlich von deinem Bedarf ab.",
     )
     const score = toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
+    const integratedHeatBonusReason =
+      shouldPreferIntegratedLeaveInHeatBonus(target) && spec?.provides_heat_protection
+        ? "Kann ein Produkt weniger in der Routine bedeuten: Leave-in-Pflege plus Foenhitzeschutz in einem Produkt."
+        : null
 
     const recommendationMeta: LeaveInRecommendationMetadata = {
       category: "leave_in",
       score: Math.round(score * 10) / 10,
       top_reasons: [
         ...positives,
+        integratedHeatBonusReason,
         target.needBucket === "heat_protect"
           ? "Bringt den fuer dein Styling benoetigten Hitzeschutz-Fokus mit."
           : "Passt gut zu deinem aktuellen Leave-in-Bedarf.",
-      ].slice(0, 3),
+      ]
+        .filter((reason): reason is string => Boolean(reason))
+        .slice(0, 3),
       tradeoffs,
       usage_hint: buildLeaveInUsageHint(decision),
       matched_profile: {
@@ -1102,8 +1139,11 @@ export function rerankLeaveInProductsWithEngine(params: {
 
   scored.sort(compareScoredProducts)
 
-  const acceptable = scored.filter(
-    (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
+  const acceptable = prioritizeIntegratedLeaveInHeatBonus(
+    scored.filter(
+      (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
+    ),
+    target,
   )
   const formatPicks = selectRequestedLeaveInFormatPicks(scored, requestedFormats)
   if (formatPicks.length > 0) {
