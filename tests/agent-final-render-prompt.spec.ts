@@ -34,3 +34,11 @@ test("final render prompt requires profile deviation notices up front", () => {
   assert.match(AGENT_FINAL_RENDER_PROMPT, /ersten Antwortsatz/)
   assert.match(AGENT_FINAL_RENDER_PROMPT, /nicht als dauerhaft gespeicherte Profilkorrektur/)
 })
+
+test("final render prompt gives conceptual split-end mask answers enough substance", () => {
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /konzeptuellen Spliss-Fragen zu Masken/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /3-5 kurzen Saetzen/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /physischer Faserschaden/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /sichtbaren Spliss schneiden lassen/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /Keine Produktliste/)
+})
