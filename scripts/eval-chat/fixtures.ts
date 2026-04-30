@@ -53,9 +53,8 @@ export const SCENARIOS: EvalScenario[] = [
       {
         message: "und owc testen?",
         metadata: {
-          intent: ["hair_care_advice", "followup", "routine_help"],
+          intent: ["hair_care_advice", "followup", "routine_help", "product_recommendation"],
           policy_overrides_exclude: ["category_product_mode"],
-          source_count_min: 1,
         },
         content: {
           must_be_german: true,
@@ -79,8 +78,7 @@ export const SCENARIOS: EvalScenario[] = [
       {
         message: "Was ist der Unterschied zwischen CWC und OWC?",
         metadata: {
-          intent: ["hair_care_advice", "routine_help"],
-          source_count_min: 1,
+          intent: ["hair_care_advice", "routine_help", "product_recommendation"],
         },
         content: {
           must_be_german: true,
@@ -274,7 +272,6 @@ export const SCENARIOS: EvalScenario[] = [
         message: "Meine Haare brechen ständig ab und fühlen sich strohig an. Was kann ich tun?",
         metadata: {
           response_mode: ["recommend_and_refine", "answer_direct"],
-          source_count_min: 1,
         },
         content: {
           must_be_german: true,

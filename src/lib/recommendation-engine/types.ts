@@ -21,6 +21,7 @@ import type {
 } from "@/lib/vocabulary"
 import type { ShampooBucket } from "@/lib/shampoo/constants"
 import type { OilNoRecommendationReason, OilPurpose, OilSubtype } from "@/lib/oil/constants"
+import type { LeaveInFormat } from "@/lib/leave-in/constants"
 import type {
   BALANCE_DIRECTIONS,
   BOND_APPLICATION_MODES,
@@ -65,6 +66,12 @@ export type ConfidenceLevel = (typeof CONFIDENCE_LEVELS)[number]
 
 export interface RecommendationRequestContext {
   requestedCategory: EngineCategoryId | null
+  maskIntensityRequest: "intensive" | null
+  leaveInHeatProtectionRequest: Exclude<LeaveInHeatProtectionNeed, "none"> | null
+  leaveInSeparateHeatProtectantMentioned: boolean
+  leaveInWeightRequest: CanonicalWeight | null
+  leaveInConditionerRelationshipRequest: LeaveInConditionerRelationship | null
+  leaveInRequestedFormats: LeaveInFormat[]
   oilPurpose: OilPurpose | null
   oilNoRecommendationReason: OilNoRecommendationReason | null
 }
@@ -201,6 +208,8 @@ export interface ConditionerTargetProfile {
   balance: CanonicalBalanceTarget | null
   repairLevel: CanonicalRepairLevel | null
   weight: CanonicalWeight | null
+  thickness: HairThickness | null
+  activeDamageDrivers: string[]
 }
 
 export type ConditionerCategoryDecision = CategoryDecisionBase<
@@ -213,19 +222,31 @@ export interface MaskTargetProfile {
   repairLevel: CanonicalRepairLevel | null
   weight: CanonicalWeight | null
   needStrength: 0 | 1 | 2 | 3
+  role: "fixed" | "optional"
+  intensityRequest: "intensive" | null
+  thickness: HairThickness | null
+  density: HairDensity | null
 }
 
 export type MaskCategoryDecision = CategoryDecisionBase<"mask", MaskTargetProfile>
 
 export type LeaveInStylingContext = "air_dry" | "heat_style"
+export type LeaveInHeatProtectionNeed = "none" | "moderate" | "high"
+export type LeaveInStylingPrepNeed = "none" | "definition" | "smooth_control" | "heat_style"
 export type LeaveInConditionerRelationship = "replacement_capable" | "booster_only"
 
 export interface LeaveInTargetProfile {
   needBucket: LeaveInCareTarget | null
   stylingContext: LeaveInStylingContext | null
+  heatProtectionNeed: LeaveInHeatProtectionNeed
+  stylingPrepNeed: LeaveInStylingPrepNeed
   conditionerRelationship: LeaveInConditionerRelationship | null
   weight: CanonicalWeight | null
+  balanceDirection: CanonicalBalanceTarget | null
   careBenefits: LeaveInCareTarget[]
+  applicationStageNeed: "towel_dry" | "dry_hair" | "pre_heat" | "post_style" | null
+  hasSeparateHeatProtectant: boolean
+  thickness: HairThickness | null
 }
 
 export type LeaveInCategoryDecision = CategoryDecisionBase<"leave_in", LeaveInTargetProfile>
@@ -239,13 +260,18 @@ export interface ShampooTargetProfile {
 
 export type ShampooCategoryDecision = CategoryDecisionBase<"shampoo", ShampooTargetProfile>
 
-export type OilPurposeSource = "request" | "missing"
+export type OilPurposeSource = "request" | "inferred" | "missing"
+export type OilPurposeFit = "exact" | "bridge" | "unknown"
 
 export interface OilTargetProfile {
   purpose: OilPurpose | null
   matcherSubtype: OilSubtype | null
   adjunctScalpSupport: boolean
   purposeSource: OilPurposeSource
+  scalpCaution: boolean
+  densityWeightCaution: boolean
+  overloadRisk: boolean
+  purposeFit: OilPurposeFit
 }
 
 export interface OilCategoryDecision extends CategoryDecisionBase<"oil", OilTargetProfile> {

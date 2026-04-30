@@ -139,7 +139,7 @@ export function evaluateShampooFit(
 
     if (target.cleansingIntensity !== spec.cleansing_intensity) {
       return {
-        status: "mismatch",
+        status: "supportive",
         reasonCodes: ["shampoo_bucket_exact_match", "shampoo_cleansing_intensity_mismatch"],
         missingFields: [],
       }
@@ -200,7 +200,7 @@ export function evaluateShampooFit(
 
   if (target.cleansingIntensity !== spec.cleansing_intensity) {
     return {
-      status: "mismatch",
+      status: "supportive",
       reasonCodes: ["shampoo_scalp_route_exact_match", "shampoo_cleansing_intensity_mismatch"],
       missingFields: [],
     }

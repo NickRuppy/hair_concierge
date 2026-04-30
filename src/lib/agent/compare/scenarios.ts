@@ -1,0 +1,312 @@
+import type { AgentCompareScenario } from "./types"
+
+export const AGENT_COMPARE_SCENARIOS: AgentCompareScenario[] = [
+  {
+    id: "recommend-products-answer-first",
+    label: "Produktwahl direkt beantworten",
+    message: "Welches Shampoo passt zu meinem feinen Haar, wenn der Ansatz schnell fettig wird?",
+    hair_profile: {
+      hair_texture: "wavy",
+      thickness: "fine",
+      concerns: ["oily_scalp", "dryness"],
+      scalp_type: "oily",
+      wash_frequency: "every_2_3_days",
+    },
+    routine_inventory: [
+      {
+        category: "shampoo",
+        product_name: "Eval Shampoo",
+        frequency_range: "3_4x",
+      },
+      {
+        category: "conditioner",
+        product_name: "Eval Conditioner",
+        frequency_range: "3_4x",
+      },
+    ],
+  },
+  {
+    id: "conditioner-moisture-recommendation",
+    label: "Conditioner · Feuchtigkeit",
+    message: "Welcher Conditioner passt bei Feuchtigkeitsmangel und trockenen Laengen?",
+    hair_profile: {
+      hair_texture: "wavy",
+      thickness: "fine",
+      density: "low",
+      concerns: ["dryness", "frizz"],
+      goals: ["moisture", "shine"],
+      protein_moisture_balance: "snaps",
+      cuticle_condition: "slightly_rough",
+      scalp_type: "balanced",
+      scalp_condition: null,
+      chemical_treatment: ["colored"],
+      wash_frequency: "every_2_3_days",
+    },
+    routine_inventory: [
+      {
+        category: "shampoo",
+        product_name: "Eval Shampoo",
+        frequency_range: "3_4x",
+      },
+      {
+        category: "conditioner",
+        product_name: "Eval Conditioner",
+        frequency_range: "3_4x",
+      },
+    ],
+  },
+  {
+    id: "conditioner-scalp-redirect",
+    label: "Conditioner · Kopfhaut-Redirect",
+    message: "Welcher Conditioner hilft gegen juckende Kopfhaut?",
+    hair_profile: {
+      hair_texture: "straight",
+      thickness: "normal",
+      density: "medium",
+      concerns: ["dandruff"],
+      protein_moisture_balance: "stretches_bounces",
+      scalp_type: "dry",
+      scalp_condition: "irritated",
+      wash_frequency: "every_2_3_days",
+    },
+    routine_inventory: [
+      {
+        category: "shampoo",
+        product_name: "Eval Shampoo",
+        frequency_range: "3_4x",
+      },
+    ],
+  },
+  {
+    id: "fix-routine-simplify",
+    label: "Routine vereinfachen",
+    message: "Meine Routine fuehlt sich zu viel an. Was wuerdest du streichen oder vereinfachen?",
+    hair_profile: {
+      hair_texture: "wavy",
+      thickness: "fine",
+      concerns: ["dryness"],
+      scalp_type: "balanced",
+      wash_frequency: "every_2_3_days",
+    },
+    routine_inventory: [
+      {
+        category: "shampoo",
+        product_name: "Gentle Shampoo",
+        frequency_range: "3_4x",
+      },
+      {
+        category: "conditioner",
+        product_name: "Rich Conditioner",
+        frequency_range: "3_4x",
+      },
+      {
+        category: "mask",
+        product_name: "Heavy Mask",
+        frequency_range: "5_6x",
+      },
+      {
+        category: "oil",
+        product_name: "Heavy Oil",
+        frequency_range: "5_6x",
+      },
+      {
+        category: "leave_in",
+        product_name: "Leave-In Cream",
+        frequency_range: "3_4x",
+      },
+    ],
+  },
+  {
+    id: "mixed-concerns-answer-now",
+    label: "Gemischte Signale, trotzdem direkt helfen",
+    message:
+      "Meine Haare sind fein, der Ansatz wird schnell fettig, aber die Laengen sind trocken und frizzig. Ich will keine komplizierte Routine.",
+    hair_profile: {
+      hair_texture: "wavy",
+      thickness: "fine",
+      concerns: ["oily_scalp", "dryness", "frizz"],
+      scalp_type: "oily",
+      wash_frequency: "every_2_3_days",
+    },
+    routine_inventory: [
+      {
+        category: "shampoo",
+        product_name: "Soft Shampoo",
+        frequency_range: "3_4x",
+      },
+      {
+        category: "conditioner",
+        product_name: "Soft Conditioner",
+        frequency_range: "3_4x",
+      },
+      {
+        category: "leave_in",
+        product_name: "Soft Leave-In",
+        frequency_range: "3_4x",
+      },
+    ],
+  },
+  {
+    id: "should-not-over-clarify",
+    label: "Sollte nicht uebermaessig rueckfragen",
+    message: "Ich suche einfach ein leichteres Leave-in fuer feines Haar.",
+    hair_profile: {
+      hair_texture: "wavy",
+      thickness: "fine",
+      concerns: ["dryness"],
+      scalp_type: "balanced",
+      wash_frequency: "every_2_3_days",
+    },
+    routine_inventory: [
+      {
+        category: "shampoo",
+        product_name: "Basic Shampoo",
+        frequency_range: "3_4x",
+      },
+      {
+        category: "conditioner",
+        product_name: "Basic Conditioner",
+        frequency_range: "3_4x",
+      },
+    ],
+  },
+  {
+    id: "leave-in-high-heat-protection",
+    label: "Leave-in · Hitzeschutz hoch",
+    message:
+      "Welches Leave-in passt, wenn ich mein feines blondiertes Haar regelmaessig mit dem Glaetteisen style?",
+    hair_profile: {
+      hair_texture: "wavy",
+      thickness: "fine",
+      density: "medium",
+      concerns: ["hair_damage", "frizz", "dryness"],
+      goals: ["strengthen", "less_frizz"],
+      protein_moisture_balance: "stretches_stays",
+      cuticle_condition: "rough",
+      scalp_type: "balanced",
+      scalp_condition: null,
+      chemical_treatment: ["bleached"],
+      wash_frequency: "every_2_3_days",
+      drying_method: "blow_dry",
+      heat_styling: "several_weekly",
+      styling_tools: ["flat_iron"],
+      uses_heat_protection: false,
+    },
+    routine_inventory: [
+      {
+        category: "shampoo",
+        product_name: "Mildes Shampoo",
+        frequency_range: "3_4x",
+      },
+      {
+        category: "conditioner",
+        product_name: "Repair Conditioner",
+        frequency_range: "3_4x",
+      },
+    ],
+  },
+  {
+    id: "leave-in-blow-dry-moderate",
+    label: "Leave-in · Foenen moderat",
+    message:
+      "Ich foene mein normales Haar nur mit dem Foen und nutze schon Hitzeschutz. Welches Leave-in passt?",
+    hair_profile: {
+      hair_texture: "straight",
+      thickness: "normal",
+      density: "medium",
+      concerns: ["dryness", "frizz"],
+      goals: ["moisture", "shine"],
+      protein_moisture_balance: "snaps",
+      cuticle_condition: "slightly_rough",
+      scalp_type: "balanced",
+      scalp_condition: null,
+      chemical_treatment: [],
+      wash_frequency: "every_2_3_days",
+      drying_method: "blow_dry",
+      heat_styling: "never",
+      styling_tools: ["blow_dryer"],
+      uses_heat_protection: true,
+    },
+    routine_inventory: [
+      {
+        category: "shampoo",
+        product_name: "Basic Shampoo",
+        frequency_range: "3_4x",
+      },
+      {
+        category: "conditioner",
+        product_name: "Basic Conditioner",
+        frequency_range: "3_4x",
+      },
+    ],
+  },
+  {
+    id: "leave-in-ingredient-unsupported",
+    label: "Leave-in · Ingredient-Wunsch",
+    message: "Welches silikonfreie Leave-in passt zu feinem Haar mit trockenen Spitzen?",
+    hair_profile: {
+      hair_texture: "wavy",
+      thickness: "fine",
+      density: "low",
+      concerns: ["dryness", "frizz"],
+      goals: ["moisture", "volume"],
+      protein_moisture_balance: "snaps",
+      cuticle_condition: "slightly_rough",
+      scalp_type: "balanced",
+      scalp_condition: null,
+      chemical_treatment: ["colored"],
+      wash_frequency: "every_2_3_days",
+      drying_method: "air_dry",
+      heat_styling: "rarely",
+      styling_tools: [],
+      uses_heat_protection: false,
+    },
+    routine_inventory: [
+      {
+        category: "shampoo",
+        product_name: "Volumen Shampoo",
+        frequency_range: "3_4x",
+      },
+      {
+        category: "conditioner",
+        product_name: "Leichte Spuelung",
+        frequency_range: "3_4x",
+      },
+    ],
+  },
+  {
+    id: "leave-in-replacement-vs-booster",
+    label: "Leave-in · Ersatz oder Booster",
+    message:
+      "Kann ein Leave-in bei meinen trockenen Locken die Spuelung ersetzen oder sollte ich es nur zusaetzlich nehmen?",
+    hair_profile: {
+      hair_texture: "curly",
+      thickness: "normal",
+      density: "high",
+      concerns: ["dryness", "frizz"],
+      goals: ["moisture", "definition"],
+      protein_moisture_balance: "snaps",
+      cuticle_condition: "rough",
+      scalp_type: "balanced",
+      scalp_condition: null,
+      chemical_treatment: [],
+      wash_frequency: "every_4_5_days",
+      drying_method: "air_dry",
+      heat_styling: "never",
+      styling_tools: [],
+      uses_heat_protection: false,
+    },
+    routine_inventory: [
+      {
+        category: "shampoo",
+        product_name: "Curl Shampoo",
+        frequency_range: "1_2x",
+      },
+      {
+        category: "conditioner",
+        product_name: "Curl Conditioner",
+        frequency_range: "1_2x",
+      },
+    ],
+  },
+]

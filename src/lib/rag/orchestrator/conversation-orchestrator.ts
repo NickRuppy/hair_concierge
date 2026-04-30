@@ -94,10 +94,11 @@ async function observeAsyncStage<T>(
 // ── Main orchestrator ────────────────────────────────────────────────────────
 
 /**
- * Orchestrates the full RAG pipeline for a single user turn.
+ * Deprecated legacy RAG turn orchestrator retained for historical tests.
  *
- * This is a drop-in replacement for `runPipeline()` in pipeline.ts,
- * delegating to the extracted boundary modules:
+ * Production /api/chat now uses the bounded Agent v1 front door. This module
+ * remains only while old RAG helpers and fixtures are retired in follow-up
+ * cleanup, delegating to the extracted boundary modules:
  *  - recommendation-engine runtime + chat helpers (decisions, clarification, retrieval filters)
  *  - retrieval-service (context retrieval, source building)
  *  - response-composer (synthesis)

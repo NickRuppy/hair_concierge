@@ -14,11 +14,13 @@ export interface HairProfileOverrides {
   chemical_treatment?: string[]
   wash_frequency?: string | null
   heat_styling?: string | null
+  styling_tools?: string[] | null
   drying_method?: string | null
   towel_technique?: string | null
   brush_type?: string | null
   night_protection?: string[] | null
   goals?: string[]
+  uses_heat_protection?: boolean
   onboarding_completed?: boolean
 }
 

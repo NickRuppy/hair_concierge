@@ -53,6 +53,10 @@ yarn-error.log*
 
 # data files (books, transcripts, products)
 /data/
+!/data/
+/data/*
+!/data/agent-guidance/
+!/data/agent-guidance/**
 *.docx
 
 # python

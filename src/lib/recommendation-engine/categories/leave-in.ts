@@ -1,32 +1,48 @@
 import type {
   CategoryFitEvaluation,
   CareNeedAssessment,
+  CanonicalBalanceTarget,
   DamageAssessment,
   InterventionPlan,
+  InterventionStep,
   LeaveInCareTarget,
   LeaveInCategoryDecision,
+  LeaveInHeatProtectionNeed,
   LeaveInConditionerRelationship,
+  LeaveInStylingPrepNeed,
   LeaveInStylingContext,
   NormalizedProfile,
+  RecommendationRequestContext,
 } from "@/lib/recommendation-engine/types"
 import type {
   LeaveInApplicationStage,
   LeaveInCareBenefit,
+  LeaveInFormat,
+  LeaveInIngredientFlag,
   LeaveInRole,
 } from "@/lib/leave-in/constants"
 import { deriveLeaveInStylingContextFromStages } from "@/lib/profile/signal-derivations"
 import {
+  compareBalanceFit,
   compareWeightFit,
+  deriveBalanceTarget,
   deriveTargetWeight,
   getPlannedStep,
 } from "@/lib/recommendation-engine/categories/shared"
+import type { HairThickness } from "@/lib/vocabulary"
 
 export interface LeaveInFitSpec {
+  product_id?: string
+  format?: LeaveInFormat | null
   weight: "light" | "medium" | "rich" | null
   roles: LeaveInRole[]
   provides_heat_protection: boolean
+  heat_protection_max_c?: number | null
+  heat_activation_required?: boolean | null
   care_benefits: LeaveInCareBenefit[]
+  ingredient_flags?: LeaveInIngredientFlag[] | null
   application_stage: LeaveInApplicationStage[]
+  suitable_thicknesses?: HairThickness[] | null
 }
 
 const LEAVE_IN_CARE_TARGET_PRIORITY: LeaveInCareTarget[] = [
@@ -44,16 +60,79 @@ function deriveLeaveInStylingContext(profile: NormalizedProfile): LeaveInStyling
   )
 }
 
+function hasHighHeatTool(profile: NormalizedProfile): boolean {
+  const tools = profile.stylingTools ?? []
+  return tools.some(
+    (tool) =>
+      tool === "flat_iron" ||
+      tool === "curling_iron" ||
+      tool === "wave_iron" ||
+      tool === "hot_air_brush" ||
+      tool === "multi_tool",
+  )
+}
+
+function hasBlowDryExposure(profile: NormalizedProfile): boolean {
+  const tools = profile.stylingTools ?? []
+  return (
+    profile.dryingMethod === "blow_dry" ||
+    profile.dryingMethod === "blow_dry_diffuser" ||
+    tools.includes("blow_dryer") ||
+    tools.includes("diffuser")
+  )
+}
+
+function deriveHeatProtectionNeed(profile: NormalizedProfile): LeaveInHeatProtectionNeed {
+  if (hasHighHeatTool(profile)) return "high"
+  if (hasBlowDryExposure(profile)) return "moderate"
+
+  if (
+    profile.heatStyling === "rarely" ||
+    profile.heatStyling === "once_weekly" ||
+    profile.heatStyling === "several_weekly" ||
+    profile.heatStyling === "daily"
+  ) {
+    return "high"
+  }
+
+  return "none"
+}
+
+function deriveStylingPrepNeed(
+  profile: NormalizedProfile,
+  careNeeds: CareNeedAssessment,
+): LeaveInStylingPrepNeed {
+  if (hasHighHeatTool(profile)) return "heat_style"
+
+  if (
+    profile.hairTexture &&
+    (profile.hairTexture === "wavy" ||
+      profile.hairTexture === "curly" ||
+      profile.hairTexture === "coily") &&
+    (profile.dryingMethod === "blow_dry_diffuser" ||
+      (profile.stylingTools ?? []).includes("diffuser") ||
+      careNeeds.definitionSupportNeed !== "none")
+  ) {
+    return "definition"
+  }
+
+  if (
+    !hasBlowDryExposure(profile) &&
+    (careNeeds.smoothingNeed === "moderate" || careNeeds.smoothingNeed === "high")
+  ) {
+    return "smooth_control"
+  }
+
+  return "none"
+}
+
 function deriveLeaveInNeedBucket(
   profile: NormalizedProfile,
   damage: DamageAssessment,
   careNeeds: CareNeedAssessment,
+  heatProtectionNeed: LeaveInHeatProtectionNeed,
 ): LeaveInCareTarget | null {
-  if (
-    profile.heatStyling &&
-    profile.heatStyling !== "never" &&
-    careNeeds.thermalProtectionNeed !== "none"
-  ) {
+  if (heatProtectionNeed !== "none" || careNeeds.thermalProtectionNeed !== "none") {
     return "heat_protect"
   }
 
@@ -87,7 +166,16 @@ function deriveLeaveInNeedBucket(
 
 function deriveConditionerRelationship(
   profile: NormalizedProfile,
+  requestContext?: RecommendationRequestContext,
 ): LeaveInConditionerRelationship | null {
+  if (requestContext?.leaveInConditionerRelationshipRequest) {
+    return requestContext.leaveInConditionerRelationshipRequest
+  }
+
+  if (requestContext?.requestedCategory === "leave_in") {
+    return "booster_only"
+  }
+
   if (!profile.thickness || !profile.density) return null
 
   if (profile.thickness === "fine" || profile.density === "low") {
@@ -101,12 +189,13 @@ function deriveCareTargets(
   needBucket: LeaveInCareTarget | null,
   damage: DamageAssessment,
   careNeeds: CareNeedAssessment,
+  heatProtectionNeed: LeaveInHeatProtectionNeed,
 ): LeaveInCareTarget[] {
   const careTargets = new Set<LeaveInCareTarget>()
 
   if (needBucket) careTargets.add(needBucket)
 
-  if (careNeeds.thermalProtectionNeed !== "none") {
+  if (heatProtectionNeed !== "none" || careNeeds.thermalProtectionNeed !== "none") {
     careTargets.add("heat_protect")
   }
   if (
@@ -164,13 +253,42 @@ function deriveSpecCareTargets(spec: LeaveInFitSpec): LeaveInCareTarget[] {
   return LEAVE_IN_CARE_TARGET_PRIORITY.filter((target) => careTargets.has(target))
 }
 
+function deriveSpecBalanceDirection(spec: LeaveInFitSpec): CanonicalBalanceTarget {
+  const benefits = new Set(spec.care_benefits ?? [])
+  const proteinSignals = benefits.has("protein")
+  const moistureSignals =
+    benefits.has("moisture") ||
+    benefits.has("anti_frizz") ||
+    benefits.has("detangling") ||
+    benefits.has("shine")
+
+  if (proteinSignals && !moistureSignals) return "protein"
+  if (moistureSignals && !proteinSignals && !benefits.has("repair")) return "moisture"
+  return "balanced"
+}
+
+function hasSeparateHeatProtectant(profile: NormalizedProfile): boolean {
+  return profile.usesHeatProtection || Boolean(profile.routineInventory.heat_protectant?.present)
+}
+
 export function buildLeaveInCategoryDecision(
   profile: NormalizedProfile,
   damage: DamageAssessment,
   careNeeds: CareNeedAssessment,
   plan: InterventionPlan,
+  requestContext?: RecommendationRequestContext,
 ): LeaveInCategoryDecision {
-  const step = getPlannedStep(plan, "leave_in")
+  const plannedStep = getPlannedStep(plan, "leave_in")
+  const explicitRequest = requestContext?.requestedCategory === "leave_in"
+  const step: InterventionStep | null =
+    plannedStep ??
+    (explicitRequest
+      ? {
+          category: "leave_in",
+          action: "add",
+          reasonCodes: ["explicit_leave_in_request"],
+        }
+      : null)
 
   if (!step) {
     return {
@@ -184,37 +302,57 @@ export function buildLeaveInCategoryDecision(
     }
   }
 
+  const planReasonCodes = explicitRequest
+    ? Array.from(new Set([...step.reasonCodes, "explicit_leave_in_request"]))
+    : step.reasonCodes
+
   const notes: string[] = []
   const stylingContext = deriveLeaveInStylingContext(profile)
   if (!stylingContext) {
     notes.push("leave_in_styling_context_unclear")
   }
 
-  const conditionerRelationship = deriveConditionerRelationship(profile)
+  const conditionerRelationship = deriveConditionerRelationship(profile, requestContext)
   if (!conditionerRelationship) {
     notes.push("leave_in_relationship_needs_thickness_and_density")
   }
 
-  const targetWeight = deriveTargetWeight(profile)
+  const targetWeight = requestContext?.leaveInWeightRequest ?? deriveTargetWeight(profile)
   if (!targetWeight) {
     notes.push("leave_in_weight_needs_thickness_and_density")
   }
 
-  const needBucket = deriveLeaveInNeedBucket(profile, damage, careNeeds)
-  const careBenefits = deriveCareTargets(needBucket, damage, careNeeds)
+  const heatProtectionNeed =
+    requestContext?.leaveInHeatProtectionRequest ?? deriveHeatProtectionNeed(profile)
+  const hasSeparateHeatProtection =
+    requestContext?.leaveInSeparateHeatProtectantMentioned || hasSeparateHeatProtectant(profile)
+  const needBucket = deriveLeaveInNeedBucket(profile, damage, careNeeds, heatProtectionNeed)
+  const stylingPrepNeed =
+    heatProtectionNeed === "high" ? "heat_style" : deriveStylingPrepNeed(profile, careNeeds)
+  const targetStylingContext =
+    heatProtectionNeed === "high" || stylingPrepNeed === "heat_style"
+      ? "heat_style"
+      : stylingContext
+  const careBenefits = deriveCareTargets(needBucket, damage, careNeeds, heatProtectionNeed)
 
   return {
     category: "leave_in",
     relevant: true,
     action: step.action,
-    planReasonCodes: step.reasonCodes,
+    planReasonCodes,
     currentInventory: profile.routineInventory.leave_in,
     targetProfile: {
       needBucket,
-      stylingContext,
+      stylingContext: targetStylingContext,
+      heatProtectionNeed,
+      stylingPrepNeed,
       conditionerRelationship,
       weight: targetWeight,
+      balanceDirection: deriveBalanceTarget(damage),
       careBenefits,
+      applicationStageNeed: heatProtectionNeed !== "none" ? "pre_heat" : null,
+      hasSeparateHeatProtectant: hasSeparateHeatProtection,
+      thickness: profile.thickness,
     },
     notes,
   }
@@ -237,10 +375,13 @@ export function evaluateLeaveInFit(
       status: "unknown",
       reasonCodes: ["leave_in_specs_missing"],
       missingFields: [
+        "format",
         "weight",
         "roles",
         "provides_heat_protection",
+        "heat_activation_required",
         "care_benefits",
+        "ingredient_flags",
         "application_stage",
       ],
     }
@@ -254,6 +395,12 @@ export function evaluateLeaveInFit(
   }
   if (decision.targetProfile.conditionerRelationship && spec.roles.length === 0) {
     missingFields.push("roles")
+  }
+  if (
+    decision.targetProfile.thickness &&
+    (!spec.suitable_thicknesses || spec.suitable_thicknesses.length === 0)
+  ) {
+    missingFields.push("suitable_thicknesses")
   }
   if (
     decision.targetProfile.careBenefits.includes("heat_protect") &&
@@ -280,10 +427,72 @@ export function evaluateLeaveInFit(
   const weightFit = compareWeightFit(decision.targetProfile.weight, spec.weight)
   const actualRelationship = deriveSpecConditionerRelationship(spec.roles)
   const actualCareTargets = deriveSpecCareTargets(spec)
+  const balanceFit = compareBalanceFit(
+    decision.targetProfile.balanceDirection,
+    deriveSpecBalanceDirection(spec),
+  )
+  const thicknessFit =
+    decision.targetProfile.thickness &&
+    spec.suitable_thicknesses &&
+    spec.suitable_thicknesses.length > 0
+      ? spec.suitable_thicknesses.includes(decision.targetProfile.thickness)
+        ? "exact"
+        : "mismatch"
+      : "unknown"
+  const heatFit =
+    decision.targetProfile.heatProtectionNeed === "high"
+      ? spec.provides_heat_protection
+        ? "exact"
+        : "mismatch"
+      : decision.targetProfile.heatProtectionNeed === "moderate"
+        ? spec.provides_heat_protection
+          ? "exact"
+          : "close"
+        : spec.heat_activation_required
+          ? "mismatch"
+          : "exact"
+  const prepFit =
+    decision.targetProfile.stylingPrepNeed === "heat_style"
+      ? spec.roles.includes("styling_prep") || spec.application_stage.includes("pre_heat")
+        ? "exact"
+        : "mismatch"
+      : decision.targetProfile.stylingPrepNeed === "definition"
+        ? spec.care_benefits.includes("curl_definition") || spec.roles.includes("styling_prep")
+          ? "exact"
+          : "close"
+        : decision.targetProfile.stylingPrepNeed === "smooth_control"
+          ? spec.care_benefits.includes("anti_frizz") || spec.roles.includes("styling_prep")
+            ? "exact"
+            : "close"
+          : "exact"
 
+  if (thicknessFit === "exact") reasonCodes.push("leave_in_thickness_exact_match")
+  if (thicknessFit === "unknown") reasonCodes.push("leave_in_thickness_unknown")
+  if (thicknessFit === "mismatch") reasonCodes.push("leave_in_thickness_mismatch")
   if (weightFit === "exact") reasonCodes.push("leave_in_weight_exact_match")
   if (weightFit === "close") reasonCodes.push("leave_in_weight_close_match")
   if (weightFit === "mismatch") reasonCodes.push("leave_in_weight_mismatch")
+  if (balanceFit === "exact") reasonCodes.push("leave_in_balance_exact_match")
+  if (balanceFit === "close") reasonCodes.push("leave_in_balance_close_match")
+  if (balanceFit === "mismatch") reasonCodes.push("leave_in_balance_mismatch")
+  if (heatFit === "exact") reasonCodes.push("leave_in_heat_protection_exact_match")
+  if (heatFit === "close") {
+    reasonCodes.push(
+      decision.targetProfile.heatProtectionNeed === "moderate" && !spec.provides_heat_protection
+        ? "leave_in_moderate_heat_protection_gap"
+        : "leave_in_heat_protection_bonus_match",
+    )
+  }
+  if (heatFit === "mismatch") {
+    reasonCodes.push(
+      decision.targetProfile.heatProtectionNeed === "high"
+        ? "leave_in_high_heat_protection_mismatch"
+        : "leave_in_heat_activation_without_heat_mismatch",
+    )
+  }
+  if (prepFit === "exact") reasonCodes.push("leave_in_styling_prep_exact_match")
+  if (prepFit === "close") reasonCodes.push("leave_in_styling_prep_partial_match")
+  if (prepFit === "mismatch") reasonCodes.push("leave_in_styling_prep_mismatch")
 
   let relationshipFit: "exact" | "close" | "mismatch" = "exact"
   if (
@@ -317,7 +526,10 @@ export function evaluateLeaveInFit(
     decision.targetProfile.needBucket &&
     !actualCareTargets.includes(decision.targetProfile.needBucket)
   ) {
-    benefitsFit = "mismatch"
+    benefitsFit =
+      decision.targetProfile.needBucket === "heat_protect" && heatFit === "close"
+        ? "close"
+        : "mismatch"
   } else if (missingBenefits.length > 0) {
     benefitsFit = matchedBenefits.length > 0 ? "close" : "mismatch"
   }
@@ -330,7 +542,11 @@ export function evaluateLeaveInFit(
     reasonCodes.push("leave_in_benefits_mismatch")
   }
 
-  if ([weightFit, relationshipFit, benefitsFit].includes("mismatch")) {
+  if (
+    [thicknessFit, weightFit, relationshipFit, benefitsFit, balanceFit, heatFit, prepFit].includes(
+      "mismatch",
+    )
+  ) {
     return {
       status: "mismatch",
       reasonCodes,
@@ -338,7 +554,15 @@ export function evaluateLeaveInFit(
     }
   }
 
-  if (weightFit === "exact" && relationshipFit === "exact" && benefitsFit === "exact") {
+  if (
+    weightFit === "exact" &&
+    relationshipFit === "exact" &&
+    benefitsFit === "exact" &&
+    balanceFit === "exact" &&
+    heatFit === "exact" &&
+    prepFit === "exact" &&
+    (thicknessFit === "exact" || thicknessFit === "unknown")
+  ) {
     return {
       status: "ideal",
       reasonCodes,

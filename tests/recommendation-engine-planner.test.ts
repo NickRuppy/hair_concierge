@@ -73,6 +73,7 @@ test("planner defers bondbuilder when structural case is consider-level rather t
   const adapted = adaptRecommendationInputFromPersistence(
     {
       ...SEVERE_DAMAGE_PROFILE,
+      concerns: [],
       cuticle_condition: "slightly_rough",
       chemical_treatment: ["colored"],
       protein_moisture_balance: "stretches_bounces",

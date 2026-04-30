@@ -24,10 +24,14 @@ import type {
   NightProtection,
 } from "@/lib/vocabulary"
 import type {
-  ProductLeaveInFitSpecs,
+  LeaveInApplicationStage,
+  LeaveInCareBenefit,
+  ProductLeaveInSpecs,
   LeaveInNeedBucket,
+  LeaveInRole,
   LeaveInStylingContext,
   LeaveInConditionerRelationship,
+  LeaveInFormat,
   LeaveInWeight,
 } from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
@@ -218,7 +222,7 @@ export interface Product {
   is_active: boolean
   sort_order: number
   conditioner_specs?: ProductConditionerSpecs | null
-  leave_in_specs?: ProductLeaveInFitSpecs | null
+  leave_in_specs?: ProductLeaveInSpecs | null
   mask_specs?: ProductMaskSpecs | null
   bondbuilder_specs?: ProductBondbuilderSpecs | null
   deep_cleansing_shampoo_specs?: ProductDeepCleansingShampooSpecs | null
@@ -259,6 +263,9 @@ export interface ShampooRecommendationMetadata extends BaseRecommendationMetadat
   matched_profile: ShampooMatchedProfile
   matched_bucket: ShampooBucket | null
   matched_concern_code: string | null
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
+  matched_scalp_route?: "oily" | "balanced" | "dry" | "dandruff" | "dry_flakes" | "irritated" | null
+  cleansing_intensity?: "gentle" | "regular" | "clarifying" | null
 }
 
 export interface ConditionerMatchedProfile {
@@ -278,6 +285,11 @@ export interface ConditionerRecommendationMetadata extends BaseRecommendationMet
   matched_weight: ConditionerWeight | null
   matched_repair_level: ConditionerRepairLevel | null
   matched_balance_need: ConditionerBalanceNeed | null
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
+  product_weight?: ConditionerWeight | null
+  product_repair_level?: ConditionerRepairLevel | null
+  product_balance_direction?: ConditionerBalanceNeed | null
+  active_damage_drivers?: string[]
 }
 
 export interface LeaveInMatchedProfile {
@@ -302,6 +314,16 @@ export interface LeaveInRecommendationMetadata extends BaseRecommendationMetadat
   styling_context: LeaveInStylingContext | null
   conditioner_relationship: LeaveInConditionerRelationship | null
   matched_weight: LeaveInWeight | null
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
+  product_format?: LeaveInFormat | null
+  product_weight?: LeaveInWeight | null
+  product_roles?: LeaveInRole[]
+  product_care_benefits?: LeaveInCareBenefit[]
+  provides_heat_protection?: boolean | null
+  product_application_stage?: LeaveInApplicationStage[]
+  heat_protection_need?: "none" | "moderate" | "high"
+  styling_prep_need?: "none" | "definition" | "smooth_control" | "heat_style"
+  product_balance_direction?: "moisture" | "balanced" | "protein" | null
 }
 
 export interface OilMatchedProfile {
@@ -316,6 +338,11 @@ export interface OilRecommendationMetadata extends BaseRecommendationMetadata {
   matched_subtype: OilSubtype | null
   use_mode: OilUseMode | null
   adjunct_scalp_support: boolean
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
+  purpose_fit?: "exact" | "bridge" | "unknown"
+  scalp_caution?: boolean
+  density_weight_caution?: boolean
+  overload_caution?: boolean
 }
 
 export type MaskType = "protein" | "moisture" | "performance"
@@ -330,6 +357,11 @@ export interface MaskRecommendationMetadata extends BaseRecommendationMetadata {
   category: "mask"
   mask_type: MaskType
   need_strength: MaskNeedStrength
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
+  role?: "fixed" | "optional"
+  product_weight?: ProductMaskSpecs["weight"] | null
+  product_concentration?: ProductMaskSpecs["concentration"] | null
+  product_balance_direction?: ProductMaskSpecs["balance_direction"] | null
 }
 
 export interface BondbuilderRecommendationMetadata extends BaseRecommendationMetadata {

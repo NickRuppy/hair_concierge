@@ -57,6 +57,14 @@ export const ROUTINE_PRODUCT_OPTIONS = ROUTINE_PRODUCTS.map((value) => ({
 export const LEAVE_IN_FORMATS = ["spray", "milk", "lotion", "cream", "serum"] as const
 export type LeaveInFormat = (typeof LEAVE_IN_FORMATS)[number]
 
+export const LEAVE_IN_FORMAT_LABELS = {
+  spray: "Spray",
+  milk: "Milk",
+  lotion: "Lotion",
+  cream: "Creme",
+  serum: "Serum",
+} as const satisfies Record<LeaveInFormat, string>
+
 export const LEAVE_IN_WEIGHTS = ["light", "medium", "rich"] as const
 export type LeaveInWeight = (typeof LEAVE_IN_WEIGHTS)[number]
 
@@ -162,6 +170,7 @@ export interface ProductLeaveInSpecs {
   product_id: string
   format: LeaveInFormat
   weight: LeaveInWeight
+  conditioner_relationship?: LeaveInConditionerRelationship
   roles: LeaveInRole[]
   provides_heat_protection: boolean
   heat_protection_max_c: number | null

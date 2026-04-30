@@ -28,6 +28,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  outputFileTracingIncludes: {
+    "/api/chat": ["./data/agent-guidance/**/*"],
+  },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }]
   },
