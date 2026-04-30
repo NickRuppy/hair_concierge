@@ -24,6 +24,7 @@ import type {
   HairProfile,
   LeaveInRecommendationMetadata,
   MaskRecommendationMetadata,
+  OilRecommendationMetadata,
   ShampooRecommendationMetadata,
 } from "@/lib/types"
 import type {
@@ -37,8 +38,10 @@ import {
   CONDITIONER_REPAIR_LEVEL_LABELS,
   CONDITIONER_WEIGHT_LABELS,
 } from "@/lib/conditioner/constants"
+import { OIL_PURPOSE_LABELS, OIL_SUBTYPE_LABELS } from "@/lib/oil/constants"
 import {
   LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS,
+  LEAVE_IN_FORMAT_LABELS,
   LEAVE_IN_ROLE_LABELS,
   LEAVE_IN_WEIGHT_LABELS,
 } from "@/lib/leave-in/constants"
@@ -46,9 +49,13 @@ import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
 import {
   HAIR_DENSITY_LABELS,
   HAIR_THICKNESS_LABELS,
+  HEAT_STYLING_LEVELS,
   PROTEIN_MOISTURE_LABELS,
   SCALP_CONDITION_LABELS,
   SCALP_TYPE_LABELS,
+  STYLING_TOOLS,
+  type HeatStyling,
+  type StylingTool,
 } from "@/lib/vocabulary"
 
 export type { SelectableProductCategory } from "@/lib/agent/contracts"
@@ -72,10 +79,16 @@ export interface SelectProductsRouteContext {
   requestedGoal?: "shine" | null
   activeProfileSignals?: AgentActiveProfileSignal[] | null
   requestedIngredientSignals?: RequestedIngredientSignal[] | null
+  requestedHeatTemperatureSignals?: RequestedHeatTemperatureSignal[] | null
   originalHairProfile?: HairProfile | null
 }
 
 export interface RequestedIngredientSignal {
+  value: string
+  evidence: string
+}
+
+export interface RequestedHeatTemperatureSignal {
   value: string
   evidence: string
 }
@@ -91,10 +104,13 @@ export const SUPPORTED_PRODUCT_CLAIM_FIELDS = [
   "repair_level",
   "concentration",
   "fit_status",
+  "format",
   "heat_protection",
   "conditioner_relationship",
   "leave_in_role",
   "care_benefit",
+  "oil_purpose",
+  "oil_subtype",
 ] as const
 
 export type StructuredProductClaimField = (typeof SUPPORTED_PRODUCT_CLAIM_FIELDS)[number]
@@ -107,7 +123,7 @@ export interface SupportedProductClaim {
 }
 
 export interface UnsupportedRequestedSignal {
-  field: ActiveProfileSignalField | "ingredient_preference"
+  field: ActiveProfileSignalField | "ingredient_preference" | "heat_temperature"
   value: string
   reason: "no_structured_product_data" | "not_a_shampoo_fit_axis" | "safety_caution"
   user_message: string
@@ -189,7 +205,8 @@ function projectDisplayableProduct(
       : []),
     ...(meta?.category === "conditioner" ||
     meta?.category === "leave_in" ||
-    meta?.category === "mask"
+    meta?.category === "mask" ||
+    meta?.category === "oil"
       ? buildUnsupportedIngredientSignals(
           routeContext?.requestedIngredientSignals ?? [],
           meta.category,
@@ -243,6 +260,10 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
 
   if (products.every((product) => product.recommendation_meta?.category === "mask")) {
     return buildMaskComparisonFactsForSet(products)
+  }
+
+  if (products.every((product) => product.recommendation_meta?.category === "oil")) {
+    return buildOilComparisonFactsForSet(products)
   }
 
   return Object.fromEntries(
@@ -347,6 +368,13 @@ function buildLeaveInComparisonFactsForSet(
     return {
       product,
       candidates: [
+        meta.product_format
+          ? {
+              key: "format",
+              value: meta.product_format,
+              text: `Format: ${LEAVE_IN_FORMAT_LABELS[meta.product_format]}`,
+            }
+          : null,
         meta.product_weight
           ? {
               key: "weight",
@@ -436,6 +464,74 @@ function buildMaskComparisonFactsForSet(products: MatchedProduct[]): Record<stri
             key: "fit_status",
             value: meta.fit_status,
             text: `Fit: ${MASK_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`,
+          }
+        : null,
+      typeof product.price_eur === "number"
+        ? {
+            key: "price",
+            value: product.price_eur.toFixed(2),
+            text: `Preis: ${product.price_eur.toFixed(2)} EUR`,
+          }
+        : null,
+    ]
+
+    return {
+      product,
+      candidates: candidates.filter((candidate): candidate is ComparisonFactCandidate =>
+        Boolean(candidate),
+      ),
+    }
+  })
+  const result: Record<string, string[]> = {}
+
+  for (const row of factRows) {
+    const facts: string[] = []
+    for (const candidate of row.candidates) {
+      const values = new Set(
+        factRows.map((other) => other.candidates.find((item) => item.key === candidate.key)?.value),
+      )
+      if (values.size <= 1) continue
+      facts.push(candidate.text)
+      if (facts.length >= 2) break
+    }
+
+    result[row.product.id] =
+      facts.length > 0 ? facts : row.candidates.slice(0, 1).map((item) => item.text)
+  }
+
+  return result
+}
+
+function buildOilComparisonFactsForSet(products: MatchedProduct[]): Record<string, string[]> {
+  const factRows = products.map((product) => {
+    const meta = product.recommendation_meta as OilRecommendationMetadata
+    const candidates: Array<ComparisonFactCandidate | null> = [
+      meta.use_mode
+        ? {
+            key: "oil_purpose",
+            value: meta.use_mode,
+            text: `Oel-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}`,
+          }
+        : null,
+      meta.matched_subtype
+        ? {
+            key: "oil_subtype",
+            value: meta.matched_subtype,
+            text: `Subtyp: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}`,
+          }
+        : null,
+      meta.purpose_fit
+        ? {
+            key: "purpose_fit",
+            value: meta.purpose_fit,
+            text: `Fit: ${meta.purpose_fit === "exact" ? "exakt" : meta.purpose_fit === "bridge" ? "Finish-Bridge" : "Daten unvollstaendig"}`,
+          }
+        : null,
+      typeof product.price_eur === "number"
+        ? {
+            key: "price",
+            value: String(product.price_eur),
+            text: `Preis: ${product.price_eur.toFixed(2)} EUR`,
           }
         : null,
     ]
@@ -583,6 +679,17 @@ const MASK_FIT_STATUS_PREFIXES: Record<
   not_applicable: "Nicht anwendbarer Treffer",
 }
 
+const OIL_FIT_STATUS_PREFIXES: Record<
+  NonNullable<OilRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "Idealer Treffer",
+  supportive: "Unterstuetzender Treffer",
+  mismatch: "Fallback-Treffer",
+  unknown: "Treffer mit unvollstaendigen Daten",
+  not_applicable: "Nicht anwendbarer Treffer",
+}
+
 const LEAVE_IN_FIT_STATUS_PREFIXES: Record<
   NonNullable<LeaveInRecommendationMetadata["fit_status"]>,
   string
@@ -662,6 +769,10 @@ function buildDisplayableFitReason(product: MatchedProduct): string {
 
   if (meta?.category === "mask") {
     return buildMaskDisplayableFitReason(meta)
+  }
+
+  if (meta?.category === "oil") {
+    return buildOilDisplayableFitReason(meta)
   }
 
   return meta?.top_reasons?.[0] ?? "Passt von den verfuegbaren Optionen am besten."
@@ -750,6 +861,25 @@ function buildMaskDisplayableFitReason(meta: MaskRecommendationMetadata): string
   return details.length > 0 ? `${prefix}; ${details.join("; ")}.` : `${prefix}.`
 }
 
+function buildOilDisplayableFitReason(meta: OilRecommendationMetadata): string {
+  const prefix = meta.fit_status
+    ? (OIL_FIT_STATUS_PREFIXES[meta.fit_status] ?? "Treffer")
+    : "Treffer"
+  const purpose = meta.use_mode ? `Oel-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null
+  const subtype = meta.matched_subtype
+    ? `Subtyp: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}`
+    : null
+  const fit =
+    meta.purpose_fit === "bridge"
+      ? "Fit: angrenzende Finish-Rolle"
+      : meta.purpose_fit === "exact"
+        ? "Fit: exakt"
+        : null
+  const details = uniqueNonEmpty([purpose, subtype, fit])
+
+  return details.length > 0 ? `${prefix}; ${details.join("; ")}.` : `${prefix}.`
+}
+
 function buildProductComparisonFacts(product: MatchedProduct): string[] {
   const meta = product.recommendation_meta
 
@@ -767,6 +897,10 @@ function buildProductComparisonFacts(product: MatchedProduct): string[] {
 
   if (meta?.category === "mask") {
     return buildMaskComparisonFacts(product, meta)
+  }
+
+  if (meta?.category === "oil") {
+    return buildOilComparisonFacts(product, meta)
   }
 
   return uniqueNonEmpty(meta?.top_reasons ?? []).slice(0, 3)
@@ -854,6 +988,21 @@ function buildMaskComparisonFacts(
   ]).slice(0, 2)
 }
 
+function buildOilComparisonFacts(
+  product: MatchedProduct,
+  meta: OilRecommendationMetadata,
+): string[] {
+  return uniqueNonEmpty([
+    meta.use_mode ? `Oel-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null,
+    meta.matched_subtype ? `Subtyp: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}` : null,
+    meta.purpose_fit
+      ? `Fit: ${meta.purpose_fit === "exact" ? "exakt" : meta.purpose_fit === "bridge" ? "Finish-Bridge" : "Daten unvollstaendig"}`
+      : null,
+    meta.density_weight_caution ? "Caveat: sparsam dosieren" : null,
+    typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
+  ]).slice(0, 2)
+}
+
 function buildClaim(
   field: SupportedProductClaim["field"],
   value: string | null | undefined,
@@ -883,6 +1032,10 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
 
   if (meta?.category === "mask") {
     return buildMaskSupportedProductClaims(meta)
+  }
+
+  if (meta?.category === "oil") {
+    return buildOilSupportedProductClaims(meta)
   }
 
   if (meta?.category !== "shampoo") {
@@ -1004,6 +1157,12 @@ function buildLeaveInSupportedProductClaims(
         : null,
     ),
     buildClaim(
+      "format",
+      meta.product_format,
+      "product_spec",
+      meta.product_format ? `Format: ${LEAVE_IN_FORMAT_LABELS[meta.product_format]}` : null,
+    ),
+    buildClaim(
       "weight",
       meta.product_weight,
       "product_spec",
@@ -1095,6 +1254,41 @@ function buildMaskSupportedProductClaims(
   ])
 }
 
+function buildOilSupportedProductClaims(meta: OilRecommendationMetadata): SupportedProductClaim[] {
+  return uniqueClaims([
+    buildClaim(
+      "thickness",
+      meta.matched_profile.thickness,
+      "product_spec",
+      meta.matched_profile.thickness
+        ? `Haardicke: ${
+            HAIR_THICKNESS_LABELS[meta.matched_profile.thickness] ?? meta.matched_profile.thickness
+          }`
+        : null,
+    ),
+    buildClaim(
+      "oil_purpose",
+      meta.use_mode,
+      "product_spec",
+      meta.use_mode ? `Oel-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null,
+    ),
+    buildClaim(
+      "oil_subtype",
+      meta.matched_subtype,
+      "product_spec",
+      meta.matched_subtype ? `Subtyp: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}` : null,
+    ),
+    buildClaim(
+      "fit_status",
+      meta.fit_status,
+      "category_decision",
+      meta.fit_status
+        ? `Fit: ${OIL_FIT_STATUS_PREFIXES[meta.fit_status] ?? meta.fit_status}`
+        : null,
+    ),
+  ])
+}
+
 function uniqueClaims(claims: Array<SupportedProductClaim | null>): SupportedProductClaim[] {
   const seen = new Set<string>()
   const result: SupportedProductClaim[] = []
@@ -1165,7 +1359,7 @@ function userMessageForUnsupportedSignal(signal: AgentActiveProfileSignal): stri
 
 function buildUnsupportedIngredientSignals(
   signals: readonly RequestedIngredientSignal[],
-  category: "conditioner" | "leave_in" | "mask" = "conditioner",
+  category: "conditioner" | "leave_in" | "mask" | "oil" = "conditioner",
 ): UnsupportedRequestedSignal[] {
   return uniqueUnsupportedSignals(
     signals.map((signal) => ({
@@ -1173,11 +1367,26 @@ function buildUnsupportedIngredientSignals(
       value: signal.value,
       reason: "no_structured_product_data",
       user_message:
-        category === "leave_in"
-          ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit."
-          : category === "mask"
-            ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Masken-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensitaet und Fit."
-            : "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensitaet und Fit.",
+        category === "oil"
+          ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Oel-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Oel-Zweck, Haardicke, Anwendung und Fit."
+          : category === "leave_in"
+            ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit."
+            : category === "mask"
+              ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Masken-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensitaet und Fit."
+              : "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensitaet und Fit.",
+    })),
+  )
+}
+
+function buildUnsupportedHeatTemperatureSignals(
+  signals: readonly RequestedHeatTemperatureSignal[],
+): UnsupportedRequestedSignal[] {
+  return uniqueUnsupportedSignals(
+    signals.map((signal) => ({
+      field: "heat_temperature",
+      value: signal.value,
+      reason: "no_structured_product_data",
+      user_message: `Exakte Hitzeschutz-Temperaturen wie ${signal.value} Grad sind in dieser Leave-in-Auswahl nicht sicher operationalisiert. Ich bewerte die Optionen deshalb nur danach, ob Hitzeschutz strukturiert erfasst ist.`,
     })),
   )
 }
@@ -1325,7 +1534,7 @@ function buildOilMissingInfo(
       return {
         key: field,
         label: "Oel-Zweck",
-        blocking: false,
+        blocking: true,
         detail: "Es fehlt noch dein Oel-Zweck fuer die Oel-Auswahl.",
       }
   }
@@ -1476,6 +1685,70 @@ function buildProfileBasis(
       ...(conditionerDecision?.targetProfile?.activeDamageDrivers ?? []).map(
         (driver) => `Damage-Kontext: ${driver}`,
       ),
+    ])
+  }
+
+  if (category === "leave_in") {
+    const leaveInDecision = categoryDecision?.category === "leave_in" ? categoryDecision : null
+    return uniqueNonEmpty([
+      ...buildProfileDeviationNotices({
+        originalHairProfile: routeContext?.originalHairProfile ?? null,
+        effectiveHairProfile: hairProfile,
+        activeSignals: routeContext?.activeProfileSignals ?? [],
+      }),
+      hairProfile.thickness
+        ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
+        : null,
+      leaveInDecision?.targetProfile?.heatProtectionNeed &&
+      leaveInDecision.targetProfile.heatProtectionNeed !== "none"
+        ? `Hitzeschutz-Bedarf: ${
+            leaveInDecision.targetProfile.heatProtectionNeed === "high" ? "Hoch" : "Moderat"
+          }`
+        : null,
+      leaveInDecision?.targetProfile?.conditionerRelationship
+        ? `Leave-in-Rolle im Profil: ${
+            LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS[
+              leaveInDecision.targetProfile.conditionerRelationship
+            ]
+          }`
+        : null,
+    ])
+  }
+
+  if (category === "mask") {
+    const maskDecision = categoryDecision?.category === "mask" ? categoryDecision : null
+    return uniqueNonEmpty([
+      ...buildProfileDeviationNotices({
+        originalHairProfile: routeContext?.originalHairProfile ?? null,
+        effectiveHairProfile: hairProfile,
+        activeSignals: routeContext?.activeProfileSignals ?? [],
+      }),
+      hairProfile.thickness
+        ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
+        : null,
+      hairProfile.density
+        ? `Haardichte: ${HAIR_DENSITY_LABELS[hairProfile.density] ?? hairProfile.density}`
+        : null,
+      hairProfile.protein_moisture_balance
+        ? `Protein-/Feuchtigkeitsbalance: ${
+            PROTEIN_MOISTURE_LABELS[hairProfile.protein_moisture_balance] ??
+            hairProfile.protein_moisture_balance
+          }`
+        : null,
+      maskDecision?.targetProfile?.weight
+        ? `Ziel-Gewicht: ${MASK_WEIGHT_LABELS[maskDecision.targetProfile.weight]}`
+        : null,
+      maskDecision?.targetProfile?.balance
+        ? `Ziel-Balance: ${MASK_BALANCE_LABELS[maskDecision.targetProfile.balance]}`
+        : null,
+      maskDecision?.targetProfile?.repairLevel
+        ? `Masken-Intensitaet: ${
+            CONDITIONER_REPAIR_LEVEL_LABELS[maskDecision.targetProfile.repairLevel]
+          }`
+        : null,
+      maskDecision?.targetProfile?.role
+        ? `Masken-Rolle: ${maskDecision.targetProfile.role === "optional" ? "Optional" : "Zusatzpflege"}`
+        : null,
     ])
   }
 
@@ -1884,13 +2157,19 @@ export function projectSelectedProducts(
     ...projectedProducts.flatMap((product) => product.unsupported_requested_signals),
     ...(resolvedCategory === "conditioner" ||
     resolvedCategory === "leave_in" ||
-    resolvedCategory === "mask"
+    resolvedCategory === "mask" ||
+    resolvedCategory === "oil"
       ? buildUnsupportedIngredientSignals(
           routeContext?.requestedIngredientSignals ?? [],
-          resolvedCategory === "leave_in" || resolvedCategory === "mask"
+          resolvedCategory === "leave_in" ||
+            resolvedCategory === "mask" ||
+            resolvedCategory === "oil"
             ? resolvedCategory
             : "conditioner",
         )
+      : []),
+    ...(resolvedCategory === "leave_in"
+      ? buildUnsupportedHeatTemperatureSignals(routeContext?.requestedHeatTemperatureSignals ?? [])
       : []),
   ])
 
@@ -1932,7 +2211,7 @@ async function runCategoryEngine(params: {
     case "conditioner":
       return selectConditionerProductsWithEngine({ message, hairProfile, routineItems })
     case "leave_in":
-      return selectLeaveInProductsWithEngine({ message, hairProfile, routineItems })
+      return selectLeaveInProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "mask":
       return selectMaskProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "oil":
@@ -2015,6 +2294,51 @@ function applyConditionerActiveOverrides(
   return next
 }
 
+function isStylingTool(value: string): value is StylingTool {
+  return (STYLING_TOOLS as readonly string[]).includes(value)
+}
+
+function isHeatStyling(value: string): value is HeatStyling {
+  return (HEAT_STYLING_LEVELS as readonly string[]).includes(value)
+}
+
+function applyLeaveInActiveOverrides(
+  hairProfile: HairProfile | null,
+  activeSignals: readonly AgentActiveProfileSignal[],
+): HairProfile | null {
+  if (!hairProfile) return null
+
+  const next: HairProfile = {
+    ...hairProfile,
+    styling_tools: hairProfile.styling_tools ? [...hairProfile.styling_tools] : [],
+  }
+
+  for (const signal of activeSignals) {
+    if (signal.selection_effect !== "override" && signal.selection_effect !== "caution") {
+      continue
+    }
+
+    if (
+      signal.field === "thickness" &&
+      (signal.value === "fine" || signal.value === "normal" || signal.value === "coarse")
+    ) {
+      next.thickness = signal.value
+    }
+
+    if (signal.field === "styling_tools" && isStylingTool(signal.value)) {
+      const tools = new Set(next.styling_tools ?? [])
+      tools.add(signal.value)
+      next.styling_tools = [...tools]
+    }
+
+    if (signal.field === "heat_styling" && isHeatStyling(signal.value)) {
+      next.heat_styling = signal.value
+    }
+  }
+
+  return next
+}
+
 function applyActiveProfileOverrides(params: {
   category: SelectableProductCategory
   hairProfile: HairProfile | null
@@ -2024,8 +2348,16 @@ function applyActiveProfileOverrides(params: {
     return applyShampooActiveOverrides(params.hairProfile, params.activeSignals)
   }
 
-  if (params.category === "conditioner" || params.category === "mask") {
+  if (
+    params.category === "conditioner" ||
+    params.category === "mask" ||
+    params.category === "oil"
+  ) {
     return applyConditionerActiveOverrides(params.hairProfile, params.activeSignals)
+  }
+
+  if (params.category === "leave_in") {
+    return applyLeaveInActiveOverrides(params.hairProfile, params.activeSignals)
   }
 
   return params.hairProfile
@@ -2058,6 +2390,24 @@ function deriveRequestedIngredientSignals(message: string): RequestedIngredientS
   }
   if (/\bhumectant\w*\b|\bfeuchthaltemittel\b/.test(normalized)) {
     add("humectant_preference", "Humectants")
+  }
+
+  return signals
+}
+
+function deriveRequestedHeatTemperatureSignals(message: string): RequestedHeatTemperatureSignal[] {
+  const normalized = message
+    .toLocaleLowerCase("de-DE")
+    .replace(/ß/g, "ss")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+  const signals: RequestedHeatTemperatureSignal[] = []
+
+  for (const match of normalized.matchAll(/\b(\d{2,3})\s*(?:grad|°\s*c|celsius)\b/g)) {
+    const value = match[1]
+    if (value && !signals.some((signal) => signal.value === value)) {
+      signals.push({ value, evidence: match[0] })
+    }
   }
 
   return signals
@@ -2121,9 +2471,14 @@ export function createSelectProductsTool(
         requestedGoal,
         activeProfileSignals,
         requestedIngredientSignals:
-          category === "conditioner" || category === "leave_in" || category === "mask"
+          category === "conditioner" ||
+          category === "leave_in" ||
+          category === "mask" ||
+          category === "oil"
             ? deriveRequestedIngredientSignals(message)
             : [],
+        requestedHeatTemperatureSignals:
+          category === "leave_in" ? deriveRequestedHeatTemperatureSignals(message) : [],
         originalHairProfile: hairProfile,
       },
     )

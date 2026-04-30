@@ -4,6 +4,7 @@ import type {
   CanonicalBalanceTarget,
   DamageAssessment,
   InterventionPlan,
+  InterventionStep,
   LeaveInCareTarget,
   LeaveInCategoryDecision,
   LeaveInHeatProtectionNeed,
@@ -11,6 +12,7 @@ import type {
   LeaveInStylingPrepNeed,
   LeaveInStylingContext,
   NormalizedProfile,
+  RecommendationRequestContext,
 } from "@/lib/recommendation-engine/types"
 import type {
   LeaveInApplicationStage,
@@ -128,8 +130,9 @@ function deriveLeaveInNeedBucket(
   profile: NormalizedProfile,
   damage: DamageAssessment,
   careNeeds: CareNeedAssessment,
+  heatProtectionNeed: LeaveInHeatProtectionNeed,
 ): LeaveInCareTarget | null {
-  if (deriveHeatProtectionNeed(profile) !== "none" || careNeeds.thermalProtectionNeed !== "none") {
+  if (heatProtectionNeed !== "none" || careNeeds.thermalProtectionNeed !== "none") {
     return "heat_protect"
   }
 
@@ -163,7 +166,16 @@ function deriveLeaveInNeedBucket(
 
 function deriveConditionerRelationship(
   profile: NormalizedProfile,
+  requestContext?: RecommendationRequestContext,
 ): LeaveInConditionerRelationship | null {
+  if (requestContext?.leaveInConditionerRelationshipRequest) {
+    return requestContext.leaveInConditionerRelationshipRequest
+  }
+
+  if (requestContext?.requestedCategory === "leave_in") {
+    return "booster_only"
+  }
+
   if (!profile.thickness || !profile.density) return null
 
   if (profile.thickness === "fine" || profile.density === "low") {
@@ -264,8 +276,19 @@ export function buildLeaveInCategoryDecision(
   damage: DamageAssessment,
   careNeeds: CareNeedAssessment,
   plan: InterventionPlan,
+  requestContext?: RecommendationRequestContext,
 ): LeaveInCategoryDecision {
-  const step = getPlannedStep(plan, "leave_in")
+  const plannedStep = getPlannedStep(plan, "leave_in")
+  const explicitRequest = requestContext?.requestedCategory === "leave_in"
+  const step: InterventionStep | null =
+    plannedStep ??
+    (explicitRequest
+      ? {
+          category: "leave_in",
+          action: "add",
+          reasonCodes: ["explicit_leave_in_request"],
+        }
+      : null)
 
   if (!step) {
     return {
@@ -279,36 +302,46 @@ export function buildLeaveInCategoryDecision(
     }
   }
 
+  const planReasonCodes = explicitRequest
+    ? Array.from(new Set([...step.reasonCodes, "explicit_leave_in_request"]))
+    : step.reasonCodes
+
   const notes: string[] = []
   const stylingContext = deriveLeaveInStylingContext(profile)
   if (!stylingContext) {
     notes.push("leave_in_styling_context_unclear")
   }
 
-  const conditionerRelationship = deriveConditionerRelationship(profile)
+  const conditionerRelationship = deriveConditionerRelationship(profile, requestContext)
   if (!conditionerRelationship) {
     notes.push("leave_in_relationship_needs_thickness_and_density")
   }
 
-  const targetWeight = deriveTargetWeight(profile)
+  const targetWeight = requestContext?.leaveInWeightRequest ?? deriveTargetWeight(profile)
   if (!targetWeight) {
     notes.push("leave_in_weight_needs_thickness_and_density")
   }
 
-  const needBucket = deriveLeaveInNeedBucket(profile, damage, careNeeds)
-  const heatProtectionNeed = deriveHeatProtectionNeed(profile)
-  const stylingPrepNeed = deriveStylingPrepNeed(profile, careNeeds)
+  const heatProtectionNeed =
+    requestContext?.leaveInHeatProtectionRequest ?? deriveHeatProtectionNeed(profile)
+  const needBucket = deriveLeaveInNeedBucket(profile, damage, careNeeds, heatProtectionNeed)
+  const stylingPrepNeed =
+    heatProtectionNeed === "high" ? "heat_style" : deriveStylingPrepNeed(profile, careNeeds)
+  const targetStylingContext =
+    heatProtectionNeed === "high" || stylingPrepNeed === "heat_style"
+      ? "heat_style"
+      : stylingContext
   const careBenefits = deriveCareTargets(needBucket, damage, careNeeds, heatProtectionNeed)
 
   return {
     category: "leave_in",
     relevant: true,
     action: step.action,
-    planReasonCodes: step.reasonCodes,
+    planReasonCodes,
     currentInventory: profile.routineInventory.leave_in,
     targetProfile: {
       needBucket,
-      stylingContext,
+      stylingContext: targetStylingContext,
       heatProtectionNeed,
       stylingPrepNeed,
       conditionerRelationship,

@@ -43,6 +43,8 @@ export const OIL_USE_MODE_LABELS = OIL_PURPOSE_LABELS
 export const OIL_NO_RECOMMENDATION_REASONS = [
   "better_non_oil_category",
   "therapy_oil_missing",
+  "scalp_treatment_needed",
+  "overload_risk",
 ] as const
 
 export type OilNoRecommendationReason = (typeof OIL_NO_RECOMMENDATION_REASONS)[number]
@@ -50,6 +52,10 @@ export type OilNoRecommendationReason = (typeof OIL_NO_RECOMMENDATION_REASONS)[n
 export const OIL_NO_RECOMMENDATION_LABELS: Record<OilNoRecommendationReason, string> = {
   better_non_oil_category: "Ein anderes Produkt passt hier besser als ein Oel.",
   therapy_oil_missing: "Das passende Therapie-/Kopfhautoel ist aktuell nicht in der Datenbank.",
+  scalp_treatment_needed:
+    "Kopfhautbeschwerden sollten zuerst ueber Shampoo- oder Kopfhautpflege eingeordnet werden.",
+  overload_risk:
+    "Bei beschwertem, fettigem oder belegtem Haar ist zunaechst Reduktion oder Reset sinnvoller als ein weiteres Oel.",
 }
 
 export function isOilCategory(category: string | null | undefined): boolean {

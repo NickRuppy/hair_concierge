@@ -9,6 +9,7 @@ import { loadUserMemoryContext } from "@/lib/rag/user-memory"
 import {
   HAIR_TEXTURE_LABELS,
   HAIR_THICKNESS_LABELS,
+  PROTEIN_MOISTURE_LABELS,
   ROUTINE_PRODUCT_LABELS,
   SCALP_TYPE_LABELS,
   WASH_FREQUENCY_LABELS,
@@ -71,6 +72,15 @@ function deriveVisibleSignals(hairProfile: HairProfile | null): string[] {
   if (hairProfile?.thickness) {
     signals.push(
       `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`,
+    )
+  }
+
+  if (hairProfile?.protein_moisture_balance) {
+    signals.push(
+      `Protein-/Feuchtigkeitsbalance: ${
+        PROTEIN_MOISTURE_LABELS[hairProfile.protein_moisture_balance] ??
+        hairProfile.protein_moisture_balance
+      }`,
     )
   }
 

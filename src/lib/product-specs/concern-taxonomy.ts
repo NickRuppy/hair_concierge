@@ -121,9 +121,9 @@ const EXTENDED_CATALOG_CONCERN_LABELS: Record<string, string> = {
   irritationen: "Kopfhautirritationen",
   nix: "Allgemeine Pflege",
   "natuerliches-oel": OIL_SUBTYPE_LABELS["natuerliches-oel"],
-  "styling-oel": OIL_SUBTYPE_LABELS["styling-oel"],
+  "styling-oel": "Styling mit Oel",
   "trocken-oel": OIL_SUBTYPE_LABELS["trocken-oel"],
-  stylingoel: OIL_SUBTYPE_LABELS["styling-oel"],
+  stylingoel: "Styling mit Oel",
   trockenoel: OIL_SUBTYPE_LABELS["trocken-oel"],
 }
 

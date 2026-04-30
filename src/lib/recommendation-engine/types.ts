@@ -21,6 +21,7 @@ import type {
 } from "@/lib/vocabulary"
 import type { ShampooBucket } from "@/lib/shampoo/constants"
 import type { OilNoRecommendationReason, OilPurpose, OilSubtype } from "@/lib/oil/constants"
+import type { LeaveInFormat } from "@/lib/leave-in/constants"
 import type {
   BALANCE_DIRECTIONS,
   BOND_APPLICATION_MODES,
@@ -66,6 +67,10 @@ export type ConfidenceLevel = (typeof CONFIDENCE_LEVELS)[number]
 export interface RecommendationRequestContext {
   requestedCategory: EngineCategoryId | null
   maskIntensityRequest: "intensive" | null
+  leaveInHeatProtectionRequest: Exclude<LeaveInHeatProtectionNeed, "none"> | null
+  leaveInWeightRequest: CanonicalWeight | null
+  leaveInConditionerRelationshipRequest: LeaveInConditionerRelationship | null
+  leaveInRequestedFormats: LeaveInFormat[]
   oilPurpose: OilPurpose | null
   oilNoRecommendationReason: OilNoRecommendationReason | null
 }
@@ -254,13 +259,18 @@ export interface ShampooTargetProfile {
 
 export type ShampooCategoryDecision = CategoryDecisionBase<"shampoo", ShampooTargetProfile>
 
-export type OilPurposeSource = "request" | "missing"
+export type OilPurposeSource = "request" | "inferred" | "missing"
+export type OilPurposeFit = "exact" | "bridge" | "unknown"
 
 export interface OilTargetProfile {
   purpose: OilPurpose | null
   matcherSubtype: OilSubtype | null
   adjunctScalpSupport: boolean
   purposeSource: OilPurposeSource
+  scalpCaution: boolean
+  densityWeightCaution: boolean
+  overloadRisk: boolean
+  purposeFit: OilPurposeFit
 }
 
 export interface OilCategoryDecision extends CategoryDecisionBase<"oil", OilTargetProfile> {

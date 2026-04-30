@@ -47,6 +47,8 @@ export const ACTIVE_PROFILE_SIGNAL_FIELDS = [
   "goals",
   "chemical_treatment",
   "desired_volume",
+  "heat_styling",
+  "styling_tools",
 ] as const
 
 export type ActiveProfileSignalField = (typeof ACTIVE_PROFILE_SIGNAL_FIELDS)[number]
@@ -184,6 +186,24 @@ function validateGuidanceIds(params: {
   return uniqueGuidanceIds(valid)
 }
 
+function salvageMisplacedGuidanceIds(params: {
+  ids: readonly string[]
+  kind: GuidanceKind
+}): GuidanceId[] {
+  return uniqueGuidanceIds(
+    params.ids.filter(
+      (id): id is GuidanceId => isGuidanceId(id) && isGuidanceKind(id, params.kind),
+    ),
+  )
+}
+
+function keepUnknownOrKindMatchedIds(params: {
+  ids: readonly string[]
+  kind: GuidanceKind
+}): string[] {
+  return params.ids.filter((id) => !isGuidanceId(id) || isGuidanceKind(id, params.kind))
+}
+
 function validateProductCategory(
   value: SelectableProductCategory | null,
   warnings: string[],
@@ -260,7 +280,11 @@ function deriveActiveProfileSignalsFromMessage(message: string): AgentActiveProf
     })
   }
 
-  if (/\bfein\w*\s+haar\b/.test(normalized)) {
+  const describesFineHair =
+    /\bfein\w*(?:[\s,]+[\w-]+){0,4}[\s,]+haar\w*\b/.test(normalized) ||
+    /\bhaar\w*\s+(?:ist|sind|wirkt|fuhlt\w*|fuehlt\w*)\s+fein\w*\b/.test(normalized)
+
+  if (describesFineHair) {
     addSignal("thickness", "fine", "override", "feines Haar")
   }
 
@@ -307,8 +331,32 @@ function deriveActiveProfileSignalsFromMessage(message: string): AgentActiveProf
     addSignal("chemical_treatment", "colored", "qualifier", "coloriertes Haar")
   }
 
-  if (/\bblondiert\w*\b/.test(normalized)) {
+  if (/\bblondier\w*\b/.test(normalized)) {
     addSignal("chemical_treatment", "bleached", "qualifier", "blondiertes Haar")
+  }
+
+  if (/\b(?:fohn\w*|foehn\w*|föhn\w*|blow\s*dry\w*)\b/.test(normalized)) {
+    addSignal("styling_tools", "blow_dryer", "override", "foehnen")
+  }
+
+  if (/\bdiffusor\w*\b|\bdiffuser\w*\b/.test(normalized)) {
+    addSignal("styling_tools", "diffuser", "override", "Diffusor")
+  }
+
+  if (/\b(?:glatt\w*|glaett\w*|glatteisen|glaetteisen|flat\s*iron)\b/.test(normalized)) {
+    addSignal("styling_tools", "flat_iron", "override", "glaetten")
+  }
+
+  if (/\b(?:lockenstab|curling\s*iron)\b/.test(normalized)) {
+    addSignal("styling_tools", "curling_iron", "override", "Lockenstab")
+  }
+
+  if (/\b(?:hot\s*brush|hot\s*air\s*brush|warmluftburste|warmluftbuerste)\b/.test(normalized)) {
+    addSignal("styling_tools", "hot_air_brush", "override", "Hot Brush")
+  }
+
+  if (/\b\d{2,3}\s*(?:grad|°\s*c|celsius)\b/.test(normalized)) {
+    addSignal("styling_tools", "flat_iron", "override", "exakte Hitzeschutz-Temperatur")
   }
 
   if (
@@ -436,6 +484,35 @@ function inferDirectProductCategoryFromMessage(
   }
 
   const normalized = normalizeRouteMessage(message)
+
+  const mentionsMask =
+    /\b(?:haar)?masken?\b/.test(normalized) ||
+    /\b(?:haar)?kuren?\b/.test(normalized) ||
+    /\b(?:protein|feuchtigkeits)masken?\b/.test(normalized)
+  const mentionsOtherCategory =
+    /\bleave[-\s]?in\b|\bleavein\b|\bconditioner\b|\bsp(?:u|ue)lung\w*\b|\bshampoos?\b|\b(?:ol|oel)\w*\b|\boil\w*\b/.test(
+      normalized,
+    )
+
+  if (mentionsMask && !mentionsOtherCategory) {
+    return "mask"
+  }
+
+  if (/\bleave[-\s]?in\b|\bleavein\b/.test(normalized)) {
+    if (userJob === "product_pick" || userJob === "troubleshoot") {
+      return "leave_in"
+    }
+
+    const asksForLeaveInComparison = /\b(?:vergleich|vergleiche|vergleichen|vs|versus)\b/.test(
+      normalized,
+    )
+    const asksForConditionerReplacement =
+      /\b(?:ersetzen|ersetzt|statt|anstelle)\b/.test(normalized) &&
+      /\b(?:spulung|spuelung|conditioner)\b/.test(normalized)
+
+    return asksForLeaveInComparison || asksForConditionerReplacement ? "leave_in" : null
+  }
+
   if (
     /\b(?:tiefenreinigungsshampoos?|tiefenreinigung|deep\s*cleansing|clarifying)\b/.test(normalized)
   ) {
@@ -489,12 +566,80 @@ function isTroubleshootQuestionWithoutImmediateProductPick(
   const asksForReplacementAdvice = /\bsoll\s+ich\s+wechseln\b/.test(normalized)
   const explicitPick =
     /\b(?:welch\w*|empfiehl\w*|empfehl\w*|nehmen|kaufen|alternative)\b/.test(normalized) &&
-    /\b(?:conditioner|spulung|spuelung)\b/.test(normalized)
+    /\b(?:conditioner|sp(?:u|ue)lung)\b/.test(normalized)
   const describesTrouble =
     /\b(?:platt|beschwert|schwer|belegt|fettig)\b/.test(normalized) &&
     /\b(?:macht|wirkt|fuhlt|fuehlt|ist|werden|wird)\b/.test(normalized)
 
   return describesTrouble && asksForReplacementAdvice && !explicitPick
+}
+
+function isMaskTypeOrConceptQuestionWithoutImmediateProductPick(
+  message: string,
+  userJob: AgentUserJob,
+  productCategory: SelectableProductCategory | null,
+): boolean {
+  if (userJob !== "compare_or_decide" || productCategory !== "mask") return false
+
+  const normalized = normalizeRouteMessage(message)
+  const explicitProductPick =
+    /\b(?:welch\w*\s+produkt\w*|empfiehl\w*|empfehl\w*|kaufen|passt\s+am\s+besten|produkt\w*\s+passt)\b/.test(
+      normalized,
+    )
+  if (explicitProductPick) return false
+
+  const asksSplitEndBoundary =
+    /\bspliss\b.{0,60}\b(?:reparier\w*|kaschier\w*|weg|dauerhaft|hilft)\b/.test(normalized) ||
+    /\b(?:reparier\w*|kaschier\w*|weg|dauerhaft|hilft)\b.{0,60}\bspliss\b/.test(normalized)
+  const mentionsProtein = /\bprotein\w*\b/.test(normalized)
+  const mentionsMoisture = /\bfeuchtigkeit\w*\b/.test(normalized)
+  const mentionsMaskContext = /\b\w*masken?\b/.test(normalized) || /\b\w*kuren?\b/.test(normalized)
+  const asksMaskTypeChoice = mentionsProtein && mentionsMoisture && mentionsMaskContext
+
+  return asksSplitEndBoundary || asksMaskTypeChoice
+}
+
+function isLeaveInNeedQuestionWithoutImmediateProductPick(
+  message: string,
+  userJob: AgentUserJob,
+  productCategory: SelectableProductCategory | null,
+): boolean {
+  if (userJob !== "compare_or_decide" || productCategory !== "leave_in") return false
+
+  const normalized = normalizeRouteMessage(message)
+  const asksForLeaveInComparison = /\b(?:vergleich|vergleiche|vergleichen|vs|versus)\b/.test(
+    normalized,
+  )
+  const asksForConditionerReplacement =
+    /\b(?:ersetzen|ersetzt|statt|anstelle)\b/.test(normalized) &&
+    /\b(?:sp(?:u|ue)lung|conditioner)\b/.test(normalized)
+  const asksIfNeeded = /\bbrauche\s+ich\b.{0,40}\bleave[-\s]?in\b/.test(normalized)
+
+  return asksIfNeeded && !asksForLeaveInComparison && !asksForConditionerReplacement
+}
+
+function isOilConceptQuestionWithoutImmediateProductPick(
+  message: string,
+  userJob: AgentUserJob,
+  productCategory: SelectableProductCategory | null,
+): boolean {
+  if (userJob !== "compare_or_decide" || productCategory !== "oil") return false
+
+  const normalized = normalizeRouteMessage(message)
+  const asksConcreteProductPick =
+    /\b(?:welch\w*|empfiehl\w*|empfehl\w*|nehmen|kaufen|produkt\w*)\b/.test(normalized)
+  if (asksConcreteProductPick) return false
+
+  const asksIfOilMakesSense =
+    /\b(?:sinnvoll|ueberhaupt|uberhaupt|brauche\s+ich|soll\s+ich|hilft)\b/.test(normalized)
+  const hasScalpOrRootCaution =
+    /\b(?:ansatz|kopfhaut)\b/.test(normalized) &&
+    /\b(?:fett\w*|olig\w*|oily|schupp\w*|juck\w*|reiz\w*)\b/.test(normalized)
+  const comparesOilUseModes =
+    /\b(?:vergleich|vergleiche|vergleichen|oder|vs|versus)\b/.test(normalized) &&
+    /\b(?:pre[-\s]?wash|vor\s+der\s+wasche|hair\s*oiling|finish|styling)\b/.test(normalized)
+
+  return (asksIfOilMakesSense && hasScalpOrRootCaution) || comparesOilUseModes
 }
 
 function messageLooksDefinitionSeeking(message: string): boolean {
@@ -566,6 +711,36 @@ function deriveToolPlan(params: {
         return []
       }
 
+      if (
+        isMaskTypeOrConceptQuestionWithoutImmediateProductPick(
+          params.message,
+          params.userJob,
+          params.productCategory,
+        )
+      ) {
+        return []
+      }
+
+      if (
+        isLeaveInNeedQuestionWithoutImmediateProductPick(
+          params.message,
+          params.userJob,
+          params.productCategory,
+        )
+      ) {
+        return []
+      }
+
+      if (
+        isOilConceptQuestionWithoutImmediateProductPick(
+          params.message,
+          params.userJob,
+          params.productCategory,
+        )
+      ) {
+        return []
+      }
+
       return ["select_products"]
     case "routine_structure":
       return ["build_or_fix_routine"]
@@ -583,7 +758,16 @@ function inferRoutineObjective(message: string): RoutineObjective {
     : "build_routine"
 }
 
-function buildFinalInstructions(route: AgentRoutePacket): string[] {
+function hasProfileDeviationNotice(selectedProducts: SelectedProductsProjection | null): boolean {
+  return (
+    selectedProducts?.profile_basis.some((basis) => basis.startsWith("Profil-Hinweis:")) ?? false
+  )
+}
+
+function buildFinalInstructions(
+  route: AgentRoutePacket,
+  selectedProducts: SelectedProductsProjection | null,
+): string[] {
   const instructions = [
     "Antworte auf Deutsch.",
     "Nutze nur die geladenen Guidance- und Tool-Daten.",
@@ -606,6 +790,12 @@ function buildFinalInstructions(route: AgentRoutePacket): string[] {
 
   if (route.concerns.includes("frizz") && route.product_category === "shampoo") {
     instructions.push("Bei Frizz Shampoo nicht automatisch als Hauptloesung framen.")
+  }
+
+  if (hasProfileDeviationNotice(selectedProducts)) {
+    instructions.push(
+      "Erwaehne den Profil-Hinweis aus selected_products.profile_basis im ersten Antwortsatz und behandle ihn als aktuelle Angabe nur fuer diesen Turn.",
+    )
   }
 
   return instructions
@@ -638,13 +828,22 @@ export function buildAgentRoutePacket(params: {
     warnings,
   })
   const requestedOverlays = validateGuidanceIds({
-    ids: params.classification.requested_overlay_ids,
+    ids: keepUnknownOrKindMatchedIds({
+      ids: params.classification.requested_overlay_ids,
+      kind: "overlay",
+    }),
     kind: "overlay",
     label: "requested overlay",
     warnings,
   })
   const requestedTopics = validateGuidanceIds({
-    ids: params.classification.requested_topic_ids,
+    ids: [
+      ...params.classification.requested_topic_ids,
+      ...salvageMisplacedGuidanceIds({
+        ids: params.classification.requested_overlay_ids,
+        kind: "topic",
+      }),
+    ],
     kind: "topic",
     label: "requested topic",
     warnings,
@@ -720,6 +919,6 @@ export function buildAgentRuntimePacket(params: {
     selected_products: params.selectedProducts ?? null,
     routine_plan: params.routinePlan ?? null,
     validation_warnings: params.route.validation_warnings,
-    final_instructions: buildFinalInstructions(params.route),
+    final_instructions: buildFinalInstructions(params.route, params.selectedProducts ?? null),
   }
 }

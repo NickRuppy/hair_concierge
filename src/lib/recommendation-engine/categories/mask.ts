@@ -10,7 +10,6 @@ import type {
 import {
   deriveBalanceTarget,
   deriveRepairLevel,
-  deriveTargetWeight,
   getPlannedStep,
 } from "@/lib/recommendation-engine/categories/shared"
 
@@ -39,6 +38,21 @@ function upliftRepairLevel(level: CanonicalRepairLevel | null): CanonicalRepairL
   }
 }
 
+function deriveMaskTargetWeight(profile: NormalizedProfile): "light" | "medium" | "rich" | null {
+  if (!profile.thickness || !profile.density) return null
+
+  if (profile.thickness === "fine") return "light"
+
+  if (profile.thickness === "normal") {
+    if (profile.density === "low") return "light"
+    if (profile.density === "medium") return "medium"
+    return "rich"
+  }
+
+  if (profile.density === "low") return "medium"
+  return "rich"
+}
+
 export function buildMaskCategoryDecision(
   profile: NormalizedProfile,
   damage: DamageAssessment,
@@ -63,7 +77,7 @@ export function buildMaskCategoryDecision(
   }
 
   const notes: string[] = []
-  const targetWeight = deriveTargetWeight(profile)
+  const targetWeight = deriveMaskTargetWeight(profile)
   const baseRepairLevel = deriveRepairLevel(damage)
   const repairLevel =
     explicitMaskRequest && requestContext.maskIntensityRequest === "intensive"

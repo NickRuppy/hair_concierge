@@ -31,6 +31,7 @@ import type {
   LeaveInRole,
   LeaveInStylingContext,
   LeaveInConditionerRelationship,
+  LeaveInFormat,
   LeaveInWeight,
 } from "@/lib/leave-in/constants"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
@@ -314,6 +315,7 @@ export interface LeaveInRecommendationMetadata extends BaseRecommendationMetadat
   conditioner_relationship: LeaveInConditionerRelationship | null
   matched_weight: LeaveInWeight | null
   fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
+  product_format?: LeaveInFormat | null
   product_weight?: LeaveInWeight | null
   product_roles?: LeaveInRole[]
   product_care_benefits?: LeaveInCareBenefit[]
@@ -336,6 +338,11 @@ export interface OilRecommendationMetadata extends BaseRecommendationMetadata {
   matched_subtype: OilSubtype | null
   use_mode: OilUseMode | null
   adjunct_scalp_support: boolean
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
+  purpose_fit?: "exact" | "bridge" | "unknown"
+  scalp_caution?: boolean
+  density_weight_caution?: boolean
+  overload_caution?: boolean
 }
 
 export type MaskType = "protein" | "moisture" | "performance"

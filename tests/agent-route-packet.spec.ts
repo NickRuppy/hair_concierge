@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  buildAgentRuntimePacket,
   buildAgentRoutePacket,
   getRequiredPlaybookForUserJob,
   type AgentRouteClassification,
@@ -78,23 +79,22 @@ test("buildAgentRoutePacket validates guidance ids and builds product tool plan"
   assert.match(packet.validation_warnings.join("\n"), /Unknown requested topic id: topic:not_real/)
 })
 
-test("buildAgentRoutePacket warns when classifier puts known guidance in the wrong bucket", () => {
+test("buildAgentRoutePacket salvages topic ids from the wrong guidance bucket", () => {
   const packet = buildAgentRoutePacket({
     message: "Wie baue ich CWC in meine Waesche ein?",
     userContext: createContext({ suggested_overlays: [] }),
     classification: createClassification({
       user_job: "usage",
       product_category: null,
-      requested_overlay_ids: ["topic:cwc_owc" as never],
+      requested_overlay_ids: ["topic:cwc_owc" as never, "playbook:compare_or_decide" as never],
       requested_topic_ids: [],
     }),
   })
 
-  assert.deepEqual(packet.guidance_ids, ["playbook:usage_and_application"])
-  assert.match(
-    packet.validation_warnings.join("\n"),
-    /Ignored requested overlay id with wrong kind: topic:cwc_owc/,
-  )
+  assert.deepEqual(packet.requested_overlay_ids, [])
+  assert.deepEqual(packet.requested_topic_ids, ["topic:cwc_owc"])
+  assert.deepEqual(packet.guidance_ids, ["playbook:usage_and_application", "topic:cwc_owc"])
+  assert.deepEqual(packet.validation_warnings, [])
 })
 
 test("buildAgentRoutePacket adds routine guidance only for routine jobs", () => {
@@ -177,6 +177,121 @@ test("buildAgentRoutePacket infers shampoo for direct selection and comparison w
   assert.equal(alternatePacket.product_category, "shampoo")
   assert.deepEqual(alternatePacket.tool_plan, ["select_products"])
   assert.deepEqual(alternatePacket.validation_warnings, [])
+})
+
+test("buildAgentRoutePacket infers leave-in for replacement comparisons", () => {
+  const packet = buildAgentRoutePacket({
+    message:
+      "Kann ein Leave-in bei mir die Spülung ersetzen oder sollte ich es eher als Extra-Pflege verwenden?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "compare_or_decide",
+      product_category: null,
+    }),
+  })
+
+  assert.equal(packet.product_category, "leave_in")
+  assert.deepEqual(packet.tool_plan, ["select_products"])
+  assert.deepEqual(packet.validation_warnings, [])
+})
+
+test("buildAgentRoutePacket keeps pure leave-in need decisions conceptual", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Brauche ich ein Leave-in oder reicht Conditioner?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "compare_or_decide",
+      product_category: null,
+    }),
+  })
+
+  assert.equal(packet.product_category, null)
+  assert.deepEqual(packet.tool_plan, [])
+  assert.deepEqual(packet.validation_warnings, [])
+})
+
+test("buildAgentRoutePacket keeps classifier-tagged leave-in need decisions conceptual", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Ich habe trockene Spitzen, aber normalen Ansatz. Brauche ich Leave-in?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "compare_or_decide",
+      product_category: "leave_in",
+    }),
+  })
+
+  assert.equal(packet.product_category, "leave_in")
+  assert.deepEqual(packet.tool_plan, [])
+  assert.deepEqual(packet.validation_warnings, [])
+})
+
+test("buildAgentRoutePacket keeps explanatory mask repair questions off product tools", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Kann eine Maske Spliss reparieren oder nur kaschieren?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "compare_or_decide",
+      product_category: "mask",
+    }),
+  })
+
+  assert.equal(packet.product_category, "mask")
+  assert.deepEqual(packet.tool_plan, [])
+  assert.deepEqual(packet.validation_warnings, [])
+})
+
+test("buildAgentRoutePacket infers leave-in for explicit leave-in comparisons", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Vergleich mir bitte ein Spray-Leave-in und eine Creme für meine Haare.",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "compare_or_decide",
+      product_category: null,
+    }),
+  })
+
+  assert.equal(packet.product_category, "leave_in")
+  assert.deepEqual(packet.tool_plan, ["select_products"])
+  assert.deepEqual(packet.validation_warnings, [])
+})
+
+test("buildAgentRoutePacket derives heat tool signals for leave-in heat requests", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Welches Leave-in mit Hitzeschutz passt, wenn ich föhne oder glätte?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "leave_in",
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) => signal.field === "styling_tools" && signal.value === "flat_iron",
+    ),
+  )
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) => signal.field === "styling_tools" && signal.value === "blow_dryer",
+    ),
+  )
+})
+
+test("buildAgentRoutePacket extracts fine hair from predicate phrasing", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Meine Haare sind fein und trocken. Gibt es eine leichte Maske?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "mask",
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) => signal.field === "thickness" && signal.value === "fine",
+    ),
+  )
 })
 
 test("buildAgentRoutePacket keeps conceptual shampoo decisions category-free without noisy warnings", () => {
@@ -323,6 +438,172 @@ test("buildAgentRoutePacket preserves active profile signals from real German sh
   )
 })
 
+test("buildAgentRoutePacket detects fine-hair phrasing in mask requests", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Meine Haare sind fein und trocken. Gibt es eine leichte Maske?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "mask",
+      concerns: ["dry_lengths"],
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) =>
+        signal.field === "thickness" &&
+        signal.value === "fine" &&
+        signal.selection_effect === "override",
+    ),
+  )
+})
+
+test("buildAgentRoutePacket keeps conceptual mask split-end questions answer-only", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Kann eine Maske Spliss reparieren oder nur kaschieren?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "compare_or_decide",
+      product_category: "mask",
+      concerns: [],
+    }),
+  })
+
+  assert.equal(packet.product_category, "mask")
+  assert.deepEqual(packet.tool_plan, [])
+})
+
+test("buildAgentRoutePacket infers mask for protein-or-moisture type decisions without selecting products", () => {
+  const messages = [
+    "Brauche ich eine Feuchtigkeitsmaske oder eine Proteinmaske?",
+    "Brauche ich Protein oder Feuchtigkeit als Maske?",
+    "Brauche ich eine Protein- oder Feuchtigkeitsmaske?",
+    "Soll ich eher Protein oder Feuchtigkeit nehmen bei Masken?",
+  ]
+
+  for (const message of messages) {
+    const packet = buildAgentRoutePacket({
+      message,
+      userContext: createContext(),
+      classification: createClassification({
+        user_job: "compare_or_decide",
+        product_category: null,
+      }),
+    })
+
+    assert.equal(packet.product_category, "mask", message)
+    assert.deepEqual(packet.tool_plan, [], message)
+  }
+})
+
+test("buildAgentRoutePacket keeps mask versus other category decisions conceptual", () => {
+  const messages = [
+    "Brauche ich eher eine Maske oder eine Spülung?",
+    "Soll ich eine Maske oder ein Öl nehmen?",
+  ]
+
+  for (const message of messages) {
+    const packet = buildAgentRoutePacket({
+      message,
+      userContext: createContext(),
+      classification: createClassification({
+        user_job: "compare_or_decide",
+        product_category: null,
+      }),
+    })
+
+    assert.equal(packet.product_category, null, message)
+    assert.deepEqual(packet.tool_plan, [], message)
+  }
+})
+
+test("buildAgentRoutePacket detects Blondierung as chemical-treatment qualifier", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Welche Maske passt nach einer Blondierung?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "mask",
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) =>
+        signal.field === "chemical_treatment" &&
+        signal.value === "bleached" &&
+        signal.selection_effect === "qualifier",
+    ),
+  )
+})
+
+test("buildAgentRoutePacket detects fine hair inside adjective chains", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Welche Maske passt zu meinen feinen, trockenen, blondierten Haaren?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "mask",
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) =>
+        signal.field === "thickness" &&
+        signal.value === "fine" &&
+        signal.selection_effect === "override",
+    ),
+  )
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) =>
+        signal.field === "chemical_treatment" &&
+        signal.value === "bleached" &&
+        signal.selection_effect === "qualifier",
+    ),
+  )
+})
+
+test("buildAgentRuntimePacket makes profile-deviation notices mandatory render context", () => {
+  const route = buildAgentRoutePacket({
+    message: "Meine Haare sind fein und trocken. Gibt es eine leichte Maske?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "mask",
+    }),
+  })
+
+  const packet = buildAgentRuntimePacket({
+    route,
+    userContext: createContext(),
+    guidance: { items: [] },
+    selectedProducts: {
+      category: "mask",
+      decision: "recommended",
+      product_response_policy: "recommend",
+      policy_reason: "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten.",
+      profile_basis: [
+        "Profil-Hinweis: aktuelle Angabe Haardicke Fein statt gespeichert Mittel",
+        "Haardicke: Fein",
+      ],
+      category_guidance: "Maske ist hier Zusatzpflege fuer Laengen und Spitzen.",
+      products: [],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+  })
+
+  assert.ok(
+    packet.final_instructions.some((instruction) =>
+      instruction.includes("Profil-Hinweis aus selected_products.profile_basis"),
+    ),
+  )
+})
+
 test("buildAgentRoutePacket extracts active signals from common German phrasing variants", () => {
   const sensitivePacket = buildAgentRoutePacket({
     message: "Meine Kopfhaut ist empfindlich, welches Shampoo passt?",
@@ -454,6 +735,24 @@ test("buildAgentRoutePacket routes deep cleansing shampoo before generic shampoo
     "overlay:dry_lengths",
     "topic:deep_cleansing",
   ])
+})
+
+test("buildAgentRoutePacket keeps oily-root oil suitability conceptual", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Ich habe schnell fettigen Ansatz. Ist Haaroel ueberhaupt sinnvoll?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "compare_or_decide",
+      product_category: "oil",
+      evidence: ["User asks whether hair oil makes sense for oily roots."],
+    }),
+  })
+
+  assert.equal(packet.user_job, "compare_or_decide")
+  assert.equal(packet.product_category, "oil")
+  assert.deepEqual(packet.concerns, ["oily_roots"])
+  assert.deepEqual(packet.tool_plan, [])
+  assert.deepEqual(packet.validation_warnings, [])
 })
 
 test("buildAgentRoutePacket covers the agreed regression route shapes", () => {

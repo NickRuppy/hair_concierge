@@ -50,6 +50,9 @@ const DRY_OIL_CONTEXT_TERMS = [
   "schwerelos",
   "nicht beschweren",
   "nicht fettig",
+  "nicht fettig aussehen",
+  "ohne fettig",
+  "fettig auszusehen",
   "ohne zu fetten",
   "schnell einziehen",
   "refresh",
@@ -82,6 +85,55 @@ const NON_OIL_CATEGORY_TERMS = [
   "spülung",
   "maske",
   "haarkur",
+]
+
+const SCALP_TREATMENT_TERMS = [
+  "schuppen",
+  "dandruff",
+  "juck",
+  "itch",
+  "irrit",
+  "roetung",
+  "rotung",
+  "entzund",
+  "entzünd",
+  "haarausfall",
+  "hair loss",
+  "wachstum",
+  "growth",
+]
+
+const OVERLOAD_TERMS = [
+  "fettig",
+  "greasy",
+  "strähnig",
+  "strahnig",
+  "beschwert",
+  "coated",
+  "belegt",
+  "schwer",
+  "heavy",
+  "limp",
+  "platt",
+  "flat",
+  "dull",
+  "stumpf",
+  "buildup",
+  "build up",
+  "ablager",
+]
+
+const LIGHTWEIGHT_POSITIVE_TERMS = [
+  "nicht beschwer",
+  "ohne zu beschwer",
+  "nicht fettig",
+  "nicht fettig aussehen",
+  "ohne fettig",
+  "fettig auszusehen",
+  "ohne zu fetten",
+  "schwerelos",
+  "weightless",
+  "lightweight",
 ]
 
 function normalizeText(value: string): string {
@@ -152,10 +204,22 @@ export function inferOilNoRecommendationReason(
   const text = normalizeText(message)
 
   if (
-    purpose === "pre_wash_oiling" &&
-    (includesAny(text, THERAPY_OIL_BRAND_TERMS) || includesAny(text, THERAPY_OIL_INGREDIENT_TERMS))
+    includesAny(text, THERAPY_OIL_BRAND_TERMS) ||
+    includesAny(text, THERAPY_OIL_INGREDIENT_TERMS)
   ) {
     return "therapy_oil_missing"
+  }
+
+  if (includesAny(text, SCALP_TREATMENT_TERMS)) {
+    return "scalp_treatment_needed"
+  }
+
+  if (
+    purpose !== null &&
+    includesAny(text, OVERLOAD_TERMS) &&
+    !includesAny(text, LIGHTWEIGHT_POSITIVE_TERMS)
+  ) {
+    return "overload_risk"
   }
 
   if (

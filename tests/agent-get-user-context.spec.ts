@@ -103,6 +103,7 @@ test("buildUserContextProjection exposes visible profile signals for response fr
     hairProfile: makeProfile({
       hair_texture: "wavy",
       thickness: "fine",
+      protein_moisture_balance: "stretches_stays",
       concerns: ["oily_scalp", "dryness", "frizz"],
       scalp_type: "oily",
       wash_frequency: "every_2_3_days",
@@ -115,6 +116,7 @@ test("buildUserContextProjection exposes visible profile signals for response fr
   assert.ok(projection.derived_signals.includes("Schnell fettender Ansatz"))
   assert.ok(projection.derived_signals.includes("Trockene Laengen"))
   assert.ok(projection.derived_signals.includes("Frizzige Laengen"))
+  assert.ok(projection.derived_signals.includes("Protein-/Feuchtigkeitsbalance: Proteinmangel"))
   assert.ok(projection.derived_signals.includes("Aktuelle Routine: Shampoo, Conditioner"))
 })
 

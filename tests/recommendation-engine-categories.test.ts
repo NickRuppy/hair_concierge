@@ -23,6 +23,7 @@ import {
 import { buildDamageAssessment } from "../src/lib/recommendation-engine/assessments/damage"
 import { adaptRecommendationInputFromPersistence } from "../src/lib/recommendation-engine/adapters/from-persistence"
 import type { PersistenceRoutineItemRow } from "../src/lib/recommendation-engine/adapters/from-persistence"
+import type { HairProfile } from "../src/lib/types"
 import type { MaskCategoryDecision } from "../src/lib/recommendation-engine/types"
 import { normalizeRecommendationInput } from "../src/lib/recommendation-engine/normalize"
 import {
@@ -104,7 +105,7 @@ test("category set turns severe shared signals into conditioner, mask, and leave
   assert.deepEqual(categories.mask.targetProfile, {
     balance: "moisture",
     repairLevel: "high",
-    weight: "medium",
+    weight: "light",
     needStrength: 3,
     role: "fixed",
     intensityRequest: null,
@@ -123,6 +124,32 @@ test("category set turns severe shared signals into conditioner, mask, and leave
     "detangle_smooth",
   ])
   assert.equal(categories.oil.relevant, false)
+})
+
+test("mask target weight is light for fine hair even with medium density", () => {
+  const { normalized, damage, careNeeds, plan } = buildEngineState(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+      density: "medium",
+      protein_moisture_balance: "stretches_stays",
+      cuticle_condition: "slightly_rough",
+      concerns: ["dryness"],
+    },
+    [],
+  )
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    buildRecommendationRequestContext({
+      requestedCategory: "mask",
+      message: "Meine Haare sind fein und trocken. Gibt es eine leichte Maske?",
+    }),
+  )
+
+  assert.equal(categories.mask.targetProfile?.weight, "light")
 })
 
 test("explicit low-need mask requests stay relevant as optional Zusatzpflege", () => {
@@ -145,6 +172,114 @@ test("explicit low-need mask requests stay relevant as optional Zusatzpflege", (
   assert.equal(categories.mask.targetProfile?.needStrength, 0)
   assert.equal(categories.mask.targetProfile?.intensityRequest, null)
   assert.ok(categories.mask.planReasonCodes.includes("explicit_mask_request"))
+})
+
+test("explicit low-need leave-in requests build a request-scoped target", () => {
+  const { normalized, damage, careNeeds, plan } = buildEngineState(LOW_DAMAGE_PROFILE, [])
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "leave_in",
+    message: "Welches Leave-in passt zu meinem Haar?",
+  })
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    requestContext,
+  )
+
+  assert.equal(categories.leaveIn.relevant, true)
+  assert.equal(categories.leaveIn.action, "add")
+  assert.equal(categories.leaveIn.targetProfile?.thickness, "normal")
+  assert.equal(categories.leaveIn.targetProfile?.weight, "medium")
+  assert.equal(categories.leaveIn.targetProfile?.conditionerRelationship, "booster_only")
+  assert.ok(categories.leaveIn.planReasonCodes.includes("explicit_leave_in_request"))
+})
+
+test("explicit leave-in heat requests build a high heat target even when routine plan is quiet", () => {
+  const heatProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    heat_styling: "never" as const,
+    styling_tools: ["blow_dryer", "flat_iron"] as HairProfile["styling_tools"],
+    drying_method: "air_dry" as const,
+  }
+  const { normalized, damage, careNeeds, plan } = buildEngineState(heatProfile, [])
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "leave_in",
+    message: "Welches Leave-in mit Hitzeschutz passt, wenn ich föhne oder glätte?",
+  })
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    requestContext,
+  )
+
+  assert.equal(categories.leaveIn.relevant, true)
+  assert.equal(categories.leaveIn.targetProfile?.heatProtectionNeed, "high")
+  assert.equal(categories.leaveIn.targetProfile?.stylingContext, "heat_style")
+  assert.equal(categories.leaveIn.targetProfile?.stylingPrepNeed, "heat_style")
+  assert.ok(categories.leaveIn.targetProfile?.careBenefits.includes("heat_protect"))
+})
+
+test("explicit leave-in heat-protection wording builds a heat target without styling-tool signals", () => {
+  const quietProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    heat_styling: "never" as const,
+    styling_tools: [] as HairProfile["styling_tools"],
+    drying_method: "air_dry" as const,
+    uses_heat_protection: false,
+  }
+  const { normalized, damage, careNeeds, plan } = buildEngineState(quietProfile, [])
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "leave_in",
+    message: "Welches Leave-in passt mit Hitzeschutz?",
+  })
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    requestContext,
+  )
+
+  assert.equal(categories.leaveIn.relevant, true)
+  assert.equal(categories.leaveIn.targetProfile?.heatProtectionNeed, "high")
+  assert.equal(categories.leaveIn.targetProfile?.stylingContext, "heat_style")
+  assert.equal(categories.leaveIn.targetProfile?.stylingPrepNeed, "heat_style")
+  assert.ok(categories.leaveIn.targetProfile?.careBenefits.includes("heat_protect"))
+})
+
+test("explicit fine weighed-down leave-in requests target light booster products", () => {
+  const fineProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    hair_texture: "wavy" as const,
+    thickness: "fine" as const,
+    density: "medium" as const,
+    concerns: ["dryness", "frizz"] as HairProfile["concerns"],
+    goals: ["less_frizz", "moisture"] as HairProfile["goals"],
+    protein_moisture_balance: "stretches_stays" as const,
+    styling_tools: ["blow_dryer"] as HairProfile["styling_tools"],
+    uses_heat_protection: true,
+  }
+  const { normalized, damage, careNeeds, plan } = buildEngineState(fineProfile, [])
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "leave_in",
+    message:
+      "Mein feines Haar braucht Pflege, wird aber schnell beschwert. Welches Leave-in passt?",
+  })
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    requestContext,
+  )
+
+  assert.equal(categories.leaveIn.relevant, true)
+  assert.equal(categories.leaveIn.targetProfile?.weight, "light")
+  assert.equal(categories.leaveIn.targetProfile?.conditionerRelationship, "booster_only")
 })
 
 test("non-explicit medium mask need stays relevant as fixed Zusatzpflege", () => {
@@ -303,14 +438,14 @@ test("mask fit uses concentration as a temporary repair proxy but still needs ba
   assert.equal(decision.action, "increase_frequency")
 
   const missingBalanceFit = evaluateMaskFit(decision, {
-    weight: "medium",
+    weight: "light",
     concentration: "high",
   })
   assert.equal(missingBalanceFit.status, "unknown")
   assert.deepEqual(missingBalanceFit.missingFields, ["balance_direction"])
 
   const exactFit = evaluateMaskFit(decision, {
-    weight: "medium",
+    weight: "light",
     concentration: "high",
     balance_direction: "moisture",
   })
@@ -567,7 +702,40 @@ test("oil decision resolves normalized request purpose before category logic run
     matcherSubtype: "styling-oel",
     adjunctScalpSupport: false,
     purposeSource: "request",
+    scalpCaution: false,
+    densityWeightCaution: false,
+    overloadRisk: false,
+    purposeFit: "exact",
   })
+})
+
+test("oil decision does not treat lightweight finish wording as overload", () => {
+  const { normalized } = buildEngineState(LOW_DAMAGE_PROFILE, [])
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Ich suche ein schwereloses Trocken-Oel, das nicht fettig wirkt.",
+  })
+
+  const decision = buildOilCategoryDecision(normalized, requestContext)
+
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.noRecommendationReason, null)
+  assert.equal(decision.targetProfile?.purpose, "light_finish")
+})
+
+test("oil decision treats non-greasy fine-hair wording as light finish", () => {
+  const { normalized } = buildEngineState(LOW_DAMAGE_PROFILE, [])
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Welches Haaroel passt zu meinem feinen Haar, ohne fettig auszusehen?",
+  })
+
+  const decision = buildOilCategoryDecision(normalized, requestContext)
+
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.clarificationNeeded, false)
+  assert.equal(decision.noRecommendationReason, null)
+  assert.equal(decision.targetProfile?.purpose, "light_finish")
 })
 
 test("oil decision asks for clarification when no explicit purpose is available", () => {
@@ -575,6 +743,10 @@ test("oil decision asks for clarification when no explicit purpose is available"
   const decision = buildOilCategoryDecision(normalized, {
     requestedCategory: "oil",
     maskIntensityRequest: null,
+    leaveInHeatProtectionRequest: null,
+    leaveInWeightRequest: null,
+    leaveInConditionerRelationshipRequest: null,
+    leaveInRequestedFormats: [],
     oilPurpose: null,
     oilNoRecommendationReason: null,
   })
@@ -582,6 +754,77 @@ test("oil decision asks for clarification when no explicit purpose is available"
   assert.equal(decision.relevant, true)
   assert.equal(decision.clarificationNeeded, true)
   assert.equal(decision.targetProfile, null)
+})
+
+test("oil decision redirects scalp treatment oil requests without product target", () => {
+  const { normalized } = buildEngineState(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      scalp_condition: "dandruff",
+    },
+    [],
+  )
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Ich suche ein Oel gegen Schuppen und juckende Kopfhaut.",
+  })
+
+  const decision = buildOilCategoryDecision(normalized, requestContext)
+
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.clarificationNeeded, false)
+  assert.equal(decision.noRecommendationReason, "scalp_treatment_needed")
+  assert.equal(decision.targetProfile, null)
+  assert.ok(decision.planReasonCodes.includes("oil_scalp_treatment_redirect"))
+})
+
+test("oil decision redirects growth and loss oil requests even without explicit oiling purpose", () => {
+  const { normalized } = buildEngineState(LOW_DAMAGE_PROFILE, [])
+
+  for (const message of [
+    "Welches Oel hilft gegen Haarausfall?",
+    "Welches Oel ist gut fuer Haarwachstum?",
+    "Welches Oel gegen Schuppen passt?",
+  ]) {
+    const requestContext = buildRecommendationRequestContext({
+      requestedCategory: "oil",
+      message,
+    })
+    const decision = buildOilCategoryDecision(normalized, requestContext)
+
+    assert.equal(decision.relevant, true)
+    assert.equal(decision.clarificationNeeded, false)
+    assert.equal(decision.noRecommendationReason, "scalp_treatment_needed")
+    assert.equal(decision.targetProfile, null)
+  }
+})
+
+test("oil decision suppresses new oil products when overload is likely current problem", () => {
+  const { normalized } = buildEngineState(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+      density: "low",
+      scalp_type: "oily",
+    },
+    [
+      { category: "oil", product_name: "Current Oil", frequency_range: "3_4x" },
+      { category: "leave_in", product_name: "Rich Leave-in", frequency_range: "3_4x" },
+      { category: "mask", product_name: "Rich Mask", frequency_range: "1_2x" },
+    ],
+  )
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Mein Haar ist strähnig und beschwert, welches Styling-Oel passt trotzdem?",
+  })
+
+  const decision = buildOilCategoryDecision(normalized, requestContext)
+
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.action, "decrease_frequency")
+  assert.equal(decision.noRecommendationReason, "overload_risk")
+  assert.equal(decision.targetProfile, null)
+  assert.ok(decision.planReasonCodes.includes("oil_overload_suppress_products"))
 })
 
 test("category set activates support/reset categories for oily buildup-heavy routines", () => {

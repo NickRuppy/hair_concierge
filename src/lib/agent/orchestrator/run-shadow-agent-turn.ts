@@ -68,6 +68,10 @@ function prepareSelectedProductsForRender(
     return projection
   }
 
+  if (projection.category === "leave_in") {
+    return projection
+  }
+
   const primaryProducts = projection.products.filter((product) => !hasFallbackCaveat(product))
   if (primaryProducts.length === 0 || primaryProducts.length === projection.products.length) {
     return projection

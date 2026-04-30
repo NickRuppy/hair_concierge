@@ -8,7 +8,10 @@ import {
 import type { MatchedProduct } from "../src/lib/rag/product-matcher"
 import type { SelectableProductCategory } from "../src/lib/agent/tools/select-products"
 import type { RecommendationEngineRuntime } from "../src/lib/recommendation-engine/runtime"
-import type { ShampooCategoryDecision } from "../src/lib/recommendation-engine/types"
+import type {
+  MaskCategoryDecision,
+  ShampooCategoryDecision,
+} from "../src/lib/recommendation-engine/types"
 import type { HairProfile } from "../src/lib/types"
 import { LOW_DAMAGE_PROFILE } from "./recommendation-engine-foundation.fixtures"
 
@@ -113,6 +116,7 @@ function createLeaveInMatchedProduct(
       conditioner_relationship: "replacement_capable",
       matched_weight: "medium",
       fit_status: "ideal",
+      product_format: "spray",
       product_weight: "medium",
       product_roles: ["replacement_conditioner", "styling_prep"],
       product_care_benefits: ["moisture", "anti_frizz"],
@@ -152,6 +156,35 @@ function createMaskMatchedProduct(
   })
 }
 
+function createOilMatchedProduct(
+  id: string,
+  score: number,
+  metadataOverrides: Record<string, unknown> = {},
+): MatchedProduct {
+  return createMatchedProduct(id, score, {
+    category: "Öle",
+    recommendation_meta: {
+      category: "oil",
+      score,
+      top_reasons: ["Passt zum Oel-Zweck"],
+      tradeoffs: [],
+      usage_hint: "Sehr sparsam in die Laengen und Spitzen geben.",
+      matched_profile: {
+        thickness: "fine",
+      },
+      matched_subtype: "trocken-oel",
+      use_mode: "light_finish",
+      adjunct_scalp_support: false,
+      fit_status: "ideal",
+      purpose_fit: "exact",
+      density_weight_caution: true,
+      overload_caution: false,
+      scalp_caution: false,
+      ...metadataOverrides,
+    },
+  })
+}
+
 function createRuntimeStub(
   overrides: Partial<RecommendationEngineRuntime> = {},
 ): RecommendationEngineRuntime {
@@ -160,6 +193,10 @@ function createRuntimeStub(
     requestContext: {
       requestedCategory: null,
       maskIntensityRequest: null,
+      leaveInHeatProtectionRequest: null,
+      leaveInWeightRequest: null,
+      leaveInConditionerRelationshipRequest: null,
+      leaveInRequestedFormats: [],
       oilPurpose: null,
       oilNoRecommendationReason: null,
     } as RecommendationEngineRuntime["requestContext"],
@@ -709,6 +746,7 @@ test("projectSelectedProducts exposes leave-in claims and unsupported ingredient
     [
       createLeaveInMatchedProduct("p-leave-in", 0.94),
       createLeaveInMatchedProduct("p-balanced", 0.88, {
+        product_format: "cream",
         product_weight: "light",
         fit_status: "supportive",
         product_balance_direction: "balanced",
@@ -736,6 +774,7 @@ test("projectSelectedProducts exposes leave-in claims and unsupported ingredient
     result.products[0].supported_claims.map((claim) => claim.field),
     [
       "thickness",
+      "format",
       "weight",
       "balance_direction",
       "fit_status",
@@ -759,8 +798,242 @@ test("projectSelectedProducts exposes leave-in claims and unsupported ingredient
       "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit.",
   })
   assert.deepEqual(result.comparison_facts, {
-    "p-leave-in": ["Gewicht: Mittel", "Balance: Feuchtigkeit"],
-    "p-balanced": ["Gewicht: Leicht", "Balance: ausgewogene Pflege"],
+    "p-leave-in": ["Format: Spray", "Gewicht: Mittel"],
+    "p-balanced": ["Format: Creme", "Gewicht: Leicht"],
+  })
+})
+
+test("selectProducts applies leave-in thickness overrides and surfaces profile deviation", async () => {
+  const observed: { thickness?: HairProfile["thickness"] } = {}
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, hairProfile, runtime }) => {
+      assert.equal(category, "leave_in")
+      observed.thickness = hairProfile?.thickness ?? null
+      assert.equal(runtime.categories.leaveIn.targetProfile?.thickness, "fine")
+      return [
+        createLeaveInMatchedProduct("fine-leave-in", 0.94, {
+          matched_profile: {
+            hair_texture: "wavy",
+            thickness: "fine",
+            density: "medium",
+            cuticle_condition: null,
+            chemical_treatment: [],
+          },
+          product_weight: "light",
+        }),
+      ]
+    },
+  })
+
+  const result = await tool({
+    category: "leave_in",
+    message:
+      "Mein feines Haar braucht Pflege, wird aber schnell beschwert. Welches Leave-in passt?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "normal",
+      density: "medium",
+      concerns: ["frizz"],
+      uses_heat_protection: false,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    userJob: "product_pick",
+    concerns: [],
+    activeProfileSignals: [
+      {
+        field: "thickness",
+        value: "fine",
+        source: "message",
+        selection_effect: "override",
+        evidence: "feines Haar",
+      },
+    ],
+  })
+
+  assert.equal(observed.thickness, "fine")
+  assert.ok(result.profile_basis.includes("Haardicke: Fein"))
+  assert.ok(result.profile_basis.some((line) => line.startsWith("Profil-Hinweis:")))
+  assert.equal(result.products[0]?.supported_claims[0]?.label, "Haardicke: Fein")
+})
+
+test("selectProducts applies leave-in heat tool overrides to the runtime", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "leave_in")
+      assert.equal(runtime.categories.leaveIn.targetProfile?.heatProtectionNeed, "high")
+      assert.equal(runtime.categories.leaveIn.targetProfile?.stylingPrepNeed, "heat_style")
+      return [createLeaveInMatchedProduct("heat-leave-in", 0.94)]
+    },
+  })
+
+  const result = await tool({
+    category: "leave_in",
+    message: "Welches Leave-in mit Hitzeschutz passt, wenn ich föhne oder glätte?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "normal",
+      density: "medium",
+      concerns: ["dryness", "frizz"],
+      protein_moisture_balance: "snaps",
+      cuticle_condition: "slightly_rough",
+      heat_styling: "never",
+      styling_tools: [],
+      drying_method: "air_dry",
+      uses_heat_protection: false,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    activeProfileSignals: [
+      {
+        field: "styling_tools",
+        value: "flat_iron",
+        source: "message",
+        selection_effect: "override",
+        evidence: "glätte",
+      },
+      {
+        field: "styling_tools",
+        value: "blow_dryer",
+        source: "message",
+        selection_effect: "override",
+        evidence: "föhne",
+      },
+    ],
+  })
+
+  assert.equal(result.products[0]?.name, "Produkt heat-leave-in")
+})
+
+test("selectProducts builds a leave-in target for explicit heat requests on otherwise quiet profiles", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "leave_in")
+      assert.equal(runtime.categories.leaveIn.relevant, true)
+      assert.equal(runtime.categories.leaveIn.targetProfile?.heatProtectionNeed, "high")
+      assert.equal(runtime.categories.leaveIn.targetProfile?.stylingPrepNeed, "heat_style")
+      return [createLeaveInMatchedProduct("heat-leave-in", 0.94)]
+    },
+  })
+
+  const result = await tool({
+    category: "leave_in",
+    message: "Welches Leave-in mit Hitzeschutz passt, wenn ich föhne oder glätte?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "normal",
+      density: "medium",
+      concerns: [],
+      goals: ["shine"],
+      heat_styling: "never",
+      styling_tools: [],
+      drying_method: "air_dry",
+      uses_heat_protection: false,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    activeProfileSignals: [
+      {
+        field: "styling_tools",
+        value: "flat_iron",
+        source: "message",
+        selection_effect: "override",
+        evidence: "glätte",
+      },
+      {
+        field: "styling_tools",
+        value: "blow_dryer",
+        source: "message",
+        selection_effect: "override",
+        evidence: "föhne",
+      },
+    ],
+  })
+
+  assert.equal(result.decision, "recommended")
+})
+
+test("selectProducts builds a leave-in heat target from generic Hitzeschutz wording", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "leave_in")
+      assert.equal(runtime.categories.leaveIn.relevant, true)
+      assert.equal(runtime.categories.leaveIn.targetProfile?.heatProtectionNeed, "high")
+      assert.equal(runtime.categories.leaveIn.targetProfile?.stylingPrepNeed, "heat_style")
+      return [createLeaveInMatchedProduct("heat-leave-in", 0.94)]
+    },
+  })
+
+  const result = await tool({
+    category: "leave_in",
+    message: "Welches Leave-in passt mit Hitzeschutz?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "normal",
+      density: "medium",
+      concerns: [],
+      goals: [],
+      heat_styling: "never",
+      styling_tools: [],
+      drying_method: "air_dry",
+      uses_heat_protection: false,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+  })
+
+  assert.equal(result.decision, "recommended")
+})
+
+test("selectProducts marks exact leave-in heat temperatures unsupported", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async () => [createLeaveInMatchedProduct("heat-leave-in", 0.94)],
+  })
+
+  const result = await tool({
+    category: "leave_in",
+    message: "Welches Leave-in schuetzt sicher bis 230 Grad?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "normal",
+      density: "medium",
+      uses_heat_protection: false,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+  })
+
+  assert.deepEqual(result.unsupported_requested_signals[0], {
+    field: "heat_temperature",
+    value: "230",
+    reason: "no_structured_product_data",
+    user_message:
+      "Exakte Hitzeschutz-Temperaturen wie 230 Grad sind in dieser Leave-in-Auswahl nicht sicher operationalisiert. Ich bewerte die Optionen deshalb nur danach, ob Hitzeschutz strukturiert erfasst ist.",
   })
 })
 
@@ -1049,6 +1322,68 @@ test("projectSelectedProducts exposes mask claims and unsupported ingredient cav
   assert.deepEqual(result.comparison_facts, {
     "p-mask-1": ["Balance: Protein", "Intensitaet: Mittel"],
     "p-mask-2": ["Balance: Ausgewogen", "Intensitaet: Hoch"],
+  })
+})
+
+test("projectSelectedProducts exposes mask profile basis with balance and target axes", () => {
+  const runtime = createRuntimeStub()
+  runtime.categories.mask = {
+    category: "mask",
+    relevant: true,
+    action: "add",
+    planReasonCodes: ["explicit_mask_request"],
+    currentInventory: null,
+    targetProfile: {
+      balance: "protein",
+      repairLevel: "medium",
+      weight: "light",
+      needStrength: 2,
+      role: "fixed",
+      intensityRequest: null,
+      thickness: "fine",
+      density: "medium",
+    },
+    notes: [],
+  } satisfies MaskCategoryDecision
+
+  const result = projectSelectedProducts(
+    [createMaskMatchedProduct("p-mask-1", 0.94)],
+    {
+      thickness: "fine",
+      density: "medium",
+      protein_moisture_balance: "stretches_stays",
+      concerns: ["dryness"],
+      chemical_treatment: ["colored"],
+    } as HairProfile,
+    "mask",
+    runtime,
+  )
+
+  assert.ok(result.profile_basis.includes("Haardicke: Fein"))
+  assert.ok(result.profile_basis.includes("Haardichte: Mittlere Dichte"))
+  assert.ok(result.profile_basis.includes("Protein-/Feuchtigkeitsbalance: Proteinmangel"))
+  assert.ok(result.profile_basis.includes("Ziel-Gewicht: Leicht"))
+  assert.ok(result.profile_basis.includes("Ziel-Balance: Protein"))
+  assert.ok(result.profile_basis.includes("Masken-Intensitaet: Mittel"))
+})
+
+test("projectSelectedProducts uses price as mask comparison fallback when fit facts match", () => {
+  const result = projectSelectedProducts(
+    [
+      createMaskMatchedProduct("p-mask-cheap", 0.94),
+      createMaskMatchedProduct("p-mask-pricey", 0.93),
+    ].map((product, index) => ({
+      ...product,
+      price_eur: index === 0 ? 4.95 : 12.95,
+    })),
+    LOW_DAMAGE_PROFILE,
+    "mask",
+    createRuntimeStub(),
+  )
+
+  assert.deepEqual(result.comparison_facts, {
+    "p-mask-cheap": ["Preis: 4.95 EUR"],
+    "p-mask-pricey": ["Preis: 12.95 EUR"],
   })
 })
 
@@ -1639,7 +1974,212 @@ test("projectSelectedProducts uses oil-specific missing-info when oil returns no
       blocking: true,
       detail: "Es fehlt noch deine Haardicke fuer die Oel-Auswahl.",
     },
+    {
+      key: "oil_purpose",
+      label: "Oel-Zweck",
+      blocking: true,
+      detail: "Es fehlt noch dein Oel-Zweck fuer die Oel-Auswahl.",
+    },
   ])
+})
+
+test("selectProducts asks for oil purpose when a product pick lacks inferred purpose", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "oil")
+      assert.equal(runtime.categories.oil.clarificationNeeded, true)
+      return []
+    },
+  })
+
+  const result = await tool({
+    category: "oil",
+    message: "Welches Haaroel passt zu mir?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "normal",
+      density: "medium",
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+  })
+
+  assert.equal(result.decision, "needs_more_info")
+  assert.deepEqual(result.missing_info, [
+    {
+      key: "oil_purpose",
+      label: "Oel-Zweck",
+      blocking: true,
+      detail: "Es fehlt noch dein Oel-Zweck fuer die Oel-Auswahl.",
+    },
+  ])
+})
+
+test("projectSelectedProducts exposes oil claims, caveats, and lean comparison facts", () => {
+  const result = projectSelectedProducts(
+    [
+      createOilMatchedProduct("dry-oil", 0.94),
+      createOilMatchedProduct("styling-oil", 0.82, {
+        matched_subtype: "styling-oel",
+        use_mode: "styling_finish",
+        purpose_fit: "bridge",
+        tradeoffs: ["Passt nur ueber die angrenzende Finish-Rolle, nicht exakt."],
+      }),
+    ],
+    {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+      density: "low",
+    } as HairProfile,
+    "oil",
+    createRuntimeStub(),
+    {
+      requestedIngredientSignals: [{ value: "silikonfrei", evidence: "silikonfrei" }],
+    },
+  )
+
+  assert.equal(result.decision, "recommended")
+  assert.deepEqual(
+    result.products[0].supported_claims.map((claim) => claim.field),
+    ["thickness", "oil_purpose", "oil_subtype", "fit_status"],
+  )
+  assert.match(result.products[0].fit_reason, /Leichtes Finish/)
+  assert.deepEqual(result.comparison_facts, {
+    "dry-oil": ["Oel-Zweck: Leichtes Finish", "Subtyp: Trocken-Oel"],
+    "styling-oil": ["Oel-Zweck: Styling-Finish", "Subtyp: Styling-Oel"],
+  })
+  assert.equal(
+    result.unsupported_requested_signals[0]?.user_message,
+    "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Oel-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Oel-Zweck, Haardicke, Anwendung und Fit.",
+  )
+})
+
+test("selectProducts carries unsupported ingredient caveats for live oil requests", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category }) => {
+      assert.equal(category, "oil")
+      return [createOilMatchedProduct("dry-oil", 0.94)]
+    },
+  })
+
+  const result = await tool({
+    category: "oil",
+    message: "Ich suche ein silikonfreies Oel als Finish gegen Frizz.",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+      density: "low",
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+  })
+
+  assert.equal(
+    result.unsupported_requested_signals[0]?.user_message,
+    "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Oel-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Oel-Zweck, Haardicke, Anwendung und Fit.",
+  )
+})
+
+test("selectProducts applies oil thickness overrides to hard-gated oil selection", async () => {
+  const observed: { thickness?: HairProfile["thickness"] } = {}
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, hairProfile, runtime }) => {
+      assert.equal(category, "oil")
+      observed.thickness = hairProfile?.thickness ?? null
+      assert.equal(runtime.categories.oil.targetProfile?.densityWeightCaution, true)
+      return [
+        createOilMatchedProduct("fine-oil", 0.94, {
+          matched_profile: { thickness: "fine" },
+        }),
+      ]
+    },
+  })
+
+  const result = await tool({
+    category: "oil",
+    message: "Mein feines Haar braucht ein leichtes Trocken-Oel, das nicht fettig wirkt.",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "normal",
+      density: "medium",
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    activeProfileSignals: [
+      {
+        field: "thickness",
+        value: "fine",
+        source: "message",
+        selection_effect: "override",
+        evidence: "feines Haar",
+      },
+    ],
+  })
+
+  assert.equal(observed.thickness, "fine")
+  assert.equal(result.products[0]?.supported_claims[0]?.label, "Haardicke: Fein")
+})
+
+test("selectProducts treats non-greasy fine-hair oil wording as a light finish target", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "oil")
+      assert.equal(runtime.categories.oil.targetProfile?.purpose, "light_finish")
+      assert.equal(runtime.categories.oil.targetProfile?.matcherSubtype, "trocken-oel")
+      return [
+        createOilMatchedProduct("fine-light-oil", 0.94, {
+          matched_profile: { thickness: "fine" },
+          use_mode: "light_finish",
+          matched_subtype: "trocken-oel",
+        }),
+      ]
+    },
+  })
+
+  const result = await tool({
+    category: "oil",
+    message: "Welches Haaroel passt zu meinem feinen Haar, ohne fettig auszusehen?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "normal",
+      density: "medium",
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    activeProfileSignals: [
+      {
+        field: "thickness",
+        value: "fine",
+        source: "message",
+        selection_effect: "override",
+        evidence: "feines Haar",
+      },
+    ],
+  })
+
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.products[0]?.supported_claims[0]?.label, "Haardicke: Fein")
+  assert.equal(result.products[0]?.supported_claims[1]?.label, "Oel-Zweck: Leichtes Finish")
 })
 
 test("projectSelectedProducts does not fabricate generic missing-info for explicit default-branch categories", () => {

@@ -261,3 +261,92 @@ test("runShadowAgentTurn filters fallback products only from the renderer packet
   assert.equal(result.final_answer, "Ich zeige nur den sicheren Treffer.")
   assert.equal(rawOutput?.products?.length, 3)
 })
+
+test("runShadowAgentTurn preserves leave-in fallback products for caveated comparisons", async () => {
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "product_pick" as const,
+        product_category: "leave_in" as const,
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.94,
+        evidence: ["User asks which leave-in fits."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer({ packet }) {
+      assert.deepEqual(
+        packet.selected_products?.products.map((product) => product.product_id),
+        ["p-1", "p-2", "p-3"],
+      )
+      assert.deepEqual(packet.selected_products?.comparison_facts, {
+        "p-1": ["Format: Lotion"],
+        "p-2": ["Format: Creme"],
+        "p-3": ["Format: Spray"],
+      })
+      return "Ich zeige alle Leave-in-Optionen mit Caveat."
+    },
+  }
+
+  const result = await runShadowAgentTurn({
+    message: "Welches Leave-in passt mit Hitzeschutz?",
+    modelClient: fakeModel,
+    tools: {
+      get_user_context: async () => ({ suggested_overlays: [] }),
+      load_guidance: async () => ({ items: [] }),
+      select_products: async (input) => ({
+        category: input.category,
+        decision: "recommended",
+        product_response_policy: "recommend",
+        policy_reason: "Leave-in passt.",
+        profile_basis: [],
+        category_guidance: "",
+        products: [
+          {
+            rank: 1,
+            product_id: "p-1",
+            name: "Primary Leave-in",
+            brand: null,
+            fit_reason: "Passt.",
+            caveat: null,
+            supported_claims: [],
+            unsupported_requested_signals: [],
+          },
+          {
+            rank: 2,
+            product_id: "p-2",
+            name: "Cream Leave-in",
+            brand: null,
+            fit_reason: "Passt.",
+            caveat: null,
+            supported_claims: [],
+            unsupported_requested_signals: [],
+          },
+          {
+            rank: 3,
+            product_id: "p-3",
+            name: "Fallback Spray",
+            brand: null,
+            fit_reason: "Fallback-Treffer.",
+            caveat: "Fallback: Balance-Richtung ist nur als caveated Option passend.",
+            supported_claims: [],
+            unsupported_requested_signals: [],
+          },
+        ],
+        comparison_facts: {
+          "p-1": ["Format: Lotion"],
+          "p-2": ["Format: Creme"],
+          "p-3": ["Format: Spray"],
+        },
+        missing_info: [],
+        unsupported_requested_signals: [],
+      }),
+      build_or_fix_routine: async () => ({ steps: [] }),
+    },
+  })
+
+  assert.equal(result.final_answer, "Ich zeige alle Leave-in-Optionen mit Caveat.")
+})

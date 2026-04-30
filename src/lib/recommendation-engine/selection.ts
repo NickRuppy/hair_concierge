@@ -14,10 +14,12 @@ import type {
   MaskType,
   OilRecommendationMetadata,
   PeelingRecommendationMetadata,
+  Product,
   ShampooRecommendationMetadata,
 } from "@/lib/types"
 import type { ProductConditionerRerankSpecs } from "@/lib/conditioner/constants"
 import type {
+  LeaveInFormat,
   LeaveInConditionerRelationship,
   LeaveInNeedBucket,
   ProductLeaveInSpecs,
@@ -90,6 +92,10 @@ type ScoredShampooProduct = ScoredEngineProduct & {
 type ScoredLeaveInProduct = ScoredEngineProduct & {
   _fitStatus: CategoryFitEvaluation["status"]
   _fitReasonCodes: string[]
+}
+
+type LeaveInSpecCandidateRow = ProductLeaveInSpecs & {
+  products: Product | null
 }
 
 type ScoredMaskProduct = ScoredEngineProduct & {
@@ -289,7 +295,6 @@ function markLeaveInFallback(product: ScoredLeaveInProduct): ScoredLeaveInProduc
 function isLeaveInFallbackEligible(reasonCodes: readonly string[]): boolean {
   const hardMismatchCodes = new Set([
     "leave_in_thickness_mismatch",
-    "leave_in_balance_mismatch",
     "leave_in_relationship_mismatch",
     "leave_in_high_heat_protection_mismatch",
     "leave_in_heat_activation_without_heat_mismatch",
@@ -297,6 +302,10 @@ function isLeaveInFallbackEligible(reasonCodes: readonly string[]): boolean {
   ])
 
   return !reasonCodes.some((code) => hardMismatchCodes.has(code))
+}
+
+function isLeaveInFormatFallbackEligible(reasonCodes: readonly string[]): boolean {
+  return isLeaveInFallbackEligible(reasonCodes)
 }
 
 function shampooBucketPriorityAdjustment(
@@ -586,7 +595,7 @@ function buildOilTopReasons(
   decision: OilCategoryDecision,
   params?: {
     exactPurposeMatch: boolean
-    subtypeBridgeMatch: boolean
+    finishBridgeMatch: boolean
   },
 ): { positives: string[]; tradeoffs: string[] } {
   const positives: string[] = []
@@ -606,9 +615,9 @@ function buildOilTopReasons(
 
   if (params?.exactPurposeMatch) {
     positives.push("Der hinterlegte Oel-Zweck passt auch in der Katalogpflege exakt zur Anfrage.")
-  } else if (params?.subtypeBridgeMatch) {
+  } else if (params?.finishBridgeMatch) {
     tradeoffs.push(
-      "Der Fit kommt aktuell noch ueber den Subtyp-Bridge und nicht ueber einen exakten Oel-Zweck-Match.",
+      "Der Fit kommt ueber die angrenzende Finish-Rolle, nicht ueber einen exakten Oel-Zweck-Match.",
     )
   }
 
@@ -616,6 +625,12 @@ function buildOilTopReasons(
     positives: positives.slice(0, 3),
     tradeoffs: tradeoffs.slice(0, 3),
   }
+}
+
+function getFinishBridgePurpose(purpose: OilPurpose | null): OilPurpose | null {
+  if (purpose === "styling_finish") return "light_finish"
+  if (purpose === "light_finish") return "styling_finish"
+  return null
 }
 
 export function rerankOilProductsWithEngine(params: {
@@ -627,6 +642,7 @@ export function rerankOilProductsWithEngine(params: {
   const { candidates, decision, hairProfile, eligibilityRows = [] } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const targetProfile = decision.targetProfile
+  const bridgePurpose = getFinishBridgePurpose(targetProfile.purpose)
   const eligibilityByProductId = new Map<string, ProductOilEligibilityRow[]>()
 
   for (const row of eligibilityRows) {
@@ -636,26 +652,53 @@ export function rerankOilProductsWithEngine(params: {
     ])
   }
 
-  const scored: ScoredEngineProduct[] = candidates.map((product) => {
+  const exactPurposeProductIds = new Set(
+    eligibilityRows
+      .filter((row) => row.oil_purpose === targetProfile.purpose)
+      .map((row) => row.product_id),
+  )
+  const finishBridgeProductIds = new Set(
+    eligibilityRows
+      .filter((row) => bridgePurpose !== null && row.oil_purpose === bridgePurpose)
+      .map((row) => row.product_id),
+  )
+  const eligibleCandidates =
+    eligibilityRows.length === 0
+      ? candidates
+      : exactPurposeProductIds.size >= SELECTION_LIMIT
+        ? candidates.filter((product) => exactPurposeProductIds.has(product.id))
+        : candidates.filter(
+            (product) =>
+              exactPurposeProductIds.has(product.id) || finishBridgeProductIds.has(product.id),
+          )
+
+  const scored: ScoredEngineProduct[] = eligibleCandidates.map((product) => {
     const productEligibility = eligibilityByProductId.get(product.id) ?? []
     const exactPurposeMatch = productEligibility.some(
       (row) => row.oil_purpose === targetProfile.purpose,
     )
-    const subtypeBridgeMatch = productEligibility.some(
-      (row) => row.oil_subtype === targetProfile.matcherSubtype,
+    const finishBridgeMatch = productEligibility.some(
+      (row) => bridgePurpose !== null && row.oil_purpose === bridgePurpose,
     )
     const { positives, tradeoffs } = buildOilTopReasons(decision, {
       exactPurposeMatch,
-      subtypeBridgeMatch,
+      finishBridgeMatch,
     })
     const score =
       toBaseScore(product) +
-      (exactPurposeMatch ? 28 : subtypeBridgeMatch ? 6 : productEligibility.length > 0 ? -10 : 0)
+      (exactPurposeMatch ? 28 : finishBridgeMatch ? -8 : productEligibility.length > 0 ? -30 : 0)
 
     const recommendationMeta: OilRecommendationMetadata = {
       category: "oil",
       score: Math.round(score * 10) / 10,
-      top_reasons: positives,
+      top_reasons:
+        positives.length > 0
+          ? positives
+          : [
+              targetProfile.purpose
+                ? `Die Auswahl folgt dem Oel-Zweck ${OIL_PURPOSE_LABELS[targetProfile.purpose].toLowerCase()}.`
+                : "Passt zum aktuellen Oel-Zweck.",
+            ],
       tradeoffs,
       usage_hint: buildOilUsageHint(decision),
       matched_profile: {
@@ -664,6 +707,11 @@ export function rerankOilProductsWithEngine(params: {
       matched_subtype: targetProfile.matcherSubtype,
       use_mode: targetProfile.purpose,
       adjunct_scalp_support: targetProfile.adjunctScalpSupport,
+      fit_status: exactPurposeMatch ? "ideal" : finishBridgeMatch ? "supportive" : "unknown",
+      purpose_fit: exactPurposeMatch ? "exact" : finishBridgeMatch ? "bridge" : "unknown",
+      scalp_caution: targetProfile.scalpCaution,
+      density_weight_caution: targetProfile.densityWeightCaution,
+      overload_caution: targetProfile.overloadRisk,
     }
 
     return {
@@ -917,6 +965,40 @@ function buildLeaveInUsageHint(decision: LeaveInCategoryDecision): string {
   return "Nach dem Conditioner sparsam in die Laengen und Spitzen geben und als zusaetzlichen Booster nutzen."
 }
 
+function productToLeaveInSpecCandidate(product: Product | null): MatchedProduct | null {
+  if (!product || product.is_active === false) return null
+
+  return {
+    ...product,
+    similarity: 0,
+    combined_score: 0,
+  }
+}
+
+async function loadLeaveInSpecDrivenCandidates(params: {
+  supabase: ReturnType<typeof createAdminClient>
+  decision: LeaveInCategoryDecision
+}): Promise<MatchedProduct[]> {
+  const targetThickness = params.decision.targetProfile?.thickness
+  if (!targetThickness) return []
+
+  const { data, error } = await params.supabase
+    .from("product_leave_in_specs")
+    .select("*, products:product_id(*)")
+
+  if (error) {
+    console.error("Failed to load leave-in spec candidates:", error)
+    return []
+  }
+
+  return ((data ?? []) as LeaveInSpecCandidateRow[]).flatMap((row) => {
+    const product = productToLeaveInSpecCandidate(row.products)
+    if (!product) return []
+    if (!product.suitable_thicknesses.includes(targetThickness)) return []
+    return [product]
+  })
+}
+
 function deriveLeaveInSpecConditionerRelationship(
   spec: LeaveInRerankSpec | null,
 ): LeaveInConditionerRelationship | null {
@@ -946,8 +1028,9 @@ export function rerankLeaveInProductsWithEngine(params: {
   specs: LeaveInRerankSpec[]
   decision: LeaveInCategoryDecision
   hairProfile: HairProfile | null
+  requestedFormats?: readonly LeaveInFormat[]
 }): MatchedProduct[] {
-  const { candidates, specs, decision, hairProfile } = params
+  const { candidates, specs, decision, hairProfile, requestedFormats = [] } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
 
@@ -996,6 +1079,7 @@ export function rerankLeaveInProductsWithEngine(params: {
       conditioner_relationship: deriveLeaveInSpecConditionerRelationship(spec),
       matched_weight: target.weight,
       fit_status: fit.status,
+      product_format: spec?.format ?? null,
       product_weight: spec?.weight ?? null,
       product_roles: spec?.roles ?? [],
       product_care_benefits: spec?.care_benefits ?? [],
@@ -1021,6 +1105,27 @@ export function rerankLeaveInProductsWithEngine(params: {
   const acceptable = scored.filter(
     (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
   )
+  const formatPicks = selectRequestedLeaveInFormatPicks(scored, requestedFormats)
+  if (formatPicks.length > 0) {
+    const selected = [...formatPicks]
+    const seen = new Set(selected.map((product) => product.id))
+    const fallback = scored
+      .filter(
+        (product) =>
+          product._fitStatus === "mismatch" && isLeaveInFallbackEligible(product._fitReasonCodes),
+      )
+      .map(markLeaveInFallback)
+
+    for (const product of [...acceptable, ...fallback]) {
+      if (seen.has(product.id)) continue
+      selected.push(product)
+      seen.add(product.id)
+      if (selected.length >= SELECTION_LIMIT) break
+    }
+
+    return stripScore(selected.slice(0, SELECTION_LIMIT))
+  }
+
   if (acceptable.length >= SELECTION_LIMIT) {
     return stripScore(acceptable.slice(0, SELECTION_LIMIT))
   }
@@ -1033,6 +1138,39 @@ export function rerankLeaveInProductsWithEngine(params: {
     .map(markLeaveInFallback)
 
   return stripScore([...acceptable, ...fallback].slice(0, SELECTION_LIMIT))
+}
+
+function selectRequestedLeaveInFormatPicks(
+  scored: ScoredLeaveInProduct[],
+  requestedFormats: readonly LeaveInFormat[],
+): ScoredLeaveInProduct[] {
+  const formats = Array.from(new Set(requestedFormats))
+  if (formats.length === 0) return []
+
+  const selected: ScoredLeaveInProduct[] = []
+  const seen = new Set<string>()
+
+  for (const format of formats) {
+    const matchingFormat = scored.filter((product) => {
+      const meta = product.recommendation_meta as LeaveInRecommendationMetadata | undefined
+      return meta?.product_format === format
+    })
+    const primary = matchingFormat.find(
+      (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
+    )
+    const fallback = matchingFormat.find(
+      (product) =>
+        product._fitStatus === "mismatch" &&
+        isLeaveInFormatFallbackEligible(product._fitReasonCodes),
+    )
+    const pick = primary ?? (fallback ? markLeaveInFallback(fallback) : null)
+
+    if (!pick || seen.has(pick.id)) continue
+    selected.push(pick)
+    seen.add(pick.id)
+  }
+
+  return selected
 }
 
 function mapBalanceToMaskType(
@@ -1134,6 +1272,19 @@ function markMaskFallback(product: ScoredMaskProduct): ScoredMaskProduct {
   }
 }
 
+function maskWeightPriorityAdjustment(
+  target: NonNullable<MaskCategoryDecision["targetProfile"]>,
+  spec: ProductMaskSpecs | null,
+): number {
+  if (!target.weight || !spec?.weight) return 0
+
+  if (target.weight === "light") {
+    return spec.weight === "light" ? 22 : -8
+  }
+
+  return spec.weight === target.weight ? 6 : 0
+}
+
 export function rerankMaskProductsWithEngine(params: {
   candidates: MatchedProduct[]
   specs: ProductMaskSpecs[]
@@ -1154,7 +1305,11 @@ export function rerankMaskProductsWithEngine(params: {
       "Die Masken-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
       "Weicht beim Masken-Zielprofil spuerbar von deinem Bedarf ab.",
     )
-    const score = toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
+    const score =
+      toBaseScore(product) +
+      fitStatusAdjustment(fit.status) +
+      fitReasonAdjustment(fit) +
+      maskWeightPriorityAdjustment(target, spec)
     const tradeoffs = buildMaskTradeoffs(fit)
 
     const recommendationMeta: MaskRecommendationMetadata = {
@@ -1463,7 +1618,7 @@ export async function selectOilProductsWithEngine(params: {
       .map((row) => row.product_id),
   )
 
-  if (exactPurposeProductIds.size > 0) {
+  if (exactPurposeProductIds.size >= SELECTION_LIMIT) {
     const exactPurposeCandidates = candidates.filter((candidate) =>
       exactPurposeProductIds.has(candidate.id),
     )
@@ -1484,9 +1639,19 @@ export async function selectLeaveInProductsWithEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime?: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
+  const runtime =
+    params.runtime ??
+    buildRecommendationEngineRuntimeFromPersistence(
+      hairProfile,
+      routineItems,
+      buildRecommendationRequestContext({
+        requestedCategory: "leave_in",
+        message,
+      }),
+    )
   const decision = runtime.categories.leaveIn
   if (!decision.relevant || !decision.targetProfile) return []
 
@@ -1514,10 +1679,15 @@ export async function selectLeaveInProductsWithEngine(params: {
     count: CANDIDATE_COUNT,
   })
 
-  const candidates = dedupeById([...strictCandidates, ...genericCandidates])
+  const supabase = createAdminClient()
+  const specDrivenCandidates = await loadLeaveInSpecDrivenCandidates({ supabase, decision })
+  const candidates = dedupeById([
+    ...strictCandidates,
+    ...genericCandidates,
+    ...specDrivenCandidates,
+  ])
   if (candidates.length === 0) return []
 
-  const supabase = createAdminClient()
   const { data: specs, error } = await supabase
     .from("product_leave_in_specs")
     .select("*")
@@ -1536,6 +1706,7 @@ export async function selectLeaveInProductsWithEngine(params: {
     specs: (specs ?? []) as ProductLeaveInSpecs[],
     decision,
     hairProfile,
+    requestedFormats: runtime.requestContext.leaveInRequestedFormats,
   })
 }
 

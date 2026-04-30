@@ -40,6 +40,7 @@ import {
   LOW_DAMAGE_PROFILE,
   SEVERE_DAMAGE_PROFILE,
 } from "./recommendation-engine-foundation.fixtures"
+import type { HairProfile } from "../src/lib/types"
 
 function createMatchedProduct(
   id: string,
@@ -305,6 +306,45 @@ test("engine mask reranking prefers medium concentration for medium mask need", 
   assert.equal(reranked[0]?.id, "medium")
   assert.match(reranked[1]?.recommendation_meta?.tradeoffs.join(" ") ?? "", /sparsam/)
   assert.equal("_fitReasonCodes" in reranked[0], false)
+})
+
+test("engine mask reranking prioritizes light weight for light mask targets", () => {
+  const decision = createMaskDecision({
+    balance: "protein",
+    repairLevel: "high",
+    weight: "light",
+    needStrength: 3,
+  })
+
+  const candidates = [
+    createMatchedProduct("medium-protein", "Maske", { combined_score: 0.9 }),
+    createMatchedProduct("light-balanced", "Maske", { combined_score: 0.75 }),
+  ]
+
+  const specs: ProductMaskSpecs[] = [
+    {
+      product_id: "medium-protein",
+      weight: "medium",
+      concentration: "high",
+      balance_direction: "protein",
+      ingredient_flags: [],
+    },
+    {
+      product_id: "light-balanced",
+      weight: "light",
+      concentration: "medium",
+      balance_direction: "balanced",
+      ingredient_flags: [],
+    },
+  ]
+
+  const reranked = rerankMaskProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+  })
+
+  assert.equal(reranked[0]?.id, "light-balanced")
 })
 
 test("engine mask reranking uplifts explicit low-need intensive requests to medium concentration", () => {
@@ -578,6 +618,168 @@ test("engine leave-in reranking does not use hard-gated mismatches as fallback f
   assert.deepEqual(
     reranked.map((product) => product.id),
     ["ideal"],
+  )
+})
+
+test("engine leave-in reranking uses balance mismatches only as caveated fallback fill", () => {
+  const proteinProfile = {
+    ...SEVERE_DAMAGE_PROFILE,
+    protein_moisture_balance: "stretches_stays" as const,
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(proteinProfile, [])
+  const decision = runtime.categories.leaveIn
+
+  const candidates = [
+    createMatchedProduct("ideal", "Leave-in", {
+      combined_score: 0.72,
+      suitable_thicknesses: ["fine"],
+    }),
+    createMatchedProduct("balanced-bridge", "Leave-in", {
+      combined_score: 0.7,
+      suitable_thicknesses: ["fine"],
+    }),
+    createMatchedProduct("opposite-balance", "Leave-in", {
+      combined_score: 0.99,
+      suitable_thicknesses: ["fine"],
+    }),
+  ]
+
+  const specs: ProductLeaveInSpecs[] = [
+    {
+      product_id: "ideal",
+      format: "spray",
+      weight: "medium",
+      roles: ["replacement_conditioner", "styling_prep"],
+      provides_heat_protection: true,
+      heat_protection_max_c: null,
+      heat_activation_required: false,
+      care_benefits: ["protein", "repair", "anti_frizz"],
+      ingredient_flags: [],
+      application_stage: ["towel_dry", "pre_heat"],
+    },
+    {
+      product_id: "balanced-bridge",
+      format: "cream",
+      weight: "medium",
+      roles: ["replacement_conditioner", "styling_prep"],
+      provides_heat_protection: true,
+      heat_protection_max_c: null,
+      heat_activation_required: false,
+      care_benefits: ["repair", "anti_frizz"],
+      ingredient_flags: [],
+      application_stage: ["towel_dry", "pre_heat"],
+    },
+    {
+      product_id: "opposite-balance",
+      format: "spray",
+      weight: "medium",
+      roles: ["replacement_conditioner", "styling_prep"],
+      provides_heat_protection: true,
+      heat_protection_max_c: null,
+      heat_activation_required: false,
+      care_benefits: ["moisture", "anti_frizz"],
+      ingredient_flags: [],
+      application_stage: ["towel_dry", "pre_heat"],
+    },
+  ]
+
+  const reranked = rerankLeaveInProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    hairProfile: proteinProfile,
+  })
+
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["ideal", "balanced-bridge", "opposite-balance"],
+  )
+
+  const fallbackMeta = reranked[2]?.recommendation_meta as LeaveInRecommendationMetadata | undefined
+  assert.match(fallbackMeta?.tradeoffs[0] ?? "", /Fallback/)
+})
+
+test("engine leave-in reranking honors explicit spray and cream comparison requests", () => {
+  const profile = {
+    ...LOW_DAMAGE_PROFILE,
+    hair_texture: "wavy" as const,
+    protein_moisture_balance: "stretches_stays" as const,
+    concerns: ["dryness", "frizz"] as HairProfile["concerns"],
+    styling_tools: ["blow_dryer"] as HairProfile["styling_tools"],
+    uses_heat_protection: true,
+  }
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "leave_in",
+    message: "Vergleich mir bitte ein Spray-Leave-in und eine Creme für meine Haare.",
+  })
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(profile, [], requestContext)
+  const decision = runtime.categories.leaveIn
+
+  const candidates = [
+    createMatchedProduct("lotion", "Leave-in", {
+      combined_score: 0.95,
+      suitable_thicknesses: ["normal"],
+    }),
+    createMatchedProduct("cream", "Leave-in", {
+      combined_score: 0.62,
+      suitable_thicknesses: ["normal"],
+    }),
+    createMatchedProduct("spray", "Leave-in", {
+      combined_score: 0.98,
+      suitable_thicknesses: ["normal"],
+    }),
+  ]
+
+  const specs: ProductLeaveInSpecs[] = [
+    {
+      product_id: "lotion",
+      format: "lotion",
+      weight: "medium",
+      roles: ["extension_conditioner", "styling_prep"],
+      provides_heat_protection: true,
+      heat_protection_max_c: null,
+      heat_activation_required: false,
+      care_benefits: ["repair", "anti_frizz"],
+      ingredient_flags: [],
+      application_stage: ["towel_dry", "pre_heat"],
+    },
+    {
+      product_id: "cream",
+      format: "cream",
+      weight: "medium",
+      roles: ["extension_conditioner", "styling_prep"],
+      provides_heat_protection: true,
+      heat_protection_max_c: null,
+      heat_activation_required: false,
+      care_benefits: ["repair", "anti_frizz"],
+      ingredient_flags: [],
+      application_stage: ["towel_dry", "pre_heat"],
+    },
+    {
+      product_id: "spray",
+      format: "spray",
+      weight: "medium",
+      roles: ["extension_conditioner", "styling_prep"],
+      provides_heat_protection: true,
+      heat_protection_max_c: null,
+      heat_activation_required: false,
+      care_benefits: ["moisture", "anti_frizz"],
+      ingredient_flags: [],
+      application_stage: ["towel_dry", "pre_heat"],
+    },
+  ]
+
+  const reranked = rerankLeaveInProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    hairProfile: profile,
+    requestedFormats: requestContext.leaveInRequestedFormats,
+  })
+
+  assert.deepEqual(
+    reranked.slice(0, 2).map((product) => product.id),
+    ["spray", "cream"],
   )
 })
 
@@ -923,6 +1125,119 @@ test("engine oil reranking prefers exact oil-purpose matches over subtype-only b
   })
 
   assert.equal(reranked[0]?.id, "purpose-exact")
+})
+
+test("engine oil reranking hides finish bridge candidates when exact purpose coverage is enough", () => {
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Ich suche ein Styling-Oel als Finish gegen Frizz.",
+  })
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(
+    LOW_DAMAGE_PROFILE,
+    [],
+    requestContext,
+  )
+  const decision = runtime.categories.oil
+
+  const reranked = rerankOilProductsWithEngine({
+    candidates: [
+      createMatchedProduct("exact-1", "Öle", { combined_score: 0.7 }),
+      createMatchedProduct("exact-2", "Öle", { combined_score: 0.68 }),
+      createMatchedProduct("exact-3", "Öle", { combined_score: 0.66 }),
+      createMatchedProduct("bridge", "Öle", { combined_score: 0.95 }),
+    ],
+    decision,
+    hairProfile: LOW_DAMAGE_PROFILE,
+    eligibilityRows: [
+      {
+        product_id: "exact-1",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "styling-oel",
+        oil_purpose: "styling_finish",
+      },
+      {
+        product_id: "exact-2",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "styling-oel",
+        oil_purpose: "styling_finish",
+      },
+      {
+        product_id: "exact-3",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "styling-oel",
+        oil_purpose: "styling_finish",
+      },
+      {
+        product_id: "bridge",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "trocken-oel",
+        oil_purpose: "light_finish",
+      },
+    ],
+  })
+
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["exact-1", "exact-2", "exact-3"],
+  )
+})
+
+test("engine oil reranking allows only adjacent finish bridge below exact threshold", () => {
+  const finishRequest = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Ich suche ein Styling-Oel als Finish gegen Frizz.",
+  })
+  const finishDecision = buildRecommendationEngineRuntimeFromPersistence(
+    LOW_DAMAGE_PROFILE,
+    [],
+    finishRequest,
+  ).categories.oil
+
+  const finishReranked = rerankOilProductsWithEngine({
+    candidates: [
+      createMatchedProduct("exact-1", "Öle", { combined_score: 0.7 }),
+      createMatchedProduct("exact-2", "Öle", { combined_score: 0.68 }),
+      createMatchedProduct("light-bridge", "Öle", { combined_score: 0.95 }),
+      createMatchedProduct("prewash", "Öle", { combined_score: 0.99 }),
+    ],
+    decision: finishDecision,
+    hairProfile: LOW_DAMAGE_PROFILE,
+    eligibilityRows: [
+      {
+        product_id: "exact-1",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "styling-oel",
+        oil_purpose: "styling_finish",
+      },
+      {
+        product_id: "exact-2",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "styling-oel",
+        oil_purpose: "styling_finish",
+      },
+      {
+        product_id: "light-bridge",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "trocken-oel",
+        oil_purpose: "light_finish",
+      },
+      {
+        product_id: "prewash",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "natuerliches-oel",
+        oil_purpose: "pre_wash_oiling",
+      },
+    ],
+  })
+
+  assert.deepEqual(
+    finishReranked.map((product) => product.id),
+    ["exact-1", "exact-2", "light-bridge"],
+  )
+  assert.match(
+    finishReranked[2]?.recommendation_meta?.tradeoffs.join(" ") ?? "",
+    /angrenzende Finish-Rolle/,
+  )
 })
 
 test("engine bondbuilder reranking prefers exact intensity and application fit over a higher semantic score", () => {
