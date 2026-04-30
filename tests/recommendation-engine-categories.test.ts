@@ -857,6 +857,25 @@ test("oil decision suppresses new oil products when overload is likely current p
   assert.ok(decision.planReasonCodes.includes("oil_overload_suppress_products"))
 })
 
+test("oil decision does not suppress unrelated substring collisions", () => {
+  const { normalized } = buildEngineState(LOW_DAMAGE_PROFILE, [])
+
+  for (const message of [
+    "Kann ich in der Wachstumsphase ein Oel als Finish nutzen?",
+    "Welches Styling-Oel passt, wenn die Haare vom Schlafen platt sind?",
+    "Ein Styling-Oel ist schwer zu finden, welches passt?",
+  ]) {
+    const requestContext = buildRecommendationRequestContext({
+      requestedCategory: "oil",
+      message,
+    })
+    const decision = buildOilCategoryDecision(normalized, requestContext)
+
+    assert.equal(decision.noRecommendationReason, null)
+    assert.notEqual(decision.targetProfile, null)
+  }
+})
+
 test("category set activates support/reset categories for oily buildup-heavy routines", () => {
   const { normalized, damage, careNeeds, plan } = buildEngineState(
     {

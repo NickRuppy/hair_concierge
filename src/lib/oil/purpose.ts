@@ -87,42 +87,6 @@ const NON_OIL_CATEGORY_TERMS = [
   "haarkur",
 ]
 
-const SCALP_TREATMENT_TERMS = [
-  "schuppen",
-  "dandruff",
-  "juck",
-  "itch",
-  "irrit",
-  "roetung",
-  "rotung",
-  "entzund",
-  "entzünd",
-  "haarausfall",
-  "hair loss",
-  "wachstum",
-  "growth",
-]
-
-const OVERLOAD_TERMS = [
-  "fettig",
-  "greasy",
-  "strähnig",
-  "strahnig",
-  "beschwert",
-  "coated",
-  "belegt",
-  "schwer",
-  "heavy",
-  "limp",
-  "platt",
-  "flat",
-  "dull",
-  "stumpf",
-  "buildup",
-  "build up",
-  "ablager",
-]
-
 const LIGHTWEIGHT_POSITIVE_TERMS = [
   "nicht beschwer",
   "ohne zu beschwer",
@@ -136,6 +100,45 @@ const LIGHTWEIGHT_POSITIVE_TERMS = [
   "lightweight",
 ]
 
+const SCALP_TREATMENT_PATTERNS = [
+  /\bschuppen\w*\b/,
+  /\bdandruff\b/,
+  /\bjuck(?:t|en|end\w*|reiz\w*)?\b/,
+  /\bitch(?:y|ing)?\b/,
+  /\birrit(?:ation|ated|iert\w*)\b/,
+  /\broetung\w*\b/,
+  /\brotung\w*\b/,
+  /\bentzund\w*\b/,
+  /\bhaarausfall\b/,
+  /\bhair\s+loss\b/,
+  /\b(?:haar)?wachstum\b/,
+  /\bgrowth\b/,
+]
+
+const OVERLOAD_PATTERNS = [
+  /\bfettig\w*\b/,
+  /\bgreasy\b/,
+  /\bstrahnig\w*\b/,
+  /\bbeschwert\w*\b/,
+  /\bcoated\b/,
+  /\bbelegt\w*\b/,
+  /\b(?:schwere?s?|heavy)\s+(?:haar|haare|hair)\w*\b/,
+  /\b(?:haar|haare|hair)\w*\s+(?:fuehlt\s+sich\s+)?(?:schwer|heavy)\b/,
+  /\blimp\b/,
+  /\bdull\b/,
+  /\bstumpf\w*\b/,
+  /\bbuildup\b/,
+  /\bbuild\s+up\b/,
+  /\bablager\w*\b/,
+]
+
+const FLAT_OVERLOAD_PATTERNS = [
+  /\bplatt(?:e|es|en|er)?\s+(?:haar|haare|hair)\w*\b/,
+  /\b(?:haar|haare|hair)\w*\s+(?:ist|sind|wirken|wirkt|feels|look|looks)?\s*platt\b/,
+  /\bflat\s+hair\b/,
+  /\bhair\s+(?:is|looks|feels)?\s*flat\b/,
+]
+
 function normalizeText(value: string): string {
   return value
     .toLowerCase()
@@ -145,6 +148,16 @@ function normalizeText(value: string): string {
 
 function includesAny(text: string, terms: string[]): boolean {
   return terms.some((term) => text.includes(normalizeText(term)))
+}
+
+function matchesAny(text: string, patterns: readonly RegExp[]): boolean {
+  return patterns.some((pattern) => pattern.test(text))
+}
+
+function matchesOverloadComplaint(text: string): boolean {
+  if (matchesAny(text, OVERLOAD_PATTERNS)) return true
+  if (/\bschlaf\w*\b/.test(text) || /\bsleep\w*\b/.test(text)) return false
+  return matchesAny(text, FLAT_OVERLOAD_PATTERNS)
 }
 
 export function inferOilPurposeFromMessage(message: string): OilPurpose | null {
@@ -210,13 +223,13 @@ export function inferOilNoRecommendationReason(
     return "therapy_oil_missing"
   }
 
-  if (includesAny(text, SCALP_TREATMENT_TERMS)) {
+  if (matchesAny(text, SCALP_TREATMENT_PATTERNS)) {
     return "scalp_treatment_needed"
   }
 
   if (
     purpose !== null &&
-    includesAny(text, OVERLOAD_TERMS) &&
+    matchesOverloadComplaint(text) &&
     !includesAny(text, LIGHTWEIGHT_POSITIVE_TERMS)
   ) {
     return "overload_risk"
@@ -244,8 +257,7 @@ export function hasOilAdjunctScalpSupport(
   return (
     text.includes("kopfhaut") ||
     text.includes("scalp") ||
-    text.includes("juck") ||
-    text.includes("schuppen") ||
+    matchesAny(text, [/\bjuck(?:t|en|end\w*|reiz\w*)?\b/, /\bschuppen\w*\b/]) ||
     profile?.scalp_condition === "dandruff" ||
     profile?.scalp_condition === "dry_flakes" ||
     profile?.scalp_condition === "irritated" ||

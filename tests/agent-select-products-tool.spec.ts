@@ -1328,6 +1328,52 @@ test("selectProducts keeps silicone-free unsupported while still recommending co
   )
 })
 
+test("selectProducts keeps silicone-free unsupported while still recommending shampoo", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async () => [
+      createShampooMatchedProduct("balanced-shampoo", 0.94, ["Passt zum Shampoo-Zielprofil."]),
+    ],
+  })
+
+  const result = await tool({
+    category: "shampoo",
+    message: "Welches silikonfreie Shampoo empfiehlst du mir?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+      scalp_type: "oily",
+      scalp_condition: null,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [
+      {
+        category: "shampoo",
+        product_name: "Current Shampoo",
+        frequency_range: "3_4x",
+      },
+    ],
+    userJob: "product_pick",
+    concerns: [],
+  })
+
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.products.length, 1)
+  assert.deepEqual(
+    result.unsupported_requested_signals.map((signal) => [signal.field, signal.value]),
+    [["ingredient_preference", "silicone_free"]],
+  )
+  assert.deepEqual(
+    result.products[0]?.unsupported_requested_signals.map((signal) => [signal.field, signal.value]),
+    [["ingredient_preference", "silicone_free"]],
+  )
+  assert.match(result.unsupported_requested_signals[0]?.user_message ?? "", /Shampoo-Auswahl/)
+})
+
 test("projectSelectedProducts exposes conditioner ingredient caveat even with no products", () => {
   const result = projectSelectedProducts(
     [],

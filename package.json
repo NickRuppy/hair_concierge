@@ -18,7 +18,7 @@
     "test:chat": "tsx scripts/eval-chat/run.ts --skip-judge",
     "test:chat:judge": "tsx scripts/eval-chat/run.ts",
     "test:chat:langfuse": "tsx scripts/eval-chat/run.ts --langfuse-publish",
-    "test:agent": "tsx --test tests/agent-guidance.spec.ts tests/agent-guidance-tracing.spec.ts tests/agent-route-packet.spec.ts tests/agent-get-user-context.spec.ts tests/agent-select-products-tool.spec.ts tests/agent-routine-tool.spec.ts tests/agent-shadow.spec.ts tests/agent-production-chat-pipeline.spec.ts",
+    "test:agent": "tsx --test tests/agent-guidance.spec.ts tests/agent-guidance-tracing.spec.ts tests/agent-route-packet.spec.ts tests/agent-get-user-context.spec.ts tests/agent-select-products-tool.spec.ts tests/agent-routine-tool.spec.ts tests/agent-shadow.spec.ts tests/agent-production-chat-pipeline.spec.ts tests/agent-final-render-prompt.spec.ts",
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
     "langfuse:seed-datasets": "tsx scripts/langfuse/seed-datasets.ts",
     "langfuse:setup-review-queues": "tsx scripts/langfuse/setup-review-queues.ts",

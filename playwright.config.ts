@@ -18,7 +18,7 @@ if (fs.existsSync(envPath)) {
 
 export default defineConfig({
   testDir: "./tests",
-  testIgnore: ["**/agent-*.spec.ts"],
+  testIgnore: ["**/agent-*.spec.ts", "**/*.test.ts", "**/*.test.tsx"],
   timeout: 600_000, // 10 min — 16 sequential streaming questions + rate limit pauses
   retries: 0,
   use: {

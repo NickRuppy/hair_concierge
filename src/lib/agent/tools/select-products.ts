@@ -212,7 +212,8 @@ function projectDisplayableProduct(
   const supportedClaims = buildSupportedProductClaims(product)
   const unsupportedRequestedSignals = [
     ...buildUnsupportedRequestedSignals(routeContext?.activeProfileSignals ?? [], supportedClaims),
-    ...(meta?.category === "conditioner" ||
+    ...(meta?.category === "shampoo" ||
+    meta?.category === "conditioner" ||
     meta?.category === "leave_in" ||
     meta?.category === "mask" ||
     meta?.category === "oil"
@@ -1338,7 +1339,7 @@ function userMessageForUnsupportedSignal(signal: AgentActiveProfileSignal): stri
 
 function buildUnsupportedIngredientSignals(
   signals: readonly RequestedIngredientSignal[],
-  category: "conditioner" | "leave_in" | "mask" | "oil" = "conditioner",
+  category: "shampoo" | "conditioner" | "leave_in" | "mask" | "oil" = "conditioner",
 ): UnsupportedRequestedSignal[] {
   return uniqueUnsupportedSignals(
     signals.map((signal) => ({
@@ -1348,11 +1349,13 @@ function buildUnsupportedIngredientSignals(
       user_message:
         category === "oil"
           ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Oel-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Oel-Zweck, Haardicke, Anwendung und Fit."
-          : category === "leave_in"
-            ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit."
-            : category === "mask"
-              ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Masken-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensitaet und Fit."
-              : "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensitaet und Fit.",
+          : category === "shampoo"
+            ? "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Shampoo-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Kopfhaut-Fokus, Haardicke, Reinigungsintensitaet und Profil-Fit."
+            : category === "leave_in"
+              ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit."
+              : category === "mask"
+                ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Masken-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensitaet und Fit."
+                : "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensitaet und Fit.",
     })),
   )
 }
@@ -2324,13 +2327,15 @@ export function projectSelectedProducts(
       projectedProducts.flatMap((product) => product.supported_claims),
     ),
     ...projectedProducts.flatMap((product) => product.unsupported_requested_signals),
-    ...(resolvedCategory === "conditioner" ||
+    ...(resolvedCategory === "shampoo" ||
+    resolvedCategory === "conditioner" ||
     resolvedCategory === "leave_in" ||
     resolvedCategory === "mask" ||
     resolvedCategory === "oil"
       ? buildUnsupportedIngredientSignals(
           routeContext?.requestedIngredientSignals ?? [],
-          resolvedCategory === "leave_in" ||
+          resolvedCategory === "shampoo" ||
+            resolvedCategory === "leave_in" ||
             resolvedCategory === "mask" ||
             resolvedCategory === "oil"
             ? resolvedCategory
@@ -2647,6 +2652,7 @@ export function createSelectProductsTool(
         requestedGoal,
         activeProfileSignals,
         requestedIngredientSignals:
+          category === "shampoo" ||
           category === "conditioner" ||
           category === "leave_in" ||
           category === "mask" ||
