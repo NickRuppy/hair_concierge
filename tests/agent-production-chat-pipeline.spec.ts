@@ -208,6 +208,7 @@ test("production agent router decision marks missing product info as clarify-onl
   assert.deepEqual(decision.policy_overrides, [
     "agent_v1_front_door",
     "product_policy:needs_more_info",
+    "missing_shampoo_profile",
   ])
   assert.match(decision.clarification_reason ?? "", /Haardicke/)
 })

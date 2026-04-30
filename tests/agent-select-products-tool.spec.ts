@@ -2257,12 +2257,48 @@ test("projectSelectedProducts uses leave-in-specific missing-info when leave_in 
 
   assert.deepEqual(result.missing_info, [
     {
+      key: "hair_texture",
+      label: "Haarmuster",
+      blocking: true,
+      detail: "Es fehlt noch dein Haarmuster fuer die Leave-in-Auswahl.",
+    },
+    {
       key: "thickness",
       label: "Haardicke",
       blocking: true,
       detail: "Es fehlt noch deine Haardicke fuer die Leave-in-Auswahl.",
     },
+    {
+      key: "density",
+      label: "Haardichte",
+      blocking: true,
+      detail: "Es fehlt noch deine Haardichte fuer die Leave-in-Auswahl.",
+    },
   ])
+})
+
+test("projectSelectedProducts blocks leave-in products when texture or density is missing", () => {
+  const result = projectSelectedProducts(
+    [createLeaveInMatchedProduct("p-leave-in", 0.94)],
+    {
+      ...LOW_DAMAGE_PROFILE,
+      hair_texture: null,
+      density: null,
+      thickness: "fine",
+    } as HairProfile,
+    "leave_in",
+    createRuntimeStub(),
+  )
+
+  assert.equal(result.decision, "needs_more_info")
+  assert.deepEqual(result.products, [])
+  assert.deepEqual(
+    result.missing_info.map((item) => [item.key, item.blocking]),
+    [
+      ["hair_texture", true],
+      ["density", true],
+    ],
+  )
 })
 
 test("projectSelectedProducts uses oil-specific missing-info when oil returns no products", () => {

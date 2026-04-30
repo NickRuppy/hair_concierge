@@ -455,7 +455,27 @@ function validateActiveProfileSignals(
   return valid
 }
 
+function isClassifierActiveSignalGroundedInMessage(
+  signal: AgentActiveProfileSignal,
+  message: string,
+  messageSignals: readonly AgentActiveProfileSignal[],
+): boolean {
+  if (
+    messageSignals.some((entry) => entry.field === signal.field && entry.value === signal.value)
+  ) {
+    return true
+  }
+
+  const evidence = normalizeRouteMessage(signal.evidence).trim()
+  if (evidence.length < 3) {
+    return false
+  }
+
+  return normalizeRouteMessage(message).includes(evidence)
+}
+
 function mergeActiveProfileSignals(
+  message: string,
   messageSignals: readonly AgentActiveProfileSignal[],
   classifierSignals: readonly AgentActiveProfileSignal[],
 ): AgentActiveProfileSignal[] {
@@ -466,6 +486,10 @@ function mergeActiveProfileSignals(
   }
 
   for (const signal of classifierSignals) {
+    if (!isClassifierActiveSignalGroundedInMessage(signal, message, messageSignals)) {
+      continue
+    }
+
     addActiveSignal(result, signal)
   }
 
@@ -896,6 +920,7 @@ export function buildAgentRoutePacket(params: {
   })
   validateConcerns(params.classification.concerns, warnings)
   const activeProfileSignals = mergeActiveProfileSignals(
+    params.message,
     deriveActiveProfileSignalsFromMessage(params.message),
     validateActiveProfileSignals(params.classification.active_profile_signals, warnings),
   )

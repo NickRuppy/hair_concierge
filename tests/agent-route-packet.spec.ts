@@ -438,7 +438,37 @@ test("buildAgentRoutePacket preserves active profile signals from real German sh
   )
 })
 
-test("buildAgentRoutePacket preserves valid classifier-only active profile signals", () => {
+test("buildAgentRoutePacket preserves grounded classifier-only active profile signals", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Welches Shampoo passt bei wenig Haar?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "shampoo",
+      active_profile_signals: [
+        {
+          field: "density",
+          value: "low",
+          source: "message",
+          selection_effect: "qualifier",
+          evidence: "wenig Haar",
+        },
+      ],
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) =>
+        signal.field === "density" &&
+        signal.value === "low" &&
+        signal.selection_effect === "qualifier",
+    ),
+  )
+  assert.deepEqual(packet.concerns, [])
+})
+
+test("buildAgentRoutePacket drops ungrounded classifier active profile concerns", () => {
   const packet = buildAgentRoutePacket({
     message: "Welches Shampoo passt zu mir?",
     userContext: createContext(),
@@ -446,13 +476,6 @@ test("buildAgentRoutePacket preserves valid classifier-only active profile signa
       user_job: "product_pick",
       product_category: "shampoo",
       active_profile_signals: [
-        {
-          field: "thickness",
-          value: "fine",
-          source: "message",
-          selection_effect: "qualifier",
-          evidence: "feines Haar",
-        },
         {
           field: "concerns",
           value: "frizz",
@@ -464,23 +487,8 @@ test("buildAgentRoutePacket preserves valid classifier-only active profile signa
     }),
   })
 
-  assert.ok(
-    packet.active_profile_signals.some(
-      (signal) =>
-        signal.field === "thickness" &&
-        signal.value === "fine" &&
-        signal.selection_effect === "qualifier",
-    ),
-  )
-  assert.ok(
-    packet.active_profile_signals.some(
-      (signal) =>
-        signal.field === "concerns" &&
-        signal.value === "frizz" &&
-        signal.selection_effect === "redirect",
-    ),
-  )
-  assert.deepEqual(packet.concerns, ["frizz"])
+  assert.deepEqual(packet.active_profile_signals, [])
+  assert.deepEqual(packet.concerns, [])
 })
 
 test("buildAgentRoutePacket detects fine-hair phrasing in mask requests", () => {

@@ -179,6 +179,27 @@ function deriveResponseMode(selectedProducts: SelectedProductsProjection | null)
   return selectedProducts?.decision === "needs_more_info" ? "clarify_only" : "answer_direct"
 }
 
+function missingProfilePolicyTag(
+  selectedProducts: SelectedProductsProjection | null,
+): string | null {
+  if (selectedProducts?.decision !== "needs_more_info") return null
+
+  switch (selectedProducts.category) {
+    case "shampoo":
+      return "missing_shampoo_profile"
+    case "conditioner":
+      return "missing_conditioner_profile"
+    case "leave_in":
+      return "missing_leave_in_profile"
+    case "mask":
+      return "missing_mask_profile"
+    case "oil":
+      return "missing_oil_profile"
+    default:
+      return null
+  }
+}
+
 export function buildClassification(route: AgentRoutePacket): ClassificationResult {
   return {
     intent: mapAgentIntent(route),
@@ -207,6 +228,11 @@ export function buildRouterDecision(params: {
 
   if (params.selectedProducts?.product_response_policy) {
     policyOverrides.push(`product_policy:${params.selectedProducts.product_response_policy}`)
+  }
+
+  const missingPolicyTag = missingProfilePolicyTag(params.selectedProducts)
+  if (missingPolicyTag) {
+    policyOverrides.push(missingPolicyTag)
   }
 
   if (params.route.validation_warnings.length > 0) {

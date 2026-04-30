@@ -1485,7 +1485,7 @@ function buildLeaveInMissingInfo(
       return {
         key: field,
         label: "Haarmuster",
-        blocking: false,
+        blocking: true,
         detail: "Es fehlt noch dein Haarmuster fuer die Leave-in-Auswahl.",
       }
     case "thickness":
@@ -1499,7 +1499,7 @@ function buildLeaveInMissingInfo(
       return {
         key: field,
         label: "Haardichte",
-        blocking: false,
+        blocking: true,
         detail: "Es fehlt noch deine Haardichte fuer die Leave-in-Auswahl.",
       }
     case "care_signal":
@@ -1917,10 +1917,7 @@ function deriveDecision(params: {
   routeContext?: SelectProductsRouteContext | null
 }): SelectProductsDecision {
   const { products, category, categoryDecision, missingInfo, routeContext } = params
-
-  if (category === "shampoo" && categoryDecision && !categoryDecision.relevant) {
-    return "not_recommended"
-  }
+  const hasBlockingMissingInfo = missingInfo.some((item) => item.blocking)
 
   if (isDryLengthOnlyShampooQuestion(category, routeContext)) {
     return "not_recommended"
@@ -1946,7 +1943,16 @@ function deriveDecision(params: {
     return "not_recommended"
   }
 
-  if (missingInfo.some((item) => item.blocking)) {
+  if (
+    category === "shampoo" &&
+    categoryDecision &&
+    !categoryDecision.relevant &&
+    !(routeContext?.userJob === "product_pick" && hasBlockingMissingInfo)
+  ) {
+    return "not_recommended"
+  }
+
+  if (hasBlockingMissingInfo) {
     return "needs_more_info"
   }
 
