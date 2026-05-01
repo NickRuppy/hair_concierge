@@ -34,7 +34,7 @@ jobs:
           CI_BASE_REF: ${{ github.event_name == 'push' && github.event.before || '' }}
           CI_HEAD_REF: ${{ github.sha }}
         run: node scripts/ci/changed-paths.mjs
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: npm
