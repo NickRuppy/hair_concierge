@@ -201,6 +201,7 @@ export function buildRecommendationEngineTrace(params: {
     request_context: runtime.requestContext,
     damage: runtime.damage,
     care_needs: runtime.careNeeds,
+    reset: runtime.reset,
     intervention_plan: runtime.plan,
     categories: {
       shampoo: runtime.categories.shampoo,

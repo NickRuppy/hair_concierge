@@ -103,6 +103,10 @@ type ScoredMaskProduct = ScoredEngineProduct & {
   _fitReasonCodes: string[]
 }
 
+type ScoredDeepCleansingShampooProduct = ScoredEngineProduct & {
+  _fitStatus: CategoryFitEvaluation["status"]
+}
+
 type LeaveInRerankSpec = ProductLeaveInSpecs
 
 interface ProductShampooSpecRow extends ShampooFitSpec {
@@ -813,7 +817,62 @@ export function rerankBondbuilderProductsWithEngine(params: {
 }
 
 function buildDeepCleansingShampooUsageHint(): string {
-  return "Als gelegentlichen Reset statt als Alltags-Shampoo nutzen und bei trockener oder empfindlicher Kopfhaut bewusst sparsam bleiben."
+  return "An Reset-Waschtagen statt des normalen Shampoos auf Kopfhaut/Ansatz nutzen, gruendlich ausspuelen und danach Conditioner in die Laengen geben. Etwa alle 5-6 Waeschen, nicht bei jeder Waesche."
+}
+
+function buildDeepCleansingTopReasons(params: {
+  decision: DeepCleansingShampooCategoryDecision
+  fit: CategoryFitEvaluation
+  spec: ProductDeepCleansingShampooSpecs | null
+}): { positives: string[]; tradeoffs: string[] } {
+  const { decision, fit, spec } = params
+  const positives: string[] = []
+  const tradeoffs: string[] = []
+
+  if (fit.status === "mismatch") {
+    tradeoffs.push("Kein sicherer Match fuer den angefragten Reset-Fokus oder Farbschutz.")
+  } else if (spec?.reset_focus === "mineral_chlorine") {
+    positives.push("Strukturiert fuer Kalk-, Mineral- oder Chlor-Kontext gepflegt.")
+  } else if (spec?.reset_focus === "broad_spectrum") {
+    positives.push(
+      "Strukturiert als breiter Reset fuer Styling-/Pflegeaufbau plus Mineral-Kontext.",
+    )
+  } else if (spec?.reset_focus === "general_buildup") {
+    positives.push("Strukturiert fuer allgemeinen Produktaufbau und beschwertes Haar gepflegt.")
+  } else {
+    positives.push("Passt als gelegentlicher Reset bei Produktaufbau oder beschwertem Haar.")
+  }
+
+  if (spec?.reset_intensity) {
+    positives.push(`Reset-Intensitaet: ${spec.reset_intensity}.`)
+  }
+
+  if (fit.status === "ideal") {
+    positives.push("Die strukturierten Reset-Daten passen sehr gut zur Anfrage.")
+  } else if (fit.status === "supportive") {
+    positives.push("Die strukturierten Reset-Daten passen mit kleinen Caveats zur Anfrage.")
+  } else if (fit.status === "unknown") {
+    tradeoffs.push("Die Tiefenreinigungs-Spezifikation ist noch nicht vollstaendig gepflegt.")
+  } else if (fit.status === "mismatch") {
+    tradeoffs.push("Weicht beim Reset-Fokus oder bei Farbschutz-Anforderungen ab.")
+  }
+
+  if (decision.targetProfile?.colorTreatedCaution) {
+    tradeoffs.push(
+      "Bei gefaerbtem oder blondiertem Haar konservativ dosieren und seltener einsetzen.",
+    )
+  }
+  if (decision.targetProfile?.cautionFlags.includes("sensitive_or_irritated_scalp")) {
+    tradeoffs.push("Nicht als Behandlung fuer gereizte Kopfhaut, Juckreiz oder Schuppen einordnen.")
+  }
+  if (decision.targetProfile?.colorSafeRequest && spec?.color_treated_suitability !== "suitable") {
+    tradeoffs.push("Farbschonung ist fuer dieses Produkt nicht strukturiert belegt.")
+  }
+
+  return {
+    positives: positives.slice(0, 3),
+    tradeoffs: tradeoffs.slice(0, 3),
+  }
 }
 
 export function rerankDeepCleansingShampooProductsWithEngine(params: {
@@ -826,20 +885,25 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
   const target = decision.targetProfile
 
   const specsByProductId = new Map(specs.map((spec) => [spec.product_id, spec]))
-  const scored: ScoredEngineProduct[] = candidates.map((product) => {
+  const scored: ScoredDeepCleansingShampooProduct[] = candidates.map((product) => {
     const spec = specsByProductId.get(product.id) ?? null
     const fit = evaluateDeepCleansingShampooFit(
       decision,
       spec as DeepCleansingShampooFitSpec | null,
     )
-    const { positives, tradeoffs } = buildFitSummary(
-      fit,
-      "Passt sehr gut zum aktuellen Reset-/Kopfhaut-Fokus.",
-      "Passt weitgehend zum aktuellen Reset-Bedarf.",
-      "Die Tiefenreinigungs-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
-      "Weicht beim Kopfhaut-Fokus zu deutlich vom aktuellen Reset-Bedarf ab.",
-    )
-    const score = toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
+    const { positives, tradeoffs } = buildDeepCleansingTopReasons({ decision, fit, spec })
+    const score =
+      toBaseScore(product) +
+      fitStatusAdjustment(fit.status) +
+      fitReasonAdjustment(fit) +
+      (spec?.reset_focus === target.resetFocus
+        ? 20
+        : spec?.reset_focus === "broad_spectrum"
+          ? 10
+          : 0) +
+      (spec?.reset_intensity === target.targetIntensity ? 10 : 0) +
+      (spec?.scalp_type_focus === target.scalpTypeFocus ? 16 : 0) +
+      (target.colorSafeRequest && spec?.color_treated_suitability === "suitable" ? 12 : 0)
 
     const recommendationMeta: DeepCleansingShampooRecommendationMetadata = {
       category: "deep_cleansing_shampoo",
@@ -849,6 +913,11 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
       usage_hint: buildDeepCleansingShampooUsageHint(),
       scalp_type_focus: target.scalpTypeFocus,
       reset_need_level: target.resetNeedLevel,
+      reset_focus: spec?.reset_focus ?? target.resetFocus,
+      reset_intensity: spec?.reset_intensity ?? target.targetIntensity,
+      color_treated_suitability: spec?.color_treated_suitability ?? null,
+      fit_status: fit.status,
+      caution_flags: target.cautionFlags,
     }
 
     return {
@@ -856,10 +925,26 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
       deep_cleansing_shampoo_specs: spec,
       recommendation_meta: recommendationMeta,
       _engineScore: score,
+      _fitStatus: fit.status,
     }
   })
 
   scored.sort(compareScoredProducts)
+
+  const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
+  const strictRequest =
+    target.resetFocus === "mineral_chlorine" ||
+    target.resetFocus === "broad_spectrum" ||
+    target.colorSafeRequest
+
+  if (acceptable.length > 0) {
+    return stripScore(acceptable.slice(0, SELECTION_LIMIT))
+  }
+
+  if (strictRequest) {
+    return []
+  }
+
   return stripScore(scored).slice(0, SELECTION_LIMIT)
 }
 
@@ -1869,9 +1954,19 @@ export async function selectDeepCleansingShampooProductsWithEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime?: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
+  const runtime =
+    params.runtime ??
+    buildRecommendationEngineRuntimeFromPersistence(
+      hairProfile,
+      routineItems,
+      buildRecommendationRequestContext({
+        requestedCategory: "deep_cleansing_shampoo",
+        message,
+      }),
+    )
   const decision = runtime.categories.deepCleansingShampoo
   if (!decision.relevant || !decision.targetProfile) return []
 

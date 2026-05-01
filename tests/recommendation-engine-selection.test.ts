@@ -1400,7 +1400,12 @@ test("engine deep-cleansing shampoo reranking prefers the exact scalp focus over
     currentInventory: null,
     targetProfile: {
       scalpTypeFocus: "oily",
-      resetNeedLevel: "moderate",
+      resetNeedLevel: "likely",
+      resetFocus: "general_buildup",
+      targetIntensity: "medium",
+      colorTreatedCaution: false,
+      colorSafeRequest: false,
+      cautionFlags: [],
     },
     notes: [],
   }
@@ -1414,10 +1419,16 @@ test("engine deep-cleansing shampoo reranking prefers the exact scalp focus over
     {
       product_id: "balanced",
       scalp_type_focus: "balanced",
+      reset_intensity: "medium",
+      reset_focus: "general_buildup",
+      color_treated_suitability: "unsuitable_or_unknown",
     },
     {
       product_id: "ideal",
       scalp_type_focus: "oily",
+      reset_intensity: "medium",
+      reset_focus: "general_buildup",
+      color_treated_suitability: "unsuitable_or_unknown",
     },
   ]
 
@@ -1434,6 +1445,98 @@ test("engine deep-cleansing shampoo reranking prefers the exact scalp focus over
       ?.scalp_type_focus,
     "oily",
   )
+})
+
+test("engine deep-cleansing shampoo reranking prefers broad-spectrum reset for mineral requests", () => {
+  const decision: DeepCleansingShampooCategoryDecision = {
+    category: "deep_cleansing_shampoo",
+    relevant: true,
+    action: "add",
+    planReasonCodes: ["mineral_chlorine_or_hard_water_context"],
+    currentInventory: null,
+    targetProfile: {
+      scalpTypeFocus: "balanced",
+      resetNeedLevel: "strong",
+      resetFocus: "mineral_chlorine",
+      targetIntensity: "medium",
+      colorTreatedCaution: true,
+      colorSafeRequest: true,
+      cautionFlags: ["color_or_bleach_caution"],
+    },
+    notes: [],
+  }
+
+  const candidates = [
+    createMatchedProduct("generic", "Deep Cleansing Shampoo", { combined_score: 0.9 }),
+    createMatchedProduct("broad", "Deep Cleansing Shampoo", { combined_score: 0.72 }),
+  ]
+  const specs: ProductDeepCleansingShampooSpecs[] = [
+    {
+      product_id: "generic",
+      scalp_type_focus: "balanced",
+      reset_intensity: "medium",
+      reset_focus: "general_buildup",
+      color_treated_suitability: "unsuitable_or_unknown",
+    },
+    {
+      product_id: "broad",
+      scalp_type_focus: "balanced",
+      reset_intensity: "medium",
+      reset_focus: "broad_spectrum",
+      color_treated_suitability: "suitable",
+    },
+  ]
+
+  const reranked = rerankDeepCleansingShampooProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+  })
+  const meta = reranked[0]?.recommendation_meta as
+    | DeepCleansingShampooRecommendationMetadata
+    | undefined
+
+  assert.equal(reranked[0]?.id, "broad")
+  assert.equal(meta?.reset_focus, "broad_spectrum")
+  assert.equal(meta?.color_treated_suitability, "suitable")
+})
+
+test("engine deep-cleansing shampoo reranking suppresses unsupported mineral and color-safe matches", () => {
+  const decision: DeepCleansingShampooCategoryDecision = {
+    category: "deep_cleansing_shampoo",
+    relevant: true,
+    action: "add",
+    planReasonCodes: ["mineral_chlorine_or_hard_water_context"],
+    currentInventory: null,
+    targetProfile: {
+      scalpTypeFocus: "balanced",
+      resetNeedLevel: "strong",
+      resetFocus: "mineral_chlorine",
+      targetIntensity: "medium",
+      colorTreatedCaution: true,
+      colorSafeRequest: true,
+      cautionFlags: ["color_or_bleach_caution"],
+    },
+    notes: [],
+  }
+
+  const reranked = rerankDeepCleansingShampooProductsWithEngine({
+    candidates: [
+      createMatchedProduct("generic", "Deep Cleansing Shampoo", { combined_score: 0.9 }),
+    ],
+    specs: [
+      {
+        product_id: "generic",
+        scalp_type_focus: "balanced",
+        reset_intensity: "medium",
+        reset_focus: "general_buildup",
+        color_treated_suitability: "unsuitable_or_unknown",
+      },
+    ],
+    decision,
+  })
+
+  assert.deepEqual(reranked, [])
 })
 
 test("engine dry shampoo reranking keeps the oily-focus candidate ahead of a broader balanced option", () => {

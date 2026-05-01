@@ -58,7 +58,6 @@ import type {
   ConditionerCategoryDecision as RecommendationEngineConditionerCategoryDecision,
   DamageAssessment as RecommendationEngineDamageAssessment,
   DeepCleansingShampooCategoryDecision as RecommendationEngineDeepCleansingShampooCategoryDecision,
-  DamageLevel,
   DryShampooCategoryDecision as RecommendationEngineDryShampooCategoryDecision,
   InterventionPlan as RecommendationEngineInterventionPlan,
   LeaveInCategoryDecision as RecommendationEngineLeaveInCategoryDecision,
@@ -66,6 +65,10 @@ import type {
   OilCategoryDecision as RecommendationEngineOilCategoryDecision,
   PeelingCategoryDecision as RecommendationEnginePeelingCategoryDecision,
   RecommendationRequestContext as RecommendationEngineRequestContext,
+  ResetAssessment as RecommendationEngineResetAssessment,
+  ResetFocus,
+  ResetIntensity,
+  ResetLevel,
   ShampooCategoryDecision as RecommendationEngineShampooCategoryDecision,
 } from "@/lib/recommendation-engine/types"
 import type { ShampooBucket, ShampooBucketPair } from "@/lib/shampoo/constants"
@@ -378,7 +381,12 @@ export interface BondbuilderRecommendationMetadata extends BaseRecommendationMet
 export interface DeepCleansingShampooRecommendationMetadata extends BaseRecommendationMetadata {
   category: "deep_cleansing_shampoo"
   scalp_type_focus: ProductScalpTypeFocus | null
-  reset_need_level: DamageLevel
+  reset_need_level: ResetLevel
+  reset_focus?: ResetFocus | null
+  reset_intensity?: ResetIntensity | null
+  color_treated_suitability?: ProductDeepCleansingShampooSpecs["color_treated_suitability"] | null
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
+  caution_flags?: string[]
 }
 
 export interface DryShampooRecommendationMetadata extends BaseRecommendationMetadata {
@@ -469,6 +477,7 @@ export interface RecommendationEngineTrace {
   request_context: RecommendationEngineRequestContext
   damage: RecommendationEngineDamageAssessment
   care_needs: RecommendationEngineCareNeedAssessment
+  reset: RecommendationEngineResetAssessment
   intervention_plan: RecommendationEngineInterventionPlan
   categories: {
     shampoo: RecommendationEngineShampooCategoryDecision

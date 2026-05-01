@@ -122,6 +122,9 @@ export const SUPPORTED_PRODUCT_CLAIM_FIELDS = [
   "care_benefit",
   "oil_purpose",
   "oil_subtype",
+  "reset_focus",
+  "reset_intensity",
+  "color_treated_suitability",
 ] as const
 
 export type StructuredProductClaimField = (typeof SUPPORTED_PRODUCT_CLAIM_FIELDS)[number]
@@ -274,6 +277,31 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
 
   if (products.every((product) => product.recommendation_meta?.category === "oil")) {
     return buildOilComparisonFactsForSet(products)
+  }
+
+  if (
+    products.every((product) => product.recommendation_meta?.category === "deep_cleansing_shampoo")
+  ) {
+    return Object.fromEntries(
+      products.map((product) => {
+        const meta = product.recommendation_meta
+        return [
+          product.id,
+          uniqueNonEmpty([
+            meta?.category === "deep_cleansing_shampoo" && meta.reset_focus
+              ? `Reset-Fokus: ${meta.reset_focus}`
+              : null,
+            meta?.category === "deep_cleansing_shampoo" && meta.reset_intensity
+              ? `Reset-Intensitaet: ${meta.reset_intensity}`
+              : null,
+            meta?.category === "deep_cleansing_shampoo" &&
+            meta.color_treated_suitability === "suitable"
+              ? "Farbschutz: strukturiert geeignet"
+              : null,
+          ]).slice(0, 3),
+        ]
+      }),
+    )
   }
 
   return Object.fromEntries(
@@ -785,6 +813,17 @@ function buildDisplayableFitReason(product: MatchedProduct): string {
     return buildOilDisplayableFitReason(meta)
   }
 
+  if (meta?.category === "deep_cleansing_shampoo") {
+    const focus =
+      meta.reset_focus === "mineral_chlorine"
+        ? "Kalk-/Chlor-/Mineral-Reset"
+        : meta.reset_focus === "broad_spectrum"
+          ? "breiter Styling- und Mineral-Reset"
+          : "Produktaufbau-Reset"
+    const intensity = meta.reset_intensity ? `; Intensitaet: ${meta.reset_intensity}` : ""
+    return `Reset-Treffer fuer ${focus}${intensity}.`
+  }
+
   return meta?.top_reasons?.[0] ?? "Passt von den verfuegbaren Optionen am besten."
 }
 
@@ -1046,6 +1085,43 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
 
   if (meta?.category === "oil") {
     return buildOilSupportedProductClaims(meta)
+  }
+
+  if (meta?.category === "deep_cleansing_shampoo") {
+    return uniqueClaims([
+      buildClaim(
+        "reset_focus",
+        meta.reset_focus,
+        "product_spec",
+        meta.reset_focus ? `Reset-Fokus: ${meta.reset_focus}` : null,
+      ),
+      buildClaim(
+        "reset_intensity",
+        meta.reset_intensity,
+        "product_spec",
+        meta.reset_intensity ? `Reset-Intensitaet: ${meta.reset_intensity}` : null,
+      ),
+      buildClaim(
+        "scalp_route",
+        meta.scalp_type_focus,
+        "product_spec",
+        meta.scalp_type_focus ? `Kopfhaut-Fokus: ${meta.scalp_type_focus}` : null,
+      ),
+      buildClaim(
+        "color_treated_suitability",
+        meta.color_treated_suitability === "suitable" ? "suitable" : null,
+        "product_spec",
+        meta.color_treated_suitability === "suitable"
+          ? "Strukturiert als geeignet fuer coloriertes Haar gepflegt"
+          : null,
+      ),
+      buildClaim(
+        "fit_status",
+        meta.fit_status,
+        "category_decision",
+        meta.fit_status ? `Fit: ${meta.fit_status}` : null,
+      ),
+    ])
   }
 
   if (meta?.category !== "shampoo") {
@@ -1621,6 +1697,17 @@ function isOilNoRecommendationDecision(
   )
 }
 
+function isDeepCleansingScalpTreatmentDecision(
+  category: SelectableProductCategory | null,
+  categoryDecision: CategoryDecision | null,
+): boolean {
+  return (
+    category === "deep_cleansing_shampoo" &&
+    categoryDecision?.category === "deep_cleansing_shampoo" &&
+    categoryDecision.notes.includes("scalp_treatment_needed")
+  )
+}
+
 function getCategoryDecision(
   runtime: RecommendationEngineRuntime | null,
   category: SelectableProductCategory | null,
@@ -1946,6 +2033,10 @@ function deriveDecision(params: {
     return "not_recommended"
   }
 
+  if (isDeepCleansingScalpTreatmentDecision(category, categoryDecision)) {
+    return "not_recommended"
+  }
+
   if (
     category === "shampoo" &&
     categoryDecision &&
@@ -2126,6 +2217,14 @@ function buildProductResponsePolicy(params: {
     }
   }
 
+  if (isDeepCleansingScalpTreatmentDecision(category, params.categoryDecision ?? null)) {
+    return {
+      product_response_policy: "caution_without_products",
+      policy_reason:
+        "Tiefenreinigung ist kein Behandlungshebel fuer Schuppen, Juckreiz oder gereizte Kopfhaut.",
+    }
+  }
+
   if (category === "shampoo" && hasConcern(routeContext, "oily_roots")) {
     return {
       product_response_policy: "explain_then_recommend",
@@ -2148,7 +2247,9 @@ function buildProductResponsePolicy(params: {
         ? "Shampoo wird primaer ueber Kopfhaut-Fokus und Haardicke entschieden."
         : category === "conditioner"
           ? "Conditioner wird ueber Haardicke, Haardichte, Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensitaet entschieden."
-          : "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten.",
+          : category === "deep_cleansing_shampoo"
+            ? "Tiefenreinigung wird nur bei Reset-Signalen empfohlen und ueber Reset-Fokus, Intensitaet, Kopfhaut-Fokus und Farbschutz-Metadaten entschieden."
+            : "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten.",
   }
 }
 
@@ -2222,6 +2323,22 @@ function buildCategoryGuidance(params: {
     }
 
     return "Conditioner ist hier ein Laengenhebel: Die Auswahl folgt Haardicke, Haardichte, Ziel-Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensitaet. Dichte und Damage-Kontext duerfen die Profilableitung erklaeren, sind aber keine Produktclaims."
+  }
+
+  if (category === "deep_cleansing_shampoo") {
+    if (isDeepCleansingScalpTreatmentDecision(category, categoryDecision)) {
+      return "Tiefenreinigung nicht als Behandlung fuer Schuppen, Juckreiz, gereizte Kopfhaut oder seborrhoische Themen framen. Keine Produktkarten zeigen; zu Kopfhaut- oder Shampoo-Einordnung umleiten und bei anhaltenden/starken Beschwerden professionelle Abklaerung empfehlen."
+    }
+
+    if (decision === "no_catalog_match") {
+      return "Tiefenreinigung kann passen, aber der aktuelle Katalog liefert keinen sicheren Treffer mit gepflegten Reset-Spezifikationen. Keine Kalk-, Chlor-, Metall- oder Farbschutzclaims ohne strukturierte Felder erfinden."
+    }
+
+    if (decision === "not_recommended") {
+      return "Tiefenreinigung ist hier nicht der erste Hebel, solange keine Build-up-, Styling-, Kalk-/Chlor- oder Reset-Signale vorliegen."
+    }
+
+    return "Tiefenreinigung ist ein gelegentlicher Reset, kein Alltags-Shampoo und keine Kopfhautbehandlung. Erst Reset-Rolle erklaeren, dann Anwendung: an Reset-Waschtagen statt normalem Shampoo, danach Conditioner in die Laengen, etwa alle 5-6 Waeschen beziehungsweise alle 2-3 Wochen und bei trockener, empfindlicher, colorierter, lockiger oder stark beanspruchter Struktur seltener."
   }
 
   if (category === "leave_in") {
@@ -2393,7 +2510,12 @@ async function runCategoryEngine(params: {
     case "bondbuilder":
       return selectBondbuilderProductsWithEngine({ message, hairProfile, routineItems })
     case "deep_cleansing_shampoo":
-      return selectDeepCleansingShampooProductsWithEngine({ message, hairProfile, routineItems })
+      return selectDeepCleansingShampooProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+      })
     case "dry_shampoo":
       return selectDryShampooProductsWithEngine({ message, hairProfile, routineItems })
     case "peeling":
