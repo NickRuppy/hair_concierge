@@ -23,7 +23,7 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'sk-placeholder' }}
       COHERE_API_KEY: ${{ secrets.COHERE_API_KEY || 'placeholder' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Detect changed paths
