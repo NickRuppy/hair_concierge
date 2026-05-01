@@ -43,7 +43,12 @@ async function loadChatRuntimeDeps() {
     { runProductionAgentPipeline },
     { buildAssistantRagContext, buildDoneEventData },
     { extractConversationMemory },
-    { buildRetrievalDebugEventData, finalizeChatTurnTrace },
+    {
+      buildRetrievalDebugEventData,
+      finalizeChatTurnTrace,
+      summarizeEngineTraceForLangfuse,
+      summarizeProductsForLangfuse,
+    },
     { chatMessageSchema },
     { generateConversationTitle },
   ] = await Promise.all([
@@ -64,6 +69,8 @@ async function loadChatRuntimeDeps() {
     extractConversationMemory,
     buildRetrievalDebugEventData,
     finalizeChatTurnTrace,
+    summarizeEngineTraceForLangfuse,
+    summarizeProductsForLangfuse,
     chatMessageSchema,
     generateConversationTitle,
   }
@@ -138,6 +145,8 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
       extractConversationMemory,
       buildRetrievalDebugEventData,
       finalizeChatTurnTrace,
+      summarizeEngineTraceForLangfuse,
+      summarizeProductsForLangfuse,
       chatMessageSchema,
       generateConversationTitle,
     } = await deps.loadRuntimeDeps()
@@ -449,6 +458,15 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   status: "completed",
                   product_count: productsToSend.length,
                   assistant_preview: sanitizeLangfuseText(fullContent)?.slice(0, 500),
+                  response_composition: completedTrace.response_composition,
+                  engine_trace: completedTrace.decision_context.engine_trace,
+                  engine_summary: summarizeEngineTraceForLangfuse(
+                    completedTrace.decision_context.engine_trace,
+                  ),
+                  matched_products: completedTrace.decision_context.matched_products,
+                  selected_products: summarizeProductsForLangfuse(
+                    completedTrace.decision_context.matched_products,
+                  ),
                 },
               })
 
@@ -503,6 +521,9 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
               output: {
                 status: "failed",
                 assistant_preview: sanitizeLangfuseText(fullContent)?.slice(0, 500),
+                response_composition: failedTrace.response_composition,
+                engine_trace: failedTrace.decision_context.engine_trace,
+                matched_products: failedTrace.decision_context.matched_products,
               },
               metadata: {
                 error: errorMessage,

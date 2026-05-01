@@ -202,6 +202,17 @@ export function buildRecommendationEngineTrace(params: {
     damage: runtime.damage,
     care_needs: runtime.careNeeds,
     intervention_plan: runtime.plan,
+    categories: {
+      shampoo: runtime.categories.shampoo,
+      conditioner: runtime.categories.conditioner,
+      mask: runtime.categories.mask,
+      leave_in: runtime.categories.leaveIn,
+      oil: runtime.categories.oil,
+      bondbuilder: runtime.categories.bondbuilder,
+      deep_cleansing_shampoo: runtime.categories.deepCleansingShampoo,
+      dry_shampoo: runtime.categories.dryShampoo,
+      peeling: runtime.categories.peeling,
+    },
     unsupported_routine_categories: runtime.unsupportedRoutineCategories,
   }
 }

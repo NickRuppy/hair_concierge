@@ -118,6 +118,30 @@ Helpful flags:
 - `--positive-limit 10`
 - `--fetch-limit 500`
 
+Production dataset items include review metadata for slicing:
+
+- `trace_version`
+- `response_composition_path`
+- `prompt_kind`
+- `engine_damage_level`
+- `engine_repair_priority`
+- `engine_actions`
+- `selected_products`
+- `failure_bucket`
+
+## Trace Schema V2
+
+Trace Schema V2 keeps the review-critical decision path in structured fields:
+
+- `router_decision`: intent routing, retrieval mode, response mode, clarification state, confidence, slot completeness, and policy overrides.
+- `decision_context.engine_trace.damage`: engine damage assessment, including overall level and repair priority.
+- `decision_context.engine_trace.categories`: category-level engine actions. For review, inspect each category's `relevant`, `action`, reason codes, and target profile.
+- `decision_context.matched_products`: selected product traces, including `recommendation_meta` for score, top reasons, tradeoffs, usage hint, and category-specific fit metadata.
+- `response_composition`: composer path, migration mode, fallback reason, rendering path, plan type, and attachment mode.
+- `user_feedback`: thumbs feedback and review annotations when present, including `failure_bucket`.
+
+In Langfuse, start from the production dataset item metadata for slicing, then open the source trace to inspect the full `router_decision`, engine categories, matched product `recommendation_meta`, `response_composition`, and `user_feedback` details.
+
 ## Review queue setup
 
 Create the manual review score configs and annotation queues:
@@ -141,7 +165,39 @@ To focus the prompt-change queue on specific prompt versions:
 npm run langfuse:setup-review-queues -- --prompt-versions 12,13
 ```
 
-Use the shared review rubric in [docs/chat-quality-review-rubric.md](/Users/nick/AI_work/hair_conscierge/.worktrees/langfuse-quality-loop/docs/chat-quality-review-rubric.md:1) so manual review, thumbs feedback, and eval metrics stay aligned.
+Use the shared review rubric in [docs/chat-quality-review-rubric.md](docs/chat-quality-review-rubric.md) so manual review, thumbs feedback, and eval metrics stay aligned.
+
+## Tester Cohort Review
+
+Run tester cohort review weekly while the C-lite rollout is active, and additionally after prompt, router, recommendation-engine, or response-composition changes.
+
+Suggested cadence:
+
+- `2x` per week: review new thumbs-down traces from the tester cohort.
+- weekly: sample zero-feedback traces across the most active categories.
+- weekly: sample thumbs-up traces as positive references.
+- before a C-lite rule or prompt change: seed the production dataset and tag the review batch.
+- after the change: compare the same slicing dimensions against the next tester cohort sample.
+
+Primary slicing dimensions:
+
+- `trace_version`
+- `response_composition_path`
+- `prompt_kind`
+- `intent`
+- `product_category`
+- `retrieval_mode`
+- `response_mode`
+- `needs_clarification`
+- `engine_damage_level`
+- `engine_repair_priority`
+- `engine_actions.<category>.relevant`
+- `engine_actions.<category>.action`
+- `selected_products[].category`
+- `selected_products[].recommendation_meta` compact scalar fit fields
+- `failure_bucket`
+
+Use these slices to separate routing failures, deterministic engine/category fit failures, product metadata gaps, response composition regressions, and positive reference traces.
 
 ## Privacy and masking
 

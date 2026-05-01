@@ -54,12 +54,17 @@ import type {
 import type {
   CareNeedAssessment as RecommendationEngineCareNeedAssessment,
   CategoryDecision as RecommendationEngineCategoryDecision,
+  BondbuilderCategoryDecision as RecommendationEngineBondbuilderCategoryDecision,
   ConditionerCategoryDecision as RecommendationEngineConditionerCategoryDecision,
   DamageAssessment as RecommendationEngineDamageAssessment,
+  DeepCleansingShampooCategoryDecision as RecommendationEngineDeepCleansingShampooCategoryDecision,
   DamageLevel,
+  DryShampooCategoryDecision as RecommendationEngineDryShampooCategoryDecision,
   InterventionPlan as RecommendationEngineInterventionPlan,
   LeaveInCategoryDecision as RecommendationEngineLeaveInCategoryDecision,
   MaskCategoryDecision as RecommendationEngineMaskCategoryDecision,
+  OilCategoryDecision as RecommendationEngineOilCategoryDecision,
+  PeelingCategoryDecision as RecommendationEnginePeelingCategoryDecision,
   RecommendationRequestContext as RecommendationEngineRequestContext,
   ShampooCategoryDecision as RecommendationEngineShampooCategoryDecision,
 } from "@/lib/recommendation-engine/types"
@@ -465,6 +470,17 @@ export interface RecommendationEngineTrace {
   damage: RecommendationEngineDamageAssessment
   care_needs: RecommendationEngineCareNeedAssessment
   intervention_plan: RecommendationEngineInterventionPlan
+  categories: {
+    shampoo: RecommendationEngineShampooCategoryDecision
+    conditioner: RecommendationEngineConditionerCategoryDecision
+    mask: RecommendationEngineMaskCategoryDecision
+    leave_in: RecommendationEngineLeaveInCategoryDecision
+    oil: RecommendationEngineOilCategoryDecision
+    bondbuilder: RecommendationEngineBondbuilderCategoryDecision
+    deep_cleansing_shampoo: RecommendationEngineDeepCleansingShampooCategoryDecision
+    dry_shampoo: RecommendationEngineDryShampooCategoryDecision
+    peeling: RecommendationEnginePeelingCategoryDecision
+  }
   unsupported_routine_categories: string[]
 }
 
@@ -603,7 +619,31 @@ export interface LangfusePromptReference {
   is_fallback: boolean
 }
 
+export type ChatPromptKind = "legacy_synth_prompt" | "response_plan_render" | "agent_final_render"
+export type ResponseCompositionPath = "legacy_synthesizer" | "response_plan" | "agent_final_render"
+export type TraceFailureBucket =
+  | "product_fit_mismatch"
+  | "routine_logic_mismatch"
+  | "missing_clarification"
+  | "unnecessary_clarification"
+  | "retrieval_grounding_gap"
+  | "response_wording_gap"
+  | "overclaim_or_missing_caveat"
+  | "memory_or_profile_miss"
+  | "technical_or_trace_gap"
+  | "positive_reference"
+
+export interface ResponseCompositionTrace {
+  path: ResponseCompositionPath
+  migration_mode: "legacy_only" | "planner_preferred"
+  fallback_reason: string | null
+  rendering_path: string | null
+  plan_type: string | null
+  attachment_mode: "text_only" | "cards" | null
+}
+
 export interface ChatPromptSnapshot {
+  kind: ChatPromptKind
   model: string
   temperature: number
   prompt_ref: LangfusePromptReference
@@ -631,6 +671,9 @@ export interface ChatMatchedProductTrace {
   category: string | null
   score: number | null
   top_reasons: string[]
+  tradeoffs: string[]
+  usage_hint: string | null
+  recommendation_meta: RecommendationMetadata | null
 }
 
 export interface ChatTraceLatencyBreakdown {
@@ -689,6 +732,7 @@ export interface ChatTurnTrace {
     synthesis: LangfusePromptReference
   }
   prompt: ChatPromptSnapshot
+  response_composition: ResponseCompositionTrace
   response: {
     assistant_content: string
     sources: CitationSource[]

@@ -7,7 +7,9 @@ import {
   mapAgentIntent,
   mapAgentProductCategory,
   productsForRenderedPacket,
+  runProductionAgentPipeline,
 } from "../src/lib/agent/production/chat-pipeline"
+import type { AgentModelClient } from "../src/lib/agent/orchestrator/model-client"
 import { createChatPostHandler } from "../src/app/api/chat/route"
 import type {
   AgentRoutePacket,
@@ -231,6 +233,73 @@ test("production agent product cards follow the renderer packet order", () => {
   )
 })
 
+test("production agent pipeline marks debug trace as agent final render", async () => {
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "usage",
+        product_category: "shampoo",
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.9,
+        evidence: ["User asks how to use shampoo."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer() {
+      return "Nutze Shampoo nur am Ansatz."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Wie benutze ich Shampoo richtig?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: null,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+    },
+  )
+
+  assert.equal(result.debugTrace.prompt.kind, "agent_final_render")
+  assert.ok(result.debugTrace.decision_context.engine_trace)
+  assert.equal(
+    result.debugTrace.decision_context.engine_trace.request_context.requestedCategory,
+    "shampoo",
+  )
+  assert.equal(
+    result.debugTrace.decision_context.engine_trace.categories.shampoo.category,
+    "shampoo",
+  )
+  assert.deepEqual(result.debugTrace.response_composition, {
+    path: "agent_final_render",
+    migration_mode: "legacy_only",
+    fallback_reason: null,
+    rendering_path: null,
+    plan_type: "agent_v1",
+    attachment_mode: null,
+  })
+})
+
 test("POST /api/chat streams agent v1 contract and persists assistant metadata", async () => {
   const fakeAdmin = createFakeAdmin()
   const persistedTurnTraces: unknown[] = []
@@ -247,6 +316,14 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
   const debugTrace = {
     request_id: "request-1",
     route_packet: { product_category: "shampoo" },
+    response_composition: {
+      path: "agent_final_render",
+      migration_mode: "legacy_only",
+      fallback_reason: null,
+      rendering_path: null,
+      plan_type: "agent_v1",
+      attachment_mode: null,
+    },
   }
   const routerDecision = {
     retrieval_mode: "hybrid",
@@ -320,7 +397,17 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
         buildDoneEventData: (params: unknown) => params,
         extractConversationMemory: async () => {},
         buildRetrievalDebugEventData: (trace: unknown) => ({ trace }),
-        finalizeChatTurnTrace: (trace: unknown, final: unknown) => ({ trace, final }),
+        finalizeChatTurnTrace: (trace: unknown, final: unknown) => ({
+          trace,
+          final,
+          response_composition: (trace as { response_composition: unknown }).response_composition,
+          decision_context: {
+            engine_trace: engineTrace,
+            matched_products: [matchedProduct],
+          },
+        }),
+        summarizeEngineTraceForLangfuse: (trace: unknown) => ({ trace }),
+        summarizeProductsForLangfuse: (products: unknown) => products,
         chatMessageSchema: {
           safeParse: (body: unknown) => ({
             success: true,
@@ -388,6 +475,11 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
         status: "completed",
         stream_read_ms: 0,
         total_ms: 0,
+      },
+      response_composition: debugTrace.response_composition,
+      decision_context: {
+        engine_trace: engineTrace,
+        matched_products: [matchedProduct],
       },
     },
   })

@@ -6,7 +6,7 @@ Use it for:
 
 - manual review of thumbs-down traces
 - sampled review of zero-feedback and thumbs-up traces
-- deciding whether the next fix belongs in classification, rules, retrieval, or synthesis
+- deciding whether the next fix belongs in routing, engine rules, retrieval, response composition, memory/profile handling, or trace instrumentation
 - keeping human review aligned with the eval harness metrics
 
 The current automated eval rubric already uses the same score names:
@@ -28,10 +28,11 @@ Ask these two questions:
 
 The second question matters most, because the fix depends on the failure layer:
 
-- wrong intent/category -> classification or router logic
-- unnecessary or weak follow-up questions -> clarification rules or classifier prompt
-- weak or irrelevant context -> retrieval logic or source selection
-- right ingredients but poor final answer -> system prompt / synthesis behavior
+- product fit mismatch -> recommendation engine category logic or product metadata
+- routine logic mismatch -> routine planner, category action, or response composition
+- missing or unnecessary clarification -> router logic, profile-slot rules, or classifier prompt
+- weak grounding -> retrieval logic, source selection, or product `recommendation_meta`
+- right ingredients but poor final answer -> response wording or composition behavior
 - unsupported certainty or hair/scalp overreach -> synthesis prompt, guardrails, or rule constraints
 
 ## Fast review flow
@@ -42,7 +43,7 @@ For each trace:
 2. Check whether the assistant should have answered directly or asked a clarifying question.
 3. Inspect the router decision, retrieval mode, sources, and matched products.
 4. Score the trace on the four core dimensions below.
-5. Assign one primary failure bucket.
+5. Assign one primary `failure_bucket`.
 6. Add one short action note describing what should change next.
 
 Keep each review short. The goal is pattern detection, not perfect prose.
@@ -171,20 +172,36 @@ After scoring, assign one primary bucket.
 
 Use these buckets consistently:
 
-- `classification`
-  - wrong intent
-  - wrong product category
-  - wrong direct-answer vs clarification decision
-- `retrieval`
-  - weak sources
-  - wrong retrieval mode
-  - missing or irrelevant context
-- `rules`
-  - deterministic business logic produced the wrong product set or wrong clarification path
-- `synthesis`
-  - final wording was vague, generic, too long, not grounded, or overconfident despite decent inputs
-- `policy/safety`
-  - medically adjacent overreach, unsupported certainty, or unsafe framing
+- `product_fit_mismatch`
+  - recommended product category, weight, subtype, target profile, or selected SKU does not fit the user/profile/question
+  - product `recommendation_meta` conflicts with the visible rationale or misses a key profile constraint
+- `routine_logic_mismatch`
+  - routine step, cadence, order, action, or category relevance is wrong
+  - engine category action does not match the routine context
+- `missing_clarification`
+  - assistant answered directly although a blocking profile/detail gap should have been clarified first
+  - trace shows missing fields or low confidence that materially affected the answer
+- `unnecessary_clarification`
+  - assistant asked a follow-up despite enough context for a useful answer
+  - clarification loop continued when a best-effort answer would be better
+- `retrieval_grounding_gap`
+  - weak sources, wrong retrieval mode, missing internal content, or product/source evidence does not support the answer
+  - matched products are plausible but not grounded in retrieved/source metadata
+- `response_wording_gap`
+  - final answer is vague, generic, too long, badly structured, or fails to explain otherwise-correct inputs
+  - wording makes the recommendation harder to act on despite acceptable trace metadata
+- `overclaim_or_missing_caveat`
+  - medically adjacent overreach, unsupported certainty, guaranteed outcomes, or missing uncertainty/caveat
+  - cosmetic guidance is framed as diagnosis or hard proof
+- `memory_or_profile_miss`
+  - answer ignores, misreads, or contradicts known profile facts, routine history, preferences, or relevant memory
+  - response uses stale profile/memory over the user's current turn
+- `technical_or_trace_gap`
+  - trace is incomplete, malformed, missing key metadata, or indicates a pipeline/instrumentation issue
+  - reviewer cannot determine the failure layer because required trace data is absent
+- `positive_reference`
+  - strong answer worth keeping as an example of desired behavior
+  - use for thumbs-up or sampled traces that demonstrate good routing, product fit, grounding, and wording
 
 Only choose one primary bucket per trace. If multiple things are wrong, choose the earliest failure that most likely caused the rest.
 
@@ -194,7 +211,7 @@ Use short notes in this structure:
 
 ```text
 Verdict: weak
-Primary bucket: synthesis
+Primary bucket: response_wording_gap
 Why: Retrieval found relevant leave-in context, but the final answer stayed generic and asked broad follow-up questions instead of giving category-specific options.
 Next change: tighten synthesis prompt to prefer best-effort concrete recommendations when retrieval confidence is sufficient.
 ```
@@ -216,37 +233,67 @@ Do not overreact to a single trace. Wait for a pattern:
 
 ## What to change based on the bucket
 
-If the main issue is `classification`:
+If the main issue is `product_fit_mismatch`:
 
-- review intent prompt
-- review router thresholds
-- inspect clarification trigger logic
+- inspect `decision_context.engine_trace.categories`
+- inspect selected product `recommendation_meta`
+- review category target-profile mapping and product eligibility rules
+- verify product metadata has the needed fit attributes
 
-If the main issue is `retrieval`:
+If the main issue is `routine_logic_mismatch`:
+
+- inspect engine category actions and routine plan slots
+- review cadence/order/action rules
+- verify response composition did not distort the planned routine
+
+If the main issue is `missing_clarification`:
+
+- review router response mode and slot-completeness signals
+- inspect missing fields on category decisions
+- tighten clarification trigger rules where the answer would otherwise be misleading
+
+If the main issue is `unnecessary_clarification`:
+
+- review router response mode and clarification caps
+- inspect whether available profile/product metadata was enough for a best-effort answer
+- tighten prompts/rules to answer directly when uncertainty is acceptable
+
+If the main issue is `retrieval_grounding_gap`:
 
 - inspect subqueries
 - inspect source ranking
 - inspect retrieval mode choice
 - verify the right internal content exists at all
 
-If the main issue is `rules`:
+If the main issue is `response_wording_gap`:
 
-- inspect deterministic category logic
-- inspect profile slot requirements
-- inspect product scoring or eligibility rules
-
-If the main issue is `synthesis`:
-
-- tighten the main system prompt
+- tighten the main system prompt or final render prompt
 - make answer structure more explicit
 - reduce generic filler
-- require stronger grounding to retrieved evidence and profile facts
+- require clearer use of retrieved evidence and profile facts
 
-If the main issue is `policy/safety`:
+If the main issue is `overclaim_or_missing_caveat`:
 
 - soften certainty
 - add stronger “do not diagnose” framing
 - separate cosmetic advice from medically adjacent advice more clearly
+
+If the main issue is `memory_or_profile_miss`:
+
+- inspect profile snapshot and relevant memory
+- verify current-turn overrides beat stale memory
+- adjust memory/profile summarization or prompt usage
+
+If the main issue is `technical_or_trace_gap`:
+
+- inspect trace persistence and Langfuse metadata
+- fix missing instrumentation before changing product logic
+- add a trace regression test when the missing field is expected in every Trace V2 turn
+
+If the main issue is `positive_reference`:
+
+- save the trace as a reference example
+- compare future regressions against its routing, engine metadata, product metadata, and wording
 
 ## Weekly operating rhythm
 

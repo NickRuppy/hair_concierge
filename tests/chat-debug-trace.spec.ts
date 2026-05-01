@@ -3,7 +3,13 @@ import {
   buildPipelineTraceDraft,
   buildRetrievalDebugEventData,
   finalizeChatTurnTrace,
+  summarizeEngineTraceForLangfuse,
+  summarizeProductsForLangfuse,
 } from "../src/lib/rag/debug-trace"
+import {
+  buildRecommendationEngineRuntimeForChat,
+  buildRecommendationEngineTrace,
+} from "../src/lib/recommendation-engine/chat"
 import type { RetrievedChunk } from "../src/lib/rag/retriever"
 import type {
   ChatPromptSnapshot,
@@ -13,6 +19,15 @@ import type {
   RouterDecision,
   RoutinePlan,
 } from "../src/lib/types"
+
+const legacyResponseComposition = {
+  path: "legacy_synthesizer" as const,
+  migration_mode: "legacy_only" as const,
+  fallback_reason: null,
+  rendering_path: null,
+  plan_type: null,
+  attachment_mode: null,
+}
 
 function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   return {
@@ -226,6 +241,7 @@ function createRoutinePlan(): RoutinePlan {
 
 function createPromptSnapshot(): ChatPromptSnapshot {
   return {
+    kind: "legacy_synth_prompt",
     model: "gpt-4o",
     temperature: 0.7,
     prompt_ref: {
@@ -277,6 +293,7 @@ test.describe("Chat debug trace", () => {
         is_fallback: false,
       },
       prompt: createPromptSnapshot(),
+      response_composition: legacyResponseComposition,
       latencies_ms: {
         classification_ms: 20,
         hair_profile_load_ms: 5,
@@ -297,9 +314,37 @@ test.describe("Chat debug trace", () => {
     expect(draft.decision_context.matched_products[0].top_reasons).toContain(
       "leicht genug fuer feines Haar",
     )
+    expect(draft.decision_context.matched_products[0]).toMatchObject({
+      tradeoffs: [],
+      usage_hint: "Nur in Laengen und Spitzen.",
+      recommendation_meta: expect.objectContaining({
+        category: "conditioner",
+        matched_weight: "light",
+      }),
+    })
+    expect(draft.response_composition).toEqual(legacyResponseComposition)
+    expect(summarizeProductsForLangfuse(draft.decision_context.matched_products)).toEqual([
+      expect.objectContaining({
+        id: "product-1",
+        category: "conditioner",
+        top_reasons: ["leicht genug fuer feines Haar", "passt zum Feuchtigkeitsfokus"],
+        has_usage_hint: true,
+      }),
+    ])
   })
 
   test("finalizes the trace and exposes a compact retrieval debug payload", () => {
+    const profile = createProfile()
+    const engineTrace = buildRecommendationEngineTrace({
+      runtime: buildRecommendationEngineRuntimeForChat({
+        hairProfile: profile,
+        routineItems: [],
+        productCategory: "routine",
+        shouldPlanRoutine: true,
+        message: "Was ist besser, CWC oder OWC?",
+      }),
+    })
+
     const draft = buildPipelineTraceDraft({
       request_id: "req-2",
       started_at: "2026-04-10T10:00:00.000Z",
@@ -311,7 +356,7 @@ test.describe("Chat debug trace", () => {
       classification: createClassification(),
       router_decision: createRouterDecision({ policy_overrides: ["missing_routine_frame"] }),
       clarification_questions: ["Wie oft waeschst du aktuell?"],
-      hair_profile_snapshot: createProfile(),
+      hair_profile_snapshot: profile,
       memory_context: null,
       retrieval_debug: {
         subqueries: ["CWC", "OWC"],
@@ -325,6 +370,7 @@ test.describe("Chat debug trace", () => {
       retrieved_chunks: [createRetrievedChunk()],
       should_plan_routine: true,
       routine_plan: createRoutinePlan(),
+      engine_trace: engineTrace,
       matched_products: [],
       classification_prompt_ref: {
         name: "hair-concierge-intent-classifier",
@@ -333,6 +379,7 @@ test.describe("Chat debug trace", () => {
         is_fallback: false,
       },
       prompt: createPromptSnapshot(),
+      response_composition: legacyResponseComposition,
       latencies_ms: {
         classification_ms: 12,
         hair_profile_load_ms: 4,
@@ -368,13 +415,38 @@ test.describe("Chat debug trace", () => {
     const debugEvent = buildRetrievalDebugEventData(draft)
 
     expect(trace.status).toBe("completed")
+    expect(trace.trace_version).toBe(2)
     expect(trace.latencies_ms.total_ms).toBe(240)
     expect(trace.response.sources).toHaveLength(1)
+    expect(trace.response_composition).toEqual(legacyResponseComposition)
+    expect(trace.decision_context.engine_trace?.categories).toMatchObject({
+      shampoo: expect.objectContaining({ category: "shampoo" }),
+      conditioner: expect.objectContaining({ category: "conditioner" }),
+      mask: expect.objectContaining({ category: "mask" }),
+      leave_in: expect.objectContaining({ category: "leave_in" }),
+      oil: expect.objectContaining({ category: "oil" }),
+      bondbuilder: expect.objectContaining({ category: "bondbuilder" }),
+      deep_cleansing_shampoo: expect.objectContaining({ category: "deep_cleansing_shampoo" }),
+      dry_shampoo: expect.objectContaining({ category: "dry_shampoo" }),
+      peeling: expect.objectContaining({ category: "peeling" }),
+    })
     expect(debugEvent).toMatchObject({
       request_id: "req-2",
       retrieval_mode: "hybrid",
+      response_composer_path: "legacy_synthesizer",
       clarification_questions: ["Wie oft waeschst du aktuell?"],
       final_context_count: 1,
+    })
+    expect(summarizeEngineTraceForLangfuse(engineTrace)).toMatchObject({
+      requested_category: "routine",
+      damage: expect.objectContaining({
+        confidence: expect.any(String),
+        active_damage_driver_count: expect.any(Number),
+      }),
+      intervention: expect.objectContaining({
+        deferred_step_count: expect.any(Number),
+      }),
+      relevant_categories: expect.any(Array),
     })
   })
 })

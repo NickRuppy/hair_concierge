@@ -6,7 +6,12 @@ import { evaluateRoute } from "@/lib/rag/router"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
 import { PRODUCT_INTENTS } from "@/lib/rag/retrieval-constants"
-import { buildPipelineTraceDraft } from "@/lib/rag/debug-trace"
+import {
+  buildMatchedProductTrace,
+  buildPipelineTraceDraft,
+  summarizeEngineTraceForLangfuse,
+  summarizeProductsForLangfuse,
+} from "@/lib/rag/debug-trace"
 import {
   buildRoutineClarificationQuestions,
   buildRoutinePlan,
@@ -252,6 +257,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         clarification_reason: result.clarification_reason ?? null,
         policy_overrides: result.policy_overrides,
         category_requirements: summarizeEngineCategoryDecision(categoryDecision),
+        engine_summary: summarizeEngineTraceForLangfuse(engineTrace),
       }),
     },
   )
@@ -396,6 +402,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         output: (result) => ({
           model: result.debug.prompt.model,
           prompt_ref: result.debug.prompt.prompt_ref,
+          response_composition: result.debug.response_composition,
         }),
       },
     )
@@ -422,6 +429,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       matched_products: [],
       classification_prompt_ref: classificationPromptRef,
       prompt: synthesisResult.debug.prompt,
+      response_composition: synthesisResult.debug.response_composition,
       latencies_ms: {
         classification_ms: classificationMs,
         hair_profile_load_ms: hairProfileLoadMs,
@@ -521,6 +529,9 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         asType: "chain",
         output: (result) => ({
           matched_product_count: result.matchedProducts.length,
+          selected_products: summarizeProductsForLangfuse(
+            buildMatchedProductTrace(result.matchedProducts),
+          ),
         }),
       },
     )
@@ -546,6 +557,9 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         asType: "chain",
         output: (result) => ({
           matched_product_count: result.products.length,
+          selected_products: summarizeProductsForLangfuse(
+            buildMatchedProductTrace(result.products),
+          ),
         }),
       },
     )
@@ -602,6 +616,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       output: (result) => ({
         model: result.debug.prompt.model,
         prompt_ref: result.debug.prompt.prompt_ref,
+        response_composition: result.debug.response_composition,
       }),
     },
   )
@@ -627,6 +642,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     matched_products: matchedProducts ?? [],
     classification_prompt_ref: classificationPromptRef,
     prompt: synthesisResult.debug.prompt,
+    response_composition: synthesisResult.debug.response_composition,
     latencies_ms: {
       classification_ms: classificationMs,
       hair_profile_load_ms: hairProfileLoadMs,

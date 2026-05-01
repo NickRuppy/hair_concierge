@@ -37,6 +37,7 @@ import {
   type SelectProductsToolResult,
 } from "@/lib/agent/tools/select-products"
 import {
+  buildRecommendationEngineRuntimeForChat,
   buildRecommendationEngineTrace,
   getRuntimeCategoryDecision,
 } from "@/lib/recommendation-engine"
@@ -71,6 +72,9 @@ type ProductionUserContext = UserContextProjection & {
 
 interface ProductionAgentPipelineDeps {
   modelClient?: AgentModelClient
+  loadConversationHistory?: (conversationId: string) => Promise<Message[]>
+  getUserContext?: (userId: string) => Promise<UserContextProjection>
+  loadUserMemoryContext?: (userId: string) => Promise<UserMemoryContext>
 }
 
 async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; durationMs: number }> {
@@ -266,6 +270,7 @@ function buildPromptSnapshot(params: {
   packet: AgentRuntimePacket
 }): ChatPromptSnapshot {
   return {
+    kind: "agent_final_render",
     model: DEFAULT_CHAT_COMPLETION_MODEL,
     temperature: 0,
     prompt_ref: promptRef("bounded-agent-final-render"),
@@ -373,9 +378,9 @@ export async function runProductionAgentPipeline(
     { result: userContextBase, durationMs: contextLoadMs },
     { result: memoryContext, durationMs: memoryLoadMs },
   ] = await Promise.all([
-    measureAsync(() => loadConversationHistory(conversationId)),
-    measureAsync(() => getUserContext(userId)),
-    measureAsync(() => loadUserMemoryContext(userId)),
+    measureAsync(() => (deps.loadConversationHistory ?? loadConversationHistory)(conversationId)),
+    measureAsync(() => (deps.getUserContext ?? getUserContext)(userId)),
+    measureAsync(() => (deps.loadUserMemoryContext ?? loadUserMemoryContext)(userId)),
   ])
 
   const userContext: ProductionUserContext = {
@@ -410,15 +415,26 @@ export async function runProductionAgentPipeline(
     runtimePacket: result.runtime_packet,
     selectedProducts: selectedProductsResult?.products ?? [],
   })
+  const engineRuntime =
+    selectedProductsResult?.runtime ??
+    buildRecommendationEngineRuntimeForChat({
+      hairProfile: userContext.profile,
+      routineItems: userContext.routine_inventory,
+      productCategory,
+      shouldPlanRoutine: route.user_job === "routine_structure",
+      message,
+    })
   const categoryDecision = selectedProductsResult
     ? (getRuntimeCategoryDecision(
-        selectedProductsResult.runtime,
+        engineRuntime,
         selectedProductsResult.projection.category as ProductCategory,
       ) as ChatCategoryDecision | null)
-    : null
-  const engineTrace: RecommendationEngineTrace | undefined = selectedProductsResult
-    ? buildRecommendationEngineTrace({ runtime: selectedProductsResult.runtime })
-    : undefined
+    : productCategory !== "routine"
+      ? (getRuntimeCategoryDecision(engineRuntime, productCategory) as ChatCategoryDecision | null)
+      : null
+  const engineTrace: RecommendationEngineTrace = buildRecommendationEngineTrace({
+    runtime: engineRuntime,
+  })
   const prompt = buildPromptSnapshot({
     message,
     packet: result.runtime_packet,
@@ -455,6 +471,14 @@ export async function runProductionAgentPipeline(
     matched_products: matchedProducts,
     classification_prompt_ref: promptRef("bounded-agent-route-classification"),
     prompt,
+    response_composition: {
+      path: "agent_final_render",
+      migration_mode: "legacy_only",
+      fallback_reason: null,
+      rendering_path: null,
+      plan_type: "agent_v1",
+      attachment_mode: null,
+    },
     latencies_ms: {
       classification_ms: agentMs,
       hair_profile_load_ms: contextLoadMs,
