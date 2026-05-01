@@ -10,8 +10,11 @@ import type {
   InterventionStep,
   NormalizedProfile,
   PeelingType,
+  ResetAssessment,
   ScalpTypeFocus,
 } from "@/lib/recommendation-engine/types"
+import { buildResetAssessment } from "@/lib/recommendation-engine/assessments/reset"
+import { emptyRecommendationRequestContext } from "@/lib/recommendation-engine/request-context"
 import { deriveLeaveInStylingContextFromStages } from "@/lib/profile/signal-derivations"
 import type { ProductFrequency } from "@/lib/vocabulary"
 
@@ -22,13 +25,6 @@ const PRODUCT_FREQUENCY_RANK: Record<ProductFrequency, number> = {
   "5_6x": 3,
   daily: 4,
 }
-
-const RESIDUE_PRONE_CATEGORIES: Array<Exclude<EngineCategoryId, "routine">> = [
-  "oil",
-  "leave_in",
-  "mask",
-  "dry_shampoo",
-]
 
 export interface BuildupResetNeed {
   level: "none" | "low" | "moderate" | "high"
@@ -171,73 +167,24 @@ export function hasScalpDrynessOrIrritationRisk(
 }
 
 export function deriveBuildupResetNeed(profile: NormalizedProfile): BuildupResetNeed {
-  let score = 0
-  const reasonCodes = new Set<string>()
+  return mapResetAssessmentToLegacyBuildupNeed(
+    buildResetAssessment(profile, emptyRecommendationRequestContext()),
+  )
+}
 
-  const dryShampooFrequency = getRoutineFrequencyBand(profile, "dry_shampoo")
-  const oilyScalp = profile.scalpType === "oily" || profile.concerns.includes("oily_scalp")
-  const residueProneLoad = RESIDUE_PRONE_CATEGORIES.filter(
-    (category) => profile.routineInventory[category] !== null,
-  ).length
-
-  if (oilyScalp) {
-    score += 1
-    reasonCodes.add("oily_scalp")
-  }
-
-  if (residueProneLoad >= 3) {
-    score += 2
-    reasonCodes.add("heavy_residue_prone_routine")
-  } else if (residueProneLoad >= 2) {
-    score += 1
-    reasonCodes.add("heavy_residue_prone_routine")
-  }
-
-  if (isFrequencyAtLeast(dryShampooFrequency, "5_6x")) {
-    score += 2
-    reasonCodes.add("frequent_dry_shampoo_use")
-    reasonCodes.add("dry_shampoo_reset_pressure")
-  } else if (isFrequencyAtLeast(dryShampooFrequency, "3_4x")) {
-    score += 1
-    reasonCodes.add("dry_shampoo_reset_pressure")
-  }
-
-  if (
-    (profile.washFrequency === "once_weekly" || profile.washFrequency === "rarely") &&
-    (oilyScalp || residueProneLoad >= 2 || dryShampooFrequency !== null)
-  ) {
-    score += 1
-    reasonCodes.add("low_wash_cadence_relative_to_load")
-  }
-
-  if (oilyScalp && residueProneLoad >= 2) {
-    reasonCodes.add("oily_scalp_plus_residue_load")
-  }
-
-  if (score <= 0) {
-    return {
-      level: "none",
-      reasonCodes: [],
-    }
-  }
-
-  if (score === 1) {
-    return {
-      level: "low",
-      reasonCodes: Array.from(reasonCodes),
-    }
-  }
-
-  if (score <= 3) {
-    return {
-      level: "moderate",
-      reasonCodes: Array.from(reasonCodes),
-    }
+export function mapResetAssessmentToLegacyBuildupNeed(
+  assessment: ResetAssessment,
+): BuildupResetNeed {
+  const levelByResetLevel: Record<ResetAssessment["level"], BuildupResetNeed["level"]> = {
+    none: "none",
+    possible: "low",
+    likely: "moderate",
+    strong: "high",
   }
 
   return {
-    level: "high",
-    reasonCodes: Array.from(reasonCodes),
+    level: levelByResetLevel[assessment.level],
+    reasonCodes: assessment.triggers,
   }
 }
 

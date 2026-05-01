@@ -9,6 +9,7 @@ import type { MatchedProduct } from "../src/lib/rag/product-matcher"
 import type { SelectableProductCategory } from "../src/lib/agent/tools/select-products"
 import type { RecommendationEngineRuntime } from "../src/lib/recommendation-engine/runtime"
 import type {
+  DeepCleansingShampooCategoryDecision,
   MaskCategoryDecision,
   ShampooCategoryDecision,
 } from "../src/lib/recommendation-engine/types"
@@ -192,6 +193,11 @@ function createRuntimeStub(
     rawInput: {} as RecommendationEngineRuntime["rawInput"],
     requestContext: {
       requestedCategory: null,
+      resetTriggerTerms: [],
+      resetTriggerSources: [],
+      resetFocusRequest: null,
+      colorSafeRequest: false,
+      scalpTreatmentIntent: false,
       maskIntensityRequest: null,
       leaveInHeatProtectionRequest: null,
       leaveInSeparateHeatProtectantMentioned: false,
@@ -204,6 +210,15 @@ function createRuntimeStub(
     normalized: {} as RecommendationEngineRuntime["normalized"],
     damage: {} as RecommendationEngineRuntime["damage"],
     careNeeds: {} as RecommendationEngineRuntime["careNeeds"],
+    reset: {
+      level: "none",
+      triggers: [],
+      triggerSources: [],
+      resetFocus: null,
+      overloadRisk: "none",
+      richOptionalCareRisk: false,
+      cautionFlags: [],
+    },
     plan: {} as RecommendationEngineRuntime["plan"],
     categories: {
       shampoo: {} as RecommendationEngineRuntime["categories"]["shampoo"],
@@ -256,6 +271,22 @@ function createRelevantShampooDecision(
     notes: [],
     ...overrides,
   }
+}
+
+function createDeepCleansingScalpTreatmentRuntimeStub(): RecommendationEngineRuntime {
+  const runtime = createRuntimeStub()
+  const decision: DeepCleansingShampooCategoryDecision = {
+    category: "deep_cleansing_shampoo",
+    relevant: true,
+    action: "behavior_change_only",
+    planReasonCodes: ["scalp_treatment_needed"],
+    currentInventory: null,
+    targetProfile: null,
+    notes: ["scalp_treatment_needed"],
+  }
+
+  runtime.categories.deepCleansingShampoo = decision
+  return runtime
 }
 
 test("projectSelectedProducts returns authoritative shampoo recommendation payload", () => {
@@ -2631,6 +2662,20 @@ test("projectSelectedProducts uses mask-specific missing-info for explicit mask 
       detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Masken-Auswahl.",
     },
   ])
+})
+
+test("projectSelectedProducts redirects deep-cleansing scalp treatment requests without products", () => {
+  const result = projectSelectedProducts(
+    [createMatchedProduct("reset", 0.9)],
+    LOW_DAMAGE_PROFILE,
+    "deep_cleansing_shampoo",
+    createDeepCleansingScalpTreatmentRuntimeStub(),
+  )
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "caution_without_products")
+  assert.deepEqual(result.products, [])
+  assert.match(result.category_guidance, /Keine Produktkarten/)
 })
 
 test("selectProducts tool only accepts engine-backed categories", () => {

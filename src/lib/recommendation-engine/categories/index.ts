@@ -7,6 +7,7 @@ import { buildMaskCategoryDecision } from "@/lib/recommendation-engine/categorie
 import { buildOilCategoryDecision } from "@/lib/recommendation-engine/categories/oil"
 import { buildPeelingCategoryDecision } from "@/lib/recommendation-engine/categories/peeling"
 import { buildShampooCategoryDecision } from "@/lib/recommendation-engine/categories/shampoo"
+import { buildResetAssessment } from "@/lib/recommendation-engine/assessments/reset"
 import type {
   CategoryRecommendationSet,
   CareNeedAssessment,
@@ -14,6 +15,7 @@ import type {
   InterventionPlan,
   NormalizedProfile,
   RecommendationRequestContext,
+  ResetAssessment,
 } from "@/lib/recommendation-engine/types"
 
 export function buildCategoryRecommendationSet(
@@ -22,15 +24,31 @@ export function buildCategoryRecommendationSet(
   careNeeds: CareNeedAssessment,
   plan: InterventionPlan,
   requestContext: RecommendationRequestContext,
+  reset?: ResetAssessment,
 ): CategoryRecommendationSet {
+  const resetAssessment = reset ?? buildResetAssessment(profile, requestContext)
+
   return {
     shampoo: buildShampooCategoryDecision(profile, plan),
     conditioner: buildConditionerCategoryDecision(profile, damage, plan),
-    mask: buildMaskCategoryDecision(profile, damage, plan, requestContext),
-    leaveIn: buildLeaveInCategoryDecision(profile, damage, careNeeds, plan, requestContext),
-    oil: buildOilCategoryDecision(profile, requestContext),
+    mask: buildMaskCategoryDecision(profile, damage, plan, requestContext, resetAssessment),
+    leaveIn: buildLeaveInCategoryDecision(
+      profile,
+      damage,
+      careNeeds,
+      plan,
+      requestContext,
+      resetAssessment,
+    ),
+    oil: buildOilCategoryDecision(profile, requestContext, resetAssessment),
     bondbuilder: buildBondbuilderCategoryDecision(profile, damage, plan),
-    deepCleansingShampoo: buildDeepCleansingShampooCategoryDecision(profile, damage, plan),
+    deepCleansingShampoo: buildDeepCleansingShampooCategoryDecision(
+      profile,
+      damage,
+      plan,
+      requestContext,
+      resetAssessment,
+    ),
     dryShampoo: buildDryShampooCategoryDecision(profile, plan),
     peeling: buildPeelingCategoryDecision(profile, damage, plan),
   }
