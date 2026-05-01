@@ -110,9 +110,8 @@ interface UpdatedSub {
 }
 
 /**
- * In Stripe API version 2025-08-27.basil, current_period_end moved from the
- * Subscription root to each SubscriptionItem. Read item first, fall back to
- * root for older API versions.
+ * Recent Stripe API versions expose current_period_end on each
+ * SubscriptionItem. Read item first, fall back to root for older API versions.
  */
 function subPeriodEndIso(sub: RetrievedSub | UpdatedSub): string {
   const itemEnd = sub.items.data[0]?.current_period_end
