@@ -38,6 +38,11 @@ import {
   PRODUCT_PEELING_TYPES,
   PRODUCT_SCALP_TYPE_FOCUSES,
 } from "@/lib/product-specs/constants"
+import {
+  COLOR_TREATED_SUITABILITIES,
+  RESET_FOCUSES,
+  RESET_INTENSITIES,
+} from "@/lib/recommendation-engine/contracts"
 
 export const hairProfileFullSchema = z.object({
   hair_texture: z.enum(HAIR_TEXTURES).nullable(),
@@ -85,6 +90,9 @@ const bondbuilderSpecsSchema = z.object({
 
 const deepCleansingShampooSpecsSchema = z.object({
   scalp_type_focus: z.enum(PRODUCT_SCALP_TYPE_FOCUSES),
+  reset_intensity: z.enum(RESET_INTENSITIES).default("medium"),
+  reset_focus: z.enum(RESET_FOCUSES).default("general_buildup"),
+  color_treated_suitability: z.enum(COLOR_TREATED_SUITABILITIES).default("unsuitable_or_unknown"),
 })
 
 const dryShampooSpecsSchema = z.object({

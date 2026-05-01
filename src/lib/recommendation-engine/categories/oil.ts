@@ -3,6 +3,7 @@ import type {
   OilCategoryDecision,
   RecommendationRequestContext,
   NormalizedProfile,
+  ResetAssessment,
 } from "@/lib/recommendation-engine/types"
 
 function hasOilScalpCaution(profile: NormalizedProfile): boolean {
@@ -80,6 +81,7 @@ function buildOilNoRecommendationDecision(
 export function buildOilCategoryDecision(
   profile: NormalizedProfile,
   requestContext: RecommendationRequestContext,
+  reset?: ResetAssessment,
 ): OilCategoryDecision {
   const oilRequested =
     requestContext.requestedCategory === "oil" || requestContext.oilPurpose !== null
@@ -103,6 +105,10 @@ export function buildOilCategoryDecision(
 
   if (noRecommendationReason) {
     return buildOilNoRecommendationDecision(profile, noRecommendationReason)
+  }
+
+  if (reset?.richOptionalCareRisk && reset.level === "strong") {
+    return buildOilNoRecommendationDecision(profile, "overload_risk")
   }
 
   if (!purpose) {

@@ -2,11 +2,18 @@ import { inferOilNoRecommendationReason, inferOilPurposeFromMessage } from "@/li
 import type {
   EngineCategoryId,
   RecommendationRequestContext,
+  ResetFocus,
+  ResetTriggerSource,
 } from "@/lib/recommendation-engine/types"
 
 export function emptyRecommendationRequestContext(): RecommendationRequestContext {
   return {
     requestedCategory: null,
+    resetTriggerTerms: [],
+    resetTriggerSources: [],
+    resetFocusRequest: null,
+    colorSafeRequest: false,
+    scalpTreatmentIntent: false,
     maskIntensityRequest: null,
     leaveInHeatProtectionRequest: null,
     leaveInSeparateHeatProtectantMentioned: false,
@@ -96,6 +103,79 @@ function normalizeMessage(message: string): string {
     .replace(/[\u0300-\u036f]/g, "")
 }
 
+function inferResetSignalsFromMessage(message: string): {
+  terms: string[]
+  sources: ResetTriggerSource[]
+  focus: ResetFocus | null
+  colorSafeRequest: boolean
+  scalpTreatmentIntent: boolean
+} {
+  const normalized = normalizeMessage(message)
+  const terms = new Set<string>()
+  const sources = new Set<ResetTriggerSource>()
+  let focus: ResetFocus | null = null
+
+  const add = (term: string, source: ResetTriggerSource) => {
+    terms.add(term)
+    sources.add(source)
+  }
+
+  if (
+    /\btiefenreinig\w*\b|\breinigungsshampoo\b|\bclarify(?:ing)?\b|\bclarifying\s+shampoo\b|\bdetox\s+shampoo\b|\breset\b|\baufbau(?:-|\s*)reset\b|\bbuildup\b|\bbuild[-\s]?up\b/.test(
+      normalized,
+    )
+  ) {
+    add("explicit_reset_request", "explicit_request")
+  }
+
+  if (
+    /\bbelegt\w*\b|\bwachsig\w*\b|\bbeschwert\w*\b|\bstumpf\w*\b|\bstraehnig\w*\b|\bsträhnig\w*\b|\bklebrig\w*\b|\bproduktig\w*\b|\bfettig\s+nach\s+dem\s+waschen\b|\bpflege\s+wirkt\s+nicht\b|\bprodukte?\s+(?:wirken|funktionieren)\s+nicht\b/.test(
+      normalized,
+    )
+  ) {
+    add("coated_heavy_or_waxy_hair", "symptom")
+  }
+
+  if (
+    /\bkalk\w*\b|\bharte[msn]?\s+wasser\b|\bhartes\s+wasser\b|\bhard\s+water\b|\bchlor\w*\b|\bschwimm\w*\b|\bpool\b|\bmineral\w*\b|\bmetall\w*\b|\bmetal\w*\b/.test(
+      normalized,
+    )
+  ) {
+    add("mineral_chlorine_or_hard_water_context", "environment")
+    focus = "mineral_chlorine"
+  }
+
+  if (
+    /\bstyling\s*reste\b|\bproduktreste\b|\bproduktablager\w*\b|\bablager\w*\b|\bbuild[-\s]?up\b|\bbuildup\b/.test(
+      normalized,
+    )
+  ) {
+    add("general_product_buildup_context", "symptom")
+    if (!focus) focus = "general_buildup"
+  }
+
+  if (
+    focus === "mineral_chlorine" &&
+    (terms.has("explicit_reset_request") || terms.has("general_product_buildup_context"))
+  ) {
+    focus = "broad_spectrum"
+  }
+
+  return {
+    terms: Array.from(terms),
+    sources: Array.from(sources),
+    focus,
+    colorSafeRequest:
+      /\bfarbschon\w*\b|\bcolor[-\s]?safe\b|\bcolor[-\s]?treated\b|\bgefärbt\w*\b|\bgefarbt\w*\b/.test(
+        normalized,
+      ),
+    scalpTreatmentIntent:
+      /\bschuppen\b|\bjuck\w*\b|\bjuckreiz\b|\bgereizt\w*\b|\birritation\b|\bekzem\b|\bseb(?:orrhoisch\w*)?\b|\bhaarausfall\b|\bhair\s*loss\b/.test(
+        normalized,
+      ),
+  }
+}
+
 function inferLeaveInHeatProtectionRequestFromMessage(message: string): "high" | null {
   const normalized = normalizeMessage(message)
 
@@ -148,9 +228,18 @@ export function buildRecommendationRequestContext(params: {
     requestedCategory === "oil" || requestedCategory === "routine"
       ? inferOilPurposeFromMessage(message)
       : null
+  const resetSignals =
+    requestedCategory === "deep_cleansing_shampoo" || requestedCategory === "routine"
+      ? inferResetSignalsFromMessage(message)
+      : inferResetSignalsFromMessage(message)
 
   return {
     requestedCategory,
+    resetTriggerTerms: resetSignals.terms,
+    resetTriggerSources: resetSignals.sources,
+    resetFocusRequest: resetSignals.focus,
+    colorSafeRequest: resetSignals.colorSafeRequest,
+    scalpTreatmentIntent: resetSignals.scalpTreatmentIntent,
     maskIntensityRequest:
       requestedCategory === "mask" || requestedCategory === "routine"
         ? inferMaskIntensityRequestFromMessage(message)

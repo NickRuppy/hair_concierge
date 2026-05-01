@@ -34,6 +34,7 @@ import type {
   CANONICAL_WEIGHTS,
   CATEGORY_FIT_STATUSES,
   CONFIDENCE_LEVELS,
+  COLOR_TREATED_SUITABILITIES,
   DAMAGE_LEVELS,
   ENGINE_CATEGORY_IDS,
   INVENTORY_CATEGORIES,
@@ -41,6 +42,9 @@ import type {
   PEELING_TYPES,
   RECOMMENDATION_ACTIONS,
   REPAIR_PRIORITIES,
+  RESET_FOCUSES,
+  RESET_INTENSITIES,
+  RESET_LEVELS,
   SCALP_TYPE_FOCUSES,
 } from "@/lib/recommendation-engine/contracts"
 
@@ -63,9 +67,20 @@ export type PeelingType = (typeof PEELING_TYPES)[number]
 export type LeaveInCareTarget = (typeof LEAVE_IN_CARE_TARGETS)[number]
 export type RecommendationAction = (typeof RECOMMENDATION_ACTIONS)[number]
 export type ConfidenceLevel = (typeof CONFIDENCE_LEVELS)[number]
+export type ResetLevel = (typeof RESET_LEVELS)[number]
+export type ResetFocus = (typeof RESET_FOCUSES)[number]
+export type ResetIntensity = (typeof RESET_INTENSITIES)[number]
+export type ColorTreatedSuitability = (typeof COLOR_TREATED_SUITABILITIES)[number]
+
+export type ResetTriggerSource = "symptom" | "routine_exposure" | "environment" | "explicit_request"
 
 export interface RecommendationRequestContext {
   requestedCategory: EngineCategoryId | null
+  resetTriggerTerms: string[]
+  resetTriggerSources: ResetTriggerSource[]
+  resetFocusRequest: ResetFocus | null
+  colorSafeRequest: boolean
+  scalpTreatmentIntent: boolean
   maskIntensityRequest: "intensive" | null
   leaveInHeatProtectionRequest: Exclude<LeaveInHeatProtectionNeed, "none"> | null
   leaveInSeparateHeatProtectantMentioned: boolean
@@ -162,6 +177,16 @@ export interface CareNeedAssessment {
   definitionSupportNeed: DamageLevel
   thermalProtectionNeed: DamageLevel
   volumeDirection: "volume" | "less_volume" | "neutral"
+}
+
+export interface ResetAssessment {
+  level: ResetLevel
+  triggers: string[]
+  triggerSources: ResetTriggerSource[]
+  resetFocus: ResetFocus | null
+  overloadRisk: ResetLevel
+  richOptionalCareRisk: boolean
+  cautionFlags: string[]
 }
 
 export interface InterventionStep {
@@ -291,7 +316,12 @@ export type BondbuilderCategoryDecision = CategoryDecisionBase<
 
 export interface DeepCleansingShampooTargetProfile {
   scalpTypeFocus: ScalpTypeFocus | null
-  resetNeedLevel: DamageLevel
+  resetNeedLevel: ResetLevel
+  resetFocus: ResetFocus | null
+  targetIntensity: ResetIntensity | null
+  colorTreatedCaution: boolean
+  colorSafeRequest: boolean
+  cautionFlags: string[]
 }
 
 export type DeepCleansingShampooCategoryDecision = CategoryDecisionBase<

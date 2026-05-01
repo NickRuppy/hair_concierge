@@ -5,6 +5,7 @@ import {
 } from "@/lib/recommendation-engine/adapters/from-persistence"
 import { buildCareNeedAssessment } from "@/lib/recommendation-engine/assessments/care-needs"
 import { buildDamageAssessment } from "@/lib/recommendation-engine/assessments/damage"
+import { buildResetAssessment } from "@/lib/recommendation-engine/assessments/reset"
 import { buildCategoryRecommendationSet } from "@/lib/recommendation-engine/categories"
 import { normalizeRecommendationInput } from "@/lib/recommendation-engine/normalize"
 import { buildInterventionPlan } from "@/lib/recommendation-engine/planner/intervention"
@@ -17,6 +18,7 @@ import type {
   NormalizedProfile,
   RecommendationRequestContext,
   RawRecommendationInput,
+  ResetAssessment,
 } from "@/lib/recommendation-engine/types"
 
 export interface RecommendationEngineRuntime {
@@ -25,6 +27,7 @@ export interface RecommendationEngineRuntime {
   normalized: NormalizedProfile
   damage: DamageAssessment
   careNeeds: CareNeedAssessment
+  reset: ResetAssessment
   plan: InterventionPlan
   categories: CategoryRecommendationSet
   unsupportedRoutineCategories: string[]
@@ -39,13 +42,15 @@ export function buildRecommendationEngineRuntimeFromPersistence(
   const normalized = normalizeRecommendationInput(adapted.input)
   const damage = buildDamageAssessment(normalized)
   const careNeeds = buildCareNeedAssessment(normalized, damage)
-  const plan = buildInterventionPlan(normalized, damage, careNeeds)
+  const reset = buildResetAssessment(normalized, requestContext)
+  const plan = buildInterventionPlan(normalized, damage, careNeeds, reset)
   const categories = buildCategoryRecommendationSet(
     normalized,
     damage,
     careNeeds,
     plan,
     requestContext,
+    reset,
   )
 
   return {
@@ -54,6 +59,7 @@ export function buildRecommendationEngineRuntimeFromPersistence(
     normalized,
     damage,
     careNeeds,
+    reset,
     plan,
     categories,
     unsupportedRoutineCategories: adapted.unsupportedRoutineCategories,
