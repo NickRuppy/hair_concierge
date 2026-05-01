@@ -22,6 +22,8 @@ jobs:
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder' }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'sk-placeholder' }}
       COHERE_API_KEY: ${{ secrets.COHERE_API_KEY || 'placeholder' }}
+      HAS_LIVE_SUPABASE_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}
+      HAS_LIVE_AI_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' && secrets.OPENAI_API_KEY != '' && secrets.COHERE_API_KEY != '' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -53,13 +55,17 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
       - name: Run Playwright smoke tests
+        if: env.HAS_LIVE_SUPABASE_SECRETS == 'true'
         run: npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @ci --project=chromium'
+      - name: Skip Playwright smoke tests
+        if: env.HAS_LIVE_SUPABASE_SECRETS != 'true'
+        run: echo "Live Supabase secrets are unavailable; skipping Supabase-backed Playwright smoke tests"
       - name: Run live chat smoke eval
-        if: steps.changes.outputs.chat_eval == 'true'
+        if: steps.changes.outputs.chat_eval == 'true' && env.HAS_LIVE_AI_SECRETS == 'true'
         run: npx start-server-and-test 'npm run start' http://localhost:3000 'npm run test:chat:ci'
       - name: Skip live chat smoke eval
-        if: steps.changes.outputs.chat_eval != 'true'
-        run: echo "No AI/chat/recommendation paths changed; skipping live chat smoke eval"
+        if: steps.changes.outputs.chat_eval != 'true' || env.HAS_LIVE_AI_SECRETS != 'true'
+        run: echo "No AI/chat/recommendation paths changed, or live AI/Supabase secrets are unavailable; skipping live chat smoke eval"
       - name: Run retrieval metrics gate
         if: steps.changes.outputs.retrieval_eval == 'true'
         run: npm run test:retrieval:ci

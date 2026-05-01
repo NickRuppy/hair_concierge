@@ -13,6 +13,7 @@ import type {
   LeaveInStylingContext,
   NormalizedProfile,
   RecommendationRequestContext,
+  ResetAssessment,
 } from "@/lib/recommendation-engine/types"
 import type {
   LeaveInApplicationStage,
@@ -277,6 +278,7 @@ export function buildLeaveInCategoryDecision(
   careNeeds: CareNeedAssessment,
   plan: InterventionPlan,
   requestContext?: RecommendationRequestContext,
+  reset?: ResetAssessment,
 ): LeaveInCategoryDecision {
   const plannedStep = getPlannedStep(plan, "leave_in")
   const explicitRequest = requestContext?.requestedCategory === "leave_in"
@@ -307,6 +309,7 @@ export function buildLeaveInCategoryDecision(
     : step.reasonCodes
 
   const notes: string[] = []
+  const resetFirst = reset?.richOptionalCareRisk && reset.level === "strong"
   const stylingContext = deriveLeaveInStylingContext(profile)
   if (!stylingContext) {
     notes.push("leave_in_styling_context_unclear")
@@ -317,7 +320,10 @@ export function buildLeaveInCategoryDecision(
     notes.push("leave_in_relationship_needs_thickness_and_density")
   }
 
-  const targetWeight = requestContext?.leaveInWeightRequest ?? deriveTargetWeight(profile)
+  const targetWeight =
+    resetFirst && !requestContext?.leaveInWeightRequest
+      ? "light"
+      : (requestContext?.leaveInWeightRequest ?? deriveTargetWeight(profile))
   if (!targetWeight) {
     notes.push("leave_in_weight_needs_thickness_and_density")
   }
@@ -334,12 +340,20 @@ export function buildLeaveInCategoryDecision(
       ? "heat_style"
       : stylingContext
   const careBenefits = deriveCareTargets(needBucket, damage, careNeeds, heatProtectionNeed)
+  if (resetFirst) {
+    notes.push("leave_in_lightweight_or_pause_until_reset")
+  }
 
   return {
     category: "leave_in",
     relevant: true,
-    action: step.action,
-    planReasonCodes,
+    action:
+      resetFirst && step.action === "add" && !explicitRequest
+        ? "behavior_change_only"
+        : step.action,
+    planReasonCodes: resetFirst
+      ? [...planReasonCodes, "reset_first_overload_risk"]
+      : planReasonCodes,
     currentInventory: profile.routineInventory.leave_in,
     targetProfile: {
       needBucket,
