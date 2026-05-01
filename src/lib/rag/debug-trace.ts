@@ -13,12 +13,14 @@ import type {
   Product,
   ProductCategory,
   RecommendationEngineTrace,
+  ResponseCompositionTrace,
   RoutinePlan,
   RouterDecision,
 } from "@/lib/types"
 
-const CHAT_TURN_TRACE_VERSION = 1
+const CHAT_TURN_TRACE_VERSION = 2
 const CONTENT_PREVIEW_LIMIT = 240
+const SUMMARY_ITEM_LIMIT = 3
 
 export interface PipelineTraceDraft {
   request_id: string
@@ -46,6 +48,7 @@ export interface PipelineTraceDraft {
     synthesis: LangfusePromptReference
   }
   prompt: ChatPromptSnapshot
+  response_composition: ResponseCompositionTrace
   latencies_ms: ChatTraceLatencyBreakdown
 }
 
@@ -78,6 +81,67 @@ export function buildMatchedProductTrace(products: Product[]): ChatMatchedProduc
     category: product.category,
     score: product.recommendation_meta?.score ?? null,
     top_reasons: product.recommendation_meta?.top_reasons ?? [],
+    tradeoffs: product.recommendation_meta?.tradeoffs ?? [],
+    usage_hint: product.recommendation_meta?.usage_hint ?? null,
+    recommendation_meta: product.recommendation_meta ?? null,
+  }))
+}
+
+function compactList(values: string[] | null | undefined): string[] {
+  return (values ?? []).filter(Boolean).slice(0, SUMMARY_ITEM_LIMIT)
+}
+
+export function summarizeEngineTraceForLangfuse(
+  trace: RecommendationEngineTrace | null | undefined,
+): Record<string, unknown> | null {
+  if (!trace) return null
+
+  const relevant_categories = Object.values(trace.categories)
+    .filter((decision) => decision.relevant)
+    .map((decision) => ({
+      category: decision.category,
+      action: decision.action,
+      plan_reason_codes: compactList(decision.planReasonCodes),
+      has_current_inventory: Boolean(decision.currentInventory),
+      has_target_profile: Boolean(decision.targetProfile),
+    }))
+
+  return {
+    requested_category: trace.request_context.requestedCategory,
+    damage: {
+      overall_level: trace.damage.overallLevel,
+      structural_level: trace.damage.structuralLevel,
+      repair_priority: trace.damage.repairPriority,
+      confidence: trace.damage.confidence,
+      active_damage_driver_count: trace.damage.activeDamageDrivers.length,
+      missing_input_count: trace.damage.missingInputs.length,
+    },
+    care_needs: trace.care_needs,
+    intervention: {
+      steps: trace.intervention_plan.steps.map((step) => ({
+        category: step.category,
+        action: step.action,
+        reason_codes: compactList(step.reasonCodes),
+      })),
+      deferred_step_count: trace.intervention_plan.deferredSteps.length,
+    },
+    relevant_categories,
+    unsupported_routine_categories: compactList(trace.unsupported_routine_categories),
+  }
+}
+
+export function summarizeProductsForLangfuse(
+  products: ChatMatchedProductTrace[],
+): Array<Record<string, unknown>> {
+  return products.slice(0, SUMMARY_ITEM_LIMIT).map((product) => ({
+    id: product.id,
+    name: product.name,
+    brand: product.brand,
+    category: product.category,
+    score: product.score,
+    top_reasons: compactList(product.top_reasons),
+    tradeoffs: compactList(product.tradeoffs),
+    has_usage_hint: Boolean(product.usage_hint),
   }))
 }
 
@@ -104,6 +168,7 @@ export function buildPipelineTraceDraft(params: {
   matched_products?: Product[]
   classification_prompt_ref: LangfusePromptReference
   prompt: ChatPromptSnapshot
+  response_composition: ResponseCompositionTrace
   latencies_ms: ChatTraceLatencyBreakdown
 }): PipelineTraceDraft {
   const {
@@ -129,6 +194,7 @@ export function buildPipelineTraceDraft(params: {
     matched_products,
     classification_prompt_ref,
     prompt,
+    response_composition,
     latencies_ms,
   } = params
 
@@ -168,6 +234,7 @@ export function buildPipelineTraceDraft(params: {
       synthesis: prompt.prompt_ref,
     },
     prompt,
+    response_composition,
     latencies_ms,
   }
 }
@@ -216,6 +283,7 @@ export function finalizeChatTurnTrace(
     decision_context: draft.decision_context,
     prompt_refs: draft.prompt_refs,
     prompt: draft.prompt,
+    response_composition: draft.response_composition,
     response: {
       assistant_content,
       sources,
@@ -237,6 +305,7 @@ export function buildRetrievalDebugEventData(draft: PipelineTraceDraft): Record<
     product_category: draft.product_category,
     retrieval_mode: draft.router_decision.retrieval_mode,
     response_mode: draft.router_decision.response_mode,
+    response_composer_path: draft.response_composition.path,
     clarification_questions: draft.clarification_questions,
     policy_overrides: draft.router_decision.policy_overrides,
     subqueries: draft.retrieval.subqueries,

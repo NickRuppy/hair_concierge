@@ -62,6 +62,7 @@ import type {
   RoutinePlan,
   ChatPromptMessageSnapshot,
   ChatPromptSnapshot,
+  ResponseCompositionTrace,
 } from "@/lib/types"
 import type { CategoryDecision as RecommendationEngineCategoryDecision } from "@/lib/recommendation-engine/types"
 import type OpenAI from "openai"
@@ -92,9 +93,19 @@ export interface SynthesisResult {
   stream: ReadableStream<Uint8Array>
   debug: {
     prompt: ChatPromptSnapshot
+    response_composition: ResponseCompositionTrace
     prompt_build_ms: number
     stream_setup_ms: number
   }
+}
+
+function getRoutineAttachmentMode(
+  routinePlan: RoutinePlan | undefined,
+): ResponseCompositionTrace["attachment_mode"] {
+  return (
+    (routinePlan as { attachment_mode?: ResponseCompositionTrace["attachment_mode"] } | undefined)
+      ?.attachment_mode ?? null
+  )
 }
 
 function appendMemoryContext(profileText: string, memoryContext?: string | null): string {
@@ -1093,11 +1104,20 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     stream,
     debug: {
       prompt: {
+        kind: "legacy_synth_prompt",
         model: DEFAULT_CHAT_COMPLETION_MODEL,
         temperature: DEFAULT_CHAT_COMPLETION_TEMPERATURE,
         prompt_ref: managedPrompt.ref,
         system_prompt: systemPrompt,
         messages: promptMessages,
+      },
+      response_composition: {
+        path: "legacy_synthesizer",
+        migration_mode: "legacy_only",
+        fallback_reason: null,
+        rendering_path: null,
+        plan_type: null,
+        attachment_mode: getRoutineAttachmentMode(routinePlan),
       },
       prompt_build_ms: promptBuildMs,
       stream_setup_ms: streamSetupMs,
