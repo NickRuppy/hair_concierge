@@ -5,6 +5,7 @@ import type {
   InterventionPlan,
   InterventionStep,
   NormalizedProfile,
+  ResetAssessment,
 } from "@/lib/recommendation-engine/types"
 import { isExplicitNoneArray } from "@/lib/profile/signal-derivations"
 import {
@@ -240,9 +241,22 @@ function buildBondBuilderPlan(
 function buildDeepCleansingShampooSteps(
   profile: NormalizedProfile,
   damage: DamageAssessment,
+  reset?: ResetAssessment,
 ): InterventionStep[] {
   const steps: InterventionStep[] = []
-  const resetNeed = deriveBuildupResetNeed(profile)
+  const resetNeed = reset
+    ? {
+        level:
+          reset.level === "strong"
+            ? "high"
+            : reset.level === "likely"
+              ? "moderate"
+              : reset.level === "possible"
+                ? "low"
+                : "none",
+        reasonCodes: reset.triggers,
+      }
+    : deriveBuildupResetNeed(profile)
   const frequencyBand = getRoutineFrequencyBand(profile, "deep_cleansing_shampoo")
   const drynessRisk = hasScalpDrynessOrIrritationRisk(profile, damage)
 
@@ -424,6 +438,7 @@ export function buildInterventionPlan(
   profile: NormalizedProfile,
   damage: DamageAssessment,
   careNeeds: CareNeedAssessment,
+  reset?: ResetAssessment,
 ): InterventionPlan {
   const steps: InterventionStep[] = []
   const deferredSteps: InterventionStep[] = []
@@ -456,7 +471,7 @@ export function buildInterventionPlan(
   steps.push(...buildHeatProtectionSteps(profile, careNeeds))
   steps.push(...buildMaskSteps(profile, damage))
   steps.push(...buildLeaveInSteps(profile, damage, careNeeds))
-  steps.push(...buildDeepCleansingShampooSteps(profile, damage))
+  steps.push(...buildDeepCleansingShampooSteps(profile, damage, reset))
   steps.push(...buildDryShampooSteps(profile, damage))
   steps.push(...buildPeelingSteps(profile, damage))
 

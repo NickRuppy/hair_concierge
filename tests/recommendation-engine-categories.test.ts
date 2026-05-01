@@ -11,6 +11,7 @@ import {
   buildOilCategoryDecision,
   buildPeelingCategoryDecision,
   buildRecommendationRequestContext,
+  buildResetAssessment,
   buildShampooCategoryDecision,
   buildInterventionPlan,
   emptyRecommendationRequestContext,
@@ -771,6 +772,11 @@ test("oil decision asks for clarification when no explicit purpose is available"
   const { normalized } = buildEngineState(LOW_DAMAGE_PROFILE, [])
   const decision = buildOilCategoryDecision(normalized, {
     requestedCategory: "oil",
+    resetTriggerTerms: [],
+    resetTriggerSources: [],
+    resetFocusRequest: null,
+    colorSafeRequest: false,
+    scalpTreatmentIntent: false,
     maskIntensityRequest: null,
     leaveInHeatProtectionRequest: null,
     leaveInSeparateHeatProtectantMentioned: false,
@@ -784,6 +790,91 @@ test("oil decision asks for clarification when no explicit purpose is available"
   assert.equal(decision.relevant, true)
   assert.equal(decision.clarificationNeeded, true)
   assert.equal(decision.targetProfile, null)
+})
+
+test("reset assessment promotes explicit coated hard-water reset request to strong broad-spectrum", () => {
+  const { normalized } = buildEngineState(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      hair_texture: "curly",
+      chemical_treatment: ["colored"],
+      wash_frequency: "once_weekly",
+    },
+    [
+      { category: "leave_in", product_name: "Curl Cream", frequency_range: "5_6x" },
+      { category: "mask", product_name: "Rich Mask", frequency_range: "3_4x" },
+      { category: "dry_shampoo", product_name: "Dry Shampoo", frequency_range: "3_4x" },
+    ],
+  )
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "deep_cleansing_shampoo",
+    message:
+      "Ich brauche Tiefenreinigung, meine Haare sind wachsig und belegt nach hartem Wasser. Bitte farbschonend.",
+  })
+  const reset = buildResetAssessment(normalized, requestContext)
+
+  assert.equal(reset.level, "strong")
+  assert.equal(reset.resetFocus, "broad_spectrum")
+  assert.equal(reset.richOptionalCareRisk, true)
+  assert.ok(reset.triggerSources.includes("explicit_request"))
+  assert.ok(reset.triggerSources.includes("symptom"))
+  assert.ok(reset.triggerSources.includes("environment"))
+  assert.ok(reset.cautionFlags.includes("color_or_bleach_caution"))
+})
+
+test("explicit deep-cleansing request builds reset target without relying on baseline planner step", () => {
+  const { normalized, damage, careNeeds } = buildEngineState(LOW_DAMAGE_PROFILE, [])
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "deep_cleansing_shampoo",
+    message: "Welches Tiefenreinigungsshampoo passt als Reset gegen Produktreste?",
+  })
+  const reset = buildResetAssessment(normalized, requestContext)
+  const plan = buildInterventionPlan(normalized, damage, careNeeds, reset)
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    requestContext,
+    reset,
+  )
+
+  assert.equal(categories.deepCleansingShampoo.relevant, true)
+  assert.equal(categories.deepCleansingShampoo.action, "add")
+  assert.equal(categories.deepCleansingShampoo.targetProfile?.resetNeedLevel, "strong")
+  assert.equal(categories.deepCleansingShampoo.targetProfile?.resetFocus, "general_buildup")
+  assert.ok(
+    categories.deepCleansingShampoo.planReasonCodes.includes("explicit_deep_cleansing_request"),
+  )
+})
+
+test("deep-cleansing request with scalp treatment intent stays guidance-only", () => {
+  const { normalized, damage, careNeeds } = buildEngineState(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      scalp_condition: "dandruff",
+    },
+    [],
+  )
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "deep_cleansing_shampoo",
+    message: "Welches Tiefenreinigungsshampoo hilft gegen Schuppen und Juckreiz?",
+  })
+  const reset = buildResetAssessment(normalized, requestContext)
+  const plan = buildInterventionPlan(normalized, damage, careNeeds, reset)
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    requestContext,
+    reset,
+  )
+
+  assert.equal(categories.deepCleansingShampoo.relevant, true)
+  assert.equal(categories.deepCleansingShampoo.action, "behavior_change_only")
+  assert.equal(categories.deepCleansingShampoo.targetProfile, null)
+  assert.ok(categories.deepCleansingShampoo.notes.includes("scalp_treatment_needed"))
 })
 
 test("oil decision redirects scalp treatment oil requests without product target", () => {
@@ -912,7 +1003,12 @@ test("category set activates support/reset categories for oily buildup-heavy rou
   assert.equal(categories.deepCleansingShampoo.action, "add")
   assert.deepEqual(categories.deepCleansingShampoo.targetProfile, {
     scalpTypeFocus: "oily",
-    resetNeedLevel: "moderate",
+    resetNeedLevel: "likely",
+    resetFocus: "general_buildup",
+    targetIntensity: "medium",
+    colorTreatedCaution: false,
+    colorSafeRequest: false,
+    cautionFlags: [],
   })
 
   assert.equal(categories.dryShampoo.relevant, true)

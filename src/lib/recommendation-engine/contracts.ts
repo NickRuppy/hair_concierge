@@ -70,6 +70,10 @@ export const RECOMMENDATION_ACTIONS = [
   "behavior_change_only",
 ] as const
 export const CONFIDENCE_LEVELS = ["low", "medium", "high"] as const
+export const RESET_LEVELS = ["none", "possible", "likely", "strong"] as const
+export const RESET_FOCUSES = ["general_buildup", "mineral_chlorine", "broad_spectrum"] as const
+export const RESET_INTENSITIES = ["gentle", "medium", "strong"] as const
+export const COLOR_TREATED_SUITABILITIES = ["suitable", "unsuitable_or_unknown"] as const
 
 export const engineCategoryIdSchema = z.enum(ENGINE_CATEGORY_IDS)
 export const inventoryCategorySchema = z.enum(INVENTORY_CATEGORIES)
@@ -90,3 +94,7 @@ export const peelingTypeSchema = z.enum(PEELING_TYPES)
 export const leaveInCareTargetSchema = z.enum(LEAVE_IN_CARE_TARGETS)
 export const recommendationActionSchema = z.enum(RECOMMENDATION_ACTIONS)
 export const confidenceLevelSchema = z.enum(CONFIDENCE_LEVELS)
+export const resetLevelSchema = z.enum(RESET_LEVELS)
+export const resetFocusSchema = z.enum(RESET_FOCUSES)
+export const resetIntensitySchema = z.enum(RESET_INTENSITIES)
+export const colorTreatedSuitabilitySchema = z.enum(COLOR_TREATED_SUITABILITIES)

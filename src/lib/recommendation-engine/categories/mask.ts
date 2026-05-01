@@ -6,6 +6,7 @@ import type {
   MaskCategoryDecision,
   NormalizedProfile,
   RecommendationRequestContext,
+  ResetAssessment,
 } from "@/lib/recommendation-engine/types"
 import {
   deriveBalanceTarget,
@@ -58,6 +59,7 @@ export function buildMaskCategoryDecision(
   damage: DamageAssessment,
   plan: InterventionPlan,
   requestContext: RecommendationRequestContext,
+  reset?: ResetAssessment,
 ): MaskCategoryDecision {
   const step = getPlannedStep(plan, "mask")
   const explicitMaskRequest = requestContext.requestedCategory === "mask"
@@ -77,6 +79,7 @@ export function buildMaskCategoryDecision(
   }
 
   const notes: string[] = []
+  const strongResetFirst = reset?.richOptionalCareRisk && reset.level === "strong"
   const targetWeight = deriveMaskTargetWeight(profile)
   const baseRepairLevel = deriveRepairLevel(damage)
   const repairLevel =
@@ -94,25 +97,36 @@ export function buildMaskCategoryDecision(
   if (explicitMaskRequest && requestContext.maskIntensityRequest === "intensive") {
     notes.push("mask_explicit_intensive_request_uplift")
   }
+  if (strongResetFirst) {
+    notes.push("mask_deemphasized_until_reset")
+  }
 
   return {
     category: "mask",
     relevant: true,
-    action: step?.action ?? (profile.routineInventory.mask ? "keep" : "add"),
+    action: strongResetFirst
+      ? profile.routineInventory.mask
+        ? "decrease_frequency"
+        : "behavior_change_only"
+      : (step?.action ?? (profile.routineInventory.mask ? "keep" : "add")),
     planReasonCodes: step
       ? explicitMaskRequest
-        ? [...step.reasonCodes, "explicit_mask_request"]
+        ? [
+            ...step.reasonCodes,
+            "explicit_mask_request",
+            ...(strongResetFirst ? ["reset_first_overload_risk"] : []),
+          ]
         : step.reasonCodes
       : explicitMaskRequest
-        ? ["explicit_mask_request"]
-        : ["derived_medium_mask_need"],
+        ? ["explicit_mask_request", ...(strongResetFirst ? ["reset_first_overload_risk"] : [])]
+        : ["derived_medium_mask_need", ...(strongResetFirst ? ["reset_first_overload_risk"] : [])],
     currentInventory: profile.routineInventory.mask,
     targetProfile: {
       balance: deriveBalanceTarget(damage),
       repairLevel,
       weight: targetWeight,
       needStrength,
-      role: needStrength >= 2 ? "fixed" : "optional",
+      role: strongResetFirst ? "optional" : needStrength >= 2 ? "fixed" : "optional",
       intensityRequest: requestContext.maskIntensityRequest,
       thickness: profile.thickness,
       density: profile.density,
