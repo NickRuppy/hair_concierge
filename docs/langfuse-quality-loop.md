@@ -91,6 +91,39 @@ The Langfuse experiment stores:
 
 `internal_eval_quality` is the phase-1 headline KPI. It blends deterministic assertion pass rate, rubric scores, and the scenario-specific expectation judge when present.
 
+## CI quality policy
+
+Pull requests use a tiered quality gate:
+
+- deterministic checks always run: typecheck, lint, build, Node contract tests, Playwright contract tests, and `@ci` smoke tests
+- live chat smoke eval runs only when AI, chat, RAG, routine, recommendation, prompt, or eval-harness paths change
+- dependency manifest changes do not trigger live chat smoke by themselves, so Dependabot PRs do not need OpenAI/Supabase chat secrets unless they also touch AI behavior
+- retrieval metrics run only when retrieval, ingestion, source chunking, Supabase match functions, or retrieval gold-set paths change; until `tests/fixtures/retrieval-gold-set.json` is annotated with real chunk IDs, CI logs this as a skipped gate instead of enforcing placeholder metrics
+- full judged chat evals are manual or scheduled, not required on every PR
+
+Use this before a quality-critical merge, launch, prompt/model/provider change, or when production feedback suggests regression:
+
+```bash
+npm run test:chat:judge
+```
+
+Publish the judged run into Langfuse when comparing prompt or behavior changes:
+
+```bash
+npm run test:chat:langfuse
+```
+
+The PR chat smoke suite intentionally stays small to control external API cost and flake risk. Add a scenario to the PR smoke suite only when it protects a high-value regression, safety redirect, or routing contract.
+
+The retrieval metric gate requires an annotated gold set. The current placeholder value `__ANNOTATE__` is intentionally treated as not enforceable so CI does not report meaningless zero-quality scores as product regressions.
+
+## GitHub repository settings to confirm
+
+- Require the `CI / quality` check before merging to `main`.
+- Require the `Security / dependency-review` check for PRs that change dependency manifests when available on the repository plan.
+- Enable secret scanning in GitHub settings.
+- Keep full judged Langfuse evals manual or scheduled until the score threshold has enough history to be reliable.
+
 ## Dataset seeding
 
 Seed the two baseline datasets:

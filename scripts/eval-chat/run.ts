@@ -5,6 +5,7 @@
  *   npx tsx scripts/eval-chat/run.ts
  *   npx tsx scripts/eval-chat/run.ts --base-url https://hair-concierge.vercel.app
  *   npx tsx scripts/eval-chat/run.ts --scenario owc-followup
+ *   npx tsx scripts/eval-chat/run.ts --ci-smoke
  *   npx tsx scripts/eval-chat/run.ts --skip-judge
  */
 
@@ -46,6 +47,7 @@ function parseArgs() {
   const args = process.argv.slice(2)
   let baseUrl = "http://localhost:3000"
   let scenarioFilter: string | null = null
+  let ciSmoke = false
   let skipJudge = false
   let langfusePublish = process.env.LANGFUSE_EVAL_PUBLISH === "1"
   let langfuseRunName: string | null = null
@@ -56,6 +58,8 @@ function parseArgs() {
       baseUrl = args[++i]
     } else if (args[i] === "--scenario" && args[i + 1]) {
       scenarioFilter = args[++i]
+    } else if (args[i] === "--ci-smoke") {
+      ciSmoke = true
     } else if (args[i] === "--skip-judge") {
       skipJudge = true
     } else if (args[i] === "--langfuse-publish") {
@@ -70,6 +74,7 @@ function parseArgs() {
   return {
     baseUrl,
     scenarioFilter,
+    ciSmoke,
     skipJudge,
     langfusePublish,
     langfuseRunName,
@@ -83,6 +88,7 @@ async function main() {
   const {
     baseUrl,
     scenarioFilter,
+    ciSmoke,
     skipJudge,
     langfusePublish,
     langfuseRunName,
@@ -101,7 +107,11 @@ async function main() {
     process.exit(1)
   }
 
-  const scenarios = scenarioFilter ? SCENARIOS.filter((s) => s.id === scenarioFilter) : SCENARIOS
+  const scenarios = scenarioFilter
+    ? SCENARIOS.filter((s) => s.id === scenarioFilter)
+    : ciSmoke
+      ? SCENARIOS.filter((s) => s.ci_smoke)
+      : SCENARIOS
 
   if (scenarios.length === 0) {
     console.error(`No scenario found with id "${scenarioFilter}"`)

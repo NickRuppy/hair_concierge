@@ -79,6 +79,7 @@ export interface EvalScenario {
   id: string
   name: string
   description: string
+  ci_smoke?: boolean
   hair_profile: HairProfileOverrides
   routine_inventory?: RoutineInventorySeed[]
   turns: EvalTurn[]

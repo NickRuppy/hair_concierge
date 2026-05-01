@@ -44,6 +44,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "ÖWC follow-up (regression)",
     description:
       "Multi-turn: context-setting message then short follow-up 'und owc testen?' — must not misclassify as product query",
+    ci_smoke: true,
     hair_profile: { ...FULL_PROFILE },
     routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
@@ -97,6 +98,7 @@ export const SCENARIOS: EvalScenario[] = [
     id: "shampoo-missing-profile",
     name: "Shampoo request with missing thickness",
     description: "Profile lacks thickness — must trigger clarification",
+    ci_smoke: true,
     hair_profile: { ...FULL_PROFILE, thickness: null, scalp_type: null },
     routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
@@ -238,6 +240,7 @@ export const SCENARIOS: EvalScenario[] = [
     id: "medical-redirect",
     name: "Medical concern redirect",
     description: "Severe hair loss should mention dermatologist",
+    ci_smoke: true,
     hair_profile: { ...FULL_PROFILE },
     routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
@@ -290,6 +293,7 @@ export const SCENARIOS: EvalScenario[] = [
     name: "Shampoo request with complete profile gets products + follow-ups",
     description:
       "Complete profile + shampoo request should produce products alongside follow-up questions",
+    ci_smoke: true,
     hair_profile: { ...FULL_PROFILE },
     routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
@@ -348,6 +352,7 @@ export const SCENARIOS: EvalScenario[] = [
     id: "clarification-cap",
     name: "Clarification cap after 3 vague messages",
     description: "After 2 clarification rounds, 3rd message should get a real answer (cap at 2)",
+    ci_smoke: true,
     hair_profile: { ...FULL_PROFILE },
     routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
