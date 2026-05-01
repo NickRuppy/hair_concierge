@@ -8,6 +8,7 @@
  *   npx tsx scripts/eval-retrieval.ts
  *   npx tsx scripts/eval-retrieval.ts --hybrid-only
  *   npx tsx scripts/eval-retrieval.ts --dense-only
+ *   npx tsx scripts/eval-retrieval.ts --hybrid-only --min-hybrid-ndcg10 0.72 --min-hybrid-recall20 0.88
  *
  * Requirements:
  *   - .env.local with OPENAI_API_KEY, SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_SUPABASE_URL
@@ -41,6 +42,35 @@ interface GoldSetEntry {
   relevant_chunk_ids: string[]
   metadata_filter?: Record<string, string>
   source_types?: string[]
+}
+
+function requireEnv(name: string): string {
+  const value = process.env[name]
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`)
+  }
+  return value
+}
+
+function parseNumericArg(args: string[], flag: string): number | undefined {
+  const index = args.indexOf(flag)
+  if (index === -1) return undefined
+
+  const rawValue = args[index + 1]
+  if (!rawValue || rawValue.startsWith("--")) {
+    throw new Error(`Missing numeric value for ${flag}`)
+  }
+
+  const value = Number(rawValue)
+  if (!Number.isFinite(value)) {
+    throw new Error(`Invalid numeric value for ${flag}: ${rawValue}`)
+  }
+
+  return value
+}
+
+function hasUnannotatedGoldSetEntries(goldSet: GoldSetEntry[]): boolean {
+  return goldSet.some((entry) => entry.relevant_chunk_ids.includes("__ANNOTATE__"))
 }
 
 // ── Metric computation ───────────────────────────────────────────────────────
@@ -77,25 +107,35 @@ function mrr(retrievedIds: string[], relevantIds: Set<string>, k: number): numbe
 
 // ── Retrieval functions ──────────────────────────────────────────────────────
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-)
+interface RetrievalClients {
+  openai: OpenAI
+  supabase: ReturnType<typeof createClient>
+}
+
+function createRetrievalClients(): RetrievalClients {
+  return {
+    openai: new OpenAI({ apiKey: requireEnv("OPENAI_API_KEY") }),
+    supabase: createClient(
+      requireEnv("NEXT_PUBLIC_SUPABASE_URL"),
+      requireEnv("SUPABASE_SERVICE_ROLE_KEY"),
+    ),
+  }
+}
 
 async function retrieveDense(
+  clients: RetrievalClients,
   query: string,
   metadataFilter?: Record<string, string>,
   sourceTypes?: string[],
 ): Promise<string[]> {
-  const embeddingRes = await openai.embeddings.create({
+  const embeddingRes = await clients.openai.embeddings.create({
     model: "text-embedding-3-large",
     input: query,
     dimensions: 384,
   })
   const embedding = embeddingRes.data[0].embedding
 
-  const { data, error } = await supabase.rpc("match_content_chunks", {
+  const { data, error } = await clients.supabase.rpc("match_content_chunks", {
     query_embedding: embedding,
     match_count: 20,
     match_threshold: 0.65,
@@ -113,12 +153,13 @@ async function retrieveDense(
 }
 
 async function retrieveHybrid(
+  clients: RetrievalClients,
   query: string,
   metadataFilter?: Record<string, string>,
   sourceTypes?: string[],
 ): Promise<string[]> {
   // Dense retrieval
-  const embeddingRes = await openai.embeddings.create({
+  const embeddingRes = await clients.openai.embeddings.create({
     model: "text-embedding-3-large",
     input: query,
     dimensions: 384,
@@ -126,7 +167,7 @@ async function retrieveHybrid(
   const embedding = embeddingRes.data[0].embedding
 
   const [denseResult, lexicalResult] = await Promise.all([
-    supabase.rpc("match_content_chunks", {
+    clients.supabase.rpc("match_content_chunks", {
       query_embedding: embedding,
       match_count: 20,
       match_threshold: 0.65,
@@ -134,7 +175,7 @@ async function retrieveHybrid(
       metadata_filter: metadataFilter ?? null,
       source_types: sourceTypes ?? null,
     }),
-    supabase.rpc("match_content_chunks_lexical", {
+    clients.supabase.rpc("match_content_chunks_lexical", {
       query_text: query,
       match_count: 20,
       source_filter: null,
@@ -169,6 +210,10 @@ async function main() {
   const args = process.argv.slice(2)
   const hybridOnly = args.includes("--hybrid-only")
   const denseOnly = args.includes("--dense-only")
+  const skipUnannotatedGoldSet = args.includes("--skip-unannotated-gold-set")
+  const minHybridNdcg10 = parseNumericArg(args, "--min-hybrid-ndcg10")
+  const minHybridRecall20 = parseNumericArg(args, "--min-hybrid-recall20")
+  const minHybridMrr10 = parseNumericArg(args, "--min-hybrid-mrr10")
 
   // Load gold set
   const goldSetPath = path.join(process.cwd(), "tests/fixtures/retrieval-gold-set.json")
@@ -179,7 +224,22 @@ async function main() {
   }
 
   const goldSet: GoldSetEntry[] = JSON.parse(fs.readFileSync(goldSetPath, "utf-8"))
+
+  if (hasUnannotatedGoldSetEntries(goldSet)) {
+    const message =
+      "Retrieval gold set still contains __ANNOTATE__ placeholders. Annotate tests/fixtures/retrieval-gold-set.json with real content chunk IDs before enforcing retrieval metric thresholds."
+
+    if (skipUnannotatedGoldSet) {
+      console.warn(`${message} Skipping retrieval CI gate for now.`)
+      return
+    }
+
+    throw new Error(message)
+  }
+
   console.log(`\nLoaded ${goldSet.length} gold set queries\n`)
+
+  const clients = createRetrievalClients()
 
   const results: {
     query: string
@@ -196,7 +256,12 @@ async function main() {
     let hybridMetrics = null
 
     if (!hybridOnly) {
-      const denseIds = await retrieveDense(entry.query, entry.metadata_filter, entry.source_types)
+      const denseIds = await retrieveDense(
+        clients,
+        entry.query,
+        entry.metadata_filter,
+        entry.source_types,
+      )
       denseMetrics = {
         ndcg10: ndcg(denseIds, relevantSet, 10),
         recall20: recall(denseIds, relevantSet, 20),
@@ -205,7 +270,12 @@ async function main() {
     }
 
     if (!denseOnly) {
-      const hybridIds = await retrieveHybrid(entry.query, entry.metadata_filter, entry.source_types)
+      const hybridIds = await retrieveHybrid(
+        clients,
+        entry.query,
+        entry.metadata_filter,
+        entry.source_types,
+      )
       hybridMetrics = {
         ndcg10: ndcg(hybridIds, relevantSet, 10),
         recall20: recall(hybridIds, relevantSet, 20),
@@ -223,6 +293,10 @@ async function main() {
   console.log("RETRIEVAL EVALUATION REPORT")
   console.log("=".repeat(60))
 
+  let hybridNdcg: number | null = null
+  let hybridRecall: number | null = null
+  let hybridMrr: number | null = null
+
   if (!hybridOnly) {
     const denseNdcg = avg(results.map((r) => r.dense?.ndcg10 ?? 0))
     const denseRecall = avg(results.map((r) => r.dense?.recall20 ?? 0))
@@ -234,9 +308,9 @@ async function main() {
   }
 
   if (!denseOnly) {
-    const hybridNdcg = avg(results.map((r) => r.hybrid?.ndcg10 ?? 0))
-    const hybridRecall = avg(results.map((r) => r.hybrid?.recall20 ?? 0))
-    const hybridMrr = avg(results.map((r) => r.hybrid?.mrr10 ?? 0))
+    hybridNdcg = avg(results.map((r) => r.hybrid?.ndcg10 ?? 0))
+    hybridRecall = avg(results.map((r) => r.hybrid?.recall20 ?? 0))
+    hybridMrr = avg(results.map((r) => r.hybrid?.mrr10 ?? 0))
     console.log(`\nHybrid (dense + lexical + RRF):`)
     console.log(`  nDCG@10:   ${hybridNdcg.toFixed(4)}  (target >= 0.72)`)
     console.log(`  Recall@20: ${hybridRecall.toFixed(4)}  (target >= 0.88)`)
@@ -263,6 +337,42 @@ async function main() {
   fs.mkdirSync(path.dirname(reportPath), { recursive: true })
   fs.writeFileSync(reportPath, JSON.stringify(results, null, 2))
   console.log(`\nDetailed results saved to: ${reportPath}`)
+
+  const thresholdFailures: string[] = []
+
+  function checkHybridThreshold(
+    label: string,
+    actual: number | null,
+    threshold: number | undefined,
+  ) {
+    if (threshold === undefined) return
+    if (actual === null) {
+      thresholdFailures.push(
+        `${label} threshold ${threshold.toFixed(4)} was provided, but hybrid retrieval was not run`,
+      )
+      return
+    }
+    if (actual < threshold) {
+      thresholdFailures.push(
+        `${label} ${actual.toFixed(4)} is below required threshold ${threshold.toFixed(4)}`,
+      )
+    }
+  }
+
+  checkHybridThreshold("Hybrid nDCG@10", hybridNdcg, minHybridNdcg10)
+  checkHybridThreshold("Hybrid Recall@20", hybridRecall, minHybridRecall20)
+  checkHybridThreshold("Hybrid MRR@10", hybridMrr, minHybridMrr10)
+
+  if (thresholdFailures.length > 0) {
+    console.error("\nRetrieval metric gate failed:")
+    for (const failure of thresholdFailures) {
+      console.error(`- ${failure}`)
+    }
+    process.exit(1)
+  }
 }
 
-main().catch(console.error)
+main().catch((error) => {
+  console.error(error)
+  process.exit(1)
+})
