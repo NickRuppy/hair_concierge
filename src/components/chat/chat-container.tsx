@@ -37,6 +37,7 @@ export function ChatContainer() {
 
   const [sidebarState, setSidebarState] = useState<"closed" | "open" | "closing">("closed")
   const sidebarPanelRef = useRef<HTMLDivElement>(null)
+  const sidebarCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [drawerProduct, setDrawerProduct] = useState<Product | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -95,11 +96,41 @@ export function ChatContainer() {
 
   const triggerRef = useRef<HTMLElement | null>(null)
 
+  const clearSidebarCloseTimer = useCallback(() => {
+    if (sidebarCloseTimerRef.current) {
+      clearTimeout(sidebarCloseTimerRef.current)
+      sidebarCloseTimerRef.current = null
+    }
+  }, [])
+
+  const finishSidebarClose = useCallback(() => {
+    clearSidebarCloseTimer()
+    setSidebarState("closed")
+  }, [clearSidebarCloseTimer])
+
   const openSidebar = useCallback(() => {
+    clearSidebarCloseTimer()
     triggerRef.current = document.activeElement as HTMLElement
     setSidebarState("open")
-  }, [])
-  const closeSidebar = useCallback(() => setSidebarState("closing"), [])
+  }, [clearSidebarCloseTimer])
+
+  const closeSidebar = useCallback(() => {
+    clearSidebarCloseTimer()
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setSidebarState("closed")
+      return
+    }
+
+    setSidebarState("closing")
+    sidebarCloseTimerRef.current = setTimeout(() => {
+      finishSidebarClose()
+    }, 300)
+  }, [clearSidebarCloseTimer, finishSidebarClose])
+
+  useEffect(() => {
+    return () => clearSidebarCloseTimer()
+  }, [clearSidebarCloseTimer])
 
   // Focus trap + Escape for mobile sidebar
   useEffect(() => {
@@ -198,8 +229,9 @@ export function ChatContainer() {
             className={`relative w-72 ${
               sidebarState === "closing" ? "animate-slide-out-left" : "animate-slide-in-left"
             }`}
-            onAnimationEnd={() => {
-              if (sidebarState === "closing") setSidebarState("closed")
+            onAnimationEnd={(event) => {
+              if (event.currentTarget !== event.target) return
+              if (sidebarState === "closing") finishSidebarClose()
             }}
           >
             <ConversationSidebar
