@@ -1988,10 +1988,7 @@ export async function selectMaskProductsWithEngine(params: {
       count: CANDIDATE_COUNT,
     })
 
-    const prioritized = candidates.filter((candidate) =>
-      candidate.suitable_concerns.includes(concernCode),
-    )
-    for (const candidate of prioritized) {
+    for (const candidate of candidates) {
       const existing = candidatesById.get(candidate.id)
       if (!existing || toBaseScore(candidate) > toBaseScore(existing)) {
         candidatesById.set(candidate.id, candidate)

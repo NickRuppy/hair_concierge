@@ -210,7 +210,7 @@ export function buildClassification(route: AgentRoutePacket): ClassificationResu
     product_category: mapAgentProductCategory(route),
     complexity: route.guidance_ids.length > 1 ? "multi_constraint" : "simple",
     needs_clarification: Boolean(route.ambiguity),
-    retrieval_mode: "hybrid",
+    retrieval_mode: "agent_engine",
     normalized_filters: {
       user_job: route.user_job,
       concerns: route.concerns,
@@ -244,7 +244,7 @@ export function buildRouterDecision(params: {
   }
 
   return {
-    retrieval_mode: "hybrid",
+    retrieval_mode: "agent_engine",
     response_mode: responseMode,
     clarification_reason:
       responseMode === "clarify_only"

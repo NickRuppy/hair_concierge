@@ -1,7 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
-import { createAdminClient } from "@/lib/supabase/admin"
 import { productSchema } from "@/lib/validators"
-import { generateEmbedding } from "@/lib/openai/embeddings"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 import { isBondbuilderCategory } from "@/lib/bondbuilder/constants"
@@ -102,7 +100,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   const { data: existing, error: existingError } = await supabase
     .from("products")
-    .select("name, brand, description, tags, category")
+    .select("category")
     .eq("id", id)
     .single()
 
@@ -252,15 +250,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: fehler("Aktualisieren", "des Produkts") }, { status: 500 })
   }
 
-  // Regenerate embedding if relevant fields changed
-  const embeddingFieldsChanged =
-    !existing ||
-    existing.name !== productPayload.name ||
-    existing.brand !== productPayload.brand ||
-    existing.description !== productPayload.description ||
-    existing.category !== productPayload.category ||
-    JSON.stringify(existing.tags) !== JSON.stringify(productPayload.tags)
-
   try {
     await deleteStructuredProductSpecs(
       supabase,
@@ -269,28 +258,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     )
   } catch (cleanupError) {
     console.error("Failed to delete obsolete product specs:", cleanupError)
-  }
-
-  if (embeddingFieldsChanged) {
-    try {
-      const embeddingText = [
-        product.name,
-        product.brand,
-        product.description,
-        product.tags?.join(", "),
-        product.category,
-      ]
-        .filter(Boolean)
-        .join(" ")
-
-      const embedding = await generateEmbedding(embeddingText)
-
-      const adminClient = createAdminClient()
-      await adminClient.from("products").update({ embedding }).eq("id", product.id)
-    } catch {
-      // Embedding generation failed but product was updated successfully
-      console.error(fehler("Generieren", "des Embeddings"))
-    }
   }
 
   // Hydrate category specs for the response

@@ -676,6 +676,8 @@ export interface MessageRagContext {
   response_mode?: ResponseMode | null
 }
 
+export type MessageDecisionContext = MessageRagContext
+
 export interface ChatPromptMessageSnapshot {
   role: "system" | "user" | "assistant"
   content: string
@@ -918,7 +920,12 @@ export type ProductCategory =
   | "routine"
   | null
 
-export type RetrievalMode = "faq" | "hybrid" | "hybrid_plus_graph" | "product_sql_plus_hybrid"
+export type RetrievalMode =
+  | "faq"
+  | "hybrid"
+  | "hybrid_plus_graph"
+  | "product_sql_plus_hybrid"
+  | "agent_engine"
 
 export type ResponseMode = "clarify_only" | "recommend_and_refine" | "answer_direct"
 

@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { productSchema } from "@/lib/validators"
-import { generateEmbedding } from "@/lib/openai/embeddings"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 import { isBondbuilderCategory, type ProductBondbuilderSpecs } from "@/lib/bondbuilder/constants"
@@ -383,27 +382,6 @@ export async function POST(request: Request) {
         { status: 500 },
       )
     }
-  }
-
-  // Generate embedding from product fields
-  try {
-    const embeddingText = [
-      product.name,
-      product.brand,
-      product.description,
-      product.tags?.join(", "),
-      product.category,
-    ]
-      .filter(Boolean)
-      .join(" ")
-
-    const embedding = await generateEmbedding(embeddingText)
-
-    const adminClient = createAdminClient()
-    await adminClient.from("products").update({ embedding }).eq("id", product.id)
-  } catch {
-    // Embedding generation failed but product was created successfully
-    console.error(fehler("Generieren", "des Embeddings"))
   }
 
   return NextResponse.json({ product }, { status: 201 })

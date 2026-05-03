@@ -2,7 +2,7 @@
 
 ## What It Is
 
-A personalized AI hair care recommendation platform built around profile-aware diagnostics, deterministic recommendation logic, and contextual AI guidance. Users take a diagnostic quiz, complete a post-auth onboarding to build a detailed hair profile, then receive product recommendations and hair care advice via a conversational AI chat with citations.
+A personalized AI hair care recommendation platform built around profile-aware diagnostics, deterministic recommendation logic, and contextual AI guidance. Users take a diagnostic quiz, complete a post-auth onboarding to build a detailed hair profile, then receive product recommendations and hair care advice via a conversational AI chat.
 
 **Target:** German-speaking hair care enthusiasts. All UI text is in German.
 
@@ -13,9 +13,9 @@ A personalized AI hair care recommendation platform built around profile-aware d
 | Layer | Tech |
 |-------|------|
 | Framework | Next.js 16 (React 19, TypeScript 5, App Router) |
-| Database | Supabase PostgreSQL + pgvector |
+| Database | Supabase PostgreSQL |
 | Auth | Supabase Auth (OAuth + email) |
-| AI/LLM | OpenAI GPT-4o (chat/classification), text-embedding-3-large embeddings |
+| AI/LLM | OpenAI GPT-4o (agent routing, response composition) |
 | Styling | Tailwind CSS 4 + shadcn/ui |
 | State | Zustand |
 | Analytics | PostHog |
@@ -55,16 +55,16 @@ graph TB
         Middleware["Middleware<br/>(session refresh,<br/>route protection)"]
     end
 
-    subgraph RAG["RAG Pipeline · src/lib/rag/"]
+    subgraph AgentEngine["Agent Recommendation Engine"]
         direction TB
-        Router["Intent Router<br/>(classify user intent)"]
-        Retriever["Hybrid Retriever<br/>(dense + lexical + RRF)"]
-        ProductMatcher["Product Matcher<br/>(category-specific)"]
-        Synthesizer["Synthesizer<br/>(advisor tone + citations)"]
+        Router["Agent Router<br/>(classify user job)"]
+        Context["Context Projection<br/>(profile + memory)"]
+        ProductMatcher["Product Selector<br/>(deterministic SQL/spec filters)"]
+        Composer["Response Composer<br/>(advisor tone + product cards)"]
 
-        Router --> Retriever
-        Retriever --> ProductMatcher
-        ProductMatcher --> Synthesizer
+        Router --> Context
+        Context --> ProductMatcher
+        ProductMatcher --> Composer
     end
 
     subgraph CategoryLogic["Category Engines"]
@@ -75,19 +75,19 @@ graph TB
         Mask["Mask<br/>(concentration)"]
     end
 
-    subgraph Supabase["Supabase · Postgres + pgvector"]
+    subgraph Supabase["Supabase · Postgres"]
         direction TB
         AuthDB["Auth (users, sessions)"]
         ProfilesDB["profiles<br/>hair_profiles"]
         ProductsDB["products +<br/>category spec tables<br/>(shampoo, conditioner,<br/>leave-in, oil, mask)"]
-        ContentDB["content_chunks<br/>(book, courses, QA)<br/>+ 1536-dim embeddings"]
+        ContentDB["content_chunks<br/>(legacy knowledge imports)"]
         ChatDB["conversations<br/>messages"]
         LeadsDB["leads<br/>(pre-auth quiz data)"]
-        RPCFunctions["RPC Functions<br/>(match_content_chunks,<br/>match_*_products,<br/>lexical search)"]
+        RPCFunctions["Legacy RPC Functions<br/>(unused by agent path)"]
     end
 
     subgraph External["External Services"]
-        OpenAI["OpenAI API<br/>(GPT-4o chat/classification,<br/>text-embedding-3-large)"]
+        OpenAI["OpenAI API<br/>(GPT-4o agent + chat)"]
         PostHog["PostHog<br/>(analytics)"]
         Vercel["Vercel<br/>(hosting)"]
     end
@@ -108,17 +108,14 @@ graph TB
 
     QuizAPI --> LeadsDB
     AuthAPI --> AuthDB
-    Retriever --> RPCFunctions
-    RPCFunctions --> ContentDB
-    RPCFunctions --> ProductsDB
-    CategoryLogic --> RPCFunctions
+    ProductMatcher --> ProductsDB
+    CategoryLogic --> ProductsDB
     ChatAPI --> ChatDB
     ProfileAPI --> ProfilesDB
     Middleware --> AuthDB
 
     Router --> OpenAI
-    Synthesizer --> OpenAI
-    Retriever --> OpenAI
+    Composer --> OpenAI
     Client --> PostHog
 ```
 
@@ -133,7 +130,7 @@ flowchart LR
     C --> D["Auth<br/>(signup/login)"]
     D --> E["Onboarding<br/>(goals, profile, routine)"]
     E --> F["Chat<br/>(AI consultation)"]
-    F --> G["Product Recs<br/>(with citations)"]
+    F --> G["Product Recs<br/>(with structured fit reasons)"]
 ```
 
 ### Flow Details
@@ -142,42 +139,36 @@ flowchart LR
 2. **Lead capture** — name + email stored in `leads` table
 3. **Auth** — Supabase OAuth (Google, etc.) + email signup; lead data linked to new user
 4. **Onboarding** (post-auth) — additional profile fields: wash frequency, goals, density, mechanical stress
-5. **Chat** — streaming SSE responses, RAG-powered, advisor-style guidance
+5. **Chat** — streaming SSE responses, agent-routed, advisor-style guidance
 
 ---
 
-## RAG Pipeline
+## Agent Recommendation Pipeline
 
-The core intelligence of the app. Each user message flows through this pipeline:
+The core intelligence of the app. Each product-recommendation message flows through this pipeline:
 
 ```mermaid
 flowchart TD
-    Msg["User sends message"] --> Intent["Intent Router<br/>(classify intent)"]
+    Msg["User sends message"] --> Route["Agent Router<br/>(classify user job)"]
 
-    Intent --> Load["Load in parallel:<br/>hair_profile + last 10 messages"]
-    Load --> Route["Policy Engine<br/>(select content sources)"]
+    Route --> Load["Load in parallel:<br/>hair_profile + memory + recent messages"]
+    Load --> Projection["Context Projection<br/>(visible profile signals)"]
 
-    Route --> Dense["pgvector<br/>semantic search"]
-    Route --> Lexical["BM25<br/>full-text search"]
-    Dense --> RRF["RRF Fusion<br/>(k=60)"]
-    Lexical --> RRF
-    RRF --> Rerank["Cross-encoder<br/>reranking"]
+    Projection --> Select["Select Products<br/>(deterministic category engine)"]
+    Select --> Eligibility["Check eligibility<br/>(spec tables + lifecycle)"]
+    Eligibility --> Score["Score & rank<br/>(category fit rules)"]
 
-    Rerank --> Match["Category-Specific<br/>Product Matching"]
-    Match --> Eligibility["Check eligibility<br/>(per category rules)"]
-    Eligibility --> Score["Score & rank<br/>(profile-aware)"]
-
-    Score --> Synth["Synthesize Response<br/>(advisor tone + citations)"]
+    Score --> Synth["Compose Response<br/>(advisor tone + product cards)"]
     Synth --> Stream["Stream via SSE<br/>to client"]
     Stream --> Save["Save to DB"]
 ```
 
 ### Recommendation Engine (Per Category)
 
-Each of the 5 product categories follows a 3-stage pipeline:
+Each product category follows a 3-stage pipeline:
 
 1. **Decision Builder** — checks eligibility, infers derived fields from profile (e.g., `scalp_type` → `shampoo_bucket`)
-2. **Product Matcher** — hybrid retrieval: pgvector semantic search + trigram lexical search + metadata filtering via Supabase RPC functions
+2. **Product Matcher** — deterministic SQL/spec filters over active products and category eligibility tables
 3. **Reranker** — category-specific scoring rules, returns top results with reasons and usage hints
 
 **Categories:** Shampoo (6 buckets), Conditioner (weight/repair levels), Leave-in (need bucket/styling context), Oil (subtype/use mode), Mask (concentration/dosing)
@@ -216,15 +207,14 @@ erDiagram
         uuid id
         text name
         text category
-        vector embedding_1536
         boolean active
+        int sort_order
     }
 
     content_chunks {
         uuid id
         text content
         text source_type
-        vector embedding_1536
     }
 
     messages {
@@ -261,10 +251,11 @@ src/
 │   └── admin/              # Admin panel components
 │
 ├── lib/
-│   ├── rag/                # RAG pipeline (21 files) — the brain of the app
+│   ├── agent/              # Production agent routing + tools
+│   ├── rag/                # Legacy chat helpers + compatibility traces
 │   ├── quiz/               # Quiz state, questions, normalization
 │   ├── supabase/           # DB clients (browser, server, admin)
-│   ├── openai/             # LLM wrappers (chat, embeddings)
+│   ├── openai/             # LLM client wrappers
 │   ├── vocabulary/         # Centralized German labels (single source of truth)
 │   ├── validators/         # Zod schemas
 │   └── {shampoo,conditioner,leave-in,oil,mask}/  # Category constants
@@ -277,7 +268,7 @@ supabase/
 └── migrations/             # 35+ SQL migrations (schema, RPC functions, RLS)
 
 data/
-└── markdown-cleaned/       # RAG knowledge base (book, courses, products, QA)
+└── markdown-cleaned/       # Legacy knowledge imports
 ```
 
 ---
@@ -287,7 +278,7 @@ data/
 | Decision | Rationale |
 |----------|-----------|
 | **Deterministic product matching** (not pure LLM) | Category-specific rules ensure consistent, explainable recommendations |
-| **Hybrid retrieval** (vector + lexical + RRF) | Catches both semantic and keyword matches for better recall |
+| **No embedding fallback for product fit** | Safety, lifecycle, and fit come from explicit category rules and catalog data |
 | **Category-specific spec tables** (not generic JSON) | Type-safe, queryable product attributes per category |
 | **Pre-auth quiz → post-auth onboarding** | Low-friction entry; captures lead before requiring signup |
 | **SSE streaming** (not WebSockets) | Simpler, works with Vercel edge, progressive response display |
@@ -296,9 +287,9 @@ data/
 
 ---
 
-## Current Status (April 2026)
+## Current Status (May 2026)
 
-**Done:** Quiz, auth, chat with streaming + RAG, product recommendations (5 categories), intent router, admin panel, mechanical stress onboarding
+**Done:** Quiz, auth, agent-routed streaming chat, deterministic product recommendations, admin panel, mechanical stress onboarding
 
 **In progress:** Onboarding finalization, shareable diagnosis card (Instagram Story format), routine recommendation design spec, chat photo upload disabled for launch
 

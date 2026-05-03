@@ -112,7 +112,12 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
   test("4. Router types compile correctly", async () => {
     // This is a compile-time check — if the test file compiles, types are correct.
     // Import types to verify they exist and are compatible.
-    type RetrievalMode = "faq" | "hybrid" | "hybrid_plus_graph" | "product_sql_plus_hybrid"
+    type RetrievalMode =
+      | "faq"
+      | "hybrid"
+      | "hybrid_plus_graph"
+      | "product_sql_plus_hybrid"
+      | "agent_engine"
     type ResponseMode = "clarify_only" | "recommend_and_refine" | "answer_direct"
     type RouterDecision = {
       retrieval_mode: RetrievalMode
@@ -124,14 +129,14 @@ test.describe("Phase 2 — Router & Clarification (unit-level contract tests) @c
     }
 
     const decision: RouterDecision = {
-      retrieval_mode: "hybrid",
+      retrieval_mode: "agent_engine",
       response_mode: "answer_direct",
       slot_completeness: 0.6,
       confidence: 0.85,
       policy_overrides: [],
     }
 
-    expect(decision.retrieval_mode).toBe("hybrid")
+    expect(decision.retrieval_mode).toBe("agent_engine")
     expect(decision.response_mode).toBe("answer_direct")
     expect(decision.confidence).toBeGreaterThan(0)
     expect(decision.policy_overrides).toEqual([])

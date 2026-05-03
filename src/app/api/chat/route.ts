@@ -41,7 +41,7 @@ async function loadChatRuntimeDeps() {
   const [
     { createAdminClient },
     { runProductionAgentPipeline },
-    { buildAssistantRagContext, buildDoneEventData },
+    { buildAssistantDecisionContext, buildAssistantRagContext, buildDoneEventData },
     { extractConversationMemory },
     {
       buildRetrievalDebugEventData,
@@ -64,6 +64,7 @@ async function loadChatRuntimeDeps() {
   return {
     createAdminClient,
     runProductionAgentPipeline,
+    buildAssistantDecisionContext,
     buildAssistantRagContext,
     buildDoneEventData,
     extractConversationMemory,
@@ -140,6 +141,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
     const {
       createAdminClient,
       runProductionAgentPipeline,
+      buildAssistantDecisionContext,
       buildAssistantRagContext,
       buildDoneEventData,
       extractConversationMemory,
@@ -356,6 +358,8 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   ? matchedProducts.slice(0, 3)
                   : []
               const langfuseTraceUrl = traceUrlPromise ? await traceUrlPromise : null
+              const buildAssistantContext =
+                buildAssistantDecisionContext ?? buildAssistantRagContext
 
               if (productsToSend.length > 0) {
                 controller.enqueue(
@@ -377,7 +381,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   conversation_id: activeConversationId,
                   role: "assistant",
                   content: fullContent,
-                  rag_context: buildAssistantRagContext(
+                  rag_context: buildAssistantContext(
                     sources,
                     categoryDecision,
                     engineTrace,

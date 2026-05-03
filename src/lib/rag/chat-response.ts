@@ -8,7 +8,7 @@ import type {
   CitationSource,
 } from "@/lib/types"
 
-export function buildAssistantRagContext(
+export function buildAssistantDecisionContext(
   sources: CitationSource[],
   categoryDecision?: ChatCategoryDecision,
   engineTrace?: RecommendationEngineTrace | null,
@@ -25,6 +25,8 @@ export function buildAssistantRagContext(
     response_mode: responseMode ?? null,
   }
 }
+
+export const buildAssistantRagContext = buildAssistantDecisionContext
 
 export function buildDoneEventData(params: {
   intent: IntentType

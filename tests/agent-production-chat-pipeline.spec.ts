@@ -206,7 +206,7 @@ test("production agent router decision marks missing product info as clarify-onl
   })
 
   assert.equal(decision.response_mode, "clarify_only")
-  assert.equal(decision.retrieval_mode, "hybrid")
+  assert.equal(decision.retrieval_mode, "agent_engine")
   assert.deepEqual(decision.policy_overrides, [
     "agent_v1_front_door",
     "product_policy:needs_more_info",
@@ -326,7 +326,7 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
     },
   }
   const routerDecision = {
-    retrieval_mode: "hybrid",
+    retrieval_mode: "agent_engine",
     response_mode: "answer_direct",
     confidence: 0.92,
     slot_completeness: 1,
