@@ -6,6 +6,7 @@ import type {
   ChatRetrievedChunkTrace,
   ChatTraceLatencyBreakdown,
   ChatTurnTrace,
+  ConversationStateTransition,
   CitationSource,
   ClassificationResult,
   HairProfile,
@@ -32,6 +33,7 @@ export interface PipelineTraceDraft {
   conversation_history_count: number
   classification: ClassificationResult
   router_decision: RouterDecision
+  conversation_state: ConversationStateTransition
   clarification_questions: string[]
   hair_profile_snapshot: HairProfile | null
   memory_context: string | null
@@ -155,6 +157,7 @@ export function buildPipelineTraceDraft(params: {
   conversation_history_count: number
   classification: ClassificationResult
   router_decision: RouterDecision
+  conversation_state: ConversationStateTransition
   clarification_questions?: string[]
   hair_profile_snapshot: HairProfile | null
   memory_context: string | null
@@ -181,6 +184,7 @@ export function buildPipelineTraceDraft(params: {
     conversation_history_count,
     classification,
     router_decision,
+    conversation_state,
     clarification_questions,
     hair_profile_snapshot,
     memory_context,
@@ -208,6 +212,7 @@ export function buildPipelineTraceDraft(params: {
     conversation_history_count,
     classification,
     router_decision,
+    conversation_state,
     clarification_questions: clarification_questions ?? [],
     hair_profile_snapshot,
     memory_context,
@@ -276,6 +281,7 @@ export function finalizeChatTurnTrace(
     conversation_history_count: draft.conversation_history_count,
     classification: draft.classification,
     router_decision: draft.router_decision,
+    conversation_state: draft.conversation_state,
     clarification_questions: draft.clarification_questions,
     hair_profile_snapshot: draft.hair_profile_snapshot,
     memory_context: draft.memory_context,

@@ -18,6 +18,7 @@ import type {
 } from "../src/lib/agent/orchestrator/route-packet"
 import type { SelectedProductsProjection } from "../src/lib/agent/tools/select-products"
 import type { Product } from "../src/lib/types"
+import type { ConversationStateTransition } from "../src/lib/types"
 
 function createRoute(overrides: Partial<AgentRoutePacket> = {}): AgentRoutePacket {
   return {
@@ -90,6 +91,23 @@ function propagateAttributesStub<A extends unknown[], F extends (...args: A) => 
   work: F,
 ): ReturnType<F> {
   return work(...([] as unknown as A))
+}
+
+function createConversationStateTransition(): ConversationStateTransition {
+  const previousState = createDefaultConversationState()
+
+  return {
+    previous_state: previousState,
+    next_state: {
+      ...previousState,
+      active_topic: "shampoo",
+      last_product_category: "shampoo",
+      last_assistant_action: "answered_direct",
+    },
+    reason: "product_topic_started",
+    changed_fields: ["active_topic", "last_product_category", "last_assistant_action"],
+    classifier_override: null,
+  }
 }
 
 function createFakeAdmin() {
@@ -305,6 +323,8 @@ test("production agent pipeline marks debug trace as agent final render", async 
 test("POST /api/chat streams agent v1 contract and persists assistant metadata", async () => {
   const fakeAdmin = createFakeAdmin()
   const persistedTurnTraces: unknown[] = []
+  const persistedStateTransitions: unknown[] = []
+  const conversationStateTransition = createConversationStateTransition()
   const matchedProduct = createProduct("primary")
   const categoryDecision = {
     category: "shampoo",
@@ -318,6 +338,7 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
   const debugTrace = {
     request_id: "request-1",
     route_packet: { product_category: "shampoo" },
+    conversation_state: conversationStateTransition,
     response_composition: {
       path: "agent_final_render",
       migration_mode: "legacy_only",
@@ -380,6 +401,7 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
             sources: [],
             retrievalSummary: { final_context_count: 0 },
             routerDecision,
+            conversationStateTransition,
             categoryDecision,
             engineTrace,
             debugTrace,
@@ -397,6 +419,9 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
           response_mode: responseMode,
         }),
         buildDoneEventData: (params: unknown) => params,
+        persistConversationStateTransition: async (_admin: unknown, params: unknown) => {
+          persistedStateTransitions.push(params)
+        },
         extractConversationMemory: async () => {},
         buildRetrievalDebugEventData: (trace: unknown) => ({ trace }),
         finalizeChatTurnTrace: (trace: unknown, final: unknown) => ({
@@ -460,6 +485,11 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
   assert.deepEqual(assistantInsert.rag_context.category_decision, categoryDecision)
   assert.deepEqual(assistantInsert.rag_context.engine_trace, engineTrace)
   assert.equal(assistantInsert.rag_context.response_mode, "answer_direct")
+  assert.deepEqual(persistedStateTransitions[0], {
+    conversationId: "conversation-1",
+    userId: "user-1",
+    transition: conversationStateTransition,
+  })
   assert.deepEqual(persistedTurnTraces[0], {
     conversation_id: "conversation-1",
     user_id: "user-1",

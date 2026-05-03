@@ -49,6 +49,7 @@ async function loadChatRuntimeDeps() {
       summarizeEngineTraceForLangfuse,
       summarizeProductsForLangfuse,
     },
+    { persistConversationStateTransition },
     { chatMessageSchema },
     { generateConversationTitle },
   ] = await Promise.all([
@@ -57,6 +58,7 @@ async function loadChatRuntimeDeps() {
     import("@/lib/rag/chat-response"),
     import("@/lib/rag/memory-extractor"),
     import("@/lib/rag/debug-trace"),
+    import("@/lib/rag/conversation-state-store"),
     import("@/lib/validators"),
     import("@/lib/rag/title-generator"),
   ])
@@ -72,6 +74,7 @@ async function loadChatRuntimeDeps() {
     finalizeChatTurnTrace,
     summarizeEngineTraceForLangfuse,
     summarizeProductsForLangfuse,
+    persistConversationStateTransition,
     chatMessageSchema,
     generateConversationTitle,
   }
@@ -149,6 +152,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
       finalizeChatTurnTrace,
       summarizeEngineTraceForLangfuse,
       summarizeProductsForLangfuse,
+      persistConversationStateTransition,
       chatMessageSchema,
       generateConversationTitle,
     } = await deps.loadRuntimeDeps()
@@ -248,6 +252,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
         sources,
         retrievalSummary,
         routerDecision,
+        conversationStateTransition,
         categoryDecision,
         engineTrace,
         debugTrace,
@@ -396,6 +401,12 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
 
               if (assistantMessageError) {
                 console.error("Failed to save assistant message:", assistantMessageError)
+              } else {
+                await persistConversationStateTransition(admin, {
+                  conversationId: activeConversationId,
+                  userId: user.id,
+                  transition: conversationStateTransition,
+                })
               }
 
               controller.enqueue(

@@ -477,6 +477,7 @@ export async function runProductionAgentPipeline(
     conversation_history_count: conversationHistory.length,
     classification,
     router_decision: routerDecision,
+    conversation_state: conversationStateTransition,
     clarification_questions:
       routerDecision.response_mode === "clarify_only" && selectedProducts?.missing_info[0]
         ? [selectedProducts.missing_info[0].detail]

@@ -777,6 +777,7 @@ export interface ChatTurnTrace {
   conversation_history_count: number
   classification: ClassificationResult
   router_decision: RouterDecision
+  conversation_state: ConversationStateTransition
   clarification_questions: string[]
   hair_profile_snapshot: HairProfile | null
   memory_context: string | null
