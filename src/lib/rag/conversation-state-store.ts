@@ -48,11 +48,15 @@ export async function persistConversationStateTransition(
     transition: ConversationStateTransition
   },
 ): Promise<void> {
-  const { error } = await supabase
-    .from("conversation_states")
-    .upsert(buildConversationStateUpsertPayload(params), { onConflict: "conversation_id" })
+  try {
+    const { error } = await supabase
+      .from("conversation_states")
+      .upsert(buildConversationStateUpsertPayload(params), { onConflict: "conversation_id" })
 
-  if (error) {
+    if (error) {
+      console.error("Failed to persist conversation state:", error)
+    }
+  } catch (error) {
     console.error("Failed to persist conversation state:", error)
   }
 }

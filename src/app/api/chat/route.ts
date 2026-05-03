@@ -406,7 +406,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   conversationId: activeConversationId,
                   userId: user.id,
                   transition: conversationStateTransition,
-                })
+                }).catch(() => {})
               }
 
               controller.enqueue(

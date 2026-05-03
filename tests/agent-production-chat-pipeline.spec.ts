@@ -516,3 +516,154 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
     },
   })
 })
+
+test("POST /api/chat continues stream when conversation state persistence rejects", async () => {
+  const fakeAdmin = createFakeAdmin()
+  const persistedTurnTraces: unknown[] = []
+  const conversationStateTransition = createConversationStateTransition()
+  const matchedProduct = createProduct("primary")
+  const categoryDecision = {
+    category: "shampoo",
+    relevant: true,
+  }
+  const engineTrace = {
+    categories: {
+      shampoo: categoryDecision,
+    },
+  }
+  const debugTrace = {
+    request_id: "request-1",
+    route_packet: { product_category: "shampoo" },
+    conversation_state: conversationStateTransition,
+    response_composition: {
+      path: "agent_final_render",
+      migration_mode: "legacy_only",
+      fallback_reason: null,
+      rendering_path: null,
+      plan_type: "agent_v1",
+      attachment_mode: null,
+    },
+  }
+  const routerDecision = {
+    retrieval_mode: "hybrid",
+    response_mode: "answer_direct",
+    confidence: 0.92,
+    slot_completeness: 1,
+    policy_overrides: ["agent_v1_front_door", "product_policy:recommend"],
+  }
+  let persistenceAttemptedAfterAssistantSave = false
+  const handler = createChatPostHandler({
+    createClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({ data: { user: { id: "user-1" } } }),
+        },
+      }) as never,
+    checkRateLimit: async () => ({ allowed: true }) as never,
+    ensureLangfuseTracing: () => null,
+    flushLangfuseClient: async () => {},
+    getLangfuseClient: () => ({ getTraceUrl: async () => "https://trace.test/request-1" }) as never,
+    getLangfuseRelease: () => "test-release",
+    resolveLangfuseTraceId: () => "trace-1",
+    startObservation: () =>
+      ({
+        otelSpan: {},
+        update: () => {},
+        end: () => {},
+      }) as never,
+    propagateAttributes: propagateAttributesStub as never,
+    otelContext: {
+      active: () => ({}),
+      with: (_context: unknown, work: () => unknown) => work(),
+    } as never,
+    otelTrace: {
+      setSpan: () => ({}),
+    } as never,
+    randomUUID: () => "request-1",
+    now: () => 100,
+    persistConversationTurnTrace: async (trace) => {
+      persistedTurnTraces.push(trace)
+    },
+    loadRuntimeDeps: async () =>
+      ({
+        createAdminClient: () => fakeAdmin.client,
+        runProductionAgentPipeline: async () => ({
+          stream: createTextStream("Das ist die Agent-v1-Antwort."),
+          conversationId: "conversation-1",
+          intent: "product_recommendation",
+          matchedProducts: [matchedProduct],
+          sources: [],
+          retrievalSummary: { final_context_count: 0 },
+          routerDecision,
+          conversationStateTransition,
+          categoryDecision,
+          engineTrace,
+          debugTrace,
+        }),
+        buildAssistantRagContext: (
+          sources: unknown[],
+          decision: unknown,
+          trace: unknown,
+          responseMode: unknown,
+        ) => ({
+          sources,
+          category_decision: decision,
+          engine_trace: trace,
+          response_mode: responseMode,
+        }),
+        buildDoneEventData: (params: unknown) => params,
+        persistConversationStateTransition: async () => {
+          persistenceAttemptedAfterAssistantSave = fakeAdmin.inserts.messages.length === 2
+          throw new Error("state persistence unavailable")
+        },
+        extractConversationMemory: async () => {},
+        buildRetrievalDebugEventData: (trace: unknown) => ({ trace }),
+        finalizeChatTurnTrace: (trace: unknown, final: unknown) => ({
+          trace,
+          final,
+          response_composition: (trace as { response_composition: unknown }).response_composition,
+          decision_context: {
+            engine_trace: engineTrace,
+            matched_products: [matchedProduct],
+          },
+        }),
+        summarizeEngineTraceForLangfuse: (trace: unknown) => ({ trace }),
+        summarizeProductsForLangfuse: (products: unknown) => products,
+        chatMessageSchema: {
+          safeParse: (body: unknown) => ({
+            success: true,
+            data: body as { message: string; conversation_id?: string | null },
+          }),
+        },
+        generateConversationTitle: async () => {},
+      }) as never,
+  })
+
+  const response = await handler(
+    new Request("http://localhost/api/chat", {
+      method: "POST",
+      body: JSON.stringify({ message: "Welches Shampoo passt?" }),
+    }),
+  )
+  const events = parseSseEvents(await response.text())
+
+  assert.equal(persistenceAttemptedAfterAssistantSave, true)
+  assert.deepEqual(
+    events.map((event) => event.type),
+    [
+      "conversation_id",
+      "langfuse_trace",
+      "confidence",
+      "retrieval_debug",
+      "content_delta",
+      "product_recommendations",
+      "assistant_message",
+      "done",
+    ],
+  )
+  assert.equal(
+    events.some((event) => event.type === "error"),
+    false,
+  )
+  assert.equal(persistedTurnTraces.length, 1)
+})
