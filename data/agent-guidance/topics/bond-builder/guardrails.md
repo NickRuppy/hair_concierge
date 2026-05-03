@@ -8,8 +8,10 @@ Do not:
 - Promise regrowth, split-end repair, permanent reversal, or full restoration to virgin hair
 - Present limited independent evidence as if it were strong clinical proof
 - Confuse chelation or detoxing with bond repair
+- Put acidic bonding shampoos/conditioners, detox/chelating products, or generic "bond" masks/serums into the strict bondbuilder bucket without curation
 - Turn brand-default timings or cadences into app-level rules
 - Treat the at-home stretch test as a standalone diagnosis
+- Tell every user to deep-cleanse before every bondbuilder use; reserve reset products for the reset/deep-cleansing category logic
 
 Preferred evidence framing:
 - Mechanism-plausible

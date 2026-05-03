@@ -1344,7 +1344,7 @@ test("engine oil reranking allows only adjacent finish bridge below exact thresh
   )
 })
 
-test("engine bondbuilder reranking prefers exact intensity and application fit over a higher semantic score", () => {
+test("engine bondbuilder reranking exposes protocol metadata without ranking by treatment mode", () => {
   const decision: BondbuilderCategoryDecision = {
     category: "bondbuilder",
     relevant: true,
@@ -1354,6 +1354,11 @@ test("engine bondbuilder reranking prefers exact intensity and application fit o
     targetProfile: {
       bondRepairIntensity: "intensive",
       applicationMode: "pre_shampoo",
+      chemicalCrosslinkLane: false,
+      peptideChainLane: true,
+      mixedOrSevereCombo: false,
+      proteinBalanceSupportingOnly: false,
+      role: "recommended",
     },
     notes: [],
   }
@@ -1368,11 +1373,19 @@ test("engine bondbuilder reranking prefers exact intensity and application fit o
       product_id: "supportive",
       bond_repair_intensity: "intensive",
       application_mode: "post_wash_leave_in",
+      bond_repair_axis: "peptide_chain",
+      treatment_mode: "leave_in",
+      product_format: "leave_in_mask",
+      usage_protocol: "k18_leave_in",
     },
     {
       product_id: "ideal",
       bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
+      bond_repair_axis: "disulfide_crosslink",
+      treatment_mode: "rinse_out",
+      product_format: "cream_treatment",
+      usage_protocol: "olaplex_3plus",
     },
   ]
 
@@ -1382,12 +1395,263 @@ test("engine bondbuilder reranking prefers exact intensity and application fit o
     decision,
   })
 
-  assert.equal(reranked[0]?.id, "ideal")
+  assert.equal(reranked[0]?.id, "supportive")
   assert.equal(reranked[0]?.recommendation_meta?.category, "bondbuilder")
   assert.equal(
     (reranked[0]?.recommendation_meta as BondbuilderRecommendationMetadata | undefined)
-      ?.application_mode,
-    "pre_shampoo",
+      ?.usage_protocol,
+    "k18_leave_in",
+  )
+})
+
+test("engine bondbuilder reranking excludes retired and add-on products from primary cards", () => {
+  const decision: BondbuilderCategoryDecision = {
+    category: "bondbuilder",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      bondRepairIntensity: "intensive",
+      applicationMode: "pre_shampoo",
+      chemicalCrosslinkLane: true,
+      peptideChainLane: false,
+      mixedOrSevereCombo: false,
+      proteinBalanceSupportingOnly: false,
+      role: "recommended",
+    },
+    notes: [],
+  }
+
+  const candidates = [
+    createMatchedProduct("active", "Bondbuilder", { combined_score: 0.6 }),
+    createMatchedProduct("legacy", "Bondbuilder", {
+      combined_score: 0.95,
+      lifecycle_status: "discontinued",
+    }),
+    createMatchedProduct("addon", "Bondbuilder", { combined_score: 0.9 }),
+  ]
+
+  const specs: ProductBondbuilderSpecs[] = candidates.map((candidate) => ({
+    product_id: candidate.id,
+    bond_repair_intensity: "intensive",
+    application_mode: "pre_shampoo",
+    bond_repair_axis: "disulfide_crosslink",
+    treatment_mode: "rinse_out",
+    product_format: "cream_treatment",
+    usage_protocol: candidate.id === "active" ? "olaplex_3plus" : "olaplex_3_legacy",
+  }))
+
+  const reranked = rerankBondbuilderProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    outgoingRelationshipsByProductId: new Map([
+      [
+        "addon",
+        [
+          {
+            source_product_id: "addon",
+            target_product_id: "active",
+            relationship_type: "add_on_for",
+          },
+        ],
+      ],
+    ]),
+  })
+
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["active"],
+  )
+  assert.match(reranked[0]?.recommendation_meta?.usage_hint ?? "", /No\.3PLUS ins nasse Haar/)
+})
+
+test("engine bondbuilder reranking attaches optional add-ons for severe combo cases", () => {
+  const decision: BondbuilderCategoryDecision = {
+    category: "bondbuilder",
+    relevant: true,
+    action: "add",
+    planReasonCodes: ["bondbuilder_mixed_severe_combo"],
+    currentInventory: null,
+    targetProfile: {
+      bondRepairIntensity: "intensive",
+      applicationMode: "pre_shampoo",
+      chemicalCrosslinkLane: true,
+      peptideChainLane: true,
+      mixedOrSevereCombo: true,
+      proteinBalanceSupportingOnly: false,
+      role: "recommended",
+    },
+    notes: [],
+  }
+
+  const candidates = [
+    createMatchedProduct("olaplex-3plus", "Bondbuilder", { combined_score: 0.7 }),
+    createMatchedProduct("epres", "Bondbuilder", { combined_score: 0.68 }),
+    createMatchedProduct("k18", "Bondbuilder", { combined_score: 0.66 }),
+  ]
+
+  const specs: ProductBondbuilderSpecs[] = [
+    {
+      product_id: "olaplex-3plus",
+      bond_repair_intensity: "intensive",
+      application_mode: "pre_shampoo",
+      bond_repair_axis: "disulfide_crosslink",
+      treatment_mode: "rinse_out",
+      product_format: "cream_treatment",
+      usage_protocol: "olaplex_3plus",
+    },
+    {
+      product_id: "epres",
+      bond_repair_intensity: "intensive",
+      application_mode: "pre_shampoo",
+      bond_repair_axis: "disulfide_crosslink",
+      treatment_mode: "rinse_out",
+      product_format: "spray_treatment",
+      usage_protocol: "epres_spray",
+    },
+    {
+      product_id: "k18",
+      bond_repair_intensity: "intensive",
+      application_mode: "post_wash_leave_in",
+      bond_repair_axis: "peptide_chain",
+      treatment_mode: "leave_in",
+      product_format: "leave_in_mask",
+      usage_protocol: "k18_leave_in",
+    },
+    {
+      product_id: "olaplex-0",
+      bond_repair_intensity: "intensive",
+      application_mode: "pre_shampoo",
+      bond_repair_axis: "disulfide_crosslink",
+      treatment_mode: "rinse_out",
+      product_format: "primer_treatment",
+      usage_protocol: "olaplex_0_booster",
+    },
+  ]
+
+  const reranked = rerankBondbuilderProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    incomingRelationshipsByProductId: new Map([
+      [
+        "olaplex-3plus",
+        [
+          {
+            source_product_id: "olaplex-0",
+            target_product_id: "olaplex-3plus",
+            relationship_type: "add_on_for",
+          },
+        ],
+      ],
+    ]),
+    relatedProductsById: new Map([
+      [
+        "olaplex-0",
+        {
+          ...createMatchedProduct("olaplex-0", "Bondbuilder"),
+          name: "OLAPLEX No.0 Intensive Bond Building Treatment",
+        },
+      ],
+    ]),
+  })
+
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["olaplex-3plus", "epres", "k18"],
+  )
+  assert.deepEqual(
+    (reranked[0]?.recommendation_meta as BondbuilderRecommendationMetadata | undefined)
+      ?.attached_add_ons?.[0],
+    {
+      relationship_type: "add_on_for",
+      product_id: "olaplex-0",
+      name: "OLAPLEX No.0 Intensive Bond Building Treatment",
+      usage_protocol: "olaplex_0_booster",
+      reason: "Optionaler Booster fuer sehr starke Schaedigung vor No.3PLUS.",
+    },
+  )
+})
+
+test("engine bondbuilder reranking scopes named K18 and OLAPLEX comparisons", () => {
+  const decision: BondbuilderCategoryDecision = {
+    category: "bondbuilder",
+    relevant: true,
+    action: "add",
+    planReasonCodes: ["bondbuilder_mixed_severe_combo"],
+    currentInventory: null,
+    targetProfile: {
+      bondRepairIntensity: "intensive",
+      applicationMode: "pre_shampoo",
+      chemicalCrosslinkLane: true,
+      peptideChainLane: true,
+      mixedOrSevereCombo: true,
+      proteinBalanceSupportingOnly: false,
+      role: "recommended",
+    },
+    notes: [],
+  }
+
+  const candidates = [
+    createMatchedProduct("olaplex-3plus", "Bondbuilder", {
+      brand: "OLAPLEX",
+      name: "OLAPLEX No.3PLUS Complete Repair Treatment",
+      combined_score: 0.7,
+    }),
+    createMatchedProduct("epres", "Bondbuilder", {
+      brand: "Epres",
+      name: "Epres Bond Repair Treatment",
+      combined_score: 0.68,
+    }),
+    createMatchedProduct("k18", "Bondbuilder", {
+      brand: "K18",
+      name: "K18 Leave-In Molecular Repair Hair Mask",
+      combined_score: 0.66,
+    }),
+  ]
+
+  const specs: ProductBondbuilderSpecs[] = [
+    {
+      product_id: "olaplex-3plus",
+      bond_repair_intensity: "intensive",
+      application_mode: "pre_shampoo",
+      bond_repair_axis: "disulfide_crosslink",
+      treatment_mode: "rinse_out",
+      product_format: "cream_treatment",
+      usage_protocol: "olaplex_3plus",
+    },
+    {
+      product_id: "epres",
+      bond_repair_intensity: "intensive",
+      application_mode: "pre_shampoo",
+      bond_repair_axis: "disulfide_crosslink",
+      treatment_mode: "rinse_out",
+      product_format: "spray_treatment",
+      usage_protocol: "epres_spray",
+    },
+    {
+      product_id: "k18",
+      bond_repair_intensity: "intensive",
+      application_mode: "post_wash_leave_in",
+      bond_repair_axis: "peptide_chain",
+      treatment_mode: "leave_in",
+      product_format: "leave_in_mask",
+      usage_protocol: "k18_leave_in",
+    },
+  ]
+
+  const reranked = rerankBondbuilderProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    message: "Soll ich K18 oder OLAPLEX nehmen?",
+  })
+
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["olaplex-3plus", "k18"],
   )
 })
 

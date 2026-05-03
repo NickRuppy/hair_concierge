@@ -27,6 +27,12 @@ import {
 } from "@/lib/oil/constants"
 import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
 import {
+  PRODUCT_BOND_PRODUCT_FORMAT_LABELS,
+  PRODUCT_BOND_REPAIR_AXIS_LABELS,
+  PRODUCT_BOND_TREATMENT_MODE_LABELS,
+  PRODUCT_BOND_USAGE_PROTOCOL_LABELS,
+} from "@/lib/product-specs/constants"
+import {
   SOURCE_TYPE_LABELS,
   PROFILE_CONCERN_LABELS,
   GOAL_LABELS,
@@ -555,6 +561,15 @@ function formatEngineCategoryDecision(
           `- Einsatzmodus: ${BOND_APPLICATION_LABELS[categoryDecision.targetProfile.applicationMode]}`,
         )
       }
+      if (categoryDecision.targetProfile?.chemicalCrosslinkLane) {
+        parts.push("- Lane-Hinweis: Disulfid-/Crosslink-Produkte plausibel")
+      }
+      if (categoryDecision.targetProfile?.peptideChainLane) {
+        parts.push("- Lane-Hinweis: Peptid-/Laengsstruktur-Produkte plausibel")
+      }
+      if (categoryDecision.targetProfile?.mixedOrSevereCombo) {
+        parts.push("- Schwere/Mix-Lage: bis zu drei regulaere Bondbuilder-Karten erlaubt")
+      }
       break
     case "deep_cleansing_shampoo":
       if (categoryDecision.targetProfile?.scalpTypeFocus) {
@@ -832,6 +847,44 @@ function formatProducts(
           }
           if (meta.adjunct_scalp_support) {
             parts.push("  Kopfhaut-Hinweis: nur als unterstuetzende Zusatzpflege")
+          }
+        }
+
+        if (meta.category === "bondbuilder") {
+          if (meta.bond_repair_axis) {
+            parts.push(
+              `  Reparatur-Lane: ${
+                PRODUCT_BOND_REPAIR_AXIS_LABELS[meta.bond_repair_axis] ?? meta.bond_repair_axis
+              }`,
+            )
+          }
+          if (meta.treatment_mode) {
+            parts.push(
+              `  Treatment-Modus: ${
+                PRODUCT_BOND_TREATMENT_MODE_LABELS[meta.treatment_mode] ?? meta.treatment_mode
+              }`,
+            )
+          }
+          if (meta.product_format) {
+            parts.push(
+              `  Format: ${
+                PRODUCT_BOND_PRODUCT_FORMAT_LABELS[meta.product_format] ?? meta.product_format
+              }`,
+            )
+          }
+          if (meta.usage_protocol) {
+            parts.push(
+              `  Nutzungsprotokoll: ${
+                PRODUCT_BOND_USAGE_PROTOCOL_LABELS[meta.usage_protocol] ?? meta.usage_protocol
+              }`,
+            )
+          }
+          if ((meta.attached_add_ons ?? []).length > 0) {
+            parts.push(
+              `  Add-ons: ${(meta.attached_add_ons ?? [])
+                .map((addOn) => `${addOn.name} (${addOn.reason})`)
+                .join(" ; ")}`,
+            )
           }
         }
 

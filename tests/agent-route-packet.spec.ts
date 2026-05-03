@@ -836,6 +836,43 @@ test("buildAgentRoutePacket infers oil for clear product asks with null classifi
   }
 })
 
+test("buildAgentRoutePacket infers bondbuilder for named K18 and OLAPLEX comparisons", () => {
+  const messages = [
+    "Soll ich K18 oder OLAPLEX nehmen?",
+    "K18 vs Olaplex - was passt besser?",
+    "Welches Bondbuilder Produkt passt zu mir?",
+    "Ist Epres oder K18 besser fuer mich?",
+  ]
+
+  for (const message of messages) {
+    const packet = buildAgentRoutePacket({
+      message,
+      userContext: createContext(),
+      classification: createClassification({
+        user_job: "compare_or_decide",
+        product_category: null,
+      }),
+    })
+
+    assert.equal(packet.product_category, "bondbuilder", message)
+    assert.deepEqual(packet.tool_plan, ["select_products"], message)
+  }
+})
+
+test("buildAgentRoutePacket keeps explicit shampoo category ahead of OLAPLEX brand-only wording", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Welches OLAPLEX Shampoo passt zu mir?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: null,
+    }),
+  })
+
+  assert.equal(packet.product_category, "shampoo")
+  assert.deepEqual(packet.tool_plan, ["select_products"])
+})
+
 test("buildAgentRoutePacket keeps oily-root oil suitability conceptual", () => {
   const packet = buildAgentRoutePacket({
     message: "Ich habe schnell fettigen Ansatz. Ist Haaroel ueberhaupt sinnvoll?",

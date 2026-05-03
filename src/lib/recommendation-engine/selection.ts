@@ -15,8 +15,11 @@ import type {
   OilRecommendationMetadata,
   PeelingRecommendationMetadata,
   Product,
+  ProductRelationshipType,
+  ProductSummary,
   ShampooRecommendationMetadata,
 } from "@/lib/types"
+import { getBondbuilderUsageHint } from "@/lib/bondbuilder/usage-protocols"
 import type { ProductConditionerRerankSpecs } from "@/lib/conditioner/constants"
 import type {
   LeaveInFormat,
@@ -79,6 +82,29 @@ const CANDIDATE_COUNT = 10
 
 type ScoredEngineProduct = MatchedProduct & {
   _engineScore: number
+}
+
+interface ProductRelationshipRow {
+  source_product_id: string
+  target_product_id: string
+  relationship_type: ProductRelationshipType
+}
+
+type RelatedProduct = ProductSummary & { similarity?: number; combined_score?: number }
+
+export function isEligibleForPrimaryRecommendation(
+  product: {
+    is_active?: boolean | null
+    lifecycle_status?: string | null
+  },
+  outgoingRelationshipTypes: ReadonlySet<ProductRelationshipType | string>,
+): boolean {
+  return (
+    product.is_active !== false &&
+    (product.lifecycle_status ?? "active") === "active" &&
+    !outgoingRelationshipTypes.has("replaced_by") &&
+    !outgoingRelationshipTypes.has("add_on_for")
+  )
 }
 
 type ScoredConditionerProduct = ScoredEngineProduct & {
@@ -759,61 +785,156 @@ export function rerankOilProductsWithEngine(params: {
   return stripScore(scored).slice(0, SELECTION_LIMIT)
 }
 
-function buildBondbuilderUsageHint(decision: BondbuilderCategoryDecision): string {
-  if (decision.targetProfile?.applicationMode === "post_wash_leave_in") {
-    return "Nach der Waesche oder im handtuchtrockenen Haar gemaess Produktanleitung sparsam einsetzen und nicht als Basispflege uebernutzen."
-  }
-
-  return "Vor dem Waschen als kurartige Bondbuilding-Behandlung gemaess Produktanleitung einsetzen und danach gruendlich ausspuelen."
-}
-
 export function rerankBondbuilderProductsWithEngine(params: {
   candidates: MatchedProduct[]
   specs: ProductBondbuilderSpecs[]
   decision: BondbuilderCategoryDecision
+  message?: string
+  outgoingRelationshipsByProductId?: Map<string, ProductRelationshipRow[]>
+  incomingRelationshipsByProductId?: Map<string, ProductRelationshipRow[]>
+  relatedProductsById?: Map<string, RelatedProduct>
 }): MatchedProduct[] {
-  const { candidates, specs, decision } = params
+  const {
+    candidates,
+    specs,
+    decision,
+    message = "",
+    outgoingRelationshipsByProductId = new Map<string, ProductRelationshipRow[]>(),
+    incomingRelationshipsByProductId = new Map<string, ProductRelationshipRow[]>(),
+    relatedProductsById = new Map<string, RelatedProduct>(),
+  } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
 
   const specsByProductId = new Map(specs.map((spec) => [spec.product_id, spec]))
-  const scored: ScoredEngineProduct[] = candidates.map((product) => {
-    const spec = specsByProductId.get(product.id) ?? null
-    const fit = evaluateBondbuilderFit(decision, spec as BondbuilderFitSpec | null)
-    const { positives, tradeoffs } = buildFitSummary(
-      fit,
-      "Passt sehr gut zur benoetigten Bondbuilding-Intensitaet und zum geplanten Einsatzmodus.",
-      "Passt weitgehend zum aktuellen Bondbuilding-Bedarf.",
-      "Die Bondbuilder-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
-      "Weicht bei Intensitaet oder Einsatzmodus zu deutlich vom aktuellen Bedarf ab.",
+  const requestedBrands = deriveRequestedBondbuilderBrands(message)
+  const eligibleCandidates = candidates.filter((product) => {
+    const outgoingRelationshipTypes: Set<ProductRelationshipType> = new Set(
+      (outgoingRelationshipsByProductId.get(product.id) ?? []).map(
+        (relationship) => relationship.relationship_type,
+      ),
     )
-    const score = toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
-
-    const recommendationMeta: BondbuilderRecommendationMetadata = {
-      category: "bondbuilder",
-      score: Math.round(score * 10) / 10,
-      top_reasons: [
-        ...positives,
-        target.bondRepairIntensity === "intensive"
-          ? "Unterstuetzt aktuell eher intensiven strukturellen Reparaturbedarf."
-          : "Passt fuer eher konservative Bondbuilding-Unterstuetzung.",
-      ].slice(0, 3),
-      tradeoffs,
-      usage_hint: buildBondbuilderUsageHint(decision),
-      matched_intensity: target.bondRepairIntensity,
-      application_mode: target.applicationMode,
-    }
-
-    return {
-      ...product,
-      bondbuilder_specs: spec,
-      recommendation_meta: recommendationMeta,
-      _engineScore: score,
-    }
+    return isEligibleForPrimaryRecommendation(product, outgoingRelationshipTypes)
   })
+  const requestedBrandCandidates =
+    requestedBrands.length > 0
+      ? eligibleCandidates.filter((product) =>
+          matchesRequestedBondbuilderBrand(product, requestedBrands),
+        )
+      : []
+  const primaryCandidates =
+    requestedBrandCandidates.length > 0 ? requestedBrandCandidates : eligibleCandidates
+
+  const scored: Array<ScoredEngineProduct & { _bondRepairAxis: string | null }> =
+    primaryCandidates.map((product) => {
+      const spec = specsByProductId.get(product.id) ?? null
+      const fit = evaluateBondbuilderFit(decision, spec as BondbuilderFitSpec | null)
+      const { positives, tradeoffs } = buildFitSummary(
+        fit,
+        "Passt sehr gut zur benoetigten Bondbuilding-Intensitaet.",
+        "Passt weitgehend zum aktuellen Bondbuilding-Bedarf.",
+        "Die Bondbuilder-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
+        "Weicht bei der Intensitaet zu deutlich vom aktuellen Bondbuilding-Bedarf ab.",
+      )
+      const score =
+        toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
+      const laneScore =
+        spec?.bond_repair_axis === "disulfide_crosslink" && target.chemicalCrosslinkLane
+          ? 7
+          : spec?.bond_repair_axis === "peptide_chain" && target.peptideChainLane
+            ? 7
+            : 0
+      const adjustedScore = score + laneScore
+      const attachedAddOns = (incomingRelationshipsByProductId.get(product.id) ?? [])
+        .filter((relationship) => relationship.relationship_type === "add_on_for")
+        .map((relationship) => {
+          const addOn = relatedProductsById.get(relationship.source_product_id)
+          const addOnSpec = specsByProductId.get(relationship.source_product_id)
+          if (!addOn) return null
+
+          return {
+            relationship_type: "add_on_for" as const,
+            product_id: addOn.id,
+            name: addOn.name,
+            usage_protocol: addOnSpec?.usage_protocol ?? null,
+            reason: "Optionaler Booster fuer sehr starke Schaedigung vor No.3PLUS.",
+          }
+        })
+        .filter((item): item is NonNullable<typeof item> => Boolean(item))
+
+      const recommendationMeta: BondbuilderRecommendationMetadata = {
+        category: "bondbuilder",
+        score: Math.round(adjustedScore * 10) / 10,
+        top_reasons: [
+          ...positives,
+          target.bondRepairIntensity === "intensive"
+            ? "Unterstuetzt aktuell eher intensiven strukturellen Reparaturbedarf."
+            : "Passt fuer eher konservative Bondbuilding-Unterstuetzung.",
+        ].slice(0, 3),
+        tradeoffs,
+        usage_hint: getBondbuilderUsageHint(spec?.usage_protocol),
+        matched_intensity: target.bondRepairIntensity,
+        application_mode: target.applicationMode,
+        bond_repair_axis: spec?.bond_repair_axis ?? null,
+        treatment_mode: spec?.treatment_mode ?? null,
+        product_format: spec?.product_format ?? null,
+        usage_protocol: spec?.usage_protocol ?? null,
+        lifecycle_status: product.lifecycle_status ?? "active",
+        attached_add_ons:
+          target.mixedOrSevereCombo && attachedAddOns.length > 0 ? attachedAddOns : undefined,
+      }
+
+      return {
+        ...product,
+        bondbuilder_specs: spec,
+        recommendation_meta: recommendationMeta,
+        _engineScore: adjustedScore,
+        _bondRepairAxis: spec?.bond_repair_axis ?? null,
+      }
+    })
 
   scored.sort(compareScoredProducts)
-  return stripScore(scored).slice(0, SELECTION_LIMIT)
+  const limit = target.mixedOrSevereCombo ? SELECTION_LIMIT : 2
+  const selected: typeof scored = []
+
+  if (!target.mixedOrSevereCombo && target.chemicalCrosslinkLane && target.peptideChainLane) {
+    const crosslink = scored.find((product) => product._bondRepairAxis === "disulfide_crosslink")
+    const peptide = scored.find((product) => product._bondRepairAxis === "peptide_chain")
+    if (crosslink) selected.push(crosslink)
+    if (peptide && peptide.id !== crosslink?.id) selected.push(peptide)
+  }
+
+  for (const product of scored) {
+    if (selected.some((selectedProduct) => selectedProduct.id === product.id)) continue
+    selected.push(product)
+    if (selected.length >= limit) break
+  }
+
+  return stripScore(selected).slice(0, limit)
+}
+
+type RequestedBondbuilderBrand = "k18" | "olaplex" | "epres"
+
+function deriveRequestedBondbuilderBrands(message: string): RequestedBondbuilderBrand[] {
+  const normalized = message.toLowerCase()
+  const brands: RequestedBondbuilderBrand[] = []
+  const addBrand = (brand: RequestedBondbuilderBrand) => {
+    if (!brands.includes(brand)) brands.push(brand)
+  }
+
+  if (/\bk18\b|\bkr18\b/.test(normalized)) addBrand("k18")
+  if (/\bolaplex\b/.test(normalized)) addBrand("olaplex")
+  if (/\bepres\b/.test(normalized)) addBrand("epres")
+
+  return brands
+}
+
+function matchesRequestedBondbuilderBrand(
+  product: MatchedProduct,
+  requestedBrands: readonly RequestedBondbuilderBrand[],
+): boolean {
+  const text = `${product.brand ?? ""} ${product.name}`.toLowerCase()
+  return requestedBrands.some((brand) => text.includes(brand))
 }
 
 function buildDeepCleansingShampooUsageHint(): string {
@@ -1905,9 +2026,19 @@ export async function selectBondbuilderProductsWithEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime?: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
+  const runtime =
+    params.runtime ??
+    buildRecommendationEngineRuntimeFromPersistence(
+      hairProfile,
+      routineItems,
+      buildRecommendationRequestContext({
+        requestedCategory: "bondbuilder",
+        message,
+      }),
+    )
   const decision = runtime.categories.bondbuilder
   if (!decision.relevant || !decision.targetProfile) return []
 
@@ -1943,10 +2074,96 @@ export async function selectBondbuilderProductsWithEngine(params: {
     return []
   }
 
+  const candidateIds = candidates.map((candidate) => candidate.id)
+  const { data: outgoingRelationships, error: outgoingRelationshipsError } = await supabase
+    .from("product_relationships")
+    .select("source_product_id,target_product_id,relationship_type")
+    .in("source_product_id", candidateIds)
+
+  if (outgoingRelationshipsError) {
+    console.error(
+      "Failed to load outgoing product relationships for recommendation engine:",
+      outgoingRelationshipsError,
+    )
+  }
+
+  const { data: incomingRelationships, error: incomingRelationshipsError } = await supabase
+    .from("product_relationships")
+    .select("source_product_id,target_product_id,relationship_type")
+    .in("target_product_id", candidateIds)
+
+  if (incomingRelationshipsError) {
+    console.error(
+      "Failed to load incoming product relationships for recommendation engine:",
+      incomingRelationshipsError,
+    )
+  }
+
+  const outgoingRelationshipsByProductId = new Map<string, ProductRelationshipRow[]>()
+  for (const relationship of (outgoingRelationships ?? []) as ProductRelationshipRow[]) {
+    const current = outgoingRelationshipsByProductId.get(relationship.source_product_id) ?? []
+    current.push(relationship)
+    outgoingRelationshipsByProductId.set(relationship.source_product_id, current)
+  }
+
+  const incomingRelationshipsByProductId = new Map<string, ProductRelationshipRow[]>()
+  for (const relationship of (incomingRelationships ?? []) as ProductRelationshipRow[]) {
+    const current = incomingRelationshipsByProductId.get(relationship.target_product_id) ?? []
+    current.push(relationship)
+    incomingRelationshipsByProductId.set(relationship.target_product_id, current)
+  }
+
+  const relatedProductIds = [
+    ...new Set(
+      ((incomingRelationships ?? []) as ProductRelationshipRow[]).map(
+        (relationship) => relationship.source_product_id,
+      ),
+    ),
+  ]
+  const relatedProductsById = new Map<string, RelatedProduct>()
+  let relatedSpecs: ProductBondbuilderSpecs[] = []
+  if (relatedProductIds.length > 0) {
+    const { data: relatedProducts, error: relatedProductsError } = await supabase
+      .from("products")
+      .select(
+        "id,name,brand,description,short_description,category,affiliate_link,image_url,price_eur,currency,tags,suitable_thicknesses,suitable_concerns,is_active,lifecycle_status,sort_order,created_at,updated_at",
+      )
+      .in("id", relatedProductIds)
+
+    if (relatedProductsError) {
+      console.error(
+        "Failed to load related products for recommendation engine:",
+        relatedProductsError,
+      )
+    }
+
+    for (const product of (relatedProducts ?? []) as RelatedProduct[]) {
+      relatedProductsById.set(product.id, product)
+    }
+
+    const { data: relatedSpecRows, error: relatedSpecsError } = await supabase
+      .from("product_bondbuilder_specs")
+      .select("*")
+      .in("product_id", relatedProductIds)
+
+    if (relatedSpecsError) {
+      console.error(
+        "Failed to load related bondbuilder specs for recommendation engine:",
+        relatedSpecsError,
+      )
+    }
+
+    relatedSpecs = (relatedSpecRows ?? []) as ProductBondbuilderSpecs[]
+  }
+
   return rerankBondbuilderProductsWithEngine({
     candidates,
-    specs: (specs ?? []) as ProductBondbuilderSpecs[],
+    specs: [...((specs ?? []) as ProductBondbuilderSpecs[]), ...relatedSpecs],
     decision,
+    message,
+    outgoingRelationshipsByProductId,
+    incomingRelationshipsByProductId,
+    relatedProductsById,
   })
 }
 

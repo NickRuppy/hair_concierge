@@ -1025,7 +1025,7 @@ test("category set activates support/reset categories for oily buildup-heavy rou
   })
 })
 
-test("bondbuilder fit prefers exact intensity and treats weaker options as mismatch", () => {
+test("bondbuilder fit uses intensity and does not rank by treatment mode", () => {
   const { normalized, damage, plan } = buildEngineState(SEVERE_DAMAGE_PROFILE, [
     {
       category: "bondbuilder",
@@ -1040,19 +1040,47 @@ test("bondbuilder fit prefers exact intensity and treats weaker options as misma
   assert.deepEqual(decision.targetProfile, {
     bondRepairIntensity: "intensive",
     applicationMode: "post_wash_leave_in",
+    chemicalCrosslinkLane: true,
+    peptideChainLane: true,
+    mixedOrSevereCombo: true,
+    proteinBalanceSupportingOnly: false,
+    role: "recommended",
   })
 
-  const exactFit = evaluateBondbuilderFit(decision, {
+  const differentModeFit = evaluateBondbuilderFit(decision, {
     bond_repair_intensity: "intensive",
-    application_mode: "post_wash_leave_in",
+    application_mode: "pre_shampoo",
+    treatment_mode: "rinse_out",
   })
-  assert.equal(exactFit.status, "ideal")
+  assert.equal(differentModeFit.status, "ideal")
 
   const weakerFit = evaluateBondbuilderFit(decision, {
     bond_repair_intensity: "maintenance",
     application_mode: "post_wash_leave_in",
   })
   assert.equal(weakerFit.status, "mismatch")
+})
+
+test("explicit low-need bondbuilder request stays optional instead of disappearing", () => {
+  const { normalized, damage, careNeeds, plan } = buildEngineState(LOW_DAMAGE_PROFILE)
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    buildRecommendationRequestContext({
+      requestedCategory: "bondbuilder",
+      message: "Welcher Bondbuilder passt am besten zu mir?",
+    }),
+  )
+
+  assert.equal(categories.bondbuilder.relevant, true)
+  assert.equal(categories.bondbuilder.action, null)
+  assert.equal(categories.bondbuilder.targetProfile?.role, "optional")
+  assert.equal(categories.bondbuilder.targetProfile?.bondRepairIntensity, "maintenance")
+  assert.ok(
+    categories.bondbuilder.planReasonCodes.includes("bondbuilder_explicit_optional_low_need"),
+  )
 })
 
 test("peeling fit rejects physical scrub when the target route is dryness-safe", () => {

@@ -41,7 +41,7 @@ export function buildCategoryRecommendationSet(
       resetAssessment,
     ),
     oil: buildOilCategoryDecision(profile, requestContext, resetAssessment),
-    bondbuilder: buildBondbuilderCategoryDecision(profile, damage, plan),
+    bondbuilder: buildBondbuilderCategoryDecision(profile, damage, plan, requestContext),
     deepCleansingShampoo: buildDeepCleansingShampooCategoryDecision(
       profile,
       damage,

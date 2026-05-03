@@ -20,6 +20,7 @@ import { applyProductMemoryConstraints } from "@/lib/rag/user-memory"
 import type { MatchedProduct } from "@/lib/rag/product-matcher"
 import type { UserMemoryContext } from "@/lib/rag/user-memory"
 import type {
+  BondbuilderRecommendationMetadata,
   ConditionerRecommendationMetadata,
   HairProfile,
   LeaveInRecommendationMetadata,
@@ -46,6 +47,12 @@ import {
   LEAVE_IN_WEIGHT_LABELS,
 } from "@/lib/leave-in/constants"
 import { SHAMPOO_BUCKET_LABELS } from "@/lib/shampoo/constants"
+import {
+  PRODUCT_BOND_PRODUCT_FORMAT_LABELS,
+  PRODUCT_BOND_REPAIR_AXIS_LABELS,
+  PRODUCT_BOND_TREATMENT_MODE_LABELS,
+  PRODUCT_BOND_USAGE_PROTOCOL_LABELS,
+} from "@/lib/product-specs/constants"
 import {
   HAIR_DENSITIES,
   HAIR_DENSITY_LABELS,
@@ -125,6 +132,11 @@ export const SUPPORTED_PRODUCT_CLAIM_FIELDS = [
   "reset_focus",
   "reset_intensity",
   "color_treated_suitability",
+  "bond_repair_axis",
+  "treatment_mode",
+  "usage_protocol",
+  "product_format",
+  "lifecycle_status",
 ] as const
 
 export type StructuredProductClaimField = (typeof SUPPORTED_PRODUCT_CLAIM_FIELDS)[number]
@@ -148,6 +160,8 @@ export interface SelectedProductResult {
   product_id: string
   name: string
   brand: string | null
+  price_eur: number | null
+  currency: string | null
   fit_reason: string
   caveat: string | null
   supported_claims: SupportedProductClaim[]
@@ -232,6 +246,8 @@ function projectDisplayableProduct(
     product_id: product.id,
     name: product.name,
     brand: product.brand,
+    price_eur: product.price_eur,
+    currency: product.currency,
     fit_reason: buildDisplayableFitReason(product),
     caveat,
     supported_claims: supportedClaims,
@@ -277,6 +293,12 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
 
   if (products.every((product) => product.recommendation_meta?.category === "oil")) {
     return buildOilComparisonFactsForSet(products)
+  }
+
+  if (products.every((product) => product.recommendation_meta?.category === "bondbuilder")) {
+    return Object.fromEntries(
+      products.map((product) => [product.id, buildBondbuilderComparisonFacts(product)]),
+    )
   }
 
   if (
@@ -813,6 +835,16 @@ function buildDisplayableFitReason(product: MatchedProduct): string {
     return buildOilDisplayableFitReason(meta)
   }
 
+  if (meta?.category === "bondbuilder") {
+    const axis = meta.bond_repair_axis
+      ? (PRODUCT_BOND_REPAIR_AXIS_LABELS[meta.bond_repair_axis] ?? meta.bond_repair_axis)
+      : null
+    const protocol = meta.usage_protocol
+      ? (PRODUCT_BOND_USAGE_PROTOCOL_LABELS[meta.usage_protocol] ?? meta.usage_protocol)
+      : null
+    return `${uniqueNonEmpty(["Bondbuilder-Treffer", axis, protocol]).join("; ")}.`
+  }
+
   if (meta?.category === "deep_cleansing_shampoo") {
     const focus =
       meta.reset_focus === "mineral_chlorine"
@@ -952,6 +984,10 @@ function buildProductComparisonFacts(product: MatchedProduct): string[] {
     return buildOilComparisonFacts(product, meta)
   }
 
+  if (meta?.category === "bondbuilder") {
+    return buildBondbuilderComparisonFacts(product)
+  }
+
   return uniqueNonEmpty(meta?.top_reasons ?? []).slice(0, 3)
 }
 
@@ -1052,6 +1088,54 @@ function buildOilComparisonFacts(
   ]).slice(0, 2)
 }
 
+function buildBondbuilderComparisonFacts(product: MatchedProduct): string[] {
+  const meta = product.recommendation_meta as BondbuilderRecommendationMetadata | undefined
+  if (meta?.category !== "bondbuilder") return []
+
+  return uniqueNonEmpty([
+    meta.bond_repair_axis
+      ? `Reparatur-Lane: ${
+          PRODUCT_BOND_REPAIR_AXIS_LABELS[meta.bond_repair_axis] ?? meta.bond_repair_axis
+        }`
+      : null,
+    buildBondbuilderLaneRole(meta.bond_repair_axis),
+    meta.treatment_mode
+      ? `Treatment-Modus: ${
+          PRODUCT_BOND_TREATMENT_MODE_LABELS[meta.treatment_mode] ?? meta.treatment_mode
+        }`
+      : null,
+    meta.product_format
+      ? `Format: ${PRODUCT_BOND_PRODUCT_FORMAT_LABELS[meta.product_format] ?? meta.product_format}`
+      : null,
+    meta.usage_protocol
+      ? `Protokoll: ${
+          PRODUCT_BOND_USAGE_PROTOCOL_LABELS[meta.usage_protocol] ?? meta.usage_protocol
+        }`
+      : null,
+    meta.lifecycle_status && meta.lifecycle_status !== "active"
+      ? `Lifecycle: ${meta.lifecycle_status}`
+      : null,
+    (meta.attached_add_ons?.length ?? 0) > 0
+      ? `Add-on: ${meta.attached_add_ons?.map((addOn) => addOn.name).join(", ")}`
+      : null,
+    typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
+  ]).slice(0, 3)
+}
+
+function buildBondbuilderLaneRole(
+  axis: BondbuilderRecommendationMetadata["bond_repair_axis"] | null | undefined,
+): string | null {
+  if (axis === "disulfide_crosslink") {
+    return "Lane-Rolle: OLAPLEX/Epres eher bei Blondierung, Coloration oder chemischem Crosslink-Stress."
+  }
+
+  if (axis === "peptide_chain") {
+    return "Lane-Rolle: K18 eher bei Bruch, Snapping, Hitze- oder Peptid-/Laengsstruktur-Signalen."
+  }
+
+  return null
+}
+
 function buildClaim(
   field: SupportedProductClaim["field"],
   value: string | null | undefined,
@@ -1120,6 +1204,49 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
         meta.fit_status,
         "category_decision",
         meta.fit_status ? `Fit: ${meta.fit_status}` : null,
+      ),
+    ])
+  }
+
+  if (meta?.category === "bondbuilder") {
+    return uniqueClaims([
+      buildClaim(
+        "bond_repair_axis",
+        meta.bond_repair_axis,
+        "product_spec",
+        meta.bond_repair_axis
+          ? `Reparatur-Lane: ${
+              PRODUCT_BOND_REPAIR_AXIS_LABELS[meta.bond_repair_axis] ?? meta.bond_repair_axis
+            }`
+          : null,
+      ),
+      buildClaim(
+        "treatment_mode",
+        meta.treatment_mode,
+        "product_spec",
+        meta.treatment_mode
+          ? `Treatment-Modus: ${
+              PRODUCT_BOND_TREATMENT_MODE_LABELS[meta.treatment_mode] ?? meta.treatment_mode
+            }`
+          : null,
+      ),
+      buildClaim(
+        "usage_protocol",
+        meta.usage_protocol,
+        "product_spec",
+        meta.usage_protocol
+          ? `Nutzungsprotokoll: ${
+              PRODUCT_BOND_USAGE_PROTOCOL_LABELS[meta.usage_protocol] ?? meta.usage_protocol
+            }`
+          : null,
+      ),
+      buildClaim(
+        "lifecycle_status",
+        meta.lifecycle_status && meta.lifecycle_status !== "active" ? meta.lifecycle_status : null,
+        "product_spec",
+        meta.lifecycle_status && meta.lifecycle_status !== "active"
+          ? `Lifecycle: ${meta.lifecycle_status}`
+          : null,
       ),
     ])
   }
@@ -1708,6 +1835,17 @@ function isDeepCleansingScalpTreatmentDecision(
   )
 }
 
+function isOptionalBondbuilderDecision(
+  category: SelectableProductCategory | null,
+  categoryDecision: CategoryDecision | null,
+): boolean {
+  return (
+    category === "bondbuilder" &&
+    categoryDecision?.category === "bondbuilder" &&
+    categoryDecision.targetProfile?.role === "optional"
+  )
+}
+
 function getCategoryDecision(
   runtime: RecommendationEngineRuntime | null,
   category: SelectableProductCategory | null,
@@ -1893,6 +2031,47 @@ function buildProfileBasis(
         : null,
       oilDecision?.targetProfile?.densityWeightCaution
         ? "Gewichts-Caveat: sehr sparsam dosieren."
+        : null,
+    ])
+  }
+
+  if (category === "bondbuilder") {
+    const bondbuilderDecision =
+      categoryDecision?.category === "bondbuilder" ? categoryDecision : null
+    return uniqueNonEmpty([
+      ...buildProfileDeviationNotices({
+        originalHairProfile: routeContext?.originalHairProfile ?? null,
+        effectiveHairProfile: hairProfile,
+        activeSignals: routeContext?.activeProfileSignals ?? [],
+      }),
+      hairProfile.thickness
+        ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
+        : null,
+      hairProfile.chemical_treatment?.length
+        ? `Chemischer Kontext: ${hairProfile.chemical_treatment.join(", ")}`
+        : null,
+      bondbuilderDecision?.targetProfile?.role === "optional"
+        ? "Bondbuilder-Check: Optional, kein Pflichtschritt"
+        : bondbuilderDecision?.relevant
+          ? "Bondbuilder-Check: Empfohlener Strukturpflege-Schritt"
+          : "Bondbuilder-Check: Gerade nicht notwendig",
+      bondbuilderDecision?.targetProfile?.bondRepairIntensity
+        ? `Bondbuilder-Intensitaet: ${
+            bondbuilderDecision.targetProfile.bondRepairIntensity === "intensive"
+              ? "Intensiv"
+              : "Erhaltung"
+          }`
+        : null,
+      bondbuilderDecision?.targetProfile?.chemicalCrosslinkLane
+        ? "Bondbuilder-Lane: Disulfid-/Crosslink"
+        : null,
+      bondbuilderDecision?.targetProfile?.peptideChainLane
+        ? "Bondbuilder-Lane: Peptid-/Laengsstruktur"
+        : null,
+      bondbuilderDecision?.targetProfile &&
+      !bondbuilderDecision.targetProfile.chemicalCrosslinkLane &&
+      !bondbuilderDecision.targetProfile.peptideChainLane
+        ? "Bondbuilder-Lane: kein klarer K18-vs-OLAPLEX-Treiber"
         : null,
     ])
   }
@@ -2233,6 +2412,17 @@ function buildProductResponsePolicy(params: {
     }
   }
 
+  if (
+    decision === "recommended" &&
+    isOptionalBondbuilderDecision(category, params.categoryDecision)
+  ) {
+    return {
+      product_response_policy: "explain_then_recommend",
+      policy_reason:
+        "Der Engine-Check sieht: kein zwingender Bondbuilder-Bedarf; Empfehlungen sind optionale Vergleichsoptionen, kein Pflichtschritt.",
+    }
+  }
+
   if (decision === "not_recommended") {
     return {
       product_response_policy: "redirect_to_better_lever",
@@ -2249,7 +2439,9 @@ function buildProductResponsePolicy(params: {
           ? "Conditioner wird ueber Haardicke, Haardichte, Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensitaet entschieden."
           : category === "deep_cleansing_shampoo"
             ? "Tiefenreinigung wird nur bei Reset-Signalen empfohlen und ueber Reset-Fokus, Intensitaet, Kopfhaut-Fokus und Farbschutz-Metadaten entschieden."
-            : "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten.",
+            : category === "bondbuilder"
+              ? "Bondbuilder wird ueber strukturellen Damage-Bedarf, Einsatzmodus und Bondbuilding-Lane entschieden."
+              : "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten.",
   }
 }
 
@@ -2369,6 +2561,22 @@ function buildCategoryGuidance(params: {
     }
 
     return "Maske ist hier Zusatzpflege fuer Laengen und Spitzen: Die Auswahl folgt Gewicht, Protein-/Feuchtigkeitsbalance, Intensitaet und Fit. Nicht als Conditioner-Ersatz, Kopfhautbehandlung oder Schadenspraevention framen."
+  }
+
+  if (category === "bondbuilder") {
+    if (isOptionalBondbuilderDecision(category, categoryDecision)) {
+      return "Der Engine-Check sieht keinen zwingenden Bondbuilder-Bedarf. Wenn der Nutzer trotzdem vergleichen will, als optionaler Zusatz framen: erst sagen, dass es kein Pflichtschritt ist, dann sparsame oder kurweise Nutzung und die passendsten Optionen nennen. Bei K18 vs OLAPLEX/Epres erklaeren: OLAPLEX/Epres = Disulfid-/Crosslink-Lane eher bei Blondierung, Coloration oder chemischem Stress; K18 = Peptid-/Leave-in-Lane eher bei Bruch, Snapping, starker Hitze oder Peptid-/Laengsstruktur-Signalen. Wenn profile_basis keinen klaren Lane-Treiber zeigt, genau das offen sagen."
+    }
+
+    if (decision === "not_recommended") {
+      return "Bondbuilder ist fuer dieses Profil gerade kein notwendiger Hebel. Keine Pflicht oder Schadensangst aufbauen; eher zu Basis-Pflege, Hitzeschutz oder Verhalten umleiten."
+    }
+
+    if (decision === "no_catalog_match") {
+      return "Bondbuilder kann als Strukturpflege passen, aber der aktuelle Katalog liefert keinen sicheren Treffer mit gepflegten Bondbuilder-Spezifikationen."
+    }
+
+    return "Bondbuilder ist hier strukturelle Zusatzpflege: erst den abgeleiteten Bedarf nennen, dann zwischen Disulfid-/Crosslink- und Peptid-/Laengsstruktur-Lane unterscheiden und nicht als normale Feuchtigkeitspflege framen. Bei K18 vs OLAPLEX/Epres gilt: Crosslink-Lane eher OLAPLEX/Epres, Peptid-/Laengsstruktur-Lane eher K18; wenn beide Lane-Signale vorliegen, beide Rollen kurz gegenueberstellen."
   }
 
   if (category === "oil" && categoryDecision?.category === "oil") {
@@ -2508,7 +2716,7 @@ async function runCategoryEngine(params: {
     case "oil":
       return selectOilProductsWithEngine({ message, hairProfile, routineItems })
     case "bondbuilder":
-      return selectBondbuilderProductsWithEngine({ message, hairProfile, routineItems })
+      return selectBondbuilderProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "deep_cleansing_shampoo":
       return selectDeepCleansingShampooProductsWithEngine({
         message,

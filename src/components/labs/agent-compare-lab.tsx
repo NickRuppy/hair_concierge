@@ -40,6 +40,10 @@ function TraceRow({ label, value }: { label: string; value: string }) {
   )
 }
 
+function formatTracePrice(price: number, currency: string | null): string {
+  return `${price.toFixed(2).replace(".", ",")} ${currency ?? "EUR"}`
+}
+
 function ProductTracePanel({ result }: { result: CompareRunResult }) {
   const trace = result.product_trace
   if (!trace) return null
@@ -115,6 +119,12 @@ function ProductTracePanel({ result }: { result: CompareRunResult }) {
                   {product.rank}. {product.name}
                   {product.brand ? (
                     <span className="font-normal text-muted-foreground"> · {product.brand}</span>
+                  ) : null}
+                  {typeof product.price_eur === "number" ? (
+                    <span className="font-normal text-muted-foreground">
+                      {" "}
+                      · {formatTracePrice(product.price_eur, product.currency)}
+                    </span>
                   ) : null}
                 </div>
                 <p className="mt-1 text-muted-foreground">{product.fit_reason}</p>

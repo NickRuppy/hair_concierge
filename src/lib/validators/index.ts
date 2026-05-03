@@ -34,7 +34,11 @@ import { isPeelingCategory } from "@/lib/peeling/constants"
 import {
   PRODUCT_BALANCE_TARGETS,
   PRODUCT_BOND_APPLICATION_MODES,
+  PRODUCT_BOND_PRODUCT_FORMATS,
+  PRODUCT_BOND_REPAIR_AXES,
   PRODUCT_BOND_REPAIR_INTENSITIES,
+  PRODUCT_BOND_TREATMENT_MODES,
+  PRODUCT_BOND_USAGE_PROTOCOLS,
   PRODUCT_PEELING_TYPES,
   PRODUCT_SCALP_TYPE_FOCUSES,
 } from "@/lib/product-specs/constants"
@@ -86,6 +90,10 @@ const conditionerSpecsSchema = z.object({
 const bondbuilderSpecsSchema = z.object({
   bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES),
   application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES),
+  bond_repair_axis: z.enum(PRODUCT_BOND_REPAIR_AXES),
+  treatment_mode: z.enum(PRODUCT_BOND_TREATMENT_MODES),
+  product_format: z.enum(PRODUCT_BOND_PRODUCT_FORMATS),
+  usage_protocol: z.enum(PRODUCT_BOND_USAGE_PROTOCOLS),
 })
 
 const deepCleansingShampooSpecsSchema = z.object({
@@ -142,6 +150,7 @@ export const productSchema = z
     suitable_thicknesses: z.array(z.string()).default([]),
     suitable_concerns: z.array(z.string()).default([]),
     is_active: z.boolean().default(true),
+    lifecycle_status: z.enum(["active", "discontinued"]).default("active"),
     sort_order: z.number().int().default(0),
     conditioner_specs: conditionerSpecsSchema.nullable().optional(),
     leave_in_specs: leaveInSpecsSchema.nullable().optional(),

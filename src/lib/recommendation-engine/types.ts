@@ -307,6 +307,11 @@ export interface OilCategoryDecision extends CategoryDecisionBase<"oil", OilTarg
 export interface BondbuilderTargetProfile {
   bondRepairIntensity: BondRepairIntensity | null
   applicationMode: BondApplicationMode | null
+  chemicalCrosslinkLane: boolean
+  peptideChainLane: boolean
+  mixedOrSevereCombo: boolean
+  proteinBalanceSupportingOnly: boolean
+  role: "recommended" | "optional"
 }
 
 export type BondbuilderCategoryDecision = CategoryDecisionBase<

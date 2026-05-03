@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
 import type { Product, ShampooBucketPair } from "@/lib/types"
-import { HAIR_THICKNESS_OPTIONS } from "@/lib/types"
+import { HAIR_THICKNESS_OPTIONS, PRODUCT_LIFECYCLE_STATUSES } from "@/lib/types"
 import { isBondbuilderCategory } from "@/lib/bondbuilder/constants"
 import { fehler } from "@/lib/vocabulary"
 import {
@@ -18,8 +18,16 @@ import {
   PRODUCT_BALANCE_TARGET_LABELS,
   PRODUCT_BOND_APPLICATION_MODES,
   PRODUCT_BOND_APPLICATION_MODE_LABELS,
+  PRODUCT_BOND_PRODUCT_FORMATS,
+  PRODUCT_BOND_PRODUCT_FORMAT_LABELS,
+  PRODUCT_BOND_REPAIR_AXES,
+  PRODUCT_BOND_REPAIR_AXIS_LABELS,
   PRODUCT_BOND_REPAIR_INTENSITIES,
   PRODUCT_BOND_REPAIR_INTENSITY_LABELS,
+  PRODUCT_BOND_TREATMENT_MODES,
+  PRODUCT_BOND_TREATMENT_MODE_LABELS,
+  PRODUCT_BOND_USAGE_PROTOCOLS,
+  PRODUCT_BOND_USAGE_PROTOCOL_LABELS,
   PRODUCT_PEELING_TYPES,
   PRODUCT_PEELING_TYPE_LABELS,
   PRODUCT_SCALP_TYPE_FOCUSES,
@@ -64,6 +72,10 @@ interface ConditionerSpecForm {
 interface BondbuilderSpecForm {
   bond_repair_intensity: string
   application_mode: string
+  bond_repair_axis: string
+  treatment_mode: string
+  product_format: string
+  usage_protocol: string
 }
 
 interface DeepCleansingShampooSpecForm {
@@ -92,6 +104,7 @@ interface ProductForm {
   suitable_concerns: string[]
   shampoo_bucket_pairs: ShampooBucketPair[]
   is_active: boolean
+  lifecycle_status: string
   sort_order: number
   conditioner_specs: ConditionerSpecForm | null
   leave_in_specs: LeaveInSpecForm | null
@@ -123,6 +136,10 @@ const emptyConditionerSpecs: ConditionerSpecForm = {
 const emptyBondbuilderSpecs: BondbuilderSpecForm = {
   bond_repair_intensity: "maintenance",
   application_mode: "pre_shampoo",
+  bond_repair_axis: "disulfide_crosslink",
+  treatment_mode: "rinse_out",
+  product_format: "cream_treatment",
+  usage_protocol: "olaplex_3plus",
 }
 
 const emptyDeepCleansingShampooSpecs: DeepCleansingShampooSpecForm = {
@@ -151,6 +168,7 @@ const emptyForm: ProductForm = {
   suitable_concerns: [],
   shampoo_bucket_pairs: [],
   is_active: true,
+  lifecycle_status: "active",
   sort_order: 0,
   conditioner_specs: null,
   leave_in_specs: null,
@@ -247,6 +265,10 @@ export default function AdminProductsPage() {
       ? {
           bond_repair_intensity: product.bondbuilder_specs.bond_repair_intensity,
           application_mode: product.bondbuilder_specs.application_mode,
+          bond_repair_axis: product.bondbuilder_specs.bond_repair_axis,
+          treatment_mode: product.bondbuilder_specs.treatment_mode,
+          product_format: product.bondbuilder_specs.product_format,
+          usage_protocol: product.bondbuilder_specs.usage_protocol,
         }
       : isBondbuilderCategory(product.category || "")
         ? { ...emptyBondbuilderSpecs }
@@ -291,6 +313,7 @@ export default function AdminProductsPage() {
       suitable_concerns: product.suitable_concerns || [],
       shampoo_bucket_pairs: product.shampoo_bucket_pairs || [],
       is_active: product.is_active,
+      lifecycle_status: product.lifecycle_status ?? "active",
       sort_order: product.sort_order,
       conditioner_specs: conditionerSpecs,
       leave_in_specs: leaveInSpecs,
@@ -465,6 +488,7 @@ export default function AdminProductsPage() {
         suitable_thicknesses: form.suitable_thicknesses,
         suitable_concerns: form.suitable_concerns,
         is_active: form.is_active,
+        lifecycle_status: form.lifecycle_status,
         sort_order: form.sort_order,
         conditioner_specs:
           conditionerEnabled && form.conditioner_specs
@@ -495,6 +519,10 @@ export default function AdminProductsPage() {
             ? {
                 bond_repair_intensity: form.bondbuilder_specs.bond_repair_intensity,
                 application_mode: form.bondbuilder_specs.application_mode,
+                bond_repair_axis: form.bondbuilder_specs.bond_repair_axis,
+                treatment_mode: form.bondbuilder_specs.treatment_mode,
+                product_format: form.bondbuilder_specs.product_format,
+                usage_protocol: form.bondbuilder_specs.usage_protocol,
               }
             : null,
         deep_cleansing_shampoo_specs:
@@ -578,6 +606,10 @@ export default function AdminProductsPage() {
       style: "currency",
       currency: "EUR",
     }).format(price)
+  }
+
+  function formatLifecycleStatus(status: string | null | undefined): string {
+    return status === "discontinued" ? "Eingestellt" : "Aktuell"
   }
 
   function formatShampooPair(pair: ShampooBucketPair): string {
@@ -1133,6 +1165,114 @@ export default function AdminProductsPage() {
                       ))}
                     </select>
                   </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Reparatur-Lane
+                    </label>
+                    <select
+                      value={form.bondbuilder_specs.bond_repair_axis}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          bondbuilder_specs: prev.bondbuilder_specs
+                            ? {
+                                ...prev.bondbuilder_specs,
+                                bond_repair_axis: e.target.value,
+                              }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {PRODUCT_BOND_REPAIR_AXES.map((value) => (
+                        <option key={value} value={value}>
+                          {PRODUCT_BOND_REPAIR_AXIS_LABELS[value]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Treatment-Modus
+                    </label>
+                    <select
+                      value={form.bondbuilder_specs.treatment_mode}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          bondbuilder_specs: prev.bondbuilder_specs
+                            ? {
+                                ...prev.bondbuilder_specs,
+                                treatment_mode: e.target.value,
+                              }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {PRODUCT_BOND_TREATMENT_MODES.map((value) => (
+                        <option key={value} value={value}>
+                          {PRODUCT_BOND_TREATMENT_MODE_LABELS[value]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Produktformat
+                    </label>
+                    <select
+                      value={form.bondbuilder_specs.product_format}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          bondbuilder_specs: prev.bondbuilder_specs
+                            ? {
+                                ...prev.bondbuilder_specs,
+                                product_format: e.target.value,
+                              }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {PRODUCT_BOND_PRODUCT_FORMATS.map((value) => (
+                        <option key={value} value={value}>
+                          {PRODUCT_BOND_PRODUCT_FORMAT_LABELS[value]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Nutzungsprotokoll
+                    </label>
+                    <select
+                      value={form.bondbuilder_specs.usage_protocol}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          bondbuilder_specs: prev.bondbuilder_specs
+                            ? {
+                                ...prev.bondbuilder_specs,
+                                usage_protocol: e.target.value,
+                              }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {PRODUCT_BOND_USAGE_PROTOCOLS.map((value) => (
+                        <option key={value} value={value}>
+                          {PRODUCT_BOND_USAGE_PROTOCOL_LABELS[value]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
             )}
@@ -1296,6 +1436,27 @@ export default function AdminProductsPage() {
                 Aktiv
               </label>
             </div>
+
+            <div>
+              <label
+                htmlFor="lifecycle_status"
+                className="mb-1 block text-xs font-medium text-muted-foreground"
+              >
+                Lebenszyklus
+              </label>
+              <select
+                id="lifecycle_status"
+                value={form.lifecycle_status}
+                onChange={(e) => setForm({ ...form, lifecycle_status: e.target.value })}
+                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                {PRODUCT_LIFECYCLE_STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {formatLifecycleStatus(status)}
+                  </option>
+                ))}
+              </select>
+            </div>
           </fieldset>
 
           <div className="mt-6 flex gap-3">
@@ -1341,6 +1502,7 @@ export default function AdminProductsPage() {
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Kategorie</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Preis</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Aktiv</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
                 <th className="px-4 py-3 text-right font-medium text-muted-foreground">Aktionen</th>
               </tr>
             </thead>
@@ -1370,6 +1532,17 @@ export default function AdminProductsPage() {
                       }`}
                     >
                       {product.is_active ? "Aktiv" : "Inaktiv"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                        product.lifecycle_status === "discontinued"
+                          ? "bg-amber-900/30 text-amber-300"
+                          : "bg-slate-800/70 text-slate-200"
+                      }`}
+                    >
+                      {formatLifecycleStatus(product.lifecycle_status)}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">

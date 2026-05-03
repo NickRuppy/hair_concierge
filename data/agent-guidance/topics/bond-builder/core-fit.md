@@ -7,6 +7,7 @@ Bond building becomes relevant when structural damage is plausible, especially a
 Good fit:
 - Chemically treated hair with clear damage history
 - Heat-stressed hair with breakage or elasticity complaints
+- Snapping, breakage, mushy or over-elastic wet hair
 - Users recovering from a recent damage event and trying to stabilize the hair
 - Users about to undergo a chemical service, where in-service bond repair can be higher leverage than home use afterwards
 
@@ -14,7 +15,8 @@ Poor fit or not needed:
 - Healthy, untreated hair with no structural-damage history
 - Scalp concerns like dandruff, itch, irritation, or oiliness
 - Softness, hydration, frizz, or slip complaints without signs of structural damage
-- Split ends, hair loss, patchy shedding, or scalp pain
+- Dryness, frizz, shine, or softness goals alone
+- Split ends alone, protein/moisture imbalance alone, hair loss, patchy shedding, or scalp pain
 
 What it can realistically help with:
 - Improved strength and elasticity of damaged strands
@@ -26,6 +28,6 @@ What it does not solve:
 - Scalp health
 - Regrowth or hair-loss concerns
 - Full restoration of severely damaged hair back to virgin condition
-- Split-end repair
+- Permanent split-end repair; split ends still need trimming
 
 Realistic ceiling: bond builders can make damaged hair feel and perform noticeably better, but recovery is partial and incremental. "Better" is realistic. "Like new" is not.

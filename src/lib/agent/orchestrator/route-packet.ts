@@ -510,8 +510,10 @@ function inferDirectProductCategoryFromMessage(
     /\b(?:haar)?masken?\b/.test(normalized) ||
     /\b(?:haar)?kuren?\b/.test(normalized) ||
     /\b(?:protein|feuchtigkeits)masken?\b/.test(normalized)
+  const mentionsOil = /\b(?:haar)?(?:oel\w*|ol(?:e|s|ig\w*)?)\b|\boils?\b/.test(normalized)
   const mentionsOtherCategory =
-    /\bleave[-\s]?in\b|\bleavein\b|\bconditioner\b|\bsp(?:u|ue)lung\w*\b|\bshampoos?\b|\b(?:ol|oel)\w*\b|\boil\w*\b/.test(
+    mentionsOil ||
+    /\bleave[-\s]?in\b|\bleavein\b|\bconditioner\b|\bsp(?:u|ue)lung\w*\b|\bshampoos?\b|\bbond\s*builder\w*\b|\bbondbuilder\w*\b|\bbond\s*repair\b|\bk18\b|\bkr18\b|\bolaplex\b|\bepres\b/.test(
       normalized,
     )
 
@@ -551,7 +553,6 @@ function inferDirectProductCategoryFromMessage(
     }
   }
 
-  const mentionsOil = /\b(?:haar)?(?:ol|oel)\w*\b|\boils?\b/.test(normalized)
   if (mentionsOil) {
     const directOilAskPatterns = [
       /\bwelch\w*\s+(?:andere?s?\s+|passende?s?\s+)?(?:(?:haar)?(?:ol|oel)\w*|oils?)\b/,
@@ -569,6 +570,15 @@ function inferDirectProductCategoryFromMessage(
   }
 
   if (
+    !/\bshampoos?\b/.test(normalized) &&
+    /\bbond\s*builder\w*\b|\bbondbuilder\w*\b|\bbond\s*repair\b|\bk18\b|\bkr18\b|\bolaplex\b|\bepres\b/.test(
+      normalized,
+    )
+  ) {
+    return "bondbuilder"
+  }
+
+  if (
     /\b(?:tiefenreinigungsshampoos?|tiefenreinigung|deep\s*cleansing|clarifying)\b/.test(normalized)
   ) {
     return "deep_cleansing_shampoo"
@@ -580,6 +590,7 @@ function inferDirectProductCategoryFromMessage(
 
   const directShampooAskPatterns = [
     /\bwelch\w*\s+(?:andere?s?\s+|passende?s?\s+)?shampoos?\b/,
+    /\bwelch\w*(?:\s+[\w-]+){0,3}\s+shampoos?\b/,
     /\bpassende?n?\s+shampoos?\b/,
     /\bshampoos?\s+(?:empfehlen|empfehlung|empfiehl)/,
     /\bempfiehl\w*\s+(?:mir\s+)?(?:ein\s+|eine\s+)?shampoos?\b/,
