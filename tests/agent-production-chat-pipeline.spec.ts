@@ -18,7 +18,7 @@ import type {
 } from "../src/lib/agent/orchestrator/route-packet"
 import type { SelectedProductsProjection } from "../src/lib/agent/tools/select-products"
 import type { Product } from "../src/lib/types"
-import type { ConversationStateTransition } from "../src/lib/types"
+import type { ConversationState, ConversationStateTransition } from "../src/lib/types"
 
 function createRoute(overrides: Partial<AgentRoutePacket> = {}): AgentRoutePacket {
   return {
@@ -318,6 +318,85 @@ test("production agent pipeline marks debug trace as agent final render", async 
     plan_type: "agent_v1",
     attachment_mode: null,
   })
+})
+
+test("production agent pipeline passes loaded conversation state into agent context and trace prompt", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: ["routine_basics"],
+    last_assistant_action: "asked_routine_basics",
+  }
+  let classifierUserContext: unknown = null
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute(params) {
+      classifierUserContext = params.userContext
+      return {
+        user_job: "routine_structure",
+        product_category: null,
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.88,
+        evidence: ["User continues an existing routine thread."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Wir bleiben bei deiner Routine."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Dann lass uns die Routine fertig machen.",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: null,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+    },
+  )
+  const renderPacket = renderPackets[0]
+  assert.ok(renderPacket)
+
+  assert.deepEqual(
+    (classifierUserContext as { conversation_state?: ConversationState }).conversation_state,
+    loadedConversationState,
+  )
+  assert.deepEqual(
+    (renderPacket.user_context as { conversation_state?: ConversationState }).conversation_state,
+    loadedConversationState,
+  )
+
+  const userMessage = result.debugTrace.prompt.messages.find((message) => message.role === "user")
+  assert.ok(userMessage)
+  const promptPayload = JSON.parse(userMessage.content) as {
+    packet: { user_context: { conversation_state: ConversationState } }
+  }
+  assert.equal(promptPayload.packet.user_context.conversation_state.active_topic, "routine")
 })
 
 test("POST /api/chat streams agent v1 contract and persists assistant metadata", async () => {

@@ -20,6 +20,14 @@ interface MessageRow {
   user_feedback_at?: string | null
 }
 
+interface ConversationStateRow {
+  state: ConversationState | null
+  state_version: number | null
+  last_transition: unknown | null
+  created_at?: string | null
+  updated_at?: string | null
+}
+
 interface ConversationDetail {
   conversation: {
     id: string
@@ -30,7 +38,7 @@ interface ConversationDetail {
   }
   messages: MessageRow[]
   traces: ConversationTurnTrace[]
-  conversation_state: ConversationState | null
+  conversation_state: ConversationStateRow | null
   user: {
     id: string
     full_name: string | null
@@ -445,6 +453,7 @@ export default function AdminConversationDetailPage() {
 
   const { conversation, messages, user: chatUser, traces } = data
   const conversationState = data.conversation_state
+  const conversationStateValue = conversationState?.state ?? null
 
   return (
     <div>
@@ -472,12 +481,26 @@ export default function AdminConversationDetailPage() {
             </p>
             <p className="mt-2 text-muted-foreground">Konversationsstatus</p>
             <p className="mt-1 font-medium text-foreground">
-              {conversationState?.active_topic ?? "kein aktives Thema"}
+              {conversationStateValue?.active_topic ?? "kein aktives Thema"}
             </p>
             <p className="text-xs text-muted-foreground">
-              Routine-Ebene: {conversationState?.routine_layer ?? "keine"} · Angebot:{" "}
-              {conversationState?.pending_offer ?? "keines"}
+              Version: {conversationState?.state_version ?? "keine"} · Aktualisiert:{" "}
+              {conversationState?.updated_at ? formatDateTime(conversationState.updated_at) : "nie"}
             </p>
+            <p className="text-xs text-muted-foreground">
+              Routine-Ebene: {conversationStateValue?.routine_layer ?? "keine"} · Angebot:{" "}
+              {conversationStateValue?.pending_offer ?? "keines"}
+            </p>
+            {conversationState?.last_transition ? (
+              <details className="mt-2">
+                <summary className="cursor-pointer text-xs text-muted-foreground">
+                  Letzter Statuswechsel
+                </summary>
+                <pre className="mt-2 max-h-48 overflow-auto rounded-lg bg-muted p-2 text-xs">
+                  {JSON.stringify(conversationState, null, 2)}
+                </pre>
+              </details>
+            ) : null}
           </div>
         </div>
       </div>

@@ -71,6 +71,7 @@ type ConversationHistoryProjection = Array<{
 
 type ProductionUserContext = UserContextProjection & {
   conversation_history: ConversationHistoryProjection
+  conversation_state: ConversationState
 }
 
 interface ProductionAgentPipelineDeps {
@@ -396,6 +397,7 @@ export async function runProductionAgentPipeline(
   const userContext: ProductionUserContext = {
     ...userContextBase,
     conversation_history: projectConversationHistory(conversationHistory),
+    conversation_state: conversationState,
   }
   const selectedProductsHolder: { current: SelectProductsToolResult | null } = { current: null }
 

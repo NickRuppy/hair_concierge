@@ -69,14 +69,14 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   let conversationState: unknown = null
   const { data: stateRow, error: stateError } = await admin
     .from("conversation_states")
-    .select("state")
+    .select("state, state_version, last_transition, created_at, updated_at")
     .eq("conversation_id", id)
     .maybeSingle()
 
   if (stateError) {
     console.error("Error fetching conversation state:", stateError)
   } else {
-    conversationState = stateRow?.state ?? null
+    conversationState = stateRow ?? null
   }
 
   // Fetch user profile + hair profile
