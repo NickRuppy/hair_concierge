@@ -5,6 +5,7 @@ import {
   createDefaultConversationState,
   normalizeConversationState,
 } from "../src/lib/rag/conversation-state"
+import { buildConversationStateUpsertPayload } from "../src/lib/rag/conversation-state-store"
 import type { ClassificationResult, ConversationState, HairProfile } from "../src/lib/types"
 
 function createClassification(overrides: Partial<ClassificationResult> = {}): ClassificationResult {
@@ -292,4 +293,31 @@ test("explicit category mention inside routine becomes routine deep dive", () =>
   expect(transition.next_state.routine_layer).toBe("deep_dive")
   expect(transition.next_state.last_product_category).toBe("leave_in")
   expect(transition.reason).toBe("routine_category_deep_dive")
+})
+
+test("state store builds stable upsert payload", () => {
+  const state = createDefaultConversationState()
+  const transition = {
+    previous_state: state,
+    next_state: { ...state, active_topic: "routine" as const },
+    reason: "routine_started",
+    changed_fields: ["active_topic"],
+    classifier_override: null,
+  }
+
+  const payload = buildConversationStateUpsertPayload({
+    conversationId: "conversation-1",
+    userId: "user-1",
+    transition,
+  })
+
+  expect(payload).toMatchObject({
+    conversation_id: "conversation-1",
+    user_id: "user-1",
+    state_version: 1,
+    state: transition.next_state,
+    last_transition: transition,
+  })
+  expect(typeof payload.updated_at).toBe("string")
+  expect(Number.isNaN(Date.parse(payload.updated_at))).toBe(false)
 })
