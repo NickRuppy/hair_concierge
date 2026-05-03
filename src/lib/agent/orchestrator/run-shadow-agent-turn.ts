@@ -140,8 +140,7 @@ export async function runShadowAgentTurn(params: {
   })
   const shouldOverridePendingRoutineAnswer = Boolean(
     params.conversationState &&
-    modelClassification.user_job === "unsupported_or_unclear" &&
-    modelClassification.product_category === null &&
+    modelClassification.user_job !== "routine_structure" &&
     shouldApplyPendingRoutineAnswerOverride({
       state: params.conversationState,
       userMessage: params.message,

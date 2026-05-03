@@ -471,6 +471,77 @@ test("production agent pipeline overrides short answer to pending routine basics
   assert.equal(renderPackets[0]?.route.product_category, null)
 })
 
+test("production agent pipeline overrides product-category misclassification in pending routine basics", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    last_assistant_action: "asked_routine_basics",
+  }
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "product_pick",
+        product_category: "shampoo",
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.81,
+        evidence: ["User mentioned Shampoo."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Ich nutze die Angaben fuer deine Routine."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Alle 3 Tage, Shampoo und Conditioner, die Laengen sind trocken.",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: null,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+    },
+  )
+
+  assert.equal(result.intent, "routine_help")
+  assert.equal(result.debugTrace.product_category, "routine")
+  assert.ok(
+    result.routerDecision.policy_overrides.includes("conversation_state_pending_routine_answer"),
+  )
+  assert.equal(
+    result.debugTrace.conversation_state.classifier_override,
+    "conversation_state_pending_routine_answer",
+  )
+  assert.equal(renderPackets[0]?.route.user_job, "routine_structure")
+  assert.equal(renderPackets[0]?.route.product_category, null)
+  assert.equal(renderPackets[0]?.selected_products, null)
+})
+
 test("POST /api/chat streams agent v1 contract and persists assistant metadata", async () => {
   const fakeAdmin = createFakeAdmin()
   const persistedTurnTraces: unknown[] = []
