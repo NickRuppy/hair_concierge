@@ -23,6 +23,7 @@ export async function GET(request: Request) {
     .from("products")
     .select("*", { count: "exact" })
     .eq("is_active", true)
+    .eq("lifecycle_status", "active")
     .order("sort_order", { ascending: true })
     .range(offset, offset + limit - 1)
 

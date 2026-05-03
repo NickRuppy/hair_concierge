@@ -9,11 +9,12 @@ import type { MatchedProduct } from "../src/lib/rag/product-matcher"
 import type { SelectableProductCategory } from "../src/lib/agent/tools/select-products"
 import type { RecommendationEngineRuntime } from "../src/lib/recommendation-engine/runtime"
 import type {
+  BondbuilderCategoryDecision,
   DeepCleansingShampooCategoryDecision,
   MaskCategoryDecision,
   ShampooCategoryDecision,
 } from "../src/lib/recommendation-engine/types"
-import type { HairProfile } from "../src/lib/types"
+import type { BondbuilderRecommendationMetadata, HairProfile } from "../src/lib/types"
 import { LOW_DAMAGE_PROFILE } from "./recommendation-engine-foundation.fixtures"
 
 function createMatchedProduct(
@@ -1661,6 +1662,87 @@ test("projectSelectedProducts uses price as mask comparison fallback when fit fa
     "p-mask-cheap": ["Preis: 4.95 EUR"],
     "p-mask-pricey": ["Preis: 12.95 EUR"],
   })
+})
+
+test("projectSelectedProducts keeps optional bondbuilder assessment with priced products", () => {
+  const bondbuilderDecision: BondbuilderCategoryDecision = {
+    category: "bondbuilder",
+    relevant: true,
+    action: null,
+    planReasonCodes: ["bondbuilder_explicit_optional_low_need"],
+    currentInventory: null,
+    targetProfile: {
+      bondRepairIntensity: "maintenance",
+      applicationMode: "pre_shampoo",
+      chemicalCrosslinkLane: false,
+      peptideChainLane: false,
+      mixedOrSevereCombo: false,
+      proteinBalanceSupportingOnly: false,
+      role: "optional",
+    },
+    notes: [],
+  }
+  const runtime = createRuntimeStub()
+  runtime.categories.bondbuilder = bondbuilderDecision
+
+  const result = projectSelectedProducts(
+    [
+      createMatchedProduct("bondbuilder", 0.94, {
+        category: "Bondbuilder",
+        price_eur: 34,
+        currency: "EUR",
+        recommendation_meta: {
+          category: "bondbuilder",
+          score: 9.4,
+          top_reasons: ["Passt fuer eher konservative Bondbuilding-Unterstuetzung."],
+          tradeoffs: ["Staerker als der aktuelle Pflichtbedarf."],
+          usage_hint: "Sparsam als Zusatz einsetzen.",
+          matched_intensity: "maintenance",
+          application_mode: "pre_shampoo",
+          bond_repair_axis: "disulfide_crosslink",
+          treatment_mode: "rinse_out",
+          product_format: "cream_treatment",
+          usage_protocol: "olaplex_3plus",
+          lifecycle_status: "active",
+        } satisfies BondbuilderRecommendationMetadata,
+      }),
+      createMatchedProduct("k18", 0.91, {
+        category: "Bondbuilder",
+        price_eur: 75,
+        currency: "EUR",
+        recommendation_meta: {
+          category: "bondbuilder",
+          score: 9.1,
+          top_reasons: ["Passt fuer eher konservative Bondbuilding-Unterstuetzung."],
+          tradeoffs: ["Staerker als der aktuelle Pflichtbedarf."],
+          usage_hint: "Sparsam als Zusatz einsetzen.",
+          matched_intensity: "maintenance",
+          application_mode: "pre_shampoo",
+          bond_repair_axis: "peptide_chain",
+          treatment_mode: "leave_in",
+          product_format: "leave_in_mask",
+          usage_protocol: "k18_leave_in",
+          lifecycle_status: "active",
+        } satisfies BondbuilderRecommendationMetadata,
+      }),
+    ],
+    LOW_DAMAGE_PROFILE,
+    "bondbuilder",
+    runtime,
+  )
+
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.product_response_policy, "explain_then_recommend")
+  assert.match(result.policy_reason, /kein zwingender Bondbuilder-Bedarf/)
+  assert.match(result.category_guidance, /optionaler Zusatz/)
+  assert.match(result.category_guidance, /K18/)
+  assert.match(result.category_guidance, /OLAPLEX/)
+  assert.ok(result.profile_basis.includes("Bondbuilder-Check: Optional, kein Pflichtschritt"))
+  assert.ok(result.profile_basis.includes("Bondbuilder-Lane: kein klarer K18-vs-OLAPLEX-Treiber"))
+  assert.equal(result.products[0]?.price_eur, 34)
+  assert.equal(result.products[0]?.currency, "EUR")
+  assert.match(result.comparison_facts?.bondbuilder?.join(" ") ?? "", /chemisch/)
+  assert.match(result.comparison_facts?.k18?.join(" ") ?? "", /Bruch/)
 })
 
 test("projectSelectedProducts redirects scalp-only conditioner requests without products", () => {

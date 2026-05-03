@@ -85,6 +85,8 @@ const productTraceSchema = z.object({
       product_id: z.string(),
       name: z.string(),
       brand: z.string().nullable(),
+      price_eur: z.number().nullable().default(null),
+      currency: z.string().nullable().default(null),
       fit_reason: z.string(),
       caveat: z.string().nullable(),
       supported_claims: z

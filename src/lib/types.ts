@@ -47,7 +47,11 @@ import type { OilNoRecommendationReason, OilSubtype, OilUseMode } from "@/lib/oi
 import type { ProductPeelingSpecs } from "@/lib/peeling/constants"
 import type {
   ProductBondApplicationMode,
+  ProductBondProductFormat,
+  ProductBondRepairAxis,
   ProductBondRepairIntensity,
+  ProductBondTreatmentMode,
+  ProductBondUsageProtocol,
   ProductPeelingType,
   ProductScalpTypeFocus,
 } from "@/lib/product-specs/constants"
@@ -211,6 +215,23 @@ export interface UserMemoryEntry {
   updated_at: string
 }
 
+export const PRODUCT_LIFECYCLE_STATUSES = ["active", "discontinued"] as const
+
+export type ProductLifecycleStatus = (typeof PRODUCT_LIFECYCLE_STATUSES)[number]
+
+export const PRODUCT_RELATIONSHIP_TYPES = ["replaced_by", "add_on_for"] as const
+
+export type ProductRelationshipType = (typeof PRODUCT_RELATIONSHIP_TYPES)[number]
+
+export interface ProductRelationship {
+  id: string
+  source_product_id: string
+  target_product_id: string
+  relationship_type: ProductRelationshipType
+  created_at: string
+  updated_at: string
+}
+
 export interface Product {
   id: string
   name: string
@@ -228,6 +249,7 @@ export interface Product {
   suitable_concerns: string[]
   shampoo_bucket_pairs?: ShampooBucketPair[] | null
   is_active: boolean
+  lifecycle_status?: ProductLifecycleStatus | null
   sort_order: number
   conditioner_specs?: ProductConditionerSpecs | null
   leave_in_specs?: ProductLeaveInSpecs | null
@@ -240,6 +262,28 @@ export interface Product {
   created_at: string
   updated_at: string
 }
+
+export type ProductSummary = Pick<
+  Product,
+  | "id"
+  | "name"
+  | "brand"
+  | "description"
+  | "short_description"
+  | "category"
+  | "affiliate_link"
+  | "image_url"
+  | "price_eur"
+  | "currency"
+  | "tags"
+  | "suitable_thicknesses"
+  | "suitable_concerns"
+  | "is_active"
+  | "lifecycle_status"
+  | "sort_order"
+  | "created_at"
+  | "updated_at"
+>
 
 export interface BaseRecommendationMetadata {
   category:
@@ -376,6 +420,22 @@ export interface BondbuilderRecommendationMetadata extends BaseRecommendationMet
   category: "bondbuilder"
   matched_intensity: ProductBondRepairIntensity | null
   application_mode: ProductBondApplicationMode | null
+  bond_repair_axis?: ProductBondRepairAxis | null
+  treatment_mode?: ProductBondTreatmentMode | null
+  product_format?: ProductBondProductFormat | null
+  usage_protocol?: ProductBondUsageProtocol | null
+  lifecycle_status?: ProductLifecycleStatus | null
+  replacement_target?: {
+    product_id: string
+    name?: string | null
+  } | null
+  attached_add_ons?: Array<{
+    relationship_type: "add_on_for"
+    product_id: string
+    name: string
+    usage_protocol: ProductBondUsageProtocol | null
+    reason: string
+  }>
 }
 
 export interface DeepCleansingShampooRecommendationMetadata extends BaseRecommendationMetadata {
