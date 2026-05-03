@@ -10,7 +10,12 @@ import {
 import { applyConversationStateToClassification } from "../src/lib/rag/conversation-state"
 import { evaluateRoute } from "../src/lib/rag/router"
 import { buildSystemPrompt } from "../src/lib/rag/synthesizer"
-import type { ClassificationResult, ContentChunk, HairProfile } from "../src/lib/types"
+import type {
+  ClassificationResult,
+  ContentChunk,
+  ConversationState,
+  HairProfile,
+} from "../src/lib/types"
 
 function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   return {
@@ -1031,6 +1036,73 @@ test.describe("Routine planner", () => {
     )
     expect(prompt).toContain("Tiefenreinigung nie als universellen Pflichtschritt")
     expect(prompt).not.toContain("Routine-Detailgrad")
+  })
+
+  test("system prompt includes compact conversation state when an active topic exists", () => {
+    const conversationState: ConversationState = {
+      version: 1,
+      active_topic: "routine",
+      routine_layer: "basics",
+      pending_offer: "routine_goals_or_problems",
+      answered_slots: ["routine_frame"],
+      last_assistant_action: "asked_routine_basics",
+      last_product_category: null,
+    }
+
+    const prompt = buildSystemPrompt(
+      createProfile(),
+      [createChunk()],
+      [],
+      "routine",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      null,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      conversationState,
+    )
+
+    expect(prompt).toContain("<conversation_state>")
+    expect(prompt).toContain("Aktives Thema: routine")
+    expect(prompt).toContain("Routine-Ebene: basics")
+    expect(prompt).toContain("Beantwortete Slots: routine_frame")
+  })
+
+  test("system prompt omits conversation state when no active topic exists", () => {
+    const prompt = buildSystemPrompt(
+      createProfile(),
+      [createChunk()],
+      [],
+      "routine",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      null,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      {
+        version: 1,
+        active_topic: null,
+        routine_layer: null,
+        pending_offer: null,
+        answered_slots: [],
+        last_assistant_action: null,
+        last_product_category: null,
+      },
+    )
+
+    expect(prompt).not.toContain("<conversation_state>")
   })
 
   test("product prompt uses not-recommended wording for explicit support categories", () => {

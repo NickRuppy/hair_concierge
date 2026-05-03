@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { useToast } from "@/providers/toast-provider"
-import type { ConversationTurnTrace, MessageRagContext } from "@/lib/types"
+import type { ConversationState, ConversationTurnTrace, MessageRagContext } from "@/lib/types"
 import { fehler } from "@/lib/vocabulary"
 import { ArrowLeft } from "lucide-react"
 
@@ -30,6 +30,7 @@ interface ConversationDetail {
   }
   messages: MessageRow[]
   traces: ConversationTurnTrace[]
+  conversation_state: ConversationState | null
   user: {
     id: string
     full_name: string | null
@@ -351,6 +352,17 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
 
           <div className="rounded-lg border bg-card p-3">
             <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
+              Konversationsstatus
+            </p>
+            <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded-md bg-background p-3 text-xs text-foreground">
+              {JSON.stringify(trace.conversation_state, null, 2)}
+            </pre>
+          </div>
+        </div>
+
+        <div className="grid gap-3 xl:grid-cols-2">
+          <div className="rounded-lg border bg-card p-3">
+            <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
               Profil Snapshot
             </p>
             <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded-md bg-background p-3 text-xs text-foreground">
@@ -432,6 +444,7 @@ export default function AdminConversationDetailPage() {
   }
 
   const { conversation, messages, user: chatUser, traces } = data
+  const conversationState = data.conversation_state
 
   return (
     <div>
@@ -456,6 +469,14 @@ export default function AdminConversationDetailPage() {
             <p className="text-muted-foreground">Observability</p>
             <p className="mt-1 font-medium text-foreground">
               {traces.length} gespeicherte Turn-Traces
+            </p>
+            <p className="mt-2 text-muted-foreground">Konversationsstatus</p>
+            <p className="mt-1 font-medium text-foreground">
+              {conversationState?.active_topic ?? "kein aktives Thema"}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Routine-Ebene: {conversationState?.routine_layer ?? "keine"} · Angebot:{" "}
+              {conversationState?.pending_offer ?? "keines"}
             </p>
           </div>
         </div>

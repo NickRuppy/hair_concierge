@@ -445,6 +445,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
           productCategory: product_category,
           categoryDecision,
           memoryContext: memoryContext.promptContext,
+          conversationState,
           clarificationQuestions,
         }),
       {
@@ -661,6 +662,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         categoryDecision,
         routinePlan,
         memoryContext: memoryContext.promptContext,
+        conversationState,
         followupQuestions,
       }),
     {
