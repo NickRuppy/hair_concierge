@@ -7,6 +7,7 @@ import {
   detectStylingProductKind,
   getRoutineAutofillSlots,
 } from "../src/lib/routines/planner"
+import { applyConversationStateToClassification } from "../src/lib/rag/conversation-state"
 import { evaluateRoute } from "../src/lib/rag/router"
 import { buildSystemPrompt } from "../src/lib/rag/synthesizer"
 import type { ClassificationResult, ContentChunk, HairProfile } from "../src/lib/types"
@@ -732,6 +733,52 @@ test.describe("Routine planner", () => {
       "Welche Routine passt zu mir?",
     )
 
+    expect(routerDecision.response_mode).not.toBe("clarify_only")
+    expect(routerDecision.policy_overrides).not.toContain("missing_routine_frame")
+  })
+
+  test("router proceeds when pending routine state receives the missing routine frame", () => {
+    const previousState = {
+      version: 1 as const,
+      active_topic: "routine" as const,
+      routine_layer: "basics" as const,
+      pending_offer: "routine_goals_or_problems" as const,
+      answered_slots: [],
+      last_assistant_action: "asked_routine_basics",
+      last_product_category: null,
+    }
+
+    const corrected = applyConversationStateToClassification({
+      state: previousState,
+      classification: createRoutineClassification({
+        intent: "followup",
+        product_category: null,
+        normalized_filters: {
+          problem: "trockene Spitzen",
+          duration: null,
+          products_tried: "Shampoo und Conditioner",
+          routine: "alle 3 Tage",
+          special_circumstances: null,
+        },
+        router_confidence: 0.58,
+      }),
+      userMessage: "Alle 3 Tage, Shampoo und Conditioner. Meine Spitzen sind trocken.",
+    })
+
+    const routerDecision = evaluateRoute(
+      corrected.classification,
+      [],
+      createProfile({
+        concerns: ["dryness"],
+        goals: ["less_frizz"],
+        wash_frequency: "every_2_3_days",
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      [],
+      "Alle 3 Tage, Shampoo und Conditioner. Meine Spitzen sind trocken.",
+    )
+
+    expect(corrected.override).toBe("conversation_state_pending_routine_answer")
     expect(routerDecision.response_mode).not.toBe("clarify_only")
     expect(routerDecision.policy_overrides).not.toContain("missing_routine_frame")
   })

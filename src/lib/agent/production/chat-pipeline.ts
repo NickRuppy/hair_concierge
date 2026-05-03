@@ -43,6 +43,8 @@ import {
 } from "@/lib/recommendation-engine"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { DEFAULT_CHAT_COMPLETION_MODEL } from "@/lib/openai/chat"
+import { computeConversationStateTransition } from "@/lib/rag/conversation-state"
+import { loadConversationState } from "@/lib/rag/conversation-state-store"
 import { buildPipelineTraceDraft } from "@/lib/rag/debug-trace"
 import type { PipelineParams, PipelineResult } from "@/lib/rag/contracts"
 import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/rag/user-memory"
@@ -377,10 +379,12 @@ export async function runProductionAgentPipeline(
     { result: conversationHistory, durationMs: historyLoadMs },
     { result: userContextBase, durationMs: contextLoadMs },
     { result: memoryContext, durationMs: memoryLoadMs },
+    { result: conversationState },
   ] = await Promise.all([
     measureAsync(() => (deps.loadConversationHistory ?? loadConversationHistory)(conversationId)),
     measureAsync(() => (deps.getUserContext ?? getUserContext)(userId)),
     measureAsync(() => (deps.loadUserMemoryContext ?? loadUserMemoryContext)(userId)),
+    measureAsync(() => loadConversationState(createAdminClient(), conversationId)),
   ])
 
   const userContext: ProductionUserContext = {
@@ -411,6 +415,24 @@ export async function runProductionAgentPipeline(
   const productCategory = mapAgentProductCategory(route)
   const routerDecision = buildRouterDecision({ route, selectedProducts })
   const classification = buildClassification(route)
+  const shouldPlanRoutine = route.user_job === "routine_structure"
+  const assistantAction =
+    routerDecision.response_mode === "clarify_only"
+      ? routerDecision.clarification_reason === "missing_routine_frame"
+        ? "asked_routine_basics"
+        : "asked_clarification"
+      : shouldPlanRoutine
+        ? "answered_routine"
+        : "answered_direct"
+  const conversationStateTransition = computeConversationStateTransition({
+    previousState: conversationState,
+    classification,
+    routerDecision,
+    userMessage: message,
+    assistantAction,
+    hairProfile: userContext.profile,
+    matchedProductCategory: productCategory,
+  })
   const matchedProducts = productsForRenderedPacket({
     runtimePacket: result.runtime_packet,
     selectedProducts: selectedProductsResult?.products ?? [],
@@ -465,7 +487,7 @@ export async function runProductionAgentPipeline(
     },
     retrieval_count: 0,
     retrieved_chunks: [],
-    should_plan_routine: route.user_job === "routine_structure",
+    should_plan_routine: shouldPlanRoutine,
     category_decision: categoryDecision ?? undefined,
     engine_trace: engineTrace,
     matched_products: matchedProducts,
@@ -501,6 +523,7 @@ export async function runProductionAgentPipeline(
     intent,
     matchedProducts,
     sources: [],
+    conversationStateTransition,
     retrievalSummary: {
       final_context_count: 0,
     },
