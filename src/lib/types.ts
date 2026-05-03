@@ -813,6 +813,41 @@ export interface ChatTurnTrace {
   error: string | null
 }
 
+export type ConversationStateTopic =
+  | "routine"
+  | "shampoo"
+  | "conditioner"
+  | "leave_in"
+  | "mask"
+  | "oil"
+  | null
+
+export type RoutineConversationLayer = "basics" | "goals" | "problems" | "deep_dive" | null
+
+export type ConversationPendingOffer =
+  | "routine_goals_or_problems"
+  | "routine_other_layer"
+  | "routine_deep_dive"
+  | null
+
+export interface ConversationState {
+  version: 1
+  active_topic: ConversationStateTopic
+  routine_layer: RoutineConversationLayer
+  pending_offer: ConversationPendingOffer
+  answered_slots: string[]
+  last_assistant_action: string | null
+  last_product_category: ConversationStateTopic
+}
+
+export interface ConversationStateTransition {
+  previous_state: ConversationState
+  next_state: ConversationState
+  reason: string
+  changed_fields: string[]
+  classifier_override: string | null
+}
+
 export interface ConversationTurnTrace {
   id: string
   conversation_id: string | null
