@@ -4,6 +4,7 @@ import {
   computeConversationStateTransition,
   createDefaultConversationState,
   normalizeConversationState,
+  shouldApplyPendingRoutineAnswerOverride,
 } from "../src/lib/rag/conversation-state"
 import { buildConversationStateUpsertPayload } from "../src/lib/rag/conversation-state-store"
 import type { ClassificationResult, ConversationState, HairProfile } from "../src/lib/types"
@@ -188,6 +189,39 @@ test("short answer to pending routine basics keeps route in routine context", ()
   expect(corrected.override).toBe("conversation_state_pending_routine_answer")
 })
 
+test("pending routine override requires the assistant to have asked routine basics", () => {
+  const staleState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: [],
+    last_assistant_action: "answered_direct",
+    last_product_category: null,
+  }
+  const classification = createClassification({
+    intent: "general_chat",
+    product_category: null,
+    router_confidence: 0.52,
+  })
+
+  expect(
+    shouldApplyPendingRoutineAnswerOverride({
+      state: staleState,
+      userMessage: "Ja",
+    }),
+  ).toBe(false)
+
+  const corrected = applyConversationStateToClassification({
+    state: staleState,
+    classification,
+    userMessage: "Ja",
+  })
+
+  expect(corrected.classification).toBe(classification)
+  expect(corrected.override).toBeNull()
+})
+
 test("unrelated short general messages do not override pending routine context", () => {
   const previousState: ConversationState = {
     version: 1,
@@ -218,6 +252,51 @@ test("unrelated short general messages do not override pending routine context",
     expect(corrected.classification).toBe(classification)
     expect(corrected.override).toBeNull()
   }
+})
+
+test("unrelated non-routine answer clears stale pending routine basics", () => {
+  const previousState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: [],
+    last_assistant_action: "asked_routine_basics",
+    last_product_category: null,
+  }
+
+  const transition = computeConversationStateTransition({
+    previousState,
+    classification: createClassification({
+      intent: "general_chat",
+      product_category: null,
+      router_confidence: 0.6,
+    }),
+    routerDecision: {
+      retrieval_mode: "hybrid",
+      response_mode: "answer_direct",
+      slot_completeness: 1,
+      confidence: 0.6,
+      policy_overrides: [],
+    },
+    userMessage: "Was ist Silikon?",
+    assistantAction: "answered_direct",
+    hairProfile: createProfile(),
+    matchedProductCategory: null,
+  })
+
+  expect(transition.next_state.active_topic).toBe("routine")
+  expect(transition.next_state.routine_layer).toBe("basics")
+  expect(transition.next_state.pending_offer).toBeNull()
+  expect(transition.next_state.last_assistant_action).toBe("answered_direct")
+  expect(transition.reason).toBe("routine_pending_offer_dismissed")
+
+  expect(
+    shouldApplyPendingRoutineAnswerOverride({
+      state: transition.next_state,
+      userMessage: "ja",
+    }),
+  ).toBe(false)
 })
 
 test("unsupported standalone category recommendation clears routine context", () => {

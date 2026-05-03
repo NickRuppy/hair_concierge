@@ -399,6 +399,78 @@ test("production agent pipeline passes loaded conversation state into agent cont
   assert.equal(promptPayload.packet.user_context.conversation_state.active_topic, "routine")
 })
 
+test("production agent pipeline overrides short answer to pending routine basics before render", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    last_assistant_action: "asked_routine_basics",
+  }
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "unsupported_or_unclear",
+        product_category: null,
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.42,
+        evidence: ["Short answer without explicit category."],
+        ambiguity: "unclear short answer",
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Dann baue ich darauf deine Routine auf."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Ja",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: null,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+    },
+  )
+
+  assert.equal(result.intent, "routine_help")
+  assert.equal(result.debugTrace.product_category, "routine")
+  assert.equal(result.debugTrace.classification.intent, "routine_help")
+  assert.equal(result.debugTrace.classification.product_category, "routine")
+  assert.ok(
+    result.routerDecision.policy_overrides.includes("conversation_state_pending_routine_answer"),
+  )
+  assert.equal(
+    result.debugTrace.conversation_state.classifier_override,
+    "conversation_state_pending_routine_answer",
+  )
+  assert.equal(renderPackets[0]?.route.user_job, "routine_structure")
+  assert.equal(renderPackets[0]?.route.product_category, null)
+})
+
 test("POST /api/chat streams agent v1 contract and persists assistant metadata", async () => {
   const fakeAdmin = createFakeAdmin()
   const persistedTurnTraces: unknown[] = []

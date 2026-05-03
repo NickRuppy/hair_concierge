@@ -14,6 +14,8 @@ import type { GuidanceLoadResult } from "@/lib/agent/contracts"
 import type { UserContextProjection } from "@/lib/agent/tools/get-user-context"
 import type { SelectedProductsProjection } from "@/lib/agent/tools/select-products"
 import type { BuildOrFixRoutineProjection } from "@/lib/agent/tools/build-or-fix-routine"
+import { shouldApplyPendingRoutineAnswerOverride } from "@/lib/rag/conversation-state"
+import type { ConversationState } from "@/lib/types"
 
 function nextRuntimeToolId(toolCalls: AgentToolCallHistory[]): string {
   return `runtime-${toolCalls.length + 1}`
@@ -116,11 +118,13 @@ export async function runShadowAgentTurn(params: {
   message: string
   modelClient: AgentModelClient
   tools: Record<AgentToolName, (input: Record<string, unknown>) => Promise<unknown>>
+  conversationState?: ConversationState | null
 }): Promise<{
   final_answer: string
   tool_calls: AgentToolCallHistory[]
   route_trace: AgentRoutePacket
   runtime_packet: AgentRuntimePacket
+  classification_override: string | null
 }> {
   const tool_calls: AgentToolCallHistory[] = []
   const userContext = (await runRuntimeTool({
@@ -129,11 +133,39 @@ export async function runShadowAgentTurn(params: {
     tools: params.tools,
     toolCalls: tool_calls,
   })) as UserContextProjection
-  const classification = await params.modelClient.classifyRoute({
+  const modelClassification = await params.modelClient.classifyRoute({
     systemPrompt: AGENT_ROUTE_CLASSIFIER_PROMPT,
     message: params.message,
     userContext,
   })
+  const shouldOverridePendingRoutineAnswer = Boolean(
+    params.conversationState &&
+    modelClassification.user_job === "unsupported_or_unclear" &&
+    modelClassification.product_category === null &&
+    shouldApplyPendingRoutineAnswerOverride({
+      state: params.conversationState,
+      userMessage: params.message,
+    }),
+  )
+  const classificationOverride = shouldOverridePendingRoutineAnswer
+    ? "conversation_state_pending_routine_answer"
+    : null
+  const classification = shouldOverridePendingRoutineAnswer
+    ? {
+        ...modelClassification,
+        user_job: "routine_structure" as const,
+        product_category: null,
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        confidence: Math.max(modelClassification.confidence, 0.75),
+        evidence: [
+          ...modelClassification.evidence.slice(0, 3),
+          "Conversation state treats this as answer to pending routine basics.",
+        ],
+        ambiguity: null,
+      }
+    : modelClassification
   const route = buildAgentRoutePacket({
     message: params.message,
     userContext,
@@ -196,5 +228,6 @@ export async function runShadowAgentTurn(params: {
     tool_calls,
     route_trace: route,
     runtime_packet: packet,
+    classification_override: classificationOverride,
   }
 }

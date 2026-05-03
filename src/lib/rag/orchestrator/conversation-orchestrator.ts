@@ -350,6 +350,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     assistantAction,
     hairProfile,
     matchedProductCategory: product_category,
+    classifierOverride: conversationStateClassifierOverride,
   })
 
   // ── Create conversation if it doesn't exist yet ────────────────────

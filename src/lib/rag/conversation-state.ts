@@ -49,15 +49,10 @@ export function applyConversationStateToClassification(params: {
   userMessage: string
 }): { classification: ClassificationResult; override: string | null } {
   const { state, classification, userMessage } = params
-  const hasPendingRoutineAnswer =
-    state.active_topic === "routine" &&
-    state.routine_layer === "basics" &&
-    state.pending_offer === "routine_goals_or_problems"
 
   if (
     !isRoutineClassification(classification) &&
-    hasPendingRoutineAnswer &&
-    isLikelyPendingRoutineAnswer(userMessage)
+    shouldApplyPendingRoutineAnswerOverride({ state, userMessage })
   ) {
     return {
       classification: {
@@ -73,6 +68,19 @@ export function applyConversationStateToClassification(params: {
   return { classification, override: null }
 }
 
+export function shouldApplyPendingRoutineAnswerOverride(params: {
+  state: ConversationState
+  userMessage: string
+}): boolean {
+  return (
+    params.state.active_topic === "routine" &&
+    params.state.routine_layer === "basics" &&
+    params.state.pending_offer === "routine_goals_or_problems" &&
+    params.state.last_assistant_action === "asked_routine_basics" &&
+    isLikelyPendingRoutineAnswer(params.userMessage)
+  )
+}
+
 export function computeConversationStateTransition(params: {
   previousState: ConversationState
   classification: ClassificationResult
@@ -81,6 +89,7 @@ export function computeConversationStateTransition(params: {
   assistantAction: string | null
   hairProfile: HairProfile | null
   matchedProductCategory: ProductCategory
+  classifierOverride?: string | null
 }): ConversationStateTransition {
   const previousState = normalizeConversationState(params.previousState)
   let nextState: ConversationState = {
@@ -176,12 +185,29 @@ export function computeConversationStateTransition(params: {
     }
   }
 
+  if (
+    reason === "unchanged" &&
+    previousState.active_topic === "routine" &&
+    previousState.routine_layer === "basics" &&
+    previousState.pending_offer === "routine_goals_or_problems" &&
+    previousState.last_assistant_action === "asked_routine_basics" &&
+    params.assistantAction !== "asked_routine_basics" &&
+    !isRoutineClassification(params.classification) &&
+    productTopic === null
+  ) {
+    nextState = {
+      ...nextState,
+      pending_offer: null,
+    }
+    reason = "routine_pending_offer_dismissed"
+  }
+
   return {
     previous_state: previousState,
     next_state: nextState,
     reason,
     changed_fields: getChangedFields(previousState, nextState),
-    classifier_override: null,
+    classifier_override: params.classifierOverride ?? null,
   }
 }
 

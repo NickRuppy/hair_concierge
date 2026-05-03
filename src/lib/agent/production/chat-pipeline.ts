@@ -405,6 +405,7 @@ export async function runProductionAgentPipeline(
   const result = await runShadowAgentTurn({
     message,
     modelClient: deps.modelClient ?? createOpenAIToolModelClient(),
+    conversationState,
     tools: makeAgentTools({
       message,
       userContext,
@@ -421,7 +422,13 @@ export async function runProductionAgentPipeline(
   const route = result.route_trace
   const intent = mapAgentIntent(route)
   const productCategory = mapAgentProductCategory(route)
-  const routerDecision = buildRouterDecision({ route, selectedProducts })
+  const baseRouterDecision = buildRouterDecision({ route, selectedProducts })
+  const routerDecision = result.classification_override
+    ? {
+        ...baseRouterDecision,
+        policy_overrides: [...baseRouterDecision.policy_overrides, result.classification_override],
+      }
+    : baseRouterDecision
   const classification = buildClassification(route)
   const shouldPlanRoutine = route.user_job === "routine_structure"
   const assistantAction =
@@ -440,6 +447,7 @@ export async function runProductionAgentPipeline(
     assistantAction,
     hairProfile: userContext.profile,
     matchedProductCategory: productCategory,
+    classifierOverride: result.classification_override,
   })
   const matchedProducts = productsForRenderedPacket({
     runtimePacket: result.runtime_packet,
