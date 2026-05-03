@@ -1,3 +1,6 @@
+alter table conversations
+    add constraint conversations_id_user_id_unique unique (id, user_id);
+
 create table conversation_states (
     conversation_id uuid primary key references conversations (id) on delete cascade,
     user_id         uuid not null references profiles (id) on delete cascade,
@@ -15,6 +18,11 @@ create table conversation_states (
     created_at      timestamptz default now(),
     updated_at      timestamptz default now()
 );
+
+alter table conversation_states
+    add constraint conversation_states_conversation_user_id_fk
+    foreign key (conversation_id, user_id)
+    references conversations (id, user_id);
 
 create index idx_conversation_states_user_id
     on conversation_states (user_id, updated_at desc);
