@@ -11,6 +11,7 @@ import {
 } from "../src/lib/agent/production/chat-pipeline"
 import type { AgentModelClient } from "../src/lib/agent/orchestrator/model-client"
 import { createChatPostHandler } from "../src/app/api/chat/route"
+import { createDefaultConversationState } from "../src/lib/rag/conversation-state"
 import type {
   AgentRoutePacket,
   AgentRuntimePacket,
@@ -277,6 +278,7 @@ test("production agent pipeline marks debug trace as agent final render", async 
         promptContext: null,
         dislikedProductNames: [],
       }),
+      loadConversationState: async () => createDefaultConversationState(),
     },
   )
 

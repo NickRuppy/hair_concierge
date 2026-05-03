@@ -44,7 +44,7 @@ import {
 import { createAdminClient } from "@/lib/supabase/admin"
 import { DEFAULT_CHAT_COMPLETION_MODEL } from "@/lib/openai/chat"
 import { computeConversationStateTransition } from "@/lib/rag/conversation-state"
-import { loadConversationState } from "@/lib/rag/conversation-state-store"
+import { loadConversationState as loadPersistedConversationState } from "@/lib/rag/conversation-state-store"
 import { buildPipelineTraceDraft } from "@/lib/rag/debug-trace"
 import type { PipelineParams, PipelineResult } from "@/lib/rag/contracts"
 import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/rag/user-memory"
@@ -52,6 +52,7 @@ import type {
   ChatCategoryDecision,
   ChatPromptSnapshot,
   ClassificationResult,
+  ConversationState,
   IntentType,
   LangfusePromptReference,
   Message,
@@ -77,6 +78,7 @@ interface ProductionAgentPipelineDeps {
   loadConversationHistory?: (conversationId: string) => Promise<Message[]>
   getUserContext?: (userId: string) => Promise<UserContextProjection>
   loadUserMemoryContext?: (userId: string) => Promise<UserMemoryContext>
+  loadConversationState?: (conversationId: string) => Promise<ConversationState>
 }
 
 async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; durationMs: number }> {
@@ -384,7 +386,11 @@ export async function runProductionAgentPipeline(
     measureAsync(() => (deps.loadConversationHistory ?? loadConversationHistory)(conversationId)),
     measureAsync(() => (deps.getUserContext ?? getUserContext)(userId)),
     measureAsync(() => (deps.loadUserMemoryContext ?? loadUserMemoryContext)(userId)),
-    measureAsync(() => loadConversationState(createAdminClient(), conversationId)),
+    measureAsync(() =>
+      deps.loadConversationState
+        ? deps.loadConversationState(conversationId)
+        : loadPersistedConversationState(createAdminClient(), conversationId),
+    ),
   ])
 
   const userContext: ProductionUserContext = {
