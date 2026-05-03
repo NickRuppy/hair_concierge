@@ -200,6 +200,19 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
         throw new Error("Conversation id missing after creation")
       }
 
+      if (!shouldGenerateConversationTitle) {
+        const { data: existingConversation, error: ownershipError } = await admin
+          .from("conversations")
+          .select("id")
+          .eq("id", activeConversationId)
+          .eq("user_id", user.id)
+          .single()
+
+        if (ownershipError || !existingConversation) {
+          return NextResponse.json({ error: "Unterhaltung nicht gefunden" }, { status: 404 })
+        }
+      }
+
       deps.ensureLangfuseTracing()
 
       chatObservation = deps.startObservation(

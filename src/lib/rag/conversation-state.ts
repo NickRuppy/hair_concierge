@@ -258,7 +258,9 @@ function hasRoutineCadenceSignal(lower: string): boolean {
 }
 
 function hasProductSignal(lower: string): boolean {
-  return /\b(shampoo|conditioner|spuelung|spülung|maske|kur|leave-?in|oel|öl)\b/.test(lower)
+  return /\b(shampoo|conditioner|spuelung|spülung|maske|kur|leave-?in|oel|öl|bondbuilder|bond-builder|bond builder|olaplex|k18|kolaplex|tiefenreinigung|deep cleansing|clarifying|kopfhautpeeling|peeling|scalp scrub|trockenshampoo|dry shampoo)\b/.test(
+    lower,
+  )
 }
 
 function hasProblemSignal(lower: string): boolean {

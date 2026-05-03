@@ -189,6 +189,33 @@ test("short answer to pending routine basics keeps route in routine context", ()
   expect(corrected.override).toBe("conversation_state_pending_routine_answer")
 })
 
+test("support-category products can answer pending routine basics", () => {
+  const previousState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: [],
+    last_assistant_action: "asked_routine_basics",
+    last_product_category: null,
+  }
+
+  for (const userMessage of [
+    "K18 und Olaplex",
+    "Kolaplex gegen Haarbruch",
+    "Kopfhautpeeling",
+    "Deep Cleansing",
+    "Dry Shampoo",
+  ]) {
+    expect(
+      shouldApplyPendingRoutineAnswerOverride({
+        state: previousState,
+        userMessage,
+      }),
+    ).toBe(true)
+  }
+})
+
 test("pending routine override requires the assistant to have asked routine basics", () => {
   const staleState: ConversationState = {
     version: 1,

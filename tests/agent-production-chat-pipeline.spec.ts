@@ -125,10 +125,22 @@ function createFakeAdmin() {
   const createChain = (table: string) => {
     let operation: "insert" | "update" | "select" | null = null
     let payload: unknown = null
+    const filters: Record<string, unknown> = {}
 
-    const resolveSingle = () => {
+    const resolveSingle = (): Promise<{ data: unknown; error: unknown }> => {
       if (table === "conversations" && operation === "insert") {
         return Promise.resolve({ data: { id: "conversation-1" }, error: null })
+      }
+
+      if (table === "conversations" && operation === "select") {
+        if (filters.id === "other-conversation" || filters.user_id !== "user-1") {
+          return Promise.resolve({
+            data: null,
+            error: { message: "conversation not found" },
+          })
+        }
+
+        return Promise.resolve({ data: { id: filters.id ?? "conversation-1" }, error: null })
       }
 
       if (table === "messages" && operation === "insert") {
@@ -160,13 +172,14 @@ function createFakeAdmin() {
         operation = operation ?? "select"
         return chain
       },
-      eq() {
+      eq(column: string, value: unknown) {
+        filters[column] = value
         return chain
       },
       single: resolveSingle,
-      then<TResult1 = { data: unknown; error: null }, TResult2 = never>(
+      then<TResult1 = { data: unknown; error: unknown }, TResult2 = never>(
         onfulfilled?:
-          | ((value: { data: unknown; error: null }) => TResult1 | PromiseLike<TResult1>)
+          | ((value: { data: unknown; error: unknown }) => TResult1 | PromiseLike<TResult1>)
           | null,
         onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
       ) {
@@ -540,6 +553,59 @@ test("production agent pipeline overrides product-category misclassification in 
   assert.equal(renderPackets[0]?.route.user_job, "routine_structure")
   assert.equal(renderPackets[0]?.route.product_category, null)
   assert.equal(renderPackets[0]?.selected_products, null)
+})
+
+test("POST /api/chat rejects existing conversations that do not belong to the user", async () => {
+  const fakeAdmin = createFakeAdmin()
+  const pipelineCalls: unknown[] = []
+  const handler = createChatPostHandler({
+    createClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({ data: { user: { id: "user-1" } } }),
+        },
+      }) as never,
+    checkRateLimit: async () => ({ allowed: true }) as never,
+    loadRuntimeDeps: async () =>
+      ({
+        createAdminClient: () => fakeAdmin.client,
+        runProductionAgentPipeline: async (params: unknown) => {
+          pipelineCalls.push(params)
+          throw new Error("pipeline should not run")
+        },
+        buildAssistantRagContext: () => ({}),
+        buildDoneEventData: (params: unknown) => params,
+        persistConversationStateTransition: async () => {},
+        extractConversationMemory: async () => {},
+        buildRetrievalDebugEventData: (trace: unknown) => ({ trace }),
+        finalizeChatTurnTrace: (trace: unknown) => trace,
+        summarizeEngineTraceForLangfuse: (trace: unknown) => ({ trace }),
+        summarizeProductsForLangfuse: (products: unknown) => products,
+        chatMessageSchema: {
+          safeParse: (body: unknown) => ({
+            success: true,
+            data: body as { message: string; conversation_id?: string | null },
+          }),
+        },
+        generateConversationTitle: async () => {},
+      }) as never,
+  })
+
+  const response = await handler(
+    new Request("http://localhost/api/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        message: "Hallo",
+        conversation_id: "other-conversation",
+      }),
+    }),
+  )
+  const body = (await response.json()) as { error?: string }
+
+  assert.equal(response.status, 404)
+  assert.equal(body.error, "Unterhaltung nicht gefunden")
+  assert.deepEqual(pipelineCalls, [])
+  assert.deepEqual(fakeAdmin.inserts.messages, [])
 })
 
 test("POST /api/chat streams agent v1 contract and persists assistant metadata", async () => {
