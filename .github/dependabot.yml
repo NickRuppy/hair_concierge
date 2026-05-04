@@ -53,6 +53,9 @@ updates:
           - "@sentry/*"
       lint-format-tooling:
         dependency-type: development
+        update-types:
+          - patch
+          - minor
         patterns:
           - "eslint"
           - "eslint-*"
@@ -61,12 +64,18 @@ updates:
           - "husky"
       test-tooling:
         dependency-type: development
+        update-types:
+          - patch
+          - minor
         patterns:
           - "@playwright/*"
           - "playwright"
           - "start-server-and-test"
       typescript-tooling:
         dependency-type: development
+        update-types:
+          - patch
+          - minor
         patterns:
           - "typescript"
           - "tsx"
