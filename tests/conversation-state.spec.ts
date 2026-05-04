@@ -130,7 +130,7 @@ test("routine request opens routine basics state", () => {
   expect(transition.reason).toBe("routine_started")
 })
 
-test("complete first routine request does not leave pending routine basics", () => {
+test("complete first routine answer stays on routine basics and offers next layers", () => {
   const transition = computeConversationStateTransition({
     previousState: createDefaultConversationState(),
     classification: createClassification(),
@@ -143,16 +143,16 @@ test("complete first routine request does not leave pending routine basics", () 
     },
     userMessage:
       "Ich wasche alle 3 Tage mit Shampoo und Conditioner, aber meine Spitzen sind trocken.",
-    assistantAction: "answered_routine",
+    assistantAction: "answered_routine_basics",
     hairProfile: createProfile(),
     matchedProductCategory: null,
   })
 
   expect(transition.next_state.active_topic).toBe("routine")
-  expect(transition.next_state.routine_layer).not.toBe("basics")
-  expect(transition.next_state.pending_offer).not.toBe("routine_goals_or_problems")
+  expect(transition.next_state.routine_layer).toBe("basics")
+  expect(transition.next_state.pending_offer).toBe("routine_goals_or_problems")
   expect(transition.next_state.answered_slots).toEqual(["routine", "products_tried", "problem"])
-  expect(transition.reason).toBe("routine_started_with_frame")
+  expect(transition.reason).toBe("routine_basics_answered")
 })
 
 test("short answer to pending routine basics keeps route in routine context", () => {
@@ -281,6 +281,38 @@ test("pending routine override requires the assistant to have asked routine basi
   expect(corrected.override).toBeNull()
 })
 
+test("pending routine override does not apply after routine basics were answered", () => {
+  const answeredBasicsState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: ["routine", "products_tried"],
+    last_assistant_action: "answered_routine_basics",
+    last_product_category: null,
+  }
+  const classification = createClassification({
+    intent: "followup",
+    product_category: "leave_in",
+    router_confidence: 0.72,
+  })
+
+  const corrected = applyConversationStateToClassification({
+    state: answeredBasicsState,
+    classification,
+    userMessage: "Und Leave-in?",
+  })
+
+  expect(corrected.classification).toBe(classification)
+  expect(corrected.override).toBeNull()
+  expect(
+    shouldApplyPendingRoutineAnswerOverride({
+      state: answeredBasicsState,
+      userMessage: "Und Leave-in?",
+    }),
+  ).toBe(false)
+})
+
 test("unrelated short general messages do not override pending routine context", () => {
   const previousState: ConversationState = {
     version: 1,
@@ -396,6 +428,117 @@ test("standalone support-category recommendation switches conversation topic", (
   expect(transition.reason).toBe("category_switch")
 })
 
+test("goal follow-up after routine basics advances to goal layer", () => {
+  const previousState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: ["routine", "products_tried"],
+    last_assistant_action: "answered_routine_basics",
+    last_product_category: null,
+  }
+
+  const transition = computeConversationStateTransition({
+    previousState,
+    classification: createClassification({
+      intent: "followup",
+      product_category: null,
+      router_confidence: 0.74,
+    }),
+    routerDecision: {
+      retrieval_mode: "hybrid",
+      response_mode: "answer_direct",
+      slot_completeness: 1,
+      confidence: 0.74,
+      policy_overrides: [],
+    },
+    userMessage: "Ja, zeig mir bitte, was für meine Ziele und mehr Definition hilft.",
+    assistantAction: "answered_routine_goals",
+    hairProfile: createProfile(),
+    matchedProductCategory: null,
+  })
+
+  expect(transition.next_state.active_topic).toBe("routine")
+  expect(transition.next_state.routine_layer).toBe("goals")
+  expect(transition.next_state.pending_offer).toBe("routine_other_layer")
+  expect(transition.reason).toBe("routine_goal_layer_selected")
+})
+
+test("problem follow-up after routine basics advances to problem layer", () => {
+  const previousState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: ["routine", "products_tried"],
+    last_assistant_action: "answered_routine_basics",
+    last_product_category: null,
+  }
+
+  const transition = computeConversationStateTransition({
+    previousState,
+    classification: createClassification({
+      intent: "followup",
+      product_category: null,
+      router_confidence: 0.74,
+    }),
+    routerDecision: {
+      retrieval_mode: "hybrid",
+      response_mode: "answer_direct",
+      slot_completeness: 1,
+      confidence: 0.74,
+      policy_overrides: [],
+    },
+    userMessage: "Lieber die Probleme: wie kann ich Frizz und trockene Spitzen fixen?",
+    assistantAction: "answered_routine_problems",
+    hairProfile: createProfile(),
+    matchedProductCategory: null,
+  })
+
+  expect(transition.next_state.active_topic).toBe("routine")
+  expect(transition.next_state.routine_layer).toBe("problems")
+  expect(transition.next_state.pending_offer).toBe("routine_other_layer")
+  expect(transition.reason).toBe("routine_problem_layer_selected")
+})
+
+test("combined goal and problem follow-up after routine basics offers deep dive next", () => {
+  const previousState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: ["routine", "products_tried"],
+    last_assistant_action: "answered_routine_basics",
+    last_product_category: null,
+  }
+
+  const transition = computeConversationStateTransition({
+    previousState,
+    classification: createClassification({
+      intent: "followup",
+      product_category: null,
+      router_confidence: 0.74,
+    }),
+    routerDecision: {
+      retrieval_mode: "hybrid",
+      response_mode: "answer_direct",
+      slot_completeness: 1,
+      confidence: 0.74,
+      policy_overrides: [],
+    },
+    userMessage: "Gerne beides: Ziele und auch die Probleme angehen.",
+    assistantAction: "answered_routine_goals_and_problems",
+    hairProfile: createProfile(),
+    matchedProductCategory: null,
+  })
+
+  expect(transition.next_state.active_topic).toBe("routine")
+  expect(transition.next_state.routine_layer).toBe("goals")
+  expect(transition.next_state.pending_offer).toBe("routine_deep_dive")
+  expect(transition.reason).toBe("routine_goal_and_problem_layers_selected")
+})
+
 test("explicit category mention inside routine becomes routine deep dive", () => {
   const previousState: ConversationState = {
     version: 1,
@@ -431,6 +574,89 @@ test("explicit category mention inside routine becomes routine deep dive", () =>
   expect(transition.next_state.routine_layer).toBe("deep_dive")
   expect(transition.next_state.last_product_category).toBe("leave_in")
   expect(transition.reason).toBe("routine_category_deep_dive")
+})
+
+test("vague category mention after routine basics becomes routine deep dive", () => {
+  const previousState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: ["routine", "products_tried"],
+    last_assistant_action: "answered_routine_basics",
+    last_product_category: null,
+  }
+
+  const transition = computeConversationStateTransition({
+    previousState,
+    classification: createClassification({
+      intent: "followup",
+      product_category: "leave_in",
+      router_confidence: 0.8,
+    }),
+    routerDecision: {
+      retrieval_mode: "hybrid",
+      response_mode: "answer_direct",
+      slot_completeness: 1,
+      confidence: 0.8,
+      policy_overrides: [],
+    },
+    userMessage: "Und Leave-in?",
+    assistantAction: "answered_routine_deep_dive",
+    hairProfile: createProfile(),
+    matchedProductCategory: "leave_in",
+  })
+
+  expect(transition.next_state.active_topic).toBe("routine")
+  expect(transition.next_state.routine_layer).toBe("deep_dive")
+  expect(transition.next_state.pending_offer).toBeNull()
+  expect(transition.next_state.last_product_category).toBe("leave_in")
+  expect(transition.reason).toBe("routine_category_deep_dive")
+})
+
+test("explicit product request inside routine switches to product category", () => {
+  const previousState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: ["routine", "products_tried"],
+    last_assistant_action: "answered_routine_basics",
+    last_product_category: null,
+  }
+
+  const classification = createClassification({
+    intent: "product_recommendation",
+    product_category: "leave_in",
+    router_confidence: 0.86,
+  })
+  const corrected = applyConversationStateToClassification({
+    state: previousState,
+    classification,
+    userMessage: "Welches Leave-in empfiehlst du mir konkret?",
+  })
+  const transition = computeConversationStateTransition({
+    previousState,
+    classification: corrected.classification,
+    routerDecision: {
+      retrieval_mode: "product_sql_plus_hybrid",
+      response_mode: "answer_direct",
+      slot_completeness: 1,
+      confidence: 0.86,
+      policy_overrides: ["category_product_mode"],
+    },
+    userMessage: "Welches Leave-in empfiehlst du mir konkret?",
+    assistantAction: "answered_product_recommendation",
+    hairProfile: createProfile(),
+    matchedProductCategory: "leave_in",
+  })
+
+  expect(corrected.override).toBeNull()
+  expect(transition.next_state.active_topic).toBe("leave_in")
+  expect(transition.next_state.routine_layer).toBeNull()
+  expect(transition.next_state.pending_offer).toBeNull()
+  expect(transition.next_state.last_product_category).toBe("leave_in")
+  expect(transition.reason).toBe("category_switch")
 })
 
 test("state store builds stable upsert payload", () => {

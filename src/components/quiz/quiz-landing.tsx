@@ -57,7 +57,7 @@ export function QuizLanding() {
           Dauert ca. 2 Minuten. Wir führen dich Schritt für Schritt durch.
         </p>
         <p className="text-center text-sm text-muted-foreground pt-2">
-          <a href="/auth" className="underline hover:text-foreground transition-colors">
+          <a href="/auth?force=login" className="underline hover:text-foreground transition-colors">
             Du hast bereits ein Konto? Hier anmelden
           </a>
         </p>

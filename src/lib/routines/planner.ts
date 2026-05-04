@@ -27,9 +27,13 @@ import type {
   HairProfile,
   RoutineContext,
   RoutineDecisionContext,
+  RoutineLayer,
+  RoutineLayerProjection,
   RoutineFocus,
   RoutinePlan,
   RoutinePlanSection,
+  RoutinePriorityLever,
+  RoutineProductCategory,
   RoutineSlotAction,
   RoutineSlotAdvice,
   RoutineTopicActivation,
@@ -1679,6 +1683,402 @@ function buildRoutineSlots(
   return sections
 }
 
+function getRoutineSlots(plan: Pick<RoutinePlan, "sections">): RoutineSlotAdvice[] {
+  return plan.sections.flatMap((section) => section.slots)
+}
+
+function findRoutineSlot(
+  plan: Pick<RoutinePlan, "sections">,
+  slotId: string,
+): RoutineSlotAdvice | undefined {
+  return getRoutineSlots(plan).find((slot) => slot.id === slotId)
+}
+
+function isActionableRoutineSlot(slot: RoutineSlotAdvice): boolean {
+  return slot.action === "add" || slot.action === "adjust" || slot.action === "upgrade"
+}
+
+function createPriorityLever(params: {
+  id: RoutinePriorityLever["id"]
+  source: RoutinePriorityLever["source"]
+  slot: RoutineSlotAdvice
+  reason: string
+  score: number
+  supportingSlots?: RoutineSlotAdvice[]
+}): RoutinePriorityLever {
+  const supportingSlotIds = (params.supportingSlots ?? [])
+    .map((slot) => slot.id)
+    .filter((slotId, index, ids) => slotId !== params.slot.id && ids.indexOf(slotId) === index)
+
+  return {
+    id: params.id,
+    source: params.source,
+    slot_id: params.slot.id,
+    label: params.slot.label,
+    reason: params.reason,
+    score: params.score,
+    topic_ids: params.slot.topic_ids,
+    supporting_slot_ids: supportingSlotIds,
+  }
+}
+
+function hasSevereActiveDamageSignals(
+  profile: HairProfile | null,
+  context: RoutineContext,
+): boolean {
+  const concerns = new Set(context.concerns)
+
+  if (context.protein_moisture_balance === "snaps") return true
+  if (
+    concerns.has("breakage") &&
+    (concerns.has("hair_damage") ||
+      concerns.has("split_ends") ||
+      context.cuticle_condition === "rough" ||
+      context.chemical_treatment.includes("bleached"))
+  ) {
+    return true
+  }
+
+  return countDamageSignals(profile) >= 3
+}
+
+function hasStrongResetBlockageSignals(context: RoutineContext): boolean {
+  if (!context.has_hair_reset_signals) return false
+
+  const routineText = normalizeText(context.products_used ?? "")
+  const heavyRoutineProductCount = context.current_routine_products.filter((entry) =>
+    HEAVY_ROUTINE_PRODUCTS.has(entry),
+  ).length
+  const hasBlockingLanguage =
+    includesAny(routineText, UNDERPERFORMING_ROUTINE_TERMS) ||
+    includesAny(routineText, HAIR_RESET_TERMS)
+  const hasExplicitResetWithLoad =
+    context.explicit_topic_ids.includes("tiefenreinigung") &&
+    (heavyRoutineProductCount >= 2 ||
+      includesAny(routineText, HARD_WATER_TERMS) ||
+      includesAny(routineText, SWIMMING_TERMS) ||
+      includesAny(routineText, CO_WASH_TERMS) ||
+      includesAny(routineText, HEAVY_STYLING_TERMS))
+
+  return context.has_hard_reset_signals || hasBlockingLanguage || hasExplicitResetWithLoad
+}
+
+function findFirstSlot(
+  plan: Pick<RoutinePlan, "sections">,
+  slotIds: string[],
+): RoutineSlotAdvice | undefined {
+  for (const slotId of slotIds) {
+    const slot = findRoutineSlot(plan, slotId)
+    if (slot) return slot
+  }
+  return undefined
+}
+
+export function selectRoutinePriorityLever(
+  profile: HairProfile | null,
+  context: RoutineContext,
+  plan: Pick<RoutinePlan, "sections" | "primary_focuses">,
+): RoutinePriorityLever | null {
+  const resetSlot = findFirstSlot(plan, ["occasional-hair-reset", "occasional-hard-reset"])
+  if (hasStrongResetBlockageSignals(context) && resetSlot) {
+    const hardResetSlot = findRoutineSlot(plan, "occasional-hard-reset")
+
+    return createPriorityLever({
+      id: "reset-blockage",
+      source: "care_risk",
+      slot: resetSlot,
+      reason:
+        "Rueckstaende, Mineralien oder Ueberlagerung koennen verhindern, dass Pflege sauber greift.",
+      score: 100,
+      supportingSlots: hardResetSlot ? [hardResetSlot] : [],
+    })
+  }
+
+  if (hasSevereActiveDamageSignals(profile, context)) {
+    const orderedCareSlots = [
+      findRoutineSlot(plan, "base-conditioner"),
+      findRoutineSlot(plan, "maintenance-leave-in"),
+      findRoutineSlot(plan, "occasional-mask"),
+      findRoutineSlot(plan, "occasional-bond-builder"),
+      context.has_hair_reset_signals ? resetSlot : undefined,
+    ].filter(
+      (slot): slot is RoutineSlotAdvice => slot !== undefined && isActionableRoutineSlot(slot),
+    )
+    const selectedSlot = orderedCareSlots[0]
+
+    if (selectedSlot) {
+      return createPriorityLever({
+        id: "care-product-first",
+        source: "care_risk",
+        slot: selectedSlot,
+        reason:
+          "Bei aktivem Bruch oder strukturellem Schaden kommt die Pflegebasis vor zusaetzlichen Extras.",
+        score: 90,
+        supportingSlots: orderedCareSlots.slice(1),
+      })
+    }
+  }
+
+  const mechanicalSlot = findRoutineSlot(plan, "maintenance-brush-tools")
+  const mechanicalDominant =
+    mechanicalSlot &&
+    (context.explicit_topic_ids.includes("brush_tools") ||
+      (!context.has_damage_signals &&
+        !context.has_dryness_damage_signals &&
+        context.goals.length === 0))
+  if (mechanicalDominant) {
+    return createPriorityLever({
+      id: "mechanical-guardrail",
+      source: "care_risk",
+      slot: mechanicalSlot,
+      reason:
+        "Mechanische Belastung ist hier das staerkste erkennbare Signal und sollte als Guardrail zuerst sitzen.",
+      score: 80,
+    })
+  }
+
+  const hasOngoingExposure =
+    hasFrequentUnprotectedHeat(profile) ||
+    context.chemical_treatment.some((treatment) => treatment !== "natural")
+  if (hasOngoingExposure) {
+    const exposureSlot = findFirstSlot(plan, [
+      "maintenance-leave-in",
+      "base-conditioner",
+      "occasional-bond-builder",
+      "occasional-mask",
+    ])
+    if (exposureSlot && isActionableRoutineSlot(exposureSlot)) {
+      return createPriorityLever({
+        id: "exposure-protection",
+        source: "care_risk",
+        slot: exposureSlot,
+        reason:
+          "Hitze oder chemische Belastung spricht fuer Schutz und Pflege, ohne aktive Schaeden zu ueberstimmen.",
+        score: 70,
+      })
+    }
+  }
+
+  const scalpSlot = findRoutineSlot(plan, "occasional-scalp-clarify")
+  if (scalpSlot && isActionableRoutineSlot(scalpSlot)) {
+    return createPriorityLever({
+      id: "scalp-safety",
+      source: "care_risk",
+      slot: scalpSlot,
+      reason: "Kopfhaut-Signale veraendern, wie sicher und gezielt die Routine reinigen sollte.",
+      score: 60,
+    })
+  }
+
+  const hasDrynessFrizzCluster = ["dryness", "frizz", "tangling"].some((concern) =>
+    context.concerns.includes(concern as HairProfile["concerns"][number]),
+  )
+  if (hasDrynessFrizzCluster) {
+    const drySlot = findFirstSlot(plan, [
+      "maintenance-leave-in",
+      "occasional-mask",
+      "base-owc-oil",
+      "occasional-oil",
+    ])
+    if (drySlot && isActionableRoutineSlot(drySlot)) {
+      return createPriorityLever({
+        id: "dryness-frizz-control",
+        source: "inferred_need",
+        slot: drySlot,
+        reason:
+          "Trockenheit, Frizz oder Verhaken brauchen zuerst einen leichten Pflege- oder Finish-Hebel.",
+        score: 50,
+      })
+    }
+  }
+
+  if (context.goals.length > 0) {
+    const goalSlot = findFirstSlot(plan, [
+      "maintenance-leave-in",
+      "maintenance-refresh",
+      "occasional-mask",
+      "base-cwc-technique",
+      "base-owc-technique",
+      "occasional-oil",
+    ])
+    if (goalSlot && isActionableRoutineSlot(goalSlot)) {
+      return createPriorityLever({
+        id: "stated-goal",
+        source: "stated_goal",
+        slot: goalSlot,
+        reason: "Ohne staerkeren Risiko-Hebel fuehrt das ausdrueckliche Ziel die Routine.",
+        score: 40,
+      })
+    }
+  }
+
+  const inferredSlot = getRoutineSlots(plan).find(
+    (slot) =>
+      slot.id !== "base-shampoo" && slot.id !== "base-conditioner" && isActionableRoutineSlot(slot),
+  )
+  if (!inferredSlot) return null
+
+  return createPriorityLever({
+    id: "inferred-need",
+    source: "inferred_need",
+    slot: inferredSlot,
+    reason: "Der sichtbarste zusaetzliche Routine-Baustein ergibt sich aus den Profilsignalen.",
+    score: 10,
+  })
+}
+
+function sortProjectionSlots(plan: RoutinePlan, slots: RoutineSlotAdvice[]): RoutineSlotAdvice[] {
+  return [...slots].sort((a, b) => {
+    if (a.id === plan.priority_lever?.slot_id) return -1
+    if (b.id === plan.priority_lever?.slot_id) return 1
+    return a.attachment_priority - b.attachment_priority
+  })
+}
+
+function isGoalDirectedSlot(plan: RoutinePlan, slot: RoutineSlotAdvice): boolean {
+  const goalCodes = new Set(
+    plan.primary_focuses.filter((focus) => focus.kind === "goal").map((focus) => focus.code),
+  )
+  if (goalCodes.size === 0) return false
+
+  if (slot.id === "maintenance-refresh" && goalCodes.has("curl_definition")) return true
+  if (
+    slot.category === "leave_in" &&
+    ["less_frizz", "curl_definition", "moisture", "shine"].some((goal) => goalCodes.has(goal))
+  ) {
+    return true
+  }
+  if (
+    slot.category === "mask" &&
+    ["moisture", "healthier_hair", "less_split_ends"].some((goal) => goalCodes.has(goal))
+  ) {
+    return true
+  }
+  if (slot.category === "oil" && ["moisture", "shine"].some((goal) => goalCodes.has(goal))) {
+    return true
+  }
+
+  return (
+    (slot.topic_ids.includes("cwc") || slot.topic_ids.includes("owc")) &&
+    ["moisture", "healthier_hair"].some((goal) => goalCodes.has(goal))
+  )
+}
+
+function isProblemDirectedSlot(plan: RoutinePlan, slot: RoutineSlotAdvice): boolean {
+  const concernCodes = new Set(
+    plan.primary_focuses.filter((focus) => focus.kind === "concern").map((focus) => focus.code),
+  )
+
+  if (
+    slot.topic_ids.some((topicId) =>
+      ["tiefenreinigung", "bond_builder", "brush_tools"].includes(topicId),
+    )
+  ) {
+    return true
+  }
+
+  if (
+    slot.category === "leave_in" &&
+    ["frizz", "dryness", "tangling", "breakage", "hair_damage"].some((concern) =>
+      concernCodes.has(concern),
+    )
+  ) {
+    return true
+  }
+
+  if (
+    (slot.category === "mask" || slot.category === "oil") &&
+    ["dryness", "breakage", "hair_damage", "split_ends"].some((concern) =>
+      concernCodes.has(concern),
+    )
+  ) {
+    return true
+  }
+
+  return false
+}
+
+function topicForDeepDiveCategory(category: RoutineProductCategory | null): RoutineTopicId | null {
+  switch (category) {
+    case "bondbuilder":
+      return "bond_builder"
+    case "deep_cleansing_shampoo":
+    case "peeling":
+      return "tiefenreinigung"
+    case "oil":
+      return "hair_oiling"
+    default:
+      return null
+  }
+}
+
+export function projectRoutinePlanForLayer(
+  plan: RoutinePlan,
+  layer: RoutineLayer,
+  options: {
+    requestedCategory?: RoutineProductCategory | null
+    requestedTopicId?: RoutineTopicId | null
+  } = {},
+): RoutineLayerProjection {
+  const slots = getRoutineSlots(plan)
+  const nonBaseActionableSlots = slots.filter(
+    (slot) =>
+      slot.id !== "base-shampoo" && slot.id !== "base-conditioner" && isActionableRoutineSlot(slot),
+  )
+  let visibleSlots: RoutineSlotAdvice[]
+
+  if (layer === "basics") {
+    visibleSlots = [
+      findRoutineSlot(plan, "base-shampoo"),
+      findRoutineSlot(plan, "base-conditioner"),
+      plan.priority_lever ? findRoutineSlot(plan, plan.priority_lever.slot_id) : undefined,
+    ].filter((slot, index, selected): slot is RoutineSlotAdvice => {
+      return (
+        Boolean(slot) && selected.findIndex((candidate) => candidate?.id === slot?.id) === index
+      )
+    })
+  } else if (layer === "goals") {
+    const goalSlots = nonBaseActionableSlots.filter((slot) => isGoalDirectedSlot(plan, slot))
+    visibleSlots = sortProjectionSlots(
+      plan,
+      goalSlots.length > 0 ? goalSlots : nonBaseActionableSlots,
+    ).slice(0, 3)
+  } else if (layer === "problems") {
+    const problemSlots = nonBaseActionableSlots.filter((slot) => isProblemDirectedSlot(plan, slot))
+    visibleSlots = sortProjectionSlots(
+      plan,
+      problemSlots.length > 0 ? problemSlots : nonBaseActionableSlots,
+    ).slice(0, 3)
+  } else {
+    const requestedCategory = options.requestedCategory ?? null
+    const requestedTopicId = options.requestedTopicId ?? topicForDeepDiveCategory(requestedCategory)
+    const categorySlot =
+      requestedCategory === null
+        ? undefined
+        : slots.find((slot) => slot.category === requestedCategory)
+    const topicSlot =
+      requestedTopicId === null
+        ? undefined
+        : nonBaseActionableSlots.find((slot) => slot.topic_ids.includes(requestedTopicId))
+    const prioritySlot = plan.priority_lever
+      ? findRoutineSlot(plan, plan.priority_lever.slot_id)
+      : undefined
+
+    visibleSlots = [categorySlot ?? topicSlot ?? prioritySlot ?? nonBaseActionableSlots[0]].filter(
+      (slot): slot is RoutineSlotAdvice => Boolean(slot),
+    )
+  }
+
+  return {
+    layer,
+    visible_slot_ids: visibleSlots.map((slot) => slot.id),
+    priority_lever: plan.priority_lever ?? null,
+    requested_category: options.requestedCategory ?? null,
+    requested_topic_id:
+      options.requestedTopicId ?? topicForDeepDiveCategory(options.requestedCategory ?? null),
+  }
+}
+
 export function buildRoutinePlan(
   profile: HairProfile | null,
   message: string,
@@ -1707,13 +2107,28 @@ export function buildRoutinePlan(
     }))
     .filter((section) => section.phase === "base_wash" || section.slots.length > 0)
 
-  return {
+  const planWithoutPriority: Omit<RoutinePlan, "priority_lever" | "layer_projections"> = {
     base_topic_id: getBaseRoutineTopicId(profile),
     primary_focuses: context.primary_focuses,
     active_topics: activeTopics,
     compare_cwc_owc: compareMode,
     sections,
     decision_context: decisionContext,
+  }
+  const planWithPriority: RoutinePlan = {
+    ...planWithoutPriority,
+    priority_lever: selectRoutinePriorityLever(profile, context, planWithoutPriority),
+  }
+  const layerProjections = {
+    basics: projectRoutinePlanForLayer(planWithPriority, "basics"),
+    goals: projectRoutinePlanForLayer(planWithPriority, "goals"),
+    problems: projectRoutinePlanForLayer(planWithPriority, "problems"),
+    deep_dive: projectRoutinePlanForLayer(planWithPriority, "deep_dive"),
+  }
+
+  return {
+    ...planWithPriority,
+    layer_projections: layerProjections,
   }
 }
 

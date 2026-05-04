@@ -9,6 +9,7 @@ import {
   productsForRenderedPacket,
   runProductionAgentPipeline,
 } from "../src/lib/agent/production/chat-pipeline"
+import { buildRecommendationEngineRuntimeForChat } from "../src/lib/recommendation-engine"
 import type { AgentModelClient } from "../src/lib/agent/orchestrator/model-client"
 import { createChatPostHandler } from "../src/app/api/chat/route"
 import { createDefaultConversationState } from "../src/lib/rag/conversation-state"
@@ -17,7 +18,7 @@ import type {
   AgentRuntimePacket,
 } from "../src/lib/agent/orchestrator/route-packet"
 import type { SelectedProductsProjection } from "../src/lib/agent/tools/select-products"
-import type { Product } from "../src/lib/types"
+import type { HairProfile, Product } from "../src/lib/types"
 import type { ConversationState, ConversationStateTransition } from "../src/lib/types"
 
 function createRoute(overrides: Partial<AgentRoutePacket> = {}): AgentRoutePacket {
@@ -36,6 +37,8 @@ function createRoute(overrides: Partial<AgentRoutePacket> = {}): AgentRoutePacke
     guidance_ids: ["playbook:recommend_products"],
     tool_plan: ["select_products"],
     routine_objective: null,
+    routine_layer: null,
+    routine_requested_category: null,
     validation_warnings: [],
     ...overrides,
   }
@@ -62,6 +65,41 @@ function createProduct(id: string): Product {
     recommendation_meta: null,
     created_at: "2026-04-29T00:00:00.000Z",
     updated_at: "2026-04-29T00:00:00.000Z",
+  }
+}
+
+function createCompleteHairProfile(overrides: Partial<HairProfile> = {}): HairProfile {
+  return {
+    id: "profile-1",
+    user_id: "user-1",
+    hair_texture: "wavy",
+    thickness: "fine",
+    density: "medium",
+    concerns: ["frizz"],
+    products_used: null,
+    wash_frequency: "every_2_3_days",
+    heat_styling: "rarely",
+    styling_tools: [],
+    goals: ["curl_definition"],
+    cuticle_condition: "rough",
+    protein_moisture_balance: "stretches_bounces",
+    scalp_type: "balanced",
+    scalp_condition: null,
+    chemical_treatment: ["natural"],
+    desired_volume: "balanced",
+    routine_preference: "balanced",
+    current_routine_products: ["shampoo", "conditioner"],
+    towel_material: null,
+    towel_technique: null,
+    drying_method: "air_dry",
+    brush_type: null,
+    night_protection: [],
+    uses_heat_protection: false,
+    additional_notes: null,
+    conversation_memory: null,
+    created_at: "2026-04-29T00:00:00.000Z",
+    updated_at: "2026-04-29T00:00:00.000Z",
+    ...overrides,
   }
 }
 
@@ -340,6 +378,801 @@ test("production agent first-turn routine clarification creates pending routine 
   assert.equal(renderPackets[0]?.routine_plan?.missing_info.length, 2)
 })
 
+test("production agent first complete routine answer renders only routine basics", async () => {
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "routine_structure",
+        product_category: null,
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.9,
+        evidence: ["User asks for a complete routine."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Ich starte mit Shampoo, Conditioner und einem passenden Fokus."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Welche Routine passt am besten zu meinem Haarprofil?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile(),
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => createDefaultConversationState(),
+    },
+  )
+  const renderedPacket = renderPackets[0]
+  assert.ok(renderedPacket)
+
+  assert.equal(result.routerDecision.response_mode, "answer_direct")
+  assert.equal(result.conversationStateTransition.reason, "routine_basics_answered")
+  assert.equal(result.conversationStateTransition.next_state.active_topic, "routine")
+  assert.equal(result.conversationStateTransition.next_state.routine_layer, "basics")
+  assert.equal(
+    result.conversationStateTransition.next_state.pending_offer,
+    "routine_goals_or_problems",
+  )
+  assert.deepEqual(
+    renderedPacket.routine_plan?.steps.map((step) => step.id),
+    ["base-shampoo", "base-conditioner", "maintenance-leave-in"],
+  )
+  assert.equal(renderedPacket.selected_products, null)
+  assert.deepEqual(result.matchedProducts, [])
+  assert.ok(
+    renderedPacket.final_instructions.includes(
+      "Fuer basics kurz Shampoo und Conditioner erklaeren und nur den hoechsten Zusatzhebel nennen.",
+    ),
+  )
+  assert.ok(
+    renderedPacket.final_instructions.includes(
+      "Schliesse basics mit einer kurzen natuerlichen Frage, ob der Nutzer als Naechstes eher sehen moechte, was ihn seinem Ziel naeherbringt, oder was gegen seine Probleme hilft. Vermeide interne Begriffe wie Ziel-Hebel oder Problem-Hebel.",
+    ),
+  )
+  assert.equal(result.debugTrace.response_composition.attachment_mode, "text_only")
+  const promptMessage = result.debugTrace.prompt.messages.find((message) => message.role === "user")
+  assert.ok(promptMessage)
+  const promptPayload = JSON.parse(promptMessage.content) as { packet: AgentRuntimePacket }
+  assert.equal(promptPayload.packet.route.routine_layer, "basics")
+  assert.equal(promptPayload.packet.selected_products, null)
+})
+
+test("production agent projects goals layer when user accepts routine goal follow-up", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    last_assistant_action: "answered_routine_basics",
+  }
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "routine_structure",
+        product_category: null,
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.88,
+        evidence: ["User chooses the routine goals layer."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Dann schauen wir auf deine Ziele."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Ja, zeig mir bitte, was fuer meine Ziele und mehr Definition hilft.",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile({
+          hair_texture: "curly",
+          concerns: ["dryness", "frizz", "tangling"],
+          goals: ["curl_definition", "less_frizz", "moisture"],
+        }),
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+    },
+  )
+  const renderedPacket = renderPackets[0]
+  assert.ok(renderedPacket)
+
+  const renderedStepIds = renderedPacket.routine_plan?.steps.map((step) => step.id) ?? []
+  assert.equal(renderedPacket.route.user_job, "routine_structure")
+  assert.equal(renderedPacket.route.routine_layer, "goals")
+  assert.ok(renderedStepIds.includes("maintenance-leave-in"))
+  assert.ok(
+    renderedStepIds.some(
+      (stepId) => stepId === "maintenance-refresh" || stepId === "occasional-mask",
+    ),
+  )
+  assert.ok(!renderedStepIds.includes("base-shampoo"))
+  assert.ok(!renderedStepIds.includes("base-conditioner"))
+  assert.equal(renderedPacket.selected_products, null)
+  assert.deepEqual(result.matchedProducts, [])
+  assert.ok(
+    renderedPacket.final_instructions.includes(
+      "Fuer goals nur die zielbezogenen Routine-Hebel erklaeren.",
+    ),
+  )
+  assert.equal(
+    (renderedPacket.user_context as { conversation_state?: ConversationState }).conversation_state
+      ?.routine_layer,
+    "goals",
+  )
+  assert.equal(result.conversationStateTransition.reason, "routine_goal_layer_selected")
+})
+
+test("production agent overrides unclear goal-layer replies inside active routine", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    last_assistant_action: "answered_routine_basics",
+  }
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "unsupported_or_unclear",
+        product_category: null,
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.43,
+        evidence: ["Short reply."],
+        ambiguity: "unclear short answer",
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Dann schauen wir auf deine Ziele."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Ja, die Ziele bitte.",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile({
+          hair_texture: "curly",
+          concerns: ["dryness", "frizz"],
+          goals: ["curl_definition", "less_frizz"],
+        }),
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+    },
+  )
+  const renderedPacket = renderPackets[0]
+  assert.ok(renderedPacket)
+
+  assert.equal(renderedPacket.route.user_job, "routine_structure")
+  assert.equal(renderedPacket.route.routine_layer, "goals")
+  assert.equal(renderedPacket.selected_products, null)
+  assert.ok(
+    result.routerDecision.policy_overrides.includes("conversation_state_routine_layer_selected"),
+  )
+  assert.equal(
+    result.debugTrace.conversation_state.classifier_override,
+    "conversation_state_routine_layer_selected",
+  )
+  assert.equal(result.conversationStateTransition.reason, "routine_goal_layer_selected")
+})
+
+test("production agent projects problems layer when user accepts routine problem follow-up", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    last_assistant_action: "answered_routine_basics",
+  }
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "routine_structure",
+        product_category: null,
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.88,
+        evidence: ["User chooses the routine problems layer."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Dann schauen wir auf Frizz und trockene Spitzen."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Lieber die Probleme: wie kann ich Frizz und trockene Spitzen fixen?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile({
+          hair_texture: "curly",
+          concerns: ["dryness", "frizz", "tangling"],
+          goals: ["curl_definition", "less_frizz", "moisture"],
+        }),
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+    },
+  )
+  const renderedPacket = renderPackets[0]
+  assert.ok(renderedPacket)
+
+  const renderedStepIds = renderedPacket.routine_plan?.steps.map((step) => step.id) ?? []
+  assert.equal(renderedPacket.route.user_job, "routine_structure")
+  assert.equal(renderedPacket.route.routine_layer, "problems")
+  assert.ok(renderedStepIds.includes("maintenance-leave-in"))
+  assert.ok(
+    renderedStepIds.some(
+      (stepId) => stepId === "occasional-mask" || stepId === "base-owc-technique",
+    ),
+  )
+  assert.ok(!renderedStepIds.includes("base-shampoo"))
+  assert.ok(!renderedStepIds.includes("base-conditioner"))
+  assert.equal(renderedPacket.selected_products, null)
+  assert.deepEqual(result.matchedProducts, [])
+  assert.ok(
+    renderedPacket.final_instructions.includes(
+      "Fuer problems nur die problembezogenen Routine-Hebel erklaeren.",
+    ),
+  )
+  assert.equal(
+    (renderedPacket.user_context as { conversation_state?: ConversationState }).conversation_state
+      ?.routine_layer,
+    "problems",
+  )
+  assert.equal(result.conversationStateTransition.reason, "routine_problem_layer_selected")
+})
+
+test("production agent keeps vague category follow-up inside routine as deep dive", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    last_assistant_action: "answered_routine_basics",
+  }
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "product_pick",
+        product_category: "leave_in",
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.82,
+        evidence: ["User mentions Leave-in."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Leave-in ist hier der naechste Routine-Hebel."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Und Leave-in?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile(),
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+    },
+  )
+  const renderedPacket = renderPackets[0]
+  assert.ok(renderedPacket)
+
+  assert.equal(renderedPacket.route.user_job, "routine_structure")
+  assert.equal(renderedPacket.route.product_category, null)
+  assert.deepEqual(
+    renderedPacket.routine_plan?.steps.map((step) => step.id),
+    ["maintenance-leave-in"],
+  )
+  assert.equal(renderedPacket.selected_products, null)
+  assert.deepEqual(result.matchedProducts, [])
+  assert.ok(
+    renderedPacket.final_instructions.includes(
+      "Fuer deep_dive fokussiert genau den angefragten Baustein erklaeren.",
+    ),
+  )
+  assert.equal(result.debugTrace.response_composition.attachment_mode, "text_only")
+  assert.equal(result.conversationStateTransition.reason, "routine_category_deep_dive")
+  assert.equal(result.conversationStateTransition.next_state.routine_layer, "deep_dive")
+  assert.equal(result.conversationStateTransition.next_state.last_product_category, "leave_in")
+})
+
+test("production agent keeps non-product category concept follow-up inside routine as deep dive", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    last_assistant_action: "answered_routine_basics",
+  }
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "compare_or_decide",
+        product_category: "leave_in",
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.8,
+        evidence: ["User asks if Leave-in is needed."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Leave-in ist hier als Routine-Baustein sinnvoll."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Brauche ich Leave-in?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile(),
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+    },
+  )
+  const renderedPacket = renderPackets[0]
+  assert.ok(renderedPacket)
+
+  assert.equal(renderedPacket.route.user_job, "routine_structure")
+  assert.equal(renderedPacket.route.routine_layer, "deep_dive")
+  assert.deepEqual(
+    renderedPacket.routine_plan?.steps.map((step) => step.id),
+    ["maintenance-leave-in"],
+  )
+  assert.equal(renderedPacket.selected_products, null)
+  assert.deepEqual(result.matchedProducts, [])
+  assert.equal(
+    result.debugTrace.conversation_state.classifier_override,
+    "conversation_state_routine_category_deep_dive",
+  )
+})
+
+test("production agent can deep dive base conditioner inside active routine", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    last_assistant_action: "answered_routine_basics",
+  }
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "product_pick",
+        product_category: "conditioner",
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.79,
+        evidence: ["User mentions Conditioner."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Conditioner ist der zweite Basisanker."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Und Conditioner?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile({
+          concerns: ["hair_damage"],
+          goals: [],
+        }),
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+    },
+  )
+  const renderedPacket = renderPackets[0]
+  assert.ok(renderedPacket)
+
+  assert.equal(renderedPacket.route.user_job, "routine_structure")
+  assert.equal(renderedPacket.route.routine_layer, "deep_dive")
+  assert.deepEqual(
+    renderedPacket.routine_plan?.steps.map((step) => step.id),
+    ["base-conditioner"],
+  )
+  assert.equal(renderedPacket.selected_products, null)
+  assert.deepEqual(result.matchedProducts, [])
+  assert.equal(result.conversationStateTransition.next_state.last_product_category, "conditioner")
+})
+
+test("production agent lets explicit routine follow-up product asks show product cards", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    last_assistant_action: "answered_routine_basics",
+  }
+  const renderPackets: AgentRuntimePacket[] = []
+  const matchedLeaveIn = {
+    ...createProduct("leave-in-1"),
+    name: "Leave-in 1",
+    category: "Leave-in",
+    similarity: 0.91,
+  }
+  const leaveInProjection: SelectedProductsProjection = {
+    category: "leave_in",
+    decision: "recommended",
+    product_response_policy: "recommend",
+    policy_reason: "Explicit product ask.",
+    profile_basis: [],
+    category_guidance: "Leave-in passt als konkrete Produktempfehlung.",
+    products: [
+      {
+        rank: 1,
+        product_id: matchedLeaveIn.id,
+        name: matchedLeaveIn.name,
+        brand: matchedLeaveIn.brand,
+        price_eur: matchedLeaveIn.price_eur,
+        currency: matchedLeaveIn.currency,
+        fit_reason: "Passt als leichter Leave-in-Fokus.",
+        caveat: null,
+        supported_claims: [],
+        unsupported_requested_signals: [],
+      },
+    ],
+    comparison_facts: null,
+    missing_info: [],
+    unsupported_requested_signals: [],
+  }
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "product_pick",
+        product_category: "leave_in",
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.9,
+        evidence: ["User asks for a concrete Leave-in recommendation."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Hier sind konkrete Leave-in-Produkte."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Welches Leave-in empfiehlst du mir konkret?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile(),
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+      createSelectProductsTool:
+        (options = {}) =>
+        async () => {
+          const effectiveHairProfile = createCompleteHairProfile()
+          options.onResult?.({
+            projection: leaveInProjection,
+            products: [matchedLeaveIn],
+            effectiveHairProfile,
+            runtime: buildRecommendationEngineRuntimeForChat({
+              hairProfile: effectiveHairProfile,
+              routineItems: [],
+              productCategory: "leave_in",
+              message: "Welches Leave-in empfiehlst du mir konkret?",
+            }),
+          })
+          return leaveInProjection
+        },
+    },
+  )
+  const renderedPacket = renderPackets[0]
+  assert.ok(renderedPacket)
+
+  assert.equal(renderedPacket.route.user_job, "product_pick")
+  assert.equal(renderedPacket.route.product_category, "leave_in")
+  assert.equal(renderedPacket.routine_plan, null)
+  assert.equal(renderedPacket.selected_products?.category, "leave_in")
+  assert.ok(renderedPacket.selected_products.products.length > 0)
+  assert.ok(result.matchedProducts.length > 0)
+  assert.equal(result.debugTrace.response_composition.attachment_mode, "cards")
+  assert.equal(result.conversationStateTransition.reason, "category_switch")
+  assert.equal(result.conversationStateTransition.next_state.active_topic, "leave_in")
+})
+
+test("production agent keeps natural explicit good-product wording in product mode", async () => {
+  const loadedConversationState: ConversationState = {
+    ...createDefaultConversationState(),
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    last_assistant_action: "answered_routine_basics",
+  }
+  const renderPackets: AgentRuntimePacket[] = []
+  const matchedLeaveIn = {
+    ...createProduct("leave-in-good"),
+    name: "Gutes Leave-in",
+    category: "Leave-in",
+    similarity: 0.9,
+  }
+  const leaveInProjection: SelectedProductsProjection = {
+    category: "leave_in",
+    decision: "recommended",
+    product_response_policy: "recommend",
+    policy_reason: "Explicit good-product wording.",
+    profile_basis: [],
+    category_guidance: "Konkrete Leave-in-Auswahl.",
+    products: [
+      {
+        rank: 1,
+        product_id: matchedLeaveIn.id,
+        name: matchedLeaveIn.name,
+        brand: matchedLeaveIn.brand,
+        price_eur: matchedLeaveIn.price_eur,
+        currency: matchedLeaveIn.currency,
+        fit_reason: "Passt als Leave-in.",
+        caveat: null,
+        supported_claims: [],
+        unsupported_requested_signals: [],
+      },
+    ],
+    comparison_facts: null,
+    missing_info: [],
+    unsupported_requested_signals: [],
+  }
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "product_pick",
+        product_category: "leave_in",
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.87,
+        evidence: ["User asks for a good Leave-in."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Hier ist ein gutes Leave-in."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Was ist ein gutes Leave-in fuer mich?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile(),
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => loadedConversationState,
+      createSelectProductsTool:
+        (options = {}) =>
+        async () => {
+          const effectiveHairProfile = createCompleteHairProfile()
+          options.onResult?.({
+            projection: leaveInProjection,
+            products: [matchedLeaveIn],
+            effectiveHairProfile,
+            runtime: buildRecommendationEngineRuntimeForChat({
+              hairProfile: effectiveHairProfile,
+              routineItems: [],
+              productCategory: "leave_in",
+              message: "Was ist ein gutes Leave-in fuer mich?",
+            }),
+          })
+          return leaveInProjection
+        },
+    },
+  )
+  const renderedPacket = renderPackets[0]
+  assert.ok(renderedPacket)
+
+  assert.equal(renderedPacket.route.user_job, "product_pick")
+  assert.equal(renderedPacket.route.product_category, "leave_in")
+  assert.equal(renderedPacket.routine_plan, null)
+  assert.equal(renderedPacket.selected_products?.category, "leave_in")
+  assert.ok(result.matchedProducts.length > 0)
+  assert.equal(result.conversationStateTransition.reason, "category_switch")
+})
+
 test("production agent product cards follow the renderer packet order", () => {
   const selectedProducts = [createProduct("fallback"), createProduct("primary")]
   const runtimePacket = {
@@ -422,7 +1255,7 @@ test("production agent pipeline marks debug trace as agent final render", async 
     fallback_reason: null,
     rendering_path: null,
     plan_type: "agent_v1",
-    attachment_mode: null,
+    attachment_mode: "text_only",
   })
 })
 

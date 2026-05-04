@@ -23,6 +23,12 @@ test("final render prompt preserves all selected product options in order", () =
   assert.match(AGENT_FINAL_RENDER_PROMPT, /nicht eigenmaechtig von drei Tool-Produkten auf zwei/)
 })
 
+test("final render prompt hides internal fallback markers from users", () => {
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /intern mit "Fallback:" markiert/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /nie in der Nutzerantwort ausgeben/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /schwaecheren Optionen nur nachgeordnet/)
+})
+
 test("final render prompt preserves spray versus cream leave-in comparisons", () => {
   assert.match(AGENT_FINAL_RENDER_PROMPT, /Spray-vs-Creme-Leave-in/)
   assert.match(AGENT_FINAL_RENDER_PROMPT, /Ersetze das Spray nicht durch eine Lotion/)
