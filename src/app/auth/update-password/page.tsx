@@ -34,7 +34,7 @@ export default function UpdatePasswordPage() {
       return
     }
     if (password !== confirmPassword) {
-      setError("Passwoerter stimmen nicht ueberein.")
+      setError("Passwörter stimmen nicht überein.")
       return
     }
 
@@ -45,7 +45,7 @@ export default function UpdatePasswordPage() {
 
     if (error) {
       console.error("Update password error:", error)
-      setError("Passwort konnte nicht geaendert werden. Bitte versuche es erneut.")
+      setError("Passwort konnte nicht geändert werden. Bitte versuche es erneut.")
       setLoading(false)
     } else {
       setSuccess(true)
@@ -66,10 +66,10 @@ export default function UpdatePasswordPage() {
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
           <h1 className="font-header text-4xl tracking-tight text-foreground">
-            Neues Passwort setzen
+            Passwort zurücksetzen
           </h1>
           <p className="text-lg text-muted-foreground">
-            Waehle ein neues Passwort fuer dein Konto.
+            Wähle ein neues Passwort für dein Konto.
           </p>
         </div>
 
@@ -82,7 +82,7 @@ export default function UpdatePasswordPage() {
                 </svg>
               </div>
               <h2 className="text-lg font-semibold text-foreground">
-                Passwort erfolgreich geaendert!
+                Passwort erfolgreich geändert!
               </h2>
               <p className="text-sm text-muted-foreground">
                 Du wirst gleich weitergeleitet...
@@ -109,7 +109,7 @@ export default function UpdatePasswordPage() {
                 />
                 <Input
                   type="password"
-                  placeholder="Passwort bestaetigen"
+                  placeholder="Passwort wiederholen"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={loading}
@@ -122,7 +122,7 @@ export default function UpdatePasswordPage() {
                   disabled={loading || !password || !confirmPassword}
                   className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
                 >
-                  {loading ? "Wird gespeichert..." : "Passwort aendern"}
+                  {loading ? "Wird gespeichert..." : "Passwort ändern"}
                 </button>
               </form>
             </div>

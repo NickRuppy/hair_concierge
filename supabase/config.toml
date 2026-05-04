@@ -109,7 +109,7 @@ enabled = true
 # in emails.
 site_url = "https://hair-concierge.vercel.app"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://hair-concierge.vercel.app/api/auth/callback", "http://localhost:3000/api/auth/callback", "https://hair-concierge.vercel.app/auth/confirm", "http://localhost:3000/auth/confirm"]
+additional_redirect_urls = ["https://hair-concierge.vercel.app/api/auth/callback", "http://localhost:3000/api/auth/callback", "http://localhost:3449/api/auth/callback", "https://hair-concierge.vercel.app/auth/confirm", "http://localhost:3000/auth/confirm", "http://localhost:3449/auth/confirm"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # If disabled, the refresh token will never expire.
@@ -185,6 +185,10 @@ content_path = "./supabase/templates/confirmation.html"
 [auth.email.template.recovery]
 subject = "Hair Concierge – Passwort zuruecksetzen"
 content_path = "./supabase/templates/recovery.html"
+
+[auth.email.template.magic_link]
+subject = "Hair Concierge – Login-Link"
+content_path = "./supabase/templates/magic-link.html"
 
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.

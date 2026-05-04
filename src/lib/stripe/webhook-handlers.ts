@@ -1,93 +1,15 @@
 import type Stripe from "stripe"
-import type { SupabaseClient } from "@supabase/supabase-js"
+import type { CheckoutActivationDeps } from "./checkout-activation"
+import { ensureCheckoutAccount, subPeriodEndIso } from "./checkout-activation"
 import { intervalFromPrice } from "./intervals"
 
-export interface HandlerDeps {
-  supabase: SupabaseClient
-  stripe: Stripe
-  premiumTierId: string
-  linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
-}
-
-/** Shape we actually read from the retrieved subscription. */
-interface RetrievedSub {
-  id: string
-  current_period_end?: number
-  items: {
-    data: Array<{
-      current_period_end?: number
-      price: {
-        interval?: string
-        interval_count?: number
-        recurring?: { interval: string; interval_count: number }
-      }
-    }>
-  }
-}
+export type HandlerDeps = CheckoutActivationDeps
 
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
   deps: HandlerDeps,
 ): Promise<void> {
-  const email = session.customer_details?.email
-  if (!email) throw new Error("session has no customer email")
-  if (typeof session.customer !== "string") throw new Error("session.customer missing")
-  if (typeof session.subscription !== "string") throw new Error("session.subscription missing")
-
-  // 1. Ensure a Supabase user exists for this email
-  const { data: existing } = await deps.supabase
-    .from("profiles")
-    .select("id, email")
-    .eq("email", email)
-    .maybeSingle()
-
-  let userId: string
-  if (existing) {
-    userId = existing.id
-  } else {
-    const { data, error } = await deps.supabase.auth.admin.createUser({
-      email,
-      email_confirm: true,
-    })
-    if (error || !data.user) {
-      throw new Error(`createUser failed: ${error?.message ?? "unknown"}`)
-    }
-    userId = data.user.id
-  }
-
-  // 2. Retrieve full subscription to get interval + period end
-  const sub = (await deps.stripe.subscriptions.retrieve(session.subscription, {
-    expand: ["items.data.price"],
-  })) as unknown as RetrievedSub
-  const price = sub.items.data[0].price
-  const interval = intervalFromPrice({
-    interval: price.recurring?.interval ?? price.interval ?? "",
-    interval_count: price.recurring?.interval_count ?? price.interval_count ?? 1,
-  })
-
-  // 3. Update profile
-  await deps.supabase
-    .from("profiles")
-    .update({
-      stripe_customer_id: session.customer,
-      stripe_subscription_id: sub.id,
-      subscription_status: "active",
-      subscription_interval: interval,
-      current_period_end: subPeriodEndIso(sub as unknown as RetrievedSub),
-      subscription_tier_id: deps.premiumTierId,
-    })
-    .eq("id", userId)
-
-  // 4. Carry quiz answers from leads into hair_profiles (fire-and-forget — a
-  //    linking failure must not fail fulfillment)
-  if (deps.linkQuizToProfile) {
-    const leadId = session.metadata?.lead_id || undefined
-    try {
-      await deps.linkQuizToProfile(userId, email, leadId)
-    } catch (err) {
-      console.error("[stripe] linkQuizToProfile failed:", err)
-    }
-  }
+  await ensureCheckoutAccount(session, deps)
 }
 
 /** Narrow shape we read from a subscription event. */
@@ -107,20 +29,6 @@ interface UpdatedSub {
       }
     }>
   }
-}
-
-/**
- * Recent Stripe API versions expose current_period_end on each
- * SubscriptionItem. Read item first, fall back to root for older API versions.
- */
-function subPeriodEndIso(sub: RetrievedSub | UpdatedSub): string {
-  const itemEnd = sub.items.data[0]?.current_period_end
-  const rootEnd = (sub as { current_period_end?: number }).current_period_end
-  const unix = itemEnd ?? rootEnd
-  if (typeof unix !== "number" || Number.isNaN(unix)) {
-    throw new Error("subscription has no current_period_end on item or root")
-  }
-  return new Date(unix * 1000).toISOString()
 }
 
 export async function handleSubscriptionUpdated(

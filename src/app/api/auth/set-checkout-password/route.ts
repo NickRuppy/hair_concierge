@@ -7,8 +7,8 @@ import {
   claimCheckoutActivation,
   releaseCheckoutActivationClaim,
 } from "@/lib/auth/checkout-activation-claim"
+import { checkRateLimit, SET_CHECKOUT_PASSWORD_RATE_LIMIT } from "@/lib/rate-limit"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
-import { checkRateLimit, SEND_AUTH_LINK_RATE_LIMIT } from "@/lib/rate-limit"
 import {
   CheckoutActivationError,
   ensureCheckoutAccount,
@@ -17,28 +17,29 @@ import {
 
 export const runtime = "nodejs"
 
-const INVALID_REQUEST_ERROR = "Bitte öffne den Aktivierungslink erneut."
-const RATE_LIMIT_ERROR = "Zu viele Anfragen. Bitte warte kurz."
+const INVALID_REQUEST_ERROR = "Bitte sende eine gültige Checkout-Session und ein Passwort."
+const WEAK_PASSWORD_ERROR = "Das Passwort muss mindestens 8 Zeichen lang sein."
+const RATE_LIMIT_ERROR = "Zu viele Versuche. Bitte warte kurz und versuche es erneut."
 const RATE_LIMIT_UNAVAILABLE_ERROR =
-  "Login-Link kann gerade nicht gesendet werden. Bitte versuche es gleich erneut."
-const INCOMPLETE_PAYMENT_ERROR =
-  "Deine Zahlung ist noch nicht abgeschlossen. Bitte schließe den Checkout zuerst ab."
+  "Passwort kann gerade nicht gesetzt werden. Bitte versuche es gleich erneut."
+const EXISTING_ACCOUNT_ERROR =
+  "Für diese E-Mail gibt es bereits ein Konto. Bitte melde dich an oder nutze den Login-Link."
+const EXPIRED_ACTIVATION_ERROR =
+  "Diese Passwort-Aktivierung ist nicht mehr gültig. Bitte melde dich an oder nutze den Login-Link."
 const INVALID_SESSION_ERROR =
   "Checkout konnte nicht bestätigt werden. Bitte öffne den Link aus deiner Bestellbestätigung erneut."
-const SEND_ERROR = "Login-Link konnte nicht gesendet werden. Bitte versuche es erneut."
-const EXPIRED_ACTIVATION_ERROR =
-  "Diese Kontoaktivierung ist nicht mehr gültig. Bitte melde dich an oder nutze den Login-Link."
-const SERVER_ERROR = "Kontoaktivierung konnte nicht abgeschlossen werden. Bitte versuche es erneut."
+const INCOMPLETE_PAYMENT_ERROR =
+  "Deine Zahlung ist noch nicht abgeschlossen. Bitte schließe den Checkout zuerst ab."
+const SERVER_ERROR = "Passwort konnte nicht gesetzt werden. Bitte versuche es später erneut."
 
 type RateLimitResult = { allowed: boolean; error?: string }
 
-export interface SendMagicLinkDeps {
+export interface SetCheckoutPasswordDeps {
   stripe: Stripe
   supabase: SupabaseClient
-  siteUrl: string
   checkRateLimit: (
     identifier: string,
-    config: typeof SEND_AUTH_LINK_RATE_LIMIT,
+    config: typeof SET_CHECKOUT_PASSWORD_RATE_LIMIT,
   ) => Promise<RateLimitResult>
   verifyCheckoutSessionForActivation: (
     sessionId: string,
@@ -65,17 +66,22 @@ export async function POST(request: Request) {
     return toNextResponse({ status: 400, body: { error: INVALID_REQUEST_ERROR } })
   }
 
-  return toNextResponse(await handleSendMagicLink(body, await createSendMagicLinkDeps()))
+  return toNextResponse(
+    await handleSetCheckoutPassword(body, await createSetCheckoutPasswordDeps()),
+  )
 }
 
-export async function handleSendMagicLink(
+export async function handleSetCheckoutPassword(
   body: unknown,
-  deps: SendMagicLinkDeps,
+  deps: SetCheckoutPasswordDeps,
 ): Promise<RouteResult> {
   const parsed = parseBody(body)
   if (!parsed.ok) return { status: 400, body: { error: INVALID_REQUEST_ERROR } }
 
-  const rateCheck = await deps.checkRateLimit(parsed.sessionId, SEND_AUTH_LINK_RATE_LIMIT)
+  const { sessionId, password } = parsed
+  if (password.length < 8) return { status: 400, body: { error: WEAK_PASSWORD_ERROR } }
+
+  const rateCheck = await deps.checkRateLimit(sessionId, SET_CHECKOUT_PASSWORD_RATE_LIMIT)
   if (!rateCheck.allowed) {
     return {
       status: rateCheck.error === "service_unavailable" ? 503 : 429,
@@ -89,7 +95,7 @@ export async function handleSendMagicLink(
   }
 
   try {
-    const session = await deps.verifyCheckoutSessionForActivation(parsed.sessionId, deps.stripe)
+    const session = await deps.verifyCheckoutSessionForActivation(sessionId, deps.stripe)
     const premiumTierId = await (deps.getPremiumTierId ?? getPremiumTierId)(deps.supabase)
     const account = await deps.ensureCheckoutAccount(session, {
       supabase: deps.supabase,
@@ -98,34 +104,45 @@ export async function handleSendMagicLink(
       linkQuizToProfile: deps.linkQuizToProfile,
     })
 
+    if (!account.canSetInitialPassword) {
+      return { status: 409, body: { error: EXISTING_ACCOUNT_ERROR } }
+    }
+
+    const metadata = await loadCurrentAppMetadata(deps.supabase, account.userId)
+    if (!isActivationStillValid(metadata, sessionId)) {
+      return { status: 409, body: { error: EXPIRED_ACTIVATION_ERROR } }
+    }
+
     const claimed = await (deps.claimCheckoutActivation ?? claimCheckoutActivation)(
       deps.supabase,
-      parsed.sessionId,
+      sessionId,
       account.userId,
-      "passwordless",
+      "password",
     )
     if (!claimed) {
       return { status: 409, body: { error: EXPIRED_ACTIVATION_ERROR } }
     }
 
-    const { error } = await deps.supabase.auth.signInWithOtp({
-      email: account.email,
-      options: {
-        emailRedirectTo: `${deps.siteUrl}/auth/confirm?next=/onboarding`,
-        shouldCreateUser: false,
-      },
+    const mergedMetadata: Record<string, unknown> = {
+      ...metadata,
+      password_initialized_at: (deps.now ?? (() => new Date()))().toISOString(),
+    }
+    delete mergedMetadata.checkout_activation_session_hash
+
+    const { error: updateError } = await deps.supabase.auth.admin.updateUserById(account.userId, {
+      password,
+      email_confirm: true,
+      app_metadata: mergedMetadata,
     })
 
-    if (error) {
-      console.error("[send-magic-link] signInWithOtp failed:", error.message)
+    if (updateError) {
+      console.error("[set-checkout-password] updateUserById failed:", updateError.message)
       await (deps.releaseCheckoutActivationClaim ?? releaseCheckoutActivationClaim)(
         deps.supabase,
-        parsed.sessionId,
+        sessionId,
       )
-      return { status: 500, body: { error: SEND_ERROR } }
+      return { status: 500, body: { error: SERVER_ERROR } }
     }
-
-    await consumeCheckoutPasswordMarker(deps, account.userId, parsed.sessionId)
 
     return { status: 200, body: { ok: true, email: account.email } }
   } catch (err) {
@@ -140,18 +157,17 @@ export async function handleSendMagicLink(
       }
     }
 
-    console.error("[send-magic-link] failed:", err)
+    console.error("[set-checkout-password] failed:", err)
     return { status: 500, body: { error: SERVER_ERROR } }
   }
 }
 
-async function createSendMagicLinkDeps(): Promise<SendMagicLinkDeps> {
+async function createSetCheckoutPasswordDeps(): Promise<SetCheckoutPasswordDeps> {
   const { getStripe } = await import("@/lib/stripe/client")
 
   return {
     stripe: getStripe(),
     supabase: createAdminClient(),
-    siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
     checkRateLimit,
     verifyCheckoutSessionForActivation,
     ensureCheckoutAccount,
@@ -168,35 +184,33 @@ async function getPremiumTierId(supabase: SupabaseClient): Promise<string> {
   return premium
 }
 
-async function consumeCheckoutPasswordMarker(
-  deps: SendMagicLinkDeps,
+async function loadCurrentAppMetadata(
+  supabase: SupabaseClient,
   userId: string,
-  sessionId: string,
-) {
-  const { data, error } = await deps.supabase.auth.admin.getUserById(userId)
+): Promise<Record<string, unknown>> {
+  const { data, error } = await supabase.auth.admin.getUserById(userId)
   if (error) throw new Error(`getUserById failed: ${error.message}`)
 
   const metadata = data.user?.app_metadata
-  const appMetadata = isRecord(metadata) ? { ...metadata } : {}
-  if (appMetadata.checkout_activation_session_hash !== checkoutSessionHash(sessionId)) return
-
-  delete appMetadata.checkout_activation_session_hash
-  appMetadata.activation_method = "passwordless"
-  appMetadata.passwordless_login_sent_at = (deps.now ?? (() => new Date()))().toISOString()
-
-  const { error: updateError } = await deps.supabase.auth.admin.updateUserById(userId, {
-    app_metadata: appMetadata,
-  })
-  if (updateError) {
-    console.error("[send-magic-link] activation marker cleanup failed:", updateError.message)
-  }
+  return isRecord(metadata) ? { ...metadata } : {}
 }
 
-function parseBody(body: unknown): { ok: true; sessionId: string } | { ok: false } {
+function isActivationStillValid(metadata: Record<string, unknown>, sessionId: string): boolean {
+  if (Object.prototype.hasOwnProperty.call(metadata, "password_initialized_at")) return false
+  return metadata.checkout_activation_session_hash === checkoutSessionHash(sessionId)
+}
+
+function parseBody(
+  body: unknown,
+): { ok: true; sessionId: string; password: string } | { ok: false } {
   if (!isRecord(body)) return { ok: false }
+
   const sessionId = body.session_id
+  const password = body.password
   if (typeof sessionId !== "string" || sessionId.trim() === "") return { ok: false }
-  return { ok: true, sessionId: sessionId.trim() }
+  if (typeof password !== "string") return { ok: false }
+
+  return { ok: true, sessionId: sessionId.trim(), password }
 }
 
 function isPaymentIncompleteError(code: CheckoutActivationError["code"]): boolean {

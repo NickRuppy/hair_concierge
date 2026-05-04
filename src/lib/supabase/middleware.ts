@@ -59,6 +59,7 @@ export async function updateSession(request: NextRequest) {
     // session_id in the request body; the route itself verifies).
     "/api/auth/send-magic-link",
     "/api/auth/send-setup-link",
+    "/api/auth/set-checkout-password",
   ]
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
 
