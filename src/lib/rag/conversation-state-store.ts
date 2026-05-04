@@ -3,7 +3,11 @@ import {
   createDefaultConversationState,
   normalizeConversationState,
 } from "@/lib/rag/conversation-state"
-import type { ConversationState, ConversationStateTransition } from "@/lib/types"
+import type {
+  ConversationState,
+  ConversationStatePersistenceTrace,
+  ConversationStateTransition,
+} from "@/lib/types"
 
 export function buildConversationStateUpsertPayload(params: {
   conversationId: string
@@ -47,7 +51,7 @@ export async function persistConversationStateTransition(
     userId: string
     transition: ConversationStateTransition
   },
-): Promise<void> {
+): Promise<ConversationStatePersistenceTrace> {
   try {
     const { error } = await supabase
       .from("conversation_states")
@@ -55,8 +59,22 @@ export async function persistConversationStateTransition(
 
     if (error) {
       console.error("Failed to persist conversation state:", error)
+      return {
+        status: "failed",
+        error: error.message,
+      }
+    }
+
+    return {
+      status: "persisted",
+      error: null,
     }
   } catch (error) {
     console.error("Failed to persist conversation state:", error)
+    return {
+      status: "failed",
+      error:
+        error instanceof Error ? error.message : "Unknown conversation state persistence error",
+    }
   }
 }

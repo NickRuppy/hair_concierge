@@ -28,6 +28,7 @@ import {
 } from "@/lib/agent/contracts"
 import {
   createBuildOrFixRoutineTool,
+  type BuildOrFixRoutineProjection,
   type RoutineObjective,
 } from "@/lib/agent/tools/build-or-fix-routine"
 import { getUserContext, type UserContextProjection } from "@/lib/agent/tools/get-user-context"
@@ -184,8 +185,22 @@ export function mapAgentProductCategory(route: AgentRoutePacket): ProductCategor
   return route.user_job === "routine_structure" ? "routine" : null
 }
 
-function deriveResponseMode(selectedProducts: SelectedProductsProjection | null): ResponseMode {
-  return selectedProducts?.decision === "needs_more_info" ? "clarify_only" : "answer_direct"
+function hasRoutineMissingInfo(
+  route: AgentRoutePacket,
+  routinePlan: BuildOrFixRoutineProjection | null | undefined,
+): boolean {
+  return route.user_job === "routine_structure" && (routinePlan?.missing_info.length ?? 0) > 0
+}
+
+function deriveResponseMode(params: {
+  route: AgentRoutePacket
+  selectedProducts: SelectedProductsProjection | null
+  routinePlan?: BuildOrFixRoutineProjection | null
+}): ResponseMode {
+  return params.selectedProducts?.decision === "needs_more_info" ||
+    hasRoutineMissingInfo(params.route, params.routinePlan)
+    ? "clarify_only"
+    : "answer_direct"
 }
 
 function missingProfilePolicyTag(
@@ -231,8 +246,9 @@ export function buildClassification(route: AgentRoutePacket): ClassificationResu
 export function buildRouterDecision(params: {
   route: AgentRoutePacket
   selectedProducts: SelectedProductsProjection | null
+  routinePlan?: BuildOrFixRoutineProjection | null
 }): RouterDecision {
-  const responseMode = deriveResponseMode(params.selectedProducts)
+  const responseMode = deriveResponseMode(params)
   const policyOverrides = ["agent_v1_front_door"]
 
   if (params.selectedProducts?.product_response_policy) {
@@ -248,13 +264,21 @@ export function buildRouterDecision(params: {
     policyOverrides.push("agent_route_validation_warnings")
   }
 
+  if (hasRoutineMissingInfo(params.route, params.routinePlan)) {
+    policyOverrides.push("missing_routine_frame")
+  }
+
   return {
     retrieval_mode: "agent_engine",
     response_mode: responseMode,
     clarification_reason:
-      responseMode === "clarify_only"
-        ? (params.selectedProducts?.missing_info[0]?.detail ?? params.route.ambiguity ?? undefined)
-        : undefined,
+      responseMode === "clarify_only" && hasRoutineMissingInfo(params.route, params.routinePlan)
+        ? "missing_routine_frame"
+        : responseMode === "clarify_only"
+          ? (params.selectedProducts?.missing_info[0]?.detail ??
+            params.route.ambiguity ??
+            undefined)
+          : undefined,
     slot_completeness: responseMode === "clarify_only" ? 0.5 : 1,
     confidence: params.route.confidence,
     policy_overrides: policyOverrides,
@@ -422,7 +446,11 @@ export async function runProductionAgentPipeline(
   const route = result.route_trace
   const intent = mapAgentIntent(route)
   const productCategory = mapAgentProductCategory(route)
-  const baseRouterDecision = buildRouterDecision({ route, selectedProducts })
+  const baseRouterDecision = buildRouterDecision({
+    route,
+    selectedProducts,
+    routinePlan: result.runtime_packet.routine_plan,
+  })
   const routerDecision = result.classification_override
     ? {
         ...baseRouterDecision,

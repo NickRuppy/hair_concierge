@@ -247,6 +247,99 @@ test("production agent router decision marks missing product info as clarify-onl
   assert.match(decision.clarification_reason ?? "", /Haardicke/)
 })
 
+test("production agent router decision marks missing routine info as clarify-only", () => {
+  const decision = buildRouterDecision({
+    route: createRoute({
+      user_job: "routine_structure",
+      product_category: null,
+      tool_plan: ["build_or_fix_routine"],
+      routine_objective: "build_routine",
+    }),
+    selectedProducts: null,
+    routinePlan: {
+      objective: "build_routine",
+      steps: [],
+      missing_info: [
+        {
+          key: "wash_frequency",
+          label: "Waschfrequenz",
+          why_it_matters: "Die Waschfrequenz bestimmt, wie oft die Routine greifen muss.",
+          blocking: false,
+          expected_type: "WashFrequency",
+        },
+      ],
+      confidence: 0.5,
+    },
+  })
+
+  assert.equal(decision.response_mode, "clarify_only")
+  assert.equal(decision.clarification_reason, "missing_routine_frame")
+  assert.ok(decision.policy_overrides.includes("missing_routine_frame"))
+})
+
+test("production agent first-turn routine clarification creates pending routine state", async () => {
+  const renderPackets: AgentRuntimePacket[] = []
+  const fakeModel: AgentModelClient = {
+    async classifyRoute() {
+      return {
+        user_job: "routine_structure",
+        product_category: null,
+        requested_overlay_ids: [],
+        requested_topic_ids: [],
+        requested_routine_id: null,
+        concerns: [],
+        confidence: 0.86,
+        evidence: ["User asks for a routine."],
+        ambiguity: null,
+      }
+    },
+    async renderFinalAnswer(params) {
+      renderPackets.push(params.packet)
+      return "Dafuer brauche ich kurz deine Waschfrequenz und aktuelle Produkte."
+    },
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Kannst du mir eine Routine bauen?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: fakeModel,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: null,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async () => createDefaultConversationState(),
+    },
+  )
+
+  assert.equal(result.intent, "routine_help")
+  assert.equal(result.routerDecision.response_mode, "clarify_only")
+  assert.equal(result.routerDecision.clarification_reason, "missing_routine_frame")
+  assert.equal(result.conversationStateTransition.next_state.active_topic, "routine")
+  assert.equal(result.conversationStateTransition.next_state.routine_layer, "basics")
+  assert.equal(
+    result.conversationStateTransition.next_state.pending_offer,
+    "routine_goals_or_problems",
+  )
+  assert.equal(result.conversationStateTransition.reason, "routine_started")
+  assert.equal(renderPackets[0]?.routine_plan?.missing_info.length, 2)
+})
+
 test("production agent product cards follow the renderer packet order", () => {
   const selectedProducts = [createProduct("fallback"), createProduct("primary")]
   const runtimePacket = {
@@ -575,7 +668,7 @@ test("POST /api/chat rejects existing conversations that do not belong to the us
         },
         buildAssistantRagContext: () => ({}),
         buildDoneEventData: (params: unknown) => params,
-        persistConversationStateTransition: async () => {},
+        persistConversationStateTransition: async () => ({ status: "persisted", error: null }),
         extractConversationMemory: async () => {},
         buildRetrievalDebugEventData: (trace: unknown) => ({ trace }),
         finalizeChatTurnTrace: (trace: unknown) => trace,
@@ -709,6 +802,7 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
         buildDoneEventData: (params: unknown) => params,
         persistConversationStateTransition: async (_admin: unknown, params: unknown) => {
           persistedStateTransitions.push(params)
+          return { status: "persisted", error: null }
         },
         extractConversationMemory: async () => {},
         buildRetrievalDebugEventData: (trace: unknown) => ({ trace }),
@@ -795,6 +889,10 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
         status: "completed",
         stream_read_ms: 0,
         total_ms: 0,
+        conversation_state_persistence: {
+          status: "persisted",
+          error: null,
+        },
       },
       response_composition: debugTrace.response_composition,
       decision_context: {
@@ -954,4 +1052,15 @@ test("POST /api/chat continues stream when conversation state persistence reject
     false,
   )
   assert.equal(persistedTurnTraces.length, 1)
+  assert.deepEqual(
+    (
+      persistedTurnTraces[0] as {
+        trace: { final: { conversation_state_persistence: unknown } }
+      }
+    ).trace.final.conversation_state_persistence,
+    {
+      status: "failed",
+      error: "state persistence unavailable",
+    },
+  )
 })

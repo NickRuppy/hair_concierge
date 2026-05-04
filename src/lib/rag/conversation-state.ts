@@ -1,5 +1,6 @@
 import type {
   ClassificationResult,
+  ConversationProductTopic,
   ConversationPendingOffer,
   ConversationState,
   ConversationStateTopic,
@@ -10,9 +11,17 @@ import type {
   RoutineConversationLayer,
 } from "@/lib/types"
 
-const SUPPORTED_PRODUCT_TOPICS = ["shampoo", "conditioner", "leave_in", "mask", "oil"] as const
-
-type SupportedProductTopic = (typeof SUPPORTED_PRODUCT_TOPICS)[number]
+const SUPPORTED_PRODUCT_TOPICS = [
+  "shampoo",
+  "conditioner",
+  "leave_in",
+  "mask",
+  "oil",
+  "bondbuilder",
+  "deep_cleansing_shampoo",
+  "dry_shampoo",
+  "peeling",
+] as const satisfies readonly ConversationProductTopic[]
 
 export function createDefaultConversationState(): ConversationState {
   return {
@@ -226,6 +235,9 @@ function isLikelyPendingRoutineAnswer(message: string): boolean {
   }
 
   const lower = message.trim().toLowerCase()
+  if (hasExplicitProductAskSignal(lower)) {
+    return false
+  }
 
   return (
     hasRoutineCadenceSignal(lower) ||
@@ -285,7 +297,21 @@ function hasAcknowledgementSignal(lower: string): boolean {
 }
 
 function hasCategoryFollowupSignal(lower: string): boolean {
-  return /\b(shampoo|conditioner|spuelung|spülung|leave-?in|maske|kur|oel|öl)\b/.test(lower)
+  return /\b(shampoo|conditioner|spuelung|spülung|leave-?in|maske|kur|oel|öl|bondbuilder|bond-builder|bond builder|olaplex|k18|kolaplex|tiefenreinigung|deep cleansing|clarifying|kopfhautpeeling|peeling|scalp scrub|trockenshampoo|dry shampoo)\b/.test(
+    lower,
+  )
+}
+
+function hasExplicitProductAskSignal(lower: string): boolean {
+  const mentionsProductTarget =
+    hasCategoryFollowupSignal(lower) || /\bprodukt(?:e|empfehlung|vorschlag)?\b/.test(lower)
+
+  return (
+    mentionsProductTarget &&
+    /\b(welche?s?|welchen|welcher|empfiehlst|empfehlen|empfehlung|produkt(?:e)?|kaufen|nehmen|passt|passendes|such(?:e|st)?|finde|konkret)\b/.test(
+      lower,
+    )
+  )
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -320,9 +346,9 @@ function normalizeAnsweredSlots(value: unknown): string[] {
   return Array.from(new Set(value.filter((slot): slot is string => typeof slot === "string")))
 }
 
-function toSupportedProductTopic(value: unknown): SupportedProductTopic | null {
-  return SUPPORTED_PRODUCT_TOPICS.includes(value as SupportedProductTopic)
-    ? (value as SupportedProductTopic)
+function toSupportedProductTopic(value: unknown): ConversationProductTopic | null {
+  return SUPPORTED_PRODUCT_TOPICS.includes(value as ConversationProductTopic)
+    ? (value as ConversationProductTopic)
     : null
 }
 

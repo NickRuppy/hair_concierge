@@ -778,6 +778,7 @@ export interface ChatTurnTrace {
   classification: ClassificationResult
   router_decision: RouterDecision
   conversation_state: ConversationStateTransition
+  conversation_state_persistence: ConversationStatePersistenceTrace
   clarification_questions: string[]
   hair_profile_snapshot: HairProfile | null
   memory_context: string | null
@@ -814,14 +815,8 @@ export interface ChatTurnTrace {
   error: string | null
 }
 
-export type ConversationStateTopic =
-  | "routine"
-  | "shampoo"
-  | "conditioner"
-  | "leave_in"
-  | "mask"
-  | "oil"
-  | null
+export type ConversationProductTopic = Exclude<ProductCategory, "routine" | null>
+export type ConversationStateTopic = "routine" | ConversationProductTopic | null
 
 export type RoutineConversationLayer = "basics" | "goals" | "problems" | "deep_dive" | null
 
@@ -847,6 +842,11 @@ export interface ConversationStateTransition {
   reason: string
   changed_fields: string[]
   classifier_override: string | null
+}
+
+export interface ConversationStatePersistenceTrace {
+  status: "persisted" | "failed" | "skipped"
+  error: string | null
 }
 
 export interface ConversationTurnTrace {

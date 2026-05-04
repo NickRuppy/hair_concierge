@@ -97,7 +97,7 @@ test("malformed partial conversation state normalizes to safe defaults", () => {
     }),
   ).toEqual({
     version: 1,
-    active_topic: null,
+    active_topic: "bondbuilder",
     routine_layer: null,
     pending_offer: null,
     answered_slots: ["routine", "problem"],
@@ -216,6 +216,38 @@ test("support-category products can answer pending routine basics", () => {
   }
 })
 
+test("pending routine override does not swallow explicit product requests", () => {
+  const previousState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: [],
+    last_assistant_action: "asked_routine_basics",
+    last_product_category: null,
+  }
+  const classification = createClassification({
+    intent: "product_recommendation",
+    product_category: "shampoo",
+    router_confidence: 0.83,
+  })
+
+  const corrected = applyConversationStateToClassification({
+    state: previousState,
+    classification,
+    userMessage: "Welches Shampoo empfiehlst du?",
+  })
+
+  expect(corrected.classification).toBe(classification)
+  expect(corrected.override).toBeNull()
+  expect(
+    shouldApplyPendingRoutineAnswerOverride({
+      state: previousState,
+      userMessage: "Welches Shampoo empfiehlst du?",
+    }),
+  ).toBe(false)
+})
+
 test("pending routine override requires the assistant to have asked routine basics", () => {
   const staleState: ConversationState = {
     version: 1,
@@ -326,7 +358,7 @@ test("unrelated non-routine answer clears stale pending routine basics", () => {
   ).toBe(false)
 })
 
-test("unsupported standalone category recommendation clears routine context", () => {
+test("standalone support-category recommendation switches conversation topic", () => {
   const previousState: ConversationState = {
     version: 1,
     active_topic: "routine",
@@ -357,11 +389,11 @@ test("unsupported standalone category recommendation clears routine context", ()
     matchedProductCategory: "bondbuilder",
   })
 
-  expect(transition.next_state.active_topic).toBeNull()
+  expect(transition.next_state.active_topic).toBe("bondbuilder")
   expect(transition.next_state.routine_layer).toBeNull()
   expect(transition.next_state.pending_offer).toBeNull()
-  expect(transition.next_state.last_product_category).toBeNull()
-  expect(transition.reason).toBe("category_switch_out_of_scope")
+  expect(transition.next_state.last_product_category).toBe("bondbuilder")
+  expect(transition.reason).toBe("category_switch")
 })
 
 test("explicit category mention inside routine becomes routine deep dive", () => {

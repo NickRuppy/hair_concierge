@@ -444,6 +444,10 @@ test.describe("Chat debug trace", () => {
       next_state: expect.objectContaining({ active_topic: "routine" }),
       reason: "routine_started",
     })
+    expect(trace.conversation_state_persistence).toEqual({
+      status: "skipped",
+      error: null,
+    })
     expect(trace.decision_context.engine_trace?.categories).toMatchObject({
       shampoo: expect.objectContaining({ category: "shampoo" }),
       conditioner: expect.objectContaining({ category: "conditioner" }),

@@ -6,6 +6,7 @@ import type {
   ChatRetrievedChunkTrace,
   ChatTraceLatencyBreakdown,
   ChatTurnTrace,
+  ConversationStatePersistenceTrace,
   ConversationStateTransition,
   CitationSource,
   ClassificationResult,
@@ -52,6 +53,11 @@ export interface PipelineTraceDraft {
   prompt: ChatPromptSnapshot
   response_composition: ResponseCompositionTrace
   latencies_ms: ChatTraceLatencyBreakdown
+}
+
+const DEFAULT_CONVERSATION_STATE_PERSISTENCE: ConversationStatePersistenceTrace = {
+  status: "skipped",
+  error: null,
 }
 
 function toContentPreview(content: string): string {
@@ -255,6 +261,7 @@ export function finalizeChatTurnTrace(
     completed_at?: string
     stream_read_ms?: number
     total_ms?: number
+    conversation_state_persistence?: ConversationStatePersistenceTrace
   },
 ): ChatTurnTrace {
   const {
@@ -266,6 +273,7 @@ export function finalizeChatTurnTrace(
     completed_at,
     stream_read_ms,
     total_ms,
+    conversation_state_persistence,
   } = params
 
   return {
@@ -282,6 +290,8 @@ export function finalizeChatTurnTrace(
     classification: draft.classification,
     router_decision: draft.router_decision,
     conversation_state: draft.conversation_state,
+    conversation_state_persistence:
+      conversation_state_persistence ?? DEFAULT_CONVERSATION_STATE_PERSISTENCE,
     clarification_questions: draft.clarification_questions,
     hair_profile_snapshot: draft.hair_profile_snapshot,
     memory_context: draft.memory_context,

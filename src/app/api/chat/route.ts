@@ -12,6 +12,7 @@ import {
 import { sanitizeLangfuseText } from "@/lib/langfuse/masking"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
+import type { ConversationStatePersistenceTrace } from "@/lib/types"
 
 export const maxDuration = 60
 
@@ -414,12 +415,36 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
 
               if (assistantMessageError) {
                 console.error("Failed to save assistant message:", assistantMessageError)
+              }
+
+              let conversationStatePersistence: ConversationStatePersistenceTrace = {
+                status: "skipped",
+                error: assistantMessageError
+                  ? "assistant_message_not_persisted"
+                  : "assistant_message_id_missing",
+              }
+
+              if (!assistantMessageError && assistantMessageRow?.id) {
+                try {
+                  conversationStatePersistence = await persistConversationStateTransition(admin, {
+                    conversationId: activeConversationId,
+                    userId: user.id,
+                    transition: conversationStateTransition,
+                  })
+                } catch (error) {
+                  console.error("Failed to persist conversation state:", error)
+                  conversationStatePersistence = {
+                    status: "failed",
+                    error:
+                      error instanceof Error
+                        ? error.message
+                        : "Unknown conversation state persistence error",
+                  }
+                }
               } else {
-                await persistConversationStateTransition(admin, {
-                  conversationId: activeConversationId,
-                  userId: user.id,
-                  transition: conversationStateTransition,
-                }).catch(() => {})
+                console.error(
+                  "Skipped conversation state persistence because assistant message was not saved.",
+                )
               }
 
               controller.enqueue(
@@ -466,6 +491,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 status: "completed",
                 stream_read_ms: Math.round(deps.now() - streamReadStart),
                 total_ms: Math.round(deps.now() - requestStart),
+                conversation_state_persistence: conversationStatePersistence,
               })
 
               deps
