@@ -61,20 +61,20 @@
   "devDependencies": {
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4.2.4",
-    "@types/node": "^20.19.39",
+    "@types/node": "^25.6.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9.39.4",
+    "eslint": "^10.3.0",
     "eslint-config-next": "^16.2.4",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "playwright": "^1.59.1",
     "prettier": "^3.8.3",
-    "start-server-and-test": "^2.1.5",
-    "supabase": "^2.98.0",
+    "start-server-and-test": "^3.0.2",
+    "supabase": "^2.98.1",
     "tailwindcss": "^4.2.4",
     "tsx": "^4.21.0",
-    "typescript": "^5"
+    "typescript": "^6"
   },
   "overrides": {
     "dompurify": "3.4.0",
