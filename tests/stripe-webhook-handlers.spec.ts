@@ -48,6 +48,16 @@ function stubDeps() {
               },
             }
           },
+          upsert(row: any) {
+            calls.push([`upsert-${table}`, row])
+            if (table === "profiles") {
+              profiles[row.id] = {
+                ...(profiles[row.id] ?? {}),
+                ...row,
+              }
+            }
+            return Promise.resolve({ error: null })
+          },
         }
       },
     } as any,
@@ -78,6 +88,8 @@ test("checkout.session.completed creates a new Supabase user and activates the s
   const { deps, calls, profiles } = stubDeps()
   const session = {
     id: "cs_1",
+    status: "complete",
+    payment_status: "paid",
     customer: "cus_1",
     customer_details: { email: "new@example.com" },
     subscription: "sub_1",
@@ -107,6 +119,8 @@ test("checkout.session.completed on existing email reuses the user", async () =>
 
   const session = {
     id: "cs_2",
+    status: "complete",
+    payment_status: "paid",
     customer: "cus_2",
     customer_details: { email: "ret@example.com" },
     subscription: "sub_2",
@@ -174,6 +188,8 @@ test("checkout.session.completed with metadata.lead_id calls linkQuizToProfile w
 
   const session = {
     id: "cs_lead",
+    status: "complete",
+    payment_status: "paid",
     customer: "cus_lead",
     customer_details: { email: "lead@example.com" },
     subscription: "sub_lead",
@@ -199,6 +215,8 @@ test("checkout.session.completed without metadata calls linkQuizToProfile with u
 
   const session = {
     id: "cs_nolead",
+    status: "complete",
+    payment_status: "paid",
     customer: "cus_nolead",
     customer_details: { email: "nolead@example.com" },
     subscription: "sub_nolead",
@@ -221,6 +239,8 @@ test("checkout.session.completed does not throw when linkQuizToProfile rejects",
 
   const session = {
     id: "cs_err",
+    status: "complete",
+    payment_status: "paid",
     customer: "cus_err",
     customer_details: { email: "err@example.com" },
     subscription: "sub_err",
@@ -249,6 +269,8 @@ test("checkout.session.completed falls back to root current_period_end when item
   } as any
   const session = {
     id: "cs_root",
+    status: "complete",
+    payment_status: "paid",
     customer: "cus_root",
     customer_details: { email: "root@example.com" },
     subscription: "sub_root",

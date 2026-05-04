@@ -55,3 +55,10 @@ export const SEND_AUTH_LINK_RATE_LIMIT: RateLimitConfig = {
   limit: 3,
   windowMs: 5 * 60_000,
 }
+
+// 8 password attempts per 10 minutes per Stripe checkout session_id.
+export const SET_CHECKOUT_PASSWORD_RATE_LIMIT: RateLimitConfig = {
+  prefix: "set-checkout-password",
+  limit: 8,
+  windowMs: 10 * 60_000,
+}
