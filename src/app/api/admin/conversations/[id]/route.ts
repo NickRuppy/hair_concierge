@@ -66,6 +66,19 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     traces = traceRows ?? []
   }
 
+  let conversationState: unknown = null
+  const { data: stateRow, error: stateError } = await admin
+    .from("conversation_states")
+    .select("state, state_version, last_transition, created_at, updated_at")
+    .eq("conversation_id", id)
+    .maybeSingle()
+
+  if (stateError) {
+    console.error("Error fetching conversation state:", stateError)
+  } else {
+    conversationState = stateRow ?? null
+  }
+
   // Fetch user profile + hair profile
   const { data: userProfile } = await admin
     .from("profiles")
@@ -77,6 +90,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     conversation,
     messages: messages || [],
     traces,
+    conversation_state: conversationState,
     user: userProfile,
   })
 }

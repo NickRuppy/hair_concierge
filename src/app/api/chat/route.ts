@@ -12,6 +12,7 @@ import {
 import { sanitizeLangfuseText } from "@/lib/langfuse/masking"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
+import type { ConversationStatePersistenceTrace } from "@/lib/types"
 
 export const maxDuration = 60
 
@@ -49,6 +50,7 @@ async function loadChatRuntimeDeps() {
       summarizeEngineTraceForLangfuse,
       summarizeProductsForLangfuse,
     },
+    { persistConversationStateTransition },
     { chatMessageSchema },
     { generateConversationTitle },
   ] = await Promise.all([
@@ -57,6 +59,7 @@ async function loadChatRuntimeDeps() {
     import("@/lib/rag/chat-response"),
     import("@/lib/rag/memory-extractor"),
     import("@/lib/rag/debug-trace"),
+    import("@/lib/rag/conversation-state-store"),
     import("@/lib/validators"),
     import("@/lib/rag/title-generator"),
   ])
@@ -72,6 +75,7 @@ async function loadChatRuntimeDeps() {
     finalizeChatTurnTrace,
     summarizeEngineTraceForLangfuse,
     summarizeProductsForLangfuse,
+    persistConversationStateTransition,
     chatMessageSchema,
     generateConversationTitle,
   }
@@ -149,6 +153,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
       finalizeChatTurnTrace,
       summarizeEngineTraceForLangfuse,
       summarizeProductsForLangfuse,
+      persistConversationStateTransition,
       chatMessageSchema,
       generateConversationTitle,
     } = await deps.loadRuntimeDeps()
@@ -194,6 +199,19 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
       const activeConversationId = conversationId
       if (!activeConversationId) {
         throw new Error("Conversation id missing after creation")
+      }
+
+      if (!shouldGenerateConversationTitle) {
+        const { data: existingConversation, error: ownershipError } = await admin
+          .from("conversations")
+          .select("id")
+          .eq("id", activeConversationId)
+          .eq("user_id", user.id)
+          .single()
+
+        if (ownershipError || !existingConversation) {
+          return NextResponse.json({ error: "Unterhaltung nicht gefunden" }, { status: 404 })
+        }
       }
 
       deps.ensureLangfuseTracing()
@@ -248,6 +266,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
         sources,
         retrievalSummary,
         routerDecision,
+        conversationStateTransition,
         categoryDecision,
         engineTrace,
         debugTrace,
@@ -398,6 +417,36 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 console.error("Failed to save assistant message:", assistantMessageError)
               }
 
+              let conversationStatePersistence: ConversationStatePersistenceTrace = {
+                status: "skipped",
+                error: assistantMessageError
+                  ? "assistant_message_not_persisted"
+                  : "assistant_message_id_missing",
+              }
+
+              if (!assistantMessageError && assistantMessageRow?.id) {
+                try {
+                  conversationStatePersistence = await persistConversationStateTransition(admin, {
+                    conversationId: activeConversationId,
+                    userId: user.id,
+                    transition: conversationStateTransition,
+                  })
+                } catch (error) {
+                  console.error("Failed to persist conversation state:", error)
+                  conversationStatePersistence = {
+                    status: "failed",
+                    error:
+                      error instanceof Error
+                        ? error.message
+                        : "Unknown conversation state persistence error",
+                  }
+                }
+              } else {
+                console.error(
+                  "Skipped conversation state persistence because assistant message was not saved.",
+                )
+              }
+
               controller.enqueue(
                 encoder.encode(
                   `data: ${JSON.stringify({
@@ -442,6 +491,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 status: "completed",
                 stream_read_ms: Math.round(deps.now() - streamReadStart),
                 total_ms: Math.round(deps.now() - requestStart),
+                conversation_state_persistence: conversationStatePersistence,
               })
 
               deps

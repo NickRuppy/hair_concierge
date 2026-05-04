@@ -68,6 +68,7 @@ import type {
   RoutinePlan,
   ChatPromptMessageSnapshot,
   ChatPromptSnapshot,
+  ConversationState,
   ResponseCompositionTrace,
 } from "@/lib/types"
 import type { CategoryDecision as RecommendationEngineCategoryDecision } from "@/lib/recommendation-engine/types"
@@ -89,6 +90,7 @@ export interface SynthesizeParams {
   categoryDecision?: RecommendationEngineCategoryDecision | null
   routinePlan?: RoutinePlan
   memoryContext?: string | null
+  conversationState?: ConversationState | null
   /** Slot-aware clarification questions from the router (replaces consultationMode) */
   clarificationQuestions?: string[]
   /** Follow-up questions for recommend_and_refine mode (products ARE shown alongside) */
@@ -130,6 +132,12 @@ function appendFollowupQuestions(profileText: string, followupQuestions?: string
   result +=
     "\nFormuliere die Empfehlung als vorsichtige erste Einschaetzung, nicht als finale Antwort.)"
   return result
+}
+
+function formatConversationState(state?: ConversationState | null): string {
+  if (!state || !state.active_topic) return ""
+
+  return `\n\n<conversation_state>\nAktives Thema: ${state.active_topic}\nRoutine-Ebene: ${state.routine_layer ?? "keine"}\nAusstehendes Angebot: ${state.pending_offer ?? "keines"}\nBeantwortete Slots: ${state.answered_slots.length > 0 ? state.answered_slots.join(", ") : "keine"}\nLetzte Assistant-Aktion: ${state.last_assistant_action ?? "keine"}\n</conversation_state>`
 }
 
 /**
@@ -1011,6 +1019,7 @@ export function buildSystemPrompt(
   basePromptTemplate = SYSTEM_PROMPT,
   followupQuestions?: string[],
   categoryDecision?: RecommendationEngineCategoryDecision | null,
+  conversationState?: ConversationState | null,
 ): string {
   let prompt = basePromptTemplate
 
@@ -1024,7 +1033,10 @@ export function buildSystemPrompt(
       ? formatShampooProfile(hairProfile, clarificationQuestions, memoryContext, followupQuestions)
       : formatUserProfile(hairProfile, clarificationQuestions, memoryContext, followupQuestions)
 
-  prompt = prompt.replace("{{USER_PROFILE}}", userProfileContext)
+  prompt = prompt.replace(
+    "{{USER_PROFILE}}",
+    `${userProfileContext}${formatConversationState(conversationState)}`,
+  )
 
   let ragContext = formatRagContext(ragChunks)
   if (routinePlan) {
@@ -1076,6 +1088,7 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     categoryDecision,
     routinePlan,
     memoryContext,
+    conversationState,
     clarificationQuestions,
     followupQuestions,
   } = params
@@ -1098,6 +1111,7 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     managedPrompt.template,
     followupQuestions,
     categoryDecision,
+    conversationState,
   )
 
   // Build the messages array for the API call

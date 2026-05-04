@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { useToast } from "@/providers/toast-provider"
-import type { ConversationTurnTrace, MessageRagContext } from "@/lib/types"
+import type { ConversationState, ConversationTurnTrace, MessageRagContext } from "@/lib/types"
 import { fehler } from "@/lib/vocabulary"
 import { ArrowLeft } from "lucide-react"
 
@@ -20,6 +20,14 @@ interface MessageRow {
   user_feedback_at?: string | null
 }
 
+interface ConversationStateRow {
+  state: ConversationState | null
+  state_version: number | null
+  last_transition: unknown | null
+  created_at?: string | null
+  updated_at?: string | null
+}
+
 interface ConversationDetail {
   conversation: {
     id: string
@@ -30,6 +38,7 @@ interface ConversationDetail {
   }
   messages: MessageRow[]
   traces: ConversationTurnTrace[]
+  conversation_state: ConversationStateRow | null
   user: {
     id: string
     full_name: string | null
@@ -351,6 +360,17 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
 
           <div className="rounded-lg border bg-card p-3">
             <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
+              Konversationsstatus
+            </p>
+            <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded-md bg-background p-3 text-xs text-foreground">
+              {JSON.stringify(trace.conversation_state, null, 2)}
+            </pre>
+          </div>
+        </div>
+
+        <div className="grid gap-3 xl:grid-cols-2">
+          <div className="rounded-lg border bg-card p-3">
+            <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
               Profil Snapshot
             </p>
             <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded-md bg-background p-3 text-xs text-foreground">
@@ -432,6 +452,8 @@ export default function AdminConversationDetailPage() {
   }
 
   const { conversation, messages, user: chatUser, traces } = data
+  const conversationState = data.conversation_state
+  const conversationStateValue = conversationState?.state ?? null
 
   return (
     <div>
@@ -457,6 +479,28 @@ export default function AdminConversationDetailPage() {
             <p className="mt-1 font-medium text-foreground">
               {traces.length} gespeicherte Turn-Traces
             </p>
+            <p className="mt-2 text-muted-foreground">Konversationsstatus</p>
+            <p className="mt-1 font-medium text-foreground">
+              {conversationStateValue?.active_topic ?? "kein aktives Thema"}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Version: {conversationState?.state_version ?? "keine"} · Aktualisiert:{" "}
+              {conversationState?.updated_at ? formatDateTime(conversationState.updated_at) : "nie"}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Routine-Ebene: {conversationStateValue?.routine_layer ?? "keine"} · Angebot:{" "}
+              {conversationStateValue?.pending_offer ?? "keines"}
+            </p>
+            {conversationState?.last_transition ? (
+              <details className="mt-2">
+                <summary className="cursor-pointer text-xs text-muted-foreground">
+                  Letzter Statuswechsel
+                </summary>
+                <pre className="mt-2 max-h-48 overflow-auto rounded-lg bg-muted p-2 text-xs">
+                  {JSON.stringify(conversationState, null, 2)}
+                </pre>
+              </details>
+            ) : null}
           </div>
         </div>
       </div>

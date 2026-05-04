@@ -3,6 +3,11 @@ import { startObservation } from "@langfuse/tracing"
 import { context as otelContext, trace as otelTrace } from "@opentelemetry/api"
 import { classifyIntent } from "@/lib/rag/intent-classifier"
 import { evaluateRoute } from "@/lib/rag/router"
+import {
+  applyConversationStateToClassification,
+  computeConversationStateTransition,
+} from "@/lib/rag/conversation-state"
+import { loadConversationState } from "@/lib/rag/conversation-state-store"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
 import { generateConversationTitle } from "@/lib/rag/title-generator"
 import { PRODUCT_INTENTS } from "@/lib/rag/retrieval-constants"
@@ -122,6 +127,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     hairProfileResult,
     routineItems,
     memoryContext,
+    conversationState,
     historyLoadMs,
     hairProfileLoadMs,
     routineItemsLoadMs,
@@ -138,6 +144,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         { result: hairProfileResult, durationMs: hairProfileLoadMs },
         { result: routineItems, durationMs: routineItemsLoadMs },
         { result: memoryContext, durationMs: memoryLoadMs },
+        { result: conversationState },
       ] = await Promise.all([
         measureAsync(async () =>
           conversationId
@@ -156,6 +163,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         ),
         measureAsync(() => loadRoutineItemsForEngine(userId)),
         measureAsync(() => loadUserMemoryContext(userId, supabase)),
+        measureAsync(() => loadConversationState(supabase, conversationId)),
       ])
 
       return {
@@ -163,6 +171,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         hairProfileResult,
         routineItems,
         memoryContext,
+        conversationState,
         historyLoadMs,
         hairProfileLoadMs,
         routineItemsLoadMs,
@@ -203,7 +212,13 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       },
     ),
   )
-  const classification = classificationOutput.result
+  const stateAwareClassification = applyConversationStateToClassification({
+    state: conversationState,
+    classification: classificationOutput.result,
+    userMessage: message,
+  })
+  const classification = stateAwareClassification.classification
+  const conversationStateClassifierOverride = stateAwareClassification.override
   const classificationPromptRef = classificationOutput.promptRef
   const { intent, product_category } = classification
   const hasExplicitRoutineFollowup =
@@ -244,8 +259,25 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       product_category,
       message,
     },
-    async () =>
-      evaluateRoute(classification, conversationHistory, hairProfile, routineItems, message),
+    async () => {
+      const baseRouterDecision = evaluateRoute(
+        classification,
+        conversationHistory,
+        hairProfile,
+        routineItems,
+        message,
+      )
+
+      return conversationStateClassifierOverride
+        ? {
+            ...baseRouterDecision,
+            policy_overrides: [
+              ...baseRouterDecision.policy_overrides,
+              conversationStateClassifierOverride,
+            ],
+          }
+        : baseRouterDecision
+    },
     {
       output: (result) => ({
         classifier_retrieval_mode: classification.retrieval_mode,
@@ -301,6 +333,25 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       stage_latency_ms: 0,
     })
   }
+
+  const assistantAction =
+    routerDecision.response_mode === "clarify_only"
+      ? routerDecision.clarification_reason === "missing_routine_frame"
+        ? "asked_routine_basics"
+        : "asked_clarification"
+      : shouldPlanRoutine
+        ? "answered_routine"
+        : "answered_direct"
+  const conversationStateTransition = computeConversationStateTransition({
+    previousState: conversationState,
+    classification,
+    routerDecision,
+    userMessage: message,
+    assistantAction,
+    hairProfile,
+    matchedProductCategory: product_category,
+    classifierOverride: conversationStateClassifierOverride,
+  })
 
   // ── Create conversation if it doesn't exist yet ────────────────────
   let conversationCreateMs = 0
@@ -395,6 +446,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
           productCategory: product_category,
           categoryDecision,
           memoryContext: memoryContext.promptContext,
+          conversationState,
           clarificationQuestions,
         }),
       {
@@ -416,6 +468,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       conversation_history_count: conversationHistory.length,
       classification,
       router_decision: routerDecision,
+      conversation_state: conversationStateTransition,
       clarification_questions: clarificationQuestions,
       hair_profile_snapshot: hairProfile,
       memory_context: memoryContext.promptContext,
@@ -453,6 +506,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
       matchedProducts: [],
       sources,
       routerDecision,
+      conversationStateTransition,
       categoryDecision: categoryDecision ?? undefined,
       engineTrace,
       retrievalSummary: {
@@ -609,6 +663,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
         categoryDecision,
         routinePlan,
         memoryContext: memoryContext.promptContext,
+        conversationState,
         followupQuestions,
       }),
     {
@@ -630,6 +685,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     conversation_history_count: conversationHistory.length,
     classification,
     router_decision: routerDecision,
+    conversation_state: conversationStateTransition,
     hair_profile_snapshot: hairProfile,
     memory_context: memoryContext.promptContext,
     retrieval_debug: retrievalDebug,
@@ -666,6 +722,7 @@ export async function orchestrateTurn(params: PipelineParams): Promise<PipelineR
     matchedProducts: matchedProducts ?? [],
     sources,
     routerDecision,
+    conversationStateTransition,
     categoryDecision: categoryDecision ?? undefined,
     engineTrace,
     retrievalSummary: {

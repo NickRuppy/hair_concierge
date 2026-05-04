@@ -10,10 +10,12 @@ import {
   buildRecommendationEngineRuntimeForChat,
   buildRecommendationEngineTrace,
 } from "../src/lib/recommendation-engine/chat"
+import { createDefaultConversationState } from "../src/lib/rag/conversation-state"
 import type { RetrievedChunk } from "../src/lib/rag/retriever"
 import type {
   ChatPromptSnapshot,
   ClassificationResult,
+  ConversationStateTransition,
   HairProfile,
   Product,
   RouterDecision,
@@ -258,6 +260,22 @@ function createPromptSnapshot(): ChatPromptSnapshot {
   }
 }
 
+function createConversationStateTransition(): ConversationStateTransition {
+  const previousState = createDefaultConversationState()
+
+  return {
+    previous_state: previousState,
+    next_state: {
+      ...previousState,
+      active_topic: "routine",
+      last_assistant_action: "answered_routine",
+    },
+    reason: "routine_started",
+    changed_fields: ["active_topic", "last_assistant_action"],
+    classifier_override: null,
+  }
+}
+
 test.describe("Chat debug trace", () => {
   test("builds a draft with retrieval and matching details", () => {
     const draft = buildPipelineTraceDraft({
@@ -270,6 +288,7 @@ test.describe("Chat debug trace", () => {
       conversation_history_count: 2,
       classification: createClassification(),
       router_decision: createRouterDecision(),
+      conversation_state: createConversationStateTransition(),
       clarification_questions: [],
       hair_profile_snapshot: createProfile(),
       memory_context: "Nutzer mochte leichte Produkte.",
@@ -355,6 +374,7 @@ test.describe("Chat debug trace", () => {
       conversation_history_count: 0,
       classification: createClassification(),
       router_decision: createRouterDecision({ policy_overrides: ["missing_routine_frame"] }),
+      conversation_state: createConversationStateTransition(),
       clarification_questions: ["Wie oft waeschst du aktuell?"],
       hair_profile_snapshot: profile,
       memory_context: null,
@@ -419,6 +439,15 @@ test.describe("Chat debug trace", () => {
     expect(trace.latencies_ms.total_ms).toBe(240)
     expect(trace.response.sources).toHaveLength(1)
     expect(trace.response_composition).toEqual(legacyResponseComposition)
+    expect(trace.conversation_state).toMatchObject({
+      previous_state: expect.objectContaining({ active_topic: null }),
+      next_state: expect.objectContaining({ active_topic: "routine" }),
+      reason: "routine_started",
+    })
+    expect(trace.conversation_state_persistence).toEqual({
+      status: "skipped",
+      error: null,
+    })
     expect(trace.decision_context.engine_trace?.categories).toMatchObject({
       shampoo: expect.objectContaining({ category: "shampoo" }),
       conditioner: expect.objectContaining({ category: "conditioner" }),

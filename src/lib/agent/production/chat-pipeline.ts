@@ -28,6 +28,7 @@ import {
 } from "@/lib/agent/contracts"
 import {
   createBuildOrFixRoutineTool,
+  type BuildOrFixRoutineProjection,
   type RoutineObjective,
 } from "@/lib/agent/tools/build-or-fix-routine"
 import { getUserContext, type UserContextProjection } from "@/lib/agent/tools/get-user-context"
@@ -43,6 +44,8 @@ import {
 } from "@/lib/recommendation-engine"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { DEFAULT_CHAT_COMPLETION_MODEL } from "@/lib/openai/chat"
+import { computeConversationStateTransition } from "@/lib/rag/conversation-state"
+import { loadConversationState as loadPersistedConversationState } from "@/lib/rag/conversation-state-store"
 import { buildPipelineTraceDraft } from "@/lib/rag/debug-trace"
 import type { PipelineParams, PipelineResult } from "@/lib/rag/contracts"
 import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/rag/user-memory"
@@ -50,6 +53,7 @@ import type {
   ChatCategoryDecision,
   ChatPromptSnapshot,
   ClassificationResult,
+  ConversationState,
   IntentType,
   LangfusePromptReference,
   Message,
@@ -68,6 +72,7 @@ type ConversationHistoryProjection = Array<{
 
 type ProductionUserContext = UserContextProjection & {
   conversation_history: ConversationHistoryProjection
+  conversation_state: ConversationState
 }
 
 interface ProductionAgentPipelineDeps {
@@ -75,6 +80,7 @@ interface ProductionAgentPipelineDeps {
   loadConversationHistory?: (conversationId: string) => Promise<Message[]>
   getUserContext?: (userId: string) => Promise<UserContextProjection>
   loadUserMemoryContext?: (userId: string) => Promise<UserMemoryContext>
+  loadConversationState?: (conversationId: string) => Promise<ConversationState>
 }
 
 async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; durationMs: number }> {
@@ -179,8 +185,22 @@ export function mapAgentProductCategory(route: AgentRoutePacket): ProductCategor
   return route.user_job === "routine_structure" ? "routine" : null
 }
 
-function deriveResponseMode(selectedProducts: SelectedProductsProjection | null): ResponseMode {
-  return selectedProducts?.decision === "needs_more_info" ? "clarify_only" : "answer_direct"
+function hasRoutineMissingInfo(
+  route: AgentRoutePacket,
+  routinePlan: BuildOrFixRoutineProjection | null | undefined,
+): boolean {
+  return route.user_job === "routine_structure" && (routinePlan?.missing_info.length ?? 0) > 0
+}
+
+function deriveResponseMode(params: {
+  route: AgentRoutePacket
+  selectedProducts: SelectedProductsProjection | null
+  routinePlan?: BuildOrFixRoutineProjection | null
+}): ResponseMode {
+  return params.selectedProducts?.decision === "needs_more_info" ||
+    hasRoutineMissingInfo(params.route, params.routinePlan)
+    ? "clarify_only"
+    : "answer_direct"
 }
 
 function missingProfilePolicyTag(
@@ -226,8 +246,9 @@ export function buildClassification(route: AgentRoutePacket): ClassificationResu
 export function buildRouterDecision(params: {
   route: AgentRoutePacket
   selectedProducts: SelectedProductsProjection | null
+  routinePlan?: BuildOrFixRoutineProjection | null
 }): RouterDecision {
-  const responseMode = deriveResponseMode(params.selectedProducts)
+  const responseMode = deriveResponseMode(params)
   const policyOverrides = ["agent_v1_front_door"]
 
   if (params.selectedProducts?.product_response_policy) {
@@ -243,13 +264,21 @@ export function buildRouterDecision(params: {
     policyOverrides.push("agent_route_validation_warnings")
   }
 
+  if (hasRoutineMissingInfo(params.route, params.routinePlan)) {
+    policyOverrides.push("missing_routine_frame")
+  }
+
   return {
     retrieval_mode: "agent_engine",
     response_mode: responseMode,
     clarification_reason:
-      responseMode === "clarify_only"
-        ? (params.selectedProducts?.missing_info[0]?.detail ?? params.route.ambiguity ?? undefined)
-        : undefined,
+      responseMode === "clarify_only" && hasRoutineMissingInfo(params.route, params.routinePlan)
+        ? "missing_routine_frame"
+        : responseMode === "clarify_only"
+          ? (params.selectedProducts?.missing_info[0]?.detail ??
+            params.route.ambiguity ??
+            undefined)
+          : undefined,
     slot_completeness: responseMode === "clarify_only" ? 0.5 : 1,
     confidence: params.route.confidence,
     policy_overrides: policyOverrides,
@@ -377,15 +406,22 @@ export async function runProductionAgentPipeline(
     { result: conversationHistory, durationMs: historyLoadMs },
     { result: userContextBase, durationMs: contextLoadMs },
     { result: memoryContext, durationMs: memoryLoadMs },
+    { result: conversationState },
   ] = await Promise.all([
     measureAsync(() => (deps.loadConversationHistory ?? loadConversationHistory)(conversationId)),
     measureAsync(() => (deps.getUserContext ?? getUserContext)(userId)),
     measureAsync(() => (deps.loadUserMemoryContext ?? loadUserMemoryContext)(userId)),
+    measureAsync(() =>
+      deps.loadConversationState
+        ? deps.loadConversationState(conversationId)
+        : loadPersistedConversationState(createAdminClient(), conversationId),
+    ),
   ])
 
   const userContext: ProductionUserContext = {
     ...userContextBase,
     conversation_history: projectConversationHistory(conversationHistory),
+    conversation_state: conversationState,
   }
   const selectedProductsHolder: { current: SelectProductsToolResult | null } = { current: null }
 
@@ -393,6 +429,7 @@ export async function runProductionAgentPipeline(
   const result = await runShadowAgentTurn({
     message,
     modelClient: deps.modelClient ?? createOpenAIToolModelClient(),
+    conversationState,
     tools: makeAgentTools({
       message,
       userContext,
@@ -409,8 +446,37 @@ export async function runProductionAgentPipeline(
   const route = result.route_trace
   const intent = mapAgentIntent(route)
   const productCategory = mapAgentProductCategory(route)
-  const routerDecision = buildRouterDecision({ route, selectedProducts })
+  const baseRouterDecision = buildRouterDecision({
+    route,
+    selectedProducts,
+    routinePlan: result.runtime_packet.routine_plan,
+  })
+  const routerDecision = result.classification_override
+    ? {
+        ...baseRouterDecision,
+        policy_overrides: [...baseRouterDecision.policy_overrides, result.classification_override],
+      }
+    : baseRouterDecision
   const classification = buildClassification(route)
+  const shouldPlanRoutine = route.user_job === "routine_structure"
+  const assistantAction =
+    routerDecision.response_mode === "clarify_only"
+      ? routerDecision.clarification_reason === "missing_routine_frame"
+        ? "asked_routine_basics"
+        : "asked_clarification"
+      : shouldPlanRoutine
+        ? "answered_routine"
+        : "answered_direct"
+  const conversationStateTransition = computeConversationStateTransition({
+    previousState: conversationState,
+    classification,
+    routerDecision,
+    userMessage: message,
+    assistantAction,
+    hairProfile: userContext.profile,
+    matchedProductCategory: productCategory,
+    classifierOverride: result.classification_override,
+  })
   const matchedProducts = productsForRenderedPacket({
     runtimePacket: result.runtime_packet,
     selectedProducts: selectedProductsResult?.products ?? [],
@@ -449,6 +515,7 @@ export async function runProductionAgentPipeline(
     conversation_history_count: conversationHistory.length,
     classification,
     router_decision: routerDecision,
+    conversation_state: conversationStateTransition,
     clarification_questions:
       routerDecision.response_mode === "clarify_only" && selectedProducts?.missing_info[0]
         ? [selectedProducts.missing_info[0].detail]
@@ -465,7 +532,7 @@ export async function runProductionAgentPipeline(
     },
     retrieval_count: 0,
     retrieved_chunks: [],
-    should_plan_routine: route.user_job === "routine_structure",
+    should_plan_routine: shouldPlanRoutine,
     category_decision: categoryDecision ?? undefined,
     engine_trace: engineTrace,
     matched_products: matchedProducts,
@@ -501,6 +568,7 @@ export async function runProductionAgentPipeline(
     intent,
     matchedProducts,
     sources: [],
+    conversationStateTransition,
     retrievalSummary: {
       final_context_count: 0,
     },
