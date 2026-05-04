@@ -81,6 +81,7 @@ interface ProductionAgentPipelineDeps {
   getUserContext?: (userId: string) => Promise<UserContextProjection>
   loadUserMemoryContext?: (userId: string) => Promise<UserMemoryContext>
   loadConversationState?: (conversationId: string) => Promise<ConversationState>
+  createSelectProductsTool?: typeof createSelectProductsTool
 }
 
 async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; durationMs: number }> {
@@ -117,6 +118,16 @@ function normalizeSelectableCategory(value: unknown): SelectableProductCategory 
 
 function normalizeRoutineObjective(value: unknown): RoutineObjective | null {
   return value === "build_routine" || value === "fix_routine" ? value : null
+}
+
+function normalizeRoutineLayer(value: unknown) {
+  return value === "basics" || value === "goals" || value === "problems" || value === "deep_dive"
+    ? value
+    : null
+}
+
+function normalizeRoutineProductCategory(value: unknown) {
+  return typeof value === "string" && isSelectableProductCategory(value) ? value : null
 }
 
 function normalizeAgentUserJob(value: unknown): AgentUserJob | null {
@@ -361,8 +372,9 @@ function makeAgentTools(params: {
   userContext: ProductionUserContext
   memoryContext: UserMemoryContext
   onSelectProducts: (result: SelectProductsToolResult) => void
+  createSelectProductsTool?: typeof createSelectProductsTool
 }): Record<AgentToolName, (input: Record<string, unknown>) => Promise<unknown>> {
-  const selectProducts = createSelectProductsTool({
+  const selectProducts = (params.createSelectProductsTool ?? createSelectProductsTool)({
     onResult: params.onSelectProducts,
   })
   const buildOrFixRoutine = createBuildOrFixRoutineTool()
@@ -387,6 +399,8 @@ function makeAgentTools(params: {
         objective: normalizeRoutineObjective(input.objective),
         message: params.message,
         hairProfile: params.userContext.profile,
+        layer: normalizeRoutineLayer(input.layer),
+        requestedCategory: normalizeRoutineProductCategory(input.requestedCategory),
       }),
   }
 }
@@ -437,6 +451,7 @@ export async function runProductionAgentPipeline(
       onSelectProducts: (selection) => {
         selectedProductsHolder.current = selection
       },
+      createSelectProductsTool: deps.createSelectProductsTool,
     }),
   })
   const agentMs = Math.round(performance.now() - agentStart)
@@ -465,7 +480,9 @@ export async function runProductionAgentPipeline(
         ? "asked_routine_basics"
         : "asked_clarification"
       : shouldPlanRoutine
-        ? "answered_routine"
+        ? route.routine_layer === "basics"
+          ? "answered_routine_basics"
+          : "answered_routine"
         : "answered_direct"
   const conversationStateTransition = computeConversationStateTransition({
     previousState: conversationState,
@@ -474,7 +491,7 @@ export async function runProductionAgentPipeline(
     userMessage: message,
     assistantAction,
     hairProfile: userContext.profile,
-    matchedProductCategory: productCategory,
+    matchedProductCategory: route.routine_requested_category ?? productCategory,
     classifierOverride: result.classification_override,
   })
   const matchedProducts = productsForRenderedPacket({
@@ -544,7 +561,7 @@ export async function runProductionAgentPipeline(
       fallback_reason: null,
       rendering_path: null,
       plan_type: "agent_v1",
-      attachment_mode: null,
+      attachment_mode: matchedProducts.length > 0 ? "cards" : "text_only",
     },
     latencies_ms: {
       classification_ms: agentMs,

@@ -111,6 +111,9 @@ export function computeConversationStateTransition(params: {
   const classifiedProductTopic = toSupportedProductTopic(params.classification.product_category)
   const matchedProductTopic = toSupportedProductTopic(params.matchedProductCategory)
   const productTopic = matchedProductTopic ?? classifiedProductTopic
+  const requestedRoutineLayer = shouldSelectRoutineLayerFromBasics(previousState)
+    ? getRequestedRoutineLayer(params.userMessage)
+    : null
   const isUnsupportedStandaloneCategorySwitch =
     params.classification.intent === "product_recommendation" &&
     params.classification.product_category !== null &&
@@ -149,6 +152,16 @@ export function computeConversationStateTransition(params: {
       last_product_category: productTopic,
     }
     reason = "routine_category_deep_dive"
+  } else if (requestedRoutineLayer !== null) {
+    nextState = {
+      ...nextState,
+      active_topic: "routine",
+      routine_layer: requestedRoutineLayer.layer,
+      pending_offer: requestedRoutineLayer.includesBoth
+        ? "routine_deep_dive"
+        : "routine_other_layer",
+    }
+    reason = requestedRoutineLayer.reason
   } else if (isRoutineClassification(params.classification)) {
     const answeredSlots = mergeAnsweredSlots(
       previousState.answered_slots,
@@ -172,6 +185,10 @@ export function computeConversationStateTransition(params: {
         nextState.routine_layer = "basics"
         nextState.pending_offer = "routine_goals_or_problems"
         reason = "routine_started"
+      } else if (params.assistantAction === "answered_routine_basics") {
+        nextState.routine_layer = "basics"
+        nextState.pending_offer = "routine_goals_or_problems"
+        reason = "routine_basics_answered"
       } else if (answeredSlots.length > 0) {
         nextState.routine_layer = answeredSlots.includes("problem") ? "deep_dive" : "goals"
         nextState.pending_offer = answeredSlots.includes("problem") ? null : "routine_deep_dive"
@@ -288,6 +305,66 @@ function hasProblemOrGoalSignal(lower: string): boolean {
       lower,
     )
   )
+}
+
+function hasGoalSignal(lower: string): boolean {
+  return /\b(ziel|ziele|goal|goals|wunsch|wünsche|wuensche|möchte|moechte|will|richtung|mehr volumen|volumen|glanz|definition|definier|weniger|reduzier|bändigen|baendigen|wachstum)\b/.test(
+    lower,
+  )
+}
+
+function hasProblemLayerSignal(lower: string): boolean {
+  return (
+    hasProblemSignal(lower) ||
+    /\b(problem|probleme|concern|concerns|sorge|sorgen|thema|themen|fixen|lösen|loesen|verbessern|reparieren|angehen)\b/.test(
+      lower,
+    )
+  )
+}
+
+function shouldSelectRoutineLayerFromBasics(state: ConversationState): boolean {
+  return (
+    state.active_topic === "routine" &&
+    state.routine_layer === "basics" &&
+    state.pending_offer === "routine_goals_or_problems" &&
+    state.last_assistant_action === "answered_routine_basics"
+  )
+}
+
+function getRequestedRoutineLayer(message: string): {
+  layer: Exclude<RoutineConversationLayer, null>
+  includesBoth: boolean
+  reason: string
+} | null {
+  const lower = message.trim().toLowerCase()
+  const asksForGoals = hasGoalSignal(lower)
+  const asksForProblems = hasProblemLayerSignal(lower)
+
+  if (asksForGoals && asksForProblems) {
+    return {
+      layer: "goals",
+      includesBoth: true,
+      reason: "routine_goal_and_problem_layers_selected",
+    }
+  }
+
+  if (asksForGoals) {
+    return {
+      layer: "goals",
+      includesBoth: false,
+      reason: "routine_goal_layer_selected",
+    }
+  }
+
+  if (asksForProblems) {
+    return {
+      layer: "problems",
+      includesBoth: false,
+      reason: "routine_problem_layer_selected",
+    }
+  }
+
+  return null
 }
 
 function hasAcknowledgementSignal(lower: string): boolean {

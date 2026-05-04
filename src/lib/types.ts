@@ -578,6 +578,8 @@ export type RoutineSlotAction = "keep" | "adjust" | "add" | "upgrade" | "avoid"
 export type RoutinePlanPhase = "base_wash" | "maintenance" | "occasional"
 export type RoutineSlotKind = "product_slot" | "instruction"
 export type RoutineProductCategory = Exclude<ProductCategory, "routine" | null>
+export type RoutinePriorityLeverSource = "care_risk" | "stated_goal" | "inferred_need"
+export type RoutineLayer = "basics" | "goals" | "problems" | "deep_dive"
 
 export interface RoutineFocus {
   kind: RoutineFocusKind
@@ -646,6 +648,33 @@ export interface RoutineSlotAdvice {
   attached_products?: Product[]
 }
 
+export interface RoutinePriorityLever {
+  id:
+    | "reset-blockage"
+    | "care-product-first"
+    | "mechanical-guardrail"
+    | "exposure-protection"
+    | "scalp-safety"
+    | "dryness-frizz-control"
+    | "stated-goal"
+    | "inferred-need"
+  source: RoutinePriorityLeverSource
+  slot_id: string
+  label: string
+  reason: string
+  score: number
+  topic_ids: RoutineTopicId[]
+  supporting_slot_ids: string[]
+}
+
+export interface RoutineLayerProjection {
+  layer: RoutineLayer
+  visible_slot_ids: string[]
+  priority_lever: RoutinePriorityLever | null
+  requested_category: RoutineProductCategory | null
+  requested_topic_id: RoutineTopicId | null
+}
+
 export interface RoutinePlanSection {
   phase: RoutinePlanPhase
   title: string
@@ -666,6 +695,8 @@ export interface RoutinePlan {
   active_topics: RoutineTopicActivation[]
   compare_cwc_owc: boolean
   sections: RoutinePlanSection[]
+  priority_lever?: RoutinePriorityLever | null
+  layer_projections?: Record<RoutineLayer, RoutineLayerProjection>
   decision_context: RoutineDecisionContext
 }
 

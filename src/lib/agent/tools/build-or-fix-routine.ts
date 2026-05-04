@@ -1,5 +1,15 @@
-import { buildRoutinePlan, deriveRoutineContext } from "@/lib/routines/planner"
-import type { HairProfile, RoutinePlan, RoutineSlotAdvice } from "@/lib/types"
+import {
+  buildRoutinePlan,
+  deriveRoutineContext,
+  projectRoutinePlanForLayer,
+} from "@/lib/routines/planner"
+import type {
+  HairProfile,
+  RoutineLayer,
+  RoutinePlan,
+  RoutineProductCategory,
+  RoutineSlotAdvice,
+} from "@/lib/types"
 
 export type BuildOrFixRoutineAction = "keep" | "add" | "adjust" | "remove"
 export type RoutineObjective = "build_routine" | "fix_routine"
@@ -35,6 +45,8 @@ export interface BuildOrFixRoutineToolInput {
   objective?: RoutineObjective | null
   message?: string | null
   hairProfile: HairProfile | null
+  layer?: RoutineLayer | null
+  requestedCategory?: RoutineProductCategory | null
 }
 
 function normalizeText(value: string | null | undefined): string | null {
@@ -100,6 +112,34 @@ function projectStep(slot: RoutineSlotAdvice): BuildOrFixRoutineStep {
     caveats: slot.caveats,
     fillable: slot.product_linkable,
   }
+}
+
+function findRoutineSlot(plan: RoutinePlan, id: string): RoutineSlotAdvice | null {
+  for (const section of plan.sections) {
+    const slot = section.slots.find((candidate) => candidate.id === id)
+    if (slot) return slot
+  }
+
+  return null
+}
+
+function projectRoutineSteps(params: {
+  plan: RoutinePlan
+  layer: RoutineLayer | null
+  requestedCategory: RoutineProductCategory | null
+}): BuildOrFixRoutineStep[] {
+  if (!params.layer) {
+    return params.plan.sections.flatMap((section) => section.slots.map(projectStep))
+  }
+
+  const projection = projectRoutinePlanForLayer(params.plan, params.layer, {
+    requestedCategory: params.requestedCategory,
+  })
+
+  return projection.visible_slot_ids
+    .map((slotId) => findRoutineSlot(params.plan, slotId))
+    .filter((slot): slot is RoutineSlotAdvice => Boolean(slot))
+    .map(projectStep)
 }
 
 function buildMissingInfo(params: {
@@ -168,6 +208,8 @@ export function projectRoutinePlan(params: {
   hairProfile: HairProfile | null
   message?: string | null
   usesBondBuilder?: boolean
+  layer?: RoutineLayer | null
+  requestedCategory?: RoutineProductCategory | null
 }): BuildOrFixRoutineProjection {
   const objective = normalizeObjective(params.objective)
   const prompt = buildPlannerPrompt({
@@ -189,7 +231,11 @@ export function projectRoutinePlan(params: {
 
   return {
     objective,
-    steps: plan.sections.flatMap((section) => section.slots.map(projectStep)),
+    steps: projectRoutineSteps({
+      plan,
+      layer: params.layer ?? null,
+      requestedCategory: params.requestedCategory ?? null,
+    }),
     missing_info: buildMissingInfo({ objective, hairProfile: params.hairProfile, context }),
     confidence: Math.round((completed / denominator) * 100) / 100,
   }
