@@ -178,6 +178,7 @@ test("runShadowAgentTurn filters fallback products only from the renderer packet
         packet.selected_products?.products.map((product) => product.product_id),
         ["p-1"],
       )
+      assert.equal(JSON.stringify(packet.selected_products).includes("Fallback:"), false)
       assert.equal(packet.selected_products?.comparison_facts, null)
       assert.deepEqual(packet.selected_products?.unsupported_requested_signals, [])
       return "Ich zeige nur den sicheren Treffer."
@@ -287,6 +288,11 @@ test("runShadowAgentTurn preserves leave-in fallback products for caveated compa
         "p-2": ["Format: Creme"],
         "p-3": ["Format: Spray"],
       })
+      assert.equal(
+        packet.selected_products?.products.find((product) => product.product_id === "p-3")?.caveat,
+        "Balance-Richtung ist nur als caveated Option passend.",
+      )
+      assert.equal(JSON.stringify(packet.selected_products).includes("Fallback:"), false)
       return "Ich zeige alle Leave-in-Optionen mit Caveat."
     },
   }
@@ -328,9 +334,9 @@ test("runShadowAgentTurn preserves leave-in fallback products for caveated compa
           {
             rank: 3,
             product_id: "p-3",
-            name: "Fallback Spray",
+            name: "Spray Leave-in",
             brand: null,
-            fit_reason: "Fallback-Treffer.",
+            fit_reason: "Nachgeordneter Treffer.",
             caveat: "Fallback: Balance-Richtung ist nur als caveated Option passend.",
             supported_claims: [],
             unsupported_requested_signals: [],

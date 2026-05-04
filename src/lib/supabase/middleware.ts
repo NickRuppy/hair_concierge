@@ -34,6 +34,8 @@ export async function updateSession(request: NextRequest) {
 
   const { pathname } = request.nextUrl
   const isQuizRetake = pathname === "/quiz" && request.nextUrl.searchParams.get("mode") === "retake"
+  const isForcedAuthLogin =
+    pathname === "/auth" && request.nextUrl.searchParams.get("force") === "login"
   const needsAuthenticatedAppRouting =
     pathname === "/auth" || pathname === "/quiz" || pathname === "/chat" || pathname === "/"
 
@@ -76,6 +78,10 @@ export async function updateSession(request: NextRequest) {
 
   // All checks below require an authenticated user
   if (!user) {
+    return supabaseResponse
+  }
+
+  if (isForcedAuthLogin) {
     return supabaseResponse
   }
 

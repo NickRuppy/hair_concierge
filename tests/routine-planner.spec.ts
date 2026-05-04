@@ -6,6 +6,7 @@ import {
   deriveRoutineContext,
   detectStylingProductKind,
   getRoutineAutofillSlots,
+  projectRoutinePlanForLayer,
 } from "../src/lib/routines/planner"
 import { applyConversationStateToClassification } from "../src/lib/rag/conversation-state"
 import { evaluateRoute } from "../src/lib/rag/router"
@@ -1464,6 +1465,177 @@ test.describe("Routine planner", () => {
 
       expect(plan.active_topics.map((topic) => topic.id)).toContain("brush_tools")
       expect(brushSlot?.rationale.some((line) => line.includes("Spruehflasche"))).toBe(true)
+    })
+  })
+
+  test.describe("Layered routine projections", () => {
+    test("basics projection keeps shampoo, conditioner, and exactly one separate priority lever when available", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          concerns: ["frizz"],
+          goals: ["less_frizz"],
+          current_routine_products: ["shampoo", "conditioner"],
+        }),
+        "Welche Routine empfiehlst du gegen Frizz?",
+      )
+
+      const projection = projectRoutinePlanForLayer(plan, "basics")
+
+      expect(plan.priority_lever?.slot_id).toBe("maintenance-leave-in")
+      expect(projection.priority_lever?.slot_id).toBe("maintenance-leave-in")
+      expect(projection.visible_slot_ids).toEqual([
+        "base-shampoo",
+        "base-conditioner",
+        "maintenance-leave-in",
+      ])
+    })
+
+    test("severe active damage selects care-product-first and starts with the conditioner upgrade", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          concerns: ["breakage", "hair_damage", "split_ends"],
+          cuticle_condition: "rough",
+          chemical_treatment: ["bleached"],
+          protein_moisture_balance: "snaps",
+          current_routine_products: ["shampoo", "conditioner"],
+        }),
+        "Meine Haare sind blondiert, rau und brechen aktiv ab.",
+      )
+
+      expect(plan.priority_lever).toMatchObject({
+        id: "care-product-first",
+        source: "care_risk",
+        slot_id: "base-conditioner",
+      })
+      expect(plan.priority_lever?.supporting_slot_ids).toEqual(
+        expect.arrayContaining([
+          "maintenance-leave-in",
+          "occasional-mask",
+          "occasional-bond-builder",
+        ]),
+      )
+    })
+
+    test("severe active damage still selects care-product-first when reset signal is weak oil usage", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          concerns: ["breakage", "hair_damage", "split_ends"],
+          cuticle_condition: "rough",
+          chemical_treatment: ["bleached"],
+          protein_moisture_balance: "snaps",
+          current_routine_products: ["shampoo", "conditioner", "oil"],
+        }),
+        "Meine Haare sind blondiert, rau und brechen aktiv ab.",
+      )
+
+      expect(plan.priority_lever).toMatchObject({
+        id: "care-product-first",
+        source: "care_risk",
+        slot_id: "base-conditioner",
+      })
+    })
+
+    test("strong reset blockage can preempt cosmetic goals", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          goals: ["shine", "curl_definition"],
+          products_used:
+            "Hartes Wasser, Gel und viele Produkte in Rotation; die Haare fuehlen sich wachsig an und nichts zieht mehr ein.",
+          current_routine_products: ["shampoo", "conditioner", "leave_in", "mask", "oil"],
+        }),
+        "Ich will mehr Glanz, aber meine Haare sind wachsig und beschwert.",
+      )
+
+      expect(plan.priority_lever).toMatchObject({
+        id: "reset-blockage",
+        source: "care_risk",
+        slot_id: "occasional-hair-reset",
+      })
+    })
+
+    test("stated goal wins when no stronger care risk is present", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          hair_texture: "curly",
+          concerns: [],
+          goals: ["curl_definition"],
+          cuticle_condition: "smooth",
+          chemical_treatment: ["natural"],
+          current_routine_products: ["shampoo", "conditioner"],
+        }),
+        "Ich moechte vor allem mehr Definition.",
+      )
+
+      expect(plan.priority_lever).toMatchObject({
+        id: "stated-goal",
+        source: "stated_goal",
+        slot_id: "maintenance-leave-in",
+      })
+    })
+
+    test("goals and problems projections expose only the top two to three relevant levers", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          hair_texture: "curly",
+          concerns: ["dryness", "frizz", "tangling", "hair_damage"],
+          goals: ["less_frizz", "curl_definition", "moisture", "healthier_hair"],
+          cuticle_condition: "rough",
+          chemical_treatment: ["colored"],
+          current_routine_products: ["shampoo", "conditioner"],
+        }),
+        "Welche Routine passt fuer definierte, weniger trockene Locken?",
+      )
+
+      const goalsProjection = projectRoutinePlanForLayer(plan, "goals")
+      const problemsProjection = projectRoutinePlanForLayer(plan, "problems")
+
+      expect(goalsProjection.visible_slot_ids).toHaveLength(3)
+      expect(problemsProjection.visible_slot_ids).toHaveLength(3)
+      expect(goalsProjection.visible_slot_ids).toEqual(
+        expect.arrayContaining(["maintenance-leave-in", "occasional-mask"]),
+      )
+      expect(problemsProjection.visible_slot_ids).toEqual(
+        expect.arrayContaining(["maintenance-leave-in", "occasional-mask"]),
+      )
+      expect(goalsProjection.visible_slot_ids).not.toContain("base-shampoo")
+      expect(goalsProjection.visible_slot_ids).not.toContain("base-conditioner")
+      expect(problemsProjection.visible_slot_ids).not.toContain("base-shampoo")
+      expect(problemsProjection.visible_slot_ids).not.toContain("base-conditioner")
+    })
+
+    test("deep dive projection focuses the requested category follow-up", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          concerns: ["frizz"],
+          goals: ["less_frizz"],
+          current_routine_products: ["shampoo", "conditioner"],
+        }),
+        "Welche Routine passt zu mir?",
+      )
+
+      const projection = projectRoutinePlanForLayer(plan, "deep_dive", {
+        requestedCategory: "leave_in",
+      })
+
+      expect(projection.visible_slot_ids).toEqual(["maintenance-leave-in"])
+      expect(projection.requested_category).toBe("leave_in")
+    })
+
+    test("deep dive projection can focus base wash categories", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          concerns: ["hair_damage"],
+          current_routine_products: ["shampoo", "conditioner"],
+        }),
+        "Welche Routine passt zu mir?",
+      )
+
+      const projection = projectRoutinePlanForLayer(plan, "deep_dive", {
+        requestedCategory: "conditioner",
+      })
+
+      expect(projection.visible_slot_ids).toEqual(["base-conditioner"])
+      expect(projection.requested_category).toBe("conditioner")
     })
   })
 })

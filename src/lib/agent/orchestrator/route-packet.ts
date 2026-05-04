@@ -13,6 +13,7 @@ import type {
   RoutineObjective,
 } from "@/lib/agent/tools/build-or-fix-routine"
 import type { SelectedProductsProjection } from "@/lib/agent/tools/select-products"
+import type { RoutineLayer } from "@/lib/types"
 
 export const AGENT_USER_JOBS = [
   "product_pick",
@@ -98,6 +99,8 @@ export interface AgentRoutePacket {
   guidance_ids: GuidanceId[]
   tool_plan: AgentRouteToolName[]
   routine_objective: RoutineObjective | null
+  routine_layer?: RoutineLayer | null
+  routine_requested_category?: SelectableProductCategory | null
   validation_warnings: string[]
 }
 
@@ -844,6 +847,36 @@ function buildFinalInstructions(
     instructions.push("Bleibe bei Anwendung, Dosierung, Reihenfolge und Technik.")
   }
 
+  if (route.user_job === "routine_structure") {
+    instructions.push(
+      "Beantworte nur die aktuelle Routine-Ebene aus routine_plan.steps; keine weiteren Routine-Bloecke ergaenzen.",
+    )
+    instructions.push(
+      "Nenne keine konkreten Produktkarten oder Produktlisten, solange selected_products leer ist.",
+    )
+
+    if (route.routine_layer === "basics") {
+      instructions.push(
+        "Fuer basics kurz Shampoo und Conditioner erklaeren und nur den hoechsten Zusatzhebel nennen.",
+      )
+      instructions.push(
+        "Schliesse basics mit einer kurzen natuerlichen Frage, ob der Nutzer als Naechstes eher sehen moechte, was ihn seinem Ziel naeherbringt, oder was gegen seine Probleme hilft. Vermeide interne Begriffe wie Ziel-Hebel oder Problem-Hebel.",
+      )
+    } else if (route.routine_layer === "goals") {
+      instructions.push("Fuer goals nur die zielbezogenen Routine-Hebel erklaeren.")
+      instructions.push(
+        "Schliesse goals mit einer kurzen natuerlichen Frage, ob der Nutzer noch konkrete Probleme angehen oder einen Baustein im Detail ansehen moechte.",
+      )
+    } else if (route.routine_layer === "problems") {
+      instructions.push("Fuer problems nur die problembezogenen Routine-Hebel erklaeren.")
+      instructions.push(
+        "Schliesse problems mit einer kurzen natuerlichen Frage, ob der Nutzer noch seine Ziele optimieren oder einen Baustein im Detail ansehen moechte.",
+      )
+    } else if (route.routine_layer === "deep_dive") {
+      instructions.push("Fuer deep_dive fokussiert genau den angefragten Baustein erklaeren.")
+    }
+  }
+
   if (route.user_job === "unsupported_or_unclear") {
     instructions.push(
       "Stelle hoechstens eine gezielte Rueckfrage oder gib sichere Kategorie-Hilfe.",
@@ -968,6 +1001,8 @@ export function buildAgentRoutePacket(params: {
     tool_plan: toolPlan,
     routine_objective:
       userJob === "routine_structure" ? inferRoutineObjective(params.message) : null,
+    routine_layer: userJob === "routine_structure" ? "basics" : null,
+    routine_requested_category: null,
     validation_warnings: warnings,
   }
 }
