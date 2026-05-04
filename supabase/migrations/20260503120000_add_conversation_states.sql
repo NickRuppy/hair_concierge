@@ -33,6 +33,15 @@ create policy "Users can read own conversation states"
     on conversation_states for select
     using (auth.uid() = user_id);
 
+create policy "Users can insert own conversation states"
+    on conversation_states for insert
+    with check (auth.uid() = user_id);
+
+create policy "Users can update own conversation states"
+    on conversation_states for update
+    using (auth.uid() = user_id)
+    with check (auth.uid() = user_id);
+
 create trigger set_updated_at_conversation_states
     before update on conversation_states
     for each row

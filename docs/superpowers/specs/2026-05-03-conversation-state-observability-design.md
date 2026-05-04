@@ -1,6 +1,6 @@
 # Conversation State Observability Design
 
-**Status:** Superseded by Conversation Frame V2 for the next implementation step.
+**Status:** This branch ships V1 conversation-state observability. Conversation Frame V2 is planned separately and is not implemented in `src/` on this branch.
 
 **Current v1 Outcome:** Hair Concierge now has explicit persisted short-term state for routine continuity. This improved routine debugging, but it is too narrow for the next user-testing phase.
 
@@ -12,7 +12,18 @@ Canonical next spec:
 
 Canonical implementation plan:
 
-`/Users/nick/AI_work/hair_conscierge/.worktrees/conversation-state-observability/plans/2026-05-03-conversation-state-observability.md`
+`/Users/nick/AI_work/hair_conscierge/.worktrees/conversation-state-observability/plans/2026-05-03-conversation-frame-v2.md`
+
+## Branch Status Map
+
+| Area | Status |
+| --- | --- |
+| V1 `conversation_state` reducer/store/traces | Implemented in this branch |
+| V1 routine/product continuity guardrails | Implemented in this branch |
+| V1 admin/debug visibility | Implemented in this branch |
+| V2 `ConversationFrame` schema/runtime | Planned only |
+| V2 route + frame structured output | Planned only |
+| V2 final-render answer-style contract | Planned only |
 
 ## Why V1 Is Not Enough
 
