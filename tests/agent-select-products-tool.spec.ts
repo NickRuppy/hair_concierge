@@ -2903,8 +2903,10 @@ test("selectProducts passes explicit dry-shampoo bridge context into category en
   assert.equal(result.decision, "recommended")
   assert.equal(
     result.products[0]?.supported_claims.some((claim) => claim.field === "usage_hint"),
-    true,
+    false,
   )
+  assert.match(result.category_guidance, /reinigt die Kopfhaut nicht/)
+  assert.match(result.category_guidance, /spaeter ausgewaschen/)
 })
 
 test("selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more", async () => {

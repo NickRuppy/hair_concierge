@@ -1238,7 +1238,6 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
         "product_spec",
         meta.format ? `Format: ${meta.format}` : null,
       ),
-      buildClaim("usage_hint", meta.usage_hint, "category_decision", meta.usage_hint),
     ])
   }
 

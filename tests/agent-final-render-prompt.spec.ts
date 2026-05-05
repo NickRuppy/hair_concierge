@@ -66,3 +66,9 @@ test("final render prompt keeps dry shampoo as a narrow bridge with hard-no guar
   assert.match(AGENT_FINAL_RENDER_PROMPT, /Auch ohne selected_products/)
   assert.match(AGENT_FINAL_RENDER_PROMPT, /route\.product_category=dry_shampoo/)
 })
+
+test("final render prompt deduplicates the mandatory dry-shampoo caveat", () => {
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /Trockenshampoo-Caveat/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /nur einmal pro Antwort/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /nicht unter jedem Produkt wiederholen/)
+})
