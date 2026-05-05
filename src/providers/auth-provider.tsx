@@ -4,14 +4,7 @@ import { signOutAction } from "@/app/auth/actions"
 import { createClient } from "@/lib/supabase/client"
 import type { Profile } from "@/lib/types"
 import { type User } from "@supabase/supabase-js"
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
 
 interface AuthContextType {
   user: User | null
@@ -35,28 +28,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const supabase = useMemo(() => createClient(), [])
 
-  const fetchProfile = useCallback(
-    async (userId: string) => {
+  const loadProfile = useCallback(
+    async (userId: string): Promise<Profile | null> => {
       try {
-        const { data } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", userId)
-          .single()
-        setProfile(data)
+        const { data } = await supabase.from("profiles").select("*").eq("id", userId).single()
+        return data
       } catch (err) {
         console.error("Error fetching profile:", err)
-        setProfile(null)
+        return null
       }
     },
-    [supabase]
+    [supabase],
   )
 
   const refreshProfile = useCallback(async () => {
     if (user) {
-      await fetchProfile(user.id)
+      setProfile(await loadProfile(user.id))
     }
-  }, [user, fetchProfile])
+  }, [user, loadProfile])
 
   const signOut = useCallback(async () => {
     setUser(null)
@@ -66,25 +55,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let resolved = false
+    let profileFetchGeneration = 0
+    let profileFetchTimer: ReturnType<typeof setTimeout> | undefined
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       resolved = true
-      try {
-        setUser(prev => {
-          const next = session?.user ?? null
-          if (prev?.id === next?.id) return prev
-          return next
-        })
-        if (session?.user) {
-          await fetchProfile(session.user.id)
-        } else {
-          setProfile(null)
-        }
-      } finally {
-        setLoading(false)
+      const next = session?.user ?? null
+
+      setUser((prev) => {
+        if (prev?.id === next?.id) return prev
+        return next
+      })
+
+      if (profileFetchTimer) clearTimeout(profileFetchTimer)
+
+      if (next) {
+        const generation = ++profileFetchGeneration
+        setProfile(null)
+        profileFetchTimer = setTimeout(() => {
+          void loadProfile(next.id).then((nextProfile) => {
+            if (profileFetchGeneration === generation) setProfile(nextProfile)
+          })
+        }, 0)
+      } else {
+        profileFetchGeneration += 1
+        setProfile(null)
       }
+
+      setLoading(false)
     })
 
     // Safety net: if INITIAL_SESSION never fires, resolve loading
@@ -95,14 +95,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return () => {
       clearTimeout(safety)
+      profileFetchGeneration += 1
+      if (profileFetchTimer) clearTimeout(profileFetchTimer)
       subscription.unsubscribe()
     }
-  }, [supabase, fetchProfile])
+  }, [supabase, loadProfile])
 
   return (
-    <AuthContext.Provider
-      value={{ user, profile, loading, refreshProfile, signOut }}
-    >
+    <AuthContext.Provider value={{ user, profile, loading, refreshProfile, signOut }}>
       {children}
     </AuthContext.Provider>
   )
