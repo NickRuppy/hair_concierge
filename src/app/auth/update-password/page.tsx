@@ -2,37 +2,66 @@
 
 import { createClient } from "@/lib/supabase/client"
 import { useState, useEffect, useMemo } from "react"
-import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
+import {
+  extractSupabaseHashSession,
+  mapPasswordUpdateError,
+  PASSWORD_RESET_LINK_ERROR,
+  type PasswordResetMessage,
+} from "@/lib/auth/password-reset"
 
 const UPDATE_TIMEOUT_MS = 15_000
-const UPDATE_TIMEOUT_MESSAGE =
-  "Speichern dauert zu lange. Bitte prüfe deine Verbindung und versuche es erneut."
-const UPDATE_ERROR_MESSAGE = "Passwort konnte nicht gespeichert werden. Bitte versuche es erneut."
+const UPDATE_TIMEOUT_ERROR: PasswordResetMessage = {
+  message: "Speichern dauert zu lange.",
+  guidance: "Bitte prüfe deine Verbindung und versuche es erneut.",
+}
 
 export default function UpdatePasswordPage() {
-  const supabase = useMemo(() => createClient(), [])
-  const router = useRouter()
+  const supabase = useMemo(() => createClient({ detectSessionInUrl: false }), [])
 
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<PasswordResetMessage | null>(null)
   const [success, setSuccess] = useState(false)
   const [checking, setChecking] = useState(true)
+  const [canUpdatePassword, setCanUpdatePassword] = useState(false)
+  const [recoveryAccessToken, setRecoveryAccessToken] = useState<string | null>(null)
+  const [recoveryEmail, setRecoveryEmail] = useState<string | null>(null)
 
   useEffect(() => {
     let active = true
 
     async function preparePasswordSession() {
       const code = new URLSearchParams(window.location.search).get("code")
+      const hashSession = extractSupabaseHashSession(window.location.hash)
+
+      if (hashSession) {
+        window.history.replaceState({}, "", "/auth/update-password")
+        const { email, error } = await getRecoveryUser(hashSession.access_token)
+        if (!active) return
+
+        if (error) {
+          console.error("Password recovery token validation failed:", error)
+          setError(PASSWORD_RESET_LINK_ERROR)
+          setChecking(false)
+          return
+        }
+
+        setRecoveryAccessToken(hashSession.access_token)
+        setRecoveryEmail(email)
+        setCanUpdatePassword(true)
+        setChecking(false)
+        return
+      }
+
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code)
         if (!active) return
 
         if (error) {
           console.error("Password recovery session exchange failed:", error)
-          setError("Der Link ist abgelaufen oder ungültig. Bitte fordere einen neuen Link an.")
+          setError(PASSWORD_RESET_LINK_ERROR)
           setChecking(false)
           return
         }
@@ -46,8 +75,10 @@ export default function UpdatePasswordPage() {
       if (!active) return
 
       if (!user) {
-        router.replace("/auth?error=link_expired")
+        setError(PASSWORD_RESET_LINK_ERROR)
+        setChecking(false)
       } else {
+        setCanUpdatePassword(true)
         setChecking(false)
       }
     }
@@ -57,17 +88,17 @@ export default function UpdatePasswordPage() {
     return () => {
       active = false
     }
-  }, [supabase, router])
+  }, [supabase])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
     if (password.length < 8) {
-      setError("Passwort muss mindestens 8 Zeichen lang sein.")
+      setError({ message: "Passwort muss mindestens 8 Zeichen lang sein." })
       return
     }
     if (password !== confirmPassword) {
-      setError("Passwörter stimmen nicht überein.")
+      setError({ message: "Passwörter stimmen nicht überein." })
       return
     }
 
@@ -75,21 +106,42 @@ export default function UpdatePasswordPage() {
     setError(null)
 
     try {
-      const { error } = await withUpdateTimeout(supabase.auth.updateUser({ password }))
+      const { error } = await withUpdateTimeout(
+        recoveryAccessToken
+          ? updatePasswordWithRecoveryToken(recoveryAccessToken, password)
+          : supabase.auth.updateUser({ password }),
+      )
 
       if (error) {
         console.error("Update password error:", error)
-        setError(UPDATE_ERROR_MESSAGE)
+        setError(mapPasswordUpdateError(error))
         setLoading(false)
       } else {
+        if (recoveryEmail) {
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: recoveryEmail,
+            password,
+          })
+
+          if (signInError) {
+            console.error("Password recovery sign-in failed:", signInError)
+            setSuccess(true)
+            setLoading(false)
+            setTimeout(() => window.location.assign("/auth?reason=password_updated"), 1200)
+            return
+          }
+        }
+
         setSuccess(true)
         setLoading(false)
-        setTimeout(() => router.replace("/chat"), 1200)
+        setTimeout(() => window.location.assign("/chat"), 1200)
       }
     } catch (err) {
       console.error("Update password failed:", err)
       setError(
-        err instanceof PasswordUpdateTimeoutError ? UPDATE_TIMEOUT_MESSAGE : UPDATE_ERROR_MESSAGE,
+        err instanceof PasswordUpdateTimeoutError
+          ? UPDATE_TIMEOUT_ERROR
+          : mapPasswordUpdateError(err),
       )
       setLoading(false)
     }
@@ -134,41 +186,39 @@ export default function UpdatePasswordPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              {error && (
-                <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                  {error}
-                </div>
-              )}
+              {error && <PasswordResetErrorBanner error={error} />}
 
-              <form onSubmit={handleSubmit} className="space-y-3">
-                <Input
-                  type="password"
-                  placeholder="Neues Passwort (min. 8 Zeichen)"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={loading}
-                  required
-                  minLength={8}
-                  className="h-11"
-                />
-                <Input
-                  type="password"
-                  placeholder="Passwort wiederholen"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  disabled={loading}
-                  required
-                  minLength={8}
-                  className="h-11"
-                />
-                <button
-                  type="submit"
-                  disabled={loading || !password || !confirmPassword}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
-                >
-                  {loading ? "Wird gespeichert..." : "Passwort speichern"}
-                </button>
-              </form>
+              {canUpdatePassword && (
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <Input
+                    type="password"
+                    placeholder="Neues Passwort (min. 8 Zeichen)"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={loading}
+                    required
+                    minLength={8}
+                    className="h-11"
+                  />
+                  <Input
+                    type="password"
+                    placeholder="Passwort wiederholen"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    disabled={loading}
+                    required
+                    minLength={8}
+                    className="h-11"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading || !password || !confirmPassword}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
+                  >
+                    {loading ? "Wird gespeichert..." : "Passwort speichern"}
+                  </button>
+                </form>
+              )}
             </div>
           )}
         </div>
@@ -188,7 +238,7 @@ export default function UpdatePasswordPage() {
 
 class PasswordUpdateTimeoutError extends Error {
   constructor() {
-    super(UPDATE_TIMEOUT_MESSAGE)
+    super(UPDATE_TIMEOUT_ERROR.message)
     this.name = "PasswordUpdateTimeoutError"
   }
 }
@@ -204,4 +254,63 @@ function withUpdateTimeout<T>(promise: Promise<T>): Promise<T> {
   ]).finally(() => {
     if (timeout) clearTimeout(timeout)
   })
+}
+
+async function getRecoveryUser(
+  accessToken: string,
+): Promise<{ email: string | null; error: unknown | null }> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/user`, {
+    headers: {
+      apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+
+  const body = await parseSupabaseBody(response)
+  if (!response.ok) return { email: null, error: body }
+
+  return {
+    email: typeof body.email === "string" ? body.email : null,
+    error: null,
+  }
+}
+
+async function updatePasswordWithRecoveryToken(accessToken: string, password: string) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/user`, {
+    method: "PUT",
+    headers: {
+      apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ password }),
+  })
+
+  if (response.ok) return { error: null }
+  return { error: await parseSupabaseBody(response) }
+}
+
+async function parseSupabaseBody(response: Response) {
+  try {
+    return await response.json()
+  } catch {
+    return { message: response.statusText, code: String(response.status) }
+  }
+}
+
+function PasswordResetErrorBanner({ error }: { error: PasswordResetMessage }) {
+  return (
+    <div className="space-y-3 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
+      <div className="font-medium">{error.message}</div>
+      {error.guidance && <div className="leading-5 text-destructive/90">{error.guidance}</div>}
+      {error.actionHref && error.actionLabel && (
+        <a
+          href={error.actionHref}
+          className="inline-flex w-full items-center justify-center rounded-md border border-destructive/20 bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+        >
+          {error.actionLabel}
+        </a>
+      )}
+    </div>
+  )
 }
