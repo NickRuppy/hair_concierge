@@ -113,6 +113,14 @@ test("auth confirm resolves Supabase redirect_to without overriding ordinary log
   expect(resolveAuthRedirectPath(externalParams, "https://hair.example")).toBe("/chat")
 })
 
+test("auth confirm allows password recovery links to land on password setup", () => {
+  const params = new URLSearchParams({
+    redirect_to: "https://hair.example/auth/confirm?next=/auth/update-password",
+  })
+
+  expect(resolveAuthRedirectPath(params, "https://hair.example")).toBe("/auth/update-password")
+})
+
 test("rejects missing request body before rate limiting or Stripe work", async () => {
   const { calls, deps } = stubDeps()
 

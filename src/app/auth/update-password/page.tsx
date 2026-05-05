@@ -1,12 +1,17 @@
 "use client"
 
 import { createClient } from "@/lib/supabase/client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 
+const UPDATE_TIMEOUT_MS = 15_000
+const UPDATE_TIMEOUT_MESSAGE =
+  "Speichern dauert zu lange. Bitte prüfe deine Verbindung und versuche es erneut."
+const UPDATE_ERROR_MESSAGE = "Passwort konnte nicht gespeichert werden. Bitte versuche es erneut."
+
 export default function UpdatePasswordPage() {
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
   const router = useRouter()
 
   const [password, setPassword] = useState("")
@@ -17,13 +22,41 @@ export default function UpdatePasswordPage() {
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    let active = true
+
+    async function preparePasswordSession() {
+      const code = new URLSearchParams(window.location.search).get("code")
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code)
+        if (!active) return
+
+        if (error) {
+          console.error("Password recovery session exchange failed:", error)
+          setError("Der Link ist abgelaufen oder ungültig. Bitte fordere einen neuen Link an.")
+          setChecking(false)
+          return
+        }
+
+        window.history.replaceState({}, "", "/auth/update-password")
+      }
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!active) return
+
       if (!user) {
-        router.replace("/auth")
+        router.replace("/auth?error=link_expired")
       } else {
         setChecking(false)
       }
-    })
+    }
+
+    preparePasswordSession()
+
+    return () => {
+      active = false
+    }
   }, [supabase, router])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -41,15 +74,24 @@ export default function UpdatePasswordPage() {
     setLoading(true)
     setError(null)
 
-    const { error } = await supabase.auth.updateUser({ password })
+    try {
+      const { error } = await withUpdateTimeout(supabase.auth.updateUser({ password }))
 
-    if (error) {
-      console.error("Update password error:", error)
-      setError("Passwort konnte nicht geändert werden. Bitte versuche es erneut.")
+      if (error) {
+        console.error("Update password error:", error)
+        setError(UPDATE_ERROR_MESSAGE)
+        setLoading(false)
+      } else {
+        setSuccess(true)
+        setLoading(false)
+        setTimeout(() => router.replace("/chat"), 1200)
+      }
+    } catch (err) {
+      console.error("Update password failed:", err)
+      setError(
+        err instanceof PasswordUpdateTimeoutError ? UPDATE_TIMEOUT_MESSAGE : UPDATE_ERROR_MESSAGE,
+      )
       setLoading(false)
-    } else {
-      setSuccess(true)
-      setTimeout(() => router.push("/chat"), 2000)
     }
   }
 
@@ -66,27 +108,29 @@ export default function UpdatePasswordPage() {
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
           <h1 className="font-header text-4xl tracking-tight text-foreground">
-            Passwort zurücksetzen
+            Passwort festlegen
           </h1>
-          <p className="text-lg text-muted-foreground">
-            Wähle ein neues Passwort für dein Konto.
-          </p>
+          <p className="text-lg text-muted-foreground">Wähle ein Passwort für dein Konto.</p>
         </div>
 
         <div className="rounded-xl border bg-card p-8 shadow-sm">
           {success ? (
             <div className="space-y-4">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <svg
+                  className="h-6 w-6 text-green-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
               </div>
               <h2 className="text-lg font-semibold text-foreground">
-                Passwort erfolgreich geändert!
+                Passwort erfolgreich gespeichert!
               </h2>
-              <p className="text-sm text-muted-foreground">
-                Du wirst gleich weitergeleitet...
-              </p>
+              <p className="text-sm text-muted-foreground">Wir leiten dich jetzt weiter...</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -122,7 +166,7 @@ export default function UpdatePasswordPage() {
                   disabled={loading || !password || !confirmPassword}
                   className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
                 >
-                  {loading ? "Wird gespeichert..." : "Passwort ändern"}
+                  {loading ? "Wird gespeichert..." : "Passwort speichern"}
                 </button>
               </form>
             </div>
@@ -140,4 +184,24 @@ export default function UpdatePasswordPage() {
       </div>
     </div>
   )
+}
+
+class PasswordUpdateTimeoutError extends Error {
+  constructor() {
+    super(UPDATE_TIMEOUT_MESSAGE)
+    this.name = "PasswordUpdateTimeoutError"
+  }
+}
+
+function withUpdateTimeout<T>(promise: Promise<T>): Promise<T> {
+  let timeout: ReturnType<typeof setTimeout> | undefined
+
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) => {
+      timeout = setTimeout(() => reject(new PasswordUpdateTimeoutError()), UPDATE_TIMEOUT_MS)
+    }),
+  ]).finally(() => {
+    if (timeout) clearTimeout(timeout)
+  })
 }
