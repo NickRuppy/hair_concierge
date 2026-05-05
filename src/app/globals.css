@@ -304,6 +304,74 @@
   transform-origin: center center;
 }
 
+@keyframes statusFade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-status-fade {
+  animation: statusFade 0.28s ease-out both;
+}
+
+@keyframes statusShimmer {
+  from {
+    background-position: 140% 50%;
+  }
+  to {
+    background-position: -60% 50%;
+  }
+}
+
+.animate-status-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    hsl(var(--muted-foreground)) 0%,
+    hsl(var(--muted-foreground)) 28%,
+    var(--brand-plum-dark) 40%,
+    var(--brand-coral) 48%,
+    var(--brand-plum-darkest) 56%,
+    hsl(var(--muted-foreground)) 70%,
+    hsl(var(--muted-foreground)) 100%
+  );
+  background-position: 150% 50%;
+  background-size: 220% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 4px rgba(var(--brand-plum-rgb), 0.16));
+  animation: statusShimmer 2.8s ease-in-out infinite;
+}
+
+@keyframes loadingEllipsisPulse {
+  0%, 100% {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-1px);
+  }
+}
+
+.animate-loading-ellipsis span {
+  animation: loadingEllipsisPulse 0.9s ease-in-out infinite;
+}
+
+.animate-loading-ellipsis span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.animate-loading-ellipsis span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
 /* Prose overrides for light background */
 .prose {
   --tw-prose-body: var(--text-body);
@@ -346,9 +414,18 @@
   .animate-fade-in-up-fast,
   .animate-scale-in,
   .animate-comb-sway,
+  .animate-status-fade,
+  .animate-status-shimmer,
+  .animate-loading-ellipsis span,
   .animate-slide-in-left,
   .animate-slide-out-left {
     animation: none !important;
+  }
+
+  .animate-status-shimmer {
+    background: none !important;
+    color: hsl(var(--muted-foreground));
+    -webkit-text-fill-color: currentColor;
   }
 }
 
