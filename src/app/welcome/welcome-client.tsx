@@ -3,7 +3,9 @@
 import { CheckCircle, Mail } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState, type FormEvent } from "react"
+import { PasswordPolicyChecklist } from "@/components/auth/password-policy-checklist"
 import { Input } from "@/components/ui/input"
+import { validatePasswordDraft } from "@/lib/auth/password-policy"
 import { createClient } from "@/lib/supabase/client"
 
 interface WelcomeClientProps {
@@ -38,13 +40,9 @@ export function WelcomeClient({ email, sessionId }: WelcomeClientProps) {
     setMessage(null)
     setHighlightMagicLink(false)
 
-    if (password.length < 8) {
-      setMessage("Passwort muss mindestens 8 Zeichen lang sein.")
-      return
-    }
-
-    if (password !== confirmPassword) {
-      setMessage("Passwörter stimmen nicht überein.")
+    const validation = validatePasswordDraft(password, confirmPassword)
+    if (!validation.ok) {
+      setMessage(validation.message)
       return
     }
 
@@ -204,6 +202,11 @@ export function WelcomeClient({ email, sessionId }: WelcomeClientProps) {
                     className="h-11"
                   />
                 </div>
+                <PasswordPolicyChecklist
+                  password={password}
+                  confirmPassword={confirmPassword}
+                  context="create"
+                />
               </div>
 
               <button

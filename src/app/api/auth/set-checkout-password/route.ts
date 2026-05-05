@@ -8,6 +8,7 @@ import {
   releaseCheckoutActivationClaim,
 } from "@/lib/auth/checkout-activation-claim"
 import { checkRateLimit, SET_CHECKOUT_PASSWORD_RATE_LIMIT } from "@/lib/rate-limit"
+import { validatePasswordDraft } from "@/lib/auth/password-policy"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import {
   CheckoutActivationError,
@@ -79,7 +80,8 @@ export async function handleSetCheckoutPassword(
   if (!parsed.ok) return { status: 400, body: { error: INVALID_REQUEST_ERROR } }
 
   const { sessionId, password } = parsed
-  if (password.length < 8) return { status: 400, body: { error: WEAK_PASSWORD_ERROR } }
+  const passwordValidation = validatePasswordDraft(password, password)
+  if (!passwordValidation.ok) return { status: 400, body: { error: WEAK_PASSWORD_ERROR } }
 
   const rateCheck = await deps.checkRateLimit(sessionId, SET_CHECKOUT_PASSWORD_RATE_LIMIT)
   if (!rateCheck.allowed) {

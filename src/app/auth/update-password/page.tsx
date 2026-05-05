@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client"
 import { useState, useEffect, useMemo } from "react"
+import { PasswordPolicyChecklist } from "@/components/auth/password-policy-checklist"
 import { Input } from "@/components/ui/input"
 import {
   extractSupabaseHashSession,
@@ -9,6 +10,7 @@ import {
   PASSWORD_RESET_LINK_ERROR,
   type PasswordResetMessage,
 } from "@/lib/auth/password-reset"
+import { validatePasswordDraft } from "@/lib/auth/password-policy"
 
 const UPDATE_TIMEOUT_MS = 15_000
 const UPDATE_TIMEOUT_ERROR: PasswordResetMessage = {
@@ -93,12 +95,9 @@ export default function UpdatePasswordPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    if (password.length < 8) {
-      setError({ message: "Passwort muss mindestens 8 Zeichen lang sein." })
-      return
-    }
-    if (password !== confirmPassword) {
-      setError({ message: "Passwörter stimmen nicht überein." })
+    const validation = validatePasswordDraft(password, confirmPassword)
+    if (!validation.ok) {
+      setError({ message: validation.message })
       return
     }
 
@@ -209,6 +208,11 @@ export default function UpdatePasswordPage() {
                     required
                     minLength={8}
                     className="h-11"
+                  />
+                  <PasswordPolicyChecklist
+                    password={password}
+                    confirmPassword={confirmPassword}
+                    context="reset"
                   />
                   <button
                     type="submit"
