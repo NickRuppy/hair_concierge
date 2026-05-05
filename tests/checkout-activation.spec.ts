@@ -108,6 +108,7 @@ function stubDeps() {
         async retrieve(id: string) {
           return {
             id,
+            status: "active",
             items: {
               data: [
                 {
@@ -403,6 +404,51 @@ test("ensureCheckoutAccount still resolves when linkQuizToProfile rejects", asyn
   ).resolves.toMatchObject({ userId: "user-1", canSetInitialPassword: true })
 
   expect(profiles["user-1"].subscription_status).toBe("active")
+})
+
+test("ensureCheckoutAccount rejects inactive checkout subscriptions", async () => {
+  const { deps, profiles } = stubDeps()
+  deps.stripe.subscriptions.retrieve = async (id: string) =>
+    ({
+      id,
+      status: "canceled",
+      items: {
+        data: [
+          {
+            price: { recurring: { interval: "month", interval_count: 1 } },
+            current_period_end: 1_800_000_000,
+          },
+        ],
+      },
+    }) as any
+
+  await expect(ensureCheckoutAccount(checkoutSession(), deps)).rejects.toMatchObject({
+    code: "checkout_subscription_inactive",
+  })
+  expect(Object.values(profiles)).toHaveLength(0)
+})
+
+test("ensureCheckoutAccount rejects expired checkout subscriptions", async () => {
+  const { deps, profiles } = stubDeps()
+  deps.now = () => new Date("2026-05-05T10:00:00.000Z")
+  deps.stripe.subscriptions.retrieve = async (id: string) =>
+    ({
+      id,
+      status: "active",
+      items: {
+        data: [
+          {
+            price: { recurring: { interval: "month", interval_count: 1 } },
+            current_period_end: 1_700_000_000,
+          },
+        ],
+      },
+    }) as any
+
+  await expect(ensureCheckoutAccount(checkoutSession(), deps)).rejects.toMatchObject({
+    code: "checkout_subscription_expired",
+  })
+  expect(Object.values(profiles)).toHaveLength(0)
 })
 
 test("verifyCheckoutSessionForActivation returns complete paid sessions", async () => {
