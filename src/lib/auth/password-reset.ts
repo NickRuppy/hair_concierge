@@ -52,6 +52,21 @@ export function mapPasswordUpdateError(error: unknown): PasswordResetMessage {
   }
 
   if (
+    combined.includes("same_password") ||
+    combined.includes("same") ||
+    combined.includes("different from") ||
+    combined.includes("different password")
+  ) {
+    return {
+      message: "Dieses Passwort ist bereits für dein Konto gesetzt.",
+      guidance: "Melde dich mit diesem Passwort an oder wähle ein anderes Passwort.",
+      actionHref: "/auth",
+      actionLabel: "Zur Anmeldung",
+    }
+  }
+
+  if (
+    combined.includes("weak_password") ||
     combined.includes("weak") ||
     combined.includes("password_strength") ||
     combined.includes("password should be") ||
@@ -59,22 +74,7 @@ export function mapPasswordUpdateError(error: unknown): PasswordResetMessage {
   ) {
     return {
       message: "Dieses Passwort ist zu schwach.",
-      guidance:
-        "Wähle mindestens 8 Zeichen und kombiniere am besten Buchstaben, Zahlen und ein Sonderzeichen.",
-    }
-  }
-
-  if (
-    combined.includes("same") ||
-    combined.includes("different from") ||
-    combined.includes("different password")
-  ) {
-    return {
-      message: "Dieses Passwort ist bereits für dein Konto gesetzt.",
-      guidance:
-        "Wähle ein anderes Passwort oder melde dich direkt mit deinem bestehenden Passwort an.",
-      actionHref: "/auth",
-      actionLabel: "Zur Anmeldung",
+      guidance: "Wähle ein Passwort mit mindestens 8 Zeichen.",
     }
   }
 
@@ -96,15 +96,23 @@ function getErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message
   if (typeof error === "object" && error && "message" in error) {
     const message = (error as { message?: unknown }).message
+    if (typeof message === "string") return message
+  }
+  if (typeof error === "object" && error && "msg" in error) {
+    const message = (error as { msg?: unknown }).msg
     return typeof message === "string" ? message : ""
   }
   return ""
 }
 
 function getErrorCode(error: unknown): string {
+  if (typeof error === "object" && error && "error_code" in error) {
+    const code = (error as { error_code?: unknown }).error_code
+    if (typeof code === "string") return code
+  }
   if (typeof error === "object" && error && "code" in error) {
     const code = (error as { code?: unknown }).code
-    return typeof code === "string" ? code : ""
+    return typeof code === "string" || typeof code === "number" ? String(code) : ""
   }
   return ""
 }
