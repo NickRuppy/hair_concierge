@@ -1,7 +1,11 @@
 import { config as loadEnv } from "dotenv"
 import { createClient } from "@supabase/supabase-js"
 
-import type { ProductDryShampooSpecs } from "@/lib/dry-shampoo/constants"
+import {
+  DRY_SHAMPOO_DB_CATEGORIES,
+  isDryShampooCategory,
+  type ProductDryShampooSpecs,
+} from "@/lib/dry-shampoo/constants"
 
 loadEnv({ path: ".env.local" })
 
@@ -25,6 +29,12 @@ type DryShampooCatalogRow = {
 }
 
 const CATEGORY = "Trockenshampoo"
+const DRY_SHAMPOO_CATEGORY_ALIASES = [...DRY_SHAMPOO_DB_CATEGORIES]
+
+export const STALE_DRY_SHAMPOO_DEACTIVATION_PATCH = {
+  is_active: false,
+  lifecycle_status: "discontinued",
+} as const
 
 const DRY_SHAMPOO_SEED_PRODUCTS: DryShampooSeedProduct[] = [
   {
@@ -197,7 +207,7 @@ const PLANNED_PRODUCT_KEYS = new Set(DRY_SHAMPOO_SEED_PRODUCTS.map(productKey))
 
 export function findUnexpectedActiveDryShampooProducts(products: DryShampooCatalogRow[]): string[] {
   return products
-    .filter((product) => product.category === CATEGORY && product.is_active === true)
+    .filter((product) => isDryShampooCategory(product.category) && product.is_active === true)
     .filter((product) => !PLANNED_PRODUCT_KEYS.has(productKey(product)))
     .map((product) => product.id)
 }
@@ -288,7 +298,7 @@ async function main() {
   const { data: activeDryShampoos, error: activeLookupError } = await supabase
     .from("products")
     .select("id,brand,name,category,is_active")
-    .eq("category", CATEGORY)
+    .in("category", DRY_SHAMPOO_CATEGORY_ALIASES)
     .eq("is_active", true)
 
   if (activeLookupError) throw activeLookupError
@@ -300,10 +310,7 @@ async function main() {
   if (unexpectedActiveIds.length > 0) {
     const { error: deactivateError } = await supabase
       .from("products")
-      .update({
-        is_active: false,
-        lifecycle_status: "retired",
-      })
+      .update(STALE_DRY_SHAMPOO_DEACTIVATION_PATCH)
       .in("id", unexpectedActiveIds)
 
     if (deactivateError) throw deactivateError
@@ -313,7 +320,7 @@ async function main() {
   const { count: activeCount, error: countError } = await supabase
     .from("products")
     .select("id", { count: "exact", head: true })
-    .eq("category", CATEGORY)
+    .in("category", DRY_SHAMPOO_CATEGORY_ALIASES)
     .eq("is_active", true)
 
   if (countError) throw countError

@@ -514,14 +514,20 @@ function inferDirectProductCategoryFromMessage(
     /\b(?:haar)?kuren?\b/.test(normalized) ||
     /\b(?:protein|feuchtigkeits)masken?\b/.test(normalized)
   const mentionsOil = /\b(?:haar)?(?:oel\w*|ol(?:e|s|ig\w*)?)\b|\boils?\b/.test(normalized)
-  const mentionsOtherCategory =
-    mentionsOil ||
-    /\bleave[-\s]?in\b|\bleavein\b|\bconditioner\b|\bsp(?:u|ue)lung\w*\b|\bshampoos?\b|\bbond\s*builder\w*\b|\bbondbuilder\w*\b|\bbond\s*repair\b|\bk18\b|\bkr18\b|\bolaplex\b|\bepres\b/.test(
-      normalized,
-    )
-
   const mentionsDryShampoo =
     /\btrockenshampoo\w*\b|\btrocken[-\s]*shampoo\w*\b|\bdry[-\s]*shampoo\w*\b/.test(normalized)
+  const normalizedWithoutDryShampooTerms = normalized.replace(
+    /\btrockenshampoo\w*\b|\btrocken[-\s]*shampoo\w*\b|\bdry[-\s]*shampoo\w*\b/g,
+    " ",
+  )
+  const mentionsGenericShampoo = /\bshampoos?\b/.test(normalizedWithoutDryShampooTerms)
+  const mentionsOtherCategory =
+    mentionsOil ||
+    mentionsGenericShampoo ||
+    /\bleave[-\s]?in\b|\bleavein\b|\bconditioner\b|\bsp(?:u|ue)lung\w*\b|\bbond\s*builder\w*\b|\bbondbuilder\w*\b|\bbond\s*repair\b|\bk18\b|\bkr18\b|\bolaplex\b|\bepres\b/.test(
+      normalizedWithoutDryShampooTerms,
+    )
+
   const dryShampooBetweenWash =
     /\btag\s*2\b|\bday\s*2\b|\bzweiter\s+tag\b|\bbetween[-\s]?wash\b|\bzwischen\s+(?:den\s+)?(?:waeschen|waschen)\b/.test(
       normalized,

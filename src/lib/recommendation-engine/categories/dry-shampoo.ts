@@ -37,12 +37,8 @@ function profileHardNoReasons(profile: NormalizedProfile): string[] {
     reasons.push("dry_shampoo_scalp_issue_hard_no")
   }
 
-  if (profile.concerns.includes("hair_loss") || profile.concerns.includes("breakage")) {
-    reasons.push(
-      profile.concerns.includes("hair_loss")
-        ? "dry_shampoo_scalp_issue_hard_no"
-        : "dry_shampoo_dry_breakage_hard_no",
-    )
+  if (profile.concerns.includes("hair_loss")) {
+    reasons.push("dry_shampoo_scalp_issue_hard_no")
   }
 
   const currentUse = profile.routineInventory.dry_shampoo?.frequencyBand ?? null

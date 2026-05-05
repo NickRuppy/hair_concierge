@@ -320,12 +320,16 @@ function inferDryShampooSignalsFromMessage(message: string): {
     /\btrockenshampoo\w*\b|\btrocken[-\s]*shampoo\w*\b|\bdry[-\s]*shampoo\w*\b/g,
     " ",
   )
-
-  if (
-    /\bbruch\w*\b|\bbruechig\w*\b|\bbruchig\w*\b|\bsproede\w*\b|\btrocken(?:e|er|es|en|em)?\b/.test(
+  const breakageDominant =
+    /\bbruch\w*\b|\bbruechig\w*\b|\bbruchig\w*\b|\bsproede\w*\b|\bsprode\w*\b|\bbrech(?:e|en|t)?\w*\b|\bbricht\b/.test(
       normalizedWithoutDryShampooTerms,
     )
-  ) {
+  const dryBrittleCombo =
+    /\btrocken(?:e|er|es|en|em)?\b.{0,60}\b(?:bruch\w*|bruechig\w*|bruchig\w*|sproede\w*|sprode\w*|brech\w*|bricht)\b|\b(?:bruch\w*|bruechig\w*|bruchig\w*|sproede\w*|sprode\w*|brech\w*|bricht)\b.{0,60}\btrocken(?:e|er|es|en|em)?\b/.test(
+      normalizedWithoutDryShampooTerms,
+    )
+
+  if (breakageDominant || dryBrittleCombo) {
     caution.add("dry_shampoo_dry_breakage_hard_no")
   }
 

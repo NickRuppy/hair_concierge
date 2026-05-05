@@ -182,6 +182,8 @@ test("buildAgentRoutePacket infers shampoo for direct selection and comparison w
 test("buildAgentRoutePacket infers dry shampoo for explicit bridge product asks", () => {
   const prompts = [
     "Ich kann heute nicht waschen, mein Ansatz ist fettig. Welches Trockenshampoo?",
+    "Welches Trocken-Shampoo passt?",
+    "Which dry shampoo should I buy?",
     "Ich brauche Volumen am Ansatz fuer Tag 2.",
     "Ich will kein Aerosol-Spray, aber brauche heute eine kurze Auffrischung am Ansatz.",
     "Ich habe dunkle Haare und bekomme von Trockenshampoo immer weissen Schleier.",
