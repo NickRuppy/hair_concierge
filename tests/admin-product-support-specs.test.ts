@@ -83,12 +83,15 @@ test("product schema requires deep-cleansing specs for deep-cleansing products",
   assert.ok(parsed.error.flatten().fieldErrors.deep_cleansing_shampoo_specs)
 })
 
-test("product schema restricts dry shampoo scalp focus to oily or balanced", () => {
+test("product schema restricts dry shampoo to supported bridge spec fields", () => {
   const parsed = productSchema.safeParse(
     buildBaseProduct({
       category: "Trockenshampoo",
       dry_shampoo_specs: {
-        scalp_type_focus: "dry",
+        primary_effect: "deep_cleanse",
+        hair_color_fit: "universal",
+        scalp_sensitivity_fit: "normal_only",
+        format: "aerosol_spray",
       },
     }),
   )

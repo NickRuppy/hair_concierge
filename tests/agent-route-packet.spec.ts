@@ -179,6 +179,72 @@ test("buildAgentRoutePacket infers shampoo for direct selection and comparison w
   assert.deepEqual(alternatePacket.validation_warnings, [])
 })
 
+test("buildAgentRoutePacket infers dry shampoo for explicit bridge product asks", () => {
+  const prompts = [
+    "Ich kann heute nicht waschen, mein Ansatz ist fettig. Welches Trockenshampoo?",
+    "Ich brauche Volumen am Ansatz fuer Tag 2.",
+    "Ich will kein Aerosol-Spray, aber brauche heute eine kurze Auffrischung am Ansatz.",
+    "Ich habe dunkle Haare und bekomme von Trockenshampoo immer weissen Schleier.",
+  ]
+
+  for (const message of prompts) {
+    const packet = buildAgentRoutePacket({
+      message,
+      userContext: createContext(),
+      classification: createClassification({
+        user_job: "product_pick",
+        product_category: null,
+      }),
+    })
+
+    assert.equal(packet.product_category, "dry_shampoo", message)
+    assert.deepEqual(packet.tool_plan, ["select_products"], message)
+    assert.deepEqual(packet.validation_warnings, [], message)
+  }
+})
+
+test("buildAgentRoutePacket does not infer dry shampoo from oily scalp alone", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Ich habe fettige Kopfhaut, was soll ich tun?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "troubleshoot",
+      product_category: null,
+      concerns: ["oily_roots"],
+    }),
+  })
+
+  assert.equal(packet.product_category, null)
+  assert.deepEqual(packet.tool_plan, [])
+  assert.deepEqual(packet.validation_warnings, [])
+})
+
+test("buildAgentRoutePacket keeps dry-shampoo troubleshooting mentions guidance-only", () => {
+  const inferredPacket = buildAgentRoutePacket({
+    message: "Trockenshampoo hat nicht geholfen, mein Ansatz sieht trotzdem fettig aus.",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "troubleshoot",
+      product_category: null,
+      concerns: ["oily_roots"],
+    }),
+  })
+  const classifiedPacket = buildAgentRoutePacket({
+    message: "Trockenshampoo hat nicht geholfen, mein Ansatz sieht trotzdem fettig aus.",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "troubleshoot",
+      product_category: "dry_shampoo",
+      concerns: ["oily_roots"],
+    }),
+  })
+
+  assert.equal(inferredPacket.product_category, "dry_shampoo")
+  assert.deepEqual(inferredPacket.tool_plan, [])
+  assert.equal(classifiedPacket.product_category, "dry_shampoo")
+  assert.deepEqual(classifiedPacket.tool_plan, [])
+})
+
 test("buildAgentRoutePacket infers leave-in for replacement comparisons", () => {
   const packet = buildAgentRoutePacket({
     message:

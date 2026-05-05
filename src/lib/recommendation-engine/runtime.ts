@@ -43,7 +43,7 @@ export function buildRecommendationEngineRuntimeFromPersistence(
   const damage = buildDamageAssessment(normalized)
   const careNeeds = buildCareNeedAssessment(normalized, damage)
   const reset = buildResetAssessment(normalized, requestContext)
-  const plan = buildInterventionPlan(normalized, damage, careNeeds, reset)
+  const plan = buildInterventionPlan(normalized, damage, careNeeds, reset, requestContext)
   const categories = buildCategoryRecommendationSet(
     normalized,
     damage,

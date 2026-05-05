@@ -22,6 +22,13 @@ export function emptyRecommendationRequestContext(): RecommendationRequestContex
     leaveInRequestedFormats: [],
     oilPurpose: null,
     oilNoRecommendationReason: null,
+    dryShampooBridgeNeedReasonCodes: [],
+    dryShampooCautionReasonCodes: [],
+    dryShampooPrimaryEffectRequest: null,
+    dryShampooHairColorFitRequest: null,
+    dryShampooRequiresSensitiveFit: false,
+    dryShampooPreferredFormat: null,
+    dryShampooAvoidAerosol: false,
   }
 }
 
@@ -214,6 +221,154 @@ function inferLeaveInSeparateHeatProtectantMentionedFromMessage(message: string)
   )
 }
 
+function inferDryShampooSignalsFromMessage(message: string): {
+  bridgeNeedReasonCodes: string[]
+  cautionReasonCodes: string[]
+  primaryEffectRequest: RecommendationRequestContext["dryShampooPrimaryEffectRequest"]
+  hairColorFitRequest: RecommendationRequestContext["dryShampooHairColorFitRequest"]
+  requiresSensitiveFit: boolean
+  preferredFormat: RecommendationRequestContext["dryShampooPreferredFormat"]
+  avoidAerosol: boolean
+} {
+  const normalized = normalizeMessage(message)
+  const bridge = new Set<string>()
+  const caution = new Set<string>()
+
+  const mentionsDryShampoo =
+    /\btrockenshampoo\w*\b|\btrocken[-\s]*shampoo\w*\b|\bdry[-\s]*shampoo\w*\b/.test(normalized)
+  const cannotWashToday =
+    /\b(?:kann|schaffe|geht)\b.{0,50}\b(?:heute|jetzt|gerade)\b.{0,50}\b(?:nicht\s+)?wasch\w*\b|\bkeine\s+zeit\b.{0,50}\bwasch\w*\b/.test(
+      normalized,
+    )
+  const betweenWash =
+    /\bbetween[-\s]?wash\b|\bzwischen\s+(?:den\s+)?waeschen\b|\bzwischen\s+(?:den\s+)?waschen\b|\btag\s*2\b|\bday\s*2\b|\bzweiter\s+tag\b|\bauffrisch\w*\b|\brefresh\w*\b|\bansatz\b.{0,40}\bfettig\w*\b|\bfettig\w*\b.{0,40}\bansatz\b/.test(
+      normalized,
+    )
+  const emergency =
+    /\bnotfall\w*\b|\bemergency\b|\blast[-\s]?minute\b|\bkurzfristig\w*\b|\bschnell\w*\b|\breise\w*\b|\bunterwegs\b/.test(
+      normalized,
+    )
+  const postWorkout = /\bsport\b|\bworkout\b|\btraining\b|\bgeschwitzt\w*\b/.test(normalized)
+  const volumeTexture =
+    /\bvolumen\b|\bgrip\b|\bgriff\b|\btextur\w*\b|\bstand\b.{0,30}\bansatz\b|\bansatzvolumen\b/.test(
+      normalized,
+    )
+  const colorCast =
+    /\bweiss(?:er|e|en)?\s+schleier\b|\bwhite\s*cast\b|\bgrau(?:er|e|en)?\s+schleier\b|\brueckstaend\w*\b|\bruckstaend\w*\b/.test(
+      normalized,
+    )
+  const routineNeedQuestion =
+    /\b(?:routine|aufnehmen|einbauen|brauche\s+ich|sollte\s+ich|soll\s+ich)\b/.test(normalized)
+  const directDryShampooProductAsk =
+    mentionsDryShampoo &&
+    !routineNeedQuestion &&
+    /\b(?:welch\w*|empfiehl\w*|empfehl\w*|passt|nehmen|kaufen)\b/.test(normalized)
+
+  if (directDryShampooProductAsk) bridge.add("dry_shampoo_explicit_bridge_request")
+  if (betweenWash || cannotWashToday) bridge.add("dry_shampoo_between_wash_bridge_needed")
+  if (cannotWashToday || emergency) bridge.add("dry_shampoo_emergency_refresh")
+  if (postWorkout) bridge.add("dry_shampoo_post_workout_refresh")
+  if (volumeTexture) bridge.add("dry_shampoo_volume_texture_request")
+  if (colorCast) bridge.add("dry_shampoo_color_cast_concern")
+
+  if (
+    /\bjuck\w*\b|\bjuckreiz\b|\bschuppen\b|\bschupp\w*\b|\bgereizt\w*\b|\birrit\w*\b|\bbrenn\w*\b|\bschmerz\w*\b|\bwund\w*\b|\bpickel\w*\b|\bbeulen\w*\b|\bakne\b|\bhaarausfall\b|\bshedding\b/.test(
+      normalized,
+    )
+  ) {
+    caution.add("dry_shampoo_scalp_issue_hard_no")
+  }
+
+  if (
+    /\bbelegt\w*\b|\bwachsig\w*\b|\bklebrig\w*\b|\bproduktig\w*\b|\bbuildup\b|\bbuild[-\s]?up\b|\bablager\w*\b/.test(
+      normalized,
+    )
+  ) {
+    caution.add("dry_shampoo_buildup_hard_no")
+  }
+
+  const frequentDryShampooUse =
+    /\b(?:jeden|fast\s+jeden|taeglich|taglich)\s+tag\b.{0,60}\btrockenshampoo\b|\btrockenshampoo\b.{0,60}\b(?:jeden|fast\s+jeden|taeglich|taglich)\s+tag\b/.test(
+      normalized,
+    ) ||
+    (mentionsDryShampoo &&
+      (/\b(?:3|4|drei|vier)\s*(?:-|bis)?\s*(?:4|vier)?\s*x\b.{0,30}\b(?:pro\s+)?woche\b/.test(
+        normalized,
+      ) ||
+        /\bmehrmals\b.{0,20}\b(?:pro\s+)?woche\b/.test(normalized) ||
+        /\b(?:alle\s+paar|alle\s+2|alle\s+zwei)\s+tage\b/.test(normalized) ||
+        /\b(?:3|4|drei|vier)\s*mal\b.{0,30}\b(?:pro\s+)?woche\b/.test(normalized)))
+
+  if (frequentDryShampooUse) {
+    caution.add("dry_shampoo_frequent_use_reset_needed")
+  }
+
+  const normalizedWithoutDryShampooTerms = normalized.replace(
+    /\btrockenshampoo\w*\b|\btrocken[-\s]*shampoo\w*\b|\bdry[-\s]*shampoo\w*\b/g,
+    " ",
+  )
+
+  if (
+    /\bbruch\w*\b|\bbruechig\w*\b|\bbruchig\w*\b|\bsproede\w*\b|\btrocken(?:e|er|es|en|em)?\b/.test(
+      normalizedWithoutDryShampooTerms,
+    )
+  ) {
+    caution.add("dry_shampoo_dry_breakage_hard_no")
+  }
+
+  const avoidAerosol =
+    /\bkein(?:e|en)?\s+(?:spray|aerosol)\b|\bohne\s+(?:spray|aerosol)\b|\bnicht\s+sprueh\w*\b|\bnicht\s+spruh\w*\b|\baerosol\b.{0,30}\b(?:meiden|vermeiden)\b/.test(
+      normalized,
+    )
+
+  if (avoidAerosol) {
+    caution.add("dry_shampoo_avoid_aerosol_format_request")
+  }
+
+  if (
+    /\basthma\b|\batem\w*\b|\blunge\w*\b|\binhalier\w*\b|\bduftstoff\w*\b|\ballerg\w*\b/.test(
+      normalized,
+    )
+  ) {
+    caution.add("dry_shampoo_respiratory_aerosol_caution")
+  }
+
+  if (/\bkind\b|\bkleinkind\b|\bbaby\b/.test(normalized)) {
+    caution.add("dry_shampoo_child_context_hard_no")
+  }
+
+  let hairColorFitRequest: RecommendationRequestContext["dryShampooHairColorFitRequest"] = null
+  if (/\bblond\w*\b|\bhell\w*\b/.test(normalized)) hairColorFitRequest = "blonde_light"
+  if (/\bbraun\w*\b|\bbruenett\w*\b|\bbrunett\w*\b/.test(normalized)) hairColorFitRequest = "brown"
+  if (/\bdunkel\w*\b|\bschwarz\w*\b/.test(normalized)) hairColorFitRequest = "dark"
+  if (!hairColorFitRequest && colorCast) hairColorFitRequest = "universal"
+
+  const sensitive = /\bsensibel\w*\b|\bempfindlich\w*\b|\bsensitive\b/.test(normalized)
+  const preferredFormat = avoidAerosol
+    ? "foam_or_liquid"
+    : /\bpuder\b|\bpowder\b/.test(normalized)
+      ? "powder"
+      : /\bschaum\b|\bfoam\b|\bliquid\b|\bfluessig\w*\b|\bflussig\w*\b/.test(normalized)
+        ? "foam_or_liquid"
+        : null
+
+  return {
+    bridgeNeedReasonCodes: Array.from(bridge),
+    cautionReasonCodes: Array.from(caution),
+    primaryEffectRequest: volumeTexture
+      ? "volume_texture"
+      : sensitive
+        ? "sensitive_refresh"
+        : mentionsDryShampoo || betweenWash || cannotWashToday || emergency || postWorkout
+          ? "classic_refresh"
+          : null,
+    hairColorFitRequest,
+    requiresSensitiveFit: sensitive,
+    preferredFormat,
+    avoidAerosol,
+  }
+}
+
 export function buildRecommendationRequestContext(params: {
   requestedCategory: EngineCategoryId | null
   message: string
@@ -232,6 +387,7 @@ export function buildRecommendationRequestContext(params: {
     requestedCategory === "deep_cleansing_shampoo" || requestedCategory === "routine"
       ? inferResetSignalsFromMessage(message)
       : inferResetSignalsFromMessage(message)
+  const dryShampooSignals = inferDryShampooSignalsFromMessage(message)
 
   return {
     requestedCategory,
@@ -263,5 +419,12 @@ export function buildRecommendationRequestContext(params: {
       requestedCategory === "oil" || requestedCategory === "routine"
         ? inferOilNoRecommendationReason(oilPurpose, message)
         : null,
+    dryShampooBridgeNeedReasonCodes: dryShampooSignals.bridgeNeedReasonCodes,
+    dryShampooCautionReasonCodes: dryShampooSignals.cautionReasonCodes,
+    dryShampooPrimaryEffectRequest: dryShampooSignals.primaryEffectRequest,
+    dryShampooHairColorFitRequest: dryShampooSignals.hairColorFitRequest,
+    dryShampooRequiresSensitiveFit: dryShampooSignals.requiresSensitiveFit,
+    dryShampooPreferredFormat: dryShampooSignals.preferredFormat,
+    dryShampooAvoidAerosol: dryShampooSignals.avoidAerosol,
   }
 }

@@ -55,3 +55,14 @@ test("final render prompt gives conceptual split-end mask answers enough substan
   assert.match(AGENT_FINAL_RENDER_PROMPT, /sichtbaren Spliss schneiden lassen/)
   assert.match(AGENT_FINAL_RENDER_PROMPT, /Keine Produktliste/)
 })
+
+test("final render prompt keeps dry shampoo as a narrow bridge with hard-no guardrails", () => {
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /Bei Trockenshampoo/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /Between-Wash-Bruecke/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /reinigt die Kopfhaut nicht/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /spaeter ausgewaschen/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /keine Trockenshampoo-Produkte erfinden/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /keine Ersatzprodukte wie Babypuder/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /Auch ohne selected_products/)
+  assert.match(AGENT_FINAL_RENDER_PROMPT, /route\.product_category=dry_shampoo/)
+})

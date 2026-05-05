@@ -1011,11 +1011,10 @@ test("category set activates support/reset categories for oily buildup-heavy rou
     cautionFlags: [],
   })
 
-  assert.equal(categories.dryShampoo.relevant, true)
-  assert.equal(categories.dryShampoo.action, "add")
-  assert.deepEqual(categories.dryShampoo.targetProfile, {
-    scalpTypeFocus: "oily",
-  })
+  assert.equal(categories.dryShampoo.relevant, false)
+  assert.equal(categories.dryShampoo.action, null)
+  assert.deepEqual(categories.dryShampoo.targetProfile, null)
+  assert.ok(categories.dryShampoo.notes.includes("dry_shampoo_oily_scalp_alone_not_enough"))
 
   assert.equal(categories.peeling.relevant, true)
   assert.equal(categories.peeling.action, "add")

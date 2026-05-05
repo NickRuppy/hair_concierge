@@ -1,4 +1,9 @@
-import type { ProductScalpTypeFocus } from "@/lib/product-specs/constants"
+import type {
+  DryShampooFormat,
+  DryShampooHairColorFit,
+  DryShampooPrimaryEffect,
+  DryShampooScalpSensitivityFit,
+} from "@/lib/product-specs/constants"
 
 export const DRY_SHAMPOO_DB_CATEGORIES = [
   "Trockenshampoo",
@@ -7,11 +12,12 @@ export const DRY_SHAMPOO_DB_CATEGORIES = [
   "dry shampoo",
 ] as const
 
-export type DryShampooScalpTypeFocus = Exclude<ProductScalpTypeFocus, "dry">
-
 export interface ProductDryShampooSpecs {
   product_id: string
-  scalp_type_focus: DryShampooScalpTypeFocus
+  primary_effect: DryShampooPrimaryEffect
+  hair_color_fit: DryShampooHairColorFit
+  scalp_sensitivity_fit: DryShampooScalpSensitivityFit
+  format: DryShampooFormat
   created_at?: string
   updated_at?: string
 }

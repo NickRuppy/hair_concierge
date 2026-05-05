@@ -520,6 +520,43 @@ function inferDirectProductCategoryFromMessage(
       normalized,
     )
 
+  const mentionsDryShampoo =
+    /\btrockenshampoo\w*\b|\btrocken[-\s]*shampoo\w*\b|\bdry[-\s]*shampoo\w*\b/.test(normalized)
+  const dryShampooBetweenWash =
+    /\btag\s*2\b|\bday\s*2\b|\bzweiter\s+tag\b|\bbetween[-\s]?wash\b|\bzwischen\s+(?:den\s+)?(?:waeschen|waschen)\b/.test(
+      normalized,
+    )
+  const dryShampooRootRefresh =
+    /\bauffrisch\w*\b.{0,50}\bansatz\b|\bansatz\b.{0,50}\bauffrisch\w*\b/.test(normalized)
+  const dryShampooGreasyRoot =
+    /\bansatz\b.{0,50}\b(?:fett\w*|nachfett\w*)\b|\b(?:fett\w*|nachfett\w*)\b.{0,50}\bansatz\b/.test(
+      normalized,
+    )
+  const dryShampooColorCast =
+    /\bweiss(?:er|e|en)?\s+schleier\b|\bwhite\s*cast\b|\bgrau(?:er|e|en)?\s+schleier\b/.test(
+      normalized,
+    )
+  const dryShampooFormatRequest =
+    /\bkein(?:e|en)?\s+(?:spray|aerosol)\b|\bohne\s+(?:spray|aerosol)\b|\bschaum\b|\bfoam\b|\bliquid\b|\bfluessig\w*\b|\bflussig\w*\b/.test(
+      normalized,
+    ) && /\bansatz\b|\bauffrisch\w*\b/.test(normalized)
+  const dryShampooVolumeBridge =
+    /\bvolumen\b|\bgrip\b|\bgriff\b|\btextur\w*\b|\bansatzvolumen\b/.test(normalized) &&
+    (/\bansatz\b/.test(normalized) || dryShampooBetweenWash)
+
+  if (
+    !mentionsOtherCategory &&
+    (mentionsDryShampoo ||
+      dryShampooBetweenWash ||
+      dryShampooRootRefresh ||
+      dryShampooGreasyRoot ||
+      dryShampooColorCast ||
+      dryShampooFormatRequest ||
+      dryShampooVolumeBridge)
+  ) {
+    return "dry_shampoo"
+  }
+
   if (mentionsMask && !mentionsOtherCategory) {
     return "mask"
   }
@@ -641,6 +678,26 @@ function isTroubleshootQuestionWithoutImmediateProductPick(
     /\b(?:macht|wirkt|fuhlt|fuehlt|ist|werden|wird)\b/.test(normalized)
 
   return describesTrouble && asksForReplacementAdvice && !explicitPick
+}
+
+function isDryShampooTroubleshootWithoutImmediateProductPick(
+  message: string,
+  userJob: AgentUserJob,
+  productCategory: SelectableProductCategory | null,
+): boolean {
+  if (userJob !== "troubleshoot" || productCategory !== "dry_shampoo") return false
+
+  const normalized = normalizeRouteMessage(message)
+  const explicitPick =
+    /\b(?:welch\w*|empfiehl\w*|empfehl\w*|nehmen|kaufen|passt|alternative)\b/.test(normalized)
+  if (explicitPick) return false
+
+  return (
+    /\btrockenshampoo\w*\b|\btrocken[-\s]*shampoo\w*\b|\bdry[-\s]*shampoo\w*\b/.test(normalized) &&
+    /\b(?:hat\s+nicht\s+geholfen|hilft\s+nicht|funktioniert\s+nicht|problem|trotzdem|macht|fuhlt|fuehlt|sieht|wirkt|belegt|klebrig|fettig)\b/.test(
+      normalized,
+    )
+  )
 }
 
 function isMaskTypeOrConceptQuestionWithoutImmediateProductPick(
@@ -772,6 +829,16 @@ function deriveToolPlan(params: {
 
       if (
         isTroubleshootQuestionWithoutImmediateProductPick(
+          params.message,
+          params.userJob,
+          params.productCategory,
+        )
+      ) {
+        return []
+      }
+
+      if (
+        isDryShampooTroubleshootWithoutImmediateProductPick(
           params.message,
           params.userJob,
           params.productCategory,
