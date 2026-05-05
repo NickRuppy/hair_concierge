@@ -526,9 +526,24 @@ function inferDirectProductCategoryFromMessage(
     /\btag\s*2\b|\bday\s*2\b|\bzweiter\s+tag\b|\bbetween[-\s]?wash\b|\bzwischen\s+(?:den\s+)?(?:waeschen|waschen)\b/.test(
       normalized,
     )
+  const dryShampooCannotWashToday =
+    /\b(?:kann|schaffe|geht)\b.{0,50}\b(?:heute|jetzt|gerade)\b.{0,50}\b(?:nicht\s+)?wasch\w*\b|\bkeine\s+zeit\b.{0,50}\bwasch\w*\b/.test(
+      normalized,
+    )
+  const dryShampooEmergency =
+    /\bnotfall\w*\b|\bemergency\b|\blast[-\s]?minute\b|\bkurzfristig\w*\b|\breise\w*\b|\bunterwegs\b/.test(
+      normalized,
+    )
+  const dryShampooSameDay = /\b(?:heute|jetzt|gerade)\b/.test(normalized)
+  const hasDryShampooBridgeContext =
+    mentionsDryShampoo || dryShampooBetweenWash || dryShampooCannotWashToday || dryShampooEmergency
+  const dryShampooRootRefreshPhrase =
+    /\bauffrisch\w*\b.{0,50}\bansatz\b|\bansatz\b.{0,50}\bauffrisch\w*\b/.test(normalized) ||
+    /\brefresh\w*\b.{0,50}\bansatz\b|\bansatz\b.{0,50}\brefresh\w*\b/.test(normalized)
   const dryShampooRootRefresh =
-    /\bauffrisch\w*\b.{0,50}\bansatz\b|\bansatz\b.{0,50}\bauffrisch\w*\b/.test(normalized)
+    (hasDryShampooBridgeContext || dryShampooSameDay) && dryShampooRootRefreshPhrase
   const dryShampooGreasyRoot =
+    hasDryShampooBridgeContext &&
     /\bansatz\b.{0,50}\b(?:fett\w*|nachfett\w*)\b|\b(?:fett\w*|nachfett\w*)\b.{0,50}\bansatz\b/.test(
       normalized,
     )
@@ -537,17 +552,21 @@ function inferDirectProductCategoryFromMessage(
       normalized,
     )
   const dryShampooFormatRequest =
+    (hasDryShampooBridgeContext || (dryShampooSameDay && dryShampooRootRefreshPhrase)) &&
     /\bkein(?:e|en)?\s+(?:spray|aerosol)\b|\bohne\s+(?:spray|aerosol)\b|\bschaum\b|\bfoam\b|\bliquid\b|\bfluessig\w*\b|\bflussig\w*\b/.test(
       normalized,
-    ) && /\bansatz\b|\bauffrisch\w*\b/.test(normalized)
+    ) &&
+    /\bansatz\b|\bauffrisch\w*\b/.test(normalized)
   const dryShampooVolumeBridge =
     /\bvolumen\b|\bgrip\b|\bgriff\b|\btextur\w*\b|\bansatzvolumen\b/.test(normalized) &&
+    hasDryShampooBridgeContext &&
     (/\bansatz\b/.test(normalized) || dryShampooBetweenWash)
 
   if (
     !mentionsOtherCategory &&
     (mentionsDryShampoo ||
       dryShampooBetweenWash ||
+      dryShampooCannotWashToday ||
       dryShampooRootRefresh ||
       dryShampooGreasyRoot ||
       dryShampooColorCast ||

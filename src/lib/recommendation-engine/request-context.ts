@@ -240,15 +240,28 @@ function inferDryShampooSignalsFromMessage(message: string): {
     /\b(?:kann|schaffe|geht)\b.{0,50}\b(?:heute|jetzt|gerade)\b.{0,50}\b(?:nicht\s+)?wasch\w*\b|\bkeine\s+zeit\b.{0,50}\bwasch\w*\b/.test(
       normalized,
     )
-  const betweenWash =
-    /\bbetween[-\s]?wash\b|\bzwischen\s+(?:den\s+)?waeschen\b|\bzwischen\s+(?:den\s+)?waschen\b|\btag\s*2\b|\bday\s*2\b|\bzweiter\s+tag\b|\bauffrisch\w*\b|\brefresh\w*\b|\bansatz\b.{0,40}\bfettig\w*\b|\bfettig\w*\b.{0,40}\bansatz\b/.test(
+  const explicitBetweenWash =
+    /\bbetween[-\s]?wash\b|\bzwischen\s+(?:den\s+)?waeschen\b|\bzwischen\s+(?:den\s+)?waschen\b|\btag\s*2\b|\bday\s*2\b|\bzweiter\s+tag\b/.test(
       normalized,
     )
   const emergency =
-    /\bnotfall\w*\b|\bemergency\b|\blast[-\s]?minute\b|\bkurzfristig\w*\b|\bschnell\w*\b|\breise\w*\b|\bunterwegs\b/.test(
+    /\bnotfall\w*\b|\bemergency\b|\blast[-\s]?minute\b|\bkurzfristig\w*\b|\breise\w*\b|\bunterwegs\b/.test(
       normalized,
     )
+  const sameDay = /\b(?:heute|jetzt|gerade)\b/.test(normalized)
   const postWorkout = /\bsport\b|\bworkout\b|\btraining\b|\bgeschwitzt\w*\b/.test(normalized)
+  const rootRefresh =
+    /\bauffrisch\w*\b|\brefresh\w*\b/.test(normalized) && /\bansatz\b/.test(normalized)
+  const greasyRoot = /\bansatz\b.{0,40}\bfettig\w*\b|\bfettig\w*\b.{0,40}\bansatz\b/.test(
+    normalized,
+  )
+  const hasDryShampooBridgeContext =
+    mentionsDryShampoo || explicitBetweenWash || cannotWashToday || emergency || postWorkout
+  const betweenWash =
+    explicitBetweenWash ||
+    cannotWashToday ||
+    (rootRefresh && (hasDryShampooBridgeContext || sameDay)) ||
+    (greasyRoot && hasDryShampooBridgeContext)
   const volumeTexture =
     /\bvolumen\b|\bgrip\b|\bgriff\b|\btextur\w*\b|\bstand\b.{0,30}\bansatz\b|\bansatzvolumen\b/.test(
       normalized,

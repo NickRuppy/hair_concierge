@@ -219,6 +219,24 @@ test("buildAgentRoutePacket does not infer dry shampoo from oily scalp alone", (
   assert.deepEqual(packet.validation_warnings, [])
 })
 
+test("buildAgentRoutePacket does not infer dry shampoo from oily-root product wording alone", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Mein Ansatz ist schnell fettig, welches Produkt passt?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: null,
+      concerns: ["oily_roots"],
+    }),
+  })
+
+  assert.equal(packet.product_category, null)
+  assert.deepEqual(packet.tool_plan, [])
+  assert.deepEqual(packet.validation_warnings, [
+    "No product tool run for product_pick: product category missing.",
+  ])
+})
+
 test("buildAgentRoutePacket keeps dry-shampoo troubleshooting mentions guidance-only", () => {
   const inferredPacket = buildAgentRoutePacket({
     message: "Trockenshampoo hat nicht geholfen, mein Ansatz sieht trotzdem fettig aus.",

@@ -16,6 +16,14 @@ type DryShampooSeedProduct = {
   specs: Omit<ProductDryShampooSpecs, "product_id">
 }
 
+type DryShampooCatalogRow = {
+  id: string
+  brand: string | null
+  name: string | null
+  category: string | null
+  is_active: boolean | null
+}
+
 const CATEGORY = "Trockenshampoo"
 
 const DRY_SHAMPOO_SEED_PRODUCTS: DryShampooSeedProduct[] = [
@@ -181,6 +189,19 @@ const DRY_SHAMPOO_SEED_PRODUCTS: DryShampooSeedProduct[] = [
   },
 ]
 
+function productKey(product: Pick<DryShampooCatalogRow, "brand" | "name">): string {
+  return `${product.brand ?? ""}\u0000${product.name ?? ""}`
+}
+
+const PLANNED_PRODUCT_KEYS = new Set(DRY_SHAMPOO_SEED_PRODUCTS.map(productKey))
+
+export function findUnexpectedActiveDryShampooProducts(products: DryShampooCatalogRow[]): string[] {
+  return products
+    .filter((product) => product.category === CATEGORY && product.is_active === true)
+    .filter((product) => !PLANNED_PRODUCT_KEYS.has(productKey(product)))
+    .map((product) => product.id)
+}
+
 function printSeedMatrix() {
   console.table(
     DRY_SHAMPOO_SEED_PRODUCTS.map((product) => ({
@@ -219,6 +240,8 @@ async function main() {
     },
   })
 
+  const seededProductIds: string[] = []
+
   for (const product of DRY_SHAMPOO_SEED_PRODUCTS) {
     const { data: existing, error: lookupError } = await supabase
       .from("products")
@@ -249,6 +272,7 @@ async function main() {
       : await supabase.from("products").insert(payload).select("id").single()
 
     if (productError) throw productError
+    seededProductIds.push(saved.id)
 
     const { error: specError } = await supabase.from("product_dry_shampoo_specs").upsert(
       {
@@ -261,10 +285,50 @@ async function main() {
     if (specError) throw specError
   }
 
+  const { data: activeDryShampoos, error: activeLookupError } = await supabase
+    .from("products")
+    .select("id,brand,name,category,is_active")
+    .eq("category", CATEGORY)
+    .eq("is_active", true)
+
+  if (activeLookupError) throw activeLookupError
+
+  const unexpectedActiveIds = findUnexpectedActiveDryShampooProducts(
+    (activeDryShampoos ?? []) as DryShampooCatalogRow[],
+  )
+
+  if (unexpectedActiveIds.length > 0) {
+    const { error: deactivateError } = await supabase
+      .from("products")
+      .update({
+        is_active: false,
+        lifecycle_status: "retired",
+      })
+      .in("id", unexpectedActiveIds)
+
+    if (deactivateError) throw deactivateError
+    console.log(`Deactivated ${unexpectedActiveIds.length} unexpected dry-shampoo products.`)
+  }
+
+  const { count: activeCount, error: countError } = await supabase
+    .from("products")
+    .select("id", { count: "exact", head: true })
+    .eq("category", CATEGORY)
+    .eq("is_active", true)
+
+  if (countError) throw countError
+  if (activeCount !== seededProductIds.length) {
+    throw new Error(
+      `Expected ${seededProductIds.length} active dry-shampoo products, found ${activeCount ?? 0}`,
+    )
+  }
+
   console.log(`Seeded ${DRY_SHAMPOO_SEED_PRODUCTS.length} dry-shampoo products.`)
 }
 
-main().catch((error) => {
-  console.error(error)
-  process.exit(1)
-})
+if (process.argv[1]?.endsWith("seed-dry-shampoo-products.ts")) {
+  main().catch((error) => {
+    console.error(error)
+    process.exit(1)
+  })
+}

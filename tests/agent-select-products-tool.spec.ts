@@ -3013,6 +3013,61 @@ test("selectProducts treats dry-shampoo routine need questions as guidance-only,
   assert.match(result.category_guidance, /Routinebaustein/)
 })
 
+test("selectProducts does not treat oily-root product wording as a dry-shampoo bridge", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "dry_shampoo")
+      assert.equal(runtime.categories.dryShampoo.relevant, false)
+      assert.ok(
+        runtime.categories.dryShampoo.notes.includes("dry_shampoo_oily_scalp_alone_not_enough"),
+      )
+
+      return [
+        createMatchedProduct("dry-oily-root", 0.91, {
+          category: "Trockenshampoo",
+          recommendation_meta: {
+            category: "dry_shampoo",
+            score: 91,
+            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Bruecke."],
+            tradeoffs: [],
+            usage_hint:
+              "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen.",
+            primary_effect: "classic_refresh",
+            hair_color_fit: "universal",
+            scalp_sensitivity_fit: "normal_only",
+            format: "aerosol_spray",
+            fit_status: "ideal",
+          },
+        }),
+      ]
+    },
+  })
+
+  const result = await tool({
+    category: "dry_shampoo",
+    message: "Mein Ansatz ist schnell fettig, welches Produkt passt?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      scalp_type: "oily",
+      concerns: ["oily_scalp"],
+      wash_frequency: "every_2_3_days",
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    userJob: "product_pick",
+    concerns: ["oily_roots"],
+  })
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+  assert.deepEqual(result.products, [])
+})
+
 test("selectProducts tool only accepts engine-backed categories", () => {
   type ToolParams = Parameters<ReturnType<typeof createSelectProductsTool>>[0]
 
