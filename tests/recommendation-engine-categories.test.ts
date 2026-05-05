@@ -1011,11 +1011,10 @@ test("category set activates support/reset categories for oily buildup-heavy rou
     cautionFlags: [],
   })
 
-  assert.equal(categories.dryShampoo.relevant, true)
-  assert.equal(categories.dryShampoo.action, "add")
-  assert.deepEqual(categories.dryShampoo.targetProfile, {
-    scalpTypeFocus: "oily",
-  })
+  assert.equal(categories.dryShampoo.relevant, false)
+  assert.equal(categories.dryShampoo.action, null)
+  assert.deepEqual(categories.dryShampoo.targetProfile, null)
+  assert.ok(categories.dryShampoo.notes.includes("dry_shampoo_oily_scalp_alone_not_enough"))
 
   assert.equal(categories.peeling.relevant, true)
   assert.equal(categories.peeling.action, "add")
@@ -1023,6 +1022,55 @@ test("category set activates support/reset categories for oily buildup-heavy rou
     scalpTypeFocus: "oily",
     peelingType: "physical_scrub",
   })
+})
+
+test("dry shampoo allows explicit bridge requests despite stored breakage or ordinary dry lengths", () => {
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "dry_shampoo",
+    message:
+      "Ich kann heute nicht waschen, mein Ansatz ist fettig und meine Laengen sind trocken. Welches Trockenshampoo?",
+  })
+  const { normalized, damage, careNeeds } = buildEngineState(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      concerns: ["breakage"],
+    },
+    [],
+  )
+  const reset = buildResetAssessment(normalized, requestContext)
+  const plan = buildInterventionPlan(normalized, damage, careNeeds, reset, requestContext)
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    requestContext,
+    reset,
+  )
+
+  assert.equal(categories.dryShampoo.relevant, true)
+  assert.ok(!categories.dryShampoo.notes.includes("dry_shampoo_dry_breakage_hard_no"))
+})
+
+test("dry shampoo blocks current-message breakage-dominant requests", () => {
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "dry_shampoo",
+    message: "Meine Haare sind trocken, sproede und brechen ab. Welches Trockenshampoo hilft?",
+  })
+  const { normalized, damage, careNeeds } = buildEngineState(LOW_DAMAGE_PROFILE, [])
+  const reset = buildResetAssessment(normalized, requestContext)
+  const plan = buildInterventionPlan(normalized, damage, careNeeds, reset, requestContext)
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    requestContext,
+    reset,
+  )
+
+  assert.equal(categories.dryShampoo.relevant, false)
+  assert.ok(categories.dryShampoo.notes.includes("dry_shampoo_dry_breakage_hard_no"))
 })
 
 test("bondbuilder fit uses intensity and does not rank by treatment mode", () => {

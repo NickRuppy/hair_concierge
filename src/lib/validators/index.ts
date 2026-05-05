@@ -32,6 +32,10 @@ import { MASK_WEIGHTS, MASK_CONCENTRATIONS, isMaskCategory } from "@/lib/mask/co
 import { OIL_SUBTYPES, isOilCategory } from "@/lib/oil/constants"
 import { isPeelingCategory } from "@/lib/peeling/constants"
 import {
+  DRY_SHAMPOO_FORMATS,
+  DRY_SHAMPOO_HAIR_COLOR_FITS,
+  DRY_SHAMPOO_PRIMARY_EFFECTS,
+  DRY_SHAMPOO_SCALP_SENSITIVITY_FITS,
   PRODUCT_BALANCE_TARGETS,
   PRODUCT_BOND_APPLICATION_MODES,
   PRODUCT_BOND_PRODUCT_FORMATS,
@@ -104,7 +108,10 @@ const deepCleansingShampooSpecsSchema = z.object({
 })
 
 const dryShampooSpecsSchema = z.object({
-  scalp_type_focus: z.enum(["oily", "balanced"] as const),
+  primary_effect: z.enum(DRY_SHAMPOO_PRIMARY_EFFECTS),
+  hair_color_fit: z.enum(DRY_SHAMPOO_HAIR_COLOR_FITS),
+  scalp_sensitivity_fit: z.enum(DRY_SHAMPOO_SCALP_SENSITIVITY_FITS),
+  format: z.enum(DRY_SHAMPOO_FORMATS),
 })
 
 const peelingSpecsSchema = z.object({

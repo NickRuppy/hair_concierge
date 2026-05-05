@@ -96,3 +96,47 @@ export const PRODUCT_PEELING_TYPE_LABELS = {
   acid_serum: "Saeure-Serum",
   physical_scrub: "Physisches Scrub",
 } as const satisfies Record<ProductPeelingType, string>
+
+export const DRY_SHAMPOO_PRIMARY_EFFECTS = [
+  "classic_refresh",
+  "volume_texture",
+  "sensitive_refresh",
+] as const
+
+export type DryShampooPrimaryEffect = (typeof DRY_SHAMPOO_PRIMARY_EFFECTS)[number]
+
+export const DRY_SHAMPOO_PRIMARY_EFFECT_LABELS = {
+  classic_refresh: "Klassische Ansatz-Auffrischung",
+  volume_texture: "Volumen/Griff am Ansatz",
+  sensitive_refresh: "Sensitive Auffrischung",
+} as const satisfies Record<DryShampooPrimaryEffect, string>
+
+export const DRY_SHAMPOO_HAIR_COLOR_FITS = ["universal", "blonde_light", "brown", "dark"] as const
+
+export type DryShampooHairColorFit = (typeof DRY_SHAMPOO_HAIR_COLOR_FITS)[number]
+
+export const DRY_SHAMPOO_HAIR_COLOR_FIT_LABELS = {
+  universal: "Universell",
+  blonde_light: "Blond/hell",
+  brown: "Braun",
+  dark: "Dunkel",
+} as const satisfies Record<DryShampooHairColorFit, string>
+
+export const DRY_SHAMPOO_SCALP_SENSITIVITY_FITS = ["sensitive_ok", "normal_only"] as const
+
+export type DryShampooScalpSensitivityFit = (typeof DRY_SHAMPOO_SCALP_SENSITIVITY_FITS)[number]
+
+export const DRY_SHAMPOO_SCALP_SENSITIVITY_FIT_LABELS = {
+  sensitive_ok: "Auch fuer sensible Kopfhaut",
+  normal_only: "Nur normale Kopfhaut",
+} as const satisfies Record<DryShampooScalpSensitivityFit, string>
+
+export const DRY_SHAMPOO_FORMATS = ["aerosol_spray", "powder", "foam_or_liquid"] as const
+
+export type DryShampooFormat = (typeof DRY_SHAMPOO_FORMATS)[number]
+
+export const DRY_SHAMPOO_FORMAT_LABELS = {
+  aerosol_spray: "Aerosol-Spray",
+  powder: "Puder",
+  foam_or_liquid: "Schaum/Liquid",
+} as const satisfies Record<DryShampooFormat, string>

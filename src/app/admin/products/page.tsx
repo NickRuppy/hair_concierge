@@ -28,6 +28,14 @@ import {
   PRODUCT_BOND_TREATMENT_MODE_LABELS,
   PRODUCT_BOND_USAGE_PROTOCOLS,
   PRODUCT_BOND_USAGE_PROTOCOL_LABELS,
+  DRY_SHAMPOO_FORMATS,
+  DRY_SHAMPOO_FORMAT_LABELS,
+  DRY_SHAMPOO_HAIR_COLOR_FITS,
+  DRY_SHAMPOO_HAIR_COLOR_FIT_LABELS,
+  DRY_SHAMPOO_PRIMARY_EFFECTS,
+  DRY_SHAMPOO_PRIMARY_EFFECT_LABELS,
+  DRY_SHAMPOO_SCALP_SENSITIVITY_FITS,
+  DRY_SHAMPOO_SCALP_SENSITIVITY_FIT_LABELS,
   PRODUCT_PEELING_TYPES,
   PRODUCT_PEELING_TYPE_LABELS,
   PRODUCT_SCALP_TYPE_FOCUSES,
@@ -83,7 +91,10 @@ interface DeepCleansingShampooSpecForm {
 }
 
 interface DryShampooSpecForm {
-  scalp_type_focus: string
+  primary_effect: string
+  hair_color_fit: string
+  scalp_sensitivity_fit: string
+  format: string
 }
 
 interface PeelingSpecForm {
@@ -147,7 +158,10 @@ const emptyDeepCleansingShampooSpecs: DeepCleansingShampooSpecForm = {
 }
 
 const emptyDryShampooSpecs: DryShampooSpecForm = {
-  scalp_type_focus: "balanced",
+  primary_effect: "classic_refresh",
+  hair_color_fit: "universal",
+  scalp_sensitivity_fit: "normal_only",
+  format: "aerosol_spray",
 }
 
 const emptyPeelingSpecs: PeelingSpecForm = {
@@ -284,7 +298,10 @@ export default function AdminProductsPage() {
 
     const dryShampooSpecs = product.dry_shampoo_specs
       ? {
-          scalp_type_focus: product.dry_shampoo_specs.scalp_type_focus,
+          primary_effect: product.dry_shampoo_specs.primary_effect,
+          hair_color_fit: product.dry_shampoo_specs.hair_color_fit,
+          scalp_sensitivity_fit: product.dry_shampoo_specs.scalp_sensitivity_fit,
+          format: product.dry_shampoo_specs.format,
         }
       : isDryShampooCategory(product.category || "")
         ? { ...emptyDryShampooSpecs }
@@ -534,7 +551,10 @@ export default function AdminProductsPage() {
         dry_shampoo_specs:
           dryShampooEnabled && form.dry_shampoo_specs
             ? {
-                scalp_type_focus: form.dry_shampoo_specs.scalp_type_focus,
+                primary_effect: form.dry_shampoo_specs.primary_effect,
+                hair_color_fit: form.dry_shampoo_specs.hair_color_fit,
+                scalp_sensitivity_fit: form.dry_shampoo_specs.scalp_sensitivity_fit,
+                format: form.dry_shampoo_specs.format,
               }
             : null,
         peeling_specs:
@@ -1324,36 +1344,63 @@ export default function AdminProductsPage() {
                     Trockenshampoo-Spezifikation
                   </h3>
                   <p className="text-xs text-muted-foreground">
-                    Der passende Kopfhaut-Fokus fuer Between-Wash-Bridge-Produkte.
+                    Schlanke Fit-Felder fuer Notfall-/Between-Wash-Bridge-Produkte.
                   </p>
                 </div>
 
-                <div>
-                  <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                    Kopfhaut-Fokus
-                  </label>
-                  <select
-                    value={form.dry_shampoo_specs.scalp_type_focus}
-                    onChange={(e) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        dry_shampoo_specs: prev.dry_shampoo_specs
-                          ? {
-                              ...prev.dry_shampoo_specs,
-                              scalp_type_focus: e.target.value,
-                            }
-                          : null,
-                      }))
-                    }
-                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                  >
-                    {PRODUCT_SCALP_TYPE_FOCUSES.filter((value) => value !== "dry").map((value) => (
-                      <option key={value} value={value}>
-                        {PRODUCT_SCALP_TYPE_FOCUS_LABELS[value]}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                {[
+                  {
+                    field: "primary_effect",
+                    label: "Primaere Wirkung",
+                    values: DRY_SHAMPOO_PRIMARY_EFFECTS,
+                    labels: DRY_SHAMPOO_PRIMARY_EFFECT_LABELS,
+                  },
+                  {
+                    field: "hair_color_fit",
+                    label: "Farbfit",
+                    values: DRY_SHAMPOO_HAIR_COLOR_FITS,
+                    labels: DRY_SHAMPOO_HAIR_COLOR_FIT_LABELS,
+                  },
+                  {
+                    field: "scalp_sensitivity_fit",
+                    label: "Sensitivitaetsfit",
+                    values: DRY_SHAMPOO_SCALP_SENSITIVITY_FITS,
+                    labels: DRY_SHAMPOO_SCALP_SENSITIVITY_FIT_LABELS,
+                  },
+                  {
+                    field: "format",
+                    label: "Format",
+                    values: DRY_SHAMPOO_FORMATS,
+                    labels: DRY_SHAMPOO_FORMAT_LABELS,
+                  },
+                ].map((config) => (
+                  <div key={config.field}>
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                      {config.label}
+                    </label>
+                    <select
+                      value={form.dry_shampoo_specs?.[config.field as keyof DryShampooSpecForm]}
+                      onChange={(e) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          dry_shampoo_specs: prev.dry_shampoo_specs
+                            ? {
+                                ...prev.dry_shampoo_specs,
+                                [config.field]: e.target.value,
+                              }
+                            : null,
+                        }))
+                      }
+                      className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    >
+                      {config.values.map((value) => (
+                        <option key={value} value={value}>
+                          {(config.labels as Record<string, string>)[value]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
               </div>
             )}
 

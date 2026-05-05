@@ -66,6 +66,7 @@ import { buildRecommendationRequestContext } from "@/lib/recommendation-engine/r
 import type {
   BondbuilderCategoryDecision,
   CategoryFitEvaluation,
+  CategoryFitStatus,
   ConditionerCategoryDecision,
   DeepCleansingShampooCategoryDecision,
   DryShampooCategoryDecision,
@@ -82,6 +83,7 @@ const CANDIDATE_COUNT = 10
 
 type ScoredEngineProduct = MatchedProduct & {
   _engineScore: number
+  _fitStatus?: CategoryFitStatus
 }
 
 interface ProductRelationshipRow {
@@ -465,7 +467,7 @@ function markConditionerFallback(product: ScoredConditionerProduct): ScoredCondi
 
 function buildConditionerFallbackTradeoff(meta: ConditionerRecommendationMetadata): string {
   if (meta.fit_status === "unknown") {
-    return "Fallback: Dieser Conditioner hat noch unvollstaendige strukturierte Fit-Daten und erscheint nur, weil nicht genug sichere Treffer verfuegbar sind."
+    return "Hinweis: Zu diesem Conditioner fehlen noch einzelne sichere Produktangaben. Er erscheint nur, weil nicht genug sehr sichere Treffer verfuegbar sind."
   }
 
   return "Fallback: Dieser Conditioner weicht beim abgeleiteten Conditioner-Fit sichtbar ab und erscheint nur, weil nicht genug sichere Treffer verfuegbar sind."
@@ -1070,7 +1072,7 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
 }
 
 function buildDryShampooUsageHint(): string {
-  return "Nur als Between-Wash-Bruecke sparsam am Ansatz einsetzen und nicht als Ersatz fuer regulaeres Waschen mit Wasser nutzen."
+  return "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen."
 }
 
 export function rerankDryShampooProductsWithEngine(params: {
@@ -1088,12 +1090,20 @@ export function rerankDryShampooProductsWithEngine(params: {
     const fit = evaluateDryShampooFit(decision, spec as DryShampooFitSpec | null)
     const { positives, tradeoffs } = buildFitSummary(
       fit,
-      "Passt sehr gut zum geplanten Between-Wash-Kopfhaut-Fokus.",
-      "Passt weitgehend zum Between-Wash-Bedarf.",
+      "Passt sehr gut zur Notfall-/Between-Wash-Bruecke.",
+      "Passt weitgehend zum kurzen Ansatz-Refresh.",
       "Die Trockenshampoo-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
-      "Weicht beim Kopfhaut-Fokus zu deutlich vom Between-Wash-Bedarf ab.",
+      "Weicht bei Effekt, Farbfit, Sensitivitaet oder Format zu deutlich vom Bedarf ab.",
     )
-    const score = toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
+    const score =
+      toBaseScore(product) +
+      fitStatusAdjustment(fit.status) +
+      fitReasonAdjustment(fit) +
+      (spec?.primary_effect === target.primaryEffectTarget ? 16 : 0) +
+      (spec?.hair_color_fit === target.hairColorFitTarget ? 12 : 0) +
+      (spec?.hair_color_fit === "universal" ? 6 : 0) +
+      (target.requiresSensitiveFit && spec?.scalp_sensitivity_fit === "sensitive_ok" ? 14 : 0) +
+      (target.preferredFormat && spec?.format === target.preferredFormat ? 10 : 0)
 
     const recommendationMeta: DryShampooRecommendationMetadata = {
       category: "dry_shampoo",
@@ -1101,7 +1111,11 @@ export function rerankDryShampooProductsWithEngine(params: {
       top_reasons: positives.slice(0, 3),
       tradeoffs,
       usage_hint: buildDryShampooUsageHint(),
-      scalp_type_focus: target.scalpTypeFocus,
+      primary_effect: spec?.primary_effect ?? target.primaryEffectTarget,
+      hair_color_fit: spec?.hair_color_fit ?? target.hairColorFitTarget,
+      scalp_sensitivity_fit: spec?.scalp_sensitivity_fit ?? null,
+      format: spec?.format ?? target.preferredFormat,
+      fit_status: fit.status,
     }
 
     return {
@@ -1109,11 +1123,13 @@ export function rerankDryShampooProductsWithEngine(params: {
       dry_shampoo_specs: spec,
       recommendation_meta: recommendationMeta,
       _engineScore: score,
+      _fitStatus: fit.status,
     }
   })
 
   scored.sort(compareScoredProducts)
-  return stripScore(scored).slice(0, SELECTION_LIMIT)
+  const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
+  return stripScore(acceptable).slice(0, SELECTION_LIMIT)
 }
 
 function buildPeelingUsageHint(decision: PeelingCategoryDecision): string {
@@ -1670,7 +1686,14 @@ export async function selectConditionerProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(
+    hairProfile,
+    routineItems,
+    buildRecommendationRequestContext({
+      requestedCategory: "conditioner",
+      message,
+    }),
+  )
   const decision = runtime.categories.conditioner
   if (!decision.relevant || !decision.targetProfile) return []
 
@@ -1728,7 +1751,14 @@ export async function selectShampooProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(
+    hairProfile,
+    routineItems,
+    buildRecommendationRequestContext({
+      requestedCategory: "shampoo",
+      message,
+    }),
+  )
   const decision = runtime.categories.shampoo
   if (!decision.relevant || !decision.targetProfile?.shampooBucket || !hairProfile?.thickness) {
     return []
@@ -2227,9 +2257,19 @@ export async function selectDryShampooProductsWithEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime?: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
-  const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
+  const { message, hairProfile, routineItems, runtime: providedRuntime } = params
+  const runtime =
+    providedRuntime ??
+    buildRecommendationEngineRuntimeFromPersistence(
+      hairProfile,
+      routineItems,
+      buildRecommendationRequestContext({
+        requestedCategory: "dry_shampoo",
+        message,
+      }),
+    )
   const decision = runtime.categories.dryShampoo
   if (!decision.relevant || !decision.targetProfile) return []
 

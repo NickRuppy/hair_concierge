@@ -586,8 +586,18 @@ function formatEngineCategoryDecision(
       parts.push(`- Reset-Bedarf: ${categoryDecision.targetProfile?.resetNeedLevel ?? "none"}`)
       break
     case "dry_shampoo":
-      if (categoryDecision.targetProfile?.scalpTypeFocus) {
-        parts.push(`- Kopfhaut-Fokus: ${categoryDecision.targetProfile.scalpTypeFocus}`)
+      if (categoryDecision.targetProfile) {
+        parts.push(
+          `- Rolle: Notfall-/Between-Wash-Bruecke, keine Kopfhautreinigung`,
+          `- Wirkung: ${categoryDecision.targetProfile.primaryEffectTarget}`,
+          `- Farbfit: ${categoryDecision.targetProfile.hairColorFitTarget}`,
+          `- Sensitivitaet erforderlich: ${
+            categoryDecision.targetProfile.requiresSensitiveFit ? "ja" : "nein"
+          }`,
+        )
+        if (categoryDecision.targetProfile.preferredFormat) {
+          parts.push(`- Formatpraeferenz: ${categoryDecision.targetProfile.preferredFormat}`)
+        }
       }
       break
     case "peeling":

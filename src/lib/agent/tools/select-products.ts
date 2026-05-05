@@ -132,6 +132,10 @@ export const SUPPORTED_PRODUCT_CLAIM_FIELDS = [
   "reset_focus",
   "reset_intensity",
   "color_treated_suitability",
+  "primary_effect",
+  "hair_color_fit",
+  "scalp_sensitivity_fit",
+  "usage_hint",
   "bond_repair_axis",
   "treatment_mode",
   "usage_protocol",
@@ -1208,6 +1212,35 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
     ])
   }
 
+  if (meta?.category === "dry_shampoo") {
+    return uniqueClaims([
+      buildClaim(
+        "primary_effect",
+        meta.primary_effect,
+        "product_spec",
+        meta.primary_effect ? `Bridge-Wirkung: ${meta.primary_effect}` : null,
+      ),
+      buildClaim(
+        "hair_color_fit",
+        meta.hair_color_fit,
+        "product_spec",
+        meta.hair_color_fit ? `Farbfit: ${meta.hair_color_fit}` : null,
+      ),
+      buildClaim(
+        "scalp_sensitivity_fit",
+        meta.scalp_sensitivity_fit,
+        "product_spec",
+        meta.scalp_sensitivity_fit ? `Sensitivitaetsfit: ${meta.scalp_sensitivity_fit}` : null,
+      ),
+      buildClaim(
+        "format",
+        meta.format,
+        "product_spec",
+        meta.format ? `Format: ${meta.format}` : null,
+      ),
+    ])
+  }
+
   if (meta?.category === "bondbuilder") {
     return uniqueClaims([
       buildClaim(
@@ -1526,18 +1559,18 @@ function signalHasSupportedClaim(
 
 function userMessageForUnsupportedSignal(signal: AgentActiveProfileSignal): string {
   if (signal.field === "chemical_treatment" && signal.value === "colored") {
-    return "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den belegten Fit-Daten."
+    return "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den sicheren Produktangaben."
   }
 
   if (signal.field === "chemical_treatment" && signal.value === "bleached") {
-    return "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den belegten Fit-Daten."
+    return "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den sicheren Produktangaben."
   }
 
   if (signal.field === "scalp_condition" && signal.value === "irritated") {
     return "Zur empfindlichen Kopfhaut habe ich bei diesen Produkten keine sichere Spezialangabe. Ich bewerte sie deshalb vor allem nach Kopfhaut-Fokus, Haardicke und Reinigungsintensitaet."
   }
 
-  return "Zu einem Teil deiner Anfrage habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den belegten Fit-Daten."
+  return "Zu einem Teil deiner Anfrage habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den sicheren Produktangaben."
 }
 
 function buildUnsupportedIngredientSignals(
@@ -1832,6 +1865,56 @@ function isDeepCleansingScalpTreatmentDecision(
     category === "deep_cleansing_shampoo" &&
     categoryDecision?.category === "deep_cleansing_shampoo" &&
     categoryDecision.notes.includes("scalp_treatment_needed")
+  )
+}
+
+const DRY_SHAMPOO_CAUTION_WITHOUT_PRODUCTS_REASONS = new Set([
+  "dry_shampoo_scalp_issue_hard_no",
+  "dry_shampoo_dry_breakage_hard_no",
+  "dry_shampoo_respiratory_aerosol_caution",
+  "dry_shampoo_child_context_hard_no",
+])
+
+const DRY_SHAMPOO_REDIRECT_REASONS = new Set([
+  "dry_shampoo_buildup_hard_no",
+  "dry_shampoo_frequent_use_reset_needed",
+])
+
+function dryShampooDecisionNotes(
+  category: SelectableProductCategory | null,
+  categoryDecision: CategoryDecision | null,
+): string[] {
+  if (category !== "dry_shampoo" || categoryDecision?.category !== "dry_shampoo") return []
+
+  return [...categoryDecision.notes, ...(categoryDecision.targetProfile?.cautionReasonCodes ?? [])]
+}
+
+function isDryShampooResetRedirectDecision(
+  category: SelectableProductCategory | null,
+  categoryDecision: CategoryDecision | null,
+): boolean {
+  return dryShampooDecisionNotes(category, categoryDecision).some((reason) =>
+    DRY_SHAMPOO_REDIRECT_REASONS.has(reason),
+  )
+}
+
+function isDryShampooCautionDecision(
+  category: SelectableProductCategory | null,
+  categoryDecision: CategoryDecision | null,
+): boolean {
+  return dryShampooDecisionNotes(category, categoryDecision).some((reason) =>
+    DRY_SHAMPOO_CAUTION_WITHOUT_PRODUCTS_REASONS.has(reason),
+  )
+}
+
+function isDryShampooNotRecommendedDecision(
+  category: SelectableProductCategory | null,
+  categoryDecision: CategoryDecision | null,
+): boolean {
+  return (
+    category === "dry_shampoo" &&
+    categoryDecision?.category === "dry_shampoo" &&
+    !categoryDecision.relevant
   )
 }
 
@@ -2216,6 +2299,10 @@ function deriveDecision(params: {
     return "not_recommended"
   }
 
+  if (isDryShampooNotRecommendedDecision(category, categoryDecision)) {
+    return "not_recommended"
+  }
+
   if (
     category === "shampoo" &&
     categoryDecision &&
@@ -2334,7 +2421,7 @@ function buildProductResponsePolicy(params: {
   categoryDecision: CategoryDecision | null
   routeContext?: SelectProductsRouteContext | null
 }): { product_response_policy: ProductResponsePolicy; policy_reason: string } {
-  const { category, decision, routeContext } = params
+  const { category, decision, categoryDecision, routeContext } = params
 
   if (decision === "needs_more_info") {
     return {
@@ -2348,6 +2435,22 @@ function buildProductResponsePolicy(params: {
       product_response_policy: "no_catalog_match",
       policy_reason:
         "Die Kategorie kann passen, aber der aktuelle Katalog liefert keinen sicheren Treffer.",
+    }
+  }
+
+  if (isDryShampooResetRedirectDecision(category, categoryDecision)) {
+    return {
+      product_response_policy: "redirect_to_better_lever",
+      policy_reason:
+        "Trockenshampoo-Nutzung oder Build-up spricht fuer Reduktion, Auswaschen und Reset-/Tiefenreinigungslogik statt fuer weiteres Trockenshampoo.",
+    }
+  }
+
+  if (isDryShampooCautionDecision(category, categoryDecision)) {
+    return {
+      product_response_policy: "caution_without_products",
+      policy_reason:
+        "Diese Trockenshampoo-Anfrage enthaelt Kopfhaut-, Haarbruch-, Aerosol-/Atemwegs- oder Kind-Kontext; deshalb keine Trockenshampoo-Produkte empfehlen.",
     }
   }
 
@@ -2452,6 +2555,30 @@ function buildCategoryGuidance(params: {
   routeContext?: SelectProductsRouteContext | null
 }): string {
   const { category, decision, categoryDecision, routeContext } = params
+
+  if (category === "dry_shampoo") {
+    if (isDryShampooResetRedirectDecision(category, categoryDecision)) {
+      return "Kein weiteres Trockenshampoo empfehlen: haeufige Nutzung oder belegte/coated Roots sollen in Reduktion, Auswaschen und Reset-/Tiefenreinigungslogik fuehren. Trockenshampoo reinigt die Kopfhaut nicht und sollte spaeter ausgewaschen werden."
+    }
+
+    if (isDryShampooCautionDecision(category, categoryDecision)) {
+      return "Trockenshampoo nicht als Produkt empfehlen: bei Juckreiz, Schuppen, gereizter oder schmerzender Kopfhaut, Haarverlust-/Bruchdominanz, Atem-/Aerosol-Caution oder Kind-Kontext guidance-only bleiben und zu Kopfhaut-, Shampoo- oder Reset-Einordnung umleiten. Trockenshampoo reinigt die Kopfhaut nicht und sollte spaeter ausgewaschen werden."
+    }
+
+    if (decision === "not_recommended") {
+      return "Trockenshampoo ist kein normaler Routinebaustein und hier kein guter Produkthebel. Es passt nur als konkrete kosmetische Between-Wash-Bruecke, nicht als Pflege, Behandlung oder Reinigung. Trockenshampoo reinigt die Kopfhaut nicht und sollte spaeter ausgewaschen werden."
+    }
+
+    if (decision === "needs_more_info") {
+      return "Fuer Trockenshampoo nur eine gezielte Rueckfrage stellen, wenn die kurze Between-Wash-Bruecke unklar ist. Nicht als Pflege, Behandlung oder Reinigung framen."
+    }
+
+    if (decision === "no_catalog_match") {
+      return "Trockenshampoo passt als kurze kosmetische Between-Wash-Bruecke, aber der aktuelle Katalog liefert keinen sicheren Treffer. Keine Produkte oder Ersatzprodukte wie Babypuder erfinden; trotzdem sagen, dass Trockenshampoo die Kopfhaut nicht reinigt und spaeter ausgewaschen werden sollte."
+    }
+
+    return "Trockenshampoo nur als kurze kosmetische Between-Wash-Bruecke am Ansatz framen, nicht als Pflege, Behandlung oder Reinigung. Immer sagen: Trockenshampoo reinigt die Kopfhaut nicht und sollte spaeter ausgewaschen werden."
+  }
 
   if (category === "shampoo") {
     if (isScalpSymptomShampooQuestion(category, routeContext)) {
@@ -2725,7 +2852,7 @@ async function runCategoryEngine(params: {
         runtime,
       })
     case "dry_shampoo":
-      return selectDryShampooProductsWithEngine({ message, hairProfile, routineItems })
+      return selectDryShampooProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "peeling":
       return selectPeelingProductsWithEngine({ message, hairProfile, routineItems })
     default:

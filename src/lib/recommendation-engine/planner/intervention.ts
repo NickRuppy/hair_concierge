@@ -5,16 +5,17 @@ import type {
   InterventionPlan,
   InterventionStep,
   NormalizedProfile,
+  RecommendationRequestContext,
   ResetAssessment,
 } from "@/lib/recommendation-engine/types"
 import { isExplicitNoneArray } from "@/lib/profile/signal-derivations"
 import {
   deriveBuildupResetNeed,
   getRoutineFrequencyBand,
-  hasBetweenWashBridgeNeed,
   hasScalpDrynessOrIrritationRisk,
   isFrequencyAtLeast,
 } from "@/lib/recommendation-engine/categories/shared"
+import { emptyRecommendationRequestContext } from "@/lib/recommendation-engine/request-context"
 
 function hasRoutineItem(
   profile: NormalizedProfile,
@@ -310,30 +311,47 @@ function buildDeepCleansingShampooSteps(
 function buildDryShampooSteps(
   profile: NormalizedProfile,
   damage: DamageAssessment,
+  requestContext: RecommendationRequestContext,
+  reset?: ResetAssessment,
 ): InterventionStep[] {
   const present = hasRoutineItem(profile, "dry_shampoo")
   const frequencyBand = getRoutineFrequencyBand(profile, "dry_shampoo")
-  const bridgeNeed = hasBetweenWashBridgeNeed(profile)
+  const bridgeReasonCodes = requestContext.dryShampooBridgeNeedReasonCodes ?? []
+  const cautionReasonCodes = requestContext.dryShampooCautionReasonCodes ?? []
+  const bridgeNeed = bridgeReasonCodes.length > 0
   const drynessRisk = hasScalpDrynessOrIrritationRisk(profile, damage)
+  const hardNoReasons = cautionReasonCodes.filter(
+    (reason) => reason !== "dry_shampoo_avoid_aerosol_format_request",
+  )
+  const resetPressure =
+    reset?.triggers.includes("frequent_dry_shampoo_use") ||
+    reset?.triggers.includes("dry_shampoo_reset_pressure") ||
+    cautionReasonCodes.includes("dry_shampoo_frequent_use_reset_needed")
+  const buildupPressure =
+    cautionReasonCodes.includes("dry_shampoo_buildup_hard_no") ||
+    reset?.triggers.some(
+      (trigger) =>
+        trigger.includes("coated") ||
+        trigger.includes("buildup") ||
+        trigger.includes("waxy") ||
+        trigger.includes("product_buildup"),
+    )
 
-  if (present && (drynessRisk || isFrequencyAtLeast(frequencyBand, "5_6x"))) {
+  if (present && (drynessRisk || resetPressure || isFrequencyAtLeast(frequencyBand, "5_6x"))) {
     return [
       {
         category: "dry_shampoo",
         action: "decrease_frequency",
-        reasonCodes: ["dry_shampoo_overuse_risk"],
+        reasonCodes: ["dry_shampoo_overuse_risk", ...cautionReasonCodes],
       },
     ]
   }
 
-  if (!bridgeNeed) {
+  if (!bridgeNeed || hardNoReasons.length > 0 || buildupPressure || resetPressure) {
     return []
   }
 
-  const reasonCodes = ["between_wash_bridge_needed"]
-  if (profile.scalpType === "oily" || profile.concerns.includes("oily_scalp")) {
-    reasonCodes.push("oily_scalp_between_wash_support")
-  }
+  const reasonCodes = bridgeReasonCodes
 
   if (!present) {
     return [
@@ -439,6 +457,7 @@ export function buildInterventionPlan(
   damage: DamageAssessment,
   careNeeds: CareNeedAssessment,
   reset?: ResetAssessment,
+  requestContext: RecommendationRequestContext = emptyRecommendationRequestContext(),
 ): InterventionPlan {
   const steps: InterventionStep[] = []
   const deferredSteps: InterventionStep[] = []
@@ -472,7 +491,7 @@ export function buildInterventionPlan(
   steps.push(...buildMaskSteps(profile, damage))
   steps.push(...buildLeaveInSteps(profile, damage, careNeeds))
   steps.push(...buildDeepCleansingShampooSteps(profile, damage, reset))
-  steps.push(...buildDryShampooSteps(profile, damage))
+  steps.push(...buildDryShampooSteps(profile, damage, requestContext, reset))
   steps.push(...buildPeelingSteps(profile, damage))
 
   const bondBuilderPlan = buildBondBuilderPlan(profile, damage)
