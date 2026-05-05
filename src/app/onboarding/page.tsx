@@ -134,6 +134,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
       initialDrilldownCategory={
         forcedStep === "product_drilldown" ? initialDrilldownCategory : null
       }
+      allowCompletionFallback={!forcedStep && profileRow?.onboarding_step === "celebration"}
     />
   )
 }

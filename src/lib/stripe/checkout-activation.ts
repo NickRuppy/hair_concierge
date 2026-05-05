@@ -8,6 +8,7 @@ export interface CheckoutActivationDeps {
   stripe: Stripe
   premiumTierId: string
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
+  now?: () => Date
 }
 
 export type CheckoutActivationErrorCode =
@@ -18,6 +19,8 @@ export type CheckoutActivationErrorCode =
   | "checkout_session_customer_missing"
   | "checkout_session_subscription_missing"
   | "checkout_session_unpaid"
+  | "checkout_subscription_inactive"
+  | "checkout_subscription_expired"
   | "checkout_user_race_unresolved"
 
 export class CheckoutActivationError extends Error {
@@ -55,6 +58,7 @@ interface SubscriptionProfilePatch {
 /** Shape we actually read from the retrieved subscription. */
 export interface RetrievedSub {
   id: string
+  status?: string
   current_period_end?: number
   items: {
     data: Array<{
@@ -97,6 +101,11 @@ export async function ensureCheckoutAccount(
   deps: CheckoutActivationDeps,
 ): Promise<CheckoutAccountResult> {
   const valid = assertValidCheckoutSession(session)
+  const sub = (await deps.stripe.subscriptions.retrieve(valid.subscriptionId, {
+    expand: ["items.data.price"],
+  })) as unknown as RetrievedSub
+  assertCurrentCheckoutSubscription(sub, deps.now?.() ?? new Date())
+
   const existingProfile = await findExistingProfile(deps, valid.email, valid.customerId)
 
   let userId: string
@@ -115,9 +124,6 @@ export async function ensureCheckoutAccount(
     }
   }
 
-  const sub = (await deps.stripe.subscriptions.retrieve(valid.subscriptionId, {
-    expand: ["items.data.price"],
-  })) as unknown as RetrievedSub
   const price = sub.items.data[0].price
   const interval = intervalFromPrice({
     interval: price.recurring?.interval ?? price.interval ?? "",
@@ -144,6 +150,23 @@ export async function ensureCheckoutAccount(
   }
 
   return { userId, email: valid.email, canSetInitialPassword }
+}
+
+function assertCurrentCheckoutSubscription(sub: RetrievedSub, now: Date) {
+  if (sub.status && sub.status !== "active") {
+    throw new CheckoutActivationError(
+      "checkout_subscription_inactive",
+      "checkout subscription is not active",
+    )
+  }
+
+  const periodEnd = subPeriodEndIso(sub)
+  if (new Date(periodEnd).getTime() <= now.getTime()) {
+    throw new CheckoutActivationError(
+      "checkout_subscription_expired",
+      "checkout subscription period has expired",
+    )
+  }
 }
 
 /**
