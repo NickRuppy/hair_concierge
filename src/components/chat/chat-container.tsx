@@ -12,10 +12,14 @@ import { ConversationSidebar } from "./conversation-sidebar"
 import { useEffect, useMemo, useRef, useState, useCallback } from "react"
 import { format, isToday, isYesterday } from "date-fns"
 import { de } from "date-fns/locale"
-import { Menu } from "lucide-react"
+import { ArrowDown, Menu } from "lucide-react"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { Icon } from "@/components/ui/icon"
 import type { Product } from "@/lib/types"
+
+const JUMP_TO_LATEST_THRESHOLD_PX = 80
+const USER_OVERRIDE_DISTANCE_PX = 200
+const ASSISTANT_TOP_PADDING_PX = 16
 
 export function ChatContainer() {
   const { profile } = useAuth()
@@ -40,7 +44,17 @@ export function ChatContainer() {
   const sidebarCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [drawerProduct, setDrawerProduct] = useState<Product | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messagesScrollRef = useRef<HTMLDivElement>(null)
+  const messagesContentRef = useRef<HTMLDivElement>(null)
+  const messageTopRefs = useRef(new Map<string, HTMLDivElement>())
+  const userInitiatedTurnRef = useRef(false)
+  const userOverrideRef = useRef(false)
+  const assistantTurnAnchoredRef = useRef(false)
+  const anchoredAssistantIdRef = useRef<string | null>(null)
+  const programmaticScrollRef = useRef(false)
+  const assistantContentByIdRef = useRef(new Map<string, string>())
+  const wasStreamingRef = useRef(isStreaming)
+  const [showJumpToLatest, setShowJumpToLatest] = useState(false)
 
   // Track IDs of messages appended during this session (not from history loads).
   // Uses the "update state during render" pattern recommended by React for
@@ -69,7 +83,7 @@ export function ChatContainer() {
     setPrevMessageCount(currentCount)
   }
 
-  const hasNewMessages = currentCount > 0 && newMessageIds.size > 0
+  const isEmpty = messages.length === 0
 
   // Clear newMessageIds after animation completes so streaming deltas don't get smooth-scroll
   useEffect(() => {
@@ -85,16 +99,176 @@ export function ChatContainer() {
     loadConversations()
   }, [loadConversations])
 
-  // Scroll behavior: smooth for appended messages, instant for history loads
   useEffect(() => {
-    if (hasNewMessages) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-    } else if (messages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "instant" })
+    if (wasStreamingRef.current && !isStreaming) {
+      window.requestAnimationFrame(() => {
+        userInitiatedTurnRef.current = false
+        userOverrideRef.current = false
+      })
     }
-  }, [messages, hasNewMessages])
+    wasStreamingRef.current = isStreaming
+  }, [isStreaming])
 
   const triggerRef = useRef<HTMLElement | null>(null)
+
+  const updateJumpToLatestVisibility = useCallback(() => {
+    const container = messagesScrollRef.current
+    if (!container) {
+      setShowJumpToLatest(false)
+      return
+    }
+
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight
+    setShowJumpToLatest(distanceFromBottom > JUMP_TO_LATEST_THRESHOLD_PX)
+  }, [])
+
+  const scheduleJumpToLatestVisibilityUpdate = useCallback(() => {
+    window.requestAnimationFrame(() => {
+      updateJumpToLatestVisibility()
+    })
+  }, [updateJumpToLatestVisibility])
+
+  const scrollContainerTo = useCallback(
+    (top: number, behavior: ScrollBehavior = "auto") => {
+      const container = messagesScrollRef.current
+      if (!container) return
+
+      programmaticScrollRef.current = true
+      container.scrollTo({ top: Math.max(0, top), behavior })
+
+      window.setTimeout(
+        () => {
+          programmaticScrollRef.current = false
+          updateJumpToLatestVisibility()
+        },
+        behavior === "smooth" ? 450 : 0,
+      )
+    },
+    [updateJumpToLatestVisibility],
+  )
+
+  const scrollToLatest = useCallback(
+    (behavior: ScrollBehavior = "auto") => {
+      const container = messagesScrollRef.current
+      if (!container) return
+
+      scrollContainerTo(container.scrollHeight, behavior)
+    },
+    [scrollContainerTo],
+  )
+
+  const handleJumpToLatest = useCallback(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    scrollToLatest(prefersReducedMotion ? "auto" : "smooth")
+  }, [scrollToLatest])
+
+  const latestAssistantMessage = useMemo(
+    () => [...messages].reverse().find((message) => message.role === "assistant") ?? null,
+    [messages],
+  )
+
+  useEffect(() => {
+    const container = messagesScrollRef.current
+    if (!container) return
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateJumpToLatestVisibility()
+    })
+    resizeObserver.observe(container)
+    if (messagesContentRef.current) {
+      resizeObserver.observe(messagesContentRef.current)
+    }
+
+    scheduleJumpToLatestVisibilityUpdate()
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [isEmpty, scheduleJumpToLatestVisibilityUpdate, updateJumpToLatestVisibility])
+
+  useEffect(() => {
+    const container = messagesScrollRef.current
+    if (!container) return
+
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight
+
+    if (
+      isStreaming &&
+      userInitiatedTurnRef.current &&
+      !programmaticScrollRef.current &&
+      distanceFromBottom > USER_OVERRIDE_DISTANCE_PX
+    ) {
+      userOverrideRef.current = true
+    }
+
+    scheduleJumpToLatestVisibilityUpdate()
+  }, [isStreaming, scheduleJumpToLatestVisibilityUpdate])
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      userInitiatedTurnRef.current = false
+      userOverrideRef.current = false
+      assistantTurnAnchoredRef.current = false
+      anchoredAssistantIdRef.current = null
+      assistantContentByIdRef.current = new Map()
+      scheduleJumpToLatestVisibilityUpdate()
+      return
+    }
+
+    const latestMessage = messages[messages.length - 1]
+    const emptyAssistantPlaceholder = latestMessage?.role === "assistant" && !latestMessage.content
+    const latestAssistantContent = latestAssistantMessage?.content ?? ""
+    const latestAssistantPreviousContent = latestAssistantMessage
+      ? assistantContentByIdRef.current.get(latestAssistantMessage.id)
+      : undefined
+    const firstContentArrived = Boolean(
+      userInitiatedTurnRef.current &&
+      latestAssistantMessage &&
+      latestAssistantContent &&
+      !assistantTurnAnchoredRef.current &&
+      (latestAssistantPreviousContent === "" || latestAssistantPreviousContent === undefined),
+    )
+
+    if (!userInitiatedTurnRef.current) {
+      scrollToLatest("auto")
+    } else if (emptyAssistantPlaceholder) {
+      scrollToLatest("auto")
+    } else if (
+      firstContentArrived &&
+      latestAssistantMessage &&
+      !userOverrideRef.current &&
+      anchoredAssistantIdRef.current !== latestAssistantMessage.id
+    ) {
+      const assistantTop = messageTopRefs.current.get(latestAssistantMessage.id)
+      if (assistantTop) {
+        const container = messagesScrollRef.current
+        const top = container
+          ? container.scrollTop +
+            (assistantTop.getBoundingClientRect().top - container.getBoundingClientRect().top) -
+            ASSISTANT_TOP_PADDING_PX
+          : assistantTop.offsetTop - ASSISTANT_TOP_PADDING_PX
+
+        scrollContainerTo(top, "auto")
+        assistantTurnAnchoredRef.current = true
+        anchoredAssistantIdRef.current = latestAssistantMessage.id
+      }
+    }
+
+    const nextContentById = new Map<string, string>()
+    for (const message of messages) {
+      if (message.role === "assistant") {
+        nextContentById.set(message.id, message.content ?? "")
+      }
+    }
+    assistantContentByIdRef.current = nextContentById
+    scheduleJumpToLatestVisibilityUpdate()
+  }, [
+    latestAssistantMessage,
+    messages,
+    scheduleJumpToLatestVisibilityUpdate,
+    scrollContainerTo,
+    scrollToLatest,
+  ])
 
   const clearSidebarCloseTimer = useCallback(() => {
     if (sidebarCloseTimerRef.current) {
@@ -186,14 +360,41 @@ export function ChatContainer() {
     setDrawerOpen(true)
   }, [])
 
+  const handleSendMessage = useCallback(
+    (message: string) => {
+      userInitiatedTurnRef.current = true
+      userOverrideRef.current = false
+      assistantTurnAnchoredRef.current = false
+      anchoredAssistantIdRef.current = null
+      void sendMessage(message)
+    },
+    [sendMessage],
+  )
+
+  const handleScroll = useCallback(() => {
+    const container = messagesScrollRef.current
+    if (!container) return
+
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight
+
+    if (
+      isStreaming &&
+      userInitiatedTurnRef.current &&
+      !programmaticScrollRef.current &&
+      distanceFromBottom > USER_OVERRIDE_DISTANCE_PX
+    ) {
+      userOverrideRef.current = true
+    }
+
+    setShowJumpToLatest(distanceFromBottom > JUMP_TO_LATEST_THRESHOLD_PX)
+  }, [isStreaming])
+
   const firstName = profile?.full_name?.split(" ")[0] || null
   const hour = new Date().getHours()
   let timeGreeting = "Guten Abend"
   if (hour < 12) timeGreeting = "Guten Morgen"
   else if (hour < 18) timeGreeting = "Guten Tag"
   const greeting = firstName ? `${timeGreeting}, ${firstName}` : timeGreeting
-
-  const isEmpty = messages.length === 0
 
   return (
     <div className="flex h-[calc(100dvh-3.5rem)] overflow-hidden">
@@ -264,7 +465,12 @@ export function ChatContainer() {
         </div>
 
         {/* Messages */}
-        <div className="relative min-w-0 flex-1 overflow-y-auto overflow-x-hidden">
+        <div
+          ref={messagesScrollRef}
+          data-testid="chat-scroll-container"
+          onScroll={handleScroll}
+          className="relative min-w-0 flex-1 overflow-y-auto overflow-x-hidden"
+        >
           {/* Atmospheric layers */}
           <div
             className="pointer-events-none absolute inset-0 opacity-[0.015]"
@@ -283,7 +489,7 @@ export function ChatContainer() {
           />
 
           {isEmpty ? (
-            <div className="relative z-[1] flex h-full flex-col px-4">
+            <div ref={messagesContentRef} className="relative z-[1] flex h-full flex-col px-4">
               <div className="mx-auto mt-auto flex w-full max-w-lg flex-col items-center pb-6 pt-10 md:pb-8">
                 <div className="animate-scale-in mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
                   <CombIcon className="h-8 w-8 text-primary-foreground" />
@@ -308,7 +514,7 @@ export function ChatContainer() {
                   {suggestedPrompts.map((prompt, index) => (
                     <button
                       key={prompt.text}
-                      onClick={() => sendMessage(prompt.text)}
+                      onClick={() => handleSendMessage(prompt.text)}
                       className="animate-fade-in-up flex items-start gap-2.5 rounded-xl border px-4 py-3 text-left type-body-sm transition-all duration-200 hover:border-primary/40 hover:bg-accent hover:shadow-sm hover:-translate-y-0.5"
                       style={{ animationDelay: `${350 + index * 80}ms` }}
                     >
@@ -322,7 +528,10 @@ export function ChatContainer() {
               </div>
             </div>
           ) : (
-            <div className="relative z-[1] mx-auto w-full max-w-3xl space-y-4 p-4">
+            <div
+              ref={messagesContentRef}
+              className="relative z-[1] mx-auto w-full max-w-3xl space-y-4 p-4"
+            >
               {messages.map((msg, idx) => {
                 // Don't render empty assistant placeholder — streaming indicator handles it
                 if (msg.role === "assistant" && !msg.content) return null
@@ -350,7 +559,17 @@ export function ChatContainer() {
                 }
 
                 return (
-                  <div key={msg.id}>
+                  <div
+                    key={msg.id}
+                    ref={(node) => {
+                      if (node) {
+                        messageTopRefs.current.set(msg.id, node)
+                      } else {
+                        messageTopRefs.current.delete(msg.id)
+                      }
+                    }}
+                    data-message-id={msg.id}
+                  >
                     {dateSeparator}
                     <ChatMessage
                       message={msg}
@@ -368,13 +587,30 @@ export function ChatContainer() {
                 messages[messages.length - 1]?.role === "assistant" &&
                 !messages[messages.length - 1]?.content && <ChatLoadingIndicator />}
 
-              <div ref={messagesEndRef} />
+              <div />
             </div>
           )}
         </div>
 
         {/* Input */}
-        <ChatInput onSend={sendMessage} disabled={isStreaming} />
+        <div className="relative">
+          <button
+            type="button"
+            data-testid="chat-jump-to-latest"
+            onClick={handleJumpToLatest}
+            aria-label="Zum Ende der Antwort springen"
+            aria-hidden={!showJumpToLatest}
+            tabIndex={showJumpToLatest ? 0 : -1}
+            className={`absolute left-1/2 -top-14 z-10 flex min-h-11 min-w-11 -translate-x-1/2 items-center justify-center rounded-full border bg-background text-foreground shadow-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+              showJumpToLatest
+                ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
+                : "pointer-events-none translate-y-2 scale-95 opacity-0"
+            }`}
+          >
+            <ArrowDown className="h-5 w-5" aria-hidden="true" />
+          </button>
+          <ChatInput onSend={handleSendMessage} disabled={isStreaming} />
+        </div>
       </div>
 
       {/* Product Detail Drawer */}
