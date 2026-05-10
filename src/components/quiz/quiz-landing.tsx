@@ -1,67 +1,129 @@
 "use client"
 
+import Link from "next/link"
+import Image from "next/image"
+import { Droplet, Star } from "lucide-react"
 import { useQuizStore } from "@/lib/quiz/store"
 import { Button } from "@/components/ui/button"
 
-const bullets = [
-  "Individuelle Analyse statt pauschaler Tipps",
-  "Ordnet Frizz, Trockenheit und Kopfhautstress besser ein",
-  "Zeigt dir den nächsten sinnvollen Schritt für dein Haar",
-]
+const tomHannemannImageUrl =
+  "https://www.tophair.de/app/uploads/2025/03/SA-WS-NewFlag-TomHannemann-MS-7-683x1024.jpg"
 
 export function QuizLanding() {
   const goNext = useQuizStore((s) => s.goNext)
 
   return (
-    <div className="flex flex-col animate-fade-in-up">
-      <div className="flex-1 flex flex-col justify-center">
-        <h1 className="font-header text-4xl leading-tight text-foreground mb-4">
-          Finde in 2 Minuten heraus, was deine Haare wirklich brauchen
-        </h1>
-        <p className="text-base text-muted-foreground mb-6 leading-relaxed">
-          Hair Concierge analysiert Struktur, Kopfhaut und Pflegebedarf und zeigt dir, womit du bei
-          deiner Pflege wirklich anfangen solltest.
-        </p>
-        <ul className="space-y-3 mb-8">
-          {bullets.map((text) => (
-            <li key={text} className="flex items-start gap-2.5">
-              <span
-                className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
-                style={{ background: "rgba(var(--brand-plum-rgb), 0.15)" }}
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path
-                    d="M2.5 6L5 8.5L9.5 4"
-                    stroke="var(--brand-plum)"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-              <span className="text-base text-foreground">{text}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <main className="relative isolate flex w-full animate-fade-in-up flex-col items-center text-center">
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+        style={{
+          background:
+            "radial-gradient(ellipse 75% 52% at 12% 8%, rgba(var(--brand-plum-rgb), 0.105), transparent 62%), radial-gradient(ellipse 52% 62% at 88% 82%, rgba(var(--brand-coral-rgb), 0.085), transparent 58%), radial-gradient(ellipse 42% 42% at 55% 52%, rgba(var(--brand-plum-light-rgb), 0.08), transparent 64%), hsl(var(--background))",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 bg-[repeating-linear-gradient(0deg,transparent,transparent_39px,rgba(var(--brand-plum-rgb),0.045)_39px,rgba(var(--brand-plum-rgb),0.045)_40px)]"
+        aria-hidden="true"
+      />
 
-      <div className="space-y-2">
+      <header className="mb-8 flex items-center justify-center gap-2.5 sm:mb-9">
+        <span className="grid h-[34px] w-[34px] place-items-center rounded-[9px] bg-[var(--brand-plum-darkest)] text-white shadow-[0_10px_24px_rgba(42,24,69,0.16)]">
+          <Droplet aria-hidden="true" className="h-[19px] w-[19px] stroke-[1.65]" />
+        </span>
+        <p className="font-header text-[21px] font-semibold leading-none text-[var(--brand-plum-darkest)]">
+          Hair Concierge
+        </p>
+      </header>
+
+      <section aria-labelledby="quiz-landing-title" className="space-y-4">
+        <h1
+          id="quiz-landing-title"
+          className="text-balance font-header text-[30px] leading-[1.14] text-[var(--text-heading)] min-[380px]:text-[37px] sm:text-[40px]"
+        >
+          Weißt du, was deine Haare <em className="text-[var(--brand-plum)]">wirklich</em> brauchen?
+        </h1>
+        <p className="mx-auto max-w-[350px] text-[15px] leading-[1.62] text-[var(--text-sub)]">
+          Hair Concierge analysiert dein Haar und zeigt dir, was deine Haare tatsächlich brauchen -
+          individuell, nicht pauschal.
+        </p>
+      </section>
+
+      <section aria-label="Quiz starten" className="mt-6 w-full sm:mt-7">
         <Button
           onClick={goNext}
-          variant="unstyled"
-          className="quiz-btn-primary w-full h-14 text-base font-bold tracking-wide rounded-xl"
+          variant="landingCta"
+          aria-label="Quiz starten"
+          aria-describedby="quiz-landing-cta-detail"
         >
-          Quiz starten
+          <span className="flex flex-col items-center leading-tight">
+            <span className="text-[17px] font-extrabold tracking-[-0.01em]">Quiz starten</span>
+            <span aria-hidden="true" className="mt-1 text-xs font-medium opacity-[0.96]">
+              In ca. 2 Minuten · Kostenlos
+            </span>
+          </span>
+          <span id="quiz-landing-cta-detail" className="sr-only">
+            In ca. 2 Minuten, kostenlos
+          </span>
         </Button>
-        <p className="text-center text-sm text-[var(--text-caption)]">
-          Dauert ca. 2 Minuten. Wir führen dich Schritt für Schritt durch.
-        </p>
-        <p className="text-center text-sm text-muted-foreground pt-2">
-          <a href="/auth?force=login" className="underline hover:text-foreground transition-colors">
-            Du hast bereits ein Konto? Hier anmelden
-          </a>
+      </section>
+
+      <figure className="mt-[18px] w-full rounded-[14px] border border-border bg-white/70 p-4 shadow-[0_14px_38px_rgba(42,24,69,0.045)] backdrop-blur-[10px]">
+        <div className="flex items-center gap-3 text-left">
+          <Image
+            src={tomHannemannImageUrl}
+            alt="Tom Hannemann"
+            width={104}
+            height={104}
+            className="h-[52px] w-[52px] shrink-0 rounded-full border-2 border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] object-cover object-[52%_18%]"
+            loading="lazy"
+            referrerPolicy="no-referrer"
+          />
+          <div>
+            <blockquote className="font-header text-[13.5px] italic leading-[1.36] text-[var(--brand-plum-darkest)]">
+              „Ich sage es immer: Ohne Analyse ist jede Produktempfehlung Glücksspiel. Deswegen
+              empfehle ich genau das hier.&quot;
+            </blockquote>
+            <figcaption className="mt-2 font-mono text-[10px] font-medium uppercase leading-[1.35] tracking-[0.075em] text-[var(--text-caption)]">
+              <strong className="text-[var(--brand-plum)]">Tom Hannemann</strong> · Friseurmeister,
+              18 Jahre Erfahrung
+            </figcaption>
+          </div>
+        </div>
+      </figure>
+
+      <div
+        className="mt-[18px] flex max-w-full flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[var(--brand-plum)]"
+        aria-label="4,9 von 5 aus ersten Nutzerinnen-Feedbacks"
+      >
+        <div className="flex justify-center gap-0.5" aria-hidden="true">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <Star key={index} aria-hidden="true" className="h-[13px] w-[13px] fill-current" />
+          ))}
+        </div>
+        <p className="font-mono text-[9.5px] font-medium uppercase leading-tight tracking-[0.055em] text-[var(--text-sub)]">
+          <strong className="font-semibold text-[var(--text-body)]">4,9/5</strong> aus ersten
+          Nutzerinnen-Feedbacks
         </p>
       </div>
-    </div>
+
+      <p className="mt-4 flex items-center justify-center gap-2 font-mono text-[10.5px] font-medium uppercase leading-tight tracking-[0.11em] text-[var(--brand-coral)]">
+        <span
+          className="h-1.5 w-1.5 rounded-full bg-[var(--brand-coral)] shadow-[0_0_0_5px_rgba(var(--brand-coral-rgb),0.11)] motion-safe:animate-pulse"
+          aria-hidden="true"
+        />
+        Starte heute damit
+      </p>
+
+      <p className="mt-[15px] text-[13px] text-[var(--text-caption)]">
+        Du hast bereits ein Konto?{" "}
+        <Link
+          href="/auth?force=login"
+          className="font-semibold text-[var(--brand-plum)] underline-offset-4 transition-colors hover:text-[var(--brand-plum-dark)] hover:underline"
+        >
+          Anmelden
+        </Link>
+      </p>
+    </main>
   )
 }
