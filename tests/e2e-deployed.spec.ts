@@ -46,6 +46,30 @@ test.describe("Deployed App E2E Tests", () => {
     expect(headingFontFamily).toContain("Playfair")
   })
 
+  test("quiz landing uses a desktop composition at desktop viewports", async ({ page }) => {
+    for (const viewport of [
+      { width: 1024, height: 768 },
+      { width: 1440, height: 900 },
+    ]) {
+      await page.setViewportSize(viewport)
+      await page.goto("/quiz", { waitUntil: "domcontentloaded" })
+
+      await expect(page.getByRole("heading", { name: /Weißt du, was deine Haare/i })).toBeVisible({
+        timeout: 15000,
+      })
+      await expect(page.getByText("Was du bekommst", { exact: true })).toBeVisible()
+      await expect(page.getByText("Dein Haarprofil", { exact: true })).toBeVisible()
+      await expect(page.getByText("Dein Pflegehebel", { exact: true })).toBeVisible()
+      await expect(page.getByText("Routine & Produkte", { exact: true })).toBeVisible()
+      await expect(page.getByRole("button", { name: /Quiz starten/i })).toBeVisible()
+
+      const hasHorizontalOverflow = await page.evaluate(() => {
+        return document.documentElement.scrollWidth > document.documentElement.clientWidth
+      })
+      expect(hasHorizontalOverflow).toBe(false)
+    }
+  })
+
   test("quiz flow: start quiz and navigate through first 4 questions", async ({ page }) => {
     await page.goto("/quiz", { waitUntil: "networkidle" })
     await expect(page.getByText("Weißt du, was deine", { exact: false })).toBeVisible({

@@ -49,7 +49,7 @@ export default function QuizLayout({ children }: { children: React.ReactNode }) 
   if (step === 1) {
     return (
       <div ref={landingScrollRef} className="min-h-[100dvh] overflow-y-auto bg-background">
-        <div className="mx-auto flex min-h-[100dvh] w-full max-w-[440px] flex-col justify-center px-6 py-10 sm:px-8 lg:max-w-[520px]">
+        <div className="mx-auto flex min-h-[100dvh] w-full max-w-[440px] flex-col justify-center px-6 py-10 sm:px-8 lg:max-w-[1160px] lg:px-10 lg:py-12 xl:max-w-[1220px]">
           {children}
         </div>
       </div>
