@@ -81,7 +81,11 @@
   --brand-plum-light: #C8B8E0;
   --brand-plum-ice: #F2EEFA;
   --brand-plum-rgb: 107, 80, 160;
+  --brand-plum-light-rgb: 200, 184, 224;
   --brand-coral: #D4616A;
+  --brand-coral-dark: #C0555D;
+  --brand-coral-deep: #AA464E;
+  --brand-coral-deeper: #9F3D45;
   --brand-coral-light: #FDEEF0;
   --brand-coral-rgb: 212, 97, 106;
 
@@ -140,14 +144,17 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-body), Arial, Helvetica, sans-serif;
+    --font-display: var(--font-playfair-display), Georgia, "Times New Roman", serif;
+    --font-body: var(--font-plus-jakarta-sans), Arial, Helvetica, sans-serif;
+    --font-mono: var(--font-ibm-plex-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-family: var(--font-body);
   }
 }
 
 /* Header font utility */
 @layer components {
   .font-header {
-    font-family: var(--font-display), Georgia, serif;
+    font-family: var(--font-display);
     font-weight: 500;
     letter-spacing: normal;
   }

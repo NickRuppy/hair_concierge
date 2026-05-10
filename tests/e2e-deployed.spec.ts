@@ -22,20 +22,33 @@ test.describe("Deployed App E2E Tests", () => {
     await expect(page).toHaveURL(/\/quiz/)
 
     // Should show the quiz landing content
-    await expect(page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })).toBeVisible({
+    await expect(page.getByText("Weißt du, was deine", { exact: false })).toBeVisible({
       timeout: 15000,
     })
 
     // "QUIZ STARTEN" button should exist
     await expect(page.getByRole("button", { name: /QUIZ STARTEN/i })).toBeVisible()
 
-    // Key bullet points should be present
-    await expect(page.getByText("Individuelle Analyse", { exact: false })).toBeVisible()
+    // Key landing signals should be present
+    await expect(page.getByText("Hair Concierge", { exact: true })).toBeVisible()
+    await expect(page.getByText("Tom Hannemann", { exact: false })).toBeVisible()
+    await expect(page.getByRole("img", { name: "Tom Hannemann" })).toBeVisible()
+    await expect(page.getByText("4,9/5", { exact: false })).toBeVisible()
+    await expect(page.getByText("Starte heute damit", { exact: false })).toBeVisible()
+    await expect(page.getByRole("link", { name: /Anmelden/i })).toHaveAttribute(
+      "href",
+      "/auth?force=login",
+    )
+
+    const headingFontFamily = await page.locator("#quiz-landing-title").evaluate((element) => {
+      return getComputedStyle(element).fontFamily
+    })
+    expect(headingFontFamily).toContain("Playfair")
   })
 
   test("quiz flow: start quiz and navigate through first 4 questions", async ({ page }) => {
     await page.goto("/quiz", { waitUntil: "networkidle" })
-    await expect(page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })).toBeVisible({
+    await expect(page.getByText("Weißt du, was deine", { exact: false })).toBeVisible({
       timeout: 15000,
     })
 
@@ -146,7 +159,7 @@ test.describe("Deployed App E2E Tests", () => {
       .click()
 
     // Should go back to landing
-    await expect(page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })).toBeVisible({
+    await expect(page.getByText("Weißt du, was deine", { exact: false })).toBeVisible({
       timeout: 10000,
     })
   })
@@ -169,7 +182,7 @@ test.describe("Deployed App E2E Tests", () => {
     expect(redirectedToQuiz || redirectedToAuth).toBe(true)
 
     if (redirectedToQuiz) {
-      await expect(page.getByText("FINDE IN 2 MINUTEN HERAUS", { exact: false })).toBeVisible({
+      await expect(page.getByText("Weißt du, was deine", { exact: false })).toBeVisible({
         timeout: 15000,
       })
     } else {

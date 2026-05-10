@@ -8,7 +8,7 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://eu.i.posthog.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.supabase.co",
+      "img-src 'self' data: blob: https://*.supabase.co https://www.tophair.de",
       "font-src 'self' data:",
       "connect-src 'self' https://eu.i.posthog.com https://eu.posthog.com https://*.supabase.co https://*.sentry.io",
       "frame-ancestors 'none'",
@@ -27,6 +27,15 @@ const nextConfig: NextConfig = {
   // Keep Turbopack scoped to this repo even when a parent folder has another lockfile.
   turbopack: {
     root: process.cwd(),
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "www.tophair.de",
+        pathname: "/app/uploads/**",
+      },
+    ],
   },
   outputFileTracingIncludes: {
     "/api/chat": ["./data/agent-guidance/**/*"],
