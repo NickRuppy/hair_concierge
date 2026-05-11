@@ -406,6 +406,33 @@ test("ensureCheckoutAccount still resolves when linkQuizToProfile rejects", asyn
   expect(profiles["user-1"].subscription_status).toBe("active")
 })
 
+test("ensureCheckoutAccount can defer quiz profile linking until after the account is active", async () => {
+  const { deps, profiles } = stubDeps()
+  const linkCalls: Array<[string, string | undefined, string | undefined]> = []
+  const deferred: { work?: () => void | Promise<void> } = {}
+
+  deps.linkQuizToProfile = async (userId, email, leadId) => {
+    linkCalls.push([userId, email, leadId])
+  }
+  deps.profileLinkMode = "defer"
+  deps.defer = (work) => {
+    deferred.work = work
+  }
+
+  const result = await ensureCheckoutAccount(
+    checkoutSession({ metadata: { lead_id: "lead-deferred" } }),
+    deps,
+  )
+
+  expect(result).toMatchObject({ userId: "user-1", canSetInitialPassword: true })
+  expect(profiles["user-1"].subscription_status).toBe("active")
+  expect(linkCalls).toHaveLength(0)
+
+  expect(deferred.work).toBeDefined()
+  await deferred.work?.()
+  expect(linkCalls).toEqual([["user-1", "new@example.com", "lead-deferred"]])
+})
+
 test("ensureCheckoutAccount rejects inactive checkout subscriptions", async () => {
   const { deps, profiles } = stubDeps()
   deps.stripe.subscriptions.retrieve = async (id: string) =>

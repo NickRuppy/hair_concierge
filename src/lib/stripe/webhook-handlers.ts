@@ -4,6 +4,7 @@ import { ensureCheckoutAccount, subPeriodEndIso } from "./checkout-activation"
 import { intervalFromPrice } from "./intervals"
 
 export type HandlerDeps = CheckoutActivationDeps
+type SubscriptionUpdateDeps = Pick<HandlerDeps, "supabase">
 
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
@@ -33,7 +34,7 @@ interface UpdatedSub {
 
 export async function handleSubscriptionUpdated(
   sub: Stripe.Subscription,
-  deps: HandlerDeps,
+  deps: SubscriptionUpdateDeps,
 ): Promise<void> {
   const s = sub as unknown as UpdatedSub
   if (typeof s.customer !== "string") throw new Error("sub.customer not a string")
@@ -52,7 +53,8 @@ export async function handleSubscriptionUpdated(
     .eq("stripe_customer_id", s.customer)
 }
 
-export interface DeleteDeps extends HandlerDeps {
+export interface DeleteDeps {
+  supabase: HandlerDeps["supabase"]
   freeTierId: string
 }
 
