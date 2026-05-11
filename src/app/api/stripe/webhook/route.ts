@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server"
+import { after, NextResponse, type NextRequest } from "next/server"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { getStripe } from "@/lib/stripe/client"
 import {
@@ -7,24 +7,22 @@ import {
   handleSubscriptionDeleted,
   handleInvoicePaymentFailed,
 } from "@/lib/stripe/webhook-handlers"
+import { getStripeTierIds } from "@/lib/stripe/tier-ids"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import type Stripe from "stripe"
 
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
 
-async function getTierIds(supabase: SupabaseClient): Promise<{
-  freeTierId: string
-  premiumTierId: string
-}> {
-  const { data, error } = await supabase.from("subscription_tiers").select("id, slug")
-  if (error) throw new Error(`failed to load subscription_tiers: ${error.message}`)
-  const free = data?.find((r: { id: string; slug: string }) => r.slug === "free")?.id
-  const premium = data?.find((r: { id: string; slug: string }) => r.slug === "premium")?.id
-  if (!free || !premium) throw new Error("subscription_tiers seed rows missing")
-  return { freeTierId: free, premiumTierId: premium }
+async function getPremiumTierId(supabase: SupabaseClient) {
+  return (await getStripeTierIds(supabase)).premiumTierId
+}
+
+async function getFreeTierId(supabase: SupabaseClient) {
+  return (await getStripeTierIds(supabase)).freeTierId
 }
 
 export async function POST(req: NextRequest) {
+  const startedAt = Date.now()
   const sig = req.headers.get("stripe-signature")
   const body = await req.text()
   if (!sig) return new NextResponse("missing signature", { status: 400 })
@@ -46,26 +44,32 @@ export async function POST(req: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { persistSession: false } },
   )
-  const { freeTierId, premiumTierId } = await getTierIds(supabase)
-  const deps = { supabase, stripe, premiumTierId, linkQuizToProfile }
-  const deleteDeps = { ...deps, freeTierId }
 
   try {
     switch (event.type) {
       case "checkout.session.completed":
         await handleCheckoutSessionCompleted(
           event.data.object as unknown as Stripe.Checkout.Session,
-          deps,
+          {
+            supabase,
+            stripe,
+            premiumTierId: await getPremiumTierId(supabase),
+            linkQuizToProfile,
+            profileLinkMode: "defer",
+            defer: (work) => after(work),
+          },
         )
         break
       case "customer.subscription.updated":
-        await handleSubscriptionUpdated(event.data.object as unknown as Stripe.Subscription, deps)
+        await handleSubscriptionUpdated(event.data.object as unknown as Stripe.Subscription, {
+          supabase,
+        })
         break
       case "customer.subscription.deleted":
-        await handleSubscriptionDeleted(
-          event.data.object as unknown as Stripe.Subscription,
-          deleteDeps,
-        )
+        await handleSubscriptionDeleted(event.data.object as unknown as Stripe.Subscription, {
+          supabase,
+          freeTierId: await getFreeTierId(supabase),
+        })
         break
       case "invoice.payment_failed":
         await handleInvoicePaymentFailed(event.data.object as unknown as Stripe.Invoice)
@@ -78,6 +82,12 @@ export async function POST(req: NextRequest) {
     console.error("[stripe] handler error:", err)
     return new NextResponse(`handler error: ${message}`, { status: 500 })
   }
+
+  console.info("[stripe:webhook] handled", {
+    eventId: event.id,
+    type: event.type,
+    durationMs: Date.now() - startedAt,
+  })
 
   return NextResponse.json({ received: true })
 }
