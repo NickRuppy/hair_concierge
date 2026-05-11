@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sarah, dein Ergebnis | Haarmony</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pd:#2A1845;--pdk:#3D2A62;--pm:#6B50A0;--pl:#C8B8E0;--pi:#F2EEFA;--co:#D4616A;--cl:#FDEEF0;--bg:#FDFBF9;--card:#FFF;--bdr:#E8E4DE;--th:#2A1845;--tb:#3A3835;--ts:#6A6560;--tc:#9A9892;--fd:'Playfair Display',serif;--fb:'Plus Jakarta Sans',sans-serif;--fm:'IBM Plex Mono',monospace;--ok:#2D9F5E;--rd:#D4616A;--ba:#C04B4B}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{font-size:16px;scroll-behavior:smooth}body{font-family:var(--fb);background:var(--bg);color:var(--tb);-webkit-font-smoothing:antialiased;overflow-x:hidden}.w{max-width:520px;margin:0 auto;padding:0 20px}.i{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}.i svg{stroke-linecap:round;stroke-linejoin:round;fill:none}img{max-width:100%;height:auto;display:block}
+.bar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(253,251,249,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr)}.bar>div{max-width:520px;margin:0 auto;padding:10px 20px;display:flex;justify-content:space-between;align-items:center}.bar .dot{width:6px;height:6px;background:var(--ba);border-radius:50%;animation:p 1.4s infinite}@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}.bar .l{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:10px;font-weight:500;color:var(--tc);text-transform:uppercase;letter-spacing:.06em}.bar .t{font-family:var(--fb);font-weight:700;font-size:14px;color:var(--ba)}.bar a{padding:10px 20px;background:var(--co);border:none;border-radius:12px;font-family:var(--fb);font-size:13px;font-weight:600;color:#fff;text-decoration:none;transition:all .2s}.bar a:hover{background:#C0555D}
+.s{padding:32px 0;border-bottom:1px solid var(--bdr)}.s:last-child{border:none}.ov{font-family:var(--fm);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}.h1{font-family:var(--fd);font-weight:500;font-size:clamp(26px,7.2vw,34px);line-height:1.2;color:var(--th);margin-bottom:12px}.h2{font-family:var(--fd);font-weight:500;font-size:clamp(20px,5.5vw,26px);line-height:1.25;color:var(--th);margin-bottom:12px}.h3{font-family:var(--fb);font-weight:700;font-size:17px;line-height:1.35;color:var(--th);margin-bottom:8px}em{font-style:italic;color:var(--pm)}.bd{font-size:16px;color:var(--ts);line-height:1.6}.sm{font-size:14px;color:var(--ts);line-height:1.55}.ct{text-align:center}
+.btn{display:block;width:100%;padding:14px 24px;text-align:center;border-radius:12px;font-family:var(--fb);font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;transition:all .2s;border:none}.btn-c{background:var(--co);color:#fff;box-shadow:0 2px 16px rgba(212,97,106,.25)}.btn-c:hover{background:#C0555D;transform:translateY(-1px);box-shadow:0 4px 24px rgba(212,97,106,.35)}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(45,159,94,.08);border:1px solid rgba(45,159,94,.25);border-radius:24px;font-family:var(--fm);font-size:10px;font-weight:500;color:var(--ok);text-transform:uppercase;letter-spacing:.1em}
+
+/* SLIDER CARDS */
+.sl{background:var(--card);border:1px solid var(--bdr);border-radius:16px;padding:18px 18px 22px;margin-bottom:12px;box-shadow:0 1px 2px rgba(42,24,69,.03)}
+.sl__hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.sl__lbl{display:flex;align-items:center;gap:9px}
+.sl__ic{width:30px;height:30px;border-radius:50%;background:var(--pi);display:flex;align-items:center;justify-content:center}.sl__ic svg{width:14px;height:14px;stroke:var(--pm);stroke-width:1.6;fill:none}
+.sl__name{font-family:var(--fm);font-size:10px;font-weight:500;color:var(--pm);text-transform:uppercase;letter-spacing:.08em}
+.sl__axis{font-family:var(--fm);font-size:9px;font-weight:500;color:var(--pm);text-transform:uppercase;letter-spacing:.1em;padding:4px 11px;border:1px solid var(--pl);border-radius:24px;background:var(--bg)}
+.sl__row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:12px}
+.sl__col{flex:1;min-width:0}.sl__col.r{text-align:right}
+.sl__step{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.sl__step.l{color:var(--rd)}.sl__step.r{color:var(--ok)}
+.sl__step.l::before{content:'';width:5px;height:5px;background:var(--rd);border-radius:50%}
+.sl__step.r::after{content:'';width:5px;height:5px;background:var(--ok);border-radius:50%}
+.sl__txt{font-family:var(--fd);font-weight:400;font-size:18px;line-height:1.25;color:var(--th)}
+.sl__bar{position:relative;height:8px;border-radius:4px;background:linear-gradient(90deg,#E47474 0%,#E8A557 33%,#D9C460 55%,#A8C76E 78%,#7AB582 100%);margin:6px 12px 4px;box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
+.sl__mk{position:absolute;top:50%;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.sl__mk.now{background:#fff;border:2.5px solid var(--rd)}.sl__mk.now::after{content:'';width:8px;height:8px;background:var(--rd);border-radius:50%}
+.sl__mk.gl{background:transparent;border:1.5px dashed var(--ok)}.sl__mk.gl::after{content:'';width:8px;height:8px;border:1.5px solid var(--ok);border-radius:50%;background:transparent}
+.sl__ends{display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--tc);padding:0 6px}
+
+/* SUMMARY CARD */
+.sm-card{background:var(--card);border:1px solid var(--bdr);border-radius:16px;padding:22px;margin-top:14px;box-shadow:0 1px 2px rgba(42,24,69,.03)}
+.sm-card__ov{font-family:var(--fm);font-size:10px;font-weight:500;color:var(--pm);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.sm-card__t{font-family:var(--fd);font-weight:500;font-size:24px;line-height:1.25;color:var(--th);margin-bottom:14px}
+.sm-card__p{font-size:14.5px;color:var(--ts);line-height:1.6;margin-bottom:10px}.sm-card__p:last-child{margin-bottom:0}.sm-card__p.lead{color:var(--th)}
+
+/* PLAN TEASER */
+.bp{position:relative;background:var(--card);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;margin-top:24px}.bp__c{padding:22px;filter:blur(5px);user-select:none;pointer-events:none}.bp__l{height:10px;background:var(--pi);border-radius:5px;margin-bottom:10px}.bp__l:nth-child(1){width:75%}.bp__l:nth-child(2){width:55%}.bp__l:nth-child(3){width:85%}.bp__l:nth-child(4){width:40%}.bp__l:nth-child(5){width:65%}.bp__o{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(253,251,249,.55);padding:24px;text-align:center}.bp__txt{font-family:var(--fd);font-weight:500;font-size:20px;color:var(--th);margin-top:6px}.bp__hint{font-size:13px;color:var(--ts);margin-top:6px;margin-bottom:14px;max-width:300px}
+
+/* TOM */
+.tom{display:flex;gap:16px;align-items:flex-start}.tom__img{width:80px;height:80px;border-radius:50%;border:2px solid var(--pl);flex-shrink:0;overflow:hidden}.tom__img img{width:100%;height:100%;object-fit:cover}.tom__q{font-family:var(--fd);font-style:italic;font-size:15px;color:var(--th);line-height:1.5;margin-bottom:6px}.tom__name{font-size:13px;font-weight:700;color:var(--th)}.tom__role{font-size:11px;color:var(--tc)}.tom__creds{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.tom__c{padding:3px 10px;background:var(--pi);border:1px solid var(--pl);border-radius:24px;font-family:var(--fm);font-size:8px;font-weight:500;color:var(--pm);text-transform:uppercase;letter-spacing:.04em}
+
+/* FEATURES */
+.ft{background:var(--card);border:1px solid var(--bdr);border-radius:14px;overflow:hidden;margin-bottom:12px}.ft__vis{height:240px;background:var(--pi);display:flex;align-items:center;justify-content:center;overflow:hidden}.ft__vis img{width:100%;height:100%;object-fit:cover;object-position:top}.ft__body{padding:16px 20px}.ft__tag{font-family:var(--fm);font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--pm);margin-bottom:6px}.ft__benefit{font-family:var(--fd);font-style:italic;font-size:13px;color:var(--pm);margin-top:10px;padding-top:10px;border-top:1px solid var(--bdr);line-height:1.4}
+
+/* COMPARISON */
+.cmp{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);border-radius:12px;overflow:hidden;border:1px solid var(--bdr);font-size:13px}.cmp th{padding:10px 12px;font-family:var(--fm);font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--tc)}.cmp th:first-child{text-align:left}.cmp th:nth-child(3){color:var(--pm);background:var(--pi)}.cmp td{padding:10px 12px;border-top:1px solid var(--bdr);text-align:center}.cmp td:first-child{text-align:left;color:var(--ts)}.cmp td:nth-child(3){background:rgba(242,238,250,.4)}.cmp .y{color:var(--pm);font-weight:700}.cmp .n{color:var(--tc)}
+
+/* PRICING */
+.urg{background:var(--cl);border:1px solid rgba(212,97,106,.12);border-radius:14px;padding:20px;text-align:center;margin-bottom:20px}.urg__l{font-family:var(--fm);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--co);margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:6px}.urg__v{font-family:var(--fb);font-weight:700;font-size:32px;color:var(--th);line-height:1}.urg__s{font-size:12px;color:var(--ts);margin-top:6px}
+.pl{background:var(--card);border:1.5px solid var(--bdr);border-radius:14px;padding:14px 20px;margin-bottom:10px;cursor:pointer;transition:all .2s;position:relative;display:flex;align-items:center;gap:14px}.pl:hover{border-color:var(--pl)}.pl.sel{border-color:var(--pm);background:var(--pi)}.pl__bdg{position:absolute;top:-9px;right:14px;background:var(--pm);color:#fff;font-family:var(--fm);font-size:8px;font-weight:500;padding:3px 10px;border-radius:24px;letter-spacing:.06em;text-transform:uppercase}.pl__r{width:18px;height:18px;border:2px solid var(--bdr);border-radius:50%;flex-shrink:0;position:relative}.pl.sel .pl__r{border-color:var(--pm);background:var(--pm)}.pl.sel .pl__r::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;background:#fff;border-radius:50%}.pl__i{flex:1}.pl__n{font-weight:700;font-size:15px;color:var(--th)}.pl__dt{font-size:11px;color:var(--tc);margin-top:1px}.pl__p{text-align:right}.pl__pr{font-weight:700;font-size:18px;color:var(--th);line-height:1}
+
+/* GUARANTEE */
+.guar{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:28px 24px;margin-top:32px}
+
+/* FADE */
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.a{opacity:0;animation:fu .5s cubic-bezier(.16,1,.3,1) forwards}.a1{animation-delay:.06s}.a2{animation-delay:.14s}.a3{animation-delay:.22s}.a4{animation-delay:.3s}.rv{opacity:0;transform:translateY(16px);transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1)}.rv.vis{opacity:1;transform:translateY(0)}
+
+@media(max-width:380px){.tom{flex-direction:column;align-items:center;text-align:center}.tom__creds{justify-content:center}.pl{padding:12px;gap:10px}.sl__txt{font-size:16px}.sm-card__t{font-size:21px}}
+</style>
+</head>
+<body>
+
+<!-- STICKY OFFER BAR -->
+<div class="bar"><div><div class="l"><span class="dot"></span>Angebot: <span class="t" id="tt">8:28</span></div><a href="#pricing">Jetzt sichern</a></div></div>
+
+<div class="w">
+
+<!-- HERO (from offer mockup) -->
+<div class="s" style="padding-top:60px;padding-bottom:24px;border:none">
+  <div class="ct"><span class="badge a a1"><span class="i"><svg viewBox="0 0 24 24" width="13" height="13" stroke="var(--ok)" stroke-width="2.2" fill="none"><polyline points="20 6 9 17 4 12"/></svg></span>Analyse fertig</span></div>
+  <p class="ov ct a a1" style="color:var(--pm);margin-top:14px;margin-bottom:6px">Sarah, dein Ergebnis</p>
+  <h1 class="h1 ct a a2">Dein Haar braucht mehr <em>Protein</em> als Feuchtigkeit.</h1>
+</div>
+
+<!-- ANALYSIS SECTION (kept from current result page — 3 sliders + summary card) -->
+<div class="s" style="padding-top:0;border:none">
+
+  <!-- Slider 1: Haargefühl -->
+  <div class="sl a a3">
+    <div class="sl__hd">
+      <div class="sl__lbl">
+        <span class="sl__ic"><svg viewBox="0 0 24 24"><path d="M12 3c-3 4-6 7-6 11a6 6 0 0012 0c0-4-3-7-6-11z"/></svg></span>
+        <span class="sl__name">Haargefühl</span>
+      </div>
+      <span class="sl__axis">Längen</span>
+    </div>
+    <div class="sl__row">
+      <div class="sl__col"><span class="sl__step l">Heute</span><div class="sl__txt">trocken & spröde</div></div>
+      <div class="sl__col r"><span class="sl__step r">Ziel</span><div class="sl__txt">weicher & geschmeidiger</div></div>
+    </div>
+    <div class="sl__bar"><div class="sl__mk now" style="left:28%"></div><div class="sl__mk gl" style="left:78%"></div></div>
+    <div class="sl__ends"><span>Trocken</span><span>Geschmeidig</span></div>
+  </div>
+
+  <!-- Slider 2: Was dich gerade ausbremst -->
+  <div class="sl a a3">
+    <div class="sl__hd">
+      <div class="sl__lbl">
+        <span class="sl__ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/></svg></span>
+        <span class="sl__name">Was dich gerade ausbremst</span>
+      </div>
+      <span class="sl__axis">Haar</span>
+    </div>
+    <div class="sl__row">
+      <div class="sl__col"><span class="sl__step l">Heute</span><div class="sl__txt">Haarbruch</div></div>
+      <div class="sl__col r"><span class="sl__step r">Ziel</span><div class="sl__txt">stabilere, geschützte Längen</div></div>
+    </div>
+    <div class="sl__bar"><div class="sl__mk now" style="left:42%"></div><div class="sl__mk gl" style="left:72%"></div></div>
+    <div class="sl__ends"><span>Instabil</span><span>Geschützt</span></div>
+  </div>
+
+  <!-- Slider 3: Worauf wir hinarbeiten -->
+  <div class="sl a a3">
+    <div class="sl__hd">
+      <div class="sl__lbl">
+        <span class="sl__ic"><svg viewBox="0 0 24 24"><path d="M12 3c-3 4-6 7-6 11a6 6 0 0012 0c0-4-3-7-6-11z"/></svg></span>
+        <span class="sl__name">Worauf wir hinarbeiten</span>
+      </div>
+      <span class="sl__axis">Längen</span>
+    </div>
+    <div class="sl__row">
+      <div class="sl__col"><span class="sl__step l">Heute</span><div class="sl__txt">wenig Feuchtigkeit</div></div>
+      <div class="sl__col r"><span class="sl__step r">Ziel</span><div class="sl__txt">mehr Elastizität & Geschmeidigkeit</div></div>
+    </div>
+    <div class="sl__bar"><div class="sl__mk now" style="left:32%"></div><div class="sl__mk gl" style="left:82%"></div></div>
+    <div class="sl__ends"><span>Trocken</span><span>Geschmeidig</span></div>
+  </div>
+
+  <!-- Summary card: Was dein Haar jetzt braucht -->
+  <div class="sm-card a a4">
+    <p class="sm-card__ov">Was dein Haar jetzt braucht</p>
+    <h2 class="sm-card__t">Mehr Stabilität in die Längen bringen</h2>
+    <p class="sm-card__p lead">Wenn die Längen geschwächt sind, geben sie schneller nach und Spliss oder Haarbruch werden leichter weiter begünstigt.</p>
+    <p class="sm-card__p">Am meisten erreichen wir hier mit einem Bondbuilder; zusätzlich kann eine stärkende Maske helfen, die Längen belastbarer zu halten.</p>
+  </div>
+</div>
+
+<!-- PLAN TEASER (from offer mockup, the cut point) -->
+<div class="s" style="padding-top:0;border:none">
+  <div class="bp rv">
+    <div class="bp__c"><div class="bp__l"></div><div class="bp__l"></div><div class="bp__l"></div><div class="bp__l"></div><div class="bp__l"></div></div>
+    <div class="bp__o">
+      <svg viewBox="0 0 40 40" width="36" height="36" fill="none">
+        <rect x="8" y="18" width="24" height="18" rx="4" fill="#F2EEFA" stroke="#6B50A0" stroke-width="1.5"/>
+        <path d="M14 18v-5a6 6 0 0112 0v5" stroke="#6B50A0" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="20" cy="27" r="2.5" fill="#6B50A0"/>
+        <line x1="20" y1="29.5" x2="20" y2="32" stroke="#6B50A0" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div class="bp__txt">Dein 30-Tage-Plan ist fertig</div>
+      <div class="bp__hint">Mit konkreten Produkten für deine Situation</div>
+      <a href="#pricing" class="btn btn-c" style="width:auto;display:inline-block;padding:13px 36px;font-size:13.5px">Plan freischalten</a>
+    </div>
+  </div>
+</div>
+
+<!-- TOM -->
+<div class="s rv">
+  <div class="tom">
+    <div class="tom__img"><img src="https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69a16fda524b7136dd4042ab.png" alt="Tom"></div>
+    <div style="flex:1">
+      <p class="tom__q">"Viele Frauen überladen ihr Haar mit Feuchtigkeit, dabei fehlt Protein. Das Haar wird weich, bricht aber trotzdem. Genau das erkennt Haarmony."</p>
+      <p class="tom__name">Tom</p>
+      <p class="tom__role">Friseurmeister & Haarmony-Gründer</p>
+      <div class="tom__creds"><span class="tom__c">18 Jahre Erfahrung</span><span class="tom__c">900+ Kundinnen</span><span class="tom__c">Bekannt aus SAT.1</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="s rv">
+  <p class="ov ct" style="color:var(--pm)">Was Haarmony für dich tut</p>
+  <h2 class="h2 ct">Dein persönlicher Haar-Experte. <em>Immer dabei.</em></h2>
+
+  <div class="ft"><div class="ft__vis"><img src="https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69de974c80b446d0fb772568.png" alt="KI Haar-Berater"></div><div class="ft__body"><p class="ft__tag">Dein KI Haar-Berater</p><h3 class="h3">Frag alles. Bekomm sofort Antworten.</h3><p class="sm">"Welches Öl für meine Spitzen?" "Warum brechen meine Haare?" — dein persönlicher Berater kennt dein Haar und antwortet sofort. Persönlicher als jeder Salonbesuch.</p><p class="ft__benefit">Kompetente Antworten, wann immer du sie brauchst.</p></div></div>
+  <div class="ft"><div class="ft__vis"><img src="https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69de91e3b935a2d764c3200c.png" alt="Produktempfehlungen"></div><div class="ft__body"><p class="ft__tag">500+ geprüfte Produkte</p><h3 class="h3">Das richtige Shampoo. Der richtige Conditioner. Sofort.</h3><p class="sm">Haarmony sagt dir genau, welches Shampoo und welchen Conditioner du brauchst — mit Name und Marke. Die restlichen Produkte für deine Routine bekommst du im 30-Tage-Plan.</p><p class="ft__benefit">Nie wieder Fehlkäufe. Jedes Produkt hat einen Grund.</p></div></div>
+  <div class="ft"><div class="ft__vis"><img src="https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69de921fe7237c4dd30efc6c.png" alt="Haarpflege Planer"></div><div class="ft__body"><p class="ft__tag">Deine Routine</p><h3 class="h3">Ein klarer Plan. Was. Wann. Wie oft.</h3><p class="sm">Haarmony baut dir eine Routine, die so einfach wie möglich ist. Abgestimmt auf deinen Alltag, deinen Haartyp und deine Ziele.</p><p class="ft__benefit">Du weißt jeden Tag genau, was zu tun ist.</p></div></div>
+</div>
+
+<!-- COMPARISON -->
+<div class="s rv">
+  <h2 class="h2 ct">Ohne vs. mit <em>Haarmony</em></h2>
+  <table class="cmp"><thead><tr><th></th><th>Ohne</th><th>Haarmony</th></tr></thead><tbody>
+    <tr><td>Protein/Feuchtigkeit-Analyse</td><td class="n">—</td><td class="y">Ja</td></tr>
+    <tr><td>Passende Produkte</td><td class="n">Rätselraten</td><td class="y">500+ mit Namen</td></tr>
+    <tr><td>Persönliche Routine</td><td class="n">Trial & Error</td><td class="y">Sofort</td></tr>
+    <tr><td>Beratung bei Fragen</td><td class="n">Teurer Salon</td><td class="y">Jederzeit</td></tr>
+    <tr><td>Sichtbares Ergebnis</td><td class="n">Monate?</td><td class="y">4 Wochen</td></tr>
+    <tr><td>Geld für falsche Produkte</td><td style="color:var(--ba)">Hunderte €</td><td class="y">0 €</td></tr>
+  </tbody></table>
+</div>
+
+<!-- PRICING -->
+<div class="s rv" id="pricing">
+  <p class="ov ct" style="color:var(--pm)">Dein Plan ist fertig</p>
+  <h2 class="h1 ct">Starte <em>Haarmony</em></h2>
+  <p class="bd ct" style="margin-bottom:20px">Deine Auswertung zeigt, was möglich ist. Dein Plan zeigt dir wie.</p>
+  <div class="urg"><div class="urg__l"><span class="i"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="#D4616A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8.5"/><polyline points="10 5 10 10 13.5 12"/></svg></span>Angebot läuft ab in</div><div class="urg__v" id="mT">8:28</div><div class="urg__s">Danach gilt der normale Preis</div></div>
+  <div class="pl" data-p="monthly" onclick="sp(this)"><div class="pl__r"></div><div class="pl__i"><div class="pl__n">Monatlich</div><div class="pl__dt"><span style="color:var(--th);font-weight:600">7,99€</span> · flexibel kündbar</div></div><div class="pl__p"><div class="pl__pr">0,27€<span style="font-size:11px;font-weight:400;color:var(--tc)">/Tag</span></div></div></div>
+  <div class="pl sel" data-p="quarterly" onclick="sp(this)"><div class="pl__bdg">Beliebteste Wahl</div><div class="pl__r"></div><div class="pl__i"><div class="pl__n">3 Monate</div><div class="pl__dt"><span style="color:var(--th);font-weight:600">14,99€</span> · einmalig</div></div><div class="pl__p"><div class="pl__pr">0,17€<span style="font-size:11px;font-weight:400;color:var(--tc)">/Tag</span></div></div></div>
+  <div class="pl" data-p="yearly" onclick="sp(this)"><div class="pl__r"></div><div class="pl__i"><div class="pl__n">12 Monate</div><div class="pl__dt"><span style="color:var(--th);font-weight:600">39,99€</span> · einmalig</div></div><div class="pl__p"><div class="pl__pr">0,11€<span style="font-size:11px;font-weight:400;color:var(--tc)">/Tag</span></div></div></div>
+  <a href="#" id="cta" class="btn btn-c" style="margin-top:14px">Jetzt starten — 14,99€ für 3 Monate</a>
+  <p style="text-align:center;font-size:11px;color:var(--tc);margin-top:8px">14 Tage Geld-zurück-Garantie · Kein Risiko</p>
+
+  <!-- GUARANTEE -->
+  <div class="guar">
+    <div style="position:relative;width:110px;height:110px;margin-bottom:18px;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 110 110" width="110" height="110" style="position:absolute;inset:0">
+        <circle cx="55" cy="55" r="52" fill="none" stroke="#D4616A" stroke-width="1.2" stroke-dasharray="3 4"/>
+        <circle cx="55" cy="55" r="45" fill="rgba(212,97,106,.05)" stroke="#D4616A" stroke-width="1.5"/>
+      </svg>
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1">
+        <div style="font-family:var(--fm);font-size:8px;font-weight:500;letter-spacing:.15em;color:var(--co);text-transform:uppercase;margin-bottom:-2px">Geld zurück</div>
+        <div style="font-family:var(--fd);font-size:42px;font-weight:600;color:var(--pd);line-height:1">14</div>
+        <div style="font-family:var(--fm);font-size:8px;font-weight:500;letter-spacing:.15em;color:var(--co);text-transform:uppercase;margin-top:-2px">Tage Garantie</div>
+      </div>
+    </div>
+    <h3 class="h3" style="margin-bottom:8px;font-family:var(--fd);font-weight:500;font-size:20px">Geld-zurück-Garantie</h3>
+    <p style="font-size:13px;color:var(--ts);line-height:1.55;max-width:340px">Wir glauben, dass dein Plan für dich funktionieren wird und du in 4 Wochen sichtbare Ergebnisse erzielst. Sollte das nicht der Fall sein, bekommst du innerhalb von 14 Tagen nach dem Kauf dein Geld zurück. Ohne Wenn und Aber.</p>
+  </div>
+</div>
+
+<!-- FINAL CTA -->
+<div class="s rv" style="text-align:center">
+  <h2 class="h2">Dein Haar wartet nicht.<br><em>Starte jetzt.</em></h2>
+  <p class="sm ct" style="margin-bottom:20px;max-width:380px;margin-left:auto;margin-right:auto">Dein persönlicher Plan ist fertig. Hol dir jetzt das Sonderangebot.</p>
+  <a href="#" id="cta2" class="btn btn-c">Mein Angebot sichern</a>
+  <div style="height:48px"></div>
+</div>
+</div>
+
+<script>
+let sec=8*60+28;function tick(){if(sec<=0)return;sec--;const m=Math.floor(sec/60),s=sec%60,str=m+':'+String(s).padStart(2,'0');document.getElementById('tt').textContent=str;document.getElementById('mT').textContent=str}setInterval(tick,1000);
+const lbl={monthly:'Jetzt starten — 7,99€/Monat',quarterly:'Jetzt starten — 14,99€ für 3 Monate',yearly:'Jetzt starten — 39,99€/Jahr'};
+function sp(el){document.querySelectorAll('.pl').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');document.getElementById('cta').textContent=lbl[el.dataset.p]}
+const ob=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('vis');ob.unobserve(x.target)}})},{threshold:.1});document.querySelectorAll('.rv').forEach(el=>ob.observe(el));
+</script>
+</body>
+</html>
