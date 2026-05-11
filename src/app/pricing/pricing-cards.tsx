@@ -4,51 +4,35 @@ import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { loadStripe } from "@stripe/stripe-js"
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js"
+import type { BillingInterval } from "@/lib/stripe/intervals"
+import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+const stripePromise = stripePublishableKey
+  ? loadStripe(stripePublishableKey)
+  : Promise.resolve(null)
+const checkoutStartError = "Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
 
-interface Plan {
-  interval: "month" | "quarter" | "year"
-  name: string
-  price: string
-  perMonth: string
-  badge?: string
-  savings?: string
-}
+type PlanInterval = BillingInterval
 
-const PLANS: Plan[] = [
-  { interval: "month", name: "Monatlich", price: "€14,99", perMonth: "/ Monat" },
-  {
-    interval: "quarter",
-    name: "Quartal",
-    price: "€34,99",
-    perMonth: "~€11,66 / Monat",
-    savings: "22% sparen",
-  },
-  {
-    interval: "year",
-    name: "Jährlich",
-    price: "€99,99",
-    perMonth: "~€8,33 / Monat",
-    badge: "Beliebt",
-    savings: "44% sparen",
-  },
-]
+const PLANS = STRIPE_PRICING_PLANS
 
 export function PricingCards({
   leadId,
   initialInterval = null,
 }: {
   leadId: string | null
-  initialInterval?: Plan["interval"] | null
+  initialInterval?: PlanInterval | null
 }) {
   const router = useRouter()
-  const [selectedInterval, setSelectedInterval] = useState<Plan["interval"] | null>(initialInterval)
-  const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const [selectedInterval, setSelectedInterval] = useState<PlanInterval | null>(initialInterval)
+  const [checkoutError, setCheckoutError] = useState<string | null>(() =>
+    initialInterval && !stripePublishableKey ? checkoutStartError : null,
+  )
 
-  function choosePlan(interval: Plan["interval"]) {
+  function choosePlan(interval: PlanInterval) {
     if (interval === selectedInterval) return
-    setCheckoutError(null)
+    setCheckoutError(stripePublishableKey ? null : checkoutStartError)
     setSelectedInterval(interval)
     const params = new URLSearchParams({ interval })
     if (leadId) params.set("lead", leadId)
@@ -56,6 +40,11 @@ export function PricingCards({
   }
 
   const fetchClientSecret = useCallback(async () => {
+    if (!stripePublishableKey) {
+      setCheckoutError(checkoutStartError)
+      throw new Error("stripe publishable key missing")
+    }
+
     setCheckoutError(null)
     const res = await fetch("/api/stripe/create-checkout-session", {
       method: "POST",
@@ -66,12 +55,15 @@ export function PricingCards({
       }),
     })
     if (!res.ok) {
-      const msg = "Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
-      setCheckoutError(msg)
+      setCheckoutError(checkoutStartError)
       throw new Error("failed to create checkout session")
     }
-    const data = await res.json()
-    return data.client_secret as string
+    const data = (await res.json()) as { client_secret?: string }
+    if (!data.client_secret) {
+      setCheckoutError(checkoutStartError)
+      throw new Error("checkout session response missing client secret")
+    }
+    return data.client_secret
   }, [selectedInterval, leadId])
 
   return (

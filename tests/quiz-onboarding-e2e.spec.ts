@@ -193,9 +193,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i })).toBeVisible({
         timeout: 45_000,
       })
-      await expect(
-        page.getByRole("heading", { name: /So kommen wir deinem Haarziel näher/i }),
-      ).toHaveCount(0)
+      await expect(page.getByText(/Analyse fertig/i)).toHaveCount(0)
 
       await expect
         .poll(
@@ -208,25 +206,25 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         .toBe("analyzed")
 
       await page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i }).click()
+      await expect(page.getByText(/Analyse fertig/i)).toBeVisible({ timeout: 15_000 })
       await expect(
-        page.getByRole("heading", { name: /So kommen wir deinem Haarziel näher/i }),
-      ).toBeVisible({ timeout: 15_000 })
+        page.getByRole("heading", {
+          name: /Dein Haar braucht mehr Protein als Feuchtigkeit/i,
+        }),
+      ).toBeVisible()
       await expect(
         page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i }),
       ).toBeVisible()
-      await expect(page.getByRole("button", { name: /PLAN FREISCHALTEN/i })).toBeVisible()
+      await expect(
+        page.getByRole("button", { name: /Jetzt starten.*34,99.*Quartal/i }),
+      ).toBeVisible()
+      await expect(page.getByText(/ERGEBNIS TEILEN/i)).toHaveCount(0)
     })
 
-    await test.step("Authenticate via inline auth on quiz-welcome", async () => {
-      // Public result CTA now hands anonymous users to pricing. The test then
-      // uses the auth page directly with the latest lead id so it can verify
-      // quiz-to-profile linking without exercising Stripe checkout.
-      await page.getByRole("button", { name: /PLAN FREISCHALTEN/i }).click()
-      await page.waitForURL(/\/pricing(\?.*)?$/, {
-        timeout: 15_000,
-        waitUntil: "domcontentloaded",
-      })
-
+    await test.step("Authenticate via direct auth shortcut with the latest lead", async () => {
+      // The result step now contains the merged offer page and inline Stripe checkout.
+      // This E2E skips payment by authenticating directly with the latest lead id,
+      // preserving coverage for quiz-to-profile linking without exercising Stripe.
       const latestLead = await fetchLatestLead()
       expect(latestLead?.id).toBeTruthy()
       await page.goto(`/auth?next=/onboarding&lead=${latestLead!.id}`, {
@@ -483,24 +481,24 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         timeout: 45_000,
       })
       await page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i }).click()
+      await expect(page.getByText(/Analyse fertig/i)).toBeVisible({ timeout: 15_000 })
       await expect(
-        page.getByRole("heading", { name: /So kommen wir deinem Haarziel näher/i }),
-      ).toBeVisible({ timeout: 15_000 })
+        page.getByRole("heading", {
+          name: /Dein Haar braucht mehr Feuchtigkeit als Protein/i,
+        }),
+      ).toBeVisible()
       await expect(
         page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i }),
       ).toBeVisible()
-      await expect(page.getByRole("button", { name: /PLAN FREISCHALTEN/i })).toBeVisible()
+      await expect(
+        page.getByRole("button", { name: /Jetzt starten.*34,99.*Quartal/i }),
+      ).toBeVisible()
+      await expect(page.getByText(/ERGEBNIS TEILEN/i)).toHaveCount(0)
     })
 
-    await test.step("Log back in via inline auth and relink the new lead", async () => {
-      // Advance from public results to pricing, then authenticate directly with
-      // the latest lead id to verify relinking without exercising Stripe checkout.
-      await page.getByRole("button", { name: /PLAN FREISCHALTEN/i }).click()
-      await page.waitForURL(/\/pricing(\?.*)?$/, {
-        timeout: 15_000,
-        waitUntil: "domcontentloaded",
-      })
-
+    await test.step("Log back in via direct auth shortcut and relink the new lead", async () => {
+      // The merged result offer page owns the Stripe handoff. This test keeps
+      // the non-Stripe relink path by authenticating directly with the latest lead id.
       const latestLead = await fetchLatestLead()
       expect(latestLead?.id).toBeTruthy()
       await page.goto(`/auth?next=/onboarding&lead=${latestLead!.id}`, {

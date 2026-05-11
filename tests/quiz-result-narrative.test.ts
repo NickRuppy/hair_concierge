@@ -287,6 +287,42 @@ test("fallback branch still offers a concise but fuller product bridge", () => {
   )
 })
 
+test("hero headline maps overextended pull test to protein-led result", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "wavy",
+    thickness: "normal",
+    pulltest: "stretches_stays",
+    concerns: ["breakage"],
+    goals: ["strengthen"],
+  })
+
+  assert.equal(narrative.heroHeadline, "Dein Haar braucht mehr Protein als Feuchtigkeit.")
+})
+
+test("hero headline maps snapping pull test to moisture-led result", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "fine",
+    pulltest: "snaps",
+    concerns: ["dryness"],
+    goals: ["moisture"],
+  })
+
+  assert.equal(narrative.heroHeadline, "Dein Haar braucht mehr Feuchtigkeit als Protein.")
+})
+
+test("hero headline has a balanced fallback", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "curly",
+    thickness: "normal",
+    pulltest: "stretches_bounces",
+    concerns: ["frizz"],
+    goals: ["less_frizz"],
+  })
+
+  assert.equal(narrative.heroHeadline, "Deine Balance ist näher dran, als es sich gerade anfühlt.")
+})
+
 test("fixed row labels and CTA copy stay compact", () => {
   const narrative = buildQuizResultNarrative({
     structure: "wavy",
