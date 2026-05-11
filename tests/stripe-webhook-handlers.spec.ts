@@ -231,40 +231,6 @@ test("checkout.session.completed without metadata calls linkQuizToProfile with u
   expect(calledLeadId).toBeUndefined()
 })
 
-test("checkout.session.completed can defer quiz profile linking", async () => {
-  const { deps, profiles } = stubDeps()
-  const calls: Array<[string, string | undefined, string | undefined]> = []
-  const deferred: { work?: () => void | Promise<void> } = {}
-
-  deps.linkQuizToProfile = async (userId, email, leadId) => {
-    calls.push([userId, email, leadId])
-  }
-  deps.profileLinkMode = "defer"
-  deps.defer = (work) => {
-    deferred.work = work
-  }
-
-  const session = {
-    id: "cs_defer",
-    status: "complete",
-    payment_status: "paid",
-    customer: "cus_defer",
-    customer_details: { email: "defer@example.com" },
-    subscription: "sub_defer",
-    metadata: { lead_id: "lead-defer" },
-  } as any
-
-  await handleCheckoutSessionCompleted(session, deps)
-
-  const p = Object.values(profiles).find((x: any) => x.email === "defer@example.com") as any
-  expect(p?.subscription_status).toBe("active")
-  expect(calls).toHaveLength(0)
-
-  expect(deferred.work).toBeDefined()
-  await deferred.work?.()
-  expect(calls).toEqual([[p.id, "defer@example.com", "lead-defer"]])
-})
-
 test("checkout.session.completed does not throw when linkQuizToProfile rejects", async () => {
   const { deps, profiles } = stubDeps()
   deps.linkQuizToProfile = async () => {

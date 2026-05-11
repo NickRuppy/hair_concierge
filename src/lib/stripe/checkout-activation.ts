@@ -8,8 +8,6 @@ export interface CheckoutActivationDeps {
   stripe: Stripe
   premiumTierId: string
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
-  profileLinkMode?: "await" | "defer" | "skip"
-  defer?: (work: () => void | Promise<void>) => void
   now?: () => Date
 }
 
@@ -93,9 +91,7 @@ export async function verifyCheckoutSessionForActivation(
   }
 
   const stripeClient = stripe ?? (await import("./client")).getStripe()
-  const session = await measureCheckoutStep("stripe.checkout.sessions.retrieve", () =>
-    stripeClient.checkout.sessions.retrieve(sessionId),
-  )
+  const session = await stripeClient.checkout.sessions.retrieve(sessionId)
   assertValidCheckoutSession(session)
   return session
 }
@@ -104,19 +100,13 @@ export async function ensureCheckoutAccount(
   session: Stripe.Checkout.Session,
   deps: CheckoutActivationDeps,
 ): Promise<CheckoutAccountResult> {
-  const startedAt = Date.now()
   const valid = assertValidCheckoutSession(session)
-  const sessionHash = checkoutSessionHash(valid.id).slice(0, 12)
-  const sub = (await measureCheckoutStep("stripe.subscriptions.retrieve", () =>
-    deps.stripe.subscriptions.retrieve(valid.subscriptionId, {
-      expand: ["items.data.price"],
-    }),
-  )) as unknown as RetrievedSub
+  const sub = (await deps.stripe.subscriptions.retrieve(valid.subscriptionId, {
+    expand: ["items.data.price"],
+  })) as unknown as RetrievedSub
   assertCurrentCheckoutSubscription(sub, deps.now?.() ?? new Date())
 
-  const existingProfile = await measureCheckoutStep("profiles.findExisting", () =>
-    findExistingProfile(deps, valid.email, valid.customerId),
-  )
+  const existingProfile = await findExistingProfile(deps, valid.email, valid.customerId)
 
   let userId: string
   let canSetInitialPassword = false
@@ -125,9 +115,7 @@ export async function ensureCheckoutAccount(
     userId = existingProfile.id
     canSetInitialPassword = await canSetPasswordForCheckoutSession(deps, userId, valid.id)
   } else {
-    const created = await measureCheckoutStep("auth.createCheckoutUser", () =>
-      createCheckoutUser(deps, valid.email, valid.id, valid.customerId),
-    )
+    const created = await createCheckoutUser(deps, valid.email, valid.id, valid.customerId)
     if (created.created) {
       userId = created.userId
       canSetInitialPassword = true
@@ -142,71 +130,26 @@ export async function ensureCheckoutAccount(
     interval_count: price.recurring?.interval_count ?? price.interval_count ?? 1,
   })
 
-  await measureCheckoutStep("profiles.upsertSubscription", () =>
-    upsertSubscriptionProfile(deps, userId, {
-      email: valid.email,
-      stripe_customer_id: valid.customerId,
-      stripe_subscription_id: sub.id,
-      subscription_status: "active",
-      subscription_interval: interval,
-      current_period_end: subPeriodEndIso(sub),
-      subscription_tier_id: deps.premiumTierId,
-    }),
-  )
-
-  await linkCheckoutQuizProfile(session, deps, userId, valid.email)
-
-  console.info("[checkout-activation] account ensured", {
-    sessionHash,
-    userId,
-    profileLinkMode: deps.profileLinkMode ?? "await",
-    durationMs: Date.now() - startedAt,
+  await upsertSubscriptionProfile(deps, userId, {
+    email: valid.email,
+    stripe_customer_id: valid.customerId,
+    stripe_subscription_id: sub.id,
+    subscription_status: "active",
+    subscription_interval: interval,
+    current_period_end: subPeriodEndIso(sub),
+    subscription_tier_id: deps.premiumTierId,
   })
 
-  return { userId, email: valid.email, canSetInitialPassword }
-}
-
-async function measureCheckoutStep<T>(label: string, work: () => Promise<T>): Promise<T> {
-  const startedAt = Date.now()
-  try {
-    return await work()
-  } finally {
-    console.info("[checkout-activation] step", {
-      label,
-      durationMs: Date.now() - startedAt,
-    })
-  }
-}
-
-async function linkCheckoutQuizProfile(
-  session: Stripe.Checkout.Session,
-  deps: CheckoutActivationDeps,
-  userId: string,
-  email: string,
-) {
-  if (!deps.linkQuizToProfile || deps.profileLinkMode === "skip") return
-
-  const leadId = session.metadata?.lead_id || undefined
-  const work = async () => {
-    const startedAt = Date.now()
+  if (deps.linkQuizToProfile) {
+    const leadId = session.metadata?.lead_id || undefined
     try {
-      await deps.linkQuizToProfile?.(userId, email, leadId)
-      console.info("[checkout-activation] quiz profile linked", {
-        userId,
-        hasLeadId: Boolean(leadId),
-        durationMs: Date.now() - startedAt,
-      })
+      await deps.linkQuizToProfile(userId, valid.email, leadId)
     } catch (err) {
       console.error("[stripe] linkQuizToProfile failed:", err)
     }
   }
 
-  if (deps.profileLinkMode === "defer" && deps.defer) {
-    deps.defer(work)
-    return
-  }
-
-  await work()
+  return { userId, email: valid.email, canSetInitialPassword }
 }
 
 function assertCurrentCheckoutSubscription(sub: RetrievedSub, now: Date) {
@@ -290,12 +233,9 @@ async function findExistingProfile(
   email: string,
   customerId: string,
 ): Promise<ProfileRow | null> {
-  const [byEmail, byCustomer] = await Promise.all([
-    findProfileBy(deps, "email", email),
-    findProfileBy(deps, "stripe_customer_id", customerId),
-  ])
+  const byEmail = await findProfileBy(deps, "email", email)
   if (byEmail) return byEmail
-  return byCustomer
+  return findProfileBy(deps, "stripe_customer_id", customerId)
 }
 
 async function findProfileBy(
