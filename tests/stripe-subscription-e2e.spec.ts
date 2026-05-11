@@ -67,7 +67,7 @@ test.describe.skip("Stripe subscription golden path (manual)", () => {
     await frame.getByRole("checkbox").first().check()
 
     // 4. Submit
-    await page.getByRole("button", { name: /Abonnieren|Subscribe|Pay|Bezahlen/i }).click()
+    await frame.getByRole("button", { name: /Abonnieren|Subscribe|Pay|Bezahlen/i }).click()
 
     // 5. After redirect, welcome page should be visible with the magic-link copy.
     await page.waitForURL(/\/welcome\?session_id=/, { timeout: 60_000 })

@@ -174,6 +174,11 @@ export function ResultOfferPricing({
                   type="button"
                   variant="unstyled"
                   onClick={() => {
+                    if (!stripePublishableKey) {
+                      setCheckoutError(checkoutStartError)
+                      return
+                    }
+
                     const interval = checkoutInterval
                     setCheckoutError(null)
                     setCheckoutInterval(null)
