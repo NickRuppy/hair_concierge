@@ -28,6 +28,15 @@ import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
 const TOM_IMAGE_URL =
   "https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69a16fda524b7136dd4042ab.png"
 
+const FEATURE_IMAGES = {
+  advisor:
+    "https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69de974c80b446d0fb772568.png",
+  products:
+    "https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69de91e3b935a2d764c3200c.png",
+  routine:
+    "https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69de921fe7237c4dd30efc6c.png",
+} as const
+
 const ICONS: Record<QuizResultIconKey, LucideIcon> = {
   droplet: Droplets,
   shield: Shield,
@@ -49,21 +58,24 @@ const FEATURES = [
     title: "Frag alles. Bekomm sofort Antworten.",
     body: "Dein persönlicher Berater kennt dein Haar und erklärt dir, welche Pflege gerade sinnvoll ist.",
     benefit: "Kompetente Antworten, wann immer du sie brauchst.",
-    visual: "KI Berater",
+    imageUrl: FEATURE_IMAGES.advisor,
+    imageAlt: "KI Haar-Berater",
   },
   {
     kicker: "500+ geprüfte Produkte",
     title: "Das richtige Shampoo. Der richtige Conditioner. Sofort.",
     body: "Haarmony sagt dir genau, welche Produkte zu deiner Situation passen und warum.",
     benefit: "Nie wieder Fehlkäufe. Jedes Produkt hat einen Grund.",
-    visual: "500+ Produkte",
+    imageUrl: FEATURE_IMAGES.products,
+    imageAlt: "Produktempfehlungen",
   },
   {
     kicker: "Deine Routine",
     title: "Ein klarer Plan. Was. Wann. Wie oft.",
     body: "Haarmony baut dir eine Routine, die so einfach wie möglich ist und zu deinem Alltag passt.",
     benefit: "Du weißt jeden Tag genau, was zu tun ist.",
-    visual: "Routine",
+    imageUrl: FEATURE_IMAGES.routine,
+    imageAlt: "Haarpflege Planer",
   },
 ] as const
 
@@ -138,6 +150,52 @@ function ResultSliderCard({ row }: { row: QuizResultNarrativeRow }) {
   )
 }
 
+function GuaranteeBadge() {
+  return (
+    <svg
+      aria-label="14 Tage Geld-zurück-Garantie"
+      className="mx-auto mb-4 size-[108px] text-[var(--brand-coral)]"
+      viewBox="0 0 108 108"
+      role="img"
+    >
+      <circle
+        cx="54"
+        cy="54"
+        r="49"
+        fill="none"
+        stroke="currentColor"
+        strokeDasharray="4 6"
+        strokeWidth="1.5"
+      />
+      <circle cx="54" cy="54" r="42" fill="rgba(var(--brand-coral-rgb),0.08)" />
+      <text
+        x="54"
+        y="31"
+        textAnchor="middle"
+        className="fill-[var(--brand-coral)] font-mono text-[8px] font-semibold uppercase tracking-[0.12em]"
+      >
+        Geld zurück
+      </text>
+      <text
+        x="54"
+        y="63"
+        textAnchor="middle"
+        className="fill-[var(--brand-plum-darkest)] font-header text-[32px] font-medium"
+      >
+        14
+      </text>
+      <text
+        x="54"
+        y="83"
+        textAnchor="middle"
+        className="fill-[var(--brand-plum)] font-mono text-[8px] font-semibold uppercase tracking-[0.12em]"
+      >
+        Tage Garantie
+      </text>
+    </svg>
+  )
+}
+
 function StaticPricingPreview() {
   const selectedPlan = STRIPE_PRICING_PLANS.find((plan) => plan.interval === "quarter")
 
@@ -147,8 +205,13 @@ function StaticPricingPreview() {
         {STRIPE_PRICING_PLANS.map((plan) => (
           <div
             key={plan.interval}
-            className="flex min-h-[74px] items-center gap-3 rounded-[14px] border border-border bg-white px-4 py-3"
+            className="relative flex min-h-[74px] items-center gap-3 rounded-[14px] border border-border bg-white px-4 py-3"
           >
+            {plan.badge ? (
+              <span className="absolute right-3 top-0 -translate-y-1/2 rounded-full bg-[var(--brand-plum)] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.08em] text-white">
+                {plan.badge}
+              </span>
+            ) : null}
             <span className="size-[18px] rounded-full border-2 border-border" />
             <span className="flex-1">
               <span className="block text-[15px] font-bold text-[var(--brand-plum-darkest)]">
@@ -212,7 +275,7 @@ export function QuizResultOfferPageShell({
           <p className="mb-2 mt-4 font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
             {displayName ? `${displayName}, dein Ergebnis` : "Dein Ergebnis"}
           </p>
-          <h1 className="font-header text-[34px] font-medium leading-[1.14] text-[var(--brand-plum-darkest)]">
+          <h1 className="font-header text-[clamp(24px,7vw,34px)] font-medium leading-[1.14] text-[var(--brand-plum-darkest)]">
             {narrative.heroHeadline}
           </h1>
         </section>
@@ -266,7 +329,7 @@ export function QuizResultOfferPageShell({
 
         <section className="border-t border-border py-8">
           <div className="flex gap-4">
-            {/* eslint-disable-next-line @next/next/no-img-element -- Mockup source asset is outside the configured Next image host set. */}
+            {/* eslint-disable-next-line @next/next/no-img-element -- renderToStaticMarkup tests do not load Next image remote config. */}
             <img
               src={TOM_IMAGE_URL}
               alt="Tom"
@@ -307,8 +370,13 @@ export function QuizResultOfferPageShell({
               key={feature.kicker}
               className="overflow-hidden rounded-[14px] border border-border bg-white"
             >
-              <div className="grid h-[190px] place-items-center bg-[linear-gradient(135deg,var(--brand-plum-ice),#fff)] font-mono text-[12px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
-                {feature.visual}
+              <div className="h-[240px] overflow-hidden bg-[var(--brand-plum-ice)]">
+                {/* eslint-disable-next-line @next/next/no-img-element -- renderToStaticMarkup tests do not load Next image remote config. */}
+                <img
+                  src={feature.imageUrl}
+                  alt={feature.imageAlt}
+                  className="h-full w-full object-cover object-top"
+                />
               </div>
               <div className="p-5">
                 <p className="mb-2 font-mono text-[9px] font-semibold uppercase tracking-[0.09em] text-[var(--brand-plum)]">
@@ -333,6 +401,19 @@ export function QuizResultOfferPageShell({
             Ohne vs. mit Haarmony
           </h2>
           <table className="w-full overflow-hidden rounded-[12px] border border-border bg-white text-[13px]">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="px-3 py-3 text-left font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+                  Vergleich
+                </th>
+                <th className="px-3 py-3 text-center font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--text-caption)]">
+                  Ohne
+                </th>
+                <th className="bg-[var(--brand-plum-ice)]/70 px-3 py-3 text-center font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
+                  Haarmony
+                </th>
+              </tr>
+            </thead>
             <tbody>
               {COMPARISON_ROWS.map(([label, without, withHaarmony]) => (
                 <tr key={label} className="border-t border-border first:border-t-0">
@@ -366,7 +447,7 @@ export function QuizResultOfferPageShell({
           </div>
           {pricingSlot ?? <StaticPricingPreview />}
           <article className="mt-7 rounded-[14px] border border-border bg-white p-6 text-center">
-            <ShieldCheck className="mx-auto mb-3 size-9 text-[var(--brand-coral)]" />
+            <GuaranteeBadge />
             <h3 className="font-header text-[22px] font-medium text-[var(--brand-plum-darkest)]">
               Geld-zurück-Garantie
             </h3>
