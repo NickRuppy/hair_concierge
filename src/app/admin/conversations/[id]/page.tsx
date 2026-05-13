@@ -69,6 +69,35 @@ function formatDuration(value?: number): string {
   return `${(value / 1000).toFixed(2)} s`
 }
 
+function formatEngine(value: string): string {
+  return value === "tool_loop" ? "Tool Loop" : "Klassisch"
+}
+
+function formatTraceBoolean(value?: boolean): string {
+  if (value == null) return "—"
+  return value ? "true" : "false"
+}
+
+function compactList(values: string[]): string {
+  return values.length > 0 ? values.join(" | ") : "—"
+}
+
+function CompactTraceList({ items }: { items: string[] }) {
+  if (items.length === 0) {
+    return <p className="mt-1 text-xs text-muted-foreground">—</p>
+  }
+
+  return (
+    <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
+      {items.map((item, index) => (
+        <li key={`${index}-${item}`} className="break-words">
+          {item}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 function TraceBadge({
   label,
   tone = "default",
@@ -97,6 +126,31 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
   const totalLatency = trace.latencies_ms.total_ms
   const retrievalChunks = trace.retrieval.chunks ?? []
   const matchedProducts = trace.decision_context.matched_products ?? []
+  const engineVariant = trace.engine_variant ?? "classic"
+  const toolLoopTrace = trace.agentic_tool_loop
+  const promptSummaryLabel = toolLoopTrace ? "Sanitized Prompt Summary" : "Prompt Snapshot"
+  const repairAttemptItems =
+    toolLoopTrace?.repair_attempts.map(
+      (attempt, index) => `#${index + 1} ${attempt.reason}: ${attempt.instruction_label}`,
+    ) ?? []
+  const modelStepItems =
+    toolLoopTrace?.model_steps.map(
+      (step) =>
+        `#${step.step_index} ${step.type}` +
+        `${step.status ? `/${step.status}` : ""}` +
+        `${step.finish_reason ? ` (${step.finish_reason})` : ""}: ` +
+        compactList(step.tool_call_names),
+    ) ?? []
+  const toolCallItems =
+    toolLoopTrace?.tool_calls.map(
+      (call) =>
+        `${call.name} [${call.status}]` +
+        `${call.latency_ms != null ? ` ${formatDuration(call.latency_ms)}` : ""}` +
+        `${call.input_summary ? ` input=${call.input_summary}` : ""}` +
+        `${call.output_summary ? ` output=${call.output_summary}` : ""}`,
+    ) ?? []
+  const blockedToolCallItems =
+    toolLoopTrace?.blocked_tool_calls.map((call) => `${call.name}: ${call.reason}`) ?? []
 
   return (
     <details className="mt-3 rounded-xl border border-dashed bg-background/70 p-3">
@@ -107,6 +161,7 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
             tone={trace.status === "completed" ? "success" : "danger"}
           />
           <TraceBadge label={trace.intent} />
+          <TraceBadge label={formatEngine(engineVariant)} />
           <TraceBadge label={trace.router_decision.retrieval_mode} />
           {trace.product_category ? <TraceBadge label={trace.product_category} /> : null}
           <span className="text-xs text-muted-foreground">
@@ -190,6 +245,83 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
             </p>
           </div>
         </div>
+
+        {toolLoopTrace || trace.engine_variant ? (
+          <div className="rounded-lg border bg-card p-3">
+            <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
+              Tool-Loop-Spur
+            </p>
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              <div>
+                <p className="text-xs text-muted-foreground">Engine</p>
+                <p className="mt-1 font-medium text-foreground">{formatEngine(engineVariant)}</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">answer_composition_mode</p>
+                <p className="mt-1 font-medium text-foreground">
+                  {toolLoopTrace?.answer_composition_mode ?? "—"}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">visible_failure</p>
+                <p className="mt-1 font-medium text-foreground">
+                  {formatTraceBoolean(toolLoopTrace?.visible_failure)}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">failure_stage</p>
+                <p className="mt-1 font-medium text-foreground">
+                  {toolLoopTrace?.failure_stage ?? "—"}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">repair_attempts</p>
+                <p className="mt-1 font-medium text-foreground">
+                  {toolLoopTrace?.repair_attempts.length ?? 0}
+                </p>
+                <CompactTraceList items={repairAttemptItems} />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">loaded_guidance_ids</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {compactList(toolLoopTrace?.loaded_guidance_ids ?? [])}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">answer_context_capsule_ids</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {compactList(toolLoopTrace?.answer_context_capsule_ids ?? [])}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Latenz</p>
+                <p className="mt-1 font-medium text-foreground">
+                  {formatDuration(toolLoopTrace?.latency_ms ?? undefined)}
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 grid gap-3 xl:grid-cols-3">
+              <div className="rounded-md border bg-background p-3">
+                <p className="text-xs font-medium text-foreground">
+                  model_steps ({toolLoopTrace?.model_steps.length ?? 0})
+                </p>
+                <CompactTraceList items={modelStepItems} />
+              </div>
+              <div className="rounded-md border bg-background p-3">
+                <p className="text-xs font-medium text-foreground">
+                  tool_calls ({toolLoopTrace?.tool_calls.length ?? 0})
+                </p>
+                <CompactTraceList items={toolCallItems} />
+              </div>
+              <div className="rounded-md border bg-background p-3">
+                <p className="text-xs font-medium text-foreground">
+                  blocked_tool_calls ({toolLoopTrace?.blocked_tool_calls.length ?? 0})
+                </p>
+                <CompactTraceList items={blockedToolCallItems} />
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         {trace.router_decision.policy_overrides.length > 0 ? (
           <div>
@@ -301,7 +433,7 @@ function TraceCard({ traceRecord }: { traceRecord: ConversationTurnTrace }) {
         <div className="grid gap-3 xl:grid-cols-2">
           <div className="rounded-lg border bg-card p-3">
             <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
-              Prompt Snapshot
+              {promptSummaryLabel}
             </p>
             <p className="text-xs text-muted-foreground">
               Modell: {trace.prompt.model} · Temperatur: {trace.prompt.temperature}

@@ -32,9 +32,30 @@ export interface UserContextProjection {
 }
 
 const RELEVANT_MEMORY_LIMIT = 6
+const MAX_SUGGESTED_OVERLAYS = 4
 const MINIMAL_ROUTINE_RE = /\b(simple|minimal|einfach\w*)\b/i
 const NEGATED_MINIMAL_ROUTINE_RE =
   /\b(?:kein(?:e|en|er|em)?|keine|nicht|no)\s+(?:\w+\s+){0,2}(simple|minimal|einfach\w*)\b/i
+const OVERLAY_PRIORITY: Partial<Record<GuidanceId, number>> = {
+  "overlay:hair_loss_or_thinning_guardrail": 100,
+  "overlay:dandruff_scalp": 95,
+  "overlay:sensitive_scalp": 90,
+  "overlay:oily_scalp": 80,
+  "overlay:dry_lengths": 75,
+  "overlay:frizz_control": 74,
+  "overlay:fine_hair": 73,
+  "overlay:tangling_detangling": 72,
+  "overlay:low_density_weight_sensitive": 69,
+  "overlay:curly_hair": 65,
+  "overlay:coily_hair": 65,
+  "overlay:heat_styling": 60,
+  "overlay:mechanical_stress": 58,
+  "overlay:buildup_risk": 56,
+  "overlay:chemical_or_color_treated": 54,
+  "overlay:damage_repair": 52,
+  "overlay:protein_moisture_balance": 50,
+  "overlay:minimal_routine": 45,
+}
 
 function formatRoutineProducts(
   products: NonNullable<HairProfile["current_routine_products"]>,
@@ -128,6 +149,67 @@ function deriveSuggestedOverlays(
     addOverlay("overlay:dry_lengths")
   }
 
+  if (hairProfile?.concerns.includes("frizz")) {
+    addOverlay("overlay:dry_lengths")
+  }
+
+  if (hairProfile?.density === "low") {
+    addOverlay("overlay:low_density_weight_sensitive")
+  }
+
+  if (hairProfile?.concerns.includes("frizz") || hairProfile?.goals.includes("less_frizz")) {
+    addOverlay("overlay:frizz_control")
+  }
+
+  if (hairProfile?.concerns.includes("tangling")) {
+    addOverlay("overlay:tangling_detangling")
+  }
+
+  if (hairProfile?.protein_moisture_balance) {
+    addOverlay("overlay:protein_moisture_balance")
+  }
+
+  if (
+    (hairProfile?.chemical_treatment ?? []).some((treatment) => treatment !== "natural") ||
+    hairProfile?.goals.includes("color_protection")
+  ) {
+    addOverlay("overlay:chemical_or_color_treated")
+  }
+
+  if (hairProfile?.concerns.includes("hair_loss") || hairProfile?.concerns.includes("thinning")) {
+    addOverlay("overlay:hair_loss_or_thinning_guardrail")
+  }
+
+  if (hairProfile?.hair_texture === "curly") {
+    addOverlay("overlay:curly_hair")
+  }
+
+  if (hairProfile?.hair_texture === "coily") {
+    addOverlay("overlay:coily_hair")
+  }
+
+  if (hairProfile?.heat_styling && hairProfile.heat_styling !== "never") {
+    addOverlay("overlay:heat_styling")
+  }
+
+  if (
+    (hairProfile?.chemical_treatment ?? []).some((treatment) => treatment !== "natural") ||
+    hairProfile?.concerns.includes("hair_damage") ||
+    hairProfile?.concerns.includes("breakage") ||
+    hairProfile?.concerns.includes("split_ends")
+  ) {
+    addOverlay("overlay:damage_repair")
+  }
+
+  if (
+    (hairProfile?.heat_styling && hairProfile.heat_styling !== "never") ||
+    Boolean(hairProfile?.styling_tools?.length) ||
+    Boolean(hairProfile?.brush_type) ||
+    Boolean(hairProfile?.drying_method && hairProfile.drying_method !== "air_dry")
+  ) {
+    addOverlay("overlay:mechanical_stress")
+  }
+
   if (
     hairProfile?.scalp_condition === "dry_flakes" ||
     hairProfile?.scalp_condition === "irritated"
@@ -150,7 +232,17 @@ function deriveSuggestedOverlays(
     addOverlay("overlay:minimal_routine")
   }
 
-  return overlays
+  return rankOverlayIds(overlays).slice(0, MAX_SUGGESTED_OVERLAYS)
+}
+
+function rankOverlayIds(ids: GuidanceId[]): GuidanceId[] {
+  return ids
+    .map((id, index) => ({ id, index }))
+    .sort((left, right) => {
+      const priorityDelta = (OVERLAY_PRIORITY[right.id] ?? 0) - (OVERLAY_PRIORITY[left.id] ?? 0)
+      return priorityDelta === 0 ? left.index - right.index : priorityDelta
+    })
+    .map((item) => item.id)
 }
 
 function deriveMissingProfileFields(hairProfile: HairProfile | null): MissingProfileField[] {

@@ -1,4 +1,7 @@
 import type {
+  AgenticTerminalAnswer,
+  AgenticTerminalProductCategory,
+  AgenticTerminalStatePatch,
   ClassificationResult,
   ConversationProductTopic,
   ConversationPendingOffer,
@@ -10,6 +13,8 @@ import type {
   RouterDecision,
   RoutineConversationLayer,
 } from "@/lib/types"
+import type { BuildOrFixRoutineProjection } from "@/lib/agent/tools/build-or-fix-routine"
+import type { SelectedProductsProjection } from "@/lib/agent/tools/select-products"
 
 const SUPPORTED_PRODUCT_TOPICS = [
   "shampoo",
@@ -237,6 +242,62 @@ export function computeConversationStateTransition(params: {
   }
 }
 
+export function resolveAgenticConversationStateTransition(params: {
+  previousState: ConversationState | null
+  terminalStatePatch: AgenticTerminalAnswer["state_patch"]
+  selectedProducts: SelectedProductsProjection | null
+  routinePlan: BuildOrFixRoutineProjection | null
+}): ConversationStateTransition {
+  const previousState = normalizeConversationState(params.previousState)
+  const patch = normalizeAgenticTerminalStatePatch(params.terminalStatePatch)
+  const selectedProductTopic = shouldApplySelectedProductsOutcome(params.selectedProducts)
+    ? toSupportedProductTopic(params.selectedProducts?.category)
+    : null
+
+  let nextState: ConversationState = {
+    ...previousState,
+    active_topic: patch.active_topic,
+    routine_layer: patch.active_topic === "routine" ? patch.routine_layer : null,
+    pending_offer: null,
+    last_assistant_action: patch.last_assistant_action,
+    last_product_category: patch.last_product_category,
+  }
+  let reason = patch.reason || `tool_loop_${patch.topic_relation}`
+
+  if (selectedProductTopic !== null) {
+    nextState = {
+      ...nextState,
+      active_topic: selectedProductTopic,
+      routine_layer: null,
+      pending_offer: null,
+      last_product_category: selectedProductTopic,
+    }
+    reason = "tool_loop_select_products"
+  }
+
+  if (params.routinePlan) {
+    nextState = {
+      ...nextState,
+      active_topic: "routine",
+      routine_layer: patch.routine_layer ?? "basics",
+      pending_offer: null,
+    }
+    reason =
+      selectedProductTopic !== null
+        ? "tool_loop_routine_and_product_tools"
+        : "tool_loop_build_or_fix_routine"
+  }
+
+  return {
+    previous_state: previousState,
+    next_state: nextState,
+    reason,
+    changed_fields: getChangedFields(previousState, nextState),
+    classifier_override: null,
+    updated_by_engine: "tool_loop",
+  }
+}
+
 function isRoutineClassification(classification: ClassificationResult): boolean {
   return classification.intent === "routine_help" || classification.product_category === "routine"
 }
@@ -385,7 +446,7 @@ function hasExplicitProductAskSignal(lower: string): boolean {
 
   return (
     mentionsProductTarget &&
-    /\b(welche?s?|welchen|welcher|empfiehlst|empfehlen|empfehlung|produkt(?:e)?|kaufen|nehmen|passt|passendes|such(?:e|st)?|finde|konkret)\b/.test(
+    /\b(welche?s?|welc\w*|welchen|welcher|empfiehlst|empfehlen|empfehlung|produkt(?:e)?|kaufen|nehmen|verwenden|benutzen|passt|passendes|such(?:e|st)?|finde|konkret)\b/.test(
       lower,
     )
   )
@@ -427,6 +488,77 @@ function toSupportedProductTopic(value: unknown): ConversationProductTopic | nul
   return SUPPORTED_PRODUCT_TOPICS.includes(value as ConversationProductTopic)
     ? (value as ConversationProductTopic)
     : null
+}
+
+function normalizeAgenticTerminalStatePatch(
+  patch: AgenticTerminalStatePatch,
+): AgenticTerminalStatePatch {
+  const activeTopic = normalizeAgenticTerminalTopic(patch?.active_topic)
+  const lastProductCategory = normalizeAgenticTerminalProductCategory(patch?.last_product_category)
+  const routineLayer =
+    activeTopic === "routine" ? normalizeRoutineLayer(patch?.routine_layer) : null
+  const lastAssistantAction = normalizeShortStateText(patch?.last_assistant_action)
+  const reason = normalizeShortStateText(patch?.reason)
+  const topicRelation = isAgenticTopicRelation(patch?.topic_relation)
+    ? patch.topic_relation
+    : "unclear"
+
+  return {
+    active_topic: activeTopic,
+    routine_layer: routineLayer,
+    last_product_category: lastProductCategory,
+    last_assistant_action: lastAssistantAction,
+    topic_relation: topicRelation,
+    reason,
+  }
+}
+
+function normalizeAgenticTerminalTopic(value: unknown): AgenticTerminalStatePatch["active_topic"] {
+  return value === "routine" || normalizeAgenticTerminalProductCategory(value) !== null
+    ? (value as AgenticTerminalStatePatch["active_topic"])
+    : null
+}
+
+function normalizeAgenticTerminalProductCategory(value: unknown): AgenticTerminalProductCategory {
+  return value === "shampoo" ||
+    value === "conditioner" ||
+    value === "leave_in" ||
+    value === "mask" ||
+    value === "oil" ||
+    value === "bondbuilder" ||
+    value === "deep_cleansing_shampoo" ||
+    value === "dry_shampoo" ||
+    value === "peeling"
+    ? value
+    : null
+}
+
+function normalizeShortStateText(value: unknown): string {
+  return typeof value === "string" ? value.trim().slice(0, 240) : ""
+}
+
+function isAgenticTopicRelation(
+  value: unknown,
+): value is AgenticTerminalStatePatch["topic_relation"] {
+  return (
+    value === "same_topic" ||
+    value === "category_switch" ||
+    value === "refinement" ||
+    value === "recap" ||
+    value === "unclear"
+  )
+}
+
+function shouldApplySelectedProductsOutcome(
+  selectedProducts: SelectedProductsProjection | null,
+): boolean {
+  if (!selectedProducts?.category) {
+    return false
+  }
+
+  return !["needs_more_info", "not_recommended", "no_catalog_match"].includes(
+    selectedProducts.decision,
+  )
 }
 
 function mergeAnsweredSlots(current: string[], next: string[]): string[] {

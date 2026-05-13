@@ -41,6 +41,7 @@ export interface PipelineResult {
     final_context_count: number
   }
   debugTrace: PipelineTraceDraft
+  visibleFailure?: boolean
 }
 
 // ── Internal orchestrator contracts ──────────────────────────────────────────

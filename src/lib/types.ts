@@ -452,6 +452,10 @@ export interface DeepCleansingShampooRecommendationMetadata extends BaseRecommen
 export interface DryShampooRecommendationMetadata extends BaseRecommendationMetadata {
   category: "dry_shampoo"
   scalp_type_focus: Exclude<ProductScalpTypeFocus, "dry"> | null
+  primary_effect?: ProductDryShampooSpecs["primary_effect"] | null
+  hair_color_fit?: ProductDryShampooSpecs["hair_color_fit"] | null
+  scalp_sensitivity_fit?: ProductDryShampooSpecs["scalp_sensitivity_fit"] | null
+  product_format?: ProductDryShampooSpecs["format"] | null
 }
 
 export interface PeelingRecommendationMetadata extends BaseRecommendationMetadata {
@@ -721,8 +725,16 @@ export interface LangfusePromptReference {
   is_fallback: boolean
 }
 
-export type ChatPromptKind = "legacy_synth_prompt" | "response_plan_render" | "agent_final_render"
-export type ResponseCompositionPath = "legacy_synthesizer" | "response_plan" | "agent_final_render"
+export type ChatPromptKind =
+  | "legacy_synth_prompt"
+  | "response_plan_render"
+  | "agent_final_render"
+  | "agentic_tool_loop"
+export type ResponseCompositionPath =
+  | "legacy_synthesizer"
+  | "response_plan"
+  | "agent_final_render"
+  | "agentic_tool_loop"
 export type TraceFailureBucket =
   | "product_fit_mismatch"
   | "routine_logic_mismatch"
@@ -737,7 +749,7 @@ export type TraceFailureBucket =
 
 export interface ResponseCompositionTrace {
   path: ResponseCompositionPath
-  migration_mode: "legacy_only" | "planner_preferred"
+  migration_mode: "legacy_only" | "planner_preferred" | "tool_loop"
   fallback_reason: string | null
   rendering_path: string | null
   plan_type: string | null
@@ -795,12 +807,113 @@ export interface ChatTraceLatencyBreakdown {
   total_ms?: number
 }
 
+export type ChatAgentEngine = "classic" | "tool_loop"
+
+export type AgenticTerminalTopic =
+  | "routine"
+  | "shampoo"
+  | "conditioner"
+  | "leave_in"
+  | "mask"
+  | "oil"
+  | "bondbuilder"
+  | "deep_cleansing_shampoo"
+  | "dry_shampoo"
+  | "peeling"
+  | null
+
+export type AgenticTerminalProductCategory = Exclude<AgenticTerminalTopic, "routine">
+
+export type AgenticTerminalRoutineLayer = RoutineConversationLayer
+
+export type AgenticTopicRelation =
+  | "same_topic"
+  | "category_switch"
+  | "refinement"
+  | "recap"
+  | "unclear"
+
+export interface AgenticTerminalStatePatch {
+  active_topic: AgenticTerminalTopic
+  routine_layer: AgenticTerminalRoutineLayer
+  last_product_category: AgenticTerminalProductCategory
+  last_assistant_action: string
+  topic_relation: AgenticTopicRelation
+  reason: string
+}
+
+export interface AgenticTerminalAnswer {
+  answer: string
+  state_patch: AgenticTerminalStatePatch
+}
+
+export interface AgenticToolLoopModelStepTrace {
+  step_index: number
+  type: "tool_calls" | "message"
+  finish_reason: string | null
+  status?: string | null
+  tool_call_names: string[]
+}
+
+export interface AgenticToolLoopToolCallTrace {
+  id: string | null
+  name: string
+  status: "executed" | "blocked" | "failed"
+  latency_ms?: number | null
+  input_summary?: string | null
+  output_summary?: string | null
+}
+
+export interface AgenticToolLoopBlockedToolCallTrace {
+  id: string | null
+  name: string
+  reason: string
+}
+
+export interface AgenticToolLoopTokenUsageTrace {
+  prompt_tokens?: number | null
+  completion_tokens?: number | null
+  total_tokens?: number | null
+}
+
+export type AgenticAnswerCompositionModeTrace = "inline_context" | "composer_context" | "baseline"
+
+export type AgenticToolLoopFailureStageTrace =
+  | "missing_terminal_answer"
+  | "multiple_terminal_answers"
+  | "terminal_with_other_tool_calls"
+  | "max_executable_tool_calls"
+  | "max_model_steps"
+  | "repair_failed"
+  | null
+
+export interface AgenticToolLoopTrace {
+  engine_variant: "tool_loop"
+  answer_composition_mode: AgenticAnswerCompositionModeTrace
+  loaded_guidance_ids: string[]
+  answer_context_capsule_ids: string[]
+  consultation_brief_summary: Record<string, unknown> | null
+  repair_attempts: Array<{
+    reason: Exclude<AgenticToolLoopFailureStageTrace, null>
+    instruction_label: string
+  }>
+  failure_stage: AgenticToolLoopFailureStageTrace
+  visible_failure: boolean
+  model_steps: AgenticToolLoopModelStepTrace[]
+  tool_calls: AgenticToolLoopToolCallTrace[]
+  blocked_tool_calls: AgenticToolLoopBlockedToolCallTrace[]
+  guardrails: string[]
+  latency_ms?: number | null
+  token_usage?: AgenticToolLoopTokenUsageTrace | null
+}
+
 export interface ChatTurnTrace {
   trace_version: number
   request_id: string
   started_at: string
   completed_at: string
   status: "completed" | "failed"
+  engine_variant?: ChatAgentEngine
   user_message: string
   conversation_id: string | null
   intent: IntentType
@@ -837,6 +950,7 @@ export interface ChatTurnTrace {
   }
   prompt: ChatPromptSnapshot
   response_composition: ResponseCompositionTrace
+  agentic_tool_loop?: AgenticToolLoopTrace
   response: {
     assistant_content: string
     sources: CitationSource[]
@@ -873,6 +987,7 @@ export interface ConversationStateTransition {
   reason: string
   changed_fields: string[]
   classifier_override: string | null
+  updated_by_engine?: ChatAgentEngine
 }
 
 export interface ConversationStatePersistenceTrace {
@@ -993,6 +1108,7 @@ export type RetrievalMode =
   | "hybrid_plus_graph"
   | "product_sql_plus_hybrid"
   | "agent_engine"
+  | "agentic_tool_loop"
 
 export type ResponseMode = "clarify_only" | "recommend_and_refine" | "answer_direct"
 

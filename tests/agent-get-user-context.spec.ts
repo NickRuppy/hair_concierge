@@ -78,9 +78,9 @@ test("buildUserContextProjection suggests overlays from profile and memory", () 
   })
 
   assert.deepEqual(projection.suggested_overlays, [
-    "overlay:fine_hair",
     "overlay:oily_scalp",
     "overlay:dry_lengths",
+    "overlay:fine_hair",
     "overlay:minimal_routine",
   ])
 })

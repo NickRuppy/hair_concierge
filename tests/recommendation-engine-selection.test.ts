@@ -1847,6 +1847,59 @@ test("engine dry shampoo reranking keeps the oily-focus candidate ahead of a bro
   )
 })
 
+test("engine dry shampoo reranking understands current live dry-shampoo spec fields", () => {
+  const decision: DryShampooCategoryDecision = {
+    category: "dry_shampoo",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      scalpTypeFocus: "balanced",
+    },
+    notes: [],
+  }
+
+  const candidates = [
+    createMatchedProduct("normal", "Trockenshampoo", { combined_score: 0.9 }),
+    createMatchedProduct("sensitive", "Trockenshampoo", { combined_score: 0.7 }),
+  ]
+
+  const specs = [
+    {
+      product_id: "normal",
+      primary_effect: "classic_refresh",
+      hair_color_fit: "universal",
+      scalp_sensitivity_fit: "normal_only",
+      format: "aerosol_spray",
+    },
+    {
+      product_id: "sensitive",
+      primary_effect: "sensitive_refresh",
+      hair_color_fit: "universal",
+      scalp_sensitivity_fit: "sensitive_ok",
+      format: "foam_or_liquid",
+    },
+  ] satisfies ProductDryShampooSpecs[]
+
+  const reranked = rerankDryShampooProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+  })
+
+  assert.equal(reranked[0]?.id, "sensitive")
+  assert.equal(
+    (reranked[0]?.recommendation_meta as DryShampooRecommendationMetadata | undefined)
+      ?.scalp_type_focus,
+    "balanced",
+  )
+  assert.doesNotMatch(
+    reranked[0]?.recommendation_meta?.top_reasons.join(" ") ?? "",
+    /Spezifikation.*unvollstaendig/i,
+  )
+})
+
 test("engine peeling reranking requires both scalp-focus and peeling-type alignment", () => {
   const decision: PeelingCategoryDecision = {
     category: "peeling",

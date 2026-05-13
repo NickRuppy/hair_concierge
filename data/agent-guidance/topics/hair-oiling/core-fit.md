@@ -1,37 +1,63 @@
 # Hair Oiling: Core Fit
 
-Hair oiling is a pre-wash routine step in which a plant-derived oil is applied to the scalp and/or lengths before shampooing. It is best understood as a protection and comfort practice, not a rescue treatment and not a proven regrowth intervention.
+## Runtime Variables
 
-This topic becomes relevant when:
-- the user wants a pre-wash buffer for dry, porous, bleached, coloured, or heat-stressed lengths
-- the user has a dry or tight scalp without signs of medical scalp disease
-- the user is open to a ritualised pre-wash step and proper wash-out technique
+- `oil_role`
+- `weight_risk`
+- `problem_fit`
+- `not_for`
+- `profile.thickness`
+- `profile.scalp_type`
+- `profile.scalp_condition`
+- `profile.concerns`
+- `current_routine_products`
 
-Good fit:
-- long, dry, porous, or chemically stressed lengths needing less wash-induced roughness
-- a dry, tight scalp that feels uncomfortable but is not medically inflamed
-- users who can tolerate a pre-wash ritual once or twice per week and will shampoo oil out correctly
-- users who understand rosemary or peppermint are only cautious adjuncts around thinning, not substitutes for clinical treatment
+## Category Role
 
-Poor fit or not needed:
+Oil has three advisory roles. In normal chat, "Oel fuer trockene Spitzen" usually means a finish/tips role; "vor dem Waschen", "einwirken", "Massage", or carrier-oil language means pre-wash oiling; scalp oiling is a cautious niche case and not the default.
+
+## Best Fit
+
+- finish/tips use when the user wants dry ends to feel smoother, calmer, shinier, or less rough
+- pre-wash length protection for dry, porous, bleached, coloured, or heat-stressed lengths when the user signals before-wash use or time to let oil sit
+- cautious scalp comfort only for a dry or tight scalp without signs of medical scalp disease
+- users who can tolerate a ritualised pre-wash step and shampoo oil out correctly
+
+## Weak Fit
+
+- true moisture replacement, structural shaft repair, or split-end repair
+- fast visible regrowth from oil alone
 - medically diagnosed or strongly suspected scalp disease such as seborrheic dermatitis, psoriasis, folliculitis, or tinea
 - active scalp wounds, very recent procedures, or post-op scalp healing
-- users expecting fast visible regrowth from oil alone
-- users who will not emulsify shampoo into the oil before adding water
+- users who will not emulsify shampoo into pre-wash oil before adding water
 
-What it can realistically help with:
-- reduce wash-induced protein loss and roughness when a genuinely penetrating pre-wash oil is used on lengths
-- reduce surface friction and leave dry or porous ends feeling calmer after washing
-- temporarily improve comfort on a dry, tight scalp
-- support a scalp-massage ritual with modest comfort and thickness-oriented upside
+## Decision Axes
 
-What it does not solve:
-- structural shaft repair
-- split ends
-- medical scalp disease
-- hormonally driven or clinically significant hair loss
-- meaningful colour protection
+- `oil_role`: finish/tips, pre-wash length protection, cautious scalp comfort
+- `weight_risk`: especially important for fine, oily, flat, or buildup-prone hair
+- `problem_fit`: shine/frizz/tips feel for finish oil; wash roughness/dry porous lengths for pre-wash oiling; dry/tight non-inflamed scalp for cautious scalp comfort
+- `not_for`: true moisture replacement, split-end repair, growth promises, medical scalp treatment
 
-Realistic ceiling:
-- calmer scalp comfort, softer ends, and less roughness during washing
-- no structural repair promises and no regrowth promises
+## Profile Interplay
+
+Fine, oily, flat, or buildup-prone profiles need strong caution around dose and weight. Dry, porous, bleached, coloured, or heat-stressed lengths fit the pre-wash protection lane better than scalp oiling by default. Scalp symptoms beyond dry or tight comfort should route away from cosmetic oil advice.
+
+## Compare Against Other Categories
+
+- Compare against leave-in when the user wants post-wash smoothing, styling prep, or heat-protection support.
+- Compare against mask when the user wants occasional extra conditioning for rough lengths.
+- Compare against conditioner when the everyday length-care baseline is missing.
+- Compare against deep cleansing when oil use contributes to buildup or heavy residue.
+
+## Answer Guidance
+
+- Default "oil for dry ends" language to finish/tips unless the user says before washing, letting it sit, massage, or carrier oil.
+- For pre-wash oiling, mention correct wash-out and that the realistic ceiling is calmer feel or less roughness during washing.
+- Keep scalp oiling niche and cautious.
+- Do not name products unless the active tool path has selected products.
+
+## Guardrails
+
+- Do not promise regrowth, structural repair, split-end repair, or medical scalp treatment.
+- Do not present rosemary or peppermint oils as substitutes for clinical hair-loss treatment.
+- Do not claim meaningful colour protection.

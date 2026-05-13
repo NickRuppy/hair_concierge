@@ -3,6 +3,7 @@ import {
   buildPipelineTraceDraft,
   buildRetrievalDebugEventData,
   finalizeChatTurnTrace,
+  projectAgenticToolLoopTraceForApp,
   summarizeEngineTraceForLangfuse,
   summarizeProductsForLangfuse,
 } from "../src/lib/rag/debug-trace"
@@ -13,6 +14,7 @@ import {
 import { createDefaultConversationState } from "../src/lib/rag/conversation-state"
 import type { RetrievedChunk } from "../src/lib/rag/retriever"
 import type {
+  AgenticToolLoopTrace,
   ChatPromptSnapshot,
   ClassificationResult,
   ConversationStateTransition,
@@ -21,6 +23,7 @@ import type {
   RouterDecision,
   RoutinePlan,
 } from "../src/lib/types"
+import type { AgenticToolLoopTrace as RuntimeAgenticToolLoopTrace } from "../src/lib/agent/orchestrator/agentic-tool-loop-types"
 
 const legacyResponseComposition = {
   path: "legacy_synthesizer" as const,
@@ -29,6 +32,15 @@ const legacyResponseComposition = {
   rendering_path: null,
   plan_type: null,
   attachment_mode: null,
+}
+
+const agentResponseComposition = {
+  path: "agent_final_render" as const,
+  migration_mode: "legacy_only" as const,
+  fallback_reason: null,
+  rendering_path: null,
+  plan_type: "agent_v1",
+  attachment_mode: "text_only" as const,
 }
 
 function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
@@ -63,6 +75,225 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     created_at: "2026-04-10T00:00:00.000Z",
     updated_at: "2026-04-10T00:00:00.000Z",
     ...overrides,
+  }
+}
+
+function createAgenticToolLoopTrace(): AgenticToolLoopTrace {
+  return {
+    engine_variant: "tool_loop",
+    answer_composition_mode: "composer_context",
+    loaded_guidance_ids: ["topic:shampoo"],
+    answer_context_capsule_ids: ["global.natural_consultant"],
+    consultation_brief_summary: {
+      charter_count: 2,
+      profile_overlay_ids: ["overlay:fine_hair"],
+      candidate_guidance_ids: ["topic:shampoo"],
+    },
+    repair_attempts: [],
+    failure_stage: null,
+    visible_failure: false,
+    model_steps: [
+      {
+        step_index: 1,
+        type: "tool_calls",
+        finish_reason: "tool_calls",
+        tool_call_names: ["select_products"],
+      },
+      {
+        step_index: 2,
+        type: "tool_calls",
+        finish_reason: "tool_calls",
+        tool_call_names: ["submit_final_answer"],
+      },
+    ],
+    tool_calls: [
+      {
+        id: "call-1",
+        name: "select_products",
+        status: "executed",
+        latency_ms: 42,
+        input_summary: "category=shampoo",
+        output_summary: "1 product",
+      },
+      {
+        id: "call-2",
+        name: "submit_final_answer",
+        status: "executed",
+      },
+    ],
+    blocked_tool_calls: [
+      {
+        id: "call-blocked",
+        name: "load_guidance",
+        reason: "not_exposed_in_v1",
+      },
+    ],
+    guardrails: ["blocked_unknown_tool"],
+    latency_ms: 320,
+    token_usage: {
+      prompt_tokens: 120,
+      completion_tokens: 64,
+      total_tokens: 184,
+    },
+  }
+}
+
+function createRuntimeAgenticToolLoopTrace(): RuntimeAgenticToolLoopTrace {
+  return {
+    engine_variant: "tool_loop",
+    answer_composition_mode: "composer_context",
+    answer_context: {
+      capsule_ids: ["global.natural_consultant", "category.shampoo.recommend"],
+      instructions: ["RAW_CAPSULE_INSTRUCTION_SHOULD_NOT_PERSIST"],
+      examples: ["RAW_CAPSULE_EXAMPLE_SHOULD_NOT_PERSIST"],
+    },
+    advisor_guidance: {
+      loaded_guidance_ids: ["topic:shampoo", "overlay:fine_hair"],
+      direct_answer_frame: "RAW_GUIDANCE_FRAME_SHOULD_NOT_PERSIST",
+      key_advice_points: ["RAW_GUIDANCE_POINT_SHOULD_NOT_PERSIST"],
+      profile_interpretation: [],
+      category_implications: [],
+      category_sections: [],
+      avoid: [],
+      proactive_next_step_options: [],
+    },
+    consultation_brief: {
+      charter: ["RAW_CHARTER_TEXT_SHOULD_NOT_PERSIST"],
+      routine_staging: ["RAW_ROUTINE_STAGING_SHOULD_NOT_PERSIST"],
+      product_vs_education: ["RAW_PRODUCT_EDUCATION_SHOULD_NOT_PERSIST"],
+      profile_overlays: [
+        {
+          id: "overlay:fine_hair",
+          kind: "overlay",
+          title: "Feines Haar",
+          content: "RAW_PROFILE_OVERLAY_CONTENT_SHOULD_NOT_PERSIST",
+        },
+      ],
+      candidate_guidance: [
+        {
+          id: "topic:shampoo",
+          kind: "topic",
+          title: "Shampoo",
+          content: "RAW_TOPIC_CONTENT_SHOULD_NOT_PERSIST",
+        },
+      ],
+    },
+    model_steps: [
+      {
+        type: "tool_calls",
+        calls: [
+          {
+            id: "call-load-guidance",
+            name: "load_advisor_guidance",
+            input: {
+              category: "shampoo",
+              message: "RAW_USER_PROFILE_BLOB_SHOULD_NOT_PERSIST",
+            },
+          },
+          {
+            id: "call-products",
+            name: "select_products",
+            input: {
+              category: "shampoo",
+              hairProfile: { secret: "RAW_PROFILE_SECRET_SHOULD_NOT_PERSIST" },
+            },
+          },
+        ],
+      },
+      {
+        type: "message",
+        content: "RAW_MODEL_MESSAGE_SHOULD_NOT_PERSIST",
+      },
+    ],
+    tool_calls: [
+      {
+        id: "call-load-guidance",
+        name: "load_advisor_guidance",
+        input: { message: "RAW_GUIDANCE_INPUT_SHOULD_NOT_PERSIST" },
+        output: {
+          projection: {
+            loaded_guidance_ids: ["topic:conditioner"],
+          },
+          raw: "RAW_GUIDANCE_OUTPUT_SHOULD_NOT_PERSIST",
+        },
+      },
+      {
+        id: "call-load-guidance-fallback",
+        name: "load_advisor_guidance",
+        input: { message: "RAW_GUIDANCE_INPUT_SHOULD_NOT_PERSIST" },
+        output: { raw: "RAW_GUIDANCE_OUTPUT_SHOULD_NOT_PERSIST" },
+      },
+      {
+        id: "call-products",
+        name: "select_products",
+        input: { hairProfile: { secret: "RAW_PROFILE_SECRET_SHOULD_NOT_PERSIST" } },
+        output: {
+          projection: {
+            category: "conditioner",
+            decision: "needs_more_info",
+            product_response_policy: "needs_more_info",
+            products: [],
+            missing_info: [{ key: "care_signal" }],
+          },
+          raw: "RAW_PRODUCT_OUTPUT_BLOB_SHOULD_NOT_PERSIST",
+        },
+      },
+      {
+        id: "call-products-second",
+        name: "select_products",
+        input: { category: "shampoo" },
+        output: {
+          projection: {
+            category: "shampoo",
+            decision: "recommended",
+            product_response_policy: "recommend",
+            products: [{ product_id: "shampoo-1" }, { product_id: "shampoo-2" }],
+            missing_info: [],
+          },
+          raw: "RAW_PRODUCT_OUTPUT_BLOB_SHOULD_NOT_PERSIST",
+        },
+      },
+      {
+        id: "call-routine",
+        name: "build_or_fix_routine",
+        input: { message: "RAW_ROUTINE_INPUT_SHOULD_NOT_PERSIST" },
+        output: {
+          objective: "fix_routine",
+          steps: [{ label: "Ansatz klaeren" }],
+          missing_info: [{ key: "wash_frequency" }],
+          raw: "RAW_ROUTINE_OUTPUT_BLOB_SHOULD_NOT_PERSIST",
+        },
+      },
+      {
+        id: "call-routine-second",
+        name: "build_or_fix_routine",
+        input: { message: "RAW_ROUTINE_INPUT_SHOULD_NOT_PERSIST" },
+        output: {
+          projection: {
+            objective: "build_routine",
+            steps: [{ label: "Mild waschen" }, { label: "Conditioner" }],
+            missing_info: [],
+          },
+          raw: "RAW_ROUTINE_OUTPUT_BLOB_SHOULD_NOT_PERSIST",
+        },
+      },
+    ],
+    blocked_tool_calls: [
+      {
+        id: "blocked-terminal",
+        name: "submit_final_answer",
+        reason: "terminal_with_other_tool_calls",
+      },
+    ],
+    guardrails: ["terminal_repair"],
+    repair_attempts: [
+      {
+        reason: "missing_terminal_answer",
+        instruction_label: "terminal_protocol_repair",
+      },
+    ],
+    failure_stage: "repair_failed",
+    visible_failure: true,
   }
 }
 
@@ -461,6 +692,7 @@ test.describe("Chat debug trace", () => {
     })
     expect(debugEvent).toMatchObject({
       request_id: "req-2",
+      engine_variant: null,
       retrieval_mode: "hybrid",
       response_composer_path: "legacy_synthesizer",
       clarification_questions: ["Wie oft waeschst du aktuell?"],
@@ -477,5 +709,312 @@ test.describe("Chat debug trace", () => {
       }),
       relevant_categories: expect.any(Array),
     })
+  })
+
+  test("exposes response composition metadata in debug traces", () => {
+    const draft = buildPipelineTraceDraft({
+      request_id: "req-response-composition",
+      started_at: "2026-04-10T10:00:00.000Z",
+      user_message: "Okay, und was waere dann der erste Waschtag?",
+      conversation_id: "conv-response-composition",
+      intent: "routine_help",
+      product_category: "routine",
+      conversation_history_count: 4,
+      classification: createClassification(),
+      router_decision: createRouterDecision(),
+      conversation_state: createConversationStateTransition(),
+      clarification_questions: [],
+      hair_profile_snapshot: createProfile(),
+      memory_context: null,
+      retrieval_debug: {
+        subqueries: [],
+        source_types: [],
+        metadata_filter: null,
+        candidate_count_before_rerank: 0,
+        reranked_count: 0,
+        fallback_used: false,
+      },
+      retrieval_count: 0,
+      retrieved_chunks: [],
+      should_plan_routine: true,
+      routine_plan: createRoutinePlan(),
+      matched_products: [],
+      classification_prompt_ref: {
+        name: "bounded-agent-route-classification",
+        version: 1,
+        label: "staging",
+        is_fallback: false,
+      },
+      prompt: createPromptSnapshot(),
+      response_composition: agentResponseComposition,
+      latencies_ms: {
+        classification_ms: 10,
+        hair_profile_load_ms: 4,
+        memory_load_ms: 2,
+        routine_planning_ms: 0,
+        history_load_ms: 3,
+        router_ms: 0,
+        conversation_create_ms: 0,
+        retrieval_ms: 0,
+        product_matching_ms: 0,
+        prompt_build_ms: 8,
+        stream_setup_ms: 30,
+      },
+    })
+
+    const trace = finalizeChatTurnTrace(draft, {
+      assistant_content: "Dann halten wir den ersten Waschtag bewusst simpel.",
+      sources: [],
+      product_count: 0,
+      status: "completed",
+      total_ms: 180,
+    })
+    const debugEvent = buildRetrievalDebugEventData(draft)
+
+    expect(draft.response_composition).toEqual(agentResponseComposition)
+    expect(trace.response_composition).toEqual(agentResponseComposition)
+    expect(debugEvent).toMatchObject({
+      response_composer_path: "agent_final_render",
+    })
+  })
+
+  test("projects runtime tool-loop traces into sanitized app trace summaries", () => {
+    const appTrace = projectAgenticToolLoopTraceForApp({
+      runtimeTrace: createRuntimeAgenticToolLoopTrace(),
+      selectedProducts: {
+        category: "shampoo",
+        decision: "recommended",
+        product_response_policy: "recommend",
+        policy_reason: "profile_match",
+        profile_basis: ["feines Haar"],
+        category_guidance: "mild reinigen",
+        products: [
+          {
+            rank: 1,
+            product_id: "product-1",
+            name: "Mild Shampoo",
+            brand: "HC",
+            price_eur: 12,
+            currency: "EUR",
+            fit_reason: "passt zu feinem Haar",
+            caveat: null,
+            supported_claims: [],
+            unsupported_requested_signals: [],
+          },
+        ],
+        comparison_facts: null,
+        missing_info: [],
+        unsupported_requested_signals: [],
+      },
+      routinePlan: {
+        objective: "build_routine",
+        steps: [
+          {
+            id: "wash",
+            label: "Mild waschen",
+            necessity: "core",
+            action: "keep",
+            category: "shampoo",
+            frequency: "nach Bedarf",
+            reasons: ["Basis"],
+            caveats: [],
+            fillable: true,
+          },
+          {
+            id: "condition",
+            label: "Conditioner",
+            necessity: "core",
+            action: "add",
+            category: "conditioner",
+            frequency: "nach jeder Waesche",
+            reasons: ["Laengen schuetzen"],
+            caveats: [],
+            fillable: true,
+          },
+        ],
+        missing_info: [],
+        confidence: 0.8,
+      },
+      latencyMs: 410,
+    })
+
+    expect(appTrace).toMatchObject({
+      engine_variant: "tool_loop",
+      answer_composition_mode: "composer_context",
+      loaded_guidance_ids: ["topic:shampoo", "overlay:fine_hair"],
+      answer_context_capsule_ids: ["global.natural_consultant", "category.shampoo.recommend"],
+      repair_attempts: [
+        {
+          reason: "missing_terminal_answer",
+          instruction_label: "terminal_protocol_repair",
+        },
+      ],
+      failure_stage: "repair_failed",
+      visible_failure: true,
+      latency_ms: 410,
+    })
+    expect(appTrace.model_steps).toEqual([
+      {
+        step_index: 1,
+        type: "tool_calls",
+        finish_reason: null,
+        tool_call_names: ["load_advisor_guidance", "select_products"],
+      },
+      {
+        step_index: 2,
+        type: "message",
+        finish_reason: null,
+        tool_call_names: [],
+      },
+    ])
+    expect(appTrace.tool_calls).toEqual([
+      expect.objectContaining({
+        id: "call-load-guidance",
+        name: "load_advisor_guidance",
+        status: "executed",
+        output_summary: "guidance_ids=topic:conditioner",
+      }),
+      expect.objectContaining({
+        id: "call-load-guidance-fallback",
+        name: "load_advisor_guidance",
+        status: "executed",
+        output_summary: "guidance_ids=topic:shampoo, overlay:fine_hair",
+      }),
+      expect.objectContaining({
+        id: "call-products",
+        name: "select_products",
+        status: "executed",
+        output_summary:
+          "category=conditioner; decision=needs_more_info; policy=needs_more_info; products=0; missing_info=1",
+      }),
+      expect.objectContaining({
+        id: "call-products-second",
+        name: "select_products",
+        status: "executed",
+        output_summary:
+          "category=shampoo; decision=recommended; policy=recommend; products=2; missing_info=0",
+      }),
+      expect.objectContaining({
+        id: "call-routine",
+        name: "build_or_fix_routine",
+        status: "executed",
+        output_summary: "objective=fix_routine; steps=1; labels=Ansatz klaeren; missing_info=1",
+      }),
+      expect.objectContaining({
+        id: "call-routine-second",
+        name: "build_or_fix_routine",
+        status: "executed",
+        output_summary:
+          "objective=build_routine; steps=2; labels=Mild waschen, Conditioner; missing_info=0",
+      }),
+    ])
+    expect(appTrace.consultation_brief_summary).toEqual({
+      charter_count: 1,
+      routine_staging_count: 1,
+      product_vs_education_count: 1,
+      profile_overlay_ids: ["overlay:fine_hair"],
+      candidate_guidance_ids: ["topic:shampoo"],
+    })
+    expect(appTrace.blocked_tool_calls).toEqual([
+      {
+        id: "blocked-terminal",
+        name: "submit_final_answer",
+        reason: "terminal_with_other_tool_calls",
+      },
+    ])
+    expect(JSON.stringify(appTrace)).not.toContain("RAW_")
+  })
+
+  test("preserves compact tool-loop trace metadata without raw prompt context", () => {
+    const agenticTrace = createAgenticToolLoopTrace()
+    const draft = buildPipelineTraceDraft({
+      request_id: "req-tool-loop",
+      started_at: "2026-04-10T10:00:00.000Z",
+      user_message: "welcges Shampoo sollte ich verwenden?",
+      conversation_id: "conv-tool-loop",
+      intent: "product_recommendation",
+      product_category: "shampoo",
+      conversation_history_count: 3,
+      classification: createClassification({
+        intent: "product_recommendation",
+        product_category: "shampoo",
+      }),
+      router_decision: createRouterDecision({
+        retrieval_mode: "agent_engine",
+        response_mode: "answer_direct",
+        policy_overrides: [],
+      }),
+      conversation_state: {
+        ...createConversationStateTransition(),
+        updated_by_engine: "tool_loop",
+      },
+      clarification_questions: [],
+      hair_profile_snapshot: createProfile(),
+      memory_context: null,
+      retrieval_debug: {
+        subqueries: [],
+        source_types: [],
+        metadata_filter: null,
+        candidate_count_before_rerank: 0,
+        reranked_count: 0,
+        fallback_used: false,
+      },
+      retrieval_count: 0,
+      retrieved_chunks: [],
+      should_plan_routine: false,
+      matched_products: [createProduct({ category: "shampoo", name: "Mild Shampoo" })],
+      classification_prompt_ref: {
+        name: "agentic-tool-loop",
+        version: 1,
+        label: "staging",
+        is_fallback: false,
+      },
+      prompt: createPromptSnapshot(),
+      response_composition: legacyResponseComposition,
+      agentic_tool_loop: agenticTrace,
+      latencies_ms: {
+        classification_ms: 0,
+        hair_profile_load_ms: 3,
+        memory_load_ms: 2,
+        routine_planning_ms: 0,
+        history_load_ms: 2,
+        router_ms: 0,
+        conversation_create_ms: 0,
+        retrieval_ms: 0,
+        product_matching_ms: 28,
+        prompt_build_ms: 5,
+        stream_setup_ms: 12,
+      },
+    })
+
+    const trace = finalizeChatTurnTrace(draft, {
+      assistant_content: "Nimm hier das mildere Shampoo.",
+      sources: [],
+      product_count: 1,
+      status: "completed",
+      total_ms: 360,
+    })
+    const debugEvent = buildRetrievalDebugEventData(draft)
+
+    expect(trace.engine_variant).toBe("tool_loop")
+    expect(trace.agentic_tool_loop).toEqual(agenticTrace)
+    expect(trace.conversation_state.updated_by_engine).toBe("tool_loop")
+    expect(debugEvent).toMatchObject({
+      engine_variant: "tool_loop",
+      tool_loop_model_step_count: 2,
+      tool_loop_total_llm_calls: 2,
+      tool_loop_tool_calls: ["select_products", "submit_final_answer"],
+      tool_loop_blocked_reasons: ["not_exposed_in_v1"],
+      loaded_guidance_ids: ["topic:shampoo"],
+      repair_count: 0,
+      failure_stage: null,
+      visible_failure: false,
+      agentic_tool_loop: {
+        model_step_count: 2,
+        tool_call_count: 2,
+        blocked_tool_call_count: 1,
+      },
+    })
+    expect(JSON.stringify(debugEvent)).not.toContain("System prompt snapshot")
   })
 })

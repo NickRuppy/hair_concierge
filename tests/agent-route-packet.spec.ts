@@ -630,6 +630,7 @@ test("buildAgentRuntimePacket makes profile-deviation notices mandatory render c
   })
 
   const packet = buildAgentRuntimePacket({
+    message: "Meine Haare sind fein und trocken. Gibt es eine leichte Maske?",
     route,
     userContext: createContext(),
     guidance: { items: [] },
@@ -655,6 +656,7 @@ test("buildAgentRuntimePacket makes profile-deviation notices mandatory render c
       instruction.includes("Profil-Hinweis aus selected_products.profile_basis"),
     ),
   )
+  assert.equal("conversation_context" in packet, false)
 })
 
 test("buildAgentRoutePacket extracts active signals from common German phrasing variants", () => {

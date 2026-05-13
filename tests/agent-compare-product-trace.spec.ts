@@ -125,7 +125,7 @@ test("compare route preserves the agent product trace for lab debugging", async 
           error: null,
         }),
         runShadowComparisonForUser: async () => ({
-          system: "agent",
+          system: "tool_loop",
           answer: "Neuer Agent",
           latency_ms: 90,
           debug_lines: [
@@ -134,6 +134,10 @@ test("compare route preserves the agent product trace for lab debugging", async 
             "policy_reason: Shampoo wird primaer ueber Kopfhaut-Fokus und Haardicke entschieden.",
           ],
           matched_products: [{ name: "Light Shampoo", category: "shampoo" }],
+          tool_loop_trace: {
+            model_steps: 2,
+            tool_calls: [{ name: "select_products", input: { category: "shampoo" } }],
+          },
           route_trace: {
             user_job: "product_pick",
             product_category: "shampoo",
@@ -198,6 +202,8 @@ test("compare route preserves the agent product trace for lab debugging", async 
     assert.equal(body.results[1].product_trace.product_response_policy, "recommend")
     assert.match(body.results[1].product_trace.policy_reason, /Kopfhaut-Fokus/)
     assert.ok(body.results[1].debug_lines.includes("product_policy: recommend"))
+    assert.equal(body.results[1].tool_loop_trace.model_steps, 2)
+    assert.equal(body.results[1].tool_loop_trace.tool_calls[0].name, "select_products")
   }))
 
 test("judgment route accepts compare records with a product trace", async () =>

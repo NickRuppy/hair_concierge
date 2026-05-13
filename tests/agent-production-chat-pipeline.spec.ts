@@ -2,49 +2,29 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import type { PropagateAttributesParams } from "@langfuse/tracing"
 
-import {
-  buildRouterDecision,
-  mapAgentIntent,
-  mapAgentProductCategory,
-  productsForRenderedPacket,
-  runProductionAgentPipeline,
-} from "../src/lib/agent/production/chat-pipeline"
-import { buildRecommendationEngineRuntimeForChat } from "../src/lib/recommendation-engine"
-import type { AgentModelClient } from "../src/lib/agent/orchestrator/model-client"
 import { createChatPostHandler } from "../src/app/api/chat/route"
+import { runProductionAgentPipeline } from "../src/lib/agent/production/chat-pipeline"
+import type {
+  AgenticToolLoopModelClient,
+  AgenticToolLoopModelStep,
+} from "../src/lib/agent/orchestrator/model-client"
+import { buildRecommendationEngineRuntimeForChat } from "../src/lib/recommendation-engine"
 import { createDefaultConversationState } from "../src/lib/rag/conversation-state"
 import type {
-  AgentRoutePacket,
-  AgentRuntimePacket,
-} from "../src/lib/agent/orchestrator/route-packet"
-import type { SelectedProductsProjection } from "../src/lib/agent/tools/select-products"
-import type { HairProfile, Product } from "../src/lib/types"
-import type { ConversationState, ConversationStateTransition } from "../src/lib/types"
+  BuildOrFixRoutineProjection,
+  BuildOrFixRoutineToolInput,
+} from "../src/lib/agent/tools/build-or-fix-routine"
+import type { LoadAdvisorGuidanceInput } from "../src/lib/agent/tools/load-advisor-guidance"
+import type {
+  createSelectProductsTool,
+  SelectedProductsProjection,
+  SelectProductsToolResult,
+} from "../src/lib/agent/tools/select-products"
+import type { ConversationStateTransition, HairProfile, Message, Product } from "../src/lib/types"
 
-function createRoute(overrides: Partial<AgentRoutePacket> = {}): AgentRoutePacket {
-  return {
-    user_job: "product_pick",
-    product_category: "shampoo",
-    requested_overlay_ids: [],
-    requested_topic_ids: [],
-    requested_routine_id: null,
-    concerns: [],
-    active_profile_signals: [],
-    confidence: 0.91,
-    evidence: ["User asks for a product."],
-    ambiguity: null,
-    required_playbook_id: "playbook:recommend_products",
-    guidance_ids: ["playbook:recommend_products"],
-    tool_plan: ["select_products"],
-    routine_objective: null,
-    routine_layer: null,
-    routine_requested_category: null,
-    validation_warnings: [],
-    ...overrides,
-  }
-}
+type SelectProductsToolParams = Parameters<ReturnType<typeof createSelectProductsTool>>[0]
 
-function createProduct(id: string): Product {
+function createProduct(id: string): Product & { similarity: number } {
   return {
     id,
     name: `Produkt ${id}`,
@@ -63,6 +43,7 @@ function createProduct(id: string): Product {
     is_active: true,
     sort_order: 0,
     recommendation_meta: null,
+    similarity: 0.9,
     created_at: "2026-04-29T00:00:00.000Z",
     updated_at: "2026-04-29T00:00:00.000Z",
   }
@@ -113,6 +94,20 @@ function createTextStream(content: string): ReadableStream<Uint8Array> {
   })
 }
 
+async function readStream(stream: ReadableStream<Uint8Array>): Promise<string> {
+  const reader = stream.getReader()
+  const decoder = new TextDecoder()
+  let output = ""
+
+  for (;;) {
+    const { done, value } = await reader.read()
+    if (done) break
+    output += decoder.decode(value, { stream: true })
+  }
+
+  return output + decoder.decode()
+}
+
 function parseSseEvents(text: string): Array<{ type: string; data: unknown }> {
   return text
     .trim()
@@ -129,23 +124,6 @@ function propagateAttributesStub<A extends unknown[], F extends (...args: A) => 
   work: F,
 ): ReturnType<F> {
   return work(...([] as unknown as A))
-}
-
-function createConversationStateTransition(): ConversationStateTransition {
-  const previousState = createDefaultConversationState()
-
-  return {
-    previous_state: previousState,
-    next_state: {
-      ...previousState,
-      active_topic: "shampoo",
-      last_product_category: "shampoo",
-      last_assistant_action: "answered_direct",
-    },
-    reason: "product_topic_started",
-    changed_fields: ["active_topic", "last_product_category", "last_assistant_action"],
-    classifier_override: null,
-  }
 }
 
 function createFakeAdmin() {
@@ -238,1247 +216,554 @@ function createFakeAdmin() {
   }
 }
 
-test("production agent compatibility maps route jobs into legacy chat metadata", () => {
-  assert.equal(mapAgentIntent(createRoute({ user_job: "product_pick" })), "product_recommendation")
-  assert.equal(mapAgentIntent(createRoute({ user_job: "routine_structure" })), "routine_help")
-  assert.equal(mapAgentIntent(createRoute({ user_job: "usage" })), "hair_care_advice")
-  assert.equal(mapAgentProductCategory(createRoute({ product_category: "shampoo" })), "shampoo")
-  assert.equal(
-    mapAgentProductCategory(createRoute({ user_job: "routine_structure", product_category: null })),
-    "routine",
-  )
-})
+function createConversationStateTransition(): ConversationStateTransition {
+  const previousState = createDefaultConversationState()
 
-test("production agent router decision marks missing product info as clarify-only", () => {
-  const selectedProducts: SelectedProductsProjection = {
-    category: "shampoo",
-    decision: "needs_more_info",
-    product_response_policy: "needs_more_info",
-    policy_reason: "Missing profile data.",
-    profile_basis: [],
-    category_guidance: "Bitte klaeren.",
-    products: [],
-    comparison_facts: null,
-    missing_info: [
+  return {
+    previous_state: previousState,
+    next_state: {
+      ...previousState,
+      active_topic: "shampoo",
+      last_product_category: "shampoo",
+      last_assistant_action: "answered_direct",
+    },
+    reason: "product_topic_started",
+    changed_fields: ["active_topic", "last_product_category", "last_assistant_action"],
+    classifier_override: null,
+    updated_by_engine: "tool_loop",
+  }
+}
+
+function createUserContext(profile: HairProfile | null = createCompleteHairProfile()) {
+  return {
+    profile,
+    routine_inventory: [],
+    relevant_memory: [],
+    derived_signals: [],
+    suggested_overlays: [],
+    missing_profile: [],
+  }
+}
+
+function createMemoryContext() {
+  return {
+    enabled: true,
+    entries: [],
+    promptContext: null,
+    dislikedProductNames: [],
+  }
+}
+
+function createTerminalStep(params: {
+  answer: string
+  productIds?: string[]
+  activeTopic?: string | null
+  lastProductCategory?: string | null
+  lastAssistantAction?: string
+  reason?: string
+}): AgenticToolLoopModelStep {
+  return {
+    type: "tool_calls",
+    calls: [
       {
-        key: "thickness",
-        label: "Haardicke",
-        blocking: true,
-        detail: "Ohne Haardicke kann die Shampoo-Auswahl nicht sinnvoll eingegrenzt werden.",
+        id: "final-1",
+        name: "submit_final_answer",
+        input: {
+          answer: params.answer,
+          product_ids: params.productIds ?? [],
+          state_patch: {
+            active_topic: params.activeTopic ?? null,
+            routine_layer: null,
+            last_product_category: params.lastProductCategory ?? null,
+            last_assistant_action: params.lastAssistantAction ?? "answered_direct",
+            topic_relation: "category_switch",
+            reason: params.reason ?? "tool_loop_answered",
+          },
+        },
       },
     ],
-    unsupported_requested_signals: [],
   }
+}
 
-  const decision = buildRouterDecision({
-    route: createRoute(),
-    selectedProducts,
-  })
+function createFakeToolLoopModel(steps: AgenticToolLoopModelStep[]): AgenticToolLoopModelClient {
+  const queue = [...steps]
 
-  assert.equal(decision.response_mode, "clarify_only")
-  assert.equal(decision.retrieval_mode, "agent_engine")
-  assert.deepEqual(decision.policy_overrides, [
-    "agent_v1_front_door",
-    "product_policy:needs_more_info",
-    "missing_shampoo_profile",
-  ])
-  assert.match(decision.clarification_reason ?? "", /Haardicke/)
-})
+  return {
+    async runStep() {
+      const step = queue.shift()
+      assert.ok(step, "Unexpected extra model step")
+      return step
+    },
+    async classifyRoute() {
+      throw new Error("Classic classifyRoute must not be called")
+    },
+    async renderFinalAnswer() {
+      throw new Error("Classic renderFinalAnswer must not be called")
+    },
+  } as AgenticToolLoopModelClient
+}
 
-test("production agent router decision marks missing routine info as clarify-only", () => {
-  const decision = buildRouterDecision({
-    route: createRoute({
-      user_job: "routine_structure",
-      product_category: null,
-      tool_plan: ["build_or_fix_routine"],
-      routine_objective: "build_routine",
+function createSelectedProductsResult(params: {
+  projection: SelectedProductsProjection
+  products: Product[]
+  message: string
+}): SelectProductsToolResult {
+  const effectiveHairProfile = createCompleteHairProfile()
+  return {
+    projection: params.projection,
+    products: params.products as SelectProductsToolResult["products"],
+    effectiveHairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile: effectiveHairProfile,
+      routineItems: [],
+      productCategory: params.projection.category,
+      message: params.message,
     }),
-    selectedProducts: null,
-    routinePlan: {
-      objective: "build_routine",
-      steps: [],
-      missing_info: [
-        {
-          key: "wash_frequency",
-          label: "Waschfrequenz",
-          why_it_matters: "Die Waschfrequenz bestimmt, wie oft die Routine greifen muss.",
-          blocking: false,
-          expected_type: "WashFrequency",
-        },
-      ],
-      confidence: 0.5,
-    },
-  })
-
-  assert.equal(decision.response_mode, "clarify_only")
-  assert.equal(decision.clarification_reason, "missing_routine_frame")
-  assert.ok(decision.policy_overrides.includes("missing_routine_frame"))
-})
-
-test("production agent first-turn routine clarification creates pending routine state", async () => {
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "routine_structure",
-        product_category: null,
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.86,
-        evidence: ["User asks for a routine."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Dafuer brauche ich kurz deine Waschfrequenz und aktuelle Produkte."
-    },
   }
+}
 
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Kannst du mir eine Routine bauen?",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: null,
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => createDefaultConversationState(),
-    },
-  )
-
-  assert.equal(result.intent, "routine_help")
-  assert.equal(result.routerDecision.response_mode, "clarify_only")
-  assert.equal(result.routerDecision.clarification_reason, "missing_routine_frame")
-  assert.equal(result.conversationStateTransition.next_state.active_topic, "routine")
-  assert.equal(result.conversationStateTransition.next_state.routine_layer, "basics")
-  assert.equal(
-    result.conversationStateTransition.next_state.pending_offer,
-    "routine_goals_or_problems",
-  )
-  assert.equal(result.conversationStateTransition.reason, "routine_started")
-  assert.equal(renderPackets[0]?.routine_plan?.missing_info.length, 2)
-})
-
-test("production agent first complete routine answer renders only routine basics", async () => {
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "routine_structure",
-        product_category: null,
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.9,
-        evidence: ["User asks for a complete routine."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Ich starte mit Shampoo, Conditioner und einem passenden Fokus."
-    },
-  }
-
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Welche Routine passt am besten zu meinem Haarprofil?",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: createCompleteHairProfile(),
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => createDefaultConversationState(),
-    },
-  )
-  const renderedPacket = renderPackets[0]
-  assert.ok(renderedPacket)
-
-  assert.equal(result.routerDecision.response_mode, "answer_direct")
-  assert.equal(result.conversationStateTransition.reason, "routine_basics_answered")
-  assert.equal(result.conversationStateTransition.next_state.active_topic, "routine")
-  assert.equal(result.conversationStateTransition.next_state.routine_layer, "basics")
-  assert.equal(
-    result.conversationStateTransition.next_state.pending_offer,
-    "routine_goals_or_problems",
-  )
-  assert.deepEqual(
-    renderedPacket.routine_plan?.steps.map((step) => step.id),
-    ["base-shampoo", "base-conditioner", "maintenance-leave-in"],
-  )
-  assert.equal(renderedPacket.selected_products, null)
-  assert.deepEqual(result.matchedProducts, [])
-  assert.ok(
-    renderedPacket.final_instructions.includes(
-      "Fuer basics kurz Shampoo und Conditioner erklaeren und nur den hoechsten Zusatzhebel nennen.",
-    ),
-  )
-  assert.ok(
-    renderedPacket.final_instructions.includes(
-      "Schliesse basics mit einer kurzen natuerlichen Frage, ob der Nutzer als Naechstes eher sehen moechte, was ihn seinem Ziel naeherbringt, oder was gegen seine Probleme hilft. Vermeide interne Begriffe wie Ziel-Hebel oder Problem-Hebel.",
-    ),
-  )
-  assert.equal(result.debugTrace.response_composition.attachment_mode, "text_only")
-  const promptMessage = result.debugTrace.prompt.messages.find((message) => message.role === "user")
-  assert.ok(promptMessage)
-  const promptPayload = JSON.parse(promptMessage.content) as { packet: AgentRuntimePacket }
-  assert.equal(promptPayload.packet.route.routine_layer, "basics")
-  assert.equal(promptPayload.packet.selected_products, null)
-})
-
-test("production agent projects goals layer when user accepts routine goal follow-up", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    last_assistant_action: "answered_routine_basics",
-  }
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "routine_structure",
-        product_category: null,
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.88,
-        evidence: ["User chooses the routine goals layer."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Dann schauen wir auf deine Ziele."
-    },
-  }
-
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Ja, zeig mir bitte, was fuer meine Ziele und mehr Definition hilft.",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: createCompleteHairProfile({
-          hair_texture: "curly",
-          concerns: ["dryness", "frizz", "tangling"],
-          goals: ["curl_definition", "less_frizz", "moisture"],
-        }),
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
-    },
-  )
-  const renderedPacket = renderPackets[0]
-  assert.ok(renderedPacket)
-
-  const renderedStepIds = renderedPacket.routine_plan?.steps.map((step) => step.id) ?? []
-  assert.equal(renderedPacket.route.user_job, "routine_structure")
-  assert.equal(renderedPacket.route.routine_layer, "goals")
-  assert.ok(renderedStepIds.includes("maintenance-leave-in"))
-  assert.ok(
-    renderedStepIds.some(
-      (stepId) => stepId === "maintenance-refresh" || stepId === "occasional-mask",
-    ),
-  )
-  assert.ok(!renderedStepIds.includes("base-shampoo"))
-  assert.ok(!renderedStepIds.includes("base-conditioner"))
-  assert.equal(renderedPacket.selected_products, null)
-  assert.deepEqual(result.matchedProducts, [])
-  assert.ok(
-    renderedPacket.final_instructions.includes(
-      "Fuer goals nur die zielbezogenen Routine-Hebel erklaeren.",
-    ),
-  )
-  assert.equal(
-    (renderedPacket.user_context as { conversation_state?: ConversationState }).conversation_state
-      ?.routine_layer,
-    "goals",
-  )
-  assert.equal(result.conversationStateTransition.reason, "routine_goal_layer_selected")
-})
-
-test("production agent overrides unclear goal-layer replies inside active routine", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    last_assistant_action: "answered_routine_basics",
-  }
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "unsupported_or_unclear",
-        product_category: null,
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.43,
-        evidence: ["Short reply."],
-        ambiguity: "unclear short answer",
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Dann schauen wir auf deine Ziele."
-    },
-  }
-
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Ja, die Ziele bitte.",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: createCompleteHairProfile({
-          hair_texture: "curly",
-          concerns: ["dryness", "frizz"],
-          goals: ["curl_definition", "less_frizz"],
-        }),
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
-    },
-  )
-  const renderedPacket = renderPackets[0]
-  assert.ok(renderedPacket)
-
-  assert.equal(renderedPacket.route.user_job, "routine_structure")
-  assert.equal(renderedPacket.route.routine_layer, "goals")
-  assert.equal(renderedPacket.selected_products, null)
-  assert.ok(
-    result.routerDecision.policy_overrides.includes("conversation_state_routine_layer_selected"),
-  )
-  assert.equal(
-    result.debugTrace.conversation_state.classifier_override,
-    "conversation_state_routine_layer_selected",
-  )
-  assert.equal(result.conversationStateTransition.reason, "routine_goal_layer_selected")
-})
-
-test("production agent projects problems layer when user accepts routine problem follow-up", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    last_assistant_action: "answered_routine_basics",
-  }
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "routine_structure",
-        product_category: null,
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.88,
-        evidence: ["User chooses the routine problems layer."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Dann schauen wir auf Frizz und trockene Spitzen."
-    },
-  }
-
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Lieber die Probleme: wie kann ich Frizz und trockene Spitzen fixen?",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: createCompleteHairProfile({
-          hair_texture: "curly",
-          concerns: ["dryness", "frizz", "tangling"],
-          goals: ["curl_definition", "less_frizz", "moisture"],
-        }),
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
-    },
-  )
-  const renderedPacket = renderPackets[0]
-  assert.ok(renderedPacket)
-
-  const renderedStepIds = renderedPacket.routine_plan?.steps.map((step) => step.id) ?? []
-  assert.equal(renderedPacket.route.user_job, "routine_structure")
-  assert.equal(renderedPacket.route.routine_layer, "problems")
-  assert.ok(renderedStepIds.includes("maintenance-leave-in"))
-  assert.ok(
-    renderedStepIds.some(
-      (stepId) => stepId === "occasional-mask" || stepId === "base-owc-technique",
-    ),
-  )
-  assert.ok(!renderedStepIds.includes("base-shampoo"))
-  assert.ok(!renderedStepIds.includes("base-conditioner"))
-  assert.equal(renderedPacket.selected_products, null)
-  assert.deepEqual(result.matchedProducts, [])
-  assert.ok(
-    renderedPacket.final_instructions.includes(
-      "Fuer problems nur die problembezogenen Routine-Hebel erklaeren.",
-    ),
-  )
-  assert.equal(
-    (renderedPacket.user_context as { conversation_state?: ConversationState }).conversation_state
-      ?.routine_layer,
-    "problems",
-  )
-  assert.equal(result.conversationStateTransition.reason, "routine_problem_layer_selected")
-})
-
-test("production agent keeps vague category follow-up inside routine as deep dive", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    last_assistant_action: "answered_routine_basics",
-  }
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "product_pick",
-        product_category: "leave_in",
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.82,
-        evidence: ["User mentions Leave-in."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Leave-in ist hier der naechste Routine-Hebel."
-    },
-  }
-
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Und Leave-in?",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: createCompleteHairProfile(),
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
-    },
-  )
-  const renderedPacket = renderPackets[0]
-  assert.ok(renderedPacket)
-
-  assert.equal(renderedPacket.route.user_job, "routine_structure")
-  assert.equal(renderedPacket.route.product_category, null)
-  assert.deepEqual(
-    renderedPacket.routine_plan?.steps.map((step) => step.id),
-    ["maintenance-leave-in"],
-  )
-  assert.equal(renderedPacket.selected_products, null)
-  assert.deepEqual(result.matchedProducts, [])
-  assert.ok(
-    renderedPacket.final_instructions.includes(
-      "Fuer deep_dive fokussiert genau den angefragten Baustein erklaeren.",
-    ),
-  )
-  assert.equal(result.debugTrace.response_composition.attachment_mode, "text_only")
-  assert.equal(result.conversationStateTransition.reason, "routine_category_deep_dive")
-  assert.equal(result.conversationStateTransition.next_state.routine_layer, "deep_dive")
-  assert.equal(result.conversationStateTransition.next_state.last_product_category, "leave_in")
-})
-
-test("production agent keeps non-product category concept follow-up inside routine as deep dive", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    last_assistant_action: "answered_routine_basics",
-  }
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "compare_or_decide",
-        product_category: "leave_in",
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.8,
-        evidence: ["User asks if Leave-in is needed."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Leave-in ist hier als Routine-Baustein sinnvoll."
-    },
-  }
-
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Brauche ich Leave-in?",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: createCompleteHairProfile(),
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
-    },
-  )
-  const renderedPacket = renderPackets[0]
-  assert.ok(renderedPacket)
-
-  assert.equal(renderedPacket.route.user_job, "routine_structure")
-  assert.equal(renderedPacket.route.routine_layer, "deep_dive")
-  assert.deepEqual(
-    renderedPacket.routine_plan?.steps.map((step) => step.id),
-    ["maintenance-leave-in"],
-  )
-  assert.equal(renderedPacket.selected_products, null)
-  assert.deepEqual(result.matchedProducts, [])
-  assert.equal(
-    result.debugTrace.conversation_state.classifier_override,
-    "conversation_state_routine_category_deep_dive",
-  )
-})
-
-test("production agent can deep dive base conditioner inside active routine", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    last_assistant_action: "answered_routine_basics",
-  }
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "product_pick",
-        product_category: "conditioner",
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.79,
-        evidence: ["User mentions Conditioner."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Conditioner ist der zweite Basisanker."
-    },
-  }
-
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Und Conditioner?",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: createCompleteHairProfile({
-          concerns: ["hair_damage"],
-          goals: [],
-        }),
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
-    },
-  )
-  const renderedPacket = renderPackets[0]
-  assert.ok(renderedPacket)
-
-  assert.equal(renderedPacket.route.user_job, "routine_structure")
-  assert.equal(renderedPacket.route.routine_layer, "deep_dive")
-  assert.deepEqual(
-    renderedPacket.routine_plan?.steps.map((step) => step.id),
-    ["base-conditioner"],
-  )
-  assert.equal(renderedPacket.selected_products, null)
-  assert.deepEqual(result.matchedProducts, [])
-  assert.equal(result.conversationStateTransition.next_state.last_product_category, "conditioner")
-})
-
-test("production agent lets explicit routine follow-up product asks show product cards", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    last_assistant_action: "answered_routine_basics",
-  }
-  const renderPackets: AgentRuntimePacket[] = []
-  const matchedLeaveIn = {
-    ...createProduct("leave-in-1"),
-    name: "Leave-in 1",
-    category: "Leave-in",
-    similarity: 0.91,
-  }
-  const leaveInProjection: SelectedProductsProjection = {
-    category: "leave_in",
+function createSelectedProductsProjection(
+  products: Product[],
+  overrides: Partial<SelectedProductsProjection> = {},
+): SelectedProductsProjection {
+  return {
+    category: "shampoo",
     decision: "recommended",
     product_response_policy: "recommend",
     policy_reason: "Explicit product ask.",
     profile_basis: [],
-    category_guidance: "Leave-in passt als konkrete Produktempfehlung.",
-    products: [
-      {
-        rank: 1,
-        product_id: matchedLeaveIn.id,
-        name: matchedLeaveIn.name,
-        brand: matchedLeaveIn.brand,
-        price_eur: matchedLeaveIn.price_eur,
-        currency: matchedLeaveIn.currency,
-        fit_reason: "Passt als leichter Leave-in-Fokus.",
-        caveat: null,
-        supported_claims: [],
-        unsupported_requested_signals: [],
-      },
-    ],
+    category_guidance: "Shampoo passt als konkrete Produktempfehlung.",
+    products: products.map((product, index) => ({
+      rank: index + 1,
+      product_id: product.id,
+      name: product.name,
+      brand: product.brand,
+      price_eur: product.price_eur,
+      currency: product.currency,
+      fit_reason: `Passt ${product.id}.`,
+      caveat: null,
+      supported_claims: [],
+      unsupported_requested_signals: [],
+    })),
     comparison_facts: null,
     missing_info: [],
     unsupported_requested_signals: [],
+    ...overrides,
   }
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "product_pick",
-        product_category: "leave_in",
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.9,
-        evidence: ["User asks for a concrete Leave-in recommendation."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Hier sind konkrete Leave-in-Produkte."
-    },
-  }
+}
 
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Welches Leave-in empfiehlst du mir konkret?",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: createCompleteHairProfile(),
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
-      createSelectProductsTool:
-        (options = {}) =>
-        async () => {
-          const effectiveHairProfile = createCompleteHairProfile()
-          options.onResult?.({
-            projection: leaveInProjection,
-            products: [matchedLeaveIn],
-            effectiveHairProfile,
-            runtime: buildRecommendationEngineRuntimeForChat({
-              hairProfile: effectiveHairProfile,
-              routineItems: [],
-              productCategory: "leave_in",
-              message: "Welches Leave-in empfiehlst du mir konkret?",
-            }),
+test("production tool-loop select_products returns answer, ordered cards, trace, state, and engine runtime", async () => {
+  const fallbackProduct = createProduct("fallback")
+  const primaryProduct = createProduct("primary")
+  const sensitiveRecentMessage =
+    "Meine private Telefonnummer ist 0176-123456789 und mein Konto-Code lautet ULTRA-SECRET-RECENT-MESSAGE-DO-NOT-PERSIST."
+  const projection = createSelectedProductsProjection([fallbackProduct, primaryProduct])
+  const selection = createSelectedProductsResult({
+    projection,
+    products: [fallbackProduct, primaryProduct],
+    message: "Welches Shampoo passt?",
+  })
+  const modelStepsSeen: unknown[] = []
+  const fakeModel: AgenticToolLoopModelClient = {
+    async runStep(params) {
+      modelStepsSeen.push(params)
+      return modelStepsSeen.length === 1
+        ? {
+            type: "tool_calls",
+            calls: [
+              {
+                id: "select-1",
+                name: "select_products",
+                input: { category: "shampoo", userJob: "product_pick" },
+              },
+            ],
+          }
+        : createTerminalStep({
+            answer: "Nimm zuerst Produkt primary.",
+            productIds: ["primary"],
+            activeTopic: "shampoo",
+            lastProductCategory: "shampoo",
           })
-          return leaveInProjection
-        },
     },
-  )
-  const renderedPacket = renderPackets[0]
-  assert.ok(renderedPacket)
-
-  assert.equal(renderedPacket.route.user_job, "product_pick")
-  assert.equal(renderedPacket.route.product_category, "leave_in")
-  assert.equal(renderedPacket.routine_plan, null)
-  assert.equal(renderedPacket.selected_products?.category, "leave_in")
-  assert.ok(renderedPacket.selected_products.products.length > 0)
-  assert.ok(result.matchedProducts.length > 0)
-  assert.equal(result.debugTrace.response_composition.attachment_mode, "cards")
-  assert.equal(result.conversationStateTransition.reason, "category_switch")
-  assert.equal(result.conversationStateTransition.next_state.active_topic, "leave_in")
-})
-
-test("production agent keeps natural explicit good-product wording in product mode", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    last_assistant_action: "answered_routine_basics",
-  }
-  const renderPackets: AgentRuntimePacket[] = []
-  const matchedLeaveIn = {
-    ...createProduct("leave-in-good"),
-    name: "Gutes Leave-in",
-    category: "Leave-in",
-    similarity: 0.9,
-  }
-  const leaveInProjection: SelectedProductsProjection = {
-    category: "leave_in",
-    decision: "recommended",
-    product_response_policy: "recommend",
-    policy_reason: "Explicit good-product wording.",
-    profile_basis: [],
-    category_guidance: "Konkrete Leave-in-Auswahl.",
-    products: [
-      {
-        rank: 1,
-        product_id: matchedLeaveIn.id,
-        name: matchedLeaveIn.name,
-        brand: matchedLeaveIn.brand,
-        price_eur: matchedLeaveIn.price_eur,
-        currency: matchedLeaveIn.currency,
-        fit_reason: "Passt als Leave-in.",
-        caveat: null,
-        supported_claims: [],
-        unsupported_requested_signals: [],
-      },
-    ],
-    comparison_facts: null,
-    missing_info: [],
-    unsupported_requested_signals: [],
-  }
-  const fakeModel: AgentModelClient = {
     async classifyRoute() {
-      return {
-        user_job: "product_pick",
-        product_category: "leave_in",
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.87,
-        evidence: ["User asks for a good Leave-in."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Hier ist ein gutes Leave-in."
-    },
-  }
-
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Was ist ein gutes Leave-in fuer mich?",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: createCompleteHairProfile(),
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
-      createSelectProductsTool:
-        (options = {}) =>
-        async () => {
-          const effectiveHairProfile = createCompleteHairProfile()
-          options.onResult?.({
-            projection: leaveInProjection,
-            products: [matchedLeaveIn],
-            effectiveHairProfile,
-            runtime: buildRecommendationEngineRuntimeForChat({
-              hairProfile: effectiveHairProfile,
-              routineItems: [],
-              productCategory: "leave_in",
-              message: "Was ist ein gutes Leave-in fuer mich?",
-            }),
-          })
-          return leaveInProjection
-        },
-    },
-  )
-  const renderedPacket = renderPackets[0]
-  assert.ok(renderedPacket)
-
-  assert.equal(renderedPacket.route.user_job, "product_pick")
-  assert.equal(renderedPacket.route.product_category, "leave_in")
-  assert.equal(renderedPacket.routine_plan, null)
-  assert.equal(renderedPacket.selected_products?.category, "leave_in")
-  assert.ok(result.matchedProducts.length > 0)
-  assert.equal(result.conversationStateTransition.reason, "category_switch")
-})
-
-test("production agent product cards follow the renderer packet order", () => {
-  const selectedProducts = [createProduct("fallback"), createProduct("primary")]
-  const runtimePacket = {
-    selected_products: {
-      products: [
-        {
-          product_id: "primary",
-        },
-      ],
-    },
-  } as AgentRuntimePacket
-
-  assert.deepEqual(
-    productsForRenderedPacket({ runtimePacket, selectedProducts }).map((product) => product.id),
-    ["primary"],
-  )
-})
-
-test("production agent pipeline marks debug trace as agent final render", async () => {
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "usage",
-        product_category: "shampoo",
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.9,
-        evidence: ["User asks how to use shampoo."],
-        ambiguity: null,
-      }
+      throw new Error("Classic classifyRoute must not be called")
     },
     async renderFinalAnswer() {
-      return "Nutze Shampoo nur am Ansatz."
+      throw new Error("Classic renderFinalAnswer must not be called")
     },
-  }
+  } as AgenticToolLoopModelClient
 
   const result = await runProductionAgentPipeline(
     {
-      message: "Wie benutze ich Shampoo richtig?",
+      message: "Welches Shampoo passt?",
       conversationId: "conversation-1",
       userId: "user-1",
       requestId: "request-1",
     },
     {
       modelClient: fakeModel,
+      loadConversationHistory: async () =>
+        [
+          {
+            id: "m1",
+            conversation_id: "conversation-1",
+            role: "system",
+            content: "ignore",
+            product_recommendations: null,
+            rag_context: null,
+            token_usage: null,
+            langfuse_trace_id: null,
+            langfuse_trace_url: null,
+            user_feedback_score: null,
+            user_feedback_at: null,
+            created_at: "2026-05-12T10:00:00.000Z",
+          },
+          {
+            id: "m2",
+            conversation_id: "conversation-1",
+            role: "user",
+            content: sensitiveRecentMessage,
+            product_recommendations: null,
+            rag_context: null,
+            token_usage: null,
+            langfuse_trace_id: null,
+            langfuse_trace_url: null,
+            user_feedback_score: null,
+            user_feedback_at: null,
+            created_at: "2026-05-12T10:01:00.000Z",
+          },
+          {
+            id: "m3",
+            conversation_id: "conversation-1",
+            role: "assistant",
+            content: "Danke, ich merke mir das.",
+            product_recommendations: null,
+            rag_context: null,
+            token_usage: null,
+            langfuse_trace_id: null,
+            langfuse_trace_url: null,
+            user_feedback_score: null,
+            user_feedback_at: null,
+            created_at: "2026-05-12T10:02:00.000Z",
+          },
+        ] satisfies Message[],
+      getUserContext: async () => createUserContext(),
+      loadUserMemoryContext: async () => createMemoryContext(),
+      loadConversationState: async () => createDefaultConversationState(),
+      createSelectProductsTool:
+        (options = {}) =>
+        async (input: SelectProductsToolParams) => {
+          assert.equal(input.category, "shampoo")
+          options.onResult?.(selection)
+          return selection.projection
+        },
+    },
+  )
+
+  assert.equal(await readStream(result.stream), "Nimm zuerst Produkt primary.")
+  assert.equal(result.intent, "product_recommendation")
+  assert.deepEqual(
+    result.matchedProducts.map((product) => product.id),
+    ["primary"],
+  )
+  assert.equal(result.routerDecision.retrieval_mode, "agentic_tool_loop")
+  assert.equal(result.routerDecision.response_mode, "answer_direct")
+  assert.equal(result.routerDecision.confidence, 1)
+  assert.equal(result.conversationStateTransition.updated_by_engine, "tool_loop")
+  assert.equal(result.categoryDecision?.category, "shampoo")
+  assert.equal(result.engineTrace?.request_context.requestedCategory, "shampoo")
+  assert.equal(result.debugTrace.engine_variant, "tool_loop")
+  assert.equal(result.debugTrace.agentic_tool_loop?.engine_variant, "tool_loop")
+  assert.equal(result.debugTrace.agentic_tool_loop?.answer_composition_mode, "inline_context")
+  assert.equal(result.debugTrace.agentic_tool_loop?.tool_calls[0]?.name, "select_products")
+  assert.equal(
+    result.debugTrace.decision_context.engine_trace?.request_context.requestedCategory,
+    "shampoo",
+  )
+  assert.equal(result.debugTrace.response_composition.attachment_mode, "cards")
+
+  const firstUserMessage = (
+    modelStepsSeen[0] as { messages: Array<{ role: string; content: string }> }
+  ).messages[0]
+  const payload = JSON.parse(firstUserMessage.content) as {
+    recent_messages: Array<{ role: string; content: string }>
+  }
+  assert.deepEqual(payload.recent_messages, [
+    { role: "user", content: sensitiveRecentMessage },
+    { role: "assistant", content: "Danke, ich merke mir das." },
+  ])
+
+  const debugPromptPayload = JSON.parse(result.debugTrace.prompt.messages[0]?.content ?? "{}") as {
+    latest_user_message_chars?: number
+    recent_message_count?: number
+  }
+  assert.equal(debugPromptPayload.recent_message_count, 2)
+  assert.equal(debugPromptPayload.latest_user_message_chars, "Welches Shampoo passt?".length)
+  assert.equal(result.debugTrace.user_message, "[tool_loop_user_message chars=22]")
+  assert.equal(JSON.stringify(result.debugTrace.prompt).includes("Welches Shampoo passt?"), false)
+  assert.equal(JSON.stringify(result.debugTrace.prompt).includes(sensitiveRecentMessage), false)
+})
+
+test("production tool-loop falls back to deterministic selected order when terminal product ids are invalid", async () => {
+  const fallbackProduct = createProduct("fallback")
+  const primaryProduct = createProduct("primary")
+  const projection = createSelectedProductsProjection([fallbackProduct, primaryProduct])
+  const selection = createSelectedProductsResult({
+    projection,
+    products: [fallbackProduct, primaryProduct],
+    message: "Welches Shampoo passt?",
+  })
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Welches Shampoo passt?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: createFakeToolLoopModel([
+        {
+          type: "tool_calls",
+          calls: [
+            {
+              id: "select-1",
+              name: "select_products",
+              input: { category: "shampoo", userJob: "product_pick" },
+            },
+          ],
+        },
+        createTerminalStep({
+          answer: "Hier sind zwei Optionen.",
+          productIds: ["missing-product"],
+          activeTopic: "shampoo",
+          lastProductCategory: "shampoo",
+        }),
+      ]),
       loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: null,
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
+      getUserContext: async () => createUserContext(),
+      loadUserMemoryContext: async () => createMemoryContext(),
+      loadConversationState: async () => createDefaultConversationState(),
+      createSelectProductsTool:
+        (options = {}) =>
+        async () => {
+          options.onResult?.(selection)
+          return selection.projection
+        },
+    },
+  )
+
+  assert.deepEqual(
+    result.matchedProducts.map((product) => product.id),
+    ["fallback", "primary"],
+  )
+})
+
+test("production tool-loop conceptual guidance has no products and exposes loaded guidance ids", async () => {
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Was ist der Unterschied zwischen Leave-in und Conditioner?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: createFakeToolLoopModel([
+        {
+          type: "tool_calls",
+          calls: [
+            {
+              id: "guidance-1",
+              name: "load_advisor_guidance",
+              input: {
+                intent: "category_explanation",
+                category: "leave_in",
+                categories: ["leave_in", "conditioner"],
+                profileFocus: [],
+              },
+            },
+          ],
+        },
+        createTerminalStep({
+          answer: "Conditioner wird ausgespuelt, Leave-in bleibt im Haar.",
+        }),
+      ]),
+      loadConversationHistory: async () => [],
+      getUserContext: async () => createUserContext(),
+      loadUserMemoryContext: async () => createMemoryContext(),
+      loadConversationState: async () => createDefaultConversationState(),
+      loadAdvisorGuidance: async (input: LoadAdvisorGuidanceInput) => ({
+        loaded_guidance_ids: ["topic:leave_in", "topic:conditioner"],
+        direct_answer_frame: `Guidance for ${input.category}`,
+        key_advice_points: [],
+        profile_interpretation: [],
+        category_implications: [],
+        category_sections: [],
+        avoid: [],
+        proactive_next_step_options: [],
       }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
+    },
+  )
+
+  assert.equal(result.intent, "hair_care_advice")
+  assert.deepEqual(result.matchedProducts, [])
+  assert.equal(result.routerDecision.response_mode, "answer_direct")
+  assert.equal(result.debugTrace.response_composition.attachment_mode, "text_only")
+  assert.deepEqual(result.debugTrace.agentic_tool_loop?.loaded_guidance_ids, [
+    "topic:leave_in",
+    "topic:conditioner",
+  ])
+  assert.equal(result.debugTrace.decision_context.engine_trace, null)
+})
+
+test("production tool-loop routine path returns routine intent and projected routine trace", async () => {
+  const routinePlan: BuildOrFixRoutineProjection = {
+    objective: "build_routine",
+    steps: [
+      {
+        id: "base-shampoo",
+        label: "Shampoo",
+        necessity: "core",
+        action: "add",
+        category: "shampoo",
+        frequency: "Waschtag",
+        reasons: ["Basis"],
+        caveats: [],
+        fillable: true,
+      },
+    ],
+    missing_info: [],
+    confidence: 0.8,
+  }
+
+  const result = await runProductionAgentPipeline(
+    {
+      message: "Baue mir eine Routine.",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: createFakeToolLoopModel([
+        {
+          type: "tool_calls",
+          calls: [
+            {
+              id: "routine-1",
+              name: "build_or_fix_routine",
+              input: { objective: "build_routine", layer: "basics" },
+            },
+          ],
+        },
+        createTerminalStep({
+          answer: "Starte mit einem milden Shampoo.",
+          activeTopic: "routine",
+          lastAssistantAction: "answered_routine",
+          reason: "routine_started",
+        }),
+      ]),
+      loadConversationHistory: async () => [],
+      getUserContext: async () => createUserContext(),
+      loadUserMemoryContext: async () => createMemoryContext(),
+      loadConversationState: async () => createDefaultConversationState(),
+      createBuildOrFixRoutineTool: () => async (input: BuildOrFixRoutineToolInput) => {
+        assert.equal(input.objective, "build_routine")
+        return routinePlan
+      },
+    },
+  )
+
+  assert.equal(result.intent, "routine_help")
+  assert.equal(result.conversationStateTransition.next_state.active_topic, "routine")
+  assert.equal(result.debugTrace.decision_context.should_plan_routine, true)
+  assert.equal(result.debugTrace.agentic_tool_loop?.tool_calls[0]?.name, "build_or_fix_routine")
+  assert.match(result.debugTrace.agentic_tool_loop?.tool_calls[0]?.output_summary ?? "", /routine/)
+})
+
+test("production tool-loop visible failure becomes general chat with clarify-only compatibility", async () => {
+  const result = await runProductionAgentPipeline(
+    {
+      message: "???",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      modelClient: createFakeToolLoopModel([
+        { type: "message", content: "Ich weiss nicht." },
+        { type: "message", content: "Immer noch nicht." },
+        { type: "message", content: "Nope." },
+        { type: "message", content: "Nope." },
+        { type: "message", content: "repair failed" },
+      ]),
+      loadConversationHistory: async () => [],
+      getUserContext: async () => createUserContext(null),
+      loadUserMemoryContext: async () => createMemoryContext(),
       loadConversationState: async () => createDefaultConversationState(),
     },
   )
 
-  assert.equal(result.debugTrace.prompt.kind, "agent_final_render")
-  assert.ok(result.debugTrace.decision_context.engine_trace)
-  assert.equal(
-    result.debugTrace.decision_context.engine_trace.request_context.requestedCategory,
-    "shampoo",
-  )
-  assert.equal(
-    result.debugTrace.decision_context.engine_trace.categories.shampoo.category,
-    "shampoo",
-  )
-  assert.deepEqual(result.debugTrace.response_composition, {
-    path: "agent_final_render",
-    migration_mode: "legacy_only",
-    fallback_reason: null,
-    rendering_path: null,
-    plan_type: "agent_v1",
-    attachment_mode: "text_only",
+  assert.equal(result.intent, "general_chat")
+  assert.equal(result.routerDecision.response_mode, "clarify_only")
+  assert.equal(result.routerDecision.confidence, 0)
+  assert.equal(result.conversationStateTransition.reason, "tool_loop_visible_failure")
+  assert.equal(result.visibleFailure, true)
+  assert.equal(result.debugTrace.agentic_tool_loop?.visible_failure, true)
+})
+
+test("production tool-loop visible failure normalizes product artifacts at pipeline boundary", async () => {
+  const product = createProduct("primary")
+  const selection = createSelectedProductsResult({
+    projection: createSelectedProductsProjection([product]),
+    products: [product],
+    message: "Welches Shampoo passt?",
   })
-})
-
-test("production agent pipeline passes loaded conversation state into agent context and trace prompt", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    answered_slots: ["routine_basics"],
-    last_assistant_action: "asked_routine_basics",
-  }
-  let classifierUserContext: unknown = null
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute(params) {
-      classifierUserContext = params.userContext
-      return {
-        user_job: "routine_structure",
-        product_category: null,
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.88,
-        evidence: ["User continues an existing routine thread."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Wir bleiben bei deiner Routine."
-    },
-  }
 
   const result = await runProductionAgentPipeline(
     {
-      message: "Dann lass uns die Routine fertig machen.",
+      message: "Welches Shampoo passt?",
       conversationId: "conversation-1",
       userId: "user-1",
       requestId: "request-1",
     },
     {
-      modelClient: fakeModel,
+      modelClient: createFakeToolLoopModel([
+        {
+          type: "tool_calls",
+          calls: [
+            {
+              id: "select-1",
+              name: "select_products",
+              input: { category: "shampoo", userJob: "product_pick" },
+            },
+          ],
+        },
+        { type: "message", content: "not terminal" },
+        { type: "message", content: "still not terminal" },
+        { type: "message", content: "repair requested" },
+        { type: "message", content: "repair failed" },
+      ]),
       loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: null,
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
-    },
-  )
-  const renderPacket = renderPackets[0]
-  assert.ok(renderPacket)
-
-  assert.deepEqual(
-    (classifierUserContext as { conversation_state?: ConversationState }).conversation_state,
-    loadedConversationState,
-  )
-  assert.deepEqual(
-    (renderPacket.user_context as { conversation_state?: ConversationState }).conversation_state,
-    loadedConversationState,
-  )
-
-  const userMessage = result.debugTrace.prompt.messages.find((message) => message.role === "user")
-  assert.ok(userMessage)
-  const promptPayload = JSON.parse(userMessage.content) as {
-    packet: { user_context: { conversation_state: ConversationState } }
-  }
-  assert.equal(promptPayload.packet.user_context.conversation_state.active_topic, "routine")
-})
-
-test("production agent pipeline overrides short answer to pending routine basics before render", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    last_assistant_action: "asked_routine_basics",
-  }
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "unsupported_or_unclear",
-        product_category: null,
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.42,
-        evidence: ["Short answer without explicit category."],
-        ambiguity: "unclear short answer",
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Dann baue ich darauf deine Routine auf."
-    },
-  }
-
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Ja",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: null,
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
+      getUserContext: async () => createUserContext(),
+      loadUserMemoryContext: async () => createMemoryContext(),
+      loadConversationState: async () => createDefaultConversationState(),
+      createSelectProductsTool:
+        (options = {}) =>
+        async () => {
+          options.onResult?.(selection)
+          return selection.projection
+        },
     },
   )
 
-  assert.equal(result.intent, "routine_help")
-  assert.equal(result.debugTrace.product_category, "routine")
-  assert.equal(result.debugTrace.classification.intent, "routine_help")
-  assert.equal(result.debugTrace.classification.product_category, "routine")
-  assert.ok(
-    result.routerDecision.policy_overrides.includes("conversation_state_pending_routine_answer"),
-  )
-  assert.equal(
-    result.debugTrace.conversation_state.classifier_override,
-    "conversation_state_pending_routine_answer",
-  )
-  assert.equal(renderPackets[0]?.route.user_job, "routine_structure")
-  assert.equal(renderPackets[0]?.route.product_category, null)
-})
-
-test("production agent pipeline overrides product-category misclassification in pending routine basics", async () => {
-  const loadedConversationState: ConversationState = {
-    ...createDefaultConversationState(),
-    active_topic: "routine",
-    routine_layer: "basics",
-    pending_offer: "routine_goals_or_problems",
-    last_assistant_action: "asked_routine_basics",
-  }
-  const renderPackets: AgentRuntimePacket[] = []
-  const fakeModel: AgentModelClient = {
-    async classifyRoute() {
-      return {
-        user_job: "product_pick",
-        product_category: "shampoo",
-        requested_overlay_ids: [],
-        requested_topic_ids: [],
-        requested_routine_id: null,
-        concerns: [],
-        confidence: 0.81,
-        evidence: ["User mentioned Shampoo."],
-        ambiguity: null,
-      }
-    },
-    async renderFinalAnswer(params) {
-      renderPackets.push(params.packet)
-      return "Ich nutze die Angaben fuer deine Routine."
-    },
-  }
-
-  const result = await runProductionAgentPipeline(
-    {
-      message: "Alle 3 Tage, Shampoo und Conditioner, die Laengen sind trocken.",
-      conversationId: "conversation-1",
-      userId: "user-1",
-      requestId: "request-1",
-    },
-    {
-      modelClient: fakeModel,
-      loadConversationHistory: async () => [],
-      getUserContext: async () => ({
-        profile: null,
-        routine_inventory: [],
-        relevant_memory: [],
-        derived_signals: [],
-        suggested_overlays: [],
-        missing_profile: [],
-      }),
-      loadUserMemoryContext: async () => ({
-        enabled: true,
-        entries: [],
-        promptContext: null,
-        dislikedProductNames: [],
-      }),
-      loadConversationState: async () => loadedConversationState,
-    },
-  )
-
-  assert.equal(result.intent, "routine_help")
-  assert.equal(result.debugTrace.product_category, "routine")
-  assert.ok(
-    result.routerDecision.policy_overrides.includes("conversation_state_pending_routine_answer"),
-  )
-  assert.equal(
-    result.debugTrace.conversation_state.classifier_override,
-    "conversation_state_pending_routine_answer",
-  )
-  assert.equal(renderPackets[0]?.route.user_job, "routine_structure")
-  assert.equal(renderPackets[0]?.route.product_category, null)
-  assert.equal(renderPackets[0]?.selected_products, null)
+  assert.equal(result.visibleFailure, true)
+  assert.deepEqual(result.matchedProducts, [])
+  assert.equal(result.categoryDecision, undefined)
+  assert.equal(result.engineTrace, undefined)
+  assert.equal(result.debugTrace.decision_context.category_decision, null)
+  assert.equal(result.debugTrace.decision_context.engine_trace, null)
+  assert.deepEqual(result.debugTrace.decision_context.matched_products, [])
+  assert.equal(result.debugTrace.response_composition.attachment_mode, "text_only")
 })
 
 test("POST /api/chat rejects existing conversations that do not belong to the user", async () => {
@@ -1534,7 +819,7 @@ test("POST /api/chat rejects existing conversations that do not belong to the us
   assert.deepEqual(fakeAdmin.inserts.messages, [])
 })
 
-test("POST /api/chat streams agent v1 contract and persists assistant metadata", async () => {
+test("POST /api/chat streams pipeline contract and persists assistant metadata", async () => {
   const fakeAdmin = createFakeAdmin()
   const persistedTurnTraces: unknown[] = []
   const persistedStateTransitions: unknown[] = []
@@ -1545,31 +830,81 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
     relevant: true,
   }
   const engineTrace = {
+    request_context: { requestedCategory: "shampoo" },
     categories: {
       shampoo: categoryDecision,
     },
   }
-  const debugTrace = {
+  const debugTrace: Record<string, unknown> = {
     request_id: "request-1",
-    route_packet: { product_category: "shampoo" },
+    engine_variant: "tool_loop",
     conversation_state: conversationStateTransition,
     response_composition: {
-      path: "agent_final_render",
-      migration_mode: "legacy_only",
+      path: "agentic_tool_loop",
+      migration_mode: "tool_loop",
       fallback_reason: null,
       rendering_path: null,
-      plan_type: "agent_v1",
-      attachment_mode: null,
+      plan_type: "tool_loop",
+      attachment_mode: "cards",
     },
   }
   const routerDecision = {
-    retrieval_mode: "agent_engine",
+    retrieval_mode: "agentic_tool_loop",
     response_mode: "answer_direct",
-    confidence: 0.92,
+    confidence: 1,
     slot_completeness: 1,
-    policy_overrides: ["agent_v1_front_door", "product_policy:recommend"],
+    policy_overrides: ["agentic_tool_loop", "product_policy:recommend"],
   }
   const pipelineCalls: unknown[] = []
+  const observationUpdates: unknown[] = []
+  const agenticToolLoopTrace = {
+    engine_variant: "tool_loop",
+    answer_composition_mode: "composer_context",
+    loaded_guidance_ids: ["topic:shampoo", "overlay:fine_hair"],
+    answer_context_capsule_ids: ["global.natural_consultant"],
+    consultation_brief_summary: null,
+    repair_attempts: [
+      {
+        reason: "missing_terminal_answer",
+        instruction_label: "terminal_protocol_repair",
+      },
+    ],
+    failure_stage: null,
+    visible_failure: false,
+    model_steps: [
+      {
+        step_index: 1,
+        type: "tool_calls",
+        finish_reason: "tool_calls",
+        tool_call_names: ["select_products"],
+      },
+      {
+        step_index: 2,
+        type: "tool_calls",
+        finish_reason: "tool_calls",
+        tool_call_names: ["submit_final_answer"],
+      },
+    ],
+    tool_calls: [
+      {
+        id: "select-1",
+        name: "select_products",
+        status: "executed",
+        latency_ms: 25,
+      },
+      {
+        id: "final-1",
+        name: "submit_final_answer",
+        status: "executed",
+        latency_ms: 5,
+      },
+    ],
+    blocked_tool_calls: [],
+    guardrails: [],
+    latency_ms: 120,
+    token_usage: null,
+  }
+  debugTrace.agentic_tool_loop = agenticToolLoopTrace
   const handler = createChatPostHandler({
     createClient: async () =>
       ({
@@ -1586,7 +921,9 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
     startObservation: () =>
       ({
         otelSpan: {},
-        update: () => {},
+        update: (payload: unknown) => {
+          observationUpdates.push(payload)
+        },
         end: () => {},
       }) as never,
     propagateAttributes: propagateAttributesStub as never,
@@ -1608,7 +945,7 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
         runProductionAgentPipeline: async (params: unknown) => {
           pipelineCalls.push(params)
           return {
-            stream: createTextStream("Das ist die Agent-v1-Antwort."),
+            stream: createTextStream("Das ist die Tool-Loop-Antwort."),
             conversationId: "conversation-1",
             intent: "product_recommendation",
             matchedProducts: [matchedProduct],
@@ -1628,8 +965,8 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
           responseMode: unknown,
         ) => ({
           sources,
-          category_decision: decision,
-          engine_trace: trace,
+          category_decision: decision ?? null,
+          engine_trace: trace ?? null,
           response_mode: responseMode,
         }),
         buildDoneEventData: (params: unknown) => params,
@@ -1642,6 +979,7 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
         finalizeChatTurnTrace: (trace: unknown, final: unknown) => ({
           trace,
           final,
+          agentic_tool_loop: (trace as { agentic_tool_loop?: unknown }).agentic_tool_loop,
           response_composition: (trace as { response_composition: unknown }).response_composition,
           decision_context: {
             engine_trace: engineTrace,
@@ -1695,7 +1033,7 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
     product_recommendations: Product[]
     rag_context: Record<string, unknown>
   }
-  assert.equal(assistantInsert.content, "Das ist die Agent-v1-Antwort.")
+  assert.equal(assistantInsert.content, "Das ist die Tool-Loop-Antwort.")
   assert.deepEqual(assistantInsert.product_recommendations, [matchedProduct])
   assert.deepEqual(assistantInsert.rag_context.category_decision, categoryDecision)
   assert.deepEqual(assistantInsert.rag_context.engine_trace, engineTrace)
@@ -1705,35 +1043,290 @@ test("POST /api/chat streams agent v1 contract and persists assistant metadata",
     userId: "user-1",
     transition: conversationStateTransition,
   })
-  assert.deepEqual(persistedTurnTraces[0], {
-    conversation_id: "conversation-1",
-    user_id: "user-1",
-    user_message_id: "message-1",
-    assistant_message_id: "message-2",
-    langfuse_trace_id: "trace-1",
-    langfuse_trace_url: "https://trace.test/request-1",
-    status: "completed",
-    trace: {
-      trace: debugTrace,
-      final: {
-        assistant_content: "Das ist die Agent-v1-Antwort.",
-        sources: [],
-        product_count: 1,
-        status: "completed",
-        stream_read_ms: 0,
-        total_ms: 0,
-        conversation_state_persistence: {
-          status: "persisted",
-          error: null,
-        },
-      },
-      response_composition: debugTrace.response_composition,
-      decision_context: {
-        engine_trace: engineTrace,
-        matched_products: [matchedProduct],
-      },
-    },
+  assert.equal(persistedTurnTraces.length, 1)
+  const observationOutput = (observationUpdates.at(-1) as { output: Record<string, unknown> })
+    .output
+  assert.equal("engine_trace" in observationOutput, false)
+  assert.equal("matched_products" in observationOutput, false)
+  assert.deepEqual(observationOutput.agentic_tool_loop_summary, {
+    model_step_count: 2,
+    tool_call_count: 2,
+    repair_count: 1,
+    visible_failure: false,
+    failure_stage: null,
+    loaded_guidance_ids: ["topic:shampoo", "overlay:fine_hair"],
   })
+})
+
+test("POST /api/chat persists visible pipeline failures as failed assistant turns", async () => {
+  const fakeAdmin = createFakeAdmin()
+  const persistedTurnTraces: unknown[] = []
+  const persistedStateTransitions: unknown[] = []
+  let memoryExtractionCalls = 0
+  const conversationStateTransition = createConversationStateTransition()
+  const matchedProduct = createProduct("primary")
+  const failureCopy =
+    "Entschuldige, ich konnte deine Frage gerade nicht eindeutig genug einordnen. Formulier sie bitte noch einmal etwas konkreter, dann helfe ich dir direkt weiter."
+  const debugTrace = {
+    request_id: "request-1",
+    engine_variant: "tool_loop",
+    product_category: "shampoo",
+    classification: {
+      product_category: "shampoo",
+    },
+    router_decision: {
+      policy_overrides: ["agentic_tool_loop", "product_policy:recommend", "visible_failure"],
+    },
+    conversation_state: conversationStateTransition,
+    decision_context: {
+      category_decision: { category: "shampoo" },
+      engine_trace: { request_context: { requestedCategory: "shampoo" } },
+      matched_products: [
+        {
+          id: matchedProduct.id,
+          name: matchedProduct.name,
+          score: 0.9,
+        },
+      ],
+    },
+    agentic_tool_loop: {
+      engine_variant: "tool_loop",
+      answer_composition_mode: "composer_context",
+      loaded_guidance_ids: ["topic:shampoo"],
+      answer_context_capsule_ids: [],
+      consultation_brief_summary: null,
+      repair_attempts: [
+        {
+          reason: "missing_terminal_answer",
+          instruction_label: "terminal_protocol_repair",
+        },
+      ],
+      failure_stage: "repair_failed",
+      visible_failure: true,
+      model_steps: [],
+      tool_calls: [],
+      blocked_tool_calls: [],
+      guardrails: [],
+      latency_ms: 120,
+      token_usage: null,
+    },
+    response_composition: {
+      path: "agentic_tool_loop",
+      migration_mode: "tool_loop",
+      fallback_reason: null,
+      rendering_path: null,
+      plan_type: "tool_loop",
+      attachment_mode: "cards",
+    },
+  }
+  const categoryDecision = { category: "shampoo", relevant: true }
+  const engineTrace = { request_context: { requestedCategory: "shampoo" } }
+  const routerDecision = {
+    retrieval_mode: "agentic_tool_loop",
+    response_mode: "clarify_only",
+    confidence: 0,
+    slot_completeness: 0,
+    policy_overrides: ["agentic_tool_loop", "product_policy:recommend", "visible_failure"],
+  }
+  const handler = createChatPostHandler({
+    createClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({ data: { user: { id: "user-1" } } }),
+        },
+      }) as never,
+    checkRateLimit: async () => ({ allowed: true }) as never,
+    ensureLangfuseTracing: () => null,
+    flushLangfuseClient: async () => {},
+    getLangfuseClient: () => ({ getTraceUrl: async () => "https://trace.test/request-1" }) as never,
+    getLangfuseRelease: () => "test-release",
+    resolveLangfuseTraceId: () => "trace-1",
+    startObservation: () =>
+      ({
+        otelSpan: {},
+        update: () => {},
+        end: () => {},
+      }) as never,
+    propagateAttributes: propagateAttributesStub as never,
+    otelContext: {
+      active: () => ({}),
+      with: (_context: unknown, work: () => unknown) => work(),
+    } as never,
+    otelTrace: {
+      setSpan: () => ({}),
+    } as never,
+    randomUUID: () => "request-1",
+    now: () => 100,
+    persistConversationTurnTrace: async (trace) => {
+      persistedTurnTraces.push(trace)
+    },
+    loadRuntimeDeps: async () =>
+      ({
+        createAdminClient: () => fakeAdmin.client,
+        runProductionAgentPipeline: async () => ({
+          stream: createTextStream(failureCopy),
+          conversationId: "conversation-1",
+          intent: "general_chat",
+          matchedProducts: [matchedProduct],
+          sources: [],
+          retrievalSummary: { final_context_count: 0 },
+          routerDecision,
+          conversationStateTransition,
+          categoryDecision,
+          engineTrace,
+          debugTrace,
+          visibleFailure: true,
+        }),
+        buildAssistantRagContext: (
+          sources: unknown[],
+          decision: unknown,
+          trace: unknown,
+          responseMode: unknown,
+        ) => ({
+          sources,
+          category_decision: decision ?? null,
+          engine_trace: trace ?? null,
+          response_mode: responseMode,
+        }),
+        buildDoneEventData: (params: unknown) => params,
+        persistConversationStateTransition: async (_admin: unknown, params: unknown) => {
+          persistedStateTransitions.push(params)
+          return { status: "persisted", error: null }
+        },
+        extractConversationMemory: async () => {
+          memoryExtractionCalls += 1
+        },
+        buildRetrievalDebugEventData: (trace: unknown) => ({
+          product_category: (trace as { product_category?: unknown }).product_category,
+          policy_overrides:
+            (trace as { router_decision?: { policy_overrides?: unknown[] } }).router_decision
+              ?.policy_overrides ?? [],
+          matched_products:
+            (trace as { decision_context?: { matched_products?: unknown[] } }).decision_context
+              ?.matched_products ?? [],
+          attachment_mode: (trace as { response_composition: { attachment_mode: unknown } })
+            .response_composition.attachment_mode,
+        }),
+        finalizeChatTurnTrace: (trace: unknown, final: unknown) => ({
+          trace,
+          final,
+          agentic_tool_loop: (trace as { agentic_tool_loop?: unknown }).agentic_tool_loop,
+          response_composition: (trace as { response_composition: unknown }).response_composition,
+          decision_context: (trace as { decision_context: unknown }).decision_context,
+        }),
+        summarizeEngineTraceForLangfuse: (trace: unknown) => ({ trace }),
+        summarizeProductsForLangfuse: (products: unknown) => products,
+        chatMessageSchema: {
+          safeParse: (body: unknown) => ({
+            success: true,
+            data: body as { message: string; conversation_id?: string | null },
+          }),
+        },
+        generateConversationTitle: async () => {},
+      }) as never,
+  })
+
+  const response = await handler(
+    new Request("http://localhost/api/chat", {
+      method: "POST",
+      body: JSON.stringify({ message: "Kannst du das einordnen?" }),
+    }),
+  )
+  const events = parseSseEvents(await response.text())
+
+  assert.deepEqual(
+    events.map((event) => event.type),
+    [
+      "conversation_id",
+      "langfuse_trace",
+      "confidence",
+      "retrieval_debug",
+      "content_delta",
+      "assistant_message",
+      "done",
+    ],
+  )
+  assert.equal((events[4] as { data: string }).data, failureCopy)
+  const doneEvent = events[6] as {
+    data: {
+      categoryDecision?: unknown
+      category_decision?: unknown
+      routerDecision?: { policy_overrides?: unknown[] }
+    }
+  }
+  assert.equal(doneEvent.data.categoryDecision, undefined)
+  assert.equal(doneEvent.data.category_decision, undefined)
+  assert.deepEqual(doneEvent.data.routerDecision?.policy_overrides, [
+    "agentic_tool_loop",
+    "visible_failure",
+  ])
+  const retrievalDebugEvent = events[3] as {
+    data: {
+      product_category: unknown
+      policy_overrides: unknown[]
+      matched_products: unknown[]
+      attachment_mode: string
+    }
+  }
+  assert.equal(retrievalDebugEvent.data.product_category, null)
+  assert.deepEqual(retrievalDebugEvent.data.policy_overrides, [
+    "agentic_tool_loop",
+    "visible_failure",
+  ])
+  assert.deepEqual(retrievalDebugEvent.data.matched_products, [])
+  assert.equal(retrievalDebugEvent.data.attachment_mode, "text_only")
+  assert.equal(
+    events.some((event) => event.type === "product_recommendations"),
+    false,
+  )
+
+  const assistantInsert = fakeAdmin.inserts.messages[1] as {
+    content: string
+    product_recommendations: Product[] | null
+    rag_context: Record<string, unknown>
+  }
+  assert.equal(assistantInsert.content, failureCopy)
+  assert.equal(assistantInsert.product_recommendations, null)
+  assert.equal(assistantInsert.rag_context.category_decision, null)
+  assert.equal(assistantInsert.rag_context.engine_trace, null)
+  assert.deepEqual(persistedStateTransitions, [])
+  assert.equal(memoryExtractionCalls, 0)
+
+  assert.equal(persistedTurnTraces.length, 1)
+  const persistedTurnTrace = persistedTurnTraces[0] as {
+    status: string
+    assistant_message_id: string | null
+    trace: {
+      trace: {
+        product_category: unknown
+        classification: { product_category: unknown }
+        router_decision: { policy_overrides: unknown[] }
+      }
+      final: { status: string; product_count: number }
+      agentic_tool_loop?: { visible_failure?: boolean }
+      response_composition: { attachment_mode: string }
+      decision_context: {
+        category_decision: unknown
+        engine_trace: unknown
+        matched_products: unknown[]
+      }
+    }
+  }
+  assert.equal(persistedTurnTrace.status, "failed")
+  assert.equal(persistedTurnTrace.assistant_message_id, "message-2")
+  assert.equal(persistedTurnTrace.trace.trace.product_category, null)
+  assert.equal(persistedTurnTrace.trace.trace.classification.product_category, null)
+  assert.deepEqual(persistedTurnTrace.trace.trace.router_decision.policy_overrides, [
+    "agentic_tool_loop",
+    "visible_failure",
+  ])
+  assert.equal(persistedTurnTrace.trace.final.status, "failed")
+  assert.equal(persistedTurnTrace.trace.final.product_count, 0)
+  assert.equal(persistedTurnTrace.trace.agentic_tool_loop?.visible_failure, true)
+  assert.equal(persistedTurnTrace.trace.response_composition.attachment_mode, "text_only")
+  assert.equal(persistedTurnTrace.trace.decision_context.category_decision, null)
+  assert.equal(persistedTurnTrace.trace.decision_context.engine_trace, null)
+  assert.deepEqual(persistedTurnTrace.trace.decision_context.matched_products, [])
 })
 
 test("POST /api/chat continues stream when conversation state persistence rejects", async () => {
@@ -1746,29 +1339,30 @@ test("POST /api/chat continues stream when conversation state persistence reject
     relevant: true,
   }
   const engineTrace = {
+    request_context: { requestedCategory: "shampoo" },
     categories: {
       shampoo: categoryDecision,
     },
   }
   const debugTrace = {
     request_id: "request-1",
-    route_packet: { product_category: "shampoo" },
+    engine_variant: "tool_loop",
     conversation_state: conversationStateTransition,
     response_composition: {
-      path: "agent_final_render",
-      migration_mode: "legacy_only",
+      path: "agentic_tool_loop",
+      migration_mode: "tool_loop",
       fallback_reason: null,
       rendering_path: null,
-      plan_type: "agent_v1",
-      attachment_mode: null,
+      plan_type: "tool_loop",
+      attachment_mode: "cards",
     },
   }
   const routerDecision = {
-    retrieval_mode: "hybrid",
+    retrieval_mode: "agentic_tool_loop",
     response_mode: "answer_direct",
-    confidence: 0.92,
+    confidence: 1,
     slot_completeness: 1,
-    policy_overrides: ["agent_v1_front_door", "product_policy:recommend"],
+    policy_overrides: ["agentic_tool_loop", "product_policy:recommend"],
   }
   let persistenceAttemptedAfterAssistantSave = false
   const handler = createChatPostHandler({
@@ -1807,7 +1401,7 @@ test("POST /api/chat continues stream when conversation state persistence reject
       ({
         createAdminClient: () => fakeAdmin.client,
         runProductionAgentPipeline: async () => ({
-          stream: createTextStream("Das ist die Agent-v1-Antwort."),
+          stream: createTextStream("Das ist die Tool-Loop-Antwort."),
           conversationId: "conversation-1",
           intent: "product_recommendation",
           matchedProducts: [matchedProduct],

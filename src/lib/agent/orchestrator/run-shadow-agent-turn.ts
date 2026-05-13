@@ -124,7 +124,7 @@ function normalizeMessageForRoutinePolicy(message: string): string {
 function hasExplicitProductAskSignal(message: string): boolean {
   const normalized = normalizeMessageForRoutinePolicy(message)
 
-  return /\b(?:welch\w*|empfiehl\w*|empfehl\w*|konkret|produkt\w*|kaufen|nehmen|auswaehlen|waehlen|passt\s+am\s+besten|gutes?|beste[nsr]?)\b/.test(
+  return /\b(?:welch\w*|welc\w*|empfiehl\w*|empfehl\w*|konkret|produkt\w*|kaufen|nehmen|verwenden|benutzen|auswaehlen|waehlen|passt\s+am\s+besten|gutes?|beste[nsr]?)\b/.test(
     normalized,
   )
 }
@@ -423,12 +423,14 @@ export async function runShadowAgentTurn(params: {
   }
 
   const packet = buildAgentRuntimePacket({
+    message: params.message,
     route,
     userContext: buildEffectiveUserContextForRender({
       userContext,
       conversationState: params.conversationState,
       route,
     }),
+    conversationState: params.conversationState,
     guidance,
     selectedProducts: prepareSelectedProductsForRender(selectedProducts),
     routinePlan,

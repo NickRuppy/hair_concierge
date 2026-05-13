@@ -4,6 +4,7 @@ import type {
   InterventionPlan,
   NormalizedProfile,
   PeelingCategoryDecision,
+  RecommendationRequestContext,
 } from "@/lib/recommendation-engine/types"
 import {
   derivePeelingType,
@@ -11,6 +12,7 @@ import {
   getPlannedStep,
   hasScalpDrynessOrIrritationRisk,
 } from "@/lib/recommendation-engine/categories/shared"
+import { emptyRecommendationRequestContext } from "@/lib/recommendation-engine/request-context"
 
 export interface PeelingFitSpec {
   scalp_type_focus: "oily" | "balanced" | "dry" | null
@@ -21,10 +23,12 @@ export function buildPeelingCategoryDecision(
   profile: NormalizedProfile,
   damage: DamageAssessment,
   plan: InterventionPlan,
+  requestContext: RecommendationRequestContext = emptyRecommendationRequestContext(),
 ): PeelingCategoryDecision {
   const step = getPlannedStep(plan, "peeling")
+  const explicitRequest = requestContext.requestedCategory === "peeling"
 
-  if (!step) {
+  if (!step && !explicitRequest) {
     return {
       category: "peeling",
       relevant: false,
@@ -44,8 +48,8 @@ export function buildPeelingCategoryDecision(
   return {
     category: "peeling",
     relevant: true,
-    action: step.action,
-    planReasonCodes: step.reasonCodes,
+    action: step?.action ?? "add",
+    planReasonCodes: step?.reasonCodes ?? ["explicit_peeling_request"],
     currentInventory: profile.routineInventory.peeling,
     targetProfile: {
       scalpTypeFocus: deriveScalpTypeFocus(profile),

@@ -1102,6 +1102,10 @@ export function rerankDryShampooProductsWithEngine(params: {
       tradeoffs,
       usage_hint: buildDryShampooUsageHint(),
       scalp_type_focus: target.scalpTypeFocus,
+      primary_effect: spec?.primary_effect ?? null,
+      hair_color_fit: spec?.hair_color_fit ?? null,
+      scalp_sensitivity_fit: spec?.scalp_sensitivity_fit ?? null,
+      product_format: spec?.format ?? null,
     }
 
     return {
@@ -2227,9 +2231,11 @@ export async function selectDryShampooProductsWithEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime?: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
+  const runtime =
+    params.runtime ?? buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
   const decision = runtime.categories.dryShampoo
   if (!decision.relevant || !decision.targetProfile) return []
 
@@ -2276,9 +2282,11 @@ export async function selectPeelingProductsWithEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime?: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
+  const runtime =
+    params.runtime ?? buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
   const decision = runtime.categories.peeling
   if (!decision.relevant || !decision.targetProfile) return []
 

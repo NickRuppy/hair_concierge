@@ -4,10 +4,18 @@ import {
   computeConversationStateTransition,
   createDefaultConversationState,
   normalizeConversationState,
+  resolveAgenticConversationStateTransition,
   shouldApplyPendingRoutineAnswerOverride,
 } from "../src/lib/rag/conversation-state"
 import { buildConversationStateUpsertPayload } from "../src/lib/rag/conversation-state-store"
-import type { ClassificationResult, ConversationState, HairProfile } from "../src/lib/types"
+import type { BuildOrFixRoutineProjection } from "../src/lib/agent/tools/build-or-fix-routine"
+import type { SelectedProductsProjection } from "../src/lib/agent/tools/select-products"
+import type {
+  AgenticTerminalStatePatch,
+  ClassificationResult,
+  ConversationState,
+  HairProfile,
+} from "../src/lib/types"
 
 function createClassification(overrides: Partial<ClassificationResult> = {}): ClassificationResult {
   return {
@@ -59,6 +67,63 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     conversation_memory: null,
     created_at: "2026-05-03T00:00:00.000Z",
     updated_at: "2026-05-03T00:00:00.000Z",
+    ...overrides,
+  }
+}
+
+function createAgenticPatch(
+  overrides: Partial<AgenticTerminalStatePatch> = {},
+): AgenticTerminalStatePatch {
+  return {
+    active_topic: null,
+    routine_layer: null,
+    last_product_category: null,
+    last_assistant_action: "answered_general_followup",
+    topic_relation: "unclear",
+    reason: "terminal_patch",
+    ...overrides,
+  }
+}
+
+function createSelectedProductsProjection(
+  overrides: Partial<SelectedProductsProjection> = {},
+): SelectedProductsProjection {
+  return {
+    category: "shampoo",
+    decision: "recommended",
+    product_response_policy: "recommend",
+    policy_reason: "Enough profile data for a shampoo recommendation.",
+    profile_basis: ["Feines Haar", "ausgeglichene Kopfhaut"],
+    category_guidance: "Mild reinigen.",
+    products: [
+      {
+        rank: 1,
+        product_id: "shampoo-1",
+        name: "Eval Shampoo",
+        brand: "Hair Concierge",
+        price_eur: null,
+        currency: "EUR",
+        fit_reason: "passt zur Kopfhaut",
+        caveat: null,
+        supported_claims: [],
+        unsupported_requested_signals: [],
+      },
+    ],
+    comparison_facts: null,
+    missing_info: [],
+    unsupported_requested_signals: [],
+    ...overrides,
+  }
+}
+
+function createRoutineProjection(
+  overrides: Partial<BuildOrFixRoutineProjection> = {},
+): BuildOrFixRoutineProjection {
+  return {
+    objective: "build_routine",
+    steps: [],
+    missing_info: [],
+    confidence: 0.82,
     ...overrides,
   }
 }
@@ -244,6 +309,12 @@ test("pending routine override does not swallow explicit product requests", () =
     shouldApplyPendingRoutineAnswerOverride({
       state: previousState,
       userMessage: "Welches Shampoo empfiehlst du?",
+    }),
+  ).toBe(false)
+  expect(
+    shouldApplyPendingRoutineAnswerOverride({
+      state: previousState,
+      userMessage: "welcges Shampoo sollte ich verwenden?",
     }),
   ).toBe(false)
 })
@@ -684,4 +755,101 @@ test("state store builds stable upsert payload", () => {
   })
   expect(typeof payload.updated_at).toBe("string")
   expect(Number.isNaN(Date.parse(payload.updated_at))).toBe(false)
+})
+
+test("agentic state transition lets selected product outcomes override conflicting patches", () => {
+  const previousState: ConversationState = {
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    pending_offer: "routine_goals_or_problems",
+    answered_slots: ["routine"],
+    last_assistant_action: "answered_routine_basics",
+    last_product_category: null,
+  }
+
+  const transition = resolveAgenticConversationStateTransition({
+    previousState,
+    terminalStatePatch: createAgenticPatch({
+      active_topic: "oil",
+      last_product_category: "oil",
+      last_assistant_action: "answered_product_recommendation",
+      topic_relation: "category_switch",
+      reason: "model_patch_chose_oil",
+    }),
+    selectedProducts: createSelectedProductsProjection({ category: "shampoo" }),
+    routinePlan: null,
+  })
+
+  expect(transition.next_state.active_topic).toBe("shampoo")
+  expect(transition.next_state.routine_layer).toBeNull()
+  expect(transition.next_state.pending_offer).toBeNull()
+  expect(transition.next_state.last_product_category).toBe("shampoo")
+  expect(transition.reason).toBe("tool_loop_select_products")
+  expect(transition.classifier_override).toBeNull()
+  expect(transition.updated_by_engine).toBe("tool_loop")
+  expect(transition.changed_fields).toEqual(
+    expect.arrayContaining([
+      "active_topic",
+      "routine_layer",
+      "pending_offer",
+      "last_assistant_action",
+      "last_product_category",
+    ]),
+  )
+})
+
+test("agentic state transition allows tool-less pivots to clear stale product topic", () => {
+  const previousState: ConversationState = {
+    version: 1,
+    active_topic: "shampoo",
+    routine_layer: null,
+    pending_offer: null,
+    answered_slots: [],
+    last_assistant_action: "answered_product_recommendation",
+    last_product_category: "shampoo",
+  }
+
+  const transition = resolveAgenticConversationStateTransition({
+    previousState,
+    terminalStatePatch: createAgenticPatch({
+      active_topic: null,
+      routine_layer: null,
+      last_product_category: null,
+      last_assistant_action: "answered_toolless_topic_pivot",
+      topic_relation: "category_switch",
+      reason: "topic_pivot_to_blow_drying",
+    }),
+    selectedProducts: null,
+    routinePlan: null,
+  })
+
+  expect(transition.next_state.active_topic).toBeNull()
+  expect(transition.next_state.last_product_category).toBeNull()
+  expect(transition.next_state.last_assistant_action).toBe("answered_toolless_topic_pivot")
+  expect(transition.reason).toBe("topic_pivot_to_blow_drying")
+  expect(transition.updated_by_engine).toBe("tool_loop")
+})
+
+test("agentic state transition lets routine tool outcomes override product-shaped patches", () => {
+  const transition = resolveAgenticConversationStateTransition({
+    previousState: createDefaultConversationState(),
+    terminalStatePatch: createAgenticPatch({
+      active_topic: "mask",
+      routine_layer: null,
+      last_product_category: "mask",
+      last_assistant_action: "answered_routine",
+      topic_relation: "category_switch",
+      reason: "model_patch_chose_mask",
+    }),
+    selectedProducts: null,
+    routinePlan: createRoutineProjection(),
+  })
+
+  expect(transition.next_state.active_topic).toBe("routine")
+  expect(transition.next_state.routine_layer).toBe("basics")
+  expect(transition.next_state.pending_offer).toBeNull()
+  expect(transition.next_state.last_product_category).toBe("mask")
+  expect(transition.reason).toBe("tool_loop_build_or_fix_routine")
+  expect(transition.updated_by_engine).toBe("tool_loop")
 })

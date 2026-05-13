@@ -284,7 +284,7 @@ export default function AdminProductsPage() {
 
     const dryShampooSpecs = product.dry_shampoo_specs
       ? {
-          scalp_type_focus: product.dry_shampoo_specs.scalp_type_focus,
+          scalp_type_focus: product.dry_shampoo_specs.scalp_type_focus ?? "",
         }
       : isDryShampooCategory(product.category || "")
         ? { ...emptyDryShampooSpecs }

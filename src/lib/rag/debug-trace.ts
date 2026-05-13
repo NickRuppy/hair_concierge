@@ -1,5 +1,13 @@
 import type { RetrieveContextDebug, RetrievedChunk } from "@/lib/rag/retriever"
 import type {
+  AgenticBlockedToolCall as RuntimeAgenticBlockedToolCall,
+  AgenticExecutedToolCall as RuntimeAgenticExecutedToolCall,
+  AgenticToolLoopModelStep as RuntimeAgenticToolLoopModelStep,
+  AgenticToolLoopTrace as RuntimeAgenticToolLoopTrace,
+} from "@/lib/agent/orchestrator/agentic-tool-loop-types"
+import type { BuildOrFixRoutineProjection } from "@/lib/agent/tools/build-or-fix-routine"
+import type { SelectedProductsProjection } from "@/lib/agent/tools/select-products"
+import type {
   ChatCategoryDecision,
   ChatMatchedProductTrace,
   ChatPromptSnapshot,
@@ -23,6 +31,8 @@ import type {
 const CHAT_TURN_TRACE_VERSION = 2
 const CONTENT_PREVIEW_LIMIT = 240
 const SUMMARY_ITEM_LIMIT = 3
+
+type AppAgenticToolLoopTrace = NonNullable<ChatTurnTrace["agentic_tool_loop"]>
 
 export interface PipelineTraceDraft {
   request_id: string
@@ -52,6 +62,8 @@ export interface PipelineTraceDraft {
   }
   prompt: ChatPromptSnapshot
   response_composition: ResponseCompositionTrace
+  engine_variant?: ChatTurnTrace["engine_variant"]
+  agentic_tool_loop?: ChatTurnTrace["agentic_tool_loop"]
   latencies_ms: ChatTraceLatencyBreakdown
 }
 
@@ -64,6 +76,308 @@ function toContentPreview(content: string): string {
   return content.length > CONTENT_PREVIEW_LIMIT
     ? `${content.slice(0, CONTENT_PREVIEW_LIMIT)}...`
     : content
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+function compactStringValues(values: unknown): string[] {
+  if (!Array.isArray(values)) return []
+
+  return Array.from(
+    new Set(values.map((value) => (typeof value === "string" ? value.trim() : "")).filter(Boolean)),
+  )
+}
+
+function compactRecordIds(values: unknown): string[] {
+  if (!Array.isArray(values)) return []
+
+  return Array.from(
+    new Set(
+      values
+        .map((value) => {
+          if (typeof value === "string") return value.trim()
+          if (isRecord(value) && typeof value.id === "string") return value.id.trim()
+          if (isRecord(value) && typeof value.guidance_id === "string") {
+            return value.guidance_id.trim()
+          }
+          return ""
+        })
+        .filter(Boolean),
+    ),
+  )
+}
+
+function summarizeInput(input: Record<string, unknown>): string | null {
+  const parts: string[] = []
+
+  for (const key of ["category", "intent", "objective", "layer", "requestedCategory"]) {
+    const value = input[key]
+    if (typeof value === "string" && value.trim().length > 0) {
+      parts.push(`${key}=${value.trim()}`)
+    }
+  }
+
+  for (const key of ["categories", "profileFocus"]) {
+    const value = input[key]
+    if (Array.isArray(value)) {
+      parts.push(`${key}_count=${value.length}`)
+    }
+  }
+
+  const keys = Object.keys(input).sort()
+  if (keys.length > 0) {
+    parts.push(`input_keys=${keys.slice(0, SUMMARY_ITEM_LIMIT).join(", ")}`)
+  }
+
+  return parts.length > 0 ? toContentPreview(parts.join("; ")) : null
+}
+
+function getProjectionRecord(output: unknown): Record<string, unknown> | null {
+  if (!isRecord(output)) return null
+
+  return isRecord(output.projection) ? output.projection : output
+}
+
+function hasAnyKey(record: Record<string, unknown>, keys: string[]): boolean {
+  return keys.some((key) => key in record)
+}
+
+function readSummaryString(record: Record<string, unknown>, key: string): string | null {
+  const value = record[key]
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null
+}
+
+function readSummaryArrayLength(record: Record<string, unknown>, key: string): number {
+  const value = record[key]
+  return Array.isArray(value) ? value.length : 0
+}
+
+function summarizeGuidanceOutput(
+  call: RuntimeAgenticExecutedToolCall,
+  fallbackGuidanceIds: string[],
+): string {
+  const projection = getProjectionRecord(call.output)
+  const outputGuidanceIds = projection ? compactStringValues(projection.loaded_guidance_ids) : []
+  const guidanceIds = outputGuidanceIds.length > 0 ? outputGuidanceIds : fallbackGuidanceIds
+
+  return guidanceIds.length > 0
+    ? toContentPreview(`guidance_ids=${guidanceIds.join(", ")}`)
+    : "guidance_ids=0"
+}
+
+function summarizeSelectedProductsProjection(projection: Record<string, unknown>): string {
+  return toContentPreview(
+    [
+      `category=${readSummaryString(projection, "category") ?? "unknown"}`,
+      `decision=${readSummaryString(projection, "decision") ?? "unknown"}`,
+      `policy=${readSummaryString(projection, "product_response_policy") ?? "unknown"}`,
+      `products=${readSummaryArrayLength(projection, "products")}`,
+      `missing_info=${readSummaryArrayLength(projection, "missing_info")}`,
+    ].join("; "),
+  )
+}
+
+function summarizeSelectedProductsOutput(params: {
+  call: RuntimeAgenticExecutedToolCall
+  selectedProducts: SelectedProductsProjection | null
+}): string {
+  const outputProjection = getProjectionRecord(params.call.output)
+  if (
+    outputProjection &&
+    hasAnyKey(outputProjection, [
+      "category",
+      "decision",
+      "product_response_policy",
+      "products",
+      "missing_info",
+    ])
+  ) {
+    return summarizeSelectedProductsProjection(outputProjection)
+  }
+
+  return params.selectedProducts
+    ? summarizeSelectedProductsProjection(
+        params.selectedProducts as unknown as Record<string, unknown>,
+      )
+    : "products=0"
+}
+
+function summarizeRoutineProjection(projection: Record<string, unknown>): string {
+  const steps = Array.isArray(projection.steps) ? projection.steps : []
+
+  return toContentPreview(
+    [
+      `objective=${readSummaryString(projection, "objective") ?? "unknown"}`,
+      `steps=${steps.length}`,
+      `labels=${steps
+        .map((step) => (isRecord(step) && typeof step.label === "string" ? step.label.trim() : ""))
+        .filter(Boolean)
+        .slice(0, SUMMARY_ITEM_LIMIT)
+        .join(", ")}`,
+      `missing_info=${readSummaryArrayLength(projection, "missing_info")}`,
+    ].join("; "),
+  )
+}
+
+function summarizeRoutineOutput(params: {
+  call: RuntimeAgenticExecutedToolCall
+  routinePlan: BuildOrFixRoutineProjection | null
+}): string {
+  const outputProjection = getProjectionRecord(params.call.output)
+  if (outputProjection && hasAnyKey(outputProjection, ["objective", "steps", "missing_info"])) {
+    return summarizeRoutineProjection(outputProjection)
+  }
+
+  return params.routinePlan
+    ? summarizeRoutineProjection(params.routinePlan as unknown as Record<string, unknown>)
+    : "steps=0"
+}
+
+function summarizeToolOutput(params: {
+  call: RuntimeAgenticExecutedToolCall
+  selectedProducts: SelectedProductsProjection | null
+  routinePlan: BuildOrFixRoutineProjection | null
+  loadedGuidanceIds: string[]
+}): string | null {
+  switch (params.call.name) {
+    case "load_advisor_guidance":
+      return summarizeGuidanceOutput(params.call, params.loadedGuidanceIds)
+    case "select_products":
+      return summarizeSelectedProductsOutput({
+        call: params.call,
+        selectedProducts: params.selectedProducts,
+      })
+    case "build_or_fix_routine":
+      return summarizeRoutineOutput({
+        call: params.call,
+        routinePlan: params.routinePlan,
+      })
+  }
+}
+
+function readOptionalString(record: Record<string, unknown>, key: string): string | null {
+  const value = record[key]
+  return typeof value === "string" ? value : null
+}
+
+function readOptionalNumber(record: Record<string, unknown>, key: string): number | null {
+  const value = record[key]
+  return typeof value === "number" && Number.isFinite(value) ? value : null
+}
+
+function projectModelStep(
+  step: RuntimeAgenticToolLoopModelStep,
+  index: number,
+): AppAgenticToolLoopTrace["model_steps"][number] {
+  const record = isRecord(step) ? step : {}
+  const status = readOptionalString(record, "status")
+  const toolCallNames =
+    step.type === "tool_calls" ? step.calls.map((call) => call.name).filter(Boolean) : []
+
+  return {
+    step_index: index + 1,
+    type: step.type,
+    finish_reason: readOptionalString(record, "finish_reason"),
+    ...(status ? { status } : {}),
+    tool_call_names: toolCallNames,
+  }
+}
+
+function projectToolCall(params: {
+  call: RuntimeAgenticExecutedToolCall
+  selectedProducts: SelectedProductsProjection | null
+  routinePlan: BuildOrFixRoutineProjection | null
+  loadedGuidanceIds: string[]
+}): AppAgenticToolLoopTrace["tool_calls"][number] {
+  const record = params.call as unknown as Record<string, unknown>
+  const latencyMs = readOptionalNumber(record, "latency_ms")
+
+  return {
+    id: params.call.id,
+    name: params.call.name,
+    status: "executed",
+    ...(latencyMs !== null ? { latency_ms: latencyMs } : {}),
+    input_summary: summarizeInput(params.call.input),
+    output_summary: summarizeToolOutput(params),
+  }
+}
+
+function projectBlockedToolCall(
+  call: RuntimeAgenticBlockedToolCall,
+): AppAgenticToolLoopTrace["blocked_tool_calls"][number] {
+  return {
+    id: call.id,
+    name: call.name,
+    reason: call.reason,
+  }
+}
+
+function extractAnswerContextCapsuleIds(runtimeTrace: RuntimeAgenticToolLoopTrace): string[] {
+  const answerContext = runtimeTrace.answer_context
+  if (!isRecord(answerContext)) return []
+
+  return Array.from(
+    new Set([
+      ...compactStringValues(answerContext.capsule_ids),
+      ...compactStringValues(answerContext.capsuleIds),
+      ...compactStringValues(answerContext.ids),
+      ...compactRecordIds(answerContext.capsules),
+    ]),
+  )
+}
+
+function summarizeConsultationBrief(
+  runtimeTrace: RuntimeAgenticToolLoopTrace,
+): Record<string, unknown> | null {
+  const brief = runtimeTrace.consultation_brief
+  if (!brief) return null
+
+  return {
+    charter_count: brief.charter.length,
+    routine_staging_count: brief.routine_staging.length,
+    product_vs_education_count: brief.product_vs_education.length,
+    profile_overlay_ids: compactRecordIds(brief.profile_overlays),
+    candidate_guidance_ids: compactRecordIds(brief.candidate_guidance),
+  }
+}
+
+export function projectAgenticToolLoopTraceForApp(params: {
+  runtimeTrace: RuntimeAgenticToolLoopTrace
+  selectedProducts: SelectedProductsProjection | null
+  routinePlan: BuildOrFixRoutineProjection | null
+  latencyMs: number
+}): AppAgenticToolLoopTrace {
+  const loadedGuidanceIds =
+    params.runtimeTrace.advisor_guidance?.loaded_guidance_ids.map((id) => String(id)) ?? []
+
+  return {
+    engine_variant: "tool_loop",
+    answer_composition_mode: params.runtimeTrace.answer_composition_mode,
+    loaded_guidance_ids: loadedGuidanceIds,
+    answer_context_capsule_ids: extractAnswerContextCapsuleIds(params.runtimeTrace),
+    consultation_brief_summary: summarizeConsultationBrief(params.runtimeTrace),
+    repair_attempts: params.runtimeTrace.repair_attempts.map((attempt) => ({
+      reason: attempt.reason,
+      instruction_label: attempt.instruction_label,
+    })),
+    failure_stage: params.runtimeTrace.failure_stage,
+    visible_failure: params.runtimeTrace.visible_failure,
+    model_steps: params.runtimeTrace.model_steps.map(projectModelStep),
+    tool_calls: params.runtimeTrace.tool_calls.map((call) =>
+      projectToolCall({
+        call,
+        selectedProducts: params.selectedProducts,
+        routinePlan: params.routinePlan,
+        loadedGuidanceIds,
+      }),
+    ),
+    blocked_tool_calls: params.runtimeTrace.blocked_tool_calls.map(projectBlockedToolCall),
+    guardrails: params.runtimeTrace.guardrails,
+    latency_ms: params.latencyMs,
+    token_usage: null,
+  }
 }
 
 export function buildRetrievedChunkTrace(chunks: RetrievedChunk[]): ChatRetrievedChunkTrace[] {
@@ -178,6 +492,8 @@ export function buildPipelineTraceDraft(params: {
   classification_prompt_ref: LangfusePromptReference
   prompt: ChatPromptSnapshot
   response_composition: ResponseCompositionTrace
+  engine_variant?: ChatTurnTrace["engine_variant"]
+  agentic_tool_loop?: ChatTurnTrace["agentic_tool_loop"]
   latencies_ms: ChatTraceLatencyBreakdown
 }): PipelineTraceDraft {
   const {
@@ -205,8 +521,13 @@ export function buildPipelineTraceDraft(params: {
     classification_prompt_ref,
     prompt,
     response_composition,
+    engine_variant,
+    agentic_tool_loop,
     latencies_ms,
   } = params
+  const resolvedEngineVariant: ChatTurnTrace["engine_variant"] = agentic_tool_loop
+    ? "tool_loop"
+    : engine_variant
 
   return {
     request_id,
@@ -246,6 +567,8 @@ export function buildPipelineTraceDraft(params: {
     },
     prompt,
     response_composition,
+    engine_variant: resolvedEngineVariant,
+    agentic_tool_loop,
     latencies_ms,
   }
 }
@@ -300,6 +623,8 @@ export function finalizeChatTurnTrace(
     prompt_refs: draft.prompt_refs,
     prompt: draft.prompt,
     response_composition: draft.response_composition,
+    ...(draft.engine_variant ? { engine_variant: draft.engine_variant } : {}),
+    ...(draft.agentic_tool_loop ? { agentic_tool_loop: draft.agentic_tool_loop } : {}),
     response: {
       assistant_content,
       sources,
@@ -315,6 +640,9 @@ export function finalizeChatTurnTrace(
 }
 
 export function buildRetrievalDebugEventData(draft: PipelineTraceDraft): Record<string, unknown> {
+  const toolLoopTrace = draft.agentic_tool_loop ?? null
+  const engineVariant = toolLoopTrace ? "tool_loop" : (draft.engine_variant ?? null)
+
   return {
     request_id: draft.request_id,
     intent: draft.intent,
@@ -322,6 +650,7 @@ export function buildRetrievalDebugEventData(draft: PipelineTraceDraft): Record<
     retrieval_mode: draft.router_decision.retrieval_mode,
     response_mode: draft.router_decision.response_mode,
     response_composer_path: draft.response_composition.path,
+    engine_variant: engineVariant,
     clarification_questions: draft.clarification_questions,
     policy_overrides: draft.router_decision.policy_overrides,
     subqueries: draft.retrieval.subqueries,
@@ -332,5 +661,23 @@ export function buildRetrievalDebugEventData(draft: PipelineTraceDraft): Record<
       name: product.name,
       score: product.score,
     })),
+    tool_loop_model_step_count: toolLoopTrace?.model_steps.length ?? null,
+    tool_loop_total_llm_calls: toolLoopTrace?.model_steps.length ?? null,
+    tool_loop_tool_calls: toolLoopTrace?.tool_calls.map((call) => call.name) ?? [],
+    tool_loop_blocked_reasons: toolLoopTrace?.blocked_tool_calls.map((call) => call.reason) ?? [],
+    loaded_guidance_ids: toolLoopTrace?.loaded_guidance_ids ?? [],
+    repair_count: toolLoopTrace?.repair_attempts.length ?? 0,
+    failure_stage: toolLoopTrace?.failure_stage ?? null,
+    visible_failure: toolLoopTrace?.visible_failure ?? false,
+    agentic_tool_loop: toolLoopTrace
+      ? {
+          model_step_count: toolLoopTrace.model_steps.length,
+          tool_call_count: toolLoopTrace.tool_calls.length,
+          blocked_tool_call_count: toolLoopTrace.blocked_tool_calls.length,
+          guardrails: toolLoopTrace.guardrails,
+          latency_ms: toolLoopTrace.latency_ms ?? null,
+          token_usage: toolLoopTrace.token_usage ?? null,
+        }
+      : null,
   }
 }

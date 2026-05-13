@@ -41,7 +41,15 @@ const THERAPY_OIL_INGREDIENT_TERMS = [
   "pfefferminzoel",
 ]
 
-const DRY_OIL_EXPLICIT_TERMS = ["trockenöl", "trockenoel", "trocken-oel", "dry oil", "dry-oil"]
+const DRY_OIL_EXPLICIT_TERMS = [
+  "trockenöl",
+  "trockenoel",
+  "trocken-oel",
+  "trockenes öl",
+  "trockenes oel",
+  "dry oil",
+  "dry-oil",
+]
 
 const DRY_OIL_CONTEXT_TERMS = [
   "leicht",
@@ -72,8 +80,16 @@ const STYLING_OIL_CONTEXT_TERMS = [
   "glätten",
   "glaenzen",
   "gloss",
+  "längen",
+  "laengen",
   "spitzen versiegeln",
   "spitzen",
+]
+
+const NEGATED_SCALP_OIL_PATTERNS = [
+  /\bnicht\s+(?:auf|an)\s+die\s+kopfhaut\b/,
+  /\bnicht\s+(?:fuer|fur)\s+die\s+kopfhaut\b/,
+  /\bnur\s+in\s+die\s+(?:spitzen|laengen|langen)\b/,
 ]
 
 const NON_OIL_CATEGORY_TERMS = [
@@ -162,6 +178,18 @@ function matchesOverloadComplaint(text: string): boolean {
 
 export function inferOilPurposeFromMessage(message: string): OilPurpose | null {
   const text = normalizeText(message)
+  const hasExplicitFinishIntent =
+    includesAny(text, STYLING_OIL_EXPLICIT_TERMS) ||
+    includesAny(text, STYLING_OIL_CONTEXT_TERMS) ||
+    includesAny(text, DRY_OIL_EXPLICIT_TERMS) ||
+    includesAny(text, DRY_OIL_CONTEXT_TERMS)
+  const hasNegatedScalpIntent = matchesAny(text, NEGATED_SCALP_OIL_PATTERNS)
+
+  if (hasExplicitFinishIntent && hasNegatedScalpIntent) {
+    return includesAny(text, DRY_OIL_EXPLICIT_TERMS) || includesAny(text, DRY_OIL_CONTEXT_TERMS)
+      ? "light_finish"
+      : "styling_finish"
+  }
 
   if (includesAny(text, NATURAL_OIL_INTENT_TERMS)) {
     return "pre_wash_oiling"
