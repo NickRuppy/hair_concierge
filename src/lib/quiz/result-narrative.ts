@@ -72,6 +72,7 @@ export interface QuizResultNarrativeRow {
 }
 
 export interface QuizResultNarrative {
+  heroHeadline: string
   intro: string
   rows: [QuizResultNarrativeRow, QuizResultNarrativeRow, QuizResultNarrativeRow]
   needs: QuizResultNeedsSection
@@ -541,6 +542,18 @@ function buildIntro(
   return "Wir sehen schon, was dein Haar gerade noch ausbremst und in welche Richtung wir dein Haar jetzt weiterentwickeln."
 }
 
+function buildHeroHeadline(answers: QuizAnswers): string {
+  if (answers.pulltest === "stretches_stays") {
+    return "Dein Haar braucht mehr Protein als Feuchtigkeit."
+  }
+
+  if (answers.pulltest === "snaps") {
+    return "Dein Haar braucht mehr Feuchtigkeit als Protein."
+  }
+
+  return "Deine Balance ist näher dran, als es sich gerade anfühlt."
+}
+
 function buildFrictionScore(
   answers: QuizAnswers,
   primaryConcern: QuizConcern | null,
@@ -906,6 +919,7 @@ export function buildQuizResultNarrative(rawAnswers: QuizAnswers): QuizResultNar
   const outcomeRow = buildOutcomeRow(primaryGoal)
 
   return {
+    heroHeadline: buildHeroHeadline(answers),
     intro: buildIntro(answers, primaryConcern, primaryGoal),
     rows: [hairFeelRow, frictionRow, outcomeRow],
     needs: buildNeedsSection(answers, primaryConcern, primaryGoal),

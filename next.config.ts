@@ -6,11 +6,12 @@ const securityHeaders = [
     key: "Content-Security-Policy-Report-Only",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://eu.i.posthog.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://eu.i.posthog.com https://js.stripe.com https://checkout.stripe.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.supabase.co",
+      "img-src 'self' data: blob: https://*.supabase.co https://www.tophair.de https://assets.cdn.filesafe.space",
       "font-src 'self' data:",
-      "connect-src 'self' https://eu.i.posthog.com https://eu.posthog.com https://*.supabase.co https://*.sentry.io",
+      "connect-src 'self' https://eu.i.posthog.com https://eu.posthog.com https://*.supabase.co https://*.sentry.io https://api.stripe.com https://js.stripe.com https://checkout.stripe.com",
+      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com",
       "frame-ancestors 'none'",
       "object-src 'none'",
       "base-uri 'self'",
@@ -27,6 +28,20 @@ const nextConfig: NextConfig = {
   // Keep Turbopack scoped to this repo even when a parent folder has another lockfile.
   turbopack: {
     root: process.cwd(),
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "www.tophair.de",
+        pathname: "/app/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "assets.cdn.filesafe.space",
+        pathname: "/**",
+      },
+    ],
   },
   outputFileTracingIncludes: {
     "/api/chat": ["./data/agent-guidance/**/*"],

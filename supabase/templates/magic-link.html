@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Login-Link</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #231f20;
+      font-family:
+        &quot;Montserrat&quot;,
+        -apple-system,
+        BlinkMacSystemFont,
+        &quot;Segoe UI&quot;,
+        Roboto,
+        sans-serif;
+    "
+  >
+    <table
+      role="presentation"
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="background-color: #231f20"
+    >
+      <tr>
+        <td align="center" style="padding: 40px 16px">
+          <table
+            role="presentation"
+            width="520"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="
+              max-width: 520px;
+              width: 100%;
+              background-color: #2a2526;
+              border: 1px solid #3a3536;
+              border-radius: 16px;
+              overflow: hidden;
+            "
+          >
+            <tr>
+              <td style="padding: 40px 36px 0 36px; text-align: center">
+                <h1
+                  style="
+                    margin: 0 0 6px 0;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: #f5c518;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                  "
+                >
+                  HAIR CONCIERGE
+                </h1>
+                <p
+                  style="
+                    margin: 0 0 24px 0;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 13px;
+                    color: #a09a8e;
+                  "
+                >
+                  Personalisierte Haarpflege-Beratung
+                </p>
+                <hr style="border: none; border-top: 1px solid #3a3536; margin: 0" />
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 28px 36px 0 36px">
+                <p
+                  style="
+                    margin: 0 0 20px 0;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 15px;
+                    line-height: 1.65;
+                    color: #e5dfd3;
+                  "
+                >
+                  Dein sicherer Login-Link ist bereit.
+                </p>
+                <p
+                  style="
+                    margin: 0 0 32px 0;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 15px;
+                    line-height: 1.65;
+                    color: #e5dfd3;
+                  "
+                >
+                  Klicke auf den Button und du bist direkt in deinem Hair Concierge Konto
+                  angemeldet.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding: 0 36px 28px 36px">
+                <a
+                  href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=magiclink&redirect_to={{ .RedirectTo }}"
+                  style="
+                    display: inline-block;
+                    background: linear-gradient(135deg, #f5c518, #d4a800);
+                    color: #231f20;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 15px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    text-decoration: none;
+                    padding: 14px 40px;
+                    border-radius: 8px;
+                  "
+                >
+                  Login-Link öffnen
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 0 36px 24px 36px">
+                <p
+                  style="
+                    margin: 0 0 20px 0;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 13px;
+                    line-height: 1.55;
+                    color: #8a847a;
+                  "
+                >
+                  Falls du diesen Login-Link nicht angefordert hast, kannst du diese E-Mail einfach
+                  ignorieren.
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 13px;
+                    line-height: 1.55;
+                    color: #8a847a;
+                  "
+                >
+                  Bis gleich!<br />
+                  Dein Hair Concierge Team
+                </p>
+              </td>
+            </tr>
+          </table>
+          <table
+            role="presentation"
+            width="520"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="max-width: 520px; width: 100%"
+          >
+            <tr>
+              <td style="padding: 20px 36px 0 36px; text-align: center">
+                <p
+                  style="
+                    margin: 0 0 4px 0;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 11px;
+                    color: #5a5550;
+                  "
+                >
+                  Hair Concierge
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    font-family: &quot;Montserrat&quot;, sans-serif;
+                    font-size: 11px;
+                    color: #5a5550;
+                  "
+                >
+                  Diese E-Mail wurde automatisch versendet.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

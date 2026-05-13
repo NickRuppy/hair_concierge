@@ -154,12 +154,13 @@ function ProductTracePanel({ result }: { result: CompareRunResult }) {
                 ) : null}
                 {product.supported_claims.length > 0 ? (
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Belegt: {product.supported_claims.map((claim) => claim.label).join(" · ")}
+                    Sichere Angaben:{" "}
+                    {product.supported_claims.map((claim) => claim.label).join(" · ")}
                   </p>
                 ) : null}
                 {product.unsupported_requested_signals.length > 0 ? (
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Nicht belegt:{" "}
+                    Keine sichere Angabe:{" "}
                     {product.unsupported_requested_signals
                       .map((signal) => `${signal.field}=${signal.value}`)
                       .join(", ")}

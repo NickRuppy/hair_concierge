@@ -1803,7 +1803,7 @@ test("engine deep-cleansing shampoo reranking suppresses unsupported mineral and
   assert.deepEqual(reranked, [])
 })
 
-test("engine dry shampoo reranking keeps the oily-focus candidate ahead of a broader balanced option", () => {
+test("engine dry shampoo reranking prefers exact bridge effect and color fit", () => {
   const decision: DryShampooCategoryDecision = {
     category: "dry_shampoo",
     relevant: true,
@@ -1811,7 +1811,12 @@ test("engine dry shampoo reranking keeps the oily-focus candidate ahead of a bro
     planReasonCodes: [],
     currentInventory: null,
     targetProfile: {
-      scalpTypeFocus: "oily",
+      primaryEffectTarget: "volume_texture",
+      hairColorFitTarget: "dark",
+      requiresSensitiveFit: false,
+      preferredFormat: null,
+      bridgeNeedReasonCodes: ["dry_shampoo_volume_texture_request"],
+      cautionReasonCodes: [],
     },
     notes: [],
   }
@@ -1824,11 +1829,17 @@ test("engine dry shampoo reranking keeps the oily-focus candidate ahead of a bro
   const specs: ProductDryShampooSpecs[] = [
     {
       product_id: "balanced",
-      scalp_type_focus: "balanced",
+      primary_effect: "classic_refresh",
+      hair_color_fit: "universal",
+      scalp_sensitivity_fit: "normal_only",
+      format: "aerosol_spray",
     },
     {
       product_id: "ideal",
-      scalp_type_focus: "oily",
+      primary_effect: "volume_texture",
+      hair_color_fit: "dark",
+      scalp_sensitivity_fit: "normal_only",
+      format: "aerosol_spray",
     },
   ]
 
@@ -1842,8 +1853,56 @@ test("engine dry shampoo reranking keeps the oily-focus candidate ahead of a bro
   assert.equal(reranked[0]?.recommendation_meta?.category, "dry_shampoo")
   assert.equal(
     (reranked[0]?.recommendation_meta as DryShampooRecommendationMetadata | undefined)
-      ?.scalp_type_focus,
-    "oily",
+      ?.primary_effect,
+    "volume_texture",
+  )
+})
+
+test("engine dry shampoo reranking filters aerosol when non-spray format is requested", () => {
+  const decision: DryShampooCategoryDecision = {
+    category: "dry_shampoo",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      primaryEffectTarget: "classic_refresh",
+      hairColorFitTarget: "universal",
+      requiresSensitiveFit: false,
+      preferredFormat: "foam_or_liquid",
+      bridgeNeedReasonCodes: ["dry_shampoo_between_wash_bridge_needed"],
+      cautionReasonCodes: ["dry_shampoo_avoid_aerosol_format_request"],
+    },
+    notes: [],
+  }
+
+  const reranked = rerankDryShampooProductsWithEngine({
+    candidates: [
+      createMatchedProduct("spray", "Dry Shampoo", { combined_score: 0.95 }),
+      createMatchedProduct("foam", "Dry Shampoo", { combined_score: 0.7 }),
+    ],
+    specs: [
+      {
+        product_id: "spray",
+        primary_effect: "classic_refresh",
+        hair_color_fit: "universal",
+        scalp_sensitivity_fit: "normal_only",
+        format: "aerosol_spray",
+      },
+      {
+        product_id: "foam",
+        primary_effect: "classic_refresh",
+        hair_color_fit: "universal",
+        scalp_sensitivity_fit: "normal_only",
+        format: "foam_or_liquid",
+      },
+    ],
+    decision,
+  })
+
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["foam"],
   )
 })
 
@@ -1855,7 +1914,12 @@ test("engine dry shampoo reranking understands current live dry-shampoo spec fie
     planReasonCodes: [],
     currentInventory: null,
     targetProfile: {
-      scalpTypeFocus: "balanced",
+      primaryEffectTarget: "sensitive_refresh",
+      hairColorFitTarget: "universal",
+      requiresSensitiveFit: true,
+      preferredFormat: null,
+      bridgeNeedReasonCodes: ["dry_shampoo_emergency_refresh"],
+      cautionReasonCodes: [],
     },
     notes: [],
   }
@@ -1891,8 +1955,8 @@ test("engine dry shampoo reranking understands current live dry-shampoo spec fie
   assert.equal(reranked[0]?.id, "sensitive")
   assert.equal(
     (reranked[0]?.recommendation_meta as DryShampooRecommendationMetadata | undefined)
-      ?.scalp_type_focus,
-    "balanced",
+      ?.scalp_sensitivity_fit,
+    "sensitive_ok",
   )
   assert.doesNotMatch(
     reranked[0]?.recommendation_meta?.top_reasons.join(" ") ?? "",

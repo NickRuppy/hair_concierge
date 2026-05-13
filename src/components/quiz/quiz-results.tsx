@@ -1,13 +1,16 @@
 "use client"
 
+import { useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
 import { buildQuizShareConfig } from "@/lib/quiz/share"
 import { useQuizStore } from "@/lib/quiz/store"
+import { isSubscriptionActive } from "@/lib/stripe/gating"
 import { useAuth } from "@/providers/auth-provider"
 import { posthog } from "@/providers/posthog-provider"
 import { useToast } from "@/providers/toast-provider"
+import { QuizResultOfferPage } from "./quiz-result-offer-page"
 import { QuizResultsView } from "./quiz-results-view"
 
 function getSafeReturnToPath(value: string | null): string | null {
@@ -27,22 +30,31 @@ function getSafeReturnToPath(value: string | null): string | null {
 export function QuizResults() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { user } = useAuth()
+  const { user, profile, loading } = useAuth()
   const { toast } = useToast()
   const { lead, answers, leadId, shareQuote, goNext } = useQuizStore()
+  const checkoutAnalyticsCapturedRef = useRef(false)
   const narrative = buildQuizResultNarrative(answers)
   const returnTo = searchParams.get("returnTo")
   const isRetakeMode = searchParams.get("mode") === "retake"
-  const canGoStraightToRoutine = Boolean(user && leadId)
+  const canGoStraightToRoutine = Boolean(user && leadId && isSubscriptionActive(profile))
+  const isCheckingSignedInSubscription = Boolean(user && leadId && (loading || profile === null))
   const cta = getQuizResultCta({ canGoStraightToRoutine })
 
-  const handleStart = () => {
+  const captureQuizCompleted = () => {
+    if (checkoutAnalyticsCapturedRef.current) return
+    checkoutAnalyticsCapturedRef.current = true
+
     posthog.capture("quiz_completed", {
       structure: answers.structure,
       thickness: answers.thickness,
       scalp_type: answers.scalp_type,
       scalp_condition: answers.scalp_condition,
     })
+  }
+
+  const handleStart = () => {
+    captureQuizCompleted()
 
     if (user && leadId) {
       const nextUrl = new URL("/onboarding", window.location.origin)
@@ -100,6 +112,31 @@ export function QuizResults() {
         description: "Teile den Link direkt aus deinem Browser.",
       })
     }
+  }
+
+  if (!canGoStraightToRoutine) {
+    if (isCheckingSignedInSubscription) {
+      return (
+        <div className="mx-auto flex min-h-[420px] w-full max-w-[520px] flex-col items-center justify-center px-5 text-center">
+          <div className="mb-4 size-10 animate-spin rounded-full border-2 border-[var(--brand-plum-ice)] border-t-[var(--brand-plum)]" />
+          <p className="font-header text-[24px] font-medium text-[var(--brand-plum-darkest)]">
+            Wir prüfen deinen Zugang
+          </p>
+          <p className="mt-2 max-w-[34ch] text-sm leading-relaxed text-muted-foreground">
+            Einen Moment bitte. Danach zeigen wir dir direkt den richtigen nächsten Schritt.
+          </p>
+        </div>
+      )
+    }
+
+    return (
+      <QuizResultOfferPage
+        name={lead.name}
+        narrative={narrative}
+        leadId={leadId}
+        onCheckoutOpen={captureQuizCompleted}
+      />
+    )
   }
 
   return (

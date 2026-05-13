@@ -516,11 +516,73 @@ function inferDirectProductCategoryFromMessage(
     /\b(?:haar)?kuren?\b/.test(normalized) ||
     /\b(?:protein|feuchtigkeits)masken?\b/.test(normalized)
   const mentionsOil = /\b(?:haar)?(?:oel\w*|ol(?:e|s|ig\w*)?)\b|\boils?\b/.test(normalized)
+  const mentionsDryShampoo =
+    /\btrockenshampoo\w*\b|\btrocken[-\s]*shampoo\w*\b|\bdry[-\s]*shampoo\w*\b/.test(normalized)
+  const normalizedWithoutDryShampooTerms = normalized.replace(
+    /\btrockenshampoo\w*\b|\btrocken[-\s]*shampoo\w*\b|\bdry[-\s]*shampoo\w*\b/g,
+    " ",
+  )
+  const mentionsGenericShampoo = /\bshampoos?\b/.test(normalizedWithoutDryShampooTerms)
   const mentionsOtherCategory =
     mentionsOil ||
-    /\bleave[-\s]?in\b|\bleavein\b|\bconditioner\b|\bsp(?:u|ue)lung\w*\b|\bshampoos?\b|\bbond\s*builder\w*\b|\bbondbuilder\w*\b|\bbond\s*repair\b|\bk18\b|\bkr18\b|\bolaplex\b|\bepres\b/.test(
+    mentionsGenericShampoo ||
+    /\bleave[-\s]?in\b|\bleavein\b|\bconditioner\b|\bsp(?:u|ue)lung\w*\b|\bbond\s*builder\w*\b|\bbondbuilder\w*\b|\bbond\s*repair\b|\bk18\b|\bkr18\b|\bolaplex\b|\bepres\b/.test(
+      normalizedWithoutDryShampooTerms,
+    )
+
+  const dryShampooBetweenWash =
+    /\btag\s*2\b|\bday\s*2\b|\bzweiter\s+tag\b|\bbetween[-\s]?wash\b|\bzwischen\s+(?:den\s+)?(?:waeschen|waschen)\b/.test(
       normalized,
     )
+  const dryShampooCannotWashToday =
+    /\b(?:kann|schaffe|geht)\b.{0,50}\b(?:heute|jetzt|gerade)\b.{0,50}\b(?:nicht\s+)?wasch\w*\b|\bkeine\s+zeit\b.{0,50}\bwasch\w*\b/.test(
+      normalized,
+    )
+  const dryShampooEmergency =
+    /\bnotfall\w*\b|\bemergency\b|\blast[-\s]?minute\b|\bkurzfristig\w*\b|\breise\w*\b|\bunterwegs\b/.test(
+      normalized,
+    )
+  const dryShampooSameDay = /\b(?:heute|jetzt|gerade)\b/.test(normalized)
+  const hasDryShampooBridgeContext =
+    mentionsDryShampoo || dryShampooBetweenWash || dryShampooCannotWashToday || dryShampooEmergency
+  const dryShampooRootRefreshPhrase =
+    /\bauffrisch\w*\b.{0,50}\bansatz\b|\bansatz\b.{0,50}\bauffrisch\w*\b/.test(normalized) ||
+    /\brefresh\w*\b.{0,50}\bansatz\b|\bansatz\b.{0,50}\brefresh\w*\b/.test(normalized)
+  const dryShampooRootRefresh =
+    (hasDryShampooBridgeContext || dryShampooSameDay) && dryShampooRootRefreshPhrase
+  const dryShampooGreasyRoot =
+    hasDryShampooBridgeContext &&
+    /\bansatz\b.{0,50}\b(?:fett\w*|nachfett\w*)\b|\b(?:fett\w*|nachfett\w*)\b.{0,50}\bansatz\b/.test(
+      normalized,
+    )
+  const dryShampooColorCast =
+    /\bweiss(?:er|e|en)?\s+schleier\b|\bwhite\s*cast\b|\bgrau(?:er|e|en)?\s+schleier\b/.test(
+      normalized,
+    )
+  const dryShampooFormatRequest =
+    (hasDryShampooBridgeContext || (dryShampooSameDay && dryShampooRootRefreshPhrase)) &&
+    /\bkein(?:e|en)?\s+(?:spray|aerosol)\b|\bohne\s+(?:spray|aerosol)\b|\bschaum\b|\bfoam\b|\bliquid\b|\bfluessig\w*\b|\bflussig\w*\b/.test(
+      normalized,
+    ) &&
+    /\bansatz\b|\bauffrisch\w*\b/.test(normalized)
+  const dryShampooVolumeBridge =
+    /\bvolumen\b|\bgrip\b|\bgriff\b|\btextur\w*\b|\bansatzvolumen\b/.test(normalized) &&
+    hasDryShampooBridgeContext &&
+    (/\bansatz\b/.test(normalized) || dryShampooBetweenWash)
+
+  if (
+    !mentionsOtherCategory &&
+    (mentionsDryShampoo ||
+      dryShampooBetweenWash ||
+      dryShampooCannotWashToday ||
+      dryShampooRootRefresh ||
+      dryShampooGreasyRoot ||
+      dryShampooColorCast ||
+      dryShampooFormatRequest ||
+      dryShampooVolumeBridge)
+  ) {
+    return "dry_shampoo"
+  }
 
   if (mentionsMask && !mentionsOtherCategory) {
     return "mask"
@@ -643,6 +705,26 @@ function isTroubleshootQuestionWithoutImmediateProductPick(
     /\b(?:macht|wirkt|fuhlt|fuehlt|ist|werden|wird)\b/.test(normalized)
 
   return describesTrouble && asksForReplacementAdvice && !explicitPick
+}
+
+function isDryShampooTroubleshootWithoutImmediateProductPick(
+  message: string,
+  userJob: AgentUserJob,
+  productCategory: SelectableProductCategory | null,
+): boolean {
+  if (userJob !== "troubleshoot" || productCategory !== "dry_shampoo") return false
+
+  const normalized = normalizeRouteMessage(message)
+  const explicitPick =
+    /\b(?:welch\w*|empfiehl\w*|empfehl\w*|nehmen|kaufen|passt|alternative)\b/.test(normalized)
+  if (explicitPick) return false
+
+  return (
+    /\btrockenshampoo\w*\b|\btrocken[-\s]*shampoo\w*\b|\bdry[-\s]*shampoo\w*\b/.test(normalized) &&
+    /\b(?:hat\s+nicht\s+geholfen|hilft\s+nicht|funktioniert\s+nicht|problem|trotzdem|macht|fuhlt|fuehlt|sieht|wirkt|belegt|klebrig|fettig)\b/.test(
+      normalized,
+    )
+  )
 }
 
 function isMaskTypeOrConceptQuestionWithoutImmediateProductPick(
@@ -774,6 +856,16 @@ function deriveToolPlan(params: {
 
       if (
         isTroubleshootQuestionWithoutImmediateProductPick(
+          params.message,
+          params.userJob,
+          params.productCategory,
+        )
+      ) {
+        return []
+      }
+
+      if (
+        isDryShampooTroubleshootWithoutImmediateProductPick(
           params.message,
           params.userJob,
           params.productCategory,

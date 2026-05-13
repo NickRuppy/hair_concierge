@@ -86,15 +86,11 @@ export function AuthForm({
     <div className="space-y-2">
       <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</div>
       {loginErrorIsCredentials && (
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={handleMagicLink}
-            disabled={loading !== null || !email.trim()}
-            className="flex-1 rounded-md border border-border bg-transparent px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-50"
-          >
-            {loading === "magic_link" ? "Wird gesendet..." : "Login-Link senden"}
-          </button>
+        <div className="space-y-2 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-3 text-left">
+          <p className="text-xs leading-5 text-destructive/90">
+            Du kannst unten einen Login-Link per E-Mail anfordern. Das funktioniert auch, wenn du
+            noch kein Passwort festgelegt hast.
+          </p>
           <button
             type="button"
             onClick={() => {
@@ -104,9 +100,9 @@ export function AuthForm({
               setMagicLinkError(null)
               setPassword("")
             }}
-            className="flex-1 rounded-md border border-border bg-transparent px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-accent"
+            className="w-full rounded-md border border-border bg-transparent px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Passwort zuruecksetzen
+            Passwort zuruecksetzen oder erstmals festlegen
           </button>
         </div>
       )}
@@ -148,7 +144,7 @@ export function AuthForm({
       const credentialsError = isInvalidCredentials(error.message)
       setError(
         credentialsError
-          ? "Login nicht moeglich. Falls du noch kein Passwort festgelegt hast, kannst du auch einen Login-Link anfordern oder dein Passwort zuruecksetzen."
+          ? "Anmeldung mit Passwort nicht moeglich. Das Passwort ist falsch oder fuer dieses Konto wurde noch kein Passwort festgelegt."
           : mapSupabaseError(error.message),
       )
       setLoginErrorIsCredentials(credentialsError)

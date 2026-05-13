@@ -52,6 +52,10 @@ import type {
   ProductBondRepairIntensity,
   ProductBondTreatmentMode,
   ProductBondUsageProtocol,
+  DryShampooFormat,
+  DryShampooHairColorFit,
+  DryShampooPrimaryEffect,
+  DryShampooScalpSensitivityFit,
   ProductPeelingType,
   ProductScalpTypeFocus,
 } from "@/lib/product-specs/constants"
@@ -451,11 +455,11 @@ export interface DeepCleansingShampooRecommendationMetadata extends BaseRecommen
 
 export interface DryShampooRecommendationMetadata extends BaseRecommendationMetadata {
   category: "dry_shampoo"
-  scalp_type_focus: Exclude<ProductScalpTypeFocus, "dry"> | null
-  primary_effect?: ProductDryShampooSpecs["primary_effect"] | null
-  hair_color_fit?: ProductDryShampooSpecs["hair_color_fit"] | null
-  scalp_sensitivity_fit?: ProductDryShampooSpecs["scalp_sensitivity_fit"] | null
-  product_format?: ProductDryShampooSpecs["format"] | null
+  primary_effect: DryShampooPrimaryEffect | null
+  hair_color_fit: DryShampooHairColorFit | null
+  scalp_sensitivity_fit: DryShampooScalpSensitivityFit | null
+  format: DryShampooFormat | null
+  fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
 }
 
 export interface PeelingRecommendationMetadata extends BaseRecommendationMetadata {

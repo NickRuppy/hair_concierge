@@ -13,6 +13,7 @@ import type { RecommendationEngineRuntime } from "../src/lib/recommendation-engi
 import type {
   BondbuilderCategoryDecision,
   DeepCleansingShampooCategoryDecision,
+  DryShampooCategoryDecision,
   MaskCategoryDecision,
   ShampooCategoryDecision,
 } from "../src/lib/recommendation-engine/types"
@@ -207,7 +208,11 @@ function createDryShampooMatchedProduct(
       tradeoffs: [],
       usage_hint:
         "Nur als Between-Wash-Bruecke sparsam am Ansatz einsetzen und spaeter auswaschen.",
-      scalp_type_focus: "balanced",
+      primary_effect: "classic_refresh",
+      hair_color_fit: "universal",
+      scalp_sensitivity_fit: "sensitive_ok",
+      format: "aerosol_spray",
+      fit_status: "ideal",
       ...metadataOverrides,
     },
   })
@@ -311,6 +316,36 @@ function createRelevantShampooDecision(
       shampooBucket: "dehydriert-fettig",
       secondaryBucket: null,
       cleansingIntensity: "regular",
+    },
+    notes: [],
+    ...overrides,
+  }
+}
+
+function createDryShampooRuntimeStub(
+  decision: DryShampooCategoryDecision,
+): RecommendationEngineRuntime {
+  const runtime = createRuntimeStub()
+  runtime.categories.dryShampoo = decision
+  return runtime
+}
+
+function createDryShampooDecision(
+  overrides: Partial<DryShampooCategoryDecision> = {},
+): DryShampooCategoryDecision {
+  return {
+    category: "dry_shampoo",
+    relevant: true,
+    action: "add",
+    planReasonCodes: ["dry_shampoo_bridge"],
+    currentInventory: null,
+    targetProfile: {
+      primaryEffectTarget: "classic_refresh",
+      hairColorFitTarget: "universal",
+      requiresSensitiveFit: false,
+      preferredFormat: null,
+      bridgeNeedReasonCodes: ["dry_shampoo_between_wash_bridge_needed"],
+      cautionReasonCodes: [],
     },
     notes: [],
     ...overrides,
@@ -1683,14 +1718,14 @@ test("projectSelectedProducts preserves unsupported active qualifiers for mask p
     value: "bleached",
     reason: "no_structured_product_data",
     user_message:
-      "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den belegten Fit-Daten.",
+      "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den sicheren Produktangaben.",
   })
   assert.deepEqual(result.unsupported_requested_signals[0], {
     field: "chemical_treatment",
     value: "bleached",
     reason: "no_structured_product_data",
     user_message:
-      "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den belegten Fit-Daten.",
+      "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den sicheren Produktangaben.",
   })
 })
 
@@ -1713,7 +1748,7 @@ test("projectSelectedProducts preserves unsupported active qualifiers without di
     value: "colored",
     reason: "no_structured_product_data",
     user_message:
-      "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den belegten Fit-Daten.",
+      "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den sicheren Produktangaben.",
   })
 })
 
@@ -2561,7 +2596,7 @@ test("projectSelectedProducts exposes per-product shampoo claims from structured
       [
         "chemical_treatment",
         "colored",
-        "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den belegten Fit-Daten.",
+        "Zum Farbschutz habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den sicheren Produktangaben.",
       ],
       [
         "scalp_condition",
@@ -2986,25 +3021,269 @@ test("projectSelectedProducts redirects deep-cleansing scalp treatment requests 
   assert.match(result.category_guidance, /Keine Produktkarten/)
 })
 
-test("selectProducts treats explicit dry-shampoo requests as engine-relevant", async () => {
-  const selectProducts = createSelectProductsTool({
-    runCategoryEngine: async ({ runtime }) => {
+test("projectSelectedProducts keeps dry-shampoo scalp symptoms guidance-only", () => {
+  const result = projectSelectedProducts(
+    [],
+    LOW_DAMAGE_PROFILE,
+    "dry_shampoo",
+    createDryShampooRuntimeStub(
+      createDryShampooDecision({
+        relevant: false,
+        action: null,
+        targetProfile: null,
+        notes: ["dry_shampoo_scalp_issue_hard_no"],
+      }),
+    ),
+  )
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "caution_without_products")
+  assert.deepEqual(result.products, [])
+  assert.match(result.category_guidance, /Trockenshampoo nicht als Produkt empfehlen/)
+  assert.match(result.category_guidance, /reinigt die Kopfhaut nicht/)
+})
+
+test("projectSelectedProducts redirects frequent dry-shampoo use to reset logic", () => {
+  const result = projectSelectedProducts(
+    [],
+    LOW_DAMAGE_PROFILE,
+    "dry_shampoo",
+    createDryShampooRuntimeStub(
+      createDryShampooDecision({
+        relevant: false,
+        action: null,
+        targetProfile: null,
+        notes: ["dry_shampoo_frequent_use_reset_needed"],
+      }),
+    ),
+  )
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+  assert.deepEqual(result.products, [])
+  assert.match(result.category_guidance, /Kein weiteres Trockenshampoo/)
+  assert.match(result.category_guidance, /Reset/)
+})
+
+test("projectSelectedProducts preserves no_catalog_match for relevant dry-shampoo requests", () => {
+  const result = projectSelectedProducts(
+    [],
+    LOW_DAMAGE_PROFILE,
+    "dry_shampoo",
+    createDryShampooRuntimeStub(createDryShampooDecision()),
+  )
+
+  assert.equal(result.decision, "no_catalog_match")
+  assert.equal(result.product_response_policy, "no_catalog_match")
+  assert.deepEqual(result.products, [])
+  assert.match(result.category_guidance, /Katalog/)
+  assert.match(result.category_guidance, /spaeter ausgewaschen/)
+})
+
+test("selectProducts passes explicit dry-shampoo bridge context into category engine", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "dry_shampoo")
       assert.equal(runtime.categories.dryShampoo.relevant, true)
-      assert.equal(runtime.categories.dryShampoo.targetProfile?.scalpTypeFocus, "balanced")
-      return [createDryShampooMatchedProduct("dry-1", 0.91)]
+      assert.ok(
+        runtime.categories.dryShampoo.targetProfile?.bridgeNeedReasonCodes.includes(
+          "dry_shampoo_emergency_refresh",
+        ),
+      )
+
+      return [
+        createMatchedProduct("dry-bridge", 0.91, {
+          category: "Trockenshampoo",
+          recommendation_meta: {
+            category: "dry_shampoo",
+            score: 91,
+            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Bruecke."],
+            tradeoffs: [],
+            usage_hint:
+              "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen.",
+            primary_effect: "classic_refresh",
+            hair_color_fit: "universal",
+            scalp_sensitivity_fit: "normal_only",
+            format: "aerosol_spray",
+            fit_status: "ideal",
+          },
+        }),
+      ]
     },
   })
 
-  const result = await selectProducts({
+  const result = await tool({
     category: "dry_shampoo",
-    message: "Mein Ansatz fettet am zweiten Tag schnell. Welches Trockenshampoo passt dann?",
+    message: "Ich kann heute nicht waschen, mein Ansatz ist fettig. Welches Trockenshampoo?",
     hairProfile: {
-      thickness: "normal",
+      ...LOW_DAMAGE_PROFILE,
+      scalp_type: "oily",
+      concerns: ["oily_scalp"],
+      wash_frequency: "every_2_3_days",
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+  })
+
+  assert.equal(result.decision, "recommended")
+  assert.equal(
+    result.products[0]?.supported_claims.some((claim) => claim.field === "usage_hint"),
+    false,
+  )
+  assert.match(result.category_guidance, /reinigt die Kopfhaut nicht/)
+  assert.match(result.category_guidance, /spaeter ausgewaschen/)
+})
+
+test("selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "dry_shampoo")
+      assert.equal(runtime.categories.dryShampoo.relevant, false)
+      assert.ok(
+        runtime.categories.dryShampoo.notes.includes("dry_shampoo_frequent_use_reset_needed"),
+      )
+
+      return [
+        createMatchedProduct("dry-frequent", 0.91, {
+          category: "Trockenshampoo",
+          recommendation_meta: {
+            category: "dry_shampoo",
+            score: 91,
+            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Bruecke."],
+            tradeoffs: [],
+            usage_hint:
+              "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen.",
+            primary_effect: "classic_refresh",
+            hair_color_fit: "universal",
+            scalp_sensitivity_fit: "normal_only",
+            format: "aerosol_spray",
+            fit_status: "ideal",
+          },
+        }),
+      ]
+    },
+  })
+
+  const result = await tool({
+    category: "dry_shampoo",
+    message: "Ich nutze Trockenshampoo 3-4x pro Woche, welches passt?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      scalp_type: "oily",
+      wash_frequency: "every_2_3_days",
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+  })
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+  assert.deepEqual(result.products, [])
+})
+
+test("selectProducts treats dry-shampoo routine need questions as guidance-only, not dry-hair hard-nos", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "dry_shampoo")
+      assert.equal(runtime.categories.dryShampoo.relevant, false)
+      assert.ok(!runtime.categories.dryShampoo.notes.includes("dry_shampoo_dry_breakage_hard_no"))
+
+      return [
+        createMatchedProduct("dry-routine", 0.91, {
+          category: "Trockenshampoo",
+          recommendation_meta: {
+            category: "dry_shampoo",
+            score: 91,
+            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Bruecke."],
+            tradeoffs: [],
+            usage_hint:
+              "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen.",
+            primary_effect: "classic_refresh",
+            hair_color_fit: "universal",
+            scalp_sensitivity_fit: "normal_only",
+            format: "aerosol_spray",
+            fit_status: "ideal",
+          },
+        }),
+      ]
+    },
+  })
+
+  const result = await tool({
+    category: "dry_shampoo",
+    message: "Sollte ich Trocken-Shampoo in meiner Routine aufnehmen?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
       scalp_type: "balanced",
       scalp_condition: null,
+      wash_frequency: "daily",
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    userJob: "compare_or_decide",
+    concerns: [],
+  })
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+  assert.deepEqual(result.products, [])
+  assert.match(result.category_guidance, /Routinebaustein/)
+})
+
+test("selectProducts does not treat oily-root product wording as a dry-shampoo bridge", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, runtime }) => {
+      assert.equal(category, "dry_shampoo")
+      assert.equal(runtime.categories.dryShampoo.relevant, false)
+      assert.ok(
+        runtime.categories.dryShampoo.notes.includes("dry_shampoo_oily_scalp_alone_not_enough"),
+      )
+
+      return [
+        createMatchedProduct("dry-oily-root", 0.91, {
+          category: "Trockenshampoo",
+          recommendation_meta: {
+            category: "dry_shampoo",
+            score: 91,
+            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Bruecke."],
+            tradeoffs: [],
+            usage_hint:
+              "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen.",
+            primary_effect: "classic_refresh",
+            hair_color_fit: "universal",
+            scalp_sensitivity_fit: "normal_only",
+            format: "aerosol_spray",
+            fit_status: "ideal",
+          },
+        }),
+      ]
+    },
+  })
+
+  const result = await tool({
+    category: "dry_shampoo",
+    message: "Mein Ansatz ist schnell fettig, welches Produkt passt?",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      scalp_type: "oily",
+      concerns: ["oily_scalp"],
       wash_frequency: "every_2_3_days",
-      concerns: [],
-    } as unknown as HairProfile,
+    } as HairProfile,
     memoryContext: {
       enabled: false,
       entries: [],
@@ -3016,9 +3295,9 @@ test("selectProducts treats explicit dry-shampoo requests as engine-relevant", a
     concerns: ["oily_roots"],
   })
 
-  assert.equal(result.decision, "recommended")
-  assert.equal(result.category, "dry_shampoo")
-  assert.equal(result.products[0]?.product_id, "dry-1")
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+  assert.deepEqual(result.products, [])
 })
 
 test("selectProducts tool only accepts engine-backed categories", () => {

@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef, useState, useCallback } from "react"
-import { useRouter } from "next/navigation"
 import posthog from "posthog-js"
 import { useToast } from "@/providers/toast-provider"
 import { createClient } from "@/lib/supabase/client"
@@ -94,6 +93,18 @@ const CATEGORY_SUBTITLES: Record<string, string> = {
   peeling: "Nutzt du ein Serum oder Scrub für deine Kopfhaut? Welches Produkt und wie oft?",
 }
 
+const SAVE_TIMEOUT_MS = 15_000
+const SAVE_TIMEOUT_MESSAGE =
+  "Speichern dauert zu lange. Bitte pruefe deine Verbindung und versuche es erneut."
+const SAVE_ERROR_MESSAGE = "Fehler beim Speichern. Bitte versuche es erneut."
+
+class SaveTimeoutError extends Error {
+  constructor() {
+    super(SAVE_TIMEOUT_MESSAGE)
+    this.name = "SaveTimeoutError"
+  }
+}
+
 /* ── Props ── */
 
 interface OnboardingFlowProps {
@@ -105,6 +116,7 @@ interface OnboardingFlowProps {
   editScope?: OnboardingEditScope | null
   singleStepEdit?: boolean
   initialDrilldownCategory?: string | null
+  allowCompletionFallback?: boolean
 }
 
 type OnboardingStateSnapshot = ReturnType<typeof useOnboardingStore.getState>
@@ -178,8 +190,8 @@ export function OnboardingFlow({
   editScope = null,
   singleStepEdit = false,
   initialDrilldownCategory = null,
+  allowCompletionFallback = false,
 }: OnboardingFlowProps) {
-  const router = useRouter()
   const { toast } = useToast()
   const store = useOnboardingStore()
   const [hydrated, setHydrated] = useState(false)
@@ -291,15 +303,16 @@ export function OnboardingFlow({
   // ── Per-step save helpers ──
 
   const saveProductUsage = useCallback(
-    async (categories: string[]) => {
+    async (categories: string[], signal?: AbortSignal) => {
       const supabase = createClient()
       const drilldowns = useOnboardingStore.getState().productDrilldowns
 
       // Get existing rows
-      const { data: existing, error: existingError } = await supabase
+      const existingQuery = supabase
         .from("user_product_usage")
         .select("id, category")
         .eq("user_id", userId)
+      const { data: existing, error: existingError } = await withAbortSignal(existingQuery, signal)
 
       if (existingError) throw existingError
 
@@ -321,13 +334,15 @@ export function OnboardingFlow({
         }
 
         if (existingMap.has(cat)) {
-          const { error: updateError } = await supabase
+          const updateQuery = supabase
             .from("user_product_usage")
             .update(payload)
             .eq("id", existingMap.get(cat))
+          const { error: updateError } = await withAbortSignal(updateQuery, signal)
           if (updateError) throw updateError
         } else {
-          const { error: insertError } = await supabase.from("user_product_usage").insert(payload)
+          const insertQuery = supabase.from("user_product_usage").insert(payload)
+          const { error: insertError } = await withAbortSignal(insertQuery, signal)
           if (insertError) throw insertError
         }
       }
@@ -338,10 +353,8 @@ export function OnboardingFlow({
         .map((r: Record<string, unknown>) => r.id as string)
 
       if (toDelete.length > 0) {
-        const { error: deleteError } = await supabase
-          .from("user_product_usage")
-          .delete()
-          .in("id", toDelete)
+        const deleteQuery = supabase.from("user_product_usage").delete().in("id", toDelete)
+        const { error: deleteError } = await withAbortSignal(deleteQuery, signal)
         if (deleteError) throw deleteError
       }
     },
@@ -349,17 +362,17 @@ export function OnboardingFlow({
   )
 
   const saveHairProfile = useCallback(
-    async (fields: Record<string, unknown>) => {
+    async (fields: Record<string, unknown>, signal?: AbortSignal) => {
       const supabase = createClient()
       const payload = { user_id: userId, ...fields }
-      const { error } = await supabase
-        .from("hair_profiles")
-        .upsert(payload, { onConflict: "user_id" })
+      const upsertQuery = supabase.from("hair_profiles").upsert(payload, { onConflict: "user_id" })
+      const { error } = await withAbortSignal(upsertQuery, signal)
 
       if (error && error.code === "22P02" && typeof fields.drying_method === "string") {
-        const { error: retryError } = await supabase
+        const retryQuery = supabase
           .from("hair_profiles")
           .upsert({ ...payload, drying_method: [fields.drying_method] }, { onConflict: "user_id" })
+        const { error: retryError } = await withAbortSignal(retryQuery, signal)
 
         if (!retryError) return
         throw retryError
@@ -390,7 +403,7 @@ export function OnboardingFlow({
           case "products_basics":
           case "products_extras": {
             const allProducts = [...state.selectedBasicProducts, ...state.selectedExtraProducts]
-            await saveProductUsage(allProducts)
+            await withSaveTimeout((signal) => saveProductUsage(allProducts, signal))
             break
           }
 
@@ -486,15 +499,25 @@ export function OnboardingFlow({
           }
 
           case "night_protection": {
-            await saveHairProfile({
-              night_protection: state.nightProtection,
-            })
-            const { error: onboardingCompletedError } = await supabase
-              .from("profiles")
-              .update({ onboarding_completed: true })
-              .eq("id", userId)
+            await withSaveTimeout(async (signal) => {
+              await saveHairProfile(
+                {
+                  night_protection: state.nightProtection,
+                },
+                signal,
+              )
 
-            if (onboardingCompletedError) throw onboardingCompletedError
+              const completionQuery = supabase
+                .from("profiles")
+                .update({ onboarding_completed: true, onboarding_step: "celebration" })
+                .eq("id", userId)
+              const { error: onboardingCompletedError } = await withAbortSignal(
+                completionQuery,
+                signal,
+              )
+
+              if (onboardingCompletedError) throw onboardingCompletedError
+            })
 
             if (!returnTo) {
               posthog.capture("onboarding_completed", { userId })
@@ -505,7 +528,15 @@ export function OnboardingFlow({
           case "celebration": {
             const { error: completionPopupError } = await supabase
               .from("profiles")
-              .update({ has_seen_completion_popup: true })
+              .update({
+                has_seen_completion_popup: true,
+                ...(allowCompletionFallback
+                  ? {
+                      onboarding_completed: true,
+                      onboarding_step: "celebration",
+                    }
+                  : {}),
+              })
               .eq("id", userId)
 
             if (completionPopupError) throw completionPopupError
@@ -513,7 +544,7 @@ export function OnboardingFlow({
               window.location.assign(returnTo)
               return
             }
-            router.push("/chat")
+            window.location.assign("/chat")
             return // Don't advance step
           }
         }
@@ -543,7 +574,7 @@ export function OnboardingFlow({
         }, 50)
       } catch (err) {
         console.error("Failed to save onboarding step:", err)
-        toast({ title: "Fehler beim Speichern. Bitte versuche es erneut.", variant: "destructive" })
+        toast({ title: userFacingSaveError(err), variant: "destructive" })
       } finally {
         savingStepsRef.current.delete(completedStep)
         setSavingStep(null)
@@ -551,7 +582,6 @@ export function OnboardingFlow({
     },
     [
       userId,
-      router,
       toast,
       saveProductUsage,
       saveHairProfile,
@@ -559,6 +589,7 @@ export function OnboardingFlow({
       returnTo,
       editScope,
       singleStepEdit,
+      allowCompletionFallback,
     ],
   )
 
@@ -898,4 +929,30 @@ export function OnboardingFlow({
       {renderScreen()}
     </div>
   )
+}
+
+function withAbortSignal<T>(query: T, signal?: AbortSignal): T {
+  if (!signal) return query
+  return (query as { abortSignal: (signal: AbortSignal) => T }).abortSignal(signal)
+}
+
+function withSaveTimeout<T>(operation: (signal: AbortSignal) => Promise<T>): Promise<T> {
+  const controller = new AbortController()
+  let timeout: ReturnType<typeof setTimeout> | undefined
+
+  return Promise.race([
+    operation(controller.signal),
+    new Promise<never>((_, reject) => {
+      timeout = setTimeout(() => {
+        controller.abort()
+        reject(new SaveTimeoutError())
+      }, SAVE_TIMEOUT_MS)
+    }),
+  ]).finally(() => {
+    if (timeout) clearTimeout(timeout)
+  })
+}
+
+function userFacingSaveError(err: unknown): string {
+  return err instanceof SaveTimeoutError ? SAVE_TIMEOUT_MESSAGE : SAVE_ERROR_MESSAGE
 }

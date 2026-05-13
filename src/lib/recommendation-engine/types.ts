@@ -23,6 +23,11 @@ import type { ShampooBucket } from "@/lib/shampoo/constants"
 import type { OilNoRecommendationReason, OilPurpose, OilSubtype } from "@/lib/oil/constants"
 import type { LeaveInFormat } from "@/lib/leave-in/constants"
 import type {
+  DryShampooFormat,
+  DryShampooHairColorFit,
+  DryShampooPrimaryEffect,
+} from "@/lib/product-specs/constants"
+import type {
   BALANCE_DIRECTIONS,
   BOND_APPLICATION_MODES,
   BOND_BUILDER_PRIORITIES,
@@ -89,6 +94,13 @@ export interface RecommendationRequestContext {
   leaveInRequestedFormats: LeaveInFormat[]
   oilPurpose: OilPurpose | null
   oilNoRecommendationReason: OilNoRecommendationReason | null
+  dryShampooBridgeNeedReasonCodes?: string[]
+  dryShampooCautionReasonCodes?: string[]
+  dryShampooPrimaryEffectRequest?: DryShampooPrimaryEffect | null
+  dryShampooHairColorFitRequest?: DryShampooHairColorFit | null
+  dryShampooRequiresSensitiveFit?: boolean
+  dryShampooPreferredFormat?: DryShampooFormat | null
+  dryShampooAvoidAerosol?: boolean
 }
 
 export interface RawRoutineInventoryItem {
@@ -335,7 +347,12 @@ export type DeepCleansingShampooCategoryDecision = CategoryDecisionBase<
 >
 
 export interface DryShampooTargetProfile {
-  scalpTypeFocus: Exclude<ScalpTypeFocus, "dry"> | null
+  primaryEffectTarget: DryShampooPrimaryEffect
+  hairColorFitTarget: DryShampooHairColorFit
+  requiresSensitiveFit: boolean
+  preferredFormat: DryShampooFormat | null
+  bridgeNeedReasonCodes: string[]
+  cautionReasonCodes: string[]
 }
 
 export type DryShampooCategoryDecision = CategoryDecisionBase<

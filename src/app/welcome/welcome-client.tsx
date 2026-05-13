@@ -1,69 +1,105 @@
 "use client"
 
 import { CheckCircle, Mail } from "lucide-react"
-import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useState, type FormEvent } from "react"
+import { PasswordPolicyChecklist } from "@/components/auth/password-policy-checklist"
+import { Input } from "@/components/ui/input"
+import { validatePasswordDraft } from "@/lib/auth/password-policy"
+import { createClient } from "@/lib/supabase/client"
 
 interface WelcomeClientProps {
   email: string
   sessionId: string
 }
 
-type ScreenState =
-  | { view: "choice" }
-  | { view: "sent"; mode: "password" | "magic_link" }
-  | { view: "error"; message: string }
+type LoadingState = "password" | "magic_link" | null
+type ScreenState = { view: "choice" } | { view: "sent" }
+
+const SIGN_IN_AFTER_PASSWORD_ERROR =
+  "Passwort wurde erstellt, aber die Anmeldung hat nicht geklappt. Bitte melde dich mit deiner E-Mail und deinem Passwort an."
+const NETWORK_ERROR =
+  "Verbindung fehlgeschlagen. Bitte prüfe deine Internet-Verbindung und versuche es erneut."
+const UNKNOWN_ERROR = "Unbekannter Fehler"
+const MAGIC_LINK_BODY =
+  "Wir senden dir einen sicheren Login-Link. Du klickst ihn im Postfach an und bist direkt angemeldet."
 
 export function WelcomeClient({ email, sessionId }: WelcomeClientProps) {
-  const [state, setState] = useState<ScreenState>({ view: "choice" })
-  const [loading, setLoading] = useState<"password" | "magic_link" | null>(null)
+  const router = useRouter()
+  const supabase = createClient()
 
-  async function handleSetupPassword() {
+  const [state, setState] = useState<ScreenState>({ view: "choice" })
+  const [loading, setLoading] = useState<LoadingState>(null)
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [message, setMessage] = useState<string | null>(null)
+  const [highlightMagicLink, setHighlightMagicLink] = useState(false)
+
+  async function handleCreatePassword(e: FormEvent) {
+    e.preventDefault()
+    setMessage(null)
+    setHighlightMagicLink(false)
+
+    const validation = validatePasswordDraft(password, confirmPassword)
+    if (!validation.ok) {
+      setMessage(validation.message)
+      return
+    }
+
     setLoading("password")
     try {
-      const res = await fetch("/api/auth/send-setup-link", {
+      const res = await fetch("/api/auth/set-checkout-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, session_id: sessionId }),
+        body: JSON.stringify({ session_id: sessionId, password }),
       })
+      const body = await res.json().catch(() => ({}))
+
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
-        throw new Error(body.error ?? "Unbekannter Fehler")
+        const errorMessage = typeof body.error === "string" ? body.error : UNKNOWN_ERROR
+        if (res.status === 409 || errorMessage.includes("Login-Link")) {
+          setHighlightMagicLink(true)
+        }
+        throw new Error(errorMessage)
       }
-      setState({ view: "sent", mode: "password" })
+
+      const signInEmail = typeof body.email === "string" ? body.email : email
+      const { error } = await supabase.auth.signInWithPassword({
+        email: signInEmail,
+        password,
+      })
+
+      if (error) {
+        setMessage(SIGN_IN_AFTER_PASSWORD_ERROR)
+        return
+      }
+
+      router.replace("/onboarding")
     } catch (err) {
-      const message =
-        err instanceof TypeError && err.message.toLowerCase().includes("fetch")
-          ? "Verbindung fehlgeschlagen. Bitte prüfe deine Internet-Verbindung und versuche es erneut."
-          : err instanceof Error
-            ? err.message
-            : "Unbekannter Fehler"
-      setState({ view: "error", message })
+      setMessage(normalizeError(err))
     } finally {
       setLoading(null)
     }
   }
 
   async function handleMagicLink() {
+    setMessage(null)
+    setHighlightMagicLink(false)
     setLoading("magic_link")
+
     try {
       const res = await fetch("/api/auth/send-magic-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, session_id: sessionId }),
+        body: JSON.stringify({ session_id: sessionId }),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
-        throw new Error(body.error ?? "Unbekannter Fehler")
+        throw new Error(typeof body.error === "string" ? body.error : UNKNOWN_ERROR)
       }
-      setState({ view: "sent", mode: "magic_link" })
+      setState({ view: "sent" })
     } catch (err) {
-      const message =
-        err instanceof TypeError && err.message.toLowerCase().includes("fetch")
-          ? "Verbindung fehlgeschlagen. Bitte prüfe deine Internet-Verbindung und versuche es erneut."
-          : err instanceof Error
-            ? err.message
-            : "Unbekannter Fehler"
-      setState({ view: "error", message })
+      setMessage(normalizeError(err))
     } finally {
       setLoading(null)
     }
@@ -71,88 +107,150 @@ export function WelcomeClient({ email, sessionId }: WelcomeClientProps) {
 
   if (state.view === "sent") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
         <div className="w-full max-w-md space-y-6 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Mail className="h-6 w-6 text-primary" />
           </div>
           <h1 className="font-header text-3xl">Check deine E-Mails</h1>
           <p className="text-base text-muted-foreground">
-            {state.mode === "password"
-              ? "Wir haben dir einen Link geschickt, um dein Passwort einzurichten."
-              : "Wir haben dir einen Login-Link geschickt."}
+            Wir haben dir einen Login-Link geschickt.
           </p>
           <p className="text-xs text-muted-foreground">
-            Keine E-Mail erhalten? Pruefe deinen Spam-Ordner oder warte 1–2 Minuten.
+            Keine E-Mail erhalten? Prüfe deinen Spam-Ordner oder warte 1-2 Minuten.
           </p>
         </div>
       </main>
     )
   }
 
-  if (state.view === "error") {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
-        <div className="w-full max-w-md space-y-6 text-center">
-          <h1 className="font-header text-3xl">Zahlung erfolgreich</h1>
-          <div className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            {state.message}
-          </div>
-          <button
-            onClick={() => setState({ view: "choice" })}
-            className="text-sm text-primary hover:underline"
-          >
-            Zurueck
-          </button>
-        </div>
-      </main>
-    )
-  }
-
-  // Choice screen
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
-      <div className="w-full max-w-md space-y-6">
-        <div className="text-center space-y-3">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-8">
+      <div className="w-full max-w-4xl space-y-6">
+        <div className="space-y-4 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
             <CheckCircle className="h-6 w-6 text-green-600" />
           </div>
-          <h1 className="font-header text-3xl">Zahlung erfolgreich</h1>
-          <p className="text-base text-muted-foreground">
-            Wie moechtest du dich in Zukunft anmelden?
-          </p>
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-primary">Zahlung erfolgreich</p>
+            <h1 className="font-header text-3xl text-foreground sm:text-4xl">Konto aktivieren</h1>
+            <p className="text-base text-muted-foreground">
+              Wähle, wie du dich bei Hair Concierge anmelden möchtest.
+            </p>
+          </div>
         </div>
 
-        <div className="space-y-3">
-          {/* Primary: set up password */}
-          <div className="rounded-xl border bg-card p-5 shadow-sm space-y-3">
-            <button
-              onClick={handleSetupPassword}
-              disabled={loading !== null}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
-            >
-              {loading === "password" ? "Wird gesendet..." : "Passwort festlegen"}
-            </button>
-            <p className="text-xs text-muted-foreground text-center">
-              Du erhaeltst eine E-Mail, um dein Passwort einzurichten.
-            </p>
-          </div>
+        <div className="mx-auto w-full max-w-md space-y-2">
+          <label htmlFor="checkout-email" className="text-sm font-medium text-foreground">
+            E-Mail aus deinem Checkout
+          </label>
+          <Input
+            id="checkout-email"
+            value={email}
+            readOnly
+            aria-readonly="true"
+            className="h-11 bg-muted/60 text-center"
+          />
+        </div>
 
-          {/* Secondary: magic link */}
-          <div className="rounded-xl border bg-card p-5 shadow-sm space-y-3">
-            <button
-              onClick={handleMagicLink}
-              disabled={loading !== null}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-transparent px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-50"
-            >
-              {loading === "magic_link" ? "Wird gesendet..." : "Login-Link zuschicken"}
-            </button>
-            <p className="text-xs text-muted-foreground text-center">
-              Einmaliger Link zum Anmelden ohne Passwort.
-            </p>
+        {message && (
+          <div className="mx-auto w-full max-w-2xl rounded-lg bg-destructive/10 px-4 py-3 text-center text-sm text-destructive">
+            {message}
           </div>
+        )}
+
+        <div className="grid gap-4 md:grid-cols-2 md:items-stretch">
+          <section className="flex min-h-[360px] flex-col rounded-lg border bg-card p-5 shadow-sm">
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-foreground">Mit Passwort fortfahren</h2>
+              <p className="min-h-[72px] text-sm leading-6 text-muted-foreground">
+                Erstelle ein Passwort und melde dich künftig direkt mit deiner E-Mail an.
+              </p>
+            </div>
+
+            <form onSubmit={handleCreatePassword} className="mt-5 flex flex-1 flex-col">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="password" className="text-sm font-medium text-foreground">
+                    Passwort
+                  </label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    disabled={loading !== null}
+                    minLength={8}
+                    required
+                    autoComplete="new-password"
+                    className="h-11"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="confirm-password" className="text-sm font-medium text-foreground">
+                    Passwort wiederholen
+                  </label>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(event) => setConfirmPassword(event.target.value)}
+                    disabled={loading !== null}
+                    minLength={8}
+                    required
+                    autoComplete="new-password"
+                    className="h-11"
+                  />
+                </div>
+                <PasswordPolicyChecklist
+                  password={password}
+                  confirmPassword={confirmPassword}
+                  context="create"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading !== null || !password || !confirmPassword}
+                className="mt-auto inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-primary bg-transparent px-6 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary/10 disabled:opacity-50"
+              >
+                {loading === "password" ? "Wird erstellt..." : "Passwort erstellen"}
+              </button>
+            </form>
+          </section>
+
+          <section
+            className={[
+              "flex min-h-[360px] flex-col rounded-lg border bg-card p-5 shadow-sm transition-colors",
+              highlightMagicLink ? "border-primary bg-primary/5" : "",
+            ].join(" ")}
+          >
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-foreground">Ohne Passwort fortfahren</h2>
+              <p className="min-h-[72px] text-sm leading-6 text-muted-foreground">
+                {MAGIC_LINK_BODY}
+              </p>
+            </div>
+
+            <div className="mt-5 flex flex-1 flex-col justify-end">
+              <button
+                type="button"
+                onClick={handleMagicLink}
+                disabled={loading !== null}
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-primary bg-transparent px-6 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary/10 disabled:opacity-50"
+              >
+                {loading === "magic_link" ? "Wird gesendet..." : "Login-Link senden"}
+              </button>
+            </div>
+          </section>
         </div>
       </div>
     </main>
   )
+}
+
+function normalizeError(err: unknown): string {
+  if (err instanceof TypeError && err.message.toLowerCase().includes("fetch")) return NETWORK_ERROR
+  if (err instanceof Error) return err.message
+  return UNKNOWN_ERROR
 }

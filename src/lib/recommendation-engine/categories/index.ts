@@ -49,8 +49,8 @@ export function buildCategoryRecommendationSet(
       requestContext,
       resetAssessment,
     ),
-    dryShampoo: buildDryShampooCategoryDecision(profile, plan, requestContext),
     peeling: buildPeelingCategoryDecision(profile, damage, plan, requestContext),
+    dryShampoo: buildDryShampooCategoryDecision(profile, plan, requestContext, resetAssessment),
   }
 }
 

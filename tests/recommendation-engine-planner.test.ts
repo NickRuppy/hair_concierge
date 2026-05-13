@@ -6,6 +6,7 @@ import { buildDamageAssessment } from "../src/lib/recommendation-engine/assessme
 import { adaptRecommendationInputFromPersistence } from "../src/lib/recommendation-engine/adapters/from-persistence"
 import { normalizeRecommendationInput } from "../src/lib/recommendation-engine/normalize"
 import { buildInterventionPlan } from "../src/lib/recommendation-engine/planner/intervention"
+import { buildRecommendationRequestContext } from "../src/lib/recommendation-engine/request-context"
 import {
   LOW_DAMAGE_PROFILE,
   SEVERE_DAMAGE_PROFILE,
@@ -133,13 +134,9 @@ test("planner activates reset-family categories for oily buildup-prone routines"
         step.reasonCodes.includes("buildup_reset_need_present"),
     ),
   )
-  assert.ok(
-    plan.steps.some(
-      (step) =>
-        step.category === "dry_shampoo" &&
-        step.action === "add" &&
-        step.reasonCodes.includes("between_wash_bridge_needed"),
-    ),
+  assert.equal(
+    plan.steps.some((step) => step.category === "dry_shampoo"),
+    false,
   )
   assert.ok(
     plan.steps.some(
@@ -147,6 +144,35 @@ test("planner activates reset-family categories for oily buildup-prone routines"
         step.category === "peeling" &&
         step.action === "add" &&
         step.reasonCodes.includes("buildup_reset_need_present"),
+    ),
+  )
+})
+
+test("planner adds dry shampoo only for explicit between-wash bridge requests", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      scalp_type: "oily",
+      concerns: ["oily_scalp"],
+      wash_frequency: "every_2_3_days",
+    },
+    [],
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+  const damage = buildDamageAssessment(normalized)
+  const careNeeds = buildCareNeedAssessment(normalized, damage)
+  const context = buildRecommendationRequestContext({
+    requestedCategory: "dry_shampoo",
+    message: "Ich kann heute nicht waschen, mein Ansatz ist fettig. Welches Trockenshampoo?",
+  })
+  const plan = buildInterventionPlan(normalized, damage, careNeeds, undefined, context)
+
+  assert.ok(
+    plan.steps.some(
+      (step) =>
+        step.category === "dry_shampoo" &&
+        step.action === "add" &&
+        step.reasonCodes.includes("dry_shampoo_emergency_refresh"),
     ),
   )
 })

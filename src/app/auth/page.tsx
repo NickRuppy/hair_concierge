@@ -19,6 +19,10 @@ const REASON_COPY: Record<string, { heading: string; subtext: string }> = {
     heading: "Bis bald!",
     subtext: "Du wurdest erfolgreich abgemeldet.",
   },
+  password_updated: {
+    heading: "Passwort gespeichert",
+    subtext: "Dein Passwort wurde gespeichert. Bitte melde dich jetzt an.",
+  },
 }
 
 export default function AuthPage() {

@@ -183,10 +183,11 @@ function renderWithProductMentions(
 }
 
 /**
- * Recursively processes React children, replacing string segments that contain
- * [N] citation markers with CitationBadge components, then product mentions.
- * Also recurses into React elements (e.g. <strong>, <em>) so product names
- * inside bold/italic markdown formatting are still matched.
+ * Processes React children, replacing string segments that contain [N] citation
+ * markers with CitationBadge components, then product mentions.
+ * Custom markdown components call this at their own boundary, so React elements
+ * are left alone to avoid re-processing product mention buttons inside bold or
+ * italic text.
  */
 function processChildren(
   children: ReactNode,
@@ -208,21 +209,6 @@ function processChildren(
       }
       return processed
     })
-  }
-  // Recurse into React elements (e.g. <strong>, <em>, <a>)
-  if (children !== null && typeof children === "object" && "props" in children) {
-    const element = children as React.ReactElement<{ children?: ReactNode }>
-    if (element.props.children) {
-      const processed = processChildren(
-        element.props.children,
-        sourceMap,
-        productMap,
-        hairProfile,
-        onProductClick,
-      )
-      // Clone the element with processed children
-      return { ...element, props: { ...element.props, children: processed } }
-    }
   }
   return children
 }
