@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Compact Card + Intelligent Drawer</title>
+    <style>
+      :root {
+        --ink: #2f243d;
+        --muted: #756e7d;
+        --line: #e5e0e8;
+        --soft: #f4f0fa;
+        --purple: #7658b4;
+        --purple-dark: #33204f;
+        --shadow: 0 14px 34px rgba(49, 38, 63, 0.12);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #fbfaf8;
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.45;
+      }
+      main { width: min(1180px, calc(100vw - 40px)); margin: 34px auto 56px; }
+      h1, h2, h3, h4, p { margin: 0; }
+      .eyebrow { color: var(--purple); font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+      h1 { margin-top: 8px; font-size: clamp(32px, 4vw, 54px); line-height: 1.04; }
+      .lead { max-width: 900px; margin-top: 10px; color: var(--muted); font-size: 18px; }
+      .context { margin-top: 26px; display: grid; gap: 14px; }
+      .question, .answer {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #fff;
+        padding: 18px 20px;
+        box-shadow: 0 8px 24px rgba(49, 38, 63, .05);
+      }
+      .question { justify-self: end; max-width: 760px; }
+      .answer { max-width: 990px; background: #f1edf8; }
+      .label { margin-bottom: 8px; color: var(--muted); font-size: 13px; font-weight: 780; letter-spacing: .03em; text-transform: uppercase; }
+      .answer-text { display: grid; gap: 9px; color: #403946; font-size: 16px; }
+      .answer-text strong { color: var(--purple); }
+      .section-title { margin: 38px 0 16px; display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+      h2 { font-size: 25px; }
+      .section-title p { max-width: 700px; color: var(--muted); }
+      .mock-grid { display: grid; grid-template-columns: minmax(320px, .88fr) minmax(460px, 1.12fr); gap: 18px; align-items: start; }
+      .panel { border: 1px solid var(--line); border-radius: 24px; background: #fff; overflow: hidden; box-shadow: 0 8px 24px rgba(49,38,63,.05); }
+      .panel-head { padding: 18px; border-bottom: 1px solid var(--line); }
+      .panel-head h3 { margin-top: 6px; font-size: 19px; }
+      .panel-head p:last-child { margin-top: 8px; color: var(--muted); font-size: 14px; }
+      .kicker { color: var(--purple); font-size: 12px; font-weight: 820; letter-spacing: .05em; text-transform: uppercase; }
+      .panel-body, .drawer-body { display: grid; gap: 16px; padding: 16px; }
+      .product-card {
+        display: grid;
+        grid-template-columns: 58px minmax(0, 1fr) auto;
+        gap: 14px;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: #fff;
+        padding: 14px;
+        box-shadow: 0 8px 22px rgba(49,38,63,.05);
+      }
+      .product-card::after { content: "›"; color: var(--muted); font-size: 28px; line-height: 1; }
+      .icon { width: 58px; height: 58px; border-radius: 16px; display: grid; place-items: center; color: var(--purple); background: var(--soft); }
+      .icon svg { width: 28px; height: 28px; }
+      .name, .drawer-title { color: #26163f; font-weight: 840; line-height: 1.18; }
+      .brand, .drawer-brand { margin-top: 2px; color: var(--muted); font-size: 14px; }
+      .pills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 9px; }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 25px;
+        border: 1px solid #ded5e8;
+        border-radius: 999px;
+        background: #f8f5fb;
+        color: #3b285e;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 760;
+      }
+      .drawer { border: 1px solid var(--line); border-radius: 28px; background: #fff; overflow: hidden; box-shadow: var(--shadow); }
+      .drawer-header { display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 16px; align-items: center; padding: 20px; border-bottom: 1px solid var(--line); }
+      .drawer-title { margin-top: 2px; font-size: 22px; }
+      .drawer-section h4 { margin-bottom: 10px; color: #554c60; font-size: 13px; font-weight: 820; letter-spacing: .04em; text-transform: uppercase; }
+      .why-box { display: grid; gap: 12px; border-radius: 16px; background: #f2edf9; padding: 15px; }
+      .why-box p { color: #443653; font-size: 15px; }
+      .fact-row {
+        display: grid;
+        grid-template-columns: minmax(122px, .38fr) minmax(0, 1fr);
+        gap: 10px;
+        border-radius: 12px;
+        background: #f8f6fa;
+        padding: 10px 11px;
+      }
+      .fact-row span:first-child { color: var(--muted); font-weight: 760; }
+      .fact-row span:last-child { color: #382b49; font-weight: 720; }
+      .copy { color: var(--muted); font-size: 15px; }
+      .facts { display: grid; gap: 8px; }
+      .drawer-footer { display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 16px; }
+      .buy-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+      .drawer-price { color: var(--purple); font-size: 23px; font-weight: 840; }
+      .buy { border: 0; border-radius: 12px; background: var(--purple); color: #fff; padding: 11px 16px; font: inherit; font-weight: 780; }
+      .disclosure { color: var(--muted); font-size: 12px; }
+      @media (max-width: 860px) {
+        main { width: min(100vw - 24px, 620px); margin-top: 18px; }
+        .mock-grid, .section-title { display: grid; }
+        .product-card { grid-template-columns: 52px minmax(0, 1fr) auto; }
+        .fact-row { grid-template-columns: 1fr; gap: 2px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Revised Direction</p>
+      <h1>Quiet Compact Card, Intelligent Drawer</h1>
+      <p class="lead">
+        Compact card stays clean: no price, no sentence. The drawer carries the high-context recommendation logic and explains how product facts transfer to the user profile.
+      </p>
+
+      <section class="context" aria-label="Chat Kontext">
+        <div class="question">
+          <p class="label">Nutzerfrage</p>
+          <p>Welches Leave-in passt, wenn ich mein feines Haar regelmäßig mit Hitze style und mehr Glanz möchte?</p>
+        </div>
+        <div class="answer">
+          <p class="label">Antwort-Kontext</p>
+          <div class="answer-text">
+            <p>Für dein Haarprofil mit feinem Haar, regelmäßigem Hitzestyling und dem Ziel von mehr Glanz würde ich ein leichtes Leave-in mit Hitzeschutz wählen.</p>
+            <p><strong>Wella Ultimate Repair Leave-In:</strong> eine Lotion mit mittlerem Gewicht, ausgewogener Pflege und Hitzeschutz.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-title">
+        <h2>Zielzustand</h2>
+        <p>Die Karte ist nur ein ruhiger Produktsprung. Die eigentliche Concierge-Erklärung sitzt im Drawer.</p>
+      </div>
+
+      <section class="mock-grid" aria-label="Compact Card und Drawer">
+        <article class="panel">
+          <div class="panel-head">
+            <p class="kicker">Compact Card</p>
+            <h3>Nur Identität + Produktfacts</h3>
+            <p>Kein Preis, kein Satz. Nur scannbare Fakten und ein klares Tap-Affordance.</p>
+          </div>
+          <div class="panel-body">
+            <div class="product-card">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M4 12c4-7 12-7 16 0" />
+                  <path d="M6 14c3-4 9-4 12 0" />
+                  <path d="M9 17c1.5-1.5 4.5-1.5 6 0" />
+                </svg>
+              </div>
+              <div>
+                <p class="name">Wella Ultimate Repair Leave-In</p>
+                <p class="brand">Wella</p>
+                <div class="pills">
+                  <span class="pill">Lotion</span>
+                  <span class="pill">Hitzeschutz</span>
+                  <span class="pill">Pflege: ausgewogen</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <p class="kicker">Drawer</p>
+            <h3>Intelligente Passung</h3>
+            <p>Der Drawer erklärt die Verbindung zwischen deinem Profil, deinem Ziel und dem Produkt.</p>
+          </div>
+          <div class="panel-body">
+            <div class="drawer">
+              <div class="drawer-header">
+                <div class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M4 12c4-7 12-7 16 0" />
+                    <path d="M6 14c3-4 9-4 12 0" />
+                    <path d="M9 17c1.5-1.5 4.5-1.5 6 0" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="drawer-brand">Wella</p>
+                  <p class="drawer-title">Wella Ultimate Repair Leave-In</p>
+                  <div class="pills"><span class="pill">Leave-in</span></div>
+                </div>
+              </div>
+
+              <div class="drawer-body">
+                <section class="drawer-section">
+                  <h4>Warum es passt</h4>
+                  <div class="why-box">
+                    <p>
+                      Du stylst regelmäßig mit Hitze und möchtest mehr Glanz, hast aber feines Haar,
+                      das schnell beschwert wirken kann. Diese Leave-in-Lotion passt als Booster
+                      nach dem Conditioner, weil sie Hitzeschutz mit ausgewogener Pflege verbindet,
+                      ohne in eine sehr reichhaltige Richtung zu gehen.
+                    </p>
+                  </div>
+                </section>
+
+                <section class="drawer-section">
+                  <h4>Anwendung</h4>
+                  <p class="copy">Sehr sparsam ins handtuchtrockene Haar geben und vor dem Föhnen oder Hitzestyling gleichmäßig in Längen und Spitzen verteilen. Bei feinem Haar lieber mit wenig Produkt starten und nur bei Bedarf nachlegen.</p>
+                </section>
+
+                <section class="drawer-section">
+                  <h4>Produktprofil</h4>
+                  <div class="facts">
+                    <div class="fact-row"><span>Textur/Form</span><span>Lotion</span></div>
+                    <div class="fact-row"><span>Gefühl</span><span>Mittel</span></div>
+                    <div class="fact-row"><span>Wirkung</span><span>Ausgewogene Pflege</span></div>
+                    <div class="fact-row"><span>Hitzeschutz</span><span>Ja</span></div>
+                    <div class="fact-row"><span>Rolle</span><span>Booster nach dem Conditioner</span></div>
+                  </div>
+                </section>
+
+                <div class="drawer-footer">
+                  <div class="buy-row">
+                    <p class="drawer-price">18,51 €</p>
+                    <button class="buy" type="button">Bei dm kaufen ↗</button>
+                  </div>
+                  <p class="disclosure">Anzeige: Der Kauflink kann ein Affiliate-Link sein.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

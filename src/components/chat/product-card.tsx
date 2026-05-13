@@ -1,3 +1,9 @@
+import { ChevronRight } from "lucide-react"
+
+import {
+  buildCompactProductFacts,
+  formatProductPrice,
+} from "@/components/chat/product-display-model"
 import type { Product } from "@/lib/types"
 import { Icon, type IconName } from "@/components/ui/icon"
 
@@ -9,30 +15,41 @@ interface ProductCardProps {
 /** Maps product.category to the icon name in our icon system. */
 function categoryIconName(category: string | null): IconName {
   if (!category) return "product-shampoo"
-  const mapped = `product-${category.replaceAll("_", "-")}` as IconName
-  // Check if the mapped name is a valid icon; fall back otherwise.
-  const validIcons: IconName[] = [
-    "product-shampoo",
-    "product-conditioner",
-    "product-oil",
-    "product-mask",
-    "product-leave-in",
-    "product-peeling",
-    "product-dry-shampoo",
-    "product-bond-builder",
-    "product-deep-cleansing",
-  ]
-  return validIcons.includes(mapped) ? mapped : "product-shampoo"
-}
+  const normalizedCategory = category
+    .trim()
+    .toLowerCase()
+    .replace(/[()]/g, "")
+    .replace(/[\s_-]+/g, "-")
 
-/** Formats a number as German-style price: `12,99 €` */
-function formatPrice(price: number): string {
-  return `${price.toFixed(2).replace(".", ",")} €`
+  const categoryIcons: Record<string, IconName> = {
+    shampoo: "product-shampoo",
+    conditioner: "product-conditioner",
+    "conditioner-drogerie": "product-conditioner",
+    oil: "product-oil",
+    oel: "product-oil",
+    öl: "product-oil",
+    öle: "product-oil",
+    oele: "product-oil",
+    mask: "product-mask",
+    maske: "product-mask",
+    "leave-in": "product-leave-in",
+    leavein: "product-leave-in",
+    peeling: "product-peeling",
+    "dry-shampoo": "product-dry-shampoo",
+    trockenshampoo: "product-dry-shampoo",
+    bondbuilder: "product-bond-builder",
+    "bond-builder": "product-bond-builder",
+    "deep-cleansing-shampoo": "product-deep-cleansing",
+    "deep-cleansing": "product-deep-cleansing",
+  }
+
+  return categoryIcons[normalizedCategory] ?? "product-shampoo"
 }
 
 export function ProductCard({ product, onClick }: ProductCardProps) {
   const iconName = categoryIconName(product.category)
-  const topReason = product.recommendation_meta?.top_reasons?.[0]
+  const facts = buildCompactProductFacts(product)
+  const price = formatProductPrice(product.price_eur, product.currency)
 
   return (
     <button
@@ -53,19 +70,32 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
         {product.brand && (
           <p className="truncate text-[11px] text-[var(--text-caption)]">{product.brand}</p>
         )}
-        {topReason && (
-          <p className="mt-0.5 whitespace-normal break-words text-[11px] leading-snug text-primary">
-            {topReason}
-          </p>
+        {facts.length > 0 && (
+          <div className="mt-1 flex min-w-0 flex-wrap gap-1">
+            {facts.map((fact) => (
+              <span
+                key={`${fact.source}:${fact.label}`}
+                className="max-w-full truncate rounded-full bg-[var(--brand-plum-ice)] px-2 py-0.5 text-[10px] font-medium leading-4 text-primary"
+              >
+                {fact.label}
+              </span>
+            ))}
+          </div>
         )}
       </div>
 
-      {/* Price */}
-      {product.price_eur != null && (
-        <span className="shrink-0 font-mono text-[12px] font-medium text-[var(--text-heading)]">
-          {formatPrice(product.price_eur)}
+      {price && (
+        <span className="shrink-0 whitespace-nowrap text-[12px] font-semibold text-[var(--text-heading)]">
+          {price}
         </span>
       )}
+
+      <span className="sr-only">Produktdetails öffnen</span>
+      <ChevronRight
+        aria-hidden="true"
+        className="h-4 w-4 shrink-0 text-[var(--text-caption)]"
+        strokeWidth={1.8}
+      />
     </button>
   )
 }
