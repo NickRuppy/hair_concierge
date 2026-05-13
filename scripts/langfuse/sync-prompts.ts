@@ -1,37 +1,11 @@
-import {
-  INTENT_CLASSIFICATION_PROMPT,
-  MEMORY_EXTRACTION_JSON_PROMPT,
-  SYSTEM_PROMPT,
-  TITLE_GENERATION_PROMPT,
-} from "../../src/lib/rag/prompts"
-import {
-  loadLocalEnv,
-  getLangfuseClientOrThrow,
-  getPromptLabel,
-  parseArgs,
-  hasFlag,
-} from "./shared"
-
-const LANGFUSE_PROMPTS = [
-  {
-    name: "hair-concierge-chat-system",
-    fallback: SYSTEM_PROMPT,
-  },
-  {
-    name: "hair-concierge-intent-classifier",
-    fallback: INTENT_CLASSIFICATION_PROMPT,
-  },
-  {
-    name: "hair-concierge-title-generator",
-    fallback: TITLE_GENERATION_PROMPT,
-  },
-  {
-    name: "hair-concierge-memory-extraction",
-    fallback: MEMORY_EXTRACTION_JSON_PROMPT,
-  },
-] as const
+process.env.LANGFUSE_LOG_LEVEL ??= "NONE"
 
 async function main() {
+  const [
+    { LANGFUSE_PROMPTS },
+    { loadLocalEnv, getLangfuseClientOrThrow, getPromptLabel, parseArgs, hasFlag },
+  ] = await Promise.all([import("../../src/lib/langfuse/prompts"), import("./shared")])
+
   loadLocalEnv()
 
   const args = parseArgs(process.argv.slice(2))
@@ -40,7 +14,7 @@ async function main() {
   const langfuse = getLangfuseClientOrThrow()
   const commitMessage = `sync from repo (${process.env.LANGFUSE_RELEASE ?? new Date().toISOString()})`
 
-  for (const prompt of LANGFUSE_PROMPTS) {
+  for (const prompt of Object.values(LANGFUSE_PROMPTS)) {
     try {
       const existing = await langfuse.prompt.get(prompt.name, {
         type: "text",
