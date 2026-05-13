@@ -29,6 +29,7 @@ import {
   buildRecommendationEngineTrace,
   getRuntimeCategoryDecision,
 } from "@/lib/recommendation-engine"
+import { LANGFUSE_PROMPTS } from "@/lib/langfuse/prompts"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { DEFAULT_CHAT_COMPLETION_MODEL } from "@/lib/openai/chat"
 import { loadConversationState as loadPersistedConversationState } from "@/lib/rag/conversation-state-store"
@@ -124,6 +125,7 @@ function promptRef(name: string): LangfusePromptReference {
 function buildToolLoopPromptSnapshot(params: {
   message: string
   recentMessages: RecentConversationMessage[]
+  promptRef: LangfusePromptReference
 }): ChatPromptSnapshot {
   const recentMessageRoles = params.recentMessages.slice(-4).map((message) => message.role)
 
@@ -131,7 +133,7 @@ function buildToolLoopPromptSnapshot(params: {
     kind: "agentic_tool_loop",
     model: DEFAULT_CHAT_COMPLETION_MODEL,
     temperature: 0,
-    prompt_ref: promptRef("agentic-tool-loop"),
+    prompt_ref: params.promptRef,
     system_prompt: "agentic_tool_loop",
     messages: [
       {
@@ -421,12 +423,24 @@ export async function runProductionAgentPipeline(
 
   const recentMessages = projectRecentMessages(conversationHistory)
   const selectedProductsHolder: { current: SelectProductsToolResult | null } = { current: null }
+  const promptRefs: { agenticToolLoop: LangfusePromptReference } = {
+    agenticToolLoop: promptRef(LANGFUSE_PROMPTS.agenticToolLoop.name),
+  }
+  const modelClient =
+    deps.modelClient ??
+    createOpenAIAgenticToolLoopModelClient({
+      onManagedPrompt: ({ prompt, ref }) => {
+        if (prompt.name === LANGFUSE_PROMPTS.agenticToolLoop.name) {
+          promptRefs.agenticToolLoop = ref
+        }
+      },
+    })
 
   const agentStart = performance.now()
   const toolLoopResult = await runAgenticToolTurn({
     message,
     recentMessages,
-    modelClient: deps.modelClient ?? createOpenAIAgenticToolLoopModelClient(),
+    modelClient,
     tools: makeAgenticTools({
       onSelectProducts: (selection) => {
         selectedProductsHolder.current = selection
@@ -479,6 +493,7 @@ export async function runProductionAgentPipeline(
   const prompt = buildToolLoopPromptSnapshot({
     message,
     recentMessages,
+    promptRef: promptRefs.agenticToolLoop,
   })
   const debugTrace = buildPipelineTraceDraft({
     request_id: requestId,
@@ -511,7 +526,7 @@ export async function runProductionAgentPipeline(
     category_decision: exposedCategoryDecision,
     engine_trace: exposedEngineTrace,
     matched_products: exposedMatchedProducts,
-    classification_prompt_ref: promptRef("agentic-tool-loop"),
+    classification_prompt_ref: promptRefs.agenticToolLoop,
     prompt,
     response_composition: {
       path: "agentic_tool_loop",

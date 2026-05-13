@@ -1,6 +1,12 @@
 import type { LangfusePromptReference } from "@/lib/types"
 import type { LangfuseConfig as LangfuseOpenAIConfig } from "@langfuse/openai"
 import {
+  AGENT_FINAL_RENDER_PROMPT,
+  AGENT_ROUTE_CLASSIFIER_PROMPT,
+  AGENTIC_CONTEXTUAL_COMPOSER_PROMPT,
+  AGENTIC_TOOL_LOOP_PROMPT,
+} from "@/lib/agent/orchestrator/prompt"
+import {
   INTENT_CLASSIFICATION_PROMPT,
   MEMORY_EXTRACTION_JSON_PROMPT,
   SYSTEM_PROMPT,
@@ -28,9 +34,25 @@ export const LANGFUSE_PROMPTS = {
     name: "hair-concierge-memory-extraction",
     fallback: MEMORY_EXTRACTION_JSON_PROMPT,
   },
+  agentRouteClassifier: {
+    name: "hair-concierge-agent-route-classifier",
+    fallback: AGENT_ROUTE_CLASSIFIER_PROMPT,
+  },
+  agenticToolLoop: {
+    name: "hair-concierge-agentic-tool-loop",
+    fallback: AGENTIC_TOOL_LOOP_PROMPT,
+  },
+  agenticContextualComposer: {
+    name: "hair-concierge-agentic-contextual-composer",
+    fallback: AGENTIC_CONTEXTUAL_COMPOSER_PROMPT,
+  },
+  agentFinalRender: {
+    name: "hair-concierge-agent-final-render",
+    fallback: AGENT_FINAL_RENDER_PROMPT,
+  },
 } as const
 
-type PromptDefinition = (typeof LANGFUSE_PROMPTS)[keyof typeof LANGFUSE_PROMPTS]
+export type PromptDefinition = (typeof LANGFUSE_PROMPTS)[keyof typeof LANGFUSE_PROMPTS]
 
 export interface ManagedTextPrompt {
   text: string

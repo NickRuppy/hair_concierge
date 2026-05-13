@@ -1,25 +1,35 @@
 # Langfuse Quality Loop
 
-This repo now has a phase-1 Langfuse integration for the production chat path.
+This repo has a Langfuse integration for the production chat path and the
+agentic tool-loop recommendation engine.
 
 ## What is live in the app
 
 - One Langfuse trace per chat turn, grouped by conversation ID as the session ID.
-- Child observations for the major pipeline stages:
-  - context loading
-  - intent classification
-  - routing
-  - retrieval
-  - product selection
-  - synthesis
-  - memory extraction
+- The production chat route runs `runProductionAgentPipeline`, which uses the
+  `tool_loop` engine.
+- Observed OpenAI generations for current agent prompts:
+  - `agentic-tool-loop-step`
+  - `agentic-tool-loop-contextual-composer` when composer mode is used
+  - legacy bounded-agent route/render generations when Compare Lab or older
+    helper paths use them
+- The root chat observation output includes compact review fields:
+  - `response_composition`
+  - `engine_summary`
+  - `selected_products`
+  - `agentic_tool_loop_summary`
+- The full sanitized turn trace is persisted in Supabase
+  `conversation_turn_traces`.
 - Prompt linkage for the production chat prompts:
   - chat system prompt
   - intent classifier prompt
   - conversation title prompt
   - memory extraction prompt
+  - agent route classifier prompt
+  - agentic tool-loop prompt
+  - agentic contextual composer prompt
+  - agent final render prompt
 - Prompt fallback behavior if Langfuse is unavailable or a label is missing.
-- Dual-write trace persistence in Supabase via `conversation_turn_traces`.
 - Assistant-message thumbs up/down feedback stored locally and sent to Langfuse scores.
 - Eval harness publishing into Langfuse experiments.
 
@@ -40,7 +50,8 @@ Use your Langfuse EU cloud base URL for `LANGFUSE_BASE_URL`.
 
 ## Prompt workflow
 
-The repo keeps prompt fallbacks in code and treats Langfuse as the runtime source of truth.
+The repo keeps prompt fallbacks in code and treats Langfuse as the runtime
+source of truth for managed prompts that are fetched by the current runtime.
 
 1. Sync the repo prompts into Langfuse:
 
@@ -50,7 +61,9 @@ npm run langfuse:sync-prompts
 
 2. Review or relabel the synced versions in Langfuse.
 
-3. Production chat reads by label. If that fetch fails, the app falls back to the in-repo prompt text and marks the trace as fallback-backed.
+3. Production chat reads managed prompts by label for the agentic model calls.
+   If that fetch fails, the app falls back to the in-repo prompt text and marks
+   the generation metadata as fallback-backed.
 
 Use `--dry-run` to preview prompt changes:
 
@@ -117,30 +130,29 @@ The PR chat smoke suite intentionally stays small to control external API cost a
 
 The retrieval metric gate requires an annotated gold set. The current placeholder value `__ANNOTATE__` is intentionally treated as not enforceable so CI does not report meaningless zero-quality scores as product regressions.
 
-## Agentic Tool Loop Rollout Gate
+## Agentic Tool Loop Production Status
 
-The `tool_loop` engine starts in Compare Lab only. Do not wire it as the default production chat engine until blinded Compare Lab review shows it is materially better than `classic`.
+The `tool_loop` engine is the production chat path. Compare Lab still exists for
+side-by-side review, but `/api/chat` now routes through the agentic tool loop and
+deterministic recommendation tools.
 
-Each Compare Lab judgment for `classic` vs `tool_loop` should record:
+For production review, inspect:
 
-- blinded winner: `classic`, `tool_loop`, or `tie`
-- failure bucket, including `semantic_state_conflict` and `tool_not_called`
-- critical product-claim failure: yes/no
-- latency for both variants
-- model step count for `tool_loop`
-- tool-call count for `tool_loop`
+- `response_composition.path = agentic_tool_loop`
+- `engine_variant = tool_loop`
+- `router_decision.retrieval_mode = agentic_tool_loop`
+- `agentic_tool_loop.model_steps`
+- `agentic_tool_loop.tool_calls`
+- `agentic_tool_loop.loaded_guidance_ids`
+- `agentic_tool_loop.answer_context_capsule_ids`
+- `agentic_tool_loop.guardrails`
+- `agentic_tool_loop.visible_failure`
+- `decision_context.engine_trace`
+- `decision_context.matched_products`
 
-Minimum rollout gate:
-
-- at least 50 blinded judgments
-- at least 25 held-out real historical turns, not only crafted prompts
-- two reviewers, or an explicit single-reviewer caveat in the PR
-- `semantic_state_conflict` plus `tool_not_called` failures reduced by at least 50% versus `classic`
-- wins exceed losses by at least 15 percentage points, excluding ties
-- zero critical invented-product or unsupported product-claim failures
-- p50 latency within +25% of `classic` and p95 within +35%
-
-Rollback stays simple: set `CHAT_AGENT_ENGINE=classic`. Tool-loop traces and conversation-state transitions should preserve `updated_by_engine`, and classic readers must ignore unknown tool-loop metadata.
+The main risk buckets are now tool-choice misses, missing or over-broad guidance,
+deterministic engine/category fit regressions, unsupported product-claim wording,
+and visible tool-loop failure handling.
 
 ## GitHub repository settings to confirm
 
@@ -181,6 +193,8 @@ Production dataset items include review metadata for slicing:
 - `trace_version`
 - `response_composition_path`
 - `prompt_kind`
+- `retrieval_mode`
+- `response_mode`
 - `engine_damage_level`
 - `engine_repair_priority`
 - `engine_actions`
@@ -195,10 +209,17 @@ Trace Schema V2 keeps the review-critical decision path in structured fields:
 - `decision_context.engine_trace.damage`: engine damage assessment, including overall level and repair priority.
 - `decision_context.engine_trace.categories`: category-level engine actions. For review, inspect each category's `relevant`, `action`, reason codes, and target profile.
 - `decision_context.matched_products`: selected product traces, including `recommendation_meta` for score, top reasons, tradeoffs, usage hint, and category-specific fit metadata.
+- `agentic_tool_loop`: compact model-step, tool-call, loaded-guidance,
+  answer-context, guardrail, and visible-failure metadata. Raw prompt context and
+  raw guidance bodies are intentionally not persisted here.
 - `response_composition`: composer path, migration mode, fallback reason, rendering path, plan type, and attachment mode.
 - `user_feedback`: thumbs feedback and review annotations when present, including `failure_bucket`.
 
-In Langfuse, start from the production dataset item metadata for slicing, then open the source trace to inspect the full `router_decision`, engine categories, matched product `recommendation_meta`, `response_composition`, and `user_feedback` details.
+In Langfuse, start from the production dataset item metadata for slicing, then
+open the source trace to inspect the root observation output. Use the linked
+Supabase `conversation_turn_traces` row or admin conversation trace view for the
+full `agentic_tool_loop`, `router_decision`, engine categories, matched product
+`recommendation_meta`, `response_composition`, and `user_feedback` details.
 
 ## Review queue setup
 
@@ -227,14 +248,15 @@ Use the shared review rubric in [docs/chat-quality-review-rubric.md](docs/chat-q
 
 ## Tester Cohort Review
 
-Run tester cohort review weekly while the C-lite rollout is active, and additionally after prompt, router, recommendation-engine, or response-composition changes.
+Run tester cohort review weekly, and additionally after prompt, tool-routing,
+recommendation-engine, answer-context, or response-composition changes.
 
 Suggested cadence:
 
 - `2x` per week: review new thumbs-down traces from the tester cohort.
 - weekly: sample zero-feedback traces across the most active categories.
 - weekly: sample thumbs-up traces as positive references.
-- before a C-lite rule or prompt change: seed the production dataset and tag the review batch.
+- before a tool-loop rule or prompt change: seed the production dataset and tag the review batch.
 - after the change: compare the same slicing dimensions against the next tester cohort sample.
 
 Primary slicing dimensions:
@@ -247,6 +269,11 @@ Primary slicing dimensions:
 - `retrieval_mode`
 - `response_mode`
 - `needs_clarification`
+- `agentic_tool_loop.tool_calls[].name`
+- `agentic_tool_loop.loaded_guidance_ids`
+- `agentic_tool_loop.answer_context_capsule_ids`
+- `agentic_tool_loop.guardrails`
+- `agentic_tool_loop.visible_failure`
 - `engine_damage_level`
 - `engine_repair_priority`
 - `engine_actions.<category>.relevant`
