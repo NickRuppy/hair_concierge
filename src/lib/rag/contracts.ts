@@ -11,7 +11,6 @@ import type {
   ShampooDecision,
   ConditionerDecision,
   LeaveInDecision,
-  OilDecision,
   MaskDecision,
   ConversationStateTransition,
 } from "@/lib/types"
@@ -76,6 +75,5 @@ export interface CategoryDecisions {
   shampoo?: ShampooDecision
   conditioner?: ConditionerDecision
   leaveIn?: LeaveInDecision
-  oil?: OilDecision
   mask?: MaskDecision
 }
