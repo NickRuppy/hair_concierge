@@ -248,7 +248,7 @@ async function main() {
   }
 
   const markdown = [
-    "# Oil V1 Canonical Specs",
+    "# Oil V1 Canonical Eligibility",
     "",
     "| Product | oil_purpose | source_subtypes |",
     "|---|---|---|",
@@ -258,12 +258,15 @@ async function main() {
     "",
   ].join("\n")
 
-  await writeFile("data/research/oil-v1-canonical-specs.json", JSON.stringify(exportRows, null, 2))
   await writeFile(
-    "data/research/oil-v1-canonical-specs-summary.json",
+    "data/research/oil-v1-canonical-eligibility.json",
+    JSON.stringify(exportRows, null, 2),
+  )
+  await writeFile(
+    "data/research/oil-v1-canonical-eligibility-summary.json",
     JSON.stringify(summary, null, 2),
   )
-  await writeFile("data/research/oil-v1-canonical-specs.md", markdown)
+  await writeFile("data/research/oil-v1-canonical-eligibility.md", markdown)
 
   const { error: upsertError } = await supabase.from("product_oil_eligibility").upsert(payload, {
     onConflict: "product_id,thickness,oil_subtype",

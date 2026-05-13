@@ -920,6 +920,38 @@ test("oil decision redirects growth and loss oil requests even without explicit 
   }
 })
 
+test("oil decision keeps therapy oil requests guidance-only until therapy oils are catalogued", () => {
+  const { normalized } = buildEngineState(LOW_DAMAGE_PROFILE, [])
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Kannst du mir Neqi Rosemary Oil fuer die Kopfhaut empfehlen?",
+  })
+
+  const decision = buildOilCategoryDecision(normalized, requestContext)
+
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.clarificationNeeded, false)
+  assert.equal(decision.noRecommendationReason, "therapy_oil_missing")
+  assert.equal(decision.targetProfile, null)
+  assert.ok(decision.planReasonCodes.includes("oil_therapy_missing"))
+})
+
+test("oil decision redirects when the stated need is better served by a non-oil category", () => {
+  const { normalized } = buildEngineState(LOW_DAMAGE_PROFILE, [])
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Ich suche ein Oel oder Leave-in mit Hitzeschutz gegen Frizz.",
+  })
+
+  const decision = buildOilCategoryDecision(normalized, requestContext)
+
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.clarificationNeeded, false)
+  assert.equal(decision.noRecommendationReason, "better_non_oil_category")
+  assert.equal(decision.targetProfile, null)
+  assert.ok(decision.planReasonCodes.includes("oil_better_non_oil_category"))
+})
+
 test("oil decision suppresses new oil products when overload is likely current problem", () => {
   const { normalized } = buildEngineState(
     {

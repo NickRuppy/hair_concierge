@@ -64,7 +64,6 @@ import type {
   ShampooDecision,
   ConditionerDecision,
   LeaveInDecision,
-  OilDecision,
   RoutinePlan,
   ChatPromptMessageSnapshot,
   ChatPromptSnapshot,
@@ -86,7 +85,6 @@ export interface SynthesizeParams {
   shampooDecision?: ShampooDecision
   conditionerDecision?: ConditionerDecision
   leaveInDecision?: LeaveInDecision
-  oilDecision?: OilDecision
   categoryDecision?: RecommendationEngineCategoryDecision | null
   routinePlan?: RoutinePlan
   memoryContext?: string | null
@@ -1022,7 +1020,6 @@ export function buildSystemPrompt(
   shampooDecision?: ShampooDecision,
   conditionerDecision?: ConditionerDecision,
   leaveInDecision?: LeaveInDecision,
-  oilDecision?: OilDecision,
   routinePlan?: RoutinePlan,
   memoryContext?: string | null,
   clarificationQuestions?: string[],
@@ -1058,8 +1055,7 @@ export function buildSystemPrompt(
       maskDecision ||
       shampooDecision ||
       conditionerDecision ||
-      leaveInDecision ||
-      oilDecision) &&
+      leaveInDecision) &&
     !(productCategory === "routine" && routinePlan)
   ) {
     ragContext += formatProducts(
@@ -1094,7 +1090,6 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     shampooDecision,
     conditionerDecision,
     leaveInDecision,
-    oilDecision,
     categoryDecision,
     routinePlan,
     memoryContext,
@@ -1114,7 +1109,6 @@ export async function synthesizeResponse(params: SynthesizeParams): Promise<Synt
     shampooDecision,
     conditionerDecision,
     leaveInDecision,
-    oilDecision,
     routinePlan,
     memoryContext,
     clarificationQuestions,

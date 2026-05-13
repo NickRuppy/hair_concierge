@@ -1344,6 +1344,90 @@ test("engine oil reranking allows only adjacent finish bridge below exact thresh
   )
 })
 
+test("engine oil reranking preserves classic subtype eligibility when oil purpose is not populated", () => {
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Ich moechte Hair Oiling vor dem Waschen machen.",
+  })
+  const decision = buildRecommendationEngineRuntimeFromPersistence(
+    LOW_DAMAGE_PROFILE,
+    [],
+    requestContext,
+  ).categories.oil
+
+  const reranked = rerankOilProductsWithEngine({
+    candidates: [
+      createMatchedProduct("classic-natural", "Öle", { combined_score: 0.7 }),
+      createMatchedProduct("wrong-subtype", "Öle", { combined_score: 0.99 }),
+    ],
+    decision,
+    hairProfile: LOW_DAMAGE_PROFILE,
+    eligibilityRows: [
+      {
+        product_id: "classic-natural",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "natuerliches-oel",
+        oil_purpose: null,
+      },
+      {
+        product_id: "wrong-subtype",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "styling-oel",
+        oil_purpose: null,
+      },
+    ],
+  })
+
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["classic-natural"],
+  )
+  assert.equal(
+    (reranked[0]?.recommendation_meta as OilRecommendationMetadata | undefined)?.purpose_fit,
+    "unknown",
+  )
+})
+
+test("engine oil reranking keeps exact purpose matches ahead of legacy subtype fallback", () => {
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Ich suche ein Styling-Oel als Finish gegen Frizz.",
+  })
+  const decision = buildRecommendationEngineRuntimeFromPersistence(
+    LOW_DAMAGE_PROFILE,
+    [],
+    requestContext,
+  ).categories.oil
+
+  const reranked = rerankOilProductsWithEngine({
+    candidates: [
+      createMatchedProduct("legacy-subtype", "Öle", { combined_score: 0.99 }),
+      createMatchedProduct("exact-purpose", "Öle", { combined_score: 0.7 }),
+    ],
+    decision,
+    hairProfile: LOW_DAMAGE_PROFILE,
+    eligibilityRows: [
+      {
+        product_id: "legacy-subtype",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "styling-oel",
+        oil_purpose: null,
+      },
+      {
+        product_id: "exact-purpose",
+        thickness: LOW_DAMAGE_PROFILE.thickness!,
+        oil_subtype: "styling-oel",
+        oil_purpose: "styling_finish",
+      },
+    ],
+  })
+
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["exact-purpose", "legacy-subtype"],
+  )
+})
+
 test("engine bondbuilder reranking exposes protocol metadata without ranking by treatment mode", () => {
   const decision: BondbuilderCategoryDecision = {
     category: "bondbuilder",

@@ -43,7 +43,7 @@ import type {
 import type { ProductBondbuilderSpecs } from "@/lib/bondbuilder/constants"
 import type { ProductDeepCleansingShampooSpecs } from "@/lib/deep-cleansing-shampoo/constants"
 import type { ProductDryShampooSpecs } from "@/lib/dry-shampoo/constants"
-import type { OilNoRecommendationReason, OilSubtype, OilUseMode } from "@/lib/oil/constants"
+import type { OilSubtype, OilUseMode } from "@/lib/oil/constants"
 import type { ProductPeelingSpecs } from "@/lib/peeling/constants"
 import type {
   ProductBondApplicationMode,
@@ -386,8 +386,6 @@ export interface OilMatchedProfile {
   thickness: HairThickness | null
 }
 
-export type OilProfileField = "thickness" | "oil_purpose"
-
 export interface OilRecommendationMetadata extends BaseRecommendationMetadata {
   category: "oil"
   matched_profile: OilMatchedProfile
@@ -523,21 +521,7 @@ export interface LeaveInDecision {
   no_catalog_match: boolean
 }
 
-export interface OilDecision {
-  category: "oil"
-  eligible: boolean
-  missing_profile_fields: OilProfileField[]
-  matched_profile: OilMatchedProfile
-  matched_subtype: OilSubtype | null
-  use_mode: OilUseMode | null
-  adjunct_scalp_support: boolean
-  candidate_count: number
-  no_catalog_match: boolean
-  no_recommendation: boolean
-  no_recommendation_reason: OilNoRecommendationReason | null
-}
-
-export type CategoryDecision = ShampooDecision | ConditionerDecision | LeaveInDecision | OilDecision
+export type CategoryDecision = ShampooDecision | ConditionerDecision | LeaveInDecision
 
 export type ChatCategoryDecision = CategoryDecision | RecommendationEngineCategoryDecision
 

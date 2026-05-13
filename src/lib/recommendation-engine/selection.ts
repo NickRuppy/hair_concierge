@@ -658,6 +658,7 @@ function buildOilTopReasons(
   params?: {
     exactPurposeMatch: boolean
     finishBridgeMatch: boolean
+    classicSubtypeMatch: boolean
   },
 ): { positives: string[]; tradeoffs: string[] } {
   const positives: string[] = []
@@ -680,6 +681,10 @@ function buildOilTopReasons(
   } else if (params?.finishBridgeMatch) {
     tradeoffs.push(
       "Der Fit kommt ueber die angrenzende Finish-Rolle, nicht ueber einen exakten Oel-Zweck-Match.",
+    )
+  } else if (params?.classicSubtypeMatch) {
+    tradeoffs.push(
+      "Der Katalogfit kommt ueber den klassischen Oel-Subtyp; ein eigener Oel-Zweck ist fuer diesen Treffer noch nicht hinterlegt.",
     )
   }
 
@@ -724,6 +729,11 @@ export function rerankOilProductsWithEngine(params: {
       .filter((row) => bridgePurpose !== null && row.oil_purpose === bridgePurpose)
       .map((row) => row.product_id),
   )
+  const classicSubtypeProductIds = new Set(
+    eligibilityRows
+      .filter((row) => row.oil_purpose === null && row.oil_subtype === targetProfile.matcherSubtype)
+      .map((row) => row.product_id),
+  )
   const eligibleCandidates =
     eligibilityRows.length === 0
       ? candidates
@@ -731,7 +741,9 @@ export function rerankOilProductsWithEngine(params: {
         ? candidates.filter((product) => exactPurposeProductIds.has(product.id))
         : candidates.filter(
             (product) =>
-              exactPurposeProductIds.has(product.id) || finishBridgeProductIds.has(product.id),
+              exactPurposeProductIds.has(product.id) ||
+              finishBridgeProductIds.has(product.id) ||
+              classicSubtypeProductIds.has(product.id),
           )
 
   const scored: ScoredEngineProduct[] = eligibleCandidates.map((product) => {
@@ -742,13 +754,25 @@ export function rerankOilProductsWithEngine(params: {
     const finishBridgeMatch = productEligibility.some(
       (row) => bridgePurpose !== null && row.oil_purpose === bridgePurpose,
     )
+    const classicSubtypeMatch = productEligibility.some(
+      (row) => row.oil_purpose === null && row.oil_subtype === targetProfile.matcherSubtype,
+    )
     const { positives, tradeoffs } = buildOilTopReasons(decision, {
       exactPurposeMatch,
       finishBridgeMatch,
+      classicSubtypeMatch,
     })
     const score =
       toBaseScore(product) +
-      (exactPurposeMatch ? 28 : finishBridgeMatch ? -8 : productEligibility.length > 0 ? -30 : 0)
+      (exactPurposeMatch
+        ? 28
+        : finishBridgeMatch
+          ? -8
+          : classicSubtypeMatch
+            ? -8
+            : productEligibility.length > 0
+              ? -30
+              : 0)
 
     const recommendationMeta: OilRecommendationMetadata = {
       category: "oil",
@@ -769,7 +793,11 @@ export function rerankOilProductsWithEngine(params: {
       matched_subtype: targetProfile.matcherSubtype,
       use_mode: targetProfile.purpose,
       adjunct_scalp_support: targetProfile.adjunctScalpSupport,
-      fit_status: exactPurposeMatch ? "ideal" : finishBridgeMatch ? "supportive" : "unknown",
+      fit_status: exactPurposeMatch
+        ? "ideal"
+        : finishBridgeMatch || classicSubtypeMatch
+          ? "supportive"
+          : "unknown",
       purpose_fit: exactPurposeMatch ? "exact" : finishBridgeMatch ? "bridge" : "unknown",
       scalp_caution: targetProfile.scalpCaution,
       density_weight_caution: targetProfile.densityWeightCaution,
