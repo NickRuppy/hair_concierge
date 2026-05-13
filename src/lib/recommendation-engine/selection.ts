@@ -2316,9 +2316,11 @@ export async function selectPeelingProductsWithEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime?: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
+  const runtime =
+    params.runtime ?? buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems)
   const decision = runtime.categories.peeling
   if (!decision.relevant || !decision.targetProfile) return []
 

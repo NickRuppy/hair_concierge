@@ -22,6 +22,7 @@ import type { UserMemoryContext } from "@/lib/rag/user-memory"
 import type {
   BondbuilderRecommendationMetadata,
   ConditionerRecommendationMetadata,
+  DryShampooRecommendationMetadata,
   HairProfile,
   LeaveInRecommendationMetadata,
   MaskRecommendationMetadata,
@@ -52,6 +53,10 @@ import {
   PRODUCT_BOND_REPAIR_AXIS_LABELS,
   PRODUCT_BOND_TREATMENT_MODE_LABELS,
   PRODUCT_BOND_USAGE_PROTOCOL_LABELS,
+  type DryShampooFormat,
+  type DryShampooHairColorFit,
+  type DryShampooPrimaryEffect,
+  type DryShampooScalpSensitivityFit,
 } from "@/lib/product-specs/constants"
 import {
   HAIR_DENSITIES,
@@ -85,6 +90,7 @@ export type SelectProductsDecision =
 
 export type ProductResponsePolicy =
   | "recommend"
+  | "recommend_with_caveat"
   | "explain_then_recommend"
   | "redirect_to_better_lever"
   | "caution_without_products"
@@ -93,6 +99,7 @@ export type ProductResponsePolicy =
 
 export interface SelectProductsRouteContext {
   userJob?: AgentUserJob | null
+  message?: string | null
   concerns?: AgentConcern[] | null
   requestedGoal?: "shine" | null
   activeProfileSignals?: AgentActiveProfileSignal[] | null
@@ -141,6 +148,9 @@ export const SUPPORTED_PRODUCT_CLAIM_FIELDS = [
   "usage_protocol",
   "product_format",
   "lifecycle_status",
+  "primary_effect",
+  "hair_color_fit",
+  "scalp_sensitivity_fit",
 ] as const
 
 export type StructuredProductClaimField = (typeof SUPPORTED_PRODUCT_CLAIM_FIELDS)[number]
@@ -263,7 +273,7 @@ function mapDisplayableCaveat(caveat: string | null): string | null {
   if (!caveat) return null
 
   if (/^fallback:/i.test(caveat.trim())) {
-    return caveat
+    return "Nachgeordnet: nicht ganz so passend zum abgeleiteten Fokus; nur verwenden, wenn keine besseren Treffer verfuegbar sind."
   }
 
   const normalized = caveat.trim().toLocaleLowerCase("de-DE")
@@ -272,7 +282,7 @@ function mapDisplayableCaveat(caveat: string | null): string | null {
     normalized === "weicht vom aktuellen kopfhaut-fokus ab" ||
     (/weicht.*kopfhaut-fokus/.test(normalized) && !/fallback/.test(normalized))
   ) {
-    return "Passt nicht exakt zum abgeleiteten Shampoo-Fokus. Nur als Fallback zeigen, wenn keine ausreichenden sicheren Treffer verfuegbar sind."
+    return "Passt nicht exakt zum abgeleiteten Shampoo-Fokus. Nur nachgeordnet zeigen, wenn keine ausreichend passenden Treffer verfuegbar sind."
   }
 
   return caveat
@@ -302,6 +312,17 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
   if (products.every((product) => product.recommendation_meta?.category === "bondbuilder")) {
     return Object.fromEntries(
       products.map((product) => [product.id, buildBondbuilderComparisonFacts(product)]),
+    )
+  }
+
+  if (products.every((product) => product.recommendation_meta?.category === "dry_shampoo")) {
+    return Object.fromEntries(
+      products.map((product) => [
+        product.id,
+        buildDryShampooComparisonFacts(
+          product.recommendation_meta as DryShampooRecommendationMetadata,
+        ),
+      ]),
     )
   }
 
@@ -370,12 +391,12 @@ function buildConditionerComparisonFactsForSet(
               key: "fit_status",
               value: `${meta.fit_status}:${
                 meta.tradeoffs.some(isFallbackCaveat) || meta.fit_status === "mismatch"
-                  ? "fallback"
+                  ? "nachgeordnet"
                   : "primary"
               }`,
               text:
                 meta.tradeoffs.some(isFallbackCaveat) || meta.fit_status === "mismatch"
-                  ? "Caveat: Fallback"
+                  ? "Nachgeordnet: nicht ganz so passend"
                   : `Fit: ${CONDITIONER_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`,
             }
           : null,
@@ -404,11 +425,20 @@ function buildConditionerComparisonFactsForSet(
   for (const row of factRows) {
     const facts: string[] = []
     for (const candidate of row.candidates) {
+      if (candidate.key === "price") continue
       const values = valuesByKey.get(candidate.key)
       if (!values || values.size <= 1) continue
       facts.push(candidate.text)
-      if (facts.length >= 2) break
+      if (facts.length >= 3) break
     }
+    preferMismatchFitFact(facts, row.candidates)
+
+    for (const candidate of row.candidates) {
+      if (facts.length >= 2) break
+      if (facts.includes(candidate.text) || candidate.key === "price") continue
+      facts.push(candidate.text)
+    }
+    appendSecondaryPriceFact(facts, row.candidates)
 
     if (facts.length > 0) {
       result[row.product.id] = facts
@@ -467,6 +497,13 @@ function buildLeaveInComparisonFactsForSet(
               text: `Fit: ${LEAVE_IN_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`,
             }
           : null,
+        typeof product.price_eur === "number"
+          ? {
+              key: "price",
+              value: product.price_eur.toFixed(2),
+              text: `Preis: ${product.price_eur.toFixed(2)} EUR`,
+            }
+          : null,
       ].filter((candidate): candidate is { key: string; value: string; text: string } =>
         Boolean(candidate),
       ),
@@ -477,13 +514,22 @@ function buildLeaveInComparisonFactsForSet(
   for (const row of factRows) {
     const facts: string[] = []
     for (const candidate of row.candidates) {
+      if (candidate.key === "price") continue
       const values = new Set(
         factRows.map((other) => other.candidates.find((item) => item.key === candidate.key)?.value),
       )
       if (values.size <= 1) continue
       facts.push(candidate.text)
-      if (facts.length >= 2) break
+      if (facts.length >= 3) break
     }
+    preferMismatchFitFact(facts, row.candidates)
+
+    for (const candidate of row.candidates) {
+      if (facts.length >= 2) break
+      if (facts.includes(candidate.text) || candidate.key === "price") continue
+      facts.push(candidate.text)
+    }
+    appendSecondaryPriceFact(facts, row.candidates)
 
     result[row.product.id] =
       facts.length > 0 ? facts : row.candidates.slice(0, 1).map((item) => item.text)
@@ -496,6 +542,35 @@ interface ComparisonFactCandidate {
   key: string
   value: string
   text: string
+}
+
+function preferMismatchFitFact(
+  facts: string[],
+  candidates: Array<{ key: string; value: string; text: string }>,
+): void {
+  const mismatchFit = candidates.find(
+    (candidate) =>
+      candidate.key === "fit_status" &&
+      (candidate.value === "mismatch" || candidate.value.startsWith("mismatch:")),
+  )
+  if (!mismatchFit || facts.includes(mismatchFit.text)) return
+
+  if (facts.length >= 3) {
+    facts[facts.length - 1] = mismatchFit.text
+    return
+  }
+
+  facts.push(mismatchFit.text)
+}
+
+function appendSecondaryPriceFact(
+  facts: string[],
+  candidates: Array<{ key: string; value: string; text: string }>,
+): void {
+  if (facts.length < 2 || facts.length >= 3) return
+  const price = candidates.find((candidate) => candidate.key === "price")
+  if (!price || facts.includes(price.text)) return
+  facts.push(price.text)
 }
 
 function buildMaskComparisonFactsForSet(products: MatchedProduct[]): Record<string, string[]> {
@@ -551,13 +626,22 @@ function buildMaskComparisonFactsForSet(products: MatchedProduct[]): Record<stri
   for (const row of factRows) {
     const facts: string[] = []
     for (const candidate of row.candidates) {
+      if (candidate.key === "price") continue
       const values = new Set(
         factRows.map((other) => other.candidates.find((item) => item.key === candidate.key)?.value),
       )
       if (values.size <= 1) continue
       facts.push(candidate.text)
-      if (facts.length >= 2) break
+      if (facts.length >= 3) break
     }
+    preferMismatchFitFact(facts, row.candidates)
+
+    for (const candidate of row.candidates) {
+      if (facts.length >= 2) break
+      if (facts.includes(candidate.text) || candidate.key === "price") continue
+      facts.push(candidate.text)
+    }
+    appendSecondaryPriceFact(facts, row.candidates)
 
     result[row.product.id] =
       facts.length > 0 ? facts : row.candidates.slice(0, 1).map((item) => item.text)
@@ -678,7 +762,7 @@ const CONDITIONER_FIT_STATUS_LABELS: Record<
 > = {
   ideal: "idealer Treffer",
   supportive: "unterstuetzender Treffer",
-  mismatch: "Fallback-Abweichung",
+  mismatch: "weicht etwas ab",
   unknown: "Daten unvollstaendig",
   not_applicable: "nicht anwendbar",
 }
@@ -689,7 +773,7 @@ const LEAVE_IN_FIT_STATUS_LABELS: Record<
 > = {
   ideal: "idealer Treffer",
   supportive: "unterstuetzender Treffer",
-  mismatch: "Fallback-Abweichung",
+  mismatch: "weicht etwas ab",
   unknown: "Daten unvollstaendig",
   not_applicable: "nicht anwendbar",
 }
@@ -727,7 +811,7 @@ const MASK_FIT_STATUS_LABELS: Record<
 > = {
   ideal: "idealer Treffer",
   supportive: "unterstuetzender Treffer",
-  mismatch: "Fallback-Abweichung",
+  mismatch: "weicht etwas ab",
   unknown: "Daten unvollstaendig",
   not_applicable: "nicht anwendbar",
 }
@@ -738,7 +822,7 @@ const MASK_FIT_STATUS_PREFIXES: Record<
 > = {
   ideal: "Idealer Treffer",
   supportive: "Unterstuetzender Treffer",
-  mismatch: "Fallback-Treffer",
+  mismatch: "Schwaecherer Treffer",
   unknown: "Treffer mit unvollstaendigen Daten",
   not_applicable: "Nicht anwendbarer Treffer",
 }
@@ -749,9 +833,33 @@ const OIL_FIT_STATUS_PREFIXES: Record<
 > = {
   ideal: "Idealer Treffer",
   supportive: "Unterstuetzender Treffer",
-  mismatch: "Fallback-Treffer",
+  mismatch: "Schwaecherer Treffer",
   unknown: "Treffer mit unvollstaendigen Daten",
   not_applicable: "Nicht anwendbarer Treffer",
+}
+
+const DRY_SHAMPOO_PRIMARY_EFFECT_LABELS: Record<DryShampooPrimaryEffect, string> = {
+  classic_refresh: "klassischer Frische-Effekt",
+  sensitive_refresh: "sensibler Frische-Effekt",
+  volume_texture: "Volumen/Textur",
+}
+
+const DRY_SHAMPOO_HAIR_COLOR_FIT_LABELS: Record<DryShampooHairColorFit, string> = {
+  universal: "universell",
+  blonde_light: "blond/hell",
+  brown: "braun",
+  dark: "dunkel",
+}
+
+const DRY_SHAMPOO_SCALP_SENSITIVITY_LABELS: Record<DryShampooScalpSensitivityFit, string> = {
+  normal_only: "normale Kopfhaut",
+  sensitive_ok: "sensible Kopfhaut geeignet",
+}
+
+const DRY_SHAMPOO_FORMAT_LABELS: Record<DryShampooFormat, string> = {
+  aerosol_spray: "Spray",
+  powder: "Puder",
+  foam_or_liquid: "Schaum/Liquid",
 }
 
 const LEAVE_IN_FIT_STATUS_PREFIXES: Record<
@@ -760,7 +868,7 @@ const LEAVE_IN_FIT_STATUS_PREFIXES: Record<
 > = {
   ideal: "Idealer Treffer",
   supportive: "Unterstuetzender Treffer",
-  mismatch: "Fallback-Treffer",
+  mismatch: "Schwaecherer Treffer",
   unknown: "Treffer mit unvollstaendigen Daten",
   not_applicable: "Nicht anwendbarer Treffer",
 }
@@ -782,7 +890,7 @@ const CONDITIONER_FIT_STATUS_PREFIXES: Record<
 > = {
   ideal: "Idealer Treffer",
   supportive: "Unterstuetzender Treffer",
-  mismatch: "Fallback-Treffer",
+  mismatch: "Schwaecherer Treffer",
   unknown: "Treffer mit unvollstaendigen Daten",
   not_applicable: "Nicht anwendbarer Treffer",
 }
@@ -860,7 +968,30 @@ function buildDisplayableFitReason(product: MatchedProduct): string {
     return `Reset-Treffer fuer ${focus}${intensity}.`
   }
 
+  if (meta?.category === "dry_shampoo") {
+    return buildDryShampooDisplayableFitReason(meta)
+  }
+
   return meta?.top_reasons?.[0] ?? "Passt von den verfuegbaren Optionen am besten."
+}
+
+function buildDryShampooDisplayableFitReason(meta: DryShampooRecommendationMetadata): string {
+  const details = uniqueNonEmpty([
+    meta.primary_effect
+      ? `Effekt: ${DRY_SHAMPOO_PRIMARY_EFFECT_LABELS[meta.primary_effect]}`
+      : null,
+    meta.scalp_sensitivity_fit
+      ? `Kopfhaut-Fit: ${DRY_SHAMPOO_SCALP_SENSITIVITY_LABELS[meta.scalp_sensitivity_fit]}`
+      : null,
+    meta.hair_color_fit
+      ? `Farbfit: ${DRY_SHAMPOO_HAIR_COLOR_FIT_LABELS[meta.hair_color_fit]}`
+      : null,
+    meta.format ? `Format: ${DRY_SHAMPOO_FORMAT_LABELS[meta.format]}` : null,
+  ])
+
+  return details.length > 0
+    ? `Trockenshampoo-Treffer; ${details.join("; ")}.`
+    : "Trockenshampoo-Treffer als Between-Wash-Bruecke."
 }
 
 function buildShampooDisplayableFitReason(meta: ShampooRecommendationMetadata): string {
@@ -992,12 +1123,14 @@ function buildProductComparisonFacts(product: MatchedProduct): string[] {
     return buildBondbuilderComparisonFacts(product)
   }
 
+  if (meta?.category === "dry_shampoo") {
+    return buildDryShampooComparisonFacts(meta)
+  }
+
   return uniqueNonEmpty(meta?.top_reasons ?? []).slice(0, 3)
 }
 
 function buildShampooComparisonFacts(meta: ShampooRecommendationMetadata): string[] {
-  const fallback = meta.tradeoffs.some(isFallbackCaveat) || meta.fit_status === "mismatch"
-
   return uniqueNonEmpty([
     meta.matched_bucket
       ? `Kopfhaut-Fokus: ${SHAMPOO_BUCKET_LABELS[meta.matched_bucket] ?? meta.matched_bucket}`
@@ -1015,7 +1148,6 @@ function buildShampooComparisonFacts(meta: ShampooRecommendationMetadata): strin
     meta.fit_status
       ? `Fit: ${SHAMPOO_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
       : null,
-    `Fallback: ${fallback ? "ja" : "nein"}`,
   ])
 }
 
@@ -1035,10 +1167,10 @@ function buildConditionerComparisonFacts(
       ? `Fit: ${CONDITIONER_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
       : null,
     meta.tradeoffs.some(isFallbackCaveat) || meta.fit_status === "mismatch"
-      ? "Caveat: Fallback"
+      ? "Nachgeordnet: nicht ganz so passend"
       : null,
     typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
-  ]).slice(0, 2)
+  ]).slice(0, 3)
 }
 
 function buildLeaveInComparisonFacts(
@@ -1057,7 +1189,7 @@ function buildLeaveInComparisonFacts(
       ? `Fit: ${LEAVE_IN_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
       : null,
     typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
-  ]).slice(0, 2)
+  ]).slice(0, 3)
 }
 
 function buildMaskComparisonFacts(
@@ -1074,7 +1206,7 @@ function buildMaskComparisonFacts(
     meta.product_weight ? `Gewicht: ${MASK_WEIGHT_LABELS[meta.product_weight]}` : null,
     meta.fit_status ? `Fit: ${MASK_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}` : null,
     typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
-  ]).slice(0, 2)
+  ]).slice(0, 3)
 }
 
 function buildOilComparisonFacts(
@@ -1123,6 +1255,21 @@ function buildBondbuilderComparisonFacts(product: MatchedProduct): string[] {
       ? `Add-on: ${meta.attached_add_ons?.map((addOn) => addOn.name).join(", ")}`
       : null,
     typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
+  ]).slice(0, 3)
+}
+
+function buildDryShampooComparisonFacts(meta: DryShampooRecommendationMetadata): string[] {
+  return uniqueNonEmpty([
+    meta.primary_effect
+      ? `Effekt: ${DRY_SHAMPOO_PRIMARY_EFFECT_LABELS[meta.primary_effect]}`
+      : null,
+    meta.scalp_sensitivity_fit
+      ? `Kopfhaut-Fit: ${DRY_SHAMPOO_SCALP_SENSITIVITY_LABELS[meta.scalp_sensitivity_fit]}`
+      : null,
+    meta.hair_color_fit
+      ? `Farbfit: ${DRY_SHAMPOO_HAIR_COLOR_FIT_LABELS[meta.hair_color_fit]}`
+      : null,
+    meta.format ? `Format: ${DRY_SHAMPOO_FORMAT_LABELS[meta.format]}` : null,
   ]).slice(0, 3)
 }
 
@@ -1218,25 +1365,31 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
         "primary_effect",
         meta.primary_effect,
         "product_spec",
-        meta.primary_effect ? `Bridge-Wirkung: ${meta.primary_effect}` : null,
+        meta.primary_effect
+          ? `Effekt: ${DRY_SHAMPOO_PRIMARY_EFFECT_LABELS[meta.primary_effect]}`
+          : null,
       ),
       buildClaim(
         "hair_color_fit",
         meta.hair_color_fit,
         "product_spec",
-        meta.hair_color_fit ? `Farbfit: ${meta.hair_color_fit}` : null,
+        meta.hair_color_fit
+          ? `Farbfit: ${DRY_SHAMPOO_HAIR_COLOR_FIT_LABELS[meta.hair_color_fit]}`
+          : null,
       ),
       buildClaim(
         "scalp_sensitivity_fit",
         meta.scalp_sensitivity_fit,
         "product_spec",
-        meta.scalp_sensitivity_fit ? `Sensitivitaetsfit: ${meta.scalp_sensitivity_fit}` : null,
+        meta.scalp_sensitivity_fit
+          ? `Kopfhaut-Fit: ${DRY_SHAMPOO_SCALP_SENSITIVITY_LABELS[meta.scalp_sensitivity_fit]}`
+          : null,
       ),
       buildClaim(
         "format",
         meta.format,
         "product_spec",
-        meta.format ? `Format: ${meta.format}` : null,
+        meta.format ? `Format: ${DRY_SHAMPOO_FORMAT_LABELS[meta.format]}` : null,
       ),
     ])
   }
@@ -2159,6 +2312,34 @@ function buildProfileBasis(
     ])
   }
 
+  if (category === "dry_shampoo") {
+    const dryShampooDecision =
+      categoryDecision?.category === "dry_shampoo" ? categoryDecision : null
+    return uniqueNonEmpty([
+      ...buildProfileDeviationNotices({
+        originalHairProfile: routeContext?.originalHairProfile ?? null,
+        effectiveHairProfile: hairProfile,
+        activeSignals: routeContext?.activeProfileSignals ?? [],
+      }),
+      hairProfile.thickness
+        ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
+        : null,
+      hairProfile.scalp_type
+        ? `Kopfhaut: ${SCALP_TYPE_LABELS[hairProfile.scalp_type] ?? hairProfile.scalp_type}`
+        : null,
+      dryShampooDecision?.targetProfile?.primaryEffectTarget
+        ? `Trockenshampoo-Fokus: ${
+            DRY_SHAMPOO_PRIMARY_EFFECT_LABELS[dryShampooDecision.targetProfile.primaryEffectTarget]
+          }`
+        : null,
+      dryShampooDecision?.targetProfile?.hairColorFitTarget
+        ? `Farbfit: ${
+            DRY_SHAMPOO_HAIR_COLOR_FIT_LABELS[dryShampooDecision.targetProfile.hairColorFitTarget]
+          }`
+        : null,
+    ])
+  }
+
   return uniqueNonEmpty([
     hairProfile.thickness
       ? `Haardicke: ${HAIR_THICKNESS_LABELS[hairProfile.thickness] ?? hairProfile.thickness}`
@@ -2271,14 +2452,13 @@ function deriveDecision(params: {
   const { products, category, categoryDecision, missingInfo, routeContext } = params
   const hasBlockingMissingInfo = missingInfo.some((item) => item.blocking)
 
-  if (isDryLengthOnlyShampooQuestion(category, routeContext)) {
+  if (isScalpSymptomShampooQuestion(category, routeContext)) {
     return "not_recommended"
   }
 
   if (
-    isScalpSymptomShampooQuestion(category, routeContext) ||
-    isShineShampooQuestion(category, routeContext) ||
-    isFrizzShampooQuestion(category, routeContext)
+    isSafeWeakLeverShampooQuestion(category, routeContext) &&
+    !isExplicitProductSelectionJob(routeContext)
   ) {
     return "not_recommended"
   }
@@ -2364,6 +2544,42 @@ function isFrizzShampooQuestion(
     hasConcern(routeContext, "oily_roots") ||
     hasConcern(routeContext, "dandruff_or_flakes") ||
     hasConcern(routeContext, "irritation")
+  )
+}
+
+function isExplicitProductSelectionJob(routeContext?: SelectProductsRouteContext | null): boolean {
+  if (routeContext?.userJob === "product_pick") {
+    return true
+  }
+
+  return hasExplicitProductAskSignal(routeContext?.message ?? "")
+}
+
+function hasExplicitProductAskSignal(message: string): boolean {
+  const normalized = normalizeRouteMessage(message)
+
+  return /\b(welch(?:e|es|en|er|em)?|empfehl\w*|kaufen|produkt|produkte|pick|auswahl|option|optionen|a oder b|besser|nimm|nehmen)\b/.test(
+    normalized,
+  )
+}
+
+function normalizeRouteMessage(message: string): string {
+  return message
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+}
+
+function isSafeWeakLeverShampooQuestion(
+  category: SelectableProductCategory | null,
+  routeContext?: SelectProductsRouteContext | null,
+): boolean {
+  return (
+    category === "shampoo" &&
+    !isScalpSymptomShampooQuestion(category, routeContext) &&
+    (isDryLengthOnlyShampooQuestion(category, routeContext) ||
+      isShineShampooQuestion(category, routeContext) ||
+      isFrizzShampooQuestion(category, routeContext))
   )
 }
 
@@ -2462,12 +2678,15 @@ function buildProductResponsePolicy(params: {
     }
   }
 
-  if (
-    category === "shampoo" &&
-    (isDryLengthOnlyShampooQuestion(category, routeContext) ||
-      isShineShampooQuestion(category, routeContext) ||
-      isFrizzShampooQuestion(category, routeContext))
-  ) {
+  if (isSafeWeakLeverShampooQuestion(category, routeContext)) {
+    if (isExplicitProductSelectionJob(routeContext) && decision === "recommended") {
+      return {
+        product_response_policy: "recommend_with_caveat",
+        policy_reason:
+          "Der Nutzer fragt explizit nach Shampoo-Produkten; empfehle passende Shampoo-Optionen, aber erklaere knapp, dass Conditioner, Leave-in, Maske oder Technik fuer dieses Ziel oft der staerkere Hebel sind.",
+      }
+    }
+
     return {
       product_response_policy: "redirect_to_better_lever",
       policy_reason:
@@ -2544,7 +2763,9 @@ function buildProductResponsePolicy(params: {
             ? "Tiefenreinigung wird nur bei Reset-Signalen empfohlen und ueber Reset-Fokus, Intensitaet, Kopfhaut-Fokus und Farbschutz-Metadaten entschieden."
             : category === "bondbuilder"
               ? "Bondbuilder wird ueber strukturellen Damage-Bedarf, Einsatzmodus und Bondbuilding-Lane entschieden."
-              : "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten.",
+              : category === "dry_shampoo"
+                ? "Trockenshampoo wird als Between-Wash-Bruecke ueber Frische-Effekt, Farbfit, Format und Kopfhaut-Sensitivitaet entschieden."
+                : "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten.",
   }
 }
 
@@ -2586,15 +2807,21 @@ function buildCategoryGuidance(params: {
     }
 
     if (isDryLengthOnlyShampooQuestion(category, routeContext)) {
-      return "Trockene Laengen sind meist kein Shampoo-first Problem. Shampoo sollte vor allem die Kopfhaut reinigen; die Laengen brauchen eher Schutz, Conditioner oder Leave-in."
+      return isExplicitProductSelectionJob(routeContext)
+        ? "Du kannst Shampoo-Produkte empfehlen, weil der Nutzer explizit danach fragt. Caveat: Shampoo ist fuer trockene Laengen nicht der staerkste Hebel; Conditioner, Leave-in oder Maske beeinflussen sie meist staerker. Shampoo bleibt vor allem Kopfhaut-/Reinigungshebel."
+        : "Trockene Laengen sind meist kein Shampoo-first Problem. Shampoo sollte vor allem die Kopfhaut reinigen; die Laengen brauchen eher Schutz, Conditioner oder Leave-in."
     }
 
     if (isShineShampooQuestion(category, routeContext)) {
-      return "Mehr Glanz entsteht meist ueber Pflege, Oberflaeche und Stylingtechnik. Shampoo ist dafuer nicht der erste Hebel, solange die Kopfhaut ausgeglichen ist."
+      return isExplicitProductSelectionJob(routeContext)
+        ? "Du kannst Shampoo-Produkte empfehlen, weil der Nutzer explizit danach fragt. Caveat: Shampoo ist fuer mehr Glanz nicht der staerkste Hebel; Pflege, Oberflaeche und Stylingtechnik wirken meist staerker."
+        : "Mehr Glanz entsteht meist ueber Pflege, Oberflaeche und Stylingtechnik. Shampoo ist dafuer nicht der erste Hebel, solange die Kopfhaut ausgeglichen ist."
     }
 
     if (isFrizzShampooQuestion(category, routeContext)) {
-      return "Frizz ist meist ein Laengen-, Pflege- oder Stylingthema. Shampoo ist dafuer nicht der erste Hebel, solange die Kopfhaut ausgeglichen ist."
+      return isExplicitProductSelectionJob(routeContext)
+        ? "Du kannst Shampoo-Produkte empfehlen, weil der Nutzer explizit danach fragt. Caveat: Shampoo ist fuer Frizz nicht der staerkste Hebel; Frizz ist meist ein Laengen-, Pflege- oder Stylingthema. Shampoo bleibt vor allem Kopfhaut-/Reinigungshebel."
+        : "Frizz ist meist ein Laengen-, Pflege- oder Stylingthema. Shampoo ist dafuer nicht der erste Hebel, solange die Kopfhaut ausgeglichen ist."
     }
 
     if (decision === "not_recommended") {
@@ -2854,7 +3081,7 @@ async function runCategoryEngine(params: {
     case "dry_shampoo":
       return selectDryShampooProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "peeling":
-      return selectPeelingProductsWithEngine({ message, hairProfile, routineItems })
+      return selectPeelingProductsWithEngine({ message, hairProfile, routineItems, runtime })
     default:
       unsupportedCategory(String(category))
   }
@@ -3105,6 +3332,7 @@ export function createSelectProductsTool(
       runtime,
       {
         userJob,
+        message,
         concerns,
         requestedGoal,
         activeProfileSignals,

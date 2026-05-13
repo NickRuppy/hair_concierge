@@ -28,6 +28,11 @@ export const guidanceCatalog = {
     title: "Vergleichen oder entscheiden",
     path: "data/agent-guidance/playbooks/compare-or-decide.md",
   },
+  "playbook:category_comparison": {
+    kind: "playbook",
+    title: "Kategorien vergleichen",
+    path: "data/agent-guidance/playbooks/category-comparison.md",
+  },
   "playbook:usage_and_application": {
     kind: "playbook",
     title: "Anwendung und Dosierung",
@@ -93,6 +98,36 @@ export const guidanceCatalog = {
     title: "Dandruff Scalp",
     path: "data/agent-guidance/overlays/dandruff-scalp.md",
   },
+  "overlay:low_density_weight_sensitive": {
+    kind: "overlay",
+    title: "Low Density / Weight Sensitive",
+    path: "data/agent-guidance/overlays/low-density-weight-sensitive.md",
+  },
+  "overlay:frizz_control": {
+    kind: "overlay",
+    title: "Frizz Control",
+    path: "data/agent-guidance/overlays/frizz-control.md",
+  },
+  "overlay:tangling_detangling": {
+    kind: "overlay",
+    title: "Tangling / Detangling",
+    path: "data/agent-guidance/overlays/tangling-detangling.md",
+  },
+  "overlay:protein_moisture_balance": {
+    kind: "overlay",
+    title: "Protein / Moisture Balance",
+    path: "data/agent-guidance/overlays/protein-moisture-balance.md",
+  },
+  "overlay:chemical_or_color_treated": {
+    kind: "overlay",
+    title: "Chemical Or Color Treated",
+    path: "data/agent-guidance/overlays/chemical-or-color-treated.md",
+  },
+  "overlay:hair_loss_or_thinning_guardrail": {
+    kind: "overlay",
+    title: "Hair Loss Or Thinning Guardrail",
+    path: "data/agent-guidance/overlays/hair-loss-or-thinning-guardrail.md",
+  },
   "routine:curl_definition": {
     kind: "routine",
     title: "Curl Definition Routine",
@@ -111,6 +146,38 @@ export const guidanceCatalog = {
       "data/agent-guidance/routines/straight-low-definition/assembly-rules.md",
       "data/agent-guidance/routines/straight-low-definition/guardrails.md",
       "data/agent-guidance/routines/straight-low-definition/followups.md",
+    ],
+  },
+  "topic:shampoo": {
+    kind: "topic",
+    title: "Shampoo",
+    paths: [
+      "data/agent-guidance/topics/shampoo/core-fit.md",
+      "data/agent-guidance/topics/shampoo/response-playbook.md",
+    ],
+  },
+  "topic:conditioner": {
+    kind: "topic",
+    title: "Conditioner",
+    paths: [
+      "data/agent-guidance/topics/conditioner/core-fit.md",
+      "data/agent-guidance/topics/conditioner/response-playbook.md",
+    ],
+  },
+  "topic:leave_in": {
+    kind: "topic",
+    title: "Leave-in",
+    paths: [
+      "data/agent-guidance/topics/leave-in/core-fit.md",
+      "data/agent-guidance/topics/leave-in/response-playbook.md",
+    ],
+  },
+  "topic:mask": {
+    kind: "topic",
+    title: "Maske",
+    paths: [
+      "data/agent-guidance/topics/mask/core-fit.md",
+      "data/agent-guidance/topics/mask/response-playbook.md",
     ],
   },
   "topic:bond_builder": {
@@ -141,6 +208,22 @@ export const guidanceCatalog = {
       "data/agent-guidance/topics/deep-cleansing/response-playbook.md",
       "data/agent-guidance/topics/deep-cleansing/guardrails.md",
       "data/agent-guidance/topics/deep-cleansing/confusions.md",
+    ],
+  },
+  "topic:dry_shampoo": {
+    kind: "topic",
+    title: "Dry Shampoo",
+    paths: [
+      "data/agent-guidance/topics/dry-shampoo/core-fit.md",
+      "data/agent-guidance/topics/dry-shampoo/response-playbook.md",
+    ],
+  },
+  "topic:peeling": {
+    kind: "topic",
+    title: "Peeling",
+    paths: [
+      "data/agent-guidance/topics/peeling/core-fit.md",
+      "data/agent-guidance/topics/peeling/response-playbook.md",
     ],
   },
   "topic:general_haircare": {

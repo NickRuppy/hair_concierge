@@ -80,3 +80,6 @@ fix-test-user.mjs
 test-screenshots*/
 *.png
 /daily-briefing-*.md
+
+# local eval / compare-lab artifacts
+/tmp/

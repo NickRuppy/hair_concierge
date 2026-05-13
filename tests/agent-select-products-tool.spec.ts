@@ -4,7 +4,9 @@ import test from "node:test"
 import {
   createSelectProductsTool,
   projectSelectedProducts,
+  type SelectedProductsProjection,
 } from "../src/lib/agent/tools/select-products"
+import { inferOilPurposeFromMessage } from "../src/lib/oil/purpose"
 import type { MatchedProduct } from "../src/lib/rag/product-matcher"
 import type { SelectableProductCategory } from "../src/lib/agent/tools/select-products"
 import type { RecommendationEngineRuntime } from "../src/lib/recommendation-engine/runtime"
@@ -15,7 +17,11 @@ import type {
   MaskCategoryDecision,
   ShampooCategoryDecision,
 } from "../src/lib/recommendation-engine/types"
-import type { BondbuilderRecommendationMetadata, HairProfile } from "../src/lib/types"
+import type {
+  BondbuilderRecommendationMetadata,
+  DryShampooRecommendationMetadata,
+  HairProfile,
+} from "../src/lib/types"
 import { LOW_DAMAGE_PROFILE } from "./recommendation-engine-foundation.fixtures"
 
 function createMatchedProduct(
@@ -186,6 +192,47 @@ function createOilMatchedProduct(
       ...metadataOverrides,
     },
   })
+}
+
+function createDryShampooMatchedProduct(
+  id: string,
+  score: number,
+  metadataOverrides: Partial<DryShampooRecommendationMetadata> = {},
+): MatchedProduct {
+  return createMatchedProduct(id, score, {
+    category: "Trockenshampoo",
+    recommendation_meta: {
+      category: "dry_shampoo",
+      score,
+      top_reasons: ["Passt als Between-Wash-Bridge fuer den Ansatz"],
+      tradeoffs: [],
+      usage_hint:
+        "Nur als Between-Wash-Bruecke sparsam am Ansatz einsetzen und spaeter auswaschen.",
+      primary_effect: "classic_refresh",
+      hair_color_fit: "universal",
+      scalp_sensitivity_fit: "sensitive_ok",
+      format: "aerosol_spray",
+      fit_status: "ideal",
+      ...metadataOverrides,
+    },
+  })
+}
+
+function assertProjectionDoesNotExposeFallback(projection: SelectedProductsProjection): void {
+  assert.doesNotMatch(JSON.stringify(projection), /Fallback/i)
+}
+
+function assertComparisonFactsAtLeast(
+  projection: SelectedProductsProjection,
+  productIds: string[],
+  minimum: number,
+): void {
+  for (const productId of productIds) {
+    assert.ok(
+      (projection.comparison_facts?.[productId]?.length ?? 0) >= minimum,
+      `${productId} should expose at least ${minimum} comparison facts`,
+    )
+  }
 }
 
 function createRuntimeStub(
@@ -391,23 +438,21 @@ test("projectSelectedProducts returns authoritative shampoo recommendation paylo
       "Kopfhaut-Route: fettig/dehydriert",
       "Reinigungsintensitaet: normal",
       "Fit: idealer Treffer",
-      "Fallback: nein",
     ],
     "p-2": [
       "Kopfhaut-Fokus: Dehydriert / Fettig",
       "Kopfhaut-Route: fettig/dehydriert",
       "Reinigungsintensitaet: normal",
       "Fit: idealer Treffer",
-      "Fallback: nein",
     ],
     "p-3": [
       "Kopfhaut-Fokus: Dehydriert / Fettig",
       "Kopfhaut-Route: fettig/dehydriert",
       "Reinigungsintensitaet: normal",
       "Fit: idealer Treffer",
-      "Fallback: nein",
     ],
   })
+  assertProjectionDoesNotExposeFallback(result)
 })
 
 test("projectSelectedProducts returns generic recommend policy for ordinary product picks", () => {
@@ -611,9 +656,19 @@ test("projectSelectedProducts exposes conditioner claims without density or dama
       "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensitaet und Fit.",
   })
   assert.deepEqual(result.comparison_facts, {
-    "p-conditioner": ["Balance: Feuchtigkeit", "Pflegeintensitaet: Intensiv"],
-    "p-balanced": ["Balance: ausgewogene Pflege", "Pflegeintensitaet: Mittel"],
+    "p-conditioner": [
+      "Balance: Feuchtigkeit",
+      "Pflegeintensitaet: Intensiv",
+      "Fit: idealer Treffer",
+    ],
+    "p-balanced": [
+      "Balance: ausgewogene Pflege",
+      "Pflegeintensitaet: Mittel",
+      "Fit: unterstuetzender Treffer",
+    ],
   })
+  assertComparisonFactsAtLeast(result, ["p-conditioner", "p-balanced"], 2)
+  assertProjectionDoesNotExposeFallback(result)
 })
 
 test("projectSelectedProducts adds conditioner profile deviation notice when message overrides thickness", () => {
@@ -737,7 +792,7 @@ test("projectSelectedProducts keeps unsupported color requests out of conditione
   )
 })
 
-test("projectSelectedProducts uses price only as conditioner comparison fallback", () => {
+test("projectSelectedProducts keeps conditioner comparison facts useful when fit axes match", () => {
   const result = projectSelectedProducts(
     [
       createMatchedProduct("p-1", 0.94, {
@@ -802,9 +857,11 @@ test("projectSelectedProducts uses price only as conditioner comparison fallback
   )
 
   assert.deepEqual(result.comparison_facts, {
-    "p-1": ["Preis: 12.99 EUR"],
-    "p-2": ["Preis: 6.99 EUR"],
+    "p-1": ["Balance: Feuchtigkeit", "Gewicht: Mittel", "Preis: 12.99 EUR"],
+    "p-2": ["Balance: Feuchtigkeit", "Gewicht: Mittel", "Preis: 6.99 EUR"],
   })
+  assertComparisonFactsAtLeast(result, ["p-1", "p-2"], 2)
+  assertProjectionDoesNotExposeFallback(result)
 })
 
 test("projectSelectedProducts exposes leave-in claims and unsupported ingredient caveats", () => {
@@ -863,9 +920,43 @@ test("projectSelectedProducts exposes leave-in claims and unsupported ingredient
       "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit.",
   })
   assert.deepEqual(result.comparison_facts, {
-    "p-leave-in": ["Format: Spray", "Gewicht: Mittel"],
-    "p-balanced": ["Format: Creme", "Gewicht: Leicht"],
+    "p-leave-in": ["Format: Spray", "Gewicht: Mittel", "Balance: Feuchtigkeit"],
+    "p-balanced": ["Format: Creme", "Gewicht: Leicht", "Balance: ausgewogene Pflege"],
   })
+  assertComparisonFactsAtLeast(result, ["p-leave-in", "p-balanced"], 2)
+  assertProjectionDoesNotExposeFallback(result)
+})
+
+test("projectSelectedProducts describes weaker leave-in alternatives without internal fallback wording", () => {
+  const result = projectSelectedProducts(
+    [
+      createLeaveInMatchedProduct("p-primary", 0.94),
+      createLeaveInMatchedProduct("p-weaker", 0.7, {
+        fit_status: "mismatch",
+        product_format: "cream",
+        product_weight: "rich",
+        product_balance_direction: "balanced",
+        provides_heat_protection: false,
+        tradeoffs: [
+          "Fallback: Dieser Treffer passt nicht exakt zum Leave-in-Zielprofil und erscheint nur nachgeordnet.",
+        ],
+      }),
+    ],
+    {
+      hair_texture: "wavy",
+      thickness: "fine",
+      density: "medium",
+      protein_moisture_balance: "snaps",
+    } as HairProfile,
+    "leave_in",
+    createRuntimeStub(),
+  )
+
+  assertProjectionDoesNotExposeFallback(result)
+  assert.match(result.products[1]?.fit_reason ?? "", /Schwaecherer Treffer/)
+  assert.match(result.products[1]?.caveat ?? "", /Nachgeordnet|nicht ganz so passend/)
+  assert.match(result.comparison_facts?.["p-weaker"]?.join(" ") ?? "", /weicht etwas ab/)
+  assertComparisonFactsAtLeast(result, ["p-primary", "p-weaker"], 2)
 })
 
 test("selectProducts applies leave-in thickness overrides and surfaces profile deviation", async () => {
@@ -1570,9 +1661,37 @@ test("projectSelectedProducts exposes mask claims and unsupported ingredient cav
       "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Masken-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensitaet und Fit.",
   })
   assert.deepEqual(result.comparison_facts, {
-    "p-mask-1": ["Balance: Protein", "Intensitaet: Mittel"],
-    "p-mask-2": ["Balance: Ausgewogen", "Intensitaet: Hoch"],
+    "p-mask-1": ["Balance: Protein", "Intensitaet: Mittel", "Gewicht: Mittel"],
+    "p-mask-2": ["Balance: Ausgewogen", "Intensitaet: Hoch", "Gewicht: Reichhaltig"],
   })
+  assertComparisonFactsAtLeast(result, ["p-mask-1", "p-mask-2"], 2)
+  assertProjectionDoesNotExposeFallback(result)
+})
+
+test("projectSelectedProducts describes weaker mask alternatives without internal fallback wording", () => {
+  const result = projectSelectedProducts(
+    [
+      createMaskMatchedProduct("p-mask-primary", 0.94),
+      createMaskMatchedProduct("p-mask-weaker", 0.7, {
+        fit_status: "mismatch",
+        product_weight: "rich",
+        product_concentration: "high",
+        product_balance_direction: "balanced",
+        tradeoffs: [
+          "Fallback: Dieser Treffer passt nicht exakt zum Masken-Zielprofil und erscheint nur nachgeordnet.",
+        ],
+      }),
+    ],
+    LOW_DAMAGE_PROFILE,
+    "mask",
+    createRuntimeStub(),
+  )
+
+  assertProjectionDoesNotExposeFallback(result)
+  assert.match(result.products[1]?.fit_reason ?? "", /Schwaecherer Treffer/)
+  assert.match(result.products[1]?.caveat ?? "", /Nachgeordnet|nicht ganz so passend/)
+  assert.match(result.comparison_facts?.["p-mask-weaker"]?.join(" ") ?? "", /weicht etwas ab/)
+  assertComparisonFactsAtLeast(result, ["p-mask-primary", "p-mask-weaker"], 2)
 })
 
 test("projectSelectedProducts preserves unsupported active qualifiers for mask products", () => {
@@ -1675,7 +1794,7 @@ test("projectSelectedProducts exposes mask profile basis with balance and target
   assert.ok(result.profile_basis.includes("Masken-Intensitaet: Mittel"))
 })
 
-test("projectSelectedProducts uses price as mask comparison fallback when fit facts match", () => {
+test("projectSelectedProducts keeps mask comparison facts useful when fit axes match", () => {
   const result = projectSelectedProducts(
     [
       createMaskMatchedProduct("p-mask-cheap", 0.94),
@@ -1690,9 +1809,11 @@ test("projectSelectedProducts uses price as mask comparison fallback when fit fa
   )
 
   assert.deepEqual(result.comparison_facts, {
-    "p-mask-cheap": ["Preis: 4.95 EUR"],
-    "p-mask-pricey": ["Preis: 12.95 EUR"],
+    "p-mask-cheap": ["Balance: Protein", "Intensitaet: Mittel", "Preis: 4.95 EUR"],
+    "p-mask-pricey": ["Balance: Protein", "Intensitaet: Mittel", "Preis: 12.95 EUR"],
   })
+  assertComparisonFactsAtLeast(result, ["p-mask-cheap", "p-mask-pricey"], 2)
+  assertProjectionDoesNotExposeFallback(result)
 })
 
 test("projectSelectedProducts keeps optional bondbuilder assessment with priced products", () => {
@@ -2038,7 +2159,7 @@ test("projectSelectedProducts treats dry-length shampoo questions as not shampoo
     "shampoo",
     createShampooRuntimeStub(createRelevantShampooDecision()),
     {
-      userJob: "compare_or_decide",
+      userJob: "troubleshoot",
       concerns: ["dry_lengths"],
     },
   )
@@ -2096,19 +2217,19 @@ const shampooPolicyCases = [
     label: "dry lengths",
     concerns: ["dry_lengths"],
     requestedGoal: null,
-    expectedPolicy: "redirect_to_better_lever",
+    expectedPolicy: "recommend_with_caveat",
   },
   {
     label: "shine",
     concerns: [],
     requestedGoal: "shine",
-    expectedPolicy: "redirect_to_better_lever",
+    expectedPolicy: "recommend_with_caveat",
   },
   {
     label: "frizz",
     concerns: ["frizz"],
     requestedGoal: null,
-    expectedPolicy: "redirect_to_better_lever",
+    expectedPolicy: "recommend_with_caveat",
   },
   {
     label: "flakes irritation",
@@ -2126,17 +2247,107 @@ for (const entry of shampooPolicyCases) {
       "shampoo",
       createShampooRuntimeStub(createRelevantShampooDecision()),
       {
-        userJob: "compare_or_decide",
+        userJob: "product_pick",
+        message:
+          entry.label === "shine"
+            ? "welches shampoo kannst du fuer mehr glanz empfehlen"
+            : entry.label === "frizz"
+              ? "welches shampoo kannst du gegen frizz empfehlen"
+              : "welches shampoo kannst du fuer trockene laengen empfehlen",
         concerns: [...entry.concerns],
         requestedGoal: entry.requestedGoal,
       },
     )
 
-    assert.equal(result.decision, "not_recommended")
+    if (entry.expectedPolicy === "recommend_with_caveat") {
+      assert.equal(result.decision, "recommended")
+      assert.equal(result.products.length, 1)
+      assert.match(
+        result.category_guidance,
+        /nicht der staerkste Hebel|nicht der stärkste Hebel|staerkerer Hebel/i,
+      )
+    } else {
+      assert.equal(result.decision, "not_recommended")
+      assert.equal(result.products.length, 0)
+    }
     assert.equal(result.product_response_policy, entry.expectedPolicy)
-    assert.equal(result.products.length, 0)
   })
 }
+
+test("projectSelectedProducts still redirects weak-lever shampoo when the user is not explicitly asking for products", () => {
+  const result = projectSelectedProducts(
+    [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
+    { thickness: "normal", scalp_type: "balanced", scalp_condition: null } as HairProfile,
+    "shampoo",
+    createShampooRuntimeStub(createRelevantShampooDecision()),
+    {
+      userJob: "troubleshoot",
+      concerns: ["frizz"],
+      requestedGoal: null,
+    },
+  )
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+  assert.equal(result.products.length, 0)
+})
+
+test("projectSelectedProducts still redirects compare-or-decide weak-lever shampoo without explicit product ask", () => {
+  const result = projectSelectedProducts(
+    [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
+    { thickness: "normal", scalp_type: "balanced", scalp_condition: null } as HairProfile,
+    "shampoo",
+    createShampooRuntimeStub(createRelevantShampooDecision()),
+    {
+      userJob: "compare_or_decide",
+      message: "brauche ich shampoo gegen trockene laengen",
+      concerns: ["dry_lengths"],
+      requestedGoal: null,
+    },
+  )
+
+  assert.equal(result.decision, "not_recommended")
+  assert.equal(result.product_response_policy, "redirect_to_better_lever")
+  assert.equal(result.products.length, 0)
+})
+
+test("projectSelectedProducts treats explicit compare-or-decide weak-lever shampoo as caveated recommendation", () => {
+  const result = projectSelectedProducts(
+    [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
+    { thickness: "normal", scalp_type: "balanced", scalp_condition: null } as HairProfile,
+    "shampoo",
+    createShampooRuntimeStub(createRelevantShampooDecision()),
+    {
+      userJob: "compare_or_decide",
+      message: "welches shampoo ist besser gegen frizz",
+      concerns: ["frizz"],
+      requestedGoal: null,
+    },
+  )
+
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.product_response_policy, "recommend_with_caveat")
+  assert.equal(result.products.length, 1)
+})
+
+test("projectSelectedProducts treats explicit weak-lever shampoo asks as caveated even without userJob", () => {
+  const result = projectSelectedProducts(
+    [createShampooMatchedProduct("p-1", 0.94, ["Passt zum normalen Kopfhaut-Fokus"])],
+    { thickness: "normal", scalp_type: "balanced", scalp_condition: null } as HairProfile,
+    "shampoo",
+    createShampooRuntimeStub(createRelevantShampooDecision()),
+    {
+      userJob: null,
+      message: "kannst du ein shampoo gegen frizz empfehlen",
+      concerns: ["frizz"],
+      requestedGoal: null,
+    },
+  )
+
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.product_response_policy, "recommend_with_caveat")
+  assert.equal(result.products.length, 1)
+})
 
 test("projectSelectedProducts keeps itchy dandruff cautious but offers a useful next step", () => {
   const result = projectSelectedProducts(
@@ -2210,7 +2421,7 @@ test("projectSelectedProducts acknowledges oily-root shampoo troubleshooting", (
   )
 })
 
-test("projectSelectedProducts preserves explicit fallback caveats and maps stale generic mismatch caveats", () => {
+test("projectSelectedProducts sanitizes weaker shampoo caveats and maps stale generic mismatch caveats", () => {
   const result = projectSelectedProducts(
     [
       createShampooMatchedProduct(
@@ -2234,11 +2445,12 @@ test("projectSelectedProducts preserves explicit fallback caveats and maps stale
     { userJob: "product_pick", concerns: [] },
   )
 
-  assert.match(result.products[0]?.caveat ?? "", /Fallback|nicht genug sichere Treffer/i)
+  assert.match(result.products[0]?.caveat ?? "", /Nachgeordnet|nicht ganz so passend/i)
   assert.equal(
     result.products[1]?.caveat,
-    "Passt nicht exakt zum abgeleiteten Shampoo-Fokus. Nur als Fallback zeigen, wenn keine ausreichenden sicheren Treffer verfuegbar sind.",
+    "Passt nicht exakt zum abgeleiteten Shampoo-Fokus. Nur nachgeordnet zeigen, wenn keine ausreichend passenden Treffer verfuegbar sind.",
   )
+  assertProjectionDoesNotExposeFallback(result)
 })
 
 test("projectSelectedProducts exposes structured shampoo comparison facts", () => {
@@ -2277,16 +2489,15 @@ test("projectSelectedProducts exposes structured shampoo comparison facts", () =
       "Kopfhaut-Route: fettig/dehydriert",
       "Reinigungsintensitaet: normal",
       "Fit: idealer Treffer",
-      "Fallback: nein",
     ],
     "p-2": [
       "Kopfhaut-Fokus: Normal",
       "Kopfhaut-Route: ausgeglichen",
       "Reinigungsintensitaet: sanft",
       "Fit: weicht ab",
-      "Fallback: ja",
     ],
   })
+  assertProjectionDoesNotExposeFallback(result)
 })
 
 test("projectSelectedProducts exposes per-product shampoo claims from structured data only", () => {
@@ -2762,6 +2973,25 @@ test("selectProducts treats non-greasy fine-hair oil wording as a light finish t
 
   assert.equal(result.decision, "recommended")
   assert.equal(result.products[0]?.supported_claims[0]?.label, "Oel-Zweck: Leichtes Finish")
+})
+
+test("oil purpose inference keeps negated scalp finish requests out of pre-wash", () => {
+  assert.equal(
+    inferOilPurposeFromMessage("ich will oel vor dem waschen einwirken lassen"),
+    "pre_wash_oiling",
+  )
+  assert.equal(
+    inferOilPurposeFromMessage("ich moechte die kopfhaut mit oel massieren"),
+    "pre_wash_oiling",
+  )
+  assert.equal(
+    inferOilPurposeFromMessage("trockenes oel fuer die spitzen, nicht auf die kopfhaut"),
+    "light_finish",
+  )
+  assert.equal(
+    inferOilPurposeFromMessage("eher als finish, nicht auf die kopfhaut"),
+    "styling_finish",
+  )
 })
 
 test("projectSelectedProducts uses mask-specific missing-info for explicit mask requests", () => {

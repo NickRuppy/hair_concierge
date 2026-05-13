@@ -1,6 +1,9 @@
 import { appendAgentCompareJudgmentLog } from "@/lib/agent/compare/judgment-log"
 import { GUIDANCE_IDS, SELECTABLE_PRODUCT_CATEGORIES } from "@/lib/agent/contracts"
-import type { AgentCompareJudgmentRecord } from "@/lib/agent/compare/types"
+import type {
+  AgentCompareAnalysisSnapshot,
+  AgentCompareJudgmentRecord,
+} from "@/lib/agent/compare/types"
 import { SUPPORTED_PRODUCT_CLAIM_FIELDS } from "@/lib/agent/tools/select-products"
 import {
   ACTIVE_PROFILE_SIGNAL_FIELDS,
@@ -32,6 +35,7 @@ const activeSignalSelectionEffectSchema = z.enum(ACTIVE_SIGNAL_SELECTION_EFFECTS
 const supportedProductClaimFieldSchema = z.enum(SUPPORTED_PRODUCT_CLAIM_FIELDS)
 const productResponsePolicySchema = z.enum([
   "recommend",
+  "recommend_with_caveat",
   "explain_then_recommend",
   "redirect_to_better_lever",
   "caution_without_products",
@@ -66,7 +70,11 @@ const missingInfoLabelSchema = z.enum([
 ])
 
 const unsupportedRequestedSignalSchema = z.object({
-  field: z.union([activeProfileSignalFieldSchema, z.literal("ingredient_preference")]),
+  field: z.union([
+    activeProfileSignalFieldSchema,
+    z.literal("ingredient_preference"),
+    z.literal("heat_temperature"),
+  ]),
   value: z.string(),
   reason: z.enum(["no_structured_product_data", "not_a_shampoo_fit_axis", "safety_caution"]),
   user_message: z.string(),
@@ -142,21 +150,65 @@ const routeTraceSchema = z.object({
   validation_warnings: z.array(z.string()),
 })
 
-const compareRunResultSchema = z.object({
-  system: z.enum(["current", "agent"]),
-  answer: z.string(),
-  latency_ms: z.number().int().nullable(),
-  debug_lines: z.array(z.string()),
-  matched_products: z.array(
-    z.object({
-      name: z.string(),
-      category: z.string().nullable(),
-    }),
-  ),
-  product_trace: productTraceSchema.nullable().optional(),
-  route_trace: routeTraceSchema.nullable().optional(),
-  error: z.string().nullable(),
-})
+const compareTurnResultSchema = z
+  .object({
+    turn: z.number().int(),
+    prompt: z.string(),
+    answer: z.string(),
+    latency_ms: z.number().int().nullable(),
+    debug_lines: z.array(z.string()).optional(),
+    matched_products: z.array(
+      z.object({
+        name: z.string(),
+        category: z.string().nullable(),
+      }),
+    ),
+    product_trace: productTraceSchema.nullable().optional(),
+    route_trace: routeTraceSchema.nullable().optional(),
+    tool_loop_trace: z.unknown().optional(),
+    state_transition: z.unknown().optional(),
+    error: z.string().nullable(),
+  })
+  .passthrough()
+
+const compareRunResultSchema = z
+  .object({
+    system: z.enum(["current", "agent", "classic", "tool_loop"]),
+    display_label: z.string().optional(),
+    answer: z.string(),
+    latency_ms: z.number().int().nullable(),
+    debug_lines: z.array(z.string()),
+    matched_products: z.array(
+      z.object({
+        name: z.string(),
+        category: z.string().nullable(),
+      }),
+    ),
+    product_trace: productTraceSchema.nullable().optional(),
+    route_trace: routeTraceSchema.nullable().optional(),
+    tool_loop_trace: z.unknown().optional(),
+    state_transition: z.unknown().optional(),
+    turns: z.array(compareTurnResultSchema).optional(),
+    error: z.string().nullable(),
+  })
+  .passthrough()
+
+const failureBucketSchema = z.enum([
+  "semantic_state_conflict",
+  "tool_not_called",
+  "unsupported_claim",
+  "invented_product",
+  "latency",
+  "other",
+  "none",
+])
+
+const toolLoopVariantSchema = z.enum([
+  "baseline",
+  "inline_context",
+  "guidance_tool",
+  "composer_context",
+])
 
 const judgmentRecordSchema = z.object({
   createdAt: z.string().datetime(),
@@ -166,6 +218,7 @@ const judgmentRecordSchema = z.object({
     full_name: z.string().nullable(),
   }),
   prompt: z.string().min(1),
+  toolLoopVariant: toolLoopVariantSchema.optional(),
   context: z.object({
     user_id: z.string().min(1),
     derived_signals: z.array(z.string()),
@@ -198,7 +251,23 @@ const judgmentRecordSchema = z.object({
       "anderes",
     ]),
     note: z.string(),
+    failure_bucket: failureBucketSchema.default("none"),
+    critical_product_claim_failure: z.boolean().default(false),
   }),
+  rollout_metrics: z
+    .object({
+      blinded_winner: z.enum(["classic", "tool_loop", "tie"]),
+      failure_bucket: failureBucketSchema,
+      critical_product_claim_failure: z.boolean(),
+      latency_ms: z.object({
+        classic: z.number().int().nullable(),
+        tool_loop: z.number().int().nullable(),
+      }),
+      tool_loop_model_steps: z.number().int().nullable(),
+      tool_loop_tool_calls: z.number().int().nullable(),
+    })
+    .optional(),
+  analysis_snapshot: z.custom<AgentCompareAnalysisSnapshot>().optional(),
 })
 
 interface JudgmentRouteDeps {

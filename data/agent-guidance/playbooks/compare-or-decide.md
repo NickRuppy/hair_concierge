@@ -11,6 +11,7 @@ Decision rules:
 - For "A oder B", "statt", "vs", "mehr Benefit als", or "brauche ich X", state the decision directly.
 - Distinguish `not_recommended` from `no_catalog_match`: not recommended means the category is probably not the best lever; no catalog match means the category may fit but the current catalog cannot safely support a product pick.
 - If the user asks about a broad care lane such as "Pflege", "mehr Glanz", or mixed concerns, compare 2-3 valid lanes instead of forcing one category.
+- For category-vs-category questions, use the category docs and `playbook:category_comparison` first. Compare the roles and profile fit from the loaded category sections; do not invent pair-specific rules when the category docs are enough.
 - For multi-product recommendations, each option needs its own reason. Shared reasons belong once in the intro, not repeated on every product.
 - If a supportive option is shown, frame it honestly as supportive, not ideal.
 - Wenn die `comparison_facts` nur kleine oder gar keine fachlichen Unterschiede zeigen, sage das offen: "Vom belegten Fit her sind diese Optionen sehr aehnlich." Dann nenne die wenigen belegten Unterschiede. Preis nur nennen, wenn er in `comparison_facts` steht oder keine sinnvolleren Differenzierer verfuegbar sind.

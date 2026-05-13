@@ -1,52 +1,38 @@
-import { loadGuidance } from "@/lib/agent/guidance/load-guidance"
 import {
-  createOpenAIToolModelClient,
-  type AgentModelClient,
+  createOpenAIAgenticToolLoopModelClient,
+  type AgenticToolLoopModelClient,
 } from "@/lib/agent/orchestrator/model-client"
-import { AGENT_FINAL_RENDER_PROMPT } from "@/lib/agent/orchestrator/prompt"
-import {
-  deriveRequestedGoal,
-  runShadowAgentTurn,
-} from "@/lib/agent/orchestrator/run-shadow-agent-turn"
-import type { AgentToolName } from "@/lib/agent/orchestrator/tool-definitions"
-import type {
-  AgentActiveProfileSignal,
-  AgentConcern,
-  AgentRoutePacket,
-  AgentRuntimePacket,
-  AgentUserJob,
-} from "@/lib/agent/orchestrator/route-packet"
-import {
-  isActiveProfileSignalField,
-  isActiveSignalSelectionEffect,
-} from "@/lib/agent/orchestrator/route-packet"
-import {
-  isGuidanceId,
-  isSelectableProductCategory,
-  type GuidanceId,
-  type SelectableProductCategory,
-} from "@/lib/agent/contracts"
+import { runAgenticToolTurn } from "@/lib/agent/orchestrator/run-agentic-tool-turn"
+import { isSelectableProductCategory, type SelectableProductCategory } from "@/lib/agent/contracts"
 import {
   createBuildOrFixRoutineTool,
   type BuildOrFixRoutineProjection,
+  type BuildOrFixRoutineToolInput,
   type RoutineObjective,
 } from "@/lib/agent/tools/build-or-fix-routine"
 import { getUserContext, type UserContextProjection } from "@/lib/agent/tools/get-user-context"
+import {
+  loadAdvisorGuidance,
+  normalizeAdvisorGuidanceCategories,
+  normalizeAdvisorGuidanceCategory,
+  normalizeAdvisorGuidanceIntent,
+  normalizeAdvisorProfileFocus,
+  type AdvisorGuidanceProjection,
+  type LoadAdvisorGuidanceInput,
+} from "@/lib/agent/tools/load-advisor-guidance"
 import {
   createSelectProductsTool,
   type SelectedProductsProjection,
   type SelectProductsToolResult,
 } from "@/lib/agent/tools/select-products"
 import {
-  buildRecommendationEngineRuntimeForChat,
   buildRecommendationEngineTrace,
   getRuntimeCategoryDecision,
 } from "@/lib/recommendation-engine"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { DEFAULT_CHAT_COMPLETION_MODEL } from "@/lib/openai/chat"
-import { computeConversationStateTransition } from "@/lib/rag/conversation-state"
 import { loadConversationState as loadPersistedConversationState } from "@/lib/rag/conversation-state-store"
-import { buildPipelineTraceDraft } from "@/lib/rag/debug-trace"
+import { buildPipelineTraceDraft, projectAgenticToolLoopTraceForApp } from "@/lib/rag/debug-trace"
 import type { PipelineParams, PipelineResult } from "@/lib/rag/contracts"
 import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/rag/user-memory"
 import type {
@@ -64,25 +50,23 @@ import type {
   RouterDecision,
 } from "@/lib/types"
 
-type ConversationHistoryProjection = Array<{
-  role: Message["role"]
-  content: string | null
-  created_at: string
-}>
-
-type ProductionUserContext = UserContextProjection & {
-  conversation_history: ConversationHistoryProjection
-  conversation_state: ConversationState
+type RecentConversationMessage = {
+  role: "user" | "assistant"
+  content: string
 }
 
 interface ProductionAgentPipelineDeps {
-  modelClient?: AgentModelClient
+  modelClient?: AgenticToolLoopModelClient
   loadConversationHistory?: (conversationId: string) => Promise<Message[]>
   getUserContext?: (userId: string) => Promise<UserContextProjection>
   loadUserMemoryContext?: (userId: string) => Promise<UserMemoryContext>
   loadConversationState?: (conversationId: string) => Promise<ConversationState>
   createSelectProductsTool?: typeof createSelectProductsTool
+  createBuildOrFixRoutineTool?: typeof createBuildOrFixRoutineTool
+  loadAdvisorGuidance?: (input: LoadAdvisorGuidanceInput) => Promise<AdvisorGuidanceProjection>
 }
+
+type SelectProductsToolParams = Parameters<ReturnType<typeof createSelectProductsTool>>[0]
 
 async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; durationMs: number }> {
   const start = performance.now()
@@ -98,8 +82,6 @@ function createTextStream(content: string): ReadableStream<Uint8Array> {
 
   return new ReadableStream({
     start(controller) {
-      // Agent v1 renders the full bounded-agent answer before returning to /api/chat.
-      // Keep the stream wrapper so the existing SSE persistence/debug envelope stays unchanged.
       if (content.length > 0) {
         controller.enqueue(encoder.encode(content))
       }
@@ -130,172 +112,6 @@ function normalizeRoutineProductCategory(value: unknown) {
   return typeof value === "string" && isSelectableProductCategory(value) ? value : null
 }
 
-function normalizeAgentUserJob(value: unknown): AgentUserJob | null {
-  return typeof value === "string" ? (value as AgentUserJob) : null
-}
-
-function normalizeAgentConcerns(value: unknown): AgentConcern[] {
-  return Array.isArray(value)
-    ? (value.filter((item): item is AgentConcern => typeof item === "string") as AgentConcern[])
-    : []
-}
-
-function normalizeRequestedGoal(value: unknown, message: string): "shine" | null {
-  return value === "shine" ? "shine" : deriveRequestedGoal(message)
-}
-
-function normalizeGuidanceIds(value: unknown): GuidanceId[] {
-  if (!Array.isArray(value)) return []
-  return value.filter((item): item is GuidanceId => typeof item === "string" && isGuidanceId(item))
-}
-
-function normalizeActiveProfileSignals(value: unknown): AgentActiveProfileSignal[] {
-  if (!Array.isArray(value)) return []
-
-  return value.flatMap((item): AgentActiveProfileSignal[] => {
-    if (!item || typeof item !== "object") return []
-
-    const signal = item as Record<string, unknown>
-    if (typeof signal.field !== "string") return []
-    if (typeof signal.selection_effect !== "string") return []
-    if (!isActiveProfileSignalField(signal.field)) return []
-    if (!isActiveSignalSelectionEffect(signal.selection_effect)) return []
-    if (signal.source !== "message") return []
-    if (typeof signal.value !== "string" || signal.value.trim().length === 0) return []
-
-    return [
-      {
-        field: signal.field,
-        value: signal.value.trim(),
-        source: "message",
-        selection_effect: signal.selection_effect,
-        evidence: typeof signal.evidence === "string" ? signal.evidence : "",
-      },
-    ]
-  })
-}
-
-export function mapAgentIntent(route: AgentRoutePacket): IntentType {
-  switch (route.user_job) {
-    case "product_pick":
-    case "compare_or_decide":
-      return "product_recommendation"
-    case "routine_structure":
-      return "routine_help"
-    case "troubleshoot":
-      return "diagnosis"
-    case "usage":
-      return "hair_care_advice"
-    case "unsupported_or_unclear":
-      return "general_chat"
-  }
-}
-
-export function mapAgentProductCategory(route: AgentRoutePacket): ProductCategory {
-  if (route.product_category) return route.product_category
-  return route.user_job === "routine_structure" ? "routine" : null
-}
-
-function hasRoutineMissingInfo(
-  route: AgentRoutePacket,
-  routinePlan: BuildOrFixRoutineProjection | null | undefined,
-): boolean {
-  return route.user_job === "routine_structure" && (routinePlan?.missing_info.length ?? 0) > 0
-}
-
-function deriveResponseMode(params: {
-  route: AgentRoutePacket
-  selectedProducts: SelectedProductsProjection | null
-  routinePlan?: BuildOrFixRoutineProjection | null
-}): ResponseMode {
-  return params.selectedProducts?.decision === "needs_more_info" ||
-    hasRoutineMissingInfo(params.route, params.routinePlan)
-    ? "clarify_only"
-    : "answer_direct"
-}
-
-function missingProfilePolicyTag(
-  selectedProducts: SelectedProductsProjection | null,
-): string | null {
-  if (selectedProducts?.decision !== "needs_more_info") return null
-
-  switch (selectedProducts.category) {
-    case "shampoo":
-      return "missing_shampoo_profile"
-    case "conditioner":
-      return "missing_conditioner_profile"
-    case "leave_in":
-      return "missing_leave_in_profile"
-    case "mask":
-      return "missing_mask_profile"
-    case "oil":
-      return "missing_oil_profile"
-    default:
-      return null
-  }
-}
-
-export function buildClassification(route: AgentRoutePacket): ClassificationResult {
-  return {
-    intent: mapAgentIntent(route),
-    product_category: mapAgentProductCategory(route),
-    complexity: route.guidance_ids.length > 1 ? "multi_constraint" : "simple",
-    needs_clarification: Boolean(route.ambiguity),
-    retrieval_mode: "agent_engine",
-    normalized_filters: {
-      user_job: route.user_job,
-      concerns: route.concerns,
-      active_profile_signals: route.active_profile_signals.map(
-        (signal) => `${signal.field}:${signal.value}:${signal.selection_effect}`,
-      ),
-      ambiguity: route.ambiguity,
-    },
-    router_confidence: route.confidence,
-  }
-}
-
-export function buildRouterDecision(params: {
-  route: AgentRoutePacket
-  selectedProducts: SelectedProductsProjection | null
-  routinePlan?: BuildOrFixRoutineProjection | null
-}): RouterDecision {
-  const responseMode = deriveResponseMode(params)
-  const policyOverrides = ["agent_v1_front_door"]
-
-  if (params.selectedProducts?.product_response_policy) {
-    policyOverrides.push(`product_policy:${params.selectedProducts.product_response_policy}`)
-  }
-
-  const missingPolicyTag = missingProfilePolicyTag(params.selectedProducts)
-  if (missingPolicyTag) {
-    policyOverrides.push(missingPolicyTag)
-  }
-
-  if (params.route.validation_warnings.length > 0) {
-    policyOverrides.push("agent_route_validation_warnings")
-  }
-
-  if (hasRoutineMissingInfo(params.route, params.routinePlan)) {
-    policyOverrides.push("missing_routine_frame")
-  }
-
-  return {
-    retrieval_mode: "agent_engine",
-    response_mode: responseMode,
-    clarification_reason:
-      responseMode === "clarify_only" && hasRoutineMissingInfo(params.route, params.routinePlan)
-        ? "missing_routine_frame"
-        : responseMode === "clarify_only"
-          ? (params.selectedProducts?.missing_info[0]?.detail ??
-            params.route.ambiguity ??
-            undefined)
-          : undefined,
-    slot_completeness: responseMode === "clarify_only" ? 0.5 : 1,
-    confidence: params.route.confidence,
-    policy_overrides: policyOverrides,
-  }
-}
-
 function promptRef(name: string): LangfusePromptReference {
   return {
     name,
@@ -305,41 +121,30 @@ function promptRef(name: string): LangfusePromptReference {
   }
 }
 
-function buildPromptSnapshot(params: {
+function buildToolLoopPromptSnapshot(params: {
   message: string
-  packet: AgentRuntimePacket
+  recentMessages: RecentConversationMessage[]
 }): ChatPromptSnapshot {
+  const recentMessageRoles = params.recentMessages.slice(-4).map((message) => message.role)
+
   return {
-    kind: "agent_final_render",
+    kind: "agentic_tool_loop",
     model: DEFAULT_CHAT_COMPLETION_MODEL,
     temperature: 0,
-    prompt_ref: promptRef("bounded-agent-final-render"),
-    system_prompt: AGENT_FINAL_RENDER_PROMPT,
+    prompt_ref: promptRef("agentic-tool-loop"),
+    system_prompt: "agentic_tool_loop",
     messages: [
-      { role: "system", content: AGENT_FINAL_RENDER_PROMPT },
       {
         role: "user",
         content: JSON.stringify({
-          message: params.message,
-          packet: params.packet,
+          latest_user_message_chars: params.message.length,
+          recent_message_count: params.recentMessages.length,
+          recent_message_roles: recentMessageRoles,
+          engine: "agentic_tool_loop",
         }),
       },
     ],
   }
-}
-
-export function productsForRenderedPacket(params: {
-  runtimePacket: AgentRuntimePacket
-  selectedProducts: Product[]
-}): Product[] {
-  const renderedProducts = params.runtimePacket.selected_products?.products ?? []
-  if (renderedProducts.length === 0) return []
-
-  const productsById = new Map(params.selectedProducts.map((product) => [product.id, product]))
-
-  return renderedProducts
-    .map((product) => productsById.get(product.product_id) ?? null)
-    .filter((product): product is Product => Boolean(product))
 }
 
 async function loadConversationHistory(conversationId: string): Promise<Message[]> {
@@ -359,49 +164,231 @@ async function loadConversationHistory(conversationId: string): Promise<Message[
   return (data as Message[]) ?? []
 }
 
-function projectConversationHistory(messages: Message[]): ConversationHistoryProjection {
-  return messages.map((message) => ({
-    role: message.role,
-    content: message.content,
-    created_at: message.created_at,
-  }))
+function projectRecentMessages(messages: Message[]): RecentConversationMessage[] {
+  return messages.flatMap((message): RecentConversationMessage[] => {
+    if (message.role !== "user" && message.role !== "assistant") return []
+    const content = message.content?.trim()
+    if (!content) return []
+    return [{ role: message.role, content }]
+  })
 }
 
-function makeAgentTools(params: {
-  message: string
-  userContext: ProductionUserContext
-  memoryContext: UserMemoryContext
+function makeAgenticTools(params: {
   onSelectProducts: (result: SelectProductsToolResult) => void
   createSelectProductsTool?: typeof createSelectProductsTool
-}): Record<AgentToolName, (input: Record<string, unknown>) => Promise<unknown>> {
+  createBuildOrFixRoutineTool?: typeof createBuildOrFixRoutineTool
+  loadAdvisorGuidance?: (input: LoadAdvisorGuidanceInput) => Promise<AdvisorGuidanceProjection>
+}): Parameters<typeof runAgenticToolTurn>[0]["tools"] {
   const selectProducts = (params.createSelectProductsTool ?? createSelectProductsTool)({
     onResult: params.onSelectProducts,
   })
-  const buildOrFixRoutine = createBuildOrFixRoutineTool()
+  const buildOrFixRoutine = (params.createBuildOrFixRoutineTool ?? createBuildOrFixRoutineTool)()
+  const advisorGuidance = params.loadAdvisorGuidance ?? loadAdvisorGuidance
 
   return {
-    get_user_context: async () => params.userContext,
-    load_guidance: async (input) => loadGuidance(normalizeGuidanceIds(input.ids)),
+    load_advisor_guidance: async (input) =>
+      advisorGuidance({
+        intent: normalizeAdvisorGuidanceIntent(input.intent),
+        category: normalizeAdvisorGuidanceCategory(input.category),
+        categories: normalizeAdvisorGuidanceCategories(input.categories),
+        profileFocus: normalizeAdvisorProfileFocus(input.profileFocus),
+        message: typeof input.message === "string" ? input.message : "",
+        userContext:
+          input.userContext && typeof input.userContext === "object"
+            ? (input.userContext as UserContextProjection)
+            : {
+                profile: null,
+                routine_inventory: [],
+                relevant_memory: [],
+                derived_signals: [],
+                suggested_overlays: [],
+                missing_profile: [],
+              },
+        conversationState:
+          input.conversationState && typeof input.conversationState === "object"
+            ? (input.conversationState as ConversationState)
+            : null,
+      }),
     select_products: async (input) =>
       selectProducts({
+        ...(input as SelectProductsToolParams),
         category: normalizeSelectableCategory(input.category),
-        message: params.message,
-        hairProfile: params.userContext.profile,
-        memoryContext: params.memoryContext,
-        routineItems: params.userContext.routine_inventory,
-        userJob: normalizeAgentUserJob(input.userJob),
-        concerns: normalizeAgentConcerns(input.concerns),
-        requestedGoal: normalizeRequestedGoal(input.requestedGoal, params.message),
-        activeProfileSignals: normalizeActiveProfileSignals(input.activeProfileSignals),
       }),
     build_or_fix_routine: async (input) =>
       buildOrFixRoutine({
+        ...(input as unknown as BuildOrFixRoutineToolInput),
         objective: normalizeRoutineObjective(input.objective),
-        message: params.message,
-        hairProfile: params.userContext.profile,
         layer: normalizeRoutineLayer(input.layer),
         requestedCategory: normalizeRoutineProductCategory(input.requestedCategory),
       }),
+  }
+}
+
+function deriveToolLoopIntent(params: {
+  visibleFailure: boolean
+  toolNames: string[]
+}): IntentType {
+  if (params.visibleFailure) return "general_chat"
+  if (params.toolNames.includes("select_products")) return "product_recommendation"
+  if (params.toolNames.includes("build_or_fix_routine")) return "routine_help"
+  if (params.toolNames.includes("load_advisor_guidance")) return "hair_care_advice"
+  return "general_chat"
+}
+
+function deriveProductCategory(params: {
+  visibleFailure: boolean
+  selectedProducts: SelectedProductsProjection | null
+  routinePlan: BuildOrFixRoutineProjection | null
+  state: ConversationState
+}): ProductCategory {
+  if (params.visibleFailure) return null
+  if (params.selectedProducts?.category) return params.selectedProducts.category
+  if (params.routinePlan) return "routine"
+  const activeTopic = params.state.active_topic
+  return activeTopic === "routine" ? "routine" : activeTopic
+}
+
+function hasBlockingRoutineMissingInfo(routinePlan: BuildOrFixRoutineProjection | null): boolean {
+  return Boolean(routinePlan?.missing_info.some((item) => item.blocking))
+}
+
+function deriveResponseMode(params: {
+  visibleFailure: boolean
+  selectedProducts: SelectedProductsProjection | null
+  routinePlan: BuildOrFixRoutineProjection | null
+}): ResponseMode {
+  return params.visibleFailure ||
+    params.selectedProducts?.decision === "needs_more_info" ||
+    hasBlockingRoutineMissingInfo(params.routinePlan)
+    ? "clarify_only"
+    : "answer_direct"
+}
+
+function deriveMissingProfilePolicyOverride(
+  selectedProducts: SelectedProductsProjection | null,
+): string | null {
+  if (selectedProducts?.decision !== "needs_more_info") return null
+  if (!selectedProducts.missing_info.some((item) => item.blocking)) return null
+
+  switch (selectedProducts.category) {
+    case "shampoo":
+      return "missing_shampoo_profile"
+    case "conditioner":
+      return "missing_conditioner_profile"
+    case "leave_in":
+      return "missing_leave_in_profile"
+    case "mask":
+      return "missing_mask_profile"
+    case "oil":
+      return "missing_oil_profile"
+    default:
+      return null
+  }
+}
+
+function buildToolLoopRouterDecision(params: {
+  visibleFailure: boolean
+  selectedProducts: SelectedProductsProjection | null
+  routinePlan: BuildOrFixRoutineProjection | null
+  repairAttempted: boolean
+}): RouterDecision {
+  const responseMode = deriveResponseMode(params)
+  const policyOverrides = ["agentic_tool_loop"]
+
+  if (params.selectedProducts?.product_response_policy) {
+    policyOverrides.push(`product_policy:${params.selectedProducts.product_response_policy}`)
+  }
+
+  const missingProfileOverride = deriveMissingProfilePolicyOverride(params.selectedProducts)
+  if (missingProfileOverride) {
+    policyOverrides.push(missingProfileOverride)
+  }
+
+  if (params.repairAttempted) {
+    policyOverrides.push("terminal_protocol_repair_attempted")
+  }
+
+  if (params.visibleFailure) {
+    policyOverrides.push("visible_failure")
+  }
+
+  if (hasBlockingRoutineMissingInfo(params.routinePlan)) {
+    policyOverrides.push("missing_routine_frame")
+  }
+
+  return {
+    retrieval_mode: "agentic_tool_loop",
+    response_mode: responseMode,
+    clarification_reason:
+      responseMode === "clarify_only" && params.visibleFailure
+        ? "tool_loop_visible_failure"
+        : responseMode === "clarify_only" && params.selectedProducts?.missing_info[0]
+          ? params.selectedProducts.missing_info[0].detail
+          : responseMode === "clarify_only" && hasBlockingRoutineMissingInfo(params.routinePlan)
+            ? "missing_routine_frame"
+            : undefined,
+    slot_completeness: responseMode === "clarify_only" ? 0.5 : 1,
+    confidence: params.visibleFailure ? 0 : params.repairAttempted ? 0.5 : 1,
+    policy_overrides: policyOverrides,
+  }
+}
+
+function buildToolLoopClassification(params: {
+  intent: IntentType
+  productCategory: ProductCategory
+  routerDecision: RouterDecision
+  toolNames: string[]
+}): ClassificationResult {
+  return {
+    intent: params.intent,
+    product_category: params.productCategory,
+    complexity: params.toolNames.length > 1 ? "multi_constraint" : "simple",
+    needs_clarification: params.routerDecision.response_mode === "clarify_only",
+    retrieval_mode: params.routerDecision.retrieval_mode,
+    normalized_filters: {
+      engine: "agentic_tool_loop",
+      tool_calls: params.toolNames,
+    },
+    router_confidence: params.routerDecision.confidence,
+  }
+}
+
+function deriveMatchedProducts(params: {
+  surfacedProductIds: string[]
+  selectedProductsResult: SelectProductsToolResult | null
+}): Product[] {
+  const selectedProducts = params.selectedProductsResult?.products ?? []
+  if (selectedProducts.length === 0) return []
+
+  const selectedProductsById = new Map(selectedProducts.map((product) => [product.id, product]))
+  const surfacedProducts = params.surfacedProductIds.flatMap((id) => {
+    const product = selectedProductsById.get(id)
+    return product ? [product] : []
+  })
+
+  return surfacedProducts.length > 0 ? surfacedProducts : selectedProducts
+}
+
+function deriveEngineArtifacts(selectedProductsResult: SelectProductsToolResult | null): {
+  categoryDecision: ChatCategoryDecision | undefined
+  engineTrace: RecommendationEngineTrace | undefined
+} {
+  if (!selectedProductsResult) {
+    return {
+      categoryDecision: undefined,
+      engineTrace: undefined,
+    }
+  }
+
+  const productCategory = selectedProductsResult.projection.category as ProductCategory
+  return {
+    categoryDecision: getRuntimeCategoryDecision(
+      selectedProductsResult.runtime,
+      productCategory,
+    ) as ChatCategoryDecision | undefined,
+    engineTrace: buildRecommendationEngineTrace({
+      runtime: selectedProductsResult.runtime,
+    }),
   }
 }
 
@@ -418,7 +405,7 @@ export async function runProductionAgentPipeline(
 
   const [
     { result: conversationHistory, durationMs: historyLoadMs },
-    { result: userContextBase, durationMs: contextLoadMs },
+    { result: userContext, durationMs: contextLoadMs },
     { result: memoryContext, durationMs: memoryLoadMs },
     { result: conversationState },
   ] = await Promise.all([
@@ -432,110 +419,81 @@ export async function runProductionAgentPipeline(
     ),
   ])
 
-  const userContext: ProductionUserContext = {
-    ...userContextBase,
-    conversation_history: projectConversationHistory(conversationHistory),
-    conversation_state: conversationState,
-  }
+  const recentMessages = projectRecentMessages(conversationHistory)
   const selectedProductsHolder: { current: SelectProductsToolResult | null } = { current: null }
 
   const agentStart = performance.now()
-  const result = await runShadowAgentTurn({
+  const toolLoopResult = await runAgenticToolTurn({
     message,
-    modelClient: deps.modelClient ?? createOpenAIToolModelClient(),
-    conversationState,
-    tools: makeAgentTools({
-      message,
-      userContext,
-      memoryContext,
+    recentMessages,
+    modelClient: deps.modelClient ?? createOpenAIAgenticToolLoopModelClient(),
+    tools: makeAgenticTools({
       onSelectProducts: (selection) => {
         selectedProductsHolder.current = selection
       },
       createSelectProductsTool: deps.createSelectProductsTool,
+      createBuildOrFixRoutineTool: deps.createBuildOrFixRoutineTool,
+      loadAdvisorGuidance: deps.loadAdvisorGuidance,
     }),
+    userContext,
+    conversationState,
+    answerCompositionMode: "inline_context",
   })
   const agentMs = Math.round(performance.now() - agentStart)
 
-  const selectedProductsResult: SelectProductsToolResult | null = selectedProductsHolder.current
-  const selectedProducts = selectedProductsResult?.projection ?? null
-  const route = result.route_trace
-  const intent = mapAgentIntent(route)
-  const productCategory = mapAgentProductCategory(route)
-  const baseRouterDecision = buildRouterDecision({
-    route,
-    selectedProducts,
-    routinePlan: result.runtime_packet.routine_plan,
+  const selectedProductsResult = selectedProductsHolder.current
+  const toolNames = toolLoopResult.tool_calls.map((call) => call.name)
+  const visibleFailure = toolLoopResult.trace.visible_failure
+  const intent = deriveToolLoopIntent({
+    visibleFailure,
+    toolNames,
   })
-  const routerDecision = result.classification_override
-    ? {
-        ...baseRouterDecision,
-        policy_overrides: [...baseRouterDecision.policy_overrides, result.classification_override],
-      }
-    : baseRouterDecision
-  const classification = buildClassification(route)
-  const shouldPlanRoutine = route.user_job === "routine_structure"
-  const assistantAction =
-    routerDecision.response_mode === "clarify_only"
-      ? routerDecision.clarification_reason === "missing_routine_frame"
-        ? "asked_routine_basics"
-        : "asked_clarification"
-      : shouldPlanRoutine
-        ? route.routine_layer === "basics"
-          ? "answered_routine_basics"
-          : "answered_routine"
-        : "answered_direct"
-  const conversationStateTransition = computeConversationStateTransition({
-    previousState: conversationState,
-    classification,
+  const productCategory = deriveProductCategory({
+    visibleFailure,
+    selectedProducts: toolLoopResult.selected_products,
+    routinePlan: toolLoopResult.routine_plan,
+    state: toolLoopResult.state_transition.next_state,
+  })
+  const routerDecision = buildToolLoopRouterDecision({
+    visibleFailure,
+    selectedProducts: toolLoopResult.selected_products,
+    routinePlan: toolLoopResult.routine_plan,
+    repairAttempted: toolLoopResult.trace.repair_attempts.length > 0,
+  })
+  const classification = buildToolLoopClassification({
+    intent,
+    productCategory,
     routerDecision,
-    userMessage: message,
-    assistantAction,
-    hairProfile: userContext.profile,
-    matchedProductCategory: route.routine_requested_category ?? productCategory,
-    classifierOverride: result.classification_override,
+    toolNames,
   })
-  const matchedProducts = productsForRenderedPacket({
-    runtimePacket: result.runtime_packet,
-    selectedProducts: selectedProductsResult?.products ?? [],
+  const matchedProducts = deriveMatchedProducts({
+    surfacedProductIds: toolLoopResult.surfaced_product_ids,
+    selectedProductsResult,
   })
-  const engineRuntime =
-    selectedProductsResult?.runtime ??
-    buildRecommendationEngineRuntimeForChat({
-      hairProfile: userContext.profile,
-      routineItems: userContext.routine_inventory,
-      productCategory,
-      shouldPlanRoutine: route.user_job === "routine_structure",
-      message,
-    })
-  const categoryDecision = selectedProductsResult
-    ? (getRuntimeCategoryDecision(
-        engineRuntime,
-        selectedProductsResult.projection.category as ProductCategory,
-      ) as ChatCategoryDecision | null)
-    : productCategory !== "routine"
-      ? (getRuntimeCategoryDecision(engineRuntime, productCategory) as ChatCategoryDecision | null)
-      : null
-  const engineTrace: RecommendationEngineTrace = buildRecommendationEngineTrace({
-    runtime: engineRuntime,
-  })
-  const prompt = buildPromptSnapshot({
+  const { categoryDecision, engineTrace } = deriveEngineArtifacts(selectedProductsResult)
+  const exposedMatchedProducts = visibleFailure ? [] : matchedProducts
+  const exposedCategoryDecision = visibleFailure ? undefined : categoryDecision
+  const exposedEngineTrace = visibleFailure ? undefined : engineTrace
+  const exposedProductCategory = visibleFailure ? null : productCategory
+  const attachmentMode = exposedMatchedProducts.length > 0 ? "cards" : "text_only"
+  const prompt = buildToolLoopPromptSnapshot({
     message,
-    packet: result.runtime_packet,
+    recentMessages,
   })
   const debugTrace = buildPipelineTraceDraft({
     request_id: requestId,
     started_at: startedAt,
-    user_message: message,
+    user_message: `[tool_loop_user_message chars=${message.length}]`,
     conversation_id: conversationId,
     intent,
-    product_category: productCategory,
+    product_category: exposedProductCategory,
     conversation_history_count: conversationHistory.length,
     classification,
     router_decision: routerDecision,
-    conversation_state: conversationStateTransition,
+    conversation_state: toolLoopResult.state_transition,
     clarification_questions:
-      routerDecision.response_mode === "clarify_only" && selectedProducts?.missing_info[0]
-        ? [selectedProducts.missing_info[0].detail]
+      routerDecision.response_mode === "clarify_only" && routerDecision.clarification_reason
+        ? [routerDecision.clarification_reason]
         : [],
     hair_profile_snapshot: userContext.profile,
     memory_context: memoryContext.promptContext,
@@ -549,22 +507,29 @@ export async function runProductionAgentPipeline(
     },
     retrieval_count: 0,
     retrieved_chunks: [],
-    should_plan_routine: shouldPlanRoutine,
-    category_decision: categoryDecision ?? undefined,
-    engine_trace: engineTrace,
-    matched_products: matchedProducts,
-    classification_prompt_ref: promptRef("bounded-agent-route-classification"),
+    should_plan_routine: Boolean(toolLoopResult.routine_plan),
+    category_decision: exposedCategoryDecision,
+    engine_trace: exposedEngineTrace,
+    matched_products: exposedMatchedProducts,
+    classification_prompt_ref: promptRef("agentic-tool-loop"),
     prompt,
     response_composition: {
-      path: "agent_final_render",
-      migration_mode: "legacy_only",
+      path: "agentic_tool_loop",
+      migration_mode: "tool_loop",
       fallback_reason: null,
       rendering_path: null,
-      plan_type: "agent_v1",
-      attachment_mode: matchedProducts.length > 0 ? "cards" : "text_only",
+      plan_type: "tool_loop",
+      attachment_mode: attachmentMode,
     },
+    engine_variant: "tool_loop",
+    agentic_tool_loop: projectAgenticToolLoopTraceForApp({
+      runtimeTrace: toolLoopResult.trace,
+      selectedProducts: toolLoopResult.selected_products,
+      routinePlan: toolLoopResult.routine_plan,
+      latencyMs: agentMs,
+    }),
     latencies_ms: {
-      classification_ms: agentMs,
+      classification_ms: 0,
       hair_profile_load_ms: contextLoadMs,
       routine_inventory_load_ms: 0,
       memory_load_ms: memoryLoadMs,
@@ -573,25 +538,26 @@ export async function runProductionAgentPipeline(
       router_ms: 0,
       conversation_create_ms: 0,
       retrieval_ms: 0,
-      product_matching_ms: selectedProductsResult ? agentMs : 0,
+      product_matching_ms: 0,
       prompt_build_ms: 0,
       stream_setup_ms: 0,
     },
   })
 
   return {
-    stream: createTextStream(result.final_answer),
+    stream: createTextStream(toolLoopResult.final_answer),
     conversationId,
     intent,
-    matchedProducts,
+    matchedProducts: exposedMatchedProducts,
     sources: [],
-    conversationStateTransition,
+    conversationStateTransition: toolLoopResult.state_transition,
     retrievalSummary: {
       final_context_count: 0,
     },
     routerDecision,
-    categoryDecision: categoryDecision ?? undefined,
-    engineTrace,
+    categoryDecision: exposedCategoryDecision,
+    engineTrace: exposedEngineTrace,
     debugTrace,
+    visibleFailure,
   }
 }

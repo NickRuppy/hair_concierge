@@ -2,6 +2,14 @@ export interface AgentComparePromptTemplate {
   id: string
   label: string
   prompt: string
+  failure_classes?: string[]
+}
+
+export interface AgentCompareMultiTurnChain {
+  id: string
+  label: string
+  turns: string[]
+  failure_classes: string[]
 }
 
 export const SHAMPOO_QA_PROMPT_TEMPLATES: AgentComparePromptTemplate[] = [
@@ -220,6 +228,134 @@ export const GENERAL_COMPARE_PROMPT_TEMPLATES: AgentComparePromptTemplate[] = [
   },
 ]
 
+export const AGENTIC_TOOL_LOOP_SEED_PROMPT_TEMPLATES: AgentComparePromptTemplate[] = [
+  {
+    id: "tool-loop-typoed-shampoo",
+    label: "Tool Loop · Tippfehler Shampoo",
+    prompt: "ok und welcges Shampoo insbesondere sollte ich verwenden",
+    failure_classes: ["semantic_state_conflict", "tool_not_called"],
+  },
+  {
+    id: "tool-loop-pronoun-followup",
+    label: "Tool Loop · Pronomen-Follow-up",
+    prompt: "Und welches davon ist leichter?",
+    failure_classes: ["pronoun_followup", "comparison_after_recommendation"],
+  },
+  {
+    id: "tool-loop-topic-pivot",
+    label: "Tool Loop · Themenwechsel",
+    prompt: "vergiss das, ich will jetzt was ueber Foehnen wissen",
+    failure_classes: ["topic_pivot", "stale_state"],
+  },
+  {
+    id: "tool-loop-usage-followup",
+    label: "Tool Loop · Anwendung nach Produkt",
+    prompt: "wie oft soll ich das Shampoo benutzen?",
+    failure_classes: ["usage_followup", "tool_overcall"],
+  },
+]
+
+export const AGENT_COMPARE_MULTI_TURN_CHAINS: AgentCompareMultiTurnChain[] = [
+  {
+    id: "routine-to-typoed-shampoo",
+    label: "Routine -> Shampoo mit Tippfehler -> Tiefenreinigung",
+    turns: [
+      "Kannst du mir meine Routine nochmal einfach aufbauen?",
+      "ok und welcges Shampoo insbesondere sollte ich verwenden",
+      "warum dann nicht Tiefenreinigung?",
+    ],
+    failure_classes: ["semantic_state_conflict", "tool_not_called", "category_switch"],
+  },
+  {
+    id: "leave-in-lighter-usage",
+    label: "Leave-in -> leichterer Pick -> Anwendung",
+    turns: [
+      "Welches Leave-in passt zu meinem feinen Haar?",
+      "welches davon ist leichter?",
+      "wie oft soll ich es verwenden?",
+    ],
+    failure_classes: ["pronoun_followup", "comparison_after_recommendation", "usage_followup"],
+  },
+  {
+    id: "routine-simplify-mask-conditioner-summary",
+    label: "Routine vereinfachen -> Maske/Conditioner -> Zusammenfassung",
+    turns: [
+      "Meine Routine ist zu viel, mach sie einfacher.",
+      "Brauche ich dann eher Maske oder Conditioner?",
+      "fass mir das bitte kurz zusammen",
+    ],
+    failure_classes: ["routine_to_product_decision", "recap", "multi_turn_state"],
+  },
+  {
+    id: "dry-shampoo-bridge-usage",
+    label: "Trockenshampoo -> Grenze -> Anwendung",
+    turns: [
+      "Mein Ansatz fettet am zweiten Tag schnell. Ist Trockenshampoo fuer mich sinnvoll?",
+      "Welches Trockenshampoo wuerdest du dann empfehlen?",
+      "Kann ich das dann einfach statt Waschen benutzen?",
+    ],
+    failure_classes: ["category_guidance_scope", "product_recommendation", "usage_guardrail"],
+  },
+  {
+    id: "peeling-sensitive-scalp",
+    label: "Peeling -> gereizte Kopfhaut -> Produktauswahl",
+    turns: [
+      "Brauche ich ein Kopfhautpeeling, wenn ich Schuppen und Juckreiz habe?",
+      "Meine Kopfhaut ist eher gereizt und trocken.",
+      "Gibt es trotzdem ein passendes Produkt oder lieber nicht?",
+    ],
+    failure_classes: ["scalp_safety", "category_guidance_scope", "recommend_with_caveat"],
+  },
+  {
+    id: "deep-cleansing-vs-shampoo",
+    label: "Tiefenreinigung -> Vergleich -> Routine",
+    turns: [
+      "Was ist bei mir sinnvoller: normales Shampoo oder Tiefenreinigungsshampoo?",
+      "Ich nutze oft Styling und meine Haare wirken schnell belegt.",
+      "Wie oft wuerdest du das in meine Routine einbauen?",
+    ],
+    failure_classes: ["category_comparison", "alias_resolution", "routine_insertion"],
+  },
+  {
+    id: "bondbuilder-explain-followup",
+    label: "Bondbuilder -> Empfehlung -> Warum",
+    turns: [
+      "Ist ein Bondbuilder fuer mein blondiertes Haar sinnvoll?",
+      "Welchen Bondbuilder wuerdest du empfehlen?",
+      "Warum gerade den und nicht einfach eine Maske?",
+    ],
+    failure_classes: [
+      "category_guidance_scope",
+      "product_recommendation",
+      "prior_recommendation_explanation",
+    ],
+  },
+  {
+    id: "oil-use-case-comparison",
+    label: "Oel -> Use Case -> Produkt",
+    turns: [
+      "Sollte ich eher Oel oder Maske gegen trockene Spitzen nehmen?",
+      "Ich meine Oel eher als Finish, nicht auf die Kopfhaut.",
+      "Welches Produkt passt dann?",
+    ],
+    failure_classes: ["category_comparison", "oil_purpose", "product_recommendation"],
+  },
+  {
+    id: "routine-add-on-full-spectrum",
+    label: "Routine Add-on -> Kategorie -> Produkt",
+    turns: [
+      "Ich habe Shampoo und Conditioner. Was sollte ich als naechstes ergaenzen?",
+      "Warum nicht direkt Maske oder Oel?",
+      "Okay, zeig mir dann ein passendes Produkt fuer den ersten Hebel.",
+    ],
+    failure_classes: [
+      "routine_category_overview",
+      "adjacent_category_transition",
+      "product_recommendation",
+    ],
+  },
+]
+
 export const AGENT_COMPARE_PROMPT_TEMPLATES: AgentComparePromptTemplate[] = [
   ...SHAMPOO_QA_PROMPT_TEMPLATES,
   ...CONDITIONER_QA_PROMPT_TEMPLATES,
@@ -228,4 +364,5 @@ export const AGENT_COMPARE_PROMPT_TEMPLATES: AgentComparePromptTemplate[] = [
   ...LEAVE_IN_EDGE_PROMPT_TEMPLATES,
   ...MASK_QA_PROMPT_TEMPLATES,
   ...GENERAL_COMPARE_PROMPT_TEMPLATES,
+  ...AGENTIC_TOOL_LOOP_SEED_PROMPT_TEMPLATES,
 ]

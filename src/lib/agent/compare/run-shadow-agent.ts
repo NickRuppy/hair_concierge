@@ -24,8 +24,15 @@ import {
   isActiveProfileSignalField,
   isActiveSignalSelectionEffect,
 } from "@/lib/agent/orchestrator/route-packet"
+import { createDefaultConversationState } from "@/lib/rag/conversation-state"
+import type { ConversationState, RoutineLayer, RoutineProductCategory } from "@/lib/types"
 import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"
-import type { AgentCompareScenario, AgentCompareUserRequest, CompareRunResult } from "./types"
+import type {
+  AgentCompareScenario,
+  AgentCompareTurnResult,
+  AgentCompareUserRequest,
+  CompareRunResult,
+} from "./types"
 
 function getRequiredCompareEnv() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -50,6 +57,14 @@ function normalizeMatchedProducts(
     name: product.name,
     category: projection.category,
   }))
+}
+
+function normalizeTurns(params: { prompt?: string; turns?: string[] }): string[] {
+  const turns = params.turns?.map((turn) => turn.trim()).filter((turn) => turn.length > 0) ?? []
+  if (turns.length > 0) return turns
+
+  const prompt = params.prompt?.trim() ?? ""
+  return prompt.length > 0 ? [prompt] : []
 }
 
 function buildShadowDebugLines(params: {
@@ -111,6 +126,26 @@ function normalizeRoutineObjective(value: unknown): RoutineObjective | null {
   return value === "build_routine" || value === "fix_routine" ? value : null
 }
 
+function normalizeRoutineLayer(value: unknown): RoutineLayer | null {
+  return value === "basics" || value === "goals" || value === "problems" || value === "deep_dive"
+    ? value
+    : null
+}
+
+function normalizeRoutineProductCategory(value: unknown): RoutineProductCategory | null {
+  return value === "shampoo" ||
+    value === "conditioner" ||
+    value === "mask" ||
+    value === "oil" ||
+    value === "leave_in" ||
+    value === "bondbuilder" ||
+    value === "deep_cleansing_shampoo" ||
+    value === "dry_shampoo" ||
+    value === "peeling"
+    ? value
+    : null
+}
+
 function normalizeAgentUserJob(value: unknown): AgentUserJob | null {
   return typeof value === "string" ? (value as AgentUserJob) : null
 }
@@ -153,7 +188,8 @@ function normalizeActiveProfileSignals(value: unknown): AgentActiveProfileSignal
 
 export async function runShadowAgentComparison(params: {
   scenario: AgentCompareScenario
-  prompt: string
+  prompt?: string
+  turns?: string[]
   baseUrl?: string | null
 }): Promise<CompareRunResult> {
   const { supabaseUrl, serviceRoleKey, anonKey } = getRequiredCompareEnv()
@@ -167,18 +203,80 @@ export async function runShadowAgentComparison(params: {
       params.scenario.routine_inventory ?? [],
     )
 
-    const context = await getUserContext(session.userId)
-    const memoryContext = await loadUserMemoryContext(session.userId, session.admin)
-    const selectProducts = createSelectProductsTool()
-    const buildOrFixRoutine = createBuildOrFixRoutineTool()
+    return runShadowAgentComparisonForUser({
+      userId: session.userId,
+      prompt: params.prompt,
+      turns: params.turns,
+      baseUrl: params.baseUrl,
+    })
+  } finally {
+    await session.cleanup()
+  }
+}
 
-    const loadedGuidanceIds: string[] = []
-    let selectedProductsProjection: SelectedProductsProjection | null = null
-    const startedAt = performance.now()
+function deriveNextClassicState(params: {
+  previousState: ConversationState | null
+  routeTrace: AgentRoutePacket
+  selectedProducts: SelectedProductsProjection | null
+}): ConversationState {
+  const previousState = params.previousState ?? createDefaultConversationState()
+  const productCategory = params.selectedProducts?.category ?? params.routeTrace.product_category
+
+  if (productCategory) {
+    return {
+      ...previousState,
+      active_topic: productCategory,
+      routine_layer: null,
+      pending_offer: null,
+      last_product_category: productCategory,
+      last_assistant_action: "answered_direct",
+    }
+  }
+
+  if (params.routeTrace.user_job === "routine_structure") {
+    const routineLayer = params.routeTrace.routine_layer ?? previousState.routine_layer ?? "basics"
+
+    return {
+      ...previousState,
+      active_topic: "routine",
+      routine_layer: routineLayer,
+      pending_offer: routineLayer === "basics" ? "routine_goals_or_problems" : null,
+      last_assistant_action:
+        routineLayer === "basics" ? "answered_routine_basics" : "answered_routine",
+    }
+  }
+
+  return {
+    ...previousState,
+    pending_offer: null,
+    last_assistant_action: "answered_direct",
+  }
+}
+
+export async function runShadowAgentComparisonForUser(
+  params: AgentCompareUserRequest,
+): Promise<CompareRunResult> {
+  const turns = normalizeTurns(params)
+  const context = await getUserContext(params.userId)
+  const memoryContext = await loadUserMemoryContext(params.userId)
+  const selectProducts = createSelectProductsTool()
+  const buildOrFixRoutine = createBuildOrFixRoutineTool()
+
+  const loadedGuidanceIds: string[] = []
+  let selectedProductsProjection: SelectedProductsProjection | null = null
+  let finalResult: Awaited<ReturnType<typeof runShadowAgentTurn>> | null = null
+  let conversationState: ConversationState | null = null
+  const turnResults: AgentCompareTurnResult[] = []
+  const startedAt = performance.now()
+
+  for (const [index, message] of turns.entries()) {
+    const turnStartedAt = performance.now()
+    let turnSelectedProductsProjection: SelectedProductsProjection | null = null
 
     const result = await runShadowAgentTurn({
-      message: params.prompt,
+      message,
       modelClient: createOpenAIToolModelClient(),
+      conversationState,
       tools: {
         get_user_context: async () => context,
         load_guidance: async (input) => {
@@ -189,108 +287,78 @@ export async function runShadowAgentComparison(params: {
         select_products: async (input) => {
           const projection = await selectProducts({
             category: normalizeSelectableCategory(input.category),
-            message: params.prompt,
+            message,
             hairProfile: context.profile,
             memoryContext,
             routineItems: context.routine_inventory,
             userJob: normalizeAgentUserJob(input.userJob),
             concerns: normalizeAgentConcerns(input.concerns),
-            requestedGoal: normalizeRequestedGoal(input.requestedGoal, params.prompt),
+            requestedGoal: normalizeRequestedGoal(input.requestedGoal, message),
             activeProfileSignals: normalizeActiveProfileSignals(input.activeProfileSignals),
           })
 
           selectedProductsProjection = projection
+          turnSelectedProductsProjection = projection
           return projection
         },
         build_or_fix_routine: async (input) =>
           buildOrFixRoutine({
             objective: normalizeRoutineObjective(input.objective),
-            message: params.prompt,
+            message,
             hairProfile: context.profile,
+            layer: normalizeRoutineLayer(input.layer),
+            requestedCategory: normalizeRoutineProductCategory(input.requestedCategory),
           }),
       },
     })
 
-    return {
-      system: "agent",
+    conversationState = deriveNextClassicState({
+      previousState: conversationState,
+      routeTrace: result.route_trace,
+      selectedProducts: turnSelectedProductsProjection,
+    })
+    finalResult = result
+    turnResults.push({
+      turn: index + 1,
+      prompt: message,
       answer: result.final_answer,
-      latency_ms: Math.round(performance.now() - startedAt),
+      latency_ms: Math.round(performance.now() - turnStartedAt),
       debug_lines: buildShadowDebugLines({
         toolCallNames: result.tool_calls.map((call) => call.name),
         guidanceIds: loadedGuidanceIds,
-        selectedProducts: selectedProductsProjection,
+        selectedProducts: turnSelectedProductsProjection,
         routeTrace: result.route_trace,
       }),
-      matched_products: normalizeMatchedProducts(selectedProductsProjection),
-      product_trace: selectedProductsProjection,
+      matched_products: normalizeMatchedProducts(turnSelectedProductsProjection),
+      product_trace: turnSelectedProductsProjection,
       route_trace: result.route_trace,
+      state_transition: { next_state: conversationState },
       error: null,
-    }
-  } finally {
-    await session.cleanup()
+    })
   }
-}
 
-export async function runShadowAgentComparisonForUser(
-  params: AgentCompareUserRequest,
-): Promise<CompareRunResult> {
-  const context = await getUserContext(params.userId)
-  const memoryContext = await loadUserMemoryContext(params.userId)
-  const selectProducts = createSelectProductsTool()
-  const buildOrFixRoutine = createBuildOrFixRoutineTool()
-
-  const loadedGuidanceIds: string[] = []
-  let selectedProductsProjection: SelectedProductsProjection | null = null
-  const startedAt = performance.now()
-
-  const result = await runShadowAgentTurn({
-    message: params.prompt,
-    modelClient: createOpenAIToolModelClient(),
-    tools: {
-      get_user_context: async () => context,
-      load_guidance: async (input) => {
-        const ids = Array.isArray(input.ids) ? (input.ids as GuidanceId[]) : []
-        loadedGuidanceIds.push(...ids)
-        return loadGuidance(ids)
-      },
-      select_products: async (input) => {
-        const projection = await selectProducts({
-          category: normalizeSelectableCategory(input.category),
-          message: params.prompt,
-          hairProfile: context.profile,
-          memoryContext,
-          routineItems: context.routine_inventory,
-          userJob: normalizeAgentUserJob(input.userJob),
-          concerns: normalizeAgentConcerns(input.concerns),
-          requestedGoal: normalizeRequestedGoal(input.requestedGoal, params.prompt),
-          activeProfileSignals: normalizeActiveProfileSignals(input.activeProfileSignals),
-        })
-
-        selectedProductsProjection = projection
-        return projection
-      },
-      build_or_fix_routine: async (input) =>
-        buildOrFixRoutine({
-          objective: normalizeRoutineObjective(input.objective),
-          message: params.prompt,
-          hairProfile: context.profile,
-        }),
-    },
-  })
+  if (!finalResult) {
+    throw new Error("Classic comparison did not produce a result.")
+  }
 
   return {
-    system: "agent",
-    answer: result.final_answer,
+    system: "classic",
+    answer: finalResult.final_answer,
     latency_ms: Math.round(performance.now() - startedAt),
     debug_lines: buildShadowDebugLines({
-      toolCallNames: result.tool_calls.map((call) => call.name),
+      toolCallNames: finalResult.tool_calls.map((call) => call.name),
       guidanceIds: loadedGuidanceIds,
       selectedProducts: selectedProductsProjection,
-      routeTrace: result.route_trace,
+      routeTrace: finalResult.route_trace,
     }),
     matched_products: normalizeMatchedProducts(selectedProductsProjection),
     product_trace: selectedProductsProjection,
-    route_trace: result.route_trace,
+    route_trace: finalResult.route_trace,
+    state_transition: conversationState ? { next_state: conversationState } : undefined,
+    turns: turnResults.length > 1 ? turnResults : undefined,
     error: null,
   }
 }
+
+export const runClassicAgentComparison = runShadowAgentComparison
+export const runClassicAgentComparisonForUser = runShadowAgentComparisonForUser

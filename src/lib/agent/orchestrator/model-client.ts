@@ -2,9 +2,14 @@ import type OpenAI from "openai"
 
 import { DEFAULT_CHAT_COMPLETION_MODEL } from "@/lib/openai/chat"
 import { getObservedOpenAI } from "@/lib/openai/client"
+import type {
+  AgenticToolLoopModelClient,
+  AgenticToolLoopModelStep,
+} from "@/lib/agent/orchestrator/agentic-tool-loop-types"
 import type { AgentToolName } from "@/lib/agent/orchestrator/tool-definitions"
 import {
   AGENT_ROUTE_CLASSIFIER_PROMPT,
+  AGENTIC_CONTEXTUAL_COMPOSER_PROMPT,
   AGENT_FINAL_RENDER_PROMPT,
 } from "@/lib/agent/orchestrator/prompt"
 import {
@@ -46,6 +51,8 @@ export interface AgentModelClient {
     packet: AgentRuntimePacket
   }): Promise<string>
 }
+
+export type { AgenticToolLoopModelClient, AgenticToolLoopModelStep }
 
 function stringArray(value: unknown): string[] {
   return Array.isArray(value)
@@ -231,6 +238,82 @@ export function createOpenAIToolModelClient(params: { model?: string } = {}): Ag
               message,
               packet,
             }),
+          },
+        ],
+      })
+
+      return typeof response.choices[0]?.message?.content === "string"
+        ? response.choices[0].message.content
+        : ""
+    },
+  }
+}
+
+function parseToolCallInput(raw: string | undefined): Record<string, unknown> {
+  if (!raw) return {}
+
+  try {
+    const parsed = JSON.parse(raw) as unknown
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : {}
+  } catch {
+    return {}
+  }
+}
+
+export function createOpenAIAgenticToolLoopModelClient(
+  params: { model?: string } = {},
+): AgenticToolLoopModelClient {
+  return {
+    async runStep({ systemPrompt, messages, tools }) {
+      const response = await getObservedOpenAI({
+        generationName: "agentic-tool-loop-step",
+      }).chat.completions.create({
+        model: params.model ?? DEFAULT_CHAT_COMPLETION_MODEL,
+        temperature: 0,
+        messages: [{ role: "system", content: systemPrompt }, ...messages],
+        tools,
+      })
+
+      const message = response.choices[0]?.message
+      const toolCalls = message?.tool_calls ?? []
+
+      if (toolCalls.length > 0) {
+        return {
+          type: "tool_calls",
+          calls: toolCalls
+            .filter(
+              (
+                call,
+              ): call is OpenAI.Chat.Completions.ChatCompletionMessageToolCall & {
+                type: "function"
+              } => call.type === "function",
+            )
+            .map((call) => ({
+              id: call.id,
+              name: call.function.name,
+              input: parseToolCallInput(call.function.arguments),
+            })),
+        }
+      }
+
+      return {
+        type: "message",
+        content: typeof message?.content === "string" ? message.content : "",
+      }
+    },
+    async composeFinalAnswer({ systemPrompt = AGENTIC_CONTEXTUAL_COMPOSER_PROMPT, ...input }) {
+      const response = await getObservedOpenAI({
+        generationName: "agentic-tool-loop-contextual-composer",
+      }).chat.completions.create({
+        model: params.model ?? DEFAULT_CHAT_COMPLETION_MODEL,
+        temperature: 0,
+        messages: [
+          { role: "system", content: systemPrompt },
+          {
+            role: "user",
+            content: JSON.stringify(input),
           },
         ],
       })

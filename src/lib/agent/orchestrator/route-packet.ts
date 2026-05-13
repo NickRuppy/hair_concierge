@@ -13,7 +13,7 @@ import type {
   RoutineObjective,
 } from "@/lib/agent/tools/build-or-fix-routine"
 import type { SelectedProductsProjection } from "@/lib/agent/tools/select-products"
-import type { RoutineLayer } from "@/lib/types"
+import type { ConversationState, RoutineLayer } from "@/lib/types"
 
 export const AGENT_USER_JOBS = [
   "product_pick",
@@ -58,6 +58,7 @@ export const ACTIVE_SIGNAL_SELECTION_EFFECTS = [
   "override",
   "qualifier",
   "redirect",
+  "augment",
   "caution",
 ] as const
 
@@ -255,9 +256,10 @@ function addActiveSignal(signals: AgentActiveProfileSignal[], signal: AgentActiv
 
   const priority: Record<ActiveSignalSelectionEffect, number> = {
     qualifier: 1,
-    redirect: 2,
-    override: 3,
-    caution: 4,
+    augment: 2,
+    redirect: 3,
+    override: 4,
+    caution: 5,
   }
 
   if (priority[signal.selection_effect] > priority[signals[existingIndex].selection_effect]) {
@@ -1100,8 +1102,10 @@ export function buildAgentRoutePacket(params: {
 }
 
 export function buildAgentRuntimePacket(params: {
+  message?: string
   route: AgentRoutePacket
   userContext: unknown
+  conversationState?: ConversationState | null
   guidance: GuidanceLoadResult
   selectedProducts?: SelectedProductsProjection | null
   routinePlan?: BuildOrFixRoutineProjection | null

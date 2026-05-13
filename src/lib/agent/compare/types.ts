@@ -13,10 +13,34 @@ export interface AgentCompareScenario {
   routine_inventory?: RoutineInventorySeed[]
 }
 
-export type CompareSystem = "current" | "agent"
+export type CanonicalCompareSystem = "classic" | "tool_loop"
+export type LegacyCompareSystem = "current" | "agent"
+export type CompareSystem = CanonicalCompareSystem
+export type CompareSystemInput = CompareSystem | LegacyCompareSystem
+
+export type AgentCompareToolLoopVariant =
+  | "baseline"
+  | "inline_context"
+  | "guidance_tool"
+  | "composer_context"
+
+export interface AgentCompareTurnResult {
+  turn: number
+  prompt: string
+  answer: string
+  latency_ms: number | null
+  debug_lines?: string[]
+  matched_products: CompareRunResult["matched_products"]
+  product_trace?: SelectedProductsProjection | null
+  route_trace?: AgentRoutePacket | null
+  tool_loop_trace?: unknown
+  state_transition?: unknown
+  error: string | null
+}
 
 export interface CompareRunResult {
-  system: CompareSystem
+  system: CompareSystemInput
+  display_label?: string
   answer: string
   latency_ms: number | null
   debug_lines: string[]
@@ -26,13 +50,19 @@ export interface CompareRunResult {
   }>
   product_trace?: SelectedProductsProjection | null
   route_trace?: AgentRoutePacket | null
+  tool_loop_trace?: unknown
+  state_transition?: unknown
+  turns?: AgentCompareTurnResult[]
   error: string | null
 }
 
 export interface AgentCompareRequest {
   scenarioId: string
-  prompt: string
+  prompt?: string
+  turns?: string[]
   baseUrl?: string | null
+  blinded?: boolean
+  toolLoopVariant?: AgentCompareToolLoopVariant
 }
 
 export interface AgentCompareUserOption {
@@ -58,14 +88,20 @@ export interface AgentCompareUserSnapshot {
 
 export interface AgentCompareUserRequest {
   userId: string
-  prompt: string
+  prompt?: string
+  turns?: string[]
   baseUrl?: string | null
+  blinded?: boolean
+  toolLoopVariant?: AgentCompareToolLoopVariant
 }
 
 export interface AgentCompareResponse {
   scenario?: AgentCompareScenario
   userId?: string
   prompt: string
+  turns?: string[]
+  blinded?: boolean
+  toolLoopVariant?: AgentCompareToolLoopVariant
   results: CompareRunResult[]
 }
 
@@ -73,16 +109,72 @@ export interface AgentCompareJudgmentDraft {
   winner: "current" | "agent" | "tie"
   primary_reason: "natuerlicher" | "nuetzlicher" | "vorsichtiger" | "personalisierter" | "anderes"
   note: string
+  failure_bucket?:
+    | "semantic_state_conflict"
+    | "tool_not_called"
+    | "unsupported_claim"
+    | "invented_product"
+    | "latency"
+    | "other"
+    | "none"
+  critical_product_claim_failure?: boolean
+}
+
+export interface AgentCompareRolloutMetrics {
+  blinded_winner: "classic" | "tool_loop" | "tie"
+  failure_bucket: NonNullable<AgentCompareJudgmentDraft["failure_bucket"]>
+  critical_product_claim_failure: boolean
+  latency_ms: {
+    classic: number | null
+    tool_loop: number | null
+  }
+  tool_loop_model_steps: number | null
+  tool_loop_tool_calls: number | null
+}
+
+export interface AgentCompareAnalysisSnapshot {
+  setup: {
+    mode: "single_turn" | "multi_turn"
+    turn_count: number
+    blinded: boolean
+    tool_loop_variant: AgentCompareToolLoopVariant | null
+    user_label: string
+  }
+  prompts: string[]
+  results: Array<{
+    label: string
+    system: string
+    latency_ms: number | null
+    answer_chars: number
+    debug_lines: string[]
+    tool_calls: string[]
+    guidance_ids: string[]
+    product_policy: string | null
+    product_category: string | null
+    selected_products: string[]
+    state_summary: string[]
+    turns: Array<{
+      turn: number
+      answer_chars: number
+      tool_calls: string[]
+      guidance_ids: string[]
+      product_policy: string | null
+      selected_products: string[]
+    }>
+  }>
 }
 
 export interface AgentCompareJudgmentRecord {
   createdAt: string
   user: AgentCompareUserOption
   prompt: string
+  toolLoopVariant?: AgentCompareToolLoopVariant
   context: AgentCompareUserSnapshot
   results: {
     current: CompareRunResult
     agent: CompareRunResult
   }
   judgment: AgentCompareJudgmentDraft
+  rollout_metrics?: AgentCompareRolloutMetrics
+  analysis_snapshot?: AgentCompareAnalysisSnapshot
 }

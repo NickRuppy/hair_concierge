@@ -163,7 +163,7 @@ export function evaluateDryShampooFit(
   if (
     isTintMismatch(target.hairColorFitTarget, spec.hair_color_fit) ||
     (target.requiresSensitiveFit && spec.scalp_sensitivity_fit === "normal_only") ||
-    (target.cautionReasonCodes.includes("dry_shampoo_avoid_aerosol_format_request") &&
+    (target.cautionReasonCodes?.includes("dry_shampoo_avoid_aerosol_format_request") &&
       spec.format === "aerosol_spray")
   ) {
     return {

@@ -117,6 +117,31 @@ The PR chat smoke suite intentionally stays small to control external API cost a
 
 The retrieval metric gate requires an annotated gold set. The current placeholder value `__ANNOTATE__` is intentionally treated as not enforceable so CI does not report meaningless zero-quality scores as product regressions.
 
+## Agentic Tool Loop Rollout Gate
+
+The `tool_loop` engine starts in Compare Lab only. Do not wire it as the default production chat engine until blinded Compare Lab review shows it is materially better than `classic`.
+
+Each Compare Lab judgment for `classic` vs `tool_loop` should record:
+
+- blinded winner: `classic`, `tool_loop`, or `tie`
+- failure bucket, including `semantic_state_conflict` and `tool_not_called`
+- critical product-claim failure: yes/no
+- latency for both variants
+- model step count for `tool_loop`
+- tool-call count for `tool_loop`
+
+Minimum rollout gate:
+
+- at least 50 blinded judgments
+- at least 25 held-out real historical turns, not only crafted prompts
+- two reviewers, or an explicit single-reviewer caveat in the PR
+- `semantic_state_conflict` plus `tool_not_called` failures reduced by at least 50% versus `classic`
+- wins exceed losses by at least 15 percentage points, excluding ties
+- zero critical invented-product or unsupported product-claim failures
+- p50 latency within +25% of `classic` and p95 within +35%
+
+Rollback stays simple: set `CHAT_AGENT_ENGINE=classic`. Tool-loop traces and conversation-state transitions should preserve `updated_by_engine`, and classic readers must ignore unknown tool-loop metadata.
+
 ## GitHub repository settings to confirm
 
 - Require the `CI / quality` check before merging to `main`.

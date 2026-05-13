@@ -13,6 +13,7 @@ import { sanitizeLangfuseText } from "@/lib/langfuse/masking"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 import type { ConversationStatePersistenceTrace } from "@/lib/types"
+import type { PipelineTraceDraft } from "@/lib/rag/debug-trace"
 
 export const maxDuration = 60
 
@@ -82,6 +83,35 @@ async function loadChatRuntimeDeps() {
 }
 
 type ChatRuntimeDeps = Awaited<ReturnType<typeof loadChatRuntimeDeps>>
+
+function scrubVisibleFailureTraceDraft(trace: PipelineTraceDraft): PipelineTraceDraft {
+  return {
+    ...trace,
+    product_category: null,
+    classification: {
+      ...trace.classification,
+      product_category: null,
+    },
+    router_decision: {
+      ...trace.router_decision,
+      policy_overrides: trace.router_decision.policy_overrides.filter(
+        (override) =>
+          !override.startsWith("product_policy:") &&
+          !/^missing_(?:shampoo|conditioner|leave_in|mask|oil)_profile$/.test(override),
+      ),
+    },
+    decision_context: {
+      ...trace.decision_context,
+      category_decision: null,
+      engine_trace: null,
+      matched_products: [],
+    },
+    response_composition: {
+      ...trace.response_composition,
+      attachment_mode: "text_only",
+    },
+  }
+}
 
 export interface ChatPostHandlerDeps {
   createClient?: typeof createClient
@@ -270,6 +300,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
         categoryDecision,
         engineTrace,
         debugTrace,
+        visibleFailure,
       } = await deps.otelContext.with(parentContext, async () =>
         deps.propagateAttributes(
           {
@@ -293,6 +324,15 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
             }),
         ),
       )
+      const isVisibleFailure = visibleFailure === true
+      const routeDebugTrace = isVisibleFailure
+        ? scrubVisibleFailureTraceDraft(debugTrace)
+        : debugTrace
+      const routeRouterDecision = isVisibleFailure
+        ? routeDebugTrace.router_decision
+        : routerDecision
+      const routeCategoryDecision = isVisibleFailure ? undefined : categoryDecision
+      const routeEngineTrace = isVisibleFailure ? null : engineTrace
 
       // Save user message
       const { data: userMessageRow, error: userMessageError } = await admin
@@ -347,7 +387,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
             encoder.encode(
               `data: ${JSON.stringify({
                 type: "retrieval_debug",
-                data: buildRetrievalDebugEventData(debugTrace),
+                data: buildRetrievalDebugEventData(routeDebugTrace),
               })}\n\n`,
             ),
           )
@@ -373,7 +413,9 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
               }
 
               const productsToSend =
-                routerDecision.response_mode !== "clarify_only" && matchedProducts.length > 0
+                !isVisibleFailure &&
+                routerDecision.response_mode !== "clarify_only" &&
+                matchedProducts.length > 0
                   ? matchedProducts.slice(0, 3)
                   : []
               const langfuseTraceUrl = traceUrlPromise ? await traceUrlPromise : null
@@ -402,8 +444,8 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   content: fullContent,
                   rag_context: buildAssistantContext(
                     sources,
-                    categoryDecision,
-                    engineTrace,
+                    routeCategoryDecision,
+                    routeEngineTrace,
                     routerDecision.response_mode,
                   ),
                   product_recommendations: productsToSend.length > 0 ? productsToSend : null,
@@ -419,12 +461,19 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
 
               let conversationStatePersistence: ConversationStatePersistenceTrace = {
                 status: "skipped",
-                error: assistantMessageError
-                  ? "assistant_message_not_persisted"
-                  : "assistant_message_id_missing",
+                error: isVisibleFailure
+                  ? "visible_failure_no_state_mutation"
+                  : assistantMessageError
+                    ? "assistant_message_not_persisted"
+                    : "assistant_message_id_missing",
               }
 
-              if (!assistantMessageError && assistantMessageRow?.id) {
+              if (isVisibleFailure) {
+                conversationStatePersistence = {
+                  status: "skipped",
+                  error: "visible_failure_no_state_mutation",
+                }
+              } else if (!assistantMessageError && assistantMessageRow?.id) {
                 try {
                   conversationStatePersistence = await persistConversationStateTransition(admin, {
                     conversationId: activeConversationId,
@@ -467,9 +516,11 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 })
                 .eq("id", activeConversationId)
 
-              extractConversationMemory(activeConversationId, user.id, {
-                requestId,
-              }).catch(() => {})
+              if (!isVisibleFailure) {
+                extractConversationMemory(activeConversationId, user.id, {
+                  requestId,
+                }).catch(() => {})
+              }
 
               await admin
                 .from("profiles")
@@ -484,15 +535,25 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 })
                 .eq("id", user.id)
 
-              const completedTrace = finalizeChatTurnTrace(debugTrace, {
+              const completedTrace = finalizeChatTurnTrace(routeDebugTrace, {
                 assistant_content: fullContent,
                 sources,
                 product_count: productsToSend.length,
-                status: "completed",
+                status: isVisibleFailure ? "failed" : "completed",
                 stream_read_ms: Math.round(deps.now() - streamReadStart),
                 total_ms: Math.round(deps.now() - requestStart),
                 conversation_state_persistence: conversationStatePersistence,
               })
+              const toolLoopSummary = completedTrace.agentic_tool_loop
+                ? {
+                    model_step_count: completedTrace.agentic_tool_loop.model_steps.length,
+                    tool_call_count: completedTrace.agentic_tool_loop.tool_calls.length,
+                    repair_count: completedTrace.agentic_tool_loop.repair_attempts.length,
+                    visible_failure: completedTrace.agentic_tool_loop.visible_failure,
+                    failure_stage: completedTrace.agentic_tool_loop.failure_stage,
+                    loaded_guidance_ids: completedTrace.agentic_tool_loop.loaded_guidance_ids,
+                  }
+                : null
 
               deps
                 .persistConversationTurnTrace({
@@ -502,25 +563,24 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   assistant_message_id: assistantMessageRow?.id ?? null,
                   langfuse_trace_id: langfuseTraceId,
                   langfuse_trace_url: langfuseTraceUrl,
-                  status: "completed",
+                  status: isVisibleFailure ? "failed" : "completed",
                   trace: completedTrace,
                 })
                 .catch(() => {})
 
               activeChatObservation.update({
                 output: {
-                  status: "completed",
+                  status: isVisibleFailure ? "failed" : "completed",
                   product_count: productsToSend.length,
                   assistant_preview: sanitizeLangfuseText(fullContent)?.slice(0, 500),
                   response_composition: completedTrace.response_composition,
-                  engine_trace: completedTrace.decision_context.engine_trace,
                   engine_summary: summarizeEngineTraceForLangfuse(
                     completedTrace.decision_context.engine_trace,
                   ),
-                  matched_products: completedTrace.decision_context.matched_products,
                   selected_products: summarizeProductsForLangfuse(
                     completedTrace.decision_context.matched_products,
                   ),
+                  agentic_tool_loop_summary: toolLoopSummary,
                 },
               })
 
@@ -531,8 +591,8 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                     data: buildDoneEventData({
                       intent,
                       retrievalSummary,
-                      routerDecision,
-                      categoryDecision,
+                      routerDecision: routeRouterDecision,
+                      categoryDecision: routeCategoryDecision,
                     }),
                   })}\n\n`,
                 ),
@@ -548,7 +608,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
             const langfuseTraceUrl = traceUrlPromise ? await traceUrlPromise : null
             const errorMessage =
               error instanceof Error ? error.message : "Unbekannter Stream-Fehler"
-            const failedTrace = finalizeChatTurnTrace(debugTrace, {
+            const failedTrace = finalizeChatTurnTrace(routeDebugTrace, {
               assistant_content: fullContent,
               sources,
               product_count: 0,
@@ -557,6 +617,16 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
               stream_read_ms: Math.round(deps.now() - streamReadStart),
               total_ms: Math.round(deps.now() - requestStart),
             })
+            const failedToolLoopSummary = failedTrace.agentic_tool_loop
+              ? {
+                  model_step_count: failedTrace.agentic_tool_loop.model_steps.length,
+                  tool_call_count: failedTrace.agentic_tool_loop.tool_calls.length,
+                  repair_count: failedTrace.agentic_tool_loop.repair_attempts.length,
+                  visible_failure: failedTrace.agentic_tool_loop.visible_failure,
+                  failure_stage: failedTrace.agentic_tool_loop.failure_stage,
+                  loaded_guidance_ids: failedTrace.agentic_tool_loop.loaded_guidance_ids,
+                }
+              : null
 
             deps
               .persistConversationTurnTrace({
@@ -576,8 +646,13 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 status: "failed",
                 assistant_preview: sanitizeLangfuseText(fullContent)?.slice(0, 500),
                 response_composition: failedTrace.response_composition,
-                engine_trace: failedTrace.decision_context.engine_trace,
-                matched_products: failedTrace.decision_context.matched_products,
+                engine_summary: summarizeEngineTraceForLangfuse(
+                  failedTrace.decision_context.engine_trace,
+                ),
+                selected_products: summarizeProductsForLangfuse(
+                  failedTrace.decision_context.matched_products,
+                ),
+                agentic_tool_loop_summary: failedToolLoopSummary,
               },
               metadata: {
                 error: errorMessage,

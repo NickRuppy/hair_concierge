@@ -20,6 +20,26 @@ npm run dev:worktree
 `dev:worktree` picks a stable worktree-specific port so multiple agents or
 parallel tasks can run side by side.
 
+## Local Chat Testing
+
+For manual chat testing behind the Stripe paywall, enable the local dev login
+shortcut in `.env.local`:
+
+```bash
+LOCAL_DEV_LOGIN_ENABLED=1
+```
+
+Then restart the dev server and open:
+
+```text
+http://localhost:<port>/api/dev/login?next=/chat
+```
+
+The route only works on localhost in `next dev` when the flag is enabled. It
+creates or refreshes a local Supabase test user, marks onboarding complete,
+seeds a realistic hair profile, sets `subscription_status` to `active`, signs
+the browser in, and redirects to `/chat`.
+
 ## Standard Commands
 
 ```bash

@@ -7,12 +7,24 @@ import type {
   HairProfile,
   RoutineLayer,
   RoutinePlan,
+  RoutineProduct,
   RoutineProductCategory,
   RoutineSlotAdvice,
 } from "@/lib/types"
 
 export type BuildOrFixRoutineAction = "keep" | "add" | "adjust" | "remove"
 export type RoutineObjective = "build_routine" | "fix_routine"
+
+const CURRENT_ROUTINE_PRODUCT_CATEGORIES = [
+  "shampoo",
+  "conditioner",
+  "leave_in",
+  "oil",
+  "mask",
+  "heat_protectant",
+  "serum",
+  "scrub",
+] as const satisfies readonly RoutineProduct[]
 
 export interface BuildOrFixRoutineStep {
   id: string
@@ -24,6 +36,23 @@ export interface BuildOrFixRoutineStep {
   reasons: string[]
   caveats: string[]
   fillable: boolean
+}
+
+export interface BuildOrFixRoutineAdjacentLever {
+  step_id: string
+  label: string
+  category: string | null
+  role: "everyday_maintenance" | "cleanup_reset" | "optional_extra" | "supporting_step"
+  reason: string
+}
+
+export interface BuildOrFixRoutinePriorityContext {
+  selected_step_id: string | null
+  selected_label: string | null
+  selected_category: string | null
+  selected_role: BuildOrFixRoutineAdjacentLever["role"] | null
+  selected_reason: string | null
+  adjacent_levers: BuildOrFixRoutineAdjacentLever[]
 }
 
 export interface BuildOrFixRoutineMissingInfo {
@@ -39,6 +68,7 @@ export interface BuildOrFixRoutineProjection {
   steps: BuildOrFixRoutineStep[]
   missing_info: BuildOrFixRoutineMissingInfo[]
   confidence: number
+  priority_context?: BuildOrFixRoutinePriorityContext | null
 }
 
 export interface BuildOrFixRoutineToolInput {
@@ -100,7 +130,48 @@ function projectAction(slot: RoutineSlotAdvice): BuildOrFixRoutineStep["action"]
   }
 }
 
-function projectStep(slot: RoutineSlotAdvice): BuildOrFixRoutineStep {
+function hasCurrentRoutineCategory(
+  hairProfile: HairProfile | null,
+  category: RoutineProductCategory | null,
+): boolean {
+  if (!category) return false
+  const currentRoutineProducts = hairProfile?.current_routine_products ?? []
+  if (
+    CURRENT_ROUTINE_PRODUCT_CATEGORIES.includes(category as RoutineProduct) &&
+    currentRoutineProducts.includes(category as RoutineProduct)
+  ) {
+    return true
+  }
+
+  const productsUsed = normalizeText(hairProfile?.products_used)?.toLowerCase() ?? ""
+  return productsUsed.includes(category.toLowerCase())
+}
+
+function anchorRoutineReasons(params: {
+  slot: RoutineSlotAdvice
+  hairProfile: HairProfile | null
+}): string[] {
+  const reasons = [...params.slot.rationale]
+  const action = projectAction(params.slot)
+  const category = params.slot.category
+
+  if (action === "keep" && hasCurrentRoutineCategory(params.hairProfile, category)) {
+    reasons.unshift(
+      `${params.slot.label} ist bereits ein vorhandener Startpunkt in deiner Routine.`,
+    )
+  }
+
+  if (action === "add" && category === "conditioner") {
+    reasons.unshift(`${params.slot.label} ist die naechste sinnvolle Ergaenzung nach dem Shampoo.`)
+  }
+
+  return Array.from(new Set(reasons))
+}
+
+function projectStep(
+  slot: RoutineSlotAdvice,
+  hairProfile: HairProfile | null,
+): BuildOrFixRoutineStep {
   return {
     id: slot.id,
     label: slot.label,
@@ -108,7 +179,7 @@ function projectStep(slot: RoutineSlotAdvice): BuildOrFixRoutineStep {
     action: projectAction(slot),
     category: slot.category,
     frequency: slot.cadence,
-    reasons: slot.rationale,
+    reasons: anchorRoutineReasons({ slot, hairProfile }),
     caveats: slot.caveats,
     fillable: slot.product_linkable,
   }
@@ -123,13 +194,67 @@ function findRoutineSlot(plan: RoutinePlan, id: string): RoutineSlotAdvice | nul
   return null
 }
 
+function classifyRoutineStepRole(slot: RoutineSlotAdvice): BuildOrFixRoutineAdjacentLever["role"] {
+  if (slot.id.includes("hair-reset") || slot.topic_ids.includes("tiefenreinigung")) {
+    return "cleanup_reset"
+  }
+
+  if (slot.category === "leave_in") {
+    return "everyday_maintenance"
+  }
+
+  if (slot.phase === "occasional") {
+    return "optional_extra"
+  }
+
+  return "supporting_step"
+}
+
+function projectAdjacentLever(slot: RoutineSlotAdvice): BuildOrFixRoutineAdjacentLever {
+  return {
+    step_id: slot.id,
+    label: slot.label,
+    category: slot.category,
+    role: classifyRoutineStepRole(slot),
+    reason: slot.rationale[0] ?? "",
+  }
+}
+
+function projectPriorityContext(plan: RoutinePlan): BuildOrFixRoutinePriorityContext | null {
+  const selectedSlot = plan.priority_lever
+    ? findRoutineSlot(plan, plan.priority_lever.slot_id)
+    : null
+  if (!selectedSlot) return null
+
+  const adjacentLevers = plan.sections
+    .flatMap((section) => section.slots)
+    .filter((slot) => slot.id !== selectedSlot.id)
+    .filter(
+      (slot) => slot.category === "leave_in" || slot.category === "mask" || slot.category === "oil",
+    )
+    .slice(0, 3)
+    .map(projectAdjacentLever)
+
+  return {
+    selected_step_id: selectedSlot.id,
+    selected_label: selectedSlot.label,
+    selected_category: selectedSlot.category,
+    selected_role: classifyRoutineStepRole(selectedSlot),
+    selected_reason: plan.priority_lever?.reason ?? selectedSlot.rationale[0] ?? null,
+    adjacent_levers: adjacentLevers,
+  }
+}
+
 function projectRoutineSteps(params: {
   plan: RoutinePlan
+  hairProfile: HairProfile | null
   layer: RoutineLayer | null
   requestedCategory: RoutineProductCategory | null
 }): BuildOrFixRoutineStep[] {
   if (!params.layer) {
-    return params.plan.sections.flatMap((section) => section.slots.map(projectStep))
+    return params.plan.sections.flatMap((section) =>
+      section.slots.map((slot) => projectStep(slot, params.hairProfile)),
+    )
   }
 
   const projection = projectRoutinePlanForLayer(params.plan, params.layer, {
@@ -139,7 +264,7 @@ function projectRoutineSteps(params: {
   return projection.visible_slot_ids
     .map((slotId) => findRoutineSlot(params.plan, slotId))
     .filter((slot): slot is RoutineSlotAdvice => Boolean(slot))
-    .map(projectStep)
+    .map((slot) => projectStep(slot, params.hairProfile))
 }
 
 function buildMissingInfo(params: {
@@ -233,11 +358,13 @@ export function projectRoutinePlan(params: {
     objective,
     steps: projectRoutineSteps({
       plan,
+      hairProfile: params.hairProfile,
       layer: params.layer ?? null,
       requestedCategory: params.requestedCategory ?? null,
     }),
     missing_info: buildMissingInfo({ objective, hairProfile: params.hairProfile, context }),
     confidence: Math.round((completed / denominator) * 100) / 100,
+    priority_context: projectPriorityContext(plan),
   }
 }
 
