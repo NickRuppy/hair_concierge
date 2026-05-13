@@ -1,13 +1,12 @@
 import { readFile } from "fs/promises"
-import { dirname, resolve } from "path"
-import { fileURLToPath } from "url"
+import { resolve } from "path"
 
 import { guidanceCatalog } from "./catalog"
 import type { GuidanceCatalogEntry } from "./catalog"
 import type { GuidanceId, GuidanceLoadResult } from "../contracts"
 
-const moduleDir = dirname(fileURLToPath(import.meta.url))
-const repoRoot = resolve(moduleDir, "../../../../")
+const GUIDANCE_PATH_PREFIX = "data/agent-guidance/"
+const guidanceRoot = resolve(process.cwd(), "data", "agent-guidance")
 const guidanceContentCache = new Map<GuidanceId, Promise<GuidanceLoadResult["items"][number]>>()
 
 function resolveEntryPaths(entry: GuidanceCatalogEntry): string[] {
@@ -22,6 +21,14 @@ function resolveEntryPaths(entry: GuidanceCatalogEntry): string[] {
   throw new Error(`Guidance catalog entry has no path: ${entry.title}`)
 }
 
+function resolveGuidancePath(entryPath: string): string {
+  if (!entryPath.startsWith(GUIDANCE_PATH_PREFIX)) {
+    throw new Error(`Guidance path must live under ${GUIDANCE_PATH_PREFIX}: ${entryPath}`)
+  }
+
+  return resolve(guidanceRoot, entryPath.slice(GUIDANCE_PATH_PREFIX.length))
+}
+
 async function loadGuidanceItem(id: string): Promise<GuidanceLoadResult["items"][number]> {
   const guidanceId = id as GuidanceId
   const cached = guidanceContentCache.get(guidanceId)
@@ -34,7 +41,7 @@ async function loadGuidanceItem(id: string): Promise<GuidanceLoadResult["items"]
   }
 
   const promise = Promise.all(
-    resolveEntryPaths(entry).map((entryPath) => readFile(resolve(repoRoot, entryPath), "utf8")),
+    resolveEntryPaths(entry).map((entryPath) => readFile(resolveGuidancePath(entryPath), "utf8")),
   ).then((contentParts) => ({
     id: guidanceId,
     kind: entry.kind,
