@@ -788,6 +788,52 @@ test("tool-loop surfaces only terminal product IDs backed by selected products",
   assert.deepEqual(withoutProductsResult.surfaced_product_ids, [])
 })
 
+test("tool-loop treats direct need-category wording as concrete product intent", async () => {
+  const modelClient = new FakeModelClient([
+    {
+      type: "tool_calls",
+      calls: [{ name: "select_products", input: { category: "shampoo" } }],
+    },
+    {
+      type: "final",
+      answer: "Ich wuerde dir zuerst dieses Shampoo zeigen.",
+      statePatch: {
+        active_topic: "shampoo",
+        last_product_category: "shampoo",
+        topic_relation: "same_topic",
+      },
+      productIds: ["shampoo-1"],
+    },
+  ])
+  let selectProductCalls = 0
+
+  const result = await runAgenticToolTurn({
+    message: "Ich brauche ein Shampoo",
+    recentMessages: [],
+    modelClient,
+    tools: {
+      select_products: async () => {
+        selectProductCalls += 1
+        return createShampooProjection()
+      },
+      build_or_fix_routine: async () => ({
+        objective: null,
+        steps: [],
+        missing_info: [],
+        confidence: 0,
+        priority_context: null,
+      }),
+    },
+    userContext: createUserContext(),
+    conversationState: null,
+  })
+
+  assert.equal(selectProductCalls, 1)
+  assert.equal(result.selected_products?.category, "shampoo")
+  assert.deepEqual(result.surfaced_product_ids, ["shampoo-1"])
+  assert.ok(!result.trace.guardrails.includes("conceptual_category_curiosity"))
+})
+
 test("tool-loop blocks select_products for conceptual category curiosity", async () => {
   const modelClient = new FakeModelClient([
     {

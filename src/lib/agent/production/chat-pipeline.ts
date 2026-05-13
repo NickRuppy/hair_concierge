@@ -264,6 +264,28 @@ function deriveResponseMode(params: {
     : "answer_direct"
 }
 
+function deriveMissingProfilePolicyOverride(
+  selectedProducts: SelectedProductsProjection | null,
+): string | null {
+  if (selectedProducts?.decision !== "needs_more_info") return null
+  if (!selectedProducts.missing_info.some((item) => item.blocking)) return null
+
+  switch (selectedProducts.category) {
+    case "shampoo":
+      return "missing_shampoo_profile"
+    case "conditioner":
+      return "missing_conditioner_profile"
+    case "leave_in":
+      return "missing_leave_in_profile"
+    case "mask":
+      return "missing_mask_profile"
+    case "oil":
+      return "missing_oil_profile"
+    default:
+      return null
+  }
+}
+
 function buildToolLoopRouterDecision(params: {
   visibleFailure: boolean
   selectedProducts: SelectedProductsProjection | null
@@ -275,6 +297,11 @@ function buildToolLoopRouterDecision(params: {
 
   if (params.selectedProducts?.product_response_policy) {
     policyOverrides.push(`product_policy:${params.selectedProducts.product_response_policy}`)
+  }
+
+  const missingProfileOverride = deriveMissingProfilePolicyOverride(params.selectedProducts)
+  if (missingProfileOverride) {
+    policyOverrides.push(missingProfileOverride)
   }
 
   if (params.repairAttempted) {

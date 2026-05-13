@@ -1158,6 +1158,7 @@ function hasExplicitProductAsk(message: string): boolean {
     /\bwelch\w*\s+(?:produkt\w*|option\w*|shampoo\w*|conditioner\w*|spuelung\w*|spulung\w*|leave in|leavein|maske\w*|haarkur\w*|kur\w*)\b/,
     /\bempfehl\w*\b/,
     /\brecommend\w*\b/,
+    /\b(?:ich\s+)?brauche\s+(?:ein\w*\s+)?(?:produkt\w*|shampoo\w*|conditioner\w*|spuelung\w*|spulung\w*|leave in|leavein|maske\w*|haarkur\w*|kur\w*|oel\w*|ol\w*)\b/,
     /\bpasst\b/,
     /\bfit(?:s)?\b/,
     /\bprodukt(?:e|en|s)?\b/,
