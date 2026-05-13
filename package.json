@@ -14,6 +14,7 @@
     "worktree:list": "git worktree list",
     "worktree:prune": "git worktree prune",
     "test:extract": "tsx scripts/extract-qa-fixtures.ts",
+    "test:comparelab:extract": "tsx scripts/extract-comparelab-prompts.ts",
     "test:qa": "playwright test qa-validation",
     "test:chat": "tsx scripts/eval-chat/run.ts --skip-judge",
     "test:chat:judge": "tsx scripts/eval-chat/run.ts",
