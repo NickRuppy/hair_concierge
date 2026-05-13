@@ -2,14 +2,22 @@ import type OpenAI from "openai"
 
 import { DEFAULT_CHAT_COMPLETION_MODEL } from "@/lib/openai/chat"
 import { getObservedOpenAI } from "@/lib/openai/client"
+import {
+  buildLangfusePromptConfig,
+  getManagedTextPromptTemplate,
+  LANGFUSE_PROMPTS,
+  type PromptDefinition,
+} from "@/lib/langfuse/prompts"
 import type {
   AgenticToolLoopModelClient,
   AgenticToolLoopModelStep,
 } from "@/lib/agent/orchestrator/agentic-tool-loop-types"
 import type { AgentToolName } from "@/lib/agent/orchestrator/tool-definitions"
+import type { LangfusePromptReference } from "@/lib/types"
 import {
   AGENT_ROUTE_CLASSIFIER_PROMPT,
   AGENTIC_CONTEXTUAL_COMPOSER_PROMPT,
+  AGENTIC_TOOL_LOOP_PROMPT,
   AGENT_FINAL_RENDER_PROMPT,
 } from "@/lib/agent/orchestrator/prompt"
 import {
@@ -199,16 +207,93 @@ const ROUTE_CLASSIFICATION_RESPONSE_FORMAT = {
   },
 } satisfies OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming["response_format"]
 
-export function createOpenAIToolModelClient(params: { model?: string } = {}): AgentModelClient {
+async function resolveManagedAgentPrompt(params: {
+  systemPrompt: string
+  prompt: PromptDefinition
+}): Promise<{
+  systemPrompt: string
+  langfuseConfig: Parameters<typeof getObservedOpenAI>[0]
+  ref: LangfusePromptReference | null
+}> {
+  if (params.systemPrompt !== params.prompt.fallback) {
+    return {
+      systemPrompt: params.systemPrompt,
+      langfuseConfig: undefined,
+      ref: null,
+    }
+  }
+
+  const managedPrompt = await getManagedTextPromptTemplate(params.prompt)
+
+  return {
+    systemPrompt: managedPrompt.template,
+    langfuseConfig: {
+      generationMetadata: {
+        prompt_label: managedPrompt.ref.label,
+        prompt_is_fallback: String(managedPrompt.ref.is_fallback),
+      },
+      langfusePrompt: buildLangfusePromptConfig(managedPrompt.ref),
+    },
+    ref: managedPrompt.ref,
+  }
+}
+
+type ManagedAgentPromptObserver = (event: {
+  prompt: PromptDefinition
+  ref: LangfusePromptReference
+}) => void
+
+function createManagedAgentPromptResolver(
+  params: {
+    onManagedPrompt?: ManagedAgentPromptObserver
+  } = {},
+) {
+  const cache = new Map<string, Promise<Awaited<ReturnType<typeof resolveManagedAgentPrompt>>>>()
+
+  return async (input: {
+    systemPrompt: string
+    prompt: PromptDefinition
+  }): ReturnType<typeof resolveManagedAgentPrompt> => {
+    if (input.systemPrompt !== input.prompt.fallback) {
+      return resolveManagedAgentPrompt(input)
+    }
+
+    let resolved = cache.get(input.prompt.name)
+    if (!resolved) {
+      resolved = resolveManagedAgentPrompt(input)
+      cache.set(input.prompt.name, resolved)
+    }
+
+    const managedPrompt = await resolved
+    if (managedPrompt.ref) {
+      params.onManagedPrompt?.({ prompt: input.prompt, ref: managedPrompt.ref })
+    }
+
+    return managedPrompt
+  }
+}
+
+export function createOpenAIToolModelClient(
+  params: { model?: string; onManagedPrompt?: ManagedAgentPromptObserver } = {},
+): AgentModelClient {
+  const resolvePrompt = createManagedAgentPromptResolver({
+    onManagedPrompt: params.onManagedPrompt,
+  })
+
   return {
     async classifyRoute({ systemPrompt = AGENT_ROUTE_CLASSIFIER_PROMPT, message, userContext }) {
+      const managedPrompt = await resolvePrompt({
+        systemPrompt,
+        prompt: LANGFUSE_PROMPTS.agentRouteClassifier,
+      })
       const response = await getObservedOpenAI({
         generationName: "bounded-agent-route-classification",
+        ...managedPrompt.langfuseConfig,
       }).chat.completions.create({
         model: params.model ?? DEFAULT_CHAT_COMPLETION_MODEL,
         temperature: 0,
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: managedPrompt.systemPrompt },
           {
             role: "user",
             content: JSON.stringify({
@@ -225,13 +310,18 @@ export function createOpenAIToolModelClient(params: { model?: string } = {}): Ag
       return parseRouteClassification(raw)
     },
     async renderFinalAnswer({ systemPrompt = AGENT_FINAL_RENDER_PROMPT, message, packet }) {
+      const managedPrompt = await resolvePrompt({
+        systemPrompt,
+        prompt: LANGFUSE_PROMPTS.agentFinalRender,
+      })
       const response = await getObservedOpenAI({
         generationName: "bounded-agent-final-render",
+        ...managedPrompt.langfuseConfig,
       }).chat.completions.create({
         model: params.model ?? DEFAULT_CHAT_COMPLETION_MODEL,
         temperature: 0,
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: managedPrompt.systemPrompt },
           {
             role: "user",
             content: JSON.stringify({
@@ -263,16 +353,25 @@ function parseToolCallInput(raw: string | undefined): Record<string, unknown> {
 }
 
 export function createOpenAIAgenticToolLoopModelClient(
-  params: { model?: string } = {},
+  params: { model?: string; onManagedPrompt?: ManagedAgentPromptObserver } = {},
 ): AgenticToolLoopModelClient {
+  const resolvePrompt = createManagedAgentPromptResolver({
+    onManagedPrompt: params.onManagedPrompt,
+  })
+
   return {
     async runStep({ systemPrompt, messages, tools }) {
+      const managedPrompt = await resolvePrompt({
+        systemPrompt,
+        prompt: LANGFUSE_PROMPTS.agenticToolLoop,
+      })
       const response = await getObservedOpenAI({
         generationName: "agentic-tool-loop-step",
+        ...managedPrompt.langfuseConfig,
       }).chat.completions.create({
         model: params.model ?? DEFAULT_CHAT_COMPLETION_MODEL,
         temperature: 0,
-        messages: [{ role: "system", content: systemPrompt }, ...messages],
+        messages: [{ role: "system", content: managedPrompt.systemPrompt }, ...messages],
         tools,
       })
 
@@ -304,13 +403,18 @@ export function createOpenAIAgenticToolLoopModelClient(
       }
     },
     async composeFinalAnswer({ systemPrompt = AGENTIC_CONTEXTUAL_COMPOSER_PROMPT, ...input }) {
+      const managedPrompt = await resolvePrompt({
+        systemPrompt,
+        prompt: LANGFUSE_PROMPTS.agenticContextualComposer,
+      })
       const response = await getObservedOpenAI({
         generationName: "agentic-tool-loop-contextual-composer",
+        ...managedPrompt.langfuseConfig,
       }).chat.completions.create({
         model: params.model ?? DEFAULT_CHAT_COMPLETION_MODEL,
         temperature: 0,
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: managedPrompt.systemPrompt },
           {
             role: "user",
             content: JSON.stringify(input),
