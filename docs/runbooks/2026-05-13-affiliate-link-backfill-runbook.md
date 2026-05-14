@@ -56,13 +56,18 @@ maske-a, maske-b
 When all 15 return:
 
 ```bash
+fail=0
 for slug in shampoo-a shampoo-b shampoo-c shampoo-d \
             leave-in-a leave-in-b leave-in-c \
             oele-a oele-b oele-c \
             conditioner-a conditioner-b conditioner-c \
             maske-a maske-b; do
-  npx tsx scripts/validate-slice.ts "$slug" || echo "FAILED: $slug"
+  npx tsx scripts/validate-slice.ts "$slug" || fail=1
 done
+if [ "$fail" -ne 0 ]; then
+  echo "One or more slices failed validation. Rerun those slices before aggregating."
+  exit 1
+fi
 ```
 
 Any slice that fails: rerun ONLY that slice's subagent (point it at the same input/output paths). Re-validate.
