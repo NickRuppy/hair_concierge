@@ -4,7 +4,7 @@ import { join } from "node:path"
 import { createClient } from "@supabase/supabase-js"
 
 import { readCsv } from "../src/lib/affiliate-research/csv"
-import { isUsableUrl, urlGate } from "../src/lib/affiliate-research/url-gate"
+import { urlGate } from "../src/lib/affiliate-research/url-gate"
 
 loadEnv({ path: ".env.local" })
 
@@ -26,12 +26,6 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false },
 })
 
-// Mirrors the export predicate: write-eligible iff current value is null,
-// empty/whitespace, or not a usable http(s) URL.
-function safeToWrite(currentValue: string | null | undefined): boolean {
-  return !isUsableUrl(currentValue)
-}
-
 function appendLog(line: string): void {
   appendFileSync(LOG_PATH, `${new Date().toISOString()} ${line}\n`)
 }
@@ -40,7 +34,6 @@ async function main(): Promise<void> {
   const rows = readCsv(APPROVED_PATH, { expectedHeader: APPROVED_HEADER })
   console.log(`Read ${rows.length} approved rows from ${APPROVED_PATH}.`)
 
-  // Defensive re-gate — should be a no-op for a well-formed approved.csv.
   const rejected: { id: string; reason: string }[] = []
   const accepted = rows.filter((r) => {
     const g = urlGate({ chosen_url: r.chosen_url, brand: r.brand })
@@ -59,40 +52,27 @@ async function main(): Promise<void> {
   let skippedBySafetyBelt = 0
   let failed = 0
   for (const r of accepted) {
-    const { data: current, error: readErr } = await supabase
-      .from("products")
-      .select("id, affiliate_link")
-      .eq("id", r.id)
-      .maybeSingle()
-    if (readErr) {
-      console.error(`READ FAILED ${r.id}: ${readErr.message}`)
-      failed++
-      continue
-    }
-    if (!current) {
-      console.error(`NOT FOUND ${r.id} — product no longer exists`)
-      failed++
-      continue
-    }
-    if (!safeToWrite(current.affiliate_link as string | null)) {
-      skippedBySafetyBelt++
-      appendLog(
-        `SKIP id=${r.id} reason=safety_belt_existing=${JSON.stringify(current.affiliate_link)}`,
-      )
-      continue
-    }
     if (dry) {
-      console.log(`DRY  UPDATE products SET affiliate_link='${r.chosen_url}' WHERE id='${r.id}'`)
+      console.log(
+        `DRY  UPDATE products SET affiliate_link='${r.chosen_url}' WHERE id='${r.id}' AND (affiliate_link IS NULL OR btrim(affiliate_link) = '' OR affiliate_link !~* '^https?://')`,
+      )
       applied++
       continue
     }
-    const { error: writeErr } = await supabase
+    const { data, error } = await supabase
       .from("products")
       .update({ affiliate_link: r.chosen_url })
       .eq("id", r.id)
-    if (writeErr) {
-      console.error(`WRITE FAILED ${r.id}: ${writeErr.message}`)
+      .or("affiliate_link.is.null,affiliate_link.eq.,affiliate_link.not.ilike.http%")
+      .select("id")
+    if (error) {
+      console.error(`WRITE FAILED ${r.id}: ${error.message}`)
       failed++
+      continue
+    }
+    if (!data || data.length === 0) {
+      skippedBySafetyBelt++
+      appendLog(`SKIP id=${r.id} reason=safety_belt_no_match`)
       continue
     }
     appendLog(`OK   id=${r.id} url=${r.chosen_url}`)
