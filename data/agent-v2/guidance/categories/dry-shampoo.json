@@ -1,0 +1,30 @@
+{
+  "package_id": "category.dry_shampoo.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "categories": ["dry_shampoo"],
+    "routine_layers": ["goals", "problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.dry_shampoo.bridge_not_cleanse",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Dry shampoo is a bridge between washes, not a substitute for cleansing."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.dry_shampoo.use_narrowly",
+      "priority": "high",
+      "source": "categories/dry-shampoo.md",
+      "message": "Keep dry shampoo narrow and caution against frequent buildup-prone use."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [],
+  "markdown_path": "categories/dry-shampoo.md"
+}

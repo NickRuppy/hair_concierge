@@ -1,0 +1,30 @@
+{
+  "package_id": "category.shampoo.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "categories": ["shampoo"],
+    "routine_layers": ["basics"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.shampoo.scalp_first",
+      "severity": "block",
+      "source": "categories/shampoo.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Frame shampoo primarily as scalp and cleansing support, not as a length repair treatment."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.shampoo.use_note",
+      "priority": "medium",
+      "source": "categories/shampoo.md",
+      "message": "When useful, mention shampoo mainly at the scalp and rinse thoroughly."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [],
+  "markdown_path": "categories/shampoo.md"
+}

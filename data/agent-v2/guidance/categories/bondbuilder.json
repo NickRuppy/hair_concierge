@@ -1,0 +1,30 @@
+{
+  "package_id": "category.bondbuilder.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "categories": ["bondbuilder"],
+    "routine_layers": ["problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.bondbuilder.not_conditioner",
+      "severity": "block",
+      "source": "categories/bondbuilder.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Do not present bondbuilders as normal moisture care or conditioner replacement."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.bondbuilder.lane_clarity",
+      "priority": "high",
+      "source": "categories/bondbuilder.md",
+      "message": "Explain the lane: chemical/color stress, breakage, or peptide/leave-in structure support."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [],
+  "markdown_path": "categories/bondbuilder.md"
+}

@@ -1,0 +1,30 @@
+{
+  "package_id": "category.peeling.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "categories": ["peeling"],
+    "routine_layers": ["problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.peeling.caution_sensitive_scalp",
+      "severity": "block",
+      "source": "categories/peeling.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Keep scalp peeling conservative for sensitive, irritated, painful, or medically adjacent scalp context."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.peeling.reset_role",
+      "priority": "medium",
+      "source": "categories/peeling.md",
+      "message": "Explain peeling as occasional buildup/scalp-feel support, not a treatment."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [],
+  "markdown_path": "categories/peeling.md"
+}

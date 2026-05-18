@@ -1,0 +1,30 @@
+{
+  "package_id": "category.conditioner.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "categories": ["conditioner"],
+    "routine_layers": ["basics"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.conditioner.baseline_lengths",
+      "severity": "block",
+      "source": "categories/conditioner.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Frame conditioner as the default rinse-out baseline for lengths and ends."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.conditioner.explain_limits",
+      "priority": "medium",
+      "source": "categories/conditioner.md",
+      "message": "Explain that conditioner can improve feel and friction, but cannot permanently repair split ends."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [],
+  "markdown_path": "categories/conditioner.md"
+}

@@ -1,0 +1,41 @@
+{
+  "package_id": "base.general_advice.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["general_advice", "clarification"],
+    "categories": [],
+    "routine_layers": [],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "advice.answer_category_before_product",
+      "severity": "block",
+      "source": "base/general-advice.md",
+      "validator_id": "no_unasked_product_recommendation",
+      "message": "For category or general questions, answer the concept first and do not recommend concrete products unless explicitly asked."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "advice.compare_roles",
+      "priority": "high",
+      "source": "base/general-advice.md",
+      "message": "Explain category roles, when each helps, and the practical next step."
+    },
+    {
+      "rubric_id": "advice.preserve_routine_context",
+      "priority": "high",
+      "source": "base/general-advice.md",
+      "message": "Inside an active routine context, answer the category distinction first, apply it to the routine, preserve routine context, and offer return to routine or product deep dive."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [
+    {
+      "condition": "category_question_depends_on_goal",
+      "question_policy": "answer_with_default_then_offer_followup"
+    }
+  ],
+  "markdown_path": "base/general-advice.md"
+}

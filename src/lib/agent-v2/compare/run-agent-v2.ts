@@ -1,0 +1,578 @@
+import { getOpenAI } from "@/lib/openai/client"
+import { createBuildOrFixRoutineTool } from "@/lib/agent/tools/build-or-fix-routine"
+import { getUserContext } from "@/lib/agent/tools/get-user-context"
+import { createSelectProductsTool } from "@/lib/agent/tools/select-products"
+import type { SelectProductsToolResult } from "@/lib/agent/tools/select-products"
+import { loadUserMemoryContext } from "@/lib/rag/user-memory"
+import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"
+import { runAgentV2ResponsesTurn } from "@/lib/agent-v2/runtime/responses-agent"
+import { loadAgentV2AdvisorGuidance } from "@/lib/agent-v2/tools/guidance-tool"
+import { projectRoutineForAgentV2 } from "@/lib/agent-v2/tools/routine-projection"
+import { projectSelectProductsForAgentV2 } from "@/lib/agent-v2/tools/select-products-projection"
+import type {
+  AgentV2AnswerMode,
+  AgentV2RoutineLayer,
+  AgentV2RoutineThreadContext,
+  AgentV2RoutineThreadStep,
+  AgentV2SafetyMode,
+  AgentV2TerminalAnswer,
+} from "@/lib/agent-v2/contracts"
+import type {
+  AgentCompareScenario,
+  AgentCompareTurnResult,
+  AgentCompareUserRequest,
+  AgentV2CompareTrace,
+  AgentV2RequestInterpretationTrace,
+  CompareRunResult,
+} from "@/lib/agent/compare/types"
+
+function getRequiredCompareEnv() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!supabaseUrl || !serviceRoleKey || !anonKey) {
+    throw new Error(
+      "Missing env vars: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    )
+  }
+
+  return { supabaseUrl, serviceRoleKey, anonKey }
+}
+
+function normalizeTurns(value: { prompt?: string; turns?: string[] }): string[] {
+  const turns = value.turns?.map((turn) => turn.trim()).filter((turn) => turn.length > 0) ?? []
+  if (turns.length > 0) return turns
+
+  const prompt = value.prompt?.trim() ?? ""
+  return prompt.length > 0 ? [prompt] : []
+}
+
+type AgentV2SelectProductsProjectionForCompare = ReturnType<typeof projectSelectProductsForAgentV2>
+
+export function normalizeAgentV2MatchedProductsForFinalAnswer(
+  projections: ReturnType<typeof projectSelectProductsForAgentV2>[],
+  answer: AgentV2TerminalAnswer,
+): CompareRunResult["matched_products"] {
+  const surfacedProductIds = collectSurfacedProductIds(answer)
+  if (surfacedProductIds.length === 0) return []
+
+  const productsById = new Map<string, { name: string; category: string | null }>()
+  for (const projection of projections) {
+    for (const product of projection.products) {
+      if (!productsById.has(product.product_id)) {
+        productsById.set(product.product_id, {
+          name: product.name,
+          category: projection.category,
+        })
+      }
+    }
+  }
+
+  return surfacedProductIds.flatMap((productId) => {
+    const product = productsById.get(productId)
+    return product ? [product] : []
+  })
+}
+
+function collectSurfacedProductIds(answer: AgentV2TerminalAnswer): string[] {
+  if (
+    answer.answer_mode === "product_recommendation" ||
+    answer.answer_mode === "routine_product_deep_dive"
+  ) {
+    return [
+      ...new Set(answer.payload.recommendations.map((recommendation) => recommendation.product_id)),
+    ]
+  }
+
+  return []
+}
+
+function isRequestInterpretationTrace(value: unknown): value is AgentV2RequestInterpretationTrace {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false
+  const record = value as Record<string, unknown>
+
+  return (
+    typeof record.primary_intent === "string" &&
+    typeof record.product_request_kind === "string" &&
+    typeof record.category === "string" &&
+    (typeof record.requested_product_count === "number" ||
+      record.requested_product_count === null) &&
+    typeof record.count_policy === "string" &&
+    typeof record.confidence === "number"
+  )
+}
+
+export function formatAgentV2RequestInterpretationSummary(
+  interpretation: AgentV2RequestInterpretationTrace | null | undefined,
+): string | null {
+  if (!interpretation) return null
+
+  const count =
+    interpretation.requested_product_count === null
+      ? interpretation.count_policy
+      : `${interpretation.requested_product_count} ${interpretation.count_policy}`
+
+  return [
+    "Intent:",
+    interpretation.primary_intent,
+    "·",
+    interpretation.product_request_kind,
+    "·",
+    interpretation.category,
+    "·",
+    count,
+    "·",
+    `confidence ${interpretation.confidence.toFixed(2)}`,
+  ].join(" ")
+}
+
+function extractRequestInterpretation(
+  answer: AgentV2TerminalAnswer,
+): AgentV2RequestInterpretationTrace | null {
+  const interpretation = (answer as unknown as { request_interpretation?: unknown })
+    .request_interpretation
+
+  return isRequestInterpretationTrace(interpretation)
+    ? (interpretation as AgentV2RequestInterpretationTrace)
+    : null
+}
+
+function augmentAgentV2CompareTrace(
+  trace: Awaited<ReturnType<typeof runAgentV2ResponsesTurn>>["trace"],
+  answer: AgentV2TerminalAnswer,
+): AgentV2CompareTrace {
+  const requestInterpretation = extractRequestInterpretation(answer)
+
+  return {
+    ...trace,
+    request_interpretation_summary:
+      formatAgentV2RequestInterpretationSummary(requestInterpretation),
+    request_interpretation: requestInterpretation,
+    validation_warnings: trace.validation_warnings,
+    bounded_repair_kind: trace.bounded_repair_kind,
+  }
+}
+
+export function updateAgentV2RoutineThreadContext(
+  previous: AgentV2RoutineThreadContext | null,
+  update: {
+    answer_mode: AgentV2AnswerMode
+    user_message: string
+    routine_context: {
+      active: boolean
+      routine_layer: AgentV2RoutineLayer | null
+      category: string | null
+    }
+    categories: string[]
+    summary_de: string | null
+    answer?: unknown
+  },
+): AgentV2RoutineThreadContext {
+  const keepsRoutineTrack =
+    update.routine_context.active ||
+    update.answer_mode === "routine" ||
+    update.answer_mode === "routine_product_deep_dive"
+
+  if (!keepsRoutineTrack) {
+    return {
+      active: false,
+      current_layer: null,
+      last_answer_mode: update.answer_mode,
+      last_routine_categories: [],
+      last_user_goal: null,
+      summary_de: null,
+      visible_steps: [],
+    }
+  }
+
+  const updateCategories = [
+    ...update.categories,
+    ...(update.routine_context.category ? [update.routine_context.category] : []),
+  ]
+  const lastRoutineCategories = [
+    ...new Set([...(previous?.last_routine_categories ?? []), ...updateCategories]),
+  ]
+  const visibleSteps = updateAgentV2VisibleRoutineThreadSteps(previous?.visible_steps ?? [], update)
+
+  return {
+    active: true,
+    current_layer: update.routine_context.routine_layer ?? previous?.current_layer ?? null,
+    last_answer_mode: update.answer_mode,
+    last_routine_categories: lastRoutineCategories,
+    last_user_goal:
+      update.answer_mode === "routine" || !previous?.last_user_goal
+        ? update.user_message
+        : previous.last_user_goal,
+    summary_de: update.summary_de ?? previous?.summary_de ?? null,
+    visible_steps: visibleSteps,
+  }
+}
+
+function updateAgentV2VisibleRoutineThreadSteps(
+  previous: readonly AgentV2RoutineThreadStep[],
+  update: {
+    answer_mode: AgentV2AnswerMode
+    routine_context: {
+      routine_layer: AgentV2RoutineLayer | null
+      category: string | null
+    }
+    categories: string[]
+    answer?: unknown
+  },
+): AgentV2RoutineThreadStep[] {
+  const routineAnswer = isAgentV2RoutineAnswer(update.answer) ? update.answer : null
+  if (update.answer_mode === "routine" && routineAnswer) {
+    const singleStepCategory =
+      routineAnswer.payload.visible_steps.length === 1 && update.categories.length === 1
+        ? update.categories[0]
+        : null
+    return routineAnswer.payload.visible_steps.map((step, index) => ({
+      step_id: step.step_id,
+      label_de: step.label_de,
+      category:
+        routineAnswer.payload.visible_steps.length === 1
+          ? (update.routine_context.category ??
+            singleStepCategory ??
+            inferRoutineThreadCategory(step.label_de))
+          : inferRoutineThreadCategory(step.label_de),
+      order: index + 1,
+      routine_layer: routineAnswer.payload.routine_layer,
+    }))
+  }
+
+  const deepDiveAnswer = isAgentV2RoutineProductDeepDiveAnswer(update.answer) ? update.answer : null
+  if (update.answer_mode === "routine_product_deep_dive" && deepDiveAnswer) {
+    const stepId = deepDiveAnswer.payload.step_id?.trim()
+    if (!stepId) return [...previous]
+
+    const category = deepDiveAnswer.payload.category ?? update.routine_context.category
+    const existingIndex = previous.findIndex((step) => step.step_id === stepId)
+    if (existingIndex >= 0) {
+      return previous.map((step, index) =>
+        index === existingIndex
+          ? {
+              ...step,
+              category: category ?? step.category,
+            }
+          : step,
+      )
+    }
+
+    return [
+      ...previous,
+      {
+        step_id: stepId,
+        label_de: category ? formatRoutineThreadCategoryLabel(category) : stepId,
+        category,
+        order: previous.length + 1,
+        routine_layer: update.routine_context.routine_layer,
+      },
+    ]
+  }
+
+  return [...previous]
+}
+
+function isAgentV2RoutineAnswer(
+  answer: unknown,
+): answer is Extract<AgentV2TerminalAnswer, { answer_mode: "routine" }> {
+  return (
+    Boolean(answer) &&
+    typeof answer === "object" &&
+    (answer as { answer_mode?: unknown }).answer_mode === "routine" &&
+    Array.isArray((answer as { payload?: { visible_steps?: unknown } }).payload?.visible_steps)
+  )
+}
+
+function isAgentV2RoutineProductDeepDiveAnswer(
+  answer: unknown,
+): answer is Extract<AgentV2TerminalAnswer, { answer_mode: "routine_product_deep_dive" }> {
+  return (
+    Boolean(answer) &&
+    typeof answer === "object" &&
+    (answer as { answer_mode?: unknown }).answer_mode === "routine_product_deep_dive" &&
+    Boolean((answer as { payload?: unknown }).payload)
+  )
+}
+
+function inferRoutineThreadCategory(labelDe: string): string | null {
+  const normalized = labelDe
+    .trim()
+    .toLocaleLowerCase("de-DE")
+    .replace(/[-\s]+/g, "_")
+  const categoryByLabel: Record<string, string> = {
+    shampoo: "shampoo",
+    conditioner: "conditioner",
+    spuelung: "conditioner",
+    leave_in: "leave_in",
+    leavein: "leave_in",
+    leave_in_conditioner: "leave_in",
+    maske: "mask",
+    haarmaske: "mask",
+    oel: "oil",
+    haaroel: "oil",
+    bondbuilder: "bondbuilder",
+    tiefenreinigung: "deep_cleansing_shampoo",
+    tiefenreinigungsshampoo: "deep_cleansing_shampoo",
+    trockenshampoo: "dry_shampoo",
+    peeling: "peeling",
+  }
+
+  return categoryByLabel[normalized] ?? null
+}
+
+function formatRoutineThreadCategoryLabel(category: string): string {
+  const labelByCategory: Record<string, string> = {
+    shampoo: "Shampoo",
+    conditioner: "Conditioner",
+    mask: "Maske",
+    leave_in: "Leave-in",
+    oil: "Oel",
+    bondbuilder: "Bondbuilder",
+    deep_cleansing_shampoo: "Tiefenreinigung",
+    dry_shampoo: "Trockenshampoo",
+    peeling: "Peeling",
+  }
+
+  return labelByCategory[category] ?? category
+}
+
+function extractRoutineThreadCategories(answer: AgentV2TerminalAnswer): string[] {
+  const categories = [
+    ...answer.extracted_constraints.product_categories,
+    answer.routine_context.category,
+  ].filter((category): category is string => Boolean(category))
+
+  if (answer.answer_mode === "routine") {
+    categories.push(
+      ...answer.payload.visible_steps
+        .map((step) => step.label_de.trim().toLocaleLowerCase("de-DE"))
+        .filter(Boolean),
+    )
+  }
+
+  if (answer.answer_mode === "routine_product_deep_dive" && answer.payload.category) {
+    categories.push(answer.payload.category)
+  }
+
+  return [...new Set(categories)]
+}
+
+export function classifyAgentV2SafetyMode(message: string): AgentV2SafetyMode {
+  const normalized = message.toLocaleLowerCase("de-DE")
+
+  if (
+    /\b(blutet|bluten|wunde|wunden|offene kopfhaut|brennt stark|verbrennung|eiter|infektion)\b/.test(
+      normalized,
+    ) ||
+    /haare?\s+fall(?:en|t).*b(?:ue|ü)scheln/.test(normalized) ||
+    /\b(pl[oö]tzlich(?:er|e|es)?\s+haarausfall|verschreibungspflichtig|rezeptpflichtig)\b/.test(
+      normalized,
+    )
+  ) {
+    return "hard_short_circuit"
+  }
+
+  const hasItchWithForegroundSymptom =
+    /\bjuck(?:t|en|reiz)\b/.test(normalized) &&
+    /\b(ger[oö]tet|rot|r[oö]tlich|brennt|brennen|wund|schmerzt|schmerzen|n[aä]sst|n[aä]ssen|ausschlag|offene stelle|offene stellen|schuppen)\b/.test(
+      normalized,
+    )
+  const hasForegroundSymptom =
+    /\b(schmerzt|schmerzen|n[aä]sst|n[aä]ssen|ausschlag|offene stelle|offene stellen)\b/.test(
+      normalized,
+    ) ||
+    /\bkopfhaut\b.*\bbrennt\b/.test(normalized) ||
+    /\bbrennt\b.*\bkopfhaut\b/.test(normalized)
+  const hasHairLossRedFlag =
+    /\b(haarausfall|haarverlust|kahle stelle|kahle stellen|kreisrund(?:er|e|es)? haarausfall|postpartum|schwangerschaft)\b/.test(
+      normalized,
+    )
+
+  if (hasItchWithForegroundSymptom || hasForegroundSymptom || hasHairLossRedFlag) {
+    return "restricted"
+  }
+
+  return "normal"
+}
+
+export async function runAgentV2ComparisonForUser(
+  params: AgentCompareUserRequest,
+): Promise<CompareRunResult> {
+  const startedAt = performance.now()
+  const turns = normalizeTurns(params)
+  const context = await getUserContext(params.userId)
+  const memoryContext = await loadUserMemoryContext(params.userId)
+  let latestSelectProductsResult: SelectProductsToolResult | null = null
+  const selectProducts = createSelectProductsTool({
+    onResult: (result) => {
+      latestSelectProductsResult = result
+    },
+  })
+  const buildRoutine = createBuildOrFixRoutineTool()
+  const recentMessages: Array<{ role: "user" | "assistant"; content: string }> = []
+  const sessionMemory = []
+  const turnResults: AgentCompareTurnResult[] = []
+  let finalResult: Awaited<ReturnType<typeof runAgentV2ResponsesTurn>> | null = null
+  const selectedProductProjections: AgentV2SelectProductsProjectionForCompare[] = []
+  let currentRoutineLayer: AgentV2RoutineLayer | null = null
+  let routineThreadContext: AgentV2RoutineThreadContext | null = null
+
+  for (const [index, message] of turns.entries()) {
+    const turnStartedAt = performance.now()
+    const safetyMode = classifyAgentV2SafetyMode(message)
+    const result = await runAgentV2ResponsesTurn({
+      client: getOpenAI() as unknown as Parameters<typeof runAgentV2ResponsesTurn>[0]["client"],
+      message,
+      recentMessages,
+      userContext: {
+        hairProfile: context.profile,
+        routineInventory: context.routine_inventory,
+        derivedSignals: context.derived_signals,
+        relevantMemory: context.relevant_memory,
+        missingProfile: context.missing_profile,
+        sessionMemory,
+      },
+      currentRoutineLayer,
+      routineThreadContext,
+      priorSelectedProductProjections: [...selectedProductProjections],
+      safetyMode,
+      tools: {
+        load_advisor_guidance: async (input) => loadAgentV2AdvisorGuidance(input),
+        select_products: async (input) => {
+          latestSelectProductsResult = null
+          const projection = await selectProducts({
+            category: input.category as Parameters<typeof selectProducts>[0]["category"],
+            message,
+            hairProfile: context.profile,
+            memoryContext,
+            routineItems: context.routine_inventory,
+          })
+          const rawResult =
+            latestSelectProductsResult ??
+            ({
+              projection,
+              products: [],
+              effectiveHairProfile: context.profile,
+              runtime: {} as SelectProductsToolResult["runtime"],
+            } satisfies SelectProductsToolResult)
+          const agentProjection = projectSelectProductsForAgentV2(rawResult)
+          selectedProductProjections.push(agentProjection)
+          return agentProjection
+        },
+        build_or_fix_routine: async (input) => {
+          const projection = await buildRoutine({
+            objective:
+              input.objective === "build_routine" || input.objective === "fix_routine"
+                ? input.objective
+                : "build_routine",
+            message,
+            hairProfile: context.profile,
+            layer: input.requested_layer as Parameters<typeof buildRoutine>[0]["layer"],
+            requestedCategory: input.requested_category as Parameters<
+              typeof buildRoutine
+            >[0]["requestedCategory"],
+          })
+          return projectRoutineForAgentV2(projection, {
+            requestedLayer: input.requested_layer as AgentV2RoutineLayer,
+          })
+        },
+      },
+    })
+
+    finalResult = result
+    routineThreadContext = updateAgentV2RoutineThreadContext(routineThreadContext, {
+      answer_mode: result.final_answer.answer_mode,
+      user_message: message,
+      answer: result.final_answer,
+      routine_context: {
+        active: result.final_answer.routine_context.active,
+        routine_layer: result.final_answer.routine_context.routine_layer,
+        category: result.final_answer.routine_context.category,
+      },
+      categories: extractRoutineThreadCategories(result.final_answer),
+      summary_de: String(result.final_answer.payload.user_facing_answer_de ?? "").slice(0, 500),
+    })
+    currentRoutineLayer = routineThreadContext.current_layer
+    sessionMemory.push(...result.accepted_session_memory_writes)
+    const answer = String(result.final_answer.payload.user_facing_answer_de ?? "")
+    const compareTrace = augmentAgentV2CompareTrace(result.trace, result.final_answer)
+
+    turnResults.push({
+      turn: index + 1,
+      prompt: message,
+      answer,
+      latency_ms: Math.round(performance.now() - turnStartedAt),
+      debug_lines: [
+        `AgentV2: ${result.final_answer.answer_mode}`,
+        `Tools: ${result.trace.tool_calls.map((call) => call.name).join(", ") || "keine"}`,
+        `Routine thread: ${routineThreadContext.active ? "aktiv" : "inaktiv"}${
+          routineThreadContext.current_layer ? `/${routineThreadContext.current_layer}` : ""
+        }`,
+      ],
+      matched_products: normalizeAgentV2MatchedProductsForFinalAnswer(
+        selectedProductProjections,
+        result.final_answer,
+      ),
+      agent_v2_trace: compareTrace,
+      error: null,
+    })
+    recentMessages.push({ role: "user", content: message }, { role: "assistant", content: answer })
+  }
+
+  if (!finalResult) {
+    throw new Error("AgentV2 comparison did not produce a result.")
+  }
+
+  const finalCompareTrace = augmentAgentV2CompareTrace(finalResult.trace, finalResult.final_answer)
+
+  return {
+    system: "agent_v2",
+    display_label: "AgentV2 GPT-5.4-mini",
+    answer: String(finalResult.final_answer.payload.user_facing_answer_de ?? ""),
+    latency_ms: Math.round(performance.now() - startedAt),
+    debug_lines: [
+      `AgentV2: ${finalResult.final_answer.answer_mode}`,
+      `Tools: ${finalResult.trace.tool_calls.map((call) => call.name).join(", ") || "keine"}`,
+      `Routine thread: ${routineThreadContext?.active ? "aktiv" : "inaktiv"}${
+        routineThreadContext?.current_layer ? `/${routineThreadContext.current_layer}` : ""
+      }`,
+    ],
+    matched_products: normalizeAgentV2MatchedProductsForFinalAnswer(
+      selectedProductProjections,
+      finalResult.final_answer,
+    ),
+    agent_v2_trace: finalCompareTrace,
+    turns: turnResults.length > 1 ? turnResults : undefined,
+    error: null,
+  }
+}
+
+export async function runAgentV2Comparison(params: {
+  scenario: AgentCompareScenario
+  prompt?: string
+  turns?: string[]
+  baseUrl?: string | null
+}): Promise<CompareRunResult> {
+  const { supabaseUrl, serviceRoleKey, anonKey } = getRequiredCompareEnv()
+  const session = await createTestSession(supabaseUrl, serviceRoleKey, anonKey)
+
+  try {
+    await upsertHairProfile(
+      session.admin,
+      session.userId,
+      params.scenario.hair_profile,
+      params.scenario.routine_inventory ?? [],
+    )
+
+    return runAgentV2ComparisonForUser({
+      userId: session.userId,
+      prompt: params.prompt,
+      turns: params.turns,
+      baseUrl: params.baseUrl,
+    })
+  } finally {
+    await session.cleanup()
+  }
+}

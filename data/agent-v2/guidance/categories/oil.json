@@ -1,0 +1,30 @@
+{
+  "package_id": "category.oil.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "categories": ["oil"],
+    "routine_layers": ["goals", "problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.oil.cosmetic_finish_or_prewash",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Frame oil as cosmetic finish, friction support, or pre-wash length care, not water-like moisture or scalp treatment."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.oil.purpose_first",
+      "priority": "high",
+      "source": "categories/oil.md",
+      "message": "Clarify whether the user wants finish, pre-wash care, or scalp-adjacent help before products."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [],
+  "markdown_path": "categories/oil.md"
+}

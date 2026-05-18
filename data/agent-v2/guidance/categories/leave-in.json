@@ -1,0 +1,30 @@
+{
+  "package_id": "category.leave_in.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "categories": ["leave_in"],
+    "routine_layers": ["basics", "goals", "problems"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.leave_in.booster_not_default_replacement",
+      "severity": "block",
+      "source": "categories/leave-in.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Frame leave-in as a booster or simplification candidate, not the default replacement for conditioner."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.leave_in.role_clarity",
+      "priority": "high",
+      "source": "categories/leave-in.md",
+      "message": "Separate care, frizz control, detangling, and heat-protection roles."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [],
+  "markdown_path": "categories/leave-in.md"
+}

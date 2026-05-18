@@ -173,7 +173,7 @@ const compareTurnResultSchema = z
 
 const compareRunResultSchema = z
   .object({
-    system: z.enum(["current", "agent", "classic", "tool_loop"]),
+    system: z.enum(["current", "agent", "classic", "tool_loop", "agent_v2"]),
     display_label: z.string().optional(),
     answer: z.string(),
     latency_ms: z.number().int().nullable(),
@@ -256,15 +256,18 @@ const judgmentRecordSchema = z.object({
   }),
   rollout_metrics: z
     .object({
-      blinded_winner: z.enum(["classic", "tool_loop", "tie"]),
+      blinded_winner: z.enum(["classic", "tool_loop", "agent_v2", "tie"]),
       failure_bucket: failureBucketSchema,
       critical_product_claim_failure: z.boolean(),
       latency_ms: z.object({
-        classic: z.number().int().nullable(),
-        tool_loop: z.number().int().nullable(),
+        classic: z.number().int().nullable().optional(),
+        tool_loop: z.number().int().nullable().optional(),
+        agent_v2: z.number().int().nullable().optional(),
       }),
       tool_loop_model_steps: z.number().int().nullable(),
       tool_loop_tool_calls: z.number().int().nullable(),
+      agent_v2_model_steps: z.number().int().nullable().optional(),
+      agent_v2_tool_calls: z.number().int().nullable().optional(),
     })
     .optional(),
   analysis_snapshot: z.custom<AgentCompareAnalysisSnapshot>().optional(),

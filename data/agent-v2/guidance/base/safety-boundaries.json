@@ -1,0 +1,58 @@
+{
+  "package_id": "base.safety_boundaries.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["safety_boundary", "general_advice", "clarification"],
+    "categories": [],
+    "routine_layers": [],
+    "safety_modes": ["restricted", "hard_short_circuit"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "safety.no_diagnosis",
+      "severity": "block",
+      "source": "base/safety-boundaries.md",
+      "validator_id": "no_medical_diagnosis",
+      "message": "Do not diagnose medical conditions."
+    },
+    {
+      "rule_id": "safety.no_treatment_claims",
+      "severity": "block",
+      "source": "base/safety-boundaries.md",
+      "validator_id": "no_medical_treatment_claims",
+      "message": "Do not claim products treat medical symptoms or conditions."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "safety.cosmetic_boundary",
+      "priority": "high",
+      "source": "base/safety-boundaries.md",
+      "message": "Keep cosmetic advice separate from medical scalp or hair-loss guidance."
+    },
+    {
+      "rubric_id": "safety.restricted_no_product_first",
+      "priority": "high",
+      "source": "base/safety-boundaries.md",
+      "message": "For restricted foreground scalp symptoms, do not lead with product recommendations; explain mild-care direction and escalation signs instead."
+    },
+    {
+      "rubric_id": "safety.one_material_clarifier",
+      "priority": "medium",
+      "source": "base/safety-boundaries.md",
+      "message": "Ask at most one clarifying question, and only when it materially changes the safe next step."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [
+    {
+      "condition": "severe_or_unclear_symptoms",
+      "question_policy": "recommend_professional_care_or_clarify"
+    },
+    {
+      "condition": "restricted_foreground_symptoms",
+      "question_policy": "one_material_clarifying_question_max"
+    }
+  ],
+  "markdown_path": "base/safety-boundaries.md"
+}

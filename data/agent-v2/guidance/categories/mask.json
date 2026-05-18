@@ -1,0 +1,30 @@
+{
+  "package_id": "category.mask.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "categories": ["mask"],
+    "routine_layers": ["goals", "problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.mask.extra_not_baseline",
+      "severity": "block",
+      "source": "categories/mask.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Frame masks as periodic extra care, not a baseline replacement for conditioner."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.mask.when_it_helps",
+      "priority": "high",
+      "source": "categories/mask.md",
+      "message": "Explain when a mask helps and when conditioner is enough."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [],
+  "markdown_path": "categories/mask.md"
+}

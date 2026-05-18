@@ -4,6 +4,7 @@ import {
 } from "@/lib/agent/compare/run-compare"
 import { runToolLoopComparisonForUser } from "@/lib/agent/compare/run-agentic-tool-loop"
 import { runClassicAgentComparisonForUser } from "@/lib/agent/compare/run-shadow-agent"
+import { runAgentV2ComparisonForUser } from "@/lib/agent-v2/compare/run-agent-v2"
 import { loadCompareUserSnapshot, listEligibleCompareUsers } from "@/lib/agent/compare/test-users"
 import { DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT } from "@/lib/agent/compare/tool-loop-variants"
 import type {
@@ -11,6 +12,7 @@ import type {
   AgentCompareUserRequest,
   AgentCompareUserSnapshot,
   CompareRunResult,
+  CompareSystem,
 } from "@/lib/agent/compare/types"
 import { NextResponse } from "next/server"
 import { z } from "zod"
@@ -24,6 +26,7 @@ const requestSchema = z
     toolLoopVariant: z
       .enum(["baseline", "inline_context", "guidance_tool", "composer_context"])
       .optional(),
+    systems: z.array(z.enum(["classic", "tool_loop", "agent_v2", "current", "agent"])).optional(),
   })
   .refine((value) => Boolean(value.prompt || value.turns?.length), {
     message: "Prompt oder Turns erforderlich",
@@ -34,6 +37,7 @@ interface AgentCompareRouteDeps {
   loadCompareUserSnapshot: (userId: string) => Promise<AgentCompareUserSnapshot>
   runCurrentComparisonForUser: (request: AgentCompareUserRequest) => Promise<CompareRunResult>
   runShadowComparisonForUser: (request: AgentCompareUserRequest) => Promise<CompareRunResult>
+  runAgentV2ComparisonForUser?: (request: AgentCompareUserRequest) => Promise<CompareRunResult>
 }
 
 const defaultRouteDeps: AgentCompareRouteDeps = {
@@ -41,6 +45,7 @@ const defaultRouteDeps: AgentCompareRouteDeps = {
   loadCompareUserSnapshot,
   runCurrentComparisonForUser: runClassicAgentComparisonForUser,
   runShadowComparisonForUser: runToolLoopComparisonForUser,
+  runAgentV2ComparisonForUser: runAgentV2ComparisonForUser,
 }
 
 function createDevOnlyResponse() {
@@ -48,7 +53,7 @@ function createDevOnlyResponse() {
 }
 
 function normalizeFailure(
-  system: "classic" | "tool_loop",
+  system: CompareSystem,
   displayLabel: string,
   error: unknown,
 ): CompareRunResult {
@@ -71,6 +76,10 @@ function normalizeTurns(value: { prompt?: string; turns?: string[] }): string[] 
 
   const prompt = value.prompt?.trim() ?? ""
   return prompt.length > 0 ? [prompt] : []
+}
+
+function formatBlindedVariantLabel(index: number): string {
+  return `Variante ${String.fromCharCode(65 + index)}`
 }
 
 export async function handleAgentCompareGetRequest(
@@ -120,26 +129,54 @@ export async function handleAgentCompareRequest(
     const prompt = turns.at(-1) ?? ""
     const blinded = parsed.data.blinded === true
     const toolLoopVariant = parsed.data.toolLoopVariant ?? DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT
-    const [current, agent] = await Promise.all([
-      deps
-        .runCurrentComparisonForUser({ ...parsed.data, prompt, turns, toolLoopVariant })
-        .then((result) => normalizeCompareRunResult(result))
-        .catch((error) => normalizeFailure("classic", "Classic", error)),
-      deps
-        .runShadowComparisonForUser({ ...parsed.data, prompt, turns, toolLoopVariant })
-        .then((result) => normalizeCompareRunResult(result))
-        .catch((error) => normalizeFailure("tool_loop", "Tool Loop", error)),
-    ])
+    const systems = parsed.data.systems?.length
+      ? parsed.data.systems.map((system) =>
+          system === "current" ? "classic" : system === "agent" ? "tool_loop" : system,
+        )
+      : (["classic", "tool_loop"] as const)
+    const runners: Record<CompareSystem, () => Promise<CompareRunResult>> = {
+      classic: () =>
+        deps.runCurrentComparisonForUser({ ...parsed.data, prompt, turns, toolLoopVariant }),
+      tool_loop: () =>
+        deps.runShadowComparisonForUser({ ...parsed.data, prompt, turns, toolLoopVariant }),
+      agent_v2: () => {
+        if (!deps.runAgentV2ComparisonForUser) {
+          throw new Error("AgentV2 runner is not configured.")
+        }
+        return deps.runAgentV2ComparisonForUser({ ...parsed.data, prompt, turns, toolLoopVariant })
+      },
+    }
+    const results = await Promise.all(
+      systems.map((system) =>
+        runners[system]()
+          .then((result) => normalizeCompareRunResult(result))
+          .catch((error) =>
+            normalizeFailure(
+              system,
+              system === "classic"
+                ? "Classic"
+                : system === "tool_loop"
+                  ? "Tool Loop"
+                  : "AgentV2 GPT-5.4-mini",
+              error,
+            ),
+          ),
+      ),
+    )
     const orderedResults =
-      blinded && shouldSwapBlindedResults(turns) ? [agent, current] : [current, agent]
+      blinded && results.length === 2 && shouldSwapBlindedResults(turns)
+        ? [results[1], results[0]]
+        : results
     const labeledResults = orderedResults.map((entry, index) =>
       normalizeCompareRunResult(
         entry,
         blinded
-          ? `Variante ${index === 0 ? "A" : "B"}`
+          ? formatBlindedVariantLabel(index)
           : entry.system === "classic"
             ? "Classic"
-            : "Tool Loop",
+            : entry.system === "tool_loop"
+              ? "Tool Loop"
+              : "AgentV2 GPT-5.4-mini",
       ),
     )
 

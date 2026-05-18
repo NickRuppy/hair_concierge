@@ -1,0 +1,90 @@
+{
+  "package_id": "base.product_recommendation.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine_product_deep_dive", "constraint_blocked"],
+    "categories": [],
+    "routine_layers": [],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "product.no_uncatalogued_products",
+      "severity": "block",
+      "source": "base/product-recommendation.md",
+      "validator_id": "known_product_ids",
+      "message": "Do not name or surface products unless they came from select_products."
+    },
+    {
+      "rule_id": "product.claims_from_supported_claims",
+      "severity": "block",
+      "source": "base/product-recommendation.md",
+      "validator_id": "supported_product_claims",
+      "message": "Product-fit claims must be supported by selected product projection fields."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "product.explain_fit_plainly",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Explain why the product fits in simple German."
+    },
+    {
+      "rubric_id": "product.frame_as_tradeoff_options",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Frame ranked products as suitable options with tradeoffs, connect every fit to profile/tool facts, and avoid winner-takes-all phrasing."
+    },
+    {
+      "rubric_id": "product.one_natural_fit_sentence_per_product",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "For each recommended product, write one coherent German sentence explaining why it fits this user."
+    },
+    {
+      "rubric_id": "product.no_raw_property_dump",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Do not render product projection fields as raw property bullets; turn them into advisor prose."
+    },
+    {
+      "rubric_id": "product.routine_deep_dive_uses_product_recommendation",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "A precise product ask inside a routine thread should use routine_product_deep_dive and the normal three-option product recommendation shape."
+    },
+    {
+      "rubric_id": "product.respect_requested_count",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Default to three product recommendations, respect explicit counts, cap requests above three, and keep count_policy aligned with the user wording."
+    },
+    {
+      "rubric_id": "product.category_fit_asks_are_recommendations",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Concrete category-fit wording such as 'Welche Spülung passt?' should use specific_products and be fulfilled as a product recommendation."
+    },
+    {
+      "rubric_id": "product.category_education_stays_educational",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Category-learning wording such as 'Welche Art von Spülung passt?' should use category_education and avoid product cards until concrete products are requested."
+    }
+  ],
+  "required_grounding": [
+    {
+      "grounding_id": "product.must_use_select_products",
+      "tool": "select_products",
+      "when": "The final answer names concrete products or shows product cards."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "required_product_input_missing",
+      "question_policy": "ask_single_missing_datapoint"
+    }
+  ],
+  "markdown_path": "base/product-recommendation.md"
+}

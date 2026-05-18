@@ -9,7 +9,9 @@ import type {
   AgentCompareToolLoopVariant,
   AgentCompareUserOption,
   AgentCompareUserSnapshot,
+  CanonicalCompareSystem,
   CompareRunResult,
+  CompareSystemInput,
 } from "@/lib/agent/compare/types"
 import {
   AGENT_COMPARE_MULTI_TURN_CHAINS,
@@ -266,6 +268,44 @@ function getTraceArrayLength(value: unknown, key: string): number | null {
   return Array.isArray(maybeArray) ? maybeArray.length : null
 }
 
+function normalizeCompareSystemForMetrics(system: CompareSystemInput): CanonicalCompareSystem {
+  if (system === "current") return "classic"
+  if (system === "agent") return "tool_loop"
+  return system
+}
+
+function getTraceMetricForSystem(
+  result: CompareRunResult,
+  system: CanonicalCompareSystem,
+  key: string,
+): number | null {
+  if (system === "agent_v2") {
+    return getTraceArrayLength(result.agent_v2_trace, key)
+  }
+
+  if (system === "tool_loop") {
+    return getTraceArrayLength(result.tool_loop_trace, key)
+  }
+
+  return null
+}
+
+export function buildAgentV2TraceDisplayData(
+  trace: NonNullable<CompareRunResult["agent_v2_trace"]>,
+): {
+  interpretationSummary: string | null
+  warnings: string[]
+  validationErrors: string[]
+} {
+  return {
+    interpretationSummary: trace.request_interpretation_summary ?? null,
+    warnings: (trace.validation_warnings ?? []).map((warning) => warning.message),
+    validationErrors: trace.validation_errors
+      .filter((error) => error.severity !== "warn")
+      .map((error) => error.validator_id),
+  }
+}
+
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)
@@ -294,21 +334,44 @@ function extractToolCallNames(trace: unknown): string[] {
   )
 }
 
+function extractResultToolCallNames(result: CompareRunResult | AgentCompareTurnResult): string[] {
+  return uniqueStrings([
+    ...extractToolCallNames(result.tool_loop_trace),
+    ...extractToolCallNames(result.agent_v2_trace),
+  ])
+}
+
 function extractStringArray(value: unknown): string[] {
   return Array.isArray(value)
     ? value.filter((entry): entry is string => typeof entry === "string")
     : []
 }
 
+function extractGuidanceIdsFromSummary(summary: string): string[] {
+  const match = summary.match(/guidance_ids=([^;]+)/)
+  if (!match) return []
+
+  return match[1].split(",").map((id) => id.trim())
+}
+
 function extractGuidanceIds(result: CompareRunResult | AgentCompareTurnResult): string[] {
-  const trace = asRecord(result.tool_loop_trace)
-  const advisorGuidance = asRecord(trace?.advisor_guidance)
-  const consultationBrief = asRecord(trace?.consultation_brief)
+  const toolLoopTrace = asRecord(result.tool_loop_trace)
+  const agentV2Trace = asRecord(result.agent_v2_trace)
+  const advisorGuidance = asRecord(toolLoopTrace?.advisor_guidance)
+  const consultationBrief = asRecord(toolLoopTrace?.consultation_brief)
   const candidateGuidance = consultationBrief?.candidate_guidance
   const candidateIds = Array.isArray(candidateGuidance)
     ? candidateGuidance.flatMap((entry) => {
         const id = asRecord(entry)?.id
         return typeof id === "string" ? [id] : []
+      })
+    : []
+
+  const agentV2ToolCalls = agentV2Trace?.tool_calls
+  const agentV2ToolOutputIds = Array.isArray(agentV2ToolCalls)
+    ? agentV2ToolCalls.flatMap((call) => {
+        const summary = asRecord(call)?.output_summary
+        return typeof summary === "string" ? extractGuidanceIdsFromSummary(summary) : []
       })
     : []
 
@@ -322,6 +385,9 @@ function extractGuidanceIds(result: CompareRunResult | AgentCompareTurnResult): 
     ...extractStringArray(result.route_trace?.guidance_ids),
     ...extractStringArray(advisorGuidance?.loaded_guidance_ids),
     ...candidateIds,
+    ...extractStringArray(agentV2Trace?.loaded_guidance_ids),
+    ...extractStringArray(agentV2Trace?.loaded_guidance_package_ids),
+    ...agentV2ToolOutputIds,
     ...debugIds,
   ])
 }
@@ -358,7 +424,7 @@ function buildResultAnalysisSnapshot(params: {
     latency_ms: params.result.latency_ms,
     answer_chars: params.result.answer.length,
     debug_lines: params.result.debug_lines,
-    tool_calls: extractToolCallNames(params.result.tool_loop_trace),
+    tool_calls: extractResultToolCallNames(params.result),
     guidance_ids: extractGuidanceIds(params.result),
     product_policy: params.result.product_trace?.product_response_policy ?? null,
     product_category: params.result.product_trace?.category ?? null,
@@ -370,7 +436,7 @@ function buildResultAnalysisSnapshot(params: {
       params.result.turns?.map((turn) => ({
         turn: turn.turn,
         answer_chars: turn.answer.length,
-        tool_calls: extractToolCallNames(turn.tool_loop_trace),
+        tool_calls: extractResultToolCallNames(turn),
         guidance_ids: extractGuidanceIds(turn),
         product_policy: turn.product_trace?.product_response_policy ?? null,
         selected_products: turn.matched_products.map((product) =>
@@ -380,7 +446,7 @@ function buildResultAnalysisSnapshot(params: {
   }
 }
 
-function buildCompareAnalysisSnapshot(params: {
+export function buildCompareAnalysisSnapshot(params: {
   result: AgentCompareResponse
   userLabel: string
   includeSystem: boolean
@@ -526,6 +592,69 @@ function ToolLoopTracePanel({ result }: { result: CompareRunResult }) {
   )
 }
 
+function AgentV2TracePanel({ result }: { result: CompareRunResult }) {
+  const trace = result.agent_v2_trace
+  if (!trace) return null
+  const display = buildAgentV2TraceDisplayData(trace)
+
+  return (
+    <div className="space-y-3 rounded-lg border bg-muted/30 p-3">
+      <p className="type-label text-muted-foreground">AgentV2-Spur</p>
+      {display.interpretationSummary ? (
+        <div className="rounded-md border bg-background p-2 text-sm text-foreground">
+          {display.interpretationSummary}
+        </div>
+      ) : null}
+      <div className="grid gap-3 md:grid-cols-2">
+        <TraceRow label="Antwortmodus" value={trace.answer_mode ?? "keiner"} />
+        <TraceRow label="Routine-Ebene" value={trace.routine_layer ?? "keine"} />
+        <TraceRow
+          label="Produkt-IDs"
+          value={trace.final_product_ids.length > 0 ? trace.final_product_ids.join(", ") : "keine"}
+        />
+        <TraceRow
+          label="Guidance"
+          value={
+            trace.loaded_guidance_package_ids.length > 0
+              ? trace.loaded_guidance_package_ids.join(", ")
+              : "keine"
+          }
+        />
+      </div>
+      <TraceRow
+        label="Tools"
+        value={
+          trace.tool_calls.length > 0
+            ? trace.tool_calls.map((call) => call.name).join(", ")
+            : "keine"
+        }
+      />
+      {display.warnings.length > 0 ? (
+        <div className="rounded-md border border-amber-300 bg-amber-50 p-2 text-sm text-amber-950">
+          <p className="text-xs font-medium uppercase tracking-wide">Warnungen</p>
+          <ul className="mt-1 space-y-1">
+            {display.warnings.map((warning) => (
+              <li key={warning}>{warning}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {display.validationErrors.length > 0 ? (
+        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-2 text-sm text-destructive">
+          <p className="text-xs font-medium uppercase tracking-wide">Validierung</p>
+          <p className="mt-1">{display.validationErrors.join(", ")}</p>
+        </div>
+      ) : null}
+      {trace.repair_attempts.length > 0 ? (
+        <TraceRow label="Reparaturen" value={`${trace.repair_attempts.length}`} />
+      ) : null}
+      {trace.bounded_repair_kind ? (
+        <TraceRow label="Reparaturart" value={trace.bounded_repair_kind} />
+      ) : null}
+    </div>
+  )
+}
+
 function ResultCard({
   title,
   result,
@@ -572,6 +701,8 @@ function ResultCard({
           {showDiagnostics ? <RouteTracePanel result={result} /> : null}
 
           {showDiagnostics ? <ToolLoopTracePanel result={result} /> : null}
+
+          {showDiagnostics ? <AgentV2TracePanel result={result} /> : null}
 
           {showDiagnostics ? <ProductTracePanel result={result} /> : null}
 
@@ -643,6 +774,7 @@ export function AgentCompareLab() {
   const [toolLoopVariant, setToolLoopVariant] = useState<AgentCompareToolLoopVariant>(
     DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT,
   )
+  const [includeAgentV2, setIncludeAgentV2] = useState(false)
   const [isRevealed, setIsRevealed] = useState(false)
   const [result, setResult] = useState<AgentCompareResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -659,12 +791,19 @@ export function AgentCompareLab() {
   const [isLoadingUser, startLoadingUser] = useTransition()
   const [isSavingJudgment, startSavingJudgment] = useTransition()
 
+  const hasAgentV2Result = result?.results.some((entry) => entry.system === "agent_v2") ?? false
   const currentResult =
-    result?.results.find((entry) => entry.system === "classic" || entry.system === "current") ??
-    null
+    result?.results.find((entry) =>
+      hasAgentV2Result
+        ? entry.system === "tool_loop" || entry.system === "agent"
+        : entry.system === "classic" || entry.system === "current",
+    ) ?? null
   const agentResult =
-    result?.results.find((entry) => entry.system === "tool_loop" || entry.system === "agent") ??
-    null
+    result?.results.find((entry) =>
+      hasAgentV2Result
+        ? entry.system === "agent_v2"
+        : entry.system === "tool_loop" || entry.system === "agent",
+    ) ?? null
   const selectedUserOption = users.find((user) => user.id === selectedUserId) ?? null
   const activeInput = isMultiTurn ? turnsText : prompt
   const activeTurns = turnsText
@@ -672,13 +811,21 @@ export function AgentCompareLab() {
     .map((turn) => turn.trim())
     .filter((turn) => turn.length > 0)
   const currentTitle =
-    result?.blinded && !isRevealed ? (currentResult?.display_label ?? "Variante A") : "Classic"
+    result?.blinded && !isRevealed
+      ? (currentResult?.display_label ?? "Variante A")
+      : hasAgentV2Result
+        ? "Tool Loop"
+        : "Classic"
   const agentTitle =
-    result?.blinded && !isRevealed ? (agentResult?.display_label ?? "Variante B") : "Tool Loop"
+    result?.blinded && !isRevealed
+      ? (agentResult?.display_label ?? "Variante B")
+      : hasAgentV2Result
+        ? "AgentV2 GPT-5.4-mini"
+        : "Tool Loop"
   const displayResults = result?.results ?? []
   const showDiagnostics = !result?.blinded || isRevealed
-  const currentJudgmentLabel = result?.blinded && !isRevealed ? currentTitle : "Classic"
-  const agentJudgmentLabel = result?.blinded && !isRevealed ? agentTitle : "Tool Loop"
+  const currentJudgmentLabel = currentTitle
+  const agentJudgmentLabel = agentTitle
   const analysisSnapshot = result
     ? buildCompareAnalysisSnapshot({
         result,
@@ -747,6 +894,7 @@ export function AgentCompareLab() {
             ...(isMultiTurn ? { turns: activeTurns } : { prompt }),
             blinded: isBlinded,
             toolLoopVariant,
+            systems: includeAgentV2 ? ["tool_loop", "agent_v2"] : undefined,
           }),
         })
 
@@ -820,6 +968,14 @@ export function AgentCompareLab() {
     if (!result || !selectedUser || !selectedUserOption || !currentResult || !agentResult) return
 
     const createdAt = new Date().toISOString()
+    const currentSystem = normalizeCompareSystemForMetrics(currentResult.system)
+    const agentSystem = normalizeCompareSystemForMetrics(agentResult.system)
+    const blindedWinner =
+      winner === "current" ? currentSystem : winner === "agent" ? agentSystem : "tie"
+    const latencyBySystem: Partial<Record<CanonicalCompareSystem, number | null>> = {
+      [currentSystem]: currentResult.latency_ms,
+      [agentSystem]: agentResult.latency_ms,
+    }
     const historyEntry: JudgmentHistoryEntry = {
       userId: selectedUserOption.id,
       userLabel: selectedUserOption.label,
@@ -837,8 +993,8 @@ export function AgentCompareLab() {
       toolLoopVariant: result.toolLoopVariant,
       context: selectedUser,
       results: {
-        current: { ...currentResult, system: "current" },
-        agent: { ...agentResult, system: "agent" },
+        current: currentResult,
+        agent: agentResult,
       },
       judgment: {
         winner,
@@ -848,15 +1004,34 @@ export function AgentCompareLab() {
         critical_product_claim_failure: criticalProductClaimFailure,
       },
       rollout_metrics: {
-        blinded_winner: winner === "current" ? "classic" : winner === "agent" ? "tool_loop" : "tie",
+        blinded_winner: blindedWinner,
         failure_bucket: failureBucket,
         critical_product_claim_failure: criticalProductClaimFailure,
-        latency_ms: {
-          classic: currentResult.latency_ms,
-          tool_loop: agentResult.latency_ms,
-        },
-        tool_loop_model_steps: getTraceArrayLength(agentResult.tool_loop_trace, "model_steps"),
-        tool_loop_tool_calls: getTraceArrayLength(agentResult.tool_loop_trace, "tool_calls"),
+        latency_ms: latencyBySystem,
+        tool_loop_model_steps:
+          currentSystem === "tool_loop"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "model_steps")
+            : agentSystem === "tool_loop"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "model_steps")
+              : null,
+        tool_loop_tool_calls:
+          currentSystem === "tool_loop"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "tool_calls")
+            : agentSystem === "tool_loop"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
+              : null,
+        agent_v2_model_steps:
+          currentSystem === "agent_v2"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "model_steps")
+            : agentSystem === "agent_v2"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "model_steps")
+              : null,
+        agent_v2_tool_calls:
+          currentSystem === "agent_v2"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "tool_calls")
+            : agentSystem === "agent_v2"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
+              : null,
       },
       analysis_snapshot: savedAnalysisSnapshot ?? undefined,
     }
@@ -988,6 +1163,16 @@ export function AgentCompareLab() {
             </label>
 
             <label className="inline-flex items-center gap-2 text-sm text-foreground">
+              <input
+                type="checkbox"
+                checked={includeAgentV2}
+                onChange={(event) => setIncludeAgentV2(event.target.checked)}
+                className="h-4 w-4 rounded border"
+              />
+              AgentV2 testen
+            </label>
+
+            <label className="inline-flex items-center gap-2 text-sm text-foreground">
               Tool-Loop
               <select
                 value={toolLoopVariant}
@@ -1114,7 +1299,9 @@ export function AgentCompareLab() {
                     ? (entry.display_label ?? "Variante")
                     : entry.system === "classic" || entry.system === "current"
                       ? "Classic"
-                      : "Tool Loop"
+                      : entry.system === "tool_loop" || entry.system === "agent"
+                        ? "Tool Loop"
+                        : "AgentV2 GPT-5.4-mini"
                 }
                 result={entry}
                 showDiagnostics={showDiagnostics}

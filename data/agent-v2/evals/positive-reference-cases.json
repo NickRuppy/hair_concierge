@@ -1,0 +1,79 @@
+[
+  {
+    "id": "manual-positive-tone-1",
+    "source": "manual_review",
+    "prompt": "Meine Haare sind fein und werden schnell beschwert.",
+    "positive_feedback_note": "Good because the answer was friendly, concrete, and did not over-recommend heavy care.",
+    "qualities_to_preserve": ["tone", "lightweight framing", "not too salesy"],
+    "requires_textual_match": false
+  },
+  {
+    "id": "manual-positive-routine-1",
+    "source": "manual_review",
+    "prompt": "Wie kann ich meine Routine verbessern?",
+    "positive_feedback_note": "Good because it started with the routine basics before adding optional products.",
+    "qualities_to_preserve": ["basics first", "clear priority lever", "no product cards by default"],
+    "requires_textual_match": false
+  },
+  {
+    "id": "manual-positive-category-1",
+    "source": "manual_review",
+    "prompt": "Brauche ich wirklich eine Maske?",
+    "positive_feedback_note": "Good because it answered when a mask helps and when conditioner is enough before offering products.",
+    "qualities_to_preserve": ["category education first", "practical nuance", "clear follow-up offer"],
+    "requires_textual_match": false
+  },
+  {
+    "id": "manual-positive-conditioner-product-ask-2026-05-15",
+    "source": "manual_review",
+    "prompt": "Mein Haar ist nach dem Waschen trocken und strohig, welchen Conditioner soll ich nehmen?",
+    "positive_feedback_note": "Good because it gives a warm intro, three grounded conditioner options, one natural fit sentence per product, and a short practical caveat.",
+    "qualities_to_preserve": [
+      "product recommendation fulfilled",
+      "three product default",
+      "one natural fit sentence per product",
+      "profile-linked why",
+      "practical caveat"
+    ],
+    "requires_textual_match": false
+  },
+  {
+    "id": "manual-positive-mask-spliss-education-2026-05-15",
+    "source": "manual_review",
+    "prompt": "Kann eine Maske Spliss reparieren oder nur kaschieren?",
+    "positive_feedback_note": "Good because it answers directly, separates what a mask can and cannot do, and gives practical advice without forcing products.",
+    "qualities_to_preserve": [
+      "direct answer first",
+      "category education first",
+      "no forced product recommendation",
+      "light structure",
+      "practical caveat"
+    ],
+    "requires_textual_match": false
+  },
+  {
+    "id": "manual-positive-shampoo-dry-lengths-2026-05-15",
+    "source": "manual_review",
+    "prompt": "Meine Laengen sind trocken, brauche ich ein anderes Shampoo?",
+    "positive_feedback_note": "Good because it does not force a shampoo recommendation and explains that dry lengths are usually influenced more by conditioner, leave-in, and ends care.",
+    "qualities_to_preserve": [
+      "direct answer first",
+      "profile-linked why",
+      "no forced product recommendation",
+      "better lever explanation"
+    ],
+    "requires_textual_match": false
+  },
+  {
+    "id": "manual-positive-two-product-count-2026-05-15",
+    "source": "manual_review",
+    "prompt": "Vergleich mir bitte zwei passende Conditioner für feines Haar.",
+    "positive_feedback_note": "The desired behavior is to respect the explicit request for two products, not default to three.",
+    "qualities_to_preserve": [
+      "explicit count respected",
+      "product recommendation fulfilled",
+      "profile-linked why"
+    ],
+    "requires_textual_match": false
+  }
+]

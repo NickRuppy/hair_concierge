@@ -1,0 +1,30 @@
+{
+  "package_id": "category.deep_cleansing_shampoo.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "categories": ["deep_cleansing_shampoo"],
+    "routine_layers": ["problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.deep_cleansing.occasional_reset",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Frame deep cleansing shampoo as occasional reset support, not daily default care."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.deep_cleansing.frequency_caution",
+      "priority": "high",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "Mention conservative frequency and follow with conditioner."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [],
+  "markdown_path": "categories/deep-cleansing-shampoo.md"
+}

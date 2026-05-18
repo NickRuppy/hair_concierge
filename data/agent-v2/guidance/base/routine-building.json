@@ -1,0 +1,66 @@
+{
+  "package_id": "base.routine_building.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["routine", "routine_product_deep_dive"],
+    "categories": [],
+    "routine_layers": ["basics", "goals", "problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "routine.must_use_routine_tool",
+      "severity": "block",
+      "source": "base/routine-building.md",
+      "validator_id": "routine_tool_required",
+      "message": "Use build_or_fix_routine before returning a multi-step routine."
+    },
+    {
+      "rule_id": "routine.broad_asks_start_with_basics",
+      "severity": "block",
+      "source": "base/routine-building.md",
+      "validator_id": "routine_layer_order",
+      "message": "Broad routine asks start with basics before goals or problems."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "routine.keep_core_obvious",
+      "priority": "high",
+      "source": "base/routine-building.md",
+      "message": "Make shampoo, conditioner, and the biggest extra lever obvious before optional products."
+    },
+    {
+      "rubric_id": "routine.explain_basics_profile_fit",
+      "priority": "high",
+      "source": "base/routine-building.md",
+      "message": "For broad routine answers, explain the role and profile-fit type of shampoo and conditioner, plus the biggest extra lever or why none is needed."
+    },
+    {
+      "rubric_id": "routine.typed_intent_matches_action",
+      "priority": "high",
+      "source": "base/routine-building.md",
+      "message": "Use typed routine_intent and mutation fields that match the user wording, routine tool call, and final answer."
+    },
+    {
+      "rubric_id": "routine.explain_or_exit_without_mutation",
+      "priority": "high",
+      "source": "base/routine-building.md",
+      "message": "Routine summarization, explanation, and exit should not mutate the routine."
+    }
+  ],
+  "required_grounding": [
+    {
+      "grounding_id": "routine.must_use_build_or_fix_routine",
+      "tool": "build_or_fix_routine",
+      "when": "The answer gives a multi-step routine."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "routine_required_input_missing",
+      "question_policy": "ask_single_missing_datapoint"
+    }
+  ],
+  "markdown_path": "base/routine-building.md"
+}

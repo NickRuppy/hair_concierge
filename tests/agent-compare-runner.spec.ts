@@ -165,6 +165,47 @@ test("runCompareWithAdapters tolerates one-sided failures", async () => {
   )
 })
 
+test("runCompareWithAdapters can run Tool Loop against AgentV2 without Classic", async () => {
+  const systems: string[] = []
+
+  const result = await runCompareWithAdapters({
+    scenario,
+    prompt: "Override",
+    systems: ["tool_loop", "agent_v2"],
+    runCurrent: async () => {
+      throw new Error("classic should not run")
+    },
+    runAgent: async () => {
+      systems.push("tool_loop")
+      return {
+        system: "tool_loop",
+        answer: "tool loop answer",
+        latency_ms: 12,
+        debug_lines: [],
+        matched_products: [],
+        error: null,
+      }
+    },
+    runAgentV2: async () => {
+      systems.push("agent_v2")
+      return {
+        system: "agent_v2",
+        answer: "agent v2 answer",
+        latency_ms: 15,
+        debug_lines: [],
+        matched_products: [],
+        error: null,
+      }
+    },
+  })
+
+  assert.deepEqual(systems, ["tool_loop", "agent_v2"])
+  assert.deepEqual(
+    result.results.map((entry) => entry.system),
+    ["tool_loop", "agent_v2"],
+  )
+})
+
 test("compare prompt packs include crafted multi-turn chains with failure coverage", () => {
   assert.deepEqual(
     AGENT_COMPARE_MULTI_TURN_CHAINS.map((chain) => chain.id),
