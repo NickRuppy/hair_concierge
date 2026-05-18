@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "ci:verify": "npm run typecheck && npm run lint && npm run build",
+    "clawpatch:init": "node scripts/ci/prepare-clawpatch.mjs",
     "clawpatch:doctor": "clawpatch doctor",
     "clawpatch:map": "clawpatch map",
     "clawpatch:status": "clawpatch status",

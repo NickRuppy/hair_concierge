@@ -83,6 +83,7 @@ Review priority from the generated map:
 For a broad pre-PR pass:
 
 ```bash
+npm run clawpatch:init
 npm run clawpatch:doctor
 npm run clawpatch:map
 npm run clawpatch:review -- --limit 10

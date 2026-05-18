@@ -25,6 +25,7 @@ Skip it for:
 Run Clawpatch inside the task worktree:
 
 ```bash
+npm run clawpatch:init
 npm run clawpatch:doctor
 npm run clawpatch:map
 npm run clawpatch:status
@@ -96,6 +97,7 @@ It always:
 
 - installs dependencies with Node 22 because Clawpatch requires Node 22+
 - installs `@openai/codex` when the `OPENAI_API_KEY` GitHub secret is available
+- runs `npm run clawpatch:init` to create local `.clawpatch/` state from `clawpatch.config.json`
 - runs `npm run clawpatch:map`
 - generates `clawpatch-summary.md` from `.clawpatch/features`
 - uploads feature-map artifacts

@@ -40,6 +40,9 @@ jobs:
           npm install -g @openai/codex@latest
           codex --version
 
+      - name: Initialize Clawpatch state
+        run: npm run clawpatch:init
+
       - name: Check Clawpatch environment
         continue-on-error: true
         env:
