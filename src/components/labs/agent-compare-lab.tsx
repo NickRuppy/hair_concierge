@@ -1105,11 +1105,6 @@ export function AgentCompareLab() {
       analysis_snapshot: savedAnalysisSnapshot ?? undefined,
     }
 
-    setHistory((current) => [historyEntry, ...current])
-    setNote("")
-    setFailureBucket("none")
-    setCriticalProductClaimFailure(false)
-
     startSavingJudgment(async () => {
       try {
         const response = await fetch("/api/labs/agent-compare/judgments", {
@@ -1122,6 +1117,11 @@ export function AgentCompareLab() {
         if (!response.ok) {
           throw new Error(data.error ?? "Urteil konnte nicht gespeichert werden")
         }
+
+        setHistory((current) => [historyEntry, ...current])
+        setNote("")
+        setFailureBucket("none")
+        setCriticalProductClaimFailure(false)
       } catch (saveError) {
         setError(
           saveError instanceof Error ? saveError.message : "Urteil konnte nicht gespeichert werden",
