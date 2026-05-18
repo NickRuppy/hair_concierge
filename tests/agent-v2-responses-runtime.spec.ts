@@ -1106,6 +1106,46 @@ test("AgentV2 runtime returns safe fallback when no terminal answer is produced"
   assert.equal(result.final_answer.answer_mode, "clarification")
 })
 
+test("AgentV2 runtime keeps restricted safety fallback when no terminal answer is produced", async () => {
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([{ type: "message", content: [] }]),
+    message: "Meine Kopfhaut juckt und ist gerötet, welches Shampoo soll ich nehmen?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    safetyMode: "restricted",
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, "missing_terminal_answer")
+  assert.equal(result.final_answer.answer_mode, "safety_boundary")
+  assert.deepEqual(result.final_answer.safety_flags, ["restricted_scalp_symptoms"])
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Kopfhaut/)
+})
+
+test("AgentV2 runtime preserves active routine context in malformed-output fallback", async () => {
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([{ type: "message", content: [] }]),
+    message: "Und was ist mit dem ersten Zusatz?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    routineThreadContext: {
+      active: true,
+      current_layer: "basics",
+      last_answer_mode: "routine",
+      last_routine_categories: ["leave_in"],
+      last_user_goal: "Routine vereinfachen",
+      summary_de: "Ein erster Zusatz ist sichtbar.",
+      visible_steps: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, "missing_terminal_answer")
+  assert.equal(result.final_answer.answer_mode, "clarification")
+  assert.equal(result.final_answer.routine_context.active, true)
+  assert.equal(result.final_answer.routine_context.routine_layer, "basics")
+})
+
 test("AgentV2 runtime repairs assistant text into exactly one terminal answer", async () => {
   const client = fakeResponsesClientWithOutputs([
     {

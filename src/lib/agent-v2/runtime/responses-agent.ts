@@ -121,6 +121,12 @@ export async function runAgentV2ResponsesTurn(params: {
     routineThreadContext,
     safetyMode,
   )
+  const buildCurrentClarificationFallback = () =>
+    buildClarificationFallback({
+      message: params.message,
+      safetyMode,
+      routineThreadContext,
+    })
 
   for (let step = 0; step < policy.max_model_steps; step += 1) {
     const response = await params.client.responses.create({
@@ -166,7 +172,7 @@ export async function runAgentV2ResponsesTurn(params: {
       trace.failure_stage = missingTerminalRepairUsed
         ? "missing_terminal_failed"
         : "missing_terminal_answer"
-      return completeWithAnswer(buildClarificationFallback(), trace)
+      return completeWithAnswer(buildCurrentClarificationFallback(), trace)
     }
 
     const terminalCalls = parsedStep.functionCalls.filter(
@@ -174,20 +180,20 @@ export async function runAgentV2ResponsesTurn(params: {
     )
     if (terminalCalls.length > 1) {
       trace.failure_stage = "multiple_terminal_answers"
-      return completeWithAnswer(buildClarificationFallback(), trace)
+      return completeWithAnswer(buildCurrentClarificationFallback(), trace)
     }
 
     if (terminalCalls.length === 1) {
       if (parsedStep.functionCalls.length > 1) {
         trace.failure_stage = "terminal_with_other_tool_calls"
-        return completeWithAnswer(buildClarificationFallback(), trace)
+        return completeWithAnswer(buildCurrentClarificationFallback(), trace)
       }
 
       const terminal = parseToolArguments(terminalCalls[0])
       if (!terminal.ok) {
         trace.blocked_tool_calls.push({ name: "submit_final_answer", reason: "invalid_json" })
         trace.failure_stage = "invalid_json"
-        return completeWithAnswer(buildClarificationFallback(), trace)
+        return completeWithAnswer(buildCurrentClarificationFallback(), trace)
       }
 
       const validation = validateAgentV2FinalAnswer(terminal.value, {
@@ -262,7 +268,7 @@ export async function runAgentV2ResponsesTurn(params: {
         trace.failure_stage = missingTerminalRepairUsed
           ? "missing_terminal_failed"
           : "repair_failed"
-        return completeWithAnswer(buildClarificationFallback(), trace)
+        return completeWithAnswer(buildCurrentClarificationFallback(), trace)
       }
       if (
         parsedStep.functionCalls.length !== 1 ||
@@ -275,7 +281,7 @@ export async function runAgentV2ResponsesTurn(params: {
           )
         }
         trace.failure_stage = "repair_failed"
-        return completeWithAnswer(buildClarificationFallback(), trace)
+        return completeWithAnswer(buildCurrentClarificationFallback(), trace)
       }
     }
 
@@ -302,7 +308,7 @@ export async function runAgentV2ResponsesTurn(params: {
 
       if (executableToolCalls >= policy.max_executable_tool_calls) {
         trace.failure_stage = "max_executable_tool_calls"
-        return completeWithAnswer(buildClarificationFallback(), trace)
+        return completeWithAnswer(buildCurrentClarificationFallback(), trace)
       }
 
       executableToolCalls += 1
@@ -712,12 +718,16 @@ function completeWithAnswer(
   }
 }
 
-function buildClarificationFallback(): AgentV2TerminalAnswer {
+function buildClarificationFallback(params: {
+  message: string
+  safetyMode: AgentV2SafetyMode
+  routineThreadContext: AgentV2RoutineThreadContext | null
+}): AgentV2TerminalAnswer {
   return buildFallbackAnswer({
-    reason: "generic",
-    message: "",
-    safetyMode: "normal",
-    routineThreadContext: null,
+    reason: params.safetyMode === "restricted" ? "restricted_safety" : "generic",
+    message: params.message,
+    safetyMode: params.safetyMode,
+    routineThreadContext: params.routineThreadContext,
   })
 }
 
@@ -756,8 +766,7 @@ function buildFallbackAnswer(params: {
     return buildEmptyProductResultFallback(params.message)
   }
 
-  const routineActive =
-    params.reason === "routine_ambiguity" && params.routineThreadContext?.active === true
+  const routineActive = params.routineThreadContext?.active === true
   return {
     answer_mode: "clarification",
     interpreted_intent: "AgentV2 fallback clarification.",
