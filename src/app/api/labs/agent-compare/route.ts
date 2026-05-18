@@ -126,6 +126,19 @@ export async function handleAgentCompareRequest(
 
   try {
     const turns = normalizeTurns(parsed.data)
+    if (turns.length === 0) {
+      return NextResponse.json(
+        {
+          error: "Ungueltige Compare-Anfrage",
+          details: {
+            formErrors: ["Prompt oder Turns erforderlich"],
+            fieldErrors: {},
+          },
+        },
+        { status: 400 },
+      )
+    }
+
     const prompt = turns.at(-1) ?? ""
     const blinded = parsed.data.blinded === true
     const toolLoopVariant = parsed.data.toolLoopVariant ?? DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT

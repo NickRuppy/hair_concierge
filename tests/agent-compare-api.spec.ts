@@ -97,6 +97,33 @@ test("POST validates the request body before calling compare execution", async (
     assert.match((await response.json()).error, /Ungueltige/)
   }))
 
+test("POST rejects whitespace-only prompts and turns before calling compare execution", async () =>
+  withNodeEnv("development", async () => {
+    const { handleAgentCompareRequest } = await importRoute()
+    let runnerCalls = 0
+    const response = await handleAgentCompareRequest(
+      { userId: "user-42", prompt: "   ", turns: ["\t  "] },
+      {
+        listEligibleCompareUsers: async () => [],
+        loadCompareUserSnapshot: async () => {
+          throw new Error("not used")
+        },
+        runCurrentComparisonForUser: async () => {
+          runnerCalls += 1
+          throw new Error("not used")
+        },
+        runShadowComparisonForUser: async () => {
+          runnerCalls += 1
+          throw new Error("not used")
+        },
+      },
+    )
+
+    assert.equal(response.status, 400)
+    assert.match((await response.json()).error, /Ungueltige/)
+    assert.equal(runnerCalls, 0)
+  }))
+
 test("handleAgentCompareRequest returns both compare columns, including partial failures", async () =>
   withNodeEnv("development", async () => {
     const { handleAgentCompareRequest } = await importRoute()
