@@ -29,6 +29,7 @@ export interface AgentV2SelectProductsProjection {
   }>
   missing_required_data: SelectedProductsMissingInfo[]
   constraint_blockers: UnsupportedRequestedSignal[]
+  comparison_facts: Record<string, string[]> | null
   allowed_claim_sources: string[]
   trace: {
     profile_basis: string[]
@@ -65,6 +66,7 @@ export function projectSelectProductsForAgentV2(
     })),
     missing_required_data: projection.missing_info,
     constraint_blockers: [...projection.unsupported_requested_signals, ...productSignals],
+    comparison_facts: projection.comparison_facts,
     allowed_claim_sources: [
       "selected_products.supported_claims",
       "selected_products.comparison_facts",

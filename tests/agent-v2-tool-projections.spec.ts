@@ -53,6 +53,48 @@ test("projectSelectProductsForAgentV2 exposes product ids and supported claims",
   assert.ok(output.allowed_claim_sources.includes("selected_products.supported_claims"))
 })
 
+test("projectSelectProductsForAgentV2 exposes advertised comparison facts", () => {
+  const input = {
+    projection: {
+      category: "conditioner",
+      decision: "recommended",
+      product_response_policy: "recommend",
+      policy_reason: "Profile and category fit.",
+      profile_basis: ["Haardicke: fein"],
+      category_guidance: "Conditioner wirkt primaer in den Laengen.",
+      products: [
+        {
+          rank: 1,
+          product_id: "prod_1",
+          name: "Leichter Conditioner",
+          brand: "Brand",
+          price_eur: 10,
+          currency: "EUR",
+          fit_reason: "Pflegt ohne zu beschweren.",
+          caveat: null,
+          supported_claims: [],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: {
+        prod_1: ["leichter als reichhaltige Alternativen"],
+      },
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [],
+    effectiveHairProfile: null,
+    runtime: {} as SelectProductsToolResult["runtime"],
+  } satisfies SelectProductsToolResult
+
+  const output = projectSelectProductsForAgentV2(input)
+
+  assert.ok(output.allowed_claim_sources.includes("selected_products.comparison_facts"))
+  assert.deepEqual(output.comparison_facts, {
+    prod_1: ["leichter als reichhaltige Alternativen"],
+  })
+})
+
 test("projectRoutineForAgentV2 explains basics layer and product policy", () => {
   const input: BuildOrFixRoutineProjection = {
     objective: "build_routine",
