@@ -22,7 +22,7 @@ import {
   DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT,
 } from "@/lib/agent/compare/tool-loop-variants"
 import type { KeyboardEvent } from "react"
-import { useEffect, useState, useTransition } from "react"
+import { useEffect, useRef, useState, useTransition } from "react"
 
 type JudgmentHistoryEntry = AgentCompareJudgmentDraft & {
   userId: string
@@ -762,6 +762,29 @@ async function fetchBootstrap(userId?: string): Promise<BootstrapResponse> {
   return data as BootstrapResponse
 }
 
+export function canSaveAgentCompareJudgment(params: {
+  result: AgentCompareResponse | null
+  selectedUser: AgentCompareUserSnapshot | null
+  selectedUserOption: AgentCompareUserOption | null
+  currentResult: CompareRunResult | null
+  agentResult: CompareRunResult | null
+}): boolean {
+  if (
+    !params.result ||
+    !params.selectedUser ||
+    !params.selectedUserOption ||
+    !params.currentResult ||
+    !params.agentResult
+  ) {
+    return false
+  }
+
+  return (
+    params.result.userId === params.selectedUserOption.id &&
+    params.selectedUser.user_id === params.selectedUserOption.id
+  )
+}
+
 export function AgentCompareLab() {
   const [users, setUsers] = useState<AgentCompareUserOption[]>([])
   const [selectedUserId, setSelectedUserId] = useState("")
@@ -790,6 +813,8 @@ export function AgentCompareLab() {
   const [isPending, startTransition] = useTransition()
   const [isLoadingUser, startLoadingUser] = useTransition()
   const [isSavingJudgment, startSavingJudgment] = useTransition()
+  const userLoadRequestId = useRef(0)
+  const compareRequestId = useRef(0)
 
   const hasAgentV2Result = result?.results.some((entry) => entry.system === "agent_v2") ?? false
   const currentResult =
@@ -826,6 +851,13 @@ export function AgentCompareLab() {
   const showDiagnostics = !result?.blinded || isRevealed
   const currentJudgmentLabel = currentTitle
   const agentJudgmentLabel = agentTitle
+  const canSaveJudgment = canSaveAgentCompareJudgment({
+    result,
+    selectedUser,
+    selectedUserOption,
+    currentResult,
+    agentResult,
+  })
   const analysisSnapshot = result
     ? buildCompareAnalysisSnapshot({
         result,
@@ -858,6 +890,8 @@ export function AgentCompareLab() {
   }, [])
 
   useEffect(() => {
+    const requestId = (userLoadRequestId.current += 1)
+
     if (!selectedUserId) {
       setSelectedUser(null)
       return
@@ -866,9 +900,19 @@ export function AgentCompareLab() {
     startLoadingUser(async () => {
       try {
         const bootstrap = await fetchBootstrap(selectedUserId)
+        if (userLoadRequestId.current !== requestId) return
+
         setUsers(bootstrap.users)
+        if (bootstrap.selectedUser?.user_id !== selectedUserId) {
+          setSelectedUser(null)
+          setError("Geladener Testnutzer passt nicht zur Auswahl.")
+          return
+        }
+
         setSelectedUser(bootstrap.selectedUser)
       } catch (bootstrapError) {
+        if (userLoadRequestId.current !== requestId) return
+
         setSelectedUser(null)
         setError(
           bootstrapError instanceof Error
@@ -881,6 +925,9 @@ export function AgentCompareLab() {
 
   async function handleRunCompare() {
     if (!selectedUserId || activeInput.trim().length === 0) return
+
+    const requestId = (compareRequestId.current += 1)
+    const submittedUserId = selectedUserId
 
     setError(null)
     setIsRevealed(false)
@@ -899,6 +946,8 @@ export function AgentCompareLab() {
         })
 
         const data = (await response.json()) as AgentCompareResponse | { error?: string }
+        if (compareRequestId.current !== requestId) return
+
         if (!response.ok) {
           setResult(null)
           setError(
@@ -909,8 +958,17 @@ export function AgentCompareLab() {
           return
         }
 
-        setResult(data as AgentCompareResponse)
+        const compareResult = data as AgentCompareResponse
+        if (compareResult.userId !== submittedUserId) {
+          setResult(null)
+          setError("Compare-Ergebnis passt nicht zum gewaehlten Testnutzer.")
+          return
+        }
+
+        setResult(compareResult)
       } catch (runError) {
+        if (compareRequestId.current !== requestId) return
+
         setResult(null)
         setError(runError instanceof Error ? runError.message : "Compare fehlgeschlagen")
       }
@@ -940,7 +998,9 @@ export function AgentCompareLab() {
   }
 
   function handleUserChange(nextUserId: string) {
+    compareRequestId.current += 1
     setSelectedUserId(nextUserId)
+    setSelectedUser(null)
     setResult(null)
     setIsRevealed(false)
     setError(null)
@@ -965,7 +1025,16 @@ export function AgentCompareLab() {
   }
 
   function handleSaveJudgment() {
-    if (!result || !selectedUser || !selectedUserOption || !currentResult || !agentResult) return
+    if (
+      !canSaveJudgment ||
+      !result ||
+      !selectedUser ||
+      !selectedUserOption ||
+      !currentResult ||
+      !agentResult
+    ) {
+      return
+    }
 
     const createdAt = new Date().toISOString()
     const currentSystem = normalizeCompareSystemForMetrics(currentResult.system)
@@ -1396,7 +1465,7 @@ export function AgentCompareLab() {
             <button
               type="button"
               onClick={handleSaveJudgment}
-              disabled={!result || !selectedUser || !selectedUserOption || isSavingJudgment}
+              disabled={!canSaveJudgment || isSavingJudgment}
               className="inline-flex items-center justify-center rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSavingJudgment ? "Speichere..." : "Urteil speichern"}

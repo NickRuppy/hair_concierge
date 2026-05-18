@@ -360,6 +360,53 @@ test("handleAgentCompareRequest preserves AgentV2 request interpretation trace i
     assert.equal(agentV2Result?.agent_v2_trace.bounded_repair_kind, "terminal_only")
   }))
 
+test("compare lab rejects saving stale results for a different loaded user", async () => {
+  const { canSaveAgentCompareJudgment } = await importCompareLab()
+  const result = {
+    userId: "user-a",
+    prompt: "Welches Shampoo passt?",
+    results: [],
+  }
+  const option = {
+    id: "user-b",
+    label: "Mara · curly",
+    full_name: "Mara",
+  }
+  const context = {
+    user_id: "user-b",
+    derived_signals: [],
+    routine_inventory: [],
+    relevant_memory: [],
+  }
+  const currentResult = {
+    system: "classic" as const,
+    answer: "A",
+    latency_ms: 100,
+    debug_lines: [],
+    matched_products: [],
+    error: null,
+  }
+  const agentResult = {
+    system: "tool_loop" as const,
+    answer: "B",
+    latency_ms: 90,
+    debug_lines: [],
+    matched_products: [],
+    error: null,
+  }
+
+  assert.equal(
+    canSaveAgentCompareJudgment({
+      result,
+      selectedUser: context,
+      selectedUserOption: option,
+      currentResult,
+      agentResult,
+    }),
+    false,
+  )
+})
+
 test("judgment route accepts a valid compare judgment in development", async () =>
   withNodeEnv("development", async () => {
     const { handleAgentCompareJudgmentRequest } = await importJudgmentRoute()
