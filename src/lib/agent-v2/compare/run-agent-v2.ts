@@ -190,6 +190,8 @@ export function updateAgentV2RoutineThreadContext(
     ...update.categories,
     ...(update.routine_context.category ? [update.routine_context.category] : []),
   ]
+    .map((category) => normalizeRoutineThreadCategory(category))
+    .filter((category): category is string => Boolean(category))
   const lastRoutineCategories = [
     ...new Set([...(previous?.last_routine_categories ?? []), ...updateCategories]),
   ]
@@ -225,14 +227,17 @@ function updateAgentV2VisibleRoutineThreadSteps(
   if (update.answer_mode === "routine" && routineAnswer) {
     const singleStepCategory =
       routineAnswer.payload.visible_steps.length === 1 && update.categories.length === 1
-        ? update.categories[0]
+        ? normalizeRoutineThreadCategory(update.categories[0])
         : null
+    const routineContextCategory = update.routine_context.category
+      ? normalizeRoutineThreadCategory(update.routine_context.category)
+      : null
     return routineAnswer.payload.visible_steps.map((step, index) => ({
       step_id: step.step_id,
       label_de: step.label_de,
       category:
         routineAnswer.payload.visible_steps.length === 1
-          ? (update.routine_context.category ??
+          ? (routineContextCategory ??
             singleStepCategory ??
             inferRoutineThreadCategory(step.label_de))
           : inferRoutineThreadCategory(step.label_de),
@@ -246,7 +251,11 @@ function updateAgentV2VisibleRoutineThreadSteps(
     const stepId = deepDiveAnswer.payload.step_id?.trim()
     if (!stepId) return [...previous]
 
-    const category = deepDiveAnswer.payload.category ?? update.routine_context.category
+    const category =
+      normalizeRoutineThreadCategory(deepDiveAnswer.payload.category ?? "") ??
+      (update.routine_context.category
+        ? normalizeRoutineThreadCategory(update.routine_context.category)
+        : null)
     const existingIndex = previous.findIndex((step) => step.step_id === stepId)
     if (existingIndex >= 0) {
       return previous.map((step, index) =>
@@ -311,7 +320,9 @@ function inferRoutineThreadCategory(labelDe: string): string | null {
     maske: "mask",
     haarmaske: "mask",
     oel: "oil",
+    öl: "oil",
     haaroel: "oil",
+    haaröl: "oil",
     bondbuilder: "bondbuilder",
     tiefenreinigung: "deep_cleansing_shampoo",
     tiefenreinigungsshampoo: "deep_cleansing_shampoo",
@@ -320,6 +331,31 @@ function inferRoutineThreadCategory(labelDe: string): string | null {
   }
 
   return categoryByLabel[normalized] ?? null
+}
+
+const ROUTINE_THREAD_CATEGORY_VALUES = new Set([
+  "shampoo",
+  "conditioner",
+  "mask",
+  "leave_in",
+  "oil",
+  "bondbuilder",
+  "deep_cleansing_shampoo",
+  "dry_shampoo",
+  "peeling",
+  "styling",
+  "treatment",
+])
+
+function normalizeRoutineThreadCategory(category: string): string | null {
+  const inferred = inferRoutineThreadCategory(category)
+  if (inferred) return inferred
+
+  const normalized = category
+    .trim()
+    .toLocaleLowerCase("de-DE")
+    .replace(/[-\s]+/g, "_")
+  return ROUTINE_THREAD_CATEGORY_VALUES.has(normalized) ? normalized : null
 }
 
 function formatRoutineThreadCategoryLabel(category: string): string {
@@ -347,8 +383,8 @@ function extractRoutineThreadCategories(answer: AgentV2TerminalAnswer): string[]
   if (answer.answer_mode === "routine") {
     categories.push(
       ...answer.payload.visible_steps
-        .map((step) => step.label_de.trim().toLocaleLowerCase("de-DE"))
-        .filter(Boolean),
+        .map((step) => inferRoutineThreadCategory(step.label_de))
+        .filter((category): category is string => Boolean(category)),
     )
   }
 

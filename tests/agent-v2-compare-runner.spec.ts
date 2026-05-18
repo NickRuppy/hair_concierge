@@ -266,6 +266,38 @@ test("AgentV2 Compare runner updates visible routine step category from routine 
   ])
 })
 
+test("AgentV2 Compare runner stores canonical categories for one-step routine labels", () => {
+  const context = updateAgentV2RoutineThreadContext(null, {
+    answer_mode: "routine",
+    user_message: "Ich will einen Leave-in Schritt.",
+    answer: {
+      answer_mode: "routine",
+      payload: {
+        routine_layer: "goals",
+        visible_steps: [
+          {
+            step_id: "goal-leave-in",
+            label_de: "Leave-in",
+            action_de: "In die Laengen geben.",
+            frequency_de: "Nach der Waesche",
+            reason_de: "Mehr Pflege ohne viel Aufwand.",
+          },
+        ],
+      },
+    },
+    routine_context: {
+      active: true,
+      routine_layer: "goals",
+      category: null,
+    },
+    categories: ["leave-in"],
+    summary_de: "Ein Leave-in Schritt passt.",
+  })
+
+  assert.deepEqual(context.last_routine_categories, ["leave_in"])
+  assert.equal(context.visible_steps[0]?.category, "leave_in")
+})
+
 test("AgentV2 Compare runner formats compact request interpretation summaries", () => {
   assert.equal(
     formatAgentV2RequestInterpretationSummary({
