@@ -10,7 +10,10 @@ test("production chat route traces agent guidance files", () => {
 
   const tracingIncludes = nextConfig.outputFileTracingIncludes
 
-  assert.deepEqual(tracingIncludes?.["/api/chat"], ["./data/agent-guidance/**/*"])
+  assert.deepEqual(tracingIncludes?.["/api/chat"], [
+    "./data/agent-guidance/**/*",
+    "./data/agent-v2/guidance/**/*",
+  ])
 })
 
 test("built production chat route artifact includes agent guidance files when present", (t) => {
@@ -26,5 +29,9 @@ test("built production chat route artifact includes agent guidance files when pr
   assert.ok(
     tracedFiles.some((file) => file.includes("data/agent-guidance/")),
     "Expected built /api/chat trace artifact to include data/agent-guidance files.",
+  )
+  assert.ok(
+    tracedFiles.some((file) => file.includes("data/agent-v2/guidance/")),
+    "Expected built /api/chat trace artifact to include data/agent-v2/guidance files.",
   )
 })
