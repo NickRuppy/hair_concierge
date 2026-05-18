@@ -1,0 +1,129 @@
+name: Clawpatch
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "23 4 * * 2"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CLAWPATCH_REVIEW_LIMIT: "10"
+      HAS_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Codex CLI
+        if: env.HAS_OPENAI_API_KEY == 'true'
+        run: |
+          npm install -g @openai/codex@latest
+          codex --version
+
+      - name: Check Clawpatch environment
+        continue-on-error: true
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npm run clawpatch:doctor
+
+      - name: Map Clawpatch features
+        run: npm run clawpatch:map
+
+      - name: Detect Codex CLI
+        id: codex
+        run: |
+          if [ "$HAS_OPENAI_API_KEY" = "true" ] && command -v codex >/dev/null 2>&1; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+            codex --version
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Review changed Clawpatch features
+        if: steps.codex.outputs.available == 'true'
+        continue-on-error: true
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'origin/main' }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            npm run clawpatch:review -- --since "$BASE_REF" --limit "$CLAWPATCH_REVIEW_LIMIT" --jobs 3
+          else
+            npm run clawpatch:review -- --limit "$CLAWPATCH_REVIEW_LIMIT" --jobs 3
+          fi
+
+      - name: Note skipped provider review
+        if: steps.codex.outputs.available != 'true'
+        run: |
+          {
+            echo "# Clawpatch provider review skipped"
+            echo
+            echo "The semantic feature map was generated, but provider-backed review was not available in this runner."
+            echo "Confirm the OPENAI_API_KEY secret is available to this event and that Codex CLI installation succeeded."
+          } > clawpatch-report.md
+
+      - name: Generate Clawpatch report
+        if: steps.codex.outputs.available == 'true'
+        continue-on-error: true
+        run: npm run clawpatch:report -- --output clawpatch-report.md
+
+      - name: Generate Clawpatch summary
+        env:
+          BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'origin/main' }}
+        run: npm run clawpatch:summary -- --output clawpatch-summary.md --base "$BASE_REF"
+
+      - name: Ensure Clawpatch report exists
+        if: always()
+        run: |
+          if [ ! -f clawpatch-report.md ]; then
+            {
+              echo "# Clawpatch report unavailable"
+              echo
+              echo "The feature summary was generated, but the provider-backed report was not available."
+            } > clawpatch-report.md
+          fi
+
+      - name: Write job summary
+        if: always()
+        run: |
+          if [ -f clawpatch-summary.md ]; then
+            cat clawpatch-summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f clawpatch-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat clawpatch-report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload Clawpatch artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: clawpatch-${{ github.run_id }}
+          path: |
+            clawpatch-summary.md
+            clawpatch-report.md
+            .clawpatch/features/
+            .clawpatch/findings/
+            .clawpatch/patches/
+          if-no-files-found: ignore
+          retention-days: 14

@@ -32,6 +32,9 @@
 # worktrees
 .worktrees/
 
+# automated code review state
+.clawpatch/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
