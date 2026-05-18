@@ -91,6 +91,17 @@ For trivial tasks (single file, <20 lines changed), skip the options table and p
 - Use `npm run worktree:new -- <slug>` to create a bootstrapped worktree
 - Use `npm run dev:worktree` inside a worktree so parallel runs do not fight over the same port
 
+## Code Review Tooling
+
+- Use Clawpatch for large or risky implementation branches when a semantic feature map would help catch cross-file regressions
+- Run Clawpatch from the task worktree, not the root `main` checkout
+- Keep `.clawpatch/` as local generated state; do not commit feature maps, findings, reports, locks, or patch attempts unless explicitly requested for an audit artifact
+- Use `npm run clawpatch:map` before the first Clawpatch review in a worktree
+- Prefer `npm run clawpatch:review -- --limit <n>` for batched review, then `npm run clawpatch:report`
+- Use `docs/codex-review-map.md` to choose the functional slice, likely risks, and relevant verification commands before fixing Clawpatch findings
+- Treat Clawpatch findings as review input, not automatic truth; reconcile material findings with `$code-reviewer`, local tests, and Hair Concierge product constraints before fixing
+- Use `npm run clawpatch:fix -- --finding <id>` only for one explicit finding at a time, only in a task worktree, and review the resulting diff manually before committing
+
 ## Working Outputs
 
 - Put implementation plans in `plans/` when a written plan is needed
