@@ -1655,6 +1655,63 @@ test("validator blocks payload routine step ids that bypass tool grounding", () 
   assert.ok(result.errors.some((error) => error.validator_id === "known_routine_step_ids"))
 })
 
+test("validator blocks routine payload layer that disagrees with routine context", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "routine",
+      request_interpretation: requestInterpretation({
+        primary_intent: "routine_build",
+        product_request_kind: "none",
+        routine_intent: "create",
+        category: "none",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Routine aufbauen",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_product_tool: false,
+        used_routine_tool: true,
+        product_ids: [],
+        routine_step_ids: ["step_1"],
+      },
+      routine_context: {
+        active: true,
+        routine_layer: "basics",
+        step_id: null,
+        category: null,
+        return_path: [],
+      },
+      payload: {
+        user_facing_answer_de: "Starte mit Shampoo als Basic.",
+        routine_layer: "deep_dive",
+        visible_steps: [
+          {
+            step_id: "step_1",
+            label_de: "Shampoo",
+            action_de: "Am Ansatz reinigen.",
+            frequency_de: null,
+            reason_de: "Basis.",
+          },
+        ],
+        next_layer_options: ["goals"],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "Routine aufbauen",
+      recentEvidenceText: "Routine aufbauen",
+      toolCallHistory: [routineToolCall()],
+      routineProjections: [{ routine_layer: "basics", visible_steps: [{ step_id: "step_1" }] }],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "routine_metadata_consistency"))
+})
+
 test("validator requires routine tool call even when routine projections are present", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -2269,6 +2326,87 @@ test("validator accepts routine product deep dive step ids from active routine t
   )
 
   assert.equal(result.ok, true)
+})
+
+test("validator blocks routine product deep dive context step ids that disagree with payload", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "routine_product_deep_dive",
+      request_interpretation: requestInterpretation({
+        product_request_kind: "routine_product_deep_dive",
+        category: "leave_in",
+        requested_product_count: null,
+        count_policy: "default",
+        evidence_quote: "Produkt dafuer",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_product_tool: true,
+        used_routine_tool: false,
+        product_ids: ["prod_1"],
+        routine_step_ids: ["thread_step"],
+        hard_rule_ids: [],
+      },
+      routine_context: {
+        active: true,
+        routine_layer: "deep_dive",
+        step_id: "invented_step",
+        category: "leave_in",
+        return_path: ["routine"],
+      },
+      payload: {
+        user_facing_answer_de: "**Test Shampoo** passt fuer den ersten Zusatz.",
+        step_id: "thread_step",
+        category: "leave_in",
+        recommendations: [
+          {
+            product_id: "prod_1",
+            reason_de: "Passt als leichter Zusatz.",
+            usage_de: "Sparsam in die Laengen.",
+            caveat_de: null,
+          },
+        ],
+        return_to_routine_offer_de: "Danach gehen wir zur Routine zurueck.",
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "Und welches Produkt dafuer?",
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "leave_in",
+          user_request: "Und welches Produkt dafuer?",
+          product_request_kind: "routine_product_deep_dive",
+          evidence_quote: "Produkt dafuer",
+        }),
+      ],
+      routineProjections: [{ routine_layer: "basics", visible_steps: [{ step_id: "real_step" }] }],
+      routineThreadContext: {
+        active: true,
+        current_layer: "goals",
+        last_answer_mode: "routine",
+        last_routine_categories: ["leave_in"],
+        last_user_goal: "Routine vereinfachen",
+        summary_de: "Erster Zusatz ist ein Leave-in.",
+        visible_steps: [
+          {
+            step_id: "thread_step",
+            label_de: "Erster Zusatz",
+            category: "leave_in",
+            order: 1,
+            routine_layer: "goals",
+          },
+        ],
+      },
+      currentRoutineLayer: "goals",
+      knownHardRuleIds: [],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "routine_metadata_consistency"))
+  assert.ok(result.errors.some((error) => error.validator_id === "known_routine_step_ids"))
 })
 
 test("validator blocks ungrounded routine product deep dive step ids", () => {

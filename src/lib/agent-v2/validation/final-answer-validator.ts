@@ -81,6 +81,7 @@ export function validateAgentV2FinalAnswer(
   validateRoutineToolRequired(terminalAnswer, context, findings)
   validateRoutineThreadContinuity(terminalAnswer, context, findings)
   validateRoutineProductDeepDive(terminalAnswer, context, findings)
+  validateRoutineMetadataConsistency(terminalAnswer, findings)
   validateAnswerModeForContext(terminalAnswer, findings)
   validateRoutineLayerProgression(terminalAnswer, context, findings)
   validateGeneralAdviceNoUnaskedProducts(terminalAnswer, findings)
@@ -805,19 +806,21 @@ function validateKnownRoutineStepIds(
       : []),
   ])
   const payloadRoutineStepIds = extractPayloadRoutineStepIds(answer)
-  const missingFromGrounding = payloadRoutineStepIds.filter(
+  const routineContextStepIds = extractRoutineContextStepIds(answer)
+  const answerRoutineStepIds = [...new Set([...payloadRoutineStepIds, ...routineContextStepIds])]
+  const missingFromGrounding = answerRoutineStepIds.filter(
     (id) => !answer.tool_grounding.routine_step_ids.includes(id),
   )
   if (missingFromGrounding.length > 0) {
     errors.push({
       validator_id: "known_routine_step_ids",
-      message: `Payload routine step IDs must also appear in tool_grounding.routine_step_ids: ${missingFromGrounding.join(", ")}`,
+      message: `Final answer routine step IDs must also appear in tool_grounding.routine_step_ids: ${missingFromGrounding.join(", ")}`,
       severity: "block",
     })
   }
 
   const referencedRoutineStepIds = [
-    ...new Set([...answer.tool_grounding.routine_step_ids, ...payloadRoutineStepIds]),
+    ...new Set([...answer.tool_grounding.routine_step_ids, ...answerRoutineStepIds]),
   ]
   const unknown = referencedRoutineStepIds.filter((id) => !known.has(id))
   if (unknown.length > 0) {
@@ -913,6 +916,13 @@ function extractPayloadRoutineStepIds(answer: AgentV2TerminalAnswer): string[] {
   return []
 }
 
+function extractRoutineContextStepIds(answer: AgentV2TerminalAnswer): string[] {
+  if (answer.answer_mode !== "routine_product_deep_dive") return []
+
+  const stepId = answer.routine_context.step_id
+  return stepId && stepId.trim().length > 0 ? [stepId] : []
+}
+
 function validateRoutineThreadContinuity(
   answer: AgentV2TerminalAnswer,
   context: AgentV2FinalAnswerValidationContext,
@@ -952,6 +962,45 @@ function validateRoutineProductDeepDive(
       validator_id: "routine_return_path_required",
       message: "Routine product deep dives must preserve a return path to the routine.",
       severity: "block",
+    })
+  }
+}
+
+function validateRoutineMetadataConsistency(
+  answer: AgentV2TerminalAnswer,
+  errors: AgentV2ValidationError[],
+): void {
+  if (answer.answer_mode === "routine") {
+    if (answer.payload.routine_layer !== answer.routine_context.routine_layer) {
+      errors.push({
+        validator_id: "routine_metadata_consistency",
+        message: "Routine payload routine_layer must match routine_context.routine_layer.",
+        severity: "block",
+        path: ["payload", "routine_layer"],
+      })
+    }
+    return
+  }
+
+  if (answer.answer_mode !== "routine_product_deep_dive") return
+
+  const contextStepId = answer.routine_context.step_id
+  if (contextStepId && answer.payload.step_id !== contextStepId) {
+    errors.push({
+      validator_id: "routine_metadata_consistency",
+      message: "Routine product deep-dive payload step_id must match routine_context.step_id.",
+      severity: "block",
+      path: ["payload", "step_id"],
+    })
+  }
+
+  const contextCategory = answer.routine_context.category
+  if (contextCategory && answer.payload.category !== contextCategory) {
+    errors.push({
+      validator_id: "routine_metadata_consistency",
+      message: "Routine product deep-dive payload category must match routine_context.category.",
+      severity: "block",
+      path: ["payload", "category"],
     })
   }
 }
