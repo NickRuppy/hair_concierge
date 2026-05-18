@@ -20,7 +20,14 @@ export const AgentV2SafetyModeSchema = z.enum(["normal", "restricted", "hard_sho
 
 export type AgentV2SafetyMode = z.infer<typeof AgentV2SafetyModeSchema>
 
-export const AgentV2ReasoningEffortSchema = z.enum(["none", "low", "medium", "high", "xhigh"])
+export const AgentV2ReasoningEffortSchema = z.enum([
+  "none",
+  "minimal",
+  "low",
+  "medium",
+  "high",
+  "xhigh",
+])
 
 export type AgentV2ReasoningEffort = z.infer<typeof AgentV2ReasoningEffortSchema>
 

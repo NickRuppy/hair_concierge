@@ -285,6 +285,14 @@ test("AgentV2 model policy accepts scoped env overrides", () => {
   assert.equal(policy.text_verbosity, "medium")
 })
 
+test("AgentV2 model policy preserves minimal reasoning effort", () => {
+  const policy = getAgentV2ModelPolicy({
+    AGENT_V2_REASONING_EFFORT: "minimal",
+  })
+
+  assert.equal(policy.reasoning_effort, "minimal")
+})
+
 test("AgentV2 positive reference cases preserve quality shape rather than exact wording", () => {
   const cases = JSON.parse(
     readFileSync("data/agent-v2/evals/positive-reference-cases.json", "utf8"),
