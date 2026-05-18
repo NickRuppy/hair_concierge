@@ -299,7 +299,9 @@ export async function runAgentV2ResponsesTurn(params: {
         continue
       }
 
-      const validatedArguments = validateExecutableToolArguments(call.name, parsedArguments.value)
+      const validatedArguments = validateExecutableToolArguments(call.name, parsedArguments.value, {
+        safetyMode,
+      })
       if (!validatedArguments.ok) {
         trace.blocked_tool_calls.push({ name: call.name, reason: "invalid_schema" })
         inputItems.push(buildFunctionCallOutput(call.call_id, { error: "invalid_schema" }))
@@ -594,6 +596,7 @@ function parseToolArguments(call: {
 function validateExecutableToolArguments(
   name: AgentV2ToolName,
   value: Record<string, unknown>,
+  options: { safetyMode: AgentV2SafetyMode },
 ): { ok: true; value: Record<string, unknown> } | { ok: false } {
   if (name === "select_products") {
     const parsed = SelectProductsToolInputSchema.safeParse(value)
@@ -607,7 +610,9 @@ function validateExecutableToolArguments(
 
   if (name === "load_advisor_guidance") {
     const parsed = LoadAgentV2AdvisorGuidanceInputSchema.safeParse(value)
-    return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
+    return parsed.success
+      ? { ok: true, value: { ...parsed.data, safety_mode: options.safetyMode } }
+      : { ok: false }
   }
 
   return { ok: true, value }

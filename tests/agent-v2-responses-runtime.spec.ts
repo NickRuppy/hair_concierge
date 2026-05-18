@@ -829,6 +829,44 @@ test("AgentV2 runtime blocks select_products in restricted safety mode", async (
   )
 })
 
+test("AgentV2 runtime binds guidance safety mode from the restricted turn", async () => {
+  let guidanceInput: Record<string, unknown> | null = null
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([
+      functionCall("call_1", "load_advisor_guidance", {
+        answer_mode_hint: "general_advice",
+        categories: [],
+        routine_layer: null,
+        safety_mode: "normal",
+      }),
+      terminalRestrictedSafetyBoundary("call_2"),
+    ]),
+    message: "Meine Kopfhaut juckt und ist gerötet. Was kann ich tun?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    safetyMode: "restricted",
+    tools: {
+      ...fakeAgentV2Tools(),
+      load_advisor_guidance: async (input) => {
+        guidanceInput = input
+        return {
+          loaded_package_ids: ["base.safety_boundaries.v1"],
+          hard_rules: [],
+          markdown_brief: "Safety guidance.",
+        }
+      },
+    },
+  })
+
+  assert.equal(result.trace.safety_mode, "restricted")
+  assert.ok(guidanceInput)
+  assert.equal((guidanceInput as Record<string, unknown>).safety_mode, "restricted")
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => asRecord(call.arguments)?.safety_mode),
+    ["restricted"],
+  )
+})
+
 test("AgentV2 runtime repairs restricted product-first answers without asking for select_products", async () => {
   const client = fakeResponsesClientWithOutputs([
     terminalProductRecommendation("call_1", ["prod_1"]),
