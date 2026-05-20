@@ -1,4 +1,4 @@
-# Hair Concierge — Project Instructions
+# Chaarlie — Project Instructions
 
 ## Plan Mode
 

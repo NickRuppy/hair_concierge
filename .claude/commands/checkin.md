@@ -27,7 +27,7 @@ Today's date: !`date +%Y-%m-%d`
 
 4. **Update the file** — Write the updated PRIORITIES.md to the memory directory with this structure:
    ```
-   # Hair Concierge - Priorities
+   # Chaarlie - Priorities
 
    *Last check-in: YYYY-MM-DD*
 
