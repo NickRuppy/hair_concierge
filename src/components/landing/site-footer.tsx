@@ -1,25 +1,12 @@
 import Link from "next/link"
 
+import { Wordmark } from "./wordmark"
+
 const linkClass =
-  "text-sm text-muted-foreground transition-colors hover:text-[var(--brand-plum-darkest)]"
+  "text-sm text-muted-foreground transition-colors hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
 
 const headingClass =
   "mb-4 font-mono text-xs font-medium uppercase tracking-wider text-[var(--brand-plum)]"
-
-function Wordmark() {
-  return (
-    <Link href="/" className="flex items-center gap-2.5" aria-label="chaarlie Startseite">
-      <span className="grid h-[34px] w-[34px] place-items-center rounded-[9px] bg-[var(--brand-plum-darkest)]">
-        <svg aria-hidden="true" viewBox="0 0 24 24" width="19" height="19" fill="#FDFBF9">
-          <path d="M12 2C9 7 5 11 5 15a7 7 0 0014 0c0-4-4-8-7-13z" />
-        </svg>
-      </span>
-      <span className="font-header text-[22px] font-medium leading-none text-[var(--brand-plum-darkest)]">
-        chaarlie
-      </span>
-    </Link>
-  )
-}
 
 export function SiteFooter() {
   return (
@@ -27,7 +14,13 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-12 grid grid-cols-1 gap-12 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
-            <Wordmark />
+            <Link
+              href="/"
+              aria-label="chaarlie Startseite"
+              className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
+            >
+              <Wordmark />
+            </Link>
             <p className="mt-3 max-w-[280px] text-sm leading-relaxed text-muted-foreground">
               Wissenschaftliche Haaranalyse, persönlich abgestimmt. Ein Produkt der Haarmony LLC.
             </p>
@@ -87,7 +80,7 @@ export function SiteFooter() {
                 <button
                   type="button"
                   data-cookie-settings-trigger
-                  className="cursor-pointer border-0 bg-transparent p-0 text-left font-[inherit] text-sm text-muted-foreground transition-colors hover:text-[var(--brand-plum-darkest)]"
+                  className="cursor-pointer border-0 bg-transparent p-0 text-left font-[inherit] text-sm text-muted-foreground transition-colors hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
                 >
                   Cookie-Einstellungen
                 </button>

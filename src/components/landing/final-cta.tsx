@@ -9,8 +9,7 @@ export function FinalCta() {
           style={{ fontSize: "clamp(28px, 4vw, 40px)" }}
         >
           Bereit, herauszufinden, was deine Haare{" "}
-          <em className="font-medium not-italic italic text-[var(--brand-plum-light)]">wirklich</em>{" "}
-          brauchen?
+          <em className="font-medium italic text-[var(--brand-plum-light)]">wirklich</em> brauchen?
         </h2>
         <p
           className="mx-auto mb-8 max-w-[520px] text-[17px]"
@@ -20,7 +19,7 @@ export function FinalCta() {
         </p>
         <Link
           href="/quiz"
-          className="inline-block rounded-[14px] bg-[var(--brand-coral)] px-9 py-[18px] text-[17px] font-bold text-white transition-all hover:bg-white hover:text-[var(--brand-plum-darkest)]"
+          className="inline-block rounded-[14px] bg-[var(--brand-coral)] px-9 py-[18px] text-[17px] font-bold text-white transition-all hover:bg-white hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
         >
           Quiz starten
         </Link>
