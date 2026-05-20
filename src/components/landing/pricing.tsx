@@ -2,8 +2,9 @@ import Link from "next/link"
 
 import { SectionHeading } from "@/components/landing/section-heading"
 import { STRIPE_PRICING_PLANS, type StripePricingPlan } from "@/lib/stripe/pricing-plans"
+import type { BillingInterval } from "@/lib/stripe/intervals"
 
-const FEATURES_BY_INTERVAL: Record<"month" | "quarter" | "year", readonly string[]> = {
+const FEATURES_BY_INTERVAL: Record<BillingInterval, readonly string[]> = {
   month: [
     "Vollständige Haar-Diagnose",
     "Persönliche Routine",
@@ -56,9 +57,14 @@ function PlanCard({ plan }: { plan: StripePricingPlan }) {
         ) : null}
       </p>
 
-      <p className="font-header text-[42px] font-semibold text-[var(--brand-plum-darkest)] leading-none">
-        <sup className="text-2xl font-medium text-muted-foreground mr-0.5">€</sup>
-        {priceDigits}
+      <p
+        aria-label={`${plan.price} ${plan.perMonth}`}
+        className="font-header text-[42px] font-semibold text-[var(--brand-plum-darkest)] leading-none"
+      >
+        <sup aria-hidden="true" className="text-2xl font-medium text-muted-foreground mr-0.5">
+          €
+        </sup>
+        <span aria-hidden="true">{priceDigits}</span>
       </p>
 
       <p className="text-sm text-muted-foreground mt-1.5 mb-6">{plan.perMonth}</p>
