@@ -1,3 +1,5 @@
+import { SectionHeading } from "@/components/landing/section-heading"
+
 type ValueBlock = {
   paths: React.ReactNode
   title: string
@@ -38,23 +40,11 @@ export function WhatIs() {
   return (
     <section className="py-20">
       <div className="mx-auto max-w-7xl px-6">
-        <div>
-          <span className="mb-3 block font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-            Was ist Chaarlie
-          </span>
-          <h2
-            className="mb-4 font-header font-medium leading-[1.2] text-[var(--brand-plum-darkest)]"
-            style={{ fontSize: "clamp(28px, 4vw, 44px)" }}
-          >
-            Eine ehrliche Haaranalyse statt Marketing-Versprechen.
-          </h2>
-          <p className="max-w-[640px] text-lg text-muted-foreground">
-            Chaarlie ist eine digitale Beratung f&uuml;r deine Haarpflege. Du machst einen
-            Selbsttest in 2 Minuten, bekommst eine klare Einsch&auml;tzung deines Haarprofils und
-            eine Routine, die zu deinen Haaren passt. Inklusive konkreter Produktvorschl&auml;ge mit
-            g&uuml;nstigen Drogerie-Alternativen.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="Was ist Chaarlie"
+          title="Eine ehrliche Haaranalyse statt Marketing-Versprechen."
+          lede="Chaarlie ist eine digitale Beratung für deine Haarpflege. Du machst einen Selbsttest in 2 Minuten, bekommst eine klare Einschätzung deines Haarprofils und eine Routine, die zu deinen Haaren passt. Inklusive konkreter Produktvorschläge mit günstigen Drogerie-Alternativen."
+        />
 
         <div className="mt-10 grid items-center gap-8 md:grid-cols-2 md:gap-16">
           <div className="flex flex-col gap-5">
@@ -95,13 +85,13 @@ export function WhatIs() {
               </p>
               <div className="flex flex-col gap-2">
                 <div className="rounded-[10px] border-[1.5px] border-border px-3.5 py-2.5 text-[13px] text-foreground">
-                  Dehnt sich, geht zur&uuml;ck
+                  Dehnt sich, geht zurück
                 </div>
                 <div className="rounded-[10px] border-[1.5px] border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] px-3.5 py-2.5 text-[13px] text-foreground">
                   Bleibt ausgeleiert
                 </div>
                 <div className="rounded-[10px] border-[1.5px] border-border px-3.5 py-2.5 text-[13px] text-foreground">
-                  Rei&szlig;t sofort
+                  Reißt sofort
                 </div>
               </div>
             </div>

@@ -1,3 +1,5 @@
+import { SectionHeading } from "@/components/landing/section-heading"
+
 type Feature = {
   paths: React.ReactNode
   title: string
@@ -48,17 +50,7 @@ export function Features() {
   return (
     <section className="py-20">
       <div className="mx-auto max-w-7xl px-6">
-        <div>
-          <span className="mb-3 block font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-            Was du bekommst
-          </span>
-          <h2
-            className="mb-4 font-header font-medium leading-[1.2] text-[var(--brand-plum-darkest)]"
-            style={{ fontSize: "clamp(28px, 4vw, 44px)" }}
-          >
-            Alles in einer App, nichts überflüssig.
-          </h2>
-        </div>
+        <SectionHeading eyebrow="Was du bekommst" title="Alles in einer App, nichts überflüssig." />
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
           {features.map((feature) => (

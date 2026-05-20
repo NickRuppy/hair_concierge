@@ -1,5 +1,7 @@
 import Link from "next/link"
 
+import { SectionHeading } from "@/components/landing/section-heading"
+
 type FaqItem = {
   question: string
   answer: React.ReactNode
@@ -55,20 +57,11 @@ export function Faq() {
   return (
     <section className="py-20">
       <div className="mx-auto max-w-[720px] px-6">
-        <div>
-          <span className="mb-3 block font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-            FAQ
-          </span>
-          <h2
-            className="mb-4 font-header font-medium leading-[1.2] text-[var(--brand-plum-darkest)]"
-            style={{ fontSize: "clamp(28px, 4vw, 44px)" }}
-          >
-            Die häufigsten Fragen.
-          </h2>
-          <p className="max-w-[640px] text-lg text-muted-foreground">
-            Antworten auf das, was du wissen solltest, bevor du loslegst.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="FAQ"
+          title="Die häufigsten Fragen."
+          lede="Antworten auf das, was du wissen solltest, bevor du loslegst."
+        />
 
         <div className="mt-12 flex flex-col gap-3">
           {items.map((item) => (

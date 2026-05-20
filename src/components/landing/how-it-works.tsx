@@ -1,3 +1,5 @@
+import { SectionHeading } from "@/components/landing/section-heading"
+
 type Step = {
   number: string
   title: string
@@ -26,20 +28,11 @@ export function HowItWorks() {
   return (
     <section className="border-y border-border bg-card py-20">
       <div className="mx-auto max-w-7xl px-6">
-        <div>
-          <span className="mb-3 block font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--brand-plum)]">
-            So funktioniert&apos;s
-          </span>
-          <h2
-            className="mb-4 font-header font-medium leading-[1.2] text-[var(--brand-plum-darkest)]"
-            style={{ fontSize: "clamp(28px, 4vw, 44px)" }}
-          >
-            In drei Schritten zu deiner Routine.
-          </h2>
-          <p className="max-w-[640px] text-lg text-muted-foreground">
-            Ohne Anmeldung starten. Ergebnis sehen. Dann entscheiden.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="So funktioniert's"
+          title="In drei Schritten zu deiner Routine."
+          lede="Ohne Anmeldung starten. Ergebnis sehen. Dann entscheiden."
+        />
 
         <div className="mt-12 grid gap-8 md:grid-cols-3">
           {steps.map((step) => (
