@@ -29,16 +29,6 @@ export function getQuizBrandPanelContent(
 ): QuizBrandPanelContent {
   void leadCaptureSubStep
 
-  if (step === 1) {
-    return {
-      eyebrow: null,
-      description: "Dein Haar verdient mehr als Raten. Finde heraus, was es wirklich braucht.",
-      progressCurrent: null,
-      progressComplete: false,
-      variant: "landing",
-    }
-  }
-
   const questionContent = QUESTION_PANEL_CONTENT[step]
   if (questionContent) {
     return {

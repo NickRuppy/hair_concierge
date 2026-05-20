@@ -8,7 +8,6 @@ export default function QuizLayout({ children }: { children: React.ReactNode }) 
   const step = useQuizStore((s) => s.step)
   const standardScrollRef = useRef<HTMLDivElement>(null)
   const resultScrollRef = useRef<HTMLDivElement>(null)
-  const landingScrollRef = useRef<HTMLDivElement>(null)
   const previousStepRef = useRef(step)
 
   useEffect(() => {
@@ -16,12 +15,7 @@ export default function QuizLayout({ children }: { children: React.ReactNode }) 
     previousStepRef.current = step
 
     const frame = window.requestAnimationFrame(() => {
-      const container =
-        step === 11
-          ? resultScrollRef.current
-          : step === 1
-            ? landingScrollRef.current
-            : standardScrollRef.current
+      const container = step === 11 ? resultScrollRef.current : standardScrollRef.current
       container?.scrollTo({ top: 0 })
       window.scrollTo({ top: 0 })
 
@@ -42,16 +36,6 @@ export default function QuizLayout({ children }: { children: React.ReactNode }) 
     return (
       <div ref={resultScrollRef} className="min-h-[100dvh] overflow-y-auto bg-background">
         <div className="mx-auto max-w-[960px] px-5 py-8 md:px-10 md:py-12">{children}</div>
-      </div>
-    )
-  }
-
-  if (step === 1) {
-    return (
-      <div ref={landingScrollRef} className="min-h-[100dvh] overflow-y-auto bg-background">
-        <div className="mx-auto flex min-h-[100dvh] w-full max-w-[440px] flex-col justify-center px-6 py-10 sm:px-8 lg:max-w-[1160px] lg:px-10 lg:py-12 xl:max-w-[1220px]">
-          {children}
-        </div>
       </div>
     )
   }

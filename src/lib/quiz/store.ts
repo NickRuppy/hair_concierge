@@ -24,7 +24,7 @@ interface QuizState {
   reset: () => void
 }
 
-const STEP_ORDER: QuizStep[] = [1, 2, 3, 13, 4, 5, 7, 6, 8, 12, 9, 10, 11, 14]
+const STEP_ORDER: QuizStep[] = [2, 3, 13, 4, 5, 7, 6, 8, 12, 9, 10, 11, 14]
 
 function nextStep(current: QuizStep): QuizStep {
   const idx = STEP_ORDER.indexOf(current)
