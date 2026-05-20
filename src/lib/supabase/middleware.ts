@@ -48,7 +48,7 @@ export async function updateSession(request: NextRequest) {
   const isForcedAuthLogin =
     pathname === "/auth" && request.nextUrl.searchParams.get("force") === "login"
   const needsAuthenticatedAppRouting =
-    pathname === "/auth" || pathname === "/quiz" || pathname === "/chat" || pathname === "/"
+    pathname === "/auth" || pathname === "/quiz" || pathname === "/chat"
 
   // Public routes that don't need auth
   const publicRoutes = [
@@ -78,7 +78,7 @@ export async function updateSession(request: NextRequest) {
     "/api/auth/send-setup-link",
     "/api/auth/set-checkout-password",
   ]
-  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route))
+  const isPublicRoute = pathname === "/" || publicRoutes.some((route) => pathname.startsWith(route))
 
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
