@@ -1,6 +1,6 @@
 import { test, expect, Page } from "@playwright/test"
 
-const BASE = process.env.E2E_BASE_URL ?? "https://hair-concierge.vercel.app"
+const BASE = process.env.PLAYWRIGHT_BASE_URL ?? "https://hair-concierge.vercel.app"
 
 // ─── Helpers ─────────────────────────────────────────────────
 async function login(page: Page) {
