@@ -1,8 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-
-const tomHannemannImageUrl =
-  "https://www.tophair.de/app/uploads/2025/03/SA-WS-NewFlag-TomHannemann-MS-7-683x1024.jpg"
+import { tomHannemannImageUrl } from "@/lib/landing-assets"
 
 const outcomeChecks = [
   "Dein Haarprofil",
@@ -63,9 +61,11 @@ export function Hero() {
         </div>
 
         <div className="rounded-[20px] border border-border bg-card p-8 shadow-[0_20px_60px_-20px_rgba(42,24,69,0.15)]">
+          {/* Custom Link styling instead of <Button variant="landingCta"> because we
+              need an anchor element with a multi-line label (CTA + subtitle). */}
           <Link
             href="/quiz"
-            className="block rounded-[14px] bg-[linear-gradient(180deg,var(--brand-coral),var(--brand-coral-dark))] px-8 py-[18px] text-center text-white shadow-[0_10px_32px_rgba(var(--brand-coral-rgb),0.31),inset_0_1px_0_rgba(255,255,255,0.22)] transition-all hover:bg-[linear-gradient(180deg,var(--brand-coral),var(--brand-coral-deep))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 motion-safe:hover:-translate-y-0.5"
+            className="block rounded-[14px] bg-[linear-gradient(180deg,var(--brand-coral),var(--brand-coral-dark))] px-8 py-[18px] text-center text-white shadow-[0_10px_32px_rgba(var(--brand-coral-rgb),0.31),inset_0_1px_0_rgba(255,255,255,0.22)] transition-all hover:bg-[linear-gradient(180deg,var(--brand-coral),var(--brand-coral-deep))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral-dark)] focus-visible:ring-offset-2 motion-safe:hover:-translate-y-0.5"
           >
             <span className="block text-lg font-bold text-white">Quiz starten</span>
             <span className="mt-1 block text-[13px] font-normal text-white/85">
