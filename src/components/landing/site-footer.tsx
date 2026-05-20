@@ -35,7 +35,7 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className={linkClass}>
+                <Link href="/#preise" className={linkClass}>
                   Preise
                 </Link>
               </li>

@@ -17,6 +17,13 @@ test.describe("Core user flows — smoke test @ci", () => {
     // users through /auth with next preserved)
     const signInLink = page.getByRole("link", { name: "Anmelden" })
     await expect(signInLink).toHaveAttribute("href", "/chat")
+    // Pricing card CTAs must funnel through /quiz, not deep-link to /pricing
+    // (anonymous /pricing visits 400 on the identity check at checkout).
+    const planCta = page.getByRole("link", { name: "Plan wählen" }).first()
+    await expect(planCta).toHaveAttribute("href", "/quiz")
+    // Footer "Preise" is an in-page anchor to the pricing section, not /pricing.
+    const footerPreise = page.locator('footer a[href="/#preise"]').filter({ hasText: "Preise" })
+    await expect(footerPreise).toBeVisible()
     // Take a screenshot as evidence
     await page.screenshot({ path: "tests/screenshots/01-homepage-landing.png", fullPage: true })
   })

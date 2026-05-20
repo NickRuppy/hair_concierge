@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect } from "react"
+import { notFound } from "next/navigation"
 import { useQuizStore } from "@/lib/quiz/store"
 import { getQuestionByStep } from "@/lib/quiz/questions"
-import { QuizLanding } from "@/components/quiz/quiz-landing"
 import { QuizQuestion } from "@/components/quiz/quiz-question"
 import { QuizScalpQuestion } from "@/components/quiz/quiz-scalp-question"
 import { QuizConcernsQuestion } from "@/components/quiz/quiz-concerns-question"
@@ -15,7 +15,6 @@ import { QuizWelcome } from "@/components/quiz/quiz-welcome"
 import { posthog } from "@/providers/posthog-provider"
 
 const STEP_NAMES: Record<number, string> = {
-  1: "landing",
   2: "hair_texture",
   3: "hair_thickness",
   13: "hair_density",
@@ -50,8 +49,6 @@ export default function QuizPage() {
   if (question) return <QuizQuestion key={question.step} question={question} />
 
   switch (step) {
-    case 1:
-      return <QuizLanding />
     case 9:
       return <QuizLeadCapture />
     case 10:
@@ -63,6 +60,8 @@ export default function QuizPage() {
     case 14:
       return <QuizWelcome />
     default:
-      return <QuizLanding />
+      // Unknown step — shouldn't happen with a healthy store. Surface a 404
+      // rather than silently rendering a placeholder (would hide bugs).
+      notFound()
   }
 }

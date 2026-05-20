@@ -37,7 +37,10 @@ function prevStep(current: QuizStep): QuizStep {
 }
 
 const initialState = {
-  step: 1 as QuizStep,
+  // step 2 is the first actual question (hair_texture). Step 1 used to be
+  // an in-app "Quiz starten" landing; that role moved to the marketing
+  // landing at /, so we skip it.
+  step: 2 as QuizStep,
   leadCaptureSubStep: "name" as LeadCaptureSubStep,
   answers: {} as QuizAnswers,
   lead: { name: "", email: "", marketingConsent: false } as LeadData,
