@@ -1,16 +1,19 @@
 import { test, expect } from "@playwright/test"
 
 test.describe("Core user flows — smoke test @ci", () => {
-  test("1. Homepage redirects unauthenticated users to /quiz", async ({ page }) => {
+  test("1. Homepage renders the marketing landing for unauthenticated users", async ({ page }) => {
     const response = await page.goto("/", { waitUntil: "networkidle" })
-    // After redirect chain settles, URL should contain /quiz
-    expect(page.url()).toContain("/quiz")
-    // Page should have loaded successfully
-    expect(
-      response?.ok() || response?.status() === 304 || page.url().includes("/quiz"),
-    ).toBeTruthy()
+    // / is now the marketing landing — should NOT redirect
+    expect(page.url()).toMatch(/\/$/)
+    expect(response?.ok() || response?.status() === 304).toBeTruthy()
+    // Hero H1 is the marketing landing's signature copy
+    const heroHeading = page.locator("h1").first()
+    await expect(heroHeading).toContainText("Weißt du, was deine Haare")
+    // The header CTA should link to /quiz
+    const quizCta = page.getByRole("link", { name: "Quiz starten" }).first()
+    await expect(quizCta).toHaveAttribute("href", "/quiz")
     // Take a screenshot as evidence
-    await page.screenshot({ path: "tests/screenshots/01-homepage-redirect.png", fullPage: true })
+    await page.screenshot({ path: "tests/screenshots/01-homepage-landing.png", fullPage: true })
   })
 
   test("2. Quiz page loads with intro and first quiz step after clicking start", async ({

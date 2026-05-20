@@ -2,13 +2,21 @@ import { test, expect } from "@playwright/test"
 
 test.describe("Deployed App E2E Tests", () => {
   // ─── 1. Homepage / Navigation ───────────────────────────────
-  test("homepage redirects unauthenticated users to /quiz", async ({ page }) => {
+  test("homepage renders the marketing landing for unauthenticated users", async ({ page }) => {
     const response = await page.goto("/", { waitUntil: "domcontentloaded" })
     expect(response?.status()).toBeLessThan(500)
 
-    // Middleware redirects unauthenticated users without hc_returning cookie to /quiz
-    await page.waitForURL("**/quiz**", { timeout: 15000 })
-    expect(page.url()).toContain("/quiz")
+    // / is now the marketing landing — should NOT redirect
+    expect(page.url()).toMatch(/\/$/)
+    // Hero H1 signature copy
+    await expect(page.locator("h1").first()).toContainText("Weißt du, was deine", {
+      timeout: 15000,
+    })
+    // Header CTA links to /quiz
+    await expect(page.getByRole("link", { name: "Quiz starten" }).first()).toHaveAttribute(
+      "href",
+      "/quiz",
+    )
   })
 
   test("homepage does not return 500", async ({ page }) => {
