@@ -12,6 +12,11 @@ test.describe("Core user flows — smoke test @ci", () => {
     // The header CTA should link to /quiz
     const quizCta = page.getByRole("link", { name: "Quiz starten" }).first()
     await expect(quizCta).toHaveAttribute("href", "/quiz")
+    // Returning users need a visible sign-in path — header has Anmelden → /chat
+    // (middleware routes signed-in users straight to /chat, signed-out returning
+    // users through /auth with next preserved)
+    const signInLink = page.getByRole("link", { name: "Anmelden" })
+    await expect(signInLink).toHaveAttribute("href", "/chat")
     // Take a screenshot as evidence
     await page.screenshot({ path: "tests/screenshots/01-homepage-landing.png", fullPage: true })
   })
