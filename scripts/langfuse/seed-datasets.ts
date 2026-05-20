@@ -20,7 +20,7 @@ async function ensureDataset(name: string, description: string): Promise<Fetched
       name,
       description,
       metadata: {
-        source: "hair-concierge",
+        source: "chaarlie",
       },
     })
     return langfuse.dataset.get(name)
@@ -31,7 +31,7 @@ async function seedCuratedDataset(datasetName: string): Promise<void> {
   const langfuse = getLangfuseClientOrThrow()
   const dataset = await ensureDataset(
     datasetName,
-    "Curated Hair Concierge regression cases sourced from scripts/eval-chat/fixtures.ts",
+    "Curated Chaarlie regression cases sourced from scripts/eval-chat/fixtures.ts",
   )
   const existingIds = new Set(dataset.items.map((item) => item.id))
   let created = 0
@@ -162,11 +162,11 @@ async function main() {
 
   const args = parseArgs(process.argv.slice(2))
   const curatedDatasetName =
-    readStringArg(args, "--curated-name", "hair-concierge-curated-chat-evals") ??
-    "hair-concierge-curated-chat-evals"
+    readStringArg(args, "--curated-name", "chaarlie-curated-chat-evals") ??
+    "chaarlie-curated-chat-evals"
   const productionDatasetName =
-    readStringArg(args, "--production-name", "hair-concierge-production-chat-triage") ??
-    "hair-concierge-production-chat-triage"
+    readStringArg(args, "--production-name", "chaarlie-production-chat-triage") ??
+    "chaarlie-production-chat-triage"
 
   await seedCuratedDataset(curatedDatasetName)
   await seedProductionDataset(productionDatasetName, {

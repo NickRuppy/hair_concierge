@@ -51,7 +51,7 @@ function parseArgs() {
   let skipJudge = false
   let langfusePublish = process.env.LANGFUSE_EVAL_PUBLISH === "1"
   let langfuseRunName: string | null = null
-  let langfuseExperimentName = "Hair Concierge Chat Eval"
+  let langfuseExperimentName = "Chaarlie Chat Eval"
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--base-url" && args[i + 1]) {

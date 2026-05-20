@@ -38,7 +38,7 @@ async function main() {
         type: "text",
         prompt: prompt.fallback,
         labels: [label],
-        tags: ["hair-concierge", "production-chat"],
+        tags: ["chaarlie", "production-chat"],
         commitMessage,
       })
 
@@ -57,7 +57,7 @@ async function main() {
         type: "text",
         prompt: prompt.fallback,
         labels: [label],
-        tags: ["hair-concierge", "production-chat"],
+        tags: ["chaarlie", "production-chat"],
         commitMessage,
       })
 
