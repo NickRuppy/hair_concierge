@@ -13,7 +13,7 @@ export default function ImpressumPage() {
         </p>
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">Impressum</h1>
         <p className="text-sm leading-relaxed text-muted-foreground">
-          Angaben gemäß § 5 TMG und Art. 13 EU-Verbraucherrechte-Richtlinie.
+          Angaben gemäß § 5 DDG und Art. 13 EU-Verbraucherrechte-Richtlinie.
         </p>
 
         <div className="space-y-6 text-sm leading-relaxed text-muted-foreground">
@@ -97,8 +97,8 @@ export default function ImpressumPage() {
           <section>
             <h2 className="mb-2 font-medium text-foreground">Haftung für Inhalte</h2>
             <p>
-              Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten
-              nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als
+              Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten
+              nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als
               Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde
               Informationen zu überwachen oder nach Umständen zu forschen, die auf eine
               rechtswidrige Tätigkeit hinweisen.

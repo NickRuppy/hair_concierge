@@ -153,7 +153,7 @@ export default function DatenschutzPage() {
                 <p>
                   Reichweitenmessung und personalisierte Werbung auf Facebook und Instagram. Wird
                   ausschließlich nach deiner Einwilligung geladen (Art. 6 Abs. 1 lit. a DSGVO, § 25
-                  TTDSG). Datenübermittlung an Meta Platforms, Inc. (USA) auf Grundlage von
+                  TDDDG). Datenübermittlung an Meta Platforms, Inc. (USA) auf Grundlage von
                   Standardvertragsklauseln.
                 </p>
               </div>
@@ -217,7 +217,7 @@ export default function DatenschutzPage() {
               <li>
                 <strong className="text-foreground">Analyse:</strong> PostHog. Hilft uns zu
                 verstehen, wie Besucher die Website nutzen. Nur mit Einwilligung (Art. 6 Abs. 1 lit.
-                a DSGVO, § 25 TTDSG).
+                a DSGVO, § 25 TDDDG).
               </li>
               <li>
                 <strong className="text-foreground">Marketing:</strong> Meta Pixel (Facebook /
