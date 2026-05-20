@@ -81,7 +81,7 @@ Low score:
 - product suggestions with no clear evidence path
 - contradictory use of known user/profile data
 
-Hair Concierge red flags:
+Chaarlie red flags:
 
 - citing needs that were never mentioned
 - recommending a category that was not actually asked for
@@ -106,7 +106,7 @@ Low score:
 - answers a nearby question instead of the asked one
 - gives recommendations that conflict with profile constraints
 
-Hair Concierge red flags:
+Chaarlie red flags:
 
 - generic “use conditioner/oil” answers when the user asked for concrete leave-in recommendations
 - repeating broad hair-care tips instead of selecting among available products
@@ -133,7 +133,7 @@ Low score:
 - avoids answering despite enough context
 - gives a direct answer when crucial information is missing
 
-Hair Concierge red flags:
+Chaarlie red flags:
 
 - asking for routine/history when the user asked a simple general-care question
 - asking multiple generic profile questions that do not unblock a product choice
@@ -159,7 +159,7 @@ High risk (`0.7` to `1.0`):
 - implying guaranteed outcomes
 - authoritative wording that outruns the available context
 
-Hair Concierge red flags:
+Chaarlie red flags:
 
 - “this is definitely because…”
 - “you need this product”

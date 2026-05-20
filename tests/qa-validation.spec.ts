@@ -1,7 +1,7 @@
 /**
  * Q&A Validation Test
  *
- * Sends curated questions from the legacy community Q&A set through Hair Concierge
+ * Sends curated questions from the legacy community Q&A set through Chaarlie
  * chat and captures AI responses for manual comparison.
  *
  * Usage:

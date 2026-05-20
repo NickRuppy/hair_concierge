@@ -26,8 +26,8 @@ export function buildQuizShareConfig(input: QuizShareConfigInput): QuizShareConf
   return {
     label: "ERGEBNIS TEILEN",
     mode: input.isMobile && input.canNativeShare ? "native" : "copy",
-    title: `${firstName}s Ergebnis bei Hair Concierge`,
-    text: input.shareQuote || `Schau dir ${firstName}s Ergebnis bei Hair Concierge an.`,
+    title: `${firstName}s Ergebnis bei Chaarlie`,
+    text: input.shareQuote || `Schau dir ${firstName}s Ergebnis bei Chaarlie an.`,
     url,
   }
 }

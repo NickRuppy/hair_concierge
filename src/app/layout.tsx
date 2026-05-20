@@ -35,9 +35,9 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "Hair Concierge — Personalisierte Haarpflege-Beratung",
+  title: "Chaarlie — Dein persönlicher Haarpflege-Berater",
   description:
-    "Personalisierte Haarpflege-Beratung powered by AI. Erhalte individuelle Tipps, Produktempfehlungen und Haar-Analysen.",
+    "Chaarlie ist dein persönlicher Haarpflege-Berater. Erhalte individuelle Tipps, Produktempfehlungen und Haaranalysen — auf dein Haar zugeschnitten.",
 }
 
 export default function RootLayout({

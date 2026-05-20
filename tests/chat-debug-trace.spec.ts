@@ -478,7 +478,7 @@ function createPromptSnapshot(): ChatPromptSnapshot {
     model: "gpt-4o",
     temperature: 0.7,
     prompt_ref: {
-      name: "hair-concierge-chat-system",
+      name: "chaarlie-chat-system",
       version: 3,
       label: "staging",
       is_fallback: false,
@@ -537,7 +537,7 @@ test.describe("Chat debug trace", () => {
       routine_plan: createRoutinePlan(),
       matched_products: [createProduct()],
       classification_prompt_ref: {
-        name: "hair-concierge-intent-classifier",
+        name: "chaarlie-intent-classifier",
         version: 2,
         label: "staging",
         is_fallback: false,
@@ -624,7 +624,7 @@ test.describe("Chat debug trace", () => {
       engine_trace: engineTrace,
       matched_products: [],
       classification_prompt_ref: {
-        name: "hair-concierge-intent-classifier",
+        name: "chaarlie-intent-classifier",
         version: 2,
         label: "staging",
         is_fallback: false,

@@ -134,7 +134,7 @@ test.describe.serial("@ci Profile page smoke", () => {
     page,
   }) => {
     await page.goto(`${baseUrl}/auth`, { waitUntil: "domcontentloaded" })
-    await expect(page.getByText("Hair Concierge").first()).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText("chaarlie").first()).toBeVisible({ timeout: 15000 })
 
     await page.locator('input[type="email"]:visible').fill(email)
     await page.locator('input[type="password"]:visible').fill(password)

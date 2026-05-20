@@ -189,7 +189,7 @@ for (const mobileViewport of mobileViewports) {
               {
                 id: "product-mobile-1",
                 name: "Ultra Lightweight Frizz Control Leave-in Conditioner With Long Name",
-                brand: "Hair Concierge",
+                brand: "Chaarlie",
                 category: "leave_in",
                 price_eur: 18.9,
                 recommendation_meta: {

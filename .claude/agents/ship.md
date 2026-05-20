@@ -146,7 +146,7 @@ The current changes have not been deployed yet — this verifies the deploy targ
 before pushing.
 
 Launch the e2e-browser-tester agent (subagent_type: `e2e-browser-tester`). Tell it to test
-https://hair-concierge.vercel.app — core flows: navigation, chat, sign-out, profile page.
+https://hair-concierge.vercel.app (will become https://chaarlie.de after DNS switch) — core flows: navigation, chat, sign-out, profile page.
 
 If it reports failures, stop and explain what failed. Report [PASS] or [FAIL].
 

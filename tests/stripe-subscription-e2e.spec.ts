@@ -10,7 +10,7 @@ import { expect, test } from "@playwright/test"
 // Manual golden path:
 //   quiz result offer page -> selected plan CTA -> inline Stripe iframe -> /welcome
 
-const TEST_EMAIL = `e2e-${Date.now()}@hair-concierge-test.local`
+const TEST_EMAIL = `e2e-${Date.now()}@chaarlie-test.local`
 
 test.describe.skip("Stripe subscription golden path (manual)", () => {
   test("quiz result offer → stripe test card → welcome shows magic-link", async ({ page }) => {

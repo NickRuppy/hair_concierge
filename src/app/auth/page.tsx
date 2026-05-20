@@ -49,7 +49,7 @@ export default function AuthPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
-            <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+            <h1 className="font-header text-4xl tracking-tight text-foreground">chaarlie</h1>
             <p className="text-lg text-muted-foreground">Willkommen zurueck</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
@@ -83,7 +83,7 @@ export default function AuthPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
-            <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+            <h1 className="font-header text-4xl tracking-tight text-foreground">chaarlie</h1>
             <p className="text-lg text-muted-foreground">Willkommen zurueck</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
@@ -115,7 +115,7 @@ export default function AuthPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
-          <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+          <h1 className="font-header text-4xl tracking-tight text-foreground">chaarlie</h1>
           <p className="text-lg text-muted-foreground">{copy?.subtext ?? "Willkommen zurueck"}</p>
         </div>
 

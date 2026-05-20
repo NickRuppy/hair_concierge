@@ -107,9 +107,9 @@ file_size_limit = "50MiB"
 enabled = true
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
 # in emails.
-site_url = "https://hair-concierge.vercel.app"
+site_url = "https://chaarlie.de"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://hair-concierge.vercel.app/api/auth/callback", "http://localhost:3000/api/auth/callback", "http://localhost:3449/api/auth/callback", "https://hair-concierge.vercel.app/auth/confirm", "http://localhost:3000/auth/confirm", "http://localhost:3449/auth/confirm"]
+additional_redirect_urls = ["https://chaarlie.de/api/auth/callback", "https://www.chaarlie.de/api/auth/callback", "https://hair-concierge.vercel.app/api/auth/callback", "http://localhost:3000/api/auth/callback", "http://localhost:3449/api/auth/callback", "https://chaarlie.de/auth/confirm", "https://www.chaarlie.de/auth/confirm", "https://hair-concierge.vercel.app/auth/confirm", "http://localhost:3000/auth/confirm", "http://localhost:3449/auth/confirm"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # If disabled, the refresh token will never expire.
@@ -176,18 +176,18 @@ user = "env(BREVO_SMTP_USER)"
 pass = "env(BREVO_SMTP_KEY)"
 # TODO: Replace with env(BREVO_SMTP_SENDER) once the env var is set in Supabase vault
 admin_email = "tom@tomhannemann.de"
-sender_name = "Hair Concierge"
+sender_name = "Chaarlie"
 
 [auth.email.template.confirmation]
-subject = "Hair Concierge – E-Mail bestaetigen"
+subject = "Chaarlie – E-Mail bestaetigen"
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = "Hair Concierge – Passwort zuruecksetzen"
+subject = "Chaarlie – Passwort zuruecksetzen"
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.magic_link]
-subject = "Hair Concierge – Login-Link"
+subject = "Chaarlie – Login-Link"
 content_path = "./supabase/templates/magic-link.html"
 
 [auth.sms]

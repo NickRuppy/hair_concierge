@@ -23,7 +23,7 @@ const CATEGORY = "Tiefenreinigungsshampoo"
 const SEED_PRODUCTS = [
   {
     name: "Sanfter Reset Shampoo",
-    brand: "Hair Concierge",
+    brand: "Chaarlie",
     description:
       "Temporaeres Testprodukt fuer einen sanften Tiefenreinigungs-Reset bei allgemeinem Produktaufbau.",
     short_description: "Sanfter Reset fuer gelegentliche Tiefenreinigung.",
@@ -38,7 +38,7 @@ const SEED_PRODUCTS = [
   },
   {
     name: "Klarer Aufbau-Reset Shampoo",
-    brand: "Hair Concierge",
+    brand: "Chaarlie",
     description:
       "Temporaeres Testprodukt fuer staerkeren Reset bei fettigem Ansatz und Styling- oder Pflegeaufbau.",
     short_description: "Staerkerer Aufbau-Reset fuer Produktueberladung.",
@@ -53,7 +53,7 @@ const SEED_PRODUCTS = [
   },
   {
     name: "Mineral & Styling Reset Shampoo",
-    brand: "Hair Concierge",
+    brand: "Chaarlie",
     description:
       "Temporaeres Testprodukt fuer breiteren Reset bei Stylingaufbau sowie Kalk-, Chlor- oder Mineral-Kontext.",
     short_description: "Breiter Reset fuer Styling, Kalk und Chlor-Kontext.",

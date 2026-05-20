@@ -1,4 +1,4 @@
-# Hair Concierge — Architecture Overview
+# Chaarlie — Architecture Overview
 
 ## What It Is
 

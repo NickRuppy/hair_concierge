@@ -3,7 +3,7 @@
  *
  * Usage:
  *   npx tsx scripts/eval-chat/run.ts
- *   npx tsx scripts/eval-chat/run.ts --base-url https://hair-concierge.vercel.app
+ *   npx tsx scripts/eval-chat/run.ts --base-url https://chaarlie.de
  *   npx tsx scripts/eval-chat/run.ts --scenario owc-followup
  *   npx tsx scripts/eval-chat/run.ts --ci-smoke
  *   npx tsx scripts/eval-chat/run.ts --skip-judge
@@ -51,7 +51,7 @@ function parseArgs() {
   let skipJudge = false
   let langfusePublish = process.env.LANGFUSE_EVAL_PUBLISH === "1"
   let langfuseRunName: string | null = null
-  let langfuseExperimentName = "Hair Concierge Chat Eval"
+  let langfuseExperimentName = "Chaarlie Chat Eval"
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--base-url" && args[i + 1]) {

@@ -66,7 +66,7 @@ export async function runJudge(
         .join("\n")
     : "(no done event)"
 
-  const prompt = `Du bist ein Qualitaetspruefer fuer einen deutschen Haarpflege-Chatbot namens Hair Concierge.
+  const prompt = `Du bist ein Qualitaetspruefer fuer einen deutschen Haarpflege-Chatbot namens Chaarlie.
 Bewerte ob die Antwort des Assistenten das erwartete Verhalten erfuellt.
 
 ## Nutzernachricht
@@ -145,7 +145,7 @@ export async function runQualityRubric(
         .join("\n")
     : "(no done event)"
 
-  const prompt = `Du bist ein strenger Qualitaetspruefer fuer den deutschen Haarpflege-Chatbot Hair Concierge.
+  const prompt = `Du bist ein strenger Qualitaetspruefer fuer den deutschen Haarpflege-Chatbot Chaarlie.
 Bewerte die Antwort entlang eines festen Rubrik-Schemas und antworte NUR mit validem JSON.
 
 ## Nutzernachricht

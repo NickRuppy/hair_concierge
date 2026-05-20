@@ -1,13 +1,13 @@
 import { test, expect, Page } from "@playwright/test"
 
-const BASE = "https://hair-concierge.vercel.app"
+const BASE = process.env.PLAYWRIGHT_BASE_URL ?? "https://hair-concierge.vercel.app"
 
 // ─── Helpers ─────────────────────────────────────────────────
 async function login(page: Page) {
   await page.goto(`${BASE}/auth`, { waitUntil: "domcontentloaded" })
 
   // Wait for login form
-  await expect(page.getByText("Hair Concierge").first()).toBeVisible({ timeout: 15000 })
+  await expect(page.getByText("chaarlie").first()).toBeVisible({ timeout: 15000 })
 
   // Fill credentials
   await page.locator('input[type="email"]').fill("qa-test@hairconscierge.test")
@@ -52,7 +52,7 @@ test.describe("Conditioner Recommendation Flow", () => {
   test("Test 1: Login and verify profile", async () => {
     // Step 1: Navigate to auth page
     await page.goto(`${BASE}/auth`, { waitUntil: "domcontentloaded" })
-    await expect(page.getByText("Hair Concierge").first()).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText("chaarlie").first()).toBeVisible({ timeout: 15000 })
     await screenshotStep(page, "01-auth-page-loaded")
 
     // Step 2: Fill login form
@@ -139,19 +139,19 @@ test.describe("Conditioner Recommendation Flow", () => {
 
     // Step 2: Find the chat input and type the question
     // The input could be a textarea or input — find whichever exists
-    const chatInput =
-      page.locator('textarea').first().or(
-        page.locator('input[type="text"]').first()
-      )
+    const chatInput = page
+      .locator("textarea")
+      .first()
+      .or(page.locator('input[type="text"]').first())
     await chatInput.waitFor({ state: "visible", timeout: 15000 })
     await chatInput.fill("Welchen Conditioner empfiehlst du mir?")
     await screenshotStep(page, "07-chat-question-typed")
 
     // Step 3: Submit the question
     // Try pressing Enter or clicking the send button
-    const sendButton = page.locator('button[type="submit"]').or(
-      page.getByRole("button", { name: /send|senden/i })
-    )
+    const sendButton = page
+      .locator('button[type="submit"]')
+      .or(page.getByRole("button", { name: /send|senden/i }))
     if (await sendButton.isVisible()) {
       await sendButton.click()
     } else {
@@ -173,7 +173,7 @@ test.describe("Conditioner Recommendation Flow", () => {
         return msgs.length > initCount
       },
       initialAssistantCount,
-      { timeout: 30000 }
+      { timeout: 30000 },
     )
     console.log("[TEST 2] New assistant message appeared")
 
@@ -245,22 +245,20 @@ test.describe("Conditioner Recommendation Flow", () => {
     await screenshotStep(page, "10-chat-new-conversation")
 
     // Find chat input
-    const chatInput =
-      page.locator('textarea').first().or(
-        page.locator('input[type="text"]').first()
-      )
+    const chatInput = page
+      .locator("textarea")
+      .first()
+      .or(page.locator('input[type="text"]').first())
     await chatInput.waitFor({ state: "visible", timeout: 15000 })
 
     // Type the specific question
-    await chatInput.fill(
-      "Ich brauche einen Conditioner für feines Haar mit Feuchtigkeitsmangel"
-    )
+    await chatInput.fill("Ich brauche einen Conditioner für feines Haar mit Feuchtigkeitsmangel")
     await screenshotStep(page, "11-specific-question-typed")
 
     // Submit
-    const sendButton3 = page.locator('button[type="submit"]').or(
-      page.getByRole("button", { name: /send|senden/i })
-    )
+    const sendButton3 = page
+      .locator('button[type="submit"]')
+      .or(page.getByRole("button", { name: /send|senden/i }))
     if (await sendButton3.isVisible()) {
       await sendButton3.click()
     } else {
@@ -278,7 +276,7 @@ test.describe("Conditioner Recommendation Flow", () => {
         return msgs.length > initCount
       },
       initCount3,
-      { timeout: 30000 }
+      { timeout: 30000 },
     )
 
     // Wait for streaming to stabilize
@@ -371,9 +369,9 @@ test.describe("Conditioner Recommendation Flow", () => {
       await quizPage.waitForTimeout(2000)
       await quizPage.goto(`${BASE}/quiz`, { waitUntil: "domcontentloaded", timeout: 30000 })
     }
-    await expect(
-      quizPage.getByRole("button", { name: /QUIZ STARTEN/i })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(quizPage.getByRole("button", { name: /QUIZ STARTEN/i })).toBeVisible({
+      timeout: 15000,
+    })
     await quizPage.screenshot({
       path: "test-results/conditioner-flow/14-quiz-landing.png",
       fullPage: true,
@@ -383,9 +381,7 @@ test.describe("Conditioner Recommendation Flow", () => {
     await quizPage.getByRole("button", { name: /QUIZ STARTEN/i }).click()
 
     // Step 1: Hair texture — click "Glatt"
-    await expect(
-      quizPage.getByText("HAARTEXTUR", { exact: false })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(quizPage.getByText("HAARTEXTUR", { exact: false })).toBeVisible({ timeout: 15000 })
     await quizPage.screenshot({
       path: "test-results/conditioner-flow/15-quiz-step1-haartextur.png",
       fullPage: true,
@@ -409,9 +405,9 @@ test.describe("Conditioner Recommendation Flow", () => {
     await quizPage.getByText("Glatt wie Glas").click()
 
     // Step 4: Pull test — THIS IS WHAT WE'RE TESTING
-    await expect(
-      quizPage.getByText("WIE ELASTISCH IST DEIN HAAR?", { exact: false })
-    ).toBeVisible({ timeout: 10000 })
+    await expect(quizPage.getByText("WIE ELASTISCH IST DEIN HAAR?", { exact: false })).toBeVisible({
+      timeout: 10000,
+    })
     await expect(quizPage.getByText("4/6")).toBeVisible()
     await quizPage.screenshot({
       path: "test-results/conditioner-flow/18-quiz-step4-pulltest.png",

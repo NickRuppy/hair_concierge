@@ -19,35 +19,35 @@ const DEFAULT_FETCH_TIMEOUT_MS = 3000
 
 export const LANGFUSE_PROMPTS = {
   chatSystem: {
-    name: "hair-concierge-chat-system",
+    name: "chaarlie-chat-system",
     fallback: SYSTEM_PROMPT,
   },
   intentClassifier: {
-    name: "hair-concierge-intent-classifier",
+    name: "chaarlie-intent-classifier",
     fallback: INTENT_CLASSIFICATION_PROMPT,
   },
   titleGenerator: {
-    name: "hair-concierge-title-generator",
+    name: "chaarlie-title-generator",
     fallback: TITLE_GENERATION_PROMPT,
   },
   memoryExtraction: {
-    name: "hair-concierge-memory-extraction",
+    name: "chaarlie-memory-extraction",
     fallback: MEMORY_EXTRACTION_JSON_PROMPT,
   },
   agentRouteClassifier: {
-    name: "hair-concierge-agent-route-classifier",
+    name: "chaarlie-agent-route-classifier",
     fallback: AGENT_ROUTE_CLASSIFIER_PROMPT,
   },
   agenticToolLoop: {
-    name: "hair-concierge-agentic-tool-loop",
+    name: "chaarlie-agentic-tool-loop",
     fallback: AGENTIC_TOOL_LOOP_PROMPT,
   },
   agenticContextualComposer: {
-    name: "hair-concierge-agentic-contextual-composer",
+    name: "chaarlie-agentic-contextual-composer",
     fallback: AGENTIC_CONTEXTUAL_COMPOSER_PROMPT,
   },
   agentFinalRender: {
-    name: "hair-concierge-agent-final-render",
+    name: "chaarlie-agent-final-render",
     fallback: AGENT_FINAL_RENDER_PROMPT,
   },
 } as const

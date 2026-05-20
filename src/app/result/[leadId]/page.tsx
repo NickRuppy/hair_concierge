@@ -33,24 +33,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lead = await getLead(leadId)
 
   if (!lead) {
-    return { title: "Nicht gefunden — Hair Concierge" }
+    return { title: "Nicht gefunden — Chaarlie" }
   }
 
   const name = lead.name as string
   const quote = (lead.share_quote as string) || "Finde heraus, was deine Haare wirklich brauchen."
 
   return {
-    title: `${name}s Haarprofil — Hair Concierge`,
+    title: `${name}s Haarprofil — Chaarlie`,
     description: quote,
     robots: { index: false, follow: false },
     openGraph: {
-      title: `${name}s Haarprofil — Hair Concierge`,
+      title: `${name}s Haarprofil — Chaarlie`,
       description: quote,
       type: "website",
     },
     twitter: {
       card: "summary",
-      title: `${name}s Haarprofil — Hair Concierge`,
+      title: `${name}s Haarprofil — Chaarlie`,
       description: quote,
     },
   }

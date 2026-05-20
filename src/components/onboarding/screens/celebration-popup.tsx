@@ -13,8 +13,7 @@ export function CelebrationPopup({ onDismiss }: CelebrationPopupProps) {
         </h2>
 
         <p className="text-base text-muted-foreground leading-relaxed mb-8">
-          Dein Haarprofil ist komplett. Hair Concierge kann dir jetzt personalisierte Empfehlungen
-          geben.
+          Dein Haarprofil ist komplett. Jetzt kann ich dir personalisierte Empfehlungen geben.
         </p>
 
         <button onClick={onDismiss} className="quiz-btn-primary w-full">

@@ -183,7 +183,7 @@ export function QuizResultsView({
           />
         </div>
         <span className="font-header text-[13px] uppercase tracking-[0.22em] text-muted-foreground">
-          Hair Concierge
+          CHAARLIE
         </span>
       </div>
 
