@@ -30,7 +30,7 @@ test.describe("Deployed App E2E Tests", () => {
     await expect(page.getByRole("button", { name: /QUIZ STARTEN/i })).toBeVisible()
 
     // Key landing signals should be present
-    await expect(page.getByText("Hair Concierge", { exact: true })).toBeVisible()
+    await expect(page.getByText("chaarlie", { exact: true })).toBeVisible()
     await expect(page.getByText("Tom Hannemann", { exact: false })).toBeVisible()
     await expect(page.getByRole("img", { name: "Tom Hannemann" })).toBeVisible()
     await expect(page.getByText("4,9/5", { exact: false })).toBeVisible()
@@ -210,7 +210,7 @@ test.describe("Deployed App E2E Tests", () => {
         timeout: 15000,
       })
     } else {
-      await expect(page.getByText("Hair Concierge")).toBeVisible({ timeout: 15000 })
+      await expect(page.getByText("chaarlie")).toBeVisible({ timeout: 15000 })
     }
   })
 
@@ -235,8 +235,8 @@ test.describe("Deployed App E2E Tests", () => {
   test("auth page renders login/signup form", async ({ page }) => {
     await page.goto("/auth", { waitUntil: "domcontentloaded" })
 
-    // Should show the Hair Concierge branding
-    await expect(page.getByText("Hair Concierge").first()).toBeVisible({
+    // Should show the chaarlie branding
+    await expect(page.getByText("chaarlie").first()).toBeVisible({
       timeout: 15000,
     })
 
@@ -268,7 +268,7 @@ test.describe("Deployed App E2E Tests", () => {
 
   test("auth page: switch between login and signup tabs", async ({ page }) => {
     await page.goto("/auth", { waitUntil: "networkidle" })
-    await expect(page.getByText("Hair Concierge").first()).toBeVisible({
+    await expect(page.getByText("chaarlie").first()).toBeVisible({
       timeout: 15000,
     })
 

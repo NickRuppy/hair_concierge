@@ -3,7 +3,7 @@
  *
  * Usage:
  *   npx tsx scripts/eval-chat/run.ts
- *   npx tsx scripts/eval-chat/run.ts --base-url https://hair-concierge.vercel.app
+ *   npx tsx scripts/eval-chat/run.ts --base-url https://chaarlie.de
  *   npx tsx scripts/eval-chat/run.ts --scenario owc-followup
  *   npx tsx scripts/eval-chat/run.ts --ci-smoke
  *   npx tsx scripts/eval-chat/run.ts --skip-judge

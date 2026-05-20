@@ -100,7 +100,7 @@ function createSelectedProductsProjection(
         rank: 1,
         product_id: "shampoo-1",
         name: "Eval Shampoo",
-        brand: "Hair Concierge",
+        brand: "Chaarlie",
         price_eur: null,
         currency: "EUR",
         fit_reason: "passt zur Kopfhaut",
