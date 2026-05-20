@@ -147,12 +147,21 @@ export default function AuthPage() {
 
 function Footer() {
   return (
-    <footer className="flex justify-center gap-4 text-xs text-muted-foreground">
+    <footer className="flex flex-wrap justify-center gap-4 text-xs text-muted-foreground">
       <a href="/impressum" className="px-2 py-2 hover:underline">
         Impressum
       </a>
       <a href="/datenschutz" className="px-2 py-2 hover:underline">
         Datenschutz
+      </a>
+      <a href="/agb" className="px-2 py-2 hover:underline">
+        AGB
+      </a>
+      <a href="/widerruf" className="px-2 py-2 hover:underline">
+        Widerruf
+      </a>
+      <a href="/kontakt" className="px-2 py-2 hover:underline">
+        Kontakt
       </a>
     </footer>
   )

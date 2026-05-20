@@ -3,6 +3,7 @@ import { Playfair_Display, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/go
 import { AuthProvider } from "@/providers/auth-provider"
 import { PostHogClientProvider } from "@/providers/posthog-provider"
 import { ToastProvider } from "@/providers/toast-provider"
+import { CookieConsent } from "@/components/cookie-consent/cookie-consent"
 import "./globals.css"
 
 const playfairDisplay = Playfair_Display({
@@ -55,6 +56,7 @@ export default function RootLayout({
             <ToastProvider>{children}</ToastProvider>
           </PostHogClientProvider>
         </AuthProvider>
+        <CookieConsent />
       </body>
     </html>
   )
