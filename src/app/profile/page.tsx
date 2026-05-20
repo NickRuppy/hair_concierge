@@ -733,7 +733,7 @@ export default function ProfilePage() {
             }
           : {
               title: `${memoryEntries.length} ${memoryEntryLabel} gespeichert`,
-              text: "Hier kannst du prüfen, bearbeiten oder löschen, was Hair Concierge aus deinen Gesprächen behalten darf.",
+              text: "Hier kannst du prüfen, bearbeiten oder löschen, was ich aus unseren Gesprächen behalten darf.",
             },
   }
 

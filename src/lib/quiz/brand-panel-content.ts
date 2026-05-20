@@ -82,7 +82,7 @@ export function getQuizBrandPanelContent(
 
   return {
     eyebrow: null,
-    description: "Hair Concierge",
+    description: "chaarlie",
     progressCurrent: null,
     progressComplete: false,
     variant: "journey",

@@ -35,7 +35,7 @@ export function QuizLanding() {
             <Droplet aria-hidden="true" className="h-[19px] w-[19px] stroke-[1.65] lg:h-6 lg:w-6" />
           </span>
           <p className="font-header text-[21px] font-semibold leading-none text-[var(--brand-plum-darkest)] lg:text-[28px]">
-            Hair Concierge
+            chaarlie
           </p>
         </header>
 
@@ -51,8 +51,8 @@ export function QuizLanding() {
             </span>
           </h1>
           <p className="mx-auto max-w-[350px] text-[15px] leading-[1.62] text-[var(--text-sub)] lg:mx-0 lg:max-w-[520px] lg:text-[18px] lg:leading-[1.7]">
-            Hair Concierge analysiert dein Haar und zeigt dir, was deine Haare tatsächlich brauchen
-            - individuell, nicht pauschal.
+            Ich analysiere dein Haar und zeige dir, was deine Haare tatsächlich brauchen —
+            individuell, nicht pauschal.
           </p>
         </section>
 

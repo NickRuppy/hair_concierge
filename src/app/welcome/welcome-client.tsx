@@ -135,7 +135,7 @@ export function WelcomeClient({ email, sessionId }: WelcomeClientProps) {
             <p className="text-sm font-medium text-primary">Zahlung erfolgreich</p>
             <h1 className="font-header text-3xl text-foreground sm:text-4xl">Konto aktivieren</h1>
             <p className="text-base text-muted-foreground">
-              Wähle, wie du dich bei Hair Concierge anmelden möchtest.
+              Wähle, wie du dich bei Chaarlie anmelden möchtest.
             </p>
           </div>
         </div>

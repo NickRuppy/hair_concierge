@@ -149,7 +149,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ lead
               letterSpacing: 6,
             }}
           >
-            HAIR CONCIERGE
+            CHAARLIE
           </div>
         </div>
 
