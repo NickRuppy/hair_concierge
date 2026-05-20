@@ -1,4 +1,4 @@
-# Hair Concierge
+# Chaarlie
 
 ## Recommended Dev Workflow
 

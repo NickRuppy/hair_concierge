@@ -171,8 +171,8 @@ npm run langfuse:seed-datasets
 
 Default datasets:
 
-- `hair-concierge-curated-chat-evals`
-- `hair-concierge-production-chat-triage`
+- `chaarlie-curated-chat-evals`
+- `chaarlie-production-chat-triage`
 
 The production dataset samples recent traced conversations from Supabase using:
 

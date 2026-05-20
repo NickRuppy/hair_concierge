@@ -1,4 +1,4 @@
-# Hair Concierge Quiz Flow – Screen-by-Screen Spezifikation
+# Chaarlie Quiz Flow – Screen-by-Screen Spezifikation
 ## Fuer Development-Team | Stand: 13. Februar 2026
 
 ---
@@ -32,7 +32,7 @@
 FINDE IN 2 MINUTEN HERAUS, WAS DEINE HAARE WIRKLICH BRAUCHEN
 
 **Subheadline:**
-Hair Concierge analysiert dein Haar und sagt dir, was DEINE Haare tatsaechlich brauchen.
+Chaarlie analysiert dein Haar und sagt dir, was DEINE Haare tatsaechlich brauchen.
 
 **Bulletpoints (mit Checkmark-Icon):**
 - Individuelle Analyse statt pauschaler Tipps
@@ -172,7 +172,7 @@ Chemische Prozesse wie Blondieren oder Faerben veraendern die innere Struktur de
 **Titel:** WAS NERVT DICH AM MEISTEN?
 
 **Anleitung:**
-Waehle bis zu 3 Punkte – Hair Concierge richtet deinen Plan danach aus, was dich wirklich stoert.
+Waehle bis zu 3 Punkte – Chaarlie richtet deinen Plan danach aus, was dich wirklich stoert.
 
 **Optionen (Multi Select, max. 3):**
 | Option | Emoji |
@@ -317,7 +317,7 @@ Komma-separierte Liste der gewaehlten Ziele
 | Dehnt sich und geht zurueck (Balanciert) | Deine Balance stimmt – aber mit der richtigen Reihenfolge (Shampoo, Maske, dann Conditioner) holst du noch deutlich mehr raus. |
 
 **Hoffnungs-Text (immer gleich):**
-Das Gute: Deine Haare sind nicht hoffnungslos. Sie brauchen nur die richtige Reihenfolge aus Reinigung, Pflege und Schutz. Genau das baut Hair Concierge jetzt fuer dich.
+Das Gute: Deine Haare sind nicht hoffnungslos. Sie brauchen nur die richtige Reihenfolge aus Reinigung, Pflege und Schutz. Genau das baut Chaarlie jetzt fuer dich.
 
 **CTA:** DEINEN PLAN STARTEN
 
@@ -334,14 +334,14 @@ DEIN HAAR-EXPERTE IN DER HOSENTASCHE
 **Toggle:** Zwei Buttons "Plan-Fokus" / "Experten-Fokus" zum Wechseln
 
 **Subheadline:**
-Teste Hair Concierge 7 Tage komplett kostenlos. Jederzeit kuendbar. Danach 11,90 EUR alle 28 Tage.
+Teste Chaarlie 7 Tage komplett kostenlos. Jederzeit kuendbar. Danach 11,90 EUR alle 28 Tage.
 
 **Benefits (3 Karten):**
 | Icon | Titel | Beschreibung |
 |------|-------|-------------|
 | 📋 | Individueller Pflegeplan | Basierend auf deinem Profil und deinen Zielen |
 | 🛒 | Konkrete Produkt-Empfehlungen | Drogerie und Profi, passend zu deinem Budget |
-| 💬 | 24/7-Chat mit Hair Concierge | Fuer alle Fragen zu Waschen, Pflege und Styling |
+| 💬 | 24/7-Chat mit Chaarlie | Fuer alle Fragen zu Waschen, Pflege und Styling |
 
 **Preis-Card:**
 - Label: 7 TAGE KOSTENLOS TESTEN
@@ -383,7 +383,7 @@ Dein Haarprofil ist gespeichert. Heute machen wir nur einen Schritt: Wir zeigen 
 | Icon | Text |
 |------|------|
 | 🚿 | 3-Minuten-Anleitung fuer deine naechste Haarwaesche |
-| 💬 | Danach kannst du Hair Concierge jederzeit Fragen stellen |
+| 💬 | Danach kannst du Chaarlie jederzeit Fragen stellen |
 | 📅 | In den naechsten Tagen bauen wir deinen Plan Schritt fuer Schritt auf |
 
 **CTA:** ERSTEN SCHRITT ANSEHEN
