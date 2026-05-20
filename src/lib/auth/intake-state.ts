@@ -50,10 +50,6 @@ export function getAuthenticatedAppRedirect(
       if (intakeState === "needs_quiz") return "/quiz"
       if (intakeState === "needs_onboarding") return "/onboarding"
       return null
-    case "/":
-      if (intakeState === "needs_quiz") return "/quiz"
-      if (intakeState === "needs_onboarding") return "/onboarding"
-      return "/chat"
     default:
       return null
   }

@@ -63,9 +63,12 @@ test("getAuthenticatedAppRedirect maps entry routes from intake state", () => {
   assert.equal(getAuthenticatedAppRedirect("/quiz", "needs_quiz"), null)
   assert.equal(getAuthenticatedAppRedirect("/quiz", "needs_onboarding"), "/onboarding")
   assert.equal(getAuthenticatedAppRedirect("/quiz", "ready"), "/chat")
-  assert.equal(getAuthenticatedAppRedirect("/", "needs_quiz"), "/quiz")
-  assert.equal(getAuthenticatedAppRedirect("/", "needs_onboarding"), "/onboarding")
-  assert.equal(getAuthenticatedAppRedirect("/", "ready"), "/chat")
+  // `/` is now the marketing landing — middleware no longer routes it
+  // through this function. Verify the function returns null for `/` so
+  // any future stray caller is a no-op rather than a redirect.
+  assert.equal(getAuthenticatedAppRedirect("/", "needs_quiz"), null)
+  assert.equal(getAuthenticatedAppRedirect("/", "needs_onboarding"), null)
+  assert.equal(getAuthenticatedAppRedirect("/", "ready"), null)
 })
 
 test("getAuthenticatedAppRedirect preserves quiz retake access", () => {
