@@ -2,13 +2,19 @@
 
 import { useQuizStore } from "@/lib/quiz/store"
 import { QuizBrandPanel } from "@/components/quiz/quiz-brand-panel"
-import { useEffect, useRef } from "react"
+import { QuizInfoStrip } from "@/components/quiz/quiz-info-strip"
+import { useEffect, useRef, useState } from "react"
 
 export default function QuizLayout({ children }: { children: React.ReactNode }) {
   const step = useQuizStore((s) => s.step)
   const standardScrollRef = useRef<HTMLDivElement>(null)
   const resultScrollRef = useRef<HTMLDivElement>(null)
   const previousStepRef = useRef(step)
+  // Info strip is only shown on the first question (step 2). The dismiss
+  // state lives here (not in the strip) so it persists across step changes
+  // within the same session — the layout doesn't unmount when the user
+  // advances through questions.
+  const [infoStripDismissed, setInfoStripDismissed] = useState(false)
 
   useEffect(() => {
     if (previousStepRef.current === step) return
@@ -49,7 +55,12 @@ export default function QuizLayout({ children }: { children: React.ReactNode }) 
 
       {/* Right panel — quiz content (full-width on mobile) */}
       <div ref={standardScrollRef} className="w-full overflow-y-auto md:w-1/2">
-        <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">{children}</div>
+        <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">
+          {step === 2 && !infoStripDismissed && (
+            <QuizInfoStrip onDismiss={() => setInfoStripDismissed(true)} />
+          )}
+          {children}
+        </div>
       </div>
     </div>
   )
