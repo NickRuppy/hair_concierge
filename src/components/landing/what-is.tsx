@@ -78,7 +78,7 @@ export function WhatIs() {
           <div className="relative flex min-h-[380px] items-center justify-center overflow-hidden rounded-3xl bg-[var(--brand-plum-ice)] p-12">
             <div className="max-w-[280px] rounded-[18px] bg-white p-6 shadow-[0_20px_60px_-10px_rgba(42,24,69,0.2)]">
               <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--brand-plum)]/60">
-                Frage 4 / 6
+                Frage 4 / 9
               </p>
               <p className="mb-5 font-header text-xl text-[var(--brand-plum-darkest)]">
                 Wie elastisch ist dein Haar?
