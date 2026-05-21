@@ -168,7 +168,7 @@ test("an explicit dryness concern keeps row two and the main lever out of the sc
   assert.equal(narrative.rows[1]?.label, "Was dich gerade ausbremst")
   assert.equal(narrative.rows[1]?.scope, "LÄNGEN")
   assert.equal(narrative.rows[1]?.before, "Trockenheit")
-  assert.equal(narrative.rows[1]?.after, "weichere, besser mit Feuchtigkeit versorgte Längen")
+  assert.equal(narrative.rows[1]?.after, "weichere, geschmeidige Längen")
   assert.doesNotMatch(narrative.needs.mainLeverTitle, /Kopfhaut/i)
   assert.doesNotMatch(narrative.needs.mainLeverProducts, /Anti-Schuppen-Shampoo|Kopfhautserum/i)
 })

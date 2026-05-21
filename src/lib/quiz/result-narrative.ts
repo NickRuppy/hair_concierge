@@ -98,7 +98,7 @@ const CONCERN_COPY: Record<QuizConcern, QuizResultRowCopy> = {
   },
   dryness: {
     before: "Trockenheit",
-    after: "weichere, besser mit Feuchtigkeit versorgte Längen",
+    after: "weichere, geschmeidige Längen",
     iconKey: "droplet",
     tickBefore: "trocken",
     tickAfter: "versorgt",
@@ -126,7 +126,7 @@ const CONCERN_COPY: Record<QuizConcern, QuizResultRowCopy> = {
   },
   hair_damage: {
     before: "Haarschäden",
-    after: "kräftiger wirkende, besser geschützte Längen",
+    after: "kräftigere, geschützte Längen",
     iconKey: "shield",
     tickBefore: "angegriffen",
     tickAfter: "geschützt",
@@ -399,7 +399,7 @@ function buildHairFeelRow(
     return {
       label: "Haargefühl",
       scope: "HAAR",
-      before: "geschwächt & strapaziert",
+      before: "strapazierte Längen",
       after: "kräftiger & geschützter",
       iconKey: "shield",
       tickBefore: "strapaziert",
@@ -738,7 +738,7 @@ function buildFrictionRow(
   const copy = primaryConcern
     ? CONCERN_COPY[primaryConcern]
     : {
-        before: "Pflege, die noch nicht richtig zu deinem Haar passt",
+        before: "unpassende Pflege",
         after: "mehr Ruhe, Glanz & Ausgewogenheit",
         iconKey: "sparkles" as const,
         tickBefore: "unstimmig",
