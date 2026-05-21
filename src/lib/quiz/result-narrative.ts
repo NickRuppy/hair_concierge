@@ -52,11 +52,14 @@ interface QuizResultRowCopy {
   tickAfter: string
 }
 
+export type QuizResultNeedsProduct = { name: string; description: string }
+
 interface QuizResultNeedsSection {
   title: string
   mainLeverTitle: string
   mainLeverWhy: string
   mainLeverProducts: string
+  products: readonly [QuizResultNeedsProduct, QuizResultNeedsProduct]
 }
 
 export interface QuizResultNarrativeRow {
@@ -95,7 +98,7 @@ const CONCERN_COPY: Record<QuizConcern, QuizResultRowCopy> = {
   },
   dryness: {
     before: "Trockenheit",
-    after: "weichere, besser mit Feuchtigkeit versorgte Längen",
+    after: "weichere, geschmeidige Längen",
     iconKey: "droplet",
     tickBefore: "trocken",
     tickAfter: "versorgt",
@@ -123,7 +126,7 @@ const CONCERN_COPY: Record<QuizConcern, QuizResultRowCopy> = {
   },
   hair_damage: {
     before: "Haarschäden",
-    after: "kräftiger wirkende, besser geschützte Längen",
+    after: "kräftigere, geschützte Längen",
     iconKey: "shield",
     tickBefore: "angegriffen",
     tickAfter: "geschützt",
@@ -396,7 +399,7 @@ function buildHairFeelRow(
     return {
       label: "Haargefühl",
       scope: "HAAR",
-      before: "geschwächt & strapaziert",
+      before: "strapazierte Längen",
       after: "kräftiger & geschützter",
       iconKey: "shield",
       tickBefore: "strapaziert",
@@ -735,7 +738,7 @@ function buildFrictionRow(
   const copy = primaryConcern
     ? CONCERN_COPY[primaryConcern]
     : {
-        before: "Pflege, die noch nicht richtig zu deinem Haar passt",
+        before: "unpassende Pflege",
         after: "mehr Ruhe, Glanz & Ausgewogenheit",
         iconKey: "sparkles" as const,
         tickBefore: "unstimmig",
@@ -848,6 +851,10 @@ function buildNeedsSection(
         "Wenn die Kopfhaut aus dem Gleichgewicht ist, bleibt sie leichter gereizt und Schuppen kommen schneller wieder.",
       mainLeverProducts:
         "Am meisten erreichen wir hier mit einem passenden Anti-Schuppen-Shampoo; zusätzlich kann ein beruhigendes Kopfhautserum helfen, die Kopfhaut zwischen den Haarwäschen ruhiger zu halten.",
+      products: [
+        { name: "Anti-Schuppen-Shampoo", description: "Reguliert die Kopfhaut bei jeder Wäsche." },
+        { name: "Kopfhautserum", description: "Hält die Kopfhaut zwischen den Wäschen ruhig." },
+      ],
     }
   }
 
@@ -865,6 +872,10 @@ function buildNeedsSection(
         "Wenn die Längen geschwächt sind, geben sie schneller nach und Spliss oder Haarbruch werden leichter weiter begünstigt.",
       mainLeverProducts:
         "Am meisten erreichen wir hier mit einem Bondbuilder; zusätzlich kann eine stärkende Maske helfen, die Längen belastbarer zu halten.",
+      products: [
+        { name: "Bondbuilder", description: "Stabilisiert die Längen von innen." },
+        { name: "Stärkende Maske", description: "Macht die Längen wieder belastbar." },
+      ],
     }
   }
 
@@ -885,6 +896,10 @@ function buildNeedsSection(
         "Wenn die Oberfläche aufraut, fallen die Längen schneller unruhig und lassen sich schwerer kontrollieren.",
       mainLeverProducts:
         "Am meisten erreichen wir hier mit einem passenden Conditioner; zusätzlich kann ein Leave-in helfen, die Längen zwischen den Wäschen ruhiger zu halten.",
+      products: [
+        { name: "Conditioner", description: "Stabilisiert die Oberfläche der Längen." },
+        { name: "Leave-in", description: "Hält die Wirkung zwischen den Wäschen." },
+      ],
     }
   }
 
@@ -896,6 +911,10 @@ function buildNeedsSection(
         "Wenn die Spitzen ausfransen, fühlen sie sich schneller trocken an und fallen weniger glatt.",
       mainLeverProducts:
         "Am meisten erreichen wir hier mit einem leichten Haaröl; zusätzlich kann ein Leave-in helfen, die Spitzen geschmeidiger und besser geschützt zu halten.",
+      products: [
+        { name: "Leichtes Haaröl", description: "Schützt und glättet die Spitzen." },
+        { name: "Leave-in", description: "Hält die Spitzen geschmeidig." },
+      ],
     }
   }
 
@@ -906,6 +925,10 @@ function buildNeedsSection(
       "Wenn die Pflegebasis besser passt, wirkt dein Haar insgesamt ruhiger und stimmiger.",
     mainLeverProducts:
       "Am meisten erreichen wir hier mit einem passenden Conditioner; zusätzlich kann ein leichtes Leave-in helfen, die Wirkung in den Längen zu halten.",
+    products: [
+      { name: "Conditioner", description: "Stimmt die Pflegebasis ab." },
+      { name: "Leichtes Leave-in", description: "Hält die Wirkung in den Längen." },
+    ],
   }
 }
 

@@ -19,9 +19,18 @@ test("result offer page shell renders the unified diagnostic offer sections and 
 
   assert.match(html, /Angebot:/i)
   assert.match(html, /Sarah, dein Ergebnis/i)
-  assert.match(html, /Dein Haar braucht mehr Protein als Feuchtigkeit\./i)
-  assert.match(html, /Haargefühl/i)
+  // New fixed hero
+  assert.match(html, /So fühlt sich dein Haar in 4 Wochen an\./i)
+  // Transformation card
+  assert.match(html, /Heute/)
+  assert.match(html, /In 4 Wochen/)
+  // Lever block
   assert.match(html, /Was dein Haar jetzt braucht/i)
+  assert.match(html, /Primärer Hebel/)
+  assert.match(html, /Sekundärer Hebel/)
+  // Old per-row label chips gone
+  assert.doesNotMatch(html, /Haargefühl/i)
+  assert.doesNotMatch(html, /Worauf wir hinarbeiten/i)
   assert.match(html, /Dein 30-Tage-Plan ist fertig/i)
   assert.match(html, /Tom/i)
   assert.match(html, /Was Haarmony für dich tut/i)
