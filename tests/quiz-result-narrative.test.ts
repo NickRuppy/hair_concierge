@@ -370,3 +370,58 @@ test("fixed row labels and CTA copy stay compact", () => {
   assert.equal(narrative.cta.label, "MEINE ROUTINE STARTEN")
   assert.equal(narrative.cta.subline, "Mit passenden Produkten, Reihenfolge und Anwendung.")
 })
+
+test("scalp-irritated branch fires when scalp_condition === gereizt and no concern is set", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "fine",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    scalp_type: "ausgeglichen",
+    has_scalp_issue: true,
+    scalp_condition: "gereizt",
+    goals: ["healthy_scalp"],
+    concerns: [],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Die Kopfhaut beruhigen")
+  assert.match(narrative.needs.mainLeverWhy, /gereizt/i)
+  assert.match(narrative.needs.mainLeverProducts, /beruhigenden Shampoo/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Beruhigendes Shampoo",
+      description: "Mildert die Kopfhautreizung bei jeder Wäsche.",
+    },
+    {
+      name: "Leichtes Leave-in",
+      description: "Pflegt die Längen, ohne die Kopfhaut zu belasten.",
+    },
+  ])
+})
+
+test("scalp-oily-balanced branch fires when scalp_type signals oily without a specific scalp_condition", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "fine",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    scalp_type: "fettig",
+    has_scalp_issue: false,
+    goals: ["healthy_scalp"],
+    concerns: [],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Die Kopfhaut in Balance bringen")
+  assert.match(narrative.needs.mainLeverWhy, /Frische und Volumen/i)
+  assert.match(narrative.needs.mainLeverProducts, /Balance-Shampoo/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Balance-Shampoo",
+      description: "Bringt die Kopfhaut in Balance, ohne sie auszutrocknen.",
+    },
+    {
+      name: "Trockenshampoo",
+      description: "Hält den Ansatz zwischen den Wäschen frisch.",
+    },
+  ])
+})

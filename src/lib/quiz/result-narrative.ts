@@ -843,7 +843,12 @@ function buildNeedsSection(
     answers.scalp_type === "trocken" ||
     primaryGoal === "healthy_scalp"
 
-  if (primaryGoal === "healthy_scalp" || (!primaryConcern && hasScalpSignals)) {
+  const scalpAllowed = primaryGoal === "healthy_scalp" || (!primaryConcern && hasScalpSignals)
+
+  if (
+    scalpAllowed &&
+    (answers.scalp_condition === "schuppen" || answers.scalp_condition === "trockene_schuppen")
+  ) {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Die Kopfhaut gezielter ausgleichen",
@@ -854,6 +859,45 @@ function buildNeedsSection(
       products: [
         { name: "Anti-Schuppen-Shampoo", description: "Reguliert die Kopfhaut bei jeder Wäsche." },
         { name: "Kopfhautserum", description: "Hält die Kopfhaut zwischen den Wäschen ruhig." },
+      ],
+    }
+  }
+
+  if (scalpAllowed && answers.scalp_condition === "gereizt") {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Die Kopfhaut beruhigen",
+      mainLeverWhy:
+        "Wenn die Kopfhaut gereizt ist, fällt das ganze Haarbild stumpfer und uneinheitlicher aus.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem beruhigenden Shampoo; zusätzlich kann ein leichtes Leave-in helfen, die Längen zu pflegen, ohne die Kopfhaut zu belasten.",
+      products: [
+        {
+          name: "Beruhigendes Shampoo",
+          description: "Mildert die Kopfhautreizung bei jeder Wäsche.",
+        },
+        {
+          name: "Leichtes Leave-in",
+          description: "Pflegt die Längen, ohne die Kopfhaut zu belasten.",
+        },
+      ],
+    }
+  }
+
+  if (scalpAllowed) {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Die Kopfhaut in Balance bringen",
+      mainLeverWhy:
+        "Wenn die Kopfhaut zu schnell fettet oder austrocknet, verliert das Haar Frische und Volumen schon nach kurzer Zeit.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem Balance-Shampoo; zusätzlich kann ein Trockenshampoo helfen, zwischen den Wäschen frisch zu wirken.",
+      products: [
+        {
+          name: "Balance-Shampoo",
+          description: "Bringt die Kopfhaut in Balance, ohne sie auszutrocknen.",
+        },
+        { name: "Trockenshampoo", description: "Hält den Ansatz zwischen den Wäschen frisch." },
       ],
     }
   }
