@@ -78,8 +78,8 @@ export function CookieConsent() {
             Wir verwenden Cookies
           </h2>
           <p className="mt-1.5 text-[13px] leading-snug text-muted-foreground sm:mt-2 sm:text-sm sm:leading-relaxed">
-            Einige sind technisch notwendig, andere helfen uns, unseren Dienst zu verbessern. Mehr
-            in unserer{" "}
+            Einige sind technisch notwendig, andere helfen uns mit Analyse oder personalisierten
+            Inhalten. Mehr in unserer{" "}
             <Link href="/datenschutz" className="underline">
               Datenschutzerklärung
             </Link>
