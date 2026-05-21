@@ -72,18 +72,20 @@ export function CookieConsent() {
         <div
           role="dialog"
           aria-label="Cookie-Einstellungen"
-          className="fixed bottom-3 left-3 right-3 z-40 max-w-md rounded-2xl border border-border bg-card p-5 shadow-2xl sm:bottom-6 sm:left-6 sm:right-auto"
+          className="fixed bottom-2 left-2 right-2 z-40 max-w-md rounded-xl border border-border bg-card p-3.5 shadow-2xl sm:bottom-6 sm:left-6 sm:right-auto sm:rounded-2xl sm:p-5"
         >
-          <h2 className="text-base font-semibold text-foreground">Wir verwenden Cookies</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Einige Cookies sind technisch notwendig, andere helfen uns, unseren Dienst zu verbessern
-            oder dir personalisierte Inhalte zu zeigen. Du kannst frei wählen. Mehr in unserer{" "}
+          <h2 className="text-sm font-semibold text-foreground sm:text-base">
+            Wir verwenden Cookies
+          </h2>
+          <p className="mt-1.5 text-[13px] leading-snug text-muted-foreground sm:mt-2 sm:text-sm sm:leading-relaxed">
+            Einige sind technisch notwendig, andere helfen uns, unseren Dienst zu verbessern. Mehr
+            in unserer{" "}
             <Link href="/datenschutz" className="underline">
               Datenschutzerklärung
             </Link>
             .
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
             <Button
               type="button"
               variant="outline"
