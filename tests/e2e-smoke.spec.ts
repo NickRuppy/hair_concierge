@@ -34,6 +34,11 @@ test.describe("Core user flows — smoke test @ci", () => {
     await page.goto("/quiz", { waitUntil: "networkidle" })
     expect(page.url()).toContain("/quiz")
 
+    // Info strip is shown above the first question, framing the quiz
+    // before the user commits to answering.
+    const infoStrip = page.getByText("Lass uns deine Haare verstehen")
+    await expect(infoStrip).toBeVisible({ timeout: 10000 })
+
     // Wait for quiz content to render
     await page.waitForTimeout(2000)
 
