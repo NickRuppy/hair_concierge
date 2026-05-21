@@ -36,6 +36,10 @@ test("surface-led results expose scope labels, bucketed positions, concise goal 
   assert.match(narrative.needs.mainLeverProducts, /Conditioner/i)
   assert.match(narrative.needs.mainLeverProducts, /zusätzlich/i)
   assert.match(narrative.needs.mainLeverProducts, /Leave-in/i)
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Conditioner", description: "Stabilisiert die Oberfläche der Längen." },
+    { name: "Leave-in", description: "Hält die Wirkung zwischen den Wäschen." },
+  ])
   assert.ok(!("reveal" in narrative))
 
   assert.equal(narrative.cta.lead, "Als Nächstes: dein persönlicher Plan")
@@ -142,6 +146,10 @@ test("no-concern fallback can become scalp-led when scalp is the strongest real 
   assert.match(narrative.needs.mainLeverWhy, /Schuppen/i)
   assert.match(narrative.needs.mainLeverProducts, /Anti-Schuppen-Shampoo/i)
   assert.match(narrative.needs.mainLeverProducts, /Kopfhautserum/i)
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Anti-Schuppen-Shampoo", description: "Reguliert die Kopfhaut bei jeder Wäsche." },
+    { name: "Kopfhautserum", description: "Hält die Kopfhaut zwischen den Wäschen ruhig." },
+  ])
 })
 
 test("an explicit dryness concern keeps row two and the main lever out of the scalp fallback", () => {
@@ -218,6 +226,10 @@ test("severe structural signals can mention bondbuilder support in the main leve
   assert.match(narrative.needs.mainLeverProducts, /Bondbuilder/i)
   assert.match(narrative.needs.mainLeverProducts, /zusätzlich/i)
   assert.match(narrative.needs.mainLeverProducts, /Maske/i)
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Bondbuilder", description: "Stabilisiert die Längen von innen." },
+    { name: "Stärkende Maske", description: "Macht die Längen wieder belastbar." },
+  ])
 })
 
 test("surface branch explains the main lever with multiple fitting categories", () => {
@@ -234,6 +246,10 @@ test("surface branch explains the main lever with multiple fitting categories", 
     narrative.needs.mainLeverProducts,
     "Am meisten erreichen wir hier mit einem passenden Conditioner; zusätzlich kann ein Leave-in helfen, die Längen zwischen den Wäschen ruhiger zu halten.",
   )
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Conditioner", description: "Stabilisiert die Oberfläche der Längen." },
+    { name: "Leave-in", description: "Hält die Wirkung zwischen den Wäschen." },
+  ])
 })
 
 test("scalp branch explains the main lever with product-specific follow-through", () => {
@@ -269,6 +285,10 @@ test("split-ends branch explains the main lever with tip-focused product guidanc
     narrative.needs.mainLeverProducts,
     "Am meisten erreichen wir hier mit einem leichten Haaröl; zusätzlich kann ein Leave-in helfen, die Spitzen geschmeidiger und besser geschützt zu halten.",
   )
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Leichtes Haaröl", description: "Schützt und glättet die Spitzen." },
+    { name: "Leave-in", description: "Hält die Spitzen geschmeidig." },
+  ])
 })
 
 test("fallback branch still offers a concise but fuller product bridge", () => {
@@ -285,6 +305,10 @@ test("fallback branch still offers a concise but fuller product bridge", () => {
     narrative.needs.mainLeverProducts,
     "Am meisten erreichen wir hier mit einem passenden Conditioner; zusätzlich kann ein leichtes Leave-in helfen, die Wirkung in den Längen zu halten.",
   )
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Conditioner", description: "Stimmt die Pflegebasis ab." },
+    { name: "Leichtes Leave-in", description: "Hält die Wirkung in den Längen." },
+  ])
 })
 
 test("hero headline maps overextended pull test to protein-led result", () => {
