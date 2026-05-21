@@ -209,7 +209,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(page.getByText(/Analyse fertig/i)).toBeVisible({ timeout: 15_000 })
       await expect(
         page.getByRole("heading", {
-          name: /Dein Haar braucht mehr Protein als Feuchtigkeit/i,
+          name: /So fühlt sich dein Haar in 4 Wochen an/i,
         }),
       ).toBeVisible()
       await expect(
@@ -484,7 +484,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(page.getByText(/Analyse fertig/i)).toBeVisible({ timeout: 15_000 })
       await expect(
         page.getByRole("heading", {
-          name: /Dein Haar braucht mehr Feuchtigkeit als Protein/i,
+          name: /So fühlt sich dein Haar in 4 Wochen an/i,
         }),
       ).toBeVisible()
       await expect(

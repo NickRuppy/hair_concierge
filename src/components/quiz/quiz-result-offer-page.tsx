@@ -1,28 +1,11 @@
 import type { ReactNode } from "react"
-import type { LucideIcon } from "lucide-react"
-import {
-  Check,
-  Droplets,
-  Heart,
-  Leaf,
-  Link2Off,
-  LockKeyhole,
-  MessageCircle,
-  Palette,
-  Scissors,
-  Shield,
-  ShieldCheck,
-  Sparkles,
-  Waves,
-} from "lucide-react"
+import { Check, LockKeyhole, MessageCircle } from "lucide-react"
 
 import { ResultOfferCountdown } from "@/components/quiz/result-offer-countdown"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
-import type {
-  QuizResultIconKey,
-  QuizResultNarrative,
-  QuizResultNarrativeRow,
-} from "@/lib/quiz/result-narrative"
+import { QuizResultTransformationCard } from "@/components/quiz/quiz-result-transformation-card"
+import { QuizResultLeverRows } from "@/components/quiz/quiz-result-lever-rows"
+import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
 
 const TOM_IMAGE_URL =
@@ -36,21 +19,6 @@ const FEATURE_IMAGES = {
   routine:
     "https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69de921fe7237c4dd30efc6c.png",
 } as const
-
-const ICONS: Record<QuizResultIconKey, LucideIcon> = {
-  droplet: Droplets,
-  shield: Shield,
-  waves: Waves,
-  "shield-check": ShieldCheck,
-  scissors: Scissors,
-  "link-off": Link2Off,
-  heart: Heart,
-  sparkles: Sparkles,
-  leaf: Leaf,
-  "arrow-up": Sparkles,
-  "arrow-down": Sparkles,
-  palette: Palette,
-}
 
 const FEATURES = [
   {
@@ -90,64 +58,6 @@ const COMPARISON_ROWS = [
 
 function firstName(name: string): string {
   return name.trim().split(/\s+/)[0] ?? ""
-}
-
-function ResultSliderCard({ row }: { row: QuizResultNarrativeRow }) {
-  const Icon = ICONS[row.iconKey] ?? Sparkles
-
-  return (
-    <article className="rounded-[16px] border border-border bg-white px-4 py-5 shadow-[0_1px_2px_rgba(var(--brand-plum-rgb),0.03)]">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <span className="grid size-8 place-items-center rounded-full bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]">
-            <Icon className="size-4 stroke-[1.75]" />
-          </span>
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
-            {row.label}
-          </span>
-        </div>
-        <span className="rounded-full border border-[var(--brand-plum-light)] bg-background px-3 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
-          {row.scope}
-        </span>
-      </div>
-
-      <div className="mb-4 grid grid-cols-2 gap-3">
-        <div>
-          <p className="mb-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[#D4616A]">
-            Heute
-          </p>
-          <p className="font-header text-[19px] leading-[1.22] text-[var(--brand-plum-darkest)]">
-            {row.before}
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="mb-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[#2D9F5E]">
-            Ziel
-          </p>
-          <p className="font-header text-[19px] leading-[1.22] text-[var(--brand-plum-darkest)]">
-            {row.after}
-          </p>
-        </div>
-      </div>
-
-      <div className="px-3">
-        <div className="relative h-2 rounded-full bg-[linear-gradient(90deg,#E47474_0%,#E8A557_33%,#D9C460_55%,#A8C76E_78%,#7AB582_100%)]">
-          <span
-            className="absolute top-1/2 size-[22px] rounded-full border-[2.5px] border-[#D4616A] bg-white after:absolute after:inset-[5px] after:rounded-full after:bg-[#D4616A]"
-            style={{ left: `${row.currentPosition}%`, transform: "translate(-50%, -50%)" }}
-          />
-          <span
-            className="absolute top-1/2 size-[22px] rounded-full border border-dashed border-[#2D9F5E] bg-white after:absolute after:inset-[6px] after:rounded-full after:border after:border-[#2D9F5E]"
-            style={{ left: `${row.targetPosition}%`, transform: "translate(-50%, -50%)" }}
-          />
-        </div>
-        <div className="mt-2 flex justify-between font-mono text-[9px] font-semibold uppercase tracking-[0.07em] text-[var(--text-caption)]">
-          <span>{row.tickBefore}</span>
-          <span>{row.tickAfter}</span>
-        </div>
-      </div>
-    </article>
-  )
 }
 
 function GuaranteeBadge() {
@@ -276,14 +186,12 @@ export function QuizResultOfferPageShell({
             {displayName ? `${displayName}, dein Ergebnis` : "Dein Ergebnis"}
           </p>
           <h1 className="font-header text-[clamp(24px,7vw,34px)] font-medium leading-[1.14] text-[var(--brand-plum-darkest)]">
-            {narrative.heroHeadline}
+            So fühlt sich dein Haar in 4 Wochen an.
           </h1>
         </section>
 
-        <section className="space-y-3 border-t border-border py-8">
-          {narrative.rows.map((row) => (
-            <ResultSliderCard key={row.label} row={row} />
-          ))}
+        <section className="space-y-4 border-t border-border py-8">
+          <QuizResultTransformationCard rows={narrative.rows} />
 
           <article className="rounded-[16px] border border-border bg-white p-6 shadow-[0_1px_2px_rgba(var(--brand-plum-rgb),0.03)]">
             <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
@@ -295,9 +203,9 @@ export function QuizResultOfferPageShell({
             <p className="mt-4 text-[14.5px] leading-[1.65] text-[var(--brand-plum-darkest)]">
               {narrative.needs.mainLeverWhy}
             </p>
-            <p className="mt-3 text-[14.5px] leading-[1.65] text-muted-foreground">
-              {narrative.needs.mainLeverProducts}
-            </p>
+            <div className="mt-5">
+              <QuizResultLeverRows products={narrative.needs.products} />
+            </div>
           </article>
         </section>
 
