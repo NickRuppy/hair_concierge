@@ -47,14 +47,14 @@ export function QuizResultTransformationCard({ rows }: QuizResultTransformationC
           return (
             <Fragment key={row.label}>
               <div
-                className={`flex items-center px-4 pr-[42px] sm:px-5 sm:pr-[42px] ${topPad} ${bottomPad}`}
+                className={`flex min-h-[80px] items-center px-4 pr-[42px] sm:px-5 sm:pr-[42px] ${topPad} ${bottomPad}`}
               >
                 <span className="font-header text-[16px] italic leading-[1.3] text-[#6B3439] opacity-95 sm:text-[17px]">
                   {row.before}
                 </span>
               </div>
               <div
-                className={`flex items-center px-4 pl-[42px] sm:px-5 sm:pl-[42px] ${topPad} ${bottomPad}`}
+                className={`flex min-h-[80px] items-center px-4 pl-[42px] sm:px-5 sm:pl-[42px] ${topPad} ${bottomPad}`}
               >
                 <span className="font-header text-[16px] font-medium italic leading-[1.3] text-[#1F4D33] sm:text-[17px]">
                   {row.after}

@@ -400,7 +400,7 @@ function buildHairFeelRow(
       label: "Haargefühl",
       scope: "HAAR",
       before: "strapazierte Längen",
-      after: "kräftiger & geschützter",
+      after: "spürbar fester",
       iconKey: "shield",
       tickBefore: "strapaziert",
       tickAfter: "geschützt",
@@ -438,12 +438,12 @@ function buildHairFeelRow(
             : "rau & unruhig",
     after:
       primaryConcern === "dryness" || primaryGoal === "moisture"
-        ? "weicher & geschmeidiger"
+        ? "weich in der Hand"
         : primaryConcern === "frizz" || primaryGoal === "less_frizz"
-          ? "ruhiger & glänzender"
+          ? "ruhig & geordnet"
           : isDefinitionLed
-            ? "mehr Form & Bündelung"
-            : "ruhiger & glänzender",
+            ? "Bündelung im Griff"
+            : "ausgeglichen im Griff",
     iconKey:
       primaryConcern === "dryness" || primaryGoal === "moisture"
         ? "droplet"
