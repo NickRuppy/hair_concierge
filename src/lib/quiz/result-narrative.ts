@@ -902,13 +902,11 @@ function buildNeedsSection(
     }
   }
 
-  const needsStructuralRepair =
-    primaryConcern === "breakage" ||
-    primaryConcern === "hair_damage" ||
-    hasColorTreatment(answers) ||
-    answers.pulltest === "stretches_stays"
+  // Severe bond damage (concern-driven, preserves today's "any severity signal" routing).
+  const hasSeveritySignal =
+    primaryConcern === "breakage" || primaryConcern === "hair_damage" || hasColorTreatment(answers)
 
-  if (needsStructuralRepair) {
+  if (hasSeveritySignal) {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Mehr Stabilität in die Längen bringen",
@@ -919,6 +917,47 @@ function buildNeedsSection(
       products: [
         { name: "Bondbuilder", description: "Stabilisiert die Längen von innen." },
         { name: "Stärkende Maske", description: "Macht die Längen wieder belastbar." },
+      ],
+    }
+  }
+
+  // Protein-needs (moderate) — fires when pulltest=stretches_stays without severity signals.
+  if (answers.pulltest === "stretches_stays") {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Überdehnten Längen wieder Struktur geben",
+      mainLeverWhy:
+        "Wenn die Längen überdehnt sind und langsam zurückspringen, fehlt ihnen Struktur — nicht unbedingt Feuchtigkeit.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einer Protein-Maske; zusätzlich kann ein Conditioner für strapaziertes Haar helfen, die Längen zwischen den Wäschen zu stützen.",
+      products: [
+        { name: "Protein-Maske", description: "Gibt überdehnten Längen wieder Struktur." },
+        {
+          name: "Conditioner für strapaziertes Haar",
+          description: "Stützt die Längen zwischen den Masken.",
+        },
+      ],
+    }
+  }
+
+  // Moisture-needs — fires when pulltest=snaps.
+  if (answers.pulltest === "snaps") {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Den Längen mehr Feuchtigkeit zurückgeben",
+      mainLeverWhy:
+        "Wenn die Längen schnell brechen statt nachzugeben, fehlt ihnen Feuchtigkeit — nicht mehr Protein.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einer Feuchtigkeitsmaske; zusätzlich kann ein Conditioner für trockenes Haar helfen, die Längen zwischen den Masken geschmeidig zu halten.",
+      products: [
+        {
+          name: "Feuchtigkeitsmaske",
+          description: "Versorgt trockene Längen tief mit Feuchtigkeit.",
+        },
+        {
+          name: "Conditioner für trockenes Haar",
+          description: "Hält die Längen geschmeidig zwischen den Masken.",
+        },
       ],
     }
   }

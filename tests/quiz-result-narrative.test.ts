@@ -425,3 +425,55 @@ test("scalp-oily-balanced branch fires when scalp_type signals oily without a sp
     },
   ])
 })
+
+test("protein-moderate branch fires when pulltest=stretches_stays without severe-damage signals", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_stays",
+    treatment: ["natur"],
+    concerns: [],
+    goals: ["healthier_hair"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Überdehnten Längen wieder Struktur geben")
+  assert.match(narrative.needs.mainLeverWhy, /überdehnt/i)
+  assert.match(narrative.needs.mainLeverProducts, /Protein-Maske/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Protein-Maske",
+      description: "Gibt überdehnten Längen wieder Struktur.",
+    },
+    {
+      name: "Conditioner für strapaziertes Haar",
+      description: "Stützt die Längen zwischen den Masken.",
+    },
+  ])
+})
+
+test("moisture-needs branch fires when pulltest=snaps", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "snaps",
+    treatment: ["natur"],
+    concerns: [],
+    goals: ["moisture"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Den Längen mehr Feuchtigkeit zurückgeben")
+  assert.match(narrative.needs.mainLeverWhy, /Feuchtigkeit/i)
+  assert.match(narrative.needs.mainLeverProducts, /Feuchtigkeitsmaske/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Feuchtigkeitsmaske",
+      description: "Versorgt trockene Längen tief mit Feuchtigkeit.",
+    },
+    {
+      name: "Conditioner für trockenes Haar",
+      description: "Hält die Längen geschmeidig zwischen den Masken.",
+    },
+  ])
+})
