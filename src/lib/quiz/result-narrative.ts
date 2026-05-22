@@ -1002,9 +1002,7 @@ function buildNeedsSection(
     primaryConcern === "dryness" ||
     primaryConcern === "tangling" ||
     primaryGoal === "less_frizz" ||
-    primaryGoal === "moisture" ||
-    primaryGoal === "shine" ||
-    primaryGoal === "curl_definition"
+    primaryGoal === "moisture"
 
   if (needsSurfaceSupport) {
     return {
