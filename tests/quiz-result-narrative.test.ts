@@ -502,3 +502,28 @@ test("curl-definition branch fires when primaryGoal=curl_definition and structur
     },
   ])
 })
+
+test("shine branch fires when primaryGoal=shine and no earlier branch matches", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    concerns: [],
+    goals: ["shine"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Mehr Glanz in die Längen bringen")
+  assert.match(narrative.needs.mainLeverWhy, /Versiegelung|stumpf/i)
+  assert.match(narrative.needs.mainLeverProducts, /Glanz-Leave-in/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Glanz-Leave-in",
+      description: "Bringt Glanz zurück in die Längen.",
+    },
+    {
+      name: "Leichtes Haaröl",
+      description: "Versiegelt die Oberfläche und betont den Glanz.",
+    },
+  ])
+})

@@ -981,6 +981,22 @@ function buildNeedsSection(
     }
   }
 
+  // Shine — fires when shine is the user's clean goal and there's no concern to address first.
+  if (primaryGoal === "shine" && !primaryConcern) {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Mehr Glanz in die Längen bringen",
+      mainLeverWhy:
+        "Wenn die Oberfläche stumpf wirkt, reflektiert das Licht nicht — eine kleine Versiegelung reicht oft schon.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem Glanz-Leave-in; zusätzlich kann ein leichtes Haaröl helfen, die Oberfläche zu versiegeln.",
+      products: [
+        { name: "Glanz-Leave-in", description: "Bringt Glanz zurück in die Längen." },
+        { name: "Leichtes Haaröl", description: "Versiegelt die Oberfläche und betont den Glanz." },
+      ],
+    }
+  }
+
   const needsSurfaceSupport =
     primaryConcern === "frizz" ||
     primaryConcern === "dryness" ||
