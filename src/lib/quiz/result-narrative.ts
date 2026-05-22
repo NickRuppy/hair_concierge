@@ -962,6 +962,25 @@ function buildNeedsSection(
     }
   }
 
+  // Curl definition — fires when curl is the user's clean goal and there's no concern to address first.
+  const hasTexture =
+    answers.structure === "wavy" || answers.structure === "curly" || answers.structure === "coily"
+
+  if (primaryGoal === "curl_definition" && hasTexture && !primaryConcern) {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Wellen und Locken besser definieren",
+      mainLeverWhy:
+        "Wenn die Locken sich verlieren, fehlt es selten an Pflege — sondern an einem Produkt, das die Bündelung hält.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem Curl-Leave-in; zusätzlich kann ein pflegender Conditioner helfen, die Locken weich und beweglich zu halten.",
+      products: [
+        { name: "Curl-Leave-in", description: "Definiert Wellen und Locken zwischen den Wäschen." },
+        { name: "Pflegender Conditioner", description: "Hält die Locken weich und beweglich." },
+      ],
+    }
+  }
+
   const needsSurfaceSupport =
     primaryConcern === "frizz" ||
     primaryConcern === "dryness" ||

@@ -477,3 +477,28 @@ test("moisture-needs branch fires when pulltest=snaps", () => {
     },
   ])
 })
+
+test("curl-definition branch fires when primaryGoal=curl_definition and structure is wavy/curly/coily", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "curly",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    concerns: [],
+    goals: ["curl_definition"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Wellen und Locken besser definieren")
+  assert.match(narrative.needs.mainLeverWhy, /Locken/i)
+  assert.match(narrative.needs.mainLeverProducts, /Curl-Leave-in/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Curl-Leave-in",
+      description: "Definiert Wellen und Locken zwischen den Wäschen.",
+    },
+    {
+      name: "Pflegender Conditioner",
+      description: "Hält die Locken weich und beweglich.",
+    },
+  ])
+})
