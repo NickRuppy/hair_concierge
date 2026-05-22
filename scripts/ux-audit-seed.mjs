@@ -42,7 +42,7 @@ const { error: hpErr } = await admin.from("hair_profiles").upsert({
   styling_tools: ["flat_iron"],
   uses_heat_protection: true,
   towel_material: "frottee",
-  towel_technique: "tupfen",
+  towel_technique: "gentle_press",
   drying_method: "air_dry",
   brush_type: "wide_tooth_comb",
   night_protection: null,

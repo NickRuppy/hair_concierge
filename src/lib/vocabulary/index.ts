@@ -107,6 +107,7 @@ export {
   TOWEL_TECHNIQUES,
   TOWEL_TECHNIQUE_LABELS,
   TOWEL_TECHNIQUE_OPTIONS,
+  normalizeTowelTechniqueValue,
   DRYING_METHODS,
   DRYING_METHOD_LABELS,
   DRYING_METHOD_OPTIONS,
@@ -116,6 +117,7 @@ export {
   NIGHT_PROTECTIONS,
   NIGHT_PROTECTION_LABELS,
   NIGHT_PROTECTION_OPTIONS,
+  normalizeNightProtectionValues,
 } from "./onboarding-care"
 export type {
   TowelMaterial,

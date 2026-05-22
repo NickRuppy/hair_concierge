@@ -27,7 +27,7 @@ const STEP_LABELS: Record<OnboardingStep, string> = {
   towel_material: "Handtuch-Material",
   towel_technique: "Handtuch-Technik",
   drying_method: "Trocknen",
-  brush_type: "Bürste",
+  brush_type: "Bürste / Kamm",
   night_protection: "Nachtschutz",
   celebration: "Abschluss",
 }

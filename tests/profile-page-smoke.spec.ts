@@ -105,7 +105,7 @@ test.describe.serial("@ci Profile page smoke", () => {
       scalp_condition: null,
       chemical_treatment: ["bleached"],
       towel_material: "frottee",
-      towel_technique: "tupfen",
+      towel_technique: "gentle_press",
       drying_method: "air_dry",
       brush_type: "wide_tooth_comb",
       night_protection: [],

@@ -150,7 +150,7 @@ async function seedLocalDevProfile(
       heat_styling: "never",
       styling_tools: [],
       towel_material: "mikrofaser",
-      towel_technique: "tupfen",
+      towel_technique: "gentle_press",
       drying_method: "air_dry",
       brush_type: "wide_tooth_comb",
       night_protection: [],

@@ -15,6 +15,16 @@ const HEAT_TOOL_ICONS: Record<string, IconName> = {
   diffuser: "heat-diffuser",
 }
 
+const HEAT_TOOL_DESCRIPTIONS: Record<string, string> = {
+  blow_dryer: "Klassischer Föhn, z. B. Dyson Supersonic oder ghd Helios.",
+  flat_iron: "Zwei heiße Platten zum Glätten, z. B. ghd Platinum+.",
+  curling_iron: "Heißer Stab oder Klemme für Locken, z. B. BaByliss Curling Wand.",
+  wave_iron: "Platten oder Zylinder für Beach Waves und S-Wellen.",
+  hot_air_brush: "Bürste mit warmer Luft, z. B. Revlon One-Step oder Shark FlexStyle.",
+  multi_tool: "System mit Aufsätzen, z. B. Dyson Airwrap oder Shark FlexStyle.",
+  diffuser: "Föhnaufsatz für Locken und Wellen.",
+}
+
 interface HeatToolsScreenProps {
   selected: string[]
   onToggle: (tool: string) => void
@@ -66,6 +76,7 @@ export function HeatToolsScreen({
             key={option.value}
             icon={HEAT_TOOL_ICONS[option.value] ?? "heat-tool"}
             label={option.label}
+            description={HEAT_TOOL_DESCRIPTIONS[option.value]}
             active={selected.includes(option.value)}
             disabled={isSaving}
             onClick={() => onToggle(option.value)}

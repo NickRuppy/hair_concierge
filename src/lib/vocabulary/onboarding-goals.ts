@@ -16,7 +16,7 @@ export const GOAL_LABEL_OVERRIDES: Record<HairTexture, Partial<Record<Goal, stri
   },
   wavy: {
     curl_definition: "Wellen-Definition",
-    moisture: "Leichte Feuchtigkeit",
+    moisture: "Feuchtigkeit ohne Beschweren",
   },
   curly: {
     curl_definition: "Locken-Clumping",

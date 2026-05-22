@@ -152,8 +152,8 @@ const iconMap = {
   "towel-tshirt": Shirt,
   "towel-turban": Crown,
   // Towel technique
-  "technique-rubbeln": Zap,
-  "technique-tupfen": Feather,
+  "technique-rough-rubbing": Zap,
+  "technique-gentle-press": Feather,
   // Drying method
   "drying-air": Wind,
   "drying-blow": Flame,

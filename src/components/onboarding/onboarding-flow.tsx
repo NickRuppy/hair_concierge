@@ -36,6 +36,8 @@ import {
   DRYING_METHOD_OPTIONS,
   BRUSH_TYPE_OPTIONS,
   NIGHT_PROTECTION_OPTIONS,
+  normalizeNightProtectionValues,
+  normalizeTowelTechniqueValue,
 } from "@/lib/vocabulary/onboarding-care"
 import type {
   TowelMaterial,
@@ -57,8 +59,8 @@ const TOWEL_MATERIAL_ICONS: Record<string, IconName> = {
 }
 
 const TOWEL_TECHNIQUE_ICONS: Record<string, IconName> = {
-  rubbeln: "technique-rubbeln",
-  tupfen: "technique-tupfen",
+  rough_rubbing: "technique-rough-rubbing",
+  gentle_press: "technique-gentle-press",
 }
 
 const DRYING_METHOD_ICONS: Record<string, IconName> = {
@@ -80,8 +82,7 @@ const BRUSH_TYPE_ICONS: Record<string, IconName> = {
 const NIGHT_PROTECTION_ICONS: Record<string, IconName> = {
   silk_satin_pillow: "night-silk-pillow",
   silk_satin_bonnet: "night-silk-bonnet",
-  loose_braid: "night-loose-braid",
-  loose_bun: "night-loose-bun",
+  loose_tied: "night-loose-braid",
   pineapple: "night-pineapple",
 }
 
@@ -231,8 +232,8 @@ export function OnboardingFlow({
       if (hairProfile.towel_material) {
         store.setTowelMaterial(hairProfile.towel_material as TowelMaterial)
       }
-      if (hairProfile.towel_technique) {
-        store.setTowelTechnique(hairProfile.towel_technique as TowelTechnique)
+      if (typeof hairProfile.towel_technique === "string") {
+        store.setTowelTechnique(normalizeTowelTechniqueValue(hairProfile.towel_technique))
       }
       if (typeof hairProfile.drying_method === "string") {
         store.setDryingMethod(hairProfile.drying_method as DryingMethod)
@@ -243,7 +244,7 @@ export function OnboardingFlow({
         store.setBrushType(hairProfile.brush_type as BrushType)
       }
       if (Array.isArray(hairProfile.night_protection)) {
-        store.setNightProtection(hairProfile.night_protection as NightProtection[])
+        store.setNightProtection(normalizeNightProtectionValues(hairProfile.night_protection) ?? [])
       }
       if (hairProfile.uses_heat_protection != null) {
         store.setUsesHeatProtection(hairProfile.uses_heat_protection as boolean)
@@ -479,7 +480,7 @@ export function OnboardingFlow({
 
           case "towel_technique": {
             await saveHairProfile({
-              towel_technique: state.towelTechnique,
+              towel_technique: normalizeTowelTechniqueValue(state.towelTechnique),
             })
             break
           }
@@ -502,7 +503,7 @@ export function OnboardingFlow({
             await withSaveTimeout(async (signal) => {
               await saveHairProfile(
                 {
-                  night_protection: state.nightProtection,
+                  night_protection: normalizeNightProtectionValues(state.nightProtection) ?? [],
                 },
                 signal,
               )
@@ -835,7 +836,7 @@ export function OnboardingFlow({
         return (
           <SingleSelectScreen
             title="Wie trocknest du?"
-            subtitle="Rubbeln oder sanft tupfen?"
+            subtitle="Rubbeln oder sanft ausdrücken?"
             options={towelTechniqueWithIcon}
             selected={store.towelTechnique}
             onSelect={(val) => {
@@ -864,8 +865,8 @@ export function OnboardingFlow({
       case "brush_type":
         return (
           <SingleSelectScreen
-            title="Welche Bürste nutzt du?"
-            subtitle="Die falsche Bürste kann Haarbruch verursachen. Zeig uns, was du nutzt."
+            title="Welche Bürste oder welchen Kamm nutzt du?"
+            subtitle="Das falsche Tool kann Haarbruch verursachen. Zeig uns, was du nutzt."
             options={brushTypeWithIcon}
             selected={store.brushType}
             onSelect={(val) => {
