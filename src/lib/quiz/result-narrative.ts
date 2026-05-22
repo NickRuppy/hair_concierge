@@ -400,7 +400,7 @@ function buildHairFeelRow(
       label: "Haargefühl",
       scope: "HAAR",
       before: "strapazierte Längen",
-      after: "kräftiger & geschützter",
+      after: "spürbar fester",
       iconKey: "shield",
       tickBefore: "strapaziert",
       tickAfter: "geschützt",
@@ -438,12 +438,12 @@ function buildHairFeelRow(
             : "rau & unruhig",
     after:
       primaryConcern === "dryness" || primaryGoal === "moisture"
-        ? "weicher & geschmeidiger"
+        ? "weich in der Hand"
         : primaryConcern === "frizz" || primaryGoal === "less_frizz"
-          ? "ruhiger & glänzender"
+          ? "ruhig & geordnet"
           : isDefinitionLed
-            ? "mehr Form & Bündelung"
-            : "ruhiger & glänzender",
+            ? "Bündelung im Griff"
+            : "ausgeglichen im Griff",
     iconKey:
       primaryConcern === "dryness" || primaryGoal === "moisture"
         ? "droplet"
@@ -843,7 +843,12 @@ function buildNeedsSection(
     answers.scalp_type === "trocken" ||
     primaryGoal === "healthy_scalp"
 
-  if (primaryGoal === "healthy_scalp" || (!primaryConcern && hasScalpSignals)) {
+  const scalpAllowed = primaryGoal === "healthy_scalp" || (!primaryConcern && hasScalpSignals)
+
+  if (
+    scalpAllowed &&
+    (answers.scalp_condition === "schuppen" || answers.scalp_condition === "trockene_schuppen")
+  ) {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Die Kopfhaut gezielter ausgleichen",
@@ -858,13 +863,50 @@ function buildNeedsSection(
     }
   }
 
-  const needsStructuralRepair =
-    primaryConcern === "breakage" ||
-    primaryConcern === "hair_damage" ||
-    hasColorTreatment(answers) ||
-    answers.pulltest === "stretches_stays"
+  if (scalpAllowed && answers.scalp_condition === "gereizt") {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Die Kopfhaut beruhigen",
+      mainLeverWhy:
+        "Wenn die Kopfhaut gereizt ist, fällt das ganze Haarbild stumpfer und uneinheitlicher aus.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem beruhigenden Shampoo; zusätzlich kann ein leichtes Leave-in helfen, die Längen zu pflegen, ohne die Kopfhaut zu belasten.",
+      products: [
+        {
+          name: "Beruhigendes Shampoo",
+          description: "Mildert die Kopfhautreizung bei jeder Wäsche.",
+        },
+        {
+          name: "Leichtes Leave-in",
+          description: "Pflegt die Längen, ohne die Kopfhaut zu belasten.",
+        },
+      ],
+    }
+  }
 
-  if (needsStructuralRepair) {
+  if (scalpAllowed) {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Die Kopfhaut in Balance bringen",
+      mainLeverWhy:
+        "Wenn die Kopfhaut zu schnell fettet oder austrocknet, verliert das Haar Frische und Volumen schon nach kurzer Zeit.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem Balance-Shampoo; zusätzlich kann ein Trockenshampoo helfen, zwischen den Wäschen frisch zu wirken.",
+      products: [
+        {
+          name: "Balance-Shampoo",
+          description: "Bringt die Kopfhaut in Balance, ohne sie auszutrocknen.",
+        },
+        { name: "Trockenshampoo", description: "Hält den Ansatz zwischen den Wäschen frisch." },
+      ],
+    }
+  }
+
+  // Severe bond damage (concern-driven, preserves today's "any severity signal" routing).
+  const hasSeveritySignal =
+    primaryConcern === "breakage" || primaryConcern === "hair_damage" || hasColorTreatment(answers)
+
+  if (hasSeveritySignal) {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Mehr Stabilität in die Längen bringen",
@@ -879,14 +921,88 @@ function buildNeedsSection(
     }
   }
 
+  // Protein-needs (moderate) — fires when pulltest=stretches_stays without severity signals.
+  if (answers.pulltest === "stretches_stays") {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Überdehnten Längen wieder Struktur geben",
+      mainLeverWhy:
+        "Wenn die Längen überdehnt sind und langsam zurückspringen, fehlt ihnen Struktur — nicht unbedingt Feuchtigkeit.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einer Protein-Maske; zusätzlich kann ein Conditioner für strapaziertes Haar helfen, die Längen zwischen den Wäschen zu stützen.",
+      products: [
+        { name: "Protein-Maske", description: "Gibt überdehnten Längen wieder Struktur." },
+        {
+          name: "Conditioner für strapaziertes Haar",
+          description: "Stützt die Längen zwischen den Masken.",
+        },
+      ],
+    }
+  }
+
+  // Moisture-needs — fires when pulltest=snaps.
+  if (answers.pulltest === "snaps") {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Den Längen mehr Feuchtigkeit zurückgeben",
+      mainLeverWhy:
+        "Wenn die Längen schnell brechen statt nachzugeben, fehlt ihnen Feuchtigkeit — nicht mehr Protein.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einer Feuchtigkeitsmaske; zusätzlich kann ein Conditioner für trockenes Haar helfen, die Längen zwischen den Masken geschmeidig zu halten.",
+      products: [
+        {
+          name: "Feuchtigkeitsmaske",
+          description: "Versorgt trockene Längen tief mit Feuchtigkeit.",
+        },
+        {
+          name: "Conditioner für trockenes Haar",
+          description: "Hält die Längen geschmeidig zwischen den Masken.",
+        },
+      ],
+    }
+  }
+
+  // Curl definition — fires when curl is the user's clean goal and there's no concern to address first.
+  const hasTexture =
+    answers.structure === "wavy" || answers.structure === "curly" || answers.structure === "coily"
+
+  if (primaryGoal === "curl_definition" && hasTexture && !primaryConcern) {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Wellen und Locken besser definieren",
+      mainLeverWhy:
+        "Wenn die Locken sich verlieren, fehlt es selten an Pflege — sondern an einem Produkt, das die Bündelung hält.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem Curl-Leave-in; zusätzlich kann ein pflegender Conditioner helfen, die Locken weich und beweglich zu halten.",
+      products: [
+        { name: "Curl-Leave-in", description: "Definiert Wellen und Locken zwischen den Wäschen." },
+        { name: "Pflegender Conditioner", description: "Hält die Locken weich und beweglich." },
+      ],
+    }
+  }
+
+  // Shine — fires when shine is the user's clean goal and there's no concern to address first.
+  if (primaryGoal === "shine" && !primaryConcern) {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Mehr Glanz in die Längen bringen",
+      mainLeverWhy:
+        "Wenn die Oberfläche stumpf wirkt, reflektiert das Licht nicht — eine kleine Versiegelung reicht oft schon.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem Glanz-Leave-in; zusätzlich kann ein leichtes Haaröl helfen, die Oberfläche zu versiegeln.",
+      products: [
+        { name: "Glanz-Leave-in", description: "Bringt Glanz zurück in die Längen." },
+        { name: "Leichtes Haaröl", description: "Versiegelt die Oberfläche und betont den Glanz." },
+      ],
+    }
+  }
+
   const needsSurfaceSupport =
     primaryConcern === "frizz" ||
     primaryConcern === "dryness" ||
     primaryConcern === "tangling" ||
     primaryGoal === "less_frizz" ||
-    primaryGoal === "moisture" ||
-    primaryGoal === "shine" ||
-    primaryGoal === "curl_definition"
+    primaryGoal === "moisture"
 
   if (needsSurfaceSupport) {
     return {
