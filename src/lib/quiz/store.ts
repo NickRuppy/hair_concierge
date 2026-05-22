@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { clearQuizDraft, loadQuizDraft, saveQuizDraft } from "./draft"
 import type { QuizStep, LeadCaptureSubStep, QuizAnswers, LeadData } from "./types"
 
 interface QuizState {
@@ -21,6 +22,8 @@ interface QuizState {
   setIsAnalyzing: (v: boolean) => void
   setLeadCaptureSubStep: (sub: LeadCaptureSubStep) => void
   setStep: (step: QuizStep) => void
+  restoreDraft: () => boolean
+  clearDraft: () => void
   reset: () => void
 }
 
@@ -50,10 +53,21 @@ const initialState = {
   isAnalyzing: false,
 }
 
-export const useQuizStore = create<QuizState>((set) => ({
+export const useQuizStore = create<QuizState>((set, get) => ({
   ...initialState,
 
-  goNext: () => set((s) => ({ step: nextStep(s.step) })),
+  goNext: () => {
+    const current = get()
+    const step = nextStep(current.step)
+    set({ step })
+
+    if (step === 14) {
+      clearQuizDraft()
+      return
+    }
+
+    saveQuizDraft({ step, answers: get().answers })
+  },
   goBack: () => set((s) => ({ step: prevStep(s.step) })),
 
   setAnswer: (key, value) =>
@@ -76,5 +90,20 @@ export const useQuizStore = create<QuizState>((set) => ({
   setIsAnalyzing: (v) => set({ isAnalyzing: v }),
   setLeadCaptureSubStep: (sub) => set({ leadCaptureSubStep: sub }),
   setStep: (step) => set({ step }),
-  reset: () => set(initialState),
+  restoreDraft: () => {
+    const draft = loadQuizDraft()
+    if (!draft) return false
+
+    set({
+      ...initialState,
+      step: draft.step,
+      answers: draft.answers,
+    })
+    return true
+  },
+  clearDraft: () => clearQuizDraft(),
+  reset: () => {
+    clearQuizDraft()
+    set(initialState)
+  },
 }))
