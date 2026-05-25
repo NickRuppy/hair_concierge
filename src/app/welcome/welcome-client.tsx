@@ -2,10 +2,11 @@
 
 import { CheckCircle, Mail } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { PasswordPolicyChecklist } from "@/components/auth/password-policy-checklist"
 import { Input } from "@/components/ui/input"
 import { validatePasswordDraft } from "@/lib/auth/password-policy"
+import { trackMetaSubscriptionConfirmed } from "@/lib/meta-pixel"
 import { createClient } from "@/lib/supabase/client"
 
 interface WelcomeClientProps {
@@ -34,6 +35,13 @@ export function WelcomeClient({ email, sessionId }: WelcomeClientProps) {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [message, setMessage] = useState<string | null>(null)
   const [highlightMagicLink, setHighlightMagicLink] = useState(false)
+  const subscriptionTrackedRef = useRef(false)
+
+  useEffect(() => {
+    if (subscriptionTrackedRef.current) return
+    subscriptionTrackedRef.current = true
+    trackMetaSubscriptionConfirmed(sessionId)
+  }, [sessionId])
 
   async function handleCreatePassword(e: FormEvent) {
     e.preventDefault()

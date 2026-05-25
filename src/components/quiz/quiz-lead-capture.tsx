@@ -9,6 +9,7 @@ import { QuizConsentSheet } from "./quiz-consent-sheet"
 import { ArrowLeft } from "lucide-react"
 import { Icon } from "@/components/ui/icon"
 import { posthog } from "@/providers/posthog-provider"
+import { trackMetaLeadCaptured } from "@/lib/meta-pixel"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 
@@ -69,6 +70,7 @@ export function QuizLeadCapture() {
       posthog.capture("quiz_lead_captured", {
         marketing_consent: accepted,
       })
+      trackMetaLeadCaptured(accepted)
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")

@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { loadStripe } from "@stripe/stripe-js"
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js"
+import { trackMetaCheckoutStarted, trackMetaPricingViewed } from "@/lib/meta-pixel"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
 
@@ -29,6 +30,10 @@ export function PricingCards({
   const [checkoutError, setCheckoutError] = useState<string | null>(() =>
     initialInterval && !stripePublishableKey ? checkoutStartError : null,
   )
+
+  useEffect(() => {
+    trackMetaPricingViewed("pricing_page")
+  }, [])
 
   function choosePlan(interval: PlanInterval) {
     if (interval === selectedInterval) return
@@ -63,6 +68,7 @@ export function PricingCards({
       setCheckoutError(checkoutStartError)
       throw new Error("checkout session response missing client secret")
     }
+    trackMetaCheckoutStarted("pricing_page", selectedInterval)
     return data.client_secret
   }, [selectedInterval, leadId])
 

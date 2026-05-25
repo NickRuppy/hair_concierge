@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { notFound } from "next/navigation"
 import { useQuizStore } from "@/lib/quiz/store"
 import { getQuestionByStep } from "@/lib/quiz/questions"
@@ -12,6 +12,7 @@ import { QuizAnalysis } from "@/components/quiz/quiz-analysis"
 import { QuizResults } from "@/components/quiz/quiz-results"
 import { QuizGoals } from "@/components/quiz/quiz-goals"
 import { QuizWelcome } from "@/components/quiz/quiz-welcome"
+import { trackMetaQuizStarted, trackMetaQuizStepViewed } from "@/lib/meta-pixel"
 import { posthog } from "@/providers/posthog-provider"
 
 const STEP_NAMES: Record<number, string> = {
@@ -32,12 +33,25 @@ const STEP_NAMES: Record<number, string> = {
 
 export default function QuizPage() {
   const step = useQuizStore((s) => s.step)
+  const quizStartedRef = useRef(false)
+  const lastTrackedStepRef = useRef<number | null>(null)
 
   useEffect(() => {
+    if (lastTrackedStepRef.current === step) return
+    lastTrackedStepRef.current = step
+
+    const stepName = STEP_NAMES[step] || `step_${step}`
+
+    if (!quizStartedRef.current) {
+      quizStartedRef.current = true
+      trackMetaQuizStarted(stepName, step)
+    }
+
     posthog.capture("quiz_step_viewed", {
-      step_name: STEP_NAMES[step] || `step_${step}`,
+      step_name: stepName,
       step_number: step, // deprecated: use step_name after Phase 4 resequencing
     })
+    trackMetaQuizStepViewed(stepName, step)
   }, [step])
 
   // Step 6: custom scalp progressive disclosure
