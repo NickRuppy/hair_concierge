@@ -1,11 +1,12 @@
 "use client"
 
-import { useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
 import { buildQuizShareConfig } from "@/lib/quiz/share"
 import { useQuizStore } from "@/lib/quiz/store"
+import { trackMetaQuizCompleted } from "@/lib/meta-pixel"
 import { isSubscriptionActive } from "@/lib/stripe/gating"
 import { useAuth } from "@/providers/auth-provider"
 import { posthog } from "@/providers/posthog-provider"
@@ -41,7 +42,7 @@ export function QuizResults() {
   const isCheckingSignedInSubscription = Boolean(user && leadId && (loading || profile === null))
   const cta = getQuizResultCta({ canGoStraightToRoutine })
 
-  const captureQuizCompleted = () => {
+  const captureQuizCompleted = useCallback(() => {
     if (checkoutAnalyticsCapturedRef.current) return
     checkoutAnalyticsCapturedRef.current = true
 
@@ -51,7 +52,12 @@ export function QuizResults() {
       scalp_type: answers.scalp_type,
       scalp_condition: answers.scalp_condition,
     })
-  }
+    trackMetaQuizCompleted()
+  }, [answers.scalp_condition, answers.scalp_type, answers.structure, answers.thickness])
+
+  useEffect(() => {
+    captureQuizCompleted()
+  }, [captureQuizCompleted])
 
   const handleStart = () => {
     captureQuizCompleted()

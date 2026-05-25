@@ -1,10 +1,11 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
+import { trackMetaCheckoutStarted, trackMetaPricingViewed } from "@/lib/meta-pixel"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
@@ -35,6 +36,10 @@ export function ResultOfferPricing({
   const [checkoutInterval, setCheckoutInterval] = useState<BillingInterval | null>(null)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
   const selectedPlan = getStripePricingPlan(selectedInterval)
+
+  useEffect(() => {
+    trackMetaPricingViewed("quiz_result_offer_pricing")
+  }, [])
 
   function choosePlan(interval: BillingInterval) {
     setSelectedInterval(interval)
@@ -81,6 +86,8 @@ export function ResultOfferPricing({
       setCheckoutError(checkoutStartError)
       throw new Error("checkout session response missing client secret")
     }
+
+    trackMetaCheckoutStarted("quiz_result_offer", checkoutInterval)
 
     return data.client_secret
   }, [checkoutInterval, leadId])

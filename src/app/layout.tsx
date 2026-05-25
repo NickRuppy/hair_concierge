@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Playfair_Display, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
 import { AuthProvider } from "@/providers/auth-provider"
+import { MetaPixelProvider } from "@/providers/meta-pixel-provider"
 import { PostHogClientProvider } from "@/providers/posthog-provider"
 import { ToastProvider } from "@/providers/toast-provider"
 import { CookieConsent } from "@/components/cookie-consent/cookie-consent"
@@ -51,11 +52,13 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <PostHogClientProvider>
-            <ToastProvider>{children}</ToastProvider>
-          </PostHogClientProvider>
-        </AuthProvider>
+        <MetaPixelProvider>
+          <AuthProvider>
+            <PostHogClientProvider>
+              <ToastProvider>{children}</ToastProvider>
+            </PostHogClientProvider>
+          </AuthProvider>
+        </MetaPixelProvider>
         <CookieConsent />
       </body>
     </html>
