@@ -891,13 +891,16 @@ function buildNeedsSection(
       mainLeverWhy:
         "Wenn die Kopfhaut zu schnell fettet oder austrocknet, verliert das Haar Frische und Volumen schon nach kurzer Zeit.",
       mainLeverProducts:
-        "Am meisten erreichen wir hier mit einem Balance-Shampoo; zusätzlich kann ein Trockenshampoo helfen, zwischen den Wäschen frisch zu wirken.",
+        "Am meisten erreichen wir hier mit einem Balance-Shampoo; zusätzlich kann ein leichter Conditioner die Längen pflegen, ohne die Kopfhaut zu belasten.",
       products: [
         {
           name: "Balance-Shampoo",
           description: "Bringt die Kopfhaut in Balance, ohne sie auszutrocknen.",
         },
-        { name: "Trockenshampoo", description: "Hält den Ansatz zwischen den Wäschen frisch." },
+        {
+          name: "Leichter Conditioner",
+          description: "Pflegt die Längen, ohne die Kopfhaut zu belasten.",
+        },
       ],
     }
   }

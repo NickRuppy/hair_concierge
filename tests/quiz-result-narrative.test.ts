@@ -414,14 +414,15 @@ test("scalp-oily-balanced branch fires when scalp_type signals oily without a sp
   assert.equal(narrative.needs.mainLeverTitle, "Die Kopfhaut in Balance bringen")
   assert.match(narrative.needs.mainLeverWhy, /Frische und Volumen/i)
   assert.match(narrative.needs.mainLeverProducts, /Balance-Shampoo/i)
+  assert.match(narrative.needs.mainLeverProducts, /leichter Conditioner/i)
   assert.deepEqual(narrative.needs.products, [
     {
       name: "Balance-Shampoo",
       description: "Bringt die Kopfhaut in Balance, ohne sie auszutrocknen.",
     },
     {
-      name: "Trockenshampoo",
-      description: "Hält den Ansatz zwischen den Wäschen frisch.",
+      name: "Leichter Conditioner",
+      description: "Pflegt die Längen, ohne die Kopfhaut zu belasten.",
     },
   ])
 })

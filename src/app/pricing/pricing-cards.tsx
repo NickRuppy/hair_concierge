@@ -92,7 +92,8 @@ export function PricingCards({
               )}
               <h2 className="font-header text-2xl">{plan.name}</h2>
               <div className="mt-4 space-y-1">
-                <p className="text-3xl font-bold">{plan.price}</p>
+                <p className="text-sm text-muted-foreground line-through">{plan.price}</p>
+                <p className="text-3xl font-bold">{plan.discountedPrice}</p>
                 <p className="text-sm text-muted-foreground">{plan.perMonth}</p>
                 {plan.savings && <p className="text-sm font-medium text-primary">{plan.savings}</p>}
               </div>

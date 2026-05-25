@@ -80,6 +80,7 @@ export async function POST(req: NextRequest) {
 
   const origin = req.nextUrl.origin
   const stripe = getStripe()
+  const discountCouponId = process.env.STRIPE_DISCOUNT_COUPON_ID
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
     ui_mode: "embedded_page",
@@ -95,6 +96,7 @@ export async function POST(req: NextRequest) {
           "Ich stimme zu, dass der Zugriff auf das Abo sofort beginnt und ich damit mein 14-tägiges Widerrufsrecht verliere (§ 356 Abs. 4 BGB).",
       },
     },
+    ...(discountCouponId ? { discounts: [{ coupon: discountCouponId }] } : {}),
     metadata: leadId ? { lead_id: leadId } : undefined,
   })
 
