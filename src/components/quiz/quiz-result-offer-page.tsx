@@ -10,9 +10,9 @@ import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
 
 const FEATURE_IMAGES = {
-  advisor: "/images/offer/advisor.png",
-  products: "/images/offer/products.png",
-  routine: "/images/offer/routine.png",
+  advisor: "/images/offer/advisor.jpg",
+  products: "/images/offer/products.jpg",
+  routine: "/images/offer/routine.jpg",
 } as const
 
 const FEATURES = [
