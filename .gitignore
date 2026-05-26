@@ -84,3 +84,8 @@ test-screenshots*/
 
 # local eval / compare-lab artifacts
 /tmp/
+
+# Affiliate link research artefacts (regenerated; safe to delete)
+!/data/affiliate-research/
+/data/affiliate-research/*
+!/data/affiliate-research/.gitkeep
