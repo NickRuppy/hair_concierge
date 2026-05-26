@@ -9,11 +9,14 @@ import {
   trackMetaCustomEvent,
   trackMetaEvent,
   trackMetaPageView,
+  trackMetaPurchaseConfirmed,
+  trackMetaSubscriptionConfirmed,
 } from "../src/lib/meta-pixel"
 
-function createMetaDom() {
+function createMetaDom(options: { storageThrows?: boolean } = {}) {
   const calls: unknown[][] = []
   const insertedScripts: Array<{ async?: boolean; id?: string; src?: string }> = []
+  const storage = new Map<string, string>()
   const scriptParent = {
     insertBefore(node: { async?: boolean; id?: string; src?: string }) {
       insertedScripts.push(node)
@@ -32,7 +35,18 @@ function createMetaDom() {
   return {
     calls,
     insertedScripts,
-    win: {} as Window & { fbq?: (...args: unknown[]) => void },
+    win: {
+      sessionStorage: {
+        getItem: (key: string) => {
+          if (options.storageThrows) throw new Error("storage unavailable")
+          return storage.get(key) ?? null
+        },
+        setItem: (key: string, value: string) => {
+          if (options.storageThrows) throw new Error("storage unavailable")
+          storage.set(key, value)
+        },
+      },
+    } as unknown as Window & { fbq?: (...args: unknown[]) => void },
     doc,
   }
 }
@@ -105,4 +119,88 @@ test("meta tracking does nothing without a pixel id or initialized fbq", () => {
   assert.equal(trackMetaCustomEvent("QuizStarted", undefined, { win: dom.win }), false)
   assert.equal(trackMetaPageView({ win: dom.win }), false)
   assert.equal(dom.insertedScripts.length, 0)
+})
+
+test("purchase tracking fires with value metadata and event id even without consent", () => {
+  const dom = createMetaDom()
+  initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
+  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
+
+  assert.equal(
+    trackMetaPurchaseConfirmed(
+      {
+        contentId: "premium_quarter",
+        currency: "EUR",
+        eventId: "cs_test_purchase",
+        interval: "quarter",
+        paymentMethodType: "card",
+        value: 17.49,
+      },
+      { doc: dom.doc, win: dom.win },
+    ),
+    true,
+  )
+
+  assert.deepEqual(dom.calls, [
+    ["consent", "grant"],
+    [
+      "track",
+      "Purchase",
+      {
+        content_ids: ["premium_quarter"],
+        content_name: "premium_subscription",
+        content_type: "product",
+        currency: "EUR",
+        payment_method_type: "card",
+        subscription_interval: "quarter",
+        value: 17.49,
+      },
+      { eventID: "cs_test_purchase" },
+    ],
+    ["consent", "revoke"],
+  ])
+})
+
+test("purchase tracking dedupes the same checkout session in browser storage", () => {
+  const dom = createMetaDom()
+  initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
+  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
+
+  const purchase = {
+    contentId: "premium_month",
+    currency: "EUR",
+    eventId: "cs_test_dedupe",
+    interval: "month",
+    value: 7.49,
+  } as const
+
+  assert.equal(trackMetaPurchaseConfirmed(purchase, { doc: dom.doc, win: dom.win }), true)
+  assert.equal(trackMetaPurchaseConfirmed(purchase, { doc: dom.doc, win: dom.win }), false)
+
+  assert.equal(dom.calls.filter((call) => call[1] === "Purchase").length, 1)
+})
+
+test("subscription and purchase tracking remain best-effort when session storage throws", () => {
+  const dom = createMetaDom({ storageThrows: true })
+  initMetaPixel({ pixelId: "988892550357504", win: dom.win, doc: dom.doc })
+  dom.win.fbq = (...args: unknown[]) => dom.calls.push(args)
+  grantMetaPixelConsent({ win: dom.win })
+
+  assert.equal(trackMetaSubscriptionConfirmed("cs_storage_blocked", { win: dom.win }), true)
+  assert.equal(
+    trackMetaPurchaseConfirmed(
+      {
+        contentId: "premium_month",
+        currency: "EUR",
+        eventId: "cs_storage_blocked",
+        interval: "month",
+        value: 7.49,
+      },
+      { doc: dom.doc, win: dom.win },
+    ),
+    true,
+  )
+
+  assert.equal(dom.calls.filter((call) => call[1] === "Subscribe").length, 1)
+  assert.equal(dom.calls.filter((call) => call[1] === "Purchase").length, 1)
 })
