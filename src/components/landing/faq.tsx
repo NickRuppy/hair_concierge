@@ -11,7 +11,7 @@ const items: FaqItem[] = [
   {
     question: "Wie unterscheidet sich Chaarlie von anderen Beauty-Quizzes?",
     answer:
-      "Klassische Beauty-Quizzes fragen nach deinem Haartyp und schlagen dir eine Produkt-Range vor. Chaarlie analysiert sechs Dimensionen deines Haares (Struktur, Oberfläche, Kopfhaut, Feuchtigkeit, Protein, Glanz) und gibt dir konkrete Empfehlungen mit echten Produktnamen, inklusive Drogerie-Alternativen. Kein Verkauf eigener Produkte.",
+      "Klassische Beauty-Quizzes fragen nach deinem Haartyp und schlagen dir eine Produkt-Range vor. Chaarlie kombiniert zwei Dinge: dein vollständiges Haarprofil (Struktur, Oberfläche, Protein-Feuchtigkeit-Balance, Kopfhaut, chemische Behandlung) und deine tatsächliche Routine (Wäsche, Hitze-Styling, Trocknung, Bürste, Nachtpflege). Daraus bekommst du konkrete Empfehlungen mit echten Produktnamen — inklusive Drogerie-Alternativen. Kein Verkauf eigener Produkte.",
   },
   {
     question: "Brauche ich Vorwissen zur Haarpflege?",
