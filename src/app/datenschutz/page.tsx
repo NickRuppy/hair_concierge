@@ -215,9 +215,9 @@ export default function DatenschutzPage() {
                 (hc_returning). Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.
               </li>
               <li>
-                <strong className="text-foreground">Analyse:</strong> PostHog. Hilft uns zu
-                verstehen, wie Besucher die Website nutzen. Nur mit Einwilligung (Art. 6 Abs. 1 lit.
-                a DSGVO, § 25 TDDDG).
+                <strong className="text-foreground">Analyse:</strong> PostHog und Customer.io. Hilft
+                uns zu verstehen, wie Besucher die Website nutzen und Kampagnen sauber auszuwerten.
+                Nur mit Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 25 TDDDG).
               </li>
               <li>
                 <strong className="text-foreground">Marketing:</strong> Meta Pixel (Facebook /

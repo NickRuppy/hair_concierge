@@ -132,7 +132,7 @@ export function CookieConsent() {
               />
               <CategoryRow
                 title="Analyse"
-                description="PostHog. Hilft uns zu verstehen, wie Besucher die Website nutzen."
+                description="PostHog und Customer.io. Hilft uns zu verstehen, wie Besucher die Website nutzen und Kampagnen sauber auszuwerten."
                 value={analytics}
                 onChange={setAnalytics}
               />

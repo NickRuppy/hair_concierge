@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Playfair_Display, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
 import { AuthProvider } from "@/providers/auth-provider"
+import { CustomerIoProvider } from "@/providers/customerio-provider"
 import { MetaPixelProvider } from "@/providers/meta-pixel-provider"
 import { PostHogClientProvider } from "@/providers/posthog-provider"
 import { ToastProvider } from "@/providers/toast-provider"
@@ -54,9 +55,11 @@ export default function RootLayout({
       >
         <MetaPixelProvider>
           <AuthProvider>
-            <PostHogClientProvider>
-              <ToastProvider>{children}</ToastProvider>
-            </PostHogClientProvider>
+            <CustomerIoProvider>
+              <PostHogClientProvider>
+                <ToastProvider>{children}</ToastProvider>
+              </PostHogClientProvider>
+            </CustomerIoProvider>
           </AuthProvider>
         </MetaPixelProvider>
         <CookieConsent />

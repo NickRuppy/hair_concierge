@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react"
 import posthog from "posthog-js"
+import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
 import { useToast } from "@/providers/toast-provider"
 import { createClient } from "@/lib/supabase/client"
 import { useOnboardingStore } from "@/lib/onboarding/store"
@@ -521,6 +522,7 @@ export function OnboardingFlow({
 
             if (!returnTo) {
               posthog.capture("onboarding_completed", { userId })
+              trackCustomerIoEvent("onboarding_completed", { user_id: userId })
             }
             break
           }

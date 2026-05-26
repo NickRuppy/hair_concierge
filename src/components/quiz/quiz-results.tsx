@@ -6,6 +6,7 @@ import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
 import { buildQuizShareConfig } from "@/lib/quiz/share"
 import { useQuizStore } from "@/lib/quiz/store"
+import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
 import { trackMetaQuizCompleted } from "@/lib/meta-pixel"
 import { isSubscriptionActive } from "@/lib/stripe/gating"
 import { useAuth } from "@/providers/auth-provider"
@@ -52,8 +53,15 @@ export function QuizResults() {
       scalp_type: answers.scalp_type,
       scalp_condition: answers.scalp_condition,
     })
+    trackCustomerIoEvent("quiz_completed", {
+      hair_texture: answers.structure,
+      lead_id: leadId ?? undefined,
+      scalp_condition: answers.scalp_condition,
+      scalp_type: answers.scalp_type,
+      thickness: answers.thickness,
+    })
     trackMetaQuizCompleted()
-  }, [answers.scalp_condition, answers.scalp_type, answers.structure, answers.thickness])
+  }, [answers.scalp_condition, answers.scalp_type, answers.structure, answers.thickness, leadId])
 
   useEffect(() => {
     captureQuizCompleted()
@@ -93,6 +101,7 @@ export function QuizResults() {
 
     if (share.mode === "native" && navigator.share) {
       posthog.capture("quiz_result_share_clicked", { leadId, method: "native" })
+      trackCustomerIoEvent("result_shared", { lead_id: leadId ?? undefined, method: "native" })
       await navigator
         .share({
           title: share.title,
@@ -106,6 +115,7 @@ export function QuizResults() {
     try {
       await navigator.clipboard.writeText(share.url)
       posthog.capture("quiz_result_share_clicked", { leadId, method: "copy_link" })
+      trackCustomerIoEvent("result_shared", { lead_id: leadId ?? undefined, method: "copy_link" })
       toast({
         title: "Link kopiert",
         description: "Du kannst dein Ergebnis jetzt direkt teilen.",
@@ -113,6 +123,7 @@ export function QuizResults() {
     } catch {
       window.open(share.url, "_blank", "noopener,noreferrer")
       posthog.capture("quiz_result_share_clicked", { leadId, method: "open_result" })
+      trackCustomerIoEvent("result_shared", { lead_id: leadId ?? undefined, method: "open_result" })
       toast({
         title: "Ergebnis geöffnet",
         description: "Teile den Link direkt aus deinem Browser.",

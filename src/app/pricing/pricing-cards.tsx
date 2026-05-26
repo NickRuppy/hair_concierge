@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { loadStripe } from "@stripe/stripe-js"
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js"
+import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
 import { trackMetaCheckoutStarted, trackMetaPricingViewed } from "@/lib/meta-pixel"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
@@ -32,8 +33,12 @@ export function PricingCards({
   )
 
   useEffect(() => {
+    trackCustomerIoEvent("pricing_viewed", {
+      lead_id: leadId ?? undefined,
+      source: "pricing_page",
+    })
     trackMetaPricingViewed("pricing_page")
-  }, [])
+  }, [leadId])
 
   function choosePlan(interval: PlanInterval) {
     if (interval === selectedInterval) return
@@ -69,6 +74,11 @@ export function PricingCards({
       throw new Error("checkout session response missing client secret")
     }
     trackMetaCheckoutStarted("pricing_page", selectedInterval)
+    trackCustomerIoEvent("checkout_started", {
+      interval: selectedInterval ?? undefined,
+      lead_id: leadId ?? undefined,
+      source: "pricing_page",
+    })
     return data.client_secret
   }, [selectedInterval, leadId])
 

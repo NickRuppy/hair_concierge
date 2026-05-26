@@ -5,6 +5,7 @@ import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe
 import { loadStripe } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
+import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
 import { trackMetaCheckoutStarted, trackMetaPricingViewed } from "@/lib/meta-pixel"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
@@ -38,8 +39,12 @@ export function ResultOfferPricing({
   const selectedPlan = getStripePricingPlan(selectedInterval)
 
   useEffect(() => {
+    trackCustomerIoEvent("pricing_viewed", {
+      lead_id: leadId ?? undefined,
+      source: "quiz_result_offer_pricing",
+    })
     trackMetaPricingViewed("quiz_result_offer_pricing")
-  }, [])
+  }, [leadId])
 
   function choosePlan(interval: BillingInterval) {
     setSelectedInterval(interval)
@@ -88,6 +93,11 @@ export function ResultOfferPricing({
     }
 
     trackMetaCheckoutStarted("quiz_result_offer", checkoutInterval)
+    trackCustomerIoEvent("checkout_started", {
+      interval: checkoutInterval,
+      lead_id: leadId ?? undefined,
+      source: "quiz_result_offer",
+    })
 
     return data.client_secret
   }, [checkoutInterval, leadId])

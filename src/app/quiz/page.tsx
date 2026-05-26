@@ -12,6 +12,7 @@ import { QuizAnalysis } from "@/components/quiz/quiz-analysis"
 import { QuizResults } from "@/components/quiz/quiz-results"
 import { QuizGoals } from "@/components/quiz/quiz-goals"
 import { QuizWelcome } from "@/components/quiz/quiz-welcome"
+import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
 import { trackMetaQuizStarted, trackMetaQuizStepViewed } from "@/lib/meta-pixel"
 import { posthog } from "@/providers/posthog-provider"
 
@@ -44,12 +45,20 @@ export default function QuizPage() {
 
     if (!quizStartedRef.current) {
       quizStartedRef.current = true
+      trackCustomerIoEvent("quiz_started", {
+        step_name: stepName,
+        step_number: step,
+      })
       trackMetaQuizStarted(stepName, step)
     }
 
     posthog.capture("quiz_step_viewed", {
       step_name: stepName,
       step_number: step, // deprecated: use step_name after Phase 4 resequencing
+    })
+    trackCustomerIoEvent("quiz_step_viewed", {
+      step_name: stepName,
+      step_number: step,
     })
     trackMetaQuizStepViewed(stepName, step)
   }, [step])
