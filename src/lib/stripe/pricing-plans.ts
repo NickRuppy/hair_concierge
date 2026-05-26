@@ -29,7 +29,9 @@ export const STRIPE_PRICING_PLANS: readonly StripePricingPlan[] = [
     discountedPrice: "€17,49",
     perMonth: "~€5,83 / Monat",
     badge: "Beliebteste Wahl",
-    savings: "50% sparen",
+    // savings reflects per-month savings vs the monthly plan (longer-commitment benefit),
+    // NOT the Stripe coupon — the coupon's 50% off is communicated via the strikethrough.
+    savings: "22% sparen",
     ctaLabel: "Jetzt starten — €17,49 im Quartal",
   },
   {
@@ -38,7 +40,8 @@ export const STRIPE_PRICING_PLANS: readonly StripePricingPlan[] = [
     price: "€99,99",
     discountedPrice: "€49,99",
     perMonth: "~€4,16 / Monat",
-    savings: "50% sparen",
+    // savings reflects per-month savings vs the monthly plan, not the Stripe coupon.
+    savings: "44% sparen",
     ctaLabel: "Jetzt starten — €49,99 / Jahr",
   },
 ] as const
