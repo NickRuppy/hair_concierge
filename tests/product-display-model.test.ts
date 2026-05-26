@@ -290,6 +290,27 @@ test("getShopLabel derives a shop-aware buy label from affiliate hosts", () => {
   )
 })
 
+test("getShopLabel recognizes brand-direct hosts", () => {
+  assert.equal(getShopLabel("https://marianila.com/products/x"), "Bei Maria Nila kaufen")
+  assert.equal(getShopLabel("https://urban-alchemy.com/products/x"), "Bei Urban Alchemy kaufen")
+  assert.equal(
+    getShopLabel("https://innersensebeauty.com/products/x"),
+    "Bei Innersense Beauty kaufen",
+  )
+  assert.equal(
+    getShopLabel("https://authenticbeautyconcept.de/products/x"),
+    "Bei Authentic Beauty Concept kaufen",
+  )
+  assert.equal(getShopLabel("https://k18hair.com/products/x"), "Bei K18 kaufen")
+  assert.equal(getShopLabel("https://olaplex.com/products/x"), "Bei Olaplex kaufen")
+})
+
+test("getShopLabel strips locale subdomains before host lookup", () => {
+  assert.equal(getShopLabel("https://de.nuxe.com/products/x"), "Bei Nuxe kaufen")
+  assert.equal(getShopLabel("https://de.curlsmith.com/products/x"), "Bei Curlsmith kaufen")
+  assert.equal(getShopLabel("https://en.neqi-hair.com/products/x"), "Bei Neqi kaufen")
+})
+
 test("affiliate links are trimmed and validated before display", () => {
   const product = createWellaLikeLeaveIn()
 
