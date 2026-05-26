@@ -105,6 +105,7 @@ const CONCERN_LABELS: Record<string, string> = {
 }
 
 const SHOP_HOST_LABELS: Record<string, string> = {
+  // Retailers
   "dm.de": "dm",
   "rossmann.de": "Rossmann",
   "mueller.de": "Müller",
@@ -113,7 +114,26 @@ const SHOP_HOST_LABELS: Record<string, string> = {
   "amazon.de": "Amazon",
   "notino.de": "Notino",
   "hagel-shop.de": "Hagel-Shop",
+  // Brand-direct PDPs used by affiliate-link backfill
+  "olaplex.com": "Olaplex",
+  "olaplex.de": "Olaplex",
+  "k18hair.com": "K18",
+  "epres.com": "Epres",
+  "sante.de": "Sante",
+  "marianila.com": "Maria Nila",
+  "urban-alchemy.com": "Urban Alchemy",
+  "innersensebeauty.com": "Innersense Beauty",
+  "authenticbeautyconcept.de": "Authentic Beauty Concept",
+  "garnier.de": "Garnier",
+  "curlsmith.com": "Curlsmith",
+  "nuxe.com": "Nuxe",
+  "neqi-hair.com": "Neqi",
+  "wella.com": "Wella",
 }
+
+// Locale subdomains brand sites use to route by region. We strip these so
+// "de.nuxe.com" resolves to the same label as "nuxe.com".
+const LOCALE_SUBDOMAIN_PREFIX = /^(de|en|fr|us|uk|eu)\./
 
 export function buildCompactProductFacts(product: Product): CompactProductFact[] {
   if (isLeaveInProduct(product)) {
@@ -288,7 +308,8 @@ export function getShopLabel(affiliateLink: string | null | undefined): string {
   if (!validLink) return "Kaufen"
 
   try {
-    const host = new URL(validLink).hostname.replace(/^www\./, "").toLowerCase()
+    const rawHost = new URL(validLink).hostname.toLowerCase()
+    const host = rawHost.replace(/^www\./, "").replace(LOCALE_SUBDOMAIN_PREFIX, "")
     const knownLabel = SHOP_HOST_LABELS[host]
     if (knownLabel) return `Bei ${knownLabel} kaufen`
 
