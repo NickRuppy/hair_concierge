@@ -4,8 +4,9 @@ const DEFAULT_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "9888925503575
 const META_SCRIPT_ID = "meta-pixel-script"
 const META_SCRIPT_SRC = "https://connect.facebook.net/en_US/fbevents.js"
 const SUBSCRIPTION_TRACKED_STORAGE_PREFIX = "chaarlie_meta_subscribe_tracked:"
+const PURCHASE_TRACKED_STORAGE_PREFIX = "chaarlie_meta_purchase_tracked:"
 
-type MetaEventValue = string | number | boolean | null | undefined
+type MetaEventValue = string | number | boolean | null | undefined | string[]
 export type MetaEventProperties = Record<string, MetaEventValue>
 export type MetaStandardEvent =
   | "PageView"
@@ -35,6 +36,23 @@ type BrowserTargets = {
   win?: MetaWindow
 }
 
+type MetaTrackOptions = BrowserTargets & {
+  eventID?: string
+}
+
+type MetaDispatchOptions = MetaTrackOptions & {
+  bypassConsent?: boolean
+}
+
+export type MetaPurchasePayload = {
+  contentId: string
+  currency: string
+  eventId: string
+  interval: string
+  paymentMethodType?: string
+  value: number
+}
+
 const initializedPixelsByWindow = new WeakMap<object, Set<string>>()
 const enabledWindows = new WeakMap<object, boolean>()
 
@@ -50,7 +68,7 @@ function sanitizeProperties(properties?: MetaEventProperties) {
 
   return Object.fromEntries(
     Object.entries(properties).filter(([, value]) => value !== undefined),
-  ) as Record<string, string | number | boolean | null>
+  ) as Record<string, Exclude<MetaEventValue, undefined>>
 }
 
 function installFbq(win: MetaWindow, doc: Document) {
@@ -118,6 +136,32 @@ function isMetaPixelEnabled(win: MetaWindow) {
   return enabledWindows.get(win) === true
 }
 
+function getBrowserSessionStorage(win: MetaWindow | undefined) {
+  if (!win) return undefined
+  try {
+    if (typeof window !== "undefined" && win === window) return window.sessionStorage
+    return (win as MetaWindow & { sessionStorage?: Storage }).sessionStorage
+  } catch {
+    return undefined
+  }
+}
+
+function safeStorageGet(storage: Storage | undefined, key: string) {
+  try {
+    return storage?.getItem(key) ?? null
+  } catch {
+    return null
+  }
+}
+
+function safeStorageSet(storage: Storage | undefined, key: string, value: string) {
+  try {
+    storage?.setItem(key, value)
+  } catch {
+    // Tracking storage is best effort; never let analytics block checkout flow.
+  }
+}
+
 export function grantMetaPixelConsent(options: Pick<BrowserTargets, "win"> = {}) {
   const win =
     options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow))
@@ -141,18 +185,45 @@ export function revokeMetaPixelConsent(options: Pick<BrowserTargets, "win"> = {}
 export function trackMetaEvent(
   eventName: MetaStandardEvent,
   properties?: MetaEventProperties,
-  options: Pick<BrowserTargets, "win"> = {},
+  options: MetaTrackOptions = {},
+) {
+  return dispatchMetaEvent(eventName, properties, options)
+}
+
+function dispatchMetaEvent(
+  eventName: MetaStandardEvent,
+  properties?: MetaEventProperties,
+  options: MetaDispatchOptions = {},
 ) {
   const win =
     options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow))
-  if (!win?.fbq || !isMetaPixelReady({ win }) || !isMetaPixelEnabled(win)) return false
+  if (!win?.fbq || !isMetaPixelReady({ win })) return false
+  if (!options.bypassConsent && !isMetaPixelEnabled(win)) return false
 
   const cleanProperties = sanitizeProperties(properties)
+  const eventOptions = options.eventID ? { eventID: options.eventID } : undefined
+  const wasEnabled = isMetaPixelEnabled(win)
+
+  if (options.bypassConsent && !wasEnabled) {
+    win.fbq("consent", "grant")
+  }
+
   if (cleanProperties && Object.keys(cleanProperties).length > 0) {
-    win.fbq("track", eventName, cleanProperties)
+    if (eventOptions) {
+      win.fbq("track", eventName, cleanProperties, eventOptions)
+    } else {
+      win.fbq("track", eventName, cleanProperties)
+    }
+  } else if (eventOptions) {
+    win.fbq("track", eventName, {}, eventOptions)
   } else {
     win.fbq("track", eventName)
   }
+
+  if (options.bypassConsent && !wasEnabled) {
+    win.fbq("consent", "revoke")
+  }
+
   return true
 }
 
@@ -225,19 +296,70 @@ export function trackMetaCheckoutStarted(
   })
 }
 
-export function trackMetaSubscriptionConfirmed(sessionId: string) {
+export function trackMetaSubscriptionConfirmed(
+  sessionId: string,
+  options: Pick<BrowserTargets, "win"> = {},
+) {
   let storageKey: string | null = null
-  if (typeof window !== "undefined") {
+  const storage = getBrowserSessionStorage(
+    options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow)),
+  )
+  if (storage) {
     storageKey = `${SUBSCRIPTION_TRACKED_STORAGE_PREFIX}${sessionId}`
-    if (window.sessionStorage.getItem(storageKey) === "1") return false
+    if (safeStorageGet(storage, storageKey) === "1") return false
   }
 
-  const tracked = trackMetaEvent("Subscribe", {
-    content_name: "premium_subscription",
-  })
+  const tracked = trackMetaEvent(
+    "Subscribe",
+    {
+      content_name: "premium_subscription",
+    },
+    options,
+  )
 
   if (tracked && storageKey) {
-    window.sessionStorage.setItem(storageKey, "1")
+    safeStorageSet(storage, storageKey, "1")
+  }
+
+  return tracked
+}
+
+export function trackMetaPurchaseConfirmed(
+  purchase: MetaPurchasePayload,
+  options: BrowserTargets = {},
+) {
+  let storageKey: string | null = null
+  const win =
+    options.win ?? (typeof window === "undefined" ? undefined : (window as unknown as MetaWindow))
+  const storage = getBrowserSessionStorage(win)
+
+  if (storage) {
+    storageKey = `${PURCHASE_TRACKED_STORAGE_PREFIX}${purchase.eventId}`
+    if (safeStorageGet(storage, storageKey) === "1") return false
+  }
+
+  if (!initMetaPixel(options)) return false
+
+  const tracked = dispatchMetaEvent(
+    "Purchase",
+    {
+      content_ids: [purchase.contentId],
+      content_name: "premium_subscription",
+      content_type: "product",
+      currency: purchase.currency.toUpperCase(),
+      payment_method_type: purchase.paymentMethodType,
+      subscription_interval: purchase.interval,
+      value: purchase.value,
+    },
+    {
+      ...options,
+      bypassConsent: true,
+      eventID: purchase.eventId,
+    },
+  )
+
+  if (tracked && storageKey) {
+    safeStorageSet(storage, storageKey, "1")
   }
 
   return tracked

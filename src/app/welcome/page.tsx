@@ -9,6 +9,7 @@ import {
   ensureCheckoutAccount,
   verifyCheckoutSessionForActivation,
 } from "@/lib/stripe/checkout-activation"
+import { buildMetaPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 import { WelcomeClient } from "./welcome-client"
 
 export const dynamic = "force-dynamic"
@@ -32,6 +33,10 @@ export default async function WelcomePage({
 
   const email = session.customer_details?.email
   if (!email) redirect("/")
+  const purchaseAnalytics = await buildMetaPurchaseAnalytics(session, stripe).catch((err) => {
+    console.error("[welcome] purchase analytics unavailable:", err)
+    return null
+  })
 
   const supabase = await createClient()
   const {
@@ -45,10 +50,17 @@ export default async function WelcomePage({
       premiumTierId: await getPremiumTierId(admin),
       linkQuizToProfile,
     })
-    redirect("/onboarding")
+    return (
+      <WelcomeClient
+        email={email}
+        purchase={purchaseAnalytics}
+        redirectTo="/onboarding"
+        sessionId={session_id}
+      />
+    )
   }
 
-  return <WelcomeClient email={email} sessionId={session_id} />
+  return <WelcomeClient email={email} purchase={purchaseAnalytics} sessionId={session_id} />
 }
 
 async function getPremiumTierId(supabase: SupabaseClient): Promise<string> {
