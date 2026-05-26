@@ -1,5 +1,5 @@
 import { config as loadEnv } from "dotenv"
-import { mkdirSync } from "node:fs"
+import { mkdirSync, readdirSync, unlinkSync } from "node:fs"
 import { join } from "node:path"
 import { createClient } from "@supabase/supabase-js"
 
@@ -109,6 +109,16 @@ function pickCanary(rows: ProductRow[]): ProductRow[] {
 
 async function main() {
   mkdirSync(OUT_DIR, { recursive: true })
+
+  // Clear stale results from any prior run so the aggregator can't pick up
+  // results-*.csv that don't correspond to this export's slice plan.
+  // missing-*.csv are overwritten in place below; only stray files we worry about.
+  for (const f of readdirSync(OUT_DIR)) {
+    if (/^results-[a-z0-9-]+\.csv$/.test(f)) {
+      unlinkSync(join(OUT_DIR, f))
+      console.log(`  cleared stale: ${f}`)
+    }
+  }
 
   const missing = await fetchAllMissing()
   console.log(`Found ${missing.length} active products missing a usable affiliate_link.`)

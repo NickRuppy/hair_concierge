@@ -10,6 +10,13 @@
 --
 -- Each statement is keyed on id (UUID), so the migration is idempotent: a
 -- second run no-ops because the new values match the current values.
+--
+-- NOTE: products has a UNIQUE(name, category) constraint (added in
+-- 20260316102000_allow_duplicate_product_names_across_categories.sql).
+-- On a fresh / divergent environment where a target name already exists in
+-- the same category from unrelated data, the matching UPDATE will fail.
+-- If that happens during deploy: investigate the colliding row first; do
+-- not blindly relax the constraint.
 
 begin;
 
