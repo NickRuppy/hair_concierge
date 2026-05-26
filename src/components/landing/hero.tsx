@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { tomHannemannImageUrl } from "@/lib/landing-assets"
+import { TOM } from "@/data/team"
 
 const outcomeChecks = [
   "Dein Haarprofil",
@@ -75,12 +75,11 @@ export function Hero() {
 
           <figure className="mt-6 flex items-start gap-3.5 rounded-[14px] bg-[var(--brand-plum-ice)] p-4">
             <Image
-              src={tomHannemannImageUrl}
-              alt="Tom Hannemann"
+              src={TOM.imageUrl}
+              alt={TOM.name}
               width={96}
               height={96}
               priority
-              referrerPolicy="no-referrer"
               className="h-12 w-12 shrink-0 rounded-full border-2 border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] object-cover object-[52%_18%]"
             />
             <div>
@@ -89,7 +88,7 @@ export function Hero() {
                 empfehle ich genau das hier.“
               </blockquote>
               <figcaption className="font-mono text-[10px] font-medium uppercase tracking-[0.06em] text-[var(--brand-plum)]">
-                Tom Hannemann · Friseurmeister · 18 Jahre Erfahrung
+                {`${TOM.name} · ${TOM.role} · ${TOM.experienceYears} Jahre Erfahrung`}
               </figcaption>
             </div>
           </figure>
