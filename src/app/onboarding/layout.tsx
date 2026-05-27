@@ -41,11 +41,7 @@ function OnboardingBrandPanel() {
 
       {/* Content */}
       <div className="relative z-10 max-w-[360px] text-center">
-        <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
-          Hair
-          <br />
-          Concierge
-        </h2>
+        <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">Chaarlie</h2>
         <div className="mx-auto mb-6 h-1 w-12 rounded-full bg-[var(--brand-plum)]/40" />
         <p className="text-lg text-muted-foreground leading-relaxed">Dein Haar, dein Plan.</p>
       </div>

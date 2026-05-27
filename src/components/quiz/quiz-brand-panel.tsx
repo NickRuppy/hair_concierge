@@ -52,11 +52,7 @@ export function QuizBrandPanel() {
 function LandingPanel({ description }: { description: string }) {
   return (
     <>
-      <h1 className="font-header text-6xl leading-[0.95] text-foreground mb-6">
-        Hair
-        <br />
-        Concierge
-      </h1>
+      <h1 className="font-header text-6xl leading-[0.95] text-foreground mb-6">Chaarlie</h1>
       <div className="mx-auto mb-6 h-1 w-16 rounded-full bg-[var(--brand-plum)]" />
       <p className="text-lg text-muted-foreground leading-relaxed">{description}</p>
     </>
@@ -81,11 +77,7 @@ function JourneyPanel({
           {eyebrow}
         </div>
       ) : null}
-      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">
-        Hair
-        <br />
-        Concierge
-      </h2>
+      <h2 className="font-header text-5xl leading-[0.95] text-foreground mb-6">Chaarlie</h2>
       <div
         className="mx-auto mb-4 h-1 w-12 rounded-full"
         style={{ background: "rgba(var(--brand-plum-rgb), 0.4)" }}
