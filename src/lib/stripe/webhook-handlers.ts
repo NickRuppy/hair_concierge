@@ -1,7 +1,12 @@
 import type Stripe from "stripe"
 import type { CheckoutActivationDeps } from "./checkout-activation"
-import { ensureCheckoutAccount, subPeriodEndIso } from "./checkout-activation"
+import {
+  ensureCheckoutAccount,
+  stripeEntitlementStatus,
+  subPeriodEndIso,
+} from "./checkout-activation"
 import { intervalFromPrice } from "./intervals"
+import { upsertBillingSubscription } from "@/lib/billing/subscriptions"
 
 export type HandlerDeps = CheckoutActivationDeps
 type SubscriptionUpdateDeps = Pick<HandlerDeps, "supabase">
@@ -51,6 +56,21 @@ export async function handleSubscriptionUpdated(
       current_period_end: subPeriodEndIso(s),
     })
     .eq("stripe_customer_id", s.customer)
+
+  const profile = await findProfileByStripeCustomerId(deps.supabase, s.customer)
+  if (!profile) return
+
+  await upsertBillingSubscription(deps.supabase, {
+    user_id: profile.id,
+    provider: "stripe",
+    provider_customer_id: s.customer,
+    provider_subscription_id: s.id,
+    provider_status: s.status,
+    entitlement_status: stripeEntitlementStatus(s.status),
+    interval,
+    current_period_end: subPeriodEndIso(s),
+    cancel_at_period_end: s.cancel_at_period_end ?? false,
+  })
 }
 
 export interface DeleteDeps {
@@ -71,6 +91,19 @@ export async function handleSubscriptionDeleted(
       subscription_tier_id: deps.freeTierId,
     })
     .eq("stripe_customer_id", customer)
+
+  const profile = await findProfileByStripeCustomerId(deps.supabase, customer)
+  if (!profile) return
+
+  await upsertBillingSubscription(deps.supabase, {
+    user_id: profile.id,
+    provider: "stripe",
+    provider_customer_id: customer,
+    provider_subscription_id: sub.id,
+    provider_status: sub.status ?? "canceled",
+    entitlement_status: "canceled",
+    cancelled_at: new Date().toISOString(),
+  })
 }
 
 export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
@@ -79,4 +112,17 @@ export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promi
     customer: invoice.customer,
     attempt: invoice.attempt_count,
   })
+}
+
+async function findProfileByStripeCustomerId(
+  supabase: HandlerDeps["supabase"],
+  customerId: string,
+): Promise<{ id: string } | null> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle()
+  if (error) throw error
+  return data as { id: string } | null
 }

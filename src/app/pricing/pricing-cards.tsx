@@ -3,10 +3,13 @@
 import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { loadStripe } from "@stripe/stripe-js"
-import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js"
+import {
+  isPayPalCheckoutEnabled,
+  PaymentMethodCheckout,
+} from "@/components/checkout/payment-method-checkout"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import type { BillingInterval } from "@/lib/stripe/intervals"
-import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
+import { getStripePricingPlan, STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 const stripePromise = stripePublishableKey
@@ -28,7 +31,9 @@ export function PricingCards({
   const router = useRouter()
   const [selectedInterval, setSelectedInterval] = useState<PlanInterval | null>(initialInterval)
   const [checkoutError, setCheckoutError] = useState<string | null>(() =>
-    initialInterval && !stripePublishableKey ? checkoutStartError : null,
+    initialInterval && !isPayPalCheckoutEnabled() && !stripePublishableKey
+      ? checkoutStartError
+      : null,
   )
 
   useEffect(() => {
@@ -40,7 +45,9 @@ export function PricingCards({
 
   function choosePlan(interval: PlanInterval) {
     if (interval === selectedInterval) return
-    setCheckoutError(stripePublishableKey ? null : checkoutStartError)
+    setCheckoutError(
+      !isPayPalCheckoutEnabled() && !stripePublishableKey ? checkoutStartError : null,
+    )
     setSelectedInterval(interval)
     const params = new URLSearchParams({ interval })
     if (leadId) params.set("lead", leadId)
@@ -48,6 +55,10 @@ export function PricingCards({
   }
 
   const fetchClientSecret = useCallback(async () => {
+    if (!selectedInterval) {
+      throw new Error("checkout interval missing")
+    }
+
     if (!stripePublishableKey) {
       setCheckoutError(checkoutStartError)
       throw new Error("stripe publishable key missing")
@@ -72,11 +83,22 @@ export function PricingCards({
       throw new Error("checkout session response missing client secret")
     }
     trackAppEvent("checkout_started", {
-      interval: selectedInterval ?? undefined,
+      interval: selectedInterval,
       leadId: leadId ?? undefined,
+      provider: "stripe",
       source: "pricing_page",
     })
     return data.client_secret
+  }, [selectedInterval, leadId])
+
+  const handlePayPalCheckoutStarted = useCallback(() => {
+    if (!selectedInterval) return
+    trackAppEvent("checkout_started", {
+      interval: selectedInterval,
+      leadId: leadId ?? undefined,
+      provider: "paypal",
+      source: "pricing_page",
+    })
   }, [selectedInterval, leadId])
 
   return (
@@ -127,33 +149,29 @@ export function PricingCards({
       {/* Checkout surface appears below cards once a plan is picked */}
       {selectedInterval !== null && (
         <div className="border-t pt-8">
-          {checkoutError ? (
-            <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center">
-              <p className="mb-4 text-sm text-destructive">{checkoutError}</p>
-              <button
-                onClick={() => {
-                  setCheckoutError(null)
-                  // Re-trigger by briefly clearing and resetting interval
-                  const interval = selectedInterval
-                  setSelectedInterval(null)
-                  setTimeout(() => setSelectedInterval(interval), 0)
-                }}
-                className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-              >
-                Erneut versuchen
-              </button>
-            </div>
-          ) : (
-            <div id="checkout" className="min-h-[600px]">
-              <EmbeddedCheckoutProvider
-                key={selectedInterval}
-                stripe={stripePromise}
-                options={{ fetchClientSecret }}
-              >
-                <EmbeddedCheckout />
-              </EmbeddedCheckoutProvider>
-            </div>
-          )}
+          <PaymentMethodCheckout
+            cardCheckoutMinHeightClassName="min-h-[600px]"
+            checkoutError={checkoutError}
+            checkoutKey={selectedInterval}
+            fetchClientSecret={fetchClientSecret}
+            interval={selectedInterval}
+            leadId={leadId}
+            onChangePlan={() => {
+              setCheckoutError(null)
+              setSelectedInterval(null)
+              router.replace("/pricing")
+            }}
+            onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
+            onRetry={() => {
+              setCheckoutError(null)
+              const interval = selectedInterval
+              setSelectedInterval(null)
+              setTimeout(() => setSelectedInterval(interval), 0)
+            }}
+            planLabel={getStripePricingPlan(selectedInterval).ctaLabel}
+            source="pricing_page"
+            stripe={stripePromise}
+          />
         </div>
       )}
     </div>

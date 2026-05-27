@@ -119,13 +119,43 @@ export async function updateSession(request: NextRequest) {
   const needsSub = SUB_REQUIRED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
 
   if (needsSub) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("subscription_status")
-      .eq("id", user.id)
-      .single()
-    const active =
-      profile?.subscription_status === "active" || profile?.subscription_status === "past_due"
+    const { data: billingRows, error: billingError } = await supabase
+      .from("billing_subscriptions")
+      .select("entitlement_status, current_period_end, cancel_at_period_end")
+      .eq("user_id", user.id)
+
+    const now = Date.now()
+    let active = false
+
+    if (!billingError) {
+      active = (
+        (billingRows as Array<{
+          entitlement_status: string | null
+          current_period_end: string | null
+          cancel_at_period_end: boolean | null
+        }> | null) ?? []
+      ).some((row) => {
+        if (row.entitlement_status === "active" || row.entitlement_status === "past_due")
+          return true
+        if (row.entitlement_status !== "canceled" || !row.cancel_at_period_end) return false
+        const timestamp = Date.parse(row.current_period_end ?? "")
+        return Number.isFinite(timestamp) && timestamp > now
+      })
+    } else {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("subscription_status, current_period_end")
+        .eq("id", user.id)
+        .maybeSingle()
+
+      const legacyStatus = profile?.subscription_status
+      const legacyPeriodEnd = Date.parse(profile?.current_period_end ?? "")
+      active =
+        legacyStatus === "active" ||
+        legacyStatus === "past_due" ||
+        (legacyStatus === "canceled" && Number.isFinite(legacyPeriodEnd) && legacyPeriodEnd > now)
+    }
+
     if (!active) {
       const url = request.nextUrl.clone()
       url.pathname = "/pricing"

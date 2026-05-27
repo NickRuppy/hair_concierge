@@ -1,8 +1,12 @@
 import { redirect } from "next/navigation"
-import type { SupabaseClient } from "@supabase/supabase-js"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
+import {
+  ensurePayPalCheckoutAccountForToken,
+  PayPalCheckoutActivationError,
+} from "@/lib/paypal/checkout-activation"
+import { getPremiumTierId } from "@/lib/billing/tier-ids"
 import { getStripe } from "@/lib/stripe/client"
 import {
   CheckoutActivationError,
@@ -17,11 +21,18 @@ export const dynamic = "force-dynamic"
 export default async function WelcomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string }>
+  searchParams: Promise<{ provider?: string; session_id?: string; token?: string }>
 }) {
-  const { session_id } = await searchParams
-  if (!session_id) redirect("/")
+  const { provider, session_id, token } = await searchParams
+  if (provider === "paypal") {
+    return renderPayPalWelcome(token)
+  }
 
+  if (!session_id) redirect("/")
+  return renderStripeWelcome(session_id)
+}
+
+async function renderStripeWelcome(session_id: string) {
   const stripe = getStripe()
   let session
   try {
@@ -52,6 +63,7 @@ export default async function WelcomePage({
     })
     return (
       <WelcomeClient
+        activationSource={{ provider: "stripe", sessionId: session_id }}
         email={email}
         purchase={purchaseAnalytics}
         redirectTo="/onboarding"
@@ -60,14 +72,70 @@ export default async function WelcomePage({
     )
   }
 
-  return <WelcomeClient email={email} purchase={purchaseAnalytics} sessionId={session_id} />
+  return (
+    <WelcomeClient
+      activationSource={{ provider: "stripe", sessionId: session_id }}
+      email={email}
+      purchase={purchaseAnalytics}
+      sessionId={session_id}
+    />
+  )
 }
 
-async function getPremiumTierId(supabase: SupabaseClient): Promise<string> {
-  const { data, error } = await supabase.from("subscription_tiers").select("id, slug")
-  if (error) throw new Error(`failed to load subscription_tiers: ${error.message}`)
+async function renderPayPalWelcome(token: string | undefined) {
+  if (!token) redirect("/")
 
-  const premium = data?.find((row: { id: string; slug: string }) => row.slug === "premium")?.id
-  if (!premium) throw new Error("subscription_tiers premium seed row missing")
-  return premium
+  const admin = createAdminClient()
+  const activation = await ensurePayPalCheckoutAccountForToken(token, {
+    supabase: admin,
+    premiumTierId: await getPremiumTierId(admin),
+    linkQuizToProfile,
+  }).catch((err) => {
+    if (err instanceof PayPalCheckoutActivationError) redirect("/pricing")
+    throw err
+  })
+
+  if (activation.status === "duplicate") {
+    return (
+      <WelcomeClient
+        activationSource={{ provider: "paypal", token }}
+        mode="duplicate"
+        purchase={null}
+      />
+    )
+  }
+
+  if (activation.status === "pending") {
+    return (
+      <WelcomeClient
+        activationSource={{ provider: "paypal", token }}
+        mode="pending"
+        purchase={null}
+      />
+    )
+  }
+
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (user?.email?.toLowerCase() === activation.email.toLowerCase()) {
+    return (
+      <WelcomeClient
+        activationSource={{ provider: "paypal", token }}
+        email={activation.email}
+        purchase={null}
+        redirectTo="/onboarding"
+      />
+    )
+  }
+
+  return (
+    <WelcomeClient
+      activationSource={{ provider: "paypal", token }}
+      email={activation.email}
+      purchase={null}
+    />
+  )
 }

@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie PayPal Checkout Mockup</title>
+    <style>
+      :root {
+        --background: #fdfbf9;
+        --card: #ffffff;
+        --border: #e8e4de;
+        --plum-950: #2a1845;
+        --plum: #6b50a0;
+        --plum-light: #c8b8e0;
+        --plum-ice: #f2eefa;
+        --coral: #d4616a;
+        --coral-dark: #c0555d;
+        --coral-light: #fdeef0;
+        --green: #2d9f5e;
+        --text: #3a3835;
+        --muted: #6a6560;
+        --caption: #736f69;
+        --paypal-blue: #003087;
+        --paypal-yellow: #ffc439;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--background);
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .topbar {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 20;
+        border-bottom: 1px solid var(--border);
+        background: rgba(253, 251, 249, 0.95);
+        backdrop-filter: blur(14px);
+      }
+
+      .topbar-inner,
+      main {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 20px;
+      }
+
+      .countdown-small {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--caption);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .countdown-small b {
+        color: var(--coral-dark);
+        font-family: inherit;
+        font-size: 14px;
+      }
+
+      .dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--coral);
+      }
+
+      .topbar-cta,
+      .coral-button {
+        border: 0;
+        border-radius: 12px;
+        background: var(--coral);
+        color: #fff;
+        font-weight: 800;
+        box-shadow: 0 8px 24px -16px rgba(212, 97, 106, 0.65);
+        cursor: pointer;
+      }
+
+      .topbar-cta {
+        padding: 10px 16px;
+        font-size: 13px;
+      }
+
+      main {
+        padding: 0 20px;
+      }
+
+      section {
+        border-top: 1px solid var(--border);
+        padding: 32px 0;
+      }
+
+      .hero {
+        border-top: 0;
+        padding-top: 72px;
+        padding-bottom: 28px;
+        text-align: center;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(45, 159, 94, 0.25);
+        border-radius: 999px;
+        background: rgba(45, 159, 94, 0.1);
+        padding: 6px 14px;
+        color: var(--green);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow {
+        margin: 16px 0 8px;
+        color: var(--plum);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      .serif {
+        color: var(--plum-950);
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 500;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(24px, 7vw, 34px);
+        line-height: 1.14;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 28px;
+        line-height: 1.18;
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--card);
+        box-shadow: 0 1px 2px rgba(42, 24, 69, 0.03);
+      }
+
+      .transformation {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        overflow: hidden;
+      }
+
+      .side {
+        min-height: 184px;
+        padding: 18px;
+      }
+
+      .side.before {
+        background: linear-gradient(180deg, var(--coral-light), #fbdde0);
+        color: #6b3439;
+      }
+
+      .side.after {
+        background: linear-gradient(180deg, #dff4eb, #ccebdc);
+        color: #1f4d33;
+      }
+
+      .side-label {
+        margin-bottom: 16px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .row {
+        display: flex;
+        min-height: 42px;
+        align-items: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.5);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 16px;
+        font-style: italic;
+        line-height: 1.25;
+      }
+
+      .needs {
+        margin-top: 16px;
+        padding: 24px;
+      }
+
+      .needs h2 {
+        font-size: 25px;
+        line-height: 1.2;
+      }
+
+      .needs p {
+        color: var(--plum-950);
+        font-size: 14.5px;
+        line-height: 1.65;
+      }
+
+      .lever {
+        display: flex;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .lever-icon {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 999px;
+        background: var(--coral-light);
+        color: var(--coral-dark);
+        font-weight: 900;
+      }
+
+      .lever:nth-child(2) .lever-icon {
+        background: var(--plum-ice);
+        color: var(--plum);
+      }
+
+      .lever strong {
+        display: block;
+        color: var(--plum-950);
+        font-size: 15px;
+      }
+
+      .lever span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .locked {
+        position: relative;
+        min-height: 248px;
+        overflow: hidden;
+        text-align: center;
+      }
+
+      .locked-blur {
+        padding: 28px;
+        filter: blur(5px);
+      }
+
+      .blur-line {
+        height: 12px;
+        margin-bottom: 10px;
+        border-radius: 999px;
+        background: var(--plum-ice);
+      }
+
+      .locked-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(253, 251, 249, 0.6);
+        padding: 24px;
+      }
+
+      .lock {
+        color: var(--plum);
+        font-size: 34px;
+      }
+
+      .locked h2 {
+        margin-top: 8px;
+        font-size: 22px;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .small {
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .tom {
+        display: flex;
+        gap: 16px;
+      }
+
+      .tom img {
+        width: 80px;
+        height: 80px;
+        flex: 0 0 auto;
+        border: 2px solid var(--plum-light);
+        border-radius: 999px;
+        object-fit: cover;
+      }
+
+      blockquote {
+        margin: 0;
+        color: var(--plum-950);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 15px;
+        font-style: italic;
+        line-height: 1.55;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 12px;
+      }
+
+      .chip {
+        border: 1px solid var(--plum-light);
+        border-radius: 999px;
+        background: var(--plum-ice);
+        padding: 4px 10px;
+        color: var(--plum);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .feature-stack {
+        display: grid;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .feature {
+        overflow: hidden;
+      }
+
+      .feature img {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        object-position: top;
+      }
+
+      .feature-body {
+        padding: 20px;
+      }
+
+      .feature h3 {
+        margin: 0;
+        color: var(--plum-950);
+        font-size: 17px;
+        line-height: 1.35;
+      }
+
+      .feature-benefit {
+        margin-top: 14px;
+        border-top: 1px solid var(--border);
+        padding-top: 12px;
+        color: var(--plum);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 13px;
+        font-style: italic;
+      }
+
+      table {
+        width: 100%;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        background: var(--card);
+        font-size: 12px;
+      }
+
+      th,
+      td {
+        border-top: 1px solid var(--border);
+        padding: 12px 10px;
+      }
+
+      th {
+        border-top: 0;
+        color: var(--caption);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+
+      th:not(:first-child),
+      td:not(:first-child) {
+        text-align: center;
+      }
+
+      th:last-child,
+      td:last-child {
+        background: rgba(242, 238, 250, 0.7);
+        color: var(--plum);
+        font-weight: 800;
+      }
+
+      .pricing-intro {
+        text-align: center;
+      }
+
+      .pricing-intro h2 {
+        margin-top: 8px;
+        font-size: 34px;
+      }
+
+      .timer-box {
+        margin: 20px 0;
+        border: 1px solid rgba(212, 97, 106, 0.14);
+        border-radius: 14px;
+        background: var(--coral-light);
+        padding: 20px;
+        text-align: center;
+      }
+
+      .timer-box b {
+        display: block;
+        margin-top: 4px;
+        color: var(--plum-950);
+        font-size: 32px;
+        line-height: 1;
+      }
+
+      .plans {
+        display: grid;
+        gap: 10px;
+      }
+
+      .plan {
+        position: relative;
+        display: grid;
+        grid-template-columns: 18px minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: center;
+        min-height: 78px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: #fff;
+        padding: 14px;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .plan.selected {
+        border-color: var(--plum);
+        background: var(--plum-ice);
+      }
+
+      .radio {
+        width: 18px;
+        height: 18px;
+        border: 2px solid var(--border);
+        border-radius: 50%;
+      }
+
+      .selected .radio {
+        border-color: var(--plum);
+        background:
+          radial-gradient(circle, #fff 0 28%, transparent 31%),
+          var(--plum);
+      }
+
+      .plan-name {
+        display: block;
+        color: var(--plum-950);
+        font-weight: 800;
+      }
+
+      .plan-detail {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .line-through {
+        color: var(--caption);
+        text-decoration: line-through;
+      }
+
+      .price {
+        text-align: right;
+      }
+
+      .price .line-through {
+        display: block;
+        font-size: 12px;
+      }
+
+      .price strong {
+        display: block;
+        margin-top: 3px;
+        color: var(--plum-950);
+        font-size: 17px;
+      }
+
+      .plan-badge {
+        position: absolute;
+        top: -10px;
+        right: 14px;
+        border-radius: 999px;
+        background: var(--plum);
+        padding: 4px 10px;
+        color: #fff;
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .coral-button {
+        display: flex;
+        width: 100%;
+        min-height: 54px;
+        align-items: center;
+        justify-content: center;
+        margin-top: 14px;
+        padding: 14px 18px;
+        font-size: 14px;
+      }
+
+      .guarantee-note {
+        margin: 10px 0 0;
+        color: var(--caption);
+        font-size: 11px;
+        text-align: center;
+      }
+
+      .checkout-panel {
+        margin-top: 20px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: #fff;
+        padding: 16px;
+        box-shadow: 0 16px 40px -28px rgba(107, 80, 160, 0.45);
+      }
+
+      .checkout-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+
+      .checkout-head strong {
+        display: block;
+        color: var(--plum-950);
+        font-size: 13px;
+      }
+
+      .checkout-head span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .change-button {
+        min-height: 40px;
+        border: 0;
+        border-radius: 10px;
+        background: var(--plum-ice);
+        padding: 0 12px;
+        color: var(--plum);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .express-pay {
+        display: grid;
+        gap: 12px;
+      }
+
+      .divider {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 12px;
+        align-items: center;
+        color: var(--caption);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .divider::before,
+      .divider::after {
+        height: 1px;
+        background: var(--border);
+        content: "";
+      }
+
+      .card-method {
+        min-height: 52px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+        color: var(--plum-950);
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .card-method.active {
+        border-color: var(--plum);
+        background: var(--plum-ice);
+      }
+
+      .paypal-word {
+        color: var(--paypal-blue);
+        font-size: 17px;
+      }
+
+      .payment-box {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin-top: 12px;
+        padding: 16px;
+      }
+
+      .stripe-placeholder {
+        display: grid;
+        gap: 10px;
+      }
+
+      .field {
+        min-height: 46px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fcfbfa;
+        padding: 13px;
+        color: var(--caption);
+        font-size: 13px;
+      }
+
+      .paypal-button {
+        width: 100%;
+        min-height: 52px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--paypal-yellow);
+        color: var(--paypal-blue);
+        font-size: 20px;
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .payment-note {
+        margin: 12px 0 0;
+        color: var(--caption);
+        font-size: 11px;
+        line-height: 1.55;
+        text-align: center;
+      }
+
+      .trust-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .trust {
+        border-radius: 10px;
+        background: #faf8f5;
+        padding: 9px 8px;
+        color: var(--muted);
+        font-size: 10.5px;
+        text-align: center;
+      }
+
+      .pending {
+        display: none;
+        margin-top: 12px;
+        border: 1px solid rgba(45, 159, 94, 0.25);
+        border-radius: 14px;
+        background: #f0faf5;
+        padding: 14px;
+      }
+
+      .pending.visible {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid rgba(45, 159, 94, 0.2);
+        border-top-color: var(--green);
+        border-radius: 999px;
+        animation: spin 0.8s linear infinite;
+      }
+
+      .pending strong {
+        display: block;
+        color: #1f633f;
+        font-size: 13px;
+      }
+
+      .pending span {
+        color: #3f765b;
+        font-size: 12px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .guarantee-card {
+        margin-top: 28px;
+        padding: 24px;
+        text-align: center;
+      }
+
+      .guarantee-card .badge-round {
+        display: grid;
+        width: 108px;
+        height: 108px;
+        place-items: center;
+        margin: 0 auto 12px;
+        border: 1.5px dashed var(--coral);
+        border-radius: 50%;
+        color: var(--plum-950);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 32px;
+      }
+
+      .final-cta {
+        padding-bottom: 80px;
+        text-align: center;
+      }
+
+      .bubble {
+        color: var(--plum);
+        font-size: 28px;
+      }
+
+      @media (max-width: 420px) {
+        main {
+          padding: 0 16px;
+        }
+
+        .plan {
+          gap: 8px;
+          grid-template-columns: 18px minmax(0, 1fr) auto;
+        }
+
+        .tom {
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="countdown-small"><span class="dot"></span> Angebot: <b>8:23</b></div>
+        <a class="topbar-cta" href="#pricing">Jetzt sichern</a>
+      </div>
+    </div>
+
+    <main>
+      <section class="hero">
+        <span class="pill">✓ Analyse fertig</span>
+        <p class="eyebrow">Codex, hier findest du dein Ergebnis</p>
+        <h1>So können sich deine Haare in 4 Wochen anfühlen.</h1>
+      </section>
+
+      <section>
+        <article class="card transformation">
+          <div class="side before">
+            <div class="side-label">Heute</div>
+            <div class="row">strapazierte Längen</div>
+            <div class="row">Haarbruch</div>
+            <div class="row">wenig Stabilität</div>
+          </div>
+          <div class="side after">
+            <div class="side-label">In 4 Wochen</div>
+            <div class="row">spürbar fester</div>
+            <div class="row">stabilere, geschütztere Längen</div>
+            <div class="row">mehr Spannkraft & Widerstandskraft</div>
+          </div>
+        </article>
+
+        <article class="card needs">
+          <p class="eyebrow" style="margin-top:0">Was dein Haar jetzt braucht</p>
+          <h2>Mehr Stabilität in die Längen bringen</h2>
+          <p>
+            Wenn die Längen geschwächt sind, geben sie schneller nach und Spliss oder Haarbruch werden leichter weiter begünstigt.
+          </p>
+          <div class="lever">
+            <span class="lever-icon">★</span>
+            <div><strong>Bondbuilder</strong><span>Stabilisiert die Längen von innen.</span></div>
+          </div>
+          <div class="lever">
+            <span class="lever-icon">+</span>
+            <div><strong>Stärkende Maske</strong><span>Macht die Längen wieder belastbar.</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section>
+        <article class="card locked">
+          <div class="locked-blur">
+            <div class="blur-line" style="width:75%"></div>
+            <div class="blur-line" style="width:50%"></div>
+            <div class="blur-line" style="width:85%"></div>
+            <div class="blur-line" style="width:42%"></div>
+          </div>
+          <div class="locked-content">
+            <div class="lock">♙</div>
+            <h2>Dein vollständiger 30-Tage-Plan ist fertig</h2>
+            <p class="small muted">Mit konkreten Produkten für deine Situation</p>
+            <p class="small muted"><em>Ausgearbeitet von Chaarlie.</em></p>
+            <a class="topbar-cta" href="#pricing">Plan freischalten</a>
+          </div>
+        </article>
+      </section>
+
+      <section>
+        <div class="tom">
+          <img src="https://chaarlie.de/images/team/tom.jpg" alt="Tom" />
+          <div>
+            <blockquote>
+              “Viele Frauen überladen ihr Haar mit Feuchtigkeit, dabei fehlt Protein. Das Haar wird weich, bricht aber trotzdem. Genau das erkennt Chaarlie.”
+            </blockquote>
+            <p style="margin:8px 0 0;font-weight:800;color:var(--plum-950);font-size:13px">Tom</p>
+            <p class="small muted" style="margin:0">Friseurmeister & Content Creator</p>
+            <div class="chips">
+              <span class="chip">18 Jahre Erfahrung</span>
+              <span class="chip">900+ Kundinnen</span>
+              <span class="chip">Bekannt aus SAT.1</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <p class="eyebrow" style="text-align:center">Was Chaarlie für dich tut</p>
+        <h2 style="text-align:center">Dein persönlicher Haar-Experte. Immer dabei.</h2>
+        <div class="feature-stack">
+          <article class="card feature">
+            <img src="https://chaarlie.de/images/offer/advisor.jpg" alt="KI Haar-Berater" />
+            <div class="feature-body">
+              <p class="eyebrow" style="margin-top:0">Dein KI Haar-Berater</p>
+              <h3>Frag alles. Bekomm sofort Antworten.</h3>
+              <p class="small muted">Dein persönlicher Berater kennt dein Haar und erklärt dir, welche Pflege gerade sinnvoll ist.</p>
+              <p class="feature-benefit">Kompetente Antworten, wann immer du sie brauchst.</p>
+            </div>
+          </article>
+          <article class="card feature">
+            <img src="https://chaarlie.de/images/offer/products.jpg" alt="Produktempfehlungen" />
+            <div class="feature-body">
+              <p class="eyebrow" style="margin-top:0">500+ geprüfte Produkte</p>
+              <h3>Das richtige Shampoo. Der richtige Conditioner. Sofort.</h3>
+              <p class="small muted">Chaarlie sagt dir genau, welche Produkte zu deiner Situation passen und warum.</p>
+              <p class="feature-benefit">Nie wieder Fehlkäufe. Jedes Produkt hat einen Grund.</p>
+            </div>
+          </article>
+          <article class="card feature">
+            <img src="https://chaarlie.de/images/offer/routine.jpg" alt="Routine" />
+            <div class="feature-body">
+              <p class="eyebrow" style="margin-top:0">Deine Routine</p>
+              <h3>Ein klarer Plan. Was. Wann. Wie oft.</h3>
+              <p class="small muted">Chaarlie baut dir eine Routine, die so einfach wie möglich ist und zu deinem Alltag passt.</p>
+              <p class="feature-benefit">Du weißt jeden Tag genau, was zu tun ist.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 style="text-align:center;margin-bottom:16px">Ohne vs. mit Chaarlie</h2>
+        <table>
+          <thead>
+            <tr><th>Vergleich</th><th>Ohne</th><th>Chaarlie</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Protein/Feuchtigkeit-Analyse</td><td>—</td><td>Ja</td></tr>
+            <tr><td>Passende Produkte</td><td>Rätselraten</td><td>500+ mit Namen</td></tr>
+            <tr><td>Persönliche Routine</td><td>Trial & Error</td><td>Sofort</td></tr>
+            <tr><td>Beratung bei Fragen</td><td>Teurer Salon</td><td>Jederzeit</td></tr>
+            <tr><td>Sichtbares Ergebnis</td><td>Monate?</td><td>4 Wochen</td></tr>
+            <tr><td>Geld für falsche Produkte</td><td>Hunderte €</td><td>0 €</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="pricing">
+        <div class="pricing-intro">
+          <p class="eyebrow">Dein Plan ist fertig</p>
+          <h2>Starte Chaarlie</h2>
+          <p class="small muted">Deine Auswertung zeigt, was möglich ist. Dein Plan zeigt dir wie.</p>
+        </div>
+
+        <div class="timer-box">
+          <div class="countdown-small" style="justify-content:center;color:var(--coral)">
+            <span class="dot"></span> Angebot läuft ab in
+          </div>
+          <b>8:23</b>
+          <p class="small muted" style="margin:8px 0 0">Danach gilt der normale Preis</p>
+        </div>
+
+        <div class="plans">
+          <button class="plan" data-name="Monatlich" data-cta="Jetzt starten — €7,49 / Monat" type="button">
+            <span class="radio"></span>
+            <span>
+              <span class="plan-name">Monatlich</span>
+              <span class="plan-detail"><span class="line-through">€14,99</span> €7,49 / Monat</span>
+            </span>
+            <span class="price"><span class="line-through">€14,99</span><strong>€7,49</strong></span>
+          </button>
+
+          <button class="plan selected" data-name="Quartal" data-cta="Jetzt starten — €17,49 im Quartal" type="button">
+            <span class="plan-badge">Beliebteste Wahl</span>
+            <span class="radio"></span>
+            <span>
+              <span class="plan-name">Quartal</span>
+              <span class="plan-detail"><span class="line-through">€34,99</span> €17,49 · ~€5,83 / Monat · 22% sparen</span>
+            </span>
+            <span class="price"><span class="line-through">€34,99</span><strong>€17,49</strong></span>
+          </button>
+
+          <button class="plan" data-name="Jährlich" data-cta="Jetzt starten — €49,99 / Jahr" type="button">
+            <span class="radio"></span>
+            <span>
+              <span class="plan-name">Jährlich</span>
+              <span class="plan-detail"><span class="line-through">€99,99</span> €49,99 · ~€4,16 / Monat · 44% sparen</span>
+            </span>
+            <span class="price"><span class="line-through">€99,99</span><strong>€49,99</strong></span>
+          </button>
+        </div>
+
+        <button class="coral-button" id="main-cta" type="button">Jetzt starten — €17,49 im Quartal</button>
+        <p class="guarantee-note">14 Tage Geld-zurück-Garantie · Kein Risiko</p>
+
+        <div class="checkout-panel" id="checkout">
+          <div class="checkout-head">
+            <div>
+              <strong>Sicher bezahlen</strong>
+              <span id="checkout-plan">Jetzt starten — €17,49 im Quartal</span>
+            </div>
+            <button class="change-button" type="button">Plan ändern</button>
+          </div>
+
+          <div class="express-pay">
+            <div id="paypal-box">
+              <button class="paypal-button" id="paypal-button" type="button">PayPal</button>
+              <p class="payment-note">PayPal öffnet sich zur Bestätigung. Danach aktivieren wir dein Konto.</p>
+            </div>
+
+            <div class="divider">oder</div>
+
+            <button class="card-method" id="card-method" type="button" aria-expanded="false" aria-controls="stripe-box">
+              Karte / SEPA
+            </button>
+          </div>
+
+          <div class="payment-box" id="stripe-box" hidden>
+            <div class="stripe-placeholder" aria-hidden="true">
+              <div class="field">E-Mail aus deinem Checkout</div>
+              <div class="field">Kartennummer oder SEPA-Lastschrift</div>
+              <div class="field">Rechnungsland und Zahlungsdetails</div>
+            </div>
+            <button class="coral-button" type="button" style="margin-top:12px">Weiter zur Zahlung</button>
+          </div>
+
+          <div class="pending" id="pending">
+            <span class="spinner" aria-hidden="true"></span>
+            <span>
+              <strong>Wir aktivieren dein Abo...</strong>
+              <span>Das dauert normalerweise nur ein paar Sekunden.</span>
+            </span>
+          </div>
+
+          <div class="trust-row">
+            <div class="trust">14 Tage Geld-zurück-Garantie</div>
+            <div class="trust">Jederzeit kündbar</div>
+          </div>
+        </div>
+
+        <article class="card guarantee-card">
+          <div class="badge-round">14</div>
+          <h2 style="font-size:22px">Geld-zurück-Garantie</h2>
+          <p class="small muted">Sollte der Plan nicht zu dir passen, bekommst du innerhalb von 14 Tagen nach dem Kauf dein Geld zurück.</p>
+        </article>
+      </section>
+
+      <section class="final-cta">
+        <div class="bubble">♡</div>
+        <h2>Dein Haar wartet nicht. Starte jetzt.</h2>
+        <p class="small muted">Dein persönlicher Plan ist fertig. Hol dir jetzt das Sonderangebot.</p>
+        <a class="coral-button" href="#pricing">Mein Angebot sichern</a>
+      </section>
+    </main>
+
+    <script>
+      const plans = Array.from(document.querySelectorAll(".plan"))
+      const mainCta = document.getElementById("main-cta")
+      const checkoutPlan = document.getElementById("checkout-plan")
+      const cardMethod = document.getElementById("card-method")
+      const stripeBox = document.getElementById("stripe-box")
+      const paypalButton = document.getElementById("paypal-button")
+      const pending = document.getElementById("pending")
+
+      plans.forEach((plan) => {
+        plan.addEventListener("click", () => {
+          plans.forEach((candidate) => candidate.classList.remove("selected"))
+          plan.classList.add("selected")
+          mainCta.textContent = plan.dataset.cta
+          checkoutPlan.textContent = plan.dataset.cta
+          pending.classList.remove("visible")
+        })
+      })
+
+      function toggleCardMethod() {
+        const open = stripeBox.hidden
+        stripeBox.hidden = !open
+        cardMethod.classList.toggle("active", open)
+        cardMethod.setAttribute("aria-expanded", String(open))
+        pending.classList.remove("visible")
+      }
+
+      cardMethod.addEventListener("click", toggleCardMethod)
+      paypalButton.addEventListener("click", () => {
+        stripeBox.hidden = true
+        cardMethod.classList.remove("active")
+        cardMethod.setAttribute("aria-expanded", "false")
+        pending.classList.add("visible")
+      })
+    </script>
+  </body>
+</html>

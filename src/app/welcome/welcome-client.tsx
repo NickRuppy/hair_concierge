@@ -1,8 +1,8 @@
 "use client"
 
-import { CheckCircle, Mail } from "lucide-react"
+import { CheckCircle, LoaderCircle, Mail } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState, type FormEvent } from "react"
+import { useEffect, useMemo, useState, type FormEvent } from "react"
 import { PasswordPolicyChecklist } from "@/components/auth/password-policy-checklist"
 import { Input } from "@/components/ui/input"
 import { validatePasswordDraft } from "@/lib/auth/password-policy"
@@ -11,11 +11,17 @@ import { createClient } from "@/lib/supabase/client"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
 
 interface WelcomeClientProps {
-  email: string
+  email?: string
   purchase: CheckoutPurchaseAnalytics | null
   redirectTo?: string
-  sessionId: string
+  sessionId?: string
+  activationSource: CheckoutActivationSource
+  mode?: "activation" | "pending" | "duplicate"
 }
+
+type CheckoutActivationSource =
+  | { provider: "stripe"; sessionId: string }
+  | { provider: "paypal"; token: string }
 
 type LoadingState = "password" | "magic_link" | null
 type ScreenState = { view: "choice" } | { view: "sent" }
@@ -28,9 +34,18 @@ const UNKNOWN_ERROR = "Unbekannter Fehler"
 const MAGIC_LINK_BODY =
   "Wir senden dir einen sicheren Login-Link. Du klickst ihn im Postfach an und bist direkt angemeldet."
 
-export function WelcomeClient({ email, purchase, redirectTo, sessionId }: WelcomeClientProps) {
+export function WelcomeClient({
+  email,
+  purchase,
+  redirectTo,
+  sessionId,
+  activationSource,
+  mode = "activation",
+}: WelcomeClientProps) {
   const router = useRouter()
   const supabase = createClient()
+  const analyticsId = sessionId ?? activationSourceId(activationSource)
+  const requestBody = useMemo(() => activationRequestBody(activationSource), [activationSource])
 
   const [state, setState] = useState<ScreenState>({ view: "choice" })
   const [loading, setLoading] = useState<LoadingState>(null)
@@ -38,6 +53,48 @@ export function WelcomeClient({ email, purchase, redirectTo, sessionId }: Welcom
   const [confirmPassword, setConfirmPassword] = useState("")
   const [message, setMessage] = useState<string | null>(null)
   const [highlightMagicLink, setHighlightMagicLink] = useState(false)
+
+  useEffect(() => {
+    if (mode !== "pending" || activationSource.provider !== "paypal") return
+    const { token } = activationSource
+
+    let cancelled = false
+    let attempts = 0
+    let timer: ReturnType<typeof setTimeout> | null = null
+
+    async function pollActivation() {
+      attempts += 1
+      try {
+        const params = new URLSearchParams({ token })
+        const response = await fetch(`/api/paypal/activation-status?${params.toString()}`)
+        const body = await response.json().catch(() => ({}))
+        if (cancelled) return
+
+        if (response.ok && body.status === "active") {
+          window.location.reload()
+          return
+        }
+        if (response.ok && body.status === "duplicate") {
+          window.location.reload()
+          return
+        }
+      } catch {
+        // Keep the pending screen calm; the next poll or manual refresh can recover.
+      }
+
+      if (!cancelled && attempts < 15) {
+        timer = setTimeout(pollActivation, 2000)
+      } else if (!cancelled) {
+        setMessage("Das dauert gerade etwas länger. Bitte aktualisiere die Seite gleich erneut.")
+      }
+    }
+
+    timer = setTimeout(pollActivation, 1200)
+    return () => {
+      cancelled = true
+      if (timer) clearTimeout(timer)
+    }
+  }, [activationSource, mode])
 
   async function handleCreatePassword(e: FormEvent) {
     e.preventDefault()
@@ -55,7 +112,7 @@ export function WelcomeClient({ email, purchase, redirectTo, sessionId }: Welcom
       const res = await fetch("/api/auth/set-checkout-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: sessionId, password }),
+        body: JSON.stringify({ ...requestBody, password }),
       })
       const body = await res.json().catch(() => ({}))
 
@@ -68,6 +125,7 @@ export function WelcomeClient({ email, purchase, redirectTo, sessionId }: Welcom
       }
 
       const signInEmail = typeof body.email === "string" ? body.email : email
+      if (!signInEmail) throw new Error(UNKNOWN_ERROR)
       const { error } = await supabase.auth.signInWithPassword({
         email: signInEmail,
         password,
@@ -95,7 +153,7 @@ export function WelcomeClient({ email, purchase, redirectTo, sessionId }: Welcom
       const res = await fetch("/api/auth/send-magic-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: sessionId }),
+        body: JSON.stringify(requestBody),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
@@ -115,7 +173,7 @@ export function WelcomeClient({ email, purchase, redirectTo, sessionId }: Welcom
         <CheckoutReturnAnalytics
           purchase={purchase}
           redirectTo={redirectTo}
-          sessionId={sessionId}
+          sessionId={analyticsId}
         />
         <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
           <div className="w-full max-w-md space-y-4 text-center">
@@ -130,10 +188,48 @@ export function WelcomeClient({ email, purchase, redirectTo, sessionId }: Welcom
     )
   }
 
+  if (mode === "pending") {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
+        <div className="w-full max-w-md space-y-5 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <LoaderCircle className="h-6 w-6 animate-spin text-primary" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="font-header text-3xl text-foreground">Wir aktivieren dein Abo...</h1>
+            <p className="text-base text-muted-foreground">
+              Das dauert normalerweise nur ein paar Sekunden.
+            </p>
+          </div>
+          {message && <p className="text-sm text-muted-foreground">{message}</p>}
+        </div>
+      </main>
+    )
+  }
+
+  if (mode === "duplicate") {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
+        <div className="w-full max-w-md space-y-5 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <Mail className="h-6 w-6 text-primary" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="font-header text-3xl text-foreground">Abo bereits aktiv</h1>
+            <p className="text-base text-muted-foreground">
+              Für diese E-Mail gibt es bereits ein aktives Abo. Wir haben die neue PayPal-Zahlung
+              gestoppt. Bitte melde dich mit deinem bestehenden Konto an.
+            </p>
+          </div>
+        </div>
+      </main>
+    )
+  }
+
   if (state.view === "sent") {
     return (
       <>
-        <CheckoutReturnAnalytics purchase={purchase} sessionId={sessionId} />
+        <CheckoutReturnAnalytics purchase={purchase} sessionId={analyticsId} />
         <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
           <div className="w-full max-w-md space-y-6 text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
@@ -154,7 +250,7 @@ export function WelcomeClient({ email, purchase, redirectTo, sessionId }: Welcom
 
   return (
     <>
-      <CheckoutReturnAnalytics purchase={purchase} sessionId={sessionId} />
+      <CheckoutReturnAnalytics purchase={purchase} sessionId={analyticsId} />
       <main className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-8">
         <div className="w-full max-w-4xl space-y-6">
           <div className="space-y-4 text-center">
@@ -176,7 +272,7 @@ export function WelcomeClient({ email, purchase, redirectTo, sessionId }: Welcom
             </label>
             <Input
               id="checkout-email"
-              value={email}
+              value={email ?? ""}
               readOnly
               aria-readonly="true"
               className="h-11 bg-muted/60 text-center"
@@ -281,6 +377,18 @@ export function WelcomeClient({ email, purchase, redirectTo, sessionId }: Welcom
       </main>
     </>
   )
+}
+
+function activationRequestBody(source: CheckoutActivationSource): Record<string, string> {
+  if (source.provider === "paypal") {
+    return { provider: "paypal", token: source.token }
+  }
+  return { session_id: source.sessionId }
+}
+
+function activationSourceId(source: CheckoutActivationSource): string {
+  if (source.provider === "paypal") return `paypal:${source.token}`
+  return source.sessionId
 }
 
 function normalizeError(err: unknown): string {

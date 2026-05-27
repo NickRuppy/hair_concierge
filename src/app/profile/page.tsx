@@ -13,6 +13,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { ManageSubscriptionButton } from "@/components/profile/manage-subscription-button"
+import { findVisibleBillingSubscriptionForUser } from "@/lib/billing/subscriptions"
+import type { BillingSubscriptionRow } from "@/lib/billing/types"
 import { PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
 import type { OnboardingStep } from "@/lib/onboarding/store"
 import {
@@ -247,6 +249,10 @@ function toggleConcern(currentValues: ProfileConcern[], concern: ProfileConcern)
   }
 
   return [...currentValues, concern]
+}
+
+function formatNullableDate(value: string | null | undefined): string {
+  return value ? new Date(value).toLocaleDateString("de-DE") : "—"
 }
 
 function createProductRows(rows: UserProductUsageRow[]): ProductDetailRow[] {
@@ -508,6 +514,9 @@ export default function ProfilePage() {
   const [memorySaving, setMemorySaving] = useState(false)
   const [editingMemoryId, setEditingMemoryId] = useState<string | null>(null)
   const [memoryDraft, setMemoryDraft] = useState("")
+  const [billingSubscription, setBillingSubscription] = useState<BillingSubscriptionRow | null>(
+    null,
+  )
 
   useEffect(() => {
     let active = true
@@ -547,6 +556,31 @@ export default function ProfilePage() {
     }
 
     loadHairProfile()
+
+    return () => {
+      active = false
+    }
+  }, [supabase, userId])
+
+  useEffect(() => {
+    let active = true
+
+    async function loadBillingSubscription() {
+      if (!userId) {
+        if (active) setBillingSubscription(null)
+        return
+      }
+
+      try {
+        const row = await findVisibleBillingSubscriptionForUser(supabase, userId)
+        if (active) setBillingSubscription(row)
+      } catch (error) {
+        console.error("Error loading billing subscription:", error)
+        if (active) setBillingSubscription(null)
+      }
+    }
+
+    loadBillingSubscription()
 
     return () => {
       active = false
@@ -1870,24 +1904,32 @@ export default function ProfilePage() {
               ) : null}
             </Card>
 
-            {profile?.stripe_customer_id && (
+            {(profile?.stripe_customer_id || billingSubscription) && (
               <section className="mt-4 rounded-2xl border border-border/60 bg-card/60 p-6">
                 <h2 className="mb-3 font-[family-name:var(--font-display)] text-lg font-medium text-[var(--text-heading)]">
                   Mitgliedschaft
                 </h2>
                 <p className="mb-1 text-sm text-muted-foreground">
                   Status:{" "}
-                  <strong className="text-foreground">{profile.subscription_status ?? "—"}</strong>
+                  <strong className="text-foreground">
+                    {billingSubscription?.entitlement_status ?? profile?.subscription_status ?? "—"}
+                  </strong>
                 </p>
                 <p className="mb-4 text-sm text-muted-foreground">
                   Nächste Abrechnung / Laufzeitende:{" "}
                   <strong className="text-foreground">
-                    {profile.current_period_end
-                      ? new Date(profile.current_period_end).toLocaleDateString("de-DE")
-                      : "—"}
+                    {formatNullableDate(
+                      billingSubscription?.current_period_end ?? profile?.current_period_end,
+                    )}
                   </strong>
                 </p>
-                <ManageSubscriptionButton />
+                <ManageSubscriptionButton
+                  provider={billingSubscription?.provider ?? "stripe"}
+                  currentPeriodEnd={
+                    billingSubscription?.current_period_end ?? profile?.current_period_end
+                  }
+                  cancelAtPeriodEnd={billingSubscription?.cancel_at_period_end ?? false}
+                />
               </section>
             )}
 

@@ -10,6 +10,7 @@ export type AppEventMap = {
   checkout_started: {
     interval?: BillingInterval | null
     leadId?: string | null
+    provider: "stripe" | "paypal"
     source: "pricing_page" | "quiz_result_offer"
   }
   first_chat_message: Record<string, never>

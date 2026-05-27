@@ -14,6 +14,13 @@ import {
   ensureCheckoutAccount,
   verifyCheckoutSessionForActivation,
 } from "@/lib/stripe/checkout-activation"
+import {
+  PayPalCheckoutActivationError,
+  ensurePayPalCheckoutAccountForToken,
+  paypalCheckoutActivationId,
+  type PayPalCheckoutAccountResult,
+} from "@/lib/paypal/checkout-activation"
+import { getPremiumTierId } from "@/lib/billing/tier-ids"
 
 export const runtime = "nodejs"
 
@@ -45,6 +52,7 @@ export interface SendMagicLinkDeps {
     stripe?: Stripe,
   ) => Promise<Stripe.Checkout.Session>
   ensureCheckoutAccount: typeof ensureCheckoutAccount
+  ensurePayPalCheckoutAccountForToken?: typeof ensurePayPalCheckoutAccountForToken
   claimCheckoutActivation?: typeof claimCheckoutActivation
   releaseCheckoutActivationClaim?: typeof releaseCheckoutActivationClaim
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
@@ -56,6 +64,10 @@ type RouteResult = {
   status: number
   body: Record<string, unknown>
 }
+
+type CheckoutActivationTarget =
+  | { provider: "stripe"; sessionId: string; activationId: string }
+  | { provider: "paypal"; token: string; activationId: string }
 
 export async function POST(request: Request) {
   let body: unknown
@@ -75,7 +87,7 @@ export async function handleSendMagicLink(
   const parsed = parseBody(body)
   if (!parsed.ok) return { status: 400, body: { error: INVALID_REQUEST_ERROR } }
 
-  const rateCheck = await deps.checkRateLimit(parsed.sessionId, SEND_AUTH_LINK_RATE_LIMIT)
+  const rateCheck = await deps.checkRateLimit(parsed.target.activationId, SEND_AUTH_LINK_RATE_LIMIT)
   if (!rateCheck.allowed) {
     return {
       status: rateCheck.error === "service_unavailable" ? 503 : 429,
@@ -89,18 +101,11 @@ export async function handleSendMagicLink(
   }
 
   try {
-    const session = await deps.verifyCheckoutSessionForActivation(parsed.sessionId, deps.stripe)
-    const premiumTierId = await (deps.getPremiumTierId ?? getPremiumTierId)(deps.supabase)
-    const account = await deps.ensureCheckoutAccount(session, {
-      supabase: deps.supabase,
-      stripe: deps.stripe,
-      premiumTierId,
-      linkQuizToProfile: deps.linkQuizToProfile,
-    })
+    const account = await ensureActiveCheckoutAccount(parsed.target, deps)
 
     const claimed = await (deps.claimCheckoutActivation ?? claimCheckoutActivation)(
       deps.supabase,
-      parsed.sessionId,
+      parsed.target.activationId,
       account.userId,
       "passwordless",
     )
@@ -120,16 +125,16 @@ export async function handleSendMagicLink(
       console.error("[send-magic-link] signInWithOtp failed:", error.message)
       await (deps.releaseCheckoutActivationClaim ?? releaseCheckoutActivationClaim)(
         deps.supabase,
-        parsed.sessionId,
+        parsed.target.activationId,
       )
       return { status: 500, body: { error: SEND_ERROR } }
     }
 
-    await consumeCheckoutPasswordMarker(deps, account.userId, parsed.sessionId)
+    await consumeCheckoutPasswordMarker(deps, account.userId, parsed.target.activationId)
 
     return { status: 200, body: { ok: true, email: account.email } }
   } catch (err) {
-    if (err instanceof CheckoutActivationError) {
+    if (err instanceof CheckoutActivationError || err instanceof PayPalCheckoutActivationError) {
       return {
         status: isPaymentIncompleteError(err.code) ? 403 : 400,
         body: {
@@ -155,30 +160,22 @@ async function createSendMagicLinkDeps(): Promise<SendMagicLinkDeps> {
     checkRateLimit,
     verifyCheckoutSessionForActivation,
     ensureCheckoutAccount,
+    ensurePayPalCheckoutAccountForToken,
     linkQuizToProfile,
   }
-}
-
-async function getPremiumTierId(supabase: SupabaseClient): Promise<string> {
-  const { data, error } = await supabase.from("subscription_tiers").select("id, slug")
-  if (error) throw new Error(`failed to load subscription_tiers: ${error.message}`)
-
-  const premium = data?.find((row: { id: string; slug: string }) => row.slug === "premium")?.id
-  if (!premium) throw new Error("subscription_tiers premium seed row missing")
-  return premium
 }
 
 async function consumeCheckoutPasswordMarker(
   deps: SendMagicLinkDeps,
   userId: string,
-  sessionId: string,
+  activationId: string,
 ) {
   const { data, error } = await deps.supabase.auth.admin.getUserById(userId)
   if (error) throw new Error(`getUserById failed: ${error.message}`)
 
   const metadata = data.user?.app_metadata
   const appMetadata = isRecord(metadata) ? { ...metadata } : {}
-  if (appMetadata.checkout_activation_session_hash !== checkoutSessionHash(sessionId)) return
+  if (appMetadata.checkout_activation_session_hash !== checkoutSessionHash(activationId)) return
 
   delete appMetadata.checkout_activation_session_hash
   appMetadata.activation_method = "passwordless"
@@ -192,15 +189,72 @@ async function consumeCheckoutPasswordMarker(
   }
 }
 
-function parseBody(body: unknown): { ok: true; sessionId: string } | { ok: false } {
-  if (!isRecord(body)) return { ok: false }
-  const sessionId = body.session_id
-  if (typeof sessionId !== "string" || sessionId.trim() === "") return { ok: false }
-  return { ok: true, sessionId: sessionId.trim() }
+async function ensureActiveCheckoutAccount(
+  target: CheckoutActivationTarget,
+  deps: SendMagicLinkDeps,
+) {
+  const premiumTierId = await (deps.getPremiumTierId ?? getPremiumTierId)(deps.supabase)
+
+  if (target.provider === "stripe") {
+    const session = await deps.verifyCheckoutSessionForActivation(target.sessionId, deps.stripe)
+    return deps.ensureCheckoutAccount(session, {
+      supabase: deps.supabase,
+      stripe: deps.stripe,
+      premiumTierId,
+      linkQuizToProfile: deps.linkQuizToProfile,
+    })
+  }
+
+  const ensurePayPal =
+    deps.ensurePayPalCheckoutAccountForToken ?? ensurePayPalCheckoutAccountForToken
+  const account: PayPalCheckoutAccountResult = await ensurePayPal(target.token, {
+    supabase: deps.supabase,
+    premiumTierId,
+    linkQuizToProfile: deps.linkQuizToProfile,
+  })
+  if (account.status === "pending" || account.status === "duplicate") {
+    throw new PayPalCheckoutActivationError(
+      "paypal_subscription_inactive",
+      "PayPal subscription is not ready for activation",
+    )
+  }
+  return account
 }
 
-function isPaymentIncompleteError(code: CheckoutActivationError["code"]): boolean {
-  return code === "checkout_session_incomplete" || code === "checkout_session_unpaid"
+function parseBody(body: unknown): { ok: true; target: CheckoutActivationTarget } | { ok: false } {
+  if (!isRecord(body)) return { ok: false }
+  const target = parseActivationTarget(body)
+  if (!target) return { ok: false }
+  return { ok: true, target }
+}
+
+function parseActivationTarget(body: Record<string, unknown>): CheckoutActivationTarget | null {
+  const sessionId = body.session_id
+  if (typeof sessionId === "string" && sessionId.trim() !== "") {
+    return { provider: "stripe", sessionId: sessionId.trim(), activationId: sessionId.trim() }
+  }
+
+  if (body.provider === "paypal") {
+    const token = body.token
+    if (typeof token !== "string" || token.trim() === "") return null
+    return {
+      provider: "paypal",
+      token: token.trim(),
+      activationId: paypalCheckoutActivationId(token.trim()),
+    }
+  }
+
+  return null
+}
+
+function isPaymentIncompleteError(
+  code: CheckoutActivationError["code"] | PayPalCheckoutActivationError["code"],
+): boolean {
+  return (
+    code === "checkout_session_incomplete" ||
+    code === "checkout_session_unpaid" ||
+    code === "paypal_subscription_inactive"
+  )
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

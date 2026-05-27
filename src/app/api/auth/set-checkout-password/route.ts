@@ -15,6 +15,13 @@ import {
   ensureCheckoutAccount,
   verifyCheckoutSessionForActivation,
 } from "@/lib/stripe/checkout-activation"
+import {
+  PayPalCheckoutActivationError,
+  ensurePayPalCheckoutAccountForToken,
+  paypalCheckoutActivationId,
+  type PayPalCheckoutAccountResult,
+} from "@/lib/paypal/checkout-activation"
+import { getPremiumTierId } from "@/lib/billing/tier-ids"
 
 export const runtime = "nodejs"
 
@@ -47,6 +54,7 @@ export interface SetCheckoutPasswordDeps {
     stripe?: Stripe,
   ) => Promise<Stripe.Checkout.Session>
   ensureCheckoutAccount: typeof ensureCheckoutAccount
+  ensurePayPalCheckoutAccountForToken?: typeof ensurePayPalCheckoutAccountForToken
   claimCheckoutActivation?: typeof claimCheckoutActivation
   releaseCheckoutActivationClaim?: typeof releaseCheckoutActivationClaim
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
@@ -58,6 +66,10 @@ type RouteResult = {
   status: number
   body: Record<string, unknown>
 }
+
+type CheckoutActivationTarget =
+  | { provider: "stripe"; sessionId: string; activationId: string }
+  | { provider: "paypal"; token: string; activationId: string }
 
 export async function POST(request: Request) {
   let body: unknown
@@ -79,11 +91,11 @@ export async function handleSetCheckoutPassword(
   const parsed = parseBody(body)
   if (!parsed.ok) return { status: 400, body: { error: INVALID_REQUEST_ERROR } }
 
-  const { sessionId, password } = parsed
+  const { target, password } = parsed
   const passwordValidation = validatePasswordDraft(password, password)
   if (!passwordValidation.ok) return { status: 400, body: { error: WEAK_PASSWORD_ERROR } }
 
-  const rateCheck = await deps.checkRateLimit(sessionId, SET_CHECKOUT_PASSWORD_RATE_LIMIT)
+  const rateCheck = await deps.checkRateLimit(target.activationId, SET_CHECKOUT_PASSWORD_RATE_LIMIT)
   if (!rateCheck.allowed) {
     return {
       status: rateCheck.error === "service_unavailable" ? 503 : 429,
@@ -97,27 +109,20 @@ export async function handleSetCheckoutPassword(
   }
 
   try {
-    const session = await deps.verifyCheckoutSessionForActivation(sessionId, deps.stripe)
-    const premiumTierId = await (deps.getPremiumTierId ?? getPremiumTierId)(deps.supabase)
-    const account = await deps.ensureCheckoutAccount(session, {
-      supabase: deps.supabase,
-      stripe: deps.stripe,
-      premiumTierId,
-      linkQuizToProfile: deps.linkQuizToProfile,
-    })
+    const account = await ensureActiveCheckoutAccount(target, deps)
 
     if (!account.canSetInitialPassword) {
       return { status: 409, body: { error: EXISTING_ACCOUNT_ERROR } }
     }
 
     const metadata = await loadCurrentAppMetadata(deps.supabase, account.userId)
-    if (!isActivationStillValid(metadata, sessionId)) {
+    if (!isActivationStillValid(metadata, target.activationId)) {
       return { status: 409, body: { error: EXPIRED_ACTIVATION_ERROR } }
     }
 
     const claimed = await (deps.claimCheckoutActivation ?? claimCheckoutActivation)(
       deps.supabase,
-      sessionId,
+      target.activationId,
       account.userId,
       "password",
     )
@@ -141,14 +146,14 @@ export async function handleSetCheckoutPassword(
       console.error("[set-checkout-password] updateUserById failed:", updateError.message)
       await (deps.releaseCheckoutActivationClaim ?? releaseCheckoutActivationClaim)(
         deps.supabase,
-        sessionId,
+        target.activationId,
       )
       return { status: 500, body: { error: SERVER_ERROR } }
     }
 
     return { status: 200, body: { ok: true, email: account.email } }
   } catch (err) {
-    if (err instanceof CheckoutActivationError) {
+    if (err instanceof CheckoutActivationError || err instanceof PayPalCheckoutActivationError) {
       return {
         status: isPaymentIncompleteError(err.code) ? 403 : 400,
         body: {
@@ -173,17 +178,9 @@ async function createSetCheckoutPasswordDeps(): Promise<SetCheckoutPasswordDeps>
     checkRateLimit,
     verifyCheckoutSessionForActivation,
     ensureCheckoutAccount,
+    ensurePayPalCheckoutAccountForToken,
     linkQuizToProfile,
   }
-}
-
-async function getPremiumTierId(supabase: SupabaseClient): Promise<string> {
-  const { data, error } = await supabase.from("subscription_tiers").select("id, slug")
-  if (error) throw new Error(`failed to load subscription_tiers: ${error.message}`)
-
-  const premium = data?.find((row: { id: string; slug: string }) => row.slug === "premium")?.id
-  if (!premium) throw new Error("subscription_tiers premium seed row missing")
-  return premium
 }
 
 async function loadCurrentAppMetadata(
@@ -197,26 +194,84 @@ async function loadCurrentAppMetadata(
   return isRecord(metadata) ? { ...metadata } : {}
 }
 
-function isActivationStillValid(metadata: Record<string, unknown>, sessionId: string): boolean {
+async function ensureActiveCheckoutAccount(
+  target: CheckoutActivationTarget,
+  deps: SetCheckoutPasswordDeps,
+) {
+  const premiumTierId = await (deps.getPremiumTierId ?? getPremiumTierId)(deps.supabase)
+
+  if (target.provider === "stripe") {
+    const session = await deps.verifyCheckoutSessionForActivation(target.sessionId, deps.stripe)
+    return deps.ensureCheckoutAccount(session, {
+      supabase: deps.supabase,
+      stripe: deps.stripe,
+      premiumTierId,
+      linkQuizToProfile: deps.linkQuizToProfile,
+    })
+  }
+
+  const ensurePayPal =
+    deps.ensurePayPalCheckoutAccountForToken ?? ensurePayPalCheckoutAccountForToken
+  const account: PayPalCheckoutAccountResult = await ensurePayPal(target.token, {
+    supabase: deps.supabase,
+    premiumTierId,
+    linkQuizToProfile: deps.linkQuizToProfile,
+  })
+  if (account.status === "pending" || account.status === "duplicate") {
+    throw new PayPalCheckoutActivationError(
+      "paypal_subscription_inactive",
+      "PayPal subscription is not ready for activation",
+    )
+  }
+  return account
+}
+
+function isActivationStillValid(metadata: Record<string, unknown>, activationId: string): boolean {
   if (Object.prototype.hasOwnProperty.call(metadata, "password_initialized_at")) return false
-  return metadata.checkout_activation_session_hash === checkoutSessionHash(sessionId)
+  return metadata.checkout_activation_session_hash === checkoutSessionHash(activationId)
 }
 
 function parseBody(
   body: unknown,
-): { ok: true; sessionId: string; password: string } | { ok: false } {
+): { ok: true; target: CheckoutActivationTarget; password: string } | { ok: false } {
   if (!isRecord(body)) return { ok: false }
 
-  const sessionId = body.session_id
   const password = body.password
-  if (typeof sessionId !== "string" || sessionId.trim() === "") return { ok: false }
   if (typeof password !== "string") return { ok: false }
 
-  return { ok: true, sessionId: sessionId.trim(), password }
+  const target = parseActivationTarget(body)
+  if (!target) return { ok: false }
+
+  return { ok: true, target, password }
 }
 
-function isPaymentIncompleteError(code: CheckoutActivationError["code"]): boolean {
-  return code === "checkout_session_incomplete" || code === "checkout_session_unpaid"
+function parseActivationTarget(body: Record<string, unknown>): CheckoutActivationTarget | null {
+  const sessionId = body.session_id
+  if (typeof sessionId === "string" && sessionId.trim() !== "") {
+    return { provider: "stripe", sessionId: sessionId.trim(), activationId: sessionId.trim() }
+  }
+
+  if (body.provider === "paypal") {
+    const token = body.token
+    if (typeof token !== "string" || token.trim() === "") return null
+    return {
+      provider: "paypal",
+      token: token.trim(),
+      activationId: paypalCheckoutActivationId(token.trim()),
+    }
+  }
+
+  return null
+}
+
+function isPaymentIncompleteError(
+  code: CheckoutActivationError["code"] | PayPalCheckoutActivationError["code"],
+): boolean {
+  return (
+    code === "checkout_session_incomplete" ||
+    code === "checkout_session_unpaid" ||
+    code === "paypal_subscription_inactive"
+  )
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
