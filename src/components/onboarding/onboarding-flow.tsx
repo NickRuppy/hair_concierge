@@ -1,8 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState, useCallback } from "react"
-import posthog from "posthog-js"
-import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { useToast } from "@/providers/toast-provider"
 import { createClient } from "@/lib/supabase/client"
 import { useOnboardingStore } from "@/lib/onboarding/store"
@@ -521,8 +520,7 @@ export function OnboardingFlow({
             })
 
             if (!returnTo) {
-              posthog.capture("onboarding_completed", { userId })
-              trackCustomerIoEvent("onboarding_completed", { user_id: userId })
+              trackAppEvent("onboarding_completed", { userId })
             }
             break
           }

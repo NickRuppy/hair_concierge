@@ -2,16 +2,15 @@
 
 import { useRouter } from "next/navigation"
 import { useEffect, useRef } from "react"
-import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
-import { trackMetaPurchaseConfirmed, trackMetaSubscriptionConfirmed } from "@/lib/meta-pixel"
-import type { MetaPurchasePayload } from "@/lib/meta-pixel"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 
 export function CheckoutReturnAnalytics({
   purchase,
   redirectTo,
   sessionId,
 }: {
-  purchase: MetaPurchasePayload | null
+  purchase: CheckoutPurchaseAnalytics | null
   redirectTo?: string
   sessionId: string
 }) {
@@ -23,19 +22,18 @@ export function CheckoutReturnAnalytics({
     trackedRef.current = true
 
     try {
-      trackCustomerIoEvent("subscription_started", {
-        checkout_session_id: sessionId,
+      trackAppEvent("subscription_started", {
+        checkoutSessionId: sessionId,
       })
-      trackMetaSubscriptionConfirmed(sessionId)
       if (purchase) {
-        trackCustomerIoEvent("purchase_completed", {
-          checkout_session_id: sessionId,
+        trackAppEvent("purchase_completed", {
+          checkoutSessionId: sessionId,
           currency: purchase.currency.toUpperCase(),
           interval: purchase.interval,
-          payment_method_type: purchase.paymentMethodType,
+          paymentMethodType: purchase.paymentMethodType,
+          planId: purchase.planId,
           value: purchase.value,
         })
-        trackMetaPurchaseConfirmed(purchase)
       }
     } catch (err) {
       console.error("[welcome] checkout analytics failed:", err)

@@ -5,8 +5,7 @@ import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe
 import { loadStripe } from "@stripe/stripe-js"
 
 import { Button } from "@/components/ui/button"
-import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
-import { trackMetaCheckoutStarted, trackMetaPricingViewed } from "@/lib/meta-pixel"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
@@ -39,11 +38,10 @@ export function ResultOfferPricing({
   const selectedPlan = getStripePricingPlan(selectedInterval)
 
   useEffect(() => {
-    trackCustomerIoEvent("pricing_viewed", {
-      lead_id: leadId ?? undefined,
+    trackAppEvent("pricing_viewed", {
+      leadId: leadId ?? undefined,
       source: "quiz_result_offer_pricing",
     })
-    trackMetaPricingViewed("quiz_result_offer_pricing")
   }, [leadId])
 
   function choosePlan(interval: BillingInterval) {
@@ -92,10 +90,9 @@ export function ResultOfferPricing({
       throw new Error("checkout session response missing client secret")
     }
 
-    trackMetaCheckoutStarted("quiz_result_offer", checkoutInterval)
-    trackCustomerIoEvent("checkout_started", {
+    trackAppEvent("checkout_started", {
       interval: checkoutInterval,
-      lead_id: leadId ?? undefined,
+      leadId: leadId ?? undefined,
       source: "quiz_result_offer",
     })
 

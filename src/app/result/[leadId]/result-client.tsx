@@ -4,8 +4,7 @@ import { useEffect } from "react"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { buildQuizShareConfig } from "@/lib/quiz/share"
 import type { QuizAnswers } from "@/lib/quiz/types"
-import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
-import { posthog } from "@/providers/posthog-provider"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { useToast } from "@/providers/toast-provider"
 import { QuizResultsView } from "@/components/quiz/quiz-results-view"
 
@@ -21,8 +20,7 @@ export function ResultPageClient({ leadId, name, quizAnswers, shareQuote }: Resu
   const narrative = buildQuizResultNarrative(quizAnswers)
 
   useEffect(() => {
-    posthog.capture("result_page_viewed", { leadId })
-    trackCustomerIoEvent("result_page_viewed", { lead_id: leadId })
+    trackAppEvent("result_page_viewed", { leadId })
   }, [leadId])
 
   const handleShare = async () => {
@@ -40,8 +38,7 @@ export function ResultPageClient({ leadId, name, quizAnswers, shareQuote }: Resu
     if (!share) return
 
     if (share.mode === "native" && navigator.share) {
-      posthog.capture("result_shared", { method: "native", leadId })
-      trackCustomerIoEvent("result_shared", { lead_id: leadId, method: "native" })
+      trackAppEvent("result_shared", { leadId, method: "native", source: "public_result" })
       await navigator
         .share({
           title: share.title,
@@ -54,16 +51,14 @@ export function ResultPageClient({ leadId, name, quizAnswers, shareQuote }: Resu
 
     try {
       await navigator.clipboard.writeText(share.url)
-      posthog.capture("result_shared", { method: "copy_link", leadId })
-      trackCustomerIoEvent("result_shared", { lead_id: leadId, method: "copy_link" })
+      trackAppEvent("result_shared", { leadId, method: "copy_link", source: "public_result" })
       toast({
         title: "Link kopiert",
         description: "Du kannst das Ergebnis jetzt direkt teilen.",
       })
     } catch {
       window.open(share.url, "_blank", "noopener,noreferrer")
-      posthog.capture("result_shared", { method: "open_result", leadId })
-      trackCustomerIoEvent("result_shared", { lead_id: leadId, method: "open_result" })
+      trackAppEvent("result_shared", { leadId, method: "open_result", source: "public_result" })
       toast({
         title: "Ergebnis geöffnet",
         description: "Teile den Link direkt aus deinem Browser.",

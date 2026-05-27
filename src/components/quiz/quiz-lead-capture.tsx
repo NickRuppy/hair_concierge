@@ -8,9 +8,7 @@ import { QuizProgressBar } from "./quiz-progress-bar"
 import { QuizConsentSheet } from "./quiz-consent-sheet"
 import { ArrowLeft } from "lucide-react"
 import { Icon } from "@/components/ui/icon"
-import { posthog } from "@/providers/posthog-provider"
-import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
-import { trackMetaLeadCaptured } from "@/lib/meta-pixel"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 
@@ -68,14 +66,10 @@ export function QuizLeadCapture() {
 
       const data = await res.json()
       setLeadId(data.leadId)
-      posthog.capture("quiz_lead_captured", {
-        marketing_consent: accepted,
+      trackAppEvent("quiz_lead_captured", {
+        leadId: data.leadId,
+        marketingConsent: accepted,
       })
-      trackCustomerIoEvent("quiz_lead_captured", {
-        lead_id: data.leadId,
-        marketing_consent: accepted,
-      })
-      trackMetaLeadCaptured(accepted)
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")

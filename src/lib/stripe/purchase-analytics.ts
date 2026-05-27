@@ -1,6 +1,5 @@
 import type Stripe from "stripe"
 import { intervalFromPrice, type BillingInterval } from "./intervals"
-import type { MetaPurchasePayload } from "@/lib/meta-pixel"
 
 type RetrievedSubscription = {
   items: {
@@ -25,14 +24,22 @@ function singleAllowedPaymentMethodTypeFromSession(session: Stripe.Checkout.Sess
   return methodTypes[0]
 }
 
-function contentIdForInterval(interval: BillingInterval) {
+function planIdForInterval(interval: BillingInterval) {
   return `premium_${interval}`
 }
 
-export async function buildMetaPurchaseAnalytics(
+export type CheckoutPurchaseAnalytics = {
+  currency: string
+  interval: BillingInterval
+  paymentMethodType?: string
+  planId: string
+  value: number
+}
+
+export async function buildCheckoutPurchaseAnalytics(
   session: Stripe.Checkout.Session,
   stripe: Stripe,
-): Promise<MetaPurchasePayload | null> {
+): Promise<CheckoutPurchaseAnalytics | null> {
   const subscriptionId = subscriptionIdFromSession(session)
   if (
     !session.id ||
@@ -55,10 +62,9 @@ export async function buildMetaPurchaseAnalytics(
   })
 
   return {
-    contentId: contentIdForInterval(interval),
     currency: session.currency.toUpperCase(),
-    eventId: session.id,
     interval,
+    planId: planIdForInterval(interval),
     paymentMethodType: singleAllowedPaymentMethodTypeFromSession(session),
     value: session.amount_total / 100,
   }

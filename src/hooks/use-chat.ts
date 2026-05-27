@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useCallback, useRef } from "react"
-import posthog from "posthog-js"
-import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import type { Message, Conversation } from "@/lib/types"
 
 interface UseChatReturn {
@@ -108,8 +107,7 @@ export function useChat(): UseChatReturn {
       setIsStreaming(true)
 
       if (isFirstMessage) {
-        posthog.capture("first_chat_message")
-        trackCustomerIoEvent("first_chat_message")
+        trackAppEvent("first_chat_message", {})
       }
 
       // Create placeholder for assistant message

@@ -6,13 +6,13 @@ import { useState, type FormEvent } from "react"
 import { PasswordPolicyChecklist } from "@/components/auth/password-policy-checklist"
 import { Input } from "@/components/ui/input"
 import { validatePasswordDraft } from "@/lib/auth/password-policy"
-import type { MetaPurchasePayload } from "@/lib/meta-pixel"
+import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 import { createClient } from "@/lib/supabase/client"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
 
 interface WelcomeClientProps {
   email: string
-  purchase: MetaPurchasePayload | null
+  purchase: CheckoutPurchaseAnalytics | null
   redirectTo?: string
   sessionId: string
 }

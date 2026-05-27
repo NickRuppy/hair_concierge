@@ -1,9 +1,9 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { buildMetaPurchaseAnalytics } from "../src/lib/stripe/purchase-analytics"
+import { buildCheckoutPurchaseAnalytics } from "../src/lib/stripe/purchase-analytics"
 
-test("buildMetaPurchaseAnalytics maps Stripe final total, currency, plan, and broad payment method", async () => {
+test("buildCheckoutPurchaseAnalytics maps Stripe final total, currency, plan, and broad payment method", async () => {
   const retrieveCalls: unknown[][] = []
   const stripe = {
     subscriptions: {
@@ -25,7 +25,7 @@ test("buildMetaPurchaseAnalytics maps Stripe final total, currency, plan, and br
     },
   }
 
-  const result = await buildMetaPurchaseAnalytics(
+  const result = await buildCheckoutPurchaseAnalytics(
     {
       amount_total: 1749,
       currency: "eur",
@@ -37,17 +37,16 @@ test("buildMetaPurchaseAnalytics maps Stripe final total, currency, plan, and br
   )
 
   assert.deepEqual(result, {
-    contentId: "premium_quarter",
     currency: "EUR",
-    eventId: "cs_test_123",
     interval: "quarter",
     paymentMethodType: "card",
+    planId: "premium_quarter",
     value: 17.49,
   })
   assert.equal(retrieveCalls.length, 1)
 })
 
-test("buildMetaPurchaseAnalytics omits ambiguous payment method lists", async () => {
+test("buildCheckoutPurchaseAnalytics omits ambiguous payment method lists", async () => {
   const stripe = {
     subscriptions: {
       async retrieve() {
@@ -67,7 +66,7 @@ test("buildMetaPurchaseAnalytics omits ambiguous payment method lists", async ()
     },
   }
 
-  const result = await buildMetaPurchaseAnalytics(
+  const result = await buildCheckoutPurchaseAnalytics(
     {
       amount_total: 749,
       currency: "eur",

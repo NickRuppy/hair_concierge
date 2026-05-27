@@ -6,11 +6,9 @@ import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
 import { buildQuizShareConfig } from "@/lib/quiz/share"
 import { useQuizStore } from "@/lib/quiz/store"
-import { trackCustomerIoEvent } from "@/lib/customerio-tracking"
-import { trackMetaQuizCompleted } from "@/lib/meta-pixel"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { isSubscriptionActive } from "@/lib/stripe/gating"
 import { useAuth } from "@/providers/auth-provider"
-import { posthog } from "@/providers/posthog-provider"
 import { useToast } from "@/providers/toast-provider"
 import { QuizResultOfferPage } from "./quiz-result-offer-page"
 import { QuizResultsView } from "./quiz-results-view"
@@ -47,20 +45,13 @@ export function QuizResults() {
     if (checkoutAnalyticsCapturedRef.current) return
     checkoutAnalyticsCapturedRef.current = true
 
-    posthog.capture("quiz_completed", {
-      structure: answers.structure,
+    trackAppEvent("quiz_completed", {
       thickness: answers.thickness,
-      scalp_type: answers.scalp_type,
-      scalp_condition: answers.scalp_condition,
+      hairTexture: answers.structure,
+      leadId: leadId ?? undefined,
+      scalpCondition: answers.scalp_condition,
+      scalpType: answers.scalp_type,
     })
-    trackCustomerIoEvent("quiz_completed", {
-      hair_texture: answers.structure,
-      lead_id: leadId ?? undefined,
-      scalp_condition: answers.scalp_condition,
-      scalp_type: answers.scalp_type,
-      thickness: answers.thickness,
-    })
-    trackMetaQuizCompleted()
   }, [answers.scalp_condition, answers.scalp_type, answers.structure, answers.thickness, leadId])
 
   useEffect(() => {
@@ -100,8 +91,11 @@ export function QuizResults() {
     if (!share) return
 
     if (share.mode === "native" && navigator.share) {
-      posthog.capture("quiz_result_share_clicked", { leadId, method: "native" })
-      trackCustomerIoEvent("result_shared", { lead_id: leadId ?? undefined, method: "native" })
+      trackAppEvent("result_shared", {
+        leadId: leadId ?? undefined,
+        method: "native",
+        source: "quiz_result",
+      })
       await navigator
         .share({
           title: share.title,
@@ -114,16 +108,22 @@ export function QuizResults() {
 
     try {
       await navigator.clipboard.writeText(share.url)
-      posthog.capture("quiz_result_share_clicked", { leadId, method: "copy_link" })
-      trackCustomerIoEvent("result_shared", { lead_id: leadId ?? undefined, method: "copy_link" })
+      trackAppEvent("result_shared", {
+        leadId: leadId ?? undefined,
+        method: "copy_link",
+        source: "quiz_result",
+      })
       toast({
         title: "Link kopiert",
         description: "Du kannst dein Ergebnis jetzt direkt teilen.",
       })
     } catch {
       window.open(share.url, "_blank", "noopener,noreferrer")
-      posthog.capture("quiz_result_share_clicked", { leadId, method: "open_result" })
-      trackCustomerIoEvent("result_shared", { lead_id: leadId ?? undefined, method: "open_result" })
+      trackAppEvent("result_shared", {
+        leadId: leadId ?? undefined,
+        method: "open_result",
+        source: "quiz_result",
+      })
       toast({
         title: "Ergebnis geöffnet",
         description: "Teile den Link direkt aus deinem Browser.",

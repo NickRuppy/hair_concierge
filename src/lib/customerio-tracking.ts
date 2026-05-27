@@ -15,6 +15,7 @@ export type CustomerIoEventName =
   | "pricing_viewed"
   | "purchase_completed"
   | "quiz_completed"
+  | "quiz_goals_selected"
   | "quiz_lead_captured"
   | "quiz_started"
   | "quiz_step_viewed"
