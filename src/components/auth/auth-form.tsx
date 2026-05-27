@@ -174,7 +174,7 @@ export function AuthForm({
     setLoginErrorIsCredentials(false)
 
     const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
-      redirectTo: `${window.location.origin}/auth/update-password`,
+      redirectTo: `${window.location.origin}/auth/confirm`,
     })
 
     if (error) {
