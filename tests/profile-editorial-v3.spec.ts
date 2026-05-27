@@ -49,6 +49,25 @@ test.describe.serial("@ci profile editorial v3", () => {
       onboarding_completed: true,
     })
     if (profErr) throw new Error(`profiles upsert failed: ${profErr.message}`)
+
+    const { error: billingErr } = await admin.from("billing_subscriptions").upsert(
+      {
+        user_id: userId,
+        provider: "stripe",
+        provider_customer_id: "cus_ux_audit_test",
+        provider_subscription_id: "sub_ux_audit_test",
+        provider_status: "active",
+        entitlement_status: "active",
+        interval: "month",
+        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        cancel_at_period_end: false,
+        metadata: { ci_seed: "profile-editorial-v3" },
+      },
+      { onConflict: "provider,provider_subscription_id" },
+    )
+    if (billingErr && billingErr.code !== "PGRST205") {
+      throw new Error(`billing upsert failed: ${billingErr.message}`)
+    }
   })
 
   test("renders editorial layout without the removed blocks", async ({ page }) => {

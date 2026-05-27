@@ -3,6 +3,7 @@ import { z } from "zod"
 import { createClient } from "@supabase/supabase-js"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
 import { getStripe, PRICE_IDS } from "@/lib/stripe/client"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 
@@ -32,35 +33,47 @@ export async function POST(req: NextRequest) {
   let customerId: string | undefined
   let customerEmail: string | undefined
 
-  if (leadId) {
-    const adminSupabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      { auth: { persistSession: false } },
+  const cookieStore = await cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: () => {},
+      },
+    },
+  )
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  const authenticatedUserId = user?.id
+  if (authenticatedUserId) {
+    const adminSupabase = createBillingAdminClient()
+    const conflictResponse = await createStripeCheckoutAccessConflictResponse(
+      adminSupabase,
+      authenticatedUserId,
     )
+    if (conflictResponse) return conflictResponse
+  }
+
+  if (leadId) {
+    const adminSupabase = createBillingAdminClient()
     const { data } = await adminSupabase
       .from("leads")
       .select("email")
       .eq("id", leadId)
       .maybeSingle()
     customerEmail = data?.email ?? undefined
+    if (customerEmail) {
+      const conflictResponse = await createStripeCheckoutEmailAccessConflictResponse(
+        adminSupabase,
+        customerEmail,
+      )
+      if (conflictResponse) return conflictResponse
+    }
   } else {
     // Resubscribe / direct-entry path — lock to the authenticated user's identity
-    const cookieStore = await cookies()
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll: () => cookieStore.getAll(),
-          setAll: () => {},
-        },
-      },
-    )
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
     if (user) {
       const { data: profile } = await supabase
         .from("profiles")
@@ -109,4 +122,44 @@ export async function POST(req: NextRequest) {
   })
 
   return NextResponse.json({ client_secret: session.client_secret })
+}
+
+export async function createStripeCheckoutEmailAccessConflictResponse(
+  supabase: Parameters<typeof assertCanStartCheckoutForEmail>[0],
+  email: string,
+): Promise<NextResponse<{ error: "checkout_access_already_exists" }> | null> {
+  try {
+    await assertCanStartCheckoutForEmail(supabase, email)
+    return null
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("already has access")) {
+      return NextResponse.json({ error: "checkout_access_already_exists" }, { status: 409 })
+    }
+    throw error
+  }
+}
+
+function createBillingAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: { persistSession: false },
+    },
+  )
+}
+
+export async function createStripeCheckoutAccessConflictResponse(
+  supabase: Parameters<typeof assertCanStartCheckout>[0],
+  userId: string,
+): Promise<NextResponse<{ error: "checkout_access_already_exists" }> | null> {
+  try {
+    await assertCanStartCheckout(supabase, userId)
+    return null
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("already has access")) {
+      return NextResponse.json({ error: "checkout_access_already_exists" }, { status: 409 })
+    }
+    throw error
+  }
 }

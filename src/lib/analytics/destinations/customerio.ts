@@ -12,6 +12,7 @@ function toCustomerIoPayload<E extends AppEventName>(eventName: E, payload: AppE
       return {
         interval: data.interval,
         lead_id: data.leadId,
+        provider: data.provider,
         source: data.source,
       }
     }
