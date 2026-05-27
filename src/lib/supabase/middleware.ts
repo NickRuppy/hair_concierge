@@ -10,6 +10,7 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl
   const fastPublicRoutes = [
     "/api/stripe",
+    "/api/paypal",
     "/api/auth/send-magic-link",
     "/api/auth/send-setup-link",
     "/api/auth/set-checkout-password",
@@ -67,6 +68,7 @@ export async function updateSession(request: NextRequest) {
     "/pricing",
     "/welcome",
     "/api/stripe",
+    "/api/paypal",
     ...(process.env.NODE_ENV === "development" ? ["/labs", "/api/labs"] : []),
     ...(process.env.NODE_ENV === "development" && process.env.LOCAL_DEV_LOGIN_ENABLED === "1"
       ? ["/api/dev/login"]
