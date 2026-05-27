@@ -32,7 +32,7 @@ function requestInterpretation(
     primary_intent: "general_advice",
     product_request_kind: "none",
     routine_intent: "none",
-    category: "none",
+    care_category: "none",
     requested_product_count: null,
     count_policy: "none",
     evidence_quote: "Brauche ich wirklich eine Maske?",
@@ -46,7 +46,7 @@ test("AgentV2RequestInterpretationSchema accepts strict semantic examples", () =
     requestInterpretation({
       primary_intent: "product_recommendation",
       product_request_kind: "specific_products",
-      category: "shampoo",
+      care_category: "shampoo",
       requested_product_count: 2,
       count_policy: "exact",
       evidence_quote: "Empfiehl mir zwei Shampoos.",
@@ -54,14 +54,14 @@ test("AgentV2RequestInterpretationSchema accepts strict semantic examples", () =
     requestInterpretation({
       primary_intent: "category_education",
       product_request_kind: "category_education",
-      category: "mask",
+      care_category: "mask",
       count_policy: "none",
       evidence_quote: "Brauche ich wirklich eine Maske?",
     }),
     requestInterpretation({
       primary_intent: "routine_mutation",
       routine_intent: "replace_product",
-      category: "conditioner",
+      care_category: "conditioner",
       evidence_quote: "Tausch den Conditioner aus.",
     }),
     requestInterpretation({
@@ -71,18 +71,18 @@ test("AgentV2RequestInterpretationSchema accepts strict semantic examples", () =
     }),
     requestInterpretation({
       primary_intent: "general_advice",
-      category: "oil",
+      care_category: "oil",
       evidence_quote: "Wie verwende ich Haaroel?",
     }),
     requestInterpretation({
       primary_intent: "clarification",
-      category: "unknown",
+      care_category: "unknown",
       confidence: 0.42,
       evidence_quote: "Was soll ich nehmen?",
     }),
     requestInterpretation({
       primary_intent: "safety_boundary",
-      category: "none",
+      care_category: "none",
       confidence: 0.98,
       evidence_quote: "Meine Kopfhaut blutet.",
     }),
@@ -153,7 +153,7 @@ test("AgentV2TerminalAnswerSchema accepts a product recommendation payload", () 
     request_interpretation: requestInterpretation({
       primary_intent: "product_recommendation",
       product_request_kind: "specific_products",
-      category: "shampoo",
+      care_category: "shampoo",
       requested_product_count: 1,
       count_policy: "default",
       evidence_quote: "Ich brauche ein Shampoo.",
@@ -357,7 +357,6 @@ test("AgentV2 request interpretation regression fixture is structurally valid", 
     "category_education",
     "compare_products",
     "product_detail",
-    "routine_product_deep_dive",
   ])
   const routineIntents = new Set([
     "none",
@@ -369,7 +368,7 @@ test("AgentV2 request interpretation regression fixture is structurally valid", 
     "summarize",
     "exit",
   ])
-  const categories = new Set([
+  const careCategories = new Set([
     "none",
     "unknown",
     "shampoo",
@@ -418,7 +417,10 @@ test("AgentV2 request interpretation regression fixture is structurally valid", 
       routineIntents.has(String(expected.routine_intent)),
       `${entry.id}: unsupported routine_intent`,
     )
-    assert.ok(categories.has(String(expected.category)), `${entry.id}: unsupported category`)
+    assert.ok(
+      careCategories.has(String(expected.care_category)),
+      `${entry.id}: unsupported care_category`,
+    )
     assert.ok(
       countPolicies.has(String(expected.count_policy)),
       `${entry.id}: unsupported count_policy`,
@@ -465,7 +467,7 @@ test("AgentV2 request interpretation regression fixture is structurally valid", 
     "product_comparison",
     "routine_build",
     "routine_mutation",
-    "routine_product_deep_dive",
+    "routine_context_product_ask",
     "routine_summary",
     "routine_exit",
     "multi_turn_reference",
@@ -480,4 +482,27 @@ test("AgentV2 request interpretation regression fixture is structurally valid", 
       `missing regression dimension: ${expectedDimension}`,
     )
   }
+})
+
+test("AgentV2 regression fixture represents routine product follow-ups as specific products plus routine context", () => {
+  const regressionCases = JSON.parse(
+    readFileSync("data/agent-v2/evals/request-interpretation-regression.json", "utf8"),
+  ) as Array<{
+    id: string
+    expected: {
+      primary_intent: string
+      product_request_kind: string
+      required_tool: string
+      routine_context_required?: boolean
+    }
+  }>
+
+  const entry = regressionCases.find(
+    (item) => item.id === "request-interpretation-routine-first-addon-deep-dive",
+  )
+  assert.ok(entry)
+  assert.equal(entry.expected.primary_intent, "product_recommendation")
+  assert.equal(entry.expected.product_request_kind, "specific_products")
+  assert.equal(entry.expected.required_tool, "select_products")
+  assert.equal(entry.expected.routine_context_required, true)
 })

@@ -179,7 +179,7 @@ export interface AgentCompareJudgmentRecord {
   toolLoopVariant?: AgentCompareToolLoopVariant
   context: AgentCompareUserSnapshot
   results: {
-    current: CompareRunResult
+    current?: CompareRunResult
     agent: CompareRunResult
   }
   judgment: AgentCompareJudgmentDraft

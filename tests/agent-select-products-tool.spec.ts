@@ -1897,6 +1897,55 @@ test("projectSelectedProducts keeps optional bondbuilder assessment with priced 
   assert.match(result.comparison_facts?.k18?.join(" ") ?? "", /Bruch/)
 })
 
+test("projectSelectedProducts exposes bondbuilder usage hints as user-facing product claims", () => {
+  const usageHint =
+    "Nach dem Shampoo ohne Conditioner auf handtuchtrockenes Haar geben, 4 Minuten einwirken lassen, nicht ausspuelen und danach stylen. In den ersten 4-6 Waeschen nach jeder Waesche, danach nach Bedarf verwenden."
+
+  const result = projectSelectedProducts(
+    [
+      createMatchedProduct("k18-leave-in", 0.95, {
+        category: "Bondbuilder",
+        recommendation_meta: {
+          category: "bondbuilder",
+          score: 9.5,
+          top_reasons: ["Passt als Leave-in-Strukturpflege fuer stark beanspruchte Laengen."],
+          tradeoffs: [],
+          usage_hint: usageHint,
+          matched_intensity: "intensive",
+          application_mode: "post_wash_leave_in",
+          bond_repair_axis: "peptide_chain",
+          treatment_mode: "leave_in",
+          product_format: "leave_in_mask",
+          usage_protocol: "k18_leave_in",
+          lifecycle_status: "active",
+        } satisfies BondbuilderRecommendationMetadata,
+      }),
+    ],
+    {
+      ...LOW_DAMAGE_PROFILE,
+      chemical_treatment: ["bleached"],
+      concerns: ["breakage"],
+    } as HairProfile,
+    "bondbuilder",
+    createRuntimeStub(),
+  )
+
+  const usageClaim = result.products[0]?.supported_claims.find(
+    (claim) => claim.field === "usage_hint",
+  )
+
+  assert.ok(usageClaim, "bondbuilder product should expose exact usage_hint")
+  assert.equal(usageClaim.value, usageHint)
+  assert.equal(usageClaim.evidence, "product_spec")
+  assert.equal(usageClaim.label, `Anwendung: ${usageHint}`)
+  assert.notEqual(usageClaim.value, "k18_leave_in")
+  assert.equal(
+    result.products[0]?.supported_claims.some((claim) => claim.field === "usage_protocol"),
+    false,
+    "bondbuilder product claims should not expose internal usage_protocol ids",
+  )
+})
+
 test("projectSelectedProducts redirects scalp-only conditioner requests without products", () => {
   const result = projectSelectedProducts(
     [createMatchedProduct("p-conditioner", 0.94)],

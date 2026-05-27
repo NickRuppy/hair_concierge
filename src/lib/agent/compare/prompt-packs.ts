@@ -255,6 +255,58 @@ export const AGENTIC_TOOL_LOOP_SEED_PROMPT_TEMPLATES: AgentComparePromptTemplate
   },
 ]
 
+export const AGENT_V2_QUALITY_REVIEW_PROMPT_TEMPLATES: AgentComparePromptTemplate[] = [
+  {
+    id: "agent-v2-review-bondbuilder-protocol",
+    label: "AgentV2 Review · Bondbuilder Protokoll",
+    prompt: "Muss ich K18 auswaschen und wie oft soll ich es benutzen?",
+    failure_classes: ["bondbuilder_protocol", "grounded_product_detail", "feasible_cta"],
+  },
+  {
+    id: "agent-v2-review-bondbuilder-routine-placement",
+    label: "AgentV2 Review · Bondbuilder Reihenfolge",
+    prompt: "Wo kommt Bondbuilder in meiner Routine hin?",
+    failure_classes: ["bondbuilder_protocol", "routine_placement", "product_specific_caveat"],
+  },
+  {
+    id: "agent-v2-review-bondbuilder-brand-comparison",
+    label: "AgentV2 Review · K18 vs OLAPLEX",
+    prompt: "K18 oder OLAPLEX, was ist besser?",
+    failure_classes: ["comparison", "non_redundant_cta", "grounded_claims"],
+  },
+  {
+    id: "agent-v2-review-deep-cleansing-products",
+    label: "AgentV2 Review · Tiefenreinigung Produkt",
+    prompt: "Nenn mir ein Tiefenreinigungsshampoo gegen Build-up.",
+    failure_classes: ["deep_cleansing_catalog", "product_selection", "profile_grounding"],
+  },
+  {
+    id: "agent-v2-review-deep-cleansing-detail",
+    label: "AgentV2 Review · Malibu C Claim",
+    prompt: "Ist das Malibu C Hard Water Wellness Shampoo chelatierend und farbsicher?",
+    failure_classes: ["unsupported_claim", "catalog_leakage", "feasible_cta"],
+  },
+  {
+    id: "agent-v2-review-deep-cleansing-vs-peeling",
+    label: "AgentV2 Review · Reset vs Peeling",
+    prompt: "Bei Build-up: lieber Tiefenreinigungsshampoo oder Kopfhautpeeling?",
+    failure_classes: ["factual_boundary", "category_comparison", "scalp_vs_lengths"],
+  },
+  {
+    id: "agent-v2-review-oil-heat-claim",
+    label: "AgentV2 Review · Oel Hitzeschutz",
+    prompt: "Kann ich das Moroccanoil Treatment als Hitzeschutz benutzen?",
+    failure_classes: ["unsupported_claim", "heat_protection_boundary", "feasible_cta"],
+  },
+  {
+    id: "agent-v2-review-mild-scalp-cosmetic",
+    label: "AgentV2 Review · Milde Kopfhaut",
+    prompt:
+      "Meine Kopfhaut ist manchmal leicht juckig, aber nicht rot. Welches milde Shampoo passt?",
+    failure_classes: ["mild_scalp_routing", "product_selection", "safety_boundary"],
+  },
+]
+
 export const AGENT_COMPARE_MULTI_TURN_CHAINS: AgentCompareMultiTurnChain[] = [
   {
     id: "routine-to-typoed-shampoo",
@@ -354,6 +406,24 @@ export const AGENT_COMPARE_MULTI_TURN_CHAINS: AgentCompareMultiTurnChain[] = [
       "product_recommendation",
     ],
   },
+  {
+    id: "agent-v2-review-routine-first-extra-product",
+    label: "AgentV2 Review · Routine -> erster Zusatz",
+    turns: [
+      "Ich will meine Routine einfacher machen.",
+      "Welches Produkt passt für den ersten Zusatz?",
+    ],
+    failure_classes: ["routine_context", "product_followup", "avoid_routine_rebuild"],
+  },
+  {
+    id: "agent-v2-review-previous-offer-reference",
+    label: "AgentV2 Review · Voriges Angebot -> Produkte",
+    turns: [
+      "Meine Haare sind trocken und frizzig. Was soll ich ändern?",
+      "Ja, zeig mir passende Produkte dafür.",
+    ],
+    failure_classes: ["previous_offer_reference", "product_followup", "latency"],
+  },
 ]
 
 export const AGENT_COMPARE_PROMPT_TEMPLATES: AgentComparePromptTemplate[] = [
@@ -365,4 +435,5 @@ export const AGENT_COMPARE_PROMPT_TEMPLATES: AgentComparePromptTemplate[] = [
   ...MASK_QA_PROMPT_TEMPLATES,
   ...GENERAL_COMPARE_PROMPT_TEMPLATES,
   ...AGENTIC_TOOL_LOOP_SEED_PROMPT_TEMPLATES,
+  ...AGENT_V2_QUALITY_REVIEW_PROMPT_TEMPLATES,
 ]

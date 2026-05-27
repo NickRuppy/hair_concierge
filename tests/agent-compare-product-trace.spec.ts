@@ -2,7 +2,9 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  AGENT_COMPARE_MULTI_TURN_CHAINS,
   AGENT_COMPARE_PROMPT_TEMPLATES,
+  AGENT_V2_QUALITY_REVIEW_PROMPT_TEMPLATES,
   CONDITIONER_EDGE_PROMPT_TEMPLATES,
   CONDITIONER_QA_PROMPT_TEMPLATES,
   LEAVE_IN_EDGE_PROMPT_TEMPLATES,
@@ -97,6 +99,37 @@ test("leave-in prompt packs cover Agent v1 heat, styling prep, booster, and unsu
   assert.ok(LEAVE_IN_QA_PROMPT_TEMPLATES.every((template) => /leave-in/i.test(template.prompt)))
   assert.equal(
     AGENT_COMPARE_PROMPT_TEMPLATES.filter((template) => template.id.startsWith("leave-in-")).length,
+    8,
+  )
+})
+
+test("AgentV2 review prompt pack covers the prioritized manual QA prompts", () => {
+  assert.deepEqual(
+    AGENT_V2_QUALITY_REVIEW_PROMPT_TEMPLATES.map((template) => template.id),
+    [
+      "agent-v2-review-bondbuilder-protocol",
+      "agent-v2-review-bondbuilder-routine-placement",
+      "agent-v2-review-bondbuilder-brand-comparison",
+      "agent-v2-review-deep-cleansing-products",
+      "agent-v2-review-deep-cleansing-detail",
+      "agent-v2-review-deep-cleansing-vs-peeling",
+      "agent-v2-review-oil-heat-claim",
+      "agent-v2-review-mild-scalp-cosmetic",
+    ],
+  )
+  assert.ok(
+    AGENT_COMPARE_MULTI_TURN_CHAINS.some(
+      (chain) => chain.id === "agent-v2-review-routine-first-extra-product",
+    ),
+  )
+  assert.ok(
+    AGENT_COMPARE_MULTI_TURN_CHAINS.some(
+      (chain) => chain.id === "agent-v2-review-previous-offer-reference",
+    ),
+  )
+  assert.equal(
+    AGENT_COMPARE_PROMPT_TEMPLATES.filter((template) => template.id.startsWith("agent-v2-review-"))
+      .length,
     8,
   )
 })

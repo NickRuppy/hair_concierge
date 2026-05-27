@@ -292,7 +292,7 @@ test("handleAgentCompareRequest preserves AgentV2 request interpretation trace i
               primary_intent: "product_recommendation",
               product_request_kind: "specific_products",
               routine_intent: "none",
-              category: "conditioner",
+              care_category: "conditioner",
               requested_product_count: 2,
               count_policy: "exact",
               evidence_quote: "zwei Conditioner",
@@ -360,6 +360,59 @@ test("handleAgentCompareRequest preserves AgentV2 request interpretation trace i
     assert.equal(agentV2Result?.agent_v2_trace.bounded_repair_kind, "terminal_only")
   }))
 
+test("handleAgentCompareRequest can run AgentV2 as the only compare system", async () =>
+  withNodeEnv("development", async () => {
+    const { handleAgentCompareRequest } = await importRoute()
+    let legacyCalls = 0
+    let agentV2Calls = 0
+    const response = await handleAgentCompareRequest(
+      {
+        userId: "user-42",
+        prompt: "Muss ich K18 auswaschen und wie oft soll ich es benutzen?",
+        blinded: false,
+        systems: ["agent_v2"],
+      },
+      {
+        listEligibleCompareUsers: async () => [],
+        loadCompareUserSnapshot: async () => {
+          throw new Error("not used")
+        },
+        runCurrentComparisonForUser: async () => {
+          legacyCalls += 1
+          throw new Error("classic should not run")
+        },
+        runShadowComparisonForUser: async () => {
+          legacyCalls += 1
+          throw new Error("tool loop should not run")
+        },
+        runAgentV2ComparisonForUser: async () => {
+          agentV2Calls += 1
+          return {
+            system: "agent_v2",
+            answer: "AgentV2 Antwort",
+            latency_ms: 90,
+            debug_lines: [],
+            matched_products: [],
+            error: null,
+          }
+        },
+      },
+    )
+
+    assert.equal(response.status, 200)
+    const body = await response.json()
+    assert.equal(legacyCalls, 0)
+    assert.equal(agentV2Calls, 1)
+    assert.equal(body.blinded, undefined)
+    assert.deepEqual(
+      body.results.map((entry: { system: string; display_label: string }) => [
+        entry.system,
+        entry.display_label,
+      ]),
+      [["agent_v2", "AgentV2 GPT-5.4-mini"]],
+    )
+  }))
+
 test("compare lab rejects saving stale results for a different loaded user", async () => {
   const { canSaveAgentCompareJudgment } = await importCompareLab()
   const result = {
@@ -404,6 +457,45 @@ test("compare lab rejects saving stale results for a different loaded user", asy
       agentResult,
     }),
     false,
+  )
+})
+
+test("compare lab allows saving AgentV2-only review results", async () => {
+  const { canSaveAgentCompareJudgment } = await importCompareLab()
+  const agentResult = {
+    system: "agent_v2" as const,
+    answer: "A",
+    latency_ms: 100,
+    debug_lines: [],
+    matched_products: [],
+    error: null,
+  }
+  const result = {
+    userId: "user-a",
+    prompt: "Was waere der naechste beste Schritt?",
+    results: [agentResult],
+  }
+  const option = {
+    id: "user-a",
+    label: "Nick · straight · fine",
+    full_name: "Nick",
+  }
+  const context = {
+    user_id: "user-a",
+    derived_signals: [],
+    routine_inventory: [],
+    relevant_memory: [],
+  }
+
+  assert.equal(
+    canSaveAgentCompareJudgment({
+      result,
+      selectedUser: context,
+      selectedUserOption: option,
+      currentResult: null,
+      agentResult,
+    }),
+    true,
   )
 })
 
@@ -805,6 +897,78 @@ test("judgment POST accepts AgentV2 compare systems and metrics", async () =>
     })
   }))
 
+test("judgment POST accepts AgentV2-only review records", async () =>
+  withNodeEnv("development", async () => {
+    const { handleAgentCompareJudgmentRequest } = await importJudgmentRoute()
+    const savedPayloads: unknown[] = []
+
+    const response = await handleAgentCompareJudgmentRequest(
+      {
+        createdAt: "2026-05-26T10:00:00.000Z",
+        user: {
+          id: "user-42",
+          label: "Nick · straight · fine",
+          full_name: "Nick",
+        },
+        prompt: "Was waere der naechste beste Schritt?",
+        toolLoopVariant: "guidance_tool",
+        context: {
+          user_id: "user-42",
+          derived_signals: ["Haardicke: Fein"],
+          routine_inventory: [],
+          relevant_memory: [],
+        },
+        results: {
+          agent: {
+            system: "agent_v2",
+            answer: "AgentV2 Antwort",
+            latency_ms: 90,
+            debug_lines: [],
+            matched_products: [],
+            agent_v2_trace: {
+              model_steps: [{ response_id: "resp_1" }],
+              tool_calls: [{ name: "load_advisor_guidance" }],
+            },
+            error: null,
+          },
+        },
+        judgment: {
+          winner: "agent",
+          primary_reason: "nuetzlicher",
+          note: "Single-system review.",
+          failure_bucket: "other",
+          critical_product_claim_failure: false,
+        },
+        rollout_metrics: {
+          blinded_winner: "agent_v2",
+          failure_bucket: "other",
+          critical_product_claim_failure: false,
+          latency_ms: {
+            agent_v2: 90,
+          },
+          tool_loop_model_steps: null,
+          tool_loop_tool_calls: null,
+          agent_v2_model_steps: 1,
+          agent_v2_tool_calls: 1,
+        },
+      },
+      {
+        appendJudgmentLog: async (payload) => {
+          savedPayloads.push(payload)
+        },
+      },
+    )
+
+    assert.equal(response.status, 200)
+    assert.deepEqual(await response.json(), { ok: true })
+    assert.equal(savedPayloads.length, 1)
+    const saved = savedPayloads[0] as {
+      results: { current?: { system: string }; agent: { system: string } }
+    }
+    assert.equal(saved.results.current, undefined)
+    assert.equal(saved.results.agent.system, "agent_v2")
+  }))
+
 test("analysis snapshot extracts AgentV2 trace tool calls and guidance ids", async () => {
   const { buildCompareAnalysisSnapshot } = await importCompareLab()
   const snapshot = buildCompareAnalysisSnapshot({
@@ -888,7 +1052,7 @@ test("AgentV2 trace display data separates warnings from fatal validation errors
       primary_intent: "product_recommendation",
       product_request_kind: "specific_products",
       routine_intent: "none",
-      category: "conditioner",
+      care_category: "conditioner",
       requested_product_count: 2,
       count_policy: "exact",
       evidence_quote: "zwei Conditioner",

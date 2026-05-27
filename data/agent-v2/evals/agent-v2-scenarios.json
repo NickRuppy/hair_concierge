@@ -12,8 +12,8 @@
     "expected": ["build_or_fix_routine layer basics", "shampoo conditioner priority lever", "no product cards by default"]
   },
   {
-    "id": "agent-v2-routine-product-deep-dive",
-    "dimension": "routine_product_deep_dive",
+    "id": "agent-v2-routine-context-product-ask",
+    "dimension": "routine_context_product_ask",
     "turns": ["Wie kann ich meine Routine verbessern?", "Welches Leave-in soll ich fuer den groessten Hebel nehmen?"],
     "expected": ["stay in routine context", "select_products called for leave_in", "return path offered"]
   },

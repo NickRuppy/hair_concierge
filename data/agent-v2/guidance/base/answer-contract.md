@@ -17,9 +17,11 @@ Every terminal answer must include `request_interpretation`. It is a terminal co
 
 The `request_interpretation` must match tool args and answer mode. Do not describe one intent in `request_interpretation` while using another in `select_products`, `build_or_fix_routine`, or the final payload.
 
-Fill `evidence_quote` with a short quote from the latest user message or active recent context that justifies the semantic decision. Do not invent evidence or quote hidden reasoning.
+Fill `evidence_quote` with a short raw phrase from the latest user message or active recent context that justifies the semantic decision. Prefer exact wording. For short referential follow-ups, use the closest active phrase that makes the decision reviewable. Do not invent evidence or quote hidden reasoning.
 
 Use `confidence` conservatively. Low confidence may support cautious general or category advice, but low confidence should use clarification before product recommendations, routine mutations, memory writes, or safety-sensitive guidance.
+
+`request_interpretation.care_category` is singular terminal accountability, not the retrieval list. Use `care_category: none` when there is no single primary category: broad concerns, broad goals, technique questions, or balanced comparisons can still load multiple category guidance packages without declaring a category winner.
 
 ## Required Grounding
 Fill tool_grounding with the guidance package IDs and tool outputs actually used. Hard rule IDs must come from loaded guidance packages.

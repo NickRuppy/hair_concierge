@@ -36,6 +36,20 @@ type BootstrapResponse = {
   selectedUser: AgentCompareUserSnapshot | null
 }
 
+type AgentCompareRunMode = "agent_v2_only" | "agent_v2_vs_tool_loop" | "classic_vs_tool_loop"
+
+const RUN_MODE_OPTIONS: Array<{ value: AgentCompareRunMode; label: string }> = [
+  { value: "agent_v2_only", label: "Nur AgentV2" },
+  { value: "agent_v2_vs_tool_loop", label: "AgentV2 vs Tool Loop" },
+  { value: "classic_vs_tool_loop", label: "Classic vs Tool Loop" },
+]
+
+function resolveCompareSystemsForMode(mode: AgentCompareRunMode): CompareSystemInput[] {
+  if (mode === "agent_v2_only") return ["agent_v2"]
+  if (mode === "agent_v2_vs_tool_loop") return ["tool_loop", "agent_v2"]
+  return ["classic", "tool_loop"]
+}
+
 const REASON_OPTIONS: Array<AgentCompareJudgmentDraft["primary_reason"]> = [
   "natuerlicher",
   "nuetzlicher",
@@ -769,13 +783,7 @@ export function canSaveAgentCompareJudgment(params: {
   currentResult: CompareRunResult | null
   agentResult: CompareRunResult | null
 }): boolean {
-  if (
-    !params.result ||
-    !params.selectedUser ||
-    !params.selectedUserOption ||
-    !params.currentResult ||
-    !params.agentResult
-  ) {
+  if (!params.result || !params.selectedUser || !params.selectedUserOption || !params.agentResult) {
     return false
   }
 
@@ -797,7 +805,7 @@ export function AgentCompareLab() {
   const [toolLoopVariant, setToolLoopVariant] = useState<AgentCompareToolLoopVariant>(
     DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT,
   )
-  const [includeAgentV2, setIncludeAgentV2] = useState(false)
+  const [runMode, setRunMode] = useState<AgentCompareRunMode>("agent_v2_only")
   const [isRevealed, setIsRevealed] = useState(false)
   const [result, setResult] = useState<AgentCompareResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -830,13 +838,16 @@ export function AgentCompareLab() {
         : entry.system === "tool_loop" || entry.system === "agent",
     ) ?? null
   const selectedUserOption = users.find((user) => user.id === selectedUserId) ?? null
+  const compareSystems = resolveCompareSystemsForMode(runMode)
+  const effectiveBlinded = runMode !== "agent_v2_only" && isBlinded
   const activeInput = isMultiTurn ? turnsText : prompt
   const activeTurns = turnsText
     .split("\n")
     .map((turn) => turn.trim())
     .filter((turn) => turn.length > 0)
-  const currentTitle =
-    result?.blinded && !isRevealed
+  const currentTitle = !currentResult
+    ? "Kein Vergleich"
+    : result?.blinded && !isRevealed
       ? (currentResult?.display_label ?? "Variante A")
       : hasAgentV2Result
         ? "Tool Loop"
@@ -939,9 +950,9 @@ export function AgentCompareLab() {
           body: JSON.stringify({
             userId: selectedUserId,
             ...(isMultiTurn ? { turns: activeTurns } : { prompt }),
-            blinded: isBlinded,
+            blinded: effectiveBlinded,
             toolLoopVariant,
-            systems: includeAgentV2 ? ["tool_loop", "agent_v2"] : undefined,
+            systems: compareSystems,
           }),
         })
 
@@ -1025,25 +1036,26 @@ export function AgentCompareLab() {
   }
 
   function handleSaveJudgment() {
-    if (
-      !canSaveJudgment ||
-      !result ||
-      !selectedUser ||
-      !selectedUserOption ||
-      !currentResult ||
-      !agentResult
-    ) {
+    if (!canSaveJudgment || !result || !selectedUser || !selectedUserOption || !agentResult) {
       return
     }
 
     const createdAt = new Date().toISOString()
-    const currentSystem = normalizeCompareSystemForMetrics(currentResult.system)
+    const currentSystem = currentResult
+      ? normalizeCompareSystemForMetrics(currentResult.system)
+      : null
     const agentSystem = normalizeCompareSystemForMetrics(agentResult.system)
     const blindedWinner =
-      winner === "current" ? currentSystem : winner === "agent" ? agentSystem : "tie"
+      winner === "current" && currentSystem
+        ? currentSystem
+        : winner === "agent"
+          ? agentSystem
+          : "tie"
     const latencyBySystem: Partial<Record<CanonicalCompareSystem, number | null>> = {
-      [currentSystem]: currentResult.latency_ms,
       [agentSystem]: agentResult.latency_ms,
+    }
+    if (currentResult && currentSystem) {
+      latencyBySystem[currentSystem] = currentResult.latency_ms
     }
     const historyEntry: JudgmentHistoryEntry = {
       userId: selectedUserOption.id,
@@ -1062,7 +1074,7 @@ export function AgentCompareLab() {
       toolLoopVariant: result.toolLoopVariant,
       context: selectedUser,
       results: {
-        current: currentResult,
+        ...(currentResult ? { current: currentResult } : {}),
         agent: agentResult,
       },
       judgment: {
@@ -1078,25 +1090,25 @@ export function AgentCompareLab() {
         critical_product_claim_failure: criticalProductClaimFailure,
         latency_ms: latencyBySystem,
         tool_loop_model_steps:
-          currentSystem === "tool_loop"
+          currentResult && currentSystem === "tool_loop"
             ? getTraceMetricForSystem(currentResult, currentSystem, "model_steps")
             : agentSystem === "tool_loop"
               ? getTraceMetricForSystem(agentResult, agentSystem, "model_steps")
               : null,
         tool_loop_tool_calls:
-          currentSystem === "tool_loop"
+          currentResult && currentSystem === "tool_loop"
             ? getTraceMetricForSystem(currentResult, currentSystem, "tool_calls")
             : agentSystem === "tool_loop"
               ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
               : null,
         agent_v2_model_steps:
-          currentSystem === "agent_v2"
+          currentResult && currentSystem === "agent_v2"
             ? getTraceMetricForSystem(currentResult, currentSystem, "model_steps")
             : agentSystem === "agent_v2"
               ? getTraceMetricForSystem(agentResult, agentSystem, "model_steps")
               : null,
         agent_v2_tool_calls:
-          currentSystem === "agent_v2"
+          currentResult && currentSystem === "agent_v2"
             ? getTraceMetricForSystem(currentResult, currentSystem, "tool_calls")
             : agentSystem === "agent_v2"
               ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
@@ -1212,6 +1224,21 @@ export function AgentCompareLab() {
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-4">
             <label className="inline-flex items-center gap-2 text-sm text-foreground">
+              Modus
+              <select
+                value={runMode}
+                onChange={(event) => setRunMode(event.target.value as AgentCompareRunMode)}
+                className="rounded-lg border bg-background px-3 py-2 text-sm"
+              >
+                {RUN_MODE_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="inline-flex items-center gap-2 text-sm text-foreground">
               <input
                 type="checkbox"
                 checked={isMultiTurn}
@@ -1226,19 +1253,10 @@ export function AgentCompareLab() {
                 type="checkbox"
                 checked={isBlinded}
                 onChange={(event) => setIsBlinded(event.target.checked)}
+                disabled={runMode === "agent_v2_only"}
                 className="h-4 w-4 rounded border"
               />
               Geblendet
-            </label>
-
-            <label className="inline-flex items-center gap-2 text-sm text-foreground">
-              <input
-                type="checkbox"
-                checked={includeAgentV2}
-                onChange={(event) => setIncludeAgentV2(event.target.checked)}
-                className="h-4 w-4 rounded border"
-              />
-              AgentV2 testen
             </label>
 
             <label className="inline-flex items-center gap-2 text-sm text-foreground">
@@ -1400,7 +1418,9 @@ export function AgentCompareLab() {
               className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
             >
               <option value="tie">Unentschieden</option>
-              <option value="current">{currentJudgmentLabel}</option>
+              <option value="current" disabled={!currentResult}>
+                {currentJudgmentLabel}
+              </option>
               <option value="agent">{agentJudgmentLabel}</option>
             </select>
           </div>

@@ -28,6 +28,66 @@
       "priority": "high",
       "source": "base/general-advice.md",
       "message": "Inside an active routine context, answer the category distinction first, apply it to the routine, preserve routine context, and offer return to routine or product deep dive."
+    },
+    {
+      "rubric_id": "general_advice.routine_boundary",
+      "priority": "high",
+      "source": "base/general-advice.md",
+      "message": "Category education and placement can stay general advice, but changed multi-step routines belong to build_or_fix_routine."
+    },
+    {
+      "rubric_id": "advice.concern_logic",
+      "priority": "high",
+      "source": "base/general-advice.md",
+      "message": "For broad concerns, identify the likely lever before choosing a category and keep broad comparisons on care_category none until one category is clearly accountable."
+    },
+    {
+      "rubric_id": "advice.goal_logic",
+      "priority": "high",
+      "source": "base/general-advice.md",
+      "message": "For broad goals, connect the answer to the desired outcome while keeping concrete product facts and exact protocols tool-grounded."
+    },
+    {
+      "rubric_id": "advice.usage_first",
+      "priority": "high",
+      "source": "base/general-advice.md",
+      "message": "For dosage, order, cadence, placement, or application questions, give practical profile-scaled steps before shopping or product alternatives; shampoo application can focus on scalp/roots, but deep-cleansing shampoo is not conceptually scalp-only."
+    },
+    {
+      "rubric_id": "advice.troubleshoot_before_products",
+      "priority": "high",
+      "source": "base/general-advice.md",
+      "message": "For troubleshooting, explain the likely problem first, split root care from length care when needed, and prefer technique, cadence, placement, or simplification before product selection."
+    },
+    {
+      "rubric_id": "advice.detangling_texture_handling",
+      "priority": "high",
+      "source": "base/general-advice.md",
+      "message": "For tangling, curl/coily handling, brush resistance, or friction-heavy breakage, prioritize slip, sections, ends-up detangling, low tension, timing, placement, and tool choice before adding more products."
+    },
+    {
+      "rubric_id": "advice.cwc_owc_as_techniques",
+      "priority": "medium",
+      "source": "base/general-advice.md",
+      "message": "Explain CWC and OWC as wash techniques that still include scalp shampoo, not as product categories, repair protocols, co-washing, or regrowth care. If CWC is named, briefly explain Conditioner-Shampoo-Conditioner and the length-protection reason; keep OWC heavier and less default for fine or weight-sensitive hair."
+    },
+    {
+      "rubric_id": "advice.german_copy_fit",
+      "priority": "high",
+      "source": "base/general-advice.md",
+      "message": "Use natural German copy: prefer starkes Brechen, bruechige Laengen, or gummiartig instead of starkes Schnappen; Routine beim Lufttrocknen instead of Air-Dry-Routine; and nicht zu viele starke Kopfhaut-Wirkstoffe kombinieren instead of Actives stapeln."
+    },
+    {
+      "rubric_id": "advice.color_treated_dry_frizzy_structural_check",
+      "priority": "medium",
+      "source": "base/general-advice.md",
+      "message": "For color-treated dry/frizzy routine-change questions, consider structural repair or Bondbuilder relevance as an optional check, but do not force Bondbuilder unless structural damage signals such as bleach, recent chemical service, strong breakage, gummiartig/over-elastic or mushy wet feel, or repeated high heat exist."
+    },
+    {
+      "rubric_id": "advice.feasible_next_step",
+      "priority": "medium",
+      "source": "base/general-advice.md",
+      "message": "For general advice endings, ask one material question, offer a grounded product/routine next step, or bridge back to the routine; do not offer unsupported photo, link, claim, or protocol checks."
     }
   ],
   "required_grounding": [],

@@ -23,8 +23,14 @@ export const AgentV2GuidanceCategorySchema = z.enum([
 export type AgentV2GuidanceCategory = z.infer<typeof AgentV2GuidanceCategorySchema>
 
 export const LoadAgentV2AdvisorGuidanceInputSchema = z.object({
-  answer_mode_hint: AgentV2AnswerModeSchema.nullable(),
-  categories: z.array(AgentV2GuidanceCategorySchema),
+  answer_mode_hint: AgentV2AnswerModeSchema.nullable().describe(
+    "Expected answer mode. Use product_recommendation for concrete product asks, named-product detail checks, and product-specific claim checks even when the final answer may ask for clarification because catalog data is missing.",
+  ),
+  categories: z
+    .array(AgentV2GuidanceCategorySchema)
+    .describe(
+      "Guidance categories to load. Use deep_cleansing_shampoo, not shampoo, for hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo questions even when the product name contains Shampoo. Use bondbuilder for named bond-repair products or brands such as K18, OLAPLEX, Epres, acidic bonding, or bond repair, even when the catalog item is leave-in-like or mask-like.",
+    ),
   routine_layer: AgentV2RoutineLayerSchema.nullable(),
   safety_mode: AgentV2SafetyModeSchema,
 })
@@ -47,27 +53,26 @@ export function selectGuidancePackageIds(
     "base.tone_and_format.v1",
   ]
 
-  if (input.safety_mode !== "normal") {
+  if (input.safety_mode !== "normal" || input.answer_mode_hint === "safety_boundary") {
     ids.push("base.safety_boundaries.v1")
   }
 
   if (
     input.answer_mode_hint === "product_recommendation" ||
-    input.answer_mode_hint === "routine_product_deep_dive" ||
     input.answer_mode_hint === "constraint_blocked"
   ) {
     ids.push("base.product_recommendation.v1")
   }
 
-  if (
-    input.answer_mode_hint === "routine" ||
-    input.answer_mode_hint === "routine_product_deep_dive" ||
-    input.routine_layer !== null
-  ) {
+  if (input.answer_mode_hint === "routine" || input.routine_layer !== null) {
     ids.push("base.routine_building.v1")
   }
 
-  if (input.answer_mode_hint === "general_advice") {
+  if (
+    input.answer_mode_hint === "general_advice" ||
+    input.answer_mode_hint === "product_recommendation" ||
+    input.answer_mode_hint === "routine"
+  ) {
     ids.push("base.general_advice.v1")
   }
 

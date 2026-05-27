@@ -2,7 +2,13 @@
   "package_id": "category.bondbuilder.v1",
   "version": 1,
   "scope": {
-    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "answer_modes": [
+      "product_recommendation",
+      "routine",
+      "general_advice",
+      "constraint_blocked",
+      "safety_boundary"
+    ],
     "categories": ["bondbuilder"],
     "routine_layers": ["problems", "deep_dive"],
     "safety_modes": ["normal", "restricted"]
@@ -12,19 +18,163 @@
       "rule_id": "category.bondbuilder.not_conditioner",
       "severity": "block",
       "source": "categories/bondbuilder.md",
-      "validator_id": "category_claim_boundary",
-      "message": "Do not present bondbuilders as normal moisture care or conditioner replacement."
+      "message": "Do not present bondbuilders as normal moisture care, baseline care, or conditioner replacement."
+    },
+    {
+      "rule_id": "category.bondbuilder.no_generic_bond_labels",
+      "severity": "block",
+      "source": "categories/bondbuilder.md",
+      "message": "Do not treat a generic bond, plex, or bond repair label as enough evidence that a product belongs in the true Bondbuilder category."
+    },
+    {
+      "rule_id": "category.bondbuilder.no_brand_line_generalization",
+      "severity": "block",
+      "source": "categories/bondbuilder.md",
+      "message": "Do not treat shampoo, conditioner, mask, serum, detox, or generic brand-line products as true Bondbuilders unless catalog/category data explicitly curates them as Bondbuilder products."
+    },
+    {
+      "rule_id": "category.bondbuilder.no_unrealistic_repair_claims",
+      "severity": "block",
+      "source": "categories/bondbuilder.md",
+      "message": "Do not promise regrowth, permanent split-end repair, full restoration, virgin-hair reversal, or clinical-proof-level efficacy for bondbuilders."
+    },
+    {
+      "rule_id": "category.bondbuilder.no_default_deep_cleanse",
+      "severity": "block",
+      "source": "categories/bondbuilder.md",
+      "message": "Do not tell every user to deep-cleanse before every bondbuilder use; reserve reset products for reset/deep-cleansing logic."
+    },
+    {
+      "rule_id": "category.bondbuilder.product_detail_requires_catalog",
+      "severity": "block",
+      "source": "categories/bondbuilder.md",
+      "message": "For named bondbuilder detail or claim checks, use product catalog data or select_products before stating protocol, lifecycle/successor status, technology lane, cleanse-after requirements, booster pairing, exact cadence, or product-specific bond-repair claims; for a single named product detail check, keep requested_product_count 1 and count_policy exact aligned between select_products and the terminal request_interpretation."
+    },
+    {
+      "rule_id": "category.bondbuilder.protocol_requires_usage_hint",
+      "severity": "block",
+      "source": "categories/bondbuilder.md",
+      "message": "For named-product bondbuilder protocol questions, answer application order, timing, cadence, wash-out or leave-in status, cleanse-after requirements, and booster pairing only from selected product supported_claims with field usage_hint or another explicit product metadata claim. If the selected product lacks a projected usage hint, give only category-level placement and state that the exact product protocol is not grounded; do not use an internal usage_protocol id as the only user-facing fact."
+    },
+    {
+      "rule_id": "category.bondbuilder.count_policy_availability",
+      "severity": "block",
+      "source": "categories/bondbuilder.md",
+      "message": "When the user requests a product count, keep count_policy exact when explicit and default when not stated, but return the exact count only when enough grounded, suitable, available Bondbuilder products exist; if fewer fit, return fewer and explain the fit or availability constraint."
+    },
+    {
+      "rule_id": "category.bondbuilder.routine_explanation_vs_mutation",
+      "severity": "block",
+      "source": "categories/bondbuilder.md",
+      "message": "Answer bondbuilder placement and usage questions with a general_advice payload, primary_intent routine_explanation, and routine_intent none unless the user asks to add, remove, replace, or change a saved/current routine. Do not call build_or_fix_routine, return routine payloads, or include routine_step_ids for ordering-only or placement-only questions unless the user asks to change saved/current routine state. Saved/current routine changes require build_or_fix_routine and a supported mutation value such as modify, remove_step, or replace_product; do not claim saved routine changes unless routine tooling confirms them."
+    },
+    {
+      "rule_id": "category.bondbuilder.safety_care_category_none",
+      "severity": "block",
+      "source": "categories/bondbuilder.md",
+      "message": "When scalp pain, significant irritation, unusual shedding, patchy hair loss, or medically adjacent symptoms dominate, use safety_boundary with care_category none and do not intensify bondbuilder repair advice; if the user links symptoms to bondbuilder, preserve that suspected trigger only in evidence and safety wording."
     }
   ],
   "soft_rubrics": [
     {
-      "rubric_id": "category.bondbuilder.lane_clarity",
+      "rubric_id": "category.bondbuilder.core_fit_structural_signals",
       "priority": "high",
       "source": "categories/bondbuilder.md",
-      "message": "Explain the lane: chemical/color stress, breakage, or peptide/leave-in structure support."
+      "message": "For bond-repair relevance questions, keep primary_intent general_advice and answer as a category-fit assessment tied to structural damage signals such as bleach, color, chemical services, heat stress, breakage, snapping, mushy or over-elastic wet feel, or service preparation."
+    },
+    {
+      "rubric_id": "category.bondbuilder.lane_decision_clarity",
+      "priority": "high",
+      "source": "categories/bondbuilder.md",
+      "message": "Make practical lane differences legible only when catalog metadata supports them; do not infer a product's lane from brand name alone. Distinguish rinse-out or pre-shampoo bond-repair treatments from leave-in structural care only when metadata supports it."
+    },
+    {
+      "rubric_id": "category.bondbuilder.type_vs_product_asks",
+      "priority": "high",
+      "source": "categories/bondbuilder.md",
+      "message": "Separate type/kind education such as 'Welche Art...' or 'Welche Arten...' from concrete product asks such as 'Welcher Bondbuilder...' or 'Nenn mir zwei...', which require product_recommendation with specific_products and select_products."
+    },
+    {
+      "rubric_id": "category.bondbuilder.comparison_without_forced_cards",
+      "priority": "high",
+      "source": "categories/bondbuilder.md",
+      "message": "For K18 vs OLAPLEX, use product_recommendation with compare_products and grounded data, but compare products and protocols without forcing cards unless the user asks for concrete options, cards, or shopping-ready recommendations."
+    },
+    {
+      "rubric_id": "category.bondbuilder.balanced_cross_category_roles",
+      "priority": "high",
+      "source": "categories/bondbuilder.md",
+      "message": "For bondbuilder versus mask, conditioner, protein, deep cleansing, or another category, use category_education with care_category none unless one category becomes primary; load multiple category guidance packages when needed."
+    },
+    {
+      "rubric_id": "category.bondbuilder.interpretation_contract",
+      "priority": "high",
+      "source": "categories/bondbuilder.md",
+      "message": "Expose bondbuilder fit, product asks, type questions, comparisons, and safety redirects through request_interpretation rather than hidden routing assumptions."
+    },
+    {
+      "rubric_id": "category.bondbuilder.lookalike_clarity",
+      "priority": "high",
+      "source": "categories/bondbuilder.md",
+      "message": "When the user asks about kinds, types, or confusing bond labels, separate true Bondbuilder treatments from look-alike repair marketing such as chelators, detox, acidic bonding, and generic bond-labeled products."
+    },
+    {
+      "rubric_id": "category.bondbuilder.no_standard_booster_type",
+      "priority": "high",
+      "source": "categories/bondbuilder.md",
+      "message": "Do not present Booster / Service-Pflege as a normal third consumer-facing Bondbuilder type; mention booster, add-on, or in-service support only as system-specific exceptions when metadata supports them."
+    },
+    {
+      "rubric_id": "category.bondbuilder.routine_placement",
+      "priority": "medium",
+      "source": "categories/bondbuilder.md",
+      "message": "Place bondbuilding as a targeted repair step, not a daily staple, and pair with moisture support when the hair is also dry. For named products with a projected usage_hint, use that hint directly; without it, limit the answer to category-level placement and say the exact protocol is not grounded."
+    },
+    {
+      "rubric_id": "category.bondbuilder.evidence_framing",
+      "priority": "medium",
+      "source": "categories/bondbuilder.md",
+      "message": "Frame efficacy as mechanism-plausible and practitioner-validated while acknowledging limited independent peer-reviewed evidence."
     }
   ],
-  "required_grounding": [],
-  "ask_when": [],
+  "required_grounding": [
+    {
+      "grounding_id": "category.bondbuilder.product_and_protocol_claims",
+      "tool": "select_products",
+      "when": "Before naming, recommending, ranking, comparing, showing cards for, fulfilling a requested count, or making product-specific technology, timing, cadence, cleanse-after, booster, lifecycle, lane, availability, or protocol claims."
+    },
+    {
+      "grounding_id": "category.bondbuilder.product_detail_claims",
+      "tool": "select_products",
+      "when": "When a named bondbuilder, product protocol, lifecycle/successor status, technology lane, booster pairing, cleanse-after use, cadence, or product-specific bond-repair claim is checked; keep count fields aligned as 1 exact for a single named-product detail check, and use projected usage_hint claims for exact user-facing protocol details."
+    },
+    {
+      "grounding_id": "category.bondbuilder.routine_mutation",
+      "tool": "build_or_fix_routine",
+      "when": "When the user asks to add, remove, replace, or change bondbuilder in a saved/current routine."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "Structural damage is unclear.",
+      "question_policy": "Ask one concise follow-up about bleach/color/chemical service, strong heat, breakage, snapping, or mushy/elastic wet feel if the answer would change the recommendation."
+    },
+    {
+      "condition": "The user may have an upcoming chemical service.",
+      "question_policy": "Ask whether bleach, color, relaxing, perming, or another chemical service is planned soon because in-service bond repair may be higher leverage."
+    },
+    {
+      "condition": "The user reports scalp pain, significant irritation after use, unusual shedding, or patchy hair loss.",
+      "question_policy": "Do not intensify repair advice; move to safety boundary and suggest stopping the triggering product and seeking professional evaluation. If the user links symptoms to bondbuilder, preserve bondbuilder as the suspected trigger in wording only."
+    },
+    {
+      "condition": "A product_detail question lacks the exact bondbuilder product.",
+      "question_policy": "Ask one concise follow-up for the product name if product-specific protocol, technology lane, lifecycle/successor status, or claim validation would materially change the answer."
+    },
+    {
+      "condition": "A saved/current routine mutation needs current routine context.",
+      "question_policy": "Use routine tooling before changing saved routine state; map add, change, and replace wording to supported mutation values and do not infer that the current routine already contains or lacks a bondbuilder step from category guidance alone."
+    }
+  ],
   "markdown_path": "categories/bondbuilder.md"
 }

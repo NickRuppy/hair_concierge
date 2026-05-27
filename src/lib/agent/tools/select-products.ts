@@ -1417,14 +1417,10 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
           : null,
       ),
       buildClaim(
-        "usage_protocol",
-        meta.usage_protocol,
+        "usage_hint",
+        meta.usage_hint,
         "product_spec",
-        meta.usage_protocol
-          ? `Nutzungsprotokoll: ${
-              PRODUCT_BOND_USAGE_PROTOCOL_LABELS[meta.usage_protocol] ?? meta.usage_protocol
-            }`
-          : null,
+        meta.usage_hint ? `Anwendung: ${meta.usage_hint}` : null,
       ),
       buildClaim(
         "lifecycle_status",

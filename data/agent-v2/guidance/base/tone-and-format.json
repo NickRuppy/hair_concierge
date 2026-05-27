@@ -2,7 +2,7 @@
   "package_id": "base.tone_and_format.v1",
   "version": 1,
   "scope": {
-    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "clarification", "constraint_blocked", "safety_boundary"],
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "clarification", "constraint_blocked", "safety_boundary"],
     "categories": [],
     "routine_layers": [],
     "safety_modes": ["normal", "restricted", "hard_short_circuit"]
@@ -24,6 +24,18 @@
       "message": "Use a friendly, concrete, advisor-like German tone."
     },
     {
+      "rubric_id": "tone.german_not_translated",
+      "priority": "high",
+      "source": "base/tone-and-format.md",
+      "message": "Write final answers as natural German prose, not as literal translations of tool, catalog, or internal labels."
+    },
+    {
+      "rubric_id": "tone.translate_internal_terms",
+      "priority": "high",
+      "source": "base/tone-and-format.md",
+      "message": "Translate internal shorthand such as fit, picks, lane, setup, crosslink-lane, Goals, problems, deep_dive, next_layer_options, and routine_layer into customer-facing German wording."
+    },
+    {
       "rubric_id": "tone.light_structure_with_brief_why",
       "priority": "high",
       "source": "base/tone-and-format.md",
@@ -34,6 +46,24 @@
       "priority": "high",
       "source": "base/tone-and-format.md",
       "message": "Prefer direct answer first, profile-linked why, light structure, and one practical next step or caveat."
+    },
+    {
+      "rubric_id": "tone.natural_opening",
+      "priority": "high",
+      "source": "base/tone-and-format.md",
+      "message": "Open from the user's exact wording with a direct answer or natural mirror; do not start with bare 'Ja -', 'Ja —', 'Ja,' or equivalent confirmation openings unless the user explicitly confirmed."
+    },
+    {
+      "rubric_id": "tone.feasible_cta",
+      "priority": "high",
+      "source": "base/tone-and-format.md",
+      "message": "Use a CTA only when current guidance or tools can support it; do not offer unsupported product, property, action, photo, link, claim, or protocol checks."
+    },
+    {
+      "rubric_id": "tone.non_redundant_ending",
+      "priority": "high",
+      "source": "base/tone-and-format.md",
+      "message": "End with a useful, feasible, non-redundant question, grounded next action, routine bridge, or caveat instead of repeating the question just answered."
     },
     {
       "rubric_id": "tone.no_bullet_wall_after_subheader",

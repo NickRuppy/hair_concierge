@@ -2,7 +2,7 @@
   "package_id": "category.shampoo.v1",
   "version": 1,
   "scope": {
-    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "constraint_blocked", "safety_boundary"],
     "categories": ["shampoo"],
     "routine_layers": ["basics"],
     "safety_modes": ["normal", "restricted"]
@@ -14,6 +14,36 @@
       "source": "categories/shampoo.md",
       "validator_id": "category_claim_boundary",
       "message": "Frame shampoo primarily as scalp and cleansing support, not as a length repair treatment."
+    },
+    {
+      "rule_id": "category.shampoo.no_medical_scalp_promises",
+      "severity": "block",
+      "source": "categories/shampoo.md",
+      "message": "Do not promise dandruff treatment, hair growth, or medical scalp treatment from shampoo guidance."
+    },
+    {
+      "rule_id": "category.shampoo.no_product_name_claim_inference",
+      "severity": "block",
+      "source": "categories/shampoo.md",
+      "message": "Do not infer color-safe, sulfate-free, fragrance-free, anti-dandruff, sensitive-scalp, repair, growth, shine, cadence, or protocol claims from shampoo names or brand lines."
+    },
+    {
+      "rule_id": "category.shampoo.normal_not_reset_lane",
+      "severity": "block",
+      "source": "categories/shampoo.md",
+      "message": "Use normal shampoo for oil, sweat, freshness, and light residue; route stubborn buildup, waxy-coated feel after washing, hard-water/mineral suspicion, repeated dry-shampoo buildup, heavy styling residue, or nothing-gets-clean signals to reset guidance instead."
+    },
+    {
+      "rule_id": "category.shampoo.saved_routine_mutations_need_tooling",
+      "severity": "block",
+      "source": "categories/shampoo.md",
+      "message": "Saved or current routine add, remove, replace, or change requests for shampoo require routine mutation handling with build_or_fix_routine."
+    },
+    {
+      "rule_id": "category.shampoo.scalp_symptom_escalation",
+      "severity": "block",
+      "source": "categories/shampoo.md",
+      "message": "For persistent, painful, inflamed, wounded, spreading, unusual, severe, infection-like, shedding, or hair-loss-adjacent symptoms, route to safety guidance instead of shampoo optimization."
     }
   ],
   "soft_rubrics": [
@@ -22,9 +52,55 @@
       "priority": "medium",
       "source": "categories/shampoo.md",
       "message": "When useful, mention shampoo mainly at the scalp and rinse thoroughly."
+    },
+    {
+      "rubric_id": "category.shampoo.length_goal_steering",
+      "priority": "high",
+      "source": "categories/shampoo.md",
+      "message": "When the user's goal is dry lengths, frizz, shine, softness, or split ends, answer the shampoo angle but explain that conditioner, leave-in, mask, or technique is usually the stronger lever."
+    },
+    {
+      "rubric_id": "category.shampoo.cleansing_strength_fit",
+      "priority": "medium",
+      "source": "categories/shampoo.md",
+      "message": "Connect shampoo strength to scalp type, wash rhythm, buildup/residue, thickness, texture, and sensitivity rather than using a universal wash-less rule."
     }
   ],
-  "required_grounding": [],
-  "ask_when": [],
+  "required_grounding": [
+    {
+      "grounding_id": "category.shampoo.product_claims_and_protocol",
+      "tool": "select_products",
+      "when": "Concrete shampoo names, recommendation order, named product detail, color-safe, sulfate-free, fragrance-free, anti-dandruff, sensitive-scalp, repair, growth, shine, exact cadence, or usage protocol claims are mentioned."
+    },
+    {
+      "grounding_id": "category.shampoo.routine_mutation_state",
+      "tool": "build_or_fix_routine",
+      "when": "The user asks to add, remove, replace, or change shampoo in a saved/current routine, or the answer claims shampoo is already covered by the current routine."
+    },
+    {
+      "grounding_id": "category.shampoo.reset_lane_comparison",
+      "tool": "load_advisor_guidance",
+      "when": "The user reports stubborn buildup, waxy or coated feel after washing, hard-water or mineral suspicion, repeated dry-shampoo buildup, heavy styling residue, or nothing-gets-clean signals."
+    },
+    {
+      "grounding_id": "category.shampoo.safety_boundary",
+      "tool": "load_advisor_guidance",
+      "when": "The user reports persistent, painful, inflamed, wounded, spreading, unusual, severe, infection-like, shedding, or hair-loss-adjacent scalp or hair symptoms."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "Oiliness, wash frequency, residue, flakes, irritation, or dry-length mismatch would materially change shampoo strength or whether safety routing is needed.",
+      "question_policy": "Ask at most one targeted follow-up; otherwise give a conservative scalp-first shampoo answer."
+    },
+    {
+      "condition": "It is unclear whether the user means ordinary oil/sweat/light residue or stubborn buildup, hard-water/mineral residue, repeated dry-shampoo buildup, heavy styling residue, or a nothing-gets-clean reset signal.",
+      "question_policy": "Ask at most one boundary-setting follow-up before treating normal shampoo as the right lane."
+    },
+    {
+      "condition": "The user asks whether a named shampoo has color-safe, sulfate-free, fragrance-free, anti-dandruff, sensitive-scalp, repair, growth, shine, cadence, or protocol claims and product metadata is unavailable.",
+      "question_policy": "Ask for the exact product or state that the claim needs product detail grounding; do not infer from the name."
+    }
+  ],
   "markdown_path": "categories/shampoo.md"
 }

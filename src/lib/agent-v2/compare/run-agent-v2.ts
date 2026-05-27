@@ -6,6 +6,7 @@ import type { SelectProductsToolResult } from "@/lib/agent/tools/select-products
 import { loadUserMemoryContext } from "@/lib/rag/user-memory"
 import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"
 import { runAgentV2ResponsesTurn } from "@/lib/agent-v2/runtime/responses-agent"
+import { buildAgentV2ProductToolMessage } from "@/lib/agent-v2/compare/product-tool-context"
 import { loadAgentV2AdvisorGuidance } from "@/lib/agent-v2/tools/guidance-tool"
 import { projectRoutineForAgentV2 } from "@/lib/agent-v2/tools/routine-projection"
 import { projectSelectProductsForAgentV2 } from "@/lib/agent-v2/tools/select-products-projection"
@@ -76,16 +77,34 @@ export function normalizeAgentV2MatchedProductsForFinalAnswer(
 }
 
 function collectSurfacedProductIds(answer: AgentV2TerminalAnswer): string[] {
-  if (
-    answer.answer_mode === "product_recommendation" ||
-    answer.answer_mode === "routine_product_deep_dive"
-  ) {
+  if (answer.answer_mode === "product_recommendation") {
     return [
       ...new Set(answer.payload.recommendations.map((recommendation) => recommendation.product_id)),
     ]
   }
 
   return []
+}
+
+export function collectTrustedSurfacedProductProjections(
+  projections: readonly AgentV2SelectProductsProjectionForCompare[],
+  answer: AgentV2TerminalAnswer,
+): AgentV2SelectProductsProjectionForCompare[] {
+  const surfacedProductIds = new Set(collectSurfacedProductIds(answer))
+  if (surfacedProductIds.size === 0) return []
+
+  return projections.flatMap((projection) => {
+    const products = projection.products.filter((product) =>
+      surfacedProductIds.has(product.product_id),
+    )
+    const productIds = new Set(products.map((product) => product.product_id))
+    const validProductIds = (projection.valid_product_ids ?? []).filter((productId) =>
+      productIds.has(productId),
+    )
+    return products.length > 0
+      ? [{ ...projection, products, valid_product_ids: validProductIds }]
+      : []
+  })
 }
 
 function isRequestInterpretationTrace(value: unknown): value is AgentV2RequestInterpretationTrace {
@@ -95,7 +114,7 @@ function isRequestInterpretationTrace(value: unknown): value is AgentV2RequestIn
   return (
     typeof record.primary_intent === "string" &&
     typeof record.product_request_kind === "string" &&
-    typeof record.category === "string" &&
+    typeof record.care_category === "string" &&
     (typeof record.requested_product_count === "number" ||
       record.requested_product_count === null) &&
     typeof record.count_policy === "string" &&
@@ -119,7 +138,7 @@ export function formatAgentV2RequestInterpretationSummary(
     "·",
     interpretation.product_request_kind,
     "·",
-    interpretation.category,
+    interpretation.care_category,
     "·",
     count,
     "·",
@@ -136,6 +155,63 @@ function extractRequestInterpretation(
   return isRequestInterpretationTrace(interpretation)
     ? (interpretation as AgentV2RequestInterpretationTrace)
     : null
+}
+
+export type AgentV2TraceTimingSummary = {
+  model_latency_ms: number | null
+  tool_latency_ms: number | null
+  observed_trace_latency_ms: number | null
+  model_steps: number
+  tool_calls: number
+  slowest_model_step_ms: number | null
+  slowest_tool_call_ms: number | null
+}
+
+type AgentV2TraceTimingInput = {
+  model_steps?: readonly unknown[]
+  tool_calls?: readonly (Record<string, unknown> & { latency_ms?: number | null })[]
+}
+
+export function summarizeAgentV2TraceTiming(
+  traces: readonly AgentV2TraceTimingInput[],
+): AgentV2TraceTimingSummary {
+  const modelLatencies = traces.flatMap((trace) =>
+    (trace.model_steps ?? []).flatMap((step) => {
+      if (!step || typeof step !== "object" || Array.isArray(step)) return []
+      const latencyMs = (step as { latency_ms?: unknown }).latency_ms
+      return typeof latencyMs === "number" && Number.isFinite(latencyMs) ? [latencyMs] : []
+    }),
+  )
+  const toolLatencies = traces.flatMap((trace) =>
+    (trace.tool_calls ?? []).flatMap((call) =>
+      typeof call.latency_ms === "number" && Number.isFinite(call.latency_ms)
+        ? [call.latency_ms]
+        : [],
+    ),
+  )
+  const modelLatencyMs = sumLatencyMs(modelLatencies)
+  const toolLatencyMs = sumLatencyMs(toolLatencies)
+
+  return {
+    model_latency_ms: modelLatencyMs,
+    tool_latency_ms: toolLatencyMs,
+    observed_trace_latency_ms:
+      modelLatencyMs === null && toolLatencyMs === null
+        ? null
+        : (modelLatencyMs ?? 0) + (toolLatencyMs ?? 0),
+    model_steps: traces.reduce((count, trace) => count + (trace.model_steps?.length ?? 0), 0),
+    tool_calls: traces.reduce((count, trace) => count + (trace.tool_calls?.length ?? 0), 0),
+    slowest_model_step_ms: maxLatencyMs(modelLatencies),
+    slowest_tool_call_ms: maxLatencyMs(toolLatencies),
+  }
+}
+
+function sumLatencyMs(values: readonly number[]): number | null {
+  return values.length > 0 ? Math.round(values.reduce((sum, value) => sum + value, 0)) : null
+}
+
+function maxLatencyMs(values: readonly number[]): number | null {
+  return values.length > 0 ? Math.round(Math.max(...values)) : null
 }
 
 function augmentAgentV2CompareTrace(
@@ -162,17 +238,18 @@ export function updateAgentV2RoutineThreadContext(
     routine_context: {
       active: boolean
       routine_layer: AgentV2RoutineLayer | null
+      step_id?: string | null
       category: string | null
     }
     categories: string[]
     summary_de: string | null
     answer?: unknown
+    trusted?: boolean
   },
 ): AgentV2RoutineThreadContext {
-  const keepsRoutineTrack =
-    update.routine_context.active ||
-    update.answer_mode === "routine" ||
-    update.answer_mode === "routine_product_deep_dive"
+  if (update.trusted === false && previous) return previous
+
+  const keepsRoutineTrack = update.routine_context.active || update.answer_mode === "routine"
 
   if (!keepsRoutineTrack) {
     return {
@@ -217,6 +294,7 @@ function updateAgentV2VisibleRoutineThreadSteps(
     answer_mode: AgentV2AnswerMode
     routine_context: {
       routine_layer: AgentV2RoutineLayer | null
+      step_id?: string | null
       category: string | null
     }
     categories: string[]
@@ -246,13 +324,16 @@ function updateAgentV2VisibleRoutineThreadSteps(
     }))
   }
 
-  const deepDiveAnswer = isAgentV2RoutineProductDeepDiveAnswer(update.answer) ? update.answer : null
-  if (update.answer_mode === "routine_product_deep_dive" && deepDiveAnswer) {
-    const stepId = deepDiveAnswer.payload.step_id?.trim()
+  const routineProductAnswer = isAgentV2RoutineProductRecommendation(update.answer)
+    ? update.answer
+    : null
+  if (routineProductAnswer) {
+    const routineContext = routineProductAnswer.routine_context ?? update.routine_context
+    const stepId = routineContext.step_id?.trim()
     if (!stepId) return [...previous]
 
     const category =
-      normalizeRoutineThreadCategory(deepDiveAnswer.payload.category ?? "") ??
+      normalizeRoutineThreadCategory(routineContext.category ?? "") ??
       (update.routine_context.category
         ? normalizeRoutineThreadCategory(update.routine_context.category)
         : null)
@@ -294,14 +375,14 @@ function isAgentV2RoutineAnswer(
   )
 }
 
-function isAgentV2RoutineProductDeepDiveAnswer(
+function isAgentV2RoutineProductRecommendation(
   answer: unknown,
-): answer is Extract<AgentV2TerminalAnswer, { answer_mode: "routine_product_deep_dive" }> {
+): answer is Extract<AgentV2TerminalAnswer, { answer_mode: "product_recommendation" }> {
   return (
     Boolean(answer) &&
     typeof answer === "object" &&
-    (answer as { answer_mode?: unknown }).answer_mode === "routine_product_deep_dive" &&
-    Boolean((answer as { payload?: unknown }).payload)
+    (answer as { answer_mode?: unknown }).answer_mode === "product_recommendation" &&
+    (answer as { routine_context?: { active?: unknown } }).routine_context?.active === true
   )
 }
 
@@ -388,10 +469,6 @@ function extractRoutineThreadCategories(answer: AgentV2TerminalAnswer): string[]
     )
   }
 
-  if (answer.answer_mode === "routine_product_deep_dive" && answer.payload.category) {
-    categories.push(answer.payload.category)
-  }
-
   return [...new Set(categories)]
 }
 
@@ -402,7 +479,7 @@ export function classifyAgentV2SafetyMode(message: string): AgentV2SafetyMode {
     /\b(blutet|bluten|wunde|wunden|offene kopfhaut|brennt stark|verbrennung|eiter|infektion)\b/.test(
       normalized,
     ) ||
-    /haare?\s+fall(?:en|t).*b(?:ue|ü)scheln/.test(normalized) ||
+    /haare?\s+fall(?:en|t).*(?:b(?:ue|ü)scheln|b(?:ue|ü)schelweise)/.test(normalized) ||
     /\b(pl[oö]tzlich(?:er|e|es)?\s+haarausfall|verschreibungspflichtig|rezeptpflichtig)\b/.test(
       normalized,
     )
@@ -412,7 +489,7 @@ export function classifyAgentV2SafetyMode(message: string): AgentV2SafetyMode {
 
   const hasItchWithForegroundSymptom =
     /\bjuck(?:t|en|reiz)\b/.test(normalized) &&
-    /\b(ger[oö]tet|rot|r[oö]tlich|brennt|brennen|wund|schmerzt|schmerzen|n[aä]sst|n[aä]ssen|ausschlag|offene stelle|offene stellen|schuppen)\b/.test(
+    /\b(ger[oö]tet|rot|r[oö]tlich|brennt|brennen|wund|schmerzt|schmerzen|n[aä]sst|n[aä]ssen|ausschlag|offene stelle|offene stellen|schuppen|schuppt|schupp(?:ig|ige|iger|iges|enden?))\b/.test(
       normalized,
     )
   const hasForegroundSymptom =
@@ -452,6 +529,7 @@ export async function runAgentV2ComparisonForUser(
   const turnResults: AgentCompareTurnResult[] = []
   let finalResult: Awaited<ReturnType<typeof runAgentV2ResponsesTurn>> | null = null
   const selectedProductProjections: AgentV2SelectProductsProjectionForCompare[] = []
+  const trustedSurfacedProductProjections: AgentV2SelectProductsProjectionForCompare[] = []
   let currentRoutineLayer: AgentV2RoutineLayer | null = null
   let routineThreadContext: AgentV2RoutineThreadContext | null = null
 
@@ -472,15 +550,19 @@ export async function runAgentV2ComparisonForUser(
       },
       currentRoutineLayer,
       routineThreadContext,
-      priorSelectedProductProjections: [...selectedProductProjections],
+      priorSelectedProductProjections: [...trustedSurfacedProductProjections],
       safetyMode,
       tools: {
         load_advisor_guidance: async (input) => loadAgentV2AdvisorGuidance(input),
         select_products: async (input) => {
           latestSelectProductsResult = null
+          const productToolMessage = buildAgentV2ProductToolMessage({
+            latestMessage: message,
+            recentMessages,
+          })
           const projection = await selectProducts({
             category: input.category as Parameters<typeof selectProducts>[0]["category"],
-            message,
+            message: productToolMessage,
             hairProfile: context.profile,
             memoryContext,
             routineItems: context.routine_inventory,
@@ -518,6 +600,8 @@ export async function runAgentV2ComparisonForUser(
     })
 
     finalResult = result
+    const trustedTurn =
+      result.trace.failure_stage === null && result.trace.validation_errors.length === 0
     routineThreadContext = updateAgentV2RoutineThreadContext(routineThreadContext, {
       answer_mode: result.final_answer.answer_mode,
       user_message: message,
@@ -529,7 +613,16 @@ export async function runAgentV2ComparisonForUser(
       },
       categories: extractRoutineThreadCategories(result.final_answer),
       summary_de: String(result.final_answer.payload.user_facing_answer_de ?? "").slice(0, 500),
+      trusted: trustedTurn,
     })
+    if (trustedTurn) {
+      trustedSurfacedProductProjections.push(
+        ...collectTrustedSurfacedProductProjections(
+          selectedProductProjections,
+          result.final_answer,
+        ),
+      )
+    }
     currentRoutineLayer = routineThreadContext.current_layer
     sessionMemory.push(...result.accepted_session_memory_writes)
     const answer = String(result.final_answer.payload.user_facing_answer_de ?? "")

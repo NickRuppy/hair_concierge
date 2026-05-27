@@ -2,7 +2,7 @@
   "package_id": "category.deep_cleansing_shampoo.v1",
   "version": 1,
   "scope": {
-    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "constraint_blocked"],
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "constraint_blocked", "safety_boundary"],
     "categories": ["deep_cleansing_shampoo"],
     "routine_layers": ["problems", "deep_dive"],
     "safety_modes": ["normal", "restricted"]
@@ -12,19 +12,158 @@
       "rule_id": "category.deep_cleansing.occasional_reset",
       "severity": "block",
       "source": "categories/deep-cleansing-shampoo.md",
-      "validator_id": "category_claim_boundary",
-      "message": "Frame deep cleansing shampoo as occasional reset support, not daily default care."
+      "message": "Frame deep-cleansing shampoo as occasional, need-based reset support, not daily default care or an everyday shampoo replacement."
+    },
+    {
+      "rule_id": "category.deep_cleansing.keep_reset_lanes_separate",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "Do not collapse clarifying, chelating, and scalp exfoliation into one interchangeable detox recommendation: product/mineral film through lengths or hard-water feel points toward reset/clarifying/chelating shampoo, while scalp-local residue on tolerant skin may point toward gentle occasional scalp peeling."
+    },
+    {
+      "rule_id": "category.deep_cleansing.no_medical_or_repair_claims",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "Do not present deep cleansing as structural repair, hair-loss support, scalp-disease treatment, or a fix for already-happened color fade."
+    },
+    {
+      "rule_id": "category.deep_cleansing.product_detail_requires_catalog",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "For named reset products or claim checks, use product catalog data or select_products before stating clarifying, chelating, hard-water, metal, color-safe, service-prep, scalp-exfoliating, compatibility, cadence, or protocol claims; treat product_detail as a fact/claim check, not necessarily a recommendation/card flow."
+    },
+    {
+      "rule_id": "category.deep_cleansing.no_claim_inference_from_name",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "Do not infer chelation, hard-water or metal removal, color safety, service-prep suitability, scalp-exfoliation, gentleness, compatibility, cadence, protocol, or reset lane from a product name, brand line, marketing family, detox label, or category prose alone."
+    },
+    {
+      "rule_id": "category.deep_cleansing.chelation_color_safe_requires_metadata",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "Chelating and color-safe claims need product metadata; if unsupported, use safe uncertainty, mention only grounded reset-category facts, and do not offer photo or link checks unless current tooling can ingest and ground them."
+    },
+    {
+      "rule_id": "category.deep_cleansing.requested_count_availability",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "When the user requests a product count, keep count_policy exact, but exact applies only when enough grounded suitable products are available; if fewer are available, return fewer and explain the fit or availability constraint."
+    },
+    {
+      "rule_id": "category.deep_cleansing.routine_explanation_vs_mutation",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "Answer reset placement and usage questions as routine_explanation with routine_intent none unless the user asks to add, remove, replace, or change a saved/current routine, which requires build_or_fix_routine; do not claim saved routine changes unless routine tooling confirms them."
+    },
+    {
+      "rule_id": "category.deep_cleansing.mutation_preserve_baseline",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "When adding a reset step to an existing/current routine, preserve the Shampoo + Conditioner baseline in the answer and frame reset as occasional."
+    },
+    {
+      "rule_id": "category.deep_cleansing.safety_care_category_none",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "When scalp pain, burning, significant irritation, wounds, swelling, unusual shedding, patchy loss, infection-like symptoms, or persistent inflammation dominate, use safety_boundary with care_category none."
+    },
+    {
+      "rule_id": "category.deep_cleansing.safety_suppresses_reset_actions",
+      "severity": "block",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "When safety_boundary applies, suppress product recommendations, reset intensification, exfoliation escalation, and routine mutation until the safety boundary is handled; persistent itch, redness, burning, pain, repeated flakes, or shedding is safety boundary, not stronger peeling."
     }
   ],
   "soft_rubrics": [
     {
-      "rubric_id": "category.deep_cleansing.frequency_caution",
+      "rubric_id": "category.deep_cleansing.variant_fit",
       "priority": "high",
       "source": "categories/deep-cleansing-shampoo.md",
-      "message": "Mention conservative frequency and follow with conditioner."
+      "message": "Identify the likely reset job before action: product/mineral film through lengths, hard-water feel or pool metals, or mild cosmetic scalp buildup; shampoo application can focus on scalp/roots, but deep-cleansing shampoo is not conceptually scalp-only."
+    },
+    {
+      "rubric_id": "category.deep_cleansing.caution_profile",
+      "priority": "high",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "For dry, fine, curly, color-treated, chemically stressed, fragile, or sensitive profiles, keep the reset gentler, less frequent, and explicitly need-based."
+    },
+    {
+      "rubric_id": "category.deep_cleansing.buildup_before_richness",
+      "priority": "high",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "When coating, heaviness, limpness, or unresponsive hair is plausible, consider reset-and-rebuild before escalating masks, leave-ins, oils, or repair framing."
+    },
+    {
+      "rubric_id": "category.deep_cleansing.type_vs_product",
+      "priority": "high",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "Treat reset type/kind questions as category education without product cards, but route which/options/count/recommendation requests to specific_products with select_products."
+    },
+    {
+      "rubric_id": "category.deep_cleansing.comparison_none",
+      "priority": "medium",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "For balanced comparisons against shampoo, dry shampoo, peeling, conditioner, mask, oil, or chelating/clarifying lanes, use category_education with product_request_kind category_education, load relevant category packages, compare roles, and use care_category none unless one category is clearly primary."
+    },
+    {
+      "rubric_id": "category.deep_cleansing.product_detail_hooks",
+      "priority": "high",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "For named products and reset claims, use primary_intent product_recommendation with product_request_kind product_detail; answer as a grounded product fact/claim check and avoid inferring claims from names, brand lines, marketing families, or category prose."
+    },
+    {
+      "rubric_id": "category.deep_cleansing.assessment_general_advice",
+      "priority": "high",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "For 'do I need a reset' or 'could this be buildup' questions, use primary_intent general_advice, product_request_kind none, and care_category deep_cleansing_shampoo; do not show product cards unless requested."
+    },
+    {
+      "rubric_id": "category.deep_cleansing.customer_facing_scalp_wording",
+      "priority": "medium",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "Keep internal Kopfhaut-Reset lane logic, but customer-facing German should prefer softer wording like Ansatz-/Kopfhaut-Rueckstands-Reset, Rueckstaende am Ansatz, or Ansatz ist belegt."
     }
   ],
-  "required_grounding": [],
-  "ask_when": [],
+  "required_grounding": [
+    {
+      "grounding_id": "category.deep_cleansing.product_claims_and_reset_lane",
+      "tool": "select_products",
+      "when": "Concrete deep-cleansing product names, recommendation order, category membership, clarifying, chelating, hard-water, metal-removal, scalp-exfoliation, color-safe, service-prep, compatibility, cadence, or protocol claims are mentioned."
+    },
+    {
+      "grounding_id": "category.deep_cleansing.product_detail_claims",
+      "tool": "select_products",
+      "when": "A named deep-cleansing product or product claim is checked for reset lane, clarifying/chelating status, hard-water or metal removal, gentleness, color safety, pre-service support, scalp-exfoliation, compatibility, exact cadence, exact placement, or usage protocol."
+    },
+    {
+      "grounding_id": "category.deep_cleansing.routine_mutation",
+      "tool": "build_or_fix_routine",
+      "when": "The user asks to add, remove, replace, or change a reset step in a saved/current routine, or when the answer would claim that saved routine state has been changed."
+    },
+    {
+      "grounding_id": "category.deep_cleansing.safety_boundary",
+      "tool": "load_advisor_guidance",
+      "when": "The user reports persistent, painful, inflamed, wounded, spreading, unusual, severe, infection-like, shedding, or hair-loss-adjacent scalp or hair symptoms."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "It is unclear whether the reset need is product film, hard water/pool minerals, scalp residue, or medical-looking scalp symptoms.",
+      "question_policy": "Ask at most one lane-setting follow-up before recommending products or a reset cadence."
+    },
+    {
+      "condition": "Fragility, chemical/color history, curl pattern, sensitivity, or dryness would materially change reset tolerance.",
+      "question_policy": "Ask at most one targeted follow-up; otherwise keep reset advice conservative, occasional, and followed by length care."
+    },
+    {
+      "condition": "The user asks for product_detail but the exact deep-cleansing product cannot be matched to catalog or selected product metadata.",
+      "question_policy": "Ask for the exact product or avoid product-specific reset-lane, compatibility, cadence, and protocol claims."
+    },
+    {
+      "condition": "The user asks to change a saved/current routine but the current routine state is missing.",
+      "question_policy": "Use routine tooling or ask one targeted routine-state question before inventing current coverage."
+    }
+  ],
   "markdown_path": "categories/deep-cleansing-shampoo.md"
 }

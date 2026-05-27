@@ -1,5 +1,6 @@
 import {
   AgentV2AnswerModeSchema,
+  type AgentV2CareCategory,
   AgentV2SessionMemoryWriteSchema,
   AgentV2TerminalAnswerSchema,
   type AgentV2RoutineLayer,
@@ -14,6 +15,7 @@ import {
   type AgentV2ToolCallTrace,
   type AgentV2ValidationError,
 } from "@/lib/agent-v2/contracts"
+import { validateUserFacingLanguage } from "@/lib/agent-v2/validation/user-facing-language"
 export interface AgentV2FinalAnswerValidationContext {
   selectedProductProjections: readonly {
     valid_product_ids?: readonly string[]
@@ -28,8 +30,10 @@ export interface AgentV2FinalAnswerValidationContext {
   toolCallHistory: readonly Partial<AgentV2ToolCallTrace>[]
   safetyMode: "normal" | "restricted" | "hard_short_circuit"
   requiredGuidancePackageIds: readonly string[]
+  loadedGuidancePackageIds?: readonly string[]
   currentRoutineLayer: "basics" | "goals" | "problems" | "deep_dive" | null
   routineThreadContext?: AgentV2RoutineThreadContext | null
+  hasCurrentRoutineInventory?: boolean
   knownHardRuleIds?: readonly string[]
 }
 
@@ -81,12 +85,13 @@ export function validateAgentV2FinalAnswer(
   validateRoutineToolRequired(terminalAnswer, context, findings)
   validateRoutineThreadContinuity(terminalAnswer, context, findings)
   validateRoutineProductDeepDive(terminalAnswer, context, findings)
-  validateRoutineMetadataConsistency(terminalAnswer, findings)
+  validateRoutineMetadataConsistency(terminalAnswer, context, findings)
   validateAnswerModeForContext(terminalAnswer, findings)
   validateRoutineLayerProgression(terminalAnswer, context, findings)
   validateGeneralAdviceNoUnaskedProducts(terminalAnswer, findings)
   validateSafety(terminalAnswer, context, findings)
   validateInternalLeakage(terminalAnswer, findings)
+  validateUserFacingLanguage(terminalAnswer, context.latestUserMessage, findings)
 
   const errors = findings.filter((finding) => finding.severity !== "warn")
   const warnings = findings.filter((finding) => finding.severity === "warn")
@@ -117,13 +122,6 @@ const payloadFieldsByMode: Record<AgentV2AnswerMode, readonly string[]> = {
     "next_layer_options",
     "next_step_offer_de",
   ],
-  routine_product_deep_dive: [
-    "user_facing_answer_de",
-    "step_id",
-    "category",
-    "recommendations",
-    "return_to_routine_offer_de",
-  ],
   general_advice: [
     "user_facing_answer_de",
     "category_or_topic",
@@ -140,7 +138,6 @@ const PRODUCT_TOOL_REQUEST_KINDS = new Set<AgentV2ProductRequestKind>([
   "specific_products",
   "compare_products",
   "product_detail",
-  "routine_product_deep_dive",
 ])
 const ROUTINE_TOOL_INTENTS = new Set<AgentV2RoutineIntent>([
   "create",
@@ -171,6 +168,37 @@ const BUILD_ROUTINE_REQUIRED_ARGUMENTS = [
   "mutation_kind",
   "evidence_quote",
 ] as const
+
+const ALWAYS_REQUIRED_GUIDANCE_PACKAGE_IDS = [
+  "base.advisor_rules.v1",
+  "base.answer_contract.v1",
+  "base.tone_and_format.v1",
+] as const
+
+const BASE_GUIDANCE_BY_ANSWER_MODE: Partial<Record<AgentV2AnswerMode, string[]>> = {
+  product_recommendation: ["base.product_recommendation.v1"],
+  routine: ["base.routine_building.v1"],
+  general_advice: ["base.general_advice.v1"],
+  safety_boundary: ["base.safety_boundaries.v1"],
+}
+
+const CATEGORY_GUIDANCE_BY_INTERPRETATION: Partial<Record<AgentV2CareCategory, string>> = {
+  shampoo: "category.shampoo.v1",
+  conditioner: "category.conditioner.v1",
+  mask: "category.mask.v1",
+  leave_in: "category.leave_in.v1",
+  oil: "category.oil.v1",
+  bondbuilder: "category.bondbuilder.v1",
+  deep_cleansing_shampoo: "category.deep_cleansing_shampoo.v1",
+  dry_shampoo: "category.dry_shampoo.v1",
+  peeling: "category.peeling.v1",
+}
+
+function isRoutineProductRecommendation(
+  answer: AgentV2TerminalAnswer,
+): answer is Extract<AgentV2TerminalAnswer, { answer_mode: "product_recommendation" }> {
+  return answer.answer_mode === "product_recommendation" && answer.routine_context.active
+}
 
 function buildTerminalSchemaError(answer: unknown): AgentV2ValidationError {
   const baseMessage = "Final answer does not match the AgentV2 terminal schema."
@@ -238,9 +266,9 @@ function sanitizeSessionMemoryWrites(
     return { answerForSchema: answer, dropped: [] }
   }
 
-  const record = answer as Record<string, unknown>
+  const record = coerceSafetyBoundaryPayload(answer as Record<string, unknown>)
   if (!Array.isArray(record.session_memory_writes)) {
-    return { answerForSchema: answer, dropped: [] }
+    return { answerForSchema: record, dropped: [] }
   }
 
   const accepted: AgentV2SessionMemoryWrite[] = []
@@ -313,6 +341,36 @@ function sanitizeSessionMemoryWrites(
   }
 }
 
+function coerceSafetyBoundaryPayload(record: Record<string, unknown>): Record<string, unknown> {
+  if (record.answer_mode !== "safety_boundary") return record
+  if (!record.payload || typeof record.payload !== "object" || Array.isArray(record.payload)) {
+    return record
+  }
+
+  const payload = record.payload as Record<string, unknown>
+  if ("boundary_reason_de" in payload || "next_step_de" in payload) return record
+  if (!("blocking_constraints" in payload) && !("safe_alternative_de" in payload)) return record
+
+  const blockingConstraints = Array.isArray(payload.blocking_constraints)
+    ? payload.blocking_constraints.filter((item): item is string => typeof item === "string")
+    : []
+  const boundaryReason =
+    blockingConstraints.length > 0
+      ? blockingConstraints.join("; ")
+      : "Medizinisch oder reizungsbezogen klingender Kontext."
+  const nextStep =
+    typeof payload.safe_alternative_de === "string" ? payload.safe_alternative_de : null
+
+  return {
+    ...record,
+    payload: {
+      user_facing_answer_de: payload.user_facing_answer_de,
+      boundary_reason_de: boundaryReason,
+      next_step_de: nextStep,
+    },
+  }
+}
+
 function validateModePayload(
   answer: AgentV2TerminalAnswer,
   errors: AgentV2ValidationError[],
@@ -352,10 +410,7 @@ function validateVisiblePayloadRendered(
     return
   }
 
-  if (
-    answer.answer_mode === "product_recommendation" ||
-    answer.answer_mode === "routine_product_deep_dive"
-  ) {
+  if (answer.answer_mode === "product_recommendation") {
     const productNamesById = resolveSelectedProductNamesById(context)
     const unverifiableProductIds = answer.payload.recommendations
       .map((recommendation) => recommendation.product_id)
@@ -403,19 +458,31 @@ function validateVisiblePayloadRendered(
 function validateInterpretationEvidence(
   answer: AgentV2TerminalAnswer,
   context: AgentV2FinalAnswerValidationContext,
-  errors: AgentV2ValidationError[],
+  findings: AgentV2ValidationError[],
 ): void {
   const evidence = normalizeEvidenceText(answer.request_interpretation.evidence_quote)
   const evidenceText = normalizeEvidenceText(buildEvidenceText(context))
-  if (!isMeaningfulEvidenceQuote(evidence, context) || !evidenceText.includes(evidence)) {
-    errors.push({
+  const grounding = classifyEvidenceGrounding(evidence, evidenceText, context)
+
+  if (grounding === "grounded") return
+  if (grounding === "plausible") {
+    findings.push({
       validator_id: "request_interpretation_evidence",
       message:
-        "request_interpretation.evidence_quote must quote a meaningful phrase from the latest user message or active session context.",
-      severity: "block",
+        "request_interpretation.evidence_quote is not an exact quote, but overlaps enough with active context to keep the turn reviewable.",
+      severity: "warn",
       path: ["request_interpretation", "evidence_quote"],
     })
+    return
   }
+
+  findings.push({
+    validator_id: "request_interpretation_evidence",
+    message:
+      "request_interpretation.evidence_quote must quote a meaningful phrase from the latest user message or active session context.",
+    severity: "block",
+    path: ["request_interpretation", "evidence_quote"],
+  })
 }
 
 function validateInterpretationConfidence(
@@ -459,14 +526,13 @@ function validateInterpretationAnswerMode(
   if (
     PRODUCT_TOOL_REQUEST_KINDS.has(interpretation.product_request_kind) &&
     answer.answer_mode !== "product_recommendation" &&
-    answer.answer_mode !== "routine_product_deep_dive" &&
     answer.answer_mode !== "clarification" &&
     answer.answer_mode !== "constraint_blocked"
   ) {
     errors.push({
       validator_id: "request_interpretation_answer_mode",
       message:
-        "Concrete product interpretations must answer with product_recommendation, routine_product_deep_dive, clarification, or constraint_blocked.",
+        "Concrete product interpretations must answer with product_recommendation, clarification, or constraint_blocked.",
       severity: "block",
       path: ["request_interpretation", "product_request_kind"],
     })
@@ -666,10 +732,7 @@ function validateProductAnswerShape(
   context: AgentV2FinalAnswerValidationContext,
   errors: AgentV2ValidationError[],
 ): void {
-  if (
-    answer.answer_mode !== "product_recommendation" &&
-    answer.answer_mode !== "routine_product_deep_dive"
-  ) {
+  if (answer.answer_mode !== "product_recommendation") {
     return
   }
 
@@ -730,15 +793,47 @@ function validateRequiredGuidance(
   context: AgentV2FinalAnswerValidationContext,
   errors: AgentV2ValidationError[],
 ): void {
-  const loaded = new Set(answer.tool_grounding.used_guidance_package_ids)
-  const missing = context.requiredGuidancePackageIds.filter((id) => !loaded.has(id))
+  const reported = new Set(answer.tool_grounding.used_guidance_package_ids)
+  const loaded = context.loadedGuidancePackageIds
+    ? new Set(context.loadedGuidancePackageIds)
+    : reported
+  const missing = getRequiredGuidancePackageIds(answer, context).filter(
+    (id) => !reported.has(id) || !loaded.has(id),
+  )
   if (missing.length > 0) {
     errors.push({
       validator_id: "required_guidance_loaded",
-      message: `Missing required guidance packages: ${missing.join(", ")}`,
+      message: `Missing required guidance packages from loaded guidance and terminal grounding: ${missing.join(", ")}`,
       severity: "block",
     })
   }
+}
+
+function getRequiredGuidancePackageIds(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): string[] {
+  const required = new Set<string>(ALWAYS_REQUIRED_GUIDANCE_PACKAGE_IDS)
+
+  for (const id of BASE_GUIDANCE_BY_ANSWER_MODE[answer.answer_mode] ?? []) {
+    required.add(id)
+  }
+
+  if (PRODUCT_TOOL_REQUEST_KINDS.has(answer.request_interpretation.product_request_kind)) {
+    required.add("base.product_recommendation.v1")
+  }
+
+  if (answer.answer_mode !== "clarification" && answer.answer_mode !== "safety_boundary") {
+    const categoryId =
+      CATEGORY_GUIDANCE_BY_INTERPRETATION[answer.request_interpretation.care_category]
+    if (categoryId) required.add(categoryId)
+  }
+
+  for (const id of context.requiredGuidancePackageIds) {
+    required.add(id)
+  }
+
+  return [...required]
 }
 
 function validateKnownHardRuleIds(
@@ -842,8 +937,7 @@ function validateProductToolRequired(
   if (
     (answer.tool_grounding.product_ids.length > 0 ||
       payloadProductIds.length > 0 ||
-      answer.answer_mode === "product_recommendation" ||
-      answer.answer_mode === "routine_product_deep_dive") &&
+      answer.answer_mode === "product_recommendation") &&
     !hasProductToolCall
   ) {
     errors.push({
@@ -864,12 +958,20 @@ function validateRoutineToolRequired(
   )
   const payloadRoutineStepIds = extractPayloadRoutineStepIds(answer)
   const routineStepIdsRequireCurrentTool =
-    answer.answer_mode !== "routine_product_deep_dive" &&
+    !isRoutineProductRecommendation(answer) &&
     (answer.tool_grounding.routine_step_ids.length > 0 || payloadRoutineStepIds.length > 0)
+  const asksForRoutineChange = isRoutineChangeRequest(
+    [context.latestUserMessage, context.recentEvidenceText ?? ""].join("\n"),
+  )
+  const handRolledRoutineChange =
+    answer.answer_mode === "general_advice" &&
+    asksForRoutineChange &&
+    answerSuggestsRoutineStepChanges(answer)
   const requiresRoutineTool =
     answer.answer_mode === "routine" ||
     routineStepIdsRequireCurrentTool ||
-    ROUTINE_TOOL_INTENTS.has(answer.request_interpretation.routine_intent)
+    ROUTINE_TOOL_INTENTS.has(answer.request_interpretation.routine_intent) ||
+    handRolledRoutineChange
   if (requiresRoutineTool && !hasRoutineToolCall) {
     errors.push({
       validator_id: "routine_tool_required",
@@ -880,10 +982,7 @@ function validateRoutineToolRequired(
 }
 
 function extractPayloadProductIds(answer: AgentV2TerminalAnswer): string[] {
-  if (
-    answer.answer_mode !== "product_recommendation" &&
-    answer.answer_mode !== "routine_product_deep_dive"
-  ) {
+  if (answer.answer_mode !== "product_recommendation") {
     return []
   }
 
@@ -907,20 +1006,53 @@ function extractPayloadRoutineStepIds(answer: AgentV2TerminalAnswer): string[] {
     ]
   }
 
-  if (answer.answer_mode === "routine_product_deep_dive") {
-    return answer.payload.step_id && answer.payload.step_id.trim().length > 0
-      ? [answer.payload.step_id]
-      : []
-  }
-
   return []
 }
 
 function extractRoutineContextStepIds(answer: AgentV2TerminalAnswer): string[] {
-  if (answer.answer_mode !== "routine_product_deep_dive") return []
+  if (!isRoutineProductRecommendation(answer)) return []
 
   const stepId = answer.routine_context.step_id
   return stepId && stepId.trim().length > 0 ? [stepId] : []
+}
+
+function isRoutineChangeRequest(text: string): boolean {
+  const normalized = text.toLocaleLowerCase("de-DE")
+  return (
+    /\b(routine|ablauf)\b.*\b(einfacher|leichter|aendern|ändern|umstellen|ergaenzen|ergänzen|weglassen|reduzieren)\b/.test(
+      normalized,
+    ) ||
+    /\b(keine schwere routine|nicht so schwere routine|leichte routine)\b/.test(normalized) ||
+    /\b(was soll ich|was sollte ich).*\b(aendern|ändern|ergaenzen|ergänzen|weglassen)\b/.test(
+      normalized,
+    ) ||
+    /\b(fuege|füge|nimm|baue).*\b(routine|schritt)\b/.test(normalized) ||
+    /\b(mach|mache|machst|machen)\b\s+(sie|ihn|es|das)\b.*\b(mit|statt|ohne)\b/.test(normalized)
+  )
+}
+
+function answerSuggestsRoutineStepChanges(answer: AgentV2TerminalAnswer): boolean {
+  const payload = answer.payload as Record<string, unknown>
+  const textParts = [readUserFacingAnswer(payload)]
+
+  for (const value of Object.values(payload)) {
+    if (typeof value === "string") textParts.push(value)
+    if (Array.isArray(value)) {
+      textParts.push(...value.filter((item): item is string => typeof item === "string"))
+    }
+  }
+
+  const normalized = normalizeVisibleText(textParts.join(" "))
+  const mentionsStepCategory =
+    /\b(conditioner|spuelung|leave in|maske|mask|oel|ol|oil|shampoo|trockenshampoo|peeling|bondbuilder|reset|tiefenreinigung)\b/.test(
+      normalized,
+    )
+  const suggestsChange =
+    /\b(aendere|andere|aendern|andern|wechsel|wechsle|ersetze|fuege|fuge|ergaenze|erganze|hinzufuegen|hinzufugen|nimm|baue|mache|machen|nutze|verwende|statt|weglassen|reduzieren)\b/.test(
+      normalized,
+    )
+
+  return mentionsStepCategory && suggestsChange
 }
 
 function validateRoutineThreadContinuity(
@@ -950,17 +1082,18 @@ function validateRoutineProductDeepDive(
   _context: AgentV2FinalAnswerValidationContext,
   errors: AgentV2ValidationError[],
 ): void {
-  if (answer.answer_mode !== "routine_product_deep_dive") return
+  if (!isRoutineProductRecommendation(answer)) return
 
-  const payload = answer.payload
   if (
+    !answer.routine_context.active ||
     answer.routine_context.return_path.length === 0 ||
-    !payload.return_to_routine_offer_de ||
-    payload.return_to_routine_offer_de.trim().length === 0
+    !answer.payload.next_step_offer_de ||
+    answer.payload.next_step_offer_de.trim().length === 0
   ) {
     errors.push({
       validator_id: "routine_return_path_required",
-      message: "Routine product deep dives must preserve a return path to the routine.",
+      message:
+        "Product recommendations inside routine threads must keep routine_context active and preserve a return path to the routine.",
       severity: "block",
     })
   }
@@ -968,6 +1101,7 @@ function validateRoutineProductDeepDive(
 
 function validateRoutineMetadataConsistency(
   answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
   errors: AgentV2ValidationError[],
 ): void {
   if (answer.answer_mode === "routine") {
@@ -982,27 +1116,51 @@ function validateRoutineMetadataConsistency(
     return
   }
 
-  if (answer.answer_mode !== "routine_product_deep_dive") return
-
-  const contextStepId = answer.routine_context.step_id
-  if (contextStepId && answer.payload.step_id !== contextStepId) {
-    errors.push({
-      validator_id: "routine_metadata_consistency",
-      message: "Routine product deep-dive payload step_id must match routine_context.step_id.",
-      severity: "block",
-      path: ["payload", "step_id"],
-    })
-  }
+  if (!isRoutineProductRecommendation(answer)) return
 
   const contextCategory = answer.routine_context.category
-  if (contextCategory && answer.payload.category !== contextCategory) {
+  const interpretationCategory = answer.request_interpretation.care_category
+  const stepCategory = findRoutineThreadStepCategory(context, answer.routine_context.step_id)
+  if (
+    contextCategory &&
+    interpretationCategory !== "unknown" &&
+    interpretationCategory !== "none" &&
+    interpretationCategory !== contextCategory
+  ) {
     errors.push({
       validator_id: "routine_metadata_consistency",
-      message: "Routine product deep-dive payload category must match routine_context.category.",
+      message:
+        "Routine product recommendation context category must match request_interpretation.care_category.",
       severity: "block",
-      path: ["payload", "category"],
+      path: ["routine_context", "category"],
     })
   }
+
+  const comparableInterpretationCategory =
+    interpretationCategory !== "unknown" && interpretationCategory !== "none"
+      ? interpretationCategory
+      : null
+  const declaredCategory = contextCategory ?? comparableInterpretationCategory
+  if (stepCategory && declaredCategory && stepCategory !== declaredCategory) {
+    errors.push({
+      validator_id: "routine_metadata_consistency",
+      message:
+        "Routine product recommendation category must match the referenced routine step category.",
+      severity: "block",
+      path: ["routine_context", "step_id"],
+    })
+  }
+}
+
+function findRoutineThreadStepCategory(
+  context: AgentV2FinalAnswerValidationContext,
+  stepId: string | null,
+): string | null {
+  if (!stepId || !context.routineThreadContext?.active) return null
+  const step = context.routineThreadContext.visible_steps.find((visibleStep) => {
+    return visibleStep.step_id === stepId
+  })
+  return step?.category ?? null
 }
 
 function validateAnswerModeForContext(
@@ -1020,18 +1178,6 @@ function validateAnswerModeForContext(
       severity: "block",
     })
   }
-
-  if (
-    answer.answer_mode === "product_recommendation" &&
-    answer.request_interpretation.product_request_kind === "routine_product_deep_dive"
-  ) {
-    errors.push({
-      validator_id: "routine_product_deep_dive_required",
-      message:
-        "Concrete product asks inside an active routine thread must use routine_product_deep_dive so the answer can return to the routine.",
-      severity: "block",
-    })
-  }
 }
 
 function validateRoutineLayerProgression(
@@ -1044,7 +1190,13 @@ function validateRoutineLayerProgression(
   const requestedLayer = answer.routine_context.routine_layer
   if (!requestedLayer) return
 
-  if (!context.currentRoutineLayer && requestedLayer !== "basics") {
+  const currentLayer = context.currentRoutineLayer ?? context.routineThreadContext?.current_layer
+  const hasRoutineBaseline =
+    Boolean(currentLayer) ||
+    context.routineThreadContext?.active === true ||
+    context.hasCurrentRoutineInventory === true
+
+  if (!hasRoutineBaseline && requestedLayer !== "basics") {
     errors.push({
       validator_id: "routine_layer_progression",
       message: "First routine answer must start with the basics layer.",
@@ -1059,7 +1211,6 @@ function validateRoutineLayerProgression(
     problems: ["problems", "goals", "deep_dive"],
     deep_dive: ["goals", "problems", "deep_dive"],
   }
-  const currentLayer = context.currentRoutineLayer
   if (currentLayer && !allowedNextLayers[currentLayer].includes(requestedLayer)) {
     errors.push({
       validator_id: "routine_layer_progression",
@@ -1106,7 +1257,6 @@ function validateSafety(
   if (
     context.safetyMode === "restricted" &&
     (answer.answer_mode === "product_recommendation" ||
-      answer.answer_mode === "routine_product_deep_dive" ||
       PRODUCT_TOOL_REQUEST_KINDS.has(answer.request_interpretation.product_request_kind))
   ) {
     errors.push({
@@ -1272,14 +1422,24 @@ function validateToolEvidenceArgument(
   args: Record<string, unknown>,
   context: AgentV2FinalAnswerValidationContext,
   toolName: string,
-  errors: AgentV2ValidationError[],
+  findings: AgentV2ValidationError[],
 ): void {
   const evidence =
     typeof args.evidence_quote === "string" ? normalizeEvidenceText(args.evidence_quote) : ""
   const evidenceText = normalizeEvidenceText(buildEvidenceText(context))
-  if (isMeaningfulEvidenceQuote(evidence, context) && evidenceText.includes(evidence)) return
+  const grounding = classifyEvidenceGrounding(evidence, evidenceText, context)
+  if (grounding === "grounded") return
+  if (grounding === "plausible") {
+    findings.push({
+      validator_id: "request_interpretation_tool_args_match",
+      message: `${toolName}.evidence_quote is not an exact quote, but overlaps enough with active context to keep the tool call reviewable.`,
+      severity: "warn",
+      path: ["request_interpretation", "evidence_quote"],
+    })
+    return
+  }
 
-  errors.push({
+  findings.push({
     validator_id: "request_interpretation_tool_args_match",
     message: `${toolName}.evidence_quote must quote a meaningful phrase from the latest user message or active session context.`,
     severity: "block",
@@ -1372,25 +1532,25 @@ function compareCategoryArgument(
   errors: AgentV2ValidationError[],
 ): void {
   const actual = "requested_category" in args ? args.requested_category : args.category
-  if (interpretation.category === "none" || interpretation.category === "unknown") return
+  if (interpretation.care_category === "none" || interpretation.care_category === "unknown") return
   if (actual === null || actual === undefined || actual === "none") {
     errors.push({
       validator_id: "request_interpretation_tool_args_match",
       message:
-        "Tool arguments must include a category when terminal request_interpretation declares one.",
+        "Tool arguments must include a category when terminal request_interpretation declares a care_category.",
       severity: "block",
-      path: ["request_interpretation", "category"],
+      path: ["request_interpretation", "care_category"],
     })
     return
   }
-  if (actual === interpretation.category) return
+  if (actual === interpretation.care_category) return
 
   errors.push({
     validator_id: "request_interpretation_tool_args_match",
     message:
-      "Terminal request_interpretation category does not match the category used in tool arguments.",
+      "Terminal request_interpretation care_category does not match the category used in tool arguments.",
     severity: "block",
-    path: ["request_interpretation", "category"],
+    path: ["request_interpretation", "care_category"],
   })
 }
 
@@ -1411,6 +1571,68 @@ function buildEvidenceText(context: AgentV2FinalAnswerValidationContext): string
     ...(context.routineThreadContext?.last_routine_categories ?? []),
     ...visibleStepEvidence,
   ].join("\n")
+}
+
+/*
+ * Evidence validation is lightweight provenance for traces and repair, not an
+ * intent classifier. Exact quotes pass; close overlap becomes a warning;
+ * empty, vague, or unrelated evidence still blocks.
+ */
+function classifyEvidenceGrounding(
+  normalizedEvidence: string,
+  normalizedEvidenceText: string,
+  context: AgentV2FinalAnswerValidationContext,
+): "grounded" | "plausible" | "missing" {
+  if (!isMeaningfulEvidenceQuote(normalizedEvidence, context)) return "missing"
+  if (normalizedEvidenceText.includes(normalizedEvidence)) return "grounded"
+
+  const evidenceTokens = meaningfulEvidenceTokens(normalizedEvidence)
+  if (evidenceTokens.length < 2) return "missing"
+
+  const sourceTokens = new Set(meaningfulEvidenceTokens(normalizedEvidenceText))
+  const overlap = evidenceTokens.filter((token) => sourceTokens.has(token))
+  const overlapRatio = overlap.length / evidenceTokens.length
+  if (overlap.length >= 2 && overlapRatio >= 0.45) return "plausible"
+
+  return "missing"
+}
+
+const EVIDENCE_STOPWORDS = new Set([
+  "aber",
+  "auch",
+  "bitte",
+  "dann",
+  "das",
+  "der",
+  "die",
+  "dir",
+  "du",
+  "ein",
+  "eine",
+  "einen",
+  "einer",
+  "gerne",
+  "ich",
+  "ja",
+  "mal",
+  "meine",
+  "meiner",
+  "mir",
+  "mit",
+  "und",
+  "was",
+  "welche",
+  "welcher",
+  "welches",
+  "zu",
+])
+
+function meaningfulEvidenceTokens(normalizedValue: string): string[] {
+  return normalizedValue
+    .split(" ")
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 3)
+    .filter((token) => !EVIDENCE_STOPWORDS.has(token))
 }
 
 function normalizeEvidenceText(value: string): string {

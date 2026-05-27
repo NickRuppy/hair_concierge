@@ -219,6 +219,8 @@ test("compare prompt packs include crafted multi-turn chains with failure covera
       "bondbuilder-explain-followup",
       "oil-use-case-comparison",
       "routine-add-on-full-spectrum",
+      "agent-v2-review-routine-first-extra-product",
+      "agent-v2-review-previous-offer-reference",
     ],
   )
 
@@ -230,7 +232,7 @@ test("compare prompt packs include crafted multi-turn chains with failure covera
   ])
   assert.match(shampooChain.turns[1], /welcges Shampoo/i)
 
-  const parityChains = AGENT_COMPARE_MULTI_TURN_CHAINS.slice(3)
+  const parityChains = AGENT_COMPARE_MULTI_TURN_CHAINS.slice(3, 9)
   assert.deepEqual(
     parityChains.map((chain) => chain.id),
     [
@@ -252,8 +254,15 @@ test("compare prompt packs include crafted multi-turn chains with failure covera
   )
 
   assert.ok(
-    AGENT_COMPARE_MULTI_TURN_CHAINS.every(
-      (chain) => chain.turns.length >= 3 && chain.failure_classes.length > 0,
+    parityChains.every((chain) => chain.turns.length >= 3 && chain.failure_classes.length > 0),
+  )
+  assert.deepEqual(
+    AGENT_COMPARE_MULTI_TURN_CHAINS.slice(9).map((chain) => chain.id),
+    ["agent-v2-review-routine-first-extra-product", "agent-v2-review-previous-offer-reference"],
+  )
+  assert.ok(
+    AGENT_COMPARE_MULTI_TURN_CHAINS.slice(9).every(
+      (chain) => chain.turns.length >= 2 && chain.failure_classes.length > 0,
     ),
   )
 })

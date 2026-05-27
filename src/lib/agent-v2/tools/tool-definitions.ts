@@ -15,7 +15,6 @@ import {
   AgentV2RoutineLayerSchema,
   AgentV2RoutineContextSchema,
   AgentV2RoutinePayloadSchema,
-  AgentV2RoutineProductDeepDivePayloadSchema,
   AgentV2SafetyBoundaryPayloadSchema,
   AgentV2SessionMemoryWriteSchema,
   AgentV2ToolGroundingSchema,
@@ -45,7 +44,7 @@ export function buildAgentV2ResponsesTools(params: {
       type: "function",
       name: "load_advisor_guidance",
       description:
-        "Load compact AgentV2 advisor guidance packages for the current answer mode, categories, routine layer, and safety mode.",
+        "Load compact AgentV2 advisor guidance packages for the current answer mode, categories, routine layer, and safety mode. Use this before category-specific claims, product recommendations, routine answers, and non-trivial general advice so the final answer is grounded in AgentV2 guidance rather than model memory. For named-product detail checks and product-specific claim checks, use answer_mode_hint product_recommendation even if the final answer may clarify because catalog data is missing; examples include 'Ist Produkt X farbsicher?' and 'Kann ich Produkt X als Hitzeschutz benutzen?'. For hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo questions, load deep_cleansing_shampoo instead of normal shampoo. For K18, OLAPLEX, Epres, acidic bonding, bond repair, or exact bond-repair protocol questions, load bondbuilder even when the product behaves like a leave-in or mask.",
       strict: true,
       parameters: toStrictJsonSchema(LoadAgentV2AdvisorGuidanceInputSchema),
     },
@@ -53,7 +52,7 @@ export function buildAgentV2ResponsesTools(params: {
       type: "function",
       name: "build_or_fix_routine",
       description:
-        "Build or adjust a staged routine using the existing deterministic routine planner.",
+        "Build or adjust a saved/current staged routine using the existing deterministic routine planner. Call this for requests to change, simplify, lighten, extend, add to, remove from, or rebalance routine state, including 'was soll ich aendern', 'Routine einfacher machen', 'keine schwere Routine', and 'fuege ... ein'. Do not call this for general placement, order, or usage questions such as 'where does this fit in my routine?' unless the user asks to add, remove, replace, or change routine state; answer those as routine_explanation with routine_intent none.",
       strict: true,
       parameters: toStrictJsonSchema(BuildOrFixRoutineToolInputSchema),
     },
@@ -71,7 +70,7 @@ export function buildAgentV2ResponsesTools(params: {
       type: "function",
       name: "select_products",
       description:
-        "Select grounded products from the catalog for an explicit product ask or routine product deep dive.",
+        "Select grounded products from the catalog for an explicit product ask, comparison, or named-product detail/claim check. For product_detail turns such as 'Can I use Product X as heat protectant?', 'Is Product X color-safe?', or 'Is Product X chelating?', this tool is required before any terminal answer, including clarification or unsupported-claim answers. Load product_recommendation guidance first and use product_request_kind product_detail. For product asks inside active routine threads, use product_request_kind specific_products and preserve routine context in the final answer. For hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo asks, use category deep_cleansing_shampoo instead of shampoo. For K18, OLAPLEX, Epres, acidic bonding, bond repair, or exact bond-repair protocol asks, use category bondbuilder instead of leave_in or mask.",
       strict: true,
       parameters: toStrictJsonSchema(SelectProductsToolInputSchema),
     })
@@ -81,7 +80,9 @@ export function buildAgentV2ResponsesTools(params: {
 }
 
 export const SelectProductsToolInputSchema = z.strictObject({
-  category: AgentV2GuidanceCategorySchema,
+  category: AgentV2GuidanceCategorySchema.describe(
+    "Product category. Use deep_cleansing_shampoo for hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo asks even when the product name contains Shampoo.",
+  ),
   reason: z.string(),
   user_request: z.string().nullable(),
   constraints: z.array(z.string()),
@@ -121,7 +122,6 @@ const AgentV2TerminalAnswerToolParametersSchema = z.strictObject({
   payload: z.union([
     AgentV2ProductRecommendationPayloadSchema,
     AgentV2RoutinePayloadSchema,
-    AgentV2RoutineProductDeepDivePayloadSchema,
     AgentV2GeneralAdvicePayloadSchema,
     AgentV2ClarificationPayloadSchema,
     AgentV2ConstraintBlockedPayloadSchema,

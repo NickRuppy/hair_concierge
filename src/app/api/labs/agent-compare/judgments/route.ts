@@ -238,7 +238,7 @@ const judgmentRecordSchema = z.object({
     ),
   }),
   results: z.object({
-    current: compareRunResultSchema,
+    current: compareRunResultSchema.optional(),
     agent: compareRunResultSchema,
   }),
   judgment: z.object({

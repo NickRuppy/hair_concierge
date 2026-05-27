@@ -2,7 +2,7 @@
   "package_id": "base.routine_building.v1",
   "version": 1,
   "scope": {
-    "answer_modes": ["routine", "routine_product_deep_dive"],
+    "answer_modes": ["routine"],
     "categories": [],
     "routine_layers": ["basics", "goals", "problems", "deep_dive"],
     "safety_modes": ["normal", "restricted"]
@@ -21,6 +21,13 @@
       "source": "base/routine-building.md",
       "validator_id": "routine_layer_order",
       "message": "Broad routine asks start with basics before goals or problems."
+    },
+    {
+      "rule_id": "routine.change_requests_require_tool",
+      "severity": "block",
+      "source": "base/routine-building.md",
+      "validator_id": "routine_tool_required",
+      "message": "Use build_or_fix_routine before answering requests to change, simplify, lighten, extend, add to, remove from, or rebalance the user's routine."
     }
   ],
   "soft_rubrics": [
@@ -47,6 +54,42 @@
       "priority": "high",
       "source": "base/routine-building.md",
       "message": "Routine summarization, explanation, and exit should not mutate the routine."
+    },
+    {
+      "rubric_id": "routine.lean_life_fit_assembly",
+      "priority": "high",
+      "source": "base/routine-building.md",
+      "message": "Explain routines through scalp wash needs, fibre conditioning needs, texture/thickness weight limits, and real-life repeatability; add the fewest steps and change one product at a time."
+    },
+    {
+      "rubric_id": "routine.threshold_change_vs_explain",
+      "priority": "high",
+      "source": "base/routine-building.md",
+      "message": "Use build_or_fix_routine for simplify/change/add/remove/lightweight routine asks, but keep pure placement, order, usage, and balanced category comparisons as non-mutating explanations."
+    },
+    {
+      "rubric_id": "routine.active_summary_does_not_rebuild",
+      "priority": "high",
+      "source": "base/routine-building.md",
+      "message": "Inside active routine threads, answer pure summary, recap, overview, or explanation follow-ups from routineThreadContext as general_advice with routine_context.active true and routine_intent none; do not call build_or_fix_routine."
+    },
+    {
+      "rubric_id": "routine.active_mutation_requires_explicit_change",
+      "priority": "high",
+      "source": "base/routine-building.md",
+      "message": "Rebuild active routine state only when the latest message explicitly asks to change, add, remove, replace, simplify further, lighten, rebalance, or rebuild."
+    },
+    {
+      "rubric_id": "routine.layer_labels_are_internal",
+      "priority": "medium",
+      "source": "base/routine-building.md",
+      "message": "Never render raw routine layer labels such as goals, problems, or deep_dive to the user; use natural German concepts instead."
+    },
+    {
+      "rubric_id": "routine.product_deep_dive_preserves_context",
+      "priority": "high",
+      "source": "base/routine-building.md",
+      "message": "For product deep dives inside an active routine thread, preserve routine_context.active and use select_products for the product lane without rebuilding the routine unless the user asks to change it."
     }
   ],
   "required_grounding": [
@@ -54,6 +97,11 @@
       "grounding_id": "routine.must_use_build_or_fix_routine",
       "tool": "build_or_fix_routine",
       "when": "The answer gives a multi-step routine."
+    },
+    {
+      "grounding_id": "routine.change_requests_build_or_fix",
+      "tool": "build_or_fix_routine",
+      "when": "User explicitly asks to change, simplify, lighten, extend, add to, remove from, replace, rebuild, or rebalance routine state."
     }
   ],
   "ask_when": [

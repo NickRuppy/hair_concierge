@@ -2,7 +2,7 @@
   "package_id": "base.answer_contract.v1",
   "version": 1,
   "scope": {
-    "answer_modes": ["product_recommendation", "routine", "routine_product_deep_dive", "general_advice", "clarification", "constraint_blocked", "safety_boundary"],
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "clarification", "constraint_blocked", "safety_boundary"],
     "categories": [],
     "routine_layers": [],
     "safety_modes": ["normal", "restricted", "hard_short_circuit"]
@@ -35,6 +35,13 @@
       "source": "base/answer-contract.md",
       "validator_id": "evidence_quote_grounding",
       "message": "request_interpretation.evidence_quote must quote the latest user message or active recent context."
+    },
+    {
+      "rule_id": "answer.evidence_quote_grounding",
+      "severity": "block",
+      "source": "base/answer-contract.md",
+      "validator_id": "evidence_quote_grounding",
+      "message": "Alias for answer.evidence_quote_grounded; request_interpretation.evidence_quote must quote the latest user message or active recent context."
     }
   ],
   "soft_rubrics": [

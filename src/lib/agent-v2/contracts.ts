@@ -3,7 +3,6 @@ import { z } from "zod"
 export const AgentV2AnswerModeSchema = z.enum([
   "product_recommendation",
   "routine",
-  "routine_product_deep_dive",
   "general_advice",
   "clarification",
   "constraint_blocked",
@@ -57,7 +56,6 @@ export const AgentV2ProductRequestKindSchema = z.enum([
   "category_education",
   "compare_products",
   "product_detail",
-  "routine_product_deep_dive",
 ])
 
 export type AgentV2ProductRequestKind = z.infer<typeof AgentV2ProductRequestKindSchema>
@@ -75,7 +73,7 @@ export const AgentV2RoutineIntentSchema = z.enum([
 
 export type AgentV2RoutineIntent = z.infer<typeof AgentV2RoutineIntentSchema>
 
-export const AgentV2InterpretationCategorySchema = z.enum([
+export const AgentV2CareCategorySchema = z.enum([
   "none",
   "unknown",
   "shampoo",
@@ -91,7 +89,7 @@ export const AgentV2InterpretationCategorySchema = z.enum([
   "treatment",
 ])
 
-export type AgentV2InterpretationCategory = z.infer<typeof AgentV2InterpretationCategorySchema>
+export type AgentV2CareCategory = z.infer<typeof AgentV2CareCategorySchema>
 
 export const AgentV2CountPolicySchema = z.enum(["none", "exact", "default", "cap"])
 
@@ -101,7 +99,7 @@ export const AgentV2RequestInterpretationSchema = z.strictObject({
   primary_intent: AgentV2PrimaryIntentSchema,
   product_request_kind: AgentV2ProductRequestKindSchema,
   routine_intent: AgentV2RoutineIntentSchema,
-  category: AgentV2InterpretationCategorySchema,
+  care_category: AgentV2CareCategorySchema,
   requested_product_count: z.number().int().min(0).max(6).nullable(),
   count_policy: AgentV2CountPolicySchema,
   evidence_quote: z.string().min(1),
@@ -226,14 +224,6 @@ export const AgentV2RoutinePayloadSchema = z.strictObject({
   next_step_offer_de: z.string().nullable(),
 })
 
-export const AgentV2RoutineProductDeepDivePayloadSchema = z.strictObject({
-  user_facing_answer_de: z.string(),
-  step_id: z.string().nullable(),
-  category: z.string().nullable(),
-  recommendations: z.array(AgentV2RecommendationPayloadSchema),
-  return_to_routine_offer_de: z.string().nullable(),
-})
-
 export const AgentV2GeneralAdvicePayloadSchema = z.strictObject({
   user_facing_answer_de: z.string(),
   category_or_topic: z.string(),
@@ -279,10 +269,6 @@ export const AgentV2TerminalAnswerSchema = z.discriminatedUnion("answer_mode", [
   AgentV2TerminalAnswerBaseSchema.extend({
     answer_mode: z.literal("routine"),
     payload: AgentV2RoutinePayloadSchema,
-  }),
-  AgentV2TerminalAnswerBaseSchema.extend({
-    answer_mode: z.literal("routine_product_deep_dive"),
-    payload: AgentV2RoutineProductDeepDivePayloadSchema,
   }),
   AgentV2TerminalAnswerBaseSchema.extend({
     answer_mode: z.literal("general_advice"),
@@ -387,9 +373,21 @@ export const AgentV2ToolCallTraceSchema = z.object({
   name: z.string(),
   arguments: z.record(z.string(), z.unknown()).optional(),
   output_summary: z.string().optional(),
+  latency_ms: z.number().nonnegative().optional(),
 })
 
 export type AgentV2ToolCallTrace = z.infer<typeof AgentV2ToolCallTraceSchema>
+
+export const AgentV2ModelStepTraceSchema = z.custom<unknown>((value) => {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return true
+  const latencyMs = (value as { latency_ms?: unknown }).latency_ms
+  return (
+    latencyMs === undefined ||
+    (typeof latencyMs === "number" && Number.isFinite(latencyMs) && latencyMs >= 0)
+  )
+})
+
+export type AgentV2ModelStepTrace = z.infer<typeof AgentV2ModelStepTraceSchema>
 
 export const AgentV2TraceSchema = z.object({
   engine: z.literal("agent_v2"),
@@ -399,7 +397,7 @@ export const AgentV2TraceSchema = z.object({
   safety_mode: AgentV2SafetyModeSchema,
   answer_mode: AgentV2AnswerModeSchema.nullable(),
   response_ids: z.array(z.string()),
-  model_steps: z.array(z.unknown()),
+  model_steps: z.array(AgentV2ModelStepTraceSchema),
   tool_calls: z.array(AgentV2ToolCallTraceSchema),
   blocked_tool_calls: z.array(
     z.object({
@@ -415,6 +413,7 @@ export const AgentV2TraceSchema = z.object({
   bounded_repair_kind: z
     .enum([
       "terminal_only",
+      "missing_guidance_or_tools",
       "missing_select_products",
       "missing_build_or_fix_routine",
       "unrepairable",
