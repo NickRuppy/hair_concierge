@@ -6,6 +6,7 @@ import { MetaPixelProvider } from "@/providers/meta-pixel-provider"
 import { PostHogClientProvider } from "@/providers/posthog-provider"
 import { ToastProvider } from "@/providers/toast-provider"
 import { CookieConsent } from "@/components/cookie-consent/cookie-consent"
+import { FeedbackWidget } from "@/components/feedback/feedback-widget"
 import "./globals.css"
 
 const playfairDisplay = Playfair_Display({
@@ -57,7 +58,10 @@ export default function RootLayout({
           <AuthProvider>
             <CustomerIoProvider>
               <PostHogClientProvider>
-                <ToastProvider>{children}</ToastProvider>
+                <ToastProvider>
+                  {children}
+                  <FeedbackWidget />
+                </ToastProvider>
               </PostHogClientProvider>
             </CustomerIoProvider>
           </AuthProvider>
