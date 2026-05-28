@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { MessageSquare, Check } from "lucide-react"
+import { Check, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils"
 
 const MAX_LENGTH = 4000
 const SUCCESS_AUTOCLOSE_MS = 1800
+const HINT_STORAGE_KEY = "chaarlie_feedback_hint_seen"
+const HINT_DELAY_MS = 1200
 
 export function FeedbackWidget() {
   const { user, loading } = useAuth()
@@ -21,19 +23,44 @@ export function FeedbackWidget() {
   const [message, setMessage] = React.useState("")
   const [submitting, setSubmitting] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
+  const [hintVisible, setHintVisible] = React.useState(false)
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null)
 
   const enabled = process.env.NEXT_PUBLIC_BETA_FEEDBACK_ENABLED === "true"
 
+  // First-time hint: show once per browser, after a short delay so it doesn't
+  // collide with page load. Dismissal via tab-click or explicit close persists.
+  React.useEffect(() => {
+    if (!enabled || loading || !user) return
+    if (typeof window === "undefined") return
+    if (window.localStorage.getItem(HINT_STORAGE_KEY)) return
+
+    const timer = window.setTimeout(() => setHintVisible(true), HINT_DELAY_MS)
+    return () => window.clearTimeout(timer)
+  }, [enabled, loading, user])
+
   React.useEffect(() => {
     if (open && !success) {
-      // Focus textarea after Dialog mounts (portal needs a tick)
       const timer = setTimeout(() => textareaRef.current?.focus(), 80)
       return () => clearTimeout(timer)
     }
   }, [open, success])
 
   if (!enabled || loading || !user) return null
+
+  function dismissHint() {
+    setHintVisible(false)
+    try {
+      window.localStorage.setItem(HINT_STORAGE_KEY, "1")
+    } catch {
+      // localStorage may be disabled (private mode, etc.) — hint just won't persist
+    }
+  }
+
+  function handleTabClick() {
+    dismissHint()
+    setOpen(true)
+  }
 
   const trimmed = message.trim()
   const canSubmit = trimmed.length > 0 && trimmed.length <= MAX_LENGTH && !submitting
@@ -42,7 +69,6 @@ export function FeedbackWidget() {
     if (submitting) return
     setOpen(next)
     if (!next) {
-      // Reset shortly after close animation finishes
       setTimeout(() => {
         setMessage("")
         setSuccess(false)
@@ -59,8 +85,6 @@ export function FeedbackWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: trimmed,
-          // Pathname only — query string can carry auth tokens / Stripe session ids.
-          // Server also redacts as defense-in-depth.
           pageUrl: typeof window !== "undefined" ? window.location.pathname : undefined,
           userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
         }),
@@ -77,7 +101,6 @@ export function FeedbackWidget() {
       setSuccess(true)
       setTimeout(() => {
         setOpen(false)
-        // Reset after close animation
         setTimeout(() => {
           setMessage("")
           setSuccess(false)
@@ -97,21 +120,58 @@ export function FeedbackWidget() {
 
   return (
     <>
+      {/* First-time hint bubble — sits to the left of the tab */}
+      {hintVisible && (
+        <div
+          role="status"
+          className={cn(
+            "fixed right-12 top-1/2 z-40 -translate-y-1/2",
+            "max-w-[260px] rounded-xl bg-card px-4 py-3 pr-9",
+            "border border-border shadow-[0_12px_32px_-12px_rgba(60,50,70,0.22)]",
+            "animate-in fade-in slide-in-from-right-2 duration-300",
+          )}
+        >
+          <p className="text-sm leading-snug text-foreground">
+            Hier kannst du uns Feedback geben — wir lesen jede Nachricht.
+          </p>
+          <button
+            type="button"
+            aria-label="Hinweis schließen"
+            onClick={dismissHint}
+            className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+          {/* Arrow pointing right toward the tab */}
+          <span
+            aria-hidden="true"
+            className="absolute right-[-6px] top-1/2 h-3 w-3 -translate-y-1/2 rotate-45 border border-border bg-card"
+            style={{ borderLeft: "none", borderBottom: "none" }}
+          />
+        </div>
+      )}
+
+      {/* Vertical side tab */}
       <button
         type="button"
         aria-label="Feedback geben"
-        onClick={() => setOpen(true)}
+        onClick={handleTabClick}
         className={cn(
-          "fixed bottom-20 right-4 z-40",
-          "flex h-[52px] w-[52px] items-center justify-center",
-          "rounded-full bg-secondary text-secondary-foreground",
-          "shadow-[0_10px_24px_-6px_rgba(217,106,118,0.5)]",
-          "transition-transform duration-150",
-          "hover:scale-105 active:scale-95",
+          "fixed right-0 top-1/2 z-40 -translate-y-1/2",
+          "flex items-center justify-center",
+          "rounded-l-xl bg-secondary text-secondary-foreground",
+          "px-2 py-5",
+          "shadow-[-6px_0_16px_-6px_rgba(217,106,118,0.45)]",
+          "transition-transform duration-200 ease-out",
+          "hover:-translate-x-[3px] hover:-translate-y-1/2",
+          "active:translate-x-0 active:-translate-y-1/2",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          hintVisible && "animate-feedback-pulse",
         )}
       >
-        <MessageSquare className="h-6 w-6" />
+        <span className="text-xs font-semibold tracking-wider [writing-mode:vertical-rl] rotate-180">
+          Feedback
+        </span>
       </button>
 
       <Dialog open={open} onOpenChange={handleOpenChange}>
