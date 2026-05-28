@@ -113,6 +113,7 @@ test("Cookie banner stacks above PayPal checkout iframes", () => {
   )
 
   assert.match(cookieConsentSource, /aria-label="Cookie-Einstellungen"/)
+  assert.match(cookieConsentSource, /bannerVisible && !settingsOpen/)
   assert.match(cookieConsentSource, /z-\[100\]/)
   assert.doesNotMatch(cookieConsentSource, /z-40/)
 })

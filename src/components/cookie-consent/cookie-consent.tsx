@@ -68,7 +68,7 @@ export function CookieConsent() {
 
   return (
     <>
-      {bannerVisible && (
+      {bannerVisible && !settingsOpen && (
         <div
           role="dialog"
           aria-label="Cookie-Einstellungen"
