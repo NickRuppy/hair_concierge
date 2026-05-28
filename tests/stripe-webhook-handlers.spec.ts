@@ -306,7 +306,13 @@ test("checkout.session.completed does not throw when linkQuizToProfile rejects",
   } as any
 
   // Should resolve normally despite linkQuizToProfile throwing
-  await expect(handleCheckoutSessionCompleted(session, deps)).resolves.toBeUndefined()
+  await expect(handleCheckoutSessionCompleted(session, deps)).resolves.toMatchObject({
+    email: "err@example.com",
+    stripeCustomerId: "cus_err",
+    stripeSubscriptionId: "sub_1",
+    subscriptionInterval: "month",
+    subscriptionStatus: "active",
+  })
 
   // Profile update still happened
   const p = Object.values(profiles).find((x: any) => x.email === "err@example.com") as any

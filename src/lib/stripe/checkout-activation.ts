@@ -40,6 +40,10 @@ export interface CheckoutAccountResult {
   userId: string
   email: string
   canSetInitialPassword: boolean
+  subscriptionInterval?: string
+  stripeCustomerId?: string
+  stripeSubscriptionId?: string
+  subscriptionStatus?: string
 }
 
 interface ProfileRow {
@@ -179,7 +183,15 @@ export async function ensureCheckoutAccount(
     durationMs: Date.now() - startedAt,
   })
 
-  return { userId, email: valid.email, canSetInitialPassword }
+  return {
+    userId,
+    email: valid.email,
+    canSetInitialPassword,
+    subscriptionInterval: interval,
+    stripeCustomerId: valid.customerId,
+    stripeSubscriptionId: sub.id,
+    subscriptionStatus: sub.status ?? "active",
+  }
 }
 
 async function measureCheckoutStep<T>(label: string, work: () => Promise<T>): Promise<T> {

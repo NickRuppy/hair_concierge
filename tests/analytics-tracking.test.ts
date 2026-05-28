@@ -5,6 +5,7 @@ import { customerIoDestination } from "../src/lib/analytics/destinations/custome
 import { metaDestination } from "../src/lib/analytics/destinations/meta"
 import { postHogDestination } from "../src/lib/analytics/destinations/posthog"
 import type { AppEventMap, AppEventName } from "../src/lib/analytics/events"
+import { eventRoutes } from "../src/lib/analytics/routes"
 import { trackAppEvent } from "../src/lib/analytics/track-app-event"
 import {
   clearCustomerIoBrowserClient,
@@ -113,7 +114,7 @@ test("quiz step views route to PostHog, Customer.io, and Meta", () => {
   })
 })
 
-test("purchase completion routes to all destinations", () => {
+test("purchase completion browser event routes to PostHog and Meta", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("purchase_completed", {
       checkoutSessionId: "cs_test_123",
@@ -124,7 +125,37 @@ test("purchase completion routes to all destinations", () => {
       value: 7.49,
     })
 
-    assert.equal(calls.length, 3)
+    assert.deepEqual(
+      calls.map((call) => call.destination),
+      ["posthog", "meta"],
+    )
+  })
+})
+
+test("browser revenue return events do not route to Customer.io", () => {
+  assert.equal(eventRoutes.purchase_completed.customerio, false)
+  assert.equal(eventRoutes.subscription_started.customerio, false)
+  assert.equal(eventRoutes.purchase_completed.posthog, true)
+  assert.equal(eventRoutes.subscription_started.posthog, true)
+  assert.equal(eventRoutes.purchase_completed.meta, true)
+  assert.equal(eventRoutes.subscription_started.meta, true)
+})
+
+test("browser quiz lead capture does not route to Customer.io", () => {
+  assert.equal(eventRoutes.quiz_lead_captured.customerio, false)
+  assert.equal(eventRoutes.quiz_lead_captured.posthog, true)
+  assert.equal(eventRoutes.quiz_lead_captured.meta, true)
+
+  withDestinationSpies((calls) => {
+    trackAppEvent("quiz_lead_captured", {
+      leadId: "lead-123",
+      marketingConsent: false,
+    })
+
+    assert.deepEqual(
+      calls.map((call) => call.destination),
+      ["posthog", "meta"],
+    )
   })
 })
 

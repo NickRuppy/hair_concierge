@@ -1,5 +1,5 @@
 import type Stripe from "stripe"
-import type { CheckoutActivationDeps } from "./checkout-activation"
+import type { CheckoutAccountResult, CheckoutActivationDeps } from "./checkout-activation"
 import {
   ensureCheckoutAccount,
   stripeEntitlementStatus,
@@ -14,8 +14,8 @@ type SubscriptionUpdateDeps = Pick<HandlerDeps, "supabase">
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
   deps: HandlerDeps,
-): Promise<void> {
-  await ensureCheckoutAccount(session, deps)
+): Promise<CheckoutAccountResult> {
+  return ensureCheckoutAccount(session, deps)
 }
 
 /** Narrow shape we read from a subscription event. */
@@ -114,15 +114,26 @@ export async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promi
   })
 }
 
-async function findProfileByStripeCustomerId(
+export type StripeCustomerProfile = {
+  id: string
+  email: string | null
+  stripe_customer_id?: string | null
+  stripe_subscription_id: string | null
+  subscription_interval: string | null
+  subscription_status: string | null
+}
+
+export async function findProfileByStripeCustomerId(
   supabase: HandlerDeps["supabase"],
   customerId: string,
-): Promise<{ id: string } | null> {
+): Promise<StripeCustomerProfile | null> {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id")
+    .select(
+      "id,email,stripe_customer_id,stripe_subscription_id,subscription_interval,subscription_status",
+    )
     .eq("stripe_customer_id", customerId)
     .maybeSingle()
   if (error) throw error
-  return data as { id: string } | null
+  return data as StripeCustomerProfile | null
 }
