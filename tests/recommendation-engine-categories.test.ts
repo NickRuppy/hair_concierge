@@ -972,7 +972,7 @@ test("oil decision redirects when the stated need is better served by a non-oil 
   assert.ok(decision.planReasonCodes.includes("oil_better_non_oil_category"))
 })
 
-test("oil decision suppresses new oil products when overload is likely current problem", () => {
+test("oil decision preserves explicit product intent while marking overload risk", () => {
   const { normalized } = buildEngineState(
     {
       ...LOW_DAMAGE_PROFILE,
@@ -996,7 +996,10 @@ test("oil decision suppresses new oil products when overload is likely current p
   assert.equal(decision.relevant, true)
   assert.equal(decision.action, "decrease_frequency")
   assert.equal(decision.noRecommendationReason, "overload_risk")
-  assert.equal(decision.targetProfile, null)
+  assert.equal(decision.targetProfile?.purpose, "styling_finish")
+  assert.equal(decision.targetProfile?.matcherSubtype, "styling-oel")
+  assert.equal(decision.targetProfile?.overloadRisk, true)
+  assert.equal(decision.targetProfile?.densityWeightCaution, true)
   assert.ok(decision.planReasonCodes.includes("oil_overload_suppress_products"))
 })
 
