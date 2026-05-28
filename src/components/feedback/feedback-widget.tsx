@@ -59,7 +59,9 @@ export function FeedbackWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: trimmed,
-          pageUrl: typeof window !== "undefined" ? window.location.href : undefined,
+          // Pathname only — query string can carry auth tokens / Stripe session ids.
+          // Server also redacts as defense-in-depth.
+          pageUrl: typeof window !== "undefined" ? window.location.pathname : undefined,
           userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
         }),
       })

@@ -6,8 +6,8 @@ create table public.beta_feedback (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete set null,
   message text not null check (length(message) between 1 and 4000),
-  page_url text,
-  user_agent text,
+  page_url text check (page_url is null or length(page_url) <= 2048),
+  user_agent text check (user_agent is null or length(user_agent) <= 512),
   created_at timestamptz not null default now()
 );
 
