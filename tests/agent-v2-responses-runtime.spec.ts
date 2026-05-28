@@ -117,7 +117,16 @@ test("AgentV2 strict tool schemas avoid open records and root unions", () => {
     "mutation_kind",
     "evidence_quote",
   ])
-  assertRequiredToolFields(tools, "set_current_care_context", ["fact"])
+  assertRequiredToolFields(tools, "set_current_care_context", [
+    "kind",
+    "field",
+    "value",
+    "category",
+    "present",
+    "frequency",
+    "code",
+    "evidenceQuote",
+  ])
 })
 
 function assertRequiredToolFields(

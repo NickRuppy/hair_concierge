@@ -4,6 +4,7 @@ import {
   projectRoutinePlanForLayer,
 } from "@/lib/routines/planner"
 import {
+  buildRecommendationEngineRuntimeFromEffectiveContext,
   buildRecommendationEngineRuntimeFromPersistence,
   type RecommendationEngineRuntime,
 } from "@/lib/recommendation-engine/runtime"
@@ -17,6 +18,7 @@ import {
   type CareBalanceToolRow,
 } from "@/lib/agent/tools/care-balance-context"
 import type { BuildOrFixRoutineToolInput as AgentV2BuildOrFixRoutineToolInput } from "@/lib/agent-v2/tools/tool-definitions"
+import type { EffectiveCareContext } from "@/lib/recommendation-engine/types"
 import type {
   HairProfile,
   RoutineLayer,
@@ -98,6 +100,7 @@ export interface BuildOrFixRoutineToolInput {
   requestedCategory?: RoutineProductCategory | null
   mutationKind?: BuildOrFixRoutineMutationKind
   routineItems?: PersistenceRoutineItemRow[]
+  effectiveCareContext?: EffectiveCareContext | null
 }
 
 function normalizeText(value: string | null | undefined): string | null {
@@ -371,6 +374,7 @@ export function projectRoutinePlan(params: {
   requestedCategory?: RoutineProductCategory | null
   mutationKind?: BuildOrFixRoutineMutationKind
   routineItems?: PersistenceRoutineItemRow[]
+  effectiveCareContext?: EffectiveCareContext | null
 }): BuildOrFixRoutineProjection {
   const objective = normalizeObjective(params.objective)
   const prompt = buildPlannerPrompt({
@@ -387,7 +391,9 @@ export function projectRoutinePlan(params: {
   const routineItems =
     params.routineItems ??
     buildRoutineItemsFromInventoryCategories(params.hairProfile?.current_routine_products)
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(params.hairProfile, routineItems)
+  const runtime = params.effectiveCareContext
+    ? buildRecommendationEngineRuntimeFromEffectiveContext(params.effectiveCareContext)
+    : buildRecommendationEngineRuntimeFromPersistence(params.hairProfile, routineItems)
 
   const inventoryMatters = objective !== "build_routine"
   const completedBase =

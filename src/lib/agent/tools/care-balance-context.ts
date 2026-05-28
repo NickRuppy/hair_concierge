@@ -1,11 +1,17 @@
 import type { RecommendationEngineRuntime } from "@/lib/recommendation-engine/runtime"
-import type { CareBalanceRow } from "@/lib/recommendation-engine/types"
+import type {
+  CareBalanceConflict,
+  CareBalanceRow,
+  CurrentTurnCareFact,
+} from "@/lib/recommendation-engine/types"
 
 export interface CareBalanceToolContext {
   authoritative: false
   mode: "side_by_side"
   rows: CareBalanceToolRow[]
   comparison: RecommendationEngineRuntime["legacyPlanComparison"] | null
+  current_turn_facts: CareBalanceToolCurrentTurnFact[]
+  conflicts: CareBalanceToolConflict[]
 }
 
 export interface CareBalanceToolRow {
@@ -21,6 +27,19 @@ export interface CareBalanceToolRow {
   usage_hint: string
   caveats: string[]
   authoritative: false
+}
+
+export interface CareBalanceToolCurrentTurnFact {
+  kind: CurrentTurnCareFact["kind"]
+  evidence_quote: string
+  source: "current_turn"
+}
+
+export interface CareBalanceToolConflict {
+  field_path: string
+  saved_value: unknown
+  current_turn_value: unknown
+  evidence_quote: string
 }
 
 function buildCareBalanceUsageHint(row: CareBalanceRow): string {
@@ -79,5 +98,25 @@ export function buildCareBalanceToolContext(params: {
     mode: "side_by_side",
     rows: params.rows.map(projectCareBalanceRowForTool),
     comparison: params.runtime.legacyPlanComparison ?? null,
+    current_turn_facts:
+      params.runtime.effectiveContext.currentTurnFacts.map(projectCurrentTurnFact),
+    conflicts: params.runtime.effectiveContext.conflicts.map(projectConflict),
+  }
+}
+
+function projectCurrentTurnFact(fact: CurrentTurnCareFact): CareBalanceToolCurrentTurnFact {
+  return {
+    kind: fact.kind,
+    evidence_quote: fact.evidenceQuote,
+    source: "current_turn",
+  }
+}
+
+function projectConflict(conflict: CareBalanceConflict): CareBalanceToolConflict {
+  return {
+    field_path: conflict.fieldPath,
+    saved_value: conflict.savedValue,
+    current_turn_value: conflict.currentTurnValue,
+    evidence_quote: conflict.evidenceQuote,
   }
 }

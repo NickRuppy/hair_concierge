@@ -180,12 +180,107 @@ export const CurrentCareFactInputSchema = z.discriminatedUnion("kind", [
 ])
 
 export const CurrentCareFactToolParametersSchema = z.strictObject({
-  fact: CurrentCareFactInputSchema,
+  kind: z.enum([
+    "profile_override",
+    "profile_augment",
+    "routine_presence",
+    "routine_frequency",
+    "context_signal",
+  ]),
+  field: z.union([ProfileFactFieldSchema, ProfileArrayFactFieldSchema]).nullable(),
+  value: z.unknown().nullable(),
+  category: InventoryCategorySchema.nullable(),
+  present: z.boolean().nullable(),
+  frequency: ProductFrequencySchema.nullable(),
+  code: z.string().min(1).nullable(),
+  evidenceQuote: z.string().min(1),
 })
 
 export type CurrentCareFactInput = z.infer<typeof CurrentCareFactInputSchema>
 export type ProfileFactField = z.infer<typeof ProfileFactFieldSchema>
 export type ProfileArrayFactField = z.infer<typeof ProfileArrayFactFieldSchema>
+
+type CurrentCareFactToolParameters = z.infer<typeof CurrentCareFactToolParametersSchema>
+
+export function parseCurrentCareFactToolInput(value: unknown): CurrentCareFactInput {
+  const canonical = CurrentCareFactInputSchema.safeParse(value)
+  if (canonical.success) return canonical.data
+
+  if (value && typeof value === "object" && !Array.isArray(value) && "fact" in value) {
+    const wrapped = CurrentCareFactInputSchema.safeParse((value as { fact?: unknown }).fact)
+    if (wrapped.success) return wrapped.data
+  }
+
+  const parsed = CurrentCareFactToolParametersSchema.safeParse(value)
+  if (!parsed.success) {
+    throw new Error("Invalid current care fact tool input")
+  }
+
+  return normalizeCurrentCareFactToolParameters(parsed.data)
+}
+
+function normalizeCurrentCareFactToolParameters(
+  value: CurrentCareFactToolParameters,
+): CurrentCareFactInput {
+  if (value.kind === "profile_override") {
+    const field = ProfileFactFieldSchema.safeParse(value.field)
+    if (!field.success || value.value === null) {
+      throw new Error("Invalid current care fact tool input")
+    }
+    return {
+      kind: value.kind,
+      field: field.data,
+      value: value.value,
+      evidenceQuote: value.evidenceQuote,
+    }
+  }
+
+  if (value.kind === "profile_augment") {
+    const field = ProfileArrayFactFieldSchema.safeParse(value.field)
+    if (!field.success || typeof value.value !== "string" || value.value.trim().length === 0) {
+      throw new Error("Invalid current care fact tool input")
+    }
+    return {
+      kind: value.kind,
+      field: field.data,
+      value: value.value,
+      evidenceQuote: value.evidenceQuote,
+    }
+  }
+
+  if (value.kind === "routine_presence") {
+    if (!value.category || value.present === null) {
+      throw new Error("Invalid current care fact tool input")
+    }
+    return {
+      kind: value.kind,
+      category: value.category,
+      present: value.present,
+      evidenceQuote: value.evidenceQuote,
+    }
+  }
+
+  if (value.kind === "routine_frequency") {
+    if (!value.category || !value.frequency) {
+      throw new Error("Invalid current care fact tool input")
+    }
+    return {
+      kind: value.kind,
+      category: value.category,
+      frequency: value.frequency,
+      evidenceQuote: value.evidenceQuote,
+    }
+  }
+
+  if (!value.code) {
+    throw new Error("Invalid current care fact tool input")
+  }
+  return {
+    kind: value.kind,
+    code: value.code,
+    evidenceQuote: value.evidenceQuote,
+  }
+}
 
 const AgentV2TerminalAnswerToolParametersSchema = z.strictObject({
   answer_mode: AgentV2AnswerModeSchema,

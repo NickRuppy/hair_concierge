@@ -4,7 +4,9 @@ import test from "node:test"
 import { runAgentV2ResponsesTurn } from "../src/lib/agent-v2/runtime/responses-agent"
 import {
   CurrentCareFactInputSchema,
+  CurrentCareFactToolParametersSchema,
   buildAgentV2ResponsesTools,
+  parseCurrentCareFactToolInput,
 } from "../src/lib/agent-v2/tools/tool-definitions"
 
 test("AgentV2 exposes set_current_care_context with current-turn fact schema", () => {
@@ -46,6 +48,62 @@ test("AgentV2 exposes set_current_care_context with current-turn fact schema", (
   ]
 
   assert.equal(accepted.length, 5)
+})
+
+test("AgentV2 model-facing current-care tool schema uses direct root fields", () => {
+  const tool = buildAgentV2ResponsesTools({ safetyMode: "normal" }).find(
+    (candidate) => candidate.name === "set_current_care_context",
+  )
+  assert.ok(tool)
+
+  const required = tool.parameters.required
+  assert.ok(Array.isArray(required))
+  assert.equal(required.includes("fact"), false)
+  for (const field of [
+    "kind",
+    "field",
+    "value",
+    "category",
+    "present",
+    "frequency",
+    "code",
+    "evidenceQuote",
+  ]) {
+    assert.ok(required.includes(field), `set_current_care_context requires ${field}`)
+  }
+
+  const parsed = CurrentCareFactToolParametersSchema.parse({
+    kind: "routine_frequency",
+    field: null,
+    value: null,
+    category: "dry_shampoo",
+    present: null,
+    frequency: "daily",
+    code: null,
+    evidenceQuote: "I use dry shampoo daily",
+  })
+
+  assert.deepEqual(parseCurrentCareFactToolInput(parsed), {
+    kind: "routine_frequency",
+    category: "dry_shampoo",
+    frequency: "daily",
+    evidenceQuote: "I use dry shampoo daily",
+  })
+
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        kind: "routine_frequency",
+        field: null,
+        value: null,
+        category: "dry_shampoo",
+        present: null,
+        frequency: null,
+        code: null,
+        evidenceQuote: "I use dry shampoo daily",
+      }),
+    /Invalid current care fact tool input/,
+  )
 })
 
 test("AgentV2 runtime rejects current-care facts with fabricated evidence quotes", async () => {

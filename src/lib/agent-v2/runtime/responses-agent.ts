@@ -19,10 +19,10 @@ import type { AgentV2RoutineProjection } from "@/lib/agent-v2/tools/routine-proj
 import type { AgentV2SelectProductsProjection } from "@/lib/agent-v2/tools/select-products-projection"
 import {
   BuildOrFixRoutineToolInputSchema,
-  CurrentCareFactInputSchema,
   type CurrentCareFactInput,
   SelectProductsToolInputSchema,
   buildAgentV2ResponsesTools,
+  parseCurrentCareFactToolInput,
 } from "@/lib/agent-v2/tools/tool-definitions"
 import {
   validateAgentV2FinalAnswer,
@@ -1341,12 +1341,11 @@ function validateExecutableToolArguments(
   }
 
   if (name === "set_current_care_context") {
-    const parsed = CurrentCareFactInputSchema.safeParse(value)
-    if (parsed.success) return { ok: true, value: parsed.data }
-
-    const wrapped = value.fact
-    const parsedWrapped = CurrentCareFactInputSchema.safeParse(wrapped)
-    return parsedWrapped.success ? { ok: true, value: parsedWrapped.data } : { ok: false }
+    try {
+      return { ok: true, value: parseCurrentCareFactToolInput(value) }
+    } catch {
+      return { ok: false }
+    }
   }
 
   if (name === "load_advisor_guidance") {

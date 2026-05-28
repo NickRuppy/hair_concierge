@@ -127,6 +127,20 @@ export function buildRecommendationEngineRuntimeFromPersistence(
 ): RecommendationEngineRuntime {
   const adapted = adaptRecommendationInputFromPersistence(profile, routineItems)
   const effectiveContext = buildEffectiveCareContext(adapted.input)
+  return buildRecommendationEngineRuntimeFromEffectiveContext(
+    effectiveContext,
+    requestContext,
+    adapted.unsupportedRoutineCategories,
+    adapted.input,
+  )
+}
+
+export function buildRecommendationEngineRuntimeFromEffectiveContext(
+  effectiveContext: EffectiveCareContext,
+  requestContext: RecommendationRequestContext = emptyRecommendationRequestContext(),
+  unsupportedRoutineCategories: string[] = [],
+  rawInput: RawRecommendationInput = buildRawInputFromEffectiveContext(effectiveContext),
+): RecommendationEngineRuntime {
   const normalized = effectiveContext.normalized
   const damage = buildDamageAssessment(normalized)
   const careNeeds = buildCareNeedAssessment(normalized, damage)
@@ -149,7 +163,7 @@ export function buildRecommendationEngineRuntimeFromPersistence(
   )
 
   return {
-    rawInput: adapted.input,
+    rawInput,
     requestContext,
     effectiveContext,
     normalized,
@@ -160,6 +174,45 @@ export function buildRecommendationEngineRuntimeFromPersistence(
     legacyPlanComparison,
     plan,
     categories,
-    unsupportedRoutineCategories: adapted.unsupportedRoutineCategories,
+    unsupportedRoutineCategories,
+  }
+}
+
+function buildRawInputFromEffectiveContext(context: EffectiveCareContext): RawRecommendationInput {
+  const profile = context.normalized
+
+  return {
+    profile: {
+      hair_texture: profile.hairTexture,
+      thickness: profile.thickness,
+      density: profile.density,
+      concerns: [...profile.concerns],
+      goals: [...profile.goals],
+      wash_frequency: profile.washFrequency,
+      heat_styling: profile.heatStyling,
+      styling_tools: profile.stylingTools ? [...profile.stylingTools] : null,
+      cuticle_condition: profile.cuticleCondition,
+      protein_moisture_balance: profile.proteinMoistureBalance,
+      scalp_type: profile.scalpType,
+      scalp_condition: profile.scalpCondition,
+      chemical_treatment: [...profile.chemicalTreatment],
+      towel_material: profile.towelMaterial,
+      towel_technique: profile.towelTechnique,
+      drying_method: profile.dryingMethod,
+      brush_type: profile.brushType,
+      night_protection: profile.nightProtection ? [...profile.nightProtection] : null,
+      uses_heat_protection: profile.usesHeatProtection,
+    },
+    routineInventory: Object.values(profile.routineInventory).flatMap((item) =>
+      item?.present === true
+        ? [
+            {
+              category: item.category,
+              product_name: item.productName,
+              frequency_range: item.frequencyBand,
+            },
+          ]
+        : [],
+    ),
   }
 }

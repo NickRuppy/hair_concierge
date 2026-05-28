@@ -15,7 +15,7 @@ import {
 } from "@/lib/recommendation-engine"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
 import type { RecommendationEngineRuntime } from "@/lib/recommendation-engine/runtime"
-import type { CategoryDecision } from "@/lib/recommendation-engine/types"
+import type { CategoryDecision, EffectiveCareContext } from "@/lib/recommendation-engine/types"
 import {
   buildCareBalanceToolContext,
   type CareBalanceToolContext,
@@ -3409,6 +3409,7 @@ export function createSelectProductsTool(
     hairProfile: HairProfile | null
     memoryContext: UserMemoryContext
     routineItems: PersistenceRoutineItemRow[]
+    effectiveCareContext?: EffectiveCareContext | null
     userJob?: AgentUserJob | null
     concerns?: AgentConcern[] | null
     requestedGoal?: "shine" | null
@@ -3420,6 +3421,7 @@ export function createSelectProductsTool(
       hairProfile,
       memoryContext,
       routineItems,
+      effectiveCareContext = null,
       userJob,
       concerns,
       requestedGoal,
@@ -3435,6 +3437,7 @@ export function createSelectProductsTool(
       routineItems,
       productCategory: category,
       message,
+      effectiveCareContext,
     })
     const products = await (options.runCategoryEngine ?? runCategoryEngine)({
       category,

@@ -5,6 +5,10 @@ import {
   createBuildOrFixRoutineTool,
   projectRoutinePlan,
 } from "../src/lib/agent/tools/build-or-fix-routine"
+import {
+  adaptRecommendationInputFromPersistence,
+  buildEffectiveCareContext,
+} from "../src/lib/recommendation-engine"
 import type { HairProfile } from "../src/lib/types"
 
 function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
@@ -305,6 +309,58 @@ test("projectRoutinePlan exposes side-by-side CareBalance frequency framing with
   assert.match(oilFrame?.usage_hint ?? "", /1_2x|daily|need_based_support/)
   assert.equal(oilFrame?.authoritative, false)
   assert.match(JSON.stringify(result), /legacy|comparison|side_by_side/)
+})
+
+test("projectRoutinePlan preserves supplied effective care context in care balance output", () => {
+  const hairProfile = createProfile({
+    thickness: "coarse",
+    goals: ["volume"],
+    current_routine_products: ["shampoo", "conditioner", "oil"],
+    products_used: "Shampoo, Conditioner, Oel",
+  })
+  const routineItems = [
+    {
+      category: "oil",
+      product_name: "Daily Oil",
+      frequency_range: "daily",
+    },
+  ] as const
+  const adapted = adaptRecommendationInputFromPersistence(hairProfile, [...routineItems])
+  const effectiveCareContext = buildEffectiveCareContext(adapted.input, [
+    {
+      kind: "profile_override",
+      field: "thickness",
+      value: "fine",
+      evidenceQuote: "Actually my hair is fine",
+      source: "current_turn",
+    },
+  ])
+
+  const result = projectRoutinePlan({
+    objective: "fix_routine",
+    message: "Actually my hair is fine, bitte mach meine Routine leichter.",
+    hairProfile,
+    routineItems: [...routineItems],
+    effectiveCareContext,
+  } as Parameters<typeof projectRoutinePlan>[0] & {
+    effectiveCareContext: typeof effectiveCareContext
+  })
+
+  const careBalanceContext = result.care_balance_context as
+    | {
+        current_turn_facts?: unknown[]
+        conflicts?: Array<{ field_path: string; current_turn_value: unknown }>
+      }
+    | null
+    | undefined
+
+  assert.equal(careBalanceContext?.current_turn_facts?.length, 1)
+  assert.ok(
+    careBalanceContext?.conflicts?.some(
+      (conflict) =>
+        conflict.field_path === "profile.thickness" && conflict.current_turn_value === "fine",
+    ),
+  )
 })
 
 test("projectRoutinePlan includes explicit add-step category in basics", () => {

@@ -13,6 +13,10 @@ import {
   buildRecommendationEngineRuntimeFromPersistence,
   type RecommendationEngineRuntime,
 } from "../src/lib/recommendation-engine/runtime"
+import {
+  adaptRecommendationInputFromPersistence,
+  buildEffectiveCareContext,
+} from "../src/lib/recommendation-engine"
 import { buildRecommendationRequestContext } from "../src/lib/recommendation-engine/request-context"
 import type {
   BondbuilderCategoryDecision,
@@ -2983,6 +2987,75 @@ test("selectProducts still returns explicit oil products while exposing CareBala
     /decrease_frequency/,
   )
   assert.match(JSON.stringify(result), /daily_oil_use|buildup_or_flatness_pressure/)
+})
+
+test("selectProducts preserves supplied effective care context in runtime and care balance output", async () => {
+  const baseProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    thickness: "coarse",
+    density: "low",
+    scalp_type: "oily",
+    goals: ["volume"],
+  } as HairProfile
+  const routineItems = [
+    {
+      category: "oil",
+      product_name: "Daily Oil",
+      frequency_range: "daily",
+    },
+  ] as const
+  const adapted = adaptRecommendationInputFromPersistence(baseProfile, [...routineItems])
+  const effectiveCareContext = buildEffectiveCareContext(adapted.input, [
+    {
+      kind: "profile_override",
+      field: "thickness",
+      value: "fine",
+      evidenceQuote: "Actually my hair is fine",
+      source: "current_turn",
+    },
+    {
+      kind: "routine_frequency",
+      category: "oil",
+      frequencyBand: "daily",
+      evidenceQuote: "I use oil daily",
+      source: "current_turn",
+    },
+  ])
+  const observed: { runtime?: RecommendationEngineRuntime } = {}
+  const tool = createSelectProductsTool({
+    onResult: ({ runtime }) => {
+      observed.runtime = runtime
+    },
+    runCategoryEngine: async () => [createOilMatchedProduct("light-oil", 0.94)],
+  })
+
+  const result = await tool({
+    category: "oil",
+    message: "Actually my hair is fine and I use oil daily.",
+    hairProfile: baseProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [...routineItems],
+    userJob: "product_pick",
+    effectiveCareContext,
+  } as Parameters<typeof tool>[0] & { effectiveCareContext: typeof effectiveCareContext })
+
+  assert.equal(observed.runtime?.effectiveContext, effectiveCareContext)
+  assert.equal(observed.runtime?.effectiveContext.currentTurnFacts.length, 2)
+  assert.ok(
+    observed.runtime?.effectiveContext.conflicts.some(
+      (conflict) =>
+        conflict.fieldPath === "profile.thickness" &&
+        conflict.savedValue === "coarse" &&
+        conflict.currentTurnValue === "fine",
+    ),
+  )
+  assert.match(JSON.stringify(result.care_balance_context), /current_turn_facts/)
+  assert.match(JSON.stringify(result.care_balance_context), /Actually my hair is fine/)
 })
 
 test("projectSelectedProducts does not turn therapy oil redirects into product recommendations", () => {

@@ -707,6 +707,7 @@ export async function runAgentV2ComparisonForUser(
             hairProfile: effectiveHairProfile,
             memoryContext,
             routineItems: effectiveRoutineItems,
+            effectiveCareContext,
           })
           const rawResult =
             latestSelectProductsResult ??
@@ -744,6 +745,7 @@ export async function runAgentV2ComparisonForUser(
             >[0]["requestedCategory"],
             mutationKind: mutationKind as Parameters<typeof buildRoutine>[0]["mutationKind"],
             routineItems: effectiveRoutineItems,
+            effectiveCareContext,
           })
           return projectRoutineForAgentV2(projection, {
             requestedLayer: input.requested_layer as AgentV2RoutineLayer,
