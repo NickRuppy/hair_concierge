@@ -10,7 +10,12 @@ import {
   isActiveSignalSelectionEffect,
 } from "@/lib/agent/orchestrator/route-packet"
 import { createBuildOrFixRoutineTool } from "@/lib/agent/tools/build-or-fix-routine"
-import type { RoutineObjective } from "@/lib/agent/tools/build-or-fix-routine"
+import type {
+  BuildOrFixRoutineToolInput,
+  RoutineObjective,
+} from "@/lib/agent/tools/build-or-fix-routine"
+import { buildCareBalanceToolContext } from "@/lib/agent/tools/care-balance-context"
+import type { CareBalanceToolContext } from "@/lib/agent/tools/care-balance-context"
 import { getUserContext } from "@/lib/agent/tools/get-user-context"
 import {
   loadAdvisorGuidance,
@@ -22,9 +27,11 @@ import {
 import type {
   SelectableProductCategory,
   SelectedProductsProjection,
+  SelectProductsToolResult,
 } from "@/lib/agent/tools/select-products"
 import { createSelectProductsTool } from "@/lib/agent/tools/select-products"
 import { loadUserMemoryContext } from "@/lib/rag/user-memory"
+import type { RecommendationEngineRuntime } from "@/lib/recommendation-engine/runtime"
 import type { ConversationState, RoutineLayer, RoutineProductCategory } from "@/lib/types"
 import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"
 import type {
@@ -32,6 +39,7 @@ import type {
   AgentCompareTurnResult,
   AgentCompareToolLoopVariant,
   AgentCompareUserRequest,
+  AgentCompareCareBalanceTrace,
   CompareRunResult,
 } from "./types"
 import {
@@ -240,6 +248,59 @@ function extractSelectedProducts(
   return result.selected_products ?? result.selectedProducts ?? result.product_trace ?? null
 }
 
+export function projectFullCareBalanceContextForCompare(
+  runtime: RecommendationEngineRuntime | null,
+): CareBalanceToolContext | null {
+  if (!runtime) return null
+
+  return buildCareBalanceToolContext({
+    runtime,
+    rows: runtime.careBalance.rows,
+  })
+}
+
+function projectSelectedProductsForCompareTrace(params: {
+  projection: SelectedProductsProjection
+  toolResult: SelectProductsToolResult | null
+}): SelectedProductsProjection {
+  if (params.toolResult?.projection !== params.projection) {
+    return params.projection
+  }
+
+  const careBalanceContext = projectFullCareBalanceContextForCompare(params.toolResult.runtime)
+  if (!careBalanceContext) return params.projection
+
+  return {
+    ...params.projection,
+    care_balance_context: careBalanceContext,
+  }
+}
+
+export function resolveCareBalanceTraceForCompare(params: {
+  selectedProducts: SelectedProductsProjection | null
+  toolCareBalanceTrace: AgentCompareCareBalanceTrace | null
+}): AgentCompareCareBalanceTrace | null {
+  return params.selectedProducts?.care_balance_context ?? params.toolCareBalanceTrace
+}
+
+export function buildRoutineToolInputForCompare(params: {
+  input: Record<string, unknown>
+  context: Awaited<ReturnType<typeof getUserContext>>
+  message: string
+}): BuildOrFixRoutineToolInput {
+  return {
+    objective: normalizeRoutineObjective(params.input.objective),
+    message: params.message,
+    hairProfile: normalizeToolHairProfile(params.input.hairProfile, params.context.profile),
+    layer: normalizeRoutineLayer(params.input.layer),
+    requestedCategory: normalizeRoutineProductCategory(params.input.requestedCategory),
+    routineItems: normalizeToolRoutineItems(
+      params.input.routineItems,
+      params.context.routine_inventory,
+    ),
+  }
+}
+
 function extractToolLoopTrace(result: AgenticToolLoopRuntimeResult): unknown {
   return result.tool_loop_trace ?? result.agentic_tool_loop ?? result.trace ?? null
 }
@@ -327,6 +388,7 @@ async function runToolLoopTurnsForUser(params: AgentCompareUserRequest): Promise
   turnResults: AgentCompareTurnResult[]
   finalResult: AgenticToolLoopRuntimeResult
   selectedProducts: SelectedProductsProjection | null
+  careBalanceTrace: AgentCompareCareBalanceTrace | null
   latencyMs: number
 }> {
   const turns = normalizeTurns(params)
@@ -339,7 +401,12 @@ async function runToolLoopTurnsForUser(params: AgentCompareUserRequest): Promise
     loadUserMemoryContext(params.userId),
     loadRuntime(),
   ])
-  const selectProducts = createSelectProductsTool()
+  let lastSelectProductsToolResult: SelectProductsToolResult | null = null
+  const selectProducts = createSelectProductsTool({
+    onResult: (result) => {
+      lastSelectProductsToolResult = result
+    },
+  })
   const buildOrFixRoutine = createBuildOrFixRoutineTool()
 
   const recentMessages: Array<{ role: "user" | "assistant"; content: string }> = []
@@ -347,6 +414,7 @@ async function runToolLoopTurnsForUser(params: AgentCompareUserRequest): Promise
   let conversationState: ConversationState | null = null
   let finalResult: AgenticToolLoopRuntimeResult | null = null
   let finalSelectedProducts: SelectedProductsProjection | null = null
+  let finalTurnCareBalanceTrace: AgentCompareCareBalanceTrace | null = null
   const toolLoopVariant = resolveAgentCompareToolLoopVariant(params.toolLoopVariant)
   const answerCompositionMode = resolveAgentCompareAnswerCompositionMode(toolLoopVariant)
   const consultationBrief = resolveAgentCompareConsultationBriefOverride(toolLoopVariant)
@@ -356,6 +424,7 @@ async function runToolLoopTurnsForUser(params: AgentCompareUserRequest): Promise
   for (const [index, message] of turns.entries()) {
     const turnStartedAt = performance.now()
     let turnSelectedProducts: SelectedProductsProjection | null = null
+    let turnCareBalanceTrace: AgentCompareCareBalanceTrace | null = null
     const result = await runtime.runAgenticToolTurn({
       message,
       recentMessages,
@@ -392,22 +461,30 @@ async function runToolLoopTurnsForUser(params: AgentCompareUserRequest): Promise
             requestedGoal: normalizeRequestedGoal(input.requestedGoal),
             activeProfileSignals: normalizeActiveProfileSignals(input.activeProfileSignals),
           })
+          const compareProjection = projectSelectedProductsForCompareTrace({
+            projection,
+            toolResult: lastSelectProductsToolResult,
+          })
 
-          turnSelectedProducts = projection
+          turnSelectedProducts = compareProjection
+          turnCareBalanceTrace = compareProjection.care_balance_context ?? turnCareBalanceTrace
+          return compareProjection
+        },
+        build_or_fix_routine: async (input) => {
+          const projection = await buildOrFixRoutine(
+            buildRoutineToolInputForCompare({ input, context, message }),
+          )
+          turnCareBalanceTrace = projection.care_balance_context ?? turnCareBalanceTrace
           return projection
         },
-        build_or_fix_routine: async (input) =>
-          buildOrFixRoutine({
-            objective: normalizeRoutineObjective(input.objective),
-            message,
-            hairProfile: normalizeToolHairProfile(input.hairProfile, context.profile),
-            layer: normalizeRoutineLayer(input.layer),
-            requestedCategory: normalizeRoutineProductCategory(input.requestedCategory),
-          }),
       },
     })
 
     const selectedProducts = extractSelectedProducts(result) ?? turnSelectedProducts
+    const careBalanceTrace = resolveCareBalanceTraceForCompare({
+      selectedProducts,
+      toolCareBalanceTrace: turnCareBalanceTrace,
+    })
     const stateTransition = extractStateTransition(result)
     const nextState = extractNextState(stateTransition)
     if (nextState) {
@@ -422,6 +499,7 @@ async function runToolLoopTurnsForUser(params: AgentCompareUserRequest): Promise
       latency_ms: Math.round(performance.now() - turnStartedAt),
       matched_products: normalizeMatchedProducts(selectedProducts),
       product_trace: selectedProducts,
+      care_balance_trace: careBalanceTrace,
       tool_loop_trace: extractToolLoopTrace(result),
       state_transition: stateTransition,
       error: null,
@@ -430,6 +508,7 @@ async function runToolLoopTurnsForUser(params: AgentCompareUserRequest): Promise
     recentMessages.push({ role: "user", content: message }, { role: "assistant", content: answer })
     finalResult = result
     finalSelectedProducts = selectedProducts
+    finalTurnCareBalanceTrace = careBalanceTrace
   }
 
   if (!finalResult) {
@@ -441,6 +520,10 @@ async function runToolLoopTurnsForUser(params: AgentCompareUserRequest): Promise
     turnResults,
     finalResult,
     selectedProducts: extractSelectedProducts(finalResult) ?? finalSelectedProducts,
+    careBalanceTrace: resolveCareBalanceTraceForCompare({
+      selectedProducts: extractSelectedProducts(finalResult) ?? finalSelectedProducts,
+      toolCareBalanceTrace: finalTurnCareBalanceTrace,
+    }),
     latencyMs: Math.round(performance.now() - startedAt),
   }
 }
@@ -448,7 +531,7 @@ async function runToolLoopTurnsForUser(params: AgentCompareUserRequest): Promise
 export async function runToolLoopComparisonForUser(
   params: AgentCompareUserRequest,
 ): Promise<CompareRunResult> {
-  const { turnResults, finalResult, selectedProducts, latencyMs } =
+  const { turnResults, finalResult, selectedProducts, careBalanceTrace, latencyMs } =
     await runToolLoopTurnsForUser(params)
 
   return {
@@ -462,6 +545,7 @@ export async function runToolLoopComparisonForUser(
     }),
     matched_products: normalizeMatchedProducts(selectedProducts),
     product_trace: selectedProducts,
+    care_balance_trace: selectedProducts?.care_balance_context ?? careBalanceTrace,
     route_trace: null,
     tool_loop_trace: extractToolLoopTrace(finalResult),
     state_transition: extractStateTransition(finalResult),

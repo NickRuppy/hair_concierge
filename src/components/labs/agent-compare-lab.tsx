@@ -2,6 +2,7 @@
 
 import type {
   AgentCompareAnalysisSnapshot,
+  AgentCompareCareBalanceTrace,
   AgentCompareJudgmentDraft,
   AgentCompareJudgmentRecord,
   AgentCompareResponse,
@@ -84,6 +85,9 @@ function formatTracePrice(price: number, currency: string | null): string {
 function ProductTracePanel({ result }: { result: CompareRunResult }) {
   const trace = result.product_trace
   if (!trace) return null
+  const careBalanceDisplay = trace.care_balance_context
+    ? buildCareBalanceTraceDisplayData(trace.care_balance_context)
+    : null
 
   return (
     <div className="space-y-3 rounded-lg border bg-muted/30 p-3">
@@ -143,6 +147,34 @@ function ProductTracePanel({ result }: { result: CompareRunResult }) {
               </li>
             ))}
           </ul>
+        </div>
+      ) : null}
+
+      {careBalanceDisplay ? (
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-muted-foreground">CareBalance</p>
+          {careBalanceDisplay.comparison ? (
+            <p className="text-xs text-muted-foreground">{careBalanceDisplay.comparison}</p>
+          ) : null}
+          {careBalanceDisplay.rows.length > 0 ? (
+            <ul className="space-y-1 text-xs leading-5 text-foreground">
+              {careBalanceDisplay.rows.map((row) => (
+                <li key={row} className="rounded-md border bg-background p-2">
+                  {row}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {careBalanceDisplay.currentTurnFacts.length > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              Current-Turn: {careBalanceDisplay.currentTurnFacts.join(" · ")}
+            </p>
+          ) : null}
+          {careBalanceDisplay.conflicts.length > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              Konflikte: {careBalanceDisplay.conflicts.join(" · ")}
+            </p>
+          ) : null}
         </div>
       ) : null}
 
@@ -330,6 +362,114 @@ function getNestedRecord(value: unknown, key: string): Record<string, unknown> |
   return asRecord(asRecord(value)?.[key])
 }
 
+function formatCareBalanceTraceScalar(value: unknown): string {
+  if (value === null) return "null"
+  if (value === undefined) return "undefined"
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    return String(value)
+  }
+
+  try {
+    return JSON.stringify(value)
+  } catch {
+    return "unformattable"
+  }
+}
+
+function getComparisonDifferenceCount(trace: AgentCompareCareBalanceTrace): number | null {
+  const comparison = asRecord(trace.comparison)
+  if (!comparison) return null
+
+  const differences = comparison.differences
+  return Array.isArray(differences) ? differences.length : 0
+}
+
+export function buildCareBalanceTraceDisplayData(trace: AgentCompareCareBalanceTrace): {
+  rows: string[]
+  comparison: string | null
+  currentTurnFacts: string[]
+  conflicts: string[]
+} {
+  const differenceCount = getComparisonDifferenceCount(trace)
+
+  return {
+    rows: trace.rows.map((row) => {
+      const reasons = row.reason_codes.length > 0 ? row.reason_codes.join(",") : "none"
+      const hints =
+        row.selection_hint_codes.length > 0 ? row.selection_hint_codes.join(",") : "none"
+
+      return `${row.category}: ${row.action} | status=${row.status} | current=${row.current_frequency ?? "none"} | reasons=${reasons} | hints=${hints}`
+    }),
+    comparison: differenceCount === null ? null : `old_vs_new: ${differenceCount} Unterschiede`,
+    currentTurnFacts: trace.current_turn_facts.map(
+      (fact) => `${fact.kind}: ${fact.evidence_quote}`,
+    ),
+    conflicts: trace.conflicts.map(
+      (conflict) =>
+        `${conflict.field_path}: saved=${formatCareBalanceTraceScalar(
+          conflict.saved_value,
+        )} -> current=${formatCareBalanceTraceScalar(conflict.current_turn_value)} (${
+          conflict.evidence_quote
+        })`,
+    ),
+  }
+}
+
+function buildCareBalanceAnalysisLines(
+  trace: AgentCompareCareBalanceTrace | null | undefined,
+): string[] {
+  if (!trace) return []
+
+  const display = buildCareBalanceTraceDisplayData(trace)
+
+  return [
+    `rows=${display.rows.length}`,
+    ...display.rows,
+    ...(display.comparison ? [display.comparison] : []),
+    ...display.currentTurnFacts.map((fact) => `fact: ${fact}`),
+    ...display.conflicts.map((conflict) => `conflict: ${conflict}`),
+  ]
+}
+
+function getResultCareBalanceTrace(
+  result: CompareRunResult | AgentCompareTurnResult,
+): AgentCompareCareBalanceTrace | null {
+  return result.care_balance_trace ?? result.product_trace?.care_balance_context ?? null
+}
+
+function CareBalanceTracePanel({ result }: { result: CompareRunResult }) {
+  const trace = getResultCareBalanceTrace(result)
+  if (!trace || result.product_trace?.care_balance_context) return null
+
+  const display = buildCareBalanceTraceDisplayData(trace)
+
+  return (
+    <div className="space-y-2 rounded-lg border bg-muted/30 p-3">
+      <p className="type-label text-muted-foreground">CareBalance</p>
+      {display.comparison ? (
+        <p className="text-xs text-muted-foreground">{display.comparison}</p>
+      ) : null}
+      {display.rows.length > 0 ? (
+        <ul className="space-y-1 text-xs leading-5 text-foreground">
+          {display.rows.map((row) => (
+            <li key={row} className="rounded-md border bg-background p-2">
+              {row}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {display.currentTurnFacts.length > 0 ? (
+        <p className="text-xs text-muted-foreground">
+          Current-Turn: {display.currentTurnFacts.join(" · ")}
+        </p>
+      ) : null}
+      {display.conflicts.length > 0 ? (
+        <p className="text-xs text-muted-foreground">Konflikte: {display.conflicts.join(" · ")}</p>
+      ) : null}
+    </div>
+  )
+}
+
 function uniqueStrings(values: string[]): string[] {
   return Array.from(new Set(values.filter((value) => value.trim().length > 0)))
 }
@@ -442,6 +582,7 @@ function buildResultAnalysisSnapshot(params: {
     guidance_ids: extractGuidanceIds(params.result),
     product_policy: params.result.product_trace?.product_response_policy ?? null,
     product_category: params.result.product_trace?.category ?? null,
+    care_balance: buildCareBalanceAnalysisLines(getResultCareBalanceTrace(params.result)),
     selected_products: params.result.matched_products.map((product) =>
       product.category ? `${product.name} (${product.category})` : product.name,
     ),
@@ -453,6 +594,7 @@ function buildResultAnalysisSnapshot(params: {
         tool_calls: extractResultToolCallNames(turn),
         guidance_ids: extractGuidanceIds(turn),
         product_policy: turn.product_trace?.product_response_policy ?? null,
+        care_balance: buildCareBalanceAnalysisLines(getResultCareBalanceTrace(turn)),
         selected_products: turn.matched_products.map((product) =>
           product.category ? `${product.name} (${product.category})` : product.name,
         ),
@@ -555,6 +697,10 @@ function CompareAnalysisPanel({
               <div>
                 <dt className="font-medium text-foreground">Produktpolitik</dt>
                 <dd>{entry.product_policy ?? "keine"}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-foreground">CareBalance</dt>
+                <dd>{entry.care_balance.length > 0 ? entry.care_balance.join(" · ") : "keine"}</dd>
               </div>
               <div>
                 <dt className="font-medium text-foreground">Produkte</dt>
@@ -717,6 +863,8 @@ function ResultCard({
           {showDiagnostics ? <ToolLoopTracePanel result={result} /> : null}
 
           {showDiagnostics ? <AgentV2TracePanel result={result} /> : null}
+
+          {showDiagnostics ? <CareBalanceTracePanel result={result} /> : null}
 
           {showDiagnostics ? <ProductTracePanel result={result} /> : null}
 

@@ -314,3 +314,92 @@ test("compare scenarios include leave-in heat and relationship cases with requir
     ),
   )
 })
+
+test("compare scenarios include care balance golden eval coverage", () => {
+  const careBalanceScenarios = AGENT_COMPARE_SCENARIOS.filter((entry) =>
+    entry.id.startsWith("care-balance-"),
+  )
+
+  assert.deepEqual(
+    careBalanceScenarios.map((entry) => entry.id),
+    [
+      "care-balance-daily-oil-flat-buildup",
+      "care-balance-missing-conditioner-dry-tangled",
+      "care-balance-rare-conditioner-high-shampoo",
+      "care-balance-blow-dryer-heat-protection",
+      "care-balance-flat-iron-no-heat-protectant",
+      "care-balance-hot-air-brush-thermal-rollers",
+      "care-balance-deep-cleansing-vulnerable",
+      "care-balance-daily-dry-shampoo-replacement",
+      "care-balance-peeling-irritated-scalp",
+      "care-balance-current-turn-correction",
+    ],
+  )
+
+  const byId = new Map(careBalanceScenarios.map((entry) => [entry.id, entry]))
+  const dailyOil = byId.get("care-balance-daily-oil-flat-buildup")
+  assert.equal(
+    dailyOil?.routine_inventory?.find((item) => item.category === "oil")?.frequency_range,
+    "daily",
+  )
+  assert.ok(dailyOil?.hair_profile.concerns?.includes("oily_scalp"))
+  assert.match(dailyOil?.message ?? "", /Oel|Build-up/i)
+
+  const missingConditioner = byId.get("care-balance-missing-conditioner-dry-tangled")
+  assert.equal(
+    missingConditioner?.routine_inventory?.some((item) => item.category === "conditioner"),
+    false,
+  )
+  assert.ok(missingConditioner?.hair_profile.concerns?.includes("dryness"))
+  assert.ok(missingConditioner?.hair_profile.concerns?.includes("tangling"))
+
+  const rareConditioner = byId.get("care-balance-rare-conditioner-high-shampoo")
+  assert.equal(
+    rareConditioner?.routine_inventory?.find((item) => item.category === "conditioner")
+      ?.frequency_range,
+    "1_2x",
+  )
+  assert.equal(
+    rareConditioner?.routine_inventory?.find((item) => item.category === "shampoo")
+      ?.frequency_range,
+    "3_4x",
+  )
+
+  const blowDryerOnly = byId.get("care-balance-blow-dryer-heat-protection")
+  assert.deepEqual(blowDryerOnly?.hair_profile.styling_tools, ["blow_dryer"])
+  assert.equal(blowDryerOnly?.hair_profile.drying_method, "blow_dry")
+  assert.equal(blowDryerOnly?.hair_profile.uses_heat_protection, false)
+
+  const flatIron = byId.get("care-balance-flat-iron-no-heat-protectant")
+  assert.deepEqual(flatIron?.hair_profile.styling_tools, ["flat_iron"])
+  assert.equal(flatIron?.hair_profile.heat_styling, "several_weekly")
+  assert.equal(flatIron?.hair_profile.uses_heat_protection, false)
+
+  const indirectHeat = byId.get("care-balance-hot-air-brush-thermal-rollers")
+  assert.deepEqual(indirectHeat?.hair_profile.styling_tools, ["hot_air_brush", "thermal_rollers"])
+
+  const deepCleanse = byId.get("care-balance-deep-cleansing-vulnerable")
+  assert.equal(
+    deepCleanse?.routine_inventory?.find((item) => item.category === "deep_cleansing_shampoo")
+      ?.frequency_range,
+    "1_2x",
+  )
+  assert.equal(deepCleanse?.hair_profile.hair_texture, "curly")
+  assert.ok(deepCleanse?.hair_profile.chemical_treatment?.includes("colored"))
+  assert.ok(deepCleanse?.hair_profile.concerns?.includes("hair_damage"))
+
+  const dryShampoo = byId.get("care-balance-daily-dry-shampoo-replacement")
+  assert.equal(
+    dryShampoo?.routine_inventory?.find((item) => item.category === "dry_shampoo")?.frequency_range,
+    "daily",
+  )
+  assert.match(dryShampoo?.message ?? "", /statt Waschen|Waschen ersetzen/i)
+
+  const peeling = byId.get("care-balance-peeling-irritated-scalp")
+  assert.equal(peeling?.hair_profile.scalp_condition, "irritated")
+  assert.ok(peeling?.routine_inventory?.some((item) => item.category === "peeling"))
+
+  const correction = byId.get("care-balance-current-turn-correction")
+  assert.equal(correction?.hair_profile.thickness, "coarse")
+  assert.match(correction?.message ?? "", /Korrektur|eigentlich fein/i)
+})

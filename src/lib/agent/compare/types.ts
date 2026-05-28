@@ -9,6 +9,9 @@ import type { AgentV2RequestInterpretation, AgentV2Trace } from "@/lib/agent-v2/
 export type AgentV2RequestInterpretationTrace = AgentV2RequestInterpretation
 
 export type AgentV2CompareTrace = AgentV2Trace
+export type AgentCompareCareBalanceTrace = NonNullable<
+  SelectedProductsProjection["care_balance_context"]
+>
 
 export interface AgentCompareScenario {
   id: string
@@ -37,6 +40,7 @@ export interface AgentCompareTurnResult {
   debug_lines?: string[]
   matched_products: CompareRunResult["matched_products"]
   product_trace?: SelectedProductsProjection | null
+  care_balance_trace?: AgentCompareCareBalanceTrace | null
   route_trace?: AgentRoutePacket | null
   tool_loop_trace?: unknown
   agent_v2_trace?: AgentV2CompareTrace
@@ -55,6 +59,7 @@ export interface CompareRunResult {
     category: string | null
   }>
   product_trace?: SelectedProductsProjection | null
+  care_balance_trace?: AgentCompareCareBalanceTrace | null
   route_trace?: AgentRoutePacket | null
   tool_loop_trace?: unknown
   agent_v2_trace?: AgentV2CompareTrace
@@ -159,6 +164,7 @@ export interface AgentCompareAnalysisSnapshot {
     guidance_ids: string[]
     product_policy: string | null
     product_category: string | null
+    care_balance: string[]
     selected_products: string[]
     state_summary: string[]
     turns: Array<{
@@ -167,6 +173,7 @@ export interface AgentCompareAnalysisSnapshot {
       tool_calls: string[]
       guidance_ids: string[]
       product_policy: string | null
+      care_balance: string[]
       selected_products: string[]
     }>
   }>
