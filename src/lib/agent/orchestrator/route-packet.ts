@@ -360,6 +360,14 @@ function deriveActiveProfileSignalsFromMessage(message: string): AgentActiveProf
     addSignal("styling_tools", "hot_air_brush", "override", "Hot Brush")
   }
 
+  if (
+    /\b(?:thermo[-\s]*lockenwickler|thermolockenwickler|thermal\s*rollers?|heizwickler|warme[-\s]+lockenwickler)\b/.test(
+      normalized,
+    )
+  ) {
+    addSignal("styling_tools", "thermal_rollers", "override", "Thermo-Lockenwickler")
+  }
+
   if (/\b\d{2,3}\s*(?:grad|°\s*c|celsius)\b/.test(normalized)) {
     addSignal("styling_tools", "flat_iron", "override", "exakte Hitzeschutz-Temperatur")
   }

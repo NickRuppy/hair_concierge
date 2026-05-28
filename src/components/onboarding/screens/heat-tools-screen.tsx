@@ -11,6 +11,7 @@ const HEAT_TOOL_ICONS: Record<string, IconName> = {
   curling_iron: "heat-curling-iron",
   wave_iron: "heat-wave-iron",
   hot_air_brush: "heat-hot-air-brush",
+  thermal_rollers: "heat-thermal-rollers",
   multi_tool: "heat-multi-tool",
   diffuser: "heat-diffuser",
 }

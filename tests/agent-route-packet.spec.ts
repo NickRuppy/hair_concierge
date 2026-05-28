@@ -363,6 +363,23 @@ test("buildAgentRoutePacket derives heat tool signals for leave-in heat requests
   )
 })
 
+test("buildAgentRoutePacket derives thermal roller heat tool signals", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Ich nutze Thermo-Lockenwickler und brauche Hitzeschutz.",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "leave_in",
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) => signal.field === "styling_tools" && signal.value === "thermal_rollers",
+    ),
+  )
+})
+
 test("buildAgentRoutePacket extracts fine hair from predicate phrasing", () => {
   const packet = buildAgentRoutePacket({
     message: "Meine Haare sind fein und trocken. Gibt es eine leichte Maske?",

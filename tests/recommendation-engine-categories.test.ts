@@ -629,6 +629,26 @@ test("leave-in target splits blow-dry heat protection from high-heat styling pre
   assert.equal(target?.needBucket, "heat_protect")
 })
 
+test("leave-in target treats thermal rollers as moderate heat exposure", () => {
+  const thermalRollerProfile = {
+    ...SEVERE_DAMAGE_PROFILE,
+    hair_texture: "straight" as const,
+    thickness: "normal" as const,
+    density: "medium" as const,
+    drying_method: "air_dry" as const,
+    heat_styling: "never" as const,
+    styling_tools: ["thermal_rollers" as const],
+    uses_heat_protection: false,
+  }
+  const { normalized, damage, careNeeds, plan } = buildEngineState(thermalRollerProfile, [])
+  const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
+  const target = decision.targetProfile
+
+  assert.equal(target?.heatProtectionNeed, "moderate")
+  assert.equal(target?.stylingPrepNeed, "none")
+  assert.equal(target?.needBucket, "heat_protect")
+})
+
 test("leave-in fit treats missing moderate blow-dry heat protection as a caveated support path", () => {
   const blowDryProfile = {
     ...SEVERE_DAMAGE_PROFILE,

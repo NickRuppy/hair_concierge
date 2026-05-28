@@ -110,6 +110,7 @@ const iconMap = {
   "heat-curling-iron": CircleDot,
   "heat-wave-iron": Waves,
   "heat-hot-air-brush": Brush,
+  "heat-thermal-rollers": Circle,
   "heat-multi-tool": Wrench,
   "heat-diffuser": Fan,
   "heat-protection-yes": Shield,

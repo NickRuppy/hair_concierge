@@ -93,6 +93,7 @@ export const STYLING_TOOLS = [
   "curling_iron",
   "wave_iron",
   "hot_air_brush",
+  "thermal_rollers",
   "multi_tool",
   "diffuser",
 ] as const
@@ -104,6 +105,7 @@ export const STYLING_TOOL_LABELS: Record<string, string> = {
   curling_iron: "Lockenstab",
   wave_iron: "Welleneisen",
   hot_air_brush: "Warmluftbürste",
+  thermal_rollers: "Thermo-Lockenwickler",
   multi_tool: "Multi-Tool",
   diffuser: "Diffusor",
 } satisfies Record<StylingTool, string>
