@@ -15,6 +15,7 @@ import {
   type AgentV2ToolCallTrace,
   type AgentV2ValidationError,
 } from "@/lib/agent-v2/contracts"
+import { normalizeAgentV2EvidenceText } from "@/lib/agent-v2/evidence-normalization"
 import { validateUserFacingLanguage } from "@/lib/agent-v2/validation/user-facing-language"
 export interface AgentV2FinalAnswerValidationContext {
   selectedProductProjections: readonly {
@@ -91,7 +92,14 @@ export function validateAgentV2FinalAnswer(
   validateGeneralAdviceNoUnaskedProducts(terminalAnswer, findings)
   validateSafety(terminalAnswer, context, findings)
   validateInternalLeakage(terminalAnswer, findings)
-  validateUserFacingLanguage(terminalAnswer, context.latestUserMessage, findings)
+  validateUserFacingLanguage(
+    terminalAnswer,
+    {
+      latestUserMessage: context.latestUserMessage,
+      recentEvidenceText: context.recentEvidenceText,
+    },
+    findings,
+  )
 
   const errors = findings.filter((finding) => finding.severity !== "warn")
   const warnings = findings.filter((finding) => finding.severity === "warn")
@@ -526,6 +534,7 @@ function validateInterpretationAnswerMode(
   if (
     PRODUCT_TOOL_REQUEST_KINDS.has(interpretation.product_request_kind) &&
     answer.answer_mode !== "product_recommendation" &&
+    !isProductBackedRoutineAnswer(answer) &&
     answer.answer_mode !== "clarification" &&
     answer.answer_mode !== "constraint_blocked"
   ) {
@@ -665,24 +674,26 @@ function validateInterpretationToolArguments(
   }
 
   if (latestProductTool?.arguments) {
-    compareToolArgument(
-      latestProductTool.arguments,
-      "product_request_kind",
-      interpretation.product_request_kind,
-      errors,
-    )
-    compareToolArgument(
-      latestProductTool.arguments,
-      "requested_product_count",
-      interpretation.requested_product_count,
-      errors,
-    )
-    compareToolArgument(
-      latestProductTool.arguments,
-      "count_policy",
-      interpretation.count_policy,
-      errors,
-    )
+    if (!isProductSelectionSupportingRoutineAnswer(answer, latestRoutineTool)) {
+      compareToolArgument(
+        latestProductTool.arguments,
+        "product_request_kind",
+        interpretation.product_request_kind,
+        errors,
+      )
+      compareToolArgument(
+        latestProductTool.arguments,
+        "requested_product_count",
+        interpretation.requested_product_count,
+        errors,
+      )
+      compareToolArgument(
+        latestProductTool.arguments,
+        "count_policy",
+        interpretation.count_policy,
+        errors,
+      )
+    }
     compareCategoryArgument(latestProductTool.arguments, interpretation, errors)
   }
 
@@ -725,6 +736,22 @@ function validateInterpretationToolArguments(
       errors,
     )
   }
+}
+
+function isProductBackedRoutineAnswer(answer: AgentV2TerminalAnswer): boolean {
+  return (
+    answer.answer_mode === "routine" &&
+    answer.tool_grounding.used_product_tool === true &&
+    answer.tool_grounding.used_routine_tool === true &&
+    ROUTINE_TOOL_INTENTS.has(answer.request_interpretation.routine_intent)
+  )
+}
+
+function isProductSelectionSupportingRoutineAnswer(
+  answer: AgentV2TerminalAnswer,
+  latestRoutineTool: Partial<AgentV2ToolCallTrace> | undefined,
+): boolean {
+  return isProductBackedRoutineAnswer(answer) && Boolean(latestRoutineTool?.arguments)
 }
 
 function validateProductAnswerShape(
@@ -1035,7 +1062,8 @@ function answerSuggestsRoutineStepChanges(answer: AgentV2TerminalAnswer): boolea
   const payload = answer.payload as Record<string, unknown>
   const textParts = [readUserFacingAnswer(payload)]
 
-  for (const value of Object.values(payload)) {
+  for (const [key, value] of Object.entries(payload)) {
+    if (key === "next_step_offer_de") continue
     if (typeof value === "string") textParts.push(value)
     if (Array.isArray(value)) {
       textParts.push(...value.filter((item): item is string => typeof item === "string"))
@@ -1084,14 +1112,9 @@ function validateRoutineProductDeepDive(
 ): void {
   if (!isRoutineProductRecommendation(answer)) return
 
-  if (
-    !answer.routine_context.active ||
-    answer.routine_context.return_path.length === 0 ||
-    !answer.payload.next_step_offer_de ||
-    answer.payload.next_step_offer_de.trim().length === 0
-  ) {
+  if (!answer.routine_context.active || answer.routine_context.return_path.length === 0) {
     errors.push({
-      validator_id: "routine_return_path_required",
+      validator_id: "routine_context_return_path_required",
       message:
         "Product recommendations inside routine threads must keep routine_context active and preserve a return path to the routine.",
       severity: "block",
@@ -1636,14 +1659,7 @@ function meaningfulEvidenceTokens(normalizedValue: string): string[] {
 }
 
 function normalizeEvidenceText(value: string): string {
-  return value
-    .toLocaleLowerCase("de-DE")
-    .normalize("NFKD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/^[\s"'“”„‚‘’`´]+|[\s"'“”„‚‘’`´]+$/gu, "")
-    .replace(/[\p{P}\p{S}]+/gu, " ")
-    .replace(/\s+/g, " ")
-    .trim()
+  return normalizeAgentV2EvidenceText(value)
 }
 
 function isMeaningfulEvidenceQuote(

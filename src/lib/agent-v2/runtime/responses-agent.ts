@@ -1,6 +1,7 @@
 import {
   AgentV2TerminalAnswerSchema,
   type AgentV2CareCategory,
+  type AgentV2PendingRoutineAction,
   type AgentV2RoutineLayer,
   type AgentV2RoutineThreadContext,
   type AgentV2RequestInterpretation,
@@ -10,6 +11,7 @@ import {
   type AgentV2Trace,
   type AgentV2ValidationError,
 } from "@/lib/agent-v2/contracts"
+import { normalizeAgentV2EvidenceText } from "@/lib/agent-v2/evidence-normalization"
 import { getAgentV2ModelPolicy, type AgentV2ModelPolicy } from "@/lib/agent-v2/model-policy"
 import { createAgentV2Trace } from "@/lib/agent-v2/runtime/trace"
 import { LoadAgentV2AdvisorGuidanceInputSchema } from "@/lib/agent-v2/tools/guidance-tool"
@@ -178,6 +180,10 @@ export async function runAgentV2ResponsesTurn(params: {
     return completeWithAnswer(buildSafetyBoundaryAnswer(params.message), trace)
   }
 
+  const routineToolPolicy = resolveRoutineToolPolicy({
+    message: params.message,
+    routineThreadContext,
+  })
   const toolDefinitions = buildAgentV2ResponsesTools({ safetyMode })
   const allowedExecutableTools = new Set(
     toolDefinitions
@@ -191,6 +197,7 @@ export async function runAgentV2ResponsesTurn(params: {
   let repairUsed = false
   let repairState: AgentV2RepairState | null = null
   let missingTerminalRepairUsed = false
+  let missingTerminalAssistantText: string | null = null
   const inputItems = buildInputItems(
     params.message,
     params.recentMessages,
@@ -198,6 +205,7 @@ export async function runAgentV2ResponsesTurn(params: {
     routineThreadContext,
     safetyMode,
     params.priorSelectedProductProjections ?? [],
+    routineToolPolicy,
   )
   const buildCurrentClarificationFallback = () =>
     buildClarificationFallback({
@@ -258,6 +266,7 @@ export async function runAgentV2ResponsesTurn(params: {
           nextToolIndex: 0,
         }
         missingTerminalRepairUsed = true
+        missingTerminalAssistantText = assistantText
         trace.bounded_repair_kind = "terminal_only"
         trace.repair_attempts.push({
           reason: "missing_terminal_answer",
@@ -478,6 +487,18 @@ export async function runAgentV2ResponsesTurn(params: {
             buildCurrentValidationContext(),
           )
         }
+        if (missingTerminalRepairUsed && missingTerminalAssistantText) {
+          return completeWithAnswer(
+            buildRecoveredAssistantTextFallback({
+              assistantText: missingTerminalAssistantText,
+              message: params.message,
+              safetyMode,
+              routineThreadContext,
+              usedGuidancePackageIds: trace.loaded_guidance_package_ids,
+            }),
+            trace,
+          )
+        }
 
         return completeWithAnswer(buildCurrentClarificationFallback(), trace)
       }
@@ -539,11 +560,11 @@ export async function runAgentV2ResponsesTurn(params: {
         continue
       }
 
-      const routineRebuildBlock = shouldBlockUnrequestedRoutineRebuild({
+      const routineRebuildBlock = authorizeBuildOrFixRoutineCall({
         name: call.name,
+        args: validatedArguments.value,
         message: params.message,
-        routineThreadContext,
-        repairState,
+        policy: routineToolPolicy,
       })
       if (routineRebuildBlock.blocked) {
         trace.blocked_tool_calls.push({
@@ -551,7 +572,11 @@ export async function runAgentV2ResponsesTurn(params: {
           reason: routineRebuildBlock.reason,
         })
         inputItems.push(
-          buildFunctionCallOutput(call.call_id, { error: routineRebuildBlock.reason }),
+          buildFunctionCallOutput(call.call_id, {
+            error: routineRebuildBlock.reason,
+            guidance:
+              "Routine changes are not authorized by the latest user turn. Answer using active routine context as non-mutating advice, or ask whether the user wants the routine changed.",
+          }),
         )
         if (repairState && call.name === repairState.requiredTools[repairState.nextToolIndex]) {
           repairState.nextToolIndex += 1
@@ -565,14 +590,21 @@ export async function runAgentV2ResponsesTurn(params: {
       }
 
       executableToolCalls += 1
+      const executableArguments = normalizeExecutableToolArguments({
+        name: call.name,
+        args: validatedArguments.value,
+        currentRoutineLayer: params.currentRoutineLayer,
+        routineThreadContext,
+        hasCurrentRoutineInventory: (params.userContext.routineInventory?.length ?? 0) > 0,
+      })
       const toolStartedAt = performance.now()
-      const output = await params.tools[call.name](validatedArguments.value)
+      const output = await params.tools[call.name](executableArguments)
       const toolLatencyMs = Math.round(performance.now() - toolStartedAt)
       inputItems.push(buildFunctionCallOutput(call.call_id, output))
       trace.tool_calls.push({
         call_id: call.call_id,
         name: call.name,
-        arguments: validatedArguments.value,
+        arguments: executableArguments,
         output_summary: summarizeToolOutput(output),
         latency_ms: toolLatencyMs,
       })
@@ -618,6 +650,7 @@ function buildInputItems(
   routineThreadContext: AgentV2RoutineThreadContext | null,
   safetyMode: AgentV2SafetyMode,
   priorSelectedProductProjections: readonly Partial<AgentV2SelectProductsProjection>[],
+  routineToolPolicy: RoutineToolPolicy,
 ): unknown[] {
   const items: unknown[] = [
     {
@@ -635,6 +668,10 @@ function buildInputItems(
     },
     {
       role: "system",
+      content: buildRoutineToolPermissionGuidance(routineToolPolicy),
+    },
+    {
+      role: "system",
       content: `Loaded Compare Lab user context. Treat this as the authoritative saved profile/routine context for this turn; do not ask for fields already present here. ${JSON.stringify(
         compactUserContextForModel(userContext),
       )}`,
@@ -644,7 +681,7 @@ function buildInputItems(
   if (routineThreadContext?.active) {
     items.push({
       role: "system",
-      content: `Active AgentV2 routine thread context, including visible_steps from the currently visible routine. Preserve routine continuity unless the user explicitly leaves the routine topic. Explanatory follow-ups may use general_advice, but keep routine_context.active=true. Use visible_steps and the previous assistant offer to resolve follow-ups like "dieser Schritt", "der erste Zusatz", "ja, zeig mir passende Produkte dafür", or "das Produkt dafür". For short product follow-ups to a previous routine offer, call select_products only; do not call build_or_fix_routine unless the latest user message asks to change, simplify, lighten, add, remove, replace, rebalance, or rebuild the routine. For pure summary, recap, overview, or explanation follow-ups such as "fass mir das bitte kurz zusammen", answer from this routineThreadContext as general_advice with routine_context.active=true, routine_intent none, and no build_or_fix_routine call. Category comparisons inside an active routine can be general_advice with routine_context.active=true when no mutation is requested. Do not invent a step ID; if unclear, ask a clarification. ${JSON.stringify(
+      content: `Active AgentV2 routine thread context, including visible_steps from the currently visible routine. Preserve routine continuity unless the user explicitly leaves the routine topic. Explanatory follow-ups may use general_advice, but keep routine_context.active=true. Use visible_steps and the previous assistant offer to resolve follow-ups like "dieser Schritt", "der erste Zusatz", "ja, zeig mir passende Produkte dafür", or "das Produkt dafür". For short product follow-ups to a previous routine offer, call select_products only; do not call build_or_fix_routine unless the latest user message asks to change, simplify, lighten, add, remove, replace, rebalance, or rebuild the routine. If the user asks to add or integrate a referenced product, make the routine change category-level for now and use only routine tool/context step IDs in the routine payload; do not create product-named step IDs. For pure summary, recap, overview, or explanation follow-ups such as "fass mir das bitte kurz zusammen", answer from this routineThreadContext as general_advice with routine_context.active=true, routine_intent none, and no build_or_fix_routine call. Category comparisons inside an active routine can be general_advice with routine_context.active=true when no mutation is requested. Do not invent a step ID; if unclear, ask a clarification. ${JSON.stringify(
         routineThreadContext,
       )}`,
     })
@@ -830,9 +867,11 @@ function buildTerminalPayloadFieldGuidance(): string {
     "Every submit_final_answer must include request_interpretation with primary_intent, product_request_kind, routine_intent, care_category, requested_product_count, count_policy, evidence_quote, and confidence.",
     "When you call select_products, its product_request_kind, requested_product_count, count_policy, category, and evidence_quote must match terminal request_interpretation. Tool category maps to request_interpretation.care_category.",
     "When you call build_or_fix_routine, its routine_intent, requested_layer, requested_category, and evidence_quote must match terminal request_interpretation and routine_context.",
+    "Routine payload visible_steps and tool_grounding.routine_step_ids must use only step IDs returned by build_or_fix_routine or already present in active routine context. Never invent product-named routine step IDs.",
     "request_interpretation.evidence_quote should be a short raw phrase from the latest user message or active session context. Prefer exact wording; if the user uses a short referential follow-up, quote the closest active phrase that justifies your semantic decision.",
     "Do not wrap evidence_quote in decorative quotation marks.",
     "payload.user_facing_answer_de is the complete final German answer shown to the user.",
+    "next_step_offer_de may be null. If present, it must mirror or summarize the visible final move in user_facing_answer_de; it must not add a separate hidden offer.",
     "Do not treat recommendations, visible_steps, usage_notes_de, or blocking_constraints as hidden content that the app will render later.",
     "If a product, routine step, usage note, or blocking constraint is user-visible in payload fields, include it in user_facing_answer_de.",
     "product_recommendation payload: user_facing_answer_de, recommendations, comparison_notes_de, usage_notes_de, next_step_offer_de.",
@@ -841,12 +880,14 @@ function buildTerminalPayloadFieldGuidance(): string {
     "clarification payload: user_facing_answer_de, question_de, missing_keys.",
     "constraint_blocked payload: user_facing_answer_de, blocking_constraints, safe_alternative_de.",
     "safety_boundary payload: user_facing_answer_de, boundary_reason_de, next_step_de.",
+    "Set pending_routine_action to null unless you explicitly offer a future routine create/change for the user to confirm. If you do offer that future action, keep the current answer non-mutating, set routine_intent none, and describe the pending action structurally so a short next-turn confirmation can authorize build_or_fix_routine.",
     "Before submitting non-trivial category, product, routine, or general advice, load the relevant guidance package. Terminal tool_grounding.used_guidance_package_ids must include required base packages and category packages.",
     "For named-product detail or product-specific claim checks, including heat protection, color safety, chelating, ingredient-free status, exact cadence, or product protocol, call select_products before submitting any terminal answer. Use product_request_kind product_detail. If the tool cannot confirm the product or claim, answer as clarification or constraint_blocked after the tool call; do not infer from the product name.",
     "For product_detail turns, terminal request_interpretation must match select_products on product_request_kind, requested_product_count, count_policy, care_category/category, and evidence_quote, even if the answer is clarification or constraint_blocked.",
-    "For a concrete product ask inside an active routine, including a short acceptance of the previous offer such as matching products for that routine step, use answer_mode product_recommendation, set request_interpretation.product_request_kind to specific_products, call select_products first, keep routine_context.active=true, include routine_context step/category when known, and use payload.next_step_offer_de to return to the routine. Do not also call build_or_fix_routine unless the latest user message asks to change the routine.",
+    "For a concrete product ask inside an active routine, including a short acceptance of the previous offer such as matching products for that routine step, use answer_mode product_recommendation, set request_interpretation.product_request_kind to specific_products, call select_products first, keep routine_context.active=true, include routine_context step/category when known, and preserve routine_context.return_path. Return to the routine through routine_context and visible prose only when useful. Do not also call build_or_fix_routine unless the latest user message asks to change the routine.",
     "For pure summary, recap, overview, or explanation follow-ups inside an active routine thread, answer from routineThreadContext as general_advice, keep routine_context.active=true, set routine_intent none, and do not call build_or_fix_routine.",
     "For first-turn routine build, simplify, improve, change, add, remove, rebalance, or lightweight-routine asks, call build_or_fix_routine before the terminal answer. Keep pure placement/order/usage questions and non-mutating category comparisons explanation-only with routine_intent none and no routine payload.",
+    "When the user asks to add or integrate a referenced product into the routine, treat the routine state change as category-level for now: call build_or_fix_routine with mutation_kind add_step and the product category, then use the routine tool's category step IDs. Mention the referenced product only in prose when grounded by recent conversation or surfaced product facts.",
     "For product recommendations, default to three products. If the user explicitly asks for one or two products, return exactly that many when available. If the user asks for more than three, cap at three.",
     "For category education without an explicit product ask, use general_advice and do not include recommendations.",
     "Use the recent conversation and surfaced product facts to resolve ambiguous follow-ups. If the latest user message is short, first check whether it answers your previous question or next-step offer.",
@@ -855,52 +896,186 @@ function buildTerminalPayloadFieldGuidance(): string {
 }
 
 type RoutineRebuildBlockReason =
-  | "routine_rebuild_not_requested"
   | "routine_summary_rebuild_not_requested"
+  | "routine_action_not_authorized"
 type RoutineRebuildBlockResult =
   | { blocked: false; reason: null }
   | { blocked: true; reason: RoutineRebuildBlockReason }
 
-function shouldBlockUnrequestedRoutineRebuild(params: {
+type RoutineToolPolicy = {
+  hardDenyReason: RoutineRebuildBlockReason | null
+  pendingConfirmationAllowed: boolean
+  pendingRoutineAction: AgentV2PendingRoutineAction | null
+}
+
+function authorizeBuildOrFixRoutineCall(params: {
   name: AgentV2ToolName
+  args: Record<string, unknown>
   message: string
-  routineThreadContext: AgentV2RoutineThreadContext | null
-  repairState: AgentV2RepairState | null
+  policy: RoutineToolPolicy
 }): RoutineRebuildBlockResult {
   if (params.name !== "build_or_fix_routine") return { blocked: false, reason: null }
-  if (params.routineThreadContext?.active !== true) return { blocked: false, reason: null }
-  if (hasRoutineMutationSignal(params.message)) return { blocked: false, reason: null }
+  if (params.policy.hardDenyReason) return { blocked: true, reason: params.policy.hardDenyReason }
+  if (params.policy.pendingConfirmationAllowed) {
+    return doesRoutineCallMatchPendingAction(params.args, params.policy.pendingRoutineAction)
+      ? { blocked: false, reason: null }
+      : { blocked: true, reason: "routine_action_not_authorized" }
+  }
+  if (isStructuredRoutineActionAuthorized(params.args, params.message)) {
+    return { blocked: false, reason: null }
+  }
+  return { blocked: true, reason: "routine_action_not_authorized" }
+}
+
+function resolveRoutineToolPolicy(params: {
+  message: string
+  routineThreadContext: AgentV2RoutineThreadContext | null
+}): RoutineToolPolicy {
+  if (hasExplicitRoutineNonMutationSignal(params.message)) {
+    return {
+      hardDenyReason: "routine_action_not_authorized",
+      pendingConfirmationAllowed: false,
+      pendingRoutineAction: null,
+    }
+  }
   if (hasRoutineSummaryFollowupSignal(params.message)) {
-    return { blocked: true, reason: "routine_summary_rebuild_not_requested" }
+    return {
+      hardDenyReason: "routine_summary_rebuild_not_requested",
+      pendingConfirmationAllowed: false,
+      pendingRoutineAction: null,
+    }
   }
-  if (params.repairState) return { blocked: false, reason: null }
-  if (hasProductFollowupSignal(params.message)) {
-    return { blocked: true, reason: "routine_rebuild_not_requested" }
+  if (hasShortRoutineActionConfirmation(params.message)) {
+    const pendingRoutineAction = params.routineThreadContext?.pending_routine_action ?? null
+    return {
+      hardDenyReason: pendingRoutineAction ? null : "routine_action_not_authorized",
+      pendingConfirmationAllowed: Boolean(pendingRoutineAction),
+      pendingRoutineAction,
+    }
   }
-  return { blocked: false, reason: null }
+  return {
+    hardDenyReason: null,
+    pendingConfirmationAllowed: false,
+    pendingRoutineAction: null,
+  }
 }
 
-function hasProductFollowupSignal(message: string): boolean {
-  const normalized = message.toLocaleLowerCase("de-DE")
-  return /\b(produkt|produkte|produktempfehl|empfehl|option|optionen)\b/.test(normalized)
+function doesRoutineCallMatchPendingAction(
+  args: Record<string, unknown>,
+  pendingRoutineAction: AgentV2PendingRoutineAction | null,
+): boolean {
+  if (!pendingRoutineAction) return false
+  const requestedCategory =
+    typeof args.requested_category === "string" ? args.requested_category : null
+  const requestedLayer = typeof args.requested_layer === "string" ? args.requested_layer : null
+  const routineIntent = typeof args.routine_intent === "string" ? args.routine_intent : "none"
+  const mutationKind = typeof args.mutation_kind === "string" ? args.mutation_kind : "none"
+
+  const categoryMatches =
+    pendingRoutineAction.category === null || pendingRoutineAction.category === requestedCategory
+  const layerMatches =
+    pendingRoutineAction.routine_layer === null ||
+    pendingRoutineAction.routine_layer === requestedLayer
+  const actionMatches =
+    pendingRoutineAction.action === routineIntent || pendingRoutineAction.action === mutationKind
+
+  return categoryMatches && layerMatches && actionMatches
 }
 
-function hasRoutineMutationSignal(message: string): boolean {
+function buildRoutineToolPermissionGuidance(policy: RoutineToolPolicy): string {
+  if (policy.hardDenyReason) {
+    return `Routine tool policy for this turn: denied (${policy.hardDenyReason}). Do not call build_or_fix_routine; answer without changing routine state.`
+  }
+  if (policy.pendingConfirmationAllowed) {
+    return "Routine tool policy for this turn: a short user confirmation can authorize build_or_fix_routine if the call matches the pending_routine_action and terminal request_interpretation."
+  }
+
+  return "Routine tool policy for this turn: trust your semantic interpretation, but build_or_fix_routine requires a mutating routine intent/objective and an evidence_quote grounded in the latest user message. Do not call it for explanation-only answers or explicit non-mutation requests."
+}
+
+function normalizeExecutableToolArguments(params: {
+  name: AgentV2ToolName
+  args: Record<string, unknown>
+  currentRoutineLayer: AgentV2RoutineLayer | null | undefined
+  routineThreadContext: AgentV2RoutineThreadContext | null
+  hasCurrentRoutineInventory: boolean
+}): Record<string, unknown> {
+  if (params.name !== "build_or_fix_routine") return params.args
+  if (hasRoutineBaseline(params)) return params.args
+  if (params.args.requested_layer === "basics") return params.args
+
+  return {
+    ...params.args,
+    requested_layer: "basics",
+  }
+}
+
+function hasRoutineBaseline(params: {
+  currentRoutineLayer: AgentV2RoutineLayer | null | undefined
+  routineThreadContext: AgentV2RoutineThreadContext | null
+  hasCurrentRoutineInventory: boolean
+}): boolean {
+  return (
+    Boolean(params.currentRoutineLayer) ||
+    params.routineThreadContext?.active === true ||
+    params.hasCurrentRoutineInventory
+  )
+}
+
+const ROUTINE_ACTION_INTENTS = new Set(["create", "modify", "remove_step", "replace_product"])
+const ROUTINE_ACTION_MUTATION_KINDS = new Set([
+  "add_step",
+  "remove_step",
+  "replace_product",
+  "change_frequency",
+  "simplify",
+])
+
+function isStructuredRoutineActionAuthorized(
+  args: Record<string, unknown>,
+  message: string,
+): boolean {
+  const routineIntent = typeof args.routine_intent === "string" ? args.routine_intent : "none"
+  const mutationKind = typeof args.mutation_kind === "string" ? args.mutation_kind : "none"
+  const evidenceQuote = typeof args.evidence_quote === "string" ? args.evidence_quote : ""
+  const hasActionIntent =
+    ROUTINE_ACTION_INTENTS.has(routineIntent) || ROUTINE_ACTION_MUTATION_KINDS.has(mutationKind)
+
+  return hasActionIntent && isEvidenceQuoteGroundedInLatestMessage(evidenceQuote, message)
+}
+
+function normalizeEvidenceText(value: string): string {
+  return normalizeAgentV2EvidenceText(value)
+}
+
+function isEvidenceQuoteGroundedInLatestMessage(evidenceQuote: string, message: string): boolean {
+  const normalizedQuote = normalizeEvidenceText(evidenceQuote)
+  const normalizedMessage = normalizeEvidenceText(message)
+  return normalizedQuote.length >= 4 && normalizedMessage.includes(normalizedQuote)
+}
+
+function hasExplicitRoutineNonMutationSignal(message: string): boolean {
   const normalized = message.toLocaleLowerCase("de-DE")
   return (
-    /\b(aender\w*|änder\w*|veraender\w*|veränder\w*|anpass\w*|vereinfach\w*|ergaenz\w*|ergänz\w*|fuege\w*|füge\w*|hinzufueg\w*|hinzufüg\w*|entfern\w*|weglass\w*|ersetz\w*|ersetze\w*|tausch\w*|umbau\w*|rebuild\w*|rebalanc\w*|ausbalancier\w*|balancier\w*)\b/.test(
+    /\b(?:nur|erstmal|erst\s*mal)\b.{0,60}\b(?:verstehen|wissen|erklaer|erklär|einordnen)\w*\b/.test(
       normalized,
     ) ||
-    /\b(einbau\w*|integrier\w*|reinnehm\w*)\b/.test(normalized) ||
-    /\b(bau|baue|bauen|baust|baut)\b.*\bein\b/.test(normalized) ||
-    /\b(nimm|nehm\w*)\b.*\brein\b/.test(normalized) ||
-    /\b(mach\w*|mach|mache|macht|machen|gestalte\w*|halt\w*)\b.{0,80}\broutine\b.{0,80}\b(leichter|leicht|einfacher|simpler)\b/.test(
+    /\b(?:nicht|nichts|keine|kein)\b.{0,40}\b(?:aendern|ändern|umstellen|umbauen|anpassen)\w*\b/.test(
       normalized,
     ) ||
-    /\broutine\b.{0,80}\b(leichter|leicht|einfacher|simpler)\b/.test(normalized) ||
-    /\bkeine\s+schwere\s+routine\b/.test(normalized) ||
-    /\b(schritt|produkt|routine)\b.{0,80}\bweg\b/.test(normalized) ||
-    /\bweg\b.{0,80}\b(schritt|produkt|routine)\b/.test(normalized)
+    /\bohne\b.{0,40}\b(?:aendern|ändern|umstellen|umbauen|anpassen)\w*\b/.test(normalized)
+  )
+}
+
+function hasShortRoutineActionConfirmation(message: string): boolean {
+  const normalized = message
+    .toLocaleLowerCase("de-DE")
+    .replace(/[^\p{L}\p{N}\s]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+
+  return /^(?:ja|genau|ok|okay|passt|mach das|mach es|nimm das rein|nehm das rein|baue das ein|bau das ein)$/.test(
+    normalized,
   )
 }
 
@@ -922,6 +1097,7 @@ function buildAnswerQualityGuidance(): string {
     "If convenience is only a product property, phrase it as product-level convenience, such as unkompliziert in der Anwendung, not as a stored user preference.",
     "Use a calm answer shape: direct answer first, one short profile-linked why, then compact steps or options only when useful.",
     "Avoid stacking many bold subheaders. Use bold mostly for product names, step labels, or one or two anchors that improve scanning.",
+    "Before calling submit_final_answer, reread the complete visible answer. The closing sentence must not ask or offer to answer a distinction the body already answered or the previous turn asked and this turn resolved. If the only available close would repeat the answer, stop cleanly.",
   ].join("\n")
 }
 
@@ -1430,6 +1606,7 @@ function buildLightweightMaskOilDecisionFallback(params: {
       category: "mask",
       return_path: routineActive ? ["routine"] : [],
     },
+    pending_routine_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de:
@@ -1535,9 +1712,27 @@ function buildRoutineKnownIntentFallback(params: {
     "Ich wuerde den Reset nicht als taeglichen Schritt einbauen. Deine Basis bleibt Shampoo fuer Kopfhaut/Ansatz und Conditioner fuer Laengen und Spitzen. Ein Tiefenreinigungsshampoo passt nur gelegentlich, wenn sich Build-up oder Rueckstaende zeigen; danach die Laengen wieder mit Conditioner pflegen."
   const genericRoutineCopy =
     "Ich wuerde die Routine nicht groesser machen als noetig: erst Shampoo fuer die Kopfhaut, Conditioner fuer Laengen und Spitzen, und nur einen passenden Zusatz, wenn dein Ziel damit klar besser abgedeckt wird."
+  const categorySpecificAddStepFallback =
+    params.routineArgs.mutation_kind === "add_step"
+      ? buildCategorySpecificAddStepRoutineFallback(requestedCategory)
+      : null
   const userFacingAnswer =
-    requestedCategory === "deep_cleansing_shampoo" ? resetCopy : genericRoutineCopy
+    requestedCategory === "deep_cleansing_shampoo"
+      ? resetCopy
+      : (categorySpecificAddStepFallback?.userFacingAnswer ?? genericRoutineCopy)
   const routineActive = params.routineThreadContext?.active === true
+  const keyPoints =
+    requestedCategory === "deep_cleansing_shampoo"
+      ? [
+          "Reset nicht als taeglichen Schritt einbauen.",
+          "Shampoo und Conditioner bleiben die Basis.",
+          "Tiefenreinigung nur gelegentlich bei Build-up oder Rueckstaenden.",
+        ]
+      : (categorySpecificAddStepFallback?.keyPoints ?? [
+          "Routine nicht groesser machen als noetig.",
+          "Shampoo und Conditioner bleiben die Basis.",
+          "Zusatz nur bei klarem Ziel ergaenzen.",
+        ])
 
   return {
     answer_mode: "general_advice",
@@ -1575,24 +1770,63 @@ function buildRoutineKnownIntentFallback(params: {
       category: requestedCategory === "unknown" ? null : requestedCategory,
       return_path: routineActive ? ["routine"] : [],
     },
+    pending_routine_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de: userFacingAnswer,
       category_or_topic: requestedCategory === "unknown" ? "routine" : requestedCategory,
-      key_points_de:
-        requestedCategory === "deep_cleansing_shampoo"
-          ? [
-              "Reset nicht als taeglichen Schritt einbauen.",
-              "Shampoo und Conditioner bleiben die Basis.",
-              "Tiefenreinigung nur gelegentlich bei Build-up oder Rueckstaenden.",
-            ]
-          : [
-              "Routine nicht groesser machen als noetig.",
-              "Shampoo und Conditioner bleiben die Basis.",
-              "Zusatz nur bei klarem Ziel ergaenzen.",
-            ],
+      key_points_de: keyPoints,
       next_step_offer_de: null,
     },
+  }
+}
+
+function buildCategorySpecificAddStepRoutineFallback(
+  category: AgentV2CareCategory,
+): { userFacingAnswer: string; keyPoints: string[] } | null {
+  switch (category) {
+    case "leave_in":
+      return {
+        userFacingAnswer:
+          "Ich kann das hier nur als Leave-in-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Fachlich waere es ein Zusatz nach dem Waschen: erst Shampoo fuer Kopfhaut/Ansatz, dann Conditioner fuer Laengen und Spitzen, danach Leave-in sparsam in Laengen und Spitzen. Bei feinem Haar lieber klein dosieren, damit es nicht beschwert.",
+        keyPoints: [
+          "Leave-in waere ein Kategorie-Schritt nach dem Waschen.",
+          "Kein eigener Produkt-Schritt in der Routine speichern.",
+          "Bei feinem Haar sparsam in Laengen und Spitzen dosieren.",
+        ],
+      }
+    case "mask":
+      return {
+        userFacingAnswer:
+          "Ich kann das hier nur als Masken-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Sinnvoll waere sie gelegentlich nach dem Shampoo und vor oder statt Conditioner, wenn Laengen extra Pflege brauchen. Sie bleibt ein Zusatz und ist kein Pflichtschritt fuer jede Waesche.",
+        keyPoints: [
+          "Maske waere ein gelegentlicher Kategorie-Schritt.",
+          "Nicht als Pflichtschritt fuer jede Waesche behandeln.",
+          "Kein eigener Produkt-Schritt in der Routine speichern.",
+        ],
+      }
+    case "oil":
+      return {
+        userFacingAnswer:
+          "Ich kann das hier nur als Oel-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Oel waere eher ein sehr sparsames Finish in den Spitzen oder ein Pre-Wash-Schritt, nicht die Basis-Pflege. Wenn dein Haar schnell beschwert wirkt, wuerde ich es nur selten und sehr klein dosieren.",
+        keyPoints: [
+          "Oel waere ein optionaler Kategorie-Schritt.",
+          "Eher Finish oder Pre-Wash, nicht Basis-Pflege.",
+          "Sehr sparsam dosieren.",
+        ],
+      }
+    case "bondbuilder":
+      return {
+        userFacingAnswer:
+          "Ich kann das hier nur als Bondbuilder-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Ein Bondbuilder passt nur als gezielter Repair-Zusatz, wenn Strukturstress ein Thema ist, und sollte nach Produktprotokoll genutzt werden. Er ersetzt keine Basis aus Shampoo und Conditioner.",
+        keyPoints: [
+          "Bondbuilder waere ein gezielter Kategorie-Schritt.",
+          "Nur sinnvoll bei passenden Strukturstress-Signalen.",
+          "Nicht als Conditioner oder Feuchtigkeitspflege behandeln.",
+        ],
+      }
+    default:
+      return null
   }
 }
 
@@ -1645,6 +1879,7 @@ function buildRoutinePlacementFallback(params: {
       category: params.category,
       return_path: routineActive ? ["routine"] : [],
     },
+    pending_routine_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de: userFacingAnswer,
@@ -1765,6 +2000,7 @@ function buildFallbackAnswer(params: {
       category: null,
       return_path: [],
     },
+    pending_routine_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de: getFallbackUserFacingAnswer(params.reason),
@@ -1775,6 +2011,72 @@ function buildFallbackAnswer(params: {
       missing_keys: [],
     },
   }
+}
+
+function buildRecoveredAssistantTextFallback(params: {
+  assistantText: string
+  message: string
+  safetyMode: AgentV2SafetyMode
+  routineThreadContext: AgentV2RoutineThreadContext | null
+  usedGuidancePackageIds: string[]
+}): AgentV2TerminalAnswer {
+  if (params.safetyMode === "restricted") {
+    return buildRestrictedSafetyFallback(params.message)
+  }
+
+  const routineActive = params.routineThreadContext?.active === true
+  const userFacingAnswer = sanitizeRecoveredAssistantText(params.assistantText)
+
+  return {
+    answer_mode: "general_advice",
+    interpreted_intent: "Recovered useful assistant text after terminal repair failure.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "unknown",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: params.message.slice(0, 240) || "unclear",
+      confidence: 0,
+    },
+    confidence: 0,
+    extracted_constraints: buildEmptyExtractedConstraints(),
+    missing_information: [],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: params.usedGuidancePackageIds,
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: routineActive,
+      routine_layer: routineActive ? (params.routineThreadContext?.current_layer ?? null) : null,
+      step_id: null,
+      category: null,
+      return_path: routineActive ? ["routine"] : [],
+    },
+    pending_routine_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: userFacingAnswer,
+      category_or_topic: "general_advice",
+      key_points_de: ["Konzeptuelle Einordnung statt gespeicherter Routine-Aenderung."],
+      next_step_offer_de: null,
+    },
+  }
+}
+
+function sanitizeRecoveredAssistantText(assistantText: string): string {
+  const normalized = assistantText
+    .replace(/\r\n?/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim()
+  if (normalized.length <= 1800) return normalized
+  return `${normalized.slice(0, 1797).trimEnd()}...`
 }
 
 function getFallbackUserFacingAnswer(reason: AgentV2FallbackReason): string {
@@ -1820,6 +2122,7 @@ function buildRestrictedSafetyFallback(message: string): AgentV2TerminalAnswer {
       category: null,
       return_path: [],
     },
+    pending_routine_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de:
@@ -1864,6 +2167,7 @@ function buildEmptyProductResultFallback(message: string): AgentV2TerminalAnswer
       category: null,
       return_path: [],
     },
+    pending_routine_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de:
@@ -1911,6 +2215,7 @@ function buildSafetyBoundaryAnswer(message: string): AgentV2TerminalAnswer {
       category: null,
       return_path: [],
     },
+    pending_routine_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de:

@@ -8,6 +8,7 @@ import {
   AgentV2ExtractedConstraintsSchema,
   AgentV2GeneralAdvicePayloadSchema,
   AgentV2MissingInformationSchema,
+  AgentV2PendingRoutineActionSchema,
   AgentV2ProductRecommendationPayloadSchema,
   AgentV2ProductRequestKindSchema,
   AgentV2RequestInterpretationSchema,
@@ -52,7 +53,7 @@ export function buildAgentV2ResponsesTools(params: {
       type: "function",
       name: "build_or_fix_routine",
       description:
-        "Build or adjust a saved/current staged routine using the existing deterministic routine planner. Call this for requests to change, simplify, lighten, extend, add to, remove from, or rebalance routine state, including 'was soll ich aendern', 'Routine einfacher machen', 'keine schwere Routine', and 'fuege ... ein'. Do not call this for general placement, order, or usage questions such as 'where does this fit in my routine?' unless the user asks to add, remove, replace, or change routine state; answer those as routine_explanation with routine_intent none.",
+        "Build or adjust a saved/current staged routine using the existing deterministic routine planner. Call this for requests to change, simplify, lighten, extend, add to, remove from, or rebalance routine state, including 'was soll ich aendern', 'Routine einfacher machen', 'keine schwere Routine', and 'fuege ... ein'. When the user asks to add or integrate a referenced product, treat it as a category-level routine step for now: pass requested_category and mutation_kind add_step, and mention the referenced product only in prose when grounded by conversation context. Routine payload step IDs must come only from routine tool output or active routine context; never invent product-named step IDs. Do not call this for general placement, order, or usage questions such as 'where does this fit in my routine?' unless the user asks to add, remove, replace, or change routine state; answer those as routine_explanation with routine_intent none.",
       strict: true,
       parameters: toStrictJsonSchema(BuildOrFixRoutineToolInputSchema),
     },
@@ -118,6 +119,7 @@ const AgentV2TerminalAnswerToolParametersSchema = z.strictObject({
   safety_flags: z.array(z.string()),
   tool_grounding: AgentV2ToolGroundingSchema,
   routine_context: AgentV2RoutineContextSchema,
+  pending_routine_action: AgentV2PendingRoutineActionSchema.nullable(),
   session_memory_writes: z.array(AgentV2SessionMemoryWriteSchema),
   payload: z.union([
     AgentV2ProductRecommendationPayloadSchema,

@@ -3,6 +3,7 @@ import {
   deriveRoutineContext,
   projectRoutinePlanForLayer,
 } from "@/lib/routines/planner"
+import type { BuildOrFixRoutineToolInput as AgentV2BuildOrFixRoutineToolInput } from "@/lib/agent-v2/tools/tool-definitions"
 import type {
   HairProfile,
   RoutineLayer,
@@ -14,6 +15,7 @@ import type {
 
 export type BuildOrFixRoutineAction = "keep" | "add" | "adjust" | "remove"
 export type RoutineObjective = "build_routine" | "fix_routine"
+type BuildOrFixRoutineMutationKind = AgentV2BuildOrFixRoutineToolInput["mutation_kind"]
 
 const CURRENT_ROUTINE_PRODUCT_CATEGORIES = [
   "shampoo",
@@ -77,6 +79,7 @@ export interface BuildOrFixRoutineToolInput {
   hairProfile: HairProfile | null
   layer?: RoutineLayer | null
   requestedCategory?: RoutineProductCategory | null
+  mutationKind?: BuildOrFixRoutineMutationKind
 }
 
 function normalizeText(value: string | null | undefined): string | null {
@@ -250,6 +253,7 @@ function projectRoutineSteps(params: {
   hairProfile: HairProfile | null
   layer: RoutineLayer | null
   requestedCategory: RoutineProductCategory | null
+  mutationKind: BuildOrFixRoutineMutationKind | undefined
 }): BuildOrFixRoutineStep[] {
   if (!params.layer) {
     return params.plan.sections.flatMap((section) =>
@@ -259,6 +263,7 @@ function projectRoutineSteps(params: {
 
   const projection = projectRoutinePlanForLayer(params.plan, params.layer, {
     requestedCategory: params.requestedCategory,
+    preferRequestedCategory: params.mutationKind === "add_step",
   })
 
   return projection.visible_slot_ids
@@ -335,6 +340,7 @@ export function projectRoutinePlan(params: {
   usesBondBuilder?: boolean
   layer?: RoutineLayer | null
   requestedCategory?: RoutineProductCategory | null
+  mutationKind?: BuildOrFixRoutineMutationKind
 }): BuildOrFixRoutineProjection {
   const objective = normalizeObjective(params.objective)
   const prompt = buildPlannerPrompt({
@@ -342,8 +348,11 @@ export function projectRoutinePlan(params: {
     message: normalizeText(params.message),
   })
   const context = deriveRoutineContext(params.hairProfile, prompt)
+  const forceRequestedCategory =
+    params.mutationKind === "add_step" ? (params.requestedCategory ?? null) : null
   const plan: RoutinePlan = buildRoutinePlan(params.hairProfile, prompt, {
     usesBondBuilder: params.usesBondBuilder ?? false,
+    forceRequestedCategory,
   })
 
   const inventoryMatters = objective !== "build_routine"
@@ -361,6 +370,7 @@ export function projectRoutinePlan(params: {
       hairProfile: params.hairProfile,
       layer: params.layer ?? null,
       requestedCategory: params.requestedCategory ?? null,
+      mutationKind: params.mutationKind,
     }),
     missing_info: buildMissingInfo({ objective, hairProfile: params.hairProfile, context }),
     confidence: Math.round((completed / denominator) * 100) / 100,

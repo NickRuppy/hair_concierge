@@ -127,6 +127,7 @@ const baseAnswer = {
     category: null,
     return_path: [],
   },
+  pending_routine_action: null,
   session_memory_writes: [],
   payload: {
     user_facing_answer_de: "**Test Shampoo** passt gut zu deinem Profil.",
@@ -900,6 +901,138 @@ test("validator requires semantic select_products tool arguments for concrete pr
   )
 })
 
+test("validator treats product selection as supporting grounding for routine mutations", () => {
+  const answer = {
+    ...routineBasicsAnswer({
+      label_de: "Leave-in: Pantene Pro-V Miracles 7in1 Haaröl Spray",
+      action_de: "Nach der Wäsche eine kleine Menge in Längen und Spitzen geben.",
+      reason_de: "Das Pantene Leave-in ergänzt die Basisroutine ohne einen Extra-Reset-Schritt.",
+    }),
+    request_interpretation: requestInterpretation({
+      primary_intent: "routine_mutation",
+      product_request_kind: "none",
+      routine_intent: "modify",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "das von pantene",
+    }),
+    tool_grounding: {
+      ...baseAnswer.tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("routine", "leave_in"),
+      used_product_tool: true,
+      used_routine_tool: true,
+      product_ids: ["prod_pantene"],
+      routine_step_ids: ["step_leave_in"],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: true,
+      routine_layer: "basics",
+      step_id: null,
+      category: "leave_in",
+      return_path: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Ich baue dir **Leave-in: Pantene Pro-V Miracles 7in1 Haaröl Spray** in die Basis ein, direkt nach dem Waschen.",
+      routine_layer: "basics",
+      visible_steps: [
+        {
+          step_id: "step_leave_in",
+          label_de: "Leave-in: Pantene Pro-V Miracles 7in1 Haaröl Spray",
+          action_de: "Nach der Wäsche eine kleine Menge in Längen und Spitzen geben.",
+          frequency_de: "Nach Bedarf",
+          reason_de:
+            "Das Pantene Leave-in ergänzt die Basisroutine ohne einen Extra-Reset-Schritt.",
+        },
+      ],
+      next_layer_options: ["goals"],
+      next_step_offer_de: null,
+    },
+  }
+
+  const productBackedRoutineContext = {
+    ...routineBasicsValidationContext,
+    selectedProductProjections: [
+      {
+        valid_product_ids: ["prod_pantene"],
+        products: [
+          {
+            product_id: "prod_pantene",
+            name: "Pantene Pro-V Miracles 7in1 Haaröl Spray",
+          },
+        ],
+      },
+    ],
+    latestUserMessage: "das von pantene",
+    recentEvidenceText:
+      "Welches Leave-in passt zu mir? Bau das Produkt bitte in meine Routine ein. das von pantene",
+    toolCallHistory: [
+      selectProductsToolCall({
+        category: "leave_in",
+        product_request_kind: "specific_products",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "das von pantene",
+      }),
+      routineToolCall({
+        objective: "fix_routine",
+        requested_category: "leave_in",
+        routine_intent: "modify",
+        mutation_kind: "add_step",
+        evidence_quote: "das von pantene",
+      }),
+    ],
+    routineProjections: [
+      {
+        routine_layer: "basics" as const,
+        visible_steps: [{ step_id: "step_leave_in" }],
+      },
+    ],
+    requiredGuidancePackageIds: requiredGuidanceForAnswer("routine", "leave_in"),
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, productBackedRoutineContext)
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+
+  const explicitProductComponent = validateAgentV2FinalAnswer(
+    {
+      ...answer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "routine_mutation",
+        product_request_kind: "specific_products",
+        routine_intent: "modify",
+        care_category: "leave_in",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "das von pantene",
+      }),
+      tool_grounding: {
+        ...answer.tool_grounding,
+        used_guidance_package_ids: [
+          ...requiredGuidanceForAnswer("routine", "leave_in"),
+          "base.product_recommendation.v1",
+        ],
+      },
+    },
+    {
+      ...productBackedRoutineContext,
+      requiredGuidancePackageIds: [
+        ...requiredGuidanceForAnswer("routine", "leave_in"),
+        "base.product_recommendation.v1",
+      ],
+    },
+  )
+
+  assert.equal(
+    explicitProductComponent.ok,
+    true,
+    JSON.stringify(explicitProductComponent.errors, null, 2),
+  )
+})
+
 test("validator blocks non-diagnostic request interpretation evidence quotes", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -981,6 +1114,31 @@ test("validator allows decorative quote marks and punctuation differences in evi
 
     assert.equal(result.ok, true, evidence_quote)
   }
+})
+
+test("validator allows German umlaut transliterations in evidence quotes", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        evidence_quote: "Welches Shampoo passt fuer mich?",
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "Welches Shampoo passt für mich?",
+      recentEvidenceText: "Welches Shampoo passt für mich?",
+      toolCallHistory: [
+        selectProductsToolCall({
+          user_request: "Welches Shampoo passt für mich?",
+          evidence_quote: "Welches Shampoo passt fuer mich?",
+        }),
+      ],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.equal(result.warnings.length, 0, JSON.stringify(result.warnings, null, 2))
 })
 
 test("validator allows evidence quotes from active routine visible step labels", () => {
@@ -3036,7 +3194,277 @@ test("validator requires product tool and routine return path for routine produc
 
   assert.equal(result.ok, false)
   assert.ok(result.errors.some((error) => error.validator_id === "product_tool_required"))
-  assert.ok(result.errors.some((error) => error.validator_id === "routine_return_path_required"))
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "routine_context_return_path_required"),
+  )
+})
+
+test("validator allows nullable next step offer for routine product recommendations with return path", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_recommendation",
+      request_interpretation: requestInterpretation({
+        product_request_kind: "specific_products",
+        care_category: "leave_in",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "das von Pantene",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_recommendation", "leave_in"),
+        used_product_tool: true,
+        product_ids: ["prod_1"],
+        routine_step_ids: ["maintenance-leave-in"],
+        hard_rule_ids: [],
+      },
+      routine_context: {
+        active: true,
+        routine_layer: "goals",
+        step_id: "maintenance-leave-in",
+        category: "leave_in",
+        return_path: ["routine", "leave_in"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Dann nimm **Test Shampoo** sparsam in Laengen und Spitzen. Bei deinem Profil wuerde ich es erstmal klein dosieren.",
+        recommendations: [
+          {
+            product_id: "prod_1",
+            reason_de: "Passt als Leave-in-Booster.",
+            usage_de: "Sparsam in Laengen und Spitzen.",
+            caveat_de: null,
+          },
+        ],
+        comparison_notes_de: [],
+        usage_notes_de: ["Sparsam in Laengen und Spitzen."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "das von Pantene",
+      recentEvidenceText: "Welches Leave-in passt zu mir? das von Pantene",
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "leave_in",
+          user_request: "das von Pantene",
+          product_request_kind: "specific_products",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "das von Pantene",
+        }),
+      ],
+      routineThreadContext: {
+        active: true,
+        current_layer: "goals",
+        last_answer_mode: "routine",
+        last_routine_categories: ["leave_in"],
+        last_user_goal: "Leave-in in Routine einbauen",
+        summary_de: "Leave-in ist als Kategorie-Schritt in der Routine.",
+        visible_steps: [
+          {
+            step_id: "maintenance-leave-in",
+            label_de: "Leave-in / Finish",
+            category: "leave_in",
+            order: 1,
+            routine_layer: "goals",
+          },
+        ],
+      },
+      currentRoutineLayer: "goals",
+      requiredGuidancePackageIds: [],
+      knownHardRuleIds: [],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator blocks objective bad conversation closers", () => {
+  const cases = [
+    {
+      text: "Leave-in nutzt du in den Laengen. Moechtest du, dass ich dir mehr dazu erklaere?",
+      validatorId: "bad_conversation_close_generic",
+    },
+    {
+      text: "Das ist eher ein Reset-Thema. Schick mir den Link, dann pruefe ich, ob es chelatiert.",
+      validatorId: "bad_conversation_close_infeasible",
+    },
+    {
+      text: "Die Routine passt so. Soll ich dir die Dosierung erklaeren? Oder soll ich dir Produkte zeigen?",
+      validatorId: "bad_conversation_close_multi_question",
+    },
+    {
+      text: "Das Produkt passt als Leave-in. Wenn du willst, kann ich dir danach passende Produkte empfehlen.",
+      validatorId: "bad_conversation_close_redundant",
+      answerMode: "product_recommendation",
+    },
+    {
+      text: "Das kann ich so nicht sicher sagen. Kopier mir die INCI rein, dann pruefe ich die Inhaltsstoffe.",
+      validatorId: "bad_conversation_close_unsupported_lane",
+    },
+    {
+      text: "Das kann ich so nicht sicher sagen. Wenn du willst, pruefe ich dir die INCI.",
+      validatorId: "bad_conversation_close_unsupported_lane",
+    },
+  ]
+
+  for (const testCase of cases) {
+    const answer =
+      testCase.answerMode === "product_recommendation"
+        ? {
+            ...baseAnswer,
+            payload: {
+              ...baseAnswer.payload,
+              user_facing_answer_de: testCase.text,
+            },
+          }
+        : {
+            ...baseAnswer,
+            answer_mode: "general_advice",
+            request_interpretation: requestInterpretation({
+              primary_intent: "general_advice",
+              product_request_kind: "none",
+              routine_intent: "none",
+              care_category: "none",
+              requested_product_count: null,
+              count_policy: "none",
+              evidence_quote: "Was soll ich tun?",
+            }),
+            tool_grounding: {
+              ...baseAnswer.tool_grounding,
+              used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
+              used_product_tool: false,
+              product_ids: [],
+              hard_rule_ids: [],
+            },
+            payload: {
+              user_facing_answer_de: testCase.text,
+              category_or_topic: "conversation_close",
+              key_points_de: ["Kurz erklaert."],
+              next_step_offer_de: null,
+            },
+          }
+
+    const result = validateAgentV2FinalAnswer(answer, {
+      ...baseValidationContext,
+      selectedProductProjections:
+        testCase.answerMode === "product_recommendation"
+          ? baseValidationContext.selectedProductProjections
+          : [],
+      toolCallHistory:
+        testCase.answerMode === "product_recommendation" ? [selectProductsToolCall()] : [],
+      latestUserMessage: "Was soll ich tun?",
+      recentEvidenceText: "Was soll ich tun?",
+      requiredGuidancePackageIds: [],
+      knownHardRuleIds:
+        testCase.answerMode === "product_recommendation"
+          ? ["product.no_uncatalogued_products"]
+          : [],
+    })
+
+    assert.ok(
+      result.errors.some((error) => error.validator_id === testCase.validatorId),
+      `${testCase.validatorId} missing in ${JSON.stringify(result.errors, null, 2)}`,
+    )
+  }
+})
+
+test("validator warns but does not block weak conversation closers", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "none",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Mein Conditioner macht alles platt",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
+        used_product_tool: false,
+        product_ids: [],
+        hard_rule_ids: [],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Bei feinem Haar wuerde ich zuerst Menge und Ansatzabstand pruefen. Das ist meistens der groesste Hebel, bevor du die ganze Kategorie wechselst. Dann schauen wir weiter.",
+        category_or_topic: "platter conditioner",
+        key_points_de: ["Menge und Ansatzabstand pruefen."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      toolCallHistory: [],
+      latestUserMessage: "Mein Conditioner macht alles platt",
+      recentEvidenceText: "Mein Conditioner macht alles platt",
+      requiredGuidancePackageIds: [],
+      knownHardRuleIds: [],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.ok(
+    result.warnings.some((warning) => warning.validator_id === "conversation_close_weak"),
+    JSON.stringify(result.warnings, null, 2),
+  )
+})
+
+test("validator allows honest clean stop for unsupported INCI-list analysis", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "none",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
+        used_product_tool: false,
+        product_ids: [],
+        hard_rule_ids: [],
+      },
+      payload: {
+        user_facing_answer_de:
+          "INCI-Listen kann ich hier nicht verlaesslich pruefen oder bewerten. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
+        category_or_topic: "unsupported ingredient analysis",
+        key_points_de: ["INCI-Analyse ist kein unterstuetzter Beratungspfad."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      toolCallHistory: [],
+      latestUserMessage: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
+      recentEvidenceText: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
+      requiredGuidancePackageIds: [],
+      knownHardRuleIds: [],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "bad_conversation_close_unsupported_lane"),
+    false,
+    JSON.stringify(result.errors, null, 2),
+  )
 })
 
 test("validator blocks carried routine step ids when active routine thread has no visible steps", () => {

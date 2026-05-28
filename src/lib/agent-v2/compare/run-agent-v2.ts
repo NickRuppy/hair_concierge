@@ -10,13 +10,14 @@ import { buildAgentV2ProductToolMessage } from "@/lib/agent-v2/compare/product-t
 import { loadAgentV2AdvisorGuidance } from "@/lib/agent-v2/tools/guidance-tool"
 import { projectRoutineForAgentV2 } from "@/lib/agent-v2/tools/routine-projection"
 import { projectSelectProductsForAgentV2 } from "@/lib/agent-v2/tools/select-products-projection"
-import type {
-  AgentV2AnswerMode,
-  AgentV2RoutineLayer,
-  AgentV2RoutineThreadContext,
-  AgentV2RoutineThreadStep,
-  AgentV2SafetyMode,
-  AgentV2TerminalAnswer,
+import {
+  AgentV2PendingRoutineActionSchema,
+  type AgentV2AnswerMode,
+  type AgentV2RoutineLayer,
+  type AgentV2RoutineThreadContext,
+  type AgentV2RoutineThreadStep,
+  type AgentV2SafetyMode,
+  type AgentV2TerminalAnswer,
 } from "@/lib/agent-v2/contracts"
 import type {
   AgentCompareScenario,
@@ -259,6 +260,7 @@ export function updateAgentV2RoutineThreadContext(
       last_routine_categories: [],
       last_user_goal: null,
       summary_de: null,
+      pending_routine_action: null,
       visible_steps: [],
     }
   }
@@ -284,8 +286,18 @@ export function updateAgentV2RoutineThreadContext(
         ? update.user_message
         : previous.last_user_goal,
     summary_de: update.summary_de ?? previous?.summary_de ?? null,
+    pending_routine_action: readPendingRoutineAction(update.answer),
     visible_steps: visibleSteps,
   }
+}
+
+function readPendingRoutineAction(
+  answer: unknown,
+): AgentV2RoutineThreadContext["pending_routine_action"] {
+  if (!answer || typeof answer !== "object" || Array.isArray(answer)) return null
+  const pending = (answer as { pending_routine_action?: unknown }).pending_routine_action
+  const parsed = AgentV2PendingRoutineActionSchema.safeParse(pending)
+  return parsed.success ? parsed.data : null
 }
 
 function updateAgentV2VisibleRoutineThreadSteps(
@@ -580,6 +592,7 @@ export async function runAgentV2ComparisonForUser(
           return agentProjection
         },
         build_or_fix_routine: async (input) => {
+          const mutationKind = typeof input.mutation_kind === "string" ? input.mutation_kind : null
           const projection = await buildRoutine({
             objective:
               input.objective === "build_routine" || input.objective === "fix_routine"
@@ -591,6 +604,7 @@ export async function runAgentV2ComparisonForUser(
             requestedCategory: input.requested_category as Parameters<
               typeof buildRoutine
             >[0]["requestedCategory"],
+            mutationKind: mutationKind as Parameters<typeof buildRoutine>[0]["mutationKind"],
           })
           return projectRoutineForAgentV2(projection, {
             requestedLayer: input.requested_layer as AgentV2RoutineLayer,

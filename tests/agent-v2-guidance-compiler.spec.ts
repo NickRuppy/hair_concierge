@@ -95,6 +95,26 @@ test("loadAgentV2GuidancePackages rejects unknown package ids", async () => {
   )
 })
 
+test("base guidance exposes conversation closure policy through existing rubrics", async () => {
+  const result = await loadAgentV2GuidancePackages([
+    "base.tone_and_format.v1",
+    "base.general_advice.v1",
+  ])
+
+  const rubricMessages = result.soft_rubrics
+    .filter((rubric) =>
+      ["tone.feasible_cta", "tone.non_redundant_ending", "advice.feasible_next_step"].includes(
+        rubric.rubric_id,
+      ),
+    )
+    .map((rubric) => rubric.message)
+    .join("\n")
+
+  assert.match(rubricMessages, /clean stop|complete answer|not force/i)
+  assert.match(rubricMessages, /INCI|ingredient/i)
+  assert.match(rubricMessages, /one material question/i)
+})
+
 test("routine layer hint loads routine guidance even without an answer mode hint", () => {
   const ids = selectGuidancePackageIds({
     answer_mode_hint: null,
@@ -198,15 +218,13 @@ test("tone guidance defines natural openings and feasible non-redundant CTAs", a
   assert.match(brief, /unless the latest user message explicitly confirmed/i)
   assert.match(brief, /Goals.*problems.*deep_dive.*next_layer_options.*routine_layer/i)
   assert.match(brief, /useful, feasible, and non-redundant/i)
-  assert.match(
-    brief,
-    /must not offer a product, property, action, photo, link, claim, or protocol check/i,
-  )
+  assert.match(brief, /must not offer a product, property, action, photo, link, claim, protocol/i)
+  assert.match(brief, /ingredient\/INCI-list check/i)
   assert.match(brief, /current tools cannot answer/i)
   assert.match(brief, /ask one material question/i)
   assert.match(brief, /offer a grounded next action/i)
   assert.match(brief, /bridge back to the routine/i)
-  assert.match(brief, /not the same question just answered/i)
+  assert.match(brief, /repeat the answered decision/i)
   assert.ok(toneMetadata.soft_rubrics.some((rubric) => rubric.rubric_id === "tone.natural_opening"))
   assert.ok(
     toneMetadata.soft_rubrics.some((rubric) => /explicitly confirmed/i.test(rubric.message)),
@@ -1073,7 +1091,9 @@ test("general advice preserves usage, troubleshooting, and CWC/OWC context", asy
   assert.match(brief, /steps before shopping/i)
   assert.match(brief, /scalp\/roots from lengths\/ends/i)
   assert.match(brief, /optional second wash/i)
-  assert.match(brief, /every 4-5 washes/i)
+  assert.match(brief, /keep the wording flexible/i)
+  assert.match(brief, /alle paar Waeschen/i)
+  assert.match(brief, /Exact timing, product order, and protocol still require product metadata/i)
   assert.match(brief, /Troubleshooting Before Shopping/i)
   assert.match(brief, /root care from length care/i)
   assert.match(brief, /CWC and OWC are wash techniques/i)
@@ -1129,9 +1149,9 @@ test("routine guidance preserves lean assembly and life-fit rules", async () => 
   assert.match(brief, /Routine einfacher machen/i)
   assert.match(brief, /what to do next/i)
   assert.match(brief, /pure placement, order, usage/i)
-  assert.match(brief, /Routine-First Change Requests/i)
-  assert.match(brief, /rebalance their routine/i)
+  assert.match(brief, /rebalance, or make a routine lighter\/easier/i)
   assert.match(brief, /fuege \.\.\. ein/i)
+  assert.match(brief, /do not hand-roll a multi-step routine/i)
   assert.match(brief, /Broad education remains general advice/i)
   assert.ok(
     metadata.hard_rules.some((rule) => rule.rule_id === "routine.change_requests_require_tool"),

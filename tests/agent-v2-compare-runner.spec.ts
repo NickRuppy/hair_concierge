@@ -221,6 +221,14 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
   const followUpContext = updateAgentV2RoutineThreadContext(initialContext, {
     answer_mode: "general_advice",
     user_message: "Brauche ich dann eher Maske oder Conditioner?",
+    answer: {
+      pending_routine_action: {
+        action: "modify",
+        routine_layer: "basics",
+        category: "mask",
+        source: "assistant_offer",
+      },
+    },
     routine_context: {
       active: true,
       routine_layer: "basics",
@@ -237,6 +245,12 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
   assert.equal(followUpContext.last_user_goal, "Meine Routine ist zu viel, mach sie einfacher.")
   assert.ok(followUpContext.summary_de)
   assert.match(followUpContext.summary_de, /Conditioner/)
+  assert.deepEqual(followUpContext.pending_routine_action, {
+    action: "modify",
+    routine_layer: "basics",
+    category: "mask",
+    source: "assistant_offer",
+  })
   assert.deepEqual(
     followUpContext.visible_steps.map((step) => ({
       step_id: step.step_id,

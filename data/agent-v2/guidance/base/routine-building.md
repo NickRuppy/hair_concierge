@@ -21,15 +21,12 @@ Use `build_or_fix_routine` for routine creation, modification, removal, or repla
 ## Required Grounding
 Use the routine projection before returning a multi-step routine. For broad routine asks, start with basics: shampoo, conditioner, and the biggest extra lever.
 
-## Routine-First Change Requests
-Use `build_or_fix_routine` when the user asks to change, simplify, lighten, extend, add to, remove from, or rebalance their routine. This includes broad German phrasing such as `was soll ich aendern`, `Routine einfacher machen`, `keine schwere Routine`, `was soll ich ergaenzen`, `was soll ich weglassen`, and `fuege ... ein`.
+## Routine Tool Threshold
+Call `build_or_fix_routine` when the user asks to build, simplify, improve, change, adjust, add to, remove from, rebalance, or make a routine lighter/easier. German wording such as `was soll ich aendern`, `Routine einfacher machen`, `keine schwere Routine`, `was soll ich ergaenzen`, `was soll ich weglassen`, `fuege ... ein`, or `welcher Zusatz passt` is routine-building/mutation territory when the user is asking what to do next, not merely asking where a category belongs.
 
 For these requests, do not hand-roll a multi-step routine in general advice. Let the routine tool decide visible steps, step IDs, routine layer, next layer options, and blockers.
 
 Broad education remains general advice when the user asks what something is, why it helps, or how a category works without asking to change routine state.
-
-## Routine Tool Threshold
-Call `build_or_fix_routine` when the user asks to build, simplify, improve, change, adjust, add to, remove from, or make a routine lighter/easier. German wording such as `Routine einfacher machen`, `was soll ich ändern`, `was soll ich ergänzen`, `welcher Zusatz passt`, or `keine schwere Routine` is routine-building/mutation territory when the user is asking what to do next, not merely asking where a category belongs.
 
 Do not call `build_or_fix_routine` for pure placement, order, usage, or category-comparison questions that do not ask to change routine state. Examples: `Kommt Öl vor oder nach Leave-in?`, `Wo kommt Trockenshampoo hin?`, `Maske oder Conditioner?` as a general category comparison. Answer those as `general_advice` with `primary_intent: routine_explanation` or `category_education`, `routine_intent: none`, and no routine payload or routine step IDs.
 

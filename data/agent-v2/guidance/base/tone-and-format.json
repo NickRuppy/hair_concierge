@@ -57,13 +57,13 @@
       "rubric_id": "tone.feasible_cta",
       "priority": "high",
       "source": "base/tone-and-format.md",
-      "message": "Use a CTA only when current guidance or tools can support it; do not offer unsupported product, property, action, photo, link, claim, or protocol checks."
+      "message": "Use a CTA only when current guidance or tools can support it; do not offer unsupported product, property, action, photo, link, claim, protocol, or ingredient/INCI-list checks."
     },
     {
       "rubric_id": "tone.non_redundant_ending",
       "priority": "high",
       "source": "base/tone-and-format.md",
-      "message": "End with a useful, feasible, non-redundant question, grounded next action, routine bridge, or caveat instead of repeating the question just answered."
+      "message": "End with a useful, feasible, non-redundant clean stop, one material question, grounded next action, routine bridge, or caveat; before submitting, reread the visible answer and do not reopen a distinction the body already answered."
     },
     {
       "rubric_id": "tone.no_bullet_wall_after_subheader",

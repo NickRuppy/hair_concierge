@@ -151,6 +151,33 @@ test.describe("Routine planner", () => {
     expect(hairResetSlot).toBeUndefined()
   })
 
+  test("explicit requested category forces a leave-in slot even when profile heuristics suppress it", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        thickness: "fine",
+        concerns: ["oily_scalp"],
+        goals: ["shine"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Bau ein Leave-in in meine Routine ein.",
+      { forceRequestedCategory: "leave_in" },
+    )
+
+    const slots = plan.sections.flatMap((section) => section.slots)
+    const leaveInSlot = slots.find((slot) => slot.category === "leave_in")
+
+    expect(leaveInSlot?.id).toBe("maintenance-leave-in")
+    expect(leaveInSlot?.action).toBe("add")
+    expect(leaveInSlot?.rationale.join(" ")).toMatch(/ausdruecklich|aufnehmen/i)
+    expect(leaveInSlot?.rationale.join(" ")).not.toMatch(/Routine nach dem Waschen runder/i)
+    expect(plan.layer_projections?.basics.visible_slot_ids).toEqual([
+      "base-shampoo",
+      "base-conditioner",
+      "maintenance-leave-in",
+    ])
+  })
+
   test("volume goal alone does not activate tiefenreinigung", () => {
     const topics = activateRoutineTopics(
       createProfile({
@@ -255,12 +282,16 @@ test.describe("Routine planner", () => {
       current_routine_products: ["shampoo", "conditioner", "leave_in"],
     })
 
-    const plan = buildRoutinePlan(profile, "Ich brauche eine Routine fuer weniger Frizz.")
+    const plan = buildRoutinePlan(profile, "Ich brauche eine Routine fuer weniger Frizz.", {
+      forceRequestedCategory: "leave_in",
+    })
     const leaveInSlot = plan.sections
       .flatMap((section) => section.slots)
       .find((slot) => slot.label === "Leave-in / Finish")
 
     expect(leaveInSlot?.action).toBe("adjust")
+    expect(leaveInSlot?.rationale.join(" ")).toMatch(/Routine nach dem Waschen runder/i)
+    expect(leaveInSlot?.rationale.join(" ")).not.toMatch(/ausdruecklich|aufnehmen/i)
   })
 
   test("dryness with low oil-risk activates hair oiling", () => {

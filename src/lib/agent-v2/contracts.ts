@@ -91,6 +91,15 @@ export const AgentV2CareCategorySchema = z.enum([
 
 export type AgentV2CareCategory = z.infer<typeof AgentV2CareCategorySchema>
 
+export const AgentV2PendingRoutineActionSchema = z.strictObject({
+  action: z.enum(["create", "modify", "add_step", "remove_step", "replace_product", "simplify"]),
+  routine_layer: AgentV2RoutineLayerSchema.nullable(),
+  category: AgentV2CareCategorySchema.nullable(),
+  source: z.literal("assistant_offer"),
+})
+
+export type AgentV2PendingRoutineAction = z.infer<typeof AgentV2PendingRoutineActionSchema>
+
 export const AgentV2CountPolicySchema = z.enum(["none", "exact", "default", "cap"])
 
 export type AgentV2CountPolicy = z.infer<typeof AgentV2CountPolicySchema>
@@ -169,6 +178,7 @@ export const AgentV2RoutineThreadContextSchema = z.strictObject({
   last_routine_categories: z.array(z.string()),
   last_user_goal: z.string().nullable(),
   summary_de: z.string().nullable(),
+  pending_routine_action: AgentV2PendingRoutineActionSchema.nullable().optional(),
   visible_steps: z.array(AgentV2RoutineThreadStepSchema),
 })
 
@@ -258,6 +268,7 @@ const AgentV2TerminalAnswerBaseSchema = z.strictObject({
   safety_flags: z.array(z.string()),
   tool_grounding: AgentV2ToolGroundingSchema,
   routine_context: AgentV2RoutineContextSchema,
+  pending_routine_action: AgentV2PendingRoutineActionSchema.nullable(),
   session_memory_writes: z.array(AgentV2SessionMemoryWriteSchema),
 })
 

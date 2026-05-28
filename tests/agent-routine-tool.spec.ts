@@ -259,6 +259,30 @@ test("projectRoutinePlan exposes priority context without changing basics scorin
   assert.ok(result.priority_context?.adjacent_levers.some((lever) => lever.category === "leave_in"))
 })
 
+test("projectRoutinePlan includes explicit add-step category in basics", () => {
+  const result = projectRoutinePlan({
+    hairProfile: createProfile({
+      hair_texture: "straight",
+      thickness: "fine",
+      concerns: [],
+      goals: [],
+      current_routine_products: ["shampoo", "conditioner"],
+    }),
+    message: "Bau ein Leave-in in meine Routine ein.",
+    layer: "basics",
+    requestedCategory: "leave_in",
+    mutationKind: "add_step",
+  })
+
+  assert.deepEqual(
+    result.steps.map((step) => step.id),
+    ["base-shampoo", "base-conditioner", "maintenance-leave-in"],
+  )
+
+  const leaveInStep = result.steps.find((step) => step.id === "maintenance-leave-in")
+  assert.equal(leaveInStep?.category, "leave_in")
+})
+
 test("projectRoutinePlan marks existing shampoo as keep and additions as next steps", () => {
   const result = projectRoutinePlan({
     objective: "build_routine",

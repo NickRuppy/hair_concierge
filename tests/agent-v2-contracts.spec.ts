@@ -177,6 +177,7 @@ test("AgentV2TerminalAnswerSchema accepts a product recommendation payload", () 
       category: null,
       return_path: [],
     },
+    pending_routine_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de: "Ich wuerde dir dieses Shampoo empfehlen.",

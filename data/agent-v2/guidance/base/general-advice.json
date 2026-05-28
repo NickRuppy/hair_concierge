@@ -87,7 +87,7 @@
       "rubric_id": "advice.feasible_next_step",
       "priority": "medium",
       "source": "base/general-advice.md",
-      "message": "For general advice endings, ask one material question, offer a grounded product/routine next step, or bridge back to the routine; do not offer unsupported photo, link, claim, or protocol checks."
+      "message": "For general advice endings, stop cleanly when the answer is complete, ask one material question, offer a grounded product/routine next step, or bridge back to the routine; do not offer unsupported photo, link, ingredient/INCI-list, claim, or protocol checks."
     }
   ],
   "required_grounding": [],

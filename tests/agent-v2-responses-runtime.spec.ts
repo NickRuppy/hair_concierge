@@ -49,6 +49,9 @@ test("AgentV2 routine tool description steers routine-first changes but excludes
   assert.match(tool.description, /Routine einfacher machen/)
   assert.match(tool.description, /keine schwere Routine/)
   assert.match(tool.description, /fuege \.\.\. ein/)
+  assert.match(tool.description, /category-level routine step/)
+  assert.match(tool.description, /referenced product/)
+  assert.match(tool.description, /routine tool output or active routine context/)
   assert.match(tool.description, /general placement, order, or usage questions/)
   assert.match(tool.description, /routine_explanation with routine_intent none/)
 })
@@ -224,6 +227,7 @@ function terminalGeneralAdviceArguments() {
       category: null,
       return_path: [],
     },
+    pending_routine_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de: "Eine Maske ist optional und haengt vom Pflegebedarf ab.",
@@ -428,6 +432,64 @@ function terminalGeneralAdviceInRoutine(call_id: string) {
       user_facing_answer_de:
         "In deiner vereinfachten Routine reicht Conditioner als Basis; eine Maske ist optional.",
       next_step_offer_de: "Danach koennen wir zur Routine zurueckgehen.",
+    },
+  })
+}
+
+function terminalMaskOilComparisonInRoutine(call_id: string, evidenceQuote = "Maske oder Oel") {
+  return terminalCall(call_id, {
+    ...terminalGeneralAdviceArguments(),
+    interpreted_intent:
+      "User asks for a non-mutating mask versus oil comparison in routine context.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: evidenceQuote,
+    }),
+    extracted_constraints: {
+      ...emptyExtractedConstraints(),
+      product_categories: ["mask", "oil"],
+      routine_layer: "basics",
+      raw_constraints: [evidenceQuote],
+    },
+    tool_grounding: {
+      ...terminalGeneralAdviceArguments().tool_grounding,
+      used_guidance_package_ids: [
+        ...requiredGuidanceForAnswer("general_advice", "mask"),
+        "category.oil.v1",
+      ],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+    },
+    routine_context: {
+      active: true,
+      routine_layer: "basics",
+      step_id: null,
+      category: null,
+      return_path: ["routine"],
+    },
+    pending_routine_action: {
+      action: "modify",
+      routine_layer: "basics",
+      category: "mask",
+      source: "assistant_offer",
+    },
+    payload: {
+      user_facing_answer_de:
+        "Als leichter Zusatz ist eine gelegentliche Maske sinnvoller als Oel. Oel waere nur optional als winziger Finish-Schritt in den Spitzen.",
+      category_or_topic: "mask_vs_oil",
+      key_points_de: [
+        "Maske ist der bessere gelegentliche Pflegehebel.",
+        "Oel ist nur ein sehr kleiner Finish-Schritt.",
+      ],
+      next_step_offer_de:
+        "Wenn du willst, kann ich daraus als Naechstes eine konkrete Routine-Aenderung machen.",
     },
   })
 }
@@ -720,6 +782,93 @@ function terminalLeaveInRoutineMutation(call_id: string) {
   })
 }
 
+function terminalLeaveInRoutineMutationWithEvidence(call_id: string, evidenceQuote: string) {
+  const call = terminalLeaveInRoutineMutation(call_id)
+  const args = JSON.parse(call.arguments)
+  args.request_interpretation.evidence_quote = evidenceQuote
+  return rawFunctionCall(call.call_id, call.name, JSON.stringify(args))
+}
+
+function terminalCategoryLevelLeaveInRoutineMutation(call_id: string) {
+  return terminalCall(call_id, {
+    ...terminalGeneralAdviceArguments(),
+    answer_mode: "routine",
+    interpreted_intent: "User wants to add the referenced leave-in category to the active routine.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "routine_mutation",
+      product_request_kind: "none",
+      routine_intent: "modify",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Bau das Produkt bitte in meine Routine ein",
+    }),
+    extracted_constraints: {
+      ...emptyExtractedConstraints(),
+      product_categories: ["leave_in"],
+      routine_layer: "basics",
+      raw_constraints: ["Produkt in Routine einbauen"],
+    },
+    tool_grounding: {
+      ...terminalGeneralAdviceArguments().tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("routine", "leave_in"),
+      used_product_tool: false,
+      used_routine_tool: true,
+      product_ids: [],
+      routine_step_ids: ["base-shampoo", "base-conditioner", "maintenance-leave-in"],
+    },
+    routine_context: {
+      active: true,
+      routine_layer: "basics",
+      step_id: "maintenance-leave-in",
+      category: "leave_in",
+      return_path: ["routine"],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Ich habe das als Leave-in / Finish in deine Routine eingeordnet: Shampoo bleibt fuer Kopfhaut und Ansatz, Conditioner fuer Laengen und Spitzen, und Leave-in / Finish kommt nach dem Waschen sparsam in Laengen und Spitzen.",
+      routine_layer: "basics",
+      visible_steps: [
+        {
+          step_id: "base-shampoo",
+          label_de: "Shampoo",
+          action_de: "Kopfhaut und Ansatz reinigen.",
+          frequency_de: "nach Bedarf",
+          reason_de: "Basis der Routine.",
+        },
+        {
+          step_id: "base-conditioner",
+          label_de: "Conditioner",
+          action_de: "In Laengen und Spitzen geben.",
+          frequency_de: "nach jeder Waesche",
+          reason_de: "Basis fuer Laengenpflege.",
+        },
+        {
+          step_id: "maintenance-leave-in",
+          label_de: "Leave-in / Finish",
+          action_de: "Nach dem Waschen sparsam in Laengen und Spitzen geben.",
+          frequency_de: "nach jeder Waesche",
+          reason_de: "Kategorie-Schritt fuer den gewuenschten Zusatz.",
+        },
+      ],
+      next_layer_options: ["goals", "deep_dive"],
+      next_step_offer_de: "Als Naechstes koennen wir die Dosierung feinjustieren.",
+    },
+  })
+}
+
+function invalidProductNamedLeaveInRoutineTerminal(call_id: string) {
+  const call = terminalCategoryLevelLeaveInRoutineMutation(call_id)
+  const args = JSON.parse(call.arguments)
+  args.tool_grounding.routine_step_ids = ["base-shampoo", "base-conditioner", "leave-in-pantene"]
+  args.routine_context.step_id = "leave-in-pantene"
+  args.payload.visible_steps[2].step_id = "leave-in-pantene"
+  args.payload.visible_steps[2].label_de = "Pantene Leave-in"
+  args.payload.user_facing_answer_de =
+    "Ich habe das Pantene Leave-in als eigenen Schritt in deine Routine eingebaut."
+  return rawFunctionCall(call.call_id, call.name, JSON.stringify(args))
+}
+
 function invalidRoutineResetTerminal(call_id: string) {
   return terminalCall(call_id, {
     ...terminalGeneralAdviceArguments(),
@@ -916,6 +1065,90 @@ function invalidMaskOilRoutineDecisionTerminal(call_id: string) {
   })
 }
 
+function validRoutineMutationTerminal(
+  call_id: string,
+  args: {
+    careCategory: "mask" | "dry_shampoo" | "conditioner" | "leave_in"
+    routineIntent: "create" | "modify" | "remove_step"
+    evidenceQuote: string
+    stepIds: string[]
+    categoryLabel: string
+  },
+) {
+  return terminalCall(call_id, {
+    ...terminalGeneralAdviceArguments(),
+    answer_mode: "routine",
+    interpreted_intent: "User explicitly authorized a routine change.",
+    request_interpretation: requestInterpretation({
+      primary_intent: args.routineIntent === "create" ? "routine_build" : "routine_mutation",
+      product_request_kind: "none",
+      routine_intent: args.routineIntent,
+      care_category: args.careCategory,
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: args.evidenceQuote,
+      confidence: 0.95,
+    }),
+    extracted_constraints: {
+      ...emptyExtractedConstraints(),
+      product_categories: [args.careCategory],
+      routine_layer: "basics",
+      raw_constraints: [args.evidenceQuote],
+    },
+    tool_grounding: {
+      ...terminalGeneralAdviceArguments().tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("routine", args.careCategory),
+      used_product_tool: false,
+      used_routine_tool: true,
+      product_ids: [],
+      routine_step_ids: args.stepIds,
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: true,
+      routine_layer: "basics",
+      step_id: args.stepIds.at(-1) ?? null,
+      category: args.careCategory,
+      return_path: ["routine"],
+    },
+    payload: {
+      user_facing_answer_de: `Ich habe die Routine angepasst: ${[
+        ...args.stepIds.map((stepId) =>
+          stepId === "step_mask"
+            ? "Haarmaske"
+            : stepId === "step_dry_shampoo"
+              ? "Trockenshampoo"
+              : stepId === "step_leave_in"
+                ? "Leave-in"
+                : stepId === "step_conditioner"
+                  ? "Conditioner"
+                  : "Shampoo",
+        ),
+        args.categoryLabel,
+      ].join(", ")}.`,
+      routine_layer: "basics",
+      visible_steps: args.stepIds.map((stepId) => ({
+        step_id: stepId,
+        label_de:
+          stepId === "step_mask"
+            ? "Haarmaske"
+            : stepId === "step_dry_shampoo"
+              ? "Trockenshampoo"
+              : stepId === "step_leave_in"
+                ? "Leave-in"
+                : stepId === "step_conditioner"
+                  ? "Conditioner"
+                  : "Shampoo",
+        action_de: "Als sichtbarer Routine-Schritt.",
+        frequency_de: "nach Bedarf",
+        reason_de: "Teil der aktualisierten Routine.",
+      })),
+      next_layer_options: ["goals", "problems"],
+      next_step_offer_de: null,
+    },
+  })
+}
+
 function validRoutineResetTerminal(call_id: string) {
   const call = invalidRoutineResetTerminal(call_id)
   const args = JSON.parse(call.arguments)
@@ -990,6 +1223,16 @@ function fakeAgentV2Tools() {
     }),
     select_products: async () => ({ valid_product_ids: [] }),
     build_or_fix_routine: async () => ({ visible_steps: [] }),
+  }
+}
+
+function fakeAgentV2ToolsWithRoutineSteps(stepIds: string[]) {
+  return {
+    ...fakeAgentV2Tools(),
+    build_or_fix_routine: async () => ({
+      routine_layer: "basics",
+      visible_steps: stepIds.map((step_id) => ({ step_id })),
+    }),
   }
 }
 
@@ -1144,6 +1387,9 @@ test("AgentV2 runtime injects terminal payload field guidance", async () => {
   assert.match(content, /general_advice/)
   assert.match(content, /concrete product ask inside an active routine/)
   assert.match(content, /complete final German answer/)
+  assert.match(content, /next_step_offer_de may be null/)
+  assert.match(content, /routine_context/)
+  assert.doesNotMatch(content, /use payload\.next_step_offer_de to return to the routine/)
   assert.match(
     content,
     /Do not treat recommendations, visible_steps, usage_notes_de, or blocking_constraints/,
@@ -1180,6 +1426,10 @@ test("AgentV2 runtime injects profile-grounded answer quality guidance", async (
   assert.match(content, /wash rhythm/)
   assert.match(content, /Do not invent a user preference/)
   assert.match(content, /calm answer shape/)
+  assert.match(content, /reread the complete visible answer/i)
+  assert.match(content, /closing sentence/i)
+  assert.match(content, /already answered/i)
+  assert.match(content, /stop cleanly/i)
 })
 
 test("AgentV2 runtime trace reflects resolved policy overrides", async () => {
@@ -1317,16 +1567,7 @@ test("AgentV2 runtime keeps routine follow-up product offers on select_products 
         evidence_quote: "passende Produkte dafuer",
       }),
     }),
-    functionCall("call_3", "build_or_fix_routine", {
-      objective: "fix_routine",
-      requested_layer: "basics",
-      requested_category: "leave_in",
-      reason: "Incorrectly rebuilding after a product-only follow-up.",
-      routine_intent: "modify",
-      mutation_kind: "add_step",
-      evidence_quote: "passende Produkte dafuer",
-    }),
-    terminalRoutineProductDeepDiveWithStep("call_4", ["prod_1"], "step_leave_in"),
+    terminalRoutineProductDeepDiveWithStep("call_3", ["prod_1"], "step_leave_in"),
   ])
   let buildRoutineCalled = false
 
@@ -1382,99 +1623,7 @@ test("AgentV2 runtime keeps routine follow-up product offers on select_products 
     result.trace.tool_calls.map((call) => call.name),
     ["load_advisor_guidance", "select_products"],
   )
-  assert.equal(result.trace.blocked_tool_calls.at(-1)?.name, "build_or_fix_routine")
-  assert.equal(result.trace.blocked_tool_calls.at(-1)?.reason, "routine_rebuild_not_requested")
-  assert.equal(result.final_answer.answer_mode, "product_recommendation")
-  assert.equal(result.final_answer.routine_context.active, true)
-  assert.equal(result.final_answer.routine_context.step_id, "step_leave_in")
-  assert.equal(result.final_answer.routine_context.category, "leave_in")
-  assert.match(result.final_answer.payload.next_step_offer_de ?? "", /Routine/)
-  assert.equal(result.trace.validation_errors.length, 0)
-})
-
-test("AgentV2 runtime blocks routine rebuild before product selection for active routine product follow-ups", async () => {
-  const client = fakeResponsesClientWithOutputs([
-    guidanceCall("call_1", {
-      answer_mode_hint: "product_recommendation",
-      categories: ["leave_in"],
-      routine_layer: "basics",
-    }),
-    functionCall("call_2", "build_or_fix_routine", {
-      objective: "fix_routine",
-      requested_layer: "basics",
-      requested_category: "leave_in",
-      reason: "Incorrectly rebuilding before selecting products for a product-only follow-up.",
-      routine_intent: "modify",
-      mutation_kind: "add_step",
-      evidence_quote: "passende Produkte dafuer",
-    }),
-    functionCall("call_3", "select_products", {
-      ...selectProductsArguments({
-        category: "leave_in",
-        reason: "User accepts the previous routine offer for matching products.",
-        user_request: "Ja, zeig mir passende Produkte dafuer.",
-        product_request_kind: "specific_products",
-        evidence_quote: "passende Produkte dafuer",
-      }),
-    }),
-    terminalRoutineProductDeepDiveWithStep("call_4", ["prod_1"], "step_leave_in"),
-  ])
-  let buildRoutineCalled = false
-
-  const result = await runAgentV2ResponsesTurn({
-    client,
-    message: "Ja, zeig mir passende Produkte dafuer.",
-    recentMessages: [
-      {
-        role: "user",
-        content: "Meine Haare sind trocken und frizzig. Was soll ich aendern?",
-      },
-      {
-        role: "assistant",
-        content:
-          "Ich wuerde die Routine mit einem leichten Leave-in als erstem Zusatz stabilisieren. Soll ich dir passende Produkte dafuer zeigen?",
-      },
-    ],
-    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
-    routineThreadContext: {
-      active: true,
-      current_layer: "basics",
-      last_answer_mode: "routine",
-      last_routine_categories: ["shampoo", "conditioner", "leave_in"],
-      last_user_goal: "Meine Haare sind trocken und frizzig. Was soll ich aendern?",
-      summary_de:
-        "Basisroutine bleibt Shampoo und Conditioner; ein leichter Leave-in ist der erste Zusatz gegen Trockenheit und Frizz.",
-      visible_steps: [
-        {
-          step_id: "step_leave_in",
-          label_de: "Leichter Leave-in",
-          action_de: "Nach dem Waschen sparsam in Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
-          reason_de: "Erster Zusatz gegen Trockenheit und Frizz.",
-        },
-      ],
-    },
-    currentRoutineLayer: "basics",
-    tools: {
-      ...fakeAgentV2Tools(),
-      select_products: async () => ({
-        valid_product_ids: ["prod_1"],
-        products: [projectedProduct("prod_1", "Test Leave-in")],
-      }),
-      build_or_fix_routine: async () => {
-        buildRoutineCalled = true
-        return { visible_steps: [] }
-      },
-    },
-  })
-
-  assert.equal(buildRoutineCalled, false)
-  assert.deepEqual(
-    result.trace.tool_calls.map((call) => call.name),
-    ["load_advisor_guidance", "select_products"],
-  )
-  assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
-  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_rebuild_not_requested")
+  assert.equal(result.trace.blocked_tool_calls.length, 0)
   assert.equal(result.final_answer.answer_mode, "product_recommendation")
   assert.equal(result.final_answer.routine_context.active, true)
   assert.equal(result.final_answer.routine_context.step_id, "step_leave_in")
@@ -1603,6 +1752,143 @@ test("AgentV2 runtime blocks routine rebuild for pure active routine summaries",
   assert.equal(result.final_answer.answer_mode, "general_advice")
   assert.equal(result.final_answer.request_interpretation.routine_intent, "none")
   assert.equal(result.final_answer.routine_context.active, true)
+  assert.equal(result.trace.validation_errors.length, 0)
+})
+
+test("AgentV2 runtime blocks routine tool permission for short confirmations without pending routine action", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["mask", "oil"],
+      routine_layer: "basics",
+    }),
+    functionCall("call_2", "build_or_fix_routine", {
+      objective: "fix_routine",
+      requested_layer: "basics",
+      requested_category: "mask",
+      reason: "Incorrectly treating a bare confirmation as routine action permission.",
+      routine_intent: "modify",
+      mutation_kind: "add_step",
+      evidence_quote: "Ja",
+    }),
+    terminalMaskOilComparisonInRoutine("call_3", "Ja"),
+  ])
+  let buildRoutineCalled = false
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ja.",
+    recentMessages: [
+      {
+        role: "assistant",
+        content: "Soll ich dir erklaeren, ob Maske oder Oel als Zusatz sinnvoller ist?",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    routineThreadContext: {
+      active: true,
+      current_layer: "basics",
+      last_answer_mode: "general_advice",
+      last_routine_categories: ["shampoo", "conditioner", "mask", "oil"],
+      last_user_goal: "Maske oder Oel als Zusatz vergleichen.",
+      summary_de: "Die letzte Frage war ein Vergleich, kein Routine-Aenderungsangebot.",
+      visible_steps: [],
+    },
+    currentRoutineLayer: "basics",
+    tools: {
+      ...fakeAgentV2Tools(),
+      build_or_fix_routine: async () => {
+        buildRoutineCalled = true
+        return { visible_steps: [] }
+      },
+    },
+  })
+
+  assert.equal(buildRoutineCalled, false)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance"],
+  )
+  assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
+  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_action_not_authorized")
+  assert.equal(result.final_answer.request_interpretation.routine_intent, "none")
+  assert.equal(
+    result.trace.validation_errors.length,
+    0,
+    JSON.stringify(result.trace.validation_errors, null, 2),
+  )
+})
+
+test("AgentV2 runtime allows routine tool permission for pending routine action confirmations", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "routine",
+      categories: ["leave_in"],
+      routine_layer: "basics",
+    }),
+    functionCall("call_2", "build_or_fix_routine", {
+      objective: "fix_routine",
+      requested_layer: "basics",
+      requested_category: "leave_in",
+      reason: "User confirms the structured pending routine action.",
+      routine_intent: "modify",
+      mutation_kind: "add_step",
+      evidence_quote: "Ja",
+    }),
+    terminalLeaveInRoutineMutationWithEvidence("call_3", "Ja"),
+  ])
+  let buildRoutineCalled = false
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ja.",
+    recentMessages: [
+      {
+        role: "assistant",
+        content: "Soll ich den Leave-in als leichten Zusatz in deine Routine einbauen?",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    routineThreadContext: {
+      active: true,
+      current_layer: "basics",
+      last_answer_mode: "general_advice",
+      last_routine_categories: ["shampoo", "conditioner", "leave_in"],
+      last_user_goal: "Trockene Laengen mit leichter Routine.",
+      summary_de: "Assistant offered to add a leave-in step.",
+      pending_routine_action: {
+        action: "add_step",
+        routine_layer: "basics",
+        category: "leave_in",
+        source: "assistant_offer",
+      },
+      visible_steps: [],
+    },
+    currentRoutineLayer: "basics",
+    tools: {
+      ...fakeAgentV2Tools(),
+      build_or_fix_routine: async () => {
+        buildRoutineCalled = true
+        return {
+          routine_layer: "basics",
+          visible_steps: [
+            { step_id: "step_shampoo" },
+            { step_id: "step_conditioner" },
+            { step_id: "step_leave_in" },
+          ],
+        }
+      },
+    },
+  })
+
+  assert.equal(buildRoutineCalled, true)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "build_or_fix_routine"],
+  )
+  assert.equal(result.trace.blocked_tool_calls.length, 0)
+  assert.equal(result.final_answer.answer_mode, "routine")
+  assert.equal(result.final_answer.request_interpretation.routine_intent, "modify")
   assert.equal(
     result.trace.validation_errors.length,
     0,
@@ -1793,7 +2079,11 @@ test("AgentV2 runtime blocks repair-triggered routine rebuild for pure active ro
     result.trace.tool_calls.some((call) => call.name === "build_or_fix_routine"),
     false,
   )
-  assert.equal(result.trace.failure_stage, null)
+  assert.equal(
+    result.trace.failure_stage,
+    null,
+    JSON.stringify(result.trace.validation_errors, null, 2),
+  )
   assert.equal(result.final_answer.answer_mode, "general_advice")
   assert.equal(result.final_answer.request_interpretation.routine_intent, "none")
   assert.equal(result.final_answer.routine_context.active, true)
@@ -1802,364 +2092,6 @@ test("AgentV2 runtime blocks repair-triggered routine rebuild for pure active ro
     0,
     JSON.stringify(result.trace.validation_errors, null, 2),
   )
-})
-
-test("AgentV2 runtime blocks routine rebuild for active routine Build-up product detail follow-ups", async () => {
-  const client = fakeResponsesClientWithOutputs([
-    guidanceCall("call_1", {
-      answer_mode_hint: "product_recommendation",
-      categories: ["deep_cleansing_shampoo"],
-      routine_layer: "problems",
-    }),
-    functionCall("call_2", "build_or_fix_routine", {
-      objective: "fix_routine",
-      requested_layer: "problems",
-      requested_category: "deep_cleansing_shampoo",
-      reason: "Incorrectly treats Build-up product detail wording as a routine mutation.",
-      routine_intent: "modify",
-      mutation_kind: "add_step",
-      evidence_quote: "Hilft das Produkt gegen Build-up",
-    }),
-    functionCall("call_3", "select_products", {
-      ...selectProductsArguments({
-        category: "deep_cleansing_shampoo",
-        reason: "User asks whether the referenced product helps with Build-up.",
-        user_request: "Hilft das Produkt gegen Build-up?",
-        product_request_kind: "product_detail",
-        requested_product_count: 1,
-        count_policy: "exact",
-        evidence_quote: "Hilft das Produkt gegen Build-up",
-      }),
-    }),
-    terminalCall("call_4", {
-      ...terminalGeneralAdviceArguments(),
-      answer_mode: "product_recommendation",
-      interpreted_intent: "User asks whether the referenced product helps with Build-up.",
-      request_interpretation: requestInterpretation({
-        primary_intent: "product_recommendation",
-        product_request_kind: "product_detail",
-        routine_intent: "none",
-        care_category: "deep_cleansing_shampoo",
-        requested_product_count: 1,
-        count_policy: "exact",
-        evidence_quote: "Hilft das Produkt gegen Build-up",
-      }),
-      extracted_constraints: {
-        ...emptyExtractedConstraints(),
-        hair_concerns: ["Build-up"],
-        product_categories: ["deep_cleansing_shampoo"],
-      },
-      tool_grounding: {
-        ...terminalGeneralAdviceArguments().tool_grounding,
-        used_guidance_package_ids: requiredGuidanceForAnswer(
-          "product_recommendation",
-          "deep_cleansing_shampoo",
-        ),
-        used_product_tool: true,
-        used_routine_tool: false,
-        product_ids: ["prod_1"],
-        routine_step_ids: [],
-      },
-      routine_context: {
-        active: true,
-        routine_layer: "problems",
-        step_id: null,
-        category: "deep_cleansing_shampoo",
-        return_path: ["routine"],
-      },
-      payload: {
-        user_facing_answer_de:
-          "Bei **Test Tiefenreinigung** kann ich Build-up-Hilfe nur anhand der Produktdaten einordnen; es bleibt eine Produktfrage, kein neuer Routine-Umbau.",
-        recommendations: [
-          {
-            product_id: "prod_1",
-            reason_de: "Referenziertes Produkt fuer Build-up-Kontext.",
-            usage_de: "Nur gelegentlich statt normalem Shampoo.",
-            caveat_de: "Nicht automatisch als neuer Routine-Schritt gesetzt.",
-          },
-        ],
-        comparison_notes_de: [],
-        usage_notes_de: ["Nur gelegentlich statt normalem Shampoo."],
-        next_step_offer_de: "Danach koennen wir zur Routine zurueckgehen.",
-      },
-    }),
-  ])
-  let buildRoutineCalled = false
-
-  const result = await runAgentV2ResponsesTurn({
-    client,
-    message: "Hilft das Produkt gegen Build-up?",
-    recentMessages: [
-      {
-        role: "assistant",
-        content: "**Test Tiefenreinigung** passt als gelegentliche Option gegen Rueckstaende.",
-      },
-    ],
-    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
-    routineThreadContext: {
-      active: true,
-      current_layer: "problems",
-      last_answer_mode: "product_recommendation",
-      last_routine_categories: ["shampoo", "conditioner", "deep_cleansing_shampoo"],
-      last_user_goal: "Was mache ich bei Rueckstaenden?",
-      summary_de:
-        "Basisroutine bleibt Shampoo und Conditioner; Tiefenreinigung ist nur gelegentlich bei Build-up relevant.",
-      visible_steps: [
-        {
-          step_id: "step_reset",
-          label_de: "Tiefenreinigung",
-          action_de: "Nur gelegentlich statt normalem Shampoo nutzen.",
-          frequency_de: "bei Build-up",
-          reason_de: "Kann Rueckstaende loesen.",
-        },
-      ],
-    },
-    currentRoutineLayer: "problems",
-    tools: {
-      ...fakeAgentV2Tools(),
-      select_products: async () => ({
-        valid_product_ids: ["prod_1"],
-        products: [projectedProduct("prod_1", "Test Tiefenreinigung")],
-      }),
-      build_or_fix_routine: async () => {
-        buildRoutineCalled = true
-        return { visible_steps: [] }
-      },
-    },
-  })
-
-  assert.equal(buildRoutineCalled, false)
-  assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
-  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_rebuild_not_requested")
-  assert.equal(result.final_answer.answer_mode, "product_recommendation")
-  assert.equal(result.final_answer.request_interpretation.routine_intent, "none")
-  assert.equal(
-    result.trace.validation_errors.length,
-    0,
-    JSON.stringify(result.trace.validation_errors, null, 2),
-  )
-})
-
-test("AgentV2 runtime blocks routine rebuild for non-mutating lightweight active routine wording", async () => {
-  const client = fakeResponsesClientWithOutputs([
-    guidanceCall("call_1", {
-      answer_mode_hint: "product_recommendation",
-      categories: ["leave_in"],
-      routine_layer: "basics",
-    }),
-    functionCall("call_2", "build_or_fix_routine", {
-      objective: "fix_routine",
-      requested_layer: "basics",
-      requested_category: "leave_in",
-      reason: "Incorrectly treats lightweight product wording as a routine mutation.",
-      routine_intent: "modify",
-      mutation_kind: "simplify",
-      evidence_quote: "leichteres Produkt fuer diesen Schritt",
-    }),
-    functionCall("call_3", "select_products", {
-      ...selectProductsArguments({
-        category: "leave_in",
-        reason: "User asks for a lightweight product for the visible routine step.",
-        user_request: "Gibt es ein leichteres Produkt fuer diesen Schritt?",
-        product_request_kind: "specific_products",
-        evidence_quote: "leichteres Produkt fuer diesen Schritt",
-      }),
-    }),
-    terminalRoutineProductDeepDiveWithStep("call_4", ["prod_1"], "step_leave_in"),
-  ])
-  let buildRoutineCalled = false
-
-  const result = await runAgentV2ResponsesTurn({
-    client,
-    message: "Gibt es ein leichteres Produkt fuer diesen Schritt?",
-    recentMessages: [
-      {
-        role: "assistant",
-        content:
-          "Ein leichter Leave-in ist dein erster Zusatz. Soll ich dir passende Produkte dafuer zeigen?",
-      },
-    ],
-    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
-    routineThreadContext: {
-      active: true,
-      current_layer: "basics",
-      last_answer_mode: "routine",
-      last_routine_categories: ["shampoo", "conditioner", "leave_in"],
-      last_user_goal: "Meine Haare sind trocken und frizzig. Was soll ich aendern?",
-      summary_de:
-        "Basisroutine bleibt Shampoo und Conditioner; ein leichter Leave-in ist der erste Zusatz gegen Trockenheit und Frizz.",
-      visible_steps: [
-        {
-          step_id: "step_leave_in",
-          label_de: "Leichter Leave-in",
-          action_de: "Nach dem Waschen sparsam in Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
-          reason_de: "Erster Zusatz gegen Trockenheit und Frizz.",
-        },
-      ],
-    },
-    currentRoutineLayer: "basics",
-    tools: {
-      ...fakeAgentV2Tools(),
-      select_products: async () => ({
-        valid_product_ids: ["prod_1"],
-        products: [projectedProduct("prod_1", "Test Leave-in")],
-      }),
-      build_or_fix_routine: async () => {
-        buildRoutineCalled = true
-        return { visible_steps: [] }
-      },
-    },
-  })
-
-  assert.equal(buildRoutineCalled, false)
-  assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
-  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_rebuild_not_requested")
-  assert.equal(result.final_answer.answer_mode, "product_recommendation")
-  assert.equal(result.final_answer.routine_context.active, true)
-  assert.equal(
-    result.trace.validation_errors.length,
-    0,
-    JSON.stringify(result.trace.validation_errors, null, 2),
-  )
-})
-
-test("AgentV2 runtime blocks routine rebuild for product-detail build-up wording", async () => {
-  const client = fakeResponsesClientWithOutputs([
-    guidanceCall("call_1", {
-      answer_mode_hint: "product_recommendation",
-      categories: ["leave_in"],
-      routine_layer: "basics",
-    }),
-    functionCall("call_2", "build_or_fix_routine", {
-      objective: "fix_routine",
-      requested_layer: "basics",
-      requested_category: "leave_in",
-      reason: "Incorrectly treats a product-detail question as a routine mutation.",
-      routine_intent: "modify",
-      mutation_kind: "add_step",
-      evidence_quote: "Baut das Produkt Proteine auf",
-    }),
-    functionCall("call_3", "select_products", {
-      ...selectProductsArguments({
-        category: "leave_in",
-        reason: "User asks a product-detail question about the referenced product.",
-        user_request: "Baut das Produkt Proteine auf?",
-        product_request_kind: "product_detail",
-        requested_product_count: 1,
-        count_policy: "exact",
-        evidence_quote: "Baut das Produkt Proteine auf",
-      }),
-    }),
-    terminalCall("call_4", {
-      ...terminalGeneralAdviceArguments(),
-      answer_mode: "product_recommendation",
-      interpreted_intent: "User asks whether the referenced product builds proteins.",
-      request_interpretation: requestInterpretation({
-        primary_intent: "product_recommendation",
-        product_request_kind: "product_detail",
-        routine_intent: "none",
-        care_category: "leave_in",
-        requested_product_count: 1,
-        count_policy: "exact",
-        evidence_quote: "Baut das Produkt Proteine auf",
-      }),
-      extracted_constraints: {
-        ...emptyExtractedConstraints(),
-        product_categories: ["leave_in"],
-      },
-      tool_grounding: {
-        ...terminalGeneralAdviceArguments().tool_grounding,
-        used_guidance_package_ids: requiredGuidanceForAnswer("product_recommendation", "leave_in"),
-        used_product_tool: true,
-        used_routine_tool: false,
-        product_ids: ["prod_1"],
-        routine_step_ids: [],
-      },
-      routine_context: {
-        active: true,
-        routine_layer: "basics",
-        step_id: null,
-        category: "leave_in",
-        return_path: ["routine"],
-      },
-      payload: {
-        user_facing_answer_de:
-          "Bei **Test Leave-in** kann ich aus den aktuellen Produktdaten nicht sicher sagen, dass es Proteine aufbaut. Sicher ist nur: Es bleibt ein Leave-in fuer den Zusatzschritt in deiner Routine.",
-        recommendations: [
-          {
-            product_id: "prod_1",
-            reason_de: "Referenziertes Produkt aus dem aktiven Routine-Kontext.",
-            usage_de: "Als Leave-in sparsam in Laengen und Spitzen.",
-            caveat_de: "Proteinaufbau ist fuer dieses Produkt nicht sicher belegt.",
-          },
-        ],
-        comparison_notes_de: [],
-        usage_notes_de: ["Als Leave-in sparsam in Laengen und Spitzen."],
-        next_step_offer_de: "Danach koennen wir zur Routine zurueckgehen.",
-      },
-    }),
-  ])
-  let buildRoutineCalled = false
-
-  const result = await runAgentV2ResponsesTurn({
-    client,
-    message: "Baut das Produkt Proteine auf?",
-    recentMessages: [
-      {
-        role: "assistant",
-        content:
-          "**Test Leave-in** passt als Produkt fuer deinen ersten Zusatz gegen Trockenheit und Frizz.",
-      },
-    ],
-    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
-    routineThreadContext: {
-      active: true,
-      current_layer: "basics",
-      last_answer_mode: "product_recommendation",
-      last_routine_categories: ["shampoo", "conditioner", "leave_in"],
-      last_user_goal: "Meine Haare sind trocken und frizzig. Was soll ich aendern?",
-      summary_de:
-        "Basisroutine bleibt Shampoo und Conditioner; ein leichter Leave-in ist der Produkt-Zusatz gegen Trockenheit und Frizz.",
-      visible_steps: [
-        {
-          step_id: "step_leave_in",
-          label_de: "Leichter Leave-in",
-          action_de: "Nach dem Waschen sparsam in Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
-          reason_de: "Erster Zusatz gegen Trockenheit und Frizz.",
-        },
-      ],
-    },
-    currentRoutineLayer: "basics",
-    tools: {
-      ...fakeAgentV2Tools(),
-      select_products: async () => ({
-        valid_product_ids: ["prod_1"],
-        products: [projectedProduct("prod_1", "Test Leave-in")],
-      }),
-      build_or_fix_routine: async () => {
-        buildRoutineCalled = true
-        return { visible_steps: [] }
-      },
-    },
-  })
-
-  assert.equal(buildRoutineCalled, false)
-  assert.deepEqual(
-    result.trace.tool_calls.map((call) => call.name),
-    ["load_advisor_guidance", "select_products"],
-  )
-  assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
-  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_rebuild_not_requested")
-  assert.equal(
-    result.trace.validation_errors.length,
-    0,
-    JSON.stringify(result.trace.validation_errors, null, 2),
-  )
-  assert.equal(result.final_answer.answer_mode, "product_recommendation")
-  assert.equal(result.final_answer.request_interpretation.product_request_kind, "product_detail")
-  assert.equal(result.final_answer.routine_context.active, true)
 })
 
 test("AgentV2 runtime allows explicit product integration requests inside active routines", async () => {
@@ -2233,13 +2165,7 @@ test("AgentV2 runtime allows explicit product integration requests inside active
     result.trace.tool_calls.map((call) => call.name),
     ["load_advisor_guidance", "build_or_fix_routine"],
   )
-  assert.equal(
-    result.trace.blocked_tool_calls.some(
-      (call) =>
-        call.name === "build_or_fix_routine" && call.reason === "routine_rebuild_not_requested",
-    ),
-    false,
-  )
+  assert.equal(result.trace.blocked_tool_calls.length, 0)
   assert.equal(
     result.trace.validation_errors.length,
     0,
@@ -2861,6 +2787,68 @@ test("AgentV2 runtime falls back safely if missing-terminal repair also omits te
   assert.equal(result.trace.failure_stage, "missing_terminal_failed")
   assert.equal(result.final_answer.answer_mode, "clarification")
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Rohantwort/)
+})
+
+test("AgentV2 runtime preserves useful assistant text if missing-terminal repair calls a disallowed tool", async () => {
+  const usefulAssistantText =
+    "**Mit mehr Feuchtigkeit** wuerde ich deine 3 Schritte so denken:\n\n" +
+    "1. **Shampoo** bleibt fuer Kopfhaut und Ansatz.\n" +
+    "2. **Conditioner** bleibt der feste Schritt fuer die Laengen.\n" +
+    "3. **Leave-in oder Maske** bringt die Extra-Feuchtigkeit rein."
+  const client = fakeResponsesClientWithOutputs([
+    {
+      type: "message",
+      role: "assistant",
+      content: [{ type: "output_text", text: usefulAssistantText }],
+    },
+    functionCall("call_1", "build_or_fix_routine", {
+      objective: "fix_routine",
+      requested_layer: "basics",
+      requested_category: "leave_in",
+      reason: "User asks for the same 3-step routine with more moisture.",
+      routine_intent: "modify",
+      mutation_kind: "add_step",
+      evidence_quote: "wie wäre die mit noch mehr feuchtigkeit",
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "ok ja wie wäre die mit noch mehr feuchtigkeit?",
+    recentMessages: [
+      { role: "user", content: "wie kann ich meine routine verbessern?" },
+      {
+        role: "assistant",
+        content: "Shampoo, Conditioner und ein leichter Zusatz waeren sinnvoll.",
+      },
+      { role: "user", content: "ok ja dann bau mir die 3 schritt routine" },
+    ],
+    routineThreadContext: {
+      active: true,
+      current_layer: "basics",
+      last_answer_mode: "routine",
+      last_routine_categories: ["shampoo", "conditioner", "leave_in"],
+      last_user_goal: "Mehr Feuchtigkeit",
+      summary_de: "Drei Schritte: Shampoo, Conditioner, leichter Zusatz.",
+      visible_steps: [
+        { step_id: "base-shampoo", category: "shampoo", label_de: "Shampoo" },
+        { step_id: "base-conditioner", category: "conditioner", label_de: "Conditioner" },
+        { step_id: "lightweight-leave-in", category: "leave_in", label_de: "Leichter Zusatz" },
+      ],
+    },
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(client.requests.length, 2)
+  assert.equal(result.trace.failure_stage, "missing_terminal_failed")
+  assert.equal(result.trace.blocked_tool_calls.at(-1)?.name, "build_or_fix_routine")
+  assert.equal(result.trace.blocked_tool_calls.at(-1)?.reason, "repair_tool_not_allowed")
+  assert.equal(result.final_answer.answer_mode, "general_advice")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Mit mehr Feuchtigkeit/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Leave-in oder Maske/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /nicht sicher.*Formulier/)
+  assert.equal(result.final_answer.routine_context.active, true)
 })
 
 test("AgentV2 runtime traces malformed JSON tool arguments", async () => {
@@ -3569,8 +3557,74 @@ test("AgentV2 runtime degrades known routine mutation repair failure to useful a
   )
 })
 
+test("AgentV2 honest fallback for failed leave-in add-step stays category-specific", async () => {
+  const routineProjection = {
+    routine_layer: "basics" as const,
+    visible_steps: [
+      { step_id: "base-shampoo" },
+      { step_id: "base-conditioner" },
+      { step_id: "maintenance-leave-in" },
+    ],
+  }
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([
+      guidanceCall("call_0", {
+        answer_mode_hint: "routine",
+        categories: ["leave_in"],
+        routine_layer: "basics",
+      }),
+      functionCall("call_1", "build_or_fix_routine", {
+        objective: "fix_routine",
+        requested_layer: "basics",
+        requested_category: "leave_in",
+        reason: "User wants to add the referenced Pantene product to the routine.",
+        routine_intent: "modify",
+        mutation_kind: "add_step",
+        evidence_quote: "Bau das Produkt bitte in meine Routine ein",
+      }),
+      invalidProductNamedLeaveInRoutineTerminal("call_2"),
+      invalidProductNamedLeaveInRoutineTerminal("call_3"),
+    ]),
+    message: "Bau das Produkt bitte in meine Routine ein.",
+    recentMessages: [
+      { role: "assistant", content: "**Pantene Pro-V Miracles 7in1** passt als Leave-in." },
+    ],
+    userContext: {
+      hairProfile: { hair_texture: "straight", thickness: "fine" },
+      routineInventory: [
+        { product_id: "routine_shampoo", category: "shampoo", name: "Shampoo" },
+        { product_id: "routine_conditioner", category: "conditioner", name: "Conditioner" },
+      ],
+      sessionMemory: [],
+    },
+    tools: {
+      ...fakeAgentV2Tools(),
+      build_or_fix_routine: async () => routineProjection,
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, "repair_failed")
+  assert.equal(result.trace.validation_errors.length, 0)
+  assert.equal(result.final_answer.answer_mode, "general_advice")
+  assert.equal(result.final_answer.request_interpretation.care_category, "leave_in")
+  assert.deepEqual(result.final_answer.tool_grounding.routine_step_ids, [])
+  assert.ok(
+    result.final_answer.tool_grounding.used_guidance_package_ids.includes("base.general_advice.v1"),
+  )
+  assert.ok(
+    result.final_answer.tool_grounding.used_guidance_package_ids.includes("category.leave_in.v1"),
+  )
+
+  const answerText = result.final_answer.payload.user_facing_answer_de
+  assert.match(answerText, /Leave-in/i)
+  assert.match(answerText, /Kategorie|Schritt|Zusatz/i)
+  assert.doesNotMatch(answerText, /Pantene/i)
+  assert.doesNotMatch(answerText, /Routine nicht groesser machen als noetig/i)
+  assert.doesNotMatch(answerText, /eingebaut|gespeichert|geaendert/i)
+})
+
 test("AgentV2 runtime degrades lightweight mask oil repair failure to category advice", async () => {
-  const message = "Ich will keine schwere Routine. Lieber Maske oder Oel?"
+  const message = "Mach meine Routine leichter: lieber Maske oder Oel als Zusatz?"
   const routineThreadContext = {
     active: true,
     current_layer: "basics" as const,
@@ -3603,7 +3657,7 @@ test("AgentV2 runtime degrades lightweight mask oil repair failure to category a
         reason: "User wants the lighter occasional add-on, choosing between mask and oil.",
         routine_intent: "modify",
         mutation_kind: "simplify",
-        evidence_quote: "keine schwere Routine. Lieber Maske oder Oel",
+        evidence_quote: "Routine leichter: lieber Maske oder Oel",
       }),
       invalidMaskOilRoutineDecisionTerminal("call_3"),
       invalidMaskOilRoutineDecisionTerminal("call_4"),
@@ -3901,6 +3955,567 @@ test("AgentV2 runtime validates first category-specific routine mutation when in
   )
   assert.equal(result.trace.validation_errors.length, 0)
   assert.equal(result.trace.failure_stage, null)
+})
+
+test("AgentV2 runtime blocks pending confirmation when routine tool args do not match pending action", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["leave_in"],
+      routine_layer: "basics",
+    }),
+    functionCall("call_2", "build_or_fix_routine", {
+      objective: "fix_routine",
+      requested_layer: "basics",
+      requested_category: "oil",
+      reason: "Model tries a different routine action than the pending offer.",
+      routine_intent: "modify",
+      mutation_kind: "add_step",
+      evidence_quote: "Ja",
+    }),
+    terminalCall("call_3", {
+      ...terminalGeneralAdviceArguments(),
+      request_interpretation: requestInterpretation({
+        primary_intent: "routine_explanation",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "leave_in",
+        evidence_quote: "Ja",
+      }),
+      tool_grounding: {
+        ...terminalGeneralAdviceArguments().tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+        used_routine_tool: false,
+      },
+      routine_context: {
+        active: true,
+        routine_layer: "basics",
+        step_id: null,
+        category: "leave_in",
+        return_path: ["routine"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Ich habe die bestaetigte Leave-in-Aenderung verstanden, aber wuerde keinen anderen Schritt daraus machen.",
+        category_or_topic: "leave_in",
+        key_points_de: ["Leave-in bleibt der bestaetigte Schritt."],
+        next_step_offer_de: null,
+      },
+    }),
+  ])
+  let buildRoutineCalled = false
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ja.",
+    recentMessages: [
+      {
+        role: "assistant",
+        content: "Soll ich den Leave-in als leichten Zusatz in deine Routine einbauen?",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    routineThreadContext: {
+      active: true,
+      current_layer: "basics",
+      last_answer_mode: "general_advice",
+      last_routine_categories: ["shampoo", "conditioner", "leave_in"],
+      last_user_goal: "Trockene Laengen mit leichter Routine.",
+      summary_de: "Assistant offered to add a leave-in step.",
+      pending_routine_action: {
+        action: "add_step",
+        routine_layer: "basics",
+        category: "leave_in",
+        source: "assistant_offer",
+      },
+      visible_steps: [],
+    },
+    currentRoutineLayer: "basics",
+    tools: {
+      ...fakeAgentV2Tools(),
+      build_or_fix_routine: async () => {
+        buildRoutineCalled = true
+        return { routine_layer: "basics", visible_steps: [] }
+      },
+    },
+  })
+
+  assert.equal(buildRoutineCalled, false)
+  assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
+  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_action_not_authorized")
+})
+
+test("AgentV2 runtime blocks objective-only routine calls for explanation turns", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["leave_in"],
+      routine_layer: "basics",
+    }),
+    functionCall("call_2", "build_or_fix_routine", {
+      objective: "fix_routine",
+      requested_layer: "basics",
+      requested_category: "leave_in",
+      reason: "Model should explain placement, not mutate routine state.",
+      routine_intent: "explain",
+      mutation_kind: "none",
+      evidence_quote: "Wo kommt Leave-in in der Routine hin",
+    }),
+    terminalCall("call_3", {
+      ...terminalGeneralAdviceArguments(),
+      request_interpretation: requestInterpretation({
+        primary_intent: "routine_explanation",
+        product_request_kind: "none",
+        routine_intent: "explain",
+        care_category: "leave_in",
+        evidence_quote: "Wo kommt Leave-in in der Routine hin",
+      }),
+      tool_grounding: {
+        ...terminalGeneralAdviceArguments().tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+        used_routine_tool: false,
+      },
+      routine_context: {
+        active: true,
+        routine_layer: "basics",
+        step_id: null,
+        category: "leave_in",
+        return_path: ["routine"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Leave-in kommt nach dem Auswaschen von Conditioner in Laengen und Spitzen, nicht an den Ansatz.",
+        category_or_topic: "leave_in",
+        key_points_de: ["Das ist eine Erklaerung, keine Routine-Aenderung."],
+        next_step_offer_de: null,
+      },
+    }),
+  ])
+  let buildRoutineCalled = false
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Wo kommt Leave-in in der Routine hin?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [{ product_id: "routine_shampoo", category: "shampoo", name: "Shampoo" }],
+      sessionMemory: [],
+    },
+    tools: {
+      ...fakeAgentV2Tools(),
+      build_or_fix_routine: async () => {
+        buildRoutineCalled = true
+        return { routine_layer: "basics", visible_steps: [] }
+      },
+    },
+  })
+
+  assert.equal(buildRoutineCalled, false)
+  assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
+  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_action_not_authorized")
+})
+
+test("AgentV2 runtime allows explicit shortened add-step routine request", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "routine",
+      categories: ["mask"],
+      routine_layer: "basics",
+    }),
+    functionCall("call_2", "build_or_fix_routine", {
+      objective: "fix_routine",
+      requested_layer: "basics",
+      requested_category: "mask",
+      reason: "User explicitly asks to add a mask to the routine.",
+      routine_intent: "modify",
+      mutation_kind: "add_step",
+      evidence_quote: "Füg bitte eine Maske in meine Routine ein",
+    }),
+    validRoutineMutationTerminal("call_3", {
+      careCategory: "mask",
+      routineIntent: "modify",
+      evidenceQuote: "Füg bitte eine Maske in meine Routine ein",
+      stepIds: ["step_shampoo", "step_mask"],
+      categoryLabel: "Haarmaske",
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Füg bitte eine Maske in meine Routine ein.",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [{ product_id: "routine_shampoo", category: "shampoo", name: "Shampoo" }],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2ToolsWithRoutineSteps(["step_shampoo", "step_mask"]),
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "build_or_fix_routine"],
+  )
+  assert.equal(result.trace.blocked_tool_calls.length, 0)
+})
+
+test("AgentV2 runtime allows routine build when evidence uses German ASCII transliteration", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "routine",
+      categories: ["shampoo", "conditioner", "leave_in"],
+      routine_layer: "basics",
+    }),
+    functionCall("call_2", "build_or_fix_routine", {
+      objective: "build_routine",
+      requested_layer: "basics",
+      requested_category: "conditioner",
+      reason: "User explicitly asks for a new routine for fine, dry hair.",
+      routine_intent: "create",
+      mutation_kind: "add_step",
+      evidence_quote: "Baue mir eine neue Routine fuer feines, trockenes Haar",
+    }),
+    validRoutineMutationTerminal("call_3", {
+      careCategory: "conditioner",
+      routineIntent: "create",
+      evidenceQuote: "Baue mir eine neue Routine für feines, trockenes Haar",
+      stepIds: ["step_shampoo", "step_conditioner", "step_leave_in"],
+      categoryLabel: "Shampoo, Conditioner und Leave-in",
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Baue mir eine neue Routine für feines, trockenes Haar.",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2ToolsWithRoutineSteps(["step_shampoo", "step_conditioner", "step_leave_in"]),
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "build_or_fix_routine"],
+  )
+  assert.equal(result.trace.blocked_tool_calls.length, 0)
+})
+
+test("AgentV2 runtime trusts structured routine create intent without action-verb wording", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "routine",
+      categories: ["shampoo", "conditioner", "leave_in"],
+      routine_layer: "basics",
+    }),
+    functionCall("call_2", "build_or_fix_routine", {
+      objective: "build_routine",
+      requested_layer: "basics",
+      requested_category: "conditioner",
+      reason: "User says they need a new routine.",
+      routine_intent: "create",
+      mutation_kind: "add_step",
+      evidence_quote: "ich brauche eine neue routine",
+    }),
+    validRoutineMutationTerminal("call_3", {
+      careCategory: "conditioner",
+      routineIntent: "create",
+      evidenceQuote: "ich brauche eine neue routine",
+      stepIds: ["step_shampoo", "step_conditioner", "step_leave_in"],
+      categoryLabel: "Shampoo, Conditioner und Leave-in",
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "ich brauche eine neue routine",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2ToolsWithRoutineSteps(["step_shampoo", "step_conditioner", "step_leave_in"]),
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "build_or_fix_routine"],
+  )
+  assert.equal(result.trace.blocked_tool_calls.length, 0)
+})
+
+test("AgentV2 runtime allows explicit raus remove-step routine request", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "routine",
+      categories: ["dry_shampoo"],
+      routine_layer: "basics",
+    }),
+    functionCall("call_2", "build_or_fix_routine", {
+      objective: "fix_routine",
+      requested_layer: "basics",
+      requested_category: "dry_shampoo",
+      reason: "User explicitly asks to remove dry shampoo from the routine.",
+      routine_intent: "remove_step",
+      mutation_kind: "remove_step",
+      evidence_quote: "Nimm das Trockenshampoo aus meiner Routine raus",
+    }),
+    validRoutineMutationTerminal("call_3", {
+      careCategory: "dry_shampoo",
+      routineIntent: "remove_step",
+      evidenceQuote: "Nimm das Trockenshampoo aus meiner Routine raus",
+      stepIds: ["step_shampoo"],
+      categoryLabel: "Trockenshampoo rausgenommen",
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Nimm das Trockenshampoo aus meiner Routine raus.",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [
+        { product_id: "routine_shampoo", category: "shampoo", name: "Shampoo" },
+        { product_id: "routine_dry_shampoo", category: "dry_shampoo", name: "Trockenshampoo" },
+      ],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2ToolsWithRoutineSteps(["step_shampoo"]),
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "build_or_fix_routine"],
+  )
+  assert.equal(result.trace.blocked_tool_calls.length, 0)
+})
+
+test("AgentV2 runtime allows explicit new routine build request", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "routine",
+      categories: ["shampoo", "conditioner", "leave_in"],
+      routine_layer: "basics",
+    }),
+    functionCall("call_2", "build_or_fix_routine", {
+      objective: "build_routine",
+      requested_layer: "basics",
+      requested_category: "conditioner",
+      reason: "User explicitly asks for a new routine for fine, dry hair.",
+      routine_intent: "create",
+      mutation_kind: "add_step",
+      evidence_quote: "Baue mir eine neue Routine für feines, trockenes Haar",
+    }),
+    validRoutineMutationTerminal("call_3", {
+      careCategory: "conditioner",
+      routineIntent: "create",
+      evidenceQuote: "Baue mir eine neue Routine für feines, trockenes Haar",
+      stepIds: ["step_shampoo", "step_conditioner", "step_leave_in"],
+      categoryLabel: "Shampoo, Conditioner und Leave-in",
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Baue mir eine neue Routine für feines, trockenes Haar",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2ToolsWithRoutineSteps(["step_shampoo", "step_conditioner", "step_leave_in"]),
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "build_or_fix_routine"],
+  )
+  assert.equal(result.trace.blocked_tool_calls.length, 0)
+})
+
+test("AgentV2 runtime coerces first product-integration routine change to basics", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "routine",
+      categories: ["leave_in"],
+      routine_layer: "goals",
+    }),
+    functionCall("call_2", "build_or_fix_routine", {
+      objective: "fix_routine",
+      requested_layer: "goals",
+      requested_category: "leave_in",
+      reason: "User explicitly asks to integrate the referenced product into the routine.",
+      routine_intent: "modify",
+      mutation_kind: "add_step",
+      evidence_quote: "Bau das Produkt bitte in meine Routine ein",
+    }),
+    validRoutineMutationTerminal("call_3", {
+      careCategory: "leave_in",
+      routineIntent: "modify",
+      evidenceQuote: "Bau das Produkt bitte in meine Routine ein",
+      stepIds: ["step_shampoo", "step_conditioner", "step_leave_in"],
+      categoryLabel: "Leave-in integriert",
+    }),
+  ])
+  let requestedLayer: string | null = null
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Bau das Produkt bitte in meine Routine ein.",
+    recentMessages: [
+      {
+        role: "assistant",
+        content: "**Test Leave-in** passt gut als leichter Zusatz.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: {
+      ...fakeAgentV2ToolsWithRoutineSteps(["step_shampoo", "step_conditioner", "step_leave_in"]),
+      build_or_fix_routine: async (input) => {
+        const layer = typeof input.requested_layer === "string" ? input.requested_layer : null
+        requestedLayer = layer
+        return {
+          routine_layer: layer ?? "basics",
+          visible_steps: [
+            { step_id: "step_shampoo" },
+            { step_id: "step_conditioner" },
+            { step_id: "step_leave_in" },
+          ],
+        }
+      },
+    },
+  })
+
+  assert.equal(requestedLayer, "basics")
+  assert.equal(result.trace.failure_stage, null)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "build_or_fix_routine"],
+  )
+  const routineToolCall = result.trace.tool_calls.at(-1)
+  assert.equal(routineToolCall?.arguments?.requested_layer, "basics")
+  assert.equal(result.trace.validation_errors.length, 0)
+  assert.equal(result.final_answer.answer_mode, "routine")
+  assert.equal(result.final_answer.routine_context.routine_layer, "basics")
+})
+
+test("AgentV2 category-level routine mutation passes add-step input and grounded step ids", async () => {
+  const routineToolInputs: Record<string, unknown>[] = []
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([
+      guidanceCall("call_1", {
+        answer_mode_hint: "routine",
+        categories: ["leave_in"],
+        routine_layer: "basics",
+      }),
+      functionCall("call_2", "build_or_fix_routine", {
+        objective: "fix_routine",
+        requested_layer: "basics",
+        requested_category: "leave_in",
+        reason: "User wants to integrate the referenced Pantene product as a routine step.",
+        routine_intent: "modify",
+        mutation_kind: "add_step",
+        evidence_quote: "Bau das Produkt bitte in meine Routine ein",
+      }),
+      terminalCategoryLevelLeaveInRoutineMutation("call_3"),
+    ]),
+    message: "Bau das Produkt bitte in meine Routine ein.",
+    recentMessages: [
+      { role: "user", content: "Welches Leave-in passt zu mir?" },
+      { role: "assistant", content: "**Pantene Pro-V Miracles 7in1** passt als Leave-in." },
+      { role: "user", content: "das von pantene" },
+    ],
+    priorSelectedProductProjections: [
+      {
+        category: "leave_in",
+        products: [projectedProduct("pantene-leave-in", "Pantene Pro-V Miracles 7in1")],
+      },
+    ],
+    userContext: {
+      hairProfile: { hair_texture: "straight", thickness: "fine" },
+      routineInventory: [
+        { product_id: "routine_shampoo", category: "shampoo", name: "Shampoo" },
+        { product_id: "routine_conditioner", category: "conditioner", name: "Conditioner" },
+      ],
+      sessionMemory: [],
+    },
+    tools: {
+      ...fakeAgentV2Tools(),
+      build_or_fix_routine: async (input) => {
+        routineToolInputs.push(input)
+        return {
+          routine_layer: "basics",
+          visible_steps: [
+            { step_id: "base-shampoo" },
+            { step_id: "base-conditioner" },
+            { step_id: "maintenance-leave-in" },
+          ],
+        }
+      },
+    },
+  })
+
+  const routineToolInput = routineToolInputs[0]
+  assert.equal(routineToolInput?.mutation_kind, "add_step")
+  assert.equal(routineToolInput?.requested_category, "leave_in")
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.final_answer.answer_mode, "routine")
+  assert.deepEqual(result.final_answer.tool_grounding.routine_step_ids, [
+    "base-shampoo",
+    "base-conditioner",
+    "maintenance-leave-in",
+  ])
+  assert.equal(result.final_answer.routine_context.step_id, "maintenance-leave-in")
+  assert.doesNotMatch(JSON.stringify(result.final_answer.payload.visible_steps), /pantene/i)
+})
+
+test("AgentV2 runtime blocks routine tool for explicit non-mutation wording", async () => {
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([
+      guidanceCall("call_1", {
+        answer_mode_hint: "general_advice",
+        categories: ["mask", "oil"],
+        routine_layer: "goals",
+      }),
+      functionCall("call_2", "build_or_fix_routine", {
+        objective: "fix_routine",
+        requested_layer: "goals",
+        requested_category: "mask",
+        reason: "Model overreaches despite user asking only to understand.",
+        routine_intent: "modify",
+        mutation_kind: "add_step",
+        evidence_quote: "Maske oder Oel",
+      }),
+      terminalMaskOilComparisonInRoutine("call_3", "Maske oder Oel"),
+    ]),
+    message: "Maske oder Oel? Ich will nur verstehen, nicht aendern.",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [{ product_id: "routine_shampoo", category: "shampoo", name: "Shampoo" }],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
+  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_action_not_authorized")
+  assert.equal(
+    result.trace.tool_calls.some((call) => call.name === "build_or_fix_routine"),
+    false,
+  )
 })
 
 test("AgentV2 runtime does not use additive routine fallback for remove-step intent", async () => {
