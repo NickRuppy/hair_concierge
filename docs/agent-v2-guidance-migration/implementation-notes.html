@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AgentV2 Implementation Notes</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #2f2b2b;
+        --muted: #706969;
+        --line: #ded8d4;
+        --soft: #faf8f6;
+        --accent: #6f579f;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: #fffdfb;
+        line-height: 1.55;
+      }
+
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 40px 24px 72px;
+      }
+
+      h1,
+      h2 {
+        line-height: 1.15;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 34px;
+        margin-bottom: 8px;
+      }
+
+      h2 {
+        font-size: 22px;
+        margin-top: 34px;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      p {
+        margin: 0 0 14px;
+      }
+
+      .meta {
+        color: var(--muted);
+        margin-bottom: 28px;
+      }
+
+      .note {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--soft);
+        padding: 16px;
+        margin: 12px 0;
+      }
+
+      .note strong {
+        color: var(--accent);
+      }
+
+      ul {
+        margin: 8px 0 0 20px;
+        padding: 0;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.95em;
+        background: #f0ece8;
+        border-radius: 4px;
+        padding: 1px 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>AgentV2 Implementation Notes</h1>
+      <p class="meta">
+        Running notes for the AgentV2 guidance rehydration and contract-fix implementation.
+        This file captures implementation decisions that interpret, narrow, or intentionally depart from the plan.
+      </p>
+
+      <h2>Design Decisions</h2>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> Continue in the existing feature worktree <code>codex/gpt-54-responses-migration-plan</code>.</p>
+        <p>The worktree is dirty, but the changed files are already in the AgentV2 and plan area for this task. I am not creating a second worktree because that would make it harder to preserve the Compare Lab state and prior AgentV2 edits.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> The controller owns this notes file.</p>
+        <p>Subagents should report decisions, deviations, tradeoffs, and open questions, but should not edit <code>implementation-notes.html</code>. This avoids write conflicts while keeping a readable implementation log for review.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> Restricted safety repair stays terminal-first.</p>
+        <p>If a rejected product-shaped answer fails because of <code>safety_no_product_first</code>, the repair path does not request <code>select_products</code> even when <code>product_tool_required</code> is also present. Restricted safety intentionally removes product selection from the safe tool surface, so the correct repair is a safety answer, not a product lookup.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> Required guidance is now checked against runtime-loaded guidance when a normal terminal answer is validated.</p>
+        <p>The terminal contract still carries <code>tool_grounding.used_guidance_package_ids</code>, but the runtime passes <code>trace.loaded_guidance_package_ids</code> into the validator so the model cannot satisfy task/category guidance requirements through self-reporting alone.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> Stable runtime instructions count as loaded base contract guidance.</p>
+        <p>The runtime now seeds <code>base.advisor_rules.v1</code>, <code>base.answer_contract.v1</code>, and <code>base.tone_and_format.v1</code> into the trace because those constraints are present in stable system instructions on every turn. Mode-specific and category-specific packages still need actual <code>load_advisor_guidance</code> output.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> Ordered repair tools are enforced before accepting another terminal answer.</p>
+        <p>If validation says both guidance and product grounding are missing, the repair path now requires <code>load_advisor_guidance</code> before <code>select_products</code>, then <code>submit_final_answer</code>. A premature terminal answer during that repair is blocked and falls back safely instead of silently passing.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> Safety guidance loads from answer-mode intent as well as safety mode.</p>
+        <p><code>load_advisor_guidance</code> now includes <code>base.safety_boundaries.v1</code> when <code>answer_mode_hint</code> is <code>safety_boundary</code>, even if the external safety mode is still <code>normal</code>. This covers cases where the model recognizes the boundary inside the loop.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> Bondbuilder pilot keeps old confusion guidance as model-facing category context, not regex-style validation.</p>
+        <p>The old <code>bond-builder/confusions.md</code> content was converted into compact <code>category.bondbuilder.v1</code> sections plus traceable hard rules and a soft rubric. I intentionally removed the placeholder <code>category_claim_boundary</code> validator ID because that validator does not exist and would imply deterministic claim scanning we have not built.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19 correction:</strong> The Bondbuilder pilot now treats the full old topic folder as the migration unit.</p>
+        <p>The first pilot was too lossy because it centered <code>confusions.md</code>. The corrected package now incorporates <code>core-fit.md</code>, <code>response-playbook.md</code>, <code>guardrails.md</code>, <code>confusions.md</code>, and the README load-order context into one AgentV2 category package.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> Broader old guidance was folded into existing category and base packages.</p>
+        <p>Following the Bondbuilder pilot, the category/base migration workers enriched the existing AgentV2 packages instead of creating a runtime overlay system. The old overlays are represented as compact best-fit, weak-fit, confusion, grounding, and answer-shape guidance in the relevant packages.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> The source map is an inventory and audit aid, not a claim that every sentence was copied.</p>
+        <p>The map now marks old guidance files as <code>considered for V0</code>. That wording is deliberate: the migration goal is to preserve usable logic in GPT-5.4-friendly packages, while leaving obsolete, duplicate, or over-specific wording behind.</p>
+      </div>
+      <div class="note">
+        <p><strong>2026-05-19:</strong> The broad prompt runner is a manual-review report, not an automated quality verdict.</p>
+        <p><code>scripts/agent-v2/run-guidance-regression.ts</code> runs the agreed prompt batch against AgentV2 and writes JSON/Markdown reports under <code>tmp/</code>. It marks deterministic misses as <code>fail</code> and normal answer-quality cases as <code>review</code>, so we can inspect actual final answers without pretending string heuristics are a judge.</p>
+      </div>
+
+      <h2>Deviations</h2>
+      <div class="note">
+        <p><strong>None currently.</strong></p>
+      </div>
+
+      <h2>Tradeoffs</h2>
+      <div class="note">
+        <p><strong>Subagent execution order:</strong> I am starting with the runtime/validator contract work before broad guidance migration.</p>
+        <p>This keeps the later Bondbuilder and category guidance tests meaningful: if the terminal contract or repair path is still broken, guidance quality would be hard to judge.</p>
+      </div>
+      <div class="note">
+        <p><strong>Subagent scope:</strong> The first worker owns only Phase 1-2 runtime, validator, tool definition, eval, and directly related test changes.</p>
+        <p>Broad guidance content migration is intentionally held back until the core contract and repair behavior are stable.</p>
+      </div>
+      <div class="note">
+        <p><strong>Required guidance fixture cleanup:</strong> Older passing validator fixtures were updated to include derived required guidance IDs.</p>
+        <p>This is fixture alignment rather than a new product behavior: the validator now enforces always-base guidance plus answer-mode and category guidance for non-trivial answers.</p>
+      </div>
+      <div class="note">
+        <p><strong>Repair prioritization:</strong> Answer-mode mismatches repair terminal-first instead of loading guidance for the wrong mode.</p>
+        <p>When the model declares a concrete product intent but submits <code>general_advice</code>, the validator may also notice that general-advice guidance is missing. In that specific combination, the repair should correct the terminal answer to product mode using already returned product evidence, not load unrelated general guidance.</p>
+      </div>
+      <div class="note">
+        <p><strong>Bondbuilder examples:</strong> High-confidence technologies from the old doc were kept as explanatory context, not default recommendations.</p>
+        <p>This preserves the useful distinction while keeping product selection authoritative: concrete Bondbuilder product names, availability, order, and category membership still need <code>select_products</code> or curated catalog data.</p>
+      </div>
+      <div class="note">
+        <p><strong>Bondbuilder product facts:</strong> Dynamic product/lifecycle/lane facts were pushed back toward catalog metadata.</p>
+        <p>The Bondbuilder markdown still names OLAPLEX, K18, and Epres as technology examples because that helps the model understand the category. It now explicitly says not to recommend, rank, compare, show cards, or make product-specific claims unless <code>select_products</code> or curated metadata returned the relevant product truth. This keeps the context useful without turning it into a stale product fact sheet.</p>
+      </div>
+      <div class="note">
+        <p><strong>Bondbuilder boundaries:</strong> The old negative-only ending was rewritten as replacement behavior.</p>
+        <p><code>category.bondbuilder.v1</code> now ends with <code>Boundaries And Replacement Behavior</code> instead of <code>Do Not</code>. Each forbidden mapping is paired with what the model should do instead, so the guidance stays compact and constructive while product/tool/validator enforcement remains outside the markdown.</p>
+      </div>
+      <div class="note">
+        <p><strong>CWC/OWC placement:</strong> The old CWC/OWC technique docs were folded into <code>base.general_advice.v1</code>.</p>
+        <p>This keeps V0 lean and avoids a new topic package before Compare Lab proves the need. If CWC/OWC becomes a frequent routed intent, it may deserve a dedicated package later.</p>
+      </div>
+      <div class="note">
+        <p><strong>Source-map test lifecycle:</strong> I added coverage for every legacy markdown source while the old guidance directory remains the migration reference.</p>
+        <p>If the old guidance is later archived or deleted, this test should be retired or pointed at the archive manifest. Keeping it forever would turn a temporary migration audit into brittle maintenance.</p>
+      </div>
+      <div class="note">
+        <p><strong>Safety forbidden-text checks:</strong> The regression fixture avoids broad words like <code>Produkt</code> and <code>Routine</code> as forbidden terms.</p>
+        <p>Those words can appear in good safety answers as caveats, for example “keine Produkt- oder Routineempfehlung”. The fixture now checks for more concrete bad behaviors such as product cards, purchase language, or a routine plan.</p>
+      </div>
+
+      <h2>Open Questions</h2>
+      <div class="note">
+        <p><strong>CWC/OWC package split:</strong> Keep as base general guidance for now. Revisit only if manual testing shows the model needs more targeted loading or the guidance becomes too large/noisy.</p>
+      </div>
+      <div class="note">
+        <p><strong>Semantic intent self-reporting:</strong> The live regression report still shows cases where the model can classify a concrete product or routine ask as general advice and therefore avoid the tool validator.</p>
+        <p>I am leaving that as an explicit next design question instead of adding German regex intent gates in this pass. A future fix should preserve the architecture principle: model owns interpretation, code validates exposed structure and tool behavior, and manual/live evals catch remaining model-quality misses.</p>
+      </div>
+      <div class="note">
+        <p><strong>Trace retention:</strong> Compare Lab judgment logs may currently retain full AgentV2 traces, including model step items and injected session memory.</p>
+        <p>This is dev-only under <code>tmp/</code>, but it is broader than the analysis snapshot needs. If AgentV2 traces become more sensitive or durable, we should sanitize judgment persistence to store only review-relevant summaries.</p>
+      </div>
+    </main>
+  </body>
+</html>
