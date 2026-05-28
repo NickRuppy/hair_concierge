@@ -224,6 +224,9 @@ type CurrentCareFactToolParameters = z.infer<typeof CurrentCareFactToolParameter
 
 export function parseCurrentCareFactToolInput(value: unknown): CurrentCareFactInput {
   if (value && typeof value === "object" && !Array.isArray(value) && "fact" in value) {
+    if (Object.keys(value).length !== 1) {
+      throw new Error("Invalid current care fact tool input")
+    }
     return parseCurrentCareFactToolInput((value as { fact?: unknown }).fact)
   }
 

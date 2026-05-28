@@ -201,6 +201,27 @@ test("AgentV2 rejects current-care direct tool input with branch leakage", () =>
       }),
     /Invalid current care fact tool input/,
   )
+
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        fact: {
+          kind: "routine_frequency",
+          category: "dry_shampoo",
+          frequency: "daily",
+          evidenceQuote: "I use dry shampoo daily",
+        },
+        kind: "profile_override",
+        field: "thickness",
+        value: "fine",
+        category: null,
+        present: null,
+        frequency: null,
+        code: null,
+        evidenceQuote: "Actually my hair is fine",
+      }),
+    /Invalid current care fact tool input/,
+  )
 })
 
 test("AgentV2 runtime rejects current-care facts with fabricated evidence quotes", async () => {
