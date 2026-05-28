@@ -25,6 +25,7 @@ export function FeedbackWidget() {
   const [success, setSuccess] = React.useState(false)
   const [hintVisible, setHintVisible] = React.useState(false)
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null)
+  const hintTimerRef = React.useRef<number | null>(null)
 
   const enabled = process.env.NEXT_PUBLIC_BETA_FEEDBACK_ENABLED === "true"
 
@@ -33,10 +34,25 @@ export function FeedbackWidget() {
   React.useEffect(() => {
     if (!enabled || loading || !user) return
     if (typeof window === "undefined") return
-    if (window.localStorage.getItem(HINT_STORAGE_KEY)) return
 
-    const timer = window.setTimeout(() => setHintVisible(true), HINT_DELAY_MS)
-    return () => window.clearTimeout(timer)
+    let alreadySeen = false
+    try {
+      alreadySeen = !!window.localStorage.getItem(HINT_STORAGE_KEY)
+    } catch {
+      // Storage blocked (private mode, strict cookie policy) — assume not seen
+    }
+    if (alreadySeen) return
+
+    hintTimerRef.current = window.setTimeout(() => {
+      setHintVisible(true)
+      hintTimerRef.current = null
+    }, HINT_DELAY_MS)
+    return () => {
+      if (hintTimerRef.current !== null) {
+        window.clearTimeout(hintTimerRef.current)
+        hintTimerRef.current = null
+      }
+    }
   }, [enabled, loading, user])
 
   React.useEffect(() => {
@@ -49,6 +65,10 @@ export function FeedbackWidget() {
   if (!enabled || loading || !user) return null
 
   function dismissHint() {
+    if (hintTimerRef.current !== null) {
+      window.clearTimeout(hintTimerRef.current)
+      hintTimerRef.current = null
+    }
     setHintVisible(false)
     try {
       window.localStorage.setItem(HINT_STORAGE_KEY, "1")
@@ -164,7 +184,7 @@ export function FeedbackWidget() {
           "shadow-[-6px_0_16px_-6px_rgba(217,106,118,0.45)]",
           "transition-transform duration-200 ease-out",
           "hover:-translate-x-[3px] hover:-translate-y-1/2",
-          "active:translate-x-0 active:-translate-y-1/2",
+          "active:translate-x-[0px] active:-translate-y-1/2",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           hintVisible && "animate-feedback-pulse",
         )}
