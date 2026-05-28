@@ -8,7 +8,7 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://eu.i.posthog.com https://cdp-eu.customer.io https://js.stripe.com https://checkout.stripe.com https://www.paypal.com https://www.paypalobjects.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.supabase.co https://www.tophair.de https://assets.cdn.filesafe.space",
+      "img-src 'self' data: blob: https://*.supabase.co https://www.tophair.de https://assets.cdn.filesafe.space https://www.paypalobjects.com",
       "font-src 'self' data:",
       "connect-src 'self' https://eu.i.posthog.com https://eu.posthog.com https://cdp-eu.customer.io https://*.supabase.co https://*.sentry.io https://api.stripe.com https://js.stripe.com https://checkout.stripe.com https://www.paypal.com https://www.sandbox.paypal.com https://api-m.paypal.com https://api-m.sandbox.paypal.com",
       "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.paypal.com https://www.sandbox.paypal.com",

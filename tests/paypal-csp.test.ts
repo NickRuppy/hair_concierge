@@ -11,6 +11,7 @@ test("CSP allows PayPal SDK, API, and button frames", async () => {
   assert.ok(csp, "expected Content-Security-Policy-Report-Only header")
   assert.match(csp, /script-src[^;]*https:\/\/www\.paypal\.com/)
   assert.match(csp, /script-src[^;]*https:\/\/www\.paypalobjects\.com/)
+  assert.match(csp, /img-src[^;]*https:\/\/www\.paypalobjects\.com/)
   assert.match(csp, /connect-src[^;]*https:\/\/www\.paypal\.com/)
   assert.match(csp, /connect-src[^;]*https:\/\/www\.sandbox\.paypal\.com/)
   assert.match(csp, /connect-src[^;]*https:\/\/api-m\.paypal\.com/)
