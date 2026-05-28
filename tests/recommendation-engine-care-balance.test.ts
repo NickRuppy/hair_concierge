@@ -2,8 +2,16 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { adaptRecommendationInputFromPersistence } from "../src/lib/recommendation-engine/adapters/from-persistence"
+import { buildDamageAssessment } from "../src/lib/recommendation-engine/assessments/damage"
+import {
+  classifyHeatExposure,
+  compareFrequencyBands,
+  hasDeepCleansingVulnerability,
+  type DeepCleansingVulnerabilityReasonCode,
+} from "../src/lib/recommendation-engine/care-balance/shared"
 import { buildEffectiveCareContext } from "../src/lib/recommendation-engine/effective-care-context"
-import type { CurrentTurnCareFact } from "../src/lib/recommendation-engine/types"
+import type { CurrentTurnCareFact, DamageAssessment } from "../src/lib/recommendation-engine/types"
+import type { StylingTool } from "../src/lib/vocabulary"
 import { LOW_DAMAGE_PROFILE } from "./recommendation-engine-foundation.fixtures"
 
 test("current-turn routine frequency overrides saved routine frequency and records conflict", () => {
@@ -165,4 +173,192 @@ test("context signals are retained without changing the effective profile", () =
   assert.deepEqual(context.currentTurnFacts, facts)
   assert.deepEqual(context.conflicts, [])
   assert.deepEqual(context.provenance, [])
+})
+
+test("compareFrequencyBands orders known bands and returns null when either side is unknown", () => {
+  assert.equal(compareFrequencyBands("1_2x", "3_4x"), -1)
+  assert.equal(compareFrequencyBands("3_4x", "3_4x"), 0)
+  assert.equal(compareFrequencyBands("daily", "1_2x"), 1)
+  assert.equal(compareFrequencyBands(null, "1_2x"), null)
+  assert.equal(compareFrequencyBands("1_2x", null), null)
+})
+
+test("hasDeepCleansingVulnerability reports vulnerable drivers for dry, damaged, textured, or rough profiles", () => {
+  const rawInput = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      hair_texture: "curly",
+      concerns: ["dryness"],
+      scalp_type: "dry",
+      chemical_treatment: ["colored"],
+      cuticle_condition: "rough",
+    },
+    [],
+  ).input
+  const vulnerableProfile = buildEffectiveCareContext(rawInput).normalized
+  const vulnerableDamage = buildDamageAssessment(vulnerableProfile)
+
+  const vulnerability = hasDeepCleansingVulnerability(vulnerableProfile, vulnerableDamage)
+
+  assert.equal(vulnerability.vulnerable, true)
+  assert.deepEqual(vulnerability.relevantTools, [])
+  assert.deepEqual(vulnerability.reasonCodes, [
+    "dry_scalp",
+    "dry_lengths_or_concerns",
+    "high_damage",
+    "color_or_bleach",
+    "curly_or_coily_texture",
+    "rough_cuticle",
+  ])
+})
+
+test("hasDeepCleansingVulnerability treats each vulnerability driver as independently sufficient", () => {
+  const buildProfile = (overrides: Partial<typeof LOW_DAMAGE_PROFILE>) =>
+    buildEffectiveCareContext(
+      adaptRecommendationInputFromPersistence(
+        {
+          ...LOW_DAMAGE_PROFILE,
+          ...overrides,
+        },
+        [],
+      ).input,
+    ).normalized
+
+  const cases: {
+    name: string
+    profile: ReturnType<typeof buildProfile>
+    damageOverride?: Partial<DamageAssessment>
+    expectedReasonCode: DeepCleansingVulnerabilityReasonCode
+  }[] = [
+    {
+      name: "dry scalp",
+      profile: buildProfile({ scalp_type: "dry" }),
+      expectedReasonCode: "dry_scalp",
+    },
+    {
+      name: "dry lengths",
+      profile: buildProfile({ concerns: ["dryness"] }),
+      expectedReasonCode: "dry_lengths_or_concerns",
+    },
+    {
+      name: "high damage",
+      profile: buildProfile({}),
+      damageOverride: { overallLevel: "high" },
+      expectedReasonCode: "high_damage",
+    },
+    {
+      name: "color or bleach",
+      profile: buildProfile({ chemical_treatment: ["bleached"] }),
+      expectedReasonCode: "color_or_bleach",
+    },
+    {
+      name: "curly or coily",
+      profile: buildProfile({ hair_texture: "coily" }),
+      expectedReasonCode: "curly_or_coily_texture",
+    },
+    {
+      name: "rough cuticle",
+      profile: buildProfile({ cuticle_condition: "rough" }),
+      expectedReasonCode: "rough_cuticle",
+    },
+  ]
+
+  for (const testCase of cases) {
+    const damage = {
+      ...buildDamageAssessment(testCase.profile),
+      ...testCase.damageOverride,
+    }
+    const vulnerability = hasDeepCleansingVulnerability(testCase.profile, damage)
+
+    assert.equal(vulnerability.vulnerable, true, testCase.name)
+    assert.equal(
+      vulnerability.reasonCodes.includes(testCase.expectedReasonCode),
+      true,
+      testCase.name,
+    )
+  }
+})
+
+test("hasDeepCleansingVulnerability is false for quiet balanced profiles", () => {
+  const balancedProfile = buildEffectiveCareContext(
+    adaptRecommendationInputFromPersistence(LOW_DAMAGE_PROFILE, []).input,
+  ).normalized
+  const balancedDamage = buildDamageAssessment(balancedProfile)
+
+  assert.deepEqual(hasDeepCleansingVulnerability(balancedProfile, balancedDamage), {
+    vulnerable: false,
+    relevantTools: [],
+    reasonCodes: [],
+  })
+})
+
+test("classifyHeatExposure distinguishes airflow, moderate, cumulative, direct, and none tiers", () => {
+  type StylingTools = StylingTool[]
+  const buildProfileWithTools = (
+    stylingTools: StylingTools,
+    dryingMethod: typeof LOW_DAMAGE_PROFILE.drying_method = "air_dry",
+  ) =>
+    buildEffectiveCareContext(
+      adaptRecommendationInputFromPersistence(
+        {
+          ...LOW_DAMAGE_PROFILE,
+          drying_method: dryingMethod,
+          heat_styling: stylingTools.length > 0 ? "once_weekly" : "never",
+          styling_tools: stylingTools,
+        },
+        [],
+      ).input,
+    ).normalized
+
+  assert.deepEqual(classifyHeatExposure(buildProfileWithTools(["blow_dryer"])), {
+    tier: "airflow",
+    relevantTools: ["blow_dryer"],
+    reasonCodes: ["airflow_heat_tool"],
+  })
+  assert.deepEqual(classifyHeatExposure(buildProfileWithTools(["diffuser"])), {
+    tier: "airflow",
+    relevantTools: ["diffuser"],
+    reasonCodes: ["airflow_heat_tool"],
+  })
+  assert.deepEqual(classifyHeatExposure(buildProfileWithTools([], "blow_dry")), {
+    tier: "airflow",
+    relevantTools: ["blow_dryer"],
+    reasonCodes: ["airflow_heat_tool"],
+  })
+  assert.deepEqual(classifyHeatExposure(buildProfileWithTools([], "blow_dry_diffuser")), {
+    tier: "airflow",
+    relevantTools: ["diffuser"],
+    reasonCodes: ["airflow_heat_tool"],
+  })
+  assert.deepEqual(classifyHeatExposure(buildProfileWithTools(["hot_air_brush"])), {
+    tier: "moderate",
+    relevantTools: ["hot_air_brush"],
+    reasonCodes: ["moderate_heat_tool"],
+  })
+  assert.deepEqual(classifyHeatExposure(buildProfileWithTools(["thermal_rollers"])), {
+    tier: "moderate",
+    relevantTools: ["thermal_rollers"],
+    reasonCodes: ["moderate_heat_tool"],
+  })
+  assert.deepEqual(
+    classifyHeatExposure(buildProfileWithTools(["hot_air_brush", "thermal_rollers"])),
+    {
+      tier: "high_cumulative",
+      relevantTools: ["hot_air_brush", "thermal_rollers"],
+      reasonCodes: ["cumulative_moderate_heat_tools"],
+    },
+  )
+  assert.deepEqual(classifyHeatExposure(buildProfileWithTools(["flat_iron"])), {
+    tier: "high_direct",
+    relevantTools: ["flat_iron"],
+    reasonCodes: ["direct_high_heat_tool"],
+  })
+  assert.equal(classifyHeatExposure(buildProfileWithTools(["curling_iron"])).tier, "high_direct")
+  assert.equal(classifyHeatExposure(buildProfileWithTools(["wave_iron"])).tier, "high_direct")
+  assert.equal(classifyHeatExposure(buildProfileWithTools(["multi_tool"])).tier, "high_direct")
+  assert.deepEqual(classifyHeatExposure(buildProfileWithTools([])), {
+    tier: "none",
+    relevantTools: [],
+    reasonCodes: [],
+  })
 })
