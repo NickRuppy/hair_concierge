@@ -45,9 +45,14 @@ test("AgentV2 exposes set_current_care_context with current-turn fact schema", (
       value: "several_weekly",
       evidenceQuote: "I use a flat iron twice a week",
     }),
+    CurrentCareFactInputSchema.parse({
+      kind: "context_signal",
+      code: "flat_fast",
+      evidenceQuote: "my hair gets flat fast",
+    }),
   ]
 
-  assert.equal(accepted.length, 5)
+  assert.equal(accepted.length, 6)
 })
 
 test("AgentV2 model-facing current-care tool schema uses direct root fields", () => {
@@ -106,6 +111,25 @@ test("AgentV2 model-facing current-care tool schema uses direct root fields", ()
   )
 })
 
+test("AgentV2 parses current-turn context signals from direct tool input", () => {
+  const parsed = CurrentCareFactToolParametersSchema.parse({
+    kind: "context_signal",
+    field: null,
+    value: null,
+    category: null,
+    present: null,
+    frequency: null,
+    code: "flat_fast",
+    evidenceQuote: "my hair gets flat fast",
+  })
+
+  assert.deepEqual(parseCurrentCareFactToolInput(parsed), {
+    kind: "context_signal",
+    code: "flat_fast",
+    evidenceQuote: "my hair gets flat fast",
+  })
+})
+
 test("AgentV2 runtime rejects current-care facts with fabricated evidence quotes", async () => {
   const result = await runAgentV2ResponsesTurn({
     client: fakeResponsesClientWithOutputs([
@@ -130,6 +154,31 @@ test("AgentV2 runtime rejects current-care facts with fabricated evidence quotes
   assert.equal(
     result.trace.tool_calls.some((call) => call.name === "set_current_care_context"),
     false,
+  )
+})
+
+test("AgentV2 runtime accepts grounded current-turn context signals", async () => {
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([
+      functionCall("call_1", "set_current_care_context", {
+        kind: "context_signal",
+        code: "flat_fast",
+        evidenceQuote: "my hair gets flat fast",
+      }),
+      terminalGeneralAdvice("call_2", {
+        evidence_quote: "my hair gets flat fast",
+      }),
+    ]),
+    message: "my hair gets flat fast. What should I change?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.blocked_tool_calls.length, 0)
+  assert.equal(
+    result.trace.tool_calls.some((call) => call.name === "set_current_care_context"),
+    true,
   )
 })
 
