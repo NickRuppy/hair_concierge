@@ -93,6 +93,8 @@ test("PayPal plan IDs are resolved by the server intent route", () => {
     new URL("../src/components/checkout/paypal-subscription-button.tsx", import.meta.url),
     "utf8",
   )
+  assert.match(buttonSource, /fundingSource=\{FUNDING\.PAYPAL\}/)
+  assert.match(buttonSource, /NEXT_PUBLIC_PAYPAL_CLIENT_ID\?\.trim\(\)/)
   assert.doesNotMatch(buttonSource, /PAYPAL_PLAN_ID_/)
   assert.match(buttonSource, /create-subscription-intent/)
   assert.match(buttonSource, /shipping_preference: "NO_SHIPPING"/)
@@ -102,6 +104,18 @@ test("PayPal plan IDs are resolved by the server intent route", () => {
     "utf8",
   )
   assert.match(routeSource, /getPayPalPlanId/)
+})
+
+test("Cookie banner stacks above PayPal checkout iframes", () => {
+  const cookieConsentSource = readFileSync(
+    new URL("../src/components/cookie-consent/cookie-consent.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(cookieConsentSource, /aria-label="Cookie-Einstellungen"/)
+  assert.match(cookieConsentSource, /bannerVisible && !settingsOpen/)
+  assert.match(cookieConsentSource, /z-\[100\]/)
+  assert.doesNotMatch(cookieConsentSource, /z-40/)
 })
 
 test("PayPal approval validates the provider custom id before accepting a bound intent", () => {

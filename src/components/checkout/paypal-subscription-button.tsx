@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js"
+import { FUNDING, PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js"
 import type { CreateSubscriptionActions, OnApproveData } from "@paypal/paypal-js"
 
 import type { BillingInterval } from "@/lib/stripe/intervals"
@@ -32,7 +32,7 @@ export function PayPalSubscriptionButton({
 }) {
   const [error, setError] = useState<string | null>(null)
   const intentTokenRef = useRef<string | null>(null)
-  const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
+  const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
 
   if (!clientId) {
     return (
@@ -55,6 +55,7 @@ export function PayPalSubscriptionButton({
       >
         <PayPalButtons
           className="w-full"
+          fundingSource={FUNDING.PAYPAL}
           createSubscription={async (
             _data: Record<string, unknown>,
             actions: CreateSubscriptionActions,
