@@ -84,29 +84,13 @@ export function buildCustomerIoQuizLeadSync({
   quizAnswers: QuizAnswers
 }) {
   const normalizedEmail = normalizeEmail(email)
-
-  if (!marketingConsent) {
-    return {
-      userId: normalizedEmail,
-      identifyTraits: {},
-      eventName: "quiz_profile_submitted",
-      eventProperties: {
-        source: "quiz_lead_api",
-        lead_id: leadId,
-        marketing_consent: false,
-      },
-      shouldIdentify: false,
-      shouldTrackProfileSubmitted: false,
-    }
-  }
-
   const answers = canonicalizeQuizAnswers(quizAnswers)
   const identifyTraits: CustomerIoServerProperties = {
     email: normalizedEmail,
     first_name: firstName(name),
     lead_id: leadId,
-    marketing_consent: true,
-    consent_timestamp: createdAt,
+    marketing_consent: marketingConsent,
+    consent_timestamp: marketingConsent ? createdAt : undefined,
     quiz_completed_at: createdAt,
     hair_texture: answers.structure,
     hair_texture_label: labelFor(answers.structure, HAIR_TEXTURE_LABELS),
@@ -138,7 +122,7 @@ export function buildCustomerIoQuizLeadSync({
     eventProperties: {
       source: "quiz_lead_api",
       lead_id: leadId,
-      marketing_consent: true,
+      marketing_consent: marketingConsent,
     },
     shouldIdentify: true,
     shouldTrackProfileSubmitted: true,

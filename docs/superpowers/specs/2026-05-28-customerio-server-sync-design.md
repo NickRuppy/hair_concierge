@@ -23,8 +23,9 @@ After implementation, quiz lead capture updates Customer.io with structured quiz
 - Use email as the pre-auth Customer.io identifier.
 - Use Supabase `user.id` as the long-term authenticated/customer identifier.
 - Send `email`, `lead_id`, and `stripe_customer_id` as linkage traits.
-- Send all structured quiz answers plus German labels when marketing consent is true.
-- Skip Customer.io quiz lead identify/event entirely when marketing consent is false.
+- Send all structured quiz answers plus German labels for every successful quiz lead capture.
+- Treat `marketing_consent` as the Customer.io campaign/email-send gate, not the ingestion gate.
+- Set `consent_timestamp` only when marketing consent is true; use `quiz_completed_at` for both consent outcomes.
 - Do not send raw free text, chat text, card details, billing address, tax IDs, or payment method identifiers.
 - Emit server `quiz_profile_submitted` instead of reusing browser `quiz_lead_captured`.
 - Reuse lifecycle names for Stripe truth events: `purchase_completed`, `subscription_started`, `subscription_updated`, `subscription_cancelled`, `payment_failed`.
@@ -65,7 +66,7 @@ Server track:
 
 The canonical trait list lives in [customerio-data-contract.md](../../customerio-data-contract.md). This design doc owns architecture and routing decisions; the data contract owns exact trait/event names.
 
-When `marketing_consent` is false, Customer.io quiz lead sync is skipped in V1. Supabase still stores the lead internally. Any future change to send non-consenting leads to Customer.io requires an explicit legal basis and privacy review.
+When `marketing_consent` is false, Customer.io still receives the quiz lead profile and `quiz_profile_submitted` event. Marketing or lifecycle email campaigns must include `marketing_consent = true` in their trigger/entry criteria. Requested/transactional messages are a separate product and legal path.
 
 ## Stripe Data Rules
 
@@ -106,8 +107,9 @@ Out of scope:
 
 Automated verification should prove:
 
-- Rich quiz traits include all structured answers and labels when consent is true.
-- Customer.io quiz lead sync is skipped when consent is false.
+- Rich quiz traits include all structured answers and labels for both `marketing_consent: true` and `marketing_consent: false`.
+- Customer.io quiz lead sync still identifies and tracks when marketing consent is false.
+- `consent_timestamp` is omitted when marketing consent is false.
 - `concerns_other_text` is never sent.
 - Server Customer.io requests use EU Pipelines endpoints, strict mode, Basic auth, and stable `messageId`.
 - `/api/quiz/lead` returns success even when Customer.io fails.

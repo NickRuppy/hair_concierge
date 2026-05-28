@@ -48,11 +48,14 @@ test("quiz lead sync returns failed results without throwing when Customer.io is
   }
 })
 
-test("quiz lead sync skips Customer.io entirely when marketing consent is false", async () => {
-  const calls: unknown[] = []
+test("quiz lead sync sends Customer.io profile and event when marketing consent is false", async () => {
+  const calls: Array<{ url: string; body: Record<string, unknown> }> = []
   const originalFetch = globalThis.fetch
-  globalThis.fetch = (async (url: string | URL | Request) => {
-    calls.push(String(url))
+  globalThis.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
+    calls.push({
+      url: String(url),
+      body: JSON.parse(String(init?.body ?? "{}")) as Record<string, unknown>,
+    })
     return new Response("{}", { status: 200 })
   }) as typeof fetch
 
@@ -78,9 +81,25 @@ test("quiz lead sync skips Customer.io entirely when marketing consent is false"
         },
       })
 
-      assert.equal(result.identify, undefined)
-      assert.equal(result.profileSubmitted, undefined)
-      assert.deepEqual(calls, [])
+      assert.equal(result.identify?.ok, true)
+      assert.equal(result.profileSubmitted?.ok, true)
+      assert.equal(calls.length, 2)
+      assert.equal(calls[0].url, "https://cdp-eu.customer.io/v1/identify")
+      assert.equal(calls[1].url, "https://cdp-eu.customer.io/v1/track")
+      assert.equal(calls[0].body.userId, "lead@example.com")
+      assert.equal(calls[1].body.userId, "lead@example.com")
+
+      const identifyTraits = calls[0].body.traits as Record<string, unknown>
+      assert.equal(identifyTraits.email, "lead@example.com")
+      assert.equal(identifyTraits.lead_id, "lead-456")
+      assert.equal(identifyTraits.marketing_consent, false)
+      assert.equal(identifyTraits.consent_timestamp, undefined)
+      assert.equal(identifyTraits.quiz_completed_at, "2026-05-28T10:00:00.000Z")
+
+      assert.equal(calls[1].body.event, "quiz_profile_submitted")
+      const eventProperties = calls[1].body.properties as Record<string, unknown>
+      assert.equal(eventProperties.lead_id, "lead-456")
+      assert.equal(eventProperties.marketing_consent, false)
     })
   } finally {
     globalThis.fetch = originalFetch

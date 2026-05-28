@@ -58,7 +58,7 @@ test("builds rich Customer.io quiz traits with labels when consent is true", () 
   assert.equal(sync.eventProperties.source, "quiz_lead_api")
 })
 
-test("skips Customer.io quiz lead sync when consent is false", () => {
+test("builds rich Customer.io quiz traits when marketing consent is false", () => {
   const sync = buildCustomerIoQuizLeadSync({
     createdAt: "2026-05-28T10:00:00.000Z",
     email: "lead@example.com",
@@ -79,7 +79,33 @@ test("skips Customer.io quiz lead sync when consent is false", () => {
     },
   })
 
-  assert.equal(sync.shouldIdentify, false)
-  assert.equal(sync.shouldTrackProfileSubmitted, false)
-  assert.deepEqual(sync.identifyTraits, {})
+  assert.equal(sync.shouldIdentify, true)
+  assert.equal(sync.shouldTrackProfileSubmitted, true)
+  assert.equal(sync.identifyTraits.email, "lead@example.com")
+  assert.equal(sync.identifyTraits.first_name, "Lead")
+  assert.equal(sync.identifyTraits.lead_id, "lead-456")
+  assert.equal(sync.identifyTraits.marketing_consent, false)
+  assert.equal(sync.identifyTraits.consent_timestamp, undefined)
+  assert.equal(sync.identifyTraits.quiz_completed_at, "2026-05-28T10:00:00.000Z")
+  assert.equal(sync.identifyTraits.hair_texture, "curly")
+  assert.equal(sync.identifyTraits.hair_texture_label, "Lockig")
+  assert.equal(sync.identifyTraits.thickness, "coarse")
+  assert.equal(sync.identifyTraits.thickness_label, "Dick")
+  assert.equal(sync.identifyTraits.density, "high")
+  assert.equal(sync.identifyTraits.density_label, "Viele Haare")
+  assert.equal(sync.identifyTraits.cuticle_condition, "rau")
+  assert.equal(sync.identifyTraits.cuticle_condition_label, "Rau")
+  assert.equal(sync.identifyTraits.protein_moisture_balance, "snaps")
+  assert.equal(sync.identifyTraits.protein_moisture_balance_label, "Feuchtigkeitsmangel")
+  assert.equal(sync.identifyTraits.scalp_type, "fettig")
+  assert.equal(sync.identifyTraits.scalp_type_label, "Schnell fettend")
+  assert.equal(sync.identifyTraits.has_scalp_issue, false)
+  assert.deepEqual(sync.identifyTraits.concerns, ["breakage"])
+  assert.deepEqual(sync.identifyTraits.concern_labels, ["Haarbruch"])
+  assert.deepEqual(sync.identifyTraits.chemical_treatment, ["natur"])
+  assert.deepEqual(sync.identifyTraits.chemical_treatment_labels, ["Naturhaar"])
+  assert.deepEqual(sync.identifyTraits.goals, ["anti_breakage"])
+  assert.deepEqual(sync.identifyTraits.goal_labels, ["Anti-Haarbruch"])
+  assert.equal("concerns_other_text" in sync.identifyTraits, false)
+  assert.equal(sync.eventProperties.marketing_consent, false)
 })

@@ -29,7 +29,7 @@ The Customer.io App API remains reserved for transactional auth email sends.
 
 ## Quiz Lead Traits
 
-When `marketing_consent` is `true`, the quiz lead sync sends all structured quiz answers and German display labels:
+After a successful quiz lead capture, Customer.io receives all structured quiz answers and German display labels regardless of the final quiz email-marketing consent choice:
 
 ```txt
 email
@@ -63,7 +63,9 @@ goal_labels
 
 `first_name` is the first whitespace-delimited token from the submitted quiz name. Do not send the full submitted name in V1 unless templates explicitly need it and privacy review approves it.
 
-When `marketing_consent` is `false`, quiz lead capture does not create or update a Customer.io person in V1. Supabase remains the source of truth. This can be revisited only with an explicit legal basis for sending non-consenting leads to a US-headquartered lifecycle/CDP vendor.
+`marketing_consent` is the campaign and email-send gate, not the Customer.io ingestion gate. Campaigns that send marketing or lifecycle email must require `marketing_consent = true` in their trigger/entry criteria. If `marketing_consent` is `false`, Customer.io still receives the lead profile and `quiz_profile_submitted` event for operational lifecycle state, segmentation analysis, and requested/transactional flows.
+
+`consent_timestamp` is only set when `marketing_consent` is `true`. Use `quiz_completed_at` as the lead/profile timestamp for both accepted and declined marketing consent.
 
 Do not send raw free text such as `concerns_other_text`.
 
@@ -81,6 +83,8 @@ payment_failed
 ```
 
 Browser events such as `quiz_lead_captured` remain analytics signals. Do not use browser `quiz_lead_captured` as the Customer.io campaign trigger when `quiz_profile_submitted` is available.
+
+Marketing/lifecycle email campaigns that use `quiz_profile_submitted` must also filter for `marketing_consent = true`.
 
 Browser `purchase_completed` and `subscription_started` must not be routed to Customer.io once server Stripe webhook events are live. PostHog and Meta can still receive the browser-return events.
 
