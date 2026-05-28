@@ -317,6 +317,22 @@
   transform-origin: center center;
 }
 
+/* Feedback side-tab attention pulse — fires while the first-time hint is up */
+@keyframes feedbackPulse {
+  0%, 100% {
+    box-shadow: -6px 0 16px -6px rgba(217, 106, 118, 0.45);
+  }
+  50% {
+    box-shadow:
+      -6px 0 16px -6px rgba(217, 106, 118, 0.45),
+      -2px 0 0 6px rgba(217, 106, 118, 0.25);
+  }
+}
+
+.animate-feedback-pulse {
+  animation: feedbackPulse 1.6s ease-in-out 3;
+}
+
 @keyframes statusFade {
   from {
     opacity: 0;
