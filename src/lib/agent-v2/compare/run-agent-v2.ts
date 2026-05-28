@@ -4,6 +4,9 @@ import { getUserContext } from "@/lib/agent/tools/get-user-context"
 import { createSelectProductsTool } from "@/lib/agent/tools/select-products"
 import type { SelectProductsToolResult } from "@/lib/agent/tools/select-products"
 import { loadUserMemoryContext } from "@/lib/rag/user-memory"
+import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
+import type { EffectiveCareContext } from "@/lib/recommendation-engine/types"
+import type { RoutineProduct } from "@/lib/vocabulary"
 import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"
 import { runAgentV2ResponsesTurn } from "@/lib/agent-v2/runtime/responses-agent"
 import { buildAgentV2ProductToolMessage } from "@/lib/agent-v2/compare/product-tool-context"
@@ -19,6 +22,7 @@ import {
   type AgentV2SafetyMode,
   type AgentV2TerminalAnswer,
 } from "@/lib/agent-v2/contracts"
+import type { HairProfile } from "@/lib/types"
 import type {
   AgentCompareScenario,
   AgentCompareTurnResult,
@@ -440,6 +444,15 @@ const ROUTINE_THREAD_CATEGORY_VALUES = new Set([
   "treatment",
 ])
 
+const ROUTINE_PRODUCT_CATEGORY_VALUES = new Set<RoutineProduct>([
+  "shampoo",
+  "conditioner",
+  "leave_in",
+  "oil",
+  "mask",
+  "heat_protectant",
+])
+
 function normalizeRoutineThreadCategory(category: string): string | null {
   const inferred = inferRoutineThreadCategory(category)
   if (inferred) return inferred
@@ -449,6 +462,113 @@ function normalizeRoutineThreadCategory(category: string): string | null {
     .toLocaleLowerCase("de-DE")
     .replace(/[-\s]+/g, "_")
   return ROUTINE_THREAD_CATEGORY_VALUES.has(normalized) ? normalized : null
+}
+
+function readAgentV2EffectiveCareContext(
+  input: Record<string, unknown>,
+): EffectiveCareContext | null {
+  const value = input.effective_care_context
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null
+  const normalized = (value as { normalized?: unknown }).normalized
+  if (!normalized || typeof normalized !== "object" || Array.isArray(normalized)) return null
+  const routineInventory = (normalized as { routineInventory?: unknown }).routineInventory
+  if (
+    !routineInventory ||
+    typeof routineInventory !== "object" ||
+    Array.isArray(routineInventory)
+  ) {
+    return null
+  }
+  return value as EffectiveCareContext
+}
+
+function createEmptyAgentV2HairProfile(): HairProfile {
+  return {
+    id: "",
+    user_id: "",
+    hair_texture: null,
+    thickness: null,
+    density: null,
+    concerns: [],
+    products_used: null,
+    wash_frequency: null,
+    heat_styling: null,
+    styling_tools: null,
+    goals: [],
+    cuticle_condition: null,
+    protein_moisture_balance: null,
+    scalp_type: null,
+    scalp_condition: null,
+    chemical_treatment: [],
+    desired_volume: null,
+    routine_preference: null,
+    current_routine_products: [],
+    towel_material: null,
+    towel_technique: null,
+    drying_method: null,
+    brush_type: null,
+    night_protection: null,
+    uses_heat_protection: false,
+    additional_notes: null,
+    conversation_memory: null,
+    created_at: "",
+    updated_at: "",
+  }
+}
+
+function buildAgentV2EffectiveHairProfile(
+  fallback: HairProfile | null,
+  effectiveContext: EffectiveCareContext | null,
+): HairProfile | null {
+  if (!effectiveContext) return fallback
+
+  const profile = effectiveContext.normalized
+  return {
+    ...(fallback ?? createEmptyAgentV2HairProfile()),
+    hair_texture: profile.hairTexture,
+    thickness: profile.thickness,
+    density: profile.density,
+    concerns: [...profile.concerns],
+    wash_frequency: profile.washFrequency,
+    heat_styling: profile.heatStyling,
+    styling_tools: profile.stylingTools ? [...profile.stylingTools] : null,
+    goals: [...profile.goals],
+    cuticle_condition: profile.cuticleCondition,
+    protein_moisture_balance: profile.proteinMoistureBalance,
+    scalp_type: profile.scalpType,
+    scalp_condition: profile.scalpCondition,
+    chemical_treatment: [...profile.chemicalTreatment],
+    current_routine_products: Object.values(profile.routineInventory).flatMap((item) =>
+      item?.present === true && ROUTINE_PRODUCT_CATEGORY_VALUES.has(item.category as RoutineProduct)
+        ? [item.category as RoutineProduct]
+        : [],
+    ),
+    towel_material: profile.towelMaterial,
+    towel_technique: profile.towelTechnique,
+    drying_method: profile.dryingMethod,
+    brush_type: profile.brushType,
+    night_protection: profile.nightProtection ? [...profile.nightProtection] : null,
+    uses_heat_protection: profile.usesHeatProtection,
+  }
+}
+
+function buildAgentV2EffectiveRoutineItems(
+  fallback: PersistenceRoutineItemRow[],
+  effectiveContext: EffectiveCareContext | null,
+): PersistenceRoutineItemRow[] {
+  if (!effectiveContext) return fallback
+
+  return Object.values(effectiveContext.normalized.routineInventory).flatMap((item) =>
+    item?.present === true
+      ? [
+          {
+            category: item.category,
+            product_name: item.productName,
+            frequency_range: item.frequencyBand,
+          },
+        ]
+      : [],
+  )
 }
 
 function formatRoutineThreadCategoryLabel(category: string): string {
@@ -568,6 +688,15 @@ export async function runAgentV2ComparisonForUser(
         load_advisor_guidance: async (input) => loadAgentV2AdvisorGuidance(input),
         select_products: async (input) => {
           latestSelectProductsResult = null
+          const effectiveCareContext = readAgentV2EffectiveCareContext(input)
+          const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
+            context.profile,
+            effectiveCareContext,
+          )
+          const effectiveRoutineItems = buildAgentV2EffectiveRoutineItems(
+            context.routine_inventory,
+            effectiveCareContext,
+          )
           const productToolMessage = buildAgentV2ProductToolMessage({
             latestMessage: message,
             recentMessages,
@@ -575,16 +704,16 @@ export async function runAgentV2ComparisonForUser(
           const projection = await selectProducts({
             category: input.category as Parameters<typeof selectProducts>[0]["category"],
             message: productToolMessage,
-            hairProfile: context.profile,
+            hairProfile: effectiveHairProfile,
             memoryContext,
-            routineItems: context.routine_inventory,
+            routineItems: effectiveRoutineItems,
           })
           const rawResult =
             latestSelectProductsResult ??
             ({
               projection,
               products: [],
-              effectiveHairProfile: context.profile,
+              effectiveHairProfile,
               runtime: {} as SelectProductsToolResult["runtime"],
             } satisfies SelectProductsToolResult)
           const agentProjection = projectSelectProductsForAgentV2(rawResult)
@@ -592,6 +721,15 @@ export async function runAgentV2ComparisonForUser(
           return agentProjection
         },
         build_or_fix_routine: async (input) => {
+          const effectiveCareContext = readAgentV2EffectiveCareContext(input)
+          const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
+            context.profile,
+            effectiveCareContext,
+          )
+          const effectiveRoutineItems = buildAgentV2EffectiveRoutineItems(
+            context.routine_inventory,
+            effectiveCareContext,
+          )
           const mutationKind = typeof input.mutation_kind === "string" ? input.mutation_kind : null
           const projection = await buildRoutine({
             objective:
@@ -599,12 +737,13 @@ export async function runAgentV2ComparisonForUser(
                 ? input.objective
                 : "build_routine",
             message,
-            hairProfile: context.profile,
+            hairProfile: effectiveHairProfile,
             layer: input.requested_layer as Parameters<typeof buildRoutine>[0]["layer"],
             requestedCategory: input.requested_category as Parameters<
               typeof buildRoutine
             >[0]["requestedCategory"],
             mutationKind: mutationKind as Parameters<typeof buildRoutine>[0]["mutationKind"],
+            routineItems: effectiveRoutineItems,
           })
           return projectRoutineForAgentV2(projection, {
             requestedLayer: input.requested_layer as AgentV2RoutineLayer,

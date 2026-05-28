@@ -15,6 +15,7 @@ import {
   type AgentV2ToolCallTrace,
   type AgentV2ValidationError,
 } from "@/lib/agent-v2/contracts"
+import type { CareBalanceConflict } from "@/lib/recommendation-engine/types"
 import { normalizeAgentV2EvidenceText } from "@/lib/agent-v2/evidence-normalization"
 import { validateUserFacingLanguage } from "@/lib/agent-v2/validation/user-facing-language"
 export interface AgentV2FinalAnswerValidationContext {
@@ -35,6 +36,7 @@ export interface AgentV2FinalAnswerValidationContext {
   currentRoutineLayer: "basics" | "goals" | "problems" | "deep_dive" | null
   routineThreadContext?: AgentV2RoutineThreadContext | null
   hasCurrentRoutineInventory?: boolean
+  currentCareContextConflicts?: readonly CareBalanceConflict[]
   knownHardRuleIds?: readonly string[]
 }
 
@@ -89,6 +91,7 @@ export function validateAgentV2FinalAnswer(
   validateRoutineMetadataConsistency(terminalAnswer, context, findings)
   validateAnswerModeForContext(terminalAnswer, findings)
   validateRoutineLayerProgression(terminalAnswer, context, findings)
+  validateCurrentCareContextConflictAcknowledgement(terminalAnswer, context, findings)
   validateGeneralAdviceNoUnaskedProducts(terminalAnswer, findings)
   validateSafety(terminalAnswer, context, findings)
   validateInternalLeakage(terminalAnswer, findings)
@@ -460,6 +463,36 @@ function validateVisiblePayloadRendered(
         path: ["payload", "user_facing_answer_de"],
       })
     }
+  }
+}
+
+function validateCurrentCareContextConflictAcknowledgement(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+  findings: AgentV2ValidationError[],
+): void {
+  const conflicts = context.currentCareContextConflicts ?? []
+  if (conflicts.length === 0) return
+
+  const userFacing = normalizeVisibleText(readUserFacingAnswer(answer.payload))
+  const acknowledged = conflicts.some((conflict) => {
+    const currentValue = String(conflict.currentTurnValue ?? "").trim()
+    const evidenceQuote = conflict.evidenceQuote.trim()
+    return (
+      (currentValue.length > 0 && hasNormalizedPhrase(userFacing, currentValue)) ||
+      (evidenceQuote.length > 0 && hasNormalizedPhrase(userFacing, evidenceQuote)) ||
+      /\b(aktuell|gerade|korrektur|korrigiert|jetzt|heute)\b/.test(userFacing)
+    )
+  })
+
+  if (!acknowledged) {
+    findings.push({
+      validator_id: "current_care_context_conflict_acknowledgement",
+      message:
+        "Meaningful current-turn profile/routine conflicts should be acknowledged naturally in German when they affect the answer.",
+      severity: "warn",
+      path: ["payload", "user_facing_answer_de"],
+    })
   }
 }
 

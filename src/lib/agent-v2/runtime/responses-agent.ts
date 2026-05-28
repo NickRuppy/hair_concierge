@@ -19,6 +19,8 @@ import type { AgentV2RoutineProjection } from "@/lib/agent-v2/tools/routine-proj
 import type { AgentV2SelectProductsProjection } from "@/lib/agent-v2/tools/select-products-projection"
 import {
   BuildOrFixRoutineToolInputSchema,
+  CurrentCareFactInputSchema,
+  type CurrentCareFactInput,
   SelectProductsToolInputSchema,
   buildAgentV2ResponsesTools,
 } from "@/lib/agent-v2/tools/tool-definitions"
@@ -27,8 +29,21 @@ import {
   type AgentV2FinalAnswerValidationContext,
   type AgentV2FinalAnswerValidationResult,
 } from "@/lib/agent-v2/validation/final-answer-validator"
+import { adaptRecommendationInputFromPersistence } from "@/lib/recommendation-engine/adapters/from-persistence"
+import { buildEffectiveCareContext } from "@/lib/recommendation-engine/effective-care-context"
+import type {
+  CurrentTurnCareFact,
+  EffectiveCareContext,
+  InventoryCategory,
+  ProfileAugmentField,
+  ProfileOverrideField,
+} from "@/lib/recommendation-engine/types"
 
-type AgentV2ToolName = "load_advisor_guidance" | "select_products" | "build_or_fix_routine"
+type AgentV2ToolName =
+  | "load_advisor_guidance"
+  | "set_current_care_context"
+  | "select_products"
+  | "build_or_fix_routine"
 type AgentV2RepairKind =
   | "terminal_only"
   | "missing_guidance_or_tools"
@@ -192,6 +207,11 @@ export async function runAgentV2ResponsesTurn(params: {
   )
   const selectedProductProjections: AgentV2SelectProductsProjection[] = []
   const routineProjections: AgentV2RoutineProjection[] = []
+  const currentTurnCareFacts: CurrentTurnCareFact[] = []
+  let effectiveCareContext = buildEffectiveCareContextForTurn(
+    params.userContext,
+    currentTurnCareFacts,
+  )
   const knownHardRuleIds = new Set<string>()
   let executableToolCalls = 0
   let repairUsed = false
@@ -227,7 +247,8 @@ export async function runAgentV2ResponsesTurn(params: {
     loadedGuidancePackageIds: trace.loaded_guidance_package_ids,
     currentRoutineLayer: params.currentRoutineLayer ?? routineThreadContext?.current_layer ?? null,
     routineThreadContext,
-    hasCurrentRoutineInventory: (params.userContext.routineInventory?.length ?? 0) > 0,
+    hasCurrentRoutineInventory: hasEffectiveRoutineInventory(effectiveCareContext),
+    currentCareContextConflicts: effectiveCareContext.conflicts,
     knownHardRuleIds: [...knownHardRuleIds],
   })
 
@@ -346,24 +367,7 @@ export async function runAgentV2ResponsesTurn(params: {
         return completeWithAnswer(buildCurrentClarificationFallback(), trace)
       }
 
-      const validation = validateAgentV2FinalAnswer(terminal.value, {
-        selectedProductProjections: [
-          ...(params.priorSelectedProductProjections ?? []),
-          ...selectedProductProjections,
-        ],
-        routineProjections,
-        latestUserMessage: params.message,
-        recentEvidenceText: buildRecentEvidenceText(params.recentMessages, routineThreadContext),
-        toolCallHistory: trace.tool_calls,
-        safetyMode,
-        requiredGuidancePackageIds: [],
-        loadedGuidancePackageIds: trace.loaded_guidance_package_ids,
-        currentRoutineLayer:
-          params.currentRoutineLayer ?? routineThreadContext?.current_layer ?? null,
-        routineThreadContext,
-        hasCurrentRoutineInventory: (params.userContext.routineInventory?.length ?? 0) > 0,
-        knownHardRuleIds: [...knownHardRuleIds],
-      })
+      const validation = validateAgentV2FinalAnswer(terminal.value, buildCurrentValidationContext())
 
       if (validation.ok) {
         trace.validation_errors = []
@@ -560,6 +564,27 @@ export async function runAgentV2ResponsesTurn(params: {
         continue
       }
 
+      if (call.name === "set_current_care_context") {
+        const evidenceQuote =
+          typeof validatedArguments.value.evidenceQuote === "string"
+            ? validatedArguments.value.evidenceQuote
+            : ""
+        if (!isEvidenceQuoteGroundedInLatestMessage(evidenceQuote, params.message)) {
+          trace.blocked_tool_calls.push({
+            name: call.name,
+            reason: "evidence_quote_not_grounded",
+          })
+          inputItems.push(
+            buildFunctionCallOutput(call.call_id, {
+              error: "evidence_quote_not_grounded",
+              guidance:
+                "Current-turn care facts require an evidenceQuote copied from the latest user message.",
+            }),
+          )
+          continue
+        }
+      }
+
       const routineRebuildBlock = authorizeBuildOrFixRoutineCall({
         name: call.name,
         args: validatedArguments.value,
@@ -584,6 +609,31 @@ export async function runAgentV2ResponsesTurn(params: {
         continue
       }
 
+      if (call.name === "set_current_care_context") {
+        const toolStartedAt = performance.now()
+        const fact = toCurrentTurnCareFact(validatedArguments.value as CurrentCareFactInput)
+        currentTurnCareFacts.push(fact)
+        effectiveCareContext = buildEffectiveCareContextForTurn(
+          params.userContext,
+          currentTurnCareFacts,
+        )
+        const output = {
+          accepted: true,
+          fact,
+          effective_care_context: effectiveCareContext,
+        }
+        const toolLatencyMs = Math.round(performance.now() - toolStartedAt)
+        inputItems.push(buildFunctionCallOutput(call.call_id, output))
+        trace.tool_calls.push({
+          call_id: call.call_id,
+          name: call.name,
+          arguments: validatedArguments.value,
+          output_summary: summarizeToolOutput(output),
+          latency_ms: toolLatencyMs,
+        })
+        continue
+      }
+
       if (executableToolCalls >= policy.max_executable_tool_calls) {
         trace.failure_stage = "max_executable_tool_calls"
         return completeWithAnswer(buildCurrentClarificationFallback(), trace)
@@ -595,7 +645,8 @@ export async function runAgentV2ResponsesTurn(params: {
         args: validatedArguments.value,
         currentRoutineLayer: params.currentRoutineLayer,
         routineThreadContext,
-        hasCurrentRoutineInventory: (params.userContext.routineInventory?.length ?? 0) > 0,
+        hasCurrentRoutineInventory: hasEffectiveRoutineInventory(effectiveCareContext),
+        effectiveCareContext,
       })
       const toolStartedAt = performance.now()
       const output = await params.tools[call.name](executableArguments)
@@ -665,6 +716,10 @@ function buildInputItems(
     {
       role: "system",
       content: buildAnswerQualityGuidance(),
+    },
+    {
+      role: "system",
+      content: buildCurrentCareContextGuidance(),
     },
     {
       role: "system",
@@ -895,6 +950,17 @@ function buildTerminalPayloadFieldGuidance(): string {
   ].join("\n")
 }
 
+function buildCurrentCareContextGuidance(): string {
+  return [
+    "Current-turn care context tool guidance.",
+    "Call set_current_care_context before care, product, or routine tools when the latest user message explicitly corrects or adds profile/routine facts, such as 'Actually my hair is fine', 'I use dry shampoo daily', 'I do not use conditioner', or 'I use a flat iron twice a week'.",
+    "Do not override durable physical profile facts from symptoms or interpretations, such as 'my hair gets flat fast'; use context_signal for symptoms, cautions, temporary observations, and uncertainty.",
+    "Use exact evidenceQuote text from the latest user message. Do not call the tool for inferred facts or stale conversation details.",
+    "Current-turn facts are turn-local. Do not tell the user you saved or changed their durable profile/routine.",
+    "If a current-turn correction conflicts with saved context and matters to the answer, acknowledge it naturally in German, for example that you are using the current correction for this answer.",
+  ].join("\n")
+}
+
 type RoutineRebuildBlockReason =
   | "routine_summary_rebuild_not_requested"
   | "routine_action_not_authorized"
@@ -999,13 +1065,22 @@ function normalizeExecutableToolArguments(params: {
   currentRoutineLayer: AgentV2RoutineLayer | null | undefined
   routineThreadContext: AgentV2RoutineThreadContext | null
   hasCurrentRoutineInventory: boolean
+  effectiveCareContext: EffectiveCareContext
 }): Record<string, unknown> {
-  if (params.name !== "build_or_fix_routine") return params.args
-  if (hasRoutineBaseline(params)) return params.args
-  if (params.args.requested_layer === "basics") return params.args
+  const args =
+    params.name === "select_products" || params.name === "build_or_fix_routine"
+      ? {
+          ...params.args,
+          effective_care_context: params.effectiveCareContext,
+        }
+      : params.args
+
+  if (params.name !== "build_or_fix_routine") return args
+  if (hasRoutineBaseline(params)) return args
+  if (args.requested_layer === "basics") return args
 
   return {
-    ...params.args,
+    ...args,
     requested_layer: "basics",
   }
 }
@@ -1020,6 +1095,71 @@ function hasRoutineBaseline(params: {
     params.routineThreadContext?.active === true ||
     params.hasCurrentRoutineInventory
   )
+}
+
+function buildEffectiveCareContextForTurn(
+  userContext: AgentV2RuntimeUserContext,
+  facts: readonly CurrentTurnCareFact[],
+): EffectiveCareContext {
+  const adapted = adaptRecommendationInputFromPersistence(
+    userContext.hairProfile as never,
+    Array.isArray(userContext.routineInventory) ? (userContext.routineInventory as never[]) : [],
+  )
+  return buildEffectiveCareContext(adapted.input, [...facts])
+}
+
+function hasEffectiveRoutineInventory(context: EffectiveCareContext): boolean {
+  return Object.values(context.normalized.routineInventory).some((item) => item?.present === true)
+}
+
+function toCurrentTurnCareFact(input: CurrentCareFactInput): CurrentTurnCareFact {
+  if (input.kind === "profile_override") {
+    return {
+      kind: "profile_override",
+      field: input.field as ProfileOverrideField,
+      value: input.value as never,
+      evidenceQuote: input.evidenceQuote,
+      source: "current_turn",
+    }
+  }
+
+  if (input.kind === "profile_augment") {
+    return {
+      kind: "profile_augment",
+      field: input.field as ProfileAugmentField,
+      values: [input.value] as never[],
+      evidenceQuote: input.evidenceQuote,
+      source: "current_turn",
+    }
+  }
+
+  if (input.kind === "routine_presence") {
+    return {
+      kind: "routine_presence",
+      category: input.category as InventoryCategory,
+      present: input.present,
+      evidenceQuote: input.evidenceQuote,
+      source: "current_turn",
+    }
+  }
+
+  if (input.kind === "routine_frequency") {
+    return {
+      kind: "routine_frequency",
+      category: input.category as InventoryCategory,
+      frequencyBand: input.frequency,
+      evidenceQuote: input.evidenceQuote,
+      source: "current_turn",
+    }
+  }
+
+  return {
+    kind: "context_signal",
+    key: input.code,
+    value: true,
+    evidenceQuote: input.evidenceQuote,
+    source: "current_turn",
+  }
 }
 
 const ROUTINE_ACTION_INTENTS = new Set(["create", "modify", "remove_step", "replace_product"])
@@ -1200,6 +1340,15 @@ function validateExecutableToolArguments(
     return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
   }
 
+  if (name === "set_current_care_context") {
+    const parsed = CurrentCareFactInputSchema.safeParse(value)
+    if (parsed.success) return { ok: true, value: parsed.data }
+
+    const wrapped = value.fact
+    const parsedWrapped = CurrentCareFactInputSchema.safeParse(wrapped)
+    return parsedWrapped.success ? { ok: true, value: parsedWrapped.data } : { ok: false }
+  }
+
   if (name === "load_advisor_guidance") {
     const parsed = LoadAgentV2AdvisorGuidanceInputSchema.safeParse(value)
     return parsed.success
@@ -1213,6 +1362,7 @@ function validateExecutableToolArguments(
 function isExecutableToolName(name: string): name is AgentV2ToolName {
   return (
     name === "load_advisor_guidance" ||
+    name === "set_current_care_context" ||
     name === "select_products" ||
     name === "build_or_fix_routine"
   )

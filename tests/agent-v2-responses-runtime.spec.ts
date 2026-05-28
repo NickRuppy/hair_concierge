@@ -17,6 +17,7 @@ test("AgentV2 exposes only the V0 advisor toolset", () => {
     "build_or_fix_routine",
     "load_advisor_guidance",
     "select_products",
+    "set_current_care_context",
     "submit_final_answer",
   ])
 
@@ -32,7 +33,12 @@ test("AgentV2 restricted safety toolset omits product selection", () => {
     .map((tool) => tool.name)
     .sort()
 
-  assert.deepEqual(names, ["build_or_fix_routine", "load_advisor_guidance", "submit_final_answer"])
+  assert.deepEqual(names, [
+    "build_or_fix_routine",
+    "load_advisor_guidance",
+    "set_current_care_context",
+    "submit_final_answer",
+  ])
 })
 
 test("AgentV2 routine tool description steers routine-first changes but excludes placement-only turns", () => {
@@ -111,6 +117,7 @@ test("AgentV2 strict tool schemas avoid open records and root unions", () => {
     "mutation_kind",
     "evidence_quote",
   ])
+  assertRequiredToolFields(tools, "set_current_care_context", ["fact"])
 })
 
 function assertRequiredToolFields(

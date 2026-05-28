@@ -24,6 +24,8 @@ import {
   AgentV2GuidanceCategorySchema,
   LoadAgentV2AdvisorGuidanceInputSchema,
 } from "@/lib/agent-v2/tools/guidance-tool"
+import { INVENTORY_CATEGORIES } from "@/lib/recommendation-engine/contracts"
+import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 
 export interface AgentV2ResponsesToolDefinition {
   type: "function"
@@ -48,6 +50,14 @@ export function buildAgentV2ResponsesTools(params: {
         "Load compact AgentV2 advisor guidance packages for the current answer mode, categories, routine layer, and safety mode. Use this before category-specific claims, product recommendations, routine answers, and non-trivial general advice so the final answer is grounded in AgentV2 guidance rather than model memory. For named-product detail checks and product-specific claim checks, use answer_mode_hint product_recommendation even if the final answer may clarify because catalog data is missing; examples include 'Ist Produkt X farbsicher?' and 'Kann ich Produkt X als Hitzeschutz benutzen?'. For hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo questions, load deep_cleansing_shampoo instead of normal shampoo. For K18, OLAPLEX, Epres, acidic bonding, bond repair, or exact bond-repair protocol questions, load bondbuilder even when the product behaves like a leave-in or mask.",
       strict: true,
       parameters: toStrictJsonSchema(LoadAgentV2AdvisorGuidanceInputSchema),
+    },
+    {
+      type: "function",
+      name: "set_current_care_context",
+      description:
+        "Declare an explicit current-turn profile or routine fact from the latest user message before calling care, product, or routine tools. Use only when the user directly corrects or adds a factual profile/routine detail, such as hair thickness, heat-tool use, current product presence/absence, or product frequency. The evidenceQuote must be exact text from the latest user message. This is turn-local only and never persists profile or routine changes.",
+      strict: true,
+      parameters: toStrictJsonSchema(CurrentCareFactToolParametersSchema),
     },
     {
       type: "function",
@@ -108,6 +118,74 @@ export const BuildOrFixRoutineToolInputSchema = z.strictObject({
 })
 
 export type BuildOrFixRoutineToolInput = z.infer<typeof BuildOrFixRoutineToolInputSchema>
+
+export const ProfileFactFieldSchema = z.enum([
+  "hairTexture",
+  "thickness",
+  "density",
+  "washFrequency",
+  "heatStyling",
+  "cuticleCondition",
+  "proteinMoistureBalance",
+  "scalpType",
+  "scalpCondition",
+  "towelMaterial",
+  "towelTechnique",
+  "dryingMethod",
+  "brushType",
+  "usesHeatProtection",
+])
+
+export const ProfileArrayFactFieldSchema = z.enum([
+  "concerns",
+  "goals",
+  "stylingTools",
+  "chemicalTreatment",
+  "nightProtection",
+])
+
+const InventoryCategorySchema = z.enum(INVENTORY_CATEGORIES)
+const ProductFrequencySchema = z.enum(PRODUCT_FREQUENCIES)
+
+export const CurrentCareFactInputSchema = z.discriminatedUnion("kind", [
+  z.strictObject({
+    kind: z.literal("profile_override"),
+    field: ProfileFactFieldSchema,
+    value: z.unknown(),
+    evidenceQuote: z.string().min(1),
+  }),
+  z.strictObject({
+    kind: z.literal("profile_augment"),
+    field: ProfileArrayFactFieldSchema,
+    value: z.string().min(1),
+    evidenceQuote: z.string().min(1),
+  }),
+  z.strictObject({
+    kind: z.literal("routine_presence"),
+    category: InventoryCategorySchema,
+    present: z.boolean(),
+    evidenceQuote: z.string().min(1),
+  }),
+  z.strictObject({
+    kind: z.literal("routine_frequency"),
+    category: InventoryCategorySchema,
+    frequency: ProductFrequencySchema,
+    evidenceQuote: z.string().min(1),
+  }),
+  z.strictObject({
+    kind: z.literal("context_signal"),
+    code: z.string().min(1),
+    evidenceQuote: z.string().min(1),
+  }),
+])
+
+export const CurrentCareFactToolParametersSchema = z.strictObject({
+  fact: CurrentCareFactInputSchema,
+})
+
+export type CurrentCareFactInput = z.infer<typeof CurrentCareFactInputSchema>
+export type ProfileFactField = z.infer<typeof ProfileFactFieldSchema>
+export type ProfileArrayFactField = z.infer<typeof ProfileArrayFactFieldSchema>
 
 const AgentV2TerminalAnswerToolParametersSchema = z.strictObject({
   answer_mode: AgentV2AnswerModeSchema,
