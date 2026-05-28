@@ -1,6 +1,7 @@
 export * from "@/lib/recommendation-engine/contracts"
 export * from "@/lib/recommendation-engine/types"
 export * from "@/lib/recommendation-engine/adapters/from-persistence"
+export * from "@/lib/recommendation-engine/effective-care-context"
 export * from "@/lib/recommendation-engine/normalize"
 export * from "@/lib/recommendation-engine/request-context"
 export * from "@/lib/recommendation-engine/assessments/damage"

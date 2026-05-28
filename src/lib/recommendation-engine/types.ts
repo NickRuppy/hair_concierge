@@ -32,6 +32,8 @@ import type {
   BOND_APPLICATION_MODES,
   BOND_BUILDER_PRIORITIES,
   BOND_REPAIR_INTENSITIES,
+  CARE_BALANCE_FACT_KINDS,
+  CARE_BALANCE_FACT_SOURCES,
   CANONICAL_BALANCE_TARGETS,
   CANONICAL_CLEANSING_INTENSITIES,
   CANONICAL_REPAIR_LEVELS,
@@ -59,6 +61,8 @@ export type DamageLevel = (typeof DAMAGE_LEVELS)[number]
 export type RepairPriority = (typeof REPAIR_PRIORITIES)[number]
 export type BalanceDirection = (typeof BALANCE_DIRECTIONS)[number]
 export type BondBuilderPriority = (typeof BOND_BUILDER_PRIORITIES)[number]
+export type CareBalanceFactKind = (typeof CARE_BALANCE_FACT_KINDS)[number]
+export type CareBalanceFactSource = (typeof CARE_BALANCE_FACT_SOURCES)[number]
 export type CategoryFitStatus = (typeof CATEGORY_FIT_STATUSES)[number]
 export type CanonicalBalanceTarget = (typeof CANONICAL_BALANCE_TARGETS)[number]
 export type CanonicalScalpRoute = (typeof CANONICAL_SCALP_ROUTES)[number]
@@ -166,6 +170,89 @@ export interface NormalizedProfile {
   nightProtection: NightProtection[] | null
   usesHeatProtection: boolean
   routineInventory: RoutineInventory
+}
+
+export type ProfileOverrideField = Exclude<keyof NormalizedProfile, "routineInventory">
+export type ProfileAugmentField =
+  | "concerns"
+  | "goals"
+  | "stylingTools"
+  | "chemicalTreatment"
+  | "nightProtection"
+
+type ArrayValue<T> = T extends readonly (infer TValue)[] ? TValue : never
+export type ProfileAugmentValue<TField extends ProfileAugmentField = ProfileAugmentField> =
+  ArrayValue<NonNullable<NormalizedProfile[TField]>>
+
+export interface ProfileOverrideCareFact<
+  TField extends ProfileOverrideField = ProfileOverrideField,
+> {
+  kind: "profile_override"
+  field: TField
+  value: NormalizedProfile[TField]
+  evidenceQuote: string
+  source: CareBalanceFactSource
+}
+
+export interface ProfileAugmentCareFact<TField extends ProfileAugmentField = ProfileAugmentField> {
+  kind: "profile_augment"
+  field: TField
+  values: ProfileAugmentValue<TField>[]
+  evidenceQuote: string
+  source: CareBalanceFactSource
+}
+
+export interface RoutinePresenceCareFact {
+  kind: "routine_presence"
+  category: InventoryCategory
+  present: boolean
+  evidenceQuote: string
+  source: CareBalanceFactSource
+}
+
+export interface RoutineFrequencyCareFact {
+  kind: "routine_frequency"
+  category: InventoryCategory
+  frequencyBand: ProductFrequency | null
+  evidenceQuote: string
+  source: CareBalanceFactSource
+}
+
+export interface ContextSignalCareFact {
+  kind: "context_signal"
+  key: string
+  value: unknown
+  evidenceQuote: string
+  source: CareBalanceFactSource
+}
+
+export type CurrentTurnCareFact =
+  | ProfileOverrideCareFact
+  | ProfileAugmentCareFact
+  | RoutinePresenceCareFact
+  | RoutineFrequencyCareFact
+  | ContextSignalCareFact
+
+export interface CareBalanceProvenanceEntry {
+  fieldPath: string
+  source: CareBalanceFactSource
+  factKind: Exclude<CareBalanceFactKind, "context_signal">
+  evidenceQuote: string
+}
+
+export interface CareBalanceConflict {
+  fieldPath: string
+  savedValue: unknown
+  currentTurnValue: unknown
+  source: CareBalanceFactSource
+  evidenceQuote: string
+}
+
+export interface EffectiveCareContext {
+  normalized: NormalizedProfile
+  currentTurnFacts: CurrentTurnCareFact[]
+  provenance: CareBalanceProvenanceEntry[]
+  conflicts: CareBalanceConflict[]
 }
 
 export interface DamageAssessment {

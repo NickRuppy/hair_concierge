@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 
 export const ENGINE_CATEGORY_IDS = [
   "shampoo",
@@ -78,6 +79,14 @@ export const RESET_FOCUSES = [
 ] as const
 export const RESET_INTENSITIES = ["gentle", "medium", "strong"] as const
 export const COLOR_TREATED_SUITABILITIES = ["suitable", "unsuitable_or_unknown"] as const
+export const CARE_BALANCE_FACT_KINDS = [
+  "profile_override",
+  "profile_augment",
+  "routine_presence",
+  "routine_frequency",
+  "context_signal",
+] as const
+export const CARE_BALANCE_FACT_SOURCES = ["current_turn"] as const
 
 export const engineCategoryIdSchema = z.enum(ENGINE_CATEGORY_IDS)
 export const inventoryCategorySchema = z.enum(INVENTORY_CATEGORIES)
@@ -102,3 +111,42 @@ export const resetLevelSchema = z.enum(RESET_LEVELS)
 export const resetFocusSchema = z.enum(RESET_FOCUSES)
 export const resetIntensitySchema = z.enum(RESET_INTENSITIES)
 export const colorTreatedSuitabilitySchema = z.enum(COLOR_TREATED_SUITABILITIES)
+export const careBalanceFactKindSchema = z.enum(CARE_BALANCE_FACT_KINDS)
+export const careBalanceFactSourceSchema = z.enum(CARE_BALANCE_FACT_SOURCES)
+export const currentTurnCareFactSchema = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("profile_override"),
+    field: z.string(),
+    value: z.unknown(),
+    evidenceQuote: z.string().min(1),
+    source: careBalanceFactSourceSchema,
+  }),
+  z.object({
+    kind: z.literal("profile_augment"),
+    field: z.string(),
+    values: z.array(z.unknown()),
+    evidenceQuote: z.string().min(1),
+    source: careBalanceFactSourceSchema,
+  }),
+  z.object({
+    kind: z.literal("routine_presence"),
+    category: inventoryCategorySchema,
+    present: z.boolean(),
+    evidenceQuote: z.string().min(1),
+    source: careBalanceFactSourceSchema,
+  }),
+  z.object({
+    kind: z.literal("routine_frequency"),
+    category: inventoryCategorySchema,
+    frequencyBand: z.enum(PRODUCT_FREQUENCIES).nullable(),
+    evidenceQuote: z.string().min(1),
+    source: careBalanceFactSourceSchema,
+  }),
+  z.object({
+    kind: z.literal("context_signal"),
+    key: z.string(),
+    value: z.unknown(),
+    evidenceQuote: z.string().min(1),
+    source: careBalanceFactSourceSchema,
+  }),
+])
