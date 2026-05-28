@@ -257,6 +257,7 @@ function createRuntimeStub(
       oilPurpose: null,
       oilNoRecommendationReason: null,
     } as RecommendationEngineRuntime["requestContext"],
+    effectiveContext: {} as RecommendationEngineRuntime["effectiveContext"],
     normalized: {} as RecommendationEngineRuntime["normalized"],
     damage: {} as RecommendationEngineRuntime["damage"],
     careNeeds: {} as RecommendationEngineRuntime["careNeeds"],
@@ -269,6 +270,7 @@ function createRuntimeStub(
       richOptionalCareRisk: false,
       cautionFlags: [],
     },
+    careBalance: { rows: [] },
     plan: {} as RecommendationEngineRuntime["plan"],
     categories: {
       shampoo: {} as RecommendationEngineRuntime["categories"]["shampoo"],

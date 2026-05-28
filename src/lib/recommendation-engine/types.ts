@@ -323,6 +323,20 @@ export interface CareBalanceSet {
   rows: CareBalanceRow[]
 }
 
+export interface CareBalanceLegacyDifference {
+  category: EngineCategoryId
+  legacyAction: RecommendationAction | null
+  legacyPlacement: "active" | "deferred" | null
+  careBalanceAction: CareBalanceRecommendation
+  legacyReasonCodes: CareBalanceReasonCode[]
+  careBalanceReasonCodes: CareBalanceReasonCode[]
+}
+
+export interface CareBalanceLegacyComparison {
+  projectedPlan: InterventionPlan
+  differences: CareBalanceLegacyDifference[]
+}
+
 export interface DamageAssessment {
   overallLevel: DamageLevel
   structuralLevel: DamageLevel

@@ -690,6 +690,15 @@ test.describe("Chat debug trace", () => {
       dry_shampoo: expect.objectContaining({ category: "dry_shampoo" }),
       peeling: expect.objectContaining({ category: "peeling" }),
     })
+    expect(trace.decision_context.engine_trace?.care_balance.rows).toHaveLength(10)
+    expect(trace.decision_context.engine_trace?.legacy_plan_comparison).toEqual(
+      expect.objectContaining({
+        projectedPlan: expect.objectContaining({
+          steps: expect.any(Array),
+        }),
+        differences: expect.any(Array),
+      }),
+    )
     expect(debugEvent).toMatchObject({
       request_id: "req-2",
       engine_variant: null,
@@ -706,6 +715,10 @@ test.describe("Chat debug trace", () => {
       }),
       intervention: expect.objectContaining({
         deferred_step_count: expect.any(Number),
+      }),
+      care_balance: expect.objectContaining({
+        rows: expect.any(Array),
+        legacy_difference_count: expect.any(Number),
       }),
       relevant_categories: expect.any(Array),
     })

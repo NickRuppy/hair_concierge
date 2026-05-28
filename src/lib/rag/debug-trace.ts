@@ -447,6 +447,15 @@ export function summarizeEngineTraceForLangfuse(
       })),
       deferred_step_count: trace.intervention_plan.deferredSteps.length,
     },
+    care_balance: {
+      rows: trace.care_balance.rows.map((row) => ({
+        category: row.category,
+        recommendation: row.recommendation,
+        primary_status: row.primaryStatus,
+        reason_codes: compactList(row.decisiveReasonCodes),
+      })),
+      legacy_difference_count: trace.legacy_plan_comparison?.differences.length ?? 0,
+    },
     relevant_categories,
     unsupported_routine_categories: compactList(trace.unsupported_routine_categories),
   }

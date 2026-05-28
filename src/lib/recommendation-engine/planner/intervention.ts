@@ -1,5 +1,6 @@
 import type {
   CareNeedAssessment,
+  CareBalanceSet,
   DamageAssessment,
   EngineCategoryId,
   InterventionPlan,
@@ -504,5 +505,33 @@ export function buildInterventionPlan(
     notes: [
       "Planner emits the full action set. Compression happens later in the category/output layer.",
     ],
+  }
+}
+
+export function projectInterventionPlanFromCareBalance(balance: CareBalanceSet): InterventionPlan {
+  const steps: InterventionStep[] = balance.rows.flatMap((row) => {
+    switch (row.recommendation) {
+      case "add":
+      case "increase_frequency":
+      case "keep":
+      case "decrease_frequency":
+      case "remove":
+        return [
+          {
+            category: row.category,
+            action: row.recommendation,
+            reasonCodes: row.decisiveReasonCodes,
+          },
+        ]
+      case "no_action":
+      case "needs_more_info":
+        return []
+    }
+  })
+
+  return {
+    steps,
+    deferredSteps: [],
+    notes: ["Non-authoritative CareBalance projection for side-by-side comparison only."],
   }
 }

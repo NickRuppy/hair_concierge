@@ -61,12 +61,15 @@ import type {
 } from "@/lib/product-specs/constants"
 import type {
   CareNeedAssessment as RecommendationEngineCareNeedAssessment,
+  CareBalanceLegacyComparison as RecommendationEngineCareBalanceLegacyComparison,
+  CareBalanceSet as RecommendationEngineCareBalanceSet,
   CategoryDecision as RecommendationEngineCategoryDecision,
   BondbuilderCategoryDecision as RecommendationEngineBondbuilderCategoryDecision,
   ConditionerCategoryDecision as RecommendationEngineConditionerCategoryDecision,
   DamageAssessment as RecommendationEngineDamageAssessment,
   DeepCleansingShampooCategoryDecision as RecommendationEngineDeepCleansingShampooCategoryDecision,
   DryShampooCategoryDecision as RecommendationEngineDryShampooCategoryDecision,
+  EffectiveCareContext as RecommendationEngineEffectiveCareContext,
   InterventionPlan as RecommendationEngineInterventionPlan,
   LeaveInCategoryDecision as RecommendationEngineLeaveInCategoryDecision,
   MaskCategoryDecision as RecommendationEngineMaskCategoryDecision,
@@ -527,10 +530,13 @@ export type ChatCategoryDecision = CategoryDecision | RecommendationEngineCatego
 
 export interface RecommendationEngineTrace {
   request_context: RecommendationEngineRequestContext
+  effective_context: RecommendationEngineEffectiveCareContext
   damage: RecommendationEngineDamageAssessment
   care_needs: RecommendationEngineCareNeedAssessment
   reset: RecommendationEngineResetAssessment
   intervention_plan: RecommendationEngineInterventionPlan
+  care_balance: RecommendationEngineCareBalanceSet
+  legacy_plan_comparison: RecommendationEngineCareBalanceLegacyComparison | null
   categories: {
     shampoo: RecommendationEngineShampooCategoryDecision
     conditioner: RecommendationEngineConditionerCategoryDecision

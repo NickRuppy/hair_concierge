@@ -199,10 +199,13 @@ export function buildRecommendationEngineTrace(params: {
 
   return {
     request_context: runtime.requestContext,
+    effective_context: runtime.effectiveContext,
     damage: runtime.damage,
     care_needs: runtime.careNeeds,
     reset: runtime.reset,
     intervention_plan: runtime.plan,
+    care_balance: runtime.careBalance,
+    legacy_plan_comparison: runtime.legacyPlanComparison ?? null,
     categories: {
       shampoo: runtime.categories.shampoo,
       conditioner: runtime.categories.conditioner,
