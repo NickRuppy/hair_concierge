@@ -64,7 +64,7 @@ function optionLabels(
   labels: Record<string, string>,
 ): string[] | null {
   if (!values || values.length === 0) return null
-  return values.map((value) => labels[value] ?? value)
+  return Array.from(new Set(values.map((value) => labels[value] ?? value)))
 }
 
 function orderedGoalLabels(profile: HairProfile | null): string[] | null {
@@ -116,7 +116,7 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
   {
     key: "routine",
     title: "Alltag",
-    description: "Trocknen, Bürste und Nachtschutz aus dem Alltagsteil deines Onboardings.",
+    description: "Trocknen, Bürste/Kamm und Nachtschutz aus dem Alltagsteil deines Onboardings.",
   },
   {
     key: "goals",
@@ -280,7 +280,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   },
   {
     key: "brush_type",
-    label: "Bürste",
+    label: "Bürste / Kamm",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "brush_type" },
     getValue: (profile) =>

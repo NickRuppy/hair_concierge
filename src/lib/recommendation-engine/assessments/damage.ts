@@ -178,10 +178,10 @@ export function buildDamageAssessment(profile: NormalizedProfile): DamageAssessm
     }
   }
 
-  if (profile.towelTechnique === "rubbeln") {
+  if (profile.towelTechnique === "rough_rubbing") {
     mechanicalScore += 2
     activeDamageDrivers.push("towel_rubbing")
-  } else if (profile.towelTechnique === "tupfen") {
+  } else if (profile.towelTechnique === "gentle_press") {
     activeProtectiveFactors.push("gentle_towel_technique")
   }
 
