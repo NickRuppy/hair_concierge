@@ -72,7 +72,7 @@ export function CookieConsent() {
         <div
           role="dialog"
           aria-label="Cookie-Einstellungen"
-          className="fixed bottom-2 left-2 right-2 z-40 max-w-md rounded-xl border border-border bg-card p-3.5 shadow-2xl sm:bottom-6 sm:left-6 sm:right-auto sm:rounded-2xl sm:p-5"
+          className="fixed bottom-2 left-2 right-2 z-[100] max-w-md rounded-xl border border-border bg-card p-3.5 shadow-2xl sm:bottom-6 sm:left-6 sm:right-auto sm:rounded-2xl sm:p-5"
         >
           <h2 className="text-sm font-semibold text-foreground sm:text-base">
             Wir verwenden Cookies
