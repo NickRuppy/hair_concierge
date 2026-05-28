@@ -814,7 +814,7 @@ test("reset assessment promotes explicit coated hard-water reset request to stro
   const reset = buildResetAssessment(normalized, requestContext)
 
   assert.equal(reset.level, "strong")
-  assert.equal(reset.resetFocus, "broad_spectrum")
+  assert.equal(reset.resetFocus, "broad_spectrum_detox")
   assert.equal(reset.richOptionalCareRisk, true)
   assert.ok(reset.triggerSources.includes("explicit_request"))
   assert.ok(reset.triggerSources.includes("symptom"))
@@ -842,7 +842,7 @@ test("explicit deep-cleansing request builds reset target without relying on bas
   assert.equal(categories.deepCleansingShampoo.relevant, true)
   assert.equal(categories.deepCleansingShampoo.action, "add")
   assert.equal(categories.deepCleansingShampoo.targetProfile?.resetNeedLevel, "strong")
-  assert.equal(categories.deepCleansingShampoo.targetProfile?.resetFocus, "general_buildup")
+  assert.equal(categories.deepCleansingShampoo.targetProfile?.resetFocus, "product_sebum_buildup")
   assert.ok(
     categories.deepCleansingShampoo.planReasonCodes.includes("explicit_deep_cleansing_request"),
   )
@@ -1036,7 +1036,7 @@ test("category set activates support/reset categories for oily buildup-heavy rou
   assert.deepEqual(categories.deepCleansingShampoo.targetProfile, {
     scalpTypeFocus: "oily",
     resetNeedLevel: "likely",
-    resetFocus: "general_buildup",
+    resetFocus: "product_sebum_buildup",
     targetIntensity: "medium",
     colorTreatedCaution: false,
     colorSafeRequest: false,

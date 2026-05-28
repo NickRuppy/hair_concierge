@@ -83,6 +83,48 @@ test("product schema requires deep-cleansing specs for deep-cleansing products",
   assert.ok(parsed.error.flatten().fieldErrors.deep_cleansing_shampoo_specs)
 })
 
+test("product schema rejects incomplete deep-cleansing specs to preserve fit metadata", () => {
+  const parsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Tiefenreinigungsshampoo",
+      deep_cleansing_shampoo_specs: {
+        scalp_type_focus: "balanced",
+      },
+    }),
+  )
+
+  assert.equal(parsed.success, false)
+  if (parsed.success) {
+    throw new Error("Expected incomplete deep-cleansing specs to fail")
+  }
+  assert.ok(parsed.error.flatten().fieldErrors.deep_cleansing_shampoo_specs)
+})
+
+test("product schema accepts complete deep-cleansing reset specs", () => {
+  const parsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Tiefenreinigungsshampoo",
+      deep_cleansing_shampoo_specs: {
+        scalp_type_focus: "balanced",
+        reset_intensity: "medium",
+        reset_focus: "broad_spectrum_detox",
+        color_treated_suitability: "suitable",
+      },
+    }),
+  )
+
+  assert.equal(parsed.success, true)
+  if (!parsed.success) {
+    throw new Error("Expected complete deep-cleansing specs to parse")
+  }
+  assert.deepEqual(parsed.data.deep_cleansing_shampoo_specs, {
+    scalp_type_focus: "balanced",
+    reset_intensity: "medium",
+    reset_focus: "broad_spectrum_detox",
+    color_treated_suitability: "suitable",
+  })
+})
+
 test("product schema restricts dry shampoo to supported bridge spec fields", () => {
   const parsed = productSchema.safeParse(
     buildBaseProduct({

@@ -148,8 +148,8 @@ function inferResetSignalsFromMessage(message: string): {
       normalized,
     )
   ) {
-    add("mineral_chlorine_or_hard_water_context", "environment")
-    focus = "mineral_chlorine"
+    add("metal_mineral_hard_water_or_hard_water_context", "environment")
+    focus = "metal_mineral_hard_water"
   }
 
   if (
@@ -158,14 +158,14 @@ function inferResetSignalsFromMessage(message: string): {
     )
   ) {
     add("general_product_buildup_context", "symptom")
-    if (!focus) focus = "general_buildup"
+    if (!focus) focus = "product_sebum_buildup"
   }
 
   if (
-    focus === "mineral_chlorine" &&
+    focus === "metal_mineral_hard_water" &&
     (terms.has("explicit_reset_request") || terms.has("general_product_buildup_context"))
   ) {
-    focus = "broad_spectrum"
+    focus = "broad_spectrum_detox"
   }
 
   return {

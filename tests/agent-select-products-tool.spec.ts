@@ -19,6 +19,7 @@ import type {
 } from "../src/lib/recommendation-engine/types"
 import type {
   BondbuilderRecommendationMetadata,
+  DeepCleansingShampooRecommendationMetadata,
   DryShampooRecommendationMetadata,
   HairProfile,
 } from "../src/lib/types"
@@ -1944,6 +1945,50 @@ test("projectSelectedProducts exposes bondbuilder usage hints as user-facing pro
     false,
     "bondbuilder product claims should not expose internal usage_protocol ids",
   )
+})
+
+test("projectSelectedProducts labels deep-cleansing reset facts without raw enum copy", () => {
+  const result = projectSelectedProducts(
+    [
+      createMatchedProduct("deep-reset", 0.94, {
+        category: "Tiefenreinigungsshampoo",
+        recommendation_meta: {
+          category: "deep_cleansing_shampoo",
+          score: 9.4,
+          top_reasons: ["Passt als Reset fuer Aufbau und Hartwasser-Kontext."],
+          tradeoffs: [],
+          usage_hint: "Gelegentlich statt normalem Shampoo verwenden.",
+          reset_need_level: "strong",
+          reset_focus: "broad_spectrum_detox",
+          reset_intensity: "medium",
+          scalp_type_focus: "balanced",
+          color_treated_suitability: "suitable",
+          fit_status: "ideal",
+          caution_flags: [],
+        } satisfies DeepCleansingShampooRecommendationMetadata,
+      }),
+    ],
+    {
+      ...LOW_DAMAGE_PROFILE,
+      chemical_treatment: ["colored"],
+      scalp_type: "balanced",
+      concerns: ["oily_scalp"],
+    } as HairProfile,
+    "deep_cleansing_shampoo",
+    createRuntimeStub(),
+  )
+
+  const renderedFacts = [
+    ...(result.comparison_facts?.["deep-reset"] ?? []),
+    ...(result.products[0]?.supported_claims.flatMap((claim) => [claim.label, claim.value]) ?? []),
+    result.products[0]?.fit_reason ?? "",
+  ].join(" ")
+
+  assert.match(renderedFacts, /breiter Styling-, Produkt- und Mineral-Reset/)
+  assert.match(renderedFacts, /Reset-Intensitaet: mittel/)
+  assert.match(renderedFacts, /Kopfhaut-Fokus: ausgeglichene Kopfhaut/)
+  assert.match(renderedFacts, /Fit: idealer Treffer/)
+  assert.doesNotMatch(renderedFacts, /broad_spectrum_detox|product_sebum_buildup|medium|balanced/)
 })
 
 test("projectSelectedProducts redirects scalp-only conditioner requests without products", () => {

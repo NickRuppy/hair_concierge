@@ -22,6 +22,7 @@ import type { UserMemoryContext } from "@/lib/rag/user-memory"
 import type {
   BondbuilderRecommendationMetadata,
   ConditionerRecommendationMetadata,
+  DeepCleansingShampooRecommendationMetadata,
   DryShampooRecommendationMetadata,
   HairProfile,
   LeaveInRecommendationMetadata,
@@ -336,10 +337,10 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
           product.id,
           uniqueNonEmpty([
             meta?.category === "deep_cleansing_shampoo" && meta.reset_focus
-              ? `Reset-Fokus: ${meta.reset_focus}`
+              ? `Reset-Fokus: ${DEEP_CLEANSING_RESET_FOCUS_LABELS[meta.reset_focus]}`
               : null,
             meta?.category === "deep_cleansing_shampoo" && meta.reset_intensity
-              ? `Reset-Intensitaet: ${meta.reset_intensity}`
+              ? `Reset-Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
               : null,
             meta?.category === "deep_cleansing_shampoo" &&
             meta.color_treated_suitability === "suitable"
@@ -913,6 +914,44 @@ const SHAMPOO_SCALP_ROUTE_FIT_PHRASES: Record<
   irritated: "irritierten Kopfhaut-Fokus",
 }
 
+const DEEP_CLEANSING_RESET_FOCUS_LABELS: Record<
+  NonNullable<DeepCleansingShampooRecommendationMetadata["reset_focus"]>,
+  string
+> = {
+  product_sebum_buildup: "Produkt-, Styling- und Sebum-Aufbau",
+  metal_mineral_hard_water: "Kalk-, Chlor-, Mineral- oder Metall-Kontext",
+  broad_spectrum_detox: "breiter Styling-, Produkt- und Mineral-Reset",
+}
+
+const DEEP_CLEANSING_RESET_INTENSITY_LABELS: Record<
+  NonNullable<DeepCleansingShampooRecommendationMetadata["reset_intensity"]>,
+  string
+> = {
+  gentle: "sanft",
+  medium: "mittel",
+  strong: "stark",
+}
+
+const DEEP_CLEANSING_SCALP_FOCUS_LABELS: Record<
+  NonNullable<DeepCleansingShampooRecommendationMetadata["scalp_type_focus"]>,
+  string
+> = {
+  oily: "schnell fettender Ansatz",
+  balanced: "ausgeglichene Kopfhaut",
+  dry: "trockene Kopfhaut",
+}
+
+const DEEP_CLEANSING_FIT_STATUS_LABELS: Record<
+  NonNullable<DeepCleansingShampooRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "idealer Treffer",
+  supportive: "unterstuetzender Treffer",
+  mismatch: "kein sicherer Treffer",
+  unknown: "Treffer mit unvollstaendigen Daten",
+  not_applicable: "nicht anwendbarer Treffer",
+}
+
 const SHAMPOO_FIT_STATUS_PREFIXES: Record<
   NonNullable<ShampooRecommendationMetadata["fit_status"]>,
   string
@@ -959,12 +998,14 @@ function buildDisplayableFitReason(product: MatchedProduct): string {
 
   if (meta?.category === "deep_cleansing_shampoo") {
     const focus =
-      meta.reset_focus === "mineral_chlorine"
+      meta.reset_focus === "metal_mineral_hard_water"
         ? "Kalk-/Chlor-/Mineral-Reset"
-        : meta.reset_focus === "broad_spectrum"
+        : meta.reset_focus === "broad_spectrum_detox"
           ? "breiter Styling- und Mineral-Reset"
           : "Produktaufbau-Reset"
-    const intensity = meta.reset_intensity ? `; Intensitaet: ${meta.reset_intensity}` : ""
+    const intensity = meta.reset_intensity
+      ? `; Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
+      : ""
     return `Reset-Treffer fuer ${focus}${intensity}.`
   }
 
@@ -1326,25 +1367,31 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
     return uniqueClaims([
       buildClaim(
         "reset_focus",
-        meta.reset_focus,
+        meta.reset_focus ? DEEP_CLEANSING_RESET_FOCUS_LABELS[meta.reset_focus] : null,
         "product_spec",
-        meta.reset_focus ? `Reset-Fokus: ${meta.reset_focus}` : null,
+        meta.reset_focus
+          ? `Reset-Fokus: ${DEEP_CLEANSING_RESET_FOCUS_LABELS[meta.reset_focus]}`
+          : null,
       ),
       buildClaim(
         "reset_intensity",
-        meta.reset_intensity,
+        meta.reset_intensity ? DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity] : null,
         "product_spec",
-        meta.reset_intensity ? `Reset-Intensitaet: ${meta.reset_intensity}` : null,
+        meta.reset_intensity
+          ? `Reset-Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
+          : null,
       ),
       buildClaim(
         "scalp_route",
-        meta.scalp_type_focus,
+        meta.scalp_type_focus ? DEEP_CLEANSING_SCALP_FOCUS_LABELS[meta.scalp_type_focus] : null,
         "product_spec",
-        meta.scalp_type_focus ? `Kopfhaut-Fokus: ${meta.scalp_type_focus}` : null,
+        meta.scalp_type_focus
+          ? `Kopfhaut-Fokus: ${DEEP_CLEANSING_SCALP_FOCUS_LABELS[meta.scalp_type_focus]}`
+          : null,
       ),
       buildClaim(
         "color_treated_suitability",
-        meta.color_treated_suitability === "suitable" ? "suitable" : null,
+        meta.color_treated_suitability === "suitable" ? "geeignet fuer coloriertes Haar" : null,
         "product_spec",
         meta.color_treated_suitability === "suitable"
           ? "Strukturiert als geeignet fuer coloriertes Haar gepflegt"
@@ -1352,9 +1399,9 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
       ),
       buildClaim(
         "fit_status",
-        meta.fit_status,
+        meta.fit_status ? DEEP_CLEANSING_FIT_STATUS_LABELS[meta.fit_status] : null,
         "category_decision",
-        meta.fit_status ? `Fit: ${meta.fit_status}` : null,
+        meta.fit_status ? `Fit: ${DEEP_CLEANSING_FIT_STATUS_LABELS[meta.fit_status]}` : null,
       ),
     ])
   }

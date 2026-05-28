@@ -102,9 +102,9 @@ const bondbuilderSpecsSchema = z.object({
 
 const deepCleansingShampooSpecsSchema = z.object({
   scalp_type_focus: z.enum(PRODUCT_SCALP_TYPE_FOCUSES),
-  reset_intensity: z.enum(RESET_INTENSITIES).default("medium"),
-  reset_focus: z.enum(RESET_FOCUSES).default("general_buildup"),
-  color_treated_suitability: z.enum(COLOR_TREATED_SUITABILITIES).default("unsuitable_or_unknown"),
+  reset_intensity: z.enum(RESET_INTENSITIES),
+  reset_focus: z.enum(RESET_FOCUSES),
+  color_treated_suitability: z.enum(COLOR_TREATED_SUITABILITIES),
 })
 
 const dryShampooSpecsSchema = z.object({

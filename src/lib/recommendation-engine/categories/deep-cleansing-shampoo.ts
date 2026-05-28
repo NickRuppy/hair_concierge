@@ -101,7 +101,7 @@ export function buildDeepCleansingShampooCategoryDecision(
     targetProfile: {
       scalpTypeFocus: deriveScalpTypeFocus(profile),
       resetNeedLevel: reset.level,
-      resetFocus: reset.resetFocus ?? "general_buildup",
+      resetFocus: reset.resetFocus ?? "product_sebum_buildup",
       targetIntensity: deriveTargetIntensity(reset, profile),
       colorTreatedCaution: isColorTreated(profile),
       colorSafeRequest: requestContext.colorSafeRequest,
@@ -139,9 +139,9 @@ export function evaluateDeepCleansingShampooFit(
     missingFields.push("reset_focus")
   } else if (target.resetFocus === spec.reset_focus) {
     reasonCodes.push("deep_cleansing_reset_focus_exact_match")
-  } else if (spec.reset_focus === "broad_spectrum") {
+  } else if (spec.reset_focus === "broad_spectrum_detox") {
     reasonCodes.push("deep_cleansing_reset_focus_close_match")
-  } else if (target.resetFocus === "broad_spectrum") {
+  } else if (target.resetFocus === "broad_spectrum_detox") {
     reasonCodes.push("deep_cleansing_reset_focus_partial_match")
   } else {
     reasonCodes.push("deep_cleansing_reset_focus_mismatch")

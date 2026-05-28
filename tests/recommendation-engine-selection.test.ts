@@ -1749,7 +1749,7 @@ test("engine deep-cleansing shampoo reranking prefers the exact scalp focus over
     targetProfile: {
       scalpTypeFocus: "oily",
       resetNeedLevel: "likely",
-      resetFocus: "general_buildup",
+      resetFocus: "product_sebum_buildup",
       targetIntensity: "medium",
       colorTreatedCaution: false,
       colorSafeRequest: false,
@@ -1768,14 +1768,14 @@ test("engine deep-cleansing shampoo reranking prefers the exact scalp focus over
       product_id: "balanced",
       scalp_type_focus: "balanced",
       reset_intensity: "medium",
-      reset_focus: "general_buildup",
+      reset_focus: "product_sebum_buildup",
       color_treated_suitability: "unsuitable_or_unknown",
     },
     {
       product_id: "ideal",
       scalp_type_focus: "oily",
       reset_intensity: "medium",
-      reset_focus: "general_buildup",
+      reset_focus: "product_sebum_buildup",
       color_treated_suitability: "unsuitable_or_unknown",
     },
   ]
@@ -1800,12 +1800,12 @@ test("engine deep-cleansing shampoo reranking prefers broad-spectrum reset for m
     category: "deep_cleansing_shampoo",
     relevant: true,
     action: "add",
-    planReasonCodes: ["mineral_chlorine_or_hard_water_context"],
+    planReasonCodes: ["metal_mineral_hard_water_or_hard_water_context"],
     currentInventory: null,
     targetProfile: {
       scalpTypeFocus: "balanced",
       resetNeedLevel: "strong",
-      resetFocus: "mineral_chlorine",
+      resetFocus: "metal_mineral_hard_water",
       targetIntensity: "medium",
       colorTreatedCaution: true,
       colorSafeRequest: true,
@@ -1823,14 +1823,14 @@ test("engine deep-cleansing shampoo reranking prefers broad-spectrum reset for m
       product_id: "generic",
       scalp_type_focus: "balanced",
       reset_intensity: "medium",
-      reset_focus: "general_buildup",
+      reset_focus: "product_sebum_buildup",
       color_treated_suitability: "unsuitable_or_unknown",
     },
     {
       product_id: "broad",
       scalp_type_focus: "balanced",
       reset_intensity: "medium",
-      reset_focus: "broad_spectrum",
+      reset_focus: "broad_spectrum_detox",
       color_treated_suitability: "suitable",
     },
   ]
@@ -1845,7 +1845,7 @@ test("engine deep-cleansing shampoo reranking prefers broad-spectrum reset for m
     | undefined
 
   assert.equal(reranked[0]?.id, "broad")
-  assert.equal(meta?.reset_focus, "broad_spectrum")
+  assert.equal(meta?.reset_focus, "broad_spectrum_detox")
   assert.equal(meta?.color_treated_suitability, "suitable")
 })
 
@@ -1854,12 +1854,12 @@ test("engine deep-cleansing shampoo reranking suppresses unsupported mineral and
     category: "deep_cleansing_shampoo",
     relevant: true,
     action: "add",
-    planReasonCodes: ["mineral_chlorine_or_hard_water_context"],
+    planReasonCodes: ["metal_mineral_hard_water_or_hard_water_context"],
     currentInventory: null,
     targetProfile: {
       scalpTypeFocus: "balanced",
       resetNeedLevel: "strong",
-      resetFocus: "mineral_chlorine",
+      resetFocus: "metal_mineral_hard_water",
       targetIntensity: "medium",
       colorTreatedCaution: true,
       colorSafeRequest: true,
@@ -1877,7 +1877,7 @@ test("engine deep-cleansing shampoo reranking suppresses unsupported mineral and
         product_id: "generic",
         scalp_type_focus: "balanced",
         reset_intensity: "medium",
-        reset_focus: "general_buildup",
+        reset_focus: "product_sebum_buildup",
         color_treated_suitability: "unsuitable_or_unknown",
       },
     ],

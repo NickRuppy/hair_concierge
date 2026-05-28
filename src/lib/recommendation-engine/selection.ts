@@ -78,6 +78,15 @@ import type {
 } from "@/lib/recommendation-engine/types"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
 
+const DEEP_CLEANSING_RESET_INTENSITY_LABELS: Record<
+  NonNullable<DeepCleansingShampooRecommendationMetadata["reset_intensity"]>,
+  string
+> = {
+  gentle: "sanft",
+  medium: "mittel",
+  strong: "stark",
+}
+
 const SELECTION_LIMIT = 3
 const CANDIDATE_COUNT = 10
 
@@ -982,20 +991,22 @@ function buildDeepCleansingTopReasons(params: {
 
   if (fit.status === "mismatch") {
     tradeoffs.push("Kein sicherer Match fuer den angefragten Reset-Fokus oder Farbschutz.")
-  } else if (spec?.reset_focus === "mineral_chlorine") {
+  } else if (spec?.reset_focus === "metal_mineral_hard_water") {
     positives.push("Strukturiert fuer Kalk-, Mineral- oder Chlor-Kontext gepflegt.")
-  } else if (spec?.reset_focus === "broad_spectrum") {
+  } else if (spec?.reset_focus === "broad_spectrum_detox") {
     positives.push(
       "Strukturiert als breiter Reset fuer Styling-/Pflegeaufbau plus Mineral-Kontext.",
     )
-  } else if (spec?.reset_focus === "general_buildup") {
+  } else if (spec?.reset_focus === "product_sebum_buildup") {
     positives.push("Strukturiert fuer allgemeinen Produktaufbau und beschwertes Haar gepflegt.")
   } else {
     positives.push("Passt als gelegentlicher Reset bei Produktaufbau oder beschwertem Haar.")
   }
 
   if (spec?.reset_intensity) {
-    positives.push(`Reset-Intensitaet: ${spec.reset_intensity}.`)
+    positives.push(
+      `Reset-Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[spec.reset_intensity]}.`,
+    )
   }
 
   if (fit.status === "ideal") {
@@ -1049,7 +1060,7 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
       fitReasonAdjustment(fit) +
       (spec?.reset_focus === target.resetFocus
         ? 20
-        : spec?.reset_focus === "broad_spectrum"
+        : spec?.reset_focus === "broad_spectrum_detox"
           ? 10
           : 0) +
       (spec?.reset_intensity === target.targetIntensity ? 10 : 0) +
@@ -1084,8 +1095,8 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
 
   const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
   const strictRequest =
-    target.resetFocus === "mineral_chlorine" ||
-    target.resetFocus === "broad_spectrum" ||
+    target.resetFocus === "metal_mineral_hard_water" ||
+    target.resetFocus === "broad_spectrum_detox" ||
     target.colorSafeRequest
 
   if (acceptable.length > 0) {

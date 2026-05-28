@@ -71,7 +71,11 @@ export const RECOMMENDATION_ACTIONS = [
 ] as const
 export const CONFIDENCE_LEVELS = ["low", "medium", "high"] as const
 export const RESET_LEVELS = ["none", "possible", "likely", "strong"] as const
-export const RESET_FOCUSES = ["general_buildup", "mineral_chlorine", "broad_spectrum"] as const
+export const RESET_FOCUSES = [
+  "product_sebum_buildup",
+  "metal_mineral_hard_water",
+  "broad_spectrum_detox",
+] as const
 export const RESET_INTENSITIES = ["gentle", "medium", "strong"] as const
 export const COLOR_TREATED_SUITABILITIES = ["suitable", "unsuitable_or_unknown"] as const
 
