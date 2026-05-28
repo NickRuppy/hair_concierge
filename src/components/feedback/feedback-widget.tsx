@@ -12,7 +12,7 @@ import { posthog } from "@/providers/posthog-provider"
 import { cn } from "@/lib/utils"
 
 const MAX_LENGTH = 4000
-const SUCCESS_AUTOCLOSE_MS = 1800
+const SUCCESS_AUTOCLOSE_MS = 4000
 const HINT_STORAGE_KEY = "chaarlie_feedback_hint_seen"
 const HINT_DELAY_MS = 1200
 
@@ -100,6 +100,16 @@ export function FeedbackWidget() {
     if (!canSubmit) return
     setSubmitting(true)
     try {
+      // Best-effort session-id capture — fails silently if PostHog isn't ready
+      // (e.g., recording not yet started). Empty string is treated as missing.
+      let posthogSessionId: string | undefined
+      try {
+        const id = posthog.get_session_id()
+        if (typeof id === "string" && id.length > 0) posthogSessionId = id
+      } catch {
+        // ignore
+      }
+
       const res = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -107,6 +117,7 @@ export function FeedbackWidget() {
           message: trimmed,
           pageUrl: typeof window !== "undefined" ? window.location.pathname : undefined,
           userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+          posthogSessionId,
         }),
       })
 
