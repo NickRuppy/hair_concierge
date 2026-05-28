@@ -4,7 +4,7 @@
 
 **Goal:** Thoroughly review `codex/gpt-54-responses-migration-plan` before merge/deploy, with special focus on AgentV2, CareBalance, product/routine grounding, compare lab, data migrations, and the 18 commits just pushed.
 
-**Architecture:** Run a split review so each reviewer owns a coherent risk surface instead of skimming a 160+ file diff. The integration reviewer merges findings, verifies high-confidence issues locally, and separates blockers from acceptable follow-ups.
+**Architecture:** Run Clawpatch first as a semantic feature-map/finding tracker, then run split human-style reviewer slices so each reviewer owns a coherent risk surface instead of skimming a 160+ file diff. The integration reviewer merges Clawpatch and subagent findings, verifies high-confidence issues locally, and separates blockers from acceptable follow-ups.
 
 **Tech Stack:** Next.js 16, TypeScript, AgentV2 Responses runtime, recommendation engine, Supabase migrations, Node test runner, Compare Lab.
 
@@ -47,6 +47,19 @@ Observed results:
 - `test:agent`: 612 pass, 1 skip, 0 fail
 - `lint`: 0 errors, 5 warnings
 - `build`: pass, with one Turbopack NFT tracing warning around `src/app/api/labs/agent-compare/route.ts` importing AgentV2 guidance compiler context
+- `clawpatch:init`: pass after Clawpatch setup was ported into this branch
+- `clawpatch:doctor`: pass; provider detected as `codex`, provider version `codex-cli 0.130.0`
+- `clawpatch:map`: pass; 242 features mapped
+- `clawpatch:summary -- --base origin/main`: pass
+- `clawpatch:review -- --since origin/main --limit 3 --jobs 1`: pass; smoke batch produced 4 open findings for later triage
+
+Clawpatch generated state is local-only and ignored:
+
+```text
+/.clawpatch/
+/clawpatch-report.md
+/clawpatch-summary.md
+```
 
 ## Review Packet Commands
 
@@ -70,6 +83,98 @@ Expected current branch state before review:
 ```
 
 If the worktree is dirty, pause and classify the dirty changes before dispatching reviewers.
+
+## Task 0: Clawpatch Semantic Review Pass
+
+**Reviewer type:** Clawpatch CLI plus local integration reviewer
+
+**Files and config:**
+
+- `.github/workflows/clawpatch.yml`
+- `clawpatch.config.json`
+- `docs/clawpatch-code-review.md`
+- `docs/codex-review-map.md`
+- `scripts/ci/prepare-clawpatch.mjs`
+- `scripts/ci/clawpatch-summary.mjs`
+- `package.json`
+- `package-lock.json`
+
+- [ ] Initialize local Clawpatch state:
+
+```bash
+cd /Users/nick/AI_work/hair_conscierge/.worktrees/gpt-54-responses-migration-plan
+npm run clawpatch:init
+```
+
+Expected:
+
+```text
+Prepared Clawpatch state at .clawpatch
+```
+
+- [ ] Check the environment:
+
+```bash
+npm run clawpatch:doctor
+```
+
+Expected:
+
+```text
+state: ok
+provider: codex
+```
+
+- [ ] Generate the feature map:
+
+```bash
+npm run clawpatch:map
+```
+
+Expected:
+
+```text
+features: 242
+```
+
+The exact count may change after future edits; investigate only if it drops unexpectedly or the command fails.
+
+- [ ] Generate the branch summary:
+
+```bash
+npm run clawpatch:summary -- --output clawpatch-summary.md --base origin/main
+```
+
+Expected: `clawpatch-summary.md` exists locally and lists touched slices including recommendation engine, Agentic chat/tools, Supabase schema, and review tooling.
+
+- [ ] Run a broad Clawpatch review batch:
+
+```bash
+npm run clawpatch:review -- --since origin/main --limit 10 --jobs 3
+```
+
+Expected: command exits 0 and writes `.clawpatch/findings/` plus a run report under `.clawpatch/reports/`.
+
+- [ ] Generate a readable report:
+
+```bash
+npm run clawpatch:report -- --output clawpatch-report.md
+```
+
+- [ ] Triage Clawpatch output before subagent dispatch:
+  - Findings in files touched by this branch: include in the relevant reviewer prompt.
+  - Findings outside this branch's scope: list as separate backlog candidates unless they can block deployment.
+  - Weak semantic findings: mark `uncertain` or `false positive`; do not turn them into churn.
+  - Clawpatch patch/fix commands are not allowed in this review pass unless the user explicitly asks for fixes.
+
+Smoke findings already observed from `--limit 3`:
+
+- `medium` delayed onboarding auto-advance can override back navigation.
+- `medium` `ci:verify` does not run project test suites.
+- `medium` profile goals save clears `desired_volume`.
+- `low` subscription portal button can remain loading after failed request.
+
+These are not automatically accepted. The integration reviewer must verify whether each finding is branch-relevant, pre-existing, and worth fixing before merge/deploy.
 
 ## Reviewer Output Contract
 
@@ -409,4 +514,3 @@ Expected:
 ```text
 ## codex/gpt-54-responses-migration-plan...origin/codex/gpt-54-responses-migration-plan
 ```
-

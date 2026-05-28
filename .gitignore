@@ -85,3 +85,8 @@ test-screenshots*/
 
 # local eval / compare-lab artifacts
 /tmp/
+
+# local Clawpatch review artifacts
+/.clawpatch/
+/clawpatch-report.md
+/clawpatch-summary.md
