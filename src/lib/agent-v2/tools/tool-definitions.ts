@@ -25,6 +25,26 @@ import {
   LoadAgentV2AdvisorGuidanceInputSchema,
 } from "@/lib/agent-v2/tools/guidance-tool"
 import { INVENTORY_CATEGORIES } from "@/lib/recommendation-engine/contracts"
+import {
+  BRUSH_TYPES,
+  CHEMICAL_TREATMENTS,
+  CUTICLE_CONDITIONS,
+  DRYING_METHODS,
+  GOALS,
+  HAIR_DENSITIES,
+  HAIR_TEXTURES,
+  HAIR_THICKNESSES,
+  HEAT_STYLING_LEVELS,
+  NIGHT_PROTECTIONS,
+  PROFILE_CONCERNS,
+  PROTEIN_MOISTURE_LEVELS,
+  SCALP_CONDITIONS,
+  SCALP_TYPES,
+  STYLING_TOOLS,
+  TOWEL_MATERIALS,
+  TOWEL_TECHNIQUES,
+  WASH_FREQUENCIES,
+} from "@/lib/vocabulary"
 import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 
 export interface AgentV2ResponsesToolDefinition {
@@ -188,7 +208,7 @@ export const CurrentCareFactToolParametersSchema = z.strictObject({
     "context_signal",
   ]),
   field: z.union([ProfileFactFieldSchema, ProfileArrayFactFieldSchema]).nullable(),
-  value: z.unknown().nullable(),
+  value: z.union([z.string(), z.boolean()]).nullable(),
   category: InventoryCategorySchema.nullable(),
   present: z.boolean().nullable(),
   frequency: ProductFrequencySchema.nullable(),
@@ -203,20 +223,21 @@ export type ProfileArrayFactField = z.infer<typeof ProfileArrayFactFieldSchema>
 type CurrentCareFactToolParameters = z.infer<typeof CurrentCareFactToolParametersSchema>
 
 export function parseCurrentCareFactToolInput(value: unknown): CurrentCareFactInput {
-  const canonical = CurrentCareFactInputSchema.safeParse(value)
-  if (canonical.success) return canonical.data
-
   if (value && typeof value === "object" && !Array.isArray(value) && "fact" in value) {
-    const wrapped = CurrentCareFactInputSchema.safeParse((value as { fact?: unknown }).fact)
-    if (wrapped.success) return wrapped.data
+    return parseCurrentCareFactToolInput((value as { fact?: unknown }).fact)
   }
 
   const parsed = CurrentCareFactToolParametersSchema.safeParse(value)
-  if (!parsed.success) {
-    throw new Error("Invalid current care fact tool input")
+  if (parsed.success) {
+    return normalizeCurrentCareFactToolParameters(parsed.data)
   }
 
-  return normalizeCurrentCareFactToolParameters(parsed.data)
+  const canonical = CurrentCareFactInputSchema.safeParse(value)
+  if (canonical.success) {
+    return normalizeCurrentCareFactToolParameters(toCurrentCareFactToolParameters(canonical.data))
+  }
+
+  throw new Error("Invalid current care fact tool input")
 }
 
 function normalizeCurrentCareFactToolParameters(
@@ -224,32 +245,54 @@ function normalizeCurrentCareFactToolParameters(
 ): CurrentCareFactInput {
   if (value.kind === "profile_override") {
     const field = ProfileFactFieldSchema.safeParse(value.field)
-    if (!field.success || value.value === null) {
+    if (
+      !field.success ||
+      value.value === null ||
+      value.category !== null ||
+      value.present !== null ||
+      value.frequency !== null ||
+      value.code !== null
+    ) {
       throw new Error("Invalid current care fact tool input")
     }
     return {
       kind: value.kind,
       field: field.data,
-      value: value.value,
+      value: normalizeProfileOverrideValue(field.data, value.value),
       evidenceQuote: value.evidenceQuote,
     }
   }
 
   if (value.kind === "profile_augment") {
     const field = ProfileArrayFactFieldSchema.safeParse(value.field)
-    if (!field.success || typeof value.value !== "string" || value.value.trim().length === 0) {
+    if (
+      !field.success ||
+      typeof value.value !== "string" ||
+      value.value.trim().length === 0 ||
+      value.category !== null ||
+      value.present !== null ||
+      value.frequency !== null ||
+      value.code !== null
+    ) {
       throw new Error("Invalid current care fact tool input")
     }
     return {
       kind: value.kind,
       field: field.data,
-      value: value.value,
+      value: normalizeProfileAugmentValue(field.data, value.value),
       evidenceQuote: value.evidenceQuote,
     }
   }
 
   if (value.kind === "routine_presence") {
-    if (!value.category || value.present === null) {
+    if (
+      value.field !== null ||
+      value.value !== null ||
+      !value.category ||
+      value.present === null ||
+      value.frequency !== null ||
+      value.code !== null
+    ) {
       throw new Error("Invalid current care fact tool input")
     }
     return {
@@ -261,7 +304,14 @@ function normalizeCurrentCareFactToolParameters(
   }
 
   if (value.kind === "routine_frequency") {
-    if (!value.category || !value.frequency) {
+    if (
+      value.field !== null ||
+      value.value !== null ||
+      !value.category ||
+      value.present !== null ||
+      !value.frequency ||
+      value.code !== null
+    ) {
       throw new Error("Invalid current care fact tool input")
     }
     return {
@@ -272,7 +322,14 @@ function normalizeCurrentCareFactToolParameters(
     }
   }
 
-  if (!value.code) {
+  if (
+    value.field !== null ||
+    value.value !== null ||
+    value.category !== null ||
+    value.present !== null ||
+    value.frequency !== null ||
+    !value.code
+  ) {
     throw new Error("Invalid current care fact tool input")
   }
   return {
@@ -280,6 +337,77 @@ function normalizeCurrentCareFactToolParameters(
     code: value.code,
     evidenceQuote: value.evidenceQuote,
   }
+}
+
+function toCurrentCareFactToolParameters(
+  input: CurrentCareFactInput,
+): CurrentCareFactToolParameters {
+  return {
+    kind: input.kind,
+    field:
+      input.kind === "profile_override" || input.kind === "profile_augment" ? input.field : null,
+    value:
+      input.kind === "profile_override" || input.kind === "profile_augment"
+        ? (input.value as string | boolean)
+        : null,
+    category:
+      input.kind === "routine_presence" || input.kind === "routine_frequency"
+        ? input.category
+        : null,
+    present: input.kind === "routine_presence" ? input.present : null,
+    frequency: input.kind === "routine_frequency" ? input.frequency : null,
+    code: input.kind === "context_signal" ? input.code : null,
+    evidenceQuote: input.evidenceQuote,
+  }
+}
+
+function normalizeProfileOverrideValue(field: ProfileFactField, value: string | boolean): unknown {
+  if (field === "usesHeatProtection") {
+    if (typeof value !== "boolean") {
+      throw new Error("Invalid current care fact tool input")
+    }
+    return value
+  }
+  if (typeof value !== "string") {
+    throw new Error("Invalid current care fact tool input")
+  }
+
+  const allowedValuesByField = {
+    hairTexture: HAIR_TEXTURES,
+    thickness: HAIR_THICKNESSES,
+    density: HAIR_DENSITIES,
+    washFrequency: WASH_FREQUENCIES,
+    heatStyling: HEAT_STYLING_LEVELS,
+    cuticleCondition: CUTICLE_CONDITIONS,
+    proteinMoistureBalance: PROTEIN_MOISTURE_LEVELS,
+    scalpType: SCALP_TYPES,
+    scalpCondition: SCALP_CONDITIONS,
+    towelMaterial: TOWEL_MATERIALS,
+    towelTechnique: TOWEL_TECHNIQUES,
+    dryingMethod: DRYING_METHODS,
+    brushType: BRUSH_TYPES,
+  } satisfies Record<Exclude<ProfileFactField, "usesHeatProtection">, readonly string[]>
+
+  return normalizeEnumLikeValue(allowedValuesByField[field], value)
+}
+
+function normalizeProfileAugmentValue(field: ProfileArrayFactField, value: string): string {
+  const allowedValuesByField = {
+    concerns: PROFILE_CONCERNS,
+    goals: GOALS,
+    stylingTools: STYLING_TOOLS,
+    chemicalTreatment: CHEMICAL_TREATMENTS,
+    nightProtection: NIGHT_PROTECTIONS,
+  } satisfies Record<ProfileArrayFactField, readonly string[]>
+
+  return normalizeEnumLikeValue(allowedValuesByField[field], value)
+}
+
+function normalizeEnumLikeValue(allowedValues: readonly string[], value: string): string {
+  if (!allowedValues.includes(value)) {
+    throw new Error("Invalid current care fact tool input")
+  }
+  return value
 }
 
 const AgentV2TerminalAnswerToolParametersSchema = z.strictObject({

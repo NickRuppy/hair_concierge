@@ -130,6 +130,79 @@ test("AgentV2 parses current-turn context signals from direct tool input", () =>
   })
 })
 
+test("AgentV2 rejects invalid current-care profile values", () => {
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        kind: "profile_override",
+        field: "thickness",
+        value: "thin",
+        evidenceQuote: "Actually my hair is thin",
+      }),
+    /Invalid current care fact tool input/,
+  )
+
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        fact: {
+          kind: "profile_augment",
+          field: "stylingTools",
+          value: "straightener",
+          evidenceQuote: "I use a straightener",
+        },
+      }),
+    /Invalid current care fact tool input/,
+  )
+})
+
+test("AgentV2 rejects current-care direct tool input with branch leakage", () => {
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        kind: "routine_frequency",
+        field: "thickness",
+        value: "fine",
+        category: "dry_shampoo",
+        present: true,
+        frequency: "daily",
+        code: "flat_fast",
+        evidenceQuote: "I use dry shampoo daily",
+      }),
+    /Invalid current care fact tool input/,
+  )
+
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        kind: "profile_override",
+        field: "thickness",
+        value: "fine",
+        category: "conditioner",
+        present: null,
+        frequency: null,
+        code: null,
+        evidenceQuote: "Actually my hair is fine",
+      }),
+    /Invalid current care fact tool input/,
+  )
+
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        kind: "context_signal",
+        field: "thickness",
+        value: "fine",
+        category: null,
+        present: null,
+        frequency: null,
+        code: "flat_fast",
+        evidenceQuote: "my hair gets flat fast",
+      }),
+    /Invalid current care fact tool input/,
+  )
+})
+
 test("AgentV2 runtime rejects current-care facts with fabricated evidence quotes", async () => {
   const result = await runAgentV2ResponsesTurn({
     client: fakeResponsesClientWithOutputs([
@@ -180,6 +253,54 @@ test("AgentV2 runtime accepts grounded current-turn context signals", async () =
     result.trace.tool_calls.some((call) => call.name === "set_current_care_context"),
     true,
   )
+})
+
+test("AgentV2 returns compact current-care tool output to the model", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    functionCall("call_1", "set_current_care_context", {
+      kind: "profile_override",
+      field: "thickness",
+      value: "fine",
+      evidenceQuote: "Actually my hair is fine",
+    }),
+    terminalGeneralAdvice("call_2", {
+      evidence_quote: "Actually my hair is fine",
+    }),
+  ])
+
+  await runAgentV2ResponsesTurn({
+    client,
+    message: "Actually my hair is fine. What does that change?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: { thickness: "coarse" },
+      routineInventory: [],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  const secondInput = client.requests[1]?.input
+  assert.ok(Array.isArray(secondInput))
+  const toolOutput = secondInput.find(
+    (item) =>
+      item &&
+      typeof item === "object" &&
+      (item as { type?: unknown; call_id?: unknown }).type === "function_call_output" &&
+      (item as { call_id?: unknown }).call_id === "call_1",
+  ) as { output?: string } | undefined
+  assert.ok(toolOutput)
+  const output = JSON.parse(toolOutput.output ?? "{}") as Record<string, unknown>
+  assert.equal(output.accepted, true)
+  assert.equal(output.effective_care_context, undefined)
+  assert.equal(output.normalized, undefined)
+  assert.deepEqual(output.fact, {
+    kind: "profile_override",
+    field: "thickness",
+    evidence_quote: "Actually my hair is fine",
+  })
+  assert.equal(output.current_turn_fact_count, 1)
+  assert.equal(output.conflict_count, 1)
 })
 
 test("AgentV2 runtime applies current-turn facts to the same effective context for product and routine tools", async () => {
@@ -234,12 +355,15 @@ test("AgentV2 runtime applies current-turn facts to the same effective context f
     },
     tools: {
       load_advisor_guidance: async () => ({ loaded_package_ids: [] }),
-      select_products: async (input) => {
-        downstreamContexts.push(input.effective_care_context)
+      select_products: async (_input, executionContext?: { effectiveCareContext?: unknown }) => {
+        downstreamContexts.push(executionContext?.effectiveCareContext)
         return { valid_product_ids: [], products: [] }
       },
-      build_or_fix_routine: async (input) => {
-        downstreamContexts.push(input.effective_care_context)
+      build_or_fix_routine: async (
+        _input,
+        executionContext?: { effectiveCareContext?: unknown },
+      ) => {
+        downstreamContexts.push(executionContext?.effectiveCareContext)
         return { routine_layer: "basics", visible_steps: [] }
       },
     },
@@ -279,6 +403,52 @@ test("AgentV2 runtime applies current-turn facts to the same effective context f
         conflict.currentTurnValue === false,
     ),
   )
+})
+
+test("AgentV2 trace keeps executable tool arguments model-visible only", async () => {
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([
+      functionCall("call_1", "set_current_care_context", {
+        kind: "profile_override",
+        field: "thickness",
+        value: "fine",
+        evidenceQuote: "Actually my hair is fine",
+      }),
+      functionCall("call_2", "select_products", {
+        category: "conditioner",
+        reason: "User asks for a conditioner.",
+        user_request: "Which conditioner fits?",
+        constraints: [],
+        product_request_kind: "specific_products",
+        requested_product_count: null,
+        count_policy: "default",
+        evidence_quote: "conditioner",
+      }),
+      functionCall("call_3", "build_or_fix_routine", {
+        objective: "fix_routine",
+        requested_layer: "basics",
+        requested_category: "conditioner",
+        reason: "User asks to rebalance routine.",
+        routine_intent: "modify",
+        mutation_kind: "add_step",
+        evidence_quote: "routine",
+      }),
+      terminalGeneralAdvice("call_4", {
+        evidence_quote: "Actually my hair is fine",
+      }),
+    ]),
+    message: "Actually my hair is fine, I want a conditioner, and please update my routine.",
+    recentMessages: [],
+    userContext: { hairProfile: { thickness: "coarse" }, routineInventory: [], sessionMemory: [] },
+    tools: fakeAgentV2Tools(),
+  })
+
+  const selectProductsCall = result.trace.tool_calls.find((call) => call.name === "select_products")
+  const routineCall = result.trace.tool_calls.find((call) => call.name === "build_or_fix_routine")
+  assert.ok(selectProductsCall)
+  assert.ok(routineCall)
+  assert.equal(selectProductsCall.arguments?.effective_care_context, undefined)
+  assert.equal(routineCall.arguments?.effective_care_context, undefined)
 })
 
 function functionCall(call_id: string, name: string, args: Record<string, unknown>) {

@@ -55,6 +55,9 @@ function normalizeTurns(value: { prompt?: string; turns?: string[] }): string[] 
 }
 
 type AgentV2SelectProductsProjectionForCompare = ReturnType<typeof projectSelectProductsForAgentV2>
+type AgentV2RuntimeToolExecutionContext = {
+  effectiveCareContext?: EffectiveCareContext
+}
 
 export function normalizeAgentV2MatchedProductsForFinalAnswer(
   projections: ReturnType<typeof projectSelectProductsForAgentV2>[],
@@ -686,9 +689,10 @@ export async function runAgentV2ComparisonForUser(
       safetyMode,
       tools: {
         load_advisor_guidance: async (input) => loadAgentV2AdvisorGuidance(input),
-        select_products: async (input) => {
+        select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
           latestSelectProductsResult = null
-          const effectiveCareContext = readAgentV2EffectiveCareContext(input)
+          const effectiveCareContext =
+            executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
           const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
             context.profile,
             effectiveCareContext,
@@ -721,8 +725,12 @@ export async function runAgentV2ComparisonForUser(
           selectedProductProjections.push(agentProjection)
           return agentProjection
         },
-        build_or_fix_routine: async (input) => {
-          const effectiveCareContext = readAgentV2EffectiveCareContext(input)
+        build_or_fix_routine: async (
+          input,
+          executionContext?: AgentV2RuntimeToolExecutionContext,
+        ) => {
+          const effectiveCareContext =
+            executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
           const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
             context.profile,
             effectiveCareContext,

@@ -70,9 +70,22 @@ interface AgentV2ResponsesClient {
 }
 
 interface AgentV2RuntimeTools {
-  load_advisor_guidance: (input: Record<string, unknown>) => Promise<unknown>
-  select_products: (input: Record<string, unknown>) => Promise<unknown>
-  build_or_fix_routine: (input: Record<string, unknown>) => Promise<unknown>
+  load_advisor_guidance: (
+    input: Record<string, unknown>,
+    executionContext?: AgentV2RuntimeToolExecutionContext,
+  ) => Promise<unknown>
+  select_products: (
+    input: Record<string, unknown>,
+    executionContext?: AgentV2RuntimeToolExecutionContext,
+  ) => Promise<unknown>
+  build_or_fix_routine: (
+    input: Record<string, unknown>,
+    executionContext?: AgentV2RuntimeToolExecutionContext,
+  ) => Promise<unknown>
+}
+
+interface AgentV2RuntimeToolExecutionContext {
+  effectiveCareContext: EffectiveCareContext
 }
 
 interface AgentV2RuntimeUserContext {
@@ -617,11 +630,7 @@ export async function runAgentV2ResponsesTurn(params: {
           params.userContext,
           currentTurnCareFacts,
         )
-        const output = {
-          accepted: true,
-          fact,
-          effective_care_context: effectiveCareContext,
-        }
+        const output = buildCurrentCareContextToolOutput(fact, effectiveCareContext)
         const toolLatencyMs = Math.round(performance.now() - toolStartedAt)
         inputItems.push(buildFunctionCallOutput(call.call_id, output))
         trace.tool_calls.push({
@@ -646,10 +655,11 @@ export async function runAgentV2ResponsesTurn(params: {
         currentRoutineLayer: params.currentRoutineLayer,
         routineThreadContext,
         hasCurrentRoutineInventory: hasEffectiveRoutineInventory(effectiveCareContext),
-        effectiveCareContext,
       })
       const toolStartedAt = performance.now()
-      const output = await params.tools[call.name](executableArguments)
+      const output = await params.tools[call.name](executableArguments, {
+        effectiveCareContext,
+      })
       const toolLatencyMs = Math.round(performance.now() - toolStartedAt)
       inputItems.push(buildFunctionCallOutput(call.call_id, output))
       trace.tool_calls.push({
@@ -1065,15 +1075,8 @@ function normalizeExecutableToolArguments(params: {
   currentRoutineLayer: AgentV2RoutineLayer | null | undefined
   routineThreadContext: AgentV2RoutineThreadContext | null
   hasCurrentRoutineInventory: boolean
-  effectiveCareContext: EffectiveCareContext
 }): Record<string, unknown> {
-  const args =
-    params.name === "select_products" || params.name === "build_or_fix_routine"
-      ? {
-          ...params.args,
-          effective_care_context: params.effectiveCareContext,
-        }
-      : params.args
+  const args = params.args
 
   if (params.name !== "build_or_fix_routine") return args
   if (hasRoutineBaseline(params)) return args
@@ -1095,6 +1098,53 @@ function hasRoutineBaseline(params: {
     params.routineThreadContext?.active === true ||
     params.hasCurrentRoutineInventory
   )
+}
+
+function buildCurrentCareContextToolOutput(
+  fact: CurrentTurnCareFact,
+  effectiveCareContext: EffectiveCareContext,
+): Record<string, unknown> {
+  return {
+    accepted: true,
+    fact: compactCurrentTurnCareFactForModel(fact),
+    current_turn_fact_count: effectiveCareContext.currentTurnFacts.length,
+    conflict_count: effectiveCareContext.conflicts.length,
+    conflicts: effectiveCareContext.conflicts.map((conflict) => ({
+      field_path: conflict.fieldPath,
+      evidence_quote: conflict.evidenceQuote,
+    })),
+  }
+}
+
+function compactCurrentTurnCareFactForModel(fact: CurrentTurnCareFact): Record<string, unknown> {
+  if (fact.kind === "profile_override" || fact.kind === "profile_augment") {
+    return {
+      kind: fact.kind,
+      field: fact.field,
+      evidence_quote: fact.evidenceQuote,
+    }
+  }
+  if (fact.kind === "routine_presence") {
+    return {
+      kind: fact.kind,
+      category: fact.category,
+      present: fact.present,
+      evidence_quote: fact.evidenceQuote,
+    }
+  }
+  if (fact.kind === "routine_frequency") {
+    return {
+      kind: fact.kind,
+      category: fact.category,
+      frequency: fact.frequencyBand,
+      evidence_quote: fact.evidenceQuote,
+    }
+  }
+  return {
+    kind: fact.kind,
+    code: fact.key,
+    evidence_quote: fact.evidenceQuote,
+  }
 }
 
 function buildEffectiveCareContextForTurn(
