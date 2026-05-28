@@ -8,6 +8,7 @@ const feedbackSchema = z.object({
   message: z.string().trim().min(1).max(4000),
   pageUrl: z.string().max(2048).optional(),
   userAgent: z.string().max(512).optional(),
+  posthogSessionId: z.string().max(128).optional(),
 })
 
 // Strip query string + hash so we never persist auth tokens, Stripe/PayPal
@@ -48,6 +49,7 @@ export async function POST(request: Request) {
     message: parsed.data.message,
     page_url: redactUrl(parsed.data.pageUrl),
     user_agent: parsed.data.userAgent ?? null,
+    posthog_session_id: parsed.data.posthogSessionId ?? null,
   })
 
   if (error) {
