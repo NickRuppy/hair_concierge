@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AgentV2 Context Decision Map</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17211b;
+        --muted: #5d6a62;
+        --line: #d8ded8;
+        --soft: #f7f8f5;
+        --panel: #ffffff;
+        --blue: #1f5f8b;
+        --green: #2f6f4e;
+        --amber: #9a661b;
+        --red: #9a3f3f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: #eef1ec;
+        line-height: 1.45;
+      }
+
+      main {
+        width: min(1180px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 32px 0 48px;
+      }
+
+      header {
+        margin-bottom: 24px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        font-size: clamp(30px, 4vw, 52px);
+        line-height: 1.05;
+      }
+
+      h2 {
+        font-size: 22px;
+        margin-bottom: 12px;
+      }
+
+      h3 {
+        font-size: 17px;
+        margin-bottom: 8px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .eyebrow {
+        color: var(--blue);
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+
+      .lede {
+        color: var(--muted);
+        max-width: 780px;
+        font-size: 18px;
+        margin-top: 12px;
+      }
+
+      section {
+        margin-top: 22px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 20px;
+      }
+
+      .pipeline {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(150px, 1fr));
+        gap: 10px;
+      }
+
+      .step {
+        min-height: 132px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+        background: var(--soft);
+        position: relative;
+      }
+
+      .step::after {
+        content: "->";
+        position: absolute;
+        right: -18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .step:last-child::after {
+        content: "";
+      }
+
+      .step strong {
+        display: block;
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+
+      .step span {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .decision-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 14px;
+      }
+
+      .decision {
+        border-left: 6px solid var(--green);
+      }
+
+      .warning {
+        border-left: 6px solid var(--amber);
+      }
+
+      .compact-list {
+        margin: 12px 0 0;
+        padding-left: 18px;
+      }
+
+      .compact-list li {
+        margin: 7px 0;
+      }
+
+      code {
+        background: #edf2ef;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 1px 6px;
+        font-family:
+          "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        font-size: 0.92em;
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .option {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+      }
+
+      .option-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+
+      .badge {
+        border-radius: 999px;
+        padding: 4px 9px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .badge.green {
+        color: #123e29;
+        background: #dff0e5;
+      }
+
+      .badge.amber {
+        color: #5b3d11;
+        background: #f5e7ca;
+      }
+
+      .badge.red {
+        color: #682020;
+        background: #f0d9d9;
+      }
+
+      .tradeoffs {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .tradeoff {
+        padding: 10px;
+        border-radius: 8px;
+        background: var(--soft);
+        border: 1px solid var(--line);
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+
+      .matrix {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 8px;
+      }
+
+      .matrix th,
+      .matrix td {
+        border: 1px solid var(--line);
+        padding: 12px;
+        vertical-align: top;
+        text-align: left;
+      }
+
+      .matrix th {
+        background: #e8ede8;
+        font-size: 13px;
+      }
+
+      .matrix td {
+        background: #fff;
+      }
+
+      .callout {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 14px;
+        align-items: start;
+        background: #f9fbf7;
+      }
+
+      .verdict {
+        font-size: 28px;
+        font-weight: 900;
+        color: var(--green);
+        line-height: 1.1;
+      }
+
+      @media (max-width: 980px) {
+        .pipeline,
+        .options,
+        .decision-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .step::after {
+          content: "";
+        }
+
+        .callout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">AgentV2 guidance migration</div>
+        <h1>Where should request_interpretation sit?</h1>
+        <p class="lede">
+          This map explains the decision in plain architecture terms: which
+          layer should reason broadly, which layer should declare the final
+          answer contract, and which layer should enforce product and safety
+          truth.
+        </p>
+      </header>
+
+      <section class="panel">
+        <h2>The pipeline we are deciding around</h2>
+        <div class="pipeline" aria-label="AgentV2 pipeline">
+          <div class="step">
+            <strong>1. User message</strong>
+            <span>
+              Natural German request. Often messy: symptoms, product asks,
+              routine follow-ups, or safety signals.
+            </span>
+          </div>
+          <div class="step">
+            <strong>2. Model reasoning</strong>
+            <span>
+              GPT-5.4-mini interprets meaning, ambiguity, tone, and which
+              context/tools might help.
+            </span>
+          </div>
+          <div class="step">
+            <strong>3. load_advisor_guidance</strong>
+            <span>
+              Loads one or more guidance packages: base, category, routine,
+              safety, and general haircare.
+            </span>
+          </div>
+          <div class="step">
+            <strong>4. Tools and catalog</strong>
+            <span>
+              Product facts, IDs, availability, ordering, protocol, and routine
+              state come from tools, not guidance prose.
+            </span>
+          </div>
+          <div class="step">
+            <strong>5. submit_final_answer</strong>
+            <span>
+              Final visible answer plus <code>request_interpretation</code>,
+              which the validator checks.
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section class="decision-grid">
+        <div class="panel decision">
+          <h2>Recommended decision</h2>
+          <p>
+            Keep <code>request_interpretation</code> narrow. It should be the
+            final accountability contract, not the broad reasoning map.
+          </p>
+          <ul class="compact-list">
+            <li>
+              <code>care_category</code> names the central product or care
+              category only when one is central.
+            </li>
+            <li>
+              <code>load_advisor_guidance</code> may load multiple packages
+              for reasoning.
+            </li>
+            <li>
+              Validators use the interpretation to check tool use, grounding,
+              answer mode, product count, safety, and routine permissions.
+            </li>
+          </ul>
+        </div>
+
+        <div class="panel warning">
+          <h2>The trap to avoid</h2>
+          <p>
+            If <code>request_interpretation</code> becomes "all topics the model
+            considered," it turns into a hidden router taxonomy. That makes it
+            bigger, harder to validate, and less useful as a final contract.
+          </p>
+          <ul class="compact-list">
+            <li>Concerns like dryness and frizz can inform reasoning.</li>
+            <li>They do not always need to become terminal schema fields.</li>
+            <li>
+              Broad reasoning belongs in guidance loading, answer synthesis,
+              traces, and evals.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2>Three options</h2>
+        <div class="options">
+          <article class="panel option">
+            <div class="option-header">
+              <h3>A. Narrow final contract</h3>
+              <span class="badge green">Recommended</span>
+            </div>
+            <p>
+              <code>request_interpretation</code> describes the answer the
+              agent actually gave. Guidance loading can be broad and
+              multi-package.
+            </p>
+            <div class="tradeoffs">
+              <div class="tradeoff">
+                <span class="label">Best when</span>
+                You want strong validation without rebuilding a router.
+              </div>
+              <div class="tradeoff">
+                <span class="label">Pros</span>
+                Small schema, easy evals, clear grounding rules, natural model
+                reasoning.
+              </div>
+              <div class="tradeoff">
+                <span class="label">Cons</span>
+                Traces need to show loaded guidance if you want to inspect all
+                reasoning context.
+              </div>
+            </div>
+          </article>
+
+          <article class="panel option">
+            <div class="option-header">
+              <h3>B. Broad topic contract</h3>
+              <span class="badge amber">Tempting</span>
+            </div>
+            <p>
+              <code>request_interpretation</code> lists every relevant topic:
+              category, concern, routine layer, technique, safety, and profile
+              signals.
+            </p>
+            <div class="tradeoffs">
+              <div class="tradeoff">
+                <span class="label">Best when</span>
+                You need exhaustive analytics more than lean validation.
+              </div>
+              <div class="tradeoff">
+                <span class="label">Pros</span>
+                Rich logs, easier topic coverage analysis, explicit multi-topic
+                visibility.
+              </div>
+              <div class="tradeoff">
+                <span class="label">Cons</span>
+                Schema grows fast, validators become brittle, and the field
+                starts acting like a router.
+              </div>
+            </div>
+          </article>
+
+          <article class="panel option">
+            <div class="option-header">
+              <h3>C. No request interpretation</h3>
+              <span class="badge red">Too loose</span>
+            </div>
+            <p>
+              The model answers and tools run, but there is no terminal
+              semantic declaration for code to validate against.
+            </p>
+            <div class="tradeoffs">
+              <div class="tradeoff">
+                <span class="label">Best when</span>
+                You only need a casual chat assistant with low consequence.
+              </div>
+              <div class="tradeoff">
+                <span class="label">Pros</span>
+                Less schema work and fewer repair loops.
+              </div>
+              <div class="tradeoff">
+                <span class="label">Cons</span>
+                Harder to catch unasked products, wrong counts, skipped tools,
+                unsafe escalation, and routine mutation mistakes.
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>What each layer should own</h2>
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>Owns</th>
+              <th>Should not own</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>load_advisor_guidance</code></td>
+              <td>
+                Broad context selection: base rules, product categories,
+                safety, routine guidance, and general haircare.
+              </td>
+              <td>
+                Final semantic truth, product IDs, product availability, or
+                saved routine mutations.
+              </td>
+            </tr>
+            <tr>
+              <td><code>request_interpretation</code></td>
+              <td>
+                The final answer contract: intent, product request kind,
+                routine intent, central <code>care_category</code>, count,
+                evidence quote, and confidence.
+              </td>
+              <td>
+                Every topic used for reasoning, every concern mentioned, or a
+                complete retrieval trace.
+              </td>
+            </tr>
+            <tr>
+              <td>Product and routine tools</td>
+              <td>
+                Facts: product IDs, ranking, catalog membership, lifecycle,
+                protocols, routine state, and persisted changes.
+              </td>
+              <td>
+                Free-form category theory or hidden product claims from prose
+                guidance.
+              </td>
+            </tr>
+            <tr>
+              <td>Validator</td>
+              <td>
+                Consistency: did the answer match the declared interpretation,
+                loaded guidance, required tools, product count, and safety
+                boundary?
+              </td>
+              <td>
+                Natural-language taste, empathy, or nuanced explanation style
+                unless it violates a hard rule.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel callout">
+        <div class="verdict">Plain-English verdict</div>
+        <p>
+          Let GPT-5.4 reason broadly. Let <code>load_advisor_guidance</code>
+          bring in the useful context. Let <code>request_interpretation</code>
+          stay small enough that code can hold the answer accountable. That is
+          the clean split between model intelligence and deterministic product
+          safety.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
