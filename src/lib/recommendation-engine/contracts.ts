@@ -87,6 +87,26 @@ export const CARE_BALANCE_FACT_KINDS = [
   "context_signal",
 ] as const
 export const CARE_BALANCE_FACT_SOURCES = ["current_turn"] as const
+export const CARE_BALANCE_RECOMMENDATIONS = [
+  "add",
+  "increase_frequency",
+  "keep",
+  "decrease_frequency",
+  "remove",
+  "no_action",
+  "needs_more_info",
+] as const
+export const CARE_BALANCE_STATUSES = [
+  "missing_needed",
+  "underused",
+  "matched",
+  "overused",
+  "unnecessary",
+  "not_relevant",
+  "needs_more_info",
+  "safety_caution",
+] as const
+export const CARE_BALANCE_STRENGTHS = ["low", "medium", "high"] as const
 
 export const engineCategoryIdSchema = z.enum(ENGINE_CATEGORY_IDS)
 export const inventoryCategorySchema = z.enum(INVENTORY_CATEGORIES)
@@ -113,6 +133,9 @@ export const resetIntensitySchema = z.enum(RESET_INTENSITIES)
 export const colorTreatedSuitabilitySchema = z.enum(COLOR_TREATED_SUITABILITIES)
 export const careBalanceFactKindSchema = z.enum(CARE_BALANCE_FACT_KINDS)
 export const careBalanceFactSourceSchema = z.enum(CARE_BALANCE_FACT_SOURCES)
+export const careBalanceRecommendationSchema = z.enum(CARE_BALANCE_RECOMMENDATIONS)
+export const careBalanceStatusSchema = z.enum(CARE_BALANCE_STATUSES)
+export const careBalanceStrengthSchema = z.enum(CARE_BALANCE_STRENGTHS)
 export const currentTurnCareFactSchema = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("profile_override"),

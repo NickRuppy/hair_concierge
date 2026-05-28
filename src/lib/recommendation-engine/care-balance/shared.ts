@@ -1,4 +1,8 @@
-import type { DamageAssessment, NormalizedProfile } from "@/lib/recommendation-engine/types"
+import type {
+  DamageAssessment,
+  HeatExposureTier,
+  NormalizedProfile,
+} from "@/lib/recommendation-engine/types"
 import type { ProductFrequency, StylingTool } from "@/lib/vocabulary"
 
 const PRODUCT_FREQUENCY_RANK: Record<ProductFrequency, number> = {
@@ -34,8 +38,6 @@ export interface DeepCleansingVulnerability {
   relevantTools: StylingTool[]
   reasonCodes: DeepCleansingVulnerabilityReasonCode[]
 }
-
-export type HeatExposureTier = "none" | "airflow" | "moderate" | "high_cumulative" | "high_direct"
 
 export type HeatExposureReasonCode =
   | "airflow_heat_tool"

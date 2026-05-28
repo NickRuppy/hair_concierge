@@ -9,10 +9,93 @@ import {
   hasDeepCleansingVulnerability,
   type DeepCleansingVulnerabilityReasonCode,
 } from "../src/lib/recommendation-engine/care-balance/shared"
+import { buildCareBalanceSet } from "../src/lib/recommendation-engine/care-balance"
+import { buildCareNeedAssessment } from "../src/lib/recommendation-engine/assessments/care-needs"
+import { buildResetAssessment } from "../src/lib/recommendation-engine/assessments/reset"
 import { buildEffectiveCareContext } from "../src/lib/recommendation-engine/effective-care-context"
-import type { CurrentTurnCareFact, DamageAssessment } from "../src/lib/recommendation-engine/types"
-import type { StylingTool } from "../src/lib/vocabulary"
+import type {
+  CareBalanceRow,
+  CurrentTurnCareFact,
+  DamageAssessment,
+  InventoryCategory,
+  RecommendationRequestContext,
+} from "../src/lib/recommendation-engine/types"
+import type { ProductFrequency, StylingTool } from "../src/lib/vocabulary"
 import { LOW_DAMAGE_PROFILE } from "./recommendation-engine-foundation.fixtures"
+
+const EMPTY_REQUEST_CONTEXT: RecommendationRequestContext = {
+  requestedCategory: null,
+  resetTriggerTerms: [],
+  resetTriggerSources: [],
+  resetFocusRequest: null,
+  colorSafeRequest: false,
+  scalpTreatmentIntent: false,
+  maskIntensityRequest: null,
+  leaveInHeatProtectionRequest: null,
+  leaveInSeparateHeatProtectantMentioned: false,
+  leaveInWeightRequest: null,
+  leaveInConditionerRelationshipRequest: null,
+  leaveInRequestedFormats: [],
+  oilPurpose: null,
+  oilNoRecommendationReason: null,
+}
+
+function buildRows(
+  profileOverrides: Partial<typeof LOW_DAMAGE_PROFILE>,
+  routine: {
+    category: InventoryCategory
+    product_name?: string | null
+    frequency_range?: ProductFrequency | null
+  }[] = [],
+  requestContext: RecommendationRequestContext = EMPTY_REQUEST_CONTEXT,
+): CareBalanceRow[] {
+  const rawInput = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      ...profileOverrides,
+    },
+    routine.map((item) => ({
+      category: item.category,
+      product_name: item.product_name ?? "Existing product",
+      frequency_range: item.frequency_range ?? null,
+    })),
+  ).input
+  const context = buildEffectiveCareContext(rawInput)
+  const damage = buildDamageAssessment(context.normalized)
+  const careNeeds = buildCareNeedAssessment(context.normalized, damage)
+  const reset = buildResetAssessment(context.normalized, requestContext)
+
+  return buildCareBalanceSet({
+    context,
+    damage,
+    careNeeds,
+    reset,
+  }).rows
+}
+
+function findRow(rows: CareBalanceRow[], category: InventoryCategory): CareBalanceRow {
+  const row = rows.find((candidate) => candidate.category === category)
+  assert.ok(row, `missing ${category} row`)
+  return row
+}
+
+function assertRecommendation(
+  rows: CareBalanceRow[],
+  category: InventoryCategory,
+  recommendation: CareBalanceRow["recommendation"],
+) {
+  const row = findRow(rows, category)
+  assert.equal(row.recommendation, recommendation)
+  assert.equal(typeof row.present, "boolean")
+  assert.ok("currentFrequency" in row)
+  assert.ok(row.primaryStatus)
+  assert.ok(row.recommendationStrength)
+  assert.ok(row.confidence)
+  assert.ok(Array.isArray(row.decisiveReasonCodes))
+  assert.ok(Array.isArray(row.contextReasonCodes))
+  assert.ok(row.cadencePolicy)
+  assert.ok(row.selectionHints)
+}
 
 test("current-turn routine frequency overrides saved routine frequency and records conflict", () => {
   const rawInput = adaptRecommendationInputFromPersistence(LOW_DAMAGE_PROFILE, [
@@ -173,6 +256,179 @@ test("context signals are retained without changing the effective profile", () =
   assert.deepEqual(context.currentTurnFacts, facts)
   assert.deepEqual(context.conflicts, [])
   assert.deepEqual(context.provenance, [])
+})
+
+test("buildCareBalanceSet returns one stable row per strong category", () => {
+  const rows = buildRows({})
+
+  assert.deepEqual(
+    rows.map((row) => row.category),
+    [
+      "shampoo",
+      "conditioner",
+      "leave_in",
+      "mask",
+      "oil",
+      "heat_protectant",
+      "bondbuilder",
+      "deep_cleansing_shampoo",
+      "dry_shampoo",
+      "peeling",
+    ],
+  )
+  assert.equal(rows.length, 10)
+  for (const row of rows) {
+    assert.equal(typeof row.present, "boolean")
+    assert.ok("currentFrequency" in row)
+    assert.ok(row.primaryStatus)
+    assert.ok(row.recommendation)
+    assert.ok(row.recommendationStrength)
+    assert.ok(row.confidence)
+    assert.ok(Array.isArray(row.decisiveReasonCodes))
+    assert.ok(Array.isArray(row.contextReasonCodes))
+    assert.ok(row.cadencePolicy)
+    assert.ok(row.selectionHints)
+  }
+})
+
+test("buildCareBalanceSet recommends adding missing conditioner for dry tangled lengths", () => {
+  const rows = buildRows({
+    concerns: ["dryness", "tangling"],
+    goals: ["moisture"],
+  })
+
+  assertRecommendation(rows, "conditioner", "add")
+})
+
+test("buildCareBalanceSet recommends increasing rare conditioner against 3-4x wash cadence", () => {
+  const rows = buildRows(
+    {
+      wash_frequency: "every_2_3_days",
+    },
+    [{ category: "conditioner", frequency_range: "rarely" }],
+  )
+
+  assertRecommendation(rows, "conditioner", "increase_frequency")
+})
+
+test("buildCareBalanceSet recommends decreasing daily oil under buildup and flatness pressure", () => {
+  const rows = buildRows(
+    {
+      goals: ["volume"],
+    },
+    [{ category: "oil", frequency_range: "daily" }],
+    { ...EMPTY_REQUEST_CONTEXT, resetTriggerTerms: ["buildup"], resetTriggerSources: ["symptom"] },
+  )
+
+  assertRecommendation(rows, "oil", "decrease_frequency")
+})
+
+test("buildCareBalanceSet recommends adding absent leave-in for frizz and tangling", () => {
+  const rows = buildRows({
+    concerns: ["frizz", "tangling"],
+  })
+
+  assertRecommendation(rows, "leave_in", "add")
+})
+
+test("buildCareBalanceSet recommends decreasing frequent mask under buildup pressure", () => {
+  const rows = buildRows({}, [{ category: "mask", frequency_range: "3_4x" }], {
+    ...EMPTY_REQUEST_CONTEXT,
+    resetTriggerTerms: ["buildup"],
+    resetTriggerSources: ["symptom"],
+  })
+
+  assertRecommendation(rows, "mask", "decrease_frequency")
+})
+
+test("buildCareBalanceSet recommends adding absent heat protectant for flat iron", () => {
+  const rows = buildRows({
+    heat_styling: "once_weekly",
+    styling_tools: ["flat_iron"],
+    uses_heat_protection: false,
+  })
+
+  assertRecommendation(rows, "heat_protectant", "add")
+})
+
+test("buildCareBalanceSet keeps absent heat protectant as no action for blow dryer only", () => {
+  const rows = buildRows({
+    heat_styling: "once_weekly",
+    styling_tools: ["blow_dryer"],
+    drying_method: "blow_dry",
+    uses_heat_protection: false,
+  })
+
+  assertRecommendation(rows, "heat_protectant", "no_action")
+})
+
+test("buildCareBalanceSet recommends increasing rare heat protectant for cumulative moderate heat tools", () => {
+  const rows = buildRows(
+    {
+      heat_styling: "several_weekly",
+      styling_tools: ["hot_air_brush", "thermal_rollers"],
+      uses_heat_protection: true,
+    },
+    [{ category: "heat_protectant", frequency_range: "rarely" }],
+  )
+
+  assertRecommendation(rows, "heat_protectant", "increase_frequency")
+})
+
+test("buildCareBalanceSet recommends adding absent bondbuilder for high bond priority", () => {
+  const rows = buildRows({
+    chemical_treatment: ["bleached"],
+    protein_moisture_balance: "snaps",
+    cuticle_condition: "rough",
+    concerns: ["hair_damage"],
+  })
+
+  assertRecommendation(rows, "bondbuilder", "add")
+})
+
+test("buildCareBalanceSet recommends decreasing deep-cleansing shampoo at 3-4x use", () => {
+  const rows = buildRows({}, [{ category: "deep_cleansing_shampoo", frequency_range: "3_4x" }])
+
+  assertRecommendation(rows, "deep_cleansing_shampoo", "decrease_frequency")
+})
+
+test("buildCareBalanceSet recommends decreasing weekly deep-cleansing shampoo with vulnerability", () => {
+  const rows = buildRows(
+    {
+      concerns: ["dryness"],
+      scalp_type: "dry",
+    },
+    [{ category: "deep_cleansing_shampoo", frequency_range: "1_2x" }],
+  )
+
+  assertRecommendation(rows, "deep_cleansing_shampoo", "decrease_frequency")
+})
+
+test("buildCareBalanceSet recommends decreasing daily dry shampoo under reset pressure", () => {
+  const rows = buildRows({}, [{ category: "dry_shampoo", frequency_range: "daily" }], {
+    ...EMPTY_REQUEST_CONTEXT,
+    resetTriggerTerms: ["buildup"],
+    resetTriggerSources: ["symptom"],
+  })
+
+  assertRecommendation(rows, "dry_shampoo", "decrease_frequency")
+})
+
+test("buildCareBalanceSet recommends decreasing peeling when scalp is irritated", () => {
+  const rows = buildRows(
+    {
+      scalp_condition: "irritated",
+    },
+    [{ category: "peeling", frequency_range: "1_2x" }],
+  )
+
+  assertRecommendation(rows, "peeling", "decrease_frequency")
+})
+
+test("buildCareBalanceSet recommends adding absent shampoo", () => {
+  const rows = buildRows({})
+
+  assertRecommendation(rows, "shampoo", "add")
 })
 
 test("compareFrequencyBands orders known bands and returns null when either side is unknown", () => {
