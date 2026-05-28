@@ -178,6 +178,26 @@ function evaluateConditioner(input: CareBalanceEvaluationInput): CareBalanceRow 
     })
   }
 
+  if (
+    item &&
+    item.frequencyBand === "daily" &&
+    input.careNeeds.volumeDirection === "volume" &&
+    needReasons.length === 0
+  ) {
+    return row(input, "conditioner", {
+      primaryStatus: "overused",
+      recommendation: "decrease_frequency",
+      recommendationStrength: "medium",
+      decisiveReasonCodes: ["conditioner_load_pressure"],
+      contextReasonCodes: ["volume_goal"],
+      cadencePolicy: {
+        kind: "match_wash_frequency",
+        washFrequency: profile.washFrequency,
+        expected: "most_washes",
+      },
+    })
+  }
+
   return row(input, "conditioner", {
     cadencePolicy: {
       kind: "match_wash_frequency",

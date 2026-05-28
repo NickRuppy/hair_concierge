@@ -37,15 +37,29 @@ function hasRoutineOverloadRisk(profile: NormalizedProfile): boolean {
 function buildOilNoRecommendationDecision(
   profile: NormalizedProfile,
   reason: NonNullable<RecommendationRequestContext["oilNoRecommendationReason"]>,
+  purpose: RecommendationRequestContext["oilPurpose"] = null,
 ): OilCategoryDecision {
   if (reason === "overload_risk") {
+    const matcherSubtype = mapOilPurposeToSubtype(purpose)
     return {
       category: "oil",
       relevant: true,
       action: profile.routineInventory.oil ? "decrease_frequency" : "behavior_change_only",
       planReasonCodes: ["oil_overload_suppress_products"],
       currentInventory: profile.routineInventory.oil,
-      targetProfile: null,
+      targetProfile:
+        purpose && matcherSubtype
+          ? {
+              purpose,
+              matcherSubtype,
+              adjunctScalpSupport: false,
+              purposeSource: "request",
+              scalpCaution: purpose === "pre_wash_oiling" && hasOilScalpCaution(profile),
+              densityWeightCaution: hasDensityWeightCaution(profile),
+              overloadRisk: true,
+              purposeFit: "exact",
+            }
+          : null,
       clarificationNeeded: false,
       noRecommendationReason: reason,
       notes: ["oil_overload_suppress_products"],
@@ -104,11 +118,11 @@ export function buildOilCategoryDecision(
   const noRecommendationReason = requestContext.oilNoRecommendationReason
 
   if (noRecommendationReason) {
-    return buildOilNoRecommendationDecision(profile, noRecommendationReason)
+    return buildOilNoRecommendationDecision(profile, noRecommendationReason, purpose)
   }
 
   if (reset?.richOptionalCareRisk && reset.level === "strong") {
-    return buildOilNoRecommendationDecision(profile, "overload_risk")
+    return buildOilNoRecommendationDecision(profile, "overload_risk", purpose)
   }
 
   if (!purpose) {
@@ -126,7 +140,7 @@ export function buildOilCategoryDecision(
   }
 
   if (hasRoutineOverloadRisk(profile)) {
-    return buildOilNoRecommendationDecision(profile, "overload_risk")
+    return buildOilNoRecommendationDecision(profile, "overload_risk", purpose)
   }
 
   const matcherSubtype = mapOilPurposeToSubtype(purpose)

@@ -9,7 +9,11 @@ import {
 import { inferOilPurposeFromMessage } from "../src/lib/oil/purpose"
 import type { MatchedProduct } from "../src/lib/rag/product-matcher"
 import type { SelectableProductCategory } from "../src/lib/agent/tools/select-products"
-import type { RecommendationEngineRuntime } from "../src/lib/recommendation-engine/runtime"
+import {
+  buildRecommendationEngineRuntimeFromPersistence,
+  type RecommendationEngineRuntime,
+} from "../src/lib/recommendation-engine/runtime"
+import { buildRecommendationRequestContext } from "../src/lib/recommendation-engine/request-context"
 import type {
   BondbuilderCategoryDecision,
   DeepCleansingShampooCategoryDecision,
@@ -2928,6 +2932,91 @@ test("selectProducts carries unsupported ingredient caveats for live oil request
     result.unsupported_requested_signals[0]?.user_message,
     "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Oel-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Oel-Zweck, Haardicke, Anwendung und Fit.",
   )
+})
+
+test("selectProducts still returns explicit oil products while exposing CareBalance decrease-frequency framing", async () => {
+  const observed: { runtime?: RecommendationEngineRuntime } = {}
+  const tool = createSelectProductsTool({
+    onResult: ({ runtime }) => {
+      observed.runtime = runtime
+    },
+    runCategoryEngine: async ({ category }) => {
+      assert.equal(category, "oil")
+      return [createOilMatchedProduct("light-oil", 0.94)]
+    },
+  })
+
+  const result = await tool({
+    category: "oil",
+    message: "Ich will trotz Build-up und plattem Ansatz ein leichtes Oel als Finish.",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+      density: "low",
+      scalp_type: "oily",
+      goals: ["volume"],
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [
+      {
+        category: "oil",
+        product_name: "Daily Oil",
+        frequency_range: "daily",
+      },
+    ],
+    userJob: "product_pick",
+  })
+
+  assert.equal(
+    observed.runtime?.careBalance.rows.find((row) => row.category === "oil")?.recommendation,
+    "decrease_frequency",
+  )
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.products.length, 1)
+  assert.match(
+    JSON.stringify((result as unknown as { care_balance_context?: unknown }).care_balance_context),
+    /decrease_frequency/,
+  )
+  assert.match(JSON.stringify(result), /daily_oil_use|buildup_or_flatness_pressure/)
+})
+
+test("projectSelectedProducts does not turn therapy oil redirects into product recommendations", () => {
+  const routeContext = {
+    message: "Welches Rosmarinoel hilft gegen Haarwachstum?",
+    userJob: "product_pick",
+  } satisfies NonNullable<Parameters<typeof projectSelectedProducts>[4]>
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+    },
+    [],
+    buildRecommendationRequestContext({
+      requestedCategory: "oil",
+      message: routeContext.message,
+    }),
+  )
+
+  const projection = projectSelectedProducts(
+    [createOilMatchedProduct("therapy-oil", 0.94)],
+    {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+    } as HairProfile,
+    "oil",
+    runtime,
+    routeContext,
+  )
+
+  assert.equal(runtime.categories.oil.noRecommendationReason, "therapy_oil_missing")
+  assert.equal(projection.decision, "not_recommended")
+  assert.equal(projection.products.length, 0)
+  assert.equal(projection.product_response_policy, "redirect_to_better_lever")
 })
 
 test("selectProducts applies oil thickness overrides to hard-gated oil selection", async () => {

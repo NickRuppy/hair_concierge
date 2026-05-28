@@ -259,6 +259,54 @@ test("projectRoutinePlan exposes priority context without changing basics scorin
   assert.ok(result.priority_context?.adjacent_levers.some((lever) => lever.category === "leave_in"))
 })
 
+test("projectRoutinePlan exposes side-by-side CareBalance frequency framing without changing routine steps", () => {
+  const result = projectRoutinePlan({
+    objective: "fix_routine",
+    message: "Mein Ansatz ist platt und ich nutze jeden Tag Oel. Wie anpassen?",
+    layer: "basics",
+    requestedCategory: "oil",
+    hairProfile: createProfile({
+      goals: ["volume"],
+      current_routine_products: ["shampoo", "conditioner", "oil"],
+      products_used: "Shampoo, Conditioner, Oel",
+    }),
+    routineItems: [
+      {
+        category: "oil",
+        product_name: "Daily Oil",
+        frequency_range: "daily",
+      },
+    ],
+  } as Parameters<typeof projectRoutinePlan>[0] & {
+    routineItems: Array<{ category: string; product_name: string | null; frequency_range: "daily" }>
+  })
+
+  assert.deepEqual(
+    result.steps.map((step) => step.id),
+    ["base-shampoo", "base-conditioner", "occasional-hair-reset"],
+  )
+
+  const oilFrame = (
+    result as unknown as {
+      care_balance_context?: {
+        rows: Array<{
+          category: string
+          action: string
+          reason_codes: string[]
+          usage_hint: string
+          authoritative: boolean
+        }>
+      }
+    }
+  ).care_balance_context?.rows.find((row) => row.category === "oil")
+
+  assert.equal(oilFrame?.action, "decrease_frequency")
+  assert.deepEqual(oilFrame?.reason_codes, ["daily_oil_use", "buildup_or_flatness_pressure"])
+  assert.match(oilFrame?.usage_hint ?? "", /1_2x|daily|need_based_support/)
+  assert.equal(oilFrame?.authoritative, false)
+  assert.match(JSON.stringify(result), /legacy|comparison|side_by_side/)
+})
+
 test("projectRoutinePlan includes explicit add-step category in basics", () => {
   const result = projectRoutinePlan({
     hairProfile: createProfile({

@@ -16,6 +16,11 @@ import {
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
 import type { RecommendationEngineRuntime } from "@/lib/recommendation-engine/runtime"
 import type { CategoryDecision } from "@/lib/recommendation-engine/types"
+import {
+  buildCareBalanceToolContext,
+  type CareBalanceToolContext,
+  type CareBalanceToolRow,
+} from "@/lib/agent/tools/care-balance-context"
 import { applyProductMemoryConstraints } from "@/lib/rag/user-memory"
 import type { MatchedProduct } from "@/lib/rag/product-matcher"
 import type { UserMemoryContext } from "@/lib/rag/user-memory"
@@ -219,9 +224,13 @@ export interface SelectedProductsProjection {
   category_guidance: string
   products: SelectedProductResult[]
   comparison_facts: Record<string, string[]> | null
+  care_balance_context?: ProductCareBalanceContext | null
   missing_info: SelectedProductsMissingInfo[]
   unsupported_requested_signals: UnsupportedRequestedSignal[]
 }
+
+export type ProductCareBalanceContext = CareBalanceToolContext
+export type ProductCareBalanceRow = CareBalanceToolRow
 
 export interface SelectProductsToolResult {
   projection: SelectedProductsProjection
@@ -355,6 +364,25 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
   return Object.fromEntries(
     products.map((product) => [product.id, buildProductComparisonFacts(product)]),
   )
+}
+
+function buildProductCareBalanceContext(params: {
+  runtime: RecommendationEngineRuntime | null
+  category: SelectableProductCategory | null
+}): ProductCareBalanceContext | null {
+  const runtime = params.runtime
+  if (!runtime || !params.category) return null
+
+  const primaryRows = runtime.careBalance.rows.filter(
+    (row) =>
+      row.category === params.category ||
+      (params.category === "leave_in" && row.category === "heat_protectant"),
+  )
+  const rowsWithActions = primaryRows.filter((row) => row.recommendation !== "no_action")
+  const rows = rowsWithActions.length > 0 ? rowsWithActions : primaryRows
+  if (rows.length === 0) return null
+
+  return buildCareBalanceToolContext({ runtime, rows })
 }
 
 function buildConditionerComparisonFactsForSet(
@@ -2514,7 +2542,13 @@ function deriveDecision(params: {
     return "not_recommended"
   }
 
-  if (isOilNoRecommendationDecision(category, categoryDecision)) {
+  if (
+    isOilNoRecommendationDecision(category, categoryDecision) &&
+    !(
+      products.length > 0 &&
+      allowsCaveatedOilProductRecommendation({ category, categoryDecision, routeContext })
+    )
+  ) {
     return "not_recommended"
   }
 
@@ -2603,6 +2637,22 @@ function hasExplicitProductAskSignal(message: string): boolean {
 
   return /\b(welch(?:e|es|en|er|em)?|empfehl\w*|kaufen|produkt|produkte|pick|auswahl|option|optionen|a oder b|besser|nimm|nehmen)\b/.test(
     normalized,
+  )
+}
+
+function allowsCaveatedOilProductRecommendation(params: {
+  category: SelectableProductCategory | null
+  categoryDecision: CategoryDecision | null
+  routeContext?: SelectProductsRouteContext | null
+}): boolean {
+  const { category, categoryDecision, routeContext } = params
+
+  return (
+    category === "oil" &&
+    categoryDecision?.category === "oil" &&
+    categoryDecision.noRecommendationReason === "overload_risk" &&
+    categoryDecision.targetProfile !== null &&
+    isExplicitProductSelectionJob(routeContext)
   )
 }
 
@@ -2754,6 +2804,21 @@ function buildProductResponsePolicy(params: {
   }
 
   if (isOilNoRecommendationDecision(category, params.categoryDecision ?? null)) {
+    if (
+      decision === "recommended" &&
+      allowsCaveatedOilProductRecommendation({
+        category,
+        categoryDecision: params.categoryDecision,
+        routeContext,
+      })
+    ) {
+      return {
+        product_response_policy: "recommend_with_caveat",
+        policy_reason:
+          "Der Nutzer fragt explizit nach Oel-Produkten; empfehle passende Optionen, aber rahme sie mit Reduktions- und Build-up-Caveat.",
+      }
+    }
+
     return {
       product_response_policy: "redirect_to_better_lever",
       policy_reason:
@@ -2978,6 +3043,13 @@ function buildCategoryGuidance(params: {
 
   if (category === "oil" && categoryDecision?.category === "oil") {
     if (categoryDecision.noRecommendationReason === "overload_risk") {
+      if (
+        decision === "recommended" &&
+        allowsCaveatedOilProductRecommendation({ category, categoryDecision, routeContext })
+      ) {
+        return "Der Nutzer fragt explizit nach Oel-Produkten; vorhandene Produkttreffer duerfen gezeigt werden. CareBalance/Planner-Caveat: wegen Beschwerungs- oder Build-up-Risiko sparsam, leichter Fit, eher Frequenz senken und nicht als Pflichtschritt framen."
+      }
+
       return "Ein neues Oel ist hier nicht der richtige Hebel: Die aktuelle Logik sieht ein Beschwerungs- oder Build-up-Risiko. Keine Oel-Produkte empfehlen; stattdessen weniger Oel, weniger Layering oder Reset-Pflege erklaeren."
     }
 
@@ -3083,6 +3155,10 @@ export function projectSelectedProducts(
     }),
     products: projectedProducts,
     comparison_facts: buildComparisonFacts(displayableProducts),
+    care_balance_context: buildProductCareBalanceContext({
+      runtime,
+      category: resolvedCategory,
+    }),
     missing_info,
     unsupported_requested_signals: packetUnsupportedSignals,
   }
@@ -3105,13 +3181,13 @@ async function runCategoryEngine(params: {
     case "shampoo":
       return selectShampooProductsWithEngine({ message, hairProfile, routineItems })
     case "conditioner":
-      return selectConditionerProductsWithEngine({ message, hairProfile, routineItems })
+      return selectConditionerProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "leave_in":
       return selectLeaveInProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "mask":
       return selectMaskProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "oil":
-      return selectOilProductsWithEngine({ message, hairProfile, routineItems })
+      return selectOilProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "bondbuilder":
       return selectBondbuilderProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "deep_cleansing_shampoo":

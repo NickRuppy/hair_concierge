@@ -3,6 +3,19 @@ import {
   deriveRoutineContext,
   projectRoutinePlanForLayer,
 } from "@/lib/routines/planner"
+import {
+  buildRecommendationEngineRuntimeFromPersistence,
+  type RecommendationEngineRuntime,
+} from "@/lib/recommendation-engine/runtime"
+import {
+  buildRoutineItemsFromInventoryCategories,
+  type PersistenceRoutineItemRow,
+} from "@/lib/recommendation-engine/adapters/from-persistence"
+import {
+  buildCareBalanceToolContext,
+  type CareBalanceToolContext,
+  type CareBalanceToolRow,
+} from "@/lib/agent/tools/care-balance-context"
 import type { BuildOrFixRoutineToolInput as AgentV2BuildOrFixRoutineToolInput } from "@/lib/agent-v2/tools/tool-definitions"
 import type {
   HairProfile,
@@ -71,7 +84,11 @@ export interface BuildOrFixRoutineProjection {
   missing_info: BuildOrFixRoutineMissingInfo[]
   confidence: number
   priority_context?: BuildOrFixRoutinePriorityContext | null
+  care_balance_context?: RoutineCareBalanceContext | null
 }
+
+export type RoutineCareBalanceContext = CareBalanceToolContext
+export type RoutineCareBalanceRow = CareBalanceToolRow
 
 export interface BuildOrFixRoutineToolInput {
   objective?: RoutineObjective | null
@@ -80,6 +97,7 @@ export interface BuildOrFixRoutineToolInput {
   layer?: RoutineLayer | null
   requestedCategory?: RoutineProductCategory | null
   mutationKind?: BuildOrFixRoutineMutationKind
+  routineItems?: PersistenceRoutineItemRow[]
 }
 
 function normalizeText(value: string | null | undefined): string | null {
@@ -248,6 +266,17 @@ function projectPriorityContext(plan: RoutinePlan): BuildOrFixRoutinePriorityCon
   }
 }
 
+function buildRoutineCareBalanceContext(
+  runtime: RecommendationEngineRuntime,
+): RoutineCareBalanceContext {
+  const rowsWithActions = runtime.careBalance.rows.filter(
+    (row) => row.recommendation !== "no_action",
+  )
+  const rows = rowsWithActions.length > 0 ? rowsWithActions : runtime.careBalance.rows
+
+  return buildCareBalanceToolContext({ runtime, rows })
+}
+
 function projectRoutineSteps(params: {
   plan: RoutinePlan
   hairProfile: HairProfile | null
@@ -341,6 +370,7 @@ export function projectRoutinePlan(params: {
   layer?: RoutineLayer | null
   requestedCategory?: RoutineProductCategory | null
   mutationKind?: BuildOrFixRoutineMutationKind
+  routineItems?: PersistenceRoutineItemRow[]
 }): BuildOrFixRoutineProjection {
   const objective = normalizeObjective(params.objective)
   const prompt = buildPlannerPrompt({
@@ -354,6 +384,10 @@ export function projectRoutinePlan(params: {
     usesBondBuilder: params.usesBondBuilder ?? false,
     forceRequestedCategory,
   })
+  const routineItems =
+    params.routineItems ??
+    buildRoutineItemsFromInventoryCategories(params.hairProfile?.current_routine_products)
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(params.hairProfile, routineItems)
 
   const inventoryMatters = objective !== "build_routine"
   const completedBase =
@@ -375,6 +409,7 @@ export function projectRoutinePlan(params: {
     missing_info: buildMissingInfo({ objective, hairProfile: params.hairProfile, context }),
     confidence: Math.round((completed / denominator) * 100) / 100,
     priority_context: projectPriorityContext(plan),
+    care_balance_context: buildRoutineCareBalanceContext(runtime),
   }
 }
 
