@@ -75,6 +75,12 @@
       "message": "A precise product ask inside a routine thread should use answer_mode product_recommendation with product_request_kind specific_products, active routine_context, and the normal three-option product recommendation shape."
     },
     {
+      "rubric_id": "product.next_add_on_grounded_rationale",
+      "priority": "medium",
+      "source": "base/product-recommendation.md",
+      "message": "When the user asks which product to add next or asks for the product behind a routine add-on, include one compact rationale sentence grounded in visible profile, current routine inventory, CareBalance, or routine-thread facts so the next-step judgment is legible."
+    },
+    {
       "rubric_id": "product.respect_requested_count",
       "priority": "high",
       "source": "base/product-recommendation.md",

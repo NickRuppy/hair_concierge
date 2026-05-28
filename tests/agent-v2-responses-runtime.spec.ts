@@ -1500,6 +1500,73 @@ test("AgentV2 runtime injects active routine thread context into first model inp
   assert.equal(result.trace.routine_thread_context?.current_layer, "basics")
 })
 
+test("AgentV2 runtime injects CareBalance as authoritative product-usage context", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  await runAgentV2ResponsesTurn({
+    client,
+    message: "Was sollte ich als erstes hinzufuegen?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [{ category: "shampoo", product_name: null, frequency_range: "daily" }],
+      sessionMemory: [],
+      careBalanceContext: {
+        authoritative: false,
+        mode: "side_by_side",
+        rows: [
+          {
+            category: "conditioner",
+            action: "add",
+            status: "missing_needed",
+            strength: "high",
+            current_frequency: null,
+            cadence_policy: {
+              kind: "match_wash_frequency",
+              washFrequency: "daily",
+              expected: "after_every_wash",
+            },
+            reason_codes: ["conditioner_missing", "dry_lengths"],
+            context_reason_codes: [],
+            selection_hint_codes: [],
+            usage_hint: "match_wash_frequency:after_every_wash",
+            caveats: ["side_by_side_non_authoritative"],
+            authoritative: false,
+          },
+          {
+            category: "leave_in",
+            action: "add",
+            status: "missing_needed",
+            strength: "medium",
+            current_frequency: null,
+            cadence_policy: { kind: "not_applicable" },
+            reason_codes: ["leave_in_missing", "frizz"],
+            context_reason_codes: [],
+            selection_hint_codes: [],
+            usage_hint: "not_applicable",
+            caveats: ["side_by_side_non_authoritative"],
+            authoritative: false,
+          },
+        ],
+        comparison: null,
+        current_turn_facts: [],
+        conflicts: [],
+      },
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  const firstInput = getInputItems(client.requests[0])
+  const careBalanceItem = firstInput
+    .map(asRecord)
+    .find((item) => String(item?.content ?? "").includes("CareBalance product-usage context"))
+  const content = String(careBalanceItem?.content ?? "")
+  assert.match(content, /conditioner/)
+  assert.match(content, /missing_needed/)
+  assert.match(content, /leave_in/)
+  assert.match(content, /current routine/)
+})
+
 test("AgentV2 runtime supports product recommendations inside an active routine thread", async () => {
   const client = fakeResponsesClientWithOutputs([
     guidanceCall("call_1", {

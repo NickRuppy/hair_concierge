@@ -21,7 +21,7 @@ export interface AgentCompareScenario {
   routine_inventory?: RoutineInventorySeed[]
 }
 
-export type CanonicalCompareSystem = "classic" | "tool_loop" | "agent_v2"
+export type CanonicalCompareSystem = "classic" | "tool_loop" | "agent_v2" | "agent_v2_care_balance"
 export type LegacyCompareSystem = "current" | "agent"
 export type CompareSystem = CanonicalCompareSystem
 export type CompareSystemInput = CompareSystem | LegacyCompareSystem

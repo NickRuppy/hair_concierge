@@ -17,6 +17,7 @@ import { createAgentV2Trace } from "@/lib/agent-v2/runtime/trace"
 import { LoadAgentV2AdvisorGuidanceInputSchema } from "@/lib/agent-v2/tools/guidance-tool"
 import type { AgentV2RoutineProjection } from "@/lib/agent-v2/tools/routine-projection"
 import type { AgentV2SelectProductsProjection } from "@/lib/agent-v2/tools/select-products-projection"
+import type { CareBalanceToolContext } from "@/lib/agent/tools/care-balance-context"
 import {
   BuildOrFixRoutineToolInputSchema,
   type CurrentCareFactInput,
@@ -92,6 +93,7 @@ interface AgentV2RuntimeUserContext {
   hairProfile: unknown
   routineInventory: unknown[]
   sessionMemory: AgentV2SessionMemoryWrite[]
+  careBalanceContext?: CareBalanceToolContext | null
   derivedSignals?: string[]
   relevantMemory?: Array<{ kind?: string; content?: string }>
   missingProfile?: unknown[]
@@ -743,10 +745,19 @@ function buildInputItems(
     },
   ]
 
+  if (userContext.careBalanceContext) {
+    items.push({
+      role: "system",
+      content: `CareBalance product-usage context. Treat this as the authoritative derived view of the current routine inventory: what exists, what is missing, what is underused/overused, and what should be added first at category level. It is derived from the saved/current routine and profile; product-specific claims still require product metadata. If this conflicts with prior visible routine wording, trust current routine inventory and CareBalance for what exists, what is missing, and what to add first; use prior visible routine only for conversational continuity. ${JSON.stringify(
+        userContext.careBalanceContext,
+      )}`,
+    })
+  }
+
   if (routineThreadContext?.active) {
     items.push({
       role: "system",
-      content: `Active AgentV2 routine thread context, including visible_steps from the currently visible routine. Preserve routine continuity unless the user explicitly leaves the routine topic. Explanatory follow-ups may use general_advice, but keep routine_context.active=true. Use visible_steps and the previous assistant offer to resolve follow-ups like "dieser Schritt", "der erste Zusatz", "ja, zeig mir passende Produkte dafür", or "das Produkt dafür". For short product follow-ups to a previous routine offer, call select_products only; do not call build_or_fix_routine unless the latest user message asks to change, simplify, lighten, add, remove, replace, rebalance, or rebuild the routine. If the user asks to add or integrate a referenced product, make the routine change category-level for now and use only routine tool/context step IDs in the routine payload; do not create product-named step IDs. For pure summary, recap, overview, or explanation follow-ups such as "fass mir das bitte kurz zusammen", answer from this routineThreadContext as general_advice with routine_context.active=true, routine_intent none, and no build_or_fix_routine call. Category comparisons inside an active routine can be general_advice with routine_context.active=true when no mutation is requested. Do not invent a step ID; if unclear, ask a clarification. ${JSON.stringify(
+      content: `Active AgentV2 routine thread context, including visible_steps from the currently visible routine. Preserve routine continuity unless the user explicitly leaves the routine topic. Explanatory follow-ups may use general_advice, but keep routine_context.active=true. Use visible_steps and the previous assistant offer to resolve referential follow-ups like "dieser Schritt", "ja, zeig mir passende Produkte dafür", or "das Produkt dafür". For "erstes Produkt hinzufuegen", "erster Zusatz", or similar missing/add-first wording, first check authoritative current routine inventory and CareBalance: a missing core/baseline step comes before an optional or recommended extra lever from the previous visible routine. If the prior visible routine used "Zusatz" for a later optional lever, explain the distinction instead of repeating the later lever. For short product follow-ups to a previous routine offer, call select_products only; do not call build_or_fix_routine unless the latest user message asks to change, simplify, lighten, add, remove, replace, rebalance, or rebuild the routine. If the user asks to add or integrate a referenced product, make the routine change category-level for now and use only routine tool/context step IDs in the routine payload; do not create product-named step IDs. For pure summary, recap, overview, or explanation follow-ups such as "fass mir das bitte kurz zusammen", answer from this routineThreadContext as general_advice with routine_context.active=true, routine_intent none, and no build_or_fix_routine call. Category comparisons inside an active routine can be general_advice with routine_context.active=true when no mutation is requested. Do not invent a step ID; if unclear, ask a clarification. ${JSON.stringify(
         routineThreadContext,
       )}`,
     })
@@ -818,6 +829,11 @@ function normalizeRoutineThreadSteps(
         step_id: stepId,
         label_de: labelDe,
         category: typeof step.category === "string" ? step.category : null,
+        ...(step.action ? { action: step.action } : {}),
+        ...(step.necessity ? { necessity: step.necessity } : {}),
+        ...(typeof step.already_in_current_routine === "boolean"
+          ? { already_in_current_routine: step.already_in_current_routine }
+          : {}),
         order,
         routine_layer: routineLayer,
       },

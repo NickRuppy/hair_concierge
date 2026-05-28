@@ -26,7 +26,11 @@ const requestSchema = z
     toolLoopVariant: z
       .enum(["baseline", "inline_context", "guidance_tool", "composer_context"])
       .optional(),
-    systems: z.array(z.enum(["classic", "tool_loop", "agent_v2", "current", "agent"])).optional(),
+    systems: z
+      .array(
+        z.enum(["classic", "tool_loop", "agent_v2", "agent_v2_care_balance", "current", "agent"]),
+      )
+      .optional(),
   })
   .refine((value) => Boolean(value.prompt || value.turns?.length), {
     message: "Prompt oder Turns erforderlich",
@@ -38,6 +42,9 @@ interface AgentCompareRouteDeps {
   runCurrentComparisonForUser: (request: AgentCompareUserRequest) => Promise<CompareRunResult>
   runShadowComparisonForUser: (request: AgentCompareUserRequest) => Promise<CompareRunResult>
   runAgentV2ComparisonForUser?: (request: AgentCompareUserRequest) => Promise<CompareRunResult>
+  runAgentV2CareBalanceComparisonForUser?: (
+    request: AgentCompareUserRequest,
+  ) => Promise<CompareRunResult>
 }
 
 const defaultRouteDeps: AgentCompareRouteDeps = {
@@ -46,6 +53,8 @@ const defaultRouteDeps: AgentCompareRouteDeps = {
   runCurrentComparisonForUser: runClassicAgentComparisonForUser,
   runShadowComparisonForUser: runToolLoopComparisonForUser,
   runAgentV2ComparisonForUser: runAgentV2ComparisonForUser,
+  runAgentV2CareBalanceComparisonForUser: (request) =>
+    runAgentV2ComparisonForUser(request, { includeCareBalanceContext: true }),
 }
 
 function createDevOnlyResponse() {
@@ -158,6 +167,17 @@ export async function handleAgentCompareRequest(
         }
         return deps.runAgentV2ComparisonForUser({ ...parsed.data, prompt, turns, toolLoopVariant })
       },
+      agent_v2_care_balance: () => {
+        if (!deps.runAgentV2CareBalanceComparisonForUser) {
+          throw new Error("AgentV2 CareBalance runner is not configured.")
+        }
+        return deps.runAgentV2CareBalanceComparisonForUser({
+          ...parsed.data,
+          prompt,
+          turns,
+          toolLoopVariant,
+        })
+      },
     }
     const results = await Promise.all(
       systems.map((system) =>
@@ -169,8 +189,10 @@ export async function handleAgentCompareRequest(
               system === "classic"
                 ? "Classic"
                 : system === "tool_loop"
-                  ? "Tool Loop"
-                  : "AgentV2 GPT-5.4-mini",
+                  ? "Legacy Tool-Loop"
+                  : system === "agent_v2_care_balance"
+                    ? "AgentV2 GPT-5.4-mini + CareBalance"
+                    : "AgentV2 GPT-5.4-mini",
               error,
             ),
           ),
@@ -188,8 +210,10 @@ export async function handleAgentCompareRequest(
           : entry.system === "classic"
             ? "Classic"
             : entry.system === "tool_loop"
-              ? "Tool Loop"
-              : "AgentV2 GPT-5.4-mini",
+              ? "Legacy Tool-Loop"
+              : entry.system === "agent_v2_care_balance"
+                ? "AgentV2 GPT-5.4-mini + CareBalance"
+                : "AgentV2 GPT-5.4-mini",
       ),
     )
 

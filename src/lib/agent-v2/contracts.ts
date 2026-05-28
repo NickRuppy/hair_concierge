@@ -165,6 +165,9 @@ export const AgentV2RoutineThreadStepSchema = z.strictObject({
   step_id: z.string(),
   label_de: z.string(),
   category: z.string().nullable(),
+  action: z.enum(["keep", "add", "adjust", "remove"]).nullable().optional(),
+  necessity: z.enum(["core", "recommended", "optional"]).nullable().optional(),
+  already_in_current_routine: z.boolean().nullable().optional(),
   order: z.number().int().positive(),
   routine_layer: AgentV2RoutineLayerSchema.nullable(),
 })

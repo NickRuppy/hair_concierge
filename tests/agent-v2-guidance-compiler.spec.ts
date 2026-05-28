@@ -115,6 +115,18 @@ test("base guidance exposes conversation closure policy through existing rubrics
   assert.match(rubricMessages, /one material question/i)
 })
 
+test("product guidance exposes grounded next-add-on rationale rubric", async () => {
+  const result = await loadAgentV2GuidancePackages(["base.product_recommendation.v1"])
+
+  const rubric = result.soft_rubrics.find(
+    (entry) => entry.rubric_id === "product.next_add_on_grounded_rationale",
+  )
+
+  assert.ok(rubric)
+  assert.match(rubric.message, /product to add next|routine add-on/i)
+  assert.match(rubric.message, /current routine inventory|CareBalance/i)
+})
+
 test("routine layer hint loads routine guidance even without an answer mode hint", () => {
   const ids = selectGuidancePackageIds({
     answer_mode_hint: null,

@@ -27,10 +27,10 @@ const scenario: AgentCompareScenario = {
 test("compare lab presents product evaluation as the recommended mode", () => {
   assert.equal(DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT, "guidance_tool")
   assert.deepEqual(AGENT_COMPARE_TOOL_LOOP_VARIANT_OPTIONS, [
-    { value: "guidance_tool", label: "Produkt-Evaluation" },
-    { value: "inline_context", label: "Beratungsbrief" },
-    { value: "composer_context", label: "Composer" },
-    { value: "baseline", label: "Ohne Kontext" },
+    { value: "guidance_tool", label: "Produkt-Evaluation (Legacy)" },
+    { value: "inline_context", label: "Beratungsbrief (Legacy)" },
+    { value: "composer_context", label: "Composer-Kontext (Legacy)" },
+    { value: "baseline", label: "Baseline ohne Zusatzkontext" },
   ])
 })
 

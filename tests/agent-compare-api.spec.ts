@@ -360,6 +360,76 @@ test("handleAgentCompareRequest preserves AgentV2 request interpretation trace i
     assert.equal(agentV2Result?.agent_v2_trace.bounded_repair_kind, "terminal_only")
   }))
 
+test("handleAgentCompareRequest compares AgentV2 baseline with AgentV2 CareBalance variant", async () =>
+  withNodeEnv("development", async () => {
+    const { handleAgentCompareRequest } = await importRoute()
+    const seen: string[] = []
+    const response = await handleAgentCompareRequest(
+      {
+        userId: "user-42",
+        prompt: "Welches Oel passt bei Build-up und taeglicher Oel-Nutzung?",
+        systems: ["agent_v2", "agent_v2_care_balance"],
+      },
+      {
+        listEligibleCompareUsers: async () => [],
+        loadCompareUserSnapshot: async () => {
+          throw new Error("not used")
+        },
+        runCurrentComparisonForUser: async () => {
+          throw new Error("classic should not run")
+        },
+        runShadowComparisonForUser: async () => {
+          throw new Error("tool loop should not run")
+        },
+        runAgentV2ComparisonForUser: async () => {
+          seen.push("baseline")
+          return {
+            system: "agent_v2",
+            answer: "AgentV2 Antwort",
+            latency_ms: 90,
+            debug_lines: [],
+            matched_products: [],
+            error: null,
+          }
+        },
+        runAgentV2CareBalanceComparisonForUser: async () => {
+          seen.push("care_balance")
+          return {
+            system: "agent_v2_care_balance",
+            answer: "AgentV2 CareBalance Antwort",
+            latency_ms: 95,
+            debug_lines: [],
+            matched_products: [],
+            care_balance_trace: {
+              authoritative: false,
+              mode: "side_by_side",
+              rows: [],
+              comparison: null,
+              current_turn_facts: [],
+              conflicts: [],
+            },
+            error: null,
+          }
+        },
+      },
+    )
+
+    assert.equal(response.status, 200)
+    const body = await response.json()
+    assert.deepEqual(seen, ["baseline", "care_balance"])
+    assert.deepEqual(
+      body.results.map((entry: { system: string; display_label: string }) => [
+        entry.system,
+        entry.display_label,
+      ]),
+      [
+        ["agent_v2", "AgentV2 GPT-5.4-mini"],
+        ["agent_v2_care_balance", "AgentV2 GPT-5.4-mini + CareBalance"],
+      ],
+    )
+    assert.equal(body.results[1].care_balance_trace.mode, "side_by_side")
+  }))
+
 test("handleAgentCompareRequest can run AgentV2 as the only compare system", async () =>
   withNodeEnv("development", async () => {
     const { handleAgentCompareRequest } = await importRoute()

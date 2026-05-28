@@ -216,6 +216,45 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
     },
     categories: ["shampoo", "conditioner"],
     summary_de: "Vereinfachte Basisroutine mit Shampoo und Conditioner.",
+    routineProjection: {
+      tool_name: "build_or_fix_routine",
+      routine_layer: "basics",
+      layer_purpose: "Show shampoo, conditioner, and the single highest-impact extra lever.",
+      visible_steps: [
+        {
+          step_id: "base-shampoo",
+          label: "Shampoo",
+          display_role: "Basis",
+          category: "shampoo",
+          necessity: "core",
+          action: "keep",
+          frequency: "Nach Bedarf",
+          short_reason: "Basis der Routine.",
+          caveats: [],
+          product_recommendation_allowed_if_explicit: false,
+        },
+        {
+          step_id: "base-conditioner",
+          label: "Conditioner",
+          display_role: "Basis",
+          category: "conditioner",
+          necessity: "core",
+          action: "add",
+          frequency: "Nach jeder Waesche",
+          short_reason: "Pflegt die Laengen.",
+          caveats: [],
+          product_recommendation_allowed_if_explicit: true,
+        },
+      ],
+      next_layer_options: ["goals", "problems"],
+      return_path: [],
+      product_request_policy: {
+        default: "do_not_name_products",
+        if_user_explicitly_asks: "call_select_products_for_requested_category",
+      },
+      missing_required_data: [],
+      conversation_prompt_de: "Moechtest du als Naechstes Ziele oder Probleme anschauen?",
+    },
   })
 
   const followUpContext = updateAgentV2RoutineThreadContext(initialContext, {
@@ -258,6 +297,9 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
       category: step.category,
       order: step.order,
       routine_layer: step.routine_layer,
+      action: step.action,
+      necessity: step.necessity,
+      already_in_current_routine: step.already_in_current_routine,
     })),
     [
       {
@@ -266,6 +308,9 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
         category: "shampoo",
         order: 1,
         routine_layer: "basics",
+        action: "keep",
+        necessity: "core",
+        already_in_current_routine: true,
       },
       {
         step_id: "base-conditioner",
@@ -273,6 +318,9 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
         category: "conditioner",
         order: 2,
         routine_layer: "basics",
+        action: "add",
+        necessity: "core",
+        already_in_current_routine: false,
       },
     ],
   )

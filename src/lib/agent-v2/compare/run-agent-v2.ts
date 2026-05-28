@@ -1,17 +1,22 @@
 import { getOpenAI } from "@/lib/openai/client"
 import { createBuildOrFixRoutineTool } from "@/lib/agent/tools/build-or-fix-routine"
+import { buildCareBalanceToolContext } from "@/lib/agent/tools/care-balance-context"
 import { getUserContext } from "@/lib/agent/tools/get-user-context"
 import { createSelectProductsTool } from "@/lib/agent/tools/select-products"
 import type { SelectProductsToolResult } from "@/lib/agent/tools/select-products"
 import { loadUserMemoryContext } from "@/lib/rag/user-memory"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
+import { buildRecommendationEngineRuntimeFromPersistence } from "@/lib/recommendation-engine/runtime"
 import type { EffectiveCareContext } from "@/lib/recommendation-engine/types"
 import type { RoutineProduct } from "@/lib/vocabulary"
 import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"
 import { runAgentV2ResponsesTurn } from "@/lib/agent-v2/runtime/responses-agent"
 import { buildAgentV2ProductToolMessage } from "@/lib/agent-v2/compare/product-tool-context"
 import { loadAgentV2AdvisorGuidance } from "@/lib/agent-v2/tools/guidance-tool"
-import { projectRoutineForAgentV2 } from "@/lib/agent-v2/tools/routine-projection"
+import {
+  projectRoutineForAgentV2,
+  type AgentV2RoutineProjection,
+} from "@/lib/agent-v2/tools/routine-projection"
 import { projectSelectProductsForAgentV2 } from "@/lib/agent-v2/tools/select-products-projection"
 import {
   AgentV2PendingRoutineActionSchema,
@@ -27,6 +32,7 @@ import type {
   AgentCompareScenario,
   AgentCompareTurnResult,
   AgentCompareUserRequest,
+  AgentCompareCareBalanceTrace,
   AgentV2CompareTrace,
   AgentV2RequestInterpretationTrace,
   CompareRunResult,
@@ -252,6 +258,7 @@ export function updateAgentV2RoutineThreadContext(
     categories: string[]
     summary_de: string | null
     answer?: unknown
+    routineProjection?: AgentV2RoutineProjection | null
     trusted?: boolean
   },
 ): AgentV2RoutineThreadContext {
@@ -318,6 +325,7 @@ function updateAgentV2VisibleRoutineThreadSteps(
     }
     categories: string[]
     answer?: unknown
+    routineProjection?: AgentV2RoutineProjection | null
   },
 ): AgentV2RoutineThreadStep[] {
   const routineAnswer = isAgentV2RoutineAnswer(update.answer) ? update.answer : null
@@ -329,18 +337,39 @@ function updateAgentV2VisibleRoutineThreadSteps(
     const routineContextCategory = update.routine_context.category
       ? normalizeRoutineThreadCategory(update.routine_context.category)
       : null
-    return routineAnswer.payload.visible_steps.map((step, index) => ({
-      step_id: step.step_id,
-      label_de: step.label_de,
-      category:
-        routineAnswer.payload.visible_steps.length === 1
+    const projectionStepsById = new Map(
+      (update.routineProjection?.visible_steps ?? []).map((step) => [step.step_id, step]),
+    )
+    return routineAnswer.payload.visible_steps.map((step, index) => {
+      const projectionStep = projectionStepsById.get(step.step_id)
+      const category =
+        projectionStep?.category ??
+        (routineAnswer.payload.visible_steps.length === 1
           ? (routineContextCategory ??
             singleStepCategory ??
             inferRoutineThreadCategory(step.label_de))
-          : inferRoutineThreadCategory(step.label_de),
-      order: index + 1,
-      routine_layer: routineAnswer.payload.routine_layer,
-    }))
+          : inferRoutineThreadCategory(step.label_de))
+
+      return {
+        step_id: step.step_id,
+        label_de: step.label_de,
+        category,
+        ...(projectionStep
+          ? {
+              action: normalizeRoutineThreadAction(projectionStep.action),
+              necessity: normalizeRoutineThreadNecessity(projectionStep.necessity),
+              already_in_current_routine:
+                projectionStep.action === "keep"
+                  ? true
+                  : projectionStep.action === "add"
+                    ? false
+                    : null,
+            }
+          : {}),
+        order: index + 1,
+        routine_layer: routineAnswer.payload.routine_layer,
+      }
+    })
   }
 
   const routineProductAnswer = isAgentV2RoutineProductRecommendation(update.answer)
@@ -381,6 +410,22 @@ function updateAgentV2VisibleRoutineThreadSteps(
   }
 
   return [...previous]
+}
+
+function normalizeRoutineThreadAction(
+  action: string | null | undefined,
+): AgentV2RoutineThreadStep["action"] {
+  return action === "keep" || action === "add" || action === "adjust" || action === "remove"
+    ? action
+    : null
+}
+
+function normalizeRoutineThreadNecessity(
+  necessity: string | null | undefined,
+): AgentV2RoutineThreadStep["necessity"] {
+  return necessity === "core" || necessity === "recommended" || necessity === "optional"
+    ? necessity
+    : null
 }
 
 function isAgentV2RoutineAnswer(
@@ -574,6 +619,20 @@ function buildAgentV2EffectiveRoutineItems(
   )
 }
 
+function buildAgentV2CareBalanceContext(
+  profile: HairProfile | null,
+  routineItems: PersistenceRoutineItemRow[],
+): AgentCompareCareBalanceTrace {
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(profile, routineItems)
+  const rowsWithActions = runtime.careBalance.rows.filter(
+    (row) => row.recommendation !== "no_action",
+  )
+  return buildCareBalanceToolContext({
+    runtime,
+    rows: rowsWithActions.length > 0 ? rowsWithActions : runtime.careBalance.rows,
+  })
+}
+
 function formatRoutineThreadCategoryLabel(category: string): string {
   const labelByCategory: Record<string, string> = {
     shampoo: "Shampoo",
@@ -647,6 +706,7 @@ export function classifyAgentV2SafetyMode(message: string): AgentV2SafetyMode {
 
 export async function runAgentV2ComparisonForUser(
   params: AgentCompareUserRequest,
+  options: { includeCareBalanceContext?: boolean } = {},
 ): Promise<CompareRunResult> {
   const startedAt = performance.now()
   const turns = normalizeTurns(params)
@@ -665,12 +725,21 @@ export async function runAgentV2ComparisonForUser(
   let finalResult: Awaited<ReturnType<typeof runAgentV2ResponsesTurn>> | null = null
   const selectedProductProjections: AgentV2SelectProductsProjectionForCompare[] = []
   const trustedSurfacedProductProjections: AgentV2SelectProductsProjectionForCompare[] = []
+  let latestCareBalanceTrace: AgentCompareCareBalanceTrace | null = null
+  let latestRoutineProjection: AgentV2RoutineProjection | null = null
   let currentRoutineLayer: AgentV2RoutineLayer | null = null
   let routineThreadContext: AgentV2RoutineThreadContext | null = null
 
   for (const [index, message] of turns.entries()) {
     const turnStartedAt = performance.now()
+    latestRoutineProjection = null
     const safetyMode = classifyAgentV2SafetyMode(message)
+    const turnCareBalanceContext = options.includeCareBalanceContext
+      ? buildAgentV2CareBalanceContext(context.profile, context.routine_inventory)
+      : null
+    if (turnCareBalanceContext) {
+      latestCareBalanceTrace = turnCareBalanceContext
+    }
     const result = await runAgentV2ResponsesTurn({
       client: getOpenAI() as unknown as Parameters<typeof runAgentV2ResponsesTurn>[0]["client"],
       message,
@@ -682,6 +751,7 @@ export async function runAgentV2ComparisonForUser(
         relevantMemory: context.relevant_memory,
         missingProfile: context.missing_profile,
         sessionMemory,
+        careBalanceContext: turnCareBalanceContext,
       },
       currentRoutineLayer,
       routineThreadContext,
@@ -721,7 +791,12 @@ export async function runAgentV2ComparisonForUser(
               effectiveHairProfile,
               runtime: {} as SelectProductsToolResult["runtime"],
             } satisfies SelectProductsToolResult)
-          const agentProjection = projectSelectProductsForAgentV2(rawResult)
+          if (rawResult.projection.care_balance_context) {
+            latestCareBalanceTrace = rawResult.projection.care_balance_context
+          }
+          const agentProjection = projectSelectProductsForAgentV2(rawResult, {
+            includeCareBalanceContext: options.includeCareBalanceContext,
+          })
           selectedProductProjections.push(agentProjection)
           return agentProjection
         },
@@ -755,9 +830,15 @@ export async function runAgentV2ComparisonForUser(
             routineItems: effectiveRoutineItems,
             effectiveCareContext,
           })
-          return projectRoutineForAgentV2(projection, {
+          if (projection.care_balance_context) {
+            latestCareBalanceTrace = projection.care_balance_context
+          }
+          const agentProjection = projectRoutineForAgentV2(projection, {
             requestedLayer: input.requested_layer as AgentV2RoutineLayer,
+            includeCareBalanceContext: options.includeCareBalanceContext,
           })
+          latestRoutineProjection = agentProjection
+          return agentProjection
         },
       },
     })
@@ -776,6 +857,7 @@ export async function runAgentV2ComparisonForUser(
       },
       categories: extractRoutineThreadCategories(result.final_answer),
       summary_de: String(result.final_answer.payload.user_facing_answer_de ?? "").slice(0, 500),
+      routineProjection: latestRoutineProjection,
       trusted: trustedTurn,
     })
     if (trustedTurn) {
@@ -807,6 +889,7 @@ export async function runAgentV2ComparisonForUser(
         selectedProductProjections,
         result.final_answer,
       ),
+      care_balance_trace: options.includeCareBalanceContext ? latestCareBalanceTrace : null,
       agent_v2_trace: compareTrace,
       error: null,
     })
@@ -820,8 +903,10 @@ export async function runAgentV2ComparisonForUser(
   const finalCompareTrace = augmentAgentV2CompareTrace(finalResult.trace, finalResult.final_answer)
 
   return {
-    system: "agent_v2",
-    display_label: "AgentV2 GPT-5.4-mini",
+    system: options.includeCareBalanceContext ? "agent_v2_care_balance" : "agent_v2",
+    display_label: options.includeCareBalanceContext
+      ? "AgentV2 GPT-5.4-mini + CareBalance"
+      : "AgentV2 GPT-5.4-mini",
     answer: String(finalResult.final_answer.payload.user_facing_answer_de ?? ""),
     latency_ms: Math.round(performance.now() - startedAt),
     debug_lines: [
@@ -835,6 +920,7 @@ export async function runAgentV2ComparisonForUser(
       selectedProductProjections,
       finalResult.final_answer,
     ),
+    care_balance_trace: options.includeCareBalanceContext ? latestCareBalanceTrace : null,
     agent_v2_trace: finalCompareTrace,
     turns: turnResults.length > 1 ? turnResults : undefined,
     error: null,
@@ -846,6 +932,7 @@ export async function runAgentV2Comparison(params: {
   prompt?: string
   turns?: string[]
   baseUrl?: string | null
+  includeCareBalanceContext?: boolean
 }): Promise<CompareRunResult> {
   const { supabaseUrl, serviceRoleKey, anonKey } = getRequiredCompareEnv()
   const session = await createTestSession(supabaseUrl, serviceRoleKey, anonKey)
@@ -858,12 +945,15 @@ export async function runAgentV2Comparison(params: {
       params.scenario.routine_inventory ?? [],
     )
 
-    return runAgentV2ComparisonForUser({
-      userId: session.userId,
-      prompt: params.prompt,
-      turns: params.turns,
-      baseUrl: params.baseUrl,
-    })
+    return runAgentV2ComparisonForUser(
+      {
+        userId: session.userId,
+        prompt: params.prompt,
+        turns: params.turns,
+        baseUrl: params.baseUrl,
+      },
+      { includeCareBalanceContext: params.includeCareBalanceContext },
+    )
   } finally {
     await session.cleanup()
   }

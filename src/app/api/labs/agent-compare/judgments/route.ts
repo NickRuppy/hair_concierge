@@ -173,7 +173,14 @@ const compareTurnResultSchema = z
 
 const compareRunResultSchema = z
   .object({
-    system: z.enum(["current", "agent", "classic", "tool_loop", "agent_v2"]),
+    system: z.enum([
+      "current",
+      "agent",
+      "classic",
+      "tool_loop",
+      "agent_v2",
+      "agent_v2_care_balance",
+    ]),
     display_label: z.string().optional(),
     answer: z.string(),
     latency_ms: z.number().int().nullable(),
@@ -256,7 +263,7 @@ const judgmentRecordSchema = z.object({
   }),
   rollout_metrics: z
     .object({
-      blinded_winner: z.enum(["classic", "tool_loop", "agent_v2", "tie"]),
+      blinded_winner: z.enum(["classic", "tool_loop", "agent_v2", "agent_v2_care_balance", "tie"]),
       failure_bucket: failureBucketSchema,
       critical_product_claim_failure: z.boolean(),
       latency_ms: z.object({

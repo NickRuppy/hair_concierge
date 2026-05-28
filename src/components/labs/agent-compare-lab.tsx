@@ -37,18 +37,25 @@ type BootstrapResponse = {
   selectedUser: AgentCompareUserSnapshot | null
 }
 
-type AgentCompareRunMode = "agent_v2_only" | "agent_v2_vs_tool_loop" | "classic_vs_tool_loop"
+type AgentCompareRunMode = "agent_v2_only" | "agent_v2_vs_care_balance" | "classic_vs_tool_loop"
 
 const RUN_MODE_OPTIONS: Array<{ value: AgentCompareRunMode; label: string }> = [
   { value: "agent_v2_only", label: "Nur AgentV2" },
-  { value: "agent_v2_vs_tool_loop", label: "AgentV2 vs Tool Loop" },
-  { value: "classic_vs_tool_loop", label: "Classic vs Tool Loop" },
+  { value: "agent_v2_vs_care_balance", label: "AgentV2 vs AgentV2 + CareBalance" },
+  { value: "classic_vs_tool_loop", label: "Classic vs Legacy Tool-Loop" },
 ]
 
 function resolveCompareSystemsForMode(mode: AgentCompareRunMode): CompareSystemInput[] {
   if (mode === "agent_v2_only") return ["agent_v2"]
-  if (mode === "agent_v2_vs_tool_loop") return ["tool_loop", "agent_v2"]
+  if (mode === "agent_v2_vs_care_balance") return ["agent_v2", "agent_v2_care_balance"]
   return ["classic", "tool_loop"]
+}
+
+function formatCompareSystemLabel(system: CompareSystemInput): string {
+  if (system === "classic" || system === "current") return "Classic"
+  if (system === "tool_loop" || system === "agent") return "Legacy Tool-Loop"
+  if (system === "agent_v2_care_balance") return "AgentV2 GPT-5.4-mini + CareBalance"
+  return "AgentV2 GPT-5.4-mini"
 }
 
 const REASON_OPTIONS: Array<AgentCompareJudgmentDraft["primary_reason"]> = [
@@ -325,7 +332,7 @@ function getTraceMetricForSystem(
   system: CanonicalCompareSystem,
   key: string,
 ): number | null {
-  if (system === "agent_v2") {
+  if (system === "agent_v2" || system === "agent_v2_care_balance") {
     return getTraceArrayLength(result.agent_v2_trace, key)
   }
 
@@ -953,7 +960,7 @@ export function AgentCompareLab() {
   const [toolLoopVariant, setToolLoopVariant] = useState<AgentCompareToolLoopVariant>(
     DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT,
   )
-  const [runMode, setRunMode] = useState<AgentCompareRunMode>("agent_v2_only")
+  const [runMode, setRunMode] = useState<AgentCompareRunMode>("agent_v2_vs_care_balance")
   const [isRevealed, setIsRevealed] = useState(false)
   const [result, setResult] = useState<AgentCompareResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -972,22 +979,15 @@ export function AgentCompareLab() {
   const userLoadRequestId = useRef(0)
   const compareRequestId = useRef(0)
 
-  const hasAgentV2Result = result?.results.some((entry) => entry.system === "agent_v2") ?? false
-  const currentResult =
-    result?.results.find((entry) =>
-      hasAgentV2Result
-        ? entry.system === "tool_loop" || entry.system === "agent"
-        : entry.system === "classic" || entry.system === "current",
-    ) ?? null
+  const resultEntries = result?.results ?? []
+  const currentResult = resultEntries.length > 1 ? (resultEntries[0] ?? null) : null
   const agentResult =
-    result?.results.find((entry) =>
-      hasAgentV2Result
-        ? entry.system === "agent_v2"
-        : entry.system === "tool_loop" || entry.system === "agent",
-    ) ?? null
+    resultEntries.length > 1 ? (resultEntries[1] ?? null) : (resultEntries[0] ?? null)
   const selectedUserOption = users.find((user) => user.id === selectedUserId) ?? null
   const compareSystems = resolveCompareSystemsForMode(runMode)
   const effectiveBlinded = runMode !== "agent_v2_only" && isBlinded
+  const comparesLegacyToolLoop = compareSystems.includes("tool_loop")
+  const comparesAgentV2CareBalance = compareSystems.includes("agent_v2_care_balance")
   const activeInput = isMultiTurn ? turnsText : prompt
   const activeTurns = turnsText
     .split("\n")
@@ -997,16 +997,14 @@ export function AgentCompareLab() {
     ? "Kein Vergleich"
     : result?.blinded && !isRevealed
       ? (currentResult?.display_label ?? "Variante A")
-      : hasAgentV2Result
-        ? "Tool Loop"
-        : "Classic"
+      : formatCompareSystemLabel(currentResult.system)
   const agentTitle =
     result?.blinded && !isRevealed
       ? (agentResult?.display_label ?? "Variante B")
-      : hasAgentV2Result
-        ? "AgentV2 GPT-5.4-mini"
-        : "Tool Loop"
-  const displayResults = result?.results ?? []
+      : agentResult
+        ? formatCompareSystemLabel(agentResult.system)
+        : "Agent"
+  const displayResults = resultEntries
   const showDiagnostics = !result?.blinded || isRevealed
   const currentJudgmentLabel = currentTitle
   const agentJudgmentLabel = agentTitle
@@ -1250,15 +1248,17 @@ export function AgentCompareLab() {
               ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
               : null,
         agent_v2_model_steps:
-          currentResult && currentSystem === "agent_v2"
+          currentResult &&
+          (currentSystem === "agent_v2" || currentSystem === "agent_v2_care_balance")
             ? getTraceMetricForSystem(currentResult, currentSystem, "model_steps")
-            : agentSystem === "agent_v2"
+            : agentSystem === "agent_v2" || agentSystem === "agent_v2_care_balance"
               ? getTraceMetricForSystem(agentResult, agentSystem, "model_steps")
               : null,
         agent_v2_tool_calls:
-          currentResult && currentSystem === "agent_v2"
+          currentResult &&
+          (currentSystem === "agent_v2" || currentSystem === "agent_v2_care_balance")
             ? getTraceMetricForSystem(currentResult, currentSystem, "tool_calls")
-            : agentSystem === "agent_v2"
+            : agentSystem === "agent_v2" || agentSystem === "agent_v2_care_balance"
               ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
               : null,
       },
@@ -1305,14 +1305,17 @@ export function AgentCompareLab() {
               className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
             >
               <option value="">Bitte waehlen</option>
-              {users.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.label}
-                </option>
-              ))}
+              <optgroup label={`Gespeicherte Testnutzer (${users.length})`}>
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.label}
+                  </option>
+                ))}
+              </optgroup>
             </select>
             <p className="text-xs text-muted-foreground">
-              Geladen werden gespeichertes Profil, aktuelle Routine und relevante Memory.
+              Geladen werden echte gespeicherte Testnutzer mit Profil, aktueller Routine und
+              relevanter Memory.
             </p>
           </div>
 
@@ -1407,25 +1410,33 @@ export function AgentCompareLab() {
               Geblendet
             </label>
 
-            <label className="inline-flex items-center gap-2 text-sm text-foreground">
-              Tool-Loop
-              <select
-                value={toolLoopVariant}
-                onChange={(event) =>
-                  setToolLoopVariant(event.target.value as AgentCompareToolLoopVariant)
-                }
-                className="rounded-lg border bg-background px-3 py-2 text-sm"
-              >
-                {AGENT_COMPARE_TOOL_LOOP_VARIANT_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+            {comparesLegacyToolLoop ? (
+              <label className="inline-flex items-center gap-2 text-sm text-foreground">
+                Legacy-Kontext
+                <select
+                  value={toolLoopVariant}
+                  onChange={(event) =>
+                    setToolLoopVariant(event.target.value as AgentCompareToolLoopVariant)
+                  }
+                  className="rounded-lg border bg-background px-3 py-2 text-sm"
+                >
+                  {AGENT_COMPARE_TOOL_LOOP_VARIANT_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
           </div>
 
-          <p className="text-xs text-muted-foreground">Vergleich mit echtem Nutzerkontext.</p>
+          <p className="text-xs text-muted-foreground">
+            {comparesAgentV2CareBalance
+              ? "Vergleicht denselben AgentV2 GPT-5.4-mini-Pfad einmal ohne und einmal mit modell-sichtbarer CareBalance-Evidenz."
+              : comparesLegacyToolLoop
+                ? "Legacy-Modus: vergleicht Classic mit dem aelteren Tool-Loop-Runner."
+                : "Nur AgentV2 testet den aktuellen Antwortpfad ohne CareBalance-Variante."}
+          </p>
           <button
             type="button"
             onClick={handleRunCompare}
@@ -1532,11 +1543,7 @@ export function AgentCompareLab() {
                 title={
                   result?.blinded && !isRevealed
                     ? (entry.display_label ?? "Variante")
-                    : entry.system === "classic" || entry.system === "current"
-                      ? "Classic"
-                      : entry.system === "tool_loop" || entry.system === "agent"
-                        ? "Tool Loop"
-                        : "AgentV2 GPT-5.4-mini"
+                    : formatCompareSystemLabel(entry.system)
                 }
                 result={entry}
                 showDiagnostics={showDiagnostics}

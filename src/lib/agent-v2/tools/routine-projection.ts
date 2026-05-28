@@ -1,6 +1,7 @@
 import type {
   BuildOrFixRoutineMissingInfo,
   BuildOrFixRoutineProjection,
+  RoutineCareBalanceContext,
 } from "@/lib/agent/tools/build-or-fix-routine"
 import type { AgentV2RoutineLayer } from "@/lib/agent-v2/contracts"
 
@@ -26,13 +27,17 @@ export interface AgentV2RoutineProjection {
     default: "do_not_name_products"
     if_user_explicitly_asks: "call_select_products_for_requested_category"
   }
+  care_balance_context?: RoutineCareBalanceContext | null
   missing_required_data: BuildOrFixRoutineMissingInfo[]
   conversation_prompt_de: string
 }
 
 export function projectRoutineForAgentV2(
   projection: BuildOrFixRoutineProjection,
-  options: { requestedLayer?: AgentV2RoutineLayer | null } = {},
+  options: {
+    requestedLayer?: AgentV2RoutineLayer | null
+    includeCareBalanceContext?: boolean
+  } = {},
 ): AgentV2RoutineProjection {
   const routineLayer = options.requestedLayer ?? inferRoutineLayer(projection)
 
@@ -58,6 +63,9 @@ export function projectRoutineForAgentV2(
       default: "do_not_name_products",
       if_user_explicitly_asks: "call_select_products_for_requested_category",
     },
+    ...(options.includeCareBalanceContext
+      ? { care_balance_context: projection.care_balance_context ?? null }
+      : {}),
     missing_required_data: projection.missing_info,
     conversation_prompt_de: getConversationPrompt(routineLayer),
   }

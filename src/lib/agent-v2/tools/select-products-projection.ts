@@ -1,4 +1,5 @@
 import type {
+  ProductCareBalanceContext,
   ProductResponsePolicy,
   SelectProductsDecision,
   SelectedProductsMissingInfo,
@@ -30,6 +31,7 @@ export interface AgentV2SelectProductsProjection {
   missing_required_data: SelectedProductsMissingInfo[]
   constraint_blockers: UnsupportedRequestedSignal[]
   comparison_facts: Record<string, string[]> | null
+  care_balance_context?: ProductCareBalanceContext | null
   allowed_claim_sources: string[]
   trace: {
     profile_basis: string[]
@@ -39,6 +41,7 @@ export interface AgentV2SelectProductsProjection {
 
 export function projectSelectProductsForAgentV2(
   result: SelectProductsToolResult,
+  options: { includeCareBalanceContext?: boolean } = {},
 ): AgentV2SelectProductsProjection {
   const projection = result.projection
   const productSignals = projection.products.flatMap(
@@ -67,12 +70,16 @@ export function projectSelectProductsForAgentV2(
     missing_required_data: projection.missing_info,
     constraint_blockers: [...projection.unsupported_requested_signals, ...productSignals],
     comparison_facts: projection.comparison_facts,
+    ...(options.includeCareBalanceContext
+      ? { care_balance_context: projection.care_balance_context ?? null }
+      : {}),
     allowed_claim_sources: [
       "selected_products.supported_claims",
       "selected_products.comparison_facts",
       "selected_products.profile_basis",
       "selected_products.category_guidance",
       "selected_products.caveat",
+      ...(options.includeCareBalanceContext ? ["selected_products.care_balance_context"] : []),
     ],
     trace: {
       profile_basis: projection.profile_basis,

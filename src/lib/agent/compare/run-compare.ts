@@ -93,6 +93,13 @@ export async function runCompareWithAdapters(params: {
     baseUrl?: string | null
     toolLoopVariant?: AgentCompareRequest["toolLoopVariant"]
   }) => Promise<CompareRunResult>
+  runAgentV2CareBalance?: (params: {
+    scenario: AgentCompareScenario
+    prompt?: string
+    turns?: string[]
+    baseUrl?: string | null
+    toolLoopVariant?: AgentCompareRequest["toolLoopVariant"]
+  }) => Promise<CompareRunResult>
 }): Promise<AgentCompareResponse> {
   const turns = normalizeTurns(params)
   const prompt = turns.at(-1) ?? ""
@@ -134,6 +141,18 @@ export async function runCompareWithAdapters(params: {
         toolLoopVariant,
       })
     },
+    agent_v2_care_balance: () => {
+      if (!params.runAgentV2CareBalance) {
+        throw new Error("AgentV2 CareBalance runner is not configured.")
+      }
+      return params.runAgentV2CareBalance({
+        scenario: params.scenario,
+        prompt,
+        turns,
+        baseUrl: params.baseUrl,
+        toolLoopVariant,
+      })
+    },
   }
 
   const results = await Promise.all(
@@ -156,8 +175,10 @@ export async function runCompareWithAdapters(params: {
         : entry.system === "classic"
           ? "Classic"
           : entry.system === "tool_loop"
-            ? "Tool Loop"
-            : "AgentV2 GPT-5.4-mini",
+            ? "Legacy Tool-Loop"
+            : entry.system === "agent_v2_care_balance"
+              ? "AgentV2 GPT-5.4-mini + CareBalance"
+              : "AgentV2 GPT-5.4-mini",
     ),
   )
 
@@ -195,5 +216,7 @@ export async function runCompare(request: AgentCompareRequest): Promise<AgentCom
       }),
     runAgent: runToolLoopComparison,
     runAgentV2: runAgentV2Comparison,
+    runAgentV2CareBalance: (params) =>
+      runAgentV2Comparison({ ...params, includeCareBalanceContext: true }),
   })
 }
