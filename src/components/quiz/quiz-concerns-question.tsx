@@ -39,6 +39,7 @@ export function QuizConcernsQuestion() {
 
   const hasSelection = localSelection.length > 0
   const hasTypedNote = otherText.trim().length > 0
+  const customOptionActive = showOtherField || hasTypedNote
   const canContinue = hasSelection || hasTypedNote
 
   return (
@@ -91,27 +92,17 @@ export function QuizConcernsQuestion() {
             />
           )
         })}
-      </div>
-
-      <div className="mt-4 space-y-3">
-        <div className="rounded-2xl border border-border/70 bg-card/70 p-4">
-          <div className="flex items-center justify-between gap-3">
-            <button
-              type="button"
-              onClick={() => setShowOtherField((current) => !current)}
-              className="text-sm font-medium text-[var(--brand-plum)] transition-colors hover:text-[var(--brand-plum-dark)]"
-            >
-              {showOtherField ? "Zusätzliche Notiz ausblenden" : "Etwas anderes ergänzen"}
-            </button>
-            {otherText.trim() ? (
-              <span className="rounded-full bg-[rgba(var(--brand-plum-rgb),0.08)] px-2.5 py-1 text-[11px] font-medium text-[var(--brand-plum)]">
-                Notiz ergänzt
-              </span>
-            ) : null}
-          </div>
-
+        <div>
+          <QuizOptionCard
+            icon="help"
+            label="Etwas anderes"
+            description="Wenn dein Thema nicht in der Liste steht, beschreib es kurz selbst."
+            active={customOptionActive}
+            onClick={() => setShowOtherField(true)}
+            animationDelay={question.options.length * 60}
+          />
           {showOtherField ? (
-            <div className="mt-3 animate-fade-in-up">
+            <div className="mt-3 animate-fade-in-up rounded-2xl border border-[rgba(var(--brand-plum-rgb),0.22)] bg-card/80 p-4">
               <label
                 htmlFor="quiz-concerns-other-text"
                 className="mb-2 block text-sm font-medium text-foreground"
@@ -127,13 +118,25 @@ export function QuizConcernsQuestion() {
                 placeholder="Zum Beispiel: stumpf nach dem Föhnen"
                 className="h-[78.75px] min-h-[78.75px] w-full overflow-y-auto rounded-xl border border-border bg-background px-[18px] py-[14px] text-base font-semibold leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
               />
-              <p className="mt-2 text-right text-xs text-[var(--text-caption)]">
-                {otherText.length}/50
-              </p>
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOtherText("")
+                    setShowOtherField(false)
+                  }}
+                  className="text-xs font-medium text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
+                >
+                  Notiz entfernen
+                </button>
+                <p className="text-xs text-[var(--text-caption)]">{otherText.length}/50</p>
+              </div>
             </div>
           ) : null}
         </div>
+      </div>
 
+      <div className="mt-4 space-y-3">
         <Button
           type="button"
           onClick={handleContinue}
@@ -144,7 +147,7 @@ export function QuizConcernsQuestion() {
           Weiter
         </Button>
 
-        {!hasSelection && !hasTypedNote ? (
+        {!hasSelection && !hasTypedNote && !customOptionActive ? (
           <button
             type="button"
             onClick={handleNone}
