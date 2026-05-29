@@ -11,7 +11,15 @@ import {
   CONDITIONER_REPAIR_LEVELS,
   isConditionerCategory,
 } from "@/lib/conditioner/constants"
-import { isDeepCleansingShampooCategory } from "@/lib/deep-cleansing-shampoo/constants"
+import {
+  DEEP_CLEANSING_COLOR_TREATED_SUITABILITIES,
+  DEEP_CLEANSING_COLOR_TREATED_SUITABILITY_LABELS,
+  DEEP_CLEANSING_RESET_FOCUSES,
+  DEEP_CLEANSING_RESET_FOCUS_LABELS,
+  DEEP_CLEANSING_RESET_INTENSITIES,
+  DEEP_CLEANSING_RESET_INTENSITY_LABELS,
+  isDeepCleansingShampooCategory,
+} from "@/lib/deep-cleansing-shampoo/constants"
 import { isDryShampooCategory } from "@/lib/dry-shampoo/constants"
 import {
   PRODUCT_BALANCE_TARGETS,
@@ -88,6 +96,9 @@ interface BondbuilderSpecForm {
 
 interface DeepCleansingShampooSpecForm {
   scalp_type_focus: string
+  reset_intensity: string
+  reset_focus: string
+  color_treated_suitability: string
 }
 
 interface DryShampooSpecForm {
@@ -155,6 +166,9 @@ const emptyBondbuilderSpecs: BondbuilderSpecForm = {
 
 const emptyDeepCleansingShampooSpecs: DeepCleansingShampooSpecForm = {
   scalp_type_focus: "balanced",
+  reset_intensity: "medium",
+  reset_focus: "product_sebum_buildup",
+  color_treated_suitability: "unsuitable_or_unknown",
 }
 
 const emptyDryShampooSpecs: DryShampooSpecForm = {
@@ -291,6 +305,9 @@ export default function AdminProductsPage() {
     const deepCleansingShampooSpecs = product.deep_cleansing_shampoo_specs
       ? {
           scalp_type_focus: product.deep_cleansing_shampoo_specs.scalp_type_focus,
+          reset_intensity: product.deep_cleansing_shampoo_specs.reset_intensity,
+          reset_focus: product.deep_cleansing_shampoo_specs.reset_focus,
+          color_treated_suitability: product.deep_cleansing_shampoo_specs.color_treated_suitability,
         }
       : isDeepCleansingShampooCategory(product.category || "")
         ? { ...emptyDeepCleansingShampooSpecs }
@@ -546,6 +563,10 @@ export default function AdminProductsPage() {
           deepCleansingShampooEnabled && form.deep_cleansing_shampoo_specs
             ? {
                 scalp_type_focus: form.deep_cleansing_shampoo_specs.scalp_type_focus,
+                reset_intensity: form.deep_cleansing_shampoo_specs.reset_intensity,
+                reset_focus: form.deep_cleansing_shampoo_specs.reset_focus,
+                color_treated_suitability:
+                  form.deep_cleansing_shampoo_specs.color_treated_suitability,
               }
             : null,
         dry_shampoo_specs:
@@ -1330,6 +1351,87 @@ export default function AdminProductsPage() {
                     {PRODUCT_SCALP_TYPE_FOCUSES.map((value) => (
                       <option key={value} value={value}>
                         {PRODUCT_SCALP_TYPE_FOCUS_LABELS[value]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                    Reset-Intensitaet
+                  </label>
+                  <select
+                    value={form.deep_cleansing_shampoo_specs.reset_intensity}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        deep_cleansing_shampoo_specs: prev.deep_cleansing_shampoo_specs
+                          ? {
+                              ...prev.deep_cleansing_shampoo_specs,
+                              reset_intensity: e.target.value,
+                            }
+                          : null,
+                      }))
+                    }
+                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
+                    {DEEP_CLEANSING_RESET_INTENSITIES.map((value) => (
+                      <option key={value} value={value}>
+                        {DEEP_CLEANSING_RESET_INTENSITY_LABELS[value]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                    Reset-Fokus
+                  </label>
+                  <select
+                    value={form.deep_cleansing_shampoo_specs.reset_focus}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        deep_cleansing_shampoo_specs: prev.deep_cleansing_shampoo_specs
+                          ? {
+                              ...prev.deep_cleansing_shampoo_specs,
+                              reset_focus: e.target.value,
+                            }
+                          : null,
+                      }))
+                    }
+                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
+                    {DEEP_CLEANSING_RESET_FOCUSES.map((value) => (
+                      <option key={value} value={value}>
+                        {DEEP_CLEANSING_RESET_FOCUS_LABELS[value]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                    Farbbehandlung
+                  </label>
+                  <select
+                    value={form.deep_cleansing_shampoo_specs.color_treated_suitability}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        deep_cleansing_shampoo_specs: prev.deep_cleansing_shampoo_specs
+                          ? {
+                              ...prev.deep_cleansing_shampoo_specs,
+                              color_treated_suitability: e.target.value,
+                            }
+                          : null,
+                      }))
+                    }
+                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
+                    {DEEP_CLEANSING_COLOR_TREATED_SUITABILITIES.map((value) => (
+                      <option key={value} value={value}>
+                        {DEEP_CLEANSING_COLOR_TREATED_SUITABILITY_LABELS[value]}
                       </option>
                     ))}
                   </select>

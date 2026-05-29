@@ -212,6 +212,11 @@ const WASH_LESS_TERMS = [
 
 const HEAVY_ROUTINE_PRODUCTS = new Set(["mask", "oil", "leave_in"])
 
+type BuildRoutinePlanOptions = {
+  usesBondBuilder?: boolean
+  forceRequestedCategory?: RoutineProductCategory | null
+}
+
 const STYLING_KIND_MAP: [RegExp, string][] = [
   [/lockencreme|curl\s*cream/i, "Lockencreme"],
   [/mousse|schaum/i, "Mousse"],
@@ -940,6 +945,171 @@ function pushSlot(
   sections.set(slot.phase, [...(sections.get(slot.phase) ?? []), slot])
 }
 
+function hasRoutineCategorySlot(
+  sections: Map<RoutinePlanSection["phase"], RoutineSlotAdvice[]>,
+  category: RoutineProductCategory,
+): boolean {
+  return [...sections.values()].some((slots) => slots.some((slot) => slot.category === category))
+}
+
+function buildForcedRequestedCategorySlot(
+  category: RoutineProductCategory,
+  profile: HairProfile | null,
+): RoutineSlotAdvice | null {
+  switch (category) {
+    case "leave_in":
+      return {
+        id: "maintenance-leave-in",
+        kind: "product_slot",
+        phase: "maintenance",
+        label: "Leave-in / Finish",
+        action: "add",
+        category: "leave_in",
+        cadence: "nach dem Waschen, sparsam dosiert",
+        rationale: [
+          "Leave-in wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
+          "Das ist nicht automatisch der wichtigste Hebel, kann aber als leichter Zusatz fuer Laengen und Spitzen sinnvoll sein.",
+        ],
+        caveats:
+          profile?.thickness === "fine"
+            ? ["Bei feinem Haar sparsam dosieren und nicht an den Ansatz geben."]
+            : [
+                "Sparsam in Laengen und Spitzen verwenden, damit die Routine nicht unnoetig schwer wird.",
+              ],
+        topic_ids: [],
+        product_linkable: true,
+        product_query: "Ich suche ein Leave-in fuer meine Routine nach dem Waschen.",
+        attachment_priority: 10,
+      }
+    case "mask":
+      return {
+        id: "occasional-mask",
+        kind: "product_slot",
+        phase: "occasional",
+        label: "Maske / Kur",
+        action: "add",
+        category: "mask",
+        cadence: "gelegentlich nach Bedarf",
+        rationale: [
+          "Maske wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
+          "Sie bleibt ein Zusatz und ersetzt Conditioner nicht automatisch.",
+        ],
+        caveats: [
+          "Nicht als Pflichtschritt verstehen; bei feinem oder schnell beschwertem Haar selten und leicht halten.",
+        ],
+        topic_ids: [],
+        product_linkable: true,
+        product_query: "Ich suche eine Maske fuer meine Routine.",
+        attachment_priority: 30,
+      }
+    case "oil":
+      return {
+        id: "occasional-oil",
+        kind: "product_slot",
+        phase: "occasional",
+        label: "Hair Oiling",
+        action: "add",
+        category: "oil",
+        cadence: "vor einzelnen Waeschen oder sehr sparsam in Spitzen",
+        rationale: [
+          "Oel wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
+          "Es ist eher Finish oder Pre-Wash-Schutz, nicht die Hauptpflege fuer trockene Laengen.",
+        ],
+        caveats: [
+          "Sehr sparsam einsetzen; bei beschwertem oder wachsigem Haar nicht weiter schichten.",
+        ],
+        topic_ids: ["hair_oiling"],
+        product_linkable: true,
+        product_query: "Ich moechte Hair Oiling vor dem Waschen machen.",
+        attachment_priority: 40,
+      }
+    case "bondbuilder":
+      return {
+        id: "occasional-bond-builder",
+        kind: "product_slot",
+        phase: "occasional",
+        label: "Bond Builder / Repair-Support",
+        action: "add",
+        category: "bondbuilder",
+        cadence: "nach Produktprotokoll",
+        rationale: [
+          "Bondbuilder wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
+          "Er ist nur dann fachlich stark, wenn echte Strukturstress-Signale vorliegen.",
+        ],
+        caveats: [
+          "Nicht als Feuchtigkeitsmaske oder Basis-Conditioner behandeln; genaue Anwendung braucht Produktdaten.",
+        ],
+        topic_ids: ["bond_builder"],
+        product_linkable: true,
+        product_query: "Ich suche einen Bondbuilder fuer meine Routine.",
+        attachment_priority: 50,
+      }
+    case "deep_cleansing_shampoo":
+      return {
+        id: "occasional-deep-cleansing-shampoo",
+        kind: "product_slot",
+        phase: "occasional",
+        label: "Tiefenreinigungsshampoo / Haar-Reset",
+        action: "add",
+        category: "deep_cleansing_shampoo",
+        cadence: "bei deutlichem Build-up nach Bedarf",
+        rationale: [
+          "Tiefenreinigung wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
+          "Sie ist ein gelegentlicher Reset fuer Rueckstaende, kein normales Shampoo fuer jede Waesche.",
+        ],
+        caveats: [
+          "Danach Conditioner oder passende Laengenpflege einplanen; nicht bei brennender oder gereizter Kopfhaut eskalieren.",
+        ],
+        topic_ids: ["tiefenreinigung"],
+        product_linkable: true,
+        product_query: "Ich suche ein Tiefenreinigungsshampoo fuer meine Routine.",
+        attachment_priority: 96,
+      }
+    case "peeling":
+      return {
+        id: "occasional-peeling",
+        kind: "product_slot",
+        phase: "occasional",
+        label: "Kopfhautpeeling",
+        action: "add",
+        category: "peeling",
+        cadence: "punktuell bei belegtem Ansatz",
+        rationale: [
+          "Kopfhautpeeling wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
+          "Es ist ein gelegentlicher Kopfhaut-Schritt fuer kosmetische Rueckstaende, keine Behandlung fuer Schmerzen, Entzuendung oder Haarausfall.",
+        ],
+        caveats: [
+          "Nicht bei Brennen, Wunden, starken Schuppen, Entzuendung oder ungewoehnlichem Haarverlust eskalieren.",
+        ],
+        topic_ids: ["tiefenreinigung"],
+        product_linkable: true,
+        product_query: "Ich suche ein Kopfhautpeeling fuer meine Routine.",
+        attachment_priority: 95,
+      }
+    case "dry_shampoo":
+      return {
+        id: "maintenance-dry-shampoo",
+        kind: "product_slot",
+        phase: "maintenance",
+        label: "Trockenshampoo",
+        action: "add",
+        category: "dry_shampoo",
+        cadence: "als kurze Frische-Hilfe zwischen Waeschen",
+        rationale: [
+          "Trockenshampoo wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
+          "Es ist eine optische Ueberbrueckung am Ansatz und kein Ersatz fuer Waschen.",
+        ],
+        caveats: ["Bei Juckreiz, Brennen, Schuppen oder viel Schichtung nicht weiter eskalieren."],
+        topic_ids: [],
+        product_linkable: true,
+        product_query: "Ich suche ein Trockenshampoo fuer meine Routine.",
+        attachment_priority: 45,
+      }
+    default:
+      return null
+  }
+}
+
 function buildMaskCadence(maskStrength: number): string {
   if (maskStrength >= 3) return "etwa jede 2. Waesche"
   if (maskStrength === 2) return "alle 2-3 Waeschen"
@@ -1246,7 +1416,10 @@ function buildRoutineSlots(
   message: string,
   activations: RoutineTopicActivation[],
   decisionContext: RoutineDecisionContext,
-  options: { usesBondBuilder: boolean },
+  options: {
+    usesBondBuilder: boolean
+    forceRequestedCategory: RoutineProductCategory | null
+  },
 ): Map<RoutinePlanSection["phase"], RoutineSlotAdvice[]> {
   const sections = new Map<RoutinePlanSection["phase"], RoutineSlotAdvice[]>()
   const activeTopicIds = new Set(activations.map((entry) => entry.id))
@@ -1680,6 +1853,14 @@ function buildRoutineSlots(
     }
   }
 
+  const forcedCategory = options.forceRequestedCategory
+  if (forcedCategory && !hasRoutineCategorySlot(sections, forcedCategory)) {
+    const forcedSlot = buildForcedRequestedCategorySlot(forcedCategory, profile)
+    if (forcedSlot) {
+      pushSlot(sections, forcedSlot)
+    }
+  }
+
   return sections
 }
 
@@ -2018,6 +2199,7 @@ export function projectRoutinePlanForLayer(
   options: {
     requestedCategory?: RoutineProductCategory | null
     requestedTopicId?: RoutineTopicId | null
+    preferRequestedCategory?: boolean
   } = {},
 ): RoutineLayerProjection {
   const slots = getRoutineSlots(plan)
@@ -2026,12 +2208,20 @@ export function projectRoutinePlanForLayer(
       slot.id !== "base-shampoo" && slot.id !== "base-conditioner" && isActionableRoutineSlot(slot),
   )
   let visibleSlots: RoutineSlotAdvice[]
+  const requestedCategorySlot =
+    options.requestedCategory === null || options.requestedCategory === undefined
+      ? undefined
+      : slots.find((slot) => slot.category === options.requestedCategory)
 
   if (layer === "basics") {
     visibleSlots = [
       findRoutineSlot(plan, "base-shampoo"),
       findRoutineSlot(plan, "base-conditioner"),
-      plan.priority_lever ? findRoutineSlot(plan, plan.priority_lever.slot_id) : undefined,
+      options.preferRequestedCategory && requestedCategorySlot
+        ? requestedCategorySlot
+        : plan.priority_lever
+          ? findRoutineSlot(plan, plan.priority_lever.slot_id)
+          : undefined,
     ].filter((slot, index, selected): slot is RoutineSlotAdvice => {
       return (
         Boolean(slot) && selected.findIndex((candidate) => candidate?.id === slot?.id) === index
@@ -2052,10 +2242,6 @@ export function projectRoutinePlanForLayer(
   } else {
     const requestedCategory = options.requestedCategory ?? null
     const requestedTopicId = options.requestedTopicId ?? topicForDeepDiveCategory(requestedCategory)
-    const categorySlot =
-      requestedCategory === null
-        ? undefined
-        : slots.find((slot) => slot.category === requestedCategory)
     const topicSlot =
       requestedTopicId === null
         ? undefined
@@ -2064,9 +2250,9 @@ export function projectRoutinePlanForLayer(
       ? findRoutineSlot(plan, plan.priority_lever.slot_id)
       : undefined
 
-    visibleSlots = [categorySlot ?? topicSlot ?? prioritySlot ?? nonBaseActionableSlots[0]].filter(
-      (slot): slot is RoutineSlotAdvice => Boolean(slot),
-    )
+    visibleSlots = [
+      requestedCategorySlot ?? topicSlot ?? prioritySlot ?? nonBaseActionableSlots[0],
+    ].filter((slot): slot is RoutineSlotAdvice => Boolean(slot))
   }
 
   return {
@@ -2082,7 +2268,7 @@ export function projectRoutinePlanForLayer(
 export function buildRoutinePlan(
   profile: HairProfile | null,
   message: string,
-  options: { usesBondBuilder?: boolean } = {},
+  options: BuildRoutinePlanOptions = {},
 ): RoutinePlan {
   const context = deriveRoutineContext(profile, message)
   const activeTopics = activateRoutineTopics(profile, message, context)
@@ -2090,6 +2276,7 @@ export function buildRoutinePlan(
   const decisionContext = buildRoutineDecisionContext(profile, message)
   const sectionSlots = buildRoutineSlots(profile, context, message, activeTopics, decisionContext, {
     usesBondBuilder: options.usesBondBuilder ?? false,
+    forceRequestedCategory: options.forceRequestedCategory ?? null,
   })
 
   const phases: RoutinePlanSection["phase"][] = ["base_wash", "maintenance", "occasional"]
@@ -2119,8 +2306,12 @@ export function buildRoutinePlan(
     ...planWithoutPriority,
     priority_lever: selectRoutinePriorityLever(profile, context, planWithoutPriority),
   }
+  const requestedProjectionOptions = {
+    requestedCategory: options.forceRequestedCategory ?? null,
+    preferRequestedCategory: Boolean(options.forceRequestedCategory),
+  }
   const layerProjections = {
-    basics: projectRoutinePlanForLayer(planWithPriority, "basics"),
+    basics: projectRoutinePlanForLayer(planWithPriority, "basics", requestedProjectionOptions),
     goals: projectRoutinePlanForLayer(planWithPriority, "goals"),
     problems: projectRoutinePlanForLayer(planWithPriority, "problems"),
     deep_dive: projectRoutinePlanForLayer(planWithPriority, "deep_dive"),

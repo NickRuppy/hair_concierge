@@ -6,6 +6,7 @@ import {
   isLocalDevLoginEnabled,
   isLocalDevLoginHost,
   normalizeLocalDevNext,
+  resetLocalDevUserPassword,
   resolveLocalDevCredentials,
 } from "@/lib/dev/local-login"
 
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest) {
       auth: { autoRefreshToken: false, persistSession: false },
     })
 
-    await ensureLocalDevUser(admin, email, password)
+    const user = await ensureLocalDevUser(admin, email, password)
 
     const supabase = createServerClient(supabaseUrl, anonKey, {
       cookies: {
@@ -49,10 +50,13 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    let { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+
+    if (signInError?.message.includes("Invalid login credentials")) {
+      await resetLocalDevUserPassword(admin, user.id, password)
+      const retry = await supabase.auth.signInWithPassword({ email, password })
+      signInError = retry.error
+    }
 
     if (signInError) {
       return NextResponse.json(

@@ -37,7 +37,7 @@ export async function ensureLocalDevUser(
   const existing = await findUserByEmail(admin, email)
 
   const user = existing
-    ? await updateLocalDevUser(admin, existing.id, password)
+    ? await refreshLocalDevUser(admin, existing.id)
     : await createLocalDevUser(admin, email, password)
 
   await seedLocalDevProfile(admin, user.id, email)
@@ -90,7 +90,20 @@ async function createLocalDevUser(
   return data.user
 }
 
-async function updateLocalDevUser(
+async function refreshLocalDevUser(admin: SupabaseClient, userId: string): Promise<User> {
+  const { data, error } = await admin.auth.admin.updateUserById(userId, {
+    email_confirm: true,
+    user_metadata: { full_name: "Local Dev User" },
+  })
+
+  if (error || !data.user) {
+    throw new Error(`Could not refresh local dev user: ${error?.message ?? "unknown error"}`)
+  }
+
+  return data.user
+}
+
+export async function resetLocalDevUserPassword(
   admin: SupabaseClient,
   userId: string,
   password: string,
@@ -160,5 +173,26 @@ async function seedLocalDevProfile(
   )
   if (hairProfileError) {
     throw new Error(`Could not seed local dev hair profile: ${hairProfileError.message}`)
+  }
+
+  const { error: routineError } = await admin.from("user_product_usage").upsert(
+    [
+      {
+        user_id: userId,
+        category: "shampoo",
+        product_name: "Local Dev Shampoo",
+        frequency_range: "3_4x",
+      },
+      {
+        user_id: userId,
+        category: "conditioner",
+        product_name: "Local Dev Conditioner",
+        frequency_range: "3_4x",
+      },
+    ],
+    { onConflict: "user_id,category" },
+  )
+  if (routineError) {
+    throw new Error(`Could not seed local dev routine inventory: ${routineError.message}`)
   }
 }

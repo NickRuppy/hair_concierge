@@ -9,10 +9,10 @@ export const AGENT_COMPARE_TOOL_LOOP_VARIANT_OPTIONS: Array<{
   value: AgentCompareToolLoopVariant
   label: string
 }> = [
-  { value: "guidance_tool", label: "Produkt-Evaluation" },
-  { value: "inline_context", label: "Beratungsbrief" },
-  { value: "composer_context", label: "Composer" },
-  { value: "baseline", label: "Ohne Kontext" },
+  { value: "guidance_tool", label: "Produkt-Evaluation (Legacy)" },
+  { value: "inline_context", label: "Beratungsbrief (Legacy)" },
+  { value: "composer_context", label: "Composer-Kontext (Legacy)" },
+  { value: "baseline", label: "Baseline ohne Zusatzkontext" },
 ]
 
 export function resolveAgentCompareToolLoopVariant(

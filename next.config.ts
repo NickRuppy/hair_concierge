@@ -44,7 +44,7 @@ const nextConfig: NextConfig = {
     ],
   },
   outputFileTracingIncludes: {
-    "/api/chat": ["./data/agent-guidance/**/*"],
+    "/api/chat": ["./data/agent-guidance/**/*", "./data/agent-v2/guidance/**/*"],
   },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }]

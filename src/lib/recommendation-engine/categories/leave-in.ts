@@ -83,9 +83,13 @@ function hasBlowDryExposure(profile: NormalizedProfile): boolean {
   )
 }
 
+function hasModerateHeatExposure(profile: NormalizedProfile): boolean {
+  return hasBlowDryExposure(profile) || (profile.stylingTools ?? []).includes("thermal_rollers")
+}
+
 function deriveHeatProtectionNeed(profile: NormalizedProfile): LeaveInHeatProtectionNeed {
   if (hasHighHeatTool(profile)) return "high"
-  if (hasBlowDryExposure(profile)) return "moderate"
+  if (hasModerateHeatExposure(profile)) return "moderate"
 
   if (
     profile.heatStyling === "rarely" ||
@@ -118,7 +122,7 @@ function deriveStylingPrepNeed(
   }
 
   if (
-    !hasBlowDryExposure(profile) &&
+    !hasModerateHeatExposure(profile) &&
     (careNeeds.smoothingNeed === "moderate" || careNeeds.smoothingNeed === "high")
   ) {
     return "smooth_control"

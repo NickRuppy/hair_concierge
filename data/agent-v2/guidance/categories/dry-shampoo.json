@@ -1,0 +1,179 @@
+{
+  "package_id": "category.dry_shampoo.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "constraint_blocked", "safety_boundary"],
+    "categories": ["dry_shampoo"],
+    "routine_layers": ["goals", "problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.dry_shampoo.bridge_not_cleanse",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "Dry shampoo absorbs oil between washes and is a temporary cosmetic bridge, not a substitute for cleansing with shampoo and water; it does not replace cleansing."
+    },
+    {
+      "rule_id": "category.dry_shampoo.no_scalp_treatment_claims",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "Do not present dry shampoo as a treatment for dandruff, irritation, hair loss, buildup, scalp congestion, or other scalp symptoms."
+    },
+    {
+      "rule_id": "category.dry_shampoo.no_indefinite_layering",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "Do not encourage repeated indefinite layering; route heavy residue, itch, flakes, soreness, or scalp congestion back to actual cleansing, reset, or safety guidance."
+    },
+    {
+      "rule_id": "category.dry_shampoo.product_detail_requires_catalog",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "For named dry shampoo detail or claim checks, use product catalog data or select_products before stating tint, no-white-cast, volume, fragrance, fragrance-free status, format, invisible finish, sensitive-scalp positioning, exact cadence, or protocol claims; treat this as a fact check, not necessarily a recommendation/card flow."
+    },
+    {
+      "rule_id": "category.dry_shampoo.no_product_name_claim_inference",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "Do not infer no-white-cast, tint, volume, fragrance, fragrance-free status, invisible finish, sensitive-scalp positioning, exact usage, or claim truth from product names, brand lines, marketing families, or category prose."
+    },
+    {
+      "rule_id": "category.dry_shampoo.no_white_cast_requires_metadata",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "No-white-cast, white-residue, and invisible-finish claims require explicit selected product metadata; without it, answer with safe uncertainty and only confirmed color, format, root-use, or product facts."
+    },
+    {
+      "rule_id": "category.dry_shampoo.no_irritation_free_guarantee",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "Metadata may support fragrance-free or sensitive-scalp positioning, but never guarantee irritation-free dry shampoo use."
+    },
+    {
+      "rule_id": "category.dry_shampoo.requested_count_available_fit",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "When the user requests a product count, keep count_policy exact, but return the exact count only when enough grounded, suitable, available dry shampoos exist; if fewer fit, return fewer and explain the fit or availability limit."
+    },
+    {
+      "rule_id": "category.dry_shampoo.routine_explanation_vs_mutation",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "Placement/order questions such as 'Wo kommt Trockenshampoo in der Routine hin?' are routine_explanation with routine_intent none unless the user asks to add, remove, replace, or change saved/current routine state, which requires build_or_fix_routine."
+    },
+    {
+      "rule_id": "category.dry_shampoo.saved_routine_mutation_requires_tool",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "Alias for category.dry_shampoo.routine_explanation_vs_mutation; saved/current routine changes require build_or_fix_routine and must keep dry shampoo optional rather than a wash replacement."
+    },
+    {
+      "rule_id": "category.dry_shampoo.safety_care_category_none",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "When scalp pain, burning, significant irritation, wounds, swelling, unusual shedding, patchy loss, infection-like symptoms, or persistent inflammation dominate, use safety_boundary with care_category none."
+    },
+    {
+      "rule_id": "category.dry_shampoo.safety_suppresses_product_escalation",
+      "severity": "block",
+      "source": "categories/dry-shampoo.md",
+      "message": "When safety symptoms dominate or the user links symptoms to dry shampoo, do not escalate to dry-shampoo product optimization; suppress product recommendations and steer to pausing the suspected trigger, cleansing/reset, simplification, or safety guidance."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.dry_shampoo.root_bridge_shape",
+      "priority": "high",
+      "source": "categories/dry-shampoo.md",
+      "message": "Tie fit to oily roots or a short wash gap, explain that dry shampoo absorbs oil between washes, then explain root placement, distribution as product directions support, and washing it out later."
+    },
+    {
+      "rubric_id": "category.dry_shampoo.scalp_comfort_gate",
+      "priority": "high",
+      "source": "categories/dry-shampoo.md",
+      "message": "When itch, flakes, burning, soreness, heavy residue, scalp congestion, or frequent dry-shampoo need are present, avoid escalating dry shampoo and frame it as a bridge or sign to adjust wash rhythm/root routine, then steer toward cleansing, reset, or scalp-care boundaries."
+    },
+    {
+      "rubric_id": "category.dry_shampoo.type_vs_product",
+      "priority": "high",
+      "source": "categories/dry-shampoo.md",
+      "message": "Treat dry-shampoo type/kind questions as category education without product cards, but route which/options/count/recommendation requests to specific_products with select_products."
+    },
+    {
+      "rubric_id": "category.dry_shampoo.weight_visibility_risk",
+      "priority": "medium",
+      "source": "categories/dry-shampoo.md",
+      "message": "For fine, dark, low-density, flat, sensitive, or buildup-prone hair, keep dose and visibility caveats practical without product-specific promises unless metadata supports them."
+    },
+    {
+      "rubric_id": "category.dry_shampoo.comparison_none",
+      "priority": "medium",
+      "source": "categories/dry-shampoo.md",
+      "message": "For comparisons against wet shampoo, deep cleansing, peeling, leave-in, oil, or length-care categories, compare roles, load relevant category packages, and use care_category none unless one category is clearly primary."
+    },
+    {
+      "rubric_id": "category.dry_shampoo.product_detail_hooks",
+      "priority": "high",
+      "source": "categories/dry-shampoo.md",
+      "message": "For named products and dry-shampoo claims, use product_detail as a product fact/claim check and avoid inferring claims from names, brand lines, marketing families, or category prose."
+    },
+    {
+      "rubric_id": "category.dry_shampoo.assessment_hook",
+      "priority": "high",
+      "source": "categories/dry-shampoo.md",
+      "message": "Treat 'is dry shampoo useful/should I use it?' as general_advice with product_request_kind none and care_category dry_shampoo unless the user asks for concrete products."
+    },
+    {
+      "rubric_id": "category.dry_shampoo.customer_facing_bridge_language",
+      "priority": "medium",
+      "source": "categories/dry-shampoo.md",
+      "message": "Prefer customer-facing German such as Frische-Ueberbrueckung, kurze Frische-Hilfe, or Ansatz auffrischen over the raw internal bridge label."
+    }
+  ],
+  "required_grounding": [
+    {
+      "grounding_id": "category.dry_shampoo.product_claims_and_usage",
+      "tool": "select_products",
+      "when": "Concrete dry shampoo names, recommendation order, category membership, no-white-cast, tint, volume, fragrance or fragrance-free status, invisible finish, sensitive-scalp positioning, exact cadence, or exact usage directions are mentioned."
+    },
+    {
+      "grounding_id": "category.dry_shampoo.product_detail_claims",
+      "tool": "select_products",
+      "when": "A named dry shampoo or product claim is checked for tint, no-white-cast, volume, fragrance or fragrance-free status, format, invisible finish, sensitive-scalp positioning, exact cadence, or usage protocol."
+    },
+    {
+      "grounding_id": "category.dry_shampoo.routine_mutation",
+      "tool": "build_or_fix_routine",
+      "when": "The user asks to add, remove, replace, or change dry shampoo in a saved/current routine; do not mutate saved routine state from placement education alone."
+    },
+    {
+      "grounding_id": "category.dry_shampoo.safety_boundary",
+      "tool": "load_advisor_guidance",
+      "when": "The user reports persistent, painful, inflamed, wounded, spreading, unusual, severe, infection-like, shedding, or hair-loss-adjacent scalp or hair symptoms."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "Frequency, scalp irritation/flakes, heavy residue, or whether the user means oily roots versus coated lengths would materially change the advice.",
+      "question_policy": "Ask at most one targeted follow-up; otherwise frame dry shampoo as a short-term root freshness bridge."
+    },
+    {
+      "condition": "The user asks for dry shampoo recommendations but does not specify a count.",
+      "question_policy": "Do not ask only for count; use the product recommendation default unless another missing detail materially changes fit."
+    },
+    {
+      "condition": "The user requests an exact number of dry shampoos but fewer grounded, suitable, available products fit.",
+      "question_policy": "Return fewer than requested and explicitly explain the fit or availability limit; do not fabricate extras to satisfy the count."
+    },
+    {
+      "condition": "The user asks for product_detail but the exact dry shampoo cannot be matched to catalog or selected product metadata.",
+      "question_policy": "Ask for the exact product or avoid product-specific tint, finish, volume, fragrance, fragrance-free status, sensitive-scalp positioning, cadence, and protocol claims."
+    },
+    {
+      "condition": "The user asks to change a saved/current routine but the current routine state is missing.",
+      "question_policy": "Use routine tooling or ask one targeted routine-state question before inventing current coverage."
+    }
+  ],
+  "markdown_path": "categories/dry-shampoo.md"
+}

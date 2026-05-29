@@ -1,0 +1,151 @@
+{
+  "package_id": "base.product_recommendation.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "clarification", "constraint_blocked"],
+    "categories": [],
+    "routine_layers": [],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "product.no_uncatalogued_products",
+      "severity": "block",
+      "source": "base/product-recommendation.md",
+      "validator_id": "known_product_ids",
+      "message": "Do not name or surface products unless they came from select_products."
+    },
+    {
+      "rule_id": "product.claims_from_supported_claims",
+      "severity": "block",
+      "source": "base/product-recommendation.md",
+      "validator_id": "supported_product_claims",
+      "message": "Product-fit claims must be supported by selected product projection fields."
+    },
+    {
+      "rule_id": "product.product_detail_requires_select_products",
+      "severity": "block",
+      "source": "base/product-recommendation.md",
+      "validator_id": "product_tool_required",
+      "message": "Named-product detail and product-specific claim checks require select_products before the terminal answer."
+    },
+    {
+      "rule_id": "product.product_detail_tool_args_match_terminal",
+      "severity": "block",
+      "source": "base/product-recommendation.md",
+      "validator_id": "request_interpretation_tool_args_match",
+      "message": "For product_detail turns, select_products arguments and terminal request_interpretation must match on kind, count, category, and evidence."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "product.explain_fit_plainly",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Explain why the product fits in simple German."
+    },
+    {
+      "rubric_id": "product.frame_as_tradeoff_options",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Frame ranked products as suitable options with tradeoffs, connect every fit to profile/tool facts, and avoid winner-takes-all phrasing."
+    },
+    {
+      "rubric_id": "product.one_natural_fit_sentence_per_product",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "For each recommended product, write one coherent German sentence explaining why it fits this user."
+    },
+    {
+      "rubric_id": "product.metadata_as_practical_implication",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Phrase tied product metadata axes as practical implications for the user's hair, routine, or tradeoff instead of catalog classification wording such as eingestuft, klassifiziert, im Katalog, or Claim hinterlegt."
+    },
+    {
+      "rubric_id": "product.no_raw_property_dump",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Do not render product projection fields as raw property bullets; turn them into advisor prose."
+    },
+    {
+      "rubric_id": "product.routine_deep_dive_uses_product_recommendation",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "A precise product ask inside a routine thread should use answer_mode product_recommendation with product_request_kind specific_products, active routine_context, and the normal three-option product recommendation shape."
+    },
+    {
+      "rubric_id": "product.next_add_on_grounded_rationale",
+      "priority": "medium",
+      "source": "base/product-recommendation.md",
+      "message": "When the user asks which product to add next or asks for the product behind a routine add-on, include one compact rationale sentence grounded in visible profile, current routine inventory, CareBalance, or routine-thread facts so the next-step judgment is legible."
+    },
+    {
+      "rubric_id": "product.respect_requested_count",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Default to three product recommendations, respect explicit counts, cap requests above three, and keep count_policy aligned with the user wording."
+    },
+    {
+      "rubric_id": "product.category_fit_asks_are_recommendations",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Concrete category-fit wording such as 'Welche Spülung passt?' should use specific_products and be fulfilled as a product recommendation."
+    },
+    {
+      "rubric_id": "product.category_education_stays_educational",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Category-learning wording such as 'Welche Art von Spülung passt?' should use category_education and avoid product cards until concrete products are requested."
+    },
+    {
+      "rubric_id": "product.no_claims_from_names",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Product names, brand lines, and descriptions are names only; never infer unsupported benefits, ingredient-free status, scalp suitability, or heat-protection details from them."
+    },
+    {
+      "rubric_id": "product.compare_with_supported_facts",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "For product comparisons, decide the asked tradeoff first, compare only comparison_facts and supported claims, keep caveated fallbacks visible, and say when options are effectively equivalent."
+    },
+    {
+      "rubric_id": "product.detail_check_after_tool",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "For named-product claim checks, call select_products first; if the catalog cannot confirm the product or claim, ask for the exact variant or explain the unsupported claim instead of inferring from the name."
+    },
+    {
+      "rubric_id": "product.user_facing_unsupported_claim_fallback",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "Translate missing metadata into user-facing language; never expose raw/internal phrases like 'Im Katalog ist kein Claim hinterlegt'. Prefer safe uncertainty such as 'Das kann ich fuer diese Variante nicht sicher versprechen. Sicher beruecksichtigen kann ich aktuell ...', then continue only with grounded generic attributes, supported facts, or an exact-variant ask when helpful."
+    },
+    {
+      "rubric_id": "product.feasible_detail_cta",
+      "priority": "medium",
+      "source": "base/product-recommendation.md",
+      "message": "Product-detail CTAs must stay inside current product metadata; do not invite photo or link checks, reviews, ingredients, white-cast, protocol, color-safety, chelating, or heat-protection checks unless current tooling can actually process and ground them and select_products surfaced support."
+    }
+  ],
+  "required_grounding": [
+    {
+      "grounding_id": "product.must_use_select_products",
+      "tool": "select_products",
+      "when": "The final answer names concrete products or shows product cards."
+    },
+    {
+      "grounding_id": "product.product_detail_must_use_select_products",
+      "tool": "select_products",
+      "when": "The user asks about a named product or product-specific claim, including heat protection, color safety, chelating, ingredient-free status, cadence, compatibility, or protocol."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "required_product_input_missing",
+      "question_policy": "ask_single_missing_datapoint"
+    }
+  ],
+  "markdown_path": "base/product-recommendation.md"
+}

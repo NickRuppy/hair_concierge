@@ -7,11 +7,16 @@ import type {
 } from "@/lib/types"
 import { buildRecommendationRequestContext } from "@/lib/recommendation-engine/request-context"
 import {
+  buildRecommendationEngineRuntimeFromEffectiveContext,
   buildRecommendationEngineRuntimeFromPersistence,
   type RecommendationEngineRuntime,
 } from "@/lib/recommendation-engine/runtime"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
-import type { CategoryDecision, EngineCategoryId } from "@/lib/recommendation-engine/types"
+import type {
+  CategoryDecision,
+  EffectiveCareContext,
+  EngineCategoryId,
+} from "@/lib/recommendation-engine/types"
 
 const PRODUCT_INTENTS: readonly IntentType[] = [
   "product_recommendation",
@@ -153,13 +158,28 @@ export function buildRecommendationEngineRuntimeForChat(params: {
   productCategory: ProductCategory
   shouldPlanRoutine?: boolean
   message: string
+  effectiveCareContext?: EffectiveCareContext | null
 }): RecommendationEngineRuntime {
-  const { hairProfile, routineItems, productCategory, shouldPlanRoutine = false, message } = params
+  const {
+    hairProfile,
+    routineItems,
+    productCategory,
+    shouldPlanRoutine = false,
+    message,
+    effectiveCareContext = null,
+  } = params
 
   const requestContext = buildRecommendationRequestContext({
     requestedCategory: toEngineRequestedCategory(productCategory, shouldPlanRoutine),
     message,
   })
+
+  if (effectiveCareContext) {
+    return buildRecommendationEngineRuntimeFromEffectiveContext(
+      effectiveCareContext,
+      requestContext,
+    )
+  }
 
   return buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems, requestContext)
 }
@@ -199,10 +219,13 @@ export function buildRecommendationEngineTrace(params: {
 
   return {
     request_context: runtime.requestContext,
+    effective_context: runtime.effectiveContext,
     damage: runtime.damage,
     care_needs: runtime.careNeeds,
     reset: runtime.reset,
     intervention_plan: runtime.plan,
+    care_balance: runtime.careBalance,
+    legacy_plan_comparison: runtime.legacyPlanComparison ?? null,
     categories: {
       shampoo: runtime.categories.shampoo,
       conditioner: runtime.categories.conditioner,

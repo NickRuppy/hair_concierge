@@ -15,13 +15,19 @@ import {
 } from "@/lib/recommendation-engine"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
 import type { RecommendationEngineRuntime } from "@/lib/recommendation-engine/runtime"
-import type { CategoryDecision } from "@/lib/recommendation-engine/types"
+import type { CategoryDecision, EffectiveCareContext } from "@/lib/recommendation-engine/types"
+import {
+  buildCareBalanceToolContext,
+  type CareBalanceToolContext,
+  type CareBalanceToolRow,
+} from "@/lib/agent/tools/care-balance-context"
 import { applyProductMemoryConstraints } from "@/lib/rag/user-memory"
 import type { MatchedProduct } from "@/lib/rag/product-matcher"
 import type { UserMemoryContext } from "@/lib/rag/user-memory"
 import type {
   BondbuilderRecommendationMetadata,
   ConditionerRecommendationMetadata,
+  DeepCleansingShampooRecommendationMetadata,
   DryShampooRecommendationMetadata,
   HairProfile,
   LeaveInRecommendationMetadata,
@@ -218,9 +224,13 @@ export interface SelectedProductsProjection {
   category_guidance: string
   products: SelectedProductResult[]
   comparison_facts: Record<string, string[]> | null
+  care_balance_context?: ProductCareBalanceContext | null
   missing_info: SelectedProductsMissingInfo[]
   unsupported_requested_signals: UnsupportedRequestedSignal[]
 }
+
+export type ProductCareBalanceContext = CareBalanceToolContext
+export type ProductCareBalanceRow = CareBalanceToolRow
 
 export interface SelectProductsToolResult {
   projection: SelectedProductsProjection
@@ -336,10 +346,10 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
           product.id,
           uniqueNonEmpty([
             meta?.category === "deep_cleansing_shampoo" && meta.reset_focus
-              ? `Reset-Fokus: ${meta.reset_focus}`
+              ? `Reset-Fokus: ${DEEP_CLEANSING_RESET_FOCUS_LABELS[meta.reset_focus]}`
               : null,
             meta?.category === "deep_cleansing_shampoo" && meta.reset_intensity
-              ? `Reset-Intensitaet: ${meta.reset_intensity}`
+              ? `Reset-Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
               : null,
             meta?.category === "deep_cleansing_shampoo" &&
             meta.color_treated_suitability === "suitable"
@@ -354,6 +364,25 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
   return Object.fromEntries(
     products.map((product) => [product.id, buildProductComparisonFacts(product)]),
   )
+}
+
+function buildProductCareBalanceContext(params: {
+  runtime: RecommendationEngineRuntime | null
+  category: SelectableProductCategory | null
+}): ProductCareBalanceContext | null {
+  const runtime = params.runtime
+  if (!runtime || !params.category) return null
+
+  const primaryRows = runtime.careBalance.rows.filter(
+    (row) =>
+      row.category === params.category ||
+      (params.category === "leave_in" && row.category === "heat_protectant"),
+  )
+  const rowsWithActions = primaryRows.filter((row) => row.recommendation !== "no_action")
+  const rows = rowsWithActions.length > 0 ? rowsWithActions : primaryRows
+  if (rows.length === 0) return null
+
+  return buildCareBalanceToolContext({ runtime, rows })
 }
 
 function buildConditionerComparisonFactsForSet(
@@ -913,6 +942,44 @@ const SHAMPOO_SCALP_ROUTE_FIT_PHRASES: Record<
   irritated: "irritierten Kopfhaut-Fokus",
 }
 
+const DEEP_CLEANSING_RESET_FOCUS_LABELS: Record<
+  NonNullable<DeepCleansingShampooRecommendationMetadata["reset_focus"]>,
+  string
+> = {
+  product_sebum_buildup: "Produkt-, Styling- und Sebum-Aufbau",
+  metal_mineral_hard_water: "Kalk-, Chlor-, Mineral- oder Metall-Kontext",
+  broad_spectrum_detox: "breiter Styling-, Produkt- und Mineral-Reset",
+}
+
+const DEEP_CLEANSING_RESET_INTENSITY_LABELS: Record<
+  NonNullable<DeepCleansingShampooRecommendationMetadata["reset_intensity"]>,
+  string
+> = {
+  gentle: "sanft",
+  medium: "mittel",
+  strong: "stark",
+}
+
+const DEEP_CLEANSING_SCALP_FOCUS_LABELS: Record<
+  NonNullable<DeepCleansingShampooRecommendationMetadata["scalp_type_focus"]>,
+  string
+> = {
+  oily: "schnell fettender Ansatz",
+  balanced: "ausgeglichene Kopfhaut",
+  dry: "trockene Kopfhaut",
+}
+
+const DEEP_CLEANSING_FIT_STATUS_LABELS: Record<
+  NonNullable<DeepCleansingShampooRecommendationMetadata["fit_status"]>,
+  string
+> = {
+  ideal: "idealer Treffer",
+  supportive: "unterstuetzender Treffer",
+  mismatch: "kein sicherer Treffer",
+  unknown: "Treffer mit unvollstaendigen Daten",
+  not_applicable: "nicht anwendbarer Treffer",
+}
+
 const SHAMPOO_FIT_STATUS_PREFIXES: Record<
   NonNullable<ShampooRecommendationMetadata["fit_status"]>,
   string
@@ -959,12 +1026,14 @@ function buildDisplayableFitReason(product: MatchedProduct): string {
 
   if (meta?.category === "deep_cleansing_shampoo") {
     const focus =
-      meta.reset_focus === "mineral_chlorine"
+      meta.reset_focus === "metal_mineral_hard_water"
         ? "Kalk-/Chlor-/Mineral-Reset"
-        : meta.reset_focus === "broad_spectrum"
+        : meta.reset_focus === "broad_spectrum_detox"
           ? "breiter Styling- und Mineral-Reset"
           : "Produktaufbau-Reset"
-    const intensity = meta.reset_intensity ? `; Intensitaet: ${meta.reset_intensity}` : ""
+    const intensity = meta.reset_intensity
+      ? `; Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
+      : ""
     return `Reset-Treffer fuer ${focus}${intensity}.`
   }
 
@@ -1326,25 +1395,31 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
     return uniqueClaims([
       buildClaim(
         "reset_focus",
-        meta.reset_focus,
+        meta.reset_focus ? DEEP_CLEANSING_RESET_FOCUS_LABELS[meta.reset_focus] : null,
         "product_spec",
-        meta.reset_focus ? `Reset-Fokus: ${meta.reset_focus}` : null,
+        meta.reset_focus
+          ? `Reset-Fokus: ${DEEP_CLEANSING_RESET_FOCUS_LABELS[meta.reset_focus]}`
+          : null,
       ),
       buildClaim(
         "reset_intensity",
-        meta.reset_intensity,
+        meta.reset_intensity ? DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity] : null,
         "product_spec",
-        meta.reset_intensity ? `Reset-Intensitaet: ${meta.reset_intensity}` : null,
+        meta.reset_intensity
+          ? `Reset-Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
+          : null,
       ),
       buildClaim(
         "scalp_route",
-        meta.scalp_type_focus,
+        meta.scalp_type_focus ? DEEP_CLEANSING_SCALP_FOCUS_LABELS[meta.scalp_type_focus] : null,
         "product_spec",
-        meta.scalp_type_focus ? `Kopfhaut-Fokus: ${meta.scalp_type_focus}` : null,
+        meta.scalp_type_focus
+          ? `Kopfhaut-Fokus: ${DEEP_CLEANSING_SCALP_FOCUS_LABELS[meta.scalp_type_focus]}`
+          : null,
       ),
       buildClaim(
         "color_treated_suitability",
-        meta.color_treated_suitability === "suitable" ? "suitable" : null,
+        meta.color_treated_suitability === "suitable" ? "geeignet fuer coloriertes Haar" : null,
         "product_spec",
         meta.color_treated_suitability === "suitable"
           ? "Strukturiert als geeignet fuer coloriertes Haar gepflegt"
@@ -1352,9 +1427,9 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
       ),
       buildClaim(
         "fit_status",
-        meta.fit_status,
+        meta.fit_status ? DEEP_CLEANSING_FIT_STATUS_LABELS[meta.fit_status] : null,
         "category_decision",
-        meta.fit_status ? `Fit: ${meta.fit_status}` : null,
+        meta.fit_status ? `Fit: ${DEEP_CLEANSING_FIT_STATUS_LABELS[meta.fit_status]}` : null,
       ),
     ])
   }
@@ -1417,14 +1492,10 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
           : null,
       ),
       buildClaim(
-        "usage_protocol",
-        meta.usage_protocol,
+        "usage_hint",
+        meta.usage_hint,
         "product_spec",
-        meta.usage_protocol
-          ? `Nutzungsprotokoll: ${
-              PRODUCT_BOND_USAGE_PROTOCOL_LABELS[meta.usage_protocol] ?? meta.usage_protocol
-            }`
-          : null,
+        meta.usage_hint ? `Anwendung: ${meta.usage_hint}` : null,
       ),
       buildClaim(
         "lifecycle_status",
@@ -2471,7 +2542,13 @@ function deriveDecision(params: {
     return "not_recommended"
   }
 
-  if (isOilNoRecommendationDecision(category, categoryDecision)) {
+  if (
+    isOilNoRecommendationDecision(category, categoryDecision) &&
+    !(
+      products.length > 0 &&
+      allowsCaveatedOilProductRecommendation({ category, categoryDecision, routeContext })
+    )
+  ) {
     return "not_recommended"
   }
 
@@ -2560,6 +2637,22 @@ function hasExplicitProductAskSignal(message: string): boolean {
 
   return /\b(welch(?:e|es|en|er|em)?|empfehl\w*|kaufen|produkt|produkte|pick|auswahl|option|optionen|a oder b|besser|nimm|nehmen)\b/.test(
     normalized,
+  )
+}
+
+function allowsCaveatedOilProductRecommendation(params: {
+  category: SelectableProductCategory | null
+  categoryDecision: CategoryDecision | null
+  routeContext?: SelectProductsRouteContext | null
+}): boolean {
+  const { category, categoryDecision, routeContext } = params
+
+  return (
+    category === "oil" &&
+    categoryDecision?.category === "oil" &&
+    categoryDecision.noRecommendationReason === "overload_risk" &&
+    categoryDecision.targetProfile !== null &&
+    isExplicitProductSelectionJob(routeContext)
   )
 }
 
@@ -2711,6 +2804,21 @@ function buildProductResponsePolicy(params: {
   }
 
   if (isOilNoRecommendationDecision(category, params.categoryDecision ?? null)) {
+    if (
+      decision === "recommended" &&
+      allowsCaveatedOilProductRecommendation({
+        category,
+        categoryDecision: params.categoryDecision,
+        routeContext,
+      })
+    ) {
+      return {
+        product_response_policy: "recommend_with_caveat",
+        policy_reason:
+          "Der Nutzer fragt explizit nach Oel-Produkten; empfehle passende Optionen, aber rahme sie mit Reduktions- und Build-up-Caveat.",
+      }
+    }
+
     return {
       product_response_policy: "redirect_to_better_lever",
       policy_reason:
@@ -2935,6 +3043,13 @@ function buildCategoryGuidance(params: {
 
   if (category === "oil" && categoryDecision?.category === "oil") {
     if (categoryDecision.noRecommendationReason === "overload_risk") {
+      if (
+        decision === "recommended" &&
+        allowsCaveatedOilProductRecommendation({ category, categoryDecision, routeContext })
+      ) {
+        return "Der Nutzer fragt explizit nach Oel-Produkten; vorhandene Produkttreffer duerfen gezeigt werden. CareBalance/Planner-Caveat: wegen Beschwerungs- oder Build-up-Risiko sparsam, leichter Fit, eher Frequenz senken und nicht als Pflichtschritt framen."
+      }
+
       return "Ein neues Oel ist hier nicht der richtige Hebel: Die aktuelle Logik sieht ein Beschwerungs- oder Build-up-Risiko. Keine Oel-Produkte empfehlen; stattdessen weniger Oel, weniger Layering oder Reset-Pflege erklaeren."
     }
 
@@ -3040,6 +3155,10 @@ export function projectSelectedProducts(
     }),
     products: projectedProducts,
     comparison_facts: buildComparisonFacts(displayableProducts),
+    care_balance_context: buildProductCareBalanceContext({
+      runtime,
+      category: resolvedCategory,
+    }),
     missing_info,
     unsupported_requested_signals: packetUnsupportedSignals,
   }
@@ -3062,13 +3181,13 @@ async function runCategoryEngine(params: {
     case "shampoo":
       return selectShampooProductsWithEngine({ message, hairProfile, routineItems })
     case "conditioner":
-      return selectConditionerProductsWithEngine({ message, hairProfile, routineItems })
+      return selectConditionerProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "leave_in":
       return selectLeaveInProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "mask":
       return selectMaskProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "oil":
-      return selectOilProductsWithEngine({ message, hairProfile, routineItems })
+      return selectOilProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "bondbuilder":
       return selectBondbuilderProductsWithEngine({ message, hairProfile, routineItems, runtime })
     case "deep_cleansing_shampoo":
@@ -3290,6 +3409,7 @@ export function createSelectProductsTool(
     hairProfile: HairProfile | null
     memoryContext: UserMemoryContext
     routineItems: PersistenceRoutineItemRow[]
+    effectiveCareContext?: EffectiveCareContext | null
     userJob?: AgentUserJob | null
     concerns?: AgentConcern[] | null
     requestedGoal?: "shine" | null
@@ -3301,6 +3421,7 @@ export function createSelectProductsTool(
       hairProfile,
       memoryContext,
       routineItems,
+      effectiveCareContext = null,
       userJob,
       concerns,
       requestedGoal,
@@ -3316,6 +3437,7 @@ export function createSelectProductsTool(
       routineItems,
       productCategory: category,
       message,
+      effectiveCareContext,
     })
     const products = await (options.runCategoryEngine ?? runCategoryEngine)({
       category,

@@ -1,0 +1,120 @@
+{
+  "package_id": "category.leave_in.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "constraint_blocked"],
+    "categories": ["leave_in"],
+    "routine_layers": ["basics", "goals", "problems"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.leave_in.booster_not_default_replacement",
+      "severity": "block",
+      "source": "categories/leave-in.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Frame leave-in as a booster or simplification candidate, not the default replacement for conditioner."
+    },
+    {
+      "rule_id": "category.leave_in.no_unsupported_heat_protection",
+      "severity": "block",
+      "source": "categories/leave-in.md",
+      "message": "Do not claim heat protection, heat-protection consolidation, or exact heat-protection temperatures unless selected product data supports it."
+    },
+    {
+      "rule_id": "category.leave_in.no_scalp_care",
+      "severity": "block",
+      "source": "categories/leave-in.md",
+      "message": "Do not present leave-in as scalp care, scalp cleansing, or root-oil control."
+    },
+    {
+      "rule_id": "category.leave_in.no_ungrounded_product_detail_claims",
+      "severity": "block",
+      "source": "categories/leave-in.md",
+      "message": "Do not infer named leave-in weight, role, format, fragrance or fragrance-free status, curl definition, conditioner replacement, or claim truth from product names or marketing."
+    },
+    {
+      "rule_id": "category.leave_in.routine_explanation_not_mutation",
+      "severity": "block",
+      "source": "categories/leave-in.md",
+      "message": "For usage-order or amount questions that do not ask to change a saved or current routine, use routine_explanation with routine_intent none and do not call build_or_fix_routine unless current routine state is needed."
+    },
+    {
+      "rule_id": "category.leave_in.safety_care_category_none",
+      "severity": "block",
+      "source": "categories/leave-in.md",
+      "message": "When significant or persistent irritation, burning, itching, swelling, shedding, patchy loss, wounds, or infection-like symptoms dominate, route to safety_boundary with care_category none."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.leave_in.role_clarity",
+      "priority": "high",
+      "source": "categories/leave-in.md",
+      "message": "Separate care, frizz control, detangling, and heat-protection roles."
+    },
+    {
+      "rubric_id": "category.leave_in.weight_and_usage_fit",
+      "priority": "high",
+      "source": "categories/leave-in.md",
+      "message": "Match leave-in weight, dose, and placement to thickness, texture, frizz, dryness, tangling, styling prep, and flat-prone or fine hair."
+    },
+    {
+      "rubric_id": "category.leave_in.simplification_clarity",
+      "priority": "medium",
+      "source": "categories/leave-in.md",
+      "message": "Mention replacing conditioner or consolidating steps only when product data and user context support that simplification."
+    },
+    {
+      "rubric_id": "category.leave_in.category_education_vs_products",
+      "priority": "high",
+      "source": "categories/leave-in.md",
+      "message": "Treat 'Welche Art von Leave-in...' as category education without product cards, but route 'Welches Leave-in passt...', options, counts, and light leave-in recommendations to product_recommendation with specific_products."
+    },
+    {
+      "rubric_id": "category.leave_in.heat_protection_boundary",
+      "priority": "high",
+      "source": "categories/leave-in.md",
+      "message": "Discuss heat-protection consolidation only when the ask is leave-in or post-wash simplification, or when grounded product metadata supports it; otherwise compare or route heat-protection needs without forcing leave_in."
+    },
+    {
+      "rubric_id": "category.leave_in.fragrance_sensitivity_boundary",
+      "priority": "medium",
+      "source": "categories/leave-in.md",
+      "message": "Use product metadata for factual fragrance or fragrance-free claims, and route significant or persistent sensitivity symptoms to safety guidance."
+    },
+    {
+      "rubric_id": "category.leave_in.german_copy_fit",
+      "priority": "medium",
+      "source": "categories/leave-in.md",
+      "message": "Use German-friendly drying-method wording such as Routine beim Lufttrocknen or beim Lufttrocknen instead of mixed-language copy like Air-Dry-Routine."
+    }
+  ],
+  "required_grounding": [
+    {
+      "grounding_id": "category.leave_in.product_claims_and_heat_protection",
+      "tool": "select_products",
+      "when": "Concrete leave-in names, product detail checks, heat protection, exact heat-protection temperature, weight, format, fragrance or fragrance-free status, curl definition, conditioner replacement, or product-specific role claims are mentioned."
+    },
+    {
+      "grounding_id": "category.leave_in.routine_mutations",
+      "tool": "build_or_fix_routine",
+      "when": "The user asks to add, remove, replace, or change leave-in in a saved or current routine."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "Heat use, weight sensitivity, fragrance or sensitivity concerns, current conditioner fit, buildup risk, or simplification intent would materially change whether leave-in is useful.",
+      "question_policy": "Ask at most one targeted follow-up; otherwise give a safe booster-focused leave-in answer."
+    },
+    {
+      "condition": "The user asks for leave-in recommendations but does not specify a count.",
+      "question_policy": "Do not ask only for count; use the product recommendation default unless another missing detail materially changes fit."
+    },
+    {
+      "condition": "The user asks whether leave-in can replace conditioner.",
+      "question_policy": "Ask or retrieve routine context only when needed to make a replacement recommendation; otherwise explain replacement as a non-default simplification candidate."
+    }
+  ],
+  "markdown_path": "categories/leave-in.md"
+}

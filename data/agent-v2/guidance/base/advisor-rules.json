@@ -1,0 +1,42 @@
+{
+  "package_id": "base.advisor_rules.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "clarification", "constraint_blocked", "safety_boundary"],
+    "categories": [],
+    "routine_layers": [],
+    "safety_modes": ["normal", "restricted", "hard_short_circuit"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "advisor.german_user_text",
+      "severity": "block",
+      "source": "base/advisor-rules.md",
+      "validator_id": "user_facing_german",
+      "message": "All user-facing prose must be German."
+    },
+    {
+      "rule_id": "advisor.no_internal_labels",
+      "severity": "block",
+      "source": "base/advisor-rules.md",
+      "validator_id": "no_internal_labels",
+      "message": "Do not expose internal tool, validator, rule, packet, or trace names to the user."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "advisor.answer_directly_first",
+      "priority": "high",
+      "source": "base/advisor-rules.md",
+      "message": "Start with the useful answer, then add nuance."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [
+    {
+      "condition": "missing_single_material_datapoint",
+      "question_policy": "ask_one_short_question"
+    }
+  ],
+  "markdown_path": "base/advisor-rules.md"
+}

@@ -1,0 +1,159 @@
+{
+  "package_id": "category.conditioner.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "constraint_blocked"],
+    "categories": ["conditioner"],
+    "routine_layers": ["basics"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.conditioner.baseline_lengths",
+      "severity": "block",
+      "source": "categories/conditioner.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Frame conditioner as the default rinse-out baseline for lengths and ends."
+    },
+    {
+      "rule_id": "category.conditioner.no_scalp_treatment",
+      "severity": "block",
+      "source": "categories/conditioner.md",
+      "message": "Do not present conditioner as scalp treatment, scalp cleansing, or root-oil control."
+    },
+    {
+      "rule_id": "category.conditioner.no_permanent_split_end_repair",
+      "severity": "block",
+      "source": "categories/conditioner.md",
+      "message": "Do not promise permanent split-end repair or structural damage reversal from conditioner."
+    },
+    {
+      "rule_id": "category.conditioner.no_ungrounded_balance_claims",
+      "severity": "block",
+      "source": "categories/conditioner.md",
+      "message": "Do not infer conditioner weight, protein/moisture role, repair claims, or usage protocol from product names or guidance prose."
+    },
+    {
+      "rule_id": "category.conditioner.product_detail_requires_catalog",
+      "severity": "block",
+      "source": "categories/conditioner.md",
+      "message": "For named conditioner detail or claim checks, use product catalog data or select_products before stating weight, protein/moisture role, color-safe status, compatibility, silicone-free or fragrance-free status, repair claims, or usage protocol."
+    },
+    {
+      "rule_id": "category.conditioner.no_current_routine_invention",
+      "severity": "block",
+      "source": "categories/conditioner.md",
+      "message": "Do not say the current routine already covers conditioner unless current routine context or routine tooling provides that state."
+    },
+    {
+      "rule_id": "category.conditioner.saved_routine_mutation_tooling",
+      "severity": "block",
+      "source": "categories/conditioner.md",
+      "message": "Use build_or_fix_routine before adding, removing, replacing, or changing conditioner in a saved or current routine."
+    },
+    {
+      "rule_id": "category.conditioner.safety_suppresses_product_escalation",
+      "severity": "block",
+      "source": "categories/conditioner.md",
+      "message": "When safety symptoms dominate, use safety_boundary with care_category none and do not escalate conditioner product recommendations."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.conditioner.explain_limits",
+      "priority": "medium",
+      "source": "categories/conditioner.md",
+      "message": "Explain that conditioner can improve feel and friction, but cannot permanently repair split ends."
+    },
+    {
+      "rubric_id": "category.conditioner.weight_and_care_balance",
+      "priority": "high",
+      "source": "categories/conditioner.md",
+      "message": "Tie conditioner weight and care intensity to hair thickness, protein/moisture balance, texture, roughness, tangling, frizz, and weight sensitivity."
+    },
+    {
+      "rubric_id": "category.conditioner.baseline_before_boosters",
+      "priority": "high",
+      "source": "categories/conditioner.md",
+      "message": "Keep conditioner as the everyday length-care baseline before masks, leave-ins, or oils unless current routine context or routine tooling shows it is already covered."
+    },
+    {
+      "rubric_id": "category.conditioner.fine_low_density_dosing",
+      "priority": "high",
+      "source": "categories/conditioner.md",
+      "message": "For fine or low-density hair, adjust conditioner amount, weight, and placement before removing conditioning support entirely."
+    },
+    {
+      "rubric_id": "category.conditioner.cwc_owc_length_protection",
+      "priority": "medium",
+      "source": "categories/conditioner.md",
+      "message": "When shampoo suits the scalp but dries lengths, explain optional CWC/OWC length protection without making it mandatory. If CWC is named, briefly explain that CWC means Conditioner-Shampoo-Conditioner and that the first conditioner protects lengths before shampoo while the second conditions after."
+    },
+    {
+      "rubric_id": "category.conditioner.owc_weight_caution",
+      "priority": "medium",
+      "source": "categories/conditioner.md",
+      "message": "Keep OWC as the heavier oil-wash-conditioner route and less default for fine, flat-prone, oily-root, low-density, or weight-sensitive hair unless dryness, porosity, curls/coils, coarser texture, damage, and buildup tolerance support it."
+    },
+    {
+      "rubric_id": "category.conditioner.balanced_comparison_none",
+      "priority": "medium",
+      "source": "categories/conditioner.md",
+      "message": "For balanced category comparisons involving conditioner, compare both categories fairly and use care_category none unless conditioner is clearly central."
+    },
+    {
+      "rubric_id": "category.conditioner.type_vs_products",
+      "priority": "high",
+      "source": "categories/conditioner.md",
+      "message": "Treat conditioner type or kind questions as category education without products, but route which/options/count/recommendation requests for a conditioner to specific_products with select_products."
+    },
+    {
+      "rubric_id": "category.conditioner.routine_explanation_vs_mutation",
+      "priority": "high",
+      "source": "categories/conditioner.md",
+      "message": "Answer routine placement or usage questions as routine_explanation without mutation, but use routine_mutation and build_or_fix_routine for saved/current routine changes."
+    },
+    {
+      "rubric_id": "category.conditioner.user_facing_german_terms",
+      "priority": "medium",
+      "source": "categories/conditioner.md",
+      "message": "Use customer-facing German for protein/moisture balance and explain CWC/OWC techniques without raw acronyms unless the user used them."
+    }
+  ],
+  "required_grounding": [
+    {
+      "grounding_id": "category.conditioner.product_fit_and_protocol",
+      "tool": "select_products",
+      "when": "Concrete conditioner names, product order, weight, protein/moisture role, usage protocol, repair claims, or category membership are mentioned."
+    },
+    {
+      "grounding_id": "category.conditioner.product_detail_claims",
+      "tool": "select_products",
+      "when": "A named conditioner or conditioner claim is checked for weight, protein/moisture role, color-safe status, compatibility, silicone-free or fragrance-free status, repair claims, or exact usage."
+    },
+    {
+      "grounding_id": "category.conditioner.saved_or_current_routine_changes",
+      "tool": "build_or_fix_routine",
+      "when": "The user asks to add, remove, replace, or change conditioner in a saved or current routine."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "Thickness, weight sensitivity, current conditioner fit, or protein/moisture direction would materially change whether conditioner is useful or which conditioner type fits.",
+      "question_policy": "Ask at most one targeted follow-up; otherwise give a safe general conditioner answer."
+    },
+    {
+      "condition": "The user asks for product_detail but the named conditioner cannot be matched to catalog or selected product metadata.",
+      "question_policy": "Ask for the exact product or avoid product-specific claims."
+    },
+    {
+      "condition": "The user asks to change a saved/current routine but the current routine state is missing.",
+      "question_policy": "Use routine tooling or ask one targeted routine-state question before inventing current coverage."
+    },
+    {
+      "condition": "Safety symptoms are linked to conditioner.",
+      "question_policy": "Do not ask product-optimization questions; preserve the suspected conditioner trigger in safety wording and keep product escalation suppressed."
+    }
+  ],
+  "markdown_path": "categories/conditioner.md"
+}

@@ -1,0 +1,121 @@
+{
+  "package_id": "category.mask.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "constraint_blocked"],
+    "categories": ["mask"],
+    "routine_layers": ["goals", "problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.mask.extra_not_baseline",
+      "severity": "block",
+      "source": "categories/mask.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Frame masks as periodic extra care, not a baseline replacement for conditioner."
+    },
+    {
+      "rule_id": "category.mask.no_scalp_or_repair_overclaim",
+      "severity": "block",
+      "source": "categories/mask.md",
+      "message": "Do not present normal masks as scalp treatments, permanent split-end repair, structural rebuilding, or future-damage prevention."
+    },
+    {
+      "rule_id": "category.mask.supported_claims_only",
+      "severity": "block",
+      "source": "categories/mask.md",
+      "message": "Use select_products or supported product data for mask weight, balance, intensity, fit, category membership, and requested-property caveats; do not infer these from names or marketing."
+    },
+    {
+      "rule_id": "category.mask.routine_explanation_vs_mutation",
+      "severity": "block",
+      "source": "categories/mask.md",
+      "message": "Route where/how/often/order questions as routine_explanation with routine_intent none unless the user asks to add, remove, replace, or change a mask in a saved or current routine, which requires build_or_fix_routine."
+    },
+    {
+      "rule_id": "category.mask.no_fixed_protocol_without_metadata",
+      "severity": "block",
+      "source": "categories/mask.md",
+      "message": "Keep general mask cadence and order flexible; exact timing, cadence, follow-up conditioner, scalp use, or product protocol requires product metadata."
+    },
+    {
+      "rule_id": "category.mask.no_structural_repair_claim",
+      "severity": "block",
+      "source": "categories/mask.md",
+      "message": "Do not claim structural repair, repair from inside, or bond-repair effects from a normal mask; compare with the bondbuilder lane when the user asks about snapping, gummy/elastic wet hair, bleach damage, or bond repair."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.mask.when_it_helps",
+      "priority": "high",
+      "source": "categories/mask.md",
+      "message": "Explain when a mask helps and when conditioner is enough."
+    },
+    {
+      "rubric_id": "category.mask.profile_balance_anchor",
+      "priority": "high",
+      "source": "categories/mask.md",
+      "message": "When protein/moisture balance, chemical stress, frizz, roughness, coated feel, brittleness, or limp hair is user-raised or materially signaled, connect the mask role to that profile signal without turning it into a hard diagnosis."
+    },
+    {
+      "rubric_id": "category.mask.cadence_and_placement",
+      "priority": "medium",
+      "source": "categories/mask.md",
+      "message": "Keep usage practical and flexible: usually after shampoo, lengths and ends, rinse well, gelegentlich/alle paar Waeschen/bei Bedarf, and stretch use if hair feels heavy, too soft, or flat."
+    },
+    {
+      "rubric_id": "category.mask.lightweight_dry_frizzy_addon",
+      "priority": "high",
+      "source": "categories/mask.md",
+      "message": "For dry/frizzy lengths inside a lightweight-routine decision, prefer a light occasional mask as the main add-on; oil may be only a tiny tips/gloss finish."
+    },
+    {
+      "rubric_id": "category.mask.education_vs_recommendation",
+      "priority": "high",
+      "source": "categories/mask.md",
+      "message": "Separate type/kind education with no product cards from which-mask/options/count/recommendation requests that require select_products and specific_products."
+    },
+    {
+      "rubric_id": "category.mask.product_detail_hooks",
+      "priority": "high",
+      "source": "categories/mask.md",
+      "message": "For named masks and claim checks such as protein-rich/free, moisture-focused, lightweight/rich, color-protective, repair-supported, scalp-directed, silicone-free, coconut-free, oil-free, or profile fit, use product_detail with product metadata or select_products."
+    },
+    {
+      "rubric_id": "category.mask.safety_none",
+      "priority": "high",
+      "source": "categories/mask.md",
+      "message": "For safety symptoms, use care_category none; if the user links symptoms to a mask, mention the suspected trigger only in safety wording."
+    }
+  ],
+  "required_grounding": [
+    {
+      "grounding_id": "category.mask.product_claims",
+      "tool": "select_products",
+      "when": "Concrete mask names, category membership, product order, weight, balance, intensity, fit, named-product detail, claim checks, or unsupported requested-signal caveats are mentioned."
+    },
+    {
+      "grounding_id": "category.mask.product_protocol",
+      "tool": "select_products",
+      "when": "Exact mask timing, cadence, order, follow-up conditioner, scalp use, color-protection, repair support, or profile-specific product claims are mentioned; use product metadata or select_products rather than category prose."
+    },
+    {
+      "grounding_id": "category.mask.routine_mutation",
+      "tool": "build_or_fix_routine",
+      "when": "The user asks to add, remove, replace, or change a mask in a saved or current routine."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "Damage level, weight sensitivity, current conditioner fit, or whether the issue is dryness, damage, buildup, or scalp symptoms would materially change whether a mask is useful.",
+      "question_policy": "Ask at most one targeted follow-up; otherwise give a conservative optional-mask answer."
+    },
+    {
+      "condition": "Protein/moisture direction would materially change the answer and the user raised it, the profile signals it, or rough, limp, brittle, coated, or recently chemically stressed hair makes it useful.",
+      "question_policy": "Ask at most one targeted follow-up; do not ask protein/moisture by default."
+    }
+  ],
+  "markdown_path": "categories/mask.md"
+}

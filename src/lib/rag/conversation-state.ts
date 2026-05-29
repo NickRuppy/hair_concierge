@@ -13,8 +13,14 @@ import type {
   RouterDecision,
   RoutineConversationLayer,
 } from "@/lib/types"
+import {
+  AgentV2RoutineThreadContextSchema,
+  AgentV2SessionMemoryWriteSchema,
+} from "@/lib/agent-v2/contracts"
+import type { AgentV2SelectProductsProjection } from "@/lib/agent-v2/tools/select-products-projection"
 import type { BuildOrFixRoutineProjection } from "@/lib/agent/tools/build-or-fix-routine"
 import type { SelectedProductsProjection } from "@/lib/agent/tools/select-products"
+type AgentV2SelectableCategory = NonNullable<AgentV2SelectProductsProjection["category"]>
 
 const SUPPORTED_PRODUCT_TOPICS = [
   "shampoo",
@@ -28,6 +34,18 @@ const SUPPORTED_PRODUCT_TOPICS = [
   "peeling",
 ] as const satisfies readonly ConversationProductTopic[]
 
+const AGENT_V2_SELECTABLE_CATEGORIES = new Set<string>([
+  "shampoo",
+  "conditioner",
+  "leave_in",
+  "oil",
+  "mask",
+  "bondbuilder",
+  "deep_cleansing_shampoo",
+  "dry_shampoo",
+  "peeling",
+] as const)
+
 export function createDefaultConversationState(): ConversationState {
   return {
     version: 1,
@@ -37,6 +55,9 @@ export function createDefaultConversationState(): ConversationState {
     answered_slots: [],
     last_assistant_action: null,
     last_product_category: null,
+    agent_v2_routine_thread_context: null,
+    agent_v2_prior_selected_product_projections: [],
+    agent_v2_session_memory: [],
   }
 }
 
@@ -54,7 +75,95 @@ export function normalizeConversationState(value: unknown): ConversationState {
     last_assistant_action:
       typeof value.last_assistant_action === "string" ? value.last_assistant_action : null,
     last_product_category: normalizeTopic(value.last_product_category),
+    agent_v2_routine_thread_context: normalizeAgentV2RoutineThreadContext(
+      value.agent_v2_routine_thread_context,
+    ),
+    agent_v2_prior_selected_product_projections: normalizeAgentV2PriorProductProjections(
+      value.agent_v2_prior_selected_product_projections,
+    ),
+    agent_v2_session_memory: normalizeAgentV2SessionMemory(value.agent_v2_session_memory),
   }
+}
+
+function normalizeAgentV2RoutineThreadContext(
+  value: unknown,
+): ConversationState["agent_v2_routine_thread_context"] {
+  const parsed = AgentV2RoutineThreadContextSchema.safeParse(value)
+  return parsed.success ? parsed.data : null
+}
+
+function normalizeAgentV2PriorProductProjections(
+  value: unknown,
+): NonNullable<ConversationState["agent_v2_prior_selected_product_projections"]> {
+  if (!Array.isArray(value)) return []
+
+  return value
+    .flatMap((projection) => {
+      if (!isRecord(projection)) return []
+
+      const products = Array.isArray(projection.products)
+        ? projection.products.flatMap((product, index) => {
+            if (!isRecord(product)) return []
+            const productId = typeof product.product_id === "string" ? product.product_id : null
+            const name = typeof product.name === "string" ? product.name : null
+            if (!productId || !name) return []
+
+            return [
+              {
+                product_id: productId,
+                rank: typeof product.rank === "number" ? product.rank : index + 1,
+                name,
+                brand: typeof product.brand === "string" ? product.brand : null,
+                price_eur: typeof product.price_eur === "number" ? product.price_eur : null,
+                currency: typeof product.currency === "string" ? product.currency : null,
+                fit_reason: typeof product.fit_reason === "string" ? product.fit_reason : "",
+                caveat: typeof product.caveat === "string" ? product.caveat : null,
+                supported_claims: Array.isArray(product.supported_claims)
+                  ? product.supported_claims
+                  : [],
+                unsupported_requested_signals: Array.isArray(product.unsupported_requested_signals)
+                  ? product.unsupported_requested_signals
+                  : [],
+              },
+            ]
+          })
+        : []
+
+      if (products.length === 0) return []
+
+      return [
+        {
+          tool_name: "select_products",
+          category: normalizeAgentV2ProjectionCategory(projection.category),
+          products: products.slice(0, 3),
+          valid_product_ids: Array.isArray(projection.valid_product_ids)
+            ? projection.valid_product_ids.filter((id): id is string => typeof id === "string")
+            : products.map((product) => product.product_id),
+        } satisfies Partial<AgentV2SelectProductsProjection>,
+      ]
+    })
+    .slice(-3)
+}
+
+function normalizeAgentV2ProjectionCategory(
+  value: unknown,
+): AgentV2SelectProductsProjection["category"] {
+  return typeof value === "string" && AGENT_V2_SELECTABLE_CATEGORIES.has(value)
+    ? (value as AgentV2SelectableCategory)
+    : null
+}
+
+function normalizeAgentV2SessionMemory(
+  value: unknown,
+): NonNullable<ConversationState["agent_v2_session_memory"]> {
+  if (!Array.isArray(value)) return []
+
+  return value
+    .flatMap((entry) => {
+      const parsed = AgentV2SessionMemoryWriteSchema.safeParse(entry)
+      return parsed.success ? [parsed.data] : []
+    })
+    .slice(-8)
 }
 
 export function applyConversationStateToClassification(params: {

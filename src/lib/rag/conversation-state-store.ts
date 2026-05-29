@@ -8,11 +8,20 @@ import type {
   ConversationStatePersistenceTrace,
   ConversationStateTransition,
 } from "@/lib/types"
+import {
+  normalizeAgentV2ConversationState,
+  type AgentV2ConversationStateTransition,
+  type AgentV2ConversationStateV2,
+} from "@/lib/agent-v2/production/persisted-session-state"
+
+type PersistableConversationStateTransition =
+  | ConversationStateTransition
+  | AgentV2ConversationStateTransition
 
 export function buildConversationStateUpsertPayload(params: {
   conversationId: string
   userId: string
-  transition: ConversationStateTransition
+  transition: PersistableConversationStateTransition
 }) {
   return {
     conversation_id: params.conversationId,
@@ -44,12 +53,32 @@ export async function loadConversationState(
   return normalizeConversationState(data?.state)
 }
 
+export async function loadAgentV2ConversationState(
+  supabase: SupabaseClient,
+  conversationId: string | null | undefined,
+): Promise<AgentV2ConversationStateV2> {
+  if (!conversationId) return normalizeAgentV2ConversationState(null)
+
+  const { data, error } = await supabase
+    .from("conversation_states")
+    .select("state")
+    .eq("conversation_id", conversationId)
+    .maybeSingle()
+
+  if (error) {
+    console.error("Failed to load AgentV2 conversation state:", error)
+    return normalizeAgentV2ConversationState(null)
+  }
+
+  return normalizeAgentV2ConversationState(data?.state)
+}
+
 export async function persistConversationStateTransition(
   supabase: SupabaseClient,
   params: {
     conversationId: string
     userId: string
-    transition: ConversationStateTransition
+    transition: PersistableConversationStateTransition
   },
 ): Promise<ConversationStatePersistenceTrace> {
   try {

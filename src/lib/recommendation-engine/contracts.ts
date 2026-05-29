@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 
 export const ENGINE_CATEGORY_IDS = [
   "shampoo",
@@ -71,9 +72,41 @@ export const RECOMMENDATION_ACTIONS = [
 ] as const
 export const CONFIDENCE_LEVELS = ["low", "medium", "high"] as const
 export const RESET_LEVELS = ["none", "possible", "likely", "strong"] as const
-export const RESET_FOCUSES = ["general_buildup", "mineral_chlorine", "broad_spectrum"] as const
+export const RESET_FOCUSES = [
+  "product_sebum_buildup",
+  "metal_mineral_hard_water",
+  "broad_spectrum_detox",
+] as const
 export const RESET_INTENSITIES = ["gentle", "medium", "strong"] as const
 export const COLOR_TREATED_SUITABILITIES = ["suitable", "unsuitable_or_unknown"] as const
+export const CARE_BALANCE_FACT_KINDS = [
+  "profile_override",
+  "profile_augment",
+  "routine_presence",
+  "routine_frequency",
+  "context_signal",
+] as const
+export const CARE_BALANCE_FACT_SOURCES = ["current_turn"] as const
+export const CARE_BALANCE_RECOMMENDATIONS = [
+  "add",
+  "increase_frequency",
+  "keep",
+  "decrease_frequency",
+  "remove",
+  "no_action",
+  "needs_more_info",
+] as const
+export const CARE_BALANCE_STATUSES = [
+  "missing_needed",
+  "underused",
+  "matched",
+  "overused",
+  "unnecessary",
+  "not_relevant",
+  "needs_more_info",
+  "safety_caution",
+] as const
+export const CARE_BALANCE_STRENGTHS = ["low", "medium", "high"] as const
 
 export const engineCategoryIdSchema = z.enum(ENGINE_CATEGORY_IDS)
 export const inventoryCategorySchema = z.enum(INVENTORY_CATEGORIES)
@@ -98,3 +131,45 @@ export const resetLevelSchema = z.enum(RESET_LEVELS)
 export const resetFocusSchema = z.enum(RESET_FOCUSES)
 export const resetIntensitySchema = z.enum(RESET_INTENSITIES)
 export const colorTreatedSuitabilitySchema = z.enum(COLOR_TREATED_SUITABILITIES)
+export const careBalanceFactKindSchema = z.enum(CARE_BALANCE_FACT_KINDS)
+export const careBalanceFactSourceSchema = z.enum(CARE_BALANCE_FACT_SOURCES)
+export const careBalanceRecommendationSchema = z.enum(CARE_BALANCE_RECOMMENDATIONS)
+export const careBalanceStatusSchema = z.enum(CARE_BALANCE_STATUSES)
+export const careBalanceStrengthSchema = z.enum(CARE_BALANCE_STRENGTHS)
+export const currentTurnCareFactSchema = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("profile_override"),
+    field: z.string(),
+    value: z.unknown(),
+    evidenceQuote: z.string().min(1),
+    source: careBalanceFactSourceSchema,
+  }),
+  z.object({
+    kind: z.literal("profile_augment"),
+    field: z.string(),
+    values: z.array(z.unknown()),
+    evidenceQuote: z.string().min(1),
+    source: careBalanceFactSourceSchema,
+  }),
+  z.object({
+    kind: z.literal("routine_presence"),
+    category: inventoryCategorySchema,
+    present: z.boolean(),
+    evidenceQuote: z.string().min(1),
+    source: careBalanceFactSourceSchema,
+  }),
+  z.object({
+    kind: z.literal("routine_frequency"),
+    category: inventoryCategorySchema,
+    frequencyBand: z.enum(PRODUCT_FREQUENCIES).nullable(),
+    evidenceQuote: z.string().min(1),
+    source: careBalanceFactSourceSchema,
+  }),
+  z.object({
+    kind: z.literal("context_signal"),
+    key: z.string(),
+    value: z.unknown(),
+    evidenceQuote: z.string().min(1),
+    source: careBalanceFactSourceSchema,
+  }),
+])

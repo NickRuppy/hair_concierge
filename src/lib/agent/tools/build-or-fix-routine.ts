@@ -3,6 +3,22 @@ import {
   deriveRoutineContext,
   projectRoutinePlanForLayer,
 } from "@/lib/routines/planner"
+import {
+  buildRecommendationEngineRuntimeFromEffectiveContext,
+  buildRecommendationEngineRuntimeFromPersistence,
+  type RecommendationEngineRuntime,
+} from "@/lib/recommendation-engine/runtime"
+import {
+  buildRoutineItemsFromInventoryCategories,
+  type PersistenceRoutineItemRow,
+} from "@/lib/recommendation-engine/adapters/from-persistence"
+import {
+  buildCareBalanceToolContext,
+  type CareBalanceToolContext,
+  type CareBalanceToolRow,
+} from "@/lib/agent/tools/care-balance-context"
+import type { BuildOrFixRoutineToolInput as AgentV2BuildOrFixRoutineToolInput } from "@/lib/agent-v2/tools/tool-definitions"
+import type { EffectiveCareContext } from "@/lib/recommendation-engine/types"
 import type {
   HairProfile,
   RoutineLayer,
@@ -14,6 +30,7 @@ import type {
 
 export type BuildOrFixRoutineAction = "keep" | "add" | "adjust" | "remove"
 export type RoutineObjective = "build_routine" | "fix_routine"
+type BuildOrFixRoutineMutationKind = AgentV2BuildOrFixRoutineToolInput["mutation_kind"]
 
 const CURRENT_ROUTINE_PRODUCT_CATEGORIES = [
   "shampoo",
@@ -25,6 +42,16 @@ const CURRENT_ROUTINE_PRODUCT_CATEGORIES = [
   "serum",
   "scrub",
 ] as const satisfies readonly RoutineProduct[]
+
+const FIRST_ADD_ON_CATEGORY_ORDER = [
+  "leave_in",
+  "mask",
+  "oil",
+  "bondbuilder",
+  "deep_cleansing_shampoo",
+  "dry_shampoo",
+  "peeling",
+] as const satisfies readonly RoutineProductCategory[]
 
 export interface BuildOrFixRoutineStep {
   id: string
@@ -69,7 +96,11 @@ export interface BuildOrFixRoutineProjection {
   missing_info: BuildOrFixRoutineMissingInfo[]
   confidence: number
   priority_context?: BuildOrFixRoutinePriorityContext | null
+  care_balance_context?: RoutineCareBalanceContext | null
 }
+
+export type RoutineCareBalanceContext = CareBalanceToolContext
+export type RoutineCareBalanceRow = CareBalanceToolRow
 
 export interface BuildOrFixRoutineToolInput {
   objective?: RoutineObjective | null
@@ -77,6 +108,9 @@ export interface BuildOrFixRoutineToolInput {
   hairProfile: HairProfile | null
   layer?: RoutineLayer | null
   requestedCategory?: RoutineProductCategory | null
+  mutationKind?: BuildOrFixRoutineMutationKind
+  routineItems?: PersistenceRoutineItemRow[]
+  effectiveCareContext?: EffectiveCareContext | null
 }
 
 function normalizeText(value: string | null | undefined): string | null {
@@ -245,11 +279,56 @@ function projectPriorityContext(plan: RoutinePlan): BuildOrFixRoutinePriorityCon
   }
 }
 
+function buildRoutineCareBalanceContext(
+  runtime: RecommendationEngineRuntime,
+): RoutineCareBalanceContext {
+  const rowsWithActions = runtime.careBalance.rows.filter(
+    (row) => row.recommendation !== "no_action",
+  )
+  const rows = rowsWithActions.length > 0 ? rowsWithActions : runtime.careBalance.rows
+
+  return buildCareBalanceToolContext({ runtime, rows })
+}
+
+function normalizeRoutineMessage(value: string | null | undefined): string {
+  return (value ?? "")
+    .toLocaleLowerCase("de-DE")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+}
+
+function isFirstAddOnRoutineRequest(message: string | null | undefined): boolean {
+  const normalized = normalizeRoutineMessage(message)
+  return (
+    /\b(?:erste[rsn]?|ersten|naechste[rsn]?|naechsten|erster|naechster)\s+(?:zusatz|extra|hebel|produkt|ergaenzung)\b/.test(
+      normalized,
+    ) ||
+    /\bwelches\s+produkt\b.{0,80}\b(?:als\s+erstes|zuerst|ergaenzen|hinzufuegen)\b/.test(normalized)
+  )
+}
+
+function inferCareBalanceFirstAddOnCategory(params: {
+  message: string | null | undefined
+  requestedCategory: RoutineProductCategory | null
+  runtime: RecommendationEngineRuntime
+}): RoutineProductCategory | null {
+  if (params.requestedCategory || !isFirstAddOnRoutineRequest(params.message)) return null
+
+  for (const category of FIRST_ADD_ON_CATEGORY_ORDER) {
+    const row = params.runtime.careBalance.rows.find((candidate) => candidate.category === category)
+    if (row?.recommendation === "add") return category
+  }
+
+  return null
+}
+
 function projectRoutineSteps(params: {
   plan: RoutinePlan
   hairProfile: HairProfile | null
   layer: RoutineLayer | null
   requestedCategory: RoutineProductCategory | null
+  mutationKind: BuildOrFixRoutineMutationKind | undefined
+  preferRequestedCategory: boolean
 }): BuildOrFixRoutineStep[] {
   if (!params.layer) {
     return params.plan.sections.flatMap((section) =>
@@ -259,6 +338,7 @@ function projectRoutineSteps(params: {
 
   const projection = projectRoutinePlanForLayer(params.plan, params.layer, {
     requestedCategory: params.requestedCategory,
+    preferRequestedCategory: params.preferRequestedCategory,
   })
 
   return projection.visible_slot_ids
@@ -335,6 +415,9 @@ export function projectRoutinePlan(params: {
   usesBondBuilder?: boolean
   layer?: RoutineLayer | null
   requestedCategory?: RoutineProductCategory | null
+  mutationKind?: BuildOrFixRoutineMutationKind
+  routineItems?: PersistenceRoutineItemRow[]
+  effectiveCareContext?: EffectiveCareContext | null
 }): BuildOrFixRoutineProjection {
   const objective = normalizeObjective(params.objective)
   const prompt = buildPlannerPrompt({
@@ -342,8 +425,25 @@ export function projectRoutinePlan(params: {
     message: normalizeText(params.message),
   })
   const context = deriveRoutineContext(params.hairProfile, prompt)
+  const routineItems =
+    params.routineItems ??
+    buildRoutineItemsFromInventoryCategories(params.hairProfile?.current_routine_products)
+  const runtime = params.effectiveCareContext
+    ? buildRecommendationEngineRuntimeFromEffectiveContext(params.effectiveCareContext)
+    : buildRecommendationEngineRuntimeFromPersistence(params.hairProfile, routineItems)
+  const careBalanceFirstAddOnCategory = inferCareBalanceFirstAddOnCategory({
+    message: params.message,
+    requestedCategory: params.requestedCategory ?? null,
+    runtime,
+  })
+  const effectiveRequestedCategory = params.requestedCategory ?? careBalanceFirstAddOnCategory
+  const forceRequestedCategory =
+    params.mutationKind === "add_step"
+      ? (effectiveRequestedCategory ?? null)
+      : careBalanceFirstAddOnCategory
   const plan: RoutinePlan = buildRoutinePlan(params.hairProfile, prompt, {
     usesBondBuilder: params.usesBondBuilder ?? false,
+    forceRequestedCategory,
   })
 
   const inventoryMatters = objective !== "build_routine"
@@ -360,11 +460,15 @@ export function projectRoutinePlan(params: {
       plan,
       hairProfile: params.hairProfile,
       layer: params.layer ?? null,
-      requestedCategory: params.requestedCategory ?? null,
+      requestedCategory: effectiveRequestedCategory,
+      mutationKind: params.mutationKind,
+      preferRequestedCategory:
+        params.mutationKind === "add_step" || Boolean(careBalanceFirstAddOnCategory),
     }),
     missing_info: buildMissingInfo({ objective, hairProfile: params.hairProfile, context }),
     confidence: Math.round((completed / denominator) * 100) / 100,
     priority_context: projectPriorityContext(plan),
+    care_balance_context: buildRoutineCareBalanceContext(runtime),
   }
 }
 

@@ -9,7 +9,15 @@ import {
 import { inferOilPurposeFromMessage } from "../src/lib/oil/purpose"
 import type { MatchedProduct } from "../src/lib/rag/product-matcher"
 import type { SelectableProductCategory } from "../src/lib/agent/tools/select-products"
-import type { RecommendationEngineRuntime } from "../src/lib/recommendation-engine/runtime"
+import {
+  buildRecommendationEngineRuntimeFromPersistence,
+  type RecommendationEngineRuntime,
+} from "../src/lib/recommendation-engine/runtime"
+import {
+  adaptRecommendationInputFromPersistence,
+  buildEffectiveCareContext,
+} from "../src/lib/recommendation-engine"
+import { buildRecommendationRequestContext } from "../src/lib/recommendation-engine/request-context"
 import type {
   BondbuilderCategoryDecision,
   DeepCleansingShampooCategoryDecision,
@@ -19,6 +27,7 @@ import type {
 } from "../src/lib/recommendation-engine/types"
 import type {
   BondbuilderRecommendationMetadata,
+  DeepCleansingShampooRecommendationMetadata,
   DryShampooRecommendationMetadata,
   HairProfile,
 } from "../src/lib/types"
@@ -256,6 +265,7 @@ function createRuntimeStub(
       oilPurpose: null,
       oilNoRecommendationReason: null,
     } as RecommendationEngineRuntime["requestContext"],
+    effectiveContext: {} as RecommendationEngineRuntime["effectiveContext"],
     normalized: {} as RecommendationEngineRuntime["normalized"],
     damage: {} as RecommendationEngineRuntime["damage"],
     careNeeds: {} as RecommendationEngineRuntime["careNeeds"],
@@ -268,6 +278,7 @@ function createRuntimeStub(
       richOptionalCareRisk: false,
       cautionFlags: [],
     },
+    careBalance: { rows: [] },
     plan: {} as RecommendationEngineRuntime["plan"],
     categories: {
       shampoo: {} as RecommendationEngineRuntime["categories"]["shampoo"],
@@ -1897,6 +1908,99 @@ test("projectSelectedProducts keeps optional bondbuilder assessment with priced 
   assert.match(result.comparison_facts?.k18?.join(" ") ?? "", /Bruch/)
 })
 
+test("projectSelectedProducts exposes bondbuilder usage hints as user-facing product claims", () => {
+  const usageHint =
+    "Nach dem Shampoo ohne Conditioner auf handtuchtrockenes Haar geben, 4 Minuten einwirken lassen, nicht ausspuelen und danach stylen. In den ersten 4-6 Waeschen nach jeder Waesche, danach nach Bedarf verwenden."
+
+  const result = projectSelectedProducts(
+    [
+      createMatchedProduct("k18-leave-in", 0.95, {
+        category: "Bondbuilder",
+        recommendation_meta: {
+          category: "bondbuilder",
+          score: 9.5,
+          top_reasons: ["Passt als Leave-in-Strukturpflege fuer stark beanspruchte Laengen."],
+          tradeoffs: [],
+          usage_hint: usageHint,
+          matched_intensity: "intensive",
+          application_mode: "post_wash_leave_in",
+          bond_repair_axis: "peptide_chain",
+          treatment_mode: "leave_in",
+          product_format: "leave_in_mask",
+          usage_protocol: "k18_leave_in",
+          lifecycle_status: "active",
+        } satisfies BondbuilderRecommendationMetadata,
+      }),
+    ],
+    {
+      ...LOW_DAMAGE_PROFILE,
+      chemical_treatment: ["bleached"],
+      concerns: ["breakage"],
+    } as HairProfile,
+    "bondbuilder",
+    createRuntimeStub(),
+  )
+
+  const usageClaim = result.products[0]?.supported_claims.find(
+    (claim) => claim.field === "usage_hint",
+  )
+
+  assert.ok(usageClaim, "bondbuilder product should expose exact usage_hint")
+  assert.equal(usageClaim.value, usageHint)
+  assert.equal(usageClaim.evidence, "product_spec")
+  assert.equal(usageClaim.label, `Anwendung: ${usageHint}`)
+  assert.notEqual(usageClaim.value, "k18_leave_in")
+  assert.equal(
+    result.products[0]?.supported_claims.some((claim) => claim.field === "usage_protocol"),
+    false,
+    "bondbuilder product claims should not expose internal usage_protocol ids",
+  )
+})
+
+test("projectSelectedProducts labels deep-cleansing reset facts without raw enum copy", () => {
+  const result = projectSelectedProducts(
+    [
+      createMatchedProduct("deep-reset", 0.94, {
+        category: "Tiefenreinigungsshampoo",
+        recommendation_meta: {
+          category: "deep_cleansing_shampoo",
+          score: 9.4,
+          top_reasons: ["Passt als Reset fuer Aufbau und Hartwasser-Kontext."],
+          tradeoffs: [],
+          usage_hint: "Gelegentlich statt normalem Shampoo verwenden.",
+          reset_need_level: "strong",
+          reset_focus: "broad_spectrum_detox",
+          reset_intensity: "medium",
+          scalp_type_focus: "balanced",
+          color_treated_suitability: "suitable",
+          fit_status: "ideal",
+          caution_flags: [],
+        } satisfies DeepCleansingShampooRecommendationMetadata,
+      }),
+    ],
+    {
+      ...LOW_DAMAGE_PROFILE,
+      chemical_treatment: ["colored"],
+      scalp_type: "balanced",
+      concerns: ["oily_scalp"],
+    } as HairProfile,
+    "deep_cleansing_shampoo",
+    createRuntimeStub(),
+  )
+
+  const renderedFacts = [
+    ...(result.comparison_facts?.["deep-reset"] ?? []),
+    ...(result.products[0]?.supported_claims.flatMap((claim) => [claim.label, claim.value]) ?? []),
+    result.products[0]?.fit_reason ?? "",
+  ].join(" ")
+
+  assert.match(renderedFacts, /breiter Styling-, Produkt- und Mineral-Reset/)
+  assert.match(renderedFacts, /Reset-Intensitaet: mittel/)
+  assert.match(renderedFacts, /Kopfhaut-Fokus: ausgeglichene Kopfhaut/)
+  assert.match(renderedFacts, /Fit: idealer Treffer/)
+  assert.doesNotMatch(renderedFacts, /broad_spectrum_detox|product_sebum_buildup|medium|balanced/)
+})
+
 test("projectSelectedProducts redirects scalp-only conditioner requests without products", () => {
   const result = projectSelectedProducts(
     [createMatchedProduct("p-conditioner", 0.94)],
@@ -2832,6 +2936,160 @@ test("selectProducts carries unsupported ingredient caveats for live oil request
     result.unsupported_requested_signals[0]?.user_message,
     "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Oel-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Oel-Zweck, Haardicke, Anwendung und Fit.",
   )
+})
+
+test("selectProducts still returns explicit oil products while exposing CareBalance decrease-frequency framing", async () => {
+  const observed: { runtime?: RecommendationEngineRuntime } = {}
+  const tool = createSelectProductsTool({
+    onResult: ({ runtime }) => {
+      observed.runtime = runtime
+    },
+    runCategoryEngine: async ({ category }) => {
+      assert.equal(category, "oil")
+      return [createOilMatchedProduct("light-oil", 0.94)]
+    },
+  })
+
+  const result = await tool({
+    category: "oil",
+    message: "Ich will trotz Build-up und plattem Ansatz ein leichtes Oel als Finish.",
+    hairProfile: {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+      density: "low",
+      scalp_type: "oily",
+      goals: ["volume"],
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [
+      {
+        category: "oil",
+        product_name: "Daily Oil",
+        frequency_range: "daily",
+      },
+    ],
+    userJob: "product_pick",
+  })
+
+  assert.equal(
+    observed.runtime?.careBalance.rows.find((row) => row.category === "oil")?.recommendation,
+    "decrease_frequency",
+  )
+  assert.equal(result.decision, "recommended")
+  assert.equal(result.products.length, 1)
+  assert.match(
+    JSON.stringify((result as unknown as { care_balance_context?: unknown }).care_balance_context),
+    /decrease_frequency/,
+  )
+  assert.match(JSON.stringify(result), /daily_oil_use|buildup_or_flatness_pressure/)
+})
+
+test("selectProducts preserves supplied effective care context in runtime and care balance output", async () => {
+  const baseProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    thickness: "coarse",
+    density: "low",
+    scalp_type: "oily",
+    goals: ["volume"],
+  } as HairProfile
+  const routineItems = [
+    {
+      category: "oil",
+      product_name: "Daily Oil",
+      frequency_range: "daily",
+    },
+  ] as const
+  const adapted = adaptRecommendationInputFromPersistence(baseProfile, [...routineItems])
+  const effectiveCareContext = buildEffectiveCareContext(adapted.input, [
+    {
+      kind: "profile_override",
+      field: "thickness",
+      value: "fine",
+      evidenceQuote: "Actually my hair is fine",
+      source: "current_turn",
+    },
+    {
+      kind: "routine_frequency",
+      category: "oil",
+      frequencyBand: "daily",
+      evidenceQuote: "I use oil daily",
+      source: "current_turn",
+    },
+  ])
+  const observed: { runtime?: RecommendationEngineRuntime } = {}
+  const tool = createSelectProductsTool({
+    onResult: ({ runtime }) => {
+      observed.runtime = runtime
+    },
+    runCategoryEngine: async () => [createOilMatchedProduct("light-oil", 0.94)],
+  })
+
+  const result = await tool({
+    category: "oil",
+    message: "Actually my hair is fine and I use oil daily.",
+    hairProfile: baseProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [...routineItems],
+    userJob: "product_pick",
+    effectiveCareContext,
+  } as Parameters<typeof tool>[0] & { effectiveCareContext: typeof effectiveCareContext })
+
+  assert.equal(observed.runtime?.effectiveContext, effectiveCareContext)
+  assert.equal(observed.runtime?.effectiveContext.currentTurnFacts.length, 2)
+  assert.ok(
+    observed.runtime?.effectiveContext.conflicts.some(
+      (conflict) =>
+        conflict.fieldPath === "profile.thickness" &&
+        conflict.savedValue === "coarse" &&
+        conflict.currentTurnValue === "fine",
+    ),
+  )
+  assert.match(JSON.stringify(result.care_balance_context), /current_turn_facts/)
+  assert.match(JSON.stringify(result.care_balance_context), /Actually my hair is fine/)
+})
+
+test("projectSelectedProducts does not turn therapy oil redirects into product recommendations", () => {
+  const routeContext = {
+    message: "Welches Rosmarinoel hilft gegen Haarwachstum?",
+    userJob: "product_pick",
+  } satisfies NonNullable<Parameters<typeof projectSelectedProducts>[4]>
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+    },
+    [],
+    buildRecommendationRequestContext({
+      requestedCategory: "oil",
+      message: routeContext.message,
+    }),
+  )
+
+  const projection = projectSelectedProducts(
+    [createOilMatchedProduct("therapy-oil", 0.94)],
+    {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+    } as HairProfile,
+    "oil",
+    runtime,
+    routeContext,
+  )
+
+  assert.equal(runtime.categories.oil.noRecommendationReason, "therapy_oil_missing")
+  assert.equal(projection.decision, "not_recommended")
+  assert.equal(projection.products.length, 0)
+  assert.equal(projection.product_response_policy, "redirect_to_better_lever")
 })
 
 test("selectProducts applies oil thickness overrides to hard-gated oil selection", async () => {

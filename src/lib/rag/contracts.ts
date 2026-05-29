@@ -12,7 +12,7 @@ import type {
   ConditionerDecision,
   LeaveInDecision,
   MaskDecision,
-  ConversationStateTransition,
+  ConversationTurnStateTransition,
 } from "@/lib/types"
 import type { PipelineTraceDraft } from "@/lib/rag/debug-trace"
 import type { UserMemoryContext } from "@/lib/rag/user-memory"
@@ -33,7 +33,7 @@ export interface PipelineResult {
   matchedProducts: Product[]
   sources: EnrichedCitationSource[]
   routerDecision: RouterDecision
-  conversationStateTransition: ConversationStateTransition
+  conversationStateTransition: ConversationTurnStateTransition
   categoryDecision?: ChatCategoryDecision
   engineTrace?: import("@/lib/types").RecommendationEngineTrace
   retrievalSummary: {

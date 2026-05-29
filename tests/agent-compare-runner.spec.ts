@@ -27,10 +27,10 @@ const scenario: AgentCompareScenario = {
 test("compare lab presents product evaluation as the recommended mode", () => {
   assert.equal(DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT, "guidance_tool")
   assert.deepEqual(AGENT_COMPARE_TOOL_LOOP_VARIANT_OPTIONS, [
-    { value: "guidance_tool", label: "Produkt-Evaluation" },
-    { value: "inline_context", label: "Beratungsbrief" },
-    { value: "composer_context", label: "Composer" },
-    { value: "baseline", label: "Ohne Kontext" },
+    { value: "guidance_tool", label: "Produkt-Evaluation (Legacy)" },
+    { value: "inline_context", label: "Beratungsbrief (Legacy)" },
+    { value: "composer_context", label: "Composer-Kontext (Legacy)" },
+    { value: "baseline", label: "Baseline ohne Zusatzkontext" },
   ])
 })
 
@@ -57,6 +57,7 @@ test("runCompareWithAdapters uses the override prompt for both systems", async (
     scenario,
     prompt: "Override",
     toolLoopVariant: "inline_context",
+    systems: ["current", "agent"],
     runCurrent: async ({ prompt, toolLoopVariant }) => {
       prompts.push(`current:${prompt}`)
       variants.push(toolLoopVariant)
@@ -96,6 +97,7 @@ test("runCompareWithAdapters resolves omitted tool-loop variant to product evalu
   const result = await runCompareWithAdapters({
     scenario,
     prompt: "Override",
+    systems: ["current", "agent"],
     runCurrent: async ({ toolLoopVariant }) => {
       variants.push(toolLoopVariant)
       return {
@@ -137,6 +139,7 @@ test("runCompareWithAdapters tolerates one-sided failures", async () => {
   const result = await runCompareWithAdapters({
     scenario,
     prompt: "Override",
+    systems: ["current", "agent"],
     runCurrent: async () => {
       throw new Error("current failed")
     },
@@ -165,6 +168,47 @@ test("runCompareWithAdapters tolerates one-sided failures", async () => {
   )
 })
 
+test("runCompareWithAdapters can run Tool Loop against AgentV2 without Classic", async () => {
+  const systems: string[] = []
+
+  const result = await runCompareWithAdapters({
+    scenario,
+    prompt: "Override",
+    systems: ["tool_loop", "agent_v2"],
+    runCurrent: async () => {
+      throw new Error("classic should not run")
+    },
+    runAgent: async () => {
+      systems.push("tool_loop")
+      return {
+        system: "tool_loop",
+        answer: "tool loop answer",
+        latency_ms: 12,
+        debug_lines: [],
+        matched_products: [],
+        error: null,
+      }
+    },
+    runAgentV2: async () => {
+      systems.push("agent_v2")
+      return {
+        system: "agent_v2",
+        answer: "agent v2 answer",
+        latency_ms: 15,
+        debug_lines: [],
+        matched_products: [],
+        error: null,
+      }
+    },
+  })
+
+  assert.deepEqual(systems, ["tool_loop", "agent_v2"])
+  assert.deepEqual(
+    result.results.map((entry) => entry.system),
+    ["tool_loop", "agent_v2"],
+  )
+})
+
 test("compare prompt packs include crafted multi-turn chains with failure coverage", () => {
   assert.deepEqual(
     AGENT_COMPARE_MULTI_TURN_CHAINS.map((chain) => chain.id),
@@ -178,6 +222,8 @@ test("compare prompt packs include crafted multi-turn chains with failure covera
       "bondbuilder-explain-followup",
       "oil-use-case-comparison",
       "routine-add-on-full-spectrum",
+      "agent-v2-review-routine-first-extra-product",
+      "agent-v2-review-previous-offer-reference",
     ],
   )
 
@@ -189,7 +235,7 @@ test("compare prompt packs include crafted multi-turn chains with failure covera
   ])
   assert.match(shampooChain.turns[1], /welcges Shampoo/i)
 
-  const parityChains = AGENT_COMPARE_MULTI_TURN_CHAINS.slice(3)
+  const parityChains = AGENT_COMPARE_MULTI_TURN_CHAINS.slice(3, 9)
   assert.deepEqual(
     parityChains.map((chain) => chain.id),
     [
@@ -211,8 +257,15 @@ test("compare prompt packs include crafted multi-turn chains with failure covera
   )
 
   assert.ok(
-    AGENT_COMPARE_MULTI_TURN_CHAINS.every(
-      (chain) => chain.turns.length >= 3 && chain.failure_classes.length > 0,
+    parityChains.every((chain) => chain.turns.length >= 3 && chain.failure_classes.length > 0),
+  )
+  assert.deepEqual(
+    AGENT_COMPARE_MULTI_TURN_CHAINS.slice(9).map((chain) => chain.id),
+    ["agent-v2-review-routine-first-extra-product", "agent-v2-review-previous-offer-reference"],
+  )
+  assert.ok(
+    AGENT_COMPARE_MULTI_TURN_CHAINS.slice(9).every(
+      (chain) => chain.turns.length >= 2 && chain.failure_classes.length > 0,
     ),
   )
 })
@@ -263,4 +316,93 @@ test("compare scenarios include leave-in heat and relationship cases with requir
         typeof entry.hair_profile.uses_heat_protection === "boolean",
     ),
   )
+})
+
+test("compare scenarios include care balance golden eval coverage", () => {
+  const careBalanceScenarios = AGENT_COMPARE_SCENARIOS.filter((entry) =>
+    entry.id.startsWith("care-balance-"),
+  )
+
+  assert.deepEqual(
+    careBalanceScenarios.map((entry) => entry.id),
+    [
+      "care-balance-daily-oil-flat-buildup",
+      "care-balance-missing-conditioner-dry-tangled",
+      "care-balance-rare-conditioner-high-shampoo",
+      "care-balance-blow-dryer-heat-protection",
+      "care-balance-flat-iron-no-heat-protectant",
+      "care-balance-hot-air-brush-thermal-rollers",
+      "care-balance-deep-cleansing-vulnerable",
+      "care-balance-daily-dry-shampoo-replacement",
+      "care-balance-peeling-irritated-scalp",
+      "care-balance-current-turn-correction",
+    ],
+  )
+
+  const byId = new Map(careBalanceScenarios.map((entry) => [entry.id, entry]))
+  const dailyOil = byId.get("care-balance-daily-oil-flat-buildup")
+  assert.equal(
+    dailyOil?.routine_inventory?.find((item) => item.category === "oil")?.frequency_range,
+    "daily",
+  )
+  assert.ok(dailyOil?.hair_profile.concerns?.includes("oily_scalp"))
+  assert.match(dailyOil?.message ?? "", /Oel|Build-up/i)
+
+  const missingConditioner = byId.get("care-balance-missing-conditioner-dry-tangled")
+  assert.equal(
+    missingConditioner?.routine_inventory?.some((item) => item.category === "conditioner"),
+    false,
+  )
+  assert.ok(missingConditioner?.hair_profile.concerns?.includes("dryness"))
+  assert.ok(missingConditioner?.hair_profile.concerns?.includes("tangling"))
+
+  const rareConditioner = byId.get("care-balance-rare-conditioner-high-shampoo")
+  assert.equal(
+    rareConditioner?.routine_inventory?.find((item) => item.category === "conditioner")
+      ?.frequency_range,
+    "1_2x",
+  )
+  assert.equal(
+    rareConditioner?.routine_inventory?.find((item) => item.category === "shampoo")
+      ?.frequency_range,
+    "3_4x",
+  )
+
+  const blowDryerOnly = byId.get("care-balance-blow-dryer-heat-protection")
+  assert.deepEqual(blowDryerOnly?.hair_profile.styling_tools, ["blow_dryer"])
+  assert.equal(blowDryerOnly?.hair_profile.drying_method, "blow_dry")
+  assert.equal(blowDryerOnly?.hair_profile.uses_heat_protection, false)
+
+  const flatIron = byId.get("care-balance-flat-iron-no-heat-protectant")
+  assert.deepEqual(flatIron?.hair_profile.styling_tools, ["flat_iron"])
+  assert.equal(flatIron?.hair_profile.heat_styling, "several_weekly")
+  assert.equal(flatIron?.hair_profile.uses_heat_protection, false)
+
+  const indirectHeat = byId.get("care-balance-hot-air-brush-thermal-rollers")
+  assert.deepEqual(indirectHeat?.hair_profile.styling_tools, ["hot_air_brush", "thermal_rollers"])
+
+  const deepCleanse = byId.get("care-balance-deep-cleansing-vulnerable")
+  assert.equal(
+    deepCleanse?.routine_inventory?.find((item) => item.category === "deep_cleansing_shampoo")
+      ?.frequency_range,
+    "1_2x",
+  )
+  assert.equal(deepCleanse?.hair_profile.hair_texture, "curly")
+  assert.ok(deepCleanse?.hair_profile.chemical_treatment?.includes("colored"))
+  assert.ok(deepCleanse?.hair_profile.concerns?.includes("hair_damage"))
+
+  const dryShampoo = byId.get("care-balance-daily-dry-shampoo-replacement")
+  assert.equal(
+    dryShampoo?.routine_inventory?.find((item) => item.category === "dry_shampoo")?.frequency_range,
+    "daily",
+  )
+  assert.match(dryShampoo?.message ?? "", /statt Waschen|Waschen ersetzen/i)
+
+  const peeling = byId.get("care-balance-peeling-irritated-scalp")
+  assert.equal(peeling?.hair_profile.scalp_condition, "irritated")
+  assert.ok(peeling?.routine_inventory?.some((item) => item.category === "peeling"))
+
+  const correction = byId.get("care-balance-current-turn-correction")
+  assert.equal(correction?.hair_profile.thickness, "coarse")
+  assert.match(correction?.message ?? "", /Korrektur|eigentlich fein/i)
 })

@@ -32,6 +32,11 @@ import type {
   BOND_APPLICATION_MODES,
   BOND_BUILDER_PRIORITIES,
   BOND_REPAIR_INTENSITIES,
+  CARE_BALANCE_FACT_KINDS,
+  CARE_BALANCE_FACT_SOURCES,
+  CARE_BALANCE_RECOMMENDATIONS,
+  CARE_BALANCE_STATUSES,
+  CARE_BALANCE_STRENGTHS,
   CANONICAL_BALANCE_TARGETS,
   CANONICAL_CLEANSING_INTENSITIES,
   CANONICAL_REPAIR_LEVELS,
@@ -59,6 +64,11 @@ export type DamageLevel = (typeof DAMAGE_LEVELS)[number]
 export type RepairPriority = (typeof REPAIR_PRIORITIES)[number]
 export type BalanceDirection = (typeof BALANCE_DIRECTIONS)[number]
 export type BondBuilderPriority = (typeof BOND_BUILDER_PRIORITIES)[number]
+export type CareBalanceFactKind = (typeof CARE_BALANCE_FACT_KINDS)[number]
+export type CareBalanceFactSource = (typeof CARE_BALANCE_FACT_SOURCES)[number]
+export type CareBalanceRecommendation = (typeof CARE_BALANCE_RECOMMENDATIONS)[number]
+export type CareBalanceStatus = (typeof CARE_BALANCE_STATUSES)[number]
+export type CareBalanceStrength = (typeof CARE_BALANCE_STRENGTHS)[number]
 export type CategoryFitStatus = (typeof CATEGORY_FIT_STATUSES)[number]
 export type CanonicalBalanceTarget = (typeof CANONICAL_BALANCE_TARGETS)[number]
 export type CanonicalScalpRoute = (typeof CANONICAL_SCALP_ROUTES)[number]
@@ -76,6 +86,8 @@ export type ResetLevel = (typeof RESET_LEVELS)[number]
 export type ResetFocus = (typeof RESET_FOCUSES)[number]
 export type ResetIntensity = (typeof RESET_INTENSITIES)[number]
 export type ColorTreatedSuitability = (typeof COLOR_TREATED_SUITABILITIES)[number]
+export type CareBalanceReasonCode = string
+export type HeatExposureTier = "none" | "airflow" | "moderate" | "high_direct" | "high_cumulative"
 
 export type ResetTriggerSource = "symptom" | "routine_exposure" | "environment" | "explicit_request"
 
@@ -166,6 +178,163 @@ export interface NormalizedProfile {
   nightProtection: NightProtection[] | null
   usesHeatProtection: boolean
   routineInventory: RoutineInventory
+}
+
+export type ProfileOverrideField = Exclude<keyof NormalizedProfile, "routineInventory">
+export type ProfileAugmentField =
+  | "concerns"
+  | "goals"
+  | "stylingTools"
+  | "chemicalTreatment"
+  | "nightProtection"
+
+type ArrayValue<T> = T extends readonly (infer TValue)[] ? TValue : never
+export type ProfileAugmentValue<TField extends ProfileAugmentField = ProfileAugmentField> =
+  ArrayValue<NonNullable<NormalizedProfile[TField]>>
+
+export interface ProfileOverrideCareFact<
+  TField extends ProfileOverrideField = ProfileOverrideField,
+> {
+  kind: "profile_override"
+  field: TField
+  value: NormalizedProfile[TField]
+  evidenceQuote: string
+  source: CareBalanceFactSource
+}
+
+export interface ProfileAugmentCareFact<TField extends ProfileAugmentField = ProfileAugmentField> {
+  kind: "profile_augment"
+  field: TField
+  values: ProfileAugmentValue<TField>[]
+  evidenceQuote: string
+  source: CareBalanceFactSource
+}
+
+export interface RoutinePresenceCareFact {
+  kind: "routine_presence"
+  category: InventoryCategory
+  present: boolean
+  evidenceQuote: string
+  source: CareBalanceFactSource
+}
+
+export interface RoutineFrequencyCareFact {
+  kind: "routine_frequency"
+  category: InventoryCategory
+  frequencyBand: ProductFrequency | null
+  evidenceQuote: string
+  source: CareBalanceFactSource
+}
+
+export interface ContextSignalCareFact {
+  kind: "context_signal"
+  key: string
+  value: unknown
+  evidenceQuote: string
+  source: CareBalanceFactSource
+}
+
+export type CurrentTurnCareFact =
+  | ProfileOverrideCareFact
+  | ProfileAugmentCareFact
+  | RoutinePresenceCareFact
+  | RoutineFrequencyCareFact
+  | ContextSignalCareFact
+
+export interface CareBalanceProvenanceEntry {
+  fieldPath: string
+  source: CareBalanceFactSource
+  factKind: Exclude<CareBalanceFactKind, "context_signal">
+  evidenceQuote: string
+}
+
+export interface CareBalanceConflict {
+  fieldPath: string
+  savedValue: unknown
+  currentTurnValue: unknown
+  source: CareBalanceFactSource
+  evidenceQuote: string
+}
+
+export interface EffectiveCareContext {
+  normalized: NormalizedProfile
+  currentTurnFacts: CurrentTurnCareFact[]
+  provenance: CareBalanceProvenanceEntry[]
+  conflicts: CareBalanceConflict[]
+}
+
+export type CareBalanceCadencePolicy =
+  | {
+      kind: "match_wash_frequency"
+      washFrequency: WashFrequency | null
+      expected: "after_every_wash" | "most_washes"
+    }
+  | {
+      kind: "match_heat_exposure"
+      heatExposureTier: HeatExposureTier
+      relevantTools: StylingTool[]
+      expected: "with_meaningful_heat" | "optional_for_airflow_only"
+    }
+  | {
+      kind: "occasional_reset"
+      resetNeed: ResetLevel
+      cautionAtOrAbove: ProductFrequency
+      vulnerableCautionAtOrAbove: ProductFrequency | null
+    }
+  | {
+      kind: "bridge_between_washes"
+      washFrequency: WashFrequency | null
+      expected: "short_bridge_only"
+    }
+  | {
+      kind: "need_based_support"
+      supportNeed: DamageLevel
+      loadSensitive: boolean
+      suggestedBand: ProductFrequency | null
+    }
+  | {
+      kind: "protocol_based"
+      priority: BondBuilderPriority
+      suggestedBand: ProductFrequency | null
+    }
+  | { kind: "baseline_cleansing"; washFrequency: WashFrequency | null }
+  | { kind: "not_applicable" }
+
+export interface CareBalanceSelectionHint {
+  code: string
+  reasonCodes: CareBalanceReasonCode[]
+}
+
+export interface CareBalanceRow {
+  category: InventoryCategory
+  present: boolean
+  currentFrequency: ProductFrequency | null
+  primaryStatus: CareBalanceStatus
+  recommendation: CareBalanceRecommendation
+  recommendationStrength: CareBalanceStrength
+  confidence: ConfidenceLevel
+  decisiveReasonCodes: CareBalanceReasonCode[]
+  contextReasonCodes: CareBalanceReasonCode[]
+  cadencePolicy: CareBalanceCadencePolicy
+  selectionHints: CareBalanceSelectionHint[]
+}
+
+export interface CareBalanceSet {
+  rows: CareBalanceRow[]
+}
+
+export interface CareBalanceLegacyDifference {
+  category: EngineCategoryId
+  legacyAction: RecommendationAction | null
+  legacyPlacement: "active" | "deferred" | null
+  careBalanceAction: CareBalanceRecommendation
+  legacyReasonCodes: CareBalanceReasonCode[]
+  careBalanceReasonCodes: CareBalanceReasonCode[]
+}
+
+export interface CareBalanceLegacyComparison {
+  projectedPlan: InterventionPlan
+  differences: CareBalanceLegacyDifference[]
 }
 
 export interface DamageAssessment {

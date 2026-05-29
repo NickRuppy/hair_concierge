@@ -1,3 +1,6 @@
+// Legacy archived production pipeline. Not reachable from /api/chat.
+// Kept temporarily for historical reference until the post-ship cleanup pass.
+
 import {
   createOpenAIAgenticToolLoopModelClient,
   type AgenticToolLoopModelClient,
@@ -55,6 +58,10 @@ type RecentConversationMessage = {
   role: "user" | "assistant"
   content: string
 }
+
+// Legacy production tool-loop pipeline. `/api/chat` now uses the AgentV2 + CareBalance
+// production pipeline in `src/lib/agent-v2/production/chat-pipeline.ts`; keep this module
+// available for legacy tests and explicit debug comparisons until the final cleanup pass.
 
 interface ProductionAgentPipelineDeps {
   modelClient?: AgenticToolLoopModelClient

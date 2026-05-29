@@ -2,6 +2,7 @@
 
 import type {
   AgentCompareAnalysisSnapshot,
+  AgentCompareCareBalanceTrace,
   AgentCompareJudgmentDraft,
   AgentCompareJudgmentRecord,
   AgentCompareResponse,
@@ -9,7 +10,9 @@ import type {
   AgentCompareToolLoopVariant,
   AgentCompareUserOption,
   AgentCompareUserSnapshot,
+  CanonicalCompareSystem,
   CompareRunResult,
+  CompareSystemInput,
 } from "@/lib/agent/compare/types"
 import {
   AGENT_COMPARE_MULTI_TURN_CHAINS,
@@ -20,7 +23,7 @@ import {
   DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT,
 } from "@/lib/agent/compare/tool-loop-variants"
 import type { KeyboardEvent } from "react"
-import { useEffect, useState, useTransition } from "react"
+import { useEffect, useRef, useState, useTransition } from "react"
 
 type JudgmentHistoryEntry = AgentCompareJudgmentDraft & {
   userId: string
@@ -32,6 +35,30 @@ type JudgmentHistoryEntry = AgentCompareJudgmentDraft & {
 type BootstrapResponse = {
   users: AgentCompareUserOption[]
   selectedUser: AgentCompareUserSnapshot | null
+}
+
+type AgentCompareRunMode =
+  | "agent_v2_care_balance"
+  | "agent_v2_vs_care_balance"
+  | "classic_vs_tool_loop"
+
+const RUN_MODE_OPTIONS: Array<{ value: AgentCompareRunMode; label: string }> = [
+  { value: "agent_v2_care_balance", label: "AgentV2 GPT-5.4-mini + CareBalance" },
+  { value: "agent_v2_vs_care_balance", label: "Debug: AgentV2 vs CareBalance" },
+  { value: "classic_vs_tool_loop", label: "Debug: Classic vs Legacy Tool-Loop" },
+]
+
+function resolveCompareSystemsForMode(mode: AgentCompareRunMode): CompareSystemInput[] {
+  if (mode === "agent_v2_care_balance") return ["agent_v2_care_balance"]
+  if (mode === "agent_v2_vs_care_balance") return ["agent_v2", "agent_v2_care_balance"]
+  return ["classic", "tool_loop"]
+}
+
+function formatCompareSystemLabel(system: CompareSystemInput): string {
+  if (system === "classic" || system === "current") return "Classic"
+  if (system === "tool_loop" || system === "agent") return "Legacy Tool-Loop"
+  if (system === "agent_v2_care_balance") return "AgentV2 GPT-5.4-mini + CareBalance"
+  return "AgentV2 GPT-5.4-mini"
 }
 
 const REASON_OPTIONS: Array<AgentCompareJudgmentDraft["primary_reason"]> = [
@@ -68,6 +95,9 @@ function formatTracePrice(price: number, currency: string | null): string {
 function ProductTracePanel({ result }: { result: CompareRunResult }) {
   const trace = result.product_trace
   if (!trace) return null
+  const careBalanceDisplay = trace.care_balance_context
+    ? buildCareBalanceTraceDisplayData(trace.care_balance_context)
+    : null
 
   return (
     <div className="space-y-3 rounded-lg border bg-muted/30 p-3">
@@ -127,6 +157,34 @@ function ProductTracePanel({ result }: { result: CompareRunResult }) {
               </li>
             ))}
           </ul>
+        </div>
+      ) : null}
+
+      {careBalanceDisplay ? (
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-muted-foreground">CareBalance</p>
+          {careBalanceDisplay.comparison ? (
+            <p className="text-xs text-muted-foreground">{careBalanceDisplay.comparison}</p>
+          ) : null}
+          {careBalanceDisplay.rows.length > 0 ? (
+            <ul className="space-y-1 text-xs leading-5 text-foreground">
+              {careBalanceDisplay.rows.map((row) => (
+                <li key={row} className="rounded-md border bg-background p-2">
+                  {row}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {careBalanceDisplay.currentTurnFacts.length > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              Current-Turn: {careBalanceDisplay.currentTurnFacts.join(" · ")}
+            </p>
+          ) : null}
+          {careBalanceDisplay.conflicts.length > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              Konflikte: {careBalanceDisplay.conflicts.join(" · ")}
+            </p>
+          ) : null}
         </div>
       ) : null}
 
@@ -266,6 +324,44 @@ function getTraceArrayLength(value: unknown, key: string): number | null {
   return Array.isArray(maybeArray) ? maybeArray.length : null
 }
 
+function normalizeCompareSystemForMetrics(system: CompareSystemInput): CanonicalCompareSystem {
+  if (system === "current") return "classic"
+  if (system === "agent") return "tool_loop"
+  return system
+}
+
+function getTraceMetricForSystem(
+  result: CompareRunResult,
+  system: CanonicalCompareSystem,
+  key: string,
+): number | null {
+  if (system === "agent_v2" || system === "agent_v2_care_balance") {
+    return getTraceArrayLength(result.agent_v2_trace, key)
+  }
+
+  if (system === "tool_loop") {
+    return getTraceArrayLength(result.tool_loop_trace, key)
+  }
+
+  return null
+}
+
+export function buildAgentV2TraceDisplayData(
+  trace: NonNullable<CompareRunResult["agent_v2_trace"]>,
+): {
+  interpretationSummary: string | null
+  warnings: string[]
+  validationErrors: string[]
+} {
+  return {
+    interpretationSummary: trace.request_interpretation_summary ?? null,
+    warnings: (trace.validation_warnings ?? []).map((warning) => warning.message),
+    validationErrors: trace.validation_errors
+      .filter((error) => error.severity !== "warn")
+      .map((error) => error.validator_id),
+  }
+}
+
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)
@@ -274,6 +370,114 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 
 function getNestedRecord(value: unknown, key: string): Record<string, unknown> | null {
   return asRecord(asRecord(value)?.[key])
+}
+
+function formatCareBalanceTraceScalar(value: unknown): string {
+  if (value === null) return "null"
+  if (value === undefined) return "undefined"
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    return String(value)
+  }
+
+  try {
+    return JSON.stringify(value)
+  } catch {
+    return "unformattable"
+  }
+}
+
+function getComparisonDifferenceCount(trace: AgentCompareCareBalanceTrace): number | null {
+  const comparison = asRecord(trace.comparison)
+  if (!comparison) return null
+
+  const differences = comparison.differences
+  return Array.isArray(differences) ? differences.length : 0
+}
+
+export function buildCareBalanceTraceDisplayData(trace: AgentCompareCareBalanceTrace): {
+  rows: string[]
+  comparison: string | null
+  currentTurnFacts: string[]
+  conflicts: string[]
+} {
+  const differenceCount = getComparisonDifferenceCount(trace)
+
+  return {
+    rows: trace.rows.map((row) => {
+      const reasons = row.reason_codes.length > 0 ? row.reason_codes.join(",") : "none"
+      const hints =
+        row.selection_hint_codes.length > 0 ? row.selection_hint_codes.join(",") : "none"
+
+      return `${row.category}: ${row.action} | status=${row.status} | current=${row.current_frequency ?? "none"} | reasons=${reasons} | hints=${hints}`
+    }),
+    comparison: differenceCount === null ? null : `old_vs_new: ${differenceCount} Unterschiede`,
+    currentTurnFacts: trace.current_turn_facts.map(
+      (fact) => `${fact.kind}: ${fact.evidence_quote}`,
+    ),
+    conflicts: trace.conflicts.map(
+      (conflict) =>
+        `${conflict.field_path}: saved=${formatCareBalanceTraceScalar(
+          conflict.saved_value,
+        )} -> current=${formatCareBalanceTraceScalar(conflict.current_turn_value)} (${
+          conflict.evidence_quote
+        })`,
+    ),
+  }
+}
+
+function buildCareBalanceAnalysisLines(
+  trace: AgentCompareCareBalanceTrace | null | undefined,
+): string[] {
+  if (!trace) return []
+
+  const display = buildCareBalanceTraceDisplayData(trace)
+
+  return [
+    `rows=${display.rows.length}`,
+    ...display.rows,
+    ...(display.comparison ? [display.comparison] : []),
+    ...display.currentTurnFacts.map((fact) => `fact: ${fact}`),
+    ...display.conflicts.map((conflict) => `conflict: ${conflict}`),
+  ]
+}
+
+function getResultCareBalanceTrace(
+  result: CompareRunResult | AgentCompareTurnResult,
+): AgentCompareCareBalanceTrace | null {
+  return result.care_balance_trace ?? result.product_trace?.care_balance_context ?? null
+}
+
+function CareBalanceTracePanel({ result }: { result: CompareRunResult }) {
+  const trace = getResultCareBalanceTrace(result)
+  if (!trace || result.product_trace?.care_balance_context) return null
+
+  const display = buildCareBalanceTraceDisplayData(trace)
+
+  return (
+    <div className="space-y-2 rounded-lg border bg-muted/30 p-3">
+      <p className="type-label text-muted-foreground">CareBalance</p>
+      {display.comparison ? (
+        <p className="text-xs text-muted-foreground">{display.comparison}</p>
+      ) : null}
+      {display.rows.length > 0 ? (
+        <ul className="space-y-1 text-xs leading-5 text-foreground">
+          {display.rows.map((row) => (
+            <li key={row} className="rounded-md border bg-background p-2">
+              {row}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {display.currentTurnFacts.length > 0 ? (
+        <p className="text-xs text-muted-foreground">
+          Current-Turn: {display.currentTurnFacts.join(" · ")}
+        </p>
+      ) : null}
+      {display.conflicts.length > 0 ? (
+        <p className="text-xs text-muted-foreground">Konflikte: {display.conflicts.join(" · ")}</p>
+      ) : null}
+    </div>
+  )
 }
 
 function uniqueStrings(values: string[]): string[] {
@@ -294,21 +498,44 @@ function extractToolCallNames(trace: unknown): string[] {
   )
 }
 
+function extractResultToolCallNames(result: CompareRunResult | AgentCompareTurnResult): string[] {
+  return uniqueStrings([
+    ...extractToolCallNames(result.tool_loop_trace),
+    ...extractToolCallNames(result.agent_v2_trace),
+  ])
+}
+
 function extractStringArray(value: unknown): string[] {
   return Array.isArray(value)
     ? value.filter((entry): entry is string => typeof entry === "string")
     : []
 }
 
+function extractGuidanceIdsFromSummary(summary: string): string[] {
+  const match = summary.match(/guidance_ids=([^;]+)/)
+  if (!match) return []
+
+  return match[1].split(",").map((id) => id.trim())
+}
+
 function extractGuidanceIds(result: CompareRunResult | AgentCompareTurnResult): string[] {
-  const trace = asRecord(result.tool_loop_trace)
-  const advisorGuidance = asRecord(trace?.advisor_guidance)
-  const consultationBrief = asRecord(trace?.consultation_brief)
+  const toolLoopTrace = asRecord(result.tool_loop_trace)
+  const agentV2Trace = asRecord(result.agent_v2_trace)
+  const advisorGuidance = asRecord(toolLoopTrace?.advisor_guidance)
+  const consultationBrief = asRecord(toolLoopTrace?.consultation_brief)
   const candidateGuidance = consultationBrief?.candidate_guidance
   const candidateIds = Array.isArray(candidateGuidance)
     ? candidateGuidance.flatMap((entry) => {
         const id = asRecord(entry)?.id
         return typeof id === "string" ? [id] : []
+      })
+    : []
+
+  const agentV2ToolCalls = agentV2Trace?.tool_calls
+  const agentV2ToolOutputIds = Array.isArray(agentV2ToolCalls)
+    ? agentV2ToolCalls.flatMap((call) => {
+        const summary = asRecord(call)?.output_summary
+        return typeof summary === "string" ? extractGuidanceIdsFromSummary(summary) : []
       })
     : []
 
@@ -322,6 +549,9 @@ function extractGuidanceIds(result: CompareRunResult | AgentCompareTurnResult): 
     ...extractStringArray(result.route_trace?.guidance_ids),
     ...extractStringArray(advisorGuidance?.loaded_guidance_ids),
     ...candidateIds,
+    ...extractStringArray(agentV2Trace?.loaded_guidance_ids),
+    ...extractStringArray(agentV2Trace?.loaded_guidance_package_ids),
+    ...agentV2ToolOutputIds,
     ...debugIds,
   ])
 }
@@ -358,10 +588,11 @@ function buildResultAnalysisSnapshot(params: {
     latency_ms: params.result.latency_ms,
     answer_chars: params.result.answer.length,
     debug_lines: params.result.debug_lines,
-    tool_calls: extractToolCallNames(params.result.tool_loop_trace),
+    tool_calls: extractResultToolCallNames(params.result),
     guidance_ids: extractGuidanceIds(params.result),
     product_policy: params.result.product_trace?.product_response_policy ?? null,
     product_category: params.result.product_trace?.category ?? null,
+    care_balance: buildCareBalanceAnalysisLines(getResultCareBalanceTrace(params.result)),
     selected_products: params.result.matched_products.map((product) =>
       product.category ? `${product.name} (${product.category})` : product.name,
     ),
@@ -370,9 +601,10 @@ function buildResultAnalysisSnapshot(params: {
       params.result.turns?.map((turn) => ({
         turn: turn.turn,
         answer_chars: turn.answer.length,
-        tool_calls: extractToolCallNames(turn.tool_loop_trace),
+        tool_calls: extractResultToolCallNames(turn),
         guidance_ids: extractGuidanceIds(turn),
         product_policy: turn.product_trace?.product_response_policy ?? null,
+        care_balance: buildCareBalanceAnalysisLines(getResultCareBalanceTrace(turn)),
         selected_products: turn.matched_products.map((product) =>
           product.category ? `${product.name} (${product.category})` : product.name,
         ),
@@ -380,7 +612,7 @@ function buildResultAnalysisSnapshot(params: {
   }
 }
 
-function buildCompareAnalysisSnapshot(params: {
+export function buildCompareAnalysisSnapshot(params: {
   result: AgentCompareResponse
   userLabel: string
   includeSystem: boolean
@@ -477,6 +709,10 @@ function CompareAnalysisPanel({
                 <dd>{entry.product_policy ?? "keine"}</dd>
               </div>
               <div>
+                <dt className="font-medium text-foreground">CareBalance</dt>
+                <dd>{entry.care_balance.length > 0 ? entry.care_balance.join(" · ") : "keine"}</dd>
+              </div>
+              <div>
                 <dt className="font-medium text-foreground">Produkte</dt>
                 <dd>
                   {entry.selected_products.length > 0
@@ -521,6 +757,69 @@ function ToolLoopTracePanel({ result }: { result: CompareRunResult }) {
             {formatTraceValue(result.state_transition)}
           </pre>
         </div>
+      ) : null}
+    </div>
+  )
+}
+
+function AgentV2TracePanel({ result }: { result: CompareRunResult }) {
+  const trace = result.agent_v2_trace
+  if (!trace) return null
+  const display = buildAgentV2TraceDisplayData(trace)
+
+  return (
+    <div className="space-y-3 rounded-lg border bg-muted/30 p-3">
+      <p className="type-label text-muted-foreground">AgentV2-Spur</p>
+      {display.interpretationSummary ? (
+        <div className="rounded-md border bg-background p-2 text-sm text-foreground">
+          {display.interpretationSummary}
+        </div>
+      ) : null}
+      <div className="grid gap-3 md:grid-cols-2">
+        <TraceRow label="Antwortmodus" value={trace.answer_mode ?? "keiner"} />
+        <TraceRow label="Routine-Ebene" value={trace.routine_layer ?? "keine"} />
+        <TraceRow
+          label="Produkt-IDs"
+          value={trace.final_product_ids.length > 0 ? trace.final_product_ids.join(", ") : "keine"}
+        />
+        <TraceRow
+          label="Guidance"
+          value={
+            trace.loaded_guidance_package_ids.length > 0
+              ? trace.loaded_guidance_package_ids.join(", ")
+              : "keine"
+          }
+        />
+      </div>
+      <TraceRow
+        label="Tools"
+        value={
+          trace.tool_calls.length > 0
+            ? trace.tool_calls.map((call) => call.name).join(", ")
+            : "keine"
+        }
+      />
+      {display.warnings.length > 0 ? (
+        <div className="rounded-md border border-amber-300 bg-amber-50 p-2 text-sm text-amber-950">
+          <p className="text-xs font-medium uppercase tracking-wide">Warnungen</p>
+          <ul className="mt-1 space-y-1">
+            {display.warnings.map((warning) => (
+              <li key={warning}>{warning}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {display.validationErrors.length > 0 ? (
+        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-2 text-sm text-destructive">
+          <p className="text-xs font-medium uppercase tracking-wide">Validierung</p>
+          <p className="mt-1">{display.validationErrors.join(", ")}</p>
+        </div>
+      ) : null}
+      {trace.repair_attempts.length > 0 ? (
+        <TraceRow label="Reparaturen" value={`${trace.repair_attempts.length}`} />
+      ) : null}
+      {trace.bounded_repair_kind ? (
+        <TraceRow label="Reparaturart" value={trace.bounded_repair_kind} />
       ) : null}
     </div>
   )
@@ -572,6 +871,10 @@ function ResultCard({
           {showDiagnostics ? <RouteTracePanel result={result} /> : null}
 
           {showDiagnostics ? <ToolLoopTracePanel result={result} /> : null}
+
+          {showDiagnostics ? <AgentV2TracePanel result={result} /> : null}
+
+          {showDiagnostics ? <CareBalanceTracePanel result={result} /> : null}
 
           {showDiagnostics ? <ProductTracePanel result={result} /> : null}
 
@@ -631,6 +934,31 @@ async function fetchBootstrap(userId?: string): Promise<BootstrapResponse> {
   return data as BootstrapResponse
 }
 
+export function canSaveAgentCompareJudgment(params: {
+  result: AgentCompareResponse | null
+  selectedUser: AgentCompareUserSnapshot | null
+  selectedUserOption: AgentCompareUserOption | null
+  currentResult: CompareRunResult | null
+  agentResult: CompareRunResult | null
+}): boolean {
+  if (!params.result || !params.selectedUser || !params.selectedUserOption || !params.agentResult) {
+    return false
+  }
+
+  return (
+    params.result.userId === params.selectedUserOption.id &&
+    params.selectedUser.user_id === params.selectedUserOption.id
+  )
+}
+
+export function normalizeWinnerForResults(
+  winner: AgentCompareJudgmentDraft["winner"],
+  currentResult: CompareRunResult | null,
+): AgentCompareJudgmentDraft["winner"] {
+  if (winner === "current" && !currentResult) return "tie"
+  return winner
+}
+
 export function AgentCompareLab() {
   const [users, setUsers] = useState<AgentCompareUserOption[]>([])
   const [selectedUserId, setSelectedUserId] = useState("")
@@ -643,6 +971,7 @@ export function AgentCompareLab() {
   const [toolLoopVariant, setToolLoopVariant] = useState<AgentCompareToolLoopVariant>(
     DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT,
   )
+  const [runMode, setRunMode] = useState<AgentCompareRunMode>("agent_v2_care_balance")
   const [isRevealed, setIsRevealed] = useState(false)
   const [result, setResult] = useState<AgentCompareResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -658,27 +987,45 @@ export function AgentCompareLab() {
   const [isPending, startTransition] = useTransition()
   const [isLoadingUser, startLoadingUser] = useTransition()
   const [isSavingJudgment, startSavingJudgment] = useTransition()
+  const userLoadRequestId = useRef(0)
+  const compareRequestId = useRef(0)
 
-  const currentResult =
-    result?.results.find((entry) => entry.system === "classic" || entry.system === "current") ??
-    null
+  const resultEntries = result?.results ?? []
+  const currentResult = resultEntries.length > 1 ? (resultEntries[0] ?? null) : null
   const agentResult =
-    result?.results.find((entry) => entry.system === "tool_loop" || entry.system === "agent") ??
-    null
+    resultEntries.length > 1 ? (resultEntries[1] ?? null) : (resultEntries[0] ?? null)
   const selectedUserOption = users.find((user) => user.id === selectedUserId) ?? null
+  const compareSystems = resolveCompareSystemsForMode(runMode)
+  const effectiveBlinded = runMode !== "agent_v2_care_balance" && isBlinded
+  const comparesLegacyToolLoop = compareSystems.includes("tool_loop")
+  const comparesAgentV2CareBalance = compareSystems.includes("agent_v2_care_balance")
   const activeInput = isMultiTurn ? turnsText : prompt
   const activeTurns = turnsText
     .split("\n")
     .map((turn) => turn.trim())
     .filter((turn) => turn.length > 0)
-  const currentTitle =
-    result?.blinded && !isRevealed ? (currentResult?.display_label ?? "Variante A") : "Classic"
+  const currentTitle = !currentResult
+    ? "Kein Vergleich"
+    : result?.blinded && !isRevealed
+      ? (currentResult?.display_label ?? "Variante A")
+      : formatCompareSystemLabel(currentResult.system)
   const agentTitle =
-    result?.blinded && !isRevealed ? (agentResult?.display_label ?? "Variante B") : "Tool Loop"
-  const displayResults = result?.results ?? []
+    result?.blinded && !isRevealed
+      ? (agentResult?.display_label ?? "Variante B")
+      : agentResult
+        ? formatCompareSystemLabel(agentResult.system)
+        : "Agent"
+  const displayResults = resultEntries
   const showDiagnostics = !result?.blinded || isRevealed
-  const currentJudgmentLabel = result?.blinded && !isRevealed ? currentTitle : "Classic"
-  const agentJudgmentLabel = result?.blinded && !isRevealed ? agentTitle : "Tool Loop"
+  const currentJudgmentLabel = currentTitle
+  const agentJudgmentLabel = agentTitle
+  const canSaveJudgment = canSaveAgentCompareJudgment({
+    result,
+    selectedUser,
+    selectedUserOption,
+    currentResult,
+    agentResult,
+  })
   const analysisSnapshot = result
     ? buildCompareAnalysisSnapshot({
         result,
@@ -693,6 +1040,10 @@ export function AgentCompareLab() {
         includeSystem: true,
       })
     : null
+
+  useEffect(() => {
+    setWinner((current) => normalizeWinnerForResults(current, currentResult))
+  }, [currentResult])
 
   useEffect(() => {
     startLoadingUser(async () => {
@@ -711,6 +1062,8 @@ export function AgentCompareLab() {
   }, [])
 
   useEffect(() => {
+    const requestId = (userLoadRequestId.current += 1)
+
     if (!selectedUserId) {
       setSelectedUser(null)
       return
@@ -719,9 +1072,19 @@ export function AgentCompareLab() {
     startLoadingUser(async () => {
       try {
         const bootstrap = await fetchBootstrap(selectedUserId)
+        if (userLoadRequestId.current !== requestId) return
+
         setUsers(bootstrap.users)
+        if (bootstrap.selectedUser?.user_id !== selectedUserId) {
+          setSelectedUser(null)
+          setError("Geladener Testnutzer passt nicht zur Auswahl.")
+          return
+        }
+
         setSelectedUser(bootstrap.selectedUser)
       } catch (bootstrapError) {
+        if (userLoadRequestId.current !== requestId) return
+
         setSelectedUser(null)
         setError(
           bootstrapError instanceof Error
@@ -735,6 +1098,9 @@ export function AgentCompareLab() {
   async function handleRunCompare() {
     if (!selectedUserId || activeInput.trim().length === 0) return
 
+    const requestId = (compareRequestId.current += 1)
+    const submittedUserId = selectedUserId
+
     setError(null)
     setIsRevealed(false)
     startTransition(async () => {
@@ -745,12 +1111,15 @@ export function AgentCompareLab() {
           body: JSON.stringify({
             userId: selectedUserId,
             ...(isMultiTurn ? { turns: activeTurns } : { prompt }),
-            blinded: isBlinded,
+            blinded: effectiveBlinded,
             toolLoopVariant,
+            systems: compareSystems,
           }),
         })
 
         const data = (await response.json()) as AgentCompareResponse | { error?: string }
+        if (compareRequestId.current !== requestId) return
+
         if (!response.ok) {
           setResult(null)
           setError(
@@ -761,8 +1130,17 @@ export function AgentCompareLab() {
           return
         }
 
-        setResult(data as AgentCompareResponse)
+        const compareResult = data as AgentCompareResponse
+        if (compareResult.userId !== submittedUserId) {
+          setResult(null)
+          setError("Compare-Ergebnis passt nicht zum gewaehlten Testnutzer.")
+          return
+        }
+
+        setResult(compareResult)
       } catch (runError) {
+        if (compareRequestId.current !== requestId) return
+
         setResult(null)
         setError(runError instanceof Error ? runError.message : "Compare fehlgeschlagen")
       }
@@ -792,7 +1170,9 @@ export function AgentCompareLab() {
   }
 
   function handleUserChange(nextUserId: string) {
+    compareRequestId.current += 1
     setSelectedUserId(nextUserId)
+    setSelectedUser(null)
     setResult(null)
     setIsRevealed(false)
     setError(null)
@@ -817,14 +1197,33 @@ export function AgentCompareLab() {
   }
 
   function handleSaveJudgment() {
-    if (!result || !selectedUser || !selectedUserOption || !currentResult || !agentResult) return
+    if (!canSaveJudgment || !result || !selectedUser || !selectedUserOption || !agentResult) {
+      return
+    }
 
     const createdAt = new Date().toISOString()
+    const currentSystem = currentResult
+      ? normalizeCompareSystemForMetrics(currentResult.system)
+      : null
+    const agentSystem = normalizeCompareSystemForMetrics(agentResult.system)
+    const normalizedWinner = normalizeWinnerForResults(winner, currentResult)
+    const blindedWinner =
+      normalizedWinner === "current" && currentSystem
+        ? currentSystem
+        : normalizedWinner === "agent"
+          ? agentSystem
+          : "tie"
+    const latencyBySystem: Partial<Record<CanonicalCompareSystem, number | null>> = {
+      [agentSystem]: agentResult.latency_ms,
+    }
+    if (currentResult && currentSystem) {
+      latencyBySystem[currentSystem] = currentResult.latency_ms
+    }
     const historyEntry: JudgmentHistoryEntry = {
       userId: selectedUserOption.id,
       userLabel: selectedUserOption.label,
       prompt: result.turns?.join("\n") ?? result.prompt,
-      winner,
+      winner: normalizedWinner,
       primary_reason: primaryReason,
       note,
       createdAt,
@@ -837,34 +1236,60 @@ export function AgentCompareLab() {
       toolLoopVariant: result.toolLoopVariant,
       context: selectedUser,
       results: {
-        current: { ...currentResult, system: "current" },
-        agent: { ...agentResult, system: "agent" },
+        ...(currentResult ? { current: currentResult } : {}),
+        agent: agentResult,
       },
       judgment: {
-        winner,
+        winner: normalizedWinner,
         primary_reason: primaryReason,
         note,
         failure_bucket: failureBucket,
         critical_product_claim_failure: criticalProductClaimFailure,
       },
       rollout_metrics: {
-        blinded_winner: winner === "current" ? "classic" : winner === "agent" ? "tool_loop" : "tie",
+        blinded_winner: blindedWinner,
         failure_bucket: failureBucket,
         critical_product_claim_failure: criticalProductClaimFailure,
-        latency_ms: {
-          classic: currentResult.latency_ms,
-          tool_loop: agentResult.latency_ms,
-        },
-        tool_loop_model_steps: getTraceArrayLength(agentResult.tool_loop_trace, "model_steps"),
-        tool_loop_tool_calls: getTraceArrayLength(agentResult.tool_loop_trace, "tool_calls"),
+        latency_ms: latencyBySystem,
+        tool_loop_model_steps:
+          currentResult && currentSystem === "tool_loop"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "model_steps")
+            : agentSystem === "tool_loop"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "model_steps")
+              : null,
+        tool_loop_tool_calls:
+          currentResult && currentSystem === "tool_loop"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "tool_calls")
+            : agentSystem === "tool_loop"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
+              : null,
+        agent_v2_model_steps:
+          currentResult && currentSystem === "agent_v2"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "model_steps")
+            : agentSystem === "agent_v2"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "model_steps")
+              : null,
+        agent_v2_tool_calls:
+          currentResult && currentSystem === "agent_v2"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "tool_calls")
+            : agentSystem === "agent_v2"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
+              : null,
+        agent_v2_care_balance_model_steps:
+          currentResult && currentSystem === "agent_v2_care_balance"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "model_steps")
+            : agentSystem === "agent_v2_care_balance"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "model_steps")
+              : null,
+        agent_v2_care_balance_tool_calls:
+          currentResult && currentSystem === "agent_v2_care_balance"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "tool_calls")
+            : agentSystem === "agent_v2_care_balance"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
+              : null,
       },
       analysis_snapshot: savedAnalysisSnapshot ?? undefined,
     }
-
-    setHistory((current) => [historyEntry, ...current])
-    setNote("")
-    setFailureBucket("none")
-    setCriticalProductClaimFailure(false)
 
     startSavingJudgment(async () => {
       try {
@@ -878,6 +1303,11 @@ export function AgentCompareLab() {
         if (!response.ok) {
           throw new Error(data.error ?? "Urteil konnte nicht gespeichert werden")
         }
+
+        setHistory((current) => [historyEntry, ...current])
+        setNote("")
+        setFailureBucket("none")
+        setCriticalProductClaimFailure(false)
       } catch (saveError) {
         setError(
           saveError instanceof Error ? saveError.message : "Urteil konnte nicht gespeichert werden",
@@ -901,14 +1331,17 @@ export function AgentCompareLab() {
               className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
             >
               <option value="">Bitte waehlen</option>
-              {users.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.label}
-                </option>
-              ))}
+              <optgroup label={`Gespeicherte Testnutzer (${users.length})`}>
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.label}
+                  </option>
+                ))}
+              </optgroup>
             </select>
             <p className="text-xs text-muted-foreground">
-              Geladen werden gespeichertes Profil, aktuelle Routine und relevante Memory.
+              Geladen werden echte gespeicherte Testnutzer mit Profil, aktueller Routine und
+              relevanter Memory.
             </p>
           </div>
 
@@ -968,6 +1401,21 @@ export function AgentCompareLab() {
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-4">
             <label className="inline-flex items-center gap-2 text-sm text-foreground">
+              Modus
+              <select
+                value={runMode}
+                onChange={(event) => setRunMode(event.target.value as AgentCompareRunMode)}
+                className="rounded-lg border bg-background px-3 py-2 text-sm"
+              >
+                {RUN_MODE_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="inline-flex items-center gap-2 text-sm text-foreground">
               <input
                 type="checkbox"
                 checked={isMultiTurn}
@@ -982,30 +1430,41 @@ export function AgentCompareLab() {
                 type="checkbox"
                 checked={isBlinded}
                 onChange={(event) => setIsBlinded(event.target.checked)}
+                disabled={runMode === "agent_v2_care_balance"}
                 className="h-4 w-4 rounded border"
               />
               Geblendet
             </label>
 
-            <label className="inline-flex items-center gap-2 text-sm text-foreground">
-              Tool-Loop
-              <select
-                value={toolLoopVariant}
-                onChange={(event) =>
-                  setToolLoopVariant(event.target.value as AgentCompareToolLoopVariant)
-                }
-                className="rounded-lg border bg-background px-3 py-2 text-sm"
-              >
-                {AGENT_COMPARE_TOOL_LOOP_VARIANT_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+            {comparesLegacyToolLoop ? (
+              <label className="inline-flex items-center gap-2 text-sm text-foreground">
+                Legacy-Kontext
+                <select
+                  value={toolLoopVariant}
+                  onChange={(event) =>
+                    setToolLoopVariant(event.target.value as AgentCompareToolLoopVariant)
+                  }
+                  className="rounded-lg border bg-background px-3 py-2 text-sm"
+                >
+                  {AGENT_COMPARE_TOOL_LOOP_VARIANT_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
           </div>
 
-          <p className="text-xs text-muted-foreground">Vergleich mit echtem Nutzerkontext.</p>
+          <p className="text-xs text-muted-foreground">
+            {runMode === "agent_v2_care_balance"
+              ? "Testet den Produktionspfad AgentV2 GPT-5.4-mini + CareBalance mit Profil, Routine und Memory des Testnutzers."
+              : comparesAgentV2CareBalance
+                ? "Debug-Modus: vergleicht AgentV2 GPT-5.4-mini ohne CareBalance mit dem Produktionspfad AgentV2 GPT-5.4-mini + CareBalance."
+                : comparesLegacyToolLoop
+                  ? "Legacy-Modus: vergleicht Classic mit dem aelteren Tool-Loop-Runner."
+                  : "Debug-Modus."}
+          </p>
           <button
             type="button"
             onClick={handleRunCompare}
@@ -1112,9 +1571,7 @@ export function AgentCompareLab() {
                 title={
                   result?.blinded && !isRevealed
                     ? (entry.display_label ?? "Variante")
-                    : entry.system === "classic" || entry.system === "current"
-                      ? "Classic"
-                      : "Tool Loop"
+                    : formatCompareSystemLabel(entry.system)
                 }
                 result={entry}
                 showDiagnostics={showDiagnostics}
@@ -1144,7 +1601,9 @@ export function AgentCompareLab() {
               className="w-full rounded-lg border bg-background px-3 py-2 text-sm"
             >
               <option value="tie">Unentschieden</option>
-              <option value="current">{currentJudgmentLabel}</option>
+              <option value="current" disabled={!currentResult}>
+                {currentJudgmentLabel}
+              </option>
               <option value="agent">{agentJudgmentLabel}</option>
             </select>
           </div>
@@ -1209,7 +1668,7 @@ export function AgentCompareLab() {
             <button
               type="button"
               onClick={handleSaveJudgment}
-              disabled={!result || !selectedUser || !selectedUserOption || isSavingJudgment}
+              disabled={!canSaveJudgment || isSavingJudgment}
               className="inline-flex items-center justify-center rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSavingJudgment ? "Speichere..." : "Urteil speichern"}

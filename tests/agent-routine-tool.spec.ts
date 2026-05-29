@@ -5,6 +5,10 @@ import {
   createBuildOrFixRoutineTool,
   projectRoutinePlan,
 } from "../src/lib/agent/tools/build-or-fix-routine"
+import {
+  adaptRecommendationInputFromPersistence,
+  buildEffectiveCareContext,
+} from "../src/lib/recommendation-engine"
 import type { HairProfile } from "../src/lib/types"
 
 function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
@@ -257,6 +261,159 @@ test("projectRoutinePlan exposes priority context without changing basics scorin
   assert.equal(result.priority_context?.selected_step_id, "occasional-hair-reset")
   assert.match(result.priority_context?.selected_reason ?? "", /Rueckstaende|Reset|Build-up|Oel/i)
   assert.ok(result.priority_context?.adjacent_levers.some((lever) => lever.category === "leave_in"))
+})
+
+test("projectRoutinePlan exposes side-by-side CareBalance frequency framing without changing routine steps", () => {
+  const result = projectRoutinePlan({
+    objective: "fix_routine",
+    message: "Mein Ansatz ist platt und ich nutze jeden Tag Oel. Wie anpassen?",
+    layer: "basics",
+    requestedCategory: "oil",
+    hairProfile: createProfile({
+      goals: ["volume"],
+      current_routine_products: ["shampoo", "conditioner", "oil"],
+      products_used: "Shampoo, Conditioner, Oel",
+    }),
+    routineItems: [
+      {
+        category: "oil",
+        product_name: "Daily Oil",
+        frequency_range: "daily",
+      },
+    ],
+  } as Parameters<typeof projectRoutinePlan>[0] & {
+    routineItems: Array<{ category: string; product_name: string | null; frequency_range: "daily" }>
+  })
+
+  assert.deepEqual(
+    result.steps.map((step) => step.id),
+    ["base-shampoo", "base-conditioner", "occasional-hair-reset"],
+  )
+
+  const oilFrame = (
+    result as unknown as {
+      care_balance_context?: {
+        rows: Array<{
+          category: string
+          action: string
+          reason_codes: string[]
+          usage_hint: string
+          authority: {
+            current_turn_category_decision: boolean
+          }
+        }>
+      }
+    }
+  ).care_balance_context?.rows.find((row) => row.category === "oil")
+
+  assert.equal(oilFrame?.action, "decrease_frequency")
+  assert.deepEqual(oilFrame?.reason_codes, ["daily_oil_use", "buildup_or_flatness_pressure"])
+  assert.match(oilFrame?.usage_hint ?? "", /1_2x|daily|need_based_support/)
+  assert.equal(oilFrame?.authority.current_turn_category_decision, true)
+  assert.match(JSON.stringify(result), /legacy|comparison|production_decision_context/)
+})
+
+test("projectRoutinePlan preserves supplied effective care context in care balance output", () => {
+  const hairProfile = createProfile({
+    thickness: "coarse",
+    goals: ["volume"],
+    current_routine_products: ["shampoo", "conditioner", "oil"],
+    products_used: "Shampoo, Conditioner, Oel",
+  })
+  const routineItems = [
+    {
+      category: "oil",
+      product_name: "Daily Oil",
+      frequency_range: "daily",
+    },
+  ] as const
+  const adapted = adaptRecommendationInputFromPersistence(hairProfile, [...routineItems])
+  const effectiveCareContext = buildEffectiveCareContext(adapted.input, [
+    {
+      kind: "profile_override",
+      field: "thickness",
+      value: "fine",
+      evidenceQuote: "Actually my hair is fine",
+      source: "current_turn",
+    },
+  ])
+
+  const result = projectRoutinePlan({
+    objective: "fix_routine",
+    message: "Actually my hair is fine, bitte mach meine Routine leichter.",
+    hairProfile,
+    routineItems: [...routineItems],
+    effectiveCareContext,
+  } as Parameters<typeof projectRoutinePlan>[0] & {
+    effectiveCareContext: typeof effectiveCareContext
+  })
+
+  const careBalanceContext = result.care_balance_context as
+    | {
+        current_turn_facts?: unknown[]
+        conflicts?: Array<{ field_path: string; current_turn_value: unknown }>
+      }
+    | null
+    | undefined
+
+  assert.equal(careBalanceContext?.current_turn_facts?.length, 1)
+  assert.ok(
+    careBalanceContext?.conflicts?.some(
+      (conflict) =>
+        conflict.field_path === "profile.thickness" && conflict.current_turn_value === "fine",
+    ),
+  )
+})
+
+test("projectRoutinePlan includes explicit add-step category in basics", () => {
+  const result = projectRoutinePlan({
+    hairProfile: createProfile({
+      hair_texture: "straight",
+      thickness: "fine",
+      concerns: [],
+      goals: [],
+      current_routine_products: ["shampoo", "conditioner"],
+    }),
+    message: "Bau ein Leave-in in meine Routine ein.",
+    layer: "basics",
+    requestedCategory: "leave_in",
+    mutationKind: "add_step",
+  })
+
+  assert.deepEqual(
+    result.steps.map((step) => step.id),
+    ["base-shampoo", "base-conditioner", "maintenance-leave-in"],
+  )
+
+  const leaveInStep = result.steps.find((step) => step.id === "maintenance-leave-in")
+  assert.equal(leaveInStep?.category, "leave_in")
+})
+
+test("projectRoutinePlan uses CareBalance add rows for broad first-add-on basics requests", () => {
+  const result = projectRoutinePlan({
+    objective: "fix_routine",
+    hairProfile: createProfile({
+      hair_texture: "wavy",
+      thickness: "normal",
+      concerns: ["frizz"],
+      goals: ["shine"],
+      current_routine_products: ["shampoo", "conditioner"],
+      products_used: "Shampoo, Conditioner",
+      routine_preference: "minimal",
+    }),
+    message:
+      "Ich will meine Routine einfacher machen. Welches Produkt passt fuer den ersten Zusatz?",
+    layer: "basics",
+  })
+
+  assert.deepEqual(
+    result.steps.map((step) => step.id),
+    ["base-shampoo", "base-conditioner", "maintenance-leave-in"],
+  )
+
+  const leaveInStep = result.steps.find((step) => step.id === "maintenance-leave-in")
+  assert.equal(leaveInStep?.category, "leave_in")
+  assert.equal(leaveInStep?.action, "add")
 })
 
 test("projectRoutinePlan marks existing shampoo as keep and additions as next steps", () => {

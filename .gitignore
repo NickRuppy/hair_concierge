@@ -57,6 +57,8 @@ yarn-error.log*
 /data/*
 !/data/agent-guidance/
 !/data/agent-guidance/**
+!/data/agent-v2/
+!/data/agent-v2/**
 *.docx
 
 # python
@@ -84,6 +86,11 @@ test-screenshots*/
 
 # local eval / compare-lab artifacts
 /tmp/
+
+# local Clawpatch review artifacts
+/.clawpatch/
+/clawpatch-report.md
+/clawpatch-summary.md
 
 # Affiliate link research artefacts (regenerated; safe to delete)
 !/data/affiliate-research/

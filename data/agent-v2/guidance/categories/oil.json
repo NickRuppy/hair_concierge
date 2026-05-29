@@ -1,0 +1,175 @@
+{
+  "package_id": "category.oil.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "constraint_blocked", "safety_boundary"],
+    "categories": ["oil"],
+    "routine_layers": ["goals", "problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.oil.cosmetic_finish_or_prewash",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Frame oil as cosmetic finish, friction support, or pre-wash length protection, not water-like moisture or medical scalp treatment. Assume finishing oil by default for broad oil use unless the user says scalp, pre-wash, massage, einwirken, growth, or hair-loss language."
+    },
+    {
+      "rule_id": "category.oil.no_growth_or_repair_claims",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "message": "Do not promise regrowth, thicker hair, structural repair, split-end repair, color protection, or medical scalp treatment from oil."
+    },
+    {
+      "rule_id": "category.oil.no_neat_essential_oils",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "message": "Do not recommend neat essential-oil application, dilution recipes, drop counts, DIY scalp-treatment protocols, or essential-oil routines for scalp symptoms; do not present rosemary, peppermint, massage, castor, coconut, or carrier oils as substitutes for clinical hair-loss evaluation or treatment."
+    },
+    {
+      "rule_id": "category.oil.growth_claims_without_symptoms_are_general_advice",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "message": "General questions about whether rosemary oil, castor oil, scalp massage, or oil helps growth should be handled as non-product general_advice with care_category oil, no unasked product cards, and conservative evidence wording unless active hair-loss or scalp symptoms trigger safety_boundary."
+    },
+    {
+      "rule_id": "category.oil.keep_product_types_separate",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "message": "Do not collapse pre-wash oils, silicone finishing serums, masks, medicated dandruff products, and scalp treatments into the same recommendation bucket."
+    },
+    {
+      "rule_id": "category.oil.no_product_name_claim_inference",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "message": "Do not infer oil role, heat protection, color protection, scalp suitability, ingredient effects, fragrance, silicone-free status, oil-free status, exact cadence, or exact protocol from product names, brand lines, or category prose."
+    },
+    {
+      "rule_id": "category.oil.no_unsupported_heat_protection",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "message": "Plain oil is not a heat protectant without product-specific support; unless selected product metadata has an explicit supported heat-protection claim, recommend a real heat protectant before heat, meaning a product with explicit heat-protectant claim before heat, and keep oil only as finish/after styling or pre-wash length protection where appropriate."
+    },
+    {
+      "rule_id": "category.oil.product_detail_requires_catalog",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "message": "For named oil, serum, ingredient, or product-specific claim checks, use product catalog data or select_products before stating role, heat protection, color protection, scalp suitability, ingredient effects, fragrance, silicone-free status, oil-free status, exact cadence, or exact protocol; for a single named product detail check, keep requested_product_count 1 and count_policy exact aligned between select_products and the terminal request_interpretation."
+    },
+    {
+      "rule_id": "category.oil.routine_explanation_vs_mutation",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "message": "Placement/order questions such as 'Kommt Oel vor oder nach Leave-in?' are routine_explanation with routine_intent none unless the user asks to add, remove, replace, or change saved/current routine state. Do not call build_or_fix_routine, return routine payloads, or include routine_step_ids for ordering-only questions; saved/current routine changes require build_or_fix_routine."
+    },
+    {
+      "rule_id": "category.oil.lightweight_mask_over_oil",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "message": "When the user asks 'Maske oder Oel?' after dry/frizzy lengths and a lightweight routine goal, do not make oil the main care add-on; prefer a light occasional mask and keep oil only as a tiny finish if needed."
+    },
+    {
+      "rule_id": "category.oil.safety_care_category_none",
+      "severity": "block",
+      "source": "categories/oil.md",
+      "message": "When sudden shedding, patchy loss, severe or persistent thinning, burning, pain, pustules, wounds, persistent flakes, inflamed scalp, or medically adjacent symptoms dominate, use safety_boundary with care_category none and do not escalate oiling."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.oil.category_fit_general_advice",
+      "priority": "high",
+      "source": "categories/oil.md",
+      "message": "When the user asks whether oil is useful, needed, or a fit, use supported general_advice as a category-fit assessment: decide whether oil is the right lever, optional, too heavy, or weaker than another category without showing unasked product cards."
+    },
+    {
+      "rubric_id": "category.oil.purpose_first",
+      "priority": "high",
+      "source": "categories/oil.md",
+      "message": "Clarify whether the user wants finish/tips use, pre-wash length protection, cautious scalp comfort, or growth support before selecting products; assume finishing oil by default for broad oil use unless the user says scalp, pre-wash, massage, einwirken, growth, hair-loss language, or clearly asks about protecting lengths before shampoo."
+    },
+    {
+      "rubric_id": "category.oil.finish_vs_prewash_goal_anchor",
+      "priority": "high",
+      "source": "categories/oil.md",
+      "message": "For finish versus pre-wash education, anchor the distinction to user concerns and goals: finishing oil for shine, surface frizz, smoother tips, and after-styling polish; pre-wash length protection for dry, porous, bleached, colored, or heat-stressed lengths before shampoo, not scalp by default."
+    },
+    {
+      "rubric_id": "category.oil.weight_and_buildup_caution",
+      "priority": "high",
+      "source": "categories/oil.md",
+      "message": "For fine, oily, flat, low-density, coated, or buildup-prone hair, keep dose tiny, end-focused, pre-wash-only, or skip oil if another layer is likely to weigh hair down."
+    },
+    {
+      "rubric_id": "category.oil.washout_technique",
+      "priority": "medium",
+      "source": "categories/oil.md",
+      "message": "For pre-wash oiling, include correct wash-out: apply before washing, leave on briefly, emulsify shampoo into oil before adding much water, rinse, then condition."
+    },
+    {
+      "rubric_id": "category.oil.confusion_clarity",
+      "priority": "high",
+      "source": "categories/oil.md",
+      "message": "Separate pre-wash oils, finishing serums, masks, medicated scalp products, and scalp comfort oiling before making a recommendation."
+    },
+    {
+      "rubric_id": "category.oil.balanced_compare_guidance",
+      "priority": "high",
+      "source": "categories/oil.md",
+      "message": "For oil-versus-leave-in, mask, conditioner, bondbuilder, heat protectant, or deep cleansing questions, answer as balanced category_education with care_category none unless one category becomes primary; load multiple guidance packages when boundaries matter."
+    },
+    {
+      "rubric_id": "category.oil.count_policy_fit_caveat",
+      "priority": "high",
+      "source": "categories/oil.md",
+      "message": "Use count_policy exact for explicit counts and default when no count is stated; exact means exactly requested only when enough grounded, suitable, available products exist, otherwise return fewer and explain the fit or availability constraint."
+    },
+    {
+      "rubric_id": "category.oil.routine_mutation_mapping",
+      "priority": "medium",
+      "source": "categories/oil.md",
+      "message": "For saved/current routine changes, map add or change wording to routine_intent modify, remove wording to remove_step, and replacing one product with another to replace_product; only claim saved changes after routine tooling confirms them."
+    }
+  ],
+  "required_grounding": [
+    {
+      "grounding_id": "category.oil.product_claims",
+      "tool": "select_products",
+      "when": "Concrete oil names, category membership, recommendation order, finish/pre-wash role, weight, fit, availability, or product claims are mentioned."
+    },
+    {
+      "grounding_id": "category.oil.product_detail_claims",
+      "tool": "select_products",
+      "when": "Named oil, serum, ingredient, heat claim, scalp suitability, fragrance, color protection, silicone-free/oil-free status, exact cadence, or product-specific oil claim is checked; keep count fields aligned as 1 exact for a single named-product detail check."
+    },
+    {
+      "grounding_id": "category.oil.routine_mutation",
+      "tool": "build_or_fix_routine",
+      "when": "The user asks to add, remove, replace, or change oil in a saved/current routine."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "It is unclear whether the user wants finish, pre-wash length protection, scalp comfort, or growth support.",
+      "question_policy": "Ask one purpose-first follow-up if the answer would change; otherwise default dry-ends language to a tiny end-focused finish and general growth-claim language to conservative non-product general_advice."
+    },
+    {
+      "condition": "Scalp oiling is requested and symptoms could be irritated, persistent, painful, flaky, pustular, patchy-loss, or medical.",
+      "question_policy": "Ask one safety follow-up or route conservatively away from routine-style oiling."
+    },
+    {
+      "condition": "The user asks whether rosemary oil, castor oil, scalp massage, or oil helps growth without naming symptoms.",
+      "question_policy": "Do not ask for product preferences or show product cards; answer the growth-claim boundary conservatively unless the wording suggests sudden shedding, patchy loss, pain, burning, pustules, wounds, persistent flakes, or another safety signal."
+    },
+    {
+      "condition": "Fine, low-density, oily-root, flat, coated, or buildup-prone hair may make oil a poor fit.",
+      "question_policy": "Ask one follow-up only if the distinction changes whether oil should be finish-only, pre-wash-only, or skipped."
+    },
+    {
+      "condition": "A product_detail question lacks the exact oil, serum, ingredient, or claim.",
+      "question_policy": "Ask one concise follow-up for the exact product or ingredient if product-specific role, heat protection, scalp suitability, fragrance, color protection, silicone-free/oil-free status, cadence, or protocol would materially change the answer."
+    }
+  ],
+  "markdown_path": "categories/oil.md"
+}

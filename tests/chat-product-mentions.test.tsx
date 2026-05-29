@@ -82,5 +82,23 @@ test("bold inline product mentions render one clickable trigger without nested b
 
   assert.equal(buttonCount, 2)
   assert.equal(hasNestedButton(html), false)
-  assert.match(html, /<strong>[\s\S]*Silky Leave-in[\s\S]*<\/strong>/)
+  assert.match(html, /<strong\b[^>]*>[\s\S]*Silky Leave-in[\s\S]*<\/strong>/)
+})
+
+test("assistant inline numbered steps render as a real ordered list", () => {
+  const html = renderToStaticMarkup(
+    <ChatMessage
+      message={createAssistantMessage(
+        "Ja - schlicht halten: 1. **Shampoo:** nur fuer die Kopfhaut. 2. **Conditioner:** in die Laengen. 3. **Leave-in:** sparsam.",
+        [],
+      )}
+      hairProfile={null}
+    />,
+  )
+
+  assert.match(html, /<ol\b/)
+  assert.equal((html.match(/<li\b/g) ?? []).length, 3)
+  assert.match(html, /<strong[^>]*>Shampoo:/)
+  assert.match(html, /<strong[^>]*>Conditioner:/)
+  assert.match(html, /<strong[^>]*>Leave-in:/)
 })

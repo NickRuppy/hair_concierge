@@ -1,0 +1,82 @@
+{
+  "package_id": "base.answer_contract.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "clarification", "constraint_blocked", "safety_boundary"],
+    "categories": [],
+    "routine_layers": [],
+    "safety_modes": ["normal", "restricted", "hard_short_circuit"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "answer.must_submit_terminal_contract",
+      "severity": "block",
+      "source": "base/answer-contract.md",
+      "validator_id": "terminal_contract",
+      "message": "End every agent turn by calling submit_final_answer with the typed terminal answer."
+    },
+    {
+      "rule_id": "answer.payload_matches_mode",
+      "severity": "block",
+      "source": "base/answer-contract.md",
+      "validator_id": "mode_payload",
+      "message": "The payload must match the declared answer_mode."
+    },
+    {
+      "rule_id": "answer.request_interpretation_matches_action",
+      "severity": "block",
+      "source": "base/answer-contract.md",
+      "validator_id": "request_interpretation_consistency",
+      "message": "request_interpretation must match tool args, answer mode, and the final payload."
+    },
+    {
+      "rule_id": "answer.evidence_quote_grounded",
+      "severity": "block",
+      "source": "base/answer-contract.md",
+      "validator_id": "evidence_quote_grounding",
+      "message": "request_interpretation.evidence_quote must quote the latest user message or active recent context."
+    },
+    {
+      "rule_id": "answer.evidence_quote_grounding",
+      "severity": "block",
+      "source": "base/answer-contract.md",
+      "validator_id": "evidence_quote_grounding",
+      "message": "Alias for answer.evidence_quote_grounded; request_interpretation.evidence_quote must quote the latest user message or active recent context."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "answer.concise_but_useful",
+      "priority": "high",
+      "source": "base/answer-contract.md",
+      "message": "Keep the answer concise but actionable."
+    },
+    {
+      "rubric_id": "answer.user_facing_answer_complete",
+      "priority": "high",
+      "source": "base/answer-contract.md",
+      "message": "payload.user_facing_answer_de is the complete final German answer shown to the user; do not treat recommendations, visible_steps, usage_notes_de, or blocking_constraints as hidden content that the app will render later."
+    },
+    {
+      "rubric_id": "answer.visible_payload_rendered_in_prose",
+      "priority": "high",
+      "source": "base/answer-contract.md",
+      "message": "If a product, routine step, usage note, or blocking constraint is user-visible in payload fields, include it in user_facing_answer_de."
+    },
+    {
+      "rubric_id": "answer.low_confidence_clarifies_risky_actions",
+      "priority": "high",
+      "source": "base/answer-contract.md",
+      "message": "When confidence is low, clarify before product recommendations, routine mutations, memory writes, or safety-sensitive guidance."
+    },
+    {
+      "rubric_id": "answer.bounded_repair_only_missing_tool",
+      "priority": "medium",
+      "source": "base/answer-contract.md",
+      "message": "During bounded repair, call only the missing required tool and then submit the final answer."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [],
+  "markdown_path": "base/answer-contract.md"
+}

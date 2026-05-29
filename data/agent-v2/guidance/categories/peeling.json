@@ -1,0 +1,146 @@
+{
+  "package_id": "category.peeling.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["product_recommendation", "routine", "general_advice", "constraint_blocked", "safety_boundary"],
+    "categories": ["peeling"],
+    "routine_layers": ["problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "category.peeling.caution_sensitive_scalp",
+      "severity": "block",
+      "source": "categories/peeling.md",
+      "validator_id": "category_claim_boundary",
+      "message": "Keep scalp peeling conservative for sensitive, irritated, painful, or medically adjacent scalp context."
+    },
+    {
+      "rule_id": "category.peeling.no_treatment_claims",
+      "severity": "block",
+      "source": "categories/peeling.md",
+      "message": "Do not present peeling as dandruff treatment, hair-loss treatment, infection treatment, or a fix for persistent itch, redness, burning, pain, repeated flakes, shedding, inflammation, wounds, or diagnosed scalp disease; this is safety boundary, not stronger peeling."
+    },
+    {
+      "rule_id": "category.peeling.anti_dandruff_positioning_boundary",
+      "severity": "block",
+      "source": "categories/peeling.md",
+      "message": "Product metadata may ground anti-dandruff or treatment-like product positioning, but do not diagnose dandruff, make peeling the default dandruff answer, or answer persistent flakes, itch, redness, inflammation, soreness, or recurrence with stronger exfoliation."
+    },
+    {
+      "rule_id": "category.peeling.not_required_or_aggressive",
+      "severity": "block",
+      "source": "categories/peeling.md",
+      "message": "Do not make peeling a required routine step, daily default, or aggressive-scrub recommendation; gentle and occasional use is the ceiling for cosmetic contexts."
+    },
+    {
+      "rule_id": "category.peeling.product_detail_requires_catalog",
+      "severity": "block",
+      "source": "categories/peeling.md",
+      "message": "For named peeling detail or claim checks, use product catalog data or select_products before stating mechanical, chemical, scalp-suitable, sensitive-scalp, anti-dandruff, treatment-like, compatibility, exact frequency, or protocol claims."
+    },
+    {
+      "rule_id": "category.peeling.no_name_based_method_or_sensitivity_inference",
+      "severity": "block",
+      "source": "categories/peeling.md",
+      "message": "Do not infer whether a peeling is mechanical, chemical, sensitive-scalp suitable, anti-dandruff, treatment-like, or scalp-safe from the product name, brand line, marketing family, or category prose alone."
+    },
+    {
+      "rule_id": "category.peeling.routine_explanation_vs_mutation",
+      "severity": "block",
+      "source": "categories/peeling.md",
+      "message": "Answer peeling placement and usage questions as routine_explanation with routine_intent none unless the user asks to add, remove, replace, or change a saved/current routine, which requires build_or_fix_routine and a supported routine_intent such as modify, remove_step, or replace_product."
+    },
+    {
+      "rule_id": "category.peeling.safety_care_category_none",
+      "severity": "block",
+      "source": "categories/peeling.md",
+      "message": "When scalp pain, burning, significant irritation, wounds, swelling, persistent or recurring flakes, itch with redness, soreness, unusual shedding, patchy loss, infection-like symptoms, or persistent inflammation dominate, use safety_boundary with care_category none and do not escalate exfoliation strength; persistent itch, redness, burning, pain, repeated flakes, or shedding is safety boundary, not stronger peeling."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "category.peeling.reset_role",
+      "priority": "medium",
+      "source": "categories/peeling.md",
+      "message": "Explain peeling as gentle occasional scalp peeling for scalp-local residue or oily-root buildup on tolerant scalps, not a treatment."
+    },
+    {
+      "rubric_id": "category.peeling.buildup_vs_symptom",
+      "priority": "high",
+      "source": "categories/peeling.md",
+      "message": "Separate cosmetic residue, oily roots, dry-shampoo/styler buildup, or mild flakes from symptom patterns such as persistent itch, redness, burning, pain, repeated flakes, shedding, or hair loss; product/mineral film through lengths or hard-water feel belongs in reset/clarifying/chelating shampoo comparison."
+    },
+    {
+      "rubric_id": "category.peeling.method_and_aftercare",
+      "priority": "medium",
+      "source": "categories/peeling.md",
+      "message": "Keep placement scalp-only, pressure gentle, frequency conservative, and remind that dry lengths still need conditioner, leave-in, or mask support separately."
+    },
+    {
+      "rubric_id": "category.peeling.type_vs_product",
+      "priority": "high",
+      "source": "categories/peeling.md",
+      "message": "Treat peeling type/kind questions as category education without product cards, but route which/options/count/recommendation requests to specific_products with select_products."
+    },
+    {
+      "rubric_id": "category.peeling.comparison_none",
+      "priority": "medium",
+      "source": "categories/peeling.md",
+      "message": "For comparisons against deep cleansing, shampoo, dry shampoo, or dandruff care, compare roles and use care_category none unless one category is clearly primary."
+    },
+    {
+      "rubric_id": "category.peeling.product_detail_hooks",
+      "priority": "high",
+      "source": "categories/peeling.md",
+      "message": "For named products and scalp-use claims, use primary_intent product_recommendation with product_request_kind product_detail; treat the turn as a product fact or claim check, not automatically as a recommendation or card flow."
+    },
+    {
+      "rubric_id": "category.peeling.requested_count_availability_caveat",
+      "priority": "medium",
+      "source": "categories/peeling.md",
+      "message": "Use count_policy exact when the user requests a number, but if fewer grounded suitable peeling products are available, return fewer and explain fit or availability instead of padding."
+    }
+  ],
+  "required_grounding": [
+    {
+      "grounding_id": "category.peeling.product_claims",
+      "tool": "select_products",
+      "when": "Concrete peeling names, recommendation order, category membership, product fit, caveats, scalp suitability, sensitive-scalp suitability, anti-dandruff claims, treatment-like claims, active role, exact frequency, or exact protocol are mentioned."
+    },
+    {
+      "grounding_id": "category.peeling.product_detail_claims",
+      "tool": "select_products",
+      "when": "A named peeling or product claim is checked as product_detail for mechanical/chemical method, scalp suitability, sensitive-scalp fit, anti-dandruff positioning, treatment-like role, compatibility, exact frequency, or scalp-use protocol."
+    },
+    {
+      "grounding_id": "category.peeling.routine_mutation",
+      "tool": "build_or_fix_routine",
+      "when": "The user asks to add, remove, replace, or change peeling in a saved/current routine; terminal routine_intent must stay within supported values such as modify, remove_step, or replace_product."
+    },
+    {
+      "grounding_id": "category.peeling.safety_boundary",
+      "tool": "load_advisor_guidance",
+      "when": "The user reports persistent or recurring flakes, itch with redness, soreness, painful, inflamed, wounded, spreading, unusual, severe, infection-like, shedding, or hair-loss-adjacent scalp or hair symptoms."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "Irritation, pain, persistent flakes, redness, sensitivity, wounds, or hair-loss context would change safety.",
+      "question_policy": "Ask one safety follow-up or avoid product-first peeling advice."
+    },
+    {
+      "condition": "It is unclear whether residue is scalp-only cosmetic buildup or fibre/length buildup better handled by deep cleansing.",
+      "question_policy": "Ask at most one lane-setting follow-up before treating peeling as the right category."
+    },
+    {
+      "condition": "The user asks for product_detail but the exact peeling product cannot be matched to catalog or selected product metadata.",
+      "question_policy": "Ask for the exact product or avoid product-specific scalp-suitability, active-role, treatment-like, frequency, and protocol claims."
+    },
+    {
+      "condition": "The user asks to change a saved/current routine but the current routine state is missing.",
+      "question_policy": "Use routine tooling or ask one targeted routine-state question before inventing current coverage."
+    }
+  ],
+  "markdown_path": "categories/peeling.md"
+}

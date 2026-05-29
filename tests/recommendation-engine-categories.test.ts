@@ -629,6 +629,26 @@ test("leave-in target splits blow-dry heat protection from high-heat styling pre
   assert.equal(target?.needBucket, "heat_protect")
 })
 
+test("leave-in target treats thermal rollers as moderate heat exposure", () => {
+  const thermalRollerProfile = {
+    ...SEVERE_DAMAGE_PROFILE,
+    hair_texture: "straight" as const,
+    thickness: "normal" as const,
+    density: "medium" as const,
+    drying_method: "air_dry" as const,
+    heat_styling: "never" as const,
+    styling_tools: ["thermal_rollers" as const],
+    uses_heat_protection: false,
+  }
+  const { normalized, damage, careNeeds, plan } = buildEngineState(thermalRollerProfile, [])
+  const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
+  const target = decision.targetProfile
+
+  assert.equal(target?.heatProtectionNeed, "moderate")
+  assert.equal(target?.stylingPrepNeed, "none")
+  assert.equal(target?.needBucket, "heat_protect")
+})
+
 test("leave-in fit treats missing moderate blow-dry heat protection as a caveated support path", () => {
   const blowDryProfile = {
     ...SEVERE_DAMAGE_PROFILE,
@@ -814,7 +834,7 @@ test("reset assessment promotes explicit coated hard-water reset request to stro
   const reset = buildResetAssessment(normalized, requestContext)
 
   assert.equal(reset.level, "strong")
-  assert.equal(reset.resetFocus, "broad_spectrum")
+  assert.equal(reset.resetFocus, "broad_spectrum_detox")
   assert.equal(reset.richOptionalCareRisk, true)
   assert.ok(reset.triggerSources.includes("explicit_request"))
   assert.ok(reset.triggerSources.includes("symptom"))
@@ -842,7 +862,7 @@ test("explicit deep-cleansing request builds reset target without relying on bas
   assert.equal(categories.deepCleansingShampoo.relevant, true)
   assert.equal(categories.deepCleansingShampoo.action, "add")
   assert.equal(categories.deepCleansingShampoo.targetProfile?.resetNeedLevel, "strong")
-  assert.equal(categories.deepCleansingShampoo.targetProfile?.resetFocus, "general_buildup")
+  assert.equal(categories.deepCleansingShampoo.targetProfile?.resetFocus, "product_sebum_buildup")
   assert.ok(
     categories.deepCleansingShampoo.planReasonCodes.includes("explicit_deep_cleansing_request"),
   )
@@ -952,7 +972,7 @@ test("oil decision redirects when the stated need is better served by a non-oil 
   assert.ok(decision.planReasonCodes.includes("oil_better_non_oil_category"))
 })
 
-test("oil decision suppresses new oil products when overload is likely current problem", () => {
+test("oil decision preserves explicit product intent while marking overload risk", () => {
   const { normalized } = buildEngineState(
     {
       ...LOW_DAMAGE_PROFILE,
@@ -976,7 +996,10 @@ test("oil decision suppresses new oil products when overload is likely current p
   assert.equal(decision.relevant, true)
   assert.equal(decision.action, "decrease_frequency")
   assert.equal(decision.noRecommendationReason, "overload_risk")
-  assert.equal(decision.targetProfile, null)
+  assert.equal(decision.targetProfile?.purpose, "styling_finish")
+  assert.equal(decision.targetProfile?.matcherSubtype, "styling-oel")
+  assert.equal(decision.targetProfile?.overloadRisk, true)
+  assert.equal(decision.targetProfile?.densityWeightCaution, true)
   assert.ok(decision.planReasonCodes.includes("oil_overload_suppress_products"))
 })
 
@@ -1036,7 +1059,7 @@ test("category set activates support/reset categories for oily buildup-heavy rou
   assert.deepEqual(categories.deepCleansingShampoo.targetProfile, {
     scalpTypeFocus: "oily",
     resetNeedLevel: "likely",
-    resetFocus: "general_buildup",
+    resetFocus: "product_sebum_buildup",
     targetIntensity: "medium",
     colorTreatedCaution: false,
     colorSafeRequest: false,

@@ -4,6 +4,14 @@ import type {
 } from "../../../../scripts/eval-chat/types"
 import type { SelectedProductsProjection } from "../tools/select-products"
 import type { AgentRoutePacket } from "../orchestrator/route-packet"
+import type { AgentV2RequestInterpretation, AgentV2Trace } from "@/lib/agent-v2/contracts"
+
+export type AgentV2RequestInterpretationTrace = AgentV2RequestInterpretation
+
+export type AgentV2CompareTrace = AgentV2Trace
+export type AgentCompareCareBalanceTrace = NonNullable<
+  SelectedProductsProjection["care_balance_context"]
+>
 
 export interface AgentCompareScenario {
   id: string
@@ -13,7 +21,7 @@ export interface AgentCompareScenario {
   routine_inventory?: RoutineInventorySeed[]
 }
 
-export type CanonicalCompareSystem = "classic" | "tool_loop"
+export type CanonicalCompareSystem = "classic" | "tool_loop" | "agent_v2" | "agent_v2_care_balance"
 export type LegacyCompareSystem = "current" | "agent"
 export type CompareSystem = CanonicalCompareSystem
 export type CompareSystemInput = CompareSystem | LegacyCompareSystem
@@ -32,8 +40,10 @@ export interface AgentCompareTurnResult {
   debug_lines?: string[]
   matched_products: CompareRunResult["matched_products"]
   product_trace?: SelectedProductsProjection | null
+  care_balance_trace?: AgentCompareCareBalanceTrace | null
   route_trace?: AgentRoutePacket | null
   tool_loop_trace?: unknown
+  agent_v2_trace?: AgentV2CompareTrace
   state_transition?: unknown
   error: string | null
 }
@@ -49,8 +59,10 @@ export interface CompareRunResult {
     category: string | null
   }>
   product_trace?: SelectedProductsProjection | null
+  care_balance_trace?: AgentCompareCareBalanceTrace | null
   route_trace?: AgentRoutePacket | null
   tool_loop_trace?: unknown
+  agent_v2_trace?: AgentV2CompareTrace
   state_transition?: unknown
   turns?: AgentCompareTurnResult[]
   error: string | null
@@ -63,6 +75,7 @@ export interface AgentCompareRequest {
   baseUrl?: string | null
   blinded?: boolean
   toolLoopVariant?: AgentCompareToolLoopVariant
+  systems?: CompareSystemInput[]
 }
 
 export interface AgentCompareUserOption {
@@ -93,6 +106,7 @@ export interface AgentCompareUserRequest {
   baseUrl?: string | null
   blinded?: boolean
   toolLoopVariant?: AgentCompareToolLoopVariant
+  systems?: CompareSystemInput[]
 }
 
 export interface AgentCompareResponse {
@@ -121,15 +135,16 @@ export interface AgentCompareJudgmentDraft {
 }
 
 export interface AgentCompareRolloutMetrics {
-  blinded_winner: "classic" | "tool_loop" | "tie"
+  blinded_winner: CanonicalCompareSystem | "tie"
   failure_bucket: NonNullable<AgentCompareJudgmentDraft["failure_bucket"]>
   critical_product_claim_failure: boolean
-  latency_ms: {
-    classic: number | null
-    tool_loop: number | null
-  }
+  latency_ms: Partial<Record<CanonicalCompareSystem, number | null>>
   tool_loop_model_steps: number | null
   tool_loop_tool_calls: number | null
+  agent_v2_model_steps?: number | null
+  agent_v2_tool_calls?: number | null
+  agent_v2_care_balance_model_steps?: number | null
+  agent_v2_care_balance_tool_calls?: number | null
 }
 
 export interface AgentCompareAnalysisSnapshot {
@@ -151,6 +166,7 @@ export interface AgentCompareAnalysisSnapshot {
     guidance_ids: string[]
     product_policy: string | null
     product_category: string | null
+    care_balance: string[]
     selected_products: string[]
     state_summary: string[]
     turns: Array<{
@@ -159,6 +175,7 @@ export interface AgentCompareAnalysisSnapshot {
       tool_calls: string[]
       guidance_ids: string[]
       product_policy: string | null
+      care_balance: string[]
       selected_products: string[]
     }>
   }>
@@ -171,7 +188,7 @@ export interface AgentCompareJudgmentRecord {
   toolLoopVariant?: AgentCompareToolLoopVariant
   context: AgentCompareUserSnapshot
   results: {
-    current: CompareRunResult
+    current?: CompareRunResult
     agent: CompareRunResult
   }
   judgment: AgentCompareJudgmentDraft

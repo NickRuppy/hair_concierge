@@ -42,7 +42,7 @@ async function defaultPersistConversationTurnTrace(params: {
 async function loadChatRuntimeDeps() {
   const [
     { createAdminClient },
-    { runProductionAgentPipeline },
+    { runAgentV2ProductionPipeline },
     { buildAssistantDecisionContext, buildAssistantRagContext, buildDoneEventData },
     { extractConversationMemory },
     {
@@ -56,7 +56,7 @@ async function loadChatRuntimeDeps() {
     { generateConversationTitle },
   ] = await Promise.all([
     import("@/lib/supabase/admin"),
-    import("@/lib/agent/production/chat-pipeline"),
+    import("@/lib/agent-v2/production/chat-pipeline"),
     import("@/lib/rag/chat-response"),
     import("@/lib/rag/memory-extractor"),
     import("@/lib/rag/debug-trace"),
@@ -67,7 +67,7 @@ async function loadChatRuntimeDeps() {
 
   return {
     createAdminClient,
-    runProductionAgentPipeline,
+    runAgentV2ProductionPipeline,
     buildAssistantDecisionContext,
     buildAssistantRagContext,
     buildDoneEventData,
@@ -174,7 +174,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
 
     const {
       createAdminClient,
-      runProductionAgentPipeline,
+      runAgentV2ProductionPipeline,
       buildAssistantDecisionContext,
       buildAssistantRagContext,
       buildDoneEventData,
@@ -316,7 +316,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
             },
           },
           async () =>
-            runProductionAgentPipeline({
+            runAgentV2ProductionPipeline({
               message,
               conversationId: activeConversationId,
               userId: user.id,

@@ -10,6 +10,7 @@ import type { ProductMaskSpecs } from "../src/lib/mask/constants"
 import type { ProductPeelingSpecs } from "../src/lib/peeling/constants"
 import type {
   BondbuilderRecommendationMetadata,
+  ConditionerRecommendationMetadata,
   DeepCleansingShampooRecommendationMetadata,
   DryShampooRecommendationMetadata,
   LeaveInRecommendationMetadata,
@@ -132,6 +133,106 @@ test("engine conditioner reranking prefers explicit target fit over higher seman
 
   assert.equal(reranked[0]?.id, "ideal")
   assert.equal(reranked[0]?.recommendation_meta?.category, "conditioner")
+})
+
+test("engine conditioner reranking softly prefers lighter fits under CareBalance flat-load pressure", () => {
+  const profile = {
+    ...LOW_DAMAGE_PROFILE,
+    thickness: "normal" as const,
+    density: "medium" as const,
+    goals: ["volume"] as HairProfile["goals"],
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(profile, [
+    {
+      category: "conditioner",
+      product_name: "Rich Conditioner",
+      frequency_range: "daily",
+    },
+  ])
+  const decision = runtime.categories.conditioner
+
+  const reranked = rerankConditionerProductsWithEngine({
+    candidates: [
+      createMatchedProduct("rich", "Conditioner", { combined_score: 0.88 }),
+      createMatchedProduct("light", "Conditioner", { combined_score: 0.72 }),
+    ],
+    specs: [
+      {
+        product_id: "rich",
+        weight: "rich",
+        repair_level: "medium",
+        balance_direction: "balanced",
+        ingredient_flags: [],
+      },
+      {
+        product_id: "light",
+        weight: "light",
+        repair_level: "medium",
+        balance_direction: "balanced",
+        ingredient_flags: [],
+      },
+    ],
+    decision,
+    hairProfile: profile,
+    runtime,
+  } as Parameters<typeof rerankConditionerProductsWithEngine>[0] & {
+    runtime: typeof runtime
+  })
+
+  assert.equal(reranked[0]?.id, "light")
+  const meta = reranked[0]?.recommendation_meta as ConditionerRecommendationMetadata | undefined
+  assert.match(JSON.stringify(meta), /care_balance|volume|lighter|light/i)
+})
+
+test("engine conditioner reranking does not use CareBalance label without load-pressure row", () => {
+  const profile = {
+    ...LOW_DAMAGE_PROFILE,
+    thickness: "normal" as const,
+    density: "medium" as const,
+    goals: ["volume"] as HairProfile["goals"],
+    wash_frequency: "once_weekly" as const,
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(profile, [
+    {
+      category: "conditioner",
+      product_name: "Light Conditioner",
+      frequency_range: "1_2x",
+    },
+  ])
+  const decision = runtime.categories.conditioner
+
+  const reranked = rerankConditionerProductsWithEngine({
+    candidates: [
+      createMatchedProduct("rich", "Conditioner", { combined_score: 0.88 }),
+      createMatchedProduct("light", "Conditioner", { combined_score: 0.72 }),
+    ],
+    specs: [
+      {
+        product_id: "rich",
+        weight: "rich",
+        repair_level: "medium",
+        balance_direction: "balanced",
+        ingredient_flags: [],
+      },
+      {
+        product_id: "light",
+        weight: "light",
+        repair_level: "medium",
+        balance_direction: "balanced",
+        ingredient_flags: [],
+      },
+    ],
+    decision,
+    hairProfile: profile,
+    runtime,
+  })
+
+  assert.equal(
+    runtime.careBalance.rows.find((row) => row.category === "conditioner")?.recommendation,
+    "no_action",
+  )
+  assert.equal(reranked[0]?.id, "rich")
+  assert.doesNotMatch(JSON.stringify(reranked[0]?.recommendation_meta), /care_balance/i)
 })
 
 test("engine conditioner reranking excludes mismatches when three non-mismatches exist", () => {
@@ -469,6 +570,63 @@ test("engine leave-in reranking strongly prefers heat-safe fit for heat styling 
 
   assert.equal(reranked[0]?.id, "ideal")
   assert.equal(reranked[0]?.recommendation_meta?.category, "leave_in")
+})
+
+test("engine leave-in reranking softly prefers stronger heat protection under CareBalance heat pressure", () => {
+  const profile = {
+    ...SEVERE_DAMAGE_PROFILE,
+    heat_styling: "daily" as const,
+    styling_tools: ["flat_iron"] as HairProfile["styling_tools"],
+    uses_heat_protection: false,
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(profile, [])
+  const decision = runtime.categories.leaveIn
+
+  const reranked = rerankLeaveInProductsWithEngine({
+    candidates: [
+      createMatchedProduct("basic-heat", "Leave-in", {
+        combined_score: 0.82,
+        suitable_thicknesses: ["fine"],
+      }),
+      createMatchedProduct("strong-heat", "Leave-in", {
+        combined_score: 0.72,
+        suitable_thicknesses: ["fine"],
+      }),
+    ],
+    specs: [
+      {
+        product_id: "basic-heat",
+        format: "spray",
+        weight: "medium",
+        roles: ["replacement_conditioner", "styling_prep"],
+        provides_heat_protection: true,
+        heat_protection_max_c: 180,
+        heat_activation_required: false,
+        care_benefits: ["repair", "anti_frizz"],
+        ingredient_flags: [],
+        application_stage: ["towel_dry", "pre_heat"],
+      },
+      {
+        product_id: "strong-heat",
+        format: "spray",
+        weight: "medium",
+        roles: ["replacement_conditioner", "styling_prep"],
+        provides_heat_protection: true,
+        heat_protection_max_c: 230,
+        heat_activation_required: false,
+        care_benefits: ["repair", "anti_frizz"],
+        ingredient_flags: [],
+        application_stage: ["towel_dry", "pre_heat"],
+      },
+    ],
+    decision,
+    hairProfile: profile,
+    runtime,
+  } as Parameters<typeof rerankLeaveInProductsWithEngine>[0] & { runtime: typeof runtime })
+
+  assert.equal(reranked[0]?.id, "strong-heat")
+  const meta = reranked[0]?.recommendation_meta as LeaveInRecommendationMetadata | undefined
+  assert.match(JSON.stringify(meta), /care_balance|heat_protectant|230|strong/i)
 })
 
 test("engine leave-in reranking excludes hard mismatches when three viable fits exist", () => {
@@ -1231,6 +1389,84 @@ test("engine oil reranking prefers exact oil-purpose matches over subtype-only b
   assert.equal(reranked[0]?.id, "purpose-exact")
 })
 
+test("engine oil reranking softly prefers light non-heavy oil when CareBalance flags daily oil load", () => {
+  const profile = {
+    ...LOW_DAMAGE_PROFILE,
+    thickness: "fine" as const,
+    density: "low" as const,
+    goals: ["volume"] as HairProfile["goals"],
+  }
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Ich moechte ein Haaroel als Finish.",
+  })
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(
+    profile,
+    [{ category: "oil", product_name: "Daily Oil", frequency_range: "daily" }],
+    requestContext,
+  )
+  const decision = runtime.categories.oil
+
+  const reranked = rerankOilProductsWithEngine({
+    candidates: [
+      createMatchedProduct("classic-oil", "Öle", { combined_score: 0.88 }),
+      createMatchedProduct("light-oil", "Öle", { combined_score: 0.72 }),
+    ],
+    decision,
+    hairProfile: profile,
+    eligibilityRows: [
+      {
+        product_id: "classic-oil",
+        thickness: "normal",
+        oil_subtype: "styling-oel",
+        oil_purpose: "styling_finish",
+      },
+      {
+        product_id: "light-oil",
+        thickness: "normal",
+        oil_subtype: "trocken-oel",
+        oil_purpose: "light_finish",
+      },
+    ],
+    runtime,
+  } as Parameters<typeof rerankOilProductsWithEngine>[0] & { runtime: typeof runtime })
+
+  assert.equal(
+    runtime.careBalance.rows.find((row) => row.category === "oil")?.recommendation,
+    "decrease_frequency",
+  )
+  assert.equal(reranked[0]?.id, "light-oil")
+  const meta = reranked[0]?.recommendation_meta as OilRecommendationMetadata | undefined
+  assert.match(JSON.stringify(meta), /care_balance|daily_oil_use|light/i)
+})
+
+test("engine keeps explicit overload-risk oil requests product-addressable with caveat context", () => {
+  const requestContext = buildRecommendationRequestContext({
+    requestedCategory: "oil",
+    message: "Ich will trotz Build-up und plattem Ansatz ein leichtes Oel als Finish.",
+  })
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      thickness: "fine",
+      density: "low",
+      scalp_type: "oily",
+      goals: ["volume"],
+    },
+    [{ category: "oil", product_name: "Daily Oil", frequency_range: "daily" }],
+    requestContext,
+  )
+
+  assert.equal(runtime.categories.oil.noRecommendationReason, "overload_risk")
+  assert.equal(runtime.categories.oil.targetProfile?.purpose, "styling_finish")
+  assert.equal(runtime.categories.oil.targetProfile?.matcherSubtype, "styling-oel")
+  assert.equal(runtime.categories.oil.targetProfile?.overloadRisk, true)
+  assert.equal(
+    runtime.careBalance.rows.find((row) => row.category === "oil")?.recommendation,
+    "decrease_frequency",
+  )
+})
+
 test("engine oil reranking hides finish bridge candidates when exact purpose coverage is enough", () => {
   const requestContext = buildRecommendationRequestContext({
     requestedCategory: "oil",
@@ -1749,7 +1985,7 @@ test("engine deep-cleansing shampoo reranking prefers the exact scalp focus over
     targetProfile: {
       scalpTypeFocus: "oily",
       resetNeedLevel: "likely",
-      resetFocus: "general_buildup",
+      resetFocus: "product_sebum_buildup",
       targetIntensity: "medium",
       colorTreatedCaution: false,
       colorSafeRequest: false,
@@ -1768,14 +2004,14 @@ test("engine deep-cleansing shampoo reranking prefers the exact scalp focus over
       product_id: "balanced",
       scalp_type_focus: "balanced",
       reset_intensity: "medium",
-      reset_focus: "general_buildup",
+      reset_focus: "product_sebum_buildup",
       color_treated_suitability: "unsuitable_or_unknown",
     },
     {
       product_id: "ideal",
       scalp_type_focus: "oily",
       reset_intensity: "medium",
-      reset_focus: "general_buildup",
+      reset_focus: "product_sebum_buildup",
       color_treated_suitability: "unsuitable_or_unknown",
     },
   ]
@@ -1800,12 +2036,12 @@ test("engine deep-cleansing shampoo reranking prefers broad-spectrum reset for m
     category: "deep_cleansing_shampoo",
     relevant: true,
     action: "add",
-    planReasonCodes: ["mineral_chlorine_or_hard_water_context"],
+    planReasonCodes: ["metal_mineral_hard_water_or_hard_water_context"],
     currentInventory: null,
     targetProfile: {
       scalpTypeFocus: "balanced",
       resetNeedLevel: "strong",
-      resetFocus: "mineral_chlorine",
+      resetFocus: "metal_mineral_hard_water",
       targetIntensity: "medium",
       colorTreatedCaution: true,
       colorSafeRequest: true,
@@ -1823,14 +2059,14 @@ test("engine deep-cleansing shampoo reranking prefers broad-spectrum reset for m
       product_id: "generic",
       scalp_type_focus: "balanced",
       reset_intensity: "medium",
-      reset_focus: "general_buildup",
+      reset_focus: "product_sebum_buildup",
       color_treated_suitability: "unsuitable_or_unknown",
     },
     {
       product_id: "broad",
       scalp_type_focus: "balanced",
       reset_intensity: "medium",
-      reset_focus: "broad_spectrum",
+      reset_focus: "broad_spectrum_detox",
       color_treated_suitability: "suitable",
     },
   ]
@@ -1845,8 +2081,80 @@ test("engine deep-cleansing shampoo reranking prefers broad-spectrum reset for m
     | undefined
 
   assert.equal(reranked[0]?.id, "broad")
-  assert.equal(meta?.reset_focus, "broad_spectrum")
+  assert.equal(meta?.reset_focus, "broad_spectrum_detox")
   assert.equal(meta?.color_treated_suitability, "suitable")
+})
+
+test("engine deep-cleansing shampoo reranking softly prefers gentle color-safe reset under CareBalance vulnerability", () => {
+  const profile = {
+    ...LOW_DAMAGE_PROFILE,
+    hair_texture: "curly" as const,
+    chemical_treatment: ["colored"] as HairProfile["chemical_treatment"],
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(profile, [
+    {
+      category: "deep_cleansing_shampoo",
+      product_name: "Reset Shampoo",
+      frequency_range: "1_2x",
+    },
+  ])
+  const decision: DeepCleansingShampooCategoryDecision = {
+    category: "deep_cleansing_shampoo",
+    relevant: true,
+    action: "add",
+    planReasonCodes: [],
+    currentInventory: null,
+    targetProfile: {
+      scalpTypeFocus: "balanced",
+      resetNeedLevel: "likely",
+      resetFocus: "product_sebum_buildup",
+      targetIntensity: "medium",
+      colorTreatedCaution: true,
+      colorSafeRequest: false,
+      cautionFlags: ["color_or_bleach_caution"],
+    },
+    notes: [],
+  }
+
+  const reranked = rerankDeepCleansingShampooProductsWithEngine({
+    candidates: [
+      createMatchedProduct("medium-reset", "Deep Cleansing Shampoo", { combined_score: 0.86 }),
+      createMatchedProduct("gentle-color-safe", "Deep Cleansing Shampoo", {
+        combined_score: 0.72,
+      }),
+    ],
+    specs: [
+      {
+        product_id: "medium-reset",
+        scalp_type_focus: "balanced",
+        reset_intensity: "medium",
+        reset_focus: "product_sebum_buildup",
+        color_treated_suitability: "unsuitable_or_unknown",
+      },
+      {
+        product_id: "gentle-color-safe",
+        scalp_type_focus: "balanced",
+        reset_intensity: "gentle",
+        reset_focus: "product_sebum_buildup",
+        color_treated_suitability: "suitable",
+      },
+    ],
+    decision,
+    runtime,
+  } as Parameters<typeof rerankDeepCleansingShampooProductsWithEngine>[0] & {
+    runtime: typeof runtime
+  })
+
+  assert.equal(
+    runtime.careBalance.rows.find((row) => row.category === "deep_cleansing_shampoo")
+      ?.recommendation,
+    "decrease_frequency",
+  )
+  assert.equal(reranked[0]?.id, "gentle-color-safe")
+  const meta = reranked[0]?.recommendation_meta as
+    | DeepCleansingShampooRecommendationMetadata
+    | undefined
+  assert.match(JSON.stringify(meta), /care_balance|deep_cleansing_vulnerability|gentle/i)
 })
 
 test("engine deep-cleansing shampoo reranking suppresses unsupported mineral and color-safe matches", () => {
@@ -1854,12 +2162,12 @@ test("engine deep-cleansing shampoo reranking suppresses unsupported mineral and
     category: "deep_cleansing_shampoo",
     relevant: true,
     action: "add",
-    planReasonCodes: ["mineral_chlorine_or_hard_water_context"],
+    planReasonCodes: ["metal_mineral_hard_water_or_hard_water_context"],
     currentInventory: null,
     targetProfile: {
       scalpTypeFocus: "balanced",
       resetNeedLevel: "strong",
-      resetFocus: "mineral_chlorine",
+      resetFocus: "metal_mineral_hard_water",
       targetIntensity: "medium",
       colorTreatedCaution: true,
       colorSafeRequest: true,
@@ -1877,7 +2185,7 @@ test("engine deep-cleansing shampoo reranking suppresses unsupported mineral and
         product_id: "generic",
         scalp_type_focus: "balanced",
         reset_intensity: "medium",
-        reset_focus: "general_buildup",
+        reset_focus: "product_sebum_buildup",
         color_treated_suitability: "unsuitable_or_unknown",
       },
     ],

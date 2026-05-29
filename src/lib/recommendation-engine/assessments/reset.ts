@@ -96,8 +96,8 @@ function chooseResetFocus(
       trigger.includes("metal"),
   )
 
-  if (mineralTrigger) return "mineral_chlorine"
-  if (triggers.size > 0) return "general_buildup"
+  if (mineralTrigger) return "metal_mineral_hard_water"
+  if (triggers.size > 0) return "product_sebum_buildup"
   return null
 }
 

@@ -65,6 +65,7 @@ import {
 import { buildRecommendationRequestContext } from "@/lib/recommendation-engine/request-context"
 import type {
   BondbuilderCategoryDecision,
+  CareBalanceRow,
   CategoryFitEvaluation,
   CategoryFitStatus,
   ConditionerCategoryDecision,
@@ -77,6 +78,15 @@ import type {
   ShampooCategoryDecision,
 } from "@/lib/recommendation-engine/types"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
+
+const DEEP_CLEANSING_RESET_INTENSITY_LABELS: Record<
+  NonNullable<DeepCleansingShampooRecommendationMetadata["reset_intensity"]>,
+  string
+> = {
+  gentle: "sanft",
+  medium: "mittel",
+  strong: "stark",
+}
 
 const SELECTION_LIMIT = 3
 const CANDIDATE_COUNT = 10
@@ -210,6 +220,31 @@ function compareScoredProducts(left: ScoredEngineProduct, right: ScoredEnginePro
   const leftPrice = typeof left.price_eur === "number" ? left.price_eur : Number.MAX_SAFE_INTEGER
   const rightPrice = typeof right.price_eur === "number" ? right.price_eur : Number.MAX_SAFE_INTEGER
   return leftPrice - rightPrice
+}
+
+function getCareBalanceRow(
+  runtime: RecommendationEngineRuntime | null | undefined,
+  category: CareBalanceRow["category"],
+): CareBalanceRow | null {
+  return runtime?.careBalance.rows.find((row) => row.category === category) ?? null
+}
+
+function hasCareBalanceReason(row: CareBalanceRow | null, reasonCode: string): boolean {
+  if (!row) return false
+  return (
+    row.decisiveReasonCodes.includes(reasonCode) ||
+    row.contextReasonCodes.includes(reasonCode) ||
+    row.selectionHints.some((hint) => hint.reasonCodes.includes(reasonCode))
+  )
+}
+
+function appendCareBalanceMetaReason(
+  reasons: string[],
+  reason: string,
+  position: "top_reason" | "tradeoff" = "top_reason",
+): string[] {
+  const next = position === "top_reason" ? [reason, ...reasons] : [...reasons, reason]
+  return [...new Set(next)].slice(0, 3)
 }
 
 function stripScore<T extends ScoredEngineProduct>(products: T[]): MatchedProduct[] {
@@ -478,10 +513,12 @@ export function rerankConditionerProductsWithEngine(params: {
   specs: ProductConditionerRerankSpecs[]
   decision: ConditionerCategoryDecision
   hairProfile: HairProfile | null
+  runtime?: RecommendationEngineRuntime
 }): MatchedProduct[] {
-  const { candidates, specs, decision, hairProfile } = params
+  const { candidates, specs, decision, hairProfile, runtime } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
+  const careBalanceRow = getCareBalanceRow(runtime, "conditioner")
 
   const specsByProductId = new Map(specs.map((spec) => [spec.product_id, spec]))
   const scored: ScoredConditionerProduct[] = candidates.map((product) => {
@@ -503,18 +540,37 @@ export function rerankConditionerProductsWithEngine(params: {
       "Die Conditioner-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
       "Weicht beim Conditioner-Zielprofil sichtbar von deinem Bedarf ab.",
     )
-    const score = toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
+    const preferLightLoadFit = hasCareBalanceReason(careBalanceRow, "conditioner_load_pressure")
+    const lightLoadBonus = preferLightLoadFit && spec?.weight === "light" ? 18 : 0
+    const score =
+      toBaseScore(product) +
+      fitStatusAdjustment(fit.status) +
+      fitReasonAdjustment(fit) +
+      lightLoadBonus
+    const careBalanceReason =
+      lightLoadBonus > 0
+        ? "CareBalance-Hinweis: leichter Conditioner-Fit gegen Volumen- oder Beschwerungsdruck."
+        : null
 
     const recommendationMeta: ConditionerRecommendationMetadata = {
       category: "conditioner",
       score: Math.round(score * 10) / 10,
       top_reasons: [
+        careBalanceReason,
         ...positives,
         target.balance
           ? `Fokus auf ${target.balance === "balanced" ? "ausgewogene Pflege" : target.balance === "moisture" ? "Feuchtigkeit" : "Protein"} passt zu deinem Profil.`
           : "Passt gut zu deinem aktuellen Conditioner-Bedarf.",
-      ].slice(0, 3),
-      tradeoffs,
+      ]
+        .filter((reason): reason is string => Boolean(reason))
+        .slice(0, 3),
+      tradeoffs: hasCareBalanceReason(careBalanceRow, "conditioner_below_wash_cadence")
+        ? appendCareBalanceMetaReason(
+            tradeoffs,
+            "CareBalance-Kontext: Conditioner-Frequenz bleibt side-by-side und nicht autoritativ.",
+            "tradeoff",
+          )
+        : tradeoffs,
       usage_hint: buildConditionerUsageHint(decision),
       matched_profile: {
         thickness: hairProfile?.thickness ?? null,
@@ -705,10 +761,13 @@ export function rerankOilProductsWithEngine(params: {
   decision: OilCategoryDecision
   hairProfile: HairProfile | null
   eligibilityRows?: ProductOilEligibilityRow[]
+  runtime?: RecommendationEngineRuntime
 }): MatchedProduct[] {
-  const { candidates, decision, hairProfile, eligibilityRows = [] } = params
+  const { candidates, decision, hairProfile, eligibilityRows = [], runtime } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const targetProfile = decision.targetProfile
+  const careBalanceRow = getCareBalanceRow(runtime, "oil")
+  const preferLightOil = hasCareBalanceReason(careBalanceRow, "daily_oil_use")
   const bridgePurpose = getFinishBridgePurpose(targetProfile.purpose)
   const eligibilityByProductId = new Map<string, ProductOilEligibilityRow[]>()
 
@@ -757,11 +816,15 @@ export function rerankOilProductsWithEngine(params: {
     const classicSubtypeMatch = productEligibility.some(
       (row) => row.oil_purpose === null && row.oil_subtype === targetProfile.matcherSubtype,
     )
+    const lightOilFit = productEligibility.some(
+      (row) => row.oil_purpose === "light_finish" || row.oil_subtype === "trocken-oel",
+    )
     const { positives, tradeoffs } = buildOilTopReasons(decision, {
       exactPurposeMatch,
       finishBridgeMatch,
       classicSubtypeMatch,
     })
+    const careBalanceBonus = preferLightOil && lightOilFit ? 64 : 0
     const score =
       toBaseScore(product) +
       (exactPurposeMatch
@@ -772,14 +835,19 @@ export function rerankOilProductsWithEngine(params: {
             ? -8
             : productEligibility.length > 0
               ? -30
-              : 0)
+              : 0) +
+      careBalanceBonus
+    const careBalanceReason =
+      careBalanceBonus > 0
+        ? "care_balance daily_oil_use: bei taeglichem Oel oder Build-up-Druck leichter, nicht schwerer Oel-Fit."
+        : null
 
     const recommendationMeta: OilRecommendationMetadata = {
       category: "oil",
       score: Math.round(score * 10) / 10,
       top_reasons:
-        positives.length > 0
-          ? positives
+        positives.length > 0 || careBalanceReason
+          ? [...new Set([careBalanceReason, ...positives].filter(Boolean) as string[])].slice(0, 3)
           : [
               targetProfile.purpose
                 ? `Die Auswahl folgt dem Oel-Zweck ${OIL_PURPOSE_LABELS[targetProfile.purpose].toLowerCase()}.`
@@ -982,20 +1050,22 @@ function buildDeepCleansingTopReasons(params: {
 
   if (fit.status === "mismatch") {
     tradeoffs.push("Kein sicherer Match fuer den angefragten Reset-Fokus oder Farbschutz.")
-  } else if (spec?.reset_focus === "mineral_chlorine") {
+  } else if (spec?.reset_focus === "metal_mineral_hard_water") {
     positives.push("Strukturiert fuer Kalk-, Mineral- oder Chlor-Kontext gepflegt.")
-  } else if (spec?.reset_focus === "broad_spectrum") {
+  } else if (spec?.reset_focus === "broad_spectrum_detox") {
     positives.push(
       "Strukturiert als breiter Reset fuer Styling-/Pflegeaufbau plus Mineral-Kontext.",
     )
-  } else if (spec?.reset_focus === "general_buildup") {
+  } else if (spec?.reset_focus === "product_sebum_buildup") {
     positives.push("Strukturiert fuer allgemeinen Produktaufbau und beschwertes Haar gepflegt.")
   } else {
     positives.push("Passt als gelegentlicher Reset bei Produktaufbau oder beschwertem Haar.")
   }
 
   if (spec?.reset_intensity) {
-    positives.push(`Reset-Intensitaet: ${spec.reset_intensity}.`)
+    positives.push(
+      `Reset-Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[spec.reset_intensity]}.`,
+    )
   }
 
   if (fit.status === "ideal") {
@@ -1030,10 +1100,13 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
   candidates: MatchedProduct[]
   specs: ProductDeepCleansingShampooSpecs[]
   decision: DeepCleansingShampooCategoryDecision
+  runtime?: RecommendationEngineRuntime
 }): MatchedProduct[] {
-  const { candidates, specs, decision } = params
+  const { candidates, specs, decision, runtime } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
+  const careBalanceRow = getCareBalanceRow(runtime, "deep_cleansing_shampoo")
+  const preferGentleReset = hasCareBalanceReason(careBalanceRow, "deep_cleansing_vulnerability")
 
   const specsByProductId = new Map(specs.map((spec) => [spec.product_id, spec]))
   const scored: ScoredDeepCleansingShampooProduct[] = candidates.map((product) => {
@@ -1043,23 +1116,36 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
       spec as DeepCleansingShampooFitSpec | null,
     )
     const { positives, tradeoffs } = buildDeepCleansingTopReasons({ decision, fit, spec })
+    const careBalanceBonus =
+      preferGentleReset && spec?.reset_intensity === "gentle"
+        ? 40
+        : preferGentleReset && spec?.color_treated_suitability === "suitable"
+          ? 28
+          : 0
     const score =
       toBaseScore(product) +
       fitStatusAdjustment(fit.status) +
       fitReasonAdjustment(fit) +
       (spec?.reset_focus === target.resetFocus
         ? 20
-        : spec?.reset_focus === "broad_spectrum"
+        : spec?.reset_focus === "broad_spectrum_detox"
           ? 10
           : 0) +
       (spec?.reset_intensity === target.targetIntensity ? 10 : 0) +
       (spec?.scalp_type_focus === target.scalpTypeFocus ? 16 : 0) +
-      (target.colorSafeRequest && spec?.color_treated_suitability === "suitable" ? 12 : 0)
+      (target.colorSafeRequest && spec?.color_treated_suitability === "suitable" ? 12 : 0) +
+      careBalanceBonus
+    const careBalanceReason =
+      careBalanceBonus > 0
+        ? "CareBalance-Hinweis: vulnerable Reset-Nutzung, daher sanfter oder farbsicherer Reset-Fit bevorzugt."
+        : null
 
     const recommendationMeta: DeepCleansingShampooRecommendationMetadata = {
       category: "deep_cleansing_shampoo",
       score: Math.round(score * 10) / 10,
-      top_reasons: positives.slice(0, 3),
+      top_reasons: careBalanceReason
+        ? appendCareBalanceMetaReason(positives, careBalanceReason)
+        : positives.slice(0, 3),
       tradeoffs,
       usage_hint: buildDeepCleansingShampooUsageHint(),
       scalp_type_focus: target.scalpTypeFocus,
@@ -1084,8 +1170,8 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
 
   const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
   const strictRequest =
-    target.resetFocus === "mineral_chlorine" ||
-    target.resetFocus === "broad_spectrum" ||
+    target.resetFocus === "metal_mineral_hard_water" ||
+    target.resetFocus === "broad_spectrum_detox" ||
     target.colorSafeRequest
 
   if (acceptable.length > 0) {
@@ -1309,10 +1395,15 @@ export function rerankLeaveInProductsWithEngine(params: {
   decision: LeaveInCategoryDecision
   hairProfile: HairProfile | null
   requestedFormats?: readonly LeaveInFormat[]
+  runtime?: RecommendationEngineRuntime
 }): MatchedProduct[] {
-  const { candidates, specs, decision, hairProfile, requestedFormats = [] } = params
+  const { candidates, specs, decision, hairProfile, requestedFormats = [], runtime } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
+  const careBalanceHeatRow = getCareBalanceRow(runtime, "heat_protectant")
+  const preferStrongHeatProtection =
+    hasCareBalanceReason(careBalanceHeatRow, "heat_protectant_missing") ||
+    hasCareBalanceReason(careBalanceHeatRow, "heat_protectant_below_heat_cadence")
 
   const specsByProductId = new Map(specs.map((spec) => [spec.product_id, spec]))
   const scored: ScoredLeaveInProduct[] = candidates.map((product) => {
@@ -1334,16 +1425,31 @@ export function rerankLeaveInProductsWithEngine(params: {
       "Die Leave-in-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
       "Weicht bei Nutzen, Hitzeschutz oder Conditioner-Rolle zu deutlich von deinem Bedarf ab.",
     )
-    const score = toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
+    const strongHeatBonus =
+      preferStrongHeatProtection &&
+      spec?.provides_heat_protection &&
+      (spec.heat_protection_max_c ?? 0) >= 220
+        ? 24
+        : 0
+    const score =
+      toBaseScore(product) +
+      fitStatusAdjustment(fit.status) +
+      fitReasonAdjustment(fit) +
+      strongHeatBonus
     const integratedHeatBonusReason =
       shouldPreferIntegratedLeaveInHeatBonus(target) && spec?.provides_heat_protection
         ? "Kann ein Produkt weniger in der Routine bedeuten: Leave-in-Pflege plus Foenhitzeschutz in einem Produkt."
+        : null
+    const careBalanceHeatReason =
+      strongHeatBonus > 0
+        ? `CareBalance-Hinweis: staerkerer Hitzeschutz-Fit (${spec?.heat_protection_max_c} C) bei hoher oder kumulativer Hitze.`
         : null
 
     const recommendationMeta: LeaveInRecommendationMetadata = {
       category: "leave_in",
       score: Math.round(score * 10) / 10,
       top_reasons: [
+        careBalanceHeatReason,
         ...positives,
         integratedHeatBonusReason,
         target.needBucket === "heat_protect"
@@ -1712,16 +1818,19 @@ export async function selectConditionerProductsWithEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime?: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(
-    hairProfile,
-    routineItems,
-    buildRecommendationRequestContext({
-      requestedCategory: "conditioner",
-      message,
-    }),
-  )
+  const runtime =
+    params.runtime ??
+    buildRecommendationEngineRuntimeFromPersistence(
+      hairProfile,
+      routineItems,
+      buildRecommendationRequestContext({
+        requestedCategory: "conditioner",
+        message,
+      }),
+    )
   const decision = runtime.categories.conditioner
   if (!decision.relevant || !decision.targetProfile) return []
 
@@ -1770,6 +1879,7 @@ export async function selectConditionerProductsWithEngine(params: {
     specs: (specs ?? []) as ProductConditionerRerankSpecs[],
     decision,
     hairProfile,
+    runtime,
   })
 }
 
@@ -1856,22 +1966,24 @@ export async function selectOilProductsWithEngine(params: {
   message: string
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
+  runtime?: RecommendationEngineRuntime
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const requestContext = buildRecommendationRequestContext({
     requestedCategory: "oil",
     message,
   })
-  const runtime = buildRecommendationEngineRuntimeFromPersistence(
-    hairProfile,
-    routineItems,
-    requestContext,
-  )
+  const runtime =
+    params.runtime ??
+    buildRecommendationEngineRuntimeFromPersistence(hairProfile, routineItems, requestContext)
   const decision = runtime.categories.oil
+  const caveatedOverloadSelection =
+    decision.noRecommendationReason === "overload_risk" && decision.targetProfile !== null
+
   if (
     !decision.relevant ||
     decision.clarificationNeeded ||
-    decision.noRecommendationReason ||
+    (decision.noRecommendationReason && !caveatedOverloadSelection) ||
     !decision.targetProfile?.matcherSubtype ||
     !hairProfile?.thickness
   ) {
@@ -1912,6 +2024,7 @@ export async function selectOilProductsWithEngine(params: {
       candidates,
       decision,
       hairProfile,
+      runtime,
     })
   }
 
@@ -1936,6 +2049,7 @@ export async function selectOilProductsWithEngine(params: {
     decision,
     hairProfile,
     eligibilityRows: typedEligibilityRows,
+    runtime,
   })
 }
 
