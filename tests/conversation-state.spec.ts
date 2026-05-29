@@ -137,6 +137,9 @@ test("default conversation state is empty and versioned", () => {
     answered_slots: [],
     last_assistant_action: null,
     last_product_category: null,
+    agent_v2_routine_thread_context: null,
+    agent_v2_prior_selected_product_projections: [],
+    agent_v2_session_memory: [],
   })
 })
 
@@ -168,6 +171,9 @@ test("malformed partial conversation state normalizes to safe defaults", () => {
     answered_slots: ["routine", "problem"],
     last_assistant_action: null,
     last_product_category: "leave_in",
+    agent_v2_routine_thread_context: null,
+    agent_v2_prior_selected_product_projections: [],
+    agent_v2_session_memory: [],
   })
 })
 
