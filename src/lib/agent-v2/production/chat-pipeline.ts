@@ -355,7 +355,11 @@ export function classifyAgentV2ProductionSafetyMode(message: string): AgentV2Saf
     /haare?\s+fall(?:en|t).*(?:b(?:ue|ü)scheln|b(?:ue|ü)schelweise)/.test(normalized) ||
     /\b(pl[oö]tzlich(?:er|e|es)?\s+haarausfall|verschreibungspflichtig|rezeptpflichtig)\b/.test(
       normalized,
-    )
+    ) ||
+    /\b(verliere|verlierst|verliert|haarausfall)\b.{0,120}\b(extrem|sehr|viele?|wochen|nicht besser)\b/.test(
+      normalized,
+    ) ||
+    /\b(extrem|sehr|viele?|wochen)\b.{0,120}\b(haare?|haarausfall)\b/.test(normalized)
   ) {
     return "hard_short_circuit"
   }

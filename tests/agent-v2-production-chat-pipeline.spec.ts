@@ -2,7 +2,10 @@ import assert from "node:assert/strict"
 import { readFile } from "node:fs/promises"
 import test from "node:test"
 
-import { runAgentV2ProductionPipeline } from "../src/lib/agent-v2/production/chat-pipeline"
+import {
+  classifyAgentV2ProductionSafetyMode,
+  runAgentV2ProductionPipeline,
+} from "../src/lib/agent-v2/production/chat-pipeline"
 import { loadAgentV2ProductionConversationHistory } from "../src/lib/agent-v2/production/conversation-history"
 import { deriveMatchedProducts } from "../src/lib/agent-v2/production/product-output"
 import { createDefaultConversationState } from "../src/lib/rag/conversation-state"
@@ -694,6 +697,15 @@ test("AgentV2 product cards do not fall back to unrelated current-turn products 
       ],
     }),
     [],
+  )
+})
+
+test("AgentV2 production safety mode hard-stops severe persistent shedding", () => {
+  assert.equal(
+    classifyAgentV2ProductionSafetyMode(
+      "Ich verliere extrem viele Haare seit Wochen und es wird nicht besser",
+    ),
+    "hard_short_circuit",
   )
 })
 
