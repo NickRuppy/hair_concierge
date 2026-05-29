@@ -1,16 +1,31 @@
 import { test, expect } from "@playwright/test"
 
 test.describe("Core user flows — smoke test @ci", () => {
-  test("1. Homepage redirects unauthenticated users to /quiz", async ({ page }) => {
+  test("1. Homepage renders the marketing landing for unauthenticated users", async ({ page }) => {
     const response = await page.goto("/", { waitUntil: "networkidle" })
-    // After redirect chain settles, URL should contain /quiz
-    expect(page.url()).toContain("/quiz")
-    // Page should have loaded successfully
-    expect(
-      response?.ok() || response?.status() === 304 || page.url().includes("/quiz"),
-    ).toBeTruthy()
+    // / is now the marketing landing — should NOT redirect
+    expect(page.url()).toMatch(/\/$/)
+    expect(response?.ok() || response?.status() === 304).toBeTruthy()
+    // Hero H1 is the marketing landing's signature copy
+    const heroHeading = page.locator("h1").first()
+    await expect(heroHeading).toContainText("Weißt du, was deine Haare")
+    // The header CTA should link to /quiz
+    const quizCta = page.getByRole("link", { name: "Quiz starten" }).first()
+    await expect(quizCta).toHaveAttribute("href", "/quiz")
+    // Returning users need a visible sign-in path — header has Anmelden → /chat
+    // (middleware routes signed-in users straight to /chat, signed-out returning
+    // users through /auth with next preserved)
+    const signInLink = page.getByRole("link", { name: "Anmelden" })
+    await expect(signInLink).toHaveAttribute("href", "/chat")
+    // Pricing card CTAs must funnel through /quiz, not deep-link to /pricing
+    // (anonymous /pricing visits 400 on the identity check at checkout).
+    const planCta = page.getByRole("link", { name: "Plan wählen" }).first()
+    await expect(planCta).toHaveAttribute("href", "/quiz")
+    // Footer "Preise" is an in-page anchor to the pricing section, not /pricing.
+    const footerPreise = page.locator('footer a[href="/#preise"]').filter({ hasText: "Preise" })
+    await expect(footerPreise).toBeVisible()
     // Take a screenshot as evidence
-    await page.screenshot({ path: "tests/screenshots/01-homepage-redirect.png", fullPage: true })
+    await page.screenshot({ path: "tests/screenshots/01-homepage-landing.png", fullPage: true })
   })
 
   test("2. Quiz page loads with intro and first quiz step after clicking start", async ({
@@ -18,6 +33,11 @@ test.describe("Core user flows — smoke test @ci", () => {
   }) => {
     await page.goto("/quiz", { waitUntil: "networkidle" })
     expect(page.url()).toContain("/quiz")
+
+    // Info strip is shown above the first question, framing the quiz
+    // before the user commits to answering.
+    const infoStrip = page.getByText("Lass uns deine Haare verstehen")
+    await expect(infoStrip).toBeVisible({ timeout: 10000 })
 
     // Wait for quiz content to render
     await page.waitForTimeout(2000)

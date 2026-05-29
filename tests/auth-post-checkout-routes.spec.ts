@@ -315,6 +315,51 @@ test("does not trust client email when verifying or updating checkout activation
   expect(ensuredEmail).toBe("stripe-owned@example.com")
 })
 
+test("password activation accepts PayPal intent tokens and uses provider-owned email", async () => {
+  let rateLimitIdentifier: string | undefined
+  let ensuredToken: string | undefined
+  const { calls, supabase } = stubSupabase({
+    checkout_activation_session_hash: sessionHash("paypal:I-password"),
+    provider: "email",
+  })
+  const { deps } = stubDeps({
+    supabase,
+    checkRateLimit: async (identifier) => {
+      rateLimitIdentifier = identifier
+      return { allowed: true }
+    },
+    ensurePayPalCheckoutAccountForToken: async (token) => {
+      ensuredToken = token
+      return {
+        status: "active",
+        userId: "user-paypal",
+        email: "paypal-owned@example.com",
+        canSetInitialPassword: true,
+      }
+    },
+  })
+
+  const response = await handleSetCheckoutPassword(
+    {
+      provider: "paypal",
+      token: "I-password",
+      email: "attacker@example.com",
+      password: "long-enough",
+    },
+    deps,
+  )
+
+  expect(response).toMatchObject({
+    status: 200,
+    body: { ok: true, email: "paypal-owned@example.com" },
+  })
+  expect(rateLimitIdentifier).toBe("paypal:I-password")
+  expect(ensuredToken).toBe("I-password")
+  const updateCall = calls.find(([op]) => op === "updateUserById")
+  expect(updateCall?.[1]).toBe("user-paypal")
+  expect(updateCall?.[2].app_metadata).not.toHaveProperty("checkout_activation_session_hash")
+})
+
 test("password activation fallback links quiz metadata when fulfilling checkout", async () => {
   let linked: { userId: string; email: string | undefined; leadId: string | undefined } | undefined
   let forwardedLeadId: string | undefined
@@ -446,6 +491,70 @@ test("send magic link derives email from checkout activation and consumes matchi
   expect(updateCall?.[1]).toBe("user-magic")
   expect(updateCall?.[2].app_metadata).toMatchObject({
     provider: "email",
+    activation_method: "passwordless",
+    passwordless_login_sent_at: "2026-05-04T12:00:00.000Z",
+  })
+  expect(updateCall?.[2].app_metadata).not.toHaveProperty("checkout_activation_session_hash")
+})
+
+test("send magic link accepts PayPal intent tokens and consumes the provider marker", async () => {
+  const calls: any[] = []
+  let rateLimitIdentifier: string | undefined
+  const { supabase } = stubSupabase({
+    checkout_activation_session_hash: sessionHash("paypal:I-magic"),
+    provider: "email",
+  })
+  supabase.auth.signInWithOtp = async (args: Record<string, unknown>) => {
+    calls.push(["signInWithOtp", args])
+    return { data: {}, error: null }
+  }
+  const originalUpdateUserById = supabase.auth.admin.updateUserById
+  supabase.auth.admin.updateUserById = async (userId: string, patch: Record<string, unknown>) => {
+    calls.push(["updateUserById", userId, patch])
+    return originalUpdateUserById(userId, patch)
+  }
+
+  const response = await handleSendMagicLink(
+    {
+      provider: "paypal",
+      token: "I-magic",
+      email: "attacker@example.com",
+    },
+    {
+      stripe: {} as any,
+      supabase,
+      siteUrl: "https://hair.example",
+      now: () => new Date("2026-05-04T12:00:00.000Z"),
+      checkRateLimit: async (identifier) => {
+        rateLimitIdentifier = identifier
+        return { allowed: true }
+      },
+      verifyCheckoutSessionForActivation: async () => checkoutSession(),
+      ensureCheckoutAccount: async () => ({
+        userId: "unused",
+        email: "unused@example.com",
+        canSetInitialPassword: true,
+      }),
+      ensurePayPalCheckoutAccountForToken: async () => ({
+        status: "active",
+        userId: "user-paypal",
+        email: "paypal-owned@example.com",
+        canSetInitialPassword: true,
+      }),
+      claimCheckoutActivation: async () => true,
+      releaseCheckoutActivationClaim: async () => {},
+    },
+  )
+
+  expect(response).toMatchObject({
+    status: 200,
+    body: { ok: true, email: "paypal-owned@example.com" },
+  })
+  expect(rateLimitIdentifier).toBe("paypal:I-magic")
+  const otpCall = calls.find(([op]) => op === "signInWithOtp")
+  expect(otpCall?.[1]).toMatchObject({ email: "paypal-owned@example.com" })
+  const updateCall = calls.find(([op]) => op === "updateUserById")
+  expect(updateCall?.[2].app_metadata).toMatchObject({
     activation_method: "passwordless",
     passwordless_login_sent_at: "2026-05-04T12:00:00.000Z",
   })

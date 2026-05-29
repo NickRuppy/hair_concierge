@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
+import { notFound } from "next/navigation"
 import { useQuizStore } from "@/lib/quiz/store"
+import { loadQuizDraft } from "@/lib/quiz/draft"
 import { getQuestionByStep } from "@/lib/quiz/questions"
-import { QuizLanding } from "@/components/quiz/quiz-landing"
 import { QuizQuestion } from "@/components/quiz/quiz-question"
 import { QuizScalpQuestion } from "@/components/quiz/quiz-scalp-question"
 import { QuizConcernsQuestion } from "@/components/quiz/quiz-concerns-question"
@@ -12,10 +13,9 @@ import { QuizAnalysis } from "@/components/quiz/quiz-analysis"
 import { QuizResults } from "@/components/quiz/quiz-results"
 import { QuizGoals } from "@/components/quiz/quiz-goals"
 import { QuizWelcome } from "@/components/quiz/quiz-welcome"
-import { posthog } from "@/providers/posthog-provider"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
 
 const STEP_NAMES: Record<number, string> = {
-  1: "landing",
   2: "hair_texture",
   3: "hair_thickness",
   13: "hair_density",
@@ -33,13 +33,90 @@ const STEP_NAMES: Record<number, string> = {
 
 export default function QuizPage() {
   const step = useQuizStore((s) => s.step)
+  const restoreDraft = useQuizStore((s) => s.restoreDraft)
+  const resetQuiz = useQuizStore((s) => s.reset)
+  const [draftStatus, setDraftStatus] = useState<"checking" | "prompt" | "ready">("checking")
+  const quizStartedRef = useRef(false)
+  const lastTrackedStepRef = useRef<number | null>(null)
 
   useEffect(() => {
-    posthog.capture("quiz_step_viewed", {
-      step_name: STEP_NAMES[step] || `step_${step}`,
-      step_number: step, // deprecated: use step_name after Phase 4 resequencing
+    const timer = window.setTimeout(() => {
+      const state = useQuizStore.getState()
+      if (state.step !== 2 || Object.keys(state.answers).length > 0) {
+        setDraftStatus("ready")
+        return
+      }
+
+      setDraftStatus(loadQuizDraft() ? "prompt" : "ready")
+    }, 0)
+
+    return () => window.clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    if (draftStatus !== "ready") return
+    if (lastTrackedStepRef.current === step) return
+    lastTrackedStepRef.current = step
+
+    const stepName = STEP_NAMES[step] || `step_${step}`
+
+    if (!quizStartedRef.current) {
+      quizStartedRef.current = true
+      trackAppEvent("quiz_started", {
+        stepName,
+        stepNumber: step,
+      })
+    }
+
+    trackAppEvent("quiz_step_viewed", {
+      stepName,
+      stepNumber: step, // deprecated: use stepName after Phase 4 resequencing
     })
-  }, [step])
+  }, [draftStatus, step])
+
+  if (draftStatus === "checking") {
+    return null
+  }
+
+  if (draftStatus === "prompt") {
+    return (
+      <div className="flex min-h-[420px] flex-col justify-center">
+        <div className="animate-fade-in-up rounded-lg border border-border bg-card p-5 shadow-sm">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-[var(--brand-plum)]">
+            Angefangener Haar-Check
+          </p>
+          <h1 className="font-header text-3xl leading-tight text-foreground">
+            Du hast noch einen angefangenen Haar-Check.
+          </h1>
+          <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+            Möchtest du dort weitermachen, wo du aufgehört hast?
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              className="quiz-btn-primary min-h-12 rounded-xl px-5 py-3 text-base font-bold"
+              onClick={() => {
+                restoreDraft()
+                setDraftStatus("ready")
+              }}
+            >
+              Weitermachen
+            </button>
+            <button
+              type="button"
+              className="min-h-12 rounded-xl border border-border px-5 py-3 text-base font-bold text-foreground transition-colors hover:bg-muted"
+              onClick={() => {
+                resetQuiz()
+                setDraftStatus("ready")
+              }}
+            >
+              Neu starten
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   // Step 6: custom scalp progressive disclosure
   if (step === 6) return <QuizScalpQuestion />
@@ -50,8 +127,6 @@ export default function QuizPage() {
   if (question) return <QuizQuestion key={question.step} question={question} />
 
   switch (step) {
-    case 1:
-      return <QuizLanding />
     case 9:
       return <QuizLeadCapture />
     case 10:
@@ -63,6 +138,8 @@ export default function QuizPage() {
     case 14:
       return <QuizWelcome />
     default:
-      return <QuizLanding />
+      // Unknown step — shouldn't happen with a healthy store. Surface a 404
+      // rather than silently rendering a placeholder (would hide bugs).
+      notFound()
   }
 }

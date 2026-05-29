@@ -471,7 +471,7 @@ export function buildInterventionPlan(
   ) {
     behaviorReasons.push("frequent_heat_without_protection")
   }
-  if (profile.towelTechnique === "rubbeln") {
+  if (profile.towelTechnique === "rough_rubbing") {
     behaviorReasons.push("rough_towel_handling")
   }
   if (profile.brushType === "paddle" || profile.brushType === "round") {

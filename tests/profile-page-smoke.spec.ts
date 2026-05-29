@@ -71,6 +71,24 @@ test.describe.serial("@ci Profile page smoke", () => {
 
     if (profileError) throw profileError
 
+    const { error: billingError } = await admin.from("billing_subscriptions").upsert(
+      {
+        user_id: userId,
+        provider: "stripe",
+        provider_customer_id: `cus_smoke_${userId}`,
+        provider_subscription_id: `sub_smoke_${userId}`,
+        provider_status: "active",
+        entitlement_status: "active",
+        interval: "month",
+        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        cancel_at_period_end: false,
+        metadata: { ci_seed: "profile-page-smoke" },
+      },
+      { onConflict: "provider,provider_subscription_id" },
+    )
+
+    if (billingError && billingError.code !== "PGRST205") throw billingError
+
     await upsertHairProfileWithDryingCompat({
       user_id: userId,
       hair_texture: "wavy",
@@ -87,7 +105,7 @@ test.describe.serial("@ci Profile page smoke", () => {
       scalp_condition: null,
       chemical_treatment: ["bleached"],
       towel_material: "frottee",
-      towel_technique: "tupfen",
+      towel_technique: "gentle_press",
       drying_method: "air_dry",
       brush_type: "wide_tooth_comb",
       night_protection: [],
@@ -123,6 +141,7 @@ test.describe.serial("@ci Profile page smoke", () => {
     if (!userId) return
 
     await admin.from("user_product_usage").delete().eq("user_id", userId)
+    await admin.from("billing_subscriptions").delete().eq("user_id", userId)
     await admin.from("hair_profiles").delete().eq("user_id", userId)
     await admin.from("profiles").delete().eq("id", userId)
     await admin.from("user_memory_entries").delete().eq("user_id", userId)
@@ -134,7 +153,7 @@ test.describe.serial("@ci Profile page smoke", () => {
     page,
   }) => {
     await page.goto(`${baseUrl}/auth`, { waitUntil: "domcontentloaded" })
-    await expect(page.getByText("Hair Concierge").first()).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText("chaarlie").first()).toBeVisible({ timeout: 15000 })
 
     await page.locator('input[type="email"]:visible').fill(email)
     await page.locator('input[type="password"]:visible').fill(password)

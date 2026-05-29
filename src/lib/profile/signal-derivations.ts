@@ -22,7 +22,7 @@ export function hasDirectMechanicalStressSignals(
   nightProtection: readonly NightProtection[] | null | undefined,
 ): boolean {
   return (
-    towelTechnique === "rubbeln" ||
+    towelTechnique === "rough_rubbing" ||
     brushType === "paddle" ||
     brushType === "round" ||
     (nightProtection?.includes("tight_hairstyles") ?? false)
@@ -36,7 +36,7 @@ export function deriveMechanicalStressLevelFromBehaviors(
 ): "low" | "medium" | "high" {
   let count = 0
 
-  if (towelTechnique === "rubbeln") count += 1
+  if (towelTechnique === "rough_rubbing") count += 1
   if (brushType === "paddle" || brushType === "round") count += 1
   if (nightProtection?.includes("tight_hairstyles")) count += 1
 

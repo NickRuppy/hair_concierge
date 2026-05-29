@@ -1,5 +1,6 @@
 export type QuizStep =
-  | 1 // landing
+  // step 1 (in-app landing) was removed when the marketing landing at /
+  // took over the funnel intro. Quiz now starts at step 2.
   | 2 // haartextur
   | 3 // haarstaerke
   | 13 // haardichte

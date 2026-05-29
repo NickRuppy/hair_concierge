@@ -209,14 +209,14 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(page.getByText(/Analyse fertig/i)).toBeVisible({ timeout: 15_000 })
       await expect(
         page.getByRole("heading", {
-          name: /Dein Haar braucht mehr Protein als Feuchtigkeit/i,
+          name: /So können sich deine Haare in 4 Wochen anfühlen/i,
         }),
       ).toBeVisible()
       await expect(
         page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i }),
       ).toBeVisible()
       await expect(
-        page.getByRole("button", { name: /Jetzt starten.*34,99.*Quartal/i }),
+        page.getByRole("button", { name: /Jetzt starten.*17,49.*Quartal/i }),
       ).toBeVisible()
       await expect(page.getByText(/ERGEBNIS TEILEN/i)).toHaveCount(0)
     })
@@ -484,14 +484,14 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(page.getByText(/Analyse fertig/i)).toBeVisible({ timeout: 15_000 })
       await expect(
         page.getByRole("heading", {
-          name: /Dein Haar braucht mehr Feuchtigkeit als Protein/i,
+          name: /So können sich deine Haare in 4 Wochen anfühlen/i,
         }),
       ).toBeVisible()
       await expect(
         page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i }),
       ).toBeVisible()
       await expect(
-        page.getByRole("button", { name: /Jetzt starten.*34,99.*Quartal/i }),
+        page.getByRole("button", { name: /Jetzt starten.*17,49.*Quartal/i }),
       ).toBeVisible()
       await expect(page.getByText(/ERGEBNIS TEILEN/i)).toHaveCount(0)
     })

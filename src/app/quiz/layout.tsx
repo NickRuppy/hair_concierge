@@ -2,26 +2,26 @@
 
 import { useQuizStore } from "@/lib/quiz/store"
 import { QuizBrandPanel } from "@/components/quiz/quiz-brand-panel"
-import { useEffect, useRef } from "react"
+import { QuizInfoStrip } from "@/components/quiz/quiz-info-strip"
+import { useEffect, useRef, useState } from "react"
 
 export default function QuizLayout({ children }: { children: React.ReactNode }) {
   const step = useQuizStore((s) => s.step)
   const standardScrollRef = useRef<HTMLDivElement>(null)
   const resultScrollRef = useRef<HTMLDivElement>(null)
-  const landingScrollRef = useRef<HTMLDivElement>(null)
   const previousStepRef = useRef(step)
+  // Info strip is only shown on the first question (step 2). The dismiss
+  // state lives here (not in the strip) so it persists across step changes
+  // within the same session — the layout doesn't unmount when the user
+  // advances through questions.
+  const [infoStripDismissed, setInfoStripDismissed] = useState(false)
 
   useEffect(() => {
     if (previousStepRef.current === step) return
     previousStepRef.current = step
 
     const frame = window.requestAnimationFrame(() => {
-      const container =
-        step === 11
-          ? resultScrollRef.current
-          : step === 1
-            ? landingScrollRef.current
-            : standardScrollRef.current
+      const container = step === 11 ? resultScrollRef.current : standardScrollRef.current
       container?.scrollTo({ top: 0 })
       window.scrollTo({ top: 0 })
 
@@ -46,16 +46,6 @@ export default function QuizLayout({ children }: { children: React.ReactNode }) 
     )
   }
 
-  if (step === 1) {
-    return (
-      <div ref={landingScrollRef} className="min-h-[100dvh] overflow-y-auto bg-background">
-        <div className="mx-auto flex min-h-[100dvh] w-full max-w-[440px] flex-col justify-center px-6 py-10 sm:px-8 lg:max-w-[1160px] lg:px-10 lg:py-12 xl:max-w-[1220px]">
-          {children}
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="flex min-h-[100dvh] bg-background">
       {/* Left panel — brand / contextual (hidden on mobile) */}
@@ -65,7 +55,12 @@ export default function QuizLayout({ children }: { children: React.ReactNode }) 
 
       {/* Right panel — quiz content (full-width on mobile) */}
       <div ref={standardScrollRef} className="w-full overflow-y-auto md:w-1/2">
-        <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">{children}</div>
+        <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">
+          {step === 2 && !infoStripDismissed && (
+            <QuizInfoStrip onDismiss={() => setInfoStripDismissed(true)} />
+          )}
+          {children}
+        </div>
       </div>
     </div>
   )

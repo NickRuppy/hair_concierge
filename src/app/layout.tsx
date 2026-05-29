@@ -1,8 +1,12 @@
 import type { Metadata, Viewport } from "next"
 import { Playfair_Display, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
 import { AuthProvider } from "@/providers/auth-provider"
+import { CustomerIoProvider } from "@/providers/customerio-provider"
+import { MetaPixelProvider } from "@/providers/meta-pixel-provider"
 import { PostHogClientProvider } from "@/providers/posthog-provider"
 import { ToastProvider } from "@/providers/toast-provider"
+import { CookieConsent } from "@/components/cookie-consent/cookie-consent"
+import { FeedbackWidget } from "@/components/feedback/feedback-widget"
 import "./globals.css"
 
 const playfairDisplay = Playfair_Display({
@@ -35,9 +39,9 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "Hair Concierge — Personalisierte Haarpflege-Beratung",
+  title: "Chaarlie — Dein persönlicher Haarpflege-Berater",
   description:
-    "Personalisierte Haarpflege-Beratung powered by AI. Erhalte individuelle Tipps, Produktempfehlungen und Haar-Analysen.",
+    "Chaarlie ist dein persönlicher Haarpflege-Berater. Erhalte individuelle Tipps, Produktempfehlungen und Haaranalysen — auf dein Haar zugeschnitten.",
 }
 
 export default function RootLayout({
@@ -46,15 +50,23 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="de">
+    <html lang="de" data-scroll-behavior="smooth">
       <body
         className={`${playfairDisplay.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <PostHogClientProvider>
-            <ToastProvider>{children}</ToastProvider>
-          </PostHogClientProvider>
-        </AuthProvider>
+        <MetaPixelProvider>
+          <AuthProvider>
+            <CustomerIoProvider>
+              <PostHogClientProvider>
+                <ToastProvider>
+                  {children}
+                  <FeedbackWidget />
+                </ToastProvider>
+              </PostHogClientProvider>
+            </CustomerIoProvider>
+          </AuthProvider>
+        </MetaPixelProvider>
+        <CookieConsent />
       </body>
     </html>
   )

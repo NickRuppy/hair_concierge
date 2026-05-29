@@ -52,11 +52,14 @@ interface QuizResultRowCopy {
   tickAfter: string
 }
 
+export type QuizResultNeedsProduct = { name: string; description: string }
+
 interface QuizResultNeedsSection {
   title: string
   mainLeverTitle: string
   mainLeverWhy: string
   mainLeverProducts: string
+  products: readonly [QuizResultNeedsProduct, QuizResultNeedsProduct]
 }
 
 export interface QuizResultNarrativeRow {
@@ -95,7 +98,7 @@ const CONCERN_COPY: Record<QuizConcern, QuizResultRowCopy> = {
   },
   dryness: {
     before: "Trockenheit",
-    after: "weichere, besser mit Feuchtigkeit versorgte Längen",
+    after: "weichere, geschmeidige Längen",
     iconKey: "droplet",
     tickBefore: "trocken",
     tickAfter: "versorgt",
@@ -123,7 +126,7 @@ const CONCERN_COPY: Record<QuizConcern, QuizResultRowCopy> = {
   },
   hair_damage: {
     before: "Haarschäden",
-    after: "kräftiger wirkende, besser geschützte Längen",
+    after: "kräftigere, geschützte Längen",
     iconKey: "shield",
     tickBefore: "angegriffen",
     tickAfter: "geschützt",
@@ -396,8 +399,8 @@ function buildHairFeelRow(
     return {
       label: "Haargefühl",
       scope: "HAAR",
-      before: "geschwächt & strapaziert",
-      after: "kräftiger & geschützter",
+      before: "strapazierte Längen",
+      after: "spürbar fester",
       iconKey: "shield",
       tickBefore: "strapaziert",
       tickAfter: "geschützt",
@@ -435,12 +438,12 @@ function buildHairFeelRow(
             : "rau & unruhig",
     after:
       primaryConcern === "dryness" || primaryGoal === "moisture"
-        ? "weicher & geschmeidiger"
+        ? "weich in der Hand"
         : primaryConcern === "frizz" || primaryGoal === "less_frizz"
-          ? "ruhiger & glänzender"
+          ? "ruhig & geordnet"
           : isDefinitionLed
-            ? "mehr Form & Bündelung"
-            : "ruhiger & glänzender",
+            ? "Bündelung im Griff"
+            : "ausgeglichen im Griff",
     iconKey:
       primaryConcern === "dryness" || primaryGoal === "moisture"
         ? "droplet"
@@ -735,7 +738,7 @@ function buildFrictionRow(
   const copy = primaryConcern
     ? CONCERN_COPY[primaryConcern]
     : {
-        before: "Pflege, die noch nicht richtig zu deinem Haar passt",
+        before: "unpassende Pflege",
         after: "mehr Ruhe, Glanz & Ausgewogenheit",
         iconKey: "sparkles" as const,
         tickBefore: "unstimmig",
@@ -840,7 +843,12 @@ function buildNeedsSection(
     answers.scalp_type === "trocken" ||
     primaryGoal === "healthy_scalp"
 
-  if (primaryGoal === "healthy_scalp" || (!primaryConcern && hasScalpSignals)) {
+  const scalpAllowed = primaryGoal === "healthy_scalp" || (!primaryConcern && hasScalpSignals)
+
+  if (
+    scalpAllowed &&
+    (answers.scalp_condition === "schuppen" || answers.scalp_condition === "trockene_schuppen")
+  ) {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Die Kopfhaut gezielter ausgleichen",
@@ -848,16 +856,60 @@ function buildNeedsSection(
         "Wenn die Kopfhaut aus dem Gleichgewicht ist, bleibt sie leichter gereizt und Schuppen kommen schneller wieder.",
       mainLeverProducts:
         "Am meisten erreichen wir hier mit einem passenden Anti-Schuppen-Shampoo; zusätzlich kann ein beruhigendes Kopfhautserum helfen, die Kopfhaut zwischen den Haarwäschen ruhiger zu halten.",
+      products: [
+        { name: "Anti-Schuppen-Shampoo", description: "Reguliert die Kopfhaut bei jeder Wäsche." },
+        { name: "Kopfhautserum", description: "Hält die Kopfhaut zwischen den Wäschen ruhig." },
+      ],
     }
   }
 
-  const needsStructuralRepair =
-    primaryConcern === "breakage" ||
-    primaryConcern === "hair_damage" ||
-    hasColorTreatment(answers) ||
-    answers.pulltest === "stretches_stays"
+  if (scalpAllowed && answers.scalp_condition === "gereizt") {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Die Kopfhaut beruhigen",
+      mainLeverWhy:
+        "Wenn die Kopfhaut gereizt ist, fällt das ganze Haarbild stumpfer und uneinheitlicher aus.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem beruhigenden Shampoo; zusätzlich kann ein leichtes Leave-in helfen, die Längen zu pflegen, ohne die Kopfhaut zu belasten.",
+      products: [
+        {
+          name: "Beruhigendes Shampoo",
+          description: "Mildert die Kopfhautreizung bei jeder Wäsche.",
+        },
+        {
+          name: "Leichtes Leave-in",
+          description: "Pflegt die Längen, ohne die Kopfhaut zu belasten.",
+        },
+      ],
+    }
+  }
 
-  if (needsStructuralRepair) {
+  if (scalpAllowed) {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Die Kopfhaut in Balance bringen",
+      mainLeverWhy:
+        "Wenn die Kopfhaut zu schnell fettet oder austrocknet, verliert das Haar Frische und Volumen schon nach kurzer Zeit.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem Balance-Shampoo; zusätzlich kann ein leichter Conditioner die Längen pflegen, ohne die Kopfhaut zu belasten.",
+      products: [
+        {
+          name: "Balance-Shampoo",
+          description: "Bringt die Kopfhaut in Balance, ohne sie auszutrocknen.",
+        },
+        {
+          name: "Leichter Conditioner",
+          description: "Pflegt die Längen, ohne die Kopfhaut zu belasten.",
+        },
+      ],
+    }
+  }
+
+  // Severe bond damage (concern-driven, preserves today's "any severity signal" routing).
+  const hasSeveritySignal =
+    primaryConcern === "breakage" || primaryConcern === "hair_damage" || hasColorTreatment(answers)
+
+  if (hasSeveritySignal) {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Mehr Stabilität in die Längen bringen",
@@ -865,6 +917,86 @@ function buildNeedsSection(
         "Wenn die Längen geschwächt sind, geben sie schneller nach und Spliss oder Haarbruch werden leichter weiter begünstigt.",
       mainLeverProducts:
         "Am meisten erreichen wir hier mit einem Bondbuilder; zusätzlich kann eine stärkende Maske helfen, die Längen belastbarer zu halten.",
+      products: [
+        { name: "Bondbuilder", description: "Stabilisiert die Längen von innen." },
+        { name: "Stärkende Maske", description: "Macht die Längen wieder belastbar." },
+      ],
+    }
+  }
+
+  // Protein-needs (moderate) — fires when pulltest=stretches_stays without severity signals.
+  if (answers.pulltest === "stretches_stays") {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Überdehnten Längen wieder Struktur geben",
+      mainLeverWhy:
+        "Wenn die Längen überdehnt sind und langsam zurückspringen, fehlt ihnen Struktur — nicht unbedingt Feuchtigkeit.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einer Protein-Maske; zusätzlich kann ein Conditioner für strapaziertes Haar helfen, die Längen zwischen den Wäschen zu stützen.",
+      products: [
+        { name: "Protein-Maske", description: "Gibt überdehnten Längen wieder Struktur." },
+        {
+          name: "Conditioner für strapaziertes Haar",
+          description: "Stützt die Längen zwischen den Masken.",
+        },
+      ],
+    }
+  }
+
+  // Moisture-needs — fires when pulltest=snaps.
+  if (answers.pulltest === "snaps") {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Den Längen mehr Feuchtigkeit zurückgeben",
+      mainLeverWhy:
+        "Wenn die Längen schnell brechen statt nachzugeben, fehlt ihnen Feuchtigkeit — nicht mehr Protein.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einer Feuchtigkeitsmaske; zusätzlich kann ein Conditioner für trockenes Haar helfen, die Längen zwischen den Masken geschmeidig zu halten.",
+      products: [
+        {
+          name: "Feuchtigkeitsmaske",
+          description: "Versorgt trockene Längen tief mit Feuchtigkeit.",
+        },
+        {
+          name: "Conditioner für trockenes Haar",
+          description: "Hält die Längen geschmeidig zwischen den Masken.",
+        },
+      ],
+    }
+  }
+
+  // Curl definition — fires when curl is the user's clean goal and there's no concern to address first.
+  const hasTexture =
+    answers.structure === "wavy" || answers.structure === "curly" || answers.structure === "coily"
+
+  if (primaryGoal === "curl_definition" && hasTexture && !primaryConcern) {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Wellen und Locken besser definieren",
+      mainLeverWhy:
+        "Wenn die Locken sich verlieren, fehlt es selten an Pflege — sondern an einem Produkt, das die Bündelung hält.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem Curl-Leave-in; zusätzlich kann ein pflegender Conditioner helfen, die Locken weich und beweglich zu halten.",
+      products: [
+        { name: "Curl-Leave-in", description: "Definiert Wellen und Locken zwischen den Wäschen." },
+        { name: "Pflegender Conditioner", description: "Hält die Locken weich und beweglich." },
+      ],
+    }
+  }
+
+  // Shine — fires when shine is the user's clean goal and there's no concern to address first.
+  if (primaryGoal === "shine" && !primaryConcern) {
+    return {
+      title: "Was dein Haar jetzt braucht",
+      mainLeverTitle: "Mehr Glanz in die Längen bringen",
+      mainLeverWhy:
+        "Wenn die Oberfläche stumpf wirkt, reflektiert das Licht nicht — eine kleine Versiegelung reicht oft schon.",
+      mainLeverProducts:
+        "Am meisten erreichen wir hier mit einem Glanz-Leave-in; zusätzlich kann ein leichtes Haaröl helfen, die Oberfläche zu versiegeln.",
+      products: [
+        { name: "Glanz-Leave-in", description: "Bringt Glanz zurück in die Längen." },
+        { name: "Leichtes Haaröl", description: "Versiegelt die Oberfläche und betont den Glanz." },
+      ],
     }
   }
 
@@ -873,9 +1005,7 @@ function buildNeedsSection(
     primaryConcern === "dryness" ||
     primaryConcern === "tangling" ||
     primaryGoal === "less_frizz" ||
-    primaryGoal === "moisture" ||
-    primaryGoal === "shine" ||
-    primaryGoal === "curl_definition"
+    primaryGoal === "moisture"
 
   if (needsSurfaceSupport) {
     return {
@@ -885,6 +1015,10 @@ function buildNeedsSection(
         "Wenn die Oberfläche aufraut, fallen die Längen schneller unruhig und lassen sich schwerer kontrollieren.",
       mainLeverProducts:
         "Am meisten erreichen wir hier mit einem passenden Conditioner; zusätzlich kann ein Leave-in helfen, die Längen zwischen den Wäschen ruhiger zu halten.",
+      products: [
+        { name: "Conditioner", description: "Stabilisiert die Oberfläche der Längen." },
+        { name: "Leave-in", description: "Hält die Wirkung zwischen den Wäschen." },
+      ],
     }
   }
 
@@ -896,6 +1030,10 @@ function buildNeedsSection(
         "Wenn die Spitzen ausfransen, fühlen sie sich schneller trocken an und fallen weniger glatt.",
       mainLeverProducts:
         "Am meisten erreichen wir hier mit einem leichten Haaröl; zusätzlich kann ein Leave-in helfen, die Spitzen geschmeidiger und besser geschützt zu halten.",
+      products: [
+        { name: "Leichtes Haaröl", description: "Schützt und glättet die Spitzen." },
+        { name: "Leave-in", description: "Hält die Spitzen geschmeidig." },
+      ],
     }
   }
 
@@ -906,6 +1044,10 @@ function buildNeedsSection(
       "Wenn die Pflegebasis besser passt, wirkt dein Haar insgesamt ruhiger und stimmiger.",
     mainLeverProducts:
       "Am meisten erreichen wir hier mit einem passenden Conditioner; zusätzlich kann ein leichtes Leave-in helfen, die Wirkung in den Längen zu halten.",
+    products: [
+      { name: "Conditioner", description: "Stimmt die Pflegebasis ab." },
+      { name: "Leichtes Leave-in", description: "Hält die Wirkung in den Längen." },
+    ],
   }
 }
 

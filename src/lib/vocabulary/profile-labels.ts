@@ -106,7 +106,7 @@ export const STYLING_TOOL_LABELS: Record<string, string> = {
   wave_iron: "Welleneisen",
   hot_air_brush: "Warmluftbürste",
   thermal_rollers: "Thermo-Lockenwickler",
-  multi_tool: "Multi-Tool",
+  multi_tool: "Multi-Styler",
   diffuser: "Diffusor",
 } satisfies Record<StylingTool, string>
 
@@ -127,7 +127,7 @@ export type MechanicalStressFactor = (typeof MECHANICAL_STRESS_FACTORS)[number]
 export const MECHANICAL_STRESS_FACTOR_LABELS: Record<string, string> = {
   tight_hairstyles: "Enge Frisuren (Zoepfe, Dutts, Extensions)",
   rough_brushing: "Haeufiges oder grobes Buersten",
-  towel_rubbing: "Handtuch-Rubbeln statt Tupfen",
+  towel_rubbing: "Handtuch-Rubbeln statt sanftem Ausdrücken",
 } satisfies Record<MechanicalStressFactor, string>
 
 export const MECHANICAL_STRESS_FACTOR_OPTIONS = MECHANICAL_STRESS_FACTORS.map((value) => ({

@@ -51,7 +51,7 @@ type AssistantMessageRecord = {
 
 async function login(page: Page, email: string, password: string) {
   await page.goto("/auth", { waitUntil: "domcontentloaded" })
-  await expect(page.getByText("Hair Concierge").first()).toBeVisible({ timeout: 15_000 })
+  await expect(page.getByText("chaarlie").first()).toBeVisible({ timeout: 15_000 })
   await page.waitForLoadState("networkidle")
   await page.waitForTimeout(500)
 

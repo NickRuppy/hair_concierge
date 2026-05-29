@@ -661,7 +661,7 @@ export default function AdminConversationDetailPage() {
                         {msg.role === "user"
                           ? "Nutzer"
                           : msg.role === "assistant"
-                            ? "Hair Concierge"
+                            ? "Chaarlie"
                             : "System"}
                       </span>
                       <span className="text-xs opacity-50">{formatTime(msg.created_at)}</span>

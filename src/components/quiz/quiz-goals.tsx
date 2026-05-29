@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 import { useQuizStore } from "@/lib/quiz/store"
-import { posthog } from "@/providers/posthog-provider"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { cn } from "@/lib/utils"
 import { getAvailableGoals, getAvailableGoalLabel } from "@/lib/onboarding/goal-flow"
 import type { HairTexture } from "@/lib/vocabulary"
@@ -49,7 +49,7 @@ export function QuizGoals() {
 
   const handleContinue = useCallback(() => {
     if (selectedGoals.length < 1) return
-    posthog.capture("quiz_goals_selected", { count: selectedGoals.length })
+    trackAppEvent("quiz_goals_selected", { count: selectedGoals.length })
     goNext()
   }, [selectedGoals, goNext])
 

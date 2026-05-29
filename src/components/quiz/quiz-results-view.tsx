@@ -1,44 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import type { LucideIcon } from "lucide-react"
-import {
-  ArrowDown,
-  ArrowUp,
-  Droplets,
-  Heart,
-  Leaf,
-  Link2Off,
-  Palette,
-  Scissors,
-  Shield,
-  ShieldCheck,
-  Sparkles,
-  Waves,
-} from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type {
-  QuizResultIconKey,
-  QuizResultNarrative,
-  QuizResultNarrativeRow,
-} from "@/lib/quiz/result-narrative"
-
-const ICONS: Record<QuizResultIconKey, LucideIcon> = {
-  droplet: Droplets,
-  shield: Shield,
-  waves: Waves,
-  "shield-check": ShieldCheck,
-  scissors: Scissors,
-  "link-off": Link2Off,
-  heart: Heart,
-  sparkles: Sparkles,
-  leaf: Leaf,
-  "arrow-up": ArrowUp,
-  "arrow-down": ArrowDown,
-  palette: Palette,
-}
-
-const CARD_DELAYS = [0.1, 0.22, 0.34]
+import { QuizResultTransformationCard } from "@/components/quiz/quiz-result-transformation-card"
+import { QuizResultLeverRows } from "@/components/quiz/quiz-result-lever-rows"
+import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
 
 export interface QuizResultsViewAction {
   label: string
@@ -51,84 +17,6 @@ interface QuizResultsViewProps {
   narrative: QuizResultNarrative
   primaryAction: QuizResultsViewAction
   secondaryAction?: QuizResultsViewAction | null
-}
-
-function SpectrumCard({ row, index }: { row: QuizResultNarrativeRow; index: number }) {
-  const Icon = ICONS[row.iconKey] ?? Sparkles
-
-  return (
-    <article
-      className="animate-fade-in-up rounded-[20px] border border-black/6 bg-white px-5 py-5 shadow-[0_1px_0_rgba(var(--brand-plum-rgb),0.04),0_8px_28px_-18px_rgba(var(--brand-plum-rgb),0.22)] transition-transform duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_1px_0_rgba(var(--brand-plum-rgb),0.06),0_18px_40px_-22px_rgba(var(--brand-plum-rgb),0.3)] sm:px-6 sm:py-6"
-      style={{ animationDelay: `${CARD_DELAYS[index] ?? 0}s` }}
-    >
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]">
-            <Icon className="size-5 stroke-[1.75]" />
-          </div>
-          <span className="type-label text-[11px] font-semibold tracking-[0.22em] text-[var(--brand-plum)]">
-            {row.label}
-          </span>
-        </div>
-
-        <span className="rounded-full border border-[rgba(var(--brand-plum-rgb),0.14)] bg-[rgba(var(--brand-plum-rgb),0.04)] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-plum)]">
-          {row.scope}
-        </span>
-      </div>
-
-      <div className="mb-3.5 grid grid-cols-2 gap-3 sm:gap-6">
-        <div className="flex min-h-12 flex-col justify-center">
-          <div className="mb-1.5 inline-flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#E35858] [font-family:var(--font-mono)]">
-            <span className="size-[7px] rounded-full bg-[#E35858]" />
-            Heute
-          </div>
-          <div className="font-header text-[15px] leading-[1.25] text-foreground sm:text-lg">
-            {row.before}
-          </div>
-        </div>
-
-        <div className="flex min-h-12 flex-col justify-center text-right">
-          <div className="mb-1.5 inline-flex items-center justify-end gap-1.5 text-[10.5px] font-semibold uppercase tracking-[0.2em] text-[#4FAE7A] [font-family:var(--font-mono)]">
-            Ziel
-            <span className="size-[7px] rounded-full bg-[#4FAE7A]" />
-          </div>
-          <div className="font-header text-[15px] leading-[1.25] text-foreground sm:text-lg">
-            {row.after}
-          </div>
-        </div>
-      </div>
-
-      <div className="px-3.5 pb-1.5 pt-3.5">
-        <div className="relative h-2.5 rounded-full bg-[linear-gradient(90deg,#E35858_0%,#EA8247_28%,#F4B23C_50%,#9EC765_72%,#4FAE7A_100%)] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.04)]">
-          <div
-            className="absolute top-1/2 grid size-[22px] place-items-center rounded-full bg-white"
-            style={{
-              left: `${row.currentPosition}%`,
-              transform: "translate(-50%, -50%)",
-              boxShadow: "0 0 0 2px #E35858, 0 4px 12px -2px rgba(227, 88, 88, 0.5)",
-            }}
-          >
-            <div className="size-[14px] rounded-full bg-[#E35858]" />
-          </div>
-          <div
-            className="absolute top-1/2 grid size-[22px] place-items-center rounded-full bg-white"
-            style={{
-              left: `${row.targetPosition}%`,
-              transform: "translate(-50%, -50%)",
-              boxShadow: "0 0 0 2px #4FAE7A",
-            }}
-          >
-            <div className="size-[14px] rounded-full border-2 border-dashed border-[#4FAE7A] bg-transparent" />
-          </div>
-        </div>
-
-        <div className="mt-2.5 flex justify-between px-0.5 text-[9.5px] uppercase tracking-[0.18em] text-[var(--text-sub)] [font-family:var(--font-mono)] sm:text-[10px]">
-          <span>{row.tickBefore}</span>
-          <span>{row.tickAfter}</span>
-        </div>
-      </div>
-    </article>
-  )
 }
 
 function ActionButton({
@@ -183,7 +71,7 @@ export function QuizResultsView({
           />
         </div>
         <span className="font-header text-[13px] uppercase tracking-[0.22em] text-muted-foreground">
-          Hair Concierge
+          CHAARLIE
         </span>
       </div>
 
@@ -202,10 +90,8 @@ export function QuizResultsView({
         {narrative.intro}
       </p>
 
-      <div className="mb-8 flex flex-col gap-[18px] sm:gap-[22px]">
-        {narrative.rows.map((row, index) => (
-          <SpectrumCard key={row.label} row={row} index={index} />
-        ))}
+      <div className="mb-8">
+        <QuizResultTransformationCard rows={narrative.rows} />
       </div>
 
       <section className="mb-7 w-full rounded-[24px] border border-black/6 bg-white px-5 py-5 shadow-[0_1px_0_rgba(var(--brand-plum-rgb),0.04),0_8px_28px_-18px_rgba(var(--brand-plum-rgb),0.22)] sm:px-6 sm:py-6">
@@ -218,9 +104,9 @@ export function QuizResultsView({
         <p className="mt-3 max-w-[48ch] text-[15.5px] leading-[1.65] text-foreground sm:text-[17px]">
           {narrative.needs.mainLeverWhy}
         </p>
-        <p className="mt-4 max-w-[50ch] text-[15px] leading-[1.7] text-muted-foreground sm:text-[16px]">
-          {narrative.needs.mainLeverProducts}
-        </p>
+        <div className="mt-5">
+          <QuizResultLeverRows products={narrative.needs.products} />
+        </div>
       </section>
 
       <div className="mx-auto mt-1 flex w-full max-w-[480px] flex-col gap-3">

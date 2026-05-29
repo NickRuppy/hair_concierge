@@ -49,7 +49,7 @@ export default function AuthPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
-            <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+            <h1 className="font-header text-4xl tracking-tight text-foreground">chaarlie</h1>
             <p className="text-lg text-muted-foreground">Willkommen zurueck</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
@@ -83,7 +83,7 @@ export default function AuthPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
-            <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+            <h1 className="font-header text-4xl tracking-tight text-foreground">chaarlie</h1>
             <p className="text-lg text-muted-foreground">Willkommen zurueck</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
@@ -115,7 +115,7 @@ export default function AuthPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/20 px-4 py-12">
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
-          <h1 className="font-header text-4xl tracking-tight text-foreground">Hair Concierge</h1>
+          <h1 className="font-header text-4xl tracking-tight text-foreground">chaarlie</h1>
           <p className="text-lg text-muted-foreground">{copy?.subtext ?? "Willkommen zurueck"}</p>
         </div>
 
@@ -147,12 +147,21 @@ export default function AuthPage() {
 
 function Footer() {
   return (
-    <footer className="flex justify-center gap-4 text-xs text-muted-foreground">
+    <footer className="flex flex-wrap justify-center gap-4 text-xs text-muted-foreground">
       <a href="/impressum" className="px-2 py-2 hover:underline">
         Impressum
       </a>
       <a href="/datenschutz" className="px-2 py-2 hover:underline">
         Datenschutz
+      </a>
+      <a href="/agb" className="px-2 py-2 hover:underline">
+        AGB
+      </a>
+      <a href="/widerruf" className="px-2 py-2 hover:underline">
+        Widerruf
+      </a>
+      <a href="/kontakt" className="px-2 py-2 hover:underline">
+        Kontakt
       </a>
     </footer>
   )

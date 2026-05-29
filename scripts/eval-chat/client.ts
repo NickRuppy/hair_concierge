@@ -130,6 +130,23 @@ export async function createTestSession(
     subscription_status: "active",
   })
 
+  const { error: billingErr } = await admin.from("billing_subscriptions").upsert(
+    {
+      user_id: userId,
+      provider: "stripe",
+      provider_subscription_id: `eval-chat-${userId}`,
+      provider_status: "active",
+      entitlement_status: "active",
+      interval: "quarter",
+      current_period_end: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      metadata: { source: "chat_eval_ci" },
+    },
+    { onConflict: "provider,provider_subscription_id" },
+  )
+  if (billingErr) {
+    throw new Error(`Failed to seed active billing subscription: ${billingErr.message}`)
+  }
+
   // Sign in to get session tokens
   const anonClient = createClient(supabaseUrl, anonKey, {
     auth: { autoRefreshToken: false, persistSession: false },
@@ -160,6 +177,7 @@ export async function createTestSession(
     await admin.from("user_memory_entries").delete().eq("user_id", userId)
     await admin.from("user_product_usage").delete().eq("user_id", userId)
     await admin.from("hair_profiles").delete().eq("user_id", userId)
+    await admin.from("billing_subscriptions").delete().eq("user_id", userId)
     await admin.from("profiles").delete().eq("id", userId)
     await admin.auth.admin.deleteUser(userId)
   }

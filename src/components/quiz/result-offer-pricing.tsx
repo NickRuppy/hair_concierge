@@ -1,10 +1,14 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
-import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { loadStripe } from "@stripe/stripe-js"
 
+import {
+  isPayPalCheckoutEnabled,
+  PaymentMethodCheckout,
+} from "@/components/checkout/payment-method-checkout"
 import { Button } from "@/components/ui/button"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import {
   DEFAULT_PRICING_INTERVAL,
@@ -36,6 +40,13 @@ export function ResultOfferPricing({
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
   const selectedPlan = getStripePricingPlan(selectedInterval)
 
+  useEffect(() => {
+    trackAppEvent("pricing_viewed", {
+      leadId: leadId ?? undefined,
+      source: "quiz_result_offer_pricing",
+    })
+  }, [leadId])
+
   function choosePlan(interval: BillingInterval) {
     setSelectedInterval(interval)
     setCheckoutInterval(null)
@@ -43,7 +54,9 @@ export function ResultOfferPricing({
   }
 
   function openCheckout() {
-    setCheckoutError(stripePublishableKey ? null : checkoutStartError)
+    setCheckoutError(
+      !isPayPalCheckoutEnabled() && !stripePublishableKey ? checkoutStartError : null,
+    )
     onCheckoutOpen?.()
     setCheckoutInterval(selectedInterval)
     window.requestAnimationFrame(() => {
@@ -82,7 +95,24 @@ export function ResultOfferPricing({
       throw new Error("checkout session response missing client secret")
     }
 
+    trackAppEvent("checkout_started", {
+      interval: checkoutInterval,
+      leadId: leadId ?? undefined,
+      provider: "stripe",
+      source: "quiz_result_offer",
+    })
+
     return data.client_secret
+  }, [checkoutInterval, leadId])
+
+  const handlePayPalCheckoutStarted = useCallback(() => {
+    if (!checkoutInterval) return
+    trackAppEvent("checkout_started", {
+      interval: checkoutInterval,
+      leadId: leadId ?? undefined,
+      provider: "paypal",
+      source: "quiz_result_offer",
+    })
   }, [checkoutInterval, leadId])
 
   return (
@@ -121,12 +151,16 @@ export function ResultOfferPricing({
                   {plan.name}
                 </span>
                 <span className="mt-1 block text-[11px] leading-snug text-muted-foreground">
-                  <strong className="font-semibold text-foreground">{plan.price}</strong>{" "}
+                  <s className="text-muted-foreground/70">{plan.price}</s>{" "}
+                  <strong className="font-semibold text-foreground">{plan.discountedPrice}</strong>{" "}
                   {getPlanDetail(plan)}
                 </span>
               </span>
-              <span className="shrink-0 text-right text-[17px] font-bold text-[var(--brand-plum-darkest)]">
-                {plan.price}
+              <span className="flex shrink-0 flex-col items-end leading-none">
+                <span className="text-[12px] text-muted-foreground line-through">{plan.price}</span>
+                <span className="mt-0.5 text-[17px] font-bold text-[var(--brand-plum-darkest)]">
+                  {plan.discountedPrice}
+                </span>
               </span>
             </button>
           )
@@ -147,60 +181,29 @@ export function ResultOfferPricing({
 
       <div ref={checkoutRef}>
         {checkoutInterval ? (
-          <div className="mt-5 rounded-[16px] border border-border bg-white p-4 shadow-[0_16px_40px_-28px_rgba(var(--brand-plum-rgb),0.45)]">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <div>
-                <p className="text-[13px] font-bold text-[var(--brand-plum-darkest)]">
-                  Sicher bezahlen
-                </p>
-                <p className="text-[12px] text-muted-foreground">
-                  {getStripePricingPlan(checkoutInterval).ctaLabel}
-                </p>
-              </div>
-              <Button
-                type="button"
-                variant="unstyled"
-                onClick={() => setCheckoutInterval(null)}
-                className="min-h-10 rounded-[10px] bg-[var(--brand-plum-ice)] px-3 text-[12px] font-bold text-[var(--brand-plum)]"
-              >
-                Plan ändern
-              </Button>
-            </div>
+          <PaymentMethodCheckout
+            checkoutError={checkoutError}
+            checkoutKey={checkoutInterval}
+            fetchClientSecret={fetchClientSecret}
+            interval={checkoutInterval}
+            leadId={leadId}
+            onChangePlan={() => setCheckoutInterval(null)}
+            onPayPalCheckoutStarted={handlePayPalCheckoutStarted}
+            onRetry={() => {
+              if (!stripePublishableKey) {
+                setCheckoutError(checkoutStartError)
+                return
+              }
 
-            {checkoutError ? (
-              <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
-                <p className="mb-3 text-sm text-destructive">{checkoutError}</p>
-                <Button
-                  type="button"
-                  variant="unstyled"
-                  onClick={() => {
-                    if (!stripePublishableKey) {
-                      setCheckoutError(checkoutStartError)
-                      return
-                    }
-
-                    const interval = checkoutInterval
-                    setCheckoutError(null)
-                    setCheckoutInterval(null)
-                    window.setTimeout(() => setCheckoutInterval(interval), 0)
-                  }}
-                  className="min-h-10 rounded-[10px] bg-[var(--brand-coral)] px-4 text-sm font-bold text-white"
-                >
-                  Erneut versuchen
-                </Button>
-              </div>
-            ) : (
-              <div className="min-h-[560px]">
-                <EmbeddedCheckoutProvider
-                  key={checkoutInterval}
-                  stripe={stripePromise}
-                  options={{ fetchClientSecret }}
-                >
-                  <EmbeddedCheckout />
-                </EmbeddedCheckoutProvider>
-              </div>
-            )}
-          </div>
+              const interval = checkoutInterval
+              setCheckoutError(null)
+              setCheckoutInterval(null)
+              window.setTimeout(() => setCheckoutInterval(interval), 0)
+            }}
+            planLabel={getStripePricingPlan(checkoutInterval).ctaLabel}
+            source="quiz_result_offer"
+            stripe={stripePromise}
+          />
         ) : null}
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { clearQuizDraft, loadQuizDraft, saveQuizDraft } from "./draft"
 import type { QuizStep, LeadCaptureSubStep, QuizAnswers, LeadData } from "./types"
 
 interface QuizState {
@@ -21,10 +22,12 @@ interface QuizState {
   setIsAnalyzing: (v: boolean) => void
   setLeadCaptureSubStep: (sub: LeadCaptureSubStep) => void
   setStep: (step: QuizStep) => void
+  restoreDraft: () => boolean
+  clearDraft: () => void
   reset: () => void
 }
 
-const STEP_ORDER: QuizStep[] = [1, 2, 3, 13, 4, 5, 7, 6, 8, 12, 9, 10, 11, 14]
+const STEP_ORDER: QuizStep[] = [2, 3, 13, 4, 5, 7, 6, 8, 12, 9, 10, 11, 14]
 
 function nextStep(current: QuizStep): QuizStep {
   const idx = STEP_ORDER.indexOf(current)
@@ -37,7 +40,10 @@ function prevStep(current: QuizStep): QuizStep {
 }
 
 const initialState = {
-  step: 1 as QuizStep,
+  // step 2 is the first actual question (hair_texture). Step 1 used to be
+  // an in-app "Quiz starten" landing; that role moved to the marketing
+  // landing at /, so we skip it.
+  step: 2 as QuizStep,
   leadCaptureSubStep: "name" as LeadCaptureSubStep,
   answers: {} as QuizAnswers,
   lead: { name: "", email: "", marketingConsent: false } as LeadData,
@@ -47,10 +53,21 @@ const initialState = {
   isAnalyzing: false,
 }
 
-export const useQuizStore = create<QuizState>((set) => ({
+export const useQuizStore = create<QuizState>((set, get) => ({
   ...initialState,
 
-  goNext: () => set((s) => ({ step: nextStep(s.step) })),
+  goNext: () => {
+    const current = get()
+    const step = nextStep(current.step)
+    set({ step })
+
+    if (step === 14) {
+      clearQuizDraft()
+      return
+    }
+
+    saveQuizDraft({ step, answers: get().answers })
+  },
   goBack: () => set((s) => ({ step: prevStep(s.step) })),
 
   setAnswer: (key, value) =>
@@ -73,5 +90,20 @@ export const useQuizStore = create<QuizState>((set) => ({
   setIsAnalyzing: (v) => set({ isAnalyzing: v }),
   setLeadCaptureSubStep: (sub) => set({ leadCaptureSubStep: sub }),
   setStep: (step) => set({ step }),
-  reset: () => set(initialState),
+  restoreDraft: () => {
+    const draft = loadQuizDraft()
+    if (!draft) return false
+
+    set({
+      ...initialState,
+      step: draft.step,
+      answers: draft.answers,
+    })
+    return true
+  },
+  clearDraft: () => clearQuizDraft(),
+  reset: () => {
+    clearQuizDraft()
+    set(initialState)
+  },
 }))

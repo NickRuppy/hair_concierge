@@ -1,5 +1,5 @@
 {
-  "name": "hair-concierge",
+  "name": "chaarlie",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -35,17 +35,21 @@
     "test:contracts": "npm run test:node && npm run test:agent && npm run test:playwright:contracts",
     "test:chat:ci": "tsx scripts/eval-chat/run.ts --skip-judge --ci-smoke",
     "test:retrieval:ci": "tsx scripts/eval-retrieval.ts --hybrid-only --min-hybrid-ndcg10 0.72 --min-hybrid-recall20 0.88 --skip-unannotated-gold-set",
+    "paypal:create-resources": "tsx scripts/paypal/create-resources.ts",
+    "paypal:validate-plans": "tsx scripts/paypal/validate-plans.ts",
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
     "langfuse:seed-datasets": "tsx scripts/langfuse/seed-datasets.ts",
     "langfuse:setup-review-queues": "tsx scripts/langfuse/setup-review-queues.ts",
     "prepare": "husky"
   },
   "dependencies": {
+    "@customerio/cdp-analytics-browser": "^0.4.16",
     "@langfuse/client": "^5.2.0",
     "@langfuse/openai": "^5.2.0",
     "@langfuse/otel": "^5.2.0",
     "@langfuse/tracing": "^5.1.0",
     "@opentelemetry/sdk-node": "^0.216.0",
+    "@paypal/react-paypal-js": "^9.2.0",
     "@sentry/nextjs": "^10.51.0",
     "@stripe/react-stripe-js": "^6.3.0",
     "@stripe/stripe-js": "^9.4.0",

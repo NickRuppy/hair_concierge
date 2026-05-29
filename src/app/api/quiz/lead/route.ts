@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server"
+import { after, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { checkRateLimit, QUIZ_LEAD_RATE_LIMIT } from "@/lib/rate-limit"
 import { leadSchema } from "@/lib/quiz/validators"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import { findReusableLead } from "@/lib/quiz/lead-lifecycle"
+import { syncQuizLeadToCustomerIo } from "@/lib/customerio/quiz-sync"
 
 const DEDUPE_WINDOW_MS = 15 * 60 * 1000
 const MAX_RECENT_DUPLICATE_CANDIDATES = 10
@@ -49,6 +50,7 @@ export async function POST(request: Request) {
     )
 
     if (existingLead) {
+      const createdAt = new Date().toISOString()
       if (existingLead.marketing_consent !== parsed.marketingConsent) {
         const { error: updateError } = await supabase
           .from("leads")
@@ -60,6 +62,17 @@ export async function POST(request: Request) {
           return NextResponse.json({ error: "Speichern fehlgeschlagen" }, { status: 500 })
         }
       }
+
+      after(() =>
+        syncQuizLeadToCustomerIo({
+          createdAt,
+          email,
+          leadId: existingLead.id,
+          marketingConsent: parsed.marketingConsent,
+          name: parsed.name,
+          quizAnswers,
+        }),
+      )
 
       return NextResponse.json({ leadId: existingLead.id })
     }
@@ -80,6 +93,17 @@ export async function POST(request: Request) {
       console.error("Lead insert error:", error)
       return NextResponse.json({ error: "Speichern fehlgeschlagen" }, { status: 500 })
     }
+
+    after(() =>
+      syncQuizLeadToCustomerIo({
+        createdAt: new Date().toISOString(),
+        email,
+        leadId: data.id,
+        marketingConsent: parsed.marketingConsent,
+        name: parsed.name,
+        quizAnswers,
+      }),
+    )
 
     return NextResponse.json({ leadId: data.id })
   } catch (err) {

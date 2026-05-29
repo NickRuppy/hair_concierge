@@ -1,56 +1,19 @@
 import type { ReactNode } from "react"
-import type { LucideIcon } from "lucide-react"
-import {
-  Check,
-  Droplets,
-  Heart,
-  Leaf,
-  Link2Off,
-  LockKeyhole,
-  MessageCircle,
-  Palette,
-  Scissors,
-  Shield,
-  ShieldCheck,
-  Sparkles,
-  Waves,
-} from "lucide-react"
+import { Check, LockKeyhole, MessageCircle, ShieldCheck } from "lucide-react"
 
 import { ResultOfferCountdown } from "@/components/quiz/result-offer-countdown"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
-import type {
-  QuizResultIconKey,
-  QuizResultNarrative,
-  QuizResultNarrativeRow,
-} from "@/lib/quiz/result-narrative"
+import { QuizResultTransformationCard } from "@/components/quiz/quiz-result-transformation-card"
+import { QuizResultLeverRows } from "@/components/quiz/quiz-result-lever-rows"
+import { TOM } from "@/data/team"
+import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
 
-const TOM_IMAGE_URL =
-  "https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69a16fda524b7136dd4042ab.png"
-
 const FEATURE_IMAGES = {
-  advisor:
-    "https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69de974c80b446d0fb772568.png",
-  products:
-    "https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69de91e3b935a2d764c3200c.png",
-  routine:
-    "https://assets.cdn.filesafe.space/ezJuYW8Fpy3PxAlRLr5w/media/69de921fe7237c4dd30efc6c.png",
+  advisor: "/images/offer/advisor.jpg",
+  products: "/images/offer/products.jpg",
+  routine: "/images/offer/routine.jpg",
 } as const
-
-const ICONS: Record<QuizResultIconKey, LucideIcon> = {
-  droplet: Droplets,
-  shield: Shield,
-  waves: Waves,
-  "shield-check": ShieldCheck,
-  scissors: Scissors,
-  "link-off": Link2Off,
-  heart: Heart,
-  sparkles: Sparkles,
-  leaf: Leaf,
-  "arrow-up": Sparkles,
-  "arrow-down": Sparkles,
-  palette: Palette,
-}
 
 const FEATURES = [
   {
@@ -64,7 +27,7 @@ const FEATURES = [
   {
     kicker: "500+ geprüfte Produkte",
     title: "Das richtige Shampoo. Der richtige Conditioner. Sofort.",
-    body: "Haarmony sagt dir genau, welche Produkte zu deiner Situation passen und warum.",
+    body: "Chaarlie sagt dir genau, welche Produkte zu deiner Situation passen und warum.",
     benefit: "Nie wieder Fehlkäufe. Jedes Produkt hat einen Grund.",
     imageUrl: FEATURE_IMAGES.products,
     imageAlt: "Produktempfehlungen",
@@ -72,7 +35,7 @@ const FEATURES = [
   {
     kicker: "Deine Routine",
     title: "Ein klarer Plan. Was. Wann. Wie oft.",
-    body: "Haarmony baut dir eine Routine, die so einfach wie möglich ist und zu deinem Alltag passt.",
+    body: "Chaarlie baut dir eine Routine, die so einfach wie möglich ist und zu deinem Alltag passt.",
     benefit: "Du weißt jeden Tag genau, was zu tun ist.",
     imageUrl: FEATURE_IMAGES.routine,
     imageAlt: "Haarpflege Planer",
@@ -90,64 +53,6 @@ const COMPARISON_ROWS = [
 
 function firstName(name: string): string {
   return name.trim().split(/\s+/)[0] ?? ""
-}
-
-function ResultSliderCard({ row }: { row: QuizResultNarrativeRow }) {
-  const Icon = ICONS[row.iconKey] ?? Sparkles
-
-  return (
-    <article className="rounded-[16px] border border-border bg-white px-4 py-5 shadow-[0_1px_2px_rgba(var(--brand-plum-rgb),0.03)]">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <span className="grid size-8 place-items-center rounded-full bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]">
-            <Icon className="size-4 stroke-[1.75]" />
-          </span>
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
-            {row.label}
-          </span>
-        </div>
-        <span className="rounded-full border border-[var(--brand-plum-light)] bg-background px-3 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
-          {row.scope}
-        </span>
-      </div>
-
-      <div className="mb-4 grid grid-cols-2 gap-3">
-        <div>
-          <p className="mb-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[#D4616A]">
-            Heute
-          </p>
-          <p className="font-header text-[19px] leading-[1.22] text-[var(--brand-plum-darkest)]">
-            {row.before}
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="mb-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[#2D9F5E]">
-            Ziel
-          </p>
-          <p className="font-header text-[19px] leading-[1.22] text-[var(--brand-plum-darkest)]">
-            {row.after}
-          </p>
-        </div>
-      </div>
-
-      <div className="px-3">
-        <div className="relative h-2 rounded-full bg-[linear-gradient(90deg,#E47474_0%,#E8A557_33%,#D9C460_55%,#A8C76E_78%,#7AB582_100%)]">
-          <span
-            className="absolute top-1/2 size-[22px] rounded-full border-[2.5px] border-[#D4616A] bg-white after:absolute after:inset-[5px] after:rounded-full after:bg-[#D4616A]"
-            style={{ left: `${row.currentPosition}%`, transform: "translate(-50%, -50%)" }}
-          />
-          <span
-            className="absolute top-1/2 size-[22px] rounded-full border border-dashed border-[#2D9F5E] bg-white after:absolute after:inset-[6px] after:rounded-full after:border after:border-[#2D9F5E]"
-            style={{ left: `${row.targetPosition}%`, transform: "translate(-50%, -50%)" }}
-          />
-        </div>
-        <div className="mt-2 flex justify-between font-mono text-[9px] font-semibold uppercase tracking-[0.07em] text-[var(--text-caption)]">
-          <span>{row.tickBefore}</span>
-          <span>{row.tickAfter}</span>
-        </div>
-      </div>
-    </article>
-  )
 }
 
 function GuaranteeBadge() {
@@ -222,8 +127,11 @@ function StaticPricingPreview() {
                 {plan.savings ? ` · ${plan.savings}` : ""}
               </span>
             </span>
-            <span className="text-[17px] font-bold text-[var(--brand-plum-darkest)]">
-              {plan.price}
+            <span className="flex flex-col items-end leading-none">
+              <span className="text-[12px] text-muted-foreground line-through">{plan.price}</span>
+              <span className="mt-0.5 text-[17px] font-bold text-[var(--brand-plum-darkest)]">
+                {plan.discountedPrice}
+              </span>
             </span>
           </div>
         ))}
@@ -273,17 +181,17 @@ export function QuizResultOfferPageShell({
             Analyse fertig
           </span>
           <p className="mb-2 mt-4 font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
-            {displayName ? `${displayName}, dein Ergebnis` : "Dein Ergebnis"}
+            {displayName
+              ? `${displayName}, hier findest du dein Ergebnis`
+              : "Hier findest du dein Ergebnis."}
           </p>
           <h1 className="font-header text-[clamp(24px,7vw,34px)] font-medium leading-[1.14] text-[var(--brand-plum-darkest)]">
-            {narrative.heroHeadline}
+            So können sich deine Haare in 4 Wochen anfühlen.
           </h1>
         </section>
 
-        <section className="space-y-3 border-t border-border py-8">
-          {narrative.rows.map((row) => (
-            <ResultSliderCard key={row.label} row={row} />
-          ))}
+        <section className="space-y-4 border-t border-border py-8">
+          <QuizResultTransformationCard rows={narrative.rows} />
 
           <article className="rounded-[16px] border border-border bg-white p-6 shadow-[0_1px_2px_rgba(var(--brand-plum-rgb),0.03)]">
             <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
@@ -295,9 +203,9 @@ export function QuizResultOfferPageShell({
             <p className="mt-4 text-[14.5px] leading-[1.65] text-[var(--brand-plum-darkest)]">
               {narrative.needs.mainLeverWhy}
             </p>
-            <p className="mt-3 text-[14.5px] leading-[1.65] text-muted-foreground">
-              {narrative.needs.mainLeverProducts}
-            </p>
+            <div className="mt-5">
+              <QuizResultLeverRows products={narrative.needs.products} />
+            </div>
           </article>
         </section>
 
@@ -312,10 +220,13 @@ export function QuizResultOfferPageShell({
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/60 p-6 text-center">
               <LockKeyhole className="mb-2 size-9 text-[var(--brand-plum)]" />
               <h2 className="font-header text-[22px] font-medium text-[var(--brand-plum-darkest)]">
-                Dein 30-Tage-Plan ist fertig
+                Dein vollständiger 30-Tage-Plan ist fertig
               </h2>
               <p className="mt-2 max-w-[300px] text-[13px] leading-relaxed text-muted-foreground">
                 Mit konkreten Produkten für deine Situation
+              </p>
+              <p className="mt-2 text-[12px] italic text-muted-foreground">
+                Ausgearbeitet von Chaarlie.
               </p>
               <a
                 href="#pricing"
@@ -331,19 +242,19 @@ export function QuizResultOfferPageShell({
           <div className="flex gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element -- renderToStaticMarkup tests do not load Next image remote config. */}
             <img
-              src={TOM_IMAGE_URL}
-              alt="Tom"
+              src={TOM.imageUrl}
+              alt={TOM.name}
               className="size-20 shrink-0 rounded-full border-2 border-[var(--brand-plum-light)] object-cover"
             />
             <div>
               <blockquote className="font-header text-[15px] italic leading-[1.55] text-[var(--brand-plum-darkest)]">
                 &ldquo;Viele Frauen überladen ihr Haar mit Feuchtigkeit, dabei fehlt Protein. Das
-                Haar wird weich, bricht aber trotzdem. Genau das erkennt Haarmony.&rdquo;
+                Haar wird weich, bricht aber trotzdem. Genau das erkennt Chaarlie.&rdquo;
               </blockquote>
-              <p className="mt-2 text-[13px] font-bold text-[var(--brand-plum-darkest)]">Tom</p>
-              <p className="text-[12px] text-[var(--text-caption)]">
-                Friseurmeister & Haarmony-Gründer
+              <p className="mt-2 text-[13px] font-bold text-[var(--brand-plum-darkest)]">
+                {TOM.shortName}
               </p>
+              <p className="text-[12px] text-[var(--text-caption)]">{TOM.role}</p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {["18 Jahre Erfahrung", "900+ Kundinnen", "Bekannt aus SAT.1"].map((item) => (
                   <span
@@ -360,7 +271,7 @@ export function QuizResultOfferPageShell({
 
         <section className="space-y-3 border-t border-border py-8">
           <p className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
-            Was Haarmony für dich tut
+            Was Chaarlie für dich tut
           </p>
           <h2 className="text-center font-header text-[28px] font-medium leading-[1.18] text-[var(--brand-plum-darkest)]">
             Dein persönlicher Haar-Experte. Immer dabei.
@@ -398,7 +309,7 @@ export function QuizResultOfferPageShell({
 
         <section className="border-t border-border py-8">
           <h2 className="mb-4 text-center font-header text-[28px] font-medium leading-[1.18] text-[var(--brand-plum-darkest)]">
-            Ohne vs. mit Haarmony
+            Ohne vs. mit Chaarlie
           </h2>
           <table className="w-full overflow-hidden rounded-[12px] border border-border bg-white text-[13px]">
             <thead>
@@ -410,17 +321,17 @@ export function QuizResultOfferPageShell({
                   Ohne
                 </th>
                 <th className="bg-[var(--brand-plum-ice)]/70 px-3 py-3 text-center font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
-                  Haarmony
+                  Chaarlie
                 </th>
               </tr>
             </thead>
             <tbody>
-              {COMPARISON_ROWS.map(([label, without, withHaarmony]) => (
+              {COMPARISON_ROWS.map(([label, without, withChaarlie]) => (
                 <tr key={label} className="border-t border-border first:border-t-0">
                   <td className="px-3 py-3 text-left text-muted-foreground">{label}</td>
                   <td className="px-3 py-3 text-center text-[var(--text-caption)]">{without}</td>
                   <td className="bg-[var(--brand-plum-ice)]/70 px-3 py-3 text-center font-bold text-[var(--brand-plum)]">
-                    {withHaarmony}
+                    {withChaarlie}
                   </td>
                 </tr>
               ))}
@@ -433,7 +344,7 @@ export function QuizResultOfferPageShell({
             Dein Plan ist fertig
           </p>
           <h2 className="mt-2 text-center font-header text-[34px] font-medium leading-[1.14] text-[var(--brand-plum-darkest)]">
-            Starte Haarmony
+            Starte Chaarlie
           </h2>
           <p className="mx-auto mt-3 max-w-[36ch] text-center text-[16px] leading-[1.6] text-muted-foreground">
             Deine Auswertung zeigt, was möglich ist. Dein Plan zeigt dir wie.
@@ -447,6 +358,7 @@ export function QuizResultOfferPageShell({
           </div>
           {pricingSlot ?? <StaticPricingPreview />}
           <article className="mt-7 rounded-[14px] border border-border bg-white p-6 text-center">
+            <ShieldCheck aria-hidden="true" className="mx-auto size-9 text-[var(--brand-coral)]" />
             <GuaranteeBadge />
             <h3 className="font-header text-[22px] font-medium text-[var(--brand-plum-darkest)]">
               Geld-zurück-Garantie

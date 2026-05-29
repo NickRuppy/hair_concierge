@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto"
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { upsertBillingSubscription } from "@/lib/billing/subscriptions"
 import { intervalFromPrice } from "./intervals"
 
 export interface CheckoutActivationDeps {
@@ -39,6 +40,10 @@ export interface CheckoutAccountResult {
   userId: string
   email: string
   canSetInitialPassword: boolean
+  subscriptionInterval?: string
+  stripeCustomerId?: string
+  stripeSubscriptionId?: string
+  subscriptionStatus?: string
 }
 
 interface ProfileRow {
@@ -154,6 +159,21 @@ export async function ensureCheckoutAccount(
     }),
   )
 
+  await measureCheckoutStep("billing.upsertSubscription", () =>
+    upsertBillingSubscription(deps.supabase, {
+      user_id: userId,
+      provider: "stripe",
+      provider_customer_id: valid.customerId,
+      provider_subscription_id: sub.id,
+      provider_status: sub.status ?? "active",
+      entitlement_status: stripeEntitlementStatus(sub.status),
+      interval,
+      current_period_end: subPeriodEndIso(sub),
+      cancel_at_period_end: false,
+      metadata: { checkout_session_id: valid.id },
+    }),
+  )
+
   await linkCheckoutQuizProfile(session, deps, userId, valid.email)
 
   console.info("[checkout-activation] account ensured", {
@@ -163,7 +183,15 @@ export async function ensureCheckoutAccount(
     durationMs: Date.now() - startedAt,
   })
 
-  return { userId, email: valid.email, canSetInitialPassword }
+  return {
+    userId,
+    email: valid.email,
+    canSetInitialPassword,
+    subscriptionInterval: interval,
+    stripeCustomerId: valid.customerId,
+    stripeSubscriptionId: sub.id,
+    subscriptionStatus: sub.status ?? "active",
+  }
 }
 
 async function measureCheckoutStep<T>(label: string, work: () => Promise<T>): Promise<T> {
@@ -239,6 +267,13 @@ export function subPeriodEndIso(sub: RetrievedSub): string {
     throw new Error("subscription has no current_period_end on item or root")
   }
   return new Date(unix * 1000).toISOString()
+}
+
+export function stripeEntitlementStatus(status: string | undefined) {
+  if (status === "past_due") return "past_due"
+  if (status === "incomplete" || status === "incomplete_expired") return "incomplete"
+  if (status && status !== "active" && status !== "trialing") return "canceled"
+  return "active"
 }
 
 function assertValidCheckoutSession(session: Stripe.Checkout.Session): ValidCheckoutSession {

@@ -26,7 +26,7 @@ export function Header() {
             <span className="h-3.5 w-[3px] rounded-sm bg-primary/30" />
           </div>
           <span className="font-header text-2xl tracking-wide text-[var(--text-heading)]">
-            Hair Concierge
+            chaarlie
           </span>
         </Link>
 

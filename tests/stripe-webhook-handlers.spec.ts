@@ -11,6 +11,7 @@ function stubDeps() {
   const calls: any[] = []
   const users: Record<string, { id: string; email: string }> = {}
   const profiles: Record<string, any> = {}
+  const billing: any[] = []
 
   const deps: HandlerDeps = {
     supabase: {
@@ -26,17 +27,21 @@ function stubDeps() {
         },
       },
       from(table: string) {
-        return {
+        const filters: Array<[string, string]> = []
+        const tableApi = {
           select() {
             return this
           },
           eq(col: string, val: string) {
             calls.push([`select-${table}-${col}`, val])
-            const row =
-              table === "profiles"
-                ? Object.values(profiles).find((p: any) => p[col] === val)
-                : Object.values(users).find((u: any) => u[col] === val)
-            return { maybeSingle: async () => ({ data: row ?? null, error: null }) }
+            filters.push([col, val])
+            return this
+          },
+          async maybeSingle() {
+            const row = rowsForTable().find((row: any) =>
+              filters.every(([col, val]) => row[col] === val),
+            )
+            return { data: row ?? null, error: null }
           },
           update(patch: any) {
             return {
@@ -55,10 +60,29 @@ function stubDeps() {
                 ...(profiles[row.id] ?? {}),
                 ...row,
               }
+            } else if (table === "billing_subscriptions") {
+              const existing = billing.find(
+                (candidate) =>
+                  candidate.provider === row.provider &&
+                  candidate.provider_subscription_id === row.provider_subscription_id,
+              )
+              if (existing) Object.assign(existing, row)
+              else billing.push(row)
             }
-            return Promise.resolve({ error: null })
+            return {
+              error: null,
+              select: () => ({
+                single: async () => ({ data: row, error: null }),
+              }),
+            }
           },
         }
+        function rowsForTable() {
+          if (table === "profiles") return Object.values(profiles)
+          if (table === "billing_subscriptions") return billing
+          return Object.values(users)
+        }
+        return tableApi
       },
     } as any,
     stripe: {
@@ -282,7 +306,13 @@ test("checkout.session.completed does not throw when linkQuizToProfile rejects",
   } as any
 
   // Should resolve normally despite linkQuizToProfile throwing
-  await expect(handleCheckoutSessionCompleted(session, deps)).resolves.toBeUndefined()
+  await expect(handleCheckoutSessionCompleted(session, deps)).resolves.toMatchObject({
+    email: "err@example.com",
+    stripeCustomerId: "cus_err",
+    stripeSubscriptionId: "sub_1",
+    subscriptionInterval: "month",
+    subscriptionStatus: "active",
+  })
 
   // Profile update still happened
   const p = Object.values(profiles).find((x: any) => x.email === "err@example.com") as any

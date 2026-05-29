@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { format } from "date-fns"
-import posthog from "posthog-js"
+import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import type { Message, CitationSource, Product, HairProfile } from "@/lib/types"
 import type { Components } from "react-markdown"
 import { ThumbsDown, ThumbsUp } from "lucide-react"
@@ -249,9 +249,7 @@ export function ChatMessage({
   useEffect(() => {
     if (products.length > 0 && !trackedRef.current) {
       trackedRef.current = true
-      posthog.capture("chat_product_recommendation_shown", {
-        productCount: products.length,
-      })
+      trackAppEvent("chat_product_recommendation_shown", { productCount: products.length })
     }
   }, [products.length])
 

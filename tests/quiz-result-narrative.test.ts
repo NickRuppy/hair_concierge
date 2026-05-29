@@ -36,6 +36,10 @@ test("surface-led results expose scope labels, bucketed positions, concise goal 
   assert.match(narrative.needs.mainLeverProducts, /Conditioner/i)
   assert.match(narrative.needs.mainLeverProducts, /zusätzlich/i)
   assert.match(narrative.needs.mainLeverProducts, /Leave-in/i)
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Conditioner", description: "Stabilisiert die Oberfläche der Längen." },
+    { name: "Leave-in", description: "Hält die Wirkung zwischen den Wäschen." },
+  ])
   assert.ok(!("reveal" in narrative))
 
   assert.equal(narrative.cta.lead, "Als Nächstes: dein persönlicher Plan")
@@ -142,6 +146,10 @@ test("no-concern fallback can become scalp-led when scalp is the strongest real 
   assert.match(narrative.needs.mainLeverWhy, /Schuppen/i)
   assert.match(narrative.needs.mainLeverProducts, /Anti-Schuppen-Shampoo/i)
   assert.match(narrative.needs.mainLeverProducts, /Kopfhautserum/i)
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Anti-Schuppen-Shampoo", description: "Reguliert die Kopfhaut bei jeder Wäsche." },
+    { name: "Kopfhautserum", description: "Hält die Kopfhaut zwischen den Wäschen ruhig." },
+  ])
 })
 
 test("an explicit dryness concern keeps row two and the main lever out of the scalp fallback", () => {
@@ -160,7 +168,7 @@ test("an explicit dryness concern keeps row two and the main lever out of the sc
   assert.equal(narrative.rows[1]?.label, "Was dich gerade ausbremst")
   assert.equal(narrative.rows[1]?.scope, "LÄNGEN")
   assert.equal(narrative.rows[1]?.before, "Trockenheit")
-  assert.equal(narrative.rows[1]?.after, "weichere, besser mit Feuchtigkeit versorgte Längen")
+  assert.equal(narrative.rows[1]?.after, "weichere, geschmeidige Längen")
   assert.doesNotMatch(narrative.needs.mainLeverTitle, /Kopfhaut/i)
   assert.doesNotMatch(narrative.needs.mainLeverProducts, /Anti-Schuppen-Shampoo|Kopfhautserum/i)
 })
@@ -218,6 +226,10 @@ test("severe structural signals can mention bondbuilder support in the main leve
   assert.match(narrative.needs.mainLeverProducts, /Bondbuilder/i)
   assert.match(narrative.needs.mainLeverProducts, /zusätzlich/i)
   assert.match(narrative.needs.mainLeverProducts, /Maske/i)
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Bondbuilder", description: "Stabilisiert die Längen von innen." },
+    { name: "Stärkende Maske", description: "Macht die Längen wieder belastbar." },
+  ])
 })
 
 test("surface branch explains the main lever with multiple fitting categories", () => {
@@ -234,6 +246,10 @@ test("surface branch explains the main lever with multiple fitting categories", 
     narrative.needs.mainLeverProducts,
     "Am meisten erreichen wir hier mit einem passenden Conditioner; zusätzlich kann ein Leave-in helfen, die Längen zwischen den Wäschen ruhiger zu halten.",
   )
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Conditioner", description: "Stabilisiert die Oberfläche der Längen." },
+    { name: "Leave-in", description: "Hält die Wirkung zwischen den Wäschen." },
+  ])
 })
 
 test("scalp branch explains the main lever with product-specific follow-through", () => {
@@ -269,6 +285,10 @@ test("split-ends branch explains the main lever with tip-focused product guidanc
     narrative.needs.mainLeverProducts,
     "Am meisten erreichen wir hier mit einem leichten Haaröl; zusätzlich kann ein Leave-in helfen, die Spitzen geschmeidiger und besser geschützt zu halten.",
   )
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Leichtes Haaröl", description: "Schützt und glättet die Spitzen." },
+    { name: "Leave-in", description: "Hält die Spitzen geschmeidig." },
+  ])
 })
 
 test("fallback branch still offers a concise but fuller product bridge", () => {
@@ -285,6 +305,10 @@ test("fallback branch still offers a concise but fuller product bridge", () => {
     narrative.needs.mainLeverProducts,
     "Am meisten erreichen wir hier mit einem passenden Conditioner; zusätzlich kann ein leichtes Leave-in helfen, die Wirkung in den Längen zu halten.",
   )
+  assert.deepEqual(narrative.needs.products, [
+    { name: "Conditioner", description: "Stimmt die Pflegebasis ab." },
+    { name: "Leichtes Leave-in", description: "Hält die Wirkung in den Längen." },
+  ])
 })
 
 test("hero headline maps overextended pull test to protein-led result", () => {
@@ -345,4 +369,162 @@ test("fixed row labels and CTA copy stay compact", () => {
   assert.equal(narrative.cta.lead, "Als Nächstes: dein persönlicher Plan")
   assert.equal(narrative.cta.label, "MEINE ROUTINE STARTEN")
   assert.equal(narrative.cta.subline, "Mit passenden Produkten, Reihenfolge und Anwendung.")
+})
+
+test("scalp-irritated branch fires when scalp_condition === gereizt and no concern is set", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "fine",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    scalp_type: "ausgeglichen",
+    has_scalp_issue: true,
+    scalp_condition: "gereizt",
+    goals: ["healthy_scalp"],
+    concerns: [],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Die Kopfhaut beruhigen")
+  assert.match(narrative.needs.mainLeverWhy, /gereizt/i)
+  assert.match(narrative.needs.mainLeverProducts, /beruhigenden Shampoo/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Beruhigendes Shampoo",
+      description: "Mildert die Kopfhautreizung bei jeder Wäsche.",
+    },
+    {
+      name: "Leichtes Leave-in",
+      description: "Pflegt die Längen, ohne die Kopfhaut zu belasten.",
+    },
+  ])
+})
+
+test("scalp-oily-balanced branch fires when scalp_type signals oily without a specific scalp_condition", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "fine",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    scalp_type: "fettig",
+    has_scalp_issue: false,
+    goals: ["healthy_scalp"],
+    concerns: [],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Die Kopfhaut in Balance bringen")
+  assert.match(narrative.needs.mainLeverWhy, /Frische und Volumen/i)
+  assert.match(narrative.needs.mainLeverProducts, /Balance-Shampoo/i)
+  assert.match(narrative.needs.mainLeverProducts, /leichter Conditioner/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Balance-Shampoo",
+      description: "Bringt die Kopfhaut in Balance, ohne sie auszutrocknen.",
+    },
+    {
+      name: "Leichter Conditioner",
+      description: "Pflegt die Längen, ohne die Kopfhaut zu belasten.",
+    },
+  ])
+})
+
+test("protein-moderate branch fires when pulltest=stretches_stays without severe-damage signals", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_stays",
+    treatment: ["natur"],
+    concerns: [],
+    goals: ["healthier_hair"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Überdehnten Längen wieder Struktur geben")
+  assert.match(narrative.needs.mainLeverWhy, /überdehnt/i)
+  assert.match(narrative.needs.mainLeverProducts, /Protein-Maske/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Protein-Maske",
+      description: "Gibt überdehnten Längen wieder Struktur.",
+    },
+    {
+      name: "Conditioner für strapaziertes Haar",
+      description: "Stützt die Längen zwischen den Masken.",
+    },
+  ])
+})
+
+test("moisture-needs branch fires when pulltest=snaps", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "snaps",
+    treatment: ["natur"],
+    concerns: [],
+    goals: ["moisture"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Den Längen mehr Feuchtigkeit zurückgeben")
+  assert.match(narrative.needs.mainLeverWhy, /Feuchtigkeit/i)
+  assert.match(narrative.needs.mainLeverProducts, /Feuchtigkeitsmaske/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Feuchtigkeitsmaske",
+      description: "Versorgt trockene Längen tief mit Feuchtigkeit.",
+    },
+    {
+      name: "Conditioner für trockenes Haar",
+      description: "Hält die Längen geschmeidig zwischen den Masken.",
+    },
+  ])
+})
+
+test("curl-definition branch fires when primaryGoal=curl_definition and structure is wavy/curly/coily", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "curly",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    concerns: [],
+    goals: ["curl_definition"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Wellen und Locken besser definieren")
+  assert.match(narrative.needs.mainLeverWhy, /Locken/i)
+  assert.match(narrative.needs.mainLeverProducts, /Curl-Leave-in/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Curl-Leave-in",
+      description: "Definiert Wellen und Locken zwischen den Wäschen.",
+    },
+    {
+      name: "Pflegender Conditioner",
+      description: "Hält die Locken weich und beweglich.",
+    },
+  ])
+})
+
+test("shine branch fires when primaryGoal=shine and no earlier branch matches", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    concerns: [],
+    goals: ["shine"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Mehr Glanz in die Längen bringen")
+  assert.match(narrative.needs.mainLeverWhy, /Versiegelung|stumpf/i)
+  assert.match(narrative.needs.mainLeverProducts, /Glanz-Leave-in/i)
+  assert.deepEqual(narrative.needs.products, [
+    {
+      name: "Glanz-Leave-in",
+      description: "Bringt Glanz zurück in die Längen.",
+    },
+    {
+      name: "Leichtes Haaröl",
+      description: "Versiegelt die Oberfläche und betont den Glanz.",
+    },
+  ])
 })

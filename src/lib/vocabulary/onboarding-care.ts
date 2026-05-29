@@ -15,13 +15,25 @@ export const TOWEL_MATERIAL_OPTIONS = TOWEL_MATERIALS.map((value) => ({
 }))
 
 /* ── Towel technique ── */
-export const TOWEL_TECHNIQUES = ["rubbeln", "tupfen"] as const
+export const TOWEL_TECHNIQUES = ["rough_rubbing", "gentle_press"] as const
 export type TowelTechnique = (typeof TOWEL_TECHNIQUES)[number]
 
 export const TOWEL_TECHNIQUE_LABELS = {
-  rubbeln: "Rubbeln",
-  tupfen: "Tupfen / Scrunchen",
+  rough_rubbing: "Rubbeln",
+  gentle_press: "Sanft ausdrücken / scrunchen",
 } as const satisfies Record<TowelTechnique, string>
+
+const TOWEL_TECHNIQUE_CANONICAL_VALUES = new Set<string>(TOWEL_TECHNIQUES)
+
+export function normalizeTowelTechniqueValue(
+  value: string | null | undefined,
+): TowelTechnique | null {
+  if (!value) return null
+  const normalized =
+    value === "rubbeln" ? "rough_rubbing" : value === "tupfen" ? "gentle_press" : value
+
+  return TOWEL_TECHNIQUE_CANONICAL_VALUES.has(normalized) ? (normalized as TowelTechnique) : null
+}
 
 export const TOWEL_TECHNIQUE_OPTIONS = TOWEL_TECHNIQUES.map((value) => ({
   value,
@@ -74,8 +86,7 @@ export const BRUSH_TYPE_OPTIONS = BRUSH_TYPES.map((value) => ({
 export const NIGHT_PROTECTIONS = [
   "silk_satin_pillow",
   "silk_satin_bonnet",
-  "loose_braid",
-  "loose_bun",
+  "loose_tied",
   "pineapple",
   "tight_hairstyles",
 ] as const
@@ -84,11 +95,24 @@ export type NightProtection = (typeof NIGHT_PROTECTIONS)[number]
 export const NIGHT_PROTECTION_LABELS = {
   silk_satin_pillow: "Seidenkissenbezug",
   silk_satin_bonnet: "Seidenhaube / Bonnet",
-  loose_braid: "Lockerer Zopf",
-  loose_bun: "Lockerer Dutt",
+  loose_tied: "Locker zusammengebunden",
   pineapple: "Pineapple (hoher lockerer Dutt)",
   tight_hairstyles: "Enge Frisuren (Zöpfe, straffe Dutts)",
 } as const satisfies Record<NightProtection, string>
+
+const NIGHT_PROTECTION_CANONICAL_VALUES = new Set<string>(NIGHT_PROTECTIONS)
+
+export function normalizeNightProtectionValues(
+  values: readonly string[] | null | undefined,
+): NightProtection[] | null {
+  if (!values) return null
+
+  const normalized = values
+    .map((value) => (value === "loose_braid" || value === "loose_bun" ? "loose_tied" : value))
+    .filter((value): value is NightProtection => NIGHT_PROTECTION_CANONICAL_VALUES.has(value))
+
+  return Array.from(new Set(normalized))
+}
 
 export const NIGHT_PROTECTION_OPTIONS = NIGHT_PROTECTIONS.map((value) => ({
   value,

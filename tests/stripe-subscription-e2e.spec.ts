@@ -10,7 +10,7 @@ import { expect, test } from "@playwright/test"
 // Manual golden path:
 //   quiz result offer page -> selected plan CTA -> inline Stripe iframe -> /welcome
 
-const TEST_EMAIL = `e2e-${Date.now()}@hair-concierge-test.local`
+const TEST_EMAIL = `e2e-${Date.now()}@chaarlie-test.local`
 
 test.describe.skip("Stripe subscription golden path (manual)", () => {
   test("quiz result offer → stripe test card → welcome shows magic-link", async ({ page }) => {
@@ -47,7 +47,7 @@ test.describe.skip("Stripe subscription golden path (manual)", () => {
     await expect(page.getByText(/Analyse fertig/i)).toBeVisible({ timeout: 15_000 })
 
     // 2. Start checkout from the result offer page's selected plan CTA.
-    await page.getByRole("button", { name: /Jetzt starten.*34,99.*Quartal/i }).click()
+    await page.getByRole("button", { name: /Jetzt starten.*17,49.*Quartal/i }).click()
 
     // 3. The embedded Stripe iframe loads inline on the result page.
     await expect(page.getByRole("button", { name: /Plan ändern/i })).toBeVisible({

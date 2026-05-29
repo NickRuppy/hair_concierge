@@ -17,7 +17,7 @@ const FULL_PROFILE: HairProfileOverrides = {
   wash_frequency: "every_2_3_days",
   heat_styling: "rarely",
   drying_method: "air_dry",
-  towel_technique: "rubbeln",
+  towel_technique: "rough_rubbing",
   brush_type: "paddle",
   night_protection: [],
   goals: ["shine"],
