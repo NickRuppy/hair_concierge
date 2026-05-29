@@ -1336,10 +1336,14 @@ test("AgentV2 runtime sends loaded user profile context to the model", async () 
   })
 
   const firstInput = getInputItems(client.requests[0])
+  const firstSystemContent = String(asRecord(firstInput[0])?.content ?? "")
+  assert.match(firstSystemContent, /Chaarlie/)
+  assert.doesNotMatch(firstSystemContent, /Hair Concierge/)
   const contextItem = firstInput
     .map(asRecord)
-    .find((item) => String(item?.content ?? "").includes("Loaded Compare Lab user context"))
+    .find((item) => String(item?.content ?? "").includes("Loaded Chaarlie user context"))
   const content = String(contextItem?.content ?? "")
+  assert.doesNotMatch(JSON.stringify(firstInput), /Compare Lab/)
   assert.match(content, /hair_texture/)
   assert.match(content, /wavy/)
   assert.match(content, /Haardicke: fein/)
@@ -1512,8 +1516,13 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
       routineInventory: [{ category: "shampoo", product_name: null, frequency_range: "daily" }],
       sessionMemory: [],
       careBalanceContext: {
-        authoritative: false,
-        mode: "side_by_side",
+        mode: "production_decision_context",
+        authority: {
+          product_truth: false,
+          persistent_routine_storage: false,
+          current_turn_category_decision: true,
+          soft_product_ranking_hints: true,
+        },
         rows: [
           {
             category: "conditioner",
@@ -1530,8 +1539,13 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
             context_reason_codes: [],
             selection_hint_codes: [],
             usage_hint: "match_wash_frequency:after_every_wash",
-            caveats: ["side_by_side_non_authoritative"],
-            authoritative: false,
+            caveats: ["current_turn_category_decision"],
+            authority: {
+              product_truth: false,
+              persistent_routine_storage: false,
+              current_turn_category_decision: true,
+              soft_product_ranking_hints: true,
+            },
           },
           {
             category: "leave_in",
@@ -1544,8 +1558,13 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
             context_reason_codes: [],
             selection_hint_codes: [],
             usage_hint: "not_applicable",
-            caveats: ["side_by_side_non_authoritative"],
-            authoritative: false,
+            caveats: ["current_turn_category_decision"],
+            authority: {
+              product_truth: false,
+              persistent_routine_storage: false,
+              current_turn_category_decision: true,
+              soft_product_ranking_hints: true,
+            },
           },
         ],
         comparison: null,
@@ -1564,7 +1583,8 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
   assert.match(content, /conditioner/)
   assert.match(content, /missing_needed/)
   assert.match(content, /leave_in/)
-  assert.match(content, /current routine/)
+  assert.match(content, /current-turn category decision context/)
+  assert.match(content, /not product truth/)
 })
 
 test("AgentV2 runtime supports product recommendations inside an active routine thread", async () => {
@@ -1852,15 +1872,15 @@ test("AgentV2 runtime blocks routine tool permission for short confirmations wit
       reason: "Incorrectly treating a bare confirmation as routine action permission.",
       routine_intent: "modify",
       mutation_kind: "add_step",
-      evidence_quote: "Ja",
+      evidence_quote: "Ja bitte",
     }),
-    terminalMaskOilComparisonInRoutine("call_3", "Ja"),
+    terminalMaskOilComparisonInRoutine("call_3", "Ja bitte"),
   ])
   let buildRoutineCalled = false
 
   const result = await runAgentV2ResponsesTurn({
     client,
-    message: "Ja.",
+    message: "Ja bitte.",
     recentMessages: [
       {
         role: "assistant",
@@ -4665,11 +4685,58 @@ test("AgentV2 runtime uses routine ambiguity fallback when routine step repair f
   assert.equal(result.trace.failure_stage, "repair_failed")
   assert.equal(result.final_answer.answer_mode, "clarification")
   assert.equal(result.final_answer.routine_context.active, true)
-  assert.match(result.final_answer.payload.user_facing_answer_de, /Meinst du mit dem Zusatz/)
+  assert.match(
+    result.final_answer.payload.user_facing_answer_de,
+    /Routine-Schritt.*nicht eindeutig zuordnen|nicht eindeutig zuordnen.*Routine-Schritt/,
+  )
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Zusatz|Leave-in-Schritt/)
   assert.doesNotMatch(
     result.final_answer.payload.user_facing_answer_de,
     /known_routine_step_ids|repair_failed|tool/i,
   )
+})
+
+test("AgentV2 runtime does not use Zusatz ambiguity fallback for explicit problem follow-up", async () => {
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([
+      terminalRoutineProductDeepDiveWithStep("call_1", ["prod_1"], "unknown_step"),
+      terminalRoutineProductDeepDiveWithStep("call_2", ["prod_1"], "unknown_step"),
+    ]),
+    message: "ok wie kann ich das frizz problem loesen",
+    recentMessages: [
+      {
+        role: "assistant",
+        content:
+          "Naechster sinnvoller Schritt: leichter Zusatz fuer die Laengen oder Problemloesung gegen Frizz/Plattheit.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    priorSelectedProductProjections: [
+      {
+        valid_product_ids: ["prod_1"],
+        products: [projectedProduct("prod_1", "Test Leave-in")],
+      },
+    ],
+    routineThreadContext: {
+      active: true,
+      current_layer: "basics",
+      last_answer_mode: "routine",
+      last_routine_categories: ["leave_in"],
+      last_user_goal: "Routine vereinfachen",
+      summary_de: "Ein erster Zusatz ist sichtbar.",
+      visible_steps: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, "repair_failed")
+  assert.equal(result.final_answer.answer_mode, "clarification")
+  assert.match(
+    result.final_answer.payload.user_facing_answer_de,
+    /Routine-Schritt.*nicht eindeutig zuordnen|nicht eindeutig zuordnen.*Routine-Schritt/,
+  )
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Meinst du mit dem Zusatz/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Leave-in-Schritt/)
 })
 
 test("AgentV2 runtime enforces model step and executable tool budgets", async () => {

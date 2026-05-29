@@ -152,3 +152,33 @@ test("projectRoutineForAgentV2 explains basics layer and product policy", () => 
   assert.equal(output.product_request_policy.default, "do_not_name_products")
   assert.equal(output.visible_steps.length, 3)
 })
+
+test("projectRoutineForAgentV2 translates internal leave-in finish labels for user-facing context", () => {
+  const input: BuildOrFixRoutineProjection = {
+    objective: "build_routine",
+    confidence: 0.9,
+    missing_info: [],
+    steps: [
+      {
+        id: "maintenance-leave-in",
+        label: "Leave-in / Finish",
+        necessity: "recommended",
+        action: "add",
+        category: "leave_in",
+        frequency: "nach der Waesche",
+        reasons: ["Ein Leave-in oder Finish-Schritt macht die Routine nach dem Waschen runder."],
+        caveats: [],
+        fillable: true,
+      },
+    ],
+    priority_context: null,
+  }
+
+  const output = projectRoutineForAgentV2(input, { requestedLayer: "basics" })
+
+  assert.equal(output.visible_steps[0]?.label, "Leichtes Leave-in")
+  assert.equal(
+    output.visible_steps[0]?.short_reason,
+    "Ein Leave-in-Schritt macht die Routine nach dem Waschen runder.",
+  )
+})

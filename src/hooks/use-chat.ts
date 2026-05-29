@@ -17,6 +17,21 @@ interface UseChatReturn {
   startNewConversation: () => void
 }
 
+function redirectToAuthIfNeeded(response: Response): boolean {
+  if (!response.redirected) return false
+
+  const url = new URL(response.url)
+  if (url.pathname !== "/auth") return false
+
+  if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    window.location.assign("/api/dev/login?next=/chat")
+    return true
+  }
+
+  window.location.assign(response.url)
+  return true
+}
+
 export function useChat(): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>([])
   const [isStreaming, setIsStreaming] = useState(false)
@@ -27,8 +42,16 @@ export function useChat(): UseChatReturn {
   const loadConversations = useCallback(async () => {
     try {
       const res = await fetch("/api/chat")
+      if (redirectToAuthIfNeeded(res)) return
+
       if (!res.ok) {
         console.error("Fehler beim Laden der Unterhaltungen:", res.status, res.statusText)
+        return
+      }
+
+      const contentType = res.headers.get("content-type") ?? ""
+      if (!contentType.includes("application/json")) {
+        console.error("Fehler beim Laden der Unterhaltungen: unerwartete Antwort")
         return
       }
 
@@ -140,8 +163,17 @@ export function useChat(): UseChatReturn {
           signal: abortRef.current.signal,
         })
 
+        if (redirectToAuthIfNeeded(res)) {
+          throw new Error("Sitzung abgelaufen")
+        }
+
         if (!res.ok) {
           throw new Error("Fehler beim Senden")
+        }
+
+        const contentType = res.headers.get("content-type") ?? ""
+        if (!contentType.includes("text/event-stream")) {
+          throw new Error("Unerwartete Chat-Antwort")
         }
 
         const reader = res.body?.getReader()

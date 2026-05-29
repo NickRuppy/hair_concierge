@@ -627,6 +627,25 @@ test("validator catches raw internal labels in visible payload routine step reas
   )
 })
 
+test("validator blocks internal product-ranking language in user-facing copy", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Test Shampoo** passt, auch wenn es laut Auswahl eher ein etwas schwaecherer Treffer ist.",
+      },
+    },
+    baseValidationContext,
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "user_facing_internal_ranking_language"),
+  )
+})
+
 test("validator warns on catalog metadata phrasing in visible payload routine step actions", () => {
   const result = validateAgentV2FinalAnswer(
     routineBasicsAnswer({
@@ -3308,6 +3327,18 @@ test("validator blocks objective bad conversation closers", () => {
     {
       text: "Das kann ich so nicht sicher sagen. Wenn du willst, pruefe ich dir die INCI.",
       validatorId: "bad_conversation_close_unsupported_lane",
+    },
+    {
+      text:
+        "Dann wuerde ich dir als erstes ein leichtes Leave-in geben. Eine Maske waere eher der zweite Schritt, falls der Frizz stark mit Bruch zusammenhaengt.\n\n" +
+        "Wenn du magst, kann ich dir danach noch sagen, ob eher ein Leave-in oder eine Maske fuer dich der bessere naechste Schritt waere.",
+      validatorId: "bad_conversation_close_redundant_comparison",
+    },
+    {
+      text:
+        "Das klingt eher nach Rueckstaenden am Ansatz oder zu schwerer Pflege als nach zu wenig Waschen. Am ehesten wuerde ich testen: Shampoo nur am Ansatz, Conditioner nur in Laengen und Spitzen, keine schweren Produkte am Oberkopf.\n\n" +
+        "Wenn du magst, kann ich dir als Naechstes sagen, ob das bei dir eher nach Rueckstaenden, zu mildem Shampoo oder wirklich fettiger Kopfhaut klingt.",
+      validatorId: "bad_conversation_close_redundant_source_triage",
     },
   ]
 

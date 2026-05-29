@@ -276,6 +276,7 @@
       "quality_criteria": [
         "treats the second turn as a product recommendation inside the routine thread",
         "keeps the routine context active",
+        "explains why this category/product is the next add-on using a visible profile, routine, CareBalance, or routine-thread fact",
         "guides back to the routine after product options"
       ]
     },

@@ -5,6 +5,7 @@ import type {
   AgenticToolLoopModelStep as RuntimeAgenticToolLoopModelStep,
   AgenticToolLoopTrace as RuntimeAgenticToolLoopTrace,
 } from "@/lib/agent/orchestrator/agentic-tool-loop-types"
+import type { AgentV2Trace } from "@/lib/agent-v2/contracts"
 import type { BuildOrFixRoutineProjection } from "@/lib/agent/tools/build-or-fix-routine"
 import type { SelectedProductsProjection } from "@/lib/agent/tools/select-products"
 import type {
@@ -15,7 +16,7 @@ import type {
   ChatTraceLatencyBreakdown,
   ChatTurnTrace,
   ConversationStatePersistenceTrace,
-  ConversationStateTransition,
+  ConversationTurnStateTransition,
   CitationSource,
   ClassificationResult,
   HairProfile,
@@ -27,6 +28,7 @@ import type {
   RoutinePlan,
   RouterDecision,
 } from "@/lib/types"
+import { summarizeAgentV2ConversationState } from "@/lib/agent-v2/production/persisted-session-state"
 
 const CHAT_TURN_TRACE_VERSION = 2
 const CONTENT_PREVIEW_LIMIT = 240
@@ -44,7 +46,7 @@ export interface PipelineTraceDraft {
   conversation_history_count: number
   classification: ClassificationResult
   router_decision: RouterDecision
-  conversation_state: ConversationStateTransition
+  conversation_state: ConversationTurnStateTransition
   clarification_questions: string[]
   hair_profile_snapshot: HairProfile | null
   memory_context: string | null
@@ -64,6 +66,7 @@ export interface PipelineTraceDraft {
   response_composition: ResponseCompositionTrace
   engine_variant?: ChatTurnTrace["engine_variant"]
   agentic_tool_loop?: ChatTurnTrace["agentic_tool_loop"]
+  agent_v2_trace?: AgentV2Trace | null
   latencies_ms: ChatTraceLatencyBreakdown
 }
 
@@ -107,6 +110,26 @@ function compactRecordIds(values: unknown): string[] {
         .filter(Boolean),
     ),
   )
+}
+
+function summarizeAgentV2TransitionState(
+  transition: ConversationTurnStateTransition,
+): Record<string, unknown> | null {
+  const nextState = transition.next_state
+  if (
+    !isRecord(nextState) ||
+    nextState.version !== 2 ||
+    nextState.engine !== "agent_v2_care_balance"
+  ) {
+    return null
+  }
+
+  return {
+    ...summarizeAgentV2ConversationState(
+      nextState as Parameters<typeof summarizeAgentV2ConversationState>[0],
+    ),
+    changed_fields: transition.changed_fields,
+  }
 }
 
 function summarizeInput(input: Record<string, unknown>): string | null {
@@ -486,7 +509,7 @@ export function buildPipelineTraceDraft(params: {
   conversation_history_count: number
   classification: ClassificationResult
   router_decision: RouterDecision
-  conversation_state: ConversationStateTransition
+  conversation_state: ConversationTurnStateTransition
   clarification_questions?: string[]
   hair_profile_snapshot: HairProfile | null
   memory_context: string | null
@@ -503,6 +526,7 @@ export function buildPipelineTraceDraft(params: {
   response_composition: ResponseCompositionTrace
   engine_variant?: ChatTurnTrace["engine_variant"]
   agentic_tool_loop?: ChatTurnTrace["agentic_tool_loop"]
+  agent_v2_trace?: AgentV2Trace | null
   latencies_ms: ChatTraceLatencyBreakdown
 }): PipelineTraceDraft {
   const {
@@ -532,6 +556,7 @@ export function buildPipelineTraceDraft(params: {
     response_composition,
     engine_variant,
     agentic_tool_loop,
+    agent_v2_trace,
     latencies_ms,
   } = params
   const resolvedEngineVariant: ChatTurnTrace["engine_variant"] = agentic_tool_loop
@@ -578,6 +603,7 @@ export function buildPipelineTraceDraft(params: {
     response_composition,
     engine_variant: resolvedEngineVariant,
     agentic_tool_loop,
+    agent_v2_trace: agent_v2_trace ?? null,
     latencies_ms,
   }
 }
@@ -634,6 +660,7 @@ export function finalizeChatTurnTrace(
     response_composition: draft.response_composition,
     ...(draft.engine_variant ? { engine_variant: draft.engine_variant } : {}),
     ...(draft.agentic_tool_loop ? { agentic_tool_loop: draft.agentic_tool_loop } : {}),
+    ...(draft.agent_v2_trace ? { agent_v2_trace: draft.agent_v2_trace } : {}),
     response: {
       assistant_content,
       sources,
@@ -650,6 +677,7 @@ export function finalizeChatTurnTrace(
 
 export function buildRetrievalDebugEventData(draft: PipelineTraceDraft): Record<string, unknown> {
   const toolLoopTrace = draft.agentic_tool_loop ?? null
+  const agentV2VisibleFailure = Boolean(draft.agent_v2_trace?.failure_stage)
   const engineVariant = toolLoopTrace ? "tool_loop" : (draft.engine_variant ?? null)
 
   return {
@@ -675,9 +703,25 @@ export function buildRetrievalDebugEventData(draft: PipelineTraceDraft): Record<
     tool_loop_tool_calls: toolLoopTrace?.tool_calls.map((call) => call.name) ?? [],
     tool_loop_blocked_reasons: toolLoopTrace?.blocked_tool_calls.map((call) => call.reason) ?? [],
     loaded_guidance_ids: toolLoopTrace?.loaded_guidance_ids ?? [],
+    agent_v2_loaded_guidance_ids: draft.agent_v2_trace?.loaded_guidance_package_ids ?? [],
+    agent_v2_tool_calls: draft.agent_v2_trace?.tool_calls.map((call) => call.name) ?? [],
+    agent_v2_blocked_reasons:
+      draft.agent_v2_trace?.blocked_tool_calls.map((call) => call.reason) ?? [],
+    agent_v2_failure_stage: draft.agent_v2_trace?.failure_stage ?? null,
+    agent_v2_visible_failure: agentV2VisibleFailure,
+    agent_v2_latency_ms: draft.agent_v2_trace
+      ? {
+          runtime: draft.latencies_ms.agent_runtime_ms ?? null,
+          model: draft.latencies_ms.agent_model_ms ?? null,
+          tools: draft.latencies_ms.agent_tool_ms ?? null,
+          model_steps: draft.agent_v2_trace.model_steps.length,
+          tool_calls: draft.agent_v2_trace.tool_calls.length,
+        }
+      : null,
+    agent_v2_state: summarizeAgentV2TransitionState(draft.conversation_state),
     repair_count: toolLoopTrace?.repair_attempts.length ?? 0,
     failure_stage: toolLoopTrace?.failure_stage ?? null,
-    visible_failure: toolLoopTrace?.visible_failure ?? false,
+    visible_failure: toolLoopTrace?.visible_failure ?? agentV2VisibleFailure,
     agentic_tool_loop: toolLoopTrace
       ? {
           model_step_count: toolLoopTrace.model_steps.length,

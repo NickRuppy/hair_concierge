@@ -724,11 +724,13 @@ export type ChatPromptKind =
   | "response_plan_render"
   | "agent_final_render"
   | "agentic_tool_loop"
+  | "agent_v2_responses"
 export type ResponseCompositionPath =
   | "legacy_synthesizer"
   | "response_plan"
   | "agent_final_render"
   | "agentic_tool_loop"
+  | "agent_v2_responses"
 export type TraceFailureBucket =
   | "product_fit_mismatch"
   | "routine_logic_mismatch"
@@ -743,7 +745,7 @@ export type TraceFailureBucket =
 
 export interface ResponseCompositionTrace {
   path: ResponseCompositionPath
-  migration_mode: "legacy_only" | "planner_preferred" | "tool_loop"
+  migration_mode: "legacy_only" | "planner_preferred" | "tool_loop" | "agent_v2_care_balance"
   fallback_reason: string | null
   rendering_path: string | null
   plan_type: string | null
@@ -797,11 +799,14 @@ export interface ChatTraceLatencyBreakdown {
   product_matching_ms: number
   prompt_build_ms: number
   stream_setup_ms: number
+  agent_runtime_ms?: number
+  agent_model_ms?: number | null
+  agent_tool_ms?: number | null
   stream_read_ms?: number
   total_ms?: number
 }
 
-export type ChatAgentEngine = "classic" | "tool_loop"
+export type ChatAgentEngine = "classic" | "tool_loop" | "agent_v2_care_balance"
 
 export type AgenticTerminalTopic =
   | "routine"
@@ -915,7 +920,7 @@ export interface ChatTurnTrace {
   conversation_history_count: number
   classification: ClassificationResult
   router_decision: RouterDecision
-  conversation_state: ConversationStateTransition
+  conversation_state: ConversationTurnStateTransition
   conversation_state_persistence: ConversationStatePersistenceTrace
   clarification_questions: string[]
   hair_profile_snapshot: HairProfile | null
@@ -945,6 +950,7 @@ export interface ChatTurnTrace {
   prompt: ChatPromptSnapshot
   response_composition: ResponseCompositionTrace
   agentic_tool_loop?: AgenticToolLoopTrace
+  agent_v2_trace?: import("@/lib/agent-v2/contracts").AgentV2Trace
   response: {
     assistant_content: string
     sources: CitationSource[]
@@ -973,6 +979,15 @@ export interface ConversationState {
   answered_slots: string[]
   last_assistant_action: string | null
   last_product_category: ConversationStateTopic
+  agent_v2_routine_thread_context?:
+    | import("@/lib/agent-v2/contracts").AgentV2RoutineThreadContext
+    | null
+  agent_v2_prior_selected_product_projections?: Array<
+    Partial<
+      import("@/lib/agent-v2/tools/select-products-projection").AgentV2SelectProductsProjection
+    >
+  >
+  agent_v2_session_memory?: import("@/lib/agent-v2/contracts").AgentV2SessionMemoryWrite[]
 }
 
 export interface ConversationStateTransition {
@@ -983,6 +998,16 @@ export interface ConversationStateTransition {
   classifier_override: string | null
   updated_by_engine?: ChatAgentEngine
 }
+
+export type AgentV2ConversationStateV2 =
+  import("@/lib/agent-v2/production/persisted-session-state").AgentV2ConversationStateV2
+
+export type AgentV2ConversationStateTransition =
+  import("@/lib/agent-v2/production/persisted-session-state").AgentV2ConversationStateTransition
+
+export type ConversationTurnStateTransition =
+  | ConversationStateTransition
+  | AgentV2ConversationStateTransition
 
 export interface ConversationStatePersistenceTrace {
   status: "persisted" | "failed" | "skipped"
@@ -1103,6 +1128,7 @@ export type RetrievalMode =
   | "product_sql_plus_hybrid"
   | "agent_engine"
   | "agentic_tool_loop"
+  | "agent_v2_responses"
 
 export type ResponseMode = "clarify_only" | "recommend_and_refine" | "answer_direct"
 

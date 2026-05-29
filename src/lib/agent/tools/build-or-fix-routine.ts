@@ -43,6 +43,16 @@ const CURRENT_ROUTINE_PRODUCT_CATEGORIES = [
   "scrub",
 ] as const satisfies readonly RoutineProduct[]
 
+const FIRST_ADD_ON_CATEGORY_ORDER = [
+  "leave_in",
+  "mask",
+  "oil",
+  "bondbuilder",
+  "deep_cleansing_shampoo",
+  "dry_shampoo",
+  "peeling",
+] as const satisfies readonly RoutineProductCategory[]
+
 export interface BuildOrFixRoutineStep {
   id: string
   label: string
@@ -280,12 +290,45 @@ function buildRoutineCareBalanceContext(
   return buildCareBalanceToolContext({ runtime, rows })
 }
 
+function normalizeRoutineMessage(value: string | null | undefined): string {
+  return (value ?? "")
+    .toLocaleLowerCase("de-DE")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+}
+
+function isFirstAddOnRoutineRequest(message: string | null | undefined): boolean {
+  const normalized = normalizeRoutineMessage(message)
+  return (
+    /\b(?:erste[rsn]?|ersten|naechste[rsn]?|naechsten|erster|naechster)\s+(?:zusatz|extra|hebel|produkt|ergaenzung)\b/.test(
+      normalized,
+    ) ||
+    /\bwelches\s+produkt\b.{0,80}\b(?:als\s+erstes|zuerst|ergaenzen|hinzufuegen)\b/.test(normalized)
+  )
+}
+
+function inferCareBalanceFirstAddOnCategory(params: {
+  message: string | null | undefined
+  requestedCategory: RoutineProductCategory | null
+  runtime: RecommendationEngineRuntime
+}): RoutineProductCategory | null {
+  if (params.requestedCategory || !isFirstAddOnRoutineRequest(params.message)) return null
+
+  for (const category of FIRST_ADD_ON_CATEGORY_ORDER) {
+    const row = params.runtime.careBalance.rows.find((candidate) => candidate.category === category)
+    if (row?.recommendation === "add") return category
+  }
+
+  return null
+}
+
 function projectRoutineSteps(params: {
   plan: RoutinePlan
   hairProfile: HairProfile | null
   layer: RoutineLayer | null
   requestedCategory: RoutineProductCategory | null
   mutationKind: BuildOrFixRoutineMutationKind | undefined
+  preferRequestedCategory: boolean
 }): BuildOrFixRoutineStep[] {
   if (!params.layer) {
     return params.plan.sections.flatMap((section) =>
@@ -295,7 +338,7 @@ function projectRoutineSteps(params: {
 
   const projection = projectRoutinePlanForLayer(params.plan, params.layer, {
     requestedCategory: params.requestedCategory,
-    preferRequestedCategory: params.mutationKind === "add_step",
+    preferRequestedCategory: params.preferRequestedCategory,
   })
 
   return projection.visible_slot_ids
@@ -382,18 +425,26 @@ export function projectRoutinePlan(params: {
     message: normalizeText(params.message),
   })
   const context = deriveRoutineContext(params.hairProfile, prompt)
-  const forceRequestedCategory =
-    params.mutationKind === "add_step" ? (params.requestedCategory ?? null) : null
-  const plan: RoutinePlan = buildRoutinePlan(params.hairProfile, prompt, {
-    usesBondBuilder: params.usesBondBuilder ?? false,
-    forceRequestedCategory,
-  })
   const routineItems =
     params.routineItems ??
     buildRoutineItemsFromInventoryCategories(params.hairProfile?.current_routine_products)
   const runtime = params.effectiveCareContext
     ? buildRecommendationEngineRuntimeFromEffectiveContext(params.effectiveCareContext)
     : buildRecommendationEngineRuntimeFromPersistence(params.hairProfile, routineItems)
+  const careBalanceFirstAddOnCategory = inferCareBalanceFirstAddOnCategory({
+    message: params.message,
+    requestedCategory: params.requestedCategory ?? null,
+    runtime,
+  })
+  const effectiveRequestedCategory = params.requestedCategory ?? careBalanceFirstAddOnCategory
+  const forceRequestedCategory =
+    params.mutationKind === "add_step"
+      ? (effectiveRequestedCategory ?? null)
+      : careBalanceFirstAddOnCategory
+  const plan: RoutinePlan = buildRoutinePlan(params.hairProfile, prompt, {
+    usesBondBuilder: params.usesBondBuilder ?? false,
+    forceRequestedCategory,
+  })
 
   const inventoryMatters = objective !== "build_routine"
   const completedBase =
@@ -409,8 +460,10 @@ export function projectRoutinePlan(params: {
       plan,
       hairProfile: params.hairProfile,
       layer: params.layer ?? null,
-      requestedCategory: params.requestedCategory ?? null,
+      requestedCategory: effectiveRequestedCategory,
       mutationKind: params.mutationKind,
+      preferRequestedCategory:
+        params.mutationKind === "add_step" || Boolean(careBalanceFirstAddOnCategory),
     }),
     missing_info: buildMissingInfo({ objective, hairProfile: params.hairProfile, context }),
     confidence: Math.round((completed / denominator) * 100) / 100,

@@ -143,6 +143,8 @@ export interface AgentCompareRolloutMetrics {
   tool_loop_tool_calls: number | null
   agent_v2_model_steps?: number | null
   agent_v2_tool_calls?: number | null
+  agent_v2_care_balance_model_steps?: number | null
+  agent_v2_care_balance_tool_calls?: number | null
 }
 
 export interface AgentCompareAnalysisSnapshot {

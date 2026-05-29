@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFile } from "node:fs/promises"
 import test from "node:test"
 
 const mutableEnv = process.env as Record<string, string | undefined>
@@ -34,6 +35,17 @@ test("GET rejects the compare lab route outside development", async () =>
       error: "Nur lokal in development verfuegbar.",
     })
   }))
+
+test("compare lab route keeps heavy dev-only runners behind dynamic imports", async () => {
+  const routeSource = await readFile("src/app/api/labs/agent-compare/route.ts", "utf8")
+
+  assert.doesNotMatch(routeSource, /import .*run-agent-v2/)
+  assert.doesNotMatch(routeSource, /import .*run-agentic-tool-loop/)
+  assert.doesNotMatch(routeSource, /import .*run-shadow-agent/)
+  assert.doesNotMatch(routeSource, /from \"@\/lib\/agent\/compare\/run-compare\"/)
+  assert.match(routeSource, /importDevOnlyModule/)
+  assert.doesNotMatch(routeSource, /await import\(\"@\/lib\/agent-v2\/compare\/run-agent-v2\"\)/)
+})
 
 test("GET returns eligible users and an optional selected-user snapshot in development", async () =>
   withNodeEnv("development", async () => {
@@ -124,7 +136,7 @@ test("POST rejects whitespace-only prompts and turns before calling compare exec
     assert.equal(runnerCalls, 0)
   }))
 
-test("handleAgentCompareRequest returns both compare columns, including partial failures", async () =>
+test("handleAgentCompareRequest defaults to AgentV2 CareBalance production path", async () =>
   withNodeEnv("development", async () => {
     const { handleAgentCompareRequest } = await importRoute()
     const response = await handleAgentCompareRequest(
@@ -148,6 +160,14 @@ test("handleAgentCompareRequest returns both compare columns, including partial 
         runShadowComparisonForUser: async () => {
           throw new Error("OpenAI API key fehlt lokal.")
         },
+        runAgentV2CareBalanceComparisonForUser: async ({ userId, prompt }) => ({
+          system: "agent_v2_care_balance",
+          answer: `AgentV2 CareBalance Antwort fuer ${userId}: ${prompt}`,
+          latency_ms: 95,
+          debug_lines: [],
+          matched_products: [],
+          error: null,
+        }),
       },
     )
 
@@ -156,10 +176,9 @@ test("handleAgentCompareRequest returns both compare columns, including partial 
     assert.equal(body.userId, "user-42")
     assert.equal(body.prompt, "Eigenes Prompt")
     assert.equal(body.toolLoopVariant, "guidance_tool")
-    assert.equal(body.results.length, 2)
-    assert.equal(body.results[0].system, "classic")
-    assert.equal(body.results[1].system, "tool_loop")
-    assert.equal(body.results[1].error, "OpenAI API key fehlt lokal.")
+    assert.equal(body.results.length, 1)
+    assert.equal(body.results[0].system, "agent_v2_care_balance")
+    assert.equal(body.results[0].display_label, "AgentV2 GPT-5.4-mini + CareBalance")
   }))
 
 test("handleAgentCompareRequest supports blinded multi-turn classic vs tool-loop runs", async () =>
@@ -182,6 +201,7 @@ test("handleAgentCompareRequest supports blinded multi-turn classic vs tool-loop
         turns: ["Ich will meine Routine vereinfachen.", "ok und welcges Shampoo?"],
         blinded: true,
         toolLoopVariant: "composer_context",
+        systems: ["classic", "tool_loop"],
       },
       {
         listEligibleCompareUsers: async () => [],
@@ -401,8 +421,13 @@ test("handleAgentCompareRequest compares AgentV2 baseline with AgentV2 CareBalan
             debug_lines: [],
             matched_products: [],
             care_balance_trace: {
-              authoritative: false,
-              mode: "side_by_side",
+              mode: "production_decision_context",
+              authority: {
+                product_truth: false,
+                persistent_routine_storage: false,
+                current_turn_category_decision: true,
+                soft_product_ranking_hints: true,
+              },
               rows: [],
               comparison: null,
               current_turn_facts: [],
@@ -427,20 +452,21 @@ test("handleAgentCompareRequest compares AgentV2 baseline with AgentV2 CareBalan
         ["agent_v2_care_balance", "AgentV2 GPT-5.4-mini + CareBalance"],
       ],
     )
-    assert.equal(body.results[1].care_balance_trace.mode, "side_by_side")
+    assert.equal(body.results[1].care_balance_trace.mode, "production_decision_context")
+    assert.equal(body.results[1].care_balance_trace.authority.current_turn_category_decision, true)
   }))
 
-test("handleAgentCompareRequest can run AgentV2 as the only compare system", async () =>
+test("handleAgentCompareRequest can run AgentV2 CareBalance as the only compare system", async () =>
   withNodeEnv("development", async () => {
     const { handleAgentCompareRequest } = await importRoute()
     let legacyCalls = 0
-    let agentV2Calls = 0
+    let careBalanceCalls = 0
     const response = await handleAgentCompareRequest(
       {
         userId: "user-42",
         prompt: "Muss ich K18 auswaschen und wie oft soll ich es benutzen?",
         blinded: false,
-        systems: ["agent_v2"],
+        systems: ["agent_v2_care_balance"],
       },
       {
         listEligibleCompareUsers: async () => [],
@@ -455,11 +481,11 @@ test("handleAgentCompareRequest can run AgentV2 as the only compare system", asy
           legacyCalls += 1
           throw new Error("tool loop should not run")
         },
-        runAgentV2ComparisonForUser: async () => {
-          agentV2Calls += 1
+        runAgentV2CareBalanceComparisonForUser: async () => {
+          careBalanceCalls += 1
           return {
-            system: "agent_v2",
-            answer: "AgentV2 Antwort",
+            system: "agent_v2_care_balance",
+            answer: "AgentV2 CareBalance Antwort",
             latency_ms: 90,
             debug_lines: [],
             matched_products: [],
@@ -472,14 +498,14 @@ test("handleAgentCompareRequest can run AgentV2 as the only compare system", asy
     assert.equal(response.status, 200)
     const body = await response.json()
     assert.equal(legacyCalls, 0)
-    assert.equal(agentV2Calls, 1)
+    assert.equal(careBalanceCalls, 1)
     assert.equal(body.blinded, undefined)
     assert.deepEqual(
       body.results.map((entry: { system: string; display_label: string }) => [
         entry.system,
         entry.display_label,
       ]),
-      [["agent_v2", "AgentV2 GPT-5.4-mini"]],
+      [["agent_v2_care_balance", "AgentV2 GPT-5.4-mini + CareBalance"]],
     )
   }))
 
@@ -530,10 +556,10 @@ test("compare lab rejects saving stale results for a different loaded user", asy
   )
 })
 
-test("compare lab allows saving AgentV2-only review results", async () => {
+test("compare lab allows saving AgentV2 CareBalance-only review results", async () => {
   const { canSaveAgentCompareJudgment } = await importCompareLab()
   const agentResult = {
-    system: "agent_v2" as const,
+    system: "agent_v2_care_balance" as const,
     answer: "A",
     latency_ms: 100,
     debug_lines: [],
@@ -567,6 +593,24 @@ test("compare lab allows saving AgentV2-only review results", async () => {
     }),
     true,
   )
+})
+
+test("compare lab coerces impossible stale current winners to tie", async () => {
+  const { normalizeWinnerForResults } = await importCompareLab()
+
+  assert.equal(normalizeWinnerForResults("current", null), "tie")
+  assert.equal(
+    normalizeWinnerForResults("current", {
+      system: "classic",
+      answer: "A",
+      latency_ms: 100,
+      debug_lines: [],
+      matched_products: [],
+      error: null,
+    }),
+    "current",
+  )
+  assert.equal(normalizeWinnerForResults("agent", null), "agent")
 })
 
 test("judgment route accepts a valid compare judgment in development", async () =>
@@ -623,6 +667,54 @@ test("judgment route accepts a valid compare judgment in development", async () 
     assert.equal(response.status, 200)
     assert.deepEqual(await response.json(), { ok: true })
     assert.equal(appended, true)
+  }))
+
+test("judgment route rejects stale current winner without a current result", async () =>
+  withNodeEnv("development", async () => {
+    const { handleAgentCompareJudgmentRequest } = await importJudgmentRoute()
+    let appended = false
+
+    const response = await handleAgentCompareJudgmentRequest(
+      {
+        createdAt: "2026-05-28T10:00:00.000Z",
+        user: {
+          id: "user-42",
+          label: "Nick · straight · fine",
+          full_name: "Nick",
+        },
+        prompt: "Was waere der naechste beste Schritt?",
+        context: {
+          user_id: "user-42",
+          derived_signals: [],
+          routine_inventory: [],
+          relevant_memory: [],
+        },
+        results: {
+          agent: {
+            system: "agent_v2_care_balance",
+            answer: "AgentV2 CareBalance Antwort",
+            latency_ms: 95,
+            debug_lines: [],
+            matched_products: [],
+            error: null,
+          },
+        },
+        judgment: {
+          winner: "current",
+          primary_reason: "nuetzlicher",
+          note: "stale UI state",
+        },
+      },
+      {
+        appendJudgmentLog: async () => {
+          appended = true
+        },
+      },
+    )
+
+    assert.equal(response.status, 400)
+    assert.match((await response.json()).error, /Ungueltiges/)
+    assert.equal(appended, false)
   }))
 
 test("judgment route accepts the guidance-tool compare variant", async () =>
@@ -967,7 +1059,7 @@ test("judgment POST accepts AgentV2 compare systems and metrics", async () =>
     })
   }))
 
-test("judgment POST accepts AgentV2-only review records", async () =>
+test("judgment POST accepts AgentV2 CareBalance-only review records and metrics", async () =>
   withNodeEnv("development", async () => {
     const { handleAgentCompareJudgmentRequest } = await importJudgmentRoute()
     const savedPayloads: unknown[] = []
@@ -990,14 +1082,14 @@ test("judgment POST accepts AgentV2-only review records", async () =>
         },
         results: {
           agent: {
-            system: "agent_v2",
-            answer: "AgentV2 Antwort",
-            latency_ms: 90,
+            system: "agent_v2_care_balance",
+            answer: "AgentV2 CareBalance Antwort",
+            latency_ms: 95,
             debug_lines: [],
             matched_products: [],
             agent_v2_trace: {
-              model_steps: [{ response_id: "resp_1" }],
-              tool_calls: [{ name: "load_advisor_guidance" }],
+              model_steps: [{ response_id: "resp_1" }, { response_id: "resp_2" }],
+              tool_calls: [{ name: "load_advisor_guidance" }, { name: "select_products" }],
             },
             error: null,
           },
@@ -1010,16 +1102,16 @@ test("judgment POST accepts AgentV2-only review records", async () =>
           critical_product_claim_failure: false,
         },
         rollout_metrics: {
-          blinded_winner: "agent_v2",
+          blinded_winner: "agent_v2_care_balance",
           failure_bucket: "other",
           critical_product_claim_failure: false,
           latency_ms: {
-            agent_v2: 90,
+            agent_v2_care_balance: 95,
           },
           tool_loop_model_steps: null,
           tool_loop_tool_calls: null,
-          agent_v2_model_steps: 1,
-          agent_v2_tool_calls: 1,
+          agent_v2_care_balance_model_steps: 2,
+          agent_v2_care_balance_tool_calls: 2,
         },
       },
       {
@@ -1034,9 +1126,22 @@ test("judgment POST accepts AgentV2-only review records", async () =>
     assert.equal(savedPayloads.length, 1)
     const saved = savedPayloads[0] as {
       results: { current?: { system: string }; agent: { system: string } }
+      rollout_metrics?: unknown
     }
     assert.equal(saved.results.current, undefined)
-    assert.equal(saved.results.agent.system, "agent_v2")
+    assert.equal(saved.results.agent.system, "agent_v2_care_balance")
+    assert.deepEqual(saved.rollout_metrics, {
+      blinded_winner: "agent_v2_care_balance",
+      failure_bucket: "other",
+      critical_product_claim_failure: false,
+      latency_ms: {
+        agent_v2_care_balance: 95,
+      },
+      tool_loop_model_steps: null,
+      tool_loop_tool_calls: null,
+      agent_v2_care_balance_model_steps: 2,
+      agent_v2_care_balance_tool_calls: 2,
+    })
   }))
 
 test("analysis snapshot extracts AgentV2 trace tool calls and guidance ids", async () => {

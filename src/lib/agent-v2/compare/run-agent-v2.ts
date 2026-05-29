@@ -11,7 +11,7 @@ import type { EffectiveCareContext } from "@/lib/recommendation-engine/types"
 import type { RoutineProduct } from "@/lib/vocabulary"
 import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"
 import { runAgentV2ResponsesTurn } from "@/lib/agent-v2/runtime/responses-agent"
-import { buildAgentV2ProductToolMessage } from "@/lib/agent-v2/compare/product-tool-context"
+import { buildAgentV2ProductToolMessage } from "@/lib/agent-v2/runtime/product-tool-context"
 import { loadAgentV2AdvisorGuidance } from "@/lib/agent-v2/tools/guidance-tool"
 import {
   projectRoutineForAgentV2,

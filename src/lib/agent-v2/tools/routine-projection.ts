@@ -47,13 +47,13 @@ export function projectRoutineForAgentV2(
     layer_purpose: LAYER_PURPOSES[routineLayer],
     visible_steps: projection.steps.map((step) => ({
       step_id: step.id,
-      label: step.label,
+      label: buildVisibleStepLabel(step),
       display_role: buildDisplayRole(step.necessity, step.action),
       category: step.category,
       necessity: step.necessity,
       action: step.action,
       frequency: step.frequency,
-      short_reason: step.reasons[0] ?? "",
+      short_reason: buildVisibleShortReason(step),
       caveats: step.caveats,
       product_recommendation_allowed_if_explicit: Boolean(step.fillable && step.category),
     })),
@@ -69,6 +69,24 @@ export function projectRoutineForAgentV2(
     missing_required_data: projection.missing_info,
     conversation_prompt_de: getConversationPrompt(routineLayer),
   }
+}
+
+function buildVisibleStepLabel(step: BuildOrFixRoutineProjection["steps"][number]): string {
+  if (step.category === "leave_in" && /^leave-in\s*\/\s*finish$/i.test(step.label.trim())) {
+    return "Leichtes Leave-in"
+  }
+
+  return step.label
+}
+
+function buildVisibleShortReason(step: BuildOrFixRoutineProjection["steps"][number]): string {
+  const reason = step.reasons[0] ?? ""
+  if (step.category !== "leave_in") return reason
+
+  return reason
+    .replace(/\bEin Leave-in oder Finish-Schritt\b/g, "Ein Leave-in-Schritt")
+    .replace(/\bLeave-in oder Finish-Schritt\b/g, "Leave-in-Schritt")
+    .replace(/\bFinish-Schritt\b/g, "Leave-in-Schritt")
 }
 
 const LAYER_PURPOSES: Record<AgentV2RoutineLayer, string> = {

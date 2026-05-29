@@ -217,68 +217,87 @@ const toolLoopVariantSchema = z.enum([
   "composer_context",
 ])
 
-const judgmentRecordSchema = z.object({
-  createdAt: z.string().datetime(),
-  user: z.object({
-    id: z.string().min(1),
-    label: z.string().min(1),
-    full_name: z.string().nullable(),
-  }),
-  prompt: z.string().min(1),
-  toolLoopVariant: toolLoopVariantSchema.optional(),
-  context: z.object({
-    user_id: z.string().min(1),
-    derived_signals: z.array(z.string()),
-    routine_inventory: z.array(
-      z.object({
-        category: z.string(),
-        product_name: z.string().nullable(),
-        frequency_range: z.string().nullable(),
-      }),
-    ),
-    relevant_memory: z.array(
-      z.object({
-        id: z.string(),
-        kind: z.string(),
-        content: z.string(),
-      }),
-    ),
-  }),
-  results: z.object({
-    current: compareRunResultSchema.optional(),
-    agent: compareRunResultSchema,
-  }),
-  judgment: z.object({
-    winner: z.enum(["current", "agent", "tie"]),
-    primary_reason: z.enum([
-      "natuerlicher",
-      "nuetzlicher",
-      "vorsichtiger",
-      "personalisierter",
-      "anderes",
-    ]),
-    note: z.string(),
-    failure_bucket: failureBucketSchema.default("none"),
-    critical_product_claim_failure: z.boolean().default(false),
-  }),
-  rollout_metrics: z
-    .object({
-      blinded_winner: z.enum(["classic", "tool_loop", "agent_v2", "agent_v2_care_balance", "tie"]),
-      failure_bucket: failureBucketSchema,
-      critical_product_claim_failure: z.boolean(),
-      latency_ms: z.object({
-        classic: z.number().int().nullable().optional(),
-        tool_loop: z.number().int().nullable().optional(),
-        agent_v2: z.number().int().nullable().optional(),
-      }),
-      tool_loop_model_steps: z.number().int().nullable(),
-      tool_loop_tool_calls: z.number().int().nullable(),
-      agent_v2_model_steps: z.number().int().nullable().optional(),
-      agent_v2_tool_calls: z.number().int().nullable().optional(),
-    })
-    .optional(),
-  analysis_snapshot: z.custom<AgentCompareAnalysisSnapshot>().optional(),
-})
+const judgmentRecordSchema = z
+  .object({
+    createdAt: z.string().datetime(),
+    user: z.object({
+      id: z.string().min(1),
+      label: z.string().min(1),
+      full_name: z.string().nullable(),
+    }),
+    prompt: z.string().min(1),
+    toolLoopVariant: toolLoopVariantSchema.optional(),
+    context: z.object({
+      user_id: z.string().min(1),
+      derived_signals: z.array(z.string()),
+      routine_inventory: z.array(
+        z.object({
+          category: z.string(),
+          product_name: z.string().nullable(),
+          frequency_range: z.string().nullable(),
+        }),
+      ),
+      relevant_memory: z.array(
+        z.object({
+          id: z.string(),
+          kind: z.string(),
+          content: z.string(),
+        }),
+      ),
+    }),
+    results: z.object({
+      current: compareRunResultSchema.optional(),
+      agent: compareRunResultSchema,
+    }),
+    judgment: z.object({
+      winner: z.enum(["current", "agent", "tie"]),
+      primary_reason: z.enum([
+        "natuerlicher",
+        "nuetzlicher",
+        "vorsichtiger",
+        "personalisierter",
+        "anderes",
+      ]),
+      note: z.string(),
+      failure_bucket: failureBucketSchema.default("none"),
+      critical_product_claim_failure: z.boolean().default(false),
+    }),
+    rollout_metrics: z
+      .object({
+        blinded_winner: z.enum([
+          "classic",
+          "tool_loop",
+          "agent_v2",
+          "agent_v2_care_balance",
+          "tie",
+        ]),
+        failure_bucket: failureBucketSchema,
+        critical_product_claim_failure: z.boolean(),
+        latency_ms: z.object({
+          classic: z.number().int().nullable().optional(),
+          tool_loop: z.number().int().nullable().optional(),
+          agent_v2: z.number().int().nullable().optional(),
+          agent_v2_care_balance: z.number().int().nullable().optional(),
+        }),
+        tool_loop_model_steps: z.number().int().nullable(),
+        tool_loop_tool_calls: z.number().int().nullable(),
+        agent_v2_model_steps: z.number().int().nullable().optional(),
+        agent_v2_tool_calls: z.number().int().nullable().optional(),
+        agent_v2_care_balance_model_steps: z.number().int().nullable().optional(),
+        agent_v2_care_balance_tool_calls: z.number().int().nullable().optional(),
+      })
+      .optional(),
+    analysis_snapshot: z.custom<AgentCompareAnalysisSnapshot>().optional(),
+  })
+  .superRefine((record, context) => {
+    if (record.judgment.winner === "current" && !record.results.current) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["judgment", "winner"],
+        message: "winner current requires a current result",
+      })
+    }
+  })
 
 interface JudgmentRouteDeps {
   appendJudgmentLog: (record: AgentCompareJudgmentRecord) => Promise<void>

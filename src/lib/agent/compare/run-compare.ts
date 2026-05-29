@@ -109,7 +109,7 @@ export async function runCompareWithAdapters(params: {
   const toolLoopVariant = resolveAgentCompareToolLoopVariant(params.toolLoopVariant)
   const requestedSystems: CompareSystemInput[] = params.systems?.length
     ? params.systems
-    : ["classic", "tool_loop"]
+    : ["agent_v2_care_balance"]
   const systems = requestedSystems.map(normalizeCompareSystem)
 
   const runners: Record<CompareSystem, () => Promise<CompareRunResult>> = {

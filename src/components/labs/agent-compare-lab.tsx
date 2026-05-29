@@ -37,16 +37,19 @@ type BootstrapResponse = {
   selectedUser: AgentCompareUserSnapshot | null
 }
 
-type AgentCompareRunMode = "agent_v2_only" | "agent_v2_vs_care_balance" | "classic_vs_tool_loop"
+type AgentCompareRunMode =
+  | "agent_v2_care_balance"
+  | "agent_v2_vs_care_balance"
+  | "classic_vs_tool_loop"
 
 const RUN_MODE_OPTIONS: Array<{ value: AgentCompareRunMode; label: string }> = [
-  { value: "agent_v2_only", label: "Nur AgentV2" },
-  { value: "agent_v2_vs_care_balance", label: "AgentV2 vs AgentV2 + CareBalance" },
-  { value: "classic_vs_tool_loop", label: "Classic vs Legacy Tool-Loop" },
+  { value: "agent_v2_care_balance", label: "AgentV2 GPT-5.4-mini + CareBalance" },
+  { value: "agent_v2_vs_care_balance", label: "Debug: AgentV2 vs CareBalance" },
+  { value: "classic_vs_tool_loop", label: "Debug: Classic vs Legacy Tool-Loop" },
 ]
 
 function resolveCompareSystemsForMode(mode: AgentCompareRunMode): CompareSystemInput[] {
-  if (mode === "agent_v2_only") return ["agent_v2"]
+  if (mode === "agent_v2_care_balance") return ["agent_v2_care_balance"]
   if (mode === "agent_v2_vs_care_balance") return ["agent_v2", "agent_v2_care_balance"]
   return ["classic", "tool_loop"]
 }
@@ -948,6 +951,14 @@ export function canSaveAgentCompareJudgment(params: {
   )
 }
 
+export function normalizeWinnerForResults(
+  winner: AgentCompareJudgmentDraft["winner"],
+  currentResult: CompareRunResult | null,
+): AgentCompareJudgmentDraft["winner"] {
+  if (winner === "current" && !currentResult) return "tie"
+  return winner
+}
+
 export function AgentCompareLab() {
   const [users, setUsers] = useState<AgentCompareUserOption[]>([])
   const [selectedUserId, setSelectedUserId] = useState("")
@@ -960,7 +971,7 @@ export function AgentCompareLab() {
   const [toolLoopVariant, setToolLoopVariant] = useState<AgentCompareToolLoopVariant>(
     DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT,
   )
-  const [runMode, setRunMode] = useState<AgentCompareRunMode>("agent_v2_vs_care_balance")
+  const [runMode, setRunMode] = useState<AgentCompareRunMode>("agent_v2_care_balance")
   const [isRevealed, setIsRevealed] = useState(false)
   const [result, setResult] = useState<AgentCompareResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -985,7 +996,7 @@ export function AgentCompareLab() {
     resultEntries.length > 1 ? (resultEntries[1] ?? null) : (resultEntries[0] ?? null)
   const selectedUserOption = users.find((user) => user.id === selectedUserId) ?? null
   const compareSystems = resolveCompareSystemsForMode(runMode)
-  const effectiveBlinded = runMode !== "agent_v2_only" && isBlinded
+  const effectiveBlinded = runMode !== "agent_v2_care_balance" && isBlinded
   const comparesLegacyToolLoop = compareSystems.includes("tool_loop")
   const comparesAgentV2CareBalance = compareSystems.includes("agent_v2_care_balance")
   const activeInput = isMultiTurn ? turnsText : prompt
@@ -1029,6 +1040,10 @@ export function AgentCompareLab() {
         includeSystem: true,
       })
     : null
+
+  useEffect(() => {
+    setWinner((current) => normalizeWinnerForResults(current, currentResult))
+  }, [currentResult])
 
   useEffect(() => {
     startLoadingUser(async () => {
@@ -1191,10 +1206,11 @@ export function AgentCompareLab() {
       ? normalizeCompareSystemForMetrics(currentResult.system)
       : null
     const agentSystem = normalizeCompareSystemForMetrics(agentResult.system)
+    const normalizedWinner = normalizeWinnerForResults(winner, currentResult)
     const blindedWinner =
-      winner === "current" && currentSystem
+      normalizedWinner === "current" && currentSystem
         ? currentSystem
-        : winner === "agent"
+        : normalizedWinner === "agent"
           ? agentSystem
           : "tie"
     const latencyBySystem: Partial<Record<CanonicalCompareSystem, number | null>> = {
@@ -1207,7 +1223,7 @@ export function AgentCompareLab() {
       userId: selectedUserOption.id,
       userLabel: selectedUserOption.label,
       prompt: result.turns?.join("\n") ?? result.prompt,
-      winner,
+      winner: normalizedWinner,
       primary_reason: primaryReason,
       note,
       createdAt,
@@ -1224,7 +1240,7 @@ export function AgentCompareLab() {
         agent: agentResult,
       },
       judgment: {
-        winner,
+        winner: normalizedWinner,
         primary_reason: primaryReason,
         note,
         failure_bucket: failureBucket,
@@ -1248,17 +1264,27 @@ export function AgentCompareLab() {
               ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
               : null,
         agent_v2_model_steps:
-          currentResult &&
-          (currentSystem === "agent_v2" || currentSystem === "agent_v2_care_balance")
+          currentResult && currentSystem === "agent_v2"
             ? getTraceMetricForSystem(currentResult, currentSystem, "model_steps")
-            : agentSystem === "agent_v2" || agentSystem === "agent_v2_care_balance"
+            : agentSystem === "agent_v2"
               ? getTraceMetricForSystem(agentResult, agentSystem, "model_steps")
               : null,
         agent_v2_tool_calls:
-          currentResult &&
-          (currentSystem === "agent_v2" || currentSystem === "agent_v2_care_balance")
+          currentResult && currentSystem === "agent_v2"
             ? getTraceMetricForSystem(currentResult, currentSystem, "tool_calls")
-            : agentSystem === "agent_v2" || agentSystem === "agent_v2_care_balance"
+            : agentSystem === "agent_v2"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
+              : null,
+        agent_v2_care_balance_model_steps:
+          currentResult && currentSystem === "agent_v2_care_balance"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "model_steps")
+            : agentSystem === "agent_v2_care_balance"
+              ? getTraceMetricForSystem(agentResult, agentSystem, "model_steps")
+              : null,
+        agent_v2_care_balance_tool_calls:
+          currentResult && currentSystem === "agent_v2_care_balance"
+            ? getTraceMetricForSystem(currentResult, currentSystem, "tool_calls")
+            : agentSystem === "agent_v2_care_balance"
               ? getTraceMetricForSystem(agentResult, agentSystem, "tool_calls")
               : null,
       },
@@ -1404,7 +1430,7 @@ export function AgentCompareLab() {
                 type="checkbox"
                 checked={isBlinded}
                 onChange={(event) => setIsBlinded(event.target.checked)}
-                disabled={runMode === "agent_v2_only"}
+                disabled={runMode === "agent_v2_care_balance"}
                 className="h-4 w-4 rounded border"
               />
               Geblendet
@@ -1431,11 +1457,13 @@ export function AgentCompareLab() {
           </div>
 
           <p className="text-xs text-muted-foreground">
-            {comparesAgentV2CareBalance
-              ? "Vergleicht denselben AgentV2 GPT-5.4-mini-Pfad einmal ohne und einmal mit modell-sichtbarer CareBalance-Evidenz."
-              : comparesLegacyToolLoop
-                ? "Legacy-Modus: vergleicht Classic mit dem aelteren Tool-Loop-Runner."
-                : "Nur AgentV2 testet den aktuellen Antwortpfad ohne CareBalance-Variante."}
+            {runMode === "agent_v2_care_balance"
+              ? "Testet den Produktionspfad AgentV2 GPT-5.4-mini + CareBalance mit Profil, Routine und Memory des Testnutzers."
+              : comparesAgentV2CareBalance
+                ? "Debug-Modus: vergleicht AgentV2 GPT-5.4-mini ohne CareBalance mit dem Produktionspfad AgentV2 GPT-5.4-mini + CareBalance."
+                : comparesLegacyToolLoop
+                  ? "Legacy-Modus: vergleicht Classic mit dem aelteren Tool-Loop-Runner."
+                  : "Debug-Modus."}
           </p>
           <button
             type="button"

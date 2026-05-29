@@ -138,6 +138,15 @@ test("AgentV2 manual regression fixture encodes product ask and category educati
     must_not_surface_products: false,
   })
 
+  assertExpected(findPrompt("Brauche ich eher eine Maske oder Conditioner?"), {
+    primary_intent: "category_education",
+    product_request_kind: "category_education",
+    care_category: "none",
+    requested_product_count: null,
+    required_tool: "none",
+    must_not_surface_products: true,
+  })
+
   assertExpected(findPrompt("Nenn mir ein paar passende Conditioner."), {
     product_request_kind: "specific_products",
     requested_product_count: 3,
@@ -234,6 +243,15 @@ test("AgentV2 guidance migration regression fixture covers broad manual prompt b
       `missing ${id}`,
     )
   }
+
+  const firstExtraProduct = guidanceMigrationCases.find(
+    (entry) => entry.id === "routine-context-first-extra-product",
+  )
+  assert.ok(firstExtraProduct)
+  assert.match(
+    firstExtraProduct.quality_criteria.join("\n"),
+    /why this category\/product is the next add-on.*visible profile, routine, CareBalance, or routine-thread fact/i,
+  )
 
   assert.ok(
     guidanceMigrationEdgeCases.some(

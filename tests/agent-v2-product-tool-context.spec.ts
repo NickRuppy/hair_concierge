@@ -4,7 +4,7 @@ import test from "node:test"
 import {
   buildAgentV2ProductToolMessage,
   isReferentialProductFollowup,
-} from "../src/lib/agent-v2/compare/product-tool-context"
+} from "../src/lib/agent-v2/runtime/product-tool-context"
 import { inferOilPurposeFromMessage } from "../src/lib/oil/purpose"
 
 test("direct product messages are passed through unchanged", () => {
@@ -30,6 +30,21 @@ test("direct asks with a named object stay unchanged even with referential wordi
       latestMessage,
       recentMessages: [
         { role: "user", content: "Ich habe vorher nach Öl für Glanz gefragt." },
+        { role: "assistant", content: "Dann schauen wir auf Finish-Produkte." },
+      ],
+    }),
+    latestMessage,
+  )
+})
+
+test("direct product asks with zu stay unchanged instead of inheriting stale context", () => {
+  const latestMessage = "Welches Produkt passt zu feinem Haar?"
+
+  assert.equal(
+    buildAgentV2ProductToolMessage({
+      latestMessage,
+      recentMessages: [
+        { role: "user", content: "Ich hatte vorher nach Oel fuer die Spitzen gefragt." },
         { role: "assistant", content: "Dann schauen wir auf Finish-Produkte." },
       ],
     }),

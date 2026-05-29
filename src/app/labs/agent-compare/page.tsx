@@ -12,7 +12,7 @@ export default function AgentComparePage() {
         <p className="type-label text-muted-foreground">Local Lab</p>
         <h1 className="text-3xl font-semibold tracking-tight">Agent Compare</h1>
         <p className="max-w-2xl text-sm text-muted-foreground">
-          Vergleicht das aktuelle lokale Chat-System direkt mit dem neuen Agenten fuer einen echten
+          Testet die neue Produktionslogik AgentV2 GPT-5.4-mini + CareBalance fuer einen echten
           gespeicherten Testnutzer. Geladen werden Profil, Routine und relevante Memory; der Prompt
           ist die eigentliche Frage.
         </p>

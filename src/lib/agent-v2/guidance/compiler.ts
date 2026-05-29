@@ -45,5 +45,5 @@ export async function loadAgentV2GuidancePackages(ids: string[]): Promise<AgentV
 }
 
 function fromRepoRoot(relativePath: string): string {
-  return path.join(process.cwd(), relativePath)
+  return path.join(/* turbopackIgnore: true */ process.cwd(), relativePath)
 }

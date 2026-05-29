@@ -35,6 +35,12 @@ const INTERNAL_LABEL_PATTERN =
   /(?:^|[^\p{L}\p{N}])(?:Goals|goals|problems|deep_dive|next_layer_options|routine_layer|request_interpretation|count_policy|evidence_quote)(?=$|[^\p{L}\p{N}])/u
 
 const CATALOG_METADATA_PATTERN = /\b(?:eingestuft|klassifiziert|im katalog|claim hinterlegt)\b/i
+const INTERNAL_RANKING_LANGUAGE_PATTERNS = [
+  /\blaut auswahl\b/,
+  /\b(?:schwaecherer|schwacher|starker|idealer|guter)\s+treffer\b/,
+  /\btreffer\s+mit\b/,
+  /\bprodukt\s*fit\b/,
+]
 
 const BARE_JA_OPENING_PATTERN = /^[\s>*_`#-]*(?:\d+[.)]\s*)?ja\s*(?:[-–—]|,)\s*/iu
 const CLOSURE_BLOCK_FINDINGS_ENABLED = true
@@ -66,6 +72,16 @@ export function validateUserFacingLanguage(
         path: text.path,
       })
     }
+
+    if (hasInternalRankingLanguage(text.value)) {
+      findings.push({
+        validator_id: "user_facing_internal_ranking_language",
+        message:
+          "User-facing prose includes internal fit/ranking labels; translate them into practical natural German.",
+        severity: "block",
+        path: text.path,
+      })
+    }
   }
 
   const opening = userFacingTexts.find((text) => text.path.at(-1) === "user_facing_answer_de")
@@ -88,14 +104,13 @@ export function validateUserFacingLanguage(
 
 export function analyzeConversationClose(
   answer: AgentV2TerminalAnswer,
-  _context: UserFacingLanguageValidationContext,
+  context: UserFacingLanguageValidationContext,
 ): AgentV2ValidationError[] {
   const findings: AgentV2ValidationError[] = []
   const visibleAnswer = getVisibleAnswerText(answer)
   const explicitOffer = getNextStepOfferText(answer)
-  const closeText = [extractLikelyClosingText(visibleAnswer), explicitOffer]
-    .filter(Boolean)
-    .join("\n")
+  const likelyClosingText = extractLikelyClosingText(visibleAnswer)
+  const closeText = [likelyClosingText, explicitOffer].filter(Boolean).join("\n")
   const normalizedClose = normalizeGermanText(closeText)
   const path = ["payload", "user_facing_answer_de"]
 
@@ -151,6 +166,26 @@ export function analyzeConversationClose(
     )
   }
 
+  if (hasRedundantComparisonClose(visibleAnswer, likelyClosingText, context, normalizedClose)) {
+    findings.push(
+      blockFinding(
+        "bad_conversation_close_redundant_comparison",
+        "Conversation close offers to compare categories the answer already compared or resolved.",
+        path,
+      ),
+    )
+  }
+
+  if (hasRedundantSourceTriageClose(visibleAnswer, likelyClosingText, context, normalizedClose)) {
+    findings.push(
+      blockFinding(
+        "bad_conversation_close_redundant_source_triage",
+        "Conversation close offers to classify a likely cause/source the answer already classified.",
+        path,
+      ),
+    )
+  }
+
   if (hasWeakButHarmlessClose(normalizedClose)) {
     findings.push({
       validator_id: "conversation_close_weak",
@@ -162,6 +197,11 @@ export function analyzeConversationClose(
   }
 
   return findings
+}
+
+function hasInternalRankingLanguage(text: string): boolean {
+  const normalized = normalizeGermanText(text)
+  return INTERNAL_RANKING_LANGUAGE_PATTERNS.some((pattern) => pattern.test(normalized))
 }
 
 function collectUserFacingPayloadStrings(
@@ -349,6 +389,117 @@ function hasRedundantProductOffer(answer: AgentV2TerminalAnswer, text: string): 
     /\b(?:produkt|produkte|produktempfehlung|produktempfehlungen|empfehlung|empfehlungen|option|optionen)\b/.test(
       text,
     ) && /\b(?:empfehlen|zeigen|heraussuchen|raussuchen|vorschlagen|auswaehlen)\b/.test(text)
+  )
+}
+
+const COMPARISON_CATEGORY_TERMS = [
+  { id: "leave_in", patterns: [/\bleave\s*in\b/, /\bleavein\b/] },
+  { id: "mask", patterns: [/\bmaske\b/, /\bhaarkur\b/, /\bkur\b/] },
+  { id: "oil", patterns: [/\boel\b/, /\bhaaroel\b/] },
+  { id: "conditioner", patterns: [/\bconditioner\b/, /\bspuelung\b/] },
+  { id: "bondbuilder", patterns: [/\bbondbuilder\b/, /\bbond\s*repair\b/] },
+  { id: "deep_cleansing", patterns: [/\btiefenreinigung\b/, /\breset\b/] },
+  { id: "shampoo", patterns: [/\bshampoo\b/] },
+  { id: "peeling", patterns: [/\bpeeling\b/, /\bkopfhautpeeling\b/] },
+]
+
+function hasRedundantComparisonClose(
+  visibleAnswer: string,
+  likelyClosingText: string,
+  context: UserFacingLanguageValidationContext,
+  normalizedClose: string,
+): boolean {
+  if (!offersFutureComparison(normalizedClose)) return false
+
+  const closeCategories = findMentionedComparisonCategories(normalizedClose)
+  if (closeCategories.length < 2) return false
+
+  const bodyWithoutClose = removeLikelyClosingText(visibleAnswer, likelyClosingText)
+  const priorContext = normalizeGermanText(
+    `${bodyWithoutClose}\n${context.recentEvidenceText ?? ""}`,
+  )
+  if (!hasDecisionLanguage(priorContext)) return false
+
+  const priorCategories = findMentionedComparisonCategories(priorContext)
+  const priorCategorySet = new Set(priorCategories)
+  return closeCategories.filter((category) => priorCategorySet.has(category)).length >= 2
+}
+
+function offersFutureComparison(text: string): boolean {
+  return (
+    /\b(?:wenn du magst|wenn du moechtest|danach|als naechstes|ich kann|kann ich)\b/.test(text) &&
+    /\b(?:ob eher|eher.*oder|oder.*besser|bessere?r naechste?r schritt|vergleich|entscheiden|einordnen)\b/.test(
+      text,
+    )
+  )
+}
+
+function findMentionedComparisonCategories(text: string): string[] {
+  return COMPARISON_CATEGORY_TERMS.filter((term) =>
+    term.patterns.some((pattern) => pattern.test(text)),
+  ).map((term) => term.id)
+}
+
+function hasDecisionLanguage(text: string): boolean {
+  return /\b(?:als erstes|zuerst|erster schritt|zweiter schritt|besser|passender|passt eher|wuerde ich|wurde ich|waere eher|ware eher|statt|sinnvoller|naheliegender|nicht der erste|nicht als basis|eher der)\b/.test(
+    text,
+  )
+}
+
+function removeLikelyClosingText(text: string, likelyClosingText: string): string {
+  const closing = likelyClosingText.trim()
+  if (!closing) return text
+
+  const index = text.lastIndexOf(closing)
+  if (index < 0) return text
+  return text.slice(0, index)
+}
+
+function hasRedundantSourceTriageClose(
+  visibleAnswer: string,
+  likelyClosingText: string,
+  context: UserFacingLanguageValidationContext,
+  normalizedClose: string,
+): boolean {
+  if (!offersFutureSourceTriage(normalizedClose)) return false
+
+  const bodyWithoutClose = removeLikelyClosingText(visibleAnswer, likelyClosingText)
+  const priorContext = normalizeGermanText(
+    `${bodyWithoutClose}\n${context.recentEvidenceText ?? ""}`,
+  )
+
+  return (
+    hasSourceDecisionLanguage(priorContext) && hasSharedSourceSignal(priorContext, normalizedClose)
+  )
+}
+
+function offersFutureSourceTriage(text: string): boolean {
+  return (
+    /\b(?:wenn du magst|wenn du moechtest|danach|als naechstes|ich kann|kann ich)\b/.test(text) &&
+    /\bob das\b.{0,140}\beher nach\b.{0,140}\bklingt\b/.test(text)
+  )
+}
+
+function hasSourceDecisionLanguage(text: string): boolean {
+  return /\b(?:klingt eher nach|klingt nach|das klingt|am ehesten|haeufigsten ursachen|wahrscheinlich|treiber|ursache)\b/.test(
+    text,
+  )
+}
+
+const SOURCE_TRIAGE_SIGNALS = [
+  /\brueckstaend\w*\b/,
+  /\bbuild\s*up\b/,
+  /\bzu schwere?r? pflege\b/,
+  /\bschwere produkte?\b/,
+  /\bzu mild(?:e[msnr]?)? shampoo\b/,
+  /\bfettige?r? kopfhaut\b/,
+  /\bnachfett\w*\b/,
+  /\bzu wenig wasch\w*\b/,
+]
+
+function hasSharedSourceSignal(priorContext: string, normalizedClose: string): boolean {
+  return SOURCE_TRIAGE_SIGNALS.some(
+    (pattern) => pattern.test(priorContext) && pattern.test(normalizedClose),
   )
 }
 

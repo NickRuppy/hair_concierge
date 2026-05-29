@@ -298,7 +298,9 @@ test("projectRoutinePlan exposes side-by-side CareBalance frequency framing with
           action: string
           reason_codes: string[]
           usage_hint: string
-          authoritative: boolean
+          authority: {
+            current_turn_category_decision: boolean
+          }
         }>
       }
     }
@@ -307,8 +309,8 @@ test("projectRoutinePlan exposes side-by-side CareBalance frequency framing with
   assert.equal(oilFrame?.action, "decrease_frequency")
   assert.deepEqual(oilFrame?.reason_codes, ["daily_oil_use", "buildup_or_flatness_pressure"])
   assert.match(oilFrame?.usage_hint ?? "", /1_2x|daily|need_based_support/)
-  assert.equal(oilFrame?.authoritative, false)
-  assert.match(JSON.stringify(result), /legacy|comparison|side_by_side/)
+  assert.equal(oilFrame?.authority.current_turn_category_decision, true)
+  assert.match(JSON.stringify(result), /legacy|comparison|production_decision_context/)
 })
 
 test("projectRoutinePlan preserves supplied effective care context in care balance output", () => {
@@ -385,6 +387,33 @@ test("projectRoutinePlan includes explicit add-step category in basics", () => {
 
   const leaveInStep = result.steps.find((step) => step.id === "maintenance-leave-in")
   assert.equal(leaveInStep?.category, "leave_in")
+})
+
+test("projectRoutinePlan uses CareBalance add rows for broad first-add-on basics requests", () => {
+  const result = projectRoutinePlan({
+    objective: "fix_routine",
+    hairProfile: createProfile({
+      hair_texture: "wavy",
+      thickness: "normal",
+      concerns: ["frizz"],
+      goals: ["shine"],
+      current_routine_products: ["shampoo", "conditioner"],
+      products_used: "Shampoo, Conditioner",
+      routine_preference: "minimal",
+    }),
+    message:
+      "Ich will meine Routine einfacher machen. Welches Produkt passt fuer den ersten Zusatz?",
+    layer: "basics",
+  })
+
+  assert.deepEqual(
+    result.steps.map((step) => step.id),
+    ["base-shampoo", "base-conditioner", "maintenance-leave-in"],
+  )
+
+  const leaveInStep = result.steps.find((step) => step.id === "maintenance-leave-in")
+  assert.equal(leaveInStep?.category, "leave_in")
+  assert.equal(leaveInStep?.action, "add")
 })
 
 test("projectRoutinePlan marks existing shampoo as keep and additions as next steps", () => {

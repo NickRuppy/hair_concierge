@@ -145,6 +145,7 @@ test("compare route preserves the agent product trace for lab debugging", async 
       {
         userId: "user-42",
         prompt: "Welches Shampoo passt am besten zu mir?",
+        systems: ["current", "agent"],
       },
       {
         listEligibleCompareUsers: async () => [],
@@ -674,7 +675,7 @@ test("compare runner projects full CareBalance context for product traces", asyn
     },
   } as never)
 
-  assert.equal(context?.mode, "side_by_side")
+  assert.equal(context?.mode, "production_decision_context")
   assert.deepEqual(
     context?.rows.map((row) => row.category),
     ["oil", "conditioner"],
@@ -724,8 +725,13 @@ test("compare analysis snapshot surfaces compact CareBalance trace details", asy
   const { buildCareBalanceTraceDisplayData, buildCompareAnalysisSnapshot } =
     await importCompareLab()
   const careBalanceContext = {
-    authoritative: false,
-    mode: "side_by_side",
+    mode: "production_decision_context",
+    authority: {
+      product_truth: false,
+      persistent_routine_storage: false,
+      current_turn_category_decision: true,
+      soft_product_ranking_hints: true,
+    },
     rows: [
       {
         category: "oil",
@@ -738,8 +744,13 @@ test("compare analysis snapshot surfaces compact CareBalance trace details", asy
         context_reason_codes: ["flat_hair", "buildup_pressure"],
         selection_hint_codes: ["prefer_light_oil"],
         usage_hint: "need_based_support:daily:rarely",
-        caveats: ["side_by_side_non_authoritative"],
-        authoritative: false,
+        caveats: ["current_turn_category_decision"],
+        authority: {
+          product_truth: false,
+          persistent_routine_storage: false,
+          current_turn_category_decision: true,
+          soft_product_ranking_hints: true,
+        },
       },
     ],
     comparison: {
@@ -816,8 +827,13 @@ test("compare analysis snapshot surfaces compact CareBalance trace details", asy
 test("compare analysis snapshot uses top-level CareBalance trace when no product trace exists", async () => {
   const { buildCompareAnalysisSnapshot } = await importCompareLab()
   const careBalanceContext = {
-    authoritative: false,
-    mode: "side_by_side",
+    mode: "production_decision_context",
+    authority: {
+      product_truth: false,
+      persistent_routine_storage: false,
+      current_turn_category_decision: true,
+      soft_product_ranking_hints: true,
+    },
     rows: [
       {
         category: "conditioner",
@@ -830,8 +846,13 @@ test("compare analysis snapshot uses top-level CareBalance trace when no product
         context_reason_codes: ["dry_lengths"],
         selection_hint_codes: ["prefer_detangling"],
         usage_hint: "match_wash_frequency:after_every_wash",
-        caveats: ["side_by_side_non_authoritative"],
-        authoritative: false,
+        caveats: ["current_turn_category_decision"],
+        authority: {
+          product_truth: false,
+          persistent_routine_storage: false,
+          current_turn_category_decision: true,
+          soft_product_ranking_hints: true,
+        },
       },
     ],
     comparison: {
@@ -872,8 +893,13 @@ test("compare analysis snapshot uses top-level CareBalance trace when no product
 test("compare analysis snapshot keeps turn CareBalance separate from final result", async () => {
   const { buildCompareAnalysisSnapshot } = await importCompareLab()
   const careBalanceContext = {
-    authoritative: false,
-    mode: "side_by_side",
+    mode: "production_decision_context",
+    authority: {
+      product_truth: false,
+      persistent_routine_storage: false,
+      current_turn_category_decision: true,
+      soft_product_ranking_hints: true,
+    },
     rows: [
       {
         category: "oil",
@@ -886,8 +912,13 @@ test("compare analysis snapshot keeps turn CareBalance separate from final resul
         context_reason_codes: [],
         selection_hint_codes: ["prefer_light_oil"],
         usage_hint: "need_based_support:daily:rarely",
-        caveats: ["side_by_side_non_authoritative"],
-        authoritative: false,
+        caveats: ["current_turn_category_decision"],
+        authority: {
+          product_truth: false,
+          persistent_routine_storage: false,
+          current_turn_category_decision: true,
+          soft_product_ranking_hints: true,
+        },
       },
     ],
     comparison: null,

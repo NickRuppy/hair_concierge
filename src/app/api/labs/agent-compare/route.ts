@@ -1,11 +1,3 @@
-import {
-  normalizeCompareRunResult,
-  shouldSwapBlindedResults,
-} from "@/lib/agent/compare/run-compare"
-import { runToolLoopComparisonForUser } from "@/lib/agent/compare/run-agentic-tool-loop"
-import { runClassicAgentComparisonForUser } from "@/lib/agent/compare/run-shadow-agent"
-import { runAgentV2ComparisonForUser } from "@/lib/agent-v2/compare/run-agent-v2"
-import { loadCompareUserSnapshot, listEligibleCompareUsers } from "@/lib/agent/compare/test-users"
 import { DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT } from "@/lib/agent/compare/tool-loop-variants"
 import type {
   AgentCompareUserOption,
@@ -48,13 +40,48 @@ interface AgentCompareRouteDeps {
 }
 
 const defaultRouteDeps: AgentCompareRouteDeps = {
-  listEligibleCompareUsers,
-  loadCompareUserSnapshot,
-  runCurrentComparisonForUser: runClassicAgentComparisonForUser,
-  runShadowComparisonForUser: runToolLoopComparisonForUser,
+  listEligibleCompareUsers: async () => {
+    const loadedModule = await importDevOnlyModule<typeof import("@/lib/agent/compare/test-users")>(
+      "@/lib/agent/compare/test-users",
+    )
+    return loadedModule.listEligibleCompareUsers()
+  },
+  loadCompareUserSnapshot: async (userId) => {
+    const loadedModule = await importDevOnlyModule<typeof import("@/lib/agent/compare/test-users")>(
+      "@/lib/agent/compare/test-users",
+    )
+    return loadedModule.loadCompareUserSnapshot(userId)
+  },
+  runCurrentComparisonForUser: async (request) => {
+    const loadedModule = await importDevOnlyModule<
+      typeof import("@/lib/agent/compare/run-shadow-agent")
+    >("@/lib/agent/compare/run-shadow-agent")
+    return loadedModule.runClassicAgentComparisonForUser(request)
+  },
+  runShadowComparisonForUser: async (request) => {
+    const loadedModule = await importDevOnlyModule<
+      typeof import("@/lib/agent/compare/run-agentic-tool-loop")
+    >("@/lib/agent/compare/run-agentic-tool-loop")
+    return loadedModule.runToolLoopComparisonForUser(request)
+  },
   runAgentV2ComparisonForUser: runAgentV2ComparisonForUser,
-  runAgentV2CareBalanceComparisonForUser: (request) =>
-    runAgentV2ComparisonForUser(request, { includeCareBalanceContext: true }),
+  runAgentV2CareBalanceComparisonForUser: async (request) => {
+    const loadedModule = await importDevOnlyModule<
+      typeof import("@/lib/agent-v2/compare/run-agent-v2")
+    >("@/lib/agent-v2/compare/run-agent-v2")
+    return loadedModule.runAgentV2ComparisonForUser(request, { includeCareBalanceContext: true })
+  },
+}
+
+async function importDevOnlyModule<T>(path: string): Promise<T> {
+  return import(path) as Promise<T>
+}
+
+async function runAgentV2ComparisonForUser(request: AgentCompareUserRequest) {
+  const loadedModule = await importDevOnlyModule<
+    typeof import("@/lib/agent-v2/compare/run-agent-v2")
+  >("@/lib/agent-v2/compare/run-agent-v2")
+  return loadedModule.runAgentV2ComparisonForUser(request)
 }
 
 function createDevOnlyResponse() {
@@ -85,6 +112,33 @@ function normalizeTurns(value: { prompt?: string; turns?: string[] }): string[] 
 
   const prompt = value.prompt?.trim() ?? ""
   return prompt.length > 0 ? [prompt] : []
+}
+
+function normalizeCompareSystem(system: CompareSystem | "current" | "agent"): CompareSystem {
+  if (system === "current") return "classic"
+  if (system === "agent") return "tool_loop"
+  return system
+}
+
+function normalizeCompareRunResult(
+  result: CompareRunResult,
+  displayLabel?: string,
+): CompareRunResult {
+  return {
+    ...result,
+    system: normalizeCompareSystem(result.system),
+    display_label: displayLabel ?? result.display_label,
+  }
+}
+
+function shouldSwapBlindedResults(turns: string[]): boolean {
+  const seed = turns.join("\n")
+  let hash = 0
+  for (let index = 0; index < seed.length; index += 1) {
+    hash = (hash * 31 + seed.charCodeAt(index)) >>> 0
+  }
+
+  return hash % 2 === 1
 }
 
 function formatBlindedVariantLabel(index: number): string {
@@ -152,10 +206,8 @@ export async function handleAgentCompareRequest(
     const blinded = parsed.data.blinded === true
     const toolLoopVariant = parsed.data.toolLoopVariant ?? DEFAULT_AGENT_COMPARE_TOOL_LOOP_VARIANT
     const systems = parsed.data.systems?.length
-      ? parsed.data.systems.map((system) =>
-          system === "current" ? "classic" : system === "agent" ? "tool_loop" : system,
-        )
-      : (["classic", "tool_loop"] as const)
+      ? parsed.data.systems.map(normalizeCompareSystem)
+      : (["agent_v2_care_balance"] as const)
     const runners: Record<CompareSystem, () => Promise<CompareRunResult>> = {
       classic: () =>
         deps.runCurrentComparisonForUser({ ...parsed.data, prompt, turns, toolLoopVariant }),

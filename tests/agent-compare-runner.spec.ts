@@ -57,6 +57,7 @@ test("runCompareWithAdapters uses the override prompt for both systems", async (
     scenario,
     prompt: "Override",
     toolLoopVariant: "inline_context",
+    systems: ["current", "agent"],
     runCurrent: async ({ prompt, toolLoopVariant }) => {
       prompts.push(`current:${prompt}`)
       variants.push(toolLoopVariant)
@@ -96,6 +97,7 @@ test("runCompareWithAdapters resolves omitted tool-loop variant to product evalu
   const result = await runCompareWithAdapters({
     scenario,
     prompt: "Override",
+    systems: ["current", "agent"],
     runCurrent: async ({ toolLoopVariant }) => {
       variants.push(toolLoopVariant)
       return {
@@ -137,6 +139,7 @@ test("runCompareWithAdapters tolerates one-sided failures", async () => {
   const result = await runCompareWithAdapters({
     scenario,
     prompt: "Override",
+    systems: ["current", "agent"],
     runCurrent: async () => {
       throw new Error("current failed")
     },

@@ -33,7 +33,7 @@
       "rubric_id": "tone.translate_internal_terms",
       "priority": "high",
       "source": "base/tone-and-format.md",
-      "message": "Translate internal shorthand such as fit, picks, lane, setup, crosslink-lane, Goals, problems, deep_dive, next_layer_options, and routine_layer into customer-facing German wording."
+      "message": "Translate internal shorthand such as fit, picks, Treffer, schwaecherer Treffer, laut Auswahl, lane, setup, crosslink-lane, Goals, problems, deep_dive, next_layer_options, and routine_layer into customer-facing German wording. Do not expose the ambiguous combined label Leave-in / Finish; say leichtes Leave-in or explain oil/serum as a sparse final tip step."
     },
     {
       "rubric_id": "tone.light_structure_with_brief_why",
@@ -63,7 +63,7 @@
       "rubric_id": "tone.non_redundant_ending",
       "priority": "high",
       "source": "base/tone-and-format.md",
-      "message": "End with a useful, feasible, non-redundant clean stop, one material question, grounded next action, routine bridge, or caveat; before submitting, reread the visible answer and do not reopen a distinction the body already answered."
+      "message": "End with a useful, feasible, non-redundant clean stop, one material question, grounded next action, routine bridge, or caveat; before submitting, reread the visible answer and do not reopen a distinction or likely-cause/source triage the body already answered."
     },
     {
       "rubric_id": "tone.no_bullet_wall_after_subheader",

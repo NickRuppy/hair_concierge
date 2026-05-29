@@ -8,7 +8,7 @@ const REFERENTIAL_GROUP_ASK =
   /\bwelche(?:s|r)?\s+(?:von\s+(?:denen|den\s+beiden|diesen|diese[mn]?|ihnen)|der\s+beiden|die\s+beiden|beide|davon)\b/i
 
 const DIRECT_PRODUCT_NEED =
-  /\bwelche(?:s|r)?\s+produkt\b.*\b(?:f(?:ue|ü)r|gegen|bei|mit|ohne|als)\b/i
+  /\bwelche(?:s|r)?\s+produkt\b.*\b(?:f(?:ue|ü)r|gegen|bei|mit|ohne|als|zu)\b/i
 
 const MAX_RECENT_USER_MESSAGES = 2
 

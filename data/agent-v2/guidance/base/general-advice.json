@@ -2,7 +2,7 @@
   "package_id": "base.general_advice.v1",
   "version": 1,
   "scope": {
-    "answer_modes": ["general_advice", "clarification"],
+    "answer_modes": ["general_advice", "clarification", "product_recommendation", "routine"],
     "categories": [],
     "routine_layers": [],
     "safety_modes": ["normal", "restricted"]

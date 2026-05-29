@@ -719,7 +719,7 @@ function buildInputItems(
     {
       role: "system",
       content:
-        "You are AgentV2 for Hair Concierge. Never return plain assistant text to the user. Every user-visible answer must be submitted by calling submit_final_answer exactly once. If unsure, submit a clarification through submit_final_answer. Keep user-facing prose German.",
+        "You are AgentV2 for Chaarlie. Never return plain assistant text to the user. Every user-visible answer must be submitted by calling submit_final_answer exactly once. If unsure, submit a clarification through submit_final_answer. Keep user-facing prose German.",
     },
     {
       role: "system",
@@ -739,7 +739,7 @@ function buildInputItems(
     },
     {
       role: "system",
-      content: `Loaded Compare Lab user context. Treat this as the authoritative saved profile/routine context for this turn; do not ask for fields already present here. ${JSON.stringify(
+      content: `Loaded Chaarlie user context. Treat this as the authoritative saved profile/routine context for this turn; do not ask for fields already present here. ${JSON.stringify(
         compactUserContextForModel(userContext),
       )}`,
     },
@@ -748,7 +748,7 @@ function buildInputItems(
   if (userContext.careBalanceContext) {
     items.push({
       role: "system",
-      content: `CareBalance product-usage context. Treat this as the authoritative derived view of the current routine inventory: what exists, what is missing, what is underused/overused, and what should be added first at category level. It is derived from the saved/current routine and profile; product-specific claims still require product metadata. If this conflicts with prior visible routine wording, trust current routine inventory and CareBalance for what exists, what is missing, and what to add first; use prior visible routine only for conversational continuity. ${JSON.stringify(
+      content: `CareBalance product-usage context. Treat this as the current-turn category decision context: what exists, what is missing, what is underused/overused, and what should be added first at category level. It may provide soft product-ranking hints, but it is not product truth and not saved routine storage. Product-specific claims still require product metadata. Saved routine changes still require routine tooling and user permission. If this conflicts with prior visible routine wording, trust current routine inventory and CareBalance for category inventory and first-lever decisions; use prior visible routine only for conversational continuity. ${JSON.stringify(
         userContext.careBalanceContext,
       )}`,
     })
@@ -757,7 +757,7 @@ function buildInputItems(
   if (routineThreadContext?.active) {
     items.push({
       role: "system",
-      content: `Active AgentV2 routine thread context, including visible_steps from the currently visible routine. Preserve routine continuity unless the user explicitly leaves the routine topic. Explanatory follow-ups may use general_advice, but keep routine_context.active=true. Use visible_steps and the previous assistant offer to resolve referential follow-ups like "dieser Schritt", "ja, zeig mir passende Produkte dafür", or "das Produkt dafür". For "erstes Produkt hinzufuegen", "erster Zusatz", or similar missing/add-first wording, first check authoritative current routine inventory and CareBalance: a missing core/baseline step comes before an optional or recommended extra lever from the previous visible routine. If the prior visible routine used "Zusatz" for a later optional lever, explain the distinction instead of repeating the later lever. For short product follow-ups to a previous routine offer, call select_products only; do not call build_or_fix_routine unless the latest user message asks to change, simplify, lighten, add, remove, replace, rebalance, or rebuild the routine. If the user asks to add or integrate a referenced product, make the routine change category-level for now and use only routine tool/context step IDs in the routine payload; do not create product-named step IDs. For pure summary, recap, overview, or explanation follow-ups such as "fass mir das bitte kurz zusammen", answer from this routineThreadContext as general_advice with routine_context.active=true, routine_intent none, and no build_or_fix_routine call. Category comparisons inside an active routine can be general_advice with routine_context.active=true when no mutation is requested. Do not invent a step ID; if unclear, ask a clarification. ${JSON.stringify(
+      content: `Active AgentV2 routine thread context, including visible_steps from the currently visible routine. Preserve routine continuity unless the user explicitly leaves the routine topic. Explanatory follow-ups may use general_advice, but keep routine_context.active=true. Resolve referential follow-ups against the latest user message, the previous assistant offer, and visible_steps in that order. If the latest user message clearly chooses one branch of the previous assistant offer, continue that branch instead of importing stale wording from another branch. Treat a follow-up as a routine-step or product reference only when the latest wording points to a visible step, a visible product, or a requested routine change. For short product follow-ups to a previous routine offer, call select_products only; do not call build_or_fix_routine unless the latest user message asks to change, simplify, lighten, add, remove, replace, rebalance, or rebuild the routine. If the user asks to add or integrate a referenced product, make the routine change category-level for now and use only routine tool/context step IDs in the routine payload; do not create product-named step IDs. For pure summary, recap, overview, or explanation follow-ups such as "fass mir das bitte kurz zusammen", answer from this routineThreadContext as general_advice with routine_context.active=true, routine_intent none, and no build_or_fix_routine call. Category comparisons inside an active routine can be general_advice with routine_context.active=true when no mutation is requested. Do not invent a step ID; if unclear, ask a neutral clarification without naming a category, product, or step the user did not name. ${JSON.stringify(
         routineThreadContext,
       )}`,
     })
@@ -767,7 +767,7 @@ function buildInputItems(
   if (surfacedProductFacts.selected_products.length > 0) {
     items.push({
       role: "system",
-      content: `Surfaced product facts from earlier turns in this Compare Lab run. Use the recent conversation and these factual product references to resolve ambiguous follow-ups and avoid repeating stale categories as if they were new. This is continuity context, not a routing rule. ${JSON.stringify(
+      content: `Surfaced product facts from earlier turns in this conversation. Use the recent conversation and these factual product references to resolve ambiguous follow-ups and avoid repeating stale categories as if they were new. This is continuity context, not a routing rule. ${JSON.stringify(
         surfacedProductFacts,
       )}`,
     })
@@ -789,7 +789,7 @@ function buildInputItems(
     },
     {
       role: "system",
-      content: `Session memory for this Compare Lab run: ${JSON.stringify(userContext.sessionMemory)}`,
+      content: `Conversation-scoped AgentV2 working memory. Use only when relevant to the latest user message; do not override current user intent: ${JSON.stringify(userContext.sessionMemory)}`,
     },
   )
 
@@ -972,7 +972,9 @@ function buildTerminalPayloadFieldGuidance(): string {
     "For product recommendations, default to three products. If the user explicitly asks for one or two products, return exactly that many when available. If the user asks for more than three, cap at three.",
     "For category education without an explicit product ask, use general_advice and do not include recommendations.",
     "Use the recent conversation and surfaced product facts to resolve ambiguous follow-ups. If the latest user message is short, first check whether it answers your previous question or next-step offer.",
-    "Prefer natural German product wording such as Empfehlungen, passt gut zu dir, passende Option, naechster Schritt, or Zusatzpflege. Avoid English-ish labels such as Picks or Fit in the final German answer.",
+    "Prefer natural German product wording such as Empfehlungen, passt gut zu dir, passende Option, naechster Schritt, or Zusatzpflege. Avoid English-ish or internal labels such as Picks, Fit, Treffer, schwaecherer Treffer, or laut Auswahl in the final German answer.",
+    "Do not show the ambiguous label Leave-in / Finish. If you mean leave-in care, say leichtes Leave-in or Leave-in fuer Laengen und Spitzen. If you mean oil or serum as the last step, say sparsames Oel/Serum in die Spitzen and explain it.",
+    "Do not close by offering to classify whether the issue sounds like causes you already classified in the answer, such as residue, too-mild shampoo, or oily scalp. If the answer already gave the likely cause and a test, stop cleanly.",
   ].join("\n")
 }
 
@@ -1280,7 +1282,7 @@ function hasShortRoutineActionConfirmation(message: string): boolean {
     .replace(/\s+/g, " ")
     .trim()
 
-  return /^(?:ja|genau|ok|okay|passt|mach das|mach es|nimm das rein|nehm das rein|baue das ein|bau das ein)$/.test(
+  return /^(?:ja(?:\s+(?:bitte|gerne))?|genau(?:\s+(?:bitte|gerne))?|ok(?:ay)?(?:\s+(?:bitte|gerne))?|passt(?:\s+(?:bitte|gerne))?|mach das(?:\s+bitte)?|mach es(?:\s+bitte)?|nimm das rein(?:\s+bitte)?|nehm das rein(?:\s+bitte)?|baue das ein(?:\s+bitte)?|bau das ein(?:\s+bitte)?)$/.test(
     normalized,
   )
 }
@@ -1304,6 +1306,7 @@ function buildAnswerQualityGuidance(): string {
     "Use a calm answer shape: direct answer first, one short profile-linked why, then compact steps or options only when useful.",
     "Avoid stacking many bold subheaders. Use bold mostly for product names, step labels, or one or two anchors that improve scanning.",
     "Before calling submit_final_answer, reread the complete visible answer. The closing sentence must not ask or offer to answer a distinction the body already answered or the previous turn asked and this turn resolved. If the only available close would repeat the answer, stop cleanly.",
+    "The same applies to likely-cause triage: after saying what the issue most likely sounds like, do not close by offering to say what it sounds like.",
   ].join("\n")
 }
 
@@ -2221,7 +2224,7 @@ function buildFallbackAnswer(params: {
       user_facing_answer_de: getFallbackUserFacingAnswer(params.reason),
       question_de:
         params.reason === "routine_ambiguity"
-          ? "Meinst du mit dem Zusatz den Leave-in-Schritt oder einen anderen Routine-Schritt?"
+          ? "Ich kann den gemeinten Routine-Schritt gerade nicht eindeutig zuordnen. Welchen Schritt meinst du?"
           : "Was genau moechtest du zu deiner Haarpflege wissen?",
       missing_keys: [],
     },
@@ -2299,7 +2302,7 @@ function getFallbackUserFacingAnswer(reason: AgentV2FallbackReason): string {
     return "Ich konnte die Antwort gerade nicht sauber zusammensetzen. Versuch es bitte noch einmal mit derselben Frage."
   }
   if (reason === "routine_ambiguity") {
-    return "Meinst du mit dem Zusatz den Leave-in-Schritt oder einen anderen Routine-Schritt?"
+    return "Ich kann den gemeinten Routine-Schritt gerade nicht eindeutig zuordnen. Welchen Schritt meinst du?"
   }
   return "Ich bin mir gerade nicht sicher, was du genau moechtest. Formulier es bitte einmal konkreter."
 }

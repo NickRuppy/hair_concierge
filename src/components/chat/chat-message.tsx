@@ -213,6 +213,13 @@ function processChildren(
   return children
 }
 
+function normalizeAssistantMarkdown(content: string): string {
+  return content
+    .replace(/\r\n?/g, "\n")
+    .replace(/([^\n])\s+(\d+\.\s+(?=(?:\*\*)?[\p{L}]))/gu, "$1\n$2")
+    .replace(/([:.])\n(\d+\.\s+)/g, "$1\n\n$2")
+}
+
 export function ChatMessage({
   message,
   hairProfile,
@@ -225,6 +232,10 @@ export function ChatMessage({
   const { content: renumberedContent, sources } = useMemo(
     () => renumberCitations(message.content ?? "", message.rag_context?.sources ?? []),
     [message.content, message.rag_context?.sources],
+  )
+  const displayContent = useMemo(
+    () => (isUser ? renumberedContent : normalizeAssistantMarkdown(renumberedContent)),
+    [isUser, renumberedContent],
   )
 
   const sourceMap = new Map(sources.map((s) => [s.index, s]))
@@ -250,33 +261,32 @@ export function ChatMessage({
 
   const hasEnhancements = sources.length > 0 || productMap.size > 0
 
+  const renderInline = (children: ReactNode) =>
+    hasEnhancements
+      ? processChildren(children, sourceMap, productMap, hairProfile, onProductClick)
+      : children
+
   // Build custom markdown components that inject citation badges + product mentions
-  const markdownComponents: Components = hasEnhancements
-    ? {
-        p({ children }) {
-          return (
-            <p>{processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}</p>
-          )
-        },
-        li({ children }) {
-          return (
-            <li>{processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}</li>
-          )
-        },
-        strong({ children }) {
-          return (
-            <strong>
-              {processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}
-            </strong>
-          )
-        },
-        em({ children }) {
-          return (
-            <em>{processChildren(children, sourceMap, productMap, hairProfile, onProductClick)}</em>
-          )
-        },
-      }
-    : {}
+  const markdownComponents: Components = {
+    p({ children }) {
+      return <p className="mb-3 whitespace-pre-line last:mb-0">{renderInline(children)}</p>
+    },
+    ol({ children }) {
+      return <ol className="my-3 list-decimal space-y-2 pl-6 first:mt-0 last:mb-0">{children}</ol>
+    },
+    ul({ children }) {
+      return <ul className="my-3 list-disc space-y-2 pl-6 first:mt-0 last:mb-0">{children}</ul>
+    },
+    li({ children }) {
+      return <li className="pl-1 leading-relaxed">{renderInline(children)}</li>
+    },
+    strong({ children }) {
+      return <strong className="font-semibold">{renderInline(children)}</strong>
+    },
+    em({ children }) {
+      return <em>{renderInline(children)}</em>
+    },
+  }
 
   return (
     <div
@@ -308,9 +318,9 @@ export function ChatMessage({
             {isUser ? (
               <p className="type-body-sm whitespace-pre-wrap break-words">{message.content}</p>
             ) : (
-              <div className="prose prose-sm max-w-none break-words">
+              <div className="prose prose-sm max-w-none break-words leading-relaxed">
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-                  {renumberedContent}
+                  {displayContent}
                 </ReactMarkdown>
               </div>
             )}

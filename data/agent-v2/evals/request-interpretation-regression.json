@@ -148,7 +148,7 @@
       "primary_intent": "category_education",
       "product_request_kind": "category_education",
       "routine_intent": "none",
-      "care_category": "conditioner",
+      "care_category": "none",
       "requested_product_count": null,
       "count_policy": "none",
       "required_tool": "none",

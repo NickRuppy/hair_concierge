@@ -6,12 +6,19 @@ import type {
 } from "@/lib/recommendation-engine/types"
 
 export interface CareBalanceToolContext {
-  authoritative: false
-  mode: "side_by_side"
+  mode: "production_decision_context"
+  authority: CareBalanceToolAuthority
   rows: CareBalanceToolRow[]
   comparison: RecommendationEngineRuntime["legacyPlanComparison"] | null
   current_turn_facts: CareBalanceToolCurrentTurnFact[]
   conflicts: CareBalanceToolConflict[]
+}
+
+export interface CareBalanceToolAuthority {
+  product_truth: false
+  persistent_routine_storage: false
+  current_turn_category_decision: true
+  soft_product_ranking_hints: true
 }
 
 export interface CareBalanceToolRow {
@@ -26,7 +33,14 @@ export interface CareBalanceToolRow {
   selection_hint_codes: string[]
   usage_hint: string
   caveats: string[]
-  authoritative: false
+  authority: CareBalanceToolAuthority
+}
+
+const CARE_BALANCE_TOOL_AUTHORITY: CareBalanceToolAuthority = {
+  product_truth: false,
+  persistent_routine_storage: false,
+  current_turn_category_decision: true,
+  soft_product_ranking_hints: true,
 }
 
 export interface CareBalanceToolCurrentTurnFact {
@@ -66,7 +80,7 @@ function buildCareBalanceUsageHint(row: CareBalanceRow): string {
 function buildCareBalanceCaveats(row: CareBalanceRow): string[] {
   if (row.recommendation === "no_action") return []
 
-  return ["side_by_side_non_authoritative", ...row.selectionHints.map((hint) => hint.code)].slice(
+  return ["current_turn_category_decision", ...row.selectionHints.map((hint) => hint.code)].slice(
     0,
     3,
   )
@@ -85,7 +99,7 @@ export function projectCareBalanceRowForTool(row: CareBalanceRow): CareBalanceTo
     selection_hint_codes: row.selectionHints.map((hint) => hint.code),
     usage_hint: buildCareBalanceUsageHint(row),
     caveats: buildCareBalanceCaveats(row),
-    authoritative: false,
+    authority: CARE_BALANCE_TOOL_AUTHORITY,
   }
 }
 
@@ -94,8 +108,8 @@ export function buildCareBalanceToolContext(params: {
   rows: CareBalanceRow[]
 }): CareBalanceToolContext {
   return {
-    authoritative: false,
-    mode: "side_by_side",
+    mode: "production_decision_context",
+    authority: CARE_BALANCE_TOOL_AUTHORITY,
     rows: params.rows.map(projectCareBalanceRowForTool),
     comparison: params.runtime.legacyPlanComparison ?? null,
     current_turn_facts:
