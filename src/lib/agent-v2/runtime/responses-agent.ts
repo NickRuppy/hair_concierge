@@ -388,8 +388,16 @@ export async function runAgentV2ResponsesTurn(params: {
         trace.validation_errors = []
         trace.validation_warnings = validation.warnings
         trace.dropped_session_memory_writes = validation.dropped_session_memory_writes
+        const sanitizedAnswer =
+          validation.sanitized_answer ?? AgentV2TerminalAnswerSchema.parse(terminal.value)
         return completeWithAnswer(
-          validation.sanitized_answer ?? AgentV2TerminalAnswerSchema.parse(terminal.value),
+          maybeReplaceLowValueClarification({
+            answer: sanitizedAnswer,
+            message: params.message,
+            safetyMode,
+            userContext: params.userContext,
+            usedGuidancePackageIds: trace.loaded_guidance_package_ids,
+          }),
           trace,
         )
       }
@@ -719,7 +727,7 @@ function buildInputItems(
     {
       role: "system",
       content:
-        "You are AgentV2 for Chaarlie. Never return plain assistant text to the user. Every user-visible answer must be submitted by calling submit_final_answer exactly once. If unsure, submit a clarification through submit_final_answer. Keep user-facing prose German.",
+        "You are AgentV2 for Chaarlie. Never return plain assistant text to the user. Every user-visible answer must be submitted by calling submit_final_answer exactly once. Clarify when a product recommendation, routine mutation, safety-sensitive answer, or product-specific claim lacks material information; for broad hair-care concerns with usable profile/context, give a best-effort answer instead of only asking what the user means. Keep user-facing prose German.",
     },
     {
       role: "system",
@@ -728,6 +736,11 @@ function buildInputItems(
     {
       role: "system",
       content: buildAnswerQualityGuidance(),
+    },
+    {
+      role: "system",
+      content:
+        "Common German hair-care shorthand: CWC means Conditioner-Wash-Conditioner. OWC/ÖWC means Öl-Wasser-Conditioner, usually a pre-wash length-protection technique. If the user asks whether to test OWC/ÖWC, explain the method and fit; do not ask what OWC means.",
     },
     {
       role: "system",
@@ -1564,6 +1577,114 @@ function completeWithAnswer(
     final_answer: answer,
     trace,
     accepted_session_memory_writes: answer.session_memory_writes,
+  }
+}
+
+function maybeReplaceLowValueClarification(params: {
+  answer: AgentV2TerminalAnswer
+  message: string
+  safetyMode: AgentV2SafetyMode
+  userContext: AgentV2RuntimeUserContext
+  usedGuidancePackageIds: string[]
+}): AgentV2TerminalAnswer {
+  if (params.safetyMode !== "normal") return params.answer
+  if (params.answer.answer_mode !== "clarification") return params.answer
+  if (params.answer.request_interpretation.product_request_kind !== "none") return params.answer
+  if (
+    params.answer.request_interpretation.care_category !== "unknown" &&
+    params.answer.request_interpretation.care_category !== "none"
+  ) {
+    return params.answer
+  }
+  if (!looksLikeBroadHairCareConcern(params.message)) return params.answer
+
+  return buildBroadHairConcernFallback({
+    message: params.message,
+    userContext: params.userContext,
+    usedGuidancePackageIds: params.usedGuidancePackageIds,
+  })
+}
+
+function looksLikeBroadHairCareConcern(message: string): boolean {
+  const normalized = normalizeAgentV2EvidenceText(message)
+  return /\b(haar|haare|frizz|trocken|fettig|platt|stumpf|komisch|problem|machen|tun)\b/.test(
+    normalized,
+  )
+}
+
+function buildBroadHairConcernFallback(params: {
+  message: string
+  userContext: AgentV2RuntimeUserContext
+  usedGuidancePackageIds: string[]
+}): AgentV2TerminalAnswer {
+  const profile = readObject(params.userContext.hairProfile)
+  const texture = readString(profile.hair_texture)
+  const thickness = readString(profile.thickness)
+  const concerns = readStringArray(profile.concerns)
+  const hasFrizz = concerns.includes("frizz")
+  const hasDryness = concerns.includes("dryness") || concerns.includes("dry")
+  const hasOily = concerns.includes("oily_roots") || concerns.includes("greasy")
+  const profileBits = [
+    thickness === "fine" ? "feinem" : thickness === "coarse" ? "kräftigerem" : null,
+    texture === "wavy" ? "welligem" : texture === "curly" ? "lockigem" : null,
+    hasFrizz ? "frizzigem" : null,
+    hasDryness ? "trockenem" : null,
+  ].filter(Boolean)
+  const profilePhrase =
+    profileBits.length > 0 ? `Bei deinem ${profileBits.join(", ")} Haar` : "Bei deinem Profil"
+  const thirdLever = hasOily
+    ? "Pflege nicht an den Ansatz geben und eine Waesche lang beobachten, ob der Ansatz sauberer bleibt."
+    : "Nach dem Waschen wenig Leave-in nur in Laengen und Spitzen testen und danach moeglichst wenig anfassen."
+
+  return {
+    answer_mode: "general_advice",
+    interpreted_intent:
+      "Broad hair-care concern answered directly instead of low-value clarification.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: params.message.slice(0, 240) || "unklare Haarfrage",
+      confidence: 0.58,
+    },
+    confidence: 0.58,
+    extracted_constraints: {
+      ...buildEmptyExtractedConstraints(),
+      hair_concerns: concerns,
+      raw_constraints: [params.message],
+    },
+    missing_information: [],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: params.usedGuidancePackageIds,
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category: null,
+      return_path: [],
+    },
+    pending_routine_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: `${profilePhrase} wuerde ich nicht noch weiter raten, sondern mit den wahrscheinlichsten Basishebeln starten:\n\n1. **Shampoo nur an Kopfhaut und Ansatz** und gruendlich ausspuelen.\n2. **Conditioner nur in Laengen und Spitzen** verwenden, nicht am Ansatz.\n3. **${thirdLever}**\n\nWenn es danach klarer wird, ob eher Frizz, Trockenheit, Fettigkeit oder Haarbruch dominiert, kann der naechste Schritt viel gezielter werden.`,
+      category_or_topic: "breite Haarpflege-Einschaetzung",
+      key_points_de: [
+        "Erst die Basisplatzierung pruefen.",
+        "Keine schweren Produkte am Ansatz.",
+        "Naechsten Schritt nach sichtbarem Hauptproblem ausrichten.",
+      ],
+      next_step_offer_de: null,
+    },
   }
 }
 
@@ -2457,6 +2578,22 @@ function buildEmptyExtractedConstraints(): AgentV2TerminalAnswer["extracted_cons
     routine_layer: null,
     raw_constraints: [],
   }
+}
+
+function readObject(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {}
+}
+
+function readString(value: unknown): string | null {
+  return typeof value === "string" && value.length > 0 ? value : null
+}
+
+function readStringArray(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string" && item.length > 0)
+    : []
 }
 
 function summarizeRequestInterpretation(interpretation: AgentV2RequestInterpretation): string {

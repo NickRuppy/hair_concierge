@@ -113,6 +113,11 @@ export function buildAgentV2RouterDecision(params: {
     policyOverrides.push("product_policy:recommend")
   }
 
+  const missingProfileOverride = deriveMissingProfileOverride(params.answer)
+  if (missingProfileOverride) {
+    policyOverrides.push(missingProfileOverride)
+  }
+
   return {
     retrieval_mode: "agent_v2_responses",
     response_mode: responseMode,
@@ -126,6 +131,24 @@ export function buildAgentV2RouterDecision(params: {
     confidence: params.visibleFailure ? 0 : params.answer.confidence,
     policy_overrides: policyOverrides,
   }
+}
+
+function deriveMissingProfileOverride(answer: AgentV2TerminalAnswer): string | null {
+  if (answer.answer_mode !== "clarification") return null
+  if (!answer.missing_information.some((item) => item.blocking)) return null
+
+  const category = answer.request_interpretation.care_category
+  if (
+    category === "shampoo" ||
+    category === "conditioner" ||
+    category === "leave_in" ||
+    category === "oil" ||
+    category === "mask"
+  ) {
+    return `missing_${category}_profile`
+  }
+
+  return null
 }
 
 export function buildAgentV2Classification(params: {
