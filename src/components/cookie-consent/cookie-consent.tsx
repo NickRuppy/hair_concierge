@@ -72,26 +72,28 @@ export function CookieConsent() {
         <div
           role="dialog"
           aria-label="Cookie-Einstellungen"
-          className="fixed bottom-2 left-2 right-2 z-[100] max-w-md rounded-xl border border-border bg-card p-3.5 shadow-2xl sm:bottom-6 sm:left-6 sm:right-auto sm:rounded-2xl sm:p-5"
+          className="fixed inset-x-2 bottom-2 z-[100] mx-auto max-w-md rounded-xl border border-border bg-card p-3.5 shadow-2xl sm:inset-x-0 sm:bottom-6 sm:flex sm:max-w-4xl sm:items-center sm:gap-6 sm:rounded-2xl sm:px-6 sm:py-4"
         >
-          <h2 className="text-sm font-semibold text-foreground sm:text-base">
-            Wir verwenden Cookies
-          </h2>
-          <p className="mt-1.5 text-[13px] leading-snug text-muted-foreground sm:mt-2 sm:text-sm sm:leading-relaxed">
-            Einige sind technisch notwendig, andere helfen uns mit Analyse oder personalisierten
-            Inhalten. Mehr in unserer{" "}
-            <Link href="/datenschutz" className="underline">
-              Datenschutzerklärung
-            </Link>
-            .
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
+          <div className="sm:flex-1">
+            <h2 className="text-sm font-semibold text-foreground sm:text-base">
+              Wir verwenden Cookies
+            </h2>
+            <p className="mt-1.5 text-[13px] leading-snug text-muted-foreground sm:mt-1 sm:text-sm sm:leading-relaxed">
+              Einige sind technisch notwendig, andere helfen uns mit Analyse oder personalisierten
+              Inhalten. Mehr in unserer{" "}
+              <Link href="/datenschutz" className="underline">
+                Datenschutzerklärung
+              </Link>
+              .
+            </p>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2 sm:mt-0 sm:shrink-0 sm:flex-nowrap">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={rejectAll}
-              className="flex-1"
+              className="flex-1 sm:flex-none"
             >
               Nur essentielle
             </Button>
@@ -100,11 +102,16 @@ export function CookieConsent() {
               variant="outline"
               size="sm"
               onClick={() => setSettingsOpen(true)}
-              className="flex-1"
+              className="flex-1 sm:flex-none"
             >
               Einstellungen
             </Button>
-            <Button type="button" size="sm" onClick={acceptAll} className="flex-1">
+            <Button
+              type="button"
+              size="sm"
+              onClick={acceptAll}
+              className="flex-1 sm:w-auto sm:flex-none"
+            >
               Alle akzeptieren
             </Button>
           </div>
