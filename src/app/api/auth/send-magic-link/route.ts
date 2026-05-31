@@ -177,7 +177,7 @@ async function consumeCheckoutPasswordMarker(
   const appMetadata = isRecord(metadata) ? { ...metadata } : {}
   if (appMetadata.checkout_activation_session_hash !== checkoutSessionHash(activationId)) return
 
-  delete appMetadata.checkout_activation_session_hash
+  appMetadata.checkout_activation_session_hash = null
   appMetadata.activation_method = "passwordless"
   appMetadata.passwordless_login_sent_at = (deps.now ?? (() => new Date()))().toISOString()
 
