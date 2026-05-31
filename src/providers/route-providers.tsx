@@ -35,3 +35,11 @@ export function PublicFlowProviders({ children }: { children: React.ReactNode })
     </MetaPixelProvider>
   )
 }
+
+export function LandingTracking() {
+  return (
+    <MetaPixelProvider>
+      <CustomerIoProvider>{null}</CustomerIoProvider>
+    </MetaPixelProvider>
+  )
+}
