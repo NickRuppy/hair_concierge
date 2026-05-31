@@ -192,9 +192,11 @@
     overflow: hidden;
   }
 
-  .quiz-card:hover {
-    border-color: hsl(var(--primary) / 0.3);
-    background: hsl(var(--muted));
+  @media (hover: hover) and (pointer: fine) {
+    .quiz-card:hover {
+      border-color: hsl(var(--primary) / 0.3);
+      background: hsl(var(--muted));
+    }
   }
 
   .quiz-card-active {

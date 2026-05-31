@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
@@ -55,6 +55,8 @@ const SCALP_CONDITIONS: { value: string; label: string; description: string; ico
 
 export function QuizScalpQuestion() {
   const { answers, setAnswer, goNext, goBack } = useQuizStore()
+  const gateRef = useRef<HTMLDivElement | null>(null)
+  const conditionRef = useRef<HTMLDivElement | null>(null)
 
   // Restore phase from existing answers when re-entering step 6
   const [phase, setPhase] = useState<Phase>(() => {
@@ -77,6 +79,16 @@ export function QuizScalpQuestion() {
   // Track whether sections should animate (false on re-entry, true on user-driven transitions)
   const [animateGate, setAnimateGate] = useState(false)
   const [animateCondition, setAnimateCondition] = useState(false)
+
+  useEffect(() => {
+    if (phase !== "gate" || !animateGate) return
+    gateRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+  }, [animateGate, phase])
+
+  useEffect(() => {
+    if (phase !== "condition" || !animateCondition) return
+    conditionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+  }, [animateCondition, phase])
 
   const handleTypeSelect = useCallback(
     (value: string) => {
@@ -214,8 +226,14 @@ export function QuizScalpQuestion() {
 
       {/* Gate section — slides in below selected type card */}
       <div
+        ref={gateRef}
         className={phase === "type" ? "hidden" : animateGate ? "mt-5 animate-fade-in-up" : "mt-5"}
       >
+        {animateGate && (
+          <p className="mb-2 text-sm font-medium text-[var(--brand-plum)]">
+            Noch eine Kopfhautfrage.
+          </p>
+        )}
         <h2 className="font-header text-2xl leading-tight text-foreground mb-2">
           Hast du zusätzlich Beschwerden wie Schuppen, Juckreiz oder Rötungen?
         </h2>
@@ -246,6 +264,7 @@ export function QuizScalpQuestion() {
 
       {/* Condition cards — slides in below gate */}
       <div
+        ref={conditionRef}
         className={
           phase !== "condition" ? "hidden" : animateCondition ? "mt-6 animate-fade-in-up" : "mt-6"
         }

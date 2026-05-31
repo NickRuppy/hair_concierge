@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 import { getAuthenticatedAppRedirect, resolveIntakeState } from "@/lib/auth/intake-state"
+import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -84,15 +85,14 @@ export async function updateSession(request: NextRequest) {
 
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
-    const isReturning = request.cookies.has("hc_returning")
-
-    if (isReturning) {
-      url.pathname = "/auth"
-      url.searchParams.set("reason", "session_expired")
-      url.searchParams.set("next", pathname + request.nextUrl.search)
-    } else {
-      url.pathname = "/quiz"
-    }
+    const redirectTarget = getUnauthenticatedRedirectTarget(
+      pathname,
+      request.nextUrl.search,
+      request.cookies.has("hc_returning"),
+    )
+    const [targetPathname, targetSearch = ""] = redirectTarget.split("?")
+    url.pathname = targetPathname
+    url.search = targetSearch ? `?${targetSearch}` : ""
     return NextResponse.redirect(url)
   }
 

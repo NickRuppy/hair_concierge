@@ -6,6 +6,7 @@ import { useToast } from "@/providers/toast-provider"
 import { createClient } from "@/lib/supabase/client"
 import { useOnboardingStore } from "@/lib/onboarding/store"
 import type { OnboardingEditScope, OnboardingStep } from "@/lib/onboarding/store"
+import { shouldHydrateStoredHeatProtection } from "@/lib/onboarding/heat-protection-hydration"
 import { OnboardingProgressBar } from "@/components/onboarding/onboarding-progress-bar"
 import {
   BASIC_PRODUCT_OPTIONS,
@@ -111,6 +112,7 @@ class SaveTimeoutError extends Error {
 interface OnboardingFlowProps {
   userId: string
   initialStep: string
+  onboardingCompleted: boolean
   hairProfile: Record<string, unknown> | null
   productUsage: Array<Record<string, unknown>>
   returnTo?: string | null
@@ -185,6 +187,7 @@ function getFinalContinueLabel(
 export function OnboardingFlow({
   userId,
   initialStep,
+  onboardingCompleted,
   hairProfile,
   productUsage,
   returnTo = null,
@@ -246,7 +249,18 @@ export function OnboardingFlow({
       if (Array.isArray(hairProfile.night_protection)) {
         store.setNightProtection(normalizeNightProtectionValues(hairProfile.night_protection) ?? [])
       }
-      if (hairProfile.uses_heat_protection != null) {
+      if (
+        shouldHydrateStoredHeatProtection({
+          storedValue:
+            typeof hairProfile.uses_heat_protection === "boolean"
+              ? hairProfile.uses_heat_protection
+              : null,
+          initialStep: step,
+          onboardingCompleted,
+          editScope,
+          singleStepEdit,
+        })
+      ) {
         store.setUsesHeatProtection(hairProfile.uses_heat_protection as boolean)
       }
     }

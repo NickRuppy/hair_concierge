@@ -226,7 +226,7 @@ test("merges app metadata, clears activation hash, and confirms email on success
     },
   })
   expect(updateCall?.[2].app_metadata).toHaveProperty("password_initialized_at")
-  expect(updateCall?.[2].app_metadata).not.toHaveProperty("checkout_activation_session_hash")
+  expect(updateCall?.[2].app_metadata).toHaveProperty("checkout_activation_session_hash", null)
 })
 
 test("rejects password creation when the checkout activation was already claimed", async () => {
@@ -357,7 +357,7 @@ test("password activation accepts PayPal intent tokens and uses provider-owned e
   expect(ensuredToken).toBe("I-password")
   const updateCall = calls.find(([op]) => op === "updateUserById")
   expect(updateCall?.[1]).toBe("user-paypal")
-  expect(updateCall?.[2].app_metadata).not.toHaveProperty("checkout_activation_session_hash")
+  expect(updateCall?.[2].app_metadata).toHaveProperty("checkout_activation_session_hash", null)
 })
 
 test("password activation fallback links quiz metadata when fulfilling checkout", async () => {
@@ -492,9 +492,9 @@ test("send magic link derives email from checkout activation and consumes matchi
   expect(updateCall?.[2].app_metadata).toMatchObject({
     provider: "email",
     activation_method: "passwordless",
+    checkout_activation_session_hash: null,
     passwordless_login_sent_at: "2026-05-04T12:00:00.000Z",
   })
-  expect(updateCall?.[2].app_metadata).not.toHaveProperty("checkout_activation_session_hash")
 })
 
 test("send magic link accepts PayPal intent tokens and consumes the provider marker", async () => {
@@ -556,9 +556,9 @@ test("send magic link accepts PayPal intent tokens and consumes the provider mar
   const updateCall = calls.find(([op]) => op === "updateUserById")
   expect(updateCall?.[2].app_metadata).toMatchObject({
     activation_method: "passwordless",
+    checkout_activation_session_hash: null,
     passwordless_login_sent_at: "2026-05-04T12:00:00.000Z",
   })
-  expect(updateCall?.[2].app_metadata).not.toHaveProperty("checkout_activation_session_hash")
 })
 
 test("magic-link activation fallback links quiz metadata when fulfilling checkout", async () => {

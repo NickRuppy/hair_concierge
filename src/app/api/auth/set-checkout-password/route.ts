@@ -132,9 +132,9 @@ export async function handleSetCheckoutPassword(
 
     const mergedMetadata: Record<string, unknown> = {
       ...metadata,
+      checkout_activation_session_hash: null,
       password_initialized_at: (deps.now ?? (() => new Date()))().toISOString(),
     }
-    delete mergedMetadata.checkout_activation_session_hash
 
     const { error: updateError } = await deps.supabase.auth.admin.updateUserById(account.userId, {
       password,
