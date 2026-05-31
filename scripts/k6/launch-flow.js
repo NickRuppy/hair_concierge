@@ -9,9 +9,16 @@ const chatMode = __ENV.K6_CHAT_MODE === "1"
 const sessionCookie = __ENV.K6_SESSION_COOKIE || ""
 const thinkTimeMinSeconds = Number(__ENV.K6_THINK_TIME_MIN || 2)
 const thinkTimeMaxSeconds = Number(__ENV.K6_THINK_TIME_MAX || 6)
+const runId = __ENV.K6_RUN_ID || `local-${Date.now()}`
+
+const launchTestHeaders = {
+  "x-chaarlie-load-test": "launch-readiness",
+  "x-chaarlie-load-run": runId,
+}
 
 const mobileHeaders = {
   headers: {
+    ...launchTestHeaders,
     "user-agent":
       "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1",
     accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -20,6 +27,7 @@ const mobileHeaders = {
 
 const jsonHeaders = {
   headers: {
+    ...launchTestHeaders,
     "content-type": "application/json",
     accept: "application/json",
     ...(sessionCookie ? { cookie: sessionCookie } : {}),

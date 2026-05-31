@@ -14,9 +14,12 @@ Pick a target:
 
 ```bash
 export K6_BASE_URL="https://chaarlie.de"
+export K6_RUN_ID="2026-05-31-public-smoke"
 ```
 
 For preview deployments, use the Vercel preview URL instead. Run write or AI modes against preview first.
+
+Requests include `x-chaarlie-load-test: launch-readiness` and `x-chaarlie-load-run: <K6_RUN_ID>` so logs and firewall events can be filtered.
 
 ## Commands
 
