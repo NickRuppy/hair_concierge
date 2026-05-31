@@ -42,6 +42,12 @@ Override soak length when needed:
 K6_SOAK_VUS=10 K6_SOAK_DURATION=45m npm run stress:soak
 ```
 
+The script includes human-ish pauses between page views. Tune them if a test is meant to model slower or faster browsing:
+
+```bash
+K6_THINK_TIME_MIN=4 K6_THINK_TIME_MAX=12 npm run stress:average
+```
+
 ## Optional Write Paths
 
 By default the script only hits public mobile pages. Enable database-writing quiz lead traffic deliberately:
@@ -85,9 +91,12 @@ Stop the run if any of these happen:
 
 - sustained `http_req_failed` over 5%;
 - p95 request duration above 3s for public pages;
+- `x-vercel-mitigated: deny` responses from the Vercel edge;
 - repeated 429s from Supabase Auth, quiz APIs, chat, or OpenAI;
 - Vercel function timeouts or memory pressure;
 - unexpected paid checkout creation or payment-provider side effects.
+
+If Vercel edge mitigation appears during a local run, pause testing from that IP and rerun with slower think time or a distributed runner. A single laptop can look more bot-like than 15 real mobile users because all traffic comes from one source IP with perfectly repeated paths.
 
 ## Manual Companion Checks
 

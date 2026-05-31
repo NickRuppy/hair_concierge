@@ -7,6 +7,8 @@ const writeMode = __ENV.K6_WRITE_MODE === "1"
 const aiMode = __ENV.K6_AI_MODE === "1"
 const chatMode = __ENV.K6_CHAT_MODE === "1"
 const sessionCookie = __ENV.K6_SESSION_COOKIE || ""
+const thinkTimeMinSeconds = Number(__ENV.K6_THINK_TIME_MIN || 2)
+const thinkTimeMaxSeconds = Number(__ENV.K6_THINK_TIME_MAX || 6)
 
 const mobileHeaders = {
   headers: {
@@ -86,6 +88,20 @@ function isOk(response) {
   return response.status >= 200 && response.status < 400
 }
 
+function isHtml(response) {
+  return String(response.headers["Content-Type"] || "").includes("text/html")
+}
+
+function isNotEdgeMitigated(response) {
+  return response.headers["X-Vercel-Mitigated"] !== "deny"
+}
+
+function think() {
+  const min = Math.max(0, thinkTimeMinSeconds)
+  const max = Math.max(min, thinkTimeMaxSeconds)
+  sleep(min + Math.random() * (max - min))
+}
+
 function uniqueEmail() {
   return `k6-${Date.now()}-${__VU}-${__ITER}@chaarlie-load.test`
 }
@@ -110,26 +126,34 @@ export default function () {
     const landing = http.get(url("/"), mobileHeaders)
     check(landing, {
       "landing responds": isOk,
-      "landing has html": (res) => String(res.headers["Content-Type"] || "").includes("text/html"),
+      "landing has html": isHtml,
+      "landing not edge-mitigated": isNotEdgeMitigated,
     })
 
-    sleep(0.5)
+    think()
 
     const quiz = http.get(url("/quiz"), mobileHeaders)
     check(quiz, {
       "quiz responds": isOk,
-      "quiz has html": (res) => String(res.headers["Content-Type"] || "").includes("text/html"),
+      "quiz has html": isHtml,
+      "quiz not edge-mitigated": isNotEdgeMitigated,
     })
+
+    think()
 
     const auth = http.get(url("/auth"), mobileHeaders)
     check(auth, {
       "auth responds": isOk,
-      "auth has html": (res) => String(res.headers["Content-Type"] || "").includes("text/html"),
+      "auth has html": isHtml,
+      "auth not edge-mitigated": isNotEdgeMitigated,
     })
+
+    think()
 
     const pricing = http.get(url("/pricing"), mobileHeaders)
     check(pricing, {
       "pricing responds": isOk,
+      "pricing not edge-mitigated": isNotEdgeMitigated,
     })
   })
 
@@ -145,6 +169,7 @@ export default function () {
       check(lead, {
         "lead write accepted": (res) => res.status === 200,
         "lead id returned": (res) => Boolean(res.json("leadId")),
+        "lead not edge-mitigated": isNotEdgeMitigated,
       })
 
       if (aiMode && lead.status === 200) {
@@ -157,6 +182,7 @@ export default function () {
         check(analyze, {
           "quiz analyze accepted": (res) => res.status === 200,
           "quiz analyze returns insight": (res) => Boolean(res.json("insight")),
+          "quiz analyze not edge-mitigated": isNotEdgeMitigated,
         })
       }
     })
@@ -167,6 +193,7 @@ export default function () {
       const chat = http.get(url("/chat"), authPageHeaders)
       check(chat, {
         "chat page responds with session": isOk,
+        "chat page not edge-mitigated": isNotEdgeMitigated,
       })
 
       if (chatMode) {
@@ -179,10 +206,11 @@ export default function () {
           "chat api starts stream": (res) => res.status === 200,
           "chat api is event stream": (res) =>
             String(res.headers["Content-Type"] || "").includes("text/event-stream"),
+          "chat api not edge-mitigated": isNotEdgeMitigated,
         })
       }
     })
   }
 
-  sleep(1)
+  think()
 }
