@@ -51,7 +51,7 @@ export default function AgbPage() {
               Es gelten die zum Zeitpunkt des Vertragsschlusses auf der Website angegebenen Preise.
               Alle Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer, sofern
               anwendbar. Die Zahlung erfolgt per Kreditkarte oder anderen angebotenen
-              Zahlungsmitteln über den sicheren Zahlungsdienstleister Stripe.
+              Zahlungsmitteln über die sicheren Zahlungsdienstleister Stripe oder PayPal.
             </p>
             <ul className="mt-2 list-inside list-disc space-y-1">
               <li>
@@ -67,6 +67,10 @@ export default function AgbPage() {
                 (entspricht ca. 8,33 € / Monat), jährliche Abrechnung
               </li>
             </ul>
+            <p className="mt-2">
+              Aktions- oder Einführungsrabatte können den ersten Abrechnungsbetrag reduzieren; die
+              jeweils angezeigten Konditionen im Checkout sind maßgeblich.
+            </p>
           </section>
 
           <section>

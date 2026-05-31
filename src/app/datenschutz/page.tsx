@@ -135,6 +135,12 @@ export default function DatenschutzPage() {
                 <p>Zahlungsabwicklung für Abonnements.</p>
               </div>
               <div>
+                <p className="font-medium text-foreground">
+                  PayPal (Europe) S.à r.l. et Cie, S.C.A. (Luxemburg)
+                </p>
+                <p>Zahlungsabwicklung für Abonnements bei Auswahl von PayPal.</p>
+              </div>
+              <div>
                 <p className="font-medium text-foreground">Customer.io (USA)</p>
                 <p>
                   Versand transaktionaler und marketingbezogener E-Mails sowie Lifecycle-Messaging.
