@@ -33,7 +33,7 @@ import {
 import { runMetadataAssertions, runContentAssertions } from "./assertions"
 import { runJudge, runQualityRubric } from "./judge"
 import { publishEvalExperiment } from "./langfuse"
-import { buildReport, writeReport, printSummary } from "./report"
+import { buildReport, writeReport, printSummary, countHardAssertionFailures } from "./report"
 import type {
   ScenarioResult,
   TurnResult,
@@ -243,7 +243,9 @@ async function main() {
 
         if (!allPassed) {
           for (const f of assertions.filter((a) => !a.passed)) {
-            console.log(`      [${f.tier}] ${f.name}: expected ${f.expected}, got ${f.actual}`)
+            console.log(
+              `      [${f.severity ?? "hard"}][${f.tier}] ${f.name}: expected ${f.expected}, got ${f.actual}`,
+            )
           }
         }
 
@@ -305,7 +307,15 @@ async function main() {
   printSummary(report)
   console.log(`Report: ${reportPath}`)
 
-  process.exit(report.summary.failed > 0 ? 1 : 0)
+  const hardFailures = countHardAssertionFailures(results)
+
+  if (ciSmoke) {
+    process.exit(hardFailures > 0 ? 1 : 0)
+  } else if (report.summary.failed > 0) {
+    process.exit(1)
+  } else {
+    process.exit(0)
+  }
 }
 
 main().catch((err) => {

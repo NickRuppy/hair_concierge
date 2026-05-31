@@ -104,6 +104,7 @@ export interface AssertionResult {
   tier: "metadata" | "content" | "db" | "judge"
   name: string
   passed: boolean
+  severity?: "hard" | "soft"
   expected: string
   actual: string
 }
@@ -160,6 +161,8 @@ export interface EvalReport {
     failed: number
     total_assertions: number
     assertion_failures: number
+    hard_assertion_failures: number
+    soft_assertion_failures: number
   }
   scenarios: ScenarioResult[]
 }
