@@ -36,7 +36,7 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Super — noch 7 kurze Fragen.",
+    motivation: "Super — noch 8 kurze Fragen.",
   },
   {
     step: 3,
