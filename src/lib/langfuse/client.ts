@@ -4,6 +4,7 @@ import { observeOpenAI, type LangfuseConfig as LangfuseOpenAIConfig } from "@lan
 import { LangfuseSpanProcessor } from "@langfuse/otel"
 import { NodeSDK } from "@opentelemetry/sdk-node"
 import { maskLangfuseExport } from "./masking"
+import { getOpenAIMaxRetries, getOpenAIRequestTimeoutMs } from "@/lib/openai/errors"
 
 let openAIInstance: OpenAI | null = null
 let langfuseInstance: LangfuseClient | null | undefined
@@ -22,7 +23,11 @@ function requireEnv(name: string): string {
 
 export function getRawOpenAI(): OpenAI {
   if (!openAIInstance) {
-    openAIInstance = new OpenAI({ apiKey: requireEnv("OPENAI_API_KEY") })
+    openAIInstance = new OpenAI({
+      apiKey: requireEnv("OPENAI_API_KEY"),
+      maxRetries: getOpenAIMaxRetries(),
+      timeout: getOpenAIRequestTimeoutMs(),
+    })
   }
 
   return openAIInstance
