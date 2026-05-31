@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 
@@ -13,6 +13,10 @@ interface HeatProtectionScreenProps {
 export function HeatProtectionScreen({ selected, onSelect, onBack }: HeatProtectionScreenProps) {
   const advancingRef = useRef(false)
   const [localSelected, setLocalSelected] = useState(selected)
+
+  useEffect(() => {
+    setLocalSelected(selected)
+  }, [selected])
 
   function handleSelect(val: boolean) {
     if (advancingRef.current) return

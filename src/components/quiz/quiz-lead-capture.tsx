@@ -147,7 +147,7 @@ export function QuizLeadCapture() {
               variant="unstyled"
               className={`w-full h-14 text-base font-bold tracking-wide rounded-xl ${lead.name.trim() ? "quiz-btn-primary" : "disabled:opacity-40"}`}
             >
-              Weiter
+              Weiter zum Ergebnis
             </Button>
           </div>
         </div>

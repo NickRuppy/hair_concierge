@@ -126,6 +126,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
     <OnboardingFlow
       userId={user.id}
       initialStep={forcedStep ?? (profileRow?.onboarding_step as string) ?? "welcome"}
+      onboardingCompleted={Boolean(profileRow?.onboarding_completed)}
       hairProfile={hairProfile}
       productUsage={productUsage ?? []}
       returnTo={returnTo}
