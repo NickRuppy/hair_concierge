@@ -9,6 +9,11 @@ export async function updateSession(request: NextRequest) {
   })
 
   const { pathname } = request.nextUrl
+  const isPublicMarketingRoute =
+    pathname === "/" ||
+    ["/agb", "/datenschutz", "/impressum", "/kontakt", "/pricing", "/widerruf"].some(
+      (route) => pathname === route || pathname.startsWith(`${route}/`),
+    )
   const fastPublicRoutes = [
     "/api/stripe",
     "/api/paypal",
@@ -17,7 +22,7 @@ export async function updateSession(request: NextRequest) {
     "/api/auth/set-checkout-password",
     "/welcome",
   ]
-  if (fastPublicRoutes.some((route) => pathname.startsWith(route))) {
+  if (isPublicMarketingRoute || fastPublicRoutes.some((route) => pathname.startsWith(route))) {
     return supabaseResponse
   }
 
