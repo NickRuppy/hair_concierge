@@ -9,6 +9,7 @@ import {
   getLangfuseRelease,
   resolveLangfuseTraceId,
 } from "@/lib/openai/client"
+import { classifyOpenAIError } from "@/lib/openai/errors"
 import { sanitizeLangfuseText } from "@/lib/langfuse/masking"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
@@ -689,17 +690,22 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
       })
     } catch (error) {
       console.error("Chat pipeline error:", error)
+      const openAIError = classifyOpenAIError(error)
       if (chatObservation) {
         chatObservation.update({
           output: {
             status: "failed",
           },
           metadata: {
+            ...(openAIError ? { openai_failure_kind: openAIError.kind } : {}),
             error: error instanceof Error ? error.message : "chat_pipeline_error",
           },
         })
         chatObservation.end()
         deps.flushLangfuseClient().catch(() => {})
+      }
+      if (openAIError) {
+        return NextResponse.json({ error: openAIError.userMessage }, { status: openAIError.status })
       }
       return NextResponse.json({ error: fehler("Verarbeitung") }, { status: 500 })
     }
