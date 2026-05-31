@@ -123,7 +123,6 @@ const PLAYWRIGHT_PREFIXES = [
   "src/lib/stripe/",
   "src/lib/paypal/",
   "src/lib/supabase/",
-  "tests/",
   "playwright.config.",
 ]
 
@@ -132,6 +131,10 @@ const PLAYWRIGHT_EXACT = [
   "next.config.ts",
   "package.json",
   "package-lock.json",
+  "tests/e2e-smoke.spec.ts",
+  "tests/profile-editorial-v3.spec.ts",
+  "tests/profile-page-smoke.spec.ts",
+  "tests/helpers/auth.ts",
 ]
 
 const SECURITY_PREFIXES = [".github/workflows/", "supabase/migrations/"]
