@@ -413,7 +413,7 @@ The command completes with exit code 0.
 **Files:**
 - External: Vercel project Production environment variables
 
-- [ ] **Step 1: Confirm current env names exist**
+- [x] **Step 1: Confirm current env names exist**
 
 Run:
 
@@ -444,7 +444,7 @@ PAYPAL_PLAN_ID_ANNUAL
 PAYPAL_WEBHOOK_ID
 ```
 
-- [ ] **Step 2: Save rollback material outside chat**
+- [x] **Step 2: Save rollback material outside chat**
 
 Before replacing Production env values, store the current Production payment env values in the team's secure password manager or deployment runbook:
 
@@ -477,7 +477,7 @@ Expected:
 Rollback does not depend on Vercel revealing old secret values later.
 ```
 
-- [ ] **Step 3: Stage 1 - replace Stripe Production env values and keep PayPal disabled**
+- [x] **Step 3: Stage 1 - replace Stripe Production env values and keep PayPal disabled**
 
 Set Vercel Production:
 
@@ -562,7 +562,7 @@ Expected:
 Commit succeeds, or there are no file changes to commit because legal approved the existing text.
 ```
 
-- [ ] **Step 2: Redeploy Stage 1 after Stripe env changes**
+- [x] **Step 2: Redeploy Stage 1 after Stripe env changes**
 
 Use the Vercel Dashboard to redeploy the latest production deployment, or run:
 
@@ -578,7 +578,7 @@ The new deployment reaches Ready state and receives the https://chaarlie.de prod
 Production has live Stripe env values and NEXT_PUBLIC_PAYPAL_ENABLED=false.
 ```
 
-- [ ] **Step 3: Confirm live envs are in the client bundle**
+- [x] **Step 3: Confirm live envs are in the client bundle**
 
 Run:
 
