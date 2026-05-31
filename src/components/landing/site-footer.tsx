@@ -30,7 +30,7 @@ export function SiteFooter() {
             <h4 className={headingClass}>Produkt</h4>
             <ul className="flex flex-col gap-2.5">
               <li>
-                <Link href="/quiz" className={linkClass}>
+                <Link href="/quiz" prefetch={false} className={linkClass}>
                   Quiz starten
                 </Link>
               </li>

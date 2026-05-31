@@ -92,6 +92,7 @@ function PlanCard({ plan }: { plan: StripePricingPlan }) {
 
       <Link
         href="/quiz"
+        prefetch={false}
         className={`block text-center py-3.5 rounded-[12px] font-semibold text-[15px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${ctaClasses}`}
       >
         Plan wählen

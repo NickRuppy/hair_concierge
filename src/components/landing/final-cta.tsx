@@ -19,6 +19,7 @@ export function FinalCta() {
         </p>
         <Link
           href="/quiz"
+          prefetch={false}
           className="inline-block rounded-[14px] bg-[var(--brand-coral)] px-9 py-[18px] text-[17px] font-bold text-white transition-all hover:bg-white hover:text-[var(--brand-plum-darkest)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
         >
           Quiz starten

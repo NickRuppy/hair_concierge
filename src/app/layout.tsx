@@ -1,12 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Playfair_Display, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google"
-import { AuthProvider } from "@/providers/auth-provider"
-import { CustomerIoProvider } from "@/providers/customerio-provider"
-import { MetaPixelProvider } from "@/providers/meta-pixel-provider"
-import { PostHogClientProvider } from "@/providers/posthog-provider"
-import { ToastProvider } from "@/providers/toast-provider"
-import { CookieConsent } from "@/components/cookie-consent/cookie-consent"
-import { LazyFeedbackWidget } from "@/components/feedback/lazy-feedback-widget"
+import { LazyCookieConsent } from "@/components/cookie-consent/lazy-cookie-consent"
 import "./globals.css"
 
 const playfairDisplay = Playfair_Display({
@@ -31,10 +25,6 @@ const ibmPlexMono = IBM_Plex_Mono({
   preload: false,
 })
 
-// Every page requires Supabase auth (AuthProvider SSR + middleware redirect),
-// so there is nothing to statically generate.
-export const dynamic = "force-dynamic"
-
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -58,19 +48,8 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable} antialiased`}
       >
-        <MetaPixelProvider>
-          <AuthProvider>
-            <CustomerIoProvider>
-              <PostHogClientProvider>
-                <ToastProvider>
-                  {children}
-                  <LazyFeedbackWidget />
-                </ToastProvider>
-              </PostHogClientProvider>
-            </CustomerIoProvider>
-          </AuthProvider>
-        </MetaPixelProvider>
-        <CookieConsent />
+        {children}
+        <LazyCookieConsent />
       </body>
     </html>
   )
