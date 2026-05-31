@@ -7,23 +7,31 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
+  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder' }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'sk-placeholder' }}
+  COHERE_API_KEY: ${{ secrets.COHERE_API_KEY || 'placeholder' }}
+  HAS_LIVE_SUPABASE_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}
+  HAS_LIVE_AI_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' && secrets.OPENAI_API_KEY != '' && secrets.COHERE_API_KEY != '' }}
+
 jobs:
-  quality:
+  detect-ci-scope:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
-    env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder' }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'sk-placeholder' }}
-      COHERE_API_KEY: ${{ secrets.COHERE_API_KEY || 'placeholder' }}
-      HAS_LIVE_SUPABASE_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}
-      HAS_LIVE_AI_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' && secrets.OPENAI_API_KEY != '' && secrets.COHERE_API_KEY != '' }}
+    timeout-minutes: 5
+    outputs:
+      chat_eval: ${{ steps.changes.outputs.chat_eval }}
+      retrieval_eval: ${{ steps.changes.outputs.retrieval_eval }}
+      playwright_smoke: ${{ steps.changes.outputs.playwright_smoke }}
+      security_scan: ${{ steps.changes.outputs.security_scan }}
+      full_ci: ${{ steps.changes.outputs.full_ci }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -33,51 +41,120 @@ jobs:
         env:
           CI_BASE_REF: ${{ github.event_name == 'push' && github.event.before || '' }}
           CI_HEAD_REF: ${{ github.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title || '' }}
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
         run: node scripts/ci/changed-paths.mjs
+
+  quality-core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Install Linux-only native bindings
-        # Our lockfile was generated on macOS-arm64 so it only pins the darwin
-        # variants of platform-specific optional deps. Install the Linux ones
-        # without touching package.json or the lockfile.
-        # See https://github.com/npm/cli/issues/4828.
-        run: npm install --no-save --no-audit --no-fund @tailwindcss/oxide-linux-x64-gnu lightningcss-linux-x64-gnu
-      - run: npm run typecheck
+      - name: Typecheck
+        run: npm run typecheck
       - name: Lint
         run: npm run lint
-      - run: npm run build
+      - name: Build
+        run: npm run build
       - name: Run deterministic contract tests
         run: npm run test:contracts
+
+  playwright-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [detect-ci-scope, quality-core]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: needs.detect-ci-scope.outputs.playwright_smoke != 'true' || env.HAS_LIVE_SUPABASE_SECRETS != 'true'
+        run: |
+          echo "Playwright smoke skipped."
+          echo "playwright_smoke=${{ needs.detect-ci-scope.outputs.playwright_smoke }}"
+          echo "HAS_LIVE_SUPABASE_SECRETS=$HAS_LIVE_SUPABASE_SECRETS"
+      - name: Install dependencies
+        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npm ci
+      - name: Build app for smoke server
+        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npm run build
       - name: Install Playwright browsers
+        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
         run: npx playwright install --with-deps chromium
       - name: Run Playwright smoke tests
-        if: env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
         run: npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @ci --project=chromium'
-      - name: Skip Playwright smoke tests
-        if: env.HAS_LIVE_SUPABASE_SECRETS != 'true'
-        run: echo "Live Supabase secrets are unavailable; skipping Supabase-backed Playwright smoke tests"
-      - name: Run live chat smoke eval
-        if: steps.changes.outputs.chat_eval == 'true' && env.HAS_LIVE_AI_SECRETS == 'true'
-        run: npx start-server-and-test 'npm run start' http://localhost:3000 'npm run test:chat:ci'
-      - name: Skip live chat smoke eval
-        if: steps.changes.outputs.chat_eval != 'true' || env.HAS_LIVE_AI_SECRETS != 'true'
-        run: echo "No AI/chat/recommendation paths changed, or live AI/Supabase secrets are unavailable; skipping live chat smoke eval"
-      - name: Run retrieval metrics gate
-        if: steps.changes.outputs.retrieval_eval == 'true'
-        run: npm run test:retrieval:ci
-      - name: Skip retrieval metrics gate
-        if: steps.changes.outputs.retrieval_eval != 'true'
-        run: echo "No retrieval/indexing paths changed; skipping retrieval metrics gate"
-      - name: Upload test artifacts
+      - name: Upload Playwright artifacts
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: test-results
+          name: playwright-smoke-${{ github.run_id }}
           path: |
             test-results/
             tests/results/
+            tests/screenshots/
+          if-no-files-found: ignore
           retention-days: 7
+
+  chat-live-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [detect-ci-scope, quality-core]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: needs.detect-ci-scope.outputs.chat_eval != 'true' || env.HAS_LIVE_AI_SECRETS != 'true'
+        run: |
+          echo "Live chat smoke skipped."
+          echo "chat_eval=${{ needs.detect-ci-scope.outputs.chat_eval }}"
+          echo "HAS_LIVE_AI_SECRETS=$HAS_LIVE_AI_SECRETS"
+      - name: Install dependencies
+        if: needs.detect-ci-scope.outputs.chat_eval == 'true' && env.HAS_LIVE_AI_SECRETS == 'true'
+        run: npm ci
+      - name: Build app for smoke server
+        if: needs.detect-ci-scope.outputs.chat_eval == 'true' && env.HAS_LIVE_AI_SECRETS == 'true'
+        run: npm run build
+      - name: Run live chat smoke eval
+        if: needs.detect-ci-scope.outputs.chat_eval == 'true' && env.HAS_LIVE_AI_SECRETS == 'true'
+        run: npx start-server-and-test 'npm run start' http://localhost:3000 'npm run test:chat:ci'
+      - name: Upload chat artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: chat-live-smoke-${{ github.run_id }}
+          path: test-results/chat-eval/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  retrieval-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [detect-ci-scope, quality-core]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: needs.detect-ci-scope.outputs.retrieval_eval != 'true'
+        run: echo "No retrieval/indexing paths changed; retrieval gate skipped."
+      - name: Install dependencies
+        if: needs.detect-ci-scope.outputs.retrieval_eval == 'true'
+        run: npm ci
+      - name: Run retrieval metrics gate
+        if: needs.detect-ci-scope.outputs.retrieval_eval == 'true'
+        run: npm run test:retrieval:ci
