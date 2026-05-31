@@ -543,6 +543,165 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
   assert.equal(failedDebugEvent.visible_failure, true)
 })
 
+test("AgentV2 production pipeline uses observed OpenAI and managed prompt refs by default", async () => {
+  const previousOpenAIKey = process.env.OPENAI_API_KEY
+  const previousObservationFlag = process.env.AGENT_V2_LANGFUSE_OBSERVATION
+  process.env.OPENAI_API_KEY = "test-openai-key"
+  delete process.env.AGENT_V2_LANGFUSE_OBSERVATION
+
+  const managedRef = {
+    name: "chaarlie-agent-v2-responses-care-balance",
+    version: 17,
+    label: "production",
+    is_fallback: false,
+  }
+  const observedClient = { responses: { create: async () => ({ output: [] }) } }
+  let observedConfig: { generationName?: unknown; langfusePrompt?: unknown } | null = null
+  let receivedClient: unknown = null
+
+  try {
+    const result = await runAgentV2ProductionPipeline(
+      {
+        message: "Welches Shampoo passt?",
+        conversationId: "conversation-1",
+        userId: "user-1",
+        requestId: "request-1",
+      },
+      {
+        loadConversationHistory: async () => [],
+        getUserContext: async () => ({
+          profile: createCompleteHairProfile(),
+          routine_inventory: [],
+          relevant_memory: [],
+          derived_signals: [],
+          suggested_overlays: [],
+          missing_profile: [],
+        }),
+        loadUserMemoryContext: async () => ({
+          enabled: true,
+          entries: [],
+          promptContext: null,
+          dislikedProductNames: [],
+        }),
+        loadConversationState: async (): Promise<ConversationState> =>
+          createDefaultConversationState(),
+        getManagedTextPromptTemplate: async () => ({
+          template: "Managed AgentV2 prompt",
+          ref: managedRef,
+        }),
+        getObservedOpenAI: (config) => {
+          observedConfig = config ?? {}
+          return observedClient as never
+        },
+        runAgentV2ResponsesTurn: async (params) => {
+          receivedClient = params.client
+          return createAgentV2Result()
+        },
+      },
+    )
+
+    assert.equal(receivedClient, observedClient)
+    assert.notEqual(observedConfig, null)
+    const capturedObservedConfig = observedConfig as unknown as {
+      generationName?: unknown
+      langfusePrompt?: unknown
+    }
+    assert.equal(capturedObservedConfig.generationName, "agent-v2-responses-step")
+    assert.deepEqual(capturedObservedConfig.langfusePrompt, {
+      name: managedRef.name,
+      version: managedRef.version,
+      isFallback: managedRef.is_fallback,
+    })
+    assert.deepEqual(result.debugTrace.prompt.prompt_ref, managedRef)
+    assert.deepEqual(result.debugTrace.prompt_refs.classification, managedRef)
+  } finally {
+    if (previousOpenAIKey === undefined) {
+      delete process.env.OPENAI_API_KEY
+    } else {
+      process.env.OPENAI_API_KEY = previousOpenAIKey
+    }
+    if (previousObservationFlag === undefined) {
+      delete process.env.AGENT_V2_LANGFUSE_OBSERVATION
+    } else {
+      process.env.AGENT_V2_LANGFUSE_OBSERVATION = previousObservationFlag
+    }
+  }
+})
+
+test("AgentV2 production pipeline can disable observed OpenAI via rollback flag", async () => {
+  const previousOpenAIKey = process.env.OPENAI_API_KEY
+  const previousObservationFlag = process.env.AGENT_V2_LANGFUSE_OBSERVATION
+  process.env.OPENAI_API_KEY = "test-openai-key"
+  process.env.AGENT_V2_LANGFUSE_OBSERVATION = "disabled"
+
+  const rawClient = { responses: { create: async () => ({ output: [] }) } }
+  const observedClient = { responses: { create: async () => ({ output: [] }) } }
+  let observedCalled = false
+  let receivedClient: unknown = null
+
+  try {
+    await runAgentV2ProductionPipeline(
+      {
+        message: "Welches Shampoo passt?",
+        conversationId: "conversation-1",
+        userId: "user-1",
+        requestId: "request-1",
+      },
+      {
+        loadConversationHistory: async () => [],
+        getUserContext: async () => ({
+          profile: createCompleteHairProfile(),
+          routine_inventory: [],
+          relevant_memory: [],
+          derived_signals: [],
+          suggested_overlays: [],
+          missing_profile: [],
+        }),
+        loadUserMemoryContext: async () => ({
+          enabled: true,
+          entries: [],
+          promptContext: null,
+          dislikedProductNames: [],
+        }),
+        loadConversationState: async (): Promise<ConversationState> =>
+          createDefaultConversationState(),
+        getManagedTextPromptTemplate: async () => ({
+          template: "Fallback AgentV2 prompt",
+          ref: {
+            name: "chaarlie-agent-v2-responses-care-balance",
+            version: null,
+            label: "staging",
+            is_fallback: true,
+          },
+        }),
+        getOpenAI: () => rawClient as never,
+        getObservedOpenAI: () => {
+          observedCalled = true
+          return observedClient as never
+        },
+        runAgentV2ResponsesTurn: async (params) => {
+          receivedClient = params.client
+          return createAgentV2Result()
+        },
+      },
+    )
+
+    assert.equal(observedCalled, false)
+    assert.equal(receivedClient, rawClient)
+  } finally {
+    if (previousOpenAIKey === undefined) {
+      delete process.env.OPENAI_API_KEY
+    } else {
+      process.env.OPENAI_API_KEY = previousOpenAIKey
+    }
+    if (previousObservationFlag === undefined) {
+      delete process.env.AGENT_V2_LANGFUSE_OBSERVATION
+    } else {
+      process.env.AGENT_V2_LANGFUSE_OBSERVATION = previousObservationFlag
+    }
+  }
+})
+
 test("AgentV2 production pipeline treats any runtime failure stage as visible failure", async () => {
   const hairProfile = createCompleteHairProfile()
   const product = createProduct("primary")

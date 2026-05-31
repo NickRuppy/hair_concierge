@@ -3143,6 +3143,47 @@ test("AgentV2 runtime stores local trace even when Langfuse is unavailable", asy
   assert.equal(result.trace.langfuse.enabled, false)
 })
 
+test("AgentV2 runtime observes executable tool calls without hidden context", async () => {
+  const observed: Array<{
+    name: string
+    input: Record<string, unknown>
+    output: unknown
+  }> = []
+
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([
+      guidanceCall("call_1", {
+        answer_mode_hint: "general_advice",
+        categories: ["mask"],
+      }),
+      terminalGeneralAdvice("call_2"),
+    ]),
+    message: "Was hilft gegen trockene Laengen?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: { additional_notes: "secret" } as never,
+      routineInventory: [{ name: "Private Produktnotiz" }] as never,
+      sessionMemory: [{ text: "private memory" }] as never,
+    },
+    tools: fakeAgentV2Tools(),
+    langfuseMode: "enabled",
+    observeToolCall: async ({ name, input, run }) => {
+      const output = await run()
+      observed.push({ name, input, output })
+      return output
+    },
+  })
+
+  assert.equal(result.trace.langfuse.enabled, true)
+  assert.equal(observed.length, 1)
+  assert.equal(observed[0].name, "load_advisor_guidance")
+  assert.equal(observed[0].input.answer_mode_hint, "general_advice")
+  assert.doesNotMatch(
+    JSON.stringify(observed),
+    /additional_notes|Private Produktnotiz|private memory/,
+  )
+})
+
 test("AgentV2 runtime rejects hard rule IDs that were not loaded", async () => {
   const result = await runAgentV2ResponsesTurn({
     client: fakeResponsesClientWithOutputs([

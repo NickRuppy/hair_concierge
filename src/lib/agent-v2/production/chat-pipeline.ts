@@ -1,4 +1,4 @@
-import { getOpenAI } from "@/lib/openai/client"
+import { getOpenAI, getObservedOpenAI } from "@/lib/openai/client"
 import { createBuildOrFixRoutineTool } from "@/lib/agent/tools/build-or-fix-routine"
 import { buildCareBalanceToolContext } from "@/lib/agent/tools/care-balance-context"
 import { getUserContext, type UserContextProjection } from "@/lib/agent/tools/get-user-context"
@@ -7,6 +7,11 @@ import {
   type SelectProductsToolResult,
 } from "@/lib/agent/tools/select-products"
 import { loadAgentV2ProductionConversationHistory } from "@/lib/agent-v2/production/conversation-history"
+import {
+  buildAgentV2GenerationMetadata,
+  isAgentV2LangfuseObservationEnabled,
+  observeAgentV2ToolCall,
+} from "@/lib/agent-v2/production/langfuse-observability"
 import { buildAgentV2ProductToolMessage } from "@/lib/agent-v2/runtime/product-tool-context"
 import {
   type AgentV2RoutineLayer,
@@ -50,6 +55,11 @@ import { loadAgentV2ConversationState as loadPersistedConversationState } from "
 import { buildPipelineTraceDraft } from "@/lib/rag/debug-trace"
 import type { PipelineParams, PipelineResult } from "@/lib/rag/contracts"
 import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/rag/user-memory"
+import {
+  LANGFUSE_PROMPTS,
+  buildLangfusePromptConfig,
+  getManagedTextPromptTemplate,
+} from "@/lib/langfuse/prompts"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
 import { buildRecommendationEngineRuntimeFromPersistence } from "@/lib/recommendation-engine/runtime"
 import type { EffectiveCareContext } from "@/lib/recommendation-engine/types"
@@ -87,6 +97,10 @@ interface ProductionAgentV2PipelineDeps {
   createSelectProductsTool?: typeof createSelectProductsTool
   createBuildOrFixRoutineTool?: typeof createBuildOrFixRoutineTool
   runAgentV2ResponsesTurn?: typeof runAgentV2ResponsesTurn
+  getOpenAI?: typeof getOpenAI
+  getObservedOpenAI?: typeof getObservedOpenAI
+  getManagedTextPromptTemplate?: typeof getManagedTextPromptTemplate
+  observeAgentV2ToolCall?: typeof observeAgentV2ToolCall
 }
 
 const ROUTINE_PRODUCT_CATEGORY_VALUES = new Set<RoutineProduct>([
@@ -151,19 +165,11 @@ function projectRecentMessages(messages: Message[]): RecentConversationMessage[]
   })
 }
 
-function promptRef(name: string): LangfusePromptReference {
-  return {
-    name,
-    version: null,
-    label: "code",
-    is_fallback: true,
-  }
-}
-
 function buildAgentV2PromptSnapshot(params: {
   message: string
   recentMessages: RecentConversationMessage[]
   model: string
+  promptRef: LangfusePromptReference
 }): ChatPromptSnapshot {
   const recentMessageRoles = params.recentMessages.slice(-4).map((message) => message.role)
 
@@ -171,7 +177,7 @@ function buildAgentV2PromptSnapshot(params: {
     kind: "agent_v2_responses",
     model: params.model,
     temperature: 0,
-    prompt_ref: promptRef("agent-v2-responses-care-balance"),
+    prompt_ref: params.promptRef,
     system_prompt: "agent_v2_responses_care_balance",
     messages: [
       {
@@ -443,10 +449,40 @@ export async function runAgentV2ProductionPipeline(
     conversationState.agent_v2.prior_selected_product_projections
   const sessionMemory = conversationState.agent_v2.session_memory
   const runTurn = deps.runAgentV2ResponsesTurn ?? runAgentV2ResponsesTurn
+  const safetyMode = classifyAgentV2ProductionSafetyMode(message)
+  const managedPrompt = await (deps.getManagedTextPromptTemplate ?? getManagedTextPromptTemplate)(
+    LANGFUSE_PROMPTS.agentV2ResponsesCareBalance,
+  )
+  const useInjectedRuntimeWithoutClient =
+    Boolean(deps.runAgentV2ResponsesTurn) && !deps.getOpenAI && !deps.getObservedOpenAI
+  const client =
+    deps.client ??
+    (useInjectedRuntimeWithoutClient
+      ? ({
+          responses: {
+            create: async () => {
+              throw new Error("Injected AgentV2 runtime did not use its model client.")
+            },
+          },
+        } satisfies AgentV2ResponsesClient)
+      : isAgentV2LangfuseObservationEnabled()
+        ? ((deps.getObservedOpenAI ?? getObservedOpenAI)({
+            generationName: "agent-v2-responses-step",
+            langfusePrompt: buildLangfusePromptConfig(managedPrompt.ref),
+            generationMetadata: buildAgentV2GenerationMetadata({
+              conversationId,
+              requestId,
+              safetyMode,
+              engine: "agent_v2",
+              endpoint: "responses",
+              migrationMode: "agent_v2_care_balance",
+            }),
+          }) as unknown as AgentV2ResponsesClient)
+        : ((deps.getOpenAI ?? getOpenAI)() as unknown as AgentV2ResponsesClient))
   const agentStart = performance.now()
 
   const result = await runTurn({
-    client: deps.client ?? (getOpenAI() as unknown as AgentV2ResponsesClient),
+    client,
     message,
     recentMessages,
     userContext: {
@@ -461,8 +497,9 @@ export async function runAgentV2ProductionPipeline(
     currentRoutineLayer: routineThreadContext?.active ? routineThreadContext.current_layer : null,
     routineThreadContext,
     priorSelectedProductProjections,
-    safetyMode: classifyAgentV2ProductionSafetyMode(message),
+    safetyMode,
     langfuseMode: "enabled",
+    observeToolCall: deps.observeAgentV2ToolCall ?? observeAgentV2ToolCall,
     tools: {
       load_advisor_guidance: async (input) => loadAgentV2AdvisorGuidance(input),
       select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
@@ -567,6 +604,7 @@ export async function runAgentV2ProductionPipeline(
     message,
     recentMessages,
     model: result.trace.model,
+    promptRef: managedPrompt.ref,
   })
   const visibleRoutineSteps = buildRoutineThreadVisibleSteps(
     latestRoutineProjection as AgentV2RoutineProjection | null,
@@ -633,7 +671,7 @@ export async function runAgentV2ProductionPipeline(
     category_decision: exposedCategoryDecision,
     engine_trace: exposedEngineTrace,
     matched_products: matchedProducts,
-    classification_prompt_ref: promptRef("agent-v2-responses-care-balance"),
+    classification_prompt_ref: managedPrompt.ref,
     prompt,
     response_composition: {
       path: "agent_v2_responses",

@@ -5,6 +5,9 @@ const PHONE_REGEX = /(?:\+?\d{1,3}[\s./-]?)?(?:\(?\d{2,4}\)?[\s./-]?)?\d{3,4}[\s
 
 const REDACTED = "[redacted]"
 const REDACTED_TEXT = "[redacted_sensitive_text]"
+const REDACTED_AGENT_V2_CONTEXT = "[redacted_agent_v2_context]"
+const REDACTED_RECENT_MESSAGE = "[redacted_recent_message]"
+const REDACTED_REASONING = "[redacted_reasoning]"
 
 const IDENTIFIER_KEYS = new Set([
   "email",
@@ -22,10 +25,64 @@ const SENSITIVE_TEXT_KEYS = new Set([
   "conversation_memory",
   "notes",
   "free_text",
+  "hairProfile",
+  "routineInventory",
+  "derivedSignals",
+  "relevantMemory",
+  "sessionMemory",
+  "careBalanceContext",
+  "routineThreadContext",
+  "priorSelectedProductProjections",
+  "recentMessages",
 ])
+
+const AGENT_V2_HIDDEN_CONTEXT_PREFIXES = [
+  "Loaded Chaarlie user context.",
+  "CareBalance product-usage context.",
+  "Active AgentV2 routine thread context,",
+  "Surfaced product facts from earlier turns",
+  "Conversation-scoped AgentV2 working memory.",
+]
 
 function maskString(value: string): string {
   return value.replace(EMAIL_REGEX, REDACTED).replace(PHONE_REGEX, REDACTED)
+}
+
+function parseJsonString(value: string): unknown {
+  try {
+    return JSON.parse(value)
+  } catch {
+    return undefined
+  }
+}
+
+function isAgentV2HiddenContextMessage(value: string): boolean {
+  return AGENT_V2_HIDDEN_CONTEXT_PREFIXES.some((prefix) => value.startsWith(prefix))
+}
+
+function maskOpenAIMessage(value: Record<string, unknown>): Record<string, unknown> {
+  const role = value.role
+  const content = value.content
+  if (typeof content !== "string") return value
+
+  if (typeof role === "string" && isAgentV2HiddenContextMessage(content)) {
+    return { ...value, content: REDACTED_AGENT_V2_CONTEXT }
+  }
+
+  if (role === "user" || role === "assistant") {
+    // Root chat observations are canonical for current-turn text; generation inputs redact duplicated conversation messages.
+    return { ...value, content: REDACTED_RECENT_MESSAGE }
+  }
+
+  return { ...value, content: maskString(content) }
+}
+
+function maskResponsesOutputItem(value: Record<string, unknown>): Record<string, unknown> {
+  if (value.type === "reasoning") {
+    return { type: "reasoning", content: REDACTED_REASONING }
+  }
+
+  return value
 }
 
 function maskValue(value: unknown, key?: string): unknown {
@@ -40,6 +97,14 @@ function maskValue(value: unknown, key?: string): unknown {
   }
 
   if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>
+    if (typeof record.role === "string" && Object.hasOwn(record, "content")) {
+      return maskOpenAIMessage(record)
+    }
+    if (record.type === "reasoning") {
+      return maskResponsesOutputItem(record)
+    }
+
     return Object.fromEntries(
       Object.entries(value).map(([entryKey, entryValue]) => [
         entryKey,
@@ -51,7 +116,16 @@ function maskValue(value: unknown, key?: string): unknown {
   return value
 }
 
-export const maskLangfuseExport: MaskFunction = ({ data }) => maskValue(data)
+export const maskLangfuseExport: MaskFunction = ({ data }) => {
+  if (typeof data === "string") {
+    const parsed = parseJsonString(data)
+    if (parsed !== undefined) {
+      return JSON.stringify(maskValue(parsed))
+    }
+  }
+
+  return maskValue(data)
+}
 
 export function sanitizeLangfuseText(value: string | null | undefined): string | null {
   if (!value) return null
