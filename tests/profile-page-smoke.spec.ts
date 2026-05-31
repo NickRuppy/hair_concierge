@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js"
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000"
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+const cookieConsentStorageKey = "chaarlie_cookie_consent_v1"
 
 if (!supabaseUrl || !serviceRoleKey) {
   throw new Error(
@@ -152,6 +153,18 @@ test.describe.serial("@ci Profile page smoke", () => {
   test("journey sections mirror the live flow and edit routes land on the right step", async ({
     page,
   }) => {
+    await page.addInitScript((storageKey) => {
+      window.localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          essential: true,
+          analytics: false,
+          marketing: false,
+          ts: Date.now(),
+        }),
+      )
+    }, cookieConsentStorageKey)
+
     await page.goto(`${baseUrl}/auth`, { waitUntil: "domcontentloaded" })
     await expect(page.getByText("chaarlie").first()).toBeVisible({ timeout: 15000 })
 
