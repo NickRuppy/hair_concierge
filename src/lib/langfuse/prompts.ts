@@ -1,5 +1,6 @@
 import type { LangfusePromptReference } from "@/lib/types"
 import type { LangfuseConfig as LangfuseOpenAIConfig } from "@langfuse/openai"
+import { AGENT_V2_RESPONSES_SYSTEM_PROMPT } from "@/lib/agent-v2/runtime/prompt"
 import {
   AGENT_FINAL_RENDER_PROMPT,
   AGENT_ROUTE_CLASSIFIER_PROMPT,
@@ -49,6 +50,10 @@ export const LANGFUSE_PROMPTS = {
   agentFinalRender: {
     name: "chaarlie-agent-final-render",
     fallback: AGENT_FINAL_RENDER_PROMPT,
+  },
+  agentV2ResponsesCareBalance: {
+    name: "chaarlie-agent-v2-responses-care-balance",
+    fallback: AGENT_V2_RESPONSES_SYSTEM_PROMPT,
   },
 } as const
 

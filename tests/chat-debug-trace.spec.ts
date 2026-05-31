@@ -11,6 +11,7 @@ import {
   buildRecommendationEngineRuntimeForChat,
   buildRecommendationEngineTrace,
 } from "../src/lib/recommendation-engine/chat"
+import { summarizeAgentV2TraceForLangfuse } from "../src/lib/agent-v2/production/langfuse-observability"
 import { createDefaultConversationState } from "../src/lib/rag/conversation-state"
 import type { RetrievedChunk } from "../src/lib/rag/retriever"
 import type {
@@ -24,6 +25,7 @@ import type {
   RoutinePlan,
 } from "../src/lib/types"
 import type { AgenticToolLoopTrace as RuntimeAgenticToolLoopTrace } from "../src/lib/agent/orchestrator/agentic-tool-loop-types"
+import type { AgentV2Trace } from "../src/lib/agent-v2/contracts"
 
 const legacyResponseComposition = {
   path: "legacy_synthesizer" as const,
@@ -1029,5 +1031,65 @@ test.describe("Chat debug trace", () => {
       },
     })
     expect(JSON.stringify(debugEvent)).not.toContain("System prompt snapshot")
+  })
+
+  test("summarizes AgentV2 trace for Langfuse root output without raw context", () => {
+    const agentV2Trace = {
+      engine: "agent_v2",
+      model: "gpt-5.4-mini",
+      endpoint: "responses",
+      reasoning_effort: "medium",
+      safety_mode: "normal",
+      answer_mode: "product_recommendation",
+      response_ids: ["resp_1"],
+      model_steps: [{ response_id: "resp_1", latency_ms: 12 }],
+      tool_calls: [{ call_id: "call_1", name: "select_products", latency_ms: 5 }],
+      blocked_tool_calls: [],
+      loaded_guidance_package_ids: ["base.answer_contract.v1"],
+      validation_errors: [],
+      validation_warnings: [],
+      request_interpretation: null,
+      request_interpretation_summary: null,
+      bounded_repair_kind: "missing_select_products",
+      repair_attempts: [{ reason: "missing_select_products", validation_errors: [] }],
+      routine_thread_context_active: false,
+      routine_thread_context: null,
+      final_product_ids: ["product-1"],
+      routine_layer: null,
+      session_memory_writes: [],
+      dropped_session_memory_writes: [],
+      injected_session_memory: [
+        {
+          type: "preference",
+          text: "RAW_SESSION_MEMORY_SHOULD_NOT_LEAK",
+          evidence_quote: "RAW_SESSION_MEMORY_SHOULD_NOT_LEAK",
+          confidence: 0.8,
+          ttl: "session",
+          affects_recommendations: true,
+          expires_at_turn: null,
+        },
+      ],
+      langfuse: {
+        enabled: true,
+        trace_id: null,
+        trace_url: null,
+      },
+      failure_stage: null,
+    } satisfies AgentV2Trace
+
+    const summary = summarizeAgentV2TraceForLangfuse(agentV2Trace)
+
+    expect(summary).toMatchObject({
+      engine: "agent_v2",
+      model_step_count: 1,
+      tool_call_count: 1,
+      blocked_tool_call_count: 0,
+      repair_count: 1,
+      loaded_guidance_ids: ["base.answer_contract.v1"],
+      response_ids: ["resp_1"],
+      answer_mode: "product_recommendation",
+      failure_stage: null,
+    })
+    expect(JSON.stringify(summary)).not.toContain("RAW_SESSION_MEMORY_SHOULD_NOT_LEAK")
   })
 })

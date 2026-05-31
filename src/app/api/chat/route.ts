@@ -51,6 +51,7 @@ async function loadChatRuntimeDeps() {
       summarizeEngineTraceForLangfuse,
       summarizeProductsForLangfuse,
     },
+    { summarizeAgentV2TraceForLangfuse },
     { persistConversationStateTransition },
     { chatMessageSchema },
     { generateConversationTitle },
@@ -60,6 +61,7 @@ async function loadChatRuntimeDeps() {
     import("@/lib/rag/chat-response"),
     import("@/lib/rag/memory-extractor"),
     import("@/lib/rag/debug-trace"),
+    import("@/lib/agent-v2/production/langfuse-observability"),
     import("@/lib/rag/conversation-state-store"),
     import("@/lib/validators"),
     import("@/lib/rag/title-generator"),
@@ -76,6 +78,7 @@ async function loadChatRuntimeDeps() {
     finalizeChatTurnTrace,
     summarizeEngineTraceForLangfuse,
     summarizeProductsForLangfuse,
+    summarizeAgentV2TraceForLangfuse,
     persistConversationStateTransition,
     chatMessageSchema,
     generateConversationTitle,
@@ -183,6 +186,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
       finalizeChatTurnTrace,
       summarizeEngineTraceForLangfuse,
       summarizeProductsForLangfuse,
+      summarizeAgentV2TraceForLangfuse,
       persistConversationStateTransition,
       chatMessageSchema,
       generateConversationTitle,
@@ -554,6 +558,9 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                     loaded_guidance_ids: completedTrace.agentic_tool_loop.loaded_guidance_ids,
                   }
                 : null
+              const agentV2Summary = completedTrace.agent_v2_trace
+                ? summarizeAgentV2TraceForLangfuse(completedTrace.agent_v2_trace)
+                : null
 
               deps
                 .persistConversationTurnTrace({
@@ -580,7 +587,8 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   selected_products: summarizeProductsForLangfuse(
                     completedTrace.decision_context.matched_products,
                   ),
-                  agentic_tool_loop_summary: toolLoopSummary,
+                  agent_v2_summary: agentV2Summary,
+                  ...(toolLoopSummary ? { agentic_tool_loop_summary: toolLoopSummary } : {}),
                 },
               })
 
@@ -627,6 +635,9 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   loaded_guidance_ids: failedTrace.agentic_tool_loop.loaded_guidance_ids,
                 }
               : null
+            const failedAgentV2Summary = failedTrace.agent_v2_trace
+              ? summarizeAgentV2TraceForLangfuse(failedTrace.agent_v2_trace)
+              : null
 
             deps
               .persistConversationTurnTrace({
@@ -652,7 +663,10 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 selected_products: summarizeProductsForLangfuse(
                   failedTrace.decision_context.matched_products,
                 ),
-                agentic_tool_loop_summary: failedToolLoopSummary,
+                agent_v2_summary: failedAgentV2Summary,
+                ...(failedToolLoopSummary
+                  ? { agentic_tool_loop_summary: failedToolLoopSummary }
+                  : {}),
               },
               metadata: {
                 error: errorMessage,
@@ -685,6 +699,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
           },
         })
         chatObservation.end()
+        deps.flushLangfuseClient().catch(() => {})
       }
       return NextResponse.json({ error: fehler("Verarbeitung") }, { status: 500 })
     }

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { AGENT_V2_RESPONSES_SYSTEM_PROMPT } from "../src/lib/agent-v2/runtime/prompt"
 import { LANGFUSE_PROMPTS } from "../src/lib/langfuse/prompts"
 import {
   AGENT_FINAL_RENDER_PROMPT,
@@ -17,6 +18,17 @@ test("Langfuse prompt registry includes current agentic chat prompts", () => {
     AGENTIC_CONTEXTUAL_COMPOSER_PROMPT,
   )
   assert.equal(LANGFUSE_PROMPTS.agentFinalRender.fallback, AGENT_FINAL_RENDER_PROMPT)
+})
+
+test("Langfuse prompt registry includes AgentV2 Responses prompt", () => {
+  assert.equal(
+    LANGFUSE_PROMPTS.agentV2ResponsesCareBalance.name,
+    "chaarlie-agent-v2-responses-care-balance",
+  )
+  assert.equal(
+    LANGFUSE_PROMPTS.agentV2ResponsesCareBalance.fallback,
+    AGENT_V2_RESPONSES_SYSTEM_PROMPT,
+  )
 })
 
 test("Langfuse prompt names are unique", () => {

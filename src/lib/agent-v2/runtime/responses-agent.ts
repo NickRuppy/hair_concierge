@@ -13,6 +13,7 @@ import {
 } from "@/lib/agent-v2/contracts"
 import { normalizeAgentV2EvidenceText } from "@/lib/agent-v2/evidence-normalization"
 import { getAgentV2ModelPolicy, type AgentV2ModelPolicy } from "@/lib/agent-v2/model-policy"
+import { AGENT_V2_RESPONSES_SYSTEM_PROMPT } from "@/lib/agent-v2/runtime/prompt"
 import { createAgentV2Trace } from "@/lib/agent-v2/runtime/trace"
 import { LoadAgentV2AdvisorGuidanceInputSchema } from "@/lib/agent-v2/tools/guidance-tool"
 import type { AgentV2RoutineProjection } from "@/lib/agent-v2/tools/routine-projection"
@@ -45,6 +46,7 @@ type AgentV2ToolName =
   | "set_current_care_context"
   | "select_products"
   | "build_or_fix_routine"
+type AgentV2RuntimeToolName = keyof AgentV2RuntimeTools
 type AgentV2RepairKind =
   | "terminal_only"
   | "missing_guidance_or_tools"
@@ -189,6 +191,11 @@ export async function runAgentV2ResponsesTurn(params: {
   safetyMode?: AgentV2SafetyMode
   policyOverrides?: Partial<AgentV2ModelPolicy>
   langfuseMode?: "disabled" | "enabled"
+  observeToolCall?: <T>(params: {
+    name: string
+    input: Record<string, unknown>
+    run: () => Promise<T>
+  }) => Promise<T>
 }): Promise<AgentV2ResponsesTurnResult> {
   const safetyMode = params.safetyMode ?? "normal"
   const policy = { ...getAgentV2ModelPolicy(), ...params.policyOverrides }
@@ -659,17 +666,31 @@ export async function runAgentV2ResponsesTurn(params: {
       }
 
       executableToolCalls += 1
+      if (!isAgentV2RuntimeToolName(call.name)) {
+        trace.blocked_tool_calls.push({ name: call.name, reason: "tool_not_allowed" })
+        inputItems.push(buildFunctionCallOutput(call.call_id, { error: "tool_not_allowed" }))
+        continue
+      }
+      const toolName = call.name
       const executableArguments = normalizeExecutableToolArguments({
-        name: call.name,
+        name: toolName,
         args: validatedArguments.value,
         currentRoutineLayer: params.currentRoutineLayer,
         routineThreadContext,
         hasCurrentRoutineInventory: hasEffectiveRoutineInventory(effectiveCareContext),
       })
       const toolStartedAt = performance.now()
-      const output = await params.tools[call.name](executableArguments, {
-        effectiveCareContext,
-      })
+      const runTool = () =>
+        params.tools[toolName](executableArguments, {
+          effectiveCareContext,
+        })
+      const output = params.observeToolCall
+        ? await params.observeToolCall({
+            name: toolName,
+            input: executableArguments,
+            run: runTool,
+          })
+        : await runTool()
       const toolLatencyMs = Math.round(performance.now() - toolStartedAt)
       inputItems.push(buildFunctionCallOutput(call.call_id, output))
       trace.tool_calls.push({
@@ -726,8 +747,7 @@ function buildInputItems(
   const items: unknown[] = [
     {
       role: "system",
-      content:
-        "You are AgentV2 for Chaarlie. Never return plain assistant text to the user. Every user-visible answer must be submitted by calling submit_final_answer exactly once. Clarify when a product recommendation, routine mutation, safety-sensitive answer, or product-specific claim lacks material information; for broad hair-care concerns with usable profile/context, give a best-effort answer instead of only asking what the user means. Keep user-facing prose German.",
+      content: AGENT_V2_RESPONSES_SYSTEM_PROMPT,
     },
     {
       role: "system",
@@ -1447,6 +1467,10 @@ function isExecutableToolName(name: string): name is AgentV2ToolName {
     name === "select_products" ||
     name === "build_or_fix_routine"
   )
+}
+
+function isAgentV2RuntimeToolName(name: AgentV2ToolName): name is AgentV2RuntimeToolName {
+  return name !== "set_current_care_context"
 }
 
 function buildRepairState(errors: AgentV2ValidationError[]): AgentV2RepairState {
