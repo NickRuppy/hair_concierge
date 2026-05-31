@@ -6,25 +6,29 @@ import { MetaPixelProvider } from "@/providers/meta-pixel-provider"
 import { PostHogClientProvider } from "@/providers/posthog-provider"
 import { ToastProvider } from "@/providers/toast-provider"
 import { CookieConsent } from "@/components/cookie-consent/cookie-consent"
-import { FeedbackWidget } from "@/components/feedback/feedback-widget"
+import { LazyFeedbackWidget } from "@/components/feedback/lazy-feedback-widget"
 import "./globals.css"
 
 const playfairDisplay = Playfair_Display({
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
+  weight: ["500"],
+  style: ["normal"],
   variable: "--font-playfair-display",
   subsets: ["latin"],
+  display: "swap",
 })
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
   subsets: ["latin"],
+  display: "swap",
 })
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
   variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
 })
 
 // Every page requires Supabase auth (AuthProvider SSR + middleware redirect),
@@ -60,7 +64,7 @@ export default function RootLayout({
               <PostHogClientProvider>
                 <ToastProvider>
                   {children}
-                  <FeedbackWidget />
+                  <LazyFeedbackWidget />
                 </ToastProvider>
               </PostHogClientProvider>
             </CustomerIoProvider>

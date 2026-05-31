@@ -11,7 +11,7 @@ import {
   clearCustomerIoBrowserClient,
   setCustomerIoBrowserClient,
 } from "../src/lib/customerio-tracking"
-import { posthog } from "../src/providers/posthog-provider"
+import { canUsePostHogBrowserTracking, posthog } from "../src/providers/posthog-provider"
 
 type DestinationCall = {
   destination: "customerio" | "meta" | "posthog"
@@ -253,6 +253,28 @@ test("PostHog adapter keeps legacy names and strips undefined mapped properties"
   } finally {
     posthog.capture = originalCapture
   }
+})
+
+test("PostHog browser tracking requires analytics consent and a project key", () => {
+  assert.equal(canUsePostHogBrowserTracking(null, "ph-key"), false)
+  assert.equal(
+    canUsePostHogBrowserTracking(
+      { essential: true, analytics: false, marketing: true, ts: 1 },
+      "ph-key",
+    ),
+    false,
+  )
+  assert.equal(
+    canUsePostHogBrowserTracking({ essential: true, analytics: true, marketing: false, ts: 1 }, ""),
+    false,
+  )
+  assert.equal(
+    canUsePostHogBrowserTracking(
+      { essential: true, analytics: true, marketing: false, ts: 1 },
+      "ph-key",
+    ),
+    true,
+  )
 })
 
 test("Customer.io adapter maps app payloads to snake_case vendor payloads", () => {
