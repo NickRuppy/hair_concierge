@@ -172,6 +172,7 @@ export function runContentAssertions(
       tier: "content",
       name: "must_be_german",
       passed: germanHits.length >= 3,
+      severity: "soft",
       expected: ">=3 German markers",
       actual: `${germanHits.length} markers (${germanHits.slice(0, 5).join(", ")})`,
     })

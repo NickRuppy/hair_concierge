@@ -6,6 +6,23 @@ import fs from "fs"
 import path from "path"
 import type { EvalReport, LangfuseExperimentSummary, ScenarioResult } from "./types"
 
+function countAssertionFailures(scenarios: ScenarioResult[], severity: "hard" | "soft"): number {
+  return scenarios.reduce(
+    (sum, s) =>
+      sum +
+      s.turns.reduce(
+        (ts, t) =>
+          ts + t.assertions.filter((a) => !a.passed && (a.severity ?? "hard") === severity).length,
+        0,
+      ),
+    0,
+  )
+}
+
+export function countHardAssertionFailures(scenarios: ScenarioResult[]): number {
+  return countAssertionFailures(scenarios, "hard")
+}
+
 export function buildReport(
   scenarios: ScenarioResult[],
   baseUrl: string,
@@ -21,6 +38,8 @@ export function buildReport(
       sum + s.turns.reduce((ts, t) => ts + t.assertions.filter((a) => !a.passed).length, 0),
     0,
   )
+  const hardAssertionFailures = countHardAssertionFailures(scenarios)
+  const softAssertionFailures = countAssertionFailures(scenarios, "soft")
 
   return {
     timestamp: new Date().toISOString(),
@@ -33,6 +52,8 @@ export function buildReport(
       failed: scenarios.filter((s) => !s.passed).length,
       total_assertions: totalAssertions,
       assertion_failures: assertionFailures,
+      hard_assertion_failures: hardAssertionFailures,
+      soft_assertion_failures: softAssertionFailures,
     },
     scenarios,
   }
@@ -61,6 +82,11 @@ export function printSummary(report: EvalReport): void {
   console.log(
     `  Assertions: ${summary.total_assertions - summary.assertion_failures}/${summary.total_assertions} passed`,
   )
+  if (summary.assertion_failures > 0) {
+    console.log(
+      `  Failure severity: ${summary.hard_assertion_failures} hard, ${summary.soft_assertion_failures} soft`,
+    )
+  }
   console.log(`  Duration: ${(report.duration_ms / 1000).toFixed(1)}s`)
   if (report.langfuse_experiment) {
     console.log(`  Langfuse run: ${report.langfuse_experiment.run_name}`)
@@ -79,7 +105,7 @@ export function printSummary(report: EvalReport): void {
         const failures = turn.assertions.filter((a) => !a.passed)
         for (const f of failures) {
           console.log(
-            `        turn ${turn.turn_index}: [${f.tier}] ${f.name} — expected: ${f.expected}, got: ${f.actual}`,
+            `        turn ${turn.turn_index}: [${f.severity ?? "hard"}][${f.tier}] ${f.name} — expected: ${f.expected}, got: ${f.actual}`,
           )
         }
         if (turn.judge_result && turn.judge_result.verdict === "fail") {
