@@ -44,6 +44,7 @@
     "stress:spike": "k6 run -e K6_PROFILE=spike scripts/k6/launch-flow.js",
     "stress:safety": "k6 run -e K6_PROFILE=safety scripts/k6/launch-flow.js",
     "stress:soak": "k6 run -e K6_PROFILE=soak scripts/k6/launch-flow.js",
+    "perf:mobile": "node scripts/perf/mobile-lighthouse.mjs",
     "paypal:create-resources": "tsx scripts/paypal/create-resources.ts",
     "paypal:validate-plans": "tsx scripts/paypal/validate-plans.ts",
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",

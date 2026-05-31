@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { readFileSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import test from "node:test"
 
 type PackageJson = {
@@ -37,4 +37,11 @@ test("launch stress scripts expose the expected k6 profiles", () => {
     assert.match(script, new RegExp(profileFlag))
     assert.match(script, /scripts\/k6\/launch-flow\.js/)
   }
+})
+
+test("mobile performance script is exposed", () => {
+  const script = packageJson.scripts?.["perf:mobile"] ?? ""
+
+  assert.match(script, /node scripts\/perf\/mobile-lighthouse\.mjs/)
+  assert.equal(existsSync("scripts/perf/mobile-lighthouse.mjs"), true)
 })

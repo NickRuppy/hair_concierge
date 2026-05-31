@@ -101,6 +101,37 @@ Stop the run if any of these happen:
 
 If Vercel edge mitigation appears during a local run, pause testing from that IP and rerun with slower think time or a distributed runner. A single laptop can look more bot-like than 15 real mobile users because all traffic comes from one source IP with perfectly repeated paths.
 
+## Mobile Performance
+
+Run Lighthouse mobile checks for the public launch pages:
+
+```bash
+LH_BASE_URL="https://chaarlie.de" npm run perf:mobile
+```
+
+Defaults:
+
+- paths: `/`, `/quiz`, `/pricing`, `/auth`;
+- output: `tmp/lighthouse/*.report.html` and `tmp/lighthouse/*.report.json`;
+- thresholds: LCP <= 2500ms, CLS <= 0.1, TBT <= 300ms.
+- Lighthouse package: `lighthouse@12.8.2` by default, override with `LH_LIGHTHOUSE_PACKAGE` if needed.
+
+Customize when needed:
+
+```bash
+LH_PATHS="/,/quiz,/result/example" LH_LCP_MS=2500 LH_CLS=0.1 LH_TBT_MS=300 npm run perf:mobile
+```
+
+Lighthouse cannot measure field INP. Use it as the lab responsiveness check, then confirm real-user INP in field analytics once beta traffic starts.
+
+### Current Baseline
+
+First homepage run on May 31, 2026:
+
+- `/`: LCP 5320ms, CLS 0.000, TBT 81ms.
+
+The LCP element was the hero H1 (`Weißt du, was deine Haare wirklich brauchen?`). Lighthouse attributed most of the delay to render delay, not server response time. Treat this as a focused follow-up for font/render/script timing on the landing hero before relying on paid traffic.
+
 ## Manual Companion Checks
 
 Run these manually on mobile Safari/Chrome before and after load:
