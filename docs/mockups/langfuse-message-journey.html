@@ -505,13 +505,13 @@
               <span>production-chat-turn</span>
             </div>
             <div class="mini-node">
-              <strong>2. Tool Loop entscheidet</strong>
-              <span>Guidance, Produkt-Tool, Routine-Tool</span>
+              <strong>2. AgentV2 entscheidet</strong>
+              <span>Responses, CareBalance, Produkt-Tool, Routine-Tool</span>
             </div>
             <div class="mini-node langfuse">
               <span class="pin">3</span>
               <strong>OpenAI wird beobachtet</strong>
-              <span>agentic-tool-loop-step</span>
+              <span>agent-v2-responses-step</span>
             </div>
             <div class="mini-node">
               <strong>3. Antwort streamt</strong>
@@ -661,7 +661,7 @@
           </div>
           <div class="lane-cell server"><div class="event empty"></div></div>
 
-          <div class="lane-label">Agent<small>Tool Loop Runtime</small></div>
+          <div class="lane-label">Agent<small>AgentV2 Responses / CareBalance</small></div>
           <div class="lane-cell agent"><div class="event empty"></div></div>
           <div class="lane-cell agent"><div class="event empty"></div></div>
           <div class="lane-cell agent"><div class="event empty"></div></div>
@@ -679,7 +679,7 @@
               <span class="dock">3</span>
               <div>
                 <h3><code>getObservedOpenAI</code></h3>
-                <p>Langfuse beobachtet <code>agentic-tool-loop-step</code> und Prompt-Version.</p>
+                <p>Langfuse beobachtet <code>agent-v2-responses-step</code> und Prompt-Version.</p>
               </div>
             </div>
           </div>
@@ -920,7 +920,7 @@
               </li>
               <li>
                 <b>Summary</b
-                ><span>Engine Summary, selected_products, agentic_tool_loop_summary</span>
+                ><span>Engine Summary, selected_products, agent_v2_trace</span>
               </li>
               <li><b>Scores</b><span>Daumen-Feedback und Eval Scores</span></li>
             </ul>
