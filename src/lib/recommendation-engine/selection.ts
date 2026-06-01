@@ -39,7 +39,7 @@ import {
   matchShampooProducts,
   matchProducts,
   type MatchedProduct,
-} from "@/lib/rag/product-matcher"
+} from "@/lib/product-matching/matcher"
 import {
   evaluateBondbuilderFit,
   evaluateConditionerFit,

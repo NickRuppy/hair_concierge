@@ -149,10 +149,12 @@ export function QuizResultOfferPageShell({
   name,
   narrative,
   pricingSlot,
+  focusRoutine = false,
 }: {
   name: string
   narrative: QuizResultNarrative
   pricingSlot?: ReactNode
+  focusRoutine?: boolean
 }) {
   const displayName = firstName(name)
 
@@ -220,10 +222,14 @@ export function QuizResultOfferPageShell({
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/60 p-6 text-center">
               <LockKeyhole className="mb-2 size-9 text-[var(--brand-plum)]" />
               <h2 className="font-header text-[22px] font-medium text-[var(--brand-plum-darkest)]">
-                Dein vollständiger 30-Tage-Plan ist fertig
+                {focusRoutine
+                  ? "Der nächste Schritt: deine aktuelle Routine"
+                  : "Dein vollständiger 30-Tage-Plan ist fertig"}
               </h2>
               <p className="mt-2 max-w-[300px] text-[13px] leading-relaxed text-muted-foreground">
-                Mit konkreten Produkten für deine Situation
+                {focusRoutine
+                  ? "Damit Chaarlie später gezielt Produkte, Reihenfolge und Anwendung empfehlen kann."
+                  : "Mit konkreten Produkten für deine Situation"}
               </p>
               <p className="mt-2 text-[12px] italic text-muted-foreground">
                 Ausgearbeitet von Chaarlie.
@@ -339,7 +345,12 @@ export function QuizResultOfferPageShell({
           </table>
         </section>
 
-        <section id="pricing" className="border-t border-border py-8">
+        <section id="pricing" className="scroll-mt-[72px] border-t border-border py-8">
+          {focusRoutine ? (
+            <p className="mb-3 rounded-[12px] bg-[var(--brand-plum-ice)] px-3 py-2 text-center text-[12px] font-bold text-[var(--brand-plum)]">
+              Weiter mit deiner Routine
+            </p>
+          ) : null}
           <p className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[var(--brand-plum)]">
             Dein Plan ist fertig
           </p>
@@ -349,6 +360,12 @@ export function QuizResultOfferPageShell({
           <p className="mx-auto mt-3 max-w-[36ch] text-center text-[16px] leading-[1.6] text-muted-foreground">
             Deine Auswertung zeigt, was möglich ist. Dein Plan zeigt dir wie.
           </p>
+          {focusRoutine ? (
+            <p className="mx-auto mt-3 max-w-[36ch] text-center text-[13px] leading-[1.55] text-muted-foreground">
+              Wir schauen uns an, was du aktuell verwendest, damit Chaarlie gezielter empfehlen
+              kann.
+            </p>
+          ) : null}
           <div className="my-5 rounded-[14px] border border-[rgba(var(--brand-coral-rgb),0.14)] bg-[var(--brand-coral-light)] p-5 text-center">
             <ResultOfferCountdown
               className="flex items-center justify-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-coral)]"
@@ -373,10 +390,14 @@ export function QuizResultOfferPageShell({
         <section className="border-t border-border pb-20 pt-8 text-center">
           <MessageCircle className="mx-auto mb-3 size-8 text-[var(--brand-plum)]" />
           <h2 className="font-header text-[28px] font-medium leading-[1.18] text-[var(--brand-plum-darkest)]">
-            Dein Haar wartet nicht. Starte jetzt.
+            {focusRoutine
+              ? "Mach mit deiner Routine weiter."
+              : "Dein Haar wartet nicht. Starte jetzt."}
           </h2>
           <p className="mx-auto mt-3 max-w-[36ch] text-[14px] leading-[1.6] text-muted-foreground">
-            Dein persönlicher Plan ist fertig. Hol dir jetzt das Sonderangebot.
+            {focusRoutine
+              ? "Deine Haaranalyse ist fertig. Jetzt verstehen wir deine aktuelle Pflege-Routine."
+              : "Dein persönlicher Plan ist fertig. Hol dir jetzt das Sonderangebot."}
           </p>
           <a
             href="#pricing"
@@ -395,17 +416,20 @@ export function QuizResultOfferPage({
   narrative,
   leadId,
   onCheckoutOpen,
+  focusRoutine = false,
 }: {
   name: string
   narrative: QuizResultNarrative
   leadId: string | null
   onCheckoutOpen?: () => void
+  focusRoutine?: boolean
 }) {
   return (
     <QuizResultOfferPageShell
       name={name}
       narrative={narrative}
       pricingSlot={<ResultOfferPricing leadId={leadId} onCheckoutOpen={onCheckoutOpen} />}
+      focusRoutine={focusRoutine}
     />
   )
 }

@@ -60,3 +60,24 @@ test("result offer page shell renders the unified diagnostic offer sections and 
   assert.match(html, /Mein Angebot sichern/i)
   assert.doesNotMatch(html, /ERGEBNIS TEILEN|WHATSAPP|ALS BILD SPEICHERN/i)
 })
+
+test("result offer page shell gates routine-return copy behind focusRoutine", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "wavy",
+    thickness: "normal",
+    fingertest: "rau",
+    pulltest: "stretches_stays",
+    concerns: ["breakage"],
+    goals: ["strengthen"],
+  })
+
+  const html = renderToStaticMarkup(
+    <QuizResultOfferPageShell name="Sarah" narrative={narrative} focusRoutine />,
+  )
+
+  assert.match(html, /Weiter mit deiner Routine/i)
+  assert.match(html, /Der nächste Schritt: deine aktuelle Routine/i)
+  assert.match(html, /was du aktuell verwendest/i)
+  assert.match(html, /Mach mit deiner Routine weiter\./i)
+  assert.doesNotMatch(html, /Dein vollständiger 30-Tage-Plan ist fertig/i)
+})

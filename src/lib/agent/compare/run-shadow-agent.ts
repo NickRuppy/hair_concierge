@@ -13,7 +13,7 @@ import type {
 } from "@/lib/agent/tools/select-products"
 import { createSelectProductsTool } from "@/lib/agent/tools/select-products"
 import { getUserContext } from "@/lib/agent/tools/get-user-context"
-import { loadUserMemoryContext } from "@/lib/rag/user-memory"
+import { loadUserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import type {
   AgentActiveProfileSignal,
   AgentConcern,
@@ -24,7 +24,7 @@ import {
   isActiveProfileSignalField,
   isActiveSignalSelectionEffect,
 } from "@/lib/agent/orchestrator/route-packet"
-import { createDefaultConversationState } from "@/lib/rag/conversation-state"
+import { createDefaultConversationState } from "@/lib/chat-runtime/conversation-state"
 import type { ConversationState, RoutineLayer, RoutineProductCategory } from "@/lib/types"
 import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"
 import type {

@@ -4,7 +4,7 @@ import { buildCareBalanceToolContext } from "@/lib/agent/tools/care-balance-cont
 import { getUserContext } from "@/lib/agent/tools/get-user-context"
 import { createSelectProductsTool } from "@/lib/agent/tools/select-products"
 import type { SelectProductsToolResult } from "@/lib/agent/tools/select-products"
-import { loadUserMemoryContext } from "@/lib/rag/user-memory"
+import { loadUserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
 import { buildRecommendationEngineRuntimeFromPersistence } from "@/lib/recommendation-engine/runtime"
 import type { EffectiveCareContext } from "@/lib/recommendation-engine/types"

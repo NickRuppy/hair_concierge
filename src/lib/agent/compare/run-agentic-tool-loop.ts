@@ -30,7 +30,7 @@ import type {
   SelectProductsToolResult,
 } from "@/lib/agent/tools/select-products"
 import { createSelectProductsTool } from "@/lib/agent/tools/select-products"
-import { loadUserMemoryContext } from "@/lib/rag/user-memory"
+import { loadUserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import type { RecommendationEngineRuntime } from "@/lib/recommendation-engine/runtime"
 import type { ConversationState, RoutineLayer, RoutineProductCategory } from "@/lib/types"
 import { createTestSession, upsertHairProfile } from "../../../../scripts/eval-chat/client"

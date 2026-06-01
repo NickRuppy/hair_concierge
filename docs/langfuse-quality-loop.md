@@ -1,23 +1,23 @@
 # Langfuse Quality Loop
 
-This repo has a Langfuse integration for the production chat path and the
-agentic tool-loop recommendation engine.
+This repo has a Langfuse integration for the production chat path:
+`runAgentV2ProductionPipeline`, backed by the AgentV2 Responses runtime and
+CareBalance-aware product tools.
 
 ## What is live in the app
 
 - One Langfuse trace per chat turn, grouped by conversation ID as the session ID.
-- The production chat route runs `runProductionAgentPipeline`, which uses the
-  `tool_loop` engine.
-- Observed OpenAI generations for current agent prompts:
-  - `agentic-tool-loop-step`
-  - `agentic-tool-loop-contextual-composer` when composer mode is used
-  - legacy bounded-agent route/render generations when Compare Lab or older
-    helper paths use them
+- The production chat route runs `runAgentV2ProductionPipeline`, which calls
+  AgentV2 Responses with CareBalance-backed product and routine context.
+- Observed OpenAI generation name for the current production agent step:
+  - `agent-v2-responses-step`
+- Legacy bounded-agent and tool-loop observations may still appear in Compare
+  Lab or older helper paths, but they are not the production chat route.
 - The root chat observation output includes compact review fields:
   - `response_composition`
   - `engine_summary`
   - `selected_products`
-  - `agentic_tool_loop_summary`
+  - `agent_v2_summary`
 - The full sanitized turn trace is persisted in Supabase
   `conversation_turn_traces`.
 - Prompt linkage for the production chat prompts:
@@ -25,10 +25,7 @@ agentic tool-loop recommendation engine.
   - intent classifier prompt
   - conversation title prompt
   - memory extraction prompt
-  - agent route classifier prompt
-  - agentic tool-loop prompt
-  - agentic contextual composer prompt
-  - agent final render prompt
+  - AgentV2 Responses prompt
 - Prompt fallback behavior if Langfuse is unavailable or a label is missing.
 - Assistant-message thumbs up/down feedback stored locally and sent to Langfuse scores.
 - Eval harness publishing into Langfuse experiments.
@@ -61,7 +58,8 @@ npm run langfuse:sync-prompts
 
 2. Review or relabel the synced versions in Langfuse.
 
-3. Production chat reads managed prompts by label for the agentic model calls.
+3. Production chat reads managed prompts by label for the AgentV2 Responses
+   model calls.
    If that fetch fails, the app falls back to the in-repo prompt text and marks
    the generation metadata as fallback-backed.
 
@@ -109,7 +107,7 @@ The Langfuse experiment stores:
 Pull requests use a tiered quality gate:
 
 - deterministic checks always run: typecheck, lint, build, Node contract tests, Playwright contract tests, and `@ci` smoke tests
-- live chat smoke eval runs only when AI, chat, RAG, routine, recommendation, prompt, or eval-harness paths change
+- live chat smoke eval runs only when AI, AgentV2 chat, memory, routine, recommendation, prompt, or eval-harness paths change
 - dependency manifest changes do not trigger live chat smoke by themselves, so Dependabot PRs do not need OpenAI/Supabase chat secrets unless they also touch AI behavior
 - retrieval metrics run only when retrieval, ingestion, source chunking, Supabase match functions, or retrieval gold-set paths change; until `tests/fixtures/retrieval-gold-set.json` is annotated with real chunk IDs, CI logs this as a skipped gate instead of enforcing placeholder metrics
 - full judged chat evals are manual or scheduled, not required on every PR
@@ -130,29 +128,31 @@ The PR chat smoke suite intentionally stays small to control external API cost a
 
 The retrieval metric gate requires an annotated gold set. The current placeholder value `__ANNOTATE__` is intentionally treated as not enforceable so CI does not report meaningless zero-quality scores as product regressions.
 
-## Agentic Tool Loop Production Status
+## AgentV2 Production Status
 
-The `tool_loop` engine is the production chat path. Compare Lab still exists for
-side-by-side review, but `/api/chat` now routes through the agentic tool loop and
-deterministic recommendation tools.
+`runAgentV2ProductionPipeline` is the production chat path. Compare Lab still
+exists for side-by-side review, but `/api/chat` now routes through AgentV2
+Responses and CareBalance-backed product tools.
 
-For production review, inspect:
+For full persisted trace review, inspect:
 
-- `response_composition.path = agentic_tool_loop`
-- `engine_variant = tool_loop`
-- `router_decision.retrieval_mode = agentic_tool_loop`
-- `agentic_tool_loop.model_steps`
-- `agentic_tool_loop.tool_calls`
-- `agentic_tool_loop.loaded_guidance_ids`
-- `agentic_tool_loop.answer_context_capsule_ids`
-- `agentic_tool_loop.guardrails`
-- `agentic_tool_loop.visible_failure`
+- `response_composition.path = agent_v2_responses`
+- `response_composition.migration_mode = agent_v2_care_balance`
+- `engine_variant = agent_v2_care_balance`
+- `router_decision.retrieval_mode = agent_v2_responses`
+- `agent_v2_trace.model_steps`
+- `agent_v2_trace.tool_calls`
+- `agent_v2_trace.blocked_tool_calls`
+- `agent_v2_trace.loaded_guidance_package_ids`
+- `agent_v2_trace.validation_errors`
+- `agent_v2_trace.validation_warnings`
+- `agent_v2_trace.failure_stage`
 - `decision_context.engine_trace`
 - `decision_context.matched_products`
 
-The main risk buckets are now tool-choice misses, missing or over-broad guidance,
-deterministic engine/category fit regressions, unsupported product-claim wording,
-and visible tool-loop failure handling.
+The main risk buckets are now AgentV2 tool-choice misses, missing or over-broad
+guidance, CareBalance category-fit regressions, unsupported product-claim
+wording, and visible AgentV2 failure handling.
 
 ## GitHub repository settings to confirm
 
@@ -209,16 +209,17 @@ Trace Schema V2 keeps the review-critical decision path in structured fields:
 - `decision_context.engine_trace.damage`: engine damage assessment, including overall level and repair priority.
 - `decision_context.engine_trace.categories`: category-level engine actions. For review, inspect each category's `relevant`, `action`, reason codes, and target profile.
 - `decision_context.matched_products`: selected product traces, including `recommendation_meta` for score, top reasons, tradeoffs, usage hint, and category-specific fit metadata.
-- `agentic_tool_loop`: compact model-step, tool-call, loaded-guidance,
-  answer-context, guardrail, and visible-failure metadata. Raw prompt context and
-  raw guidance bodies are intentionally not persisted here.
+- `agent_v2_trace`: compact model-step, tool-call, blocked-call,
+  loaded-guidance-package, validation, response-id, final-product, and
+  failure-stage metadata. Raw prompt context and raw guidance bodies are
+  intentionally not persisted here.
 - `response_composition`: composer path, migration mode, fallback reason, rendering path, plan type, and attachment mode.
 - `user_feedback`: thumbs feedback and review annotations when present, including `failure_bucket`.
 
 In Langfuse, start from the production dataset item metadata for slicing, then
 open the source trace to inspect the root observation output. Use the linked
 Supabase `conversation_turn_traces` row or admin conversation trace view for the
-full `agentic_tool_loop`, `router_decision`, engine categories, matched product
+full `agent_v2_trace`, `router_decision`, engine categories, matched product
 `recommendation_meta`, `response_composition`, and `user_feedback` details.
 
 ## Review queue setup
@@ -256,10 +257,10 @@ Suggested cadence:
 - `2x` per week: review new thumbs-down traces from the tester cohort.
 - weekly: sample zero-feedback traces across the most active categories.
 - weekly: sample thumbs-up traces as positive references.
-- before a tool-loop rule or prompt change: seed the production dataset and tag the review batch.
+- before an AgentV2 or CareBalance rule/prompt change: seed the production dataset and tag the review batch.
 - after the change: compare the same slicing dimensions against the next tester cohort sample.
 
-Primary slicing dimensions:
+Primary slicing dimensions from Langfuse metadata and the linked full persisted trace:
 
 - `trace_version`
 - `response_composition_path`
@@ -269,11 +270,12 @@ Primary slicing dimensions:
 - `retrieval_mode`
 - `response_mode`
 - `needs_clarification`
-- `agentic_tool_loop.tool_calls[].name`
-- `agentic_tool_loop.loaded_guidance_ids`
-- `agentic_tool_loop.answer_context_capsule_ids`
-- `agentic_tool_loop.guardrails`
-- `agentic_tool_loop.visible_failure`
+- `agent_v2_trace.tool_calls[].name`
+- `agent_v2_trace.blocked_tool_calls[].reason`
+- `agent_v2_trace.loaded_guidance_package_ids`
+- `agent_v2_trace.validation_errors`
+- `agent_v2_trace.validation_warnings`
+- `agent_v2_trace.failure_stage`
 - `engine_damage_level`
 - `engine_repair_priority`
 - `engine_actions.<category>.relevant`

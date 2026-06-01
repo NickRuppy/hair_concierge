@@ -36,7 +36,7 @@ import {
   rerankPeelingProductsWithEngine,
   rerankShampooProductsWithEngine,
 } from "../src/lib/recommendation-engine"
-import type { MatchedProduct } from "../src/lib/rag/product-matcher"
+import type { MatchedProduct } from "../src/lib/product-matching/matcher"
 import {
   LOW_DAMAGE_PROFILE,
   SEVERE_DAMAGE_PROFILE,

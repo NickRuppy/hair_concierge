@@ -8,15 +8,7 @@ import {
   getRoutineAutofillSlots,
   projectRoutinePlanForLayer,
 } from "../src/lib/routines/planner"
-import { applyConversationStateToClassification } from "../src/lib/rag/conversation-state"
-import { evaluateRoute } from "../src/lib/rag/router"
-import { buildSystemPrompt } from "../src/lib/rag/synthesizer"
-import type {
-  ClassificationResult,
-  ContentChunk,
-  ConversationState,
-  HairProfile,
-} from "../src/lib/types"
+import type { HairProfile } from "../src/lib/types"
 
 function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   return {
@@ -49,41 +41,6 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     conversation_memory: null,
     created_at: "2026-04-09T00:00:00.000Z",
     updated_at: "2026-04-09T00:00:00.000Z",
-    ...overrides,
-  }
-}
-
-function createRoutineClassification(
-  overrides: Partial<ClassificationResult> = {},
-): ClassificationResult {
-  return {
-    intent: "routine_help",
-    product_category: "routine",
-    complexity: "multi_constraint",
-    needs_clarification: false,
-    retrieval_mode: "hybrid",
-    normalized_filters: {
-      problem: null,
-      duration: null,
-      products_tried: null,
-      routine: null,
-      special_circumstances: null,
-    },
-    router_confidence: 0.92,
-    ...overrides,
-  }
-}
-
-function createChunk(overrides: Partial<ContentChunk> = {}): ContentChunk {
-  return {
-    id: "chunk-1",
-    source_type: "book",
-    source_name: "Routine Basics",
-    chunk_index: 0,
-    content: "Routine content",
-    token_count: 12,
-    metadata: {},
-    created_at: "2026-04-09T00:00:00.000Z",
     ...overrides,
   }
 }
@@ -169,7 +126,7 @@ test.describe("Routine planner", () => {
 
     expect(leaveInSlot?.id).toBe("maintenance-leave-in")
     expect(leaveInSlot?.action).toBe("add")
-    expect(leaveInSlot?.rationale.join(" ")).toMatch(/ausdrücklich|aufnehmen/i)
+    expect(leaveInSlot?.rationale.join(" ")).toMatch(/ausdruecklich|aufnehmen/i)
     expect(leaveInSlot?.rationale.join(" ")).not.toMatch(/Routine nach dem Waschen runder/i)
     expect(plan.layer_projections?.basics.visible_slot_ids).toEqual([
       "base-shampoo",
@@ -291,7 +248,7 @@ test.describe("Routine planner", () => {
 
     expect(leaveInSlot?.action).toBe("adjust")
     expect(leaveInSlot?.rationale.join(" ")).toMatch(/Routine nach dem Waschen runder/i)
-    expect(leaveInSlot?.rationale.join(" ")).not.toMatch(/ausdrücklich|aufnehmen/i)
+    expect(leaveInSlot?.rationale.join(" ")).not.toMatch(/ausdruecklich|aufnehmen/i)
   })
 
   test("dryness with low oil-risk activates hair oiling", () => {
@@ -381,7 +338,7 @@ test.describe("Routine planner", () => {
       oilSlot?.rationale.some((line) => line.includes("Shampoo zuerst auf trockenes Haar")),
     ).toBe(true)
     expect(oilSlot?.caveats).toContain(
-      "Ätherische Öle (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisöl verdünnen.",
+      "Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.",
     )
   })
 
@@ -402,7 +359,7 @@ test.describe("Routine planner", () => {
       oilSlot?.rationale.every((line) => !line.includes("Shampoo zuerst auf trockenes Haar")),
     ).toBe(true)
     expect(oilSlot?.caveats).not.toContain(
-      "Ätherische Öle (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisöl verdünnen.",
+      "Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.",
     )
   })
 
@@ -427,10 +384,10 @@ test.describe("Routine planner", () => {
 
     expect(oilSlot?.caveats).toHaveLength(2)
     expect(oilSlot?.caveats).toContain(
-      "Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht überladen.",
+      "Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht ueberladen.",
     )
     expect(oilSlot?.caveats).toContain(
-      "Ätherische Öle (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisöl verdünnen.",
+      "Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.",
     )
   })
 
@@ -593,19 +550,6 @@ test.describe("Routine planner", () => {
     })
 
     const plan = buildRoutinePlan(profile, "Was ist der Unterschied zwischen CWC und OWC?")
-    const prompt = buildSystemPrompt(
-      profile,
-      [createChunk()],
-      [],
-      "routine",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      plan,
-      null,
-      undefined,
-    )
     const subqueries = buildRoutineRetrievalSubqueries(
       "Was ist der Unterschied zwischen CWC und OWC?",
       plan,
@@ -616,8 +560,6 @@ test.describe("Routine planner", () => {
     expect(plan.active_topics.map((topic) => topic.id)).not.toContain("cwc")
     expect(subqueries).toContain("CWC")
     expect(subqueries).toContain("OWC")
-    expect(prompt).toContain("Vergleichsmodus")
-    expect(prompt).toContain("kompakten nummerierten Wash-Day-Schritte")
   })
 
   test("explicit CWC on healthy profile uses educational mode", () => {
@@ -714,109 +656,6 @@ test.describe("Routine planner", () => {
       .find((slot) => slot.label === "Maske / Kur")
 
     expect(maskSlot?.action).toBe("avoid")
-  })
-
-  test("router clarifies when the routine frame is still missing", () => {
-    const routerDecision = evaluateRoute(
-      createRoutineClassification({ router_confidence: 0.91 }),
-      [],
-      createProfile({
-        hair_texture: null,
-        concerns: [],
-        goals: [],
-        wash_frequency: null,
-        scalp_type: null,
-        current_routine_products: [],
-      }),
-      [],
-      "Welche Routine passt zu mir?",
-    )
-
-    expect(routerDecision.response_mode).toBe("clarify_only")
-    expect(routerDecision.policy_overrides).toContain("missing_routine_frame")
-  })
-
-  test("router still clarifies when organizer and cadence exist but inventory is missing", () => {
-    const routerDecision = evaluateRoute(
-      createRoutineClassification(),
-      [],
-      createProfile({
-        concerns: ["frizz"],
-        goals: ["less_frizz"],
-        wash_frequency: "every_2_3_days",
-        current_routine_products: [],
-        products_used: null,
-      }),
-      [],
-      "Welche Routine passt zu mir?",
-    )
-
-    expect(routerDecision.response_mode).toBe("clarify_only")
-    expect(routerDecision.policy_overrides).toContain("missing_routine_frame")
-  })
-
-  test("router can proceed once organizer, cadence, and inventory are available from the profile", () => {
-    const routerDecision = evaluateRoute(
-      createRoutineClassification(),
-      [],
-      createProfile({
-        concerns: ["frizz"],
-        goals: ["less_frizz"],
-        wash_frequency: "every_2_3_days",
-        current_routine_products: ["shampoo", "conditioner"],
-      }),
-      [],
-      "Welche Routine passt zu mir?",
-    )
-
-    expect(routerDecision.response_mode).not.toBe("clarify_only")
-    expect(routerDecision.policy_overrides).not.toContain("missing_routine_frame")
-  })
-
-  test("router proceeds when pending routine state receives the missing routine frame", () => {
-    const previousState = {
-      version: 1 as const,
-      active_topic: "routine" as const,
-      routine_layer: "basics" as const,
-      pending_offer: "routine_goals_or_problems" as const,
-      answered_slots: [],
-      last_assistant_action: "asked_routine_basics",
-      last_product_category: null,
-    }
-
-    const corrected = applyConversationStateToClassification({
-      state: previousState,
-      classification: createRoutineClassification({
-        intent: "followup",
-        product_category: null,
-        normalized_filters: {
-          problem: "trockene Spitzen",
-          duration: null,
-          products_tried: "Shampoo und Conditioner",
-          routine: "alle 3 Tage",
-          special_circumstances: null,
-        },
-        router_confidence: 0.58,
-      }),
-      userMessage: "Alle 3 Tage, Shampoo und Conditioner. Meine Spitzen sind trocken.",
-    })
-
-    const routerDecision = evaluateRoute(
-      corrected.classification,
-      [],
-      createProfile({
-        concerns: ["dryness"],
-        goals: ["less_frizz"],
-        wash_frequency: "every_2_3_days",
-        current_routine_products: ["shampoo", "conditioner"],
-      }),
-      [],
-      "Alle 3 Tage, Shampoo und Conditioner. Meine Spitzen sind trocken.",
-    )
-
-    expect(corrected.override).toBe("conversation_state_pending_routine_answer")
-    expect(routerDecision.response_mode).not.toBe("clarify_only")
-    expect(routerDecision.policy_overrides).not.toContain("missing_routine_frame")
   })
 
   test("retrieval hints keep exact topic names and autofill only add or upgrade slots", () => {
@@ -1036,134 +875,6 @@ test.describe("Routine planner", () => {
     expect(refreshSlot?.caveats).toHaveLength(0)
   })
 
-  test("routine system prompt includes the plan, softer avoid wording, and reasoning-first product instructions", () => {
-    const profile = createProfile({
-      current_routine_products: ["shampoo", "conditioner", "mask"],
-      routine_preference: "advanced",
-    })
-    const routinePlan = buildRoutinePlan(profile, "Welche Routine passt zu mir?")
-
-    const prompt = buildSystemPrompt(
-      profile,
-      [createChunk()],
-      [],
-      "routine",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      routinePlan,
-      null,
-      undefined,
-    )
-
-    expect(prompt).toContain("Routine-Plan:")
-    expect(prompt).toContain("Maske / Kur: gerade eher weniger geeignet")
-    expect(prompt).toContain("Begründe pro relevantem Slot erst kurz den Fit zum Profil")
-    expect(prompt).toContain("ordne sie direkt dem gerade erklärten Slot")
-    expect(prompt).toContain(
-      "unterscheide sauber zwischen Kopfhaut-Tiefenreinigung, Haar-Reset und Hard Reset",
-    )
-    expect(prompt).toContain("Tiefenreinigung nie als universellen Pflichtschritt")
-    expect(prompt).not.toContain("Routine-Detailgrad")
-  })
-
-  test("system prompt includes compact conversation state when an active topic exists", () => {
-    const conversationState: ConversationState = {
-      version: 1,
-      active_topic: "routine",
-      routine_layer: "basics",
-      pending_offer: "routine_goals_or_problems",
-      answered_slots: ["routine_frame"],
-      last_assistant_action: "asked_routine_basics",
-      last_product_category: null,
-    }
-
-    const prompt = buildSystemPrompt(
-      createProfile(),
-      [createChunk()],
-      [],
-      "routine",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      null,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      conversationState,
-    )
-
-    expect(prompt).toContain("<conversation_state>")
-    expect(prompt).toContain("Aktives Thema: routine")
-    expect(prompt).toContain("Routine-Ebene: basics")
-    expect(prompt).toContain("Beantwortete Slots: routine_frame")
-  })
-
-  test("system prompt omits conversation state when no active topic exists", () => {
-    const prompt = buildSystemPrompt(
-      createProfile(),
-      [createChunk()],
-      [],
-      "routine",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      null,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      {
-        version: 1,
-        active_topic: null,
-        routine_layer: null,
-        pending_offer: null,
-        answered_slots: [],
-        last_assistant_action: null,
-        last_product_category: null,
-      },
-    )
-
-    expect(prompt).not.toContain("<conversation_state>")
-  })
-
-  test("product prompt uses not-recommended wording for explicit support categories", () => {
-    const prompt = buildSystemPrompt(
-      createProfile(),
-      [createChunk()],
-      [],
-      "bondbuilder",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      null,
-      undefined,
-      undefined,
-      undefined,
-      {
-        category: "bondbuilder",
-        relevant: false,
-        action: null,
-        planReasonCodes: [],
-        currentInventory: null,
-        targetProfile: null,
-        notes: ["bond_builder_low_relevance_currently"],
-      },
-    )
-
-    expect(prompt).toContain("aktuell kein Bondbuilder empfohlen ist")
-    expect(prompt).toContain("nicht als Katalog-No-Match")
-    expect(prompt).not.toContain("Keine passenden Produkte in der Datenbank gefunden")
-  })
-
   test.describe("Bond builder logic", () => {
     test("colored alone does NOT activate bond builder", () => {
       const topics = activateRoutineTopics(
@@ -1249,7 +960,7 @@ test.describe("Routine planner", () => {
         bondSlot?.rationale.some((line) => line.includes("Kombination aus K18 und Olaplex")),
       ).toBe(true)
       expect(
-        bondSlot?.caveats.some((line) => line.includes("professionelles Beratungsgespräch")),
+        bondSlot?.caveats.some((line) => line.includes("professionelles Beratungsgespraech")),
       ).toBe(true)
     })
 
@@ -1288,7 +999,7 @@ test.describe("Routine planner", () => {
         .flatMap((section) => section.slots)
         .find((slot) => slot.id === "occasional-bond-builder")
 
-      expect(bondSlot?.rationale.some((line) => line.includes("K18 (Längsverbindungen)"))).toBe(
+      expect(bondSlot?.rationale.some((line) => line.includes("K18 (Laengsverbindungen)"))).toBe(
         true,
       )
     })
@@ -1307,7 +1018,7 @@ test.describe("Routine planner", () => {
       expect(topicIds).toContain("tiefenreinigung")
 
       const tiefenreinigung = topics.find((topic) => topic.id === "tiefenreinigung")
-      expect(tiefenreinigung?.reason).toContain("Rückstände")
+      expect(tiefenreinigung?.reason).toContain("Rueckstaende")
 
       const hairResetSlot = plan.sections
         .flatMap((section) => section.slots)
@@ -1328,7 +1039,7 @@ test.describe("Routine planner", () => {
         .flatMap((section) => section.slots)
         .find((slot) => slot.id === "occasional-bond-builder")
 
-      expect(bondSlot?.caveats.some((line) => line.includes("steif und spröde"))).toBe(true)
+      expect(bondSlot?.caveats.some((line) => line.includes("steif und sproede"))).toBe(true)
     })
 
     test("protein interaction caveat varies by balance", () => {
@@ -1361,32 +1072,6 @@ test.describe("Routine planner", () => {
         .find((slot) => slot.id === "occasional-bond-builder")
 
       expect(balancedSlot?.caveats.some((line) => line.includes("Feuchtigkeit reicht"))).toBe(true)
-    })
-
-    test("system prompt includes bond builder synth rules when bond_builder is active", () => {
-      const profile = createProfile({
-        cuticle_condition: "rough",
-        concerns: ["hair_damage"],
-        chemical_treatment: ["bleached"],
-      })
-      const routinePlan = buildRoutinePlan(profile, "Welche Routine passt zu mir?")
-
-      const prompt = buildSystemPrompt(
-        profile,
-        [createChunk()],
-        [],
-        "routine",
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        routinePlan,
-        null,
-        undefined,
-      )
-
-      expect(prompt).toContain("nachgewiesener Bond-Technologie")
-      expect(prompt).toContain("Längs- und Querverbindungen")
     })
 
     test("snaps alone activates bond builder via damage signals", () => {
@@ -1448,7 +1133,7 @@ test.describe("Routine planner", () => {
       expect(topicIds).toContain("brush_tools")
       expect(brushSlot?.action).toBe("adjust")
       expect(brushSlot?.rationale.some((line) => line.includes("von unten nach oben"))).toBe(true)
-      expect(brushSlot?.rationale.some((line) => line.includes("Paddle- und Rundbürsten"))).toBe(
+      expect(brushSlot?.rationale.some((line) => line.includes("Paddle- und Rundbuersten"))).toBe(
         true,
       )
     })
@@ -1470,7 +1155,7 @@ test.describe("Routine planner", () => {
       expect(
         brushSlot?.caveats.some((line) => line.includes("gereizter oder schuppiger Kopfhaut")),
       ).toBe(true)
-      expect(brushSlot?.caveats.some((line) => line.includes("Haarausfall oder Ausdünnung"))).toBe(
+      expect(brushSlot?.caveats.some((line) => line.includes("Haarausfall oder Ausduennung"))).toBe(
         true,
       )
     })
@@ -1489,7 +1174,7 @@ test.describe("Routine planner", () => {
         .find((slot) => slot.id === "maintenance-brush-tools")
 
       expect(plan.active_topics.map((topic) => topic.id)).toContain("brush_tools")
-      expect(brushSlot?.rationale.some((line) => line.includes("Sprühflasche"))).toBe(true)
+      expect(brushSlot?.rationale.some((line) => line.includes("Spruehflasche"))).toBe(true)
     })
   })
 

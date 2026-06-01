@@ -7,10 +7,12 @@ import { Pricing } from "@/components/landing/pricing"
 import { Faq } from "@/components/landing/faq"
 import { FinalCta } from "@/components/landing/final-cta"
 import { SiteFooter } from "@/components/landing/site-footer"
+import { LandingTracking } from "@/providers/route-providers"
 
 export default function Home() {
   return (
     <>
+      <LandingTracking />
       <LandingHeader />
       <main>
         <Hero />

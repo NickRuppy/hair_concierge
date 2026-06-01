@@ -79,7 +79,6 @@ export function Hero() {
               alt={TOM.name}
               width={96}
               height={96}
-              priority
               className="h-12 w-12 shrink-0 rounded-full border-2 border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] object-cover object-[52%_18%]"
             />
             <div>

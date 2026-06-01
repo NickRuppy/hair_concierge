@@ -7,7 +7,7 @@ import {
   type SelectedProductsProjection,
 } from "../src/lib/agent/tools/select-products"
 import { inferOilPurposeFromMessage } from "../src/lib/oil/purpose"
-import type { MatchedProduct } from "../src/lib/rag/product-matcher"
+import type { MatchedProduct } from "../src/lib/product-matching/matcher"
 import type { SelectableProductCategory } from "../src/lib/agent/tools/select-products"
 import {
   buildRecommendationEngineRuntimeFromPersistence,

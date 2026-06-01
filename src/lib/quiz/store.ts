@@ -8,18 +8,12 @@ interface QuizState {
   answers: QuizAnswers
   lead: LeadData
   leadId: string | null
-  aiInsight: string | null
-  shareQuote: string | null
-  isAnalyzing: boolean
 
   goNext: () => void
   goBack: () => void
   setAnswer: (key: keyof QuizAnswers, value: string | string[] | boolean | undefined) => void
   setLeadField: <K extends keyof LeadData>(key: K, value: LeadData[K]) => void
   setLeadId: (id: string) => void
-  setAiInsight: (insight: string) => void
-  setShareQuote: (quote: string) => void
-  setIsAnalyzing: (v: boolean) => void
   setLeadCaptureSubStep: (sub: LeadCaptureSubStep) => void
   setStep: (step: QuizStep) => void
   restoreDraft: () => boolean
@@ -48,9 +42,6 @@ const initialState = {
   answers: {} as QuizAnswers,
   lead: { name: "", email: "", marketingConsent: false } as LeadData,
   leadId: null as string | null,
-  aiInsight: null as string | null,
-  shareQuote: null as string | null,
-  isAnalyzing: false,
 }
 
 export const useQuizStore = create<QuizState>((set, get) => ({
@@ -85,9 +76,6 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   setLeadField: (key, value) => set((s) => ({ lead: { ...s.lead, [key]: value } })),
 
   setLeadId: (id) => set({ leadId: id }),
-  setAiInsight: (insight) => set({ aiInsight: insight }),
-  setShareQuote: (quote) => set({ shareQuote: quote }),
-  setIsAnalyzing: (v) => set({ isAnalyzing: v }),
   setLeadCaptureSubStep: (sub) => set({ leadCaptureSubStep: sub }),
   setStep: (step) => set({ step }),
   restoreDraft: () => {

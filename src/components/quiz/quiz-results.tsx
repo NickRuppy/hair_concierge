@@ -4,14 +4,31 @@ import { useCallback, useEffect, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
-import { buildQuizShareConfig } from "@/lib/quiz/share"
 import { useQuizStore } from "@/lib/quiz/store"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { isSubscriptionActive } from "@/lib/stripe/gating"
 import { useAuth } from "@/providers/auth-provider"
-import { useToast } from "@/providers/toast-provider"
 import { QuizResultOfferPage } from "./quiz-result-offer-page"
 import { QuizResultsView } from "./quiz-results-view"
+
+interface ResultArtifactEmailTriggerState {
+  leadId: string | null
+  isCheckingAccess: boolean
+  previouslyTriggeredLeadId: string | null
+  canGoStraightToRoutine: boolean
+}
+
+export function shouldTriggerResultArtifactEmail({
+  leadId,
+  isCheckingAccess,
+  previouslyTriggeredLeadId,
+}: ResultArtifactEmailTriggerState): boolean {
+  if (!leadId) return false
+  if (isCheckingAccess) return false
+  if (previouslyTriggeredLeadId === leadId) return false
+
+  return true
+}
 
 function getSafeReturnToPath(value: string | null): string | null {
   if (!value) return null
@@ -31,9 +48,9 @@ export function QuizResults() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, profile, loading } = useAuth()
-  const { toast } = useToast()
-  const { lead, answers, leadId, shareQuote, goNext } = useQuizStore()
+  const { lead, answers, leadId, goNext } = useQuizStore()
   const checkoutAnalyticsCapturedRef = useRef(false)
+  const resultArtifactEmailLeadRef = useRef<string | null>(null)
   const narrative = buildQuizResultNarrative(answers)
   const returnTo = searchParams.get("returnTo")
   const isRetakeMode = searchParams.get("mode") === "retake"
@@ -58,6 +75,27 @@ export function QuizResults() {
     captureQuizCompleted()
   }, [captureQuizCompleted])
 
+  useEffect(() => {
+    if (
+      !shouldTriggerResultArtifactEmail({
+        leadId,
+        isCheckingAccess: loading || isCheckingSignedInSubscription,
+        previouslyTriggeredLeadId: resultArtifactEmailLeadRef.current,
+        canGoStraightToRoutine,
+      })
+    ) {
+      return
+    }
+
+    resultArtifactEmailLeadRef.current = leadId
+    void fetch("/api/quiz/result-artifact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ leadId }),
+      keepalive: true,
+    }).catch(() => {})
+  }, [canGoStraightToRoutine, isCheckingSignedInSubscription, leadId, loading])
+
   const handleStart = () => {
     captureQuizCompleted()
 
@@ -74,61 +112,6 @@ export function QuizResults() {
     }
 
     goNext()
-  }
-
-  const handleShare = async () => {
-    const share = buildQuizShareConfig({
-      leadId,
-      name: lead.name,
-      shareQuote,
-      origin: window.location.origin,
-      isMobile:
-        window.matchMedia("(max-width: 767px)").matches ||
-        /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent),
-      canNativeShare: typeof navigator !== "undefined" && typeof navigator.share === "function",
-    })
-
-    if (!share) return
-
-    if (share.mode === "native" && navigator.share) {
-      trackAppEvent("result_shared", {
-        leadId: leadId ?? undefined,
-        method: "native",
-        source: "quiz_result",
-      })
-      await navigator
-        .share({
-          title: share.title,
-          text: share.text,
-          url: share.url,
-        })
-        .catch(() => {})
-      return
-    }
-
-    try {
-      await navigator.clipboard.writeText(share.url)
-      trackAppEvent("result_shared", {
-        leadId: leadId ?? undefined,
-        method: "copy_link",
-        source: "quiz_result",
-      })
-      toast({
-        title: "Link kopiert",
-        description: "Du kannst dein Ergebnis jetzt direkt teilen.",
-      })
-    } catch {
-      window.open(share.url, "_blank", "noopener,noreferrer")
-      trackAppEvent("result_shared", {
-        leadId: leadId ?? undefined,
-        method: "open_result",
-        source: "quiz_result",
-      })
-      toast({
-        title: "Ergebnis geöffnet",
-        description: "Teile den Link direkt aus deinem Browser.",
-      })
-    }
   }
 
   if (!canGoStraightToRoutine) {
@@ -161,7 +144,7 @@ export function QuizResults() {
       name={lead.name}
       narrative={{ ...narrative, cta }}
       primaryAction={{ label: cta.label, onClick: handleStart }}
-      secondaryAction={leadId ? { label: "ERGEBNIS TEILEN", onClick: handleShare } : null}
+      secondaryAction={null}
     />
   )
 }

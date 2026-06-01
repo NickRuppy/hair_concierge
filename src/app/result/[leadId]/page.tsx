@@ -1,66 +1,61 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { createClient } from "@supabase/supabase-js"
-import type { QuizAnswers } from "@/lib/quiz/types"
+
 import { ResultPageClient } from "./result-client"
+import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
+import type { QuizAnswers } from "@/lib/quiz/types"
+import { quizAnswersSchema } from "@/lib/quiz/validators"
+import { createAdminClient } from "@/lib/supabase/admin"
+
+export const dynamic = "force-dynamic"
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 interface Props {
   params: Promise<{ leadId: string }>
+  searchParams: Promise<{ focus?: string }>
 }
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+interface LeadResultRow {
+  id: string
+  name: string
+  quiz_answers: unknown
+}
 
-async function getLead(leadId: string) {
-  if (!UUID_RE.test(leadId)) return null
-
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } },
-  )
-
-  const { data } = await supabase
+async function getLeadResult(leadId: string): Promise<LeadResultRow | null> {
+  const supabase = createAdminClient()
+  const { data, error } = await supabase
     .from("leads")
-    .select("id, name, quiz_answers, share_quote")
+    .select("id, name, quiz_answers")
     .eq("id", leadId)
-    .single()
+    .maybeSingle()
 
-  return data
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { leadId } = await params
-  const lead = await getLead(leadId)
-
-  if (!lead) {
-    return { title: "Nicht gefunden — Chaarlie" }
+  if (error) {
+    console.error("[result-page] failed to load lead", error)
+    return null
   }
 
-  const name = lead.name as string
-  const quote = (lead.share_quote as string) || "Finde heraus, was deine Haare wirklich brauchen."
-
-  return {
-    title: `${name}s Haarprofil — Chaarlie`,
-    description: quote,
-    robots: { index: false, follow: false },
-    openGraph: {
-      title: `${name}s Haarprofil — Chaarlie`,
-      description: quote,
-      type: "website",
-    },
-    twitter: {
-      card: "summary",
-      title: `${name}s Haarprofil — Chaarlie`,
-      description: quote,
-    },
-  }
+  return data as LeadResultRow | null
 }
 
-export default async function ResultPage({ params }: Props) {
-  const { leadId } = await params
-  const lead = await getLead(leadId)
+function parseQuizAnswers(raw: unknown): QuizAnswers | null {
+  const normalized = normalizeStoredQuizAnswers((raw as Record<string, unknown> | null) ?? null)
+  const parsed = quizAnswersSchema.safeParse(normalized)
 
-  if (!lead) {
+  return parsed.success ? parsed.data : null
+}
+
+export default async function ResultPage({ params, searchParams }: Props) {
+  const [{ leadId }, sp] = await Promise.all([params, searchParams])
+  const lead = await getLeadResult(leadId)
+  const quizAnswers = lead ? parseQuizAnswers(lead.quiz_answers) : null
+
+  if (!lead || !quizAnswers) {
     notFound()
   }
 
@@ -68,8 +63,8 @@ export default async function ResultPage({ params }: Props) {
     <ResultPageClient
       leadId={lead.id}
       name={lead.name}
-      quizAnswers={lead.quiz_answers as QuizAnswers}
-      shareQuote={lead.share_quote || null}
+      quizAnswers={quizAnswers}
+      focusRoutine={sp.focus === "routine"}
     />
   )
 }

@@ -6,7 +6,7 @@ import {
   backfillLegacyConversationMemory,
   ensureUserMemorySettings,
   listUserMemoryEntries,
-} from "@/lib/rag/user-memory"
+} from "@/lib/chat-runtime/user-memory"
 import { ERR_UNAUTHORIZED, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
 
 const memorySettingsSchema = z.object({
@@ -56,7 +56,7 @@ export async function PATCH(request: Request) {
   if (!parsed.success) {
     return NextResponse.json(
       { error: ERR_INVALID_DATA, details: parsed.error.flatten() },
-      { status: 400 }
+      { status: 400 },
     )
   }
 
@@ -68,7 +68,7 @@ export async function PATCH(request: Request) {
         user_id: user.id,
         memory_enabled: parsed.data.memory_enabled,
       },
-      { onConflict: "user_id" }
+      { onConflict: "user_id" },
     )
     .select("memory_enabled")
     .single()

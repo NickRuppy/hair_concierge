@@ -8,7 +8,7 @@ import {
   selectShampooProductsWithEngine,
   type PersistenceRoutineItemRow,
 } from "@/lib/recommendation-engine"
-import { applyProductMemoryConstraints } from "@/lib/rag/user-memory"
+import { applyProductMemoryConstraints } from "@/lib/chat-runtime/user-memory"
 import { getRoutineAutofillSlots } from "@/lib/routines/planner"
 import type { HairProfile, Product, RoutinePlan, RoutineSlotAdvice } from "@/lib/types"
 

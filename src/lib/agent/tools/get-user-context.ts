@@ -5,7 +5,7 @@ import {
   type RoutineInventoryLike,
 } from "@/lib/hair-profile/derived"
 import { loadRoutineItemsForEngine } from "@/lib/recommendation-engine"
-import { loadUserMemoryContext } from "@/lib/rag/user-memory"
+import { loadUserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import {
   HAIR_TEXTURE_LABELS,
   HAIR_THICKNESS_LABELS,

@@ -69,18 +69,6 @@ function toCustomerIoPayload<E extends AppEventName>(eventName: E, payload: AppE
         step_number: data.stepNumber,
       }
     }
-    case "result_page_viewed": {
-      const data = payload as AppEventMap["result_page_viewed"]
-      return { lead_id: data.leadId }
-    }
-    case "result_shared": {
-      const data = payload as AppEventMap["result_shared"]
-      return {
-        lead_id: data.leadId,
-        method: data.method,
-        source: data.source,
-      }
-    }
     case "subscription_started": {
       const data = payload as AppEventMap["subscription_started"]
       return { checkout_session_id: data.checkoutSessionId }

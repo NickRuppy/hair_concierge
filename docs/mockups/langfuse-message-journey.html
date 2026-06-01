@@ -505,13 +505,13 @@
               <span>production-chat-turn</span>
             </div>
             <div class="mini-node">
-              <strong>2. Tool Loop entscheidet</strong>
-              <span>Guidance, Produkt-Tool, Routine-Tool</span>
+              <strong>2. AgentV2 entscheidet</strong>
+              <span>Responses, CareBalance, Produkt-Tool, Routine-Tool</span>
             </div>
             <div class="mini-node langfuse">
               <span class="pin">3</span>
               <strong>OpenAI wird beobachtet</strong>
-              <span>agentic-tool-loop-step</span>
+              <span>agent-v2-responses-step</span>
             </div>
             <div class="mini-node">
               <strong>3. Antwort streamt</strong>
@@ -546,7 +546,7 @@
 
         <div class="legend">
           <div class="legend-item"><span class="swatch server"></span>Next.js / API Route</div>
-          <div class="legend-item"><span class="swatch agent"></span>Agentic Tool Loop</div>
+          <div class="legend-item"><span class="swatch agent"></span>AgentV2 / CareBalance</div>
           <div class="legend-item">
             <span class="swatch data"></span>Supabase / lokale Trace-Daten
           </div>
@@ -633,8 +633,8 @@
           <div class="lane-cell server">
             <div class="event">
               <div>
-                <h3><code>runProductionAgentPipeline</code></h3>
-                <p>Der aktuelle Produktionspfad ist <code>tool_loop</code>.</p>
+                <h3><code>AgentV2 production chat</code></h3>
+                <p>Der aktuelle Produktionspfad nutzt die <code>CareBalance</code>-Empfehlungslogik.</p>
               </div>
               <span class="arrow">-></span>
             </div>
@@ -661,7 +661,7 @@
           </div>
           <div class="lane-cell server"><div class="event empty"></div></div>
 
-          <div class="lane-label">Agent<small>Tool Loop Runtime</small></div>
+          <div class="lane-label">Agent<small>AgentV2 Responses / CareBalance</small></div>
           <div class="lane-cell agent"><div class="event empty"></div></div>
           <div class="lane-cell agent"><div class="event empty"></div></div>
           <div class="lane-cell agent"><div class="event empty"></div></div>
@@ -679,7 +679,7 @@
               <span class="dock">3</span>
               <div>
                 <h3><code>getObservedOpenAI</code></h3>
-                <p>Langfuse beobachtet <code>agentic-tool-loop-step</code> und Prompt-Version.</p>
+                <p>Langfuse beobachtet <code>agent-v2-responses-step</code> und Prompt-Version.</p>
               </div>
             </div>
           </div>
@@ -798,7 +798,7 @@
               <span class="dock">6</span>
               <div>
                 <h3>Root Output</h3>
-                <p>Antwort-Vorschau, Produkte, Engine Summary, Tool-Loop Summary.</p>
+                <p>Antwort-Vorschau, Produkte, Engine Summary, AgentV2 Summary.</p>
               </div>
             </div>
           </div>
@@ -846,11 +846,10 @@
           <article class="dock-card" data-number="3">
             <h3>Prompt- und LLM-Beobachtung</h3>
             <p>
-              Der Model Client laedt verwaltete Agent-Prompts aus Langfuse und umhuellt OpenAI mit
-              <code>getObservedOpenAI</code>.
+              Die AgentV2-Produktionspipeline laedt den verwalteten Responses-Prompt und umhuellt
+              OpenAI mit <code>getObservedOpenAI</code> fuer <code>agent-v2-responses-step</code>.
             </p>
-            <span class="file-ref">src/lib/agent/orchestrator/model-client.ts:206-235</span>
-            <span class="file-ref">src/lib/agent/orchestrator/model-client.ts:312-330</span>
+            <span class="file-ref">src/lib/agent-v2/production/chat-pipeline.ts:453-480</span>
           </article>
 
           <article class="dock-card" data-number="4">
@@ -875,7 +874,7 @@
             <h3>Langfuse Root Output</h3>
             <p>
               Am Ende werden Produktanzahl, Antwort-Vorschau, Engine Summary, selected products und
-              Tool-Loop Summary an Langfuse geschrieben.
+              AgentV2 Summary an Langfuse geschrieben.
             </p>
             <span class="file-ref">src/app/api/chat/route.ts:571-585</span>
           </article>
@@ -920,7 +919,7 @@
               </li>
               <li>
                 <b>Summary</b
-                ><span>Engine Summary, selected_products, agentic_tool_loop_summary</span>
+                ><span>Engine Summary, selected_products, agent_v2_summary</span>
               </li>
               <li><b>Scores</b><span>Daumen-Feedback und Eval Scores</span></li>
             </ul>
@@ -933,7 +932,7 @@
                 <b>Full Turn</b><span><code>conversation_turn_traces.trace</code></span>
               </li>
               <li>
-                <b>Tool Loop</b><span>model_steps, tool_calls, guardrails, visible_failure</span>
+                <b>AgentV2</b><span>model_steps, tool_calls, blocked_tool_calls, failure_stage</span>
               </li>
               <li>
                 <b>Engine</b
