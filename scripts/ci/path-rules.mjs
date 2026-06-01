@@ -12,7 +12,10 @@ const CHAT_PREFIXES = [
   "scripts/eval-chat/",
 ]
 
-const CHAT_EXACT = ["docs/langfuse-quality-loop.md"]
+const CHAT_EXACT = [
+  "docs/langfuse-quality-loop.md",
+  "src/lib/product-matching/matcher.ts",
+]
 
 const RETRIEVAL_PREFIXES = [
   "src/lib/rag/retrieval/",
