@@ -1,5 +1,5 @@
-import { PublicFlowProviders } from "@/providers/route-providers"
+import { PublicAuthFlowProviders } from "@/providers/route-providers"
 
 export default function WelcomeLayout({ children }: { children: React.ReactNode }) {
-  return <PublicFlowProviders>{children}</PublicFlowProviders>
+  return <PublicAuthFlowProviders>{children}</PublicAuthFlowProviders>
 }

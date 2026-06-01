@@ -36,10 +36,26 @@ export function PublicFlowProviders({ children }: { children: React.ReactNode })
   )
 }
 
+export function PublicAuthFlowProviders({ children }: { children: React.ReactNode }) {
+  return (
+    <MetaPixelProvider>
+      <AuthProvider>
+        <CustomerIoProvider>
+          <PostHogClientProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </PostHogClientProvider>
+        </CustomerIoProvider>
+      </AuthProvider>
+    </MetaPixelProvider>
+  )
+}
+
 export function LandingTracking() {
   return (
     <MetaPixelProvider>
-      <CustomerIoProvider>{null}</CustomerIoProvider>
+      <CustomerIoProvider>
+        <PostHogClientProvider>{null}</PostHogClientProvider>
+      </CustomerIoProvider>
     </MetaPixelProvider>
   )
 }

@@ -1,6 +1,7 @@
 "use client"
 
-import { Suspense, useEffect, useRef, useState } from "react"
+import { AnalyticsBrowser } from "@customerio/cdp-analytics-browser"
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 import { COOKIE_CONSENT_CHANGE_EVENT, loadConsent, type CookieConsent } from "@/lib/cookie-consent"
 import {
@@ -65,37 +66,24 @@ export function CustomerIoProvider({ children }: { children: React.ReactNode }) 
   const [enabled, setEnabled] = useState(false)
   const clientInstalledRef = useRef(false)
 
-  useEffect(() => {
-    let disposed = false
-    let wantsTracking = false
-
-    const installClient = async () => {
-      if (clientInstalledRef.current) return true
-      const { AnalyticsBrowser } = await import("@customerio/cdp-analytics-browser")
-      if (disposed) return false
+  useLayoutEffect(() => {
+    const installClient = () => {
+      if (clientInstalledRef.current) return
       const client = AnalyticsBrowser.load({
         cdnURL: CUSTOMERIO_CDN_URL,
         writeKey: CUSTOMERIO_WRITE_KEY,
       }) as CustomerIoBrowserClient
       setCustomerIoBrowserClient(client)
       clientInstalledRef.current = true
-      return true
     }
 
     const syncConsent = (consent: CookieConsent | null) => {
       const canTrack = canUseCustomerIoBrowserTracking(consent, CUSTOMERIO_WRITE_KEY)
-      wantsTracking = canTrack
+      setEnabled(canTrack)
 
       if (canTrack) {
-        void installClient()
-          .then((installed) => {
-            if (!disposed && wantsTracking && installed) setEnabled(true)
-          })
-          .catch(() => {
-            if (!disposed) setEnabled(false)
-          })
+        installClient()
       } else {
-        setEnabled(false)
         resetCustomerIoBrowserClient()
         clearCustomerIoBrowserClient()
         clientInstalledRef.current = false
@@ -111,10 +99,7 @@ export function CustomerIoProvider({ children }: { children: React.ReactNode }) 
     }
 
     window.addEventListener(COOKIE_CONSENT_CHANGE_EVENT, handleConsentChange)
-    return () => {
-      disposed = true
-      window.removeEventListener(COOKIE_CONSENT_CHANGE_EVENT, handleConsentChange)
-    }
+    return () => window.removeEventListener(COOKIE_CONSENT_CHANGE_EVENT, handleConsentChange)
   }, [])
 
   return (
