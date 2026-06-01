@@ -16,7 +16,7 @@ AgentV2 Responses plus CareBalance recommendation engine.
   - `response_composition`
   - `engine_summary`
   - `selected_products`
-  - `agent_v2_trace`
+  - `agent_v2_summary`
 - The full sanitized turn trace is persisted in Supabase
   `conversation_turn_traces`.
 - Prompt linkage for the production chat prompts:
@@ -132,7 +132,7 @@ AgentV2 Responses with CareBalance is the production chat path. Compare Lab
 still exists for side-by-side review, but `/api/chat` now routes through AgentV2
 Responses and the CareBalance recommendation context.
 
-For production review, inspect:
+For full persisted trace review, inspect:
 
 - `response_composition.path = agent_v2_responses`
 - `response_composition.migration_mode = agent_v2_care_balance`
@@ -256,7 +256,7 @@ Suggested cadence:
 - before a tool-loop rule or prompt change: seed the production dataset and tag the review batch.
 - after the change: compare the same slicing dimensions against the next tester cohort sample.
 
-Primary slicing dimensions:
+Primary slicing dimensions from Langfuse metadata and the linked full persisted trace:
 
 - `trace_version`
 - `response_composition_path`
