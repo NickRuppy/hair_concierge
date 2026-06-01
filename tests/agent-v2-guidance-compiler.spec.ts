@@ -411,7 +411,7 @@ test("Deep cleansing guidance preserves reset lanes and conservative boundaries"
   assert.match(markdown, /co-washing|CWC|OWC|oiling/i)
   assert.match(markdown, /daily cleansing|baseline shampoo replacement/i)
   assert.match(markdown, /structural repair|hair-loss|color fade/i)
-  assert.match(markdown, /Rueckstands-Reset/)
+  assert.match(markdown, /Rückstands-Reset/)
   assert.ok(
     metadata.hard_rules.some(
       (rule) => rule.rule_id === "category.deep_cleansing.keep_reset_lanes_separate",
@@ -519,7 +519,7 @@ test("core wash care category guidance preserves old fit boundaries", () => {
   assert.match(conditioner, /dry lengths are not automatically dry scalp/i)
   assert.match(conditioner, /conditioner can provide slip for detangling/i)
   assert.match(conditioner, /CWC\/OWC/i)
-  assert.match(conditioner, /CWC heisst Conditioner-Shampoo-Conditioner/i)
+  assert.match(conditioner, /CWC heißt Conditioner-Shampoo-Conditioner/i)
   assert.match(conditioner, /conditioner before shampoo/i)
   assert.match(conditioner, /OWC is the heavier oil-wash-conditioner route/i)
   assert.match(conditioner, /Balanced category comparisons/i)
@@ -590,8 +590,8 @@ test("wash length category guidance encodes product detail and routine boundarie
   assert.match(shampoo, /stubborn buildup|waxy\/coated|hard-water|nothing gets.*clean/i)
   assert.match(shampoo, /Scalp Symptom Threshold/i)
 
-  assert.match(conditioner, /Welche Art von Spuelung/i)
-  assert.match(conditioner, /Welche Spuelung passt/i)
+  assert.match(conditioner, /Welche Art von Spülung/i)
+  assert.match(conditioner, /Welche Spülung passt/i)
   assert.match(conditioner, /raw CWC\/OWC|CWC\/OWC acronyms/i)
 
   assert.match(leaveIn, /Heat Protection Boundary/i)
@@ -617,7 +617,7 @@ test("Mask guidance preserves old length-care and cadence boundaries", () => {
   assert.match(markdown, /lengths and ends/i)
   assert.match(markdown, /conditioner is usually the everyday/i)
   assert.match(markdown, /protein\/moisture/i)
-  assert.match(markdown, /gelegentlich|alle paar Waeschen|bei Bedarf|flexible starting point/i)
+  assert.match(markdown, /gelegentlich|alle paar Wäschen|bei Bedarf|flexible starting point/i)
   assert.match(markdown, /permanently repair split ends|permanent split-end repair/i)
   assert.ok(
     metadata.hard_rules.some(
@@ -974,8 +974,8 @@ test("compiled product-detail guidance uses user-facing unsupported-claim fallba
     /Never expose raw\/internal phrases such as `Im Katalog ist kein Claim hinterlegt`/i,
   )
   assert.match(brief, /translate missing metadata into user-facing language/i)
-  assert.match(brief, /Das kann ich fuer diese Variante nicht sicher versprechen/i)
-  assert.match(brief, /Sicher beruecksichtigen kann ich aktuell/i)
+  assert.match(brief, /Das kann ich für diese Variante nicht sicher versprechen/i)
+  assert.match(brief, /Sicher berücksichtigen kann ich aktuell/i)
   assert.match(brief, /generic attributes, safe uncertainty, or ask for a supported exact variant/i)
   assert.match(brief, /do not invite photo or link checks/i)
   assert.match(brief, /current tooling can actually process and ground them/i)
@@ -1104,12 +1104,12 @@ test("general advice preserves usage, troubleshooting, and CWC/OWC context", asy
   assert.match(brief, /scalp\/roots from lengths\/ends/i)
   assert.match(brief, /optional second wash/i)
   assert.match(brief, /keep the wording flexible/i)
-  assert.match(brief, /alle paar Waeschen/i)
+  assert.match(brief, /alle paar Wäschen/i)
   assert.match(brief, /Exact timing, product order, and protocol still require product metadata/i)
   assert.match(brief, /Troubleshooting Before Shopping/i)
   assert.match(brief, /root care from length care/i)
   assert.match(brief, /CWC and OWC are wash techniques/i)
-  assert.match(brief, /CWC heisst Conditioner-Shampoo-Conditioner/i)
+  assert.match(brief, /CWC heißt Conditioner-Shampoo-Conditioner/i)
   assert.match(brief, /OWC is the heavier oil-wash-conditioner route/i)
   assert.match(brief, /German Copy Fit/i)
   assert.match(brief, /starkes Brechen/i)
@@ -1162,7 +1162,7 @@ test("routine guidance preserves lean assembly and life-fit rules", async () => 
   assert.match(brief, /what to do next/i)
   assert.match(brief, /pure placement, order, usage/i)
   assert.match(brief, /rebalance, or make a routine lighter\/easier/i)
-  assert.match(brief, /fuege \.\.\. ein/i)
+  assert.match(brief, /füge \.\.\. ein/i)
   assert.match(brief, /do not hand-roll a multi-step routine/i)
   assert.match(brief, /Broad education remains general advice/i)
   assert.ok(
@@ -1273,7 +1273,7 @@ test("routine-first category steering preserves placement and lightweight add-on
     ),
   )
 
-  assert.match(oil, /Maske oder Oel\?/i)
+  assert.match(oil, /Maske oder Öl\?/i)
   assert.match(oil, /do not make oil the main care add-on/i)
   assert.ok(
     oilMetadata.hard_rules.some(

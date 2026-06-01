@@ -1890,7 +1890,7 @@ test("engine bondbuilder reranking attaches optional add-ons for severe combo ca
       product_id: "olaplex-0",
       name: "OLAPLEX No.0 Intensive Bond Building Treatment",
       usage_protocol: "olaplex_0_booster",
-      reason: "Optionaler Booster fuer sehr starke Schaedigung vor No.3PLUS.",
+      reason: "Optionaler Booster für sehr starke Schädigung vor No.3PLUS.",
     },
   )
 })

@@ -3,8 +3,12 @@ import test from "node:test"
 
 import { projectRoutineForAgentV2 } from "../src/lib/agent-v2/tools/routine-projection"
 import { projectSelectProductsForAgentV2 } from "../src/lib/agent-v2/tools/select-products-projection"
+import type { AgentV2RoutineLayer } from "../src/lib/agent-v2/contracts"
 import type { BuildOrFixRoutineProjection } from "../src/lib/agent/tools/build-or-fix-routine"
 import type { SelectProductsToolResult } from "../src/lib/agent/tools/select-products"
+
+const ASCII_GERMAN_PROMPT_VARIANTS =
+  /\b(?:Moechtest|Naechstes|naeherbringt|loest|moechtest|koennen|fuer|zurueckgehen|naechsten)\b/
 
 test("projectSelectProductsForAgentV2 exposes product ids and supported claims", () => {
   const input = {
@@ -14,7 +18,7 @@ test("projectSelectProductsForAgentV2 exposes product ids and supported claims",
       product_response_policy: "recommend",
       policy_reason: "Profile and category fit.",
       profile_basis: ["Haardicke: fein", "Kopfhaut: fettig"],
-      category_guidance: "Shampoo wirkt primaer an der Kopfhaut.",
+      category_guidance: "Shampoo wirkt primär an der Kopfhaut.",
       products: [
         {
           rank: 1,
@@ -23,7 +27,7 @@ test("projectSelectProductsForAgentV2 exposes product ids and supported claims",
           brand: "Brand",
           price_eur: 12.5,
           currency: "EUR",
-          fit_reason: "Reinigt leicht ohne die Laengen zu beschweren.",
+          fit_reason: "Reinigt leicht ohne die Längen zu beschweren.",
           caveat: null,
           supported_claims: [
             {
@@ -61,7 +65,7 @@ test("projectSelectProductsForAgentV2 exposes advertised comparison facts", () =
       product_response_policy: "recommend",
       policy_reason: "Profile and category fit.",
       profile_basis: ["Haardicke: fein"],
-      category_guidance: "Conditioner wirkt primaer in den Laengen.",
+      category_guidance: "Conditioner wirkt primär in den Längen.",
       products: [
         {
           rank: 1,
@@ -118,8 +122,8 @@ test("projectRoutineForAgentV2 explains basics layer and product policy", () => 
         necessity: "core",
         action: "add",
         category: "conditioner",
-        frequency: "nach jeder Waesche",
-        reasons: ["Pflegt die Laengen."],
+        frequency: "nach jeder Wäsche",
+        reasons: ["Pflegt die Längen."],
         caveats: [],
         fillable: true,
       },
@@ -129,8 +133,8 @@ test("projectRoutineForAgentV2 explains basics layer and product policy", () => 
         necessity: "recommended",
         action: "add",
         category: "leave_in",
-        frequency: "nach der Waesche",
-        reasons: ["Groesster Zusatzhebel fuer Frizz."],
+        frequency: "nach der Wäsche",
+        reasons: ["Größter Zusatzhebel für Frizz."],
         caveats: [],
         fillable: true,
       },
@@ -140,7 +144,7 @@ test("projectRoutineForAgentV2 explains basics layer and product policy", () => 
       selected_label: "Leave-in",
       selected_category: "leave_in",
       selected_role: "everyday_maintenance",
-      selected_reason: "Groesster Zusatzhebel fuer Frizz.",
+      selected_reason: "Größter Zusatzhebel für Frizz.",
       adjacent_levers: [],
     },
   }
@@ -151,6 +155,53 @@ test("projectRoutineForAgentV2 explains basics layer and product policy", () => 
   assert.deepEqual(output.next_layer_options, ["goals", "problems"])
   assert.equal(output.product_request_policy.default, "do_not_name_products")
   assert.equal(output.visible_steps.length, 3)
+  assert.equal(output.visible_steps[2]?.display_role, "Nächster Hebel")
+  assert.equal(
+    output.conversation_prompt_de,
+    "Möchtest du als Nächstes eher sehen, was dich deinen Zielen näherbringt, oder was konkrete Probleme löst?",
+  )
+  assert.doesNotMatch(output.conversation_prompt_de, ASCII_GERMAN_PROMPT_VARIANTS)
+})
+
+test("projectRoutineForAgentV2 exposes standard German prompts for every routine layer", () => {
+  const input: BuildOrFixRoutineProjection = {
+    objective: "build_routine",
+    confidence: 0.9,
+    missing_info: [],
+    steps: [
+      {
+        id: "priority-leave-in",
+        label: "Leave-in",
+        necessity: "recommended",
+        action: "add",
+        category: "leave_in",
+        frequency: "nach der Wäsche",
+        reasons: ["Größter Zusatzhebel für Frizz."],
+        caveats: [],
+        fillable: true,
+      },
+    ],
+    priority_context: null,
+  }
+
+  const expectedPrompts: Record<AgentV2RoutineLayer, string> = {
+    basics:
+      "Möchtest du als Nächstes eher sehen, was dich deinen Zielen näherbringt, oder was konkrete Probleme löst?",
+    goals:
+      "Wenn du möchtest, können wir danach die konkrete Produktauswahl für den wichtigsten Ziel-Hebel anschauen.",
+    problems:
+      "Wenn du möchtest, können wir danach den wichtigsten Problem-Hebel als Produkt-Deep-Dive anschauen.",
+    deep_dive: "Danach können wir zur Routine zurückgehen und den nächsten Hebel einordnen.",
+  }
+
+  for (const [layer, expectedPrompt] of Object.entries(expectedPrompts) as Array<
+    [AgentV2RoutineLayer, string]
+  >) {
+    const output = projectRoutineForAgentV2(input, { requestedLayer: layer })
+
+    assert.equal(output.conversation_prompt_de, expectedPrompt)
+    assert.doesNotMatch(output.conversation_prompt_de, ASCII_GERMAN_PROMPT_VARIANTS)
+  }
 })
 
 test("projectRoutineForAgentV2 translates internal leave-in finish labels for user-facing context", () => {
@@ -165,7 +216,7 @@ test("projectRoutineForAgentV2 translates internal leave-in finish labels for us
         necessity: "recommended",
         action: "add",
         category: "leave_in",
-        frequency: "nach der Waesche",
+        frequency: "nach der Wäsche",
         reasons: ["Ein Leave-in oder Finish-Schritt macht die Routine nach dem Waschen runder."],
         caveats: [],
         fillable: true,

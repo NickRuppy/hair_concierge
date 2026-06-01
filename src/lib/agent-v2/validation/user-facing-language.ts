@@ -1,4 +1,5 @@
 import type { AgentV2TerminalAnswer, AgentV2ValidationError } from "@/lib/agent-v2/contracts"
+import { hasAsciiGermanOrthography } from "@/lib/german-orthography/ascii-transliterations"
 
 interface UserFacingLanguageValidationContext {
   latestUserMessage: string
@@ -68,6 +69,16 @@ export function validateUserFacingLanguage(
         validator_id: "user_facing_catalog_metadata_phrasing",
         message:
           "User-facing prose uses catalog or metadata classification phrasing; prefer practical implications in natural German.",
+        severity: "warn",
+        path: text.path,
+      })
+    }
+
+    if (hasAsciiGermanOrthography(text.value)) {
+      findings.push({
+        validator_id: "user_facing_ascii_german_orthography",
+        message:
+          "User-facing German uses ASCII umlaut transliterations; prefer standard German orthography with umlauts and ß.",
         severity: "warn",
         path: text.path,
       })

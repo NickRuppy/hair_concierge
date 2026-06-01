@@ -19,7 +19,7 @@ import type { MatchedProduct } from "@/lib/rag/product-matcher"
 const CONDITIONER_CLARIFICATION_QUESTIONS: Record<ConditionerProfileField, string> = {
   thickness: "Ist dein Haar eher fein, mittel oder dick?",
   protein_moisture_balance:
-    "Hast du mal den Zugtest gemacht? Einzelnes Haar ziehen - bricht es direkt, dehnt es sich, oder federt es zurueck?",
+    "Hast du mal den Zugtest gemacht? Einzelnes Haar ziehen - bricht es direkt, dehnt es sich, oder federt es zurück?",
 }
 
 const CONDITIONER_FIELD_ORDER: ConditionerProfileField[] = ["thickness", "protein_moisture_balance"]
@@ -213,7 +213,7 @@ function scoreWeightFit(
   ) {
     return {
       points: -12,
-      negative: "Fuer feines Haar mit geringer Dichte wahrscheinlich zu reichhaltig.",
+      negative: "Für feines Haar mit geringer Dichte wahrscheinlich zu reichhaltig.",
     }
   }
 
@@ -231,13 +231,13 @@ function scoreWeightFit(
   if (distance === 1) {
     return {
       points: 5,
-      positive: "Das Gewicht ist eine brauchbare Naeheoption fuer dein Haarprofil.",
+      positive: "Das Gewicht ist eine brauchbare Näheoption für dein Haarprofil.",
     }
   }
 
   return {
     points: -7,
-    negative: "Das Gewicht ist fuer dein Haarprofil eher nicht die erste Wahl.",
+    negative: "Das Gewicht ist für dein Haarprofil eher nicht die erste Wahl.",
   }
 }
 
@@ -262,34 +262,34 @@ function scoreRepairFit(
     if (actualIndex > expectedIndex) {
       return {
         points: -3,
-        negative: "Pflegt reparierender als aktuell noetig.",
+        negative: "Pflegt reparierender als aktuell nötig.",
       }
     }
     return {
       points: -5,
-      negative: "Koennte fuer deinen aktuellen Reparaturbedarf etwas zu leicht sein.",
+      negative: "Könnte für deinen aktuellen Reparaturbedarf etwas zu leicht sein.",
     }
   }
 
   if (actualIndex > expectedIndex) {
     return {
       points: -6,
-      negative: "Fuer dein Profil wahrscheinlich reparierender als noetig.",
+      negative: "Für dein Profil wahrscheinlich reparierender als nötig.",
     }
   }
 
   return {
     points: -9,
-    negative: "Fuer deinen aktuellen Reparaturbedarf wahrscheinlich nicht intensiv genug.",
+    negative: "Für deinen aktuellen Reparaturbedarf wahrscheinlich nicht intensiv genug.",
   }
 }
 
 function buildUsageHint(decision: ConditionerDecision): string {
   if (decision.matched_repair_level === "high") {
-    return "In die Laengen und Spitzen geben, 2-3 Minuten einwirken lassen und gruendlich ausspuelen."
+    return "In die Längen und Spitzen geben, 2-3 Minuten einwirken lassen und gründlich ausspülen."
   }
 
-  return "In die Laengen und Spitzen geben, kurz einarbeiten und gruendlich ausspuelen."
+  return "In die Längen und Spitzen geben, kurz einarbeiten und gründlich ausspülen."
 }
 
 export function rerankConditionerProducts(
@@ -321,7 +321,7 @@ export function rerankConditionerProducts(
     if (decision.matched_profile.thickness) {
       positives.push({
         points: 6,
-        reason: `Ist fuer ${THICKNESS_REASON_LABELS[decision.matched_profile.thickness]} Haar eingeordnet.`,
+        reason: `Ist für ${THICKNESS_REASON_LABELS[decision.matched_profile.thickness]} Haar eingeordnet.`,
       })
     }
 
@@ -344,7 +344,7 @@ export function rerankConditionerProducts(
     if (!spec) {
       negatives.push({
         points: 0,
-        reason: "Fuer dieses Produkt fehlt noch die volle Conditioner-Spezifikation.",
+        reason: "Für dieses Produkt fehlt noch die volle Conditioner-Spezifikation.",
       })
     }
 

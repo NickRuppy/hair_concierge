@@ -114,8 +114,8 @@ test("buildUserContextProjection exposes visible profile signals for response fr
   })
 
   assert.ok(projection.derived_signals.includes("Schnell fettender Ansatz"))
-  assert.ok(projection.derived_signals.includes("Trockene Laengen"))
-  assert.ok(projection.derived_signals.includes("Frizzige Laengen"))
+  assert.ok(projection.derived_signals.includes("Trockene Längen"))
+  assert.ok(projection.derived_signals.includes("Frizzige Längen"))
   assert.ok(projection.derived_signals.includes("Protein-/Feuchtigkeitsbalance: Proteinmangel"))
   assert.ok(projection.derived_signals.includes("Aktuelle Routine: Shampoo, Conditioner"))
 })

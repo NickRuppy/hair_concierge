@@ -97,7 +97,7 @@ test.describe("Conditioner reranker", () => {
 
     expect(buildConditionerClarificationQuestions(decision)).toEqual([
       "Ist dein Haar eher fein, mittel oder dick?",
-      "Hast du mal den Zugtest gemacht? Einzelnes Haar ziehen - bricht es direkt, dehnt es sich, oder federt es zurueck?",
+      "Hast du mal den Zugtest gemacht? Einzelnes Haar ziehen - bricht es direkt, dehnt es sich, oder federt es zurück?",
     ])
   })
 
@@ -284,7 +284,7 @@ test.describe("Conditioner reranker", () => {
     expect(results.map((product) => product.id)).toEqual(["first", "second"])
     expect(results[0]?.conditioner_specs ?? null).toBeNull()
     expect(results[0]?.recommendation_meta?.tradeoffs).toContain(
-      "Fuer dieses Produkt fehlt noch die volle Conditioner-Spezifikation.",
+      "Für dieses Produkt fehlt noch die volle Conditioner-Spezifikation.",
     )
   })
 
@@ -329,10 +329,10 @@ test.describe("Conditioner reranker", () => {
   })
 
   test("intent prompt routes Haarkur to mask instead of conditioner", () => {
-    expect(INTENT_CLASSIFICATION_PROMPT).toContain("- conditioner: Conditioner, Spuelung")
+    expect(INTENT_CLASSIFICATION_PROMPT).toContain("- conditioner: Conditioner, Spülung")
     expect(INTENT_CLASSIFICATION_PROMPT).toContain("- mask: Haarmaske, Haarkur, Tiefenpflege")
     expect(INTENT_CLASSIFICATION_PROMPT).not.toContain(
-      "- conditioner: Conditioner, Spuelung, Haarkur",
+      "- conditioner: Conditioner, Spülung, Haarkur",
     )
   })
 

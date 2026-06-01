@@ -191,7 +191,7 @@ Then explain:
 3. the usage note: after washing, sparingly, lengths and ends, away from roots for fine/oily hair
 4. whether heat protection, conditioner replacement, fragrance/fragrance-free status, or product recommendations require grounded product selection
 
-Use simple German terms like `Leave-in`, `Booster`, `Laengen und Spitzen`, `sparsam`, `Hitzeschutz`, and `nicht an den Ansatz`.
+Use simple German terms like `Leave-in`, `Booster`, `Längen und Spitzen`, `sparsam`, `Hitzeschutz`, and `nicht an den Ansatz`.
 
 For drying-method wording, prefer `Routine beim Lufttrocknen` or `beim Lufttrocknen` instead of mixed-language phrases like `Air-Dry-Routine`.
 

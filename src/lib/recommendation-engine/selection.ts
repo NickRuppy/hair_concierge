@@ -314,7 +314,7 @@ function buildFitSummary(
 }
 
 function buildShampooUsageHint(): string {
-  return "Im ersten Waschgang auf die Kopfhaut geben, gruendlich einmassieren und danach sauber ausspuelen."
+  return "Im ersten Waschgang auf die Kopfhaut geben, gründlich einmassieren und danach sauber ausspülen."
 }
 
 function markShampooFallback(product: ScoredShampooProduct): ScoredShampooProduct {
@@ -436,14 +436,14 @@ function buildShampooTopReasons(
   if (fit.status === "supportive" || fit.status === "ideal") {
     positives.push(
       matchedBucket && matchedBucket === decision.targetProfile?.secondaryBucket
-        ? "Ergaenzt den Hauptfokus sinnvoll ueber die geplante Rotation."
+        ? "Ergänzt den Hauptfokus sinnvoll über die geplante Rotation."
         : "Passt zum eingeordneten Kopfhaut-Fokus.",
     )
   }
 
   if (fit.status === "unknown") {
     tradeoffs.push(
-      "Die Shampoo-Spezifikation ist noch nicht vollstaendig genug fuer eine feinere Fit-Einstufung.",
+      "Die Shampoo-Spezifikation ist noch nicht vollständig genug für eine feinere Fit-Einstufung.",
     )
   }
   if (fit.status === "mismatch") {
@@ -454,7 +454,7 @@ function buildShampooTopReasons(
     fit.reasonCodes.some((reasonCode) => reasonCode.includes("cleansing_intensity_mismatch"))
   ) {
     tradeoffs.push(
-      "Passt zum Kopfhaut-Fokus; die Reinigungsintensitaet ist nur ein Vergleichspunkt.",
+      "Passt zum Kopfhaut-Fokus; die Reinigungsintensität ist nur ein Vergleichspunkt.",
     )
   }
 
@@ -476,10 +476,10 @@ function mapConditionerBalanceNeed(
 
 function buildConditionerUsageHint(decision: ConditionerCategoryDecision): string {
   if (decision.targetProfile?.repairLevel === "high") {
-    return "In die Laengen und Spitzen geben, 2-3 Minuten einwirken lassen und gruendlich ausspuelen."
+    return "In die Längen und Spitzen geben, 2-3 Minuten einwirken lassen und gründlich ausspülen."
   }
 
-  return "In die Laengen und Spitzen geben, kurz einarbeiten und gruendlich ausspuelen."
+  return "In die Längen und Spitzen geben, kurz einarbeiten und gründlich ausspülen."
 }
 
 function markConditionerFallback(product: ScoredConditionerProduct): ScoredConditionerProduct {
@@ -502,10 +502,10 @@ function markConditionerFallback(product: ScoredConditionerProduct): ScoredCondi
 
 function buildConditionerFallbackTradeoff(meta: ConditionerRecommendationMetadata): string {
   if (meta.fit_status === "unknown") {
-    return "Hinweis: Zu diesem Conditioner fehlen noch einzelne sichere Produktangaben. Er erscheint nur, weil nicht genug sehr sichere Treffer verfuegbar sind."
+    return "Hinweis: Zu diesem Conditioner fehlen noch einzelne sichere Produktangaben. Er erscheint nur, weil nicht genug sehr sichere Treffer verfügbar sind."
   }
 
-  return "Fallback: Dieser Conditioner weicht beim abgeleiteten Conditioner-Fit sichtbar ab und erscheint nur, weil nicht genug sichere Treffer verfuegbar sind."
+  return "Fallback: Dieser Conditioner weicht beim abgeleiteten Conditioner-Fit sichtbar ab und erscheint nur, weil nicht genug sichere Treffer verfügbar sind."
 }
 
 export function rerankConditionerProductsWithEngine(params: {
@@ -537,7 +537,7 @@ export function rerankConditionerProductsWithEngine(params: {
       fit,
       "Passt sehr gut zu deinem aktuellen Balance-, Repair- und Gewichtsbedarf.",
       "Passt weitgehend zu deinem aktuellen Conditioner-Zielprofil.",
-      "Die Conditioner-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
+      "Die Conditioner-Spezifikation ist noch nicht vollständig genug für eine sichere Idealeinstufung.",
       "Weicht beim Conditioner-Zielprofil sichtbar von deinem Bedarf ab.",
     )
     const preferLightLoadFit = hasCareBalanceReason(careBalanceRow, "conditioner_load_pressure")
@@ -696,17 +696,17 @@ export function rerankShampooProductsWithEngine(params: {
 function buildOilUsageHint(decision: OilCategoryDecision): string {
   if (decision.targetProfile?.purpose === "pre_wash_oiling") {
     if (decision.targetProfile.adjunctScalpSupport) {
-      return "Vor dem Waschen sparsam auf trockene Kopfhaut und Laengen geben, 30-45 Minuten einwirken lassen und anschliessend auswaschen. Bei aktiven Kopfhautproblemen bleibt Shampoo oder ein Scalp-Treatment der primaere Hebel."
+      return "Vor dem Waschen sparsam auf trockene Kopfhaut und Längen geben, 30-45 Minuten einwirken lassen und anschließend auswaschen. Bei aktiven Kopfhautproblemen bleibt Shampoo oder ein Scalp-Treatment der primäre Hebel."
     }
 
-    return "Vor dem Waschen sparsam auf trockene Kopfhaut und/oder Laengen geben, 30-45 Minuten einwirken lassen und anschliessend auswaschen."
+    return "Vor dem Waschen sparsam auf trockene Kopfhaut und/oder Längen geben, 30-45 Minuten einwirken lassen und anschließend auswaschen."
   }
 
   if (decision.targetProfile?.purpose === "light_finish") {
-    return "Sehr sparsam in trockene Laengen und Spitzen geben, damit das Haar leicht bleibt und nicht fettig wirkt."
+    return "Sehr sparsam in trockene Längen und Spitzen geben, damit das Haar leicht bleibt und nicht fettig wirkt."
   }
 
-  return "Sparsam als Finish in trockene oder fast trockene Laengen und Spitzen geben, um Frizz zu baendigen und Glanz zu geben."
+  return "Sparsam als Finish in trockene oder fast trockene Längen und Spitzen geben, um Frizz zu bändigen und Glanz zu geben."
 }
 
 function buildOilTopReasons(
@@ -728,19 +728,19 @@ function buildOilTopReasons(
 
   if (decision.targetProfile?.adjunctScalpSupport) {
     tradeoffs.push(
-      "Bei aktiven Kopfhautproblemen bleibt Shampoo oder ein Scalp-Treatment der primaere Hebel.",
+      "Bei aktiven Kopfhautproblemen bleibt Shampoo oder ein Scalp-Treatment der primäre Hebel.",
     )
   }
 
   if (params?.exactPurposeMatch) {
-    positives.push("Der hinterlegte Oel-Zweck passt auch in der Katalogpflege exakt zur Anfrage.")
+    positives.push("Der hinterlegte Öl-Zweck passt auch in der Katalogpflege exakt zur Anfrage.")
   } else if (params?.finishBridgeMatch) {
     tradeoffs.push(
-      "Der Fit kommt ueber die angrenzende Finish-Rolle, nicht ueber einen exakten Oel-Zweck-Match.",
+      "Der Fit kommt über die angrenzende Finish-Rolle, nicht über einen exakten Öl-Zweck-Match.",
     )
   } else if (params?.classicSubtypeMatch) {
     tradeoffs.push(
-      "Der Katalogfit kommt ueber den klassischen Oel-Subtyp; ein eigener Oel-Zweck ist fuer diesen Treffer noch nicht hinterlegt.",
+      "Der Katalogfit kommt über den klassischen Öl-Subtyp; ein eigener Öl-Zweck ist für diesen Treffer noch nicht hinterlegt.",
     )
   }
 
@@ -839,7 +839,7 @@ export function rerankOilProductsWithEngine(params: {
       careBalanceBonus
     const careBalanceReason =
       careBalanceBonus > 0
-        ? "care_balance daily_oil_use: bei taeglichem Oel oder Build-up-Druck leichter, nicht schwerer Oel-Fit."
+        ? "care_balance daily_oil_use: bei täglichem Öl oder Build-up-Druck leichter, nicht schwerer Öl-Fit."
         : null
 
     const recommendationMeta: OilRecommendationMetadata = {
@@ -850,8 +850,8 @@ export function rerankOilProductsWithEngine(params: {
           ? [...new Set([careBalanceReason, ...positives].filter(Boolean) as string[])].slice(0, 3)
           : [
               targetProfile.purpose
-                ? `Die Auswahl folgt dem Oel-Zweck ${OIL_PURPOSE_LABELS[targetProfile.purpose].toLowerCase()}.`
-                : "Passt zum aktuellen Oel-Zweck.",
+                ? `Die Auswahl folgt dem Öl-Zweck ${OIL_PURPOSE_LABELS[targetProfile.purpose].toLowerCase()}.`
+                : "Passt zum aktuellen Öl-Zweck.",
             ],
       tradeoffs,
       usage_hint: buildOilUsageHint(decision),
@@ -929,10 +929,10 @@ export function rerankBondbuilderProductsWithEngine(params: {
       const fit = evaluateBondbuilderFit(decision, spec as BondbuilderFitSpec | null)
       const { positives, tradeoffs } = buildFitSummary(
         fit,
-        "Passt sehr gut zur benoetigten Bondbuilding-Intensitaet.",
+        "Passt sehr gut zur benötigten Bondbuilding-Intensität.",
         "Passt weitgehend zum aktuellen Bondbuilding-Bedarf.",
-        "Die Bondbuilder-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
-        "Weicht bei der Intensitaet zu deutlich vom aktuellen Bondbuilding-Bedarf ab.",
+        "Die Bondbuilder-Spezifikation ist noch nicht vollständig genug für eine sichere Idealeinstufung.",
+        "Weicht bei der Intensität zu deutlich vom aktuellen Bondbuilding-Bedarf ab.",
       )
       const score =
         toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
@@ -955,7 +955,7 @@ export function rerankBondbuilderProductsWithEngine(params: {
             product_id: addOn.id,
             name: addOn.name,
             usage_protocol: addOnSpec?.usage_protocol ?? null,
-            reason: "Optionaler Booster fuer sehr starke Schaedigung vor No.3PLUS.",
+            reason: "Optionaler Booster für sehr starke Schädigung vor No.3PLUS.",
           }
         })
         .filter((item): item is NonNullable<typeof item> => Boolean(item))
@@ -966,8 +966,8 @@ export function rerankBondbuilderProductsWithEngine(params: {
         top_reasons: [
           ...positives,
           target.bondRepairIntensity === "intensive"
-            ? "Unterstuetzt aktuell eher intensiven strukturellen Reparaturbedarf."
-            : "Passt fuer eher konservative Bondbuilding-Unterstuetzung.",
+            ? "Unterstützt aktuell eher intensiven strukturellen Reparaturbedarf."
+            : "Passt für eher konservative Bondbuilding-Unterstützung.",
         ].slice(0, 3),
         tradeoffs,
         usage_hint: getBondbuilderUsageHint(spec?.usage_protocol),
@@ -1036,7 +1036,7 @@ function matchesRequestedBondbuilderBrand(
 }
 
 function buildDeepCleansingShampooUsageHint(): string {
-  return "An Reset-Waschtagen statt des normalen Shampoos auf Kopfhaut/Ansatz nutzen, gruendlich ausspuelen und danach Conditioner in die Laengen geben. Etwa alle 5-6 Waeschen, nicht bei jeder Waesche."
+  return "An Reset-Waschtagen statt des normalen Shampoos auf Kopfhaut/Ansatz nutzen, gründlich ausspülen und danach Conditioner in die Längen geben. Etwa alle 5-6 Wäschen, nicht bei jeder Wäsche."
 }
 
 function buildDeepCleansingTopReasons(params: {
@@ -1049,22 +1049,20 @@ function buildDeepCleansingTopReasons(params: {
   const tradeoffs: string[] = []
 
   if (fit.status === "mismatch") {
-    tradeoffs.push("Kein sicherer Match fuer den angefragten Reset-Fokus oder Farbschutz.")
+    tradeoffs.push("Kein sicherer Match für den angefragten Reset-Fokus oder Farbschutz.")
   } else if (spec?.reset_focus === "metal_mineral_hard_water") {
-    positives.push("Strukturiert fuer Kalk-, Mineral- oder Chlor-Kontext gepflegt.")
+    positives.push("Strukturiert für Kalk-, Mineral- oder Chlor-Kontext gepflegt.")
   } else if (spec?.reset_focus === "broad_spectrum_detox") {
-    positives.push(
-      "Strukturiert als breiter Reset fuer Styling-/Pflegeaufbau plus Mineral-Kontext.",
-    )
+    positives.push("Strukturiert als breiter Reset für Styling-/Pflegeaufbau plus Mineral-Kontext.")
   } else if (spec?.reset_focus === "product_sebum_buildup") {
-    positives.push("Strukturiert fuer allgemeinen Produktaufbau und beschwertes Haar gepflegt.")
+    positives.push("Strukturiert für allgemeinen Produktaufbau und beschwertes Haar gepflegt.")
   } else {
     positives.push("Passt als gelegentlicher Reset bei Produktaufbau oder beschwertem Haar.")
   }
 
   if (spec?.reset_intensity) {
     positives.push(
-      `Reset-Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[spec.reset_intensity]}.`,
+      `Reset-Intensität: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[spec.reset_intensity]}.`,
     )
   }
 
@@ -1073,21 +1071,21 @@ function buildDeepCleansingTopReasons(params: {
   } else if (fit.status === "supportive") {
     positives.push("Die strukturierten Reset-Daten passen mit kleinen Caveats zur Anfrage.")
   } else if (fit.status === "unknown") {
-    tradeoffs.push("Die Tiefenreinigungs-Spezifikation ist noch nicht vollstaendig gepflegt.")
+    tradeoffs.push("Die Tiefenreinigungs-Spezifikation ist noch nicht vollständig gepflegt.")
   } else if (fit.status === "mismatch") {
     tradeoffs.push("Weicht beim Reset-Fokus oder bei Farbschutz-Anforderungen ab.")
   }
 
   if (decision.targetProfile?.colorTreatedCaution) {
     tradeoffs.push(
-      "Bei gefaerbtem oder blondiertem Haar konservativ dosieren und seltener einsetzen.",
+      "Bei gefärbtem oder blondiertem Haar konservativ dosieren und seltener einsetzen.",
     )
   }
   if (decision.targetProfile?.cautionFlags.includes("sensitive_or_irritated_scalp")) {
-    tradeoffs.push("Nicht als Behandlung fuer gereizte Kopfhaut, Juckreiz oder Schuppen einordnen.")
+    tradeoffs.push("Nicht als Behandlung für gereizte Kopfhaut, Juckreiz oder Schuppen einordnen.")
   }
   if (decision.targetProfile?.colorSafeRequest && spec?.color_treated_suitability !== "suitable") {
-    tradeoffs.push("Farbschonung ist fuer dieses Produkt nicht strukturiert belegt.")
+    tradeoffs.push("Farbschonung ist für dieses Produkt nicht strukturiert belegt.")
   }
 
   return {
@@ -1186,7 +1184,7 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
 }
 
 function buildDryShampooUsageHint(): string {
-  return "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen."
+  return "Nur als kurze Between-Wash-Brücke am Ansatz verwenden, später auswaschen und nicht als Ersatz für Shampoo/Wasser nutzen."
 }
 
 export function rerankDryShampooProductsWithEngine(params: {
@@ -1204,10 +1202,10 @@ export function rerankDryShampooProductsWithEngine(params: {
     const fit = evaluateDryShampooFit(decision, spec as DryShampooFitSpec | null)
     const { positives, tradeoffs } = buildFitSummary(
       fit,
-      "Passt sehr gut zur Notfall-/Between-Wash-Bruecke.",
+      "Passt sehr gut zur Notfall-/Between-Wash-Brücke.",
       "Passt weitgehend zum kurzen Ansatz-Refresh.",
-      "Die Trockenshampoo-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
-      "Weicht bei Effekt, Farbfit, Sensitivitaet oder Format zu deutlich vom Bedarf ab.",
+      "Die Trockenshampoo-Spezifikation ist noch nicht vollständig genug für eine sichere Idealeinstufung.",
+      "Weicht bei Effekt, Farbfit, Sensitivität oder Format zu deutlich vom Bedarf ab.",
     )
     const score =
       toBaseScore(product) +
@@ -1248,10 +1246,10 @@ export function rerankDryShampooProductsWithEngine(params: {
 
 function buildPeelingUsageHint(decision: PeelingCategoryDecision): string {
   if (decision.targetProfile?.peelingType === "physical_scrub") {
-    return "Als gelegentliches Kopfhaut-Reset vorsichtig verwenden und bei Sensibilitaet oder Trockenheit lieber seltener einsetzen."
+    return "Als gelegentliches Kopfhaut-Reset vorsichtig verwenden und bei Sensibilität oder Trockenheit lieber seltener einsetzen."
   }
 
-  return "Als sanfteres Kopfhaut-Peeling gemaess Produktanleitung einsetzen und die Frequenz bewusst konservativ halten."
+  return "Als sanfteres Kopfhaut-Peeling gemäß Produktanleitung einsetzen und die Frequenz bewusst konservativ halten."
 }
 
 export function rerankPeelingProductsWithEngine(params: {
@@ -1271,7 +1269,7 @@ export function rerankPeelingProductsWithEngine(params: {
       fit,
       "Passt sehr gut zum aktuellen Kopfhaut-Fokus und Peeling-Typ.",
       "Passt weitgehend zum aktuellen Kopfhaut-Reset-Bedarf.",
-      "Die Peeling-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
+      "Die Peeling-Spezifikation ist noch nicht vollständig genug für eine sichere Idealeinstufung.",
       "Weicht bei Kopfhaut-Fokus oder Peeling-Typ zu deutlich vom aktuellen Bedarf ab.",
     )
     const score = toBaseScore(product) + fitStatusAdjustment(fit.status) + fitReasonAdjustment(fit)
@@ -1321,14 +1319,14 @@ function mapEngineLeaveInNeedToLegacy(
 
 function buildLeaveInUsageHint(decision: LeaveInCategoryDecision): string {
   if (decision.targetProfile?.stylingContext === "heat_style") {
-    return "Sparsam ins handtuchtrockene Haar geben und vor dem Foehnen oder Hitzestyling gleichmaessig verteilen."
+    return "Sparsam ins handtuchtrockene Haar geben und vor dem Föhnen oder Hitzestyling gleichmäßig verteilen."
   }
 
   if (decision.targetProfile?.conditionerRelationship === "replacement_capable") {
-    return "Nach dem Waschen sparsam in die Laengen geben; bei feinem Haar kann es je nach Produkt auch den Conditioner ersetzen."
+    return "Nach dem Waschen sparsam in die Längen geben; bei feinem Haar kann es je nach Produkt auch den Conditioner ersetzen."
   }
 
-  return "Nach dem Conditioner sparsam in die Laengen und Spitzen geben und als zusaetzlichen Booster nutzen."
+  return "Nach dem Conditioner sparsam in die Längen und Spitzen geben und als zusätzlichen Booster nutzen."
 }
 
 function productToLeaveInSpecCandidate(product: Product | null): MatchedProduct | null {
@@ -1421,8 +1419,8 @@ export function rerankLeaveInProductsWithEngine(params: {
     const { positives, tradeoffs } = buildFitSummary(
       fit,
       "Passt sehr gut zu deinem Leave-in-Zielprofil inklusive Nutzen, Beziehung zum Conditioner und Gewicht.",
-      "Passt in grossen Teilen zu deinem Leave-in-Zielprofil.",
-      "Die Leave-in-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
+      "Passt in großen Teilen zu deinem Leave-in-Zielprofil.",
+      "Die Leave-in-Spezifikation ist noch nicht vollständig genug für eine sichere Idealeinstufung.",
       "Weicht bei Nutzen, Hitzeschutz oder Conditioner-Rolle zu deutlich von deinem Bedarf ab.",
     )
     const strongHeatBonus =
@@ -1438,11 +1436,11 @@ export function rerankLeaveInProductsWithEngine(params: {
       strongHeatBonus
     const integratedHeatBonusReason =
       shouldPreferIntegratedLeaveInHeatBonus(target) && spec?.provides_heat_protection
-        ? "Kann ein Produkt weniger in der Routine bedeuten: Leave-in-Pflege plus Foenhitzeschutz in einem Produkt."
+        ? "Kann ein Produkt weniger in der Routine bedeuten: Leave-in-Pflege plus Föhnhitzeschutz in einem Produkt."
         : null
     const careBalanceHeatReason =
       strongHeatBonus > 0
-        ? `CareBalance-Hinweis: staerkerer Hitzeschutz-Fit (${spec?.heat_protection_max_c} C) bei hoher oder kumulativer Hitze.`
+        ? `CareBalance-Hinweis: stärkerer Hitzeschutz-Fit (${spec?.heat_protection_max_c} C) bei hoher oder kumulativer Hitze.`
         : null
 
     const recommendationMeta: LeaveInRecommendationMetadata = {
@@ -1453,7 +1451,7 @@ export function rerankLeaveInProductsWithEngine(params: {
         ...positives,
         integratedHeatBonusReason,
         target.needBucket === "heat_protect"
-          ? "Bringt den fuer dein Styling benoetigten Hitzeschutz-Fokus mit."
+          ? "Bringt den für dein Styling benötigten Hitzeschutz-Fokus mit."
           : "Passt gut zu deinem aktuellen Leave-in-Bedarf.",
       ]
         .filter((reason): reason is string => Boolean(reason))
@@ -1590,10 +1588,10 @@ function mapBalanceToMaskType(
 
 function buildMaskUsageHint(spec: ProductMaskSpecs | null): string {
   if (!spec) {
-    return "Nach dem Shampoo in die Laengen und Spitzen geben, gruendlich ausspuelen und danach Conditioner verwenden."
+    return "Nach dem Shampoo in die Längen und Spitzen geben, gründlich ausspülen und danach Conditioner verwenden."
   }
 
-  return "Nach dem Shampoo in die Laengen und Spitzen geben, gruendlich ausspuelen und danach Conditioner verwenden."
+  return "Nach dem Shampoo in die Längen und Spitzen geben, gründlich ausspülen und danach Conditioner verwenden."
 }
 
 function buildMaskTradeoffs(fit: CategoryFitEvaluation): string[] {
@@ -1604,12 +1602,12 @@ function buildMaskTradeoffs(fit: CategoryFitEvaluation): string[] {
 
   if (fit.status === "unknown") {
     add(
-      "Die Masken-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
+      "Die Masken-Spezifikation ist noch nicht vollständig genug für eine sichere Idealeinstufung.",
     )
   }
 
   if (fit.status === "mismatch") {
-    add("Weicht beim Masken-Zielprofil spuerbar von deinem Bedarf ab.")
+    add("Weicht beim Masken-Zielprofil spürbar von deinem Bedarf ab.")
   }
 
   if (fit.reasonCodes.includes("mask_optional_overcare_caveat")) {
@@ -1619,7 +1617,7 @@ function buildMaskTradeoffs(fit: CategoryFitEvaluation): string[] {
   }
 
   if (fit.reasonCodes.includes("mask_high_intensity_use_sparingly_caveat")) {
-    add("Wenn du sie testest, dann eher sparsam und nicht bei jeder Waesche.")
+    add("Wenn du sie testest, dann eher sparsam und nicht bei jeder Wäsche.")
   }
 
   if (fit.reasonCodes.includes("mask_wrong_balance_stiff_dull_risk")) {
@@ -1631,11 +1629,11 @@ function buildMaskTradeoffs(fit: CategoryFitEvaluation): string[] {
   }
 
   if (fit.reasonCodes.includes("mask_light_weight_may_be_underpowered_caveat")) {
-    add("Die leichte Textur kann fuer sehr dichtes oder kraeftiges Haar etwas zu wenig sein.")
+    add("Die leichte Textur kann für sehr dichtes oder kräftiges Haar etwas zu wenig sein.")
   }
 
   if (fit.reasonCodes.includes("mask_low_concentration_may_be_underpowered_caveat")) {
-    add("Die niedrige Intensitaet kann fuer staerkeren Kur-Bedarf etwas zu wenig sein.")
+    add("Die niedrige Intensität kann für stärkeren Kur-Bedarf etwas zu wenig sein.")
   }
 
   if (fit.missingFields.length > 0) {
@@ -1654,7 +1652,7 @@ function markMaskFallback(product: ScoredMaskProduct): ScoredMaskProduct {
   if (!meta || meta.category !== "mask") return product
 
   const fallbackTradeoff =
-    "Fallback: Diese Maske weicht beim abgeleiteten Masken-Fit sichtbar ab und erscheint nur, weil nicht genug sichere Treffer verfuegbar sind."
+    "Fallback: Diese Maske weicht beim abgeleiteten Masken-Fit sichtbar ab und erscheint nur, weil nicht genug sichere Treffer verfügbar sind."
 
   return {
     ...product,
@@ -1696,10 +1694,10 @@ export function rerankMaskProductsWithEngine(params: {
     const fit = evaluateMaskFit(decision, spec as MaskFitSpec | null)
     const { positives } = buildFitSummary(
       fit,
-      "Passt sehr gut zu deinem Masken-Zielprofil fuer Balance, Repair und Gewicht.",
+      "Passt sehr gut zu deinem Masken-Zielprofil für Balance, Repair und Gewicht.",
       "Passt weitgehend zu deinem aktuellen Maskenbedarf.",
-      "Die Masken-Spezifikation ist noch nicht vollstaendig genug fuer eine sichere Idealeinstufung.",
-      "Weicht beim Masken-Zielprofil spuerbar von deinem Bedarf ab.",
+      "Die Masken-Spezifikation ist noch nicht vollständig genug für eine sichere Idealeinstufung.",
+      "Weicht beim Masken-Zielprofil spürbar von deinem Bedarf ab.",
     )
     const score =
       toBaseScore(product) +

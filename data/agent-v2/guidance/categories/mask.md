@@ -61,7 +61,7 @@ If hair feels heavy, too soft, flat, coated, or slow to dry, stretch cadence, us
 Do not ask about protein/moisture direction by default. Ask only when the user raises protein/moisture, the profile already signals it, or rough, limp, brittle, coated, or recently chemically stressed hair makes that distinction materially useful.
 
 ## Usage And Cadence
-For general mask advice, keep cadence flexible: gelegentlich, alle paar Waeschen, or bei Bedarf. If you mention every few washes or a couple of times per month, frame it as a flexible starting point only, not a protocol.
+For general mask advice, keep cadence flexible: gelegentlich, alle paar Wäschen, or bei Bedarf. If you mention every few washes or a couple of times per month, frame it as a flexible starting point only, not a protocol.
 
 Usually place a rinse-out mask after shampoo, mainly in lengths and ends, then rinse well. Conditioner after a mask is optional and should be mentioned only when the routine convention or product protocol supports it.
 
@@ -194,7 +194,7 @@ Then explain:
 1. when conditioner is enough
 2. why a mask could help lengths and ends
 3. how to use it: usually after shampoo, mainly in lengths and ends, rinse well
-4. cadence as gelegentlich, alle paar Waeschen, or bei Bedarf
+4. cadence as gelegentlich, alle paar Wäschen, or bei Bedarf
 
 If conditioner after mask, exact timing, or exact cadence matters for a concrete product, ground it in product metadata. For washing every two to three days, every four to five washes or two to three times per month can be a flexible starting point, then stretch or increase based on heaviness and dryness.
 

@@ -196,7 +196,7 @@ function anchorRoutineReasons(params: {
   }
 
   if (action === "add" && category === "conditioner") {
-    reasons.unshift(`${params.slot.label} ist die naechste sinnvolle Ergaenzung nach dem Shampoo.`)
+    reasons.unshift(`${params.slot.label} ist die nächste sinnvolle Ergänzung nach dem Shampoo.`)
   }
 
   return Array.from(new Set(reasons))

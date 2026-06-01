@@ -198,7 +198,7 @@ Then explain:
 3. the practical use note: mainly scalp/roots, rinse thoroughly, conditioner for lengths afterward
 4. whether product recommendations require grounded product selection
 
-Use everyday German terms like `Kopfhaut`, `Ansatz`, `Laengen`, `sauberes Gefuehl`, `Rueckstaende`, and `Ausspuelen`.
+Use everyday German terms like `Kopfhaut`, `Ansatz`, `Längen`, `sauberes Gefühl`, `Rückstände`, and `Ausspülen`.
 
 ## Do Not
 - Do not frame shampoo as length repair, split-end repair, structural repair, growth support, or scalp medical treatment.

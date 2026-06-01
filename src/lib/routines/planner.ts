@@ -47,7 +47,7 @@ const ROUTINE_TOPIC_LABELS: Record<RoutineTopicId, string> = {
   tiefenreinigung: "Tiefenreinigung",
   hair_oiling: "Hair Oiling",
   bond_builder: "Bond Builder",
-  brush_tools: "Buersten & Tools",
+  brush_tools: "Bürsten & Tools",
   lockenrefresh: "Lockenrefresh",
   cwc: "CWC",
   owc: "OWC",
@@ -787,10 +787,10 @@ export function activateRoutineTopics(
     const clarifyReason = explicit.has("tiefenreinigung")
       ? "Die Frage zielt direkt auf Build-up oder Tiefenreinigung."
       : context.has_scalp_clarify_signals && context.has_hair_reset_signals
-        ? "Kopfhaut- und Rueckstands-Signale sprechen fuer einen gezielten Reset."
+        ? "Kopfhaut- und Rückstands-Signale sprechen für einen gezielten Reset."
         : context.has_scalp_clarify_signals
-          ? "Kopfhaut- und Sebum-Signale sprechen fuer eine gezielte Kopfhaut-Tiefenreinigung."
-          : "Rueckstaende, Produktueberlagerung oder Mineralien sprechen fuer einen gezielten Reset."
+          ? "Kopfhaut- und Sebum-Signale sprechen für eine gezielte Kopfhaut-Tiefenreinigung."
+          : "Rückstände, Produktüberlagerung oder Mineralien sprechen für einen gezielten Reset."
     push("tiefenreinigung", clarifyReason, 30, true)
   }
 
@@ -805,8 +805,8 @@ export function activateRoutineTopics(
       explicit.has("hair_oiling")
         ? "Hair Oiling wurde direkt angefragt."
         : scalpDriven
-          ? "Kopfhaut-Signale sprechen fuer ein unterstuetzendes Pre-Wash-Oiling."
-          : "Trockenheits- und Schadenssignale sprechen fuer ein vorsichtiges Pre-Wash-Oiling.",
+          ? "Kopfhaut-Signale sprechen für ein unterstützendes Pre-Wash-Oiling."
+          : "Trockenheits- und Schadenssignale sprechen für ein vorsichtiges Pre-Wash-Oiling.",
       40,
       false,
     )
@@ -819,7 +819,7 @@ export function activateRoutineTopics(
       "bond_builder",
       explicit.has("bond_builder")
         ? "Bond Builder wurde direkt angefragt."
-        : "Schadens- oder Chemie-Signale sprechen fuer Repair-Support.",
+        : "Schadens- oder Chemie-Signale sprechen für Repair-Support.",
       45,
       true,
     )
@@ -827,7 +827,7 @@ export function activateRoutineTopics(
     if (!explicitOnly && !seen.has("tiefenreinigung")) {
       push(
         "tiefenreinigung",
-        "Bond Builder brauchen Zugang zur inneren Haarstruktur — Rueckstaende von Silikonen oder Stylingprodukten koennen die Aufnahme blockieren.",
+        "Bond Builder brauchen Zugang zur inneren Haarstruktur — Rückstände von Silikonen oder Stylingprodukten können die Aufnahme blockieren.",
         30,
         true,
       )
@@ -838,8 +838,8 @@ export function activateRoutineTopics(
     push(
       "brush_tools",
       explicit.has("brush_tools")
-        ? "Buersten oder Tools wurden direkt angefragt."
-        : "Mechanische Belastung oder Entwirr-Signale sprechen fuer gezielte Tool- und Anwendungshinweise.",
+        ? "Bürsten oder Tools wurden direkt angefragt."
+        : "Mechanische Belastung oder Entwirr-Signale sprechen für gezielte Tool- und Anwendungshinweise.",
       55,
       true,
     )
@@ -855,7 +855,7 @@ export function activateRoutineTopics(
       "lockenrefresh",
       explicit.has("lockenrefresh")
         ? "Lockenrefresh wurde direkt angefragt."
-        : "Zwischenwaschtage bei Wellen oder Locken brauchen haeufig eine Refresh-Option.",
+        : "Zwischenwaschtage bei Wellen oder Locken brauchen häufig eine Refresh-Option.",
       50,
       true,
     )
@@ -872,9 +872,9 @@ export function activateRoutineTopics(
     } else if (explicitRequest) {
       reason = `${ROUTINE_TOPIC_LABELS[topicId]} wurde direkt angefragt.`
     } else if (topicId === "cwc") {
-      reason = "Das Profil spricht eher fuer eine schonende Conditioner-Schutzwaesche."
+      reason = "Das Profil spricht eher für eine schonende Conditioner-Schutzwäsche."
     } else {
-      reason = "Das Profil spricht eher fuer eine Oel-Vorwaesche mit anschliessender Schutzpflege."
+      reason = "Das Profil spricht eher für eine Öl-Vorwäsche mit anschließender Schutzpflege."
     }
 
     push(topicId, reason, 60, true)
@@ -892,17 +892,17 @@ export function buildRoutineClarificationQuestions(
 
   if (!context.organizer_complete) {
     questions.push(
-      "Was soll deine Routine gerade vor allem leisten - weniger Frizz, mehr Feuchtigkeit, Definition, Reparatur oder eher etwas fuer die Kopfhaut?",
+      "Was soll deine Routine gerade vor allem leisten - weniger Frizz, mehr Feuchtigkeit, Definition, Reparatur oder eher etwas für die Kopfhaut?",
     )
   }
 
   if (!context.cadence_complete) {
-    questions.push("Wie oft waeschst du deine Haare aktuell?")
+    questions.push("Wie oft wäschst du deine Haare aktuell?")
   }
 
   if (!context.inventory_complete) {
     questions.push(
-      "Welche Schritte sind aktuell schon fest in deiner Routine - Shampoo, Conditioner, Leave-in, Maske oder Oel?",
+      "Welche Schritte sind aktuell schon fest in deiner Routine - Shampoo, Conditioner, Leave-in, Maske oder Öl?",
     )
   }
 
@@ -967,18 +967,18 @@ function buildForcedRequestedCategorySlot(
         category: "leave_in",
         cadence: "nach dem Waschen, sparsam dosiert",
         rationale: [
-          "Leave-in wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
-          "Das ist nicht automatisch der wichtigste Hebel, kann aber als leichter Zusatz fuer Laengen und Spitzen sinnvoll sein.",
+          "Leave-in wird aufgenommen, weil du diesen Schritt ausdrücklich in der Routine haben möchtest.",
+          "Das ist nicht automatisch der wichtigste Hebel, kann aber als leichter Zusatz für Längen und Spitzen sinnvoll sein.",
         ],
         caveats:
           profile?.thickness === "fine"
             ? ["Bei feinem Haar sparsam dosieren und nicht an den Ansatz geben."]
             : [
-                "Sparsam in Laengen und Spitzen verwenden, damit die Routine nicht unnoetig schwer wird.",
+                "Sparsam in Längen und Spitzen verwenden, damit die Routine nicht unnötig schwer wird.",
               ],
         topic_ids: [],
         product_linkable: true,
-        product_query: "Ich suche ein Leave-in fuer meine Routine nach dem Waschen.",
+        product_query: "Ich suche ein Leave-in für meine Routine nach dem Waschen.",
         attachment_priority: 10,
       }
     case "mask":
@@ -991,7 +991,7 @@ function buildForcedRequestedCategorySlot(
         category: "mask",
         cadence: "gelegentlich nach Bedarf",
         rationale: [
-          "Maske wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
+          "Maske wird aufgenommen, weil du diesen Schritt ausdrücklich in der Routine haben möchtest.",
           "Sie bleibt ein Zusatz und ersetzt Conditioner nicht automatisch.",
         ],
         caveats: [
@@ -999,7 +999,7 @@ function buildForcedRequestedCategorySlot(
         ],
         topic_ids: [],
         product_linkable: true,
-        product_query: "Ich suche eine Maske fuer meine Routine.",
+        product_query: "Ich suche eine Maske für meine Routine.",
         attachment_priority: 30,
       }
     case "oil":
@@ -1010,17 +1010,17 @@ function buildForcedRequestedCategorySlot(
         label: "Hair Oiling",
         action: "add",
         category: "oil",
-        cadence: "vor einzelnen Waeschen oder sehr sparsam in Spitzen",
+        cadence: "vor einzelnen Wäschen oder sehr sparsam in Spitzen",
         rationale: [
-          "Oel wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
-          "Es ist eher Finish oder Pre-Wash-Schutz, nicht die Hauptpflege fuer trockene Laengen.",
+          "Öl wird aufgenommen, weil du diesen Schritt ausdrücklich in der Routine haben möchtest.",
+          "Es ist eher Finish oder Pre-Wash-Schutz, nicht die Hauptpflege für trockene Längen.",
         ],
         caveats: [
           "Sehr sparsam einsetzen; bei beschwertem oder wachsigem Haar nicht weiter schichten.",
         ],
         topic_ids: ["hair_oiling"],
         product_linkable: true,
-        product_query: "Ich moechte Hair Oiling vor dem Waschen machen.",
+        product_query: "Ich möchte Hair Oiling vor dem Waschen machen.",
         attachment_priority: 40,
       }
     case "bondbuilder":
@@ -1033,7 +1033,7 @@ function buildForcedRequestedCategorySlot(
         category: "bondbuilder",
         cadence: "nach Produktprotokoll",
         rationale: [
-          "Bondbuilder wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
+          "Bondbuilder wird aufgenommen, weil du diesen Schritt ausdrücklich in der Routine haben möchtest.",
           "Er ist nur dann fachlich stark, wenn echte Strukturstress-Signale vorliegen.",
         ],
         caveats: [
@@ -1041,7 +1041,7 @@ function buildForcedRequestedCategorySlot(
         ],
         topic_ids: ["bond_builder"],
         product_linkable: true,
-        product_query: "Ich suche einen Bondbuilder fuer meine Routine.",
+        product_query: "Ich suche einen Bondbuilder für meine Routine.",
         attachment_priority: 50,
       }
     case "deep_cleansing_shampoo":
@@ -1054,15 +1054,15 @@ function buildForcedRequestedCategorySlot(
         category: "deep_cleansing_shampoo",
         cadence: "bei deutlichem Build-up nach Bedarf",
         rationale: [
-          "Tiefenreinigung wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
-          "Sie ist ein gelegentlicher Reset fuer Rueckstaende, kein normales Shampoo fuer jede Waesche.",
+          "Tiefenreinigung wird aufgenommen, weil du diesen Schritt ausdrücklich in der Routine haben möchtest.",
+          "Sie ist ein gelegentlicher Reset für Rückstände, kein normales Shampoo für jede Wäsche.",
         ],
         caveats: [
-          "Danach Conditioner oder passende Laengenpflege einplanen; nicht bei brennender oder gereizter Kopfhaut eskalieren.",
+          "Danach Conditioner oder passende Längenpflege einplanen; nicht bei brennender oder gereizter Kopfhaut eskalieren.",
         ],
         topic_ids: ["tiefenreinigung"],
         product_linkable: true,
-        product_query: "Ich suche ein Tiefenreinigungsshampoo fuer meine Routine.",
+        product_query: "Ich suche ein Tiefenreinigungsshampoo für meine Routine.",
         attachment_priority: 96,
       }
     case "peeling":
@@ -1075,15 +1075,15 @@ function buildForcedRequestedCategorySlot(
         category: "peeling",
         cadence: "punktuell bei belegtem Ansatz",
         rationale: [
-          "Kopfhautpeeling wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
-          "Es ist ein gelegentlicher Kopfhaut-Schritt fuer kosmetische Rueckstaende, keine Behandlung fuer Schmerzen, Entzuendung oder Haarausfall.",
+          "Kopfhautpeeling wird aufgenommen, weil du diesen Schritt ausdrücklich in der Routine haben möchtest.",
+          "Es ist ein gelegentlicher Kopfhaut-Schritt für kosmetische Rückstände, keine Behandlung für Schmerzen, Entzündung oder Haarausfall.",
         ],
         caveats: [
-          "Nicht bei Brennen, Wunden, starken Schuppen, Entzuendung oder ungewoehnlichem Haarverlust eskalieren.",
+          "Nicht bei Brennen, Wunden, starken Schuppen, Entzündung oder ungewöhnlichem Haarverlust eskalieren.",
         ],
         topic_ids: ["tiefenreinigung"],
         product_linkable: true,
-        product_query: "Ich suche ein Kopfhautpeeling fuer meine Routine.",
+        product_query: "Ich suche ein Kopfhautpeeling für meine Routine.",
         attachment_priority: 95,
       }
     case "dry_shampoo":
@@ -1094,15 +1094,15 @@ function buildForcedRequestedCategorySlot(
         label: "Trockenshampoo",
         action: "add",
         category: "dry_shampoo",
-        cadence: "als kurze Frische-Hilfe zwischen Waeschen",
+        cadence: "als kurze Frische-Hilfe zwischen Wäschen",
         rationale: [
-          "Trockenshampoo wird aufgenommen, weil du diesen Schritt ausdruecklich in der Routine haben moechtest.",
-          "Es ist eine optische Ueberbrueckung am Ansatz und kein Ersatz fuer Waschen.",
+          "Trockenshampoo wird aufgenommen, weil du diesen Schritt ausdrücklich in der Routine haben möchtest.",
+          "Es ist eine optische Überbrückung am Ansatz und kein Ersatz für Waschen.",
         ],
         caveats: ["Bei Juckreiz, Brennen, Schuppen oder viel Schichtung nicht weiter eskalieren."],
         topic_ids: [],
         product_linkable: true,
-        product_query: "Ich suche ein Trockenshampoo fuer meine Routine.",
+        product_query: "Ich suche ein Trockenshampoo für meine Routine.",
         attachment_priority: 45,
       }
     default:
@@ -1111,9 +1111,9 @@ function buildForcedRequestedCategorySlot(
 }
 
 function buildMaskCadence(maskStrength: number): string {
-  if (maskStrength >= 3) return "etwa jede 2. Waesche"
-  if (maskStrength === 2) return "alle 2-3 Waeschen"
-  return "alle 4-5 Waeschen"
+  if (maskStrength >= 3) return "etwa jede 2. Wäsche"
+  if (maskStrength === 2) return "alle 2-3 Wäschen"
+  return "alle 4-5 Wäschen"
 }
 
 function getRoutineLeaveInNeedLabel(
@@ -1191,14 +1191,14 @@ function buildCwcTechniqueSlot(): RoutineSlotAdvice {
     category: null,
     cadence: "als Wash-Day-Variante bei Bedarf",
     rationale: [
-      "CWC ist hier eine Wash-Day-Variante, kein Pflichtschritt fuer jede Waesche.",
-      "1. Conditioner auf trockene Laengen und Spitzen geben.",
+      "CWC ist hier eine Wash-Day-Variante, kein Pflichtschritt für jede Wäsche.",
+      "1. Conditioner auf trockene Längen und Spitzen geben.",
       "2. Shampoo nur an der Kopfhaut verwenden.",
-      "3. Den entstehenden Schaum sanft durch die Laengen gleiten lassen.",
-      "4. Zum Schluss erneut Conditioner auftragen und ausspuelen.",
+      "3. Den entstehenden Schaum sanft durch die Längen gleiten lassen.",
+      "4. Zum Schluss erneut Conditioner auftragen und ausspülen.",
     ],
     caveats: [
-      "Wenn die Haare schnell belegt wirken, nicht als Standard fuer jede Waesche etablieren.",
+      "Wenn die Haare schnell belegt wirken, nicht als Standard für jede Wäsche etablieren.",
     ],
     topic_ids: ["cwc"],
     product_linkable: false,
@@ -1212,10 +1212,10 @@ function buildScalpClarifySlot(
   shampooPresent: boolean,
 ): RoutineSlotAdvice {
   const rationale = [
-    "Hier geht es primaer um Talg, Kopfhaut-Rueckstaende und schnell belegte Ansaetze - nicht um einen Voll-Reset fuer die Laengen.",
+    "Hier geht es primär um Talg, Kopfhaut-Rückstände und schnell belegte Ansätze - nicht um einen Voll-Reset für die Längen.",
     context.has_sensitive_scalp_signals
-      ? "Bei sensibler Kopfhaut lieber sanft und gezielt reinigen statt die Intensitaet hochzuziehen."
-      : "Wenn der Ansatz schnell nachfettet oder Dry-Shampoo-Reste sitzen, kann punktuell auch ein sanftes Scalp-Exfoliant vor der Waesche sinnvoll sein.",
+      ? "Bei sensibler Kopfhaut lieber sanft und gezielt reinigen statt die Intensität hochzuziehen."
+      : "Wenn der Ansatz schnell nachfettet oder Dry-Shampoo-Reste sitzen, kann punktuell auch ein sanftes Scalp-Exfoliant vor der Wäsche sinnvoll sein.",
   ]
 
   const caveats = context.has_sensitive_scalp_signals
@@ -1254,29 +1254,29 @@ function buildHairResetSlot(params: {
 
   const rationale = bondBuilderDriven
     ? [
-        "Bond Builder brauchen saubere Haarstruktur - Rueckstaende koennen die Aufnahme blockieren.",
-        "Vor Bond Builder ist ein Haar-Reset oft sinnvoller als noch mehr Produkt auf ueberlagerte Laengen zu schichten.",
-        "Danach immer Conditioner oder Maske einplanen, damit die Laengen nicht stumpf bleiben.",
+        "Bond Builder brauchen saubere Haarstruktur - Rückstände können die Aufnahme blockieren.",
+        "Vor Bond Builder ist ein Haar-Reset oft sinnvoller als noch mehr Produkt auf überlagerte Längen zu schichten.",
+        "Danach immer Conditioner oder Maske einplanen, damit die Längen nicht stumpf bleiben.",
       ]
     : educational
       ? [
-          "Tiefenreinigung ist ein gezielter Reset fuer Rueckstaende auf Haar und Kopfhaut, kein Pflichtschritt fuer jede Routine.",
-          "Fuer die Laengen wird sie vor allem dann spannend, wenn Produkte, Mineralien oder Poolwasser die Haare schwer oder stumpf machen.",
-          "Danach immer Conditioner oder Maske einplanen, damit die Laengen wieder geschmeidig werden.",
+          "Tiefenreinigung ist ein gezielter Reset für Rückstände auf Haar und Kopfhaut, kein Pflichtschritt für jede Routine.",
+          "Für die Längen wird sie vor allem dann spannend, wenn Produkte, Mineralien oder Poolwasser die Haare schwer oder stumpf machen.",
+          "Danach immer Conditioner oder Maske einplanen, damit die Längen wieder geschmeidig werden.",
         ]
       : [
-          "Hier geht es vor allem um Rueckstaende auf Laengen und Spitzen - etwa durch Leave-ins, Oele, Styling, Mineralien oder Poolwasser.",
-          "Ein Haar-Reset schafft wieder eine saubere Basis, wenn sich die Haare wachsig, belegt oder ueberpflegt anfuehlen.",
-          "Danach immer Conditioner oder Maske einplanen, damit die Laengen nicht stumpf bleiben.",
+          "Hier geht es vor allem um Rückstände auf Längen und Spitzen - etwa durch Leave-ins, Öle, Styling, Mineralien oder Poolwasser.",
+          "Ein Haar-Reset schafft wieder eine saubere Basis, wenn sich die Haare wachsig, belegt oder überpflegt anfühlen.",
+          "Danach immer Conditioner oder Maske einplanen, damit die Längen nicht stumpf bleiben.",
         ]
 
   rationale.push(
-    "Auf sauberem Haar greifen Pflege oder farbauffrischende Produkte oft gleichmaessiger - das ist ein Bonus, kein Pflichtargument.",
+    "Auf sauberem Haar greifen Pflege oder farbauffrischende Produkte oft gleichmäßiger - das ist ein Bonus, kein Pflichtargument.",
   )
 
   const caveats = context.has_sensitive_scalp_signals
     ? [
-        "Die Kopfhaut wirkt eher sensibel - deshalb gezielt reinigen und die Intensitaet nicht unnoetig hochziehen.",
+        "Die Kopfhaut wirkt eher sensibel - deshalb gezielt reinigen und die Intensität nicht unnötig hochziehen.",
       ]
     : []
 
@@ -1300,9 +1300,7 @@ function buildHairResetSlot(params: {
 }
 
 function buildHardResetSlot(context: RoutineContext): RoutineSlotAdvice {
-  const caveats = [
-    "Nur fuer echte Ueberlagerung - nicht als Standard fuer jede Waesche etablieren.",
-  ]
+  const caveats = ["Nur für echte Überlagerung - nicht als Standard für jede Wäsche etablieren."]
 
   if (context.has_sensitive_scalp_signals) {
     caveats.push(
@@ -1317,10 +1315,10 @@ function buildHardResetSlot(context: RoutineContext): RoutineSlotAdvice {
     label: "Hard Reset",
     action: "add",
     category: null,
-    cadence: "selten und nur bei deutlicher Ueberlagerung",
+    cadence: "selten und nur bei deutlicher Überlagerung",
     rationale: [
-      "Das ist die Eskalationsstufe fuer wirklich belegte, wachsig wirkende oder deutlich ueberpflegte Haare.",
-      "Wenn viele Produkte rotieren oder kaum noch etwas sauber einzieht, kann punktuell ein staerkerer Reset sinnvoll sein.",
+      "Das ist die Eskalationsstufe für wirklich belegte, wachsig wirkende oder deutlich überpflegte Haare.",
+      "Wenn viele Produkte rotieren oder kaum noch etwas sauber einzieht, kann punktuell ein stärkerer Reset sinnvoll sein.",
       "Danach immer Conditioner oder Maske einplanen, damit die Haare nicht quietschig oder stumpf bleiben.",
     ],
     caveats,
@@ -1343,15 +1341,15 @@ function buildOwcOilSlot(
     id: "base-owc-oil",
     kind: "product_slot",
     phase: "base_wash",
-    label: "OWC Oel-Schutz",
+    label: "OWC Öl-Schutz",
     action: oilAction,
     category: "oil",
     cadence: "als Wash-Day-Variante bei Bedarf",
     rationale: [
-      "Fuer OWC braucht es ein sparsam dosiertes Oel nur fuer Laengen und Spitzen vor dem Waschen.",
+      "Für OWC braucht es ein sparsam dosiertes Öl nur für Längen und Spitzen vor dem Waschen.",
       oilPresent
-        ? "Wenn schon ein Oel in der Routine ist, hier eher Dosierung und Einsatz pruefen als direkt mehr Produkt zu stapeln."
-        : "Wenn noch kein Oel da ist, reicht fuer OWC ein leichtes Pre-Wash-Oel statt eines schweren Finish-Oels.",
+        ? "Wenn schon ein Öl in der Routine ist, hier eher Dosierung und Einsatz prüfen als direkt mehr Produkt zu stapeln."
+        : "Wenn noch kein Öl da ist, reicht für OWC ein leichtes Pre-Wash-Öl statt eines schweren Finish-Öls.",
     ],
     caveats: [
       "Bei schnell fettender Kopfhaut oder Build-up nicht als Standard etablieren.",
@@ -1360,7 +1358,7 @@ function buildOwcOilSlot(
     ],
     topic_ids: ["owc"],
     product_linkable: oilAction === "add" && !(explicitOwcRequest && cautiousDueToWeight),
-    product_query: "Ich suche ein natuerliches Oel fuer OWC vor dem Waschen.",
+    product_query: "Ich suche ein natürliches Öl für OWC vor dem Waschen.",
     attachment_priority: 15,
   }
 }
@@ -1383,7 +1381,7 @@ function buildOwcTechniqueSlot(
 
   if (context.has_oil_weight_risk) {
     caveats.push(
-      "Das Profil hat ein hoeheres Beschwerungsrisiko — lieber mit minimaler Menge starten.",
+      "Das Profil hat ein höheres Beschwerungsrisiko — lieber mit minimaler Menge starten.",
     )
   }
 
@@ -1396,11 +1394,11 @@ function buildOwcTechniqueSlot(
     category: null,
     cadence: "als Wash-Day-Variante bei Bedarf",
     rationale: [
-      "OWC ist hier eine Wash-Day-Variante fuer mehr Schutz, nicht automatisch die Basis jeder Waesche.",
-      "1. Oel mit Praying Hands oder Scrunching sparsam in trockene Laengen und Spitzen geben.",
+      "OWC ist hier eine Wash-Day-Variante für mehr Schutz, nicht automatisch die Basis jeder Wäsche.",
+      "1. Öl mit Praying Hands oder Scrunching sparsam in trockene Längen und Spitzen geben.",
       "2. Shampoo zuerst direkt am trockenen Ansatz verteilen.",
-      "3. Dann Wasser dazugeben und den Schaum sanft durch die Laengen ziehen.",
-      "4. Zum Schluss Conditioner auftragen und ausspuelen.",
+      "3. Dann Wasser dazugeben und den Schaum sanft durch die Längen ziehen.",
+      "4. Zum Schluss Conditioner auftragen und ausspülen.",
     ],
     caveats,
     topic_ids: ["owc"],
@@ -1452,7 +1450,7 @@ function buildRoutineSlots(
       ? `${WASH_FREQUENCY_LABELS[profile.wash_frequency] ?? profile.wash_frequency}`
       : "an deinen Waschtagen",
     rationale: [
-      "Shampoo bleibt der feste Startpunkt fuer die Kopfhaut und die Waschfrequenz.",
+      "Shampoo bleibt der feste Startpunkt für die Kopfhaut und die Waschfrequenz.",
       profile?.scalp_type
         ? `Die Kopfhaut ist hier ein echtes Steuersignal (${SCALP_TYPE_LABELS[profile.scalp_type] ?? profile.scalp_type}).`
         : "Die Kopfhaut-Situation entscheidet, wie mild oder reset-lastig gereinigt werden sollte.",
@@ -1463,11 +1461,11 @@ function buildRoutineSlots(
       !shampooPresent &&
       shampooDecision.relevant &&
       Boolean(shampooDecision.targetProfile?.shampooBucket),
-    product_query: "Ich suche ein Shampoo fuer meine regulaeren Waschtage.",
+    product_query: "Ich suche ein Shampoo für meine regulären Waschtage.",
     attachment_priority: 50,
   })
 
-  const conditionerReasons = ["Conditioner bleibt der feste Pflegeanker nach jeder Waesche."]
+  const conditionerReasons = ["Conditioner bleibt der feste Pflegeanker nach jeder Wäsche."]
   if (conditionerDecision.targetProfile?.balance) {
     conditionerReasons.push(
       `Der Conditioner sollte vor allem ${
@@ -1501,14 +1499,14 @@ function buildRoutineSlots(
     label: "Conditioner",
     action: conditionerAction,
     category: "conditioner",
-    cadence: "nach jeder Waesche",
+    cadence: "nach jeder Wäsche",
     rationale: conditionerReasons,
     caveats: [],
     topic_ids: activations[0] ? [activations[0].id] : [],
     product_linkable:
       (conditionerAction === "add" || conditionerAction === "upgrade") &&
       conditionerDecision.relevant,
-    product_query: "Ich suche einen Conditioner fuer meine Basisroutine.",
+    product_query: "Ich suche einen Conditioner für meine Basisroutine.",
     attachment_priority: 20,
   })
 
@@ -1528,10 +1526,10 @@ function buildRoutineSlots(
         category: null,
         cadence: null,
         rationale: [
-          "CWC ist ein optionaler Wash-Day-Baustein fuer gezielte Pflege und kein Pflichtschritt.",
+          "CWC ist ein optionaler Wash-Day-Baustein für gezielte Pflege und kein Pflichtschritt.",
         ],
         caveats: [
-          "Dein Profil zeigt aktuell keine starken Trockenheits- oder Schadenssignale — CWC ist hier eher optional, aber wir erklaeren gerne wie es funktioniert.",
+          "Dein Profil zeigt aktuell keine starken Trockenheits- oder Schadenssignale — CWC ist hier eher optional, aber wir erklären gerne wie es funktioniert.",
         ],
         topic_ids: ["cwc"],
         product_linkable: false,
@@ -1554,10 +1552,10 @@ function buildRoutineSlots(
         category: null,
         cadence: null,
         rationale: [
-          "OWC ist ein optionaler Wash-Day-Baustein fuer gezielte Pflege und kein Pflichtschritt.",
+          "OWC ist ein optionaler Wash-Day-Baustein für gezielte Pflege und kein Pflichtschritt.",
         ],
         caveats: [
-          "Dein Profil zeigt aktuell keine starken Trockenheits- oder Schadenssignale — OWC ist hier eher optional, aber wir erklaeren gerne wie es funktioniert.",
+          "Dein Profil zeigt aktuell keine starken Trockenheits- oder Schadenssignale — OWC ist hier eher optional, aber wir erklären gerne wie es funktioniert.",
         ],
         topic_ids: ["owc"],
         product_linkable: false,
@@ -1594,7 +1592,7 @@ function buildRoutineSlots(
     }
     if (leaveInDecision.targetProfile?.stylingContext) {
       leaveInReasons.push(
-        `Der Finish-Schritt soll vor allem fuer ${LEAVE_IN_STYLING_CONTEXT_LABELS[leaveInDecision.targetProfile.stylingContext]} passen.`,
+        `Der Finish-Schritt soll vor allem für ${LEAVE_IN_STYLING_CONTEXT_LABELS[leaveInDecision.targetProfile.stylingContext]} passen.`,
       )
     }
 
@@ -1614,7 +1612,7 @@ function buildRoutineSlots(
           ? [activations[0].id]
           : [],
       product_linkable: leaveInAction === "add" && leaveInDecision.relevant,
-      product_query: "Ich suche ein Leave-in fuer meine Routine nach dem Waschen.",
+      product_query: "Ich suche ein Leave-in für meine Routine nach dem Waschen.",
       attachment_priority: 10,
     })
   }
@@ -1626,9 +1624,9 @@ function buildRoutineSlots(
       : "Verwende dasselbe Styling-Produkt vom letzten Waschtag — nicht mit neuen Produkten experimentieren."
 
     const refreshRationale = [
-      "Lockenrefresh ist eine abgekuerzte Version des letzten Steps der Locken-Routine — nur leicht anfeuchten, Produkt auffrischen, trocknen lassen.",
+      "Lockenrefresh ist eine abgekürzte Version des letzten Steps der Locken-Routine — nur leicht anfeuchten, Produkt auffrischen, trocknen lassen.",
       productEcho,
-      "Regelmaessiges Auffrischen trainiert langfristig die Lockenstruktur.",
+      "Regelmäßiges Auffrischen trainiert langfristig die Lockenstruktur.",
     ]
 
     const refreshCaveats: string[] = []
@@ -1637,7 +1635,7 @@ function buildRoutineSlots(
       refreshRationale.splice(
         2,
         0,
-        "Bei Bedarf vorher etwas Leave-In in trockene Laengen einarbeiten (siehe Leave-In-Slot).",
+        "Bei Bedarf vorher etwas Leave-In in trockene Längen einarbeiten (siehe Leave-In-Slot).",
       )
       if (profile?.thickness === "fine") {
         refreshCaveats.push(
@@ -1653,7 +1651,7 @@ function buildRoutineSlots(
       label: "Lockenrefresh",
       action: leaveInPresent ? "adjust" : "add",
       category: null,
-      cadence: "an Tagen zwischen den Waeschen, ca. 10 Min.",
+      cadence: "an Tagen zwischen den Wäschen, ca. 10 Min.",
       rationale: refreshRationale,
       caveats: refreshCaveats,
       topic_ids: ["lockenrefresh"],
@@ -1683,14 +1681,14 @@ function buildRoutineSlots(
             "Eine Maske bleibt Zusatzpflege und wird nur bei echtem Bedarf fest eingeplant.",
             getRoutineMaskTypeLabel(maskDecision.targetProfile?.balance ?? null)
               ? `Der Fokus liegt eher auf ${getRoutineMaskTypeLabel(maskDecision.targetProfile?.balance ?? null)}.`
-              : "Die Maske wird ueber Bedarf und Vertraeglichkeit gesteuert.",
+              : "Die Maske wird über Bedarf und Verträglichkeit gesteuert.",
           ]
-        : ["Aktuell sprechen die Profilsignale nicht fuer eine feste Masken-Rolle in der Routine."],
+        : ["Aktuell sprechen die Profilsignale nicht für eine feste Masken-Rolle in der Routine."],
       caveats: [],
       topic_ids: activeTopicIds.has("bond_builder") ? ["bond_builder"] : [],
       product_linkable:
         !maskPresent && maskDecision.relevant && Boolean(maskDecision.targetProfile?.balance),
-      product_query: "Ich suche eine Maske fuer meine Routine.",
+      product_query: "Ich suche eine Maske für meine Routine.",
       attachment_priority: 30,
     })
   }
@@ -1733,26 +1731,26 @@ function buildRoutineSlots(
     const oilActive = oilAction === "add" || oilAction === "adjust"
 
     const oilRationale = [
-      "Hair Oiling bleibt ein optionaler Pre-Wash-Baustein und keine Pflicht fuer jede Routine.",
+      "Hair Oiling bleibt ein optionaler Pre-Wash-Baustein und keine Pflicht für jede Routine.",
       hasScalpHairOilingFit(context)
-        ? "Es kann trockene, nicht entzuendliche Kopfhaut sanft unterstuetzen und gleichzeitig Laengen und Spitzen vor der Waesche schuetzen."
-        : "Es ist vor allem dann sinnvoll, wenn Trockenheit oder Oberflaechenschaeden ein Thema sind.",
+        ? "Es kann trockene, nicht entzündliche Kopfhaut sanft unterstützen und gleichzeitig Längen und Spitzen vor der Wäsche schützen."
+        : "Es ist vor allem dann sinnvoll, wenn Trockenheit oder Oberflächenschäden ein Thema sind.",
     ]
     if (oilActive) {
       oilRationale.push(
-        "Wichtig beim Auswaschen: Shampoo zuerst auf trockenes Haar auftragen, dann erst mit Wasser ausspuelen.",
+        "Wichtig beim Auswaschen: Shampoo zuerst auf trockenes Haar auftragen, dann erst mit Wasser ausspülen.",
       )
     }
 
     const oilCaveats: string[] = []
     if (context.scalp_condition === "irritated") {
       oilCaveats.push(
-        "Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht ueberladen.",
+        "Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht überladen.",
       )
     }
     if (oilActive) {
       oilCaveats.push(
-        "Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.",
+        "Ätherische Öle (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisöl verdünnen.",
       )
     }
 
@@ -1763,12 +1761,12 @@ function buildRoutineSlots(
       label: "Hair Oiling",
       action: oilAction,
       category: "oil",
-      cadence: "vor einzelnen Waeschen nach Bedarf",
+      cadence: "vor einzelnen Wäschen nach Bedarf",
       rationale: oilRationale,
       caveats: oilCaveats,
       topic_ids: ["hair_oiling"],
       product_linkable: activeTopicIds.has("hair_oiling") && !oilPresent,
-      product_query: "Ich moechte Hair Oiling vor dem Waschen machen.",
+      product_query: "Ich möchte Hair Oiling vor dem Waschen machen.",
       attachment_priority: 40,
     })
   }
@@ -1787,10 +1785,10 @@ function buildRoutineSlots(
         category: null,
         cadence: null,
         rationale: [
-          "Bond Builder ist ein optionaler Baustein fuer gezielte Reparatur auf molekularer Ebene.",
+          "Bond Builder ist ein optionaler Baustein für gezielte Reparatur auf molekularer Ebene.",
         ],
         caveats: [
-          "Dein Profil zeigt aktuell keine starken Schadenssignale — Bond Builder ist hier eher optional, aber wir erklaeren gerne wie es funktioniert.",
+          "Dein Profil zeigt aktuell keine starken Schadenssignale — Bond Builder ist hier eher optional, aber wir erklären gerne wie es funktioniert.",
         ],
         topic_ids: ["bond_builder"],
         product_linkable: false,
@@ -1805,33 +1803,33 @@ function buildRoutineSlots(
       const bondRationale: string[] =
         severity === "severe"
           ? [
-              "Die Kombination aus K18 und Olaplex kann die Reparatur deutlich verstaerken — K18 fuer Laengsverbindungen, Olaplex fuer Querverbindungen.",
+              "Die Kombination aus K18 und Olaplex kann die Reparatur deutlich verstärken — K18 für Längsverbindungen, Olaplex für Querverbindungen.",
             ]
           : hasChemical
             ? [
-                "Bond Builder kann hier gezielt unterstuetzen.",
+                "Bond Builder kann hier gezielt unterstützen.",
                 "Bei chemischer Belastung kann Olaplex (Querverbindungen) besonders sinnvoll sein.",
               ]
             : [
-                "Bond Builder kann hier gezielt unterstuetzen.",
-                "Bei allgemeiner Schaedigung ohne Chemie ist K18 (Laengsverbindungen) oft der bessere Einstieg.",
+                "Bond Builder kann hier gezielt unterstützen.",
+                "Bei allgemeiner Schädigung ohne Chemie ist K18 (Längsverbindungen) oft der bessere Einstieg.",
               ]
 
       const bondCaveats: string[] = [
-        "Zu haeufige Anwendung kann das Haar steif und sproede machen — Pausen einhalten.",
+        "Zu häufige Anwendung kann das Haar steif und spröde machen — Pausen einhalten.",
       ]
 
       if (profile?.protein_moisture_balance === "snaps") {
         bondCaveats.push(
-          "Die Haare reissen aktuell leicht — ein professionelles Beratungsgespraech kann hier zusaetzlich helfen.",
+          "Die Haare reißen aktuell leicht — ein professionelles Beratungsgespräch kann hier zusätzlich helfen.",
         )
       } else if (profile?.protein_moisture_balance === "stretches_stays") {
         bondCaveats.push(
-          "Bond Builder und Protein koennen parallel laufen, solange die Haare noch ueberdehnt sind.",
+          "Bond Builder und Protein können parallel laufen, solange die Haare noch überdehnt sind.",
         )
       } else if (profile?.protein_moisture_balance === "stretches_bounces") {
         bondCaveats.push(
-          "Die Haare sind aktuell stabil — Protein-Behandlungen dazu sind nicht mehr noetig, Feuchtigkeit reicht.",
+          "Die Haare sind aktuell stabil — Protein-Behandlungen dazu sind nicht mehr nötig, Feuchtigkeit reicht.",
         )
       }
 
@@ -1842,7 +1840,7 @@ function buildRoutineSlots(
         label: "Bond Builder / Repair-Support",
         action: options.usesBondBuilder ? "adjust" : "add",
         category: null,
-        cadence: "4 Anwendungen am Stueck, dann 4 Waeschen Pause, danach nach Bedarf",
+        cadence: "4 Anwendungen am Stück, dann 4 Wäschen Pause, danach nach Bedarf",
         rationale: bondRationale,
         caveats: bondCaveats,
         topic_ids: ["bond_builder"],
@@ -1969,7 +1967,7 @@ export function selectRoutinePriorityLever(
       source: "care_risk",
       slot: resetSlot,
       reason:
-        "Rueckstaende, Mineralien oder Ueberlagerung koennen verhindern, dass Pflege sauber greift.",
+        "Rückstände, Mineralien oder Überlagerung können verhindern, dass Pflege sauber greift.",
       score: 100,
       supportingSlots: hardResetSlot ? [hardResetSlot] : [],
     })
@@ -1993,7 +1991,7 @@ export function selectRoutinePriorityLever(
         source: "care_risk",
         slot: selectedSlot,
         reason:
-          "Bei aktivem Bruch oder strukturellem Schaden kommt die Pflegebasis vor zusaetzlichen Extras.",
+          "Bei aktivem Bruch oder strukturellem Schaden kommt die Pflegebasis vor zusätzlichen Extras.",
         score: 90,
         supportingSlots: orderedCareSlots.slice(1),
       })
@@ -2013,7 +2011,7 @@ export function selectRoutinePriorityLever(
       source: "care_risk",
       slot: mechanicalSlot,
       reason:
-        "Mechanische Belastung ist hier das staerkste erkennbare Signal und sollte als Guardrail zuerst sitzen.",
+        "Mechanische Belastung ist hier das stärkste erkennbare Signal und sollte als Guardrail zuerst sitzen.",
       score: 80,
     })
   }
@@ -2034,7 +2032,7 @@ export function selectRoutinePriorityLever(
         source: "care_risk",
         slot: exposureSlot,
         reason:
-          "Hitze oder chemische Belastung spricht fuer Schutz und Pflege, ohne aktive Schaeden zu ueberstimmen.",
+          "Hitze oder chemische Belastung spricht für Schutz und Pflege, ohne aktive Schäden zu überstimmen.",
         score: 70,
       })
     }
@@ -2046,7 +2044,7 @@ export function selectRoutinePriorityLever(
       id: "scalp-safety",
       source: "care_risk",
       slot: scalpSlot,
-      reason: "Kopfhaut-Signale veraendern, wie sicher und gezielt die Routine reinigen sollte.",
+      reason: "Kopfhaut-Signale verändern, wie sicher und gezielt die Routine reinigen sollte.",
       score: 60,
     })
   }
@@ -2087,7 +2085,7 @@ export function selectRoutinePriorityLever(
         id: "stated-goal",
         source: "stated_goal",
         slot: goalSlot,
-        reason: "Ohne staerkeren Risiko-Hebel fuehrt das ausdrueckliche Ziel die Routine.",
+        reason: "Ohne stärkeren Risiko-Hebel führt das ausdrückliche Ziel die Routine.",
         score: 40,
       })
     }
@@ -2103,7 +2101,7 @@ export function selectRoutinePriorityLever(
     id: "inferred-need",
     source: "inferred_need",
     slot: inferredSlot,
-    reason: "Der sichtbarste zusaetzliche Routine-Baustein ergibt sich aus den Profilsignalen.",
+    reason: "Der sichtbarste zusätzliche Routine-Baustein ergibt sich aus den Profilsignalen.",
     score: 10,
   })
 }
@@ -2287,7 +2285,7 @@ export function buildRoutinePlan(
         phase === "base_wash"
           ? "Basisroutine"
           : phase === "maintenance"
-            ? "Pflege zwischen den Waeschen"
+            ? "Pflege zwischen den Wäschen"
             : "Gelegentliche Extras",
       summary: buildSectionSummary(phase, profile),
       slots: sectionSlots.get(phase) ?? [],

@@ -120,7 +120,7 @@
       "rubric_id": "product.user_facing_unsupported_claim_fallback",
       "priority": "high",
       "source": "base/product-recommendation.md",
-      "message": "Translate missing metadata into user-facing language; never expose raw/internal phrases like 'Im Katalog ist kein Claim hinterlegt'. Prefer safe uncertainty such as 'Das kann ich fuer diese Variante nicht sicher versprechen. Sicher beruecksichtigen kann ich aktuell ...', then continue only with grounded generic attributes, supported facts, or an exact-variant ask when helpful."
+      "message": "Translate missing metadata into user-facing language; never expose raw/internal phrases like 'Im Katalog ist kein Claim hinterlegt'. Prefer safe uncertainty such as 'Das kann ich für diese Variante nicht sicher versprechen. Sicher berücksichtigen kann ich aktuell ...', then continue only with grounded generic attributes, supported facts, or an exact-variant ask when helpful."
     },
     {
       "rubric_id": "product.feasible_detail_cta",

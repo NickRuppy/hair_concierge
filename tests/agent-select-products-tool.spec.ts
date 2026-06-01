@@ -121,7 +121,7 @@ function createLeaveInMatchedProduct(
       score,
       top_reasons: ["Passt zum Leave-in-Zielprofil"],
       tradeoffs: [],
-      usage_hint: "Sparsam in die Laengen geben.",
+      usage_hint: "Sparsam in die Längen geben.",
       matched_profile: {
         hair_texture: "wavy",
         thickness: "fine",
@@ -161,7 +161,7 @@ function createMaskMatchedProduct(
       top_reasons: ["Passt zum Masken-Zielprofil"],
       tradeoffs: [],
       usage_hint:
-        "Nach dem Shampoo in die Laengen und Spitzen geben, gruendlich ausspuelen und danach Conditioner verwenden.",
+        "Nach dem Shampoo in die Längen und Spitzen geben, gründlich ausspülen und danach Conditioner verwenden.",
       mask_type: "protein",
       need_strength: 2,
       fit_status: "ideal",
@@ -184,9 +184,9 @@ function createOilMatchedProduct(
     recommendation_meta: {
       category: "oil",
       score,
-      top_reasons: ["Passt zum Oel-Zweck"],
+      top_reasons: ["Passt zum Öl-Zweck"],
       tradeoffs: [],
-      usage_hint: "Sehr sparsam in die Laengen und Spitzen geben.",
+      usage_hint: "Sehr sparsam in die Längen und Spitzen geben.",
       matched_profile: {
         thickness: "fine",
       },
@@ -213,10 +213,9 @@ function createDryShampooMatchedProduct(
     recommendation_meta: {
       category: "dry_shampoo",
       score,
-      top_reasons: ["Passt als Between-Wash-Bridge fuer den Ansatz"],
+      top_reasons: ["Passt als Between-Wash-Brücke für den Ansatz"],
       tradeoffs: [],
-      usage_hint:
-        "Nur als Between-Wash-Bruecke sparsam am Ansatz einsetzen und spaeter auswaschen.",
+      usage_hint: "Nur als Between-Wash-Brücke sparsam am Ansatz einsetzen und später auswaschen.",
       primary_effect: "classic_refresh",
       hair_color_fit: "universal",
       scalp_sensitivity_fit: "sensitive_ok",
@@ -384,13 +383,13 @@ test("projectSelectedProducts returns authoritative shampoo recommendation paylo
     [
       createShampooMatchedProduct("p-1", 0.94, [
         "Passt zum fettigen Ansatz",
-        "Leicht genug fuer feines Haar",
+        "Leicht genug für feines Haar",
       ]),
       createShampooMatchedProduct(
         "p-2",
         0.86,
-        ["Staerkerer Kopfhaut-Fokus"],
-        ["Kann bei trockenen Laengen etwas aktiver wirken"],
+        ["Stärkerer Kopfhaut-Fokus"],
+        ["Kann bei trockenen Längen etwas aktiver wirken"],
       ),
       createShampooMatchedProduct("p-3", 0.71, ["Sanftere Alternative"]),
     ],
@@ -421,7 +420,7 @@ test("projectSelectedProducts returns authoritative shampoo recommendation paylo
         rank: 1,
         product_id: "p-1",
         fit_reason:
-          "Idealer Treffer fuer feines Haar und schnell fettenden Kopfhaut-Fokus; Reinigungsintensitaet: normal.",
+          "Idealer Treffer für feines Haar und schnell fettenden Kopfhaut-Fokus; Reinigungsintensität: normal.",
         caveat: null,
         hasUsageHint: false,
       },
@@ -429,15 +428,15 @@ test("projectSelectedProducts returns authoritative shampoo recommendation paylo
         rank: 2,
         product_id: "p-2",
         fit_reason:
-          "Idealer Treffer fuer feines Haar und schnell fettenden Kopfhaut-Fokus; Reinigungsintensitaet: normal.",
-        caveat: "Kann bei trockenen Laengen etwas aktiver wirken",
+          "Idealer Treffer für feines Haar und schnell fettenden Kopfhaut-Fokus; Reinigungsintensität: normal.",
+        caveat: "Kann bei trockenen Längen etwas aktiver wirken",
         hasUsageHint: false,
       },
       {
         rank: 3,
         product_id: "p-3",
         fit_reason:
-          "Idealer Treffer fuer feines Haar und schnell fettenden Kopfhaut-Fokus; Reinigungsintensitaet: normal.",
+          "Idealer Treffer für feines Haar und schnell fettenden Kopfhaut-Fokus; Reinigungsintensität: normal.",
         caveat: null,
         hasUsageHint: false,
       },
@@ -447,19 +446,19 @@ test("projectSelectedProducts returns authoritative shampoo recommendation paylo
     "p-1": [
       "Kopfhaut-Fokus: Dehydriert / Fettig",
       "Kopfhaut-Route: fettig/dehydriert",
-      "Reinigungsintensitaet: normal",
+      "Reinigungsintensität: normal",
       "Fit: idealer Treffer",
     ],
     "p-2": [
       "Kopfhaut-Fokus: Dehydriert / Fettig",
       "Kopfhaut-Route: fettig/dehydriert",
-      "Reinigungsintensitaet: normal",
+      "Reinigungsintensität: normal",
       "Fit: idealer Treffer",
     ],
     "p-3": [
       "Kopfhaut-Fokus: Dehydriert / Fettig",
       "Kopfhaut-Route: fettig/dehydriert",
-      "Reinigungsintensitaet: normal",
+      "Reinigungsintensität: normal",
       "Fit: idealer Treffer",
     ],
   })
@@ -591,7 +590,7 @@ test("projectSelectedProducts exposes conditioner claims without density or dama
           score: 94,
           top_reasons: ["Passt zum Conditioner-Zielprofil"],
           tradeoffs: [],
-          usage_hint: "In die Laengen geben.",
+          usage_hint: "In die Längen geben.",
           matched_profile: {
             thickness: "fine",
             density: "low",
@@ -615,7 +614,7 @@ test("projectSelectedProducts exposes conditioner claims without density or dama
           score: 88,
           top_reasons: ["Supportive Balance"],
           tradeoffs: ["Etwas breiter als dein Feuchtigkeitsfokus."],
-          usage_hint: "In die Laengen geben.",
+          usage_hint: "In die Längen geben.",
           matched_profile: {
             thickness: "fine",
             density: "low",
@@ -664,18 +663,18 @@ test("projectSelectedProducts exposes conditioner claims without density or dama
     value: "silicone_free",
     reason: "no_structured_product_data",
     user_message:
-      "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensitaet und Fit.",
+      "Wünsche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensität und Fit.",
   })
   assert.deepEqual(result.comparison_facts, {
     "p-conditioner": [
       "Balance: Feuchtigkeit",
-      "Pflegeintensitaet: Intensiv",
+      "Pflegeintensität: Intensiv",
       "Fit: idealer Treffer",
     ],
     "p-balanced": [
       "Balance: ausgewogene Pflege",
-      "Pflegeintensitaet: Mittel",
-      "Fit: unterstuetzender Treffer",
+      "Pflegeintensität: Mittel",
+      "Fit: unterstützender Treffer",
     ],
   })
   assertComparisonFactsAtLeast(result, ["p-conditioner", "p-balanced"], 2)
@@ -708,7 +707,7 @@ test("projectSelectedProducts adds conditioner profile deviation notice when mes
           score: 94,
           top_reasons: ["Passt zum leichteren Zielprofil"],
           tradeoffs: [],
-          usage_hint: "In die Laengen geben.",
+          usage_hint: "In die Längen geben.",
           matched_profile: {
             thickness: "fine",
             density: "medium",
@@ -813,7 +812,7 @@ test("projectSelectedProducts keeps conditioner comparison facts useful when fit
           score: 94,
           top_reasons: ["Passt zum Zielprofil"],
           tradeoffs: [],
-          usage_hint: "In die Laengen geben.",
+          usage_hint: "In die Längen geben.",
           matched_profile: {
             thickness: "normal",
             density: "medium",
@@ -838,7 +837,7 @@ test("projectSelectedProducts keeps conditioner comparison facts useful when fit
           score: 91,
           top_reasons: ["Passt ebenfalls zum Zielprofil"],
           tradeoffs: [],
-          usage_hint: "In die Laengen geben.",
+          usage_hint: "In die Längen geben.",
           matched_profile: {
             thickness: "normal",
             density: "medium",
@@ -928,7 +927,7 @@ test("projectSelectedProducts exposes leave-in claims and unsupported ingredient
     value: "silicone_free",
     reason: "no_structured_product_data",
     user_message:
-      "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit.",
+      "Wünsche wie silikonfrei, kokosfrei, proteinfrei oder ölfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit.",
   })
   assert.deepEqual(result.comparison_facts, {
     "p-leave-in": ["Format: Spray", "Gewicht: Mittel", "Balance: Feuchtigkeit"],
@@ -964,7 +963,7 @@ test("projectSelectedProducts describes weaker leave-in alternatives without int
   )
 
   assertProjectionDoesNotExposeFallback(result)
-  assert.match(result.products[1]?.fit_reason ?? "", /Schwaecherer Treffer/)
+  assert.match(result.products[1]?.fit_reason ?? "", /Schwächerer Treffer/)
   assert.match(result.products[1]?.caveat ?? "", /Nachgeordnet|nicht ganz so passend/)
   assert.match(result.comparison_facts?.["p-weaker"]?.join(" ") ?? "", /weicht etwas ab/)
   assertComparisonFactsAtLeast(result, ["p-primary", "p-weaker"], 2)
@@ -1306,7 +1305,7 @@ test("selectProducts treats separate heat protectant as a leave-in bonus for blo
       "Separater Hitzeschutz vorhanden: Leave-in-Hitzeschutz ist Bonus, kein Muss.",
     ),
   )
-  assert.match(result.category_guidance, /im Einstieg ausdruecklich/)
+  assert.match(result.category_guidance, /im Einstieg ausdrücklich/)
   assert.match(result.category_guidance, /ein Produkt weniger/)
   assert.match(result.category_guidance, /separaten Hitzeschutz behalten/)
 })
@@ -1361,7 +1360,7 @@ test("selectProducts recommends conditioner for low-need balanced profile with e
             score: 94,
             top_reasons: ["Passt zu einem leichten, ausgewogenen Conditioner-Zielprofil."],
             tradeoffs: [],
-            usage_hint: "In die Laengen geben.",
+            usage_hint: "In die Längen geben.",
             matched_profile: {
               thickness: "fine",
               density: "medium",
@@ -1439,7 +1438,7 @@ test("selectProducts keeps silicone-free unsupported while still recommending co
           score: 94,
           top_reasons: ["Passt zum ausgewogenen Conditioner-Zielprofil."],
           tradeoffs: [],
-          usage_hint: "In die Laengen geben.",
+          usage_hint: "In die Längen geben.",
           matched_profile: {
             thickness: "normal",
             density: "medium",
@@ -1604,7 +1603,7 @@ test("selectProducts tool carries unsupported ingredient caveats for leave-in re
     value: "silicone_free",
     reason: "no_structured_product_data",
     user_message:
-      "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit.",
+      "Wünsche wie silikonfrei, kokosfrei, proteinfrei oder ölfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit.",
   })
 })
 
@@ -1649,7 +1648,7 @@ test("projectSelectedProducts exposes mask claims and unsupported ingredient cav
         product_weight: "rich",
         product_concentration: "high",
         product_balance_direction: "balanced",
-        tradeoffs: ["Wenn du sie testest, dann eher sparsam und nicht bei jeder Waesche."],
+        tradeoffs: ["Wenn du sie testest, dann eher sparsam und nicht bei jeder Wäsche."],
       }),
     ],
     LOW_DAMAGE_PROFILE,
@@ -1669,11 +1668,11 @@ test("projectSelectedProducts exposes mask claims and unsupported ingredient cav
     value: "silicone_free",
     reason: "no_structured_product_data",
     user_message:
-      "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Masken-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensitaet und Fit.",
+      "Wünsche wie silikonfrei, kokosfrei, proteinfrei oder ölfrei sind in dieser Masken-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensität und Fit.",
   })
   assert.deepEqual(result.comparison_facts, {
-    "p-mask-1": ["Balance: Protein", "Intensitaet: Mittel", "Gewicht: Mittel"],
-    "p-mask-2": ["Balance: Ausgewogen", "Intensitaet: Hoch", "Gewicht: Reichhaltig"],
+    "p-mask-1": ["Balance: Protein", "Intensität: Mittel", "Gewicht: Mittel"],
+    "p-mask-2": ["Balance: Ausgewogen", "Intensität: Hoch", "Gewicht: Reichhaltig"],
   })
   assertComparisonFactsAtLeast(result, ["p-mask-1", "p-mask-2"], 2)
   assertProjectionDoesNotExposeFallback(result)
@@ -1699,7 +1698,7 @@ test("projectSelectedProducts describes weaker mask alternatives without interna
   )
 
   assertProjectionDoesNotExposeFallback(result)
-  assert.match(result.products[1]?.fit_reason ?? "", /Schwaecherer Treffer/)
+  assert.match(result.products[1]?.fit_reason ?? "", /Schwächerer Treffer/)
   assert.match(result.products[1]?.caveat ?? "", /Nachgeordnet|nicht ganz so passend/)
   assert.match(result.comparison_facts?.["p-mask-weaker"]?.join(" ") ?? "", /weicht etwas ab/)
   assertComparisonFactsAtLeast(result, ["p-mask-primary", "p-mask-weaker"], 2)
@@ -1802,7 +1801,7 @@ test("projectSelectedProducts exposes mask profile basis with balance and target
   assert.ok(result.profile_basis.includes("Protein-/Feuchtigkeitsbalance: Proteinmangel"))
   assert.ok(result.profile_basis.includes("Ziel-Gewicht: Leicht"))
   assert.ok(result.profile_basis.includes("Ziel-Balance: Protein"))
-  assert.ok(result.profile_basis.includes("Masken-Intensitaet: Mittel"))
+  assert.ok(result.profile_basis.includes("Masken-Intensität: Mittel"))
 })
 
 test("projectSelectedProducts keeps mask comparison facts useful when fit axes match", () => {
@@ -1820,8 +1819,8 @@ test("projectSelectedProducts keeps mask comparison facts useful when fit axes m
   )
 
   assert.deepEqual(result.comparison_facts, {
-    "p-mask-cheap": ["Balance: Protein", "Intensitaet: Mittel", "Preis: 4.95 EUR"],
-    "p-mask-pricey": ["Balance: Protein", "Intensitaet: Mittel", "Preis: 12.95 EUR"],
+    "p-mask-cheap": ["Balance: Protein", "Intensität: Mittel", "Preis: 4.95 EUR"],
+    "p-mask-pricey": ["Balance: Protein", "Intensität: Mittel", "Preis: 12.95 EUR"],
   })
   assertComparisonFactsAtLeast(result, ["p-mask-cheap", "p-mask-pricey"], 2)
   assertProjectionDoesNotExposeFallback(result)
@@ -1857,8 +1856,8 @@ test("projectSelectedProducts keeps optional bondbuilder assessment with priced 
         recommendation_meta: {
           category: "bondbuilder",
           score: 9.4,
-          top_reasons: ["Passt fuer eher konservative Bondbuilding-Unterstuetzung."],
-          tradeoffs: ["Staerker als der aktuelle Pflichtbedarf."],
+          top_reasons: ["Passt für eher konservative Bondbuilding-Unterstützung."],
+          tradeoffs: ["Stärker als der aktuelle Pflichtbedarf."],
           usage_hint: "Sparsam als Zusatz einsetzen.",
           matched_intensity: "maintenance",
           application_mode: "pre_shampoo",
@@ -1876,8 +1875,8 @@ test("projectSelectedProducts keeps optional bondbuilder assessment with priced 
         recommendation_meta: {
           category: "bondbuilder",
           score: 9.1,
-          top_reasons: ["Passt fuer eher konservative Bondbuilding-Unterstuetzung."],
-          tradeoffs: ["Staerker als der aktuelle Pflichtbedarf."],
+          top_reasons: ["Passt für eher konservative Bondbuilding-Unterstützung."],
+          tradeoffs: ["Stärker als der aktuelle Pflichtbedarf."],
           usage_hint: "Sparsam als Zusatz einsetzen.",
           matched_intensity: "maintenance",
           application_mode: "pre_shampoo",
@@ -1910,7 +1909,7 @@ test("projectSelectedProducts keeps optional bondbuilder assessment with priced 
 
 test("projectSelectedProducts exposes bondbuilder usage hints as user-facing product claims", () => {
   const usageHint =
-    "Nach dem Shampoo ohne Conditioner auf handtuchtrockenes Haar geben, 4 Minuten einwirken lassen, nicht ausspuelen und danach stylen. In den ersten 4-6 Waeschen nach jeder Waesche, danach nach Bedarf verwenden."
+    "Nach dem Shampoo ohne Conditioner auf handtuchtrockenes Haar geben, 4 Minuten einwirken lassen, nicht ausspülen und danach stylen. In den ersten 4-6 Wäschen nach jeder Wäsche, danach nach Bedarf verwenden."
 
   const result = projectSelectedProducts(
     [
@@ -1919,7 +1918,7 @@ test("projectSelectedProducts exposes bondbuilder usage hints as user-facing pro
         recommendation_meta: {
           category: "bondbuilder",
           score: 9.5,
-          top_reasons: ["Passt als Leave-in-Strukturpflege fuer stark beanspruchte Laengen."],
+          top_reasons: ["Passt als Leave-in-Strukturpflege für stark beanspruchte Längen."],
           tradeoffs: [],
           usage_hint: usageHint,
           matched_intensity: "intensive",
@@ -1965,7 +1964,7 @@ test("projectSelectedProducts labels deep-cleansing reset facts without raw enum
         recommendation_meta: {
           category: "deep_cleansing_shampoo",
           score: 9.4,
-          top_reasons: ["Passt als Reset fuer Aufbau und Hartwasser-Kontext."],
+          top_reasons: ["Passt als Reset für Aufbau und Hartwasser-Kontext."],
           tradeoffs: [],
           usage_hint: "Gelegentlich statt normalem Shampoo verwenden.",
           reset_need_level: "strong",
@@ -1995,7 +1994,7 @@ test("projectSelectedProducts labels deep-cleansing reset facts without raw enum
   ].join(" ")
 
   assert.match(renderedFacts, /breiter Styling-, Produkt- und Mineral-Reset/)
-  assert.match(renderedFacts, /Reset-Intensitaet: mittel/)
+  assert.match(renderedFacts, /Reset-Intensität: mittel/)
   assert.match(renderedFacts, /Kopfhaut-Fokus: ausgeglichene Kopfhaut/)
   assert.match(renderedFacts, /Fit: idealer Treffer/)
   assert.doesNotMatch(renderedFacts, /broad_spectrum_detox|product_sebum_buildup|medium|balanced/)
@@ -2146,7 +2145,7 @@ test("projectSelectedProducts blocks conditioner products when protein balance i
       key: "protein_moisture_balance",
       label: "Protein-/Feuchtigkeitsbalance",
       blocking: true,
-      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Conditioner-Auswahl.",
+      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance für die Conditioner-Auswahl.",
     },
   ])
 })
@@ -2166,7 +2165,7 @@ test("projectSelectedProducts blocks mask products when protein balance is missi
       key: "protein_moisture_balance",
       label: "Protein-/Feuchtigkeitsbalance",
       blocking: true,
-      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Masken-Auswahl.",
+      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance für die Masken-Auswahl.",
     },
   ])
 })
@@ -2208,8 +2207,8 @@ test("projectSelectedProducts preserves oil no-recommendation decisions as redir
   assert.equal(result.product_response_policy, "redirect_to_better_lever")
   assert.deepEqual(result.products, [])
   assert.deepEqual(result.missing_info, [])
-  assert.match(result.policy_reason, /unterdrueckt Produkte/)
-  assert.match(result.category_guidance, /Build-up|weniger Oel|Keine Oel-Produkte/)
+  assert.match(result.policy_reason, /unterdrückt Produkte/)
+  assert.match(result.category_guidance, /Build-up|weniger Öl|Keine Öl-Produkte/)
 })
 
 test("projectSelectedProducts returns not_recommended when shampoo is not the right lever", () => {
@@ -2234,7 +2233,7 @@ test("projectSelectedProducts returns not_recommended when shampoo is not the ri
 
 test("projectSelectedProducts suppresses shampoo products when the category is not recommended", () => {
   const result = projectSelectedProducts(
-    [createShampooMatchedProduct("p-1", 0.94, ["Waere ein guter Shampoo-Treffer"])],
+    [createShampooMatchedProduct("p-1", 0.94, ["Wäre ein guter Shampoo-Treffer"])],
     { thickness: "normal" } as HairProfile,
     "shampoo",
     createShampooRuntimeStub(
@@ -2254,7 +2253,7 @@ test("projectSelectedProducts suppresses shampoo products when the category is n
 
 test("projectSelectedProducts treats dry-length shampoo questions as not shampoo-first", () => {
   const result = projectSelectedProducts(
-    [createShampooMatchedProduct("p-1", 0.94, ["Waere ein guter Shampoo-Treffer"])],
+    [createShampooMatchedProduct("p-1", 0.94, ["Wäre ein guter Shampoo-Treffer"])],
     {
       thickness: "normal",
       scalp_type: "balanced",
@@ -2270,7 +2269,7 @@ test("projectSelectedProducts treats dry-length shampoo questions as not shampoo
 
   assert.equal(result.decision, "not_recommended")
   assert.equal(result.product_response_policy, "redirect_to_better_lever")
-  assert.match(result.category_guidance, /Trockene Laengen/)
+  assert.match(result.category_guidance, /Trockene Längen/)
   assert.deepEqual(result.products, [])
 })
 
@@ -2366,10 +2365,7 @@ for (const entry of shampooPolicyCases) {
     if (entry.expectedPolicy === "recommend_with_caveat") {
       assert.equal(result.decision, "recommended")
       assert.equal(result.products.length, 1)
-      assert.match(
-        result.category_guidance,
-        /nicht der staerkste Hebel|nicht der stärkste Hebel|staerkerer Hebel/i,
-      )
+      assert.match(result.category_guidance, /nicht der stärkste Hebel|stärkerer Hebel/i)
     } else {
       assert.equal(result.decision, "not_recommended")
       assert.equal(result.products.length, 0)
@@ -2495,8 +2491,8 @@ test("projectSelectedProducts keeps itchy dandruff cautious but offers a useful 
   assert.deepEqual(result.products, [])
   assert.match(result.category_guidance, /Anti-Schuppen|Schuppen/i)
   assert.match(result.category_guidance, /empfindliche|gereizte|juck/i)
-  assert.match(result.category_guidance, /Optionen|auswaehlen|einordnen/i)
-  assert.match(result.category_guidance, /anhaelt|stark|professionell|dermatologisch/i)
+  assert.match(result.category_guidance, /Optionen|auswählen|einordnen/i)
+  assert.match(result.category_guidance, /anhält|stark|professionell|dermatologisch/i)
   assert.doesNotMatch(result.category_guidance, /Behandlung|behand|Bekaempf/i)
 })
 
@@ -2521,7 +2517,7 @@ test("projectSelectedProducts acknowledges oily-root shampoo troubleshooting", (
   assert.match(result.category_guidance, /fettender Ansatz/)
   assert.equal(
     result.products[0].fit_reason,
-    "Idealer Treffer fuer feines Haar und schnell fettenden Kopfhaut-Fokus; Reinigungsintensitaet: normal.",
+    "Idealer Treffer für feines Haar und schnell fettenden Kopfhaut-Fokus; Reinigungsintensität: normal.",
   )
 })
 
@@ -2552,7 +2548,7 @@ test("projectSelectedProducts sanitizes weaker shampoo caveats and maps stale ge
   assert.match(result.products[0]?.caveat ?? "", /Nachgeordnet|nicht ganz so passend/i)
   assert.equal(
     result.products[1]?.caveat,
-    "Passt nicht exakt zum abgeleiteten Shampoo-Fokus. Nur nachgeordnet zeigen, wenn keine ausreichend passenden Treffer verfuegbar sind.",
+    "Passt nicht exakt zum abgeleiteten Shampoo-Fokus. Nur nachgeordnet zeigen, wenn keine ausreichend passenden Treffer verfügbar sind.",
   )
   assertProjectionDoesNotExposeFallback(result)
 })
@@ -2591,13 +2587,13 @@ test("projectSelectedProducts exposes structured shampoo comparison facts", () =
     "p-1": [
       "Kopfhaut-Fokus: Dehydriert / Fettig",
       "Kopfhaut-Route: fettig/dehydriert",
-      "Reinigungsintensitaet: normal",
+      "Reinigungsintensität: normal",
       "Fit: idealer Treffer",
     ],
     "p-2": [
       "Kopfhaut-Fokus: Normal",
       "Kopfhaut-Route: ausgeglichen",
-      "Reinigungsintensitaet: sanft",
+      "Reinigungsintensität: sanft",
       "Fit: weicht ab",
     ],
   })
@@ -2705,7 +2701,7 @@ test("projectSelectedProducts exposes per-product shampoo claims from structured
       [
         "scalp_condition",
         "irritated",
-        "Zur empfindlichen Kopfhaut habe ich bei diesen Produkten keine sichere Spezialangabe. Ich bewerte sie deshalb vor allem nach Kopfhaut-Fokus, Haardicke und Reinigungsintensitaet.",
+        "Zur empfindlichen Kopfhaut habe ich bei diesen Produkten keine sichere Spezialangabe. Ich bewerte sie deshalb vor allem nach Kopfhaut-Fokus, Haardicke und Reinigungsintensität.",
       ],
     ],
   )
@@ -2725,7 +2721,7 @@ test("projectSelectedProducts writes shampoo fit reasons from structured claims,
         recommendation_meta: {
           category: "shampoo",
           score: 0.94,
-          top_reasons: ["Kraeftigt sichtbar und gibt mehr Fuelle"],
+          top_reasons: ["Kräftigt sichtbar und gibt mehr Fülle"],
           tradeoffs: [],
           usage_hint: "",
           matched_profile: {
@@ -2752,7 +2748,7 @@ test("projectSelectedProducts writes shampoo fit reasons from structured claims,
 
   assert.equal(
     result.products[0].fit_reason,
-    "Idealer Treffer fuer feines Haar und schnell fettenden Kopfhaut-Fokus; Reinigungsintensitaet: normal.",
+    "Idealer Treffer für feines Haar und schnell fettenden Kopfhaut-Fokus; Reinigungsintensität: normal.",
   )
   assert.doesNotMatch(result.products[0].fit_reason, /kraeft|fuelle|volume/i)
 })
@@ -2765,19 +2761,19 @@ test("projectSelectedProducts uses leave-in-specific missing-info when leave_in 
       key: "hair_texture",
       label: "Haarmuster",
       blocking: true,
-      detail: "Es fehlt noch dein Haarmuster fuer die Leave-in-Auswahl.",
+      detail: "Es fehlt noch dein Haarmuster für die Leave-in-Auswahl.",
     },
     {
       key: "thickness",
       label: "Haardicke",
       blocking: true,
-      detail: "Es fehlt noch deine Haardicke fuer die Leave-in-Auswahl.",
+      detail: "Es fehlt noch deine Haardicke für die Leave-in-Auswahl.",
     },
     {
       key: "density",
       label: "Haardichte",
       blocking: true,
-      detail: "Es fehlt noch deine Haardichte fuer die Leave-in-Auswahl.",
+      detail: "Es fehlt noch deine Haardichte für die Leave-in-Auswahl.",
     },
   ])
 })
@@ -2814,13 +2810,13 @@ test("projectSelectedProducts uses oil-specific missing-info when oil returns no
       key: "thickness",
       label: "Haardicke",
       blocking: true,
-      detail: "Es fehlt noch deine Haardicke fuer die Oel-Auswahl.",
+      detail: "Es fehlt noch deine Haardicke für die Öl-Auswahl.",
     },
     {
       key: "oil_purpose",
-      label: "Oel-Zweck",
+      label: "Öl-Zweck",
       blocking: true,
-      detail: "Es fehlt noch dein Oel-Zweck fuer die Oel-Auswahl.",
+      detail: "Es fehlt noch dein Öl-Zweck für die Öl-Auswahl.",
     },
   ])
 })
@@ -2836,7 +2832,7 @@ test("selectProducts asks for oil purpose when a product pick lacks inferred pur
 
   const result = await tool({
     category: "oil",
-    message: "Welches Haaroel passt zu mir?",
+    message: "Welches Haaröl passt zu mir?",
     hairProfile: {
       ...LOW_DAMAGE_PROFILE,
       thickness: "normal",
@@ -2855,9 +2851,9 @@ test("selectProducts asks for oil purpose when a product pick lacks inferred pur
   assert.deepEqual(result.missing_info, [
     {
       key: "oil_purpose",
-      label: "Oel-Zweck",
+      label: "Öl-Zweck",
       blocking: true,
-      detail: "Es fehlt noch dein Oel-Zweck fuer die Oel-Auswahl.",
+      detail: "Es fehlt noch dein Öl-Zweck für die Öl-Auswahl.",
     },
   ])
 })
@@ -2870,7 +2866,7 @@ test("projectSelectedProducts exposes oil claims, caveats, and lean comparison f
         matched_subtype: "styling-oel",
         use_mode: "styling_finish",
         purpose_fit: "bridge",
-        tradeoffs: ["Passt nur ueber die angrenzende Finish-Rolle, nicht exakt."],
+        tradeoffs: ["Passt nur über die angrenzende Finish-Rolle, nicht exakt."],
       }),
     ],
     {
@@ -2898,12 +2894,12 @@ test("projectSelectedProducts exposes oil claims, caveats, and lean comparison f
   )
   assert.match(result.products[0].fit_reason, /Leichtes Finish/)
   assert.deepEqual(result.comparison_facts, {
-    "dry-oil": ["Oel-Zweck: Leichtes Finish", "Subtyp: Trocken-Oel"],
-    "styling-oil": ["Oel-Zweck: Styling-Finish", "Subtyp: Styling-Oel"],
+    "dry-oil": ["Öl-Zweck: Leichtes Finish", "Subtyp: Trocken-Öl"],
+    "styling-oil": ["Öl-Zweck: Styling-Finish", "Subtyp: Styling-Öl"],
   })
   assert.equal(
     result.unsupported_requested_signals[0]?.user_message,
-    "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Oel-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Oel-Zweck, Haardicke, Anwendung und Fit.",
+    "Wünsche wie silikonfrei, kokosfrei, proteinfrei oder ölfrei sind in dieser Öl-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Öl-Zweck, Haardicke, Anwendung und Fit.",
   )
 })
 
@@ -2934,7 +2930,7 @@ test("selectProducts carries unsupported ingredient caveats for live oil request
 
   assert.equal(
     result.unsupported_requested_signals[0]?.user_message,
-    "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Oel-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Oel-Zweck, Haardicke, Anwendung und Fit.",
+    "Wünsche wie silikonfrei, kokosfrei, proteinfrei oder ölfrei sind in dieser Öl-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Öl-Zweck, Haardicke, Anwendung und Fit.",
   )
 })
 
@@ -3153,7 +3149,7 @@ test("selectProducts applies oil density overrides to density-weight caution", a
 
   const result = await tool({
     category: "oil",
-    message: "Meine Haare sind gerade wenig dicht. Welches Haaroel passt als leichtes Finish?",
+    message: "Meine Haare sind gerade wenig dicht. Welches Haaröl passt als leichtes Finish?",
     hairProfile: {
       ...LOW_DAMAGE_PROFILE,
       thickness: "normal",
@@ -3205,7 +3201,7 @@ test("selectProducts treats non-greasy fine-hair oil wording as a light finish t
 
   const result = await tool({
     category: "oil",
-    message: "Welches Haaroel passt zu meinem feinen Haar, ohne fettig auszusehen?",
+    message: "Welches Haaröl passt zu meinem feinen Haar, ohne fettig auszusehen?",
     hairProfile: {
       ...LOW_DAMAGE_PROFILE,
       thickness: "normal",
@@ -3230,7 +3226,7 @@ test("selectProducts treats non-greasy fine-hair oil wording as a light finish t
   })
 
   assert.equal(result.decision, "recommended")
-  assert.equal(result.products[0]?.supported_claims[0]?.label, "Oel-Zweck: Leichtes Finish")
+  assert.equal(result.products[0]?.supported_claims[0]?.label, "Öl-Zweck: Leichtes Finish")
 })
 
 test("oil purpose inference keeps negated scalp finish requests out of pre-wash", () => {
@@ -3260,7 +3256,7 @@ test("projectSelectedProducts uses mask-specific missing-info for explicit mask 
       key: "protein_moisture_balance",
       label: "Protein-/Feuchtigkeitsbalance",
       blocking: true,
-      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Masken-Auswahl.",
+      detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance für die Masken-Auswahl.",
     },
   ])
 })
@@ -3335,7 +3331,7 @@ test("projectSelectedProducts preserves no_catalog_match for relevant dry-shampo
   assert.equal(result.product_response_policy, "no_catalog_match")
   assert.deepEqual(result.products, [])
   assert.match(result.category_guidance, /Katalog/)
-  assert.match(result.category_guidance, /spaeter ausgewaschen/)
+  assert.match(result.category_guidance, /später ausgewaschen/)
 })
 
 test("selectProducts passes explicit dry-shampoo bridge context into category engine", async () => {
@@ -3355,10 +3351,10 @@ test("selectProducts passes explicit dry-shampoo bridge context into category en
           recommendation_meta: {
             category: "dry_shampoo",
             score: 91,
-            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Bruecke."],
+            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Brücke."],
             tradeoffs: [],
             usage_hint:
-              "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen.",
+              "Nur als kurze Between-Wash-Brücke am Ansatz verwenden, später auswaschen und nicht als Ersatz für Shampoo/Wasser nutzen.",
             primary_effect: "classic_refresh",
             hair_color_fit: "universal",
             scalp_sensitivity_fit: "normal_only",
@@ -3394,7 +3390,7 @@ test("selectProducts passes explicit dry-shampoo bridge context into category en
     false,
   )
   assert.match(result.category_guidance, /reinigt die Kopfhaut nicht/)
-  assert.match(result.category_guidance, /spaeter ausgewaschen/)
+  assert.match(result.category_guidance, /später ausgewaschen/)
 })
 
 test("selectProducts redirects message-stated frequent dry-shampoo use instead of recommending more", async () => {
@@ -3412,10 +3408,10 @@ test("selectProducts redirects message-stated frequent dry-shampoo use instead o
           recommendation_meta: {
             category: "dry_shampoo",
             score: 91,
-            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Bruecke."],
+            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Brücke."],
             tradeoffs: [],
             usage_hint:
-              "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen.",
+              "Nur als kurze Between-Wash-Brücke am Ansatz verwenden, später auswaschen und nicht als Ersatz für Shampoo/Wasser nutzen.",
             primary_effect: "classic_refresh",
             hair_color_fit: "universal",
             scalp_sensitivity_fit: "normal_only",
@@ -3462,10 +3458,10 @@ test("selectProducts treats dry-shampoo routine need questions as guidance-only,
           recommendation_meta: {
             category: "dry_shampoo",
             score: 91,
-            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Bruecke."],
+            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Brücke."],
             tradeoffs: [],
             usage_hint:
-              "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen.",
+              "Nur als kurze Between-Wash-Brücke am Ansatz verwenden, später auswaschen und nicht als Ersatz für Shampoo/Wasser nutzen.",
             primary_effect: "classic_refresh",
             hair_color_fit: "universal",
             scalp_sensitivity_fit: "normal_only",
@@ -3518,10 +3514,10 @@ test("selectProducts does not treat oily-root product wording as a dry-shampoo b
           recommendation_meta: {
             category: "dry_shampoo",
             score: 91,
-            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Bruecke."],
+            top_reasons: ["Passt als kurze Notfall-/Between-Wash-Brücke."],
             tradeoffs: [],
             usage_hint:
-              "Nur als kurze Between-Wash-Bruecke am Ansatz verwenden, spaeter auswaschen und nicht als Ersatz fuer Shampoo/Wasser nutzen.",
+              "Nur als kurze Between-Wash-Brücke am Ansatz verwenden, später auswaschen und nicht als Ersatz für Shampoo/Wasser nutzen.",
             primary_effect: "classic_refresh",
             hair_color_fit: "universal",
             scalp_sensitivity_fit: "normal_only",

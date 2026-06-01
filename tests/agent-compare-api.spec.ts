@@ -880,6 +880,81 @@ test("judgment route accepts heat temperature as an unsupported requested signal
     assert.equal(appended, true)
   }))
 
+test("judgment route accepts legacy Oel-Zweck missing-info labels", async () =>
+  withNodeEnv("development", async () => {
+    const { handleAgentCompareJudgmentRequest } = await importJudgmentRoute()
+    const savedPayloads: unknown[] = []
+
+    const response = await handleAgentCompareJudgmentRequest(
+      {
+        createdAt: "2026-06-01T12:00:00.000Z",
+        user: {
+          id: "user-42",
+          label: "Lea · fine",
+          full_name: "Lea",
+        },
+        prompt: "Welches Öl passt?",
+        toolLoopVariant: "guidance_tool",
+        context: {
+          user_id: "user-42",
+          derived_signals: ["Haardicke: Fein"],
+          routine_inventory: [],
+          relevant_memory: [],
+        },
+        results: {
+          agent: {
+            system: "tool_loop",
+            answer: "B",
+            latency_ms: 90,
+            debug_lines: [],
+            matched_products: [],
+            product_trace: {
+              category: "oil",
+              decision: "needs_more_info",
+              product_response_policy: "needs_more_info",
+              policy_reason: "Öl-Zweck fehlt.",
+              profile_basis: ["Haardicke: Fein"],
+              category_guidance: "Öl-Auswahl braucht den Zweck.",
+              products: [],
+              comparison_facts: null,
+              missing_info: [
+                {
+                  key: "oil_purpose",
+                  label: "Oel-Zweck",
+                  blocking: true,
+                  detail: "Es fehlt noch dein Öl-Zweck für die Öl-Auswahl.",
+                },
+              ],
+              unsupported_requested_signals: [],
+            },
+            error: null,
+          },
+        },
+        judgment: {
+          winner: "agent",
+          primary_reason: "nuetzlicher",
+          note: "Legacy label accepted.",
+        },
+      },
+      {
+        appendJudgmentLog: async (payload) => {
+          savedPayloads.push(payload)
+        },
+      },
+    )
+
+    assert.equal(response.status, 200)
+    assert.deepEqual(await response.json(), { ok: true })
+    assert.equal(
+      (
+        savedPayloads[0] as {
+          results: { agent: { product_trace: { missing_info: Array<{ label: string }> } } }
+        }
+      ).results.agent.product_trace.missing_info[0].label,
+      "Öl-Zweck",
+    )
+  }))
+
 test("judgment POST accepts a valid compare record in development", async () =>
   withNodeEnv("development", async () => {
     const { handleAgentCompareJudgmentRequest } = await importJudgmentRoute()

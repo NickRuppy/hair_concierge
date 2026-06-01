@@ -1005,8 +1005,8 @@ function buildTerminalPayloadFieldGuidance(): string {
     "For product recommendations, default to three products. If the user explicitly asks for one or two products, return exactly that many when available. If the user asks for more than three, cap at three.",
     "For category education without an explicit product ask, use general_advice and do not include recommendations.",
     "Use the recent conversation and surfaced product facts to resolve ambiguous follow-ups. If the latest user message is short, first check whether it answers your previous question or next-step offer.",
-    "Prefer natural German product wording such as Empfehlungen, passt gut zu dir, passende Option, naechster Schritt, or Zusatzpflege. Avoid English-ish or internal labels such as Picks, Fit, Treffer, schwaecherer Treffer, or laut Auswahl in the final German answer.",
-    "Do not show the ambiguous label Leave-in / Finish. If you mean leave-in care, say leichtes Leave-in or Leave-in fuer Laengen und Spitzen. If you mean oil or serum as the last step, say sparsames Oel/Serum in die Spitzen and explain it.",
+    "Prefer natural German product wording such as Empfehlungen, passt gut zu dir, passende Option, nächster Schritt, or Zusatzpflege. Avoid English-ish or internal labels such as Picks, Fit, Treffer, schwächerer Treffer, or laut Auswahl in the final German answer.",
+    "Do not show the ambiguous label Leave-in / Finish. If you mean leave-in care, say leichtes Leave-in or Leave-in für Längen und Spitzen. If you mean oil or serum as the last step, say sparsames Öl/Serum in die Spitzen and explain it.",
     "Do not close by offering to classify whether the issue sounds like causes you already classified in the answer, such as residue, too-mild shampoo, or oily scalp. If the answer already gave the likely cause and a test, stop cleanly.",
   ].join("\n")
 }
@@ -1657,8 +1657,8 @@ function buildBroadHairConcernFallback(params: {
   const profilePhrase =
     profileBits.length > 0 ? `Bei deinem ${profileBits.join(", ")} Haar` : "Bei deinem Profil"
   const thirdLever = hasOily
-    ? "Pflege nicht an den Ansatz geben und eine Waesche lang beobachten, ob der Ansatz sauberer bleibt."
-    : "Nach dem Waschen wenig Leave-in nur in Laengen und Spitzen testen und danach moeglichst wenig anfassen."
+    ? "Pflege nicht an den Ansatz geben und eine Wäsche lang beobachten, ob der Ansatz sauberer bleibt."
+    : "Nach dem Waschen wenig Leave-in nur in Längen und Spitzen testen und danach möglichst wenig anfassen."
 
   return {
     answer_mode: "general_advice",
@@ -1700,12 +1700,12 @@ function buildBroadHairConcernFallback(params: {
     pending_routine_action: null,
     session_memory_writes: [],
     payload: {
-      user_facing_answer_de: `${profilePhrase} wuerde ich nicht noch weiter raten, sondern mit den wahrscheinlichsten Basishebeln starten:\n\n1. **Shampoo nur an Kopfhaut und Ansatz** und gruendlich ausspuelen.\n2. **Conditioner nur in Laengen und Spitzen** verwenden, nicht am Ansatz.\n3. **${thirdLever}**\n\nWenn es danach klarer wird, ob eher Frizz, Trockenheit, Fettigkeit oder Haarbruch dominiert, kann der naechste Schritt viel gezielter werden.`,
-      category_or_topic: "breite Haarpflege-Einschaetzung",
+      user_facing_answer_de: `${profilePhrase} würde ich nicht noch weiter raten, sondern mit den wahrscheinlichsten Basishebeln starten:\n\n1. **Shampoo nur an Kopfhaut und Ansatz** und gründlich ausspülen.\n2. **Conditioner nur in Längen und Spitzen** verwenden, nicht am Ansatz.\n3. **${thirdLever}**\n\nWenn es danach klarer wird, ob eher Frizz, Trockenheit, Fettigkeit oder Haarbruch dominiert, kann der nächste Schritt viel gezielter werden.`,
+      category_or_topic: "breite Haarpflege-Einschätzung",
       key_points_de: [
-        "Erst die Basisplatzierung pruefen.",
+        "Erst die Basisplatzierung prüfen.",
         "Keine schweren Produkte am Ansatz.",
-        "Naechsten Schritt nach sichtbarem Hauptproblem ausrichten.",
+        "Nächsten Schritt nach sichtbarem Hauptproblem ausrichten.",
       ],
       next_step_offer_de: null,
     },
@@ -1926,7 +1926,7 @@ function buildLightweightMaskOilDecisionFallback(params: {
     typeof params.routineArgs.evidence_quote === "string" &&
     params.routineArgs.evidence_quote.trim().length > 0
       ? params.routineArgs.evidence_quote
-      : params.message.slice(0, 240) || "Maske oder Oel"
+      : params.message.slice(0, 240) || "Maske oder Öl"
   const routineActive = params.routineThreadContext?.active === true
   const usedGuidancePackageIds = buildLoadedMaskOilFallbackGuidancePackageIds(
     params.loadedGuidancePackageIds,
@@ -1973,11 +1973,11 @@ function buildLightweightMaskOilDecisionFallback(params: {
     session_memory_writes: [],
     payload: {
       user_facing_answer_de:
-        "Wenn du es leicht halten willst, waere die Maske der sinnvollere Haupt-Zusatz: gelegentlich fuer trockene oder frizzige Laengen, nicht als neuer schwerer Dauer-Schritt. Shampoo fuer Kopfhaut/Ansatz und Conditioner fuer Laengen und Spitzen bleiben die Basis. Oel wuerde ich nur optional als winziges Finish in die Spitzen nehmen, wenn sie danach noch strohig wirken.",
+        "Wenn du es leicht halten willst, wäre die Maske der sinnvollere Haupt-Zusatz: gelegentlich für trockene oder frizzige Längen, nicht als neuer schwerer Dauer-Schritt. Shampoo für Kopfhaut/Ansatz und Conditioner für Längen und Spitzen bleiben die Basis. Öl würde ich nur optional als winziges Finish in die Spitzen nehmen, wenn sie danach noch strohig wirken.",
       category_or_topic: "mask",
       key_points_de: [
-        "Maske als gelegentlicher Haupt-Zusatz fuer trockene oder frizzige Laengen.",
-        "Oel nur optional und winzig als Finish in die Spitzen.",
+        "Maske als gelegentlicher Haupt-Zusatz für trockene oder frizzige Längen.",
+        "Öl nur optional und winzig als Finish in die Spitzen.",
         "Shampoo und Conditioner bleiben die Basis.",
       ],
       next_step_offer_de: null,
@@ -2072,9 +2072,9 @@ function buildRoutineKnownIntentFallback(params: {
       : params.message.slice(0, 240) || "Routine anpassen"
 
   const resetCopy =
-    "Ich wuerde den Reset nicht als taeglichen Schritt einbauen. Deine Basis bleibt Shampoo fuer Kopfhaut/Ansatz und Conditioner fuer Laengen und Spitzen. Ein Tiefenreinigungsshampoo passt nur gelegentlich, wenn sich Build-up oder Rueckstaende zeigen; danach die Laengen wieder mit Conditioner pflegen."
+    "Ich würde den Reset nicht als täglichen Schritt einbauen. Deine Basis bleibt Shampoo für Kopfhaut/Ansatz und Conditioner für Längen und Spitzen. Ein Tiefenreinigungsshampoo passt nur gelegentlich, wenn sich Build-up oder Rückstände zeigen; danach die Längen wieder mit Conditioner pflegen."
   const genericRoutineCopy =
-    "Ich wuerde die Routine nicht groesser machen als noetig: erst Shampoo fuer die Kopfhaut, Conditioner fuer Laengen und Spitzen, und nur einen passenden Zusatz, wenn dein Ziel damit klar besser abgedeckt wird."
+    "Ich würde die Routine nicht größer machen als nötig: erst Shampoo für die Kopfhaut, Conditioner für Längen und Spitzen, und nur einen passenden Zusatz, wenn dein Ziel damit klar besser abgedeckt wird."
   const categorySpecificAddStepFallback =
     params.routineArgs.mutation_kind === "add_step"
       ? buildCategorySpecificAddStepRoutineFallback(requestedCategory)
@@ -2087,14 +2087,14 @@ function buildRoutineKnownIntentFallback(params: {
   const keyPoints =
     requestedCategory === "deep_cleansing_shampoo"
       ? [
-          "Reset nicht als taeglichen Schritt einbauen.",
+          "Reset nicht als täglichen Schritt einbauen.",
           "Shampoo und Conditioner bleiben die Basis.",
-          "Tiefenreinigung nur gelegentlich bei Build-up oder Rueckstaenden.",
+          "Tiefenreinigung nur gelegentlich bei Build-up oder Rückständen.",
         ]
       : (categorySpecificAddStepFallback?.keyPoints ?? [
-          "Routine nicht groesser machen als noetig.",
+          "Routine nicht größer machen als nötig.",
           "Shampoo und Conditioner bleiben die Basis.",
-          "Zusatz nur bei klarem Ziel ergaenzen.",
+          "Zusatz nur bei klarem Ziel ergänzen.",
         ])
 
   return {
@@ -2151,29 +2151,29 @@ function buildCategorySpecificAddStepRoutineFallback(
     case "leave_in":
       return {
         userFacingAnswer:
-          "Ich kann das hier nur als Leave-in-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Fachlich waere es ein Zusatz nach dem Waschen: erst Shampoo fuer Kopfhaut/Ansatz, dann Conditioner fuer Laengen und Spitzen, danach Leave-in sparsam in Laengen und Spitzen. Bei feinem Haar lieber klein dosieren, damit es nicht beschwert.",
+          "Ich kann das hier nur als Leave-in-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Fachlich wäre es ein Zusatz nach dem Waschen: erst Shampoo für Kopfhaut/Ansatz, dann Conditioner für Längen und Spitzen, danach Leave-in sparsam in Längen und Spitzen. Bei feinem Haar lieber klein dosieren, damit es nicht beschwert.",
         keyPoints: [
-          "Leave-in waere ein Kategorie-Schritt nach dem Waschen.",
+          "Leave-in wäre ein Kategorie-Schritt nach dem Waschen.",
           "Kein eigener Produkt-Schritt in der Routine speichern.",
-          "Bei feinem Haar sparsam in Laengen und Spitzen dosieren.",
+          "Bei feinem Haar sparsam in Längen und Spitzen dosieren.",
         ],
       }
     case "mask":
       return {
         userFacingAnswer:
-          "Ich kann das hier nur als Masken-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Sinnvoll waere sie gelegentlich nach dem Shampoo und vor oder statt Conditioner, wenn Laengen extra Pflege brauchen. Sie bleibt ein Zusatz und ist kein Pflichtschritt fuer jede Waesche.",
+          "Ich kann das hier nur als Masken-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Sinnvoll wäre sie gelegentlich nach dem Shampoo und vor oder statt Conditioner, wenn Längen extra Pflege brauchen. Sie bleibt ein Zusatz und ist kein Pflichtschritt für jede Wäsche.",
         keyPoints: [
-          "Maske waere ein gelegentlicher Kategorie-Schritt.",
-          "Nicht als Pflichtschritt fuer jede Waesche behandeln.",
+          "Maske wäre ein gelegentlicher Kategorie-Schritt.",
+          "Nicht als Pflichtschritt für jede Wäsche behandeln.",
           "Kein eigener Produkt-Schritt in der Routine speichern.",
         ],
       }
     case "oil":
       return {
         userFacingAnswer:
-          "Ich kann das hier nur als Oel-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Oel waere eher ein sehr sparsames Finish in den Spitzen oder ein Pre-Wash-Schritt, nicht die Basis-Pflege. Wenn dein Haar schnell beschwert wirkt, wuerde ich es nur selten und sehr klein dosieren.",
+          "Ich kann das hier nur als Öl-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Öl wäre eher ein sehr sparsames Finish in den Spitzen oder ein Pre-Wash-Schritt, nicht die Basis-Pflege. Wenn dein Haar schnell beschwert wirkt, würde ich es nur selten und sehr klein dosieren.",
         keyPoints: [
-          "Oel waere ein optionaler Kategorie-Schritt.",
+          "Öl wäre ein optionaler Kategorie-Schritt.",
           "Eher Finish oder Pre-Wash, nicht Basis-Pflege.",
           "Sehr sparsam dosieren.",
         ],
@@ -2183,7 +2183,7 @@ function buildCategorySpecificAddStepRoutineFallback(
         userFacingAnswer:
           "Ich kann das hier nur als Bondbuilder-Kategorie in die Routine einordnen, nicht als eigenen Produkt-Schritt speichern. Ein Bondbuilder passt nur als gezielter Repair-Zusatz, wenn Strukturstress ein Thema ist, und sollte nach Produktprotokoll genutzt werden. Er ersetzt keine Basis aus Shampoo und Conditioner.",
         keyPoints: [
-          "Bondbuilder waere ein gezielter Kategorie-Schritt.",
+          "Bondbuilder wäre ein gezielter Kategorie-Schritt.",
           "Nur sinnvoll bei passenden Strukturstress-Signalen.",
           "Nicht als Conditioner oder Feuchtigkeitspflege behandeln.",
         ],
@@ -2203,8 +2203,8 @@ function buildRoutinePlacementFallback(params: {
   const routineActive = params.routineThreadContext?.active === true
   const isDryShampoo = params.category === "dry_shampoo"
   const userFacingAnswer = isDryShampoo
-    ? "Trockenshampoo passt zwischen den Haarwaeschen, wenn der Ansatz schneller fettig wirkt. Gib es direkt an den Ansatz, lass es kurz wirken und buerste oder massiere es dann aus. Es ist keine Reinigung wie Shampoo und ersetzt keine Waesche; bei feinem Haar lieber sparsam starten, damit es nicht stumpf oder beschwert wirkt."
-    : "Tiefenreinigung passt gelegentlich an einem Waschtag statt deinem normalen Shampoo, wenn sich Build-up, Styling-Rueckstaende oder ein belegtes Haargefuehl zeigen. Danach Conditioner oder Laengenpflege einplanen, weil die Laengen sonst rauer wirken koennen. Das ist eine Anwendungserklaerung, kein neuer Routine-Schritt."
+    ? "Trockenshampoo passt zwischen den Haarwäschen, wenn der Ansatz schneller fettig wirkt. Gib es direkt an den Ansatz, lass es kurz wirken und bürste oder massiere es dann aus. Es ist keine Reinigung wie Shampoo und ersetzt keine Wäsche; bei feinem Haar lieber sparsam starten, damit es nicht stumpf oder beschwert wirkt."
+    : "Tiefenreinigung passt gelegentlich an einem Waschtag statt deinem normalen Shampoo, wenn sich Build-up, Styling-Rückstände oder ein belegtes Haargefühl zeigen. Danach Conditioner oder Längenpflege einplanen, weil die Längen sonst rauer wirken können. Das ist eine Anwendungserklärung, kein neuer Routine-Schritt."
 
   return {
     answer_mode: "general_advice",
@@ -2249,14 +2249,14 @@ function buildRoutinePlacementFallback(params: {
       category_or_topic: params.category,
       key_points_de: isDryShampoo
         ? [
-            "Zwischen nassen Haarwaeschen verwenden.",
+            "Zwischen nassen Haarwäschen verwenden.",
             "Direkt am Ansatz einsetzen.",
-            "Kein Ersatz fuer Shampoo; bei feinem Haar sparsam dosieren.",
+            "Kein Ersatz für Shampoo; bei feinem Haar sparsam dosieren.",
           ]
         : [
             "Gelegentlich am Waschtag statt normalem Shampoo verwenden.",
-            "Nur bei Build-up, Rueckstaenden oder belegtem Haargefuehl einsetzen.",
-            "Danach Conditioner oder Laengenpflege verwenden.",
+            "Nur bei Build-up, Rückständen oder belegtem Haargefühl einsetzen.",
+            "Danach Conditioner oder Längenpflege verwenden.",
           ],
       next_step_offer_de: null,
     },
@@ -2370,7 +2370,7 @@ function buildFallbackAnswer(params: {
       question_de:
         params.reason === "routine_ambiguity"
           ? "Ich kann den gemeinten Routine-Schritt gerade nicht eindeutig zuordnen. Welchen Schritt meinst du?"
-          : "Was genau moechtest du zu deiner Haarpflege wissen?",
+          : "Was genau möchtest du zu deiner Haarpflege wissen?",
       missing_keys: [],
     },
   }
@@ -2427,7 +2427,7 @@ function buildRecoveredAssistantTextFallback(params: {
     payload: {
       user_facing_answer_de: userFacingAnswer,
       category_or_topic: "general_advice",
-      key_points_de: ["Konzeptuelle Einordnung statt gespeicherter Routine-Aenderung."],
+      key_points_de: ["Konzeptuelle Einordnung statt gespeicherter Routine-Änderung."],
       next_step_offer_de: null,
     },
   }
@@ -2449,7 +2449,7 @@ function getFallbackUserFacingAnswer(reason: AgentV2FallbackReason): string {
   if (reason === "routine_ambiguity") {
     return "Ich kann den gemeinten Routine-Schritt gerade nicht eindeutig zuordnen. Welchen Schritt meinst du?"
   }
-  return "Ich bin mir gerade nicht sicher, was du genau moechtest. Formulier es bitte einmal konkreter."
+  return "Ich bin mir gerade nicht sicher, was du genau möchtest. Formulier es bitte einmal konkreter."
 }
 
 function buildRestrictedSafetyFallback(message: string): AgentV2TerminalAnswer {
@@ -2492,7 +2492,7 @@ function buildRestrictedSafetyFallback(message: string): AgentV2TerminalAnswer {
         "Bei juckender oder gereizter Kopfhaut würde ich nicht direkt mit einem konkreten Produkt starten. Bis es ruhiger ist: mild reinigen, keine Kopfhaut-Peelings und nichts stark Duftendes direkt auf die Kopfhaut. Wenn es anhält, brennt, nässt, schmerzt oder stärker wird, bitte abklären lassen.",
       boundary_reason_de:
         "Die Beschreibung klingt nach einem Kopfhautthema, bei dem Sicherheit vor Produktempfehlung geht.",
-      next_step_de: "Bleib vorerst mild und lass es abklaeren, wenn es nicht rasch ruhiger wird.",
+      next_step_de: "Bleib vorerst mild und lass es abklären, wenn es nicht rasch ruhiger wird.",
     },
   }
 }
@@ -2536,7 +2536,7 @@ function buildEmptyProductResultFallback(message: string): AgentV2TerminalAnswer
       user_facing_answer_de:
         "Ich finde gerade keinen sicheren Produkttreffer in dieser Kategorie. Ich kann dir aber erklären, welche Produktart hier passen würde.",
       category_or_topic: "product_result",
-      key_points_de: ["Kein sicherer Produkttreffer aus den verfuegbaren Daten."],
+      key_points_de: ["Kein sicherer Produkttreffer aus den verfügbaren Daten."],
       next_step_offer_de: null,
     },
   }
@@ -2582,10 +2582,10 @@ function buildSafetyBoundaryAnswer(message: string): AgentV2TerminalAnswer {
     session_memory_writes: [],
     payload: {
       user_facing_answer_de:
-        "Das klingt nicht mehr nach einer rein kosmetischen Haarpflege-Frage. Bitte lass das zeitnah aerztlich abklaeren; ich wuerde hier keine Produkt- oder Routineempfehlung in den Vordergrund stellen.",
+        "Das klingt nicht mehr nach einer rein kosmetischen Haarpflege-Frage. Bitte lass das zeitnah ärztlich abklären; ich würde hier keine Produkt- oder Routineempfehlung in den Vordergrund stellen.",
       boundary_reason_de:
-        "Die Beschreibung klingt nach einem moeglich medizinischen Kopfhaut- oder Haarausfallthema.",
-      next_step_de: "Bitte lass das zeitnah aerztlich abklaeren.",
+        "Die Beschreibung klingt nach einem möglich medizinischen Kopfhaut- oder Haarausfallthema.",
+      next_step_de: "Bitte lass das zeitnah ärztlich abklären.",
     },
   }
 }

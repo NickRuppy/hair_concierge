@@ -96,7 +96,7 @@ If the user asks what a bondbuilder does:
 If the user asks for a type/kind of bondbuilder, not concrete products:
 - examples:
   - `Welche Arten von Bondbuildern gibt es?`
-  - `Welche Art Bondbuilder ist fuer blondiertes Haar sinnvoll?`
+  - `Welche Art Bondbuilder ist für blondiertes Haar sinnvoll?`
   - `Was ist der Unterschied zwischen auswaschbarer Reparaturpflege und Leave-in-Strukturpflege?`
   - `Welche Bondbuilder-Lanes gibt es?`
 - primary_intent: category_education
@@ -108,7 +108,7 @@ If the user asks for a type/kind of bondbuilder, not concrete products:
 If the user asks for concrete bond-repair products:
 - examples:
   - `Welcher Bondbuilder passt zu blondiertem Haar?`
-  - `Nenn mir zwei Bondbuilder fuer Haarbruch.`
+  - `Nenn mir zwei Bondbuilder für Haarbruch.`
   - `Welche K18-Alternative kannst du empfehlen?`
 - primary_intent: product_recommendation
 - product_request_kind: specific_products
@@ -216,11 +216,11 @@ If the user links burning, irritation, shedding, patchy loss, or similar symptom
 ## German Answer Shape
 Start with whether Bondbuilder sounds relevant at all.
 
-Explain the expected benefit in plain German: staerkere, widerstandsfaehigere Laengen and weniger Bruch, not instant softness, regrowth, or complete repair.
+Explain the expected benefit in plain German: stärkere, widerstandsfähigere Längen and weniger Bruch, not instant softness, regrowth, or complete repair.
 
-For "Welche Arten gibt es?" say that the useful distinction is not shampoo/spuelung/maske/serum, but true Bondbuilder treatments versus look-alike repair marketing and, only when product metadata supports it, auswaschbare or Pre-Shampoo-Reparatur-Treatments versus Leave-in-Strukturpflege. Mention booster/add-on or Service products only as product-system-specific exceptions, not as a standard third consumer type.
+For "Welche Arten gibt es?" say that the useful distinction is not shampoo/spülung/maske/serum, but true Bondbuilder treatments versus look-alike repair marketing and, only when product metadata supports it, auswaschbare or Pre-Shampoo-Reparatur-Treatments versus Leave-in-Strukturpflege. Mention booster/add-on or Service products only as product-system-specific exceptions, not as a standard third consumer type.
 
-Use customer-facing terms like `Reparaturpflege`, `Strukturpflege`, `staerkende Pflege`, or `aufbauende Pflege`; do not expose internal lane labels as raw system language.
+Use customer-facing terms like `Reparaturpflege`, `Strukturpflege`, `stärkende Pflege`, or `aufbauende Pflege`; do not expose internal lane labels as raw system language.
 
 ## Do Not
 - Do not call bondbuilders normal moisture masks. Instead: describe them as targeted structural-repair treatments.

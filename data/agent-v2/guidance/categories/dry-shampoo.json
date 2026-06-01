@@ -128,7 +128,7 @@
       "rubric_id": "category.dry_shampoo.customer_facing_bridge_language",
       "priority": "medium",
       "source": "categories/dry-shampoo.md",
-      "message": "Prefer customer-facing German such as Frische-Ueberbrueckung, kurze Frische-Hilfe, or Ansatz auffrischen over the raw internal bridge label."
+      "message": "Prefer customer-facing German such as Frische-Überbrückung, kurze Frische-Hilfe, or Ansatz auffrischen over the raw internal bridge label."
     }
   ],
   "required_grounding": [

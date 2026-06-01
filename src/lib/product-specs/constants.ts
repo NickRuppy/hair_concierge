@@ -33,7 +33,7 @@ export type ProductBondRepairAxis = (typeof PRODUCT_BOND_REPAIR_AXES)[number]
 
 export const PRODUCT_BOND_REPAIR_AXIS_LABELS = {
   disulfide_crosslink: "Disulfid-/Crosslink-Lane",
-  peptide_chain: "Peptid-/Laengsstruktur-Lane",
+  peptide_chain: "Peptid-/Längsstruktur-Lane",
 } as const satisfies Record<ProductBondRepairAxis, string>
 
 export const PRODUCT_BOND_APPLICATION_MODES = ["pre_shampoo", "post_wash_leave_in"] as const
@@ -42,7 +42,7 @@ export type ProductBondApplicationMode = (typeof PRODUCT_BOND_APPLICATION_MODES)
 
 export const PRODUCT_BOND_APPLICATION_MODE_LABELS = {
   pre_shampoo: "Vor dem Waschen",
-  post_wash_leave_in: "Nach der Waesche / Leave-in",
+  post_wash_leave_in: "Nach der Wäsche / Leave-in",
 } as const satisfies Record<ProductBondApplicationMode, string>
 
 export const PRODUCT_BOND_TREATMENT_MODES = ["rinse_out", "leave_in"] as const
@@ -50,7 +50,7 @@ export const PRODUCT_BOND_TREATMENT_MODES = ["rinse_out", "leave_in"] as const
 export type ProductBondTreatmentMode = (typeof PRODUCT_BOND_TREATMENT_MODES)[number]
 
 export const PRODUCT_BOND_TREATMENT_MODE_LABELS = {
-  rinse_out: "Wird ausgespuelt",
+  rinse_out: "Wird ausgespült",
   leave_in: "Bleibt im Haar",
 } as const satisfies Record<ProductBondTreatmentMode, string>
 
@@ -93,7 +93,7 @@ export const PRODUCT_PEELING_TYPES = ["acid_serum", "physical_scrub"] as const
 export type ProductPeelingType = (typeof PRODUCT_PEELING_TYPES)[number]
 
 export const PRODUCT_PEELING_TYPE_LABELS = {
-  acid_serum: "Saeure-Serum",
+  acid_serum: "Säure-Serum",
   physical_scrub: "Physisches Scrub",
 } as const satisfies Record<ProductPeelingType, string>
 
@@ -127,7 +127,7 @@ export const DRY_SHAMPOO_SCALP_SENSITIVITY_FITS = ["sensitive_ok", "normal_only"
 export type DryShampooScalpSensitivityFit = (typeof DRY_SHAMPOO_SCALP_SENSITIVITY_FITS)[number]
 
 export const DRY_SHAMPOO_SCALP_SENSITIVITY_FIT_LABELS = {
-  sensitive_ok: "Auch fuer sensible Kopfhaut",
+  sensitive_ok: "Auch für sensible Kopfhaut",
   normal_only: "Nur normale Kopfhaut",
 } as const satisfies Record<DryShampooScalpSensitivityFit, string>
 

@@ -54,7 +54,7 @@ Common confusions:
 - Product-specific promises such as no white cast, tint match, volume, fragrance tolerance, invisible finish, or sensitive-scalp positioning need selected product facts. Even with supporting metadata, do not guarantee irritation-free use.
 
 ## Root Bridge Logic
-Internal Frische-Bridge logic can remain, but customer-facing German should use softer wording such as `Frische-Ueberbrueckung`, `kurze Frische-Hilfe`, or `Ansatz auffrischen`.
+Internal Frische-Bridge logic can remain, but customer-facing German should use softer wording such as `Frische-Überbrückung`, `kurze Frische-Hilfe`, or `Ansatz auffrischen`.
 
 Keep the category narrow: dry shampoo is for visible root oil and short-term freshness. It belongs mainly at the roots, should be distributed or brushed/comb-through only as product directions support, and should be washed out later with normal shampoo and water.
 
@@ -146,8 +146,8 @@ If the user asks a broad concern or technique question without a product-categor
 German example distinctions:
 - "Welche Art Trockenshampoo passt zu feinem Haar?" or "Spray oder Puder: was ist der Unterschied?" means type/kind education: `primary_intent: category_education`, `product_request_kind: category_education`, no unasked product cards.
 - "Ist Trockenshampoo bei schnell fettendem Ansatz sinnvoll?" means category assessment: `primary_intent: general_advice`, `product_request_kind: none`, `care_category: dry_shampoo`.
-- "Nenn mir zwei Trockenshampoos fuer dunkles Haar" or "Welches Trockenshampoo kannst du empfehlen?" means concrete products: `primary_intent: product_recommendation`, `product_request_kind: specific_products`, `requires_tool: select_products`.
-- "Stimmt es, dass Produkt X keinen weissen Schleier macht?" means product fact/claim check: `primary_intent: product_recommendation`, `product_request_kind: product_detail`, and needs product metadata or `select_products` before the claim is answered.
+- "Nenn mir zwei Trockenshampoos für dunkles Haar" or "Welches Trockenshampoo kannst du empfehlen?" means concrete products: `primary_intent: product_recommendation`, `product_request_kind: specific_products`, `requires_tool: select_products`.
+- "Stimmt es, dass Produkt X keinen weißen Schleier macht?" means product fact/claim check: `primary_intent: product_recommendation`, `product_request_kind: product_detail`, and needs product metadata or `select_products` before the claim is answered.
 
 ## Agent May Decide
 - Whether dry shampoo is a useful bridge, optional, weak fit, or inappropriate because actual cleansing or safety handling is needed.
@@ -189,7 +189,7 @@ Escalate away from dry-shampoo optimization when the user reports scalp pain, bu
 Do not recommend dry shampoo as scalp treatment or cleansing replacement. If the user links itch, burning, soreness, flakes, residue, or congestion to dry shampoo, suggest pausing the suspected trigger and moving toward actual cleansing, simpler scalp care, or professional evaluation when symptoms are significant or persistent. Do not diagnose dandruff, dermatitis, allergy, infection, or hair loss.
 
 ## German Answer Shape
-Call it `Frische-Ueberbrueckung`, `kurze Frische-Hilfe`, or `Ansatz auffrischen`, not a real wash.
+Call it `Frische-Überbrückung`, `kurze Frische-Hilfe`, or `Ansatz auffrischen`, not a real wash.
 
 Then explain:
 1. it can visually buffer oily roots for a short time

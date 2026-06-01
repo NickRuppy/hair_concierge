@@ -3,8 +3,8 @@ export type PostWashAction = (typeof POST_WASH_ACTIONS)[number]
 
 export const POST_WASH_ACTION_LABELS = {
   air_dry: "Lufttrocknen",
-  blow_dry_only: "Nur Foehnen",
-  heat_tool_styling: "Hitzetools (z.B. Glaetteisen)",
+  blow_dry_only: "Nur Föhnen",
+  heat_tool_styling: "Hitzetools (z.B. Glätteisen)",
 } as const satisfies Record<PostWashAction, string>
 
 export const POST_WASH_ACTION_OPTIONS = POST_WASH_ACTIONS.map((value) => ({
@@ -42,7 +42,7 @@ export const ROUTINE_PRODUCT_LABELS = {
   shampoo: "Shampoo",
   conditioner: "Conditioner",
   leave_in: "Leave-in",
-  oil: "Oel",
+  oil: "Öl",
   mask: "Maske",
   heat_protectant: "Hitzeschutz",
   serum: "Serum",
@@ -86,7 +86,7 @@ export const LEAVE_IN_ROLE_LABELS = {
   replacement_conditioner: "Conditioner-Ersatz",
   extension_conditioner: "Conditioner-Booster",
   styling_prep: "Styling-Vorbereitung",
-  oil_replacement: "Oel-Ersatz",
+  oil_replacement: "Öl-Ersatz",
 } as const satisfies Record<LeaveInRole, string>
 
 export const LEAVE_IN_CARE_BENEFITS = [
@@ -123,7 +123,7 @@ export type LeaveInStylingContext = (typeof LEAVE_IN_STYLING_CONTEXTS)[number]
 
 export const LEAVE_IN_STYLING_CONTEXT_LABELS = {
   air_dry: "Lufttrocknen",
-  heat_style: "Styling mit Hitze/Foehn",
+  heat_style: "Styling mit Hitze/Föhn",
 } as const satisfies Record<LeaveInStylingContext, string>
 
 export const LEAVE_IN_CONDITIONER_RELATIONSHIPS = ["replacement_capable", "booster_only"] as const
@@ -131,7 +131,7 @@ export type LeaveInConditionerRelationship = (typeof LEAVE_IN_CONDITIONER_RELATI
 
 export const LEAVE_IN_CONDITIONER_RELATIONSHIP_LABELS = {
   replacement_capable: "Kann Conditioner ersetzen",
-  booster_only: "Nur als Booster zusaetzlich zum Conditioner",
+  booster_only: "Nur als Booster zusätzlich zum Conditioner",
 } as const satisfies Record<LeaveInConditionerRelationship, string>
 
 export const LEAVE_IN_FIT_CARE_BENEFITS = [
@@ -146,7 +146,7 @@ export const LEAVE_IN_FIT_CARE_BENEFIT_LABELS = {
   heat_protect: "Hitzeschutz",
   curl_definition: "Locken- oder Wellen-Definition",
   repair: "Repair",
-  detangle_smooth: "Entwirrt und glaettet",
+  detangle_smooth: "Entwirrt und glättet",
 } as const satisfies Record<LeaveInFitCareBenefit, string>
 
 export const LEAVE_IN_INGREDIENT_FLAGS = [

@@ -169,7 +169,7 @@ test.describe("Routine planner", () => {
 
     expect(leaveInSlot?.id).toBe("maintenance-leave-in")
     expect(leaveInSlot?.action).toBe("add")
-    expect(leaveInSlot?.rationale.join(" ")).toMatch(/ausdruecklich|aufnehmen/i)
+    expect(leaveInSlot?.rationale.join(" ")).toMatch(/ausdrücklich|aufnehmen/i)
     expect(leaveInSlot?.rationale.join(" ")).not.toMatch(/Routine nach dem Waschen runder/i)
     expect(plan.layer_projections?.basics.visible_slot_ids).toEqual([
       "base-shampoo",
@@ -291,7 +291,7 @@ test.describe("Routine planner", () => {
 
     expect(leaveInSlot?.action).toBe("adjust")
     expect(leaveInSlot?.rationale.join(" ")).toMatch(/Routine nach dem Waschen runder/i)
-    expect(leaveInSlot?.rationale.join(" ")).not.toMatch(/ausdruecklich|aufnehmen/i)
+    expect(leaveInSlot?.rationale.join(" ")).not.toMatch(/ausdrücklich|aufnehmen/i)
   })
 
   test("dryness with low oil-risk activates hair oiling", () => {
@@ -381,7 +381,7 @@ test.describe("Routine planner", () => {
       oilSlot?.rationale.some((line) => line.includes("Shampoo zuerst auf trockenes Haar")),
     ).toBe(true)
     expect(oilSlot?.caveats).toContain(
-      "Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.",
+      "Ätherische Öle (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisöl verdünnen.",
     )
   })
 
@@ -402,7 +402,7 @@ test.describe("Routine planner", () => {
       oilSlot?.rationale.every((line) => !line.includes("Shampoo zuerst auf trockenes Haar")),
     ).toBe(true)
     expect(oilSlot?.caveats).not.toContain(
-      "Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.",
+      "Ätherische Öle (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisöl verdünnen.",
     )
   })
 
@@ -427,10 +427,10 @@ test.describe("Routine planner", () => {
 
     expect(oilSlot?.caveats).toHaveLength(2)
     expect(oilSlot?.caveats).toContain(
-      "Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht ueberladen.",
+      "Bei stark gereizter Kopfhaut eher sanft bleiben und die Routine nicht überladen.",
     )
     expect(oilSlot?.caveats).toContain(
-      "Aetherische Oele (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisoel verduennen.",
+      "Ätherische Öle (z.B. Rosmarin, Teebaum) nie pur auftragen — immer mit einem Basisöl verdünnen.",
     )
   })
 
@@ -1059,8 +1059,8 @@ test.describe("Routine planner", () => {
 
     expect(prompt).toContain("Routine-Plan:")
     expect(prompt).toContain("Maske / Kur: gerade eher weniger geeignet")
-    expect(prompt).toContain("Begruende pro relevantem Slot erst kurz den Fit zum Profil")
-    expect(prompt).toContain("ordne sie direkt dem gerade erklaerten Slot")
+    expect(prompt).toContain("Begründe pro relevantem Slot erst kurz den Fit zum Profil")
+    expect(prompt).toContain("ordne sie direkt dem gerade erklärten Slot")
     expect(prompt).toContain(
       "unterscheide sauber zwischen Kopfhaut-Tiefenreinigung, Haar-Reset und Hard Reset",
     )
@@ -1249,7 +1249,7 @@ test.describe("Routine planner", () => {
         bondSlot?.rationale.some((line) => line.includes("Kombination aus K18 und Olaplex")),
       ).toBe(true)
       expect(
-        bondSlot?.caveats.some((line) => line.includes("professionelles Beratungsgespraech")),
+        bondSlot?.caveats.some((line) => line.includes("professionelles Beratungsgespräch")),
       ).toBe(true)
     })
 
@@ -1288,7 +1288,7 @@ test.describe("Routine planner", () => {
         .flatMap((section) => section.slots)
         .find((slot) => slot.id === "occasional-bond-builder")
 
-      expect(bondSlot?.rationale.some((line) => line.includes("K18 (Laengsverbindungen)"))).toBe(
+      expect(bondSlot?.rationale.some((line) => line.includes("K18 (Längsverbindungen)"))).toBe(
         true,
       )
     })
@@ -1307,7 +1307,7 @@ test.describe("Routine planner", () => {
       expect(topicIds).toContain("tiefenreinigung")
 
       const tiefenreinigung = topics.find((topic) => topic.id === "tiefenreinigung")
-      expect(tiefenreinigung?.reason).toContain("Rueckstaende")
+      expect(tiefenreinigung?.reason).toContain("Rückstände")
 
       const hairResetSlot = plan.sections
         .flatMap((section) => section.slots)
@@ -1328,7 +1328,7 @@ test.describe("Routine planner", () => {
         .flatMap((section) => section.slots)
         .find((slot) => slot.id === "occasional-bond-builder")
 
-      expect(bondSlot?.caveats.some((line) => line.includes("steif und sproede"))).toBe(true)
+      expect(bondSlot?.caveats.some((line) => line.includes("steif und spröde"))).toBe(true)
     })
 
     test("protein interaction caveat varies by balance", () => {
@@ -1386,7 +1386,7 @@ test.describe("Routine planner", () => {
       )
 
       expect(prompt).toContain("nachgewiesener Bond-Technologie")
-      expect(prompt).toContain("Laengs- und Querverbindungen")
+      expect(prompt).toContain("Längs- und Querverbindungen")
     })
 
     test("snaps alone activates bond builder via damage signals", () => {
@@ -1448,7 +1448,7 @@ test.describe("Routine planner", () => {
       expect(topicIds).toContain("brush_tools")
       expect(brushSlot?.action).toBe("adjust")
       expect(brushSlot?.rationale.some((line) => line.includes("von unten nach oben"))).toBe(true)
-      expect(brushSlot?.rationale.some((line) => line.includes("Paddle- und Rundbuersten"))).toBe(
+      expect(brushSlot?.rationale.some((line) => line.includes("Paddle- und Rundbürsten"))).toBe(
         true,
       )
     })
@@ -1470,7 +1470,7 @@ test.describe("Routine planner", () => {
       expect(
         brushSlot?.caveats.some((line) => line.includes("gereizter oder schuppiger Kopfhaut")),
       ).toBe(true)
-      expect(brushSlot?.caveats.some((line) => line.includes("Haarausfall oder Ausduennung"))).toBe(
+      expect(brushSlot?.caveats.some((line) => line.includes("Haarausfall oder Ausdünnung"))).toBe(
         true,
       )
     })
@@ -1489,7 +1489,7 @@ test.describe("Routine planner", () => {
         .find((slot) => slot.id === "maintenance-brush-tools")
 
       expect(plan.active_topics.map((topic) => topic.id)).toContain("brush_tools")
-      expect(brushSlot?.rationale.some((line) => line.includes("Spruehflasche"))).toBe(true)
+      expect(brushSlot?.rationale.some((line) => line.includes("Sprühflasche"))).toBe(true)
     })
   })
 

@@ -158,28 +158,28 @@ export function buildBrushToolsSlot(
       "Beim Entwirren immer in den Spitzen anfangen und von unten nach oben arbeiten; bei dichterem oder stark verknotetem Haar lieber in Sektionen.",
     )
     rationale.push(
-      "Eine weiche Detangling-Buerste oder ein grobzinkiger Kamm ist hier meist die sicherere Basis als eine straffere Stylingbuerste.",
+      "Eine weiche Detangling-Bürste oder ein grobzinkiger Kamm ist hier meist die sicherere Basis als eine straffere Stylingbürste.",
     )
   }
 
   if (dryStylingBrushRelevant) {
     rationale.push(
-      "Paddle- und Rundbuersten eher fuer trockenes Styling, Foehnen und Formen nutzen - nicht als Standard fuer nasses Entwirren.",
+      "Paddle- und Rundbürsten eher für trockenes Styling, Föhnen und Formen nutzen - nicht als Standard für nasses Entwirren.",
     )
   }
 
   if (scalpToolRelevant) {
     rationale.push(
-      "Fuer Kopfhaut-Oel oder -Seren lieber scheitelweise mit Applikatorflasche oder Kamm-Applikator arbeiten und sparsam dosieren.",
+      "Für Kopfhaut-Öl oder -Seren lieber scheitelweise mit Applikatorflasche oder Kamm-Applikator arbeiten und sparsam dosieren.",
     )
     rationale.push(
-      "Eine Scalp-Brush bleibt optional: eher locker fuehren und die Kopfhaut sanft bewegen statt mit Druck ueber die Haut zu schrubben.",
+      "Eine Scalp-Brush bleibt optional: eher locker führen und die Kopfhaut sanft bewegen statt mit Druck über die Haut zu schrubben.",
     )
   }
 
   if (refreshToolRelevant) {
     rationale.push(
-      "Fuer Wellen oder Locken zwischen den Waeschen reicht oft Wasser aus einer Spruehflasche zum Reaktivieren, bevor weiteres Produkt dazukommt.",
+      "Für Wellen oder Locken zwischen den Wäschen reicht oft Wasser aus einer Sprühflasche zum Reaktivieren, bevor weiteres Produkt dazukommt.",
     )
   }
 
@@ -191,7 +191,7 @@ export function buildBrushToolsSlot(
 
   if (rationale.length === 0) {
     rationale.push(
-      "Buersten und Tools sollten immer nach Funktion gewaehlt werden: schonendes Entwirren, sauberes Abteilen oder gezieltes Styling.",
+      "Bürsten und Tools sollten immer nach Funktion gewählt werden: schonendes Entwirren, sauberes Abteilen oder gezieltes Styling.",
     )
     rationale.push(
       "Je mehr Reibung und Zug entstehen, desto wichtiger werden weiche Tools, Slip und ein ruhiges Arbeiten in kleinen Abschnitten.",
@@ -199,7 +199,7 @@ export function buildBrushToolsSlot(
   }
 
   const caveats: string[] = [
-    "Tools regelmaessig reinigen und nicht teilen, damit Rueckstaende und Kopfhautthemen nicht mitgeschleppt werden.",
+    "Tools regelmäßig reinigen und nicht teilen, damit Rückstände und Kopfhautthemen nicht mitgeschleppt werden.",
   ]
 
   if (
@@ -214,7 +214,7 @@ export function buildBrushToolsSlot(
 
   if (context.concerns.includes("hair_loss") || context.concerns.includes("thinning")) {
     caveats.push(
-      "Bei Haarausfall oder Ausduennung lieber besonders sanft arbeiten und keine aggressive Kopfhautmassage oder ruckartiges Entwirren empfehlen.",
+      "Bei Haarausfall oder Ausdünnung lieber besonders sanft arbeiten und keine aggressive Kopfhautmassage oder ruckartiges Entwirren empfehlen.",
     )
   }
 
@@ -223,7 +223,7 @@ export function buildBrushToolsSlot(
     (context.heat_styling !== null && context.heat_styling !== "never")
   ) {
     caveats.push(
-      "Beim Foehnen mit Buerste lieber mit Hitzeschutz und moderater Temperatur arbeiten, damit das Tool nicht zusaetzlich Schaden verstaerkt.",
+      "Beim Föhnen mit Bürste lieber mit Hitzeschutz und moderater Temperatur arbeiten, damit das Tool nicht zusätzlich Schaden verstärkt.",
     )
   }
 
@@ -238,12 +238,12 @@ export function buildBrushToolsSlot(
     id: "maintenance-brush-tools",
     kind: "instruction",
     phase: "maintenance",
-    label: "Buersten & Tools",
+    label: "Bürsten & Tools",
     action,
     category: null,
     cadence: explicitBrushRequest
       ? "je nach Bedarf beim Entwirren, Auffrischen oder scheitelweisen Auftragen"
-      : "im Alltag moeglichst reibungsarm einsetzen",
+      : "im Alltag möglichst reibungsarm einsetzen",
     rationale,
     caveats,
     topic_ids: ["brush_tools"],

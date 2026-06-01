@@ -51,10 +51,10 @@ test("AgentV2 routine tool description steers routine-first changes but excludes
     tool.description,
     /change, simplify, lighten, extend, add to, remove from, or rebalance routine state/,
   )
-  assert.match(tool.description, /was soll ich aendern/)
+  assert.match(tool.description, /was soll ich ändern/)
   assert.match(tool.description, /Routine einfacher machen/)
   assert.match(tool.description, /keine schwere Routine/)
-  assert.match(tool.description, /fuege \.\.\. ein/)
+  assert.match(tool.description, /füge \.\.\. ein/)
   assert.match(tool.description, /category-level routine step/)
   assert.match(tool.description, /referenced product/)
   assert.match(tool.description, /routine tool output or active routine context/)
@@ -246,9 +246,9 @@ function terminalGeneralAdviceArguments() {
     pending_routine_action: null,
     session_memory_writes: [],
     payload: {
-      user_facing_answer_de: "Eine Maske ist optional und haengt vom Pflegebedarf ab.",
+      user_facing_answer_de: "Eine Maske ist optional und hängt vom Pflegebedarf ab.",
       category_or_topic: "mask",
-      key_points_de: ["Eine Maske hilft vor allem bei zusaetzlichem Pflegebedarf."],
+      key_points_de: ["Eine Maske hilft vor allem bei zusätzlichem Pflegebedarf."],
       next_step_offer_de: "Ich kann dir danach eine passende Maske empfehlen.",
     },
   }
@@ -414,11 +414,11 @@ function terminalRestrictedSafetyBoundary(call_id: string) {
     },
     payload: {
       user_facing_answer_de:
-        "Bei juckender und geroeteter Kopfhaut wuerde ich nicht direkt ein Produkt empfehlen. Halte die Pflege mild und reizarm; wenn Brennen, Naessen, offene Stellen oder staerkere Schmerzen dazukommen, lass es bitte aerztlich abklaeren.",
+        "Bei juckender und geröteter Kopfhaut würde ich nicht direkt ein Produkt empfehlen. Halte die Pflege mild und reizarm; wenn Brennen, Nässen, offene Stellen oder stärkere Schmerzen dazukommen, lass es bitte ärztlich abklären.",
       boundary_reason_de:
-        "Juckreiz zusammen mit Roetung klingt nach einem moeglich medizinischen Kopfhautthema.",
+        "Juckreiz zusammen mit Rötung klingt nach einem möglich medizinischen Kopfhautthema.",
       next_step_de:
-        "Nutze vorerst nur milde, reizarme Pflege und hole Hilfe, wenn es staerker wird oder nicht abklingt.",
+        "Nutze vorerst nur milde, reizarme Pflege und hole Hilfe, wenn es stärker wird oder nicht abklingt.",
     },
   })
 }
@@ -447,7 +447,7 @@ function terminalGeneralAdviceInRoutine(call_id: string) {
       ...terminalGeneralAdviceArguments().payload,
       user_facing_answer_de:
         "In deiner vereinfachten Routine reicht Conditioner als Basis; eine Maske ist optional.",
-      next_step_offer_de: "Danach koennen wir zur Routine zurueckgehen.",
+      next_step_offer_de: "Danach können wir zur Routine zurückgehen.",
     },
   })
 }
@@ -498,14 +498,14 @@ function terminalMaskOilComparisonInRoutine(call_id: string, evidenceQuote = "Ma
     },
     payload: {
       user_facing_answer_de:
-        "Als leichter Zusatz ist eine gelegentliche Maske sinnvoller als Oel. Oel waere nur optional als winziger Finish-Schritt in den Spitzen.",
+        "Als leichter Zusatz ist eine gelegentliche Maske sinnvoller als Öl. Öl wäre nur optional als winziger Finish-Schritt in den Spitzen.",
       category_or_topic: "mask_vs_oil",
       key_points_de: [
         "Maske ist der bessere gelegentliche Pflegehebel.",
-        "Oel ist nur ein sehr kleiner Finish-Schritt.",
+        "Öl ist nur ein sehr kleiner Finish-Schritt.",
       ],
       next_step_offer_de:
-        "Wenn du willst, kann ich daraus als Naechstes eine konkrete Routine-Aenderung machen.",
+        "Wenn du willst, kann ich daraus als Nächstes eine konkrete Routine-Änderung machen.",
     },
   })
 }
@@ -526,7 +526,7 @@ function terminalBondbuilderCategoryEducation(call_id: string) {
     },
     payload: {
       user_facing_answer_de:
-        "Es gibt nicht einfach vier normale Produktarten wie Shampoo, Conditioner, Maske und Leave-in. Im engeren Sinn geht es um kuratierte Reparaturbehandlungen; andere Bond-Labels koennen Look-alikes sein.",
+        "Es gibt nicht einfach vier normale Produktarten wie Shampoo, Conditioner, Maske und Leave-in. Im engeren Sinn geht es um kuratierte Reparaturbehandlungen; andere Bond-Labels können Look-alikes sein.",
       category_or_topic: "bondbuilder",
       key_points_de: [
         "Generic bond labels are not enough.",
@@ -557,7 +557,7 @@ function terminalProductRecommendation(call_id: string, product_ids: string[]) {
       product_ids,
     },
     payload: {
-      user_facing_answer_de: "Ich wuerde dir dieses Produkt empfehlen.",
+      user_facing_answer_de: "Ich würde dir dieses Produkt empfehlen.",
       recommendations: product_ids.map((product_id) => ({
         product_id,
         reason_de: "Passt zu deinem Profil.",
@@ -704,16 +704,16 @@ function terminalRoutineProductDeepDive(call_id: string, product_ids: string[]) 
     },
     payload: {
       user_facing_answer_de:
-        "**Test Leave-in** passt gut als erster Zusatzhebel, weil es leicht ist und feines Haar nicht unnoetig beschwert.",
+        "**Test Leave-in** passt gut als erster Zusatzhebel, weil es leicht ist und feines Haar nicht unnötig beschwert.",
       recommendations: product_ids.map((product_id) => ({
         product_id,
         reason_de: "Passt als leichter erster Zusatzhebel in der Routine.",
-        usage_de: "Nach dem Waschen sparsam in Laengen und Spitzen.",
+        usage_de: "Nach dem Waschen sparsam in Längen und Spitzen.",
         caveat_de: null,
       })),
       comparison_notes_de: [],
-      usage_notes_de: ["Nach dem Waschen sparsam in Laengen und Spitzen."],
-      next_step_offer_de: "Danach koennen wir schauen, wie du es in die Routine einbaust.",
+      usage_notes_de: ["Nach dem Waschen sparsam in Längen und Spitzen."],
+      next_step_offer_de: "Danach können wir schauen, wie du es in die Routine einbaust.",
     },
   })
 }
@@ -767,7 +767,7 @@ function terminalLeaveInRoutineMutation(call_id: string) {
     },
     payload: {
       user_facing_answer_de:
-        "Ich habe den Leichter Leave-in als Zusatz in deine Routine gesetzt: Shampoo reinigt Kopfhaut und Ansatz, Conditioner pflegt die Laengen, und Leichter Leave-in kommt nach dem Waschen sparsam in Laengen und Spitzen.",
+        "Ich habe den Leichter Leave-in als Zusatz in deine Routine gesetzt: Shampoo reinigt Kopfhaut und Ansatz, Conditioner pflegt die Längen, und Leichter Leave-in kommt nach dem Waschen sparsam in Längen und Spitzen.",
       routine_layer: "basics",
       visible_steps: [
         {
@@ -780,20 +780,20 @@ function terminalLeaveInRoutineMutation(call_id: string) {
         {
           step_id: "step_conditioner",
           label_de: "Conditioner",
-          action_de: "In Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
-          reason_de: "Basis fuer Laengenpflege.",
+          action_de: "In Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
+          reason_de: "Basis für Längenpflege.",
         },
         {
           step_id: "step_leave_in",
           label_de: "Leichter Leave-in",
-          action_de: "Nach dem Waschen sparsam in Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
+          action_de: "Nach dem Waschen sparsam in Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
           reason_de: "Zusatz gegen Trockenheit und Frizz.",
         },
       ],
       next_layer_options: ["goals", "deep_dive"],
-      next_step_offer_de: "Als Naechstes koennen wir die genaue Anwendung feinjustieren.",
+      next_step_offer_de: "Als Nächstes können wir die genaue Anwendung feinjustieren.",
     },
   })
 }
@@ -842,7 +842,7 @@ function terminalCategoryLevelLeaveInRoutineMutation(call_id: string) {
     },
     payload: {
       user_facing_answer_de:
-        "Ich habe das als Leave-in / Finish in deine Routine eingeordnet: Shampoo bleibt fuer Kopfhaut und Ansatz, Conditioner fuer Laengen und Spitzen, und Leave-in / Finish kommt nach dem Waschen sparsam in Laengen und Spitzen.",
+        "Ich habe das als Leave-in / Finish in deine Routine eingeordnet: Shampoo bleibt für Kopfhaut und Ansatz, Conditioner für Längen und Spitzen, und Leave-in / Finish kommt nach dem Waschen sparsam in Längen und Spitzen.",
       routine_layer: "basics",
       visible_steps: [
         {
@@ -855,20 +855,20 @@ function terminalCategoryLevelLeaveInRoutineMutation(call_id: string) {
         {
           step_id: "base-conditioner",
           label_de: "Conditioner",
-          action_de: "In Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
-          reason_de: "Basis fuer Laengenpflege.",
+          action_de: "In Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
+          reason_de: "Basis für Längenpflege.",
         },
         {
           step_id: "maintenance-leave-in",
           label_de: "Leave-in / Finish",
-          action_de: "Nach dem Waschen sparsam in Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
-          reason_de: "Kategorie-Schritt fuer den gewuenschten Zusatz.",
+          action_de: "Nach dem Waschen sparsam in Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
+          reason_de: "Kategorie-Schritt für den gewünschten Zusatz.",
         },
       ],
       next_layer_options: ["goals", "deep_dive"],
-      next_step_offer_de: "Als Naechstes koennen wir die Dosierung feinjustieren.",
+      next_step_offer_de: "Als Nächstes können wir die Dosierung feinjustieren.",
     },
   })
 }
@@ -932,16 +932,16 @@ function invalidRoutineResetTerminal(call_id: string) {
         {
           step_id: "step_conditioner",
           label_de: "Conditioner",
-          action_de: "In Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
-          reason_de: "Basis fuer Laengenpflege.",
+          action_de: "In Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
+          reason_de: "Basis für Längenpflege.",
         },
         {
           step_id: "step_reset",
           label_de: "Reset",
           action_de: "Gelegentlich ein Tiefenreinigungsshampoo nutzen.",
           frequency_de: "gelegentlich",
-          reason_de: "Kann bei Rueckstaenden helfen.",
+          reason_de: "Kann bei Rückständen helfen.",
         },
       ],
       next_layer_options: ["goals", "deep_dive"],
@@ -997,7 +997,7 @@ function invalidRoutinePlacementTerminal(
           label_de: categoryLabel,
           action_de: "In der Routine passend platzieren.",
           frequency_de: "nach Bedarf",
-          reason_de: "Placement-Erklaerung.",
+          reason_de: "Placement-Erklärung.",
         },
       ],
       next_layer_options: ["goals", "deep_dive"],
@@ -1056,20 +1056,20 @@ function invalidMaskOilRoutineDecisionTerminal(call_id: string) {
         {
           step_id: "step_conditioner",
           label_de: "Conditioner",
-          action_de: "In Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
-          reason_de: "Basis fuer Laengenpflege.",
+          action_de: "In Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
+          reason_de: "Basis für Längenpflege.",
         },
         {
           step_id: "step_mask",
           label_de: "Haarmaske",
-          action_de: "Gelegentlich in trockene oder frizzige Laengen geben.",
+          action_de: "Gelegentlich in trockene oder frizzige Längen geben.",
           frequency_de: "gelegentlich",
-          reason_de: "Haupt-Add-on fuer Pflegebedarf in den Laengen.",
+          reason_de: "Haupt-Add-on für Pflegebedarf in den Längen.",
         },
         {
           step_id: "step_oil",
-          label_de: "Haaroel",
+          label_de: "Haaröl",
           action_de: "Optional winzig in die Spitzen geben.",
           frequency_de: "bei Bedarf",
           reason_de: "Finish, nicht Hauptpflege.",
@@ -1169,7 +1169,7 @@ function validRoutineResetTerminal(call_id: string) {
   const call = invalidRoutineResetTerminal(call_id)
   const args = JSON.parse(call.arguments)
   args.payload.user_facing_answer_de =
-    "Deine Basis bleibt Shampoo + Conditioner. Den Reset-Schritt wuerde ich nur gelegentlich einbauen."
+    "Deine Basis bleibt Shampoo + Conditioner. Den Reset-Schritt würde ich nur gelegentlich einbauen."
   return rawFunctionCall(call.call_id, call.name, JSON.stringify(args))
 }
 
@@ -1685,7 +1685,7 @@ test("AgentV2 runtime keeps routine follow-up product offers on select_products 
       {
         role: "assistant",
         content:
-          "Ich wuerde die Routine mit einem leichten Leave-in als erstem Zusatz stabilisieren. Soll ich dir passende Produkte dafuer zeigen?",
+          "Ich würde die Routine mit einem leichten Leave-in als erstem Zusatz stabilisieren. Soll ich dir passende Produkte dafür zeigen?",
       },
     ],
     userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
@@ -1701,8 +1701,8 @@ test("AgentV2 runtime keeps routine follow-up product offers on select_products 
         {
           step_id: "step_leave_in",
           label_de: "Leichter Leave-in",
-          action_de: "Nach dem Waschen sparsam in Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
+          action_de: "Nach dem Waschen sparsam in Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
           reason_de: "Erster Zusatz gegen Trockenheit und Frizz.",
         },
       ],
@@ -1786,7 +1786,7 @@ test("AgentV2 runtime blocks routine rebuild for pure active routine summaries",
           "Basis: Shampoo und Conditioner beibehalten.",
           "Erster Zusatz: leichter Leave-in gegen Trockenheit und Frizz.",
         ],
-        next_step_offer_de: "Wenn du willst, kann ich danach einen Schritt genauer erklaeren.",
+        next_step_offer_de: "Wenn du willst, kann ich danach einen Schritt genauer erklären.",
       },
     }),
   ])
@@ -1799,7 +1799,7 @@ test("AgentV2 runtime blocks routine rebuild for pure active routine summaries",
       {
         role: "assistant",
         content:
-          "Deine Basis bleibt Shampoo und Conditioner. Als ersten Zusatz wuerde ich ein leichtes Leave-in nehmen.",
+          "Deine Basis bleibt Shampoo und Conditioner. Als ersten Zusatz würde ich ein leichtes Leave-in nehmen.",
       },
     ],
     userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
@@ -1822,15 +1822,15 @@ test("AgentV2 runtime blocks routine rebuild for pure active routine summaries",
         {
           step_id: "step_conditioner",
           label_de: "Conditioner",
-          action_de: "In Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
-          reason_de: "Basis fuer Laengenpflege.",
+          action_de: "In Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
+          reason_de: "Basis für Längenpflege.",
         },
         {
           step_id: "step_leave_in",
           label_de: "Leichter Leave-in",
-          action_de: "Nach dem Waschen sparsam in Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
+          action_de: "Nach dem Waschen sparsam in Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
           reason_de: "Erster Zusatz gegen Trockenheit und Frizz.",
         },
       ],
@@ -1884,7 +1884,7 @@ test("AgentV2 runtime blocks routine tool permission for short confirmations wit
     recentMessages: [
       {
         role: "assistant",
-        content: "Soll ich dir erklaeren, ob Maske oder Oel als Zusatz sinnvoller ist?",
+        content: "Soll ich dir erklären, ob Maske oder Öl als Zusatz sinnvoller ist?",
       },
     ],
     userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
@@ -1894,7 +1894,7 @@ test("AgentV2 runtime blocks routine tool permission for short confirmations wit
       last_answer_mode: "general_advice",
       last_routine_categories: ["shampoo", "conditioner", "mask", "oil"],
       last_user_goal: "Maske oder Oel als Zusatz vergleichen.",
-      summary_de: "Die letzte Frage war ein Vergleich, kein Routine-Aenderungsangebot.",
+      summary_de: "Die letzte Frage war ein Vergleich, kein Routine-Änderungsangebot.",
       visible_steps: [],
     },
     currentRoutineLayer: "basics",
@@ -1957,7 +1957,7 @@ test("AgentV2 runtime allows routine tool permission for pending routine action 
       current_layer: "basics",
       last_answer_mode: "general_advice",
       last_routine_categories: ["shampoo", "conditioner", "leave_in"],
-      last_user_goal: "Trockene Laengen mit leichter Routine.",
+      last_user_goal: "Trockene Längen mit leichter Routine.",
       summary_de: "Assistant offered to add a leave-in step.",
       pending_routine_action: {
         action: "add_step",
@@ -2056,15 +2056,15 @@ test("AgentV2 runtime blocks repair-triggered routine rebuild for pure active ro
           {
             step_id: "step_conditioner",
             label_de: "Conditioner",
-            action_de: "In Laengen und Spitzen geben.",
-            frequency_de: "nach jeder Waesche",
-            reason_de: "Basis fuer Laengenpflege.",
+            action_de: "In Längen und Spitzen geben.",
+            frequency_de: "nach jeder Wäsche",
+            reason_de: "Basis für Längenpflege.",
           },
           {
             step_id: "step_leave_in",
             label_de: "Leichter Leave-in",
-            action_de: "Sparsam in Laengen und Spitzen geben.",
-            frequency_de: "nach jeder Waesche",
+            action_de: "Sparsam in Längen und Spitzen geben.",
+            frequency_de: "nach jeder Wäsche",
             reason_de: "Zusatz gegen Trockenheit und Frizz.",
           },
         ],
@@ -2129,7 +2129,7 @@ test("AgentV2 runtime blocks repair-triggered routine rebuild for pure active ro
       {
         role: "assistant",
         content:
-          "Deine Basis bleibt Shampoo und Conditioner. Als ersten Zusatz wuerde ich ein leichtes Leave-in nehmen.",
+          "Deine Basis bleibt Shampoo und Conditioner. Als ersten Zusatz würde ich ein leichtes Leave-in nehmen.",
       },
     ],
     userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
@@ -2152,15 +2152,15 @@ test("AgentV2 runtime blocks repair-triggered routine rebuild for pure active ro
         {
           step_id: "step_conditioner",
           label_de: "Conditioner",
-          action_de: "In Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
-          reason_de: "Basis fuer Laengenpflege.",
+          action_de: "In Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
+          reason_de: "Basis für Längenpflege.",
         },
         {
           step_id: "step_leave_in",
           label_de: "Leichter Leave-in",
-          action_de: "Nach dem Waschen sparsam in Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
+          action_de: "Nach dem Waschen sparsam in Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
           reason_de: "Erster Zusatz gegen Trockenheit und Frizz.",
         },
       ],
@@ -2224,7 +2224,7 @@ test("AgentV2 runtime allows explicit product integration requests inside active
       {
         role: "assistant",
         content:
-          "Der leichte Leave-in passt als Produkt fuer deinen ersten Zusatz gegen Trockenheit und Frizz.",
+          "Der leichte Leave-in passt als Produkt für deinen ersten Zusatz gegen Trockenheit und Frizz.",
       },
     ],
     userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
@@ -2240,8 +2240,8 @@ test("AgentV2 runtime allows explicit product integration requests inside active
         {
           step_id: "step_leave_in",
           label_de: "Leichter Leave-in",
-          action_de: "Nach dem Waschen sparsam in Laengen und Spitzen geben.",
-          frequency_de: "nach jeder Waesche",
+          action_de: "Nach dem Waschen sparsam in Längen und Spitzen geben.",
+          frequency_de: "nach jeder Wäsche",
           reason_de: "Erster Zusatz gegen Trockenheit und Frizz.",
         },
       ],
@@ -2281,7 +2281,7 @@ test("AgentV2 runtime allows explicit product integration requests inside active
 
 test("AgentV2 runtime answers grounded K18 bondbuilder protocol from selected product usage hint", async () => {
   const usageHint =
-    "Nach dem Shampoo ohne Conditioner auf handtuchtrockenes Haar geben, 4 Minuten einwirken lassen, nicht ausspuelen und danach stylen. In den ersten 4-6 Waeschen nach jeder Waesche, danach nach Bedarf verwenden."
+    "Nach dem Shampoo ohne Conditioner auf handtuchtrockenes Haar geben, 4 Minuten einwirken lassen, nicht ausspülen und danach stylen. In den ersten 4-6 Wäschen nach jeder Wäsche, danach nach Bedarf verwenden."
   const selectedProduct = {
     product_id: "k18-leave-in",
     rank: 1,
@@ -2345,11 +2345,11 @@ test("AgentV2 runtime answers grounded K18 bondbuilder protocol from selected pr
       },
       payload: {
         user_facing_answer_de:
-          "Bei K18 Molecular Repair Leave-In ist die Anwendung klar: nach dem Shampoo ohne Conditioner auf handtuchtrockenes Haar geben, 4 Minuten einwirken lassen und nicht ausspuelen. In den ersten 4-6 Waeschen nutzt du es nach jeder Waesche, danach nach Bedarf.",
+          "Bei K18 Molecular Repair Leave-In ist die Anwendung klar: nach dem Shampoo ohne Conditioner auf handtuchtrockenes Haar geben, 4 Minuten einwirken lassen und nicht ausspülen. In den ersten 4-6 Wäschen nutzt du es nach jeder Wäsche, danach nach Bedarf.",
         recommendations: [
           {
             product_id: "k18-leave-in",
-            reason_de: "Ausgewaehlter Bondbuilder mit geerdetem Anwendungshinweis.",
+            reason_de: "Ausgewählter Bondbuilder mit geerdetem Anwendungshinweis.",
             usage_de: usageHint,
             caveat_de: null,
           },
@@ -2388,8 +2388,8 @@ test("AgentV2 runtime answers grounded K18 bondbuilder protocol from selected pr
   assert.deepEqual(result.trace.blocked_tool_calls, [])
   assert.deepEqual(result.trace.validation_errors, [])
   assert.equal(result.final_answer.request_interpretation.product_request_kind, "product_detail")
-  assert.match(result.final_answer.payload.user_facing_answer_de, /nicht ausspuelen/)
-  assert.match(result.final_answer.payload.user_facing_answer_de, /4-6 Waeschen/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /nicht ausspülen/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /4-6 Wäschen/)
   assert.doesNotMatch(
     result.final_answer.payload.user_facing_answer_de,
     /kann.*Protokoll|soll ich dir.*Anwendung/i,
@@ -2894,9 +2894,9 @@ test("AgentV2 runtime falls back safely if missing-terminal repair also omits te
 
 test("AgentV2 runtime preserves useful assistant text if missing-terminal repair calls a disallowed tool", async () => {
   const usefulAssistantText =
-    "**Mit mehr Feuchtigkeit** wuerde ich deine 3 Schritte so denken:\n\n" +
-    "1. **Shampoo** bleibt fuer Kopfhaut und Ansatz.\n" +
-    "2. **Conditioner** bleibt der feste Schritt fuer die Laengen.\n" +
+    "**Mit mehr Feuchtigkeit** würde ich deine 3 Schritte so denken:\n\n" +
+    "1. **Shampoo** bleibt für Kopfhaut und Ansatz.\n" +
+    "2. **Conditioner** bleibt der feste Schritt für die Längen.\n" +
     "3. **Leave-in oder Maske** bringt die Extra-Feuchtigkeit rein."
   const client = fakeResponsesClientWithOutputs([
     {
@@ -2922,7 +2922,7 @@ test("AgentV2 runtime preserves useful assistant text if missing-terminal repair
       { role: "user", content: "wie kann ich meine routine verbessern?" },
       {
         role: "assistant",
-        content: "Shampoo, Conditioner und ein leichter Zusatz waeren sinnvoll.",
+        content: "Shampoo, Conditioner und ein leichter Zusatz wären sinnvoll.",
       },
       { role: "user", content: "ok ja dann bau mir die 3 schritt routine" },
     ],
@@ -3475,9 +3475,9 @@ test("AgentV2 runtime degrades dry shampoo placement repair failure to useful ad
   assert.equal(result.trace.failure_stage, "repair_failed")
   assert.equal(result.final_answer.answer_mode, "general_advice")
   assert.equal(result.trace.validation_errors.length, 0)
-  assert.match(result.final_answer.payload.user_facing_answer_de, /zwischen den Haarwaeschen/i)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /zwischen den Haarwäschen/i)
   assert.match(result.final_answer.payload.user_facing_answer_de, /Ansatz/i)
-  assert.match(result.final_answer.payload.user_facing_answer_de, /ersetzt keine Waesche/i)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /ersetzt keine Wäsche/i)
   assert.match(result.final_answer.payload.user_facing_answer_de, /feinem Haar/i)
   assert.doesNotMatch(
     result.final_answer.payload.user_facing_answer_de,
@@ -3522,8 +3522,8 @@ test("AgentV2 runtime degrades deep cleansing placement repair failure to useful
   assert.equal(result.trace.validation_errors.length, 0)
   assert.match(result.final_answer.payload.user_facing_answer_de, /Waschtag/i)
   assert.match(result.final_answer.payload.user_facing_answer_de, /statt deinem normalen Shampoo/i)
-  assert.match(result.final_answer.payload.user_facing_answer_de, /Build-up|Rueckstaende/i)
-  assert.match(result.final_answer.payload.user_facing_answer_de, /Conditioner|Laengenpflege/i)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Build-up|Rückstände/i)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Conditioner|Längenpflege/i)
   assert.doesNotMatch(
     result.final_answer.payload.user_facing_answer_de,
     /eingebaut|gespeichert|geaendert/i,
@@ -3559,7 +3559,7 @@ test("AgentV2 runtime degrades placement repair failure when repair gets the wro
   assert.equal(result.trace.blocked_tool_calls.at(-1)?.name, "select_products")
   assert.equal(result.final_answer.answer_mode, "general_advice")
   assert.equal(result.trace.validation_errors.length, 0)
-  assert.match(result.final_answer.payload.user_facing_answer_de, /zwischen den Haarwaeschen/i)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /zwischen den Haarwäschen/i)
   assert.doesNotMatch(
     result.final_answer.payload.user_facing_answer_de,
     /nicht sauber zusammensetzen|Formulier es bitte/,
@@ -3610,7 +3610,7 @@ test("AgentV2 runtime degrades terminal-only placement repair when repair calls 
   assert.equal(result.trace.blocked_tool_calls.at(-1)?.reason, "repair_tool_not_allowed")
   assert.equal(result.final_answer.answer_mode, "general_advice")
   assert.equal(result.trace.validation_errors.length, 0)
-  assert.match(result.final_answer.payload.user_facing_answer_de, /zwischen den Haarwaeschen/i)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /zwischen den Haarwäschen/i)
   assert.doesNotMatch(
     result.final_answer.payload.user_facing_answer_de,
     /nicht sauber zusammensetzen|Formulier es bitte/,
@@ -3763,7 +3763,7 @@ test("AgentV2 honest fallback for failed leave-in add-step stays category-specif
   assert.match(answerText, /Leave-in/i)
   assert.match(answerText, /Kategorie|Schritt|Zusatz/i)
   assert.doesNotMatch(answerText, /Pantene/i)
-  assert.doesNotMatch(answerText, /Routine nicht groesser machen als noetig/i)
+  assert.doesNotMatch(answerText, /Routine nicht größer machen als nötig/i)
   assert.doesNotMatch(answerText, /eingebaut|gespeichert|geaendert/i)
 })
 
@@ -3858,7 +3858,7 @@ test("AgentV2 runtime degrades lightweight mask oil repair failure to category a
   const answerText = result.final_answer.payload.user_facing_answer_de
   assert.match(answerText, /Maske/i)
   assert.match(answerText, /gelegentlich|Occasional|Add-on|Zusatz/i)
-  assert.match(answerText, /Oel|Öl|Haaroel|Haaröl/i)
+  assert.match(answerText, /Oel|Öl|Haaröl|Haaröl/i)
   assert.match(answerText, /winzig|klein|sparsam|optional/i)
   assert.match(answerText, /Finish|Spitzen/i)
   assert.match(answerText, /Shampoo/i)
@@ -3896,7 +3896,10 @@ test("AgentV2 runtime does not use mask oil fallback without loaded mask and oil
 
   assert.equal(result.trace.failure_stage, "repair_failed")
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Maske der sinnvollere/i)
-  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Oel wuerde ich/i)
+  assert.doesNotMatch(
+    result.final_answer.payload.user_facing_answer_de,
+    /(?:Oel wuerde|Öl würde) ich/i,
+  )
   assert.ok(!result.trace.loaded_guidance_package_ids.includes("category.mask.v1"))
   assert.ok(!result.trace.loaded_guidance_package_ids.includes("category.oil.v1"))
 })
@@ -3937,7 +3940,10 @@ test("AgentV2 runtime does not use mask oil fallback without lightweight add-on 
   assert.equal(result.trace.failure_stage, "repair_failed")
   assert.equal(result.final_answer.answer_mode, "general_advice")
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Maske der sinnvollere/i)
-  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Oel wuerde ich/i)
+  assert.doesNotMatch(
+    result.final_answer.payload.user_facing_answer_de,
+    /(?:Oel wuerde|Öl würde) ich/i,
+  )
 })
 
 test("AgentV2 runtime does not treat oily scalp wording as an oil-vs-mask decision", async () => {
@@ -3976,7 +3982,10 @@ test("AgentV2 runtime does not treat oily scalp wording as an oil-vs-mask decisi
   assert.equal(result.trace.failure_stage, "repair_failed")
   assert.equal(result.final_answer.answer_mode, "general_advice")
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Maske der sinnvollere/i)
-  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Oel wuerde ich/i)
+  assert.doesNotMatch(
+    result.final_answer.payload.user_facing_answer_de,
+    /(?:Oel wuerde|Öl würde) ich/i,
+  )
 })
 
 test("AgentV2 runtime keeps restricted safety fallback when routine known intent exists", async () => {
@@ -4010,7 +4019,7 @@ test("AgentV2 runtime keeps restricted safety fallback when routine known intent
 
   assert.equal(result.trace.failure_stage, "repair_failed")
   assert.equal(result.final_answer.answer_mode, "safety_boundary")
-  assert.match(result.final_answer.payload.user_facing_answer_de, /Kopfhaut|reizarm|abklaeren/i)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Kopfhaut|reizarm|abklären/i)
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Reset nicht/)
 })
 
@@ -4140,9 +4149,9 @@ test("AgentV2 runtime blocks pending confirmation when routine tool args do not 
       },
       payload: {
         user_facing_answer_de:
-          "Ich habe die bestaetigte Leave-in-Aenderung verstanden, aber wuerde keinen anderen Schritt daraus machen.",
+          "Ich habe die bestätigte Leave-in-Änderung verstanden, aber würde keinen anderen Schritt daraus machen.",
         category_or_topic: "leave_in",
-        key_points_de: ["Leave-in bleibt der bestaetigte Schritt."],
+        key_points_de: ["Leave-in bleibt der bestätigte Schritt."],
         next_step_offer_de: null,
       },
     }),
@@ -4164,7 +4173,7 @@ test("AgentV2 runtime blocks pending confirmation when routine tool args do not 
       current_layer: "basics",
       last_answer_mode: "general_advice",
       last_routine_categories: ["shampoo", "conditioner", "leave_in"],
-      last_user_goal: "Trockene Laengen mit leichter Routine.",
+      last_user_goal: "Trockene Längen mit leichter Routine.",
       summary_de: "Assistant offered to add a leave-in step.",
       pending_routine_action: {
         action: "add_step",
@@ -4228,9 +4237,9 @@ test("AgentV2 runtime blocks objective-only routine calls for explanation turns"
       },
       payload: {
         user_facing_answer_de:
-          "Leave-in kommt nach dem Auswaschen von Conditioner in Laengen und Spitzen, nicht an den Ansatz.",
+          "Leave-in kommt nach dem Auswaschen von Conditioner in Längen und Spitzen, nicht an den Ansatz.",
         category_or_topic: "leave_in",
-        key_points_de: ["Das ist eine Erklaerung, keine Routine-Aenderung."],
+        key_points_de: ["Das ist eine Erklärung, keine Routine-Änderung."],
         next_step_offer_de: null,
       },
     }),
@@ -4748,7 +4757,7 @@ test("AgentV2 runtime does not use Zusatz ambiguity fallback for explicit proble
       {
         role: "assistant",
         content:
-          "Naechster sinnvoller Schritt: leichter Zusatz fuer die Laengen oder Problemloesung gegen Frizz/Plattheit.",
+          "Nächster sinnvoller Schritt: leichter Zusatz für die Längen oder Problemlösung gegen Frizz/Plattheit.",
       },
     ],
     userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
