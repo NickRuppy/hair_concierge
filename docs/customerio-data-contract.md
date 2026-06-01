@@ -25,7 +25,8 @@ https://cdp-eu.customer.io/v1
 
 All server calls use `CUSTOMERIO_SERVER_WRITE_KEY`, `X-Strict-Mode: 1`, ISO timestamps, and stable `messageId` values for dedupe where available. Customer.io documents strict mode for Pipelines; without it, validation errors can be logged while the API still returns `200`.
 
-The Customer.io App API remains reserved for transactional auth email sends.
+The Customer.io App API remains reserved for requested transactional/service emails, including
+auth emails and quiz-result artifact delivery. It is not used for marketing campaigns.
 
 ## Quiz Lead Traits
 
@@ -86,6 +87,11 @@ Browser events such as `quiz_lead_captured` remain analytics signals. Do not use
 
 Marketing/lifecycle email campaigns that use `quiz_profile_submitted` must also filter for `marketing_consent = true`.
 
+Requested service/artifact emails, such as the quiz result artifact email, are separate from
+marketing/lifecycle campaigns. They may send without `marketing_consent` only when the email
+delivers the artifact the user requested or just completed, avoids promotional email copy, and
+uses the Customer.io App API transactional send path.
+
 Browser `purchase_completed` and `subscription_started` must not be routed to Customer.io once server Stripe webhook events are live. PostHog and Meta can still receive the browser-return events.
 
 ## Event Source Rules
@@ -121,7 +127,7 @@ Customer.io sync is best-effort. Failures must never block quiz lead capture, pa
 
 V1 uses logging only. Supabase remains the source of truth for manual backfills.
 
-Manual replay should use Supabase rows as truth: rebuild the Customer.io payload from the lead/profile/subscription row and send it with a stable `messageId` through the Pipelines API. Do not replay from browser analytics events.
+Manual replay should use Supabase rows as truth: rebuild the Customer.io payload from the lead/profile/subscription row and send it through the matching server-owned channel. Lifecycle events use the Pipelines API with stable `messageId` values; transactional/service artifacts such as `quiz_result_artifact` use the Customer.io App API after resetting their send status for replay. Do not replay from browser analytics events.
 
 Use these stable message ID shapes for manual replay:
 

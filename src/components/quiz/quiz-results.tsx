@@ -31,6 +31,7 @@ export function QuizResults() {
   const { user, profile, loading } = useAuth()
   const { lead, answers, leadId, goNext } = useQuizStore()
   const checkoutAnalyticsCapturedRef = useRef(false)
+  const resultArtifactEmailLeadRef = useRef<string | null>(null)
   const narrative = buildQuizResultNarrative(answers)
   const returnTo = searchParams.get("returnTo")
   const isRetakeMode = searchParams.get("mode") === "retake"
@@ -54,6 +55,21 @@ export function QuizResults() {
   useEffect(() => {
     captureQuizCompleted()
   }, [captureQuizCompleted])
+
+  useEffect(() => {
+    if (!leadId) return
+    if (loading) return
+    if (canGoStraightToRoutine || isCheckingSignedInSubscription) return
+    if (resultArtifactEmailLeadRef.current === leadId) return
+
+    resultArtifactEmailLeadRef.current = leadId
+    void fetch("/api/quiz/result-artifact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ leadId }),
+      keepalive: true,
+    }).catch(() => {})
+  }, [canGoStraightToRoutine, isCheckingSignedInSubscription, leadId, loading])
 
   const handleStart = () => {
     captureQuizCompleted()

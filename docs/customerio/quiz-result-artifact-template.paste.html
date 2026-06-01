@@ -1,0 +1,46 @@
+<div style="display: none; max-height: 0; overflow: hidden; opacity: 0; color: transparent;">
+  Öffne deine Ergebnisse und fahre mit deiner Routine fort.
+</div>
+<div style="font-family: Arial, sans-serif; color: #332f2d; line-height: 1.5;">
+  <p style="margin: 0 0 16px;">
+    {% if trigger.first_name != blank %}{{ trigger.first_name | escape }}, {% endif %}deine Haaranalyse ist fertig.
+  </p>
+
+  <h1 style="font-size: 28px; line-height: 1.15; margin: 0 0 14px; color: #4b2f68;">
+    {{ trigger.headline | default: "So kommen wir deinem Haarziel näher" | escape }}
+  </h1>
+
+  <p style="margin: 0 0 22px; color: #746d67;">
+    {{ trigger.intro | default: "" | escape }}
+  </p>
+
+  {% for row in trigger.rows %}
+    <div style="border-top: 1px solid #e7ddd6; padding: 14px 0;">
+      <p style="margin: 0 0 6px; color: #4b2f68; font-size: 12px; font-weight: bold;">
+        {{ row.label | escape }}{% if row.scope != blank %} · {{ row.scope | escape }}{% endif %}
+      </p>
+      <p style="margin: 0 0 4px;"><strong>Aktuell:</strong> {{ row.before | escape }}</p>
+      <p style="margin: 0;"><strong>Ziel:</strong> {{ row.after | escape }}</p>
+    </div>
+  {% endfor %}
+
+  <div style="background: #f7f1fb; border-radius: 14px; padding: 18px; margin: 22px 0;">
+    <p style="margin: 0 0 8px; color: #4b2f68; font-size: 12px; font-weight: bold;">Dein größter Hebel</p>
+    <h2 style="font-size: 22px; line-height: 1.2; margin: 0 0 10px; color: #332f2d;">
+      {{ trigger.main_lever_title | escape }}
+    </h2>
+    <p style="margin: 0;">{{ trigger.main_lever_why | escape }}</p>
+  </div>
+
+  {% for lever in trigger.routine_levers %}
+    <p style="margin: 0 0 10px;">
+      <strong>{{ lever.name | escape }}:</strong> {{ lever.description | escape }}
+    </p>
+  {% endfor %}
+
+  <p style="margin: 26px 0 0;">
+    <a href="{{ trigger.result_url }}" style="display: inline-block; background: #d96f5d; color: #ffffff; text-decoration: none; border-radius: 12px; padding: 14px 22px; font-weight: bold;">
+      {{ trigger.cta_label | default: "Zur Routine" | escape }}
+    </a>
+  </p>
+</div>
