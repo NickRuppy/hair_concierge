@@ -47,7 +47,7 @@ import type { SelectedProductsProjection } from "@/lib/agent/tools/select-produc
 import {
   normalizeConversationState,
   resolveAgenticConversationStateTransition,
-} from "@/lib/rag/conversation-state"
+} from "@/lib/chat-runtime/conversation-state"
 import type { AgentActiveProfileSignal, AgentConcern } from "@/lib/agent/orchestrator/route-packet"
 import type {
   ConversationState,

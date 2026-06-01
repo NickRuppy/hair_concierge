@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import {
   createDefaultConversationState,
   normalizeConversationState,
-} from "@/lib/rag/conversation-state"
+} from "@/lib/chat-runtime/conversation-state"
 import type {
   ConversationState,
   ConversationStatePersistenceTrace,

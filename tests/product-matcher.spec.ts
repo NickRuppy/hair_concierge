@@ -5,7 +5,7 @@ import {
   rankProductsForDeterministicMatch,
   sortMatchedProducts,
   type MatchedProduct,
-} from "../src/lib/rag/product-matcher"
+} from "../src/lib/product-matching/matcher"
 import type { Product } from "../src/lib/types"
 
 function createProduct(id: string, overrides: Partial<Product> = {}): Product {

@@ -37,11 +37,11 @@ type SupabaseAdmin = ReturnType<typeof createAdminClient>
 function hasMissingMemoryTable(error: { code?: string; message?: string } | null): boolean {
   return Boolean(
     error &&
-      (error.code === "42P01" ||
-        error.code === "42703" ||
-        error.message?.includes("user_memory_") ||
-        error.message?.includes("conversation_memory") ||
-        error.message?.includes("memory_extracted_at_count"))
+    (error.code === "42P01" ||
+      error.code === "42703" ||
+      error.message?.includes("user_memory_") ||
+      error.message?.includes("conversation_memory") ||
+      error.message?.includes("memory_extracted_at_count")),
   )
 }
 
@@ -59,7 +59,9 @@ export function normalizeProductName(value: string): string {
   return normalizeMemoryToken(value).replace(/_/g, "")
 }
 
-export function normalizeMemoryKey(memory: Pick<ExtractedMemoryCandidate, "kind" | "content" | "memory_key" | "product_names">): string {
+export function normalizeMemoryKey(
+  memory: Pick<ExtractedMemoryCandidate, "kind" | "content" | "memory_key" | "product_names">,
+): string {
   const productName = memory.product_names?.find((name) => name.trim().length > 0)
   const keySource = memory.memory_key?.trim() || productName || memory.content
   return `${memory.kind}:${normalizeMemoryToken(keySource).slice(0, 120)}`
@@ -69,7 +71,9 @@ export function isValidMemoryKind(kind: string): kind is UserMemoryKind {
   return USER_MEMORY_KINDS.includes(kind as UserMemoryKind)
 }
 
-export function sanitizeMemoryCandidate(candidate: ExtractedMemoryCandidate): ExtractedMemoryCandidate | null {
+export function sanitizeMemoryCandidate(
+  candidate: ExtractedMemoryCandidate,
+): ExtractedMemoryCandidate | null {
   const content = candidate.content.trim().replace(/\s+/g, " ")
   const confidence = candidate.confidence ?? null
 
@@ -132,7 +136,7 @@ function productMatchesMemoryName(product: Product, dislikedProductName: string)
 
 export function applyProductMemoryConstraints<T extends Product>(
   products: T[],
-  memoryContext: Pick<UserMemoryContext, "enabled" | "dislikedProductNames">
+  memoryContext: Pick<UserMemoryContext, "enabled" | "dislikedProductNames">,
 ): T[] {
   if (!memoryContext.enabled || memoryContext.dislikedProductNames.length === 0) {
     return products
@@ -155,7 +159,7 @@ export function applyProductMemoryConstraints<T extends Product>(
 
 export async function ensureUserMemorySettings(
   userId: string,
-  supabase: SupabaseAdmin = createAdminClient()
+  supabase: SupabaseAdmin = createAdminClient(),
 ): Promise<boolean> {
   const { data: existing, error: loadError } = await supabase
     .from("user_memory_settings")
@@ -190,7 +194,7 @@ export async function ensureUserMemorySettings(
 
 export async function getUserMemoryEnabled(
   userId: string,
-  supabase: SupabaseAdmin = createAdminClient()
+  supabase: SupabaseAdmin = createAdminClient(),
 ): Promise<boolean> {
   const { data, error } = await supabase
     .from("user_memory_settings")
@@ -210,7 +214,7 @@ export async function getUserMemoryEnabled(
 
 export async function listUserMemoryEntries(
   userId: string,
-  supabase: SupabaseAdmin = createAdminClient()
+  supabase: SupabaseAdmin = createAdminClient(),
 ): Promise<UserMemoryEntry[]> {
   const { data, error } = await supabase
     .from("user_memory_entries")
@@ -231,7 +235,7 @@ export async function listUserMemoryEntries(
 
 export async function loadUserMemoryContext(
   userId: string,
-  supabase: SupabaseAdmin = createAdminClient()
+  supabase: SupabaseAdmin = createAdminClient(),
 ): Promise<UserMemoryContext> {
   const enabled = await getUserMemoryEnabled(userId, supabase)
   if (!enabled) {
@@ -255,7 +259,7 @@ export async function loadUserMemoryContext(
 
 export async function backfillLegacyConversationMemory(
   userId: string,
-  supabase: SupabaseAdmin = createAdminClient()
+  supabase: SupabaseAdmin = createAdminClient(),
 ): Promise<void> {
   const { data: existingEntries, error: entryError } = await supabase
     .from("user_memory_entries")
@@ -301,7 +305,7 @@ export async function backfillLegacyConversationMemory(
 
 export async function rebuildConversationMemoryCache(
   userId: string,
-  supabase: SupabaseAdmin = createAdminClient()
+  supabase: SupabaseAdmin = createAdminClient(),
 ): Promise<void> {
   const entries = await listUserMemoryEntries(userId, supabase)
   const cache = buildMemoryPromptContext(entries)
@@ -320,7 +324,7 @@ export async function insertExtractedMemories(
   userId: string,
   conversationId: string,
   candidates: ExtractedMemoryCandidate[],
-  supabase: SupabaseAdmin = createAdminClient()
+  supabase: SupabaseAdmin = createAdminClient(),
 ): Promise<void> {
   for (const rawCandidate of candidates) {
     const candidate = sanitizeMemoryCandidate(rawCandidate)
@@ -422,7 +426,7 @@ export async function updateUserMemoryEntry(
   userId: string,
   memoryId: string,
   content: string,
-  supabase: SupabaseAdmin = createAdminClient()
+  supabase: SupabaseAdmin = createAdminClient(),
 ): Promise<UserMemoryEntry | null> {
   const nextContent = content.trim().replace(/\s+/g, " ")
   if (!nextContent) return null
@@ -488,7 +492,7 @@ export async function updateUserMemoryEntry(
 export async function deleteUserMemoryEntry(
   userId: string,
   memoryId: string,
-  supabase: SupabaseAdmin = createAdminClient()
+  supabase: SupabaseAdmin = createAdminClient(),
 ): Promise<boolean> {
   const { error } = await supabase
     .from("user_memory_entries")
@@ -510,7 +514,7 @@ export async function deleteUserMemoryEntry(
 export async function deleteConversationSourcedMemories(
   userId: string,
   conversationId: string,
-  supabase: SupabaseAdmin = createAdminClient()
+  supabase: SupabaseAdmin = createAdminClient(),
 ): Promise<void> {
   const { error } = await supabase
     .from("user_memory_entries")

@@ -15,7 +15,7 @@ A personalized AI hair care recommendation platform built around profile-aware d
 | Framework | Next.js 16 (React 19, TypeScript 5, App Router) |
 | Database | Supabase PostgreSQL |
 | Auth | Supabase Auth (OAuth + email) |
-| AI/LLM | OpenAI GPT-4o (agent routing, response composition) |
+| AI/LLM | OpenAI Responses runtime (AgentV2 chat, prompt-managed guidance) |
 | Styling | Tailwind CSS 4 + shadcn/ui |
 | State | Zustand |
 | Analytics | PostHog |
@@ -87,7 +87,7 @@ graph TB
     end
 
     subgraph External["External Services"]
-        OpenAI["OpenAI API<br/>(GPT-4o agent + chat)"]
+        OpenAI["OpenAI API<br/>(AgentV2 Responses chat)"]
         PostHog["PostHog<br/>(analytics)"]
         Vercel["Vercel<br/>(hosting)"]
     end
@@ -251,8 +251,10 @@ src/
 │   └── admin/              # Admin panel components
 │
 ├── lib/
-│   ├── agent/              # Production agent routing + tools
-│   ├── rag/                # Legacy chat helpers + compatibility traces
+│   ├── agent/              # Shared agent tools and compare helpers
+│   ├── agent-v2/           # Production AgentV2 chat pipeline
+│   ├── chat-runtime/       # Memory, state, trace, and chat stream helpers
+│   ├── product-matching/   # Matcher and product chunk builders
 │   ├── quiz/               # Quiz state, questions, normalization
 │   ├── supabase/           # DB clients (browser, server, admin)
 │   ├── openai/             # LLM client wrappers

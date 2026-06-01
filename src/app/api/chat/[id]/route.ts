@@ -1,13 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { deleteConversationSourcedMemories } from "@/lib/rag/user-memory"
+import { deleteConversationSourcedMemories } from "@/lib/chat-runtime/user-memory"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
   const {
@@ -27,10 +24,7 @@ export async function GET(
     .single()
 
   if (!conversation) {
-    return NextResponse.json(
-      { error: "Unterhaltung nicht gefunden" },
-      { status: 404 }
-    )
+    return NextResponse.json({ error: "Unterhaltung nicht gefunden" }, { status: 404 })
   }
 
   const { data: messages } = await supabase
@@ -42,10 +36,7 @@ export async function GET(
   return NextResponse.json({ conversation, messages: messages || [] })
 }
 
-export async function DELETE(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
   const {
@@ -66,10 +57,7 @@ export async function DELETE(
     .eq("user_id", user.id)
 
   if (error) {
-    return NextResponse.json(
-      { error: fehler("Löschen") },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: fehler("Löschen") }, { status: 500 })
   }
 
   return NextResponse.json({ success: true })

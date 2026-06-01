@@ -6,8 +6,8 @@ import {
   normalizeConversationState,
   resolveAgenticConversationStateTransition,
   shouldApplyPendingRoutineAnswerOverride,
-} from "../src/lib/rag/conversation-state"
-import { buildConversationStateUpsertPayload } from "../src/lib/rag/conversation-state-store"
+} from "../src/lib/chat-runtime/conversation-state"
+import { buildConversationStateUpsertPayload } from "../src/lib/chat-runtime/conversation-state-store"
 import type { BuildOrFixRoutineProjection } from "../src/lib/agent/tools/build-or-fix-routine"
 import type { SelectedProductsProjection } from "../src/lib/agent/tools/select-products"
 import type {

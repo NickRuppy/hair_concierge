@@ -21,7 +21,7 @@ Do not keep the old `quality` check required after this workflow lands. GitHub b
 
 `chat-live-smoke` runs only when chat, agent, recommendation, prompt, eval, Langfuse, or relevant config paths changed and live AI/Supabase secrets are available. In CI smoke mode, hard failures fail the job; soft heuristic failures are reported but do not fail the job.
 
-`retrieval-gate` runs only when retrieval, RAG, index, product data, or retrieval eval paths changed.
+`retrieval-gate` runs only when retrieval, product-chunk ingestion, index, product data, or retrieval eval paths changed.
 
 ## Path Overrides
 

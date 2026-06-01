@@ -14,7 +14,7 @@ import type { GuidanceLoadResult } from "@/lib/agent/contracts"
 import type { UserContextProjection } from "@/lib/agent/tools/get-user-context"
 import type { SelectedProductsProjection } from "@/lib/agent/tools/select-products"
 import type { BuildOrFixRoutineProjection } from "@/lib/agent/tools/build-or-fix-routine"
-import { shouldApplyPendingRoutineAnswerOverride } from "@/lib/rag/conversation-state"
+import { shouldApplyPendingRoutineAnswerOverride } from "@/lib/chat-runtime/conversation-state"
 import type { ConversationState, RoutineLayer } from "@/lib/types"
 
 function nextRuntimeToolId(toolCalls: AgentToolCallHistory[]): string {

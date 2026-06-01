@@ -14,7 +14,7 @@ import type {
 } from "../src/lib/agent/orchestrator/agentic-tool-loop-types"
 import { runAgenticToolTurn } from "../src/lib/agent/orchestrator/run-agentic-tool-turn"
 import { projectRoutinePlan } from "../src/lib/agent/tools/build-or-fix-routine"
-import { createDefaultConversationState } from "../src/lib/rag/conversation-state"
+import { createDefaultConversationState } from "../src/lib/chat-runtime/conversation-state"
 import type { UserContextProjection } from "../src/lib/agent/tools/get-user-context"
 import type { SelectedProductsProjection } from "../src/lib/agent/tools/select-products"
 import type { ConversationState } from "../src/lib/types"

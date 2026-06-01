@@ -14,7 +14,7 @@ import { sanitizeLangfuseText } from "@/lib/langfuse/masking"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
 import type { ConversationStatePersistenceTrace } from "@/lib/types"
-import type { PipelineTraceDraft } from "@/lib/rag/debug-trace"
+import type { PipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
 
 export const maxDuration = 60
 
@@ -44,7 +44,7 @@ async function loadChatRuntimeDeps() {
   const [
     { createAdminClient },
     { runAgentV2ProductionPipeline },
-    { buildAssistantDecisionContext, buildAssistantRagContext, buildDoneEventData },
+    { buildAssistantDecisionContext, buildDoneEventData },
     { extractConversationMemory },
     {
       buildRetrievalDebugEventData,
@@ -59,20 +59,19 @@ async function loadChatRuntimeDeps() {
   ] = await Promise.all([
     import("@/lib/supabase/admin"),
     import("@/lib/agent-v2/production/chat-pipeline"),
-    import("@/lib/rag/chat-response"),
-    import("@/lib/rag/memory-extractor"),
-    import("@/lib/rag/debug-trace"),
+    import("@/lib/chat-runtime/stream-events"),
+    import("@/lib/chat-runtime/memory-extractor"),
+    import("@/lib/chat-runtime/debug-trace"),
     import("@/lib/agent-v2/production/langfuse-observability"),
-    import("@/lib/rag/conversation-state-store"),
+    import("@/lib/chat-runtime/conversation-state-store"),
     import("@/lib/validators"),
-    import("@/lib/rag/title-generator"),
+    import("@/lib/chat-runtime/title-generator"),
   ])
 
   return {
     createAdminClient,
     runAgentV2ProductionPipeline,
     buildAssistantDecisionContext,
-    buildAssistantRagContext,
     buildDoneEventData,
     extractConversationMemory,
     buildRetrievalDebugEventData,
@@ -180,7 +179,6 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
       createAdminClient,
       runAgentV2ProductionPipeline,
       buildAssistantDecisionContext,
-      buildAssistantRagContext,
       buildDoneEventData,
       extractConversationMemory,
       buildRetrievalDebugEventData,
@@ -424,9 +422,6 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   ? matchedProducts.slice(0, 3)
                   : []
               const langfuseTraceUrl = traceUrlPromise ? await traceUrlPromise : null
-              const buildAssistantContext =
-                buildAssistantDecisionContext ?? buildAssistantRagContext
-
               if (productsToSend.length > 0) {
                 controller.enqueue(
                   encoder.encode(
@@ -447,7 +442,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   conversation_id: activeConversationId,
                   role: "assistant",
                   content: fullContent,
-                  rag_context: buildAssistantContext(
+                  rag_context: buildAssistantDecisionContext(
                     sources,
                     routeCategoryDecision,
                     routeEngineTrace,

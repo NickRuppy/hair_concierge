@@ -18,7 +18,7 @@ import path from "path"
 import {
   buildProductListChunks,
   type ProductListChunkProduct as ProductInput,
-} from "../src/lib/rag/product-list-chunks"
+} from "../src/lib/product-matching/product-list-chunks"
 
 // Load .env.local for standalone script execution
 const envPath = path.join(process.cwd(), ".env.local")
@@ -36,7 +36,7 @@ const EMBEDDING_BATCH_SIZE = 10
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 )
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
 
@@ -91,9 +91,7 @@ async function main() {
 
   const allProducts: ProductInput[] = []
   for (const file of jsonFiles) {
-    const products: ProductInput[] = JSON.parse(
-      fs.readFileSync(path.join(excelDir, file), "utf-8")
-    )
+    const products: ProductInput[] = JSON.parse(fs.readFileSync(path.join(excelDir, file), "utf-8"))
     console.log(`  ${file}: ${products.length} products`)
     allProducts.push(...products)
   }

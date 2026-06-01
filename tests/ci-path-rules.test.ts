@@ -33,6 +33,18 @@ test("retrieval fixture changes run retrieval gate only", () => {
   assert.equal(scope.playwright_smoke, false)
 })
 
+test("product matcher changes run chat eval", () => {
+  const scope = classifyCiScope(["src/lib/product-matching/matcher.ts"])
+  assert.equal(scope.chat_eval, true)
+  assert.equal(scope.retrieval_eval, false)
+})
+
+test("product list chunk changes run retrieval eval", () => {
+  const scope = classifyCiScope(["src/lib/product-matching/product-list-chunks.ts"])
+  assert.equal(scope.retrieval_eval, true)
+  assert.equal(scope.chat_eval, false)
+})
+
 test("workflow and dependency changes mark security scan relevant", () => {
   assert.equal(classifyCiScope([".github/workflows/ci.yml"]).security_scan, true)
   assert.equal(classifyCiScope(["package-lock.json"]).security_scan, true)

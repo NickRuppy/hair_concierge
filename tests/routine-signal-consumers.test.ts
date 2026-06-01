@@ -1,7 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { deriveLeaveInNeedBucket } from "../src/lib/rag/leave-in-decision"
 import { buildRoutinePlan } from "../src/lib/routines/planner"
 import type { HairProfile } from "../src/lib/types"
 
@@ -40,14 +39,6 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   }
 }
 
-test("breakage feeds the strict leave-in flow as a repair signal", () => {
-  const profile = createProfile({
-    concerns: ["breakage"],
-  })
-
-  assert.equal(deriveLeaveInNeedBucket(profile), "repair")
-})
-
 test("routine planner treats tangling as a support signal instead of a structural one", () => {
   const plan = buildRoutinePlan(
     createProfile({
@@ -64,5 +55,27 @@ test("routine planner treats tangling as a support signal instead of a structura
   assert.equal(
     plan.active_topics.some((topic) => topic.id === "bond_builder"),
     false,
+  )
+})
+
+test("breakage remains visible in the current routine plan", () => {
+  const plan = buildRoutinePlan(
+    createProfile({
+      concerns: ["breakage"],
+      cuticle_condition: "rough",
+      current_routine_products: ["shampoo", "conditioner"],
+    }),
+    "Meine Haare brechen schnell ab.",
+  )
+
+  const slots = plan.sections.flatMap((section) => section.slots)
+  const leaveInSlot = slots.find((slot) => slot.id === "maintenance-leave-in")
+  const bondBuilderSlot = slots.find((slot) => slot.id === "occasional-bond-builder")
+
+  assert.equal(leaveInSlot?.action, "add")
+  assert.equal(bondBuilderSlot?.action, "add")
+  assert.equal(
+    plan.active_topics.some((topic) => topic.id === "bond_builder"),
+    true,
   )
 })

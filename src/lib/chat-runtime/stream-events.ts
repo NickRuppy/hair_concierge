@@ -26,8 +26,6 @@ export function buildAssistantDecisionContext(
   }
 }
 
-export const buildAssistantRagContext = buildAssistantDecisionContext
-
 export function buildDoneEventData(params: {
   intent: IntentType
   retrievalSummary: { final_context_count: number }
