@@ -11,6 +11,25 @@ import { useAuth } from "@/providers/auth-provider"
 import { QuizResultOfferPage } from "./quiz-result-offer-page"
 import { QuizResultsView } from "./quiz-results-view"
 
+interface ResultArtifactEmailTriggerState {
+  leadId: string | null
+  isCheckingAccess: boolean
+  previouslyTriggeredLeadId: string | null
+  canGoStraightToRoutine: boolean
+}
+
+export function shouldTriggerResultArtifactEmail({
+  leadId,
+  isCheckingAccess,
+  previouslyTriggeredLeadId,
+}: ResultArtifactEmailTriggerState): boolean {
+  if (!leadId) return false
+  if (isCheckingAccess) return false
+  if (previouslyTriggeredLeadId === leadId) return false
+
+  return true
+}
+
 function getSafeReturnToPath(value: string | null): string | null {
   if (!value) return null
 
@@ -57,10 +76,16 @@ export function QuizResults() {
   }, [captureQuizCompleted])
 
   useEffect(() => {
-    if (!leadId) return
-    if (loading) return
-    if (canGoStraightToRoutine || isCheckingSignedInSubscription) return
-    if (resultArtifactEmailLeadRef.current === leadId) return
+    if (
+      !shouldTriggerResultArtifactEmail({
+        leadId,
+        isCheckingAccess: loading || isCheckingSignedInSubscription,
+        previouslyTriggeredLeadId: resultArtifactEmailLeadRef.current,
+        canGoStraightToRoutine,
+      })
+    ) {
+      return
+    }
 
     resultArtifactEmailLeadRef.current = leadId
     void fetch("/api/quiz/result-artifact", {
