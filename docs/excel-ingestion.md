@@ -2,7 +2,7 @@
 
 ## Expected Excel Format
 
-Each `.xlsx` file in `data/` represents one product category (e.g. `Leave-In.xlsx`, `Shampoo.xlsx`).
+Each `.xlsx` file in `data/product_lists/0326v2/` represents one product category (e.g. `Leave-In.xlsx`, `Shampoo.xlsx`).
 
 Two layouts are auto-detected:
 
