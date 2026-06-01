@@ -4,7 +4,6 @@ import { check, group, sleep } from "k6"
 const baseUrl = (__ENV.K6_BASE_URL || "https://chaarlie.de").replace(/\/$/, "")
 const profile = __ENV.K6_PROFILE || "smoke"
 const writeMode = __ENV.K6_WRITE_MODE === "1"
-const aiMode = __ENV.K6_AI_MODE === "1"
 const chatMode = __ENV.K6_CHAT_MODE === "1"
 const sessionCookie = __ENV.K6_SESSION_COOKIE || ""
 const thinkTimeMinSeconds = Number(__ENV.K6_THINK_TIME_MIN || 2)
@@ -180,19 +179,6 @@ export default function () {
         "lead not edge-mitigated": isNotEdgeMitigated,
       })
 
-      if (aiMode && lead.status === 200) {
-        const leadId = lead.json("leadId")
-        const analyze = http.post(
-          url("/api/quiz/analyze"),
-          JSON.stringify({ leadId, name: body.name, quizAnswers: body.quizAnswers }),
-          jsonHeaders,
-        )
-        check(analyze, {
-          "quiz analyze accepted": (res) => res.status === 200,
-          "quiz analyze returns insight": (res) => Boolean(res.json("insight")),
-          "quiz analyze not edge-mitigated": isNotEdgeMitigated,
-        })
-      }
     })
   }
 

@@ -7,16 +7,6 @@ function cleanAnalyticsPayload(payload: AnalyticsPayload) {
   ) as Record<string, NonNullable<AnalyticsPayload[string]> | null>
 }
 
-function toPostHogEventName<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
-  if (
-    eventName === "result_shared" &&
-    (payload as AppEventMap["result_shared"]).source === "quiz_result"
-  ) {
-    return "quiz_result_share_clicked"
-  }
-  return eventName
-}
-
 function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
   switch (eventName) {
     case "purchase_completed": {
@@ -51,18 +41,6 @@ function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEven
         step_number: data.stepNumber,
       }
     }
-    case "result_page_viewed": {
-      const data = payload as AppEventMap["result_page_viewed"]
-      return { leadId: data.leadId }
-    }
-    case "result_shared": {
-      const data = payload as AppEventMap["result_shared"]
-      return {
-        leadId: data.leadId,
-        method: data.method,
-        source: data.source,
-      }
-    }
     case "chat_product_recommendation_shown": {
       const data = payload as AppEventMap["chat_product_recommendation_shown"]
       return { productCount: data.productCount }
@@ -78,10 +56,7 @@ function toPostHogPayload<E extends AppEventName>(eventName: E, payload: AppEven
 
 export const postHogDestination = {
   track<E extends AppEventName>(eventName: E, payload: AppEventMap[E]) {
-    posthog.capture(
-      toPostHogEventName(eventName, payload),
-      cleanAnalyticsPayload(toPostHogPayload(eventName, payload)),
-    )
+    posthog.capture(eventName, cleanAnalyticsPayload(toPostHogPayload(eventName, payload)))
     return true
   },
 }

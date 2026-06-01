@@ -1,9 +1,8 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
 import { Loader2, Check } from "lucide-react"
-import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 
 const steps = [
   "Haarstruktur wird analysiert ...",
@@ -14,11 +13,9 @@ const steps = [
 const STEP_DELAY = 1200
 
 export function QuizAnalysis() {
-  const { lead, answers, leadId, setAiInsight, setShareQuote, goNext } = useQuizStore()
+  const { lead, goNext } = useQuizStore()
   const [completedSteps, setCompletedSteps] = useState(0)
-  const [apiDone, setApiDone] = useState(false)
-  const fetched = useRef(false)
-  const canReveal = completedSteps >= steps.length && apiDone
+  const canReveal = completedSteps >= steps.length
 
   // Animate checklist items
   useEffect(() => {
@@ -28,29 +25,6 @@ export function QuizAnalysis() {
     }
     return () => timers.forEach(clearTimeout)
   }, [])
-
-  // Call analyze API in parallel
-  useEffect(() => {
-    if (fetched.current || !leadId) return
-    fetched.current = true
-
-    fetch("/api/quiz/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        leadId,
-        name: lead.name,
-        quizAnswers: canonicalizeQuizAnswers(answers),
-      }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.insight) setAiInsight(data.insight)
-        if (data.shareQuote) setShareQuote(data.shareQuote)
-        setApiDone(true)
-      })
-      .catch(() => setApiDone(true))
-  }, [leadId, lead.name, answers, setAiInsight, setShareQuote])
 
   return (
     <div className="flex flex-col items-center justify-center py-16 animate-fade-in-up">

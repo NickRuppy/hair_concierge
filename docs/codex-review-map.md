@@ -59,7 +59,7 @@ Clawpatch-generated test links are useful triage hints, not proof of adequate co
 
 | Slice | Clawpatch features | Shape | Mapped tests | Notable generated feature records |
 | --- | ---: | --- | ---: | --- |
-| Quiz and lead capture | 25 | 5 library, 1 route, 19 UI flow | 4 | `feat_route_58541ef7ee` Route `/quiz`; `feat_route_61d1080a4c` Route `/api/quiz/lead`; `feat_route_79eeba3dd3` Route `/api/quiz/analyze` |
+| Quiz and lead capture | 25 | 5 library, 1 route, 19 UI flow | 4 | `feat_route_58541ef7ee` Route `/quiz`; `feat_route_61d1080a4c` Route `/api/quiz/lead` |
 | Onboarding and profile shaping | 19 | 6 library, 1 route, 12 UI flow | 1 | `feat_library_0153fe859f` source group `src/components/onboarding/screens`; `feat_route_e82b77cd40` Route `/onboarding` |
 | Recommendation engine | 7 | 7 library | 0 | `feat_library_d9d76394b4` source group `src/lib/recommendation-engine/categories`; `feat_library_a72310a0b6` source group `src/lib/recommendation-engine` |
 | Agentic chat and tools | 22 | 9 library, 3 route, 10 UI flow | 3 | `feat_route_4f2453eb75` Route `/api/chat`; `feat_route_4c11dbaf4b` Route `/api/chat/feedback`; `feat_library_82fa133a7f` source group `src/lib/agent/orchestrator` |

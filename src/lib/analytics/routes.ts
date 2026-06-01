@@ -18,7 +18,5 @@ export const eventRoutes = {
   quiz_lead_captured: { customerio: false, meta: true, posthog: true },
   quiz_started: { customerio: true, meta: true, posthog: true },
   quiz_step_viewed: { customerio: true, meta: true, posthog: true },
-  result_page_viewed: { customerio: true, meta: false, posthog: true },
-  result_shared: { customerio: true, meta: false, posthog: true },
   subscription_started: { customerio: false, meta: true, posthog: true },
 } satisfies Record<AppEventName, AppEventRoute>

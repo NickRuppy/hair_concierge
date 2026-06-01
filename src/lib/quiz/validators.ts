@@ -100,9 +100,3 @@ export const leadSchema = z.object({
   marketingConsent: z.boolean(),
   quizAnswers: quizAnswersSchema,
 })
-
-export const analyzeSchema = z.object({
-  leadId: z.string().uuid(),
-  name: z.string(),
-  quizAnswers: quizAnswersSchema,
-})

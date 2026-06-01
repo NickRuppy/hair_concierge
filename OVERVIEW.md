@@ -46,7 +46,7 @@ graph TB
 
     subgraph Server["Next.js API Routes"]
         direction TB
-        QuizAPI["POST /api/quiz/lead<br/>POST /api/quiz/analyze"]
+        QuizAPI["POST /api/quiz/lead"]
         AuthAPI["POST /api/auth/callback"]
         ChatAPI["POST /api/chat<br/>(SSE streaming)"]
         ProductsAPI["GET /api/products"]

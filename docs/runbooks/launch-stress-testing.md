@@ -59,11 +59,8 @@ By default the script only hits public mobile pages. Enable database-writing qui
 K6_WRITE_MODE=1 npm run stress:average
 ```
 
-Enable the AI-backed quiz analysis path only for a short, intentional run:
-
-```bash
-K6_WRITE_MODE=1 K6_AI_MODE=1 npm run stress:smoke
-```
+The former AI-backed quiz analysis path is retired. The stress script should not call
+`/api/quiz/analyze`; that endpoint is kept only as a 410 tombstone.
 
 To exercise authenticated `/chat`, copy a short-lived browser session cookie from a dedicated paid test user:
 
