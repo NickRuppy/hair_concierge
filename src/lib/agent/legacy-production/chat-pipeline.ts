@@ -35,10 +35,13 @@ import {
 import { LANGFUSE_PROMPTS } from "@/lib/langfuse/prompts"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { DEFAULT_CHAT_COMPLETION_MODEL } from "@/lib/openai/chat"
-import { loadConversationState as loadPersistedConversationState } from "@/lib/rag/conversation-state-store"
-import { buildPipelineTraceDraft, projectAgenticToolLoopTraceForApp } from "@/lib/rag/debug-trace"
+import { loadConversationState as loadPersistedConversationState } from "@/lib/chat-runtime/conversation-state-store"
+import {
+  buildPipelineTraceDraft,
+  projectAgenticToolLoopTraceForApp,
+} from "@/lib/chat-runtime/debug-trace"
 import type { PipelineParams, PipelineResult } from "@/lib/rag/contracts"
-import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/rag/user-memory"
+import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import type {
   ChatCategoryDecision,
   ChatPromptSnapshot,

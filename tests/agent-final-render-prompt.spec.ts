@@ -9,7 +9,7 @@ import {
 import { buildAgenticAnswerContext } from "../src/lib/agent/orchestrator/agentic-answer-context"
 import type { AgenticAnswerCapsuleId } from "../src/lib/agent/orchestrator/agentic-answer-context"
 import type { SelectedProductsProjection } from "../src/lib/agent/tools/select-products"
-import { createDefaultConversationState } from "../src/lib/rag/conversation-state"
+import { createDefaultConversationState } from "../src/lib/chat-runtime/conversation-state"
 
 function createSelectedProductsProjection(
   category: SelectedProductsProjection["category"],

@@ -8,7 +8,7 @@ import {
 } from "../src/lib/agent-v2/production/chat-pipeline"
 import { loadAgentV2ProductionConversationHistory } from "../src/lib/agent-v2/production/conversation-history"
 import { deriveMatchedProducts } from "../src/lib/agent-v2/production/product-output"
-import { createDefaultConversationState } from "../src/lib/rag/conversation-state"
+import { createDefaultConversationState } from "../src/lib/chat-runtime/conversation-state"
 import { buildRecommendationEngineRuntimeForChat } from "../src/lib/recommendation-engine"
 import type {
   createSelectProductsTool,
@@ -26,7 +26,7 @@ import {
   normalizeAgentV2ConversationState,
   type AgentV2ConversationStateV2,
 } from "../src/lib/agent-v2/production/persisted-session-state"
-import { buildRetrievalDebugEventData } from "../src/lib/rag/debug-trace"
+import { buildRetrievalDebugEventData } from "../src/lib/chat-runtime/debug-trace"
 
 type SelectProductsToolParams = Parameters<ReturnType<typeof createSelectProductsTool>>[0]
 

@@ -11,10 +11,10 @@ import {
   selectShampooProductsWithEngine,
 } from "@/lib/recommendation-engine"
 import type { PersistenceRoutineItemRow } from "@/lib/recommendation-engine/adapters/from-persistence"
-import { applyProductMemoryConstraints } from "@/lib/rag/user-memory"
+import { applyProductMemoryConstraints } from "@/lib/chat-runtime/user-memory"
 import type { SelectionResult } from "@/lib/rag/selection/types"
 import type { HairProfile, ProductCategory } from "@/lib/types"
-import type { UserMemoryContext } from "@/lib/rag/user-memory"
+import type { UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 
 async function selectGeneric(
   message: string,

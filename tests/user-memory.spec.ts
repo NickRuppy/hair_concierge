@@ -12,11 +12,11 @@ import {
   normalizeMemoryToken,
   sanitizeMemoryCandidate,
   updateUserMemoryEntry,
-} from "../src/lib/rag/user-memory"
+} from "../src/lib/chat-runtime/user-memory"
 import {
   MEMORY_EXTRACTION_JSON_PROMPT,
   parseMemoryExtractionResult,
-} from "../src/lib/rag/memory-extractor"
+} from "../src/lib/chat-runtime/memory-extractor"
 import type { Product, UserMemoryEntry } from "../src/lib/types"
 
 type TableRow = Record<string, unknown> & {
@@ -29,7 +29,7 @@ type QueryResult = { data: unknown; error: null | { code?: string; message?: str
 const NOW = "2026-04-08T00:00:00.000Z"
 
 function createMemoryEntry(
-  overrides: Partial<UserMemoryEntry> = {}
+  overrides: Partial<UserMemoryEntry> = {},
 ): UserMemoryEntry & Record<string, unknown> {
   return {
     id: "memory-1",
@@ -82,7 +82,7 @@ class FakeSupabaseQuery {
 
   constructor(
     private tables: Tables,
-    private tableName: string
+    private tableName: string,
   ) {}
 
   select(columns?: string) {
@@ -131,7 +131,7 @@ class FakeSupabaseQuery {
   async maybeSingle(): Promise<QueryResult> {
     const { data, error } = await this.execute()
     return {
-      data: Array.isArray(data) ? data[0] ?? null : data,
+      data: Array.isArray(data) ? (data[0] ?? null) : data,
       error,
     }
   }
@@ -139,14 +139,14 @@ class FakeSupabaseQuery {
   async single(): Promise<QueryResult> {
     const { data, error } = await this.execute()
     return {
-      data: Array.isArray(data) ? data[0] ?? null : data,
+      data: Array.isArray(data) ? (data[0] ?? null) : data,
       error,
     }
   }
 
   then<TResult1 = QueryResult, TResult2 = never>(
     onfulfilled?: ((value: QueryResult) => TResult1 | PromiseLike<TResult1>) | null,
-    onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null
+    onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
   ): Promise<TResult1 | TResult2> {
     return this.execute().then(onfulfilled, onrejected)
   }
@@ -157,12 +157,8 @@ class FakeSupabaseQuery {
     if (this.operation === "insert") {
       const payloads = Array.isArray(this.payload) ? this.payload : [this.payload ?? {}]
       const inserted = payloads.map((payload, index) => ({
-        id: typeof payload.id === "string"
-          ? payload.id
-          : `inserted-${rows.length + index + 1}`,
-        ...(this.tableName === "user_memory_entries"
-          ? { status: payload.status ?? "active" }
-          : {}),
+        id: typeof payload.id === "string" ? payload.id : `inserted-${rows.length + index + 1}`,
+        ...(this.tableName === "user_memory_entries" ? { status: payload.status ?? "active" } : {}),
         created_at: typeof payload.created_at === "string" ? payload.created_at : NOW,
         updated_at: typeof payload.updated_at === "string" ? payload.updated_at : NOW,
         ...payload,
@@ -193,13 +189,13 @@ class FakeSupabaseQuery {
   private filterRows(rows: TableRow[]): TableRow[] {
     let result = rows.filter((row) =>
       this.filters.every(({ column, value, op }) =>
-        op === "neq" ? row[column] !== value : row[column] === value
-      )
+        op === "neq" ? row[column] !== value : row[column] === value,
+      ),
     )
 
     if (this.orderColumn) {
       result = [...result].sort((a, b) =>
-        String(b[this.orderColumn!] ?? "").localeCompare(String(a[this.orderColumn!] ?? ""))
+        String(b[this.orderColumn!] ?? "").localeCompare(String(a[this.orderColumn!] ?? "")),
       )
     }
 
@@ -235,28 +231,34 @@ test.describe("User memory extraction contracts", () => {
   })
 
   test("parses valid structured JSON and rejects malformed or unsupported output", () => {
-    const parsed = parseMemoryExtractionResult(JSON.stringify({
-      memories: [
-        {
-          kind: "product_experience",
-          memory_key: "product:heavy_oil",
-          content: "Der Nutzer hat Heavy Oil nicht gut vertragen.",
-          evidence: "Heavy Oil hat bei mir Juckreiz gemacht.",
-          confidence: 0.91,
-          product_names: ["Heavy Oil"],
-          sentiment: "negative",
-        },
-      ],
-    }))
+    const parsed = parseMemoryExtractionResult(
+      JSON.stringify({
+        memories: [
+          {
+            kind: "product_experience",
+            memory_key: "product:heavy_oil",
+            content: "Der Nutzer hat Heavy Oil nicht gut vertragen.",
+            evidence: "Heavy Oil hat bei mir Juckreiz gemacht.",
+            confidence: 0.91,
+            product_names: ["Heavy Oil"],
+            sentiment: "negative",
+          },
+        ],
+      }),
+    )
 
     expect(parsed).toHaveLength(1)
     expect(parsed[0]?.kind).toBe("product_experience")
     expect(normalizeMemoryKey(parsed[0]!)).toBe("product_experience:product_heavy_oil")
 
     expect(parseMemoryExtractionResult("{not json")).toEqual([])
-    expect(parseMemoryExtractionResult(JSON.stringify({
-      memories: [{ kind: "unsupported", content: "Nope" }],
-    }))).toEqual([])
+    expect(
+      parseMemoryExtractionResult(
+        JSON.stringify({
+          memories: [{ kind: "unsupported", content: "Nope" }],
+        }),
+      ),
+    ).toEqual([])
   })
 })
 
@@ -271,7 +273,7 @@ test.describe("User memory pure rules", () => {
         evidence: "  mag leichte Texturen  ",
         confidence: 0.8,
         product_names: ["  Produkt A  ", ""],
-      })
+      }),
     ).toEqual({
       kind: "preference",
       content: "Der Nutzer mag leichte Texturen.",
@@ -286,7 +288,7 @@ test.describe("User memory pure rules", () => {
         kind: "preference",
         content: "Der Nutzer mag Duft.",
         confidence: 0.4,
-      })
+      }),
     ).toBeNull()
   })
 
@@ -327,14 +329,14 @@ test.describe("User memory pure rules", () => {
       applyProductMemoryConstraints(products, {
         enabled: true,
         dislikedProductNames: ["Heavy Oil"],
-      }).map((product) => product.id)
+      }).map((product) => product.id),
     ).toEqual(["heavy-plus", "light", "heavy"])
 
     expect(
       applyProductMemoryConstraints(products, {
         enabled: false,
         dislikedProductNames: ["Heavy Oil"],
-      }).map((product) => product.id)
+      }).map((product) => product.id),
     ).toEqual(["heavy", "heavy-plus", "light"])
   })
 })
@@ -390,7 +392,7 @@ test.describe("User memory persistence with fake Supabase", () => {
           confidence: 0.93,
         },
       ],
-      asSupabase(fake)
+      asSupabase(fake),
     )
 
     expect(fake.tables.user_memory_entries).toEqual([
@@ -409,7 +411,7 @@ test.describe("User memory persistence with fake Supabase", () => {
     expect(fake.tables.hair_profiles?.[0]).toEqual(
       expect.objectContaining({
         conversation_memory: "- Der Nutzer bevorzugt duftfreie Produkte.",
-      })
+      }),
     )
   })
 
@@ -429,7 +431,7 @@ test.describe("User memory persistence with fake Supabase", () => {
       "user-1",
       "memory-1",
       "Der Nutzer mag inzwischen leichte Oele.",
-      asSupabase(fake)
+      asSupabase(fake),
     )
 
     expect(fake.tables.user_memory_entries?.[0]).toEqual(
@@ -439,12 +441,12 @@ test.describe("User memory persistence with fake Supabase", () => {
         source_conversation_id: null,
         evidence: null,
         metadata: {},
-      })
+      }),
     )
     expect(fake.tables.hair_profiles?.[0]).toEqual(
       expect.objectContaining({
         conversation_memory: "- Der Nutzer mag inzwischen leichte Oele.",
-      })
+      }),
     )
   })
 
@@ -472,7 +474,7 @@ test.describe("User memory persistence with fake Supabase", () => {
       "user-1",
       "memory-1",
       "Der Nutzer bevorzugt duftfreie Produkte.",
-      asSupabase(fake)
+      asSupabase(fake),
     )
 
     expect(result).toBeNull()
@@ -481,7 +483,7 @@ test.describe("User memory persistence with fake Supabase", () => {
       expect.objectContaining({
         id: "memory-1",
         content: "Der Nutzer mag leichte Texturen.",
-      })
+      }),
     )
   })
 
@@ -502,7 +504,7 @@ test.describe("User memory persistence with fake Supabase", () => {
       "user-1",
       "memory-1",
       "Der Nutzer bevorzugt schwere Oele.",
-      asSupabase(fake)
+      asSupabase(fake),
     )
 
     expect(result).not.toBeNull()
@@ -511,7 +513,7 @@ test.describe("User memory persistence with fake Supabase", () => {
         id: "memory-1",
         content: "Der Nutzer bevorzugt schwere Oele.",
         source: "manual",
-      })
+      }),
     )
   })
 
@@ -545,13 +547,11 @@ test.describe("User memory persistence with fake Supabase", () => {
     ])
 
     await deleteConversationSourcedMemories("user-1", "conversation-2", asSupabase(fake))
-    expect(fake.tables.user_memory_entries?.map((entry) => entry.id)).toEqual([
-      "manual-keep",
-    ])
+    expect(fake.tables.user_memory_entries?.map((entry) => entry.id)).toEqual(["manual-keep"])
     expect(fake.tables.hair_profiles?.[0]).toEqual(
       expect.objectContaining({
         conversation_memory: "- Manuell gepflegte Erinnerung.",
-      })
+      }),
     )
   })
 })

@@ -21,9 +21,9 @@ import {
   type CareBalanceToolContext,
   type CareBalanceToolRow,
 } from "@/lib/agent/tools/care-balance-context"
-import { applyProductMemoryConstraints } from "@/lib/rag/user-memory"
+import { applyProductMemoryConstraints } from "@/lib/chat-runtime/user-memory"
 import type { MatchedProduct } from "@/lib/rag/product-matcher"
-import type { UserMemoryContext } from "@/lib/rag/user-memory"
+import type { UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import type {
   BondbuilderRecommendationMetadata,
   ConditionerRecommendationMetadata,

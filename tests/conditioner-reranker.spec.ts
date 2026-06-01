@@ -10,8 +10,11 @@ import {
   deriveExpectedConditionerWeight,
   rerankConditionerProducts,
 } from "../src/lib/rag/conditioner-decision"
-import { buildAssistantRagContext, buildDoneEventData } from "../src/lib/rag/chat-response"
-import { INTENT_CLASSIFICATION_PROMPT } from "../src/lib/rag/prompts"
+import {
+  buildAssistantDecisionContext,
+  buildDoneEventData,
+} from "../src/lib/chat-runtime/stream-events"
+import { INTENT_CLASSIFICATION_PROMPT } from "../src/lib/chat-runtime/prompts"
 
 function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   return {
@@ -300,7 +303,7 @@ test.describe("Conditioner reranker", () => {
       1,
     )
 
-    const ragContext = buildAssistantRagContext([], categoryDecision)
+    const ragContext = buildAssistantDecisionContext([], categoryDecision)
     const donePayload = buildDoneEventData({
       intent: "product_recommendation",
       retrievalSummary: { final_context_count: 0 },

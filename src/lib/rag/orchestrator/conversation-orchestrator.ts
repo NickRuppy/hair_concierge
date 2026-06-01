@@ -6,17 +6,17 @@ import { evaluateRoute } from "@/lib/rag/router"
 import {
   applyConversationStateToClassification,
   computeConversationStateTransition,
-} from "@/lib/rag/conversation-state"
-import { loadConversationState } from "@/lib/rag/conversation-state-store"
+} from "@/lib/chat-runtime/conversation-state"
+import { loadConversationState } from "@/lib/chat-runtime/conversation-state-store"
 import { emitRouterEvent } from "@/lib/rag/retrieval-telemetry"
-import { generateConversationTitle } from "@/lib/rag/title-generator"
+import { generateConversationTitle } from "@/lib/chat-runtime/title-generator"
 import { PRODUCT_INTENTS } from "@/lib/rag/retrieval-constants"
 import {
   buildMatchedProductTrace,
   buildPipelineTraceDraft,
   summarizeEngineTraceForLangfuse,
   summarizeProductsForLangfuse,
-} from "@/lib/rag/debug-trace"
+} from "@/lib/chat-runtime/debug-trace"
 import {
   buildRoutineClarificationQuestions,
   buildRoutinePlan,
@@ -25,7 +25,7 @@ import {
 } from "@/lib/routines/planner"
 import { attachProductsToRoutinePlan } from "@/lib/routines/product-attachments"
 import { hydrateHairProfileForConsumers } from "@/lib/hair-profile/derived"
-import { loadUserMemoryContext } from "@/lib/rag/user-memory"
+import { loadUserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import {
   buildEngineClarificationQuestions,
   buildEngineRetrievalFilter,

@@ -10,7 +10,10 @@ import {
 import { deriveMaskDecision } from "../src/lib/rag/mask-reranker"
 import { computeChunkBoostedScore, type RetrievedChunk } from "../src/lib/rag/retriever"
 import { buildProductListChunks } from "../src/lib/rag/product-list-chunks"
-import { buildAssistantRagContext, buildDoneEventData } from "../src/lib/rag/chat-response"
+import {
+  buildAssistantDecisionContext,
+  buildDoneEventData,
+} from "../src/lib/chat-runtime/stream-events"
 import { evaluateRoute } from "../src/lib/rag/router"
 import { normalizeShampooBucketPairs } from "../src/lib/shampoo/eligibility"
 
@@ -526,7 +529,7 @@ test.describe("Shampoo Flow alignment", () => {
       }),
       0,
     )
-    const ragContext = buildAssistantRagContext([], categoryDecision)
+    const ragContext = buildAssistantDecisionContext([], categoryDecision)
     const donePayload = buildDoneEventData({
       intent: "product_recommendation",
       retrievalSummary: { final_context_count: 0 },

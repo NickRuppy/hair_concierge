@@ -13,10 +13,10 @@ import {
   insertExtractedMemories,
   listUserMemoryEntries,
   type ExtractedMemoryCandidate,
-} from "@/lib/rag/user-memory"
+} from "@/lib/chat-runtime/user-memory"
 import type { UserMemoryKind } from "@/lib/types"
 
-export { MEMORY_EXTRACTION_JSON_PROMPT } from "@/lib/rag/prompts"
+export { MEMORY_EXTRACTION_JSON_PROMPT } from "@/lib/chat-runtime/prompts"
 
 const MIN_USER_MESSAGES = 3
 

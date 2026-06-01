@@ -8,7 +8,7 @@ import {
   getRoutineAutofillSlots,
   projectRoutinePlanForLayer,
 } from "../src/lib/routines/planner"
-import { applyConversationStateToClassification } from "../src/lib/rag/conversation-state"
+import { applyConversationStateToClassification } from "../src/lib/chat-runtime/conversation-state"
 import { evaluateRoute } from "../src/lib/rag/router"
 import { buildSystemPrompt } from "../src/lib/rag/synthesizer"
 import type {

@@ -9,7 +9,7 @@ import {
   LANGFUSE_PROMPTS,
 } from "@/lib/langfuse/prompts"
 import { getLangfuseEnvironment } from "@/lib/openai/client"
-import { SYSTEM_PROMPT } from "@/lib/rag/prompts"
+import { SYSTEM_PROMPT } from "@/lib/chat-runtime/prompts"
 import {
   CONDITIONER_REPAIR_LEVEL_LABELS,
   CONDITIONER_WEIGHT_LABELS,

@@ -14,8 +14,8 @@ import type {
   MaskDecision,
   ConversationTurnStateTransition,
 } from "@/lib/types"
-import type { PipelineTraceDraft } from "@/lib/rag/debug-trace"
-import type { UserMemoryContext } from "@/lib/rag/user-memory"
+import type { PipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
+import type { UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 
 // ── Public pipeline interface (moved from pipeline.ts) ───────────────────────
 

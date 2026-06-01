@@ -51,10 +51,10 @@ import {
   type AgentV2ConversationStateTransition,
   type AgentV2ConversationStateV2,
 } from "@/lib/agent-v2/production/persisted-session-state"
-import { loadAgentV2ConversationState as loadPersistedConversationState } from "@/lib/rag/conversation-state-store"
-import { buildPipelineTraceDraft } from "@/lib/rag/debug-trace"
+import { loadAgentV2ConversationState as loadPersistedConversationState } from "@/lib/chat-runtime/conversation-state-store"
+import { buildPipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
 import type { PipelineParams, PipelineResult } from "@/lib/rag/contracts"
-import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/rag/user-memory"
+import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import {
   LANGFUSE_PROMPTS,
   buildLangfusePromptConfig,
