@@ -1,17 +1,18 @@
 # Langfuse Quality Loop
 
-This repo has a Langfuse integration for the production chat path and the
-AgentV2 Responses plus CareBalance recommendation engine.
+This repo has a Langfuse integration for the production chat path:
+`runAgentV2ProductionPipeline`, backed by the AgentV2 Responses runtime and
+CareBalance-aware product tools.
 
 ## What is live in the app
 
 - One Langfuse trace per chat turn, grouped by conversation ID as the session ID.
-- The production chat route runs AgentV2 production chat, which uses the
-  CareBalance recommendation engine.
-- Observed OpenAI generations for current agent prompts:
+- The production chat route runs `runAgentV2ProductionPipeline`, which calls
+  AgentV2 Responses with CareBalance-backed product and routine context.
+- Observed OpenAI generation name for the current production agent step:
   - `agent-v2-responses-step`
-  - legacy bounded-agent route/render generations when Compare Lab or older
-    helper paths use them
+- Legacy bounded-agent and tool-loop observations may still appear in Compare
+  Lab or older helper paths, but they are not the production chat route.
 - The root chat observation output includes compact review fields:
   - `response_composition`
   - `engine_summary`
@@ -57,7 +58,8 @@ npm run langfuse:sync-prompts
 
 2. Review or relabel the synced versions in Langfuse.
 
-3. Production chat reads managed prompts by label for the agentic model calls.
+3. Production chat reads managed prompts by label for the AgentV2 Responses
+   model calls.
    If that fetch fails, the app falls back to the in-repo prompt text and marks
    the generation metadata as fallback-backed.
 
@@ -105,7 +107,7 @@ The Langfuse experiment stores:
 Pull requests use a tiered quality gate:
 
 - deterministic checks always run: typecheck, lint, build, Node contract tests, Playwright contract tests, and `@ci` smoke tests
-- live chat smoke eval runs only when AI, chat, RAG, routine, recommendation, prompt, or eval-harness paths change
+- live chat smoke eval runs only when AI, AgentV2 chat, memory, routine, recommendation, prompt, or eval-harness paths change
 - dependency manifest changes do not trigger live chat smoke by themselves, so Dependabot PRs do not need OpenAI/Supabase chat secrets unless they also touch AI behavior
 - retrieval metrics run only when retrieval, ingestion, source chunking, Supabase match functions, or retrieval gold-set paths change; until `tests/fixtures/retrieval-gold-set.json` is annotated with real chunk IDs, CI logs this as a skipped gate instead of enforcing placeholder metrics
 - full judged chat evals are manual or scheduled, not required on every PR
@@ -128,9 +130,9 @@ The retrieval metric gate requires an annotated gold set. The current placeholde
 
 ## AgentV2 Production Status
 
-AgentV2 Responses with CareBalance is the production chat path. Compare Lab
-still exists for side-by-side review, but `/api/chat` now routes through AgentV2
-Responses and the CareBalance recommendation context.
+`runAgentV2ProductionPipeline` is the production chat path. Compare Lab still
+exists for side-by-side review, but `/api/chat` now routes through AgentV2
+Responses and CareBalance-backed product tools.
 
 For full persisted trace review, inspect:
 
