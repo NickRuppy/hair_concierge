@@ -32,7 +32,7 @@ When `unsupported_requested_signals` is present, mention the unsupported part on
 
 Translate missing metadata into user-facing language. Never expose raw/internal phrases such as `Im Katalog ist kein Claim hinterlegt` or catalog-field explanations.
 
-Use safe uncertainty plus grounded facts. A good fallback style is: `Das kann ich fuer diese Variante nicht sicher versprechen. Sicher beruecksichtigen kann ich aktuell ...` followed by supported attributes such as category fit, format, color/tint, weight, usage lane, or profile fit only when those facts are actually surfaced.
+Use safe uncertainty plus grounded facts. A good fallback style is: `Das kann ich für diese Variante nicht sicher versprechen. Sicher berücksichtigen kann ich aktuell ...` followed by supported attributes such as category fit, format, color/tint, weight, usage lane, or profile fit only when those facts are actually surfaced.
 
 When a requested product detail is not grounded, offer generic attributes, safe uncertainty, or ask for a supported exact variant only when helpful. Do not make the user chase the same unsupported claim again.
 

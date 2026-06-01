@@ -529,9 +529,9 @@ function terminalGeneralAdvice(call_id: string, overrides: { evidence_quote: str
     session_memory_writes: [],
     payload: {
       user_facing_answer_de:
-        "Alles klar, ich beruecksichtige diese aktuelle Angabe nur fuer diese Antwort.",
+        "Alles klar, ich berücksichtige diese aktuelle Angabe nur für diese Antwort.",
       category_or_topic: "Aktuelle Pflegeangaben",
-      key_points_de: ["Ich werte die aktuelle Korrektur fuer diese Antwort."],
+      key_points_de: ["Ich werte die aktuelle Korrektur für diese Antwort."],
       next_step_offer_de: null,
     },
   })

@@ -50,7 +50,7 @@ Use protein/moisture balance as category-fit logic, not diagnosis. It helps expl
 ## CWC/OWC Conditioner Logic
 CWC/OWC belongs partly in conditioner guidance because it changes how conditioner can be used around shampoo.
 
-If shampoo works for scalp cleansing but dries the lengths, conditioner before shampoo can protect lengths, and conditioner after shampoo remains the normal rinse-out care step. When mentioning CWC, explain it briefly in customer-facing German: `CWC heisst Conditioner-Shampoo-Conditioner: etwas Conditioner schuetzt die Laengen vor dem Shampoo, danach pflegt Conditioner noch einmal gezielt.`
+If shampoo works for scalp cleansing but dries the lengths, conditioner before shampoo can protect lengths, and conditioner after shampoo remains the normal rinse-out care step. When mentioning CWC, explain it briefly in customer-facing German: `CWC heißt Conditioner-Shampoo-Conditioner: etwas Conditioner schützt die Längen vor dem Shampoo, danach pflegt Conditioner noch einmal gezielt.`
 
 Keep this optional and response-based, not mandatory for every routine. OWC is the heavier oil-wash-conditioner route; keep it less default for fine, flat-prone, oily-root, low-density, or weight-sensitive hair unless dryness, porosity, curls/coils, coarser texture, damage, and buildup tolerance clearly support it.
 
@@ -88,13 +88,13 @@ If the user asks what type of conditioner fits them:
   care_category: conditioner
   requires_tool: false unless concrete products are requested
 
-If the user asks "Welche Art von Spuelung..." or asks only about conditioner types, kinds, weight classes, or care direction:
+If the user asks "Welche Art von Spülung..." or asks only about conditioner types, kinds, weight classes, or care direction:
   primary_intent: category_education
   product_request_kind: category_education
   care_category: conditioner
   requires_tool: false
 
-If the user asks "Welche Spuelung passt...", asks for options, asks how many products to choose, or requests a light conditioner recommendation:
+If the user asks "Welche Spülung passt...", asks for options, asks how many products to choose, or requests a light conditioner recommendation:
   primary_intent: product_recommendation
   product_request_kind: specific_products
   care_category: conditioner
@@ -161,11 +161,11 @@ Start with the practical judgment: whether conditioner is the baseline, optional
 Then explain simply:
 1. what conditioner can realistically change
 2. why placement is lengths and ends
-3. how hair thickness and the balance between Feuchtigkeit und staerkender Pflege shape conditioner type
+3. how hair thickness and the balance between Feuchtigkeit und stärkender Pflege shape conditioner type
 4. whether conditioner before shampoo for length protection, conditioner before and after shampoo, mask, leave-in, shampoo, or oil is the better adjacent lever
 5. whether concrete product recommendations require product selection
 
-Use customer-facing German. Do not expose internal profile labels like `thickness` or `protein_moisture_balance`. Do not expose raw CWC/OWC acronyms unless the user used them; explain the technique as Spuelung vor dem Shampoo zum Schutz der Laengen or Spuelung vor und nach dem Shampoo. If CWC is named, include the short meaning and why it protects lengths.
+Use customer-facing German. Do not expose internal profile labels like `thickness` or `protein_moisture_balance`. Do not expose raw CWC/OWC acronyms unless the user used them; explain the technique as Spülung vor dem Shampoo zum Schutz der Längen or Spülung vor und nach dem Shampoo. If CWC is named, include the short meaning and why it protects lengths.
 
 ## Do Not
 - Do not promise permanent split-end repair, structural damage reversal, scalp treatment, or root-oil control.

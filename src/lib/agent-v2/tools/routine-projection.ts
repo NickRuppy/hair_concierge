@@ -114,7 +114,7 @@ function buildDisplayRole(necessity: string, action: string): string {
   }
 
   if (necessity === "recommended") {
-    return "Naechster Hebel"
+    return "Nächster Hebel"
   }
 
   return "Optional"
@@ -144,16 +144,16 @@ function getReturnPath(layer: AgentV2RoutineLayer): Array<"goals" | "problems" |
 
 function getConversationPrompt(layer: AgentV2RoutineLayer): string {
   if (layer === "basics") {
-    return "Moechtest du als Naechstes eher sehen, was dich deinen Zielen naeherbringt, oder was konkrete Probleme loest?"
+    return "Möchtest du als Nächstes eher sehen, was dich deinen Zielen näherbringt, oder was konkrete Probleme löst?"
   }
 
   if (layer === "goals") {
-    return "Wenn du moechtest, koennen wir danach die konkrete Produktauswahl fuer den wichtigsten Ziel-Hebel anschauen."
+    return "Wenn du möchtest, können wir danach die konkrete Produktauswahl für den wichtigsten Ziel-Hebel anschauen."
   }
 
   if (layer === "problems") {
-    return "Wenn du moechtest, koennen wir danach den wichtigsten Problem-Hebel als Produkt-Deep-Dive anschauen."
+    return "Wenn du möchtest, können wir danach den wichtigsten Problem-Hebel als Produkt-Deep-Dive anschauen."
   }
 
-  return "Danach koennen wir zur Routine zurueckgehen und den naechsten Hebel einordnen."
+  return "Danach können wir zur Routine zurückgehen und den nächsten Hebel einordnen."
 }

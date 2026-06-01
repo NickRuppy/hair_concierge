@@ -122,7 +122,7 @@
       "rubric_id": "category.deep_cleansing.customer_facing_scalp_wording",
       "priority": "medium",
       "source": "categories/deep-cleansing-shampoo.md",
-      "message": "Keep internal Kopfhaut-Reset lane logic, but customer-facing German should prefer softer wording like Ansatz-/Kopfhaut-Rueckstands-Reset, Rueckstaende am Ansatz, or Ansatz ist belegt."
+      "message": "Keep internal Kopfhaut-Reset lane logic, but customer-facing German should prefer softer wording like Ansatz-/Kopfhaut-Rückstands-Reset, Rückstände am Ansatz, or Ansatz ist belegt."
     }
   ],
   "required_grounding": [

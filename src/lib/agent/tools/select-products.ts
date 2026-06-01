@@ -208,7 +208,7 @@ export interface SelectedProductsMissingInfo {
     | "Haardichte"
     | "Pflegebedarf"
     | "Styling-Kontext"
-    | "Oel-Zweck"
+    | "Öl-Zweck"
     | "Protein-/Feuchtigkeitsbalance"
     | "Einsatzziel"
   blocking: boolean
@@ -283,7 +283,7 @@ function mapDisplayableCaveat(caveat: string | null): string | null {
   if (!caveat) return null
 
   if (/^fallback:/i.test(caveat.trim())) {
-    return "Nachgeordnet: nicht ganz so passend zum abgeleiteten Fokus; nur verwenden, wenn keine besseren Treffer verfuegbar sind."
+    return "Nachgeordnet: nicht ganz so passend zum abgeleiteten Fokus; nur verwenden, wenn keine besseren Treffer verfügbar sind."
   }
 
   const normalized = caveat.trim().toLocaleLowerCase("de-DE")
@@ -292,7 +292,7 @@ function mapDisplayableCaveat(caveat: string | null): string | null {
     normalized === "weicht vom aktuellen kopfhaut-fokus ab" ||
     (/weicht.*kopfhaut-fokus/.test(normalized) && !/fallback/.test(normalized))
   ) {
-    return "Passt nicht exakt zum abgeleiteten Shampoo-Fokus. Nur nachgeordnet zeigen, wenn keine ausreichend passenden Treffer verfuegbar sind."
+    return "Passt nicht exakt zum abgeleiteten Shampoo-Fokus. Nur nachgeordnet zeigen, wenn keine ausreichend passenden Treffer verfügbar sind."
   }
 
   return caveat
@@ -349,7 +349,7 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
               ? `Reset-Fokus: ${DEEP_CLEANSING_RESET_FOCUS_LABELS[meta.reset_focus]}`
               : null,
             meta?.category === "deep_cleansing_shampoo" && meta.reset_intensity
-              ? `Reset-Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
+              ? `Reset-Intensität: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
               : null,
             meta?.category === "deep_cleansing_shampoo" &&
             meta.color_treated_suitability === "suitable"
@@ -412,7 +412,7 @@ function buildConditionerComparisonFactsForSet(
           ? {
               key: "repair_level",
               value: meta.product_repair_level,
-              text: `Pflegeintensitaet: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`,
+              text: `Pflegeintensität: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`,
             }
           : null,
         meta.fit_status
@@ -617,7 +617,7 @@ function buildMaskComparisonFactsForSet(products: MatchedProduct[]): Record<stri
         ? {
             key: "concentration",
             value: meta.product_concentration,
-            text: `Intensitaet: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`,
+            text: `Intensität: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`,
           }
         : null,
       meta.product_weight
@@ -687,7 +687,7 @@ function buildOilComparisonFactsForSet(products: MatchedProduct[]): Record<strin
         ? {
             key: "oil_purpose",
             value: meta.use_mode,
-            text: `Oel-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}`,
+            text: `Öl-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}`,
           }
         : null,
       meta.matched_subtype
@@ -701,7 +701,7 @@ function buildOilComparisonFactsForSet(products: MatchedProduct[]): Record<strin
         ? {
             key: "purpose_fit",
             value: meta.purpose_fit,
-            text: `Fit: ${meta.purpose_fit === "exact" ? "exakt" : meta.purpose_fit === "bridge" ? "Finish-Bridge" : "Daten unvollstaendig"}`,
+            text: `Fit: ${meta.purpose_fit === "exact" ? "exakt" : meta.purpose_fit === "bridge" ? "Finish-Bridge" : "Daten unvollständig"}`,
           }
         : null,
       typeof product.price_eur === "number"
@@ -752,7 +752,7 @@ const SHAMPOO_SCALP_ROUTE_LABELS: Record<
   balanced: "ausgeglichen",
   dry: "trocken",
   dandruff: "Schuppen",
-  dry_flakes: "trockene Schueppchen",
+  dry_flakes: "trockene Schüppchen",
   irritated: "irritiert",
 }
 
@@ -762,7 +762,7 @@ const SHAMPOO_CLEANSING_INTENSITY_LABELS: Record<
 > = {
   gentle: "sanft",
   regular: "normal",
-  clarifying: "klaerend",
+  clarifying: "klärend",
 }
 
 const SHAMPOO_FIT_STATUS_LABELS: Record<
@@ -770,9 +770,9 @@ const SHAMPOO_FIT_STATUS_LABELS: Record<
   string
 > = {
   ideal: "idealer Treffer",
-  supportive: "unterstuetzender Treffer",
+  supportive: "unterstützender Treffer",
   mismatch: "weicht ab",
-  unknown: "Daten unvollstaendig",
+  unknown: "Daten unvollständig",
   not_applicable: "nicht anwendbar",
 }
 
@@ -790,9 +790,9 @@ const CONDITIONER_FIT_STATUS_LABELS: Record<
   string
 > = {
   ideal: "idealer Treffer",
-  supportive: "unterstuetzender Treffer",
+  supportive: "unterstützender Treffer",
   mismatch: "weicht etwas ab",
-  unknown: "Daten unvollstaendig",
+  unknown: "Daten unvollständig",
   not_applicable: "nicht anwendbar",
 }
 
@@ -801,9 +801,9 @@ const LEAVE_IN_FIT_STATUS_LABELS: Record<
   string
 > = {
   ideal: "idealer Treffer",
-  supportive: "unterstuetzender Treffer",
+  supportive: "unterstützender Treffer",
   mismatch: "weicht etwas ab",
-  unknown: "Daten unvollstaendig",
+  unknown: "Daten unvollständig",
   not_applicable: "nicht anwendbar",
 }
 
@@ -839,9 +839,9 @@ const MASK_FIT_STATUS_LABELS: Record<
   string
 > = {
   ideal: "idealer Treffer",
-  supportive: "unterstuetzender Treffer",
+  supportive: "unterstützender Treffer",
   mismatch: "weicht etwas ab",
-  unknown: "Daten unvollstaendig",
+  unknown: "Daten unvollständig",
   not_applicable: "nicht anwendbar",
 }
 
@@ -850,9 +850,9 @@ const MASK_FIT_STATUS_PREFIXES: Record<
   string
 > = {
   ideal: "Idealer Treffer",
-  supportive: "Unterstuetzender Treffer",
-  mismatch: "Schwaecherer Treffer",
-  unknown: "Treffer mit unvollstaendigen Daten",
+  supportive: "Unterstützender Treffer",
+  mismatch: "Schwächerer Treffer",
+  unknown: "Treffer mit unvollständigen Daten",
   not_applicable: "Nicht anwendbarer Treffer",
 }
 
@@ -861,9 +861,9 @@ const OIL_FIT_STATUS_PREFIXES: Record<
   string
 > = {
   ideal: "Idealer Treffer",
-  supportive: "Unterstuetzender Treffer",
-  mismatch: "Schwaecherer Treffer",
-  unknown: "Treffer mit unvollstaendigen Daten",
+  supportive: "Unterstützender Treffer",
+  mismatch: "Schwächerer Treffer",
+  unknown: "Treffer mit unvollständigen Daten",
   not_applicable: "Nicht anwendbarer Treffer",
 }
 
@@ -896,9 +896,9 @@ const LEAVE_IN_FIT_STATUS_PREFIXES: Record<
   string
 > = {
   ideal: "Idealer Treffer",
-  supportive: "Unterstuetzender Treffer",
-  mismatch: "Schwaecherer Treffer",
-  unknown: "Treffer mit unvollstaendigen Daten",
+  supportive: "Unterstützender Treffer",
+  mismatch: "Schwächerer Treffer",
+  unknown: "Treffer mit unvollständigen Daten",
   not_applicable: "Nicht anwendbarer Treffer",
 }
 
@@ -918,16 +918,16 @@ const CONDITIONER_FIT_STATUS_PREFIXES: Record<
   string
 > = {
   ideal: "Idealer Treffer",
-  supportive: "Unterstuetzender Treffer",
-  mismatch: "Schwaecherer Treffer",
-  unknown: "Treffer mit unvollstaendigen Daten",
+  supportive: "Unterstützender Treffer",
+  mismatch: "Schwächerer Treffer",
+  unknown: "Treffer mit unvollständigen Daten",
   not_applicable: "Nicht anwendbarer Treffer",
 }
 
 const SHAMPOO_THICKNESS_FIT_PHRASES = {
   fine: "feines Haar",
   normal: "mitteldickes Haar",
-  coarse: "kraeftiges Haar",
+  coarse: "kräftiges Haar",
 } as const
 
 const SHAMPOO_SCALP_ROUTE_FIT_PHRASES: Record<
@@ -938,7 +938,7 @@ const SHAMPOO_SCALP_ROUTE_FIT_PHRASES: Record<
   balanced: "ausgeglichenen Kopfhaut-Fokus",
   dry: "trockenen Kopfhaut-Fokus",
   dandruff: "Schuppen-Fokus",
-  dry_flakes: "trockene-Schueppchen-Fokus",
+  dry_flakes: "trockene-Schüppchen-Fokus",
   irritated: "irritierten Kopfhaut-Fokus",
 }
 
@@ -974,9 +974,9 @@ const DEEP_CLEANSING_FIT_STATUS_LABELS: Record<
   string
 > = {
   ideal: "idealer Treffer",
-  supportive: "unterstuetzender Treffer",
+  supportive: "unterstützender Treffer",
   mismatch: "kein sicherer Treffer",
-  unknown: "Treffer mit unvollstaendigen Daten",
+  unknown: "Treffer mit unvollständigen Daten",
   not_applicable: "nicht anwendbarer Treffer",
 }
 
@@ -985,9 +985,9 @@ const SHAMPOO_FIT_STATUS_PREFIXES: Record<
   string
 > = {
   ideal: "Idealer Treffer",
-  supportive: "Unterstuetzender Treffer",
-  mismatch: "Schwaecherer Treffer",
-  unknown: "Treffer mit unvollstaendigen Daten",
+  supportive: "Unterstützender Treffer",
+  mismatch: "Schwächerer Treffer",
+  unknown: "Treffer mit unvollständigen Daten",
   not_applicable: "Nicht anwendbarer Treffer",
 }
 
@@ -1032,16 +1032,16 @@ function buildDisplayableFitReason(product: MatchedProduct): string {
           ? "breiter Styling- und Mineral-Reset"
           : "Produktaufbau-Reset"
     const intensity = meta.reset_intensity
-      ? `; Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
+      ? `; Intensität: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
       : ""
-    return `Reset-Treffer fuer ${focus}${intensity}.`
+    return `Reset-Treffer für ${focus}${intensity}.`
   }
 
   if (meta?.category === "dry_shampoo") {
     return buildDryShampooDisplayableFitReason(meta)
   }
 
-  return meta?.top_reasons?.[0] ?? "Passt von den verfuegbaren Optionen am besten."
+  return meta?.top_reasons?.[0] ?? "Passt von den verfügbaren Optionen am besten."
 }
 
 function buildDryShampooDisplayableFitReason(meta: DryShampooRecommendationMetadata): string {
@@ -1060,7 +1060,7 @@ function buildDryShampooDisplayableFitReason(meta: DryShampooRecommendationMetad
 
   return details.length > 0
     ? `Trockenshampoo-Treffer; ${details.join("; ")}.`
-    : "Trockenshampoo-Treffer als Between-Wash-Bruecke."
+    : "Trockenshampoo-Treffer als Between-Wash-Brücke."
 }
 
 function buildShampooDisplayableFitReason(meta: ShampooRecommendationMetadata): string {
@@ -1080,8 +1080,8 @@ function buildShampooDisplayableFitReason(meta: ShampooRecommendationMetadata): 
     ? (SHAMPOO_CLEANSING_INTENSITY_LABELS[meta.cleansing_intensity] ?? meta.cleansing_intensity)
     : null
   const fitParts = uniqueNonEmpty([thickness, scalp])
-  const fitText = fitParts.length > 0 ? ` fuer ${fitParts.join(" und ")}` : ""
-  const intensityText = intensity ? `; Reinigungsintensitaet: ${intensity}` : ""
+  const fitText = fitParts.length > 0 ? ` für ${fitParts.join(" und ")}` : ""
+  const intensityText = intensity ? `; Reinigungsintensität: ${intensity}` : ""
 
   return `${prefix}${fitText}${intensityText}.`
 }
@@ -1097,7 +1097,7 @@ function buildConditionerDisplayableFitReason(meta: ConditionerRecommendationMet
     ? `Gewicht: ${CONDITIONER_WEIGHT_LABELS[meta.product_weight]}`
     : null
   const repair = meta.product_repair_level
-    ? `Pflegeintensitaet: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`
+    ? `Pflegeintensität: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`
     : null
   const targetRepair =
     meta.matched_repair_level && meta.active_damage_drivers && meta.active_damage_drivers.length > 0
@@ -1138,7 +1138,7 @@ function buildMaskDisplayableFitReason(meta: MaskRecommendationMetadata): string
     ? `Balance: ${MASK_BALANCE_LABELS[meta.product_balance_direction]}`
     : null
   const concentration = meta.product_concentration
-    ? `Intensitaet: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`
+    ? `Intensität: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`
     : null
   const weight = meta.product_weight ? `Gewicht: ${MASK_WEIGHT_LABELS[meta.product_weight]}` : null
   const details = uniqueNonEmpty([balance, concentration, weight])
@@ -1150,7 +1150,7 @@ function buildOilDisplayableFitReason(meta: OilRecommendationMetadata): string {
   const prefix = meta.fit_status
     ? (OIL_FIT_STATUS_PREFIXES[meta.fit_status] ?? "Treffer")
     : "Treffer"
-  const purpose = meta.use_mode ? `Oel-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null
+  const purpose = meta.use_mode ? `Öl-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null
   const subtype = meta.matched_subtype
     ? `Subtyp: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}`
     : null
@@ -1210,7 +1210,7 @@ function buildShampooComparisonFacts(meta: ShampooRecommendationMetadata): strin
         }`
       : null,
     meta.cleansing_intensity
-      ? `Reinigungsintensitaet: ${
+      ? `Reinigungsintensität: ${
           SHAMPOO_CLEANSING_INTENSITY_LABELS[meta.cleansing_intensity] ?? meta.cleansing_intensity
         }`
       : null,
@@ -1230,7 +1230,7 @@ function buildConditionerComparisonFacts(
       : null,
     meta.product_weight ? `Gewicht: ${CONDITIONER_WEIGHT_LABELS[meta.product_weight]}` : null,
     meta.product_repair_level
-      ? `Pflegeintensitaet: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`
+      ? `Pflegeintensität: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`
       : null,
     meta.fit_status
       ? `Fit: ${CONDITIONER_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}`
@@ -1270,7 +1270,7 @@ function buildMaskComparisonFacts(
       ? `Balance: ${MASK_BALANCE_LABELS[meta.product_balance_direction]}`
       : null,
     meta.product_concentration
-      ? `Intensitaet: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`
+      ? `Intensität: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`
       : null,
     meta.product_weight ? `Gewicht: ${MASK_WEIGHT_LABELS[meta.product_weight]}` : null,
     meta.fit_status ? `Fit: ${MASK_FIT_STATUS_LABELS[meta.fit_status] ?? meta.fit_status}` : null,
@@ -1283,10 +1283,10 @@ function buildOilComparisonFacts(
   meta: OilRecommendationMetadata,
 ): string[] {
   return uniqueNonEmpty([
-    meta.use_mode ? `Oel-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null,
+    meta.use_mode ? `Öl-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null,
     meta.matched_subtype ? `Subtyp: ${OIL_SUBTYPE_LABELS[meta.matched_subtype]}` : null,
     meta.purpose_fit
-      ? `Fit: ${meta.purpose_fit === "exact" ? "exakt" : meta.purpose_fit === "bridge" ? "Finish-Bridge" : "Daten unvollstaendig"}`
+      ? `Fit: ${meta.purpose_fit === "exact" ? "exakt" : meta.purpose_fit === "bridge" ? "Finish-Bridge" : "Daten unvollständig"}`
       : null,
     meta.density_weight_caution ? "Caveat: sparsam dosieren" : null,
     typeof product.price_eur === "number" ? `Preis: ${product.price_eur.toFixed(2)} EUR` : null,
@@ -1350,7 +1350,7 @@ function buildBondbuilderLaneRole(
   }
 
   if (axis === "peptide_chain") {
-    return "Lane-Rolle: K18 eher bei Bruch, Snapping, Hitze- oder Peptid-/Laengsstruktur-Signalen."
+    return "Lane-Rolle: K18 eher bei Bruch, Snapping, Hitze- oder Peptid-/Längsstruktur-Signalen."
   }
 
   return null
@@ -1406,7 +1406,7 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
         meta.reset_intensity ? DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity] : null,
         "product_spec",
         meta.reset_intensity
-          ? `Reset-Intensitaet: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
+          ? `Reset-Intensität: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
           : null,
       ),
       buildClaim(
@@ -1419,10 +1419,10 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
       ),
       buildClaim(
         "color_treated_suitability",
-        meta.color_treated_suitability === "suitable" ? "geeignet fuer coloriertes Haar" : null,
+        meta.color_treated_suitability === "suitable" ? "geeignet für coloriertes Haar" : null,
         "product_spec",
         meta.color_treated_suitability === "suitable"
-          ? "Strukturiert als geeignet fuer coloriertes Haar gepflegt"
+          ? "Strukturiert als geeignet für coloriertes Haar gepflegt"
           : null,
       ),
       buildClaim(
@@ -1546,7 +1546,7 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
       meta.cleansing_intensity,
       "product_spec",
       meta.cleansing_intensity
-        ? `Reinigungsintensitaet: ${
+        ? `Reinigungsintensität: ${
             SHAMPOO_CLEANSING_INTENSITY_LABELS[meta.cleansing_intensity] ?? meta.cleansing_intensity
           }`
         : null,
@@ -1585,7 +1585,7 @@ function buildConditionerSupportedProductClaims(
       meta.product_repair_level,
       "product_spec",
       meta.product_repair_level
-        ? `Pflegeintensitaet: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`
+        ? `Pflegeintensität: ${CONDITIONER_REPAIR_LEVEL_LABELS[meta.product_repair_level]}`
         : null,
     ),
     buildClaim(
@@ -1692,7 +1692,7 @@ function buildMaskSupportedProductClaims(
       meta.product_concentration,
       "product_spec",
       meta.product_concentration
-        ? `Intensitaet: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`
+        ? `Intensität: ${MASK_CONCENTRATION_LABELS[meta.product_concentration]}`
         : null,
     ),
     buildClaim(
@@ -1710,7 +1710,7 @@ function buildOilSupportedProductClaims(meta: OilRecommendationMetadata): Suppor
       "oil_purpose",
       meta.use_mode,
       "product_spec",
-      meta.use_mode ? `Oel-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null,
+      meta.use_mode ? `Öl-Zweck: ${OIL_PURPOSE_LABELS[meta.use_mode]}` : null,
     ),
     buildClaim(
       "oil_subtype",
@@ -1791,7 +1791,7 @@ function userMessageForUnsupportedSignal(signal: AgentActiveProfileSignal): stri
   }
 
   if (signal.field === "scalp_condition" && signal.value === "irritated") {
-    return "Zur empfindlichen Kopfhaut habe ich bei diesen Produkten keine sichere Spezialangabe. Ich bewerte sie deshalb vor allem nach Kopfhaut-Fokus, Haardicke und Reinigungsintensitaet."
+    return "Zur empfindlichen Kopfhaut habe ich bei diesen Produkten keine sichere Spezialangabe. Ich bewerte sie deshalb vor allem nach Kopfhaut-Fokus, Haardicke und Reinigungsintensität."
   }
 
   return "Zu einem Teil deiner Anfrage habe ich aktuell keine sichere Produktangabe. Ich bewerte die Optionen deshalb nach den sicheren Produktangaben."
@@ -1808,14 +1808,14 @@ function buildUnsupportedIngredientSignals(
       reason: "no_structured_product_data",
       user_message:
         category === "oil"
-          ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Oel-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Oel-Zweck, Haardicke, Anwendung und Fit."
+          ? "Wünsche wie silikonfrei, kokosfrei, proteinfrei oder ölfrei sind in dieser Öl-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Öl-Zweck, Haardicke, Anwendung und Fit."
           : category === "shampoo"
-            ? "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Shampoo-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Kopfhaut-Fokus, Haardicke, Reinigungsintensitaet und Profil-Fit."
+            ? "Wünsche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Shampoo-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Kopfhaut-Fokus, Haardicke, Reinigungsintensität und Profil-Fit."
             : category === "leave_in"
-              ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit."
+              ? "Wünsche wie silikonfrei, kokosfrei, proteinfrei oder ölfrei sind in dieser Leave-in-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Gewicht, Rolle, Hitzeschutz, Pflegefokus und Fit."
               : category === "mask"
-                ? "Wuensche wie silikonfrei, kokosfrei, proteinfrei oder oelfrei sind in dieser Masken-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensitaet und Fit."
-                : "Wuensche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprueft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensitaet und Fit.",
+                ? "Wünsche wie silikonfrei, kokosfrei, proteinfrei oder ölfrei sind in dieser Masken-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Intensität und Fit."
+                : "Wünsche wie silikonfrei, kokosfrei oder proteinfrei sind in dieser Conditioner-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Gewicht, Balance, Pflegeintensität und Fit.",
     })),
   )
 }
@@ -1886,14 +1886,14 @@ function buildShampooMissingInfo(
         key: field,
         label: "Kopfhaut-Typ",
         blocking: true,
-        detail: "Es fehlt noch dein Kopfhaut-Typ fuer die Shampoo-Auswahl.",
+        detail: "Es fehlt noch dein Kopfhaut-Typ für die Shampoo-Auswahl.",
       }
     case "scalp_condition":
       return {
         key: field,
         label: "Kopfhaut-Beschwerden",
         blocking: true,
-        detail: "Es fehlen noch aktuelle Kopfhaut-Beschwerden fuer die Shampoo-Auswahl.",
+        detail: "Es fehlen noch aktuelle Kopfhaut-Beschwerden für die Shampoo-Auswahl.",
       }
   }
 }
@@ -1914,7 +1914,7 @@ function buildConditionerMissingInfo(
         key: field,
         label: "Protein-/Feuchtigkeitsbalance",
         blocking: true,
-        detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Conditioner-Auswahl.",
+        detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance für die Conditioner-Auswahl.",
       }
   }
 }
@@ -1935,7 +1935,7 @@ function buildMaskMissingInfo(
         key: field,
         label: "Protein-/Feuchtigkeitsbalance",
         blocking: true,
-        detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance fuer die Masken-Auswahl.",
+        detail: "Es fehlt noch deine Protein-/Feuchtigkeitsbalance für die Masken-Auswahl.",
       }
   }
 }
@@ -1949,35 +1949,35 @@ function buildLeaveInMissingInfo(
         key: field,
         label: "Haarmuster",
         blocking: true,
-        detail: "Es fehlt noch dein Haarmuster fuer die Leave-in-Auswahl.",
+        detail: "Es fehlt noch dein Haarmuster für die Leave-in-Auswahl.",
       }
     case "thickness":
       return {
         key: field,
         label: "Haardicke",
         blocking: true,
-        detail: "Es fehlt noch deine Haardicke fuer die Leave-in-Auswahl.",
+        detail: "Es fehlt noch deine Haardicke für die Leave-in-Auswahl.",
       }
     case "density":
       return {
         key: field,
         label: "Haardichte",
         blocking: true,
-        detail: "Es fehlt noch deine Haardichte fuer die Leave-in-Auswahl.",
+        detail: "Es fehlt noch deine Haardichte für die Leave-in-Auswahl.",
       }
     case "care_signal":
       return {
         key: field,
         label: "Pflegebedarf",
         blocking: false,
-        detail: "Es fehlt noch dein Pflegebedarf fuer die Leave-in-Auswahl.",
+        detail: "Es fehlt noch dein Pflegebedarf für die Leave-in-Auswahl.",
       }
     case "styling_signal":
       return {
         key: field,
         label: "Styling-Kontext",
         blocking: false,
-        detail: "Es fehlt noch dein Styling-Kontext fuer die Leave-in-Auswahl.",
+        detail: "Es fehlt noch dein Styling-Kontext für die Leave-in-Auswahl.",
       }
   }
 }
@@ -1991,14 +1991,14 @@ function buildOilMissingInfo(
         key: field,
         label: "Haardicke",
         blocking: true,
-        detail: "Es fehlt noch deine Haardicke fuer die Oel-Auswahl.",
+        detail: "Es fehlt noch deine Haardicke für die Öl-Auswahl.",
       }
     case "oil_purpose":
       return {
         key: field,
-        label: "Oel-Zweck",
+        label: "Öl-Zweck",
         blocking: true,
-        detail: "Es fehlt noch dein Oel-Zweck fuer die Oel-Auswahl.",
+        detail: "Es fehlt noch dein Öl-Zweck für die Öl-Auswahl.",
       }
   }
 }
@@ -2309,7 +2309,7 @@ function buildProfileBasis(
         ? `Ziel-Balance: ${MASK_BALANCE_LABELS[maskDecision.targetProfile.balance]}`
         : null,
       maskDecision?.targetProfile?.repairLevel
-        ? `Masken-Intensitaet: ${
+        ? `Masken-Intensität: ${
             CONDITIONER_REPAIR_LEVEL_LABELS[maskDecision.targetProfile.repairLevel]
           }`
         : null,
@@ -2334,7 +2334,7 @@ function buildProfileBasis(
         ? `Haardichte: ${HAIR_DENSITY_LABELS[hairProfile.density] ?? hairProfile.density}`
         : null,
       oilDecision?.targetProfile?.purpose
-        ? `Oel-Zweck: ${OIL_PURPOSE_LABELS[oilDecision.targetProfile.purpose]}`
+        ? `Öl-Zweck: ${OIL_PURPOSE_LABELS[oilDecision.targetProfile.purpose]}`
         : null,
       oilDecision?.targetProfile?.densityWeightCaution
         ? "Gewichts-Caveat: sehr sparsam dosieren."
@@ -2363,7 +2363,7 @@ function buildProfileBasis(
           ? "Bondbuilder-Check: Empfohlener Strukturpflege-Schritt"
           : "Bondbuilder-Check: Gerade nicht notwendig",
       bondbuilderDecision?.targetProfile?.bondRepairIntensity
-        ? `Bondbuilder-Intensitaet: ${
+        ? `Bondbuilder-Intensität: ${
             bondbuilderDecision.targetProfile.bondRepairIntensity === "intensive"
               ? "Intensiv"
               : "Erhaltung"
@@ -2373,7 +2373,7 @@ function buildProfileBasis(
         ? "Bondbuilder-Lane: Disulfid-/Crosslink"
         : null,
       bondbuilderDecision?.targetProfile?.peptideChainLane
-        ? "Bondbuilder-Lane: Peptid-/Laengsstruktur"
+        ? "Bondbuilder-Lane: Peptid-/Längsstruktur"
         : null,
       bondbuilderDecision?.targetProfile &&
       !bondbuilderDecision.targetProfile.chemicalCrosslinkLane &&
@@ -2735,7 +2735,7 @@ function buildProductResponsePolicy(params: {
   if (decision === "needs_more_info") {
     return {
       product_response_policy: "needs_more_info",
-      policy_reason: "Fuer diese Produktauswahl fehlt noch eine entscheidende Profilinformation.",
+      policy_reason: "Für diese Produktauswahl fehlt noch eine entscheidende Profilinformation.",
     }
   }
 
@@ -2751,7 +2751,7 @@ function buildProductResponsePolicy(params: {
     return {
       product_response_policy: "redirect_to_better_lever",
       policy_reason:
-        "Trockenshampoo-Nutzung oder Build-up spricht fuer Reduktion, Auswaschen und Reset-/Tiefenreinigungslogik statt fuer weiteres Trockenshampoo.",
+        "Trockenshampoo-Nutzung oder Build-up spricht für Reduktion, Auswaschen und Reset-/Tiefenreinigungslogik statt für weiteres Trockenshampoo.",
     }
   }
 
@@ -2759,7 +2759,7 @@ function buildProductResponsePolicy(params: {
     return {
       product_response_policy: "caution_without_products",
       policy_reason:
-        "Diese Trockenshampoo-Anfrage enthaelt Kopfhaut-, Haarbruch-, Aerosol-/Atemwegs- oder Kind-Kontext; deshalb keine Trockenshampoo-Produkte empfehlen.",
+        "Diese Trockenshampoo-Anfrage enthält Kopfhaut-, Haarbruch-, Aerosol-/Atemwegs- oder Kind-Kontext; deshalb keine Trockenshampoo-Produkte empfehlen.",
     }
   }
 
@@ -2767,7 +2767,7 @@ function buildProductResponsePolicy(params: {
     return {
       product_response_policy: "caution_without_products",
       policy_reason:
-        "Juckreiz, Reizung oder wiederkehrende Schuppen brauchen eine vorsichtige Einordnung; danach koennen passende Anti-Schuppen- oder empfindliche-Kopfhaut-Optionen ausgewaehlt werden.",
+        "Juckreiz, Reizung oder wiederkehrende Schuppen brauchen eine vorsichtige Einordnung; danach können passende Anti-Schuppen- oder empfindliche-Kopfhaut-Optionen ausgewählt werden.",
     }
   }
 
@@ -2776,14 +2776,14 @@ function buildProductResponsePolicy(params: {
       return {
         product_response_policy: "recommend_with_caveat",
         policy_reason:
-          "Der Nutzer fragt explizit nach Shampoo-Produkten; empfehle passende Shampoo-Optionen, aber erklaere knapp, dass Conditioner, Leave-in, Maske oder Technik fuer dieses Ziel oft der staerkere Hebel sind.",
+          "Der Nutzer fragt explizit nach Shampoo-Produkten; empfehle passende Shampoo-Optionen, aber erkläre knapp, dass Conditioner, Leave-in, Maske oder Technik für dieses Ziel oft der stärkere Hebel sind.",
       }
     }
 
     return {
       product_response_policy: "redirect_to_better_lever",
       policy_reason:
-        "Diese Anfrage betrifft vor allem Laengen, Haaroberflaeche oder Stylingtechnik; Shampoo ist nicht der erste Hebel, solange die Kopfhaut ausgeglichen ist.",
+        "Diese Anfrage betrifft vor allem Längen, Haaroberfläche oder Stylingtechnik; Shampoo ist nicht der erste Hebel, solange die Kopfhaut ausgeglichen ist.",
     }
   }
 
@@ -2791,7 +2791,7 @@ function buildProductResponsePolicy(params: {
     return {
       product_response_policy: "redirect_to_better_lever",
       policy_reason:
-        "Diese Conditioner-Anfrage betrifft nur Kopfhaut, Ansatz oder Schuppen. Conditioner ist dafuer nicht der richtige Produkthebel; passender sind Kopfhaut- oder Shampoo-Einordnung.",
+        "Diese Conditioner-Anfrage betrifft nur Kopfhaut, Ansatz oder Schuppen. Conditioner ist dafür nicht der richtige Produkthebel; passender sind Kopfhaut- oder Shampoo-Einordnung.",
     }
   }
 
@@ -2799,7 +2799,7 @@ function buildProductResponsePolicy(params: {
     return {
       product_response_policy: "redirect_to_better_lever",
       policy_reason:
-        "Diese Masken-Anfrage betrifft nur Kopfhaut, Ansatz oder Schuppen. Eine Haarmaske ist dafuer nicht der richtige Produkthebel; passender sind Kopfhaut- oder Shampoo-Einordnung.",
+        "Diese Masken-Anfrage betrifft nur Kopfhaut, Ansatz oder Schuppen. Eine Haarmaske ist dafür nicht der richtige Produkthebel; passender sind Kopfhaut- oder Shampoo-Einordnung.",
     }
   }
 
@@ -2815,14 +2815,14 @@ function buildProductResponsePolicy(params: {
       return {
         product_response_policy: "recommend_with_caveat",
         policy_reason:
-          "Der Nutzer fragt explizit nach Oel-Produkten; empfehle passende Optionen, aber rahme sie mit Reduktions- und Build-up-Caveat.",
+          "Der Nutzer fragt explizit nach Öl-Produkten; empfehle passende Optionen, aber rahme sie mit Reduktions- und Build-up-Caveat.",
       }
     }
 
     return {
       product_response_policy: "redirect_to_better_lever",
       policy_reason:
-        "Die Oel-Entscheidung unterdrueckt Produkte bewusst und leitet zu einem besseren Hebel oder zu weniger Oel-Nutzung um.",
+        "Die Öl-Entscheidung unterdrückt Produkte bewusst und leitet zu einem besseren Hebel oder zu weniger Öl-Nutzung um.",
     }
   }
 
@@ -2830,7 +2830,7 @@ function buildProductResponsePolicy(params: {
     return {
       product_response_policy: "caution_without_products",
       policy_reason:
-        "Tiefenreinigung ist kein Behandlungshebel fuer Schuppen, Juckreiz oder gereizte Kopfhaut.",
+        "Tiefenreinigung ist kein Behandlungshebel für Schuppen, Juckreiz oder gereizte Kopfhaut.",
     }
   }
 
@@ -2838,7 +2838,7 @@ function buildProductResponsePolicy(params: {
     return {
       product_response_policy: "explain_then_recommend",
       policy_reason:
-        "Ein schnell fettender Ansatz ist kopfhautnah; Shampoo kann helfen, aber Auftrag, Menge und optionaler zweiter Waschgang gehoeren zur Antwort.",
+        "Ein schnell fettender Ansatz ist kopfhautnah; Shampoo kann helfen, aber Auftrag, Menge und optionaler zweiter Waschgang gehören zur Antwort.",
     }
   }
 
@@ -2856,7 +2856,7 @@ function buildProductResponsePolicy(params: {
   if (decision === "not_recommended") {
     return {
       product_response_policy: "redirect_to_better_lever",
-      policy_reason: "Diese Kategorie ist fuer die aktuelle Anfrage nicht der wichtigste Hebel.",
+      policy_reason: "Diese Kategorie ist für die aktuelle Anfrage nicht der wichtigste Hebel.",
     }
   }
 
@@ -2864,16 +2864,16 @@ function buildProductResponsePolicy(params: {
     product_response_policy: "recommend",
     policy_reason:
       category === "shampoo"
-        ? "Shampoo wird primaer ueber Kopfhaut-Fokus und Haardicke entschieden."
+        ? "Shampoo wird primär über Kopfhaut-Fokus und Haardicke entschieden."
         : category === "conditioner"
-          ? "Conditioner wird ueber Haardicke, Haardichte, Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensitaet entschieden."
+          ? "Conditioner wird über Haardicke, Haardichte, Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensität entschieden."
           : category === "deep_cleansing_shampoo"
-            ? "Tiefenreinigung wird nur bei Reset-Signalen empfohlen und ueber Reset-Fokus, Intensitaet, Kopfhaut-Fokus und Farbschutz-Metadaten entschieden."
+            ? "Tiefenreinigung wird nur bei Reset-Signalen empfohlen und über Reset-Fokus, Intensität, Kopfhaut-Fokus und Farbschutz-Metadaten entschieden."
             : category === "bondbuilder"
-              ? "Bondbuilder wird ueber strukturellen Damage-Bedarf, Einsatzmodus und Bondbuilding-Lane entschieden."
+              ? "Bondbuilder wird über strukturellen Damage-Bedarf, Einsatzmodus und Bondbuilding-Lane entschieden."
               : category === "dry_shampoo"
-                ? "Trockenshampoo wird als Between-Wash-Bruecke ueber Frische-Effekt, Farbfit, Format und Kopfhaut-Sensitivitaet entschieden."
-                : "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten.",
+                ? "Trockenshampoo wird als Between-Wash-Brücke über Frische-Effekt, Farbfit, Format und Kopfhaut-Sensitivität entschieden."
+                : "Die Auswahl folgt den aktuell verfügbaren Profil- und Produktdaten.",
   }
 }
 
@@ -2887,61 +2887,61 @@ function buildCategoryGuidance(params: {
 
   if (category === "dry_shampoo") {
     if (isDryShampooResetRedirectDecision(category, categoryDecision)) {
-      return "Kein weiteres Trockenshampoo empfehlen: haeufige Nutzung oder belegte/coated Roots sollen in Reduktion, Auswaschen und Reset-/Tiefenreinigungslogik fuehren. Trockenshampoo reinigt die Kopfhaut nicht und sollte spaeter ausgewaschen werden."
+      return "Kein weiteres Trockenshampoo empfehlen: häufige Nutzung oder belegte/coated Roots sollen in Reduktion, Auswaschen und Reset-/Tiefenreinigungslogik führen. Trockenshampoo reinigt die Kopfhaut nicht und sollte später ausgewaschen werden."
     }
 
     if (isDryShampooCautionDecision(category, categoryDecision)) {
-      return "Trockenshampoo nicht als Produkt empfehlen: bei Juckreiz, Schuppen, gereizter oder schmerzender Kopfhaut, Haarverlust-/Bruchdominanz, Atem-/Aerosol-Caution oder Kind-Kontext guidance-only bleiben und zu Kopfhaut-, Shampoo- oder Reset-Einordnung umleiten. Trockenshampoo reinigt die Kopfhaut nicht und sollte spaeter ausgewaschen werden."
+      return "Trockenshampoo nicht als Produkt empfehlen: bei Juckreiz, Schuppen, gereizter oder schmerzender Kopfhaut, Haarverlust-/Bruchdominanz, Atem-/Aerosol-Caution oder Kind-Kontext guidance-only bleiben und zu Kopfhaut-, Shampoo- oder Reset-Einordnung umleiten. Trockenshampoo reinigt die Kopfhaut nicht und sollte später ausgewaschen werden."
     }
 
     if (decision === "not_recommended") {
-      return "Trockenshampoo ist kein normaler Routinebaustein und hier kein guter Produkthebel. Es passt nur als konkrete kosmetische Between-Wash-Bruecke, nicht als Pflege, Behandlung oder Reinigung. Trockenshampoo reinigt die Kopfhaut nicht und sollte spaeter ausgewaschen werden."
+      return "Trockenshampoo ist kein normaler Routinebaustein und hier kein guter Produkthebel. Es passt nur als konkrete kosmetische Between-Wash-Brücke, nicht als Pflege, Behandlung oder Reinigung. Trockenshampoo reinigt die Kopfhaut nicht und sollte später ausgewaschen werden."
     }
 
     if (decision === "needs_more_info") {
-      return "Fuer Trockenshampoo nur eine gezielte Rueckfrage stellen, wenn die kurze Between-Wash-Bruecke unklar ist. Nicht als Pflege, Behandlung oder Reinigung framen."
+      return "Für Trockenshampoo nur eine gezielte Rückfrage stellen, wenn die kurze Between-Wash-Brücke unklar ist. Nicht als Pflege, Behandlung oder Reinigung framen."
     }
 
     if (decision === "no_catalog_match") {
-      return "Trockenshampoo passt als kurze kosmetische Between-Wash-Bruecke, aber der aktuelle Katalog liefert keinen sicheren Treffer. Keine Produkte oder Ersatzprodukte wie Babypuder erfinden; trotzdem sagen, dass Trockenshampoo die Kopfhaut nicht reinigt und spaeter ausgewaschen werden sollte."
+      return "Trockenshampoo passt als kurze kosmetische Between-Wash-Brücke, aber der aktuelle Katalog liefert keinen sicheren Treffer. Keine Produkte oder Ersatzprodukte wie Babypuder erfinden; trotzdem sagen, dass Trockenshampoo die Kopfhaut nicht reinigt und später ausgewaschen werden sollte."
     }
 
-    return "Trockenshampoo nur als kurze kosmetische Between-Wash-Bruecke am Ansatz framen, nicht als Pflege, Behandlung oder Reinigung. Immer sagen: Trockenshampoo reinigt die Kopfhaut nicht und sollte spaeter ausgewaschen werden."
+    return "Trockenshampoo nur als kurze kosmetische Between-Wash-Brücke am Ansatz framen, nicht als Pflege, Behandlung oder Reinigung. Immer sagen: Trockenshampoo reinigt die Kopfhaut nicht und sollte später ausgewaschen werden."
   }
 
   if (category === "shampoo") {
     if (isScalpSymptomShampooQuestion(category, routeContext)) {
-      return "Juckreiz, Reizung oder wiederkehrende Schuppen sind nicht nur ein normales kosmetisches Shampoo-Thema. Wenn es stark ist oder anhaelt, sollte es professionell oder dermatologisch abgeklaert werden. Stelle Shampoo nicht als medizinische Loesung dar; frage knapp, ob der Fokus eher Schuppen-Reduktion oder gereizte/empfindliche Kopfhaut ist, und sage, dass danach passende Shampoo-Optionen ausgewaehlt werden koennen."
+      return "Juckreiz, Reizung oder wiederkehrende Schuppen sind nicht nur ein normales kosmetisches Shampoo-Thema. Wenn es stark ist oder anhält, sollte es professionell oder dermatologisch abgeklärt werden. Stelle Shampoo nicht als medizinische Lösung dar; frage knapp, ob der Fokus eher Schuppen-Reduktion oder gereizte/empfindliche Kopfhaut ist, und sage, dass danach passende Shampoo-Optionen ausgewählt werden können."
     }
 
     if (isDryLengthOnlyShampooQuestion(category, routeContext)) {
       return isExplicitProductSelectionJob(routeContext)
-        ? "Du kannst Shampoo-Produkte empfehlen, weil der Nutzer explizit danach fragt. Caveat: Shampoo ist fuer trockene Laengen nicht der staerkste Hebel; Conditioner, Leave-in oder Maske beeinflussen sie meist staerker. Shampoo bleibt vor allem Kopfhaut-/Reinigungshebel."
-        : "Trockene Laengen sind meist kein Shampoo-first Problem. Shampoo sollte vor allem die Kopfhaut reinigen; die Laengen brauchen eher Schutz, Conditioner oder Leave-in."
+        ? "Du kannst Shampoo-Produkte empfehlen, weil der Nutzer explizit danach fragt. Caveat: Shampoo ist für trockene Längen nicht der stärkste Hebel; Conditioner, Leave-in oder Maske beeinflussen sie meist stärker. Shampoo bleibt vor allem Kopfhaut-/Reinigungshebel."
+        : "Trockene Längen sind meist kein Shampoo-first Problem. Shampoo sollte vor allem die Kopfhaut reinigen; die Längen brauchen eher Schutz, Conditioner oder Leave-in."
     }
 
     if (isShineShampooQuestion(category, routeContext)) {
       return isExplicitProductSelectionJob(routeContext)
-        ? "Du kannst Shampoo-Produkte empfehlen, weil der Nutzer explizit danach fragt. Caveat: Shampoo ist fuer mehr Glanz nicht der staerkste Hebel; Pflege, Oberflaeche und Stylingtechnik wirken meist staerker."
-        : "Mehr Glanz entsteht meist ueber Pflege, Oberflaeche und Stylingtechnik. Shampoo ist dafuer nicht der erste Hebel, solange die Kopfhaut ausgeglichen ist."
+        ? "Du kannst Shampoo-Produkte empfehlen, weil der Nutzer explizit danach fragt. Caveat: Shampoo ist für mehr Glanz nicht der stärkste Hebel; Pflege, Oberfläche und Stylingtechnik wirken meist stärker."
+        : "Mehr Glanz entsteht meist über Pflege, Oberfläche und Stylingtechnik. Shampoo ist dafür nicht der erste Hebel, solange die Kopfhaut ausgeglichen ist."
     }
 
     if (isFrizzShampooQuestion(category, routeContext)) {
       return isExplicitProductSelectionJob(routeContext)
-        ? "Du kannst Shampoo-Produkte empfehlen, weil der Nutzer explizit danach fragt. Caveat: Shampoo ist fuer Frizz nicht der staerkste Hebel; Frizz ist meist ein Laengen-, Pflege- oder Stylingthema. Shampoo bleibt vor allem Kopfhaut-/Reinigungshebel."
-        : "Frizz ist meist ein Laengen-, Pflege- oder Stylingthema. Shampoo ist dafuer nicht der erste Hebel, solange die Kopfhaut ausgeglichen ist."
+        ? "Du kannst Shampoo-Produkte empfehlen, weil der Nutzer explizit danach fragt. Caveat: Shampoo ist für Frizz nicht der stärkste Hebel; Frizz ist meist ein Längen-, Pflege- oder Stylingthema. Shampoo bleibt vor allem Kopfhaut-/Reinigungshebel."
+        : "Frizz ist meist ein Längen-, Pflege- oder Stylingthema. Shampoo ist dafür nicht der erste Hebel, solange die Kopfhaut ausgeglichen ist."
     }
 
     if (decision === "not_recommended") {
-      return "Shampoo ist fuer diese Anfrage gerade nicht der wichtigste Hebel."
+      return "Shampoo ist für diese Anfrage gerade nicht der wichtigste Hebel."
     }
 
     if (decision === "needs_more_info") {
-      return "Fuer eine Shampoo-Auswahl brauchen wir mindestens Haardicke und einen Kopfhaut-Fokus."
+      return "Für eine Shampoo-Auswahl brauchen wir mindestens Haardicke und einen Kopfhaut-Fokus."
     }
 
     if (decision === "no_catalog_match") {
-      return "Shampoo passt als Kategorie, aber der aktuelle Katalog liefert keinen sicheren Treffer fuer diesen Kopfhaut-Fokus."
+      return "Shampoo passt als Kategorie, aber der aktuelle Katalog liefert keinen sicheren Treffer für diesen Kopfhaut-Fokus."
     }
 
     const shampooDecision = categoryDecision?.category === "shampoo" ? categoryDecision : null
@@ -2956,32 +2956,32 @@ function buildCategoryGuidance(params: {
 
     return label
       ? `Shampoo ist hier der richtige Hebel: Die Auswahl folgt dem Kopfhaut-Fokus ${label} und deiner Haardicke.`
-      : "Shampoo ist hier der richtige Hebel, gesteuert ueber Kopfhaut-Fokus und Haardicke."
+      : "Shampoo ist hier der richtige Hebel, gesteuert über Kopfhaut-Fokus und Haardicke."
   }
 
   if (category === "conditioner") {
     if (isScalpOnlyConditionerQuestion(category, routeContext)) {
-      return "Conditioner ist fuer reine Kopfhaut-, Ansatz-, Schuppen- oder Juckreiz-Anfragen nicht der richtige Hebel. Keine Conditioner-Produkte empfehlen; zu Kopfhaut- oder Shampoo-Einordnung umleiten und Conditioner nicht als Behandlung fuer Kopfhautreizung framen."
+      return "Conditioner ist für reine Kopfhaut-, Ansatz-, Schuppen- oder Juckreiz-Anfragen nicht der richtige Hebel. Keine Conditioner-Produkte empfehlen; zu Kopfhaut- oder Shampoo-Einordnung umleiten und Conditioner nicht als Behandlung für Kopfhautreizung framen."
     }
 
     if (decision === "not_recommended") {
-      return "Conditioner ist fuer diese Anfrage gerade nicht der wichtigste Hebel."
+      return "Conditioner ist für diese Anfrage gerade nicht der wichtigste Hebel."
     }
 
     if (decision === "needs_more_info") {
-      return "Fuer eine Conditioner-Auswahl sind Haardicke, Haardichte und Protein-/Feuchtigkeitsbalance normalerweise Profil-Invarianten. Fehlende Angaben defensiv behandeln, nicht als normalen Chat-Pfad aufblasen."
+      return "Für eine Conditioner-Auswahl sind Haardicke, Haardichte und Protein-/Feuchtigkeitsbalance normalerweise Profil-Invarianten. Fehlende Angaben defensiv behandeln, nicht als normalen Chat-Pfad aufblasen."
     }
 
     if (decision === "no_catalog_match") {
-      return "Conditioner passt als Kategorie, aber der aktuelle Katalog liefert keinen sicheren Treffer fuer dieses Zielprofil."
+      return "Conditioner passt als Kategorie, aber der aktuelle Katalog liefert keinen sicheren Treffer für dieses Zielprofil."
     }
 
-    return "Conditioner ist hier ein Laengenhebel: Die Auswahl folgt Haardicke, Haardichte, Ziel-Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensitaet. Dichte und Damage-Kontext duerfen die Profilableitung erklaeren, sind aber keine Produktclaims."
+    return "Conditioner ist hier ein Längenhebel: Die Auswahl folgt Haardicke, Haardichte, Ziel-Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensität. Dichte und Damage-Kontext dürfen die Profilableitung erklären, sind aber keine Produktclaims."
   }
 
   if (category === "deep_cleansing_shampoo") {
     if (isDeepCleansingScalpTreatmentDecision(category, categoryDecision)) {
-      return "Tiefenreinigung nicht als Behandlung fuer Schuppen, Juckreiz, gereizte Kopfhaut oder seborrhoische Themen framen. Keine Produktkarten zeigen; zu Kopfhaut- oder Shampoo-Einordnung umleiten und bei anhaltenden/starken Beschwerden professionelle Abklaerung empfehlen."
+      return "Tiefenreinigung nicht als Behandlung für Schuppen, Juckreiz, gereizte Kopfhaut oder seborrhoische Themen framen. Keine Produktkarten zeigen; zu Kopfhaut- oder Shampoo-Einordnung umleiten und bei anhaltenden/starken Beschwerden professionelle Abklärung empfehlen."
     }
 
     if (decision === "no_catalog_match") {
@@ -2992,7 +2992,7 @@ function buildCategoryGuidance(params: {
       return "Tiefenreinigung ist hier nicht der erste Hebel, solange keine Build-up-, Styling-, Kalk-/Chlor- oder Reset-Signale vorliegen."
     }
 
-    return "Tiefenreinigung ist ein gelegentlicher Reset, kein Alltags-Shampoo und keine Kopfhautbehandlung. Erst Reset-Rolle erklaeren, dann Anwendung: an Reset-Waschtagen statt normalem Shampoo, danach Conditioner in die Laengen, etwa alle 5-6 Waeschen beziehungsweise alle 2-3 Wochen und bei trockener, empfindlicher, colorierter, lockiger oder stark beanspruchter Struktur seltener."
+    return "Tiefenreinigung ist ein gelegentlicher Reset, kein Alltags-Shampoo und keine Kopfhautbehandlung. Erst Reset-Rolle erklären, dann Anwendung: an Reset-Waschtagen statt normalem Shampoo, danach Conditioner in die Längen, etwa alle 5-6 Wäschen beziehungsweise alle 2-3 Wochen und bei trockener, empfindlicher, colorierter, lockiger oder stark beanspruchter Struktur seltener."
   }
 
   if (category === "leave_in") {
@@ -3001,44 +3001,44 @@ function buildCategoryGuidance(params: {
       leaveInDecision?.targetProfile?.hasSeparateHeatProtectant &&
       leaveInDecision.targetProfile.heatProtectionNeed === "moderate"
     ) {
-      return "Der Nutzer hat bereits separaten Hitzeschutz. Fuer Foehnen ist integrierter Leave-in-Hitzeschutz ein Bonus, kein Muss. Sage im Einstieg ausdruecklich, dass diese Zwei-in-eins-Route ein Produkt weniger in der Routine bedeuten kann: Leave-in-Pflege plus Foehnschutz in einem Produkt. Sage auch, dass der Nutzer den separaten Hitzeschutz behalten kann; dann sind Leave-ins ohne eigenen Hitzeschutz weiterhin normale Pflege-Booster."
+      return "Der Nutzer hat bereits separaten Hitzeschutz. Für Föhnen ist integrierter Leave-in-Hitzeschutz ein Bonus, kein Muss. Sage im Einstieg ausdrücklich, dass diese Zwei-in-eins-Route ein Produkt weniger in der Routine bedeuten kann: Leave-in-Pflege plus Föhnschutz in einem Produkt. Sage auch, dass der Nutzer den separaten Hitzeschutz behalten kann; dann sind Leave-ins ohne eigenen Hitzeschutz weiterhin normale Pflege-Booster."
     }
   }
 
   if (category === "mask") {
     if (isScalpOnlyMaskQuestion(category, routeContext)) {
-      return "Masken sind Zusatzpflege fuer Laengen und Spitzen, nicht der richtige Hebel fuer reine Kopfhaut-, Ansatz-, Schuppen- oder Juckreiz-Anfragen. Keine Masken-Produkte empfehlen; zu Kopfhaut- oder Shampoo-Einordnung umleiten."
+      return "Masken sind Zusatzpflege für Längen und Spitzen, nicht der richtige Hebel für reine Kopfhaut-, Ansatz-, Schuppen- oder Juckreiz-Anfragen. Keine Masken-Produkte empfehlen; zu Kopfhaut- oder Shampoo-Einordnung umleiten."
     }
 
     if (decision === "not_recommended") {
-      return "Eine Maske ist fuer diese Anfrage gerade nicht der wichtigste Hebel."
+      return "Eine Maske ist für diese Anfrage gerade nicht der wichtigste Hebel."
     }
 
     if (decision === "needs_more_info") {
-      return "Fuer eine Masken-Auswahl sind Haardicke, Haardichte und Protein-/Feuchtigkeitsbalance normalerweise Profil-Invarianten. Fehlende Angaben defensiv behandeln, nicht als normalen Chat-Pfad aufblasen."
+      return "Für eine Masken-Auswahl sind Haardicke, Haardichte und Protein-/Feuchtigkeitsbalance normalerweise Profil-Invarianten. Fehlende Angaben defensiv behandeln, nicht als normalen Chat-Pfad aufblasen."
     }
 
     if (decision === "no_catalog_match") {
-      return "Eine Maske kann als Zusatzpflege passen, aber der aktuelle Katalog liefert keinen sicheren Treffer fuer dieses Zielprofil."
+      return "Eine Maske kann als Zusatzpflege passen, aber der aktuelle Katalog liefert keinen sicheren Treffer für dieses Zielprofil."
     }
 
-    return "Maske ist hier Zusatzpflege fuer Laengen und Spitzen: Die Auswahl folgt Gewicht, Protein-/Feuchtigkeitsbalance, Intensitaet und Fit. Nicht als Conditioner-Ersatz, Kopfhautbehandlung oder Schadenspraevention framen."
+    return "Maske ist hier Zusatzpflege für Längen und Spitzen: Die Auswahl folgt Gewicht, Protein-/Feuchtigkeitsbalance, Intensität und Fit. Nicht als Conditioner-Ersatz, Kopfhautbehandlung oder Schadensprävention framen."
   }
 
   if (category === "bondbuilder") {
     if (isOptionalBondbuilderDecision(category, categoryDecision)) {
-      return "Der Engine-Check sieht keinen zwingenden Bondbuilder-Bedarf. Wenn der Nutzer trotzdem vergleichen will, als optionaler Zusatz framen: erst sagen, dass es kein Pflichtschritt ist, dann sparsame oder kurweise Nutzung und die passendsten Optionen nennen. Bei K18 vs OLAPLEX/Epres erklaeren: OLAPLEX/Epres = Disulfid-/Crosslink-Lane eher bei Blondierung, Coloration oder chemischem Stress; K18 = Peptid-/Leave-in-Lane eher bei Bruch, Snapping, starker Hitze oder Peptid-/Laengsstruktur-Signalen. Wenn profile_basis keinen klaren Lane-Treiber zeigt, genau das offen sagen."
+      return "Der Engine-Check sieht keinen zwingenden Bondbuilder-Bedarf. Wenn der Nutzer trotzdem vergleichen will, als optionaler Zusatz framen: erst sagen, dass es kein Pflichtschritt ist, dann sparsame oder kurweise Nutzung und die passendsten Optionen nennen. Bei K18 vs OLAPLEX/Epres erklären: OLAPLEX/Epres = Disulfid-/Crosslink-Lane eher bei Blondierung, Coloration oder chemischem Stress; K18 = Peptid-/Leave-in-Lane eher bei Bruch, Snapping, starker Hitze oder Peptid-/Längsstruktur-Signalen. Wenn profile_basis keinen klaren Lane-Treiber zeigt, genau das offen sagen."
     }
 
     if (decision === "not_recommended") {
-      return "Bondbuilder ist fuer dieses Profil gerade kein notwendiger Hebel. Keine Pflicht oder Schadensangst aufbauen; eher zu Basis-Pflege, Hitzeschutz oder Verhalten umleiten."
+      return "Bondbuilder ist für dieses Profil gerade kein notwendiger Hebel. Keine Pflicht oder Schadensangst aufbauen; eher zu Basis-Pflege, Hitzeschutz oder Verhalten umleiten."
     }
 
     if (decision === "no_catalog_match") {
       return "Bondbuilder kann als Strukturpflege passen, aber der aktuelle Katalog liefert keinen sicheren Treffer mit gepflegten Bondbuilder-Spezifikationen."
     }
 
-    return "Bondbuilder ist hier strukturelle Zusatzpflege: erst den abgeleiteten Bedarf nennen, dann zwischen Disulfid-/Crosslink- und Peptid-/Laengsstruktur-Lane unterscheiden und nicht als normale Feuchtigkeitspflege framen. Bei K18 vs OLAPLEX/Epres gilt: Crosslink-Lane eher OLAPLEX/Epres, Peptid-/Laengsstruktur-Lane eher K18; wenn beide Lane-Signale vorliegen, beide Rollen kurz gegenueberstellen."
+    return "Bondbuilder ist hier strukturelle Zusatzpflege: erst den abgeleiteten Bedarf nennen, dann zwischen Disulfid-/Crosslink- und Peptid-/Längsstruktur-Lane unterscheiden und nicht als normale Feuchtigkeitspflege framen. Bei K18 vs OLAPLEX/Epres gilt: Crosslink-Lane eher OLAPLEX/Epres, Peptid-/Längsstruktur-Lane eher K18; wenn beide Lane-Signale vorliegen, beide Rollen kurz gegenüberstellen."
   }
 
   if (category === "oil" && categoryDecision?.category === "oil") {
@@ -3047,38 +3047,38 @@ function buildCategoryGuidance(params: {
         decision === "recommended" &&
         allowsCaveatedOilProductRecommendation({ category, categoryDecision, routeContext })
       ) {
-        return "Der Nutzer fragt explizit nach Oel-Produkten; vorhandene Produkttreffer duerfen gezeigt werden. CareBalance/Planner-Caveat: wegen Beschwerungs- oder Build-up-Risiko sparsam, leichter Fit, eher Frequenz senken und nicht als Pflichtschritt framen."
+        return "Der Nutzer fragt explizit nach Öl-Produkten; vorhandene Produkttreffer dürfen gezeigt werden. CareBalance/Planner-Caveat: wegen Beschwerungs- oder Build-up-Risiko sparsam, leichter Fit, eher Frequenz senken und nicht als Pflichtschritt framen."
       }
 
-      return "Ein neues Oel ist hier nicht der richtige Hebel: Die aktuelle Logik sieht ein Beschwerungs- oder Build-up-Risiko. Keine Oel-Produkte empfehlen; stattdessen weniger Oel, weniger Layering oder Reset-Pflege erklaeren."
+      return "Ein neues Öl ist hier nicht der richtige Hebel: Die aktuelle Logik sieht ein Beschwerungs- oder Build-up-Risiko. Keine Öl-Produkte empfehlen; stattdessen weniger Öl, weniger Layering oder Reset-Pflege erklären."
     }
 
     if (categoryDecision.noRecommendationReason === "scalp_treatment_needed") {
-      return "Oel ist hier nicht als Kopfhautbehandlung zu empfehlen. Keine Oel-Produkte empfehlen; zu Kopfhaut- oder Shampoo-Einordnung umleiten."
+      return "Öl ist hier nicht als Kopfhautbehandlung zu empfehlen. Keine Öl-Produkte empfehlen; zu Kopfhaut- oder Shampoo-Einordnung umleiten."
     }
 
     if (categoryDecision.noRecommendationReason === "therapy_oil_missing") {
-      return "Fuer Wachstums-, Haarverlust- oder Therapie-Oel-Anfragen gibt es in dieser Produktauswahl keinen sicheren kosmetischen Produktpfad. Keine Oel-Produkte empfehlen und keine medizinischen Versprechen machen."
+      return "Für Wachstums-, Haarverlust- oder Therapie-Öl-Anfragen gibt es in dieser Produktauswahl keinen sicheren kosmetischen Produktpfad. Keine Öl-Produkte empfehlen und keine medizinischen Versprechen machen."
     }
 
     if (categoryDecision.noRecommendationReason === "better_non_oil_category") {
-      return "Oel ist fuer diese Anfrage nicht der beste Produkthebel. Keine Oel-Produkte empfehlen; zu Leave-in, Conditioner, Maske oder passender Kopfhautpflege umleiten."
+      return "Öl ist für diese Anfrage nicht der beste Produkthebel. Keine Öl-Produkte empfehlen; zu Leave-in, Conditioner, Maske oder passender Kopfhautpflege umleiten."
     }
   }
 
   if (decision === "not_recommended") {
-    return "Diese Kategorie ist fuer die aktuelle Anfrage wahrscheinlich nicht der beste Hebel."
+    return "Diese Kategorie ist für die aktuelle Anfrage wahrscheinlich nicht der beste Hebel."
   }
 
   if (decision === "needs_more_info") {
-    return "Fuer diese Produktauswahl fehlt noch eine wirklich entscheidende Information."
+    return "Für diese Produktauswahl fehlt noch eine wirklich entscheidende Information."
   }
 
   if (decision === "no_catalog_match") {
     return "Die Kategorie kann passen, aber der aktuelle Katalog liefert keinen sicheren Treffer."
   }
 
-  return "Die Auswahl folgt den aktuell verfuegbaren Profil- und Produktdaten."
+  return "Die Auswahl folgt den aktuell verfügbaren Profil- und Produktdaten."
 }
 
 export function projectSelectedProducts(

@@ -8,7 +8,7 @@ Scalp oiling is a cautious niche case for a dry/tight but calm scalp. It is not 
 Assume finishing oil by default for broad oil use unless the user says scalp, pre-wash, massage, einwirken, growth, or hair-loss language.
 
 ## Use When
-- The user asks for oil, Haaroel, dry ends, tips, shine, finish, smoother surface feel, or frizz smoothing.
+- The user asks for oil, Haaröl, dry ends, tips, shine, finish, smoother surface feel, or frizz smoothing.
 - The user says `vor dem Waschen`, `einwirken`, `Massage`, carrier oil, scalp oiling, or pre-wash oiling language.
 - Dry, porous, bleached, colored, heat-stressed, rough, or friction-prone lengths may need pre-wash length protection or end-focused finish.
 - Fine, flat, oily-root, low-density, or buildup-prone profiles need weight caution rather than automatic oil avoidance.
@@ -100,9 +100,9 @@ If the user asks whether oil is useful, whether they need it, or whether oil fit
 
 If the user asks for a type/kind of oil use, not concrete products:
 - examples:
-  - `Soll ich Oel vor dem Waschen oder nach dem Stylen nehmen?`
-  - `Welche Art von Oel-Anwendung passt zu trockenen Spitzen?`
-  - `Ist Oel eher Finish oder Pre-Wash?`
+  - `Soll ich Öl vor dem Waschen oder nach dem Stylen nehmen?`
+  - `Welche Art von Öl-Anwendung passt zu trockenen Spitzen?`
+  - `Ist Öl eher Finish oder Pre-Wash?`
 - primary_intent: category_education
 - product_request_kind: category_education
 - care_category: oil
@@ -111,9 +111,9 @@ If the user asks for a type/kind of oil use, not concrete products:
 
 If the user asks which oil fits, asks for options, or asks for a count:
 - examples:
-  - `Welches Oel passt, ohne dass es schwer wird?`
-  - `Nenn mir zwei Haaroele.`
-  - `Empfiehl mir ein leichtes Oel fuer Spitzen.`
+  - `Welches Öl passt, ohne dass es schwer wird?`
+  - `Nenn mir zwei Haaröle.`
+  - `Empfiehl mir ein leichtes Öl für Spitzen.`
 - primary_intent: product_recommendation
 - product_request_kind: specific_products
 - care_category: oil
@@ -149,10 +149,10 @@ If the user asks where or how oil belongs in a routine, without asking to change
 - routine_intent: none
 - care_category: oil
 - requires_tool: false unless current routine state is needed
-- do not call build_or_fix_routine for ordering-only questions like `Kommt Oel vor oder nach Leave-in?`
+- do not call build_or_fix_routine for ordering-only questions like `Kommt Öl vor oder nach Leave-in?`
 - do not return routine payloads or routine_step_ids for ordering-only questions
 
-Placement/order questions such as `Kommt Oel vor oder nach Leave-in?` are routine_explanation, not routine_mutation, unless the user asks to add, remove, replace, or change saved/current routine state.
+Placement/order questions such as `Kommt Öl vor oder nach Leave-in?` are routine_explanation, not routine_mutation, unless the user asks to add, remove, replace, or change saved/current routine state.
 
 If the user asks to add, remove, replace, or change oil in a saved/current routine:
 - primary_intent: routine_mutation
@@ -172,7 +172,7 @@ If the user asks generally whether rosemary oil, castor oil, scalp massage, or o
 - do_not_show_unasked_product_cards: true
 - explain that evidence is limited/mixed and do not frame oil as a hair-growth treatment
 
-When the user asks `Maske oder Oel?` after saying the lengths are dry/frizzy and the routine should stay light, do not make oil the main care add-on. Prefer a light occasional mask; oil is only a tiny finish if needed.
+When the user asks `Maske oder Öl?` after saying the lengths are dry/frizzy and the routine should stay light, do not make oil the main care add-on. Prefer a light occasional mask; oil is only a tiny finish if needed.
 
 If the user reports sudden shedding, patchy loss, severe or persistent thinning, scalp pain, burning, pustules, wounds, persistent flakes, inflamed scalp, or medically adjacent scalp symptoms:
 - primary_intent: safety_boundary
@@ -220,7 +220,7 @@ Do not suggest oil as medical scalp care. Pause scalp oils during active irritat
 Do not recommend neat essential-oil application. Do not give dilution recipes, drop counts, DIY scalp-treatment protocols, or essential-oil routines for scalp symptoms. Do not present rosemary, peppermint, massage, castor, coconut, or carrier oils as substitutes for clinical hair-loss evaluation or treatment.
 
 ## German Answer Shape
-Separate oil purposes first and tie them to the user's goal: `Finish fuer Spitzen` for Glanz, Oberflaechen-Frizz, glattere Spitzen, or Polish; `Pre-Wash-Schutz fuer Laengen` for trockene, poroese, blondierte, colorierte, hitzegestresste Laengen vor dem Shampoo; or cautious scalp comfort only when the scalp is calm and the user actually asked about scalp use.
+Separate oil purposes first and tie them to the user's goal: `Finish für Spitzen` for Glanz, Oberflächen-Frizz, glattere Spitzen, or Polish; `Pre-Wash-Schutz für Längen` for trockene, poröse, blondierte, colorierte, hitzegestresste Längen vor dem Shampoo; or cautious scalp comfort only when the scalp is calm and the user actually asked about scalp use.
 
 Then explain:
 1. whether oil belongs in the routine

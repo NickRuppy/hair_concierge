@@ -6,13 +6,13 @@ import { Mail } from "lucide-react"
 import { AuthForm } from "@/components/auth/auth-form"
 
 const ERROR_MESSAGES: Record<string, string> = {
-  link_expired: "Der Link ist abgelaufen oder ungueltig. Bitte fordere einen neuen an.",
+  link_expired: "Der Link ist abgelaufen oder ungültig. Bitte fordere einen neuen an.",
   auth_failed: "Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
 }
 
 const REASON_COPY: Record<string, { heading: string; subtext: string }> = {
   session_expired: {
-    heading: "Willkommen zurueck!",
+    heading: "Willkommen zurück!",
     subtext: "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
   },
   signed_out: {
@@ -50,24 +50,24 @@ export default function AuthPage() {
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
             <h1 className="font-header text-4xl tracking-tight text-foreground">chaarlie</h1>
-            <p className="text-lg text-muted-foreground">Willkommen zurueck</p>
+            <p className="text-lg text-muted-foreground">Willkommen zurück</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
             <div className="space-y-4">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                 <Mail className="h-6 w-6 text-primary" />
               </div>
-              <h2 className="text-lg font-semibold text-foreground">Pruefe dein Postfach</h2>
+              <h2 className="text-lg font-semibold text-foreground">Prüfe dein Postfach</h2>
               <p className="text-sm text-muted-foreground">
                 Wir haben eine E-Mail an{" "}
                 <span className="font-medium text-foreground">{emailSentTo}</span> gesendet. Klicke
-                auf den Link, um dein Passwort zurueckzusetzen.
+                auf den Link, um dein Passwort zurückzusetzen.
               </p>
               <button
                 onClick={() => setView("form")}
                 className="text-sm text-primary hover:underline"
               >
-                Zurueck zur Anmeldung
+                Zurück zur Anmeldung
               </button>
             </div>
           </div>
@@ -84,7 +84,7 @@ export default function AuthPage() {
         <div className="w-full max-w-md space-y-8 text-center">
           <div className="space-y-2">
             <h1 className="font-header text-4xl tracking-tight text-foreground">chaarlie</h1>
-            <p className="text-lg text-muted-foreground">Willkommen zurueck</p>
+            <p className="text-lg text-muted-foreground">Willkommen zurück</p>
           </div>
           <div className="rounded-xl border bg-card p-8 shadow-sm">
             <div className="space-y-4">
@@ -100,7 +100,7 @@ export default function AuthPage() {
                 onClick={() => setView("form")}
                 className="text-sm text-primary hover:underline"
               >
-                Zurueck zur Anmeldung
+                Zurück zur Anmeldung
               </button>
             </div>
           </div>
@@ -116,7 +116,7 @@ export default function AuthPage() {
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
           <h1 className="font-header text-4xl tracking-tight text-foreground">chaarlie</h1>
-          <p className="text-lg text-muted-foreground">{copy?.subtext ?? "Willkommen zurueck"}</p>
+          <p className="text-lg text-muted-foreground">{copy?.subtext ?? "Willkommen zurück"}</p>
         </div>
 
         {urlError && ERROR_MESSAGES[urlError] && (

@@ -62,11 +62,11 @@ Common confusions:
 ## Reset Lane Logic
 Name the likely reset job before recommending action:
 
-- `Rueckstands-Reset`: product film, stylers, masks, leave-ins, oils, co-washing, CWC/OWC, dry shampoo, coated feel, sticky feel, limpness, or "nothing gets clean".
+- `Rückstands-Reset`: product film, stylers, masks, leave-ins, oils, co-washing, CWC/OWC, dry shampoo, coated feel, sticky feel, limpness, or "nothing gets clean".
 - `Kalk-/Metall-Reset`: hard water, pool, metal/mineral concern, dull/stiff/brassy feel, or oxidative color/bleach service prep.
 - `Kopfhaut-Reset`: mild non-medical scalp oil, visible residue, or scalp-side buildup.
 
-`Kopfhaut-Reset` is an internal lane label. In customer-facing German, prefer softer wording such as `Ansatz-/Kopfhaut-Rueckstands-Reset`, `Rueckstaende am Ansatz`, or `Ansatz ist belegt`, so the answer does not sound like medical scalp treatment.
+`Kopfhaut-Reset` is an internal lane label. In customer-facing German, prefer softer wording such as `Ansatz-/Kopfhaut-Rückstands-Reset`, `Rückstände am Ansatz`, or `Ansatz ist belegt`, so the answer does not sound like medical scalp treatment.
 
 If the signal is only ordinary oiliness, sweat, or light residue, compare normal shampoo before escalating to deep cleansing. If the signal is mainly scalp-local residue or oily-root buildup on tolerant skin, compare gentle occasional scalp peeling. If the signal is product/mineral film through lengths or hard-water feel, compare reset/clarifying/chelating shampoo. If the signal is dry lengths without coating, route toward conditioner, leave-in, mask, oil, bondbuilder, or technique rather than reset-first advice.
 
@@ -74,17 +74,17 @@ For dry, fine, curly, bleached, color-treated, fragile, or sensitive profiles, k
 
 ## German Request Examples
 Type or kind education without concrete products:
-- `Welche Art von Tiefenreinigung brauche ich bei wachsigen Laengen?` -> category education; explain Rueckstands-Reset versus Kalk-/Metall-Reset; do not show unasked product cards.
-- `Brauche ich eher ein klaerendes oder ein chelatierendes Shampoo?` -> category education; compare reset lanes; load relevant category guidance when needed.
-- `Ist Tiefenreinigung oder Peeling besser fuer belegten Ansatz?` -> category education; compare category roles; keep `care_category: none` unless one category becomes the primary answer.
+- `Welche Art von Tiefenreinigung brauche ich bei wachsigen Längen?` -> category education; explain Rückstands-Reset versus Kalk-/Metall-Reset; do not show unasked product cards.
+- `Brauche ich eher ein klärendes oder ein chelatierendes Shampoo?` -> category education; compare reset lanes; load relevant category guidance when needed.
+- `Ist Tiefenreinigung oder Peeling besser für belegten Ansatz?` -> category education; compare category roles; keep `care_category: none` unless one category becomes the primary answer.
 
 Category assessment without product cards:
-- `Brauche ich ueberhaupt einen Reset, wenn mein Haar nach dem Waschen schwer bleibt?` -> general advice; assess buildup plausibility; no product cards unless the user asks for products.
-- `Kann das Build-up sein oder ist normale Waesche genug?` -> general advice; explain likely fit and one next step.
+- `Brauche ich überhaupt einen Reset, wenn mein Haar nach dem Waschen schwer bleibt?` -> general advice; assess buildup plausibility; no product cards unless the user asks for products.
+- `Kann das Build-up sein oder ist normale Wäsche genug?` -> general advice; explain likely fit and one next step.
 
 Concrete product asks:
 - `Welches Tiefenreinigungsshampoo passt zu mir?` -> product recommendation; use `select_products`.
-- `Nenn mir zwei Produkte fuer Kalk/Metalle vor dem Faerben.` -> product recommendation with requested count; use `select_products`; return fewer than requested only when fewer grounded suitable products are available and explain that fit/availability limit.
+- `Nenn mir zwei Produkte für Kalk/Metalle vor dem Färben.` -> product recommendation with requested count; use `select_products`; return fewer than requested only when fewer grounded suitable products are available and explain that fit/availability limit.
 - `Ist Produkt X wirklich chelatierend und farbsicher?` -> product detail fact/claim check; use product metadata or `select_products`; this is not necessarily a recommendation/card flow.
 
 ## Agent Interpretation Hooks
@@ -211,7 +211,7 @@ Escalate away from cosmetic reset advice when the user reports scalp pain, burni
 If symptoms are linked to a reset product, suggest pausing the suspected trigger and getting professional evaluation when symptoms are significant, persistent, painful, patchy, or inflammatory. Do not diagnose, and do not intensify cleansing or exfoliation as the first move.
 
 ## German Answer Shape
-Start with the practical lane: `Rueckstands-Reset`, `Kalk-/Metall-Reset`, `Ansatz-/Kopfhaut-Rueckstands-Reset`, or "normal shampoo is enough".
+Start with the practical lane: `Rückstands-Reset`, `Kalk-/Metall-Reset`, `Ansatz-/Kopfhaut-Rückstands-Reset`, or "normal shampoo is enough".
 
 Then explain:
 1. why the reset fits or does not fit the user's signal
@@ -219,7 +219,7 @@ Then explain:
 3. that a reset wash temporarily replaces the normal shampoo step, then length care follows
 4. whether product choice, exact cadence, compatibility, or service-prep claims need product data
 
-Use everyday German terms like `Rueckstaende`, `Ansatz`, `Laengen`, `belegt`, `wachsiges Gefuehl`, `Kalk/Metalle`, `normale Waesche`, and `sanft wieder aufbauen`.
+Use everyday German terms like `Rückstände`, `Ansatz`, `Längen`, `belegt`, `wachsiges Gefühl`, `Kalk/Metalle`, `normale Wäsche`, and `sanft wieder aufbauen`.
 
 ## Do Not
 - Do not make deep cleansing a daily shampoo default; instead frame it as occasional and need-based.

@@ -202,9 +202,9 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
           {
             step_id: "base-conditioner",
             label_de: "Conditioner",
-            action_de: "In die Laengen geben.",
-            frequency_de: "Nach jeder Waesche",
-            reason_de: "Pflegt die Laengen.",
+            action_de: "In die Längen geben.",
+            frequency_de: "Nach jeder Wäsche",
+            reason_de: "Pflegt die Längen.",
           },
         ],
       },
@@ -240,8 +240,8 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
           category: "conditioner",
           necessity: "core",
           action: "add",
-          frequency: "Nach jeder Waesche",
-          short_reason: "Pflegt die Laengen.",
+          frequency: "Nach jeder Wäsche",
+          short_reason: "Pflegt die Längen.",
           caveats: [],
           product_recommendation_allowed_if_explicit: true,
         },
@@ -253,7 +253,7 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
         if_user_explicitly_asks: "call_select_products_for_requested_category",
       },
       missing_required_data: [],
-      conversation_prompt_de: "Moechtest du als Naechstes Ziele oder Probleme anschauen?",
+      conversation_prompt_de: "Möchtest du als Nächstes Ziele oder Probleme anschauen?",
     },
   })
 
@@ -418,8 +418,8 @@ test("AgentV2 Compare runner updates visible routine step category from routine 
           {
             step_id: "goal-leave-in",
             label_de: "Erster Zusatz",
-            action_de: "Leave-in in die Laengen geben.",
-            frequency_de: "Nach der Waesche",
+            action_de: "Leave-in in die Längen geben.",
+            frequency_de: "Nach der Wäsche",
             reason_de: "Mehr Pflege ohne viel Aufwand.",
           },
         ],
@@ -455,7 +455,7 @@ test("AgentV2 Compare runner updates visible routine step category from routine 
       category: "leave_in",
     },
     categories: ["leave_in"],
-    summary_de: "Dafuer passt ein leichtes Leave-in.",
+    summary_de: "Dafür passt ein leichtes Leave-in.",
   })
 
   assert.deepEqual(deepDiveContext.visible_steps, [
@@ -481,8 +481,8 @@ test("AgentV2 Compare runner stores canonical categories for one-step routine la
           {
             step_id: "goal-leave-in",
             label_de: "Leave-in",
-            action_de: "In die Laengen geben.",
-            frequency_de: "Nach der Waesche",
+            action_de: "In die Längen geben.",
+            frequency_de: "Nach der Wäsche",
             reason_de: "Mehr Pflege ohne viel Aufwand.",
           },
         ],

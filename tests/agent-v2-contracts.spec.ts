@@ -180,7 +180,7 @@ test("AgentV2TerminalAnswerSchema accepts a product recommendation payload", () 
     pending_routine_action: null,
     session_memory_writes: [],
     payload: {
-      user_facing_answer_de: "Ich wuerde dir dieses Shampoo empfehlen.",
+      user_facing_answer_de: "Ich würde dir dieses Shampoo empfehlen.",
       recommendations: [
         {
           product_id: "prod_1",
@@ -190,7 +190,7 @@ test("AgentV2TerminalAnswerSchema accepts a product recommendation payload", () 
         },
       ],
       comparison_notes_de: [],
-      usage_notes_de: ["Shampoo vor allem am Ansatz verwenden und gruendlich ausspuelen."],
+      usage_notes_de: ["Shampoo vor allem am Ansatz verwenden und gründlich ausspülen."],
       next_step_offer_de: null,
     },
   }
@@ -225,7 +225,7 @@ test("AgentV2TerminalAnswerSchema requires request interpretation", () => {
     payload: {
       user_facing_answer_de: "Eine Maske ist optional.",
       category_or_topic: "mask",
-      key_points_de: ["Sie hilft bei zusaetzlichem Pflegebedarf."],
+      key_points_de: ["Sie hilft bei zusätzlichem Pflegebedarf."],
       next_step_offer_de: null,
     },
   })

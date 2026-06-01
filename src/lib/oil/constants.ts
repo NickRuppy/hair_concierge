@@ -16,9 +16,9 @@ export const OIL_SUBTYPES = ["natuerliches-oel", "styling-oel", "trocken-oel"] a
 export type OilSubtype = (typeof OIL_SUBTYPES)[number]
 
 export const OIL_SUBTYPE_LABELS: Record<OilSubtype, string> = {
-  "natuerliches-oel": "Natuerliches Oel",
-  "styling-oel": "Styling-Oel",
-  "trocken-oel": "Trocken-Oel",
+  "natuerliches-oel": "Natürliches Öl",
+  "styling-oel": "Styling-Öl",
+  "trocken-oel": "Trocken-Öl",
 }
 
 export const OIL_SUBTYPE_OPTIONS = OIL_SUBTYPES.map((value) => ({
@@ -50,12 +50,12 @@ export const OIL_NO_RECOMMENDATION_REASONS = [
 export type OilNoRecommendationReason = (typeof OIL_NO_RECOMMENDATION_REASONS)[number]
 
 export const OIL_NO_RECOMMENDATION_LABELS: Record<OilNoRecommendationReason, string> = {
-  better_non_oil_category: "Ein anderes Produkt passt hier besser als ein Oel.",
-  therapy_oil_missing: "Das passende Therapie-/Kopfhautoel ist aktuell nicht in der Datenbank.",
+  better_non_oil_category: "Ein anderes Produkt passt hier besser als ein Öl.",
+  therapy_oil_missing: "Das passende Therapie-/Kopfhautöl ist aktuell nicht in der Datenbank.",
   scalp_treatment_needed:
-    "Kopfhautbeschwerden sollten zuerst ueber Shampoo- oder Kopfhautpflege eingeordnet werden.",
+    "Kopfhautbeschwerden sollten zuerst über Shampoo- oder Kopfhautpflege eingeordnet werden.",
   overload_risk:
-    "Bei beschwertem, fettigem oder belegtem Haar ist zunaechst Reduktion oder Reset sinnvoller als ein weiteres Oel.",
+    "Bei beschwertem, fettigem oder belegtem Haar ist zunächst Reduktion oder Reset sinnvoller als ein weiteres Öl.",
 }
 
 export function isOilCategory(category: string | null | undefined): boolean {

@@ -70,7 +70,7 @@ Separate scalp/roots from lengths/ends when that prevents dryness, oiliness, res
 
 For reset comparisons, do not turn the shampoo placement rule into a category rule. Shampoo application can focus on scalp/roots, but deep-cleansing shampoo is not conceptually scalp-only: product/mineral film through lengths or hard-water feel points toward reset/clarifying/chelating shampoo, while scalp-local residue or oily-root buildup on tolerant skin may point toward gentle occasional scalp peeling. Persistent itch, redness, burning, pain, repeated flakes, or shedding belongs to the safety boundary, not stronger peeling.
 
-For mask cadence, use wash rhythm as the anchor and keep the wording flexible: `gelegentlich`, `alle paar Waeschen`, `bei Bedarf`, or `ein paar Mal pro Monat` for general advice. If hair feels heavy, too soft, or flat, stretch the interval or use less/shorter; if lengths stay dry or rough and the mask is not heavy, cautiously move more often. Exact timing, product order, and protocol still require product metadata.
+For mask cadence, use wash rhythm as the anchor and keep the wording flexible: `gelegentlich`, `alle paar Wäschen`, `bei Bedarf`, or `ein paar Mal pro Monat` for general advice. If hair feels heavy, too soft, or flat, stretch the interval or use less/shorter; if lengths stay dry or rough and the mask is not heavy, cautiously move more often. Exact timing, product order, and protocol still require product metadata.
 
 ## Troubleshooting Before Shopping
 For "why", "what can I do", messy outcomes, or "nothing works" questions, explain the likely problem before recommending products. Prefer technique, cadence, placement, simplification, or observation before product selection.
@@ -85,14 +85,14 @@ Use conditioner or leave-in slip when relevant, work in sections, start at the e
 If a conditioner or leave-in is already present, consider amount, timing, saturation, placement, and tool choice before adding another product.
 
 ## CWC And OWC
-CWC and OWC are wash techniques, not product categories or repair treatments. CWC is usually the lighter conditioner-wash-conditioner protection route. If CWC is mentioned, briefly explain it in user-facing German: `CWC heisst Conditioner-Shampoo-Conditioner: etwas Conditioner schuetzt die Laengen vor dem Shampoo, danach pflegt Conditioner noch einmal gezielt.`
+CWC and OWC are wash techniques, not product categories or repair treatments. CWC is usually the lighter conditioner-wash-conditioner protection route. If CWC is mentioned, briefly explain it in user-facing German: `CWC heißt Conditioner-Shampoo-Conditioner: etwas Conditioner schützt die Längen vor dem Shampoo, danach pflegt Conditioner noch einmal gezielt.`
 
 OWC is the heavier oil-wash-conditioner route for drier, curlier, coarser, more porous, or more damaged lengths when scalp and buildup risk allow. Keep OWC less default for fine, flat-prone, oily-root, low-density, or weight-sensitive hair.
 
 Both still include a real shampoo step on the scalp. Do not collapse them into co-washing, cleansing conditioners, standalone hair oiling, structural repair, regrowth, or fixed-cadence protocols. Avoid intensifying CWC/OWC when active scalp symptoms, persistent flaking/itching, inflammation, or repeated greasy/coated results are the foreground issue.
 
 ## German Copy Fit
-Use natural German or German-friendly wording for common review-sensitive phrases. Prefer `starkes Brechen`, `bruechige Laengen`, or `gummiartig` depending on context; do not write `starkes Schnappen`. Prefer `Routine beim Lufttrocknen`; do not write `Air-Dry-Routine`. For scalp-actives wording, say `nicht zu viele starke Kopfhaut-Wirkstoffe kombinieren`; do not write `Actives stapeln`.
+Use natural German or German-friendly wording for common review-sensitive phrases. Prefer `starkes Brechen`, `brüchige Längen`, or `gummiartig` depending on context; do not write `starkes Schnappen`. Prefer `Routine beim Lufttrocknen`; do not write `Air-Dry-Routine`. For scalp-actives wording, say `nicht zu viele starke Kopfhaut-Wirkstoffe kombinieren`; do not write `Actives stapeln`.
 
 For color-treated, dry, frizzy routine-change questions, consider whether structural repair or Bondbuilder relevance should be mentioned as an optional check. Do not force Bondbuilder unless structural damage signals exist, such as bleach/highlights, recent chemical service, strong breakage, gummiartig or overly elastic wet feel, mushy wet feel, or repeated high heat.
 

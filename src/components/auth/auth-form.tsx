@@ -27,7 +27,7 @@ function mapSupabaseError(message: string): string {
     return "E-Mail oder Passwort ist falsch."
   }
   if (message.includes("Email not confirmed")) {
-    return "Bitte bestaetige zuerst deine E-Mail-Adresse."
+    return "Bitte bestätige zuerst deine E-Mail-Adresse."
   }
   return message
 }
@@ -102,7 +102,7 @@ export function AuthForm({
             }}
             className="w-full rounded-md border border-border bg-transparent px-3 py-2 text-xs font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Passwort zuruecksetzen oder erstmals festlegen
+            Passwort zurücksetzen oder erstmals festlegen
           </button>
         </div>
       )}
@@ -144,7 +144,7 @@ export function AuthForm({
       const credentialsError = isInvalidCredentials(error.message)
       setError(
         credentialsError
-          ? "Anmeldung mit Passwort nicht moeglich. Das Passwort ist falsch oder fuer dieses Konto wurde noch kein Passwort festgelegt."
+          ? "Anmeldung mit Passwort nicht möglich. Das Passwort ist falsch oder für dieses Konto wurde noch kein Passwort festgelegt."
           : mapSupabaseError(error.message),
       )
       setLoginErrorIsCredentials(credentialsError)
@@ -226,7 +226,7 @@ export function AuthForm({
       <div className="space-y-4">
         <h2 className="text-lg font-semibold text-foreground">Passwort vergessen?</h2>
         <p className="text-sm text-muted-foreground">
-          Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zuruecksetzen.
+          Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen.
         </p>
 
         {errorBanner}
@@ -257,7 +257,7 @@ export function AuthForm({
           }}
           className="text-sm text-primary hover:underline"
         >
-          Zurueck zur Anmeldung
+          Zurück zur Anmeldung
         </button>
       </div>
     )

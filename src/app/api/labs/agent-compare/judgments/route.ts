@@ -56,18 +56,21 @@ const missingInfoKeySchema = z.enum([
   "recommendation_goal",
 ])
 
-const missingInfoLabelSchema = z.enum([
-  "Haardicke",
-  "Kopfhaut-Typ",
-  "Kopfhaut-Beschwerden",
-  "Haarmuster",
-  "Haardichte",
-  "Pflegebedarf",
-  "Styling-Kontext",
-  "Oel-Zweck",
-  "Protein-/Feuchtigkeitsbalance",
-  "Einsatzziel",
-])
+const missingInfoLabelSchema = z.preprocess(
+  (value) => (value === "Oel-Zweck" ? "Öl-Zweck" : value),
+  z.enum([
+    "Haardicke",
+    "Kopfhaut-Typ",
+    "Kopfhaut-Beschwerden",
+    "Haarmuster",
+    "Haardichte",
+    "Pflegebedarf",
+    "Styling-Kontext",
+    "Öl-Zweck",
+    "Protein-/Feuchtigkeitsbalance",
+    "Einsatzziel",
+  ]),
+)
 
 const unsupportedRequestedSignalSchema = z.object({
   field: z.union([

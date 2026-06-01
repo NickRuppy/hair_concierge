@@ -68,7 +68,7 @@ test("projectBuildOrFixRoutinePlan projects a thin agent-facing routine payload"
     frequency: "Alle 2-3 Tage",
     reasons: [
       "Shampoo ist bereits ein vorhandener Startpunkt in deiner Routine.",
-      "Shampoo bleibt der feste Startpunkt fuer die Kopfhaut und die Waschfrequenz.",
+      "Shampoo bleibt der feste Startpunkt für die Kopfhaut und die Waschfrequenz.",
       "Die Kopfhaut ist hier ein echtes Steuersignal (Ausgeglichen).",
     ],
     caveats: [],
@@ -259,7 +259,7 @@ test("projectRoutinePlan exposes priority context without changing basics scorin
     ["base-shampoo", "base-conditioner", "occasional-hair-reset"],
   )
   assert.equal(result.priority_context?.selected_step_id, "occasional-hair-reset")
-  assert.match(result.priority_context?.selected_reason ?? "", /Rueckstaende|Reset|Build-up|Oel/i)
+  assert.match(result.priority_context?.selected_reason ?? "", /Rückstände|Reset|Build-up|Öl/i)
   assert.ok(result.priority_context?.adjacent_levers.some((lever) => lever.category === "leave_in"))
 })
 
@@ -438,5 +438,5 @@ test("projectRoutinePlan marks existing shampoo as keep and additions as next st
   assert.equal(shampooStep?.action, "keep")
   assert.match(shampooStep?.reasons.join(" ") ?? "", /bereits|schon|vorhanden|Startpunkt/i)
   assert.equal(conditionerStep?.action, "add")
-  assert.match(conditionerStep?.reasons.join(" ") ?? "", /naechst|hinzufuegen|ergaenzen/i)
+  assert.match(conditionerStep?.reasons.join(" ") ?? "", /nächst|hinzufügen|ergänzen/i)
 })

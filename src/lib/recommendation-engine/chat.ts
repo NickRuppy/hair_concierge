@@ -35,11 +35,11 @@ const ROUTER_SLOT_KEYS = [
 type RouterSlotKey = (typeof ROUTER_SLOT_KEYS)[number]
 
 const SLOT_QUESTIONS: Record<RouterSlotKey, string> = {
-  problem: "Was genau ist dein Anliegen? Beschreib mir, was dich an deinen Haaren stoert.",
-  duration: "Seit wann faellt dir das auf? Hat sich kuerzlich etwas veraendert?",
+  problem: "Was genau ist dein Anliegen? Beschreib mir, was dich an deinen Haaren stört.",
+  duration: "Seit wann fällt dir das auf? Hat sich kürzlich etwas verändert?",
   products_tried: "Was benutzt du aktuell - Shampoo, Conditioner oder Leave-in?",
-  routine: "Wie sieht deine Routine aus? Wie oft waeschst du deine Haare?",
-  special_circumstances: "Gibt es besondere Umstaende wie Faerben, Hitze oder Medikamente?",
+  routine: "Wie sieht deine Routine aus? Wie oft wäschst du deine Haare?",
+  special_circumstances: "Gibt es besondere Umstände wie Färben, Hitze oder Medikamente?",
 }
 
 const SLOT_PRIORITY: RouterSlotKey[] = [
@@ -52,8 +52,7 @@ const SLOT_PRIORITY: RouterSlotKey[] = [
 
 const SHAMPOO_CLARIFICATION_QUESTIONS = {
   thickness: "Ist dein Haar eher fein, mittel oder dick?",
-  scalp_type:
-    "Wie wuerdest du deine Kopfhaut beschreiben - eher fettig, trocken oder ausgeglichen?",
+  scalp_type: "Wie würdest du deine Kopfhaut beschreiben - eher fettig, trocken oder ausgeglichen?",
   scalp_condition:
     "Hast du aktuell Kopfhautbeschwerden - keine, Schuppen, trockene Schuppen oder gereizte Kopfhaut?",
 } as const
@@ -61,7 +60,7 @@ const SHAMPOO_CLARIFICATION_QUESTIONS = {
 const CONDITIONER_CLARIFICATION_QUESTIONS = {
   thickness: "Ist dein Haar eher fein, mittel oder dick?",
   protein_moisture_balance:
-    "Hast du mal den Zugtest gemacht? Einzelnes Haar ziehen - bricht es direkt, dehnt es sich, oder federt es zurueck?",
+    "Hast du mal den Zugtest gemacht? Einzelnes Haar ziehen - bricht es direkt, dehnt es sich, oder federt es zurück?",
 } as const
 
 const LEAVE_IN_CLARIFICATION_QUESTIONS = {
@@ -69,15 +68,15 @@ const LEAVE_IN_CLARIFICATION_QUESTIONS = {
   thickness: "Ist dein Haar eher fein, mittel oder dick?",
   density: "Hast du eher wenig, mittel viele oder viele Haare?",
   care_signal:
-    "Was soll deine Pflege gerade vor allem leisten - eher Frizz baendigen, Feuchtigkeit geben, reparieren, Definition geben oder Schutz vor Hitze?",
+    "Was soll deine Pflege gerade vor allem leisten - eher Frizz bändigen, Feuchtigkeit geben, reparieren, Definition geben oder Schutz vor Hitze?",
   styling_signal:
-    "Was machst du nach dem Waschen meistens - lufttrocknen, ohne Hitze stylen oder mit Foehn/Hitzetools arbeiten?",
+    "Was machst du nach dem Waschen meistens - lufttrocknen, ohne Hitze stylen oder mit Föhn/Hitzetools arbeiten?",
 } as const
 
 const OIL_CLARIFICATION_QUESTIONS = {
   thickness: "Ist dein Haar eher fein, mittel oder dick?",
   oil_purpose:
-    "Wofuer moechtest du das Oel vor allem nutzen - fuer Hair Oiling vor dem Waschen, als Styling-Finish gegen Frizz/mehr Glanz oder als leichtes Trocken-Oel?",
+    "Wofür möchtest du das Öl vor allem nutzen - für Hair Oiling vor dem Waschen, als Styling-Finish gegen Frizz/mehr Glanz oder als leichtes Trocken-Öl?",
 } as const
 
 function getMissingRouterSlots(filters: Record<string, string | string[] | null>): RouterSlotKey[] {

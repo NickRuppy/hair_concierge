@@ -71,11 +71,11 @@ function deriveConcernSignals(hairProfile: HairProfile | null): string[] {
   }
 
   if (hairProfile?.concerns.includes("dryness")) {
-    signals.push("Trockene Laengen")
+    signals.push("Trockene Längen")
   }
 
   if (hairProfile?.concerns.includes("frizz")) {
-    signals.push("Frizzige Laengen")
+    signals.push("Frizzige Längen")
   }
 
   return signals

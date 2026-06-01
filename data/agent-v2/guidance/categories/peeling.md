@@ -87,7 +87,7 @@ If the user asks whether peeling is right for them, for example "Ist Kopfhautpee
 - care_category: peeling
 - requires_tool: false unless product-specific
 
-If the user asks for a type/kind of peeling, not concrete products, for example "Welche Art von Kopfhautpeeling ist bei oeligem Ansatz sinnvoll?" or "Was ist besser: mechanisches oder chemisches Kopfhautpeeling?":
+If the user asks for a type/kind of peeling, not concrete products, for example "Welche Art von Kopfhautpeeling ist bei öligem Ansatz sinnvoll?" or "Was ist besser: mechanisches oder chemisches Kopfhautpeeling?":
 - primary_intent: category_education
 - product_request_kind: category_education
 - care_category: peeling
@@ -193,7 +193,7 @@ If symptoms are active or significant, do not recommend stronger exfoliation. Su
 If the user links burning, itching, shedding, irritation, or similar symptoms to peeling, mention the suspected trigger in the safety wording, but keep care_category none and do not add unsupported trigger-category fields.
 
 ## German Answer Shape
-Start by separating `Rueckstaende/oelige Kopfhaut` from `gereizte Kopfhaut`.
+Start by separating `Rückstände/ölige Kopfhaut` from `gereizte Kopfhaut`.
 
 If it fits, frame peeling as occasional scalp-only support before or during a wash, with gentle pressure, thorough rinsing, and normal conditioner or length care afterward.
 
@@ -203,7 +203,7 @@ Then explain:
 3. why persistent flakes, burning, pain, redness, wounds, or shedding should not be solved by stronger exfoliation
 4. whether product choice, exact scalp-use protocol, or treatment-like claims need product data
 
-Use practical German terms like `Kopfhautpeeling`, `Rueckstaende`, `oeliger Ansatz`, `sanft`, `selten`, `nicht schrubben`, and `bei Brennen stoppen`.
+Use practical German terms like `Kopfhautpeeling`, `Rückstände`, `öliger Ansatz`, `sanft`, `selten`, `nicht schrubben`, and `bei Brennen stoppen`.
 
 ## Do Not
 - Do not diagnose or promise flake, itch, inflammation, dandruff, infection, or hair-loss treatment.

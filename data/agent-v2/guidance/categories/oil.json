@@ -61,13 +61,13 @@
       "rule_id": "category.oil.routine_explanation_vs_mutation",
       "severity": "block",
       "source": "categories/oil.md",
-      "message": "Placement/order questions such as 'Kommt Oel vor oder nach Leave-in?' are routine_explanation with routine_intent none unless the user asks to add, remove, replace, or change saved/current routine state. Do not call build_or_fix_routine, return routine payloads, or include routine_step_ids for ordering-only questions; saved/current routine changes require build_or_fix_routine."
+      "message": "Placement/order questions such as 'Kommt Öl vor oder nach Leave-in?' are routine_explanation with routine_intent none unless the user asks to add, remove, replace, or change saved/current routine state. Do not call build_or_fix_routine, return routine payloads, or include routine_step_ids for ordering-only questions; saved/current routine changes require build_or_fix_routine."
     },
     {
       "rule_id": "category.oil.lightweight_mask_over_oil",
       "severity": "block",
       "source": "categories/oil.md",
-      "message": "When the user asks 'Maske oder Oel?' after dry/frizzy lengths and a lightweight routine goal, do not make oil the main care add-on; prefer a light occasional mask and keep oil only as a tiny finish if needed."
+      "message": "When the user asks 'Maske oder Öl?' after dry/frizzy lengths and a lightweight routine goal, do not make oil the main care add-on; prefer a light occasional mask and keep oil only as a tiny finish if needed."
     },
     {
       "rule_id": "category.oil.safety_care_category_none",

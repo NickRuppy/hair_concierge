@@ -482,7 +482,7 @@ test("validator requires category guidance for category education answers", () =
       ],
     },
     payload: {
-      user_facing_answer_de: "Bondbuilder sind Aufbaupflege fuer strukturell strapaziertes Haar.",
+      user_facing_answer_de: "Bondbuilder sind Aufbaupflege für strukturell strapaziertes Haar.",
       category_or_topic: "bondbuilder",
       key_points_de: ["Sie sind nicht dasselbe wie normale Pflege."],
       next_step_offer_de: null,
@@ -591,7 +591,7 @@ test("validator blocks raw internal labels in visible payload recommendation fie
         recommendations: [
           {
             product_id: "prod_1",
-            reason_de: "Passt fuer Goals und deep_dive.",
+            reason_de: "Passt für Goals und deep_dive.",
             usage_de: null,
             caveat_de: null,
           },
@@ -634,7 +634,7 @@ test("validator blocks internal product-ranking language in user-facing copy", (
       payload: {
         ...baseAnswer.payload,
         user_facing_answer_de:
-          "**Test Shampoo** passt, auch wenn es laut Auswahl eher ein etwas schwaecherer Treffer ist.",
+          "**Test Shampoo** passt, auch wenn es laut Auswahl eher ein etwas schwächerer Treffer ist.",
       },
     },
     baseValidationContext,
@@ -700,7 +700,7 @@ test("validator blocks bare Ja opening for non-confirmation user message", () =>
   const result = validateAgentV2FinalAnswer(
     placementOnlyAdviceAnswer(
       "Welche Spuelung passt zu feinem Haar?",
-      "Ja - bei feinem Haar wuerde ich leichte Pflege nehmen.",
+      "Ja - bei feinem Haar würde ich leichte Pflege nehmen.",
     ),
     {
       ...baseValidationContext,
@@ -718,7 +718,7 @@ test("validator blocks bare Ja opening for non-confirmation user message", () =>
 
 test("validator allows Ja opening after explicit confirmation", () => {
   const result = validateAgentV2FinalAnswer(
-    placementOnlyAdviceAnswer("Ja", "Ja - bei feinem Haar wuerde ich leichte Pflege nehmen."),
+    placementOnlyAdviceAnswer("Ja", "Ja - bei feinem Haar würde ich leichte Pflege nehmen."),
     {
       ...baseValidationContext,
       selectedProductProjections: [],
@@ -756,6 +756,120 @@ test("validator warns on catalog classification phrasing without failing validat
   )
 })
 
+test("validator warns on representative ASCII German orthography tokens without failing validation", async (t) => {
+  const cases = [
+    { label: "ue", text: "Fuer die Pflege gilt: sanft verteilen." },
+    { label: "ae", text: "Die Laengen brauchen nur eine kleine Menge." },
+    { label: "oe", text: "Oel bitte nur sparsam in die Spitzen geben." },
+    { label: "ss-heisst", text: "Das heisst: kurz einwirken lassen." },
+    { label: "ss-gross", text: "Gross gedacht: weniger Produkt ist oft besser." },
+    { label: "ss-grosse", text: "Eine grosse Menge ist meistens nicht nötig." },
+    { label: "ss-grossen", text: "Bei grossen Mengen wird feines Haar schneller schwer." },
+    { label: "ss-ausser", text: "Ausser am Ansatz darf die Pflege in die Längen." },
+    { label: "ss-ausserdem", text: "Ausserdem hilft gründliches Ausspülen." },
+    { label: "ss-weiss", text: "Ich weiss, dass weniger Produkt oft reicht." },
+  ]
+
+  for (const testCase of cases) {
+    await t.test(testCase.label, () => {
+      const answer = {
+        ...baseAnswer,
+        answer_mode: "general_advice",
+        request_interpretation: requestInterpretation({
+          primary_intent: "general_advice",
+          product_request_kind: "none",
+          routine_intent: "none",
+          care_category: "none",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "Wie pflege ich meine Laengen?",
+        }),
+        tool_grounding: {
+          ...baseAnswer.tool_grounding,
+          used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
+          used_product_tool: false,
+          used_routine_tool: false,
+          product_ids: [],
+          routine_step_ids: [],
+          hard_rule_ids: [],
+        },
+        payload: {
+          user_facing_answer_de: testCase.text,
+          category_or_topic: "general_advice",
+          key_points_de: [testCase.text],
+          next_step_offer_de: null,
+        },
+      }
+
+      const result = validateAgentV2FinalAnswer(answer, {
+        ...baseValidationContext,
+        selectedProductProjections: [],
+        toolCallHistory: [],
+        latestUserMessage: "Wie pflege ich meine Laengen?",
+        recentEvidenceText: "Wie pflege ich meine Laengen?",
+        knownHardRuleIds: [],
+      })
+
+      assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+      assert.equal(result.errors.length, 0)
+      assert.ok(
+        result.warnings.some(
+          (warning) => warning.validator_id === "user_facing_ascii_german_orthography",
+        ),
+      )
+    })
+  }
+})
+
+test("validator does not warn on ordinary ue letter pairs or standard German orthography", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "general_advice",
+    request_interpretation: requestInterpretation({
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "conditioner",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Welche Feuchtigkeit fuer Conditioner?",
+    }),
+    tool_grounding: {
+      ...baseAnswer.tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "conditioner"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Heute reicht eine neue, nicht zu teure Pflege mit Feuchtigkeit für die Längen.",
+      category_or_topic: "conditioner",
+      key_points_de: ["Feuchtigkeit und gründliches Ausspülen sind möglich."],
+      next_step_offer_de: null,
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    toolCallHistory: [],
+    latestUserMessage: "Welche Feuchtigkeit fuer Conditioner?",
+    recentEvidenceText: "Welche Feuchtigkeit fuer Conditioner?",
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.equal(
+    result.warnings.some(
+      (warning) => warning.validator_id === "user_facing_ascii_german_orthography",
+    ),
+    false,
+  )
+})
+
 test("validator allows cosmetic treatment wording for frizz", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -763,7 +877,7 @@ test("validator allows cosmetic treatment wording for frizz", () => {
       payload: {
         ...baseAnswer.payload,
         user_facing_answer_de:
-          "**Test Shampoo** behandelt Frizz kosmetisch und macht die Laengen glaetter.",
+          "**Test Shampoo** behandelt Frizz kosmetisch und macht die Längen glätter.",
       },
     },
     baseValidationContext,
@@ -779,7 +893,7 @@ test("validator allows public styling tool wording", () => {
       payload: {
         ...baseAnswer.payload,
         user_facing_answer_de:
-          "**Test Shampoo** passt; wenn du ein Styling-Tool nutzt, ist Hitzeschutz fuer die Laengen sinnvoll.",
+          "**Test Shampoo** passt; wenn du ein Styling-Tool nutzt, ist Hitzeschutz für die Längen sinnvoll.",
       },
     },
     baseValidationContext,
@@ -816,7 +930,7 @@ test("validator accepts natural product fit sentences", () => {
       payload: {
         ...baseAnswer.payload,
         user_facing_answer_de:
-          "**Test Shampoo** passt gut, weil es leicht reinigt und dein feines Haar nicht unnoetig beschwert.",
+          "**Test Shampoo** passt gut, weil es leicht reinigt und dein feines Haar nicht unnötig beschwert.",
       },
     },
     baseValidationContext,
@@ -1117,8 +1231,8 @@ test("validator allows decorative quote marks and punctuation differences in evi
           product_ids: [],
         },
         payload: {
-          user_facing_answer_de: "Bei juckender und geroeteter Kopfhaut wuerde ich mild bleiben.",
-          boundary_reason_de: "Moeglich medizinischer Kopfhautkontext.",
+          user_facing_answer_de: "Bei juckender und geröteter Kopfhaut würde ich mild bleiben.",
+          boundary_reason_de: "Möglich medizinischer Kopfhautkontext.",
           next_step_de: null,
         },
       },
@@ -1198,7 +1312,7 @@ test("validator allows evidence quotes from active routine visible step labels",
         ],
         comparison_notes_de: [],
         usage_notes_de: [],
-        next_step_offer_de: "Danach kannst du zur Routine zurueckgehen.",
+        next_step_offer_de: "Danach kannst du zur Routine zurückgehen.",
       },
     },
     {
@@ -1446,8 +1560,8 @@ test("validator blocks incomplete routine prose that omits visible steps", () =>
           {
             step_id: "step_conditioner",
             label_de: "Conditioner",
-            action_de: "In Laengen und Spitzen geben.",
-            frequency_de: "Nach jeder Waesche",
+            action_de: "In Längen und Spitzen geben.",
+            frequency_de: "Nach jeder Wäsche",
             reason_de: "Basis der Pflege.",
           },
         ],
@@ -1601,13 +1715,13 @@ test("validator blocks incomplete routine product deep dive prose that omits the
           {
             product_id: "prod_1",
             reason_de: "Passt als leichter erster Zusatzhebel.",
-            usage_de: "Sparsam in Laengen und Spitzen.",
+            usage_de: "Sparsam in Längen und Spitzen.",
             caveat_de: null,
           },
         ],
         comparison_notes_de: [],
-        usage_notes_de: ["Sparsam in Laengen und Spitzen."],
-        next_step_offer_de: "Danach gehen wir zur Routine zurueck.",
+        usage_notes_de: ["Sparsam in Längen und Spitzen."],
+        next_step_offer_de: "Danach gehen wir zur Routine zurück.",
       },
     },
     {
@@ -1658,8 +1772,8 @@ test("validator requires blocked answers to render the actual blocker, not only 
       },
       payload: {
         user_facing_answer_de:
-          "Mit dieser Einschraenkung kann ich kein konkretes Produkt empfehlen.",
-        blocking_constraints: ["keine geeigneten Produkte wegen deiner Ausschluesse"],
+          "Mit dieser Einschränkung kann ich kein konkretes Produkt empfehlen.",
+        blocking_constraints: ["keine geeigneten Produkte wegen deiner Ausschlüsse"],
         safe_alternative_de: null,
       },
     },
@@ -1690,7 +1804,7 @@ test("validator rejects unasked product cards in general advice", () => {
       payload: {
         user_facing_answer_de: "Eine Maske ist optional.",
         category_or_topic: "mask",
-        key_points_de: ["Eine Maske hilft bei zusaetzlichem Pflegebedarf."],
+        key_points_de: ["Eine Maske hilft bei zusätzlichem Pflegebedarf."],
         next_step_offer_de: "Ich kann dir danach eine passende Maske empfehlen.",
       },
     },
@@ -1749,9 +1863,9 @@ test("validator requires selected products to be surfaced for concrete category-
         product_ids: [],
       },
       payload: {
-        user_facing_answer_de: "Eine feuchtigkeitsspendende Spuelung passt hier am besten.",
+        user_facing_answer_de: "Eine feuchtigkeitsspendende Spülung passt hier am besten.",
         category_or_topic: "conditioner",
-        key_points_de: ["Achte auf Feuchtigkeit und mittlere Pflegeintensitaet."],
+        key_points_de: ["Achte auf Feuchtigkeit und mittlere Pflegeintensität."],
         next_step_offer_de: null,
       },
     },
@@ -1799,7 +1913,7 @@ test("validator allows general category comparison without product fulfillment",
       payload: {
         user_facing_answer_de: "Conditioner ist die Basis, eine Maske ist eher Zusatzpflege.",
         category_or_topic: "conditioner_vs_mask",
-        key_points_de: ["Conditioner regelmaessig, Maske nur bei Extra-Bedarf."],
+        key_points_de: ["Conditioner regelmäßig, Maske nur bei Extra-Bedarf."],
         next_step_offer_de: null,
       },
     },
@@ -1960,7 +2074,7 @@ test("validator allows routine product asks as product recommendations with rout
       },
       payload: {
         ...baseAnswer.payload,
-        next_step_offer_de: "Danach gehen wir zur Routine zurueck.",
+        next_step_offer_de: "Danach gehen wir zur Routine zurück.",
       },
     },
     {
@@ -2013,7 +2127,7 @@ test("validator bases option count on projections relevant to the recommended pr
         recommendations: [
           {
             product_id: "prod_current",
-            reason_de: "Passt fuer die aktuelle Anwendung.",
+            reason_de: "Passt für die aktuelle Anwendung.",
             usage_de: null,
             caveat_de: null,
           },
@@ -2159,8 +2273,8 @@ test("validator validates every answer mode payload", () => {
       },
       payload: {
         user_facing_answer_de:
-          "Mit deiner Einschraenkung gibt es aktuell keine geeigneten Produkte wegen deiner Ausschluesse.",
-        blocking_constraints: ["keine geeigneten Produkte wegen deiner Ausschluesse"],
+          "Mit deiner Einschränkung gibt es aktuell keine geeigneten Produkte wegen deiner Ausschlüsse.",
+        blocking_constraints: ["keine geeigneten Produkte wegen deiner Ausschlüsse"],
         safe_alternative_de: null,
       },
     },
@@ -2183,9 +2297,9 @@ test("validator validates every answer mode payload", () => {
         product_ids: [],
       },
       payload: {
-        user_facing_answer_de: "Das sollte aerztlich abgeklart werden.",
-        boundary_reason_de: "Moeglich medizinischer Kontext.",
-        next_step_de: "Bitte aerztlich abklaeren lassen.",
+        user_facing_answer_de: "Das sollte ärztlich abgeklärt werden.",
+        boundary_reason_de: "Möglich medizinischer Kontext.",
+        next_step_de: "Bitte ärztlich abklären lassen.",
       },
     },
   } as const
@@ -2229,7 +2343,7 @@ test("validator rejects malformed mode payloads", () => {
   const result = validateAgentV2FinalAnswer(
     {
       ...baseAnswer,
-      payload: { user_facing_answer_de: "Ich wuerde dir dieses Produkt empfehlen." },
+      payload: { user_facing_answer_de: "Ich würde dir dieses Produkt empfehlen." },
     },
     baseValidationContext,
   )
@@ -2260,9 +2374,9 @@ test("validator coerces constraint-shaped safety payloads", () => {
         hard_rule_ids: ["safety.no_diagnosis"],
       },
       payload: {
-        user_facing_answer_de: "Bitte pausiere das Produkt und lass es abklaeren.",
+        user_facing_answer_de: "Bitte pausiere das Produkt und lass es abklären.",
         blocking_constraints: ["Brennen der Kopfhaut"],
-        safe_alternative_de: "Pausiere das Produkt und hole professionelle Einschaetzung.",
+        safe_alternative_de: "Pausiere das Produkt und hole professionelle Einschätzung.",
       },
     },
     {
@@ -2559,14 +2673,14 @@ test("validator allows first category-specific routine mutation when current rou
       },
       payload: {
         user_facing_answer_de:
-          "Deine Basis bleibt Shampoo + Conditioner. Den Reset wuerde ich nur gelegentlich einbauen.",
+          "Deine Basis bleibt Shampoo + Conditioner. Den Reset würde ich nur gelegentlich einbauen.",
         routine_layer: "problems",
         visible_steps: [
           {
             step_id: "step_baseline",
             label_de: "Shampoo + Conditioner",
             action_de: "Als Basis beibehalten.",
-            frequency_de: "regelmaessig",
+            frequency_de: "regelmäßig",
             reason_de: "Die bestehende Routine bleibt der Ausgangspunkt.",
           },
           {
@@ -2574,7 +2688,7 @@ test("validator allows first category-specific routine mutation when current rou
             label_de: "Reset",
             action_de: "Gelegentlich mit Tiefenreinigung einbauen.",
             frequency_de: "gelegentlich",
-            reason_de: "Hilft bei Rueckstaenden, ohne die Basis zu ersetzen.",
+            reason_de: "Hilft bei Rückständen, ohne die Basis zu ersetzen.",
           },
         ],
         next_layer_options: ["goals", "problems"],
@@ -2641,10 +2755,10 @@ test("validator allows guidance-only general advice inside active routine thread
       },
       payload: {
         user_facing_answer_de:
-          "In deiner vereinfachten Routine waere Conditioner der Basis-Schritt; eine Maske ist eher optional.",
+          "In deiner vereinfachten Routine wäre Conditioner der Basis-Schritt; eine Maske ist eher optional.",
         category_or_topic: "conditioner_vs_mask",
         key_points_de: [
-          "Conditioner ist der regelmaessige Pflegeabschluss.",
+          "Conditioner ist der regelmäßige Pflegeabschluss.",
           "Maske ist ein Zusatz.",
         ],
         next_step_offer_de: "Wenn du magst, passe ich danach die Routine an.",
@@ -2952,7 +3066,7 @@ test("validator blocks routine layer regression using routine thread current lay
           {
             step_id: "step_conditioner",
             label_de: "Conditioner",
-            action_de: "Nach dem Waschen in die Laengen geben.",
+            action_de: "Nach dem Waschen in die Längen geben.",
             frequency_de: null,
             reason_de: "Basis.",
           },
@@ -3029,13 +3143,13 @@ test("validator requires routine tool for hand-rolled routine change advice", ()
       },
       payload: {
         user_facing_answer_de:
-          "Aendere den Conditioner auf mehr Feuchtigkeit, fuege ein Leave-in hinzu, nimm einmal pro Woche eine Maske und nutze etwas Oil gegen Frizz.",
+          "Ändere den Conditioner auf mehr Feuchtigkeit, füge ein Leave-in hinzu, nimm einmal pro Woche eine Maske und nutze etwas Öl gegen Frizz.",
         category_or_topic: "routine_change",
         key_points_de: [
           "Conditioner wechseln.",
-          "Leave-in ergaenzen.",
-          "Maske hinzufuegen.",
-          "Oil verwenden.",
+          "Leave-in ergänzen.",
+          "Maske hinzufügen.",
+          "Öl verwenden.",
         ],
         next_step_offer_de: null,
       },
@@ -3060,7 +3174,7 @@ test("validator allows placement-only dry shampoo advice without routine tooling
   const result = validateAgentV2FinalAnswer(
     placementOnlyAdviceAnswer(
       message,
-      "Trockenshampoo kommt normalerweise zwischen Waeschen an den Ansatz, nicht als pflegender Waschschritt.",
+      "Trockenshampoo kommt normalerweise zwischen Wäschen an den Ansatz, nicht als pflegender Waschschritt.",
     ),
     {
       ...baseValidationContext,
@@ -3081,7 +3195,7 @@ test("validator allows placement-only oil and leave-in advice without routine to
   const result = validateAgentV2FinalAnswer(
     placementOnlyAdviceAnswer(
       message,
-      "Oel kommt meist nach Leave-in in die Laengen und Spitzen, damit es das Finish abrundet.",
+      "Öl kommt meist nach Leave-in in die Längen und Spitzen, damit es das Finish abrundet.",
     ),
     {
       ...baseValidationContext,
@@ -3183,7 +3297,7 @@ test("validator requires product tool and routine return path for routine produc
         return_path: [],
       },
       payload: {
-        user_facing_answer_de: "Dafuer passt ein leichter Conditioner.",
+        user_facing_answer_de: "Dafür passt ein leichter Conditioner.",
         recommendations: [],
         comparison_notes_de: [],
         usage_notes_de: [],
@@ -3247,17 +3361,17 @@ test("validator allows nullable next step offer for routine product recommendati
       },
       payload: {
         user_facing_answer_de:
-          "Dann nimm **Test Shampoo** sparsam in Laengen und Spitzen. Bei deinem Profil wuerde ich es erstmal klein dosieren.",
+          "Dann nimm **Test Shampoo** sparsam in Längen und Spitzen. Bei deinem Profil würde ich es erstmal klein dosieren.",
         recommendations: [
           {
             product_id: "prod_1",
             reason_de: "Passt als Leave-in-Booster.",
-            usage_de: "Sparsam in Laengen und Spitzen.",
+            usage_de: "Sparsam in Längen und Spitzen.",
             caveat_de: null,
           },
         ],
         comparison_notes_de: [],
-        usage_notes_de: ["Sparsam in Laengen und Spitzen."],
+        usage_notes_de: ["Sparsam in Längen und Spitzen."],
         next_step_offer_de: null,
       },
     },
@@ -3304,15 +3418,15 @@ test("validator allows nullable next step offer for routine product recommendati
 test("validator blocks objective bad conversation closers", () => {
   const cases = [
     {
-      text: "Leave-in nutzt du in den Laengen. Moechtest du, dass ich dir mehr dazu erklaere?",
+      text: "Leave-in nutzt du in den Längen. Möchtest du, dass ich dir mehr dazu erkläre?",
       validatorId: "bad_conversation_close_generic",
     },
     {
-      text: "Das ist eher ein Reset-Thema. Schick mir den Link, dann pruefe ich, ob es chelatiert.",
+      text: "Das ist eher ein Reset-Thema. Schick mir den Link, dann prüfe ich, ob es chelatiert.",
       validatorId: "bad_conversation_close_infeasible",
     },
     {
-      text: "Die Routine passt so. Soll ich dir die Dosierung erklaeren? Oder soll ich dir Produkte zeigen?",
+      text: "Die Routine passt so. Soll ich dir die Dosierung erklären? Oder soll ich dir Produkte zeigen?",
       validatorId: "bad_conversation_close_multi_question",
     },
     {
@@ -3321,23 +3435,23 @@ test("validator blocks objective bad conversation closers", () => {
       answerMode: "product_recommendation",
     },
     {
-      text: "Das kann ich so nicht sicher sagen. Kopier mir die INCI rein, dann pruefe ich die Inhaltsstoffe.",
+      text: "Das kann ich so nicht sicher sagen. Kopier mir die INCI rein, dann prüfe ich die Inhaltsstoffe.",
       validatorId: "bad_conversation_close_unsupported_lane",
     },
     {
-      text: "Das kann ich so nicht sicher sagen. Wenn du willst, pruefe ich dir die INCI.",
+      text: "Das kann ich so nicht sicher sagen. Wenn du willst, prüfe ich dir die INCI.",
       validatorId: "bad_conversation_close_unsupported_lane",
     },
     {
       text:
-        "Dann wuerde ich dir als erstes ein leichtes Leave-in geben. Eine Maske waere eher der zweite Schritt, falls der Frizz stark mit Bruch zusammenhaengt.\n\n" +
-        "Wenn du magst, kann ich dir danach noch sagen, ob eher ein Leave-in oder eine Maske fuer dich der bessere naechste Schritt waere.",
+        "Dann würde ich dir als erstes ein leichtes Leave-in geben. Eine Maske wäre eher der zweite Schritt, falls der Frizz stark mit Bruch zusammenhängt.\n\n" +
+        "Wenn du magst, kann ich dir danach noch sagen, ob eher ein Leave-in oder eine Maske für dich der bessere nächste Schritt wäre.",
       validatorId: "bad_conversation_close_redundant_comparison",
     },
     {
       text:
-        "Das klingt eher nach Rueckstaenden am Ansatz oder zu schwerer Pflege als nach zu wenig Waschen. Am ehesten wuerde ich testen: Shampoo nur am Ansatz, Conditioner nur in Laengen und Spitzen, keine schweren Produkte am Oberkopf.\n\n" +
-        "Wenn du magst, kann ich dir als Naechstes sagen, ob das bei dir eher nach Rueckstaenden, zu mildem Shampoo oder wirklich fettiger Kopfhaut klingt.",
+        "Das klingt eher nach Rückständen am Ansatz oder zu schwerer Pflege als nach zu wenig Waschen. Am ehesten würde ich testen: Shampoo nur am Ansatz, Conditioner nur in Längen und Spitzen, keine schweren Produkte am Oberkopf.\n\n" +
+        "Wenn du magst, kann ich dir als Nächstes sagen, ob das bei dir eher nach Rückständen, zu mildem Shampoo oder wirklich fettiger Kopfhaut klingt.",
       validatorId: "bad_conversation_close_redundant_source_triage",
     },
   ]
@@ -3374,7 +3488,7 @@ test("validator blocks objective bad conversation closers", () => {
             payload: {
               user_facing_answer_de: testCase.text,
               category_or_topic: "conversation_close",
-              key_points_de: ["Kurz erklaert."],
+              key_points_de: ["Kurz erklärt."],
               next_step_offer_de: null,
             },
           }
@@ -3426,9 +3540,9 @@ test("validator warns but does not block weak conversation closers", () => {
       },
       payload: {
         user_facing_answer_de:
-          "Bei feinem Haar wuerde ich zuerst Menge und Ansatzabstand pruefen. Das ist meistens der groesste Hebel, bevor du die ganze Kategorie wechselst. Dann schauen wir weiter.",
+          "Bei feinem Haar würde ich zuerst Menge und Ansatzabstand prüfen. Das ist meistens der größte Hebel, bevor du die ganze Kategorie wechselst. Dann schauen wir weiter.",
         category_or_topic: "platter conditioner",
-        key_points_de: ["Menge und Ansatzabstand pruefen."],
+        key_points_de: ["Menge und Ansatzabstand prüfen."],
         next_step_offer_de: null,
       },
     },
@@ -3473,9 +3587,9 @@ test("validator allows honest clean stop for unsupported INCI-list analysis", ()
       },
       payload: {
         user_facing_answer_de:
-          "INCI-Listen kann ich hier nicht verlaesslich pruefen oder bewerten. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
+          "INCI-Listen kann ich hier nicht verlässlich prüfen oder bewerten. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
         category_or_topic: "unsupported ingredient analysis",
-        key_points_de: ["INCI-Analyse ist kein unterstuetzter Beratungspfad."],
+        key_points_de: ["INCI-Analyse ist kein unterstützter Beratungspfad."],
         next_step_offer_de: null,
       },
     },
@@ -3528,18 +3642,18 @@ test("validator blocks carried routine step ids when active routine thread has n
       },
       payload: {
         user_facing_answer_de:
-          "**Test Shampoo** passt hier als leichter Zusatz, weil es dein feines Haar nicht unnoetig beschwert.",
+          "**Test Shampoo** passt hier als leichter Zusatz, weil es dein feines Haar nicht unnötig beschwert.",
         recommendations: [
           {
             product_id: "prod_1",
             reason_de: "Passt als leichter Zusatz.",
-            usage_de: "Sparsam in die Laengen.",
+            usage_de: "Sparsam in die Längen.",
             caveat_de: null,
           },
         ],
         comparison_notes_de: [],
-        usage_notes_de: ["Sparsam in die Laengen."],
-        next_step_offer_de: "Danach gehen wir zur Routine zurueck.",
+        usage_notes_de: ["Sparsam in die Längen."],
+        next_step_offer_de: "Danach gehen wir zur Routine zurück.",
       },
     },
     {
@@ -3601,18 +3715,18 @@ test("validator accepts routine product recommendation step ids from active rout
         return_path: ["routine"],
       },
       payload: {
-        user_facing_answer_de: "**Test Shampoo** passt fuer den ersten Zusatz.",
+        user_facing_answer_de: "**Test Shampoo** passt für den ersten Zusatz.",
         recommendations: [
           {
             product_id: "prod_1",
             reason_de: "Passt als leichter Zusatz.",
-            usage_de: "Sparsam in die Laengen.",
+            usage_de: "Sparsam in die Längen.",
             caveat_de: null,
           },
         ],
         comparison_notes_de: [],
-        usage_notes_de: ["Sparsam in die Laengen."],
-        next_step_offer_de: "Danach gehen wir zur Routine zurueck.",
+        usage_notes_de: ["Sparsam in die Längen."],
+        next_step_offer_de: "Danach gehen wir zur Routine zurück.",
       },
     },
     {
@@ -3680,18 +3794,18 @@ test("validator blocks routine product recommendation context categories that di
         return_path: ["routine"],
       },
       payload: {
-        user_facing_answer_de: "**Test Shampoo** passt fuer den ersten Zusatz.",
+        user_facing_answer_de: "**Test Shampoo** passt für den ersten Zusatz.",
         recommendations: [
           {
             product_id: "prod_1",
             reason_de: "Passt als leichter Zusatz.",
-            usage_de: "Sparsam in die Laengen.",
+            usage_de: "Sparsam in die Längen.",
             caveat_de: null,
           },
         ],
         comparison_notes_de: [],
-        usage_notes_de: ["Sparsam in die Laengen."],
-        next_step_offer_de: "Danach gehen wir zur Routine zurueck.",
+        usage_notes_de: ["Sparsam in die Längen."],
+        next_step_offer_de: "Danach gehen wir zur Routine zurück.",
       },
     },
     {
@@ -3764,18 +3878,18 @@ test("validator blocks routine product recommendation category that disagrees wi
         return_path: ["routine"],
       },
       payload: {
-        user_facing_answer_de: "**Test Shampoo** passt fuer diesen Schritt.",
+        user_facing_answer_de: "**Test Shampoo** passt für diesen Schritt.",
         recommendations: [
           {
             product_id: "prod_1",
             reason_de: "Passt als Pflege-Schritt.",
-            usage_de: "Sparsam in die Laengen.",
+            usage_de: "Sparsam in die Längen.",
             caveat_de: null,
           },
         ],
         comparison_notes_de: [],
-        usage_notes_de: ["Sparsam in die Laengen."],
-        next_step_offer_de: "Danach gehen wir zur Routine zurueck.",
+        usage_notes_de: ["Sparsam in die Längen."],
+        next_step_offer_de: "Danach gehen wir zur Routine zurück.",
       },
     },
     {
@@ -3850,7 +3964,7 @@ test("validator blocks ungrounded routine product recommendation step ids", () =
         ],
         comparison_notes_de: [],
         usage_notes_de: [],
-        next_step_offer_de: "Danach gehen wir zur Routine zurueck.",
+        next_step_offer_de: "Danach gehen wir zur Routine zurück.",
       },
     },
     {
