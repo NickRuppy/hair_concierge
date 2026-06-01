@@ -34,7 +34,6 @@ updates:
         dependency-type: production
         patterns:
           - "openai"
-          - "cohere-ai"
           - "@langfuse/*"
           - "@opentelemetry/*"
           - "@sentry/*"
@@ -52,7 +51,6 @@ updates:
           - "react-dom"
           - "@supabase/*"
           - "openai"
-          - "cohere-ai"
           - "@langfuse/*"
           - "@opentelemetry/*"
           - "@sentry/*"
