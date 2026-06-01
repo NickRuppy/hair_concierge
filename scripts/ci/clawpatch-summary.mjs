@@ -40,8 +40,25 @@ const slices = [
     patterns: ["src/app/api/chat", "src/lib/agent", "src/components/chat", "src/hooks/use-chat.ts"],
   },
   {
-    name: "RAG and memory",
-    patterns: ["src/lib/rag", "src/app/api/memory", "scripts/eval-retrieval.ts"],
+    name: "Chat memory, state, and traces",
+    patterns: [
+      "src/lib/chat-runtime",
+      "src/app/api/memory",
+      "src/app/api/chat",
+      "tests/user-memory.spec.ts",
+      "tests/conversation-state.spec.ts",
+      "tests/chat-debug-trace.spec.ts",
+    ],
+  },
+  {
+    name: "Product matching and catalog chunks",
+    patterns: [
+      "src/lib/product-matching",
+      "scripts/ingest-product-chunks.ts",
+      "scripts/eval-retrieval.ts",
+      "tests/product-matcher.spec.ts",
+      "tests/product-list-chunks.test.ts",
+    ],
   },
   {
     name: "Langfuse and eval loop",

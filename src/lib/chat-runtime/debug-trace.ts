@@ -1,4 +1,3 @@
-import type { RetrieveContextDebug, RetrievedChunk } from "@/lib/rag/retriever"
 import type {
   AgenticBlockedToolCall as RuntimeAgenticBlockedToolCall,
   AgenticExecutedToolCall as RuntimeAgenticExecutedToolCall,
@@ -19,6 +18,7 @@ import type {
   ConversationTurnStateTransition,
   CitationSource,
   ClassificationResult,
+  ContentChunk,
   HairProfile,
   LangfusePromptReference,
   Product,
@@ -35,6 +35,24 @@ const CONTENT_PREVIEW_LIMIT = 240
 const SUMMARY_ITEM_LIMIT = 3
 
 type AppAgenticToolLoopTrace = NonNullable<ChatTurnTrace["agentic_tool_loop"]>
+
+export interface RetrievedChunk extends ContentChunk {
+  similarity: number
+  weighted_similarity: number
+  retrieval_path?: "dense" | "lexical" | "hybrid"
+  dense_score?: number
+  lexical_score?: number
+  fused_score?: number
+}
+
+export interface RetrieveContextDebug {
+  subqueries: string[]
+  source_types: string[] | null
+  metadata_filter: Record<string, string> | null
+  candidate_count_before_rerank: number
+  reranked_count: number
+  fallback_used: boolean
+}
 
 export interface PipelineTraceDraft {
   request_id: string

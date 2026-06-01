@@ -1,10 +1,11 @@
 const CHAT_PREFIXES = [
   "src/lib/agent/",
   "src/lib/agent-v2/",
+  "src/lib/chat-runtime/",
   "src/lib/langfuse/",
   "src/lib/openai/",
+  "src/lib/product-matching/",
   "src/lib/recommendation-engine/",
-  "src/lib/rag/",
   "src/lib/routines/",
   "src/app/api/chat/",
   "data/agent-guidance/",
@@ -14,14 +15,11 @@ const CHAT_PREFIXES = [
 
 const CHAT_EXACT = [
   "docs/langfuse-quality-loop.md",
-  "src/lib/product-matching/matcher.ts",
 ]
+const CHAT_EXCLUDE = ["src/lib/product-matching/product-list-chunks.ts"]
 
 const RETRIEVAL_PREFIXES = [
-  "src/lib/rag/retrieval/",
-  "src/lib/rag/retriever.ts",
   "src/lib/product-matching/product-list-chunks.ts",
-  "src/lib/rag/retrieval-telemetry.ts",
   "scripts/ingest-",
   "scripts/eval-retrieval.ts",
   "supabase/migrations/",
@@ -64,8 +62,9 @@ export function hasFullCiMarker({ prTitle = "", prBody = "" } = {}) {
 
 export function classifyCiScope(files, prContext = {}) {
   const fullCi = hasFullCiMarker(prContext)
+  const chatFiles = files.filter((file) => !CHAT_EXCLUDE.includes(file))
   return {
-    chat_eval: fullCi || files.some((file) => matches(file, CHAT_PREFIXES, CHAT_EXACT)),
+    chat_eval: fullCi || chatFiles.some((file) => matches(file, CHAT_PREFIXES, CHAT_EXACT)),
     retrieval_eval:
       fullCi || files.some((file) => matches(file, RETRIEVAL_PREFIXES, RETRIEVAL_EXACT)),
     playwright_smoke:

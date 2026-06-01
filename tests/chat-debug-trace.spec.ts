@@ -13,7 +13,7 @@ import {
 } from "../src/lib/recommendation-engine/chat"
 import { summarizeAgentV2TraceForLangfuse } from "../src/lib/agent-v2/production/langfuse-observability"
 import { createDefaultConversationState } from "../src/lib/chat-runtime/conversation-state"
-import type { RetrievedChunk } from "../src/lib/rag/retriever"
+import type { RetrievedChunk } from "../src/lib/chat-runtime/debug-trace"
 import type {
   AgenticToolLoopTrace,
   ChatPromptSnapshot,

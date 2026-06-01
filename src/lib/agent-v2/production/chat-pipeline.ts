@@ -52,8 +52,7 @@ import {
   type AgentV2ConversationStateV2,
 } from "@/lib/agent-v2/production/persisted-session-state"
 import { loadAgentV2ConversationState as loadPersistedConversationState } from "@/lib/chat-runtime/conversation-state-store"
-import { buildPipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
-import type { PipelineParams, PipelineResult } from "@/lib/rag/contracts"
+import { buildPipelineTraceDraft, type PipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
 import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import {
   LANGFUSE_PROMPTS,
@@ -65,11 +64,17 @@ import { buildRecommendationEngineRuntimeFromPersistence } from "@/lib/recommend
 import type { EffectiveCareContext } from "@/lib/recommendation-engine/types"
 import { createAdminClient } from "@/lib/supabase/admin"
 import type {
+  ChatCategoryDecision,
   ChatPromptSnapshot,
   ClassificationResult,
+  ConversationTurnStateTransition,
+  EnrichedCitationSource,
   HairProfile,
+  IntentType,
   LangfusePromptReference,
   Message,
+  Product,
+  RouterDecision,
 } from "@/lib/types"
 import type { RoutineProduct } from "@/lib/vocabulary"
 
@@ -86,6 +91,30 @@ type AgentV2StoredProductProjection = Partial<AgentV2SelectProductsProjection>
 type AgentV2ProductionTraceTiming = {
   modelMs: number | null
   toolMs: number | null
+}
+
+export interface PipelineParams {
+  message: string
+  conversationId?: string
+  userId: string
+  requestId: string
+}
+
+export interface PipelineResult {
+  stream: ReadableStream<Uint8Array>
+  conversationId: string
+  intent: IntentType
+  matchedProducts: Product[]
+  sources: EnrichedCitationSource[]
+  routerDecision: RouterDecision
+  conversationStateTransition: ConversationTurnStateTransition
+  categoryDecision?: ChatCategoryDecision
+  engineTrace?: import("@/lib/types").RecommendationEngineTrace
+  retrievalSummary: {
+    final_context_count: number
+  }
+  debugTrace: PipelineTraceDraft
+  visibleFailure?: boolean
 }
 
 interface ProductionAgentV2PipelineDeps {

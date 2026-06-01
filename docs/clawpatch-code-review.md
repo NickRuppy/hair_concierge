@@ -88,6 +88,7 @@ npm run test:node
 The shared format command is intentionally unset because the historical repo is not globally Prettier-clean. Use changed-file formatting where relevant.
 
 For chat, recommendation, and trace work, add the relevant contract, Playwright, or eval commands from `package.json` before considering a branch ready.
+Use the current review-map slice names: `Chat memory, state, and traces` for runtime state/debug trace work, and `Product matching and catalog chunks` for catalog chunk ingestion or retrieval-eval changes.
 
 ## GitHub Automation
 
