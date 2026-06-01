@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test"
 import type { HairProfile } from "../src/lib/types"
-import type { MatchedProduct } from "../src/lib/rag/product-matcher"
+import type { MatchedProduct } from "../src/lib/product-matching/matcher"
 import {
   annotateShampooRecommendations,
   buildShampooClarificationQuestions,
@@ -9,7 +9,7 @@ import {
 } from "../src/lib/rag/shampoo-decision"
 import { deriveMaskDecision } from "../src/lib/rag/mask-reranker"
 import { computeChunkBoostedScore, type RetrievedChunk } from "../src/lib/rag/retriever"
-import { buildProductListChunks } from "../src/lib/rag/product-list-chunks"
+import { buildProductListChunks } from "../src/lib/product-matching/product-list-chunks"
 import {
   buildAssistantDecisionContext,
   buildDoneEventData,

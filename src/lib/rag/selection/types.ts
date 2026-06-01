@@ -1,4 +1,4 @@
-import type { MatchedProduct } from "@/lib/rag/product-matcher"
+import type { MatchedProduct } from "@/lib/product-matching/matcher"
 
 export interface SelectionResult {
   products: MatchedProduct[]

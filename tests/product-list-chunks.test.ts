@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { buildProductListChunks } from "../src/lib/rag/product-list-chunks"
+import { buildProductListChunks } from "../src/lib/product-matching/product-list-chunks"
 
 test("product list chunks understand hyphenated oil subtype labels", () => {
   const chunks = buildProductListChunks([

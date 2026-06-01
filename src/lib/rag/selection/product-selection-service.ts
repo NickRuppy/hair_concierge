@@ -1,4 +1,4 @@
-import { matchProducts } from "@/lib/rag/product-matcher"
+import { matchProducts } from "@/lib/product-matching/matcher"
 import {
   selectBondbuilderProductsWithEngine,
   selectConditionerProductsWithEngine,

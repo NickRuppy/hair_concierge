@@ -5,7 +5,7 @@ import type {
   MaskSignal,
   MaskType,
 } from "@/lib/types"
-import type { MatchedProduct } from "@/lib/rag/product-matcher"
+import type { MatchedProduct } from "@/lib/product-matching/matcher"
 import type { ProductMaskSpecs } from "@/lib/mask/constants"
 import { deriveMechanicalStressLevelFromBehaviors } from "@/lib/profile/signal-derivations"
 

@@ -13,7 +13,7 @@ import type {
   ShampooProfileField,
   ShampooRecommendationMetadata,
 } from "@/lib/types"
-import type { MatchedProduct } from "@/lib/rag/product-matcher"
+import type { MatchedProduct } from "@/lib/product-matching/matcher"
 
 const SHAMPOO_CLARIFICATION_QUESTIONS: Record<ShampooProfileField, string> = {
   thickness: "Ist dein Haar eher fein, mittel oder dick?",

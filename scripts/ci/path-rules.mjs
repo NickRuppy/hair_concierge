@@ -17,7 +17,7 @@ const CHAT_EXACT = ["docs/langfuse-quality-loop.md"]
 const RETRIEVAL_PREFIXES = [
   "src/lib/rag/retrieval/",
   "src/lib/rag/retriever.ts",
-  "src/lib/rag/product-list-chunks.ts",
+  "src/lib/product-matching/product-list-chunks.ts",
   "src/lib/rag/retrieval-telemetry.ts",
   "scripts/ingest-",
   "scripts/eval-retrieval.ts",

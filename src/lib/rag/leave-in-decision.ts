@@ -1,5 +1,5 @@
 import { deriveExpectedConditionerWeight } from "@/lib/rag/conditioner-decision"
-import type { MatchedProduct } from "@/lib/rag/product-matcher"
+import type { MatchedProduct } from "@/lib/product-matching/matcher"
 import type {
   HairProfile,
   LeaveInDecision,

@@ -1,5 +1,5 @@
 import type { HairProfile } from "@/lib/types"
-import type { MatchedProduct } from "@/lib/rag/product-matcher"
+import type { MatchedProduct } from "@/lib/product-matching/matcher"
 import type { ProductLeaveInSpecs } from "@/lib/leave-in/constants"
 import {
   buildLeaveInDecision,
@@ -13,11 +13,11 @@ import {
 export function rerankLeaveInProducts(
   candidates: MatchedProduct[],
   specs: ProductLeaveInSpecs[],
-  hairProfile: HairProfile | null
+  hairProfile: HairProfile | null,
 ): MatchedProduct[] {
   return rerankStrictLeaveInProducts(
     candidates,
     specs,
-    buildLeaveInDecision(hairProfile, candidates.length)
+    buildLeaveInDecision(hairProfile, candidates.length),
   )
 }

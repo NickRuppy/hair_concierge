@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test"
 import type { HairProfile } from "../src/lib/types"
-import type { MatchedProduct } from "../src/lib/rag/product-matcher"
+import type { MatchedProduct } from "../src/lib/product-matching/matcher"
 import type { ProductMaskSpecs } from "../src/lib/mask/constants"
 import { buildMaskConcernSearchOrder } from "../src/lib/rag/mask-mapper"
 import { deriveMaskDecision, rerankMaskProducts } from "../src/lib/rag/mask-reranker"

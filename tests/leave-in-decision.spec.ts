@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test"
 import type { HairProfile } from "../src/lib/types"
-import type { MatchedProduct } from "../src/lib/rag/product-matcher"
+import type { MatchedProduct } from "../src/lib/product-matching/matcher"
 import type { ProductLeaveInSpecs } from "../src/lib/leave-in/constants"
 import {
   buildLeaveInClarificationQuestions,

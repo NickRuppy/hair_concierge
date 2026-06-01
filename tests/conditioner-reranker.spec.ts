@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test"
 import { isConditionerCategory } from "../src/lib/conditioner/constants"
 import type { HairProfile } from "../src/lib/types"
-import type { MatchedProduct } from "../src/lib/rag/product-matcher"
+import type { MatchedProduct } from "../src/lib/product-matching/matcher"
 import type { ProductConditionerSpecs } from "../src/lib/conditioner/constants"
 import {
   buildConditionerClarificationQuestions,
