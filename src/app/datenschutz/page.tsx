@@ -171,13 +171,6 @@ export default function DatenschutzPage() {
                 </p>
               </div>
               <div>
-                <p className="font-medium text-foreground">Cohere, Inc. (USA)</p>
-                <p>
-                  Verarbeitung von Suchanfragen zur Verbesserung der Empfehlungsqualität.
-                  Übermittlung auf Grundlage von Standardvertragsklauseln.
-                </p>
-              </div>
-              <div>
                 <p className="font-medium text-foreground">Langfuse (EU)</p>
                 <p>
                   Überwachung und Analyse der KI-Interaktionen zur Qualitätssicherung. Daten werden

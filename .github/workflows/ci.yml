@@ -18,9 +18,8 @@ env:
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
   SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder' }}
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'sk-placeholder' }}
-  COHERE_API_KEY: ${{ secrets.COHERE_API_KEY || 'placeholder' }}
   HAS_LIVE_SUPABASE_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}
-  HAS_LIVE_AI_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' && secrets.OPENAI_API_KEY != '' && secrets.COHERE_API_KEY != '' }}
+  HAS_LIVE_AI_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' && secrets.OPENAI_API_KEY != '' }}
 
 jobs:
   detect-ci-scope:
