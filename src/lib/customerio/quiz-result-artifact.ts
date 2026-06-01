@@ -4,6 +4,7 @@ import type { QuizAnswers } from "@/lib/quiz/types"
 import type { CustomerIoTransactionalEmailPayload } from "./transactional"
 
 export const QUIZ_RESULT_ARTIFACT_MESSAGE_ID = "quiz_result_artifact"
+export const QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV = "CUSTOMERIO_QUIZ_RESULT_TRANSACTIONAL_MESSAGE_ID"
 export const QUIZ_RESULT_ARTIFACT_CTA_LABEL = "Zur Routine"
 
 export interface QuizResultArtifactEmailInput {
@@ -27,6 +28,16 @@ function resultUrl(siteUrl: string, leadId: string): string {
   return url.toString()
 }
 
+export function getQuizResultArtifactMessageId(): string | number {
+  const configured = process.env[QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV]?.trim()
+
+  if (!configured) {
+    return QUIZ_RESULT_ARTIFACT_MESSAGE_ID
+  }
+
+  return /^\d+$/.test(configured) ? Number(configured) : configured
+}
+
 export function buildQuizResultArtifactEmailPayload(
   input: QuizResultArtifactEmailInput,
 ): CustomerIoTransactionalEmailPayload {
@@ -34,7 +45,7 @@ export function buildQuizResultArtifactEmailPayload(
 
   return {
     to: input.email,
-    transactionalMessageId: QUIZ_RESULT_ARTIFACT_MESSAGE_ID,
+    transactionalMessageId: getQuizResultArtifactMessageId(),
     messageData: {
       lead_id: input.leadId,
       first_name: firstName(input.name),

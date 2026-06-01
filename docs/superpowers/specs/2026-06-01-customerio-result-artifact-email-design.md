@@ -68,7 +68,9 @@ Transactional send details:
 
 - Endpoint: `POST ${CUSTOMERIO_APP_API_URL ?? "https://api-eu.customer.io"}/v1/send/email`
 - Auth: `Authorization: Bearer ${CUSTOMERIO_APP_API_KEY}`
-- Body includes `transactional_message_id: "quiz_result_artifact"`.
+- Body includes `transactional_message_id: "quiz_result_artifact"` by default, or
+  `CUSTOMERIO_QUIZ_RESULT_TRANSACTIONAL_MESSAGE_ID` when the workspace is configured with a
+  numeric Customer.io transactional id.
 - Body includes `identifiers: { "email": normalizedLeadEmail }`.
 - Body includes `message_data` with the payload below.
 - Body includes `send_to_unsubscribed: true`.

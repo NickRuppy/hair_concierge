@@ -4,6 +4,7 @@ import test from "node:test"
 import {
   QUIZ_RESULT_ARTIFACT_CTA_LABEL,
   QUIZ_RESULT_ARTIFACT_MESSAGE_ID,
+  QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV,
   buildQuizResultArtifactEmailPayload,
 } from "../src/lib/customerio/quiz-result-artifact"
 import type { QuizAnswers } from "../src/lib/quiz/types"
@@ -21,26 +22,61 @@ const answers: QuizAnswers = {
   goals: ["less_frizz", "moisture"],
 }
 
-test("builds Customer.io message data from quiz result narrative", () => {
-  const payload = buildQuizResultArtifactEmailPayload({
-    leadId: "550e8400-e29b-41d4-a716-446655440000",
-    name: "Lea Beispiel",
-    email: "lea@example.com",
-    quizAnswers: answers,
-    siteUrl: "https://chaarlie.de",
-  })
+function restoreMessageIdEnv(previous: string | undefined) {
+  if (previous === undefined) {
+    delete process.env[QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV]
+    return
+  }
 
-  assert.equal(payload.to, "lea@example.com")
-  assert.equal(payload.transactionalMessageId, QUIZ_RESULT_ARTIFACT_MESSAGE_ID)
-  assert.equal(payload.messageData.lead_id, "550e8400-e29b-41d4-a716-446655440000")
-  assert.equal(payload.messageData.first_name, "Lea")
-  assert.equal(payload.messageData.cta_label, QUIZ_RESULT_ARTIFACT_CTA_LABEL)
-  assert.equal(
-    payload.messageData.result_url,
-    "https://chaarlie.de/result/550e8400-e29b-41d4-a716-446655440000?focus=routine",
-  )
-  assert.equal(Array.isArray(payload.messageData.rows), true)
-  assert.equal(Array.isArray(payload.messageData.routine_levers), true)
+  process.env[QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV] = previous
+}
+
+test("builds Customer.io message data from quiz result narrative", () => {
+  const previousMessageId = process.env[QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV]
+  delete process.env[QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV]
+
+  try {
+    const payload = buildQuizResultArtifactEmailPayload({
+      leadId: "550e8400-e29b-41d4-a716-446655440000",
+      name: "Lea Beispiel",
+      email: "lea@example.com",
+      quizAnswers: answers,
+      siteUrl: "https://chaarlie.de",
+    })
+
+    assert.equal(payload.to, "lea@example.com")
+    assert.equal(payload.transactionalMessageId, QUIZ_RESULT_ARTIFACT_MESSAGE_ID)
+    assert.equal(payload.messageData.lead_id, "550e8400-e29b-41d4-a716-446655440000")
+    assert.equal(payload.messageData.first_name, "Lea")
+    assert.equal(payload.messageData.cta_label, QUIZ_RESULT_ARTIFACT_CTA_LABEL)
+    assert.equal(
+      payload.messageData.result_url,
+      "https://chaarlie.de/result/550e8400-e29b-41d4-a716-446655440000?focus=routine",
+    )
+    assert.equal(Array.isArray(payload.messageData.rows), true)
+    assert.equal(Array.isArray(payload.messageData.routine_levers), true)
+  } finally {
+    restoreMessageIdEnv(previousMessageId)
+  }
+})
+
+test("supports numeric Customer.io transactional message id override", () => {
+  const previousMessageId = process.env[QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV]
+  process.env[QUIZ_RESULT_ARTIFACT_MESSAGE_ID_ENV] = "7"
+
+  try {
+    const payload = buildQuizResultArtifactEmailPayload({
+      leadId: "550e8400-e29b-41d4-a716-446655440000",
+      name: "Lea Beispiel",
+      email: "lea@example.com",
+      quizAnswers: answers,
+      siteUrl: "https://chaarlie.de",
+    })
+
+    assert.equal(payload.transactionalMessageId, 7)
+  } finally {
+    restoreMessageIdEnv(previousMessageId)
+  }
 })
 
 test("includes deterministic row and routine lever arrays", () => {

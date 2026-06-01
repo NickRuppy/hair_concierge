@@ -5,11 +5,14 @@ Preheader: Öffne deine Ergebnisse und fahre mit deiner Routine fort.
 
 Setup checklist:
 1. Create/open Customer.io transactional message `quiz_result_artifact`.
-2. Confirm workspace region and set CUSTOMERIO_APP_API_URL to https://api-eu.customer.io for EU workspaces.
-3. Set CUSTOMERIO_APP_API_KEY before deploying the app trigger.
-4. Paste this HTML into the Customer.io code editor.
-5. Preview with the fixture payload in tests/quiz-result-artifact-email.test.ts.
-6. Send one test email before broad rollout.
+2. Set the Customer.io trigger name to `quiz_result_artifact`, or set
+   CUSTOMERIO_QUIZ_RESULT_TRANSACTIONAL_MESSAGE_ID to the numeric transactional id from the
+   Customer.io URL, for example `/transactional/7/templates/40` => `7`.
+3. Confirm workspace region and set CUSTOMERIO_APP_API_URL to https://api-eu.customer.io for EU workspaces.
+4. Set CUSTOMERIO_APP_API_KEY before deploying the app trigger.
+5. Paste this HTML into the Customer.io code editor.
+6. Preview with the fixture payload in tests/quiz-result-artifact-email.test.ts.
+7. Send one test email before broad rollout.
 -->
 <div style="display: none; max-height: 0; overflow: hidden; opacity: 0; color: transparent;">
   Öffne deine Ergebnisse und fahre mit deiner Routine fort.

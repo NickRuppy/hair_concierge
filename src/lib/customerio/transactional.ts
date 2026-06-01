@@ -10,7 +10,7 @@ export type CustomerIoMessageData = Record<string, CustomerIoMessageDataValue>
 
 export interface CustomerIoTransactionalEmailPayload {
   to: string
-  transactionalMessageId: string
+  transactionalMessageId: string | number
   messageData: CustomerIoMessageData
 }
 
@@ -18,7 +18,7 @@ export interface CustomerIoTransactionalEmailRequest {
   path: "/v1/send/email"
   body: {
     to: string
-    transactional_message_id: string
+    transactional_message_id: string | number
     identifiers: { email: string }
     message_data: CustomerIoMessageData
     send_to_unsubscribed: true

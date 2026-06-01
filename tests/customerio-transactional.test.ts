@@ -10,7 +10,7 @@ import {
 test("builds Customer.io App API transactional request with privacy flags", () => {
   const payload: CustomerIoTransactionalEmailPayload = {
     to: "lea@example.com",
-    transactionalMessageId: "quiz_result_artifact",
+    transactionalMessageId: 7,
     messageData: { first_name: "Lea", cta_label: "Zur Routine" },
   }
 
@@ -19,7 +19,7 @@ test("builds Customer.io App API transactional request with privacy flags", () =
   assert.equal(request.path, "/v1/send/email")
   assert.deepEqual(request.body.identifiers, { email: "lea@example.com" })
   assert.equal(request.body.to, "lea@example.com")
-  assert.equal(request.body.transactional_message_id, "quiz_result_artifact")
+  assert.equal(request.body.transactional_message_id, 7)
   assert.equal(request.body.send_to_unsubscribed, true)
   assert.equal(request.body.disable_message_retention, true)
   assert.deepEqual(request.body.message_data, payload.messageData)
