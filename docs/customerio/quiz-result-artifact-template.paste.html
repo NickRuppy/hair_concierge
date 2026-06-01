@@ -1,46 +1,178 @@
-<div style="display: none; max-height: 0; overflow: hidden; opacity: 0; color: transparent;">
-  Öffne deine Ergebnisse und fahre mit deiner Routine fort.
-</div>
-<div style="font-family: Arial, sans-serif; color: #332f2d; line-height: 1.5;">
-  <p style="margin: 0 0 16px;">
-    {% if trigger.first_name != blank %}{{ trigger.first_name | escape }}, {% endif %}deine Haaranalyse ist fertig.
-  </p>
-
-  <h1 style="font-size: 28px; line-height: 1.15; margin: 0 0 14px; color: #4b2f68;">
-    {{ trigger.headline | default: "So kommen wir deinem Haarziel näher" | escape }}
-  </h1>
-
-  <p style="margin: 0 0 22px; color: #746d67;">
-    {{ trigger.intro | default: "" | escape }}
-  </p>
-
-  {% for row in trigger.rows %}
-    <div style="border-top: 1px solid #e7ddd6; padding: 14px 0;">
-      <p style="margin: 0 0 6px; color: #4b2f68; font-size: 12px; font-weight: bold;">
-        {{ row.label | escape }}{% if row.scope != blank %} · {{ row.scope | escape }}{% endif %}
-      </p>
-      <p style="margin: 0 0 4px;"><strong>Aktuell:</strong> {{ row.before | escape }}</p>
-      <p style="margin: 0;"><strong>Ziel:</strong> {{ row.after | escape }}</p>
-    </div>
-  {% endfor %}
-
-  <div style="background: #f7f1fb; border-radius: 14px; padding: 18px; margin: 22px 0;">
-    <p style="margin: 0 0 8px; color: #4b2f68; font-size: 12px; font-weight: bold;">Dein größter Hebel</p>
-    <h2 style="font-size: 22px; line-height: 1.2; margin: 0 0 10px; color: #332f2d;">
-      {{ trigger.main_lever_title | escape }}
-    </h2>
-    <p style="margin: 0;">{{ trigger.main_lever_why | escape }}</p>
+<!DOCTYPE html>
+<html lang="de" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>Deine Haaranalyse</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    /* Client resets */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; line-height: 100%; outline: none; text-decoration: none; }
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+    a { text-decoration: none; }
+    /* Mobile */
+    @media only screen and (max-width: 600px) {
+      .sp { padding-left: 20px !important; padding-right: 20px !important; }
+      .h1 { font-size: 26px !important; line-height: 1.2 !important; }
+      .tcell { font-size: 15px !important; }
+      .arrowcol { width: 36px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#F1ECF7;">
+  <!-- Preheader -->
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0; mso-hide:all; color:transparent; height:0; width:0;">
+    Öffne deine Ergebnisse und fahre mit deiner Routine fort.
+    &#8199;&#65279;&#8199;&#65279;&#8199;&#65279;&#8199;&#65279;&#8199;&#65279;&#8199;&#65279;&#8199;&#65279;&#8199;&#65279;
   </div>
 
-  {% for lever in trigger.routine_levers %}
-    <p style="margin: 0 0 10px;">
-      <strong>{{ lever.name | escape }}:</strong> {{ lever.description | escape }}
-    </p>
-  {% endfor %}
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#F1ECF7;">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+        <!--[if mso]><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600"><tr><td><![endif]-->
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px; width:100%; background-color:#FFFFFF; border-radius:20px; overflow:hidden; border:1px solid #ECE2F2;">
 
-  <p style="margin: 26px 0 0;">
-    <a href="{{ trigger.result_url }}" style="display: inline-block; background: #d96f5d; color: #ffffff; text-decoration: none; border-radius: 12px; padding: 14px 22px; font-weight: bold;">
-      {{ trigger.cta_label | default: "Zur Routine" | escape }}
-    </a>
-  </p>
-</div>
+          <!-- Brand header -->
+          <tr>
+            <td align="center" style="padding:30px 32px 6px;">
+              <div style="font-family:'Playfair Display', Georgia, 'Times New Roman', serif; font-size:25px; font-weight:700; letter-spacing:0.5px; color:#2A1845;">chaarlie</div>
+              <div style="font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#9B8CC0; padding-top:8px;">Deine Haaranalyse</div>
+            </td>
+          </tr>
+
+          <!-- Greeting + headline + intro -->
+          <tr>
+            <td class="sp" style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:14px; line-height:1.5; color:#6A6560;">
+                {% if trigger.first_name != blank %}{{ trigger.first_name | escape }}, {% endif %}deine Haaranalyse ist fertig.
+              </p>
+              <h1 class="h1" style="margin:0 0 14px; font-family:'Playfair Display', Georgia, 'Times New Roman', serif; font-size:30px; line-height:1.22; font-weight:700; color:#2A1845;">
+                {{ trigger.headline | default: "So kommen wir deinem Haarziel näher" | escape }}
+              </h1>
+              <p style="margin:0; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:15px; line-height:1.6; color:#3A3835;">
+                {{ trigger.intro | default: "" | escape }}
+              </p>
+            </td>
+          </tr>
+
+          <!-- Transformation card: Heute -> In 4 Wochen -->
+          <tr>
+            <td class="sp" style="padding:26px 36px 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:separate; border-radius:16px; overflow:hidden; border:1px solid #F0E7DF;">
+                <tr>
+                  <td width="46%" style="padding:12px 16px; background-color:#FDEEF0; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#C0555D;">Heute</td>
+                  <td class="arrowcol" width="8%" rowspan="{{ trigger.rows | size | plus: 1 }}" align="center" valign="middle" style="background-color:#FFFFFF; padding:0 2px;">
+                    <div style="font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:7px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:#2D8A57; line-height:1.1; padding-bottom:3px;">mit<br>Chaarlie</div>
+                    <div style="width:30px; height:30px; line-height:30px; border-radius:50%; background-color:#E8F4ED; color:#2D8A57; font-size:16px; font-weight:700; text-align:center; margin:0 auto;">&rarr;</div>
+                  </td>
+                  <td width="46%" style="padding:12px 16px; background-color:#E8F4ED; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#2D8A57; text-align:right;">In 4 Wochen</td>
+                </tr>
+                {% for row in trigger.rows %}
+                <tr>
+                  <td class="tcell" style="padding:13px 16px; background-color:#FDEEF0; border-top:2px solid #FFFFFF; font-family:'Playfair Display', Georgia, serif; font-style:italic; font-size:16px; line-height:1.35; color:#6B3439; vertical-align:middle;">{{ row.before | escape }}</td>
+                  <td class="tcell" style="padding:13px 16px; background-color:#E8F4ED; border-top:2px solid #FFFFFF; font-family:'Playfair Display', Georgia, serif; font-style:italic; font-size:16px; line-height:1.35; color:#1F4D33; text-align:right; vertical-align:middle;">{{ row.after | escape }}</td>
+                </tr>
+                {% endfor %}
+              </table>
+            </td>
+          </tr>
+
+          <!-- Row context labels (what each transformation refers to) -->
+          {% if trigger.rows != blank %}
+          <tr>
+            <td class="sp" style="padding:14px 36px 0;">
+              {% for row in trigger.rows %}
+              <span style="display:inline-block; margin:0 6px 6px 0; padding:5px 11px; background-color:#F4F0FA; border-radius:999px; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:11px; font-weight:600; letter-spacing:0.3px; color:#6B50A0;">{{ row.label | escape }}{% if row.scope != blank %} &middot; {{ row.scope | escape }}{% endif %}</span>
+              {% endfor %}
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- Biggest lever highlight -->
+          <tr>
+            <td class="sp" style="padding:24px 36px 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#F2EEFA; border-radius:16px;">
+                <tr>
+                  <td style="padding:20px 22px;">
+                    <p style="margin:0 0 8px; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#6B50A0;">Dein größter Hebel</p>
+                    <h2 style="margin:0 0 9px; font-family:'Playfair Display', Georgia, serif; font-size:21px; line-height:1.25; font-weight:700; color:#2A1845;">{{ trigger.main_lever_title | escape }}</h2>
+                    <p style="margin:0; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:14px; line-height:1.6; color:#3A3835;">{{ trigger.main_lever_why | escape }}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Routine levers -->
+          <tr>
+            <td class="sp" style="padding:24px 36px 0;">
+              <p style="margin:0 0 14px; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#9B8CC0;">Deine Routine-Hebel</p>
+              {% for lever in trigger.routine_levers %}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:14px;">
+                <tr>
+                  <td width="40" valign="top" style="padding-top:1px;">
+                    {% if forloop.first %}
+                    <div style="width:28px; height:28px; line-height:28px; border-radius:50%; background-color:#FDEEF0; color:#C0555D; font-size:14px; font-weight:700; text-align:center;">&#9733;</div>
+                    {% else %}
+                    <div style="width:28px; height:28px; line-height:28px; border-radius:50%; background-color:#F2EEFA; color:#6B50A0; font-size:16px; font-weight:700; text-align:center;">+</div>
+                    {% endif %}
+                  </td>
+                  <td valign="top" style="padding-left:12px;">
+                    <p style="margin:0 0 3px; font-family:'Playfair Display', Georgia, serif; font-size:17px; font-weight:500; line-height:1.3; color:#2A1845;">{{ lever.name | escape }}</p>
+                    <p style="margin:0; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:13.5px; line-height:1.55; color:#6A6560;">{{ lever.description | escape }}</p>
+                  </td>
+                </tr>
+              </table>
+              {% endfor %}
+            </td>
+          </tr>
+
+          <!-- CTA -->
+          <tr>
+            <td class="sp" align="center" style="padding:30px 36px 4px;">
+              <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ trigger.result_url }}" style="height:52px;v-text-anchor:middle;width:280px;" arcsize="26%" stroke="f" fillcolor="#D4616A">
+                <w:anchorlock/>
+                <center style="color:#FFFFFF;font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:bold;">{{ trigger.cta_label | default: "Zur Routine" | escape }}</center>
+              </v:roundrect>
+              <![endif]-->
+              <!--[if !mso]><!-- -->
+              <a href="{{ trigger.result_url }}" style="display:inline-block; background-color:#D4616A; color:#FFFFFF; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:16px; font-weight:700; line-height:52px; text-align:center; text-decoration:none; border-radius:13px; padding:0 40px;">{{ trigger.cta_label | default: "Zur Routine" | escape }}</a>
+              <!--<![endif]-->
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:12px 36px 32px;">
+              <p style="margin:0; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:12px; line-height:1.5; color:#9189A0;">Als Nächstes schauen wir uns deine aktuelle Routine genauer an.</p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:22px 36px 30px; background-color:#FAF7FD; border-top:1px solid #EEE6F4;">
+              <p style="margin:0 0 6px; font-family:'Playfair Display', Georgia, serif; font-size:15px; font-weight:700; color:#2A1845; text-align:center;">chaarlie</p>
+              <p style="margin:0 0 10px; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:11px; line-height:1.6; color:#9189A0; text-align:center;">Haarmony LLC &middot; 1111B S Governors Ave #84075, Dover, DE 19904, USA</p>
+              <p style="margin:0; font-family:'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif; font-size:11px; line-height:1.6; color:#9189A0; text-align:center;">
+                <a href="https://chaarlie.de/impressum" style="color:#6B50A0; text-decoration:underline;">Impressum</a>
+                &nbsp;&middot;&nbsp;
+                <a href="https://chaarlie.de/datenschutz" style="color:#6B50A0; text-decoration:underline;">Datenschutz</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!--[if mso]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
