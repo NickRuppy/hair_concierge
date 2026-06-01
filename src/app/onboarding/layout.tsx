@@ -1,16 +1,20 @@
+import { AppRouteProviders } from "@/providers/route-providers"
+
 export default function OnboardingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-[100dvh] bg-background">
-      {/* Left panel — brand (hidden on mobile) */}
-      <div className="sticky top-0 hidden h-screen w-1/2 items-center justify-center overflow-hidden md:flex">
-        <OnboardingBrandPanel />
-      </div>
+    <AppRouteProviders>
+      <div className="flex min-h-[100dvh] bg-background">
+        {/* Left panel — brand (hidden on mobile) */}
+        <div className="sticky top-0 hidden h-screen w-1/2 items-center justify-center overflow-hidden md:flex">
+          <OnboardingBrandPanel />
+        </div>
 
-      {/* Right panel — onboarding content (full-width on mobile) */}
-      <div className="w-full overflow-y-auto md:w-1/2">
-        <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">{children}</div>
+        {/* Right panel — onboarding content (full-width on mobile) */}
+        <div className="w-full overflow-y-auto md:w-1/2">
+          <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">{children}</div>
+        </div>
       </div>
-    </div>
+    </AppRouteProviders>
   )
 }
 

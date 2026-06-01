@@ -3,14 +3,8 @@
 import { Header } from "@/components/layout/header"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-  LayoutDashboard,
-  Quote,
-  FileText,
-  Package,
-  Users,
-  MessageCircle,
-} from "lucide-react"
+import { LayoutDashboard, Quote, FileText, Package, Users, MessageCircle } from "lucide-react"
+import { AppRouteProviders } from "@/providers/route-providers"
 
 const adminNav = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -21,15 +15,11 @@ const adminNav = [
   { href: "/admin/conversations", label: "Chats", icon: MessageCircle },
 ]
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   return (
-    <>
+    <AppRouteProviders>
       <Header />
       <div className="flex min-h-[calc(100vh-3.5rem)]">
         {/* Sidebar */}
@@ -40,8 +30,7 @@ export default function AdminLayout({
           <nav className="space-y-1">
             {adminNav.map((item) => {
               const isActive =
-                pathname === item.href ||
-                (item.href !== "/admin" && pathname.startsWith(item.href))
+                pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href))
               const Icon = item.icon
               return (
                 <Link
@@ -66,17 +55,14 @@ export default function AdminLayout({
           <div className="flex gap-1 overflow-x-auto">
             {adminNav.map((item) => {
               const isActive =
-                pathname === item.href ||
-                (item.href !== "/admin" && pathname.startsWith(item.href))
+                pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href))
               const Icon = item.icon
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs ${
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground"
+                    isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground"
                   }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
@@ -90,6 +76,6 @@ export default function AdminLayout({
         {/* Content */}
         <main className="flex-1 p-6">{children}</main>
       </div>
-    </>
+    </AppRouteProviders>
   )
 }

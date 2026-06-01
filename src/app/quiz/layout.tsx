@@ -3,6 +3,7 @@
 import { useQuizStore } from "@/lib/quiz/store"
 import { QuizBrandPanel } from "@/components/quiz/quiz-brand-panel"
 import { QuizInfoStrip } from "@/components/quiz/quiz-info-strip"
+import { AppRouteProviders } from "@/providers/route-providers"
 import { useEffect, useRef, useState } from "react"
 
 export default function QuizLayout({ children }: { children: React.ReactNode }) {
@@ -40,28 +41,32 @@ export default function QuizLayout({ children }: { children: React.ReactNode }) 
   // Results page (step 11): full-width centered layout, no brand panel
   if (step === 11) {
     return (
-      <div ref={resultScrollRef} className="min-h-[100dvh] overflow-y-auto bg-background">
-        <div className="mx-auto max-w-[960px] px-5 py-8 md:px-10 md:py-12">{children}</div>
-      </div>
+      <AppRouteProviders>
+        <div ref={resultScrollRef} className="min-h-[100dvh] overflow-y-auto bg-background">
+          <div className="mx-auto max-w-[960px] px-5 py-8 md:px-10 md:py-12">{children}</div>
+        </div>
+      </AppRouteProviders>
     )
   }
 
   return (
-    <div className="flex min-h-[100dvh] bg-background">
-      {/* Left panel — brand / contextual (hidden on mobile) */}
-      <div className="sticky top-0 hidden h-screen w-1/2 items-center justify-center overflow-hidden md:flex">
-        <QuizBrandPanel />
-      </div>
+    <AppRouteProviders>
+      <div className="flex min-h-[100dvh] bg-background">
+        {/* Left panel — brand / contextual (hidden on mobile) */}
+        <div className="sticky top-0 hidden h-screen w-1/2 items-center justify-center overflow-hidden md:flex">
+          <QuizBrandPanel />
+        </div>
 
-      {/* Right panel — quiz content (full-width on mobile) */}
-      <div ref={standardScrollRef} className="w-full overflow-y-auto md:w-1/2">
-        <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">
-          {step === 2 && !infoStripDismissed && (
-            <QuizInfoStrip onDismiss={() => setInfoStripDismissed(true)} />
-          )}
-          {children}
+        {/* Right panel — quiz content (full-width on mobile) */}
+        <div ref={standardScrollRef} className="w-full overflow-y-auto md:w-1/2">
+          <div className="mx-auto max-w-[540px] px-5 py-8 md:px-10 md:py-12">
+            {step === 2 && !infoStripDismissed && (
+              <QuizInfoStrip onDismiss={() => setInfoStripDismissed(true)} />
+            )}
+            {children}
+          </div>
         </div>
       </div>
-    </div>
+    </AppRouteProviders>
   )
 }
