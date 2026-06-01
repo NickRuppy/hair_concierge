@@ -253,7 +253,7 @@ Suggested cadence:
 - `2x` per week: review new thumbs-down traces from the tester cohort.
 - weekly: sample zero-feedback traces across the most active categories.
 - weekly: sample thumbs-up traces as positive references.
-- before a tool-loop rule or prompt change: seed the production dataset and tag the review batch.
+- before an AgentV2 or CareBalance rule/prompt change: seed the production dataset and tag the review batch.
 - after the change: compare the same slicing dimensions against the next tester cohort sample.
 
 Primary slicing dimensions from Langfuse metadata and the linked full persisted trace:
