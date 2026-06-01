@@ -11,6 +11,25 @@ import { useAuth } from "@/providers/auth-provider"
 import { QuizResultOfferPage } from "./quiz-result-offer-page"
 import { QuizResultsView } from "./quiz-results-view"
 
+interface ResultArtifactEmailTriggerState {
+  leadId: string | null
+  isCheckingAccess: boolean
+  previouslyTriggeredLeadId: string | null
+  canGoStraightToRoutine: boolean
+}
+
+export function shouldTriggerResultArtifactEmail({
+  leadId,
+  isCheckingAccess,
+  previouslyTriggeredLeadId,
+}: ResultArtifactEmailTriggerState): boolean {
+  if (!leadId) return false
+  if (isCheckingAccess) return false
+  if (previouslyTriggeredLeadId === leadId) return false
+
+  return true
+}
+
 function getSafeReturnToPath(value: string | null): string | null {
   if (!value) return null
 
@@ -31,6 +50,7 @@ export function QuizResults() {
   const { user, profile, loading } = useAuth()
   const { lead, answers, leadId, goNext } = useQuizStore()
   const checkoutAnalyticsCapturedRef = useRef(false)
+  const resultArtifactEmailLeadRef = useRef<string | null>(null)
   const narrative = buildQuizResultNarrative(answers)
   const returnTo = searchParams.get("returnTo")
   const isRetakeMode = searchParams.get("mode") === "retake"
@@ -54,6 +74,27 @@ export function QuizResults() {
   useEffect(() => {
     captureQuizCompleted()
   }, [captureQuizCompleted])
+
+  useEffect(() => {
+    if (
+      !shouldTriggerResultArtifactEmail({
+        leadId,
+        isCheckingAccess: loading || isCheckingSignedInSubscription,
+        previouslyTriggeredLeadId: resultArtifactEmailLeadRef.current,
+        canGoStraightToRoutine,
+      })
+    ) {
+      return
+    }
+
+    resultArtifactEmailLeadRef.current = leadId
+    void fetch("/api/quiz/result-artifact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ leadId }),
+      keepalive: true,
+    }).catch(() => {})
+  }, [canGoStraightToRoutine, isCheckingSignedInSubscription, leadId, loading])
 
   const handleStart = () => {
     captureQuizCompleted()
