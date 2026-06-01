@@ -66,23 +66,6 @@ export const scalpConditionResults: Record<string, string> = {
     " Dazu kommt eine gereizte Kopfhaut — Jucken, Rötungen oder Brennen brauchen besondere Aufmerksamkeit.",
 }
 
-// --- Aha-Moment fallback ---
-export const ahaFallback: Record<string, string> = {
-  stretches_bounces:
-    "Deine Balance stimmt \u2013 aber mit der richtigen Reihenfolge (Shampoo, Maske, dann Conditioner) holst du noch deutlich mehr raus.",
-  stretches_stays:
-    "Wahrscheinlich gibst du deinen Haaren gerade vor allem Feuchtigkeit. Aber dein Zugtest zeigt: Dir fehlt Protein. Deshalb fühlen sich deine Haare nie richtig stabil an.",
-  snaps:
-    "Wahrscheinlich setzt du auf Repair-Produkte. Aber dein Zugtest zeigt: Dir fehlt Feuchtigkeit und Fett. Deshalb werden sie immer spröder statt weicher.",
-}
-
-// --- Share quote fallback (for OG card) ---
-export const shareQuoteFallback: Record<string, string> = {
-  stretches_bounces: "Deine Balance stimmt — jetzt fehlt nur die richtige Routine.",
-  stretches_stays: "Deinen Haaren fehlt Protein. Das ändert alles.",
-  snaps: "Deine Haare schreien nach Feuchtigkeit, nicht nach Repair.",
-}
-
 // --- Hope text (always the same) ---
 export const hopeText =
   "Das Gute: Deine Haare sind nicht hoffnungslos. Sie brauchen die richtige Reihenfolge aus Reinigung, Pflege und Schutz. Im nächsten Schritt schärfen wir noch deine Ziele und deine Wunsch-Routine."

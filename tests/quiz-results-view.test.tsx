@@ -21,14 +21,13 @@ test("shared results view renders transformation card + structured lever rows", 
       name="Lea"
       narrative={narrative}
       primaryAction={{ label: "QUIZ STARTEN", href: "/quiz" }}
-      secondaryAction={{ label: "ERGEBNIS TEILEN", href: "/result/demo" }}
     />,
   )
 
   // Headline + lever section still present
   assert.match(html, /SO KOMMEN WIR DEINEM HAARZIEL NÄHER/i)
   assert.match(html, /WAS DEIN HAAR JETZT BRAUCHT/i)
-  assert.match(html, /ERGEBNIS TEILEN/i)
+  assert.doesNotMatch(html, /ERGEBNIS TEILEN/i)
 
   // New transformation card structure
   assert.match(html, /Heute/)

@@ -51,14 +51,6 @@ export type AppEventMap = {
     stepName: string
     stepNumber: number
   }
-  result_page_viewed: {
-    leadId: string
-  }
-  result_shared: {
-    leadId?: string | null
-    method: "copy_link" | "native" | "open_result"
-    source: "public_result" | "quiz_result"
-  }
   subscription_started: {
     checkoutSessionId: string
   }

@@ -19,8 +19,6 @@ export type CustomerIoEventName =
   | "quiz_lead_captured"
   | "quiz_started"
   | "quiz_step_viewed"
-  | "result_page_viewed"
-  | "result_shared"
   | "subscription_started"
 
 export type CustomerIoBrowserClient = {

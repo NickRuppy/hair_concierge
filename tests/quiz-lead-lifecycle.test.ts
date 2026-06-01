@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { findReusableLead, getLeadStatusAfterAnalyze } from "../src/lib/quiz/lead-lifecycle"
+import { findReusableLead } from "../src/lib/quiz/lead-lifecycle"
 
 test("dedupe reuses a recent lead when normalized answers match", () => {
   const reusableLead = findReusableLead(
@@ -96,9 +96,4 @@ test("dedupe distinguishes concern notes with different text", () => {
   )
 
   assert.equal(reusableLead, null)
-})
-
-test("analyze status transitions to analyzed before linking and linked afterwards", () => {
-  assert.equal(getLeadStatusAfterAnalyze(null), "analyzed")
-  assert.equal(getLeadStatusAfterAnalyze("user-123"), "linked")
 })

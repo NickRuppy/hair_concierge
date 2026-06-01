@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test"
+import { test, expect, type Page } from "@playwright/test"
 import { createClient } from "@supabase/supabase-js"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -14,6 +14,15 @@ const admin = createClient(supabaseUrl, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false },
 })
 
+async function hideCookieBanner(page: Page) {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      "chaarlie_cookie_consent_v1",
+      JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
+    )
+  })
+}
+
 test.describe.serial("Quiz to onboarding E2E", () => {
   const email = `playwright-quiz-${Date.now()}@hairconscierge.test`
   const password = "Playwright123!"
@@ -25,7 +34,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
   async function fetchLatestLead() {
     const { data, error } = await admin
       .from("leads")
-      .select("id, email, status, ai_insight, user_id, quiz_answers")
+      .select("id, email, status, user_id, quiz_answers")
       .eq("email", email)
       .order("created_at", { ascending: false })
       .limit(1)
@@ -63,6 +72,8 @@ test.describe.serial("Quiz to onboarding E2E", () => {
   }
 
   test.beforeAll(async () => {
+    const currentPeriodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+
     const { data, error } = await admin.auth.admin.createUser({
       email,
       password,
@@ -84,12 +95,30 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         full_name: fullName,
         stripe_customer_id: `cus_quiz_${userId}`,
         subscription_status: "active",
-        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        current_period_end: currentPeriodEnd,
       },
       { onConflict: "id" },
     )
 
     if (profileError) throw profileError
+
+    const { error: billingError } = await admin.from("billing_subscriptions").upsert(
+      {
+        user_id: userId,
+        provider: "stripe",
+        provider_customer_id: `cus_quiz_${userId}`,
+        provider_subscription_id: `sub_quiz_${userId}`,
+        provider_status: "active",
+        entitlement_status: "active",
+        interval: "month",
+        current_period_end: currentPeriodEnd,
+        cancel_at_period_end: false,
+        metadata: { ci_seed: "quiz-onboarding-e2e" },
+      },
+      { onConflict: "provider,provider_subscription_id" },
+    )
+
+    if (billingError && billingError.code !== "PGRST205") throw billingError
   })
 
   test.afterAll(async () => {
@@ -98,16 +127,28 @@ test.describe.serial("Quiz to onboarding E2E", () => {
     if (!userId) return
 
     await admin.from("user_product_usage").delete().eq("user_id", userId)
+    await admin.from("billing_subscriptions").delete().eq("user_id", userId)
     await admin.from("hair_profiles").delete().eq("user_id", userId)
     await admin.from("profiles").delete().eq("id", userId)
     await admin.auth.admin.deleteUser(userId)
   })
 
   test("quiz hands off into onboarding and persists linked diagnostics", async ({ page }) => {
+    await hideCookieBanner(page)
+
+    let analyzeRequestCount = 0
+    await page.route("**/api/quiz/analyze", async (route) => {
+      analyzeRequestCount += 1
+      await route.fulfill({
+        status: 410,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "Quiz-Analyse nicht mehr unterstuetzt" }),
+      })
+    })
+
     await test.step("Complete the quiz and lead capture", async () => {
       await page.goto("/quiz", { waitUntil: "networkidle" })
 
-      await page.getByRole("button", { name: /QUIZ STARTEN/i }).click()
       await expect(
         page.getByRole("heading", { name: /Was ist deine natürliche Haartextur/i }),
       ).toBeVisible()
@@ -178,7 +219,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       await page.getByPlaceholder("Dein Vorname").fill("Playwright")
-      await page.getByRole("button", { name: /^Weiter$/i }).click()
+      await page.getByRole("button", { name: /Weiter zum Ergebnis/i }).click()
 
       await page.getByPlaceholder("name@beispiel.de").fill(email)
       await page.getByRole("button", { name: /^Weiter$/i }).click()
@@ -186,7 +227,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
     })
 
-    await test.step("Verify the lead is analyzed before auth", async () => {
+    await test.step("Verify the lead stays captured before auth without analyze", async () => {
       await expect(page.getByText(/DEIN PROFIL WIRD ERSTELLT/i)).toBeVisible({
         timeout: 45_000,
       })
@@ -203,7 +244,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
           },
           { timeout: 30_000 },
         )
-        .toBe("analyzed")
+        .toBe("captured")
 
       await page.getByRole("button", { name: /MEIN HAARPROFIL ANSEHEN/i }).click()
       await expect(page.getByText(/Analyse fertig/i)).toBeVisible({ timeout: 15_000 })
@@ -212,13 +253,12 @@ test.describe.serial("Quiz to onboarding E2E", () => {
           name: /So können sich deine Haare in 4 Wochen anfühlen/i,
         }),
       ).toBeVisible()
-      await expect(
-        page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i }),
-      ).toBeVisible()
+      await expect(page.getByText(/Was dein Haar jetzt braucht/i)).toBeVisible()
       await expect(
         page.getByRole("button", { name: /Jetzt starten.*17,49.*Quartal/i }),
       ).toBeVisible()
       await expect(page.getByText(/ERGEBNIS TEILEN/i)).toHaveCount(0)
+      expect(analyzeRequestCount).toBe(0)
     })
 
     await test.step("Authenticate via direct auth shortcut with the latest lead", async () => {
@@ -397,6 +437,8 @@ test.describe.serial("Quiz to onboarding E2E", () => {
   test("existing account can retake the quiz and overwrite diagnostic profile fields", async ({
     page,
   }) => {
+    await hideCookieBanner(page)
+
     await test.step("Confirm the first quiz run is linked", async () => {
       const initialProfile = await fetchHairProfile()
 
@@ -421,7 +463,9 @@ test.describe.serial("Quiz to onboarding E2E", () => {
     await test.step("Retake the quiz with different diagnostics", async () => {
       await page.goto("/quiz", { waitUntil: "networkidle" })
 
-      await page.getByRole("button", { name: /QUIZ STARTEN/i }).click()
+      await expect(
+        page.getByRole("heading", { name: /Was ist deine natürliche Haartextur/i }),
+      ).toBeVisible()
       await page.getByText("Glatt").first().click()
       await expect(page.getByText("2/9")).toBeVisible()
       await page.getByRole("button", { name: /Fein Kaum spürbar/i }).click()
@@ -455,7 +499,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         .click()
       await page.getByRole("button", { name: "NEIN" }).click()
       await expect(page.getByText("8/9")).toBeVisible()
-      await page.getByRole("button", { name: "Etwas anderes ergänzen" }).click()
+      await page.getByRole("button", { name: /Etwas anderes/i }).click()
       await page.getByLabel("Eigene Notiz").fill("verklebt schnell")
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
@@ -469,7 +513,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       await page.getByPlaceholder("Dein Vorname").fill("Playwright Return")
-      await page.getByRole("button", { name: /^Weiter$/i }).click()
+      await page.getByRole("button", { name: /Weiter zum Ergebnis/i }).click()
       await page.getByPlaceholder("name@beispiel.de").fill(email)
       await page.getByRole("button", { name: /^Weiter$/i }).click()
       await page.getByRole("button", { name: /JA, WEITER ZU MEINEM PLAN/i }).click()
@@ -487,9 +531,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
           name: /So können sich deine Haare in 4 Wochen anfühlen/i,
         }),
       ).toBeVisible()
-      await expect(
-        page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i }),
-      ).toBeVisible()
+      await expect(page.getByText(/Was dein Haar jetzt braucht/i)).toBeVisible()
       await expect(
         page.getByRole("button", { name: /Jetzt starten.*17,49.*Quartal/i }),
       ).toBeVisible()

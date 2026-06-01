@@ -162,20 +162,10 @@ test("browser quiz lead capture does not route to Customer.io", () => {
 test("non-funnel lifecycle and engagement events stay out of Meta", () => {
   withDestinationSpies((calls) => {
     trackAppEvent("first_chat_message", {})
-    trackAppEvent("result_shared", {
-      leadId: "lead-123",
-      method: "copy_link",
-      source: "public_result",
-    })
 
     assert.deepEqual(
       calls.map((call) => `${call.eventName}:${call.destination}`),
-      [
-        "first_chat_message:posthog",
-        "first_chat_message:customerio",
-        "result_shared:posthog",
-        "result_shared:customerio",
-      ],
+      ["first_chat_message:posthog", "first_chat_message:customerio"],
     )
   })
 })
@@ -226,7 +216,7 @@ test("destination failures are isolated and do not throw from the facade", () =>
   }
 })
 
-test("PostHog adapter keeps legacy names and strips undefined mapped properties", () => {
+test("PostHog adapter strips undefined mapped properties", () => {
   const originalCapture = posthog.capture
   const calls: unknown[][] = []
   posthog.capture = ((...args: unknown[]) => {
@@ -240,16 +230,8 @@ test("PostHog adapter keeps legacy names and strips undefined mapped properties"
       scalpType: null,
       thickness: undefined,
     })
-    postHogDestination.track("result_shared", {
-      leadId: undefined,
-      method: "copy_link",
-      source: "quiz_result",
-    })
 
-    assert.deepEqual(calls, [
-      ["quiz_completed", { structure: "wavy", scalp_type: null }],
-      ["quiz_result_share_clicked", { method: "copy_link", source: "quiz_result" }],
-    ])
+    assert.deepEqual(calls, [["quiz_completed", { structure: "wavy", scalp_type: null }]])
   } finally {
     posthog.capture = originalCapture
   }
