@@ -140,10 +140,11 @@ For full persisted trace review, inspect:
 - `router_decision.retrieval_mode = agent_v2_responses`
 - `agent_v2_trace.model_steps`
 - `agent_v2_trace.tool_calls`
-- `agent_v2_trace.loaded_guidance_ids`
-- `agent_v2_trace.answer_context_capsule_ids`
-- `agent_v2_trace.guardrails`
-- `agent_v2_trace.visible_failure`
+- `agent_v2_trace.blocked_tool_calls`
+- `agent_v2_trace.loaded_guidance_package_ids`
+- `agent_v2_trace.validation_errors`
+- `agent_v2_trace.validation_warnings`
+- `agent_v2_trace.failure_stage`
 - `decision_context.engine_trace`
 - `decision_context.matched_products`
 
@@ -206,9 +207,10 @@ Trace Schema V2 keeps the review-critical decision path in structured fields:
 - `decision_context.engine_trace.damage`: engine damage assessment, including overall level and repair priority.
 - `decision_context.engine_trace.categories`: category-level engine actions. For review, inspect each category's `relevant`, `action`, reason codes, and target profile.
 - `decision_context.matched_products`: selected product traces, including `recommendation_meta` for score, top reasons, tradeoffs, usage hint, and category-specific fit metadata.
-- `agent_v2_trace`: compact model-step, tool-call, loaded-guidance,
-  answer-context, guardrail, and visible-failure metadata. Raw prompt context and
-  raw guidance bodies are intentionally not persisted here.
+- `agent_v2_trace`: compact model-step, tool-call, blocked-call,
+  loaded-guidance-package, validation, response-id, final-product, and
+  failure-stage metadata. Raw prompt context and raw guidance bodies are
+  intentionally not persisted here.
 - `response_composition`: composer path, migration mode, fallback reason, rendering path, plan type, and attachment mode.
 - `user_feedback`: thumbs feedback and review annotations when present, including `failure_bucket`.
 
@@ -267,10 +269,11 @@ Primary slicing dimensions from Langfuse metadata and the linked full persisted 
 - `response_mode`
 - `needs_clarification`
 - `agent_v2_trace.tool_calls[].name`
-- `agent_v2_trace.loaded_guidance_ids`
-- `agent_v2_trace.answer_context_capsule_ids`
-- `agent_v2_trace.guardrails`
-- `agent_v2_trace.visible_failure`
+- `agent_v2_trace.blocked_tool_calls[].reason`
+- `agent_v2_trace.loaded_guidance_package_ids`
+- `agent_v2_trace.validation_errors`
+- `agent_v2_trace.validation_warnings`
+- `agent_v2_trace.failure_stage`
 - `engine_damage_level`
 - `engine_repair_priority`
 - `engine_actions.<category>.relevant`

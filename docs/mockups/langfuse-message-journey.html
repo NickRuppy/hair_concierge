@@ -846,11 +846,10 @@
           <article class="dock-card" data-number="3">
             <h3>Prompt- und LLM-Beobachtung</h3>
             <p>
-              Der Model Client laedt verwaltete Agent-Prompts aus Langfuse und umhuellt OpenAI mit
-              <code>getObservedOpenAI</code>.
+              Die AgentV2-Produktionspipeline laedt den verwalteten Responses-Prompt und umhuellt
+              OpenAI mit <code>getObservedOpenAI</code> fuer <code>agent-v2-responses-step</code>.
             </p>
-            <span class="file-ref">src/lib/agent/orchestrator/model-client.ts:206-235</span>
-            <span class="file-ref">src/lib/agent/orchestrator/model-client.ts:312-330</span>
+            <span class="file-ref">src/lib/agent-v2/production/chat-pipeline.ts:453-480</span>
           </article>
 
           <article class="dock-card" data-number="4">
@@ -933,7 +932,7 @@
                 <b>Full Turn</b><span><code>conversation_turn_traces.trace</code></span>
               </li>
               <li>
-                <b>AgentV2</b><span>model_steps, tool_calls, guardrails, visible_failure</span>
+                <b>AgentV2</b><span>model_steps, tool_calls, blocked_tool_calls, failure_stage</span>
               </li>
               <li>
                 <b>Engine</b
