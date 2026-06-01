@@ -6,8 +6,8 @@ agentic tool-loop recommendation engine.
 ## What is live in the app
 
 - One Langfuse trace per chat turn, grouped by conversation ID as the session ID.
-- The production chat route runs `runProductionAgentPipeline`, which uses the
-  `tool_loop` engine.
+- The production chat route runs AgentV2 production chat, which uses the
+  CareBalance recommendation engine.
 - Observed OpenAI generations for current agent prompts:
   - `agentic-tool-loop-step`
   - `agentic-tool-loop-contextual-composer` when composer mode is used

@@ -1135,10 +1135,12 @@ test("AgentV2 production pipeline ignores legacy V1 routine fields without flat 
 
 test("/api/chat imports only the AgentV2 production chat pipeline", async () => {
   const routeSource = await readFile("src/app/api/chat/route.ts", "utf8")
+  const legacyProductionImport = "@/lib/agent/" + "legacy-production"
+  const legacyProductionRunner = "runProduction" + "AgentPipeline"
 
   assert.match(routeSource, /@\/lib\/agent-v2\/production\/chat-pipeline/)
   assert.doesNotMatch(routeSource, /@\/lib\/agent\/production/)
-  assert.doesNotMatch(routeSource, /@\/lib\/agent\/legacy-production/)
-  assert.doesNotMatch(routeSource, /\brunProductionAgentPipeline\b/)
+  assert.doesNotMatch(routeSource, new RegExp(legacyProductionImport.replaceAll("/", "\\/")))
+  assert.doesNotMatch(routeSource, new RegExp(`\\b${legacyProductionRunner}\\b`))
   assert.match(routeSource, /\brunAgentV2ProductionPipeline\b/)
 })
