@@ -37,7 +37,7 @@ Norm.| ProdG, ProdH          | ProdI                | ProdJ     | ...
 ## Steps to Add a New Category
 
 ### 1. Place the Excel file
-Drop the `.xlsx` into `data/` or `data/product_lists/` (both are scanned). The category name comes from either the A1 title cell (Format B) or the filename (Format A).
+Drop the `.xlsx` into `data/product_lists/0326v2/`. That is the directory `scripts/convert_sources.py` scans for Excel product matrices. The category name comes from either the A1 title cell (Format B) or the filename (Format A).
 
 ### 2. Run conversion
 ```bash
