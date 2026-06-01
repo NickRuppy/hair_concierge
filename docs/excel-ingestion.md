@@ -44,14 +44,14 @@ Drop the `.xlsx` into `data/` or `data/product_lists/` (both are scanned). The c
 python3 scripts/convert_sources.py
 ```
 Generates:
-- `data/markdown/products/<slug>/` — one markdown file per thickness x concern cell
+- `data/markdown/products/<slug>/` — legacy markdown product files per thickness x concern cell
 - `data/products-from-excel/<slug>.json` — product catalog entries
 
-### 3. Ingest into vector DB (content_chunks)
+### 3. Ingest product-list chunks (content_chunks)
 ```bash
-npx tsx scripts/ingest-markdown.ts --source product_list
+npx tsx scripts/ingest-product-chunks.ts
 ```
-Each cell-based file becomes exactly 1 chunk with metadata (`thickness`, `concern`, `category`).
+Reads `data/products-from-excel/*.json`, builds grouped `category x thickness x concern` chunks, embeds them, and stores them in `content_chunks` with `source_type = 'product_list'`.
 
 ### 4. Ingest into product catalog (products table)
 ```bash
@@ -60,15 +60,15 @@ npx tsx scripts/ingest-products.ts
 Reads all JSON from `data/products-from-excel/*.json`. Upserts by product name.
 
 ### 5. Verify
-- `content_chunks`: one row per non-empty cell with `source_type = 'product_list'`
-- `products`: products with correct `suitable_hair_types` and `suitable_concerns`
+- `content_chunks`: grouped product-list rows with `source_type = 'product_list'`
+- `products`: products with correct `suitable_thicknesses` and `suitable_concerns`
 
 ## Architecture Notes
 
-### Cell-based chunking
-- 1 chunk = 1 matrix cell = thickness x concern (e.g. "fein + schuppen")
-- Each chunk ~100-400 chars with descriptive natural language for good embeddings
-- Metadata in JSONB column: `{thickness, concern, category, ...}`
+### Grouped product-list chunking
+- 1 chunk = grouped `category x thickness x concern` product list.
+- Each chunk contains descriptive German prose plus the matching product names for that category/thickness/concern combination.
+- Metadata in JSONB column includes `category`, `thickness`, `concern`, `product_count`, `product_names`, and `language`.
 
 ### Retrieval and product-list chunks
 - `src/lib/product-matching/product-list-chunks.ts` builds grouped product-list chunks from product catalog rows for ingestion into `content_chunks`.
@@ -93,7 +93,8 @@ Reads all JSON from `data/products-from-excel/*.json`. Upserts by product name.
 
 ### Key files
 - `scripts/convert_sources.py` — Step 4: Excel conversion
-- `scripts/ingest-markdown.ts` — chunks + embeds -> `content_chunks`
+- `scripts/ingest-product-chunks.ts` — current product-list chunk ingestion into `content_chunks`
 - `scripts/ingest-products.ts` — products -> `products` table
 - `src/lib/product-matching/product-list-chunks.ts` — builds product-list chunks for ingestion
 - `scripts/eval-retrieval.ts` — evaluates retrieval metrics against Supabase RPCs
+- `scripts/ingest-markdown.ts` — general/legacy markdown ingestion, not the current product-list chunk workflow
