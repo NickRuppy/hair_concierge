@@ -74,11 +74,13 @@ function sqlLikePatternToRegExp(pattern: string) {
 function createSupabaseStub(seed?: {
   billing?: Partial<BillingSubscriptionRow>[]
   manualGrants?: Array<Record<string, unknown>>
+  tableErrors?: Record<string, { code?: string; message: string }>
   profiles?: Record<string, Record<string, unknown>>
   authUsers?: Record<string, { id: string; email: string; app_metadata?: Record<string, unknown> }>
   paypalIntents?: Array<Record<string, unknown>>
 }) {
   const calls: Array<Record<string, unknown>> = []
+  const tableErrors = seed?.tableErrors ?? {}
   const billing: BillingSubscriptionRow[] = (seed?.billing ?? []).map((row, index) => ({
     id: row.id ?? `billing-${index + 1}`,
     user_id: row.user_id ?? "user-1",
@@ -153,6 +155,9 @@ function createSupabaseStub(seed?: {
     }
 
     async function resolveRows() {
+      const tableError = tableErrors[table]
+      if (tableError) return { data: null, error: tableError }
+
       if (state.op === "update" && state.patch) {
         const matched = applyFilters(rows() as Record<string, unknown>[])
         for (const row of matched) Object.assign(row, state.patch)
@@ -275,11 +280,13 @@ function createSupabaseStub(seed?: {
         return builder
       },
       maybeSingle: async () => {
-        const { data } = await resolveRows()
+        const { data, error } = await resolveRows()
+        if (error) return { data: null, error }
         return { data: data[0] ?? null, error: null }
       },
       single: async () => {
-        const { data } = await resolveRows()
+        const { data, error } = await resolveRows()
+        if (error) return { data: null, error }
         return { data: data[0] ?? null, error: null }
       },
       then(resolve: (value: unknown) => void, reject: (error: unknown) => void) {
@@ -1633,6 +1640,24 @@ test("Stripe checkout email conflict blocks email-only manual grants", async () 
   )
 
   assert.equal(response?.status, 409)
+})
+
+test("Stripe checkout email conflict ignores missing manual grants table", async () => {
+  const active = createSupabaseStub({
+    tableErrors: {
+      manual_access_grants: {
+        code: "PGRST205",
+        message: "Could not find the table 'public.manual_access_grants' in the schema cache",
+      },
+    },
+  })
+
+  const response = await createStripeCheckoutEmailAccessConflictResponse(
+    active.supabase,
+    "friend@example.com",
+  )
+
+  assert.equal(response, null)
 })
 
 test("getPayPalPlanId reads interval-specific server env vars", () => {
