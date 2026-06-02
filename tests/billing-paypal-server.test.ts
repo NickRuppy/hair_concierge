@@ -4,7 +4,10 @@ import test from "node:test"
 import {
   assertCanStartCheckout,
   assertCanStartCheckoutForEmail,
+  findCurrentManualAccessGrant,
   findCurrentBillingSubscriptionForUser,
+  hasCurrentAppAccess,
+  hasCurrentManualAccess,
   upsertBillingSubscription,
 } from "../src/lib/billing/subscriptions"
 import type { SupabaseBillingClient } from "../src/lib/billing/types"
@@ -53,8 +56,24 @@ function pastIso() {
   return new Date(Date.now() - 86_400_000).toISOString()
 }
 
+function sqlLikePatternToRegExp(pattern: string) {
+  let source = "^"
+  for (const char of pattern) {
+    if (char === "%") {
+      source += ".*"
+    } else if (char === "_") {
+      source += "."
+    } else {
+      source += char.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&")
+    }
+  }
+  source += "$"
+  return new RegExp(source, "i")
+}
+
 function createSupabaseStub(seed?: {
   billing?: Partial<BillingSubscriptionRow>[]
+  manualGrants?: Array<Record<string, unknown>>
   profiles?: Record<string, Record<string, unknown>>
   authUsers?: Record<string, { id: string; email: string; app_metadata?: Record<string, unknown> }>
   paypalIntents?: Array<Record<string, unknown>>
@@ -76,6 +95,7 @@ function createSupabaseStub(seed?: {
     created_at: row.created_at ?? new Date().toISOString(),
     updated_at: row.updated_at ?? new Date().toISOString(),
   }))
+  const manualGrants = seed?.manualGrants ?? []
   const profiles = seed?.profiles ?? {}
   const authUsers = seed?.authUsers ?? {}
   const paypalIntents = seed?.paypalIntents ?? []
@@ -93,6 +113,7 @@ function createSupabaseStub(seed?: {
 
     function rows() {
       if (table === "billing_subscriptions") return billing
+      if (table === "manual_access_grants") return manualGrants
       if (table === "profiles") return Object.values(profiles)
       if (table === "paypal_checkout_intents") return paypalIntents
       return []
@@ -104,8 +125,8 @@ function createSupabaseStub(seed?: {
           if (filter.op === "eq") return row[filter.column] === filter.value
           if (filter.op === "is") return row[filter.column] === filter.value
           if (filter.op === "ilike") {
-            return (
-              String(row[filter.column] ?? "").toLowerCase() === String(filter.value).toLowerCase()
+            return sqlLikePatternToRegExp(String(filter.value)).test(
+              String(row[filter.column] ?? ""),
             )
           }
           if (filter.op === "in") return (filter.value as unknown[]).includes(row[filter.column])
@@ -272,6 +293,7 @@ function createSupabaseStub(seed?: {
   return {
     calls,
     billing,
+    manualGrants,
     profiles,
     authUsers,
     paypalIntents,
@@ -374,6 +396,80 @@ test("upsertBillingSubscription preserves optional fields during partial status 
   assert.equal(billing[0].interval, "quarter")
   assert.equal(billing[0].current_period_end, periodEnd)
   assert.deepEqual(billing[0].metadata, { plan_id: "P-quarter" })
+})
+
+test("hasCurrentManualAccess only allows unrevoked and unexpired grants", () => {
+  const now = new Date("2026-06-02T10:00:00.000Z")
+
+  assert.equal(hasCurrentManualAccess({ expires_at: null, revoked_at: null }, now), true)
+  assert.equal(
+    hasCurrentManualAccess({ expires_at: "2026-06-03T10:00:00.000Z", revoked_at: null }, now),
+    true,
+  )
+  assert.equal(
+    hasCurrentManualAccess({ expires_at: "2026-06-01T10:00:00.000Z", revoked_at: null }, now),
+    false,
+  )
+  assert.equal(
+    hasCurrentManualAccess(
+      {
+        expires_at: "2026-06-03T10:00:00.000Z",
+        revoked_at: "2026-06-02T09:00:00.000Z",
+      },
+      now,
+    ),
+    false,
+  )
+})
+
+test("findCurrentManualAccessGrant finds user and email grants case-insensitively", async () => {
+  const now = new Date("2026-06-02T10:00:00.000Z")
+  const { supabase } = createSupabaseStub({
+    manualGrants: [
+      {
+        id: "expired",
+        user_id: "user-1",
+        email: "expired@example.com",
+        expires_at: "2026-06-01T10:00:00.000Z",
+        revoked_at: null,
+      },
+      {
+        id: "email-grant",
+        user_id: null,
+        email: "friend@example.com",
+        expires_at: null,
+        revoked_at: null,
+      },
+    ],
+  })
+
+  assert.equal(await findCurrentManualAccessGrant(supabase, { userId: "user-1" }, now), null)
+  assert.deepEqual(
+    await findCurrentManualAccessGrant(supabase, { email: "Friend@Example.com" }, now),
+    {
+      id: "email-grant",
+      user_id: null,
+      email: "friend@example.com",
+      expires_at: null,
+      revoked_at: null,
+    },
+  )
+})
+
+test("findCurrentManualAccessGrant treats grant emails as exact values, not LIKE patterns", async () => {
+  const { supabase } = createSupabaseStub({
+    manualGrants: [
+      {
+        id: "underscore-grant",
+        user_id: null,
+        email: "axb@example.com",
+        expires_at: null,
+        revoked_at: null,
+      },
+    ],
+  })
+
+  assert.equal(await findCurrentManualAccessGrant(supabase, { email: "a_b@example.com" }), null)
 })
 
 test("findCurrentBillingSubscriptionForUser prefers active before past_due before future paid-through canceled", async () => {
@@ -504,6 +600,23 @@ test("assertCanStartCheckout allows incomplete rows so users can retry checkout"
   await assert.doesNotReject(() => assertCanStartCheckout(supabase, "user-1"))
 })
 
+test("assertCanStartCheckout blocks users with active manual grants", async () => {
+  const { supabase } = createSupabaseStub({
+    profiles: { "user-1": { id: "user-1", subscription_status: null } },
+    manualGrants: [
+      {
+        id: "grant-1",
+        user_id: "user-1",
+        email: "friend@example.com",
+        expires_at: null,
+        revoked_at: null,
+      },
+    ],
+  })
+
+  await assert.rejects(() => assertCanStartCheckout(supabase, "user-1"), /already has access/)
+})
+
 test("assertCanStartCheckoutForEmail blocks lead checkout for an already subscribed profile", async () => {
   const { supabase } = createSupabaseStub({
     billing: [{ user_id: "user-1", entitlement_status: "active" }],
@@ -515,6 +628,58 @@ test("assertCanStartCheckoutForEmail blocks lead checkout for an already subscri
   await assert.rejects(
     () => assertCanStartCheckoutForEmail(supabase, "paid@example.com"),
     /already has access/,
+  )
+})
+
+test("assertCanStartCheckoutForEmail blocks active manual grants before a profile exists", async () => {
+  const { supabase } = createSupabaseStub({
+    manualGrants: [
+      {
+        id: "grant-1",
+        user_id: null,
+        email: "friend@example.com",
+        expires_at: null,
+        revoked_at: null,
+      },
+    ],
+  })
+
+  await assert.rejects(
+    () => assertCanStartCheckoutForEmail(supabase, "Friend@Example.com"),
+    /already has access/,
+  )
+})
+
+test("hasCurrentAppAccess accepts paid, legacy, and manual access sources", async () => {
+  const paid = createSupabaseStub({
+    billing: [{ user_id: "paid-user", entitlement_status: "active" }],
+    profiles: { "paid-user": { id: "paid-user", subscription_status: null } },
+  })
+  assert.equal(await hasCurrentAppAccess(paid.supabase, { userId: "paid-user" }), true)
+
+  const legacy = createSupabaseStub({
+    profiles: { "legacy-user": { id: "legacy-user", subscription_status: "past_due" } },
+  })
+  assert.equal(await hasCurrentAppAccess(legacy.supabase, { userId: "legacy-user" }), true)
+
+  const manual = createSupabaseStub({
+    profiles: { "manual-user": { id: "manual-user", subscription_status: null } },
+    manualGrants: [
+      {
+        id: "grant-1",
+        user_id: null,
+        email: "friend@example.com",
+        expires_at: null,
+        revoked_at: null,
+      },
+    ],
+  })
+  assert.equal(
+    await hasCurrentAppAccess(manual.supabase, {
+      userId: "manual-user",
+      email: "Friend@Example.com",
+    }),
+    true,
   )
 })
 
@@ -1444,6 +1609,27 @@ test("Stripe checkout lead-email conflict uses provider-neutral access guard", a
   const response = await createStripeCheckoutEmailAccessConflictResponse(
     active.supabase,
     "paid@example.com",
+  )
+
+  assert.equal(response?.status, 409)
+})
+
+test("Stripe checkout email conflict blocks email-only manual grants", async () => {
+  const active = createSupabaseStub({
+    manualGrants: [
+      {
+        id: "grant-1",
+        user_id: null,
+        email: "friend@example.com",
+        expires_at: null,
+        revoked_at: null,
+      },
+    ],
+  })
+
+  const response = await createStripeCheckoutEmailAccessConflictResponse(
+    active.supabase,
+    "Friend@Example.com",
   )
 
   assert.equal(response?.status, 409)

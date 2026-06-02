@@ -55,6 +55,13 @@ export async function POST(req: NextRequest) {
       authenticatedUserId,
     )
     if (conflictResponse) return conflictResponse
+    if (user?.email) {
+      const emailConflictResponse = await createStripeCheckoutEmailAccessConflictResponse(
+        adminSupabase,
+        user.email,
+      )
+      if (emailConflictResponse) return emailConflictResponse
+    }
   }
 
   if (leadId) {
