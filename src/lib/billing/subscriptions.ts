@@ -12,7 +12,16 @@ type LegacyProfileSubscription = {
   current_period_end: string | null
 }
 
+export interface ManualAccessGrantRow {
+  id: string
+  user_id: string | null
+  email: string | null
+  expires_at: string | null
+  revoked_at: string | null
+}
+
 const OPEN_ENTITLEMENTS = new Set<BillingEntitlementStatus>(["active", "past_due"])
+const ACCESS_ALREADY_EXISTS_ERROR = "User already has access through an existing subscription"
 
 export async function upsertBillingSubscription(
   supabase: SupabaseBillingClient,
@@ -114,7 +123,12 @@ export async function assertCanStartCheckout(
 ): Promise<void> {
   const current = await findCurrentBillingSubscriptionForUser(supabase, userId, now)
   if (current) {
-    throw new Error("User already has access through an existing subscription")
+    throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
+  }
+
+  const manualGrant = await findCurrentManualAccessGrant(supabase, { userId }, now)
+  if (manualGrant) {
+    throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
   }
 
   const { data, error } = await supabase
@@ -127,7 +141,7 @@ export async function assertCanStartCheckout(
   const profile = data as LegacyProfileSubscription | null
 
   if (profile && hasCurrentLegacyProfileAccess(profile, now)) {
-    throw new Error("User already has access through an existing subscription")
+    throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
   }
 }
 
@@ -136,6 +150,11 @@ export async function assertCanStartCheckoutForEmail(
   email: string,
   now: Date = new Date(),
 ): Promise<void> {
+  const manualGrant = await findCurrentManualAccessGrant(supabase, { email }, now)
+  if (manualGrant) {
+    throw new Error(ACCESS_ALREADY_EXISTS_ERROR)
+  }
+
   const { data, error } = await supabase
     .from("profiles")
     .select("id, subscription_status, current_period_end")
@@ -147,6 +166,69 @@ export async function assertCanStartCheckoutForEmail(
   if (!profile?.id) return
 
   await assertCanStartCheckout(supabase, profile.id, now)
+}
+
+export async function hasCurrentAppAccess(
+  supabase: SupabaseBillingClient,
+  lookup: { userId: string; email?: string | null },
+  now: Date = new Date(),
+): Promise<boolean> {
+  const current = await findCurrentBillingSubscriptionForUser(supabase, lookup.userId, now)
+  if (current) return true
+
+  const manualGrant = await findCurrentManualAccessGrant(supabase, lookup, now)
+  if (manualGrant) return true
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("subscription_status, current_period_end")
+    .eq("id", lookup.userId)
+    .maybeSingle()
+
+  if (error) throw error
+  const profile = data as LegacyProfileSubscription | null
+  return profile ? hasCurrentLegacyProfileAccess(profile, now) : false
+}
+
+export async function findCurrentManualAccessGrant(
+  supabase: SupabaseBillingClient,
+  lookup: { userId?: string | null; email?: string | null },
+  now: Date = new Date(),
+): Promise<ManualAccessGrantRow | null> {
+  const grants: ManualAccessGrantRow[] = []
+
+  if (lookup.userId) {
+    const { data, error } = await supabase
+      .from("manual_access_grants")
+      .select("id, user_id, email, expires_at, revoked_at")
+      .eq("user_id", lookup.userId)
+
+    if (error) throw error
+    grants.push(...((data as ManualAccessGrantRow[] | null) ?? []))
+  }
+
+  const email = lookup.email?.trim().toLowerCase()
+  if (email) {
+    const { data, error } = await supabase
+      .from("manual_access_grants")
+      .select("id, user_id, email, expires_at, revoked_at")
+      .eq("email", email)
+
+    if (error) throw error
+    grants.push(...((data as ManualAccessGrantRow[] | null) ?? []))
+  }
+
+  const current = grants.filter((grant) => hasCurrentManualAccess(grant, now))
+  current.sort((left, right) => compareNullableIsoDesc(left.expires_at, right.expires_at))
+  return current[0] ?? null
+}
+
+export function hasCurrentManualAccess(
+  grant: Pick<ManualAccessGrantRow, "expires_at" | "revoked_at">,
+  now: Date = new Date(),
+): boolean {
+  if (grant.revoked_at) return false
+  return !grant.expires_at || isFutureIso(grant.expires_at, now)
 }
 
 export function hasCurrentBillingAccess(

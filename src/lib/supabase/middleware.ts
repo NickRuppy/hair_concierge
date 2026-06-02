@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 import { getAuthenticatedAppRedirect, resolveIntakeState } from "@/lib/auth/intake-state"
+import { findCurrentManualAccessGrant } from "@/lib/billing/subscriptions"
 import { getUnauthenticatedRedirectTarget } from "@/lib/auth/unauthenticated-redirect"
 
 export async function updateSession(request: NextRequest) {
@@ -161,6 +162,18 @@ export async function updateSession(request: NextRequest) {
         legacyStatus === "active" ||
         legacyStatus === "past_due" ||
         (legacyStatus === "canceled" && Number.isFinite(legacyPeriodEnd) && legacyPeriodEnd > now)
+    }
+
+    if (!active) {
+      const manualGrant = await findCurrentManualAccessGrant(
+        supabase,
+        { userId: user.id, email: user.email },
+        new Date(now),
+      ).catch((error) => {
+        console.warn("[billing] manual access grant check failed", error)
+        return null
+      })
+      active = Boolean(manualGrant)
     }
 
     if (!active) {

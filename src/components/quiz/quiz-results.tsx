@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { getQuizResultCta } from "@/lib/quiz/result-cta"
@@ -49,13 +49,28 @@ export function QuizResults() {
   const searchParams = useSearchParams()
   const { user, profile, loading } = useAuth()
   const { lead, answers, leadId, goNext } = useQuizStore()
+  const [serverAccessCheck, setServerAccessCheck] = useState<{
+    key: string
+    hasAccess: boolean
+  } | null>(null)
   const checkoutAnalyticsCapturedRef = useRef(false)
   const resultArtifactEmailLeadRef = useRef<string | null>(null)
   const narrative = buildQuizResultNarrative(answers)
   const returnTo = searchParams.get("returnTo")
   const isRetakeMode = searchParams.get("mode") === "retake"
-  const canGoStraightToRoutine = Boolean(user && leadId && isSubscriptionActive(profile))
-  const isCheckingSignedInSubscription = Boolean(user && leadId && (loading || profile === null))
+  const profileHasAccess = isSubscriptionActive(profile)
+  const serverAccessKey =
+    user && leadId && !loading && !profileHasAccess ? `${user.id}:${leadId}` : null
+  const serverHasAccess = Boolean(
+    serverAccessKey && serverAccessCheck?.key === serverAccessKey && serverAccessCheck.hasAccess,
+  )
+  const isCheckingServerAccess = Boolean(
+    serverAccessKey && serverAccessCheck?.key !== serverAccessKey,
+  )
+  const canGoStraightToRoutine = Boolean(user && leadId && (profileHasAccess || serverHasAccess))
+  const isCheckingSignedInSubscription = Boolean(
+    user && leadId && (loading || profile === null || isCheckingServerAccess),
+  )
   const cta = getQuizResultCta({ canGoStraightToRoutine })
 
   const captureQuizCompleted = useCallback(() => {
@@ -74,6 +89,40 @@ export function QuizResults() {
   useEffect(() => {
     captureQuizCompleted()
   }, [captureQuizCompleted])
+
+  useEffect(() => {
+    if (!serverAccessKey) return
+
+    let cancelled = false
+
+    void fetch("/api/billing/access", {
+      headers: { Accept: "application/json" },
+    })
+      .then(async (response) => {
+        if (!response.ok) return { hasAccess: false }
+        return (await response.json()) as { hasAccess?: unknown }
+      })
+      .then((body) => {
+        if (!cancelled) {
+          setServerAccessCheck({
+            key: serverAccessKey,
+            hasAccess: body.hasAccess === true,
+          })
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setServerAccessCheck({
+            key: serverAccessKey,
+            hasAccess: false,
+          })
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [serverAccessKey])
 
   useEffect(() => {
     if (
