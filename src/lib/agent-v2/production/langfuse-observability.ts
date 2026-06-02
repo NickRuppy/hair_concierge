@@ -77,6 +77,14 @@ function readStringArray(value: unknown): string[] {
   return Array.isArray(value) && value.every((entry) => typeof entry === "string") ? value : []
 }
 
+function readPackageIds(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value.flatMap((entry) => {
+    const object = readObject(entry)
+    return typeof object?.package_id === "string" ? [object.package_id] : []
+  })
+}
+
 function readObject(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)
@@ -92,17 +100,20 @@ export function summarizeAgentV2ToolOutput(name: string, output: unknown) {
     : Array.isArray(projection?.steps)
       ? projection.steps
       : null
-  const loadedGuidanceIds = [
+  const loadedGuidanceIds = new Set([
     ...readStringArray(object?.loaded_package_ids),
+    ...readStringArray(object?.loaded_guidance_ids),
+    ...readPackageIds(object?.packages),
     ...readStringArray(projection?.loaded_guidance_ids),
-  ]
+    ...readPackageIds(projection?.packages),
+  ])
 
   return {
     name,
     valid_product_ids: readStringArray(projection?.valid_product_ids),
     product_count: products ? products.length : null,
     routine_step_count: visibleSteps ? visibleSteps.length : null,
-    loaded_guidance_ids: loadedGuidanceIds,
+    loaded_guidance_ids: [...loadedGuidanceIds],
   }
 }
 
