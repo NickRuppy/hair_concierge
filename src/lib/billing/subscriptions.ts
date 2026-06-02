@@ -203,7 +203,10 @@ export async function findCurrentManualAccessGrant(
       .select("id, user_id, email, expires_at, revoked_at")
       .eq("user_id", lookup.userId)
 
-    if (error) throw error
+    if (error) {
+      if (isMissingManualAccessGrantsTableError(error)) return null
+      throw error
+    }
     grants.push(...((data as ManualAccessGrantRow[] | null) ?? []))
   }
 
@@ -214,13 +217,24 @@ export async function findCurrentManualAccessGrant(
       .select("id, user_id, email, expires_at, revoked_at")
       .eq("email", email)
 
-    if (error) throw error
+    if (error) {
+      if (isMissingManualAccessGrantsTableError(error)) return null
+      throw error
+    }
     grants.push(...((data as ManualAccessGrantRow[] | null) ?? []))
   }
 
   const current = grants.filter((grant) => hasCurrentManualAccess(grant, now))
   current.sort((left, right) => compareNullableIsoDesc(left.expires_at, right.expires_at))
   return current[0] ?? null
+}
+
+function isMissingManualAccessGrantsTableError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false
+  const candidate = error as { code?: unknown; message?: unknown }
+  const code = typeof candidate.code === "string" ? candidate.code : ""
+  const message = typeof candidate.message === "string" ? candidate.message : ""
+  return (code === "PGRST205" || code === "42P01") && message.includes("manual_access_grants")
 }
 
 export function hasCurrentManualAccess(
