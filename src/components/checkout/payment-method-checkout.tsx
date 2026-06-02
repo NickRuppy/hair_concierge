@@ -92,19 +92,30 @@ export function PaymentMethodCheckout({
             <span className="h-px bg-border" aria-hidden="true" />
           </div>
 
-          <button
-            type="button"
-            aria-controls="card-sepa-checkout"
-            aria-expanded={cardCheckoutOpen}
-            onClick={() => setCardCheckoutOpen(true)}
-            className={`min-h-[52px] rounded-[12px] border bg-white px-4 text-[16px] font-bold text-[var(--brand-plum-darkest)] transition-colors ${
-              cardCheckoutOpen
-                ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
-                : "border-border hover:border-[var(--brand-plum-light)]"
-            }`}
-          >
-            Karte / SEPA
-          </button>
+          <div>
+            <button
+              type="button"
+              aria-controls="card-sepa-checkout"
+              aria-describedby={!cardCheckoutOpen ? "payment-method-helper" : undefined}
+              aria-expanded={cardCheckoutOpen}
+              onClick={() => setCardCheckoutOpen(true)}
+              className={`min-h-[52px] w-full rounded-[12px] border bg-white px-4 text-[16px] font-bold text-[var(--brand-plum-darkest)] transition-colors ${
+                cardCheckoutOpen
+                  ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
+                  : "border-border hover:border-[var(--brand-plum-light)]"
+              }`}
+            >
+              Karte, SEPA & weitere
+            </button>
+            {!cardCheckoutOpen ? (
+              <p
+                id="payment-method-helper"
+                className="mt-3 text-center text-[11px] leading-relaxed text-[var(--text-caption)]"
+              >
+                Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten.
+              </p>
+            ) : null}
+          </div>
         </div>
       ) : null}
 

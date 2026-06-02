@@ -63,7 +63,9 @@ test("PayPal enabled checkout renders express PayPal first and keeps card checko
   assert.match(html, /Jetzt starten — €17,49 im Quartal/)
   assert.match(html, /PayPal öffnet sich zur Bestätigung\. Danach aktivieren wir dein Konto\./)
   assert.match(html, />oder</)
-  assert.match(html, /Karte \/ SEPA/)
+  assert.match(html, /Karte, SEPA &amp; weitere/)
+  assert.match(html, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
+  assert.doesNotMatch(html, /Karte \/ SEPA/)
   assert.match(html, /aria-expanded="false"/)
   assert.doesNotMatch(html, /min-h-\[560px\]|min-h-\[600px\]/)
   assert.doesNotMatch(html, /Stripe|native|nativ integriert|über Stripe|keine doppelte Zahlung/i)
@@ -78,7 +80,23 @@ test("PayPal disabled checkout preserves the immediate card and SEPA checkout su
   assert.doesNotMatch(html, /PayPal öffnet sich zur Bestätigung/)
   assert.doesNotMatch(html, />oder</)
   assert.doesNotMatch(html, /Karte \/ SEPA/)
+  assert.doesNotMatch(html, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
   assert.match(html, /min-h-\[560px\]/)
+})
+
+test("Stripe payment helper copy is only shown before the embedded checkout expands", () => {
+  const source = readFileSync(
+    new URL("../src/components/checkout/payment-method-checkout.tsx", import.meta.url),
+    "utf8",
+  )
+
+  assert.match(
+    source,
+    /aria-describedby=\{!cardCheckoutOpen \? "payment-method-helper" : undefined\}/,
+  )
+  assert.match(source, /!cardCheckoutOpen \? \(/)
+  assert.match(source, /id="payment-method-helper"/)
+  assert.match(source, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
 })
 
 test("PayPal approval redirects to the provider-aware welcome URL", () => {
