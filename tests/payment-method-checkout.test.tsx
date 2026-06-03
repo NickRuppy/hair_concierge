@@ -63,8 +63,9 @@ test("PayPal enabled checkout renders express PayPal first and keeps card checko
   assert.match(html, /Jetzt starten — €17,49 im Quartal/)
   assert.match(html, /PayPal öffnet sich zur Bestätigung\. Danach aktivieren wir dein Konto\./)
   assert.match(html, />oder</)
-  assert.match(html, /Karte, SEPA &amp; weitere/)
+  assert.match(html, /Karte &amp; weitere/)
   assert.match(html, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
+  assert.doesNotMatch(html, /SEPA/)
   assert.doesNotMatch(html, /Karte \/ SEPA/)
   assert.match(html, /aria-expanded="false"/)
   assert.doesNotMatch(html, /min-h-\[560px\]|min-h-\[600px\]/)
@@ -72,13 +73,14 @@ test("PayPal enabled checkout renders express PayPal first and keeps card checko
   assert.doesNotMatch(html, /bezahlt bis|paid-through|Kündigung/i)
 })
 
-test("PayPal disabled checkout preserves the immediate card and SEPA checkout surface", () => {
+test("PayPal disabled checkout preserves the immediate Stripe checkout surface", () => {
   const html = renderCheckout(false)
 
   assert.match(html, /Sicher bezahlen/)
   assert.match(html, /Jetzt starten — €17,49 im Quartal/)
   assert.doesNotMatch(html, /PayPal öffnet sich zur Bestätigung/)
   assert.doesNotMatch(html, />oder</)
+  assert.doesNotMatch(html, /SEPA/)
   assert.doesNotMatch(html, /Karte \/ SEPA/)
   assert.doesNotMatch(html, /Im sicheren Checkout siehst du alle verfügbaren Zahlungsarten\./)
   assert.match(html, /min-h-\[560px\]/)

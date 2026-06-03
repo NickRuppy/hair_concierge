@@ -5,6 +5,7 @@ import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
 import { getStripe, PRICE_IDS } from "@/lib/stripe/client"
+import { buildStripeCheckoutSessionParams } from "@/lib/stripe/checkout-session-params"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 
 export const runtime = "nodejs"
@@ -49,8 +50,14 @@ export async function POST(req: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
   const authenticatedUserId = user?.id
+  let adminSupabase: ReturnType<typeof createBillingAdminClient> | null = null
+  const getAdminSupabase = () => {
+    adminSupabase ??= createBillingAdminClient()
+    return adminSupabase
+  }
+
   if (authenticatedUserId) {
-    const adminSupabase = createBillingAdminClient()
+    const adminSupabase = getAdminSupabase()
     const conflictResponse = await createStripeCheckoutAccessConflictResponse(
       adminSupabase,
       authenticatedUserId,
@@ -67,13 +74,19 @@ export async function POST(req: NextRequest) {
   }
 
   if (leadId) {
-    const adminSupabase = createBillingAdminClient()
+    const adminSupabase = getAdminSupabase()
     const { data, error } = await adminSupabase
       .from("leads")
       .select("email")
       .eq("id", leadId)
       .maybeSingle()
-    if (error) throw error
+    if (error) {
+      console.error("[stripe] lead lookup failed before Checkout creation", {
+        leadId,
+        error,
+      })
+      return NextResponse.json({ error: "lead lookup failed" }, { status: 500 })
+    }
     customerEmail = data?.email ?? undefined
     if (customerEmail) {
       resolvedLeadId = leadId
@@ -116,24 +129,16 @@ export async function POST(req: NextRequest) {
       "[stripe] STRIPE_DISCOUNT_COUPON_ID is not set — checkout will charge the full anchor price. Configure the discount coupon in Stripe + env to match the UI.",
     )
   }
-  const session = await stripe.checkout.sessions.create({
-    mode: "subscription",
-    ui_mode: "embedded_page",
-    line_items: [{ price: priceId, quantity: 1 }],
-    // Pass customer OR customer_email — never both (Stripe rejects that combination)
-    ...(customerId ? { customer: customerId } : { customer_email: customerEmail }),
-    return_url: `${origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
-    automatic_tax: { enabled: true },
-    consent_collection: { terms_of_service: "required" },
-    custom_text: {
-      terms_of_service_acceptance: {
-        message:
-          "Ich stimme zu, dass der Zugriff auf das Abo sofort beginnt und ich damit mein 14-tägiges Widerrufsrecht verliere (§ 356 Abs. 4 BGB).",
-      },
-    },
-    ...(discountCouponId ? { discounts: [{ coupon: discountCouponId }] } : {}),
-    metadata: resolvedLeadId ? { lead_id: resolvedLeadId } : undefined,
+
+  const params = buildStripeCheckoutSessionParams({
+    origin,
+    priceId,
+    customerId,
+    customerEmail,
+    discountCouponId,
+    leadId: resolvedLeadId,
   })
+  const session = await stripe.checkout.sessions.create(params)
 
   return NextResponse.json({ client_secret: session.client_secret })
 }

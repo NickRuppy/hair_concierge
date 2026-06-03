@@ -34,6 +34,10 @@ const stripeRouteSource = readFileSync(
   new URL("../src/app/api/stripe/create-checkout-session/route.ts", import.meta.url),
   "utf8",
 )
+const stripeCheckoutSessionParamsSource = readFileSync(
+  new URL("../src/lib/stripe/checkout-session-params.ts", import.meta.url),
+  "utf8",
+)
 
 test("active subscription dialog links known emails to prefilled auth", () => {
   assert.match(dialogSource, /Aktives Abo gefunden/)
@@ -116,9 +120,10 @@ test("Stripe lead-derived duplicate conflicts do not expose hidden lead emails",
   assert.ok(stripeRouteSource.includes("{ includeEmail: false }"))
   assert.ok(stripeRouteSource.includes("options.includeEmail === false ? {} : { email }"))
   assert.ok(stripeRouteSource.includes("let resolvedLeadId: string | null = null"))
+  assert.ok(stripeRouteSource.includes("leadId: resolvedLeadId"))
   assert.ok(
-    stripeRouteSource.includes(
-      "metadata: resolvedLeadId ? { lead_id: resolvedLeadId } : undefined",
+    stripeCheckoutSessionParamsSource.includes(
+      "metadata: leadId ? { lead_id: leadId } : undefined",
     ),
   )
 })

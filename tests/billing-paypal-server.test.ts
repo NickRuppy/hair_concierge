@@ -38,8 +38,11 @@ import {
   handleSubscriptionDeleted,
   handleSubscriptionUpdated,
 } from "../src/lib/stripe/webhook-handlers"
-import { createStripeCheckoutAccessConflictResponse } from "../src/app/api/stripe/create-checkout-session/route"
-import { createStripeCheckoutEmailAccessConflictResponse } from "../src/app/api/stripe/create-checkout-session/route"
+import {
+  POST as createStripeCheckoutSession,
+  createStripeCheckoutAccessConflictResponse,
+  createStripeCheckoutEmailAccessConflictResponse,
+} from "../src/app/api/stripe/create-checkout-session/route"
 import { handleBillingReconcile } from "../src/app/api/billing/reconcile/route"
 import { EXPECTED_PAYPAL_PLAN_SHAPES, getPayPalPlanId } from "../src/lib/paypal/plans"
 import {
@@ -111,7 +114,11 @@ function createSupabaseStub(seed?: {
       patch?: Record<string, unknown>
       order?: { column: string; ascending: boolean }[]
       limit?: number
-      filters: Array<{ column: string; value: unknown; op: "eq" | "ilike" | "in" | "lte" | "is" }>
+      filters: Array<{
+        column: string
+        value: unknown
+        op: "eq" | "ilike" | "in" | "lte" | "lt" | "gt" | "is"
+      }>
     } = { filters: [] }
 
     function rows() {
@@ -137,6 +144,14 @@ function createSupabaseStub(seed?: {
             const value = row[filter.column]
             return typeof value === "string" && value <= String(filter.value)
           }
+          if (filter.op === "lt") {
+            const value = row[filter.column]
+            return typeof value === "string" && value < String(filter.value)
+          }
+          if (filter.op === "gt") {
+            const value = row[filter.column]
+            return typeof value === "string" && value > String(filter.value)
+          }
           return false
         }),
       )
@@ -159,12 +174,14 @@ function createSupabaseStub(seed?: {
       const tableError = tableErrors[table]
       if (tableError) return { data: null, error: tableError }
 
+      let updatedRows: Record<string, unknown>[] | null = null
       if (state.op === "update" && state.patch) {
         const matched = applyFilters(rows() as Record<string, unknown>[])
+        updatedRows = [...matched]
         for (const row of matched) Object.assign(row, state.patch)
         calls.push({ table, op: "update", patch: state.patch, filters: state.filters })
       }
-      let result = sorted(applyFilters(rows() as Record<string, unknown>[]))
+      let result = sorted(updatedRows ?? applyFilters(rows() as Record<string, unknown>[]))
       if (typeof state.limit === "number") result = result.slice(0, state.limit)
       return { data: result, error: null }
     }
@@ -270,6 +287,14 @@ function createSupabaseStub(seed?: {
       },
       lte(column: string, value: string) {
         state.filters.push({ column, value, op: "lte" })
+        return builder
+      },
+      lt(column: string, value: string) {
+        state.filters.push({ column, value, op: "lt" })
+        return builder
+      },
+      gt(column: string, value: string) {
+        state.filters.push({ column, value, op: "gt" })
         return builder
       },
       order(column: string, options: { ascending?: boolean } = {}) {
@@ -1247,6 +1272,102 @@ test("checkout.session.completed keeps profile writes and upserts a Stripe billi
   assert.equal(billing[0].current_period_end, new Date(periodEnd * 1000).toISOString())
 })
 
+test("Stripe unpaid SEPA checkout does not grant access on direct activation", async () => {
+  const periodEnd = Math.floor((Date.now() + 172_800_000) / 1000)
+  const { supabase, billing, profiles } = createSupabaseStub()
+  const stripe = {
+    subscriptions: {
+      retrieve: async () => ({
+        id: "sub_sepa",
+        status: "active",
+        default_payment_method: { id: "pm_sepa", type: "sepa_debit" },
+        items: {
+          data: [
+            {
+              current_period_end: periodEnd,
+              price: { recurring: { interval: "month", interval_count: 1 } },
+            },
+          ],
+        },
+      }),
+    },
+  }
+  const linked: unknown[][] = []
+
+  await assert.rejects(
+    () =>
+      ensureCheckoutAccount(
+        {
+          id: "cs_sepa",
+          status: "complete",
+          payment_status: "unpaid",
+          customer: "cus_sepa",
+          customer_details: { email: "sepa@example.com" },
+          subscription: "sub_sepa",
+          metadata: { lead_id: "lead-sepa" },
+        } as any,
+        {
+          supabase: supabase as any,
+          stripe: stripe as any,
+          premiumTierId: "tier-premium",
+          linkQuizToProfile: async (...args) => {
+            linked.push(args)
+          },
+        },
+      ),
+    /checkout session payment is not paid/,
+  )
+
+  assert.equal(Object.keys(profiles).length, 0)
+  assert.equal(billing.length, 0)
+  assert.deepEqual(linked, [])
+})
+
+test("Stripe unpaid non-SEPA checkout does not grant access on direct activation", async () => {
+  const periodEnd = Math.floor((Date.now() + 172_800_000) / 1000)
+  const { supabase, billing, profiles } = createSupabaseStub()
+  const stripe = {
+    subscriptions: {
+      retrieve: async () => ({
+        id: "sub_card_unpaid",
+        status: "active",
+        default_payment_method: { id: "pm_card", type: "card" },
+        items: {
+          data: [
+            {
+              current_period_end: periodEnd,
+              price: { recurring: { interval: "month", interval_count: 1 } },
+            },
+          ],
+        },
+      }),
+    },
+  }
+
+  await assert.rejects(
+    () =>
+      ensureCheckoutAccount(
+        {
+          id: "cs_card_unpaid",
+          status: "complete",
+          payment_status: "unpaid",
+          customer: "cus_card_unpaid",
+          customer_details: { email: "card-unpaid@example.com" },
+          subscription: "sub_card_unpaid",
+        } as any,
+        {
+          supabase: supabase as any,
+          stripe: stripe as any,
+          premiumTierId: "tier-premium",
+        },
+      ),
+    /checkout session payment is not paid/,
+  )
+
+  assert.equal(Object.keys(profiles).length, 0)
+  assert.equal(billing.length, 0)
+})
+
 test("PayPal ACTIVE activation creates a user from provider-verified email and grants Premium", async () => {
   const periodEnd = futureIso()
   const { supabase, profiles, billing, authUsers } = createSupabaseStub()
@@ -1513,6 +1634,7 @@ test("Stripe subscription.updated upserts the billing row when profile resolves 
       "user-1": {
         id: "user-1",
         stripe_customer_id: "cus_update",
+        stripe_subscription_id: "sub_update",
         subscription_status: "active",
       },
     },
@@ -1582,6 +1704,42 @@ test("Stripe unpaid subscription updates do not create open billing access", asy
   assert.equal(await findCurrentBillingSubscriptionForUser(supabase, "user-1"), null)
 })
 
+test("Stripe active non-current subscription updates do not create open billing access", async () => {
+  const periodEnd = Math.floor((Date.now() + 172_800_000) / 1000)
+  const { supabase, billing } = createSupabaseStub({
+    profiles: {
+      "user-1": {
+        id: "user-1",
+        stripe_customer_id: "cus_non_current",
+        stripe_subscription_id: "sub_current",
+        subscription_status: "active",
+      },
+    },
+  })
+
+  await handleSubscriptionUpdated(
+    {
+      id: "sub_old_sepa",
+      customer: "cus_non_current",
+      status: "active",
+      cancel_at_period_end: false,
+      items: {
+        data: [
+          {
+            current_period_end: periodEnd,
+            price: { recurring: { interval: "month", interval_count: 1 } },
+          },
+        ],
+      },
+    } as any,
+    { supabase: supabase as any },
+  )
+
+  assert.equal(billing[0].provider_status, "active")
+  assert.equal(billing[0].entitlement_status, "canceled")
+  assert.equal(await findCurrentBillingSubscriptionForUser(supabase, "user-1"), null)
+})
+
 test("Stripe subscription.deleted downgrades profile and marks billing row canceled", async () => {
   const periodEnd = futureIso()
   const { supabase, billing, profiles } = createSupabaseStub({
@@ -1589,6 +1747,7 @@ test("Stripe subscription.deleted downgrades profile and marks billing row cance
       "user-1": {
         id: "user-1",
         stripe_customer_id: "cus_delete",
+        stripe_subscription_id: "sub_delete",
         subscription_status: "active",
         subscription_tier_id: "tier-premium",
       },
@@ -1636,6 +1795,17 @@ test("Stripe checkout route returns a stable conflict key and known email when c
 
   assert.equal(response.status, 409)
   assert.deepEqual(body, { error: "checkout_access_already_exists", email: "paid@example.com" })
+})
+
+test("Stripe checkout route returns bad request for malformed JSON", async () => {
+  const response = await createStripeCheckoutSession({
+    json: async () => {
+      throw new Error("malformed")
+    },
+  } as any)
+
+  assert.equal(response.status, 400)
+  assert.deepEqual(await response.json(), { error: "bad request" })
 })
 
 test("Stripe checkout conflict check uses the provided billing-visible client", async () => {
