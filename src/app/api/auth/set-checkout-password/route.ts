@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { captureCheckoutException } from "@/lib/observability/checkout"
 import {
   checkoutSessionHash,
   claimCheckoutActivation,
@@ -59,6 +60,7 @@ export interface SetCheckoutPasswordDeps {
   releaseCheckoutActivationClaim?: typeof releaseCheckoutActivationClaim
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
   getPremiumTierId?: (supabase: SupabaseClient) => Promise<string>
+  captureCheckoutException?: typeof captureCheckoutException
   now?: () => Date
 }
 
@@ -97,8 +99,25 @@ export async function handleSetCheckoutPassword(
 
   const rateCheck = await deps.checkRateLimit(target.activationId, SET_CHECKOUT_PASSWORD_RATE_LIMIT)
   if (!rateCheck.allowed) {
+    const status = rateCheck.error === "service_unavailable" ? 503 : 429
+    ;(deps.captureCheckoutException ?? captureCheckoutException)(
+      new Error(
+        rateCheck.error === "service_unavailable"
+          ? "Checkout password rate limit unavailable"
+          : "Checkout password rate limited",
+      ),
+      {
+        ...checkoutActivationTargetSentryDetails(target, "checkout_password_activation"),
+        status,
+        reason:
+          rateCheck.error === "service_unavailable"
+            ? "set_checkout_password_rate_limit_unavailable"
+            : "set_checkout_password_rate_limited",
+        rateLimitSource: "app",
+      },
+    )
     return {
-      status: rateCheck.error === "service_unavailable" ? 503 : 429,
+      status,
       body: {
         error:
           rateCheck.error === "service_unavailable"
@@ -144,6 +163,11 @@ export async function handleSetCheckoutPassword(
 
     if (updateError) {
       console.error("[set-checkout-password] updateUserById failed:", updateError.message)
+      ;(deps.captureCheckoutException ?? captureCheckoutException)(updateError, {
+        ...checkoutActivationTargetSentryDetails(target, "checkout_password_activation"),
+        status: 500,
+        reason: "update_user_failed",
+      })
       await (deps.releaseCheckoutActivationClaim ?? releaseCheckoutActivationClaim)(
         deps.supabase,
         target.activationId,
@@ -165,6 +189,10 @@ export async function handleSetCheckoutPassword(
     }
 
     console.error("[set-checkout-password] failed:", err)
+    ;(deps.captureCheckoutException ?? captureCheckoutException)(err, {
+      ...checkoutActivationTargetSentryDetails(target, "checkout_password_activation"),
+      status: 500,
+    })
     return { status: 500, body: { error: SERVER_ERROR } }
   }
 }
@@ -276,6 +304,26 @@ function isPaymentIncompleteError(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+function checkoutActivationTargetSentryDetails(
+  target: CheckoutActivationTarget,
+  stage: "checkout_password_activation",
+) {
+  if (target.provider === "paypal") {
+    return {
+      provider: "paypal" as const,
+      stage,
+      source: "welcome" as const,
+      paypalTokenPresent: true,
+    }
+  }
+  return {
+    provider: "stripe" as const,
+    stage,
+    source: "welcome" as const,
+    stripeSessionId: target.sessionId,
+  }
 }
 
 function toNextResponse(result: RouteResult) {

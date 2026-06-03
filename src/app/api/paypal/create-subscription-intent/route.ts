@@ -3,6 +3,7 @@ import { z } from "zod"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { assertCanStartCheckout, assertCanStartCheckoutForEmail } from "@/lib/billing/subscriptions"
+import { captureCheckoutException } from "@/lib/observability/checkout"
 import {
   createPayPalCheckoutIntent,
   type PayPalCheckoutSource,
@@ -35,50 +36,74 @@ export async function POST(request: Request) {
   try {
     planId = getPayPalPlanId(interval)
   } catch {
+    captureCheckoutException(new Error("PayPal plan not configured"), {
+      provider: "paypal",
+      stage: "paypal_create_subscription_intent",
+      source,
+      interval,
+      leadId,
+      status: 500,
+      reason: "plan_not_configured",
+    })
     return NextResponse.json({ error: "paypal plan not configured" }, { status: 500 })
   }
 
-  const admin = createAdminClient()
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  try {
+    const admin = createAdminClient()
+    const supabase = await createClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
-  if (user?.id) {
-    const conflict = await toConflictResponse(assertCanStartCheckout(admin, user.id), user.email)
-    if (conflict) return conflict
-  }
-
-  let email = user?.email ?? null
-  let resolvedLeadId: string | null = null
-  let canExposeConflictEmail = Boolean(user?.email)
-  if (leadId) {
-    const { data, error } = await admin.from("leads").select("email").eq("id", leadId).maybeSingle()
-    if (error) throw error
-    if (typeof data?.email === "string") {
-      email = data.email
-      resolvedLeadId = leadId
+    if (user?.id) {
+      const conflict = await toConflictResponse(assertCanStartCheckout(admin, user.id), user.email)
+      if (conflict) return conflict
     }
-    canExposeConflictEmail = false
+
+    let email = user?.email ?? null
+    let resolvedLeadId: string | null = null
+    let canExposeConflictEmail = Boolean(user?.email)
+    if (leadId) {
+      const { data, error } = await admin
+        .from("leads")
+        .select("email")
+        .eq("id", leadId)
+        .maybeSingle()
+      if (error) throw error
+      if (typeof data?.email === "string") {
+        email = data.email
+        resolvedLeadId = leadId
+      }
+      canExposeConflictEmail = false
+    }
+
+    if (email) {
+      const conflict = await toConflictResponse(
+        assertCanStartCheckoutForEmail(admin, email),
+        canExposeConflictEmail ? email : null,
+      )
+      if (conflict) return conflict
+    }
+
+    const intent = await createPayPalCheckoutIntent(admin, {
+      interval: interval as BillingInterval,
+      source: source as PayPalCheckoutSource,
+      leadId: resolvedLeadId,
+      email,
+      userId: user?.id ?? null,
+    })
+
+    return NextResponse.json({ token: intent.token, planId })
+  } catch (error) {
+    captureCheckoutException(error, {
+      provider: "paypal",
+      stage: "paypal_create_subscription_intent",
+      source,
+      interval,
+      leadId,
+    })
+    throw error
   }
-
-  if (email) {
-    const conflict = await toConflictResponse(
-      assertCanStartCheckoutForEmail(admin, email),
-      canExposeConflictEmail ? email : null,
-    )
-    if (conflict) return conflict
-  }
-
-  const intent = await createPayPalCheckoutIntent(admin, {
-    interval: interval as BillingInterval,
-    source: source as PayPalCheckoutSource,
-    leadId: resolvedLeadId,
-    email,
-    userId: user?.id ?? null,
-  })
-
-  return NextResponse.json({ token: intent.token, planId })
 }
 
 async function toConflictResponse(

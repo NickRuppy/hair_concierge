@@ -146,12 +146,16 @@ test("rejects weak passwords before changing anything", async () => {
 
 test("returns 429 when the checkout session is rate limited", async () => {
   let rateLimitIdentifier: string | undefined
+  const captured: any[] = []
   const { calls, deps } = stubDeps({
-    checkRateLimit: async (identifier) => {
+    checkRateLimit: async (identifier: string) => {
       rateLimitIdentifier = identifier
       return { allowed: false }
     },
-  })
+    captureCheckoutException: (_error: unknown, details: Record<string, unknown>) => {
+      captured.push(details)
+    },
+  } as any)
 
   const response = await handleSetCheckoutPassword(
     { session_id: "cs_test_password", password: "long-enough" },
@@ -162,6 +166,15 @@ test("returns 429 when the checkout session is rate limited", async () => {
   expect(response.body.error).toContain("Zu viele")
   expect(rateLimitIdentifier).toBe("cs_test_password")
   expect(calls).toEqual([])
+  expect(captured).toEqual([
+    expect.objectContaining({
+      provider: "stripe",
+      stage: "checkout_password_activation",
+      rateLimitSource: "app",
+      reason: "set_checkout_password_rate_limited",
+      status: 429,
+    }),
+  ])
 })
 
 test("returns 503 when the rate-limit service is unavailable", async () => {
@@ -632,6 +645,35 @@ test("send magic link rejects when the checkout activation was already claimed",
   expect(response.body.error).toContain("nicht mehr gültig")
 })
 
+test("send magic link reports app rate limits to checkout Sentry context", async () => {
+  const { deps } = stubDeps()
+  const captured: any[] = []
+  const response = await handleSendMagicLink({ session_id: "cs_magic" }, {
+    stripe: deps.stripe,
+    supabase: deps.supabase,
+    siteUrl: "https://hair.example",
+    checkRateLimit: async () => ({ allowed: false }),
+    verifyCheckoutSessionForActivation: deps.verifyCheckoutSessionForActivation,
+    ensureCheckoutAccount: deps.ensureCheckoutAccount,
+    claimCheckoutActivation: async () => true,
+    releaseCheckoutActivationClaim: async () => {},
+    captureCheckoutException: (_error: unknown, details: Record<string, unknown>) => {
+      captured.push(details)
+    },
+  } as any)
+
+  expect(response.status).toBe(429)
+  expect(captured).toEqual([
+    expect.objectContaining({
+      provider: "stripe",
+      stage: "checkout_magic_link_activation",
+      rateLimitSource: "app",
+      reason: "send_auth_link_rate_limited",
+      status: 429,
+    }),
+  ])
+})
+
 test("send magic link releases the checkout activation claim if email sending fails", async () => {
   const { deps } = stubDeps()
   let releasedSessionId: string | undefined
@@ -658,6 +700,44 @@ test("send magic link releases the checkout activation claim if email sending fa
 
   expect(response.status).toBe(500)
   expect(releasedSessionId).toBe("cs_magic")
+})
+
+test("send magic link reports Supabase Auth email-send rate limits to checkout Sentry context", async () => {
+  const { deps } = stubDeps()
+  const captured: any[] = []
+  deps.supabase.auth.signInWithOtp = async () => ({
+    data: { user: null, session: null },
+    error: {
+      message: "Email rate limit exceeded",
+      error_code: "over_email_send_rate_limit",
+      status: 429,
+    } as any,
+  })
+
+  const response = await handleSendMagicLink({ session_id: "cs_magic" }, {
+    stripe: deps.stripe,
+    supabase: deps.supabase,
+    siteUrl: "https://hair.example",
+    checkRateLimit: deps.checkRateLimit,
+    verifyCheckoutSessionForActivation: deps.verifyCheckoutSessionForActivation,
+    ensureCheckoutAccount: deps.ensureCheckoutAccount,
+    claimCheckoutActivation: async () => true,
+    releaseCheckoutActivationClaim: async () => {},
+    captureCheckoutException: (_error: unknown, details: Record<string, unknown>) => {
+      captured.push(details)
+    },
+  } as any)
+
+  expect(response.status).toBe(500)
+  expect(captured).toEqual([
+    expect.objectContaining({
+      provider: "stripe",
+      stage: "checkout_magic_link_activation",
+      rateLimitSource: "supabase_auth",
+      reason: "supabase_auth_email_rate_limit",
+      status: 429,
+    }),
+  ])
 })
 
 test("send magic link requires only session_id and reports non-leaky German errors", async () => {
