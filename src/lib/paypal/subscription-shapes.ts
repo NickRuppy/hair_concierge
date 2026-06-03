@@ -70,11 +70,14 @@ export function toBillingSubscriptionInputFromPayPal(
   const paidThrough = derivePayPalPaidThroughDate(subscription)
   const isProviderCancellation =
     subscription.status === "CANCELLED" || subscription.status === "EXPIRED"
+  const providerSubscriberEmail =
+    subscription.subscriber?.email_address?.trim().toLowerCase() || undefined
 
   return {
     user_id: userId,
     provider: "paypal",
     provider_customer_id: subscription.subscriber?.payer_id ?? null,
+    provider_subscriber_email: providerSubscriberEmail,
     provider_subscription_id: subscription.id,
     provider_status: subscription.status ?? "UNKNOWN",
     entitlement_status: entitlementStatus,

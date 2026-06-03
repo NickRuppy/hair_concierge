@@ -49,6 +49,7 @@ function createSupabaseStub(seed?: {
     user_id: row.user_id ?? "user-1",
     provider: row.provider ?? "paypal",
     provider_customer_id: row.provider_customer_id ?? "payer-1",
+    provider_subscriber_email: row.provider_subscriber_email ?? null,
     provider_subscription_id: row.provider_subscription_id ?? `I-${index + 1}`,
     provider_status: row.provider_status ?? "ACTIVE",
     entitlement_status: row.entitlement_status ?? "active",
@@ -460,6 +461,43 @@ test("activation webhook does not rebind an intent that already belongs to anoth
   assert.deepEqual(cancelled, ["I-active"])
   assert.equal(paypalIntents[0].provider_subscription_id, "I-original")
   assert.equal(paypalIntents[0].status, "approved")
+  assert.equal(billing.length, 0)
+})
+
+test("activation webhook cancels subscriptions created from expired checkout intents", async () => {
+  const { supabase, billing, paypalIntents } = createSupabaseStub({
+    billing: [],
+    paypalIntents: [
+      {
+        id: "intent-expired",
+        token: "token-active",
+        interval: "month",
+        source: "pricing_page",
+        status: "approved",
+        provider_subscription_id: null,
+        expires_at: pastIso(),
+      },
+    ],
+  })
+  const cancelled: string[] = []
+
+  const result = await handlePayPalWebhookEvent(
+    event("WH-expired-token", "BILLING.SUBSCRIPTION.ACTIVATED"),
+    {
+      supabase,
+      premiumTierId: "tier-premium",
+      freeTierId: "tier-free",
+      retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+      cancelPayPalSubscription: async (subscriptionId) => {
+        cancelled.push(subscriptionId)
+      },
+    },
+  )
+
+  assert.deepEqual(result, { handled: true })
+  assert.deepEqual(cancelled, ["I-active"])
+  assert.equal(paypalIntents[0].status, "expired")
+  assert.equal(paypalIntents[0].provider_subscription_id, null)
   assert.equal(billing.length, 0)
 })
 

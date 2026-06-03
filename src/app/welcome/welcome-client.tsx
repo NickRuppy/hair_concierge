@@ -11,7 +11,9 @@ import { createClient } from "@/lib/supabase/client"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
 
 interface WelcomeClientProps {
+  analyticsId?: string
   email?: string
+  providerSubscriberEmail?: string | null
   purchase: CheckoutPurchaseAnalytics | null
   redirectTo?: string
   sessionId?: string
@@ -35,7 +37,9 @@ const MAGIC_LINK_BODY =
   "Wir senden dir einen sicheren Login-Link. Du klickst ihn im Postfach an und bist direkt angemeldet."
 
 export function WelcomeClient({
+  analyticsId: providedAnalyticsId,
   email,
+  providerSubscriberEmail,
   purchase,
   redirectTo,
   sessionId,
@@ -44,8 +48,13 @@ export function WelcomeClient({
 }: WelcomeClientProps) {
   const router = useRouter()
   const supabase = createClient()
-  const analyticsId = sessionId ?? activationSourceId(activationSource)
+  const analyticsId = providedAnalyticsId ?? sessionId ?? activationSourceId(activationSource)
   const requestBody = useMemo(() => activationRequestBody(activationSource), [activationSource])
+  const paypalActivationToken =
+    activationSource.provider === "paypal" ? activationSource.token : null
+  const showProviderSubscriberEmail =
+    Boolean(providerSubscriberEmail?.trim()) &&
+    providerSubscriberEmail?.trim().toLowerCase() !== email?.trim().toLowerCase()
 
   const [state, setState] = useState<ScreenState>({ view: "choice" })
   const [loading, setLoading] = useState<LoadingState>(null)
@@ -55,8 +64,8 @@ export function WelcomeClient({
   const [highlightMagicLink, setHighlightMagicLink] = useState(false)
 
   useEffect(() => {
-    if (mode !== "pending" || activationSource.provider !== "paypal") return
-    const { token } = activationSource
+    if (mode !== "pending" || !paypalActivationToken) return
+    const token = paypalActivationToken
 
     let cancelled = false
     let attempts = 0
@@ -94,7 +103,7 @@ export function WelcomeClient({
       cancelled = true
       if (timer) clearTimeout(timer)
     }
-  }, [activationSource, mode])
+  }, [mode, paypalActivationToken])
 
   async function handleCreatePassword(e: FormEvent) {
     e.preventDefault()
@@ -266,17 +275,36 @@ export function WelcomeClient({
             </div>
           </div>
 
-          <div className="mx-auto w-full max-w-md space-y-2">
-            <label htmlFor="checkout-email" className="text-sm font-medium text-foreground">
-              E-Mail aus deinem Checkout
-            </label>
-            <Input
-              id="checkout-email"
-              value={email ?? ""}
-              readOnly
-              aria-readonly="true"
-              className="h-11 bg-muted/60 text-center"
-            />
+          <div className="mx-auto w-full max-w-md space-y-3">
+            <div className="space-y-2">
+              <label htmlFor="checkout-email" className="text-sm font-medium text-foreground">
+                Chaarlie-E-Mail
+              </label>
+              <Input
+                id="checkout-email"
+                value={email ?? ""}
+                readOnly
+                aria-readonly="true"
+                className="h-11 bg-muted/60 text-center"
+              />
+            </div>
+            {showProviderSubscriberEmail ? (
+              <div className="space-y-2">
+                <label
+                  htmlFor="provider-subscriber-email"
+                  className="text-sm font-medium text-foreground"
+                >
+                  PayPal-E-Mail
+                </label>
+                <Input
+                  id="provider-subscriber-email"
+                  value={providerSubscriberEmail?.trim() ?? ""}
+                  readOnly
+                  aria-readonly="true"
+                  className="h-11 bg-muted/60 text-center"
+                />
+              </div>
+            ) : null}
           </div>
 
           {message && (
@@ -387,7 +415,7 @@ function activationRequestBody(source: CheckoutActivationSource): Record<string,
 }
 
 function activationSourceId(source: CheckoutActivationSource): string {
-  if (source.provider === "paypal") return `paypal:${source.token}`
+  if (source.provider === "paypal") return "paypal:checkout"
   return source.sessionId
 }
 

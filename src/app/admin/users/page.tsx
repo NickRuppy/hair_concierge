@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
 import type { Profile, HairProfile } from "@/lib/types"
+import type { BillingSubscriptionRow } from "@/lib/billing/types"
 import { fehler, HAIR_TEXTURE_LABELS } from "@/lib/vocabulary"
 
 interface UserWithHairProfile extends Profile {
   hair_profiles?: HairProfile[]
+  current_billing_subscription?: BillingSubscriptionRow | null
 }
 
 export default function AdminUsersPage() {
@@ -56,6 +58,13 @@ export default function AdminUsersPage() {
     return parts.length > 0 ? parts.join(" / ") : null
   }
 
+  function getPayPalEmail(user: UserWithHairProfile): string | null {
+    const subscriberEmail = user.current_billing_subscription?.provider_subscriber_email?.trim()
+    if (!subscriberEmail) return null
+    if (subscriberEmail.toLowerCase() === user.email?.trim().toLowerCase()) return null
+    return subscriberEmail
+  }
+
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
@@ -79,7 +88,7 @@ export default function AdminUsersPage() {
             <thead>
               <tr className="border-b bg-muted/50">
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Email</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Kontakt</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Admin</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                   Haarprofil
@@ -92,6 +101,7 @@ export default function AdminUsersPage() {
             <tbody>
               {users.map((user) => {
                 const hairSummary = getHairSummary(user)
+                const paypalEmail = getPayPalEmail(user)
                 return (
                   <tr
                     key={user.id}
@@ -100,7 +110,24 @@ export default function AdminUsersPage() {
                     <td className="px-4 py-3 font-medium text-foreground">
                       {user.full_name || "—"}
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">{user.email}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      <div className="space-y-1">
+                        <div>
+                          <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-muted-foreground/70">
+                            Chaarlie-E-Mail
+                          </p>
+                          <p>{user.email}</p>
+                        </div>
+                        {paypalEmail ? (
+                          <div>
+                            <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-muted-foreground/70">
+                              PayPal-E-Mail
+                            </p>
+                            <p>{paypalEmail}</p>
+                          </div>
+                        ) : null}
+                      </div>
+                    </td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${

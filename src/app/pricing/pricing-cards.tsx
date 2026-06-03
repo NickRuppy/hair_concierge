@@ -7,6 +7,11 @@ import {
   isPayPalCheckoutEnabled,
   PaymentMethodCheckout,
 } from "@/components/checkout/payment-method-checkout"
+import {
+  ActiveSubscriptionDialog,
+  isCheckoutAccessAlreadyExistsResponse,
+  readCheckoutAccessAlreadyExistsEmail,
+} from "@/components/checkout/active-subscription-dialog"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import { getStripePricingPlan, STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
@@ -35,6 +40,8 @@ export function PricingCards({
       ? checkoutStartError
       : null,
   )
+  const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
 
   useEffect(() => {
     trackAppEvent("pricing_viewed", {
@@ -74,6 +81,13 @@ export function PricingCards({
       }),
     })
     if (!res.ok) {
+      const body = await res.json().catch(() => ({}))
+      if (isCheckoutAccessAlreadyExistsResponse(res, body)) {
+        setCheckoutError(null)
+        setDuplicateEmail(readCheckoutAccessAlreadyExistsEmail(body))
+        setDuplicateDialogOpen(true)
+        throw new Error("checkout access already exists")
+      }
       setCheckoutError(checkoutStartError)
       throw new Error("failed to create checkout session")
     }
@@ -103,6 +117,11 @@ export function PricingCards({
 
   return (
     <div className="space-y-8">
+      <ActiveSubscriptionDialog
+        email={duplicateEmail}
+        onOpenChange={setDuplicateDialogOpen}
+        open={duplicateDialogOpen}
+      />
       {/* Plan cards always visible; selected card is visually emphasised */}
       <div className="grid gap-6 md:grid-cols-3">
         {PLANS.map((plan) => {

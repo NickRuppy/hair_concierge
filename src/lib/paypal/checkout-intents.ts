@@ -174,6 +174,21 @@ export async function markPayPalCheckoutIntentActivated(
   if (error) throw error
 }
 
+export async function markPayPalCheckoutIntentExpired(
+  supabase: PayPalCheckoutIntentClient,
+  token: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from("paypal_checkout_intents")
+    .update({
+      status: "expired",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("token", token)
+
+  if (error) throw error
+}
+
 export function isPayPalCheckoutIntentExpired(
   intent: Pick<PayPalCheckoutIntentRow, "expires_at">,
   now: Date = new Date(),

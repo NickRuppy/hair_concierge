@@ -17,7 +17,7 @@ const BodySchema = z.object({
 })
 
 export async function POST(req: NextRequest) {
-  const parsed = BodySchema.safeParse(await req.json())
+  const parsed = BodySchema.safeParse(await req.json().catch(() => null))
   if (!parsed.success) {
     return NextResponse.json({ error: "bad request" }, { status: 400 })
   }
@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
   // Priority: leadId email → authed user's stripe_customer_id → authed user's email → 400
   let customerId: string | undefined
   let customerEmail: string | undefined
+  let resolvedLeadId: string | null = null
 
   const cookieStore = await cookies()
   const supabase = createServerClient(
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
     const conflictResponse = await createStripeCheckoutAccessConflictResponse(
       adminSupabase,
       authenticatedUserId,
+      user.email,
     )
     if (conflictResponse) return conflictResponse
     if (user?.email) {
@@ -66,22 +68,27 @@ export async function POST(req: NextRequest) {
 
   if (leadId) {
     const adminSupabase = createBillingAdminClient()
-    const { data } = await adminSupabase
+    const { data, error } = await adminSupabase
       .from("leads")
       .select("email")
       .eq("id", leadId)
       .maybeSingle()
+    if (error) throw error
     customerEmail = data?.email ?? undefined
     if (customerEmail) {
+      resolvedLeadId = leadId
       const conflictResponse = await createStripeCheckoutEmailAccessConflictResponse(
         adminSupabase,
         customerEmail,
+        { includeEmail: false },
       )
       if (conflictResponse) return conflictResponse
     }
-  } else {
-    // Resubscribe / direct-entry path — lock to the authenticated user's identity
-    if (user) {
+  }
+
+  if (!customerId && !customerEmail) {
+    // Resubscribe, direct-entry, or stale lead path — lock to the authenticated user's identity.
+    if (user?.id) {
       const { data: profile } = await supabase
         .from("profiles")
         .select("stripe_customer_id")
@@ -125,7 +132,7 @@ export async function POST(req: NextRequest) {
       },
     },
     ...(discountCouponId ? { discounts: [{ coupon: discountCouponId }] } : {}),
-    metadata: leadId ? { lead_id: leadId } : undefined,
+    metadata: resolvedLeadId ? { lead_id: resolvedLeadId } : undefined,
   })
 
   return NextResponse.json({ client_secret: session.client_secret })
@@ -134,13 +141,20 @@ export async function POST(req: NextRequest) {
 export async function createStripeCheckoutEmailAccessConflictResponse(
   supabase: Parameters<typeof assertCanStartCheckoutForEmail>[0],
   email: string,
-): Promise<NextResponse<{ error: "checkout_access_already_exists" }> | null> {
+  options: { includeEmail?: boolean } = {},
+): Promise<NextResponse<{ error: "checkout_access_already_exists"; email?: string }> | null> {
   try {
     await assertCanStartCheckoutForEmail(supabase, email)
     return null
   } catch (error) {
     if (error instanceof Error && error.message.includes("already has access")) {
-      return NextResponse.json({ error: "checkout_access_already_exists" }, { status: 409 })
+      return NextResponse.json(
+        {
+          error: "checkout_access_already_exists",
+          ...(options.includeEmail === false ? {} : { email }),
+        },
+        { status: 409 },
+      )
     }
     throw error
   }
@@ -159,13 +173,17 @@ function createBillingAdminClient() {
 export async function createStripeCheckoutAccessConflictResponse(
   supabase: Parameters<typeof assertCanStartCheckout>[0],
   userId: string,
-): Promise<NextResponse<{ error: "checkout_access_already_exists" }> | null> {
+  email?: string | null,
+): Promise<NextResponse<{ error: "checkout_access_already_exists"; email?: string }> | null> {
   try {
     await assertCanStartCheckout(supabase, userId)
     return null
   } catch (error) {
     if (error instanceof Error && error.message.includes("already has access")) {
-      return NextResponse.json({ error: "checkout_access_already_exists" }, { status: 409 })
+      return NextResponse.json(
+        { error: "checkout_access_already_exists", ...(email ? { email } : {}) },
+        { status: 409 },
+      )
     }
     throw error
   }

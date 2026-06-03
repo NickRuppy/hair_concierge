@@ -86,6 +86,7 @@ function createSupabaseStub(seed?: {
     user_id: row.user_id ?? "user-1",
     provider: row.provider ?? "stripe",
     provider_customer_id: row.provider_customer_id ?? null,
+    provider_subscriber_email: row.provider_subscriber_email ?? null,
     provider_subscription_id: row.provider_subscription_id ?? `sub-${index + 1}`,
     provider_status: row.provider_status ?? "active",
     entitlement_status: row.entitlement_status ?? "active",
@@ -782,7 +783,7 @@ test("PayPal checkout intent binding is immutable after the first provider subsc
   assert.equal(paypalIntents[0].email, "first@example.com")
 })
 
-test("PayPal duplicate guard checks intent user, intent email, and provider email", async () => {
+test("PayPal duplicate guard checks Chaarlie user and email, not PayPal subscriber email", async () => {
   const { supabase } = createSupabaseStub({
     billing: [{ user_id: "user-1", entitlement_status: "active" }],
     profiles: {
@@ -812,7 +813,7 @@ test("PayPal duplicate guard checks intent user, intent email, and provider emai
       { user_id: null, email: "other@example.com" },
       { subscriber: { email_address: "Lead@Example.com" } },
     ),
-    "paypal_email_already_has_access",
+    null,
   )
 })
 
@@ -836,7 +837,7 @@ test("PayPal duplicate marker is written only after duplicate cancellation succe
         cancelPayPalSubscription: async () => {
           throw new Error("PayPal outage")
         },
-        reason: "paypal_email_already_has_access",
+        reason: "intent_email_already_has_access",
         subscriptionId: "I-duplicate",
         supabase,
         token: "token-1",
@@ -851,7 +852,7 @@ test("PayPal duplicate marker is written only after duplicate cancellation succe
         cancelPayPalSubscription: async () => {
           throw new Error("SUBSCRIPTION_STATUS_INVALID")
         },
-        reason: "paypal_email_already_has_access",
+        reason: "intent_email_already_has_access",
         retrievePayPalSubscription: async () => ({ status: "ACTIVE" }),
         subscriptionId: "I-duplicate",
         supabase,
@@ -865,27 +866,27 @@ test("PayPal duplicate marker is written only after duplicate cancellation succe
     cancelPayPalSubscription: async () => {
       throw new Error("already cancelled")
     },
-    reason: "paypal_email_already_has_access",
+    reason: "intent_email_already_has_access",
     retrievePayPalSubscription: async () => ({ status: "CANCELLED" }),
     subscriptionId: "I-duplicate",
     supabase,
     token: "token-1",
   })
   assert.equal(paypalIntents[0].status, "duplicate")
-  assert.equal(paypalIntents[0].duplicate_reason, "paypal_email_already_has_access")
+  assert.equal(paypalIntents[0].duplicate_reason, "intent_email_already_has_access")
 
   paypalIntents[0].status = "approved"
   paypalIntents[0].duplicate_reason = null
 
   await cancelAndMarkPayPalDuplicate({
     cancelPayPalSubscription: async () => {},
-    reason: "paypal_email_already_has_access",
+    reason: "intent_email_already_has_access",
     subscriptionId: "I-duplicate",
     supabase,
     token: "token-1",
   })
   assert.equal(paypalIntents[0].status, "duplicate")
-  assert.equal(paypalIntents[0].duplicate_reason, "paypal_email_already_has_access")
+  assert.equal(paypalIntents[0].duplicate_reason, "intent_email_already_has_access")
 })
 
 test("mirrorBillingSubscriptionToProfile keeps future paid-through PayPal cancellations active", async () => {
@@ -1366,6 +1367,53 @@ test("PayPal activation reuses an existing profile with the provider email", asy
   assert.equal(profiles["existing-user"].subscription_status, "active")
 })
 
+test("PayPal activation does not treat wildcard characters as profile email matches", async () => {
+  const { supabase, profiles, authUsers } = createSupabaseStub({
+    profiles: {
+      "existing-user": {
+        id: "existing-user",
+        email: "axb@example.com",
+        subscription_status: null,
+      },
+    },
+    authUsers: {
+      "existing-user": {
+        id: "existing-user",
+        email: "axb@example.com",
+        app_metadata: {},
+      },
+    },
+  })
+
+  const result = await ensurePayPalCheckoutAccount(
+    {
+      id: "I-wildcard-email",
+      status: "ACTIVE",
+      plan_id: "P-month",
+      subscriber: {
+        payer_id: "payer-1",
+        email_address: "a_b@example.com",
+      },
+      billing_info: { next_billing_time: futureIso() },
+    },
+    {
+      supabase,
+      premiumTierId: "tier-premium",
+      interval: "month",
+    },
+  )
+
+  assert.equal(result.status, "active")
+  if (result.status !== "active") throw new Error("expected active PayPal activation result")
+  assert.notEqual(result.userId, "existing-user")
+  assert.equal(profiles["existing-user"].subscription_status, null)
+  assert.equal(profiles[result.userId].email, "a_b@example.com")
+  assert.equal(
+    Object.values(authUsers).some((user) => user.email === "a_b@example.com"),
+    true,
+  )
+})
+
 test("PayPal activation refuses to attach a second current subscription to the same email", async () => {
   const { supabase, profiles, authUsers } = createSupabaseStub({
     billing: [
@@ -1411,7 +1459,7 @@ test("PayPal activation refuses to attach a second current subscription to the s
           interval: "quarter",
         },
       ),
-    /already has a current subscription/,
+    /Chaarlie account already has current subscription access/,
   )
   assert.equal(Object.keys(authUsers).length, 1)
   assert.equal(profiles["existing-user"].subscription_status, "active")
@@ -1572,18 +1620,22 @@ test("Stripe subscription.deleted downgrades profile and marks billing row cance
   assert.equal(billing[0].current_period_end, periodEnd)
 })
 
-test("Stripe checkout route returns a stable conflict key when checkout access already exists", async () => {
+test("Stripe checkout route returns a stable conflict key and known email when checkout access already exists", async () => {
   const active = createSupabaseStub({
     billing: [{ user_id: "user-1", entitlement_status: "active" }],
     profiles: { "user-1": { id: "user-1", subscription_status: null } },
   })
 
-  const response = await createStripeCheckoutAccessConflictResponse(active.supabase, "user-1")
+  const response = await createStripeCheckoutAccessConflictResponse(
+    active.supabase,
+    "user-1",
+    "paid@example.com",
+  )
   if (!response) throw new Error("expected checkout conflict response")
   const body = await response.json()
 
   assert.equal(response.status, 409)
-  assert.deepEqual(body, { error: "checkout_access_already_exists" })
+  assert.deepEqual(body, { error: "checkout_access_already_exists", email: "paid@example.com" })
 })
 
 test("Stripe checkout conflict check uses the provided billing-visible client", async () => {
@@ -1619,6 +1671,10 @@ test("Stripe checkout lead-email conflict uses provider-neutral access guard", a
   )
 
   assert.equal(response?.status, 409)
+  assert.deepEqual(await response?.json(), {
+    error: "checkout_access_already_exists",
+    email: "paid@example.com",
+  })
 })
 
 test("Stripe checkout email conflict blocks email-only manual grants", async () => {
@@ -1640,6 +1696,10 @@ test("Stripe checkout email conflict blocks email-only manual grants", async () 
   )
 
   assert.equal(response?.status, 409)
+  assert.deepEqual(await response?.json(), {
+    error: "checkout_access_already_exists",
+    email: "Friend@Example.com",
+  })
 })
 
 test("Stripe checkout email conflict ignores missing manual grants table", async () => {

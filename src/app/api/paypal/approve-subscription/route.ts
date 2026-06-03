@@ -16,8 +16,8 @@ import {
 } from "@/lib/paypal/subscriptions"
 import {
   cancelAndMarkPayPalDuplicate,
+  buildPayPalDuplicateCheckoutBody,
   findPayPalCheckoutDuplicateReason,
-  PAYPAL_DUPLICATE_CHECKOUT_COPY,
   PayPalDuplicateCancellationError,
 } from "@/lib/paypal/duplicate-guard"
 
@@ -49,10 +49,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "paypal token mismatch" }, { status: 400 })
   }
   if (intent.status === "duplicate") {
-    return NextResponse.json(
-      { error: "checkout_access_already_exists", message: PAYPAL_DUPLICATE_CHECKOUT_COPY },
-      { status: 409 },
-    )
+    return createPayPalDuplicateCheckoutResponse(intent)
   }
   if (intent.provider_subscription_id && intent.provider_subscription_id !== subscription.id) {
     return NextResponse.json({ error: "paypal subscription mismatch" }, { status: 400 })
@@ -67,7 +64,7 @@ export async function POST(request: Request) {
       admin,
       token,
       subscription.id,
-      getPayPalSubscriberEmail(subscription),
+      intent.email ?? getPayPalSubscriberEmail(subscription),
     )
     return NextResponse.json({ ok: true, token })
   }
@@ -112,13 +109,16 @@ export async function POST(request: Request) {
       }
       throw error
     }
-    return NextResponse.json(
-      { error: "checkout_access_already_exists", message: PAYPAL_DUPLICATE_CHECKOUT_COPY },
-      { status: 409 },
-    )
+    return createPayPalDuplicateCheckoutResponse(boundIntent)
   }
 
   return NextResponse.json({ ok: true, token })
+}
+
+export function createPayPalDuplicateCheckoutResponse(
+  intent: Pick<PayPalCheckoutIntentRow, "email" | "lead_id">,
+): NextResponse<ReturnType<typeof buildPayPalDuplicateCheckoutBody>> {
+  return NextResponse.json(buildPayPalDuplicateCheckoutBody(intent), { status: 409 })
 }
 
 function getPayPalSubscriberEmail(subscription: PayPalSubscription): string | null {

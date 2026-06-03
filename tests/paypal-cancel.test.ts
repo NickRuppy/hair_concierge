@@ -27,6 +27,7 @@ function createSupabaseStub(options: {
     user_id: row.user_id ?? "user-1",
     provider: row.provider ?? "paypal",
     provider_customer_id: row.provider_customer_id ?? "payer-1",
+    provider_subscriber_email: row.provider_subscriber_email ?? null,
     provider_subscription_id: row.provider_subscription_id ?? `I-${index + 1}`,
     provider_status: row.provider_status ?? "ACTIVE",
     entitlement_status: row.entitlement_status ?? "active",

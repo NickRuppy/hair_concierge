@@ -7,6 +7,11 @@ import {
   isPayPalCheckoutEnabled,
   PaymentMethodCheckout,
 } from "@/components/checkout/payment-method-checkout"
+import {
+  ActiveSubscriptionDialog,
+  isCheckoutAccessAlreadyExistsResponse,
+  readCheckoutAccessAlreadyExistsEmail,
+} from "@/components/checkout/active-subscription-dialog"
 import { Button } from "@/components/ui/button"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import type { BillingInterval } from "@/lib/stripe/intervals"
@@ -38,6 +43,8 @@ export function ResultOfferPricing({
     useState<BillingInterval>(DEFAULT_PRICING_INTERVAL)
   const [checkoutInterval, setCheckoutInterval] = useState<BillingInterval | null>(null)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const selectedPlan = getStripePricingPlan(selectedInterval)
 
   useEffect(() => {
@@ -85,6 +92,13 @@ export function ResultOfferPricing({
     })
 
     if (!response.ok) {
+      const body = await response.json().catch(() => ({}))
+      if (isCheckoutAccessAlreadyExistsResponse(response, body)) {
+        setCheckoutError(null)
+        setDuplicateEmail(readCheckoutAccessAlreadyExistsEmail(body))
+        setDuplicateDialogOpen(true)
+        throw new Error("checkout access already exists")
+      }
       setCheckoutError(checkoutStartError)
       throw new Error("failed to create checkout session")
     }
@@ -117,6 +131,11 @@ export function ResultOfferPricing({
 
   return (
     <div className="space-y-4">
+      <ActiveSubscriptionDialog
+        email={duplicateEmail}
+        onOpenChange={setDuplicateDialogOpen}
+        open={duplicateDialogOpen}
+      />
       <div className="grid gap-2.5">
         {STRIPE_PRICING_PLANS.map((plan) => {
           const isSelected = plan.interval === selectedInterval

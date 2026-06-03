@@ -6,10 +6,21 @@ import type { CreateSubscriptionActions, OnApproveData } from "@paypal/paypal-js
 
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { PayPalCheckoutSource } from "@/lib/paypal/checkout-intents"
+import {
+  ActiveSubscriptionDialog,
+  checkoutAccessAlreadyExistsError,
+  isCheckoutAccessAlreadyExistsResponse,
+  readCheckoutAccessAlreadyExistsEmail,
+} from "./active-subscription-dialog"
 
 const paypalStartError = "PayPal-Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
-const duplicateAccessError =
-  "Für diese E-Mail gibt es bereits ein aktives Abo. Bitte melde dich mit deinem bestehenden Konto an."
+
+class CheckoutAccessAlreadyExistsError extends Error {
+  constructor(readonly email?: string | null) {
+    super(checkoutAccessAlreadyExistsError)
+    this.name = "CheckoutAccessAlreadyExistsError"
+  }
+}
 
 export function buildPayPalWelcomeUrl(token: string) {
   const params = new URLSearchParams({
@@ -31,7 +42,10 @@ export function PayPalSubscriptionButton({
   source: PayPalCheckoutSource
 }) {
   const [error, setError] = useState<string | null>(null)
+  const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const intentTokenRef = useRef<string | null>(null)
+  const suppressNextPayPalErrorRef = useRef(false)
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID?.trim()
 
   if (!clientId) {
@@ -44,6 +58,11 @@ export function PayPalSubscriptionButton({
 
   return (
     <div>
+      <ActiveSubscriptionDialog
+        email={duplicateEmail}
+        onOpenChange={setDuplicateDialogOpen}
+        open={duplicateDialogOpen}
+      />
       <PayPalScriptProvider
         options={{
           clientId,
@@ -73,6 +92,12 @@ export function PayPalSubscriptionButton({
                 },
               } as Parameters<CreateSubscriptionActions["subscription"]["create"]>[0])
             } catch (err) {
+              if (err instanceof CheckoutAccessAlreadyExistsError) {
+                suppressNextPayPalErrorRef.current = true
+                setDuplicateEmail(err.email ?? null)
+                setDuplicateDialogOpen(true)
+                throw err
+              }
               setError(err instanceof Error ? err.message : paypalStartError)
               throw err
             }
@@ -85,13 +110,24 @@ export function PayPalSubscriptionButton({
             }
             const approved = await approveSubscriptionIntent(token, data.subscriptionID)
             if (!approved.ok) {
+              if (approved.duplicate) {
+                setError(null)
+                setDuplicateEmail(approved.email ?? null)
+                setDuplicateDialogOpen(true)
+                return
+              }
               setError(approved.message)
-              if (approved.duplicate) window.location.assign(buildPayPalWelcomeUrl(token))
               return
             }
             window.location.assign(buildPayPalWelcomeUrl(token))
           }}
-          onError={() => setError(paypalStartError)}
+          onError={() => {
+            if (suppressNextPayPalErrorRef.current) {
+              suppressNextPayPalErrorRef.current = false
+              return
+            }
+            setError(paypalStartError)
+          }}
           style={{
             borderRadius: 999,
             color: "gold",
@@ -124,7 +160,9 @@ async function createSubscriptionIntent({
   })
   const body = await response.json().catch(() => ({}))
   if (!response.ok) {
-    if (response.status === 409) throw new Error(duplicateAccessError)
+    if (isCheckoutAccessAlreadyExistsResponse(response, body)) {
+      throw new CheckoutAccessAlreadyExistsError(readCheckoutAccessAlreadyExistsEmail(body))
+    }
     throw new Error(paypalStartError)
   }
 
@@ -138,7 +176,9 @@ async function createSubscriptionIntent({
 async function approveSubscriptionIntent(
   token: string,
   subscriptionId: string,
-): Promise<{ ok: true } | { ok: false; duplicate: boolean; message: string }> {
+): Promise<
+  { ok: true } | { ok: false; duplicate: boolean; email?: string | null; message: string }
+> {
   const response = await fetch("/api/paypal/approve-subscription", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -148,5 +188,10 @@ async function approveSubscriptionIntent(
 
   const body = await response.json().catch(() => ({}))
   const message = typeof body.message === "string" ? body.message : paypalStartError
-  return { ok: false, duplicate: response.status === 409, message }
+  return {
+    ok: false,
+    duplicate: isCheckoutAccessAlreadyExistsResponse(response, body),
+    email: readCheckoutAccessAlreadyExistsEmail(body),
+    message,
+  }
 }
