@@ -10,7 +10,9 @@ import {
   bindPayPalCheckoutIntentToSubscription,
   findPayPalCheckoutIntentByProviderSubscriptionId,
   findPayPalCheckoutIntentByToken,
+  isPayPalCheckoutIntentExpired,
   markPayPalCheckoutIntentActivated,
+  markPayPalCheckoutIntentExpired,
   PayPalCheckoutIntentBindingError,
 } from "@/lib/paypal/checkout-intents"
 import {
@@ -149,6 +151,12 @@ async function activateOrRefreshSubscription(
   if (!existing && !intent) {
     throw new Error(`PayPal subscription ${subscription.id} has no checkout intent or local row`)
   }
+  if (!existing && intent && isPayPalCheckoutIntentExpired(intent)) {
+    await markPayPalCheckoutIntentExpired(deps.supabase, intent.token)
+    const cancel = deps.cancelPayPalSubscription ?? cancelPayPalSubscriptionForWebhook
+    await cancel(subscription.id, "PayPal checkout intent expired before activation")
+    return
+  }
 
   let boundIntent = intent
   if (token && intent && !intent.provider_subscription_id) {
@@ -157,7 +165,7 @@ async function activateOrRefreshSubscription(
         deps.supabase,
         token,
         subscription.id,
-        intent.email ?? subscription.subscriber?.email_address ?? null,
+        intent.email ?? null,
       )
     } catch (error) {
       if (error instanceof PayPalCheckoutIntentBindingError && !existing) {
@@ -183,10 +191,12 @@ async function activateOrRefreshSubscription(
   }
 
   if (!existing && boundIntent) {
+    const fallbackAccountEmail = boundIntent.email ?? subscription.subscriber?.email_address ?? null
     const duplicateReason = await findPayPalCheckoutDuplicateReason(
       deps.supabase,
       boundIntent,
       subscription,
+      { fallbackAccountEmail },
     )
     if (duplicateReason) {
       await cancelAndMarkPayPalDuplicate({
@@ -207,6 +217,7 @@ async function activateOrRefreshSubscription(
     supabase: deps.supabase,
     premiumTierId: deps.premiumTierId,
     activationKey: boundIntent?.token,
+    accountEmail: boundIntent?.email ?? null,
     interval: boundIntent?.interval ?? intervalFromMetadata(subscription),
     leadId: boundIntent?.lead_id ?? null,
     linkQuizToProfile: deps.linkQuizToProfile,

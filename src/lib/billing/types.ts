@@ -9,6 +9,7 @@ export interface BillingSubscriptionRow {
   user_id: string
   provider: BillingProvider
   provider_customer_id: string | null
+  provider_subscriber_email: string | null
   provider_subscription_id: string
   provider_status: string
   entitlement_status: BillingEntitlementStatus
@@ -28,6 +29,7 @@ export type BillingSubscriptionInput = {
   provider_status: string
   entitlement_status: BillingEntitlementStatus
   provider_customer_id?: string | null
+  provider_subscriber_email?: string | null
   interval?: BillingInterval | null
   current_period_end?: string | null
   cancel_at_period_end?: boolean

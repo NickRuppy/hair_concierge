@@ -20,6 +20,7 @@ export interface PayPalCheckoutActivationDeps {
   supabase: SupabaseClient
   premiumTierId: string
   activationKey?: string
+  accountEmail?: string | null
   interval?: BillingInterval
   leadId?: string | null
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
@@ -54,6 +55,7 @@ export type PayPalCheckoutAccountResult =
       status: "active"
       userId: string
       email: string
+      providerSubscriberEmail: string | null
       canSetInitialPassword: boolean
     }
   | { status: "pending" }
@@ -109,6 +111,7 @@ export async function ensurePayPalCheckoutAccountForToken(
   const result = await ensurePayPalCheckoutAccount(subscription, {
     ...deps,
     activationKey: token,
+    accountEmail: intent.email ?? null,
     interval: intent.interval,
     leadId: intent.lead_id,
   })
@@ -131,10 +134,11 @@ export async function ensurePayPalCheckoutAccount(
     )
   }
 
-  const valid = assertActivePayPalSubscription(subscription)
+  const valid = assertActivePayPalSubscription(subscription, deps.accountEmail)
+  const accountEmail = deps.accountEmail?.trim().toLowerCase() || valid.email.toLowerCase()
   const interval = deps.interval ?? intervalFromPlanId(valid.planId)
   const activationKey = deps.activationKey ?? valid.id
-  const existingProfile = await findProfileByEmail(deps, valid.email)
+  const existingProfile = await findProfileByEmail(deps, accountEmail)
 
   let userId: string
   let canSetInitialPassword = false
@@ -144,7 +148,7 @@ export async function ensurePayPalCheckoutAccount(
     await assertNoDifferentCurrentSubscription(deps, userId, valid.id)
     canSetInitialPassword = await canSetPasswordForPayPalSubscription(deps, userId, activationKey)
   } else {
-    const created = await createPayPalCheckoutUser(deps, valid.email, activationKey)
+    const created = await createPayPalCheckoutUser(deps, accountEmail, activationKey)
     if (!created.created) await assertNoDifferentCurrentSubscription(deps, created.userId, valid.id)
     if (created.created) {
       userId = created.userId
@@ -155,7 +159,7 @@ export async function ensurePayPalCheckoutAccount(
   }
 
   await upsertSubscriptionProfile(deps, userId, {
-    email: valid.email,
+    email: accountEmail,
     subscription_status: "active",
     subscription_interval: interval,
     current_period_end: valid.periodEnd,
@@ -167,9 +171,15 @@ export async function ensurePayPalCheckoutAccount(
     toBillingSubscriptionInputFromPayPal(subscription, userId, interval),
   )
   await mirrorBillingSubscriptionToProfile(deps.supabase, billingRow, deps.premiumTierId)
-  await linkPayPalQuizProfile(subscription, deps, userId, valid.email)
+  await linkPayPalQuizProfile(subscription, deps, userId, accountEmail)
 
-  return { status: "active", userId, email: valid.email, canSetInitialPassword }
+  return {
+    status: "active",
+    userId,
+    email: accountEmail,
+    providerSubscriberEmail: billingRow.provider_subscriber_email,
+    canSetInitialPassword,
+  }
 }
 
 async function assertNoDifferentCurrentSubscription(
@@ -183,7 +193,7 @@ async function assertNoDifferentCurrentSubscription(
     return
   throw new PayPalCheckoutActivationError(
     "paypal_existing_access",
-    "PayPal subscriber email already has a current subscription",
+    "Chaarlie account already has current subscription access",
   )
 }
 
@@ -195,7 +205,10 @@ export function paypalCheckoutActivationHash(subscriptionId: string): string {
   return createHash("sha256").update(paypalCheckoutActivationId(subscriptionId)).digest("hex")
 }
 
-function assertActivePayPalSubscription(subscription: PayPalSubscription): {
+function assertActivePayPalSubscription(
+  subscription: PayPalSubscription,
+  accountEmail?: string | null,
+): {
   id: string
   email: string
   planId: string
@@ -208,11 +221,13 @@ function assertActivePayPalSubscription(subscription: PayPalSubscription): {
     )
   }
 
-  const email = subscription.subscriber?.email_address
+  const email =
+    accountEmail?.trim().toLowerCase() ||
+    subscription.subscriber?.email_address?.trim().toLowerCase()
   if (!email) {
     throw new PayPalCheckoutActivationError(
       "paypal_subscription_email_missing",
-      "PayPal subscription has no subscriber email",
+      "PayPal checkout activation has no Chaarlie or subscriber email",
     )
   }
 
@@ -249,7 +264,7 @@ async function findProfileByEmail(
   const { data, error } = await deps.supabase
     .from("profiles")
     .select("id, email")
-    .ilike("email", email)
+    .eq("email", email.toLowerCase())
     .maybeSingle()
   if (error) throw new Error(`profile lookup failed: ${error.message}`)
   return data as ProfileRow | null

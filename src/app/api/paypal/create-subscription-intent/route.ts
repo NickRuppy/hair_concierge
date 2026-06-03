@@ -45,26 +45,35 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser()
 
   if (user?.id) {
-    const conflict = await toConflictResponse(assertCanStartCheckout(admin, user.id))
+    const conflict = await toConflictResponse(assertCanStartCheckout(admin, user.id), user.email)
     if (conflict) return conflict
   }
 
   let email = user?.email ?? null
+  let resolvedLeadId: string | null = null
+  let canExposeConflictEmail = Boolean(user?.email)
   if (leadId) {
     const { data, error } = await admin.from("leads").select("email").eq("id", leadId).maybeSingle()
     if (error) throw error
-    email = typeof data?.email === "string" ? data.email : email
+    if (typeof data?.email === "string") {
+      email = data.email
+      resolvedLeadId = leadId
+    }
+    canExposeConflictEmail = false
   }
 
   if (email) {
-    const conflict = await toConflictResponse(assertCanStartCheckoutForEmail(admin, email))
+    const conflict = await toConflictResponse(
+      assertCanStartCheckoutForEmail(admin, email),
+      canExposeConflictEmail ? email : null,
+    )
     if (conflict) return conflict
   }
 
   const intent = await createPayPalCheckoutIntent(admin, {
     interval: interval as BillingInterval,
     source: source as PayPalCheckoutSource,
-    leadId: leadId ?? null,
+    leadId: resolvedLeadId,
     email,
     userId: user?.id ?? null,
   })
@@ -74,13 +83,17 @@ export async function POST(request: Request) {
 
 async function toConflictResponse(
   promise: Promise<void>,
-): Promise<NextResponse<{ error: typeof ACCESS_CONFLICT_ERROR }> | null> {
+  email?: string | null,
+): Promise<NextResponse<{ error: typeof ACCESS_CONFLICT_ERROR; email?: string }> | null> {
   try {
     await promise
     return null
   } catch (error) {
     if (error instanceof Error && error.message.includes("already has access")) {
-      return NextResponse.json({ error: ACCESS_CONFLICT_ERROR }, { status: 409 })
+      return NextResponse.json(
+        { error: ACCESS_CONFLICT_ERROR, ...(email ? { email } : {}) },
+        { status: 409 },
+      )
     }
     throw error
   }

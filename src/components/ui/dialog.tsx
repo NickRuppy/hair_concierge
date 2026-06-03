@@ -22,27 +22,35 @@ interface DialogProps {
   children: React.ReactNode
 }
 
-function Dialog({ open: controlledOpen, onOpenChange: controlledOnOpenChange, children }: DialogProps) {
+function Dialog({
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+  children,
+}: DialogProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false)
 
   const open = controlledOpen !== undefined ? controlledOpen : uncontrolledOpen
   const onOpenChange = controlledOnOpenChange || setUncontrolledOpen
 
-  return (
-    <DialogContext.Provider value={{ open, onOpenChange }}>
-      {children}
-    </DialogContext.Provider>
-  )
+  return <DialogContext.Provider value={{ open, onOpenChange }}>{children}</DialogContext.Provider>
 }
 
-function DialogTrigger({ children, className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+function DialogTrigger({
+  children,
+  className,
+  onClick,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const { onOpenChange } = React.useContext(DialogContext)
 
   return (
     <button
       type="button"
       className={className}
-      onClick={() => onOpenChange(true)}
+      onClick={(event) => {
+        onClick?.(event)
+        if (!event.defaultPrevented) onOpenChange(true)
+      }}
       {...props}
     >
       {children}
@@ -50,14 +58,22 @@ function DialogTrigger({ children, className, ...props }: React.ButtonHTMLAttrib
   )
 }
 
-function DialogClose({ children, className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+function DialogClose({
+  children,
+  className,
+  onClick,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const { onOpenChange } = React.useContext(DialogContext)
 
   return (
     <button
       type="button"
       className={className}
-      onClick={() => onOpenChange(false)}
+      onClick={(event) => {
+        onClick?.(event)
+        if (!event.defaultPrevented) onOpenChange(false)
+      }}
       {...props}
     >
       {children}
@@ -102,7 +118,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
     if (!mounted || !open) return null
 
     return createPortal(
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 z-[120] flex items-center justify-center">
         {/* Overlay */}
         <div
           className="fixed inset-0 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out"
@@ -113,23 +129,24 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
           ref={ref}
           className={cn(
             "fixed left-1/2 top-1/2 z-50 grid w-full max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border border-border bg-background p-6 shadow-lg duration-200 sm:rounded-lg",
-            className
+            className,
           )}
           {...props}
         >
           {children}
           <button
+            type="button"
             className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             onClick={() => onOpenChange(false)}
           >
             <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">Schließen</span>
           </button>
         </div>
       </div>,
-      document.body
+      document.body,
     )
-  }
+  },
 )
 DialogContent.displayName = "DialogContent"
 
@@ -153,20 +170,12 @@ function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 
 function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h2
-      className={cn("text-lg font-semibold leading-none tracking-tight", className)}
-      {...props}
-    />
+    <h2 className={cn("text-lg font-semibold leading-none tracking-tight", className)} {...props} />
   )
 }
 
 function DialogDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return (
-    <p
-      className={cn("text-sm text-muted-foreground", className)}
-      {...props}
-    />
-  )
+  return <p className={cn("text-sm text-muted-foreground", className)} {...props} />
 }
 
 export {

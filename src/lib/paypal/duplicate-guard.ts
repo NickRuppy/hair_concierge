@@ -9,6 +9,20 @@ import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 export const PAYPAL_DUPLICATE_CHECKOUT_COPY =
   "Für diese E-Mail gibt es bereits ein aktives Abo. Wir haben die neue PayPal-Zahlung gestoppt. Bitte melde dich mit deinem bestehenden Konto an."
 
+export function buildPayPalDuplicateCheckoutBody(
+  intent: Pick<PayPalCheckoutIntentRow, "email" | "lead_id">,
+): {
+  error: "checkout_access_already_exists"
+  email?: string
+  message: typeof PAYPAL_DUPLICATE_CHECKOUT_COPY
+} {
+  return {
+    error: "checkout_access_already_exists",
+    ...(canExposePayPalDuplicateEmail(intent) ? { email: intent.email } : {}),
+    message: PAYPAL_DUPLICATE_CHECKOUT_COPY,
+  }
+}
+
 export class PayPalDuplicateCancellationError extends Error {
   constructor(
     message: string,
@@ -19,10 +33,7 @@ export class PayPalDuplicateCancellationError extends Error {
   }
 }
 
-type DuplicateReason =
-  | "user_already_has_access"
-  | "intent_email_already_has_access"
-  | "paypal_email_already_has_access"
+type DuplicateReason = "user_already_has_access" | "intent_email_already_has_access"
 
 type CancelPayPalSubscription = (subscriptionId: string, reason: string) => Promise<void>
 type RetrievePayPalSubscription = (
@@ -33,6 +44,7 @@ export async function findPayPalCheckoutDuplicateReason(
   supabase: Pick<SupabaseClient, "from">,
   intent: Pick<PayPalCheckoutIntentRow, "user_id" | "email">,
   subscription: PayPalSubscription,
+  options: { fallbackAccountEmail?: string | null } = {},
 ): Promise<DuplicateReason | null> {
   if (intent.user_id && (await hasCurrentAccessForUser(supabase, intent.user_id))) {
     return "user_already_has_access"
@@ -43,13 +55,15 @@ export async function findPayPalCheckoutDuplicateReason(
     return "intent_email_already_has_access"
   }
 
+  const fallbackAccountEmail = normalizeEmail(options.fallbackAccountEmail)
   const paypalEmail = normalizeEmail(subscription.subscriber?.email_address)
   if (
-    paypalEmail &&
-    paypalEmail !== intentEmail &&
-    (await hasCurrentAccessForEmail(supabase, paypalEmail))
+    !intentEmail &&
+    fallbackAccountEmail &&
+    fallbackAccountEmail === paypalEmail &&
+    (await hasCurrentAccessForEmail(supabase, fallbackAccountEmail))
   ) {
-    return "paypal_email_already_has_access"
+    return "intent_email_already_has_access"
   }
 
   return null
@@ -146,6 +160,12 @@ async function isTerminalPayPalSubscription(
 function isTerminalPayPalStatus(status: string | null | undefined): boolean {
   const normalized = status?.trim().toUpperCase()
   return normalized === "CANCELLED" || normalized === "CANCELED" || normalized === "EXPIRED"
+}
+
+function canExposePayPalDuplicateEmail(
+  intent: Pick<PayPalCheckoutIntentRow, "email" | "lead_id">,
+): intent is Pick<PayPalCheckoutIntentRow, "email" | "lead_id"> & { email: string } {
+  return Boolean(intent.email && !intent.lead_id)
 }
 
 async function retrievePayPalSubscriptionAfterCancelFailure(subscriptionId: string) {

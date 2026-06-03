@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { ManageSubscriptionButton } from "@/components/profile/manage-subscription-button"
+import { formatBillingDate, formatBillingMembershipStatus } from "@/lib/billing/display"
 import { findVisibleBillingSubscriptionForUser } from "@/lib/billing/subscriptions"
 import type { BillingSubscriptionRow } from "@/lib/billing/types"
 import { PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
@@ -252,7 +253,7 @@ function toggleConcern(currentValues: ProfileConcern[], concern: ProfileConcern)
 }
 
 function formatNullableDate(value: string | null | undefined): string {
-  return value ? new Date(value).toLocaleDateString("de-DE") : "—"
+  return formatBillingDate(value)
 }
 
 function createProductRows(rows: UserProductUsageRow[]): ProductDetailRow[] {
@@ -1912,7 +1913,10 @@ export default function ProfilePage() {
                 <p className="mb-1 text-sm text-muted-foreground">
                   Status:{" "}
                   <strong className="text-foreground">
-                    {billingSubscription?.entitlement_status ?? profile?.subscription_status ?? "—"}
+                    {formatBillingMembershipStatus(
+                      billingSubscription,
+                      profile?.subscription_status,
+                    )}
                   </strong>
                 </p>
                 <p className="mb-4 text-sm text-muted-foreground">

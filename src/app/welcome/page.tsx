@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation"
+import { createHash } from "node:crypto"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
@@ -99,6 +100,7 @@ async function renderPayPalWelcome(token: string | undefined) {
     return (
       <WelcomeClient
         activationSource={{ provider: "paypal", token }}
+        analyticsId={paypalCheckoutAnalyticsId(token)}
         mode="duplicate"
         purchase={null}
       />
@@ -109,6 +111,7 @@ async function renderPayPalWelcome(token: string | undefined) {
     return (
       <WelcomeClient
         activationSource={{ provider: "paypal", token }}
+        analyticsId={paypalCheckoutAnalyticsId(token)}
         mode="pending"
         purchase={null}
       />
@@ -124,7 +127,9 @@ async function renderPayPalWelcome(token: string | undefined) {
     return (
       <WelcomeClient
         activationSource={{ provider: "paypal", token }}
+        analyticsId={paypalCheckoutAnalyticsId(token)}
         email={activation.email}
+        providerSubscriberEmail={activation.providerSubscriberEmail}
         purchase={null}
         redirectTo="/onboarding"
       />
@@ -134,8 +139,14 @@ async function renderPayPalWelcome(token: string | undefined) {
   return (
     <WelcomeClient
       activationSource={{ provider: "paypal", token }}
+      analyticsId={paypalCheckoutAnalyticsId(token)}
       email={activation.email}
+      providerSubscriberEmail={activation.providerSubscriberEmail}
       purchase={null}
     />
   )
+}
+
+function paypalCheckoutAnalyticsId(token: string): string {
+  return `paypal:${createHash("sha256").update(token).digest("hex").slice(0, 16)}`
 }

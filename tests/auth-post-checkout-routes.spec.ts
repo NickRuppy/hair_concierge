@@ -334,6 +334,7 @@ test("password activation accepts PayPal intent tokens and uses provider-owned e
         status: "active",
         userId: "user-paypal",
         email: "paypal-owned@example.com",
+        providerSubscriberEmail: "paypal-owned@example.com",
         canSetInitialPassword: true,
       }
     },
@@ -539,6 +540,7 @@ test("send magic link accepts PayPal intent tokens and consumes the provider mar
         status: "active",
         userId: "user-paypal",
         email: "paypal-owned@example.com",
+        providerSubscriberEmail: "paypal-owned@example.com",
         canSetInitialPassword: true,
       }),
       claimCheckoutActivation: async () => true,
