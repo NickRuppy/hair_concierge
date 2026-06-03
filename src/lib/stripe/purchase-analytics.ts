@@ -2,6 +2,7 @@ import type Stripe from "stripe"
 import { intervalFromPrice, type BillingInterval } from "./intervals"
 
 type RetrievedSubscription = {
+  default_payment_method?: string | { id: string; type?: string } | null
   items: {
     data: Array<{
       price: {
@@ -18,10 +19,10 @@ function subscriptionIdFromSession(session: Stripe.Checkout.Session) {
   return session.subscription?.id
 }
 
-function singleAllowedPaymentMethodTypeFromSession(session: Stripe.Checkout.Session) {
-  const methodTypes = session.payment_method_types
-  if (methodTypes?.length !== 1) return undefined
-  return methodTypes[0]
+function selectedPaymentMethodTypeFromSubscription(subscription: RetrievedSubscription) {
+  const paymentMethod = subscription.default_payment_method
+  if (typeof paymentMethod !== "object" || paymentMethod === null) return undefined
+  return paymentMethod.type
 }
 
 function planIdForInterval(interval: BillingInterval) {
@@ -51,7 +52,7 @@ export async function buildCheckoutPurchaseAnalytics(
   }
 
   const subscription = (await stripe.subscriptions.retrieve(subscriptionId, {
-    expand: ["items.data.price"],
+    expand: ["default_payment_method", "items.data.price"],
   })) as unknown as RetrievedSubscription
   const price = subscription.items.data[0]?.price
   if (!price) return null
@@ -65,7 +66,7 @@ export async function buildCheckoutPurchaseAnalytics(
     currency: session.currency.toUpperCase(),
     interval,
     planId: planIdForInterval(interval),
-    paymentMethodType: singleAllowedPaymentMethodTypeFromSession(session),
+    paymentMethodType: selectedPaymentMethodTypeFromSubscription(subscription),
     value: session.amount_total / 100,
   }
 }

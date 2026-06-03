@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test"
 import {
   handleCheckoutSessionCompleted,
+  handleCheckoutSessionAsyncPaymentSucceeded,
+  handleCheckoutSessionAsyncPaymentFailed,
+  handleChargeDisputeCreated,
   handleSubscriptionUpdated,
   handleSubscriptionDeleted,
   handleInvoicePaymentFailed,
@@ -12,6 +15,14 @@ function stubDeps() {
   const users: Record<string, { id: string; email: string }> = {}
   const profiles: Record<string, any> = {}
   const billing: any[] = []
+  const charges: Record<string, any> = {}
+  const invoices: Record<string, any> = {}
+  const invoicePayments: any[] = []
+  const retrievedCharges: Array<{ id: string; expand?: string[] }> = []
+  const retrievedInvoices: Array<{ id: string; expand?: string[] }> = []
+  const listedInvoicePayments: any[] = []
+  const canceledSubscriptions: string[] = []
+  const beforeProfileUpdate: Array<() => void> = []
 
   const deps: HandlerDeps = {
     supabase: {
@@ -44,14 +55,41 @@ function stubDeps() {
             return { data: row ?? null, error: null }
           },
           update(patch: any) {
-            return {
+            const updateFilters: Array<[string, string]> = []
+            let appliedRows: any[] | null = null
+            const applyUpdate = () => {
+              if (appliedRows) return appliedRows
+              if (table === "profiles") {
+                for (const hook of beforeProfileUpdate.splice(0)) hook()
+              }
+              appliedRows = []
+              for (const row of rowsForTable()) {
+                if (updateFilters.every(([col, val]) => row[col] === val)) {
+                  Object.assign(row, patch)
+                  appliedRows.push(row)
+                }
+              }
+              return appliedRows
+            }
+            const builder = {
               eq(col: string, val: string) {
-                calls.push([`update-${table}`, val, patch])
-                const row = Object.values(profiles).find((p: any) => p[col] === val)
-                if (row) Object.assign(row, patch)
-                return Promise.resolve({ error: null })
+                calls.push([`update-${table}-${col}`, val, patch])
+                updateFilters.push([col, val])
+                return builder
+              },
+              select() {
+                return builder
+              },
+              async maybeSingle() {
+                const row = applyUpdate()[0]
+                return { data: row ?? null, error: null }
+              },
+              then(resolve: (value: { error: null }) => unknown) {
+                applyUpdate()
+                return Promise.resolve({ error: null }).then(resolve)
               },
             }
+            return builder
           },
           upsert(row: any) {
             calls.push([`upsert-${table}`, row])
@@ -86,6 +124,33 @@ function stubDeps() {
       },
     } as any,
     stripe: {
+      charges: {
+        async retrieve(id: string, params?: { expand?: string[] }) {
+          retrievedCharges.push({ id, expand: params?.expand })
+          return charges[id] ?? { id, customer: null }
+        },
+      },
+      invoicePayments: {
+        async list(params?: any) {
+          listedInvoicePayments.push(params)
+          return {
+            data: invoicePayments.filter((invoicePayment) => {
+              if (!params?.payment) return true
+              const payment = invoicePayment.payment ?? {}
+              return (
+                payment.type === params.payment.type &&
+                payment.payment_intent === params.payment.payment_intent
+              )
+            }),
+          }
+        },
+      },
+      invoices: {
+        async retrieve(id: string, params?: { expand?: string[] }) {
+          retrievedInvoices.push({ id, expand: params?.expand })
+          return invoices[id] ?? { id }
+        },
+      },
       subscriptions: {
         async retrieve(_id: string) {
           return {
@@ -100,12 +165,30 @@ function stubDeps() {
             },
           } as any
         },
+        async cancel(id: string) {
+          canceledSubscriptions.push(id)
+          return { id, status: "canceled" } as any
+        },
       },
     } as any,
     premiumTierId: "tier-premium",
   }
 
-  return { calls, users, profiles, deps }
+  return {
+    beforeProfileUpdate,
+    billing,
+    calls,
+    canceledSubscriptions,
+    charges,
+    invoicePayments,
+    invoices,
+    listedInvoicePayments,
+    retrievedCharges,
+    retrievedInvoices,
+    users,
+    profiles,
+    deps,
+  }
 }
 
 test("checkout.session.completed creates a new Supabase user and activates the sub", async () => {
@@ -161,6 +244,7 @@ test("subscription.updated keeps status=active when cancel_at_period_end flips",
     id: "u",
     email: "x@y",
     stripe_customer_id: "cus_X",
+    stripe_subscription_id: "sub_X",
     subscription_status: "active",
     subscription_interval: "year",
   }
@@ -178,9 +262,91 @@ test("subscription.updated keeps status=active when cancel_at_period_end flips",
       ],
     },
   } as any
-  await handleSubscriptionUpdated(sub, deps)
+  const result = await handleSubscriptionUpdated(sub, deps)
   expect((profiles["u"] as any).subscription_status).toBe("active")
   expect((profiles["u"] as any).current_period_end).toBeTruthy()
+  expect(result.matchedCurrentSubscription).toBe(true)
+})
+
+test("subscription.updated does not overwrite a newer active subscription", async () => {
+  const { billing, deps, profiles } = stubDeps()
+  profiles["u"] = {
+    id: "u",
+    email: "x@y",
+    stripe_customer_id: "cus_X",
+    stripe_subscription_id: "sub_new_success",
+    subscription_status: "active",
+    subscription_interval: "month",
+    current_period_end: "2027-02-01T00:00:00.000Z",
+  }
+  const sub = {
+    id: "sub_old_failed",
+    customer: "cus_X",
+    status: "canceled",
+    cancel_at_period_end: false,
+    items: {
+      data: [
+        {
+          price: { interval: "month", interval_count: 3 },
+          current_period_end: 1_900_000_000,
+        },
+      ],
+    },
+  } as any
+
+  const result = await handleSubscriptionUpdated(sub, deps)
+
+  expect((profiles["u"] as any).subscription_status).toBe("active")
+  expect((profiles["u"] as any).subscription_interval).toBe("month")
+  expect((profiles["u"] as any).current_period_end).toBe("2027-02-01T00:00:00.000Z")
+  expect((profiles["u"] as any).stripe_subscription_id).toBe("sub_new_success")
+  expect(billing).toHaveLength(1)
+  expect(billing[0]).toMatchObject({
+    user_id: "u",
+    provider_subscription_id: "sub_old_failed",
+    provider_status: "canceled",
+    entitlement_status: "canceled",
+  })
+  expect(result.matchedCurrentSubscription).toBe(false)
+})
+
+test("subscription.updated does not create an open entitlement for an active non-current subscription", async () => {
+  const { billing, deps, profiles } = stubDeps()
+  profiles["u"] = {
+    id: "u",
+    email: "x@y",
+    stripe_customer_id: "cus_X",
+    stripe_subscription_id: "sub_new_success",
+    subscription_status: "active",
+    subscription_interval: "month",
+    current_period_end: "2027-02-01T00:00:00.000Z",
+  }
+  const sub = {
+    id: "sub_old_sepa",
+    customer: "cus_X",
+    status: "active",
+    cancel_at_period_end: false,
+    items: {
+      data: [
+        {
+          price: { interval: "month", interval_count: 1 },
+          current_period_end: 1_900_000_000,
+        },
+      ],
+    },
+  } as any
+
+  const result = await handleSubscriptionUpdated(sub, deps)
+
+  expect((profiles["u"] as any).stripe_subscription_id).toBe("sub_new_success")
+  expect(billing).toHaveLength(1)
+  expect(billing[0]).toMatchObject({
+    user_id: "u",
+    provider_subscription_id: "sub_old_sepa",
+    provider_status: "active",
+    entitlement_status: "canceled",
+  })
+  expect(result.matchedCurrentSubscription).toBe(false)
 })
 
 test("subscription.deleted flips profile to canceled + Free tier", async () => {
@@ -188,19 +354,543 @@ test("subscription.deleted flips profile to canceled + Free tier", async () => {
   profiles["u"] = {
     id: "u",
     stripe_customer_id: "cus_D",
+    stripe_subscription_id: "sub_D",
     subscription_status: "active",
     subscription_tier_id: "tier-premium",
+    subscription_interval: "month",
+    current_period_end: "2027-01-01T00:00:00.000Z",
   }
   const sub = { id: "sub_D", customer: "cus_D", status: "canceled" } as any
-  await handleSubscriptionDeleted(sub, { ...deps, freeTierId: "tier-free" } as any)
+  const result = await handleSubscriptionDeleted(sub, { ...deps, freeTierId: "tier-free" } as any)
   expect((profiles["u"] as any).subscription_status).toBe("canceled")
   expect((profiles["u"] as any).subscription_tier_id).toBe("tier-free")
+  expect((profiles["u"] as any).stripe_subscription_id).toBeNull()
+  expect((profiles["u"] as any).subscription_interval).toBeNull()
+  expect((profiles["u"] as any).current_period_end).toBeNull()
+  expect(result.matchedCurrentSubscription).toBe(true)
+})
+
+test("subscription.deleted does not downgrade a newer active subscription", async () => {
+  const { billing, deps, profiles } = stubDeps()
+  profiles["u"] = {
+    id: "u",
+    stripe_customer_id: "cus_D",
+    stripe_subscription_id: "sub_new_success",
+    subscription_status: "active",
+    subscription_tier_id: "tier-premium",
+    subscription_interval: "month",
+    current_period_end: "2027-02-01T00:00:00.000Z",
+  }
+  const sub = { id: "sub_old_failed", customer: "cus_D", status: "canceled" } as any
+
+  const result = await handleSubscriptionDeleted(sub, { ...deps, freeTierId: "tier-free" } as any)
+
+  expect((profiles["u"] as any).subscription_status).toBe("active")
+  expect((profiles["u"] as any).subscription_tier_id).toBe("tier-premium")
+  expect((profiles["u"] as any).stripe_subscription_id).toBe("sub_new_success")
+  expect((profiles["u"] as any).subscription_interval).toBe("month")
+  expect((profiles["u"] as any).current_period_end).toBe("2027-02-01T00:00:00.000Z")
+  expect(billing).toHaveLength(1)
+  expect(billing[0]).toMatchObject({
+    user_id: "u",
+    provider_subscription_id: "sub_old_failed",
+    provider_status: "canceled",
+    entitlement_status: "canceled",
+  })
+  expect(result.matchedCurrentSubscription).toBe(false)
+})
+
+test("subscription.deleted reports no match when a concurrent checkout wins the guarded update", async () => {
+  const { beforeProfileUpdate, billing, deps, profiles } = stubDeps()
+  profiles["u"] = {
+    id: "u",
+    stripe_customer_id: "cus_D",
+    stripe_subscription_id: "sub_D",
+    subscription_status: "active",
+    subscription_tier_id: "tier-premium",
+    subscription_interval: "month",
+    current_period_end: "2027-01-01T00:00:00.000Z",
+  }
+  beforeProfileUpdate.push(() => {
+    profiles["u"].stripe_subscription_id = "sub_new_success"
+    profiles["u"].subscription_status = "active"
+    profiles["u"].subscription_tier_id = "tier-premium"
+  })
+
+  const result = await handleSubscriptionDeleted(
+    { id: "sub_D", customer: "cus_D", status: "canceled" } as any,
+    { ...deps, freeTierId: "tier-free" } as any,
+  )
+
+  expect(result.matchedCurrentSubscription).toBe(false)
+  expect((profiles["u"] as any).subscription_status).toBe("active")
+  expect((profiles["u"] as any).subscription_tier_id).toBe("tier-premium")
+  expect((profiles["u"] as any).stripe_subscription_id).toBe("sub_new_success")
+  expect(billing).toHaveLength(1)
+  expect(billing[0]).toMatchObject({
+    user_id: "u",
+    provider_subscription_id: "sub_D",
+    provider_status: "canceled",
+    entitlement_status: "canceled",
+  })
 })
 
 test("invoice.payment_failed logs and returns (no throw)", async () => {
   const invoice = { id: "in_1", customer: "cus_1", attempt_count: 2 } as any
   await handleInvoicePaymentFailed(invoice)
   // no assertion beyond no-throw; log-only for MVP
+})
+
+test("checkout.session.async_payment_failed revokes premium access and cancels subscription", async () => {
+  const { billing, canceledSubscriptions, deps, profiles } = stubDeps()
+  profiles.u = {
+    id: "u",
+    email: "failed@example.com",
+    stripe_customer_id: "cus_async_failed",
+    stripe_subscription_id: "sub_async_failed",
+    subscription_status: "active",
+    subscription_tier_id: "tier-premium",
+    subscription_interval: "quarter",
+    current_period_end: "2027-01-01T00:00:00.000Z",
+  }
+  billing.push({
+    user_id: "u",
+    provider: "stripe",
+    provider_customer_id: "cus_async_failed",
+    provider_subscription_id: "sub_async_failed",
+    provider_status: "active",
+    entitlement_status: "active",
+    metadata: { checkout_session_id: "cs_async_failed", payment_status: "unpaid" },
+  })
+  await handleCheckoutSessionAsyncPaymentFailed(
+    {
+      id: "cs_async_failed",
+      customer: "cus_async_failed",
+      subscription: "sub_async_failed",
+    } as any,
+    { ...deps, freeTierId: "tier-free" },
+  )
+
+  expect(profiles.u.subscription_status).toBe("canceled")
+  expect(profiles.u.subscription_tier_id).toBe("tier-free")
+  expect(profiles.u.stripe_subscription_id).toBeNull()
+  expect(profiles.u.subscription_interval).toBeNull()
+  expect(profiles.u.current_period_end).toBeNull()
+  expect(billing).toHaveLength(1)
+  expect(billing[0]).toMatchObject({
+    user_id: "u",
+    provider: "stripe",
+    provider_customer_id: "cus_async_failed",
+    provider_subscription_id: "sub_async_failed",
+    provider_status: "payment_failed",
+    entitlement_status: "canceled",
+    metadata: {
+      checkout_session_id: "cs_async_failed",
+      payment_status: "unpaid",
+      reason: "async_payment_failed",
+    },
+  })
+  expect(billing[0].cancelled_at).toBeTruthy()
+  expect(canceledSubscriptions).toEqual(["sub_async_failed"])
+})
+
+test("checkout.session.async_payment_succeeded skips SEPA when the session payment method types reveal it", async () => {
+  const { billing, canceledSubscriptions, deps, profiles } = stubDeps()
+  const result = await handleCheckoutSessionAsyncPaymentSucceeded(
+    {
+      id: "cs_async_sepa",
+      status: "complete",
+      payment_status: "paid",
+      customer: "cus_sepa",
+      customer_details: { email: "sepa@example.com" },
+      subscription: "sub_sepa",
+      payment_method_types: ["sepa_debit"],
+    } as any,
+    deps,
+  )
+
+  expect(result).toBeNull()
+  expect(Object.values(profiles)).toHaveLength(0)
+  expect(billing).toHaveLength(0)
+  expect(canceledSubscriptions).toEqual(["sub_sepa"])
+})
+
+test("checkout.session.async_payment_failed does not revoke a newer active subscription", async () => {
+  const { billing, canceledSubscriptions, deps, profiles } = stubDeps()
+  profiles.u = {
+    id: "u",
+    email: "retry@example.com",
+    stripe_customer_id: "cus_retry",
+    stripe_subscription_id: "sub_new_success",
+    subscription_status: "active",
+    subscription_tier_id: "tier-premium",
+    subscription_interval: "month",
+    current_period_end: "2027-01-01T00:00:00.000Z",
+  }
+  await handleCheckoutSessionAsyncPaymentFailed(
+    {
+      id: "cs_old_failed",
+      customer: "cus_retry",
+      subscription: "sub_old_failed",
+    } as any,
+    { ...deps, freeTierId: "tier-free" },
+  )
+
+  expect(profiles.u.subscription_status).toBe("active")
+  expect(profiles.u.subscription_tier_id).toBe("tier-premium")
+  expect(profiles.u.stripe_subscription_id).toBe("sub_new_success")
+  expect(profiles.u.subscription_interval).toBe("month")
+  expect(profiles.u.current_period_end).toBe("2027-01-01T00:00:00.000Z")
+  expect(billing).toHaveLength(1)
+  expect(billing[0]).toMatchObject({
+    user_id: "u",
+    provider_subscription_id: "sub_old_failed",
+    provider_status: "payment_failed",
+    entitlement_status: "canceled",
+    metadata: { reason: "async_payment_failed" },
+  })
+  expect(canceledSubscriptions).toEqual(["sub_old_failed"])
+})
+
+test("checkout.session.async_payment_failed update is guarded against concurrent new subscription", async () => {
+  const { beforeProfileUpdate, billing, deps, profiles } = stubDeps()
+  profiles.u = {
+    id: "u",
+    email: "race@example.com",
+    stripe_customer_id: "cus_race",
+    stripe_subscription_id: "sub_old_failed",
+    subscription_status: "active",
+    subscription_tier_id: "tier-premium",
+    subscription_interval: "quarter",
+    current_period_end: "2027-01-01T00:00:00.000Z",
+  }
+  beforeProfileUpdate.push(() => {
+    profiles.u.stripe_subscription_id = "sub_new_success"
+    profiles.u.subscription_interval = "month"
+    profiles.u.current_period_end = "2027-02-01T00:00:00.000Z"
+  })
+
+  await handleCheckoutSessionAsyncPaymentFailed(
+    {
+      id: "cs_race",
+      customer: "cus_race",
+      subscription: "sub_old_failed",
+    } as any,
+    { ...deps, freeTierId: "tier-free" },
+  )
+
+  expect(profiles.u.subscription_status).toBe("active")
+  expect(profiles.u.subscription_tier_id).toBe("tier-premium")
+  expect(profiles.u.stripe_subscription_id).toBe("sub_new_success")
+  expect(profiles.u.subscription_interval).toBe("month")
+  expect(profiles.u.current_period_end).toBe("2027-02-01T00:00:00.000Z")
+  expect(billing).toHaveLength(1)
+  expect(billing[0]).toMatchObject({
+    user_id: "u",
+    provider_subscription_id: "sub_old_failed",
+    provider_status: "payment_failed",
+    entitlement_status: "canceled",
+  })
+})
+
+test("checkout.session.async_payment_failed still succeeds when subscription cancel fails", async () => {
+  const { billing, canceledSubscriptions, deps, profiles } = stubDeps()
+  profiles.u = {
+    id: "u",
+    email: "cancel-fails@example.com",
+    stripe_customer_id: "cus_cancel_fails",
+    stripe_subscription_id: "sub_cancel_fails",
+    subscription_status: "active",
+    subscription_tier_id: "tier-premium",
+  }
+  deps.stripe.subscriptions.cancel = async (id: string) => {
+    canceledSubscriptions.push(id)
+    throw new Error("stripe unavailable")
+  }
+
+  await handleCheckoutSessionAsyncPaymentFailed(
+    {
+      id: "cs_cancel_fails",
+      customer: "cus_cancel_fails",
+      subscription: "sub_cancel_fails",
+    } as any,
+    { ...deps, freeTierId: "tier-free" },
+  )
+
+  expect(profiles.u.subscription_status).toBe("canceled")
+  expect(profiles.u.subscription_tier_id).toBe("tier-free")
+  expect(billing).toHaveLength(1)
+  expect(canceledSubscriptions).toEqual(["sub_cancel_fails"])
+})
+
+test("charge.dispute.created retrieves charge, revokes active profile, and cancels subscription", async () => {
+  const {
+    billing,
+    canceledSubscriptions,
+    charges,
+    deps,
+    invoicePayments,
+    listedInvoicePayments,
+    profiles,
+    retrievedCharges,
+    retrievedInvoices,
+  } = stubDeps()
+  profiles.u = {
+    id: "u",
+    email: "disputed@example.com",
+    stripe_customer_id: "cus_disputed",
+    stripe_subscription_id: "sub_disputed_current",
+    subscription_status: "active",
+    subscription_tier_id: "tier-premium",
+    subscription_interval: "year",
+    current_period_end: "2027-01-01T00:00:00.000Z",
+  }
+  billing.push({
+    user_id: "u",
+    provider: "stripe",
+    provider_customer_id: "cus_disputed",
+    provider_subscription_id: "sub_disputed_current",
+    provider_status: "active",
+    entitlement_status: "active",
+    metadata: { source: "checkout" },
+  })
+  charges.ch_disputed = {
+    id: "ch_disputed",
+    customer: { id: "cus_disputed" },
+    payment_intent: { id: "pi_disputed" },
+  }
+  invoicePayments.push({
+    id: "inpay_disputed",
+    payment: { type: "payment_intent", payment_intent: "pi_disputed" },
+    invoice: {
+      id: "in_disputed",
+      parent: {
+        subscription_details: {
+          subscription: { id: "sub_disputed_current" },
+        },
+      },
+    },
+  })
+
+  await handleChargeDisputeCreated(
+    {
+      id: "dp_disputed",
+      charge: { id: "ch_disputed" },
+    } as any,
+    { ...deps, freeTierId: "tier-free" },
+  )
+
+  expect(retrievedCharges).toEqual([{ id: "ch_disputed", expand: undefined }])
+  expect(listedInvoicePayments).toEqual([
+    {
+      payment: { type: "payment_intent", payment_intent: "pi_disputed" },
+      limit: 1,
+      expand: ["data.invoice.parent.subscription_details.subscription"],
+    },
+  ])
+  expect(retrievedInvoices).toHaveLength(0)
+  expect(profiles.u.subscription_status).toBe("canceled")
+  expect(profiles.u.subscription_tier_id).toBe("tier-free")
+  expect(profiles.u.stripe_subscription_id).toBeNull()
+  expect(profiles.u.subscription_interval).toBeNull()
+  expect(profiles.u.current_period_end).toBeNull()
+  expect(billing).toHaveLength(1)
+  expect(billing[0]).toMatchObject({
+    user_id: "u",
+    provider: "stripe",
+    provider_customer_id: "cus_disputed",
+    provider_subscription_id: "sub_disputed_current",
+    provider_status: "disputed",
+    entitlement_status: "canceled",
+    metadata: {
+      source: "checkout",
+      reason: "charge_dispute_created",
+    },
+  })
+  expect(billing[0].cancelled_at).toBeTruthy()
+  expect(canceledSubscriptions).toEqual(["sub_disputed_current"])
+})
+
+test("charge.dispute.created does not revoke a newer active subscription for an old disputed charge", async () => {
+  const {
+    billing,
+    canceledSubscriptions,
+    charges,
+    deps,
+    invoicePayments,
+    invoices,
+    listedInvoicePayments,
+    profiles,
+    retrievedCharges,
+    retrievedInvoices,
+  } = stubDeps()
+  profiles.u = {
+    id: "u",
+    email: "retry-dispute@example.com",
+    stripe_customer_id: "cus_retry_dispute",
+    stripe_subscription_id: "sub_new_success",
+    subscription_status: "active",
+    subscription_tier_id: "tier-premium",
+    subscription_interval: "month",
+    current_period_end: "2027-02-01T00:00:00.000Z",
+  }
+  charges.ch_old_disputed = {
+    id: "ch_old_disputed",
+    customer: "cus_retry_dispute",
+    payment_intent: "pi_old_disputed",
+  }
+  invoicePayments.push({
+    id: "inpay_old_disputed",
+    payment: { type: "payment_intent", payment_intent: "pi_old_disputed" },
+    invoice: "in_old_disputed",
+  })
+  invoices.in_old_disputed = {
+    id: "in_old_disputed",
+    parent: {
+      subscription_details: {
+        subscription: "sub_old_disputed",
+      },
+    },
+  }
+
+  await handleChargeDisputeCreated(
+    {
+      id: "dp_old_disputed",
+      charge: "ch_old_disputed",
+    } as any,
+    { ...deps, freeTierId: "tier-free" },
+  )
+
+  expect(retrievedCharges).toEqual([{ id: "ch_old_disputed", expand: undefined }])
+  expect(listedInvoicePayments).toEqual([
+    {
+      payment: { type: "payment_intent", payment_intent: "pi_old_disputed" },
+      limit: 1,
+      expand: ["data.invoice.parent.subscription_details.subscription"],
+    },
+  ])
+  expect(retrievedInvoices).toEqual([
+    { id: "in_old_disputed", expand: ["parent.subscription_details.subscription"] },
+  ])
+  expect(profiles.u.subscription_status).toBe("active")
+  expect(profiles.u.subscription_tier_id).toBe("tier-premium")
+  expect(profiles.u.stripe_subscription_id).toBe("sub_new_success")
+  expect(profiles.u.subscription_interval).toBe("month")
+  expect(profiles.u.current_period_end).toBe("2027-02-01T00:00:00.000Z")
+  expect(billing).toHaveLength(1)
+  expect(billing[0]).toMatchObject({
+    user_id: "u",
+    provider_subscription_id: "sub_old_disputed",
+    provider_status: "disputed",
+    entitlement_status: "canceled",
+    metadata: { reason: "charge_dispute_created" },
+  })
+  expect(canceledSubscriptions).toEqual(["sub_old_disputed"])
+})
+
+test("charge.dispute.created without profile skips, but no-current-subscription still cancels disputed sub", async () => {
+  const {
+    billing,
+    canceledSubscriptions,
+    charges,
+    deps,
+    invoicePayments,
+    invoices,
+    listedInvoicePayments,
+    profiles,
+    retrievedCharges,
+    retrievedInvoices,
+  } = stubDeps()
+  profiles.withoutSubscription = {
+    id: "withoutSubscription",
+    email: "former@example.com",
+    stripe_customer_id: "cus_former",
+    stripe_subscription_id: null,
+    subscription_status: "canceled",
+    subscription_tier_id: "tier-free",
+  }
+  charges.ch_no_profile = {
+    id: "ch_no_profile",
+    customer: "cus_missing",
+    payment_intent: "pi_no_profile",
+  }
+  charges.ch_no_subscription = {
+    id: "ch_no_subscription",
+    customer: "cus_former",
+    payment_intent: "pi_no_subscription",
+  }
+  invoicePayments.push(
+    {
+      id: "inpay_no_profile",
+      payment: { type: "payment_intent", payment_intent: "pi_no_profile" },
+      invoice: "in_no_profile",
+    },
+    {
+      id: "inpay_no_subscription",
+      payment: { type: "payment_intent", payment_intent: "pi_no_subscription" },
+      invoice: "in_no_subscription",
+    },
+  )
+  invoices.in_no_profile = {
+    id: "in_no_profile",
+    parent: { subscription_details: { subscription: "sub_no_profile" } },
+  }
+  invoices.in_no_subscription = {
+    id: "in_no_subscription",
+    parent: { subscription_details: { subscription: "sub_former" } },
+  }
+
+  await expect(
+    handleChargeDisputeCreated(
+      {
+        id: "dp_no_profile",
+        charge: "ch_no_profile",
+      } as any,
+      { ...deps, freeTierId: "tier-free" },
+    ),
+  ).resolves.toBeUndefined()
+  await expect(
+    handleChargeDisputeCreated(
+      {
+        id: "dp_no_subscription",
+        charge: "ch_no_subscription",
+      } as any,
+      { ...deps, freeTierId: "tier-free" },
+    ),
+  ).resolves.toBeUndefined()
+
+  expect(retrievedCharges).toEqual([
+    { id: "ch_no_profile", expand: undefined },
+    { id: "ch_no_subscription", expand: undefined },
+  ])
+  expect(listedInvoicePayments).toEqual([
+    {
+      payment: { type: "payment_intent", payment_intent: "pi_no_profile" },
+      limit: 1,
+      expand: ["data.invoice.parent.subscription_details.subscription"],
+    },
+    {
+      payment: { type: "payment_intent", payment_intent: "pi_no_subscription" },
+      limit: 1,
+      expand: ["data.invoice.parent.subscription_details.subscription"],
+    },
+  ])
+  expect(retrievedInvoices).toEqual([
+    { id: "in_no_profile", expand: ["parent.subscription_details.subscription"] },
+    { id: "in_no_subscription", expand: ["parent.subscription_details.subscription"] },
+  ])
+  expect(profiles.withoutSubscription.stripe_subscription_id).toBeNull()
+  expect(profiles.withoutSubscription.subscription_status).toBe("canceled")
+  expect(profiles.withoutSubscription.subscription_tier_id).toBe("tier-free")
+  expect(billing).toHaveLength(1)
+  expect(billing[0]).toMatchObject({
+    user_id: "withoutSubscription",
+    provider_subscription_id: "sub_former",
+    provider_status: "disputed",
+    entitlement_status: "canceled",
+    metadata: { reason: "charge_dispute_created" },
+  })
+  expect(canceledSubscriptions).toEqual(["sub_former"])
 })
 
 test("checkout.session.completed with metadata.lead_id calls linkQuizToProfile with that id", async () => {

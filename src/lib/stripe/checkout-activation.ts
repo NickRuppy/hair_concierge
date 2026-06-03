@@ -101,7 +101,8 @@ export async function verifyCheckoutSessionForActivation(
   const session = await measureCheckoutStep("stripe.checkout.sessions.retrieve", () =>
     stripeClient.checkout.sessions.retrieve(sessionId),
   )
-  assertValidCheckoutSession(session)
+  assertCheckoutSessionShape(session)
+  assertCheckoutPaymentAuthorized(session)
   return session
 }
 
@@ -110,13 +111,10 @@ export async function ensureCheckoutAccount(
   deps: CheckoutActivationDeps,
 ): Promise<CheckoutAccountResult> {
   const startedAt = Date.now()
-  const valid = assertValidCheckoutSession(session)
+  const valid = assertCheckoutSessionShape(session)
   const sessionHash = checkoutSessionHash(valid.id).slice(0, 12)
-  const sub = (await measureCheckoutStep("stripe.subscriptions.retrieve", () =>
-    deps.stripe.subscriptions.retrieve(valid.subscriptionId, {
-      expand: ["items.data.price"],
-    }),
-  )) as unknown as RetrievedSub
+  assertCheckoutPaymentAuthorized(session)
+  const sub = await retrieveCheckoutSubscription(deps.stripe, valid.subscriptionId)
   assertCurrentCheckoutSubscription(sub, deps.now?.() ?? new Date())
 
   const existingProfile = await measureCheckoutStep("profiles.findExisting", () =>
@@ -170,7 +168,10 @@ export async function ensureCheckoutAccount(
       interval,
       current_period_end: subPeriodEndIso(sub),
       cancel_at_period_end: false,
-      metadata: { checkout_session_id: valid.id },
+      metadata: {
+        checkout_session_id: valid.id,
+        payment_status: session.payment_status ?? "unknown",
+      },
     }),
   )
 
@@ -276,7 +277,18 @@ export function stripeEntitlementStatus(status: string | undefined) {
   return "active"
 }
 
-function assertValidCheckoutSession(session: Stripe.Checkout.Session): ValidCheckoutSession {
+async function retrieveCheckoutSubscription(
+  stripe: Stripe,
+  subscriptionId: string,
+): Promise<RetrievedSub> {
+  return (await measureCheckoutStep("stripe.subscriptions.retrieve", () =>
+    stripe.subscriptions.retrieve(subscriptionId, {
+      expand: ["items.data.price"],
+    }),
+  )) as unknown as RetrievedSub
+}
+
+function assertCheckoutSessionShape(session: Stripe.Checkout.Session): ValidCheckoutSession {
   if (!session.id) {
     throw new CheckoutActivationError("checkout_session_missing_id", "checkout session has no id")
   }
@@ -299,16 +311,16 @@ function assertValidCheckoutSession(session: Stripe.Checkout.Session): ValidChec
       "checkout session customer is missing",
     )
   }
-  if (typeof session.subscription !== "string") {
+  const subscriptionId =
+    typeof session.subscription === "string"
+      ? session.subscription
+      : isRecord(session.subscription) && typeof session.subscription.id === "string"
+        ? session.subscription.id
+        : null
+  if (!subscriptionId) {
     throw new CheckoutActivationError(
       "checkout_session_subscription_missing",
       "checkout session subscription is missing",
-    )
-  }
-  if (session.payment_status === "unpaid") {
-    throw new CheckoutActivationError(
-      "checkout_session_unpaid",
-      "checkout session payment is unpaid",
     )
   }
 
@@ -316,8 +328,18 @@ function assertValidCheckoutSession(session: Stripe.Checkout.Session): ValidChec
     id: session.id,
     email,
     customerId: session.customer,
-    subscriptionId: session.subscription,
+    subscriptionId,
   }
+}
+
+function assertCheckoutPaymentAuthorized(session: Stripe.Checkout.Session) {
+  if (session.payment_status === "paid") return
+  if (session.payment_status === "no_payment_required") return
+
+  throw new CheckoutActivationError(
+    "checkout_session_unpaid",
+    "checkout session payment is not paid",
+  )
 }
 
 async function findExistingProfile(

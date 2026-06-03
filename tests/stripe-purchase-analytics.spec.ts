@@ -11,6 +11,7 @@ test("buildCheckoutPurchaseAnalytics maps Stripe final total, currency, plan, an
         retrieveCalls.push(args)
         return {
           id: "sub_123",
+          default_payment_method: { id: "pm_card", type: "card" },
           items: {
             data: [
               {
@@ -30,7 +31,7 @@ test("buildCheckoutPurchaseAnalytics maps Stripe final total, currency, plan, an
       amount_total: 1749,
       currency: "eur",
       id: "cs_test_123",
-      payment_method_types: ["card"],
+      payment_method_types: ["card", "sepa_debit"],
       subscription: "sub_123",
     } as any,
     stripe as any,
@@ -44,14 +45,19 @@ test("buildCheckoutPurchaseAnalytics maps Stripe final total, currency, plan, an
     value: 17.49,
   })
   assert.equal(retrieveCalls.length, 1)
+  assert.deepEqual(retrieveCalls[0], [
+    "sub_123",
+    { expand: ["default_payment_method", "items.data.price"] },
+  ])
 })
 
-test("buildCheckoutPurchaseAnalytics omits ambiguous payment method lists", async () => {
+test("buildCheckoutPurchaseAnalytics omits payment method when actual method is not expanded", async () => {
   const stripe = {
     subscriptions: {
       async retrieve() {
         return {
           id: "sub_123",
+          default_payment_method: "pm_unexpanded",
           items: {
             data: [
               {
@@ -70,8 +76,8 @@ test("buildCheckoutPurchaseAnalytics omits ambiguous payment method lists", asyn
     {
       amount_total: 749,
       currency: "eur",
-      id: "cs_test_ambiguous",
-      payment_method_types: ["card", "paypal"],
+      id: "cs_test_unexpanded",
+      payment_method_types: ["sepa_debit"],
       subscription: "sub_123",
     } as any,
     stripe as any,

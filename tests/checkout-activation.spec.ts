@@ -23,6 +23,42 @@ function sessionHash(sessionId: string) {
   return createHash("sha256").update(sessionId).digest("hex")
 }
 
+function stripeForCheckoutActivation(options: {
+  session?: Record<string, unknown>
+  default_payment_method?: unknown
+}) {
+  return {
+    checkout: {
+      sessions: {
+        async retrieve(id: string) {
+          return checkoutSession({
+            id,
+            payment_status: "unpaid",
+            ...options.session,
+          })
+        },
+      },
+    },
+    subscriptions: {
+      async retrieve(id: string) {
+        return {
+          id,
+          status: "active",
+          default_payment_method: options.default_payment_method,
+          items: {
+            data: [
+              {
+                price: { recurring: { interval: "month", interval_count: 1 } },
+                current_period_end: 1_800_000_000,
+              },
+            ],
+          },
+        }
+      },
+    },
+  } as any
+}
+
 function stubDeps() {
   const calls: any[] = []
   const users: Record<
@@ -30,6 +66,7 @@ function stubDeps() {
     { id: string; email: string; app_metadata?: Record<string, unknown> }
   > = {}
   const profiles: Record<string, any> = {}
+  const billing: any[] = []
   const duplicateEmails = new Set<string>()
 
   const deps: HandlerDeps = {
@@ -70,15 +107,26 @@ function stubDeps() {
         },
       },
       from(table: string) {
-        return {
+        const filters: Array<[string, string]> = []
+        const rows = () => {
+          if (table === "profiles") return Object.values(profiles)
+          if (table === "billing_subscriptions") return billing
+          return Object.values(users)
+        }
+        const builder = {
           select() {
-            return this
+            return builder
           },
           eq(col: string, val: string) {
             calls.push([`select-${table}-${col}`, val])
-            const rows = table === "profiles" ? Object.values(profiles) : Object.values(users)
-            const row = rows.find((candidate: any) => candidate[col] === val)
-            return { maybeSingle: async () => ({ data: row ?? null, error: null }) }
+            filters.push([col, val])
+            return builder
+          },
+          async maybeSingle() {
+            const row = rows().find((candidate: any) =>
+              filters.every(([col, val]) => candidate[col] === val),
+            )
+            return { data: row ?? null, error: null }
           },
           update(patch: any) {
             return {
@@ -97,10 +145,39 @@ function stubDeps() {
                 ...(profiles[row.id] ?? {}),
                 ...row,
               }
+            } else if (table === "billing_subscriptions") {
+              const existing = billing.find(
+                (candidate) =>
+                  candidate.provider === row.provider &&
+                  candidate.provider_subscription_id === row.provider_subscription_id,
+              )
+              if (existing) Object.assign(existing, row)
+              else billing.push(row)
             }
+            return {
+              error: null,
+              select: () => ({
+                single: async () => ({
+                  data:
+                    table === "billing_subscriptions"
+                      ? billing.find(
+                          (candidate) =>
+                            candidate.provider === row.provider &&
+                            candidate.provider_subscription_id === row.provider_subscription_id,
+                        )
+                      : row,
+                  error: null,
+                }),
+              }),
+            }
+          },
+          insert(row: any) {
+            calls.push([`insert-${table}`, row])
+            if (table === "billing_subscriptions") billing.push(row)
             return Promise.resolve({ error: null })
           },
         }
+        return builder
       },
     } as any,
     stripe: {
@@ -109,6 +186,7 @@ function stubDeps() {
           return {
             id,
             status: "active",
+            default_payment_method: { id: "pm_card", type: "card" },
             items: {
               data: [
                 {
@@ -133,7 +211,7 @@ test("ensureCheckoutAccount creates a fresh paid user with hashed checkout activ
 
   const result = await ensureCheckoutAccount(session, deps)
 
-  expect(result).toEqual({
+  expect(result).toMatchObject({
     userId: "user-1",
     email: "new@example.com",
     canSetInitialPassword: true,
@@ -183,7 +261,7 @@ test("ensureCheckoutAccount reuses an existing email and denies initial password
     deps,
   )
 
-  expect(result).toEqual({
+  expect(result).toMatchObject({
     userId: "user-existing",
     email: "ret@example.com",
     canSetInitialPassword: false,
@@ -221,7 +299,7 @@ test("ensureCheckoutAccount allows password setup for an existing checkout-creat
     deps,
   )
 
-  expect(result).toEqual({
+  expect(result).toMatchObject({
     userId: "user-checkout",
     email: "checkout@example.com",
     canSetInitialPassword: true,
@@ -256,7 +334,7 @@ test("ensureCheckoutAccount denies password setup when the matching activation m
     deps,
   )
 
-  expect(result).toEqual({
+  expect(result).toMatchObject({
     userId: "user-used",
     email: "used@example.com",
     canSetInitialPassword: false,
@@ -287,7 +365,7 @@ test("ensureCheckoutAccount reuses an existing Stripe customer and does not crea
     deps,
   )
 
-  expect(result).toEqual({
+  expect(result).toMatchObject({
     userId: "user-by-customer",
     email: "newer@example.com",
     canSetInitialPassword: false,
@@ -323,7 +401,7 @@ test("ensureCheckoutAccount treats duplicate createUser races as an existing acc
     deps,
   )
 
-  expect(result).toEqual({
+  expect(result).toMatchObject({
     userId: "user-race",
     email: "race@example.com",
     canSetInitialPassword: false,
@@ -350,7 +428,7 @@ test("ensureCheckoutAccount creates a missing profile for duplicate auth users",
     deps,
   )
 
-  expect(result).toEqual({
+  expect(result).toMatchObject({
     userId: "user-auth-only",
     email: "auth-only@example.com",
     canSetInitialPassword: false,
@@ -385,7 +463,7 @@ test("ensureCheckoutAccount denies password setup for duplicate createUser races
     deps,
   )
 
-  expect(result).toEqual({
+  expect(result).toMatchObject({
     userId: "user-race-match",
     email: "race-match@example.com",
     canSetInitialPassword: false,
@@ -495,14 +573,32 @@ test("verifyCheckoutSessionForActivation returns complete paid sessions", async 
   })
 })
 
-test("verifyCheckoutSessionForActivation rejects incomplete and unpaid sessions", async () => {
+test("verifyCheckoutSessionForActivation accepts complete sessions with no payment required", async () => {
   const stripe = {
     checkout: {
       sessions: {
         async retrieve(id: string) {
-          return id === "cs_unpaid"
-            ? checkoutSession({ id, payment_status: "unpaid" })
-            : checkoutSession({ id, status: "open" })
+          return checkoutSession({
+            id,
+            payment_status: "no_payment_required",
+          })
+        },
+      },
+    },
+  } as any
+
+  await expect(verifyCheckoutSessionForActivation("cs_free", stripe)).resolves.toMatchObject({
+    id: "cs_free",
+    payment_status: "no_payment_required",
+  })
+})
+
+test("verifyCheckoutSessionForActivation rejects incomplete sessions", async () => {
+  const stripe = {
+    checkout: {
+      sessions: {
+        async retrieve(id: string) {
+          return checkoutSession({ id, status: "open" })
         },
       },
     },
@@ -511,7 +607,37 @@ test("verifyCheckoutSessionForActivation rejects incomplete and unpaid sessions"
   await expect(verifyCheckoutSessionForActivation("cs_open", stripe)).rejects.toMatchObject({
     code: "checkout_session_incomplete",
   })
-  await expect(verifyCheckoutSessionForActivation("cs_unpaid", stripe)).rejects.toMatchObject({
+})
+
+test("verifyCheckoutSessionForActivation rejects complete unpaid sessions even if subscription default payment method is SEPA", async () => {
+  const stripe = stripeForCheckoutActivation({
+    default_payment_method: { id: "pm_sepa", type: "sepa_debit" },
+  })
+
+  await expect(verifyCheckoutSessionForActivation("cs_unpaid_sepa", stripe)).rejects.toMatchObject({
+    code: "checkout_session_unpaid",
+  })
+})
+
+test("verifyCheckoutSessionForActivation rejects complete unpaid sessions even if subscription default payment method is card", async () => {
+  const stripe = stripeForCheckoutActivation({
+    default_payment_method: { id: "pm_card", type: "card" },
+  })
+
+  await expect(verifyCheckoutSessionForActivation("cs_unpaid_card", stripe)).rejects.toMatchObject({
+    code: "checkout_session_unpaid",
+  })
+})
+
+test("verifyCheckoutSessionForActivation rejects complete unpaid sessions even if SEPA was offered", async () => {
+  const stripe = stripeForCheckoutActivation({
+    session: { payment_method_types: ["card", "sepa_debit"] },
+    default_payment_method: { id: "pm_card", type: "card" },
+  })
+
+  await expect(
+    verifyCheckoutSessionForActivation("cs_unpaid_offered_sepa", stripe),
+  ).rejects.toMatchObject({
     code: "checkout_session_unpaid",
   })
 })

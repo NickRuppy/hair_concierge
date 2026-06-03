@@ -12,6 +12,10 @@ function stubDeps() {
   const users: Record<string, { id: string; email: string }> = {}
   const profiles: Record<string, any> = {}
   const billing: any[] = []
+  const canceledSubscriptions: string[] = []
+  const subscriptionPaymentMethods: Record<string, { id: string; type?: string }> = {
+    sub_123: { id: "pm_card", type: "card" },
+  }
 
   const deps: HandlerDeps = {
     supabase: {
@@ -43,15 +47,37 @@ function stubDeps() {
             return { data: row ?? null, error: null }
           },
           update(patch: any) {
-            return {
+            const updateFilters: Array<[string, string]> = []
+            let appliedRows: any[] | null = null
+            const applyUpdate = () => {
+              if (appliedRows) return appliedRows
+              appliedRows = []
+              for (const row of rowsForTable()) {
+                if (updateFilters.every(([column, value]) => row[column] === value)) {
+                  Object.assign(row, patch)
+                  appliedRows.push(row)
+                }
+              }
+              return appliedRows
+            }
+            const builder = {
               eq(column: string, value: string) {
-                const row = Object.values(profiles).find(
-                  (candidate: any) => candidate[column] === value,
-                )
-                if (row) Object.assign(row, patch)
-                return Promise.resolve({ error: null })
+                updateFilters.push([column, value])
+                return builder
+              },
+              select() {
+                return builder
+              },
+              async maybeSingle() {
+                const row = applyUpdate()[0]
+                return { data: row ?? null, error: null }
+              },
+              then(resolve: (value: { error: null }) => unknown) {
+                applyUpdate()
+                return Promise.resolve({ error: null }).then(resolve)
               },
             }
+            return builder
           },
           upsert(row: any) {
             if (table === "profiles") {
@@ -85,10 +111,14 @@ function stubDeps() {
     } as any,
     stripe: {
       subscriptions: {
-        async retrieve() {
+        async retrieve(id: string) {
           return {
-            id: "sub_123",
+            id,
             status: "active",
+            default_payment_method: subscriptionPaymentMethods[id] ?? {
+              id: "pm_card",
+              type: "card",
+            },
             current_period_end: 1_800_000_000,
             items: {
               data: [
@@ -100,12 +130,16 @@ function stubDeps() {
             },
           }
         },
+        async cancel(id: string) {
+          canceledSubscriptions.push(id)
+          return { id, status: "canceled" }
+        },
       },
     } as any,
     premiumTierId: "tier_premium",
   }
 
-  return { deps, profiles }
+  return { billing, canceledSubscriptions, deps, profiles, subscriptionPaymentMethods }
 }
 
 function withEnv(name: string, value: string, fn: () => Promise<void>) {
@@ -231,4 +265,293 @@ test("webhook event schedules best-effort Customer.io checkout sync after fulfil
   } finally {
     globalThis.fetch = originalFetch
   }
+})
+
+test("webhook event activates non-SEPA async payment success", async () => {
+  const { billing, deps, profiles, subscriptionPaymentMethods } = stubDeps()
+  const deferred: Array<() => void | Promise<void>> = []
+  subscriptionPaymentMethods.sub_async_success = { id: "pm_delayed", type: "customer_balance" }
+
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_async_succeeded",
+      type: "checkout.session.async_payment_succeeded",
+      created: 1_800_000_000,
+      data: {
+        object: {
+          id: "cs_async_succeeded",
+          amount_total: 1749,
+          currency: "eur",
+          status: "complete",
+          payment_status: "paid",
+          customer: "cus_async_succeeded",
+          customer_details: { email: "async-success@example.com" },
+          subscription: "sub_async_success",
+        },
+      },
+    } as any,
+    {
+      defer: (work) => deferred.push(work),
+      getPremiumTierId: async () => "tier_premium",
+      linkQuizToProfile: async () => {},
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  const profile = Object.values(profiles).find(
+    (candidate: any) => candidate.email === "async-success@example.com",
+  ) as any
+  assert.equal(profile.subscription_status, "active")
+  assert.equal(profile.stripe_subscription_id, "sub_async_success")
+  assert.equal(billing[0].provider_subscription_id, "sub_async_success")
+  assert.equal(billing[0].entitlement_status, "active")
+  assert.equal(deferred.length, 2)
+})
+
+test("webhook event activates async success when SEPA was offered but a non-SEPA method settled", async () => {
+  const { billing, canceledSubscriptions, deps, profiles, subscriptionPaymentMethods } = stubDeps()
+  const deferred: Array<() => void | Promise<void>> = []
+  subscriptionPaymentMethods.sub_mixed_success = { id: "pm_delayed", type: "customer_balance" }
+
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_mixed_async_succeeded",
+      type: "checkout.session.async_payment_succeeded",
+      created: 1_800_000_000,
+      data: {
+        object: {
+          id: "cs_mixed_async_succeeded",
+          amount_total: 1749,
+          currency: "eur",
+          status: "complete",
+          payment_status: "paid",
+          payment_method_types: ["customer_balance", "sepa_debit"],
+          customer: "cus_mixed_async_succeeded",
+          customer_details: { email: "mixed-success@example.com" },
+          subscription: "sub_mixed_success",
+        },
+      },
+    } as any,
+    {
+      defer: (work) => deferred.push(work),
+      getPremiumTierId: async () => "tier_premium",
+      linkQuizToProfile: async () => {},
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  const profile = Object.values(profiles).find(
+    (candidate: any) => candidate.email === "mixed-success@example.com",
+  ) as any
+  assert.equal(profile.subscription_status, "active")
+  assert.equal(profile.stripe_subscription_id, "sub_mixed_success")
+  assert.equal(billing[0].provider_subscription_id, "sub_mixed_success")
+  assert.equal(billing[0].entitlement_status, "active")
+  assert.deepEqual(canceledSubscriptions, [])
+  assert.equal(deferred.length, 2)
+})
+
+test("webhook event skips SEPA async payment success during SEPA sunset", async () => {
+  const { billing, canceledSubscriptions, deps, profiles, subscriptionPaymentMethods } = stubDeps()
+  const deferred: Array<() => void | Promise<void>> = []
+  subscriptionPaymentMethods.sub_sepa_success = { id: "pm_sepa", type: "sepa_debit" }
+
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_sepa_async_succeeded",
+      type: "checkout.session.async_payment_succeeded",
+      created: 1_800_000_000,
+      data: {
+        object: {
+          id: "cs_sepa_async_succeeded",
+          amount_total: 749,
+          currency: "eur",
+          status: "complete",
+          payment_status: "paid",
+          customer: "cus_sepa_async_succeeded",
+          customer_details: { email: "sepa-success@example.com" },
+          subscription: "sub_sepa_success",
+        },
+      },
+    } as any,
+    {
+      defer: (work) => deferred.push(work),
+      getPremiumTierId: async () => "tier_premium",
+      linkQuizToProfile: async () => {},
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  assert.deepEqual(Object.values(profiles), [])
+  assert.deepEqual(billing, [])
+  assert.deepEqual(canceledSubscriptions, ["sub_sepa_success"])
+  assert.equal(deferred.length, 0)
+})
+
+test("webhook event skips SEPA async payment success when the session payment method types reveal it", async () => {
+  const { billing, canceledSubscriptions, deps, profiles, subscriptionPaymentMethods } = stubDeps()
+  const deferred: Array<() => void | Promise<void>> = []
+  subscriptionPaymentMethods.sub_session_sepa_success = { id: "pm_unknown" }
+
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_session_sepa_async_succeeded",
+      type: "checkout.session.async_payment_succeeded",
+      created: 1_800_000_000,
+      data: {
+        object: {
+          id: "cs_session_sepa_async_succeeded",
+          amount_total: 749,
+          currency: "eur",
+          status: "complete",
+          payment_status: "paid",
+          payment_method_types: ["sepa_debit"],
+          customer: "cus_session_sepa_async_succeeded",
+          customer_details: { email: "session-sepa-success@example.com" },
+          subscription: "sub_session_sepa_success",
+        },
+      },
+    } as any,
+    {
+      defer: (work) => deferred.push(work),
+      getPremiumTierId: async () => "tier_premium",
+      linkQuizToProfile: async () => {},
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  assert.deepEqual(Object.values(profiles), [])
+  assert.deepEqual(billing, [])
+  assert.deepEqual(canceledSubscriptions, ["sub_session_sepa_success"])
+  assert.equal(deferred.length, 0)
+})
+
+test("webhook event acknowledges unpaid checkout completion without granting access", async () => {
+  const { billing, deps, profiles } = stubDeps()
+  const deferred: Array<() => void | Promise<void>> = []
+
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_checkout_unpaid",
+      type: "checkout.session.completed",
+      created: 1_800_000_000,
+      data: {
+        object: {
+          id: "cs_unpaid",
+          amount_total: 749,
+          currency: "eur",
+          status: "complete",
+          payment_status: "unpaid",
+          customer: "cus_unpaid",
+          customer_details: { email: "unpaid@example.com" },
+          subscription: "sub_unpaid",
+        },
+      },
+    } as any,
+    {
+      defer: (work) => deferred.push(work),
+      getPremiumTierId: async () => "tier_premium",
+      linkQuizToProfile: async () => {},
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  assert.deepEqual(Object.values(profiles), [])
+  assert.deepEqual(billing, [])
+  assert.equal(deferred.length, 0)
+})
+
+test("webhook event handles checkout.session.async_payment_failed without Customer.io purchase work", async () => {
+  const { billing, canceledSubscriptions, deps, profiles } = stubDeps()
+  const deferred: Array<() => void | Promise<void>> = []
+  profiles.user_async_failed = {
+    id: "user_async_failed",
+    email: "async-failed@example.com",
+    stripe_customer_id: "cus_async_failed",
+    stripe_subscription_id: "sub_async_failed",
+    subscription_status: "active",
+    subscription_tier_id: "tier_premium",
+    subscription_interval: "quarter",
+    current_period_end: "2027-01-01T00:00:00.000Z",
+  }
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_async_failed",
+      type: "checkout.session.async_payment_failed",
+      created: 1_800_000_000,
+      data: {
+        object: {
+          id: "cs_async_failed",
+          customer: "cus_async_failed",
+          subscription: "sub_async_failed",
+        },
+      },
+    } as any,
+    {
+      defer: (work) => deferred.push(work),
+      getFreeTierId: async () => "tier_free",
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  assert.equal(profiles.user_async_failed.subscription_status, "canceled")
+  assert.equal(profiles.user_async_failed.subscription_tier_id, "tier_free")
+  assert.equal(profiles.user_async_failed.stripe_subscription_id, null)
+  assert.equal(profiles.user_async_failed.subscription_interval, null)
+  assert.equal(profiles.user_async_failed.current_period_end, null)
+  assert.equal(billing.length, 1)
+  assert.equal(billing[0].provider_status, "payment_failed")
+  assert.deepEqual(billing[0].metadata, { reason: "async_payment_failed" })
+  assert.deepEqual(canceledSubscriptions, ["sub_async_failed"])
+  assert.equal(deferred.length, 0)
+})
+
+test("stale subscription deletion does not send Customer.io cancellation for a newer active subscription", async () => {
+  const { billing, deps, profiles } = stubDeps()
+  const deferred: Array<() => void | Promise<void>> = []
+  profiles.user_migrated = {
+    id: "user_migrated",
+    email: "migrated@example.com",
+    stripe_customer_id: "cus_migrated",
+    stripe_subscription_id: "sub_new_active",
+    subscription_status: "active",
+    subscription_tier_id: "tier_premium",
+    subscription_interval: "quarter",
+    current_period_end: "2027-01-01T00:00:00.000Z",
+  }
+
+  await handleStripeWebhookEvent(
+    {
+      id: "evt_stale_deleted",
+      type: "customer.subscription.deleted",
+      created: 1_800_000_000,
+      data: {
+        object: {
+          id: "sub_old_deleted",
+          customer: "cus_migrated",
+          status: "canceled",
+        },
+      },
+    } as any,
+    {
+      defer: (work) => deferred.push(work),
+      getFreeTierId: async () => "tier_free",
+      stripe: deps.stripe,
+      supabase: deps.supabase,
+    },
+  )
+
+  assert.equal(profiles.user_migrated.stripe_subscription_id, "sub_new_active")
+  assert.equal(profiles.user_migrated.subscription_status, "active")
+  assert.equal(profiles.user_migrated.subscription_tier_id, "tier_premium")
+  assert.equal(billing.length, 1)
+  assert.equal(billing[0].provider_subscription_id, "sub_old_deleted")
+  assert.equal(billing[0].entitlement_status, "canceled")
+  assert.equal(deferred.length, 0)
 })

@@ -95,7 +95,7 @@ export function PaymentMethodCheckout({
           <div>
             <button
               type="button"
-              aria-controls="card-sepa-checkout"
+              aria-controls="card-checkout"
               aria-describedby={!cardCheckoutOpen ? "payment-method-helper" : undefined}
               aria-expanded={cardCheckoutOpen}
               onClick={() => setCardCheckoutOpen(true)}
@@ -105,7 +105,7 @@ export function PaymentMethodCheckout({
                   : "border-border hover:border-[var(--brand-plum-light)]"
               }`}
             >
-              Karte, SEPA & weitere
+              Karte & weitere
             </button>
             {!cardCheckoutOpen ? (
               <p
@@ -120,7 +120,7 @@ export function PaymentMethodCheckout({
       ) : null}
 
       {showCardCheckout ? (
-        <div id="card-sepa-checkout" className={paypalEnabled ? "mt-3" : undefined}>
+        <div id="card-checkout" className={paypalEnabled ? "mt-3" : undefined}>
           {checkoutError ? (
             <div className="rounded-[14px] border border-destructive/30 bg-destructive/10 p-5 text-center">
               <p className="mb-3 text-sm text-destructive">{checkoutError}</p>
