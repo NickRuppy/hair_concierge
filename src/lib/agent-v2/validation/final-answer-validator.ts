@@ -13,6 +13,7 @@ import {
   type AgentV2SessionMemoryWrite,
   type AgentV2TerminalAnswer,
   type AgentV2ToolCallTrace,
+  type AgentV2TurnGateResult,
   type AgentV2ValidationError,
 } from "@/lib/agent-v2/contracts"
 import type { CareBalanceConflict } from "@/lib/recommendation-engine/types"
@@ -38,6 +39,7 @@ export interface AgentV2FinalAnswerValidationContext {
   hasCurrentRoutineInventory?: boolean
   currentCareContextConflicts?: readonly CareBalanceConflict[]
   knownHardRuleIds?: readonly string[]
+  turnGate?: AgentV2TurnGateResult | null
 }
 
 export interface AgentV2FinalAnswerValidationResult {
@@ -77,6 +79,7 @@ export function validateAgentV2FinalAnswer(
   validateInterpretationEvidence(terminalAnswer, context, findings)
   validateInterpretationConfidence(terminalAnswer, context, findings)
   validateInterpretationAnswerMode(terminalAnswer, findings)
+  validateTurnGateConsistency(terminalAnswer, context, findings)
   validateInterpretationToolHistory(terminalAnswer, context, findings)
   validateInterpretationToolArguments(terminalAnswer, context, findings)
   validateProductAnswerShape(terminalAnswer, context, findings)
@@ -90,6 +93,7 @@ export function validateAgentV2FinalAnswer(
   validateRoutineProductDeepDive(terminalAnswer, context, findings)
   validateRoutineMetadataConsistency(terminalAnswer, context, findings)
   validateAnswerModeForContext(terminalAnswer, findings)
+  validateBoundaryAnswerSideEffects(terminalAnswer, findings)
   validateRoutineLayerProgression(terminalAnswer, context, findings)
   validateCurrentCareContextConflictAcknowledgement(terminalAnswer, context, findings)
   validateGeneralAdviceNoUnaskedProducts(terminalAnswer, findings)
@@ -142,6 +146,8 @@ const payloadFieldsByMode: Record<AgentV2AnswerMode, readonly string[]> = {
   clarification: ["user_facing_answer_de", "question_de", "missing_keys"],
   constraint_blocked: ["user_facing_answer_de", "blocking_constraints", "safe_alternative_de"],
   safety_boundary: ["user_facing_answer_de", "boundary_reason_de", "next_step_de"],
+  social: ["user_facing_answer_de", "pivot_de"],
+  domain_boundary: ["user_facing_answer_de", "boundary_kind", "redirect_topic_de"],
 }
 
 const knownPayloadFields = new Set(Object.values(payloadFieldsByMode).flat())
@@ -619,6 +625,117 @@ function validateInterpretationAnswerMode(
       path: ["request_interpretation", "primary_intent"],
     })
   }
+
+  if (answer.answer_mode === "social" && interpretation.primary_intent !== "smalltalk") {
+    errors.push({
+      validator_id: "request_interpretation_answer_mode",
+      message: "Social answers require primary_intent smalltalk.",
+      severity: "block",
+      path: ["request_interpretation", "primary_intent"],
+    })
+  }
+
+  if (answer.answer_mode === "domain_boundary" && interpretation.primary_intent !== "unknown") {
+    errors.push({
+      validator_id: "request_interpretation_answer_mode",
+      message: "Domain-boundary answers require primary_intent unknown.",
+      severity: "block",
+      path: ["request_interpretation", "primary_intent"],
+    })
+  }
+
+  if (
+    (answer.answer_mode === "social" || answer.answer_mode === "domain_boundary") &&
+    (interpretation.product_request_kind !== "none" ||
+      interpretation.routine_intent !== "none" ||
+      interpretation.care_category !== "none" ||
+      interpretation.requested_product_count !== null ||
+      interpretation.count_policy !== "none" ||
+      interpretation.confidence < 0.7)
+  ) {
+    errors.push({
+      validator_id: "request_interpretation_answer_mode",
+      message:
+        "Social and domain-boundary interpretations must use no product/routine/category fields and confidence at least 0.7.",
+      severity: "block",
+      path: ["request_interpretation"],
+    })
+  }
+}
+
+function validateTurnGateConsistency(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+  errors: AgentV2ValidationError[],
+): void {
+  const gate = context.turnGate
+  if (!gate) {
+    if (answer.answer_mode === "social" || answer.answer_mode === "domain_boundary") {
+      errors.push({
+        validator_id: "turn_gate_answer_mode",
+        message: "Social and domain-boundary answer modes require an authorized turn gate.",
+        severity: "block",
+        path: ["answer_mode"],
+      })
+    }
+    return
+  }
+
+  if (answer.answer_mode === "social" && gate.gate_status !== "social") {
+    errors.push({
+      validator_id: "turn_gate_answer_mode",
+      message: "Social answer mode requires social turn-gate status.",
+      severity: "block",
+      path: ["answer_mode"],
+    })
+  }
+
+  if (
+    answer.answer_mode === "domain_boundary" &&
+    gate.gate_status !== "domain_boundary" &&
+    gate.gate_status !== "prompt_or_role_bypass"
+  ) {
+    errors.push({
+      validator_id: "turn_gate_answer_mode",
+      message:
+        "Domain-boundary answer mode requires domain_boundary or prompt_or_role_bypass gate status.",
+      severity: "block",
+      path: ["answer_mode"],
+    })
+  }
+
+  if (gate.gate_status === "social" && answer.answer_mode !== "social") {
+    errors.push({
+      validator_id: "turn_gate_answer_mode",
+      message: "Social turn-gate status must submit a social answer.",
+      severity: "block",
+      path: ["answer_mode"],
+    })
+  }
+
+  if (
+    (gate.gate_status === "domain_boundary" || gate.gate_status === "prompt_or_role_bypass") &&
+    answer.answer_mode !== "domain_boundary"
+  ) {
+    errors.push({
+      validator_id: "turn_gate_answer_mode",
+      message: "Boundary turn-gate status must submit a domain_boundary answer.",
+      severity: "block",
+      path: ["answer_mode"],
+    })
+  }
+
+  if (answer.answer_mode === "domain_boundary") {
+    const payload = answer.payload
+    if (payload.boundary_kind !== gate.boundary_kind) {
+      errors.push({
+        validator_id: "turn_gate_answer_mode",
+        message: "Domain-boundary payload boundary_kind must match the authorized turn gate.",
+        severity: "block",
+        path: ["payload", "boundary_kind"],
+      })
+    }
+  }
 }
 
 function validateInterpretationToolHistory(
@@ -873,6 +990,10 @@ function getRequiredGuidancePackageIds(
   answer: AgentV2TerminalAnswer,
   context: AgentV2FinalAnswerValidationContext,
 ): string[] {
+  if (answer.answer_mode === "social" || answer.answer_mode === "domain_boundary") {
+    return [...context.requiredGuidancePackageIds]
+  }
+
   const required = new Set<string>(ALWAYS_REQUIRED_GUIDANCE_PACKAGE_IDS)
 
   for (const id of BASE_GUIDANCE_BY_ANSWER_MODE[answer.answer_mode] ?? []) {
@@ -1236,6 +1357,46 @@ function validateAnswerModeForContext(
   }
 }
 
+function validateBoundaryAnswerSideEffects(
+  answer: AgentV2TerminalAnswer,
+  errors: AgentV2ValidationError[],
+): void {
+  if (answer.answer_mode !== "social" && answer.answer_mode !== "domain_boundary") return
+
+  const hasSideEffects =
+    answer.tool_grounding.used_product_tool ||
+    answer.tool_grounding.used_routine_tool ||
+    answer.tool_grounding.product_ids.length > 0 ||
+    answer.tool_grounding.routine_step_ids.length > 0 ||
+    extractPayloadProductIds(answer).length > 0 ||
+    extractPayloadRoutineStepIds(answer).length > 0 ||
+    answer.session_memory_writes.length > 0 ||
+    answer.routine_context.active ||
+    answer.pending_routine_action !== null
+
+  if (hasSideEffects) {
+    errors.push({
+      validator_id: "boundary_answer_no_side_effects",
+      message:
+        "Social and domain-boundary answers must not include product, routine, memory, active routine context, or pending routine side effects.",
+      severity: "block",
+    })
+  }
+
+  if (
+    answer.answer_mode === "domain_boundary" &&
+    answer.payload.boundary_kind === "unsupported_domain" &&
+    !answer.payload.redirect_topic_de
+  ) {
+    errors.push({
+      validator_id: "domain_boundary_redirect",
+      message: "Unsupported-domain answers must include a hair-care redirect topic.",
+      severity: "block",
+      path: ["payload", "redirect_topic_de"],
+    })
+  }
+}
+
 function validateRoutineLayerProgression(
   answer: AgentV2TerminalAnswer,
   context: AgentV2FinalAnswerValidationContext,
@@ -1348,7 +1509,8 @@ function validateInternalLeakage(
   answer: AgentV2TerminalAnswer,
   errors: AgentV2ValidationError[],
 ): void {
-  const userFacing = readUserFacingAnswer(answer.payload).toLocaleLowerCase("de-DE")
+  const rawUserFacing = readUserFacingAnswer(answer.payload)
+  const userFacing = rawUserFacing.toLocaleLowerCase("de-DE")
   if (
     /\b(validator|trace|regel-id|rule_id|session memory|speichere diese erinnerung)\b/i.test(
       userFacing,
@@ -1357,6 +1519,17 @@ function validateInternalLeakage(
     errors.push({
       validator_id: "no_internal_leakage",
       message: "User-facing prose leaks internal tool, trace, or memory language.",
+      severity: "block",
+    })
+  }
+
+  if (
+    answer.answer_mode === "domain_boundary" &&
+    (/```/.test(rawUserFacing) || /<\/?[a-z][\s\S]*>/i.test(rawUserFacing))
+  ) {
+    errors.push({
+      validator_id: "no_internal_leakage",
+      message: "Domain-boundary responses must not include code fences or raw HTML.",
       severity: "block",
     })
   }

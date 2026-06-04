@@ -730,6 +730,7 @@ export function buildRetrievalDebugEventData(draft: PipelineTraceDraft): Record<
     agent_v2_latency_ms: draft.agent_v2_trace
       ? {
           runtime: draft.latencies_ms.agent_runtime_ms ?? null,
+          turn_gate: draft.latencies_ms.agent_turn_gate_ms ?? null,
           model: draft.latencies_ms.agent_model_ms ?? null,
           tools: draft.latencies_ms.agent_tool_ms ?? null,
           model_steps: draft.agent_v2_trace.model_steps.length,

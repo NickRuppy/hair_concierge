@@ -14,6 +14,7 @@ import {
 } from "@/lib/agent-v2/production/langfuse-observability"
 import { buildAgentV2ProductToolMessage } from "@/lib/agent-v2/runtime/product-tool-context"
 import {
+  type AgentV2AnswerMode,
   type AgentV2RoutineLayer,
   type AgentV2RoutineThreadContext,
   type AgentV2SafetyMode,
@@ -91,6 +92,7 @@ type AgentV2StoredProductProjection = Partial<AgentV2SelectProductsProjection>
 type AgentV2ProductionTraceTiming = {
   modelMs: number | null
   toolMs: number | null
+  gateMs: number | null
 }
 
 export interface PipelineParams {
@@ -115,6 +117,7 @@ export interface PipelineResult {
   }
   debugTrace: PipelineTraceDraft
   visibleFailure?: boolean
+  answerMode: AgentV2AnswerMode
 }
 
 interface ProductionAgentV2PipelineDeps {
@@ -170,6 +173,7 @@ function summarizeAgentV2ProductionTraceTiming(
   return {
     modelMs: sumFiniteLatencies(trace.model_steps.map(readAgentV2ModelStepLatencyMs)),
     toolMs: sumFiniteLatencies(trace.tool_calls.map((call) => call.latency_ms)),
+    gateMs: trace.turn_gate?.latency_ms ?? null,
   }
 }
 
@@ -732,6 +736,7 @@ export async function runAgentV2ProductionPipeline(
       prompt_build_ms: 0,
       stream_setup_ms: 0,
       agent_runtime_ms: agentMs,
+      agent_turn_gate_ms: agentTiming.gateMs,
       agent_model_ms: agentTiming.modelMs,
       agent_tool_ms: agentTiming.toolMs,
     },
@@ -752,5 +757,6 @@ export async function runAgentV2ProductionPipeline(
     engineTrace: exposedEngineTrace,
     debugTrace,
     visibleFailure,
+    answerMode: answer.answer_mode,
   }
 }
