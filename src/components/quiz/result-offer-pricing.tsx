@@ -1,7 +1,8 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
-import { loadStripe } from "@stripe/stripe-js"
+import { loadStripe } from "@stripe/stripe-js/pure"
+import type { Stripe } from "@stripe/stripe-js"
 
 import {
   isPayPalCheckoutEnabled,
@@ -22,9 +23,7 @@ import {
 } from "@/lib/stripe/pricing-plans"
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-const stripePromise = stripePublishableKey
-  ? loadStripe(stripePublishableKey)
-  : Promise.resolve(null)
+const unloadedStripePromise = Promise.resolve(null)
 const checkoutStartError = "Zahlung konnte nicht gestartet werden. Bitte versuche es erneut."
 
 function getPlanDetail(plan: ReturnType<typeof getStripePricingPlan>): string {
@@ -39,13 +38,45 @@ export function ResultOfferPricing({
   onCheckoutOpen?: () => void
 }) {
   const checkoutRef = useRef<HTMLDivElement | null>(null)
+  const stripePromiseRef = useRef<Promise<Stripe | null> | null>(null)
   const [selectedInterval, setSelectedInterval] =
     useState<BillingInterval>(DEFAULT_PRICING_INTERVAL)
   const [checkoutInterval, setCheckoutInterval] = useState<BillingInterval | null>(null)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const [checkoutStripePromise, setCheckoutStripePromise] =
+    useState<Promise<Stripe | null>>(unloadedStripePromise)
   const [duplicateEmail, setDuplicateEmail] = useState<string | null>(null)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
   const selectedPlan = getStripePricingPlan(selectedInterval)
+
+  const getStripePromise = useCallback(() => {
+    if (!stripePublishableKey) {
+      stripePromiseRef.current = unloadedStripePromise
+      return unloadedStripePromise
+    }
+
+    if (!stripePromiseRef.current) {
+      const promise = loadStripe(stripePublishableKey)
+      promise.catch(() => {
+        if (stripePromiseRef.current === promise) {
+          stripePromiseRef.current = null
+        }
+      })
+      stripePromiseRef.current = promise
+    }
+
+    return stripePromiseRef.current
+  }, [])
+
+  const ensureStripePromise = useCallback(() => {
+    const promise = getStripePromise()
+    setCheckoutStripePromise(promise)
+    return promise
+  }, [getStripePromise])
+
+  useEffect(() => {
+    getStripePromise()
+  }, [getStripePromise])
 
   useEffect(() => {
     trackAppEvent("pricing_viewed", {
@@ -61,6 +92,7 @@ export function ResultOfferPricing({
   }
 
   function openCheckout() {
+    ensureStripePromise()
     setCheckoutError(
       !isPayPalCheckoutEnabled() && !stripePublishableKey ? checkoutStartError : null,
     )
@@ -221,7 +253,7 @@ export function ResultOfferPricing({
             }}
             planLabel={getStripePricingPlan(checkoutInterval).ctaLabel}
             source="quiz_result_offer"
-            stripe={stripePromise}
+            stripe={checkoutStripePromise}
           />
         ) : null}
       </div>
