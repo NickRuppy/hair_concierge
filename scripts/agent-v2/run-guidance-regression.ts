@@ -20,6 +20,10 @@ type GuidanceMigrationRegressionCase = {
   safety_mode?: "normal" | "restricted" | "hard_short_circuit"
   expected_tools: string[]
   expected_guidance: string[]
+  expected_answer_mode?: string
+  expected_gate_status?: string
+  expect_no_products?: boolean
+  expect_no_routine_mutation?: boolean
   must_not_contain: string[]
   quality_criteria: string[]
 }
@@ -46,6 +50,9 @@ type GuidanceMigrationReportCase = {
   actual_guidance: string[]
   expected_guidance: string[]
   missing_guidance: string[]
+  actual_answer_modes: string[]
+  actual_gate_statuses: string[]
+  expectation_failures: string[]
   validation_errors: string[]
   validation_warnings: string[]
   forbidden_text_hits: string[]
@@ -116,6 +123,27 @@ function collectGuidance(traces: readonly AgentV2CompareTrace[]): string[] {
   return unique(traces.flatMap((trace) => trace.loaded_guidance_package_ids))
 }
 
+function collectAnswerModes(traces: readonly AgentV2CompareTrace[]): string[] {
+  return unique(traces.flatMap((trace) => (trace.answer_mode ? [trace.answer_mode] : [])))
+}
+
+function collectGateStatuses(traces: readonly AgentV2CompareTrace[]): string[] {
+  return unique(
+    traces.flatMap((trace) => {
+      const turnGate = (trace as { turn_gate?: unknown }).turn_gate
+      if (!turnGate || typeof turnGate !== "object" || Array.isArray(turnGate)) return []
+      const authorized = (turnGate as { authorized?: unknown }).authorized
+      if (!authorized || typeof authorized !== "object" || Array.isArray(authorized)) return []
+      const gateStatus = (authorized as { gate_status?: unknown }).gate_status
+      return typeof gateStatus === "string" ? [gateStatus] : []
+    }),
+  )
+}
+
+function collectFinalProductIds(traces: readonly AgentV2CompareTrace[]): string[] {
+  return unique(traces.flatMap((trace) => trace.final_product_ids ?? []))
+}
+
 function collectValidationIds(
   traces: readonly AgentV2CompareTrace[],
   field: "validation_errors" | "validation_warnings",
@@ -159,6 +187,7 @@ function classifyResult(params: {
   missingTools: readonly string[]
   missingGuidance: readonly string[]
   forbiddenTextHits: readonly string[]
+  expectationFailures: readonly string[]
   qualityCriteria: readonly string[]
 }): GuidanceMigrationReportCase["heuristic_result"] {
   if (
@@ -166,7 +195,8 @@ function classifyResult(params: {
     params.validationErrors.length > 0 ||
     params.missingTools.length > 0 ||
     params.missingGuidance.length > 0 ||
-    params.forbiddenTextHits.length > 0
+    params.forbiddenTextHits.length > 0 ||
+    params.expectationFailures.length > 0
   ) {
     return "fail"
   }
@@ -308,6 +338,9 @@ async function runCase(
   let latencyMs: number | null = null
   let actualTools: string[] = []
   let actualGuidance: string[] = []
+  let actualAnswerModes: string[] = []
+  let actualGateStatuses: string[] = []
+  let actualFinalProductIds: string[] = []
   let validationErrors: string[] = []
   let validationWarnings: string[] = []
   let timingSummary: AgentV2TraceTimingSummary = summarizeAgentV2TraceTiming([])
@@ -326,6 +359,9 @@ async function runCase(
     latencyMs = result.latency_ms
     actualTools = collectTools(traces)
     actualGuidance = collectGuidance(traces)
+    actualAnswerModes = collectAnswerModes(traces)
+    actualGateStatuses = collectGateStatuses(traces)
+    actualFinalProductIds = collectFinalProductIds(traces)
     validationErrors = collectValidationIds(traces, "validation_errors")
     validationWarnings = collectValidationIds(traces, "validation_warnings")
     timingSummary = summarizeAgentV2TraceTiming(traces)
@@ -336,12 +372,30 @@ async function runCase(
   const missingTools = expectedTools.filter((tool) => !actualTools.includes(tool))
   const missingGuidance = expectedGuidance.filter((id) => !actualGuidance.includes(id))
   const forbiddenTextHits = collectForbiddenHits(finalResponse, entry.must_not_contain ?? [])
+  const expectationFailures = [
+    entry.expected_answer_mode && !actualAnswerModes.includes(entry.expected_answer_mode)
+      ? `missing_answer_mode:${entry.expected_answer_mode}`
+      : null,
+    entry.expected_gate_status && !actualGateStatuses.includes(entry.expected_gate_status)
+      ? `missing_gate_status:${entry.expected_gate_status}`
+      : null,
+    entry.expect_no_products === true && actualFinalProductIds.length > 0
+      ? `unexpected_products:${actualFinalProductIds.join(",")}`
+      : null,
+    entry.expect_no_products === true && actualTools.includes("select_products")
+      ? "unexpected_product_tool:select_products"
+      : null,
+    entry.expect_no_routine_mutation === true && actualTools.includes("build_or_fix_routine")
+      ? "unexpected_routine_mutation_tool"
+      : null,
+  ].filter((value): value is string => Boolean(value))
   const heuristicResult = classifyResult({
     runtimeError,
     validationErrors,
     missingTools,
     missingGuidance,
     forbiddenTextHits,
+    expectationFailures,
     qualityCriteria,
   })
 
@@ -359,6 +413,9 @@ async function runCase(
     actual_guidance: actualGuidance,
     expected_guidance: expectedGuidance,
     missing_guidance: missingGuidance,
+    actual_answer_modes: actualAnswerModes,
+    actual_gate_statuses: actualGateStatuses,
+    expectation_failures: expectationFailures,
     validation_errors: validationErrors,
     validation_warnings: validationWarnings,
     forbidden_text_hits: forbiddenTextHits,
@@ -425,6 +482,9 @@ function renderMarkdown(report: GuidanceMigrationReport): string {
       `- Expected guidance: ${item.expected_guidance.join(", ") || "none"}`,
       `- Actual guidance: ${item.actual_guidance.join(", ") || "none"}`,
       `- Missing guidance: ${item.missing_guidance.join(", ") || "none"}`,
+      `- Actual answer modes: ${item.actual_answer_modes.join(", ") || "none"}`,
+      `- Actual gate statuses: ${item.actual_gate_statuses.join(", ") || "none"}`,
+      `- Expectation failures: ${item.expectation_failures.join(", ") || "none"}`,
       `- Validation errors: ${item.validation_errors.join(", ") || "none"}`,
       `- Validation warnings: ${item.validation_warnings.join(", ") || "none"}`,
       `- Forbidden text hits: ${item.forbidden_text_hits.join(", ") || "none"}`,
@@ -457,10 +517,17 @@ async function main() {
 
   const rawFixture = await readFile(FIXTURE_PATH, "utf8")
   const fixture = parseFixture(rawFixture)
+  const selectedFixtureCases = selectFixtureCases(fixture)
+  if (
+    selectedFixtureCases.some((entry) => entry.expected_gate_status) &&
+    process.env.AGENT_V2_TURN_GATE_ENABLED === undefined
+  ) {
+    process.env.AGENT_V2_TURN_GATE_ENABLED = "true"
+  }
   const generatedAt = new Date().toISOString()
   const cases: GuidanceMigrationReportCase[] = []
 
-  for (const entry of selectFixtureCases(fixture)) {
+  for (const entry of selectedFixtureCases) {
     process.stdout.write(`Running ${entry.id}...\n`)
     cases.push(await runCase(fixture, entry))
   }

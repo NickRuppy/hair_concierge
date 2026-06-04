@@ -16,6 +16,7 @@ export interface AgentV2ModelPolicy {
   max_model_steps: number
   max_executable_tool_calls: number
   max_repair_turns: number
+  turn_gate_enabled: boolean
 }
 
 export function getAgentV2ModelPolicy(
@@ -30,6 +31,7 @@ export function getAgentV2ModelPolicy(
     max_model_steps: parsePositiveInteger(env.AGENT_V2_MAX_MODEL_STEPS, 6),
     max_executable_tool_calls: parsePositiveInteger(env.AGENT_V2_MAX_EXECUTABLE_TOOL_CALLS, 5),
     max_repair_turns: parseNonNegativeInteger(env.AGENT_V2_MAX_REPAIR_TURNS, 1),
+    turn_gate_enabled: parseBoolean(env.AGENT_V2_TURN_GATE_ENABLED, false),
   }
 }
 
@@ -51,4 +53,12 @@ function parsePositiveInteger(value: string | undefined, fallback: number): numb
 function parseNonNegativeInteger(value: string | undefined, fallback: number): number {
   const parsed = Number.parseInt(value ?? "", 10)
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback
+}
+
+function parseBoolean(value: string | undefined, fallback: boolean): boolean {
+  if (value === undefined) return fallback
+  const normalized = value.trim().toLowerCase()
+  if (["1", "true", "yes", "on"].includes(normalized)) return true
+  if (["0", "false", "no", "off"].includes(normalized)) return false
+  return fallback
 }

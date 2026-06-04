@@ -304,6 +304,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
         engineTrace,
         debugTrace,
         visibleFailure,
+        answerMode,
       } = await deps.otelContext.with(parentContext, async () =>
         deps.propagateAttributes(
           {
@@ -328,6 +329,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
         ),
       )
       const isVisibleFailure = visibleFailure === true
+      const skipsAgentV2StateMutation = answerMode === "social" || answerMode === "domain_boundary"
       const routeDebugTrace = isVisibleFailure
         ? scrubVisibleFailureTraceDraft(debugTrace)
         : debugTrace
@@ -463,15 +465,22 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 status: "skipped",
                 error: isVisibleFailure
                   ? "visible_failure_no_state_mutation"
-                  : assistantMessageError
-                    ? "assistant_message_not_persisted"
-                    : "assistant_message_id_missing",
+                  : skipsAgentV2StateMutation
+                    ? "answer_mode_no_state_mutation"
+                    : assistantMessageError
+                      ? "assistant_message_not_persisted"
+                      : "assistant_message_id_missing",
               }
 
               if (isVisibleFailure) {
                 conversationStatePersistence = {
                   status: "skipped",
                   error: "visible_failure_no_state_mutation",
+                }
+              } else if (skipsAgentV2StateMutation) {
+                conversationStatePersistence = {
+                  status: "skipped",
+                  error: "answer_mode_no_state_mutation",
                 }
               } else if (!assistantMessageError && assistantMessageRow?.id) {
                 try {
@@ -516,7 +525,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 })
                 .eq("id", activeConversationId)
 
-              if (!isVisibleFailure) {
+              if (!isVisibleFailure && !skipsAgentV2StateMutation) {
                 extractConversationMemory(activeConversationId, user.id, {
                   requestId,
                 }).catch(() => {})

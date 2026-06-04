@@ -7,6 +7,8 @@ export const AgentV2AnswerModeSchema = z.enum([
   "clarification",
   "constraint_blocked",
   "safety_boundary",
+  "social",
+  "domain_boundary",
 ])
 
 export type AgentV2AnswerMode = z.infer<typeof AgentV2AnswerModeSchema>
@@ -18,6 +20,42 @@ export type AgentV2RoutineLayer = z.infer<typeof AgentV2RoutineLayerSchema>
 export const AgentV2SafetyModeSchema = z.enum(["normal", "restricted", "hard_short_circuit"])
 
 export type AgentV2SafetyMode = z.infer<typeof AgentV2SafetyModeSchema>
+
+export const AgentV2TurnGateStatusSchema = z.enum([
+  "proceed",
+  "social",
+  "domain_boundary",
+  "prompt_or_role_bypass",
+])
+
+export type AgentV2TurnGateStatus = z.infer<typeof AgentV2TurnGateStatusSchema>
+
+export const AgentV2TurnGateBoundaryKindSchema = z.enum([
+  "unsupported_domain",
+  "prompt_or_role_bypass",
+])
+
+export type AgentV2TurnGateBoundaryKind = z.infer<typeof AgentV2TurnGateBoundaryKindSchema>
+
+export const AgentV2TurnGateResultSchema = z.strictObject({
+  gate_status: AgentV2TurnGateStatusSchema,
+  evidence_quote: z.string().min(1),
+  confidence: z.number().min(0).max(1),
+  boundary_kind: AgentV2TurnGateBoundaryKindSchema.nullable(),
+})
+
+export type AgentV2TurnGateResult = z.infer<typeof AgentV2TurnGateResultSchema>
+
+export const AgentV2TurnGateTraceSchema = z.strictObject({
+  proposed: AgentV2TurnGateResultSchema.nullable(),
+  authorized: AgentV2TurnGateResultSchema.nullable(),
+  safety_mode: AgentV2SafetyModeSchema,
+  advisor_continuation_allowed: z.boolean(),
+  enabled: z.boolean(),
+  latency_ms: z.number().nonnegative().nullable(),
+})
+
+export type AgentV2TurnGateTrace = z.infer<typeof AgentV2TurnGateTraceSchema>
 
 export const AgentV2ReasoningEffortSchema = z.enum([
   "none",
@@ -262,6 +300,17 @@ export const AgentV2SafetyBoundaryPayloadSchema = z.strictObject({
   next_step_de: z.string().nullable(),
 })
 
+export const AgentV2SocialPayloadSchema = z.strictObject({
+  user_facing_answer_de: z.string(),
+  pivot_de: z.string().nullable(),
+})
+
+export const AgentV2DomainBoundaryPayloadSchema = z.strictObject({
+  user_facing_answer_de: z.string(),
+  boundary_kind: AgentV2TurnGateBoundaryKindSchema,
+  redirect_topic_de: z.string().nullable(),
+})
+
 const AgentV2TerminalAnswerBaseSchema = z.strictObject({
   interpreted_intent: z.string(),
   request_interpretation: AgentV2RequestInterpretationSchema,
@@ -299,6 +348,14 @@ export const AgentV2TerminalAnswerSchema = z.discriminatedUnion("answer_mode", [
   AgentV2TerminalAnswerBaseSchema.extend({
     answer_mode: z.literal("safety_boundary"),
     payload: AgentV2SafetyBoundaryPayloadSchema,
+  }),
+  AgentV2TerminalAnswerBaseSchema.extend({
+    answer_mode: z.literal("social"),
+    payload: AgentV2SocialPayloadSchema,
+  }),
+  AgentV2TerminalAnswerBaseSchema.extend({
+    answer_mode: z.literal("domain_boundary"),
+    payload: AgentV2DomainBoundaryPayloadSchema,
   }),
 ])
 
@@ -413,6 +470,7 @@ export const AgentV2TraceSchema = z.object({
   response_ids: z.array(z.string()),
   model_steps: z.array(AgentV2ModelStepTraceSchema),
   tool_calls: z.array(AgentV2ToolCallTraceSchema),
+  turn_gate: AgentV2TurnGateTraceSchema.nullable().optional(),
   blocked_tool_calls: z.array(
     z.object({
       name: z.string(),
@@ -463,6 +521,7 @@ export const AgentV2TraceSchema = z.object({
       "validation_failed",
       "repair_failed",
       "missing_terminal_failed",
+      "turn_gate_failed",
     ])
     .nullable(),
 })

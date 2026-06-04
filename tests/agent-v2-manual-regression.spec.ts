@@ -220,7 +220,7 @@ test("AgentV2 manual regression fixture keeps manual quality gates attached to c
 })
 
 test("AgentV2 guidance migration regression fixture covers broad manual prompt batch", () => {
-  assert.equal(guidanceMigrationCases.length, 46)
+  assert.equal(guidanceMigrationCases.length, 58)
 
   for (const entry of guidanceMigrationCases) {
     assert.ok(entry.id.length > 0)
