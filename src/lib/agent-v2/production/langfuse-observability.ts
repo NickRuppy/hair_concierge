@@ -14,6 +14,12 @@ type AgentV2TraceLike = {
   failure_stage: string | null
   routine_thread_context_active: boolean
   final_product_ids: readonly string[]
+  turn_gate?: {
+    authorized?: { gate_status?: unknown; boundary_kind?: unknown } | null
+    safety_mode?: unknown
+    advisor_continuation_allowed?: unknown
+    latency_ms?: unknown
+  } | null
   langfuse?: { enabled?: boolean; trace_id?: string | null; trace_url?: string | null }
 }
 
@@ -55,6 +61,20 @@ export function summarizeAgentV2TraceForLangfuse(trace: AgentV2TraceLike) {
     failure_stage: trace.failure_stage,
     routine_thread_context_active: trace.routine_thread_context_active,
     final_product_ids: trace.final_product_ids,
+    turn_gate_status:
+      typeof trace.turn_gate?.authorized?.gate_status === "string"
+        ? trace.turn_gate.authorized.gate_status
+        : null,
+    turn_gate_boundary_kind:
+      typeof trace.turn_gate?.authorized?.boundary_kind === "string"
+        ? trace.turn_gate.authorized.boundary_kind
+        : null,
+    turn_gate_advisor_continuation_allowed:
+      typeof trace.turn_gate?.advisor_continuation_allowed === "boolean"
+        ? trace.turn_gate.advisor_continuation_allowed
+        : null,
+    turn_gate_latency_ms:
+      typeof trace.turn_gate?.latency_ms === "number" ? trace.turn_gate.latency_ms : null,
     langfuse_enabled: trace.langfuse?.enabled ?? false,
   }
 }

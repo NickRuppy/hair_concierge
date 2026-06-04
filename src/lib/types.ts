@@ -800,6 +800,7 @@ export interface ChatTraceLatencyBreakdown {
   prompt_build_ms: number
   stream_setup_ms: number
   agent_runtime_ms?: number
+  agent_turn_gate_ms?: number | null
   agent_model_ms?: number | null
   agent_tool_ms?: number | null
   stream_read_ms?: number

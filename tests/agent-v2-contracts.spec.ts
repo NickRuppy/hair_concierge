@@ -6,6 +6,7 @@ import {
   AgentV2RequestInterpretationSchema,
   AgentV2RoutineThreadContextSchema,
   AgentV2TerminalAnswerSchema,
+  AgentV2TraceSchema,
   type AgentV2RequestInterpretation,
   type AgentV2TerminalAnswer,
 } from "../src/lib/agent-v2/contracts"
@@ -85,6 +86,16 @@ test("AgentV2RequestInterpretationSchema accepts strict semantic examples", () =
       care_category: "none",
       confidence: 0.98,
       evidence_quote: "Meine Kopfhaut blutet.",
+    }),
+    requestInterpretation({
+      primary_intent: "smalltalk",
+      confidence: 0.86,
+      evidence_quote: "hallo",
+    }),
+    requestInterpretation({
+      primary_intent: "unknown",
+      confidence: 0.88,
+      evidence_quote: "welchen nagellack soll ich kaufen?",
     }),
   ]
 
@@ -198,6 +209,118 @@ test("AgentV2TerminalAnswerSchema accepts a product recommendation payload", () 
   assert.equal(AgentV2TerminalAnswerSchema.parse(value).answer_mode, "product_recommendation")
 })
 
+test("AgentV2TerminalAnswerSchema accepts social and domain-boundary payloads", () => {
+  const social: AgentV2TerminalAnswer = {
+    answer_mode: "social",
+    interpreted_intent: "User greets Chaarlie.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "smalltalk",
+      evidence_quote: "hallo",
+      confidence: 0.9,
+    }),
+    confidence: 0.9,
+    extracted_constraints: emptyExtractedConstraints(),
+    missing_information: [],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: [
+        "base.advisor_rules.v1",
+        "base.answer_contract.v1",
+        "base.tone_and_format.v1",
+      ],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category: null,
+      return_path: [],
+    },
+    pending_routine_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: "Hallo! Ich bin da, wenn du eine Haarfrage hast.",
+      pivot_de: "Haarfrage",
+    },
+  }
+
+  const boundary: AgentV2TerminalAnswer = {
+    ...social,
+    answer_mode: "domain_boundary",
+    interpreted_intent: "User asks outside the supported hair-care domain.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "unknown",
+      evidence_quote: "welchen nagellack soll ich kaufen?",
+      confidence: 0.9,
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Bei Nagellack kann ich dir nicht sinnvoll helfen. Ich unterstütze dich gern bei Haarpflege, Kopfhaut, Styling oder passenden Produkten.",
+      boundary_kind: "unsupported_domain",
+      redirect_topic_de: "Haarpflege, Kopfhaut, Styling oder passende Produkte",
+    },
+  }
+
+  assert.equal(AgentV2TerminalAnswerSchema.parse(social).answer_mode, "social")
+  assert.equal(AgentV2TerminalAnswerSchema.parse(boundary).answer_mode, "domain_boundary")
+})
+
+test("AgentV2TraceSchema accepts turn-gate trace fields", () => {
+  const trace = AgentV2TraceSchema.parse({
+    engine: "agent_v2",
+    model: DEFAULT_AGENT_V2_MODEL,
+    endpoint: "responses",
+    reasoning_effort: "low",
+    safety_mode: "normal",
+    answer_mode: "social",
+    response_ids: [],
+    model_steps: [],
+    tool_calls: [],
+    turn_gate: {
+      proposed: {
+        gate_status: "social",
+        evidence_quote: "hallo",
+        confidence: 0.9,
+        boundary_kind: null,
+      },
+      authorized: {
+        gate_status: "social",
+        evidence_quote: "hallo",
+        confidence: 0.9,
+        boundary_kind: null,
+      },
+      safety_mode: "normal",
+      advisor_continuation_allowed: false,
+      enabled: true,
+      latency_ms: 12,
+    },
+    blocked_tool_calls: [],
+    loaded_guidance_package_ids: [],
+    validation_errors: [],
+    validation_warnings: [],
+    request_interpretation: null,
+    request_interpretation_summary: null,
+    bounded_repair_kind: null,
+    repair_attempts: [],
+    routine_thread_context_active: false,
+    routine_thread_context: null,
+    final_product_ids: [],
+    routine_layer: null,
+    session_memory_writes: [],
+    dropped_session_memory_writes: [],
+    injected_session_memory: [],
+    langfuse: { enabled: false, trace_id: null, trace_url: null },
+    failure_stage: null,
+  })
+
+  assert.equal(trace.turn_gate?.authorized?.gate_status, "social")
+})
+
 test("AgentV2TerminalAnswerSchema requires request interpretation", () => {
   const result = AgentV2TerminalAnswerSchema.safeParse({
     answer_mode: "general_advice",
@@ -272,6 +395,7 @@ test("AgentV2 model policy defaults to GPT-5.4-mini Responses", () => {
   assert.equal(policy.reasoning_effort, "low")
   assert.equal(policy.text_verbosity, "low")
   assert.equal(policy.store, false)
+  assert.equal(policy.turn_gate_enabled, false)
 })
 
 test("AgentV2 model policy accepts scoped env overrides", () => {
@@ -279,11 +403,13 @@ test("AgentV2 model policy accepts scoped env overrides", () => {
     AGENT_V2_MODEL: "gpt-5.4-mini",
     AGENT_V2_REASONING_EFFORT: "medium",
     AGENT_V2_TEXT_VERBOSITY: "medium",
+    AGENT_V2_TURN_GATE_ENABLED: "true",
   })
 
   assert.equal(policy.model, "gpt-5.4-mini")
   assert.equal(policy.reasoning_effort, "medium")
   assert.equal(policy.text_verbosity, "medium")
+  assert.equal(policy.turn_gate_enabled, true)
 })
 
 test("AgentV2 model policy preserves minimal reasoning effort", () => {

@@ -23,6 +23,7 @@ export function createAgentV2Trace(params: {
     response_ids: [],
     model_steps: [],
     tool_calls: [],
+    turn_gate: null,
     blocked_tool_calls: [],
     loaded_guidance_package_ids: [],
     validation_errors: [],

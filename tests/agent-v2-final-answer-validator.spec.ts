@@ -355,10 +355,265 @@ const routineBasicsValidationContext = {
   knownHardRuleIds: [],
 } as const
 
+function socialAnswer(overrides: Record<string, unknown> = {}) {
+  return {
+    ...baseAnswer,
+    answer_mode: "social",
+    interpreted_intent: "User greets Chaarlie.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "smalltalk",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "hallo",
+      confidence: 0.9,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: [
+        "base.advisor_rules.v1",
+        "base.answer_contract.v1",
+        "base.tone_and_format.v1",
+      ],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category: null,
+      return_path: [],
+    },
+    pending_routine_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: "Hallo! Ich bin da, wenn du eine Haarfrage hast.",
+      pivot_de: "Haarfrage",
+    },
+    ...overrides,
+  }
+}
+
+function domainBoundaryAnswer(overrides: Record<string, unknown> = {}) {
+  return {
+    ...socialAnswer(),
+    answer_mode: "domain_boundary",
+    interpreted_intent: "User request is outside supported hair care.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "unknown",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "welchen nagellack soll ich kaufen?",
+      confidence: 0.9,
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Bei Nagellack kann ich dir nicht sinnvoll helfen. Ich unterstütze dich gern bei Haarpflege, Kopfhaut, Styling oder passenden Produkten.",
+      boundary_kind: "unsupported_domain",
+      redirect_topic_de: "Haarpflege, Kopfhaut, Styling oder passende Produkte",
+    },
+    ...overrides,
+  }
+}
+
 test("validator accepts known product ids", () => {
   const result = validateAgentV2FinalAnswer(baseAnswer, baseValidationContext)
 
   assert.equal(result.ok, true)
+})
+
+test("validator accepts social and domain-boundary answers when gate-consistent", () => {
+  const social = validateAgentV2FinalAnswer(
+    socialAnswer({
+      tool_grounding: {
+        ...socialAnswer().tool_grounding,
+        used_guidance_package_ids: [],
+      },
+    }),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "hallo",
+      recentEvidenceText: "hallo",
+      toolCallHistory: [{ name: "classify_turn_gate" }],
+      knownHardRuleIds: [],
+      turnGate: {
+        gate_status: "social",
+        evidence_quote: "hallo",
+        confidence: 0.9,
+        boundary_kind: null,
+      },
+    },
+  )
+  const boundary = validateAgentV2FinalAnswer(
+    domainBoundaryAnswer({
+      tool_grounding: {
+        ...domainBoundaryAnswer().tool_grounding,
+        used_guidance_package_ids: [],
+      },
+    }),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "welchen nagellack soll ich kaufen?",
+      recentEvidenceText: "welchen nagellack soll ich kaufen?",
+      toolCallHistory: [{ name: "classify_turn_gate" }],
+      knownHardRuleIds: [],
+      turnGate: {
+        gate_status: "domain_boundary",
+        evidence_quote: "welchen nagellack soll ich kaufen?",
+        confidence: 0.9,
+        boundary_kind: "unsupported_domain",
+      },
+    },
+  )
+
+  assert.equal(social.ok, true)
+  assert.equal(boundary.ok, true)
+})
+
+test("validator blocks social and domain-boundary answers without an authorized gate", () => {
+  const social = validateAgentV2FinalAnswer(socialAnswer(), {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "hallo",
+    recentEvidenceText: "hallo",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+    turnGate: null,
+  })
+  const boundary = validateAgentV2FinalAnswer(domainBoundaryAnswer(), {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "welchen nagellack soll ich kaufen?",
+    recentEvidenceText: "welchen nagellack soll ich kaufen?",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+    turnGate: null,
+  })
+
+  assert.equal(social.ok, false)
+  assert.ok(social.errors.some((error) => error.validator_id === "turn_gate_answer_mode"))
+  assert.equal(boundary.ok, false)
+  assert.ok(boundary.errors.some((error) => error.validator_id === "turn_gate_answer_mode"))
+})
+
+test("validator blocks social and domain-boundary side effects", () => {
+  const withProductIds = validateAgentV2FinalAnswer(
+    socialAnswer({
+      tool_grounding: {
+        ...socialAnswer().tool_grounding,
+        product_ids: ["prod_1"],
+      },
+    }),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "hallo",
+      recentEvidenceText: "hallo",
+      toolCallHistory: [{ name: "classify_turn_gate" }],
+      knownHardRuleIds: [],
+      turnGate: {
+        gate_status: "social",
+        evidence_quote: "hallo",
+        confidence: 0.9,
+        boundary_kind: null,
+      },
+    },
+  )
+  const withMemoryWrite = validateAgentV2FinalAnswer(
+    domainBoundaryAnswer({
+      session_memory_writes: [
+        {
+          type: "other",
+          text: "User asked about nail polish.",
+          evidence_quote: "welchen nagellack soll ich kaufen?",
+          confidence: 0.9,
+          ttl: "session",
+          affects_recommendations: false,
+          expires_at_turn: null,
+        },
+      ],
+    }),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "welchen nagellack soll ich kaufen?",
+      recentEvidenceText: "welchen nagellack soll ich kaufen?",
+      toolCallHistory: [{ name: "classify_turn_gate" }],
+      knownHardRuleIds: [],
+      turnGate: {
+        gate_status: "domain_boundary",
+        evidence_quote: "welchen nagellack soll ich kaufen?",
+        confidence: 0.9,
+        boundary_kind: "unsupported_domain",
+      },
+    },
+  )
+
+  assert.equal(withProductIds.ok, false)
+  assert.ok(
+    withProductIds.errors.some((error) => error.validator_id === "boundary_answer_no_side_effects"),
+  )
+  assert.equal(withMemoryWrite.ok, false)
+  assert.ok(
+    withMemoryWrite.errors.some(
+      (error) => error.validator_id === "boundary_answer_no_side_effects",
+    ),
+  )
+})
+
+test("validator blocks domain-boundary code and gate mismatch", () => {
+  const withHtml = validateAgentV2FinalAnswer(
+    domainBoundaryAnswer({
+      payload: {
+        user_facing_answer_de: "<html>Hallo</html>",
+        boundary_kind: "unsupported_domain",
+        redirect_topic_de: "Haarpflege",
+      },
+    }),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "mach html",
+      recentEvidenceText: "mach html",
+      toolCallHistory: [{ name: "classify_turn_gate" }],
+      knownHardRuleIds: [],
+      turnGate: {
+        gate_status: "domain_boundary",
+        evidence_quote: "mach html",
+        confidence: 0.9,
+        boundary_kind: "unsupported_domain",
+      },
+    },
+  )
+  const mismatch = validateAgentV2FinalAnswer(domainBoundaryAnswer(), {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "welchen nagellack soll ich kaufen?",
+    recentEvidenceText: "welchen nagellack soll ich kaufen?",
+    toolCallHistory: [{ name: "classify_turn_gate" }],
+    knownHardRuleIds: [],
+    turnGate: {
+      gate_status: "social",
+      evidence_quote: "welchen nagellack soll ich kaufen?",
+      confidence: 0.9,
+      boundary_kind: null,
+    },
+  })
+
+  assert.equal(withHtml.ok, false)
+  assert.ok(withHtml.errors.some((error) => error.validator_id === "no_internal_leakage"))
+  assert.equal(mismatch.ok, false)
+  assert.ok(mismatch.errors.some((error) => error.validator_id === "turn_gate_answer_mode"))
 })
 
 test("validator requires mode-specific and category guidance for category product answers", () => {

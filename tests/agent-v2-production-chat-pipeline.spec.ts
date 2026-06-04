@@ -6,6 +6,7 @@ import {
   classifyAgentV2ProductionSafetyMode,
   runAgentV2ProductionPipeline,
 } from "../src/lib/agent-v2/production/chat-pipeline"
+import { createChatPostHandler } from "../src/app/api/chat/route"
 import { loadAgentV2ProductionConversationHistory } from "../src/lib/agent-v2/production/conversation-history"
 import { deriveMatchedProducts } from "../src/lib/agent-v2/production/product-output"
 import { createDefaultConversationState } from "../src/lib/chat-runtime/conversation-state"
@@ -119,6 +120,68 @@ async function readStream(stream: ReadableStream<Uint8Array>): Promise<string> {
   }
 
   return output + decoder.decode()
+}
+
+function createTextStream(text: string): ReadableStream<Uint8Array> {
+  return new ReadableStream({
+    start(controller) {
+      controller.enqueue(new TextEncoder().encode(text))
+      controller.close()
+    },
+  })
+}
+
+function createFakeChatAdminClient(params: {
+  messageRows: Array<Record<string, unknown>>
+  conversationUpdates: Array<Record<string, unknown>>
+}) {
+  return {
+    from(table: string) {
+      const query = {
+        operation: null as "insert" | "update" | "select" | null,
+        payload: null as Record<string, unknown> | null,
+        filters: [] as Array<{ column: string; value: unknown }>,
+        insert(payload: Record<string, unknown>) {
+          this.operation = "insert"
+          this.payload = payload
+          if (table === "messages") {
+            params.messageRows.push(payload)
+          }
+          return this
+        },
+        update(payload: Record<string, unknown>) {
+          this.operation = "update"
+          this.payload = payload
+          if (table === "conversations") {
+            params.conversationUpdates.push(payload)
+          }
+          return this
+        },
+        select() {
+          this.operation = this.operation ?? "select"
+          return this
+        },
+        eq(column: string, value: unknown) {
+          this.filters.push({ column, value })
+          return this
+        },
+        async single() {
+          if (table === "conversations") {
+            return { data: { id: "conversation-1" }, error: null }
+          }
+          if (table === "messages" && this.operation === "insert") {
+            return { data: { id: `message-${params.messageRows.length}` }, error: null }
+          }
+          if (table === "profiles") {
+            return { data: { message_count_this_month: 0 }, error: null }
+          }
+          return { data: null, error: null }
+        },
+      }
+
+      return query
+    },
+  }
 }
 
 function createAgentV2Result(): AgentV2ResponsesTurnResult {
@@ -514,6 +577,7 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
   assert.equal(debugEvent.agent_v2_visible_failure, false)
   assert.deepEqual(debugEvent.agent_v2_latency_ms, {
     runtime: result.debugTrace.latencies_ms.agent_runtime_ms,
+    turn_gate: null,
     model: 7,
     tools: 1,
     model_steps: 1,
@@ -541,6 +605,391 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
   })
   assert.equal(failedDebugEvent.agent_v2_visible_failure, true)
   assert.equal(failedDebugEvent.visible_failure, true)
+})
+
+test("AgentV2 production pipeline exposes boundary answer mode without products", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const boundaryResult = createAgentV2Result()
+  boundaryResult.final_answer = {
+    ...boundaryResult.final_answer,
+    answer_mode: "domain_boundary",
+    interpreted_intent: "User asks outside supported hair care.",
+    request_interpretation: {
+      primary_intent: "unknown",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "welchen nagellack soll ich kaufen?",
+      confidence: 0.9,
+    },
+    tool_grounding: {
+      used_guidance_package_ids: [
+        "base.advisor_rules.v1",
+        "base.answer_contract.v1",
+        "base.tone_and_format.v1",
+      ],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category: null,
+      return_path: [],
+    },
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de:
+        "Bei Nagellack kann ich dir nicht sinnvoll helfen. Ich unterstütze dich gern bei Haarpflege, Kopfhaut, Styling oder passenden Produkten.",
+      boundary_kind: "unsupported_domain",
+      redirect_topic_de: "Haarpflege, Kopfhaut, Styling oder passende Produkte",
+    },
+  }
+  boundaryResult.trace = {
+    ...boundaryResult.trace,
+    answer_mode: "domain_boundary",
+    tool_calls: [
+      {
+        call_id: "gate-1",
+        name: "classify_turn_gate",
+        arguments: { gate_status: "domain_boundary" },
+        latency_ms: 1,
+      },
+    ],
+    turn_gate: {
+      proposed: {
+        gate_status: "domain_boundary",
+        evidence_quote: "welchen nagellack soll ich kaufen?",
+        confidence: 0.9,
+        boundary_kind: "unsupported_domain",
+      },
+      authorized: {
+        gate_status: "domain_boundary",
+        evidence_quote: "welchen nagellack soll ich kaufen?",
+        confidence: 0.9,
+        boundary_kind: "unsupported_domain",
+      },
+      safety_mode: "normal",
+      advisor_continuation_allowed: false,
+      enabled: true,
+      latency_ms: 8,
+    },
+    final_product_ids: [],
+    session_memory_writes: [],
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "welchen nagellack soll ich kaufen?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      runAgentV2ResponsesTurn: async () => boundaryResult,
+    },
+  )
+
+  assert.equal(result.answerMode, "domain_boundary")
+  assert.equal(result.intent, "general_chat")
+  assert.deepEqual(result.matchedProducts, [])
+  assert.equal(result.categoryDecision, undefined)
+  assert.equal(result.engineTrace, undefined)
+  assert.equal(result.debugTrace.response_composition.attachment_mode, "text_only")
+  assert.equal(result.debugTrace.latencies_ms.agent_turn_gate_ms, 8)
+  assert.equal(
+    await readStream(result.stream),
+    boundaryResult.final_answer.payload.user_facing_answer_de,
+  )
+})
+
+test("/api/chat persists visible boundary turns while skipping AgentV2 state and memory mutation", async () => {
+  const messageRows: Array<Record<string, unknown>> = []
+  const conversationUpdates: Array<Record<string, unknown>> = []
+  const traceRows: Array<Record<string, unknown>> = []
+  const statePersistenceCalls: unknown[] = []
+  const memoryExtractionCalls: unknown[] = []
+  const boundaryAnswer =
+    "Bei Nagellack kann ich dir nicht sinnvoll helfen. Ich unterstütze dich gern bei Haarpflege."
+  const routerDecision = {
+    retrieval_mode: "agent_v2_responses",
+    response_mode: "answer_direct",
+    slot_completeness: 1,
+    confidence: 0.95,
+    policy_overrides: [],
+  } as const
+  const debugTrace = {
+    request_id: "request-1",
+    started_at: "2026-06-04T12:00:00.000Z",
+    user_message: "[agent_v2_user_message chars=32]",
+    conversation_id: "conversation-1",
+    intent: "general_chat",
+    product_category: null,
+    conversation_history_count: 0,
+    classification: {
+      intent: "general_chat",
+      product_category: null,
+      complexity: "simple",
+      needs_clarification: false,
+      retrieval_mode: "agent_v2_responses",
+      normalized_filters: {},
+      router_confidence: 0.95,
+    },
+    router_decision: routerDecision,
+    conversation_state: {
+      previous_state: null,
+      next_state: null,
+      changed_fields: [],
+      updated_by_engine: "agent_v2_care_balance",
+    },
+    clarification_questions: [],
+    hair_profile_snapshot: null,
+    memory_context: null,
+    retrieval: {
+      retrieved_count: 0,
+      chunks: [],
+      citations: [],
+    },
+    decision_context: {
+      should_plan_routine: false,
+      routine_plan: null,
+      category_decision: null,
+      engine_trace: null,
+      matched_products: [],
+    },
+    prompt_refs: {
+      classification: null,
+      synthesis: null,
+    },
+    prompt: {
+      prompt_id: "agent_v2",
+      prompt_ref: null,
+      included_sections: [],
+      estimated_tokens: 0,
+    },
+    response_composition: {
+      attachment_mode: "text_only",
+    },
+    engine_variant: "agent_v2_care_balance",
+    agent_v2_trace: {
+      engine: "agent_v2",
+      model: "gpt-5.4-mini",
+      endpoint: "responses",
+      reasoning_effort: "medium",
+      safety_mode: "normal",
+      answer_mode: "domain_boundary",
+      response_ids: ["response-1"],
+      model_steps: [],
+      tool_calls: [
+        {
+          call_id: "gate-1",
+          name: "classify_turn_gate",
+          arguments: { gate_status: "domain_boundary" },
+          latency_ms: 1,
+        },
+      ],
+      blocked_tool_calls: [],
+      loaded_guidance_package_ids: [],
+      validation_errors: [],
+      validation_warnings: [],
+      request_interpretation: null,
+      request_interpretation_summary: null,
+      bounded_repair_kind: null,
+      repair_attempts: [],
+      routine_thread_context_active: false,
+      routine_thread_context: null,
+      final_product_ids: [],
+      routine_layer: null,
+      session_memory_writes: [],
+      dropped_session_memory_writes: [],
+      injected_session_memory: [],
+      langfuse: {
+        enabled: false,
+        trace_id: null,
+        trace_url: null,
+      },
+      failure_stage: null,
+      turn_gate: {
+        proposed: {
+          gate_status: "domain_boundary",
+          evidence_quote: "welchen nagellack soll ich kaufen?",
+          confidence: 0.9,
+          boundary_kind: "unsupported_domain",
+        },
+        authorized: {
+          gate_status: "domain_boundary",
+          evidence_quote: "welchen nagellack soll ich kaufen?",
+          confidence: 0.9,
+          boundary_kind: "unsupported_domain",
+        },
+        safety_mode: "normal",
+        advisor_continuation_allowed: false,
+        enabled: true,
+        latency_ms: 8,
+      },
+    },
+    latencies_ms: {
+      classification_ms: 0,
+      hair_profile_load_ms: 0,
+      memory_load_ms: 0,
+      routine_planning_ms: 0,
+      history_load_ms: 0,
+      router_ms: 0,
+      conversation_create_ms: 0,
+      retrieval_ms: 0,
+      product_matching_ms: 0,
+      prompt_build_ms: 0,
+      stream_setup_ms: 0,
+      agent_runtime_ms: 10,
+      agent_turn_gate_ms: 8,
+      agent_model_ms: 9,
+      agent_tool_ms: 1,
+    },
+  }
+  const admin = createFakeChatAdminClient({
+    messageRows,
+    conversationUpdates,
+  })
+  const handler = createChatPostHandler({
+    createClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({ data: { user: { id: "user-1" } } }),
+        },
+      }) as never,
+    checkRateLimit: async () => ({ allowed: true }) as never,
+    ensureLangfuseTracing: () => null,
+    flushLangfuseClient: async () => {},
+    getLangfuseClient: () =>
+      ({
+        getTraceUrl: async () => "https://langfuse.test/trace/trace-1",
+      }) as never,
+    getLangfuseRelease: () => "test-release",
+    resolveLangfuseTraceId: () => "trace-1",
+    startObservation: () =>
+      ({
+        otelSpan: {},
+        update: () => {},
+        end: () => {},
+      }) as never,
+    propagateAttributes: ((_attributes: unknown, fn: () => unknown) => fn()) as never,
+    otelContext: {
+      active: () => ({}),
+      with: async (_context: unknown, fn: () => unknown) => fn(),
+    } as never,
+    otelTrace: {
+      setSpan: () => ({}),
+    } as never,
+    loadRuntimeDeps: async () =>
+      ({
+        createAdminClient: () => admin,
+        runAgentV2ProductionPipeline: async () => ({
+          stream: createTextStream(boundaryAnswer),
+          intent: "general_chat",
+          matchedProducts: [],
+          sources: [],
+          retrievalSummary: { final_context_count: 0 },
+          routerDecision,
+          conversationStateTransition: debugTrace.conversation_state,
+          categoryDecision: undefined,
+          engineTrace: undefined,
+          debugTrace,
+          visibleFailure: false,
+          answerMode: "domain_boundary",
+        }),
+        buildAssistantDecisionContext: () => null,
+        buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
+        extractConversationMemory: (...args: unknown[]) => {
+          memoryExtractionCalls.push(args)
+          return Promise.resolve()
+        },
+        buildRetrievalDebugEventData: () => ({ route_debug: true }),
+        finalizeChatTurnTrace: (
+          trace: Record<string, unknown>,
+          params: Record<string, unknown>,
+        ) => ({
+          ...trace,
+          status: params.status,
+          conversation_state_persistence: params.conversation_state_persistence,
+        }),
+        summarizeEngineTraceForLangfuse: () => null,
+        summarizeProductsForLangfuse: () => [],
+        summarizeAgentV2TraceForLangfuse: () => ({ answer_mode: "domain_boundary" }),
+        persistConversationStateTransition: async (...args: unknown[]) => {
+          statePersistenceCalls.push(args)
+          return { status: "persisted", error: null }
+        },
+        chatMessageSchema: {
+          safeParse: (value: unknown) => ({ success: true, data: value }),
+        },
+        generateConversationTitle: async () => {},
+      }) as never,
+    persistConversationTurnTrace: async (row) => {
+      traceRows.push(row)
+    },
+    randomUUID: () => "request-1",
+    now: () => 0,
+  })
+
+  const response = await handler(
+    new Request("https://example.test/api/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        message: "welchen nagellack soll ich kaufen?",
+        conversation_id: "conversation-1",
+      }),
+    }),
+  )
+  const responseText = await response.text()
+
+  assert.equal(response.status, 200)
+  assert.match(responseText, /conversation_id/)
+  assert.match(responseText, new RegExp(boundaryAnswer))
+  assert.deepEqual(
+    messageRows.map((row) => row.role),
+    ["user", "assistant"],
+  )
+  assert.equal(messageRows[0]?.content, "welchen nagellack soll ich kaufen?")
+  assert.equal(messageRows[1]?.content, boundaryAnswer)
+  assert.equal(conversationUpdates.length, 1)
+  assert.equal(statePersistenceCalls.length, 0)
+  assert.equal(memoryExtractionCalls.length, 0)
+  assert.equal(traceRows.length, 1)
+  const persistedTrace = traceRows[0]?.trace as
+    | { conversation_state_persistence?: { status?: string; error?: string | null } }
+    | undefined
+  assert.deepEqual(persistedTrace?.conversation_state_persistence, {
+    status: "skipped",
+    error: "answer_mode_no_state_mutation",
+  })
 })
 
 test("AgentV2 production pipeline uses observed OpenAI and managed prompt refs by default", async () => {

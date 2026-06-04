@@ -64,6 +64,9 @@ export function deriveEngineArtifacts(selectedProductsResult: SelectProductsTool
 }
 
 export function deriveIntent(answer: AgentV2TerminalAnswer): IntentType {
+  if (answer.answer_mode === "social" || answer.answer_mode === "domain_boundary") {
+    return "general_chat"
+  }
   if (answer.answer_mode === "product_recommendation") return "product_recommendation"
   if (
     answer.answer_mode === "routine" ||
@@ -78,6 +81,7 @@ export function deriveIntent(answer: AgentV2TerminalAnswer): IntentType {
 }
 
 export function deriveProductCategory(answer: AgentV2TerminalAnswer): ProductCategory {
+  if (answer.answer_mode === "social" || answer.answer_mode === "domain_boundary") return null
   if (answer.answer_mode === "routine") return "routine"
   return toProductCategory(answer.request_interpretation.care_category)
 }
