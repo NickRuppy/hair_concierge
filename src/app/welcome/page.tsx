@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { createHash } from "node:crypto"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { captureCheckoutException } from "@/lib/observability/checkout"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import {
   ensurePayPalCheckoutAccountForToken,
@@ -39,7 +40,16 @@ async function renderStripeWelcome(session_id: string) {
   try {
     session = await verifyCheckoutSessionForActivation(session_id, stripe)
   } catch (err) {
-    if (err instanceof CheckoutActivationError) redirect("/pricing")
+    if (err instanceof CheckoutActivationError) {
+      captureCheckoutException(err, {
+        provider: "stripe",
+        stage: "checkout_return",
+        source: "welcome",
+        stripeSessionId: session_id,
+        reason: err.code,
+      })
+      redirect("/pricing")
+    }
     throw err
   }
 
@@ -47,6 +57,13 @@ async function renderStripeWelcome(session_id: string) {
   if (!email) redirect("/")
   const purchaseAnalytics = await buildCheckoutPurchaseAnalytics(session, stripe).catch((err) => {
     console.error("[welcome] purchase analytics unavailable:", err)
+    captureCheckoutException(err, {
+      provider: "stripe",
+      stage: "checkout_return",
+      source: "welcome",
+      stripeSessionId: session_id,
+      reason: "purchase_analytics_unavailable",
+    })
     return null
   })
 
@@ -92,7 +109,16 @@ async function renderPayPalWelcome(token: string | undefined) {
     premiumTierId: await getPremiumTierId(admin),
     linkQuizToProfile,
   }).catch((err) => {
-    if (err instanceof PayPalCheckoutActivationError) redirect("/pricing")
+    if (err instanceof PayPalCheckoutActivationError) {
+      captureCheckoutException(err, {
+        provider: "paypal",
+        stage: "checkout_return",
+        source: "welcome",
+        paypalTokenPresent: true,
+        reason: err.code,
+      })
+      redirect("/pricing")
+    }
     throw err
   })
 

@@ -9,6 +9,7 @@ import { validatePasswordDraft } from "@/lib/auth/password-policy"
 import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 import { createClient } from "@/lib/supabase/client"
 import { CheckoutReturnAnalytics } from "./checkout-return-analytics"
+import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 
 interface WelcomeClientProps {
   analyticsId?: string
@@ -80,20 +81,63 @@ export function WelcomeClient({
         if (cancelled) return
 
         if (response.ok && body.status === "active") {
+          addCheckoutBreadcrumb({
+            provider: "paypal",
+            stage: "paypal_activation_status_poll",
+            source: "welcome",
+            paypalTokenPresent: true,
+            status: "active",
+          })
           window.location.reload()
           return
         }
         if (response.ok && body.status === "duplicate") {
+          addCheckoutBreadcrumb(
+            {
+              provider: "paypal",
+              stage: "paypal_activation_status_poll",
+              source: "welcome",
+              paypalTokenPresent: true,
+              status: "duplicate",
+            },
+            "warning",
+          )
           window.location.reload()
           return
         }
-      } catch {
+        if (!response.ok && attempts === 1) {
+          captureCheckoutException(new Error("PayPal activation status poll failed"), {
+            provider: "paypal",
+            stage: "paypal_activation_status_poll",
+            source: "welcome",
+            paypalTokenPresent: true,
+            status: response.status,
+          })
+        }
+      } catch (err) {
+        if (cancelled) return
+        if (attempts === 1) {
+          captureCheckoutException(err, {
+            provider: "paypal",
+            stage: "paypal_activation_status_poll",
+            source: "welcome",
+            paypalTokenPresent: true,
+            reason: "network_error",
+          })
+        }
         // Keep the pending screen calm; the next poll or manual refresh can recover.
       }
 
       if (!cancelled && attempts < 15) {
         timer = setTimeout(pollActivation, 2000)
       } else if (!cancelled) {
+        captureCheckoutException(new Error("PayPal activation polling timed out"), {
+          provider: "paypal",
+          stage: "paypal_activation_status_poll",
+          source: "welcome",
+          paypalTokenPresent: true,
+          reason: "polling_timeout",
+        })
         setMessage("Das dauert gerade etwas länger. Bitte aktualisiere die Seite gleich erneut.")
       }
     }
@@ -130,6 +174,10 @@ export function WelcomeClient({
         if (res.status === 409 || errorMessage.includes("Login-Link")) {
           setHighlightMagicLink(true)
         }
+        captureCheckoutException(new Error(errorMessage), {
+          ...checkoutActivationSentryDetails(activationSource, "checkout_password_activation"),
+          status: res.status,
+        })
         throw new Error(errorMessage)
       }
 
@@ -141,6 +189,10 @@ export function WelcomeClient({
       })
 
       if (error) {
+        captureCheckoutException(error, {
+          ...checkoutActivationSentryDetails(activationSource, "checkout_password_activation"),
+          reason: "supabase_password_sign_in_failed",
+        })
         setMessage(SIGN_IN_AFTER_PASSWORD_ERROR)
         return
       }
@@ -166,7 +218,12 @@ export function WelcomeClient({
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
-        throw new Error(typeof body.error === "string" ? body.error : UNKNOWN_ERROR)
+        const errorMessage = typeof body.error === "string" ? body.error : UNKNOWN_ERROR
+        captureCheckoutException(new Error(errorMessage), {
+          ...checkoutActivationSentryDetails(activationSource, "checkout_magic_link_activation"),
+          status: res.status,
+        })
+        throw new Error(errorMessage)
       }
       setState({ view: "sent" })
     } catch (err) {
@@ -417,6 +474,26 @@ function activationRequestBody(source: CheckoutActivationSource): Record<string,
 function activationSourceId(source: CheckoutActivationSource): string {
   if (source.provider === "paypal") return "paypal:checkout"
   return source.sessionId
+}
+
+function checkoutActivationSentryDetails(
+  source: CheckoutActivationSource,
+  stage: "checkout_password_activation" | "checkout_magic_link_activation",
+) {
+  if (source.provider === "paypal") {
+    return {
+      provider: "paypal" as const,
+      stage,
+      source: "welcome" as const,
+      paypalTokenPresent: true,
+    }
+  }
+  return {
+    provider: "stripe" as const,
+    stage,
+    source: "welcome" as const,
+    stripeSessionId: source.sessionId,
+  }
 }
 
 function normalizeError(err: unknown): string {

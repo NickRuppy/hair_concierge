@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { captureCheckoutException, getCheckoutRateLimitReason } from "@/lib/observability/checkout"
 import {
   checkoutSessionHash,
   claimCheckoutActivation,
@@ -57,6 +58,7 @@ export interface SendMagicLinkDeps {
   releaseCheckoutActivationClaim?: typeof releaseCheckoutActivationClaim
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
   getPremiumTierId?: (supabase: SupabaseClient) => Promise<string>
+  captureCheckoutException?: typeof captureCheckoutException
   now?: () => Date
 }
 
@@ -89,8 +91,25 @@ export async function handleSendMagicLink(
 
   const rateCheck = await deps.checkRateLimit(parsed.target.activationId, SEND_AUTH_LINK_RATE_LIMIT)
   if (!rateCheck.allowed) {
+    const status = rateCheck.error === "service_unavailable" ? 503 : 429
+    ;(deps.captureCheckoutException ?? captureCheckoutException)(
+      new Error(
+        rateCheck.error === "service_unavailable"
+          ? "Checkout auth-link rate limit unavailable"
+          : "Checkout auth-link rate limited",
+      ),
+      {
+        ...checkoutActivationTargetSentryDetails(parsed.target, "checkout_magic_link_activation"),
+        status,
+        reason:
+          rateCheck.error === "service_unavailable"
+            ? "send_auth_link_rate_limit_unavailable"
+            : "send_auth_link_rate_limited",
+        rateLimitSource: "app",
+      },
+    )
     return {
-      status: rateCheck.error === "service_unavailable" ? 503 : 429,
+      status,
       body: {
         error:
           rateCheck.error === "service_unavailable"
@@ -123,6 +142,14 @@ export async function handleSendMagicLink(
 
     if (error) {
       console.error("[send-magic-link] signInWithOtp failed:", error.message)
+      const rateLimitReason = getCheckoutRateLimitReason(error)
+      ;(deps.captureCheckoutException ?? captureCheckoutException)(error, {
+        ...checkoutActivationTargetSentryDetails(parsed.target, "checkout_magic_link_activation"),
+        // The route still returns 500, but this tags the upstream Supabase Auth throttle.
+        status: rateLimitReason ? 429 : 500,
+        reason: rateLimitReason ?? "sign_in_with_otp_failed",
+        rateLimitSource: rateLimitReason ? "supabase_auth" : undefined,
+      })
       await (deps.releaseCheckoutActivationClaim ?? releaseCheckoutActivationClaim)(
         deps.supabase,
         parsed.target.activationId,
@@ -146,6 +173,10 @@ export async function handleSendMagicLink(
     }
 
     console.error("[send-magic-link] failed:", err)
+    ;(deps.captureCheckoutException ?? captureCheckoutException)(err, {
+      ...checkoutActivationTargetSentryDetails(parsed.target, "checkout_magic_link_activation"),
+      status: 500,
+    })
     return { status: 500, body: { error: SERVER_ERROR } }
   }
 }
@@ -186,6 +217,15 @@ async function consumeCheckoutPasswordMarker(
   })
   if (updateError) {
     console.error("[send-magic-link] activation marker cleanup failed:", updateError.message)
+    ;(deps.captureCheckoutException ?? captureCheckoutException)(updateError, {
+      provider: activationId.startsWith("paypal:") ? "paypal" : "stripe",
+      stage: "checkout_magic_link_activation",
+      source: "welcome",
+      stripeSessionId: activationId.startsWith("paypal:") ? undefined : activationId,
+      paypalTokenPresent: activationId.startsWith("paypal:"),
+      status: 500,
+      reason: "activation_marker_cleanup_failed",
+    })
   }
 }
 
@@ -259,6 +299,26 @@ function isPaymentIncompleteError(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+function checkoutActivationTargetSentryDetails(
+  target: CheckoutActivationTarget,
+  stage: "checkout_magic_link_activation",
+) {
+  if (target.provider === "paypal") {
+    return {
+      provider: "paypal" as const,
+      stage,
+      source: "welcome" as const,
+      paypalTokenPresent: true,
+    }
+  }
+  return {
+    provider: "stripe" as const,
+    stage,
+    source: "welcome" as const,
+    stripeSessionId: target.sessionId,
+  }
 }
 
 function toNextResponse(result: RouteResult) {

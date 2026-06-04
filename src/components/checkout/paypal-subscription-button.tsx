@@ -4,6 +4,7 @@ import { useRef, useState } from "react"
 import { FUNDING, PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js"
 import type { CreateSubscriptionActions, OnApproveData } from "@paypal/paypal-js"
 
+import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import type { PayPalCheckoutSource } from "@/lib/paypal/checkout-intents"
 import {
@@ -80,7 +81,15 @@ export function PayPalSubscriptionButton({
             actions: CreateSubscriptionActions,
           ) => {
             setError(null)
+            suppressNextPayPalErrorRef.current = false
             onCheckoutStarted()
+            addCheckoutBreadcrumb({
+              provider: "paypal",
+              stage: "paypal_create_subscription",
+              source,
+              interval,
+              leadId,
+            })
             try {
               const intent = await createSubscriptionIntent({ interval, leadId, source })
               intentTokenRef.current = intent.token
@@ -99,6 +108,14 @@ export function PayPalSubscriptionButton({
                 throw err
               }
               setError(err instanceof Error ? err.message : paypalStartError)
+              captureCheckoutException(err, {
+                provider: "paypal",
+                stage: "paypal_create_subscription",
+                source,
+                interval,
+                leadId,
+              })
+              suppressNextPayPalErrorRef.current = true
               throw err
             }
           }}
@@ -106,27 +123,87 @@ export function PayPalSubscriptionButton({
             const token = intentTokenRef.current
             if (!data.subscriptionID || !token) {
               setError(paypalStartError)
+              captureCheckoutException(new Error("PayPal approval missing subscription or token"), {
+                provider: "paypal",
+                stage: "paypal_approve_subscription",
+                source,
+                interval,
+                leadId,
+                paypalSubscriptionId: data.subscriptionID,
+                paypalTokenPresent: Boolean(token),
+                reason: "approve_payload_incomplete",
+              })
               return
             }
+            addCheckoutBreadcrumb({
+              provider: "paypal",
+              stage: "paypal_approve_subscription",
+              source,
+              interval,
+              leadId,
+              paypalSubscriptionId: data.subscriptionID,
+              paypalTokenPresent: true,
+            })
             const approved = await approveSubscriptionIntent(token, data.subscriptionID)
             if (!approved.ok) {
               if (approved.duplicate) {
+                addCheckoutBreadcrumb(
+                  {
+                    provider: "paypal",
+                    stage: "checkout_return",
+                    source,
+                    interval,
+                    leadId,
+                    paypalSubscriptionId: data.subscriptionID,
+                    paypalTokenPresent: true,
+                    status: approved.status,
+                    reason: "duplicate_access",
+                  },
+                  "warning",
+                )
                 setError(null)
                 setDuplicateEmail(approved.email ?? null)
                 setDuplicateDialogOpen(true)
                 return
               }
+              captureCheckoutException(new Error("PayPal subscription approval failed"), {
+                provider: "paypal",
+                stage: "paypal_approve_subscription",
+                source,
+                interval,
+                leadId,
+                paypalSubscriptionId: data.subscriptionID,
+                paypalTokenPresent: true,
+                status: approved.status,
+              })
               setError(approved.message)
               return
             }
+            addCheckoutBreadcrumb({
+              provider: "paypal",
+              stage: "checkout_return",
+              source,
+              interval,
+              leadId,
+              paypalSubscriptionId: data.subscriptionID,
+              paypalTokenPresent: true,
+            })
             window.location.assign(buildPayPalWelcomeUrl(token))
           }}
-          onError={() => {
+          onError={(err) => {
             if (suppressNextPayPalErrorRef.current) {
               suppressNextPayPalErrorRef.current = false
               return
             }
             setError(paypalStartError)
+            captureCheckoutException(err, {
+              provider: "paypal",
+              stage: "paypal_create_subscription",
+              source,
+              interval,
+              leadId,
+              reason: "paypal_button_error",
+            })
           }}
           style={{
             borderRadius: 999,
@@ -177,7 +254,8 @@ async function approveSubscriptionIntent(
   token: string,
   subscriptionId: string,
 ): Promise<
-  { ok: true } | { ok: false; duplicate: boolean; email?: string | null; message: string }
+  | { ok: true }
+  | { ok: false; duplicate: boolean; email?: string | null; message: string; status: number }
 > {
   const response = await fetch("/api/paypal/approve-subscription", {
     method: "POST",
@@ -193,5 +271,6 @@ async function approveSubscriptionIntent(
     duplicate: isCheckoutAccessAlreadyExistsResponse(response, body),
     email: readCheckoutAccessAlreadyExistsEmail(body),
     message,
+    status: response.status,
   }
 }

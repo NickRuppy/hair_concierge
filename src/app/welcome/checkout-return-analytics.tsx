@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useEffect, useRef } from "react"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import type { CheckoutPurchaseAnalytics } from "@/lib/stripe/purchase-analytics"
 
 export function CheckoutReturnAnalytics({
@@ -22,6 +23,13 @@ export function CheckoutReturnAnalytics({
     trackedRef.current = true
 
     try {
+      addCheckoutBreadcrumb({
+        provider: sessionId.startsWith("paypal:") ? "paypal" : "stripe",
+        stage: "checkout_return",
+        source: "welcome",
+        stripeSessionId: sessionId.startsWith("paypal:") ? undefined : sessionId,
+        paypalTokenPresent: sessionId.startsWith("paypal:"),
+      })
       trackAppEvent("subscription_started", {
         checkoutSessionId: sessionId,
       })
@@ -37,8 +45,24 @@ export function CheckoutReturnAnalytics({
       }
     } catch (err) {
       console.error("[welcome] checkout analytics failed:", err)
+      captureCheckoutException(err, {
+        provider: sessionId.startsWith("paypal:") ? "paypal" : "stripe",
+        stage: "checkout_return",
+        source: "welcome",
+        stripeSessionId: sessionId.startsWith("paypal:") ? undefined : sessionId,
+        paypalTokenPresent: sessionId.startsWith("paypal:"),
+        reason: "analytics_failed",
+      })
     } finally {
       if (redirectTo) {
+        addCheckoutBreadcrumb({
+          provider: sessionId.startsWith("paypal:") ? "paypal" : "stripe",
+          stage: "checkout_return",
+          source: "welcome",
+          stripeSessionId: sessionId.startsWith("paypal:") ? undefined : sessionId,
+          paypalTokenPresent: sessionId.startsWith("paypal:"),
+          reason: "redirect_to_onboarding",
+        })
         router.replace(redirectTo)
       }
     }

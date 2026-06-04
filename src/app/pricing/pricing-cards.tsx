@@ -13,6 +13,7 @@ import {
   readCheckoutAccessAlreadyExistsEmail,
 } from "@/components/checkout/active-subscription-dialog"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { addCheckoutBreadcrumb, captureCheckoutException } from "@/lib/observability/checkout"
 import type { BillingInterval } from "@/lib/stripe/intervals"
 import { getStripePricingPlan, STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
 
@@ -63,46 +64,105 @@ export function PricingCards({
 
   const fetchClientSecret = useCallback(async () => {
     if (!selectedInterval) {
-      throw new Error("checkout interval missing")
+      const error = new Error("checkout interval missing")
+      captureCheckoutException(error, {
+        provider: "stripe",
+        stage: "stripe_embedded_checkout_client_secret",
+        source: "pricing_page",
+      })
+      throw error
     }
 
     if (!stripePublishableKey) {
       setCheckoutError(checkoutStartError)
-      throw new Error("stripe publishable key missing")
+      const error = new Error("stripe publishable key missing")
+      captureCheckoutException(error, {
+        provider: "stripe",
+        stage: "stripe_embedded_checkout_load",
+        source: "pricing_page",
+        interval: selectedInterval,
+        leadId,
+        reason: "publishable_key_missing",
+      })
+      throw error
     }
 
     setCheckoutError(null)
-    const res = await fetch("/api/stripe/create-checkout-session", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        interval: selectedInterval,
-        ...(leadId ? { leadId } : {}),
-      }),
+    addCheckoutBreadcrumb({
+      provider: "stripe",
+      stage: "stripe_embedded_checkout_client_secret",
+      source: "pricing_page",
+      interval: selectedInterval,
+      leadId,
     })
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}))
-      if (isCheckoutAccessAlreadyExistsResponse(res, body)) {
-        setCheckoutError(null)
-        setDuplicateEmail(readCheckoutAccessAlreadyExistsEmail(body))
-        setDuplicateDialogOpen(true)
-        throw new Error("checkout access already exists")
+    try {
+      const res = await fetch("/api/stripe/create-checkout-session", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          interval: selectedInterval,
+          ...(leadId ? { leadId } : {}),
+        }),
+      })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        if (isCheckoutAccessAlreadyExistsResponse(res, body)) {
+          setCheckoutError(null)
+          setDuplicateEmail(readCheckoutAccessAlreadyExistsEmail(body))
+          setDuplicateDialogOpen(true)
+          throw new Error("checkout access already exists")
+        }
+        setCheckoutError(checkoutStartError)
+        const error = new Error("failed to create checkout session")
+        captureCheckoutException(error, {
+          provider: "stripe",
+          stage: "stripe_embedded_checkout_client_secret",
+          source: "pricing_page",
+          interval: selectedInterval,
+          leadId,
+          status: res.status,
+        })
+        throw error
+      }
+      const data = (await res.json()) as { client_secret?: string }
+      if (!data.client_secret) {
+        setCheckoutError(checkoutStartError)
+        const error = new Error("checkout session response missing client secret")
+        captureCheckoutException(error, {
+          provider: "stripe",
+          stage: "stripe_embedded_checkout_client_secret",
+          source: "pricing_page",
+          interval: selectedInterval,
+          leadId,
+          status: res.status,
+          reason: "client_secret_missing",
+        })
+        throw error
+      }
+      trackAppEvent("checkout_started", {
+        interval: selectedInterval,
+        leadId: leadId ?? undefined,
+        provider: "stripe",
+        source: "pricing_page",
+      })
+      return data.client_secret
+    } catch (error) {
+      if (error instanceof Error && error.message === "checkout access already exists") {
+        throw error
       }
       setCheckoutError(checkoutStartError)
-      throw new Error("failed to create checkout session")
+      if (error instanceof TypeError) {
+        captureCheckoutException(error, {
+          provider: "stripe",
+          stage: "stripe_embedded_checkout_client_secret",
+          source: "pricing_page",
+          interval: selectedInterval,
+          leadId,
+          reason: "network_error",
+        })
+      }
+      throw error
     }
-    const data = (await res.json()) as { client_secret?: string }
-    if (!data.client_secret) {
-      setCheckoutError(checkoutStartError)
-      throw new Error("checkout session response missing client secret")
-    }
-    trackAppEvent("checkout_started", {
-      interval: selectedInterval,
-      leadId: leadId ?? undefined,
-      provider: "stripe",
-      source: "pricing_page",
-    })
-    return data.client_secret
   }, [selectedInterval, leadId])
 
   const handlePayPalCheckoutStarted = useCallback(() => {
