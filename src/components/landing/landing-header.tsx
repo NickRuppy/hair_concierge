@@ -22,6 +22,7 @@ export function LandingHeader() {
           </Link>
           <Link
             href="/quiz"
+            prefetch={false}
             className="whitespace-nowrap rounded-[10px] bg-[var(--brand-coral)] px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--brand-coral-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2 sm:px-[18px] sm:py-2.5"
           >
             Quiz starten
