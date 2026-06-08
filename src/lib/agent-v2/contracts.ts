@@ -467,6 +467,13 @@ export const AgentV2TraceSchema = z.object({
   reasoning_effort: AgentV2ReasoningEffortSchema,
   safety_mode: AgentV2SafetyModeSchema,
   answer_mode: AgentV2AnswerModeSchema.nullable(),
+  named_product_context: z
+    .strictObject({
+      display_name: z.string(),
+      category: AgentV2CareCategorySchema,
+    })
+    .nullable()
+    .default(null),
   response_ids: z.array(z.string()),
   model_steps: z.array(AgentV2ModelStepTraceSchema),
   tool_calls: z.array(AgentV2ToolCallTraceSchema),

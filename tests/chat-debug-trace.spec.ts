@@ -1041,6 +1041,7 @@ test.describe("Chat debug trace", () => {
       reasoning_effort: "medium",
       safety_mode: "normal",
       answer_mode: "product_recommendation",
+      named_product_context: null,
       response_ids: ["resp_1"],
       model_steps: [{ response_id: "resp_1", latency_ms: 12 }],
       tool_calls: [{ call_id: "call_1", name: "select_products", latency_ms: 5 }],
