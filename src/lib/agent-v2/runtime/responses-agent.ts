@@ -15,6 +15,10 @@ import {
 } from "@/lib/agent-v2/contracts"
 import { normalizeAgentV2EvidenceText } from "@/lib/agent-v2/evidence-normalization"
 import { getAgentV2ModelPolicy, type AgentV2ModelPolicy } from "@/lib/agent-v2/model-policy"
+import {
+  buildAgentV2NamedProductContext,
+  type AgentV2NamedProductContext,
+} from "@/lib/agent-v2/named-product-context"
 import { AGENT_V2_RESPONSES_SYSTEM_PROMPT } from "@/lib/agent-v2/runtime/prompt"
 import { createAgentV2Trace } from "@/lib/agent-v2/runtime/trace"
 import { LoadAgentV2AdvisorGuidanceInputSchema } from "@/lib/agent-v2/tools/guidance-tool"
@@ -221,6 +225,17 @@ export async function runAgentV2ResponsesTurn(params: {
     return completeWithAnswer(buildSafetyBoundaryAnswer(params.message), trace)
   }
 
+  const namedProductContext = buildAgentV2NamedProductContext({
+    latestMessage: params.message,
+    recentMessages: params.recentMessages,
+  })
+  trace.named_product_context = namedProductContext
+    ? {
+        display_name: namedProductContext.display_name,
+        category: namedProductContext.category,
+      }
+    : null
+
   const routineToolPolicy = resolveRoutineToolPolicy({
     message: params.message,
     routineThreadContext,
@@ -256,6 +271,7 @@ export async function runAgentV2ResponsesTurn(params: {
     params.priorSelectedProductProjections ?? [],
     routineToolPolicy,
     turnGateEnabled,
+    namedProductContext,
   )
   const buildCurrentClarificationFallback = () =>
     isNonProceedTurnGate(turnGateAuthorized)
@@ -302,6 +318,7 @@ export async function runAgentV2ResponsesTurn(params: {
     currentCareContextConflicts: effectiveCareContext.conflicts,
     knownHardRuleIds: [...knownHardRuleIds],
     turnGate: turnGateEnabled ? turnGateAuthorized : null,
+    namedProductContext,
   })
 
   for (let step = 0; step < policy.max_model_steps; step += 1) {
@@ -798,6 +815,7 @@ function buildInputItems(
   priorSelectedProductProjections: readonly Partial<AgentV2SelectProductsProjection>[],
   routineToolPolicy: RoutineToolPolicy,
   turnGateEnabled: boolean,
+  namedProductContext: AgentV2NamedProductContext | null,
 ): unknown[] {
   const items: unknown[] = [
     {
@@ -869,6 +887,13 @@ function buildInputItems(
     })
   }
 
+  if (namedProductContext) {
+    items.push({
+      role: "system",
+      content: buildNamedProductContextGuidance(namedProductContext),
+    })
+  }
+
   if (safetyMode === "restricted") {
     items.push({
       role: "system",
@@ -890,6 +915,15 @@ function buildInputItems(
   )
 
   return items
+}
+
+function buildNamedProductContextGuidance(context: AgentV2NamedProductContext): string {
+  return [
+    `Current user named a plausible exact product: "${context.display_name}" (${context.category}). Treat it as user-provided but not catalog-verified.`,
+    "For product_detail, still call select_products before the terminal answer.",
+    "If select_products returns no exact or supported product_detail match, do not ask for the exact name again and do not substitute unrelated catalog alternatives as the answer.",
+    "Use constraint_blocked or a cautious non-evaluative answer: say it is not a verified catalog hit, cannot be evaluated exactly, and only discuss category-level plausibility or limitations if useful.",
+  ].join(" ")
 }
 
 function normalizeRoutineThreadContext(
@@ -1064,7 +1098,7 @@ function buildTerminalPayloadFieldGuidance(): string {
     "Social and domain_boundary answers are complete visible answers. They must not use product or routine tools, product_ids, routine_step_ids, session_memory_writes, active routine_context, or pending_routine_action.",
     "Set pending_routine_action to null unless you explicitly offer a future routine create/change for the user to confirm. If you do offer that future action, keep the current answer non-mutating, set routine_intent none, and describe the pending action structurally so a short next-turn confirmation can authorize build_or_fix_routine.",
     "Before submitting non-trivial category, product, routine, or general advice, load the relevant guidance package. Terminal tool_grounding.used_guidance_package_ids must include required base packages and category packages.",
-    "For named-product detail or product-specific claim checks, including heat protection, color safety, chelating, ingredient-free status, exact cadence, or product protocol, call select_products before submitting any terminal answer. Use product_request_kind product_detail. If the tool cannot confirm the product or claim, answer as clarification or constraint_blocked after the tool call; do not infer from the product name.",
+    "For named-product detail or product-specific claim checks, including heat protection, color safety, chelating, ingredient-free status, exact cadence, or product protocol, call select_products before submitting any terminal answer. Use product_request_kind product_detail. If the tool cannot confirm the product or claim, answer as clarification or constraint_blocked after the tool call; when named_product_context says the user already gave a plausible exact product name, use constraint_blocked instead of repeated clarification. Do not infer from the product name.",
     "For product_detail turns, terminal request_interpretation must match select_products on product_request_kind, requested_product_count, count_policy, care_category/category, and evidence_quote, even if the answer is clarification or constraint_blocked.",
     "For a concrete product ask inside an active routine, including a short acceptance of the previous offer such as matching products for that routine step, use answer_mode product_recommendation, set request_interpretation.product_request_kind to specific_products, call select_products first, keep routine_context.active=true, include routine_context step/category when known, and preserve routine_context.return_path. Return to the routine through routine_context and visible prose only when useful. Do not also call build_or_fix_routine unless the latest user message asks to change the routine.",
     "For pure summary, recap, overview, or explanation follow-ups inside an active routine thread, answer from routineThreadContext as general_advice, keep routine_context.active=true, set routine_intent none, and do not call build_or_fix_routine.",

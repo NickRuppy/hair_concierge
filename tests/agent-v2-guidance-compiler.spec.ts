@@ -934,6 +934,7 @@ test("product guidance preserves old claim boundaries and comparison fallback ru
   const metadata = JSON.parse(
     readFileSync("data/agent-v2/guidance/base/product-recommendation.json", "utf8"),
   ) as {
+    hard_rules: Array<{ rule_id: string; validator_id: string; message: string }>
     soft_rubrics: Array<{ rubric_id: string; message: string }>
   }
 
@@ -947,6 +948,16 @@ test("product guidance preserves old claim boundaries and comparison fallback ru
   assert.match(brief, /caveated fallback/i)
   assert.match(brief, /not_recommended.*no_catalog_match/i)
   assert.match(brief, /effectively equivalent/i)
+  assert.match(brief, /named_product_context/i)
+  assert.match(brief, /do not ask for the exact name again/i)
+  assert.match(brief, /do not substitute unrelated catalog recommendations/i)
+  assert.ok(
+    metadata.hard_rules.some(
+      (rule) =>
+        rule.rule_id === "product.named_detail_no_repeat_or_substitute" &&
+        rule.validator_id === "named_product_detail_unverified",
+    ),
+  )
   assert.ok(
     metadata.soft_rubrics.some((rubric) => rubric.rubric_id === "product.no_claims_from_names"),
   )
@@ -976,7 +987,7 @@ test("compiled product-detail guidance uses user-facing unsupported-claim fallba
   assert.match(brief, /translate missing metadata into user-facing language/i)
   assert.match(brief, /Das kann ich für diese Variante nicht sicher versprechen/i)
   assert.match(brief, /Sicher berücksichtigen kann ich aktuell/i)
-  assert.match(brief, /generic attributes, safe uncertainty, or ask for a supported exact variant/i)
+  assert.match(brief, /ask for the exact variant only if the user has not already provided/i)
   assert.match(brief, /do not invite photo or link checks/i)
   assert.match(brief, /current tooling can actually process and ground them/i)
   assert.match(brief, /only confirmed color, format, or product facts/i)

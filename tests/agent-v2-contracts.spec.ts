@@ -278,6 +278,7 @@ test("AgentV2TraceSchema accepts turn-gate trace fields", () => {
     reasoning_effort: "low",
     safety_mode: "normal",
     answer_mode: "social",
+    named_product_context: null,
     response_ids: [],
     model_steps: [],
     tool_calls: [],
