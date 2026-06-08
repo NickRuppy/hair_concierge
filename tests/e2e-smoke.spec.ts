@@ -12,11 +12,9 @@ test.describe("Core user flows — smoke test @ci", () => {
     // The header CTA should link to /quiz
     const quizCta = page.getByRole("link", { name: "Quiz starten" }).first()
     await expect(quizCta).toHaveAttribute("href", "/quiz")
-    // Returning users need a visible sign-in path — header has Anmelden → /chat
-    // (middleware routes signed-in users straight to /chat, signed-out returning
-    // users through /auth with next preserved)
+    // Returning users need a visible sign-in path that opens auth directly.
     const signInLink = page.getByRole("link", { name: "Anmelden" })
-    await expect(signInLink).toHaveAttribute("href", "/chat")
+    await expect(signInLink).toHaveAttribute("href", "/auth?next=/chat")
     // Pricing card CTAs must funnel through /quiz, not deep-link to /pricing
     // (anonymous /pricing visits 400 on the identity check at checkout).
     const planCta = page.getByRole("link", { name: "Plan wählen" }).first()

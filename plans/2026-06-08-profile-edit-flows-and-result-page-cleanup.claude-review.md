@@ -1,0 +1,40 @@
+I have enough grounding. The key catch: `tests/result-offer-page.test.tsx` already statically renders the offer page, so the flipped result-page test is de-risked. Here is the verdict.
+
+---
+
+**Verdict:** Re-shape first (one central decision + one internal contradiction must be resolved before this is safe to hand to a subagent). The result-page removal half is solid; the profile-edit half punts its load-bearing detail.
+
+**Lean shape**
+- **Irreducible goal:** (1) Both result paths (`/quiz` completion, `/result/[leadId]`) always render `QuizResultOfferPage` — delete the `QuizResultsView`/`hasAccess` branches and the `/quiz?mode=retake` auth bypass; (2) profile Hair-Check edits open a dedicated quiz-style edit route instead of the inline editor.
+- **Cut or defer:**
+  - **Delete, don't "narrow":** the "remove `cta` from `QuizResultNarrative` if unused" step (Task 4 Step 5). It's a trap — see Blocker 2. Keep the field; it becomes harmless dead data.
+  - **Separate scope:** the `landing-header.tsx` `/chat` → `/auth?next=/chat` change (Task 5 Step 4) is orthogonal to "retire old result page." Plan already says keep commits separated — keep this one out of the critical path.
+  - **Reuse, don't add:** `resolveHairCheckReturnTo` is a verbatim copy of `getSafeReturnToPath` (`src/components/quiz/quiz-results.tsx:33`). The config module (`hair-check-edit-config.ts`) itself *is* justified — it's a genuine single source of truth for page + route + tests.
+- **Hard tradeoff the plan avoids:** which UI primitive renders the edit options. The plan writes `EditHairCheckFlow` against `QuizOptionCard` but then hedges "adapt if the API differs." That hedge *is* the work — see Blocker 1. The existing inline editor already solved this with `SegmentedControl` (singles) + custom pill buttons (multi); reuse that, don't reach for `QuizOptionCard`.
+
+**Prior art**
+- **`returnTo` open-redirect guard:** matches the canonical "allow only local non-`//`, non-scheme paths" shape; resolver logic is correct. Deviation: re-implements the existing `getSafeReturnToPath` (`quiz-results.tsx:33-45`) instead of reusing it. Acceptable since the original lives in a file being gutted, but note the dupe.
+- **Partial profile write:** `upsert(..., { onConflict: "user_id" })` matches existing `handleSaveQuiz` (`src/app/profile/page.tsx:867`). OK. One difference: the new flow writes only the edited column(s); on an existing row Postgres `ON CONFLICT DO UPDATE` preserves other columns, so this is fine (and better than the full-row rewrite).
+- **Flow/branch removal:** deleted outright with no feature flag. For a *UI-branch* removal (not a data migration) where the offer page is already the live anonymous path, a flag is overkill — but the only kill-switch is `git revert`. Acceptable; just name it as the rollback.
+
+**Blockers** (will fail or regress as written)
+
+1. **`QuizOptionCard` API mismatch — the edit flow won't compile and has no icon data.** — `src/components/quiz/quiz-option-card.tsx:6-14`. The real props are `icon: IconName` (**required**), `label: string`, `active: boolean`, and it renders **no children**. The plan's `EditHairCheckFlow` passes `selected={...}` and `{option.label}` as children (Task 2 Step 5). Worse, the config's `HairCheckOption` is `{ value, label }` with no icon, and the source arrays carry no icon either (`HAIR_TEXTURE_OPTIONS` is `{value,label}` only — `src/lib/vocabulary/hair-types.ts:20-23`). Real quiz usage proves the requirement: `quiz-question.tsx:115` passes `icon={opt.icon}` from option objects that *do* have icons. → **Fix before handoff:** render edit options with `SegmentedControl` (singles) + pill buttons (multi/scalp) exactly as the inline editor does today (`profile/page.tsx:1080-1340`), or add an `icon` to every config option. "Step 6: adapt if typecheck fails" under-specifies a central, ~150-line piece of UI and will leave a subagent improvising.
+
+2. **Internal contradiction: removing `narrative.cta` breaks a test the plan requires green.** — Task 4 Step 5 says remove `cta` from `QuizResultNarrative` "if no remaining production code uses it." After `QuizResultsView` is deleted, the *only* production reader is gone (it's read at `quiz-results-view.tsx:115,118`; the offer page never reads it). **But** `tests/quiz-result-narrative.test.ts:45-46` and `:369-371` assert `narrative.cta.lead/label/subline`, and the plan runs that exact test expecting PASS (Task 4 Step 7, Task 6 Step 1). A subagent that follows the "remove" branch breaks the build and the test, which the plan never lists for update. → **Fix:** keep `cta` untouched. The acceptance criterion "no result page shows `MEINE ROUTINE STARTEN`" still holds because nothing renders `narrative.cta` once the view is deleted (the string lives on only as dead data in `result-narrative.ts:1070`).
+
+**High-confidence issues** (correctness, not preference)
+- **Two conflicting `openTarget` snippets** (Task 3 Step 2). The first ignores scalp grouping; the second (`editField = scalp_type|scalp_condition ? "scalp" : fieldKey`) supersedes it. Only the grouped version should be implemented — a literal subagent may paste both, producing dead/contradictory branches. State "use the grouped version only."
+- **Nonexistent finish skills.** Task 6 Step 5 says run the `ready-check` skill; Execution Handoff says run before `autoreview`. Neither exists (not in `~/.claude/skills/`, not in the session skill list). The real finish per CLAUDE.md is `npm run ci:verify` + the `codex:codex-rescue` agent on `git diff main...HEAD` + `/ship`. Rename these or a subagent will stall hunting for a missing skill.
+
+**Smaller / nice-to-haves**
+- **De-risked:** the flipped `result-page-client.test.tsx` statically renders `QuizResultOfferPage`; `tests/result-offer-page.test.tsx` already proves `renderToStaticMarkup(<QuizResultOfferPage/>)` works with no provider, despite the `useState/useEffect/fetch` in `result-offer-pricing.tsx`. The asserted strings exist verbatim: `"Angebot:"` (`quiz-result-offer-page.tsx:168`) and `"So können sich deine Haare in 4 Wochen anfühlen."` (`:191`). This test flip is sound.
+- **Use `npm run ci:verify`** (exists, `package.json:16`) instead of the three separate `typecheck`/`lint`/`build` invocations — CLAUDE.md preference.
+- **`landing-header` change:** verify `/auth` actually consumes `?next=` before relying on it; if it doesn't, the link is cosmetically equal to today (middleware already bounces logged-out `/chat` → auth). No regression either way.
+- **Value/label alignment verified:** `SURFACE_OPTIONS` (`smooth/slightly_rough/rough`) and `ELASTICITY_OPTIONS` (`stretches_bounces/stretches_stays/snaps`) match the stored DB values and the label maps (`src/lib/vocabulary/profile-labels.ts:7-20`). The 8-field edit config vs. 9 profile cards (scalp_type + scalp_condition merged → `scalp`) is consistent with `PROFILE_FIELD_CONFIG` (`section-config.ts:133-218`). No drift.
+- **No stranded retake links:** `mode=retake`/`isRetakeMode` appears in src only inside the files being gutted (`quiz-results.tsx`, `intake-state.ts`, `middleware.ts`) — removing the bypass strands nothing. Anonymous `/quiz` is unaffected (middleware early-returns for `!user` before auth routing).
+
+**Bottom line**
+The result-page-removal half (Tasks 4–5) is well-grounded and largely ready — every file path, prop, and assertion string checks out, and the offer page is already the proven render path. Don't ship as-is because the profile-edit half (Tasks 1–3) leaves its single most important detail unspecified: **Blocker 1** (the `QuizOptionCard` contract — decide the primitive and supply icon data, or reuse `SegmentedControl` like the existing editor) and **Blocker 2** (delete the "remove `cta`" step so a self-consistent test suite stays green). Resolve those two, downgrade the `ready-check`/`autoreview` references to the real finish steps, and de-dupe the `openTarget` snippet — then it's safe for subagent handoff.
+
+Want me to spec the leaner `EditHairCheckFlow` against `SegmentedControl` + pill buttons (mirroring the current inline editor) so the `QuizOptionCard` decision is settled before handoff?

@@ -60,6 +60,9 @@ test("getAuthenticatedAppRedirect maps entry routes from intake state", () => {
   assert.equal(getAuthenticatedAppRedirect("/chat", "needs_quiz"), "/quiz")
   assert.equal(getAuthenticatedAppRedirect("/chat", "needs_onboarding"), "/onboarding")
   assert.equal(getAuthenticatedAppRedirect("/chat", "ready"), null)
+  assert.equal(getAuthenticatedAppRedirect("/onboarding", "needs_quiz"), "/quiz")
+  assert.equal(getAuthenticatedAppRedirect("/onboarding", "needs_onboarding"), null)
+  assert.equal(getAuthenticatedAppRedirect("/onboarding", "ready"), null)
   assert.equal(getAuthenticatedAppRedirect("/quiz", "needs_quiz"), null)
   assert.equal(getAuthenticatedAppRedirect("/quiz", "needs_onboarding"), "/onboarding")
   assert.equal(getAuthenticatedAppRedirect("/quiz", "ready"), "/chat")
@@ -71,6 +74,6 @@ test("getAuthenticatedAppRedirect maps entry routes from intake state", () => {
   assert.equal(getAuthenticatedAppRedirect("/", "ready"), null)
 })
 
-test("getAuthenticatedAppRedirect preserves quiz retake access", () => {
-  assert.equal(getAuthenticatedAppRedirect("/quiz", "ready", { isQuizRetake: true }), null)
+test("getAuthenticatedAppRedirect sends ready users away from quiz even with stale retake links", () => {
+  assert.equal(getAuthenticatedAppRedirect("/quiz", "ready"), "/chat")
 })

@@ -41,9 +41,6 @@ test("surface-led results expose scope labels, bucketed positions, concise goal 
     { name: "Leave-in", description: "Hält die Wirkung zwischen den Wäschen." },
   ])
   assert.ok(!("reveal" in narrative))
-
-  assert.equal(narrative.cta.lead, "Als Nächstes: dein persönlicher Plan")
-  assert.equal(narrative.cta.subline, "Mit passenden Produkten, Reihenfolge und Anwendung.")
 })
 
 test("primary concern ranking prefers hair damage over tangling, split ends, and frizz", () => {
@@ -347,7 +344,7 @@ test("hero headline has a balanced fallback", () => {
   assert.equal(narrative.heroHeadline, "Deine Balance ist näher dran, als es sich gerade anfühlt.")
 })
 
-test("fixed row labels and CTA copy stay compact", () => {
+test("fixed row labels stay compact", () => {
   const narrative = buildQuizResultNarrative({
     structure: "wavy",
     thickness: "normal",
@@ -366,9 +363,6 @@ test("fixed row labels and CTA copy stay compact", () => {
   assert.equal(narrative.rows[0]?.scope, "LÄNGEN")
   assert.equal(narrative.rows[0]?.currentPosition, 34)
   assert.equal(narrative.rows[0]?.targetPosition, 78)
-  assert.equal(narrative.cta.lead, "Als Nächstes: dein persönlicher Plan")
-  assert.equal(narrative.cta.label, "MEINE ROUTINE STARTEN")
-  assert.equal(narrative.cta.subline, "Mit passenden Produkten, Reihenfolge und Anwendung.")
 })
 
 test("scalp-irritated branch fires when scalp_condition === gereizt and no concern is set", () => {

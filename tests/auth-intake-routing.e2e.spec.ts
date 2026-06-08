@@ -115,7 +115,9 @@ test.describe.serial("Authenticated intake routing", () => {
     await expect(page.getByRole("button", { name: /Quiz starten/i })).toBeVisible()
   })
 
-  test("signed-in quiz completion skips auth and lands in onboarding", async ({ page }) => {
+  test("signed-in quiz completion saves intake and shows the modern result offer", async ({
+    page,
+  }) => {
     await page.goto("/auth", { waitUntil: "networkidle" })
     await page.locator('input[type="email"]:visible').fill(email)
     await page.locator('input[type="password"]:visible').fill(password)
@@ -183,22 +185,9 @@ test.describe.serial("Authenticated intake routing", () => {
       page.getByRole("heading", { name: /So kommen wir deinem Haarziel näher/i }),
     ).toBeVisible({ timeout: 15_000 })
     await expect(page.getByRole("heading", { name: /Was dein Haar jetzt braucht/i })).toBeVisible()
-    await expect(page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i })).toBeVisible()
-    await page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i }).click()
-
-    await page.waitForURL((url) => url.pathname === "/onboarding", {
-      timeout: 30_000,
-      waitUntil: "domcontentloaded",
-    })
-
-    const onboardingUrl = new URL(page.url())
-    expect(onboardingUrl.pathname).toBe("/onboarding")
-    expect(onboardingUrl.searchParams.get("lead")).toBeTruthy()
-
-    await expect(page.getByRole("button", { name: /LOS GEHT/i })).toBeVisible({
-      timeout: 15_000,
-    })
-    await expect(page.getByText("PROFIL SPEICHERN", { exact: false })).toHaveCount(0)
+    await expect(page.getByText(/Angebot:/i)).toBeVisible()
+    await expect(page.getByText(/So können sich deine Haare in 4 Wochen anfühlen\./i)).toBeVisible()
+    await expect(page.getByRole("button", { name: /MEINE ROUTINE STARTEN/i })).toHaveCount(0)
 
     await expect
       .poll(

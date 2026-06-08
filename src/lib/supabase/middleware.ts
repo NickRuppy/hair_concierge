@@ -52,11 +52,13 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const isQuizRetake = pathname === "/quiz" && request.nextUrl.searchParams.get("mode") === "retake"
   const isForcedAuthLogin =
     pathname === "/auth" && request.nextUrl.searchParams.get("force") === "login"
   const needsAuthenticatedAppRouting =
-    pathname === "/auth" || pathname === "/quiz" || pathname === "/chat"
+    pathname === "/auth" ||
+    pathname === "/quiz" ||
+    pathname === "/onboarding" ||
+    pathname === "/chat"
 
   // Public routes that don't need auth
   const publicRoutes = [
@@ -122,6 +124,39 @@ export async function updateSession(request: NextRequest) {
     })
   }
 
+  if (needsAuthenticatedAppRouting) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_completed")
+      .eq("id", user.id)
+      .maybeSingle()
+
+    const { data: hairProfile } = await supabase
+      .from("hair_profiles")
+      .select(
+        "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns",
+      )
+      .eq("user_id", user.id)
+      .maybeSingle()
+
+    const intakeState = resolveIntakeState(profile, hairProfile)
+    const redirectPath = getAuthenticatedAppRedirect(pathname, intakeState)
+
+    if (redirectPath) {
+      const url = request.nextUrl.clone()
+      url.pathname = redirectPath
+      if (redirectPath === "/onboarding") {
+        const leadId = request.nextUrl.searchParams.get("lead")
+        if (leadId) {
+          url.searchParams.set("lead", leadId)
+        }
+      } else {
+        url.searchParams.delete("lead")
+      }
+      return NextResponse.redirect(url)
+    }
+  }
+
   // --- Subscription paywall ---------------------------------------------
   const SUB_REQUIRED_PREFIXES = ["/onboarding", "/chat", "/api/chat"]
   const needsSub = SUB_REQUIRED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
@@ -184,39 +219,6 @@ export async function updateSession(request: NextRequest) {
     }
   }
   // --- End subscription paywall ------------------------------------------
-
-  if (needsAuthenticatedAppRouting) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("onboarding_completed")
-      .eq("id", user.id)
-      .maybeSingle()
-
-    const { data: hairProfile } = await supabase
-      .from("hair_profiles")
-      .select(
-        "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns",
-      )
-      .eq("user_id", user.id)
-      .maybeSingle()
-
-    const intakeState = resolveIntakeState(profile, hairProfile)
-    const redirectPath = getAuthenticatedAppRedirect(pathname, intakeState, { isQuizRetake })
-
-    if (redirectPath) {
-      const url = request.nextUrl.clone()
-      url.pathname = redirectPath
-      if (redirectPath === "/onboarding") {
-        const leadId = request.nextUrl.searchParams.get("lead")
-        if (leadId) {
-          url.searchParams.set("lead", leadId)
-        }
-      } else {
-        url.searchParams.delete("lead")
-      }
-      return NextResponse.redirect(url)
-    }
-  }
 
   // Admin route protection
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
