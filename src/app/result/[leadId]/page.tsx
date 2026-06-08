@@ -1,10 +1,7 @@
 import type { Metadata } from "next"
-import { cookies } from "next/headers"
 import { notFound } from "next/navigation"
-import { createServerClient } from "@supabase/ssr"
 
 import { ResultPageClient } from "./result-client"
-import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import { quizAnswersSchema } from "@/lib/quiz/validators"
@@ -30,6 +27,8 @@ interface LeadResultRow {
   quiz_answers: unknown
 }
 
+// Result links are intentionally public-by-unguessable lead ID so emailed result artifacts
+// can open without forcing account login before plan selection.
 async function getLeadResult(leadId: string): Promise<LeadResultRow | null> {
   const supabase = createAdminClient()
   const { data, error } = await supabase
@@ -53,37 +52,9 @@ function parseQuizAnswers(raw: unknown): QuizAnswers | null {
   return parsed.success ? parsed.data : null
 }
 
-async function getAuthenticatedResultAccess(): Promise<boolean> {
-  const cookieStore = await cookies()
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: () => {},
-      },
-    },
-  )
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) return false
-
-  return hasCurrentAppAccess(supabase, { userId: user.id, email: user.email }).catch((error) => {
-    console.warn("[result-page] failed to resolve authenticated access", error)
-    return false
-  })
-}
-
 export default async function ResultPage({ params, searchParams }: Props) {
   const [{ leadId }, sp] = await Promise.all([params, searchParams])
-  const [lead, hasAccess] = await Promise.all([
-    getLeadResult(leadId),
-    getAuthenticatedResultAccess(),
-  ])
+  const lead = await getLeadResult(leadId)
   const quizAnswers = lead ? parseQuizAnswers(lead.quiz_answers) : null
 
   if (!lead || !quizAnswers) {
@@ -96,7 +67,6 @@ export default async function ResultPage({ params, searchParams }: Props) {
       name={lead.name}
       quizAnswers={quizAnswers}
       focusRoutine={sp.focus === "routine"}
-      hasAccess={hasAccess}
     />
   )
 }

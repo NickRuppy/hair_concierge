@@ -14,7 +14,7 @@ export function LandingHeader() {
         </Link>
         <nav className="flex shrink-0 items-center gap-3 sm:gap-5">
           <Link
-            href="/chat"
+            href="/auth?next=/chat"
             prefetch={false}
             className="whitespace-nowrap rounded-md text-sm font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-[var(--brand-plum-darkest)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
           >

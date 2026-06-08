@@ -31,12 +31,7 @@ export function resolveIntakeState(
 export function getAuthenticatedAppRedirect(
   pathname: string,
   intakeState: IntakeState,
-  options?: { isQuizRetake?: boolean },
 ): string | null {
-  if (pathname === "/quiz" && options?.isQuizRetake) {
-    return null
-  }
-
   switch (pathname) {
     case "/auth":
       if (intakeState === "needs_quiz") return "/quiz"
@@ -46,6 +41,9 @@ export function getAuthenticatedAppRedirect(
       if (intakeState === "needs_quiz") return null
       if (intakeState === "needs_onboarding") return "/onboarding"
       return "/chat"
+    case "/onboarding":
+      if (intakeState === "needs_quiz") return "/quiz"
+      return null
     case "/chat":
       if (intakeState === "needs_quiz") return "/quiz"
       if (intakeState === "needs_onboarding") return "/onboarding"

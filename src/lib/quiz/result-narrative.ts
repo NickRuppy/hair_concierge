@@ -79,11 +79,6 @@ export interface QuizResultNarrative {
   intro: string
   rows: [QuizResultNarrativeRow, QuizResultNarrativeRow, QuizResultNarrativeRow]
   needs: QuizResultNeedsSection
-  cta: {
-    lead: string
-    label: string
-    subline: string
-  }
   primaryConcern: QuizConcern | null
   primaryGoal: Goal | null
 }
@@ -1065,11 +1060,6 @@ export function buildQuizResultNarrative(rawAnswers: QuizAnswers): QuizResultNar
     intro: buildIntro(answers, primaryConcern, primaryGoal),
     rows: [hairFeelRow, frictionRow, outcomeRow],
     needs: buildNeedsSection(answers, primaryConcern, primaryGoal),
-    cta: {
-      lead: "Als Nächstes: dein persönlicher Plan",
-      label: "MEINE ROUTINE STARTEN",
-      subline: "Mit passenden Produkten, Reihenfolge und Anwendung.",
-    },
     primaryConcern,
     primaryGoal,
   }

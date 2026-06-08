@@ -14,18 +14,17 @@ const quizAnswers: QuizAnswers = {
   goals: ["shine"],
 }
 
-test("result page client sends manually granted users to onboarding instead of the paid offer", () => {
+test("result page client renders the paid offer for previously granted users too", () => {
   const html = renderToStaticMarkup(
     <ResultPageClient
       leadId="11111111-1111-4111-8111-111111111111"
       name="Lea"
       quizAnswers={quizAnswers}
       focusRoutine={false}
-      hasAccess
     />,
   )
 
-  assert.match(html, /SO KOMMEN WIR DEINEM HAARZIEL NÄHER/i)
-  assert.match(html, /href="\/onboarding\?lead=11111111-1111-4111-8111-111111111111"/)
-  assert.doesNotMatch(html, /Angebot:/i)
+  assert.match(html, /Angebot:/i)
+  assert.match(html, /So können sich deine Haare in 4 Wochen anfühlen\./i)
+  assert.doesNotMatch(html, /MEINE ROUTINE STARTEN/i)
 })
