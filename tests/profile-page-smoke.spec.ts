@@ -286,14 +286,14 @@ test.describe.serial("@ci Profile page smoke", () => {
     await expect(page.getByText("Edited Shampoo").first()).toBeVisible()
     await expect(page.getByText("5-6x/Woche").first()).toBeVisible()
 
-    const { data: shampooCleanupRow, error: shampooCleanupError } = await admin
+    const { data: shampooCompatibilityRow, error: shampooCompatibilityError } = await admin
       .from("hair_profiles")
       .select("wash_frequency")
       .eq("user_id", userId!)
       .single()
 
-    if (shampooCleanupError) throw shampooCleanupError
-    expect(shampooCleanupRow?.wash_frequency).toBeNull()
+    if (shampooCompatibilityError) throw shampooCompatibilityError
+    expect(shampooCompatibilityRow?.wash_frequency).toBe("weekly_1x")
 
     const { data: shampooUsageRow, error: shampooUsageError } = await admin
       .from("user_product_usage")
