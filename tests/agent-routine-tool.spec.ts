@@ -20,7 +20,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     density: "medium",
     concerns: ["dryness"],
     products_used: null,
-    wash_frequency: "every_2_3_days",
+    wash_frequency: "weekly_3_4x",
     heat_styling: "never",
     styling_tools: [],
     goals: ["moisture"],
@@ -65,7 +65,7 @@ test("projectBuildOrFixRoutinePlan projects a thin agent-facing routine payload"
     necessity: "core",
     action: "keep",
     category: "shampoo",
-    frequency: "Alle 2-3 Tage",
+    frequency: "3-4x/Woche",
     reasons: [
       "Shampoo ist bereits ein vorhandener Startpunkt in deiner Routine.",
       "Shampoo bleibt der feste Startpunkt für die Kopfhaut und die Waschfrequenz.",
@@ -108,8 +108,8 @@ test("createBuildOrFixRoutineTool derives machine-readable missing-info from com
     },
     {
       key: "wash_frequency",
-      label: "Waschfrequenz",
-      why_it_matters: "Die Waschfrequenz bestimmt, wie oft die Routine wirklich greifen muss.",
+      label: "Shampoo-Rhythmus",
+      why_it_matters: "Der Shampoo-Rhythmus bestimmt, wie oft die Routine wirklich greifen muss.",
       blocking: false,
       expected_type: "WashFrequency",
     },
@@ -151,8 +151,8 @@ test("projectRoutinePlan keeps missing-info tied to actual fields when only the 
   assert.deepEqual(result.missing_info, [
     {
       key: "wash_frequency",
-      label: "Waschfrequenz",
-      why_it_matters: "Die Waschfrequenz bestimmt, wie oft die Routine wirklich greifen muss.",
+      label: "Shampoo-Rhythmus",
+      why_it_matters: "Der Shampoo-Rhythmus bestimmt, wie oft die Routine wirklich greifen muss.",
       blocking: false,
       expected_type: "WashFrequency",
     },
@@ -245,7 +245,7 @@ test("projectRoutinePlan exposes priority context without changing basics scorin
       density: null,
       scalp_type: "balanced",
       scalp_condition: null,
-      wash_frequency: "daily",
+      wash_frequency: "daily_1x",
       products_used: "Shampoo: Old Spice, Oel: Kokosoel, Conditioner: Keine Ahnung",
       current_routine_products: ["shampoo", "oil", "conditioner"],
       goals: ["less_volume", "curl_definition", "healthier_hair"],
@@ -278,11 +278,15 @@ test("projectRoutinePlan exposes side-by-side CareBalance frequency framing with
       {
         category: "oil",
         product_name: "Daily Oil",
-        frequency_range: "daily",
+        frequency_range: "daily_1x",
       },
     ],
   } as Parameters<typeof projectRoutinePlan>[0] & {
-    routineItems: Array<{ category: string; product_name: string | null; frequency_range: "daily" }>
+    routineItems: Array<{
+      category: string
+      product_name: string | null
+      frequency_range: "daily_1x"
+    }>
   })
 
   assert.deepEqual(
@@ -308,7 +312,7 @@ test("projectRoutinePlan exposes side-by-side CareBalance frequency framing with
 
   assert.equal(oilFrame?.action, "decrease_frequency")
   assert.deepEqual(oilFrame?.reason_codes, ["daily_oil_use", "buildup_or_flatness_pressure"])
-  assert.match(oilFrame?.usage_hint ?? "", /1_2x|daily|need_based_support/)
+  assert.match(oilFrame?.usage_hint ?? "", /weekly_1x|daily_1x|need_based_support/)
   assert.equal(oilFrame?.authority.current_turn_category_decision, true)
   assert.match(JSON.stringify(result), /legacy|comparison|production_decision_context/)
 })
@@ -324,7 +328,7 @@ test("projectRoutinePlan preserves supplied effective care context in care balan
     {
       category: "oil",
       product_name: "Daily Oil",
-      frequency_range: "daily",
+      frequency_range: "daily_1x",
     },
   ] as const
   const adapted = adaptRecommendationInputFromPersistence(hairProfile, [...routineItems])

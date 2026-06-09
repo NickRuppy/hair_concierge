@@ -42,7 +42,7 @@ function profileHardNoReasons(profile: NormalizedProfile): string[] {
   }
 
   const currentUse = profile.routineInventory.dry_shampoo?.frequencyBand ?? null
-  if (isFrequencyAtLeast(currentUse, "3_4x")) {
+  if (isFrequencyAtLeast(currentUse, "weekly_3_4x")) {
     reasons.push("dry_shampoo_frequent_use_reset_needed")
   }
 

@@ -309,7 +309,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await expect(page.getByText("Dein Conditioner", { exact: false })).toBeVisible({
         timeout: 10_000,
       })
-      await page.getByRole("button", { name: /1-2x pro Woche/i }).click()
+      await page.getByRole("button", { name: /1x\/Woche/i }).click()
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
       // Heat tools: skip (no heat tools)

@@ -6,15 +6,7 @@ import type {
   ResetLevel,
   ResetTriggerSource,
 } from "@/lib/recommendation-engine/types"
-import type { ProductFrequency } from "@/lib/vocabulary"
-
-const PRODUCT_FREQUENCY_RANK: Record<ProductFrequency, number> = {
-  rarely: 0,
-  "1_2x": 1,
-  "3_4x": 2,
-  "5_6x": 3,
-  daily: 4,
-}
+import { isProductFrequencyAtLeast, type ProductFrequency } from "@/lib/vocabulary"
 
 function addSignal(
   state: {
@@ -35,8 +27,7 @@ function isFrequencyAtLeast(
   frequencyBand: ProductFrequency | null,
   threshold: ProductFrequency,
 ): boolean {
-  if (!frequencyBand) return false
-  return PRODUCT_FREQUENCY_RANK[frequencyBand] >= PRODUCT_FREQUENCY_RANK[threshold]
+  return isProductFrequencyAtLeast(frequencyBand, threshold)
 }
 
 function getFrequency(
@@ -136,22 +127,23 @@ export function buildResetAssessment(
     addSignal(state, 1, "residue_prone_routine", "routine_exposure")
   }
 
-  if (isFrequencyAtLeast(dryShampooFrequency, "5_6x")) {
+  if (isFrequencyAtLeast(dryShampooFrequency, "weekly_5_6x")) {
     addSignal(state, 2, "frequent_dry_shampoo_use", "routine_exposure")
-  } else if (isFrequencyAtLeast(dryShampooFrequency, "3_4x")) {
+  } else if (isFrequencyAtLeast(dryShampooFrequency, "weekly_3_4x")) {
     addSignal(state, 1, "dry_shampoo_reset_pressure", "routine_exposure")
   }
 
-  if (isFrequencyAtLeast(oilFrequency, "3_4x")) {
+  if (isFrequencyAtLeast(oilFrequency, "weekly_3_4x")) {
     addSignal(state, 1, "frequent_oil_use", "routine_exposure")
   }
 
-  if (isFrequencyAtLeast(maskFrequency, "3_4x")) {
+  if (isFrequencyAtLeast(maskFrequency, "weekly_3_4x")) {
     addSignal(state, 1, "frequent_mask_use", "routine_exposure")
   }
 
   if (
-    (profile.washFrequency === "once_weekly" || profile.washFrequency === "rarely") &&
+    profile.washFrequency !== null &&
+    !isFrequencyAtLeast(profile.washFrequency, "weekly_2x") &&
     (oilyScalp || residueProneLoad >= 2 || dryShampooFrequency !== null)
   ) {
     addSignal(state, 1, "low_wash_cadence_relative_to_load", "routine_exposure")

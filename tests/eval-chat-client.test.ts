@@ -8,7 +8,7 @@ test("buildEvalSeedPayloads keeps routine inventory out of hair_profiles writes"
     "user_eval",
     {
       hair_texture: "wavy",
-      wash_frequency: "every_2_3_days",
+      wash_frequency: "weekly_3_4x",
       drying_method: "air_dry",
       onboarding_completed: true,
     },
@@ -16,7 +16,7 @@ test("buildEvalSeedPayloads keeps routine inventory out of hair_profiles writes"
       {
         category: "shampoo",
         product_name: "Soft Wash",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
       {
         category: "conditioner",
@@ -27,7 +27,7 @@ test("buildEvalSeedPayloads keeps routine inventory out of hair_profiles writes"
   assert.deepEqual(hairProfileRow, {
     user_id: "user_eval",
     hair_texture: "wavy",
-    wash_frequency: "every_2_3_days",
+    wash_frequency: "weekly_3_4x",
     drying_method: "air_dry",
   })
 
@@ -36,7 +36,7 @@ test("buildEvalSeedPayloads keeps routine inventory out of hair_profiles writes"
       user_id: "user_eval",
       category: "shampoo",
       product_name: "Soft Wash",
-      frequency_range: "3_4x",
+      frequency_range: "weekly_3_4x",
     },
     {
       user_id: "user_eval",

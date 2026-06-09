@@ -24,7 +24,7 @@ test("AgentV2 exposes set_current_care_context with current-turn fact schema", (
     CurrentCareFactInputSchema.parse({
       kind: "routine_frequency",
       category: "dry_shampoo",
-      frequency: "daily",
+      frequency: "daily_1x",
       evidenceQuote: "I use dry shampoo daily",
     }),
     CurrentCareFactInputSchema.parse({
@@ -83,7 +83,7 @@ test("AgentV2 model-facing current-care tool schema uses direct root fields", ()
     value: null,
     category: "dry_shampoo",
     present: null,
-    frequency: "daily",
+    frequency: "daily_1x",
     code: null,
     evidenceQuote: "I use dry shampoo daily",
   })
@@ -91,7 +91,7 @@ test("AgentV2 model-facing current-care tool schema uses direct root fields", ()
   assert.deepEqual(parseCurrentCareFactToolInput(parsed), {
     kind: "routine_frequency",
     category: "dry_shampoo",
-    frequency: "daily",
+    frequency: "daily_1x",
     evidenceQuote: "I use dry shampoo daily",
   })
 
@@ -165,7 +165,7 @@ test("AgentV2 rejects current-care direct tool input with branch leakage", () =>
         value: "fine",
         category: "dry_shampoo",
         present: true,
-        frequency: "daily",
+        frequency: "daily_1x",
         code: "flat_fast",
         evidenceQuote: "I use dry shampoo daily",
       }),
@@ -208,7 +208,7 @@ test("AgentV2 rejects current-care direct tool input with branch leakage", () =>
         fact: {
           kind: "routine_frequency",
           category: "dry_shampoo",
-          frequency: "daily",
+          frequency: "daily_1x",
           evidenceQuote: "I use dry shampoo daily",
         },
         kind: "profile_override",
@@ -230,7 +230,7 @@ test("AgentV2 runtime rejects current-care facts with fabricated evidence quotes
       functionCall("call_1", "set_current_care_context", {
         kind: "routine_frequency",
         category: "dry_shampoo",
-        frequency: "daily",
+        frequency: "daily_1x",
         evidenceQuote: "not in the latest user turn",
       }),
       terminalGeneralAdvice("call_2", {
@@ -370,7 +370,7 @@ test("AgentV2 runtime applies current-turn facts to the same effective context f
     userContext: {
       hairProfile: { thickness: "coarse" },
       routineInventory: [
-        { category: "conditioner", product_name: "Saved", frequency_range: "1_2x" },
+        { category: "conditioner", product_name: "Saved", frequency_range: "weekly_1x" },
       ],
       sessionMemory: [],
     },

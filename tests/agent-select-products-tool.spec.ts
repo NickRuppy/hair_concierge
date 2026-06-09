@@ -1401,7 +1401,7 @@ test("selectProducts recommends conditioner for low-need balanced profile with e
       {
         category: "conditioner",
         product_name: "Current Conditioner",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
     ],
     userJob: "product_pick",
@@ -1473,7 +1473,7 @@ test("selectProducts keeps silicone-free unsupported while still recommending co
       {
         category: "conditioner",
         product_name: "Current Conditioner",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
     ],
     userJob: "product_pick",
@@ -1518,7 +1518,7 @@ test("selectProducts keeps silicone-free unsupported while still recommending sh
       {
         category: "shampoo",
         product_name: "Current Shampoo",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
     ],
     userJob: "product_pick",
@@ -2188,7 +2188,7 @@ test("projectSelectedProducts preserves oil no-recommendation decisions as redir
       category: "oil",
       present: true,
       productName: "Current Oil",
-      frequencyBand: "3_4x",
+      frequencyBand: "weekly_3_4x",
     },
     targetProfile: null,
     clarificationNeeded: false,
@@ -2966,7 +2966,7 @@ test("selectProducts still returns explicit oil products while exposing CareBala
       {
         category: "oil",
         product_name: "Daily Oil",
-        frequency_range: "daily",
+        frequency_range: "daily_1x",
       },
     ],
     userJob: "product_pick",
@@ -2997,7 +2997,7 @@ test("selectProducts preserves supplied effective care context in runtime and ca
     {
       category: "oil",
       product_name: "Daily Oil",
-      frequency_range: "daily",
+      frequency_range: "daily_1x",
     },
   ] as const
   const adapted = adaptRecommendationInputFromPersistence(baseProfile, [...routineItems])
@@ -3012,7 +3012,7 @@ test("selectProducts preserves supplied effective care context in runtime and ca
     {
       kind: "routine_frequency",
       category: "oil",
-      frequencyBand: "daily",
+      frequencyBand: "daily_1x",
       evidenceQuote: "I use oil daily",
       source: "current_turn",
     },
@@ -3373,7 +3373,7 @@ test("selectProducts passes explicit dry-shampoo bridge context into category en
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "oily",
       concerns: ["oily_scalp"],
-      wash_frequency: "every_2_3_days",
+      wash_frequency: "weekly_3_4x",
     } as HairProfile,
     memoryContext: {
       enabled: false,
@@ -3429,7 +3429,7 @@ test("selectProducts redirects message-stated frequent dry-shampoo use instead o
     hairProfile: {
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "oily",
-      wash_frequency: "every_2_3_days",
+      wash_frequency: "weekly_3_4x",
     } as HairProfile,
     memoryContext: {
       enabled: false,
@@ -3480,7 +3480,7 @@ test("selectProducts treats dry-shampoo routine need questions as guidance-only,
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "balanced",
       scalp_condition: null,
-      wash_frequency: "daily",
+      wash_frequency: "daily_1x",
     } as HairProfile,
     memoryContext: {
       enabled: false,
@@ -3536,7 +3536,7 @@ test("selectProducts does not treat oily-root product wording as a dry-shampoo b
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "oily",
       concerns: ["oily_scalp"],
-      wash_frequency: "every_2_3_days",
+      wash_frequency: "weekly_3_4x",
     } as HairProfile,
     memoryContext: {
       enabled: false,

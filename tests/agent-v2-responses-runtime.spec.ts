@@ -1684,11 +1684,11 @@ test("AgentV2 runtime injects profile-grounded answer quality guidance", async (
       hairProfile: {
         hair_texture: "straight",
         thickness: "fine",
-        wash_frequency: "every_2_3_days",
+        wash_frequency: "weekly_3_4x",
         drying_method: "air_dry",
       },
       routineInventory: [],
-      derivedSignals: ["Haardicke: Fein", "Waschrhythmus: Alle 2-3 Tage"],
+      derivedSignals: ["Haardicke: Fein", "Shampoo-Rhythmus: 3-4x/Woche"],
       sessionMemory: [],
     },
     tools: fakeAgentV2Tools(),
@@ -1770,7 +1770,7 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
     recentMessages: [],
     userContext: {
       hairProfile: null,
-      routineInventory: [{ category: "shampoo", product_name: null, frequency_range: "daily" }],
+      routineInventory: [{ category: "shampoo", product_name: null, frequency_range: "daily_1x" }],
       sessionMemory: [],
       careBalanceContext: {
         mode: "production_decision_context",
@@ -1789,7 +1789,7 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
             current_frequency: null,
             cadence_policy: {
               kind: "match_wash_frequency",
-              washFrequency: "daily",
+              washFrequency: "daily_1x",
               expected: "after_every_wash",
             },
             reason_codes: ["conditioner_missing", "dry_lengths"],

@@ -95,10 +95,21 @@ export {
 
 export {
   PRODUCT_FREQUENCIES,
+  PRODUCT_FREQUENCY_METADATA,
   PRODUCT_FREQUENCY_LABELS,
   PRODUCT_FREQUENCY_OPTIONS,
+  normalizeProductFrequency,
+  getProductFrequencyMetadata,
+  compareProductFrequencies,
+  isProductFrequencyAtLeast,
+  chooseHigherProductFrequency,
 } from "./frequencies"
-export type { ProductFrequency } from "./frequencies"
+export type {
+  ProductFrequency,
+  ProductFrequencyInput,
+  ProductFrequencyMetadata,
+  ProductFrequencyComparison,
+} from "./frequencies"
 
 export {
   TOWEL_MATERIALS,

@@ -54,7 +54,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     density: "medium",
     concerns: ["frizz"],
     products_used: null,
-    wash_frequency: "every_2_3_days",
+    wash_frequency: "weekly_3_4x",
     heat_styling: "never",
     styling_tools: [],
     goals: ["less_frizz"],

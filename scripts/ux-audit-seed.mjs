@@ -52,9 +52,9 @@ if (hpErr) console.log("hair_profiles upsert error:", hpErr.message)
 // 3. user_product_usage: three products like mockup
 await admin.from("user_product_usage").delete().eq("user_id", user.id)
 const { error: prErr } = await admin.from("user_product_usage").insert([
-  { user_id: user.id, category: "shampoo", product_name: "Daily Shampoo", frequency_range: "1_2x" },
-  { user_id: user.id, category: "conditioner", product_name: "Curl Conditioner", frequency_range: "1_2x" },
-  { user_id: user.id, category: "dry_shampoo", product_name: "Dry Refresh", frequency_range: "rarely" },
+  { user_id: user.id, category: "shampoo", product_name: "Daily Shampoo", frequency_range: "weekly_1x" },
+  { user_id: user.id, category: "conditioner", product_name: "Curl Conditioner", frequency_range: "weekly_1x" },
+  { user_id: user.id, category: "dry_shampoo", product_name: "Dry Refresh", frequency_range: "less_than_monthly" },
 ])
 if (prErr) console.log("user_product_usage insert error:", prErr.message)
 

@@ -96,7 +96,7 @@ test.describe.serial("@ci Profile page smoke", () => {
       thickness: "fine",
       density: "medium",
       concerns: [],
-      wash_frequency: "once_weekly",
+      wash_frequency: "weekly_1x",
       heat_styling: "once_weekly",
       styling_tools: ["flat_iron"],
       uses_heat_protection: true,
@@ -119,19 +119,19 @@ test.describe.serial("@ci Profile page smoke", () => {
         user_id: userId,
         category: "shampoo",
         product_name: "Daily Shampoo",
-        frequency_range: "1_2x",
+        frequency_range: "weekly_1x",
       },
       {
         user_id: userId,
         category: "conditioner",
         product_name: "Curl Conditioner",
-        frequency_range: "1_2x",
+        frequency_range: "weekly_1x",
       },
       {
         user_id: userId,
         category: "dry_shampoo",
         product_name: "Dry Refresh",
-        frequency_range: "rarely",
+        frequency_range: "less_than_monthly",
       },
     ])
 
@@ -280,11 +280,11 @@ test.describe.serial("@ci Profile page smoke", () => {
     )
     await expect(page.getByText("Dein Shampoo", { exact: false })).toBeVisible()
     await page.locator('input[placeholder="z.B. Produktname oder Marke"]').fill("Edited Shampoo")
-    await page.getByRole("button", { name: "5-6x pro Woche" }).click()
+    await page.getByRole("button", { name: "5-6x/Woche" }).click()
     await page.getByRole("button", { name: "Speichern und zurück zum Profil" }).click()
     await page.waitForURL(/\/profile$/, { timeout: 30000 })
     await expect(page.getByText("Edited Shampoo").first()).toBeVisible()
-    await expect(page.getByText("5-6x pro Woche").first()).toBeVisible()
+    await expect(page.getByText("5-6x/Woche").first()).toBeVisible()
 
     const { data: shampooCleanupRow, error: shampooCleanupError } = await admin
       .from("hair_profiles")
@@ -303,7 +303,7 @@ test.describe.serial("@ci Profile page smoke", () => {
       .single()
 
     if (shampooUsageError) throw shampooUsageError
-    expect(shampooUsageRow?.frequency_range).toBe("5_6x")
+    expect(shampooUsageRow?.frequency_range).toBe("weekly_5_6x")
 
     const towelMaterialCard = page
       .getByRole("button")

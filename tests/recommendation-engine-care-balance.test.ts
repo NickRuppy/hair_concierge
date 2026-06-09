@@ -102,14 +102,14 @@ test("current-turn routine frequency overrides saved routine frequency and recor
     {
       category: "oil",
       product_name: "Light Oil",
-      frequency_range: "rarely",
+      frequency_range: "less_than_monthly",
     },
   ]).input
   const facts: CurrentTurnCareFact[] = [
     {
       kind: "routine_frequency",
       category: "oil",
-      frequencyBand: "daily",
+      frequencyBand: "daily_1x",
       evidenceQuote: "Ich benutze Öl aktuell täglich",
       source: "current_turn",
     },
@@ -117,13 +117,13 @@ test("current-turn routine frequency overrides saved routine frequency and recor
 
   const context = buildEffectiveCareContext(rawInput, facts)
 
-  assert.equal(context.normalized.routineInventory.oil?.frequencyBand, "daily")
+  assert.equal(context.normalized.routineInventory.oil?.frequencyBand, "daily_1x")
   assert.deepEqual(context.currentTurnFacts, facts)
   assert.deepEqual(context.conflicts, [
     {
       fieldPath: "routine.oil.frequency",
-      savedValue: "rarely",
-      currentTurnValue: "daily",
+      savedValue: "less_than_monthly",
+      currentTurnValue: "daily_1x",
       source: "current_turn",
       evidenceQuote: "Ich benutze Öl aktuell täglich",
     },
@@ -143,7 +143,7 @@ test("current-turn routine presence can clear or create a routine item", () => {
     {
       category: "mask",
       product_name: "Weekly Mask",
-      frequency_range: "1_2x",
+      frequency_range: "weekly_1x",
     },
   ]).input
 
@@ -301,12 +301,10 @@ test("buildCareBalanceSet recommends adding missing conditioner for dry tangled 
 })
 
 test("buildCareBalanceSet recommends increasing rare conditioner against 3-4x wash cadence", () => {
-  const rows = buildRows(
-    {
-      wash_frequency: "every_2_3_days",
-    },
-    [{ category: "conditioner", frequency_range: "rarely" }],
-  )
+  const rows = buildRows({}, [
+    { category: "shampoo", frequency_range: "weekly_3_4x" },
+    { category: "conditioner", frequency_range: "less_than_monthly" },
+  ])
 
   assertRecommendation(rows, "conditioner", "increase_frequency")
 })
@@ -316,7 +314,7 @@ test("buildCareBalanceSet recommends decreasing daily oil under buildup and flat
     {
       goals: ["volume"],
     },
-    [{ category: "oil", frequency_range: "daily" }],
+    [{ category: "oil", frequency_range: "daily_1x" }],
     { ...EMPTY_REQUEST_CONTEXT, resetTriggerTerms: ["buildup"], resetTriggerSources: ["symptom"] },
   )
 
@@ -332,7 +330,7 @@ test("buildCareBalanceSet recommends adding absent leave-in for frizz and tangli
 })
 
 test("buildCareBalanceSet recommends decreasing frequent mask under buildup pressure", () => {
-  const rows = buildRows({}, [{ category: "mask", frequency_range: "3_4x" }], {
+  const rows = buildRows({}, [{ category: "mask", frequency_range: "weekly_3_4x" }], {
     ...EMPTY_REQUEST_CONTEXT,
     resetTriggerTerms: ["buildup"],
     resetTriggerSources: ["symptom"],
@@ -369,7 +367,7 @@ test("buildCareBalanceSet recommends increasing rare heat protectant for cumulat
       styling_tools: ["hot_air_brush", "thermal_rollers"],
       uses_heat_protection: true,
     },
-    [{ category: "heat_protectant", frequency_range: "rarely" }],
+    [{ category: "heat_protectant", frequency_range: "less_than_monthly" }],
   )
 
   assertRecommendation(rows, "heat_protectant", "increase_frequency")
@@ -387,7 +385,9 @@ test("buildCareBalanceSet recommends adding absent bondbuilder for high bond pri
 })
 
 test("buildCareBalanceSet recommends decreasing deep-cleansing shampoo at 3-4x use", () => {
-  const rows = buildRows({}, [{ category: "deep_cleansing_shampoo", frequency_range: "3_4x" }])
+  const rows = buildRows({}, [
+    { category: "deep_cleansing_shampoo", frequency_range: "weekly_3_4x" },
+  ])
 
   assertRecommendation(rows, "deep_cleansing_shampoo", "decrease_frequency")
 })
@@ -398,14 +398,14 @@ test("buildCareBalanceSet recommends decreasing weekly deep-cleansing shampoo wi
       concerns: ["dryness"],
       scalp_type: "dry",
     },
-    [{ category: "deep_cleansing_shampoo", frequency_range: "1_2x" }],
+    [{ category: "deep_cleansing_shampoo", frequency_range: "weekly_1x" }],
   )
 
   assertRecommendation(rows, "deep_cleansing_shampoo", "decrease_frequency")
 })
 
 test("buildCareBalanceSet recommends decreasing daily dry shampoo under reset pressure", () => {
-  const rows = buildRows({}, [{ category: "dry_shampoo", frequency_range: "daily" }], {
+  const rows = buildRows({}, [{ category: "dry_shampoo", frequency_range: "daily_1x" }], {
     ...EMPTY_REQUEST_CONTEXT,
     resetTriggerTerms: ["buildup"],
     resetTriggerSources: ["symptom"],
@@ -419,7 +419,7 @@ test("buildCareBalanceSet recommends decreasing peeling when scalp is irritated"
     {
       scalp_condition: "irritated",
     },
-    [{ category: "peeling", frequency_range: "1_2x" }],
+    [{ category: "peeling", frequency_range: "weekly_1x" }],
   )
 
   assertRecommendation(rows, "peeling", "decrease_frequency")
@@ -432,11 +432,11 @@ test("buildCareBalanceSet recommends adding absent shampoo", () => {
 })
 
 test("compareFrequencyBands orders known bands and returns null when either side is unknown", () => {
-  assert.equal(compareFrequencyBands("1_2x", "3_4x"), -1)
-  assert.equal(compareFrequencyBands("3_4x", "3_4x"), 0)
-  assert.equal(compareFrequencyBands("daily", "1_2x"), 1)
-  assert.equal(compareFrequencyBands(null, "1_2x"), null)
-  assert.equal(compareFrequencyBands("1_2x", null), null)
+  assert.equal(compareFrequencyBands("weekly_1x", "weekly_3_4x"), -1)
+  assert.equal(compareFrequencyBands("weekly_3_4x", "weekly_3_4x"), 0)
+  assert.equal(compareFrequencyBands("daily_1x", "weekly_1x"), 1)
+  assert.equal(compareFrequencyBands(null, "weekly_1x"), null)
+  assert.equal(compareFrequencyBands("weekly_1x", null), null)
 })
 
 test("hasDeepCleansingVulnerability reports vulnerable drivers for dry, damaged, textured, or rough profiles", () => {

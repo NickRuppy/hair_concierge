@@ -1,4 +1,6 @@
 import { INVENTORY_CATEGORIES } from "@/lib/recommendation-engine/contracts"
+import { getVisibleProductUsageItems } from "@/lib/product-usage/shampoo-fallback"
+import { normalizeProductFrequency } from "@/lib/vocabulary"
 import type {
   InventoryCategory,
   NormalizedProfile,
@@ -18,13 +20,13 @@ function normalizeRoutineInventory(
 ): RoutineInventory {
   const inventory = createEmptyRoutineInventory()
 
-  for (const item of items) {
+  for (const item of getVisibleProductUsageItems(items)) {
     const category = item.category as InventoryCategory
     const normalizedItem: NormalizedRoutineInventoryItem = {
       category,
       present: true,
       productName: item.product_name?.trim() || null,
-      frequencyBand: item.frequency_range ?? null,
+      frequencyBand: normalizeProductFrequency(item.frequency_range),
     }
 
     inventory[category] = normalizedItem

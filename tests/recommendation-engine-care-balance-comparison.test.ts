@@ -99,7 +99,7 @@ test("runtime side-by-side detects dry shampoo overuse in legacy and CareBalance
   })
   const runtime = buildRecommendationEngineRuntimeFromPersistence(
     LOW_DAMAGE_PROFILE,
-    [{ category: "dry_shampoo", product_name: "Bridge Spray", frequency_range: "daily" }],
+    [{ category: "dry_shampoo", product_name: "Bridge Spray", frequency_range: "daily_1x" }],
     requestContext,
   )
 
@@ -116,7 +116,7 @@ test("runtime side-by-side detects peeling overuse when scalp is irritated", () 
       ...LOW_DAMAGE_PROFILE,
       scalp_condition: "irritated",
     },
-    [{ category: "peeling", product_name: "Scalp Scrub", frequency_range: "1_2x" }],
+    [{ category: "peeling", product_name: "Scalp Scrub", frequency_range: "weekly_1x" }],
   )
 
   assert.ok(hasPlanStep(runtime.plan, "peeling", "decrease_frequency"))
@@ -126,7 +126,7 @@ test("runtime side-by-side detects peeling overuse when scalp is irritated", () 
   )
 })
 
-test("CareBalance projection surfaces 1-2x deep-cleansing vulnerability even when legacy plan lacks it", () => {
+test("CareBalance projection surfaces weekly deep-cleansing vulnerability even when legacy plan lacks it", () => {
   const runtime = buildRecommendationEngineRuntimeFromPersistence(
     {
       ...LOW_DAMAGE_PROFILE,
@@ -137,7 +137,7 @@ test("CareBalance projection surfaces 1-2x deep-cleansing vulnerability even whe
       {
         category: "deep_cleansing_shampoo",
         product_name: "Reset Wash",
-        frequency_range: "1_2x",
+        frequency_range: "weekly_1x",
       },
     ],
   )

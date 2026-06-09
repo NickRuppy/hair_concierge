@@ -3,7 +3,12 @@ import {
   deriveWashFrequencyFromRoutineItems,
   type RoutineInventoryLike,
 } from "@/lib/hair-profile/derived"
-import type { ProductFrequency } from "@/lib/vocabulary"
+import {
+  chooseHigherProductFrequency,
+  normalizeProductFrequency,
+  type ProductFrequency,
+  type ProductFrequencyInput,
+} from "@/lib/vocabulary"
 import type {
   InventoryCategory,
   RawHairProfileInput,
@@ -28,23 +33,19 @@ const CATEGORY_CANONICALIZATION: Record<string, InventoryCategory> = {
   scrub: "peeling",
 }
 
-const PRODUCT_FREQUENCY_RANK: Record<ProductFrequency, number> = {
-  rarely: 0,
-  "1_2x": 1,
-  "3_4x": 2,
-  "5_6x": 3,
-  daily: 4,
-}
-
 export interface PersistenceRoutineItemRow {
   category: string
   product_name: string | null
-  frequency_range: ProductFrequency | null
+  frequency_range: ProductFrequencyInput | string | null
 }
 
 export interface AdaptedRecommendationInput {
   input: RawRecommendationInput
   unsupportedRoutineCategories: string[]
+}
+
+export interface AdaptRecommendationInputOptions {
+  derivedShampooFrequency?: ProductFrequency | null
 }
 
 export function buildRoutineItemsFromInventoryCategories(
@@ -84,10 +85,14 @@ function emptyRawHairProfileInput(): RawHairProfileInput {
 function buildRawHairProfileInput(
   profile: HairProfile | null,
   routineItems: RoutineInventoryLike[],
+  options: AdaptRecommendationInputOptions,
 ): RawHairProfileInput {
   if (!profile) {
     return emptyRawHairProfileInput()
   }
+
+  const derivedWashFrequency = deriveWashFrequencyFromRoutineItems(routineItems)
+  const derivedShampooFrequency = options.derivedShampooFrequency ?? null
 
   return {
     hair_texture: profile.hair_texture,
@@ -95,7 +100,7 @@ function buildRawHairProfileInput(
     density: profile.density,
     concerns: profile.concerns ?? [],
     goals: profile.goals ?? [],
-    wash_frequency: deriveWashFrequencyFromRoutineItems(routineItems, profile.wash_frequency),
+    wash_frequency: derivedWashFrequency ?? derivedShampooFrequency,
     heat_styling: profile.heat_styling,
     styling_tools: profile.styling_tools ?? null,
     cuticle_condition: profile.cuticle_condition,
@@ -122,17 +127,16 @@ function canonicalizeInventoryCategory(category: string): InventoryCategory | nu
 
 function shouldReplaceFrequency(
   current: ProductFrequency | null,
-  incoming: ProductFrequency | null,
+  incoming: ProductFrequencyInput | string | null,
 ): boolean {
-  if (incoming === null) return false
-  if (current === null) return true
-
-  return PRODUCT_FREQUENCY_RANK[incoming] > PRODUCT_FREQUENCY_RANK[current]
+  const normalizedIncoming = normalizeProductFrequency(incoming)
+  return chooseHigherProductFrequency(current, normalizedIncoming) === normalizedIncoming
 }
 
 export function adaptRecommendationInputFromPersistence(
   profile: HairProfile | null,
   routineItems: PersistenceRoutineItemRow[],
+  options: AdaptRecommendationInputOptions = {},
 ): AdaptedRecommendationInput {
   const unsupportedRoutineCategories: string[] = []
   const supportedItems = new Map<
@@ -149,11 +153,12 @@ export function adaptRecommendationInputFromPersistence(
     }
 
     const current = supportedItems.get(canonicalCategory)
+    const frequency = normalizeProductFrequency(item.frequency_range)
     if (!current) {
       supportedItems.set(canonicalCategory, {
         category: canonicalCategory,
         product_name: item.product_name,
-        frequency_range: item.frequency_range,
+        frequency_range: frequency,
       })
       continue
     }
@@ -161,15 +166,15 @@ export function adaptRecommendationInputFromPersistence(
     supportedItems.set(canonicalCategory, {
       category: canonicalCategory,
       product_name: current.product_name ?? item.product_name,
-      frequency_range: shouldReplaceFrequency(current.frequency_range, item.frequency_range)
-        ? item.frequency_range
+      frequency_range: shouldReplaceFrequency(current.frequency_range, frequency)
+        ? frequency
         : current.frequency_range,
     })
   }
 
   return {
     input: {
-      profile: buildRawHairProfileInput(profile, routineItems),
+      profile: buildRawHairProfileInput(profile, routineItems, options),
       routineInventory: [...supportedItems.values()],
     },
     unsupportedRoutineCategories,

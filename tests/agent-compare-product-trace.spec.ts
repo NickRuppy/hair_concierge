@@ -635,8 +635,8 @@ test("compare runner projects full CareBalance context for product traces", asyn
           recommendation: "decrease_frequency",
           primaryStatus: "overuse",
           recommendationStrength: "strong",
-          currentFrequency: "daily",
-          cadencePolicy: { kind: "need_based_support", suggestedBand: "rarely" },
+          currentFrequency: "daily_1x",
+          cadencePolicy: { kind: "need_based_support", suggestedBand: "less_than_monthly" },
           decisiveReasonCodes: ["daily_oil_use"],
           contextReasonCodes: ["flat_hair", "buildup_pressure"],
           selectionHints: [{ code: "prefer_light_oil" }],
@@ -647,7 +647,7 @@ test("compare runner projects full CareBalance context for product traces", asyn
           primaryStatus: "gap",
           recommendationStrength: "moderate",
           currentFrequency: null,
-          cadencePolicy: { kind: "match_wash_frequency", expected: "3_4x" },
+          cadencePolicy: { kind: "match_wash_frequency", expected: "weekly_3_4x" },
           decisiveReasonCodes: ["conditioner_missing"],
           contextReasonCodes: ["dry_lengths"],
           selectionHints: [{ code: "prefer_detangling" }],
@@ -711,14 +711,14 @@ test("compare runner projects full CareBalance context for product traces", asyn
         {
           category: "oil",
           product_name: "Glanz Oel",
-          frequency_range: "daily",
+          frequency_range: "daily_1x",
         },
       ],
     } as never,
   })
 
   assert.equal(routineInput.routineItems?.[0]?.category, "oil")
-  assert.equal(routineInput.routineItems?.[0]?.frequency_range, "daily")
+  assert.equal(routineInput.routineItems?.[0]?.frequency_range, "daily_1x")
 })
 
 test("compare analysis snapshot surfaces compact CareBalance trace details", async () => {
@@ -738,12 +738,12 @@ test("compare analysis snapshot surfaces compact CareBalance trace details", asy
         action: "decrease_frequency",
         status: "overuse",
         strength: "strong",
-        current_frequency: "daily",
-        cadence_policy: { kind: "need_based_support", suggestedBand: "rarely" },
+        current_frequency: "daily_1x",
+        cadence_policy: { kind: "need_based_support", suggestedBand: "less_than_monthly" },
         reason_codes: ["daily_oil_use"],
         context_reason_codes: ["flat_hair", "buildup_pressure"],
         selection_hint_codes: ["prefer_light_oil"],
-        usage_hint: "need_based_support:daily:rarely",
+        usage_hint: "need_based_support:daily_1x:less_than_monthly",
         caveats: ["current_turn_category_decision"],
         authority: {
           product_truth: false,
@@ -775,7 +775,7 @@ test("compare analysis snapshot surfaces compact CareBalance trace details", asy
 
   const display = buildCareBalanceTraceDisplayData(careBalanceContext as never)
   assert.deepEqual(display.rows, [
-    "oil: decrease_frequency | status=overuse | current=daily | reasons=daily_oil_use | hints=prefer_light_oil",
+    "oil: decrease_frequency | status=overuse | current=daily_1x | reasons=daily_oil_use | hints=prefer_light_oil",
   ])
   assert.equal(display.comparison, "old_vs_new: 2 Unterschiede")
   assert.deepEqual(display.currentTurnFacts, ["routine_inventory: Ich nutze Oel taeglich."])
@@ -817,7 +817,7 @@ test("compare analysis snapshot surfaces compact CareBalance trace details", asy
 
   assert.deepEqual(snapshot.results[0]?.care_balance, [
     "rows=1",
-    "oil: decrease_frequency | status=overuse | current=daily | reasons=daily_oil_use | hints=prefer_light_oil",
+    "oil: decrease_frequency | status=overuse | current=daily_1x | reasons=daily_oil_use | hints=prefer_light_oil",
     "old_vs_new: 2 Unterschiede",
     "fact: routine_inventory: Ich nutze Oel taeglich.",
     "conflict: profile.thickness: saved=coarse -> current=fine (Korrektur: eigentlich fein.)",
@@ -906,12 +906,12 @@ test("compare analysis snapshot keeps turn CareBalance separate from final resul
         action: "decrease_frequency",
         status: "overused",
         strength: "high",
-        current_frequency: "daily",
-        cadence_policy: { kind: "need_based_support", suggestedBand: "rarely" },
+        current_frequency: "daily_1x",
+        cadence_policy: { kind: "need_based_support", suggestedBand: "less_than_monthly" },
         reason_codes: ["daily_oil_use"],
         context_reason_codes: [],
         selection_hint_codes: ["prefer_light_oil"],
-        usage_hint: "need_based_support:daily:rarely",
+        usage_hint: "need_based_support:daily_1x:less_than_monthly",
         caveats: ["current_turn_category_decision"],
         authority: {
           product_truth: false,
@@ -975,7 +975,7 @@ test("compare analysis snapshot keeps turn CareBalance separate from final resul
   assert.deepEqual(snapshot.results[0]?.care_balance, [])
   assert.deepEqual(snapshot.results[0]?.turns[0]?.care_balance, [
     "rows=1",
-    "oil: decrease_frequency | status=overused | current=daily | reasons=daily_oil_use | hints=prefer_light_oil",
+    "oil: decrease_frequency | status=overused | current=daily_1x | reasons=daily_oil_use | hints=prefer_light_oil",
   ])
   assert.deepEqual(snapshot.results[0]?.turns[1]?.care_balance, [])
 })
