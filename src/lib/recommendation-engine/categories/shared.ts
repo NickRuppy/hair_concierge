@@ -16,15 +16,7 @@ import type {
 import { buildResetAssessment } from "@/lib/recommendation-engine/assessments/reset"
 import { emptyRecommendationRequestContext } from "@/lib/recommendation-engine/request-context"
 import { deriveLeaveInStylingContextFromStages } from "@/lib/profile/signal-derivations"
-import type { ProductFrequency } from "@/lib/vocabulary"
-
-const PRODUCT_FREQUENCY_RANK: Record<ProductFrequency, number> = {
-  rarely: 0,
-  "1_2x": 1,
-  "3_4x": 2,
-  "5_6x": 3,
-  daily: 4,
-}
+import { isProductFrequencyAtLeast, type ProductFrequency } from "@/lib/vocabulary"
 
 export interface BuildupResetNeed {
   level: "none" | "low" | "moderate" | "high"
@@ -49,8 +41,7 @@ export function isFrequencyAtLeast(
   frequencyBand: ProductFrequency | null,
   threshold: ProductFrequency,
 ): boolean {
-  if (!frequencyBand) return false
-  return PRODUCT_FREQUENCY_RANK[frequencyBand] >= PRODUCT_FREQUENCY_RANK[threshold]
+  return isProductFrequencyAtLeast(frequencyBand, threshold)
 }
 
 export function deriveTargetWeight(profile: NormalizedProfile): CanonicalWeight | null {
@@ -189,7 +180,7 @@ export function mapResetAssessmentToLegacyBuildupNeed(
 }
 
 export function hasBetweenWashBridgeNeed(profile: NormalizedProfile): boolean {
-  const betweenWashDays = profile.washFrequency !== null && profile.washFrequency !== "daily"
+  const betweenWashDays = profile.washFrequency !== null && profile.washFrequency !== "daily_1x"
   const oilyBridgeNeed = profile.scalpType === "oily" || profile.concerns.includes("oily_scalp")
   const currentDryShampooUse = profile.routineInventory.dry_shampoo !== null
 

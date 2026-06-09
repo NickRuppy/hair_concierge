@@ -98,18 +98,7 @@ function row(
 }
 
 function targetConditionerCadence(profile: NormalizedProfile): ProductFrequency | null {
-  switch (profile.washFrequency) {
-    case "daily":
-      return "daily"
-    case "every_2_3_days":
-      return "3_4x"
-    case "once_weekly":
-      return "1_2x"
-    case "rarely":
-      return "rarely"
-    default:
-      return null
-  }
+  return profile.washFrequency
 }
 
 function isAtLeast(frequency: ProductFrequency | null, threshold: ProductFrequency): boolean {
@@ -180,7 +169,7 @@ function evaluateConditioner(input: CareBalanceEvaluationInput): CareBalanceRow 
 
   if (
     item &&
-    item.frequencyBand === "daily" &&
+    item.frequencyBand === "daily_1x" &&
     input.careNeeds.volumeDirection === "volume" &&
     needReasons.length === 0
   ) {
@@ -229,7 +218,7 @@ function evaluateLeaveIn(input: CareBalanceEvaluationInput): CareBalanceRow {
 
 function evaluateMask(input: CareBalanceEvaluationInput): CareBalanceRow {
   const item = getRoutineItem(input.context.normalized, "mask")
-  if (item && isAtLeast(item.frequencyBand, "3_4x") && input.reset.level !== "none") {
+  if (item && isAtLeast(item.frequencyBand, "weekly_3_4x") && input.reset.level !== "none") {
     return row(input, "mask", {
       primaryStatus: "overused",
       recommendation: "decrease_frequency",
@@ -240,7 +229,7 @@ function evaluateMask(input: CareBalanceEvaluationInput): CareBalanceRow {
         kind: "need_based_support",
         supportNeed: input.damage.overallLevel,
         loadSensitive: true,
-        suggestedBand: "1_2x",
+        suggestedBand: "weekly_1x",
       },
     })
   }
@@ -251,7 +240,7 @@ function evaluateMask(input: CareBalanceEvaluationInput): CareBalanceRow {
 function evaluateOil(input: CareBalanceEvaluationInput): CareBalanceRow {
   const item = getRoutineItem(input.context.normalized, "oil")
   if (
-    item?.frequencyBand === "daily" &&
+    item?.frequencyBand === "daily_1x" &&
     (input.reset.level !== "none" || input.careNeeds.volumeDirection === "volume")
   ) {
     return row(input, "oil", {
@@ -267,7 +256,7 @@ function evaluateOil(input: CareBalanceEvaluationInput): CareBalanceRow {
         kind: "need_based_support",
         supportNeed: input.careNeeds.hydrationNeed,
         loadSensitive: true,
-        suggestedBand: "1_2x",
+        suggestedBand: "weekly_1x",
       },
     })
   }
@@ -298,7 +287,7 @@ function evaluateHeatProtectant(input: CareBalanceEvaluationInput): CareBalanceR
   if (
     item &&
     heat.tier === "high_cumulative" &&
-    compareFrequencyBands(item.frequencyBand, "3_4x") === -1
+    compareFrequencyBands(item.frequencyBand, "weekly_3_4x") === -1
   ) {
     return row(input, "heat_protectant", {
       primaryStatus: "underused",
@@ -338,7 +327,7 @@ function evaluateBondbuilder(input: CareBalanceEvaluationInput): CareBalanceRow 
       cadencePolicy: {
         kind: "protocol_based",
         priority: input.damage.bondBuilderPriority,
-        suggestedBand: "1_2x",
+        suggestedBand: "weekly_1x",
       },
     })
   }
@@ -351,7 +340,7 @@ function evaluateDeepCleansingShampoo(input: CareBalanceEvaluationInput): CareBa
   const item = getRoutineItem(profile, "deep_cleansing_shampoo")
   const vulnerability = hasDeepCleansingVulnerability(profile, input.damage)
 
-  if (item && isAtLeast(item.frequencyBand, "3_4x")) {
+  if (item && isAtLeast(item.frequencyBand, "weekly_3_4x")) {
     return row(input, "deep_cleansing_shampoo", {
       primaryStatus: "overused",
       recommendation: "decrease_frequency",
@@ -361,13 +350,13 @@ function evaluateDeepCleansingShampoo(input: CareBalanceEvaluationInput): CareBa
       cadencePolicy: {
         kind: "occasional_reset",
         resetNeed: input.reset.level,
-        cautionAtOrAbove: "3_4x",
-        vulnerableCautionAtOrAbove: "1_2x",
+        cautionAtOrAbove: "weekly_3_4x",
+        vulnerableCautionAtOrAbove: "weekly_1x",
       },
     })
   }
 
-  if (item?.frequencyBand === "1_2x" && vulnerability.vulnerable) {
+  if (item?.frequencyBand === "weekly_1x" && vulnerability.vulnerable) {
     return row(input, "deep_cleansing_shampoo", {
       primaryStatus: "safety_caution",
       recommendation: "decrease_frequency",
@@ -376,8 +365,8 @@ function evaluateDeepCleansingShampoo(input: CareBalanceEvaluationInput): CareBa
       cadencePolicy: {
         kind: "occasional_reset",
         resetNeed: input.reset.level,
-        cautionAtOrAbove: "3_4x",
-        vulnerableCautionAtOrAbove: "1_2x",
+        cautionAtOrAbove: "weekly_3_4x",
+        vulnerableCautionAtOrAbove: "weekly_1x",
       },
     })
   }
@@ -387,15 +376,15 @@ function evaluateDeepCleansingShampoo(input: CareBalanceEvaluationInput): CareBa
     cadencePolicy: {
       kind: "occasional_reset",
       resetNeed: input.reset.level,
-      cautionAtOrAbove: "3_4x",
-      vulnerableCautionAtOrAbove: "1_2x",
+      cautionAtOrAbove: "weekly_3_4x",
+      vulnerableCautionAtOrAbove: "weekly_1x",
     },
   })
 }
 
 function evaluateDryShampoo(input: CareBalanceEvaluationInput): CareBalanceRow {
   const item = getRoutineItem(input.context.normalized, "dry_shampoo")
-  if (item?.frequencyBand === "daily" && input.reset.level !== "none") {
+  if (item?.frequencyBand === "daily_1x" && input.reset.level !== "none") {
     return row(input, "dry_shampoo", {
       primaryStatus: "overused",
       recommendation: "decrease_frequency",
@@ -425,8 +414,8 @@ function evaluatePeeling(input: CareBalanceEvaluationInput): CareBalanceRow {
       cadencePolicy: {
         kind: "occasional_reset",
         resetNeed: input.reset.level,
-        cautionAtOrAbove: "3_4x",
-        vulnerableCautionAtOrAbove: "1_2x",
+        cautionAtOrAbove: "weekly_3_4x",
+        vulnerableCautionAtOrAbove: "weekly_1x",
       },
     })
   }

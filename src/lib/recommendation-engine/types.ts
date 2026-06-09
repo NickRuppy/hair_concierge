@@ -127,6 +127,7 @@ export interface RawHairProfileInput {
   density: HairDensity | null
   concerns: ProfileConcern[]
   goals: Goal[]
+  // Phase 1 compatibility name; sourced from user_product_usage(category='shampoo').
   wash_frequency: WashFrequency | null
   heat_styling: HeatStyling | null
   styling_tools: StylingTool[] | null
@@ -163,6 +164,7 @@ export interface NormalizedProfile {
   density: HairDensity | null
   concerns: ProfileConcern[]
   goals: Goal[]
+  // Phase 1 compatibility name; sourced from user_product_usage(category='shampoo').
   washFrequency: WashFrequency | null
   heatStyling: HeatStyling | null
   stylingTools: StylingTool[] | null

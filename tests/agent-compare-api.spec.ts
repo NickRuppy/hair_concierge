@@ -61,7 +61,7 @@ test("GET returns eligible users and an optional selected-user snapshot in devel
           user_id: userId,
           derived_signals: ["Haardicke: Fein"],
           routine_inventory: [
-            { category: "shampoo", product_name: "Soft Wash", frequency_range: "2_3x" },
+            { category: "shampoo", product_name: "Soft Wash", frequency_range: "weekly_2x" },
           ],
           relevant_memory: [
             { id: "memory-1", kind: "preference", content: "Routine soll einfach sein." },
@@ -974,7 +974,7 @@ test("judgment POST accepts a valid compare record in development", async () =>
           user_id: "user-42",
           derived_signals: ["Haardicke: Fein"],
           routine_inventory: [
-            { category: "conditioner", product_name: "Soft Care", frequency_range: "2_3x" },
+            { category: "conditioner", product_name: "Soft Care", frequency_range: "weekly_2x" },
           ],
           relevant_memory: [
             { id: "memory-1", kind: "preference", content: "Routine soll einfach sein." },

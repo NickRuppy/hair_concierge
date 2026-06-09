@@ -5,6 +5,7 @@ import {
   SCALP_CONDITION_LABELS,
   SCALP_TYPE_LABELS,
   WASH_FREQUENCY_LABELS,
+  isProductFrequencyAtLeast,
 } from "@/lib/vocabulary"
 import { CONDITIONER_REPAIR_LEVEL_LABELS } from "@/lib/conditioner/constants"
 import {
@@ -273,7 +274,7 @@ function getBaseRoutineTopicId(profile: HairProfile | null): RoutineTopicId | nu
 }
 
 function hasBetweenWashDays(washFrequency: HairProfile["wash_frequency"]): boolean {
-  return washFrequency !== null && washFrequency !== "daily"
+  return washFrequency !== null && washFrequency !== "daily_1x"
 }
 
 function getCombinedRoutineText(profile: HairProfile | null, normalizedMessage: string): string {
@@ -476,7 +477,7 @@ function hasOilWeightRisk(profile: HairProfile | null): boolean {
 }
 
 function hasFrequentWashNeed(washFrequency: HairProfile["wash_frequency"]): boolean {
-  return washFrequency === "daily" || washFrequency === "every_2_3_days"
+  return isProductFrequencyAtLeast(washFrequency, "weekly_3_4x")
 }
 
 function hasMechanicalStressNeed(profile: HairProfile | null): boolean {

@@ -343,7 +343,7 @@ test("compare scenarios include care balance golden eval coverage", () => {
   const dailyOil = byId.get("care-balance-daily-oil-flat-buildup")
   assert.equal(
     dailyOil?.routine_inventory?.find((item) => item.category === "oil")?.frequency_range,
-    "daily",
+    "daily_1x",
   )
   assert.ok(dailyOil?.hair_profile.concerns?.includes("oily_scalp"))
   assert.match(dailyOil?.message ?? "", /Oel|Build-up/i)
@@ -360,12 +360,12 @@ test("compare scenarios include care balance golden eval coverage", () => {
   assert.equal(
     rareConditioner?.routine_inventory?.find((item) => item.category === "conditioner")
       ?.frequency_range,
-    "1_2x",
+    "weekly_1x",
   )
   assert.equal(
     rareConditioner?.routine_inventory?.find((item) => item.category === "shampoo")
       ?.frequency_range,
-    "3_4x",
+    "weekly_3_4x",
   )
 
   const blowDryerOnly = byId.get("care-balance-blow-dryer-heat-protection")
@@ -385,7 +385,7 @@ test("compare scenarios include care balance golden eval coverage", () => {
   assert.equal(
     deepCleanse?.routine_inventory?.find((item) => item.category === "deep_cleansing_shampoo")
       ?.frequency_range,
-    "1_2x",
+    "weekly_1x",
   )
   assert.equal(deepCleanse?.hair_profile.hair_texture, "curly")
   assert.ok(deepCleanse?.hair_profile.chemical_treatment?.includes("colored"))
@@ -394,7 +394,7 @@ test("compare scenarios include care balance golden eval coverage", () => {
   const dryShampoo = byId.get("care-balance-daily-dry-shampoo-replacement")
   assert.equal(
     dryShampoo?.routine_inventory?.find((item) => item.category === "dry_shampoo")?.frequency_range,
-    "daily",
+    "daily_1x",
   )
   assert.match(dryShampoo?.message ?? "", /statt Waschen|Waschen ersetzen/i)
 

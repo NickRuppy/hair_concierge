@@ -19,7 +19,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     density: "medium",
     concerns: [],
     products_used: null,
-    wash_frequency: "every_2_3_days",
+    wash_frequency: "weekly_3_4x",
     heat_styling: "never",
     styling_tools: [],
     goals: [],
@@ -1164,7 +1164,7 @@ test.describe("Routine planner", () => {
       const plan = buildRoutinePlan(
         createProfile({
           hair_texture: "curly",
-          wash_frequency: "every_2_3_days",
+          wash_frequency: "weekly_3_4x",
         }),
         "Brauche ich eine Spruehflasche fuer meinen Lockenrefresh?",
       )

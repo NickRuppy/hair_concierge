@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { hydrateHairProfileForConsumers } from "../src/lib/hair-profile/derived"
+import { UNSELECTED_SHAMPOO_PRODUCT_NAME } from "../src/lib/product-usage/shampoo-fallback"
 import type { HairProfile } from "../src/lib/types"
 
 function makeProfile(overrides: Partial<HairProfile> = {}): HairProfile {
@@ -44,12 +45,12 @@ test("hydrates derived routine categories and products_used from user_product_us
     {
       category: "conditioner",
       product_name: "Soft Conditioner",
-      frequency_range: "1_2x",
+      frequency_range: "weekly_2x",
     },
     {
       category: "leave_in",
       product_name: "Curl Cream",
-      frequency_range: "rarely",
+      frequency_range: "less_than_monthly",
     },
   ])
 
@@ -58,15 +59,76 @@ test("hydrates derived routine categories and products_used from user_product_us
   assert.match(hydrated?.products_used ?? "", /Leave-in: Curl Cream/)
 })
 
-test("hydrates wash frequency from shampoo routine items without a persisted mirror", () => {
+test("hydrates wash cadence from shampoo product usage", () => {
   const hydrated = hydrateHairProfileForConsumers(makeProfile({ wash_frequency: null }), [
     {
       category: "shampoo",
       product_name: "Daily Shampoo",
-      frequency_range: "3_4x",
+      frequency_range: "weekly_3_4x",
     },
   ])
 
-  assert.equal(hydrated?.wash_frequency, "every_2_3_days")
+  assert.equal(hydrated?.wash_frequency, "weekly_3_4x")
   assert.deepEqual(hydrated?.current_routine_products, ["shampoo"])
+})
+
+test("uses the highest shampoo cadence when duplicate shampoo rows exist", () => {
+  const hydrated = hydrateHairProfileForConsumers(makeProfile({ wash_frequency: null }), [
+    {
+      category: "shampoo",
+      product_name: "Occasional Shampoo",
+      frequency_range: "weekly_1x",
+    },
+    {
+      category: "shampoo",
+      product_name: "Main Shampoo",
+      frequency_range: "weekly_5_6x",
+    },
+  ])
+
+  assert.equal(hydrated?.wash_frequency, "weekly_5_6x")
+})
+
+test("uses unselected shampoo fallback for cadence without selected routine product display", () => {
+  const hydrated = hydrateHairProfileForConsumers(
+    makeProfile({
+      wash_frequency: null,
+      current_routine_products: ["shampoo"],
+      products_used: "Shampoo: Legacy",
+    }),
+    [
+      {
+        category: "shampoo",
+        product_name: UNSELECTED_SHAMPOO_PRODUCT_NAME,
+        frequency_range: "less_than_monthly",
+      },
+    ],
+  )
+
+  assert.equal(hydrated?.wash_frequency, "less_than_monthly")
+  assert.equal(hydrated?.current_routine_products, null)
+  assert.equal(hydrated?.products_used, null)
+})
+
+test("keeps real unnamed less-than-monthly shampoo visible", () => {
+  const hydrated = hydrateHairProfileForConsumers(makeProfile({ wash_frequency: null }), [
+    {
+      category: "shampoo",
+      product_name: null,
+      frequency_range: "less_than_monthly",
+    },
+  ])
+
+  assert.equal(hydrated?.wash_frequency, "less_than_monthly")
+  assert.deepEqual(hydrated?.current_routine_products, ["shampoo"])
+  assert.equal(hydrated?.products_used, "Shampoo")
+})
+
+test("does not infer shampoo frequency from deprecated profile wash_frequency", () => {
+  const hydrated = hydrateHairProfileForConsumers(
+    makeProfile({ wash_frequency: "daily_1x" as never }),
+    [],
+  )
+
+  assert.equal(hydrated?.wash_frequency, null)
 })

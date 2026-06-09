@@ -6,6 +6,7 @@ import {
   buildUserContextProjection,
   assertHairProfileQuerySucceeded,
 } from "../src/lib/agent/tools/get-user-context"
+import { UNSELECTED_SHAMPOO_PRODUCT_NAME } from "../src/lib/product-usage/shampoo-fallback"
 
 function makeProfile(overrides: Partial<HairProfile> = {}): HairProfile {
   return {
@@ -16,7 +17,7 @@ function makeProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     density: null,
     concerns: [],
     products_used: null,
-    wash_frequency: "every_2_3_days",
+    wash_frequency: "weekly_3_4x",
     heat_styling: null,
     styling_tools: null,
     goals: [],
@@ -106,7 +107,7 @@ test("buildUserContextProjection exposes visible profile signals for response fr
       protein_moisture_balance: "stretches_stays",
       concerns: ["oily_scalp", "dryness", "frizz"],
       scalp_type: "oily",
-      wash_frequency: "every_2_3_days",
+      wash_frequency: "weekly_3_4x",
       current_routine_products: ["shampoo", "conditioner"],
     }),
     routineItems: [],
@@ -117,7 +118,35 @@ test("buildUserContextProjection exposes visible profile signals for response fr
   assert.ok(projection.derived_signals.includes("Trockene Längen"))
   assert.ok(projection.derived_signals.includes("Frizzige Längen"))
   assert.ok(projection.derived_signals.includes("Protein-/Feuchtigkeitsbalance: Proteinmangel"))
+  assert.ok(projection.derived_signals.includes("Shampoo-Rhythmus: 3-4x/Woche"))
   assert.ok(projection.derived_signals.includes("Aktuelle Routine: Shampoo, Conditioner"))
+})
+
+test("buildUserContextProjection hides unselected shampoo fallback from routine inventory", () => {
+  const projection = buildUserContextProjection({
+    hairProfile: makeProfile({ wash_frequency: "less_than_monthly" }),
+    routineItems: [
+      {
+        category: "shampoo",
+        product_name: UNSELECTED_SHAMPOO_PRODUCT_NAME,
+        frequency_range: "less_than_monthly",
+      },
+      {
+        category: "conditioner",
+        product_name: "Soft Conditioner",
+        frequency_range: "weekly_2x",
+      },
+    ],
+    memoryEntries: [],
+  })
+
+  assert.deepEqual(projection.routine_inventory, [
+    {
+      category: "conditioner",
+      product_name: "Soft Conditioner",
+      frequency_range: "weekly_2x",
+    },
+  ])
 })
 
 test("buildUserContextProjection surfaces missing profile fields", () => {

@@ -4,6 +4,7 @@ import {
   hydrateHairProfileForConsumers,
   type RoutineInventoryLike,
 } from "@/lib/hair-profile/derived"
+import { getVisibleProductUsageItems } from "@/lib/product-usage/shampoo-fallback"
 import { loadRoutineItemsForEngine } from "@/lib/recommendation-engine"
 import { loadUserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import {
@@ -18,7 +19,7 @@ import type { GuidanceId } from "@/lib/agent/contracts"
 
 export interface MissingProfileField {
   key: "hair_texture" | "wash_frequency"
-  label: "Haarmuster" | "Waschfrequenz"
+  label: "Haarmuster" | "Shampoo-Rhythmus"
   blocking: false
 }
 
@@ -111,7 +112,7 @@ function deriveVisibleSignals(hairProfile: HairProfile | null): string[] {
 
   if (hairProfile?.wash_frequency) {
     signals.push(
-      `Waschrhythmus: ${WASH_FREQUENCY_LABELS[hairProfile.wash_frequency] ?? hairProfile.wash_frequency}`,
+      `Shampoo-Rhythmus: ${WASH_FREQUENCY_LABELS[hairProfile.wash_frequency] ?? hairProfile.wash_frequency}`,
     )
   }
 
@@ -253,7 +254,7 @@ function deriveMissingProfileFields(hairProfile: HairProfile | null): MissingPro
   }
 
   if (!hairProfile?.wash_frequency) {
-    missing.push({ key: "wash_frequency", label: "Waschfrequenz", blocking: false })
+    missing.push({ key: "wash_frequency", label: "Shampoo-Rhythmus", blocking: false })
   }
 
   return missing
@@ -279,7 +280,7 @@ export function buildUserContextProjection(params: {
 
   return {
     profile: params.hairProfile,
-    routine_inventory: params.routineItems,
+    routine_inventory: getVisibleProductUsageItems(params.routineItems),
     relevant_memory: relevantMemory,
     derived_signals: deriveVisibleSignals(params.hairProfile),
     suggested_overlays: deriveSuggestedOverlays(params.hairProfile, relevantMemory),

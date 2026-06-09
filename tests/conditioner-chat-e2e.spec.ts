@@ -284,7 +284,7 @@ test.describe.serial("Conditioner chat E2E", () => {
         density: "low",
         concerns: [],
         products_used: null,
-        wash_frequency: "every_2_3_days",
+        wash_frequency: "weekly_3_4x",
         heat_styling: "rarely",
         styling_tools: [],
         goals: ["shine"],
@@ -307,7 +307,7 @@ test.describe.serial("Conditioner chat E2E", () => {
       user_id: currentUserId,
       category: "conditioner",
       product_name: "Conditioner",
-      frequency_range: "1_2x",
+      frequency_range: "weekly_1x",
     })
 
     if (usageError) throw usageError
@@ -369,7 +369,7 @@ test.describe.serial("Conditioner chat E2E", () => {
         density: null,
         concerns: [],
         products_used: null,
-        wash_frequency: "every_2_3_days",
+        wash_frequency: "weekly_3_4x",
         heat_styling: "rarely",
         styling_tools: [],
         goals: ["shine"],
@@ -392,7 +392,7 @@ test.describe.serial("Conditioner chat E2E", () => {
       user_id: currentUserId,
       category: "conditioner",
       product_name: "Conditioner",
-      frequency_range: "1_2x",
+      frequency_range: "weekly_1x",
     })
 
     if (usageError) throw usageError

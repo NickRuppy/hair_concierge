@@ -40,7 +40,7 @@ test("projectCompareUserSnapshot keeps profile, routine, and memory visible for 
       {
         category: "conditioner",
         product_name: "Soft Conditioner",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
     ],
     relevantMemory: [{ id: "m1", kind: "preference", content: "Bitte einfache Routine." }] as never,

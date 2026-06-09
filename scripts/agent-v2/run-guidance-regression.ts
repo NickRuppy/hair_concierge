@@ -78,8 +78,8 @@ type GuidanceMigrationReport = {
 const FIXTURE_PATH = "data/agent-v2/evals/guidance-migration-regression.json"
 const ALLOW_FAILURES_FLAG = "--allow-failures"
 const DEFAULT_ROUTINE_INVENTORY = [
-  { category: "shampoo", product_name: "Mildes Shampoo", frequency_range: "3_4x" },
-  { category: "conditioner", product_name: "Leichte Spuelung", frequency_range: "3_4x" },
+  { category: "shampoo", product_name: "Mildes Shampoo", frequency_range: "weekly_3_4x" },
+  { category: "conditioner", product_name: "Leichte Spuelung", frequency_range: "weekly_3_4x" },
 ] as const
 
 function loadLocalEnv() {
@@ -222,7 +222,7 @@ function parseFixture(rawFixture: string): GuidanceMigrationRegressionFixture {
         concerns: ["dryness", "frizz"],
         goals: ["less_frizz", "shine", "moisture"],
         chemical_treatment: ["colored"],
-        wash_frequency: "every_2_3_days",
+        wash_frequency: "weekly_3_4x",
         drying_method: "air_dry",
         heat_styling: "rarely",
         protein_moisture_balance: "stretches_bounces",

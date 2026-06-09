@@ -47,6 +47,11 @@ import type {
   ProfileAugmentField,
   ProfileOverrideField,
 } from "@/lib/recommendation-engine/types"
+import {
+  getVisibleProductUsageItems,
+  type ProductUsageFrequencyLike,
+} from "@/lib/product-usage/shampoo-fallback"
+import { normalizeProductFrequency } from "@/lib/vocabulary"
 
 type AgentV2ToolName =
   | "classify_turn_gate"
@@ -975,13 +980,39 @@ function compactUserContextForModel(userContext: AgentV2RuntimeUserContext) {
   return {
     profile: userContext.hairProfile,
     derived_signals: userContext.derivedSignals ?? [],
-    routine_inventory: userContext.routineInventory,
+    routine_inventory: compactRoutineInventoryForModel(userContext.routineInventory),
     relevant_memory: (userContext.relevantMemory ?? []).slice(0, 6).map((entry) => ({
       kind: entry.kind ?? "unknown",
       content: String(entry.content ?? "").slice(0, 500),
     })),
     missing_profile: userContext.missingProfile ?? [],
   }
+}
+
+function compactRoutineInventoryForModel(items: unknown[]): unknown[] {
+  const productUsageItems: ProductUsageFrequencyLike[] = []
+  const passthroughItems: unknown[] = []
+
+  for (const item of items) {
+    if (isProductUsageFrequencyLike(item)) {
+      productUsageItems.push(item)
+    } else {
+      passthroughItems.push(item)
+    }
+  }
+
+  return [...getVisibleProductUsageItems(productUsageItems), ...passthroughItems]
+}
+
+function isProductUsageFrequencyLike(item: unknown): item is ProductUsageFrequencyLike {
+  if (!item || typeof item !== "object") return false
+
+  const record = item as Record<string, unknown>
+  return (
+    typeof record.category === "string" &&
+    (typeof record.product_name === "string" || record.product_name === null) &&
+    (typeof record.frequency_range === "string" || record.frequency_range === null)
+  )
 }
 
 function compactSurfacedProductFactsForModel(
@@ -1320,9 +1351,16 @@ function buildEffectiveCareContextForTurn(
   userContext: AgentV2RuntimeUserContext,
   facts: readonly CurrentTurnCareFact[],
 ): EffectiveCareContext {
+  const hairProfileRecord =
+    userContext.hairProfile && typeof userContext.hairProfile === "object"
+      ? (userContext.hairProfile as { wash_frequency?: string | null })
+      : null
   const adapted = adaptRecommendationInputFromPersistence(
     userContext.hairProfile as never,
     Array.isArray(userContext.routineInventory) ? (userContext.routineInventory as never[]) : [],
+    {
+      derivedShampooFrequency: normalizeProductFrequency(hairProfileRecord?.wash_frequency),
+    },
   )
   return buildEffectiveCareContext(adapted.input, [...facts])
 }
@@ -1451,7 +1489,7 @@ function buildAnswerQualityGuidance(): string {
   return [
     "AgentV2 answer quality guidance.",
     "Use 2-3 materially relevant profile facts when they affect the answer, such as hair texture, thickness, wash rhythm, drying method, heat/styling behavior, scalp, current routine, goals, or concerns.",
-    "When you give frequency or usage cadence and it is based on profile context, name the anchor plainly, for example: Bei deinem Waschrhythmus alle 2-3 Tage.",
+    "When you give frequency or usage cadence and it is based on profile context, name the anchor plainly, for example: Bei deinem Shampoo-Rhythmus 3-4x/Woche.",
     "Do not invent a user preference. Do not say the user wants an easy/minimal/simple routine unless the latest message, recent context, memory, or profile explicitly says that.",
     "If convenience is only a product property, phrase it as product-level convenience, such as unkompliziert in der Anwendung, not as a stored user preference.",
     "Use a calm answer shape: direct answer first, one short profile-linked why, then compact steps or options only when useful.",

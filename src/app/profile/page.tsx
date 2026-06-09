@@ -16,6 +16,7 @@ import { ManageSubscriptionButton } from "@/components/profile/manage-subscripti
 import { formatBillingDate, formatBillingMembershipStatus } from "@/lib/billing/display"
 import { findVisibleBillingSubscriptionForUser } from "@/lib/billing/subscriptions"
 import type { BillingSubscriptionRow } from "@/lib/billing/types"
+import { getVisibleProductUsageItems } from "@/lib/product-usage/shampoo-fallback"
 import { PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
 import type { OnboardingStep } from "@/lib/onboarding/store"
 import {
@@ -37,7 +38,12 @@ import {
   SCALP_CONDITION_LABELS,
   SCALP_TYPE_LABELS,
 } from "@/lib/types"
-import { PRODUCT_FREQUENCY_LABELS, type ProductFrequency, fehler } from "@/lib/vocabulary"
+import {
+  PRODUCT_FREQUENCY_LABELS,
+  fehler,
+  normalizeProductFrequency,
+  type ProductFrequencyInput,
+} from "@/lib/vocabulary"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
@@ -51,7 +57,7 @@ type UserProductUsageRow = {
   id: string
   category: string
   product_name: string | null
-  frequency_range: ProductFrequency | null
+  frequency_range: ProductFrequencyInput | string | null
 }
 
 type StructuredField = ProfileFieldConfig & { value: ProfileFieldValue }
@@ -197,7 +203,7 @@ function createLocalHairProfile(
     density: currentProfile?.density ?? null,
     concerns: currentProfile?.concerns ?? [],
     products_used: currentProfile?.products_used ?? null,
-    wash_frequency: currentProfile?.wash_frequency ?? null,
+    wash_frequency: null,
     heat_styling: currentProfile?.heat_styling ?? null,
     styling_tools: currentProfile?.styling_tools ?? null,
     goals: currentProfile?.goals ?? [],
@@ -257,7 +263,7 @@ function formatNullableDate(value: string | null | undefined): string {
 }
 
 function createProductRows(rows: UserProductUsageRow[]): ProductDetailRow[] {
-  return [...rows]
+  return getVisibleProductUsageItems(rows)
     .sort((left, right) => {
       const leftIndex = PRODUCT_ORDER_INDEX.get(left.category) ?? Number.MAX_SAFE_INTEGER
       const rightIndex = PRODUCT_ORDER_INDEX.get(right.category) ?? Number.MAX_SAFE_INTEGER
@@ -265,9 +271,8 @@ function createProductRows(rows: UserProductUsageRow[]): ProductDetailRow[] {
     })
     .map((row) => {
       const productName = row.product_name?.trim() || null
-      const frequencyLabel = row.frequency_range
-        ? PRODUCT_FREQUENCY_LABELS[row.frequency_range]
-        : null
+      const frequency = normalizeProductFrequency(row.frequency_range)
+      const frequencyLabel = frequency ? PRODUCT_FREQUENCY_LABELS[frequency] : null
 
       return {
         key: row.id,

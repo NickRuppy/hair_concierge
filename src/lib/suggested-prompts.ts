@@ -132,7 +132,7 @@ function buildScalpPrompt(profile: HairProfile): SuggestedPrompt {
   if (
     profile.scalp_type === "oily" ||
     hasConcern(profile, "oily_scalp") ||
-    profile.wash_frequency === "daily"
+    profile.wash_frequency === "daily_1x"
   ) {
     return {
       text: "Welches Shampoo passt zu meinem schnell fettenden Ansatz?",

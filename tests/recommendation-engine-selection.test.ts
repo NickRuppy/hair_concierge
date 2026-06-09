@@ -146,7 +146,7 @@ test("engine conditioner reranking softly prefers lighter fits under CareBalance
     {
       category: "conditioner",
       product_name: "Rich Conditioner",
-      frequency_range: "daily",
+      frequency_range: "daily_1x",
     },
   ])
   const decision = runtime.categories.conditioner
@@ -190,13 +190,13 @@ test("engine conditioner reranking does not use CareBalance label without load-p
     thickness: "normal" as const,
     density: "medium" as const,
     goals: ["volume"] as HairProfile["goals"],
-    wash_frequency: "once_weekly" as const,
+    wash_frequency: "weekly_1x" as const,
   }
   const runtime = buildRecommendationEngineRuntimeFromPersistence(profile, [
     {
       category: "conditioner",
       product_name: "Light Conditioner",
-      frequency_range: "1_2x",
+      frequency_range: "weekly_1x",
     },
   ])
   const decision = runtime.categories.conditioner
@@ -1402,7 +1402,7 @@ test("engine oil reranking softly prefers light non-heavy oil when CareBalance f
   })
   const runtime = buildRecommendationEngineRuntimeFromPersistence(
     profile,
-    [{ category: "oil", product_name: "Daily Oil", frequency_range: "daily" }],
+    [{ category: "oil", product_name: "Daily Oil", frequency_range: "daily_1x" }],
     requestContext,
   )
   const decision = runtime.categories.oil
@@ -1453,7 +1453,7 @@ test("engine keeps explicit overload-risk oil requests product-addressable with 
       scalp_type: "oily",
       goals: ["volume"],
     },
-    [{ category: "oil", product_name: "Daily Oil", frequency_range: "daily" }],
+    [{ category: "oil", product_name: "Daily Oil", frequency_range: "daily_1x" }],
     requestContext,
   )
 
@@ -2095,7 +2095,7 @@ test("engine deep-cleansing shampoo reranking softly prefers gentle color-safe r
     {
       category: "deep_cleansing_shampoo",
       product_name: "Reset Shampoo",
-      frequency_range: "1_2x",
+      frequency_range: "weekly_1x",
     },
   ])
   const decision: DeepCleansingShampooCategoryDecision = {
@@ -2407,12 +2407,12 @@ test("engine selectors keep baseline conditioner active when shared engine is ot
     {
       category: "shampoo",
       product_name: "Gentle Shampoo",
-      frequency_range: "3_4x",
+      frequency_range: "weekly_3_4x",
     },
     {
       category: "conditioner",
       product_name: "Daily Conditioner",
-      frequency_range: "3_4x",
+      frequency_range: "weekly_3_4x",
     },
   ])
 

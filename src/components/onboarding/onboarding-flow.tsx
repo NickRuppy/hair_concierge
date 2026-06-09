@@ -7,13 +7,18 @@ import { createClient } from "@/lib/supabase/client"
 import { useOnboardingStore } from "@/lib/onboarding/store"
 import type { OnboardingEditScope, OnboardingStep } from "@/lib/onboarding/store"
 import { shouldHydrateStoredHeatProtection } from "@/lib/onboarding/heat-protection-hydration"
+import { buildProductUsagePayloads } from "@/lib/onboarding/product-usage-save"
+import {
+  isUnselectedShampooFallbackItem,
+  SHAMPOO_CATEGORY,
+} from "@/lib/product-usage/shampoo-fallback"
 import { OnboardingProgressBar } from "@/components/onboarding/onboarding-progress-bar"
 import {
   BASIC_PRODUCT_OPTIONS,
   EXTRA_PRODUCT_OPTIONS,
   PRODUCT_CATEGORY_LABELS,
 } from "@/lib/onboarding/product-options"
-import type { ProductFrequency } from "@/lib/vocabulary"
+import { normalizeProductFrequency, type ProductFrequency } from "@/lib/vocabulary"
 import type { HeatStyling } from "@/lib/vocabulary"
 
 // Import all screens
@@ -274,13 +279,26 @@ export function OnboardingFlow({
 
       for (const row of productUsage) {
         const cat = row.category as string
+        const productName = typeof row.product_name === "string" ? row.product_name : null
+        const frequency = normalizeProductFrequency((row.frequency_range as string | null) ?? null)
+
+        if (
+          isUnselectedShampooFallbackItem({
+            category: cat,
+            product_name: productName,
+            frequency_range: frequency,
+          })
+        ) {
+          continue
+        }
+
         if (basicValues.includes(cat)) basics.push(cat)
         else if (extraValues.includes(cat)) extras.push(cat)
 
         if (row.product_name || row.frequency_range) {
           store.setProductDrilldown(cat, {
-            productName: (row.product_name as string) ?? "",
-            frequency: (row.frequency_range as ProductFrequency) ?? null,
+            productName: productName ?? "",
+            frequency,
           })
         }
       }
@@ -338,21 +356,23 @@ export function OnboardingFlow({
         ]),
       )
 
-      // Upsert selected categories
-      for (const cat of categories) {
-        const drilldown = drilldowns[cat]
+      const payloads = buildProductUsagePayloads({
+        selectedCategories: categories,
+        drilldowns,
+      })
+
+      // Upsert selected categories plus the canonical shampoo fallback row.
+      for (const usagePayload of payloads) {
         const payload = {
           user_id: userId,
-          category: cat,
-          product_name: drilldown?.productName ?? null,
-          frequency_range: drilldown?.frequency ?? null,
+          ...usagePayload,
         }
 
-        if (existingMap.has(cat)) {
+        if (existingMap.has(usagePayload.category)) {
           const updateQuery = supabase
             .from("user_product_usage")
             .update(payload)
-            .eq("id", existingMap.get(cat))
+            .eq("id", existingMap.get(usagePayload.category))
           const { error: updateError } = await withAbortSignal(updateQuery, signal)
           if (updateError) throw updateError
         } else {
@@ -364,7 +384,10 @@ export function OnboardingFlow({
 
       // Delete deselected categories
       const toDelete = (existing ?? [])
-        .filter((r: Record<string, unknown>) => !categories.includes(r.category as string))
+        .filter((r: Record<string, unknown>) => {
+          const category = r.category as string
+          return category !== SHAMPOO_CATEGORY && !categories.includes(category)
+        })
         .map((r: Record<string, unknown>) => r.id as string)
 
       if (toDelete.length > 0) {
@@ -442,12 +465,6 @@ export function OnboardingFlow({
 
             if (productUsageError) throw productUsageError
 
-            // Clear the legacy mirror; shampoo cadence now comes from user_product_usage.
-            if (currentCat === "shampoo") {
-              await saveHairProfile({
-                wash_frequency: null,
-              })
-            }
             break
           }
 

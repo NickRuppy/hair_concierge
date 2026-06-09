@@ -3,15 +3,12 @@ import type {
   HeatExposureTier,
   NormalizedProfile,
 } from "@/lib/recommendation-engine/types"
-import type { ProductFrequency, StylingTool } from "@/lib/vocabulary"
-
-const PRODUCT_FREQUENCY_RANK: Record<ProductFrequency, number> = {
-  rarely: 0,
-  "1_2x": 1,
-  "3_4x": 2,
-  "5_6x": 3,
-  daily: 4,
-}
+import {
+  compareProductFrequencies,
+  type ProductFrequency,
+  type ProductFrequencyComparison,
+  type StylingTool,
+} from "@/lib/vocabulary"
 
 const DIRECT_HIGH_HEAT_TOOLS = new Set<StylingTool>([
   "flat_iron",
@@ -23,7 +20,7 @@ const DIRECT_HIGH_HEAT_TOOLS = new Set<StylingTool>([
 const AIRFLOW_HEAT_TOOLS = new Set<StylingTool>(["blow_dryer", "diffuser"])
 const MODERATE_HEAT_TOOLS = new Set<StylingTool>(["hot_air_brush", "thermal_rollers"])
 
-export type FrequencyComparison = -1 | 0 | 1 | null
+export type FrequencyComparison = ProductFrequencyComparison
 
 export type DeepCleansingVulnerabilityReasonCode =
   | "dry_scalp"
@@ -55,13 +52,7 @@ export function compareFrequencyBands(
   left: ProductFrequency | null,
   right: ProductFrequency | null,
 ): FrequencyComparison {
-  if (!left || !right) return null
-
-  const leftRank = PRODUCT_FREQUENCY_RANK[left]
-  const rightRank = PRODUCT_FREQUENCY_RANK[right]
-
-  if (leftRank === rightRank) return 0
-  return leftRank < rightRank ? -1 : 1
+  return compareProductFrequencies(left, right)
 }
 
 export function hasDeepCleansingVulnerability(

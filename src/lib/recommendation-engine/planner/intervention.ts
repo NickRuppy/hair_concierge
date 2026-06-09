@@ -217,7 +217,10 @@ function buildBondBuilderPlan(
     return { steps, deferredSteps }
   }
 
-  if (damage.bondBuilderPriority === "recommend" && !isFrequencyAtLeast(frequencyBand, "1_2x")) {
+  if (
+    damage.bondBuilderPriority === "recommend" &&
+    !isFrequencyAtLeast(frequencyBand, "weekly_1x")
+  ) {
     steps.push({
       category: "bondbuilder",
       action: "increase_frequency",
@@ -265,7 +268,7 @@ function buildDeepCleansingShampooSteps(
   if (
     hasRoutineItem(profile, "deep_cleansing_shampoo") &&
     drynessRisk &&
-    isFrequencyAtLeast(frequencyBand, "3_4x")
+    isFrequencyAtLeast(frequencyBand, "weekly_3_4x")
   ) {
     return [
       {
@@ -291,7 +294,7 @@ function buildDeepCleansingShampooSteps(
     return steps
   }
 
-  if (!isFrequencyAtLeast(frequencyBand, "1_2x")) {
+  if (!isFrequencyAtLeast(frequencyBand, "weekly_1x")) {
     steps.push({
       category: "deep_cleansing_shampoo",
       action: "increase_frequency",
@@ -338,7 +341,10 @@ function buildDryShampooSteps(
         trigger.includes("product_buildup"),
     )
 
-  if (present && (drynessRisk || resetPressure || isFrequencyAtLeast(frequencyBand, "5_6x"))) {
+  if (
+    present &&
+    (drynessRisk || resetPressure || isFrequencyAtLeast(frequencyBand, "weekly_5_6x"))
+  ) {
     return [
       {
         category: "dry_shampoo",
@@ -388,7 +394,7 @@ function buildPeelingSteps(
         profile.concerns.includes("dandruff") ||
         profile.goals.includes("healthy_scalp")))
 
-  if (present && (drynessRisk || isFrequencyAtLeast(frequencyBand, "3_4x"))) {
+  if (present && (drynessRisk || isFrequencyAtLeast(frequencyBand, "weekly_3_4x"))) {
     return [
       {
         category: "peeling",
@@ -414,7 +420,7 @@ function buildPeelingSteps(
     ]
   }
 
-  if (!isFrequencyAtLeast(frequencyBand, "1_2x")) {
+  if (!isFrequencyAtLeast(frequencyBand, "weekly_1x")) {
     return [
       {
         category: "peeling",

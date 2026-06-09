@@ -382,7 +382,7 @@ test("conditioner stays baseline core care for low-need profiles with existing c
     {
       category: "conditioner",
       product_name: "Current Conditioner",
-      frequency_range: "3_4x",
+      frequency_range: "weekly_3_4x",
     },
   ])
   const categories = buildCategoryRecommendationSet(
@@ -818,12 +818,12 @@ test("reset assessment promotes explicit coated hard-water reset request to stro
       ...LOW_DAMAGE_PROFILE,
       hair_texture: "curly",
       chemical_treatment: ["colored"],
-      wash_frequency: "once_weekly",
+      wash_frequency: "weekly_1x",
     },
     [
-      { category: "leave_in", product_name: "Curl Cream", frequency_range: "5_6x" },
-      { category: "mask", product_name: "Rich Mask", frequency_range: "3_4x" },
-      { category: "dry_shampoo", product_name: "Dry Shampoo", frequency_range: "3_4x" },
+      { category: "leave_in", product_name: "Curl Cream", frequency_range: "weekly_5_6x" },
+      { category: "mask", product_name: "Rich Mask", frequency_range: "weekly_3_4x" },
+      { category: "dry_shampoo", product_name: "Dry Shampoo", frequency_range: "weekly_3_4x" },
     ],
   )
   const requestContext = buildRecommendationRequestContext({
@@ -981,9 +981,9 @@ test("oil decision preserves explicit product intent while marking overload risk
       scalp_type: "oily",
     },
     [
-      { category: "oil", product_name: "Current Oil", frequency_range: "3_4x" },
-      { category: "leave_in", product_name: "Rich Leave-in", frequency_range: "3_4x" },
-      { category: "mask", product_name: "Rich Mask", frequency_range: "1_2x" },
+      { category: "oil", product_name: "Current Oil", frequency_range: "weekly_3_4x" },
+      { category: "leave_in", product_name: "Rich Leave-in", frequency_range: "weekly_3_4x" },
+      { category: "mask", product_name: "Rich Mask", frequency_range: "weekly_1x" },
     ],
   )
   const requestContext = buildRecommendationRequestContext({
@@ -1029,18 +1029,18 @@ test("category set activates support/reset categories for oily buildup-heavy rou
       scalp_type: "oily",
       concerns: ["oily_scalp"],
       goals: ["healthy_scalp"],
-      wash_frequency: "once_weekly",
+      wash_frequency: "weekly_1x",
     },
     [
       {
         category: "oil",
         product_name: "Pre Wash Oil",
-        frequency_range: "1_2x",
+        frequency_range: "weekly_1x",
       },
       {
         category: "leave_in",
         product_name: "Smoothing Leave In",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
     ],
   )
@@ -1133,7 +1133,7 @@ test("bondbuilder fit uses intensity and does not rank by treatment mode", () =>
     {
       category: "bondbuilder",
       product_name: "Bond Builder",
-      frequency_range: "rarely",
+      frequency_range: "less_than_monthly",
     },
   ])
   const decision = buildBondbuilderCategoryDecision(normalized, damage, plan)
@@ -1198,7 +1198,7 @@ test("peeling fit rejects physical scrub when the target route is dryness-safe",
       {
         category: "peeling",
         product_name: "Scalp Scrub",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
     ],
   )
@@ -1223,12 +1223,12 @@ test("category set keeps only baseline conditioner active when shared layers are
     {
       category: "shampoo",
       product_name: "Gentle Shampoo",
-      frequency_range: "3_4x",
+      frequency_range: "weekly_3_4x",
     },
     {
       category: "conditioner",
       product_name: "Daily Conditioner",
-      frequency_range: "3_4x",
+      frequency_range: "weekly_3_4x",
     },
   ])
 

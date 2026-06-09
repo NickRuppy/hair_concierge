@@ -368,8 +368,8 @@ function buildMissingInfo(params: {
   if (!context.wash_frequency) {
     missing.push({
       key: "wash_frequency",
-      label: "Waschfrequenz",
-      why_it_matters: "Die Waschfrequenz bestimmt, wie oft die Routine wirklich greifen muss.",
+      label: "Shampoo-Rhythmus",
+      why_it_matters: "Der Shampoo-Rhythmus bestimmt, wie oft die Routine wirklich greifen muss.",
       blocking: false,
       expected_type: "WashFrequency",
     })

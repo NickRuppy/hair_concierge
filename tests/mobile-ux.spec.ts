@@ -113,7 +113,7 @@ for (const mobileViewport of mobileViewports) {
           chemical_treatment: ["colored"],
           goals: ["less_frizz"],
           desired_volume: "balanced",
-          wash_frequency: "every_2_3_days",
+          wash_frequency: "weekly_3_4x",
           heat_styling: "never",
           styling_tools: [],
           night_protection: [],

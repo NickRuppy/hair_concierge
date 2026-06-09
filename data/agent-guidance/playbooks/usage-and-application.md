@@ -8,7 +8,7 @@ Decision rules:
 - Separate scalp/root application from lengths/ends when that prevents dryness, oiliness, or buildup.
 - Mention sectioning, water, dilution, or second-pass application when distribution matters more than product quantity.
 - For shampoo, mention an optional second wash only if needed: if the scalp still does not feel clean after the first wash, repeat once; often one wash is enough.
-- For mask cadence or overcare questions, answer by wash rhythm. If `wash_frequency=every_2_3_days`, use roughly every 4-5 washes / about 2-3 times per month as the starting point. If hair feels heavy, too soft, or flat, stretch the interval or use less/shorter. If lengths stay dry or rough and the mask is not heavy, cautiously move toward weekly.
+- For mask cadence or overcare questions, answer by shampoo rhythm. If `wash_frequency=weekly_3_4x`, use roughly every 4-5 washes / about 2-3 times per month as the starting point. If hair feels heavy, too soft, or flat, stretch the interval or use less/shorter. If lengths stay dry or rough and the mask is not heavy, cautiously move toward weekly.
 - Give a provisional usage rule even when product choice still needs one follow-up.
 
 What to avoid: do not turn a usage question into a shopping answer unless the user explicitly asks for alternatives.

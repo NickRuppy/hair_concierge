@@ -10,6 +10,7 @@ import {
   LOW_DAMAGE_PROFILE,
   SEVERE_DAMAGE_PROFILE,
 } from "./recommendation-engine-foundation.fixtures"
+import { UNSELECTED_SHAMPOO_PRODUCT_NAME } from "../src/lib/product-usage/shampoo-fallback"
 
 test("persistence adapter maps supported routine categories and reports unsupported ones", () => {
   const adapted = adaptRecommendationInputFromPersistence(
@@ -27,7 +28,7 @@ test("persistence adapter maps supported routine categories and reports unsuppor
   )
   assert.equal(
     adapted.input.routineInventory.find((item) => item.category === "peeling")?.frequency_range,
-    "1_2x",
+    "weekly_1x",
   )
 })
 
@@ -40,11 +41,67 @@ test("normalization produces a full inventory map keyed by V1 inventory categori
 
   assert.equal(normalized.routineInventory.conditioner?.present, true)
   assert.equal(normalized.routineInventory.conditioner?.productName, "Repair Conditioner")
-  assert.equal(normalized.routineInventory.mask?.frequencyBand, "1_2x")
-  assert.equal(normalized.routineInventory.heat_protectant?.frequencyBand, "5_6x")
+  assert.equal(normalized.routineInventory.mask?.frequencyBand, "weekly_1x")
+  assert.equal(normalized.routineInventory.heat_protectant?.frequencyBand, "weekly_5_6x")
   assert.equal(normalized.routineInventory.peeling?.productName, "Scalp Serum")
   assert.equal(normalized.routineInventory.shampoo, null)
   assert.equal(normalized.routineInventory.deep_cleansing_shampoo, null)
+})
+
+test("normalization treats unselected shampoo fallback as cadence but not present inventory", () => {
+  const adapted = adaptRecommendationInputFromPersistence(LOW_DAMAGE_PROFILE, [
+    {
+      category: "shampoo",
+      product_name: UNSELECTED_SHAMPOO_PRODUCT_NAME,
+      frequency_range: "less_than_monthly",
+    },
+  ])
+  const normalized = normalizeRecommendationInput(adapted.input)
+
+  assert.equal(normalized.washFrequency, "less_than_monthly")
+  assert.equal(normalized.routineInventory.shampoo, null)
+})
+
+test("normalization keeps explicit derived shampoo cadence when fallback row is hidden from inventory", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      wash_frequency: "less_than_monthly",
+    },
+    [],
+    { derivedShampooFrequency: "less_than_monthly" },
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+
+  assert.equal(normalized.washFrequency, "less_than_monthly")
+  assert.equal(normalized.routineInventory.shampoo, null)
+})
+
+test("normalization does not infer wash cadence from raw deprecated profile field", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      wash_frequency: "daily_1x",
+    },
+    [],
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+
+  assert.equal(normalized.washFrequency, null)
+})
+
+test("normalization keeps real unnamed less-than-monthly shampoo present", () => {
+  const adapted = adaptRecommendationInputFromPersistence(LOW_DAMAGE_PROFILE, [
+    {
+      category: "shampoo",
+      product_name: null,
+      frequency_range: "less_than_monthly",
+    },
+  ])
+  const normalized = normalizeRecommendationInput(adapted.input)
+
+  assert.equal(normalized.washFrequency, "less_than_monthly")
+  assert.equal(normalized.routineInventory.shampoo?.present, true)
 })
 
 test("low-damage fixture yields low repair need with protective factors", () => {

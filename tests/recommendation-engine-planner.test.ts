@@ -106,18 +106,18 @@ test("planner activates reset-family categories for oily buildup-prone routines"
       scalp_type: "oily",
       concerns: ["oily_scalp"],
       goals: ["healthy_scalp"],
-      wash_frequency: "once_weekly",
+      wash_frequency: "weekly_1x",
     },
     [
       {
         category: "oil",
         product_name: "Pre Wash Oil",
-        frequency_range: "1_2x",
+        frequency_range: "weekly_1x",
       },
       {
         category: "leave_in",
         product_name: "Smoothing Leave In",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
     ],
   )
@@ -154,7 +154,7 @@ test("planner adds dry shampoo only for explicit between-wash bridge requests", 
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "oily",
       concerns: ["oily_scalp"],
-      wash_frequency: "every_2_3_days",
+      wash_frequency: "weekly_3_4x",
     },
     [],
   )
@@ -189,22 +189,22 @@ test("planner de-escalates support categories when dryness and overuse risk are 
       {
         category: "bondbuilder",
         product_name: "Repair Booster",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
       {
         category: "deep_cleansing_shampoo",
         product_name: "Reset Wash",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
       {
         category: "dry_shampoo",
         product_name: "Bridge Spray",
-        frequency_range: "daily",
+        frequency_range: "daily_1x",
       },
       {
         category: "peeling",
         product_name: "Scalp Scrub",
-        frequency_range: "3_4x",
+        frequency_range: "weekly_3_4x",
       },
     ],
   )
@@ -252,7 +252,7 @@ test("planner can increase bondbuilder usage when the structural case is recomme
     {
       category: "bondbuilder",
       product_name: "Bond Builder",
-      frequency_range: "rarely",
+      frequency_range: "less_than_monthly",
     },
   ])
   const normalized = normalizeRecommendationInput(adapted.input)

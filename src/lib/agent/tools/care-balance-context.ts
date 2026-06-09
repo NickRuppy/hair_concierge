@@ -59,7 +59,7 @@ export interface CareBalanceToolConflict {
 function buildCareBalanceUsageHint(row: CareBalanceRow): string {
   switch (row.cadencePolicy.kind) {
     case "need_based_support":
-      return `need_based_support:${row.currentFrequency ?? "none"}:${row.cadencePolicy.suggestedBand ?? "as_needed"}`
+      return `need_based_support:${row.currentFrequency ?? "none"}:${row.cadencePolicy.suggestedBand ?? "less_than_monthly"}`
     case "match_heat_exposure":
       return `match_heat_exposure:${row.cadencePolicy.expected}:${row.cadencePolicy.heatExposureTier}`
     case "occasional_reset":

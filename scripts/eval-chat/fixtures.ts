@@ -14,7 +14,7 @@ const FULL_PROFILE: HairProfileOverrides = {
   scalp_type: "balanced",
   scalp_condition: "none",
   chemical_treatment: ["colored"],
-  wash_frequency: "every_2_3_days",
+  wash_frequency: "weekly_3_4x",
   heat_styling: "rarely",
   drying_method: "air_dry",
   towel_technique: "rough_rubbing",
@@ -28,12 +28,12 @@ const FULL_ROUTINE_INVENTORY: RoutineInventorySeed[] = [
   {
     category: "shampoo",
     product_name: "Eval Shampoo",
-    frequency_range: "3_4x",
+    frequency_range: "weekly_3_4x",
   },
   {
     category: "conditioner",
     product_name: "Eval Conditioner",
-    frequency_range: "3_4x",
+    frequency_range: "weekly_3_4x",
   },
 ]
 
