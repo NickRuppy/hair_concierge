@@ -713,6 +713,128 @@ test("validator requires product guidance for product-detail clarifications", ()
   )
 })
 
+test("validator blocks repeated exact-name clarification for already named off-catalog products", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "clarification",
+      request_interpretation: requestInterpretation({
+        primary_intent: "clarification",
+        product_request_kind: "product_detail",
+        routine_intent: "none",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_product_tool: true,
+        product_ids: [],
+        used_guidance_package_ids: [
+          ...requiredGuidanceForAnswer("clarification"),
+          "base.product_recommendation.v1",
+          "category.conditioner.v1",
+        ],
+      },
+      payload: {
+        user_facing_answer_de: "Wie heißt das Produkt genau?",
+        question_de: "Schick mir bitte die genaue Produktbezeichnung.",
+        missing_keys: ["product_detail"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "Moisture Mist Conditioner von Urban Alchemy",
+      recentEvidenceText: "Moisture Mist Conditioner von Urban Alchemy",
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "conditioner",
+          product_request_kind: "product_detail",
+          requested_product_count: 1,
+          count_policy: "none",
+          evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
+        }),
+      ],
+      namedProductContext: {
+        display_name: "Urban Alchemy Moisture Mist Conditioner",
+        category: "conditioner",
+        plausible_exact_name: true,
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "named_product_detail_unverified"))
+})
+
+test("validator blocks substitute catalog recommendations for already named off-catalog product detail turns", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        routine_intent: "none",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["balea_aqua_hyaluron"],
+        used_guidance_package_ids: requiredGuidanceForAnswer(
+          "product_recommendation",
+          "conditioner",
+        ),
+      },
+      payload: {
+        user_facing_answer_de: "**Balea Aqua Hyaluron** passt besser zu deinem Haar.",
+        recommendations: [
+          {
+            product_id: "balea_aqua_hyaluron",
+            reason_de: "Leichte Feuchtigkeit.",
+            usage_de: null,
+            caveat_de: null,
+          },
+        ],
+        comparison_notes_de: [],
+        usage_notes_de: [],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [
+        {
+          valid_product_ids: ["balea_aqua_hyaluron"],
+          products: [{ product_id: "balea_aqua_hyaluron", name: "Balea Aqua Hyaluron" }],
+        },
+      ],
+      latestUserMessage: "Moisture Mist Conditioner von Urban Alchemy",
+      recentEvidenceText: "Moisture Mist Conditioner von Urban Alchemy",
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "conditioner",
+          product_request_kind: "product_detail",
+          requested_product_count: 1,
+          count_policy: "none",
+          evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
+        }),
+      ],
+      namedProductContext: {
+        display_name: "Urban Alchemy Moisture Mist Conditioner",
+        category: "conditioner",
+        plausible_exact_name: true,
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "named_product_detail_unverified"))
+})
+
 test("validator requires category guidance for category education answers", () => {
   const answer = {
     ...baseAnswer,

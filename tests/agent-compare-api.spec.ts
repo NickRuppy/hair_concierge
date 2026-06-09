@@ -306,6 +306,7 @@ test("handleAgentCompareRequest preserves AgentV2 request interpretation trace i
             reasoning_effort: "low",
             safety_mode: "normal",
             answer_mode: "product_recommendation",
+            named_product_context: null,
             request_interpretation_summary:
               "Intent: product_recommendation · specific_products · conditioner · 2 exact · confidence 0.91",
             request_interpretation: {
@@ -1242,6 +1243,7 @@ test("analysis snapshot extracts AgentV2 trace tool calls and guidance ids", asy
             reasoning_effort: "low",
             safety_mode: "normal",
             answer_mode: null,
+            named_product_context: null,
             request_interpretation_summary: null,
             request_interpretation: null,
             validation_warnings: [],
@@ -1296,6 +1298,7 @@ test("AgentV2 trace display data separates warnings from fatal validation errors
     reasoning_effort: "low",
     safety_mode: "normal",
     answer_mode: "product_recommendation",
+    named_product_context: null,
     request_interpretation_summary:
       "Intent: product_recommendation · specific_products · conditioner · 2 exact · confidence 0.91",
     request_interpretation: {

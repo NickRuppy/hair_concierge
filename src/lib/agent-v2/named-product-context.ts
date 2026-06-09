@@ -1,0 +1,342 @@
+import type { AgentV2CareCategory } from "./contracts"
+
+export interface AgentV2NamedProductContext {
+  display_name: string
+  category: AgentV2CareCategory
+  plausible_exact_name: boolean
+}
+
+type SupportedCategoryConfig = {
+  category: AgentV2CareCategory
+  displayLabel: string
+  matchSource: string
+}
+
+const SUPPORTED_CATEGORY_CONFIGS: SupportedCategoryConfig[] = [
+  {
+    category: "deep_cleansing_shampoo",
+    displayLabel: "Tiefenreinigungsshampoo",
+    matchSource:
+      "tiefenreinigung(?:s)?shampoo|tiefenreinigungs\\s+shampoo|clarifying\\s+shampoo|deep\\s+cleansing\\s+shampoo",
+  },
+  {
+    category: "dry_shampoo",
+    displayLabel: "Trockenshampoo",
+    matchSource: "trockenshampoo|trocken\\s*shampoo|dry\\s+shampoo",
+  },
+  {
+    category: "leave_in",
+    displayLabel: "Leave-in",
+    matchSource: "leave[\\s-]?in(?:\\s+conditioner)?",
+  },
+  {
+    category: "bondbuilder",
+    displayLabel: "Bondbuilder",
+    matchSource:
+      "bond\\s*builder|bondbuilder|bonding\\s+treatment|(?<![\\p{L}\\p{N}])plex(?![\\p{L}\\p{N}])",
+  },
+  {
+    category: "conditioner",
+    displayLabel: "Conditioner",
+    matchSource: "conditioner|sp(?:ue|ü)lung",
+  },
+  {
+    category: "shampoo",
+    displayLabel: "Shampoo",
+    matchSource: "shampoo",
+  },
+  {
+    category: "mask",
+    displayLabel: "Maske",
+    matchSource: "haar\\s*maske|haarmaske|maske|mask",
+  },
+  {
+    category: "oil",
+    displayLabel: "Oil",
+    matchSource: "(?<![\\p{L}\\p{N}])(?:haar\\s*)?(?:oel|öl|oil)(?![\\p{L}\\p{N}])",
+  },
+  {
+    category: "peeling",
+    displayLabel: "Peeling",
+    matchSource: "kopfhaut\\s*peeling|scalp\\s+scrub|peeling",
+  },
+]
+
+const CURRENT_USE_PHRASE =
+  /\bich\s+(?:nutze|benutze|verwende|habe|nehme)\b|\b(?:nutze|benutze|verwende|nehme)\s+ich\b/iu
+
+const PRODUCT_EVALUATION_PHRASE = /\bwas\s+h(?:ae|ä)ltst\s+du\s+von\b|\bwas\s+haelst\s+du\s+von\b/iu
+
+const GENERIC_CATEGORY_QUESTION =
+  /\bwelch(?:er|en|es|e)\b|\bkannst\s+du\s+mir\b.*\bempfehlen\b|\bempfiehlst\s+du\b|\bempfehlung(?:en)?\b/iu
+
+const QUOTED_PRODUCT_NAME = /["“”]([^"“”]{2,80})["“”]/u
+
+const BRAND_AFTER_VON =
+  /\bvon\s+([A-ZÄÖÜ0-9][\p{L}\p{M}\p{N}&'.-]*(?:\s+[A-ZÄÖÜ0-9][\p{L}\p{M}\p{N}&'.-]*){0,4})/u
+
+const WORD_TOKEN = /[\p{L}\p{M}\p{N}&'.-]+/gu
+
+const CATEGORY_STOPWORDS = new Set([
+  "bondbuilder",
+  "conditioner",
+  "deep",
+  "dry",
+  "haar",
+  "haarmaske",
+  "leave",
+  "maske",
+  "mask",
+  "oel",
+  "oil",
+  "peeling",
+  "plex",
+  "scalp",
+  "scrub",
+  "shampoo",
+  "spuelung",
+  "tiefenreinigungsshampoo",
+  "trockenshampoo",
+])
+
+const QUESTION_WORDS = new Set(["welche", "welchen", "welcher", "welches"])
+
+export function normalizeNamedProductForComparison(value: string): string {
+  return value
+    .toLocaleLowerCase("de-DE")
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/(^|[^\p{L}\p{N}])von(?=$|[^\p{L}\p{N}])/gu, "$1 ")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+}
+
+export function buildAgentV2NamedProductContext(params: {
+  latestMessage: string
+  recentMessages: unknown[]
+}): AgentV2NamedProductContext | null {
+  void params.recentMessages
+
+  const latestMessage = params.latestMessage.trim()
+  if (latestMessage.length === 0) return null
+
+  const category = inferCategory(latestMessage)
+  if (category === null) return null
+
+  const brand = extractBrandAfterVon(latestMessage, category)
+  const quotedProductName = extractQuotedProductName(latestMessage)
+  const hasCurrentUse = hasCurrentUsePhrasing(latestMessage)
+  const hasProductEvaluation = hasProductEvaluationPhrasing(latestMessage)
+
+  if (isGenericCategoryQuestion(latestMessage) && !brand && !quotedProductName && !hasCurrentUse) {
+    return null
+  }
+  if (
+    !hasPositiveNamedProductSignal({
+      brand,
+      quotedProductName,
+      hasCurrentUse,
+      hasProductEvaluation,
+    })
+  ) {
+    return null
+  }
+
+  const messageWithoutBrand = brand
+    ? latestMessage.replace(new RegExp(`\\bvon\\s+${escapeRegExp(brand)}`, "u"), " ")
+    : latestMessage
+  const rawProductName =
+    quotedProductName ?? extractCategoryAdjacentProductName(messageWithoutBrand, category)
+  if (rawProductName === null) return null
+
+  const productName = ensureCategoryLabel(cleanupProductName(rawProductName), category)
+  if (!isPlausibleExactProductName(productName, category)) return null
+
+  return {
+    display_name: buildDisplayName({ brand, productName, category }),
+    category,
+    plausible_exact_name: true,
+  }
+}
+
+function inferCategory(message: string): AgentV2CareCategory | null {
+  for (const config of SUPPORTED_CATEGORY_CONFIGS) {
+    if (new RegExp(config.matchSource, "iu").test(message)) return config.category
+  }
+  return null
+}
+
+function extractBrandAfterVon(message: string, category: AgentV2CareCategory): string | null {
+  const match = BRAND_AFTER_VON.exec(message)
+  if (!match?.[1]) return null
+
+  const candidate = cleanupDisplayText(match[1])
+  const config = getCategoryConfig(category)
+  if (config !== null && new RegExp(config.matchSource, "iu").test(candidate)) return null
+
+  return candidate
+}
+
+function extractQuotedProductName(message: string): string | null {
+  const match = QUOTED_PRODUCT_NAME.exec(message)
+  return match?.[1] ? cleanupDisplayText(match[1]) : null
+}
+
+function hasCurrentUsePhrasing(message: string): boolean {
+  return CURRENT_USE_PHRASE.test(message)
+}
+
+function hasProductEvaluationPhrasing(message: string): boolean {
+  return PRODUCT_EVALUATION_PHRASE.test(message)
+}
+
+function hasPositiveNamedProductSignal(params: {
+  brand: string | null
+  quotedProductName: string | null
+  hasCurrentUse: boolean
+  hasProductEvaluation: boolean
+}): boolean {
+  return (
+    params.brand !== null ||
+    params.quotedProductName !== null ||
+    params.hasCurrentUse ||
+    params.hasProductEvaluation
+  )
+}
+
+function isGenericCategoryQuestion(message: string): boolean {
+  return GENERIC_CATEGORY_QUESTION.test(message)
+}
+
+function extractCategoryAdjacentProductName(
+  messageWithoutBrand: string,
+  category: AgentV2CareCategory,
+): string | null {
+  const config = getCategoryConfig(category)
+  if (config === null) return null
+
+  const match = new RegExp(config.matchSource, "iu").exec(messageWithoutBrand)
+  if (!match) return null
+
+  const beforeCategory = messageWithoutBrand.slice(0, match.index)
+  const afterCategory = messageWithoutBrand.slice(match.index + match[0].length)
+  const nameBeforeCategory = getCapitalizedNameTail(beforeCategory)
+  if (nameBeforeCategory !== null) return `${nameBeforeCategory} ${config.displayLabel}`
+
+  const nameAfterCategory = getCapitalizedNameHead(afterCategory)
+  if (nameAfterCategory !== null) return `${config.displayLabel} ${nameAfterCategory}`
+
+  return null
+}
+
+function getCapitalizedNameTail(value: string): string | null {
+  const tokens = getTokens(value)
+  const nameTokens: string[] = []
+  for (let index = tokens.length - 1; index >= 0; index -= 1) {
+    const token = tokens[index]
+    if (!isNameToken(token)) break
+    nameTokens.unshift(token)
+  }
+  if (nameTokens.some((token) => QUESTION_WORDS.has(normalizeNamedProductForComparison(token)))) {
+    return null
+  }
+  return nameTokens.length > 0 ? nameTokens.join(" ") : null
+}
+
+function getCapitalizedNameHead(value: string): string | null {
+  const firstClause = value.split(/[,.!?;:]/u)[0] ?? ""
+  const tokens = getTokens(firstClause)
+  const nameTokens: string[] = []
+  for (const token of tokens) {
+    if (!isNameToken(token)) break
+    nameTokens.push(token)
+  }
+  return nameTokens.length > 0 ? nameTokens.join(" ") : null
+}
+
+function getTokens(value: string): string[] {
+  return value.match(WORD_TOKEN) ?? []
+}
+
+function isNameToken(token: string): boolean {
+  const firstCharacter = token[0]
+  if (!firstCharacter) return false
+  if (/\p{N}/u.test(firstCharacter)) return true
+  return (
+    firstCharacter === firstCharacter.toLocaleUpperCase("de-DE") &&
+    firstCharacter !== firstCharacter.toLocaleLowerCase("de-DE")
+  )
+}
+
+function cleanupProductName(value: string): string {
+  return cleanupDisplayText(value.replace(/["“”]/gu, " "))
+}
+
+function cleanupDisplayText(value: string): string {
+  return value
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^[\s,.:;!?-]+|[\s,.:;!?-]+$/gu, "")
+}
+
+function isPlausibleExactProductName(productName: string, category: AgentV2CareCategory): boolean {
+  const normalized = normalizeNamedProductForComparison(productName)
+  if (normalized.length === 0) return false
+
+  const categoryConfig = getCategoryConfig(category)
+  const categoryLabel = categoryConfig
+    ? normalizeNamedProductForComparison(categoryConfig.displayLabel)
+    : category
+
+  const detailTokens = normalized
+    .split(" ")
+    .filter((token) => token !== categoryLabel)
+    .filter((token) => !isCategoryStopword(token))
+
+  return detailTokens.length > 0
+}
+
+function buildDisplayName(params: {
+  brand: string | null
+  productName: string
+  category: AgentV2CareCategory
+}): string {
+  const productName = params.brand
+    ? cleanupDisplayText(
+        params.productName.replace(new RegExp(`\\b${escapeRegExp(params.brand)}\\b`, "iu"), " "),
+      )
+    : params.productName
+
+  return cleanupDisplayText(
+    [params.brand, moveCategoryLabelToEnd(productName, params.category)].filter(Boolean).join(" "),
+  )
+}
+
+function moveCategoryLabelToEnd(productName: string, category: AgentV2CareCategory): string {
+  const config = getCategoryConfig(category)
+  if (config === null) return cleanupDisplayText(productName)
+
+  const productWithoutCategory = cleanupDisplayText(
+    productName.replace(new RegExp(`(?:^|\\s)(?:${config.matchSource})(?=\\s|$)`, "giu"), " "),
+  )
+  if (productWithoutCategory.length === 0) return config.displayLabel
+
+  return cleanupDisplayText(`${productWithoutCategory} ${config.displayLabel}`)
+}
+
+function ensureCategoryLabel(productName: string, category: AgentV2CareCategory): string {
+  return moveCategoryLabelToEnd(productName, category)
+}
+
+function isCategoryStopword(value: string): boolean {
+  return CATEGORY_STOPWORDS.has(value)
+}
+
+function getCategoryConfig(category: AgentV2CareCategory): SupportedCategoryConfig | null {
+  return SUPPORTED_CATEGORY_CONFIGS.find((config) => config.category === category) ?? null
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+}

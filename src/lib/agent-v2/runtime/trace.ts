@@ -20,6 +20,7 @@ export function createAgentV2Trace(params: {
     reasoning_effort: params.policy.reasoning_effort,
     safety_mode: params.safetyMode,
     answer_mode: null,
+    named_product_context: null,
     response_ids: [],
     model_steps: [],
     tool_calls: [],

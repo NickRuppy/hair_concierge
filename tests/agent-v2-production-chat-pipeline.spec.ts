@@ -253,6 +253,7 @@ function createAgentV2Result(): AgentV2ResponsesTurnResult {
       reasoning_effort: "medium",
       safety_mode: "normal",
       answer_mode: "product_recommendation",
+      named_product_context: null,
       response_ids: ["response-1"],
       model_steps: [
         {

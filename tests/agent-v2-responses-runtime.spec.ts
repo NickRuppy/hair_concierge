@@ -722,6 +722,45 @@ function terminalNamedProductRecommendation(
   })
 }
 
+function terminalOffCatalogNamedProductBlocked(call_id: string) {
+  return terminalCall(call_id, {
+    ...terminalGeneralAdviceArguments(),
+    answer_mode: "constraint_blocked",
+    interpreted_intent: "User asks for detail evaluation of a named conditioner.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      care_category: "conditioner",
+      requested_product_count: 1,
+      count_policy: "none",
+      evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
+    }),
+    extracted_constraints: {
+      ...emptyExtractedConstraints(),
+      product_categories: ["conditioner"],
+      raw_constraints: ["Moisture Mist Conditioner von Urban Alchemy"],
+    },
+    tool_grounding: {
+      ...terminalGeneralAdviceArguments().tool_grounding,
+      used_guidance_package_ids: [
+        ...requiredGuidanceForAnswer("constraint_blocked", "conditioner"),
+        "base.product_recommendation.v1",
+      ],
+      used_product_tool: true,
+      product_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Den Urban Alchemy Moisture Mist Conditioner habe ich nicht als verifizierten Katalogtreffer. Ich kann ihn deshalb nicht exakt bewerten. Von der Kategorie her klingt ein leichter Conditioner für dein feines, lockiges, trockenes oder frizziges Haar plausibel; achte vor allem auf Beschwerung und genug Slip.",
+      blocking_constraints: [
+        "kein verifizierter Katalogtreffer für Urban Alchemy Moisture Mist Conditioner",
+      ],
+      safe_alternative_de:
+        "Ich kann ihn vorsichtig gegen verifizierte Conditioner einordnen, ohne ihn als geprüftes Produkt zu bewerten.",
+    },
+  })
+}
+
 function terminalPartiallyRenderedProductRecommendation(
   call_id: string,
   products: Array<{ product_id: string; name: string }>,
@@ -1641,6 +1680,34 @@ test("AgentV2 runtime injects surfaced product facts for referential follow-ups"
   assert.match(content, /shampoo/)
   assert.match(content, /Test Shampoo/)
   assert.match(content, /Use the recent conversation/)
+})
+
+test("AgentV2 runtime injects named product context for plausible off-catalog product detail turns", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Kannst du den Moisture Mist Conditioner von Urban Alchemy bewerten?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: fakeAgentV2Tools(),
+  })
+
+  const firstInput = getInputItems(client.requests[0])
+  const namedProductContextItem = firstInput
+    .map(asRecord)
+    .find((item) =>
+      String(item?.content ?? "").includes("Current user named a plausible exact product"),
+    )
+  const content = String(namedProductContextItem?.content ?? "")
+  assert.match(content, /Urban Alchemy Moisture Mist Conditioner/)
+  assert.match(content, /conditioner/)
+  assert.match(content, /not catalog-verified/)
+  assert.match(content, /constraint_blocked/)
+  assert.deepEqual(result.trace.named_product_context, {
+    display_name: "Urban Alchemy Moisture Mist Conditioner",
+    category: "conditioner",
+  })
 })
 
 test("AgentV2 runtime injects terminal payload field guidance", async () => {
@@ -2887,6 +2954,70 @@ test("AgentV2 runtime repairs concrete category-fit asks that hide selected prod
   assert.equal(
     result.trace.repair_attempts[0].validation_errors[0].validator_id,
     "request_interpretation_answer_mode",
+  )
+})
+
+test("AgentV2 runtime repairs off-catalog named product detail substitutes to constraint_blocked", async () => {
+  const substituteProducts = [{ product_id: "balea_aqua_hyaluron", name: "Balea Aqua Hyaluron" }]
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["conditioner"],
+    }),
+    functionCall("call_2", "select_products", {
+      ...selectProductsArguments({
+        category: "conditioner",
+        reason: "User asks about a named conditioner.",
+        user_request: "Moisture Mist Conditioner von Urban Alchemy",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
+      }),
+    }),
+    terminalNamedProductRecommendation("call_3", substituteProducts, {
+      product_request_kind: "product_detail",
+      requested_product_count: 1,
+      count_policy: "none",
+      evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
+    }),
+    terminalOffCatalogNamedProductBlocked("call_4"),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Moisture Mist Conditioner von Urban Alchemy",
+    recentMessages: [],
+    userContext: {
+      hairProfile: {
+        hair_texture: "curly",
+        thickness: "fine",
+        concerns: ["dryness", "frizz"],
+      },
+      routineInventory: [],
+      sessionMemory: [],
+    },
+    tools: {
+      ...fakeAgentV2Tools(),
+      select_products: async () => ({
+        valid_product_ids: substituteProducts.map((product) => product.product_id),
+        products: substituteProducts,
+      }),
+    },
+  })
+
+  assert.equal(result.final_answer.answer_mode, "constraint_blocked")
+  assert.match(
+    result.final_answer.payload.user_facing_answer_de,
+    /nicht als verifizierten Katalogtreffer/,
+  )
+  assert.match(result.final_answer.payload.user_facing_answer_de, /nicht exakt bewerten/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Balea Aqua Hyaluron/)
+  assert.equal(result.trace.validation_errors.length, 0)
+  assert.equal(result.trace.repair_attempts.length, 1)
+  assert.equal(
+    result.trace.repair_attempts[0].validation_errors[0].validator_id,
+    "named_product_detail_unverified",
   )
 })
 

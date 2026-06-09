@@ -18,6 +18,10 @@ import {
 } from "@/lib/agent-v2/contracts"
 import type { CareBalanceConflict } from "@/lib/recommendation-engine/types"
 import { normalizeAgentV2EvidenceText } from "@/lib/agent-v2/evidence-normalization"
+import {
+  normalizeNamedProductForComparison,
+  type AgentV2NamedProductContext,
+} from "@/lib/agent-v2/named-product-context"
 import { validateUserFacingLanguage } from "@/lib/agent-v2/validation/user-facing-language"
 export interface AgentV2FinalAnswerValidationContext {
   selectedProductProjections: readonly {
@@ -40,6 +44,7 @@ export interface AgentV2FinalAnswerValidationContext {
   currentCareContextConflicts?: readonly CareBalanceConflict[]
   knownHardRuleIds?: readonly string[]
   turnGate?: AgentV2TurnGateResult | null
+  namedProductContext?: AgentV2NamedProductContext | null
 }
 
 export interface AgentV2FinalAnswerValidationResult {
@@ -88,6 +93,7 @@ export function validateAgentV2FinalAnswer(
   validateKnownProductIds(terminalAnswer, context, findings)
   validateKnownRoutineStepIds(terminalAnswer, context, findings)
   validateProductToolRequired(terminalAnswer, context, findings)
+  validateNamedProductDetailAnswer(terminalAnswer, context, findings)
   validateRoutineToolRequired(terminalAnswer, context, findings)
   validateRoutineThreadContinuity(terminalAnswer, context, findings)
   validateRoutineProductDeepDive(terminalAnswer, context, findings)
@@ -1127,6 +1133,83 @@ function validateProductToolRequired(
       severity: "block",
     })
   }
+}
+
+function validateNamedProductDetailAnswer(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+  errors: AgentV2ValidationError[],
+): void {
+  const namedProductContext = context.namedProductContext
+  if (
+    !namedProductContext ||
+    !namedProductContext.plausible_exact_name ||
+    answer.request_interpretation.product_request_kind !== "product_detail"
+  ) {
+    return
+  }
+
+  if (answer.answer_mode === "clarification" && asksForExactProductNameAgain(answer)) {
+    errors.push({
+      validator_id: "named_product_detail_unverified",
+      message:
+        "The user already gave a plausible exact product name; do not ask for the exact name again. Use constraint_blocked if select_products cannot verify it.",
+      severity: "block",
+      path: ["payload", "question_de"],
+    })
+    return
+  }
+
+  if (
+    answer.answer_mode === "product_recommendation" &&
+    !referencesNamedProductMatch(answer, context, namedProductContext)
+  ) {
+    errors.push({
+      validator_id: "named_product_detail_unverified",
+      message:
+        "Named product detail turns must not substitute unrelated catalog recommendations when the named product is not verified.",
+      severity: "block",
+      path: ["payload", "recommendations"],
+    })
+  }
+}
+
+function asksForExactProductNameAgain(
+  answer: Extract<AgentV2TerminalAnswer, { answer_mode: "clarification" }>,
+): boolean {
+  const text = [answer.payload.user_facing_answer_de, answer.payload.question_de].join("\n")
+  return /(?:genaue?|exakte?)\s+(?:produkt(?:bezeichnung|name)?|bezeichnung|name)|wie\s+hei(?:ß|ss)t\s+(?:das\s+)?produkt\s+genau/iu.test(
+    text,
+  )
+}
+
+function referencesNamedProductMatch(
+  answer: Extract<AgentV2TerminalAnswer, { answer_mode: "product_recommendation" }>,
+  context: AgentV2FinalAnswerValidationContext,
+  namedProductContext: AgentV2NamedProductContext,
+): boolean {
+  const referencedProductIds = new Set([
+    ...answer.tool_grounding.product_ids,
+    ...extractPayloadProductIds(answer),
+  ])
+  if (referencedProductIds.size === 0) return false
+
+  const referencedProductNames = context.selectedProductProjections.flatMap((projection) =>
+    (projection.products ?? [])
+      .filter((product) => product.product_id && referencedProductIds.has(product.product_id))
+      .map((product) => product.name)
+      .filter((name): name is string => Boolean(name)),
+  )
+  return referencedProductNames.some((name) =>
+    namedProductNamesMatch(name, namedProductContext.display_name),
+  )
+}
+
+function namedProductNamesMatch(candidateName: string, namedProductName: string): boolean {
+  const candidate = normalizeNamedProductForComparison(candidateName)
+  const named = normalizeNamedProductForComparison(namedProductName)
+  if (candidate.length === 0 || named.length === 0) return false
+  return candidate === named || candidate.includes(named) || named.includes(candidate)
 }
 
 function validateRoutineToolRequired(
