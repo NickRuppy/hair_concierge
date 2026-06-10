@@ -1921,6 +1921,20 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
   assert.match(content, /leave_in/)
   assert.match(content, /current-turn category decision context/)
   assert.match(content, /not product truth/)
+  assert.match(content, /shampoo_cadence is the only full target-range\/delta cadence model/)
+  assert.match(content, /do not invent shampoo-style target bands/)
+  assert.match(content, /action, current_frequency, cadence_policy, reason_codes, and usage_hint/)
+  assert.match(content, /match_shampoo_frequency means conditioner-like use is tied to washes/)
+  assert.match(
+    content,
+    /match_heat_exposure means heat protectant is tied to meaningful heat events/,
+  )
+  assert.match(content, /occasional_reset means reset products are occasional and cautious/)
+  assert.match(content, /bridge_between_washes means dry shampoo is a short bridge only/)
+  assert.match(content, /need_based_support means soft care is need\/load-sensitive/)
+  assert.match(content, /protocol_based means bond builders are product\/protocol-specific/)
+  assert.match(content, /baseline_cleansing means basic cleansing context/)
+  assert.match(content, /not_applicable means do not force cadence commentary/)
   assert.match(content, /shampoo_cadence/)
   assert.match(content, /"delta":"below"/)
   assert.match(content, /"target_band":"high"/)
