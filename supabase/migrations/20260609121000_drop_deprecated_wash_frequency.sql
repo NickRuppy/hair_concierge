@@ -113,26 +113,31 @@ WHERE NOT EXISTS (
       AND hp.wash_frequency IS NOT NULL
   );
 
-UPDATE user_memory_entries old_memory
-SET
-  status = 'archived',
-  superseded_by = new_memory.id,
-  archived_at = COALESCE(old_memory.archived_at, now()),
-  updated_at = now()
-FROM user_memory_entries new_memory
-WHERE old_memory.normalized_key = 'routine:wash_frequency'
-  AND old_memory.status = 'active'
-  AND new_memory.user_id = old_memory.user_id
-  AND new_memory.normalized_key = 'routine:shampoo_frequency'
-  AND new_memory.status = 'active'
-  AND old_memory.id <> new_memory.id;
+DO $$
+BEGIN
+  IF to_regclass('public.user_memory_entries') IS NOT NULL THEN
+    UPDATE public.user_memory_entries old_memory
+    SET
+      status = 'archived',
+      superseded_by = new_memory.id,
+      archived_at = COALESCE(old_memory.archived_at, now()),
+      updated_at = now()
+    FROM public.user_memory_entries new_memory
+    WHERE old_memory.normalized_key = 'routine:wash_frequency'
+      AND old_memory.status = 'active'
+      AND new_memory.user_id = old_memory.user_id
+      AND new_memory.normalized_key = 'routine:shampoo_frequency'
+      AND new_memory.status = 'active'
+      AND old_memory.id <> new_memory.id;
 
-UPDATE user_memory_entries
-SET
-  normalized_key = 'routine:shampoo_frequency',
-  updated_at = now()
-WHERE normalized_key = 'routine:wash_frequency'
-  AND status = 'active';
+    UPDATE public.user_memory_entries
+    SET
+      normalized_key = 'routine:shampoo_frequency',
+      updated_at = now()
+    WHERE normalized_key = 'routine:wash_frequency'
+      AND status = 'active';
+  END IF;
+END $$;
 
 ALTER TABLE user_product_usage
   DROP CONSTRAINT IF EXISTS user_product_usage_frequency_range_check;
