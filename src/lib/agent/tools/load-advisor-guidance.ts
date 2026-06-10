@@ -291,7 +291,7 @@ function isGenericShampooMention(normalized: string): boolean {
 
   if (!/\bshampoo\b/.test(normalized)) return false
 
-  return !/\b(?:dry shampoo|deep cleansing shampoo|trockenshampoo|tiefenreinigungsshampoo|reinigungsshampoo)\b/.test(
+  return !/\b(?:dry shampoo|deep cleansing shampoo|clarifying shampoo|trockenshampoo|tiefenreinigungsshampoo|reinigungsshampoo)\b/.test(
     normalized,
   )
 }

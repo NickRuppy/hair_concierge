@@ -317,6 +317,54 @@ test("projectRoutinePlan exposes side-by-side CareBalance frequency framing with
   assert.match(JSON.stringify(result), /legacy|comparison|production_decision_context/)
 })
 
+test("projectRoutinePlan includes shampoo cadence in care balance context", () => {
+  const result = projectRoutinePlan({
+    hairProfile: createProfile({
+      scalp_type: "oily",
+      concerns: ["oily_scalp"],
+      current_routine_products: ["shampoo", "conditioner"],
+    }),
+    routineItems: [
+      {
+        category: "shampoo",
+        product_name: "Existing shampoo",
+        frequency_range: "weekly_1x",
+      },
+    ],
+    message: "Soll ich mein Shampoo anders nutzen?",
+  })
+
+  const careBalanceContext = result.care_balance_context as
+    | {
+        shampoo_cadence?: {
+          current_frequency: string | null
+          target_min: string | null
+          target_max: string | null
+          target_preferred: string | null
+          delta: string
+          base_band: string | null
+          target_band: string | null
+          reason_codes: string[]
+          caveat_codes: string[]
+        }
+      }
+    | null
+    | undefined
+
+  assert.deepEqual(careBalanceContext?.shampoo_cadence, {
+    current_frequency: "weekly_1x",
+    target_min: "weekly_2x",
+    target_max: "weekly_5_6x",
+    target_preferred: "weekly_3_4x",
+    delta: "below",
+    position_in_range: null,
+    base_band: "high",
+    target_band: "high",
+    reason_codes: ["base_scalp_type_oily", "modifier_up_oily_scalp_concern"],
+    caveat_codes: [],
+  })
+})
+
 test("projectRoutinePlan preserves supplied effective care context in care balance output", () => {
   const hairProfile = createProfile({
     thickness: "coarse",

@@ -3,12 +3,16 @@ import type {
   CareBalanceConflict,
   CareBalanceRow,
   CurrentTurnCareFact,
+  ShampooCadenceBand,
+  ShampooCadenceAssessment,
 } from "@/lib/recommendation-engine/types"
+import type { ProductFrequency } from "@/lib/vocabulary"
 
 export interface CareBalanceToolContext {
   mode: "production_decision_context"
   authority: CareBalanceToolAuthority
   rows: CareBalanceToolRow[]
+  shampoo_cadence?: CareBalanceToolShampooCadence
   comparison: RecommendationEngineRuntime["legacyPlanComparison"] | null
   current_turn_facts: CareBalanceToolCurrentTurnFact[]
   conflicts: CareBalanceToolConflict[]
@@ -34,6 +38,19 @@ export interface CareBalanceToolRow {
   usage_hint: string
   caveats: string[]
   authority: CareBalanceToolAuthority
+}
+
+export interface CareBalanceToolShampooCadence {
+  current_frequency: ShampooCadenceAssessment["currentFrequency"]
+  target_min: ProductFrequency | null
+  target_max: ProductFrequency | null
+  target_preferred: ProductFrequency | null
+  delta: ShampooCadenceAssessment["delta"]
+  position_in_range: ShampooCadenceAssessment["positionInRange"]
+  base_band: ShampooCadenceAssessment["baseBand"]
+  target_band: ShampooCadenceBand | null
+  reason_codes: string[]
+  caveat_codes: string[]
 }
 
 const CARE_BALANCE_TOOL_AUTHORITY: CareBalanceToolAuthority = {
@@ -103,14 +120,40 @@ export function projectCareBalanceRowForTool(row: CareBalanceRow): CareBalanceTo
   }
 }
 
+function projectShampooCadenceForTool(
+  assessment: ShampooCadenceAssessment | undefined,
+): CareBalanceToolShampooCadence | undefined {
+  if (!assessment) return undefined
+
+  if (assessment.currentFrequency === null && assessment.target === null) {
+    return undefined
+  }
+
+  return {
+    current_frequency: assessment.currentFrequency,
+    target_min: assessment.target?.minFrequency ?? null,
+    target_max: assessment.target?.maxFrequency ?? null,
+    target_preferred: assessment.target?.preferredFrequency ?? null,
+    delta: assessment.delta,
+    position_in_range: assessment.positionInRange,
+    base_band: assessment.baseBand,
+    target_band: assessment.target?.band ?? null,
+    reason_codes: assessment.reasonCodes,
+    caveat_codes: assessment.caveatCodes,
+  }
+}
+
 export function buildCareBalanceToolContext(params: {
   runtime: RecommendationEngineRuntime
   rows: CareBalanceRow[]
 }): CareBalanceToolContext {
+  const shampooCadence = projectShampooCadenceForTool(params.runtime.shampooCadenceAssessment)
+
   return {
     mode: "production_decision_context",
     authority: CARE_BALANCE_TOOL_AUTHORITY,
     rows: params.rows.map(projectCareBalanceRowForTool),
+    ...(shampooCadence ? { shampoo_cadence: shampooCadence } : {}),
     comparison: params.runtime.legacyPlanComparison ?? null,
     current_turn_facts:
       params.runtime.effectiveContext.currentTurnFacts.map(projectCurrentTurnFact),

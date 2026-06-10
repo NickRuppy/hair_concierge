@@ -246,9 +246,21 @@ test("loadAdvisorGuidance normalizes deep cleansing shampoo aliases to deep clea
     conversationState: null,
   })
 
+  const inferredClarifyingAlias = await loadAdvisorGuidance({
+    intent: "category_explanation",
+    category: null,
+    categories: [],
+    profileFocus: [],
+    message: "Was bringt ein clarifying shampoo gegen Build-up?",
+    userContext: createUserContext(),
+    conversationState: null,
+  })
+
   assert.deepEqual(explicitAlias.loaded_guidance_ids, ["topic:deep_cleansing"])
   assert.deepEqual(inferredAlias.loaded_guidance_ids, ["topic:deep_cleansing"])
+  assert.deepEqual(inferredClarifyingAlias.loaded_guidance_ids, ["topic:deep_cleansing"])
   assert.ok(!inferredAlias.loaded_guidance_ids.includes("topic:shampoo"))
+  assert.ok(!inferredClarifyingAlias.loaded_guidance_ids.includes("topic:shampoo"))
   assert.ok(!inferredAlias.loaded_guidance_ids.includes("topic:general_haircare"))
   assert.ok(
     inferredAlias.category_sections.some((section) => section.category === "deep_cleansing"),

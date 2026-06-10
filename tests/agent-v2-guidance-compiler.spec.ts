@@ -178,6 +178,37 @@ test("routine guidance keeps broad basics answers profile-linked and staged", as
   assert.match(brief, /fine hair, dry scalp, oily scalp, curls, or damage/i)
 })
 
+test("shampoo cadence context guidance stays soft and category-specific", async () => {
+  const result = await loadAgentV2GuidancePackages([
+    "base.routine_building.v1",
+    "category.shampoo.v1",
+    "category.dry_shampoo.v1",
+    "category.deep_cleansing_shampoo.v1",
+  ])
+  const brief = result.markdown_brief
+  const shampooMetadata = JSON.parse(
+    readFileSync("data/agent-v2/guidance/categories/shampoo.json", "utf8"),
+  ) as {
+    soft_rubrics: Array<{ rubric_id: string; message: string }>
+  }
+
+  assert.match(brief, /care_balance_context\.shampoo_cadence/i)
+  assert.match(brief, /current rhythm versus target orientation/i)
+  assert.match(brief, /target_preferred/i)
+  assert.match(brief, /2-3 weeks/i)
+  assert.match(brief, /within range, but at the low edge/i)
+  assert.match(brief, /not automatically wrong if the scalp is calm/i)
+  assert.match(brief, /caveat_codes/i)
+  assert.match(brief, /modifier_down_stacked_fiber_fragility/i)
+  assert.match(brief, /does not replace wet scalp cleansing/i)
+  assert.match(brief, /do not turn every reset answer into a wash-frequency lecture/i)
+  assert.ok(
+    shampooMetadata.soft_rubrics.some(
+      (rubric) => rubric.rubric_id === "category.shampoo.cadence_context_delta",
+    ),
+  )
+})
+
 test("product guidance frames ranked products as tradeoff options", async () => {
   const result = await loadAgentV2GuidancePackages(["base.product_recommendation.v1"])
   const brief = result.markdown_brief

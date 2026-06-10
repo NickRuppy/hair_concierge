@@ -1891,6 +1891,18 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
             },
           },
         ],
+        shampoo_cadence: {
+          current_frequency: "weekly_1x",
+          target_min: "weekly_2x",
+          target_max: "weekly_5_6x",
+          target_preferred: "weekly_3_4x",
+          delta: "below",
+          position_in_range: null,
+          base_band: "high",
+          target_band: "high",
+          reason_codes: ["base_scalp_type_oily"],
+          caveat_codes: [],
+        },
         comparison: null,
         current_turn_facts: [],
         conflicts: [],
@@ -1909,6 +1921,9 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
   assert.match(content, /leave_in/)
   assert.match(content, /current-turn category decision context/)
   assert.match(content, /not product truth/)
+  assert.match(content, /shampoo_cadence/)
+  assert.match(content, /"delta":"below"/)
+  assert.match(content, /"target_band":"high"/)
 })
 
 test("AgentV2 runtime supports product recommendations inside an active routine thread", async () => {
