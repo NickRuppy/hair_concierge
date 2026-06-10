@@ -439,7 +439,6 @@ test("recommendation runtime exposes oily weekly shampoo cadence as below high t
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "oily",
       concerns: ["oily_scalp"],
-      wash_frequency: "weekly_1x",
     },
     [{ category: "shampoo", product_name: "Existing shampoo", frequency_range: "weekly_1x" }],
   )

@@ -46,7 +46,9 @@ function shiftBand(band: ShampooCadenceBand, direction: "up" | "down"): ShampooC
 
 function getCurrentShampooFrequency(profile: NormalizedProfile): ProductFrequency | null {
   return (
-    profile.routineInventory.shampoo?.frequencyBand ?? profile.washFrequency ?? "less_than_monthly"
+    profile.routineInventory.shampoo?.frequencyBand ??
+    profile.shampooFrequency ??
+    "less_than_monthly"
   )
 }
 

@@ -32,7 +32,7 @@ function profile(overrides: Partial<NormalizedProfile> = {}): NormalizedProfile 
     density: null,
     concerns: [],
     goals: [],
-    washFrequency: null,
+    shampooFrequency: null,
     heatStyling: null,
     stylingTools: null,
     cuticleCondition: null,
@@ -289,7 +289,6 @@ test("hidden unselected shampoo fallback is hidden from inventory but still driv
   const context = buildEffectiveCareContext(rawInput)
 
   assert.equal(context.normalized.routineInventory.shampoo, null)
-  assert.equal(context.normalized.washFrequency, "less_than_monthly")
 
   const assessment = buildShampooCadenceAssessment(context.normalized)
 
@@ -312,24 +311,6 @@ test("visible shampoo with unknown frequency uses the same fallback as an empty 
   assert.equal(assessment.currentFrequency, "less_than_monthly")
   assert.equal(assessment.target?.band, "high")
   assert.equal(assessment.delta, "below")
-})
-
-test("legacy wash frequency still backfills an unknown shampoo cadence before the rare fallback", () => {
-  const assessment = buildShampooCadenceAssessment(
-    profile({
-      scalpType: "oily",
-      washFrequency: "weekly_2x",
-      routineInventory: {
-        ...profile().routineInventory,
-        shampoo: inventoryItem("shampoo", null),
-      },
-    }),
-  )
-
-  assert.equal(assessment.currentFrequency, "weekly_2x")
-  assert.equal(assessment.target?.band, "high")
-  assert.equal(assessment.delta, "near")
-  assert.equal(assessment.positionInRange, "lower_edge")
 })
 
 test("cadence-relevant likely reset assessment moves a balanced scalp up to the high target", () => {

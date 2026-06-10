@@ -322,7 +322,6 @@ test("projectRoutinePlan includes shampoo cadence in care balance context", () =
     hairProfile: createProfile({
       scalp_type: "oily",
       concerns: ["oily_scalp"],
-      wash_frequency: "weekly_1x",
       current_routine_products: ["shampoo", "conditioner"],
     }),
     routineItems: [
