@@ -222,7 +222,7 @@ function parseFixture(rawFixture: string): GuidanceMigrationRegressionFixture {
         concerns: ["dryness", "frizz"],
         goals: ["less_frizz", "shine", "moisture"],
         chemical_treatment: ["colored"],
-        wash_frequency: "weekly_3_4x",
+        shampoo_frequency: "weekly_3_4x",
         drying_method: "air_dry",
         heat_styling: "rarely",
         protein_moisture_balance: "stretches_bounces",

@@ -44,7 +44,7 @@ export function normalizeRecommendationInput(input: RawRecommendationInput): Nor
     density: profile.density,
     concerns: profile.concerns ?? [],
     goals: profile.goals ?? [],
-    washFrequency: profile.wash_frequency,
+    shampooFrequency: profile.shampoo_frequency,
     heatStyling: profile.heat_styling,
     stylingTools: profile.styling_tools ?? null,
     cuticleCondition: profile.cuticle_condition,

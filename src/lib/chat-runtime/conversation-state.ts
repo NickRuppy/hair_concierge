@@ -438,7 +438,7 @@ function isLikelyPendingRoutineAnswer(message: string): boolean {
 function toAnsweredSlots(message: string, hairProfile: HairProfile | null): string[] {
   const slots = new Set<string>()
   const lower = message.toLowerCase()
-  if (hairProfile?.wash_frequency || hasRoutineCadenceSignal(lower)) {
+  if (hairProfile?.shampoo_frequency || hasRoutineCadenceSignal(lower)) {
     slots.add("routine")
   }
   if ((hairProfile?.current_routine_products?.length ?? 0) > 0 || hasProductSignal(lower)) {

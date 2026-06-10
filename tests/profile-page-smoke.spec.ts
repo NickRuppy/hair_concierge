@@ -96,7 +96,6 @@ test.describe.serial("@ci Profile page smoke", () => {
       thickness: "fine",
       density: "medium",
       concerns: [],
-      wash_frequency: "weekly_1x",
       heat_styling: "once_weekly",
       styling_tools: ["flat_iron"],
       uses_heat_protection: true,
@@ -165,12 +164,22 @@ test.describe.serial("@ci Profile page smoke", () => {
       )
     }, cookieConsentStorageKey)
 
-    await page.goto(`${baseUrl}/auth`, { waitUntil: "domcontentloaded" })
+    await page.goto(`${baseUrl}/auth?email=${encodeURIComponent(email)}`, {
+      waitUntil: "networkidle",
+    })
     await expect(page.getByText("chaarlie").first()).toBeVisible({ timeout: 15000 })
 
-    await page.locator('input[type="email"]:visible').fill(email)
-    await page.locator('input[type="password"]:visible').fill(password)
-    await page.getByRole("button", { name: /^Anmelden$/ }).click()
+    const emailInput = page.locator('input[type="email"]:visible')
+    const passwordInput = page.locator('input[type="password"]:visible')
+    await emailInput.fill("")
+    await emailInput.pressSequentially(email)
+    await passwordInput.fill("")
+    await passwordInput.pressSequentially(password)
+    const loginButton = page.getByRole("button", { name: /^Anmelden$/ })
+    await expect(emailInput).toHaveValue(email)
+    await expect(passwordInput).toHaveValue(password)
+    await expect(loginButton).toBeEnabled()
+    await loginButton.click()
     await page.waitForURL(/\/(chat|profile|pricing)(\?.*)?$/, { timeout: 30000 })
 
     await page.goto(`${baseUrl}/profile`, { waitUntil: "domcontentloaded" })
@@ -285,15 +294,6 @@ test.describe.serial("@ci Profile page smoke", () => {
     await page.waitForURL(/\/profile$/, { timeout: 30000 })
     await expect(page.getByText("Edited Shampoo").first()).toBeVisible()
     await expect(page.getByText("5-6x/Woche").first()).toBeVisible()
-
-    const { data: shampooCompatibilityRow, error: shampooCompatibilityError } = await admin
-      .from("hair_profiles")
-      .select("wash_frequency")
-      .eq("user_id", userId!)
-      .single()
-
-    if (shampooCompatibilityError) throw shampooCompatibilityError
-    expect(shampooCompatibilityRow?.wash_frequency).toBe("weekly_1x")
 
     const { data: shampooUsageRow, error: shampooUsageError } = await admin
       .from("user_product_usage")

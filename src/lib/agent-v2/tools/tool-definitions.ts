@@ -47,7 +47,6 @@ import {
   STYLING_TOOLS,
   TOWEL_MATERIALS,
   TOWEL_TECHNIQUES,
-  WASH_FREQUENCIES,
 } from "@/lib/vocabulary"
 import { PRODUCT_FREQUENCIES } from "@/lib/vocabulary/frequencies"
 
@@ -161,7 +160,7 @@ export const ProfileFactFieldSchema = z.enum([
   "hairTexture",
   "thickness",
   "density",
-  "washFrequency",
+  "shampooFrequency",
   "heatStyling",
   "cuticleCondition",
   "proteinMoistureBalance",
@@ -410,7 +409,7 @@ function normalizeProfileOverrideValue(field: ProfileFactField, value: string | 
     hairTexture: HAIR_TEXTURES,
     thickness: HAIR_THICKNESSES,
     density: HAIR_DENSITIES,
-    washFrequency: WASH_FREQUENCIES,
+    shampooFrequency: PRODUCT_FREQUENCIES,
     heatStyling: HEAT_STYLING_LEVELS,
     cuticleCondition: CUTICLE_CONDITIONS,
     proteinMoistureBalance: PROTEIN_MOISTURE_LEVELS,

@@ -55,7 +55,7 @@ function hasMeaningfulProfile(profile: HairProfile | null): profile is HairProfi
     profile.scalp_condition ||
     profile.protein_moisture_balance ||
     profile.cuticle_condition ||
-    profile.wash_frequency ||
+    profile.shampoo_frequency ||
     profile.heat_styling ||
     profile.desired_volume ||
     profile.routine_preference ||
@@ -132,7 +132,7 @@ function buildScalpPrompt(profile: HairProfile): SuggestedPrompt {
   if (
     profile.scalp_type === "oily" ||
     hasConcern(profile, "oily_scalp") ||
-    profile.wash_frequency === "daily_1x"
+    profile.shampoo_frequency === "daily_1x"
   ) {
     return {
       text: "Welches Shampoo passt zu meinem schnell fettenden Ansatz?",

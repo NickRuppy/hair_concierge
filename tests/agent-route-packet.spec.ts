@@ -15,7 +15,7 @@ function createContext(overrides: Partial<UserContextProjection> = {}): UserCont
     profile: {
       hair_texture: "curly",
       concerns: ["dryness"],
-      wash_frequency: "weekly_3_4x",
+      shampoo_frequency: "weekly_3_4x",
     } as HairProfile,
     routine_inventory: [],
     relevant_memory: [],

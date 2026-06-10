@@ -18,7 +18,7 @@ const LEGACY_PRODUCT_FREQUENCY_ALIASES = {
   daily: "daily_1x",
 } as const
 
-const LEGACY_WASH_FREQUENCY_ALIASES = {
+const LEGACY_PROFILE_FREQUENCY_ALIASES = {
   once_weekly: "weekly_1x",
   every_4_5_days: "weekly_2x",
   every_2_3_days: "weekly_3_4x",
@@ -29,7 +29,7 @@ const PRODUCT_FREQUENCY_SET = new Set<string>(PRODUCT_FREQUENCIES)
 export type ProductFrequencyInput =
   | ProductFrequency
   | keyof typeof LEGACY_PRODUCT_FREQUENCY_ALIASES
-  | keyof typeof LEGACY_WASH_FREQUENCY_ALIASES
+  | keyof typeof LEGACY_PROFILE_FREQUENCY_ALIASES
 
 export interface ProductFrequencyMetadata {
   value: ProductFrequency
@@ -135,7 +135,7 @@ export function normalizeProductFrequency(
 
   return (
     LEGACY_PRODUCT_FREQUENCY_ALIASES[frequency as keyof typeof LEGACY_PRODUCT_FREQUENCY_ALIASES] ??
-    LEGACY_WASH_FREQUENCY_ALIASES[frequency as keyof typeof LEGACY_WASH_FREQUENCY_ALIASES] ??
+    LEGACY_PROFILE_FREQUENCY_ALIASES[frequency as keyof typeof LEGACY_PROFILE_FREQUENCY_ALIASES] ??
     null
   )
 }
@@ -181,13 +181,6 @@ export function chooseHigherProductFrequency(
 
   return compareProductFrequencies(current, incoming) === -1 ? incoming : current
 }
-
-export const WASH_FREQUENCIES = PRODUCT_FREQUENCIES
-export type WashFrequency = ProductFrequency
-
-export const WASH_FREQUENCY_LABELS = PRODUCT_FREQUENCY_LABELS
-
-export const WASH_FREQUENCY_OPTIONS = PRODUCT_FREQUENCY_OPTIONS
 
 export const HEAT_STYLING_LEVELS = [
   "daily",

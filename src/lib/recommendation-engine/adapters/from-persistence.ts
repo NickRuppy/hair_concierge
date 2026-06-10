@@ -1,6 +1,6 @@
 import type { HairProfile, RoutineProduct } from "@/lib/types"
 import {
-  deriveWashFrequencyFromRoutineItems,
+  deriveShampooFrequencyFromRoutineItems,
   type RoutineInventoryLike,
 } from "@/lib/hair-profile/derived"
 import {
@@ -65,7 +65,7 @@ function emptyRawHairProfileInput(): RawHairProfileInput {
     density: null,
     concerns: [],
     goals: [],
-    wash_frequency: null,
+    shampoo_frequency: null,
     heat_styling: null,
     styling_tools: null,
     cuticle_condition: null,
@@ -91,7 +91,7 @@ function buildRawHairProfileInput(
     return emptyRawHairProfileInput()
   }
 
-  const derivedWashFrequency = deriveWashFrequencyFromRoutineItems(routineItems)
+  const derivedShampooRoutineFrequency = deriveShampooFrequencyFromRoutineItems(routineItems)
   const derivedShampooFrequency = options.derivedShampooFrequency ?? null
 
   return {
@@ -100,7 +100,7 @@ function buildRawHairProfileInput(
     density: profile.density,
     concerns: profile.concerns ?? [],
     goals: profile.goals ?? [],
-    wash_frequency: derivedWashFrequency ?? derivedShampooFrequency,
+    shampoo_frequency: derivedShampooRoutineFrequency ?? derivedShampooFrequency,
     heat_styling: profile.heat_styling,
     styling_tools: profile.styling_tools ?? null,
     cuticle_condition: profile.cuticle_condition,

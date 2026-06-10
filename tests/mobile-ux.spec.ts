@@ -113,7 +113,6 @@ for (const mobileViewport of mobileViewports) {
           chemical_treatment: ["colored"],
           goals: ["less_frizz"],
           desired_volume: "balanced",
-          wash_frequency: "weekly_3_4x",
           heat_styling: "never",
           styling_tools: [],
           night_protection: [],
@@ -122,6 +121,14 @@ for (const mobileViewport of mobileViewports) {
         { onConflict: "user_id" },
       )
       if (hairProfileError) throw hairProfileError
+
+      const { error: productUsageError } = await admin.from("user_product_usage").insert({
+        user_id: userId,
+        category: "shampoo",
+        product_name: "Shampoo",
+        frequency_range: "weekly_3_4x",
+      })
+      if (productUsageError) throw productUsageError
     })
 
     test.afterAll(async () => {

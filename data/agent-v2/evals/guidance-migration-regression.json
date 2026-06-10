@@ -22,7 +22,7 @@
       "chemical_treatment": [
         "colored"
       ],
-      "wash_frequency": "weekly_3_4x",
+      "shampoo_frequency": "weekly_3_4x",
       "drying_method": "air_dry",
       "heat_styling": "rarely",
       "protein_moisture_balance": "stretches_bounces",
@@ -46,7 +46,7 @@
       "chemical_treatment": [
         "colored"
       ],
-      "wash_frequency": "weekly_3_4x",
+      "shampoo_frequency": "weekly_3_4x",
       "drying_method": "air_dry",
       "heat_styling": "rarely",
       "protein_moisture_balance": "stretches_bounces",
@@ -67,7 +67,7 @@
       "chemical_treatment": [
         "colored"
       ],
-      "wash_frequency": null,
+      "shampoo_frequency": null,
       "drying_method": "air_dry",
       "heat_styling": "rarely",
       "protein_moisture_balance": null,

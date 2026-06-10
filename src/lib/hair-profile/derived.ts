@@ -9,7 +9,7 @@ import {
   normalizeProductFrequency,
   ROUTINE_PRODUCTS,
   type RoutineProduct,
-  type WashFrequency,
+  type ProductFrequency,
 } from "@/lib/vocabulary"
 
 export type RoutineInventoryLike = ProductUsageFrequencyLike
@@ -22,10 +22,10 @@ function normalizeRoutineProductCategory(category: string): RoutineProduct | nul
     : null
 }
 
-export function deriveWashFrequencyFromRoutineItems(
+export function deriveShampooFrequencyFromRoutineItems(
   routineItems: RoutineInventoryLike[],
-): WashFrequency | null {
-  return routineItems.reduce<WashFrequency | null>((highestFrequency, item) => {
+): ProductFrequency | null {
+  return routineItems.reduce<ProductFrequency | null>((highestFrequency, item) => {
     if (item.category !== "shampoo") return highestFrequency
     return chooseHigherProductFrequency(
       highestFrequency,
@@ -87,7 +87,7 @@ export function hydrateHairProfileForConsumers(
 
   return {
     ...profile,
-    wash_frequency: deriveWashFrequencyFromRoutineItems(routineItems),
+    shampoo_frequency: deriveShampooFrequencyFromRoutineItems(routineItems),
     current_routine_products: deriveCurrentRoutineProductsFromRoutineItems(
       routineItems,
       profile.current_routine_products ?? null,

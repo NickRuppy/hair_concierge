@@ -83,11 +83,11 @@ export interface BuildOrFixRoutinePriorityContext {
 }
 
 export interface BuildOrFixRoutineMissingInfo {
-  key: "hair_texture" | "wash_frequency" | "current_routine_products"
+  key: "hair_texture" | "shampoo_frequency" | "current_routine_products"
   label: string
   why_it_matters: string
   blocking: boolean
-  expected_type: "HairTexture" | "WashFrequency" | "RoutineProduct[]"
+  expected_type: "HairTexture" | "ProductFrequency" | "RoutineProduct[]"
 }
 
 export interface BuildOrFixRoutineProjection {
@@ -365,13 +365,13 @@ function buildMissingInfo(params: {
     })
   }
 
-  if (!context.wash_frequency) {
+  if (!context.shampoo_frequency) {
     missing.push({
-      key: "wash_frequency",
+      key: "shampoo_frequency",
       label: "Shampoo-Rhythmus",
       why_it_matters: "Der Shampoo-Rhythmus bestimmt, wie oft die Routine wirklich greifen muss.",
       blocking: false,
-      expected_type: "WashFrequency",
+      expected_type: "ProductFrequency",
     })
   }
 
@@ -448,7 +448,7 @@ export function projectRoutinePlan(params: {
 
   const inventoryMatters = objective !== "build_routine"
   const completedBase =
-    Number(Boolean(context.hair_texture)) + Number(Boolean(context.wash_frequency))
+    Number(Boolean(context.hair_texture)) + Number(Boolean(context.shampoo_frequency))
   const completed =
     completedBase +
     (inventoryMatters ? Number((params.hairProfile?.current_routine_products ?? []).length > 0) : 0)

@@ -14,7 +14,6 @@ const FULL_PROFILE: HairProfileOverrides = {
   scalp_type: "balanced",
   scalp_condition: "none",
   chemical_treatment: ["colored"],
-  wash_frequency: "weekly_3_4x",
   heat_styling: "rarely",
   drying_method: "air_dry",
   towel_technique: "rough_rubbing",

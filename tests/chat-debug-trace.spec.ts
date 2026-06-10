@@ -54,7 +54,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     density: "medium",
     concerns: ["frizz"],
     products_used: null,
-    wash_frequency: "weekly_3_4x",
+    shampoo_frequency: "weekly_3_4x",
     heat_styling: "never",
     styling_tools: [],
     goals: ["less_frizz"],
@@ -262,7 +262,7 @@ function createRuntimeAgenticToolLoopTrace(): RuntimeAgenticToolLoopTrace {
         output: {
           objective: "fix_routine",
           steps: [{ label: "Ansatz klaeren" }],
-          missing_info: [{ key: "wash_frequency" }],
+          missing_info: [{ key: "shampoo_frequency" }],
           raw: "RAW_ROUTINE_OUTPUT_BLOB_SHOULD_NOT_PERSIST",
         },
       },

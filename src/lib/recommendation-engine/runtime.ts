@@ -188,7 +188,7 @@ function buildRawInputFromEffectiveContext(context: EffectiveCareContext): RawRe
       density: profile.density,
       concerns: [...profile.concerns],
       goals: [...profile.goals],
-      wash_frequency: profile.washFrequency,
+      shampoo_frequency: profile.shampooFrequency,
       heat_styling: profile.heatStyling,
       styling_tools: profile.stylingTools ? [...profile.stylingTools] : null,
       cuticle_condition: profile.cuticleCondition,
