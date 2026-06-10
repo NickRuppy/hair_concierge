@@ -81,6 +81,7 @@ import type {
   ResetIntensity,
   ResetLevel,
   ShampooCategoryDecision as RecommendationEngineShampooCategoryDecision,
+  ShampooCadenceAssessment as RecommendationEngineShampooCadenceAssessment,
 } from "@/lib/recommendation-engine/types"
 import type { ShampooBucket, ShampooBucketPair } from "@/lib/shampoo/constants"
 
@@ -534,6 +535,7 @@ export interface RecommendationEngineTrace {
   damage: RecommendationEngineDamageAssessment
   care_needs: RecommendationEngineCareNeedAssessment
   reset: RecommendationEngineResetAssessment
+  shampoo_cadence_assessment: RecommendationEngineShampooCadenceAssessment | null
   intervention_plan: RecommendationEngineInterventionPlan
   care_balance: RecommendationEngineCareBalanceSet
   legacy_plan_comparison: RecommendationEngineCareBalanceLegacyComparison | null

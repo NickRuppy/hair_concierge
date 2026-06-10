@@ -539,15 +539,14 @@ function buildLeaveInComparisonFactsForSet(
     }
   })
   const result: Record<string, string[]> = {}
+  const valuesByKey = buildComparisonValuesByKey(factRows)
 
   for (const row of factRows) {
     const facts: string[] = []
     for (const candidate of row.candidates) {
       if (candidate.key === "price") continue
-      const values = new Set(
-        factRows.map((other) => other.candidates.find((item) => item.key === candidate.key)?.value),
-      )
-      if (values.size <= 1) continue
+      const values = valuesByKey.get(candidate.key)
+      if (!values || values.size <= 1) continue
       facts.push(candidate.text)
       if (facts.length >= 3) break
     }
@@ -571,6 +570,20 @@ interface ComparisonFactCandidate {
   key: string
   value: string
   text: string
+}
+
+function buildComparisonValuesByKey(
+  factRows: Array<{ candidates: ComparisonFactCandidate[] }>,
+): Map<string, Set<string>> {
+  const valuesByKey = new Map<string, Set<string>>()
+  for (const row of factRows) {
+    for (const candidate of row.candidates) {
+      const values = valuesByKey.get(candidate.key) ?? new Set<string>()
+      values.add(candidate.value)
+      valuesByKey.set(candidate.key, values)
+    }
+  }
+  return valuesByKey
 }
 
 function preferMismatchFitFact(
@@ -651,15 +664,14 @@ function buildMaskComparisonFactsForSet(products: MatchedProduct[]): Record<stri
     }
   })
   const result: Record<string, string[]> = {}
+  const valuesByKey = buildComparisonValuesByKey(factRows)
 
   for (const row of factRows) {
     const facts: string[] = []
     for (const candidate of row.candidates) {
       if (candidate.key === "price") continue
-      const values = new Set(
-        factRows.map((other) => other.candidates.find((item) => item.key === candidate.key)?.value),
-      )
-      if (values.size <= 1) continue
+      const values = valuesByKey.get(candidate.key)
+      if (!values || values.size <= 1) continue
       facts.push(candidate.text)
       if (facts.length >= 3) break
     }
@@ -721,14 +733,13 @@ function buildOilComparisonFactsForSet(products: MatchedProduct[]): Record<strin
     }
   })
   const result: Record<string, string[]> = {}
+  const valuesByKey = buildComparisonValuesByKey(factRows)
 
   for (const row of factRows) {
     const facts: string[] = []
     for (const candidate of row.candidates) {
-      const values = new Set(
-        factRows.map((other) => other.candidates.find((item) => item.key === candidate.key)?.value),
-      )
-      if (values.size <= 1) continue
+      const values = valuesByKey.get(candidate.key)
+      if (!values || values.size <= 1) continue
       facts.push(candidate.text)
       if (facts.length >= 2) break
     }

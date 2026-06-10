@@ -693,6 +693,9 @@ test.describe("Chat debug trace", () => {
       peeling: expect.objectContaining({ category: "peeling" }),
     })
     expect(trace.decision_context.engine_trace?.care_balance.rows).toHaveLength(10)
+    expect(trace.decision_context.engine_trace?.shampoo_cadence_assessment).toEqual(
+      engineTrace.shampoo_cadence_assessment,
+    )
     expect(trace.decision_context.engine_trace?.legacy_plan_comparison).toEqual(
       expect.objectContaining({
         projectedPlan: expect.objectContaining({

@@ -937,6 +937,35 @@ test("projectSelectedProducts exposes leave-in claims and unsupported ingredient
   assertProjectionDoesNotExposeFallback(result)
 })
 
+test("projectSelectedProducts prefers concrete leave-in differences over missing metadata", () => {
+  const result = projectSelectedProducts(
+    [
+      createLeaveInMatchedProduct("p-with-format", 0.94),
+      createLeaveInMatchedProduct("p-without-format", 0.88, {
+        product_format: undefined,
+        product_weight: "light",
+      }),
+    ],
+    {
+      hair_texture: "wavy",
+      thickness: "fine",
+      density: "medium",
+      protein_moisture_balance: "snaps",
+    } as HairProfile,
+    "leave_in",
+    createRuntimeStub(),
+  )
+
+  assert.deepEqual(result.comparison_facts?.["p-with-format"]?.slice(0, 2), [
+    "Gewicht: Mittel",
+    "Format: Spray",
+  ])
+  assert.deepEqual(result.comparison_facts?.["p-without-format"]?.slice(0, 2), [
+    "Gewicht: Leicht",
+    "Balance: Feuchtigkeit",
+  ])
+})
+
 test("projectSelectedProducts describes weaker leave-in alternatives without internal fallback wording", () => {
   const result = projectSelectedProducts(
     [
@@ -1824,6 +1853,30 @@ test("projectSelectedProducts keeps mask comparison facts useful when fit axes m
   })
   assertComparisonFactsAtLeast(result, ["p-mask-cheap", "p-mask-pricey"], 2)
   assertProjectionDoesNotExposeFallback(result)
+})
+
+test("projectSelectedProducts prefers concrete mask differences over missing metadata", () => {
+  const result = projectSelectedProducts(
+    [
+      createMaskMatchedProduct("p-mask-with-balance", 0.94),
+      createMaskMatchedProduct("p-mask-without-balance", 0.93, {
+        product_balance_direction: undefined,
+        product_concentration: "high",
+      }),
+    ],
+    LOW_DAMAGE_PROFILE,
+    "mask",
+    createRuntimeStub(),
+  )
+
+  assert.deepEqual(result.comparison_facts?.["p-mask-with-balance"]?.slice(0, 2), [
+    "Intensität: Mittel",
+    "Balance: Protein",
+  ])
+  assert.deepEqual(result.comparison_facts?.["p-mask-without-balance"]?.slice(0, 2), [
+    "Intensität: Hoch",
+    "Gewicht: Mittel",
+  ])
 })
 
 test("projectSelectedProducts keeps optional bondbuilder assessment with priced products", () => {
@@ -2901,6 +2954,30 @@ test("projectSelectedProducts exposes oil claims, caveats, and lean comparison f
     result.unsupported_requested_signals[0]?.user_message,
     "Wünsche wie silikonfrei, kokosfrei, proteinfrei oder ölfrei sind in dieser Öl-Auswahl noch nicht sicher geprüft. Ich bewerte die Optionen deshalb nach Öl-Zweck, Haardicke, Anwendung und Fit.",
   )
+})
+
+test("projectSelectedProducts does not compare oil subtype against missing metadata", () => {
+  const result = projectSelectedProducts(
+    [
+      createOilMatchedProduct("dry-oil", 0.94),
+      createOilMatchedProduct("generic-finish", 0.82, {
+        matched_subtype: undefined,
+        use_mode: "styling_finish",
+      }),
+    ],
+    LOW_DAMAGE_PROFILE,
+    "oil",
+    createRuntimeStub({
+      requestContext: {
+        ...createRuntimeStub().requestContext,
+        requestedCategory: "oil",
+        oilPurpose: "light_finish",
+      },
+    }),
+  )
+
+  assert.deepEqual(result.comparison_facts?.["dry-oil"], ["Öl-Zweck: Leichtes Finish"])
+  assert.deepEqual(result.comparison_facts?.["generic-finish"], ["Öl-Zweck: Styling-Finish"])
 })
 
 test("selectProducts carries unsupported ingredient caveats for live oil requests", async () => {

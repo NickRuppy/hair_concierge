@@ -222,6 +222,7 @@ export function buildRecommendationEngineTrace(params: {
     damage: runtime.damage,
     care_needs: runtime.careNeeds,
     reset: runtime.reset,
+    shampoo_cadence_assessment: runtime.shampooCadenceAssessment ?? null,
     intervention_plan: runtime.plan,
     care_balance: runtime.careBalance,
     legacy_plan_comparison: runtime.legacyPlanComparison ?? null,
