@@ -13,7 +13,7 @@ function makeProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     density: null,
     concerns: [],
     products_used: null,
-    wash_frequency: null,
+    shampoo_frequency: null,
     heat_styling: null,
     styling_tools: [],
     goals: [],

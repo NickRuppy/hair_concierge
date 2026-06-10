@@ -17,7 +17,7 @@ function makeProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     density: null,
     concerns: [],
     products_used: null,
-    wash_frequency: "weekly_3_4x",
+    shampoo_frequency: "weekly_3_4x",
     heat_styling: null,
     styling_tools: null,
     goals: [],
@@ -107,7 +107,7 @@ test("buildUserContextProjection exposes visible profile signals for response fr
       protein_moisture_balance: "stretches_stays",
       concerns: ["oily_scalp", "dryness", "frizz"],
       scalp_type: "oily",
-      wash_frequency: "weekly_3_4x",
+      shampoo_frequency: "weekly_3_4x",
       current_routine_products: ["shampoo", "conditioner"],
     }),
     routineItems: [],
@@ -124,7 +124,7 @@ test("buildUserContextProjection exposes visible profile signals for response fr
 
 test("buildUserContextProjection hides unselected shampoo fallback from routine inventory", () => {
   const projection = buildUserContextProjection({
-    hairProfile: makeProfile({ wash_frequency: "less_than_monthly" }),
+    hairProfile: makeProfile({ shampoo_frequency: "less_than_monthly" }),
     routineItems: [
       {
         category: "shampoo",
@@ -153,7 +153,7 @@ test("buildUserContextProjection surfaces missing profile fields", () => {
   const projection = buildUserContextProjection({
     hairProfile: makeProfile({
       hair_texture: null,
-      wash_frequency: null,
+      shampoo_frequency: null,
     }),
     routineItems: [],
     memoryEntries: [],
@@ -161,7 +161,7 @@ test("buildUserContextProjection surfaces missing profile fields", () => {
 
   assert.deepEqual(
     projection.missing_profile.map((entry) => entry.key),
-    ["hair_texture", "wash_frequency"],
+    ["hair_texture", "shampoo_frequency"],
   )
 })
 

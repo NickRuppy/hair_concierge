@@ -4,7 +4,7 @@ import {
   HAIR_TEXTURE_LABELS,
   SCALP_CONDITION_LABELS,
   SCALP_TYPE_LABELS,
-  WASH_FREQUENCY_LABELS,
+  PRODUCT_FREQUENCY_LABELS,
   isProductFrequencyAtLeast,
 } from "@/lib/vocabulary"
 import { CONDITIONER_REPAIR_LEVEL_LABELS } from "@/lib/conditioner/constants"
@@ -273,8 +273,8 @@ function getBaseRoutineTopicId(profile: HairProfile | null): RoutineTopicId | nu
   }
 }
 
-function hasBetweenWashDays(washFrequency: HairProfile["wash_frequency"]): boolean {
-  return washFrequency !== null && washFrequency !== "daily_1x"
+function hasBetweenWashDays(shampooFrequency: HairProfile["shampoo_frequency"]): boolean {
+  return shampooFrequency !== null && shampooFrequency !== "daily_1x"
 }
 
 function getCombinedRoutineText(profile: HairProfile | null, normalizedMessage: string): string {
@@ -476,8 +476,8 @@ function hasOilWeightRisk(profile: HairProfile | null): boolean {
   return profile?.thickness === "fine" && profile?.density === "high"
 }
 
-function hasFrequentWashNeed(washFrequency: HairProfile["wash_frequency"]): boolean {
-  return isProductFrequencyAtLeast(washFrequency, "weekly_3_4x")
+function hasFrequentWashNeed(shampooFrequency: HairProfile["shampoo_frequency"]): boolean {
+  return isProductFrequencyAtLeast(shampooFrequency, "weekly_3_4x")
 }
 
 function hasMechanicalStressNeed(profile: HairProfile | null): boolean {
@@ -512,7 +512,7 @@ function countOwcSupportSignals(profile: HairProfile | null, context: RoutineCon
     count++
   }
   if (hasStrongDrynessDamageCluster(profile)) count++
-  if (hasFrequentWashNeed(context.wash_frequency)) count++
+  if (hasFrequentWashNeed(context.shampoo_frequency)) count++
   if (hasMechanicalStressNeed(profile)) count++
 
   return count
@@ -680,7 +680,7 @@ export function deriveRoutineContext(profile: HairProfile | null, message: strin
     (profile?.goals?.length ?? 0) > 0 ||
     Boolean(profile?.hair_texture)
   const cadenceComplete =
-    Boolean(profile?.wash_frequency) ||
+    Boolean(profile?.shampoo_frequency) ||
     Boolean(profile?.scalp_type) ||
     (profile?.current_routine_products?.length ?? 0) > 0
   const inventoryComplete =
@@ -690,7 +690,7 @@ export function deriveRoutineContext(profile: HairProfile | null, message: strin
     hair_texture: profile?.hair_texture ?? null,
     thickness: profile?.thickness ?? null,
     density: profile?.density ?? null,
-    wash_frequency: profile?.wash_frequency ?? null,
+    shampoo_frequency: profile?.shampoo_frequency ?? null,
     heat_styling: profile?.heat_styling ?? null,
     styling_tools: profile?.styling_tools ?? null,
     drying_method: profile?.drying_method ?? null,
@@ -708,7 +708,7 @@ export function deriveRoutineContext(profile: HairProfile | null, message: strin
     organizer_complete: organizerComplete,
     cadence_complete: cadenceComplete,
     inventory_complete: inventoryComplete,
-    has_between_wash_days: hasBetweenWashDays(profile?.wash_frequency ?? null),
+    has_between_wash_days: hasBetweenWashDays(profile?.shampoo_frequency ?? null),
     has_buildup_signals: hasScalpClarify || hasHairReset,
     has_scalp_clarify_signals: hasScalpClarify,
     has_hair_reset_signals: hasHairReset,
@@ -926,8 +926,8 @@ function buildSectionSummary(
   profile: HairProfile | null,
 ): string {
   if (phase === "base_wash") {
-    const washLabel = profile?.wash_frequency
-      ? (WASH_FREQUENCY_LABELS[profile.wash_frequency] ?? profile.wash_frequency)
+    const washLabel = profile?.shampoo_frequency
+      ? (PRODUCT_FREQUENCY_LABELS[profile.shampoo_frequency] ?? profile.shampoo_frequency)
       : "an deinen Waschtagen"
     return `Die Basisroutine orientiert sich an ${washLabel.toLowerCase()}.`
   }
@@ -1447,8 +1447,8 @@ function buildRoutineSlots(
     label: "Shampoo",
     action: shampooPresent ? "keep" : "add",
     category: "shampoo",
-    cadence: profile?.wash_frequency
-      ? `${WASH_FREQUENCY_LABELS[profile.wash_frequency] ?? profile.wash_frequency}`
+    cadence: profile?.shampoo_frequency
+      ? `${PRODUCT_FREQUENCY_LABELS[profile.shampoo_frequency] ?? profile.shampoo_frequency}`
       : "an deinen Waschtagen",
     rationale: [
       "Shampoo bleibt der feste Startpunkt für die Kopfhaut und die Waschfrequenz.",

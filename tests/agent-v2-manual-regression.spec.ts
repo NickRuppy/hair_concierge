@@ -367,7 +367,7 @@ test("AgentV2 guidance migration regression fixture keeps normal cases on comple
     chemical_treatment: new Set(["natural", "colored", "bleached"]),
     scalp_type: new Set(["oily", "balanced", "dry"]),
     scalp_condition: new Set(["dandruff", "dry_flakes", "irritated", null]),
-    wash_frequency: new Set([
+    shampoo_frequency: new Set([
       "less_than_monthly",
       "monthly_1x",
       "biweekly_1x",
@@ -390,7 +390,7 @@ test("AgentV2 guidance migration regression fixture keeps normal cases on comple
     "concerns",
     "goals",
     "chemical_treatment",
-    "wash_frequency",
+    "shampoo_frequency",
     "drying_method",
     "heat_styling",
     "protein_moisture_balance",
@@ -461,8 +461,8 @@ test("AgentV2 guidance migration regression fixture keeps normal cases on comple
       `${entry.id}: non-canonical scalp_condition`,
     )
     assert.ok(
-      canonical.wash_frequency.has(profile.wash_frequency as never),
-      `${entry.id}: non-canonical wash_frequency`,
+      canonical.shampoo_frequency.has(profile.shampoo_frequency as never),
+      `${entry.id}: non-canonical shampoo_frequency`,
     )
     assert.ok(
       canonical.protein_moisture_balance.has(profile.protein_moisture_balance as never),

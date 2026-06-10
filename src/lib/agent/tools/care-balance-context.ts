@@ -81,14 +81,14 @@ function buildCareBalanceUsageHint(row: CareBalanceRow): string {
       return `match_heat_exposure:${row.cadencePolicy.expected}:${row.cadencePolicy.heatExposureTier}`
     case "occasional_reset":
       return `occasional_reset:${row.cadencePolicy.resetNeed}`
-    case "match_wash_frequency":
-      return `match_wash_frequency:${row.cadencePolicy.expected}`
+    case "match_shampoo_frequency":
+      return `match_shampoo_frequency:${row.cadencePolicy.expected}`
     case "bridge_between_washes":
       return `bridge_between_washes:${row.cadencePolicy.expected}`
     case "protocol_based":
       return `protocol_based:${row.cadencePolicy.priority}:${row.cadencePolicy.suggestedBand ?? "protocol"}`
     case "baseline_cleansing":
-      return `baseline_cleansing:${row.cadencePolicy.washFrequency ?? "unknown"}`
+      return `baseline_cleansing:${row.cadencePolicy.shampooFrequency ?? "unknown"}`
     case "not_applicable":
       return "not_applicable"
   }

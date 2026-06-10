@@ -818,7 +818,7 @@ test("reset assessment promotes explicit coated hard-water reset request to stro
       ...LOW_DAMAGE_PROFILE,
       hair_texture: "curly",
       chemical_treatment: ["colored"],
-      wash_frequency: "weekly_1x",
+      shampoo_frequency: "weekly_1x",
     },
     [
       { category: "leave_in", product_name: "Curl Cream", frequency_range: "weekly_5_6x" },
@@ -1029,7 +1029,7 @@ test("category set activates support/reset categories for oily buildup-heavy rou
       scalp_type: "oily",
       concerns: ["oily_scalp"],
       goals: ["healthy_scalp"],
-      wash_frequency: "weekly_1x",
+      shampoo_frequency: "weekly_1x",
     },
     [
       {

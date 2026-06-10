@@ -1353,13 +1353,13 @@ function buildEffectiveCareContextForTurn(
 ): EffectiveCareContext {
   const hairProfileRecord =
     userContext.hairProfile && typeof userContext.hairProfile === "object"
-      ? (userContext.hairProfile as { wash_frequency?: string | null })
+      ? (userContext.hairProfile as { shampoo_frequency?: string | null })
       : null
   const adapted = adaptRecommendationInputFromPersistence(
     userContext.hairProfile as never,
     Array.isArray(userContext.routineInventory) ? (userContext.routineInventory as never[]) : [],
     {
-      derivedShampooFrequency: normalizeProductFrequency(hairProfileRecord?.wash_frequency),
+      derivedShampooFrequency: normalizeProductFrequency(hairProfileRecord?.shampoo_frequency),
     },
   )
   return buildEffectiveCareContext(adapted.input, [...facts])

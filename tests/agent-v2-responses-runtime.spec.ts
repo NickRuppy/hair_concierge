@@ -1751,7 +1751,7 @@ test("AgentV2 runtime injects profile-grounded answer quality guidance", async (
       hairProfile: {
         hair_texture: "straight",
         thickness: "fine",
-        wash_frequency: "weekly_3_4x",
+        shampoo_frequency: "weekly_3_4x",
         drying_method: "air_dry",
       },
       routineInventory: [],
@@ -1855,14 +1855,14 @@ test("AgentV2 runtime injects CareBalance as authoritative product-usage context
             strength: "high",
             current_frequency: null,
             cadence_policy: {
-              kind: "match_wash_frequency",
-              washFrequency: "daily_1x",
+              kind: "match_shampoo_frequency",
+              shampooFrequency: "daily_1x",
               expected: "after_every_wash",
             },
             reason_codes: ["conditioner_missing", "dry_lengths"],
             context_reason_codes: [],
             selection_hint_codes: [],
-            usage_hint: "match_wash_frequency:after_every_wash",
+            usage_hint: "match_shampoo_frequency:after_every_wash",
             caveats: ["current_turn_category_decision"],
             authority: {
               product_truth: false,

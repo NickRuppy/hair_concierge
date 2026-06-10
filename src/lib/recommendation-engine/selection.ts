@@ -564,7 +564,7 @@ export function rerankConditionerProductsWithEngine(params: {
       ]
         .filter((reason): reason is string => Boolean(reason))
         .slice(0, 3),
-      tradeoffs: hasCareBalanceReason(careBalanceRow, "conditioner_below_wash_cadence")
+      tradeoffs: hasCareBalanceReason(careBalanceRow, "conditioner_below_shampoo_cadence")
         ? appendCareBalanceMetaReason(
             tradeoffs,
             "CareBalance-Kontext: Conditioner-Frequenz bleibt side-by-side und nicht autoritativ.",

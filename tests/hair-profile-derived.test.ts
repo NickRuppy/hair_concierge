@@ -14,7 +14,7 @@ function makeProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     density: null,
     concerns: [],
     products_used: null,
-    wash_frequency: null,
+    shampoo_frequency: null,
     heat_styling: null,
     styling_tools: null,
     goals: [],
@@ -60,7 +60,7 @@ test("hydrates derived routine categories and products_used from user_product_us
 })
 
 test("hydrates wash cadence from shampoo product usage", () => {
-  const hydrated = hydrateHairProfileForConsumers(makeProfile({ wash_frequency: null }), [
+  const hydrated = hydrateHairProfileForConsumers(makeProfile({ shampoo_frequency: null }), [
     {
       category: "shampoo",
       product_name: "Daily Shampoo",
@@ -68,12 +68,12 @@ test("hydrates wash cadence from shampoo product usage", () => {
     },
   ])
 
-  assert.equal(hydrated?.wash_frequency, "weekly_3_4x")
+  assert.equal(hydrated?.shampoo_frequency, "weekly_3_4x")
   assert.deepEqual(hydrated?.current_routine_products, ["shampoo"])
 })
 
 test("uses the highest shampoo cadence when duplicate shampoo rows exist", () => {
-  const hydrated = hydrateHairProfileForConsumers(makeProfile({ wash_frequency: null }), [
+  const hydrated = hydrateHairProfileForConsumers(makeProfile({ shampoo_frequency: null }), [
     {
       category: "shampoo",
       product_name: "Occasional Shampoo",
@@ -86,13 +86,13 @@ test("uses the highest shampoo cadence when duplicate shampoo rows exist", () =>
     },
   ])
 
-  assert.equal(hydrated?.wash_frequency, "weekly_5_6x")
+  assert.equal(hydrated?.shampoo_frequency, "weekly_5_6x")
 })
 
 test("uses unselected shampoo fallback for cadence without selected routine product display", () => {
   const hydrated = hydrateHairProfileForConsumers(
     makeProfile({
-      wash_frequency: null,
+      shampoo_frequency: null,
       current_routine_products: ["shampoo"],
       products_used: "Shampoo: Legacy",
     }),
@@ -105,13 +105,13 @@ test("uses unselected shampoo fallback for cadence without selected routine prod
     ],
   )
 
-  assert.equal(hydrated?.wash_frequency, "less_than_monthly")
+  assert.equal(hydrated?.shampoo_frequency, "less_than_monthly")
   assert.equal(hydrated?.current_routine_products, null)
   assert.equal(hydrated?.products_used, null)
 })
 
 test("keeps real unnamed less-than-monthly shampoo visible", () => {
-  const hydrated = hydrateHairProfileForConsumers(makeProfile({ wash_frequency: null }), [
+  const hydrated = hydrateHairProfileForConsumers(makeProfile({ shampoo_frequency: null }), [
     {
       category: "shampoo",
       product_name: null,
@@ -119,16 +119,16 @@ test("keeps real unnamed less-than-monthly shampoo visible", () => {
     },
   ])
 
-  assert.equal(hydrated?.wash_frequency, "less_than_monthly")
+  assert.equal(hydrated?.shampoo_frequency, "less_than_monthly")
   assert.deepEqual(hydrated?.current_routine_products, ["shampoo"])
   assert.equal(hydrated?.products_used, "Shampoo")
 })
 
-test("does not infer shampoo frequency from deprecated profile wash_frequency", () => {
+test("does not infer shampoo frequency from deprecated profile shampoo_frequency", () => {
   const hydrated = hydrateHairProfileForConsumers(
-    makeProfile({ wash_frequency: "daily_1x" as never }),
+    makeProfile({ shampoo_frequency: "daily_1x" as never }),
     [],
   )
 
-  assert.equal(hydrated?.wash_frequency, null)
+  assert.equal(hydrated?.shampoo_frequency, null)
 })

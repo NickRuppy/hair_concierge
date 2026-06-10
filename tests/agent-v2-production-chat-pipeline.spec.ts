@@ -65,7 +65,7 @@ function createCompleteHairProfile(overrides: Partial<HairProfile> = {}): HairPr
     density: "medium",
     concerns: ["frizz"],
     products_used: null,
-    wash_frequency: "weekly_3_4x",
+    shampoo_frequency: "weekly_3_4x",
     heat_styling: "rarely",
     styling_tools: [],
     goals: ["curl_definition"],

@@ -284,7 +284,6 @@ test.describe.serial("Conditioner chat E2E", () => {
         density: "low",
         concerns: [],
         products_used: null,
-        wash_frequency: "weekly_3_4x",
         heat_styling: "rarely",
         styling_tools: [],
         goals: ["shine"],
@@ -303,12 +302,20 @@ test.describe.serial("Conditioner chat E2E", () => {
 
     if (profileError) throw profileError
 
-    const { error: usageError } = await admin.from("user_product_usage").insert({
-      user_id: currentUserId,
-      category: "conditioner",
-      product_name: "Conditioner",
-      frequency_range: "weekly_1x",
-    })
+    const { error: usageError } = await admin.from("user_product_usage").insert([
+      {
+        user_id: currentUserId,
+        category: "shampoo",
+        product_name: "Shampoo",
+        frequency_range: "weekly_3_4x",
+      },
+      {
+        user_id: currentUserId,
+        category: "conditioner",
+        product_name: "Conditioner",
+        frequency_range: "weekly_1x",
+      },
+    ])
 
     if (usageError) throw usageError
 
@@ -369,7 +376,6 @@ test.describe.serial("Conditioner chat E2E", () => {
         density: null,
         concerns: [],
         products_used: null,
-        wash_frequency: "weekly_3_4x",
         heat_styling: "rarely",
         styling_tools: [],
         goals: ["shine"],
@@ -388,12 +394,20 @@ test.describe.serial("Conditioner chat E2E", () => {
 
     if (profileError) throw profileError
 
-    const { error: usageError } = await admin.from("user_product_usage").insert({
-      user_id: currentUserId,
-      category: "conditioner",
-      product_name: "Conditioner",
-      frequency_range: "weekly_1x",
-    })
+    const { error: usageError } = await admin.from("user_product_usage").insert([
+      {
+        user_id: currentUserId,
+        category: "shampoo",
+        product_name: "Shampoo",
+        frequency_range: "weekly_3_4x",
+      },
+      {
+        user_id: currentUserId,
+        category: "conditioner",
+        product_name: "Conditioner",
+        frequency_range: "weekly_1x",
+      },
+    ])
 
     if (usageError) throw usageError
 

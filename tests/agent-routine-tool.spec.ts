@@ -20,7 +20,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     density: "medium",
     concerns: ["dryness"],
     products_used: null,
-    wash_frequency: "weekly_3_4x",
+    shampoo_frequency: "weekly_3_4x",
     heat_styling: "never",
     styling_tools: [],
     goals: ["moisture"],
@@ -88,7 +88,7 @@ test("createBuildOrFixRoutineTool derives machine-readable missing-info from com
     hairProfile: createProfile({
       hair_texture: null,
       scalp_type: null,
-      wash_frequency: null,
+      shampoo_frequency: null,
       current_routine_products: [],
       concerns: [],
       goals: [],
@@ -107,11 +107,11 @@ test("createBuildOrFixRoutineTool derives machine-readable missing-info from com
       expected_type: "HairTexture",
     },
     {
-      key: "wash_frequency",
+      key: "shampoo_frequency",
       label: "Shampoo-Rhythmus",
       why_it_matters: "Der Shampoo-Rhythmus bestimmt, wie oft die Routine wirklich greifen muss.",
       blocking: false,
-      expected_type: "WashFrequency",
+      expected_type: "ProductFrequency",
     },
     {
       key: "current_routine_products",
@@ -140,7 +140,7 @@ test("projectRoutinePlan keeps missing-info tied to actual fields when only the 
   const result = projectRoutinePlan({
     hairProfile: createProfile({
       scalp_type: "balanced",
-      wash_frequency: null,
+      shampoo_frequency: null,
       current_routine_products: [],
       products_used: "Ich nutze Shampoo und Conditioner",
     }),
@@ -150,11 +150,11 @@ test("projectRoutinePlan keeps missing-info tied to actual fields when only the 
   assert.equal(result.confidence, 0.33)
   assert.deepEqual(result.missing_info, [
     {
-      key: "wash_frequency",
+      key: "shampoo_frequency",
       label: "Shampoo-Rhythmus",
       why_it_matters: "Der Shampoo-Rhythmus bestimmt, wie oft die Routine wirklich greifen muss.",
       blocking: false,
-      expected_type: "WashFrequency",
+      expected_type: "ProductFrequency",
     },
     {
       key: "current_routine_products",
@@ -245,7 +245,7 @@ test("projectRoutinePlan exposes priority context without changing basics scorin
       density: null,
       scalp_type: "balanced",
       scalp_condition: null,
-      wash_frequency: "daily_1x",
+      shampoo_frequency: "daily_1x",
       products_used: "Shampoo: Old Spice, Oel: Kokosoel, Conditioner: Keine Ahnung",
       current_routine_products: ["shampoo", "oil", "conditioner"],
       goals: ["less_volume", "curl_definition", "healthier_hair"],

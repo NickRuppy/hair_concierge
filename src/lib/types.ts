@@ -4,7 +4,7 @@ import type {
   HairTexture,
   HairThickness,
   HairDensity,
-  WashFrequency,
+  ProductFrequency,
   HeatStyling,
   ProfileConcern,
   Goal,
@@ -89,7 +89,7 @@ export type {
   HairTexture,
   HairThickness,
   HairDensity,
-  WashFrequency,
+  ProductFrequency,
   HeatStyling,
   ProfileConcern,
   Goal,
@@ -112,7 +112,7 @@ export {
   HAIR_DENSITY_OPTIONS,
   PROFILE_CONCERN_OPTIONS,
   GOAL_OPTIONS,
-  WASH_FREQUENCY_OPTIONS,
+  PRODUCT_FREQUENCY_OPTIONS,
   HEAT_STYLING_OPTIONS,
   STYLING_TOOL_OPTIONS,
   PROFILE_CONCERN_LABELS,
@@ -160,7 +160,7 @@ export interface HairProfile {
   density: HairDensity | null
   concerns: ProfileConcern[]
   products_used: string | null
-  wash_frequency: WashFrequency | null
+  shampoo_frequency: ProductFrequency | null
   heat_styling: HeatStyling | null
   styling_tools: StylingTool[] | null
   goals: Goal[]
@@ -591,7 +591,7 @@ export interface RoutineContext {
   hair_texture: HairTexture | null
   thickness: HairThickness | null
   density: HairDensity | null
-  wash_frequency: WashFrequency | null
+  shampoo_frequency: ProductFrequency | null
   heat_styling: HeatStyling | null
   styling_tools: StylingTool[] | null
   drying_method: DryingMethod | null
