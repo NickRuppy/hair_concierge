@@ -58,7 +58,7 @@ test("normalization treats unselected shampoo fallback as cadence but not presen
   ])
   const normalized = normalizeRecommendationInput(adapted.input)
 
-  assert.equal(normalized.washFrequency, "less_than_monthly")
+  assert.equal(normalized.shampooFrequency, "less_than_monthly")
   assert.equal(normalized.routineInventory.shampoo, null)
 })
 
@@ -66,14 +66,14 @@ test("normalization keeps explicit derived shampoo cadence when fallback row is 
   const adapted = adaptRecommendationInputFromPersistence(
     {
       ...LOW_DAMAGE_PROFILE,
-      wash_frequency: "less_than_monthly",
+      shampoo_frequency: "less_than_monthly",
     },
     [],
     { derivedShampooFrequency: "less_than_monthly" },
   )
   const normalized = normalizeRecommendationInput(adapted.input)
 
-  assert.equal(normalized.washFrequency, "less_than_monthly")
+  assert.equal(normalized.shampooFrequency, "less_than_monthly")
   assert.equal(normalized.routineInventory.shampoo, null)
 })
 
@@ -81,13 +81,13 @@ test("normalization does not infer wash cadence from raw deprecated profile fiel
   const adapted = adaptRecommendationInputFromPersistence(
     {
       ...LOW_DAMAGE_PROFILE,
-      wash_frequency: "daily_1x",
+      shampoo_frequency: "daily_1x",
     },
     [],
   )
   const normalized = normalizeRecommendationInput(adapted.input)
 
-  assert.equal(normalized.washFrequency, null)
+  assert.equal(normalized.shampooFrequency, null)
 })
 
 test("normalization keeps real unnamed less-than-monthly shampoo present", () => {
@@ -100,7 +100,7 @@ test("normalization keeps real unnamed less-than-monthly shampoo present", () =>
   ])
   const normalized = normalizeRecommendationInput(adapted.input)
 
-  assert.equal(normalized.washFrequency, "less_than_monthly")
+  assert.equal(normalized.shampooFrequency, "less_than_monthly")
   assert.equal(normalized.routineInventory.shampoo?.present, true)
 })
 

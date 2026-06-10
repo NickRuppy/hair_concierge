@@ -17,7 +17,6 @@ import type {
   StylingTool,
   TowelMaterial,
   TowelTechnique,
-  WashFrequency,
 } from "@/lib/vocabulary"
 import type { ShampooBucket } from "@/lib/shampoo/constants"
 import type { OilNoRecommendationReason, OilPurpose, OilSubtype } from "@/lib/oil/constants"
@@ -127,8 +126,7 @@ export interface RawHairProfileInput {
   density: HairDensity | null
   concerns: ProfileConcern[]
   goals: Goal[]
-  // Phase 1 compatibility name; sourced from user_product_usage(category='shampoo').
-  wash_frequency: WashFrequency | null
+  shampoo_frequency: ProductFrequency | null
   heat_styling: HeatStyling | null
   styling_tools: StylingTool[] | null
   cuticle_condition: CuticleCondition | null
@@ -164,8 +162,7 @@ export interface NormalizedProfile {
   density: HairDensity | null
   concerns: ProfileConcern[]
   goals: Goal[]
-  // Phase 1 compatibility name; sourced from user_product_usage(category='shampoo').
-  washFrequency: WashFrequency | null
+  shampooFrequency: ProductFrequency | null
   heatStyling: HeatStyling | null
   stylingTools: StylingTool[] | null
   cuticleCondition: CuticleCondition | null
@@ -267,8 +264,8 @@ export interface EffectiveCareContext {
 
 export type CareBalanceCadencePolicy =
   | {
-      kind: "match_wash_frequency"
-      washFrequency: WashFrequency | null
+      kind: "match_shampoo_frequency"
+      shampooFrequency: ProductFrequency | null
       expected: "after_every_wash" | "most_washes"
     }
   | {
@@ -285,7 +282,7 @@ export type CareBalanceCadencePolicy =
     }
   | {
       kind: "bridge_between_washes"
-      washFrequency: WashFrequency | null
+      shampooFrequency: ProductFrequency | null
       expected: "short_bridge_only"
     }
   | {
@@ -299,7 +296,7 @@ export type CareBalanceCadencePolicy =
       priority: BondBuilderPriority
       suggestedBand: ProductFrequency | null
     }
-  | { kind: "baseline_cleansing"; washFrequency: WashFrequency | null }
+  | { kind: "baseline_cleansing"; shampooFrequency: ProductFrequency | null }
   | { kind: "not_applicable" }
 
 export interface CareBalanceSelectionHint {

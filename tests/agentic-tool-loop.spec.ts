@@ -2083,7 +2083,7 @@ test("tool-loop current frizz and tangling signals steer routine priority away f
         density: "medium",
         concerns: [],
         products_used: "Shampoo, Conditioner, Maske, Oel",
-        wash_frequency: "weekly_3_4x",
+        shampoo_frequency: "weekly_3_4x",
         heat_styling: "never",
         styling_tools: [],
         goals: [],

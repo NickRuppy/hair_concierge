@@ -142,11 +142,11 @@ export function buildResetAssessment(
   }
 
   if (
-    profile.washFrequency !== null &&
-    !isFrequencyAtLeast(profile.washFrequency, "weekly_2x") &&
+    profile.shampooFrequency !== null &&
+    !isFrequencyAtLeast(profile.shampooFrequency, "weekly_2x") &&
     (oilyScalp || residueProneLoad >= 2 || dryShampooFrequency !== null)
   ) {
-    addSignal(state, 1, "low_wash_cadence_relative_to_load", "routine_exposure")
+    addSignal(state, 1, "low_shampoo_cadence_relative_to_load", "routine_exposure")
   }
 
   if (oilyScalp && residueProneLoad >= 2) {

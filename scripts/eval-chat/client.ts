@@ -208,21 +208,35 @@ export function buildEvalSeedPayloads(
 } {
   const profileFields = { ...overrides }
   delete profileFields.onboarding_completed
+  delete profileFields.shampoo_frequency
   const normalizedProfileFields = Object.fromEntries(
     Object.entries(profileFields).filter(([, value]) => value !== undefined),
   )
+  const routineUsageRows = routineInventory.map((item) => ({
+    user_id: userId,
+    category: item.category,
+    product_name: item.product_name ?? null,
+    frequency_range: item.frequency_range ?? null,
+  }))
+
+  if (
+    typeof overrides.shampoo_frequency === "string" &&
+    !routineUsageRows.some((item) => item.category === "shampoo")
+  ) {
+    routineUsageRows.push({
+      user_id: userId,
+      category: "shampoo",
+      product_name: null,
+      frequency_range: overrides.shampoo_frequency,
+    })
+  }
 
   return {
     hairProfileRow: {
       user_id: userId,
       ...normalizedProfileFields,
     },
-    routineUsageRows: routineInventory.map((item) => ({
-      user_id: userId,
-      category: item.category,
-      product_name: item.product_name ?? null,
-      frequency_range: item.frequency_range ?? null,
-    })),
+    routineUsageRows,
   }
 }
 

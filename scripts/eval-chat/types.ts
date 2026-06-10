@@ -12,7 +12,7 @@ export interface HairProfileOverrides {
   scalp_type?: string | null
   scalp_condition?: string | null
   chemical_treatment?: string[]
-  wash_frequency?: string | null
+  shampoo_frequency?: string | null
   heat_styling?: string | null
   styling_tools?: string[] | null
   drying_method?: string | null

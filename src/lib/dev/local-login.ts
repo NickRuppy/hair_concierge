@@ -159,7 +159,6 @@ async function seedLocalDevProfile(
       scalp_condition: null,
       chemical_treatment: ["colored"],
       desired_volume: "balanced",
-      wash_frequency: "weekly_3_4x",
       heat_styling: "never",
       styling_tools: [],
       towel_material: "mikrofaser",

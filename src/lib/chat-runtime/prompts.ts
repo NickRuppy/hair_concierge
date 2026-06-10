@@ -197,7 +197,7 @@ Regeln:
 - Medizinisch angrenzende Fakten wie Haarausfall, Kopfhautbeschwerden, Schwangerschaft, Medikamente oder Allergien nur speichern, wenn der Nutzer sie explizit als relevant nennt.
 - Keine Smalltalk-Fakten, keine allgemeinen Lebensdetails ohne Haarpflegebezug.
 - Bei Produkterfahrungen setze product_names und sentiment. Negative sentiment bedeutet: Produkt nicht wieder priorisieren.
-- memory_key muss stabil sein, z.B. "product:olaplex_no_3", "preference:duft", "routine:wash_frequency". Bei neuem Widerspruch denselben memory_key verwenden, damit die neueste Aussage gewinnt.
+- memory_key muss stabil sein, z.B. "product:olaplex_no_3", "preference:duft", "routine:shampoo_frequency". Bei neuem Widerspruch denselben memory_key verwenden, damit die neueste Aussage gewinnt.
 - Wenn nichts Neues speicherwürdig ist: {"memories":[]}.
 
 {{EXISTING_MEMORY_SECTION}}

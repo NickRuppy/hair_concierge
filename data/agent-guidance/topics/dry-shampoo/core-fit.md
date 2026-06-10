@@ -6,7 +6,7 @@
 - `profile.scalp_condition`
 - `profile.thickness`
 - `profile.concerns`
-- `wash_frequency`
+- `shampoo_frequency`
 - oily-root, freshness, and time-between-washes signals
 
 ## Category Role

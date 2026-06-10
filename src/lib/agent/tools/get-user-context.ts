@@ -10,15 +10,15 @@ import { loadUserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import {
   HAIR_TEXTURE_LABELS,
   HAIR_THICKNESS_LABELS,
+  PRODUCT_FREQUENCY_LABELS,
   PROTEIN_MOISTURE_LABELS,
   ROUTINE_PRODUCT_LABELS,
   SCALP_TYPE_LABELS,
-  WASH_FREQUENCY_LABELS,
 } from "@/lib/vocabulary"
 import type { GuidanceId } from "@/lib/agent/contracts"
 
 export interface MissingProfileField {
-  key: "hair_texture" | "wash_frequency"
+  key: "hair_texture" | "shampoo_frequency"
   label: "Haarmuster" | "Shampoo-Rhythmus"
   blocking: false
 }
@@ -56,6 +56,10 @@ const OVERLAY_PRIORITY: Partial<Record<GuidanceId, number>> = {
   "overlay:damage_repair": 52,
   "overlay:protein_moisture_balance": 50,
   "overlay:minimal_routine": 45,
+}
+
+function getShampooFrequency(hairProfile: HairProfile | null): HairProfile["shampoo_frequency"] {
+  return hairProfile?.shampoo_frequency ?? null
 }
 
 function formatRoutineProducts(
@@ -110,9 +114,10 @@ function deriveVisibleSignals(hairProfile: HairProfile | null): string[] {
     signals.push(`Kopfhaut: ${SCALP_TYPE_LABELS[hairProfile.scalp_type] ?? hairProfile.scalp_type}`)
   }
 
-  if (hairProfile?.wash_frequency) {
+  const shampooFrequency = getShampooFrequency(hairProfile)
+  if (shampooFrequency) {
     signals.push(
-      `Shampoo-Rhythmus: ${WASH_FREQUENCY_LABELS[hairProfile.wash_frequency] ?? hairProfile.wash_frequency}`,
+      `Shampoo-Rhythmus: ${PRODUCT_FREQUENCY_LABELS[shampooFrequency] ?? shampooFrequency}`,
     )
   }
 
@@ -253,8 +258,8 @@ function deriveMissingProfileFields(hairProfile: HairProfile | null): MissingPro
     missing.push({ key: "hair_texture", label: "Haarmuster", blocking: false })
   }
 
-  if (!hairProfile?.wash_frequency) {
-    missing.push({ key: "wash_frequency", label: "Shampoo-Rhythmus", blocking: false })
+  if (!getShampooFrequency(hairProfile)) {
+    missing.push({ key: "shampoo_frequency", label: "Shampoo-Rhythmus", blocking: false })
   }
 
   return missing

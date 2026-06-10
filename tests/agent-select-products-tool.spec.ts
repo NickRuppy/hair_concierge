@@ -3373,7 +3373,7 @@ test("selectProducts passes explicit dry-shampoo bridge context into category en
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "oily",
       concerns: ["oily_scalp"],
-      wash_frequency: "weekly_3_4x",
+      shampoo_frequency: "weekly_3_4x",
     } as HairProfile,
     memoryContext: {
       enabled: false,
@@ -3429,7 +3429,7 @@ test("selectProducts redirects message-stated frequent dry-shampoo use instead o
     hairProfile: {
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "oily",
-      wash_frequency: "weekly_3_4x",
+      shampoo_frequency: "weekly_3_4x",
     } as HairProfile,
     memoryContext: {
       enabled: false,
@@ -3480,7 +3480,7 @@ test("selectProducts treats dry-shampoo routine need questions as guidance-only,
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "balanced",
       scalp_condition: null,
-      wash_frequency: "daily_1x",
+      shampoo_frequency: "daily_1x",
     } as HairProfile,
     memoryContext: {
       enabled: false,
@@ -3536,7 +3536,7 @@ test("selectProducts does not treat oily-root product wording as a dry-shampoo b
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "oily",
       concerns: ["oily_scalp"],
-      wash_frequency: "weekly_3_4x",
+      shampoo_frequency: "weekly_3_4x",
     } as HairProfile,
     memoryContext: {
       enabled: false,

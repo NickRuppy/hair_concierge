@@ -180,7 +180,8 @@ export function mapResetAssessmentToLegacyBuildupNeed(
 }
 
 export function hasBetweenWashBridgeNeed(profile: NormalizedProfile): boolean {
-  const betweenWashDays = profile.washFrequency !== null && profile.washFrequency !== "daily_1x"
+  const betweenWashDays =
+    profile.shampooFrequency !== null && profile.shampooFrequency !== "daily_1x"
   const oilyBridgeNeed = profile.scalpType === "oily" || profile.concerns.includes("oily_scalp")
   const currentDryShampooUse = profile.routineInventory.dry_shampoo !== null
 

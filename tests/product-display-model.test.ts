@@ -116,7 +116,7 @@ function createFineHairProfile(): HairProfile {
     density: "medium",
     concerns: [],
     products_used: null,
-    wash_frequency: null,
+    shampoo_frequency: null,
     heat_styling: "several_weekly",
     styling_tools: ["blow_dryer", "flat_iron"],
     goals: ["shine"],

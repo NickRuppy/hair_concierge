@@ -203,7 +203,7 @@ function createLocalHairProfile(
     density: currentProfile?.density ?? null,
     concerns: currentProfile?.concerns ?? [],
     products_used: currentProfile?.products_used ?? null,
-    wash_frequency: null,
+    shampoo_frequency: null,
     heat_styling: currentProfile?.heat_styling ?? null,
     styling_tools: currentProfile?.styling_tools ?? null,
     goals: currentProfile?.goals ?? [],

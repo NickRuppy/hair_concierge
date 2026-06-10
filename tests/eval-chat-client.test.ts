@@ -8,7 +8,6 @@ test("buildEvalSeedPayloads keeps routine inventory out of hair_profiles writes"
     "user_eval",
     {
       hair_texture: "wavy",
-      wash_frequency: "weekly_3_4x",
       drying_method: "air_dry",
       onboarding_completed: true,
     },
@@ -27,7 +26,6 @@ test("buildEvalSeedPayloads keeps routine inventory out of hair_profiles writes"
   assert.deepEqual(hairProfileRow, {
     user_id: "user_eval",
     hair_texture: "wavy",
-    wash_frequency: "weekly_3_4x",
     drying_method: "air_dry",
   })
 
@@ -43,6 +41,27 @@ test("buildEvalSeedPayloads keeps routine inventory out of hair_profiles writes"
       category: "conditioner",
       product_name: null,
       frequency_range: null,
+    },
+  ])
+})
+
+test("buildEvalSeedPayloads seeds shampoo usage from profile override when inventory omits it", () => {
+  const { hairProfileRow, routineUsageRows } = buildEvalSeedPayloads("user_eval", {
+    hair_texture: "wavy",
+    shampoo_frequency: "weekly_3_4x",
+  })
+
+  assert.deepEqual(hairProfileRow, {
+    user_id: "user_eval",
+    hair_texture: "wavy",
+  })
+
+  assert.deepEqual(routineUsageRows, [
+    {
+      user_id: "user_eval",
+      category: "shampoo",
+      product_name: null,
+      frequency_range: "weekly_3_4x",
     },
   ])
 })

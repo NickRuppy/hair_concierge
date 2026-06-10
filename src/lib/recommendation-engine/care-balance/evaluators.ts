@@ -98,7 +98,7 @@ function row(
 }
 
 function targetConditionerCadence(profile: NormalizedProfile): ProductFrequency | null {
-  return profile.washFrequency
+  return profile.shampooFrequency
 }
 
 function isAtLeast(frequency: ProductFrequency | null, threshold: ProductFrequency): boolean {
@@ -141,8 +141,8 @@ function evaluateConditioner(input: CareBalanceEvaluationInput): CareBalanceRow 
       recommendationStrength: "high",
       decisiveReasonCodes: ["conditioner_missing", ...needReasons],
       cadencePolicy: {
-        kind: "match_wash_frequency",
-        washFrequency: profile.washFrequency,
+        kind: "match_shampoo_frequency",
+        shampooFrequency: profile.shampooFrequency,
         expected: "after_every_wash",
       },
     })
@@ -157,11 +157,11 @@ function evaluateConditioner(input: CareBalanceEvaluationInput): CareBalanceRow 
       primaryStatus: "underused",
       recommendation: "increase_frequency",
       recommendationStrength: "medium",
-      decisiveReasonCodes: ["conditioner_below_wash_cadence"],
-      contextReasonCodes: [`wash_cadence_${profile.washFrequency}`],
+      decisiveReasonCodes: ["conditioner_below_shampoo_cadence"],
+      contextReasonCodes: [`shampoo_cadence_${profile.shampooFrequency}`],
       cadencePolicy: {
-        kind: "match_wash_frequency",
-        washFrequency: profile.washFrequency,
+        kind: "match_shampoo_frequency",
+        shampooFrequency: profile.shampooFrequency,
         expected: "after_every_wash",
       },
     })
@@ -180,8 +180,8 @@ function evaluateConditioner(input: CareBalanceEvaluationInput): CareBalanceRow 
       decisiveReasonCodes: ["conditioner_load_pressure"],
       contextReasonCodes: ["volume_goal"],
       cadencePolicy: {
-        kind: "match_wash_frequency",
-        washFrequency: profile.washFrequency,
+        kind: "match_shampoo_frequency",
+        shampooFrequency: profile.shampooFrequency,
         expected: "most_washes",
       },
     })
@@ -189,8 +189,8 @@ function evaluateConditioner(input: CareBalanceEvaluationInput): CareBalanceRow 
 
   return row(input, "conditioner", {
     cadencePolicy: {
-      kind: "match_wash_frequency",
-      washFrequency: profile.washFrequency,
+      kind: "match_shampoo_frequency",
+      shampooFrequency: profile.shampooFrequency,
       expected: "after_every_wash",
     },
   })
@@ -393,7 +393,7 @@ function evaluateDryShampoo(input: CareBalanceEvaluationInput): CareBalanceRow {
       contextReasonCodes: input.reset.triggers,
       cadencePolicy: {
         kind: "bridge_between_washes",
-        washFrequency: input.context.normalized.washFrequency,
+        shampooFrequency: input.context.normalized.shampooFrequency,
         expected: "short_bridge_only",
       },
     })

@@ -20,15 +20,8 @@ export {
 } from "./concerns-goals"
 export type { ProfileConcern, Goal } from "./concerns-goals"
 
-export {
-  WASH_FREQUENCIES,
-  WASH_FREQUENCY_LABELS,
-  WASH_FREQUENCY_OPTIONS,
-  HEAT_STYLING_LEVELS,
-  HEAT_STYLING_LABELS,
-  HEAT_STYLING_OPTIONS,
-} from "./frequencies"
-export type { WashFrequency, HeatStyling } from "./frequencies"
+export { HEAT_STYLING_LEVELS, HEAT_STYLING_LABELS, HEAT_STYLING_OPTIONS } from "./frequencies"
+export type { HeatStyling } from "./frequencies"
 
 export {
   CUTICLE_CONDITIONS,

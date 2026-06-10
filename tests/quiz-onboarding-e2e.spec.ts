@@ -50,7 +50,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
     const { data, error } = await admin
       .from("hair_profiles")
       .select(
-        "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns, desired_volume, goals, drying_method, routine_preference, wash_frequency",
+        "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns, desired_volume, goals, drying_method, routine_preference",
       )
       .eq("user_id", userId)
       .maybeSingle()
@@ -427,7 +427,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(hairProfile?.concerns).toEqual(["dryness", "frizz"])
       expect(hairProfile?.goals).toEqual(expect.arrayContaining(["shine", "volume"]))
       expect(hairProfile?.drying_method).toBe("air_dry")
-      expect(await fetchRoutineCategories()).toEqual(["conditioner"])
+      expect(await fetchRoutineCategories()).toEqual(["conditioner", "shampoo"])
 
       firstLeadId = (await fetchLatestLead())?.id ?? null
       expect(firstLeadId).not.toBeNull()
@@ -456,7 +456,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       expect(initialProfile?.concerns).toEqual(["dryness", "frizz"])
       expect(initialProfile?.goals).toEqual(expect.arrayContaining(["shine", "volume"]))
       expect(initialProfile?.drying_method).toBe("air_dry")
-      expect(await fetchRoutineCategories()).toEqual(["conditioner"])
+      expect(await fetchRoutineCategories()).toEqual(["conditioner", "shampoo"])
       expect(firstLeadId).not.toBeNull()
     })
 
@@ -635,7 +635,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       // Goals stay from first run since user didn't re-save goals page
       expect(hairProfile?.goals).toEqual(expect.arrayContaining(["shine", "volume"]))
       expect(hairProfile?.drying_method).toBe("air_dry")
-      expect(await fetchRoutineCategories()).toEqual(["conditioner"])
+      expect(await fetchRoutineCategories()).toEqual(["conditioner", "shampoo"])
     })
   })
 })

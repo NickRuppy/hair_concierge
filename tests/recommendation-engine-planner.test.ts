@@ -106,7 +106,7 @@ test("planner activates reset-family categories for oily buildup-prone routines"
       scalp_type: "oily",
       concerns: ["oily_scalp"],
       goals: ["healthy_scalp"],
-      wash_frequency: "weekly_1x",
+      shampoo_frequency: "weekly_1x",
     },
     [
       {
@@ -154,7 +154,7 @@ test("planner adds dry shampoo only for explicit between-wash bridge requests", 
       ...LOW_DAMAGE_PROFILE,
       scalp_type: "oily",
       concerns: ["oily_scalp"],
-      wash_frequency: "weekly_3_4x",
+      shampoo_frequency: "weekly_3_4x",
     },
     [],
   )

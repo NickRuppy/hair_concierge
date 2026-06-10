@@ -190,7 +190,7 @@ test("engine conditioner reranking does not use CareBalance label without load-p
     thickness: "normal" as const,
     density: "medium" as const,
     goals: ["volume"] as HairProfile["goals"],
-    wash_frequency: "weekly_1x" as const,
+    shampoo_frequency: "weekly_1x" as const,
   }
   const runtime = buildRecommendationEngineRuntimeFromPersistence(profile, [
     {
