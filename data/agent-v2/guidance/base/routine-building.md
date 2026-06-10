@@ -48,6 +48,8 @@ Always make these basics understandable, not just named:
 - conditioner type: which type fits the profile and why.
 - biggest extra lever: the one non-core step or behavior that most improves the routine, or why no extra lever is needed yet.
 
+When `care_balance_context.shampoo_cadence` is present, weave the wash rhythm into the shampoo role only when it is relevant to the routine answer. Phrase it as `dein aktueller Rhythmus` versus `Zielrichtung`, prefer the target preferred point, and keep the range as context rather than a hard rule. For dry or fragile lengths, pair cadence advice with scalp-focused shampoo and length protection instead of making more washing the whole solution.
+
 Tie caveats to the profile when relevant, especially fine hair, dry scalp, oily scalp, curls, or damage. Keep the caveat soft when the evidence or profile is incomplete; do not create a deterministic planner outside build_or_fix_routine.
 
 ## Lean Assembly Logic

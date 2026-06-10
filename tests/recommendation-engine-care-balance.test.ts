@@ -12,7 +12,9 @@ import {
 import { buildCareBalanceSet } from "../src/lib/recommendation-engine/care-balance"
 import { buildCareNeedAssessment } from "../src/lib/recommendation-engine/assessments/care-needs"
 import { buildResetAssessment } from "../src/lib/recommendation-engine/assessments/reset"
+import { buildCareBalanceToolContext } from "../src/lib/agent/tools/care-balance-context"
 import { buildEffectiveCareContext } from "../src/lib/recommendation-engine/effective-care-context"
+import { buildRecommendationEngineRuntimeFromPersistence } from "../src/lib/recommendation-engine/runtime"
 import type {
   CareBalanceRow,
   CurrentTurnCareFact,
@@ -429,6 +431,45 @@ test("buildCareBalanceSet recommends adding absent shampoo", () => {
   const rows = buildRows({})
 
   assertRecommendation(rows, "shampoo", "add")
+})
+
+test("recommendation runtime exposes oily weekly shampoo cadence as below high target", () => {
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      scalp_type: "oily",
+      concerns: ["oily_scalp"],
+      wash_frequency: "weekly_1x",
+    },
+    [{ category: "shampoo", product_name: "Existing shampoo", frequency_range: "weekly_1x" }],
+  )
+  const assessment = runtime.shampooCadenceAssessment
+  assert.ok(assessment)
+
+  assert.equal(assessment.currentFrequency, "weekly_1x")
+  assert.equal(assessment.baseBand, "high")
+  assert.equal(assessment.target?.band, "high")
+  assert.equal(assessment.target?.minFrequency, "weekly_2x")
+  assert.equal(assessment.delta, "below")
+  assert.ok(assessment.reasonCodes.includes("base_scalp_type_oily"))
+
+  const toolContext = buildCareBalanceToolContext({
+    runtime,
+    rows: runtime.careBalance.rows,
+  })
+
+  assert.deepEqual(toolContext.shampoo_cadence, {
+    current_frequency: "weekly_1x",
+    target_min: "weekly_2x",
+    target_max: "weekly_5_6x",
+    target_preferred: "weekly_3_4x",
+    delta: "below",
+    position_in_range: null,
+    base_band: "high",
+    target_band: "high",
+    reason_codes: assessment.reasonCodes,
+    caveat_codes: assessment.caveatCodes,
+  })
 })
 
 test("compareFrequencyBands orders known bands and returns null when either side is unknown", () => {

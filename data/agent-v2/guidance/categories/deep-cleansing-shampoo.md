@@ -72,6 +72,8 @@ If the signal is only ordinary oiliness, sweat, or light residue, compare normal
 
 For dry, fine, curly, bleached, color-treated, fragile, or sensitive profiles, keep reset language gentler, less frequent, and explicitly need-based. Follow reset washes with conditioner or suitable length care, but do not invent exact product order or timing.
 
+Mention `care_balance_context.shampoo_cadence` only when reset or buildup signals moved the target upward or wash rhythm is directly relevant to the reset decision. Keep reset answers focused on the reset job; do not turn every reset answer into a wash-frequency lecture.
+
 ## German Request Examples
 Type or kind education without concrete products:
 - `Welche Art von Tiefenreinigung brauche ich bei wachsigen Längen?` -> category education; explain Rückstands-Reset versus Kalk-/Metall-Reset; do not show unasked product cards.

@@ -372,6 +372,27 @@ export interface ResetAssessment {
   cautionFlags: string[]
 }
 
+export type ShampooCadenceBand = "low" | "medium" | "high"
+export type ShampooCadenceDelta = "below" | "near" | "above" | "unknown"
+export type ShampooCadencePositionInRange = "lower_edge" | "preferred" | "upper_edge"
+
+export interface ShampooCadenceTarget {
+  band: ShampooCadenceBand
+  minFrequency: ProductFrequency
+  maxFrequency: ProductFrequency
+  preferredFrequency: ProductFrequency
+}
+
+export interface ShampooCadenceAssessment {
+  currentFrequency: ProductFrequency | null
+  baseBand: ShampooCadenceBand | null
+  target: ShampooCadenceTarget | null
+  delta: ShampooCadenceDelta
+  positionInRange: ShampooCadencePositionInRange | null
+  reasonCodes: string[]
+  caveatCodes: string[]
+}
+
 export interface InterventionStep {
   category: EngineCategoryId | "behavior"
   action: RecommendationAction

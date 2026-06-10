@@ -14,6 +14,7 @@ import {
   projectInterventionPlanFromCareBalance,
 } from "@/lib/recommendation-engine/planner/intervention"
 import { emptyRecommendationRequestContext } from "@/lib/recommendation-engine/request-context"
+import { buildShampooCadenceAssessment } from "@/lib/recommendation-engine/shampoo-cadence"
 import type {
   CategoryRecommendationSet,
   CareBalanceLegacyDifference,
@@ -29,6 +30,7 @@ import type {
   RecommendationRequestContext,
   RawRecommendationInput,
   ResetAssessment,
+  ShampooCadenceAssessment,
 } from "@/lib/recommendation-engine/types"
 
 export interface RecommendationEngineRuntime {
@@ -39,6 +41,7 @@ export interface RecommendationEngineRuntime {
   damage: DamageAssessment
   careNeeds: CareNeedAssessment
   reset: ResetAssessment
+  shampooCadenceAssessment?: ShampooCadenceAssessment
   careBalance: CareBalanceSet
   legacyPlanComparison?: CareBalanceLegacyComparison
   plan: InterventionPlan
@@ -145,6 +148,7 @@ export function buildRecommendationEngineRuntimeFromEffectiveContext(
   const damage = buildDamageAssessment(normalized)
   const careNeeds = buildCareNeedAssessment(normalized, damage)
   const reset = buildResetAssessment(normalized, requestContext)
+  const shampooCadenceAssessment = buildShampooCadenceAssessment(normalized, reset)
   const careBalance = buildCareBalanceSet({
     context: effectiveContext,
     damage,
@@ -170,6 +174,7 @@ export function buildRecommendationEngineRuntimeFromEffectiveContext(
     damage,
     careNeeds,
     reset,
+    shampooCadenceAssessment,
     careBalance,
     legacyPlanComparison,
     plan,

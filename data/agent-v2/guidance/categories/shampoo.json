@@ -2,7 +2,13 @@
   "package_id": "category.shampoo.v1",
   "version": 1,
   "scope": {
-    "answer_modes": ["product_recommendation", "routine", "general_advice", "constraint_blocked", "safety_boundary"],
+    "answer_modes": [
+      "product_recommendation",
+      "routine",
+      "general_advice",
+      "constraint_blocked",
+      "safety_boundary"
+    ],
     "categories": ["shampoo"],
     "routine_layers": ["basics"],
     "safety_modes": ["normal", "restricted"]
@@ -64,6 +70,12 @@
       "priority": "medium",
       "source": "categories/shampoo.md",
       "message": "Connect shampoo strength to scalp type, wash rhythm, buildup/residue, thickness, texture, and sensitivity rather than using a universal wash-less rule."
+    },
+    {
+      "rubric_id": "category.shampoo.cadence_context_delta",
+      "priority": "high",
+      "source": "categories/shampoo.md",
+      "message": "When care_balance_context.shampoo_cadence is present for a routine or shampoo-relevant answer, explain current versus target as a soft delta, prefer target_preferred, and pair any increase with scalp-focused washing plus length protection when dry or fragile lengths are visible."
     }
   ],
   "required_grounding": [

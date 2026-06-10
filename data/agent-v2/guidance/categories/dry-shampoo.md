@@ -60,6 +60,8 @@ Keep the category narrow: dry shampoo is for visible root oil and short-term fre
 
 For oily roots, dry shampoo can be an occasional bridge, but wash frequency should still match scalp oiliness, activity, styling-product use, comfort, and lifestyle. If the user needs it frequently, frame that as a bridge or sign to adjust wash rhythm/root routine, not as proof they should simply wash normally. Do not tell every oily-root user to wash less. If the user reports heaviness, itch, flakes, burning, soreness, or congestion after dry shampoo, stop escalating dry shampoo and move toward actual cleansing, simplification, or safety wording.
 
+If `care_balance_context.shampoo_cadence` shows frequent dry-shampoo use while the target wet-shampoo cadence is above current real shampoo use, say dry shampoo can bridge visible freshness, but it does not replace wet scalp cleansing with shampoo and water.
+
 ## Agent Interpretation Hooks
 If the user asks what dry shampoo does:
 - primary_intent: category_education

@@ -56,6 +56,20 @@ When the user says a shampoo works for the scalp but dries out the lengths, do n
 
 "Wash less" is not a universal goal. Wash rhythm should fit scalp oiliness, activity, styling-product use, dry-shampoo use, texture, and comfort.
 
+## Shampoo Cadence Context
+When `care_balance_context.shampoo_cadence` is present and the answer is routine- or shampoo-relevant, use it as a profile delta: current rhythm versus target orientation. Do not present the target as a universal rule.
+
+Prefer `target_preferred` in customer-facing copy. Mention the min/max range only when it helps explain flexibility. If current frequency is unknown, state the target orientation and invite observation of when oil returns and whether the scalp stays calm.
+
+Use the delta softly:
+- `below`: suggest testing toward the preferred target for 2-3 weeks, especially when the target is driven by oily roots or dandruff-like scalp signals. Do not say oily scalps must wash daily.
+- `near` + `lower_edge`: say the rhythm is within range, but at the low edge.
+- `near` + `preferred`: say it fits well.
+- `near` + `upper_edge`: say it can work now, but watch longer-term tolerance for scalp and lengths.
+- `above`: say it is above target, but not automatically wrong if the scalp is calm. For dry lengths or fibre fragility caveats, emphasize milder, scalp-focused washing and length protection rather than washing even more.
+
+If `caveat_codes`, `reason_codes` such as `modifier_down_stacked_fiber_fragility`, or visible profile facts point to dry lengths or fibre fragility, keep the practical copy scalp-first: shampoo mainly on Kopfhaut/Ansatz, let foam rinse through the Längen, then protect lengths with conditioner, leave-in, mask, or CWC/OWC when useful.
+
 ## Everyday Residue vs Reset Boundary
 Normal shampoo handles everyday scalp/root cleansing: oil, sweat, light residue, freshness, and normal wash-day feel.
 
