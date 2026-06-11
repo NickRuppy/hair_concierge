@@ -69,6 +69,25 @@ test("product schema accepts engine-native mask specs", () => {
   assert.equal(parsed.success, true)
 })
 
+test("product schema preserves purchase-link health fields without category specs", () => {
+  const parsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: null,
+      purchase_link_status: "unavailable",
+      purchase_link_checked_at: "2026-06-09T12:05:00.000Z",
+      price_checked_at: "2026-06-09T12:10:00.000Z",
+    }),
+  )
+
+  assert.equal(parsed.success, true)
+  if (!parsed.success) {
+    throw new Error("Expected purchase-link health fields to parse")
+  }
+  assert.equal(parsed.data.purchase_link_status, "unavailable")
+  assert.equal(parsed.data.purchase_link_checked_at, "2026-06-09T12:05:00.000Z")
+  assert.equal(parsed.data.price_checked_at, "2026-06-09T12:10:00.000Z")
+})
+
 test("product schema requires deep-cleansing specs for deep-cleansing products", () => {
   const parsed = productSchema.safeParse(
     buildBaseProduct({

@@ -39,6 +39,11 @@ const CONDITIONER_BACKFILL_BY_NAME: Record<string, ConditionerBackfillSpec> = {
   "Balea Ultra Med Sensitive": { weight: "light", repair_level: "low", ingredient_flags: [] },
   "Bali Curls Moisturising": { weight: "rich", repair_level: "medium", ingredient_flags: ["oils"] },
   "Cantu Conditioner Cream": { weight: "rich", repair_level: "medium", ingredient_flags: ["oils"] },
+  "Cantu Leave-In Repair Cream": {
+    weight: "rich",
+    repair_level: "high",
+    ingredient_flags: ["oils"],
+  },
   "Cantu Repair Cream": { weight: "rich", repair_level: "high", ingredient_flags: ["oils"] },
   "Dejan Garz The Foundation": {
     weight: "rich",
@@ -71,6 +76,11 @@ const CONDITIONER_BACKFILL_BY_NAME: Record<string, ConditionerBackfillSpec> = {
     ingredient_flags: ["silicones"],
   },
   "Guhl Bond+": { weight: "medium", repair_level: "high", ingredient_flags: ["silicones"] },
+  "Guhl Bond+ Reparatur Spülung": {
+    weight: "medium",
+    repair_level: "high",
+    ingredient_flags: ["silicones"],
+  },
   "Guhl Panthenol*": { weight: "medium", repair_level: "high", ingredient_flags: [] },
   "Hair Biology Full & Shining": { weight: "light", repair_level: "medium", ingredient_flags: [] },
   "Hask Curl Care": { weight: "rich", repair_level: "medium", ingredient_flags: [] },
@@ -126,6 +136,16 @@ const CONDITIONER_BACKFILL_BY_NAME: Record<string, ConditionerBackfillSpec> = {
     ingredient_flags: ["silicones", "oils"],
   },
   "OGX Renewing Argan Oil": {
+    weight: "rich",
+    repair_level: "medium",
+    ingredient_flags: ["silicones", "oils"],
+  },
+  "OGX Renewing Argan Oil of Morocco Conditioner": {
+    weight: "rich",
+    repair_level: "medium",
+    ingredient_flags: ["silicones", "oils"],
+  },
+  "OGX Renewing Argan Oil of Morocco Conditioner (legacy duplicate)": {
     weight: "rich",
     repair_level: "medium",
     ingredient_flags: ["silicones", "oils"],

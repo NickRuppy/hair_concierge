@@ -59,6 +59,8 @@ yarn-error.log*
 !/data/agent-guidance/**
 !/data/agent-v2/
 !/data/agent-v2/**
+!/data/product-metadata-audit/
+!/data/product-metadata-audit/**
 *.docx
 
 # python
