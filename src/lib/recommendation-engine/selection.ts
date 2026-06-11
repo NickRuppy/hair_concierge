@@ -2293,7 +2293,7 @@ export async function selectBondbuilderProductsWithEngine(params: {
     const { data: relatedProducts, error: relatedProductsError } = await supabase
       .from("products")
       .select(
-        "id,name,brand,description,short_description,category,affiliate_link,image_url,price_eur,currency,tags,suitable_thicknesses,suitable_concerns,is_active,lifecycle_status,sort_order,created_at,updated_at",
+        "id,name,brand,description,short_description,category,affiliate_link,image_url,price_eur,currency,purchase_link_status,tags,suitable_thicknesses,suitable_concerns,is_active,lifecycle_status,sort_order,created_at,updated_at",
       )
       .in("id", relatedProductIds)
 

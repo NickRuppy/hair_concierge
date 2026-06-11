@@ -15,7 +15,8 @@ import {
   buildProductMatchSummary,
   formatProductPrice,
   getProductCategoryLabel,
-  getShopLabel,
+  getProductShopCtaLabel,
+  getPurchaseLinkHelperText,
   getValidAffiliateLink,
   shouldShowAffiliateDisclosure,
 } from "./product-display-model"
@@ -44,7 +45,8 @@ export function ProductDetailDrawer({
   const profileRows = buildDrawerProductProfileRows(product)
   const price = formatProductPrice(product.price_eur, product.currency)
   const affiliateHref = getValidAffiliateLink(product.affiliate_link)
-  const shopLabel = getShopLabel(affiliateHref)
+  const shopLabel = getProductShopCtaLabel(product)
+  const purchaseLinkHelperText = getPurchaseLinkHelperText(product)
   const showAffiliateDisclosure = shouldShowAffiliateDisclosure(product)
 
   return (
@@ -122,6 +124,9 @@ export function ProductDetailDrawer({
                     </a>
                   )}
                 </div>
+              )}
+              {purchaseLinkHelperText && (
+                <p className="text-xs leading-5 text-muted-foreground">{purchaseLinkHelperText}</p>
               )}
               {showAffiliateDisclosure && (
                 <p className="text-xs leading-5 text-muted-foreground">

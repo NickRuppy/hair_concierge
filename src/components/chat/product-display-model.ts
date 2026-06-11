@@ -135,6 +135,9 @@ const SHOP_HOST_LABELS: Record<string, string> = {
 // "de.nuxe.com" resolves to the same label as "nuxe.com".
 const LOCALE_SUBDOMAIN_PREFIX = /^(de|en|fr|us|uk|eu)\./
 
+export const UNAVAILABLE_PURCHASE_LINK_HELPER =
+  "Der hinterlegte Shop meldet den Artikel aktuell als online nicht verfügbar."
+
 export function buildCompactProductFacts(product: Product): CompactProductFact[] {
   if (isLeaveInProduct(product)) {
     const facts: CompactProductFact[] = []
@@ -319,6 +322,19 @@ export function getShopLabel(affiliateLink: string | null | undefined): string {
   } catch {
     return "Kaufen"
   }
+}
+
+export function isPurchaseLinkUnavailable(product: Product): boolean {
+  return product.purchase_link_status === "unavailable"
+}
+
+export function getProductShopCtaLabel(product: Product): string {
+  if (isPurchaseLinkUnavailable(product)) return "Shop-Link aktuell nicht verfügbar"
+  return getShopLabel(product.affiliate_link)
+}
+
+export function getPurchaseLinkHelperText(product: Product): string {
+  return isPurchaseLinkUnavailable(product) ? UNAVAILABLE_PURCHASE_LINK_HELPER : ""
 }
 
 export function shouldShowAffiliateDisclosure(product: Product): boolean {

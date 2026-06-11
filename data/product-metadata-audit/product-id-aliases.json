@@ -1,0 +1,28 @@
+[
+  {
+    "id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+    "aliases": [
+      { "name": "Guhl Panthenol*", "category": "Conditioner (Drogerie)" },
+      { "name": "Guhl Panthenol", "category": "Conditioner (Drogerie)" },
+      {
+        "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+        "category": "Conditioner (Drogerie)"
+      }
+    ]
+  },
+  {
+    "id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+    "aliases": [
+      { "name": "Gliss Ultimate Repair Spülung", "category": "Conditioner (Drogerie)" },
+      { "name": "Gliss Ultimate Repair Express-Repair-Spülung", "category": "Leave-in" },
+      { "name": "Gliss Ultimate Repair Sprüh-Conditioner", "category": "Leave-in" }
+    ]
+  },
+  {
+    "id": "4827c174-92e9-4121-ab70-843d5c037ad0",
+    "aliases": [
+      { "name": "Olaplex No.5 Leave-In", "category": "Leave-in" },
+      { "name": "Original OLAPLEX N°5LEAVE-IN Conditioner", "category": "Leave-in" }
+    ]
+  }
+]

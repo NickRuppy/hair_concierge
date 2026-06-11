@@ -8,8 +8,11 @@ import {
   buildProductMatchSummary,
   formatProductPrice,
   getProductCategoryLabel,
+  getProductShopCtaLabel,
+  getPurchaseLinkHelperText,
   getShopLabel,
   getValidAffiliateLink,
+  UNAVAILABLE_PURCHASE_LINK_HELPER,
   shouldShowAffiliateDisclosure,
 } from "@/components/chat/product-display-model"
 import type { HairProfile, Product } from "@/lib/types"
@@ -288,6 +291,23 @@ test("getShopLabel derives a shop-aware buy label from affiliate hosts", () => {
     getShopLabel("https://www.dm.de/wella-ultimate-repair-leave-in-p4064666338183.html"),
     "Bei dm kaufen",
   )
+})
+
+test("unavailable purchase links use the unavailable CTA label and helper text", () => {
+  const product = createWellaLikeLeaveIn()
+  product.purchase_link_status = "unavailable"
+
+  assert.equal(getProductShopCtaLabel(product), "Shop-Link aktuell nicht verfügbar")
+  assert.equal(getPurchaseLinkHelperText(product), UNAVAILABLE_PURCHASE_LINK_HELPER)
+})
+
+test("available purchase links keep the normal shop CTA and omit helper text", () => {
+  const product = createWellaLikeLeaveIn()
+  product.affiliate_link = "https://www.mueller.de/p/wella-ultimate-repair-leave-in"
+  product.purchase_link_status = "available"
+
+  assert.equal(getProductShopCtaLabel(product), "Bei Müller kaufen")
+  assert.equal(getPurchaseLinkHelperText(product), "")
 })
 
 test("getShopLabel recognizes brand-direct hosts", () => {

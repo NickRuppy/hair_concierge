@@ -1,0 +1,51 @@
+[
+  {
+    "id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+    "expected_price_eur": 4.95,
+    "max_delta_eur": 0.05,
+    "source_name": "Müller",
+    "source_url": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/"
+  },
+  {
+    "id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+    "expected_price_eur": 4.49,
+    "max_delta_eur": 0.05,
+    "source_name": "Rossmann",
+    "source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-express-repair-spuelung/p/4015100813494"
+  },
+  {
+    "id": "4827c174-92e9-4121-ab70-843d5c037ad0",
+    "expected_price_eur": 34,
+    "max_delta_eur": 0.05,
+    "source_name": "official",
+    "source_url": "https://olaplex.de/products/original-olaplex-n-5leave-in-conditioner"
+  },
+  {
+    "id": "a1d705b4-b973-486d-b853-2c795b6db681",
+    "expected_price_eur": 26.99,
+    "max_delta_eur": 0.05,
+    "source_name": "Douglas",
+    "source_url": "https://www.douglas.de/de/p/5010218791"
+  },
+  {
+    "id": "514ffd65-e4a5-4f7f-96c5-0f194e3b3b36",
+    "expected_price_eur": 34.19,
+    "max_delta_eur": 0.05,
+    "source_name": "Douglas",
+    "source_url": "https://www.douglas.de/de/p/5011380000"
+  },
+  {
+    "id": "6513692a-b54f-4acc-9c77-5799d3dd200c",
+    "expected_price_eur": 32.2,
+    "max_delta_eur": 0.05,
+    "source_name": "Notino",
+    "source_url": "https://www.notino.de/malibu-c/hard-water-wallness-tiefenreinigendes-shampoo/"
+  },
+  {
+    "id": "6d6c3ff2-9d12-4f27-a56f-b5b72cf53318",
+    "expected_price_eur": 25.67,
+    "max_delta_eur": 0.05,
+    "source_name": "Notino",
+    "source_url": "https://www.notino.de/bumble-and-bumble/bb-sunday-shampoo-reinigendes-detox-shampoo/"
+  }
+]

@@ -15,6 +15,20 @@ export const HOST_ALLOWLIST = new Set<string>([
   "www.notino.de",
   "otto.de",
   "www.otto.de",
+  "hagel-shop.de",
+  "www.hagel-shop.de",
+  "shop-apotheke.com",
+  "www.shop-apotheke.com",
+  "epres-hair.de",
+  "www.epres-hair.de",
+  "neqi-hair.com",
+  "www.neqi-hair.com",
+  "k18hair.com",
+  "www.k18hair.com",
+  "urban-alchemy.com",
+  "www.urban-alchemy.com",
+  "wella.com",
+  "www.wella.com",
 ])
 
 export const HOST_DENYLIST = new Set<string>([

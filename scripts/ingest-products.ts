@@ -31,6 +31,13 @@ import {
   type ShampooBucketPairInput,
   normalizeShampooBucketPairs,
 } from "../src/lib/shampoo/eligibility"
+import {
+  mergeCommercialFields,
+  parseProductIdentityAliases,
+  resolveProductIdentity,
+  type CommercialProductFields,
+  type ExistingProduct,
+} from "../src/lib/product-metadata/ingest-identity"
 
 // Load .env.local for standalone script execution
 const envPath = path.join(process.cwd(), ".env.local")
@@ -76,6 +83,7 @@ const TEXTURE_ADJECTIVES: Record<string, string> = {
 }
 
 interface ProductInput {
+  id?: string
   name: string
   brand?: string
   description?: string
@@ -117,6 +125,38 @@ const LEAVE_IN_STAGE_SET = new Set<string>(LEAVE_IN_APPLICATION_STAGES)
 const LEAVE_IN_FIT_CARE_SET = new Set<string>(LEAVE_IN_FIT_CARE_BENEFITS)
 const MASK_WEIGHT_SET = new Set<string>(MASK_WEIGHTS)
 const MASK_CONCENTRATION_SET = new Set<string>(MASK_CONCENTRATIONS)
+
+function loadProductIdentityAliases(): Map<string, string> {
+  const aliasesPath = path.join(
+    process.cwd(),
+    "data",
+    "product-metadata-audit",
+    "product-id-aliases.json",
+  )
+
+  if (!fs.existsSync(aliasesPath)) {
+    return new Map()
+  }
+
+  return parseProductIdentityAliases(fs.readFileSync(aliasesPath, "utf-8"))
+}
+
+function logPreservedCommercialFields(
+  product: ProductInput,
+  existing: CommercialProductFields | null | undefined,
+  incoming: CommercialProductFields,
+  forceCommercialOverwrite: boolean,
+): void {
+  if (forceCommercialOverwrite || !existing) return
+
+  const preservedFields = (["affiliate_link", "image_url", "price_eur"] as const).filter(
+    (field) => incoming[field] == null && existing[field] != null,
+  )
+
+  for (const field of preservedFields) {
+    console.log(`  Preserving existing ${field} for ${product.name}`)
+  }
+}
 
 function normalizeProductInput(product: ProductInput, fallbackSortOrder: number): ProductInput {
   const suitable_thicknesses = product.suitable_thicknesses?.length
@@ -180,6 +220,52 @@ function parseProductNamesFilter(rawValue?: string): Set<string> | null {
   return names.length > 0 ? new Set(names) : null
 }
 
+async function findProductById(id: string): Promise<ExistingProduct | null> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("id, category, affiliate_link, image_url, price_eur")
+    .eq("id", id)
+    .maybeSingle()
+
+  if (error) {
+    throw new Error(`Failed to find product by id ${id}: ${error.message}`)
+  }
+
+  return data
+}
+
+async function findExistingProduct(
+  product: ProductInput,
+  identityAliases: Map<string, string>,
+): Promise<ExistingProduct | null> {
+  const resolution = await resolveProductIdentity(product, identityAliases, {
+    findProductById,
+    findProductByNameCategory,
+  })
+
+  return resolution.product
+}
+
+async function findProductByNameCategory(
+  name: string,
+  category?: string | null,
+): Promise<ExistingProduct | null> {
+  let query = supabase
+    .from("products")
+    .select("id, category, affiliate_link, image_url, price_eur")
+    .eq("name", name)
+
+  query = category == null ? query.is("category", null) : query.eq("category", category)
+
+  const { data, error } = await query.maybeSingle()
+
+  if (error) {
+    throw new Error(`Failed to find product by name/category ${name}: ${error.message}`)
+  }
+
+  return data
+}
+
 function parseCSV(content: string): ProductInput[] {
   const lines = content.split("\n").filter((l) => l.trim())
   if (lines.length < 2) return []
@@ -196,6 +282,7 @@ function parseCSV(content: string): ProductInput[] {
     })
 
     products.push({
+      id: obj.id || undefined,
       name: obj.name,
       brand: obj.brand || undefined,
       description: obj.description || undefined,
@@ -514,6 +601,9 @@ async function main() {
 
   console.log(`Found ${products.length} products`)
 
+  const forceCommercialOverwrite = process.env.FORCE_COMMERCIAL_METADATA_OVERWRITE === "1"
+  const identityAliases = loadProductIdentityAliases()
+
   for (let i = 0; i < products.length; i++) {
     const product = products[i]
 
@@ -525,29 +615,52 @@ async function main() {
     // Embed the description (rich semantic text)
     const embedding = await generateEmbedding(description)
 
-    // Upsert product
-    const { data: upsertedProduct, error } = await supabase
-      .from("products")
-      .upsert(
-        {
-          name: product.name,
-          brand: product.brand || null,
-          description,
-          category: product.category || null,
-          affiliate_link: product.affiliate_link || null,
-          image_url: product.image_url || null,
-          price_eur: product.price_eur || null,
-          tags: product.tags || [],
-          suitable_thicknesses: product.suitable_thicknesses || [],
-          suitable_concerns: product.suitable_concerns || [],
-          is_active: product.is_active ?? true,
-          sort_order: product.sort_order ?? i,
-          embedding: JSON.stringify(embedding),
-        },
-        { onConflict: "name,category" },
-      )
-      .select("id, category")
-      .single()
+    const existingProduct = await findExistingProduct(product, identityAliases)
+    const incomingCommercialFields: CommercialProductFields = {
+      affiliate_link: product.affiliate_link,
+      image_url: product.image_url,
+      price_eur: product.price_eur,
+    }
+    const commercialFields = mergeCommercialFields(
+      existingProduct,
+      incomingCommercialFields,
+      forceCommercialOverwrite,
+    )
+    logPreservedCommercialFields(
+      product,
+      existingProduct,
+      incomingCommercialFields,
+      forceCommercialOverwrite,
+    )
+
+    const productPayload = {
+      name: product.name,
+      brand: product.brand || null,
+      description,
+      category: product.category || null,
+      affiliate_link: commercialFields.affiliate_link,
+      image_url: commercialFields.image_url,
+      price_eur: commercialFields.price_eur,
+      tags: product.tags || [],
+      suitable_thicknesses: product.suitable_thicknesses || [],
+      suitable_concerns: product.suitable_concerns || [],
+      is_active: product.is_active ?? true,
+      sort_order: product.sort_order ?? i,
+      embedding: JSON.stringify(embedding),
+    }
+
+    const { data: upsertedProduct, error } = existingProduct?.id
+      ? await supabase
+          .from("products")
+          .update(productPayload)
+          .eq("id", existingProduct.id)
+          .select("id, category")
+          .single()
+      : await supabase
+          .from("products")
+          .upsert(productPayload, { onConflict: "name,category" })
+          .select("id, category")
+          .single()
 
     if (error) {
       console.error(`  Error upserting ${product.name}:`, error.message)
@@ -565,15 +678,31 @@ async function main() {
     }
 
     if (upsertedProduct && isLeaveInCategory(upsertedProduct.category || product.category)) {
-      const leaveInSpecs = inferLeaveInSpecs(product)
-      const { error: leaveInError } = await supabase.from("product_leave_in_fit_specs").upsert({
-        product_id: upsertedProduct.id,
-        ...leaveInSpecs,
-      })
+      const shouldReplaceLegacyLeaveInSpecs =
+        product.leave_in_specs != null || process.env.REPLACE_LEGACY_LEAVE_IN_SPECS === "1"
+      const shouldUpsertLeaveInFitSpecs =
+        !existingProduct?.id ||
+        product.leave_in_specs != null ||
+        process.env.FORCE_LEAVE_IN_FIT_SPECS_OVERWRITE === "1"
+      let leaveInFitSpecsReady = true
 
-      if (leaveInError) {
-        console.error(`  Error upserting leave-in specs for ${product.name}:`, leaveInError.message)
-      } else {
+      if (shouldUpsertLeaveInFitSpecs) {
+        const leaveInSpecs = inferLeaveInSpecs(product)
+        const { error: leaveInError } = await supabase.from("product_leave_in_fit_specs").upsert({
+          product_id: upsertedProduct.id,
+          ...leaveInSpecs,
+        })
+
+        if (leaveInError) {
+          console.error(
+            `  Error upserting leave-in specs for ${product.name}:`,
+            leaveInError.message,
+          )
+          leaveInFitSpecsReady = false
+        }
+      }
+
+      if (shouldReplaceLegacyLeaveInSpecs && leaveInFitSpecsReady) {
         const { error: legacyDeleteError } = await supabase
           .from("product_leave_in_specs")
           .delete()

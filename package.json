@@ -39,6 +39,7 @@
     "test:contracts": "npm run test:node && npm run test:agent && npm run test:playwright:contracts",
     "test:chat:ci": "tsx scripts/eval-chat/run.ts --skip-judge --ci-smoke",
     "test:retrieval:ci": "tsx scripts/eval-retrieval.ts --hybrid-only --min-hybrid-ndcg10 0.72 --min-hybrid-recall20 0.88 --skip-unannotated-gold-set",
+    "audit:products": "tsx scripts/audit-product-metadata.ts",
     "stress:smoke": "k6 run -e K6_PROFILE=smoke scripts/k6/launch-flow.js",
     "stress:average": "k6 run -e K6_PROFILE=average scripts/k6/launch-flow.js",
     "stress:spike": "k6 run -e K6_PROFILE=spike scripts/k6/launch-flow.js",

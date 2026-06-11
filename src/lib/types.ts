@@ -249,6 +249,9 @@ export interface Product {
 
   category: string | null
   affiliate_link: string | null
+  purchase_link_status?: "available" | "unavailable" | null
+  purchase_link_checked_at?: string | null
+  price_checked_at?: string | null
   image_url: string | null
   price_eur: number | null
   currency: string
@@ -280,6 +283,9 @@ export type ProductSummary = Pick<
   | "short_description"
   | "category"
   | "affiliate_link"
+  | "purchase_link_status"
+  | "purchase_link_checked_at"
+  | "price_checked_at"
   | "image_url"
   | "price_eur"
   | "currency"
