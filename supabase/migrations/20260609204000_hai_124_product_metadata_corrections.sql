@@ -951,6 +951,45 @@ SET
   care_benefits = EXCLUDED.care_benefits,
   updated_at = now();
 
+INSERT INTO public.product_leave_in_specs (
+  product_id,
+  format,
+  weight,
+  roles,
+  provides_heat_protection,
+  heat_protection_max_c,
+  heat_activation_required,
+  care_benefits,
+  ingredient_flags,
+  application_stage,
+  updated_at
+)
+VALUES (
+  '9f94c225-61ec-455d-b303-f39e885e222a'::uuid,
+  'cream',
+  'medium',
+  ARRAY['styling_prep']::text[],
+  false,
+  NULL,
+  false,
+  ARRAY['moisture', 'detangling']::text[],
+  ARRAY[]::text[],
+  ARRAY['towel_dry']::text[],
+  now()
+)
+ON CONFLICT (product_id) DO UPDATE
+SET
+  format = EXCLUDED.format,
+  weight = EXCLUDED.weight,
+  roles = EXCLUDED.roles,
+  provides_heat_protection = EXCLUDED.provides_heat_protection,
+  heat_protection_max_c = EXCLUDED.heat_protection_max_c,
+  heat_activation_required = EXCLUDED.heat_activation_required,
+  care_benefits = EXCLUDED.care_benefits,
+  ingredient_flags = EXCLUDED.ingredient_flags,
+  application_stage = EXCLUDED.application_stage,
+  updated_at = now();
+
 UPDATE public.products
 SET
   brand = oil_available_updates.brand,
@@ -1973,6 +2012,59 @@ SET
   price_checked_at = '2026-06-11T00:00:00Z',
   updated_at = now()
 WHERE category = 'Shampoo'
+  AND id IN (
+    '261e5c9f-d312-4206-82da-fbd0ab6f3614'::uuid,
+    '303b4c0c-53a4-46de-883d-c29e448ee590'::uuid,
+    'f184aef4-d8f9-4956-bcd6-ba1bf1ebeace'::uuid,
+    '088b1427-ed22-424e-8cfd-ea2578120ae6'::uuid,
+    '4fd5f4c3-83b2-4893-be8c-ada29b8ca718'::uuid,
+    '1ef2be82-259c-4a1f-af2e-3ac3403f9731'::uuid,
+    '51a0b647-2794-49a3-96e1-e7695432561e'::uuid,
+    'e7bfd306-b128-4735-a9f8-0eeacdbd5013'::uuid,
+    'a79513be-e34b-4a1e-b7eb-b3d4b58160be'::uuid,
+    '7373656d-5fd7-46e8-81a3-2ef29e3c4c18'::uuid,
+    '3f3c7d89-9e7b-4e91-85f7-d3c58d304918'::uuid,
+    '64fb44d5-8701-46ab-bcba-f1747f071e48'::uuid,
+    'fcbc469f-93c8-4be5-85db-e789b09189c7'::uuid,
+    'ead1333b-6839-464d-b272-673d39bb95a4'::uuid,
+    'd01de47e-e360-4b31-9924-e3e5bc31ccdc'::uuid,
+    '16ebefbe-48d8-4c7f-9c81-b903651a6e03'::uuid,
+    '1f51a69f-c946-4898-9091-2fd2c59fb467'::uuid,
+    '03b847e5-01b9-40e5-950a-98efc73abb3a'::uuid,
+    '6fde3fe2-3850-4502-b9f2-ebb17eb13bad'::uuid,
+    '515de93c-1c77-465d-ae0d-2a8d6ddb3d73'::uuid,
+    '7e95671b-41a7-4f5c-9188-e535e46678ba'::uuid,
+    '0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c'::uuid,
+    'a7ff335a-7e81-4cf4-9c20-9209bff4386b'::uuid,
+    'b000d235-1fc6-434c-9ba1-f1207d36cded'::uuid,
+    '5effc311-25d7-44dd-8c16-b93c182068d3'::uuid,
+    '9d8d4709-4041-495e-98ee-e0261fa30e27'::uuid,
+    '744de604-d266-453b-a56b-eea92c5ca565'::uuid,
+    'eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d'::uuid,
+    '02afbd03-1c7d-467c-8a07-a8b226d6f535'::uuid,
+    '3d94c017-9edb-4ba0-accd-4772e262f012'::uuid,
+    'e76e0ed4-bd20-40cd-84ae-e93030610d40'::uuid,
+    '2ecd3c9d-90f6-45a3-a72c-daefed50be10'::uuid,
+    '57bae8c8-0ebd-4722-b955-c760d8ffcdbb'::uuid,
+    '7200bb0b-7463-433b-86c8-744f5c1431de'::uuid,
+    'cd7461cc-7fde-40dd-8d39-fca1aa8f30bf'::uuid,
+    '9bfad335-a086-45a0-9af7-f26b36b4ecff'::uuid,
+    '6dc65df2-2466-43e4-bdc2-3a05803f305c'::uuid,
+    '7b5ec424-d21f-4eb8-999e-7aed98e94b86'::uuid,
+    'f033afbe-281a-419e-a245-3ad83d721bd0'::uuid,
+    '0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33'::uuid,
+    'a06cfc4d-c4f5-457e-a94e-26559f96f0e9'::uuid,
+    '716a4f4e-6ba4-4742-a1cf-75e90ae1da3f'::uuid,
+    '686df4f6-4e8f-48e7-b823-5b1e89dd9cf2'::uuid,
+    'd408aca9-cd16-4cb0-90e7-bab26a698000'::uuid,
+    '678119a0-9070-4faf-b9ed-7c0ac008767e'::uuid,
+    'a1c3dc8d-2638-497f-8c7f-9b491c9003b0'::uuid,
+    'c07a181b-3d55-4d47-ad68-9c1e324d4496'::uuid,
+    '4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946'::uuid,
+    '1623a993-3ff4-43be-82c1-95a1ee57ec52'::uuid,
+    'bef4f219-2c1f-4e02-8e3a-93056b95465a'::uuid,
+    '17b6d50e-ca5b-4f66-bdd7-39bd19afe748'::uuid
+  )
   AND purchase_link_status IS NULL;
 
 UPDATE public.products

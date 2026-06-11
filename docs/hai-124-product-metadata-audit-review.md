@@ -171,7 +171,7 @@ This is the state to resume from if the thread is compacted.
 | Maria Nila Structure Repair Leave-In [695414e1-3435-4304-943b-76677408980c] | Existing canonical Flaconi row stays active and `available`. |
 | Maria Nila True Soft Leave-In [3c769f60-283f-48c3-9549-cf84b73115d7] | Still no exact buyable SKU found; remains inactive and `unavailable`. |
 | Moroccanoil All In One Leave In Conditioner [7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6] | Kept Douglas product page; status `available`. |
-| Neqi Build Boost Leave-In Balm [9f94c225-61ec-455d-b303-f39e885e222a] | Added as new Sheet product for `NEQI x @_the.beautiful.people Leave-In`; exact NEQI brand-shop title is `Build Boost Leave-In Balm`; store `9.95 EUR`; status `available`; `neqi-hair.com` allowlisted as reviewed brand source. |
+| Neqi Build Boost Leave-In Balm [9f94c225-61ec-455d-b303-f39e885e222a] | Added as new Sheet product for `NEQI x @_the.beautiful.people Leave-In`; exact NEQI brand-shop title is `Build Boost Leave-In Balm`; store `9.95 EUR`; status `available`; `neqi-hair.com` allowlisted as reviewed brand source; legacy leave-in specs added so strict matcher eligibility is populated. |
 | Neqi Moisture Mystery [e6896862-523b-42b3-967d-41cbd16acf64] | Existing Leave-in row remains active with dm page and status `available`; it is not the same as the new `NEQI x THE BEAUTIFUL PEOPLE` product. |
 | OUAI Leave In Conditioner [993f0e55-2450-4557-853d-e6e23ec0d1a9] | Kept Douglas product page; status `available`. |
 | Pantene Bonding Leave-In [35a372b6-c7ef-45cb-be0b-99cef476f247] | Kept dm product page; status `available`. |
