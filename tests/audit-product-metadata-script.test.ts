@@ -45,6 +45,36 @@ test("checkStoredLinkBuyability classifies known retailer content", async () => 
   }
 })
 
+test("checkStoredLinkBuyability lets unavailable dm text win over cart markup", async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async () =>
+    new Response("<html><body>Nicht lieferbar In den Warenkorb</body></html>", { status: 200 })
+
+  try {
+    const status = await checkStoredLinkBuyability(
+      buildProduct({ affiliate_link: "https://www.dm.de/p/d/123/test-product" }),
+    )
+    assert.equal(status, "unavailable")
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test("checkStoredLinkBuyability lets unavailable Mueller text win over cart markup", async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async () =>
+    new Response("<html><body>Nicht lieferbar In den Warenkorb</body></html>", { status: 200 })
+
+  try {
+    const status = await checkStoredLinkBuyability(
+      buildProduct({ affiliate_link: "https://www.mueller.de/p/test-product-PPN123/" }),
+    )
+    assert.equal(status, "unavailable")
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test("checkStoredLinkBuyability returns manual-review null for inconclusive fetch results", async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = async () =>

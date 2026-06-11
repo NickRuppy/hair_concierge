@@ -678,17 +678,29 @@ async function main() {
     }
 
     if (upsertedProduct && isLeaveInCategory(upsertedProduct.category || product.category)) {
-      const leaveInSpecs = inferLeaveInSpecs(product)
       const shouldReplaceLegacyLeaveInSpecs =
         product.leave_in_specs != null || process.env.REPLACE_LEGACY_LEAVE_IN_SPECS === "1"
-      const { error: leaveInError } = await supabase.from("product_leave_in_fit_specs").upsert({
-        product_id: upsertedProduct.id,
-        ...leaveInSpecs,
-      })
+      const shouldUpsertLeaveInFitSpecs =
+        product.leave_in_specs != null || process.env.FORCE_LEAVE_IN_FIT_SPECS_OVERWRITE === "1"
+      let leaveInFitSpecsReady = true
 
-      if (leaveInError) {
-        console.error(`  Error upserting leave-in specs for ${product.name}:`, leaveInError.message)
-      } else if (shouldReplaceLegacyLeaveInSpecs) {
+      if (shouldUpsertLeaveInFitSpecs) {
+        const leaveInSpecs = inferLeaveInSpecs(product)
+        const { error: leaveInError } = await supabase.from("product_leave_in_fit_specs").upsert({
+          product_id: upsertedProduct.id,
+          ...leaveInSpecs,
+        })
+
+        if (leaveInError) {
+          console.error(
+            `  Error upserting leave-in specs for ${product.name}:`,
+            leaveInError.message,
+          )
+          leaveInFitSpecsReady = false
+        }
+      }
+
+      if (shouldReplaceLegacyLeaveInSpecs && leaveInFitSpecsReady) {
         const { error: legacyDeleteError } = await supabase
           .from("product_leave_in_specs")
           .delete()

@@ -17,9 +17,6 @@ const SELECT_COLUMNS =
 
 const OUT_DIR = "tmp/product-metadata-audit"
 const KNOWN_PRICE_CHECKS_PATH = "data/product-metadata-audit/known-price-checks.json"
-const GUHL_ID = "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504"
-const GUHL_REPLACEMENT_URL =
-  "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/"
 const USER_AGENT =
   "ChaarlieProductMetadataAudit/1.0 (+read-only purchase link review; contact: product metadata audit)"
 
@@ -153,6 +150,17 @@ function includesAny(text: string, needles: string[]): boolean {
   return needles.some((needle) => text.includes(needle))
 }
 
+const UNAVAILABLE_PHRASES = [
+  "ausverkauft",
+  "online momentan nicht verfügbar",
+  "online nicht verfügbar",
+  "nicht online verfügbar",
+  "nicht verfügbar",
+  "nicht lieferbar",
+  "out of stock",
+  "sold out",
+]
+
 function classifyKnownRetailerContent(
   host: string,
   brand: string | null,
@@ -165,20 +173,13 @@ function classifyKnownRetailerContent(
   }
 
   if (host === "mueller.de" || host.endsWith(".mueller.de")) {
+    if (includesAny(text, UNAVAILABLE_PHRASES)) return "unavailable"
     if (text.includes("lieferbar") && text.includes("in den warenkorb")) return "available"
     return null
   }
 
   if (host === "dm.de" || host.endsWith(".dm.de")) {
-    if (
-      includesAny(text, [
-        "online momentan nicht verfügbar",
-        "online nicht verfügbar",
-        "nicht online verfügbar",
-      ])
-    ) {
-      return "unavailable"
-    }
+    if (includesAny(text, UNAVAILABLE_PHRASES)) return "unavailable"
     if (includesAny(text, ["lieferbar", "online verfügbar", "in den warenkorb"])) return "available"
     return null
   }
@@ -198,17 +199,7 @@ function classifyKnownRetailerContent(
 
   if (!usesGenericBeautyRule) return null
 
-  if (
-    includesAny(text, [
-      "ausverkauft",
-      "nicht verfügbar",
-      "nicht lieferbar",
-      "out of stock",
-      "sold out",
-    ])
-  ) {
-    return "unavailable"
-  }
+  if (includesAny(text, UNAVAILABLE_PHRASES)) return "unavailable"
 
   if (
     includesAny(text, [
@@ -294,49 +285,11 @@ function proposalToCsvRow(row: PurchaseLinkReviewProposalRow): CsvRow {
   }
 }
 
-function buildGuhlReplacement(check: KnownPriceCheck | undefined): {
-  replacement_affiliate_link: string
-  replacement_price_eur: number
-  replacement_purchase_link_status: "available"
-  replacement_evidence: string
-} {
-  return {
-    replacement_affiliate_link: GUHL_REPLACEMENT_URL,
-    replacement_price_eur: check?.expected_price_eur ?? 4.95,
-    replacement_purchase_link_status: "available",
-    replacement_evidence:
-      "Reviewed Müller product page for Guhl Panthenol Reparatur 2in1 Kur & Spülung; expected price 4.95 EUR.",
-  }
-}
-
-async function buildProposalRows(
-  products: ProductRow[],
-  knownPriceChecksById: Map<string, KnownPriceCheck>,
-): Promise<PurchaseLinkReviewProposalRow[]> {
+async function buildProposalRows(products: ProductRow[]): Promise<PurchaseLinkReviewProposalRow[]> {
   const proposalRows: PurchaseLinkReviewProposalRow[] = []
 
   for (const product of products) {
     const checkedStatus = await checkStoredLinkBuyability(product)
-    const knownCheck = knownPriceChecksById.get(product.id)
-
-    if (product.id === GUHL_ID) {
-      const replacement = buildGuhlReplacement(knownCheck)
-      proposalRows.push({
-        id: product.id,
-        category: product.category,
-        brand: product.brand,
-        name: product.name,
-        affiliate_link: product.affiliate_link,
-        price_eur: product.price_eur,
-        checked_purchase_link_status: checkedStatus,
-        replacement_affiliate_link: replacement.replacement_affiliate_link,
-        replacement_price_eur: replacement.replacement_price_eur,
-        replacement_purchase_link_status: replacement.replacement_purchase_link_status,
-        replacement_evidence: replacement.replacement_evidence,
-        review_action: "replace_link",
-      })
-      continue
-    }
 
     proposalRows.push({
       id: product.id,
@@ -375,7 +328,7 @@ async function main() {
     ]
   })
 
-  const proposalRows = await buildProposalRows(products, knownPriceChecksById)
+  const proposalRows = await buildProposalRows(products)
 
   mkdirSync(OUT_DIR, { recursive: true })
   writeFileSync(
