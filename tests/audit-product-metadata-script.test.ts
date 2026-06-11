@@ -75,6 +75,21 @@ test("checkStoredLinkBuyability lets unavailable Mueller text win over cart mark
   }
 })
 
+test("checkStoredLinkBuyability lets generic unavailable Rossmann text win over cart markup", async () => {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async () =>
+    new Response("<html><body>Nicht verfügbar Zum Warenkorb</body></html>", { status: 200 })
+
+  try {
+    const status = await checkStoredLinkBuyability(
+      buildProduct({ affiliate_link: "https://www.rossmann.de/de/test-product/p/123456789" }),
+    )
+    assert.equal(status, "unavailable")
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test("checkStoredLinkBuyability returns manual-review null for inconclusive fetch results", async () => {
   const originalFetch = globalThis.fetch
   globalThis.fetch = async () =>

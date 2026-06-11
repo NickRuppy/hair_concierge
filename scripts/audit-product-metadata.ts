@@ -167,7 +167,7 @@ function classifyKnownRetailerContent(
   text: string,
 ): BuyabilityStatus {
   if (host === "rossmann.de" || host.endsWith(".rossmann.de")) {
-    if (text.includes("online momentan nicht verfügbar")) return "unavailable"
+    if (includesAny(text, UNAVAILABLE_PHRASES)) return "unavailable"
     if (includesAny(text, ["in den warenkorb", "zum warenkorb"])) return "available"
     return null
   }

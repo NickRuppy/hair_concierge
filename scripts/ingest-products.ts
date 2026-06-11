@@ -681,7 +681,9 @@ async function main() {
       const shouldReplaceLegacyLeaveInSpecs =
         product.leave_in_specs != null || process.env.REPLACE_LEGACY_LEAVE_IN_SPECS === "1"
       const shouldUpsertLeaveInFitSpecs =
-        product.leave_in_specs != null || process.env.FORCE_LEAVE_IN_FIT_SPECS_OVERWRITE === "1"
+        !existingProduct?.id ||
+        product.leave_in_specs != null ||
+        process.env.FORCE_LEAVE_IN_FIT_SPECS_OVERWRITE === "1"
       let leaveInFitSpecsReady = true
 
       if (shouldUpsertLeaveInFitSpecs) {
