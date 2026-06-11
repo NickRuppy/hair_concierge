@@ -118,7 +118,20 @@ function inferredCandidate(row: ReviewRow, result?: CandidateResult): Candidate 
     return usableCandidates(result)[0]
   }
   if (goodIds.length === 1) return candidateForReviewId(result, goodIds[0])
+  if (goodIds.length > 1) return candidateForReviewId(result, goodIds[0])
   return undefined
+}
+
+function isCandidateApproved(row: ReviewRow): boolean {
+  if (row.product_rating === "reject" || row.product_rating === "needs_work") return false
+  if (row.product_rating === "approved") return true
+
+  const selectedRating = row.selected_candidate_id
+    ? row.candidate_ratings?.[row.selected_candidate_id]
+    : undefined
+  if (selectedRating === "good") return true
+
+  return Object.values(row.candidate_ratings ?? {}).some((rating) => rating === "good")
 }
 
 function loadSource(source: ReviewSource): MergedDecision[] {
@@ -136,7 +149,7 @@ function loadSource(source: ReviewSource): MergedDecision[] {
     const selectedImageUrl = row.selected_image_url || candidate?.url || ""
     const selectedSource = row.selected_source || candidate?.source || ""
     const status =
-      row.product_rating === "approved" && selectedLocalPath
+      isCandidateApproved(row) && selectedLocalPath
         ? "approved"
         : row.product_rating === "reject"
           ? "rejected"

@@ -136,7 +136,30 @@ What works — `remove-baked-shadow.py`, which exploits geometry instead of colo
 # input must have an alpha channel (the brand asset's own, or a model cutout)
 ```
 
-### Step 4b — second pass for the bright shadow fade
+### When the shadow touches a dark product feature
+
+If a dark badge/label sits at the silhouette edge AND the shadow runs along
+that edge (catalog batch 2 #39: full-height side shadow + bronze badge), the
+badge and shadow merge into one boundary-connected dark component and the
+badge gets eaten. The discriminator is **saturation**: cast shadows are
+warm-tinted (sat = max(rgb)−min(rgb) ≈ 14–20) while product darks are
+neutral (sat ≤ 6). Verify per image, then pass the gate as a third arg:
+
+```bash
+/tmp/rembg-venv/bin/python3 scripts/product-images/remove-baked-shadow.py input.webp output.png 10
+```
+
+**Debug technique:** render a removal overlay — removed pixels in red on the
+grayscale source — to see exactly what the script classified as shadow. This
+is how the badge-eating was found; the magenta composite alone made it look
+like a generic gash.
+
+### Step 4b — second pass for the bright shadow fade (only if needed)
+
+First check the de-shadowed result on magenta — the fade-dilation inside the
+script often catches everything, and the second pass is not free: on catalog
+batch 2 #39, BiRefNet cut a wedge out of the bottle's badge. Only run it when
+a visible warm fade actually remains (pilot #16/#18–20 needed it).
 
 The luminance threshold misses the brightest part of the shadow fade (warm
 beige, lum > 185). Fix: flatten the de-shadowed result onto white, then run
@@ -167,6 +190,17 @@ is the working answer.
 2. All outputs `RGBA` mode, dimensions identical to source
 3. Contact sheet on a beige/colored background for one last eyeball:
    every product clean, no smudges, label text intact
+
+## Catalog batch 2 notes (2026-06-11, `catalog-2026-06-10-02/`)
+
+- 50 images: 30 already-clean brand cutouts (PNG passthrough), 19 Vision
+  cutouts (zero failures, no padding needed), 1 baked shadow (#39 Olaplex
+  No.6).
+- #39 needed the saturation gate (`min_sat=10`) — full-height side shadow
+  touching the bronze BOND SMOOTHER badge; no BiRefNet second pass.
+- Tight crops with ~1% transparency (#09, #41) are legit edge-to-edge
+  product crops, not broken alpha — check the alpha histogram (98% at 255,
+  rest at 0) and composite on magenta before "fixing" anything.
 
 ## Pilot batch notes (2026-06-10)
 

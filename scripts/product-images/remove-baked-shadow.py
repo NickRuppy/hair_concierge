@@ -3,6 +3,16 @@
 Shadow = dark, desaturated pixels connected to the OUTER boundary of the
 alpha silhouette. Label text/badges are dark too, but they are interior
 islands fully surrounded by bright product pixels, so they survive.
+
+Usage: remove-baked-shadow.py <input> <output.png> [min_sat]
+
+min_sat (optional, default 0): only treat dark pixels with
+max(r,g,b)-min(r,g,b) >= min_sat as shadow candidates. Use ~10 when the
+shadow touches a dark product feature (badge, dark label edge) — cast
+shadows are usually warm-tinted while product darks are neutral, so the
+saturation gate separates them. Verify per image: compare the saturation
+of shadow vs. product dark pixels first (catalog-2026-06-10-02 #39 had
+shadow sat 14-20 vs badge sat 0-6).
 """
 import sys
 import numpy as np
@@ -13,7 +23,7 @@ DARK_LUM = 185        # core shadow luminance
 FADE_LUM = 238        # anti-aliased shadow fade
 FADE_RADIUS = 4       # how far the fade-extension may grow from core shadow
 
-def deshadow(src_path, out_path):
+def deshadow(src_path, out_path, min_sat=0):
     im = Image.open(src_path).convert('RGBA')
     arr = np.array(im)
     rgb = arr[:, :, :3].astype(float)
@@ -28,6 +38,9 @@ def deshadow(src_path, out_path):
 
     # core shadow: dark pixels connected to the boundary
     dark = (lum < DARK_LUM) & mask
+    if min_sat > 0:
+        sat = rgb.max(axis=2) - rgb.min(axis=2)
+        dark &= sat >= min_sat
     labels, n = ndimage.label(dark)
     touching = np.unique(labels[boundary & dark])
     touching = touching[touching > 0]
@@ -56,4 +69,4 @@ def deshadow(src_path, out_path):
     print(f"OK: {out_path.split('/')[-1]}  (removed {removed:.1%} of silhouette)")
 
 if __name__ == '__main__':
-    deshadow(sys.argv[1], sys.argv[2])
+    deshadow(sys.argv[1], sys.argv[2], float(sys.argv[3]) if len(sys.argv) > 3 else 0)
