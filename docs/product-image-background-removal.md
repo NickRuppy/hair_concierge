@@ -1,9 +1,10 @@
 # Product-Image Background Removal
 
-Reliable, fully local pipeline for turning product packshots (JPG/WebP, any source)
-into clean transparent-background PNGs (RGBA), ready for compositing onto our own
-backgrounds. Battle-tested on the 20-image pilot batch (2026-06-10,
-`data/product-images/pilot-2026-06-10/selected/` → `selected-nobg/`).
+Reliable, fully local pipeline for turning product packshots (JPG/WebP/PNG/AVIF,
+any source) into clean transparent-background PNGs (RGBA), ready for compositing
+onto our own backgrounds. Battle-tested on 181 images across 5 batches
+(2026-06-10..12: 20-image pilot + catalog batches 02–05, each
+`data/product-images/<batch>/selected/` → `selected-nobg/`).
 
 This document covers the cutout/background-removal stage only. For the full
 scrape → review → cutout → final composite → manifest → Supabase publish flow,
@@ -21,45 +22,63 @@ Scripts live in `scripts/product-images/`:
 ## TL;DR decision tree
 
 ```
-For each image:
-1. Does the source already have a usable alpha channel?   → check FIRST (step 0)
-   └─ yes, and it's clean on magenta                      → just convert to PNG, done
-   └─ yes, but shadow is baked in (opaque, inside alpha)  → remove-baked-shadow.py (+ step 4b)
-2. Flat/studio background, product not touching edges     → removebg.swift (Vision)
-   └─ Vision says "no subject found" (product fills frame)→ removebg-padded.swift
-3. QA on magenta. Background haze / gradient remnants?    → rembg isnet-general-use
-4. Shadow remnant survives every model?                    → it's baked in → remove-baked-shadow.py
-   └─ bright warm fade still left after that              → 4b: flatten on white + BiRefNet 2nd pass
+0. Check source alpha FIRST (step 0)
+   ├─ HAS alpha (any %) → composite on magenta and inspect
+   │   ├─ clean                          → PNG passthrough, done (most common: dm/Rossmann assets)
+   │   ├─ only ~0–5% transparent         → likely a legit edge-to-edge tight crop, NOT broken:
+   │   │                                    alpha histogram ≈ 9x% at 255 + rest at 0 → passthrough
+   │   └─ baked-in shadow (opaque, inside the alpha)
+   │       ├─ product vividly colored    → flatten on white + BiRefNet (one command, try first)
+   │       └─ product white/light        → remove-baked-shadow.py
+   │           ├─ shadow touches a dark badge/label → add saturation gate (3rd arg, ~10)
+   │           └─ warm fade remains on magenta      → step 4b (flatten + BiRefNet)
+   └─ NO alpha (flat photo) → removebg.swift (Vision)
+       ├─ "no subject found" (product fills frame)  → removebg-padded.swift
+       ├─ product is a sachet/box with people in the
+       │  printed artwork (Vision lifts the person!) → full-opacity passthrough instead
+       └─ background haze remains on magenta         → rembg isnet-general-use
+
+Always: QA every output on magenta (step 2) + final RGBA/dimension check.
 ```
 
 ## Step 0 — Inspect sources before running any model
 
-Two things bit us in the pilot; both are cheap to check up front:
+Across the catalog batches, **most images (60–90%) already shipped usable
+alpha** — the passthrough is the most common path, not the exception. Check
+up front (use the rembg venv python; system python3 has no PIL):
 
 ```bash
-# Which sources already ship transparency? (brand assets often do)
-python3 - <<'EOF'
+# Which sources already ship transparency? (brand + dm/Rossmann assets usually do)
+/tmp/rembg-venv/bin/python3 - <<'EOF'
 from PIL import Image
 import numpy as np, glob
 for f in sorted(glob.glob('selected/*')):
     im = Image.open(f)
-    if 'A' in im.mode:
+    if 'A' in im.mode or im.mode == 'P':
         a = np.array(im.convert('RGBA'))[:,:,3]
-        print(f, im.mode, f'transparent={(a==0).mean():.0%}')
+        print(f, im.mode, f'transparent={(a==0).mean():.1%}')
     else:
         print(f, im.mode, '(no alpha)')
 EOF
 ```
 
-- **Source already >80% transparent** → it's an official brand cutout. Don't run a
-  model on it (models receive the flattened RGB and re-include baked shadows).
-  Work with the existing alpha instead.
-- **Source has no alpha** → proceed to Vision (step 1).
+Interpreting the numbers — the % is only a hint; the magenta composite
+(step 2) is the real test:
 
-## Step 1 — macOS Vision subject-lift (default, handles ~75% of images)
+- **Any transparency at all** → composite on magenta and look. Clean → convert
+  to RGBA PNG, done. Never run a model on a source with good alpha: models see
+  the flattened RGB and re-include baked shadows (pilot lesson).
+- **~0–5% transparent** → usually a legit edge-to-edge tight crop (dm strip
+  images), not broken alpha. Confirm via histogram: ~9x% of pixels at alpha 255
+  + remainder at 0 = fine. Don't "fix" it.
+- **`P` (palette) mode with 0% transparent** → treat as flat, go to Vision.
+- **No alpha** → Vision (step 1). AVIF/WebP/JPG/PNG all work as Vision input.
+
+## Step 1 — macOS Vision subject-lift (default for flat sources)
 
 Zero install, runs locally, same tech as "lift subject" in Photos. Excellent on
-retailer packshots (dm/Rossmann style: product on white).
+retailer packshots (product on white/studio background) — 52/52 clean across
+catalog batches 2–5, including AVIF sources.
 
 ```bash
 swift scripts/product-images/removebg.swift <outputDir> <inputs...>
@@ -67,13 +86,19 @@ swift scripts/product-images/removebg.swift <outputDir> <inputs...>
 swift scripts/product-images/removebg.swift selected-nobg selected/*.jpg selected/*.webp
 ```
 
-**Known failure:** "SKIP (no subject found)" when the product fills the frame
+**Known failure 1:** "SKIP (no subject found)" when the product fills the frame
 edge-to-edge (tight crops). Fix: pad with a white border, cut out, crop back —
 that's exactly what the padded variant does:
 
 ```bash
 swift scripts/product-images/removebg-padded.swift <input> <output.png>
 ```
+
+**Known failure 2 — sachet/box artwork (silent, caught only in QA):** flat
+packets/boxes whose printed artwork features a person make Vision lift the
+*person out of the packaging art* — padded variant too (batch 3 #44
+Schaebens). If the product is the full rectangle, the correct output is a
+full-opacity passthrough of the source, not segmentation.
 
 ## Step 2 — QA every batch on magenta (non-negotiable)
 
@@ -85,8 +110,14 @@ swift scripts/product-images/qa-composite.swift /tmp/qa-magenta selected-nobg/*.
 # then visually inspect /tmp/qa-magenta/*.png
 ```
 
+For batches, contact sheets beat per-image files: PIL grid of 8 images per
+sheet at ~420px cells, magenta background, image number in the corner. Big
+enough to spot shadows, few enough files to actually look at all of them.
+
 Look for: gray/beige smudges next to the product (shadow), lighter bands
-(background haze), color fringes on edges. Also verify file properties:
+(background haze), color fringes on edges. **Zoom suspicious bases/edges at
+full resolution** — batch 2's badge-eating looked like a generic gash at
+sheet scale. Also verify file properties:
 
 ```bash
 python3 -c "
@@ -121,9 +152,15 @@ writes proper RGBA.
 ## Step 4 — Baked-in shadows (the hard case)
 
 Some brand assets (Olaplex, epres in the pilot) bake the drop shadow into the
-product cutout as **fully opaque pixels**. Every segmentation model
-(Vision, ISNet, BiRefNet, BiRefNet-DIS, BRIA) treats it as subject — trying more
-models is a dead end; we tried five.
+product cutout as **fully opaque pixels**. For WHITE/light products, every
+segmentation model (Vision, ISNet, BiRefNet, BiRefNet-DIS, BRIA) treats the
+shadow as subject — trying more models is a dead end; we tried five.
+
+**Exception — strongly colored products:** if the product is vividly colored
+(catalog batch 3 #34, yellow Olaplex No.7 oil), BiRefNet on the flattened
+image separates the gray shadow cleanly — try that FIRST, it's one command.
+The geometric script can be unusable there anyway: a dark product body (amber
+oil, lum < 185) merges with the shadow into one boundary-connected component.
 
 What works — `remove-baked-shadow.py`, which exploits geometry instead of color:
 
@@ -190,6 +227,32 @@ is the working answer.
 2. All outputs `RGBA` mode, dimensions identical to source
 3. Contact sheet on a beige/colored background for one last eyeball:
    every product clean, no smudges, label text intact
+
+## Catalog batch 5 notes (2026-06-12, `catalog-2026-06-10-05/`)
+
+- 11 images: 7 alpha passthroughs (dry-shampoo cans), 4 Vision cutouts incl.
+  AVIF sources — zero failures.
+- #09 was an Olaplex but as a flat retailer photo, not a brand asset — Vision
+  excluded the photo shadow naturally. The baked-shadow problem is specific
+  to Olaplex's official transparent brand assets.
+
+## Catalog batch 4 notes (2026-06-12, `catalog-2026-06-10-04/`)
+
+- 50 images, the easy case: 44 clean alpha passthroughs (dm/Rossmann-style
+  assets), 6 Vision cutouts, zero failures, no baked shadows. No new lessons.
+
+## Catalog batch 3 notes (2026-06-11, `catalog-2026-06-10-03/`)
+
+- 50 images: 26 clean alpha passthroughs, 23 Vision cutouts (zero failures),
+  1 baked shadow (#34 Olaplex No.7).
+- #34: geometric deshadow unusable (dark amber oil body merges with the
+  shadow; saturation ranges overlap). Plain BiRefNet on the flattened image
+  worked — vivid yellow vs gray shadow is exactly what models separate well.
+- **Sachet/box artwork trap (#44 Schaebens):** flat packets whose printed
+  artwork features a person fool Vision — it lifts the person out of the
+  packaging art (padded variant too). If the product is the full rectangle,
+  the fix is a full-opacity passthrough, not segmentation. Same family as
+  batch 2's #15 Gliss box / #19 HASK sachet.
 
 ## Catalog batch 2 notes (2026-06-11, `catalog-2026-06-10-02/`)
 

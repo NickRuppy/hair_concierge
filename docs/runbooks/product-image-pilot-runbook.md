@@ -465,6 +465,185 @@ Recommended next batch:
 Before moving beyond 50-product batches, preserve every batch manifest and
 review-state file as the provenance record for future audits.
 
+## Next Batch Recipe
+
+Use this as the short operational recipe for the next 50-product batch. Replace
+`catalog-YYYY-MM-DD-NN` once at the top and keep the same value through every
+command.
+
+```bash
+export BATCH_ID=catalog-YYYY-MM-DD-NN
+export BATCH_DIR=data/product-images/$BATCH_ID
+```
+
+1. Select the next products after the previous batch is published:
+
+```bash
+npx tsx scripts/product-images/select-pilot-products.ts \
+  --limit=50 \
+  --allow-partial \
+  --out=$BATCH_DIR/pilot-products.csv
+```
+
+2. Scrape raw candidates:
+
+```bash
+npx tsx scripts/product-images/scrape-pilot-images.ts \
+  --batch-dir=$BATCH_DIR \
+  --pilot=$BATCH_DIR/pilot-products.csv
+```
+
+3. Do not send the raw scrape straight to review. First apply the source
+   learnings from batches 01-05:
+
+- Prefer exact retailer/brand hero or meta images over page `img` tags.
+- On DM pages, `browser-meta` is often the exact product hero. Related-product
+  carousel thumbnails can share brand/category words but be the wrong SKU.
+- Compare image URL slugs against the product page slug. If the URL slug points
+  at another product, drop it.
+- Drop banners, lifestyle panels, recommendation-grid images, logos, icons,
+  ingredient/texture detail shots, and back-of-pack-only candidates unless they
+  are the only exact source and the reviewer explicitly accepts them.
+- For hard cases, make a small rescue review folder rather than expanding the
+  full review set with noise. Good rescue sources so far: official brand CDN,
+  DM/Rossmann/Mueller/Hagel product images, YesStyle/Lyko/Walmart/Incidecoder
+  originals when they show the exact single product.
+
+Create learned review folders as needed, for example:
+
+```text
+$BATCH_DIR/learned/
+$BATCH_DIR/learned2/
+$BATCH_DIR/learned3/
+```
+
+Each review folder must contain its own `image-candidates.json`, `review.html`,
+and `review-state.json`. Keep the final reviewer work small: first show the
+high-confidence learned set, then only show rejected rows in rescue rounds.
+
+4. Serve review pages locally:
+
+```bash
+npx tsx scripts/product-images/serve-review.ts \
+  --batch-dir=$BATCH_DIR \
+  --port=3357
+```
+
+Review URLs then follow the folder names:
+
+```text
+http://127.0.0.1:3357/learned/review.html
+http://127.0.0.1:3357/learned2/review.html
+http://127.0.0.1:3357/learned3/review.html
+```
+
+5. Merge every approved review source into `selected/`. Pass the final set of
+   review folders explicitly:
+
+```bash
+npx tsx scripts/product-images/merge-review-decisions.ts \
+  --batch-dir=$BATCH_DIR \
+  --review-source=learned:learned/review-state.json:learned/image-candidates.json \
+  --review-source=learned2:learned2/review-state.json:learned2/image-candidates.json \
+  --review-source=learned3:learned3/review-state.json:learned3/image-candidates.json
+```
+
+Only continue when this reports exactly 50 approved rows and `selected/` has 50
+files whose names include product ids.
+
+6. Remove backgrounds and QA the transparent cutouts.
+
+Use [Product-Image Background Removal](../product-image-background-removal.md)
+as the authoritative cutout procedure. The short operational rule is:
+
+- Check source alpha first. If the source already has clean transparency, pass
+  it through as RGBA PNG; do not run a segmentation model over good alpha.
+- For flat packshots without alpha, use macOS Vision subject-lift
+  (`removebg.swift`) first.
+- If Vision reports no subject because the product fills the frame, use
+  `removebg-padded.swift`.
+- If Vision leaves haze/gradients, try `rembg` with `isnet-general-use`.
+- For fully opaque baked-in shadows inside brand alpha assets, use
+  `remove-baked-shadow.py`; for vividly colored products, try flattened
+  BiRefNet first because it can separate gray shadow from the product body.
+- For sachets or boxes whose printed artwork includes people, do not let
+  Vision lift the person out of the package art. If the product is the full
+  rectangle, use full-opacity passthrough instead.
+- QA every output on magenta with `qa-composite.swift`. White preview
+  backgrounds hide halos, haze, and shadow remnants.
+
+If the cutout work is outsourced, keep the same acceptance bar: returned files
+must be transparent PNG/RGBA cutouts, visually QA'd on a colored background, and
+saved in:
+
+```text
+$BATCH_DIR/selected-nobg/
+```
+
+Keep product ids in the filenames. The compositor matches by product id, not by
+file order. Before compositing, verify file count, product-id coverage, and that
+the returned files are PNG/RGBA.
+
+7. Composite final assets from the returned cutouts:
+
+```bash
+npx tsx scripts/product-images/process-selected-images.ts \
+  --batch-dir=$BATCH_DIR \
+  --input-dir=$BATCH_DIR/selected-nobg \
+  --expected-count=50
+```
+
+Review:
+
+```text
+http://127.0.0.1:3357/final-review.html
+```
+
+8. Generate and validate the manifest. Include every candidate file that
+   contributed approved sources:
+
+```bash
+npx tsx scripts/product-images/generate-pilot-manifest.ts \
+  --batch-dir=$BATCH_DIR \
+  --expected-count=50 \
+  --candidate-files=learned/image-candidates.json,learned2/image-candidates.json,learned3/image-candidates.json
+```
+
+If the background removal was outsourced, set `processing_method` to
+`third_party` in all manifest rows before publishing. Use a real CSV parser or
+regenerate the manifest before editing; product image URLs can contain commas,
+so a naive `split(",")` corrupts the manifest.
+
+9. Dry-run publish:
+
+```bash
+npx tsx scripts/product-images/publish-pilot-images.ts \
+  --batch-dir=$BATCH_DIR \
+  --batch-id=$BATCH_ID \
+  --expected-count=50 \
+  --dry-run
+```
+
+Only publish after the dry-run shows exactly 50 payloads, bucket/database
+preflight passes, and storage paths use the intended batch id.
+
+10. Publish and verify:
+
+```bash
+npx tsx scripts/product-images/publish-pilot-images.ts \
+  --batch-dir=$BATCH_DIR \
+  --batch-id=$BATCH_ID \
+  --expected-count=50
+```
+
+After publishing, verify:
+
+- 50 `products.image_url` values point to `/product-images/$BATCH_ID/`
+- 50 `product_image_assets` rows exist for `manifest_batch_id = $BATCH_ID`
+- product URLs match audit public URLs
+- one sampled public asset returns `200 image/webp`
+- local chat recommendation cards still render on mobile width
+
 ## Catalog Batch 01 Learnings
 
 Batch `catalog-2026-06-10-01` published 49 reviewed assets and intentionally
