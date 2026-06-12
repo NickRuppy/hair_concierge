@@ -814,6 +814,7 @@ function validateInterpretationToolArguments(
   const latestRoutineTool = [...context.toolCallHistory]
     .reverse()
     .find((call) => call.name === "build_or_fix_routine")
+  const multiSlotProductContext = isMultiSlotProductSelectionContext(answer, context)
 
   if (latestProductTool) {
     if (!latestProductTool.arguments) {
@@ -837,20 +838,24 @@ function validateInterpretationToolArguments(
         interpretation.product_request_kind,
         errors,
       )
-      compareToolArgument(
-        latestProductTool.arguments,
-        "requested_product_count",
-        interpretation.requested_product_count,
-        errors,
-      )
-      compareToolArgument(
-        latestProductTool.arguments,
-        "count_policy",
-        interpretation.count_policy,
-        errors,
-      )
+      if (!multiSlotProductContext) {
+        compareToolArgument(
+          latestProductTool.arguments,
+          "requested_product_count",
+          interpretation.requested_product_count,
+          errors,
+        )
+        compareToolArgument(
+          latestProductTool.arguments,
+          "count_policy",
+          interpretation.count_policy,
+          errors,
+        )
+      }
     }
-    compareCategoryArgument(latestProductTool.arguments, interpretation, errors)
+    if (!multiSlotProductContext) {
+      compareCategoryArgument(latestProductTool.arguments, interpretation, errors)
+    }
   }
 
   if (latestRoutineTool) {
@@ -910,6 +915,190 @@ function isProductSelectionSupportingRoutineAnswer(
   return isProductBackedRoutineAnswer(answer) && Boolean(latestRoutineTool?.arguments)
 }
 
+type MultiSlotProductSelectionInfo = {
+  isSlotShaped: boolean
+  isValid: boolean
+  distinctCategoryCount: number
+}
+
+const MULTI_SLOT_CATEGORY_EVIDENCE_PATTERNS: Partial<Record<AgentV2CareCategory, RegExp[]>> = {
+  shampoo: [/\bshampoo\b/, /\balltagsshampoo\b/],
+  conditioner: [/\bconditioner\b/, /\bspuelung\b/],
+  mask: [/\bmaske\b/, /\bmask\b/],
+  leave_in: [/\bleave\s?in\b/, /\bleavein\b/],
+  oil: [/\boel\b/, /\bol\b/, /\boil\b/],
+  bondbuilder: [/\bbondbuilder\b/, /\bbond\s?builder\b/, /\bbonding\b/, /\bk18\b/, /\bolaplex\b/],
+  deep_cleansing_shampoo: [
+    /\btiefenreinigung\b/,
+    /\btiefenreinigungsshampoo\b/,
+    /\bdeep\s?cleansing\b/,
+    /\bclarifying\b/,
+    /\bdetox\b/,
+    /\breset\b/,
+  ],
+  dry_shampoo: [/\btrockenshampoo\b/, /\bdry\s?shampoo\b/],
+  peeling: [/\bpeeling\b/, /\bscalp\s?scrub\b/],
+  styling: [/\bstyling\b/, /\bstyler\b/],
+  treatment: [/\btreatment\b/, /\bbehandlung\b/],
+}
+
+function getProductToolCalls(
+  context: AgentV2FinalAnswerValidationContext,
+): readonly Partial<AgentV2ToolCallTrace>[] {
+  return context.toolCallHistory.filter((call) => call.name === "select_products")
+}
+
+function getCurrentProductProjections(
+  context: AgentV2FinalAnswerValidationContext,
+  productToolCallCount: number,
+): AgentV2FinalAnswerValidationContext["selectedProductProjections"] {
+  // responses-agent prepends prior-turn projections and appends one current projection per product call.
+  if (context.selectedProductProjections.length < productToolCallCount) return []
+  return context.selectedProductProjections.slice(-productToolCallCount)
+}
+
+function getToolArgumentString(call: Partial<AgentV2ToolCallTrace>, key: string): string | null {
+  const value = call.arguments?.[key]
+  return typeof value === "string" && value.trim().length > 0 ? value : null
+}
+
+function getToolArgumentNumber(call: Partial<AgentV2ToolCallTrace>, key: string): number | null {
+  const value = call.arguments?.[key]
+  return typeof value === "number" && Number.isFinite(value) ? value : null
+}
+
+function userEvidenceMentionsCategory(category: string, evidenceText: string): boolean {
+  const patterns = MULTI_SLOT_CATEGORY_EVIDENCE_PATTERNS[category as AgentV2CareCategory]
+  return Boolean(patterns?.some((pattern) => pattern.test(evidenceText)))
+}
+
+function userFacingAdmitsMissingSlot(category: string, userFacingText: string): boolean {
+  const normalized = normalizeAgentV2EvidenceText(userFacingText)
+  const mentionsCategory = userEvidenceMentionsCategory(category, normalized)
+  const admitsMissingCatalogMatch = [
+    /\b(?:kein|keinen|keine)\s+(?:sicher(?:er|en|e|es)|passend(?:er|en|e|es))?\s*(?:treffer|katalogtreffer|produkt|option|match)\b/,
+    /\bkein(?:e|en)?\s+passend(?:es|en|e|er)?\s+(?:produkt|option|treffer|match)\b/,
+    /\bnichts\s+passend(?:es|en|e|er)?\b/,
+    /\bfehl(?:t|en)?\s+(?:mir\s+|uns\s+)?(?:ein|eine|einen|den|der)?\s*(?:sicher(?:er|en|e|es)?|passend(?:er|en|e|es)?|katalog)\s*(?:treffer|produkt|option|match)\b/,
+    /\bohne\s+(?:sicher(?:en|er|e|es)?|passend(?:en|er|e|es)?)\s*(?:treffer|produkt|option|match)\b/,
+    /\bno\s+(?:safe|catalog)\s+(?:hit|match|product)\b/,
+  ].some((pattern) => pattern.test(normalized))
+
+  return mentionsCategory && admitsMissingCatalogMatch
+}
+
+function getMultiSlotEvidenceText(context: AgentV2FinalAnswerValidationContext): string {
+  return normalizeAgentV2EvidenceText(context.latestUserMessage)
+}
+
+function getEmptySlotCategories(
+  categories: readonly string[],
+  projections: AgentV2FinalAnswerValidationContext["selectedProductProjections"],
+): string[] {
+  return projections.flatMap((projection, index) =>
+    (projection.valid_product_ids?.length ?? 0) === 0 && categories[index]
+      ? [categories[index]]
+      : [],
+  )
+}
+
+function getMultiSlotProductSelectionInfo(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): MultiSlotProductSelectionInfo {
+  const productToolCalls = getProductToolCalls(context)
+  const categories = productToolCalls
+    .map((call) => getToolArgumentString(call, "category"))
+    .filter((category): category is string => Boolean(category))
+  const allProductCallsHaveCategories = categories.length === productToolCalls.length
+  const distinctCategoryCount = new Set(categories).size
+  const invalidInfo = {
+    isSlotShaped: false,
+    isValid: false,
+    distinctCategoryCount,
+  }
+
+  if (
+    answer.answer_mode !== "product_recommendation" ||
+    answer.request_interpretation.product_request_kind === "product_detail" ||
+    answer.request_interpretation.product_request_kind === "compare_products" ||
+    productToolCalls.length < 2 ||
+    !allProductCallsHaveCategories ||
+    distinctCategoryCount < 2
+  ) {
+    return invalidInfo
+  }
+
+  const isSlotShaped =
+    productToolCalls.length === distinctCategoryCount &&
+    productToolCalls.every(
+      (call) =>
+        getToolArgumentString(call, "count_policy") === "exact" &&
+        getToolArgumentNumber(call, "requested_product_count") === 1,
+    )
+  if (!isSlotShaped) return invalidInfo
+
+  const categorySet = new Set(categories)
+  const interpretationMatchesSlotShape =
+    answer.request_interpretation.count_policy === "exact" &&
+    answer.request_interpretation.requested_product_count === distinctCategoryCount &&
+    categorySet.has(answer.request_interpretation.care_category)
+  const evidenceText = getMultiSlotEvidenceText(context)
+  const evidenceMentionsEverySlot = categories.every((category) =>
+    userEvidenceMentionsCategory(category, evidenceText),
+  )
+  const visibleRecommendationIds = answer.payload.recommendations.map(
+    (recommendation) => recommendation.product_id,
+  )
+  const currentProductProjections = getCurrentProductProjections(context, productToolCalls.length)
+  const emptySlotCategories = getEmptySlotCategories(categories, currentProductProjections)
+  const userFacing = readUserFacingAnswer(answer.payload)
+  const userFacingAdmitsEveryEmptySlot = emptySlotCategories.every((category) =>
+    userFacingAdmitsMissingSlot(category, userFacing),
+  )
+  const fillableProjectionIndexes = new Set(
+    currentProductProjections.flatMap((projection, index) =>
+      (projection.valid_product_ids?.length ?? 0) > 0 ? [index] : [],
+    ),
+  )
+  const visibleProjectionIndexes = new Set<number>()
+  const allVisibleRecommendationsSelected = visibleRecommendationIds.every((id) => {
+    const projectionIndex = currentProductProjections.findIndex((projection) =>
+      (projection.valid_product_ids ?? []).includes(id),
+    )
+    if (projectionIndex === -1) return false
+    visibleProjectionIndexes.add(projectionIndex)
+    return true
+  })
+  const visibleRecommendationsUseDistinctSlots =
+    visibleProjectionIndexes.size === visibleRecommendationIds.length
+  const allFillableSlotsAreVisible =
+    visibleRecommendationIds.length === fillableProjectionIndexes.size &&
+    Array.from(fillableProjectionIndexes).every((index) => visibleProjectionIndexes.has(index))
+  const visibleRecommendationCountAllowsRelaxation =
+    visibleRecommendationIds.length <= distinctCategoryCount
+
+  return {
+    isSlotShaped,
+    isValid:
+      interpretationMatchesSlotShape &&
+      evidenceMentionsEverySlot &&
+      userFacingAdmitsEveryEmptySlot &&
+      visibleRecommendationCountAllowsRelaxation &&
+      allVisibleRecommendationsSelected &&
+      visibleRecommendationsUseDistinctSlots &&
+      allFillableSlotsAreVisible,
+    distinctCategoryCount,
+  }
+}
+
+function isMultiSlotProductSelectionContext(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  return getMultiSlotProductSelectionInfo(answer, context).isValid
+}
+
 function validateProductAnswerShape(
   answer: AgentV2TerminalAnswer,
   context: AgentV2FinalAnswerValidationContext,
@@ -932,6 +1121,18 @@ function validateProductAnswerShape(
   }
 
   const recommendations = answer.payload.recommendations
+  const multiSlotProductContext = getMultiSlotProductSelectionInfo(answer, context)
+  if (
+    multiSlotProductContext.isSlotShaped &&
+    recommendations.length > multiSlotProductContext.distinctCategoryCount
+  ) {
+    errors.push({
+      validator_id: "requested_product_count",
+      message: `Multi-category product requests must not surface more visible recommendations than the ${multiSlotProductContext.distinctCategoryCount} selected category slot(s).`,
+      severity: "block",
+    })
+  }
+
   const recommendationIds = new Set(
     recommendations.map((recommendation) => recommendation.product_id),
   )
@@ -947,7 +1148,11 @@ function validateProductAnswerShape(
     answer.request_interpretation,
     availableRecommendationCount,
   )
-  if (countRequirement.kind === "exact" && recommendations.length !== countRequirement.count) {
+  if (
+    countRequirement.kind === "exact" &&
+    recommendations.length !== countRequirement.count &&
+    !multiSlotProductContext.isValid
+  ) {
     errors.push({
       validator_id: "requested_product_count",
       message: `The user asked for ${countRequirement.count} product recommendation(s); return exactly that many when enough valid products are available.`,
