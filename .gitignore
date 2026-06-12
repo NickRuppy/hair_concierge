@@ -61,6 +61,11 @@ yarn-error.log*
 !/data/agent-v2/**
 !/data/product-metadata-audit/
 !/data/product-metadata-audit/**
+!/data/product-additions/
+!/data/product-additions/**
+!/data/product-catalog-normalization.json
+!/data/product-catalog-normalization.schema.json
+!/data/product-catalog-snapshot.json
 *.docx
 
 # python
@@ -93,6 +98,7 @@ test-screenshots*/
 /.clawpatch/
 /clawpatch-report.md
 /clawpatch-summary.md
+*.claude-code-review*.md
 
 # Affiliate link research artefacts (regenerated; safe to delete)
 !/data/affiliate-research/
