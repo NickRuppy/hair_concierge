@@ -1,0 +1,301 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chaarlie.app/schemas/product-catalog-normalization.schema.json",
+  "title": "Product Catalog Normalization",
+  "description": "Phase 0 product identity normalization data for the existing Hair Concierge product catalog.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metadata", "products"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "updated_at", "production_baseline"],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source": {
+          "type": ["string", "null"]
+        },
+        "production_baseline": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["product_count", "categories"],
+          "properties": {
+            "product_count": {
+              "type": "integer",
+              "const": 239
+            },
+            "categories": {
+              "type": "array",
+              "minItems": 8,
+              "maxItems": 8,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "Bondbuilder",
+                  "Conditioner (Drogerie)",
+                  "Leave-in",
+                  "Maske",
+                  "Öle",
+                  "Shampoo",
+                  "Tiefenreinigungsshampoo",
+                  "Trockenshampoo"
+                ]
+              }
+            }
+          }
+        },
+        "notes": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "products": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/product"
+      }
+    }
+  },
+  "$defs": {
+    "categoryKey": {
+      "type": "string",
+      "enum": [
+        "bondbuilder",
+        "conditioner",
+        "deep_cleansing_shampoo",
+        "dry_shampoo",
+        "hairspray",
+        "heat_protectant",
+        "leave_in",
+        "mask",
+        "oil",
+        "peeling",
+        "scrub",
+        "serum",
+        "shampoo",
+        "styling_cream",
+        "styling_gel",
+        "styling_mousse"
+      ]
+    },
+    "currentCategory": {
+      "type": "string",
+      "enum": [
+        "Bondbuilder",
+        "Conditioner (Drogerie)",
+        "Leave-in",
+        "Maske",
+        "Öle",
+        "Shampoo",
+        "Tiefenreinigungsshampoo",
+        "Trockenshampoo"
+      ]
+    },
+    "identifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "value"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["gtin", "ean", "barcode", "retailer_sku", "retailer_url"]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": ["string", "null"]
+        },
+        "notes": {
+          "type": ["string", "null"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": ["gtin", "ean", "barcode"]
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "string",
+                "pattern": "^[0-9]{8,14}$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "retailer_url"
+              }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "alias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alias", "resolves_to", "canonical_brand", "product_line"],
+      "properties": {
+        "alias": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolves_to": {
+          "type": "string",
+          "enum": ["brand", "brand_line"]
+        },
+        "canonical_brand": {
+          "type": "string",
+          "minLength": 1
+        },
+        "product_line": {
+          "type": ["string", "null"]
+        },
+        "notes": {
+          "type": ["string", "null"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "resolves_to": {
+                "const": "brand"
+              }
+            },
+            "required": ["resolves_to"]
+          },
+          "then": {
+            "properties": {
+              "product_line": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resolves_to": {
+                "const": "brand_line"
+              }
+            },
+            "required": ["resolves_to"]
+          },
+          "then": {
+            "properties": {
+              "product_line": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product_id",
+        "current_brand",
+        "current_name",
+        "current_category",
+        "canonical_category_key",
+        "canonical_brand",
+        "product_line",
+        "clean_name",
+        "aliases",
+        "known_titles",
+        "identifiers",
+        "notes",
+        "review_status"
+      ],
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "current_brand": {
+          "type": "string",
+          "minLength": 1
+        },
+        "current_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "current_category": {
+          "$ref": "#/$defs/currentCategory"
+        },
+        "canonical_category_key": {
+          "$ref": "#/$defs/categoryKey"
+        },
+        "canonical_brand": {
+          "type": "string",
+          "minLength": 1
+        },
+        "product_line": {
+          "type": ["string", "null"]
+        },
+        "clean_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/alias"
+          }
+        },
+        "known_titles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "identifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "notes": {
+          "type": ["string", "null"]
+        },
+        "review_status": {
+          "type": "string",
+          "enum": ["draft", "reviewed", "blocked"]
+        }
+      }
+    }
+  }
+}
