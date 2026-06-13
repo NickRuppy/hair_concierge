@@ -1,3 +1,8 @@
+export * from "./brand-resolution"
+export * from "./normalize"
+
+import { normalizeIdentifier, normalizeIdentityText } from "./normalize"
+
 export const SUPPORTED_PRODUCT_CATEGORY_KEYS = [
   "shampoo",
   "conditioner",
@@ -76,30 +81,6 @@ const CATEGORY_ALIASES: Array<[KnownProductCategoryKey, string]> = [
   ["hairspray", "Hairspray"],
 ]
 
-function normalizeGermanText(value: string): string {
-  return value
-    .replace(/ß/g, "ss")
-    .replace(/ẞ/g, "ss")
-    .normalize("NFKD")
-    .replace(/\p{Mark}/gu, "")
-}
-
-export function normalizeText(value: string | null | undefined): string {
-  if (!value) return ""
-
-  return normalizeGermanText(value)
-    .toLowerCase()
-    .replace(/n[º°]/g, "no")
-    .replace(/[_-]+/g, " ")
-    .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
-    .trim()
-    .replace(/\s+/g, " ")
-}
-
-export function normalizeIdentifier(value: string | null | undefined): string {
-  return normalizeText(value).replace(/\s+/g, "_")
-}
-
 const CATEGORY_ALIAS_BY_IDENTIFIER = new Map<string, KnownProductCategoryKey>()
 
 for (const key of KNOWN_PRODUCT_CATEGORY_KEYS) {
@@ -113,6 +94,7 @@ for (const [key, alias] of CATEGORY_ALIASES) {
 export function normalizeCategoryKey(
   value: string | null | undefined,
 ): KnownProductCategoryKey | null {
+  if (!value) return null
   const normalized = normalizeIdentifier(value)
   return CATEGORY_ALIAS_BY_IDENTIFIER.get(normalized) ?? null
 }
@@ -125,11 +107,12 @@ type TokenSpan = {
 
 function tokenSpans(value: string): TokenSpan[] {
   const spans: TokenSpan[] = []
-  const tokenPattern = /[\p{Letter}\p{Number}]+/gu
+  const tokenPattern =
+    /[\p{Letter}\p{Number}]+(?:[\u2018\u2019'`´](?=[\p{Letter}\p{Number}])[\p{Letter}\p{Number}]+)*/gu
 
   for (const match of value.matchAll(tokenPattern)) {
     const rawToken = match[0]
-    const normalized = normalizeText(rawToken)
+    const normalized = normalizeIdentityText(rawToken)
     if (!normalized) continue
 
     spans.push({
@@ -142,7 +125,7 @@ function tokenSpans(value: string): TokenSpan[] {
   return spans
 }
 
-function prefixMatch(source: string, prefix: string): { end: number; tokenCount: number } | null {
+function prefixMatch(source: string, prefix: string): { end: number } | null {
   const sourceTokens = tokenSpans(source)
   const prefixTokens = tokenSpans(prefix)
 
@@ -156,10 +139,7 @@ function prefixMatch(source: string, prefix: string): { end: number; tokenCount:
     }
   }
 
-  return {
-    end: sourceTokens[prefixTokens.length - 1].end,
-    tokenCount: prefixTokens.length,
-  }
+  return { end: sourceTokens[prefixTokens.length - 1].end }
 }
 
 function stripTokenPrefix(source: string, prefix: string | null | undefined): string {
@@ -182,138 +162,4 @@ export function cleanProductDisplayName(
 ): string {
   const withoutBrand = stripTokenPrefix(value, options.brand)
   return stripTokenPrefix(withoutBrand, options.productLine)
-}
-
-export type ProductIdentityProductLine = {
-  key: string
-  name: string
-  aliases?: readonly string[]
-}
-
-export type ProductIdentityBrand = {
-  key: string
-  name: string
-  aliases?: readonly string[]
-  productLines?: readonly ProductIdentityProductLine[]
-}
-
-export type BrandAliasConflict = {
-  normalizedAlias: string
-  targets: Array<{
-    brandKey: string
-    label: string
-  }>
-}
-
-export type BrandResolution = {
-  match: "brand_line" | "brand" | "none"
-  brand: ProductIdentityBrand | null
-  productLine: ProductIdentityProductLine | null
-  matchedText: string | null
-}
-
-function uniqueLabels(name: string, aliases: readonly string[] | undefined): string[] {
-  const labels = [name, ...(aliases ?? [])]
-  const seen = new Set<string>()
-  const unique: string[] = []
-
-  for (const label of labels) {
-    const normalized = normalizeText(label)
-    if (!normalized || seen.has(normalized)) continue
-
-    seen.add(normalized)
-    unique.push(label)
-  }
-
-  return unique
-}
-
-export function detectBrandAliasConflicts(
-  brands: readonly ProductIdentityBrand[],
-): BrandAliasConflict[] {
-  const targetsByAlias = new Map<string, Map<string, { brandKey: string; label: string }>>()
-
-  for (const brand of brands) {
-    for (const label of uniqueLabels(brand.name, brand.aliases)) {
-      const normalizedAlias = normalizeText(label)
-      const targets = targetsByAlias.get(normalizedAlias) ?? new Map()
-
-      if (!targets.has(brand.key)) {
-        targets.set(brand.key, { brandKey: brand.key, label })
-      }
-
-      targetsByAlias.set(normalizedAlias, targets)
-    }
-  }
-
-  return Array.from(targetsByAlias.entries())
-    .filter(([, targets]) => targets.size > 1)
-    .map(([normalizedAlias, targets]) => ({
-      normalizedAlias,
-      targets: Array.from(targets.values()),
-    }))
-}
-
-function trimLeadingSeparators(value: string): { text: string; offset: number } {
-  const match = value.match(/^[\s\p{Punctuation}\p{Symbol}]+/u)
-  const offset = match?.[0].length ?? 0
-  return { text: value.slice(offset), offset }
-}
-
-function bestPrefixMatch<T>(
-  source: string,
-  candidates: readonly T[],
-  labelsFor: (candidate: T) => string[],
-): { candidate: T; end: number; tokenCount: number } | null {
-  let bestMatch: { candidate: T; end: number; tokenCount: number } | null = null
-
-  for (const candidate of candidates) {
-    for (const label of labelsFor(candidate)) {
-      const match = prefixMatch(source, label)
-      if (!match) continue
-
-      if (!bestMatch || match.tokenCount > bestMatch.tokenCount || match.end > bestMatch.end) {
-        bestMatch = { candidate, ...match }
-      }
-    }
-  }
-
-  return bestMatch
-}
-
-export function resolveBrandFromText(
-  rawText: string,
-  brands: readonly ProductIdentityBrand[],
-): BrandResolution {
-  const brandMatch = bestPrefixMatch(rawText, brands, (brand) =>
-    uniqueLabels(brand.name, brand.aliases),
-  )
-
-  if (!brandMatch) {
-    return { match: "none", brand: null, productLine: null, matchedText: null }
-  }
-
-  const remainder = trimLeadingSeparators(rawText.slice(brandMatch.end))
-  const productLines = brandMatch.candidate.productLines ?? []
-  const lineMatch = bestPrefixMatch(remainder.text, productLines, (line) =>
-    uniqueLabels(line.name, line.aliases),
-  )
-
-  if (lineMatch) {
-    const lineEnd = brandMatch.end + remainder.offset + lineMatch.end
-
-    return {
-      match: "brand_line",
-      brand: brandMatch.candidate,
-      productLine: lineMatch.candidate,
-      matchedText: rawText.slice(0, lineEnd).trim(),
-    }
-  }
-
-  return {
-    match: "brand",
-    brand: brandMatch.candidate,
-    productLine: null,
-    matchedText: rawText.slice(0, brandMatch.end).trim(),
-  }
 }
