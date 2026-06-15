@@ -1,5 +1,11 @@
 /* ── Towel material ── */
-export const TOWEL_MATERIALS = ["frottee", "mikrofaser", "tshirt", "turban_mikrofaser"] as const
+export const TOWEL_MATERIALS = [
+  "frottee",
+  "mikrofaser",
+  "tshirt",
+  "turban_mikrofaser",
+  "no_towel",
+] as const
 export type TowelMaterial = (typeof TOWEL_MATERIALS)[number]
 
 export const TOWEL_MATERIAL_LABELS = {
@@ -7,6 +13,7 @@ export const TOWEL_MATERIAL_LABELS = {
   mikrofaser: "Mikrofaser-Handtuch",
   tshirt: "T-Shirt / Baumwolltuch",
   turban_mikrofaser: "Turban (Mikrofaser)",
+  no_towel: "Kein Handtuch: Ich lasse meine Haare tropfnass trocknen",
 } as const satisfies Record<TowelMaterial, string>
 
 export const TOWEL_MATERIAL_OPTIONS = TOWEL_MATERIALS.map((value) => ({

@@ -324,7 +324,24 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       })
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
-      // Towel material: select Frottee (single-select, auto-advances)
+      // Towel material: no towel skips technique, then back up and keep the normal Frottee path covered.
+      await expect(page.getByText("Womit trocknest du dein Haar?", { exact: false })).toBeVisible({
+        timeout: 10_000,
+      })
+      await page
+        .getByRole("button", {
+          name: /Kein Handtuch: Ich lasse meine Haare tropfnass trocknen/i,
+        })
+        .click()
+
+      await expect(
+        page.getByText("Wie trocknest du dein Haar hauptsächlich?", { exact: false }),
+      ).toBeVisible({
+        timeout: 10_000,
+      })
+      await expect(page.getByText("Wie trocknest du?", { exact: false })).toHaveCount(0)
+      await page.getByRole("button", { name: /^Zurück$/i }).click()
+
       await expect(page.getByText("Womit trocknest du dein Haar?", { exact: false })).toBeVisible({
         timeout: 10_000,
       })

@@ -2,6 +2,8 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   NIGHT_PROTECTIONS,
+  TOWEL_MATERIAL_LABELS,
+  TOWEL_MATERIALS,
   TOWEL_TECHNIQUES,
   normalizeNightProtectionValues,
   normalizeTowelTechniqueValue,
@@ -14,6 +16,20 @@ test("towel technique canonicalizes legacy German values", () => {
 
 test("towel technique options expose language-independent data keys", () => {
   assert.deepEqual(TOWEL_TECHNIQUES, ["rough_rubbing", "gentle_press"])
+})
+
+test("towel material options include no towel as the final explicit option", () => {
+  assert.deepEqual(TOWEL_MATERIALS, [
+    "frottee",
+    "mikrofaser",
+    "tshirt",
+    "turban_mikrofaser",
+    "no_towel",
+  ])
+  assert.equal(
+    TOWEL_MATERIAL_LABELS.no_towel,
+    "Kein Handtuch: Ich lasse meine Haare tropfnass trocknen",
+  )
 })
 
 test("night protection canonicalizes legacy loose braid and bun values", () => {

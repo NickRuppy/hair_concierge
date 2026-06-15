@@ -1,4 +1,6 @@
+import { getRoutineSteps } from "@/lib/onboarding/routine-steps"
 import type { OnboardingStep } from "./store"
+import type { TowelMaterial } from "@/lib/vocabulary/onboarding-care"
 
 const PRODUCTS_STEPS: OnboardingStep[] = ["products_basics", "products_extras"]
 const STYLING_STEPS: OnboardingStep[] = [
@@ -7,14 +9,6 @@ const STYLING_STEPS: OnboardingStep[] = [
   "heat_protection",
   "interstitial",
 ]
-const ROUTINE_STEPS: OnboardingStep[] = [
-  "towel_material",
-  "towel_technique",
-  "drying_method",
-  "brush_type",
-  "night_protection",
-]
-
 const STEP_LABELS: Record<OnboardingStep, string> = {
   welcome: "Willkommen",
   products_basics: "Produkte Basics",
@@ -37,6 +31,7 @@ export interface OnboardingProgressInput {
   currentDrilldownIndex: number
   drilldownCount: number
   selectedHeatTools: string[]
+  towelMaterial: TowelMaterial | null
 }
 
 export interface OnboardingProgressMilestone {
@@ -70,7 +65,11 @@ function buildDrilldownSteps(drilldownCount: number): string[] {
 export function buildOnboardingProgressPath({
   drilldownCount,
   selectedHeatTools,
-}: Pick<OnboardingProgressInput, "drilldownCount" | "selectedHeatTools">): string[] {
+  towelMaterial,
+}: Pick<
+  OnboardingProgressInput,
+  "drilldownCount" | "selectedHeatTools" | "towelMaterial"
+>): string[] {
   const hasHeatTools = selectedHeatTools.length > 0
 
   return [
@@ -79,7 +78,7 @@ export function buildOnboardingProgressPath({
     "heat_tools",
     ...(hasHeatTools ? ["heat_frequency", "heat_protection"] : []),
     ...STYLING_STEPS.slice(-1),
-    ...ROUTINE_STEPS,
+    ...getRoutineSteps({ towelMaterial }),
   ]
 }
 
