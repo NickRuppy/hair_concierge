@@ -4,13 +4,14 @@ import { join } from "node:path"
 import test from "node:test"
 
 const migrationsDir = join(process.cwd(), "supabase", "migrations")
-const migrationFile = readdirSync(migrationsDir).find((file) =>
-  file.endsWith("_product_intake_submissions.sql"),
-)
+const migrationFiles = readdirSync(migrationsDir).filter((file) => file.includes("product_intake"))
 
-assert.ok(migrationFile, "product intake submissions migration is missing")
+assert.ok(migrationFiles.length > 0, "product intake migrations are missing")
 
-const migrationSql = readFileSync(join(migrationsDir, migrationFile), "utf8")
+const migrationSql = migrationFiles
+  .sort()
+  .map((file) => readFileSync(join(migrationsDir, file), "utf8"))
+  .join("\n")
 const normalizedSql = migrationSql.replace(/\s+/g, " ").toLowerCase()
 
 function assertIncludes(fragment: string) {
@@ -198,6 +199,24 @@ test("product intake migration enforces ownership and current pending-link integ
   assertIncludes("coalesce(current_setting('request.jwt.claims', true), '') = ''")
   assertIncludes("profiles.is_admin = true")
   assertIncludes("create or replace function public.validate_product_submission_status_link()")
+  assertIncludes("create or replace function public.product_intake_cancel_usage_for_category")
+  assertIncludes("delete from public.user_product_usage")
+  assertIncludes("status = 'cancelled_by_user'")
+  assertIncludes("cleanup_after = coalesce(cleanup_after, p_updated_at + interval '30 days')")
+  assertIncludes(
+    "create or replace function public.product_intake_replace_usage_with_matched_product",
+  )
+  assertIncludes("product_submission_id = null")
+  assertIncludes("match_status = 'matched'")
+  assertIncludes(
+    "create or replace function public.product_intake_replace_usage_with_pending_submission",
+  )
+  assertIncludes("product_submission_id = p_submission_id")
+  assertIncludes("match_status = 'pending_review'")
+  assertIncludes("jsonb_build_object")
+  assertIncludes(
+    "grant execute on function public.product_intake_replace_usage_with_pending_submission",
+  )
   assertIncludes("successful product submissions require approved_product_id")
   assertIncludes("from public.products")
   assertIncludes("category_key = new.category")

@@ -12,6 +12,7 @@ import { CitationBadge } from "./citation-badge"
 import { ProductPopover } from "./product-popover"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { ProductCard } from "./product-card"
+import { ProductIntakeCard } from "./product-intake-card"
 
 /**
  * Renumbers [N] citation markers in content so they appear as [1], [2], [3]
@@ -341,6 +342,13 @@ export function ChatMessage({
             </ul>
           </details>
         )}
+
+        {message.rag_context?.product_intake_offer && !isUser ? (
+          <ProductIntakeCard
+            offer={message.rag_context.product_intake_offer}
+            conversationId={message.conversation_id}
+          />
+        ) : null}
 
         {/* Product recommendation cards */}
         {products.length > 0 && onProductClick && (

@@ -2,6 +2,7 @@ import type {
   ChatCategoryDecision,
   IntentType,
   MessageRagContext,
+  ProductIntakeOffer,
   RecommendationEngineTrace,
   ResponseMode,
   RouterDecision,
@@ -13,8 +14,15 @@ export function buildAssistantDecisionContext(
   categoryDecision?: ChatCategoryDecision,
   engineTrace?: RecommendationEngineTrace | null,
   responseMode?: ResponseMode,
+  productIntakeOffer?: ProductIntakeOffer | null,
 ): MessageRagContext | null {
-  if (sources.length === 0 && !categoryDecision && !engineTrace && !responseMode) {
+  if (
+    sources.length === 0 &&
+    !categoryDecision &&
+    !engineTrace &&
+    !responseMode &&
+    !productIntakeOffer
+  ) {
     return null
   }
 
@@ -23,6 +31,7 @@ export function buildAssistantDecisionContext(
     category_decision: categoryDecision ?? null,
     engine_trace: engineTrace ?? null,
     response_mode: responseMode ?? null,
+    product_intake_offer: productIntakeOffer ?? null,
   }
 }
 

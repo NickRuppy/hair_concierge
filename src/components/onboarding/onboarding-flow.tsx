@@ -4,21 +4,32 @@ import { useEffect, useRef, useState, useCallback } from "react"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { useToast } from "@/providers/toast-provider"
 import { createClient } from "@/lib/supabase/client"
-import { useOnboardingStore } from "@/lib/onboarding/store"
+import { emptyProductDrilldown, useOnboardingStore } from "@/lib/onboarding/store"
 import type { OnboardingEditScope, OnboardingStep } from "@/lib/onboarding/store"
 import { shouldHydrateStoredHeatProtection } from "@/lib/onboarding/heat-protection-hydration"
 import { buildProductUsagePayloads } from "@/lib/onboarding/product-usage-save"
-import {
-  isUnselectedShampooFallbackItem,
-  SHAMPOO_CATEGORY,
-} from "@/lib/product-usage/shampoo-fallback"
+import { isUnselectedShampooFallbackItem } from "@/lib/product-usage/shampoo-fallback"
+import { useOnboardingProductIntakeController } from "@/hooks/use-onboarding-product-intake-controller"
 import { OnboardingProgressBar } from "@/components/onboarding/onboarding-progress-bar"
+import { ProductReplacementDialog } from "@/components/onboarding/product-replacement-dialog"
+import {
+  BRUSH_TYPE_ICONS,
+  CATEGORY_SUBTITLES,
+  DRYING_METHOD_ICONS,
+  NIGHT_PROTECTION_ICONS,
+  TOWEL_MATERIAL_ICONS,
+  TOWEL_TECHNIQUE_ICONS,
+} from "@/components/onboarding/onboarding-display-config"
+import {
+  getFinalContinueLabel,
+  shouldReturnAfterScopeStep,
+} from "@/components/onboarding/onboarding-flow-navigation"
 import {
   BASIC_PRODUCT_OPTIONS,
   EXTRA_PRODUCT_OPTIONS,
   PRODUCT_CATEGORY_LABELS,
 } from "@/lib/onboarding/product-options"
-import { normalizeProductFrequency, type ProductFrequency } from "@/lib/vocabulary"
+import { normalizeProductFrequency } from "@/lib/vocabulary"
 import type { HeatStyling } from "@/lib/vocabulary"
 
 // Import all screens
@@ -55,61 +66,19 @@ import type {
 
 import type { IconName } from "@/components/ui/icon"
 
-/* ── Care habit icon maps ── */
-
-const TOWEL_MATERIAL_ICONS: Record<string, IconName> = {
-  frottee: "towel-frottee",
-  mikrofaser: "towel-mikrofaser",
-  tshirt: "towel-tshirt",
-  turban_mikrofaser: "towel-turban",
-}
-
-const TOWEL_TECHNIQUE_ICONS: Record<string, IconName> = {
-  rough_rubbing: "technique-rough-rubbing",
-  gentle_press: "technique-gentle-press",
-}
-
-const DRYING_METHOD_ICONS: Record<string, IconName> = {
-  air_dry: "drying-air",
-  blow_dry: "drying-blow",
-  blow_dry_diffuser: "drying-diffuser",
-}
-
-const BRUSH_TYPE_ICONS: Record<string, IconName> = {
-  wide_tooth_comb: "brush-wide-tooth",
-  detangling: "brush-detangling",
-  paddle: "brush-paddle",
-  round: "brush-round",
-  boar_bristle: "brush-boar-bristle",
-  fingers: "brush-fingers",
-  none_regular: "brush-none",
-}
-
-const NIGHT_PROTECTION_ICONS: Record<string, IconName> = {
-  silk_satin_pillow: "night-silk-pillow",
-  silk_satin_bonnet: "night-silk-bonnet",
-  loose_tied: "night-loose-braid",
-  pineapple: "night-pineapple",
-}
-
-/* ── Label map for drilldown categories ── */
-
-/* ── Custom subtitle overrides for drilldown screens ── */
-
-const CATEGORY_SUBTITLES: Record<string, string> = {
-  peeling: "Nutzt du ein Serum oder Scrub für deine Kopfhaut? Welches Produkt und wie oft?",
-}
-
 const SAVE_TIMEOUT_MS = 15_000
 const SAVE_TIMEOUT_MESSAGE =
   "Speichern dauert zu lange. Bitte pruefe deine Verbindung und versuche es erneut."
 const SAVE_ERROR_MESSAGE = "Fehler beim Speichern. Bitte versuche es erneut."
-
 class SaveTimeoutError extends Error {
   constructor() {
     super(SAVE_TIMEOUT_MESSAGE)
     this.name = "SaveTimeoutError"
   }
+}
+
+type ProductReplacementConflict = {
+  step: "product_drilldown"
 }
 
 /* ── Props ── */
@@ -124,67 +93,8 @@ interface OnboardingFlowProps {
   editScope?: OnboardingEditScope | null
   singleStepEdit?: boolean
   initialDrilldownCategory?: string | null
+  productIntakeEnabled?: boolean
   allowCompletionFallback?: boolean
-}
-
-type OnboardingStateSnapshot = ReturnType<typeof useOnboardingStore.getState>
-
-function shouldReturnAfterScopeStep(
-  completedStep: OnboardingStep,
-  state: OnboardingStateSnapshot,
-  editScope: OnboardingEditScope | null,
-) {
-  switch (editScope) {
-    case "products": {
-      const lastDrilldownIndex = state.drilldownCategories().length - 1
-      return (
-        completedStep === "product_drilldown" && state.currentDrilldownIndex >= lastDrilldownIndex
-      )
-    }
-    case "styling":
-      return (
-        (completedStep === "heat_tools" && state.selectedHeatTools.length === 0) ||
-        completedStep === "heat_protection"
-      )
-    case "routine":
-      return completedStep === "night_protection"
-    default:
-      return false
-  }
-}
-
-function getFinalContinueLabel(
-  currentStep: OnboardingStep,
-  state: OnboardingStateSnapshot,
-  editScope: OnboardingEditScope | null,
-  singleStepEdit: boolean,
-  returnTo: string | null,
-) {
-  if (!returnTo) return "Weiter"
-
-  if (
-    singleStepEdit &&
-    (currentStep === "product_drilldown" ||
-      currentStep === "heat_tools" ||
-      currentStep === "drying_method" ||
-      currentStep === "night_protection")
-  ) {
-    return "Speichern und zurück zum Profil"
-  }
-
-  if (currentStep === "night_protection" && editScope === "routine") {
-    return "Speichern und zurück zum Profil"
-  }
-
-  if (
-    currentStep === "product_drilldown" &&
-    editScope === "products" &&
-    shouldReturnAfterScopeStep(currentStep, state, editScope)
-  ) {
-    return "Speichern und zurück zum Profil"
-  }
-
-  return "Weiter"
 }
 
 /* ── Component ── */
@@ -199,12 +109,16 @@ export function OnboardingFlow({
   editScope = null,
   singleStepEdit = false,
   initialDrilldownCategory = null,
+  productIntakeEnabled = false,
   allowCompletionFallback = false,
 }: OnboardingFlowProps) {
   const { toast } = useToast()
   const store = useOnboardingStore()
+  const productIntake = useOnboardingProductIntakeController(productIntakeEnabled)
   const [hydrated, setHydrated] = useState(false)
   const [savingStep, setSavingStep] = useState<OnboardingStep | null>(null)
+  const [productReplacementConflict, setProductReplacementConflict] =
+    useState<ProductReplacementConflict | null>(null)
   const initRef = useRef(false)
   const savingStepsRef = useRef<Set<OnboardingStep>>(new Set())
   const stepSaveTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -296,10 +210,10 @@ export function OnboardingFlow({
         else if (extraValues.includes(cat)) extras.push(cat)
 
         if (row.product_name || row.frequency_range) {
-          store.setProductDrilldown(cat, {
-            productName: productName ?? "",
-            frequency,
-          })
+          store.setProductDrilldown(
+            cat,
+            productIntake.drilldownFromUsageRow(row, productName ?? "", frequency),
+          )
         }
       }
 
@@ -382,21 +296,19 @@ export function OnboardingFlow({
         }
       }
 
-      // Delete deselected categories
-      const toDelete = (existing ?? [])
-        .filter((r: Record<string, unknown>) => {
-          const category = r.category as string
-          return category !== SHAMPOO_CATEGORY && !categories.includes(category)
-        })
-        .map((r: Record<string, unknown>) => r.id as string)
+      const directDeleteIds = await productIntake.cancelDeselectedCategories(
+        existing ?? [],
+        categories,
+        signal,
+      )
 
-      if (toDelete.length > 0) {
-        const deleteQuery = supabase.from("user_product_usage").delete().in("id", toDelete)
+      if (directDeleteIds.length > 0) {
+        const deleteQuery = supabase.from("user_product_usage").delete().in("id", directDeleteIds)
         const { error: deleteError } = await withAbortSignal(deleteQuery, signal)
         if (deleteError) throw deleteError
       }
     },
-    [userId],
+    [productIntake, userId],
   )
 
   const saveHairProfile = useCallback(
@@ -424,7 +336,7 @@ export function OnboardingFlow({
   // ── Step completion handler ──
 
   const handleStepComplete = useCallback(
-    async (completedStep: OnboardingStep) => {
+    async (completedStep: OnboardingStep, options: { replaceExistingConfirmed?: boolean } = {}) => {
       if (savingStepsRef.current.has(completedStep)) return
       savingStepsRef.current.add(completedStep)
       setSavingStep(completedStep)
@@ -453,17 +365,40 @@ export function OnboardingFlow({
             const drilldown = state.productDrilldowns[currentCat]
             if (!drilldown) break
 
-            // Update the specific product usage row
-            const { error: productUsageError } = await supabase
-              .from("user_product_usage")
-              .update({
-                product_name: drilldown.productName,
-                frequency_range: drilldown.frequency,
-              })
-              .eq("user_id", userId)
-              .eq("category", currentCat)
+            if (!productIntakeEnabled || !productIntake.isSupportedCategory(currentCat)) {
+              const { error: productUsageError } = await supabase
+                .from("user_product_usage")
+                .update({
+                  product_name: drilldown.productName,
+                  frequency_range: drilldown.frequency,
+                })
+                .eq("user_id", userId)
+                .eq("category", currentCat)
 
-            if (productUsageError) throw productUsageError
+              if (productUsageError) throw productUsageError
+              break
+            }
+
+            const productIntakeResult = await withSaveTimeout((signal) =>
+              productIntake.submitDrilldown(
+                currentCat,
+                drilldown,
+                options.replaceExistingConfirmed,
+                signal,
+              ),
+            )
+            if (!productIntakeResult) break
+            if (productIntakeResult.status === "replace_conflict") {
+              setProductReplacementConflict({ step: "product_drilldown" })
+              return
+            }
+            if (productIntakeResult.usageId) {
+              useOnboardingStore.getState().setProductDrilldown(currentCat, {
+                existingUsageId: productIntakeResult.usageId,
+                frontImagePath: null,
+                committedFrontImagePath: productIntakeResult.frontImagePath,
+              })
+            }
 
             break
           }
@@ -618,6 +553,8 @@ export function OnboardingFlow({
       saveProductUsage,
       saveHairProfile,
       saveOnboardingStep,
+      productIntake,
+      productIntakeEnabled,
       returnTo,
       editScope,
       singleStepEdit,
@@ -705,8 +642,8 @@ export function OnboardingFlow({
   const drilldownCategories = store.drilldownCategories()
   const currentCategory = drilldownCategories[store.currentDrilldownIndex]
   const currentDrilldown = currentCategory
-    ? (store.productDrilldowns[currentCategory] ?? { productName: "", frequency: null })
-    : { productName: "", frequency: null }
+    ? (store.productDrilldowns[currentCategory] ?? emptyProductDrilldown())
+    : emptyProductDrilldown()
   const backTarget = singleStepEdit && returnTo ? returnTo : null
 
   function handleBack() {
@@ -763,8 +700,30 @@ export function OnboardingFlow({
             category={currentCategory}
             categoryLabel={PRODUCT_CATEGORY_LABELS[currentCategory] ?? currentCategory}
             subtitle={CATEGORY_SUBTITLES[currentCategory]}
+            intakeMethod={currentDrilldown.intakeMethod}
             productName={currentDrilldown.productName}
+            brandText={currentDrilldown.brandText}
             frequency={currentDrilldown.frequency}
+            frontImagePath={currentDrilldown.frontImagePath}
+            committedFrontImagePath={currentDrilldown.committedFrontImagePath}
+            barcodeImagePath={currentDrilldown.barcodeImagePath}
+            isSupportedIntakeCategory={productIntake.isSupportedCategory(currentCategory)}
+            productIntakeEnabled={productIntakeEnabled}
+            isSaving={savingStep === "product_drilldown"}
+            onIntakeMethodChange={(method) =>
+              store.setProductDrilldown(currentCategory, {
+                ...currentDrilldown,
+                intakeMethod: method,
+              })
+            }
+            onBrandTextChange={({ brandText, brandId, productLineId }) =>
+              store.setProductDrilldown(currentCategory, {
+                ...currentDrilldown,
+                brandText,
+                brandId,
+                productLineId,
+              })
+            }
             onProductNameChange={(name) =>
               store.setProductDrilldown(currentCategory, {
                 ...currentDrilldown,
@@ -777,6 +736,13 @@ export function OnboardingFlow({
                 frequency: freq,
               })
             }
+            onUploadImage={async (kind, file) => {
+              const uploadPatch = await productIntake.uploadImagePatch(kind, file)
+              store.setProductDrilldown(currentCategory, {
+                ...useOnboardingStore.getState().productDrilldowns[currentCategory],
+                ...uploadPatch,
+              })
+            }}
             onContinue={() => handleStepComplete("product_drilldown")}
             onBack={handleBack}
             continueLabel={getFinalContinueLabel(
@@ -959,6 +925,17 @@ export function OnboardingFlow({
         </div>
       )}
       {renderScreen()}
+      {productReplacementConflict ? (
+        <ProductReplacementDialog
+          disabled={savingStep !== null}
+          onCancel={() => setProductReplacementConflict(null)}
+          onConfirm={() => {
+            const conflict = productReplacementConflict
+            setProductReplacementConflict(null)
+            void handleStepComplete(conflict.step, { replaceExistingConfirmed: true })
+          }}
+        />
+      ) : null}
     </div>
   )
 }

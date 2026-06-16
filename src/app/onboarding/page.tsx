@@ -5,6 +5,7 @@ import { OnboardingFlow } from "@/components/onboarding/onboarding-flow"
 import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import { getOnboardingEditScope, type OnboardingStep } from "@/lib/onboarding/store"
 import { resolveIntakeState } from "@/lib/auth/intake-state"
+import { isProductIntakeEnabled } from "@/lib/product-intake/config"
 
 interface OnboardingPageProps {
   searchParams: Promise<{
@@ -135,6 +136,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
       initialDrilldownCategory={
         forcedStep === "product_drilldown" ? initialDrilldownCategory : null
       }
+      productIntakeEnabled={isProductIntakeEnabled()}
       allowCompletionFallback={!forcedStep && profileRow?.onboarding_step === "celebration"}
     />
   )

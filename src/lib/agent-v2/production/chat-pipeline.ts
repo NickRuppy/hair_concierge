@@ -24,6 +24,13 @@ import {
 import { runAgentV2ResponsesTurn } from "@/lib/agent-v2/runtime/responses-agent"
 import { loadAgentV2AdvisorGuidance } from "@/lib/agent-v2/tools/guidance-tool"
 import {
+  lookupProductCandidate,
+  type ProductLookupCatalog,
+  type ProductLookupResult,
+} from "@/lib/product-intake/product-lookup"
+import { createSupabaseProductIntakeRepository } from "@/lib/product-intake/repository"
+import type { BrandResolutionCatalogInput } from "@/lib/product-identity/brand-resolution"
+import {
   projectRoutineForAgentV2,
   type AgentV2RoutineProjection,
 } from "@/lib/agent-v2/tools/routine-projection"
@@ -100,6 +107,7 @@ export interface PipelineParams {
   conversationId?: string
   userId: string
   requestId: string
+  productIntakeEnabled?: boolean
 }
 
 export interface PipelineResult {
@@ -118,6 +126,7 @@ export interface PipelineResult {
   debugTrace: PipelineTraceDraft
   visibleFailure?: boolean
   answerMode: AgentV2AnswerMode
+  productIntakeOffer?: import("@/lib/types").ProductIntakeOffer | null
 }
 
 interface ProductionAgentV2PipelineDeps {
@@ -133,6 +142,7 @@ interface ProductionAgentV2PipelineDeps {
   getObservedOpenAI?: typeof getObservedOpenAI
   getManagedTextPromptTemplate?: typeof getManagedTextPromptTemplate
   observeAgentV2ToolCall?: typeof observeAgentV2ToolCall
+  createProductIntakeRepository?: typeof createSupabaseProductIntakeRepository
 }
 
 const ROUTINE_PRODUCT_CATEGORY_VALUES = new Set<RoutineProduct>([
@@ -469,6 +479,7 @@ export async function runAgentV2ProductionPipeline(
   const selectedProductResults: SelectProductsToolResult[] = []
   const selectedProductProjections: ReturnType<typeof projectSelectProductsForAgentV2>[] = []
   let latestSelectProductsResult: SelectProductsToolResult | null = null
+  let latestProductLookupResult: ProductLookupResult | null = null
   let latestRoutineProjection: AgentV2RoutineProjection | null = null
   const selectProducts = (deps.createSelectProductsTool ?? createSelectProductsTool)({
     onResult: (result) => {
@@ -482,6 +493,23 @@ export async function runAgentV2ProductionPipeline(
     conversationState.agent_v2.prior_selected_product_projections
   const sessionMemory = conversationState.agent_v2.session_memory
   const runTurn = deps.runAgentV2ResponsesTurn ?? runAgentV2ResponsesTurn
+  const productIntakeEnabled = params.productIntakeEnabled === true
+  let productLookupCatalogPromise: Promise<{
+    catalog: ProductLookupCatalog
+    brandCatalog: BrandResolutionCatalogInput
+  }> | null = null
+  const loadProductLookupCatalogs = () => {
+    productLookupCatalogPromise ??= (async () => {
+      const repository =
+        deps.createProductIntakeRepository?.() ?? createSupabaseProductIntakeRepository()
+      const [catalog, brandCatalog] = await Promise.all([
+        repository.loadCatalog(),
+        repository.loadBrandResolutionCatalog(),
+      ])
+      return { catalog, brandCatalog }
+    })()
+    return productLookupCatalogPromise
+  }
   const safetyMode = classifyAgentV2ProductionSafetyMode(message)
   const managedPrompt = await (deps.getManagedTextPromptTemplate ?? getManagedTextPromptTemplate)(
     LANGFUSE_PROMPTS.agentV2ResponsesCareBalance,
@@ -531,10 +559,30 @@ export async function runAgentV2ProductionPipeline(
     routineThreadContext,
     priorSelectedProductProjections,
     safetyMode,
+    productIntakeEnabled,
     langfuseMode: "enabled",
     observeToolCall: deps.observeAgentV2ToolCall ?? observeAgentV2ToolCall,
     tools: {
       load_advisor_guidance: async (input) => loadAgentV2AdvisorGuidance(input),
+      lookup_product_candidate: async (input) => {
+        if (!productIntakeEnabled) {
+          throw new Error("product intake lookup tool is disabled")
+        }
+        const { catalog, brandCatalog } = await loadProductLookupCatalogs()
+        const result = lookupProductCandidate({
+          input: {
+            category: typeof input.category === "string" ? input.category : null,
+            brand_text: typeof input.brand_text === "string" ? input.brand_text : null,
+            product_name_text:
+              typeof input.product_name_text === "string" ? input.product_name_text : null,
+          },
+          catalog,
+          brandCatalog,
+          offerId: `product-intake-${requestId}`,
+        })
+        latestProductLookupResult = result
+        return result
+      },
       select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
         latestSelectProductsResult = null
         const effectiveCareContext =
@@ -617,6 +665,11 @@ export async function runAgentV2ProductionPipeline(
 
   const answer = result.final_answer
   const visibleFailure = result.trace.failure_stage !== null
+  const productLookupResult = latestProductLookupResult as ProductLookupResult | null
+  const productIntakeOffer =
+    productIntakeEnabled && !visibleFailure && productLookupResult?.status === "not_found"
+      ? productLookupResult.intake_offer
+      : null
   const intent = deriveIntent(answer)
   const productCategory = visibleFailure ? null : deriveProductCategory(answer)
   const routerDecision = buildAgentV2RouterDecision({ answer, visibleFailure })
@@ -758,5 +811,6 @@ export async function runAgentV2ProductionPipeline(
     debugTrace,
     visibleFailure,
     answerMode: answer.answer_mode,
+    productIntakeOffer,
   }
 }

@@ -200,6 +200,13 @@ export function useChat(): UseChatReturn {
               switch (event.type) {
                 case "conversation_id":
                   setCurrentConversationId(event.data)
+                  setMessages((prev) =>
+                    prev.map((message) =>
+                      message.conversation_id
+                        ? message
+                        : { ...message, conversation_id: event.data },
+                    ),
+                  )
                   break
                 case "content_delta":
                   setMessages((prev) => {
@@ -235,6 +242,22 @@ export function useChat(): UseChatReturn {
                       updated[updated.length - 1] = {
                         ...last,
                         product_recommendations: event.data,
+                      }
+                    }
+                    return updated
+                  })
+                  break
+                case "product_intake_offer":
+                  setMessages((prev) => {
+                    const updated = [...prev]
+                    const last = updated[updated.length - 1]
+                    if (last?.role === "assistant") {
+                      updated[updated.length - 1] = {
+                        ...last,
+                        rag_context: {
+                          ...(last.rag_context ?? { sources: [], category_decision: null }),
+                          product_intake_offer: event.data,
+                        },
                       }
                     }
                     return updated
@@ -282,6 +305,7 @@ export function useChat(): UseChatReturn {
                         rag_context: {
                           sources: last.rag_context?.sources ?? [],
                           category_decision: event.data?.category_decision ?? null,
+                          product_intake_offer: last.rag_context?.product_intake_offer ?? null,
                         },
                       }
                     }

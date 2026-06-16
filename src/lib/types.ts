@@ -819,9 +819,21 @@ export interface MessageRagContext {
   category_decision?: ChatCategoryDecision | null
   engine_trace?: RecommendationEngineTrace | null
   response_mode?: ResponseMode | null
+  product_intake_offer?: ProductIntakeOffer | null
 }
 
 export type MessageDecisionContext = MessageRagContext
+
+export interface ProductIntakeOffer {
+  id: string
+  source: "chat"
+  reason: "product_lookup_not_found"
+  category: ProductIntakeCategoryKey
+  extracted_identity?: {
+    brand_text?: string
+    product_name_text?: string
+  }
+}
 
 export interface ChatPromptMessageSnapshot {
   role: "system" | "user" | "assistant"
@@ -1278,6 +1290,7 @@ export interface ChatSSEEvent {
     | "conversation_id"
     | "content_delta"
     | "product_recommendations"
+    | "product_intake_offer"
     | "sources"
     | "confidence"
     | "retrieval_debug"

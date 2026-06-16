@@ -27,6 +27,33 @@ export type OnboardingStep =
   | "celebration"
 
 export type OnboardingEditScope = "products" | "styling" | "routine"
+export type OnboardingProductIntakeMethod = "manual" | "photo"
+export type OnboardingProductIntakeFrontImageValidationStatus =
+  | "valid_product_front"
+  | "uncertain"
+  | "not_a_product_photo"
+  | "unsafe_or_inappropriate"
+export type OnboardingProductIntakeBarcodeImageValidationStatus =
+  | "valid_barcode"
+  | "uncertain"
+  | "not_a_product_photo"
+  | "unsafe_or_inappropriate"
+export type OnboardingProductDrilldown = {
+  intakeMethod: OnboardingProductIntakeMethod | null
+  productName: string
+  existingUsageId: string | null
+  brandText: string
+  brandId: string | null
+  productLineId: string | null
+  frequency: ProductFrequency | null
+  frontImagePath: string | null
+  committedFrontImagePath: string | null
+  barcodeImagePath: string | null
+  frontImageValidationStatus: OnboardingProductIntakeFrontImageValidationStatus | null
+  frontImageValidationMetadata: Record<string, unknown>
+  barcodeImageValidationStatus: OnboardingProductIntakeBarcodeImageValidationStatus | null
+  barcodeImageValidationMetadata: Record<string, unknown>
+}
 
 export function getOnboardingEditScope(step: OnboardingStep): OnboardingEditScope | null {
   switch (step) {
@@ -79,7 +106,7 @@ interface OnboardingState {
   // Product usage
   selectedBasicProducts: string[]
   selectedExtraProducts: string[]
-  productDrilldowns: Record<string, { productName: string; frequency: ProductFrequency | null }>
+  productDrilldowns: Record<string, OnboardingProductDrilldown>
   currentDrilldownIndex: number
 
   // Heat styling
@@ -102,10 +129,7 @@ interface OnboardingState {
   // Setters
   setSelectedBasicProducts: (products: string[]) => void
   setSelectedExtraProducts: (products: string[]) => void
-  setProductDrilldown: (
-    category: string,
-    data: { productName: string; frequency: ProductFrequency | null },
-  ) => void
+  setProductDrilldown: (category: string, data: Partial<OnboardingProductDrilldown>) => void
   setCurrentDrilldownIndex: (index: number) => void
   setSelectedHeatTools: (tools: string[]) => void
   setHeatFrequency: (freq: HeatStyling | null) => void
@@ -146,10 +170,7 @@ const initialData = {
 
   selectedBasicProducts: [] as string[],
   selectedExtraProducts: [] as string[],
-  productDrilldowns: {} as Record<
-    string,
-    { productName: string; frequency: ProductFrequency | null }
-  >,
+  productDrilldowns: {} as Record<string, OnboardingProductDrilldown>,
   currentDrilldownIndex: 0,
 
   selectedHeatTools: [] as string[],
@@ -161,6 +182,25 @@ const initialData = {
   dryingMethod: null as DryingMethod | null,
   brushType: null as BrushType | null,
   nightProtection: [] as NightProtection[],
+}
+
+export function emptyProductDrilldown(): OnboardingProductDrilldown {
+  return {
+    intakeMethod: null,
+    productName: "",
+    existingUsageId: null,
+    brandText: "",
+    brandId: null,
+    productLineId: null,
+    frequency: null,
+    frontImagePath: null,
+    committedFrontImagePath: null,
+    barcodeImagePath: null,
+    frontImageValidationStatus: null,
+    frontImageValidationMetadata: {},
+    barcodeImageValidationStatus: null,
+    barcodeImageValidationMetadata: {},
+  }
 }
 
 /* ── Store ── */
@@ -257,7 +297,14 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   setSelectedExtraProducts: (products) => set({ selectedExtraProducts: products }),
   setProductDrilldown: (category, data) =>
     set((s) => ({
-      productDrilldowns: { ...s.productDrilldowns, [category]: data },
+      productDrilldowns: {
+        ...s.productDrilldowns,
+        [category]: {
+          ...emptyProductDrilldown(),
+          ...(s.productDrilldowns[category] ?? {}),
+          ...data,
+        },
+      },
     })),
   setCurrentDrilldownIndex: (index) => set({ currentDrilldownIndex: index }),
   setSelectedHeatTools: (tools) => set({ selectedHeatTools: tools }),
