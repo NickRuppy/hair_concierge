@@ -9,6 +9,7 @@ test("product drilldowns count as individual progress steps", () => {
     currentDrilldownIndex: 2,
     drilldownCount: 3,
     selectedHeatTools: ["foehn"],
+    towelMaterial: null,
   })
 
   assert.equal(progress.totalSteps, 14)
@@ -28,6 +29,7 @@ test("heat branch disappears from the effective path when no tools are selected"
     currentDrilldownIndex: 1,
     drilldownCount: 2,
     selectedHeatTools: [],
+    towelMaterial: null,
   })
 
   assert.equal(progress.totalSteps, 11)
@@ -47,6 +49,7 @@ test("night protection reaches the end of the visible onboarding path", () => {
     currentDrilldownIndex: 0,
     drilldownCount: 1,
     selectedHeatTools: ["glätteisen"],
+    towelMaterial: null,
   })
 
   assert.equal(progress.currentLabel, "Nachtschutz")
@@ -55,4 +58,20 @@ test("night protection reaches the end of the visible onboarding path", () => {
   assert.equal(progress.progressPercent, 100)
   assert.equal(progress.milestones[2]?.label, "Alltag")
   assert.equal(progress.milestones[2]?.percent, 100)
+})
+
+test("no towel removes towel technique from the visible routine path", () => {
+  const progress = buildOnboardingProgressState({
+    currentStep: "drying_method",
+    currentDrilldownIndex: 0,
+    drilldownCount: 1,
+    selectedHeatTools: [],
+    towelMaterial: "no_towel",
+  })
+
+  assert.equal(progress.path.includes("towel_technique"), false)
+  assert.equal(progress.path.includes("towel_material"), true)
+  assert.equal(progress.path.includes("drying_method"), true)
+  assert.equal(progress.currentLabel, "Trocknen")
+  assert.equal(progress.currentSectionIndex, 2)
 })

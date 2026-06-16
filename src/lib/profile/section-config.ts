@@ -263,10 +263,16 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     label: "Trocknungstechnik",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "towel_technique" },
-    getValue: (profile) =>
-      profile?.towel_technique
-        ? (TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique)
-        : null,
+    getValue: (profile) => {
+      if (profile?.towel_technique) {
+        return TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique
+      }
+      if (profile?.towel_material === "no_towel") {
+        return "Keine Trocknungstechnik"
+      }
+
+      return null
+    },
   },
   {
     key: "drying_method",

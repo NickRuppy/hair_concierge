@@ -2,6 +2,7 @@
 
 import type { OnboardingStep } from "@/lib/onboarding/store"
 import { buildOnboardingProgressState } from "@/lib/onboarding/progress"
+import type { TowelMaterial } from "@/lib/vocabulary/onboarding-care"
 
 const SECTION_LABELS = ["Produkte", "Styling", "Alltag"] as const
 
@@ -10,6 +11,7 @@ interface OnboardingProgressBarProps {
   currentDrilldownIndex: number
   drilldownCount: number
   selectedHeatTools: string[]
+  towelMaterial: TowelMaterial | null
 }
 
 export function OnboardingProgressBar({
@@ -17,12 +19,14 @@ export function OnboardingProgressBar({
   currentDrilldownIndex,
   drilldownCount,
   selectedHeatTools,
+  towelMaterial,
 }: OnboardingProgressBarProps) {
   const progress = buildOnboardingProgressState({
     currentStep,
     currentDrilldownIndex,
     drilldownCount,
     selectedHeatTools,
+    towelMaterial,
   })
 
   return (
