@@ -759,6 +759,14 @@ export async function runAgentV2ComparisonForUser(
       safetyMode,
       tools: {
         load_advisor_guidance: async (input) => loadAgentV2AdvisorGuidance(input),
+        lookup_product_candidate: async () => ({
+          status: "insufficient_identity",
+          category: null,
+          product: null,
+          candidates: [],
+          missing_fields: ["category"],
+          intake_offer: null,
+        }),
         select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
           latestSelectProductsResult = null
           const effectiveCareContext =

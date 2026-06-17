@@ -6,7 +6,10 @@ import {
   createSelectProductsTool,
   type SelectProductsToolResult,
 } from "@/lib/agent/tools/select-products"
-import { loadAgentV2ProductionConversationHistory } from "@/lib/agent-v2/production/conversation-history"
+import {
+  loadAgentV2ProductionConversationHistory,
+  verifyAgentV2ProductionConversationOwnership,
+} from "@/lib/agent-v2/production/conversation-history"
 import {
   buildAgentV2GenerationMetadata,
   isAgentV2LangfuseObservationEnabled,
@@ -23,6 +26,13 @@ import {
 } from "@/lib/agent-v2/contracts"
 import { runAgentV2ResponsesTurn } from "@/lib/agent-v2/runtime/responses-agent"
 import { loadAgentV2AdvisorGuidance } from "@/lib/agent-v2/tools/guidance-tool"
+import {
+  lookupProductCandidate,
+  type ProductLookupCatalog,
+  type ProductLookupResult,
+} from "@/lib/product-intake/product-lookup"
+import { createSupabaseProductIntakeRepository } from "@/lib/product-intake/repository"
+import type { BrandResolutionCatalogInput } from "@/lib/product-identity/brand-resolution"
 import {
   projectRoutineForAgentV2,
   type AgentV2RoutineProjection,
@@ -52,7 +62,7 @@ import {
   type AgentV2ConversationStateTransition,
   type AgentV2ConversationStateV2,
 } from "@/lib/agent-v2/production/persisted-session-state"
-import { loadAgentV2ConversationState as loadPersistedConversationState } from "@/lib/chat-runtime/conversation-state-store"
+import { loadAgentV2ConversationStateForUser } from "@/lib/chat-runtime/conversation-state-store"
 import { buildPipelineTraceDraft, type PipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
 import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import {
@@ -100,6 +110,7 @@ export interface PipelineParams {
   conversationId?: string
   userId: string
   requestId: string
+  productIntakeEnabled?: boolean
 }
 
 export interface PipelineResult {
@@ -118,14 +129,19 @@ export interface PipelineResult {
   debugTrace: PipelineTraceDraft
   visibleFailure?: boolean
   answerMode: AgentV2AnswerMode
+  productIntakeOffer?: import("@/lib/types").ProductIntakeOffer | null
 }
 
 interface ProductionAgentV2PipelineDeps {
   client?: AgentV2ResponsesClient
+  verifyConversationOwnership?: (params: {
+    conversationId: string
+    userId: string
+  }) => Promise<boolean>
   loadConversationHistory?: (conversationId: string) => Promise<Message[]>
   getUserContext?: (userId: string) => Promise<UserContextProjection>
   loadUserMemoryContext?: (userId: string) => Promise<UserMemoryContext>
-  loadConversationState?: (conversationId: string) => Promise<unknown>
+  loadConversationState?: (params: { conversationId: string; userId: string }) => Promise<unknown>
   createSelectProductsTool?: typeof createSelectProductsTool
   createBuildOrFixRoutineTool?: typeof createBuildOrFixRoutineTool
   runAgentV2ResponsesTurn?: typeof runAgentV2ResponsesTurn
@@ -133,6 +149,7 @@ interface ProductionAgentV2PipelineDeps {
   getObservedOpenAI?: typeof getObservedOpenAI
   getManagedTextPromptTemplate?: typeof getManagedTextPromptTemplate
   observeAgentV2ToolCall?: typeof observeAgentV2ToolCall
+  createProductIntakeRepository?: typeof createSupabaseProductIntakeRepository
 }
 
 const ROUTINE_PRODUCT_CATEGORY_VALUES = new Set<RoutineProduct>([
@@ -442,6 +459,14 @@ export async function runAgentV2ProductionPipeline(
   }
 
   const startedAt = new Date().toISOString()
+  const ownsConversation = await (
+    deps.verifyConversationOwnership ?? verifyAgentV2ProductionConversationOwnership
+  )({ conversationId, userId })
+
+  if (!ownsConversation) {
+    throw new Error("AgentV2 production conversation does not belong to user.")
+  }
+
   const [
     { result: conversationHistory, durationMs: historyLoadMs },
     { result: userContext, durationMs: contextLoadMs },
@@ -455,8 +480,8 @@ export async function runAgentV2ProductionPipeline(
     measureAsync(() => (deps.loadUserMemoryContext ?? loadUserMemoryContext)(userId)),
     measureAsync(() =>
       deps.loadConversationState
-        ? deps.loadConversationState(conversationId)
-        : loadPersistedConversationState(createAdminClient(), conversationId),
+        ? deps.loadConversationState({ conversationId, userId })
+        : loadAgentV2ConversationStateForUser(createAdminClient(), { conversationId, userId }),
     ),
   ])
 
@@ -468,20 +493,31 @@ export async function runAgentV2ProductionPipeline(
   )
   const selectedProductResults: SelectProductsToolResult[] = []
   const selectedProductProjections: ReturnType<typeof projectSelectProductsForAgentV2>[] = []
-  let latestSelectProductsResult: SelectProductsToolResult | null = null
+  let latestProductLookupResult: ProductLookupResult | null = null
   let latestRoutineProjection: AgentV2RoutineProjection | null = null
-  const selectProducts = (deps.createSelectProductsTool ?? createSelectProductsTool)({
-    onResult: (result) => {
-      latestSelectProductsResult = result
-      selectedProductResults.push(result)
-    },
-  })
   const buildRoutine = (deps.createBuildOrFixRoutineTool ?? createBuildOrFixRoutineTool)()
   const routineThreadContext = buildRoutineThreadContextFromConversationState(conversationState)
   const priorSelectedProductProjections =
     conversationState.agent_v2.prior_selected_product_projections
   const sessionMemory = conversationState.agent_v2.session_memory
   const runTurn = deps.runAgentV2ResponsesTurn ?? runAgentV2ResponsesTurn
+  const productIntakeEnabled = params.productIntakeEnabled === true
+  let productLookupCatalogPromise: Promise<{
+    catalog: ProductLookupCatalog
+    brandCatalog: BrandResolutionCatalogInput
+  }> | null = null
+  const loadProductLookupCatalogs = () => {
+    productLookupCatalogPromise ??= (async () => {
+      const repository =
+        deps.createProductIntakeRepository?.() ?? createSupabaseProductIntakeRepository()
+      const [catalog, brandCatalog] = await Promise.all([
+        repository.loadCatalog(),
+        repository.loadBrandResolutionCatalog(),
+      ])
+      return { catalog, brandCatalog }
+    })()
+    return productLookupCatalogPromise
+  }
   const safetyMode = classifyAgentV2ProductionSafetyMode(message)
   const managedPrompt = await (deps.getManagedTextPromptTemplate ?? getManagedTextPromptTemplate)(
     LANGFUSE_PROMPTS.agentV2ResponsesCareBalance,
@@ -531,12 +567,31 @@ export async function runAgentV2ProductionPipeline(
     routineThreadContext,
     priorSelectedProductProjections,
     safetyMode,
+    productIntakeEnabled,
     langfuseMode: "enabled",
     observeToolCall: deps.observeAgentV2ToolCall ?? observeAgentV2ToolCall,
     tools: {
       load_advisor_guidance: async (input) => loadAgentV2AdvisorGuidance(input),
+      lookup_product_candidate: async (input) => {
+        if (!productIntakeEnabled) {
+          throw new Error("product intake lookup tool is disabled")
+        }
+        const { catalog, brandCatalog } = await loadProductLookupCatalogs()
+        const result = lookupProductCandidate({
+          input: {
+            category: typeof input.category === "string" ? input.category : null,
+            brand_text: typeof input.brand_text === "string" ? input.brand_text : null,
+            product_name_text:
+              typeof input.product_name_text === "string" ? input.product_name_text : null,
+          },
+          catalog,
+          brandCatalog,
+          offerId: `product-intake-${requestId}`,
+        })
+        latestProductLookupResult = result
+        return result
+      },
       select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
-        latestSelectProductsResult = null
         const effectiveCareContext =
           executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
         const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
@@ -551,23 +606,30 @@ export async function runAgentV2ProductionPipeline(
           latestMessage: message,
           recentMessages,
         })
-        const projection = await selectProducts({
-          category: input.category as Parameters<typeof selectProducts>[0]["category"],
+        let rawResult: SelectProductsToolResult | null = null
+        const selectProductsForCall = (deps.createSelectProductsTool ?? createSelectProductsTool)({
+          onResult: (result) => {
+            rawResult = result
+          },
+        })
+        const projection = await selectProductsForCall({
+          category: input.category as Parameters<typeof selectProductsForCall>[0]["category"],
           message: productToolMessage,
           hairProfile: effectiveHairProfile,
           memoryContext,
           routineItems: effectiveRoutineItems,
           effectiveCareContext,
         })
-        const rawResult =
-          latestSelectProductsResult ??
+        const resultForProjection =
+          rawResult ??
           ({
             projection,
             products: [],
             effectiveHairProfile,
             runtime: {} as SelectProductsToolResult["runtime"],
           } satisfies SelectProductsToolResult)
-        const agentProjection = projectSelectProductsForAgentV2(rawResult, {
+        selectedProductResults.push(resultForProjection)
+        const agentProjection = projectSelectProductsForAgentV2(resultForProjection, {
           includeCareBalanceContext: true,
         })
         selectedProductProjections.push(agentProjection)
@@ -617,6 +679,11 @@ export async function runAgentV2ProductionPipeline(
 
   const answer = result.final_answer
   const visibleFailure = result.trace.failure_stage !== null
+  const productLookupResult = latestProductLookupResult as ProductLookupResult | null
+  const productIntakeOffer =
+    productIntakeEnabled && !visibleFailure && productLookupResult?.status === "not_found"
+      ? productLookupResult.intake_offer
+      : null
   const intent = deriveIntent(answer)
   const productCategory = visibleFailure ? null : deriveProductCategory(answer)
   const routerDecision = buildAgentV2RouterDecision({ answer, visibleFailure })
@@ -629,7 +696,9 @@ export async function runAgentV2ProductionPipeline(
   const matchedProducts = visibleFailure
     ? []
     : deriveMatchedProducts({ answer, selectedProductResults })
-  const { categoryDecision, engineTrace } = deriveEngineArtifacts(latestSelectProductsResult)
+  const { categoryDecision, engineTrace } = deriveEngineArtifacts(
+    selectedProductResults.at(-1) ?? null,
+  )
   const exposedCategoryDecision = visibleFailure ? undefined : categoryDecision
   const exposedEngineTrace = visibleFailure ? undefined : engineTrace
   const attachmentMode = matchedProducts.length > 0 ? "cards" : "text_only"
@@ -758,5 +827,6 @@ export async function runAgentV2ProductionPipeline(
     debugTrace,
     visibleFailure,
     answerMode: answer.answer_mode,
+    productIntakeOffer,
   }
 }

@@ -44,6 +44,8 @@
     "products:identity:validate": "tsx scripts/product-identity/validate-normalization.ts",
     "products:identity:validate-reviewed": "tsx scripts/product-identity/validate-normalization.ts --require-reviewed",
     "products:identity:apply": "tsx scripts/product-identity/apply-normalization.ts",
+    "product-intake:check-readiness": "tsx scripts/product-intake/check-readiness.ts",
+    "product-intake:cleanup-photos": "tsx scripts/product-intake/cleanup-photos.ts",
     "stress:smoke": "k6 run -e K6_PROFILE=smoke scripts/k6/launch-flow.js",
     "stress:average": "k6 run -e K6_PROFILE=average scripts/k6/launch-flow.js",
     "stress:spike": "k6 run -e K6_PROFILE=spike scripts/k6/launch-flow.js",
