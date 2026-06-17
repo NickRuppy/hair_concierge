@@ -847,6 +847,164 @@ test("onboarding same pending photo usage can be saved again without reuploading
   assert.ok(!fake.calls.some((call) => call.startsWith("commit_image:front")))
 })
 
+test("needs-more-info submission can be completed in place and reopened for review", async () => {
+  const fake = createFakeRepository({
+    usage: makeUsage({
+      id: EXISTING_USAGE_ID,
+      product_name: "Mystery Maske",
+      frequency_range: "weekly_1x",
+      product_submission_id: "old-submission",
+      match_status: "needs_more_info",
+      source: "onboarding",
+      intake_method: "manual",
+    }),
+    submissions: [
+      makeSubmission({
+        id: "old-submission",
+        user_product_usage_id: EXISTING_USAGE_ID,
+        brand_text: "Unbekannte Marke",
+        product_name_text: "Mystery Maske",
+        status: "needs_more_info",
+        user_facing_resolution_reason: "Der genaue Produktname fehlt.",
+        user_facing_next_step: "Bitte ergänze den Namen auf der Vorderseite.",
+        user_facing_missing_fields: ["product_name_text"],
+        notification_sent_at: "2026-06-13T09:00:00.000Z",
+        intake_history: [{ at: "2026-06-13T09:00:00.000Z" }],
+      }),
+    ],
+  })
+
+  const result = await submitProductIntake({
+    userId: USER_ID,
+    source: "onboarding",
+    input: onboardingProductIntakeSubmissionSchema.parse(
+      manualInput({
+        product_name_text: "Mystery Maske reparierend",
+        existing_usage_id: EXISTING_USAGE_ID,
+      }),
+    ),
+    repository: fake.repository,
+    now: () => "2026-06-13T10:00:00.000Z",
+  })
+
+  assert.equal(result.status, "pending_review")
+  assert.equal(fake.submissions.length, 1)
+  assert.equal(fake.submissions[0].id, "old-submission")
+  assert.equal(fake.submissions[0].status, "pending_review")
+  assert.equal(fake.submissions[0].product_name_text, "Mystery Maske reparierend")
+  assert.equal(fake.submissions[0].user_facing_resolution_reason, null)
+  assert.equal(fake.submissions[0].user_facing_next_step, null)
+  assert.deepEqual(fake.submissions[0].user_facing_missing_fields, [])
+  assert.equal(fake.submissions[0].notification_sent_at, null)
+  assert.equal(fake.usage?.match_status, "pending_review")
+  assert.ok(!fake.calls.includes("insert_submission"))
+})
+
+test("chat needs-more-info follow-up can update the pending submission in place", async () => {
+  const fake = createFakeRepository({
+    conversationIds: [CONVERSATION_ID],
+    usage: makeUsage({
+      id: EXISTING_USAGE_ID,
+      product_name: "Mystery Maske",
+      frequency_range: "weekly_1x",
+      product_submission_id: "old-submission",
+      match_status: "needs_more_info",
+      source: "chat",
+      intake_method: "manual",
+    }),
+    submissions: [
+      makeSubmission({
+        id: "old-submission",
+        user_product_usage_id: EXISTING_USAGE_ID,
+        source: "chat",
+        source_conversation_id: CONVERSATION_ID,
+        brand_text: "Unbekannte Marke",
+        product_name_text: "Mystery Maske",
+        status: "needs_more_info",
+        user_facing_resolution_reason: "Der genaue Produktname fehlt.",
+        user_facing_next_step: "Bitte ergänze den Namen.",
+        user_facing_missing_fields: ["product_name_text"],
+        notification_sent_at: "2026-06-13T09:00:00.000Z",
+      }),
+    ],
+  })
+
+  const result = await submitProductIntake({
+    userId: USER_ID,
+    source: "chat",
+    input: chatProductIntakeSubmissionSchema.parse(
+      manualInput({
+        product_name_text: "Mystery Maske reparierend",
+        source_conversation_id: CONVERSATION_ID,
+        existing_usage_id: EXISTING_USAGE_ID,
+      }),
+    ),
+    repository: fake.repository,
+    now: () => "2026-06-13T10:00:00.000Z",
+  })
+
+  assert.equal(result.status, "pending_review")
+  assert.equal(fake.submissions.length, 1)
+  assert.equal(fake.submissions[0].id, "old-submission")
+  assert.equal(fake.submissions[0].status, "pending_review")
+  assert.equal(fake.submissions[0].source, "chat")
+  assert.equal(fake.submissions[0].source_conversation_id, CONVERSATION_ID)
+  assert.equal(fake.submissions[0].product_name_text, "Mystery Maske reparierend")
+  assert.equal(fake.submissions[0].notification_sent_at, null)
+  assert.equal(fake.usage?.match_status, "pending_review")
+  assert.ok(!fake.calls.includes("insert_submission"))
+})
+
+test("stale chat follow-up card cannot update a different pending submission", async () => {
+  const oldSubmissionId = "66666666-6666-4666-8666-666666666666"
+  const newSubmissionId = "77777777-7777-4777-8777-777777777777"
+  const fake = createFakeRepository({
+    conversationIds: [CONVERSATION_ID],
+    usage: makeUsage({
+      id: EXISTING_USAGE_ID,
+      product_name: "New Pending Maske",
+      frequency_range: "weekly_1x",
+      product_submission_id: newSubmissionId,
+      match_status: "pending_review",
+      source: "chat",
+      intake_method: "manual",
+    }),
+    submissions: [
+      makeSubmission({
+        id: newSubmissionId,
+        user_product_usage_id: EXISTING_USAGE_ID,
+        source: "chat",
+        source_conversation_id: CONVERSATION_ID,
+        brand_text: "Neue Marke",
+        product_name_text: "New Pending Maske",
+        status: "pending_review",
+      }),
+    ],
+  })
+
+  await assert.rejects(
+    () =>
+      submitProductIntake({
+        userId: USER_ID,
+        source: "chat",
+        input: chatProductIntakeSubmissionSchema.parse(
+          manualInput({
+            product_name_text: "Old Card Maske",
+            source_conversation_id: CONVERSATION_ID,
+            existing_usage_id: EXISTING_USAGE_ID,
+            existing_submission_id: oldSubmissionId,
+          }),
+        ),
+        repository: fake.repository,
+      }),
+    ProductIntakeConflictError,
+  )
+
+  assert.equal(fake.submissions.length, 1)
+  assert.equal(fake.submissions[0].id, newSubmissionId)
+  assert.equal(fake.submissions[0].product_name_text, "New Pending Maske")
+})
+
 test("onboarding same pending photo usage updates the current reference when a new front image is uploaded", async () => {
   const oldFrontPath = `${USER_ID}/old-submission/front-old.jpg`
   const newFrontUploadPath = `tmp/${USER_ID}/front-new.jpg`

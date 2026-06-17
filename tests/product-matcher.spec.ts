@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  isGloballyRecommendableProduct,
   rankProductsForDeterministicMatch,
   sortMatchedProducts,
   type MatchedProduct,
@@ -72,4 +73,20 @@ test("deterministic matcher sort lets structured scores win before catalog tie-b
     [cheapButWeak, pricierFit].sort(sortMatchedProducts).map((product) => product.id),
     ["fit", "cheap"],
   )
+})
+
+test("global product matchers exclude non-recommended and inactive lifecycle products", () => {
+  assert.equal(
+    isGloballyRecommendableProduct(
+      createProduct("user-submitted", { is_chaarlie_recommended: false }),
+    ),
+    false,
+  )
+  assert.equal(
+    isGloballyRecommendableProduct(
+      createProduct("discontinued", { lifecycle_status: "discontinued" }),
+    ),
+    false,
+  )
+  assert.equal(isGloballyRecommendableProduct(createProduct("curated")), true)
 })
