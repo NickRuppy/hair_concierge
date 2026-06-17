@@ -3,6 +3,9 @@
 -- do not alter existing product spec table RLS here. Production anon reads were
 -- audited separately and must stay table-specific.
 
+CREATE SCHEMA IF NOT EXISTS extensions;
+CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA extensions;
+
 CREATE TABLE IF NOT EXISTS public.product_categories (
   key text PRIMARY KEY,
   display_name_de text NOT NULL,
@@ -14,7 +17,7 @@ CREATE TABLE IF NOT EXISTS public.product_categories (
 );
 
 CREATE TABLE IF NOT EXISTS public.brands (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   canonical_name text NOT NULL,
   normalized_name text NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
@@ -22,7 +25,7 @@ CREATE TABLE IF NOT EXISTS public.brands (
 );
 
 CREATE TABLE IF NOT EXISTS public.product_lines (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   brand_id uuid NOT NULL REFERENCES public.brands(id) ON DELETE CASCADE,
   canonical_name text NOT NULL,
   normalized_name text NOT NULL,
@@ -33,7 +36,7 @@ CREATE TABLE IF NOT EXISTS public.product_lines (
 );
 
 CREATE TABLE IF NOT EXISTS public.brand_aliases (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   brand_id uuid NOT NULL REFERENCES public.brands(id) ON DELETE CASCADE,
   product_line_id uuid,
   alias text NOT NULL,
@@ -47,7 +50,7 @@ CREATE TABLE IF NOT EXISTS public.brand_aliases (
 );
 
 CREATE TABLE IF NOT EXISTS public.product_identifiers (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   product_id uuid NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
   identifier_type text NOT NULL,
   identifier_value text NOT NULL,
@@ -184,10 +187,10 @@ CREATE INDEX IF NOT EXISTS idx_products_chaarlie_recommended
   ON public.products (is_chaarlie_recommended)
   WHERE is_chaarlie_recommended = true;
 
-DROP FUNCTION IF EXISTS public.match_products(vector, text, text[], integer, text[], text);
+DROP FUNCTION IF EXISTS public.match_products(extensions.vector, text, text[], integer, text[], text);
 
 CREATE OR REPLACE FUNCTION public.match_products(
-    query_embedding vector,
+    query_embedding extensions.vector,
     user_hair_texture text DEFAULT NULL,
     user_concerns text[] DEFAULT '{}',
     match_count integer DEFAULT 5,
