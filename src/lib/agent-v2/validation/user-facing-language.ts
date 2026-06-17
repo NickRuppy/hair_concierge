@@ -121,7 +121,7 @@ export function analyzeConversationClose(
   const visibleAnswer = getVisibleAnswerText(answer)
   const explicitOffer = getNextStepOfferText(answer)
   const likelyClosingText = extractLikelyClosingText(visibleAnswer)
-  const closeText = [likelyClosingText, explicitOffer].filter(Boolean).join("\n")
+  const closeText = buildConversationCloseText(likelyClosingText, explicitOffer)
   const normalizedClose = normalizeGermanText(closeText)
   const path = ["payload", "user_facing_answer_de"]
 
@@ -309,6 +309,19 @@ function extractLikelyClosingText(text: string): string {
     .map((part) => part.trim())
     .filter(Boolean)
   return paragraphs.at(-1) ?? text.trim()
+}
+
+function buildConversationCloseText(likelyClosingText: string, explicitOffer: string): string {
+  if (!likelyClosingText) return explicitOffer
+  if (!explicitOffer) return likelyClosingText
+
+  const normalizedClose = normalizeGermanText(likelyClosingText)
+  const normalizedOffer = normalizeGermanText(explicitOffer)
+  if (normalizedClose.includes(normalizedOffer) || normalizedOffer.includes(normalizedClose)) {
+    return likelyClosingText
+  }
+
+  return [likelyClosingText, explicitOffer].join("\n")
 }
 
 function normalizeGermanText(text: string): string {

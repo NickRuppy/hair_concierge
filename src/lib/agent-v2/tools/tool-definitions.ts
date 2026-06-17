@@ -9,7 +9,7 @@ import {
   AgentV2ExtractedConstraintsSchema,
   AgentV2GeneralAdvicePayloadSchema,
   AgentV2MissingInformationSchema,
-  AgentV2PendingRoutineActionSchema,
+  AgentV2PendingFollowupActionSchema,
   AgentV2ProductRecommendationPayloadSchema,
   AgentV2ProductRequestKindSchema,
   AgentV2RequestInterpretationSchema,
@@ -453,7 +453,7 @@ const AgentV2TerminalAnswerToolParametersSchema = z.strictObject({
   safety_flags: z.array(z.string()),
   tool_grounding: AgentV2ToolGroundingSchema,
   routine_context: AgentV2RoutineContextSchema,
-  pending_routine_action: AgentV2PendingRoutineActionSchema.nullable(),
+  pending_followup_action: AgentV2PendingFollowupActionSchema.nullable(),
   session_memory_writes: z.array(AgentV2SessionMemoryWriteSchema),
   payload: z.union([
     AgentV2ProductRecommendationPayloadSchema,

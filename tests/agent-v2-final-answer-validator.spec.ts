@@ -127,7 +127,7 @@ const baseAnswer = {
     category: null,
     return_path: [],
   },
-  pending_routine_action: null,
+  pending_followup_action: null,
   session_memory_writes: [],
   payload: {
     user_facing_answer_de: "**Test Shampoo** passt gut zu deinem Profil.",
@@ -362,6 +362,44 @@ const routineBasicsValidationContext = {
   knownHardRuleIds: [],
 } as const
 
+function createValidGeneralAdviceAnswer(overrides: Record<string, unknown> = {}) {
+  return {
+    ...baseAnswer,
+    answer_mode: "general_advice",
+    interpreted_intent: "User asks for category advice.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Ist eine Maske sinnvoll?",
+    }),
+    extracted_constraints: {
+      ...emptyExtractedConstraints(),
+      product_categories: ["mask"],
+      raw_constraints: ["Maske"],
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "mask"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    pending_followup_action: null,
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: null,
+    },
+    ...overrides,
+  }
+}
+
 function socialAnswer(overrides: Record<string, unknown> = {}) {
   return {
     ...baseAnswer,
@@ -396,7 +434,7 @@ function socialAnswer(overrides: Record<string, unknown> = {}) {
       category: null,
       return_path: [],
     },
-    pending_routine_action: null,
+    pending_followup_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de: "Hallo! Ich bin da, wenn du eine Haarfrage hast.",
@@ -435,6 +473,566 @@ test("validator accepts known product ids", () => {
   const result = validateAgentV2FinalAnswer(baseAnswer, baseValidationContext)
 
   assert.equal(result.ok, true)
+})
+
+test("AgentV2 validator blocks confirmable next step without pending follow-up action", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Ich kann dir danach konkrete Masken empfehlen.",
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "pending_followup_action_missing"))
+})
+
+test("AgentV2 validator allows informational next step without pending follow-up action", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Maske",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske kann sinnvoll sein. Danach kannst du zur Routine zurückgehen.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Danach kannst du zur Routine zurückgehen.",
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator blocks hidden pending action behind informational next step", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske kann sinnvoll sein. Danach kannst du zur Routine zurückgehen.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Danach kannst du zur Routine zurückgehen.",
+    },
+    pending_followup_action: {
+      kind: "advisor_response",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "pending_followup_action_hidden"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("AgentV2 validator blocks hidden pending follow-up actions without visible offer", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: null,
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "pending_followup_action_hidden"))
+})
+
+test("AgentV2 validator blocks next-step offers that are not rendered in the visible answer", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Ich kann dir danach konkrete Masken empfehlen.",
+    },
+    pending_followup_action: {
+      kind: "product_recommendation",
+      category: "mask",
+      routine_layer: null,
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "visible_payload_not_rendered"))
+})
+
+test("AgentV2 validator blocks visible product offers stored as advisor follow-up actions", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Ein Leave-in kann bei dir gut passen. Soll ich dir passende Leave-ins empfehlen?",
+      category_or_topic: "leave_in",
+      key_points_de: ["Leave-in kann als Booster helfen."],
+      next_step_offer_de: "Soll ich dir passende Leave-ins empfehlen?",
+    },
+    pending_followup_action: {
+      kind: "advisor_response",
+      category: "none",
+      routine_layer: "basics",
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Erklär mir, warum Leave-in passt.",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "pending_followup_action_kind_mismatch"),
+  )
+})
+
+test("AgentV2 validator accepts visible product offers with matching pending product action", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Ein Leave-in kann bei dir gut passen. Wenn du möchtest, empfehle ich dir passende Leave-ins.",
+      category_or_topic: "leave_in",
+      key_points_de: ["Leave-in kann als Booster helfen."],
+      next_step_offer_de: "Wenn du möchtest, empfehle ich dir passende Leave-ins.",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    pending_followup_action: {
+      kind: "product_recommendation",
+      category: "leave_in",
+      routine_layer: null,
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Erklär mir, warum Leave-in passt.",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator blocks visible routine mutation offers stored as advisor follow-up actions", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Maske",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske wäre eher ein optionaler Zusatz. Wenn du möchtest, kann ich sie in deine Routine einbauen.",
+      category_or_topic: "mask",
+      key_points_de: ["Maske ist ein optionaler Zusatz."],
+      next_step_offer_de: "Wenn du möchtest, kann ich sie in deine Routine einbauen.",
+    },
+    pending_followup_action: {
+      kind: "advisor_response",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Ist eine Maske sinnvoll?",
+    recentEvidenceText: "Ist eine Maske sinnvoll?",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "pending_followup_action_kind_mismatch"),
+  )
+})
+
+test("AgentV2 validator accepts product-worded routine mutation offers", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Das Produkt passt eher als leichter Zusatz. Soll ich das Produkt in deine Routine einbauen?",
+      category_or_topic: "leave_in",
+      key_points_de: ["Der Zusatz sollte leicht bleiben."],
+      next_step_offer_de: "Soll ich das Produkt in deine Routine einbauen?",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "leave_in",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Ist dieses Leave-in sinnvoll?",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator blocks routine mutation category drift from visible offers", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Maske",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske wäre eher ein optionaler Zusatz. Soll ich die Maske in deine Routine einbauen?",
+      category_or_topic: "mask",
+      key_points_de: ["Maske ist ein optionaler Zusatz."],
+      next_step_offer_de: "Soll ich die Maske in deine Routine einbauen?",
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "leave_in",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Ist eine Maske sinnvoll?",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some(
+      (error) => error.validator_id === "pending_followup_action_category_mismatch",
+    ),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("AgentV2 validator does not count mirrored next-step offer as a second visible question", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "ob eine Maske bei mir sinnvoll wäre",
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "mask"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: true,
+      routine_layer: "basics",
+      step_id: null,
+      category: null,
+      return_path: ["basics"],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske kann bei dir sinnvoll sein, aber eher als gelegentliche Zusatzpflege.\n\nSoll ich sie in deine Routine einbauen?",
+      category_or_topic: "Haarmaske",
+      key_points_de: ["Maske ist Zusatzpflege, nicht Conditioner-Ersatz."],
+      next_step_offer_de: "Soll ich sie in deine Routine einbauen?",
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage:
+      "Ich überlege, ob eine Maske bei mir sinnvoll wäre. Frag mich, ob du sie in meine Routine einbauen sollst.",
+    recentEvidenceText:
+      "Ich überlege, ob eine Maske bei mir sinnvoll wäre. Frag mich, ob du sie in meine Routine einbauen sollst.",
+    toolCallHistory: [],
+    routineThreadContext: {
+      active: true,
+      current_layer: "basics",
+      last_answer_mode: "routine",
+      last_routine_categories: ["shampoo", "conditioner", "leave_in"],
+      last_user_goal: "einfache Routine",
+      summary_de: "Einfache Basisroutine mit Shampoo, Conditioner und Leave-in.",
+      visible_steps: [
+        {
+          step_id: "base-shampoo",
+          label_de: "Shampoo",
+          category: "shampoo",
+          order: 1,
+          routine_layer: "basics",
+        },
+      ],
+      pending_followup_action: null,
+    },
+    currentRoutineLayer: "basics",
+    requiredGuidancePackageIds: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator schema blocks routine action fields on product follow-up actions", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Ich kann dir danach konkrete Masken empfehlen.",
+    },
+    pending_followup_action: {
+      kind: "product_recommendation",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "terminal_schema"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("AgentV2 validator schema blocks routine action fields on advisor follow-up actions", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "routine_explanation",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Routine und Feuchtigkeit",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Mehr Feuchtigkeit erreichst du vor allem über sanftere Reinigung und passende Pflegeabstände.\n\nAls Nächstes kann ich dir die Feuchtigkeitslogik deiner Routine erklären.",
+      category_or_topic: "routine_hydration",
+      key_points_de: ["Mehr Feuchtigkeit braucht nicht automatisch einen neuen Routine-Schritt."],
+      next_step_offer_de:
+        "Als Nächstes kann ich dir die Feuchtigkeitslogik deiner Routine erklären.",
+    },
+    pending_followup_action: {
+      kind: "advisor_response",
+      category: "none",
+      routine_layer: "basics",
+      routine_action: "create",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Wie bekomme ich mehr Feuchtigkeit in meine Routine?",
+    recentEvidenceText: "Routine und Feuchtigkeit",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "terminal_schema"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("AgentV2 validator schema blocks routine mutation follow-up without routine action", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Ich kann danach deine Routine anpassen.",
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "terminal_schema"),
+    JSON.stringify(result.errors, null, 2),
+  )
 })
 
 test("validator accepts social and domain-boundary answers when gate-consistent", () => {
@@ -1683,9 +2281,10 @@ test("validator allows evidence quotes from active routine visible step labels",
         category: "leave_in",
         return_path: ["routine"],
       },
+      pending_followup_action: null,
       payload: {
         user_facing_answer_de:
-          "**Test Shampoo** passt als leichter erster Zusatz in deine Routine.",
+          "**Test Shampoo** passt als leichter erster Zusatz in deine Routine. Danach kannst du zur Routine zurückgehen.",
         recommendations: [
           {
             product_id: "prod_1",
@@ -3463,8 +4062,10 @@ test("validator allows routine product asks as product recommendations with rout
         ...baseAnswer.tool_grounding,
         routine_step_ids: ["base-shampoo"],
       },
+      pending_followup_action: null,
       payload: {
         ...baseAnswer.payload,
+        user_facing_answer_de: `${baseAnswer.payload.user_facing_answer_de} Danach gehen wir zur Routine zurück.`,
         next_step_offer_de: "Danach gehen wir zur Routine zurück.",
       },
     },
@@ -4144,9 +4745,16 @@ test("validator allows guidance-only general advice inside active routine thread
         category: "conditioner",
         return_path: ["routine"],
       },
+      pending_followup_action: {
+        kind: "routine_mutation",
+        category: "conditioner",
+        routine_layer: "basics",
+        routine_action: "modify",
+        source: "assistant_offer",
+      },
       payload: {
         user_facing_answer_de:
-          "In deiner vereinfachten Routine wäre Conditioner der Basis-Schritt; eine Maske ist eher optional.",
+          "In deiner vereinfachten Routine wäre Conditioner der Basis-Schritt; eine Maske ist eher optional. Wenn du magst, passe ich danach die Routine an.",
         category_or_topic: "conditioner_vs_mask",
         key_points_de: [
           "Conditioner ist der regelmäßige Pflegeabschluss.",
@@ -5105,8 +5713,10 @@ test("validator accepts routine product recommendation step ids from active rout
         category: "leave_in",
         return_path: ["routine"],
       },
+      pending_followup_action: null,
       payload: {
-        user_facing_answer_de: "**Test Shampoo** passt für den ersten Zusatz.",
+        user_facing_answer_de:
+          "**Test Shampoo** passt für den ersten Zusatz. Danach gehen wir zur Routine zurück.",
         recommendations: [
           {
             product_id: "prod_1",

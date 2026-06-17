@@ -99,6 +99,7 @@ export function validateAgentV2FinalAnswer(
   validateRoutineProductDeepDive(terminalAnswer, context, findings)
   validateRoutineMetadataConsistency(terminalAnswer, context, findings)
   validateAnswerModeForContext(terminalAnswer, findings)
+  validatePendingFollowupAction(terminalAnswer, findings)
   validateBoundaryAnswerSideEffects(terminalAnswer, findings)
   validateRoutineLayerProgression(terminalAnswer, context, findings)
   validateCurrentCareContextConflictAcknowledgement(terminalAnswer, context, findings)
@@ -416,6 +417,16 @@ function validateVisiblePayloadRendered(
   errors: AgentV2ValidationError[],
 ): void {
   const userFacing = normalizeVisibleText(readUserFacingAnswer(answer.payload))
+  const nextStepOffer = readNextStepOffer(answer)
+  if (nextStepOffer && !isNextStepOfferRendered(userFacing, nextStepOffer)) {
+    errors.push({
+      validator_id: "visible_payload_not_rendered",
+      message:
+        "User-facing prose must visibly include next_step_offer_de when it creates a pending follow-up action.",
+      severity: "block",
+      path: ["payload", "user_facing_answer_de"],
+    })
+  }
 
   if (answer.answer_mode === "routine") {
     const missingStepLabels = answer.payload.visible_steps
@@ -1645,6 +1656,139 @@ function validateAnswerModeForContext(
   }
 }
 
+function readNextStepOffer(answer: AgentV2TerminalAnswer): string | null {
+  if (!("next_step_offer_de" in answer.payload)) return null
+  const offer = answer.payload.next_step_offer_de
+  return typeof offer === "string" && offer.trim().length > 0 ? offer.trim() : null
+}
+
+function validatePendingFollowupAction(
+  answer: AgentV2TerminalAnswer,
+  errors: AgentV2ValidationError[],
+): void {
+  const nextStepOffer = readNextStepOffer(answer)
+  const expectedOfferKind = classifyPendingFollowupOfferKind(nextStepOffer)
+  const hasConfirmableOffer =
+    Boolean(expectedOfferKind) || isConfirmableFollowupOffer(nextStepOffer)
+
+  if (nextStepOffer && !answer.pending_followup_action && hasConfirmableOffer) {
+    errors.push({
+      validator_id: "pending_followup_action_missing",
+      message: "Actionable next_step_offer_de should provide pending_followup_action.",
+      severity: "block",
+    })
+  }
+
+  if ((!nextStepOffer || !hasConfirmableOffer) && answer.pending_followup_action) {
+    errors.push({
+      validator_id: "pending_followup_action_hidden",
+      message:
+        "pending_followup_action must not be set without a visible confirmable next_step_offer_de.",
+      severity: "block",
+    })
+  }
+
+  const action = answer.pending_followup_action
+  if (action && expectedOfferKind && action.kind !== expectedOfferKind) {
+    errors.push({
+      validator_id: "pending_followup_action_kind_mismatch",
+      message: "pending_followup_action.kind must match the visible next-step offer semantics.",
+      severity: "block",
+      path: ["pending_followup_action", "kind"],
+    })
+  }
+
+  const expectedOfferCategory = inferPendingFollowupOfferCategory(
+    nextStepOffer,
+    answer.request_interpretation.care_category,
+  )
+  if (
+    (action?.kind === "product_recommendation" || action?.kind === "routine_mutation") &&
+    expectedOfferCategory &&
+    action.category !== expectedOfferCategory
+  ) {
+    errors.push({
+      validator_id: "pending_followup_action_category_mismatch",
+      message:
+        "Pending follow-up category must match the visible next-step offer when the category is clear.",
+      severity: "block",
+      path: ["pending_followup_action", "category"],
+    })
+  }
+}
+
+function classifyPendingFollowupOfferKind(
+  offer: string | null,
+): "product_recommendation" | "routine_mutation" | null {
+  if (!offer) return null
+  const normalizedOffer = normalizeVisibleText(offer)
+
+  if (
+    /\broutine\b/.test(normalizedOffer) &&
+    /\b(anpass|ander|aender|einbau|integrier|hinzufug|hinzufueg|aufnehm|setz|bau|baue|umbau|vereinfach)\w*/.test(
+      normalizedOffer,
+    )
+  ) {
+    return "routine_mutation"
+  }
+
+  if (
+    /\b(empfehl|produk|produkt|option|auswahl|heraussuch|raussuch|vorschlag|vorschlaeg|katalog)\w*/.test(
+      normalizedOffer,
+    )
+  ) {
+    return "product_recommendation"
+  }
+
+  return null
+}
+
+function isConfirmableFollowupOffer(offer: string | null): boolean {
+  if (!offer) return false
+  const normalizedOffer = normalizeVisibleText(offer)
+
+  return (
+    /\b(?:soll|mochtest|moechtest|willst)\b.{0,50}\b(?:ich|wir)\b/.test(normalizedOffer) ||
+    /\b(?:kann|konnen)\b.{0,30}\b(?:ich|wir)\b/.test(normalizedOffer) ||
+    /\b(?:ich|wir)\b.{0,30}\b(?:kann|konnen|empfehle|erklaere|erklare|ordne|passe|baue|schaue|zeige)\w*/.test(
+      normalizedOffer,
+    ) ||
+    /\bwenn du (?:magst|mochtest|moechtest|willst)\b.{0,90}\b(?:ich|wir)\b/.test(normalizedOffer)
+  )
+}
+
+function inferPendingFollowupOfferCategory(
+  offer: string | null,
+  interpretedCategory: AgentV2CareCategory,
+): AgentV2CareCategory | null {
+  if (!offer) return null
+  const normalizedOffer = normalizeVisibleText(offer)
+  const visibleCategory = inferCareCategoryFromOfferText(normalizedOffer)
+  if (visibleCategory) return visibleCategory
+
+  return interpretedCategory !== "none" && interpretedCategory !== "unknown"
+    ? interpretedCategory
+    : null
+}
+
+function inferCareCategoryFromOfferText(normalizedOffer: string): AgentV2CareCategory | null {
+  if (/\b(leave in|leave ins)\b/.test(normalizedOffer)) return "leave_in"
+  if (/\b(mask|maske|masken)\b/.test(normalizedOffer)) return "mask"
+  if (/\b(conditioner|spulung|spuelung)\b/.test(normalizedOffer)) return "conditioner"
+  if (/\b(shampoo|shampoos)\b/.test(normalizedOffer)) return "shampoo"
+  if (/\b(oel|ol|oil|serum|seren)\b/.test(normalizedOffer)) return "oil"
+  if (/\b(bondbuilder|bond builder|bond repair|bonding)\b/.test(normalizedOffer)) {
+    return "bondbuilder"
+  }
+  if (/\b(trockenshampoo|dry shampoo)\b/.test(normalizedOffer)) return "dry_shampoo"
+  if (/\b(tiefenreinigung|deep cleansing|reset shampoo)\b/.test(normalizedOffer)) {
+    return "deep_cleansing_shampoo"
+  }
+  if (/\b(peeling|scalp scrub|kopfhautpeeling)\b/.test(normalizedOffer)) return "peeling"
+
+  return null
+}
+
 function validateBoundaryAnswerSideEffects(
   answer: AgentV2TerminalAnswer,
   errors: AgentV2ValidationError[],
@@ -1660,13 +1804,13 @@ function validateBoundaryAnswerSideEffects(
     extractPayloadRoutineStepIds(answer).length > 0 ||
     answer.session_memory_writes.length > 0 ||
     answer.routine_context.active ||
-    answer.pending_routine_action !== null
+    answer.pending_followup_action !== null
 
   if (hasSideEffects) {
     errors.push({
       validator_id: "boundary_answer_no_side_effects",
       message:
-        "Social and domain-boundary answers must not include product, routine, memory, active routine context, or pending routine side effects.",
+        "Social and domain-boundary answers must not include product, routine, memory, active routine context, or pending follow-up side effects.",
       severity: "block",
     })
   }
@@ -1853,6 +1997,18 @@ function normalizeVisibleText(value: string): string {
 function hasNormalizedPhrase(normalizedHaystack: string, needle: string): boolean {
   const normalizedNeedle = normalizeVisibleText(needle)
   return normalizedNeedle.length > 0 && normalizedHaystack.includes(normalizedNeedle)
+}
+
+function isNextStepOfferRendered(normalizedProse: string, offer: string): boolean {
+  if (hasNormalizedPhrase(normalizedProse, offer)) return true
+
+  const meaningfulParts = normalizeVisibleText(offer)
+    .split(" ")
+    .filter((part) => part.length >= 4)
+  if (meaningfulParts.length < 3) return false
+
+  const renderedParts = meaningfulParts.filter((part) => normalizedProse.includes(part))
+  return renderedParts.length >= Math.ceil(meaningfulParts.length * 0.6)
 }
 
 function isConstraintRendered(normalizedProse: string, constraint: string): boolean {

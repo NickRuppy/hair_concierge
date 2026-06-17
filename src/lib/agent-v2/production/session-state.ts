@@ -1,11 +1,11 @@
 import {
-  AgentV2PendingRoutineActionSchema,
   type AgentV2AnswerMode,
   type AgentV2RoutineThreadContext,
   type AgentV2RoutineThreadStep,
   type AgentV2SessionMemoryWrite,
   type AgentV2TerminalAnswer,
 } from "@/lib/agent-v2/contracts"
+import { readPendingFollowupAction } from "@/lib/agent-v2/pending-followup-action"
 import type { AgentV2RoutineProjection } from "@/lib/agent-v2/tools/routine-projection"
 import type { AgentV2SelectProductsProjection } from "@/lib/agent-v2/tools/select-products-projection"
 import type {
@@ -118,7 +118,12 @@ export function updateAgentV2ProductionRoutineThreadContext(params: {
 
   const keepsRoutineTrack =
     params.answer.routine_context.active || params.answer.answer_mode === "routine"
-  if (!keepsRoutineTrack) return buildInactiveRoutineThreadContext(params.answer.answer_mode)
+  if (!keepsRoutineTrack) {
+    return buildInactiveRoutineThreadContext(
+      params.answer.answer_mode,
+      readPendingFollowupAction(params.answer),
+    )
+  }
 
   const categories = collectRoutineThreadCategories(params.answer)
   const visibleSteps = updateRoutineThreadVisibleSteps({
@@ -143,7 +148,7 @@ export function updateAgentV2ProductionRoutineThreadContext(params: {
       String(params.answer.payload.user_facing_answer_de ?? "").slice(0, 500) ||
       params.previous?.summary_de ||
       null,
-    pending_routine_action: readPendingRoutineAction(params.answer),
+    pending_followup_action: readPendingFollowupAction(params.answer),
     visible_steps: visibleSteps,
   }
 }
@@ -194,13 +199,6 @@ export function buildNextAgentV2SessionState(params: {
   }
 }
 
-function readPendingRoutineAction(
-  answer: AgentV2TerminalAnswer,
-): AgentV2RoutineThreadContext["pending_routine_action"] {
-  const parsed = AgentV2PendingRoutineActionSchema.safeParse(answer.pending_routine_action)
-  return parsed.success ? parsed.data : null
-}
-
 function normalizeRoutineThreadAction(
   action: string | null | undefined,
 ): AgentV2RoutineThreadContext["visible_steps"][number]["action"] {
@@ -219,6 +217,7 @@ function normalizeRoutineThreadNecessity(
 
 function buildInactiveRoutineThreadContext(
   answerMode: AgentV2AnswerMode,
+  pendingFollowupAction: AgentV2RoutineThreadContext["pending_followup_action"] = null,
 ): AgentV2RoutineThreadContext {
   return {
     active: false,
@@ -227,7 +226,7 @@ function buildInactiveRoutineThreadContext(
     last_routine_categories: [],
     last_user_goal: null,
     summary_de: null,
-    pending_routine_action: null,
+    pending_followup_action: pendingFollowupAction,
     visible_steps: [],
   }
 }
