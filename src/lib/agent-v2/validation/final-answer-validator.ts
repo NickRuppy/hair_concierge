@@ -1670,6 +1670,7 @@ function validatePendingFollowupAction(
   const expectedOfferKind = classifyPendingFollowupOfferKind(nextStepOffer)
   const hasConfirmableOffer =
     Boolean(expectedOfferKind) || isConfirmableFollowupOffer(nextStepOffer)
+  const action = answer.pending_followup_action
 
   if (nextStepOffer && !answer.pending_followup_action && hasConfirmableOffer) {
     errors.push({
@@ -1688,8 +1689,11 @@ function validatePendingFollowupAction(
     })
   }
 
-  const action = answer.pending_followup_action
-  if (action && expectedOfferKind && action.kind !== expectedOfferKind) {
+  if (
+    action &&
+    ((action.kind === "routine_mutation" && expectedOfferKind !== "routine_mutation") ||
+      (expectedOfferKind && action.kind !== expectedOfferKind))
+  ) {
     errors.push({
       validator_id: "pending_followup_action_kind_mismatch",
       message: "pending_followup_action.kind must match the visible next-step offer semantics.",
@@ -1723,12 +1727,7 @@ function classifyPendingFollowupOfferKind(
   if (!offer) return null
   const normalizedOffer = normalizeVisibleText(offer)
 
-  if (
-    /\broutine\b/.test(normalizedOffer) &&
-    /\b(anpass|ander|aender|einbau|integrier|hinzufug|hinzufueg|aufnehm|setz|bau|baue|umbau|vereinfach)\w*/.test(
-      normalizedOffer,
-    )
-  ) {
+  if (isRoutineMutationOffer(normalizedOffer)) {
     return "routine_mutation"
   }
 
@@ -1741,6 +1740,47 @@ function classifyPendingFollowupOfferKind(
   }
 
   return null
+}
+
+function isRoutineMutationOffer(normalizedOffer: string): boolean {
+  if (!/\broutine\b/.test(normalizedOffer)) return false
+  if (
+    !/\b(anpass|ander|aender|einbau|integrier|hinzufug|hinzufueg|aufnehm|setz|bau|baue|umbau|vereinfach|passe|passen)\w*/.test(
+      normalizedOffer,
+    )
+  ) {
+    return false
+  }
+  if (isAdviceStyleRoutineOffer(normalizedOffer)) return false
+
+  return (
+    /\b(?:soll|mochtest|moechtest|willst)\b.{0,70}\b(?:ich|wir)\b.{0,120}\broutine\b/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:mochtest|moechtest|willst)\b.{0,90}\bdass\b.{0,30}\b(?:ich|wir)\b.{0,120}\broutine\b/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:ich|wir)\b.{0,50}\b(?:kann|konnen|passe|passen|baue|bauen|nehme|nehmen|setze|setzen|integriere|integrieren|vereinfache|vereinfachen)\w*\b.{0,120}\broutine\b/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:ich|wir)\b.{0,120}\broutine\b.{0,80}\b(?:anpass|ander|aender|einbau|integrier|hinzufug|hinzufueg|aufnehm|setz|bau|baue|umbau|vereinfach)\w*/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:anpass|ander|aender|einbau|integrier|hinzufug|hinzufueg|aufnehm|setz|bau|baue|umbau|vereinfach|passe|passen|baue|bauen|nehme|nehmen|setze|setzen|integriere|integrieren|vereinfache|vereinfachen)\w*\b.{0,40}\b(?:ich|wir)\b.{0,120}\broutine\b/.test(
+      normalizedOffer,
+    )
+  )
+}
+
+function isAdviceStyleRoutineOffer(normalizedOffer: string): boolean {
+  return (
+    /\b(?:wie|wo|wann)\b.{0,80}\b(?:du|man)\b.{0,100}\b(?:anpass|ander|aender|einbau|integrier|hinzufug|hinzufueg|aufnehm|setz|bau|baue|umbau|vereinfach)\w*/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:zeige|zeigen|erklaere|erklaren|erklar|schaue|schauen|anschauen|einordne|einordnen)\w*\b.{0,80}\b(?:wie|wo|wann)\b/.test(
+      normalizedOffer,
+    )
+  )
 }
 
 function isConfirmableFollowupOffer(offer: string | null): boolean {

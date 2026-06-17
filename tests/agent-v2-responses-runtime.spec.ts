@@ -994,10 +994,10 @@ function terminalRoutineProductDeepDive(call_id: string, product_ids: string[]) 
       return_path: ["routine"],
     },
     pending_followup_action: {
-      kind: "routine_mutation",
+      kind: "advisor_response",
       category: "leave_in",
       routine_layer: "basics",
-      routine_action: "add_step",
+      routine_action: null,
       source: "assistant_offer",
     },
     payload: {

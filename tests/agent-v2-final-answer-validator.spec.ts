@@ -804,6 +804,57 @@ test("AgentV2 validator accepts product-worded routine mutation offers", () => {
   assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
 })
 
+test("AgentV2 validator blocks advice-style routine offers stored as routine mutations", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Das Leave-in kann als leichter Zusatz sinnvoll sein. Ich kann dir zeigen, wie du es in deine Routine einbaust.",
+      category_or_topic: "leave_in",
+      key_points_de: ["Der Zusatz sollte leicht bleiben."],
+      next_step_offer_de: "Ich kann dir zeigen, wie du es in deine Routine einbaust.",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "leave_in",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Ist dieses Leave-in sinnvoll?",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "pending_followup_action_kind_mismatch"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
 test("AgentV2 validator blocks routine mutation category drift from visible offers", () => {
   const answer = createValidGeneralAdviceAnswer({
     request_interpretation: requestInterpretation({
