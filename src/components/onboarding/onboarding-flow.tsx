@@ -706,6 +706,7 @@ export function OnboardingFlow({
             frequency={currentDrilldown.frequency}
             frontImagePath={currentDrilldown.frontImagePath}
             committedFrontImagePath={currentDrilldown.committedFrontImagePath}
+            existingUsageId={currentDrilldown.existingUsageId}
             barcodeImagePath={currentDrilldown.barcodeImagePath}
             isSupportedIntakeCategory={productIntake.isSupportedCategory(currentCategory)}
             productIntakeEnabled={productIntakeEnabled}

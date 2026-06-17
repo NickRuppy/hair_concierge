@@ -136,6 +136,7 @@ export function useOnboardingProductIntakeController(productIntakeEnabled: boole
         productLineId: drilldown.productLineId,
         productName: drilldown.productName,
         frontImagePath: drilldown.frontImagePath,
+        committedFrontImagePath: drilldown.committedFrontImagePath,
         frontImageValidationStatus: drilldown.frontImageValidationStatus,
         frontImageValidationMetadata: drilldown.frontImageValidationMetadata,
         barcodeImagePath: drilldown.barcodeImagePath,

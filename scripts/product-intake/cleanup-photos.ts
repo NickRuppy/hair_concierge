@@ -15,6 +15,11 @@ type ProductSubmissionPhotoRow = {
   barcode_image_path: string | null
 }
 
+type ReferencedSubmissionPhotoRow = {
+  front_image_path: string | null
+  barcode_image_path: string | null
+}
+
 function loadLocalEnv() {
   for (const envPath of envCandidatePaths()) {
     if (existsSync(envPath)) {
@@ -136,6 +141,35 @@ export async function cleanupExpiredSubmissionPhotos(supabase: SupabaseClient, a
   return { rows: totalRows, objects: totalObjects }
 }
 
+export async function loadReferencedSubmissionImagePaths(
+  supabase: SupabaseClient,
+): Promise<Set<string>> {
+  const paths = new Set<string>()
+
+  for (let offset = 0; ; offset += SUBMISSION_BATCH_SIZE) {
+    const { data, error } = await supabase
+      .from("product_submissions")
+      .select("front_image_path, barcode_image_path")
+      .is("photos_deleted_at", null)
+      .range(offset, offset + SUBMISSION_BATCH_SIZE - 1)
+
+    if (error) {
+      throw new Error(`load referenced submission photos: ${error.message}`)
+    }
+
+    const rows = (data ?? []) as ReferencedSubmissionPhotoRow[]
+    for (const row of rows) {
+      for (const path of uniquePaths([row.front_image_path, row.barcode_image_path])) {
+        paths.add(path)
+      }
+    }
+
+    if (rows.length < SUBMISSION_BATCH_SIZE) break
+  }
+
+  return paths
+}
+
 async function listStoragePage(supabase: SupabaseClient, path: string, offset: number) {
   const { data, error } = await supabase.storage.from(PRODUCT_INTAKE_BUCKET).list(path, {
     limit: STORAGE_PAGE_SIZE,
@@ -160,7 +194,12 @@ async function listAllStorageEntries(supabase: SupabaseClient, path: string) {
   return entries
 }
 
-async function cleanupAbandonedTmpUploads(supabase: SupabaseClient, apply: boolean, cutoff: Date) {
+export async function cleanupAbandonedTmpUploads(
+  supabase: SupabaseClient,
+  apply: boolean,
+  cutoff: Date,
+  protectedPaths: ReadonlySet<string> = new Set(),
+) {
   const users = await listAllStorageEntries(supabase, "tmp")
   let totalObjects = 0
 
@@ -171,6 +210,7 @@ async function cleanupAbandonedTmpUploads(supabase: SupabaseClient, apply: boole
     const stalePaths = files
       .filter((file) => isOlderThan(file.updated_at ?? file.created_at, cutoff))
       .map((file) => `${userPath}/${file.name}`)
+      .filter((path) => !protectedPaths.has(path))
 
     totalObjects += await removeStorageObjects(supabase, stalePaths, apply)
   }
@@ -186,10 +226,9 @@ async function main() {
   console.log(`Product Intake photo cleanup mode: ${apply ? "apply" : "dry-run"}`)
   console.log(`Temporary upload cutoff: ${tmpCutoff.toISOString()}`)
 
-  const [expiredSubmissions, tmpUploads] = await Promise.all([
-    cleanupExpiredSubmissionPhotos(supabase, apply),
-    cleanupAbandonedTmpUploads(supabase, apply, tmpCutoff),
-  ])
+  const expiredSubmissions = await cleanupExpiredSubmissionPhotos(supabase, apply)
+  const protectedPaths = await loadReferencedSubmissionImagePaths(supabase)
+  const tmpUploads = await cleanupAbandonedTmpUploads(supabase, apply, tmpCutoff, protectedPaths)
 
   console.log(
     `Expired submission rows: ${expiredSubmissions.rows}; committed objects ${

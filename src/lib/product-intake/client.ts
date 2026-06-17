@@ -87,10 +87,13 @@ export function canSubmitProductIntake(params: {
   productName: string
   frontImagePath?: string | null
   committedFrontImagePath?: string | null
+  existingUsageId?: string | null
 }) {
   if (!params.category || !params.frequency) return false
   if (params.method === "photo") {
-    return Boolean(params.frontImagePath || params.committedFrontImagePath)
+    return Boolean(
+      params.frontImagePath || (params.committedFrontImagePath && params.existingUsageId),
+    )
   }
   if (params.method === "manual") {
     return params.brandText.trim().length > 0 && params.productName.trim().length > 0
@@ -107,6 +110,7 @@ export function buildProductIntakeSubmissionPayload(params: {
   productLineId?: string | null
   productName: string
   frontImagePath?: string | null
+  committedFrontImagePath?: string | null
   frontImageValidationStatus?: string | null
   frontImageValidationMetadata?: ProductIntakeValidationMetadata
   barcodeImagePath?: string | null
@@ -127,12 +131,14 @@ export function buildProductIntakeSubmissionPayload(params: {
   }
 
   if (params.method === "photo") {
+    const frontImagePath = params.frontImagePath ?? null
+
     return {
       intake_method: "photo",
       ...common,
-      ...(params.frontImagePath
+      ...(frontImagePath
         ? {
-            front_image_path: params.frontImagePath,
+            front_image_path: frontImagePath,
             front_image_validation_status: params.frontImageValidationStatus ?? "uncertain",
             front_image_validation_metadata: params.frontImageValidationMetadata ?? {},
           }

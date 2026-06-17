@@ -27,6 +27,7 @@ interface ProductDrilldownScreenProps {
   frequency: ProductFrequency | null
   frontImagePath: string | null
   committedFrontImagePath: string | null
+  existingUsageId: string | null
   barcodeImagePath: string | null
   isSupportedIntakeCategory: boolean
   productIntakeEnabled: boolean
@@ -52,6 +53,7 @@ function hasRequiredFields(params: {
   frequency: ProductFrequency | null
   frontImagePath: string | null
   committedFrontImagePath: string | null
+  existingUsageId: string | null
   isSupportedIntakeCategory: boolean
 }) {
   if (!params.frequency) return false
@@ -64,6 +66,7 @@ function hasRequiredFields(params: {
     productName: params.productName,
     frontImagePath: params.frontImagePath,
     committedFrontImagePath: params.committedFrontImagePath,
+    existingUsageId: params.existingUsageId,
   })
 }
 
@@ -77,6 +80,7 @@ export function ProductDrilldownScreen({
   frequency,
   frontImagePath,
   committedFrontImagePath,
+  existingUsageId,
   barcodeImagePath,
   isSupportedIntakeCategory,
   productIntakeEnabled,
@@ -106,11 +110,13 @@ export function ProductDrilldownScreen({
         frequency,
         frontImagePath,
         committedFrontImagePath,
+        existingUsageId,
         isSupportedIntakeCategory: shouldUseProductIntake,
       }),
     [
       brandText,
       committedFrontImagePath,
+      existingUsageId,
       frequency,
       frontImagePath,
       productName,

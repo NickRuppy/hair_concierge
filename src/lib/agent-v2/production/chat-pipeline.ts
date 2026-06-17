@@ -6,7 +6,10 @@ import {
   createSelectProductsTool,
   type SelectProductsToolResult,
 } from "@/lib/agent/tools/select-products"
-import { loadAgentV2ProductionConversationHistory } from "@/lib/agent-v2/production/conversation-history"
+import {
+  loadAgentV2ProductionConversationHistory,
+  verifyAgentV2ProductionConversationOwnership,
+} from "@/lib/agent-v2/production/conversation-history"
 import {
   buildAgentV2GenerationMetadata,
   isAgentV2LangfuseObservationEnabled,
@@ -59,7 +62,7 @@ import {
   type AgentV2ConversationStateTransition,
   type AgentV2ConversationStateV2,
 } from "@/lib/agent-v2/production/persisted-session-state"
-import { loadAgentV2ConversationState as loadPersistedConversationState } from "@/lib/chat-runtime/conversation-state-store"
+import { loadAgentV2ConversationStateForUser } from "@/lib/chat-runtime/conversation-state-store"
 import { buildPipelineTraceDraft, type PipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
 import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import {
@@ -131,10 +134,14 @@ export interface PipelineResult {
 
 interface ProductionAgentV2PipelineDeps {
   client?: AgentV2ResponsesClient
+  verifyConversationOwnership?: (params: {
+    conversationId: string
+    userId: string
+  }) => Promise<boolean>
   loadConversationHistory?: (conversationId: string) => Promise<Message[]>
   getUserContext?: (userId: string) => Promise<UserContextProjection>
   loadUserMemoryContext?: (userId: string) => Promise<UserMemoryContext>
-  loadConversationState?: (conversationId: string) => Promise<unknown>
+  loadConversationState?: (params: { conversationId: string; userId: string }) => Promise<unknown>
   createSelectProductsTool?: typeof createSelectProductsTool
   createBuildOrFixRoutineTool?: typeof createBuildOrFixRoutineTool
   runAgentV2ResponsesTurn?: typeof runAgentV2ResponsesTurn
@@ -452,6 +459,14 @@ export async function runAgentV2ProductionPipeline(
   }
 
   const startedAt = new Date().toISOString()
+  const ownsConversation = await (
+    deps.verifyConversationOwnership ?? verifyAgentV2ProductionConversationOwnership
+  )({ conversationId, userId })
+
+  if (!ownsConversation) {
+    throw new Error("AgentV2 production conversation does not belong to user.")
+  }
+
   const [
     { result: conversationHistory, durationMs: historyLoadMs },
     { result: userContext, durationMs: contextLoadMs },
@@ -465,8 +480,8 @@ export async function runAgentV2ProductionPipeline(
     measureAsync(() => (deps.loadUserMemoryContext ?? loadUserMemoryContext)(userId)),
     measureAsync(() =>
       deps.loadConversationState
-        ? deps.loadConversationState(conversationId)
-        : loadPersistedConversationState(createAdminClient(), conversationId),
+        ? deps.loadConversationState({ conversationId, userId })
+        : loadAgentV2ConversationStateForUser(createAdminClient(), { conversationId, userId }),
     ),
   ])
 
@@ -478,15 +493,8 @@ export async function runAgentV2ProductionPipeline(
   )
   const selectedProductResults: SelectProductsToolResult[] = []
   const selectedProductProjections: ReturnType<typeof projectSelectProductsForAgentV2>[] = []
-  let latestSelectProductsResult: SelectProductsToolResult | null = null
   let latestProductLookupResult: ProductLookupResult | null = null
   let latestRoutineProjection: AgentV2RoutineProjection | null = null
-  const selectProducts = (deps.createSelectProductsTool ?? createSelectProductsTool)({
-    onResult: (result) => {
-      latestSelectProductsResult = result
-      selectedProductResults.push(result)
-    },
-  })
   const buildRoutine = (deps.createBuildOrFixRoutineTool ?? createBuildOrFixRoutineTool)()
   const routineThreadContext = buildRoutineThreadContextFromConversationState(conversationState)
   const priorSelectedProductProjections =
@@ -584,7 +592,6 @@ export async function runAgentV2ProductionPipeline(
         return result
       },
       select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
-        latestSelectProductsResult = null
         const effectiveCareContext =
           executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
         const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
@@ -599,23 +606,30 @@ export async function runAgentV2ProductionPipeline(
           latestMessage: message,
           recentMessages,
         })
-        const projection = await selectProducts({
-          category: input.category as Parameters<typeof selectProducts>[0]["category"],
+        let rawResult: SelectProductsToolResult | null = null
+        const selectProductsForCall = (deps.createSelectProductsTool ?? createSelectProductsTool)({
+          onResult: (result) => {
+            rawResult = result
+          },
+        })
+        const projection = await selectProductsForCall({
+          category: input.category as Parameters<typeof selectProductsForCall>[0]["category"],
           message: productToolMessage,
           hairProfile: effectiveHairProfile,
           memoryContext,
           routineItems: effectiveRoutineItems,
           effectiveCareContext,
         })
-        const rawResult =
-          latestSelectProductsResult ??
+        const resultForProjection =
+          rawResult ??
           ({
             projection,
             products: [],
             effectiveHairProfile,
             runtime: {} as SelectProductsToolResult["runtime"],
           } satisfies SelectProductsToolResult)
-        const agentProjection = projectSelectProductsForAgentV2(rawResult, {
+        selectedProductResults.push(resultForProjection)
+        const agentProjection = projectSelectProductsForAgentV2(resultForProjection, {
           includeCareBalanceContext: true,
         })
         selectedProductProjections.push(agentProjection)
@@ -682,7 +696,9 @@ export async function runAgentV2ProductionPipeline(
   const matchedProducts = visibleFailure
     ? []
     : deriveMatchedProducts({ answer, selectedProductResults })
-  const { categoryDecision, engineTrace } = deriveEngineArtifacts(latestSelectProductsResult)
+  const { categoryDecision, engineTrace } = deriveEngineArtifacts(
+    selectedProductResults.at(-1) ?? null,
+  )
   const exposedCategoryDecision = visibleFailure ? undefined : categoryDecision
   const exposedEngineTrace = visibleFailure ? undefined : engineTrace
   const attachmentMode = matchedProducts.length > 0 ? "cards" : "text_only"
