@@ -21,7 +21,9 @@ export function parseArgs(argv = process.argv.slice(2)): CliArgs {
       continue
     }
 
-    const [rawKey, inlineValue] = arg.slice(2).split("=", 2)
+    const equalsIndex = arg.indexOf("=")
+    const rawKey = equalsIndex >= 0 ? arg.slice(2, equalsIndex) : arg.slice(2)
+    const inlineValue = equalsIndex >= 0 ? arg.slice(equalsIndex + 1) : undefined
     if (!rawKey) continue
     if (inlineValue !== undefined) {
       flags.set(rawKey, inlineValue)

@@ -7,6 +7,7 @@ import {
   buildProductIntakeReviewRagContext,
 } from "../src/lib/product-intake/notifications"
 import type { ProductSubmission } from "../src/lib/types"
+import { parseArgs } from "../scripts/product-intake/cli"
 
 const reviewMigration = readFileSync(
   "supabase/migrations/20260617120000_product_intake_review_workflow_functions.sql",
@@ -133,7 +134,17 @@ test("destructive review scripts default to dry-run and require explicit confirm
 
   assert.match(researchScript, /Refusing to update closed submission/)
   assert.match(researchScript, /\.eq\("status", submission\.status\)/)
+  assert.match(researchScript, /\.eq\("updated_at", submission\.updated_at\)/)
+  assert.match(researchScript, /submission\.researched_payload \?\? {}/)
   assert.match(researchScript, /error\?\.message \?\? "no row updated"/)
+})
+
+test("product intake CLI preserves inline flag values containing equals signs", () => {
+  const args = parseArgs(["extra", "--reason=pH=5,5", "--apply"])
+
+  assert.equal(args.flags.get("reason"), "pH=5,5")
+  assert.equal(args.flags.get("apply"), true)
+  assert.deepEqual(args.positional, ["extra"])
 })
 
 function notificationSubmission(

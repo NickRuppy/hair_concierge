@@ -24,6 +24,8 @@ async function loadPayload(path: string) {
 }
 
 function buildDraftFromSubmission(submission: Awaited<ReturnType<typeof loadSubmission>>) {
+  const researchedPayload = submission.researched_payload ?? {}
+
   return {
     draft: {
       product: {
@@ -42,7 +44,7 @@ function buildDraftFromSubmission(submission: Awaited<ReturnType<typeof loadSubm
       sources: [],
       field_rationales: {},
     },
-    final: (submission.researched_payload as { final?: unknown }).final,
+    final: (researchedPayload as { final?: unknown }).final,
   }
 }
 
@@ -87,6 +89,9 @@ async function main() {
       `Refusing to update closed submission ${submission.id} with status ${submission.status}`,
     )
   }
+  if (!submission.updated_at) {
+    throw new Error(`Refusing to update submission ${submission.id} without updated_at guard`)
+  }
 
   const nextStatus = markReady && dryRun.ok ? "ready_for_review" : "researching"
   const { data, error } = await supabase
@@ -98,6 +103,7 @@ async function main() {
     })
     .eq("id", submission.id)
     .eq("status", submission.status)
+    .eq("updated_at", submission.updated_at)
     .in("status", [...OPEN_RESEARCH_STATUSES])
     .select("id")
     .single()
