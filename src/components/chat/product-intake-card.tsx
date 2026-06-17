@@ -5,6 +5,7 @@ import {
   PRODUCT_CATEGORY_DISPLAY_LABELS,
   SUPPORTED_PRODUCT_CATEGORY_KEYS,
 } from "@/lib/product-identity"
+import { Button } from "@/components/ui/button"
 import {
   ProductIntakeBrandProductFields,
   ProductIntakeImageFields,
@@ -30,9 +31,9 @@ type ProductIntakeCardProps = {
 
 export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardProps) {
   const brandListId = useId()
-  const [method, setMethod] = useState<ProductIntakeMethod>("photo")
+  const [method, setMethod] = useState<ProductIntakeMethod>(offer.intake_method ?? "photo")
   const [category, setCategory] = useState<ProductIntakeCategoryKey | "">(offer.category)
-  const [frequency, setFrequency] = useState<ProductFrequency | "">("")
+  const [frequency, setFrequency] = useState<ProductFrequency | "">(offer.frequency_range ?? "")
   const [brandText, setBrandText] = useState(offer.extracted_identity?.brand_text ?? "")
   const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null)
   const [selectedProductLineId, setSelectedProductLineId] = useState<string | null>(null)
@@ -53,6 +54,17 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
   const [busy, setBusy] = useState<ProductIntakeImageKind | "submit" | null>(null)
   const [status, setStatus] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const missingFields = useMemo(() => offer.missing_fields ?? [], [offer.missing_fields])
+  const hasMissingField = (needle: string) =>
+    missingFields.some((field) => field.toLocaleLowerCase("de").includes(needle))
+  const needsBrand = hasMissingField("brand") || hasMissingField("marke")
+  const needsProductName =
+    hasMissingField("product name") ||
+    hasMissingField("product_name") ||
+    hasMissingField("produktname")
+  const needsBarcodeImage = hasMissingField("barcode") || hasMissingField("ean")
+  const needsFrontImage = hasMissingField("front") || hasMissingField("vorderseite")
+  const missingFieldLabels = uniqueMissingFieldLabels(missingFields)
 
   const ready = useMemo(
     () =>
@@ -63,9 +75,40 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
         brandText,
         productName,
         frontImagePath,
+        committedFrontImagePath: offer.committed_front_image_path,
+        barcodeImagePath,
+        committedBarcodeImagePath: offer.committed_barcode_image_path,
+        existingUsageId: offer.existing_usage_id,
+        missingFields,
       }),
-    [brandText, category, frequency, frontImagePath, method, productName],
+    [
+      brandText,
+      barcodeImagePath,
+      category,
+      frequency,
+      frontImagePath,
+      method,
+      missingFields,
+      offer.committed_barcode_image_path,
+      offer.committed_front_image_path,
+      offer.existing_usage_id,
+      productName,
+    ],
   )
+
+  const inputClassName =
+    "w-full rounded-xl border border-border bg-background px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-[var(--brand-plum)]/50 focus:outline-none focus:ring-1 focus:ring-[var(--brand-plum)]/25"
+  const missingInputClassName =
+    "w-full rounded-xl border border-secondary/60 bg-[var(--brand-coral-light)] px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-secondary focus:outline-none focus:ring-1 focus:ring-secondary/25"
+  const categoryClassName = hasMissingField("category") ? missingInputClassName : inputClassName
+  const frequencyClassName =
+    hasMissingField("frequency") || hasMissingField("häufig")
+      ? missingInputClassName
+      : inputClassName
+  const imageFieldClassName =
+    "block rounded-xl border border-border/80 bg-background px-3 py-3 text-sm text-foreground transition-colors"
+  const missingImageFieldClassName =
+    "block rounded-xl border border-secondary/60 bg-[var(--brand-coral-light)] px-3 py-3 text-sm text-foreground transition-colors"
 
   function handleBrandTextChange(value: string) {
     setBrandText(value)
@@ -129,6 +172,8 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
       barcodeImageValidationStatus,
       barcodeImageValidationMetadata,
       sourceConversationId: conversationId,
+      existingUsageId: offer.existing_usage_id,
+      existingSubmissionId: offer.submission_id,
       replaceExistingConfirmed,
     })
 
@@ -172,18 +217,24 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
   }
 
   return (
-    <div className="w-full min-w-0 rounded-xl border border-border bg-background p-3 shadow-sm">
+    <div className="w-full min-w-0 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
       <p className="mb-3 text-sm leading-relaxed text-foreground">
-        Danke für dein Produkt. Wir haben es noch nicht sicher in unserer Datenbank und prüfen es
-        gerne konkret für dich.
+        {offer.reason === "needs_more_info"
+          ? "Wir brauchen noch eine Ergänzung, damit wir dein Produkt sauber prüfen können."
+          : "Danke für dein Produkt. Wir haben es noch nicht sicher in unserer Datenbank und prüfen es gerne konkret für dich."}
       </p>
+      {missingFieldLabels.length > 0 ? (
+        <div className="mb-3 rounded-xl border border-secondary/25 bg-[var(--brand-coral-light)] px-3 py-2 text-xs leading-relaxed text-foreground">
+          Ergänze bitte: {missingFieldLabels.join(", ")}
+        </div>
+      ) : null}
       <ProductIntakeMethodToggle value={method} onChange={setMethod} />
 
       <div className="space-y-3">
         <select
           value={category}
           onChange={(event) => setCategory(event.target.value as ProductIntakeCategoryKey)}
-          className="w-full rounded-lg border border-border bg-muted px-3 py-2 text-sm text-foreground"
+          className={categoryClassName}
         >
           <option value="">Kategorie</option>
           {SUPPORTED_PRODUCT_CATEGORY_KEYS.map((key) => (
@@ -196,7 +247,7 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
         <select
           value={frequency}
           onChange={(event) => setFrequency(event.target.value as ProductFrequency)}
-          className="w-full rounded-lg border border-border bg-muted px-3 py-2 text-sm text-foreground"
+          className={frequencyClassName}
         >
           <option value="">Häufigkeit</option>
           {PRODUCT_FREQUENCY_OPTIONS.map((option) => (
@@ -208,10 +259,15 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
 
         {method === "photo" ? (
           <ProductIntakeImageFields
-            frontReady={Boolean(frontImagePath)}
-            barcodeReady={Boolean(barcodeImagePath)}
+            frontReady={Boolean(frontImagePath || offer.committed_front_image_path)}
+            barcodeReady={Boolean(barcodeImagePath || offer.committed_barcode_image_path)}
             uploading={busy === "front" || busy === "barcode" ? busy : null}
             onUpload={uploadImage}
+            labelClassName={imageFieldClassName}
+            frontLabelClassName={needsFrontImage ? missingImageFieldClassName : imageFieldClassName}
+            barcodeLabelClassName={
+              needsBarcodeImage ? missingImageFieldClassName : imageFieldClassName
+            }
           />
         ) : null}
 
@@ -220,24 +276,54 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
           productName={productName}
           brandOptions={brandOptions}
           brandListId={brandListId}
-          brandPlaceholder={method === "manual" ? "Marke" : "Marke optional"}
-          productPlaceholder={method === "manual" ? "Produktname" : "Produktname optional"}
+          brandPlaceholder={method === "manual" || needsBrand ? "Marke" : "Marke optional"}
+          productPlaceholder={
+            method === "manual" || needsProductName ? "Produktname" : "Produktname optional"
+          }
           onBrandTextChange={handleBrandTextChange}
           onProductNameChange={setProductName}
+          inputClassName={inputClassName}
+          brandInputClassName={needsBrand ? missingInputClassName : inputClassName}
+          productInputClassName={needsProductName ? missingInputClassName : inputClassName}
         />
 
         {error ? <p className="text-xs text-destructive">{error}</p> : null}
         {status ? <p className="text-xs text-emerald-700">{status}</p> : null}
 
-        <button
+        <Button
           type="button"
           onClick={() => submit()}
           disabled={!ready || busy !== null || Boolean(status)}
-          className="quiz-btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
+          variant="cta"
+          className="w-full"
         >
           {busy === "submit" ? "Speichern..." : "Produkt einreichen"}
-        </button>
+        </Button>
       </div>
     </div>
   )
+}
+
+function uniqueMissingFieldLabels(fields: string[]) {
+  const labels = fields.map(formatMissingFieldLabel)
+  return labels.filter((label, index) => labels.indexOf(label) === index)
+}
+
+function formatMissingFieldLabel(field: string) {
+  const normalized = field.toLocaleLowerCase("de")
+  if (normalized.includes("barcode") || normalized.includes("ean")) return "Barcodefoto"
+  if (normalized.includes("front") || normalized.includes("vorderseite")) return "Vorderseitenfoto"
+  if (
+    normalized.includes("product name") ||
+    normalized.includes("product_name") ||
+    normalized.includes("produktname")
+  ) {
+    return "Produktname"
+  }
+  if (normalized.includes("brand") || normalized.includes("marke")) return "Marke"
+  if (normalized.includes("category") || normalized.includes("kategorie")) return "Kategorie"
+  if (normalized.includes("frequency") || normalized.includes("häufig")) {
+    return "Nutzungshäufigkeit"
+  }
+  return field
 }

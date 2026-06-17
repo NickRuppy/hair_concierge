@@ -108,11 +108,13 @@ export function isEligibleForPrimaryRecommendation(
   product: {
     is_active?: boolean | null
     lifecycle_status?: string | null
+    is_chaarlie_recommended?: boolean | null
   },
   outgoingRelationshipTypes: ReadonlySet<ProductRelationshipType | string>,
 ): boolean {
   return (
     product.is_active !== false &&
+    product.is_chaarlie_recommended !== false &&
     (product.lifecycle_status ?? "active") === "active" &&
     !outgoingRelationshipTypes.has("replaced_by") &&
     !outgoingRelationshipTypes.has("add_on_for")
@@ -2293,9 +2295,11 @@ export async function selectBondbuilderProductsWithEngine(params: {
     const { data: relatedProducts, error: relatedProductsError } = await supabase
       .from("products")
       .select(
-        "id,name,brand,description,short_description,category,affiliate_link,image_url,price_eur,currency,purchase_link_status,tags,suitable_thicknesses,suitable_concerns,is_active,lifecycle_status,sort_order,created_at,updated_at",
+        "id,name,brand,description,short_description,category,affiliate_link,image_url,price_eur,currency,purchase_link_status,tags,suitable_thicknesses,suitable_concerns,is_active,lifecycle_status,is_chaarlie_recommended,sort_order,created_at,updated_at",
       )
       .in("id", relatedProductIds)
+      .eq("is_chaarlie_recommended", true)
+      .eq("lifecycle_status", "active")
 
     if (relatedProductsError) {
       console.error(

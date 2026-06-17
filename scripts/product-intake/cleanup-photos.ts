@@ -5,7 +5,7 @@ import { pathToFileURL } from "node:url"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
 const PRODUCT_INTAKE_BUCKET = "product-intake"
-const DEFAULT_TMP_MAX_AGE_HOURS = 24
+const DEFAULT_TMP_MAX_AGE_HOURS = 6
 const SUBMISSION_BATCH_SIZE = 100
 const STORAGE_PAGE_SIZE = 100
 
