@@ -67,6 +67,9 @@ const CURRENT_USE_PHRASE =
 
 const PRODUCT_EVALUATION_PHRASE = /\bwas\s+h(?:ae|ä)ltst\s+du\s+von\b|\bwas\s+haelst\s+du\s+von\b/iu
 
+const PRODUCT_ROUTINE_ADD_PHRASE =
+  /\b(?:f(?:ue|ü)ge|packe|nimm|bau(?:e)?|integrier(?:e)?|erg(?:ae|ä)nz(?:e)?)\b[\s\S]{0,120}\b(?:routine|routinen|pflege|plan)\b|\b(?:routine|routinen|pflege|plan)\b[\s\S]{0,120}\b(?:hinzu|einbauen|integrieren|erg(?:ae|ä)nzen)\b/iu
+
 const GENERIC_CATEGORY_QUESTION =
   /\bwelch(?:er|en|es|e)\b|\bkannst\s+du\s+mir\b.*\bempfehlen\b|\bempfiehlst\s+du\b|\bempfehlung(?:en)?\b/iu
 
@@ -101,6 +104,18 @@ const CATEGORY_STOPWORDS = new Set([
 
 const QUESTION_WORDS = new Set(["welche", "welchen", "welcher", "welches"])
 
+const LEADING_COMMAND_WORDS = new Set([
+  "baue",
+  "bau",
+  "erganze",
+  "ergaenze",
+  "fuge",
+  "fuege",
+  "integriere",
+  "nimm",
+  "packe",
+])
+
 export function normalizeNamedProductForComparison(value: string): string {
   return value
     .toLocaleLowerCase("de-DE")
@@ -128,6 +143,7 @@ export function buildAgentV2NamedProductContext(params: {
   const quotedProductName = extractQuotedProductName(latestMessage)
   const hasCurrentUse = hasCurrentUsePhrasing(latestMessage)
   const hasProductEvaluation = hasProductEvaluationPhrasing(latestMessage)
+  const hasRoutineAdd = hasProductRoutineAddPhrasing(latestMessage)
 
   if (isGenericCategoryQuestion(latestMessage) && !brand && !quotedProductName && !hasCurrentUse) {
     return null
@@ -138,6 +154,7 @@ export function buildAgentV2NamedProductContext(params: {
       quotedProductName,
       hasCurrentUse,
       hasProductEvaluation,
+      hasRoutineAdd,
     })
   ) {
     return null
@@ -191,17 +208,23 @@ function hasProductEvaluationPhrasing(message: string): boolean {
   return PRODUCT_EVALUATION_PHRASE.test(message)
 }
 
+function hasProductRoutineAddPhrasing(message: string): boolean {
+  return PRODUCT_ROUTINE_ADD_PHRASE.test(message)
+}
+
 function hasPositiveNamedProductSignal(params: {
   brand: string | null
   quotedProductName: string | null
   hasCurrentUse: boolean
   hasProductEvaluation: boolean
+  hasRoutineAdd: boolean
 }): boolean {
   return (
     params.brand !== null ||
     params.quotedProductName !== null ||
     params.hasCurrentUse ||
-    params.hasProductEvaluation
+    params.hasProductEvaluation ||
+    params.hasRoutineAdd
   )
 }
 
@@ -241,7 +264,8 @@ function getCapitalizedNameTail(value: string): string | null {
   if (nameTokens.some((token) => QUESTION_WORDS.has(normalizeNamedProductForComparison(token)))) {
     return null
   }
-  return nameTokens.length > 0 ? nameTokens.join(" ") : null
+  const productTokens = dropLeadingCommandWords(nameTokens)
+  return productTokens.length > 0 ? productTokens.join(" ") : null
 }
 
 function getCapitalizedNameHead(value: string): string | null {
@@ -252,7 +276,8 @@ function getCapitalizedNameHead(value: string): string | null {
     if (!isNameToken(token)) break
     nameTokens.push(token)
   }
-  return nameTokens.length > 0 ? nameTokens.join(" ") : null
+  const productTokens = dropLeadingCommandWords(nameTokens)
+  return productTokens.length > 0 ? productTokens.join(" ") : null
 }
 
 function getTokens(value: string): string[] {
@@ -260,6 +285,8 @@ function getTokens(value: string): string[] {
 }
 
 function isNameToken(token: string): boolean {
+  if (token === "&" || token === "+") return true
+
   const firstCharacter = token[0]
   if (!firstCharacter) return false
   if (/\p{N}/u.test(firstCharacter)) return true
@@ -267,6 +294,19 @@ function isNameToken(token: string): boolean {
     firstCharacter === firstCharacter.toLocaleUpperCase("de-DE") &&
     firstCharacter !== firstCharacter.toLocaleLowerCase("de-DE")
   )
+}
+
+function dropLeadingCommandWords(tokens: string[]): string[] {
+  let firstProductTokenIndex = 0
+  while (
+    firstProductTokenIndex < tokens.length &&
+    LEADING_COMMAND_WORDS.has(
+      normalizeNamedProductForComparison(tokens[firstProductTokenIndex] ?? ""),
+    )
+  ) {
+    firstProductTokenIndex += 1
+  }
+  return tokens.slice(firstProductTokenIndex)
 }
 
 function cleanupProductName(value: string): string {

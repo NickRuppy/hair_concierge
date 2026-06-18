@@ -785,7 +785,7 @@ export async function submitProductIntake(
   }
 
   const [catalog, brandCatalogInput, existingUsage] = await Promise.all([
-    params.repository.loadCatalog(),
+    params.repository.loadCatalog({ eligibilityMode: "intake_dedupe" }),
     params.repository.loadBrandResolutionCatalog(),
     params.repository.findUserProductUsage(params.userId, params.input.category),
   ])

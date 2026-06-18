@@ -23,6 +23,7 @@ import {
 } from "@/lib/agent/tools/care-balance-context"
 import { applyProductMemoryConstraints } from "@/lib/chat-runtime/user-memory"
 import type { MatchedProduct } from "@/lib/product-matching/matcher"
+import { isMatchedRoutineUsage } from "@/lib/product-usage/routine-identity"
 import type { UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import type {
   BondbuilderRecommendationMetadata,
@@ -3185,36 +3186,104 @@ async function runCategoryEngine(params: {
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
   runtime: RecommendationEngineRuntime
+  includeProductIds?: string[]
 }): Promise<MatchedProduct[]> {
-  const { category, message, hairProfile, routineItems, runtime } = params
+  const { category, message, hairProfile, routineItems, runtime, includeProductIds } = params
 
   switch (category) {
     case "shampoo":
-      return selectShampooProductsWithEngine({ message, hairProfile, routineItems })
+      return selectShampooProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        includeProductIds,
+      })
     case "conditioner":
-      return selectConditionerProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectConditionerProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+      })
     case "leave_in":
-      return selectLeaveInProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectLeaveInProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+      })
     case "mask":
-      return selectMaskProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectMaskProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+      })
     case "oil":
-      return selectOilProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectOilProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+      })
     case "bondbuilder":
-      return selectBondbuilderProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectBondbuilderProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+      })
     case "deep_cleansing_shampoo":
       return selectDeepCleansingShampooProductsWithEngine({
         message,
         hairProfile,
         routineItems,
         runtime,
+        includeProductIds,
       })
     case "dry_shampoo":
-      return selectDryShampooProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectDryShampooProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+      })
     case "peeling":
-      return selectPeelingProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectPeelingProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+      })
     default:
       unsupportedCategory(String(category))
   }
+}
+
+function ownedProductIdsForCategory(
+  routineItems: PersistenceRoutineItemRow[],
+  category: SelectableProductCategory,
+): string[] {
+  return [
+    ...new Set(
+      routineItems
+        .filter(
+          (item) =>
+            item.category === category &&
+            isMatchedRoutineUsage(item.match_status ?? null) &&
+            typeof item.product_id === "string" &&
+            item.product_id.length > 0,
+        )
+        .map((item) => item.product_id as string),
+    ),
+  ]
 }
 
 function applyShampooActiveOverrides(
@@ -3450,14 +3519,16 @@ export function createSelectProductsTool(
       message,
       effectiveCareContext,
     })
-    const products = await (options.runCategoryEngine ?? runCategoryEngine)({
+    const includeProductIds = ownedProductIdsForCategory(routineItems, category)
+    const engineProducts = await (options.runCategoryEngine ?? runCategoryEngine)({
       category,
       message,
       hairProfile: effectiveHairProfile,
       routineItems,
       runtime,
+      includeProductIds,
     })
-    const constrainedProducts = applyProductMemoryConstraints(products, memoryContext)
+    const constrainedProducts = applyProductMemoryConstraints(engineProducts, memoryContext)
     const projection = projectSelectedProducts(
       constrainedProducts,
       effectiveHairProfile,

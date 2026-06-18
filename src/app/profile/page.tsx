@@ -16,9 +16,14 @@ import { ManageSubscriptionButton } from "@/components/profile/manage-subscripti
 import { formatBillingDate, formatBillingMembershipStatus } from "@/lib/billing/display"
 import { findVisibleBillingSubscriptionForUser } from "@/lib/billing/subscriptions"
 import type { BillingSubscriptionRow } from "@/lib/billing/types"
-import { getVisibleProductUsageItems } from "@/lib/product-usage/shampoo-fallback"
-import { PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
 import type { OnboardingStep } from "@/lib/onboarding/store"
+import {
+  coerceUserProductUsageRows,
+  createProductRows,
+  getProductCompletionLabel,
+  USER_PRODUCT_USAGE_WITH_PRODUCT_SELECT,
+  type UserProductUsageRow,
+} from "@/lib/profile/product-usage-rows"
 import {
   PROFILE_FIELD_CONFIG,
   PROFILE_SECTION_META,
@@ -38,12 +43,7 @@ import {
   SCALP_CONDITION_LABELS,
   SCALP_TYPE_LABELS,
 } from "@/lib/types"
-import {
-  PRODUCT_FREQUENCY_LABELS,
-  fehler,
-  normalizeProductFrequency,
-  type ProductFrequencyInput,
-} from "@/lib/vocabulary"
+import { fehler } from "@/lib/vocabulary"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
@@ -53,13 +53,6 @@ type MemoryApiResponse = {
   entries: UserMemoryEntry[]
 }
 
-type UserProductUsageRow = {
-  id: string
-  category: string
-  product_name: string | null
-  frequency_range: ProductFrequencyInput | string | null
-}
-
 type StructuredField = ProfileFieldConfig & { value: ProfileFieldValue }
 
 type JourneyField = {
@@ -67,15 +60,6 @@ type JourneyField = {
   label: string
   value: ProfileFieldValue
   editTarget: ProfileEditTarget | null
-}
-
-type ProductDetailRow = {
-  key: string
-  category: string
-  categoryLabel: string
-  productName: string | null
-  frequencyLabel: string | null
-  isComplete: boolean
 }
 
 type QuizDraft = {
@@ -110,10 +94,6 @@ type ProfileSectionSummary = {
 const SECTION_META_BY_KEY = Object.fromEntries(
   PROFILE_SECTION_META.map((meta) => [meta.key, meta]),
 ) as Record<ProfileJourneySectionKey, (typeof PROFILE_SECTION_META)[number]>
-
-const PRODUCT_ORDER_INDEX = new Map(
-  PRODUCT_CATEGORY_ORDER.map((category, index) => [category, index]),
-)
 
 const QUIZ_SURFACE_OPTIONS = [
   { value: "smooth", label: "Glatt wie Glas" },
@@ -203,7 +183,7 @@ function createLocalHairProfile(
     density: currentProfile?.density ?? null,
     concerns: currentProfile?.concerns ?? [],
     products_used: currentProfile?.products_used ?? null,
-    shampoo_frequency: null,
+    shampoo_frequency: currentProfile?.shampoo_frequency ?? null,
     heat_styling: currentProfile?.heat_styling ?? null,
     styling_tools: currentProfile?.styling_tools ?? null,
     goals: currentProfile?.goals ?? [],
@@ -262,41 +242,9 @@ function formatNullableDate(value: string | null | undefined): string {
   return formatBillingDate(value)
 }
 
-function createProductRows(rows: UserProductUsageRow[]): ProductDetailRow[] {
-  return getVisibleProductUsageItems(rows)
-    .sort((left, right) => {
-      const leftIndex = PRODUCT_ORDER_INDEX.get(left.category) ?? Number.MAX_SAFE_INTEGER
-      const rightIndex = PRODUCT_ORDER_INDEX.get(right.category) ?? Number.MAX_SAFE_INTEGER
-      return leftIndex - rightIndex
-    })
-    .map((row) => {
-      const productName = row.product_name?.trim() || null
-      const frequency = normalizeProductFrequency(row.frequency_range)
-      const frequencyLabel = frequency ? PRODUCT_FREQUENCY_LABELS[frequency] : null
-
-      return {
-        key: row.id,
-        category: row.category,
-        categoryLabel: PRODUCT_CATEGORY_LABELS[row.category] ?? row.category,
-        productName,
-        frequencyLabel,
-        isComplete: Boolean(productName && frequencyLabel),
-      }
-    })
-}
-
 function getCompletionLabel(filled: number, total: number) {
   if (total === 0 || filled === 0) return "Offen"
   return `${filled}/${total} vollständig`
-}
-
-function getProductCompletionLabel(rows: ProductDetailRow[], onboardingCompleted: boolean) {
-  if (rows.length === 0) {
-    return onboardingCompleted ? "Noch leer" : "Offen"
-  }
-
-  const completeCount = rows.filter((row) => row.isComplete).length
-  return `${completeCount}/${rows.length} vollständig`
 }
 
 function getOpenItemsTitle(count: number, singular: string, plural: string) {
@@ -309,6 +257,17 @@ function SectionStatusBadge({ label }: { label: string }) {
     <Badge
       variant="outline"
       className="border-primary/15 bg-primary/[0.05] px-3 py-1 text-xs font-medium text-primary"
+    >
+      {label}
+    </Badge>
+  )
+}
+
+function ProductReviewStatusBadge({ label }: { label: string }) {
+  return (
+    <Badge
+      variant="outline"
+      className="w-fit border-amber-300/50 bg-amber-50 px-2.5 py-0.5 text-[11px] font-medium text-amber-800"
     >
       {label}
     </Badge>
@@ -610,13 +569,13 @@ export default function ProfilePage() {
       try {
         const { data, error } = await supabase
           .from("user_product_usage")
-          .select("id, category, product_name, frequency_range")
+          .select(USER_PRODUCT_USAGE_WITH_PRODUCT_SELECT)
           .eq("user_id", userId)
 
         if (error) throw error
         if (!active) return
 
-        setProductUsage((data as UserProductUsageRow[] | null) ?? [])
+        setProductUsage(coerceUserProductUsageRows(data))
       } catch (error) {
         console.error("Error loading product usage:", error)
         if (active) {
@@ -731,7 +690,7 @@ export default function ProfilePage() {
   const routineFilled = routineFields.filter((field) => field.value !== null)
   const goalsFilled = goalsFields.filter((field) => field.value !== null)
   const selectedProductCategories = productRows.map((row) => row.categoryLabel)
-  const incompleteProductRows = productRows.filter((row) => !row.isComplete)
+  const incompleteProductRows = productRows.filter((row) => row.needsUserDetails)
 
   const quizStatus = profileLoading
     ? "Wird geladen"
@@ -1484,7 +1443,7 @@ export default function ProfilePage() {
                             <p className="text-sm font-semibold text-[var(--text-heading)]">
                               {row.categoryLabel}
                             </p>
-                            {!row.isComplete ? (
+                            {row.needsUserDetails ? (
                               <p className="mt-1 text-xs text-muted-foreground">
                                 Details fehlen noch
                               </p>
@@ -1497,6 +1456,11 @@ export default function ProfilePage() {
                             )}
                           >
                             {row.productName ?? "Noch offen"}
+                            {row.reviewStatusLabel ? (
+                              <span className="mt-2 block">
+                                <ProductReviewStatusBadge label={row.reviewStatusLabel} />
+                              </span>
+                            ) : null}
                           </p>
                           <p
                             className={cn(
@@ -1539,6 +1503,11 @@ export default function ProfilePage() {
                               >
                                 {row.productName ?? "Noch offen"}
                               </span>
+                              {row.reviewStatusLabel ? (
+                                <span className="mt-2 block">
+                                  <ProductReviewStatusBadge label={row.reviewStatusLabel} />
+                                </span>
+                              ) : null}
                             </p>
                             <p>
                               <span className="text-muted-foreground">Häufigkeit:</span>{" "}

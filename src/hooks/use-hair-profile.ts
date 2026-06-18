@@ -4,6 +4,10 @@ import { useAuth } from "@/providers/auth-provider"
 import { createClient } from "@/lib/supabase/client"
 import type { HairProfile } from "@/lib/types"
 import { hydrateHairProfileForConsumers } from "@/lib/hair-profile/derived"
+import {
+  coerceProductUsageFrequencyRows,
+  USER_PRODUCT_USAGE_ROUTINE_SELECT,
+} from "@/lib/product-usage/shampoo-fallback"
 import { useEffect, useState } from "react"
 
 const supabase = createClient()
@@ -25,12 +29,15 @@ export function useHairProfile() {
           supabase.from("hair_profiles").select("*").eq("user_id", userId).maybeSingle(),
           supabase
             .from("user_product_usage")
-            .select("category, product_name, frequency_range")
+            .select(USER_PRODUCT_USAGE_ROUTINE_SELECT)
             .eq("user_id", userId),
         ])
 
         setHairProfile(
-          hydrateHairProfileForConsumers(profile as HairProfile | null, routineItems ?? []),
+          hydrateHairProfileForConsumers(
+            profile as HairProfile | null,
+            coerceProductUsageFrequencyRows(routineItems),
+          ),
         )
       } catch (err) {
         console.error("Error loading hair profile:", err)

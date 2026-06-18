@@ -25,6 +25,8 @@ function createProduct(id: string, overrides: Partial<Product> = {}): Product {
     suitable_thicknesses: ["fine", "normal", "coarse"],
     suitable_concerns: ["protein", "feuchtigkeit"],
     is_active: true,
+    lifecycle_status: "active",
+    is_chaarlie_recommended: true,
     sort_order: 0,
     created_at: "2026-05-03T00:00:00.000Z",
     updated_at: "2026-05-03T00:00:00.000Z",
@@ -54,6 +56,32 @@ test("deterministic product ranking keeps legacy suitability arrays as ranking s
     ["exact", "spec-fit"],
   )
   assert.equal(ranked[0].combined_score, 1)
+  assert.equal(ranked[1].combined_score, 0)
+})
+
+test("deterministic product ranking preserves explicitly included owned candidates beyond count", () => {
+  const catalogFit = createProduct("catalog-fit", {
+    suitable_thicknesses: ["fine"],
+    suitable_concerns: ["protein"],
+  })
+  const ownedCandidate = createProduct("owned-candidate", {
+    is_chaarlie_recommended: false,
+    suitable_thicknesses: [],
+    suitable_concerns: [],
+    sort_order: 99,
+  })
+
+  const ranked = rankProductsForDeterministicMatch([catalogFit, ownedCandidate], {
+    thickness: "fine",
+    concerns: ["protein"],
+    count: 1,
+    includeProductIds: ["owned-candidate"],
+  })
+
+  assert.deepEqual(
+    ranked.map((product) => product.id),
+    ["catalog-fit", "owned-candidate"],
+  )
   assert.equal(ranked[1].combined_score, 0)
 })
 

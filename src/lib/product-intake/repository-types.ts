@@ -80,8 +80,14 @@ export type ProductIntakeSubmissionRow = {
   updated_at?: string
 }
 
+export type ProductIntakeCatalogEligibilityMode = "general_recommendation" | "intake_dedupe"
+
+export type ProductIntakeCatalogLoadOptions = {
+  eligibilityMode?: ProductIntakeCatalogEligibilityMode
+}
+
 export type ProductIntakeRepository = {
-  loadCatalog: () => Promise<ProductIntakeCatalog>
+  loadCatalog: (params?: ProductIntakeCatalogLoadOptions) => Promise<ProductIntakeCatalog>
   loadBrandResolutionCatalog: () => Promise<BrandResolutionCatalogInput>
   findUserProductUsage: (
     userId: string,

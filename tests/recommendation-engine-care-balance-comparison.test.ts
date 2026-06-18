@@ -51,6 +51,49 @@ test("runtime keeps legacy planner authoritative while CareBalance also detects 
   assert.ok(hasPlanStep(runtime.legacyPlanComparison!.projectedPlan, "conditioner", "add"))
 })
 
+test("runtime preserves matched and pending routine product identity in effective context", () => {
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(LOW_DAMAGE_PROFILE, [
+    {
+      category: "conditioner",
+      product_name: "User Conditioner",
+      frequency_range: "weekly_3_4x",
+      product_id: "conditioner-product-id",
+      product_submission_id: null,
+      match_status: "matched",
+    },
+    {
+      category: "mask",
+      product_name: "Pending Mask",
+      frequency_range: "weekly_1x",
+      product_id: null,
+      product_submission_id: "mask-submission-id",
+      match_status: "pending_review",
+    },
+  ])
+
+  assert.equal(
+    runtime.effectiveContext.normalized.routineInventory.conditioner?.productId,
+    "conditioner-product-id",
+  )
+  assert.equal(
+    runtime.effectiveContext.normalized.routineInventory.conditioner?.productSubmissionId,
+    null,
+  )
+  assert.equal(
+    runtime.effectiveContext.normalized.routineInventory.conditioner?.matchStatus,
+    "matched",
+  )
+  assert.equal(runtime.effectiveContext.normalized.routineInventory.mask?.productId, null)
+  assert.equal(
+    runtime.effectiveContext.normalized.routineInventory.mask?.productSubmissionId,
+    "mask-submission-id",
+  )
+  assert.equal(
+    runtime.effectiveContext.normalized.routineInventory.mask?.matchStatus,
+    "pending_review",
+  )
+})
+
 test("runtime side-by-side detects high-priority missing bondbuilder in legacy and CareBalance", () => {
   const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
 

@@ -174,6 +174,20 @@ function selectProductsToolCall(
   }
 }
 
+function lookupProductCandidateToolCall() {
+  return {
+    name: "lookup_product_candidate",
+    call_id: "call_lookup",
+    arguments: {
+      category: "shampoo",
+      brand_text: "Brand",
+      product_name_text: "Test Shampoo",
+      reason: "User asks whether their own named product suits them.",
+      evidence_quote: "Test Shampoo",
+    },
+  }
+}
+
 function routineToolCall(
   overrides: Partial<{
     objective: string | null
@@ -428,6 +442,244 @@ test("validator accepts known product ids", () => {
   const result = validateAgentV2FinalAnswer(baseAnswer, baseValidationContext)
 
   assert.equal(result.ok, true)
+})
+
+test("validator blocks named product detail answers when lookup was not called", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Test Shampoo",
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "Passt Test Shampoo zu mir?",
+      recentEvidenceText: "Passt Test Shampoo zu mir?",
+      toolCallHistory: [
+        selectProductsToolCall({
+          product_request_kind: "product_detail",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "Test Shampoo",
+        }),
+      ],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_required"))
+})
+
+test("validator does not require unavailable product lookup when intake is disabled", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Test Shampoo",
+      }),
+    },
+    {
+      ...baseValidationContext,
+      productIntakeEnabled: false,
+      latestUserMessage: "Passt Test Shampoo zu mir?",
+      recentEvidenceText: "Passt Test Shampoo zu mir?",
+      toolCallHistory: [
+        selectProductsToolCall({
+          product_request_kind: "product_detail",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "Test Shampoo",
+        }),
+      ],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+      },
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_required"),
+    false,
+  )
+})
+
+test("validator does not require lookup for broad product recommendations without a concrete product", () => {
+  const result = validateAgentV2FinalAnswer(baseAnswer, baseValidationContext)
+
+  assert.equal(result.ok, true)
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_required"),
+    false,
+  )
+})
+
+for (const status of ["ambiguous", "insufficient_identity", "not_found", "unsupported_category"]) {
+  test(`validator blocks product recommendations after ${status} product lookup`, () => {
+    const result = validateAgentV2FinalAnswer(baseAnswer, {
+      ...baseValidationContext,
+      productLookupResults: [
+        {
+          status,
+          category: "shampoo",
+          product: null,
+        },
+      ],
+    })
+
+    assert.equal(result.ok, false)
+    assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+  })
+}
+
+test("validator allows product recommendations after exact product lookup", () => {
+  const result = validateAgentV2FinalAnswer(baseAnswer, {
+    ...baseValidationContext,
+    toolCallHistory: [...baseValidationContext.toolCallHistory, lookupProductCandidateToolCall()],
+    productLookupResults: [
+      {
+        status: "found_exact",
+        category: "shampoo",
+        product: { id: "prod_1", name: "Test Shampoo" },
+      },
+    ],
+  })
+
+  assert.equal(result.ok, true)
+})
+
+test("validator allows claims for exact lookup products when another lookup is unresolved", () => {
+  const result = validateAgentV2FinalAnswer(baseAnswer, {
+    ...baseValidationContext,
+    toolCallHistory: [...baseValidationContext.toolCallHistory, lookupProductCandidateToolCall()],
+    productLookupResults: [
+      {
+        status: "found_exact",
+        category: "shampoo",
+        product: { id: "prod_1", name: "Test Shampoo" },
+      },
+      {
+        status: "not_found",
+        category: "conditioner",
+        product: null,
+      },
+    ],
+  })
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+  )
+})
+
+test("validator blocks named product detail prose after unresolved product lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Test Shampoo",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+        used_product_tool: false,
+        product_ids: [],
+      },
+      payload: {
+        user_facing_answer_de: "Test Shampoo passt eher gut zu deinem Profil.",
+        category_or_topic: "shampoo",
+        key_points_de: ["Es passt eher gut zu deinem Profil."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      toolCallHistory: [...baseValidationContext.toolCallHistory, lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+})
+
+test("validator allows constraint-blocked deferral after unresolved product lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "constraint_blocked",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Test Shampoo",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+        used_product_tool: false,
+        product_ids: [],
+      },
+      payload: {
+        user_facing_answer_de: "Ich habe Test Shampoo noch nicht als verifizierten Katalogtreffer.",
+        blocking_constraints: ["product_not_verified"],
+        safe_alternative_de: "Du kannst es zur Produktprüfung hinzufügen.",
+      },
+    },
+    {
+      ...baseValidationContext,
+      toolCallHistory: [...baseValidationContext.toolCallHistory, lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+      },
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+  )
 })
 
 test("validator accepts social and domain-boundary answers when gate-consistent", () => {

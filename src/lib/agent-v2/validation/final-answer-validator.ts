@@ -28,6 +28,7 @@ export interface AgentV2FinalAnswerValidationContext {
     valid_product_ids?: readonly string[]
     products?: readonly { product_id?: string; name?: string }[]
   }[]
+  productLookupResults?: readonly AgentV2ProductLookupValidationResult[]
   routineProjections: readonly {
     routine_layer?: AgentV2RoutineLayer
     visible_steps?: readonly { step_id?: string }[]
@@ -45,6 +46,13 @@ export interface AgentV2FinalAnswerValidationContext {
   knownHardRuleIds?: readonly string[]
   turnGate?: AgentV2TurnGateResult | null
   namedProductContext?: AgentV2NamedProductContext | null
+  productIntakeEnabled?: boolean
+}
+
+export interface AgentV2ProductLookupValidationResult {
+  status: string
+  category?: string | null
+  product?: { id?: string; name?: string } | null
 }
 
 export interface AgentV2FinalAnswerValidationResult {
@@ -93,6 +101,8 @@ export function validateAgentV2FinalAnswer(
   validateKnownProductIds(terminalAnswer, context, findings)
   validateKnownRoutineStepIds(terminalAnswer, context, findings)
   validateProductToolRequired(terminalAnswer, context, findings)
+  validateNamedProductLookupRequired(terminalAnswer, context, findings)
+  validateProductLookupResultClaims(terminalAnswer, context, findings)
   validateNamedProductDetailAnswer(terminalAnswer, context, findings)
   validateRoutineToolRequired(terminalAnswer, context, findings)
   validateRoutineThreadContinuity(terminalAnswer, context, findings)
@@ -191,6 +201,12 @@ const BUILD_ROUTINE_REQUIRED_ARGUMENTS = [
   "mutation_kind",
   "evidence_quote",
 ] as const
+const UNRESOLVED_PRODUCT_LOOKUP_STATUSES = new Set([
+  "ambiguous",
+  "insufficient_identity",
+  "not_found",
+  "unsupported_category",
+])
 
 const ALWAYS_REQUIRED_GUIDANCE_PACKAGE_IDS = [
   "base.advisor_rules.v1",
@@ -1133,6 +1149,93 @@ function validateProductToolRequired(
       severity: "block",
     })
   }
+}
+
+function validateNamedProductLookupRequired(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+  errors: AgentV2ValidationError[],
+): void {
+  const namedProductContext = context.namedProductContext
+  if (!namedProductContext?.plausible_exact_name) return
+  if (context.productIntakeEnabled === false) return
+
+  const hasLookupToolCall = context.toolCallHistory.some(
+    (call) => call.name === "lookup_product_candidate",
+  )
+  if (hasLookupToolCall) return
+  if (!isNamedProductLookupTurn(answer)) return
+  if (!makesNamedProductSpecificFinalAnswer(answer)) return
+
+  errors.push({
+    validator_id: "product_lookup_required",
+    message:
+      "Named-product detail, suitability, or routine-add answers require lookup_product_candidate before product-specific final claims.",
+    severity: "block",
+  })
+}
+
+function validateProductLookupResultClaims(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+  errors: AgentV2ValidationError[],
+): void {
+  const lookupResults = context.productLookupResults ?? []
+  const unresolvedLookupResults = lookupResults.filter((result) =>
+    UNRESOLVED_PRODUCT_LOOKUP_STATUSES.has(result.status),
+  )
+  if (unresolvedLookupResults.length === 0) {
+    return
+  }
+
+  const payloadProductIds = extractPayloadProductIds(answer)
+  const claimedProductIds = [
+    ...new Set([...answer.tool_grounding.product_ids, ...payloadProductIds]),
+  ].filter((id) => id.trim().length > 0)
+  const exactLookupProductIds = new Set(
+    lookupResults
+      .filter((result) => result.status === "found_exact" && result.product?.id)
+      .map((result) => result.product?.id as string),
+  )
+  if (
+    claimedProductIds.length > 0 &&
+    claimedProductIds.every((productId) => exactLookupProductIds.has(productId))
+  ) {
+    return
+  }
+
+  const makesProductSpecificClaim =
+    answer.answer_mode === "product_recommendation" ||
+    (answer.answer_mode === "general_advice" && isNamedProductLookupTurn(answer)) ||
+    answer.answer_mode === "routine" ||
+    answer.tool_grounding.product_ids.length > 0 ||
+    payloadProductIds.length > 0
+
+  if (!makesProductSpecificClaim) return
+
+  errors.push({
+    validator_id: "product_lookup_unresolved",
+    message: `Product-specific claims are blocked after lookup_product_candidate returned unresolved status: ${unresolvedLookupResults
+      .map((result) => result.status)
+      .join(", ")}.`,
+    severity: "block",
+  })
+}
+
+function isNamedProductLookupTurn(answer: AgentV2TerminalAnswer): boolean {
+  return (
+    PRODUCT_TOOL_REQUEST_KINDS.has(answer.request_interpretation.product_request_kind) ||
+    ROUTINE_TOOL_INTENTS.has(answer.request_interpretation.routine_intent)
+  )
+}
+
+function makesNamedProductSpecificFinalAnswer(answer: AgentV2TerminalAnswer): boolean {
+  return (
+    answer.answer_mode === "product_recommendation" ||
+    answer.answer_mode === "routine" ||
+    answer.answer_mode === "general_advice" ||
+    answer.answer_mode === "constraint_blocked"
+  )
 }
 
 function validateNamedProductDetailAnswer(

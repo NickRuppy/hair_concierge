@@ -5,6 +5,12 @@ import { DEEP_CLEANSING_SHAMPOO_DB_CATEGORIES } from "@/lib/deep-cleansing-shamp
 import { DRY_SHAMPOO_DB_CATEGORIES } from "@/lib/dry-shampoo/constants"
 import { OIL_DB_CATEGORIES, type OilSubtype } from "@/lib/oil/constants"
 import { PEELING_DB_CATEGORIES } from "@/lib/peeling/constants"
+import {
+  buildProductCandidateScope,
+  GENERAL_RECOMMENDATION_PRODUCT_SQL_FILTER,
+  isIncludedProductCandidate,
+  isProductEligibleForMode,
+} from "@/lib/product-catalog/eligibility"
 import type { Product, ProductCategory, ShampooBucket } from "@/lib/types"
 
 export interface MatchedProduct extends Product {
@@ -32,6 +38,7 @@ export interface ProductMatchParams {
   concerns?: string[] // already-mapped product concern codes
   category?: ProductCategory
   count?: number
+  includeProductIds?: string[]
 }
 
 export interface ShampooMatchParams {
@@ -94,11 +101,7 @@ function categoryMatches(product: Product, categoryFilter: string[] | null): boo
 }
 
 export function isGloballyRecommendableProduct(product: Product): boolean {
-  return (
-    product.is_active !== false &&
-    product.is_chaarlie_recommended !== false &&
-    (product.lifecycle_status ?? "active") === "active"
-  )
+  return isProductEligibleForMode(product, "general_recommendation")
 }
 
 function scoreProduct(
@@ -142,12 +145,27 @@ function strictCandidateWindow(count: number): number {
 
 export function rankProductsForDeterministicMatch(
   products: Product[],
-  params: Pick<ProductMatchParams, "thickness" | "concerns" | "count">,
+  params: Pick<ProductMatchParams, "thickness" | "concerns" | "count" | "includeProductIds">,
 ): MatchedProduct[] {
-  return products
+  const count = params.count ?? 5
+  const candidateScope = buildProductCandidateScope(params.includeProductIds)
+  const ranked = products
     .map((product) => asMatchedProduct(product, scoreProduct(product, params)))
     .sort(sortMatchedProducts)
-    .slice(0, params.count ?? 5)
+
+  if (candidateScope.includedProductIds.size === 0) return ranked.slice(0, count)
+
+  const result: MatchedProduct[] = []
+  let generalCount = 0
+  for (const product of ranked) {
+    const isIncludedProduct = isIncludedProductCandidate(product, candidateScope)
+    if (!isIncludedProduct && generalCount >= count) continue
+
+    result.push(product)
+    if (!isIncludedProduct) generalCount += 1
+  }
+
+  return result
 }
 
 /**
@@ -158,7 +176,7 @@ export function rankProductsForDeterministicMatch(
  * Structured category/spec logic owns final fit and safety decisions.
  */
 export async function matchProducts(params: ProductMatchParams): Promise<MatchedProduct[]> {
-  const { thickness, concerns = [], category, count = 5 } = params
+  const { thickness, concerns = [], category, count = 5, includeProductIds = [] } = params
 
   try {
     const supabase = createAdminClient()
@@ -167,9 +185,12 @@ export async function matchProducts(params: ProductMatchParams): Promise<Matched
     let query = supabase
       .from("products")
       .select("*")
-      .eq("is_active", true)
-      .eq("is_chaarlie_recommended", true)
-      .eq("lifecycle_status", "active")
+      .eq("is_active", GENERAL_RECOMMENDATION_PRODUCT_SQL_FILTER.is_active)
+      .eq(
+        "is_chaarlie_recommended",
+        GENERAL_RECOMMENDATION_PRODUCT_SQL_FILTER.is_chaarlie_recommended,
+      )
+      .eq("lifecycle_status", GENERAL_RECOMMENDATION_PRODUCT_SQL_FILTER.lifecycle_status)
       .order("sort_order", { ascending: true })
       .order("price_eur", { ascending: true, nullsFirst: false })
 
@@ -184,15 +205,51 @@ export async function matchProducts(params: ProductMatchParams): Promise<Matched
       return []
     }
 
-    return rankProductsForDeterministicMatch((data as ProductRow[]) ?? [], {
+    let products = ((data as ProductRow[]) ?? []).filter((product) =>
+      isProductEligibleForMode(product, "general_recommendation"),
+    )
+
+    if (includeProductIds.length > 0) {
+      let ownedQuery = supabase
+        .from("products")
+        .select("*")
+        .in("id", [...new Set(includeProductIds)])
+        .eq("is_active", true)
+        .eq("lifecycle_status", GENERAL_RECOMMENDATION_PRODUCT_SQL_FILTER.lifecycle_status)
+
+      if (categoryFilter) {
+        ownedQuery = ownedQuery.in("category", categoryFilter)
+      }
+
+      const { data: ownedData, error: ownedError } = await ownedQuery
+      if (ownedError) {
+        console.error("Error loading owned products for assessment:", ownedError)
+      } else {
+        products = dedupeProductsById([...products, ...((ownedData as ProductRow[]) ?? [])])
+      }
+    }
+
+    return rankProductsForDeterministicMatch(products, {
       thickness,
       concerns,
       count,
+      includeProductIds,
     })
   } catch (error) {
     console.error("Product matching failed:", error)
     return []
   }
+}
+
+function dedupeProductsById<T extends Product>(products: T[]): T[] {
+  const seen = new Set<string>()
+  const result: T[] = []
+  for (const product of products) {
+    if (seen.has(product.id)) continue
+    seen.add(product.id)
+    result.push(product)
+  }
+  return result
 }
 
 /**

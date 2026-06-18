@@ -22,6 +22,9 @@ function inventoryItem(
     present,
     productName: present ? `${category} product` : null,
     frequencyBand,
+    productId: null,
+    productSubmissionId: null,
+    matchStatus: null,
   }
 }
 

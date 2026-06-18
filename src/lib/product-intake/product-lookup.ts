@@ -14,6 +14,10 @@ import {
   type ProductIntakeMatchCandidate,
 } from "@/lib/product-intake/product-matching"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
+import {
+  isProductEligibleForMode,
+  productIsChaarlieRecommended,
+} from "@/lib/product-catalog/eligibility"
 import type { ProductIntakeCategoryKey, ProductIntakeOffer } from "@/lib/types"
 
 export type ProductLookupCatalog = ProductIntakeCatalog
@@ -54,6 +58,7 @@ export type LookupProductCandidateParams = {
   catalog: ProductLookupCatalog
   brandCatalog?: BrandResolutionCatalogInput | null
   offerId?: string
+  eligibilityMode?: "user_visible" | "intake_dedupe"
 }
 
 const SUPPORTED_CATEGORY_SET = new Set<string>(SUPPORTED_PRODUCT_CATEGORY_KEYS)
@@ -114,7 +119,21 @@ function productCleanName(product: ProductIntakeCatalogProduct): string {
 }
 
 function productChaarlieRecommended(product: ProductIntakeCatalogProduct): boolean | null {
-  return product.isChaarlieRecommended ?? product.is_chaarlie_recommended ?? null
+  return productIsChaarlieRecommended(product)
+}
+
+function lookupCatalogForEligibilityMode(
+  catalog: ProductLookupCatalog,
+  mode: NonNullable<LookupProductCandidateParams["eligibilityMode"]>,
+): ProductLookupCatalog {
+  const eligibilityMode = mode === "intake_dedupe" ? "intake_dedupe" : "general_recommendation"
+
+  return {
+    ...catalog,
+    products: catalog.products.filter((product) =>
+      isProductEligibleForMode(product, eligibilityMode),
+    ),
+  }
 }
 
 function toLookupProduct(product: ProductIntakeCatalogProduct): ProductLookupProduct {
@@ -275,7 +294,7 @@ export function lookupProductCandidate(params: LookupProductCandidateParams): Pr
       cleanProductName,
       productName: productNameText,
     },
-    params.catalog,
+    lookupCatalogForEligibilityMode(params.catalog, params.eligibilityMode ?? "user_visible"),
   )
 
   if (match.status === "matched" && match.matchedProduct) {
