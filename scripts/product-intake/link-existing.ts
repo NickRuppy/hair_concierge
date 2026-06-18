@@ -6,6 +6,7 @@ import {
   printJson,
   requireFlag,
 } from "./cli"
+import { flushProductIntakeSentry } from "@/lib/observability/product-intake"
 import { linkExistingProduct, notifyReviewResult } from "./review-actions"
 
 async function main() {
@@ -56,7 +57,8 @@ async function main() {
   })
 }
 
-main().catch((error) => {
+main().catch(async (error) => {
   console.error(error instanceof Error ? error.message : error)
+  await flushProductIntakeSentry()
   process.exitCode = 1
 })
