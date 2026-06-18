@@ -10,6 +10,7 @@ import { updateAgentV2ProductionRoutineThreadContext } from "../src/lib/agent-v2
 import { selectGuidancePackageIds } from "../src/lib/agent-v2/tools/guidance-tool"
 import { validateAgentV2FinalAnswer } from "../src/lib/agent-v2/validation/final-answer-validator"
 import {
+  type AgentV2CareCategory,
   AgentV2TerminalAnswerSchema,
   type AgentV2RoutineThreadContext,
 } from "../src/lib/agent-v2/contracts"
@@ -559,7 +560,7 @@ function terminalClarification(call_id: string) {
     pending_followup_action: null,
     payload: {
       user_facing_answer_de:
-        "Ich kann dir helfen. Meinst du eine konkrete Produktempfehlung oder eher eine allgemeine Einordnung?",
+        "Meinst du eine konkrete Produktempfehlung oder eher eine allgemeine Einordnung?",
       question_de: "Meinst du eine Produktempfehlung oder eine allgemeine Einordnung?",
       missing_keys: ["request_focus"],
     },
@@ -726,21 +727,25 @@ function terminalBondbuilderCategoryEducation(call_id: string) {
   })
 }
 
-function terminalProductRecommendation(call_id: string, product_ids: string[]) {
+function terminalProductRecommendation(
+  call_id: string,
+  product_ids: string[],
+  category: AgentV2CareCategory = "conditioner",
+) {
   return terminalCall(call_id, {
     ...terminalGeneralAdviceArguments(),
     answer_mode: "product_recommendation",
     request_interpretation: requestInterpretation({
       primary_intent: "product_recommendation",
       product_request_kind: "specific_products",
-      care_category: "conditioner",
+      care_category: category,
       requested_product_count: null,
       count_policy: "default",
       evidence_quote: "Welches Produkt passt",
     }),
     tool_grounding: {
       ...terminalGeneralAdviceArguments().tool_grounding,
-      used_guidance_package_ids: requiredGuidanceForAnswer("product_recommendation", "conditioner"),
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_recommendation", category),
       used_product_tool: true,
       product_ids,
     },
@@ -2530,7 +2535,10 @@ test("AgentV2 short confirmation continues pending product recommendation offer"
     ["load_advisor_guidance", "select_products"],
   )
   assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
-  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_action_not_authorized")
+  assert.equal(
+    result.trace.blocked_tool_calls[0]?.reason,
+    "pending_product_recommendation_tool_not_allowed",
+  )
   assert.equal(result.final_answer.answer_mode, "product_recommendation")
   assert.equal(result.final_answer.pending_followup_action, null)
   assert.equal(
@@ -2590,7 +2598,17 @@ test("AgentV2 short confirmation continues pending advisor response offer withou
       categories: ["mask"],
       routine_layer: "basics",
     }),
-    functionCall("call_2", "build_or_fix_routine", {
+    functionCall("call_2", "select_products", {
+      category: "mask",
+      constraints: ["Maske erklären"],
+      count_policy: "default",
+      evidence_quote: "gerne",
+      product_request_kind: "specific_products",
+      reason: "Incorrectly treating a non-mutating explanation confirmation as product request.",
+      requested_product_count: 3,
+      user_request: "Maske erklären",
+    }),
+    functionCall("call_3", "build_or_fix_routine", {
       objective: "fix_routine",
       requested_layer: "basics",
       requested_category: "mask",
@@ -2599,9 +2617,10 @@ test("AgentV2 short confirmation continues pending advisor response offer withou
       mutation_kind: "add_step",
       evidence_quote: "gerne",
     }),
-    terminalAdvisorResponseNoOffer("call_3"),
+    terminalAdvisorResponseNoOffer("call_4"),
   ])
   let buildRoutineCalled = false
+  let selectProductsCalled = false
 
   const previousRoutineThreadContext: AgentV2RoutineThreadContext = {
     active: true,
@@ -2634,6 +2653,10 @@ test("AgentV2 short confirmation continues pending advisor response offer withou
     currentRoutineLayer: "basics",
     tools: {
       ...fakeAgentV2Tools(),
+      select_products: async () => {
+        selectProductsCalled = true
+        return { valid_product_ids: [] }
+      },
       build_or_fix_routine: async () => {
         buildRoutineCalled = true
         return { visible_steps: [] }
@@ -2642,12 +2665,21 @@ test("AgentV2 short confirmation continues pending advisor response offer withou
   })
 
   assert.equal(buildRoutineCalled, false)
+  assert.equal(selectProductsCalled, false)
   assert.deepEqual(
     result.trace.tool_calls.map((call) => call.name),
     ["load_advisor_guidance"],
   )
-  assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
-  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_action_not_authorized")
+  assert.equal(result.trace.blocked_tool_calls[0]?.name, "select_products")
+  assert.equal(
+    result.trace.blocked_tool_calls[0]?.reason,
+    "pending_advisor_response_tool_not_allowed",
+  )
+  assert.equal(result.trace.blocked_tool_calls[1]?.name, "build_or_fix_routine")
+  assert.equal(
+    result.trace.blocked_tool_calls[1]?.reason,
+    "pending_advisor_response_tool_not_allowed",
+  )
   assert.equal(result.final_answer.answer_mode, "general_advice")
   assert.equal(result.final_answer.request_interpretation.routine_intent, "none")
   assert.equal(result.final_answer.pending_followup_action, null)
@@ -2665,6 +2697,73 @@ test("AgentV2 short confirmation continues pending advisor response offer withou
     visibleFailure: false,
   })
   assert.equal(nextRoutineThreadContext.pending_followup_action, null)
+})
+
+test("AgentV2 repair stays terminal-only when advisor confirmation forbids product tools", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["mask"],
+      routine_layer: "basics",
+    }),
+    terminalProductRecommendation("call_2", ["mask_1"], "mask"),
+    terminalAdvisorResponseNoOffer("call_3"),
+  ])
+  let selectProductsCalled = false
+
+  const previousRoutineThreadContext: AgentV2RoutineThreadContext = {
+    active: true,
+    current_layer: "basics",
+    last_answer_mode: "general_advice",
+    last_routine_categories: ["mask"],
+    last_user_goal: "Maske einordnen.",
+    summary_de: "Assistant offered a non-mutating mask explanation.",
+    pending_followup_action: {
+      kind: "advisor_response",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: null,
+      source: "assistant_offer",
+    },
+    visible_steps: [],
+  }
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "gerne",
+    recentMessages: [
+      {
+        role: "assistant",
+        content: "Ich kann dir kurz erklären, wann eine Maske sinnvoll ist.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    routineThreadContext: previousRoutineThreadContext,
+    currentRoutineLayer: "basics",
+    tools: {
+      ...fakeAgentV2Tools(),
+      select_products: async () => {
+        selectProductsCalled = true
+        return { valid_product_ids: [] }
+      },
+    },
+  })
+
+  assert.equal(selectProductsCalled, false)
+  assert.equal(result.trace.bounded_repair_kind, "terminal_only")
+  assert.equal(result.trace.repair_attempts[0]?.reason, "terminal_only")
+  assert.equal(
+    result.trace.repair_attempts[0]?.validation_errors.some(
+      (error) => error.validator_id === "product_tool_required",
+    ),
+    true,
+  )
+  assert.equal(
+    result.trace.blocked_tool_calls.some((call) => call.name === "select_products"),
+    false,
+  )
+  assert.equal(result.final_answer.answer_mode, "general_advice")
+  assert.equal(result.trace.validation_errors.length, 0)
 })
 
 test("AgentV2 runtime blocks routine tool permission for short confirmations without pending follow-up action", async () => {
@@ -4366,6 +4465,83 @@ test("AgentV2 runtime passes structured validation repair details back to the mo
   assert.match(serializedRepairInput, /rejected_value/)
   assert.match(serializedRepairInput, /suggested_value/)
   assert.match(serializedRepairInput, /Was hilft gegen Frizz bei meinem Haarprofil/)
+})
+
+test("AgentV2 runtime repairs visible follow-up offers without hidden pending state", async () => {
+  const badFollowupOfferAnswer = terminalGeneralAdviceWithOverrides("call_1", {
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Frizz",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+      used_product_tool: false,
+      product_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Gegen Frizz hilft bei deinem Profil vor allem ein leichtes Leave-in in den Längen. Ich erkläre dir die Anwendung gerne.",
+      category_or_topic: "leave_in",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+    pending_followup_action: null,
+  })
+  const repairedAnswer = terminalGeneralAdviceWithOverrides("call_2", {
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Frizz",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+      used_product_tool: false,
+      product_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Gegen Frizz hilft bei deinem Profil vor allem ein leichtes Leave-in in den Längen.",
+      category_or_topic: "leave_in",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+    pending_followup_action: null,
+  })
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_guidance", {
+      answer_mode_hint: "general_advice",
+      categories: ["leave_in"],
+    }),
+    badFollowupOfferAnswer,
+    repairedAnswer,
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Frizz",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.final_answer.answer_mode, "general_advice")
+  if (result.final_answer.answer_mode === "general_advice") {
+    assert.equal(result.final_answer.payload.next_step_offer_de, null)
+  }
+  const repairInput = getInputItems(client.requests[2])
+  const serializedRepairInput = JSON.stringify(repairInput)
+  assert.match(serializedRepairInput, /pending_followup_action_missing/)
+  assert.match(serializedRepairInput, /do not repeat or rephrase a confirmable next-step offer/)
 })
 
 test("AgentV2 runtime sanitizes evidence metadata after one failed repair when answer is otherwise valid", async () => {

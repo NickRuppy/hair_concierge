@@ -1743,11 +1743,26 @@ function readNextStepOffer(answer: AgentV2TerminalAnswer): string | null {
   return typeof offer === "string" && offer.trim().length > 0 ? offer.trim() : null
 }
 
+function readVisibleFollowupOffer(answer: AgentV2TerminalAnswer): string | null {
+  const nextStepOffer = readNextStepOffer(answer)
+  const proseOffer = extractConfirmableFollowupOfferFromVisibleProse(
+    readUserFacingAnswer(answer.payload),
+  )
+  const nextStepKind = classifyPendingFollowupOfferKind(nextStepOffer)
+  const proseKind = classifyPendingFollowupOfferKind(proseOffer)
+
+  if (proseOffer && proseKind && proseKind !== nextStepKind) return proseOffer
+  if (nextStepOffer && (nextStepKind || isConfirmableFollowupOffer(nextStepOffer))) {
+    return nextStepOffer
+  }
+  return proseOffer ?? nextStepOffer
+}
+
 function validatePendingFollowupAction(
   answer: AgentV2TerminalAnswer,
   errors: AgentV2ValidationError[],
 ): void {
-  const nextStepOffer = readNextStepOffer(answer)
+  const nextStepOffer = readVisibleFollowupOffer(answer)
   const expectedOfferKind = classifyPendingFollowupOfferKind(nextStepOffer)
   const hasConfirmableOffer =
     Boolean(expectedOfferKind) || isConfirmableFollowupOffer(nextStepOffer)
@@ -1912,6 +1927,47 @@ function isConfirmableFollowupOffer(offer: string | null): boolean {
     /\b(?:soll|mochtest|moechtest|willst)\b.{0,50}\b(?:ich|wir)\b/.test(normalizedOffer) ||
     /\b(?:kann|konnen)\b.{0,30}\b(?:ich|wir)\b/.test(normalizedOffer) ||
     /\b(?:ich|wir)\b.{0,30}\b(?:kann|konnen|empfehle|erklaere|erklare|ordne|passe|baue|schaue|zeige)\w*/.test(
+      normalizedOffer,
+    ) ||
+    /\bwenn du (?:magst|mochtest|moechtest|willst)\b.{0,90}\b(?:ich|wir)\b/.test(normalizedOffer)
+  )
+}
+
+function extractConfirmableFollowupOfferFromVisibleProse(userFacingAnswer: string): string | null {
+  const candidates = userFacingAnswer
+    .split(/(?:\n+|(?<=[.!?])\s+)/u)
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0)
+
+  for (const candidate of candidates.reverse()) {
+    if (isVisibleProseConfirmableFollowupOffer(candidate)) return candidate
+  }
+
+  return null
+}
+
+function isVisibleProseConfirmableFollowupOffer(offer: string): boolean {
+  const normalizedOffer = normalizeVisibleText(offer)
+  if (!isConfirmableFollowupOffer(offer)) return false
+  if (
+    /\b(?:ich|wir)\b.{0,30}\b(?:kann|konnen)\b.{0,60}\b(?:nicht|kein|keine|keinen)\b/.test(
+      normalizedOffer,
+    )
+  ) {
+    return false
+  }
+  if (/\b(?:ich|wir)\b.{0,30}\b(?:kann|konnen)\b.{0,60}\bnur\b/.test(normalizedOffer)) {
+    return false
+  }
+  const isQuestion = /[?？]\s*$/.test(offer.trim())
+
+  return (
+    /\b(?:soll|mochtest|moechtest)\b.{0,70}\b(?:ich|wir)\b/.test(normalizedOffer) ||
+    (isQuestion && /\b(?:kann|konnen)\b.{0,30}\b(?:ich|wir)\b/.test(normalizedOffer)) ||
+    /\b(?:ich|wir)\b.{0,30}\b(?:kann|konnen)\b.{0,80}\b(?:als nachstes|danach|anschliessend|noch kurz|kurz erklaren|kurz zeigen|gern erklaren|gerne erklaren)\b/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:ich|wir)\b.{0,30}\b(?:empfehle|erklaere|erklare|ordne|passe|baue|schaue|zeige)\w*\b.{0,80}\b(?:gern|gerne|als nachstes|danach|anschliessend)\b/.test(
       normalizedOffer,
     ) ||
     /\bwenn du (?:magst|mochtest|moechtest|willst)\b.{0,90}\b(?:ich|wir)\b/.test(normalizedOffer)

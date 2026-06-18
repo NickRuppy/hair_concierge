@@ -248,13 +248,14 @@ export async function runAgentV2ResponsesTurn(params: {
       }
     : null
 
+  const pendingFollowupAction = routineThreadContext?.pending_followup_action ?? null
+  const isShortFollowupConfirmation = hasShortRoutineActionConfirmation(params.message)
   const routineToolPolicy = resolvePendingRoutineMutationPolicy({
     message: params.message,
     routineThreadContext,
   })
   const shortConfirmationWithoutPendingFollowup =
-    hasShortRoutineActionConfirmation(params.message) &&
-    !routineThreadContext?.pending_followup_action
+    isShortFollowupConfirmation && !pendingFollowupAction
   const turnGateEnabled = policy.turn_gate_enabled
   const toolDefinitions = buildAgentV2ResponsesTools({ safetyMode, turnGateEnabled })
   const allowedExecutableTools = new Set(
@@ -597,7 +598,14 @@ export async function runAgentV2ResponsesTurn(params: {
         return completeWithAnswer(buildCurrentFallbackAnswer(fallbackReason), trace)
       }
 
-      repairState = buildRepairState(validation.errors)
+      const repairAllowedExecutableTools = resolveAllowedExecutableTools({
+        baseAllowedTools: allowedExecutableTools,
+        turnGateEnabled,
+        turnGateAuthorized,
+        pendingFollowupAction,
+        isShortFollowupConfirmation,
+      })
+      repairState = buildRepairState(validation.errors, repairAllowedExecutableTools)
       trace.bounded_repair_kind = repairState.kind
       if (repairState.kind === "unrepairable") {
         trace.failure_stage = "repair_failed"
@@ -708,12 +716,26 @@ export async function runAgentV2ResponsesTurn(params: {
       baseAllowedTools: allowedExecutableTools,
       turnGateEnabled,
       turnGateAuthorized,
+      pendingFollowupAction,
+      isShortFollowupConfirmation,
     })
 
     for (const call of parsedStep.functionCalls) {
-      if (!isExecutableToolName(call.name) || !currentAllowedExecutableTools.has(call.name)) {
+      if (!isExecutableToolName(call.name)) {
         trace.blocked_tool_calls.push({ name: call.name, reason: "tool_not_allowed" })
         inputItems.push(buildFunctionCallOutput(call.call_id, { error: "tool_not_allowed" }))
+        continue
+      }
+      if (!currentAllowedExecutableTools.has(call.name)) {
+        const reason = resolveDisallowedExecutableToolReason({
+          name: call.name,
+          turnGateEnabled,
+          turnGateAuthorized,
+          pendingFollowupAction,
+          isShortFollowupConfirmation,
+        })
+        trace.blocked_tool_calls.push({ name: call.name, reason })
+        inputItems.push(buildFunctionCallOutput(call.call_id, buildToolBlockedOutput(reason)))
         continue
       }
 
@@ -941,7 +963,7 @@ function buildInputItems(
   if (pendingFollowupAction) {
     items.push({
       role: "system",
-      content: `Pending follow-up action from previous assistant offer. Short confirmations such as "Ja", "Ja bitte", "gerne", and "mach das" should resolve to this action. Product recommendation actions should call select_products. Advisor response actions should answer without build_or_fix_routine. Only routine_mutation can authorize build_or_fix_routine. ${JSON.stringify(
+      content: `Pending follow-up action from previous assistant offer. Short confirmations such as "Ja", "Ja bitte", "gerne", and "mach das" should resolve to this action. Product recommendation actions should call select_products and must not change the routine. Advisor response actions should answer without select_products or build_or_fix_routine; load advisor guidance if needed, then answer the confirmed explanation. Only routine_mutation can authorize build_or_fix_routine. ${JSON.stringify(
         pendingFollowupAction,
       )}`,
     })
@@ -1173,12 +1195,17 @@ function buildRepairInstruction(
     repairState.requiredTools.length > 0
       ? `Call only these missing required tools in order: ${requiredTools}. After they return, call submit_final_answer exactly once. Do not call unrelated tools.`
       : "Call submit_final_answer exactly once using only already returned tool outputs. Do not call executable tools."
+  const followupRepairPolicy = errors.some(
+    (error) => error.validator_id === "pending_followup_action_missing",
+  )
+    ? " For pending_followup_action_missing: do not repeat or rephrase a confirmable next-step offer unless you also set a matching pending_followup_action. If unsure, remove the offer, set next_step_offer_de to null, and close with a decisive helpful answer."
+    : ""
 
   return {
     role: "system",
     content: `Repair the AgentV2 terminal answer. Validation failed with: ${JSON.stringify(
       errors.map((error) => compactValidationErrorForRepair(error)),
-    )}. ${repairPolicy} When a validation error includes suggested_value, use it exactly unless it conflicts with the latest user message or returned tool outputs. When repair_hint is present, follow it before changing unrelated fields. Keep all product/routine claims grounded in returned tool outputs. Match payload fields to answer_mode exactly.\n\n${buildTerminalPayloadFieldGuidance()}`,
+    )}. ${repairPolicy}${followupRepairPolicy} When a validation error includes suggested_value, use it exactly unless it conflicts with the latest user message or returned tool outputs. When repair_hint is present, follow it before changing unrelated fields. Keep all product/routine claims grounded in returned tool outputs. Match payload fields to answer_mode exactly.\n\n${buildTerminalPayloadFieldGuidance()}`,
   }
 }
 
@@ -1227,6 +1254,7 @@ function buildTerminalPayloadFieldGuidance(): string {
     "Plain informational next-step suggestions are not confirmable offers and must not create pending_followup_action.",
     "If next_step_offer_de is non-null and asks the user to continue, choose a matching pending_followup_action. Use product_recommendation for concrete product offers, advisor_response for non-mutating continuations, and routine_mutation only for explicit routine create/change offers.",
     "The pending_followup_action kind and category must match the visible offer: offers to recommend passende Produkte/Masken/Leave-ins/etc. are product_recommendation with the category; offers to add, integrate, build, or change the routine are routine_mutation.",
+    "When resolving a short confirmation of pending_followup_action.kind advisor_response, do not call select_products or build_or_fix_routine; answer the confirmed explanation from guidance and recent context.",
     "Only pending_followup_action.kind routine_mutation can authorize build_or_fix_routine on a short next-turn confirmation.",
     "Before submitting non-trivial category, product, routine, or general advice, load the relevant guidance package. Terminal tool_grounding.used_guidance_package_ids must include required base packages and category packages.",
     "For named-product detail or product-specific claim checks, including heat protection, color safety, chelating, ingredient-free status, exact cadence, or product protocol, call select_products before submitting any terminal answer. Use product_request_kind product_detail. If the tool cannot confirm the product or claim, answer as clarification or constraint_blocked after the tool call; when named_product_context says the user already gave a plausible exact product name, use constraint_blocked instead of repeated clarification. Do not infer from the product name.",
@@ -1640,7 +1668,10 @@ function isAgentV2RuntimeToolName(name: AgentV2ToolName): name is AgentV2Runtime
   return name !== "set_current_care_context" && name !== "classify_turn_gate"
 }
 
-function buildRepairState(errors: AgentV2ValidationError[]): AgentV2RepairState {
+function buildRepairState(
+  errors: AgentV2ValidationError[],
+  allowedExecutableTools: ReadonlySet<AgentV2ToolName>,
+): AgentV2RepairState {
   const validatorIds = new Set(errors.map((error) => error.validator_id))
   const requiredTools: AgentV2ToolName[] = []
   const safetyProductFirst = validatorIds.has("safety_no_product_first")
@@ -1657,13 +1688,24 @@ function buildRepairState(errors: AgentV2ValidationError[]): AgentV2RepairState 
     validatorIds.has("request_interpretation_answer_mode") ||
     validatorIds.has("category_advice_no_unasked_products")
 
-  if (validatorIds.has("required_guidance_loaded") && !answerModeMismatch) {
+  if (
+    validatorIds.has("required_guidance_loaded") &&
+    !answerModeMismatch &&
+    allowedExecutableTools.has("load_advisor_guidance")
+  ) {
     requiredTools.push("load_advisor_guidance")
   }
-  if (validatorIds.has("product_tool_required") && !safetyProductFirst) {
+  if (
+    validatorIds.has("product_tool_required") &&
+    !safetyProductFirst &&
+    allowedExecutableTools.has("select_products")
+  ) {
     requiredTools.push("select_products")
   }
-  if (validatorIds.has("routine_tool_required")) {
+  if (
+    validatorIds.has("routine_tool_required") &&
+    allowedExecutableTools.has("build_or_fix_routine")
+  ) {
     requiredTools.push("build_or_fix_routine")
   }
 
@@ -1821,14 +1863,89 @@ function resolveAllowedExecutableTools(params: {
   baseAllowedTools: ReadonlySet<AgentV2ToolName>
   turnGateEnabled: boolean
   turnGateAuthorized: AgentV2TurnGateResult | null
+  pendingFollowupAction: AgentV2RoutineThreadContext["pending_followup_action"] | null
+  isShortFollowupConfirmation: boolean
 }): Set<AgentV2ToolName> {
-  if (!params.turnGateEnabled) return new Set(params.baseAllowedTools)
-  if (!params.turnGateAuthorized) return new Set(["classify_turn_gate"])
-  if (params.turnGateAuthorized.gate_status !== "proceed") return new Set()
-
   const allowed = new Set(params.baseAllowedTools)
-  allowed.delete("classify_turn_gate")
+  if (params.turnGateEnabled) {
+    if (!params.turnGateAuthorized) return new Set(["classify_turn_gate"])
+    if (params.turnGateAuthorized.gate_status !== "proceed") return new Set()
+    allowed.delete("classify_turn_gate")
+  }
+
+  if (!params.isShortFollowupConfirmation || !params.pendingFollowupAction) return allowed
+
+  if (params.pendingFollowupAction.kind === "advisor_response") {
+    allowed.delete("select_products")
+    allowed.delete("build_or_fix_routine")
+  } else if (params.pendingFollowupAction.kind === "product_recommendation") {
+    allowed.delete("build_or_fix_routine")
+  } else if (params.pendingFollowupAction.kind === "routine_mutation") {
+    allowed.delete("select_products")
+  }
+
   return allowed
+}
+
+function resolveDisallowedExecutableToolReason(params: {
+  name: AgentV2ToolName
+  turnGateEnabled: boolean
+  turnGateAuthorized: AgentV2TurnGateResult | null
+  pendingFollowupAction: AgentV2RoutineThreadContext["pending_followup_action"] | null
+  isShortFollowupConfirmation: boolean
+}): string {
+  if (params.turnGateEnabled && !params.turnGateAuthorized) return "turn_gate_required"
+  if (params.turnGateEnabled && params.turnGateAuthorized?.gate_status !== "proceed") {
+    return "turn_gate_not_proceed"
+  }
+
+  if (params.isShortFollowupConfirmation && params.pendingFollowupAction) {
+    if (
+      params.pendingFollowupAction.kind === "advisor_response" &&
+      (params.name === "select_products" || params.name === "build_or_fix_routine")
+    ) {
+      return "pending_advisor_response_tool_not_allowed"
+    }
+    if (
+      params.pendingFollowupAction.kind === "product_recommendation" &&
+      params.name === "build_or_fix_routine"
+    ) {
+      return "pending_product_recommendation_tool_not_allowed"
+    }
+    if (
+      params.pendingFollowupAction.kind === "routine_mutation" &&
+      params.name === "select_products"
+    ) {
+      return "pending_routine_mutation_tool_not_allowed"
+    }
+  }
+
+  return "tool_not_allowed"
+}
+
+function buildToolBlockedOutput(reason: string): Record<string, string> {
+  if (reason === "pending_advisor_response_tool_not_allowed") {
+    return {
+      error: reason,
+      guidance:
+        "The previous visible offer was a non-mutating advisor response. Do not call product or routine tools for this short confirmation; load advisor guidance if needed, then answer the confirmed explanation.",
+    }
+  }
+  if (reason === "pending_product_recommendation_tool_not_allowed") {
+    return {
+      error: reason,
+      guidance:
+        "The previous visible offer was a product recommendation. Use product guidance and select_products if needed, but do not change routine state.",
+    }
+  }
+  if (reason === "pending_routine_mutation_tool_not_allowed") {
+    return {
+      error: reason,
+      guidance:
+        "The previous visible offer was a routine change. Use routine guidance and build_or_fix_routine if needed, but do not select products unless the user explicitly asks for products.",
+    }
+  }
+  return { error: reason }
 }
 
 function buildTurnGateRepairInstruction(): Record<string, unknown> {

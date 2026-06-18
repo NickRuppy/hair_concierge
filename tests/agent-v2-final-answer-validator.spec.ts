@@ -508,6 +508,198 @@ test("AgentV2 validator blocks confirmable next step without pending follow-up a
   assert.match(error.repair_hint ?? "", /product_recommendation/)
 })
 
+test("AgentV2 validator blocks visible prose offers without structured pending follow-up action", () => {
+  const answer = {
+    ...baseAnswer,
+    request_interpretation: requestInterpretation({
+      care_category: "leave_in",
+      evidence_quote: "leichtes Leave-in gegen Frizz",
+    }),
+    tool_grounding: {
+      ...baseAnswer.tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_recommendation", "leave_in"),
+      product_ids: ["prod_1"],
+      hard_rule_ids: [],
+    },
+    payload: {
+      ...baseAnswer.payload,
+      user_facing_answer_de:
+        "**Test Leave-in** passt gut gegen Frizz. Soll ich dir die Anwendung jetzt kurz erklären?",
+      next_step_offer_de: null,
+    },
+    pending_followup_action: null,
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [
+      {
+        valid_product_ids: ["prod_1"],
+        products: [{ product_id: "prod_1", name: "Test Leave-in" }],
+      },
+    ],
+    latestUserMessage: "Ich brauche ein leichtes Leave-in gegen Frizz.",
+    recentEvidenceText: "leichtes Leave-in gegen Frizz",
+    toolCallHistory: [selectProductsToolCall({ category: "leave_in" })],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_missing",
+  )
+  assert.ok(error)
+  assert.equal(error.expected, "pending_followup_action.kind=advisor_response")
+  assert.equal(error.rejected_value, "Soll ich dir die Anwendung jetzt kurz erklären?")
+})
+
+test("AgentV2 validator checks visible prose offers even when next_step_offer_de is non-confirmable", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Maske",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske ist bei trockenem Haar eher Zusatzpflege. Soll ich dir danach passende Masken empfehlen?",
+      category_or_topic: "mask",
+      key_points_de: ["Masken sind Zusatzpflege."],
+      next_step_offer_de: "Danach kannst du zur Routine zurückgehen.",
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_missing",
+  )
+  assert.ok(error)
+  assert.equal(error.expected, "pending_followup_action.kind=product_recommendation")
+  assert.equal(error.rejected_value, "Soll ich dir danach passende Masken empfehlen?")
+})
+
+test("AgentV2 validator does not treat plain Ich-kann answer openers as follow-up offers", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Brauche ich eine Maske?",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Ich kann dir das grob einordnen: Eine Maske ist ein Zusatz, kein Pflichtschritt.",
+      category_or_topic: "mask",
+      key_points_de: ["Masken sind Zusatzpflege."],
+      next_step_offer_de: null,
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Brauche ich eine Maske?",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator blocks visible prose offers with first-person action verbs", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Ein Leave-in kann gegen Frizz sinnvoll sein. Ich erkläre dir die Anwendung gerne.",
+      category_or_topic: "leave_in",
+      key_points_de: ["Leave-in kann Frizz optisch beruhigen."],
+      next_step_offer_de: null,
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Leave-in",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_missing",
+  )
+  assert.ok(error)
+  assert.equal(error.rejected_value, "Ich erkläre dir die Anwendung gerne.")
+})
+
+test("AgentV2 validator does not treat direct recommendations as follow-up offers", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Ich empfehle dir bei Frizz zuerst ein leichtes Leave-in als Kategorie, nicht sofort mehrere Styling-Produkte.",
+      category_or_topic: "leave_in",
+      key_points_de: ["Leichtes Leave-in passt oft besser als schwere Styling-Produkte."],
+      next_step_offer_de: null,
+    },
+    tool_grounding: {
+      ...createValidGeneralAdviceAnswer().tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Leave-in",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
 test("AgentV2 validator allows informational next step without pending follow-up action", () => {
   const answer = createValidGeneralAdviceAnswer({
     request_interpretation: requestInterpretation({

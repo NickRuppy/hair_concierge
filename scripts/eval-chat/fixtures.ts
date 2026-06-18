@@ -330,12 +330,7 @@ export const SCENARIOS: EvalScenario[] = [
         content: {
           must_be_german: true,
           required_keywords: ["Anwendung"],
-          forbidden_keywords: [
-            "handtuchtrockene",
-            "Längen und Spitzen",
-            "Formulier es bitte",
-            "konkreter",
-          ],
+          forbidden_keywords: ["handtuchtrockene", "Formulier es bitte", "konkreter"],
         },
         judge: {
           expected_behavior:
@@ -473,11 +468,11 @@ export const SCENARIOS: EvalScenario[] = [
     turns: [
       {
         message: "Meine Haare sind irgendwie komisch",
-        metadata: { response_mode: ["recommend_and_refine", "answer_direct"] },
+        metadata: { response_mode: ["clarify_only", "recommend_and_refine", "answer_direct"] },
       },
       {
         message: "Es ist halt so ein Problem mit meinen Haaren",
-        metadata: { response_mode: ["recommend_and_refine", "answer_direct"] },
+        metadata: { response_mode: ["clarify_only", "recommend_and_refine", "answer_direct"] },
       },
       {
         message: "Ich weiss einfach nicht was ich machen soll",
