@@ -423,6 +423,34 @@ function terminalGeneralAdvice(
   })
 }
 
+function terminalGeneralAdviceWithOverrides(
+  call_id: string,
+  options: {
+    request_interpretation?: Parameters<typeof requestInterpretation>[0]
+    tool_grounding?: Record<string, unknown>
+    payload?: Record<string, unknown>
+    pending_followup_action?: unknown
+  } = {},
+) {
+  const base = terminalGeneralAdviceArguments()
+  return terminalCall(call_id, {
+    ...base,
+    request_interpretation: requestInterpretation(options.request_interpretation),
+    tool_grounding: {
+      ...base.tool_grounding,
+      ...options.tool_grounding,
+    },
+    pending_followup_action:
+      "pending_followup_action" in options
+        ? options.pending_followup_action
+        : base.pending_followup_action,
+    payload: {
+      ...base.payload,
+      ...options.payload,
+    },
+  })
+}
+
 function terminalSocial(call_id: string, evidenceQuote = "hallo") {
   return terminalCall(call_id, {
     ...terminalGeneralAdviceArguments(),
@@ -2702,6 +2730,62 @@ test("AgentV2 runtime blocks routine tool permission for short confirmations wit
   )
 })
 
+test("AgentV2 runtime does not let evidence sanitization bypass short confirmation guard", async () => {
+  const badEvidenceAnswer = terminalGeneralAdviceWithOverrides("call_1", {
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "invented prior offer",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+      used_product_tool: false,
+      product_ids: [],
+    },
+    payload: {
+      user_facing_answer_de: "Gerne - bei Frizz hilft vor allem eine leichte Pflege in den Längen.",
+      category_or_topic: "frizz",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+  })
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_guidance", {
+      answer_mode_hint: "general_advice",
+      categories: [],
+      routine_layer: "basics",
+    }),
+    badEvidenceAnswer,
+    badEvidenceAnswer,
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ja bitte.",
+    recentMessages: [
+      {
+        role: "assistant",
+        content: "Soll ich dir erklären, ob Maske oder Öl als Zusatz sinnvoller ist?",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, null, JSON.stringify(result.trace.validation_errors))
+  assert.equal(result.final_answer.answer_mode, "clarification")
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Gerne - bei Frizz/)
+  assert.ok(
+    result.trace.validation_warnings.some(
+      (warning) => warning.validator_id === "request_interpretation_evidence_sanitized",
+    ),
+  )
+})
+
 test("AgentV2 short confirmation authorizes matching pending routine mutation", async () => {
   const client = fakeResponsesClientWithOutputs([
     guidanceCall("call_1", {
@@ -4206,6 +4290,185 @@ test("AgentV2 runtime blocks terminal answers that skip required repair tools", 
   )
   assert.ok(
     repairInput.some((item) => String(asRecord(item)?.content ?? "").includes("known_product_ids")),
+  )
+})
+
+test("AgentV2 runtime passes structured validation repair details back to the model", async () => {
+  const badEvidenceAnswer = terminalGeneralAdviceWithOverrides("call_1", {
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "anti frizz protocol",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+      used_product_tool: false,
+      product_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Gegen Frizz hilft bei deinem Profil vor allem leichte Pflege in den Längen.",
+      category_or_topic: "frizz",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+  })
+  const goodEvidenceAnswer = terminalGeneralAdviceWithOverrides("call_2", {
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+      used_product_tool: false,
+      product_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Gegen Frizz hilft bei deinem Profil vor allem leichte Pflege in den Längen.",
+      category_or_topic: "frizz",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+  })
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_guidance", {
+      answer_mode_hint: "general_advice",
+      categories: [],
+    }),
+    badEvidenceAnswer,
+    goodEvidenceAnswer,
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  const repairInput = getInputItems(client.requests[2])
+  const serializedRepairInput = JSON.stringify(repairInput)
+  assert.match(serializedRepairInput, /request_interpretation_evidence/)
+  assert.match(serializedRepairInput, /rejected_value/)
+  assert.match(serializedRepairInput, /suggested_value/)
+  assert.match(serializedRepairInput, /Was hilft gegen Frizz bei meinem Haarprofil/)
+})
+
+test("AgentV2 runtime sanitizes evidence metadata after one failed repair when answer is otherwise valid", async () => {
+  const badEvidenceAnswer = terminalGeneralAdviceWithOverrides("call_1", {
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "anti frizz protocol",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+      used_product_tool: false,
+      product_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Gegen Frizz hilft bei deinem Profil vor allem leichte Pflege in den Längen.",
+      category_or_topic: "frizz",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+  })
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_guidance", {
+      answer_mode_hint: "general_advice",
+      categories: [],
+    }),
+    badEvidenceAnswer,
+    badEvidenceAnswer,
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.final_answer.answer_mode, "general_advice")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Gegen Frizz/)
+  assert.equal(
+    result.final_answer.request_interpretation.evidence_quote,
+    "Was hilft gegen Frizz bei meinem Haarprofil?",
+  )
+  assert.equal(result.trace.failure_stage, null)
+  assert.deepEqual(result.trace.validation_errors, [])
+  assert.ok(
+    result.trace.validation_warnings.some(
+      (warning) => warning.validator_id === "request_interpretation_evidence_sanitized",
+    ),
+  )
+})
+
+test("AgentV2 runtime does not sanitize mixed evidence and product grounding failures", async () => {
+  const badAnswer = terminalGeneralAdviceWithOverrides("call_1", {
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "anti frizz protocol",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+      used_product_tool: false,
+      product_ids: ["unknown_product"],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Gegen Frizz hilft bei deinem Profil vor allem leichte Pflege in den Längen.",
+      category_or_topic: "frizz",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+  })
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_guidance", {
+      answer_mode_hint: "general_advice",
+      categories: [],
+    }),
+    badAnswer,
+    badAnswer,
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, "repair_failed")
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Gegen Frizz/)
+  assert.ok(
+    result.trace.validation_errors.some(
+      (error) => error.validator_id !== "request_interpretation_evidence",
+    ),
   )
 })
 

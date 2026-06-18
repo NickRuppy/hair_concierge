@@ -40,6 +40,7 @@ import {
   parseCurrentCareFactToolInput,
 } from "@/lib/agent-v2/tools/tool-definitions"
 import {
+  sanitizeRepairableEvidenceQuote,
   validateAgentV2FinalAnswer,
   type AgentV2FinalAnswerValidationContext,
   type AgentV2FinalAnswerValidationResult,
@@ -539,6 +540,45 @@ export async function runAgentV2ResponsesTurn(params: {
       trace.validation_warnings = validation.warnings
       trace.dropped_session_memory_writes = validation.dropped_session_memory_writes
       if (repairUsed || policy.max_repair_turns === 0) {
+        if (repairUsed && validation.sanitized_answer) {
+          const evidenceSanitization = sanitizeRepairableEvidenceQuote(
+            validation.sanitized_answer,
+            validation.errors,
+          )
+          if (evidenceSanitization) {
+            const sanitizedValidation = validateAgentV2FinalAnswer(
+              evidenceSanitization.answer,
+              buildCurrentValidationContext(),
+            )
+            if (sanitizedValidation.ok) {
+              trace.validation_errors = []
+              trace.validation_warnings = [
+                ...sanitizedValidation.warnings,
+                evidenceSanitization.warning,
+              ]
+              trace.dropped_session_memory_writes =
+                sanitizedValidation.dropped_session_memory_writes
+              const sanitizedAnswer =
+                sanitizedValidation.sanitized_answer ?? evidenceSanitization.answer
+              if (
+                shortConfirmationWithoutPendingFollowup &&
+                sanitizedAnswer.answer_mode !== "clarification"
+              ) {
+                return completeWithAnswer(buildCurrentClarificationFallback(), trace)
+              }
+              return completeWithAnswer(
+                maybeReplaceLowValueClarification({
+                  answer: sanitizedAnswer,
+                  message: params.message,
+                  safetyMode,
+                  userContext: params.userContext,
+                  usedGuidancePackageIds: trace.loaded_guidance_package_ids,
+                }),
+                trace,
+              )
+            }
+          }
+        }
         trace.failure_stage = "repair_failed"
         const fallbackReason = selectFallbackReason(
           validation.errors,
@@ -1084,11 +1124,44 @@ function buildTerminalValidationOutput(
 ): Record<string, unknown> {
   return buildFunctionCallOutput(callId, {
     error: "terminal_answer_validation_failed",
-    validation_errors: errors.map((error) => ({
-      validator_id: error.validator_id,
-      message: error.message,
-    })),
+    validation_errors: errors.map((error) => compactValidationErrorForRepair(error)),
   })
+}
+
+function compactValidationErrorForRepair(error: AgentV2ValidationError): Record<string, unknown> {
+  const output: Record<string, unknown> = {
+    validator_id: error.validator_id,
+    message: error.message,
+    severity: error.severity,
+  }
+  if (error.path) output.path = error.path
+  if (error.reason_code) output.reason_code = error.reason_code
+  if (error.repair_hint) output.repair_hint = error.repair_hint
+
+  const rejectedValue = compactRepairValue(error.rejected_value)
+  if (rejectedValue !== undefined) output.rejected_value = rejectedValue
+  const expected = compactRepairValue(error.expected)
+  if (expected !== undefined) output.expected = expected
+  const suggestedValue = compactRepairValue(error.suggested_value)
+  if (suggestedValue !== undefined) output.suggested_value = suggestedValue
+
+  return output
+}
+
+function compactRepairValue(value: unknown): unknown {
+  if (typeof value === "string") return value.length > 500 ? `${value.slice(0, 497)}...` : value
+  if (typeof value === "number" || typeof value === "boolean" || value === null) return value
+  if (Array.isArray(value)) {
+    const scalars = value.filter(
+      (item) =>
+        typeof item === "string" ||
+        typeof item === "number" ||
+        typeof item === "boolean" ||
+        item === null,
+    )
+    return scalars.slice(0, 12)
+  }
+  return undefined
 }
 
 function buildRepairInstruction(
@@ -1104,11 +1177,8 @@ function buildRepairInstruction(
   return {
     role: "system",
     content: `Repair the AgentV2 terminal answer. Validation failed with: ${JSON.stringify(
-      errors.map((error) => ({
-        validator_id: error.validator_id,
-        message: error.message,
-      })),
-    )}. ${repairPolicy} Keep all product/routine claims grounded in returned tool outputs. Match payload fields to answer_mode exactly.\n\n${buildTerminalPayloadFieldGuidance()}`,
+      errors.map((error) => compactValidationErrorForRepair(error)),
+    )}. ${repairPolicy} When a validation error includes suggested_value, use it exactly unless it conflicts with the latest user message or returned tool outputs. When repair_hint is present, follow it before changing unrelated fields. Keep all product/routine claims grounded in returned tool outputs. Match payload fields to answer_mode exactly.\n\n${buildTerminalPayloadFieldGuidance()}`,
   }
 }
 

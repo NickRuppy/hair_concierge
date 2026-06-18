@@ -461,6 +461,11 @@ export const AgentV2ValidationErrorSchema = z.object({
   message: z.string(),
   severity: z.enum(["block", "warn"]).default("block"),
   path: z.array(z.union([z.string(), z.number()])).optional(),
+  reason_code: z.string().optional(),
+  rejected_value: z.unknown().optional(),
+  expected: z.unknown().optional(),
+  suggested_value: z.unknown().optional(),
+  repair_hint: z.string().optional(),
 })
 
 export type AgentV2ValidationError = z.infer<typeof AgentV2ValidationErrorSchema>

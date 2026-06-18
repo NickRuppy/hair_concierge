@@ -1,7 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { validateAgentV2FinalAnswer } from "../src/lib/agent-v2/validation/final-answer-validator"
+import {
+  sanitizeRepairableEvidenceQuote,
+  validateAgentV2FinalAnswer,
+} from "../src/lib/agent-v2/validation/final-answer-validator"
 
 function emptyExtractedConstraints() {
   return {
@@ -496,7 +499,13 @@ test("AgentV2 validator blocks confirmable next step without pending follow-up a
   })
 
   assert.equal(result.ok, false)
-  assert.ok(result.errors.some((error) => error.validator_id === "pending_followup_action_missing"))
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_missing",
+  )
+  assert.ok(error)
+  assert.equal(error.reason_code, "pending_followup_action_missing")
+  assert.equal(error.expected, "pending_followup_action.kind=product_recommendation")
+  assert.match(error.repair_hint ?? "", /product_recommendation/)
 })
 
 test("AgentV2 validator allows informational next step without pending follow-up action", () => {
@@ -663,9 +672,13 @@ test("AgentV2 validator blocks visible product offers stored as advisor follow-u
   })
 
   assert.equal(result.ok, false)
-  assert.ok(
-    result.errors.some((error) => error.validator_id === "pending_followup_action_kind_mismatch"),
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_kind_mismatch",
   )
+  assert.ok(error)
+  assert.equal(error.reason_code, "pending_followup_action_kind_mismatch")
+  assert.equal(error.expected, "pending_followup_action.kind=product_recommendation")
+  assert.match(error.repair_hint ?? "", /product_recommendation/)
 })
 
 test("AgentV2 validator accepts visible product offers with matching pending product action", () => {
@@ -849,10 +862,13 @@ test("AgentV2 validator blocks advice-style routine offers stored as routine mut
   })
 
   assert.equal(result.ok, false)
-  assert.ok(
-    result.errors.some((error) => error.validator_id === "pending_followup_action_kind_mismatch"),
-    JSON.stringify(result.errors, null, 2),
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_kind_mismatch",
   )
+  assert.ok(error, JSON.stringify(result.errors, null, 2))
+  assert.equal(error.reason_code, "pending_followup_action_kind_mismatch")
+  assert.equal(error.expected, "pending_followup_action.kind=advisor_response")
+  assert.match(error.repair_hint ?? "", /advisor_response/)
 })
 
 test("AgentV2 validator blocks routine mutation category drift from visible offers", () => {
@@ -2214,6 +2230,38 @@ test("validator blocks non-diagnostic request interpretation evidence quotes", (
   assert.ok(result.errors.some((error) => error.validator_id === "request_interpretation_evidence"))
 })
 
+test("validator returns repair metadata for ungrounded evidence quotes", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        evidence_quote: "anti frizz protocol",
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "Was hilft gegen Frizz bei meinem Haarprofil?",
+      recentEvidenceText: "Was hilft gegen Frizz bei meinem Haarprofil?",
+      toolCallHistory: [
+        selectProductsToolCall({
+          user_request: "Was hilft gegen Frizz bei meinem Haarprofil?",
+          evidence_quote: "anti frizz protocol",
+        }),
+      ],
+    },
+  )
+
+  const error = result.errors.find(
+    (candidate) => candidate.validator_id === "request_interpretation_evidence",
+  )
+  assert.ok(error)
+  assert.equal(error.path?.join("."), "request_interpretation.evidence_quote")
+  assert.equal(error.rejected_value, "anti frizz protocol")
+  assert.equal(error.suggested_value, "Was hilft gegen Frizz bei meinem Haarprofil?")
+  assert.equal(error.reason_code, "evidence_quote_not_in_context")
+  assert.match(String(error.repair_hint), /suggested_value/)
+})
+
 test("validator allows full short user messages as evidence quotes", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -2236,6 +2284,48 @@ test("validator allows full short user messages as evidence quotes", () => {
   )
 
   assert.equal(result.ok, true)
+})
+
+test("validator allows exact short concern terms as evidence quotes", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "category_education",
+        routine_intent: "none",
+        care_category: "none",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Frizz",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+        used_product_tool: false,
+        product_ids: [],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Gegen Frizz hilft bei deinem Profil vor allem leichte Pflege in den Längen.",
+        category_or_topic: "frizz",
+        key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Was hilft gegen Frizz bei meinem Haarprofil?",
+      recentEvidenceText: "Was hilft gegen Frizz bei meinem Haarprofil?",
+      toolCallHistory: [{ name: "load_advisor_guidance", call_id: "call_guidance" }],
+      requiredGuidancePackageIds: [],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.equal(result.warnings.length, 0, JSON.stringify(result.warnings, null, 2))
 })
 
 test("validator allows decorative quote marks and punctuation differences in evidence quotes", () => {
@@ -2492,6 +2582,94 @@ test("validator rejects vague or invented evidence quotes", () => {
       evidence_quote,
     )
   }
+})
+
+test("validator sanitizer can repair evidence quote metadata only", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "general_advice",
+    request_interpretation: requestInterpretation({
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "anti frizz protocol",
+    }),
+    tool_grounding: {
+      ...baseAnswer.tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+      used_product_tool: false,
+      product_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Gegen Frizz hilft bei deinem Profil vor allem leichte Pflege in den Längen.",
+      category_or_topic: "frizz",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+  }
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    recentEvidenceText: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    toolCallHistory: [{ name: "load_advisor_guidance", call_id: "call_guidance" }],
+    requiredGuidancePackageIds: [],
+  })
+
+  assert.ok(result.sanitized_answer)
+  const sanitized = sanitizeRepairableEvidenceQuote(result.sanitized_answer, result.errors)
+
+  assert.ok(sanitized)
+  assert.equal(
+    sanitized.answer.request_interpretation.evidence_quote,
+    "Was hilft gegen Frizz bei meinem Haarprofil?",
+  )
+  assert.equal(sanitized.warning.validator_id, "request_interpretation_evidence_sanitized")
+  assert.equal(sanitized.warning.severity, "warn")
+})
+
+test("validator sanitizer refuses mixed or non-evidence failures", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "general_advice",
+    request_interpretation: requestInterpretation({
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "anti frizz protocol",
+    }),
+    tool_grounding: {
+      ...baseAnswer.tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+      used_product_tool: false,
+      product_ids: ["unknown_product"],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Gegen Frizz hilft bei deinem Profil vor allem leichte Pflege in den Längen.",
+      category_or_topic: "frizz",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+  }
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    recentEvidenceText: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    toolCallHistory: [{ name: "load_advisor_guidance", call_id: "call_guidance" }],
+    requiredGuidancePackageIds: [],
+  })
+
+  assert.ok(result.sanitized_answer)
+  assert.equal(sanitizeRepairableEvidenceQuote(result.sanitized_answer, result.errors), null)
 })
 
 test("validator requires user-facing prose to mention each recommended product", () => {

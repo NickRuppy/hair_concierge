@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
+  AgentV2ValidationErrorSchema,
   AgentV2RequestInterpretationSchema,
   AgentV2RoutineThreadContextSchema,
   AgentV2TerminalAnswerSchema,
@@ -102,6 +103,24 @@ test("AgentV2RequestInterpretationSchema accepts strict semantic examples", () =
   for (const example of examples) {
     assert.deepEqual(AgentV2RequestInterpretationSchema.parse(example), example)
   }
+})
+
+test("AgentV2ValidationErrorSchema accepts optional repair metadata", () => {
+  const parsed = AgentV2ValidationErrorSchema.parse({
+    validator_id: "request_interpretation_evidence",
+    message: "Evidence quote is not grounded.",
+    severity: "block",
+    path: ["request_interpretation", "evidence_quote"],
+    reason_code: "evidence_quote_not_in_context",
+    rejected_value: "Frizz repair",
+    expected: "Exact phrase from latest user message or active context.",
+    suggested_value: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    repair_hint: "Use suggested_value exactly for request_interpretation.evidence_quote.",
+  })
+
+  assert.equal(parsed.reason_code, "evidence_quote_not_in_context")
+  assert.equal(parsed.rejected_value, "Frizz repair")
+  assert.equal(parsed.suggested_value, "Was hilft gegen Frizz bei meinem Haarprofil?")
 })
 
 test("AgentV2RequestInterpretationSchema requires every semantic field", () => {

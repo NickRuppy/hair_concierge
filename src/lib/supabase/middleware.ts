@@ -76,7 +76,9 @@ export async function updateSession(request: NextRequest) {
     "/welcome",
     "/api/stripe",
     "/api/paypal",
-    ...(process.env.NODE_ENV === "development" ? ["/labs", "/api/labs"] : []),
+    ...(process.env.NODE_ENV === "development"
+      ? ["/labs", "/api/labs", "/api/debug/build-info"]
+      : []),
     ...(process.env.NODE_ENV === "development" && process.env.LOCAL_DEV_LOGIN_ENABLED === "1"
       ? ["/api/dev/login"]
       : []),

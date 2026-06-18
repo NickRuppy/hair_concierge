@@ -209,18 +209,18 @@ export const SCENARIOS: EvalScenario[] = [
     ],
   },
 
-  // ── FAQ shortcut ─────────────────────────────────────────────────────────
+  // ── FAQ-style direct answer ──────────────────────────────────────────────
   {
     id: "simple-faq",
     name: "Simple FAQ question",
-    description: "Straightforward question — should use FAQ shortcut",
+    description: "Straightforward question — should answer directly",
     hair_profile: { ...FULL_PROFILE },
     routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Wie oft sollte ich meine Haare waschen?",
         metadata: {
-          retrieval_mode: ["faq", "hybrid"],
+          retrieval_mode: ["agent_v2_responses", "faq", "hybrid"],
         },
         content: {
           must_be_german: true,

@@ -129,6 +129,47 @@ export function validateAgentV2FinalAnswer(
   }
 }
 
+export function sanitizeRepairableEvidenceQuote(
+  answer: AgentV2TerminalAnswer,
+  errors: readonly AgentV2ValidationError[],
+): { answer: AgentV2TerminalAnswer; warning: AgentV2ValidationError } | null {
+  const blockingErrors = errors.filter((error) => error.severity !== "warn")
+  if (blockingErrors.length === 0) return null
+  if (
+    !blockingErrors.every(
+      (error) =>
+        error.validator_id === "request_interpretation_evidence" &&
+        error.path?.join(".") === "request_interpretation.evidence_quote" &&
+        typeof error.suggested_value === "string" &&
+        error.suggested_value.trim().length > 0,
+    )
+  ) {
+    return null
+  }
+
+  const suggested = String(blockingErrors[0].suggested_value).trim()
+  const sanitizedAnswer = AgentV2TerminalAnswerSchema.parse({
+    ...answer,
+    request_interpretation: {
+      ...answer.request_interpretation,
+      evidence_quote: suggested,
+    },
+  })
+
+  return {
+    answer: sanitizedAnswer,
+    warning: {
+      validator_id: "request_interpretation_evidence_sanitized",
+      message:
+        "request_interpretation.evidence_quote was sanitized after model repair failed for evidence metadata only.",
+      severity: "warn",
+      path: ["request_interpretation", "evidence_quote"],
+      rejected_value: answer.request_interpretation.evidence_quote,
+      suggested_value: suggested,
+    },
+  }
+}
+
 const payloadFieldsByMode: Record<AgentV2AnswerMode, readonly string[]> = {
   product_recommendation: [
     "user_facing_answer_de",
@@ -524,7 +565,8 @@ function validateInterpretationEvidence(
   context: AgentV2FinalAnswerValidationContext,
   findings: AgentV2ValidationError[],
 ): void {
-  const evidence = normalizeEvidenceText(answer.request_interpretation.evidence_quote)
+  const originalEvidence = answer.request_interpretation.evidence_quote
+  const evidence = normalizeEvidenceText(originalEvidence)
   const evidenceText = normalizeEvidenceText(buildEvidenceText(context))
   const grounding = classifyEvidenceGrounding(evidence, evidenceText, context)
 
@@ -546,7 +588,46 @@ function validateInterpretationEvidence(
       "request_interpretation.evidence_quote must quote a meaningful phrase from the latest user message or active session context.",
     severity: "block",
     path: ["request_interpretation", "evidence_quote"],
+    ...buildEvidenceRepairMetadata({
+      normalizedEvidence: evidence,
+      originalEvidence,
+      normalizedEvidenceText: evidenceText,
+      context,
+    }),
   })
+}
+
+function buildEvidenceRepairMetadata(params: {
+  normalizedEvidence: string
+  originalEvidence: string
+  normalizedEvidenceText: string
+  context: AgentV2FinalAnswerValidationContext
+}): Pick<
+  AgentV2ValidationError,
+  "reason_code" | "rejected_value" | "expected" | "suggested_value" | "repair_hint"
+> {
+  const suggestedValue = chooseEvidenceQuoteSuggestion(params.context)
+  const reasonCode = params.normalizedEvidenceText.includes(params.normalizedEvidence)
+    ? "evidence_quote_too_short_or_generic"
+    : "evidence_quote_not_in_context"
+
+  return {
+    reason_code: reasonCode,
+    rejected_value: params.originalEvidence,
+    expected: "Exact phrase from latest user message or active session context.",
+    suggested_value: suggestedValue,
+    repair_hint:
+      "Set request_interpretation.evidence_quote to suggested_value exactly, or to another exact phrase from the latest user message / active context.",
+  }
+}
+
+function chooseEvidenceQuoteSuggestion(context: AgentV2FinalAnswerValidationContext): string {
+  const latest = context.latestUserMessage.trim()
+  if (latest.length > 0) return latest.slice(0, 240)
+  const recent = (context.recentEvidenceText ?? "").trim()
+  if (recent.length > 0) return recent.slice(0, 240)
+  // Re-validation will still reject this sentinel when no grounding context exists.
+  return "unclear"
 }
 
 function validateInterpretationConfidence(
@@ -1670,6 +1751,7 @@ function validatePendingFollowupAction(
   const expectedOfferKind = classifyPendingFollowupOfferKind(nextStepOffer)
   const hasConfirmableOffer =
     Boolean(expectedOfferKind) || isConfirmableFollowupOffer(nextStepOffer)
+  const expectedActionKind = expectedOfferKind ?? (hasConfirmableOffer ? "advisor_response" : null)
   const action = answer.pending_followup_action
 
   if (nextStepOffer && !answer.pending_followup_action && hasConfirmableOffer) {
@@ -1677,6 +1759,11 @@ function validatePendingFollowupAction(
       validator_id: "pending_followup_action_missing",
       message: "Actionable next_step_offer_de should provide pending_followup_action.",
       severity: "block",
+      ...buildPendingFollowupRepairMetadata(
+        "pending_followup_action_missing",
+        expectedActionKind,
+        nextStepOffer,
+      ),
     })
   }
 
@@ -1686,12 +1773,17 @@ function validatePendingFollowupAction(
       message:
         "pending_followup_action must not be set without a visible confirmable next_step_offer_de.",
       severity: "block",
+      reason_code: "pending_followup_action_hidden",
+      rejected_value: answer.pending_followup_action,
+      expected: "pending_followup_action=null",
+      repair_hint:
+        "Remove pending_followup_action, or make the user-facing answer visibly offer a confirmable next action.",
     })
   }
 
   if (
     action &&
-    ((action.kind === "routine_mutation" && expectedOfferKind !== "routine_mutation") ||
+    ((action.kind === "routine_mutation" && expectedActionKind !== "routine_mutation") ||
       (expectedOfferKind && action.kind !== expectedOfferKind))
   ) {
     errors.push({
@@ -1699,6 +1791,12 @@ function validatePendingFollowupAction(
       message: "pending_followup_action.kind must match the visible next-step offer semantics.",
       severity: "block",
       path: ["pending_followup_action", "kind"],
+      rejected_value: action.kind,
+      ...buildPendingFollowupRepairMetadata(
+        "pending_followup_action_kind_mismatch",
+        expectedActionKind,
+        nextStepOffer,
+      ),
     })
   }
 
@@ -1717,7 +1815,30 @@ function validatePendingFollowupAction(
         "Pending follow-up category must match the visible next-step offer when the category is clear.",
       severity: "block",
       path: ["pending_followup_action", "category"],
+      reason_code: "pending_followup_action_category_mismatch",
+      rejected_value: action.category,
+      expected: `pending_followup_action.category=${expectedOfferCategory}`,
+      repair_hint:
+        "Set pending_followup_action.category to the product/routine category named in the visible offer.",
     })
+  }
+}
+
+function buildPendingFollowupRepairMetadata(
+  reasonCode: "pending_followup_action_missing" | "pending_followup_action_kind_mismatch",
+  expectedActionKind: "product_recommendation" | "routine_mutation" | "advisor_response" | null,
+  nextStepOffer: string | null,
+): Pick<AgentV2ValidationError, "reason_code" | "expected" | "rejected_value" | "repair_hint"> {
+  const expected = expectedActionKind
+    ? `pending_followup_action.kind=${expectedActionKind}`
+    : "pending_followup_action must match visible next_step_offer_de semantics"
+  return {
+    reason_code: reasonCode,
+    expected,
+    rejected_value: nextStepOffer,
+    repair_hint: expectedActionKind
+      ? `Set pending_followup_action.kind to ${expectedActionKind}, or remove/soften next_step_offer_de if the visible answer should not create a confirmable follow-up.`
+      : "Align pending_followup_action with the visible next_step_offer_de, or remove/soften next_step_offer_de if no confirmation should be stored.",
   }
 }
 
@@ -2360,6 +2481,13 @@ function isMeaningfulEvidenceQuote(
   const evidenceTokens = normalizedEvidence.split(" ").filter(Boolean)
   if (evidenceTokens.length === 1 && ["shampoo", "routine"].includes(evidenceTokens[0] ?? "")) {
     return false
+  }
+  if (
+    compactEvidence.length >= MIN_EVIDENCE_QUOTE_LENGTH - 1 &&
+    meaningfulEvidenceTokens(normalizedEvidence).length > 0 &&
+    normalizeEvidenceText(buildEvidenceText(context)).includes(normalizedEvidence)
+  ) {
+    return true
   }
   if (compactEvidence.length >= MIN_EVIDENCE_QUOTE_LENGTH) return true
 
