@@ -1,4 +1,5 @@
 import { createSupabaseClientFromEnv, flagInt, parseArgs, printJson } from "./cli"
+import { flushProductIntakeSentry } from "@/lib/observability/product-intake"
 import { notifyReviewResult } from "./review-actions"
 
 async function main() {
@@ -33,10 +34,15 @@ async function main() {
     }
   }
 
+  if (process.exitCode) {
+    await flushProductIntakeSentry()
+  }
+
   printJson({ count: results.length, results })
 }
 
-main().catch((error) => {
+main().catch(async (error) => {
   console.error(error instanceof Error ? error.message : error)
+  await flushProductIntakeSentry()
   process.exitCode = 1
 })

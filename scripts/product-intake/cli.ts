@@ -4,6 +4,7 @@ import { join, sep } from "node:path"
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { config as loadEnv } from "dotenv"
+import { initProductIntakeScriptSentry } from "@/lib/observability/product-intake"
 
 export type CliArgs = {
   positional: string[]
@@ -80,6 +81,7 @@ function envCandidatePaths(): string[] {
 
 export function createSupabaseClientFromEnv(): SupabaseClient {
   loadLocalEnv()
+  initProductIntakeScriptSentry()
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY

@@ -7,6 +7,10 @@ import {
   requireFlag,
 } from "./cli"
 import {
+  captureProductIntakeException,
+  flushProductIntakeSentry,
+} from "@/lib/observability/product-intake"
+import {
   appendProductAdditionRecord,
   approveReviewedSubmission,
   loadSubmission,
@@ -91,6 +95,19 @@ export async function approveSubmissionById(params: {
       spec_operations: validation.targetSpecOperations,
     })
   } catch (error) {
+    captureProductIntakeException(error, {
+      stage: "append_addition_record",
+      submissionId: submission.id,
+      approvedProductId: approval.product_id,
+      userId: submission.user_id,
+      source: submission.source,
+      sourceConversationId: submission.source_conversation_id,
+      category: submission.category,
+      intakeMethod: submission.intake_method,
+      status: approval.submission.status,
+      reason: "addition_record_write_failed",
+      committed: true,
+    })
     console.error(
       `Approved in DB, but failed to write addition record. Regenerate for submission ${submission.id}.`,
     )
@@ -132,8 +149,9 @@ async function main() {
 }
 
 if (process.argv[1]?.endsWith("approve.ts")) {
-  main().catch((error) => {
+  main().catch(async (error) => {
     console.error(error instanceof Error ? error.message : error)
+    await flushProductIntakeSentry()
     process.exitCode = 1
   })
 }
