@@ -322,18 +322,24 @@ export const SCENARIOS: EvalScenario[] = [
     turns: [
       {
         message:
-          "Ich brauche ein leichtes Leave-in gegen Frizz. Wenn du mir Produkte zeigst, kannst du danach auch kurz erklären, wie ich es anwende?",
+          "Ich brauche ein leichtes Leave-in gegen Frizz. Nenne mir bitte Produkte und frag mich danach, ob du mir die Anwendung kurz erklären sollst, aber erklär die Anwendung noch nicht.",
         metadata: {
           response_mode: ["recommend_and_refine", "answer_direct"],
           product_count_min: 1,
         },
         content: {
           must_be_german: true,
-          forbidden_keywords: ["Formulier es bitte", "konkreter"],
+          required_keywords: ["Anwendung"],
+          forbidden_keywords: [
+            "handtuchtrockene",
+            "Längen und Spitzen",
+            "Formulier es bitte",
+            "konkreter",
+          ],
         },
         judge: {
           expected_behavior:
-            "Should recommend at least one leave-in product and visibly leave a natural follow-up path for usage/application guidance. Must not only ask clarifying questions.",
+            "Should recommend at least one leave-in product and visibly ask whether the user wants a short application explanation, without already giving the full usage instructions. Must not only ask clarifying questions.",
         },
       },
       {
