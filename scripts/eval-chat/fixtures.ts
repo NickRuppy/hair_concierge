@@ -312,6 +312,116 @@ export const SCENARIOS: EvalScenario[] = [
   },
 
   {
+    id: "leave-in-offer-confirmation",
+    name: "Leave-in recommendation follow-up confirmation",
+    description:
+      "Multi-turn: product recommendation should create a visible follow-up path, and 'Ja bitte' should resolve that path instead of falling back to a generic clarification",
+    ci_smoke: true,
+    hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message:
+          "Ich brauche ein leichtes Leave-in gegen Frizz. Wenn du mir Produkte zeigst, kannst du danach auch kurz erklären, wie ich es anwende?",
+        metadata: {
+          response_mode: ["recommend_and_refine", "answer_direct"],
+          product_count_min: 1,
+        },
+        content: {
+          must_be_german: true,
+          forbidden_keywords: ["Formulier es bitte", "konkreter"],
+        },
+        judge: {
+          expected_behavior:
+            "Should recommend at least one leave-in product and visibly leave a natural follow-up path for usage/application guidance. Must not only ask clarifying questions.",
+        },
+      },
+      {
+        message: "Ja bitte",
+        content: {
+          must_be_german: true,
+          required_keywords: ["anwenden", "Längen"],
+          forbidden_keywords: ["Formulier es bitte", "konkreter", "nicht sicher, was du genau"],
+        },
+        judge: {
+          expected_behavior:
+            "Should interpret 'Ja bitte' as confirmation of the prior visible usage/application follow-up and explain how to apply the recommended leave-in. Must not ask the user to restate the request.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "routine-summary-followup",
+    name: "Routine summary follow-up",
+    description:
+      "Multi-turn: after building a simple routine, a summary follow-up should recap the visible routine instead of rebuilding it or losing context",
+    hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message: "Erstelle mir bitte eine einfache Routine für meine welligen Haare",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Shampoo", "Conditioner"],
+          forbidden_keywords: ["Formulier es bitte", "konkreter"],
+        },
+        judge: {
+          expected_behavior:
+            "Should create a simple routine for wavy hair using the available profile and current routine context. Must not reject the request as unclear.",
+        },
+      },
+      {
+        message: "Fass mir das bitte ganz kurz zusammen",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Shampoo", "Conditioner"],
+          forbidden_keywords: ["Formulier es bitte", "konkreter"],
+        },
+        judge: {
+          expected_behavior:
+            "Should summarize the routine from the previous assistant answer. Must not rebuild a new routine, ask for the whole request again, or lose the routine context.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "explicit-branch-followup",
+    name: "Explicit branch follow-up after category comparison",
+    description:
+      "Multi-turn: after comparing Leave-in and mask for frizz, an explicit branch choice should continue that branch instead of importing stale wording from another option",
+    hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message: "Soll ich gegen Frizz eher ein Leave-in oder eine Maske testen?",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Leave-in", "Maske"],
+          forbidden_keywords: ["Formulier es bitte", "konkreter"],
+        },
+        judge: {
+          expected_behavior:
+            "Should compare Leave-in vs mask for frizz and give a practical direction for the user's profile.",
+        },
+      },
+      {
+        message: "Dann lieber Leave-in",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Leave-in"],
+          forbidden_keywords: ["Maske wäre besser", "Formulier es bitte", "konkreter"],
+        },
+        judge: {
+          expected_behavior:
+            "Should continue the explicitly chosen Leave-in branch and give next-step guidance or products for Leave-in. Must not switch back to recommending a mask as the chosen option.",
+        },
+      },
+    ],
+  },
+
+  {
     id: "recommend-refine-no-match",
     name: "Recommend & refine with unlikely catalog match",
     description:
