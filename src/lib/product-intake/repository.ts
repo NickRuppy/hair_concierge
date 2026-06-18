@@ -1,6 +1,10 @@
 import { randomUUID } from "node:crypto"
 
 import { createAdminClient } from "@/lib/supabase/admin"
+import {
+  GENERAL_RECOMMENDATION_PRODUCT_SQL_FILTER,
+  INTAKE_DEDUPE_PRODUCT_SQL_FILTER,
+} from "@/lib/product-catalog/eligibility"
 import { PRODUCT_INTAKE_BUCKET } from "@/lib/product-intake/image-validation"
 import { ProductIntakePersistenceError } from "@/lib/product-intake/errors"
 import { assertTemporaryUploadPathBelongsToUser } from "@/lib/product-intake/upload-paths"
@@ -89,13 +93,31 @@ export function createSupabaseProductIntakeRepository(
   admin = createAdminClient(),
 ): ProductIntakeRepository {
   return {
-    async loadCatalog() {
+    async loadCatalog(params) {
+      const eligibilityMode = params?.eligibilityMode ?? "general_recommendation"
+      let productsQuery = admin
+        .from("products")
+        .select(
+          "id, name, brand_id, product_line_id, category_key, is_active, lifecycle_status, is_chaarlie_recommended",
+        )
+        .eq(
+          "is_active",
+          eligibilityMode === "intake_dedupe"
+            ? INTAKE_DEDUPE_PRODUCT_SQL_FILTER.is_active
+            : GENERAL_RECOMMENDATION_PRODUCT_SQL_FILTER.is_active,
+        )
+
+      if (eligibilityMode === "general_recommendation") {
+        productsQuery = productsQuery
+          .eq("lifecycle_status", GENERAL_RECOMMENDATION_PRODUCT_SQL_FILTER.lifecycle_status)
+          .eq(
+            "is_chaarlie_recommended",
+            GENERAL_RECOMMENDATION_PRODUCT_SQL_FILTER.is_chaarlie_recommended,
+          )
+      }
+
       const [productsResult, identifiersResult] = await Promise.all([
-        admin
-          .from("products")
-          .select(
-            "id, name, brand_id, product_line_id, category_key, is_active, is_chaarlie_recommended",
-          ),
+        productsQuery,
         admin
           .from("product_identifiers")
           .select(

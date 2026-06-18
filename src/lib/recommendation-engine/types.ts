@@ -118,6 +118,9 @@ export interface RawRoutineInventoryItem {
   category: InventoryCategory
   product_name: string | null
   frequency_range: ProductFrequency | null
+  product_id?: string | null
+  product_submission_id?: string | null
+  match_status?: "text_only" | "matched" | "pending_review" | "needs_more_info" | null
 }
 
 export interface RawHairProfileInput {
@@ -152,6 +155,9 @@ export interface NormalizedRoutineInventoryItem {
   present: boolean
   productName: string | null
   frequencyBand: ProductFrequency | null
+  productId: string | null
+  productSubmissionId: string | null
+  matchStatus: "text_only" | "matched" | "pending_review" | "needs_more_info" | null
 }
 
 export type RoutineInventory = Record<InventoryCategory, NormalizedRoutineInventoryItem | null>

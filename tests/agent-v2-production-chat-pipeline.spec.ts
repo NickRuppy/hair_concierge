@@ -1178,6 +1178,147 @@ test("AgentV2 production pipeline surfaces product intake offer from lookup resu
   )
 })
 
+test("AgentV2 production pipeline scopes lookup to public products and user-owned matched products", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  const lookupResults: Array<{ status: string; productId: string | null }> = []
+  const loadCatalogModes: unknown[] = []
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Passt mein Testmarke Owned Conditioner zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "owned-lookup",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [
+          {
+            category: "conditioner",
+            product_name: "Owned Conditioner",
+            frequency_range: "weekly_1x",
+            product_id: "owned-conditioner",
+            match_status: "matched",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async (params: unknown) => {
+            loadCatalogModes.push(params)
+            return {
+              products: [
+                {
+                  id: "public-conditioner",
+                  name: "Public Conditioner",
+                  brand_id: "brand-test",
+                  category_key: "conditioner",
+                  is_active: true,
+                  lifecycle_status: "active",
+                  is_chaarlie_recommended: true,
+                },
+                {
+                  id: "owned-conditioner",
+                  name: "Owned Conditioner",
+                  brand_id: "brand-test",
+                  category_key: "conditioner",
+                  is_active: true,
+                  lifecycle_status: "active",
+                  is_chaarlie_recommended: false,
+                },
+                {
+                  id: "hidden-conditioner",
+                  name: "Hidden Conditioner",
+                  brand_id: "brand-test",
+                  category_key: "conditioner",
+                  is_active: true,
+                  lifecycle_status: "active",
+                  is_chaarlie_recommended: false,
+                },
+              ],
+              identifiers: [
+                {
+                  product_id: "hidden-conditioner",
+                  identifier_type: "retailer_sku",
+                  identifier_value: "hidden-sku",
+                  normalized_identifier_value: "hidden-sku",
+                },
+              ],
+            }
+          },
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-test", canonical_name: "Testmarke" }],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        const ownedResult = await params.tools.lookup_product_candidate({
+          category: "conditioner",
+          brand_text: "Testmarke",
+          product_name_text: "Owned Conditioner",
+          reason: "The user asks whether their owned product suits them.",
+          evidence_quote: "Testmarke Owned Conditioner",
+        })
+        const hiddenResult = await params.tools.lookup_product_candidate({
+          category: "conditioner",
+          brand_text: "Testmarke",
+          product_name_text: "Hidden Conditioner",
+          reason: "The user asks about a non-owned non-recommended product.",
+          evidence_quote: "Testmarke Hidden Conditioner",
+        })
+        lookupResults.push(summarizeLookupResult(ownedResult), summarizeLookupResult(hiddenResult))
+        return agentResult
+      },
+    },
+  )
+
+  assert.deepEqual(loadCatalogModes, [{ eligibilityMode: "intake_dedupe" }])
+  assert.deepEqual(lookupResults, [
+    { status: "found_exact", productId: "owned-conditioner" },
+    { status: "not_found", productId: null },
+  ])
+})
+
+function summarizeLookupResult(result: unknown): { status: string; productId: string | null } {
+  if (!result || typeof result !== "object" || Array.isArray(result)) {
+    return { status: "invalid", productId: null }
+  }
+
+  const record = result as Record<string, unknown>
+  const product =
+    record.product && typeof record.product === "object" && !Array.isArray(record.product)
+      ? (record.product as Record<string, unknown>)
+      : null
+
+  return {
+    status: typeof record.status === "string" ? record.status : "invalid",
+    productId: typeof product?.id === "string" ? product.id : null,
+  }
+}
+
 test("AgentV2 production pipeline defaults product intake lookup off", async () => {
   const hairProfile = createCompleteHairProfile()
   const agentResult = createAgentV2Result()

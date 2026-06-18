@@ -134,6 +134,7 @@ function createFakeRepository(options: FakeRepoOptions = {}) {
   let nextSubmission = 1
   let nextUsage = 1
   const calls: string[] = []
+  const catalogModes: string[] = []
   const openStatuses = new Set([
     "pending_review",
     "researching",
@@ -157,7 +158,8 @@ function createFakeRepository(options: FakeRepoOptions = {}) {
   }
 
   const repository: ProductIntakeRepository = {
-    async loadCatalog() {
+    async loadCatalog(params) {
+      catalogModes.push(params?.eligibilityMode ?? "default")
       return catalog
     },
     async loadBrandResolutionCatalog() {
@@ -352,6 +354,7 @@ function createFakeRepository(options: FakeRepoOptions = {}) {
       return Array.from(submissions.values())
     },
     calls,
+    catalogModes,
   }
 }
 
@@ -436,6 +439,7 @@ test("matched manual intake links user usage to the existing product without cre
   assert.equal(fake.usage?.product_id, "product-garnier-mask")
   assert.equal(fake.usage?.product_submission_id, null)
   assert.equal(fake.usage?.match_status, "matched")
+  assert.deepEqual(fake.catalogModes, ["intake_dedupe"])
   assert.deepEqual(fake.calls, ["replace_usage_matched:product-garnier-mask"])
 })
 

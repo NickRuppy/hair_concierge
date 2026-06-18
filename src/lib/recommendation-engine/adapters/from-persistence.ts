@@ -1,4 +1,8 @@
-import type { HairProfile, RoutineProduct } from "@/lib/types"
+import type { HairProfile, ProductUsageMatchStatus, RoutineProduct } from "@/lib/types"
+import {
+  chooseRoutineUsageIdentity,
+  normalizeRoutineUsageIdentity,
+} from "@/lib/product-usage/routine-identity"
 import {
   deriveShampooFrequencyFromRoutineItems,
   type RoutineInventoryLike,
@@ -37,6 +41,9 @@ export interface PersistenceRoutineItemRow {
   category: string
   product_name: string | null
   frequency_range: ProductFrequencyInput | string | null
+  product_id?: string | null
+  product_submission_id?: string | null
+  match_status?: ProductUsageMatchStatus | null
 }
 
 export interface AdaptedRecommendationInput {
@@ -87,12 +94,15 @@ function buildRawHairProfileInput(
   routineItems: RoutineInventoryLike[],
   options: AdaptRecommendationInputOptions,
 ): RawHairProfileInput {
-  if (!profile) {
-    return emptyRawHairProfileInput()
-  }
-
   const derivedShampooRoutineFrequency = deriveShampooFrequencyFromRoutineItems(routineItems)
   const derivedShampooFrequency = options.derivedShampooFrequency ?? null
+
+  if (!profile) {
+    return {
+      ...emptyRawHairProfileInput(),
+      shampoo_frequency: derivedShampooRoutineFrequency ?? derivedShampooFrequency,
+    }
+  }
 
   return {
     hair_texture: profile.hair_texture,
@@ -154,21 +164,25 @@ export function adaptRecommendationInputFromPersistence(
 
     const current = supportedItems.get(canonicalCategory)
     const frequency = normalizeProductFrequency(item.frequency_range)
+    const identity = normalizeRoutineUsageIdentity(item)
     if (!current) {
       supportedItems.set(canonicalCategory, {
         category: canonicalCategory,
         product_name: item.product_name,
         frequency_range: frequency,
+        ...identity,
       })
       continue
     }
 
+    const mergedIdentity = chooseRoutineUsageIdentity(current, identity)
     supportedItems.set(canonicalCategory, {
       category: canonicalCategory,
       product_name: current.product_name ?? item.product_name,
       frequency_range: shouldReplaceFrequency(current.frequency_range, frequency)
         ? frequency
         : current.frequency_range,
+      ...mergedIdentity,
     })
   }
 

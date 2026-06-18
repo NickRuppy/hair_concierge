@@ -21,6 +21,8 @@ export type ProductIntakeCatalogProduct = {
   category_key?: string | null
   isActive?: boolean | null
   is_active?: boolean | null
+  lifecycleStatus?: string | null
+  lifecycle_status?: string | null
   isChaarlieRecommended?: boolean | null
   is_chaarlie_recommended?: boolean | null
 }
