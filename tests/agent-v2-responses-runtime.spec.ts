@@ -1684,6 +1684,8 @@ test("AgentV2 turn gate must run before advisor tools when enabled", async () =>
     result.trace.tool_calls.map((call) => call.name),
     ["classify_turn_gate", "load_advisor_guidance"],
   )
+  const gateToolCall = result.trace.tool_calls.find((call) => call.name === "classify_turn_gate")
+  assert.equal(result.trace.turn_gate?.latency_ms, gateToolCall?.latency_ms)
 })
 
 test("AgentV2 social gate allows only a social terminal answer", async () => {

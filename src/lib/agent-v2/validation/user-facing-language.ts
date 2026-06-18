@@ -11,6 +11,12 @@ interface UserFacingText {
   value: string
 }
 
+interface ConversationCloseCandidate {
+  path: Array<string | number>
+  text: string
+  likelyClosingText: string
+}
+
 const USER_FACING_PAYLOAD_FIELDS = new Set([
   "user_facing_answer_de",
   "reason_de",
@@ -119,92 +125,104 @@ export function analyzeConversationClose(
 ): AgentV2ValidationError[] {
   const findings: AgentV2ValidationError[] = []
   const visibleAnswer = getVisibleAnswerText(answer)
-  const explicitOffer = getNextStepOfferText(answer)
-  const likelyClosingText = extractLikelyClosingText(visibleAnswer)
-  const closeText = buildConversationCloseText(likelyClosingText, explicitOffer)
-  const normalizedClose = normalizeGermanText(closeText)
-  const path = ["payload", "user_facing_answer_de"]
 
-  if (!normalizedClose) return findings
+  for (const candidate of getConversationCloseCandidates(answer)) {
+    const normalizedClose = normalizeGermanText(candidate.text)
+    if (!normalizedClose) continue
 
-  if (hasGenericClose(normalizedClose)) {
-    findings.push(
-      blockFinding(
-        "bad_conversation_close_generic",
-        "Conversation close is generic bait instead of a specific useful next move.",
-        path,
-      ),
-    )
-  }
+    if (hasGenericClose(normalizedClose)) {
+      findings.push(
+        blockFinding(
+          "bad_conversation_close_generic",
+          "Conversation close is generic bait instead of a specific useful next move.",
+          candidate.path,
+        ),
+      )
+    }
 
-  if (hasInfeasibleClose(normalizedClose)) {
-    findings.push(
-      blockFinding(
-        "bad_conversation_close_infeasible",
-        "Conversation close offers an action the current chat/tools cannot actually service.",
-        path,
-      ),
-    )
-  }
+    if (hasInfeasibleClose(normalizedClose)) {
+      findings.push(
+        blockFinding(
+          "bad_conversation_close_infeasible",
+          "Conversation close offers an action the current chat/tools cannot actually service.",
+          candidate.path,
+        ),
+      )
+    }
 
-  if (hasUnsupportedIngredientLane(normalizedClose)) {
-    findings.push(
-      blockFinding(
-        "bad_conversation_close_unsupported_lane",
-        "Conversation close opens unsupported ingredient/INCI-list analysis instead of staying in supported product facts.",
-        path,
-      ),
-    )
-  }
+    if (hasUnsupportedIngredientLane(normalizedClose)) {
+      findings.push(
+        blockFinding(
+          "bad_conversation_close_unsupported_lane",
+          "Conversation close opens unsupported ingredient/INCI-list analysis instead of staying in supported product facts.",
+          candidate.path,
+        ),
+      )
+    }
 
-  if (countQuestions(closeText) > 1) {
-    findings.push(
-      blockFinding(
-        "bad_conversation_close_multi_question",
-        "Conversation close asks multiple questions; ask at most one material question.",
-        path,
-      ),
-    )
-  }
+    if (countQuestions(candidate.text) > 1) {
+      findings.push(
+        blockFinding(
+          "bad_conversation_close_multi_question",
+          "Conversation close asks multiple questions; ask at most one material question.",
+          candidate.path,
+        ),
+      )
+    }
 
-  if (hasRedundantProductOffer(answer, normalizedClose)) {
-    findings.push(
-      blockFinding(
-        "bad_conversation_close_redundant",
-        "Conversation close offers the same product recommendation action already completed in this answer.",
-        path,
-      ),
-    )
-  }
+    if (hasRedundantProductOffer(answer, normalizedClose)) {
+      findings.push(
+        blockFinding(
+          "bad_conversation_close_redundant",
+          "Conversation close offers the same product recommendation action already completed in this answer.",
+          candidate.path,
+        ),
+      )
+    }
 
-  if (hasRedundantComparisonClose(visibleAnswer, likelyClosingText, context, normalizedClose)) {
-    findings.push(
-      blockFinding(
-        "bad_conversation_close_redundant_comparison",
-        "Conversation close offers to compare categories the answer already compared or resolved.",
-        path,
-      ),
-    )
-  }
+    if (
+      hasRedundantComparisonClose(
+        visibleAnswer,
+        candidate.likelyClosingText,
+        context,
+        normalizedClose,
+      )
+    ) {
+      findings.push(
+        blockFinding(
+          "bad_conversation_close_redundant_comparison",
+          "Conversation close offers to compare categories the answer already compared or resolved.",
+          candidate.path,
+        ),
+      )
+    }
 
-  if (hasRedundantSourceTriageClose(visibleAnswer, likelyClosingText, context, normalizedClose)) {
-    findings.push(
-      blockFinding(
-        "bad_conversation_close_redundant_source_triage",
-        "Conversation close offers to classify a likely cause/source the answer already classified.",
-        path,
-      ),
-    )
-  }
+    if (
+      hasRedundantSourceTriageClose(
+        visibleAnswer,
+        candidate.likelyClosingText,
+        context,
+        normalizedClose,
+      )
+    ) {
+      findings.push(
+        blockFinding(
+          "bad_conversation_close_redundant_source_triage",
+          "Conversation close offers to classify a likely cause/source the answer already classified.",
+          candidate.path,
+        ),
+      )
+    }
 
-  if (hasWeakButHarmlessClose(normalizedClose)) {
-    findings.push({
-      validator_id: "conversation_close_weak",
-      message:
-        "Conversation close is harmless but vague; prefer a specific warm-coach next direction or a clean stop.",
-      severity: "warn",
-      path,
-    })
+    if (hasWeakButHarmlessClose(normalizedClose)) {
+      findings.push({
+        validator_id: "conversation_close_weak",
+        message:
+          "Conversation close is harmless but vague; prefer a specific warm-coach next direction or a clean stop.",
+        severity: "warn",
+        path: candidate.path,
+      })
+    }
   }
 
   return findings
@@ -303,6 +321,48 @@ function getNextStepOfferText(answer: AgentV2TerminalAnswer): string {
     : ""
 }
 
+function getConversationCloseCandidates(
+  answer: AgentV2TerminalAnswer,
+): ConversationCloseCandidate[] {
+  const visibleAnswer = getVisibleAnswerText(answer)
+  const explicitOffer = getNextStepOfferText(answer)
+  const likelyClosingText = extractLikelyClosingText(visibleAnswer)
+  const candidates: ConversationCloseCandidate[] = [
+    {
+      path: ["payload", "user_facing_answer_de"],
+      text: buildConversationCloseText(likelyClosingText, explicitOffer),
+      likelyClosingText,
+    },
+  ]
+
+  for (const field of [
+    "question_de",
+    "safe_alternative_de",
+    "boundary_reason_de",
+    "next_step_de",
+  ]) {
+    const value = (answer.payload as Record<string, unknown>)[field]
+    collectCloseCandidateValue(value, ["payload", field], candidates)
+  }
+
+  return candidates
+}
+
+function collectCloseCandidateValue(
+  value: unknown,
+  path: Array<string | number>,
+  candidates: ConversationCloseCandidate[],
+): void {
+  if (typeof value === "string") {
+    candidates.push({ path, text: value, likelyClosingText: value })
+    return
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => collectCloseCandidateValue(item, [...path, index], candidates))
+  }
+}
+
 function extractLikelyClosingText(text: string): string {
   const paragraphs = text
     .split(/\n{2,}/)
@@ -388,6 +448,12 @@ function hasIngredientAnalysisRefusal(text: string): boolean {
   return (
     new RegExp(
       `${ingredientList}.{0,80}\\b(?:kann|koennen)\\b.{0,50}\\bnicht\\b.{0,80}${analysisAction}`,
+    ).test(text) ||
+    new RegExp(
+      `\\b(?:kann|koennen)\\b.{0,80}${ingredientList}.{0,80}\\bnicht\\b.{0,80}${analysisAction}`,
+    ).test(text) ||
+    new RegExp(
+      `\\b(?:kann|koennen)\\b.{0,80}\\bkeine?n?\\b.{0,80}${ingredientList}.{0,80}${analysisAction}`,
     ).test(text) ||
     /\b(?:nicht unterstuetzt|unterstuetze ich hier nicht|kein unterstuetzter)\b/.test(text)
   )

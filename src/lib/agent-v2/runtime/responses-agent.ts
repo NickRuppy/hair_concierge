@@ -420,7 +420,7 @@ export async function runAgentV2ResponsesTurn(params: {
         safety_mode: safetyMode,
         advisor_continuation_allowed: turnGateAuthorized.gate_status === "proceed",
         enabled: true,
-        latency_ms: modelStepLatencyMs,
+        latency_ms: gateLatencyMs,
       }
       const output = buildTurnGateToolOutput(turnGateAuthorized, safetyMode)
       inputItems.push(buildFunctionCallOutput(gateCall.call_id, output))

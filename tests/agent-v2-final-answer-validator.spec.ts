@@ -5745,6 +5745,55 @@ test("validator blocks objective bad conversation closers", () => {
   }
 })
 
+test("validator checks rendered clarification question close text", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "clarification",
+      request_interpretation: requestInterpretation({
+        primary_intent: "clarification",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "unknown",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Was soll ich tun?",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("clarification"),
+        used_product_tool: false,
+        product_ids: [],
+        hard_rule_ids: [],
+      },
+      payload: {
+        user_facing_answer_de: "Ich brauche dafür noch eine konkrete Richtung.",
+        question_de: "Möchtest du mehr Tipps?",
+        missing_keys: ["category"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      toolCallHistory: [],
+      latestUserMessage: "Was soll ich tun?",
+      recentEvidenceText: "Was soll ich tun?",
+      requiredGuidancePackageIds: [],
+      knownHardRuleIds: [],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some(
+      (error) =>
+        error.validator_id === "bad_conversation_close_generic" &&
+        error.path?.join(".") === "payload.question_de",
+    ),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
 test("validator warns but does not block weak conversation closers", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -5793,51 +5842,60 @@ test("validator warns but does not block weak conversation closers", () => {
 })
 
 test("validator allows honest clean stop for unsupported INCI-list analysis", () => {
-  const result = validateAgentV2FinalAnswer(
-    {
-      ...baseAnswer,
-      answer_mode: "general_advice",
-      request_interpretation: requestInterpretation({
-        primary_intent: "general_advice",
-        product_request_kind: "none",
-        routine_intent: "none",
-        care_category: "none",
-        requested_product_count: null,
-        count_policy: "none",
-        evidence_quote: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
-      }),
-      tool_grounding: {
-        ...baseAnswer.tool_grounding,
-        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
-        used_product_tool: false,
-        product_ids: [],
-        hard_rule_ids: [],
-      },
-      payload: {
-        user_facing_answer_de:
-          "INCI-Listen kann ich hier nicht verlässlich prüfen oder bewerten. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
-        category_or_topic: "unsupported ingredient analysis",
-        key_points_de: ["INCI-Analyse ist kein unterstützter Beratungspfad."],
-        next_step_offer_de: null,
-      },
-    },
-    {
-      ...baseValidationContext,
-      selectedProductProjections: [],
-      toolCallHistory: [],
-      latestUserMessage: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
-      recentEvidenceText: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
-      requiredGuidancePackageIds: [],
-      knownHardRuleIds: [],
-    },
-  )
+  const allowedRefusals = [
+    "INCI-Listen kann ich hier nicht verlässlich prüfen oder bewerten. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
+    "Ich kann INCI-Listen hier nicht verlässlich analysieren. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
+    "Ich kann keine INCI-Listen analysieren. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
+  ]
 
-  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
-  assert.equal(
-    result.errors.some((error) => error.validator_id === "bad_conversation_close_unsupported_lane"),
-    false,
-    JSON.stringify(result.errors, null, 2),
-  )
+  for (const refusal of allowedRefusals) {
+    const result = validateAgentV2FinalAnswer(
+      {
+        ...baseAnswer,
+        answer_mode: "general_advice",
+        request_interpretation: requestInterpretation({
+          primary_intent: "general_advice",
+          product_request_kind: "none",
+          routine_intent: "none",
+          care_category: "none",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
+        }),
+        tool_grounding: {
+          ...baseAnswer.tool_grounding,
+          used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
+          used_product_tool: false,
+          product_ids: [],
+          hard_rule_ids: [],
+        },
+        payload: {
+          user_facing_answer_de: refusal,
+          category_or_topic: "unsupported ingredient analysis",
+          key_points_de: ["INCI-Analyse ist kein unterstützter Beratungspfad."],
+          next_step_offer_de: null,
+        },
+      },
+      {
+        ...baseValidationContext,
+        selectedProductProjections: [],
+        toolCallHistory: [],
+        latestUserMessage: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
+        recentEvidenceText: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
+        requiredGuidancePackageIds: [],
+        knownHardRuleIds: [],
+      },
+    )
+
+    assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+    assert.equal(
+      result.errors.some(
+        (error) => error.validator_id === "bad_conversation_close_unsupported_lane",
+      ),
+      false,
+      JSON.stringify(result.errors, null, 2),
+    )
+  }
 })
 
 test("validator blocks carried routine step ids when active routine thread has no visible steps", () => {

@@ -101,7 +101,7 @@ export async function updateSession(request: NextRequest) {
     const [targetPathname, targetSearch = ""] = redirectTarget.split("?")
     url.pathname = targetPathname
     url.search = targetSearch ? `?${targetSearch}` : ""
-    return NextResponse.redirect(url)
+    return redirectWithSupabaseCookies(url, supabaseResponse)
   }
 
   // All checks below require an authenticated user
@@ -182,7 +182,7 @@ export async function updateSession(request: NextRequest) {
       const url = request.nextUrl.clone()
       url.pathname = "/pricing"
       url.searchParams.set("reason", "resubscribe")
-      return NextResponse.redirect(url)
+      return redirectWithSupabaseCookies(url, supabaseResponse)
     }
   }
   // --- End subscription paywall ------------------------------------------
@@ -216,7 +216,7 @@ export async function updateSession(request: NextRequest) {
       } else {
         url.searchParams.delete("lead")
       }
-      return NextResponse.redirect(url)
+      return redirectWithSupabaseCookies(url, supabaseResponse)
     }
   }
 
@@ -231,9 +231,18 @@ export async function updateSession(request: NextRequest) {
     if (!profile?.is_admin) {
       const url = request.nextUrl.clone()
       url.pathname = "/chat"
-      return NextResponse.redirect(url)
+      return redirectWithSupabaseCookies(url, supabaseResponse)
     }
   }
 
   return supabaseResponse
+}
+
+export function redirectWithSupabaseCookies(
+  url: string | URL,
+  supabaseResponse: NextResponse,
+): NextResponse {
+  const redirectResponse = NextResponse.redirect(url)
+  supabaseResponse.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie))
+  return redirectResponse
 }
