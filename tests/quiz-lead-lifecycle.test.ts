@@ -11,6 +11,7 @@ test("dedupe reuses a recent lead when normalized answers match", () => {
         quiz_answers: {
           structure: "curly",
           thickness: "normal",
+          hair_length: "medium",
           fingertest: "rau",
           pulltest: "ueberdehnt",
           scalp_condition: "keine",
@@ -23,6 +24,7 @@ test("dedupe reuses a recent lead when normalized answers match", () => {
     {
       structure: "curly",
       thickness: "normal",
+      hair_length: "medium",
       fingertest: "rau",
       pulltest: "stretches_stays",
       scalp_type: "fettig",
@@ -43,6 +45,7 @@ test("dedupe still reuses a legacy lead missing the new scalp gate and concern f
         quiz_answers: {
           structure: "curly",
           thickness: "normal",
+          hair_length: "medium",
           fingertest: "rau",
           pulltest: "ueberdehnt",
           scalp_type: "fettig",
@@ -53,6 +56,7 @@ test("dedupe still reuses a legacy lead missing the new scalp gate and concern f
     {
       structure: "curly",
       thickness: "normal",
+      hair_length: "medium",
       fingertest: "rau",
       pulltest: "stretches_stays",
       scalp_type: "fettig",
@@ -73,6 +77,7 @@ test("dedupe distinguishes concern notes with different text", () => {
         quiz_answers: {
           structure: "curly",
           thickness: "normal",
+          hair_length: "medium",
           fingertest: "rau",
           pulltest: "ueberdehnt",
           scalp_type: "fettig",
@@ -85,6 +90,7 @@ test("dedupe distinguishes concern notes with different text", () => {
     {
       structure: "curly",
       thickness: "normal",
+      hair_length: "medium",
       fingertest: "rau",
       pulltest: "stretches_stays",
       scalp_type: "fettig",

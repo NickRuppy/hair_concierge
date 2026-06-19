@@ -62,6 +62,7 @@ function emptyRawHairProfileInput(): RawHairProfileInput {
   return {
     hair_texture: null,
     thickness: null,
+    hair_length: null,
     density: null,
     concerns: [],
     goals: [],
@@ -97,6 +98,7 @@ function buildRawHairProfileInput(
   return {
     hair_texture: profile.hair_texture,
     thickness: profile.thickness,
+    hair_length: profile.hair_length ?? null,
     density: profile.density,
     concerns: profile.concerns ?? [],
     goals: profile.goals ?? [],

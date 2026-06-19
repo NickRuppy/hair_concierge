@@ -11,6 +11,14 @@ export {
 export type { HairTexture, HairThickness } from "./hair-types"
 
 export {
+  HAIR_LENGTHS,
+  HAIR_LENGTH_LABELS,
+  HAIR_LENGTH_DESCRIPTIONS,
+  HAIR_LENGTH_OPTIONS,
+} from "./hair-length"
+export type { HairLength } from "./hair-length"
+
+export {
   PROFILE_CONCERNS,
   PROFILE_CONCERN_LABELS,
   PROFILE_CONCERN_OPTIONS,

@@ -18,6 +18,7 @@ import type { OnboardingStep } from "@/lib/onboarding/store"
 import {
   BRUSH_TYPE_LABELS,
   DRYING_METHOD_LABELS,
+  HAIR_LENGTH_OPTIONS,
   NIGHT_PROTECTION_LABELS,
   TOWEL_MATERIAL_LABELS,
   TOWEL_TECHNIQUE_LABELS,
@@ -151,6 +152,13 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.density, HAIR_DENSITY_OPTIONS),
+  },
+  {
+    key: "hair_length",
+    label: "Haarlänge",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) => optionLabel(profile?.hair_length, HAIR_LENGTH_OPTIONS),
   },
   {
     key: "cuticle_condition",

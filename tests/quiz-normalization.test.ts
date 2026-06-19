@@ -43,6 +43,11 @@ test("density values are normalized and invalid values are removed", () => {
   assert.equal(normalizeStoredQuizAnswers({ density: "unknown" }).density, undefined)
 })
 
+test("hair length values are normalized and invalid values are removed", () => {
+  assert.equal(normalizeStoredQuizAnswers({ hair_length: "very_long" }).hair_length, "very_long")
+  assert.equal(normalizeStoredQuizAnswers({ hair_length: "unknown" }).hair_length, undefined)
+})
+
 test("legacy scalp values still map to type and condition", () => {
   const normalized = normalizeStoredQuizAnswers({
     structure: "wavy",

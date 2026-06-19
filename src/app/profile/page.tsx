@@ -41,6 +41,7 @@ import {
 import {
   PRODUCT_FREQUENCY_LABELS,
   fehler,
+  HAIR_LENGTH_OPTIONS,
   normalizeProductFrequency,
   type ProductFrequencyInput,
 } from "@/lib/vocabulary"
@@ -82,6 +83,7 @@ type QuizDraft = {
   hair_texture: string
   thickness: string
   density: string
+  hair_length: string
   cuticle_condition: string
   protein_moisture_balance: string
   chemical_treatment: ChemicalTreatment[]
@@ -179,6 +181,7 @@ function createQuizDraft(profile: HairProfile | null): QuizDraft {
     hair_texture: profile?.hair_texture ?? "",
     thickness: profile?.thickness ?? "",
     density: profile?.density ?? "",
+    hair_length: profile?.hair_length ?? "",
     cuticle_condition: profile?.cuticle_condition ?? "",
     protein_moisture_balance: profile?.protein_moisture_balance ?? "",
     chemical_treatment: profile?.chemical_treatment ?? [],
@@ -194,6 +197,7 @@ function createLocalHairProfile(
   fields: Partial<HairProfile>,
 ): HairProfile {
   const now = fields.updated_at ?? new Date().toISOString()
+  const hasHairLengthOverride = Object.prototype.hasOwnProperty.call(fields, "hair_length")
 
   return {
     id: currentProfile?.id ?? `local-${userId}`,
@@ -203,7 +207,7 @@ function createLocalHairProfile(
     density: currentProfile?.density ?? null,
     concerns: currentProfile?.concerns ?? [],
     products_used: currentProfile?.products_used ?? null,
-    shampoo_frequency: null,
+    shampoo_frequency: currentProfile?.shampoo_frequency ?? null,
     heat_styling: currentProfile?.heat_styling ?? null,
     styling_tools: currentProfile?.styling_tools ?? null,
     goals: currentProfile?.goals ?? [],
@@ -226,6 +230,9 @@ function createLocalHairProfile(
     created_at: currentProfile?.created_at ?? now,
     updated_at: now,
     ...fields,
+    hair_length: hasHairLengthOverride
+      ? (fields.hair_length ?? null)
+      : (currentProfile?.hair_length ?? null),
   }
 }
 
@@ -244,6 +251,10 @@ function toggleChemicalTreatment(
   }
 
   return [...withoutNatural, treatment]
+}
+
+function hasProfileFieldValue(value: ProfileFieldValue): boolean {
+  return value !== null && (!Array.isArray(value) || value.length > 0)
 }
 
 function toggleConcern(currentValues: ProfileConcern[], concern: ProfileConcern): ProfileConcern[] {
@@ -726,10 +737,10 @@ export default function ProfilePage() {
   const goalsField = goalsFields[0] ?? null
   const productRows = useMemo(() => createProductRows(productUsage), [productUsage])
 
-  const quizFilled = quizFields.filter((field) => field.value !== null)
-  const stylingFilled = stylingFields.filter((field) => field.value !== null)
-  const routineFilled = routineFields.filter((field) => field.value !== null)
-  const goalsFilled = goalsFields.filter((field) => field.value !== null)
+  const quizFilled = quizFields.filter((field) => hasProfileFieldValue(field.value))
+  const stylingFilled = stylingFields.filter((field) => hasProfileFieldValue(field.value))
+  const routineFilled = routineFields.filter((field) => hasProfileFieldValue(field.value))
+  const goalsFilled = goalsFields.filter((field) => hasProfileFieldValue(field.value))
   const selectedProductCategories = productRows.map((row) => row.categoryLabel)
   const incompleteProductRows = productRows.filter((row) => !row.isComplete)
 
@@ -848,6 +859,7 @@ export default function ProfilePage() {
       | "hair_texture"
       | "thickness"
       | "density"
+      | "hair_length"
       | "cuticle_condition"
       | "protein_moisture_balance"
       | "concerns"
@@ -858,6 +870,7 @@ export default function ProfilePage() {
       hair_texture: (quizDraft.hair_texture || null) as HairProfile["hair_texture"],
       thickness: (quizDraft.thickness || null) as HairProfile["thickness"],
       density: (quizDraft.density || null) as HairProfile["density"],
+      hair_length: (quizDraft.hair_length || null) as HairProfile["hair_length"],
       cuticle_condition: (quizDraft.cuticle_condition || null) as HairProfile["cuticle_condition"],
       protein_moisture_balance: (quizDraft.protein_moisture_balance ||
         null) as HairProfile["protein_moisture_balance"],
@@ -1132,6 +1145,25 @@ export default function ProfilePage() {
 
                       <div
                         ref={(node) => {
+                          quizFieldRefs.current.hair_length = node
+                        }}
+                      >
+                        <QuizEditorField
+                          title="Haarlänge"
+                          text="Wie lang deine Haare aktuell sind; bei Locken zählt die sanft gestreckte Länge."
+                        >
+                          <SegmentedControl
+                            options={HAIR_LENGTH_OPTIONS}
+                            value={quizDraft.hair_length}
+                            onChange={(value) =>
+                              setQuizDraft((current) => ({ ...current, hair_length: value }))
+                            }
+                          />
+                        </QuizEditorField>
+                      </div>
+
+                      <div
+                        ref={(node) => {
                           quizFieldRefs.current.cuticle_condition = node
                         }}
                       >
@@ -1367,26 +1399,45 @@ export default function ProfilePage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {quizFields.map((field) => {
-                      const isMissing = field.value == null
-                      return (
-                        <ProfileFieldCard
-                          key={field.key}
-                          field={field}
-                          onClick={() => openTarget("quiz", field.editTarget, field.key)}
-                          tone={isMissing ? "attention" : "default"}
-                          className={isMissing ? "md:col-span-2 xl:col-span-3" : undefined}
-                        >
-                          {isMissing ? (
-                            <ProfileFieldValue
-                              value={null}
-                              emptyLabel="Noch offen — tippen zum Ergänzen"
-                            />
-                          ) : undefined}
-                        </ProfileFieldCard>
-                      )
-                    })}
+                  <div className="space-y-4">
+                    {hairProfile?.hair_length == null ? (
+                      <InlinePromptCard
+                        title="Haarlänge ergänzen"
+                        text="Ergänze deine Haarlänge, damit Mengen und Anwendungshinweise genauer werden."
+                        action={
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="w-auto"
+                            onClick={() => startQuizEditing("hair_length")}
+                          >
+                            Haarlänge ergänzen
+                          </Button>
+                        }
+                      />
+                    ) : null}
+
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      {quizFields.map((field) => {
+                        const isMissing = field.value == null
+                        return (
+                          <ProfileFieldCard
+                            key={field.key}
+                            field={field}
+                            onClick={() => openTarget("quiz", field.editTarget, field.key)}
+                            tone={isMissing ? "attention" : "default"}
+                            className={isMissing ? "md:col-span-2 xl:col-span-3" : undefined}
+                          >
+                            {isMissing ? (
+                              <ProfileFieldValue
+                                value={null}
+                                emptyLabel="Noch offen — tippen zum Ergänzen"
+                              />
+                            ) : undefined}
+                          </ProfileFieldCard>
+                        )
+                      })}
+                    </div>
                   </div>
                 )}
               </CardContent>

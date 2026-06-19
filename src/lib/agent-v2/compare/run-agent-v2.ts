@@ -527,6 +527,7 @@ function createEmptyAgentV2HairProfile(): HairProfile {
     user_id: "",
     hair_texture: null,
     thickness: null,
+    hair_length: null,
     density: null,
     concerns: [],
     products_used: null,
@@ -565,6 +566,7 @@ function buildAgentV2EffectiveHairProfile(
   return {
     ...(fallback ?? createEmptyAgentV2HairProfile()),
     hair_texture: profile.hairTexture,
+    hair_length: profile.hairLength,
     thickness: profile.thickness,
     density: profile.density,
     concerns: [...profile.concerns],

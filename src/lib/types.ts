@@ -3,6 +3,7 @@
 import type {
   HairTexture,
   HairThickness,
+  HairLength,
   HairDensity,
   ProductFrequency,
   HeatStyling,
@@ -88,6 +89,7 @@ import type { ShampooBucket, ShampooBucketPair } from "@/lib/shampoo/constants"
 export type {
   HairTexture,
   HairThickness,
+  HairLength,
   HairDensity,
   ProductFrequency,
   HeatStyling,
@@ -157,6 +159,7 @@ export interface HairProfile {
   user_id: string
   hair_texture: HairTexture | null
   thickness: HairThickness | null
+  hair_length: HairLength | null
   density: HairDensity | null
   concerns: ProfileConcern[]
   products_used: string | null

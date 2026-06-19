@@ -14,6 +14,7 @@ test("builds rich Customer.io quiz traits with labels when consent is true", () 
       structure: "wavy",
       thickness: "fine",
       density: "low",
+      hair_length: "medium",
       fingertest: "leicht_uneben",
       pulltest: "stretches_stays",
       scalp_type: "trocken",
@@ -37,6 +38,8 @@ test("builds rich Customer.io quiz traits with labels when consent is true", () 
   assert.equal(sync.identifyTraits.thickness_label, "Fein")
   assert.equal(sync.identifyTraits.density, "low")
   assert.equal(sync.identifyTraits.density_label, "Wenig Haare")
+  assert.equal(sync.identifyTraits.hair_length, "medium")
+  assert.equal(sync.identifyTraits.hair_length_label, "Mittellang")
   assert.equal(sync.identifyTraits.cuticle_condition, "leicht_uneben")
   assert.equal(sync.identifyTraits.cuticle_condition_label, "Leicht uneben")
   assert.equal(sync.identifyTraits.protein_moisture_balance, "stretches_stays")
@@ -69,6 +72,7 @@ test("builds rich Customer.io quiz traits when marketing consent is false", () =
       structure: "curly",
       thickness: "coarse",
       density: "high",
+      hair_length: "long",
       fingertest: "rau",
       pulltest: "snaps",
       scalp_type: "fettig",
@@ -93,6 +97,8 @@ test("builds rich Customer.io quiz traits when marketing consent is false", () =
   assert.equal(sync.identifyTraits.thickness_label, "Dick")
   assert.equal(sync.identifyTraits.density, "high")
   assert.equal(sync.identifyTraits.density_label, "Viele Haare")
+  assert.equal(sync.identifyTraits.hair_length, "long")
+  assert.equal(sync.identifyTraits.hair_length_label, "Lang")
   assert.equal(sync.identifyTraits.cuticle_condition, "rau")
   assert.equal(sync.identifyTraits.cuticle_condition_label, "Rau")
   assert.equal(sync.identifyTraits.protein_moisture_balance, "snaps")

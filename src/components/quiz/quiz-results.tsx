@@ -79,12 +79,20 @@ export function QuizResults() {
 
     trackAppEvent("quiz_completed", {
       thickness: answers.thickness,
+      hairLength: answers.hair_length,
       hairTexture: answers.structure,
       leadId: leadId ?? undefined,
       scalpCondition: answers.scalp_condition,
       scalpType: answers.scalp_type,
     })
-  }, [answers.scalp_condition, answers.scalp_type, answers.structure, answers.thickness, leadId])
+  }, [
+    answers.hair_length,
+    answers.scalp_condition,
+    answers.scalp_type,
+    answers.structure,
+    answers.thickness,
+    leadId,
+  ])
 
   useEffect(() => {
     captureQuizCompleted()

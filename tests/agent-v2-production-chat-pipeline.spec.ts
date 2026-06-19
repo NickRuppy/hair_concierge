@@ -62,6 +62,7 @@ function createCompleteHairProfile(overrides: Partial<HairProfile> = {}): HairPr
     user_id: "user-1",
     hair_texture: "wavy",
     thickness: "fine",
+    hair_length: null,
     density: "medium",
     concerns: ["frizz"],
     products_used: null,
@@ -358,6 +359,102 @@ test("AgentV2 production conversation history loads the latest ten messages chro
       "Message 11",
       "Message 12",
     ],
+  )
+})
+
+test("AgentV2 production conversation history checks ownership before loading admin-scoped messages", async () => {
+  const returnedMessages = [createMessage(1)]
+  const calls: Array<{ table: string; column: string; value: string }> = []
+  const fakeClient = {
+    from(table: string) {
+      return {
+        select() {
+          return {
+            eq(column: string, value: string) {
+              calls.push({ table, column, value })
+              if (table === "conversations") {
+                return {
+                  eq(nextColumn: string, nextValue: string) {
+                    calls.push({ table, column: nextColumn, value: nextValue })
+                    return {
+                      async maybeSingle() {
+                        return { data: { id: "conversation-1" }, error: null }
+                      },
+                    }
+                  },
+                }
+              }
+
+              return {
+                order() {
+                  return {
+                    async limit() {
+                      return { data: returnedMessages, error: null }
+                    },
+                  }
+                },
+              }
+            },
+          }
+        },
+      }
+    },
+  }
+
+  const messages = await loadAgentV2ProductionConversationHistory(
+    "conversation-1",
+    "user-1",
+    fakeClient,
+  )
+
+  assert.deepEqual(
+    calls.filter((call) => call.table === "conversations"),
+    [
+      { table: "conversations", column: "id", value: "conversation-1" },
+      { table: "conversations", column: "user_id", value: "user-1" },
+    ],
+  )
+  assert.deepEqual(messages, returnedMessages)
+})
+
+test("AgentV2 production conversation history fails loudly when messages cannot be loaded", async () => {
+  const fakeClient = {
+    from(table: string) {
+      return {
+        select() {
+          return {
+            eq() {
+              if (table === "conversations") {
+                return {
+                  eq() {
+                    return {
+                      async maybeSingle() {
+                        return { data: { id: "conversation-1" }, error: null }
+                      },
+                    }
+                  },
+                }
+              }
+
+              return {
+                order() {
+                  return {
+                    async limit() {
+                      return { data: null, error: { message: "database unavailable" } }
+                    },
+                  }
+                },
+              }
+            },
+          }
+        },
+      }
+    },
+  }
+
+  await assert.rejects(
+    () => loadAgentV2ProductionConversationHistory("conversation-1", "user-1", fakeClient),
+    /Failed to load AgentV2 production conversation history/,
   )
 })
 

@@ -6,6 +6,7 @@ import type {
   DryingMethod,
   Goal,
   HairDensity,
+  HairLength,
   HairTexture,
   HairThickness,
   HeatStyling,
@@ -123,6 +124,7 @@ export interface RawRoutineInventoryItem {
 export interface RawHairProfileInput {
   hair_texture: HairTexture | null
   thickness: HairThickness | null
+  hair_length: HairLength | null
   density: HairDensity | null
   concerns: ProfileConcern[]
   goals: Goal[]
@@ -158,6 +160,7 @@ export type RoutineInventory = Record<InventoryCategory, NormalizedRoutineInvent
 
 export interface NormalizedProfile {
   hairTexture: HairTexture | null
+  hairLength: HairLength | null
   thickness: HairThickness | null
   density: HairDensity | null
   concerns: ProfileConcern[]

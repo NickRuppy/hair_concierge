@@ -4,6 +4,7 @@ import { isConditionerCategory } from "@/lib/conditioner/constants"
 import {
   HAIR_TEXTURES,
   HAIR_THICKNESSES,
+  HAIR_LENGTHS,
   HAIR_DENSITIES,
   PROFILE_CONCERNS,
   GOALS,
@@ -55,6 +56,7 @@ export const hairProfileFullSchema = z.object({
   hair_texture: z.enum(HAIR_TEXTURES).nullable(),
   thickness: z.enum(HAIR_THICKNESSES).nullable(),
   density: z.enum(HAIR_DENSITIES).nullable().default(null),
+  hair_length: z.enum(HAIR_LENGTHS).nullable().default(null),
   concerns: z.array(z.enum(PROFILE_CONCERNS)).default([]),
   products_used: z.string().nullable().default(null),
   heat_styling: z.enum(HEAT_STYLING_LEVELS).nullable().default(null),

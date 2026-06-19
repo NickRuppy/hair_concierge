@@ -5,8 +5,10 @@ export const QUIZ_DRAFT_STORAGE_KEY = "chaarlie:quiz-draft:v1"
 export const QUIZ_DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14
 
 const QUIZ_DRAFT_VERSION = 1
+const HAIR_LENGTH_STEP: QuizStep = 15
 const LEAD_CAPTURE_STEP: QuizStep = 9
-const VALID_DRAFT_STEPS = new Set<QuizStep>([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
+const VALID_DRAFT_STEPS = new Set<QuizStep>([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+const STEPS_AFTER_HAIR_LENGTH = new Set<QuizStep>([4, 5, 6, 7, 8, 9, 10, 11, 12, 14])
 
 export interface QuizDraft {
   version: typeof QUIZ_DRAFT_VERSION
@@ -36,7 +38,11 @@ function getBrowserStorage(): Storage | null {
   }
 }
 
-function getRestorableStep(step: QuizStep): QuizStep {
+function getRestorableStep(step: QuizStep, answers?: QuizAnswers): QuizStep {
+  if (answers && !answers.hair_length && STEPS_AFTER_HAIR_LENGTH.has(step)) {
+    return HAIR_LENGTH_STEP
+  }
+
   return step === 10 || step === 11 || step === 14 ? LEAD_CAPTURE_STEP : step
 }
 
@@ -74,7 +80,7 @@ export function saveQuizDraft(input: QuizDraftInput, storage = getBrowserStorage
   const draft: QuizDraft = {
     version: QUIZ_DRAFT_VERSION,
     savedAt: Date.now(),
-    step: getRestorableStep(input.step),
+    step: getRestorableStep(input.step, input.answers),
     answers: input.answers,
   }
 
@@ -109,10 +115,12 @@ export function loadQuizDraft(storage = getBrowserStorage()): QuizDraft | null {
       return null
     }
 
+    const answers = normalizeDraftAnswers(parsed.answers)
+
     return {
       ...parsed,
-      step: getRestorableStep(parsed.step),
-      answers: normalizeDraftAnswers(parsed.answers),
+      step: getRestorableStep(parsed.step, answers),
+      answers,
     }
   } catch {
     clearQuizDraft(storage)

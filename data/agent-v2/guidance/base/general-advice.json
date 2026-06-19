@@ -54,6 +54,12 @@
       "message": "For dosage, order, cadence, placement, or application questions, give practical profile-scaled steps before shopping or product alternatives; shampoo application can focus on scalp/roots, but deep-cleansing shampoo is not conceptually scalp-only."
     },
     {
+      "rubric_id": "advice.hair_length_application_signal",
+      "priority": "high",
+      "source": "base/general-advice.md",
+      "message": "Use hair length as an application and relevance signal, not a damage diagnosis: very short hair has no real lengths-and-ends zone, short hair needs smaller amounts, and long/very long hair mainly needs sectioning, distribution, detangling, and protection copy."
+    },
+    {
       "rubric_id": "advice.troubleshoot_before_products",
       "priority": "high",
       "source": "base/general-advice.md",

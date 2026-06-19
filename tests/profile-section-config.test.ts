@@ -10,6 +10,7 @@ function makeProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     user_id: "user_test",
     hair_texture: null,
     thickness: null,
+    hair_length: null,
     density: null,
     concerns: [],
     products_used: null,
@@ -56,4 +57,16 @@ test("profile shows no towel technique as an answered editable value", () => {
     ),
     "Keine Trocknungstechnik",
   )
+})
+
+test("profile quiz section includes editable hair length after density", () => {
+  const quizFields = PROFILE_FIELD_CONFIG.filter((field) => field.sectionKey === "quiz")
+  const densityIndex = quizFields.findIndex((field) => field.key === "density")
+  const hairLengthField = quizFields[densityIndex + 1]
+
+  assert.notEqual(densityIndex, -1)
+  assert.equal(hairLengthField?.key, "hair_length")
+  assert.equal(hairLengthField.label, "Haarlänge")
+  assert.deepEqual(hairLengthField.editTarget, { kind: "quiz" })
+  assert.equal(hairLengthField.getValue(makeProfile({ hair_length: "long" })), "Lang")
 })

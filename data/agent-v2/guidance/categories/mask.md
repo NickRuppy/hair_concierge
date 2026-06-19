@@ -56,6 +56,8 @@ Protein/moisture balance matters for mask fit because masks can shift the feel o
 
 Fine or low-density hair usually needs lighter, shorter, or less frequent mask use. Curly, coarse, chemically treated, bleached, colored, porous, rough, or high-friction lengths may justify more intensive periodic care.
 
+Hair length changes mask coverage and relevance. Very short hair usually should not receive a mask as an automatic extra unless dryness, chemical stress, roughness, curls/coils, or a direct user request makes it useful. Short hair needs less product and lower frequency. Long and very long hair can need sectioning and enough coverage for older ends, but do not infer structural damage from length alone.
+
 If hair feels heavy, too soft, flat, coated, or slow to dry, stretch cadence, use less, or reset/simplify before adding richer care.
 
 Do not ask about protein/moisture direction by default. Ask only when the user raises protein/moisture, the profile already signals it, or rough, limp, brittle, coated, or recently chemically stressed hair makes that distinction materially useful.

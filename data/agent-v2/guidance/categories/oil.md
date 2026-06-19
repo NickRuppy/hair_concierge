@@ -72,6 +72,8 @@ For broad oil use, assume finishing oil by default unless the user says scalp, p
 
 For fine, oily, flat, low-density, coated, or buildup-prone hair, keep dose tiny, end-focused, or skip oil if another layer is likely to weigh hair down. If oil use is contributing to coated/heavy residue, compare deep cleansing instead of adding more oil.
 
+Hair length changes oil relevance and amount. Very short hair usually should not get oil for lengths or ends unless the user asks, the hair is chemically stressed/dry, or a product-specific styling finish is clearly relevant. Short hair needs a tiny amount at most. Long and very long hair can need more careful sectioning or end-focused distribution, but oil should still stay optional and should not be treated as repair.
+
 ## Wash-Out Technique
 For pre-wash oiling, give practical technique before product shopping:
 

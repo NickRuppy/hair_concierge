@@ -1,3 +1,4 @@
+import { forwardRef, type ComponentPropsWithoutRef } from "react"
 import {
   type LucideIcon,
   Waves,
@@ -70,6 +71,73 @@ import {
   Eraser,
 } from "lucide-react"
 
+type HairLengthIconProps = ComponentPropsWithoutRef<LucideIcon>
+
+// Hair length encoded as a vertical bar: a fixed serif crossbar marks the start
+// at the top, and a flat-topped bar grows downward by `ext` viewBox units (very
+// short → very long). The motif is optically centered on y=12.
+function createHairLengthIcon(ext: number, displayName: string): LucideIcon {
+  const round = (value: number) => Math.round(value * 1000) / 1000
+  const top = round(12 - ext / 2 + 0.5)
+  const bottom = round(12 + ext / 2 + 0.5)
+  const halfWidth = 1.6
+  const left = 12 - halfWidth
+  const right = 12 + halfWidth
+  const arcTop = round(bottom - halfWidth)
+  const barPath = `M${left} ${top} L${right} ${top} L${right} ${arcTop} A${halfWidth} ${halfWidth} 0 0 1 ${left} ${arcTop} Z`
+
+  const HairLengthIcon = forwardRef<SVGSVGElement, HairLengthIconProps>(
+    (
+      {
+        color = "currentColor",
+        size = 24,
+        strokeWidth = 2,
+        absoluteStrokeWidth,
+        className,
+        children,
+        ...props
+      },
+      ref,
+    ) => {
+      const width = Number(size)
+      const numericStrokeWidth = Number(strokeWidth)
+      const resolvedStrokeWidth =
+        absoluteStrokeWidth && Number.isFinite(width) && Number.isFinite(numericStrokeWidth)
+          ? (numericStrokeWidth * 24) / width
+          : strokeWidth
+
+      return (
+        <svg
+          ref={ref}
+          xmlns="http://www.w3.org/2000/svg"
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke={color}
+          strokeWidth={resolvedStrokeWidth}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={className}
+          {...props}
+        >
+          <path d={barPath} fill={color} stroke="none" />
+          <line x1={8.5} y1={top} x2={15.5} y2={top} />
+          {children}
+        </svg>
+      )
+    },
+  )
+  HairLengthIcon.displayName = displayName
+  return HairLengthIcon as LucideIcon
+}
+
+const HairLengthVeryShort = createHairLengthIcon(6, "HairLengthVeryShort")
+const HairLengthShort = createHairLengthIcon(9.4, "HairLengthShort")
+const HairLengthMedium = createHairLengthIcon(12.8, "HairLengthMedium")
+const HairLengthLong = createHairLengthIcon(16.2, "HairLengthLong")
+const HairLengthVeryLong = createHairLengthIcon(19.6, "HairLengthVeryLong")
+
 // Each key is a semantic icon name. Values are Lucide icons today,
 // swappable to custom SVG components later in this single file.
 const iconMap = {
@@ -82,6 +150,12 @@ const iconMap = {
   "hair-fine": Feather,
   "hair-normal": Equal,
   "hair-coarse": Cylinder,
+  // Hair length
+  "hair-length-very-short": HairLengthVeryShort,
+  "hair-length-short": HairLengthShort,
+  "hair-length-medium": HairLengthMedium,
+  "hair-length-long": HairLengthLong,
+  "hair-length-very-long": HairLengthVeryLong,
   // Surface feel
   "surface-smooth": Sparkles,
   "surface-uneven": Activity,

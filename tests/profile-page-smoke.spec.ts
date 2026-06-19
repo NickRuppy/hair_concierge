@@ -95,6 +95,7 @@ test.describe.serial("@ci Profile page smoke", () => {
       hair_texture: "wavy",
       thickness: "fine",
       density: "medium",
+      hair_length: "long",
       concerns: [],
       heat_styling: "once_weekly",
       styling_tools: ["flat_iron"],
@@ -210,7 +211,10 @@ test.describe.serial("@ci Profile page smoke", () => {
     await expect(page.getByText("Weitere Produkte")).toHaveCount(0)
     await expect(page.getByText("Aus Haar-Check")).toHaveCount(0)
     await expect(page.getByText("Aus Onboarding")).toHaveCount(0)
-    await expect(page.locator("#profile-section-quiz").getByText("9/9 vollständig")).toBeVisible()
+    await expect(page.locator("#profile-section-quiz").getByText("10/10 vollständig")).toBeVisible()
+    await expect(
+      page.getByRole("button").filter({ hasText: "Haarlänge" }).filter({ hasText: "Lang" }),
+    ).toBeVisible()
     await expect(
       page
         .getByRole("button")

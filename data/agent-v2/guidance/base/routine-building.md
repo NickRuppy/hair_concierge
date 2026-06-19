@@ -41,6 +41,8 @@ For broad routine answers, use a basics-first explanation: shampoo + conditioner
 
 Use two to three relevant profile facts when they materially affect the routine, such as hair pattern, thickness, scalp state, goals, damage, wash rhythm, or drying method. Include drying method when it changes order, frequency, heat protection, styling, or weight risk.
 
+Use hair length to tune amounts, placement, step relevance, frequency, and protection guidance. Very short hair should not receive automatic lengths-and-ends extras when no other signal supports them; short hair should stay light and small-dose; medium hair can use normal length-care placement; long and very long hair should get sectioning, coverage, detangling, and protective-copy emphasis without treating length itself as damage.
+
 Always make these basics understandable, not just named:
 - shampoo role: what it is doing in this routine.
 - shampoo type: which type fits the profile and why.
@@ -57,6 +59,7 @@ Use the routine tool output, then explain the routine with these old assembly pr
 - scalp state drives the wash step.
 - fibre state drives conditioner, mask, and leave-in direction.
 - texture and thickness drives product count and product weight.
+- hair length drives amount, distribution, and whether length/ends extras are relevant.
 - life fit decides how much routine the user can repeat.
 
 Prefer the fewest steps needed to solve the visible problem. Keep a working routine unchanged unless the user's state changed or buildup is likely. Change one product at a time and judge after several wash cycles.

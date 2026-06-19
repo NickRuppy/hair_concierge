@@ -4,6 +4,7 @@ export type QuizStep =
   | 2 // haartextur
   | 3 // haarstaerke
   | 13 // haardichte
+  | 15 // haarlaenge
   | 4 // oberflaeche
   | 5 // zugtest
   | 6 // kopfhaut
@@ -20,7 +21,7 @@ export type LeadCaptureSubStep = "name" | "email" | "consent"
 export type SelectionMode = "single" | "multi"
 
 import type { IconName } from "@/components/ui/icon"
-import type { ProfileConcern } from "@/lib/vocabulary"
+import type { HairLength, ProfileConcern } from "@/lib/vocabulary"
 
 export interface QuizOption {
   value: string
@@ -44,6 +45,7 @@ export interface QuizAnswers {
   structure?: string
   thickness?: string
   density?: string
+  hair_length?: HairLength
   fingertest?: string
   pulltest?: string
   scalp_type?: string

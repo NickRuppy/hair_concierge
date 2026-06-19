@@ -58,6 +58,12 @@
       "message": "Frame ranked products as suitable options with tradeoffs, connect every fit to profile/tool facts, and avoid winner-takes-all phrasing."
     },
     {
+      "rubric_id": "product.hair_length_usage_only",
+      "priority": "high",
+      "source": "base/product-recommendation.md",
+      "message": "When hair length is surfaced in profile basis or category caveats, use it for amount, application zone, sectioning, frequency, and protection guidance only; do not turn length into an unsupported product claim or deterministic damage score."
+    },
+    {
       "rubric_id": "product.one_natural_fit_sentence_per_product",
       "priority": "high",
       "source": "base/product-recommendation.md",

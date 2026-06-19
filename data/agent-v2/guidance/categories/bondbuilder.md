@@ -29,6 +29,8 @@ Bondbuilders can improve strength, elasticity, and resilience of damaged strands
 
 The realistic ceiling is partial and incremental: `better` and `more stable` are realistic; `like new`, permanent split-end repair, regrowth, or full restoration to virgin hair are not.
 
+Hair length alone is not a Bondbuilder signal. Long or very long hair may need better distribution and protection guidance because the ends are older, but do not recommend bondbuilder, increase repair severity, or infer structural damage from length unless chemical, heat, breakage, or wet-feel signals support it.
+
 ## Category Boundaries
 Belongs here:
 - targeted structural repair for chemically or heat-stressed lengths

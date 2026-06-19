@@ -1,7 +1,9 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { resolveProfileDensityFromQuizAnswers } from "../src/lib/quiz/link-to-profile"
+import * as linkToProfile from "../src/lib/quiz/link-to-profile"
+
+const { resolveProfileDensityFromQuizAnswers } = linkToProfile
 
 test("linking uses the explicit quiz density when present", () => {
   assert.equal(resolveProfileDensityFromQuizAnswers({ density: "high" }), "high")
@@ -30,5 +32,17 @@ test("linking does not invent density for sparse or partial answers", () => {
       thickness: "normal",
     }),
     undefined,
+  )
+})
+
+test("profile update data includes quiz hair length when present", () => {
+  assert.equal(
+    linkToProfile.buildProfileDataFromQuizAnswers({
+      structure: "wavy",
+      thickness: "normal",
+      density: "medium",
+      hair_length: "long",
+    }).hair_length,
+    "long",
   )
 })

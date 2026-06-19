@@ -116,6 +116,7 @@ function createFineHairProfile(): HairProfile {
     user_id: "user-1",
     hair_texture: "wavy",
     thickness: "fine",
+    hair_length: null,
     density: "medium",
     concerns: [],
     products_used: null,

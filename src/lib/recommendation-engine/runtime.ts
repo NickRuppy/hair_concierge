@@ -189,6 +189,7 @@ function buildRawInputFromEffectiveContext(context: EffectiveCareContext): RawRe
   return {
     profile: {
       hair_texture: profile.hairTexture,
+      hair_length: profile.hairLength,
       thickness: profile.thickness,
       density: profile.density,
       concerns: [...profile.concerns],

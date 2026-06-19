@@ -62,6 +62,12 @@
       "message": "Explain routines through scalp wash needs, fibre conditioning needs, texture/thickness weight limits, and real-life repeatability; add the fewest steps and change one product at a time."
     },
     {
+      "rubric_id": "routine.hair_length_tunes_application",
+      "priority": "high",
+      "source": "base/routine-building.md",
+      "message": "Use hair length to tune amounts, placement, step relevance, frequency, and protection guidance: avoid automatic lengths-and-ends extras for very short hair, keep short hair light, and use sectioning/coverage copy for long or very long hair without treating length as damage."
+    },
+    {
       "rubric_id": "routine.threshold_change_vs_explain",
       "priority": "high",
       "source": "base/routine-building.md",
