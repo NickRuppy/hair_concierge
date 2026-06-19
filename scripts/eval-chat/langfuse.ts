@@ -23,6 +23,7 @@ interface EvalExperimentItem {
     turn_index: number
     message: string
     hair_profile: EvalScenario["hair_profile"]
+    routine_inventory: EvalScenario["routine_inventory"]
     base_url: string
   }
   expectedOutput: {

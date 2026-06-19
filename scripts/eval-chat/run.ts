@@ -29,11 +29,17 @@ import {
   upsertHairProfile,
   sendMessage,
   fetchLatestAssistantMessage,
+  fetchConversationTurnTrace,
 } from "./client"
 import { runMetadataAssertions, runContentAssertions } from "./assertions"
 import { runJudge, runQualityRubric } from "./judge"
 import { publishEvalExperiment } from "./langfuse"
 import { buildReport, writeReport, printSummary, countHardAssertionFailures } from "./report"
+import {
+  buildFailedTurnDebugArtifact,
+  fetchEvalServerInfo,
+  writeFailedTurnDebugArtifact,
+} from "./debug-artifacts"
 import type {
   ScenarioResult,
   TurnResult,
@@ -121,8 +127,21 @@ async function main() {
   console.log(
     `Running ${scenarios.length} scenario(s) against ${baseUrl}${skipJudge ? " (skip judge)" : ""}`,
   )
+  const serverInfo = await fetchEvalServerInfo(baseUrl)
+  if (serverInfo.available) {
+    console.log(
+      `Server debug: ${serverInfo.git_sha?.slice(0, 8) ?? "unknown"} on ${
+        serverInfo.git_branch ?? "unknown"
+      }${serverInfo.git_dirty ? " (dirty)" : ""}, started ${
+        serverInfo.server_started_at ?? "unknown"
+      }`,
+    )
+  } else {
+    console.log(`Server debug: unavailable (${serverInfo.error})`)
+  }
 
   const results: ScenarioResult[] = []
+  const debugArtifactPaths: string[] = []
   let langfuseExperiment: LangfuseExperimentSummary | null = null
 
   for (const scenario of scenarios) {
@@ -247,6 +266,33 @@ async function main() {
               `      [${f.severity ?? "hard"}][${f.tier}] ${f.name}: expected ${f.expected}, got ${f.actual}`,
             )
           }
+          try {
+            const traceLookup = await fetchConversationTurnTrace(session.admin, {
+              assistantMessageId: sse.assistant_message_id,
+              conversationId,
+            })
+            const artifact = buildFailedTurnDebugArtifact({
+              baseUrl,
+              scenarioId: scenario.id,
+              scenarioName: scenario.name,
+              turnIndex: i + 1,
+              message: turn.message,
+              sseResult: sse,
+              assertions,
+              serverInfo,
+              traceRow: traceLookup.traceRow,
+              traceError: traceLookup.error,
+            })
+            const artifactPath = writeFailedTurnDebugArtifact(artifact)
+            debugArtifactPaths.push(artifactPath)
+            console.log(`      Debug artifact: ${artifactPath}`)
+          } catch (error) {
+            console.log(
+              `      Debug artifact failed: ${
+                error instanceof Error ? error.message : String(error)
+              }`,
+            )
+          }
         }
 
         turnResults.push({
@@ -306,6 +352,12 @@ async function main() {
   const reportPath = writeReport(report)
   printSummary(report)
   console.log(`Report: ${reportPath}`)
+  if (debugArtifactPaths.length > 0) {
+    console.log("Debug artifacts:")
+    for (const artifactPath of debugArtifactPaths) {
+      console.log(`  ${artifactPath}`)
+    }
+  }
 
   const hardFailures = countHardAssertionFailures(results)
 

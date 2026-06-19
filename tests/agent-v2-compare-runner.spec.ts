@@ -284,10 +284,11 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
   assert.equal(followUpContext.last_user_goal, "Meine Routine ist zu viel, mach sie einfacher.")
   assert.ok(followUpContext.summary_de)
   assert.match(followUpContext.summary_de, /Conditioner/)
-  assert.deepEqual(followUpContext.pending_routine_action, {
-    action: "modify",
-    routine_layer: "basics",
+  assert.deepEqual(followUpContext.pending_followup_action, {
+    kind: "routine_mutation",
     category: "mask",
+    routine_layer: "basics",
+    routine_action: "modify",
     source: "assistant_offer",
   })
   assert.deepEqual(
@@ -324,6 +325,38 @@ test("AgentV2 Compare runner preserves routine thread context across follow-up t
       },
     ],
   )
+})
+
+test("AgentV2 Compare runner preserves non-routine pending product follow-up offers", () => {
+  const context = updateAgentV2RoutineThreadContext(null, {
+    answer_mode: "general_advice",
+    user_message: "Was bringt mir eine Maske?",
+    answer: {
+      pending_followup_action: {
+        kind: "product_recommendation",
+        category: "mask",
+        routine_layer: null,
+        routine_action: null,
+        source: "assistant_offer",
+      },
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      category: null,
+    },
+    categories: ["mask"],
+    summary_de: "Eine Maske ist optional.",
+  })
+
+  assert.equal(context.active, false)
+  assert.deepEqual(context.pending_followup_action, {
+    kind: "product_recommendation",
+    category: "mask",
+    routine_layer: null,
+    routine_action: null,
+    source: "assistant_offer",
+  })
 })
 
 test("AgentV2 Compare runner preserves previous routine layer when active follow-up omits layer", () => {

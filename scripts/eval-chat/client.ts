@@ -5,6 +5,7 @@
  */
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
+import type { EvalConversationTurnTraceRow } from "./debug-artifacts"
 import type { SSEResult, HairProfileOverrides, RoutineInventorySeed } from "./types"
 
 const PROJECT_REF = "pqdkhefxsxkyeqelqegq"
@@ -504,4 +505,38 @@ export async function fetchLatestAssistantMessage(
     .limit(1)
     .maybeSingle()
   return data
+}
+
+export async function fetchConversationTurnTrace(
+  admin: SupabaseClient,
+  params: {
+    assistantMessageId?: string | null
+    conversationId?: string | null
+  },
+): Promise<{ traceRow: EvalConversationTurnTraceRow | null; error: string | null }> {
+  for (let attempt = 0; attempt < 6; attempt++) {
+    let query = admin
+      .from("conversation_turn_traces")
+      .select("status, trace, langfuse_trace_id, langfuse_trace_url")
+      .order("created_at", { ascending: false })
+      .limit(1)
+
+    if (params.assistantMessageId) {
+      query = query.eq("assistant_message_id", params.assistantMessageId)
+    } else if (params.conversationId) {
+      query = query.eq("conversation_id", params.conversationId)
+    } else {
+      return { traceRow: null, error: "missing trace lookup identifiers" }
+    }
+
+    const { data, error } = await query.maybeSingle()
+    if (error) {
+      return { traceRow: null, error: error.message }
+    }
+    if (data) return { traceRow: data as EvalConversationTurnTraceRow, error: null }
+
+    await wait(250)
+  }
+
+  return { traceRow: null, error: null }
 }

@@ -229,7 +229,7 @@ function createAgentV2Result(): AgentV2ResponsesTurnResult {
         category: "shampoo",
         return_path: [],
       },
-      pending_routine_action: null,
+      pending_followup_action: null,
       session_memory_writes: [],
       payload: {
         user_facing_answer_de: "Nimm zuerst Produkt primary.",
@@ -387,7 +387,7 @@ test("AgentV2 persisted state promotes flat AgentV2 fields from current version-
     last_routine_categories: ["leave_in"],
     last_user_goal: "Ich will meine Routine einfacher machen.",
     summary_de: "Leave-in ist der erste Zusatz.",
-    pending_routine_action: null,
+    pending_followup_action: null,
     visible_steps: [],
   }
   const sessionMemory: AgentV2SessionMemoryWrite = {
@@ -426,6 +426,37 @@ test("AgentV2 persisted state promotes flat AgentV2 fields from current version-
   assert.deepEqual(state.agent_v2.routine_thread_context, routineThread)
   assert.equal(state.agent_v2.prior_selected_product_projections.length, 1)
   assert.equal(state.agent_v2.session_memory.length, 1)
+})
+
+test("AgentV2 persisted state normalizes legacy pending routine action into pending follow-up action", () => {
+  const state = normalizeAgentV2ConversationState({
+    version: 1,
+    active_topic: "routine",
+    routine_layer: "basics",
+    agent_v2_routine_thread_context: {
+      active: true,
+      current_layer: "basics",
+      last_answer_mode: "general_advice",
+      last_routine_categories: ["leave_in"],
+      last_user_goal: "Ich will meine Routine erweitern.",
+      summary_de: "Assistant offered a leave-in step.",
+      pending_routine_action: {
+        action: "add_step",
+        routine_layer: "basics",
+        category: "leave_in",
+        source: "assistant_offer",
+      },
+      visible_steps: [],
+    },
+  })
+
+  assert.deepEqual(state.agent_v2.routine_thread_context?.pending_followup_action, {
+    kind: "routine_mutation",
+    category: "leave_in",
+    routine_layer: "basics",
+    routine_action: "add_step",
+    source: "assistant_offer",
+  })
 })
 
 test("AgentV2 persisted state recovers from malformed persisted state", () => {
@@ -1326,10 +1357,11 @@ test("AgentV2 production pipeline carries persisted routine thread context into 
     last_routine_categories: ["leave_in"],
     last_user_goal: "Ich will meine Routine erweitern.",
     summary_de: "Leave-in ist der sichtbare naechste Schritt.",
-    pending_routine_action: {
-      action: "add_step",
-      routine_layer: "basics",
+    pending_followup_action: {
+      kind: "routine_mutation",
       category: "leave_in",
+      routine_layer: "basics",
+      routine_action: "add_step",
       source: "assistant_offer",
     },
     visible_steps: [
@@ -1392,7 +1424,7 @@ test("AgentV2 production pipeline carries persisted routine thread context into 
   )
 
   const routineContext = receivedRoutineContext as AgentV2RoutineThreadContext | null
-  assert.equal(routineContext?.pending_routine_action?.category, "leave_in")
+  assert.equal(routineContext?.pending_followup_action?.category, "leave_in")
   assert.equal(routineContext?.visible_steps[0]?.step_id, "maintenance-leave-in")
   assert.equal(receivedRoutineLayer, "basics")
   const nextState = result.conversationStateTransition.next_state as AgentV2ConversationStateV2
