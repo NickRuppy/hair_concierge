@@ -7,7 +7,7 @@ import { ResultPageClient } from "./result-client"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
-import { quizAnswersSchema } from "@/lib/quiz/validators"
+import { storedQuizAnswersSchema } from "@/lib/quiz/validators"
 import { createAdminClient } from "@/lib/supabase/admin"
 
 export const dynamic = "force-dynamic"
@@ -48,7 +48,7 @@ async function getLeadResult(leadId: string): Promise<LeadResultRow | null> {
 
 function parseQuizAnswers(raw: unknown): QuizAnswers | null {
   const normalized = normalizeStoredQuizAnswers((raw as Record<string, unknown> | null) ?? null)
-  const parsed = quizAnswersSchema.safeParse(normalized)
+  const parsed = storedQuizAnswersSchema.safeParse(normalized)
 
   return parsed.success ? parsed.data : null
 }

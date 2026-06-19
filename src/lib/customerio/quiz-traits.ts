@@ -1,6 +1,7 @@
 import type { CustomerIoServerProperties } from "@/lib/customerio/server"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import { HAIR_LENGTH_LABELS } from "@/lib/vocabulary"
 import { GOAL_LABELS, PROFILE_CONCERN_LABELS } from "@/lib/vocabulary/concerns-goals"
 
 const HAIR_TEXTURE_LABELS: Record<string, string> = {
@@ -98,6 +99,8 @@ export function buildCustomerIoQuizLeadSync({
     thickness_label: labelFor(answers.thickness, THICKNESS_LABELS),
     density: answers.density,
     density_label: labelFor(answers.density, DENSITY_LABELS),
+    hair_length: answers.hair_length,
+    hair_length_label: labelFor(answers.hair_length, HAIR_LENGTH_LABELS),
     cuticle_condition: answers.fingertest,
     cuticle_condition_label: labelFor(answers.fingertest, CUTICLE_CONDITION_LABELS),
     protein_moisture_balance: answers.pulltest,

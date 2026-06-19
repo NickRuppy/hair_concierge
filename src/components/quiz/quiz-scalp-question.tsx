@@ -178,10 +178,10 @@ export function QuizScalpQuestion() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={7} total={QUIZ_TOTAL_QUESTIONS} />
+          <QuizProgressBar current={8} total={QUIZ_TOTAL_QUESTIONS} />
         </div>
         <span className="text-sm text-[var(--text-caption)] tabular-nums">
-          7/{QUIZ_TOTAL_QUESTIONS}
+          8/{QUIZ_TOTAL_QUESTIONS}
         </span>
       </div>
 

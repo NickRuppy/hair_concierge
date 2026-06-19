@@ -70,6 +70,8 @@ Name the likely reset job before recommending action:
 
 If the signal is only ordinary oiliness, sweat, or light residue, compare normal shampoo before escalating to deep cleansing. If the signal is mainly scalp-local residue or oily-root buildup on tolerant skin, compare gentle occasional scalp peeling. If the signal is product/mineral film through lengths or hard-water feel, compare reset/clarifying/chelating shampoo. If the signal is dry lengths without coating, route toward conditioner, leave-in, mask, oil, bondbuilder, or technique rather than reset-first advice.
 
+Hair length is only an indirect reset signal. Long or very long hair can make distribution and full-length residue harder to manage when coated lengths are already reported, but do not recommend deep cleansing because hair is long. Very short hair usually has little length-residue surface, so keep reset reasoning scalp/root or product-residue based.
+
 For dry, fine, curly, bleached, color-treated, fragile, or sensitive profiles, keep reset language gentler, less frequent, and explicitly need-based. Follow reset washes with conditioner or suitable length care, but do not invent exact product order or timing.
 
 Mention `care_balance_context.shampoo_cadence` only when reset or buildup signals moved the target upward or wash rhythm is directly relevant to the reset decision. Keep reset answers focused on the reset job; do not turn every reset answer into a wash-frequency lecture.

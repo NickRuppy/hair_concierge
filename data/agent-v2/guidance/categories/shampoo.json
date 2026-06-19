@@ -60,6 +60,12 @@
       "message": "When useful, mention shampoo mainly at the scalp and rinse thoroughly."
     },
     {
+      "rubric_id": "category.shampoo.hair_length_weak_signal",
+      "priority": "medium",
+      "source": "categories/shampoo.md",
+      "message": "Hair length should only weakly affect normal shampoo advice: do not scale shampoo like a length-care product, and use length mainly for placement, rinse-down, and length-protection caveats."
+    },
+    {
       "rubric_id": "category.shampoo.length_goal_steering",
       "priority": "high",
       "source": "categories/shampoo.md",

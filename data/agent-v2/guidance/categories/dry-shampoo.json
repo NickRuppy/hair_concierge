@@ -89,6 +89,12 @@
       "message": "Tie fit to oily roots or a short wash gap, explain that dry shampoo absorbs oil between washes, then explain root placement, distribution as product directions support, and washing it out later."
     },
     {
+      "rubric_id": "category.dry_shampoo.hair_length_application_only",
+      "priority": "medium",
+      "source": "categories/dry-shampoo.md",
+      "message": "Hair length is not a major dry-shampoo signal; use it only for application practicality such as root sectioning on long hair, and never for length dryness, frizz, split ends, or protection."
+    },
+    {
       "rubric_id": "category.dry_shampoo.scalp_comfort_gate",
       "priority": "high",
       "source": "categories/dry-shampoo.md",

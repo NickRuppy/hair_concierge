@@ -28,6 +28,7 @@ function inventoryItem(
 function profile(overrides: Partial<NormalizedProfile> = {}): NormalizedProfile {
   return {
     hairTexture: null,
+    hairLength: null,
     thickness: null,
     density: null,
     concerns: [],

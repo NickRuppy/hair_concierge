@@ -6,7 +6,27 @@ type ConversationHistoryQueryResult = {
   error: unknown
 }
 
+type ConversationOwnershipQueryResult = {
+  data: { id: string } | null
+  error: unknown
+}
+
 type ConversationHistoryClient = {
+  from(table: "conversations"): {
+    select(columns: string): {
+      eq(
+        column: "id",
+        value: string,
+      ): {
+        eq(
+          column: "user_id",
+          value: string,
+        ): {
+          maybeSingle(): Promise<ConversationOwnershipQueryResult>
+        }
+      }
+    }
+  }
   from(table: "messages"): {
     select(columns: string): {
       eq(
@@ -26,9 +46,27 @@ type ConversationHistoryClient = {
 
 export async function loadAgentV2ProductionConversationHistory(
   conversationId: string,
-  client: unknown = createAdminClient(),
+  userIdOrClient?: string | unknown,
+  maybeClient?: unknown,
 ): Promise<Message[]> {
+  const userId = typeof userIdOrClient === "string" ? userIdOrClient : undefined
+  const client =
+    (typeof userIdOrClient === "string" ? maybeClient : userIdOrClient) ?? createAdminClient()
   const admin = client as ConversationHistoryClient
+
+  if (userId) {
+    const { data: conversation, error: ownershipError } = await admin
+      .from("conversations")
+      .select("id")
+      .eq("id", conversationId)
+      .eq("user_id", userId)
+      .maybeSingle()
+
+    if (ownershipError || !conversation) {
+      throw new Error("AgentV2 production conversation is not available for this user.")
+    }
+  }
+
   const { data, error } = await admin
     .from("messages")
     .select("*")
@@ -38,7 +76,7 @@ export async function loadAgentV2ProductionConversationHistory(
 
   if (error) {
     console.error("Failed to load AgentV2 production conversation history:", error)
-    return []
+    throw new Error("Failed to load AgentV2 production conversation history.")
   }
 
   return ((data as Message[]) ?? []).slice().reverse()

@@ -84,6 +84,12 @@
       "message": "For fine or low-density hair, adjust conditioner amount, weight, and placement before removing conditioning support entirely."
     },
     {
+      "rubric_id": "category.conditioner.hair_length_amount_relevance",
+      "priority": "high",
+      "source": "categories/conditioner.md",
+      "message": "Use hair length to tune conditioner amount and relevance: very short hair may need only a tiny targeted amount, short hair stays light, and medium/long/very long hair uses lengths-and-ends placement with better distribution rather than stronger repair claims by length alone."
+    },
+    {
       "rubric_id": "category.conditioner.cwc_owc_length_protection",
       "priority": "medium",
       "source": "categories/conditioner.md",

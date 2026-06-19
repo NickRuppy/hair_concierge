@@ -45,6 +45,8 @@ thickness
 thickness_label
 density
 density_label
+hair_length
+hair_length_label
 cuticle_condition
 cuticle_condition_label
 protein_moisture_balance

@@ -30,6 +30,7 @@ export type AppEventMap = {
     value: number
   }
   quiz_completed: {
+    hairLength?: string
     hairTexture?: string
     leadId?: string | null
     scalpCondition?: string | null

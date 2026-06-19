@@ -56,14 +56,20 @@ export async function loadConversationState(
 export async function loadAgentV2ConversationState(
   supabase: SupabaseClient,
   conversationId: string | null | undefined,
+  userId?: string,
 ): Promise<AgentV2ConversationStateV2> {
   if (!conversationId) return normalizeAgentV2ConversationState(null)
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("conversation_states")
     .select("state")
     .eq("conversation_id", conversationId)
-    .maybeSingle()
+
+  if (userId) {
+    query = query.eq("user_id", userId)
+  }
+
+  const { data, error } = await query.maybeSingle()
 
   if (error) {
     console.error("Failed to load AgentV2 conversation state:", error)

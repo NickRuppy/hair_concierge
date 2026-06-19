@@ -8,6 +8,7 @@ function createBaseAnswers() {
     structure: "wavy",
     thickness: "normal",
     density: "medium",
+    hair_length: "medium",
     fingertest: "leicht_uneben",
     pulltest: "stretches_stays",
     scalp_type: "trocken",
@@ -28,6 +29,13 @@ test("quiz schema accepts an empty concern array with a negative scalp gate", ()
 test("quiz schema requires density as the third physical hair attribute", () => {
   const answers = createBaseAnswers()
   delete (answers as Partial<typeof answers>).density
+
+  assert.throws(() => quizAnswersSchema.parse(answers))
+})
+
+test("quiz schema requires hair length as the fourth physical hair attribute", () => {
+  const answers = createBaseAnswers()
+  delete (answers as Partial<typeof answers>).hair_length
 
   assert.throws(() => quizAnswersSchema.parse(answers))
 })

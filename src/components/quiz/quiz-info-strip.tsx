@@ -20,7 +20,7 @@ export function QuizInfoStrip({ onDismiss }: Props) {
         <strong className="font-semibold">
           Lass uns deine Haare verstehen — Schritt für Schritt.
         </strong>{" "}
-        9 schnelle Fragen zur Basis, dann gehts an deine Routine und Produkte.
+        10 schnelle Fragen zur Basis, dann gehts an deine Routine und Produkte.
       </p>
       <button
         type="button"

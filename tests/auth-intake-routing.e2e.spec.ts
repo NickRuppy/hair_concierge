@@ -131,6 +131,7 @@ test.describe.serial("Authenticated intake routing", () => {
     await page.getByText("Wellig").first().click()
     await page.getByText("Mittel").first().click()
     await page.getByText("Mittlere Dichte").click()
+    await page.getByText("Mittellang").click()
     await page.getByText("Leicht uneben").click()
     await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
 
@@ -211,7 +212,7 @@ test.describe.serial("Authenticated intake routing", () => {
       .toBe("linked")
 
     const latestLead = await fetchLatestLead()
-    expect(latestLead?.quiz_answers).toMatchObject({ density: "medium" })
+    expect(latestLead?.quiz_answers).toMatchObject({ density: "medium", hair_length: "medium" })
     await expect.poll(fetchHairProfileDensity, { timeout: 30_000 }).toBe("medium")
   })
 })

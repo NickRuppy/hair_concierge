@@ -60,6 +60,12 @@
       "message": "Match leave-in weight, dose, and placement to thickness, texture, frizz, dryness, tangling, styling prep, and flat-prone or fine hair."
     },
     {
+      "rubric_id": "category.leave_in.hair_length_relevance",
+      "priority": "high",
+      "source": "categories/leave-in.md",
+      "message": "Use hair length to tune leave-in relevance and dose: very short hair should not get leave-in only for lengths-and-ends care unless another signal or direct request supports it; long and very long hair mainly need sectioning and coverage guidance, not repair escalation."
+    },
+    {
       "rubric_id": "category.leave_in.simplification_clarity",
       "priority": "medium",
       "source": "categories/leave-in.md",

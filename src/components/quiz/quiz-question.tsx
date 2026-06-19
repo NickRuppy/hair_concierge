@@ -14,6 +14,7 @@ const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswer
   2: "structure",
   3: "thickness",
   13: "density",
+  15: "hair_length",
   4: "fingertest",
   5: "pulltest",
   7: "treatment",

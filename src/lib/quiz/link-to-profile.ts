@@ -20,6 +20,61 @@ export function resolveProfileDensityFromQuizAnswers(answers: QuizAnswers): stri
   return hasCompleteLegacyDiagnostics ? "medium" : undefined
 }
 
+export function buildProfileDataFromQuizAnswers(answers: QuizAnswers): Record<string, unknown> {
+  const profileData: Record<string, unknown> = {}
+
+  if (answers.structure) profileData.hair_texture = answers.structure
+  if (answers.thickness) profileData.thickness = answers.thickness
+  if (answers.hair_length) profileData.hair_length = answers.hair_length
+  const density = resolveProfileDensityFromQuizAnswers(answers)
+  if (density) profileData.density = density
+
+  // Map quiz cuticle condition keys to English
+  const CUTICLE_MAP: Record<string, string> = {
+    glatt: "smooth",
+    leicht_uneben: "slightly_rough",
+    rau: "rough",
+  }
+  if (answers.fingertest)
+    profileData.cuticle_condition = CUTICLE_MAP[answers.fingertest] ?? answers.fingertest
+  if (answers.pulltest) profileData.protein_moisture_balance = answers.pulltest
+
+  // Map quiz scalp keys to English
+  const SCALP_TYPE_MAP: Record<string, string> = {
+    fettig: "oily",
+    ausgeglichen: "balanced",
+    trocken: "dry",
+  }
+  const SCALP_CONDITION_MAP: Record<string, string> = {
+    schuppen: "dandruff",
+    trockene_schuppen: "dry_flakes",
+    gereizt: "irritated",
+  }
+
+  if (answers.scalp_type) {
+    profileData.scalp_type = SCALP_TYPE_MAP[answers.scalp_type] ?? answers.scalp_type
+  }
+  if (answers.scalp_condition) {
+    profileData.scalp_condition =
+      SCALP_CONDITION_MAP[answers.scalp_condition] ?? answers.scalp_condition
+  } else if (answers.has_scalp_issue === false) {
+    profileData.scalp_condition = null
+  }
+  if (answers.concerns !== undefined) profileData.concerns = answers.concerns
+
+  // Map quiz chemical treatment keys to English
+  const TREATMENT_MAP: Record<string, string> = {
+    natur: "natural",
+    gefaerbt: "colored",
+    blondiert: "bleached",
+  }
+  if (answers.treatment) {
+    profileData.chemical_treatment = answers.treatment.map((t: string) => TREATMENT_MAP[t] ?? t)
+  }
+
+  return profileData
+}
+
 /**
  * After a user authenticates, link their quiz lead data to their profile.
  *
@@ -97,53 +152,7 @@ export async function linkQuizToProfile(
   // --- Map quiz answers to hair_profiles columns ---
   const profileData: Record<string, unknown> = {
     user_id: userId,
-  }
-
-  if (answers.structure) profileData.hair_texture = answers.structure
-  if (answers.thickness) profileData.thickness = answers.thickness
-  const density = resolveProfileDensityFromQuizAnswers(answers)
-  if (density) profileData.density = density
-  // Map quiz cuticle condition keys to English
-  const CUTICLE_MAP: Record<string, string> = {
-    glatt: "smooth",
-    leicht_uneben: "slightly_rough",
-    rau: "rough",
-  }
-  if (answers.fingertest)
-    profileData.cuticle_condition = CUTICLE_MAP[answers.fingertest] ?? answers.fingertest
-  if (answers.pulltest) profileData.protein_moisture_balance = answers.pulltest
-
-  // Map quiz scalp keys to English
-  const SCALP_TYPE_MAP: Record<string, string> = {
-    fettig: "oily",
-    ausgeglichen: "balanced",
-    trocken: "dry",
-  }
-  const SCALP_CONDITION_MAP: Record<string, string> = {
-    schuppen: "dandruff",
-    trockene_schuppen: "dry_flakes",
-    gereizt: "irritated",
-  }
-
-  if (answers.scalp_type) {
-    profileData.scalp_type = SCALP_TYPE_MAP[answers.scalp_type] ?? answers.scalp_type
-  }
-  if (answers.scalp_condition) {
-    profileData.scalp_condition =
-      SCALP_CONDITION_MAP[answers.scalp_condition] ?? answers.scalp_condition
-  } else if (answers.has_scalp_issue === false) {
-    profileData.scalp_condition = null
-  }
-  if (answers.concerns !== undefined) profileData.concerns = answers.concerns
-
-  // Map quiz chemical treatment keys to English
-  const TREATMENT_MAP: Record<string, string> = {
-    natur: "natural",
-    gefaerbt: "colored",
-    blondiert: "bleached",
-  }
-  if (answers.treatment) {
-    profileData.chemical_treatment = answers.treatment.map((t: string) => TREATMENT_MAP[t] ?? t)
+    ...buildProfileDataFromQuizAnswers(answers),
   }
 
   const incomingGoals =

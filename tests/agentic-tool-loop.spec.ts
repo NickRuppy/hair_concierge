@@ -2080,6 +2080,7 @@ test("tool-loop current frizz and tangling signals steer routine priority away f
         user_id: "user-1",
         hair_texture: "straight",
         thickness: "normal",
+        hair_length: null,
         density: "medium",
         concerns: [],
         products_used: "Shampoo, Conditioner, Maske, Oel",

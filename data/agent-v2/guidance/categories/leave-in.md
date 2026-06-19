@@ -54,6 +54,8 @@ Common look-alikes:
 ## Fit And Usage Logic
 Match leave-in weight, dose, and placement to thickness, density, texture, frizz, dryness, tangling, styling prep, heat use, and buildup risk.
 
+Hair length changes leave-in relevance and dose. Very short hair usually should not get a leave-in only for lengths-and-ends care unless heat use, curl styling, dryness, chemical stress, or a direct user request creates a clear reason. Short hair needs very small amounts. Long and very long hair can justify stronger sectioning and coverage guidance, but length alone should not become a repair or damage signal.
+
 Fine, low-density, oily-root, flat-prone, or buildup-prone profiles need small amounts, careful distribution, and placement away from roots. Wavy, curly, coarse, chemically treated, dry, or rough-feeling lengths may benefit from more leave-on support.
 
 Replacing conditioner only when selected product data and routine context support it can be discussed as a possible simplification candidate. It is a special case, not the default.

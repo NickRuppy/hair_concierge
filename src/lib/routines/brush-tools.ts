@@ -90,17 +90,24 @@ function includesAny(text: string, terms: string[]): boolean {
   return terms.some((term) => text.includes(normalizeText(term)))
 }
 
-/** Accepts an already-normalized message string (via normalizeText). */
-export function hasExplicitBrushToolsRequest(normalizedMessage: string): boolean {
-  return includesAny(normalizedMessage, BRUSH_TOOLS_TERMS)
+function hasDirectDetanglingRequest(normalizedMessage: string): boolean {
+  return (
+    /\bentwirr\w*\b/.test(normalizedMessage) ||
+    /\bdetangl\w*\b/.test(normalizedMessage) ||
+    /\bknoten\b.{0,40}\b(?:loes\w*|los\w*|raus\w*|entfern\w*)\b/.test(normalizedMessage)
+  )
 }
 
 /** Accepts an already-normalized message string (via normalizeText). */
-export function hasBrushToolsNeed(
-  profile: HairProfile | null,
-  normalizedMessage: string,
-  context: RoutineContext,
-): boolean {
+export function hasExplicitBrushToolsRequest(normalizedMessage: string): boolean {
+  return (
+    includesAny(normalizedMessage, BRUSH_TOOLS_TERMS) ||
+    hasDirectDetanglingRequest(normalizedMessage)
+  )
+}
+
+/** Accepts an already-normalized message string (via normalizeText). */
+export function hasBrushToolsNeed(profile: HairProfile | null, normalizedMessage: string): boolean {
   return (
     hasDirectMechanicalStressSignals(
       profile?.towel_technique,

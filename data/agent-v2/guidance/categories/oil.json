@@ -102,6 +102,12 @@
       "message": "For fine, oily, flat, low-density, coated, or buildup-prone hair, keep dose tiny, end-focused, pre-wash-only, or skip oil if another layer is likely to weigh hair down."
     },
     {
+      "rubric_id": "category.oil.hair_length_relevance",
+      "priority": "high",
+      "source": "categories/oil.md",
+      "message": "Use hair length to tune oil relevance and amount: very short hair usually should not get oil for lengths or ends unless another signal or direct request supports it; long and very long hair may need sectioning or end-focused distribution, but oil stays optional and non-repair."
+    },
+    {
       "rubric_id": "category.oil.washout_technique",
       "priority": "medium",
       "source": "categories/oil.md",

@@ -1,5 +1,5 @@
 import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
-import { quizAnswersSchema } from "@/lib/quiz/validators"
+import { storedQuizAnswersSchema } from "@/lib/quiz/validators"
 
 import { buildQuizResultArtifactEmailPayload } from "./quiz-result-artifact"
 import type { CustomerIoTransactionalEmailPayload } from "./transactional"
@@ -81,7 +81,7 @@ export async function handleResultArtifactEmail({
   const name = lead.name?.trim() ?? ""
   const email = lead.email?.trim() ?? ""
   const normalizedAnswers = normalizeStoredQuizAnswers(lead.quiz_answers)
-  const parsedAnswers = quizAnswersSchema.safeParse(normalizedAnswers)
+  const parsedAnswers = storedQuizAnswersSchema.safeParse(normalizedAnswers)
 
   if (!parsedAnswers.success) {
     await store.markFailed(leadId, "Result artifact email has incomplete quiz answers")
