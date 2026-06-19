@@ -37,15 +37,15 @@ Out of scope:
 
 ## Canonical Decisions
 
-| Current shape                            | Correct canonical shape                                                                       |
-| ---------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `Fructis` as brand                       | `Garnier > Fructis`; `Hair Food` stays in product name, not the one-level line                |
-| `Wahre Schätze` as brand                 | `Garnier > Wahre Schätze`                                                                     |
-| `Gliss` / `Glisskur` as brands           | `Schwarzkopf GLISS`; lines such as `Aqua Revive`, `Liquid Silk`, `Ultimate Repair` when clear |
-| `Monday` / `Monday Haircare` split       | `MONDAY`; no line for current products                                                        |
-| `L’Oréal` generic brand for Elvital oils | `L'Oréal Paris > Elvital`                                                                     |
-| `L'Oreal Professionnel`                  | `L'Oréal Professionnel > Metal DX` for the current deep-cleansing product                     |
-| `Balea > Aqua`                           | `Balea > Professional`; `Aqua Hyaluron` stays in product name                                 |
+| Current shape                                     | Correct canonical shape                                                                       |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `Fructis` as brand or `Fructis Hair Food` as line | `Garnier > Fructis`; `Hair Food` stays in product name, not the one-level line                |
+| `Wahre Schätze` as brand                          | `Garnier > Wahre Schätze`                                                                     |
+| `Gliss` / `Glisskur` as brands                    | `Schwarzkopf GLISS`; lines such as `Aqua Revive`, `Liquid Silk`, `Ultimate Repair` when clear |
+| `Monday` / `Monday Haircare` split                | `MONDAY`; no line for current products                                                        |
+| `L’Oréal` generic brand for Elvital oils          | `L'Oréal Paris > Elvital`                                                                     |
+| `L'Oreal Professionnel`                           | `L'Oréal Professionnel > Metal DX` for the current deep-cleansing product                     |
+| `Balea > Aqua`                                    | `Balea > Professional`; `Aqua Hyaluron` stays in product name                                 |
 
 ## Target File Map
 
@@ -76,27 +76,31 @@ Phase B files, not part of the first correction apply:
 
 Phase A updates reviewed normalization `clean_name` and production `brand_id` / `product_line_id`. It does **not** write live `products.name`.
 
-| Product row                                         | Active? | Current normalized identity | New normalized identity               | Reviewed `clean_name` in JSON         | Phase A writes `products.name`? |
-| --------------------------------------------------- | ------- | --------------------------- | ------------------------------------- | ------------------------------------- | ------------------------------- |
-| `Gliss Kur Aqua Revive Conditioner`                 | yes     | `Gliss > Kur`               | `Schwarzkopf GLISS > Aqua Revive`     | `Conditioner`                         | no                              |
-| `Monday Moisture Conditioner`                       | yes     | `Monday`                    | `MONDAY`                              | `Moisture Conditioner`                | no                              |
-| `Balea Aqua Hyaluron 3in1`                          | yes     | `Balea > Aqua`              | `Balea > Professional`                | `Aqua Hyaluron 3in1`                  | no                              |
-| `Gliss Ultimate Repair Sprüh-Conditioner`           | yes     | `Gliss`                     | `Schwarzkopf GLISS > Ultimate Repair` | `Sprüh-Conditioner`                   | no                              |
-| `Balea Aqua Hyaluron 3 in 1`                        | yes     | `Balea > Aqua`              | `Balea > Professional`                | `Aqua Hyaluron 3 in 1`                | no                              |
-| `Fructis Hair Food Aloe Vera`                       | yes     | `Fructis`                   | `Garnier > Fructis`                   | `Hair Food Aloe Vera`                 | no                              |
-| `Fructis Hair Food Papaya`                          | yes     | `Fructis`                   | `Garnier > Fructis`                   | `Hair Food Papaya`                    | no                              |
-| `Gliss Aqua Revive`                                 | yes     | `Gliss`                     | `Schwarzkopf GLISS > Aqua Revive`     | `4-in-1 Bonding Haarmaske`            | no                              |
-| `Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske`  | yes     | `Gliss`                     | `Schwarzkopf GLISS > Liquid Silk`     | `Glanz 4-in-1 Bonding Haarmaske`      | no                              |
-| `Glisskur Liquid Silk`                              | no      | `Glisskur`                  | `Schwarzkopf GLISS`                   | `Liquid Silk`                         | no                              |
-| `Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl` | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `1-Minute Haarkur Argan & Camelia Öl` | no                              |
-| `Wahre Schätze Avocado`                             | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `Avocado`                             | no                              |
-| `L’Oréal Elvital Öl Magique Jojoba`                 | yes     | `L’Oréal`                   | `L'Oréal Paris > Elvital`             | `Öl Magique Jojoba`                   | no                              |
-| `L’Oréal Öl Magique Midnight Serum`                 | yes     | `L’Oréal`                   | `L'Oréal Paris > Elvital`             | `Öl Magique Midnight Serum`           | no                              |
-| `Balea Aqua Hyaluron`                               | yes     | `Balea > Aqua`              | `Balea > Professional`                | `Aqua Hyaluron`                       | no                              |
-| `Monday Haircare Volume Kraft & Fülle Shampoo`      | yes     | `Monday Haircare`           | `MONDAY`                              | `Volume Kraft & Fülle Shampoo`        | no                              |
-| `Wahre Schätze Aktivkohle`                          | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `Aktivkohle`                          | no                              |
-| `Wahre Schätze Sanfte Hafermilch`                   | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `Sanfte Hafermilch`                   | no                              |
-| `Serie Expert Metal DX Shampoo`                     | yes     | `L'Oreal Professionnel`     | `L'Oréal Professionnel > Metal DX`    | `Shampoo`                             | no                              |
+| Product row                                                 | Active? | Current normalized identity   | New normalized identity               | Reviewed `clean_name` in JSON               | Phase A writes `products.name`? |
+| ----------------------------------------------------------- | ------- | ----------------------------- | ------------------------------------- | ------------------------------------------- | ------------------------------- |
+| `Gliss Kur Aqua Revive Conditioner`                         | yes     | `Gliss > Kur`                 | `Schwarzkopf GLISS > Aqua Revive`     | `Conditioner`                               | no                              |
+| `Monday Moisture Conditioner`                               | yes     | `Monday`                      | `MONDAY`                              | `Moisture Conditioner`                      | no                              |
+| `Balea Aqua Hyaluron 3in1`                                  | yes     | `Balea > Aqua`                | `Balea > Professional`                | `Aqua Hyaluron 3in1`                        | no                              |
+| `Gliss Ultimate Repair Sprüh-Conditioner`                   | yes     | `Gliss`                       | `Schwarzkopf GLISS > Ultimate Repair` | `Sprüh-Conditioner`                         | no                              |
+| `Garnier Hair Food Macadamia`                               | yes     | `Garnier > Hair Food`         | `Garnier > Fructis`                   | `Hair Food Macadamia`                       | no                              |
+| `Garnier Hair Food Aloe Vera`                               | yes     | `Garnier > Hair Food`         | `Garnier > Fructis`                   | `Hair Food Aloe Vera`                       | no                              |
+| `Garnier Hair Food Macadamia`                               | yes     | `Garnier > Hair Food`         | `Garnier > Fructis`                   | `Hair Food Macadamia`                       | no                              |
+| `Balea Aqua Hyaluron 3 in 1`                                | yes     | `Balea > Aqua`                | `Balea > Professional`                | `Aqua Hyaluron 3 in 1`                      | no                              |
+| `Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung` | yes     | `Garnier > Fructis Hair Food` | `Garnier > Fructis`                   | `Hair Food Aloe Vera Feuchtigkeits-Spülung` | no                              |
+| `Fructis Hair Food Aloe Vera`                               | yes     | `Fructis`                     | `Garnier > Fructis`                   | `Hair Food Aloe Vera`                       | no                              |
+| `Fructis Hair Food Papaya`                                  | yes     | `Fructis`                     | `Garnier > Fructis`                   | `Hair Food Papaya`                          | no                              |
+| `Gliss Aqua Revive`                                         | yes     | `Gliss`                       | `Schwarzkopf GLISS > Aqua Revive`     | `4-in-1 Bonding Haarmaske`                  | no                              |
+| `Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske`          | yes     | `Gliss`                       | `Schwarzkopf GLISS > Liquid Silk`     | `Glanz 4-in-1 Bonding Haarmaske`            | no                              |
+| `Glisskur Liquid Silk`                                      | no      | `Glisskur`                    | `Schwarzkopf GLISS`                   | `Liquid Silk`                               | no                              |
+| `Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl`         | yes     | `Wahre Schätze`               | `Garnier > Wahre Schätze`             | `1-Minute Haarkur Argan & Camelia Öl`       | no                              |
+| `Wahre Schätze Avocado`                                     | yes     | `Wahre Schätze`               | `Garnier > Wahre Schätze`             | `Avocado`                                   | no                              |
+| `L’Oréal Elvital Öl Magique Jojoba`                         | yes     | `L’Oréal`                     | `L'Oréal Paris > Elvital`             | `Öl Magique Jojoba`                         | no                              |
+| `L’Oréal Öl Magique Midnight Serum`                         | yes     | `L’Oréal`                     | `L'Oréal Paris > Elvital`             | `Öl Magique Midnight Serum`                 | no                              |
+| `Balea Aqua Hyaluron`                                       | yes     | `Balea > Aqua`                | `Balea > Professional`                | `Aqua Hyaluron`                             | no                              |
+| `Monday Haircare Volume Kraft & Fülle Shampoo`              | yes     | `Monday Haircare`             | `MONDAY`                              | `Volume Kraft & Fülle Shampoo`              | no                              |
+| `Wahre Schätze Aktivkohle`                                  | yes     | `Wahre Schätze`               | `Garnier > Wahre Schätze`             | `Aktivkohle`                                | no                              |
+| `Wahre Schätze Sanfte Hafermilch`                           | yes     | `Wahre Schätze`               | `Garnier > Wahre Schätze`             | `Sanfte Hafermilch`                         | no                              |
+| `Serie Expert Metal DX Shampoo`                             | yes     | `L'Oreal Professionnel`       | `L'Oréal Professionnel > Metal DX`    | `Shampoo`                                   | no                              |
 
 Implementation notes:
 
@@ -113,10 +117,12 @@ Implementation notes:
 
 ## Task 2: Update Reviewed Normalization Data
 
-- [ ] Edit the 19 affected rows in `data/product-catalog-normalization.json`.
+- [ ] Edit the 23 affected rows in `data/product-catalog-normalization.json`.
 - [ ] Retarget aliases so old user/shop wording still resolves to the corrected identity.
 - [ ] Add aliases for common spellings with explicit scope:
-  - Brand-only aliases for `Garnier`: `Fructis`, `Garnier Fructis`, `Garnier Hair Food`, `Garnier Fructis Hair Food`, `Wahre Schätze`, `Wahre Schaetze`, `Garnier Wahre Schätze`.
+  - Brand-only aliases for `Garnier`: `Garnier`.
+  - Line-aware aliases for `Garnier > Fructis`: `Fructis`, `Garnier Fructis`, `Garnier Hair Food`, `Garnier Fructis Hair Food`.
+  - Line-aware aliases for `Garnier > Wahre Schätze`: `Wahre Schätze`, `Wahre Schaetze`, `Garnier Wahre Schätze`.
   - Brand-only aliases for `Schwarzkopf GLISS`: `Gliss`, `GLISS`, `Gliss Kur`, `Glisskur`, `Schwarzkopf Gliss`, `Schwarzkopf GLISS`.
   - Brand-only aliases for `MONDAY`: `Monday`, `MONDAY`, `Monday Haircare`, `MONDAY Haircare`.
   - Documented intentional brand aliases for `L'Oréal Paris`: bare `L’Oréal` / `L'Oreal` for the affected Elvital oil rows; this is intentionally not used for `L'Oréal Professionnel`.
@@ -134,7 +140,7 @@ Create `scripts/product-identity/correct-canonical-identities.ts`.
 - [ ] Load `.env.local` and assert the Supabase URL targets project `pqdkhefxsxkyeqelqegq`.
 - [ ] Verify current production rows match expected product IDs and old normalized identity before writing.
 - [ ] Upsert required canonical brands and product lines.
-- [ ] Retarget or replace stale aliases in a deterministic delete-then-insert/update order because the current generic apply path refuses alias re-pointing.
+- [ ] Retarget stale aliases with deterministic `upsert` on `normalized_alias`; do not delete and recreate aliases unless a future cleanup script explicitly proves that is safe.
 - [ ] Update affected `products.brand_id` and `products.product_line_id`.
 - [ ] Assert the script does not write `products.name`.
 - [ ] Delete old orphan identity rows only after verifying no references remain from `products`, `product_lines`, or `brand_aliases`.
