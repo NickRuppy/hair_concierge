@@ -6,24 +6,26 @@ User situation: after the Phase 0 product identity backfill, production now has 
 
 Promised end-state: production and repo normalization data use one clean identity model: `display title = brand + optional line + clean product name`; aliases remain forgiving for user input; incorrect standalone brand rows are removed once unused; product cards and product-intake lookup still show full understandable product titles.
 
+Claude review outcome: split the work. Phase A corrects canonical identity and aliases additively. Phase B performs live `products.name` cleanup only after the app can hydrate canonical brand/line data everywhere product names are displayed and after catalog ingest is id-stable.
+
 ## Chosen Approach
 
-Use a small, guarded correction pass rather than manual database edits.
+Use a two-phase guarded correction pass rather than manual database edits.
 
-- Update the reviewed normalization document and identity docs.
-- Add/extend tests for canonical brand/line policy and display-name composition.
-- Add a guarded correction script that performs the retargeting in a deterministic order.
-- Dry-run and review before applying to production.
+- **Phase A: canonical identity correction.** Update reviewed normalization data, docs, tests, aliases, `products.brand_id`, and `products.product_line_id`. Do not write `products.name`.
+- **Phase B: display-name cleanup.** Clean `products.name`, wire canonical brand/line hydration into product display DTOs, make catalog ingest id-stable, and refresh product/RAG chunks in one coordinated release window.
+- Add a guarded Phase A correction script that performs retargeting in a deterministic order.
+- Dry-run and review before applying any production write.
 
 ## Scope Boundaries
 
 In scope:
 
-- Correct the affected canonical brand/product-line mappings found after the first backfill.
+- Phase A: correct the affected canonical brand/product-line mappings found after the first backfill.
 - Retarget brand aliases so user-entered old names still resolve correctly.
-- Clean affected `products.name` values where they duplicate the new brand/line.
+- Update reviewed `clean_name` values in `data/product-catalog-normalization.json` where they duplicate the new brand/line.
 - Delete old orphan identity rows only after verifying nothing references them.
-- Add or reuse a central product display helper for `brand + optional line + name`.
+- Document Phase B prerequisites for live `products.name` cleanup and central product display composition.
 
 Out of scope:
 
@@ -31,6 +33,7 @@ Out of scope:
 - Dropping legacy `products.brand` / `products.category` columns; that remains Phase 7.
 - Recategorizing products or changing recommendation/category spec properties.
 - Rewriting realistic chat/eval fixtures that mention old user language such as `Gliss Kur`.
+- Phase A: writing live `products.name`, changing display DTOs, refreshing product/RAG chunks, or changing catalog ingest upsert keys.
 
 ## Canonical Decisions
 
@@ -46,46 +49,59 @@ Out of scope:
 
 ## Target File Map
 
+Phase A files:
+
 - Modify: `data/product-catalog-normalization.json`
 - Modify: `docs/product-identity-normalization.md`
-- Modify or create: central product display helper, likely near `src/components/chat/product-display-model.ts` or `src/lib/product-catalog/`
-- Modify call sites that currently render only `products.name` when normalized identity is available:
-  - chat product cards
-  - profile product usage rows
-  - product-intake product lookup/review displays where applicable
 - Create: `scripts/product-identity/correct-canonical-identities.ts`
 - Modify: `package.json` script entry, e.g. `products:identity:correct`
 - Modify tests:
   - `tests/product-catalog-normalization.test.ts`
   - `tests/product-identity-resolution.test.ts`
-  - product display/helper test, existing or new
   - script dry-run/unit test if feasible without live Supabase
 
-## Correction Table
+Phase B files, not part of the first correction apply:
 
-| Product row                                         | Active? | Current normalized identity | New normalized identity               | Target `products.name` / `clean_name` | Expected composed display title                                |
-| --------------------------------------------------- | ------- | --------------------------- | ------------------------------------- | ------------------------------------- | -------------------------------------------------------------- |
-| `Gliss Kur Aqua Revive Conditioner`                 | yes     | `Gliss > Kur`               | `Schwarzkopf GLISS > Aqua Revive`     | `Conditioner`                         | `Schwarzkopf GLISS Aqua Revive Conditioner`                    |
-| `Monday Moisture Conditioner`                       | yes     | `Monday`                    | `MONDAY`                              | `Moisture Conditioner`                | `MONDAY Moisture Conditioner`                                  |
-| `Balea Aqua Hyaluron 3in1`                          | yes     | `Balea > Aqua`              | `Balea > Professional`                | `Aqua Hyaluron 3in1`                  | `Balea Professional Aqua Hyaluron 3in1`                        |
-| `Gliss Ultimate Repair Sprüh-Conditioner`           | yes     | `Gliss`                     | `Schwarzkopf GLISS > Ultimate Repair` | `Sprüh-Conditioner`                   | `Schwarzkopf GLISS Ultimate Repair Sprüh-Conditioner`          |
-| `Balea Aqua Hyaluron 3 in 1`                        | yes     | `Balea > Aqua`              | `Balea > Professional`                | `Aqua Hyaluron 3 in 1`                | `Balea Professional Aqua Hyaluron 3 in 1`                      |
-| `Fructis Hair Food Aloe Vera`                       | yes     | `Fructis`                   | `Garnier > Fructis`                   | `Hair Food Aloe Vera`                 | `Garnier Fructis Hair Food Aloe Vera`                          |
-| `Fructis Hair Food Papaya`                          | yes     | `Fructis`                   | `Garnier > Fructis`                   | `Hair Food Papaya`                    | `Garnier Fructis Hair Food Papaya`                             |
-| `Gliss Aqua Revive`                                 | yes     | `Gliss`                     | `Schwarzkopf GLISS > Aqua Revive`     | `4-in-1 Bonding Haarmaske`            | `Schwarzkopf GLISS Aqua Revive 4-in-1 Bonding Haarmaske`       |
-| `Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske`  | yes     | `Gliss`                     | `Schwarzkopf GLISS > Liquid Silk`     | `Glanz 4-in-1 Bonding Haarmaske`      | `Schwarzkopf GLISS Liquid Silk Glanz 4-in-1 Bonding Haarmaske` |
-| `Glisskur Liquid Silk`                              | no      | `Glisskur`                  | `Schwarzkopf GLISS > Liquid Silk`     | `Liquid Silk`                         | `Schwarzkopf GLISS Liquid Silk`                                |
-| `Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl` | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `1-Minute Haarkur Argan & Camelia Öl` | `Garnier Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl`    |
-| `Wahre Schätze Avocado`                             | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `Avocado`                             | `Garnier Wahre Schätze Avocado`                                |
-| `L’Oréal Elvital Öl Magique Jojoba`                 | yes     | `L’Oréal`                   | `L'Oréal Paris > Elvital`             | `Öl Magique Jojoba`                   | `L'Oréal Paris Elvital Öl Magique Jojoba`                      |
-| `L’Oréal Öl Magique Midnight Serum`                 | yes     | `L’Oréal`                   | `L'Oréal Paris > Elvital`             | `Öl Magique Midnight Serum`           | `L'Oréal Paris Elvital Öl Magique Midnight Serum`              |
-| `Balea Aqua Hyaluron`                               | yes     | `Balea > Aqua`              | `Balea > Professional`                | `Aqua Hyaluron`                       | `Balea Professional Aqua Hyaluron`                             |
-| `Monday Haircare Volume Kraft & Fülle Shampoo`      | yes     | `Monday Haircare`           | `MONDAY`                              | `Volume Kraft & Fülle Shampoo`        | `MONDAY Volume Kraft & Fülle Shampoo`                          |
-| `Wahre Schätze Aktivkohle`                          | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `Aktivkohle`                          | `Garnier Wahre Schätze Aktivkohle`                             |
-| `Wahre Schätze Sanfte Hafermilch`                   | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `Sanfte Hafermilch`                   | `Garnier Wahre Schätze Sanfte Hafermilch`                      |
-| `Serie Expert Metal DX Shampoo`                     | yes     | `L'Oreal Professionnel`     | `L'Oréal Professionnel > Metal DX`    | `Shampoo`                             | `L'Oréal Professionnel Metal DX Shampoo`                       |
+- Modify or create: central product display helper, likely near `src/components/chat/product-display-model.ts` or `src/lib/product-catalog/`
+- Modify product DTO/fetch paths so canonical `brands.name` and `product_lines.name` are available where needed:
+  - chat product cards
+  - profile product usage rows
+  - product-intake product lookup/review displays
+  - any recommendation/product matching payload that currently serializes only `products.name` plus legacy `products.brand`
+- Modify `scripts/ingest-products.ts` so product ingest is id-stable before any live `products.name` cleanup.
+- Refresh product list/RAG chunks after the live name cleanup.
+- Add product display/helper tests.
 
-Implementation note: these target names assume the display helper is wired before production apply. If the helper is not wired, do not apply the name cleanup yet because product cards would become too bare.
+## Phase A Correction Table
+
+Phase A updates reviewed normalization `clean_name` and production `brand_id` / `product_line_id`. It does **not** write live `products.name`.
+
+| Product row                                         | Active? | Current normalized identity | New normalized identity               | Reviewed `clean_name` in JSON         | Phase A writes `products.name`? |
+| --------------------------------------------------- | ------- | --------------------------- | ------------------------------------- | ------------------------------------- | ------------------------------- |
+| `Gliss Kur Aqua Revive Conditioner`                 | yes     | `Gliss > Kur`               | `Schwarzkopf GLISS > Aqua Revive`     | `Conditioner`                         | no                              |
+| `Monday Moisture Conditioner`                       | yes     | `Monday`                    | `MONDAY`                              | `Moisture Conditioner`                | no                              |
+| `Balea Aqua Hyaluron 3in1`                          | yes     | `Balea > Aqua`              | `Balea > Professional`                | `Aqua Hyaluron 3in1`                  | no                              |
+| `Gliss Ultimate Repair Sprüh-Conditioner`           | yes     | `Gliss`                     | `Schwarzkopf GLISS > Ultimate Repair` | `Sprüh-Conditioner`                   | no                              |
+| `Balea Aqua Hyaluron 3 in 1`                        | yes     | `Balea > Aqua`              | `Balea > Professional`                | `Aqua Hyaluron 3 in 1`                | no                              |
+| `Fructis Hair Food Aloe Vera`                       | yes     | `Fructis`                   | `Garnier > Fructis`                   | `Hair Food Aloe Vera`                 | no                              |
+| `Fructis Hair Food Papaya`                          | yes     | `Fructis`                   | `Garnier > Fructis`                   | `Hair Food Papaya`                    | no                              |
+| `Gliss Aqua Revive`                                 | yes     | `Gliss`                     | `Schwarzkopf GLISS > Aqua Revive`     | `4-in-1 Bonding Haarmaske`            | no                              |
+| `Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske`  | yes     | `Gliss`                     | `Schwarzkopf GLISS > Liquid Silk`     | `Glanz 4-in-1 Bonding Haarmaske`      | no                              |
+| `Glisskur Liquid Silk`                              | no      | `Glisskur`                  | `Schwarzkopf GLISS`                   | `Liquid Silk`                         | no                              |
+| `Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl` | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `1-Minute Haarkur Argan & Camelia Öl` | no                              |
+| `Wahre Schätze Avocado`                             | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `Avocado`                             | no                              |
+| `L’Oréal Elvital Öl Magique Jojoba`                 | yes     | `L’Oréal`                   | `L'Oréal Paris > Elvital`             | `Öl Magique Jojoba`                   | no                              |
+| `L’Oréal Öl Magique Midnight Serum`                 | yes     | `L’Oréal`                   | `L'Oréal Paris > Elvital`             | `Öl Magique Midnight Serum`           | no                              |
+| `Balea Aqua Hyaluron`                               | yes     | `Balea > Aqua`              | `Balea > Professional`                | `Aqua Hyaluron`                       | no                              |
+| `Monday Haircare Volume Kraft & Fülle Shampoo`      | yes     | `Monday Haircare`           | `MONDAY`                              | `Volume Kraft & Fülle Shampoo`        | no                              |
+| `Wahre Schätze Aktivkohle`                          | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `Aktivkohle`                          | no                              |
+| `Wahre Schätze Sanfte Hafermilch`                   | yes     | `Wahre Schätze`             | `Garnier > Wahre Schätze`             | `Sanfte Hafermilch`                   | no                              |
+| `Serie Expert Metal DX Shampoo`                     | yes     | `L'Oreal Professionnel`     | `L'Oréal Professionnel > Metal DX`    | `Shampoo`                             | no                              |
+
+Implementation notes:
+
+- `clean_name` is reviewed normalization data only. It must not be treated as the live DB `products.name` until Phase B.
+- The inactive `Glisskur Liquid Silk` row stays on brand-only `Schwarzkopf GLISS` in Phase A because `Liquid Silk` as both product line and `clean_name` would fail the duplicate-prefix validator.
 
 ## Task 1: Update Canonical Policy Docs
 
@@ -93,37 +109,23 @@ Implementation note: these target names assume the display helper is wired befor
 - [ ] Change examples from `Garnier > Fructis Hair Food` to `Garnier > Fructis` with `Hair Food ...` in `clean_name`.
 - [ ] Add examples for `Schwarzkopf GLISS`, `MONDAY`, `L'Oréal Paris > Elvital`, `L'Oréal Professionnel > Metal DX`, and `Balea > Professional`.
 - [ ] Document the display contract: product display title is `brand + optional line + clean product name`.
+- [ ] Document that Phase A intentionally leaves live `products.name` unchanged because ingest still uses `(name, category)` and product chunks include `product.name`.
 
 ## Task 2: Update Reviewed Normalization Data
 
 - [ ] Edit the 19 affected rows in `data/product-catalog-normalization.json`.
 - [ ] Retarget aliases so old user/shop wording still resolves to the corrected identity.
-- [ ] Add aliases for common spellings:
-  - `Fructis`, `Garnier Fructis`, `Garnier Hair Food`, `Garnier Fructis Hair Food`
-  - `Wahre Schätze`, `Wahre Schaetze`, `Garnier Wahre Schätze`
-  - `Gliss`, `GLISS`, `Gliss Kur`, `Glisskur`, `Schwarzkopf Gliss`, `Schwarzkopf GLISS`
-  - `Monday`, `MONDAY`, `Monday Haircare`, `MONDAY Haircare`
-  - `L’Oréal`, `L'Oreal`, `L'Oréal Paris`, `Elvital`
-  - `L'Oreal Professionnel`, `L'Oréal Professionnel Paris`, `Serie Expert Metal DX`
-  - `Balea Aqua`, `Balea Professional`, `Balea med`, `Balea Natural Beauty`
+- [ ] Add aliases for common spellings with explicit scope:
+  - Brand-only aliases for `Garnier`: `Fructis`, `Garnier Fructis`, `Garnier Hair Food`, `Garnier Fructis Hair Food`, `Wahre Schätze`, `Wahre Schaetze`, `Garnier Wahre Schätze`.
+  - Brand-only aliases for `Schwarzkopf GLISS`: `Gliss`, `GLISS`, `Gliss Kur`, `Glisskur`, `Schwarzkopf Gliss`, `Schwarzkopf GLISS`.
+  - Brand-only aliases for `MONDAY`: `Monday`, `MONDAY`, `Monday Haircare`, `MONDAY Haircare`.
+  - Documented intentional brand aliases for `L'Oréal Paris`: bare `L’Oréal` / `L'Oreal` for the affected Elvital oil rows; this is intentionally not used for `L'Oréal Professionnel`.
+  - Brand/line or line-aware aliases for `L'Oréal Professionnel > Metal DX`: `L'Oreal Professionnel`, `L'Oréal Professionnel Paris`, `Serie Expert Metal DX`.
+  - Brand/line aliases for Balea lines: `Balea Aqua` -> `Balea > Professional`; keep existing `Balea med` -> `Balea > Med`; keep existing `Balea Natural Beauty` -> `Balea > Natural Beauty`.
+- [ ] Ensure shared aliases that could apply across several rows resolve at brand scope rather than conflicting line scope.
 - [ ] Run `npm run products:identity:validate-reviewed`.
 
-## Task 3: Add Product Display Helper
-
-- [ ] Locate current product display helpers and card formatting.
-- [ ] Add or reuse one central helper that composes `brand + optional line + name` without duplicating repeated tokens.
-- [ ] Ensure the helper handles both joined DB rows and existing flat product DTOs.
-- [ ] Patch high-impact display paths that would otherwise show only cleaned `products.name`:
-  - chat product cards
-  - profile/routine owned product rows
-  - product-intake lookup/review displays where normalized identity is available
-- [ ] Add tests for duplicate prevention:
-  - `Garnier + Fructis + Hair Food Aloe Vera` -> `Garnier Fructis Hair Food Aloe Vera`
-  - `Balea + Professional + Aqua Hyaluron 3in1` -> `Balea Professional Aqua Hyaluron 3in1`
-  - `MONDAY + null + Volume Kraft & Fülle Shampoo` -> `MONDAY Volume Kraft & Fülle Shampoo`
-  - `L'Oréal Paris + Elvital + Öl Magique Jojoba` -> `L'Oréal Paris Elvital Öl Magique Jojoba`
-
-## Task 4: Add Guarded Correction Script
+## Task 3: Add Guarded Phase A Correction Script
 
 Create `scripts/product-identity/correct-canonical-identities.ts`.
 
@@ -132,8 +134,9 @@ Create `scripts/product-identity/correct-canonical-identities.ts`.
 - [ ] Load `.env.local` and assert the Supabase URL targets project `pqdkhefxsxkyeqelqegq`.
 - [ ] Verify current production rows match expected product IDs and old normalized identity before writing.
 - [ ] Upsert required canonical brands and product lines.
-- [ ] Retarget or replace stale aliases in a deterministic order.
-- [ ] Update affected `products.brand_id`, `products.product_line_id`, and `products.name`.
+- [ ] Retarget or replace stale aliases in a deterministic delete-then-insert/update order because the current generic apply path refuses alias re-pointing.
+- [ ] Update affected `products.brand_id` and `products.product_line_id`.
+- [ ] Assert the script does not write `products.name`.
 - [ ] Delete old orphan identity rows only after verifying no references remain from `products`, `product_lines`, or `brand_aliases`.
 - [ ] Print a before/after summary:
   - affected products
@@ -142,20 +145,21 @@ Create `scripts/product-identity/correct-canonical-identities.ts`.
   - lines inserted/reused
   - orphan brands/lines deleted or skipped
 
-## Task 5: Tests And Dry Run
+## Task 4: Phase A Tests And Dry Run
 
 - [ ] Add normalization tests that fail if standalone `Fructis`, `Wahre Schätze`, `Glisskur`, `Monday Haircare`, or generic `L’Oréal` remain canonical brands for affected rows.
 - [ ] Add brand-resolution tests for the corrected aliases.
+- [ ] Add a test or assertion that no Phase A script path writes live `products.name`.
 - [ ] Add script dry-run tests if the current test harness can mock Supabase cleanly; otherwise keep logic units exported and test the plan builder.
 - [ ] Run:
 
 ```bash
 npm run products:identity:validate-reviewed
-npx tsx --test tests/product-catalog-normalization.test.ts tests/product-identity-resolution.test.ts <display-helper-test>
+npx tsx --test tests/product-catalog-normalization.test.ts tests/product-identity-resolution.test.ts <script-plan-test>
 npm run products:identity:correct
 ```
 
-## Task 6: Review And Production Apply Gate
+## Task 5: Phase A Review And Production Apply Gate
 
 - [ ] Run local checks and final code review on the correction diff.
 - [ ] Run a dry-run against production and review the exact output with Nick.
@@ -169,8 +173,29 @@ npm run products:identity:correct -- --apply --confirm-project=pqdkhefxsxkyeqelq
   - no affected product remains on old canonical brand rows;
   - corrected aliases resolve to the intended brand/line;
   - old wrong brand rows are absent or explicitly reported as skipped because still referenced;
-  - product display title examples render correctly.
+  - no live `products.name` value changed.
 - [ ] Record the production correction in the plan or PR handoff.
+
+## Phase B Follow-Up: Live Product Name Cleanup
+
+Do not start Phase B until Phase A has shipped or is deliberately bundled into the same release window with the prerequisites below.
+
+- [ ] Make `scripts/ingest-products.ts` id-stable so future imports update existing products even if `products.name` changes.
+- [ ] Locate current product display helpers and card formatting.
+- [ ] Add or reuse one central helper that composes `brand + optional line + name` without duplicating repeated tokens.
+- [ ] Ensure canonical `brand` and `product_line` data is available in DTOs that feed:
+  - chat product cards
+  - product detail drawer/popover
+  - profile/routine owned product rows
+  - product-intake lookup/review displays
+  - product matching/recommendation payloads where display titles are serialized
+- [ ] Clean affected live `products.name` values only after the helper and DTO hydration are in place.
+- [ ] Refresh product list/RAG chunks after live `products.name` cleanup.
+- [ ] Add display helper tests:
+  - `Garnier + Fructis + Hair Food Aloe Vera` -> `Garnier Fructis Hair Food Aloe Vera`
+  - `Balea + Professional + Aqua Hyaluron 3in1` -> `Balea Professional Aqua Hyaluron 3in1`
+  - `MONDAY + null + Volume Kraft & Fülle Shampoo` -> `MONDAY Volume Kraft & Fülle Shampoo`
+  - `L'Oréal Paris + Elvital + Öl Magique Jojoba` -> `L'Oréal Paris Elvital Öl Magique Jojoba`
 
 ## Verification
 
@@ -179,8 +204,8 @@ Automated:
 - `npm run products:identity:validate-reviewed`
 - Product normalization tests
 - Brand-resolution tests
-- Product display helper tests
-- Correction script dry-run/unit tests
+- Phase A correction script dry-run/unit tests
+- `npm run ci:verify` or the current repo-wide verification command before final handoff, unless the branch owner explicitly scopes a narrower run and documents why
 - `git diff --check`
 - Prettier on changed files
 
@@ -193,11 +218,12 @@ Manual/read-only production checks before apply:
 Manual/read-only production checks after apply:
 
 - Brand search for `Fructis`, `Wahre Schätze`, `Glisskur`, `MONDAY Haircare`, `Elvital`, `Balea Aqua` returns corrected options.
-- Sample product cards show full display names with no duplication.
+- Sample product cards are unchanged in live product name text for Phase A, while brand lookup/search uses corrected canonical identities.
 - `products.brand` and `products.category` legacy fields remain unchanged.
+- `products.name` values remain unchanged in Phase A.
 
 ## Execution Handoff
 
-Recommended next skill: `branch-gate`, then `superpowers:subagent-driven-development`.
+Recommended next skill: `branch-gate`, then subagent-driven implementation if available in the session.
 
 Use a new stacked branch/worktree from `codex/product-intake-phase-5` so PR #181 remains reviewable and this canonical correction can be reviewed separately.
