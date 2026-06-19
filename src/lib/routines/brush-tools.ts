@@ -90,11 +90,19 @@ function includesAny(text: string, terms: string[]): boolean {
   return terms.some((term) => text.includes(normalizeText(term)))
 }
 
+function hasDirectDetanglingRequest(normalizedMessage: string): boolean {
+  return (
+    /\bentwirr\w*\b/.test(normalizedMessage) ||
+    /\bdetangl\w*\b/.test(normalizedMessage) ||
+    /\bknoten\b.{0,40}\b(?:loes\w*|los\w*|raus\w*|entfern\w*)\b/.test(normalizedMessage)
+  )
+}
+
 /** Accepts an already-normalized message string (via normalizeText). */
 export function hasExplicitBrushToolsRequest(normalizedMessage: string): boolean {
   return (
     includesAny(normalizedMessage, BRUSH_TOOLS_TERMS) ||
-    includesAny(normalizedMessage, DETANGLING_TERMS)
+    hasDirectDetanglingRequest(normalizedMessage)
   )
 }
 
