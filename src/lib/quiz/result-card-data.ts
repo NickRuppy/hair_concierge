@@ -52,7 +52,7 @@ export function buildCardData(rawAnswers: QuizAnswers): CardData {
     },
     {
       icon: "result-clipboard" as const,
-      title: "Haarstärke",
+      title: "Haardicke",
       description: thicknessResults[answers.thickness ?? ""] ?? "",
     },
     {

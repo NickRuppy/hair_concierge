@@ -1092,8 +1092,8 @@ export default function ProfilePage() {
                         }}
                       >
                         <QuizEditorField
-                          title="Haartextur"
-                          text="Wie dein Haar natürlich fällt, wenn es nass ist."
+                          title="Haarstruktur"
+                          text="Welche Haarstruktur die meisten deiner Haare haben."
                         >
                           <SegmentedControl
                             options={HAIR_TEXTURE_OPTIONS}
@@ -1111,8 +1111,8 @@ export default function ProfilePage() {
                         }}
                       >
                         <QuizEditorField
-                          title="Haar-Dicke"
-                          text="Wie dick ein einzelnes Haar im Vergleich zu einem Nähfaden ist."
+                          title="Haardicke"
+                          text="Wie sich ein einzelnes Haar bei dir meistens im Vergleich zu einem Nähfaden anfühlt."
                         >
                           <SegmentedControl
                             options={HAIR_THICKNESS_OPTIONS}

@@ -89,14 +89,14 @@ test.describe("Deployed App E2E Tests", () => {
     await startButton.waitFor({ state: "visible" })
     await startButton.click()
 
-    // Step 1: Hair texture question (question 1/7)
-    await expect(page.getByText(/Haartextur/i)).toBeVisible({ timeout: 15000 })
+    // Step 1: Hair structure question (question 1/7)
+    await expect(page.getByText(/Haarstruktur/i)).toBeVisible({ timeout: 15000 })
 
     // Click "Glatt" option — should auto-advance after 400ms
     await page.getByText("Glatt").first().click()
 
     // Step 2: Hair thickness (question 2/7)
-    await expect(page.getByText(/Wie dick sind deine einzelnen Haare/i)).toBeVisible({
+    await expect(page.getByText(/Wie dick fühlt sich ein einzelnes Haar/i)).toBeVisible({
       timeout: 10000,
     })
     await expect(page.getByText("2/7")).toBeVisible()
@@ -132,7 +132,7 @@ test.describe("Deployed App E2E Tests", () => {
     await startBtn.waitFor({ state: "visible" })
     await startBtn.click()
     // Wait for question title instead of counter (more reliable)
-    await expect(page.getByText(/Haartextur/i)).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText(/Haarstruktur/i)).toBeVisible({ timeout: 15000 })
 
     await page.getByText("Glatt").first().click()
     await expect(page.getByText("2/7")).toBeVisible({ timeout: 10000 })
@@ -182,7 +182,7 @@ test.describe("Deployed App E2E Tests", () => {
     await startBtn.click()
 
     // Should be on question 1 — wait for the question title
-    await expect(page.getByText(/Haartextur/i)).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText(/Haarstruktur/i)).toBeVisible({ timeout: 15000 })
 
     // Click the back arrow button (the ArrowLeft svg button)
     await page

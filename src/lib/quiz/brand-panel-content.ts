@@ -12,8 +12,8 @@ export interface QuizBrandPanelContent {
 const QUESTION_PANEL_CONTENT: Partial<
   Record<QuizStep, { questionNumber: number; description: string }>
 > = {
-  2: { questionNumber: 1, description: "Deine natürliche Basis." },
-  3: { questionNumber: 2, description: "Wie fein dein Haar ist." },
+  2: { questionNumber: 1, description: "Deine natürliche Haarstruktur." },
+  3: { questionNumber: 2, description: "Dicke einzelner Haare." },
   13: { questionNumber: 3, description: "Wie voll dein Haar insgesamt ist." },
   15: { questionNumber: 4, description: "Wie lang deine Haare aktuell sind." },
   4: { questionNumber: 5, description: "Wie sich die Oberfläche anfühlt." },
