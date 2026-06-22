@@ -113,7 +113,7 @@ test.describe("Conditioner Recommendation Flow", () => {
     // Verify we're on the profile page and it has content
     // Look for profile-related German text
     const hasProfileContent =
-      bodyText?.includes("Haartextur") ||
+      bodyText?.includes("Haarstruktur") ||
       bodyText?.includes("Haardicke") ||
       bodyText?.includes("Zugtest") ||
       bodyText?.includes("Profil") ||

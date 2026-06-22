@@ -150,7 +150,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.goto("/quiz", { waitUntil: "networkidle" })
 
       await expect(
-        page.getByRole("heading", { name: /Was ist deine natürliche Haartextur/i }),
+        page.getByRole("heading", { name: /Welche Haarstruktur haben die meisten deiner Haare/i }),
       ).toBeVisible()
 
       await page.getByText("Wellig").first().click()
@@ -487,7 +487,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.goto("/quiz", { waitUntil: "networkidle" })
 
       await expect(
-        page.getByRole("heading", { name: /Was ist deine natürliche Haartextur/i }),
+        page.getByRole("heading", { name: /Welche Haarstruktur haben die meisten deiner Haare/i }),
       ).toBeVisible()
       await page.getByText("Glatt").first().click()
       await expect(page.getByText("2/10")).toBeVisible()

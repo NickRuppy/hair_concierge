@@ -134,14 +134,14 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
 export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "hair_texture",
-    label: "Haartextur",
+    label: "Haarstruktur",
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.hair_texture, HAIR_TEXTURE_OPTIONS),
   },
   {
     key: "thickness",
-    label: "Haar-Dicke",
+    label: "Haardicke",
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.thickness, HAIR_THICKNESS_OPTIONS),

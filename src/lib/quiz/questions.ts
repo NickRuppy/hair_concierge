@@ -7,9 +7,9 @@ export const quizQuestions: QuizQuestion[] = [
   {
     step: 2,
     questionNumber: 1,
-    title: "Was ist deine natürliche Haartextur?",
+    title: "Welche Haarstruktur haben die meisten deiner Haare?",
     instruction:
-      "Mach eine Strähne tropfnass, drücke sie oben zusammen und lass los \u2013 was passiert?",
+      "Schau dir eine typische nasse Strähne an und wähle unten aus, welche Form sie annimmt.",
     options: [
       {
         value: "straight",
@@ -42,9 +42,8 @@ export const quizQuestions: QuizQuestion[] = [
   {
     step: 3,
     questionNumber: 2,
-    title: "Wie dick sind deine einzelnen Haare?",
-    instruction:
-      "Nimm ein einzelnes Haar und halte es zwischen Daumen und Zeigefinger. Vergleiche es mit einem Nähfaden \u2013 das ist der beste Referenzpunkt.\n\nGemeint ist ein einzelnes Haar, nicht wie viele Haare du insgesamt hast.",
+    title: "Wie dick fühlt sich ein einzelnes Haar bei dir meistens an?",
+    instruction: "Vergleiche ein einzelnes Haar mit einem Nähfaden.",
     options: [
       {
         value: "fine",
