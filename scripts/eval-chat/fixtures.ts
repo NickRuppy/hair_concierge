@@ -213,14 +213,14 @@ export const SCENARIOS: EvalScenario[] = [
   {
     id: "simple-faq",
     name: "Simple FAQ question",
-    description: "Straightforward question — should use FAQ shortcut",
+    description: "Straightforward question — should answer directly",
     hair_profile: { ...FULL_PROFILE },
     routine_inventory: FULL_ROUTINE_INVENTORY,
     turns: [
       {
         message: "Wie oft sollte ich meine Haare waschen?",
         metadata: {
-          retrieval_mode: ["faq", "hybrid"],
+          retrieval_mode: ["faq", "hybrid", "agent_v2_responses"],
         },
         content: {
           must_be_german: true,

@@ -4,6 +4,8 @@ Phase 0 defines how Chaarlie names, matches, and reviews catalog products before
 
 Phase 0 keeps the current production catalog shape compatible: existing `products.brand` and `products.category` stay in place, new identity tables are additive, and `product_lines` remain internal-only, optional, and forgiving. Product intake submissions and approval workflows are out of scope for this phase.
 
+Canonical correction passes may update reviewed normalization data and identity FKs (`brand_id`, `product_line_id`) before display-name cleanup is ready. They must not write live `products.name` until product display DTOs hydrate canonical brand/line data everywhere, catalog ingest is id-stable without `(name, category)` as the identity key, and product/RAG chunks can be refreshed in the same release window.
+
 ## Goals
 
 - Make catalog product identity deterministic where the source data is clear.
@@ -82,7 +84,8 @@ Rules:
 
 Rules:
 
-- Use `product_line` for stable sub-brands or ranges such as `Pro-V Miracles`, `Fructis Hair Food`, `Wahre Schätze`, or `Elvital`.
+- Use `product_line` for stable one-level sub-brands or ranges such as `Pro-V Miracles`, `Fructis`, `Wahre Schätze`, or `Elvital`.
+- Keep nested range or variant families in `clean_name` when they are not the one-level line decision. For example, use `Garnier > Fructis` with `Hair Food Aloe Vera ...` as `clean_name`, not `Garnier > Fructis Hair Food`.
 - Use `null` when the line is absent, weakly evidenced, or not needed for matching.
 - Accept aliases that resolve either to brand only or to brand+line.
 - Backfill product lines only when they improve matching or auditability.
@@ -153,7 +156,7 @@ Examples:
 
 - `Pantene`, `Pantene Pro V`, and `Pantene Pro-V` can resolve to canonical brand `Pantene`.
 - `Pantene Pro-V Miracles` can resolve to brand `Pantene` plus line `Pro-V Miracles`.
-- `Garnier Hair Food` can resolve to brand `Garnier` plus line `Fructis Hair Food` only when the product context supports the Fructis Hair Food range.
+- `Garnier Hair Food` can resolve to brand `Garnier` plus line `Fructis` only when the product context supports the Fructis range; `Hair Food` then stays in `clean_name`.
 - `Elvital` should resolve to brand `L'Oréal Paris` plus line `Elvital` when used as the consumer-facing range.
 
 Aliases should not hide uncertainty. If the same alias can reasonably mean two brands or lines in the catalog, keep both candidates out of automatic matching and document the conflict in `notes`.
@@ -191,8 +194,8 @@ Aliases should not hide uncertainty. If the same alias can reasonably mean two b
 {
   "canonical_category_key": "conditioner",
   "canonical_brand": "Garnier",
-  "product_line": "Fructis Hair Food",
-  "clean_name": "Aloe Vera Feuchtigkeitsspülung",
+  "product_line": "Fructis",
+  "clean_name": "Hair Food Aloe Vera Feuchtigkeitsspülung",
   "aliases": [
     {
       "alias": "Garnier Fructis",
@@ -204,13 +207,13 @@ Aliases should not hide uncertainty. If the same alias can reasonably mean two b
       "alias": "Garnier Fructis Hair Food",
       "resolves_to": "brand_line",
       "canonical_brand": "Garnier",
-      "product_line": "Fructis Hair Food"
+      "product_line": "Fructis"
     },
     {
       "alias": "Garnier Hair Food",
       "resolves_to": "brand_line",
       "canonical_brand": "Garnier",
-      "product_line": "Fructis Hair Food"
+      "product_line": "Fructis"
     }
   ]
 }

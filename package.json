@@ -44,6 +44,7 @@
     "products:identity:validate": "tsx scripts/product-identity/validate-normalization.ts",
     "products:identity:validate-reviewed": "tsx scripts/product-identity/validate-normalization.ts --require-reviewed",
     "products:identity:apply": "tsx scripts/product-identity/apply-normalization.ts",
+    "products:identity:correct": "tsx scripts/product-identity/correct-canonical-identities.ts",
     "product-intake:check-readiness": "tsx scripts/product-intake/check-readiness.ts",
     "product-intake:cleanup-photos": "tsx scripts/product-intake/cleanup-photos.ts",
     "products:intake:queue": "tsx scripts/product-intake/queue.ts",

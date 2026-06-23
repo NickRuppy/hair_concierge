@@ -258,3 +258,159 @@ test("detectBrandAliasConflicts reports duplicate normalized aliases with confli
     },
   ])
 })
+
+test("resolver handles corrected Phase A catalog aliases", () => {
+  const catalog = buildBrandResolutionCatalog({
+    brands: [
+      {
+        id: "brand-garnier",
+        canonical_name: "Garnier",
+        normalized_name: "garnier",
+      },
+      {
+        id: "brand-gliss",
+        canonical_name: "Schwarzkopf GLISS",
+        normalized_name: "schwarzkopf gliss",
+      },
+      {
+        id: "brand-monday",
+        canonical_name: "MONDAY",
+        normalized_name: "monday",
+      },
+      {
+        id: "brand-loreal-paris",
+        canonical_name: "L'Oréal Paris",
+        normalized_name: "loreal paris",
+      },
+      {
+        id: "brand-loreal-professionnel",
+        canonical_name: "L'Oréal Professionnel",
+        normalized_name: "loreal professionnel",
+      },
+      {
+        id: "brand-balea",
+        canonical_name: "Balea",
+        normalized_name: "balea",
+      },
+    ],
+    productLines: [
+      {
+        id: "line-fructis",
+        brand_id: "brand-garnier",
+        canonical_name: "Fructis",
+        normalized_name: "fructis",
+      },
+      {
+        id: "line-wahre",
+        brand_id: "brand-garnier",
+        canonical_name: "Wahre Schätze",
+        normalized_name: "wahre schatze",
+      },
+      {
+        id: "line-elvital",
+        brand_id: "brand-loreal-paris",
+        canonical_name: "Elvital",
+        normalized_name: "elvital",
+      },
+      {
+        id: "line-metal-dx",
+        brand_id: "brand-loreal-professionnel",
+        canonical_name: "Metal DX",
+        normalized_name: "metal dx",
+      },
+      {
+        id: "line-professional",
+        brand_id: "brand-balea",
+        canonical_name: "Professional",
+        normalized_name: "professional",
+      },
+    ],
+    brandAliases: [
+      {
+        brand_id: "brand-garnier",
+        product_line_id: "line-fructis",
+        alias: "Fructis",
+        normalized_alias: "fructis",
+      },
+      {
+        brand_id: "brand-garnier",
+        product_line_id: "line-fructis",
+        alias: "Garnier Hair Food",
+        normalized_alias: "garnier hair food",
+      },
+      {
+        brand_id: "brand-garnier",
+        product_line_id: "line-wahre",
+        alias: "Wahre Schätze",
+        normalized_alias: "wahre schatze",
+      },
+      {
+        brand_id: "brand-gliss",
+        product_line_id: null,
+        alias: "Glisskur",
+        normalized_alias: "glisskur",
+      },
+      {
+        brand_id: "brand-monday",
+        product_line_id: null,
+        alias: "Monday Haircare",
+        normalized_alias: "monday haircare",
+      },
+      {
+        brand_id: "brand-loreal-paris",
+        product_line_id: null,
+        alias: "L'Oréal",
+        normalized_alias: "loreal",
+      },
+      {
+        brand_id: "brand-loreal-paris",
+        product_line_id: "line-elvital",
+        alias: "Elvital",
+        normalized_alias: "elvital",
+      },
+      {
+        brand_id: "brand-loreal-professionnel",
+        product_line_id: "line-metal-dx",
+        alias: "Serie Expert Metal DX",
+        normalized_alias: "serie expert metal dx",
+      },
+      {
+        brand_id: "brand-balea",
+        product_line_id: "line-professional",
+        alias: "Balea Aqua",
+        normalized_alias: "balea aqua",
+      },
+    ],
+  })
+
+  const fructis = resolveBrandFromText("Garnier Hair Food Aloe Vera", catalog)
+  assert.equal(fructis.match, "brand_line")
+  assert.equal(fructis.brand?.id, "brand-garnier")
+  assert.equal(fructis.productLine?.id, "line-fructis")
+
+  const wahre = resolveBrandFromText("Wahre Schätze Avocado", catalog)
+  assert.equal(wahre.match, "brand_line")
+  assert.equal(wahre.productLine?.id, "line-wahre")
+
+  const gliss = resolveBrandFromText("Glisskur Liquid Silk", catalog)
+  assert.equal(gliss.match, "brand")
+  assert.equal(gliss.brand?.id, "brand-gliss")
+  assert.equal(gliss.productLine, null)
+
+  const monday = resolveBrandFromText("Monday Haircare Volume Shampoo", catalog)
+  assert.equal(monday.match, "brand")
+  assert.equal(monday.brand?.id, "brand-monday")
+
+  const elvital = resolveBrandFromText("Elvital Öl Magique", catalog)
+  assert.equal(elvital.match, "brand_line")
+  assert.equal(elvital.productLine?.id, "line-elvital")
+
+  const metalDx = resolveBrandFromText("Serie Expert Metal DX Shampoo", catalog)
+  assert.equal(metalDx.match, "brand_line")
+  assert.equal(metalDx.brand?.id, "brand-loreal-professionnel")
+  assert.equal(metalDx.productLine?.id, "line-metal-dx")
+
+  const balea = resolveBrandFromText("Balea Aqua Hyaluron", catalog)
+  assert.equal(balea.match, "brand_line")
+  assert.equal(balea.productLine?.id, "line-professional")
+})

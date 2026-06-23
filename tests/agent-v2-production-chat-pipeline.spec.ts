@@ -473,6 +473,7 @@ function createAgentV2Result(): AgentV2ResponsesTurnResult {
         requested_product_count: 1,
         count_policy: "exact",
         evidence_quote: "Welches Shampoo passt?",
+        specific_product_candidate: false,
         confidence: 0.95,
       },
       confidence: 0.92,
@@ -1011,7 +1012,7 @@ test("AgentV2 production pipeline keeps parallel select_products results isolate
   }
   const resolvers = new Map<string, (value: SelectProductsToolResult) => void>()
 
-  await runAgentV2ProductionPipeline(
+  const result = await runAgentV2ProductionPipeline(
     {
       message: "Vergleiche Shampoo und Conditioner.",
       conversationId: "conversation-1",
@@ -1075,12 +1076,13 @@ test("AgentV2 production pipeline surfaces product intake offer from lookup resu
     interpreted_intent: "User asks about their own named product.",
     request_interpretation: {
       primary_intent: "general_advice",
-      product_request_kind: "none",
+      product_request_kind: "product_detail",
       routine_intent: "none",
       care_category: "shampoo",
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: "Pantene Pro-V Volume Pur Shampoo",
+      specific_product_candidate: true,
       confidence: 0.88,
     },
     tool_grounding: {
@@ -1178,13 +1180,727 @@ test("AgentV2 production pipeline surfaces product intake offer from lookup resu
   )
 })
 
+test("AgentV2 production pipeline renders intake when lookup category is inferred from answer target", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "general_advice",
+    interpreted_intent: "User asks about their own named shampoo without saying the category word.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Pantene Pro-V Volume Pur",
+      specific_product_candidate: true,
+      confidence: 0.88,
+    },
+    tool_grounding: {
+      used_guidance_package_ids: ["base.advisor_rules.v1", "category.shampoo.v1"],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Dieses konkrete Produkt kenne ich noch nicht sicher in unserer Produktdatenbank. Du kannst es kurz hinzufügen, dann prüfen wir es sauber.",
+      category_or_topic: "shampoo",
+      key_points_de: [],
+      next_step_offer_de: null,
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Was hältst du von Pantene Pro-V Volume Pur?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-inferred-category-lookup",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-pantene", canonical_name: "Pantene" }],
+            productLines: [
+              { id: "line-pro-v", brand_id: "brand-pantene", canonical_name: "Pro-V" },
+            ],
+            brandAliases: [
+              {
+                brand_id: "brand-pantene",
+                product_line_id: "line-pro-v",
+                alias: "Pantene Pro-V",
+              },
+            ],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Pantene Pro-V",
+          product_name_text: "Volume Pur",
+          reason: "User asks about a concrete product and the model inferred shampoo.",
+          evidence_quote: "Pantene Pro-V Volume Pur",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  assert.deepEqual(result.productIntakeOffer, {
+    id: "product-intake-request-inferred-category-lookup",
+    source: "chat",
+    reason: "product_lookup_not_found",
+    category: "shampoo",
+    extracted_identity: {
+      brand_text: "Pantene Pro-V",
+      product_name_text: "Volume Pur",
+    },
+  })
+})
+
+test("AgentV2 production pipeline does not render intake for background product mentions", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "general_advice",
+    interpreted_intent: "User asks about washing frequency with current product as context.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Wie oft sollte ich meine Haare waschen",
+      specific_product_candidate: true,
+      confidence: 0.88,
+    },
+    tool_grounding: {
+      used_guidance_package_ids: [
+        "base.advisor_rules.v1",
+        "base.general_advice.v1",
+        "category.shampoo.v1",
+      ],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Für die Waschfrequenz zählt vor allem deine Kopfhaut. Starte nach Bedarf und beobachte, wie schnell der Ansatz nachfettet.",
+      category_or_topic: "shampoo",
+      key_points_de: ["Die Waschfrequenz hängt eher von Kopfhaut und Alltag ab."],
+      next_step_offer_de: null,
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message:
+        "Ich benutze Pantene Pro-V Volume Pur Shampoo. Wie oft sollte ich meine Haare waschen?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-background-product",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async () => agentResult,
+    },
+  )
+
+  assert.equal(result.productIntakeOffer, null)
+  assert.equal(
+    await readStream(result.stream),
+    agentResult.final_answer.payload.user_facing_answer_de,
+  )
+})
+
+test("AgentV2 production pipeline does not render intake from over-eager lookup for background product mention", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "general_advice",
+    interpreted_intent: "User asks about washing frequency with current product as context.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Wie oft sollte ich meine Haare waschen",
+      specific_product_candidate: true,
+      confidence: 0.88,
+    },
+    tool_grounding: {
+      used_guidance_package_ids: [
+        "base.advisor_rules.v1",
+        "base.general_advice.v1",
+        "category.shampoo.v1",
+      ],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Für die Waschfrequenz zählt vor allem deine Kopfhaut. Starte nach Bedarf und beobachte, wie schnell der Ansatz nachfettet.",
+      category_or_topic: "shampoo",
+      key_points_de: ["Die Waschfrequenz hängt eher von Kopfhaut und Alltag ab."],
+      next_step_offer_de: null,
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message:
+        "Ich benutze Pantene Pro-V Volume Pur Shampoo. Wie oft sollte ich meine Haare waschen?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-background-overeager-lookup",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-pantene", canonical_name: "Pantene" }],
+            productLines: [
+              { id: "line-pro-v", brand_id: "brand-pantene", canonical_name: "Pro-V" },
+            ],
+            brandAliases: [
+              {
+                brand_id: "brand-pantene",
+                product_line_id: "line-pro-v",
+                alias: "Pantene Pro-V",
+              },
+            ],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Pantene Pro-V",
+          product_name_text: "Volume Pur Shampoo",
+          reason: "Over-eager lookup for a background product mention.",
+          evidence_quote: "Pantene Pro-V Volume Pur Shampoo",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(result.productIntakeOffer, null)
+  assert.equal(
+    await readStream(result.stream),
+    agentResult.final_answer.payload.user_facing_answer_de,
+  )
+})
+
+test("AgentV2 production pipeline does not render intake from background lookup on other-category recommendation", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "product_recommendation",
+    interpreted_intent:
+      "User mentions their current shampoo as context and asks for a conditioner recommendation.",
+    request_interpretation: {
+      primary_intent: "product_recommendation",
+      product_request_kind: "specific_products",
+      routine_intent: "none",
+      care_category: "conditioner",
+      requested_product_count: 1,
+      count_policy: "exact",
+      evidence_quote: "welchen Conditioner empfiehlst du dazu",
+      specific_product_candidate: true,
+      confidence: 0.88,
+    },
+    extracted_constraints: {
+      ...agentResult.final_answer.extracted_constraints,
+      product_categories: ["conditioner"],
+      raw_constraints: ["welchen Conditioner empfiehlst du dazu"],
+    },
+    tool_grounding: {
+      used_guidance_package_ids: ["base.advisor_rules.v1", "category.conditioner.v1"],
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: ["primary"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category: "conditioner",
+      return_path: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Als Conditioner würde ich dir ein leichtes Produkt empfehlen, das deine Längen weich macht, ohne sie zu beschweren.",
+      recommendations: [
+        {
+          product_id: "primary",
+          reason_de: "Passt zu deinem Profil.",
+          usage_de: null,
+          caveat_de: null,
+        },
+      ],
+      comparison_notes_de: [],
+      usage_notes_de: [],
+      next_step_offer_de: null,
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message:
+        "Ich benutze Pantene Pro-V Volume Pur Shampoo, welchen Conditioner empfiehlst du dazu?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-background-lookup-other-category",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-pantene", canonical_name: "Pantene" }],
+            productLines: [
+              { id: "line-pro-v", brand_id: "brand-pantene", canonical_name: "Pro-V" },
+            ],
+            brandAliases: [
+              {
+                brand_id: "brand-pantene",
+                product_line_id: "line-pro-v",
+                alias: "Pantene Pro-V",
+              },
+            ],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Pantene Pro-V",
+          product_name_text: "Volume Pur Shampoo",
+          reason: "Over-eager lookup for a background product mention.",
+          evidence_quote: "Pantene Pro-V Volume Pur Shampoo",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(result.productIntakeOffer, null)
+  assert.equal(
+    await readStream(result.stream),
+    agentResult.final_answer.payload.user_facing_answer_de,
+  )
+})
+
+test("AgentV2 production pipeline does not render intake from an over-eager lookup when final answer has no specific product candidate", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "general_advice",
+    interpreted_intent: "User asks a broad category question, not to assess a concrete product.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Welche Shampoos passen zu mir?",
+      specific_product_candidate: false,
+      confidence: 0.88,
+    },
+    tool_grounding: {
+      used_guidance_package_ids: ["base.advisor_rules.v1", "base.general_advice.v1"],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Bei deinem Haar sollte ein Shampoo mild reinigen und den Ansatz nicht beschweren.",
+      category_or_topic: "shampoo",
+      key_points_de: ["Milde Reinigung ist hier wichtiger als ein stark klärender Effekt."],
+      next_step_offer_de: null,
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Welche Shampoos passen zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-overeager-lookup",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-acme", canonical_name: "Acme" }],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Acme",
+          product_name_text: "Ghost Shampoo",
+          reason: "Over-eager tool call unrelated to the final broad answer.",
+          evidence_quote: "Acme Ghost Shampoo",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(result.productIntakeOffer, null)
+  assert.equal(
+    await readStream(result.stream),
+    agentResult.final_answer.payload.user_facing_answer_de,
+  )
+})
+
+test("AgentV2 production pipeline does not render intake from a wrong branded lookup", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "constraint_blocked",
+    interpreted_intent: "User asks for Chaarlie's opinion on their own conditioner.",
+    request_interpretation: {
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: "conditioner",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "miracles conditioner",
+      specific_product_candidate: true,
+      confidence: 0.9,
+    },
+    tool_grounding: {
+      used_guidance_package_ids: ["base.advisor_rules.v1", "category.conditioner.v1"],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Diesen konkreten Jean & Lean Miracles Conditioner kann ich noch nicht zuverlässig bewerten, weil er nicht eindeutig in meinen Produktdaten ist.",
+      blocking_constraints: ["product_not_verified"],
+      safe_alternative_de: "Du kannst ihn hinzufügen, damit ich ihn später konkret einordnen kann.",
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "kannst du mir sagen, was du von meinem jean & lean miracles conditioner hältst",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-wrong-generic-intake",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-pantene", canonical_name: "Pantene" }],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "conditioner",
+          brand_text: "Pantene",
+          product_name_text: "Miracles Conditioner",
+          reason: "Wrong generic candidate.",
+          evidence_quote: "miracles conditioner",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(result.productIntakeOffer, null)
+})
+
+test("AgentV2 production pipeline does not render intake from a wrong category lookup with matching brand text", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "constraint_blocked",
+    interpreted_intent: "User asks for Chaarlie's opinion on their own conditioner.",
+    request_interpretation: {
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: "conditioner",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Acme Hydra Glow Conditioner",
+      specific_product_candidate: true,
+      confidence: 0.9,
+    },
+    tool_grounding: {
+      used_guidance_package_ids: ["base.advisor_rules.v1", "category.conditioner.v1"],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Diesen konkreten Acme Hydra Glow Conditioner kann ich noch nicht zuverlässig bewerten, weil er nicht eindeutig in meinen Produktdaten ist.",
+      blocking_constraints: ["product_not_verified"],
+      safe_alternative_de: "Du kannst ihn hinzufügen, damit ich ihn später konkret einordnen kann.",
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Was hältst du von meinem Acme Hydra Glow Conditioner?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-wrong-category-intake",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-acme", canonical_name: "Acme" }],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Acme",
+          product_name_text: "Hydra Glow",
+          reason: "Wrong category candidate with overlapping brand and line text.",
+          evidence_quote: "Acme Hydra Glow",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(result.productIntakeOffer, null)
+})
+
 test("AgentV2 production pipeline scopes lookup to public products and user-owned matched products", async () => {
   const hairProfile = createCompleteHairProfile()
   const agentResult = createAgentV2Result()
   const lookupResults: Array<{ status: string; productId: string | null }> = []
   const loadCatalogModes: unknown[] = []
 
-  await runAgentV2ProductionPipeline(
+  const result = await runAgentV2ProductionPipeline(
     {
       message: "Passt mein Testmarke Owned Conditioner zu mir?",
       conversationId: "conversation-1",
@@ -1300,6 +2016,7 @@ test("AgentV2 production pipeline scopes lookup to public products and user-owne
     { status: "found_exact", productId: "owned-conditioner" },
     { status: "not_found", productId: null },
   ])
+  assert.equal(result.productIntakeOffer, null)
 })
 
 function summarizeLookupResult(result: unknown): { status: string; productId: string | null } {
@@ -1414,6 +2131,257 @@ test("AgentV2 production pipeline disables product intake lookup when feature fl
   assert.equal(result.productIntakeOffer, null)
 })
 
+test("AgentV2 production pipeline exposes intake only for not-found supported product lookups", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const cases = [
+    {
+      label: "not_found",
+      input: {
+        category: "shampoo",
+        brand_text: "Unbekannte Testmarke",
+        product_name_text: "Hydra Glow Shampoo",
+        reason: "User asks whether their own product suits them.",
+        evidence_quote: "Unbekannte Testmarke Hydra Glow Shampoo",
+      },
+      expectIntake: true,
+    },
+    {
+      label: "insufficient_identity",
+      input: {
+        category: "shampoo",
+        brand_text: "Unbekannte Testmarke",
+        product_name_text: "",
+        reason: "User asks about an underspecified product.",
+        evidence_quote: "mein Shampoo",
+      },
+      expectIntake: false,
+    },
+    {
+      label: "partial_unclear_category",
+      expectedStatus: "insufficient_identity",
+      input: {
+        category: null,
+        brand_text: "Garnier",
+        product_name_text: "Hair Food",
+        reason: "User asks about a partial concrete product without clear use category.",
+        evidence_quote: "Was hältst du von Garnier Hair Food?",
+      },
+      expectIntake: false,
+    },
+    {
+      label: "ambiguous",
+      input: {
+        category: "shampoo",
+        brand_text: "Unbekannte Testmarke",
+        product_name_text: "Hydra Glow Shampoo",
+        reason: "User asks about a product with multiple possible catalog matches.",
+        evidence_quote: "Unbekannte Testmarke Hydra Glow Shampoo",
+      },
+      catalog: {
+        products: [
+          {
+            id: "hydra-glow-a",
+            name: "Hydra Glow Shampoo",
+            brandId: "brand-unknown",
+            categoryKey: "shampoo",
+            isActive: true,
+            lifecycleStatus: "active",
+            isChaarlieRecommended: true,
+          },
+          {
+            id: "hydra-glow-b",
+            name: "Hydra Glow Shampoo",
+            brandId: "brand-unknown",
+            categoryKey: "shampoo",
+            isActive: true,
+            lifecycleStatus: "active",
+            isChaarlieRecommended: true,
+          },
+        ],
+        identifiers: [],
+      },
+      brandCatalog: {
+        brands: [{ id: "brand-unknown", canonical_name: "Unbekannte Testmarke" }],
+        productLines: [],
+        brandAliases: [],
+      },
+      expectIntake: false,
+    },
+    {
+      label: "unsupported_category",
+      input: {
+        category: "hairspray",
+        brand_text: "Unbekannte Testmarke",
+        product_name_text: "Hydra Glow Haarspray",
+        reason: "User asks about an unsupported product category.",
+        evidence_quote: "Unbekannte Testmarke Hydra Glow Haarspray",
+      },
+      expectIntake: false,
+    },
+  ] as const
+
+  for (const testCase of cases) {
+    let observedStatus: string | null = null
+    const result = await runAgentV2ProductionPipeline(
+      {
+        message: "Ich benutze ein Produkt. Passt das zu mir?",
+        conversationId: `conversation-${testCase.label}`,
+        userId: "user-1",
+        requestId: `request-${testCase.label}`,
+        productIntakeEnabled: true,
+      },
+      {
+        verifyConversationOwnership,
+        loadConversationHistory: async () => [],
+        getUserContext: async () => ({
+          profile: hairProfile,
+          routine_inventory: [],
+          relevant_memory: [],
+          derived_signals: [],
+          suggested_overlays: [],
+          missing_profile: [],
+        }),
+        loadUserMemoryContext: async () => ({
+          enabled: true,
+          entries: [],
+          promptContext: null,
+          dislikedProductNames: [],
+        }),
+        loadConversationState: async (): Promise<ConversationState> =>
+          createDefaultConversationState(),
+        client: {
+          responses: {
+            create: async () => ({ output: [] }),
+          },
+        },
+        createProductIntakeRepository: () =>
+          ({
+            loadCatalog: async () =>
+              "catalog" in testCase ? testCase.catalog : { products: [], identifiers: [] },
+            loadBrandResolutionCatalog: async () =>
+              "brandCatalog" in testCase
+                ? testCase.brandCatalog
+                : {
+                    brands: [],
+                    productLines: [],
+                    brandAliases: [],
+                  },
+          }) as never,
+        runAgentV2ResponsesTurn: async (params) => {
+          const lookupResult = await params.tools.lookup_product_candidate(testCase.input)
+          observedStatus =
+            lookupResult && typeof lookupResult === "object" && "status" in lookupResult
+              ? String(lookupResult.status)
+              : null
+          if (testCase.expectIntake) {
+            const agentResult = createAgentV2Result()
+            agentResult.final_answer = {
+              ...agentResult.final_answer,
+              answer_mode: "general_advice",
+              interpreted_intent: "User asks about their own named product.",
+              request_interpretation: {
+                primary_intent: "general_advice",
+                product_request_kind: "product_detail",
+                routine_intent: "none",
+                care_category: "shampoo",
+                requested_product_count: null,
+                count_policy: "none",
+                evidence_quote: "Unbekannte Testmarke Hydra Glow Shampoo",
+                specific_product_candidate: true,
+                confidence: 0.88,
+              },
+              tool_grounding: {
+                used_guidance_package_ids: ["base.advisor_rules.v1"],
+                used_product_tool: false,
+                used_routine_tool: false,
+                product_ids: [],
+                routine_step_ids: [],
+                hard_rule_ids: [],
+              },
+              payload: {
+                user_facing_answer_de:
+                  "Dieses konkrete Shampoo ist noch nicht in unserer Produktdatenbank.",
+                category_or_topic: "shampoo",
+                key_points_de: [],
+                next_step_offer_de: null,
+              },
+            }
+            return agentResult
+          }
+          return createAgentV2Result()
+        },
+      },
+    )
+
+    assert.equal(
+      observedStatus,
+      "expectedStatus" in testCase ? testCase.expectedStatus : testCase.label,
+    )
+    assert.equal(Boolean(result.productIntakeOffer), testCase.expectIntake)
+  }
+})
+
+test("AgentV2 production pipeline does not render intake for broad brand-family asks without lookup", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  let lookupCalled = false
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Welche Pantene Produkte empfiehlst du?",
+      conversationId: "conversation-broad-brand",
+      userId: "user-1",
+      requestId: "request-broad-brand",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-pantene", canonical_name: "Pantene" }],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        const originalLookup = params.tools.lookup_product_candidate
+        params.tools.lookup_product_candidate = async (input) => {
+          lookupCalled = true
+          return originalLookup(input)
+        }
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(lookupCalled, false)
+  assert.equal(result.productIntakeOffer, null)
+})
+
 test("AgentV2 production pipeline memoizes product lookup catalogs per turn", async () => {
   const hairProfile = createCompleteHairProfile()
   const agentResult = createAgentV2Result()
@@ -1506,6 +2474,7 @@ test("AgentV2 production pipeline exposes boundary answer mode without products"
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: "welchen nagellack soll ich kaufen?",
+      specific_product_candidate: false,
       confidence: 0.9,
     },
     tool_grounding: {
