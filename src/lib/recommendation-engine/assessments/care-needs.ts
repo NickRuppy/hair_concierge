@@ -3,6 +3,7 @@ import type {
   DamageAssessment,
   NormalizedProfile,
 } from "@/lib/recommendation-engine/types"
+import { hasBleachTreatment } from "@/lib/profile/chemical-treatment"
 import { maxDamageLevel, scoreToDamageLevel } from "@/lib/recommendation-engine/utils/levels"
 
 function deriveVolumeDirection(
@@ -29,7 +30,7 @@ export function buildCareNeedAssessment(
   }
   if (profile.concerns.includes("dryness")) hydrationScore += 2
   if (profile.goals.includes("moisture")) hydrationScore += 2
-  if (profile.chemicalTreatment.includes("bleached")) hydrationScore += 1
+  if (hasBleachTreatment(profile.chemicalTreatment)) hydrationScore += 1
 
   if (profile.concerns.includes("frizz")) smoothingScore += 2
   if (profile.goals.includes("less_frizz")) smoothingScore += 2

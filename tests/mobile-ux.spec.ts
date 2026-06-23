@@ -16,16 +16,29 @@ const admin = createClient(supabaseUrl, serviceRoleKey, {
 })
 
 async function completeQuizToConcerns(page: Page) {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      "chaarlie_cookie_consent_v1",
+      JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
+    )
+  })
+
   await page.goto(`${baseUrl}/quiz`, { waitUntil: "networkidle" })
 
-  await page.getByRole("button", { name: /QUIZ STARTEN/i }).click()
+  const startButton = page.getByRole("button", { name: /QUIZ STARTEN/i })
+  if (await startButton.isVisible()) {
+    await startButton.click()
+  }
+
   await page.getByText("Wellig").first().click()
   await page.getByText("Mittel").first().click()
+  await page.getByText("Mittlere Dichte").click()
+  await page.getByText("Mittellang").click()
   await page.getByText("Leicht uneben").click()
   await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
 
   await page.locator(".quiz-card", { hasText: "Naturhaar" }).click()
-  await page.locator(".quiz-card", { hasText: "Gefärbt / Getönt" }).click()
+  await page.locator(".quiz-card", { hasText: "Gefärbt / getönt" }).click()
   await page.getByRole("button", { name: /^Weiter$/i }).click()
 
   await page
@@ -74,6 +87,8 @@ for (const mobileViewport of mobileViewports) {
     let userId: string | null = null
 
     test.beforeAll(async () => {
+      const currentPeriodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+
       const { data, error } = await admin.auth.admin.createUser({
         email,
         password,
@@ -93,11 +108,28 @@ for (const mobileViewport of mobileViewports) {
           onboarding_completed: true,
           onboarding_step: "celebration",
           subscription_status: "active",
-          current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          current_period_end: currentPeriodEnd,
         },
         { onConflict: "id" },
       )
       if (profileError) throw profileError
+
+      const { error: billingError } = await admin.from("billing_subscriptions").upsert(
+        {
+          user_id: userId,
+          provider: "stripe",
+          provider_customer_id: `cus_mobile_${userId}`,
+          provider_subscription_id: `sub_mobile_${userId}`,
+          provider_status: "active",
+          entitlement_status: "active",
+          interval: "month",
+          current_period_end: currentPeriodEnd,
+          cancel_at_period_end: false,
+          metadata: { ci_seed: "mobile-ux" },
+        },
+        { onConflict: "provider,provider_subscription_id" },
+      )
+      if (billingError && billingError.code !== "PGRST205") throw billingError
 
       const { error: hairProfileError } = await admin.from("hair_profiles").upsert(
         {
@@ -135,6 +167,7 @@ for (const mobileViewport of mobileViewports) {
       if (!userId) return
 
       await admin.from("user_product_usage").delete().eq("user_id", userId)
+      await admin.from("billing_subscriptions").delete().eq("user_id", userId)
       await admin.from("hair_profiles").delete().eq("user_id", userId)
       await admin.from("profiles").delete().eq("id", userId)
       await admin.auth.admin.deleteUser(userId)
@@ -145,15 +178,21 @@ for (const mobileViewport of mobileViewports) {
     }) => {
       await completeQuizToConcerns(page)
 
-      const scrollTopBefore = await page.evaluate(() => {
+      await page.evaluate(() => {
         const panes = Array.from(document.querySelectorAll<HTMLElement>(".overflow-y-auto"))
-        const pane = panes.find((element) => element.scrollHeight > element.clientHeight)
-        pane?.scrollTo({ top: pane.scrollHeight })
-        window.scrollTo({ top: document.documentElement.scrollHeight })
-        return Math.max(pane?.scrollTop ?? 0, window.scrollY)
-      })
+        const pane =
+          panes.find((element) => element.scrollHeight > element.clientHeight) ?? panes[0]
+        if (!pane) return
 
-      expect(scrollTopBefore).toBeGreaterThan(0)
+        const spacer = document.createElement("div")
+        spacer.setAttribute("data-testid", "mobile-scroll-reset-spacer")
+        spacer.style.height = "800px"
+        spacer.setAttribute("aria-hidden", "true")
+        pane.appendChild(spacer)
+        pane.scrollTo({ top: pane.scrollHeight })
+        window.scrollTo({ top: document.documentElement.scrollHeight })
+      })
+      await expect.poll(() => quizScrollPaneTop(page)).toBeGreaterThan(0)
 
       await page.getByText("Trockenheit").click()
       await page.getByText("Frizz").click()

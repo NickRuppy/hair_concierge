@@ -1,6 +1,7 @@
-import type { Goal, HairTexture } from "@/lib/vocabulary"
+import type { ChemicalTreatment, Goal, HairTexture } from "@/lib/vocabulary"
 import { GOALS } from "@/lib/vocabulary"
 import { getOrderedGoals } from "@/lib/onboarding/goal-flow"
+import { getChemicalTreatmentDamageWeight } from "@/lib/profile/chemical-treatment"
 
 import { QUIZ_CONCERN_VALUES, canonicalizeQuizAnswers } from "./normalization"
 import type { QuizAnswers } from "./types"
@@ -266,10 +267,50 @@ function isHairTexture(value: QuizAnswers["structure"]): value is HairTexture {
   return value === "straight" || value === "wavy" || value === "curly" || value === "coily"
 }
 
-function hasColorTreatment(answers: QuizAnswers): boolean {
+function hasQuizColorOrBleachTreatment(answers: QuizAnswers): boolean {
   return (
-    answers.treatment?.includes("gefaerbt") === true ||
-    answers.treatment?.includes("blondiert") === true
+    answers.treatment?.some(
+      (treatment) => treatment === "gefaerbt" || treatment === "blondiert",
+    ) === true
+  )
+}
+
+function hasQuizShapeChangingTreatment(answers: QuizAnswers): boolean {
+  return (
+    answers.treatment?.some(
+      (treatment) => treatment === "dauerwelle" || treatment === "chemisch_geglaettet",
+    ) === true
+  )
+}
+
+function getQuizChemicalStressWeight(answers: QuizAnswers): number {
+  const treatmentMap: Record<string, ChemicalTreatment> = {
+    natur: "natural",
+    gefaerbt: "colored",
+    blondiert: "bleached",
+    dauerwelle: "permed",
+    chemisch_geglaettet: "chemically_straightened",
+  }
+
+  const canonicalTreatments = (answers.treatment ?? []).map(
+    (treatment) => treatmentMap[treatment] ?? treatment,
+  ) as ChemicalTreatment[]
+
+  return getChemicalTreatmentDamageWeight(canonicalTreatments)
+}
+
+function hasQuizShapeTreatmentDamageContext(
+  answers: QuizAnswers,
+  primaryConcern: QuizConcern | null,
+): boolean {
+  return (
+    answers.fingertest === "rau" ||
+    primaryConcern === "breakage" ||
+    primaryConcern === "hair_damage" ||
+    answers.concerns?.includes("breakage") === true ||
+    answers.concerns?.includes("hair_damage") === true ||
+    answers.pulltest === "snaps" ||
+    answers.pulltest === "stretches_stays"
   )
 }
 
@@ -306,11 +347,13 @@ function scoreConcern(concern: QuizConcern, answers: QuizAnswers): number {
     score += 5
   }
 
-  if (
-    hasColorTreatment(answers) &&
-    (concern === "hair_damage" || concern === "breakage" || concern === "split_ends")
-  ) {
-    score += 15
+  const chemicalStressWeight = getQuizChemicalStressWeight(answers)
+  if (chemicalStressWeight > 0) {
+    if (concern === "hair_damage" || concern === "breakage") {
+      score += chemicalStressWeight >= 4 ? 20 : 15
+    } else if (concern === "split_ends") {
+      score += chemicalStressWeight >= 4 ? 15 : 10
+    }
   }
 
   return score
@@ -327,7 +370,7 @@ function buildHairFeelScores(
 
   if (answers.pulltest === "stretches_stays") structural += 3
   if (answers.pulltest === "snaps") structural += 2
-  if (hasColorTreatment(answers)) structural += 2
+  structural += getQuizChemicalStressWeight(answers)
   if (primaryConcern === "breakage" || primaryConcern === "hair_damage") structural += 2
   if (primaryConcern === "split_ends") structural += 1
   if (
@@ -596,7 +639,7 @@ function buildFrictionScore(
 
   if (answers.pulltest === "stretches_stays") score += 3
   if (answers.pulltest === "snaps") score += 2
-  if (hasColorTreatment(answers)) score += 2
+  score += Math.min(getQuizChemicalStressWeight(answers), 3)
   if (answers.fingertest === "rau") score += 2
 
   if (primaryGoal === "healthy_scalp") score += 1
@@ -907,7 +950,11 @@ function buildNeedsSection(
 
   // Severe bond damage (concern-driven, preserves today's "any severity signal" routing).
   const hasSeveritySignal =
-    primaryConcern === "breakage" || primaryConcern === "hair_damage" || hasColorTreatment(answers)
+    primaryConcern === "breakage" ||
+    primaryConcern === "hair_damage" ||
+    hasQuizColorOrBleachTreatment(answers) ||
+    (hasQuizShapeChangingTreatment(answers) &&
+      hasQuizShapeTreatmentDamageContext(answers, primaryConcern))
 
   if (hasSeveritySignal) {
     return {

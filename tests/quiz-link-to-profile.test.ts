@@ -46,3 +46,12 @@ test("profile update data includes quiz hair length when present", () => {
     "long",
   )
 })
+
+test("profile update data maps expanded quiz treatment values to canonical profile values", () => {
+  assert.deepEqual(
+    linkToProfile.buildProfileDataFromQuizAnswers({
+      treatment: ["dauerwelle", "chemisch_geglaettet"],
+    }).chemical_treatment,
+    ["permed", "chemically_straightened"],
+  )
+})

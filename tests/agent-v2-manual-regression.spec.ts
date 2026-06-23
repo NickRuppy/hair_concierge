@@ -364,7 +364,13 @@ test("AgentV2 guidance migration regression fixture keeps normal cases on comple
       "strengthen",
       "anti_breakage",
     ]),
-    chemical_treatment: new Set(["natural", "colored", "bleached"]),
+    chemical_treatment: new Set([
+      "natural",
+      "colored",
+      "bleached",
+      "permed",
+      "chemically_straightened",
+    ]),
     scalp_type: new Set(["oily", "balanced", "dry"]),
     scalp_condition: new Set(["dandruff", "dry_flakes", "irritated", null]),
     shampoo_frequency: new Set([
@@ -402,6 +408,12 @@ test("AgentV2 guidance migration regression fixture keeps normal cases on comple
     Array.isArray(guidanceMigrationFixture.incomplete_profile_context_keys),
     "fixture should explicitly name incomplete-profile edge contexts",
   )
+  for (const treatment of ["permed", "chemically_straightened"]) {
+    assert.ok(
+      canonical.chemical_treatment.has(treatment as never),
+      `canonical chemical_treatment allowlist missing ${treatment}`,
+    )
+  }
 
   for (const entry of guidanceMigrationCases) {
     const profileKey =

@@ -1186,6 +1186,36 @@ test("explicit low-need bondbuilder request stays optional instead of disappeari
   )
 })
 
+test("permed hair alone does not hard-route to bondbuilder", () => {
+  const { normalized, damage, careNeeds, plan } = buildEngineState({
+    ...LOW_DAMAGE_PROFILE,
+    chemical_treatment: ["permed"],
+  })
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    emptyRecommendationRequestContext(),
+  )
+
+  assert.equal(damage.bondBuilderPriority, "none")
+  assert.equal(categories.bondbuilder.relevant, false)
+})
+
+test("chemical straightening with roughness supports bondbuilder consideration", () => {
+  const { normalized, damage, plan } = buildEngineState({
+    ...LOW_DAMAGE_PROFILE,
+    chemical_treatment: ["chemically_straightened"],
+    cuticle_condition: "rough",
+  })
+  const decision = buildBondbuilderCategoryDecision(normalized, damage, plan)
+
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.targetProfile?.chemicalCrosslinkLane, true)
+  assert.ok(decision.planReasonCodes.includes("bondbuilder_chemical_crosslink_lane"))
+})
+
 test("peeling fit rejects physical scrub when the target route is dryness-safe", () => {
   const { normalized, damage, plan } = buildEngineState(
     {

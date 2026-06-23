@@ -49,8 +49,10 @@ const SCALP_CONDITION_LABELS: Record<string, string> = {
 
 const TREATMENT_LABELS: Record<string, string> = {
   natur: "Naturhaar",
-  gefaerbt: "Gefärbt",
-  blondiert: "Blondiert",
+  gefaerbt: "Gefärbt / getönt",
+  blondiert: "Blondiert / aufgehellt",
+  dauerwelle: "Dauerwelle / Volumenwelle",
+  chemisch_geglaettet: "Chemisch geglättet",
 }
 
 function normalizeEmail(email: string) {

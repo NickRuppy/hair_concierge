@@ -60,13 +60,21 @@ export const SCALP_CONDITION_LABELS: Record<string, string> = {
 
 /* ── Chemical treatment ── */
 
-export const CHEMICAL_TREATMENTS = ["natural", "colored", "bleached"] as const
+export const CHEMICAL_TREATMENTS = [
+  "natural",
+  "colored",
+  "bleached",
+  "permed",
+  "chemically_straightened",
+] as const
 export type ChemicalTreatment = (typeof CHEMICAL_TREATMENTS)[number]
 
 export const CHEMICAL_TREATMENT_LABELS: Record<string, string> = {
   natural: "Naturhaar",
-  colored: "Gefärbt",
-  bleached: "Blondiert",
+  colored: "Gefärbt / getönt",
+  bleached: "Blondiert / aufgehellt",
+  permed: "Dauerwelle / Volumenwelle",
+  chemically_straightened: "Chemisch geglättet",
 } satisfies Record<ChemicalTreatment, string>
 
 /* ── Desired volume ── */

@@ -9,7 +9,7 @@ export const quizQuestions: QuizQuestion[] = [
     questionNumber: 1,
     title: "Welche Haarstruktur haben die meisten deiner Haare?",
     instruction:
-      "Schau dir eine typische nasse Strähne an und wähle unten aus, welche Form sie annimmt.",
+      "Schau dir eine typische nasse Strähne an und wähle unten aus, welche Form sie annimmt.\n\nBei Dauerwelle oder chemischer Glättung: Wähle hier deine natürliche Struktur am Ansatz, nicht die chemisch umgeformten Längen.",
     options: [
       {
         value: "straight",
@@ -175,7 +175,7 @@ export const quizQuestions: QuizQuestion[] = [
     questionNumber: 7,
     title: "Sind deine Haare chemisch behandelt?",
     instruction:
-      "Chemische Prozesse wie Blondieren oder Färben verändern die innere Struktur deiner Haare grundlegend. Blondieren bricht Brückenverbindungen auf und entzieht Protein \u2013 das muss in der Pflege ausgeglichen werden.",
+      "Wähle alles aus, was in deinen Längen noch vorhanden ist. Gemeint sind Behandlungen, die Farbe oder Form chemisch verändern. Pflege, Kuren, Bondbuilder und normales Hitzestyling zählen hier nicht.",
     options: [
       {
         value: "natur",
@@ -185,14 +185,26 @@ export const quizQuestions: QuizQuestion[] = [
       },
       {
         value: "gefaerbt",
-        label: "Gefärbt / Getönt",
+        label: "Gefärbt / getönt",
         description: "Farbveränderung, aber kein Aufhellen",
         icon: "treatment-colored",
       },
       {
         value: "blondiert",
-        label: "Blondiert / Aufgehellt",
+        label: "Blondiert / aufgehellt",
         description: "Gebleacht, Strähnchen oder Balayage",
+        icon: "treatment-lightened",
+      },
+      {
+        value: "dauerwelle",
+        label: "Dauerwelle / Volumenwelle",
+        description: "Chemisch dauerhaft gewellte oder gelockte Längen",
+        icon: "treatment-colored",
+      },
+      {
+        value: "chemisch_geglaettet",
+        label: "Chemisch geglättet",
+        description: "Relaxer, dauerhafte Glättung, Keratin-Glättung oder Brazilian Blowout",
         icon: "treatment-lightened",
       },
     ],

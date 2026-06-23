@@ -172,6 +172,57 @@ test("severe-damage fixture yields severe structural load and bond builder recom
   assert.ok(damage.activeDamageDrivers.includes("towel_rubbing"))
 })
 
+test("chemical treatments contribute capped structural damage with accumulating drivers", () => {
+  const normalized = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        chemical_treatment: ["colored", "permed"],
+      },
+      [],
+    ).input,
+  )
+  const damage = buildDamageAssessment(normalized)
+
+  assert.equal(damage.structuralLevel, "moderate")
+  assert.ok(damage.activeDamageDrivers.includes("colored_hair"))
+  assert.ok(damage.activeDamageDrivers.includes("permed_hair"))
+})
+
+test("chemical straightening alone is elevated stress without forcing bondbuilder recommendation", () => {
+  const normalized = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        chemical_treatment: ["chemically_straightened"],
+      },
+      [],
+    ).input,
+  )
+  const damage = buildDamageAssessment(normalized)
+
+  assert.equal(damage.structuralLevel, "moderate")
+  assert.equal(damage.bondBuilderPriority, "none")
+  assert.ok(damage.activeDamageDrivers.includes("chemically_straightened_hair"))
+})
+
+test("bleach caps chemical structural stress at the strongest tier", () => {
+  const normalized = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        chemical_treatment: ["bleached", "chemically_straightened"],
+      },
+      [],
+    ).input,
+  )
+  const damage = buildDamageAssessment(normalized)
+
+  assert.equal(damage.structuralLevel, "high")
+  assert.ok(damage.activeDamageDrivers.includes("bleached_hair"))
+  assert.ok(damage.activeDamageDrivers.includes("chemically_straightened_hair"))
+})
+
 test("severe-damage fixture drives high care needs and heat protection urgency", () => {
   const adapted = adaptRecommendationInputFromPersistence(
     SEVERE_DAMAGE_PROFILE,

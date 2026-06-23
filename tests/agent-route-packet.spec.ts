@@ -397,6 +397,96 @@ test("buildAgentRoutePacket extracts fine hair from predicate phrasing", () => {
   )
 })
 
+test("buildAgentRoutePacket extracts permed treatment without inferring curly texture", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Ich habe eine Dauerwelle und meine Längen sind trocken.",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "troubleshoot",
+      product_category: null,
+      concerns: ["dry_lengths"],
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) => signal.field === "chemical_treatment" && signal.value === "permed",
+    ),
+  )
+  assert.equal(
+    packet.active_profile_signals.some(
+      (signal) => signal.field === "hair_texture" && signal.value === "curly",
+    ),
+    false,
+  )
+})
+
+test("buildAgentRoutePacket extracts chemical straightening without inferring straight texture", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Meine Haare sind keratin-geglättet und brechen leicht.",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "troubleshoot",
+      product_category: null,
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) =>
+        signal.field === "chemical_treatment" && signal.value === "chemically_straightened",
+    ),
+  )
+  assert.equal(
+    packet.active_profile_signals.some(
+      (signal) => signal.field === "hair_texture" && signal.value === "straight",
+    ),
+    false,
+  )
+})
+
+test("buildAgentRoutePacket preserves explicit flat-iron signals with chemical straightening", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Meine Haare sind chemisch geglättet und ich glätte täglich mit dem Glätteisen.",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "leave_in",
+    }),
+  })
+
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) =>
+        signal.field === "chemical_treatment" && signal.value === "chemically_straightened",
+    ),
+  )
+  assert.ok(
+    packet.active_profile_signals.some(
+      (signal) => signal.field === "styling_tools" && signal.value === "flat_iron",
+    ),
+  )
+})
+
+test("buildAgentRoutePacket does not treat keratin care copy as chemical straightening", () => {
+  const packet = buildAgentRoutePacket({
+    message: "Passt eine Keratin-Kur, wenn meine Haare von Natur aus glatt sind?",
+    userContext: createContext(),
+    classification: createClassification({
+      user_job: "product_pick",
+      product_category: "mask",
+    }),
+  })
+
+  assert.equal(
+    packet.active_profile_signals.some(
+      (signal) =>
+        signal.field === "chemical_treatment" && signal.value === "chemically_straightened",
+    ),
+    false,
+  )
+})
+
 test("buildAgentRoutePacket keeps conceptual shampoo decisions category-free without noisy warnings", () => {
   const switchPacket = buildAgentRoutePacket({
     message: "Ich habe trockene Spitzen, sollte ich mein Shampoo wechseln?",

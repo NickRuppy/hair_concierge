@@ -153,6 +153,23 @@ test("falls back to mask versus leave-in when damage is present but conditioner 
   )
 })
 
+test("chemical straightening counts as a damage signal for care prompts", () => {
+  const profile = makeProfile({
+    scalp_type: "dry",
+    chemical_treatment: ["chemically_straightened"],
+  })
+
+  assert.deepEqual(
+    generateSuggestedPrompts(profile).map((prompt) => prompt.text),
+    [
+      "Welche Routine passt am besten zu meinem Haarprofil?",
+      "Welches Shampoo passt zu meiner Kopfhaut?",
+      "Brauche ich eher Maske oder Leave-in für meine Längen?",
+      "Was ist der nächste sinnvolle Schritt für mein Haarprofil?",
+    ],
+  )
+})
+
 test("breakage counts as a damage signal even without legacy damage tags", () => {
   const profile = makeProfile({
     scalp_type: "balanced",

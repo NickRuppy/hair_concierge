@@ -1801,6 +1801,14 @@ function userMessageForUnsupportedSignal(signal: AgentActiveProfileSignal): stri
     return "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den sicheren Produktangaben."
   }
 
+  if (signal.field === "chemical_treatment" && signal.value === "permed") {
+    return "Zur Dauerwelle habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den sicheren Produktangaben."
+  }
+
+  if (signal.field === "chemical_treatment" && signal.value === "chemically_straightened") {
+    return "Zu chemisch geglättetem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den sicheren Produktangaben."
+  }
+
   if (signal.field === "scalp_condition" && signal.value === "irritated") {
     return "Zur empfindlichen Kopfhaut habe ich bei diesen Produkten keine sichere Spezialangabe. Ich bewerte sie deshalb vor allem nach Kopfhaut-Fokus, Haardicke und Reinigungsintensität."
   }

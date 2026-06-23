@@ -23,6 +23,13 @@ import {
   applyHairLengthRoutinePolicy,
   hasHeatExposureNeed,
 } from "@/lib/routines/hair-length-policy"
+import {
+  getChemicalTreatmentDamageDrivers,
+  hasActiveChemicalTreatment,
+  hasBleachTreatment,
+  hasColorOrBleachTreatment,
+  hasShapeChangingTreatment,
+} from "@/lib/profile/chemical-treatment"
 import { hasDirectMechanicalStressSignals } from "@/lib/profile/signal-derivations"
 import {
   buildRecommendationEngineRuntimeFromPersistence,
@@ -392,7 +399,7 @@ function hasHardResetSignals(profile: HairProfile | null, normalizedMessage: str
 function hasDrynessDamageSignals(profile: HairProfile | null): boolean {
   const concerns = new Set(profile?.concerns ?? [])
   const goals = new Set(profile?.goals ?? [])
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const treatments = profile?.chemical_treatment ?? []
 
   return (
     concerns.has("dryness") ||
@@ -406,8 +413,7 @@ function hasDrynessDamageSignals(profile: HairProfile | null): boolean {
     goals.has("less_split_ends") ||
     profile?.cuticle_condition === "slightly_rough" ||
     profile?.cuticle_condition === "rough" ||
-    treatments.has("colored") ||
-    treatments.has("bleached")
+    hasActiveChemicalTreatment(treatments)
   )
 }
 
@@ -420,16 +426,16 @@ function hasFrequentUnprotectedHeat(profile: HairProfile | null): boolean {
 
 function hasDamageSignals(profile: HairProfile | null): boolean {
   const concerns = new Set(profile?.concerns ?? [])
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const treatments = profile?.chemical_treatment ?? []
 
   return (
     profile?.protein_moisture_balance === "snaps" ||
+    profile?.protein_moisture_balance === "stretches_stays" ||
     concerns.has("breakage") ||
     concerns.has("hair_damage") ||
     concerns.has("split_ends") ||
     profile?.cuticle_condition === "rough" ||
-    treatments.has("colored") ||
-    treatments.has("bleached") ||
+    hasActiveChemicalTreatment(treatments) ||
     hasFrequentUnprotectedHeat(profile)
   )
 }
@@ -438,27 +444,36 @@ function hasBondBuilderSignals(profile: HairProfile | null): boolean {
   if (!hasDamageSignals(profile)) return false
 
   const concerns = new Set(profile?.concerns ?? [])
-  const treatments = new Set(profile?.chemical_treatment ?? [])
-  const hasColoredOnly =
-    treatments.has("colored") &&
-    !treatments.has("bleached") &&
+  const treatments = profile?.chemical_treatment ?? []
+  const hasBondbuilderDamageContext =
+    concerns.has("breakage") ||
+    concerns.has("hair_damage") ||
+    concerns.has("split_ends") ||
+    profile?.cuticle_condition === "rough" ||
+    profile?.protein_moisture_balance === "snaps" ||
+    profile?.protein_moisture_balance === "stretches_stays" ||
+    hasFrequentUnprotectedHeat(profile)
+  const hasCautiousTreatmentOnly =
+    (hasColorOrBleachTreatment(treatments) || hasShapeChangingTreatment(treatments)) &&
+    !hasBleachTreatment(treatments) &&
     !concerns.has("breakage") &&
     !concerns.has("hair_damage") &&
     !concerns.has("split_ends") &&
     profile?.cuticle_condition !== "rough" &&
+    profile?.protein_moisture_balance !== "snaps" &&
+    profile?.protein_moisture_balance !== "stretches_stays" &&
     !hasFrequentUnprotectedHeat(profile)
 
-  return !hasColoredOnly
+  return hasBleachTreatment(treatments) || hasBondbuilderDamageContext || !hasCautiousTreatmentOnly
 }
 
 function countDamageSignals(profile: HairProfile | null): number {
   const concerns = new Set(profile?.concerns ?? [])
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const treatments = profile?.chemical_treatment ?? []
   let count = 0
 
   if (profile?.protein_moisture_balance === "snaps") count++
-  if (treatments.has("bleached")) count++
-  if (treatments.has("colored")) count++
+  count += getChemicalTreatmentDamageDrivers(treatments).length
   if (profile?.cuticle_condition === "rough") count++
   if (concerns.has("breakage")) count++
   if (concerns.has("hair_damage")) count++
@@ -469,10 +484,10 @@ function countDamageSignals(profile: HairProfile | null): number {
 }
 
 function deriveBondBuilderSeverity(profile: HairProfile | null): "moderate" | "severe" {
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const treatments = profile?.chemical_treatment ?? []
 
   if (profile?.protein_moisture_balance === "snaps") return "severe"
-  if (treatments.has("bleached") && countDamageSignals(profile) >= 2) return "severe"
+  if (hasBleachTreatment(treatments) && countDamageSignals(profile) >= 2) return "severe"
   if (countDamageSignals(profile) >= 3) return "severe"
 
   return "moderate"
@@ -510,10 +525,10 @@ function hasStrongDrynessDamageCluster(profile: HairProfile | null): boolean {
 }
 
 function countOwcSupportSignals(profile: HairProfile | null, context: RoutineContext): number {
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const treatments = profile?.chemical_treatment ?? []
   let count = 0
 
-  if (treatments.has("colored") || treatments.has("bleached")) count++
+  if (hasActiveChemicalTreatment(treatments)) count++
   if (profile?.cuticle_condition === "rough" || profile?.cuticle_condition === "slightly_rough") {
     count++
   }
@@ -758,8 +773,7 @@ function hasProactiveHairOilingFit(context: RoutineContext): boolean {
     context.goals.includes("moisture") ||
     context.cuticle_condition === "slightly_rough" ||
     context.cuticle_condition === "rough" ||
-    context.chemical_treatment.includes("colored") ||
-    context.chemical_treatment.includes("bleached")
+    hasActiveChemicalTreatment(context.chemical_treatment)
   )
 }
 
@@ -1826,8 +1840,8 @@ function buildRoutineSlots(
       })
     } else {
       const severity = deriveBondBuilderSeverity(profile)
-      const treatments = new Set(profile?.chemical_treatment ?? [])
-      const hasChemical = treatments.has("bleached") || treatments.has("colored")
+      const treatments = profile?.chemical_treatment ?? []
+      const hasChemical = hasActiveChemicalTreatment(treatments)
 
       const bondRationale: string[] =
         severity === "severe"
@@ -1942,7 +1956,7 @@ function hasSevereActiveDamageSignals(
     (concerns.has("hair_damage") ||
       concerns.has("split_ends") ||
       context.cuticle_condition === "rough" ||
-      context.chemical_treatment.includes("bleached"))
+      hasBleachTreatment(context.chemical_treatment))
   ) {
     return true
   }

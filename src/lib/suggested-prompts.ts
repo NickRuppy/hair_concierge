@@ -1,5 +1,6 @@
 import type { HairProfile, HairTexture, Goal, ProfileConcern, RoutineProduct } from "@/lib/types"
 import type { IconName } from "@/components/ui/icon"
+import { hasActiveChemicalTreatment } from "@/lib/profile/chemical-treatment"
 import { deriveLeaveInStylingContextFromStages } from "@/lib/profile/signal-derivations"
 
 export interface SuggestedPrompt {
@@ -104,8 +105,7 @@ function hasDamageSignals(profile: HairProfile): boolean {
     hasConcern(profile, "breakage") ||
     hasGoal(profile, "moisture") ||
     hasGoal(profile, "anti_breakage") ||
-    profile.chemical_treatment.includes("colored") ||
-    profile.chemical_treatment.includes("bleached"),
+    hasActiveChemicalTreatment(profile.chemical_treatment),
   )
 }
 
