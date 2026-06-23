@@ -2657,13 +2657,13 @@ This plan is intentionally large. Execute it in phases, with review checkpoints 
 5. Phase 4A review and approval core, stacked from `codex/product-intake-phase-3` / PR #177 as draft PR #179. Implemented, reviewed, pushed, and Vercel green as of 2026-06-18.
 6. Phase 4B review ops hardening, stacked from `codex/product-intake-phase-4a-review-core` / PR #179 as draft PR #180. Implemented, reviewed, pushed, Vercel green, and safe ops-smoked as of 2026-06-18.
 7. Phase 5 assistant/recommendation integration. Implemented across PR #181 and PR #182. PR #182 is the source of truth for the post-smoke agent-native lookup correction.
-8. Phase 6 verification and shipping. Next concrete step: refresh live PR checks for PR #182, then run the Supabase migration-state gate for PR #181 before any merge/deploy.
+8. Phase 6 verification and shipping. PR #182 smoke fixups were committed and pushed on 2026-06-23; Vercel was still deploying at the first live check. Next concrete step: wait for PR #182 live checks to finish, then run the Supabase migration-state gate for PR #181 before any merge/deploy.
 9. Phase 7 follow-up legacy identity contract cleanup after a separate production release.
 10. Final cleanup: temporary upload reaper before broad production enablement if it was not already implemented in Phase 4A.
 
 Recommended next steps from the current PR #182 worktree:
 
-1. Commit/push the PR #182 smoke fixups after explicit approval, then run a final live PR status check for PR #182 and keep it as the top stacked draft PR.
+1. Wait for the final live PR status check for PR #182 to finish and keep it as the top stacked draft PR.
 2. Before merging the stack, run the Supabase migration-state gate for PR #181's `20260618120000_product_visibility_policy_lifecycle.sql` on project `pqdkhefxsxkyeqelqegq`.
 3. Refresh/rebase or otherwise update the lower stacked PRs if GitHub reports they are behind `main`.
 4. Only after explicit approval, proceed through the stack merge/deploy plan. Do not run the guarded canonical identity production apply or clean temporary uploads as part of this merge unless explicitly approved.
