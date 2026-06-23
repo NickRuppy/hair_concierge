@@ -3684,6 +3684,82 @@ test("AgentV2 runtime repairs off-catalog named product detail substitutes to co
   assert.ok(repairValidatorIds.includes("named_product_detail_unverified"))
 })
 
+test("AgentV2 runtime degrades ambiguous product lookup repair failure to useful clarification", async () => {
+  const substituteProducts = [
+    { product_id: "mask_1", name: "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske" },
+    { product_id: "mask_2", name: "Schaebens Argan-Öl Haarmaske" },
+    { product_id: "mask_3", name: "Sante Intense Hydration" },
+  ]
+  const client = fakeResponsesClientWithOutputs([
+    functionCall("call_1", "lookup_product_candidate", {
+      category: "mask",
+      brand_text: "Garnier",
+      product_name_text: "Hair Food",
+      reason: "User asks for an opinion on a named product family.",
+      evidence_quote: "Garnier Hair Food",
+    }),
+    guidanceCall("call_2", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["mask"],
+    }),
+    functionCall("call_3", "select_products", {
+      ...selectProductsArguments({
+        category: "mask",
+        reason: "User asks for a named mask product detail.",
+        user_request: "Was hältst du von Garnier Hair Food?",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Garnier Hair Food",
+      }),
+    }),
+    terminalNamedProductRecommendation("call_4", substituteProducts, {
+      care_category: "mask",
+      product_request_kind: "product_detail",
+      requested_product_count: 3,
+      count_policy: "default",
+      evidence_quote: "Garnier Hair Food",
+    }),
+    terminalNamedProductRecommendation("call_5", substituteProducts, {
+      care_category: "mask",
+      product_request_kind: "product_detail",
+      requested_product_count: 3,
+      count_policy: "default",
+      evidence_quote: "Garnier Hair Food",
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Was hältst du von Garnier Hair Food?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: { hair_texture: "wavy", thickness: "fine", concerns: ["frizz"] },
+      routineInventory: [],
+      sessionMemory: [],
+    },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async () => ({
+        status: "ambiguous",
+        category: "mask",
+        product: null,
+      }),
+      select_products: async () => ({
+        valid_product_ids: substituteProducts.map((product) => product.product_id),
+        products: substituteProducts,
+      }),
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, "repair_failed")
+  assert.equal(result.final_answer.answer_mode, "clarification")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /mehrere|nicht eindeutig|welche/i)
+  assert.match(result.final_answer.payload.question_de, /welche|variante|genau/i)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Gliss|Schaebens|Sante/)
+})
+
 test("AgentV2 runtime repairs product recommendations to respect an explicit count", async () => {
   const products = [
     { product_id: "prod_1", name: "Test Conditioner" },

@@ -1611,7 +1611,7 @@ test("validator allows generic category context after unresolved lookup", () => 
     },
   )
 
-  assert.equal(result.ok, true)
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
 })
 
 test("validator allows cautious product deferrals after unresolved lookup", () => {
@@ -3504,6 +3504,171 @@ test("validator requires blocked answers to render the actual blocker, not only 
 
   assert.equal(result.ok, false)
   assert.ok(result.errors.some((error) => error.validator_id === "visible_payload_not_rendered"))
+})
+
+test("validator accepts natural catalog-verification wording for blocked product lookup answers", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "constraint_blocked",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 0,
+        count_policy: "none",
+        evidence_quote: "mein jean & lean conditioner",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer(
+          "product_recommendation",
+          "conditioner",
+        ),
+        used_product_tool: true,
+        product_ids: [],
+        hard_rule_ids: [
+          ...baseAnswer.tool_grounding.hard_rule_ids,
+          "product.no_uncatalogued_products",
+        ],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Der Name ist für mich aktuell kein verifizierter Katalogtreffer, deshalb kann ich ihn nicht genau bewerten. Wichtig ist: keine genaue Produkteinschätzung ohne bestätigte Produktdaten.",
+        blocking_constraints: [
+          "nicht katalogverifiziert",
+          "keine genaue Produkteinschätzung ohne bestätigte Produktdaten",
+        ],
+        safe_alternative_de:
+          "Für dein Haarprofil wirkt ein leichter bis mittlerer Conditioner meist passender als etwas sehr Reichhaltiges.",
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      selectedProductProjections: [],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "conditioner",
+          product_request_kind: "product_detail",
+          requested_product_count: 0,
+          count_policy: "none",
+          evidence_quote: "mein jean & lean conditioner",
+        }),
+        {
+          name: "lookup_product_candidate",
+          arguments: {
+            category: "conditioner",
+            brand_text: "jean & lean",
+            product_name_text: "Conditioner",
+          },
+          output_summary: "product_lookup:not_found",
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "conditioner",
+          input_identity: {
+            category: "conditioner",
+            brand_text: "jean & lean",
+            product_name_text: "Conditioner",
+            evidence_quote: "mein jean & lean conditioner",
+          },
+          product: null,
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator ignores hidden product grounding for blocked not-found product deferrals", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "constraint_blocked",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 0,
+        count_policy: "none",
+        evidence_quote: "mein jean & lean conditioner",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer(
+          "product_recommendation",
+          "conditioner",
+        ),
+        used_product_tool: true,
+        product_ids: ["prod_1"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Ich kann deinen jean & lean Conditioner hier nicht als verifizierten Katalogtreffer prüfen; deshalb ist eine exakte Produktbewertung ohne verifizierte Identität nicht möglich. Für dein feines, welliges Haar mit Frizz ist Conditioner grundsätzlich die richtige Basispflege für Längen und Spitzen, aber die konkrete Eignung hängt bei einem einzelnen Produkt vor allem von Gewicht und Pflegeintensität ab.",
+        blocking_constraints: [
+          "keine exakte Produktbewertung ohne verifizierte Identität",
+          "nicht als verifizierter Katalogtreffer prüfbar",
+        ],
+        safe_alternative_de:
+          "Ich kann dir stattdessen sagen, woran du bei einem Conditioner für dein Haar am ehesten erkennst, ob er eher leicht oder zu schwer ist.",
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "conditioner",
+          product_request_kind: "product_detail",
+          requested_product_count: 0,
+          count_policy: "none",
+          evidence_quote: "mein jean & lean conditioner",
+        }),
+        {
+          name: "lookup_product_candidate",
+          arguments: {
+            category: "conditioner",
+            brand_text: "jean & lean",
+            product_name_text: "Conditioner",
+          },
+          output_summary: "product_lookup:not_found",
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "conditioner",
+          input_identity: {
+            category: "conditioner",
+            brand_text: "jean & lean",
+            product_name_text: "Conditioner",
+            evidence_quote: "mein jean & lean conditioner",
+          },
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "jean & lean Conditioner",
+        category: "conditioner",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+    JSON.stringify(result.errors, null, 2),
+  )
 })
 
 test("validator rejects unasked product cards in general advice", () => {

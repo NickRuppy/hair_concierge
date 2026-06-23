@@ -1219,7 +1219,6 @@ function validateProductLookupResultClaims(
   const makesProductSpecificClaim =
     answer.answer_mode === "product_recommendation" ||
     answer.answer_mode === "routine" ||
-    answer.tool_grounding.product_ids.length > 0 ||
     payloadProductIds.length > 0 ||
     makesUnresolvedNamedProductSpecificClaim(answer, context)
 
@@ -1982,6 +1981,8 @@ function hasNormalizedPhrase(normalizedHaystack: string, needle: string): boolea
 
 function isConstraintRendered(normalizedProse: string, constraint: string): boolean {
   if (hasNormalizedPhrase(normalizedProse, constraint)) return true
+  if (isCatalogVerificationConstraintRendered(normalizedProse, constraint)) return true
+  if (isProductEvaluationConstraintRendered(normalizedProse, constraint)) return true
 
   const meaningfulParts = normalizeVisibleText(constraint)
     .split(" ")
@@ -1990,6 +1991,49 @@ function isConstraintRendered(normalizedProse: string, constraint: string): bool
 
   const renderedParts = meaningfulParts.filter((part) => normalizedProse.includes(part))
   return renderedParts.length >= 2
+}
+
+function isCatalogVerificationConstraintRendered(
+  normalizedProse: string,
+  constraint: string,
+): boolean {
+  const normalizedConstraint = normalizeVisibleText(constraint)
+  const isCatalogVerificationConstraint =
+    /\b(katalogverifiziert|katalogtreffer|produktdaten|produktzuordnung)\b/.test(
+      normalizedConstraint,
+    ) && /\b(nicht|kein|keine|ohne|unbesta?tigt|fehlend)\b/.test(normalizedConstraint)
+
+  if (!isCatalogVerificationConstraint) return false
+
+  return (
+    /\b(verifiziert|besta?tigt|katalogtreffer|katalog|produktdaten)\b/.test(normalizedProse) &&
+    /\b(nicht|kein|keine|ohne|unbesta?tigt|fehlt|fehlend|nicht genau|nicht exakt)\b/.test(
+      normalizedProse,
+    )
+  )
+}
+
+function isProductEvaluationConstraintRendered(
+  normalizedProse: string,
+  constraint: string,
+): boolean {
+  const normalizedConstraint = normalizeVisibleText(constraint)
+  const isProductEvaluationConstraint =
+    /\b(?:produktbewertung|produktscha?tzung|einscha?tzung|bewertung|bewerten)\b/.test(
+      normalizedConstraint,
+    ) &&
+    /\b(?:exakt|genau|konkret|sicher)\b/.test(normalizedConstraint) &&
+    /\b(?:nicht|kein|keine|ohne|unmo?glich|moglich)\b/.test(normalizedConstraint)
+
+  if (!isProductEvaluationConstraint) return false
+
+  return (
+    /\b(?:produktbewertung|produktscha?tzung|einscha?tzung|bewertung|bewerten)\b/.test(
+      normalizedProse,
+    ) &&
+    /\b(?:exakt|genau|konkret|sicher)\b/.test(normalizedProse) &&
+    /\b(?:nicht|kein|keine|ohne|unmo?glich|moglich)\b/.test(normalizedProse)
+  )
 }
 
 function getRecommendationCountRequirement(

@@ -60,10 +60,12 @@ The problem is not just lowercase matching. The deeper issue is that chat produc
 - Post-review correlation fix: product-selection/compare answers now require the lookup category to match the final answer target category before a `not_found` lookup can render a chat intake card. This prevents an unknown background shampoo lookup from attaching an intake card to a conditioner recommendation answer.
 - Post-review false-negative fix: product-detail/add-style answers may render an intake card when the lookup category matches the final answer target category, even if the user did not literally type the category word in the product name.
 - Follow-up product idea, intentionally out of this correctness patch: if a background product lookup is `not_found`, the assistant may later add a small natural-language follow-up offer to add that background product after answering the user's main question. This should be a separate answer-composition change, not an immediate intake-card render.
+- Manual PR #182 smoke found three final local issues and all were patched before shipping: unresolved brand plus generic category names such as `jean & lean conditioner` now count as enough lookup identity for `not_found`; blocked product deferrals tolerate natural German wording such as `nicht exakt bewerten`; and ambiguous lookup repair failures degrade to a useful variant/category clarification instead of the generic fallback.
 
 ## Replay Result Summary
 
-- Latest report path: `tmp/product-lookup-replay-2026-06-22T18-29-32-500Z.json` (local ignored artifact; do not commit raw examples).
+- Latest report path: `tmp/product-lookup-replay-2026-06-23T13-54-39-179Z.json` (local ignored artifact; do not commit raw examples).
+- Earlier matching report path: `tmp/product-lookup-replay-2026-06-22T18-29-32-500Z.json`.
 - Earlier matching report paths: `tmp/product-lookup-replay-2026-06-22T18-21-27-497Z.json`, `tmp/product-lookup-replay-2026-06-22T18-09-59-878Z.json`, `tmp/product-lookup-replay-2026-06-22T18-03-35-579Z.json`, `tmp/product-lookup-replay-2026-06-22T17-58-25-997Z.json`, `tmp/product-lookup-replay-2026-06-22T17-46-01-135Z.json`, `tmp/product-lookup-replay-2026-06-22T17-13-08-786Z.json`.
 - Rows: 429 total, 398 tested, 31 skipped for missing product name.
 - Status counts: `found_exact=0`, `ambiguous=0`, `not_found=3`, `insufficient_identity=378`, `unsupported_category=17`, `skipped_missing_product_name=31`.
@@ -632,7 +634,7 @@ Out of scope:
 
   Result: PASS on 2026-06-22 against `http://localhost:3168`, 13/13 scenarios and 68/68 assertions. Report: `test-results/chat-eval/chat-eval-2026-06-22T17-42-49.json`.
 
-- [ ] **Step 4: Manual browser smoke**
+- [x] **Step 4: Manual browser smoke**
 
   With dev server running, test:
   - unknown concrete product -> assistant defers and intake card appears
@@ -640,6 +642,11 @@ Out of scope:
   - broad category/brand ask -> no intake card
 
   Use existing login/dev account flow from the repo's QA conventions.
+
+  Result on 2026-06-23 against `http://localhost:3168`: PASS.
+  - Lowercase unknown concrete product prompt `kannst du mir sagen, was du von meinem jean & lean conditioner hältst` called lookup, deferred exact product judgment, and rendered the product intake card.
+  - Ambiguous prompt `Was hältst du von Garnier Hair Food?` asked which exact variant was meant and rendered no intake card.
+  - Broad prompt `Welche Pantene Produkte empfiehlst du?` rendered no intake card.
 
 ## Task 8: Documentation And Master Plan Cross-Reference
 

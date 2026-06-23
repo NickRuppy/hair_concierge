@@ -261,8 +261,10 @@ export function lookupProductCandidate(params: LookupProductCandidateParams): Pr
     brand: brandName(resolved?.brand ?? null) ?? brandText,
     productLine: lineName(resolved?.productLine ?? null),
   })
+  const precisionIdentity =
+    !resolvedBrandId && brandText ? `${brandText} ${cleanProductName}` : cleanProductName
 
-  if (!hasPreciseProductIdentity(cleanProductName)) {
+  if (!hasPreciseProductIdentity(precisionIdentity)) {
     return emptyResult({
       status: "insufficient_identity",
       category,

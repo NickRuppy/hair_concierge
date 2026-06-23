@@ -2256,6 +2256,12 @@ function buildKnownIntentFallbackAnswer(params: {
   if (params.safetyMode !== "normal") return null
   if (params.reason !== "generic" && params.reason !== "composition_failed") return null
 
+  const productLookupFallback = buildProductLookupClarificationFallback({
+    message: params.message,
+    trace: params.trace,
+  })
+  if (productLookupFallback) return productLookupFallback
+
   const placementCategory = detectRoutinePlacementFallbackCategory(params.trace, params.message)
   if (
     placementCategory &&
@@ -2319,6 +2325,114 @@ function buildKnownIntentFallbackAnswer(params: {
   }
 
   return null
+}
+
+function buildProductLookupClarificationFallback(params: {
+  message: string
+  trace: AgentV2Trace
+}): AgentV2TerminalAnswer | null {
+  const latestLookupCall = [...params.trace.tool_calls]
+    .reverse()
+    .find((call) => call.name === "lookup_product_candidate")
+  const lookupStatus = readProductLookupStatus(latestLookupCall?.output_summary)
+  if (
+    lookupStatus !== "ambiguous" &&
+    lookupStatus !== "insufficient_identity" &&
+    lookupStatus !== "unsupported_category"
+  ) {
+    return null
+  }
+
+  const lookupArgs = latestLookupCall?.arguments ?? {}
+  const evidenceQuote =
+    readNonEmptyString(lookupArgs.evidence_quote) ?? params.message.slice(0, 240)
+  const displayName = buildProductLookupDisplayName(lookupArgs, evidenceQuote)
+  const category = readFallbackCareCategory(lookupArgs.category)
+  const userFacingAnswer =
+    lookupStatus === "unsupported_category"
+      ? `Ich kann ${displayName} in dieser Produktkategorie aktuell noch nicht sauber in unserer Produktdatenbank prüfen. Deshalb möchte ich dazu nichts erfinden.`
+      : lookupStatus === "insufficient_identity"
+        ? `Ich brauche zu ${displayName} noch etwas mehr Info, bevor ich es zuverlässig prüfen kann. Welche genaue Produktvariante oder Kategorie meinst du?`
+        : `Ich finde zu ${displayName} mehrere mögliche Varianten und möchte nichts Falsches bewerten. Welche genaue Variante meinst du?`
+  const question =
+    lookupStatus === "unsupported_category"
+      ? "Um welche der unterstützten Kategorien geht es: Shampoo, Conditioner, Leave-in, Maske, Öl, Trockenshampoo, Tiefenreinigungsshampoo oder Bondbuilder?"
+      : "Welche genaue Variante meinst du?"
+
+  return {
+    answer_mode: "clarification",
+    interpreted_intent: "Product lookup clarification fallback after terminal repair failed.",
+    request_interpretation: {
+      primary_intent: "clarification",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: category,
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: evidenceQuote,
+      specific_product_candidate: true,
+      confidence: 0,
+    },
+    confidence: 0,
+    extracted_constraints: {
+      ...buildEmptyExtractedConstraints(),
+      product_categories: category === "unknown" ? [] : [category],
+      raw_constraints: [evidenceQuote],
+    },
+    missing_information: [
+      {
+        key: lookupStatus === "unsupported_category" ? "supported_category" : "product_identity",
+        label_de:
+          lookupStatus === "unsupported_category"
+            ? "unterstützte Produktkategorie"
+            : "genaue Produktvariante",
+        blocking: true,
+        question_de: question,
+      },
+    ],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: params.trace.loaded_guidance_package_ids,
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: ["product.no_uncatalogued_products"],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category: category === "unknown" ? null : category,
+      return_path: [],
+    },
+    pending_routine_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: userFacingAnswer,
+      question_de: question,
+      missing_keys: [
+        lookupStatus === "unsupported_category" ? "supported_category" : "product_identity",
+      ],
+    },
+  }
+}
+
+function readProductLookupStatus(outputSummary: unknown): string | null {
+  if (typeof outputSummary !== "string") return null
+  const match = /^product_lookup:([a-z_]+)$/.exec(outputSummary.trim())
+  return match?.[1] ?? null
+}
+
+function buildProductLookupDisplayName(args: Record<string, unknown>, fallback: string): string {
+  const brand = readNonEmptyString(args.brand_text)
+  const productName = readNonEmptyString(args.product_name_text)
+  const combined = [brand, productName].filter(Boolean).join(" ").trim()
+  return combined || fallback || "dieses Produkt"
+}
+
+function readNonEmptyString(value: unknown): string | null {
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null
 }
 
 function isLightweightMaskOilDecisionFallbackEligible(
