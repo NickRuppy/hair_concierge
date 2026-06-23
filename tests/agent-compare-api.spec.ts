@@ -317,6 +317,7 @@ test("handleAgentCompareRequest preserves AgentV2 request interpretation trace i
               requested_product_count: 2,
               count_policy: "exact",
               evidence_quote: "zwei Conditioner",
+              specific_product_candidate: false,
               confidence: 0.91,
             },
             validation_warnings: [
@@ -1309,6 +1310,7 @@ test("AgentV2 trace display data separates warnings from fatal validation errors
       requested_product_count: 2,
       count_policy: "exact",
       evidence_quote: "zwei Conditioner",
+      specific_product_candidate: false,
       confidence: 0.91,
     },
     validation_warnings: [

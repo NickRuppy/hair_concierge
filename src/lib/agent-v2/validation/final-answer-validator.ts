@@ -1,6 +1,7 @@
 import {
   AgentV2AnswerModeSchema,
   type AgentV2CareCategory,
+  AgentV2CareCategorySchema,
   AgentV2SessionMemoryWriteSchema,
   AgentV2TerminalAnswerSchema,
   type AgentV2RoutineLayer,
@@ -19,6 +20,7 @@ import {
 import type { CareBalanceConflict } from "@/lib/recommendation-engine/types"
 import { normalizeAgentV2EvidenceText } from "@/lib/agent-v2/evidence-normalization"
 import {
+  getAgentV2NamedProductCategoryReferenceTerms,
   normalizeNamedProductForComparison,
   type AgentV2NamedProductContext,
 } from "@/lib/agent-v2/named-product-context"
@@ -52,6 +54,12 @@ export interface AgentV2FinalAnswerValidationContext {
 export interface AgentV2ProductLookupValidationResult {
   status: string
   category?: string | null
+  input_identity?: {
+    category?: string | null
+    brand_text?: string | null
+    product_name_text?: string | null
+    evidence_quote?: string | null
+  } | null
   product?: { id?: string; name?: string } | null
 }
 
@@ -673,12 +681,13 @@ function validateInterpretationAnswerMode(
       interpretation.care_category !== "none" ||
       interpretation.requested_product_count !== null ||
       interpretation.count_policy !== "none" ||
+      interpretation.specific_product_candidate !== false ||
       interpretation.confidence < 0.7)
   ) {
     errors.push({
       validator_id: "request_interpretation_answer_mode",
       message:
-        "Social and domain-boundary interpretations must use no product/routine/category fields and confidence at least 0.7.",
+        "Social and domain-boundary interpretations must use no product/routine/category fields, no specific product candidate, and confidence at least 0.7.",
       severity: "block",
       path: ["request_interpretation"],
     })
@@ -1156,21 +1165,24 @@ function validateNamedProductLookupRequired(
   context: AgentV2FinalAnswerValidationContext,
   errors: AgentV2ValidationError[],
 ): void {
-  const namedProductContext = context.namedProductContext
-  if (!namedProductContext?.plausible_exact_name) return
   if (context.productIntakeEnabled === false) return
 
-  const hasLookupToolCall = context.toolCallHistory.some(
-    (call) => call.name === "lookup_product_candidate",
-  )
-  if (hasLookupToolCall) return
-  if (!isNamedProductLookupTurn(answer)) return
-  if (!makesNamedProductSpecificFinalAnswer(answer)) return
+  const modelRequiresLookup =
+    answer.request_interpretation.specific_product_candidate === true &&
+    isNamedProductLookupTurn(answer) &&
+    isLookupGuardedAnswerMode(answer)
+
+  const visibleNamedProductClaimRequiresLookup =
+    isLookupGuardedAnswerMode(answer) && makesUnresolvedNamedProductSpecificClaim(answer, context)
+
+  if (!modelRequiresLookup && !visibleNamedProductClaimRequiresLookup) return
+
+  if (hasMatchingProductLookupForAnswer(answer, context)) return
 
   errors.push({
     validator_id: "product_lookup_required",
     message:
-      "Named-product detail, suitability, or routine-add answers require lookup_product_candidate before product-specific final claims.",
+      "Named-product detail, suitability, or routine-add turns require lookup_product_candidate before a terminal answer.",
     severity: "block",
   })
 }
@@ -1206,16 +1218,21 @@ function validateProductLookupResultClaims(
 
   const makesProductSpecificClaim =
     answer.answer_mode === "product_recommendation" ||
-    (answer.answer_mode === "general_advice" && isNamedProductLookupTurn(answer)) ||
     answer.answer_mode === "routine" ||
     answer.tool_grounding.product_ids.length > 0 ||
-    payloadProductIds.length > 0
+    payloadProductIds.length > 0 ||
+    makesUnresolvedNamedProductSpecificClaim(answer, context)
 
   if (!makesProductSpecificClaim) return
 
+  const relevantUnresolvedLookupResults = unresolvedLookupResults.filter((result) =>
+    unresolvedLookupResultMatchesAnswerClaim(result, answer, context),
+  )
+  if (relevantUnresolvedLookupResults.length === 0) return
+
   errors.push({
     validator_id: "product_lookup_unresolved",
-    message: `Product-specific claims are blocked after lookup_product_candidate returned unresolved status: ${unresolvedLookupResults
+    message: `Product-specific claims are blocked after lookup_product_candidate returned unresolved status: ${relevantUnresolvedLookupResults
       .map((result) => result.status)
       .join(", ")}.`,
     severity: "block",
@@ -1229,13 +1246,223 @@ function isNamedProductLookupTurn(answer: AgentV2TerminalAnswer): boolean {
   )
 }
 
-function makesNamedProductSpecificFinalAnswer(answer: AgentV2TerminalAnswer): boolean {
+function isLookupGuardedAnswerMode(answer: AgentV2TerminalAnswer): boolean {
   return (
     answer.answer_mode === "product_recommendation" ||
     answer.answer_mode === "routine" ||
     answer.answer_mode === "general_advice" ||
-    answer.answer_mode === "constraint_blocked"
+    answer.answer_mode === "constraint_blocked" ||
+    answer.answer_mode === "clarification"
   )
+}
+
+function makesUnresolvedNamedProductSpecificClaim(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  const namedProductContext = context.namedProductContext
+  if (!namedProductContext?.plausible_exact_name) return false
+
+  const userFacing = readUserFacingAnswer(answer.payload)
+  if (referencesUnresolvedNamedProduct(userFacing, namedProductContext)) {
+    return hasNamedProductClaimPredicate(userFacing)
+  }
+
+  return hasPronounProductClaim(userFacing)
+}
+
+function referencesUnresolvedNamedProduct(
+  text: string,
+  namedProductContext: AgentV2NamedProductContext,
+): boolean {
+  if (namedProductNamesMatch(text, namedProductContext.display_name)) return true
+
+  const normalized = normalizeVisibleText(text)
+  if (/\b(?:das|dieses|dein|mein)\s+produkt\b/u.test(normalized)) return true
+
+  return getAgentV2NamedProductCategoryReferenceTerms(namedProductContext.category).some((term) =>
+    new RegExp(
+      `\\b(?:der|die|das|den|dem|dieser|diese|dieses|diesen|diesem|dein|deine|deinen|deinem|mein|meine|meinen|meinem)\\s+${escapeRegExp(
+        normalizeVisibleText(term),
+      )}\\b`,
+      "u",
+    ).test(normalized),
+  )
+}
+
+function hasNamedProductClaimPredicate(text: string): boolean {
+  return /\b(?:passt|geeignet|ideal|gut|schlecht|ok(?:ay)?|in\s+ordnung|empfehlenswert|w(?:ue|ü)rde\s+ich\s+(?:nehmen|empfehlen)|spendet|pflegt|st(?:ae|ä)rkt|reinigt|beschwert|trocknet|enth(?:ae|ä)lt|weiter\s*(?:verwenden|nutzen|benutzen)|weiterverwenden|verwenden|nutzen|benutzen|behalten|nehmen|in\s+der\s+routine\s+lassen)\b/iu.test(
+    text,
+  )
+}
+
+function hasPronounProductClaim(text: string): boolean {
+  const normalized = normalizeVisibleText(text)
+  return (
+    /\b(?:er|sie|es|das)\s+(?:passt|spendet|pflegt|st(?:ae|ä)rkt|reinigt|beschwert|trocknet|enth(?:ae|ä)lt|ist\s+(?:geeignet|ideal|gut|schlecht|empfehlenswert)|(?:weiter\s*)?(?:verwenden|nutzen|benutzen)|weiterverwenden|behalten|nehmen|in\s+der\s+routine\s+lassen)\b/u.test(
+      normalized,
+    ) ||
+    /\bdu\s+kannst\s+(?:ihn|sie|es|das)\s+(?:(?:weiter\s*)?(?:verwenden|nutzen|benutzen)|weiterverwenden|behalten|nehmen|in\s+der\s+routine\s+lassen)\b/u.test(
+      normalized,
+    )
+  )
+}
+
+function hasMatchingProductLookupForAnswer(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  const lookupResults = context.productLookupResults ?? []
+  if (
+    lookupResults.some((result) => productLookupMatchesAnswerCandidate(result, answer, context))
+  ) {
+    return true
+  }
+
+  return context.toolCallHistory.some((call) => {
+    if (call.name !== "lookup_product_candidate") return false
+    const args =
+      call.arguments && typeof call.arguments === "object" && !Array.isArray(call.arguments)
+        ? (call.arguments as Record<string, unknown>)
+        : null
+    if (!args) return false
+
+    return productLookupMatchesAnswerCandidate(
+      {
+        status: "called",
+        category: typeof args.category === "string" ? args.category : null,
+        input_identity: {
+          category: typeof args.category === "string" ? args.category : null,
+          brand_text: typeof args.brand_text === "string" ? args.brand_text : null,
+          product_name_text:
+            typeof args.product_name_text === "string" ? args.product_name_text : null,
+          evidence_quote: typeof args.evidence_quote === "string" ? args.evidence_quote : null,
+        },
+        product: null,
+      },
+      answer,
+      context,
+    )
+  })
+}
+
+function productLookupMatchesAnswerCandidate(
+  lookup: AgentV2ProductLookupValidationResult,
+  answer: AgentV2TerminalAnswer,
+  context?: AgentV2FinalAnswerValidationContext,
+): boolean {
+  const lookupBrand = lookup.input_identity?.brand_text?.trim() ?? ""
+  const lookupProductName = lookup.input_identity?.product_name_text?.trim() ?? ""
+  const identityParts = [
+    lookupBrand && lookupProductName ? `${lookupBrand} ${lookupProductName}` : null,
+    !lookupBrand ? lookupProductName : null,
+    lookup.product?.name,
+  ].filter((part): part is string => Boolean(part?.trim()))
+
+  if (identityParts.length === 0) return true
+
+  const evidenceParts = [
+    answer.request_interpretation.evidence_quote,
+    context?.latestUserMessage,
+  ].filter((part): part is string => Boolean(part?.trim()))
+
+  return identityParts.some((identity) =>
+    evidenceParts.some((evidence) =>
+      productLookupIdentityMatchesEvidence(identity, evidence, lookup),
+    ),
+  )
+}
+
+function unresolvedLookupResultMatchesAnswerClaim(
+  lookup: AgentV2ProductLookupValidationResult,
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  const lookupBrand = lookup.input_identity?.brand_text?.trim() ?? ""
+  const lookupProductName = lookup.input_identity?.product_name_text?.trim() ?? ""
+  const identityParts = [
+    lookupBrand && lookupProductName ? `${lookupBrand} ${lookupProductName}` : null,
+    !lookupBrand ? lookupProductName : null,
+    lookup.product?.name,
+  ].filter((part): part is string => Boolean(part?.trim()))
+
+  if (identityParts.length === 0) {
+    const answerCategory =
+      answer.request_interpretation.care_category !== "none" &&
+      answer.request_interpretation.care_category !== "unknown"
+        ? answer.request_interpretation.care_category
+        : context.namedProductContext?.category
+    const lookupCategory = lookup.input_identity?.category ?? lookup.category ?? null
+    return Boolean(answerCategory) && Boolean(lookupCategory) && lookupCategory === answerCategory
+  }
+
+  const evidenceParts = [
+    answer.request_interpretation.evidence_quote,
+    readUserFacingAnswer(answer.payload),
+  ].filter((part): part is string => Boolean(part?.trim()))
+
+  return (
+    identityParts.some((identity) =>
+      evidenceParts.some((evidence) =>
+        productLookupIdentityMatchesEvidence(identity, evidence, lookup),
+      ),
+    ) || unresolvedLookupMatchesNamedProductClaimByCategory(lookup, answer, context)
+  )
+}
+
+function productLookupIdentityMatchesEvidence(
+  identity: string,
+  evidence: string,
+  lookup: AgentV2ProductLookupValidationResult,
+): boolean {
+  const normalizedIdentity = normalizeNamedProductForComparison(identity)
+  const normalizedEvidence = normalizeNamedProductForComparison(evidence)
+  if (!normalizedIdentity || !normalizedEvidence) return false
+  const normalizedLookupBrand = lookup.input_identity?.brand_text
+    ? normalizeNamedProductForComparison(lookup.input_identity.brand_text)
+    : ""
+  if (normalizedLookupBrand && !normalizedEvidence.includes(normalizedLookupBrand)) return false
+  if (isGenericLookupIdentity(normalizedIdentity, lookup)) return false
+  if (
+    normalizedIdentity === normalizedEvidence ||
+    normalizedIdentity.includes(normalizedEvidence) ||
+    normalizedEvidence.includes(normalizedIdentity)
+  ) {
+    return true
+  }
+
+  const identityTokens = normalizedIdentity.split(" ").filter((token) => token.length > 0)
+  if (identityTokens.length < 2) return false
+  const evidenceTokens = new Set(normalizedEvidence.split(" ").filter((token) => token.length > 0))
+  return identityTokens.every((token) => evidenceTokens.has(token))
+}
+
+function unresolvedLookupMatchesNamedProductClaimByCategory(
+  lookup: AgentV2ProductLookupValidationResult,
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  const namedProductContext = context.namedProductContext
+  if (!namedProductContext?.plausible_exact_name) return false
+  const lookupCategory = lookup.input_identity?.category ?? lookup.category ?? null
+  if (!lookupCategory || lookupCategory !== namedProductContext.category) return false
+  return makesUnresolvedNamedProductSpecificClaim(answer, context)
+}
+
+function isGenericLookupIdentity(
+  normalizedIdentity: string,
+  lookup: AgentV2ProductLookupValidationResult,
+): boolean {
+  const category = lookup.input_identity?.category ?? lookup.category ?? null
+  const parsedCategory = AgentV2CareCategorySchema.safeParse(category)
+  if (!parsedCategory.success) return false
+  return getAgentV2NamedProductCategoryReferenceTerms(parsedCategory.data).some(
+    (term) => normalizeNamedProductForComparison(term) === normalizedIdentity,
+  )
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 }
 
 function validateNamedProductDetailAnswer(
