@@ -236,6 +236,15 @@ export const guidanceCatalog = {
       "data/agent-guidance/topics/general-haircare/confusions.md",
     ],
   },
+  "topic:night_protection": {
+    kind: "topic",
+    title: "Night Protection",
+    paths: [
+      "data/agent-guidance/topics/night-protection/core-fit.md",
+      "data/agent-guidance/topics/night-protection/response-playbook.md",
+      "data/agent-guidance/topics/night-protection/guardrails.md",
+    ],
+  },
   "topic:hair_oiling": {
     kind: "topic",
     title: "Hair Oiling",

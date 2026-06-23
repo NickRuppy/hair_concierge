@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import {
+  NIGHT_PROTECTION_LABELS,
   NIGHT_PROTECTIONS,
   TOWEL_MATERIAL_LABELS,
   TOWEL_MATERIALS,
@@ -42,4 +43,26 @@ test("night protection options expose only the canonical loose tied value", () =
   assert.ok(NIGHT_PROTECTIONS.includes("loose_tied"))
   assert.ok(!NIGHT_PROTECTIONS.includes("loose_braid" as never))
   assert.ok(!NIGHT_PROTECTIONS.includes("loose_bun" as never))
+})
+
+test("night protection options include length tip accessory and remove tight hairstyles", () => {
+  assert.deepEqual(NIGHT_PROTECTIONS, [
+    "silk_satin_pillow",
+    "silk_satin_bonnet",
+    "loose_tied",
+    "pineapple",
+    "length_tip_accessory",
+  ])
+  assert.equal(
+    NIGHT_PROTECTION_LABELS.length_tip_accessory,
+    "Längen-/Spitzenschutz (z. B. HairHOMIE)",
+  )
+  assert.ok(!NIGHT_PROTECTIONS.includes("tight_hairstyles" as never))
+})
+
+test("night protection normalization drops legacy tight hairstyles", () => {
+  assert.deepEqual(normalizeNightProtectionValues(["tight_hairstyles"]), [])
+  assert.deepEqual(normalizeNightProtectionValues(["silk_satin_pillow", "tight_hairstyles"]), [
+    "silk_satin_pillow",
+  ])
 })

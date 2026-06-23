@@ -1,6 +1,6 @@
 import { INVENTORY_CATEGORIES } from "@/lib/recommendation-engine/contracts"
 import { getVisibleProductUsageItems } from "@/lib/product-usage/shampoo-fallback"
-import { normalizeProductFrequency } from "@/lib/vocabulary"
+import { normalizeNightProtectionValues, normalizeProductFrequency } from "@/lib/vocabulary"
 import type {
   InventoryCategory,
   NormalizedProfile,
@@ -57,7 +57,7 @@ export function normalizeRecommendationInput(input: RawRecommendationInput): Nor
     towelTechnique: profile.towel_technique,
     dryingMethod: profile.drying_method,
     brushType: profile.brush_type,
-    nightProtection: profile.night_protection ?? null,
+    nightProtection: normalizeNightProtectionValues(profile.night_protection),
     usesHeatProtection: profile.uses_heat_protection ?? false,
     routineInventory: normalizeRoutineInventory(input.routineInventory),
   }

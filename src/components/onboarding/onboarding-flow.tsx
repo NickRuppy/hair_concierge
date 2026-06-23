@@ -91,6 +91,7 @@ const NIGHT_PROTECTION_ICONS: Record<string, IconName> = {
   silk_satin_bonnet: "night-silk-bonnet",
   loose_tied: "night-loose-braid",
   pineapple: "night-pineapple",
+  length_tip_accessory: "night-loose-braid",
 }
 
 /* ── Label map for drilldown categories ── */
@@ -695,9 +696,7 @@ export function OnboardingFlow({
     icon: BRUSH_TYPE_ICONS[o.value] ?? fallbackIcon,
   }))
 
-  const nightProtectionWithIcon = NIGHT_PROTECTION_OPTIONS.filter(
-    (o) => o.value !== "tight_hairstyles",
-  ).map((o) => ({
+  const nightProtectionWithIcon = NIGHT_PROTECTION_OPTIONS.map((o) => ({
     ...o,
     icon: NIGHT_PROTECTION_ICONS[o.value] ?? fallbackIcon,
   }))
@@ -918,7 +917,7 @@ export function OnboardingFlow({
         return (
           <MultiSelectScreen
             title="Wie schützt du dein Haar nachts?"
-            subtitle="Nachts verliert dein Haar Feuchtigkeit. Schon kleine Änderungen helfen."
+            subtitle="Mehrfachauswahl möglich. Wähle alles aus, was du nachts nutzt."
             options={nightProtectionWithIcon}
             selected={store.nightProtection}
             onToggle={toggleNightProtection}

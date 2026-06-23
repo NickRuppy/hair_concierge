@@ -53,6 +53,13 @@ test("AgentV2 guidance index includes every active product category", () => {
   }
 })
 
+test("AgentV2 guidance index includes night protection topic package", () => {
+  const id = "topic.night_protection.v1"
+
+  assert.ok((AGENT_V2_GUIDANCE_PACKAGE_IDS as readonly string[]).includes(id))
+  assert.ok(getAgentV2GuidancePackageEntry(id))
+})
+
 test("AgentV2 category metadata declares grounding and ask policies", () => {
   for (const path of listMarkdownSources("data/agent-v2/guidance/categories")) {
     const metadataPath = path.replace(/\.md$/, ".json")
@@ -86,6 +93,23 @@ test("loadAgentV2GuidancePackages loads structured metadata plus markdown brief"
   assert.ok(result.packages[0].markdown_brief.length > 80)
   assert.ok(result.packages[0].hard_rules.every((rule) => rule.rule_id.length > 0))
   assert.ok(result.hard_rules.some((rule) => rule.rule_id === "product.no_uncatalogued_products"))
+})
+
+test("loadAgentV2GuidancePackages loads night protection topic guidance", async () => {
+  const result = await loadAgentV2GuidancePackages(["topic.night_protection.v1"])
+  const brief = result.markdown_brief
+
+  assert.match(brief, /low-friction behavior lever/i)
+  assert.match(brief, /HairHOMIE/i)
+  assert.match(brief, /length\/tip accessory/i)
+  assert.match(brief, /night_protection: \[\]/i)
+  assert.match(brief, /null.*legacy|legacy.*null/i)
+  assert.match(brief, /breakage|split ends|hair damage|tangling|frizz/i)
+  assert.ok(
+    result.hard_rules.some(
+      (rule) => rule.rule_id === "topic.night_protection.low_friction_not_repair",
+    ),
+  )
 })
 
 test("loadAgentV2GuidancePackages rejects unknown package ids", async () => {
@@ -131,6 +155,7 @@ test("routine layer hint loads routine guidance even without an answer mode hint
   const ids = selectGuidancePackageIds({
     answer_mode_hint: null,
     categories: [],
+    topics: [],
     routine_layer: "basics",
     safety_mode: "normal",
   })
@@ -142,6 +167,7 @@ test("safety boundary answer mode hint loads safety guidance in normal safety mo
   const ids = selectGuidancePackageIds({
     answer_mode_hint: "safety_boundary",
     categories: [],
+    topics: [],
     routine_layer: null,
     safety_mode: "normal",
   })
@@ -154,6 +180,7 @@ test("broad general advice loads for advice, product, and routine turns", () => 
     const ids = selectGuidancePackageIds({
       answer_mode_hint,
       categories: [],
+      topics: [],
       routine_layer: null,
       safety_mode: "normal",
     })
@@ -163,6 +190,19 @@ test("broad general advice loads for advice, product, and routine turns", () => 
       `${answer_mode_hint} should load base.general_advice.v1`,
     )
   }
+})
+
+test("night protection topic hint loads night protection guidance", () => {
+  const ids = selectGuidancePackageIds({
+    answer_mode_hint: "general_advice",
+    categories: [],
+    topics: ["night_protection"],
+    routine_layer: null,
+    safety_mode: "normal",
+  })
+
+  assert.ok(ids.includes("base.general_advice.v1"))
+  assert.ok(ids.includes("topic.night_protection.v1"))
 })
 
 test("routine guidance keeps broad basics answers profile-linked and staged", async () => {
