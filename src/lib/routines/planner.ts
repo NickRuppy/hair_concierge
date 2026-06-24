@@ -176,7 +176,6 @@ const NIGHT_PROTECTION_TERMS = [
   "pineapple",
   "hairhomie",
   "hair homie",
-  "laengenschutz",
   "längenschutz",
   "spitzenschutz",
 ]
