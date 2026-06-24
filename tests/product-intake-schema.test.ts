@@ -13,6 +13,11 @@ const migrationSql = migrationFiles
   .map((file) => readFileSync(join(migrationsDir, file), "utf8"))
   .join("\n")
 const normalizedSql = migrationSql.replace(/\s+/g, " ").toLowerCase()
+const phaseOneMigrationSql = readFileSync(
+  join(migrationsDir, "20260612130000_product_intake_submissions.sql"),
+  "utf8",
+)
+const normalizedPhaseOneSql = phaseOneMigrationSql.replace(/\s+/g, " ").toLowerCase()
 
 function assertIncludes(fragment: string) {
   const escapedFragment = fragment
@@ -270,10 +275,13 @@ test("product intake migration keeps raw submissions service/admin only and stor
   assert.doesNotMatch(normalizedSql, /name\s+like\s+'tmp\/'\s+\|\|\s+auth\.uid\(\)::text/)
 })
 
-test("product intake migration stays inside the phase 1 schema boundary", () => {
-  assert.doesNotMatch(normalizedSql, /insert\s+into\s+public\.products/)
-  assert.doesNotMatch(normalizedSql, /create\s+or\s+replace\s+function\s+public\.match_products/)
-  assert.doesNotMatch(normalizedSql, /alter\s+table\s+public\.product_\w+_specs/)
-  assert.doesNotMatch(normalizedSql, /recommendation/)
-  assert.doesNotMatch(normalizedSql, /notification_sent_at\s*=\s*now\(\)/)
+test("phase 1 product intake migration stays inside the submission foundation boundary", () => {
+  assert.doesNotMatch(normalizedPhaseOneSql, /insert\s+into\s+public\.products/)
+  assert.doesNotMatch(
+    normalizedPhaseOneSql,
+    /create\s+or\s+replace\s+function\s+public\.match_products/,
+  )
+  assert.doesNotMatch(normalizedPhaseOneSql, /alter\s+table\s+public\.product_\w+_specs/)
+  assert.doesNotMatch(normalizedPhaseOneSql, /recommendation/)
+  assert.doesNotMatch(normalizedPhaseOneSql, /notification_sent_at\s*=\s*now\(\)/)
 })

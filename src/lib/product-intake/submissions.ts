@@ -320,7 +320,28 @@ function collectObsoleteCommittedImagePaths(params: {
   )
 }
 
-function isSameOnboardingUsageEdit(params: {
+function isSamePendingUsageEdit(params: {
+  input: ProductIntakeSubmissionInput
+  existingUsage: ProductIntakeUsageRow | null
+}) {
+  const expectedSubmissionId =
+    params.input && "existing_submission_id" in params.input
+      ? (params.input.existing_submission_id ?? null)
+      : null
+
+  return Boolean(
+    params.existingUsage &&
+    params.existingUsage.product_submission_id &&
+    (!expectedSubmissionId ||
+      expectedSubmissionId === params.existingUsage.product_submission_id) &&
+    (params.existingUsage.match_status === "pending_review" ||
+      params.existingUsage.match_status === "needs_more_info") &&
+    "existing_usage_id" in params.input &&
+    params.input.existing_usage_id === params.existingUsage.id,
+  )
+}
+
+function isSameOnboardingUsageReference(params: {
   source: ProductSubmissionSource
   input: ProductIntakeSubmissionInput
   existingUsage: ProductIntakeUsageRow | null
@@ -387,7 +408,11 @@ async function updatePendingSubmissionInPlace(params: {
     submissionId,
     params.userId,
   )
-  if (!previousSubmission || previousSubmission.status !== "pending_review") {
+  if (
+    !previousSubmission ||
+    (previousSubmission.status !== "pending_review" &&
+      previousSubmission.status !== "needs_more_info")
+  ) {
     return null
   }
 
@@ -466,6 +491,13 @@ async function updatePendingSubmissionInPlace(params: {
         params.input.intake_method === "photo" && barcodeImagePath ? "uncertain" : null,
       barcode_image_validation_metadata: {},
       status: "pending_review",
+      reviewed_at: null,
+      reviewed_by: null,
+      review_notes: null,
+      user_facing_resolution_reason: null,
+      user_facing_next_step: null,
+      user_facing_missing_fields: [],
+      notification_sent_at: null,
       intake_history: [
         ...(Array.isArray(previousSubmission.intake_history)
           ? previousSubmission.intake_history
@@ -626,8 +658,7 @@ async function createPendingSubmission(params: {
 
   if (
     params.existingUsage &&
-    isSameOnboardingUsageEdit({
-      source: params.source,
+    isSamePendingUsageEdit({
       input: params.input,
       existingUsage: params.existingUsage,
     })
@@ -763,9 +794,15 @@ export async function submitProductIntake(
     existingUsage &&
     isTrackedUsage(existingUsage) &&
     !(
-      params.source === "onboarding" &&
-      "existing_usage_id" in params.input &&
-      params.input.existing_usage_id === existingUsage.id
+      isSameOnboardingUsageReference({
+        source: params.source,
+        input: params.input,
+        existingUsage,
+      }) ||
+      isSamePendingUsageEdit({
+        input: params.input,
+        existingUsage,
+      })
     ) &&
     params.input.replace_existing_confirmed !== true
   ) {

@@ -97,14 +97,29 @@ export const onboardingProductIntakeSubmissionSchema = z
     }
   })
 
-export const chatProductIntakeSubmissionSchema = z.discriminatedUnion("intake_method", [
-  manualProductIntakeBaseSchema.extend({
-    source_conversation_id: uuidString.optional(),
-  }),
-  photoProductIntakeBaseSchema.extend({
-    source_conversation_id: uuidString.optional(),
-  }),
-])
+export const chatProductIntakeSubmissionSchema = z
+  .discriminatedUnion("intake_method", [
+    manualProductIntakeBaseSchema.extend({
+      source_conversation_id: uuidString.optional(),
+      existing_usage_id: uuidString.optional(),
+      existing_submission_id: uuidString.optional(),
+    }),
+    photoProductIntakeBaseSchema.extend({
+      front_image_path: uploadPathString.optional(),
+      source_conversation_id: uuidString.optional(),
+      existing_usage_id: uuidString.optional(),
+      existing_submission_id: uuidString.optional(),
+    }),
+  ])
+  .superRefine((value, ctx) => {
+    if (value.intake_method === "photo" && !value.front_image_path && !value.existing_usage_id) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["front_image_path"],
+        message: "Vorderseitenfoto ist erforderlich.",
+      })
+    }
+  })
 
 export const onboardingProductIntakeCancelSchema = z.object({
   categories: z

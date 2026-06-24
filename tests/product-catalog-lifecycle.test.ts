@@ -10,6 +10,16 @@ test("active product without outgoing relationship is primary-eligible", () => {
   )
 })
 
+test("user-submitted product is not globally primary-eligible", () => {
+  assert.equal(
+    isEligibleForPrimaryRecommendation(
+      { is_active: true, lifecycle_status: "active", is_chaarlie_recommended: false },
+      new Set(),
+    ),
+    false,
+  )
+})
+
 test("discontinued product is not primary-eligible", () => {
   assert.equal(
     isEligibleForPrimaryRecommendation(

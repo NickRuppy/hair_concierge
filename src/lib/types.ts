@@ -264,6 +264,7 @@ export interface Product {
   shampoo_bucket_pairs?: ShampooBucketPair[] | null
   is_active: boolean
   lifecycle_status?: ProductLifecycleStatus | null
+  is_chaarlie_recommended?: boolean | null
   sort_order: number
   conditioner_specs?: ProductConditionerSpecs | null
   leave_in_specs?: ProductLeaveInSpecs | null
@@ -830,8 +831,15 @@ export type MessageDecisionContext = MessageRagContext
 export interface ProductIntakeOffer {
   id: string
   source: "chat"
-  reason: "product_lookup_not_found"
+  reason: "product_lookup_not_found" | "needs_more_info"
   category: ProductIntakeCategoryKey
+  frequency_range?: ProductFrequency | null
+  intake_method?: ProductIntakeMethod | null
+  submission_id?: string
+  existing_usage_id?: string | null
+  committed_front_image_path?: string | null
+  committed_barcode_image_path?: string | null
+  missing_fields?: string[]
   extracted_identity?: {
     brand_text?: string
     product_name_text?: string

@@ -24,6 +24,7 @@ export async function GET(request: Request) {
     .select("*", { count: "exact" })
     .eq("is_active", true)
     .eq("lifecycle_status", "active")
+    .eq("is_chaarlie_recommended", true)
     .order("sort_order", { ascending: true })
     .range(offset, offset + limit - 1)
 

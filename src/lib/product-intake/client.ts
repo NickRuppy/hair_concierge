@@ -87,9 +87,35 @@ export function canSubmitProductIntake(params: {
   productName: string
   frontImagePath?: string | null
   committedFrontImagePath?: string | null
+  barcodeImagePath?: string | null
+  committedBarcodeImagePath?: string | null
   existingUsageId?: string | null
+  missingFields?: string[] | null
 }) {
   if (!params.category || !params.frequency) return false
+  if (requiresMissingField(params.missingFields, ["brand", "marke"]) && !params.brandText.trim()) {
+    return false
+  }
+  if (
+    requiresMissingField(params.missingFields, ["product name", "product_name", "produktname"]) &&
+    !params.productName.trim()
+  ) {
+    return false
+  }
+  if (
+    requiresMissingField(params.missingFields, ["barcode", "ean"]) &&
+    !params.barcodeImagePath &&
+    !params.committedBarcodeImagePath
+  ) {
+    return false
+  }
+  if (
+    requiresMissingField(params.missingFields, ["front", "vorderseite"]) &&
+    !params.frontImagePath &&
+    !(params.committedFrontImagePath && params.existingUsageId)
+  ) {
+    return false
+  }
   if (params.method === "photo") {
     return Boolean(
       params.frontImagePath || (params.committedFrontImagePath && params.existingUsageId),
@@ -99,6 +125,13 @@ export function canSubmitProductIntake(params: {
     return params.brandText.trim().length > 0 && params.productName.trim().length > 0
   }
   return false
+}
+
+function requiresMissingField(missingFields: string[] | null | undefined, needles: string[]) {
+  return (missingFields ?? []).some((field) => {
+    const normalized = field.toLocaleLowerCase("de")
+    return needles.some((needle) => normalized.includes(needle))
+  })
 }
 
 export function buildProductIntakeSubmissionPayload(params: {
@@ -118,6 +151,7 @@ export function buildProductIntakeSubmissionPayload(params: {
   barcodeImageValidationMetadata?: ProductIntakeValidationMetadata
   sourceConversationId?: string | null
   existingUsageId?: string | null
+  existingSubmissionId?: string | null
   replaceExistingConfirmed?: boolean
 }): Record<string, unknown> {
   const common = {
@@ -127,6 +161,7 @@ export function buildProductIntakeSubmissionPayload(params: {
     ...(params.productLineId ? { product_line_id: params.productLineId } : {}),
     ...(params.sourceConversationId ? { source_conversation_id: params.sourceConversationId } : {}),
     ...(params.existingUsageId ? { existing_usage_id: params.existingUsageId } : {}),
+    ...(params.existingSubmissionId ? { existing_submission_id: params.existingSubmissionId } : {}),
     ...(params.replaceExistingConfirmed ? { replace_existing_confirmed: true } : {}),
   }
 

@@ -93,6 +93,14 @@ function categoryMatches(product: Product, categoryFilter: string[] | null): boo
   return !categoryFilter || (product.category ? categoryFilter.includes(product.category) : false)
 }
 
+export function isGloballyRecommendableProduct(product: Product): boolean {
+  return (
+    product.is_active !== false &&
+    product.is_chaarlie_recommended !== false &&
+    (product.lifecycle_status ?? "active") === "active"
+  )
+}
+
 function scoreProduct(
   product: Product,
   params: { thickness?: string; concerns?: string[] },
@@ -160,6 +168,8 @@ export async function matchProducts(params: ProductMatchParams): Promise<Matched
       .from("products")
       .select("*")
       .eq("is_active", true)
+      .eq("is_chaarlie_recommended", true)
+      .eq("lifecycle_status", "active")
       .order("sort_order", { ascending: true })
       .order("price_eur", { ascending: true, nullsFirst: false })
 
@@ -208,7 +218,8 @@ export async function matchShampooProducts(params: ShampooMatchParams): Promise<
 
     return ((data as ProductJoinRow[]) ?? [])
       .map(joinedProduct)
-      .filter((product): product is ProductRow => Boolean(product?.is_active))
+      .filter((product): product is ProductRow => Boolean(product))
+      .filter(isGloballyRecommendableProduct)
       .filter((product) => categoryMatches(product, CATEGORY_DB_MAP["shampoo"]))
       .map((product) => asMatchedProduct(product, 1))
       .sort(sortMatchedProducts)
@@ -244,7 +255,8 @@ export async function matchConditionerProducts(
 
     return ((data as ProductJoinRow[]) ?? [])
       .map(joinedProduct)
-      .filter((product): product is ProductRow => Boolean(product?.is_active))
+      .filter((product): product is ProductRow => Boolean(product))
+      .filter(isGloballyRecommendableProduct)
       .filter((product) => categoryMatches(product, CATEGORY_DB_MAP["conditioner"]))
       .map((product) => asMatchedProduct(product, 1))
       .sort(sortMatchedProducts)
@@ -279,7 +291,8 @@ export async function matchLeaveInProducts(params: LeaveInMatchParams): Promise<
 
     return ((data as ProductJoinRow[]) ?? [])
       .map(joinedProduct)
-      .filter((product): product is ProductRow => Boolean(product?.is_active))
+      .filter((product): product is ProductRow => Boolean(product))
+      .filter(isGloballyRecommendableProduct)
       .filter((product) => categoryMatches(product, CATEGORY_DB_MAP["leave_in"]))
       .map((product) => asMatchedProduct(product, 1))
       .sort(sortMatchedProducts)
@@ -313,7 +326,8 @@ export async function matchOilProducts(params: OilMatchParams): Promise<MatchedP
 
     return ((data as ProductJoinRow[]) ?? [])
       .map(joinedProduct)
-      .filter((product): product is ProductRow => Boolean(product?.is_active))
+      .filter((product): product is ProductRow => Boolean(product))
+      .filter(isGloballyRecommendableProduct)
       .filter((product) => categoryMatches(product, CATEGORY_DB_MAP["oil"]))
       .map((product) => asMatchedProduct(product, 1))
       .sort(sortMatchedProducts)

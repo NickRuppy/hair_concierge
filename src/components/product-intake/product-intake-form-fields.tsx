@@ -3,11 +3,12 @@
 import { Check, ImageUp, Keyboard, Loader2 } from "lucide-react"
 import type { ProductIntakeImageKind, ProductIntakeMethod } from "@/lib/product-intake/client"
 import type { ProductIntakeBrandOption } from "@/lib/product-intake/client"
+import { cn } from "@/lib/utils"
 
 export function ProductIntakeMethodToggle({
   value,
   onChange,
-  className = "mb-3 grid grid-cols-2 gap-2",
+  className = "mb-3 grid grid-cols-2 gap-1.5 rounded-xl bg-muted/70 p-1",
   buttonClassName = "flex min-h-[44px] items-center justify-center gap-2 rounded-lg border px-2 text-sm font-medium transition-colors",
 }: {
   value: ProductIntakeMethod | null
@@ -30,8 +31,8 @@ export function ProductIntakeMethodToggle({
             onClick={() => onChange(option.value)}
             className={`${buttonClassName} ${
               active
-                ? "border-secondary bg-secondary text-secondary-foreground"
-                : "border-border bg-background text-foreground hover:border-[var(--brand-plum)]/40"
+                ? "border-background bg-background text-foreground shadow-sm"
+                : "border-transparent bg-transparent text-muted-foreground hover:bg-background/60 hover:text-foreground"
             }`}
           >
             <Icon className="h-4 w-4" />
@@ -49,7 +50,9 @@ export function ProductIntakeImageFields({
   uploading,
   uploadError,
   onUpload,
-  labelClassName = "block rounded-lg border border-border bg-muted p-3 text-sm",
+  labelClassName = "block rounded-xl border border-border/80 bg-background px-3 py-3 text-sm text-foreground transition-colors",
+  frontLabelClassName,
+  barcodeLabelClassName,
   inputClassName = "sr-only",
   statusClassName = "flex items-center gap-2 text-xs text-muted-foreground",
   errorClassName = "text-xs text-destructive",
@@ -60,6 +63,8 @@ export function ProductIntakeImageFields({
   uploadError?: string | null
   onUpload: (kind: ProductIntakeImageKind, file: File | undefined) => void
   labelClassName?: string
+  frontLabelClassName?: string
+  barcodeLabelClassName?: string
   inputClassName?: string
   statusClassName?: string
   errorClassName?: string
@@ -71,7 +76,7 @@ export function ProductIntakeImageFields({
         ready={frontReady}
         kind="front"
         onUpload={onUpload}
-        labelClassName={labelClassName}
+        labelClassName={frontLabelClassName ?? labelClassName}
         inputClassName={inputClassName}
       />
       <ProductIntakeImageField
@@ -79,7 +84,7 @@ export function ProductIntakeImageFields({
         ready={barcodeReady}
         kind="barcode"
         onUpload={onUpload}
-        labelClassName={labelClassName}
+        labelClassName={barcodeLabelClassName ?? labelClassName}
         inputClassName={inputClassName}
       />
 
@@ -109,23 +114,39 @@ function ProductIntakeImageField({
   labelClassName: string
   inputClassName: string
 }) {
+  const inputIsHidden = inputClassName.split(/\s+/).includes("sr-only")
+
   return (
     <label className={labelClassName}>
-      <span className="mb-2 flex items-center justify-between gap-3">
-        {label}
-        {ready ? <Check className="h-4 w-4 text-emerald-600" /> : null}
-      </span>
-      <span className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-        <span className="rounded-full bg-secondary px-3 py-1.5 font-medium text-secondary-foreground">
-          {ready ? "Foto ersetzen" : "Foto auswählen"}
+      <span className="flex items-start justify-between gap-3">
+        <span>
+          <span className="block font-medium">{label}</span>
+          <span className="mt-0.5 block text-xs text-muted-foreground">
+            {ready ? "Bild liegt vor" : "Noch kein Bild ausgewählt"}
+          </span>
         </span>
-        <span>{ready ? "Bild hochgeladen" : "Noch kein Bild ausgewählt"}</span>
+        {ready ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
+            <Check className="h-3.5 w-3.5" />
+            Erledigt
+          </span>
+        ) : null}
       </span>
+
+      {inputIsHidden ? (
+        <span className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+          <span className="inline-flex rounded-full bg-secondary px-3 py-1.5 font-medium text-secondary-foreground">
+            {ready ? "Foto ersetzen" : "Foto auswählen"}
+          </span>
+          <span>JPG, PNG, WEBP oder HEIC</span>
+        </span>
+      ) : null}
+
       <input
         type="file"
         accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
         onChange={(event) => onUpload(kind, event.target.files?.[0])}
-        className={inputClassName}
+        className={cn(!inputIsHidden && "mt-3", inputClassName)}
       />
     </label>
   )
@@ -141,7 +162,9 @@ export function ProductIntakeBrandProductFields({
   onBrandTextChange,
   onProductNameChange,
   wrapperClassName = "grid gap-2 sm:grid-cols-2",
-  inputClassName = "w-full rounded-lg border border-border bg-muted px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground",
+  inputClassName = "w-full rounded-xl border border-border bg-background px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-[var(--brand-plum)]/50 focus:outline-none focus:ring-1 focus:ring-[var(--brand-plum)]/25",
+  brandInputClassName,
+  productInputClassName,
 }: {
   brandText: string
   productName: string
@@ -153,6 +176,8 @@ export function ProductIntakeBrandProductFields({
   onProductNameChange: (value: string) => void
   wrapperClassName?: string
   inputClassName?: string
+  brandInputClassName?: string
+  productInputClassName?: string
 }) {
   return (
     <>
@@ -163,14 +188,14 @@ export function ProductIntakeBrandProductFields({
           onChange={(event) => onBrandTextChange(event.target.value)}
           placeholder={brandPlaceholder}
           list={brandListId}
-          className={inputClassName}
+          className={brandInputClassName ?? inputClassName}
         />
         <input
           type="text"
           value={productName}
           onChange={(event) => onProductNameChange(event.target.value)}
           placeholder={productPlaceholder}
-          className={inputClassName}
+          className={productInputClassName ?? inputClassName}
         />
       </div>
       <datalist id={brandListId}>

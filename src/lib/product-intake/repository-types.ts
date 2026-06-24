@@ -67,6 +67,15 @@ export type ProductIntakeSubmissionRow = {
   researched_payload: JsonRecord
   intake_history: JsonRecord[]
   approved_product_id: string | null
+  reviewed_at?: string | null
+  reviewed_by?: string | null
+  review_notes?: string | null
+  user_facing_resolution_reason?: string | null
+  user_facing_next_step?: string | null
+  user_facing_missing_fields?: unknown[]
+  notification_sent_at?: string | null
+  cleanup_after?: string | null
+  photos_deleted_at?: string | null
   created_at?: string
   updated_at?: string
 }
