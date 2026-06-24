@@ -1,4 +1,5 @@
 import { createSupabaseClientFromEnv, flag, flagBool, parseArgs, requireFlag } from "./cli"
+import { flushProductIntakeSentry } from "@/lib/observability/product-intake"
 import { approveSubmissionById } from "./approve"
 import { loadSubmissionsByIds, validateSubmissionReady } from "./review-actions"
 
@@ -49,12 +50,17 @@ async function main() {
     }
   }
 
+  if (process.exitCode) {
+    await flushProductIntakeSentry()
+  }
+
   if (!apply) {
     console.log("Batch dry-run only. Re-run with --apply --confirm to approve selected rows.")
   }
 }
 
-main().catch((error) => {
+main().catch(async (error) => {
   console.error(error instanceof Error ? error.message : error)
+  await flushProductIntakeSentry()
   process.exitCode = 1
 })

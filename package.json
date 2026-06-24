@@ -54,6 +54,7 @@
     "products:intake:link-existing": "tsx scripts/product-intake/link-existing.ts",
     "products:intake:request-info": "tsx scripts/product-intake/request-info.ts",
     "products:intake:notify-pending": "tsx scripts/product-intake/notify-pending.ts",
+    "products:intake:promote": "tsx scripts/product-intake/promote.ts",
     "products:intake:cleanup-storage": "tsx scripts/product-intake/cleanup-storage.ts",
     "stress:smoke": "k6 run -e K6_PROFILE=smoke scripts/k6/launch-flow.js",
     "stress:average": "k6 run -e K6_PROFILE=average scripts/k6/launch-flow.js",

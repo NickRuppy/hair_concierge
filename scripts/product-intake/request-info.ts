@@ -8,6 +8,7 @@ import {
   printJson,
   requireFlag,
 } from "./cli"
+import { flushProductIntakeSentry } from "@/lib/observability/product-intake"
 import { notifyReviewResult, rejectSubmission, requestMoreInfo } from "./review-actions"
 
 async function readMissingFields(path: string | null): Promise<unknown[]> {
@@ -126,7 +127,8 @@ async function main() {
   })
 }
 
-main().catch((error) => {
+main().catch(async (error) => {
   console.error(error instanceof Error ? error.message : error)
+  await flushProductIntakeSentry()
   process.exitCode = 1
 })

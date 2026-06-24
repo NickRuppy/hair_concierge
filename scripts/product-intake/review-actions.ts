@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { join } from "node:path"
 
 import { sendProductIntakeReviewNotification } from "@/lib/product-intake/notifications"
+import { captureProductIntakeException } from "@/lib/observability/product-intake"
 import type {
   ProductIntakeFinalReviewedPayload,
   ProductIntakeTargetSpecOperation,
@@ -87,6 +88,18 @@ export async function approveReviewedSubmission(params: {
   })
 
   if (error) {
+    captureProductIntakeException(error, {
+      stage: "approve_reviewed_product",
+      submissionId: params.submission.id,
+      userId: params.submission.user_id,
+      source: params.submission.source,
+      sourceConversationId: params.submission.source_conversation_id,
+      category: params.submission.category,
+      intakeMethod: params.submission.intake_method,
+      status: params.submission.status,
+      reason: error.code ?? "rpc_error",
+      committed: false,
+    })
     throw new Error(`approve product submission ${params.submission.id}: ${error.message}`)
   }
 
@@ -110,6 +123,13 @@ export async function linkExistingProduct(params: {
   })
 
   if (error) {
+    captureProductIntakeException(error, {
+      stage: "link_existing_product",
+      submissionId: params.submissionId,
+      productId: params.productId,
+      reason: error.code ?? "rpc_error",
+      committed: false,
+    })
     throw new Error(`link product submission ${params.submissionId}: ${error.message}`)
   }
 
@@ -137,6 +157,12 @@ export async function requestMoreInfo(params: {
   })
 
   if (error) {
+    captureProductIntakeException(error, {
+      stage: "request_more_info",
+      submissionId: params.submissionId,
+      reason: error.code ?? "rpc_error",
+      committed: false,
+    })
     throw new Error(`request info for product submission ${params.submissionId}: ${error.message}`)
   }
 
@@ -162,6 +188,12 @@ export async function rejectSubmission(params: {
   })
 
   if (error) {
+    captureProductIntakeException(error, {
+      stage: "reject_submission",
+      submissionId: params.submissionId,
+      reason: error.code ?? "rpc_error",
+      committed: false,
+    })
     throw new Error(`reject product submission ${params.submissionId}: ${error.message}`)
   }
 
@@ -211,5 +243,21 @@ export async function appendProductAdditionRecord(record: AdditionRecord): Promi
 }
 
 export async function notifyReviewResult(supabase: SupabaseClient, submission: ProductSubmission) {
-  return sendProductIntakeReviewNotification(supabase, submission)
+  try {
+    return await sendProductIntakeReviewNotification(supabase, submission)
+  } catch (error) {
+    captureProductIntakeException(error, {
+      stage: "send_review_notification",
+      submissionId: submission.id,
+      approvedProductId: submission.approved_product_id,
+      userId: submission.user_id,
+      source: submission.source,
+      sourceConversationId: submission.source_conversation_id,
+      category: submission.category,
+      intakeMethod: submission.intake_method,
+      status: submission.status,
+      notificationResult: "failed",
+    })
+    throw error
+  }
 }
