@@ -217,6 +217,31 @@ test("lookup offers product intake only for a precise supported product not foun
   })
 })
 
+test("lookup treats unresolved brand plus generic category name as enough identity for intake", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "conditioner",
+      brand_text: "Jean & Lean",
+      product_name_text: "Conditioner",
+    },
+    catalog,
+    brandCatalog,
+    offerId: "offer-unknown-brand",
+  })
+
+  assert.equal(result.status, "not_found")
+  assert.deepEqual(result.intake_offer, {
+    id: "offer-unknown-brand",
+    source: "chat",
+    reason: "product_lookup_not_found",
+    category: "conditioner",
+    extracted_identity: {
+      brand_text: "Jean & Lean",
+      product_name_text: "Conditioner",
+    },
+  })
+})
+
 test("lookup asks for more identity before offering intake for generic brand category mentions", () => {
   const pantene = lookupProductCandidate({
     input: {

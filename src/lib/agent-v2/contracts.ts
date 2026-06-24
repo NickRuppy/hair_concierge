@@ -187,6 +187,7 @@ export const AgentV2RequestInterpretationSchema = z.strictObject({
   requested_product_count: z.number().int().min(0).max(6).nullable(),
   count_policy: AgentV2CountPolicySchema,
   evidence_quote: z.string().min(1),
+  specific_product_candidate: z.boolean(),
   confidence: z.number().min(0).max(1),
 })
 

@@ -7,6 +7,7 @@ import {
   ProductIntakeImageFields,
   ProductIntakeMethodToggle,
 } from "@/components/product-intake/product-intake-form-fields"
+import { DiscreteSlider } from "@/components/ui/slider"
 import { PRODUCT_FREQUENCY_OPTIONS } from "@/lib/vocabulary"
 import type { ProductFrequency } from "@/lib/vocabulary"
 import {
@@ -16,6 +17,19 @@ import {
 } from "@/lib/product-intake/client"
 import { useProductIntakeBrandOptions } from "@/hooks/use-product-intake-brand-options"
 import type { OnboardingProductIntakeMethod } from "@/lib/onboarding/store"
+
+const PRODUCT_FREQUENCY_SLIDER_STOPS = PRODUCT_FREQUENCY_OPTIONS.map((option) => ({
+  ...option,
+  shortLabel: option.label
+    .replace("Seltener als 1x/Monat", "<1x/M")
+    .replace("Ca. 1x/Monat", "1x/M")
+    .replace("Ca. alle 2 Wochen", "2W")
+    .replace("1x/Woche", "1x/W")
+    .replace("2x/Woche", "2x/W")
+    .replace("3-4x/Woche", "3-4x/W")
+    .replace("5-6x/Woche", "5-6x/W")
+    .replace("Täglich", "tgl."),
+}))
 
 interface ProductDrilldownScreenProps {
   category: string
@@ -189,23 +203,33 @@ export function ProductDrilldownScreen({
             uploadError={uploadError}
             onUpload={handleUpload}
             labelClassName="block rounded-xl border border-border bg-muted p-4 text-sm font-medium text-foreground"
-            inputClassName="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-full file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-secondary-foreground"
             statusClassName="flex items-center gap-2 text-sm text-[var(--text-sub)]"
             errorClassName="text-sm text-destructive"
           />
 
-          <ProductIntakeBrandProductFields
-            brandText={brandText}
-            productName={productName}
-            brandOptions={brandOptions}
-            brandListId={brandListId}
-            brandPlaceholder="Marke optional"
-            productPlaceholder="Produktname optional"
-            onBrandTextChange={handleBrandTextChange}
-            onProductNameChange={onProductNameChange}
-            wrapperClassName="grid gap-3 sm:grid-cols-2"
-            inputClassName="w-full rounded-xl border border-border bg-muted px-4 py-3 text-base text-foreground placeholder:text-[var(--text-caption)] focus:border-[var(--brand-plum)]/50 focus:outline-none focus:ring-1 focus:ring-[var(--brand-plum)]/30 transition-colors"
-          />
+          <div className="space-y-2 pt-1">
+            <p className="text-sm font-medium text-foreground">
+              Optionale Zusatzinfos{" "}
+              <span className="font-normal text-muted-foreground">
+                helfen uns, dein Produkt schneller zu erkennen.
+              </span>
+            </p>
+            <ProductIntakeBrandProductFields
+              brandText={brandText}
+              productName={productName}
+              brandOptions={brandOptions}
+              brandListId={brandListId}
+              brandLabel="Marke"
+              productLabel="Produktname"
+              brandPlaceholder="Marke (optional)"
+              productPlaceholder="Produktname (optional)"
+              onBrandTextChange={handleBrandTextChange}
+              onProductNameChange={onProductNameChange}
+              wrapperClassName="space-y-3"
+              labelTextClassName="sr-only"
+              inputClassName="w-full rounded-xl border border-border bg-muted px-4 py-3 text-base text-foreground placeholder:text-[var(--text-caption)] focus:border-[var(--brand-plum)]/50 focus:outline-none focus:ring-1 focus:ring-[var(--brand-plum)]/30 transition-colors"
+            />
+          </div>
         </div>
       ) : null}
 
@@ -217,8 +241,10 @@ export function ProductDrilldownScreen({
               productName={productName}
               brandOptions={brandOptions}
               brandListId={brandListId}
-              brandPlaceholder="Marke"
-              productPlaceholder="Produktname"
+              brandLabel="Marke"
+              productLabel="Produktname"
+              brandPlaceholder="z.B. Garnier"
+              productPlaceholder="z.B. Fructis Hair Food Aloe Vera"
               onBrandTextChange={handleBrandTextChange}
               onProductNameChange={onProductNameChange}
               wrapperClassName="space-y-3"
@@ -237,23 +263,20 @@ export function ProductDrilldownScreen({
       ) : null}
 
       <div className="animate-fade-in-up mb-8" style={{ animationDelay: "160ms" }}>
-        <p className="text-sm text-[var(--text-sub)] mb-3">Wie oft?</p>
-        <div className="flex flex-wrap gap-2">
-          {PRODUCT_FREQUENCY_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => onFrequencyChange(option.value)}
-              className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
-                frequency === option.value
-                  ? "border-secondary bg-secondary text-secondary-foreground"
-                  : "border-border text-muted-foreground hover:border-border hover:text-foreground"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className="mb-3 flex items-baseline justify-between gap-3">
+          <p className="text-sm font-medium text-[var(--text-sub)]">Wie oft?</p>
+          <p className="text-sm text-muted-foreground">
+            {frequency
+              ? PRODUCT_FREQUENCY_OPTIONS.find((option) => option.value === frequency)?.label
+              : "Bitte auswählen"}
+          </p>
         </div>
+        <DiscreteSlider
+          stops={PRODUCT_FREQUENCY_SLIDER_STOPS}
+          value={frequency ?? undefined}
+          onValueChange={(value) => onFrequencyChange(value as ProductFrequency)}
+          aria-label="Nutzungshäufigkeit"
+        />
       </div>
 
       <div className="animate-fade-in-up" style={{ animationDelay: "220ms" }}>

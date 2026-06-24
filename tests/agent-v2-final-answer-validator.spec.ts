@@ -91,6 +91,7 @@ function requestInterpretation(
     requested_product_count: number | null
     count_policy: "none" | "exact" | "default" | "cap"
     evidence_quote: string
+    specific_product_candidate: boolean
     confidence: number
   }> = {},
 ) {
@@ -102,6 +103,7 @@ function requestInterpretation(
     requested_product_count: null,
     count_policy: "default",
     evidence_quote: "Welches Shampoo passt zu mir?",
+    specific_product_candidate: false,
     confidence: 0.9,
     ...overrides,
   }
@@ -522,30 +524,17 @@ test("AgentV2 validator blocks confirmable next step without pending follow-up a
   assert.match(error.repair_hint ?? "", /product_recommendation/)
 })
 
-test("validator blocks named product detail answers when lookup was not called", () => {
+test("validator does not require lookup from deterministic named-product context alone", () => {
   const result = validateAgentV2FinalAnswer(
-    {
-      ...baseAnswer,
-      request_interpretation: requestInterpretation({
-        primary_intent: "product_recommendation",
-        product_request_kind: "product_detail",
-        requested_product_count: 1,
-        count_policy: "exact",
-        evidence_quote: "Test Shampoo",
-      }),
-    },
+    placementOnlyAdviceAnswer(
+      "Passt Test Shampoo zu mir?",
+      "Bei feinem Haar zählt vor allem, dass Pflege nicht zu schwer wird.",
+    ),
     {
       ...baseValidationContext,
       latestUserMessage: "Passt Test Shampoo zu mir?",
       recentEvidenceText: "Passt Test Shampoo zu mir?",
-      toolCallHistory: [
-        selectProductsToolCall({
-          product_request_kind: "product_detail",
-          requested_product_count: 1,
-          count_policy: "exact",
-          evidence_quote: "Test Shampoo",
-        }),
-      ],
+      toolCallHistory: [],
       namedProductContext: {
         display_name: "Test Shampoo",
         category: "shampoo",
@@ -554,8 +543,598 @@ test("validator blocks named product detail answers when lookup was not called",
     },
   )
 
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_required"),
+    false,
+  )
+})
+
+test("validator requires lookup when visible answer claims about deterministic own-product context", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Shampoo. Passt das zu mir?",
+      "Test Shampoo ist als Kategorie wahrscheinlich okay, wenn deine Kopfhaut es toleriert.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Shampoo. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Shampoo. Passt das zu mir?",
+      toolCallHistory: [],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_required"),
+    true,
+  )
+})
+
+test("validator requires lookup from model-owned product candidate metadata without named-product context", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "jean & lean conditioner",
+        specific_product_candidate: true,
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      selectedProductProjections: [],
+      toolCallHistory: [],
+      namedProductContext: null,
+    },
+  )
+
   assert.equal(result.ok, false)
   assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_required"))
+})
+
+test("validator does not require duplicate lookup when model-owned product candidate already called lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "jean & lean conditioner",
+        specific_product_candidate: true,
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      toolCallHistory: [
+        {
+          ...lookupProductCandidateToolCall(),
+          arguments: {
+            category: "conditioner",
+            brand_text: "Jean & Lean",
+            product_name_text: "Conditioner",
+            reason: "User asks whether their own named product suits them.",
+            evidence_quote: "jean & lean conditioner",
+          },
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "conditioner",
+          input_identity: {
+            category: "conditioner",
+            brand_text: "Jean & Lean",
+            product_name_text: "Conditioner",
+            evidence_quote: "jean & lean conditioner",
+          },
+          product: { id: "prod_1", name: "Jean & Lean Conditioner" },
+        },
+      ],
+      namedProductContext: null,
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_required"),
+    false,
+  )
+})
+
+test("validator matches lookup to mentioned product identity even when answer target category differs", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Olaplex No.4 Shampoo",
+        specific_product_candidate: true,
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "Ich nutze Olaplex No.4 Shampoo, welchen Conditioner empfiehlst du dazu?",
+      recentEvidenceText: "Ich nutze Olaplex No.4 Shampoo, welchen Conditioner empfiehlst du dazu?",
+      selectedProductProjections: [],
+      toolCallHistory: [
+        {
+          ...lookupProductCandidateToolCall(),
+          arguments: {
+            category: "shampoo",
+            brand_text: "Olaplex",
+            product_name_text: "No.4 Shampoo",
+            reason: "User mentions a concrete shampoo while asking for conditioner advice.",
+            evidence_quote: "Olaplex No.4 Shampoo",
+          },
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Olaplex",
+            product_name_text: "No.4 Shampoo",
+            evidence_quote: "Olaplex No.4 Shampoo",
+          },
+          product: { id: "olaplex-no4", name: "Olaplex No.4 Shampoo" },
+        },
+      ],
+      namedProductContext: null,
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_required"),
+    false,
+  )
+})
+
+test("validator does not treat a different product lookup as satisfying model-owned candidate lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "jean & lean conditioner",
+        specific_product_candidate: true,
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      selectedProductProjections: [],
+      toolCallHistory: [
+        {
+          ...lookupProductCandidateToolCall(),
+          arguments: {
+            category: "conditioner",
+            brand_text: "Pantene",
+            product_name_text: "Miracles Conditioner",
+            reason: "Wrong candidate.",
+            evidence_quote: "Pantene Miracles Conditioner",
+          },
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "conditioner",
+          input_identity: {
+            brand_text: "Pantene",
+            product_name_text: "Miracles Conditioner",
+          },
+          product: { id: "pantene-conditioner", name: "Pantene Miracles Conditioner" },
+        },
+      ],
+      namedProductContext: null,
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_required"))
+})
+
+test("validator does not use lookup evidence quote alone as candidate identity", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "jean & lean conditioner",
+        specific_product_candidate: true,
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      selectedProductProjections: [],
+      toolCallHistory: [
+        {
+          ...lookupProductCandidateToolCall(),
+          arguments: {
+            category: "conditioner",
+            brand_text: "Pantene",
+            product_name_text: "Miracles Conditioner",
+            reason: "Wrong candidate with copied evidence.",
+            evidence_quote: "jean & lean conditioner",
+          },
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "conditioner",
+          input_identity: {
+            category: "conditioner",
+            brand_text: "Pantene",
+            product_name_text: "Miracles Conditioner",
+            evidence_quote: "jean & lean conditioner",
+          },
+          product: { id: "pantene-conditioner", name: "Pantene Miracles Conditioner" },
+        },
+      ],
+      namedProductContext: null,
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_required"))
+})
+
+test("validator does not use generic product name fragment alone when lookup brand differs", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "jean & lean conditioner",
+        specific_product_candidate: true,
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      selectedProductProjections: [],
+      toolCallHistory: [
+        {
+          ...lookupProductCandidateToolCall(),
+          arguments: {
+            category: "conditioner",
+            brand_text: "Pantene",
+            product_name_text: "Conditioner",
+            reason: "Wrong generic candidate with copied evidence.",
+            evidence_quote: "jean & lean conditioner",
+          },
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "conditioner",
+          input_identity: {
+            category: "conditioner",
+            brand_text: "Pantene",
+            product_name_text: "Conditioner",
+            evidence_quote: "jean & lean conditioner",
+          },
+          product: { id: "pantene-conditioner", name: "Pantene Conditioner" },
+        },
+      ],
+      namedProductContext: null,
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_required"))
+})
+
+test("validator does not use product-name-only evidence when lookup brand differs", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "miracles conditioner",
+        specific_product_candidate: true,
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage:
+        "kannst du mir sagen, was du von meinem jean & lean miracles conditioner hältst",
+      recentEvidenceText:
+        "kannst du mir sagen, was du von meinem jean & lean miracles conditioner hältst",
+      selectedProductProjections: [],
+      toolCallHistory: [
+        {
+          ...lookupProductCandidateToolCall(),
+          arguments: {
+            category: "conditioner",
+            brand_text: "Pantene",
+            product_name_text: "Miracles Conditioner",
+            reason: "Wrong candidate with overlapping product name.",
+            evidence_quote: "miracles conditioner",
+          },
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "conditioner",
+          input_identity: {
+            category: "conditioner",
+            brand_text: "Pantene",
+            product_name_text: "Miracles Conditioner",
+            evidence_quote: "miracles conditioner",
+          },
+          product: { id: "pantene-conditioner", name: "Pantene Miracles Conditioner" },
+        },
+      ],
+      namedProductContext: null,
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_required"))
+})
+
+test("validator requires lookup when constraint-blocked answer makes named-product claim", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "constraint_blocked",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "shampoo",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Test Shampoo",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+        used_product_tool: false,
+        product_ids: [],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Test Shampoo passt wahrscheinlich gut, wenn deine Kopfhaut es toleriert.",
+        blocking_constraints: ["product_not_verified"],
+        safe_alternative_de: "Du kannst es zur Produktprüfung hinzufügen.",
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Shampoo. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Shampoo. Passt das zu mir?",
+      toolCallHistory: [],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_required"))
+})
+
+test("validator does not use stale recent evidence text to satisfy a different product lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "jean & lean conditioner",
+        specific_product_candidate: true,
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText:
+        "Vorher ging es um Pantene Miracles Conditioner. Jetzt: jean & lean conditioner.",
+      selectedProductProjections: [],
+      toolCallHistory: [
+        {
+          ...lookupProductCandidateToolCall(),
+          arguments: {
+            category: "conditioner",
+            brand_text: "Pantene",
+            product_name_text: "Miracles Conditioner",
+            reason: "Stale previous candidate.",
+            evidence_quote: "Pantene Miracles Conditioner",
+          },
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "conditioner",
+          input_identity: {
+            category: "conditioner",
+            brand_text: "Pantene",
+            product_name_text: "Miracles Conditioner",
+          },
+          product: { id: "pantene-conditioner", name: "Pantene Miracles Conditioner" },
+        },
+      ],
+      namedProductContext: null,
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_required"))
+})
+
+test("validator requires lookup before clarification for exact own-product suitability turns", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "clarification",
+      request_interpretation: requestInterpretation({
+        primary_intent: "clarification",
+        product_request_kind: "product_detail",
+        routine_intent: "none",
+        care_category: "conditioner",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Ich benutze Test Conditioner",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("clarification"),
+        used_product_tool: false,
+        product_ids: [],
+      },
+      payload: {
+        user_facing_answer_de: "Was möchtest du genau über das Produkt wissen?",
+        question_de: "Was möchtest du genau über das Produkt wissen?",
+        missing_keys: ["request_focus"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Conditioner. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Conditioner. Passt das zu mir?",
+      toolCallHistory: [],
+      namedProductContext: {
+        display_name: "Test Conditioner",
+        category: "conditioner",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_required"))
+})
+
+test("validator does not require lookup for background current-use product mentions", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Shampoo. Wie oft sollte ich meine Haare waschen?",
+      "Für die Waschfrequenz zählt vor allem deine Kopfhaut; starte nach Bedarf und beobachte, wie schnell der Ansatz nachfettet.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Shampoo. Wie oft sollte ich meine Haare waschen?",
+      recentEvidenceText: "Ich benutze Test Shampoo. Wie oft sollte ich meine Haare waschen?",
+      toolCallHistory: [],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "background",
+      },
+    },
+  )
+
+  assert.equal(result.ok, true)
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_required"),
+    false,
+  )
+})
+
+test("validator does not require lookup for background product clarification answers", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "clarification",
+      request_interpretation: requestInterpretation({
+        primary_intent: "clarification",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "shampoo",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Ich benutze Test Shampoo",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("clarification"),
+        used_product_tool: false,
+        product_ids: [],
+      },
+      payload: {
+        user_facing_answer_de: "Meinst du die Kopfhaut oder eher die Längen?",
+        question_de: "Meinst du die Kopfhaut oder eher die Längen?",
+        missing_keys: ["focus_area"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Shampoo. Was ist besser?",
+      recentEvidenceText: "Ich benutze Test Shampoo. Was ist besser?",
+      toolCallHistory: [],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "background",
+      },
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_required"),
+    false,
+  )
 })
 
 test("validator does not require unavailable product lookup when intake is disabled", () => {
@@ -587,6 +1166,7 @@ test("validator does not require unavailable product lookup when intake is disab
         display_name: "Test Shampoo",
         category: "shampoo",
         plausible_exact_name: true,
+        named_product_intent: "evaluation",
       },
     },
   )
@@ -665,6 +1245,100 @@ test("validator allows claims for exact lookup products when another lookup is u
   )
 })
 
+test("validator does not let an unresolved mentioned-product lookup block unrelated grounded recommendations", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "specific_products",
+        care_category: "conditioner",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "welchen Conditioner empfiehlst du dazu",
+        specific_product_candidate: false,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer(
+          "product_recommendation",
+          "conditioner",
+        ),
+        product_ids: ["conditioner_1"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de: "**Test Conditioner** ist eine passende Conditioner-Option dazu.",
+        recommendations: [
+          {
+            product_id: "conditioner_1",
+            reason_de: "Passt als Conditioner zu deiner Anfrage.",
+            usage_de: null,
+            caveat_de: null,
+          },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage:
+        "Ich nutze Acme Hydra Glow Shampoo, welchen Conditioner empfiehlst du dazu?",
+      recentEvidenceText:
+        "Ich nutze Acme Hydra Glow Shampoo, welchen Conditioner empfiehlst du dazu?",
+      toolCallHistory: [
+        {
+          ...lookupProductCandidateToolCall(),
+          arguments: {
+            category: "shampoo",
+            brand_text: "Acme",
+            product_name_text: "Hydra Glow Shampoo",
+            reason: "User mentioned a shampoo as context for a conditioner ask.",
+            evidence_quote: "Acme Hydra Glow Shampoo",
+          },
+        },
+        selectProductsToolCall({
+          category: "conditioner",
+          reason: "User asks for a conditioner recommendation.",
+          user_request: "welchen Conditioner empfiehlst du dazu",
+          product_request_kind: "specific_products",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "welchen Conditioner empfiehlst du dazu",
+        }),
+      ],
+      selectedProductProjections: [
+        {
+          valid_product_ids: ["conditioner_1"],
+          products: [
+            {
+              product_id: "conditioner_1",
+              name: "Test Conditioner",
+            },
+          ],
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Acme",
+            product_name_text: "Hydra Glow Shampoo",
+            evidence_quote: "Acme Hydra Glow Shampoo",
+          },
+          product: null,
+        },
+      ],
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+  )
+})
+
 test("validator blocks named product detail prose after unresolved product lookup", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -704,6 +1378,7 @@ test("validator blocks named product detail prose after unresolved product looku
         display_name: "Test Shampoo",
         category: "shampoo",
         plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
       },
     },
   )
@@ -711,6 +1386,388 @@ test("validator blocks named product detail prose after unresolved product looku
   assert.equal(result.ok, false)
   assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
 })
+
+test("validator blocks exact named-product property claims after unresolved lookup despite general-advice classification", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Shampoo. Passt das zu mir?",
+      "Test Shampoo spendet Feuchtigkeit und passt deshalb gut zu deinem Profil.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Shampoo. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Shampoo. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+})
+
+test("validator blocks pronoun product suitability claims after unresolved lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Shampoo. Passt das zu mir?",
+      "Das Produkt passt gut zu deinem Profil.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Shampoo. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Shampoo. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+})
+
+test("validator blocks pronoun product claims after unresolved lookup with structured input identity", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...placementOnlyAdviceAnswer(
+        "Ich benutze Acme Hydra Glow Shampoo. Passt das zu mir?",
+        "Das Shampoo passt gut zu deinem Profil.",
+      ),
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "none",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Passt das zu mir?",
+        specific_product_candidate: false,
+      }),
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Acme Hydra Glow Shampoo. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Acme Hydra Glow Shampoo. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Acme",
+            product_name_text: "Hydra Glow Shampoo",
+            evidence_quote: "Acme Hydra Glow Shampoo",
+          },
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Acme Hydra Glow Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+})
+
+test("validator blocks category-term product property claims after unresolved lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Conditioner. Passt das zu mir?",
+      "Der Conditioner spendet Feuchtigkeit und beschwert nicht.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Conditioner. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Conditioner. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "conditioner",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Conditioner",
+        category: "conditioner",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+})
+
+test("validator blocks named-product use claims after unresolved lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Shampoo. Passt das zu mir?",
+      "Test Shampoo kannst du weiterverwenden.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Shampoo. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Shampoo. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+})
+
+test("validator blocks product-phrase use claims after unresolved lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Shampoo. Passt das zu mir?",
+      "Das Produkt kannst du weiter nutzen.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Shampoo. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Shampoo. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+})
+
+test("validator blocks pronoun keep claims after unresolved lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Shampoo. Passt das zu mir?",
+      "Du kannst ihn behalten.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Shampoo. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Shampoo. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+})
+
+test("validator blocks category-term routine keep claims after unresolved lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Conditioner. Passt das zu mir?",
+      "Den Conditioner kannst du in der Routine lassen.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Conditioner. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Conditioner. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "conditioner",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Conditioner",
+        category: "conditioner",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+})
+
+test("validator allows generic category context after unresolved lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Conditioner. Passt das zu mir?",
+      "Allgemein gilt: Conditioner können Längen pflegen; das konkrete Produkt bewerte ich ohne Treffer nicht.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Conditioner. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Conditioner. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "conditioner",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Conditioner",
+        category: "conditioner",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator allows cautious product deferrals after unresolved lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Test Shampoo. Passt das zu mir?",
+      "Ich bewerte das Produkt ohne Treffer nicht.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Test Shampoo. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Test Shampoo. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Test Shampoo",
+        category: "shampoo",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, true)
+})
+
+const categoryTermClaimCases = [
+  { category: "shampoo", term: "Shampoo" },
+  { category: "conditioner", term: "Conditioner" },
+  { category: "mask", term: "Maske" },
+  { category: "leave_in", term: "Leave-in" },
+  { category: "oil", term: "Öl" },
+  { category: "bondbuilder", term: "Bondbuilder" },
+  { category: "deep_cleansing_shampoo", term: "Tiefenreinigungsshampoo" },
+  { category: "dry_shampoo", term: "Trockenshampoo" },
+  { category: "peeling", term: "Peeling" },
+] as const
+
+for (const testCase of categoryTermClaimCases) {
+  test(`validator covers unresolved category-term use claims for ${testCase.category}`, () => {
+    const result = validateAgentV2FinalAnswer(
+      placementOnlyAdviceAnswer(
+        `Ich benutze Test ${testCase.term}. Passt das zu mir?`,
+        `Den ${testCase.term} kannst du weiterverwenden.`,
+      ),
+      {
+        ...baseValidationContext,
+        selectedProductProjections: [],
+        latestUserMessage: `Ich benutze Test ${testCase.term}. Passt das zu mir?`,
+        recentEvidenceText: `Ich benutze Test ${testCase.term}. Passt das zu mir?`,
+        toolCallHistory: [lookupProductCandidateToolCall()],
+        productLookupResults: [
+          {
+            status: "not_found",
+            category: testCase.category,
+            product: null,
+          },
+        ],
+        namedProductContext: {
+          display_name: `Test ${testCase.term}`,
+          category: testCase.category,
+          plausible_exact_name: true,
+          named_product_intent: "current_use_product_question",
+        },
+      },
+    )
+
+    assert.equal(result.ok, false)
+    assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
+  })
+}
 
 test("validator allows constraint-blocked deferral after unresolved product lookup", () => {
   const result = validateAgentV2FinalAnswer(
@@ -750,6 +1807,7 @@ test("validator allows constraint-blocked deferral after unresolved product look
         display_name: "Test Shampoo",
         category: "shampoo",
         plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
       },
     },
   )
@@ -842,6 +1900,41 @@ test("AgentV2 validator checks visible prose offers even when next_step_offer_de
   assert.ok(error)
   assert.equal(error.expected, "pending_followup_action.kind=product_recommendation")
   assert.equal(error.rejected_value, "Soll ich dir danach passende Masken empfehlen?")
+})
+
+test("validator blocks social answers that claim a specific product candidate", () => {
+  const result = validateAgentV2FinalAnswer(
+    socialAnswer({
+      request_interpretation: requestInterpretation({
+        primary_intent: "smalltalk",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "none",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "hallo",
+        specific_product_candidate: true,
+        confidence: 0.9,
+      }),
+    }),
+    {
+      ...baseValidationContext,
+      latestUserMessage: "hallo",
+      recentEvidenceText: "hallo",
+      toolCallHistory: [{ name: "classify_turn_gate" }],
+      turnGate: {
+        gate_status: "social",
+        evidence_quote: "hallo",
+        confidence: 0.9,
+        boundary_kind: null,
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "request_interpretation_answer_mode"),
+  )
 })
 
 test("AgentV2 validator does not treat plain Ich-kann answer openers as follow-up offers", () => {
@@ -4324,9 +5417,175 @@ test("validator does not relax exact counts for terminal-only multi-category slo
   )
 })
 
+test("validator accepts natural catalog-verification wording for blocked product lookup answers", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "constraint_blocked",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 0,
+        count_policy: "none",
+        evidence_quote: "mein jean & lean conditioner",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer(
+          "product_recommendation",
+          "conditioner",
+        ),
+        used_product_tool: true,
+        product_ids: [],
+        hard_rule_ids: [
+          ...baseAnswer.tool_grounding.hard_rule_ids,
+          "product.no_uncatalogued_products",
+        ],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Der Name ist für mich aktuell kein verifizierter Katalogtreffer, deshalb kann ich ihn nicht genau bewerten. Wichtig ist: keine genaue Produkteinschätzung ohne bestätigte Produktdaten.",
+        blocking_constraints: [
+          "nicht katalogverifiziert",
+          "keine genaue Produkteinschätzung ohne bestätigte Produktdaten",
+        ],
+        safe_alternative_de:
+          "Für dein Haarprofil wirkt ein leichter bis mittlerer Conditioner meist passender als etwas sehr Reichhaltiges.",
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      selectedProductProjections: [],
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "conditioner",
+          product_request_kind: "product_detail",
+          requested_product_count: 0,
+          count_policy: "none",
+          evidence_quote: "mein jean & lean conditioner",
+        }),
+        {
+          name: "lookup_product_candidate",
+          arguments: {
+            category: "conditioner",
+            brand_text: "jean & lean",
+            product_name_text: "Conditioner",
+          },
+          output_summary: "product_lookup:not_found",
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "conditioner",
+          input_identity: {
+            category: "conditioner",
+            brand_text: "jean & lean",
+            product_name_text: "Conditioner",
+            evidence_quote: "mein jean & lean conditioner",
+          },
+          product: null,
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator ignores hidden product grounding for blocked not-found product deferrals", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "constraint_blocked",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: 0,
+        count_policy: "none",
+        evidence_quote: "mein jean & lean conditioner",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer(
+          "product_recommendation",
+          "conditioner",
+        ),
+        used_product_tool: true,
+        product_ids: ["prod_1"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Ich kann deinen jean & lean Conditioner hier nicht als verifizierten Katalogtreffer prüfen; deshalb ist eine exakte Produktbewertung ohne verifizierte Identität nicht möglich. Für dein feines, welliges Haar mit Frizz ist Conditioner grundsätzlich die richtige Basispflege für Längen und Spitzen, aber die konkrete Eignung hängt bei einem einzelnen Produkt vor allem von Gewicht und Pflegeintensität ab.",
+        blocking_constraints: [
+          "keine exakte Produktbewertung ohne verifizierte Identität",
+          "nicht als verifizierter Katalogtreffer prüfbar",
+        ],
+        safe_alternative_de:
+          "Ich kann dir stattdessen sagen, woran du bei einem Conditioner für dein Haar am ehesten erkennst, ob er eher leicht oder zu schwer ist.",
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "conditioner",
+          product_request_kind: "product_detail",
+          requested_product_count: 0,
+          count_policy: "none",
+          evidence_quote: "mein jean & lean conditioner",
+        }),
+        {
+          name: "lookup_product_candidate",
+          arguments: {
+            category: "conditioner",
+            brand_text: "jean & lean",
+            product_name_text: "Conditioner",
+          },
+          output_summary: "product_lookup:not_found",
+        },
+      ],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "conditioner",
+          input_identity: {
+            category: "conditioner",
+            brand_text: "jean & lean",
+            product_name_text: "Conditioner",
+            evidence_quote: "mein jean & lean conditioner",
+          },
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "jean & lean Conditioner",
+        category: "conditioner",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    false,
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
 test("validator does not relax multi-slot answers using prior-turn selected products", () => {
   const prompt =
     "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+
   const result = validateAgentV2FinalAnswer(
     {
       ...baseAnswer,

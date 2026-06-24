@@ -18,12 +18,14 @@ import {
 import { buildAgentV2ProductToolMessage } from "@/lib/agent-v2/runtime/product-tool-context"
 import {
   type AgentV2AnswerMode,
+  AgentV2CareCategorySchema,
   type AgentV2RoutineLayer,
   type AgentV2RoutineThreadContext,
   type AgentV2SafetyMode,
   type AgentV2SessionMemoryWrite,
   type AgentV2TerminalAnswer,
 } from "@/lib/agent-v2/contracts"
+import { getAgentV2NamedProductCategoryReferenceTerms } from "@/lib/agent-v2/named-product-context"
 import { runAgentV2ResponsesTurn } from "@/lib/agent-v2/runtime/responses-agent"
 import { loadAgentV2AdvisorGuidance } from "@/lib/agent-v2/tools/guidance-tool"
 import {
@@ -109,6 +111,15 @@ type AgentV2ProductionTraceTiming = {
   toolMs: number | null
   gateMs: number | null
 }
+type ProductLookupExecutionInput = {
+  category: string | null
+  brand_text: string | null
+  product_name_text: string | null
+}
+type ProductLookupExecution = {
+  input: ProductLookupExecutionInput
+  result: ProductLookupResult
+}
 
 export interface PipelineParams {
   message: string
@@ -165,6 +176,148 @@ const ROUTINE_PRODUCT_CATEGORY_VALUES = new Set<RoutineProduct>([
   "mask",
   "heat_protectant",
 ])
+
+function selectProductIntakeOfferForAnswer(
+  answer: AgentV2TerminalAnswer,
+  executions: readonly ProductLookupExecution[],
+  latestUserMessage: string,
+): ProductLookupResult["intake_offer"] {
+  const eligible = executions.filter(
+    (execution) => execution.result.status === "not_found" && execution.result.intake_offer,
+  )
+  if (eligible.length === 0) return null
+
+  if (answerSupportsProductIntakeOffer(answer)) {
+    return (
+      eligible.find((execution) =>
+        productLookupExecutionMatchesAnswer(execution, answer, latestUserMessage),
+      )?.result.intake_offer ?? null
+    )
+  }
+
+  return null
+}
+
+function answerSupportsProductIntakeOffer(answer: AgentV2TerminalAnswer): boolean {
+  if (!answer.request_interpretation.specific_product_candidate) return false
+  const { product_request_kind: productRequestKind, routine_intent: routineIntent } =
+    answer.request_interpretation
+  if (
+    productRequestKind === "specific_products" ||
+    productRequestKind === "compare_products" ||
+    productRequestKind === "product_detail"
+  ) {
+    return true
+  }
+  return routineIntent === "modify" || routineIntent === "replace_product"
+}
+
+function productLookupExecutionMatchesAnswer(
+  execution: ProductLookupExecution,
+  answer: AgentV2TerminalAnswer,
+  latestUserMessage: string,
+): boolean {
+  if (
+    answerNeedsLookupCategoryTargetMatch(answer) &&
+    !lookupCategoryMatchesAnswer(execution, answer)
+  ) {
+    return false
+  }
+
+  const identityParts = [
+    execution.input.brand_text && execution.input.product_name_text
+      ? `${execution.input.brand_text} ${execution.input.product_name_text}`
+      : null,
+    !execution.input.brand_text ? execution.input.product_name_text : null,
+    execution.result.product?.name,
+  ].filter((part): part is string => Boolean(part?.trim()))
+
+  if (identityParts.length === 0) return true
+
+  const evidenceParts = [answer.request_interpretation.evidence_quote, latestUserMessage].filter(
+    (part): part is string => Boolean(part?.trim()),
+  )
+  return identityParts.some((identity) =>
+    evidenceParts.some(
+      (evidence) =>
+        normalizedProductTextOverlaps(identity, evidence, execution.input.brand_text) &&
+        lookupCategoryMatchesEvidence(execution.input.category, evidence, answer),
+    ),
+  )
+}
+
+function answerNeedsLookupCategoryTargetMatch(answer: AgentV2TerminalAnswer): boolean {
+  return (
+    answer.request_interpretation.product_request_kind === "specific_products" ||
+    answer.request_interpretation.product_request_kind === "compare_products"
+  )
+}
+
+function lookupCategoryMatchesAnswer(
+  execution: ProductLookupExecution,
+  answer: AgentV2TerminalAnswer,
+): boolean {
+  const lookupCategory = AgentV2CareCategorySchema.safeParse(execution.input.category)
+  if (
+    !lookupCategory.success ||
+    lookupCategory.data === "none" ||
+    lookupCategory.data === "unknown"
+  ) {
+    return false
+  }
+  const answerCategory = answer.request_interpretation.care_category
+  if (answerCategory === "none" || answerCategory === "unknown") return false
+  return lookupCategory.data === answerCategory
+}
+
+function lookupCategoryMatchesEvidence(
+  category: string | null,
+  evidence: string,
+  answer?: AgentV2TerminalAnswer,
+): boolean {
+  if (!category) return true
+  const parsedCategory = AgentV2CareCategorySchema.safeParse(category)
+  if (!parsedCategory.success) return true
+  if (
+    answer &&
+    parsedCategory.data !== "none" &&
+    parsedCategory.data !== "unknown" &&
+    answer.request_interpretation.care_category === parsedCategory.data
+  ) {
+    return true
+  }
+  const categoryTerms = getAgentV2NamedProductCategoryReferenceTerms(parsedCategory.data)
+  if (categoryTerms.length === 0) return true
+  const normalizedEvidence = normalizeProductLookupText(evidence)
+  return categoryTerms.some((term) => normalizedEvidence.includes(normalizeProductLookupText(term)))
+}
+
+function normalizedProductTextOverlaps(
+  a: string,
+  b: string,
+  requiredBrand?: string | null,
+): boolean {
+  const normalizedA = normalizeProductLookupText(a)
+  const normalizedB = normalizeProductLookupText(b)
+  if (!normalizedA || !normalizedB) return false
+  const normalizedRequiredBrand = requiredBrand ? normalizeProductLookupText(requiredBrand) : ""
+  if (normalizedRequiredBrand && !normalizedB.includes(normalizedRequiredBrand)) return false
+  return (
+    normalizedA === normalizedB ||
+    normalizedA.includes(normalizedB) ||
+    normalizedB.includes(normalizedA)
+  )
+}
+
+function normalizeProductLookupText(value: string): string {
+  return value
+    .toLocaleLowerCase("de-DE")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[\p{P}\p{S}]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+}
 
 async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; durationMs: number }> {
   const start = performance.now()
@@ -548,7 +701,7 @@ export async function runAgentV2ProductionPipeline(
   )
   const selectedProductResults: SelectProductsToolResult[] = []
   const selectedProductProjections: ReturnType<typeof projectSelectProductsForAgentV2>[] = []
-  let latestProductLookupResult: ProductLookupResult | null = null
+  const productLookupExecutions: ProductLookupExecution[] = []
   let latestRoutineProjection: AgentV2RoutineProjection | null = null
   const buildRoutine = (deps.createBuildOrFixRoutineTool ?? createBuildOrFixRoutineTool)()
   const routineThreadContext = buildRoutineThreadContextFromConversationState(conversationState)
@@ -633,19 +786,20 @@ export async function runAgentV2ProductionPipeline(
           throw new Error("product intake lookup tool is disabled")
         }
         const { catalog, brandCatalog } = await loadProductLookupCatalogs()
+        const lookupInput = {
+          category: typeof input.category === "string" ? input.category : null,
+          brand_text: typeof input.brand_text === "string" ? input.brand_text : null,
+          product_name_text:
+            typeof input.product_name_text === "string" ? input.product_name_text : null,
+        }
         const result = lookupProductCandidate({
-          input: {
-            category: typeof input.category === "string" ? input.category : null,
-            brand_text: typeof input.brand_text === "string" ? input.brand_text : null,
-            product_name_text:
-              typeof input.product_name_text === "string" ? input.product_name_text : null,
-          },
+          input: lookupInput,
           catalog,
           brandCatalog,
           offerId: `product-intake-${requestId}`,
           eligibilityMode: "intake_dedupe",
         })
-        latestProductLookupResult = result
+        productLookupExecutions.push({ input: lookupInput, result })
         return result
       },
       select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
@@ -736,10 +890,9 @@ export async function runAgentV2ProductionPipeline(
 
   const answer = result.final_answer
   const visibleFailure = result.trace.failure_stage !== null
-  const productLookupResult = latestProductLookupResult as ProductLookupResult | null
   const productIntakeOffer =
-    productIntakeEnabled && !visibleFailure && productLookupResult?.status === "not_found"
-      ? productLookupResult.intake_offer
+    productIntakeEnabled && !visibleFailure
+      ? selectProductIntakeOfferForAnswer(answer, productLookupExecutions, params.message)
       : null
   const intent = deriveIntent(answer)
   const productCategory = visibleFailure ? null : deriveProductCategory(answer)

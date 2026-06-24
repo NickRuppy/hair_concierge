@@ -38,6 +38,7 @@ function requestInterpretation(
     requested_product_count: null,
     count_policy: "none",
     evidence_quote: "Brauche ich wirklich eine Maske?",
+    specific_product_candidate: false,
     confidence: 0.9,
     ...overrides,
   }
@@ -52,6 +53,15 @@ test("AgentV2RequestInterpretationSchema accepts strict semantic examples", () =
       requested_product_count: 2,
       count_policy: "exact",
       evidence_quote: "Empfiehl mir zwei Shampoos.",
+    }),
+    requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      care_category: "conditioner",
+      requested_product_count: 1,
+      count_policy: "exact",
+      evidence_quote: "Was hältst du von meinem Jean & Len Conditioner?",
+      specific_product_candidate: true,
     }),
     requestInterpretation({
       primary_intent: "category_education",
@@ -145,6 +155,20 @@ test("AgentV2RequestInterpretationSchema rejects unknown enum values", () => {
   })
 
   assert.equal(result.success, false)
+})
+
+test("AgentV2RequestInterpretationSchema requires boolean product candidate signal", () => {
+  const missing = { ...requestInterpretation() } as Record<string, unknown>
+  delete missing.specific_product_candidate
+
+  assert.equal(AgentV2RequestInterpretationSchema.safeParse(missing).success, false)
+
+  const invalid = {
+    ...requestInterpretation(),
+    specific_product_candidate: "true",
+  }
+
+  assert.equal(AgentV2RequestInterpretationSchema.safeParse(invalid).success, false)
 })
 
 test("AgentV2RoutineThreadContextSchema accepts visible routine steps", () => {

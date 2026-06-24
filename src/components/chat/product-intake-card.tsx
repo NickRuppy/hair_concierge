@@ -283,6 +283,7 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
           onBrandTextChange={handleBrandTextChange}
           onProductNameChange={setProductName}
           inputClassName={inputClassName}
+          labelTextClassName="sr-only"
           brandInputClassName={needsBrand ? missingInputClassName : inputClassName}
           productInputClassName={needsProductName ? missingInputClassName : inputClassName}
         />

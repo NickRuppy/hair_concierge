@@ -117,32 +117,32 @@ function ProductIntakeImageField({
   const inputIsHidden = inputClassName.split(/\s+/).includes("sr-only")
 
   return (
-    <label className={labelClassName}>
-      <span className="flex items-start justify-between gap-3">
-        <span>
+    <label className={cn(labelClassName, inputIsHidden && "cursor-pointer")}>
+      <span className="flex items-center justify-between gap-4">
+        <span className="min-w-0">
           <span className="block font-medium">{label}</span>
-          <span className="mt-0.5 block text-xs text-muted-foreground">
-            {ready ? "Bild liegt vor" : "Noch kein Bild ausgewählt"}
+          <span
+            className={cn(
+              "mt-1 flex items-center gap-1.5 text-xs",
+              ready ? "text-emerald-700" : "text-muted-foreground",
+            )}
+          >
+            {ready ? <Check className="h-3.5 w-3.5 shrink-0" /> : null}
+            {ready ? "Bild hinzugefügt" : "Bild hochladen"}
           </span>
         </span>
-        {ready ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
-            <Check className="h-3.5 w-3.5" />
-            Erledigt
+        {inputIsHidden ? (
+          <span
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-sm transition-colors hover:bg-secondary/90"
+            aria-hidden="true"
+          >
+            <ImageUp className="h-5 w-5" />
           </span>
         ) : null}
       </span>
 
-      {inputIsHidden ? (
-        <span className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <span className="inline-flex rounded-full bg-secondary px-3 py-1.5 font-medium text-secondary-foreground">
-            {ready ? "Foto ersetzen" : "Foto auswählen"}
-          </span>
-          <span>JPG, PNG, WEBP oder HEIC</span>
-        </span>
-      ) : null}
-
       <input
+        aria-label={`${label} ${ready ? "ersetzen" : "hochladen"}`}
         type="file"
         accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
         onChange={(event) => onUpload(kind, event.target.files?.[0])}
@@ -157,12 +157,16 @@ export function ProductIntakeBrandProductFields({
   productName,
   brandOptions,
   brandListId,
+  brandLabel = "Marke",
+  productLabel = "Produktname",
   brandPlaceholder,
   productPlaceholder,
   onBrandTextChange,
   onProductNameChange,
   wrapperClassName = "grid gap-2 sm:grid-cols-2",
   inputClassName = "w-full rounded-xl border border-border bg-background px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-[var(--brand-plum)]/50 focus:outline-none focus:ring-1 focus:ring-[var(--brand-plum)]/25",
+  labelClassName = "space-y-1.5",
+  labelTextClassName = "block text-xs font-medium text-muted-foreground",
   brandInputClassName,
   productInputClassName,
 }: {
@@ -170,33 +174,43 @@ export function ProductIntakeBrandProductFields({
   productName: string
   brandOptions: ProductIntakeBrandOption[]
   brandListId: string
+  brandLabel?: string
+  productLabel?: string
   brandPlaceholder: string
   productPlaceholder: string
   onBrandTextChange: (value: string) => void
   onProductNameChange: (value: string) => void
   wrapperClassName?: string
   inputClassName?: string
+  labelClassName?: string
+  labelTextClassName?: string
   brandInputClassName?: string
   productInputClassName?: string
 }) {
   return (
     <>
       <div className={wrapperClassName}>
-        <input
-          type="text"
-          value={brandText}
-          onChange={(event) => onBrandTextChange(event.target.value)}
-          placeholder={brandPlaceholder}
-          list={brandListId}
-          className={brandInputClassName ?? inputClassName}
-        />
-        <input
-          type="text"
-          value={productName}
-          onChange={(event) => onProductNameChange(event.target.value)}
-          placeholder={productPlaceholder}
-          className={productInputClassName ?? inputClassName}
-        />
+        <label className={labelClassName}>
+          <span className={labelTextClassName}>{brandLabel}</span>
+          <input
+            type="text"
+            value={brandText}
+            onChange={(event) => onBrandTextChange(event.target.value)}
+            placeholder={brandPlaceholder}
+            list={brandListId}
+            className={brandInputClassName ?? inputClassName}
+          />
+        </label>
+        <label className={labelClassName}>
+          <span className={labelTextClassName}>{productLabel}</span>
+          <input
+            type="text"
+            value={productName}
+            onChange={(event) => onProductNameChange(event.target.value)}
+            placeholder={productPlaceholder}
+            className={productInputClassName ?? inputClassName}
+          />
+        </label>
       </div>
       <datalist id={brandListId}>
         {brandOptions.map((option) => (

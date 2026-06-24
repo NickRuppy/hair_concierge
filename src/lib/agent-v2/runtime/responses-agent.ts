@@ -882,7 +882,7 @@ export async function runAgentV2ResponsesTurn(params: {
       if (call.name === "load_advisor_guidance") {
         collectGuidanceTrace(output, trace, knownHardRuleIds)
       } else if (call.name === "lookup_product_candidate") {
-        const lookupResult = summarizeProductLookupResult(output)
+        const lookupResult = summarizeProductLookupResult(output, executableArguments)
         if (lookupResult) productLookupResults.push(lookupResult)
       } else if (call.name === "select_products") {
         selectedProductProjections.push(output as AgentV2SelectProductsProjection)
@@ -1034,6 +1034,14 @@ function buildNamedProductContextGuidance(
   context: AgentV2NamedProductContext,
   params: { productIntakeEnabled: boolean },
 ): string {
+  if (context.named_product_intent === "background") {
+    return [
+      `Current user named a plausible exact product as background context: "${context.display_name}" (${context.category}). Treat it as user-provided but not catalog-verified.`,
+      "The latest user request is not an exact opinion, suitability, use, or routine-add question about that product.",
+      "Answer the actual user question with category-level guidance. Do not evaluate the named product or offer product intake unless the user asks a follow-up about that product.",
+    ].join(" ")
+  }
+
   const guidance = [
     `Current user named a plausible exact product: "${context.display_name}" (${context.category}). Treat it as user-provided but not catalog-verified.`,
     "For product_detail, still call select_products before the terminal answer.",
@@ -1042,7 +1050,7 @@ function buildNamedProductContextGuidance(
 
   if (params.productIntakeEnabled) {
     guidance.push(
-      "Also call lookup_product_candidate when the product identity and category/use are specific enough; use its result to distinguish found_exact, ambiguous, unsupported_category, insufficient_identity, and not_found.",
+      "Also call lookup_product_candidate for this concrete product candidate before product-specific answers. A partial product identity is allowed and category/use can be unclear; pass category null when needed and use the result to distinguish found_exact, ambiguous, unsupported_category, insufficient_identity, and not_found.",
       "If lookup_product_candidate returns not_found, write a natural German answer saying the product is not yet in the database and can be added for review; the app will render the intake card from structured metadata.",
       "Use constraint_blocked or a cautious non-evaluative answer when lookup is ambiguous, unsupported, or missing category/identity: say it is not a verified catalog hit, cannot be evaluated exactly, and only discuss category-level plausibility or limitations if useful.",
     )
@@ -1265,7 +1273,8 @@ function buildRepairSubmitInstruction(): Record<string, unknown> {
 function buildTerminalPayloadFieldGuidance(): string {
   return [
     "AgentV2 terminal payload fields by answer_mode. Choose exactly one answer_mode and make payload match that mode.",
-    "Every submit_final_answer must include request_interpretation with primary_intent, product_request_kind, routine_intent, care_category, requested_product_count, count_policy, evidence_quote, and confidence.",
+    "Every submit_final_answer must include request_interpretation with primary_intent, product_request_kind, routine_intent, care_category, requested_product_count, count_policy, evidence_quote, specific_product_candidate, and confidence.",
+    "Set request_interpretation.specific_product_candidate true when the latest turn or active context contains a plausible concrete product candidate that the user wants to assess, compare, identify, add, or use in this answer, even if brand/name/category is partial. Keep it false for background product mentions, broad category asks, broad brand-family asks, generic category education, social turns, domain-boundary turns, and safety-boundary turns.",
     "When you call select_products, its product_request_kind, requested_product_count, count_policy, category, and evidence_quote must match terminal request_interpretation. Tool category maps to request_interpretation.care_category.",
     "When you call build_or_fix_routine, its routine_intent, requested_layer, requested_category, and evidence_quote must match terminal request_interpretation and routine_context.",
     "Routine payload visible_steps and tool_grounding.routine_step_ids must use only step IDs returned by build_or_fix_routine or already present in active routine context. Never invent product-named routine step IDs.",
@@ -1283,8 +1292,8 @@ function buildTerminalPayloadFieldGuidance(): string {
     "safety_boundary payload: user_facing_answer_de, boundary_reason_de, next_step_de.",
     "social payload: user_facing_answer_de, pivot_de.",
     "domain_boundary payload: user_facing_answer_de, boundary_kind, redirect_topic_de.",
-    "For social answers, set request_interpretation to primary_intent smalltalk, product_request_kind none, routine_intent none, care_category none, requested_product_count null, count_policy none, and quote the latest user message.",
-    "For domain_boundary answers, set request_interpretation to primary_intent unknown, product_request_kind none, routine_intent none, care_category none, requested_product_count null, count_policy none, and quote the latest user message.",
+    "For social answers, set request_interpretation to primary_intent smalltalk, product_request_kind none, routine_intent none, care_category none, requested_product_count null, count_policy none, specific_product_candidate false, and quote the latest user message.",
+    "For domain_boundary answers, set request_interpretation to primary_intent unknown, product_request_kind none, routine_intent none, care_category none, requested_product_count null, count_policy none, specific_product_candidate false, and quote the latest user message.",
     "Social and domain_boundary answers are complete visible answers. They must not use product or routine tools, product_ids, routine_step_ids, session_memory_writes, active routine_context, or pending_followup_action.",
     "Set pending_followup_action to null unless you explicitly offer a future action the user can confirm.",
     "Do not copy a routine action completed in the current answer into pending_followup_action; current-turn routine work belongs in request_interpretation.routine_intent, routine tool calls, and routine payloads.",
@@ -1851,11 +1860,16 @@ function summarizeToolOutput(output: unknown): string {
 
 function summarizeProductLookupResult(
   output: unknown,
+  input: unknown,
 ): AgentV2ProductLookupValidationResult | null {
   if (!output || typeof output !== "object" || Array.isArray(output)) return null
 
   const record = output as Record<string, unknown>
   if (typeof record.status !== "string") return null
+  const inputRecord =
+    input && typeof input === "object" && !Array.isArray(input)
+      ? (input as Record<string, unknown>)
+      : null
 
   const product =
     record.product && typeof record.product === "object" && !Array.isArray(record.product)
@@ -1865,6 +1879,14 @@ function summarizeProductLookupResult(
   return {
     status: record.status,
     category: typeof record.category === "string" ? record.category : null,
+    input_identity: {
+      category: typeof inputRecord?.category === "string" ? inputRecord.category : null,
+      brand_text: typeof inputRecord?.brand_text === "string" ? inputRecord.brand_text : null,
+      product_name_text:
+        typeof inputRecord?.product_name_text === "string" ? inputRecord.product_name_text : null,
+      evidence_quote:
+        typeof inputRecord?.evidence_quote === "string" ? inputRecord.evidence_quote : null,
+    },
     product: product
       ? {
           id: typeof product.id === "string" ? product.id : undefined,
@@ -2061,6 +2083,7 @@ function buildNonProceedTurnGateFallback(
         requested_product_count: null,
         count_policy: "none",
         evidence_quote: evidenceQuote,
+        specific_product_candidate: false,
         confidence: Math.max(gate.confidence, 0.7),
       },
       confidence: Math.max(gate.confidence, 0.7),
@@ -2114,6 +2137,7 @@ function buildDomainBoundaryFallbackAnswer(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: params.evidenceQuote,
+      specific_product_candidate: false,
       confidence,
     },
     confidence,
@@ -2250,6 +2274,7 @@ function buildBroadHairConcernFallback(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: params.message.slice(0, 240) || "unklare Haarfrage",
+      specific_product_candidate: false,
       confidence: 0.58,
     },
     confidence: 0.58,
@@ -2356,6 +2381,12 @@ function buildKnownIntentFallbackAnswer(params: {
   if (params.safetyMode !== "normal") return null
   if (params.reason !== "generic" && params.reason !== "composition_failed") return null
 
+  const productLookupFallback = buildProductLookupClarificationFallback({
+    message: params.message,
+    trace: params.trace,
+  })
+  if (productLookupFallback) return productLookupFallback
+
   const placementCategory = detectRoutinePlacementFallbackCategory(params.trace, params.message)
   if (
     placementCategory &&
@@ -2419,6 +2450,114 @@ function buildKnownIntentFallbackAnswer(params: {
   }
 
   return null
+}
+
+function buildProductLookupClarificationFallback(params: {
+  message: string
+  trace: AgentV2Trace
+}): AgentV2TerminalAnswer | null {
+  const latestLookupCall = [...params.trace.tool_calls]
+    .reverse()
+    .find((call) => call.name === "lookup_product_candidate")
+  const lookupStatus = readProductLookupStatus(latestLookupCall?.output_summary)
+  if (
+    lookupStatus !== "ambiguous" &&
+    lookupStatus !== "insufficient_identity" &&
+    lookupStatus !== "unsupported_category"
+  ) {
+    return null
+  }
+
+  const lookupArgs = latestLookupCall?.arguments ?? {}
+  const evidenceQuote =
+    readNonEmptyString(lookupArgs.evidence_quote) ?? params.message.slice(0, 240)
+  const displayName = buildProductLookupDisplayName(lookupArgs, evidenceQuote)
+  const category = readFallbackCareCategory(lookupArgs.category)
+  const userFacingAnswer =
+    lookupStatus === "unsupported_category"
+      ? `Ich kann ${displayName} in dieser Produktkategorie aktuell noch nicht sauber in unserer Produktdatenbank prüfen. Deshalb möchte ich dazu nichts erfinden.`
+      : lookupStatus === "insufficient_identity"
+        ? `Ich brauche zu ${displayName} noch etwas mehr Info, bevor ich es zuverlässig prüfen kann. Welche genaue Produktvariante oder Kategorie meinst du?`
+        : `Ich finde zu ${displayName} mehrere mögliche Varianten und möchte nichts Falsches bewerten. Welche genaue Variante meinst du?`
+  const question =
+    lookupStatus === "unsupported_category"
+      ? "Um welche der unterstützten Kategorien geht es: Shampoo, Conditioner, Leave-in, Maske, Öl, Trockenshampoo, Tiefenreinigungsshampoo oder Bondbuilder?"
+      : "Welche genaue Variante meinst du?"
+
+  return {
+    answer_mode: "clarification",
+    interpreted_intent: "Product lookup clarification fallback after terminal repair failed.",
+    request_interpretation: {
+      primary_intent: "clarification",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: category,
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: evidenceQuote,
+      specific_product_candidate: true,
+      confidence: 0,
+    },
+    confidence: 0,
+    extracted_constraints: {
+      ...buildEmptyExtractedConstraints(),
+      product_categories: category === "unknown" ? [] : [category],
+      raw_constraints: [evidenceQuote],
+    },
+    missing_information: [
+      {
+        key: lookupStatus === "unsupported_category" ? "supported_category" : "product_identity",
+        label_de:
+          lookupStatus === "unsupported_category"
+            ? "unterstützte Produktkategorie"
+            : "genaue Produktvariante",
+        blocking: true,
+        question_de: question,
+      },
+    ],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: params.trace.loaded_guidance_package_ids,
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: ["product.no_uncatalogued_products"],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category: category === "unknown" ? null : category,
+      return_path: [],
+    },
+    pending_followup_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: userFacingAnswer,
+      question_de: question,
+      missing_keys: [
+        lookupStatus === "unsupported_category" ? "supported_category" : "product_identity",
+      ],
+    },
+  }
+}
+
+function readProductLookupStatus(outputSummary: unknown): string | null {
+  if (typeof outputSummary !== "string") return null
+  const match = /^product_lookup:([a-z_]+)$/.exec(outputSummary.trim())
+  return match?.[1] ?? null
+}
+
+function buildProductLookupDisplayName(args: Record<string, unknown>, fallback: string): string {
+  const brand = readNonEmptyString(args.brand_text)
+  const productName = readNonEmptyString(args.product_name_text)
+  const combined = [brand, productName].filter(Boolean).join(" ").trim()
+  return combined || fallback || "dieses Produkt"
+}
+
+function readNonEmptyString(value: unknown): string | null {
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null
 }
 
 function isLightweightMaskOilDecisionFallbackEligible(
@@ -2522,6 +2661,7 @@ function buildLightweightMaskOilDecisionFallback(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: evidenceQuote,
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -2686,6 +2826,7 @@ function buildRoutineKnownIntentFallback(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: evidenceQuote,
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -2795,6 +2936,7 @@ function buildRoutinePlacementFallback(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: params.message.slice(0, 240) || "Routine-Platzierung",
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -2920,6 +3062,7 @@ function buildFallbackAnswer(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: "unclear",
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -2979,6 +3122,7 @@ function buildRecoveredAssistantTextFallback(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: params.message.slice(0, 240) || "unclear",
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -3042,6 +3186,7 @@ function buildRestrictedSafetyFallback(message: string): AgentV2TerminalAnswer {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: message.slice(0, 240) || "unclear",
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -3087,6 +3232,7 @@ function buildEmptyProductResultFallback(message: string): AgentV2TerminalAnswer
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: message.slice(0, 240) || "unclear",
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -3132,6 +3278,7 @@ function buildSafetyBoundaryAnswer(message: string): AgentV2TerminalAnswer {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: message.slice(0, 240) || "safety concern",
+      specific_product_candidate: false,
       confidence: 1,
     },
     confidence: 1,

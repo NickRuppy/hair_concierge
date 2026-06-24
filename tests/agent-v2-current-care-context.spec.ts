@@ -495,6 +495,7 @@ function terminalGeneralAdvice(call_id: string, overrides: { evidence_quote: str
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: overrides.evidence_quote,
+      specific_product_candidate: false,
       confidence: 0.9,
     },
     confidence: 0.9,

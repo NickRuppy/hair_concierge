@@ -358,8 +358,8 @@
       "current_category": "Conditioner (Drogerie)",
       "canonical_category_key": "conditioner",
       "canonical_brand": "Garnier",
-      "product_line": "Hair Food",
-      "clean_name": "Macadamia",
+      "product_line": "Fructis",
+      "clean_name": "Hair Food Macadamia",
       "aliases": [
         {
           "alias": "Garnier",
@@ -368,10 +368,28 @@
           "product_line": null
         },
         {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
           "alias": "Garnier Hair Food",
           "resolves_to": "brand_line",
           "canonical_brand": "Garnier",
-          "product_line": "Hair Food"
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
         }
       ],
       "known_titles": ["Garnier Hair Food Macadamia"],
@@ -386,7 +404,7 @@
       "current_category": "Conditioner (Drogerie)",
       "canonical_category_key": "conditioner",
       "canonical_brand": "Garnier",
-      "product_line": "Fructis Hair Food",
+      "product_line": "Fructis",
       "clean_name": "Hair Food Aloe Vera Feuchtigkeits-Spülung",
       "aliases": [
         {
@@ -396,10 +414,28 @@
           "product_line": null
         },
         {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
           "alias": "Garnier Fructis Hair Food",
           "resolves_to": "brand_line",
           "canonical_brand": "Garnier",
-          "product_line": "Fructis Hair Food"
+          "product_line": "Fructis"
         }
       ],
       "known_titles": [
@@ -472,21 +508,45 @@
       "current_name": "Gliss Kur Aqua Revive Conditioner",
       "current_category": "Conditioner (Drogerie)",
       "canonical_category_key": "conditioner",
-      "canonical_brand": "Gliss",
-      "product_line": "Kur",
-      "clean_name": "Aqua Revive Conditioner",
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Aqua Revive",
+      "clean_name": "Conditioner",
       "aliases": [
         {
           "alias": "Gliss",
           "resolves_to": "brand",
-          "canonical_brand": "Gliss",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
           "product_line": null
         },
         {
           "alias": "Gliss Kur",
-          "resolves_to": "brand_line",
-          "canonical_brand": "Gliss",
-          "product_line": "Kur"
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Glisskur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
         }
       ],
       "known_titles": ["Gliss Kur Aqua Revive Conditioner"],
@@ -757,14 +817,32 @@
       "current_name": "Monday Moisture Conditioner",
       "current_category": "Conditioner (Drogerie)",
       "canonical_category_key": "conditioner",
-      "canonical_brand": "Monday",
+      "canonical_brand": "MONDAY",
       "product_line": null,
       "clean_name": "Moisture Conditioner",
       "aliases": [
         {
           "alias": "Monday",
           "resolves_to": "brand",
-          "canonical_brand": "Monday",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "MONDAY",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "Monday Haircare",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "MONDAY Haircare",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
           "product_line": null
         }
       ],
@@ -1277,8 +1355,8 @@
       "current_category": "Leave-in",
       "canonical_category_key": "leave_in",
       "canonical_brand": "Balea",
-      "product_line": "Aqua",
-      "clean_name": "Hyaluron 3in1",
+      "product_line": "Professional",
+      "clean_name": "Aqua Hyaluron 3in1",
       "aliases": [
         {
           "alias": "Balea",
@@ -1290,7 +1368,13 @@
           "alias": "Balea Aqua",
           "resolves_to": "brand_line",
           "canonical_brand": "Balea",
-          "product_line": "Aqua"
+          "product_line": "Professional"
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
         }
       ],
       "known_titles": ["Balea Aqua Hyaluron 3in1"],
@@ -1534,8 +1618,8 @@
       "current_category": "Leave-in",
       "canonical_category_key": "leave_in",
       "canonical_brand": "Garnier",
-      "product_line": "Hair Food",
-      "clean_name": "Aloe Vera",
+      "product_line": "Fructis",
+      "clean_name": "Hair Food Aloe Vera",
       "aliases": [
         {
           "alias": "Garnier",
@@ -1544,10 +1628,28 @@
           "product_line": null
         },
         {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
           "alias": "Garnier Hair Food",
           "resolves_to": "brand_line",
           "canonical_brand": "Garnier",
-          "product_line": "Hair Food"
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
         }
       ],
       "known_titles": ["Garnier Hair Food Aloe Vera"],
@@ -1562,8 +1664,8 @@
       "current_category": "Leave-in",
       "canonical_category_key": "leave_in",
       "canonical_brand": "Garnier",
-      "product_line": "Hair Food",
-      "clean_name": "Macadamia",
+      "product_line": "Fructis",
+      "clean_name": "Hair Food Macadamia",
       "aliases": [
         {
           "alias": "Garnier",
@@ -1572,10 +1674,28 @@
           "product_line": null
         },
         {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
           "alias": "Garnier Hair Food",
           "resolves_to": "brand_line",
           "canonical_brand": "Garnier",
-          "product_line": "Hair Food"
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
         }
       ],
       "known_titles": ["Garnier Hair Food Macadamia"],
@@ -1589,14 +1709,44 @@
       "current_name": "Gliss Ultimate Repair Sprüh-Conditioner",
       "current_category": "Leave-in",
       "canonical_category_key": "leave_in",
-      "canonical_brand": "Gliss",
-      "product_line": null,
-      "clean_name": "Ultimate Repair Sprüh-Conditioner",
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Ultimate Repair",
+      "clean_name": "Sprüh-Conditioner",
       "aliases": [
         {
           "alias": "Gliss",
           "resolves_to": "brand",
-          "canonical_brand": "Gliss",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Gliss Kur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Glisskur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
           "product_line": null
         }
       ],
@@ -2435,8 +2585,8 @@
       "current_category": "Maske",
       "canonical_category_key": "mask",
       "canonical_brand": "Balea",
-      "product_line": "Aqua",
-      "clean_name": "Hyaluron 3 in 1",
+      "product_line": "Professional",
+      "clean_name": "Aqua Hyaluron 3 in 1",
       "aliases": [
         {
           "alias": "Balea",
@@ -2448,7 +2598,13 @@
           "alias": "Balea Aqua",
           "resolves_to": "brand_line",
           "canonical_brand": "Balea",
-          "product_line": "Aqua"
+          "product_line": "Professional"
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
         }
       ],
       "known_titles": ["Balea Aqua Hyaluron 3 in 1"],
@@ -2528,15 +2684,39 @@
       "current_name": "Fructis Hair Food Aloe Vera",
       "current_category": "Maske",
       "canonical_category_key": "mask",
-      "canonical_brand": "Fructis",
-      "product_line": null,
+      "canonical_brand": "Garnier",
+      "product_line": "Fructis",
       "clean_name": "Hair Food Aloe Vera",
       "aliases": [
         {
-          "alias": "Fructis",
+          "alias": "Garnier",
           "resolves_to": "brand",
-          "canonical_brand": "Fructis",
+          "canonical_brand": "Garnier",
           "product_line": null
+        },
+        {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
         }
       ],
       "known_titles": ["Fructis Hair Food Aloe Vera"],
@@ -2550,15 +2730,39 @@
       "current_name": "Fructis Hair Food Papaya",
       "current_category": "Maske",
       "canonical_category_key": "mask",
-      "canonical_brand": "Fructis",
-      "product_line": null,
+      "canonical_brand": "Garnier",
+      "product_line": "Fructis",
       "clean_name": "Hair Food Papaya",
       "aliases": [
         {
-          "alias": "Fructis",
+          "alias": "Garnier",
           "resolves_to": "brand",
-          "canonical_brand": "Fructis",
+          "canonical_brand": "Garnier",
           "product_line": null
+        },
+        {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
         }
       ],
       "known_titles": ["Fructis Hair Food Papaya"],
@@ -2572,14 +2776,44 @@
       "current_name": "Gliss Aqua Revive",
       "current_category": "Maske",
       "canonical_category_key": "mask",
-      "canonical_brand": "Gliss",
-      "product_line": null,
-      "clean_name": "Aqua Revive",
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Aqua Revive",
+      "clean_name": "4-in-1 Bonding Haarmaske",
       "aliases": [
         {
           "alias": "Gliss",
           "resolves_to": "brand",
-          "canonical_brand": "Gliss",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Gliss Kur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Glisskur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
           "product_line": null
         }
       ],
@@ -2594,14 +2828,44 @@
       "current_name": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
       "current_category": "Maske",
       "canonical_category_key": "mask",
-      "canonical_brand": "Gliss",
-      "product_line": null,
-      "clean_name": "Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Liquid Silk",
+      "clean_name": "Glanz 4-in-1 Bonding Haarmaske",
       "aliases": [
         {
           "alias": "Gliss",
           "resolves_to": "brand",
-          "canonical_brand": "Gliss",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Gliss Kur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Glisskur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
           "product_line": null
         }
       ],
@@ -2616,14 +2880,44 @@
       "current_name": "Glisskur Liquid Silk",
       "current_category": "Maske",
       "canonical_category_key": "mask",
-      "canonical_brand": "Glisskur",
+      "canonical_brand": "Schwarzkopf GLISS",
       "product_line": null,
       "clean_name": "Liquid Silk",
       "aliases": [
         {
+          "alias": "Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Gliss Kur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
           "alias": "Glisskur",
           "resolves_to": "brand",
-          "canonical_brand": "Glisskur",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
           "product_line": null
         }
       ],
@@ -3012,15 +3306,33 @@
       "current_name": "Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl",
       "current_category": "Maske",
       "canonical_category_key": "mask",
-      "canonical_brand": "Wahre Schätze",
-      "product_line": null,
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
       "clean_name": "1-Minute Haarkur Argan & Camelia Öl",
       "aliases": [
         {
-          "alias": "Wahre Schätze",
+          "alias": "Garnier",
           "resolves_to": "brand",
-          "canonical_brand": "Wahre Schätze",
+          "canonical_brand": "Garnier",
           "product_line": null
+        },
+        {
+          "alias": "Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Wahre Schaetze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
         }
       ],
       "known_titles": ["Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl"],
@@ -3034,15 +3346,33 @@
       "current_name": "Wahre Schätze Avocado",
       "current_category": "Maske",
       "canonical_category_key": "mask",
-      "canonical_brand": "Wahre Schätze",
-      "product_line": null,
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
       "clean_name": "Avocado",
       "aliases": [
         {
-          "alias": "Wahre Schätze",
+          "alias": "Garnier",
           "resolves_to": "brand",
-          "canonical_brand": "Wahre Schätze",
+          "canonical_brand": "Garnier",
           "product_line": null
+        },
+        {
+          "alias": "Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Wahre Schaetze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
         }
       ],
       "known_titles": ["Wahre Schätze Avocado"],
@@ -3514,15 +3844,39 @@
       "current_name": "L’Oréal Elvital Öl Magique Jojoba",
       "current_category": "Öle",
       "canonical_category_key": "oil",
-      "canonical_brand": "L’Oréal",
-      "product_line": null,
-      "clean_name": "Elvital Öl Magique Jojoba",
+      "canonical_brand": "L'Oréal Paris",
+      "product_line": "Elvital",
+      "clean_name": "Öl Magique Jojoba",
       "aliases": [
+        {
+          "alias": "L'Oréal Paris",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
         {
           "alias": "L’Oréal",
           "resolves_to": "brand",
-          "canonical_brand": "L’Oréal",
+          "canonical_brand": "L'Oréal Paris",
           "product_line": null
+        },
+        {
+          "alias": "L'Oreal",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
+          "alias": "L'Oréal Paris Elvital",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": "Elvital"
+        },
+        {
+          "alias": "Elvital",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": "Elvital"
         }
       ],
       "known_titles": ["L’Oréal Elvital Öl Magique Jojoba"],
@@ -3536,15 +3890,39 @@
       "current_name": "L’Oréal Öl Magique Midnight Serum",
       "current_category": "Öle",
       "canonical_category_key": "oil",
-      "canonical_brand": "L’Oréal",
-      "product_line": null,
+      "canonical_brand": "L'Oréal Paris",
+      "product_line": "Elvital",
       "clean_name": "Öl Magique Midnight Serum",
       "aliases": [
         {
+          "alias": "L'Oréal Paris",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
           "alias": "L’Oréal",
           "resolves_to": "brand",
-          "canonical_brand": "L’Oréal",
+          "canonical_brand": "L'Oréal Paris",
           "product_line": null
+        },
+        {
+          "alias": "L'Oreal",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
+          "alias": "L'Oréal Paris Elvital",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": "Elvital"
+        },
+        {
+          "alias": "Elvital",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": "Elvital"
         }
       ],
       "known_titles": ["L’Oréal Öl Magique Midnight Serum"],
@@ -4023,8 +4401,8 @@
       "current_category": "Shampoo",
       "canonical_category_key": "shampoo",
       "canonical_brand": "Balea",
-      "product_line": "Aqua",
-      "clean_name": "Hyaluron",
+      "product_line": "Professional",
+      "clean_name": "Aqua Hyaluron",
       "aliases": [
         {
           "alias": "Balea",
@@ -4036,7 +4414,13 @@
           "alias": "Balea Aqua",
           "resolves_to": "brand_line",
           "canonical_brand": "Balea",
-          "product_line": "Aqua"
+          "product_line": "Professional"
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
         }
       ],
       "known_titles": ["Balea Aqua Hyaluron"],
@@ -4568,14 +4952,32 @@
       "current_name": "Monday Haircare Volume Kraft & Fülle Shampoo",
       "current_category": "Shampoo",
       "canonical_category_key": "shampoo",
-      "canonical_brand": "Monday Haircare",
+      "canonical_brand": "MONDAY",
       "product_line": null,
       "clean_name": "Volume Kraft & Fülle Shampoo",
       "aliases": [
         {
+          "alias": "Monday",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "MONDAY",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
           "alias": "Monday Haircare",
           "resolves_to": "brand",
-          "canonical_brand": "Monday Haircare",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "MONDAY Haircare",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
           "product_line": null
         }
       ],
@@ -5102,15 +5504,33 @@
       "current_name": "Wahre Schätze Aktivkohle",
       "current_category": "Shampoo",
       "canonical_category_key": "shampoo",
-      "canonical_brand": "Wahre Schätze",
-      "product_line": null,
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
       "clean_name": "Aktivkohle",
       "aliases": [
         {
-          "alias": "Wahre Schätze",
+          "alias": "Garnier",
           "resolves_to": "brand",
-          "canonical_brand": "Wahre Schätze",
+          "canonical_brand": "Garnier",
           "product_line": null
+        },
+        {
+          "alias": "Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Wahre Schaetze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
         }
       ],
       "known_titles": ["Wahre Schätze Aktivkohle"],
@@ -5124,15 +5544,33 @@
       "current_name": "Wahre Schätze Sanfte Hafermilch",
       "current_category": "Shampoo",
       "canonical_category_key": "shampoo",
-      "canonical_brand": "Wahre Schätze",
-      "product_line": null,
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
       "clean_name": "Sanfte Hafermilch",
       "aliases": [
         {
-          "alias": "Wahre Schätze",
+          "alias": "Garnier",
           "resolves_to": "brand",
-          "canonical_brand": "Wahre Schätze",
+          "canonical_brand": "Garnier",
           "product_line": null
+        },
+        {
+          "alias": "Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Wahre Schaetze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
         }
       ],
       "known_titles": ["Wahre Schätze Sanfte Hafermilch"],
@@ -5212,15 +5650,39 @@
       "current_name": "Serie Expert Metal DX Shampoo",
       "current_category": "Tiefenreinigungsshampoo",
       "canonical_category_key": "deep_cleansing_shampoo",
-      "canonical_brand": "L'Oreal Professionnel",
-      "product_line": null,
-      "clean_name": "Serie Expert Metal DX Shampoo",
+      "canonical_brand": "L'Oréal Professionnel",
+      "product_line": "Metal DX",
+      "clean_name": "Shampoo",
       "aliases": [
+        {
+          "alias": "L'Oréal Professionnel",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Professionnel",
+          "product_line": null
+        },
         {
           "alias": "L'Oreal Professionnel",
           "resolves_to": "brand",
-          "canonical_brand": "L'Oreal Professionnel",
+          "canonical_brand": "L'Oréal Professionnel",
           "product_line": null
+        },
+        {
+          "alias": "L'Oréal Professionnel Paris",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Professionnel",
+          "product_line": null
+        },
+        {
+          "alias": "Metal DX",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Professionnel",
+          "product_line": "Metal DX"
+        },
+        {
+          "alias": "Serie Expert Metal DX",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Professionnel",
+          "product_line": "Metal DX"
         }
       ],
       "known_titles": [
