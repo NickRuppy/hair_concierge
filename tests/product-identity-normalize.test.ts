@@ -6,9 +6,11 @@ import {
   PRODUCT_CATEGORY_DISPLAY_LABELS,
   SUPPORTED_PRODUCT_CATEGORY_KEYS,
   cleanProductDisplayName,
+  normalizeIdentityText,
   normalizeCategoryKey,
   normalizeIdentifier,
   normalizeText,
+  tokenizeProductName,
 } from "../src/lib/product-identity"
 
 test("canonical category constants include supported and known unsupported keys", () => {
@@ -58,10 +60,36 @@ test("normalizeText folds accents, punctuation, case, and spacing", () => {
   assert.equal(normalizeText("Tiefenreinigungs-Shampoo"), "tiefenreinigungs shampoo")
 })
 
+test("normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics", () => {
+  assert.equal(normalizeIdentityText("  OLAPLEX   Nº. 5 -- Leave-In  "), "olaplex no 5 leave in")
+  assert.equal(normalizeIdentityText("Olaplex No 5 Leave In"), "olaplex no 5 leave in")
+  assert.equal(normalizeIdentityText("Garnier Fructis / Hair-Food"), "garnier fructis hair food")
+})
+
+test("normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites", () => {
+  assert.equal(normalizeIdentityText("L'Oréal"), "loreal")
+  assert.equal(normalizeIdentityText("L’Oréal"), "loreal")
+  assert.equal(normalizeIdentityText("Loreal"), "loreal")
+})
+
 test("normalizeIdentifier returns stable snake-case identifiers", () => {
   assert.equal(normalizeIdentifier("Deep Cleansing Shampoo"), "deep_cleansing_shampoo")
   assert.equal(normalizeIdentifier("  Öle + Pflege  "), "ole_pflege")
   assert.equal(normalizeIdentifier("leave_in"), "leave_in")
+  assert.equal(normalizeIdentifier(null), "")
+  assert.equal(normalizeIdentifier(undefined), "")
+})
+
+test("tokenizeProductName returns normalized searchable product-name tokens", () => {
+  assert.deepEqual(tokenizeProductName("Garnier Fructis Hair-Food Aloe"), [
+    "garnier",
+    "fructis",
+    "hair",
+    "food",
+    "aloe",
+  ])
+  assert.deepEqual(tokenizeProductName("L'Oréal Professionnel"), ["loreal", "professionnel"])
+  assert.deepEqual(tokenizeProductName("OLAPLEX No. 5"), ["olaplex", "no", "5"])
 })
 
 test("cleanProductDisplayName removes exact brand and product line prefixes conservatively", () => {
@@ -94,5 +122,13 @@ test("cleanProductDisplayName removes exact brand and product line prefixes cons
       productLine: "No. 5",
     }),
     "Olaplexx No. 5 Leave-In Conditioner",
+  )
+
+  assert.equal(
+    cleanProductDisplayName("L'Oréal Paris Elvital Dream Length", {
+      brand: "Loreal Paris",
+      productLine: "Elvital",
+    }),
+    "Dream Length",
   )
 })
