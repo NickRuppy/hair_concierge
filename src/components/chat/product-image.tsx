@@ -40,25 +40,28 @@ function getCategoryConfig(category: string | null) {
 interface ProductImageProps {
   imageUrl: string | null
   category: string | null
-  size?: "sm" | "md" | "lg"
+  size?: "sm" | "md" | "lg" | "card"
 }
 
 const SIZES = {
   sm: "h-10 w-10",
   md: "h-14 w-14",
   lg: "h-20 w-20",
+  card: "h-24 w-[5.5rem]",
 }
 
 const SIZE_PX = {
   sm: 40,
   md: 56,
   lg: 80,
+  card: 96,
 }
 
 const ICON_SIZES = {
   sm: "h-5 w-5",
   md: "h-7 w-7",
   lg: "h-10 w-10",
+  card: "h-8 w-8",
 }
 
 export function ProductImage({ imageUrl, category, size = "md" }: ProductImageProps) {
@@ -69,7 +72,7 @@ export function ProductImage({ imageUrl, category, size = "md" }: ProductImagePr
         alt=""
         width={SIZE_PX[size]}
         height={SIZE_PX[size]}
-        className={`${SIZES[size]} shrink-0 rounded-xl object-cover`}
+        className={`${SIZES[size]} shrink-0 rounded-xl object-contain`}
         unoptimized
       />
     )

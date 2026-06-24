@@ -41,6 +41,12 @@ const nextConfig: NextConfig = {
         hostname: "assets.cdn.filesafe.space",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "pqdkhefxsxkyeqelqegq.supabase.co",
+        pathname: "/storage/v1/object/public/product-images/**",
+        search: "",
+      },
     ],
   },
   outputFileTracingIncludes: {

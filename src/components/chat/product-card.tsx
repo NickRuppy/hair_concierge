@@ -6,6 +6,7 @@ import {
 } from "@/components/chat/product-display-model"
 import type { Product } from "@/lib/types"
 import { Icon, type IconName } from "@/components/ui/icon"
+import { ProductImage } from "./product-image"
 
 interface ProductCardProps {
   product: Product
@@ -50,17 +51,25 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
   const iconName = categoryIconName(product.category)
   const facts = buildCompactProductFacts(product)
   const price = formatProductPrice(product.price_eur, product.currency)
+  const hasImage = Boolean(product.image_url)
 
   return (
     <button
       type="button"
       onClick={() => onClick(product)}
-      className="flex w-full min-w-0 cursor-pointer items-center gap-3 overflow-hidden rounded-xl border border-border bg-card p-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-sm"
+      className={
+        hasImage
+          ? "grid w-full min-w-0 cursor-pointer grid-cols-[5.5rem_minmax(0,1fr)_auto_auto] items-center gap-3 overflow-hidden rounded-xl border border-border bg-card p-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-sm"
+          : "flex w-full min-w-0 cursor-pointer items-center gap-3 overflow-hidden rounded-xl border border-border bg-card p-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-sm"
+      }
     >
-      {/* Category icon */}
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--brand-plum-ice)]">
-        <Icon name={iconName} size={18} className="text-primary" />
-      </div>
+      {product.image_url ? (
+        <ProductImage imageUrl={product.image_url} category={product.category} size="card" />
+      ) : (
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--brand-plum-ice)]">
+          <Icon name={iconName} size={18} className="text-primary" />
+        </div>
+      )}
 
       {/* Product info */}
       <div className="min-w-0 flex-1">
