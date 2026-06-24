@@ -283,6 +283,10 @@ function hasQuizShapeChangingTreatment(answers: QuizAnswers): boolean {
   )
 }
 
+function hasQuizPermTreatment(answers: QuizAnswers): boolean {
+  return answers.treatment?.includes("dauerwelle") === true
+}
+
 function getQuizChemicalStressWeight(answers: QuizAnswers): number {
   const treatmentMap: Record<string, ChemicalTreatment> = {
     natur: "natural",
@@ -1015,8 +1019,10 @@ function buildNeedsSection(
   // Curl definition — fires when curl is the user's clean goal and there's no concern to address first.
   const hasTexture =
     answers.structure === "wavy" || answers.structure === "curly" || answers.structure === "coily"
+  const hasDefinitionShapeContext =
+    hasTexture || (primaryGoal === "curl_definition" && hasQuizPermTreatment(answers))
 
-  if (primaryGoal === "curl_definition" && hasTexture && !primaryConcern) {
+  if (primaryGoal === "curl_definition" && hasDefinitionShapeContext && !primaryConcern) {
     return {
       title: "Was dein Haar jetzt braucht",
       mainLeverTitle: "Wellen und Locken besser definieren",

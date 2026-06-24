@@ -33,6 +33,10 @@ export function hasBleachTreatment(treatments: readonly ChemicalTreatment[]): bo
   return treatments.includes("bleached")
 }
 
+export function hasPermTreatment(treatments: readonly ChemicalTreatment[]): boolean {
+  return treatments.includes("permed")
+}
+
 export function hasShapeChangingTreatment(treatments: readonly ChemicalTreatment[]): boolean {
   return treatments.some((treatment) => SHAPE_CHANGING_TREATMENTS.has(treatment))
 }

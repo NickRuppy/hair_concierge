@@ -7,6 +7,7 @@ import {
   hasActiveChemicalTreatment,
   hasBleachTreatment,
   hasColorOrBleachTreatment,
+  hasPermTreatment,
   hasShapeChangingTreatment,
 } from "../src/lib/profile/chemical-treatment"
 
@@ -29,6 +30,12 @@ test("shape-changing helper identifies perm and chemical straightening", () => {
   assert.equal(hasShapeChangingTreatment(["permed"]), true)
   assert.equal(hasShapeChangingTreatment(["chemically_straightened"]), true)
   assert.equal(hasShapeChangingTreatment(["colored", "bleached"]), false)
+})
+
+test("perm helper stays narrower than all shape-changing treatments", () => {
+  assert.equal(hasPermTreatment(["permed"]), true)
+  assert.equal(hasPermTreatment(["chemically_straightened"]), false)
+  assert.equal(hasPermTreatment(["colored", "bleached"]), false)
 })
 
 test("chemical treatment damage weight uses capped stress tiers", () => {

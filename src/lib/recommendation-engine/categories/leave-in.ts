@@ -31,6 +31,7 @@ import {
   getPlannedStep,
 } from "@/lib/recommendation-engine/categories/shared"
 import type { HairThickness } from "@/lib/vocabulary"
+import { hasPermTreatment } from "@/lib/profile/chemical-treatment"
 
 export interface LeaveInFitSpec {
   product_id?: string
@@ -87,6 +88,21 @@ function hasModerateHeatExposure(profile: NormalizedProfile): boolean {
   return hasBlowDryExposure(profile) || (profile.stylingTools ?? []).includes("thermal_rollers")
 }
 
+function hasNaturalDefinitionTexture(profile: NormalizedProfile): boolean {
+  return (
+    profile.hairTexture === "wavy" ||
+    profile.hairTexture === "curly" ||
+    profile.hairTexture === "coily"
+  )
+}
+
+function hasDefinitionShapeContext(profile: NormalizedProfile): boolean {
+  return (
+    hasNaturalDefinitionTexture(profile) ||
+    (profile.goals.includes("curl_definition") && hasPermTreatment(profile.chemicalTreatment))
+  )
+}
+
 function deriveHeatProtectionNeed(profile: NormalizedProfile): LeaveInHeatProtectionNeed {
   if (hasHighHeatTool(profile)) return "high"
   if (hasModerateHeatExposure(profile)) return "moderate"
@@ -110,10 +126,7 @@ function deriveStylingPrepNeed(
   if (hasHighHeatTool(profile)) return "heat_style"
 
   if (
-    profile.hairTexture &&
-    (profile.hairTexture === "wavy" ||
-      profile.hairTexture === "curly" ||
-      profile.hairTexture === "coily") &&
+    hasDefinitionShapeContext(profile) &&
     (profile.dryingMethod === "blow_dry_diffuser" ||
       (profile.stylingTools ?? []).includes("diffuser") ||
       careNeeds.definitionSupportNeed !== "none")
@@ -141,12 +154,7 @@ function deriveLeaveInNeedBucket(
     return "heat_protect"
   }
 
-  if (
-    careNeeds.definitionSupportNeed !== "none" &&
-    (profile.hairTexture === "wavy" ||
-      profile.hairTexture === "curly" ||
-      profile.hairTexture === "coily")
-  ) {
+  if (careNeeds.definitionSupportNeed !== "none" && hasDefinitionShapeContext(profile)) {
     return "curl_definition"
   }
 

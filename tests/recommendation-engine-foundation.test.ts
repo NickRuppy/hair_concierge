@@ -151,6 +151,41 @@ test("low-damage fixture keeps care needs conservative", () => {
   assert.equal(careNeeds.volumeDirection, "neutral")
 })
 
+test("straight natural texture plus perm supports explicit curl definition goal only", () => {
+  const permedDefinition = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        hair_texture: "straight",
+        chemical_treatment: ["permed"],
+        goals: ["curl_definition"],
+      },
+      [],
+    ).input,
+  )
+  const permedDamage = buildDamageAssessment(permedDefinition)
+  const permedCareNeeds = buildCareNeedAssessment(permedDefinition, permedDamage)
+
+  assert.equal(permedCareNeeds.definitionSupportNeed, "moderate")
+  assert.equal(permedCareNeeds.detanglingNeed, "none")
+
+  const straightenedDefinition = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        hair_texture: "straight",
+        chemical_treatment: ["chemically_straightened"],
+        goals: ["curl_definition"],
+      },
+      [],
+    ).input,
+  )
+  const straightenedDamage = buildDamageAssessment(straightenedDefinition)
+  const straightenedCareNeeds = buildCareNeedAssessment(straightenedDefinition, straightenedDamage)
+
+  assert.equal(straightenedCareNeeds.definitionSupportNeed, "none")
+})
+
 test("severe-damage fixture yields severe structural load and bond builder recommendation", () => {
   const adapted = adaptRecommendationInputFromPersistence(
     SEVERE_DAMAGE_PROFILE,

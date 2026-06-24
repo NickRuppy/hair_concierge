@@ -574,6 +574,36 @@ test("curl-definition branch fires when primaryGoal=curl_definition and structur
   ])
 })
 
+test("curl-definition branch supports straight natural texture when a perm is selected", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    treatment: ["dauerwelle"],
+    concerns: [],
+    goals: ["curl_definition"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Wellen und Locken besser definieren")
+  assert.match(narrative.needs.mainLeverProducts, /Curl-Leave-in/i)
+})
+
+test("chemical straightening does not unlock curl-definition narrative for straight natural texture", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    treatment: ["chemisch_geglaettet"],
+    concerns: [],
+    goals: ["curl_definition"],
+  })
+
+  assert.notEqual(narrative.needs.mainLeverTitle, "Wellen und Locken besser definieren")
+  assert.doesNotMatch(narrative.needs.mainLeverProducts, /Curl-Leave-in/i)
+})
+
 test("shine branch fires when primaryGoal=shine and no earlier branch matches", () => {
   const narrative = buildQuizResultNarrative({
     structure: "straight",
