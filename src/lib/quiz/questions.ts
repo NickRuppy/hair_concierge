@@ -175,7 +175,7 @@ export const quizQuestions: QuizQuestion[] = [
     questionNumber: 7,
     title: "Sind deine Haare chemisch behandelt?",
     instruction:
-      "Wähle alles aus, was in deinen Längen noch vorhanden ist. Gemeint sind Behandlungen, die Farbe oder Form chemisch verändern. Pflege, Kuren, Bondbuilder und normales Hitzestyling zählen hier nicht.",
+      "Hier geht es um chemische Veränderungen in deinen Längen – zum Beispiel Farbe, Aufhellung, Dauerwelle oder Glättung. Deine natürliche Haarstruktur hast du schon separat am Anfang ausgewählt.",
     options: [
       {
         value: "natur",
