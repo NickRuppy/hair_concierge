@@ -31,6 +31,18 @@ import { buildRetrievalDebugEventData } from "../src/lib/chat-runtime/debug-trac
 
 type SelectProductsToolParams = Parameters<ReturnType<typeof createSelectProductsTool>>[0]
 
+const verifyConversationOwnership = async ({
+  conversationId,
+  userId,
+}: {
+  conversationId: string
+  userId: string
+}) => {
+  assert.equal(typeof conversationId, "string")
+  assert.equal(typeof userId, "string")
+  return true
+}
+
 function createProduct(id: string): Product & { similarity: number } {
   return {
     id,
@@ -131,6 +143,269 @@ function createTextStream(text: string): ReadableStream<Uint8Array> {
     },
   })
 }
+
+test("chat product intake offer is driven by structured pipeline metadata and preserves model copy", async () => {
+  const modelAnswer =
+    "Danke dir. Dieses konkrete Pantene-Shampoo kenne ich noch nicht sicher in unserer Produktdatenbank. Damit ich es wirklich passend zu deiner Routine einschätzen kann, kannst du es kurz hinzufügen."
+  const productIntakeOffer = {
+    id: "offer-1",
+    source: "chat",
+    reason: "product_lookup_not_found",
+    category: "shampoo",
+    extracted_identity: {
+      brand_text: "Pantene",
+      product_name_text: "Pro-V Repair & Care Shampoo",
+    },
+  }
+  const messageRows: Array<Record<string, unknown>> = []
+  const conversationUpdates: Array<Record<string, unknown>> = []
+  const statePersistenceCalls: unknown[] = []
+  const memoryExtractionCalls: unknown[] = []
+  const traceRows: Array<Record<string, unknown>> = []
+  let decisionContextProductIntakeOffer: unknown = null
+  const admin = createFakeChatAdminClient({ messageRows, conversationUpdates })
+
+  const handler = createChatPostHandler({
+    createClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({ data: { user: { id: "user-1" } } }),
+        },
+      }) as never,
+    checkRateLimit: async () => ({ allowed: true }) as never,
+    ensureLangfuseTracing: () => null,
+    flushLangfuseClient: async () => {},
+    getLangfuseClient: () =>
+      ({
+        getTraceUrl: async () => "https://langfuse.test/trace/trace-1",
+      }) as never,
+    getLangfuseRelease: () => "test-release",
+    resolveLangfuseTraceId: () => "trace-1",
+    startObservation: () =>
+      ({
+        otelSpan: {},
+        update: () => {},
+        end: () => {},
+      }) as never,
+    propagateAttributes: ((_attributes: unknown, fn: () => unknown) => fn()) as never,
+    otelContext: {
+      active: () => ({}),
+      with: async (_context: unknown, fn: () => unknown) => fn(),
+    } as never,
+    otelTrace: {
+      setSpan: () => ({}),
+    } as never,
+    loadRuntimeDeps: async () =>
+      ({
+        createAdminClient: () => admin,
+        runAgentV2ProductionPipeline: async () => ({
+          stream: createTextStream(modelAnswer),
+          intent: "product_question",
+          matchedProducts: [],
+          sources: [{ title: "Source that should not be shown" }],
+          retrievalSummary: { final_context_count: 0 },
+          routerDecision: {
+            confidence: 0.8,
+            retrieval_mode: "semantic",
+            response_mode: "answer",
+          },
+          conversationStateTransition: { next_state: "should_not_persist" },
+          categoryDecision: undefined,
+          engineTrace: undefined,
+          debugTrace: {},
+          visibleFailure: false,
+          answerMode: "product_recommendation",
+          productIntakeOffer,
+        }),
+        buildAssistantDecisionContext: (
+          _sources: unknown,
+          _categoryDecision: unknown,
+          _engineTrace: unknown,
+          _responseMode: unknown,
+          productIntakeOffer: unknown,
+        ) => {
+          decisionContextProductIntakeOffer = productIntakeOffer
+          return { product_intake_offer: productIntakeOffer }
+        },
+        buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
+        extractConversationMemory: (...args: unknown[]) => {
+          memoryExtractionCalls.push(args)
+          return Promise.resolve()
+        },
+        buildRetrievalDebugEventData: () => ({ route_debug: true }),
+        finalizeChatTurnTrace: (_trace: unknown, params: Record<string, unknown>) => ({
+          response_composition: {},
+          decision_context: {
+            engine_trace: null,
+            matched_products: [],
+          },
+          conversation_state_persistence: params.conversation_state_persistence,
+        }),
+        summarizeEngineTraceForLangfuse: () => null,
+        summarizeProductsForLangfuse: () => [],
+        summarizeAgentV2TraceForLangfuse: () => null,
+        persistConversationStateTransition: async (...args: unknown[]) => {
+          statePersistenceCalls.push(args)
+          return { status: "persisted", error: null }
+        },
+        chatMessageSchema: {
+          safeParse: (value: unknown) => ({ success: true, data: value }),
+        },
+        generateConversationTitle: async () => {},
+      }) as never,
+    persistConversationTurnTrace: async (row) => {
+      traceRows.push(row)
+    },
+    randomUUID: () => "offer-1",
+    now: () => 0,
+  })
+
+  const response = await handler(
+    new Request("https://example.test/api/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        message: "Ich benutze Pantene Pro-V Shampoo. Passt das gut zu mir?",
+        conversation_id: "conversation-1",
+      }),
+    }),
+  )
+  const responseText = await response.text()
+
+  assert.equal(response.status, 200)
+  assert.match(responseText, /product_intake_offer/)
+  assert.match(responseText, new RegExp(modelAnswer))
+  assert.equal(messageRows[1]?.content, modelAnswer)
+  assert.deepEqual(decisionContextProductIntakeOffer, productIntakeOffer)
+  assert.deepEqual(
+    (messageRows[1]?.rag_context as { product_intake_offer?: unknown } | undefined)
+      ?.product_intake_offer,
+    productIntakeOffer,
+  )
+  assert.equal(statePersistenceCalls.length, 0)
+  assert.equal(memoryExtractionCalls.length, 0)
+  assert.equal(traceRows.length, 1)
+})
+
+test("chat route does not infer product intake offer from raw user message", async () => {
+  const modelAnswer =
+    "Ich kann das konkrete Produkt nur bewerten, wenn es in der Produktdatenbank sicher gefunden wurde."
+  const messageRows: Array<Record<string, unknown>> = []
+  const conversationUpdates: Array<Record<string, unknown>> = []
+  const statePersistenceCalls: unknown[] = []
+  const memoryExtractionCalls: unknown[] = []
+  const traceRows: Array<Record<string, unknown>> = []
+  const admin = createFakeChatAdminClient({ messageRows, conversationUpdates })
+
+  const handler = createChatPostHandler({
+    createClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({ data: { user: { id: "user-1" } } }),
+        },
+      }) as never,
+    checkRateLimit: async () => ({ allowed: true }) as never,
+    ensureLangfuseTracing: () => null,
+    flushLangfuseClient: async () => {},
+    getLangfuseClient: () =>
+      ({
+        getTraceUrl: async () => "https://langfuse.test/trace/trace-1",
+      }) as never,
+    getLangfuseRelease: () => "test-release",
+    resolveLangfuseTraceId: () => "trace-1",
+    startObservation: () =>
+      ({
+        otelSpan: {},
+        update: () => {},
+        end: () => {},
+      }) as never,
+    propagateAttributes: ((_attributes: unknown, fn: () => unknown) => fn()) as never,
+    otelContext: {
+      active: () => ({}),
+      with: async (_context: unknown, fn: () => unknown) => fn(),
+    } as never,
+    otelTrace: {
+      setSpan: () => ({}),
+    } as never,
+    loadRuntimeDeps: async () =>
+      ({
+        createAdminClient: () => admin,
+        runAgentV2ProductionPipeline: async () => ({
+          stream: createTextStream(modelAnswer),
+          intent: "routine_question",
+          matchedProducts: [],
+          sources: [],
+          retrievalSummary: { final_context_count: 0 },
+          routerDecision: {
+            confidence: 0.8,
+            retrieval_mode: "semantic",
+            response_mode: "answer",
+          },
+          conversationStateTransition: { next_state: "persist" },
+          categoryDecision: undefined,
+          engineTrace: undefined,
+          debugTrace: {},
+          visibleFailure: false,
+          answerMode: "product_recommendation",
+        }),
+        buildAssistantDecisionContext: (
+          _sources: unknown,
+          _categoryDecision: unknown,
+          _engineTrace: unknown,
+          _responseMode: unknown,
+          productIntakeOffer: unknown,
+        ) => ({ product_intake_offer: productIntakeOffer }),
+        buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
+        extractConversationMemory: (...args: unknown[]) => {
+          memoryExtractionCalls.push(args)
+          return Promise.resolve()
+        },
+        buildRetrievalDebugEventData: () => ({ route_debug: true }),
+        finalizeChatTurnTrace: (_trace: unknown, params: Record<string, unknown>) => ({
+          response_composition: {},
+          decision_context: {
+            engine_trace: null,
+            matched_products: [],
+          },
+          conversation_state_persistence: params.conversation_state_persistence,
+        }),
+        summarizeEngineTraceForLangfuse: () => null,
+        summarizeProductsForLangfuse: () => [],
+        summarizeAgentV2TraceForLangfuse: () => null,
+        persistConversationStateTransition: async (...args: unknown[]) => {
+          statePersistenceCalls.push(args)
+          return { status: "persisted", error: null }
+        },
+        chatMessageSchema: {
+          safeParse: (value: unknown) => ({ success: true, data: value }),
+        },
+        generateConversationTitle: async () => {},
+      }) as never,
+    persistConversationTurnTrace: async (row) => {
+      traceRows.push(row)
+    },
+    randomUUID: () => "offer-1",
+    now: () => 0,
+  })
+
+  const response = await handler(
+    new Request("https://example.test/api/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        message: "Ich benutze Pantene Pro-V Shampoo. Passt das gut zu mir?",
+        conversation_id: "conversation-1",
+      }),
+    }),
+  )
+  const responseText = await response.text()
+
+  assert.equal(response.status, 200)
+  assert.doesNotMatch(responseText, /product_intake_offer/)
+  assert.match(responseText, new RegExp(modelAnswer))
+  assert.equal(messageRows[1]?.content, modelAnswer)
+  assert.equal(statePersistenceCalls.length, 1)
+  assert.equal(memoryExtractionCalls.length, 1)
+  assert.equal(traceRows.length, 1)
+})
 
 function createFakeChatAdminClient(params: {
   messageRows: Array<Record<string, unknown>>
@@ -573,6 +848,57 @@ test("AgentV2 persisted state recovers from malformed persisted state", () => {
   assert.equal(state.agent_v2.routine_thread_context, null)
 })
 
+test("AgentV2 production pipeline rejects mismatched user and conversation before loading history or state", async () => {
+  let historyLoaded = false
+  let stateLoaded = false
+
+  await assert.rejects(
+    () =>
+      runAgentV2ProductionPipeline(
+        {
+          message: "Hallo",
+          conversationId: "conversation-owned-by-user-2",
+          userId: "user-1",
+          requestId: "request-ownership",
+        },
+        {
+          verifyConversationOwnership: async ({ conversationId, userId }) => {
+            assert.equal(conversationId, "conversation-owned-by-user-2")
+            assert.equal(userId, "user-1")
+            return false
+          },
+          loadConversationHistory: async () => {
+            historyLoaded = true
+            return []
+          },
+          getUserContext: async () => ({
+            profile: createCompleteHairProfile(),
+            routine_inventory: [],
+            relevant_memory: [],
+            derived_signals: [],
+            suggested_overlays: [],
+            missing_profile: [],
+          }),
+          loadUserMemoryContext: async () => ({
+            enabled: true,
+            entries: [],
+            promptContext: null,
+            dislikedProductNames: [],
+          }),
+          loadConversationState: async () => {
+            stateLoaded = true
+            return createDefaultConversationState()
+          },
+          runAgentV2ResponsesTurn: async () => createAgentV2Result(),
+        },
+      ),
+    /does not belong to user/i,
+  )
+
+  assert.equal(historyLoaded, false)
+  assert.equal(stateLoaded, false)
+})
+
 test("AgentV2 production pipeline returns cards, trace, and CareBalance context", async () => {
   const primaryProduct = createProduct("primary")
   const fallbackProduct = createProduct("fallback")
@@ -621,6 +947,7 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () =>
         [
           {
@@ -736,6 +1063,421 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
   assert.equal(failedDebugEvent.visible_failure, true)
 })
 
+test("AgentV2 production pipeline keeps parallel select_products results isolated", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const shampooProduct = createProduct("shampoo-product")
+  const conditionerProduct = createProduct("conditioner-product")
+  const shampooSelection: SelectProductsToolResult = {
+    projection: {
+      category: "shampoo",
+      decision: "recommended",
+      product_response_policy: "recommend",
+      policy_reason: "Explicit shampoo comparison.",
+      profile_basis: [],
+      category_guidance: "Shampoo passt als konkrete Produktempfehlung.",
+      products: [
+        {
+          rank: 1,
+          product_id: shampooProduct.id,
+          name: shampooProduct.name,
+          brand: shampooProduct.brand,
+          price_eur: shampooProduct.price_eur,
+          currency: shampooProduct.currency,
+          fit_reason: "Passt als Shampoo.",
+          caveat: null,
+          supported_claims: [],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [shampooProduct],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: "shampoo",
+      message: "Vergleiche Shampoo und Conditioner.",
+    }),
+  }
+  const conditionerSelection: SelectProductsToolResult = {
+    projection: {
+      category: "conditioner",
+      decision: "recommended",
+      product_response_policy: "recommend",
+      policy_reason: "Explicit conditioner comparison.",
+      profile_basis: [],
+      category_guidance: "Conditioner passt als konkrete Produktempfehlung.",
+      products: [
+        {
+          rank: 1,
+          product_id: conditionerProduct.id,
+          name: conditionerProduct.name,
+          brand: conditionerProduct.brand,
+          price_eur: conditionerProduct.price_eur,
+          currency: conditionerProduct.currency,
+          fit_reason: "Passt als Conditioner.",
+          caveat: null,
+          supported_claims: [],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [conditionerProduct],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: "conditioner",
+      message: "Vergleiche Shampoo und Conditioner.",
+    }),
+  }
+  const resolvers = new Map<string, (value: SelectProductsToolResult) => void>()
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Vergleiche Shampoo und Conditioner.",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-parallel-select-products",
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createSelectProductsTool:
+        (options = {}) =>
+        async (input: SelectProductsToolParams) =>
+          new Promise((resolve) => {
+            resolvers.set(input.category, (result) => {
+              options.onResult?.(result)
+              resolve(result.projection)
+            })
+          }),
+      runAgentV2ResponsesTurn: async (params) => {
+        const shampooPromise = params.tools.select_products({ category: "shampoo" })
+        const conditionerPromise = params.tools.select_products({ category: "conditioner" })
+
+        resolvers.get("conditioner")?.(conditionerSelection)
+        resolvers.get("shampoo")?.(shampooSelection)
+
+        const [shampooProjection, conditionerProjection] = (await Promise.all([
+          shampooPromise,
+          conditionerPromise,
+        ])) as [AgentV2SelectProductsProjection, AgentV2SelectProductsProjection]
+
+        assert.equal(shampooProjection.category, "shampoo")
+        assert.equal(conditionerProjection.category, "conditioner")
+        return createAgentV2Result()
+      },
+    },
+  )
+})
+
+test("AgentV2 production pipeline surfaces product intake offer from lookup result", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "general_advice",
+    interpreted_intent: "User asks about their own named product.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Pantene Pro-V Volume Pur Shampoo",
+      confidence: 0.88,
+    },
+    tool_grounding: {
+      used_guidance_package_ids: ["base.advisor_rules.v1"],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Danke dir. Dieses konkrete Shampoo kenne ich noch nicht sicher in unserer Produktdatenbank. Du kannst es kurz hinzufügen, dann prüfen wir es sauber.",
+      category_or_topic: "shampoo",
+      key_points_de: [],
+      next_step_offer_de: null,
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Ich nutze Pantene Pro-V Volume Pur Shampoo. Passt das zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-lookup",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-pantene", canonical_name: "Pantene" }],
+            productLines: [
+              { id: "line-pro-v", brand_id: "brand-pantene", canonical_name: "Pro-V" },
+            ],
+            brandAliases: [
+              {
+                brand_id: "brand-pantene",
+                product_line_id: "line-pro-v",
+                alias: "Pantene Pro-V",
+              },
+            ],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Pantene Pro-V",
+          product_name_text: "Volume Pur Shampoo",
+          reason: "User asks whether their own named product suits them.",
+          evidence_quote: "Pantene Pro-V Volume Pur Shampoo",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  assert.deepEqual(result.productIntakeOffer, {
+    id: "product-intake-request-lookup",
+    source: "chat",
+    reason: "product_lookup_not_found",
+    category: "shampoo",
+    extracted_identity: {
+      brand_text: "Pantene Pro-V",
+      product_name_text: "Volume Pur Shampoo",
+    },
+  })
+  assert.equal(
+    await readStream(result.stream),
+    agentResult.final_answer.payload.user_facing_answer_de,
+  )
+})
+
+test("AgentV2 production pipeline defaults product intake lookup off", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  let observedProductIntakeEnabled: boolean | undefined
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Ich nutze Pantene Pro-V Volume Pur Shampoo. Passt das zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-default-disabled-lookup",
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      runAgentV2ResponsesTurn: async (params) => {
+        observedProductIntakeEnabled = params.productIntakeEnabled
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(observedProductIntakeEnabled, false)
+  assert.equal(result.productIntakeOffer, null)
+})
+
+test("AgentV2 production pipeline disables product intake lookup when feature flag is off", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  let observedProductIntakeEnabled: boolean | undefined
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Ich nutze Pantene Pro-V Volume Pur Shampoo. Passt das zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-disabled-lookup",
+      productIntakeEnabled: false,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      runAgentV2ResponsesTurn: async (params) => {
+        observedProductIntakeEnabled = params.productIntakeEnabled
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(observedProductIntakeEnabled, false)
+  assert.equal(result.productIntakeOffer, null)
+})
+
+test("AgentV2 production pipeline memoizes product lookup catalogs per turn", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  let loadCatalogCalls = 0
+  let loadBrandCatalogCalls = 0
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Ich nutze Pantene Pro-V Volume Pur Shampoo. Passt das zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-lookup-cache",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => {
+            loadCatalogCalls += 1
+            return { products: [], identifiers: [] }
+          },
+          loadBrandResolutionCatalog: async () => {
+            loadBrandCatalogCalls += 1
+            return {
+              brands: [{ id: "brand-pantene", canonical_name: "Pantene" }],
+              productLines: [],
+              brandAliases: [],
+            }
+          },
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Pantene",
+          product_name_text: "Volume Pur Shampoo",
+          reason: "First check.",
+          evidence_quote: "Pantene Pro-V Volume Pur Shampoo",
+        })
+        await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Pantene",
+          product_name_text: "Volume Pur Shampoo",
+          reason: "Second check.",
+          evidence_quote: "Pantene Pro-V Volume Pur Shampoo",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(loadCatalogCalls, 1)
+  assert.equal(loadBrandCatalogCalls, 1)
+})
+
 test("AgentV2 production pipeline exposes boundary answer mode without products", async () => {
   const hairProfile = createCompleteHairProfile()
   const boundaryResult = createAgentV2Result()
@@ -821,6 +1563,7 @@ test("AgentV2 production pipeline exposes boundary answer mode without products"
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: hairProfile,
@@ -1146,6 +1889,7 @@ test("AgentV2 production pipeline uses observed OpenAI and managed prompt refs b
         requestId: "request-1",
       },
       {
+        verifyConversationOwnership,
         loadConversationHistory: async () => [],
         getUserContext: async () => ({
           profile: createCompleteHairProfile(),
@@ -1226,6 +1970,7 @@ test("AgentV2 production pipeline can disable observed OpenAI via rollback flag"
         requestId: "request-1",
       },
       {
+        verifyConversationOwnership,
         loadConversationHistory: async () => [],
         getUserContext: async () => ({
           profile: createCompleteHairProfile(),
@@ -1330,6 +2075,7 @@ test("AgentV2 production pipeline treats any runtime failure stage as visible fa
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: hairProfile,
@@ -1485,6 +2231,7 @@ test("AgentV2 production pipeline carries persisted routine thread context into 
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: createCompleteHairProfile(),
@@ -1558,6 +2305,7 @@ test("AgentV2 production pipeline carries persisted surfaced product facts into 
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: createCompleteHairProfile(),
@@ -1622,6 +2370,7 @@ test("AgentV2 production pipeline carries session memory through conversation st
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: createCompleteHairProfile(),
@@ -1674,6 +2423,7 @@ test("AgentV2 production pipeline ignores legacy V1 routine fields without flat 
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: createCompleteHairProfile(),

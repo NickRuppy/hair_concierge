@@ -34,6 +34,7 @@ import type { CareBalanceToolContext } from "@/lib/agent/tools/care-balance-cont
 import {
   BuildOrFixRoutineToolInputSchema,
   ClassifyTurnGateToolParametersSchema,
+  LookupProductCandidateToolInputSchema,
   type CurrentCareFactInput,
   SelectProductsToolInputSchema,
   buildAgentV2ResponsesTools,
@@ -64,6 +65,7 @@ type AgentV2ToolName =
   | "classify_turn_gate"
   | "load_advisor_guidance"
   | "set_current_care_context"
+  | "lookup_product_candidate"
   | "select_products"
   | "build_or_fix_routine"
 type AgentV2RuntimeToolName = keyof AgentV2RuntimeTools
@@ -98,6 +100,10 @@ interface AgentV2RuntimeTools {
     executionContext?: AgentV2RuntimeToolExecutionContext,
   ) => Promise<unknown>
   select_products: (
+    input: Record<string, unknown>,
+    executionContext?: AgentV2RuntimeToolExecutionContext,
+  ) => Promise<unknown>
+  lookup_product_candidate: (
     input: Record<string, unknown>,
     executionContext?: AgentV2RuntimeToolExecutionContext,
   ) => Promise<unknown>
@@ -209,6 +215,7 @@ export async function runAgentV2ResponsesTurn(params: {
   priorSelectedProductProjections?: readonly Partial<AgentV2SelectProductsProjection>[]
   tools: AgentV2RuntimeTools
   safetyMode?: AgentV2SafetyMode
+  productIntakeEnabled?: boolean
   policyOverrides?: Partial<AgentV2ModelPolicy>
   langfuseMode?: "disabled" | "enabled"
   observeToolCall?: <T>(params: {
@@ -218,6 +225,7 @@ export async function runAgentV2ResponsesTurn(params: {
   }) => Promise<T>
 }): Promise<AgentV2ResponsesTurnResult> {
   const safetyMode = params.safetyMode ?? "normal"
+  const productIntakeEnabled = params.productIntakeEnabled === true
   const policy = { ...getAgentV2ModelPolicy(), ...params.policyOverrides }
   const routineThreadContext = normalizeRoutineThreadContext(params.routineThreadContext ?? null)
   const trace = createAgentV2Trace({
@@ -257,7 +265,11 @@ export async function runAgentV2ResponsesTurn(params: {
   const shortConfirmationWithoutPendingFollowup =
     isShortFollowupConfirmation && !pendingFollowupAction
   const turnGateEnabled = policy.turn_gate_enabled
-  const toolDefinitions = buildAgentV2ResponsesTools({ safetyMode, turnGateEnabled })
+  const toolDefinitions = buildAgentV2ResponsesTools({
+    safetyMode,
+    turnGateEnabled,
+    productIntakeEnabled,
+  })
   const allowedExecutableTools = new Set(
     toolDefinitions
       .map((tool) => tool.name)
@@ -288,6 +300,7 @@ export async function runAgentV2ResponsesTurn(params: {
     routineToolPolicy,
     turnGateEnabled,
     namedProductContext,
+    productIntakeEnabled,
   )
   const buildCurrentClarificationFallback = () =>
     isNonProceedTurnGate(turnGateAuthorized)
@@ -898,6 +911,7 @@ function buildInputItems(
   routineToolPolicy: RoutineToolPolicy,
   turnGateEnabled: boolean,
   namedProductContext: AgentV2NamedProductContext | null,
+  productIntakeEnabled: boolean,
 ): unknown[] {
   const items: unknown[] = [
     {
@@ -982,7 +996,7 @@ function buildInputItems(
   if (namedProductContext) {
     items.push({
       role: "system",
-      content: buildNamedProductContextGuidance(namedProductContext),
+      content: buildNamedProductContextGuidance(namedProductContext, { productIntakeEnabled }),
     })
   }
 
@@ -1009,13 +1023,29 @@ function buildInputItems(
   return items
 }
 
-function buildNamedProductContextGuidance(context: AgentV2NamedProductContext): string {
-  return [
+function buildNamedProductContextGuidance(
+  context: AgentV2NamedProductContext,
+  params: { productIntakeEnabled: boolean },
+): string {
+  const guidance = [
     `Current user named a plausible exact product: "${context.display_name}" (${context.category}). Treat it as user-provided but not catalog-verified.`,
     "For product_detail, still call select_products before the terminal answer.",
     "If select_products returns no exact or supported product_detail match, do not ask for the exact name again and do not substitute unrelated catalog alternatives as the answer.",
-    "Use constraint_blocked or a cautious non-evaluative answer: say it is not a verified catalog hit, cannot be evaluated exactly, and only discuss category-level plausibility or limitations if useful.",
-  ].join(" ")
+  ]
+
+  if (params.productIntakeEnabled) {
+    guidance.push(
+      "Also call lookup_product_candidate when the product identity and category/use are specific enough; use its result to distinguish found_exact, ambiguous, unsupported_category, insufficient_identity, and not_found.",
+      "If lookup_product_candidate returns not_found, write a natural German answer saying the product is not yet in the database and can be added for review; the app will render the intake card from structured metadata.",
+      "Use constraint_blocked or a cautious non-evaluative answer when lookup is ambiguous, unsupported, or missing category/identity: say it is not a verified catalog hit, cannot be evaluated exactly, and only discuss category-level plausibility or limitations if useful.",
+    )
+  } else {
+    guidance.push(
+      "If select_products cannot verify an exact catalog hit, answer cautiously without offering product intake: say it is not a verified catalog hit and ask for the exact product/category only when needed.",
+    )
+  }
+
+  return guidance.join(" ")
 }
 
 function normalizeRoutineThreadContext(
@@ -1626,6 +1656,11 @@ function validateExecutableToolArguments(
     return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
   }
 
+  if (name === "lookup_product_candidate") {
+    const parsed = LookupProductCandidateToolInputSchema.safeParse(value)
+    return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
+  }
+
   if (name === "build_or_fix_routine") {
     const parsed = BuildOrFixRoutineToolInputSchema.safeParse(value)
     return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
@@ -1659,6 +1694,7 @@ function isExecutableToolName(name: string): name is AgentV2ToolName {
     name === "classify_turn_gate" ||
     name === "load_advisor_guidance" ||
     name === "set_current_care_context" ||
+    name === "lookup_product_candidate" ||
     name === "select_products" ||
     name === "build_or_fix_routine"
   )

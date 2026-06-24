@@ -34,6 +34,63 @@ test("AgentV2 exposes only the V0 advisor toolset", () => {
   }
 })
 
+test("AgentV2 exposes product intake lookup only when explicitly enabled", () => {
+  const tools = buildAgentV2ResponsesTools({
+    safetyMode: "normal",
+    productIntakeEnabled: true,
+  })
+  const names = tools.map((tool) => tool.name).sort()
+
+  assert.deepEqual(names, [
+    "build_or_fix_routine",
+    "load_advisor_guidance",
+    "lookup_product_candidate",
+    "select_products",
+    "set_current_care_context",
+    "submit_final_answer",
+  ])
+})
+
+test("AgentV2 omits product intake lookup tool when product intake is disabled", () => {
+  const tools = buildAgentV2ResponsesTools({
+    safetyMode: "normal",
+    productIntakeEnabled: false,
+  })
+  const names = tools.map((tool) => tool.name).sort()
+
+  assert.deepEqual(names, [
+    "build_or_fix_routine",
+    "load_advisor_guidance",
+    "select_products",
+    "set_current_care_context",
+    "submit_final_answer",
+  ])
+})
+
+test("AgentV2 disabled product intake guidance does not promise an intake card", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  await runAgentV2ResponsesTurn({
+    client,
+    message: "Kannst du den Moisture Mist Conditioner von Urban Alchemy bewerten?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: false,
+    tools: fakeAgentV2Tools(),
+  })
+
+  const firstInput = getInputItems(client.requests[0])
+  const namedProductContextItem = firstInput
+    .map(asRecord)
+    .find((item) =>
+      String(item?.content ?? "").includes("Current user named a plausible exact product"),
+    )
+  const content = String(namedProductContextItem?.content ?? "")
+  assert.doesNotMatch(content, /lookup_product_candidate/)
+  assert.doesNotMatch(content, /intake card/i)
+  assert.match(content, /without offering product intake/)
+})
+
 test("AgentV2 restricted safety toolset omits product selection", () => {
   const names = buildAgentV2ResponsesTools({ safetyMode: "restricted" })
     .map((tool) => tool.name)
@@ -98,7 +155,10 @@ test("AgentV2 product and guidance tool descriptions route bond repair brands to
 })
 
 test("AgentV2 strict tool schemas avoid open records and root unions", () => {
-  const tools = buildAgentV2ResponsesTools({ safetyMode: "normal" })
+  const tools = buildAgentV2ResponsesTools({
+    safetyMode: "normal",
+    productIntakeEnabled: true,
+  })
 
   for (const tool of tools) {
     const serialized = JSON.stringify(tool.parameters)
@@ -126,6 +186,13 @@ test("AgentV2 strict tool schemas avoid open records and root unions", () => {
     "product_request_kind",
     "requested_product_count",
     "count_policy",
+    "evidence_quote",
+  ])
+  assertRequiredToolFields(tools, "lookup_product_candidate", [
+    "category",
+    "brand_text",
+    "product_name_text",
+    "reason",
     "evidence_quote",
   ])
   assertRequiredToolFields(tools, "build_or_fix_routine", [
@@ -1583,6 +1650,7 @@ function fakeAgentV2Tools() {
       markdown_brief: "Guidance.",
     }),
     select_products: async () => ({ valid_product_ids: [] }),
+    lookup_product_candidate: async () => ({ status: "insufficient_identity" }),
     build_or_fix_routine: async () => ({ visible_steps: [] }),
   }
 }
@@ -1656,6 +1724,51 @@ test("AgentV2 runtime executes tool call then terminal answer", async () => {
         asRecord(item)?.type === "function_call_output" && asRecord(item)?.call_id === "call_1",
     ),
   )
+})
+
+test("AgentV2 runtime executes product candidate lookup tool", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    functionCall("call_1", "lookup_product_candidate", {
+      category: "shampoo",
+      brand_text: "Pantene Pro-V",
+      product_name_text: "Volume Pur Shampoo",
+      reason: "The user asks whether their own named product suits them.",
+      evidence_quote: "Pantene Pro-V Volume Pur Shampoo",
+    }),
+    terminalGeneralAdvice("call_2"),
+  ])
+  const toolInputs: Record<string, unknown>[] = []
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ich nutze Pantene Pro-V Volume Pur Shampoo. Passt das zu mir?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async (input) => {
+        toolInputs.push(input)
+        return {
+          status: "not_found",
+          category: "shampoo",
+          intake_offer: {
+            id: "offer-1",
+            source: "chat",
+            reason: "product_lookup_not_found",
+            category: "shampoo",
+            extracted_identity: {
+              brand_text: "Pantene Pro-V",
+              product_name_text: "Volume Pur Shampoo",
+            },
+          },
+        }
+      },
+    },
+  })
+
+  assert.equal(toolInputs.length, 1)
+  assert.equal(toolInputs[0]?.category, "shampoo")
+  assert.ok(result.trace.tool_calls.some((call) => call.name === "lookup_product_candidate"))
 })
 
 test("AgentV2 turn gate must run before advisor tools when enabled", async () => {
@@ -1895,6 +2008,7 @@ test("AgentV2 runtime injects named product context for plausible off-catalog pr
     message: "Kannst du den Moisture Mist Conditioner von Urban Alchemy bewerten?",
     recentMessages: [],
     userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
     tools: fakeAgentV2Tools(),
   })
 
@@ -1908,6 +2022,8 @@ test("AgentV2 runtime injects named product context for plausible off-catalog pr
   assert.match(content, /Urban Alchemy Moisture Mist Conditioner/)
   assert.match(content, /conditioner/)
   assert.match(content, /not catalog-verified/)
+  assert.match(content, /lookup_product_candidate/)
+  assert.match(content, /not_found/)
   assert.match(content, /constraint_blocked/)
   assert.deepEqual(result.trace.named_product_context, {
     display_name: "Urban Alchemy Moisture Mist Conditioner",
@@ -6163,6 +6279,9 @@ test("AgentV2 hard short circuit bypasses model and product tools", async () => 
       },
       select_products: async () => {
         throw new Error("products should not be called")
+      },
+      lookup_product_candidate: async () => {
+        throw new Error("lookup should not be called")
       },
       build_or_fix_routine: async () => {
         throw new Error("routine should not be called")

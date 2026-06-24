@@ -44,6 +44,25 @@ type ConversationHistoryClient = {
   }
 }
 
+type ConversationOwnershipClient = {
+  from(table: "conversations"): {
+    select(columns: string): {
+      eq(
+        column: "id" | "user_id",
+        value: string,
+      ): {
+        eq(
+          column: "id" | "user_id",
+          value: string,
+        ): {
+          maybeSingle(): Promise<ConversationOwnershipQueryResult>
+        }
+        maybeSingle(): Promise<ConversationOwnershipQueryResult>
+      }
+    }
+  }
+}
+
 export async function loadAgentV2ProductionConversationHistory(
   conversationId: string,
   userIdOrClient?: string | unknown,
@@ -80,4 +99,24 @@ export async function loadAgentV2ProductionConversationHistory(
   }
 
   return ((data as Message[]) ?? []).slice().reverse()
+}
+
+export async function verifyAgentV2ProductionConversationOwnership(
+  params: { conversationId: string; userId: string },
+  client: unknown = createAdminClient(),
+): Promise<boolean> {
+  const admin = client as ConversationOwnershipClient
+  const { data, error } = await admin
+    .from("conversations")
+    .select("id")
+    .eq("id", params.conversationId)
+    .eq("user_id", params.userId)
+    .maybeSingle()
+
+  if (error) {
+    console.error("Failed to verify AgentV2 production conversation ownership:", error)
+    return false
+  }
+
+  return Boolean(data?.id)
 }

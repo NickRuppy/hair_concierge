@@ -61,6 +61,7 @@ export interface AgentV2ResponsesToolDefinition {
 export function buildAgentV2ResponsesTools(params: {
   safetyMode: "normal" | "restricted" | "hard_short_circuit"
   turnGateEnabled?: boolean
+  productIntakeEnabled?: boolean
 }): AgentV2ResponsesToolDefinition[] {
   if (params.safetyMode === "hard_short_circuit") {
     throw new Error("Hard short circuit bypasses the AgentV2 tool loop")
@@ -114,7 +115,20 @@ export function buildAgentV2ResponsesTools(params: {
   )
 
   if (params.safetyMode === "normal") {
-    tools.splice(1, 0, {
+    const productTools: AgentV2ResponsesToolDefinition[] = []
+
+    if (params.productIntakeEnabled === true) {
+      productTools.push({
+        type: "function",
+        name: "lookup_product_candidate",
+        description:
+          "Look up a named product candidate in the product catalog when the user wants Chaarlie to work with that specific product: e.g. evaluate their own product, ask whether it suits them, add it to their routine, or clarify a named product. Use this for precise product identity checks before offering product intake. The lookup needs the product category/use when known from the message, context, or product name; if category is unclear, pass null and ask a natural clarification from the result. Do not call this for broad recommendation asks like 'welches Shampoo empfiehlst du?' unless the user names a specific product candidate. If the lookup returns not_found for a supported category, the app may offer the product intake card; if it returns ambiguous, ask which exact product; if unsupported_category, explain that this product category cannot be added yet.",
+        strict: true,
+        parameters: toStrictJsonSchema(LookupProductCandidateToolInputSchema),
+      })
+    }
+
+    productTools.push({
       type: "function",
       name: "select_products",
       description:
@@ -122,10 +136,22 @@ export function buildAgentV2ResponsesTools(params: {
       strict: true,
       parameters: toStrictJsonSchema(SelectProductsToolInputSchema),
     })
+
+    tools.splice(1, 0, ...productTools)
   }
 
   return tools
 }
+
+export const LookupProductCandidateToolInputSchema = z.strictObject({
+  category: z.string().nullable(),
+  brand_text: z.string().nullable(),
+  product_name_text: z.string().nullable(),
+  reason: z.string(),
+  evidence_quote: z.string().min(1),
+})
+
+export type LookupProductCandidateToolInput = z.infer<typeof LookupProductCandidateToolInputSchema>
 
 export const SelectProductsToolInputSchema = z.strictObject({
   category: AgentV2GuidanceCategorySchema.describe(

@@ -12,6 +12,7 @@ import {
 import { classifyOpenAIError } from "@/lib/openai/errors"
 import { sanitizeLangfuseText } from "@/lib/langfuse/masking"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
+import { isProductIntakeEnabled } from "@/lib/product-intake/config"
 import { NextResponse } from "next/server"
 import type { ConversationStatePersistenceTrace } from "@/lib/types"
 import type { PipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
@@ -305,6 +306,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
         debugTrace,
         visibleFailure,
         answerMode,
+        productIntakeOffer: pipelineProductIntakeOffer,
       } = await deps.otelContext.with(parentContext, async () =>
         deps.propagateAttributes(
           {
@@ -325,6 +327,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
               conversationId: activeConversationId,
               userId: user.id,
               requestId,
+              productIntakeEnabled: isProductIntakeEnabled(),
             }),
         ),
       )
@@ -338,6 +341,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
         : routerDecision
       const routeCategoryDecision = isVisibleFailure ? undefined : categoryDecision
       const routeEngineTrace = isVisibleFailure ? null : engineTrace
+      const productIntakeOffer = isVisibleFailure ? null : (pipelineProductIntakeOffer ?? null)
 
       // Save user message
       const { data: userMessageRow, error: userMessageError } = await admin
@@ -423,6 +427,8 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 matchedProducts.length > 0
                   ? matchedProducts.slice(0, 3)
                   : []
+              const productIntakeOfferToSend = productIntakeOffer
+              const responseSources = productIntakeOfferToSend ? [] : sources
               const langfuseTraceUrl = traceUrlPromise ? await traceUrlPromise : null
               if (productsToSend.length > 0) {
                 controller.enqueue(
@@ -432,9 +438,22 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 )
               }
 
-              if (sources.length > 0) {
+              if (responseSources.length > 0) {
                 controller.enqueue(
-                  encoder.encode(`data: ${JSON.stringify({ type: "sources", data: sources })}\n\n`),
+                  encoder.encode(
+                    `data: ${JSON.stringify({ type: "sources", data: responseSources })}\n\n`,
+                  ),
+                )
+              }
+
+              if (productIntakeOfferToSend) {
+                controller.enqueue(
+                  encoder.encode(
+                    `data: ${JSON.stringify({
+                      type: "product_intake_offer",
+                      data: productIntakeOfferToSend,
+                    })}\n\n`,
+                  ),
                 )
               }
 
@@ -445,10 +464,11 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                   role: "assistant",
                   content: fullContent,
                   rag_context: buildAssistantDecisionContext(
-                    sources,
+                    responseSources,
                     routeCategoryDecision,
                     routeEngineTrace,
                     routerDecision.response_mode,
+                    productIntakeOfferToSend,
                   ),
                   product_recommendations: productsToSend.length > 0 ? productsToSend : null,
                   langfuse_trace_id: langfuseTraceId,
@@ -463,16 +483,23 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
 
               let conversationStatePersistence: ConversationStatePersistenceTrace = {
                 status: "skipped",
-                error: isVisibleFailure
-                  ? "visible_failure_no_state_mutation"
-                  : skipsAgentV2StateMutation
-                    ? "answer_mode_no_state_mutation"
-                    : assistantMessageError
-                      ? "assistant_message_not_persisted"
-                      : "assistant_message_id_missing",
+                error: productIntakeOfferToSend
+                  ? "product_intake_deferred_no_state_mutation"
+                  : isVisibleFailure
+                    ? "visible_failure_no_state_mutation"
+                    : skipsAgentV2StateMutation
+                      ? "answer_mode_no_state_mutation"
+                      : assistantMessageError
+                        ? "assistant_message_not_persisted"
+                        : "assistant_message_id_missing",
               }
 
-              if (isVisibleFailure) {
+              if (productIntakeOfferToSend) {
+                conversationStatePersistence = {
+                  status: "skipped",
+                  error: "product_intake_deferred_no_state_mutation",
+                }
+              } else if (isVisibleFailure) {
                 conversationStatePersistence = {
                   status: "skipped",
                   error: "visible_failure_no_state_mutation",
@@ -525,7 +552,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                 })
                 .eq("id", activeConversationId)
 
-              if (!isVisibleFailure && !skipsAgentV2StateMutation) {
+              if (!isVisibleFailure && !skipsAgentV2StateMutation && !productIntakeOfferToSend) {
                 extractConversationMemory(activeConversationId, user.id, {
                   requestId,
                 }).catch(() => {})
@@ -546,7 +573,7 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
 
               const completedTrace = finalizeChatTurnTrace(routeDebugTrace, {
                 assistant_content: fullContent,
-                sources,
+                sources: responseSources,
                 product_count: productsToSend.length,
                 status: isVisibleFailure ? "failed" : "completed",
                 stream_read_ms: Math.round(deps.now() - streamReadStart),
