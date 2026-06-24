@@ -216,6 +216,12 @@ function buildRawInputFromEffectiveContext(context: EffectiveCareContext): RawRe
               category: item.category,
               product_name: item.productName,
               frequency_range: item.frequencyBand,
+              product_id: item.matchStatus === "matched" ? item.productId : null,
+              product_submission_id:
+                item.matchStatus === "pending_review" || item.matchStatus === "needs_more_info"
+                  ? item.productSubmissionId
+                  : null,
+              match_status: item.matchStatus,
             },
           ]
         : [],

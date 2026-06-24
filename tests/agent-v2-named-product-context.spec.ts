@@ -40,6 +40,17 @@ test("detects named product from common what-do-you-think wording", () => {
   assert.equal(context?.display_name, "Urban Alchemy Moisture Mist Conditioner")
 })
 
+test("detects unquoted named product from add-to-routine wording", () => {
+  const context = buildAgentV2NamedProductContext({
+    latestMessage: "Füge Pantene Pro-V Repair & Care Shampoo zu meiner Routine hinzu.",
+    recentMessages: [],
+  })
+
+  assert.equal(context?.plausible_exact_name, true)
+  assert.equal(context?.category, "shampoo")
+  assert.equal(context?.display_name, "Pantene Pro-V Repair & Care Shampoo")
+})
+
 test("detects quoted named product with category signal", () => {
   const context = buildAgentV2NamedProductContext({
     latestMessage: 'Was haelst du vom Conditioner "Moisture Mist" von Urban Alchemy?',

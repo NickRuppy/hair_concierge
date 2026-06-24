@@ -16,6 +16,7 @@ const catalog: ProductLookupCatalog = {
       productLineId: "line-fructis",
       categoryKey: "mask",
       isActive: true,
+      lifecycleStatus: "active",
       isChaarlieRecommended: false,
     },
     {
@@ -25,6 +26,7 @@ const catalog: ProductLookupCatalog = {
       productLineId: "line-fructis",
       categoryKey: "conditioner",
       isActive: true,
+      lifecycleStatus: "active",
       isChaarlieRecommended: true,
     },
     {
@@ -34,6 +36,7 @@ const catalog: ProductLookupCatalog = {
       productLineId: "line-pro-v",
       categoryKey: "shampoo",
       isActive: true,
+      lifecycleStatus: "active",
       isChaarlieRecommended: true,
     },
     {
@@ -43,6 +46,7 @@ const catalog: ProductLookupCatalog = {
       productLineId: "line-pro-v",
       categoryKey: "shampoo",
       isActive: true,
+      lifecycleStatus: "active",
       isChaarlieRecommended: true,
     },
   ],
@@ -72,21 +76,70 @@ const brandCatalog: BrandResolutionCatalogInput = {
   ],
 }
 
-test("lookup returns exact catalog hit even when product is not Chaarlie recommended", () => {
+test("user-visible lookup does not return exact hits for non-Chaarlie-recommended products", () => {
   const result = lookupProductCandidate({
     input: {
       category: "mask",
       brand_text: "Garnier Fructis",
       product_name_text: "Hair Food Aloe Maske",
     },
-    catalog,
+    catalog: {
+      ...catalog,
+      products: [catalog.products[0]],
+    },
     brandCatalog,
+  })
+
+  assert.equal(result.status, "not_found")
+  assert.equal(result.product, null)
+  assert.deepEqual(result.candidates, [])
+  assert.equal(result.intake_offer?.reason, "product_lookup_not_found")
+})
+
+test("intake-dedupe lookup can find active non-Chaarlie-recommended products", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "mask",
+      brand_text: "Garnier Fructis",
+      product_name_text: "Hair Food Aloe Maske",
+    },
+    catalog: {
+      ...catalog,
+      products: [catalog.products[0]],
+    },
+    brandCatalog,
+    eligibilityMode: "intake_dedupe",
   })
 
   assert.equal(result.status, "found_exact")
   assert.equal(result.product?.id, "garnier-mask")
   assert.equal(result.product?.is_chaarlie_recommended, false)
   assert.equal(result.intake_offer, null)
+})
+
+test("user-visible lookup does not return exact hits for non-active-lifecycle products", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "shampoo",
+      brand_text: "Pantene Pro-V",
+      product_name_text: "Repair & Care Shampoo",
+    },
+    catalog: {
+      ...catalog,
+      products: [
+        {
+          ...catalog.products[2],
+          lifecycleStatus: "discontinued",
+        },
+      ],
+    },
+    brandCatalog,
+  })
+
+  assert.equal(result.status, "not_found")
+  assert.equal(result.product, null)
+  assert.deepEqual(result.candidates, [])
+  assert.equal(result.intake_offer?.reason, "product_lookup_not_found")
 })
 
 test("lookup needs category before it can make a conclusive product decision", () => {

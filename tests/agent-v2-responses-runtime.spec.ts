@@ -1771,6 +1771,152 @@ test("AgentV2 runtime executes product candidate lookup tool", async () => {
   assert.ok(result.trace.tool_calls.some((call) => call.name === "lookup_product_candidate"))
 })
 
+test("AgentV2 runtime repairs skipped named-product lookup by calling lookup tool", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["conditioner"],
+    }),
+    terminalOffCatalogNamedProductBlocked("call_2"),
+    functionCall("call_3", "lookup_product_candidate", {
+      category: "conditioner",
+      brand_text: "Urban Alchemy",
+      product_name_text: "Moisture Mist Conditioner",
+      reason: "The user asks whether their own named product suits them.",
+      evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+    }),
+    functionCall(
+      "call_4",
+      "select_products",
+      selectProductsArguments({
+        category: "conditioner",
+        user_request: "Urban Alchemy Moisture Mist Conditioner",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+      }),
+    ),
+    terminalOffCatalogNamedProductBlocked("call_5"),
+  ])
+  const lookupInputs: Record<string, unknown>[] = []
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Kannst du den Moisture Mist Conditioner von Urban Alchemy bewerten?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async (input) => {
+        lookupInputs.push(input)
+        return {
+          status: "not_found",
+          category: "conditioner",
+          product: null,
+          intake_offer: {
+            id: "offer-1",
+            source: "chat",
+            reason: "product_lookup_not_found",
+            category: "conditioner",
+            extracted_identity: {
+              brand_text: "Urban Alchemy",
+              product_name_text: "Moisture Mist Conditioner",
+            },
+          },
+        }
+      },
+      select_products: async () => ({
+        valid_product_ids: [],
+        products: [],
+      }),
+    },
+  })
+
+  assert.equal(result.final_answer.answer_mode, "constraint_blocked")
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.trace.repair_attempts.length, 1)
+  assert.ok(
+    result.trace.repair_attempts[0].validation_errors.some(
+      (error) => error.validator_id === "product_lookup_required",
+    ),
+  )
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "lookup_product_candidate", "select_products"],
+  )
+  assert.equal(lookupInputs.length, 1)
+  assert.equal(lookupInputs[0]?.category, "conditioner")
+})
+
+test("AgentV2 runtime blocks product recommendations after unresolved product lookup", async () => {
+  const products = [{ product_id: "prod_1", name: "Test Conditioner" }]
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["conditioner"],
+    }),
+    functionCall("call_2", "lookup_product_candidate", {
+      category: "conditioner",
+      brand_text: "Urban Alchemy",
+      product_name_text: "Moisture Mist Conditioner",
+      reason: "The user asks whether their own named product suits them.",
+      evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+    }),
+    functionCall(
+      "call_3",
+      "select_products",
+      selectProductsArguments({
+        category: "conditioner",
+        user_request: "Urban Alchemy Moisture Mist Conditioner",
+        evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+      }),
+    ),
+    terminalNamedProductRecommendation("call_4", products, {
+      evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Passt der Urban Alchemy Moisture Mist Conditioner zu mir?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async () => ({
+        status: "not_found",
+        category: "conditioner",
+        product: null,
+        intake_offer: {
+          id: "offer-1",
+          source: "chat",
+          reason: "product_lookup_not_found",
+          category: "conditioner",
+          extracted_identity: {
+            brand_text: "Urban Alchemy",
+            product_name_text: "Moisture Mist Conditioner",
+          },
+        },
+      }),
+      select_products: async () => ({
+        valid_product_ids: products.map((product) => product.product_id),
+        products,
+      }),
+    },
+  })
+
+  assert.equal(result.final_answer.answer_mode, "clarification")
+  assert.equal(result.trace.repair_attempts.length, 1)
+  assert.ok(
+    result.trace.repair_attempts[0].validation_errors.some(
+      (error) => error.validator_id === "product_lookup_unresolved",
+    ),
+  )
+})
+
 test("AgentV2 turn gate must run before advisor tools when enabled", async () => {
   const client = fakeResponsesClientWithOutputs([
     functionCall("gate_1", "classify_turn_gate", {
@@ -3739,7 +3885,14 @@ test("AgentV2 runtime repairs off-catalog named product detail substitutes to co
       answer_mode_hint: "product_recommendation",
       categories: ["conditioner"],
     }),
-    functionCall("call_2", "select_products", {
+    functionCall("call_2", "lookup_product_candidate", {
+      category: "conditioner",
+      brand_text: "Urban Alchemy",
+      product_name_text: "Moisture Mist Conditioner",
+      reason: "User asks about a named conditioner.",
+      evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
+    }),
+    functionCall("call_3", "select_products", {
       ...selectProductsArguments({
         category: "conditioner",
         reason: "User asks about a named conditioner.",
@@ -3750,13 +3903,13 @@ test("AgentV2 runtime repairs off-catalog named product detail substitutes to co
         evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
       }),
     }),
-    terminalNamedProductRecommendation("call_3", substituteProducts, {
+    terminalNamedProductRecommendation("call_4", substituteProducts, {
       product_request_kind: "product_detail",
       requested_product_count: 1,
       count_policy: "none",
       evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
     }),
-    terminalOffCatalogNamedProductBlocked("call_4"),
+    terminalOffCatalogNamedProductBlocked("call_5"),
   ])
 
   const result = await runAgentV2ResponsesTurn({
@@ -3772,8 +3925,14 @@ test("AgentV2 runtime repairs off-catalog named product detail substitutes to co
       routineInventory: [],
       sessionMemory: [],
     },
+    productIntakeEnabled: true,
     tools: {
       ...fakeAgentV2Tools(),
+      lookup_product_candidate: async () => ({
+        status: "not_found",
+        category: "conditioner",
+        product: null,
+      }),
       select_products: async () => ({
         valid_product_ids: substituteProducts.map((product) => product.product_id),
         products: substituteProducts,
@@ -3790,10 +3949,11 @@ test("AgentV2 runtime repairs off-catalog named product detail substitutes to co
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Balea Aqua Hyaluron/)
   assert.equal(result.trace.validation_errors.length, 0)
   assert.equal(result.trace.repair_attempts.length, 1)
-  assert.equal(
-    result.trace.repair_attempts[0].validation_errors[0].validator_id,
-    "named_product_detail_unverified",
+  const repairValidatorIds = result.trace.repair_attempts[0].validation_errors.map(
+    (error) => error.validator_id,
   )
+  assert.ok(repairValidatorIds.includes("product_lookup_unresolved"))
+  assert.ok(repairValidatorIds.includes("named_product_detail_unverified"))
 })
 
 test("AgentV2 runtime repairs product recommendations to respect an explicit count", async () => {

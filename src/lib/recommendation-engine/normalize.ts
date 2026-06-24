@@ -1,4 +1,5 @@
 import { INVENTORY_CATEGORIES } from "@/lib/recommendation-engine/contracts"
+import { normalizeRoutineUsageIdentityCamel } from "@/lib/product-usage/routine-identity"
 import { getVisibleProductUsageItems } from "@/lib/product-usage/shampoo-fallback"
 import { normalizeProductFrequency } from "@/lib/vocabulary"
 import type {
@@ -22,11 +23,15 @@ function normalizeRoutineInventory(
 
   for (const item of getVisibleProductUsageItems(items)) {
     const category = item.category as InventoryCategory
+    const identity = normalizeRoutineUsageIdentityCamel(item)
     const normalizedItem: NormalizedRoutineInventoryItem = {
       category,
       present: true,
       productName: item.product_name?.trim() || null,
       frequencyBand: normalizeProductFrequency(item.frequency_range),
+      productId: identity.productId,
+      productSubmissionId: identity.productSubmissionId,
+      matchStatus: identity.matchStatus,
     }
 
     inventory[category] = normalizedItem

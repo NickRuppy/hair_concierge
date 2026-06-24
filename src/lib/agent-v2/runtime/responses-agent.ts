@@ -45,6 +45,7 @@ import {
   validateAgentV2FinalAnswer,
   type AgentV2FinalAnswerValidationContext,
   type AgentV2FinalAnswerValidationResult,
+  type AgentV2ProductLookupValidationResult,
 } from "@/lib/agent-v2/validation/final-answer-validator"
 import { adaptRecommendationInputFromPersistence } from "@/lib/recommendation-engine/adapters/from-persistence"
 import { buildEffectiveCareContext } from "@/lib/recommendation-engine/effective-care-context"
@@ -276,6 +277,7 @@ export async function runAgentV2ResponsesTurn(params: {
       .filter((name): name is AgentV2ToolName => isExecutableToolName(name)),
   )
   const selectedProductProjections: AgentV2SelectProductsProjection[] = []
+  const productLookupResults: AgentV2ProductLookupValidationResult[] = []
   const routineProjections: AgentV2RoutineProjection[] = []
   const currentTurnCareFacts: CurrentTurnCareFact[] = []
   let effectiveCareContext = buildEffectiveCareContextForTurn(
@@ -334,6 +336,7 @@ export async function runAgentV2ResponsesTurn(params: {
       ...(params.priorSelectedProductProjections ?? []),
       ...selectedProductProjections,
     ],
+    productLookupResults,
     routineProjections,
     latestUserMessage: params.message,
     recentEvidenceText: buildRecentEvidenceText(params.recentMessages, routineThreadContext),
@@ -348,6 +351,7 @@ export async function runAgentV2ResponsesTurn(params: {
     knownHardRuleIds: [...knownHardRuleIds],
     turnGate: turnGateEnabled ? turnGateAuthorized : null,
     namedProductContext,
+    productIntakeEnabled,
   })
 
   for (let step = 0; step < policy.max_model_steps; step += 1) {
@@ -877,6 +881,9 @@ export async function runAgentV2ResponsesTurn(params: {
 
       if (call.name === "load_advisor_guidance") {
         collectGuidanceTrace(output, trace, knownHardRuleIds)
+      } else if (call.name === "lookup_product_candidate") {
+        const lookupResult = summarizeProductLookupResult(output)
+        if (lookupResult) productLookupResults.push(lookupResult)
       } else if (call.name === "select_products") {
         selectedProductProjections.push(output as AgentV2SelectProductsProjection)
       } else if (call.name === "build_or_fix_routine") {
@@ -1732,6 +1739,12 @@ function buildRepairState(
     requiredTools.push("load_advisor_guidance")
   }
   if (
+    validatorIds.has("product_lookup_required") &&
+    allowedExecutableTools.has("lookup_product_candidate")
+  ) {
+    requiredTools.push("lookup_product_candidate")
+  }
+  if (
     validatorIds.has("product_tool_required") &&
     !safetyProductFirst &&
     allowedExecutableTools.has("select_products")
@@ -1821,6 +1834,9 @@ function summarizeToolOutput(output: unknown): string {
   if ("gate_status" in output && typeof output.gate_status === "string") {
     return `turn_gate:${output.gate_status}`
   }
+  if ("status" in output && typeof output.status === "string") {
+    return `product_lookup:${output.status}`
+  }
   if ("valid_product_ids" in output && Array.isArray(output.valid_product_ids)) {
     return `products:${output.valid_product_ids.length}`
   }
@@ -1831,6 +1847,31 @@ function summarizeToolOutput(output: unknown): string {
     return "guidance"
   }
   return "tool_output"
+}
+
+function summarizeProductLookupResult(
+  output: unknown,
+): AgentV2ProductLookupValidationResult | null {
+  if (!output || typeof output !== "object" || Array.isArray(output)) return null
+
+  const record = output as Record<string, unknown>
+  if (typeof record.status !== "string") return null
+
+  const product =
+    record.product && typeof record.product === "object" && !Array.isArray(record.product)
+      ? (record.product as Record<string, unknown>)
+      : null
+
+  return {
+    status: record.status,
+    category: typeof record.category === "string" ? record.category : null,
+    product: product
+      ? {
+          id: typeof product.id === "string" ? product.id : undefined,
+          name: typeof product.name === "string" ? product.name : undefined,
+        }
+      : null,
+  }
 }
 
 function authorizeTurnGate(value: unknown): AgentV2TurnGateResult {

@@ -31,6 +31,11 @@ import {
   type ProductLookupCatalog,
   type ProductLookupResult,
 } from "@/lib/product-intake/product-lookup"
+import {
+  isProductEligibleForMode,
+  productIsActive,
+  productLifecycleStatus,
+} from "@/lib/product-catalog/eligibility"
 import { createSupabaseProductIntakeRepository } from "@/lib/product-intake/repository"
 import type { BrandResolutionCatalogInput } from "@/lib/product-identity/brand-resolution"
 import {
@@ -360,10 +365,55 @@ function buildAgentV2EffectiveRoutineItems(
             category: item.category,
             product_name: item.productName,
             frequency_range: item.frequencyBand,
+            product_id: item.matchStatus === "matched" ? item.productId : null,
+            product_submission_id:
+              item.matchStatus === "pending_review" || item.matchStatus === "needs_more_info"
+                ? item.productSubmissionId
+                : null,
+            match_status: item.matchStatus,
           },
         ]
       : [],
   )
+}
+
+function getMatchedRoutineProductIds(items: unknown[]): Set<string> {
+  const productIds = new Set<string>()
+
+  for (const item of items) {
+    if (!item || typeof item !== "object" || Array.isArray(item)) continue
+    const record = item as Record<string, unknown>
+    const matchStatus = record.match_status ?? record.matchStatus
+    const productId = record.product_id ?? record.productId
+    if (matchStatus === "matched" && typeof productId === "string" && productId.length > 0) {
+      productIds.add(productId)
+    }
+  }
+
+  return productIds
+}
+
+function scopeLookupCatalogForUser(
+  catalog: ProductLookupCatalog,
+  ownedProductIds: ReadonlySet<string>,
+): ProductLookupCatalog {
+  const products = catalog.products.filter(
+    (product) =>
+      isProductEligibleForMode(product, "general_recommendation") ||
+      (ownedProductIds.has(product.id) &&
+        productIsActive(product) &&
+        productLifecycleStatus(product) === "active"),
+  )
+  const allowedProductIds = new Set(products.map((product) => product.id))
+
+  return {
+    ...catalog,
+    products,
+    identifiers: catalog.identifiers?.filter((identifier) => {
+      const productId = identifier.productId ?? identifier.product_id
+      return Boolean(productId && allowedProductIds.has(productId))
+    }),
+  }
 }
 
 function buildConversationStateTransition(params: {
@@ -515,11 +565,12 @@ export async function runAgentV2ProductionPipeline(
     productLookupCatalogPromise ??= (async () => {
       const repository =
         deps.createProductIntakeRepository?.() ?? createSupabaseProductIntakeRepository()
+      const ownedProductIds = getMatchedRoutineProductIds(userContext.routine_inventory)
       const [catalog, brandCatalog] = await Promise.all([
-        repository.loadCatalog(),
+        repository.loadCatalog({ eligibilityMode: "intake_dedupe" }),
         repository.loadBrandResolutionCatalog(),
       ])
-      return { catalog, brandCatalog }
+      return { catalog: scopeLookupCatalogForUser(catalog, ownedProductIds), brandCatalog }
     })()
     return productLookupCatalogPromise
   }
@@ -592,6 +643,7 @@ export async function runAgentV2ProductionPipeline(
           catalog,
           brandCatalog,
           offerId: `product-intake-${requestId}`,
+          eligibilityMode: "intake_dedupe",
         })
         latestProductLookupResult = result
         return result
