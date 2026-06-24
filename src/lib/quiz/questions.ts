@@ -175,7 +175,7 @@ export const quizQuestions: QuizQuestion[] = [
     questionNumber: 7,
     title: "Sind deine Haare chemisch behandelt?",
     instruction:
-      "Hier zählt alles, was Farbe oder Form deines Haares länger verändert hat – z. B. Färben, Tönen, Aufhellen, Dauerwelle oder Glättung. Deine natürliche Struktur hast du am Anfang separat ausgewählt.",
+      "Gemeint ist alles, was Farbe oder Form länger verändert hat: Färben/Tönen, Aufhellen, Dauerwelle oder Glättung. Deine natürliche Struktur hast du schon angegeben.",
     options: [
       {
         value: "natur",
