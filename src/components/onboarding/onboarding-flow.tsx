@@ -91,7 +91,7 @@ const NIGHT_PROTECTION_ICONS: Record<string, IconName> = {
   silk_satin_bonnet: "night-silk-bonnet",
   loose_tied: "night-loose-braid",
   pineapple: "night-pineapple",
-  length_tip_accessory: "night-loose-braid",
+  length_tip_accessory: "night-length-accessory",
 }
 
 /* ── Label map for drilldown categories ── */
