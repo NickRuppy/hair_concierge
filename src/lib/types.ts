@@ -302,6 +302,114 @@ export type ProductSummary = Pick<
   | "updated_at"
 >
 
+export type CanonicalProductCategoryKey =
+  | "shampoo"
+  | "conditioner"
+  | "mask"
+  | "leave_in"
+  | "oil"
+  | "dry_shampoo"
+  | "deep_cleansing_shampoo"
+  | "bondbuilder"
+  | "heat_protectant"
+  | "serum"
+  | "scrub"
+  | "peeling"
+  | "styling_gel"
+  | "styling_mousse"
+  | "styling_cream"
+  | "hairspray"
+
+export type ProductIntakeCategoryKey =
+  | "shampoo"
+  | "conditioner"
+  | "mask"
+  | "leave_in"
+  | "oil"
+  | "dry_shampoo"
+  | "deep_cleansing_shampoo"
+  | "bondbuilder"
+
+export type ProductIntakeMethod = "manual" | "photo"
+export type ProductUsageSource = "onboarding" | "chat" | "profile" | "script"
+export type ProductSubmissionSource = Extract<ProductUsageSource, "onboarding" | "chat">
+export type ProductUsageMatchStatus = "text_only" | "matched" | "pending_review" | "needs_more_info"
+
+export type ProductSubmissionStatus =
+  | "pending_review"
+  | "researching"
+  | "ready_for_review"
+  | "needs_more_info"
+  | "matched_existing"
+  | "approved"
+  | "rejected"
+  | "cancelled_by_user"
+
+export type ProductFrontImageValidationStatus =
+  | "valid_product_front"
+  | "uncertain"
+  | "not_a_product_photo"
+  | "unsafe_or_inappropriate"
+
+export type ProductBarcodeImageValidationStatus =
+  | "valid_barcode"
+  | "uncertain"
+  | "not_a_product_photo"
+  | "unsafe_or_inappropriate"
+
+export interface UserProductUsage {
+  id: string
+  user_id: string
+  category: CanonicalProductCategoryKey
+  product_name: string | null
+  frequency_range: ProductFrequency | null
+  brand_text: string | null
+  product_id: string | null
+  product_submission_id: string | null
+  match_status: ProductUsageMatchStatus
+  intake_method: ProductIntakeMethod | null
+  source: ProductUsageSource | null
+  front_image_path: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface ProductSubmission {
+  id: string
+  user_id: string
+  user_product_usage_id: string | null
+  source: ProductSubmissionSource
+  source_conversation_id: string | null
+  intake_method: ProductIntakeMethod
+  category: ProductIntakeCategoryKey
+  brand_text: string | null
+  product_name_text: string | null
+  frequency_range: ProductFrequency
+  front_image_path: string | null
+  barcode_image_path: string | null
+  front_image_validation_status: ProductFrontImageValidationStatus | null
+  front_image_validation_metadata: Record<string, unknown>
+  barcode_image_validation_status: ProductBarcodeImageValidationStatus | null
+  barcode_image_validation_metadata: Record<string, unknown>
+  previous_product_id: string | null
+  previous_product_snapshot: Record<string, unknown>
+  status: ProductSubmissionStatus
+  researched_payload: Record<string, unknown>
+  intake_history: Array<Record<string, unknown>>
+  approved_product_id: string | null
+  reviewed_at: string | null
+  reviewed_by: string | null
+  review_notes: string | null
+  user_facing_resolution_reason: string | null
+  user_facing_next_step: string | null
+  user_facing_missing_fields: string[]
+  notification_sent_at: string | null
+  cleanup_after: string | null
+  photos_deleted_at: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface BaseRecommendationMetadata {
   category:
     | "shampoo"
