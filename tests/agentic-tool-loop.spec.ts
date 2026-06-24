@@ -2,7 +2,10 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { buildAgenticToolDefinitions } from "../src/lib/agent/orchestrator/tool-definitions"
-import { AGENTIC_TOOL_LOOP_PROMPT } from "../src/lib/agent/orchestrator/prompt"
+import {
+  AGENTIC_TOOL_LOOP_PROMPT,
+  AGENT_ROUTE_CLASSIFIER_PROMPT,
+} from "../src/lib/agent/orchestrator/prompt"
 import { isGuidanceId } from "../src/lib/agent/contracts"
 import { buildAgenticConsultationBrief } from "../src/lib/agent/orchestrator/agentic-consultation-brief"
 import { extractCurrentTurnContextOverlay } from "../src/lib/agent/orchestrator/current-turn-context"
@@ -432,6 +435,10 @@ test("agentic prompt asks for multi-category guidance on category comparisons", 
   assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Maske oder Oel/i)
 })
 
+test("route classifier prompt exposes night protection as a known topic", () => {
+  assert.match(AGENT_ROUTE_CLASSIFIER_PROMPT, /topic:night_protection/)
+})
+
 test("consultation brief includes shampoo candidate context for explicit shampoo asks", async () => {
   const brief = await buildAgenticConsultationBrief({
     message: "welches shampoo kannst du fuer mehr glanz empfehlen",
@@ -503,6 +510,42 @@ test(
     })
 
     assert.ok(brief.candidate_guidance.some((item) => item.id === "topic:peeling"))
+  },
+)
+
+test(
+  "consultation brief includes night protection candidate guidance for night terms",
+  {
+    skip:
+      !isGuidanceId("topic:night_protection") &&
+      "topic:night_protection is owned by guidance worker",
+  },
+  async () => {
+    const cases = [
+      "Brauche ich nachts mehr Nachtschutz?",
+      "Welche Schlaffrisur hilft beim Schlafen?",
+      "Ist ein Seidenkissen oder Satinkissen sinnvoll?",
+      "Hilft ein Bonnet gegen Reibung?",
+      "Soll ich Pineapple nachts machen?",
+      "Wann passt HairHOMIE?",
+      "Was hilft als Laengenschutz und Spitzenschutz ueber Nacht?",
+      "Was hilft als Längen-/Spitzenschutz ueber Nacht?",
+      "How do I protect my hair while sleeping?",
+    ] as const
+
+    for (const message of cases) {
+      const brief = await buildAgenticConsultationBrief({
+        message,
+        recentMessages: [],
+        userContext: createUserContext(),
+        conversationState: null,
+      })
+
+      assert.ok(
+        brief.candidate_guidance.some((item) => item.id === "topic:night_protection"),
+        message,
+      )
+    }
   },
 )
 

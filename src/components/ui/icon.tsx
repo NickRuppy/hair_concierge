@@ -69,6 +69,7 @@ import {
   Atom,
   Flower2,
   Eraser,
+  Ribbon,
 } from "lucide-react"
 
 type HairLengthIconProps = ComponentPropsWithoutRef<LucideIcon>
@@ -247,6 +248,7 @@ const iconMap = {
   "night-loose-braid": Link2,
   "night-loose-bun": Circle,
   "night-pineapple": TrendingUp,
+  "night-length-accessory": Ribbon,
   // Goals
   "goal-moisture": Droplets,
   "goal-shine": Sun,

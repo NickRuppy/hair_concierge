@@ -96,6 +96,22 @@ const CATEGORY_TOPIC_BY_KEYWORD: Array<{
     id: "topic:peeling",
     patterns: [/\bpeeling\b/i, /\bkopfhaut[-_ ]?peeling\b/i, /\bscalp[-_ ]?(?:scrub|exfoliat)/i],
   },
+  {
+    id: "topic:night_protection",
+    patterns: [
+      /\bnachtschutz\b/i,
+      /\bschlaf(?:en|frisur|zopf|routine)\b/i,
+      /\bprotect(?:ion)?\b.{0,40}\bsleep(?:ing)?\b|\bsleep(?:ing)?\b.{0,40}\bprotect(?:ion)?\b/i,
+      /\bseiden[-_ ]?(?:kissen|haube|bonnet)?\b/i,
+      /\bsatin[-_ ]?(?:kissen|haube|bonnet)?\b/i,
+      /\bbonnet\b/i,
+      /\bpineapple\b/i,
+      /\bhairhomie\b/i,
+      /\b(?:langen|laengen)[\w/_-]*spitzenschutz\b/i,
+      /\b(?:langen|laengen)schutz\b/i,
+      /\bspitzenschutz\b/i,
+    ],
+  },
 ]
 
 const ROUTINE_RE = /\b(routine|basis|basics|anpassen|umstellen|vereinfach|aufbauen|schritte?)\b/i

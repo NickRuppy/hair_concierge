@@ -109,11 +109,7 @@ export function hasExplicitBrushToolsRequest(normalizedMessage: string): boolean
 /** Accepts an already-normalized message string (via normalizeText). */
 export function hasBrushToolsNeed(profile: HairProfile | null, normalizedMessage: string): boolean {
   return (
-    hasDirectMechanicalStressSignals(
-      profile?.towel_technique,
-      profile?.brush_type,
-      profile?.night_protection,
-    ) ||
+    hasDirectMechanicalStressSignals(profile?.towel_technique, profile?.brush_type) ||
     profile?.brush_type === "paddle" ||
     profile?.brush_type === "round" ||
     profile?.brush_type === "boar_bristle" ||
@@ -130,7 +126,6 @@ export function buildBrushToolsSlot(
   const hasMechanicalStressSignals = hasDirectMechanicalStressSignals(
     profile?.towel_technique,
     profile?.brush_type,
-    profile?.night_protection,
   )
   const stylingContext = deriveLeaveInStylingContextFromStages(
     profile?.drying_method,

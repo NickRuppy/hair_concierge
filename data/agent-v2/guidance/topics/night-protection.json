@@ -1,0 +1,95 @@
+{
+  "package_id": "topic.night_protection.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["general_advice", "routine", "constraint_blocked", "safety_boundary"],
+    "categories": [],
+    "routine_layers": ["goals", "problems", "deep_dive"],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "topic.night_protection.low_friction_not_repair",
+      "severity": "block",
+      "source": "topics/night-protection.md",
+      "message": "Frame night protection as low-friction sleep behavior, containment, easier morning detangling, or style preservation; do not present it as repair, split-end reversal, hair-loss prevention, growth support, or medical scalp care."
+    },
+    {
+      "rule_id": "topic.night_protection.no_tight_styles",
+      "severity": "block",
+      "source": "topics/night-protection.md",
+      "message": "Do not recommend tight hairstyles, tight elastics, tight roots, or hairline tension as night protection. If a tied or pineapple style is suggested, it must be loose and comfortable."
+    },
+    {
+      "rule_id": "topic.night_protection.no_universal_best_option",
+      "severity": "block",
+      "source": "topics/night-protection.md",
+      "message": "Do not present satin/silk pillowcase, bonnet, loose tie, pineapple, or length/tip accessory as universally best. Choose based on length, texture, tangling/frizz pattern, style goals, and comfort."
+    },
+    {
+      "rule_id": "topic.night_protection.named_product_claims_need_context",
+      "severity": "block",
+      "source": "topics/night-protection.md",
+      "message": "For HairHOMIE or another named product, do not claim material, fit, dimensions, exact usage, availability, price, durability, or promised outcomes unless grounded in product/vendor context."
+    },
+    {
+      "rule_id": "topic.night_protection.do_not_stack_by_default",
+      "severity": "block",
+      "source": "topics/night-protection.md",
+      "message": "If the user already has a night-protection option, optimize fit, tension, placement, and comfort before adding more options. Combinations are allowed but not mandatory."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "topic.night_protection.option_fit_matrix",
+      "priority": "high",
+      "source": "topics/night-protection.md",
+      "message": "Map options by fit: satin/silk pillowcase as passive baseline, bonnet for broader containment and curl/style preservation, loose tie for longer hair tangling, pineapple for wavy/curly shape preservation, and length/tip accessory for long hair with tangled lengths or ends."
+    },
+    {
+      "rubric_id": "topic.night_protection.missing_option_recommendation",
+      "priority": "high",
+      "source": "topics/night-protection.md",
+      "message": "When night_protection is [] and the user reports morning tangles, frizz, rough ends, flattened curls, friction-like breakage, long hair, or a matching full-routine need, suggest one low-burden low-friction option matched to their profile. Treat null as legacy/missing, not explicit no protection."
+    },
+    {
+      "rubric_id": "topic.night_protection.combine_without_overprescribing",
+      "priority": "medium",
+      "source": "topics/night-protection.md",
+      "message": "Allow combinations such as pillowcase plus bonnet, pineapple, loose tie, or length/tip accessory when each solves a distinct friction or comfort issue, but avoid making multi-step night routines sound required."
+    },
+    {
+      "rubric_id": "topic.night_protection.hairhomie_as_length_accessory",
+      "priority": "high",
+      "source": "topics/night-protection.md",
+      "message": "Treat HairHOMIE-like options as length/tip accessories for long or very long hair unless exact product claims are requested; keep brand-specific claims separate from the generic recommendation."
+    }
+  ],
+  "required_grounding": [
+    {
+      "grounding_id": "topic.night_protection.catalog_product_recommendations",
+      "tool": "select_products",
+      "when": "Concrete catalog-backed night-protection or accessory products are recommended, ranked, priced, or compared."
+    },
+    {
+      "grounding_id": "topic.night_protection.routine_mutation",
+      "tool": "build_or_fix_routine",
+      "when": "The user asks to add, remove, or change night protection inside a saved/current routine."
+    }
+  ],
+  "ask_when": [
+    {
+      "condition": "The best option depends on unknown length, texture, current night habit, or comfort with headwear.",
+      "question_policy": "Ask one concise follow-up only if it would change the recommendation; otherwise answer conditionally with the lowest-burden option."
+    },
+    {
+      "condition": "The user already has a selected night-protection option but still has tangling, frizz, flattened curls, or rough ends.",
+      "question_policy": "Ask or infer whether fit, tension, placement, or material is the likely issue before adding another option."
+    },
+    {
+      "condition": "The user reports shedding, patchy loss, painful scalp, inflamed scalp, wounds, pustules, or persistent flakes.",
+      "question_policy": "Do not ask product-preference questions; route away from night-protection optimization and use safety-boundary guidance."
+    }
+  ],
+  "markdown_path": "topics/night-protection.md"
+}

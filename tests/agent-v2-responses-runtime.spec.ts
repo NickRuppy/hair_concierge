@@ -1572,6 +1572,9 @@ function fakeAgentV2Tools() {
         categories: Array.isArray(input.categories)
           ? (input.categories as Parameters<typeof selectGuidancePackageIds>[0]["categories"])
           : [],
+        topics: Array.isArray(input.topics)
+          ? (input.topics as Parameters<typeof selectGuidancePackageIds>[0]["topics"])
+          : [],
         routine_layer: (typeof input.routine_layer === "string"
           ? input.routine_layer
           : null) as Parameters<typeof selectGuidancePackageIds>[0]["routine_layer"],

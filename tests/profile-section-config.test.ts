@@ -70,3 +70,15 @@ test("profile quiz section includes editable hair length after density", () => {
   assert.deepEqual(hairLengthField.editTarget, { kind: "quiz" })
   assert.equal(hairLengthField.getValue(makeProfile({ hair_length: "long" })), "Lang")
 })
+
+test("profile routine section shows length tip accessory night protection label", () => {
+  const nightProtectionField = PROFILE_FIELD_CONFIG.find(
+    (field) => field.key === "night_protection",
+  )
+
+  assert.ok(nightProtectionField)
+  assert.deepEqual(
+    nightProtectionField.getValue(makeProfile({ night_protection: ["length_tip_accessory"] })),
+    ["Längen-/Spitzenschutz (z. B. HairHOMIE)"],
+  )
+})
