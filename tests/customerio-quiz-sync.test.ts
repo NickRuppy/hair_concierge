@@ -28,6 +28,7 @@ test("quiz lead sync returns failed results without throwing when Customer.io is
           structure: "wavy",
           thickness: "fine",
           density: "low",
+          hair_length: "medium",
           fingertest: "leicht_uneben",
           pulltest: "stretches_stays",
           scalp_type: "trocken",
@@ -71,6 +72,7 @@ test("quiz lead sync sends Customer.io profile and event when marketing consent 
           structure: "wavy",
           thickness: "fine",
           density: "low",
+          hair_length: "medium",
           fingertest: "leicht_uneben",
           pulltest: "stretches_stays",
           scalp_type: "trocken",
@@ -95,6 +97,8 @@ test("quiz lead sync sends Customer.io profile and event when marketing consent 
       assert.equal(identifyTraits.marketing_consent, false)
       assert.equal(identifyTraits.consent_timestamp, undefined)
       assert.equal(identifyTraits.quiz_completed_at, "2026-05-28T10:00:00.000Z")
+      assert.equal(identifyTraits.hair_length, "medium")
+      assert.equal(identifyTraits.hair_length_label, "Mittellang")
 
       assert.equal(calls[1].body.event, "quiz_profile_submitted")
       const eventProperties = calls[1].body.properties as Record<string, unknown>

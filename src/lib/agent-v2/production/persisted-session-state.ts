@@ -4,6 +4,7 @@ import {
   type AgentV2RoutineThreadContext,
   type AgentV2SessionMemoryWrite,
 } from "@/lib/agent-v2/contracts"
+import { readPendingFollowupAction } from "@/lib/agent-v2/pending-followup-action"
 import type { AgentV2SelectProductsProjection } from "@/lib/agent-v2/tools/select-products-projection"
 import type {
   SupportedProductClaim,
@@ -137,7 +138,13 @@ function buildAgentV2State(params: {
 }
 
 function normalizeRoutineThreadContext(value: unknown): AgentV2RoutineThreadContext | null {
-  const parsed = AgentV2RoutineThreadContextSchema.safeParse(value)
+  const candidate = isRecord(value) ? { ...value } : value
+  if (isRecord(candidate)) {
+    candidate.pending_followup_action = readPendingFollowupAction(candidate)
+    delete candidate.pending_routine_action
+  }
+
+  const parsed = AgentV2RoutineThreadContextSchema.safeParse(candidate)
   return parsed.success ? parsed.data : null
 }
 

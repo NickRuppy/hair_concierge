@@ -122,10 +122,10 @@ export interface PipelineResult {
 
 interface ProductionAgentV2PipelineDeps {
   client?: AgentV2ResponsesClient
-  loadConversationHistory?: (conversationId: string) => Promise<Message[]>
+  loadConversationHistory?: (conversationId: string, userId: string) => Promise<Message[]>
   getUserContext?: (userId: string) => Promise<UserContextProjection>
   loadUserMemoryContext?: (userId: string) => Promise<UserMemoryContext>
-  loadConversationState?: (conversationId: string) => Promise<unknown>
+  loadConversationState?: (conversationId: string, userId: string) => Promise<unknown>
   createSelectProductsTool?: typeof createSelectProductsTool
   createBuildOrFixRoutineTool?: typeof createBuildOrFixRoutineTool
   runAgentV2ResponsesTurn?: typeof runAgentV2ResponsesTurn
@@ -264,6 +264,7 @@ function createEmptyAgentV2HairProfile(): HairProfile {
     user_id: "",
     hair_texture: null,
     thickness: null,
+    hair_length: null,
     density: null,
     concerns: [],
     products_used: null,
@@ -302,6 +303,7 @@ function buildAgentV2EffectiveHairProfile(
   return {
     ...(fallback ?? createEmptyAgentV2HairProfile()),
     hair_texture: profile.hairTexture,
+    hair_length: profile.hairLength,
     thickness: profile.thickness,
     density: profile.density,
     concerns: [...profile.concerns],
@@ -449,14 +451,17 @@ export async function runAgentV2ProductionPipeline(
     { result: rawConversationState },
   ] = await Promise.all([
     measureAsync(() =>
-      (deps.loadConversationHistory ?? loadAgentV2ProductionConversationHistory)(conversationId),
+      (deps.loadConversationHistory ?? loadAgentV2ProductionConversationHistory)(
+        conversationId,
+        userId,
+      ),
     ),
     measureAsync(() => (deps.getUserContext ?? getUserContext)(userId)),
     measureAsync(() => (deps.loadUserMemoryContext ?? loadUserMemoryContext)(userId)),
     measureAsync(() =>
       deps.loadConversationState
-        ? deps.loadConversationState(conversationId)
-        : loadPersistedConversationState(createAdminClient(), conversationId),
+        ? deps.loadConversationState(conversationId, userId)
+        : loadPersistedConversationState(createAdminClient(), conversationId, userId),
     ),
   ])
 

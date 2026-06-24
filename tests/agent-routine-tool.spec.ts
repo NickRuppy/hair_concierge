@@ -17,6 +17,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     user_id: "user-1",
     hair_texture: "curly",
     thickness: "normal",
+    hair_length: null,
     density: "medium",
     concerns: ["dryness"],
     products_used: null,

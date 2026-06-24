@@ -19,7 +19,6 @@ import {
 } from "@/lib/agent-v2/tools/routine-projection"
 import { projectSelectProductsForAgentV2 } from "@/lib/agent-v2/tools/select-products-projection"
 import {
-  AgentV2PendingRoutineActionSchema,
   type AgentV2AnswerMode,
   type AgentV2RoutineLayer,
   type AgentV2RoutineThreadContext,
@@ -27,6 +26,7 @@ import {
   type AgentV2SafetyMode,
   type AgentV2TerminalAnswer,
 } from "@/lib/agent-v2/contracts"
+import { readPendingFollowupAction } from "@/lib/agent-v2/pending-followup-action"
 import type { HairProfile } from "@/lib/types"
 import type {
   AgentCompareScenario,
@@ -274,7 +274,7 @@ export function updateAgentV2RoutineThreadContext(
       last_routine_categories: [],
       last_user_goal: null,
       summary_de: null,
-      pending_routine_action: null,
+      pending_followup_action: readPendingFollowupAction(update.answer),
       visible_steps: [],
     }
   }
@@ -300,18 +300,9 @@ export function updateAgentV2RoutineThreadContext(
         ? update.user_message
         : previous.last_user_goal,
     summary_de: update.summary_de ?? previous?.summary_de ?? null,
-    pending_routine_action: readPendingRoutineAction(update.answer),
+    pending_followup_action: readPendingFollowupAction(update.answer),
     visible_steps: visibleSteps,
   }
-}
-
-function readPendingRoutineAction(
-  answer: unknown,
-): AgentV2RoutineThreadContext["pending_routine_action"] {
-  if (!answer || typeof answer !== "object" || Array.isArray(answer)) return null
-  const pending = (answer as { pending_routine_action?: unknown }).pending_routine_action
-  const parsed = AgentV2PendingRoutineActionSchema.safeParse(pending)
-  return parsed.success ? parsed.data : null
 }
 
 function updateAgentV2VisibleRoutineThreadSteps(
@@ -536,6 +527,7 @@ function createEmptyAgentV2HairProfile(): HairProfile {
     user_id: "",
     hair_texture: null,
     thickness: null,
+    hair_length: null,
     density: null,
     concerns: [],
     products_used: null,
@@ -574,6 +566,7 @@ function buildAgentV2EffectiveHairProfile(
   return {
     ...(fallback ?? createEmptyAgentV2HairProfile()),
     hair_texture: profile.hairTexture,
+    hair_length: profile.hairLength,
     thickness: profile.thickness,
     density: profile.density,
     concerns: [...profile.concerns],

@@ -10,7 +10,7 @@ const steps: Step[] = [
   {
     number: "1",
     title: "Quiz machen",
-    body: "2 Minuten, neun Fragen. Zugtest, Oberfläche, Kopfhaut, deine Ziele.",
+    body: "2 Minuten, zehn Fragen. Zugtest, Oberfläche, Kopfhaut, deine Ziele.",
   },
   {
     number: "2",

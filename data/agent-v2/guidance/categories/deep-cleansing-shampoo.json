@@ -89,6 +89,12 @@
       "message": "For dry, fine, curly, color-treated, chemically stressed, fragile, or sensitive profiles, keep the reset gentler, less frequent, and explicitly need-based."
     },
     {
+      "rubric_id": "category.deep_cleansing.hair_length_indirect_only",
+      "priority": "medium",
+      "source": "categories/deep-cleansing-shampoo.md",
+      "message": "Hair length is only an indirect reset signal: long or very long hair can affect distribution and full-length residue when coated lengths are already reported, but do not recommend deep cleansing because hair is long."
+    },
+    {
       "rubric_id": "category.deep_cleansing.buildup_before_richness",
       "priority": "high",
       "source": "categories/deep-cleansing-shampoo.md",

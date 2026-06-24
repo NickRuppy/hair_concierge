@@ -20,7 +20,7 @@ export function getHaartypLabel(answers: QuizAnswers): string {
   return `${t}, ${s} Haare`
 }
 
-// --- Card 2: Haarstärke ---
+// --- Card 2: Haardicke ---
 export const thicknessResults: Record<string, string> = {
   fine: "Fein \u2013 braucht leichte, wässrige Produkte. Dicke Cremes drücken feine Haare platt, weil der Haardurchmesser zu gering ist.",
   normal:

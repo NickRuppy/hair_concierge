@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { getRoutineSteps } from "@/lib/onboarding/routine-steps"
 import type { HeatStyling, ProductFrequency } from "@/lib/vocabulary/frequencies"
 import type {
   TowelMaterial,
@@ -60,16 +61,6 @@ const LINEAR_BEFORE_HEAT: OnboardingStep[] = [
 ]
 
 const HEAT_BRANCH: OnboardingStep[] = ["heat_frequency", "heat_protection"]
-
-const LINEAR_AFTER_HEAT: OnboardingStep[] = [
-  "interstitial",
-  "towel_material",
-  "towel_technique",
-  "drying_method",
-  "brush_type",
-  "night_protection",
-  "celebration",
-]
 
 /* ── State shape ── */
 
@@ -279,7 +270,17 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
 
 /* ── Build the full linear order including/excluding heat branch ── */
 
-function buildFullOrder(state: { selectedHeatTools: string[] }): OnboardingStep[] {
+function buildFullOrder(state: {
+  selectedHeatTools: string[]
+  towelMaterial: TowelMaterial | null
+}): OnboardingStep[] {
   const hasHeat = state.selectedHeatTools.length > 0
-  return [...LINEAR_BEFORE_HEAT, ...(hasHeat ? HEAT_BRANCH : []), ...LINEAR_AFTER_HEAT]
+
+  return [
+    ...LINEAR_BEFORE_HEAT,
+    ...(hasHeat ? HEAT_BRANCH : []),
+    "interstitial",
+    ...getRoutineSteps({ towelMaterial: state.towelMaterial }),
+    "celebration",
+  ]
 }

@@ -66,6 +66,12 @@
       "message": "Keep usage practical and flexible: usually after shampoo, lengths and ends, rinse well, gelegentlich/alle paar Wäschen/bei Bedarf, and stretch use if hair feels heavy, too soft, or flat."
     },
     {
+      "rubric_id": "category.mask.hair_length_coverage_relevance",
+      "priority": "high",
+      "source": "categories/mask.md",
+      "message": "Use hair length to tune mask coverage and relevance: very short hair should not receive an automatic mask unless another signal supports it, short hair needs less product and lower frequency, and long or very long hair needs sectioning/coverage without inferring structural damage from length alone."
+    },
+    {
       "rubric_id": "category.mask.lightweight_dry_frizzy_addon",
       "priority": "high",
       "source": "categories/mask.md",

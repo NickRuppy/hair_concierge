@@ -18,12 +18,18 @@ import {
   hasExplicitBrushToolsRequest,
 } from "@/lib/routines/brush-tools"
 import { CURLY_TEXTURES } from "@/lib/routines/constants"
+import {
+  applyHairLengthRoutineCopy,
+  applyHairLengthRoutinePolicy,
+  hasHeatExposureNeed,
+} from "@/lib/routines/hair-length-policy"
 import { hasDirectMechanicalStressSignals } from "@/lib/profile/signal-derivations"
 import {
   buildRecommendationEngineRuntimeFromPersistence,
   buildRecommendationRequestContext,
 } from "@/lib/recommendation-engine"
 import { buildRoutineItemsFromInventoryCategories } from "@/lib/recommendation-engine/adapters/from-persistence"
+import { suppressLengthOnlyCare } from "@/lib/recommendation-engine/hair-length"
 import type {
   HairProfile,
   RoutineContext,
@@ -552,6 +558,7 @@ function selectWashProtectionTopic(
   const compareMode = isCwcOwcComparisonRequest(message)
   const explicitCwc = context.explicit_topic_ids.includes("cwc")
   const explicitOwc = context.explicit_topic_ids.includes("owc")
+  const lacksLengthEndsZone = suppressLengthOnlyCare(profile?.hair_length ?? null)
 
   if (compareMode) {
     const topicId = hasOwcFit(profile, context)
@@ -569,6 +576,10 @@ function selectWashProtectionTopic(
 
   if (explicitCwc) {
     return { topicId: "cwc", compareMode }
+  }
+
+  if (lacksLengthEndsZone && !context.has_dryness_damage_signals && !context.has_damage_signals) {
+    return { topicId: null, compareMode }
   }
 
   if (!context.has_wash_protection_need) {
@@ -835,7 +846,11 @@ export function activateRoutineTopics(
     }
   }
 
-  if (explicit.has("brush_tools") || hasBrushToolsNeed(profile, normalizedMessage, context)) {
+  const lacksLengthEndsZone = suppressLengthOnlyCare(profile?.hair_length ?? null)
+  if (
+    explicit.has("brush_tools") ||
+    (!lacksLengthEndsZone && hasBrushToolsNeed(profile, normalizedMessage))
+  ) {
     push(
       "brush_tools",
       explicit.has("brush_tools")
@@ -1439,8 +1454,16 @@ function buildRoutineSlots(
     leave_in: leaveInDecision,
     mask: maskDecision,
   } = decisionContext
+  const pushRoutineSlot = (slot: RoutineSlotAdvice) => {
+    const guardedSlot = applyHairLengthRoutinePolicy(slot, {
+      hairLength: profile?.hair_length ?? null,
+      context,
+      activeTopicIds,
+    })
+    if (guardedSlot) pushSlot(sections, guardedSlot)
+  }
 
-  pushSlot(sections, {
+  pushRoutineSlot({
     id: "base-shampoo",
     kind: "product_slot",
     phase: "base_wash",
@@ -1493,7 +1516,7 @@ function buildRoutineSlots(
         : "keep"
     : "add"
 
-  pushSlot(sections, {
+  pushRoutineSlot({
     id: "base-conditioner",
     kind: "product_slot",
     phase: "base_wash",
@@ -1518,7 +1541,7 @@ function buildRoutineSlots(
 
   if (activeWashProtectionTopic === "cwc") {
     if (explicitWashProtectionWithoutNeed) {
-      pushSlot(sections, {
+      pushRoutineSlot({
         id: "base-cwc-technique",
         kind: "instruction",
         phase: "base_wash",
@@ -1538,13 +1561,13 @@ function buildRoutineSlots(
         attachment_priority: 92,
       })
     } else {
-      pushSlot(sections, buildCwcTechniqueSlot())
+      pushRoutineSlot(buildCwcTechniqueSlot())
     }
   }
 
   if (activeWashProtectionTopic === "owc") {
     if (explicitWashProtectionWithoutNeed) {
-      pushSlot(sections, {
+      pushRoutineSlot({
         id: "base-owc-technique",
         kind: "instruction",
         phase: "base_wash",
@@ -1564,8 +1587,8 @@ function buildRoutineSlots(
         attachment_priority: 92,
       })
     } else {
-      pushSlot(sections, buildOwcOilSlot(context, explicitOwcRequest, oilPresent))
-      pushSlot(sections, buildOwcTechniqueSlot(profile, context))
+      pushRoutineSlot(buildOwcOilSlot(context, explicitOwcRequest, oilPresent))
+      pushRoutineSlot(buildOwcTechniqueSlot(profile, context))
     }
   }
 
@@ -1577,7 +1600,8 @@ function buildRoutineSlots(
     context.goals.includes("curl_definition") ||
     context.concerns.includes("frizz") ||
     context.concerns.includes("dryness") ||
-    context.concerns.includes("tangling")
+    context.concerns.includes("tangling") ||
+    (hasHeatExposureNeed(context) && !context.uses_heat_protection)
 
   if (shouldUseLeaveIn || leaveInPresent) {
     const leaveInAction: RoutineSlotAction =
@@ -1596,8 +1620,13 @@ function buildRoutineSlots(
         `Der Finish-Schritt soll vor allem für ${LEAVE_IN_STYLING_CONTEXT_LABELS[leaveInDecision.targetProfile.stylingContext]} passen.`,
       )
     }
+    if (hasHeatExposureNeed(context) && !context.uses_heat_protection) {
+      leaveInReasons.push(
+        "Bei Hitze durch Föhn, Diffusor oder Styling-Tools sollte der Schritt Hitzeschutz abdecken.",
+      )
+    }
 
-    pushSlot(sections, {
+    pushRoutineSlot({
       id: "maintenance-leave-in",
       kind: "product_slot",
       phase: "maintenance",
@@ -1645,7 +1674,7 @@ function buildRoutineSlots(
       }
     }
 
-    pushSlot(sections, {
+    pushRoutineSlot({
       id: "maintenance-refresh",
       kind: "instruction",
       phase: "maintenance",
@@ -1663,11 +1692,11 @@ function buildRoutineSlots(
   }
 
   if (activeTopicIds.has("brush_tools")) {
-    pushSlot(sections, buildBrushToolsSlot(profile, context, normalizeText(message)))
+    pushRoutineSlot(buildBrushToolsSlot(profile, context, normalizeText(message)))
   }
 
   if (maskDecision.relevant || maskPresent) {
-    pushSlot(sections, {
+    pushRoutineSlot({
       id: "occasional-mask",
       kind: "product_slot",
       phase: "occasional",
@@ -1703,12 +1732,11 @@ function buildRoutineSlots(
       !bondBuilderDriven
 
     if (context.has_scalp_clarify_signals) {
-      pushSlot(sections, buildScalpClarifySlot(context, shampooPresent))
+      pushRoutineSlot(buildScalpClarifySlot(context, shampooPresent))
     }
 
     if (context.has_hair_reset_signals || bondBuilderDriven || educationalClarify) {
-      pushSlot(
-        sections,
+      pushRoutineSlot(
         buildHairResetSlot({
           context,
           shampooPresent,
@@ -1719,7 +1747,7 @@ function buildRoutineSlots(
     }
 
     if (context.has_hard_reset_signals) {
-      pushSlot(sections, buildHardResetSlot(context))
+      pushRoutineSlot(buildHardResetSlot(context))
     }
   }
 
@@ -1755,7 +1783,7 @@ function buildRoutineSlots(
       )
     }
 
-    pushSlot(sections, {
+    pushRoutineSlot({
       id: "occasional-oil",
       kind: "product_slot",
       phase: "occasional",
@@ -1777,7 +1805,7 @@ function buildRoutineSlots(
       context.explicit_topic_ids.includes("bond_builder") && !context.has_bond_builder_signals
 
     if (explicitWithoutSignals) {
-      pushSlot(sections, {
+      pushRoutineSlot({
         id: "occasional-bond-builder",
         kind: "instruction",
         phase: "occasional",
@@ -1834,7 +1862,7 @@ function buildRoutineSlots(
         )
       }
 
-      pushSlot(sections, {
+      pushRoutineSlot({
         id: "occasional-bond-builder",
         kind: "instruction",
         phase: "occasional",
@@ -1856,7 +1884,7 @@ function buildRoutineSlots(
   if (forcedCategory && !hasRoutineCategorySlot(sections, forcedCategory)) {
     const forcedSlot = buildForcedRequestedCategorySlot(forcedCategory, profile)
     if (forcedSlot) {
-      pushSlot(sections, forcedSlot)
+      pushSlot(sections, applyHairLengthRoutineCopy(forcedSlot, profile?.hair_length ?? null))
     }
   }
 

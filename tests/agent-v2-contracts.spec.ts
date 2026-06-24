@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
+  AgentV2ValidationErrorSchema,
   AgentV2RequestInterpretationSchema,
   AgentV2RoutineThreadContextSchema,
   AgentV2TerminalAnswerSchema,
@@ -104,6 +105,24 @@ test("AgentV2RequestInterpretationSchema accepts strict semantic examples", () =
   }
 })
 
+test("AgentV2ValidationErrorSchema accepts optional repair metadata", () => {
+  const parsed = AgentV2ValidationErrorSchema.parse({
+    validator_id: "request_interpretation_evidence",
+    message: "Evidence quote is not grounded.",
+    severity: "block",
+    path: ["request_interpretation", "evidence_quote"],
+    reason_code: "evidence_quote_not_in_context",
+    rejected_value: "Frizz repair",
+    expected: "Exact phrase from latest user message or active context.",
+    suggested_value: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    repair_hint: "Use suggested_value exactly for request_interpretation.evidence_quote.",
+  })
+
+  assert.equal(parsed.reason_code, "evidence_quote_not_in_context")
+  assert.equal(parsed.rejected_value, "Frizz repair")
+  assert.equal(parsed.suggested_value, "Was hilft gegen Frizz bei meinem Haarprofil?")
+})
+
 test("AgentV2RequestInterpretationSchema requires every semantic field", () => {
   const complete = requestInterpretation()
 
@@ -188,7 +207,7 @@ test("AgentV2TerminalAnswerSchema accepts a product recommendation payload", () 
       category: null,
       return_path: [],
     },
-    pending_routine_action: null,
+    pending_followup_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de: "Ich würde dir dieses Shampoo empfehlen.",
@@ -207,6 +226,64 @@ test("AgentV2TerminalAnswerSchema accepts a product recommendation payload", () 
   }
 
   assert.equal(AgentV2TerminalAnswerSchema.parse(value).answer_mode, "product_recommendation")
+})
+
+test("AgentV2 terminal answer supports generalized pending follow-up action", () => {
+  const parsed = AgentV2TerminalAnswerSchema.parse({
+    answer_mode: "general_advice",
+    interpreted_intent: "User asks whether they want product suggestions next.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      care_category: "mask",
+      evidence_quote: "Maske",
+    }),
+    confidence: 0.9,
+    extracted_constraints: {
+      ...emptyExtractedConstraints(),
+      product_categories: ["mask"],
+      raw_constraints: ["Maske"],
+    },
+    missing_information: [],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: [
+        "base.advisor_rules.v1",
+        "base.answer_contract.v1",
+        "base.tone_and_format.v1",
+        "base.general_advice.v1",
+        "category.mask.v1",
+      ],
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: true,
+      routine_layer: "basics",
+      step_id: null,
+      category: "mask",
+      return_path: ["routine"],
+    },
+    pending_followup_action: {
+      kind: "product_recommendation",
+      category: "mask",
+      routine_layer: null,
+      routine_action: null,
+      source: "assistant_offer",
+    },
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: "Eine Maske kann als Zusatz sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Maske ist ein optionaler Zusatz."],
+      next_step_offer_de: "Ich kann dir danach konkrete Masken empfehlen.",
+    },
+  })
+
+  assert.equal(parsed.pending_followup_action?.kind, "product_recommendation")
 })
 
 test("AgentV2TerminalAnswerSchema accepts social and domain-boundary payloads", () => {
@@ -241,7 +318,7 @@ test("AgentV2TerminalAnswerSchema accepts social and domain-boundary payloads", 
       category: null,
       return_path: [],
     },
-    pending_routine_action: null,
+    pending_followup_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de: "Hallo! Ich bin da, wenn du eine Haarfrage hast.",

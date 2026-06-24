@@ -58,6 +58,8 @@ Internal Frische-Bridge logic can remain, but customer-facing German should use 
 
 Keep the category narrow: dry shampoo is for visible root oil and short-term freshness. It belongs mainly at the roots, should be distributed or brushed/comb-through only as product directions support, and should be washed out later with normal shampoo and water.
 
+Hair length is not a major dry-shampoo signal. Use it only for application practicality, such as sectioning at the roots on long or very long hair. Do not recommend dry shampoo because hair is long, and do not use dry shampoo for length dryness, frizz, split ends, or protection.
+
 For oily roots, dry shampoo can be an occasional bridge, but wash frequency should still match scalp oiliness, activity, styling-product use, comfort, and lifestyle. If the user needs it frequently, frame that as a bridge or sign to adjust wash rhythm/root routine, not as proof they should simply wash normally. Do not tell every oily-root user to wash less. If the user reports heaviness, itch, flakes, burning, soreness, or congestion after dry shampoo, stop escalating dry shampoo and move toward actual cleansing, simplification, or safety wording.
 
 If `care_balance_context.shampoo_cadence` shows frequent dry-shampoo use while the target wet-shampoo cadence is above current real shampoo use, say dry shampoo can bridge visible freshness, but it does not replace wet scalp cleansing with shampoo and water.

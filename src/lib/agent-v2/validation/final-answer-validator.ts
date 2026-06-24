@@ -99,6 +99,7 @@ export function validateAgentV2FinalAnswer(
   validateRoutineProductDeepDive(terminalAnswer, context, findings)
   validateRoutineMetadataConsistency(terminalAnswer, context, findings)
   validateAnswerModeForContext(terminalAnswer, findings)
+  validatePendingFollowupAction(terminalAnswer, findings)
   validateBoundaryAnswerSideEffects(terminalAnswer, findings)
   validateRoutineLayerProgression(terminalAnswer, context, findings)
   validateCurrentCareContextConflictAcknowledgement(terminalAnswer, context, findings)
@@ -125,6 +126,47 @@ export function validateAgentV2FinalAnswer(
     sanitized_answer: terminalAnswer,
     accepted_session_memory_writes: terminalAnswer.session_memory_writes,
     dropped_session_memory_writes: memorySanitization.dropped,
+  }
+}
+
+export function sanitizeRepairableEvidenceQuote(
+  answer: AgentV2TerminalAnswer,
+  errors: readonly AgentV2ValidationError[],
+): { answer: AgentV2TerminalAnswer; warning: AgentV2ValidationError } | null {
+  const blockingErrors = errors.filter((error) => error.severity !== "warn")
+  if (blockingErrors.length === 0) return null
+  if (
+    !blockingErrors.every(
+      (error) =>
+        error.validator_id === "request_interpretation_evidence" &&
+        error.path?.join(".") === "request_interpretation.evidence_quote" &&
+        typeof error.suggested_value === "string" &&
+        error.suggested_value.trim().length > 0,
+    )
+  ) {
+    return null
+  }
+
+  const suggested = String(blockingErrors[0].suggested_value).trim()
+  const sanitizedAnswer = AgentV2TerminalAnswerSchema.parse({
+    ...answer,
+    request_interpretation: {
+      ...answer.request_interpretation,
+      evidence_quote: suggested,
+    },
+  })
+
+  return {
+    answer: sanitizedAnswer,
+    warning: {
+      validator_id: "request_interpretation_evidence_sanitized",
+      message:
+        "request_interpretation.evidence_quote was sanitized after model repair failed for evidence metadata only.",
+      severity: "warn",
+      path: ["request_interpretation", "evidence_quote"],
+      rejected_value: answer.request_interpretation.evidence_quote,
+      suggested_value: suggested,
+    },
   }
 }
 
@@ -416,6 +458,16 @@ function validateVisiblePayloadRendered(
   errors: AgentV2ValidationError[],
 ): void {
   const userFacing = normalizeVisibleText(readUserFacingAnswer(answer.payload))
+  const nextStepOffer = readNextStepOffer(answer)
+  if (nextStepOffer && !isNextStepOfferRendered(userFacing, nextStepOffer)) {
+    errors.push({
+      validator_id: "visible_payload_not_rendered",
+      message:
+        "User-facing prose must visibly include next_step_offer_de when it creates a pending follow-up action.",
+      severity: "block",
+      path: ["payload", "user_facing_answer_de"],
+    })
+  }
 
   if (answer.answer_mode === "routine") {
     const missingStepLabels = answer.payload.visible_steps
@@ -513,7 +565,8 @@ function validateInterpretationEvidence(
   context: AgentV2FinalAnswerValidationContext,
   findings: AgentV2ValidationError[],
 ): void {
-  const evidence = normalizeEvidenceText(answer.request_interpretation.evidence_quote)
+  const originalEvidence = answer.request_interpretation.evidence_quote
+  const evidence = normalizeEvidenceText(originalEvidence)
   const evidenceText = normalizeEvidenceText(buildEvidenceText(context))
   const grounding = classifyEvidenceGrounding(evidence, evidenceText, context)
 
@@ -535,7 +588,46 @@ function validateInterpretationEvidence(
       "request_interpretation.evidence_quote must quote a meaningful phrase from the latest user message or active session context.",
     severity: "block",
     path: ["request_interpretation", "evidence_quote"],
+    ...buildEvidenceRepairMetadata({
+      normalizedEvidence: evidence,
+      originalEvidence,
+      normalizedEvidenceText: evidenceText,
+      context,
+    }),
   })
+}
+
+function buildEvidenceRepairMetadata(params: {
+  normalizedEvidence: string
+  originalEvidence: string
+  normalizedEvidenceText: string
+  context: AgentV2FinalAnswerValidationContext
+}): Pick<
+  AgentV2ValidationError,
+  "reason_code" | "rejected_value" | "expected" | "suggested_value" | "repair_hint"
+> {
+  const suggestedValue = chooseEvidenceQuoteSuggestion(params.context)
+  const reasonCode = params.normalizedEvidenceText.includes(params.normalizedEvidence)
+    ? "evidence_quote_too_short_or_generic"
+    : "evidence_quote_not_in_context"
+
+  return {
+    reason_code: reasonCode,
+    rejected_value: params.originalEvidence,
+    expected: "Exact phrase from latest user message or active session context.",
+    suggested_value: suggestedValue,
+    repair_hint:
+      "Set request_interpretation.evidence_quote to suggested_value exactly, or to another exact phrase from the latest user message / active context.",
+  }
+}
+
+function chooseEvidenceQuoteSuggestion(context: AgentV2FinalAnswerValidationContext): string {
+  const latest = context.latestUserMessage.trim()
+  if (latest.length > 0) return latest.slice(0, 240)
+  const recent = (context.recentEvidenceText ?? "").trim()
+  if (recent.length > 0) return recent.slice(0, 240)
+  // Re-validation will still reject this sentinel when no grounding context exists.
+  return "unclear"
 }
 
 function validateInterpretationConfidence(
@@ -814,6 +906,7 @@ function validateInterpretationToolArguments(
   const latestRoutineTool = [...context.toolCallHistory]
     .reverse()
     .find((call) => call.name === "build_or_fix_routine")
+  const multiSlotProductContext = isMultiSlotProductSelectionContext(answer, context)
 
   if (latestProductTool) {
     if (!latestProductTool.arguments) {
@@ -837,20 +930,24 @@ function validateInterpretationToolArguments(
         interpretation.product_request_kind,
         errors,
       )
-      compareToolArgument(
-        latestProductTool.arguments,
-        "requested_product_count",
-        interpretation.requested_product_count,
-        errors,
-      )
-      compareToolArgument(
-        latestProductTool.arguments,
-        "count_policy",
-        interpretation.count_policy,
-        errors,
-      )
+      if (!multiSlotProductContext) {
+        compareToolArgument(
+          latestProductTool.arguments,
+          "requested_product_count",
+          interpretation.requested_product_count,
+          errors,
+        )
+        compareToolArgument(
+          latestProductTool.arguments,
+          "count_policy",
+          interpretation.count_policy,
+          errors,
+        )
+      }
     }
-    compareCategoryArgument(latestProductTool.arguments, interpretation, errors)
+    if (!multiSlotProductContext) {
+      compareCategoryArgument(latestProductTool.arguments, interpretation, errors)
+    }
   }
 
   if (latestRoutineTool) {
@@ -910,6 +1007,190 @@ function isProductSelectionSupportingRoutineAnswer(
   return isProductBackedRoutineAnswer(answer) && Boolean(latestRoutineTool?.arguments)
 }
 
+type MultiSlotProductSelectionInfo = {
+  isSlotShaped: boolean
+  isValid: boolean
+  distinctCategoryCount: number
+}
+
+const MULTI_SLOT_CATEGORY_EVIDENCE_PATTERNS: Partial<Record<AgentV2CareCategory, RegExp[]>> = {
+  shampoo: [/\bshampoo\b/, /\balltagsshampoo\b/],
+  conditioner: [/\bconditioner\b/, /\bspuelung\b/],
+  mask: [/\bmaske\b/, /\bmask\b/],
+  leave_in: [/\bleave\s?in\b/, /\bleavein\b/],
+  oil: [/\boel\b/, /\bol\b/, /\boil\b/],
+  bondbuilder: [/\bbondbuilder\b/, /\bbond\s?builder\b/, /\bbonding\b/, /\bk18\b/, /\bolaplex\b/],
+  deep_cleansing_shampoo: [
+    /\btiefenreinigung\b/,
+    /\btiefenreinigungsshampoo\b/,
+    /\bdeep\s?cleansing\b/,
+    /\bclarifying\b/,
+    /\bdetox\b/,
+    /\breset\b/,
+  ],
+  dry_shampoo: [/\btrockenshampoo\b/, /\bdry\s?shampoo\b/],
+  peeling: [/\bpeeling\b/, /\bscalp\s?scrub\b/],
+  styling: [/\bstyling\b/, /\bstyler\b/],
+  treatment: [/\btreatment\b/, /\bbehandlung\b/],
+}
+
+function getProductToolCalls(
+  context: AgentV2FinalAnswerValidationContext,
+): readonly Partial<AgentV2ToolCallTrace>[] {
+  return context.toolCallHistory.filter((call) => call.name === "select_products")
+}
+
+function getCurrentProductProjections(
+  context: AgentV2FinalAnswerValidationContext,
+  productToolCallCount: number,
+): AgentV2FinalAnswerValidationContext["selectedProductProjections"] {
+  // responses-agent prepends prior-turn projections and appends one current projection per product call.
+  if (context.selectedProductProjections.length < productToolCallCount) return []
+  return context.selectedProductProjections.slice(-productToolCallCount)
+}
+
+function getToolArgumentString(call: Partial<AgentV2ToolCallTrace>, key: string): string | null {
+  const value = call.arguments?.[key]
+  return typeof value === "string" && value.trim().length > 0 ? value : null
+}
+
+function getToolArgumentNumber(call: Partial<AgentV2ToolCallTrace>, key: string): number | null {
+  const value = call.arguments?.[key]
+  return typeof value === "number" && Number.isFinite(value) ? value : null
+}
+
+function userEvidenceMentionsCategory(category: string, evidenceText: string): boolean {
+  const patterns = MULTI_SLOT_CATEGORY_EVIDENCE_PATTERNS[category as AgentV2CareCategory]
+  return Boolean(patterns?.some((pattern) => pattern.test(evidenceText)))
+}
+
+function userFacingAdmitsMissingSlot(category: string, userFacingText: string): boolean {
+  const normalized = normalizeAgentV2EvidenceText(userFacingText)
+  const mentionsCategory = userEvidenceMentionsCategory(category, normalized)
+  const admitsMissingCatalogMatch = [
+    /\b(?:kein|keinen|keine)\s+(?:sicher(?:er|en|e|es)|passend(?:er|en|e|es))?\s*(?:treffer|katalogtreffer|produkt|option|match)\b/,
+    /\bkein(?:e|en)?\s+passend(?:es|en|e|er)?\s+(?:produkt|option|treffer|match)\b/,
+    /\bnichts\s+passend(?:es|en|e|er)?\b/,
+    /\bfehl(?:t|en)?\s+(?:mir\s+|uns\s+)?(?:ein|eine|einen|den|der)?\s*(?:sicher(?:er|en|e|es)?|passend(?:er|en|e|es)?|katalog)\s*(?:treffer|produkt|option|match)\b/,
+    /\bohne\s+(?:sicher(?:en|er|e|es)?|passend(?:en|er|e|es)?)\s*(?:treffer|produkt|option|match)\b/,
+    /\bno\s+(?:safe|catalog)\s+(?:hit|match|product)\b/,
+  ].some((pattern) => pattern.test(normalized))
+
+  return mentionsCategory && admitsMissingCatalogMatch
+}
+
+function getMultiSlotEvidenceText(context: AgentV2FinalAnswerValidationContext): string {
+  return normalizeAgentV2EvidenceText(context.latestUserMessage)
+}
+
+function getEmptySlotCategories(
+  categories: readonly string[],
+  projections: AgentV2FinalAnswerValidationContext["selectedProductProjections"],
+): string[] {
+  return projections.flatMap((projection, index) =>
+    (projection.valid_product_ids?.length ?? 0) === 0 && categories[index]
+      ? [categories[index]]
+      : [],
+  )
+}
+
+function getMultiSlotProductSelectionInfo(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): MultiSlotProductSelectionInfo {
+  const productToolCalls = getProductToolCalls(context)
+  const categories = productToolCalls
+    .map((call) => getToolArgumentString(call, "category"))
+    .filter((category): category is string => Boolean(category))
+  const allProductCallsHaveCategories = categories.length === productToolCalls.length
+  const distinctCategoryCount = new Set(categories).size
+  const invalidInfo = {
+    isSlotShaped: false,
+    isValid: false,
+    distinctCategoryCount,
+  }
+
+  if (
+    answer.answer_mode !== "product_recommendation" ||
+    answer.request_interpretation.product_request_kind === "product_detail" ||
+    answer.request_interpretation.product_request_kind === "compare_products" ||
+    productToolCalls.length < 2 ||
+    !allProductCallsHaveCategories ||
+    distinctCategoryCount < 2
+  ) {
+    return invalidInfo
+  }
+
+  const isSlotShaped =
+    productToolCalls.length === distinctCategoryCount &&
+    productToolCalls.every(
+      (call) =>
+        getToolArgumentString(call, "count_policy") === "exact" &&
+        getToolArgumentNumber(call, "requested_product_count") === 1,
+    )
+  if (!isSlotShaped) return invalidInfo
+
+  const categorySet = new Set(categories)
+  const interpretationMatchesSlotShape =
+    answer.request_interpretation.count_policy === "exact" &&
+    answer.request_interpretation.requested_product_count === distinctCategoryCount &&
+    categorySet.has(answer.request_interpretation.care_category)
+  const evidenceText = getMultiSlotEvidenceText(context)
+  const evidenceMentionsEverySlot = categories.every((category) =>
+    userEvidenceMentionsCategory(category, evidenceText),
+  )
+  const visibleRecommendationIds = answer.payload.recommendations.map(
+    (recommendation) => recommendation.product_id,
+  )
+  const currentProductProjections = getCurrentProductProjections(context, productToolCalls.length)
+  const emptySlotCategories = getEmptySlotCategories(categories, currentProductProjections)
+  const userFacing = readUserFacingAnswer(answer.payload)
+  const userFacingAdmitsEveryEmptySlot = emptySlotCategories.every((category) =>
+    userFacingAdmitsMissingSlot(category, userFacing),
+  )
+  const fillableProjectionIndexes = new Set(
+    currentProductProjections.flatMap((projection, index) =>
+      (projection.valid_product_ids?.length ?? 0) > 0 ? [index] : [],
+    ),
+  )
+  const visibleProjectionIndexes = new Set<number>()
+  const allVisibleRecommendationsSelected = visibleRecommendationIds.every((id) => {
+    const projectionIndex = currentProductProjections.findIndex((projection) =>
+      (projection.valid_product_ids ?? []).includes(id),
+    )
+    if (projectionIndex === -1) return false
+    visibleProjectionIndexes.add(projectionIndex)
+    return true
+  })
+  const visibleRecommendationsUseDistinctSlots =
+    visibleProjectionIndexes.size === visibleRecommendationIds.length
+  const allFillableSlotsAreVisible =
+    visibleRecommendationIds.length === fillableProjectionIndexes.size &&
+    Array.from(fillableProjectionIndexes).every((index) => visibleProjectionIndexes.has(index))
+  const visibleRecommendationCountAllowsRelaxation =
+    visibleRecommendationIds.length <= distinctCategoryCount
+
+  return {
+    isSlotShaped,
+    isValid:
+      interpretationMatchesSlotShape &&
+      evidenceMentionsEverySlot &&
+      userFacingAdmitsEveryEmptySlot &&
+      visibleRecommendationCountAllowsRelaxation &&
+      allVisibleRecommendationsSelected &&
+      visibleRecommendationsUseDistinctSlots &&
+      allFillableSlotsAreVisible,
+    distinctCategoryCount,
+  }
+}
+
+function isMultiSlotProductSelectionContext(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  return getMultiSlotProductSelectionInfo(answer, context).isValid
+}
+
 function validateProductAnswerShape(
   answer: AgentV2TerminalAnswer,
   context: AgentV2FinalAnswerValidationContext,
@@ -932,6 +1213,18 @@ function validateProductAnswerShape(
   }
 
   const recommendations = answer.payload.recommendations
+  const multiSlotProductContext = getMultiSlotProductSelectionInfo(answer, context)
+  if (
+    multiSlotProductContext.isSlotShaped &&
+    recommendations.length > multiSlotProductContext.distinctCategoryCount
+  ) {
+    errors.push({
+      validator_id: "requested_product_count",
+      message: `Multi-category product requests must not surface more visible recommendations than the ${multiSlotProductContext.distinctCategoryCount} selected category slot(s).`,
+      severity: "block",
+    })
+  }
+
   const recommendationIds = new Set(
     recommendations.map((recommendation) => recommendation.product_id),
   )
@@ -947,7 +1240,11 @@ function validateProductAnswerShape(
     answer.request_interpretation,
     availableRecommendationCount,
   )
-  if (countRequirement.kind === "exact" && recommendations.length !== countRequirement.count) {
+  if (
+    countRequirement.kind === "exact" &&
+    recommendations.length !== countRequirement.count &&
+    !multiSlotProductContext.isValid
+  ) {
     errors.push({
       validator_id: "requested_product_count",
       message: `The user asked for ${countRequirement.count} product recommendation(s); return exactly that many when enough valid products are available.`,
@@ -1440,6 +1737,275 @@ function validateAnswerModeForContext(
   }
 }
 
+function readNextStepOffer(answer: AgentV2TerminalAnswer): string | null {
+  if (!("next_step_offer_de" in answer.payload)) return null
+  const offer = answer.payload.next_step_offer_de
+  return typeof offer === "string" && offer.trim().length > 0 ? offer.trim() : null
+}
+
+function readVisibleFollowupOffer(answer: AgentV2TerminalAnswer): string | null {
+  const nextStepOffer = readNextStepOffer(answer)
+  const proseOffer = extractConfirmableFollowupOfferFromVisibleProse(
+    readUserFacingAnswer(answer.payload),
+  )
+  const nextStepKind = classifyPendingFollowupOfferKind(nextStepOffer)
+  const proseKind = classifyPendingFollowupOfferKind(proseOffer)
+
+  if (proseOffer && proseKind && proseKind !== nextStepKind) return proseOffer
+  if (nextStepOffer && (nextStepKind || isConfirmableFollowupOffer(nextStepOffer))) {
+    return nextStepOffer
+  }
+  return proseOffer ?? nextStepOffer
+}
+
+function validatePendingFollowupAction(
+  answer: AgentV2TerminalAnswer,
+  errors: AgentV2ValidationError[],
+): void {
+  const nextStepOffer = readVisibleFollowupOffer(answer)
+  const expectedOfferKind = classifyPendingFollowupOfferKind(nextStepOffer)
+  const hasConfirmableOffer =
+    Boolean(expectedOfferKind) || isConfirmableFollowupOffer(nextStepOffer)
+  const expectedActionKind = expectedOfferKind ?? (hasConfirmableOffer ? "advisor_response" : null)
+  const action = answer.pending_followup_action
+
+  if (nextStepOffer && !answer.pending_followup_action && hasConfirmableOffer) {
+    errors.push({
+      validator_id: "pending_followup_action_missing",
+      message: "Actionable next_step_offer_de should provide pending_followup_action.",
+      severity: "block",
+      ...buildPendingFollowupRepairMetadata(
+        "pending_followup_action_missing",
+        expectedActionKind,
+        nextStepOffer,
+      ),
+    })
+  }
+
+  if ((!nextStepOffer || !hasConfirmableOffer) && answer.pending_followup_action) {
+    errors.push({
+      validator_id: "pending_followup_action_hidden",
+      message:
+        "pending_followup_action must not be set without a visible confirmable next_step_offer_de.",
+      severity: "block",
+      reason_code: "pending_followup_action_hidden",
+      rejected_value: answer.pending_followup_action,
+      expected: "pending_followup_action=null",
+      repair_hint:
+        "Remove pending_followup_action, or make the user-facing answer visibly offer a confirmable next action.",
+    })
+  }
+
+  if (
+    action &&
+    ((action.kind === "routine_mutation" && expectedActionKind !== "routine_mutation") ||
+      (expectedOfferKind && action.kind !== expectedOfferKind))
+  ) {
+    errors.push({
+      validator_id: "pending_followup_action_kind_mismatch",
+      message: "pending_followup_action.kind must match the visible next-step offer semantics.",
+      severity: "block",
+      path: ["pending_followup_action", "kind"],
+      rejected_value: action.kind,
+      ...buildPendingFollowupRepairMetadata(
+        "pending_followup_action_kind_mismatch",
+        expectedActionKind,
+        nextStepOffer,
+      ),
+    })
+  }
+
+  const expectedOfferCategory = inferPendingFollowupOfferCategory(
+    nextStepOffer,
+    answer.request_interpretation.care_category,
+  )
+  if (
+    (action?.kind === "product_recommendation" || action?.kind === "routine_mutation") &&
+    expectedOfferCategory &&
+    action.category !== expectedOfferCategory
+  ) {
+    errors.push({
+      validator_id: "pending_followup_action_category_mismatch",
+      message:
+        "Pending follow-up category must match the visible next-step offer when the category is clear.",
+      severity: "block",
+      path: ["pending_followup_action", "category"],
+      reason_code: "pending_followup_action_category_mismatch",
+      rejected_value: action.category,
+      expected: `pending_followup_action.category=${expectedOfferCategory}`,
+      repair_hint:
+        "Set pending_followup_action.category to the product/routine category named in the visible offer.",
+    })
+  }
+}
+
+function buildPendingFollowupRepairMetadata(
+  reasonCode: "pending_followup_action_missing" | "pending_followup_action_kind_mismatch",
+  expectedActionKind: "product_recommendation" | "routine_mutation" | "advisor_response" | null,
+  nextStepOffer: string | null,
+): Pick<AgentV2ValidationError, "reason_code" | "expected" | "rejected_value" | "repair_hint"> {
+  const expected = expectedActionKind
+    ? `pending_followup_action.kind=${expectedActionKind}`
+    : "pending_followup_action must match visible next_step_offer_de semantics"
+  return {
+    reason_code: reasonCode,
+    expected,
+    rejected_value: nextStepOffer,
+    repair_hint: expectedActionKind
+      ? `Set pending_followup_action.kind to ${expectedActionKind}, or remove/soften next_step_offer_de if the visible answer should not create a confirmable follow-up.`
+      : "Align pending_followup_action with the visible next_step_offer_de, or remove/soften next_step_offer_de if no confirmation should be stored.",
+  }
+}
+
+function classifyPendingFollowupOfferKind(
+  offer: string | null,
+): "product_recommendation" | "routine_mutation" | null {
+  if (!offer) return null
+  const normalizedOffer = normalizeVisibleText(offer)
+
+  if (isRoutineMutationOffer(normalizedOffer)) {
+    return "routine_mutation"
+  }
+
+  if (
+    /\b(empfehl|produk|produkt|option|auswahl|heraussuch|raussuch|vorschlag|vorschlaeg|katalog)\w*/.test(
+      normalizedOffer,
+    )
+  ) {
+    return "product_recommendation"
+  }
+
+  return null
+}
+
+function isRoutineMutationOffer(normalizedOffer: string): boolean {
+  if (!/\broutine\b/.test(normalizedOffer)) return false
+  if (
+    !/\b(anpass|ander|aender|einbau|integrier|hinzufug|hinzufueg|aufnehm|setz|bau|baue|umbau|vereinfach|passe|passen)\w*/.test(
+      normalizedOffer,
+    )
+  ) {
+    return false
+  }
+  if (isAdviceStyleRoutineOffer(normalizedOffer)) return false
+
+  return (
+    /\b(?:soll|mochtest|moechtest|willst)\b.{0,70}\b(?:ich|wir)\b.{0,120}\broutine\b/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:mochtest|moechtest|willst)\b.{0,90}\bdass\b.{0,30}\b(?:ich|wir)\b.{0,120}\broutine\b/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:ich|wir)\b.{0,50}\b(?:kann|konnen|passe|passen|baue|bauen|nehme|nehmen|setze|setzen|integriere|integrieren|vereinfache|vereinfachen)\w*\b.{0,120}\broutine\b/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:ich|wir)\b.{0,120}\broutine\b.{0,80}\b(?:anpass|ander|aender|einbau|integrier|hinzufug|hinzufueg|aufnehm|setz|bau|baue|umbau|vereinfach)\w*/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:anpass|ander|aender|einbau|integrier|hinzufug|hinzufueg|aufnehm|setz|bau|baue|umbau|vereinfach|passe|passen|baue|bauen|nehme|nehmen|setze|setzen|integriere|integrieren|vereinfache|vereinfachen)\w*\b.{0,40}\b(?:ich|wir)\b.{0,120}\broutine\b/.test(
+      normalizedOffer,
+    )
+  )
+}
+
+function isAdviceStyleRoutineOffer(normalizedOffer: string): boolean {
+  return (
+    /\b(?:wie|wo|wann)\b.{0,80}\b(?:du|man)\b.{0,100}\b(?:anpass|ander|aender|einbau|integrier|hinzufug|hinzufueg|aufnehm|setz|bau|baue|umbau|vereinfach)\w*/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:zeige|zeigen|erklaere|erklaren|erklar|schaue|schauen|anschauen|einordne|einordnen)\w*\b.{0,80}\b(?:wie|wo|wann)\b/.test(
+      normalizedOffer,
+    )
+  )
+}
+
+function isConfirmableFollowupOffer(offer: string | null): boolean {
+  if (!offer) return false
+  const normalizedOffer = normalizeVisibleText(offer)
+
+  return (
+    /\b(?:soll|mochtest|moechtest|willst)\b.{0,50}\b(?:ich|wir)\b/.test(normalizedOffer) ||
+    /\b(?:kann|konnen)\b.{0,30}\b(?:ich|wir)\b/.test(normalizedOffer) ||
+    /\b(?:ich|wir)\b.{0,30}\b(?:kann|konnen|empfehle|erklaere|erklare|ordne|passe|baue|schaue|zeige)\w*/.test(
+      normalizedOffer,
+    ) ||
+    /\bwenn du (?:magst|mochtest|moechtest|willst)\b.{0,90}\b(?:ich|wir)\b/.test(normalizedOffer)
+  )
+}
+
+function extractConfirmableFollowupOfferFromVisibleProse(userFacingAnswer: string): string | null {
+  const candidates = userFacingAnswer
+    .split(/(?:\n+|(?<=[.!?])\s+)/u)
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0)
+
+  for (const candidate of candidates.reverse()) {
+    if (isVisibleProseConfirmableFollowupOffer(candidate)) return candidate
+  }
+
+  return null
+}
+
+function isVisibleProseConfirmableFollowupOffer(offer: string): boolean {
+  const normalizedOffer = normalizeVisibleText(offer)
+  if (!isConfirmableFollowupOffer(offer)) return false
+  if (
+    /\b(?:ich|wir)\b.{0,30}\b(?:kann|konnen)\b.{0,60}\b(?:nicht|kein|keine|keinen)\b/.test(
+      normalizedOffer,
+    )
+  ) {
+    return false
+  }
+  if (/\b(?:ich|wir)\b.{0,30}\b(?:kann|konnen)\b.{0,60}\bnur\b/.test(normalizedOffer)) {
+    return false
+  }
+  const isQuestion = /[?？]\s*$/.test(offer.trim())
+
+  return (
+    /\b(?:soll|mochtest|moechtest)\b.{0,70}\b(?:ich|wir)\b/.test(normalizedOffer) ||
+    (isQuestion && /\b(?:kann|konnen)\b.{0,30}\b(?:ich|wir)\b/.test(normalizedOffer)) ||
+    /\b(?:ich|wir)\b.{0,30}\b(?:kann|konnen)\b.{0,80}\b(?:als nachstes|danach|anschliessend|noch kurz|kurz erklaren|kurz zeigen|gern erklaren|gerne erklaren)\b/.test(
+      normalizedOffer,
+    ) ||
+    /\b(?:ich|wir)\b.{0,30}\b(?:empfehle|erklaere|erklare|ordne|passe|baue|schaue|zeige)\w*\b.{0,80}\b(?:gern|gerne|als nachstes|danach|anschliessend)\b/.test(
+      normalizedOffer,
+    ) ||
+    /\bwenn du (?:magst|mochtest|moechtest|willst)\b.{0,90}\b(?:ich|wir)\b/.test(normalizedOffer)
+  )
+}
+
+function inferPendingFollowupOfferCategory(
+  offer: string | null,
+  interpretedCategory: AgentV2CareCategory,
+): AgentV2CareCategory | null {
+  if (!offer) return null
+  const normalizedOffer = normalizeVisibleText(offer)
+  const visibleCategory = inferCareCategoryFromOfferText(normalizedOffer)
+  if (visibleCategory) return visibleCategory
+
+  return interpretedCategory !== "none" && interpretedCategory !== "unknown"
+    ? interpretedCategory
+    : null
+}
+
+function inferCareCategoryFromOfferText(normalizedOffer: string): AgentV2CareCategory | null {
+  if (/\b(leave in|leave ins)\b/.test(normalizedOffer)) return "leave_in"
+  if (/\b(mask|maske|masken)\b/.test(normalizedOffer)) return "mask"
+  if (/\b(conditioner|spulung|spuelung)\b/.test(normalizedOffer)) return "conditioner"
+  if (/\b(shampoo|shampoos)\b/.test(normalizedOffer)) return "shampoo"
+  if (/\b(oel|ol|oil|serum|seren)\b/.test(normalizedOffer)) return "oil"
+  if (/\b(bondbuilder|bond builder|bond repair|bonding)\b/.test(normalizedOffer)) {
+    return "bondbuilder"
+  }
+  if (/\b(trockenshampoo|dry shampoo)\b/.test(normalizedOffer)) return "dry_shampoo"
+  if (/\b(tiefenreinigung|deep cleansing|reset shampoo)\b/.test(normalizedOffer)) {
+    return "deep_cleansing_shampoo"
+  }
+  if (/\b(peeling|scalp scrub|kopfhautpeeling)\b/.test(normalizedOffer)) return "peeling"
+
+  return null
+}
+
 function validateBoundaryAnswerSideEffects(
   answer: AgentV2TerminalAnswer,
   errors: AgentV2ValidationError[],
@@ -1455,13 +2021,13 @@ function validateBoundaryAnswerSideEffects(
     extractPayloadRoutineStepIds(answer).length > 0 ||
     answer.session_memory_writes.length > 0 ||
     answer.routine_context.active ||
-    answer.pending_routine_action !== null
+    answer.pending_followup_action !== null
 
   if (hasSideEffects) {
     errors.push({
       validator_id: "boundary_answer_no_side_effects",
       message:
-        "Social and domain-boundary answers must not include product, routine, memory, active routine context, or pending routine side effects.",
+        "Social and domain-boundary answers must not include product, routine, memory, active routine context, or pending follow-up side effects.",
       severity: "block",
     })
   }
@@ -1648,6 +2214,18 @@ function normalizeVisibleText(value: string): string {
 function hasNormalizedPhrase(normalizedHaystack: string, needle: string): boolean {
   const normalizedNeedle = normalizeVisibleText(needle)
   return normalizedNeedle.length > 0 && normalizedHaystack.includes(normalizedNeedle)
+}
+
+function isNextStepOfferRendered(normalizedProse: string, offer: string): boolean {
+  if (hasNormalizedPhrase(normalizedProse, offer)) return true
+
+  const meaningfulParts = normalizeVisibleText(offer)
+    .split(" ")
+    .filter((part) => part.length >= 4)
+  if (meaningfulParts.length < 3) return false
+
+  const renderedParts = meaningfulParts.filter((part) => normalizedProse.includes(part))
+  return renderedParts.length >= Math.ceil(meaningfulParts.length * 0.6)
 }
 
 function isConstraintRendered(normalizedProse: string, constraint: string): boolean {
@@ -1959,6 +2537,13 @@ function isMeaningfulEvidenceQuote(
   const evidenceTokens = normalizedEvidence.split(" ").filter(Boolean)
   if (evidenceTokens.length === 1 && ["shampoo", "routine"].includes(evidenceTokens[0] ?? "")) {
     return false
+  }
+  if (
+    compactEvidence.length >= MIN_EVIDENCE_QUOTE_LENGTH - 1 &&
+    meaningfulEvidenceTokens(normalizedEvidence).length > 0 &&
+    normalizeEvidenceText(buildEvidenceText(context)).includes(normalizedEvidence)
+  ) {
+    return true
   }
   if (compactEvidence.length >= MIN_EVIDENCE_QUOTE_LENGTH) return true
 

@@ -3,21 +3,21 @@ import test from "node:test"
 
 import { getQuizBrandPanelContent } from "../src/lib/quiz/brand-panel-content"
 
-test("question eight keeps the desktop rail with concise concerns copy", () => {
+test("question nine keeps the desktop rail with concise concerns copy", () => {
   const content = getQuizBrandPanelContent(8, "name")
 
-  assert.equal(content.eyebrow, "FRAGE 8 VON 9")
+  assert.equal(content.eyebrow, "FRAGE 9 VON 10")
   assert.equal(content.description, "Was dich gerade ausbremst.")
-  assert.equal(content.progressCurrent, 8)
+  assert.equal(content.progressCurrent, 9)
   assert.equal(content.progressComplete, false)
 })
 
-test("goals step becomes question nine in the desktop rail", () => {
+test("goals step becomes question ten in the desktop rail", () => {
   const content = getQuizBrandPanelContent(12, "name")
 
-  assert.equal(content.eyebrow, "FRAGE 9 VON 9")
+  assert.equal(content.eyebrow, "FRAGE 10 VON 10")
   assert.equal(content.description, "Worauf wir hinarbeiten.")
-  assert.equal(content.progressCurrent, 9)
+  assert.equal(content.progressCurrent, 10)
   assert.equal(content.progressComplete, false)
 })
 
@@ -26,7 +26,7 @@ test("lead capture uses a short finalization message with completed progress", (
 
   assert.equal(content.eyebrow, "FAST GESCHAFFT")
   assert.equal(content.description, "Gleich zeigen wir dir dein Profil.")
-  assert.equal(content.progressCurrent, 9)
+  assert.equal(content.progressCurrent, 10)
   assert.equal(content.progressComplete, true)
 })
 
@@ -35,6 +35,6 @@ test("analysis keeps the same desktop rail shell with concise processing copy", 
 
   assert.equal(content.eyebrow, "ANALYSE")
   assert.equal(content.description, "Wir setzen alles zusammen.")
-  assert.equal(content.progressCurrent, 9)
+  assert.equal(content.progressCurrent, 10)
   assert.equal(content.progressComplete, true)
 })

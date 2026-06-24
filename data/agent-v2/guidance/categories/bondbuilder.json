@@ -83,6 +83,12 @@
       "message": "For bond-repair relevance questions, keep primary_intent general_advice and answer as a category-fit assessment tied to structural damage signals such as bleach, color, chemical services, heat stress, breakage, snapping, mushy or over-elastic wet feel, or service preparation."
     },
     {
+      "rubric_id": "category.bondbuilder.hair_length_not_damage_signal",
+      "priority": "high",
+      "source": "categories/bondbuilder.md",
+      "message": "Hair length alone is not a Bondbuilder signal: do not recommend bondbuilder, increase repair severity, or infer structural damage from length unless chemical, heat, breakage, or wet-feel signals support it."
+    },
+    {
       "rubric_id": "category.bondbuilder.lane_decision_clarity",
       "priority": "high",
       "source": "categories/bondbuilder.md",

@@ -29,6 +29,19 @@ test("hair profile validator accepts thermal rollers as a styling tool", () => {
   assert.deepEqual(parsed.styling_tools, ["thermal_rollers"])
 })
 
+test("hair profile validator preserves hair length for full profile saves", () => {
+  const parsed = hairProfileFullSchema.parse({
+    hair_texture: "wavy",
+    thickness: "normal",
+    density: "medium",
+    hair_length: "long",
+    concerns: [],
+    goals: [],
+  })
+
+  assert.equal(parsed.hair_length, "long")
+})
+
 test("heat tools onboarding screen renders thermal rollers as a selectable option", () => {
   const html = renderToStaticMarkup(
     <HeatToolsScreen

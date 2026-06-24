@@ -8,6 +8,11 @@ import {
   getRoutineAutofillSlots,
   projectRoutinePlanForLayer,
 } from "../src/lib/routines/planner"
+import {
+  getLengthCareIntensity,
+  hasLengthEndsZone,
+  suppressLengthOnlyCare,
+} from "../src/lib/recommendation-engine/hair-length"
 import type { HairProfile } from "../src/lib/types"
 
 function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
@@ -16,6 +21,7 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
     user_id: "user-1",
     hair_texture: "wavy",
     thickness: "fine",
+    hair_length: null,
     density: "medium",
     concerns: [],
     products_used: null,
@@ -46,6 +52,202 @@ function createProfile(overrides: Partial<HairProfile> = {}): HairProfile {
 }
 
 test.describe("Routine planner", () => {
+  test("hair length helper maps length zones and care intensity conservatively", () => {
+    expect(hasLengthEndsZone("very_short")).toBe(false)
+    expect(hasLengthEndsZone(null)).toBe(false)
+    expect(hasLengthEndsZone("short")).toBe(true)
+    expect(hasLengthEndsZone("medium")).toBe(true)
+    expect(hasLengthEndsZone("long")).toBe(true)
+    expect(hasLengthEndsZone("very_long")).toBe(true)
+
+    expect(getLengthCareIntensity("very_short")).toBe("minimal")
+    expect(getLengthCareIntensity("short")).toBe("light")
+    expect(getLengthCareIntensity("medium")).toBe("standard")
+    expect(getLengthCareIntensity("long")).toBe("elevated")
+    expect(getLengthCareIntensity("very_long")).toBe("maximum")
+    expect(getLengthCareIntensity(null)).toBe("unknown")
+
+    expect(suppressLengthOnlyCare("very_short")).toBe(true)
+    expect(suppressLengthOnlyCare("short")).toBe(false)
+    expect(suppressLengthOnlyCare("medium")).toBe(false)
+    expect(suppressLengthOnlyCare("long")).toBe(false)
+    expect(suppressLengthOnlyCare("very_long")).toBe(false)
+    expect(suppressLengthOnlyCare(null)).toBe(false)
+  })
+
+  test("very short healthy profile does not add length-only care extras", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        hair_length: "very_short",
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir?",
+    )
+
+    const slots = plan.sections.flatMap((section) => section.slots)
+
+    expect(
+      slots
+        .find((slot) => slot.id === "base-conditioner")
+        ?.caveats.some((line) => /sehr kurzem Haar|sehr kleine Menge/i.test(line)),
+    ).toBe(true)
+    expect(slots.find((slot) => slot.id === "maintenance-leave-in")).toBeUndefined()
+    expect(slots.find((slot) => slot.id === "occasional-oil")).toBeUndefined()
+    expect(slots.find((slot) => slot.id === "occasional-mask")).toBeUndefined()
+    expect(slots.find((slot) => slot.id === "maintenance-brush-tools")).toBeUndefined()
+  })
+
+  test("very short profile does not auto-add detangling or wash-protection guidance from mechanical stress alone", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        hair_length: "very_short",
+        night_protection: ["tight_hairstyles"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir?",
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("brush_tools")
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("cwc")
+
+    const slotIds = plan.sections.flatMap((section) => section.slots.map((slot) => slot.id))
+    expect(slotIds).not.toContain("maintenance-brush-tools")
+    expect(slotIds).not.toContain("base-cwc-technique")
+  })
+
+  test("very short profile keeps direct detangling questions explicit", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        hair_length: "very_short",
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Wie entwirre ich Knoten bei meinen Haaren?",
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).toContain("brush_tools")
+    expect(plan.sections.flatMap((section) => section.slots.map((slot) => slot.id))).toContain(
+      "maintenance-brush-tools",
+    )
+  })
+
+  test("very short profile can still receive need-driven CWC guidance", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        hair_length: "very_short",
+        concerns: ["dryness"],
+        chemical_treatment: ["colored"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine hilft gegen trockene Haare?",
+    )
+
+    expect(plan.active_topics.map((topic) => topic.id)).toContain("cwc")
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("owc")
+
+    const cwcSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "base-cwc-technique")
+
+    expect(cwcSlot).toBeDefined()
+    expect([...(cwcSlot?.rationale ?? []), ...(cwcSlot?.caveats ?? [])].join(" ")).toMatch(
+      /sehr kurzem Haar|sehr kleine Menge/i,
+    )
+  })
+
+  test("very short profile still keeps heat-protection guidance when heat use exists", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        hair_length: "very_short",
+        heat_styling: "daily",
+        uses_heat_protection: false,
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir, wenn ich taeglich glaette?",
+    )
+
+    const slots = plan.sections.flatMap((section) => section.slots)
+    const heatGuidance = slots.find(
+      (slot) =>
+        slot.id === "maintenance-leave-in" &&
+        [...slot.rationale, ...slot.caveats].some((line) => /Hitze|Hitzeschutz/i.test(line)),
+    )
+
+    expect(heatGuidance).toBeDefined()
+  })
+
+  test("very short profile still keeps heat-protection guidance for diffuser drying", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        hair_length: "very_short",
+        drying_method: "blow_dry_diffuser",
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir?",
+    )
+
+    const heatGuidance = plan.sections
+      .flatMap((section) => section.slots)
+      .find(
+        (slot) =>
+          slot.id === "maintenance-leave-in" &&
+          [...slot.rationale, ...slot.caveats].some((line) => /Hitze|Hitzeschutz/i.test(line)),
+      )
+
+    expect(heatGuidance).toBeDefined()
+  })
+
+  test("short hair allows need-driven ends care but keeps the copy light", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        hair_length: "short",
+        concerns: ["dryness"],
+        goals: ["moisture"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine hilft gegen trockene Laengen?",
+    )
+
+    const leaveInSlot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((slot) => slot.id === "maintenance-leave-in")
+
+    expect(leaveInSlot?.action).toBe("add")
+    const leaveInCopy = [...(leaveInSlot?.rationale ?? []), ...(leaveInSlot?.caveats ?? [])].join(
+      " ",
+    )
+    expect(leaveInCopy).toMatch(/kleine Menge|leicht|sparsam/i)
+  })
+
+  test("very long hair strengthens coverage copy without triggering bond builder by length alone", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        hair_length: "very_long",
+        concerns: ["frizz"],
+        goals: ["less_frizz"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt gegen Frizz?",
+    )
+
+    const slots = plan.sections.flatMap((section) => section.slots)
+    const leaveInSlot = slots.find((slot) => slot.id === "maintenance-leave-in")
+
+    expect(leaveInSlot).toBeDefined()
+    expect([...leaveInSlot!.rationale, ...leaveInSlot!.caveats].join(" ")).toMatch(
+      /partienweise|Sektion|Längen|Spitzen|Schutz/i,
+    )
+    expect(slots.find((slot) => slot.id === "occasional-bond-builder")).toBeUndefined()
+    expect(plan.active_topics.map((topic) => topic.id)).not.toContain("bond_builder")
+  })
+
   test("wavy frizz routine stays structure-first and adds one lightweight finish slot", () => {
     const profile = createProfile({
       concerns: ["frizz"],
@@ -113,6 +315,7 @@ test.describe("Routine planner", () => {
       createProfile({
         hair_texture: "straight",
         thickness: "fine",
+        hair_length: "very_short",
         concerns: ["oily_scalp"],
         goals: ["shine"],
         current_routine_products: ["shampoo", "conditioner"],

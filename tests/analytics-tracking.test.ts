@@ -183,6 +183,49 @@ test("facade strips undefined payload values once before destination dispatch", 
   })
 })
 
+test("quiz completed analytics payload includes hair length when present", () => {
+  withDestinationSpies((calls) => {
+    trackAppEvent("quiz_completed", {
+      hairLength: "medium",
+      hairTexture: "wavy",
+      leadId: "lead-123",
+      scalpCondition: "gereizt",
+      scalpType: "trocken",
+      thickness: "fine",
+    })
+
+    assert.deepEqual(
+      calls.map((call) => call.payload),
+      [
+        {
+          hairLength: "medium",
+          hairTexture: "wavy",
+          leadId: "lead-123",
+          scalpCondition: "gereizt",
+          scalpType: "trocken",
+          thickness: "fine",
+        },
+        {
+          hairLength: "medium",
+          hairTexture: "wavy",
+          leadId: "lead-123",
+          scalpCondition: "gereizt",
+          scalpType: "trocken",
+          thickness: "fine",
+        },
+        {
+          hairLength: "medium",
+          hairTexture: "wavy",
+          leadId: "lead-123",
+          scalpCondition: "gereizt",
+          scalpType: "trocken",
+          thickness: "fine",
+        },
+      ],
+    )
+  })
+})
+
 test("destination failures are isolated and do not throw from the facade", () => {
   const originalPostHog = postHogDestination.track
   const originalCustomerIo = customerIoDestination.track

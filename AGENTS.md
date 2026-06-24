@@ -40,6 +40,28 @@ Use for:
 - turning a noisy recommendation flow into explicit user-facing questions
 - defining deterministic mappings, fallback rules, response metadata, and tests
 
+### `plan-hardening-loop`
+
+Use for:
+
+- creating, hardening, or reviewing non-trivial implementation plans
+- "grill me" planning sessions that should end in a plan
+- running Claude review on a plan and revising until implementation handoff is clean
+- implementing a written plan or starting subagent-driven implementation from a finalized plan
+- planning frontend or visual work where HTML mockups should be compared before choosing a direction
+
+Rules:
+
+- Treat it as a skill that contains a loop: grill, compare options, write/update plan, run Claude review, revise accepted findings, and repeat only when blockers changed materially.
+- If the kickoff is rough, first interview the user for goal, context, constraints, non-goals, and "done when" before starting the autonomous loop.
+- Before implementing a plan, establish an Implementation Goal Contract before file edits. If Goal mode is available, set it; otherwise print the contract and treat it as the controlling objective.
+- Short approvals like "good, implement", "go", or "do subagent-driven implementation" must not skip the goal contract. They only authorize the implementation kickoff.
+- Present 2-3 options for meaningful design forks, not every factual clarification question.
+- Prefer comparing similarly scoped architecture or UX directions over defaulting to "small vs medium vs large".
+- Explain tradeoffs in simple language: what gets easier, what gets harder, and what risk remains.
+- For frontend or visual decisions, create lightweight HTML mockups before asking the user to choose when layout, hierarchy, copy density, or interaction shape matters.
+- Stop for user input only when a product decision, risk acceptance, or scope choice cannot be made from local context.
+
 ### Combined workflow
 
 When a category or spec change needs both research and implementation logic, use:

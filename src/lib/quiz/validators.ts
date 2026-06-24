@@ -3,6 +3,7 @@ import {
   QUIZ_STRUCTURE_VALUES,
   QUIZ_THICKNESS_VALUES,
   QUIZ_DENSITY_VALUES,
+  QUIZ_HAIR_LENGTH_VALUES,
   QUIZ_FINGERTEST_VALUES,
   QUIZ_PULLTEST_VALUES,
   QUIZ_CONCERN_VALUES,
@@ -12,29 +13,37 @@ import {
 } from "./normalization"
 import { GOALS } from "@/lib/vocabulary/concerns-goals"
 
-export const quizAnswersSchema = z
-  .object({
-    structure: z.enum(QUIZ_STRUCTURE_VALUES),
-    thickness: z.enum(QUIZ_THICKNESS_VALUES),
-    density: z.enum(QUIZ_DENSITY_VALUES),
-    fingertest: z.enum(QUIZ_FINGERTEST_VALUES),
-    pulltest: z.enum(QUIZ_PULLTEST_VALUES),
-    scalp_type: z.enum(QUIZ_SCALP_TYPE_VALUES),
-    has_scalp_issue: z.boolean(),
-    scalp_condition: z.enum(QUIZ_SCALP_CONDITION_VALUES).optional(),
-    concerns: z.array(z.enum(QUIZ_CONCERN_VALUES)).max(3, "Bitte waehle hoechstens drei Bedenken"),
-    concerns_other_text: z.string().trim().max(50, "Bitte bleib bei maximal 50 Zeichen").optional(),
-    treatment: z
-      .array(z.enum(QUIZ_TREATMENT_VALUES))
-      .min(1, "Bitte waehle mindestens eine Behandlung"),
-    goals: z
-      .array(z.enum(GOALS))
-      .min(1, "Bitte waehle mindestens ein Ziel")
-      .max(5, "Bitte waehle hoechstens fuenf Ziele")
-      .optional(),
-  })
-  .strict()
-  .superRefine((answers, ctx) => {
+const baseQuizAnswersShape = {
+  structure: z.enum(QUIZ_STRUCTURE_VALUES),
+  thickness: z.enum(QUIZ_THICKNESS_VALUES),
+  density: z.enum(QUIZ_DENSITY_VALUES),
+  fingertest: z.enum(QUIZ_FINGERTEST_VALUES),
+  pulltest: z.enum(QUIZ_PULLTEST_VALUES),
+  scalp_type: z.enum(QUIZ_SCALP_TYPE_VALUES),
+  has_scalp_issue: z.boolean(),
+  scalp_condition: z.enum(QUIZ_SCALP_CONDITION_VALUES).optional(),
+  concerns: z.array(z.enum(QUIZ_CONCERN_VALUES)).max(3, "Bitte waehle hoechstens drei Bedenken"),
+  concerns_other_text: z.string().trim().max(50, "Bitte bleib bei maximal 50 Zeichen").optional(),
+  treatment: z
+    .array(z.enum(QUIZ_TREATMENT_VALUES))
+    .min(1, "Bitte waehle mindestens eine Behandlung"),
+  goals: z
+    .array(z.enum(GOALS))
+    .min(1, "Bitte waehle mindestens ein Ziel")
+    .max(5, "Bitte waehle hoechstens fuenf Ziele")
+    .optional(),
+} satisfies z.ZodRawShape
+
+function applyQuizAnswerRules<T extends z.ZodRawShape>(schema: z.ZodObject<T>) {
+  return schema.strict().superRefine((rawAnswers, ctx) => {
+    const answers = rawAnswers as {
+      treatment: string[]
+      concerns: string[]
+      has_scalp_issue: boolean
+      scalp_condition?: string
+      goals?: string[]
+    }
+
     if (new Set(answers.treatment).size !== answers.treatment.length) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -93,6 +102,21 @@ export const quizAnswersSchema = z
       }
     }
   })
+}
+
+export const quizAnswersSchema = applyQuizAnswerRules(
+  z.object({
+    ...baseQuizAnswersShape,
+    hair_length: z.enum(QUIZ_HAIR_LENGTH_VALUES),
+  }),
+)
+
+export const storedQuizAnswersSchema = applyQuizAnswerRules(
+  z.object({
+    ...baseQuizAnswersShape,
+    hair_length: z.enum(QUIZ_HAIR_LENGTH_VALUES).optional(),
+  }),
+)
 
 export const leadSchema = z.object({
   name: z.string().min(1, "Name ist erforderlich"),

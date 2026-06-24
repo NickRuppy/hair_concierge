@@ -18,6 +18,7 @@ import type { OnboardingStep } from "@/lib/onboarding/store"
 import {
   BRUSH_TYPE_LABELS,
   DRYING_METHOD_LABELS,
+  HAIR_LENGTH_OPTIONS,
   NIGHT_PROTECTION_LABELS,
   TOWEL_MATERIAL_LABELS,
   TOWEL_TECHNIQUE_LABELS,
@@ -133,14 +134,14 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
 export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   {
     key: "hair_texture",
-    label: "Haartextur",
+    label: "Haarstruktur",
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.hair_texture, HAIR_TEXTURE_OPTIONS),
   },
   {
     key: "thickness",
-    label: "Haar-Dicke",
+    label: "Haardicke",
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.thickness, HAIR_THICKNESS_OPTIONS),
@@ -151,6 +152,13 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) => optionLabel(profile?.density, HAIR_DENSITY_OPTIONS),
+  },
+  {
+    key: "hair_length",
+    label: "Haarlänge",
+    sectionKey: "quiz",
+    editTarget: { kind: "quiz" },
+    getValue: (profile) => optionLabel(profile?.hair_length, HAIR_LENGTH_OPTIONS),
   },
   {
     key: "cuticle_condition",
@@ -263,10 +271,16 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     label: "Trocknungstechnik",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "towel_technique" },
-    getValue: (profile) =>
-      profile?.towel_technique
-        ? (TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique)
-        : null,
+    getValue: (profile) => {
+      if (profile?.towel_technique) {
+        return TOWEL_TECHNIQUE_LABELS[profile.towel_technique] ?? profile.towel_technique
+      }
+      if (profile?.towel_material === "no_towel") {
+        return "Keine Trocknungstechnik"
+      }
+
+      return null
+    },
   },
   {
     key: "drying_method",

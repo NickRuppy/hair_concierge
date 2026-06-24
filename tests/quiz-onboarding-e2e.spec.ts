@@ -50,7 +50,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
     const { data, error } = await admin
       .from("hair_profiles")
       .select(
-        "hair_texture, thickness, density, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns, desired_volume, goals, drying_method, routine_preference",
+        "hair_texture, thickness, density, hair_length, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns, desired_volume, goals, drying_method, routine_preference",
       )
       .eq("user_id", userId)
       .maybeSingle()
@@ -150,23 +150,26 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.goto("/quiz", { waitUntil: "networkidle" })
 
       await expect(
-        page.getByRole("heading", { name: /Was ist deine natürliche Haartextur/i }),
+        page.getByRole("heading", { name: /Welche Haarstruktur haben die meisten deiner Haare/i }),
       ).toBeVisible()
 
       await page.getByText("Wellig").first().click()
-      await expect(page.getByText("2/9")).toBeVisible()
+      await expect(page.getByText("2/10")).toBeVisible()
 
       await page.getByText("Mittel").first().click()
-      await expect(page.getByText("3/9")).toBeVisible()
+      await expect(page.getByText("3/10")).toBeVisible()
 
       await page.getByText("Mittlere Dichte").click()
-      await expect(page.getByText("4/9")).toBeVisible()
+      await expect(page.getByText("4/10")).toBeVisible()
+
+      await page.getByText("Mittellang").click()
+      await expect(page.getByText("5/10")).toBeVisible()
 
       await page.getByText("Leicht uneben").click()
-      await expect(page.getByText("5/9")).toBeVisible()
+      await expect(page.getByText("6/10")).toBeVisible()
 
       await page.getByText("Dehnt sich, bleibt ausgeleiert").click()
-      await expect(page.getByText("6/9")).toBeVisible()
+      await expect(page.getByText("7/10")).toBeVisible()
 
       await expect(
         page.getByRole("heading", { name: /Sind deine Haare chemisch behandelt/i }),
@@ -186,8 +189,8 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
-      // Scalp question (7/9)
-      await expect(page.getByText("7/9")).toBeVisible()
+      // Scalp question (8/10)
+      await expect(page.getByText("8/10")).toBeVisible()
       await expect(
         page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
       ).toBeVisible()
@@ -203,7 +206,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.getByRole("button", { name: "JA" }).click()
       await page.getByText("Trockene Schuppen").click()
 
-      await expect(page.getByText("8/9")).toBeVisible()
+      await expect(page.getByText("9/10")).toBeVisible()
       await expect(page.getByText(/Welche Haarprobleme/i)).toBeVisible()
       await page.getByText("Trockenheit").click()
       await page.getByText("Frizz").click()
@@ -324,7 +327,24 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       })
       await page.getByRole("button", { name: /^Weiter$/i }).click()
 
-      // Towel material: select Frottee (single-select, auto-advances)
+      // Towel material: no towel skips technique, then back up and keep the normal Frottee path covered.
+      await expect(page.getByText("Womit trocknest du dein Haar?", { exact: false })).toBeVisible({
+        timeout: 10_000,
+      })
+      await page
+        .getByRole("button", {
+          name: /Kein Handtuch: Ich lasse meine Haare tropfnass trocknen/i,
+        })
+        .click()
+
+      await expect(
+        page.getByText("Wie trocknest du dein Haar hauptsächlich?", { exact: false }),
+      ).toBeVisible({
+        timeout: 10_000,
+      })
+      await expect(page.getByText("Wie trocknest du?", { exact: false })).toHaveCount(0)
+      await page.getByRole("button", { name: /^Zurück$/i }).click()
+
       await expect(page.getByText("Womit trocknest du dein Haar?", { exact: false })).toBeVisible({
         timeout: 10_000,
       })
@@ -399,6 +419,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       const latestLead = await fetchLatestLead()
       expect(latestLead?.quiz_answers).toMatchObject({
         density: "medium",
+        hair_length: "medium",
       })
 
       await expect
@@ -417,6 +438,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         hair_texture: "wavy",
         thickness: "normal",
         density: "medium",
+        hair_length: "medium",
         cuticle_condition: "slightly_rough",
         protein_moisture_balance: "stretches_stays",
         scalp_type: "dry",
@@ -446,6 +468,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         hair_texture: "wavy",
         thickness: "normal",
         density: "medium",
+        hair_length: "medium",
         cuticle_condition: "slightly_rough",
         protein_moisture_balance: "stretches_stays",
         scalp_type: "dry",
@@ -464,16 +487,18 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await page.goto("/quiz", { waitUntil: "networkidle" })
 
       await expect(
-        page.getByRole("heading", { name: /Was ist deine natürliche Haartextur/i }),
+        page.getByRole("heading", { name: /Welche Haarstruktur haben die meisten deiner Haare/i }),
       ).toBeVisible()
       await page.getByText("Glatt").first().click()
-      await expect(page.getByText("2/9")).toBeVisible()
+      await expect(page.getByText("2/10")).toBeVisible()
       await page.getByRole("button", { name: /Fein Kaum spürbar/i }).click()
-      await expect(page.getByText("3/9")).toBeVisible()
+      await expect(page.getByText("3/10")).toBeVisible()
       await page.getByText("Wenig Haare").click()
-      await expect(page.getByText("4/9")).toBeVisible()
+      await expect(page.getByText("4/10")).toBeVisible()
+      await page.getByText("Sehr kurz").click()
+      await expect(page.getByText("5/10")).toBeVisible()
       await page.getByText("Glatt wie Glas").click()
-      await expect(page.getByText("5/9")).toBeVisible()
+      await expect(page.getByText("6/10")).toBeVisible()
       await page.getByText("Reißt sofort").click()
 
       await expect(
@@ -489,7 +514,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       await naturCard.click()
 
       await page.getByRole("button", { name: /^Weiter$/i }).click()
-      await expect(page.getByText("7/9")).toBeVisible()
+      await expect(page.getByText("8/10")).toBeVisible()
       await expect(
         page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
       ).toBeVisible()
@@ -498,7 +523,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         .filter({ has: page.getByText(/^Fettig$/) })
         .click()
       await page.getByRole("button", { name: "NEIN" }).click()
-      await expect(page.getByText("8/9")).toBeVisible()
+      await expect(page.getByText("9/10")).toBeVisible()
       await page.getByRole("button", { name: /Etwas anderes/i }).click()
       await page.getByLabel("Eigene Notiz").fill("verklebt schnell")
       await page.getByRole("button", { name: /^Weiter$/i }).click()
@@ -602,6 +627,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
       const latestLead = await fetchLatestLead()
       expect(latestLead?.quiz_answers).toMatchObject({
         density: "low",
+        hair_length: "very_short",
         concerns: [],
         concerns_other_text: "verklebt schnell",
       })
@@ -623,6 +649,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
         hair_texture: "straight",
         thickness: "fine",
         density: "low",
+        hair_length: "very_short",
         cuticle_condition: "smooth",
         protein_moisture_balance: "snaps",
         scalp_type: "oily",

@@ -19,6 +19,7 @@ const STEP_NAMES: Record<number, string> = {
   2: "hair_texture",
   3: "hair_thickness",
   13: "hair_density",
+  15: "hair_length",
   4: "surface_test",
   5: "pull_test",
   6: "scalp",

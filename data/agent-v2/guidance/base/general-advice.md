@@ -66,6 +66,8 @@ For application, dosage, order, cadence, routine placement, sectioning, or "wie 
 
 Scale amount and placement with profile signals such as fine hair, oily scalp, dry lengths, curls, density, length, heat use, and routine complexity. Start small for fine hair, oily roots, or buildup risk; allow more only when thickness, dryness, density, or curl pattern supports it.
 
+Use hair length as an application and relevance signal, not as a damage diagnosis. Very short hair has no real lengths-and-ends zone, so length-focused products, detangling steps, CWC/OWC, oils, masks, and night-protection advice should be optional or skipped unless another signal or direct user request justifies them. Short hair usually needs smaller amounts; medium hair can use normal lengths-and-ends placement; long and very long hair mainly need better sectioning, distribution, detangling, and protection copy, not automatic repair escalation.
+
 Separate scalp/roots from lengths/ends when that prevents dryness, oiliness, residue, or irritation. For shampoo, place the product mainly on the scalp; the lengths usually get enough from rinse-down. An optional second wash is only for when the scalp still does not feel clean after the first wash.
 
 For reset comparisons, do not turn the shampoo placement rule into a category rule. Shampoo application can focus on scalp/roots, but deep-cleansing shampoo is not conceptually scalp-only: product/mineral film through lengths or hard-water feel points toward reset/clarifying/chelating shampoo, while scalp-local residue or oily-root buildup on tolerant skin may point toward gentle occasional scalp peeling. Persistent itch, redness, burning, pain, repeated flakes, or shedding belongs to the safety boundary, not stronger peeling.
@@ -82,6 +84,8 @@ For tangles, knots, brush resistance, curl/coily handling, or friction-heavy bre
 
 Use conditioner or leave-in slip when relevant, work in sections, start at the ends, and move upward. Do not suggest pushing through painful resistance. For curly or coily hair, avoid dry brushing as a default and favor low-tension handling with enough slip.
 
+For very short hair, do not force detangling or ends-up sectioning language unless the user explicitly asks or has enough length for it. For long and very long hair, sectioning and gentle detangling become more important because the same product amount is harder to distribute evenly.
+
 If a conditioner or leave-in is already present, consider amount, timing, saturation, placement, and tool choice before adding another product.
 
 ## CWC And OWC
@@ -90,6 +94,8 @@ CWC and OWC are wash techniques, not product categories or repair treatments. CW
 OWC is the heavier oil-wash-conditioner route for drier, curlier, coarser, more porous, or more damaged lengths when scalp and buildup risk allow. Keep OWC less default for fine, flat-prone, oily-root, low-density, or weight-sensitive hair.
 
 Both still include a real shampoo step on the scalp. Do not collapse them into co-washing, cleansing conditioners, standalone hair oiling, structural repair, regrowth, or fixed-cadence protocols. Avoid intensifying CWC/OWC when active scalp symptoms, persistent flaking/itching, inflammation, or repeated greasy/coated results are the foreground issue.
+
+Do not auto-suggest CWC or OWC for very short hair from mechanical-stress signals alone. If the user directly asks about CWC/OWC with very short hair, answer educationally and make clear that it may be unnecessary when there are no real lengths to protect.
 
 ## German Copy Fit
 Use natural German or German-friendly wording for common review-sensitive phrases. Prefer `starkes Brechen`, `brüchige Längen`, or `gummiartig` depending on context; do not write `starkes Schnappen`. Prefer `Routine beim Lufttrocknen`; do not write `Air-Dry-Routine`. For scalp-actives wording, say `nicht zu viele starke Kopfhaut-Wirkstoffe kombinieren`; do not write `Actives stapeln`.

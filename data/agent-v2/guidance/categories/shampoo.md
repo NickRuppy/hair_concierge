@@ -52,6 +52,8 @@ Common look-alikes:
 ## Scalp/Length Split Logic
 Keep shampoo mainly on the scalp and roots. Rinse-down is normally enough for lengths unless there is heavy product residue.
 
+Hair length should only weakly affect normal shampoo advice. Even for long or very long hair, do not scale shampoo like a length-care product; scale placement, rinse-down, and length-protection caveats instead. Very short hair usually needs no lengths-and-ends shampoo caveat because there is no real lengths zone.
+
 When the user says a shampoo works for the scalp but dries out the lengths, do not discard the scalp logic automatically. Explain that the scalp may still need the shampoo while the lengths need protection: lighter application, less direct shampoo on lengths, conditioner after washing, and sometimes conditioner before shampoo as CWC/OWC length protection.
 
 "Wash less" is not a universal goal. Wash rhythm should fit scalp oiliness, activity, styling-product use, dry-shampoo use, texture, and comfort.

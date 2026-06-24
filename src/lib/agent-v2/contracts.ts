@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { SELECTABLE_PRODUCT_CATEGORIES } from "@/lib/agent/contracts"
 
 export const AgentV2AnswerModeSchema = z.enum([
   "product_recommendation",
@@ -129,14 +130,50 @@ export const AgentV2CareCategorySchema = z.enum([
 
 export type AgentV2CareCategory = z.infer<typeof AgentV2CareCategorySchema>
 
-export const AgentV2PendingRoutineActionSchema = z.strictObject({
-  action: z.enum(["create", "modify", "add_step", "remove_step", "replace_product", "simplify"]),
-  routine_layer: AgentV2RoutineLayerSchema.nullable(),
-  category: AgentV2CareCategorySchema.nullable(),
-  source: z.literal("assistant_offer"),
-})
+export const AgentV2PendingFollowupKindSchema = z.enum([
+  "product_recommendation",
+  "advisor_response",
+  "routine_mutation",
+])
 
-export type AgentV2PendingRoutineAction = z.infer<typeof AgentV2PendingRoutineActionSchema>
+export type AgentV2PendingFollowupKind = z.infer<typeof AgentV2PendingFollowupKindSchema>
+
+const AgentV2ConcreteProductFollowupCategorySchema = z.enum(SELECTABLE_PRODUCT_CATEGORIES)
+
+const AgentV2PendingRoutineActionSchema = z.enum([
+  "create",
+  "modify",
+  "add_step",
+  "remove_step",
+  "replace_product",
+  "simplify",
+])
+
+export const AgentV2PendingFollowupActionSchema = z.discriminatedUnion("kind", [
+  z.strictObject({
+    kind: z.literal("product_recommendation"),
+    category: AgentV2ConcreteProductFollowupCategorySchema,
+    routine_layer: z.null(),
+    routine_action: z.null(),
+    source: z.literal("assistant_offer"),
+  }),
+  z.strictObject({
+    kind: z.literal("advisor_response"),
+    category: AgentV2CareCategorySchema.nullable(),
+    routine_layer: AgentV2RoutineLayerSchema.nullable(),
+    routine_action: z.null(),
+    source: z.literal("assistant_offer"),
+  }),
+  z.strictObject({
+    kind: z.literal("routine_mutation"),
+    category: AgentV2CareCategorySchema.nullable(),
+    routine_layer: AgentV2RoutineLayerSchema.nullable(),
+    routine_action: AgentV2PendingRoutineActionSchema,
+    source: z.literal("assistant_offer"),
+  }),
+])
+
+export type AgentV2PendingFollowupAction = z.infer<typeof AgentV2PendingFollowupActionSchema>
 
 export const AgentV2CountPolicySchema = z.enum(["none", "exact", "default", "cap"])
 
@@ -219,7 +256,7 @@ export const AgentV2RoutineThreadContextSchema = z.strictObject({
   last_routine_categories: z.array(z.string()),
   last_user_goal: z.string().nullable(),
   summary_de: z.string().nullable(),
-  pending_routine_action: AgentV2PendingRoutineActionSchema.nullable().optional(),
+  pending_followup_action: AgentV2PendingFollowupActionSchema.nullable().optional(),
   visible_steps: z.array(AgentV2RoutineThreadStepSchema),
 })
 
@@ -320,7 +357,7 @@ const AgentV2TerminalAnswerBaseSchema = z.strictObject({
   safety_flags: z.array(z.string()),
   tool_grounding: AgentV2ToolGroundingSchema,
   routine_context: AgentV2RoutineContextSchema,
-  pending_routine_action: AgentV2PendingRoutineActionSchema.nullable(),
+  pending_followup_action: AgentV2PendingFollowupActionSchema.nullable(),
   session_memory_writes: z.array(AgentV2SessionMemoryWriteSchema),
 })
 
@@ -424,6 +461,11 @@ export const AgentV2ValidationErrorSchema = z.object({
   message: z.string(),
   severity: z.enum(["block", "warn"]).default("block"),
   path: z.array(z.union([z.string(), z.number()])).optional(),
+  reason_code: z.string().optional(),
+  rejected_value: z.unknown().optional(),
+  expected: z.unknown().optional(),
+  suggested_value: z.unknown().optional(),
+  repair_hint: z.string().optional(),
 })
 
 export type AgentV2ValidationError = z.infer<typeof AgentV2ValidationErrorSchema>

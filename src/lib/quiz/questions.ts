@@ -1,14 +1,15 @@
 import type { QuizQuestion } from "./types"
+import { HAIR_LENGTH_OPTIONS } from "@/lib/vocabulary"
 
-export const QUIZ_TOTAL_QUESTIONS = 9
+export const QUIZ_TOTAL_QUESTIONS = 10
 
 export const quizQuestions: QuizQuestion[] = [
   {
     step: 2,
     questionNumber: 1,
-    title: "Was ist deine natürliche Haartextur?",
+    title: "Welche Haarstruktur haben die meisten deiner Haare?",
     instruction:
-      "Mach eine Strähne tropfnass, drücke sie oben zusammen und lass los \u2013 was passiert?",
+      "Schau dir eine typische nasse Strähne an und wähle unten aus, welche Form sie annimmt.",
     options: [
       {
         value: "straight",
@@ -36,14 +37,13 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Super — noch 8 kurze Fragen.",
+    motivation: "Super — noch 9 kurze Fragen.",
   },
   {
     step: 3,
     questionNumber: 2,
-    title: "Wie dick sind deine einzelnen Haare?",
-    instruction:
-      "Nimm ein einzelnes Haar und halte es zwischen Daumen und Zeigefinger. Vergleiche es mit einem Nähfaden \u2013 das ist der beste Referenzpunkt.\n\nGemeint ist ein einzelnes Haar, nicht wie viele Haare du insgesamt hast.",
+    title: "Wie dick fühlt sich ein einzelnes Haar bei dir meistens an?",
+    instruction: "Vergleiche ein einzelnes Haar mit einem Nähfaden.",
     options: [
       {
         value: "fine",
@@ -97,8 +97,24 @@ export const quizQuestions: QuizQuestion[] = [
     motivation: "Genau — jetzt kennen wir die wichtigsten Grunddaten.",
   },
   {
-    step: 4,
+    step: 15,
     questionNumber: 4,
+    title: "Wie lang sind deine Haare aktuell?",
+    instruction:
+      "Bei Locken oder Coils zählt die sanft gestreckte Länge einer Strähne.\n\nWenn du zwischen zwei Längen liegst, wähle die längere Option.",
+    options: [
+      { ...HAIR_LENGTH_OPTIONS[0], icon: "hair-length-very-short" },
+      { ...HAIR_LENGTH_OPTIONS[1], icon: "hair-length-short" },
+      { ...HAIR_LENGTH_OPTIONS[2], icon: "hair-length-medium" },
+      { ...HAIR_LENGTH_OPTIONS[3], icon: "hair-length-long" },
+      { ...HAIR_LENGTH_OPTIONS[4], icon: "hair-length-very-long" },
+    ],
+    selectionMode: "single",
+    motivation: "Danke — damit werden Mengen und Anwendung genauer.",
+  },
+  {
+    step: 4,
+    questionNumber: 5,
     title: "Wie fühlt sich dein Haar an?",
     instruction:
       "Nimm ein gewaschenes, trockenes Haar aus deiner Bürste \u2013 es darf kein Produkt mehr drauf sein. Schließ die Augen und fahre ganz langsam mit zwei Fingern von der Wurzel zur Spitze. Konzentrier dich darauf, was du fühlst:",
@@ -127,7 +143,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     step: 5,
-    questionNumber: 5,
+    questionNumber: 6,
     title: "Wie elastisch ist dein Haar?",
     instruction:
       "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefühl, nicht reißen. Beobachte genau, was passiert:\n\nZiehe nur leicht. Uns geht es um die Tendenz, nicht um Perfektion.",
@@ -156,7 +172,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     step: 7,
-    questionNumber: 6,
+    questionNumber: 7,
     title: "Sind deine Haare chemisch behandelt?",
     instruction:
       "Chemische Prozesse wie Blondieren oder Färben verändern die innere Struktur deiner Haare grundlegend. Blondieren bricht Brückenverbindungen auf und entzieht Protein \u2013 das muss in der Pflege ausgeglichen werden.",
@@ -185,7 +201,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     step: 8,
-    questionNumber: 8,
+    questionNumber: 9,
     title: "Welche Haarprobleme beschäftigen dich gerade am meisten?",
     instruction:
       "Wähle bis zu 3 Punkte aus, die aktuell am besten zu deinen Längen und Spitzen passen.",

@@ -525,7 +525,7 @@ function terminalGeneralAdvice(call_id: string, overrides: { evidence_quote: str
       category: null,
       return_path: null,
     },
-    pending_routine_action: null,
+    pending_followup_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de:

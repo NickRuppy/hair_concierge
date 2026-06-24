@@ -1,7 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { validateAgentV2FinalAnswer } from "../src/lib/agent-v2/validation/final-answer-validator"
+import {
+  sanitizeRepairableEvidenceQuote,
+  validateAgentV2FinalAnswer,
+} from "../src/lib/agent-v2/validation/final-answer-validator"
 
 function emptyExtractedConstraints() {
   return {
@@ -127,7 +130,7 @@ const baseAnswer = {
     category: null,
     return_path: [],
   },
-  pending_routine_action: null,
+  pending_followup_action: null,
   session_memory_writes: [],
   payload: {
     user_facing_answer_de: "**Test Shampoo** passt gut zu deinem Profil.",
@@ -171,6 +174,13 @@ function selectProductsToolCall(
       evidence_quote: "Welches Shampoo passt zu mir?",
       ...overrides,
     },
+  }
+}
+
+function selectedProjection(productId: string, name: string) {
+  return {
+    valid_product_ids: [productId],
+    products: [{ product_id: productId, name }],
   }
 }
 
@@ -355,6 +365,44 @@ const routineBasicsValidationContext = {
   knownHardRuleIds: [],
 } as const
 
+function createValidGeneralAdviceAnswer(overrides: Record<string, unknown> = {}) {
+  return {
+    ...baseAnswer,
+    answer_mode: "general_advice",
+    interpreted_intent: "User asks for category advice.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Ist eine Maske sinnvoll?",
+    }),
+    extracted_constraints: {
+      ...emptyExtractedConstraints(),
+      product_categories: ["mask"],
+      raw_constraints: ["Maske"],
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "mask"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    pending_followup_action: null,
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: null,
+    },
+    ...overrides,
+  }
+}
+
 function socialAnswer(overrides: Record<string, unknown> = {}) {
   return {
     ...baseAnswer,
@@ -389,7 +437,7 @@ function socialAnswer(overrides: Record<string, unknown> = {}) {
       category: null,
       return_path: [],
     },
-    pending_routine_action: null,
+    pending_followup_action: null,
     session_memory_writes: [],
     payload: {
       user_facing_answer_de: "Hallo! Ich bin da, wenn du eine Haarfrage hast.",
@@ -428,6 +476,822 @@ test("validator accepts known product ids", () => {
   const result = validateAgentV2FinalAnswer(baseAnswer, baseValidationContext)
 
   assert.equal(result.ok, true)
+})
+
+test("AgentV2 validator blocks confirmable next step without pending follow-up action", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Ich kann dir danach konkrete Masken empfehlen.",
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_missing",
+  )
+  assert.ok(error)
+  assert.equal(error.reason_code, "pending_followup_action_missing")
+  assert.equal(error.expected, "pending_followup_action.kind=product_recommendation")
+  assert.match(error.repair_hint ?? "", /product_recommendation/)
+})
+
+test("AgentV2 validator blocks visible prose offers without structured pending follow-up action", () => {
+  const answer = {
+    ...baseAnswer,
+    request_interpretation: requestInterpretation({
+      care_category: "leave_in",
+      evidence_quote: "leichtes Leave-in gegen Frizz",
+    }),
+    tool_grounding: {
+      ...baseAnswer.tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_recommendation", "leave_in"),
+      product_ids: ["prod_1"],
+      hard_rule_ids: [],
+    },
+    payload: {
+      ...baseAnswer.payload,
+      user_facing_answer_de:
+        "**Test Leave-in** passt gut gegen Frizz. Soll ich dir die Anwendung jetzt kurz erklären?",
+      next_step_offer_de: null,
+    },
+    pending_followup_action: null,
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [
+      {
+        valid_product_ids: ["prod_1"],
+        products: [{ product_id: "prod_1", name: "Test Leave-in" }],
+      },
+    ],
+    latestUserMessage: "Ich brauche ein leichtes Leave-in gegen Frizz.",
+    recentEvidenceText: "leichtes Leave-in gegen Frizz",
+    toolCallHistory: [selectProductsToolCall({ category: "leave_in" })],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_missing",
+  )
+  assert.ok(error)
+  assert.equal(error.expected, "pending_followup_action.kind=advisor_response")
+  assert.equal(error.rejected_value, "Soll ich dir die Anwendung jetzt kurz erklären?")
+})
+
+test("AgentV2 validator checks visible prose offers even when next_step_offer_de is non-confirmable", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Maske",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske ist bei trockenem Haar eher Zusatzpflege. Soll ich dir danach passende Masken empfehlen?",
+      category_or_topic: "mask",
+      key_points_de: ["Masken sind Zusatzpflege."],
+      next_step_offer_de: "Danach kannst du zur Routine zurückgehen.",
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_missing",
+  )
+  assert.ok(error)
+  assert.equal(error.expected, "pending_followup_action.kind=product_recommendation")
+  assert.equal(error.rejected_value, "Soll ich dir danach passende Masken empfehlen?")
+})
+
+test("AgentV2 validator does not treat plain Ich-kann answer openers as follow-up offers", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Brauche ich eine Maske?",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Ich kann dir das grob einordnen: Eine Maske ist ein Zusatz, kein Pflichtschritt.",
+      category_or_topic: "mask",
+      key_points_de: ["Masken sind Zusatzpflege."],
+      next_step_offer_de: null,
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Brauche ich eine Maske?",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator blocks visible prose offers with first-person action verbs", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Ein Leave-in kann gegen Frizz sinnvoll sein. Ich erkläre dir die Anwendung gerne.",
+      category_or_topic: "leave_in",
+      key_points_de: ["Leave-in kann Frizz optisch beruhigen."],
+      next_step_offer_de: null,
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Leave-in",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_missing",
+  )
+  assert.ok(error)
+  assert.equal(error.rejected_value, "Ich erkläre dir die Anwendung gerne.")
+})
+
+test("AgentV2 validator does not treat direct recommendations as follow-up offers", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Ich empfehle dir bei Frizz zuerst ein leichtes Leave-in als Kategorie, nicht sofort mehrere Styling-Produkte.",
+      category_or_topic: "leave_in",
+      key_points_de: ["Leichtes Leave-in passt oft besser als schwere Styling-Produkte."],
+      next_step_offer_de: null,
+    },
+    tool_grounding: {
+      ...createValidGeneralAdviceAnswer().tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Leave-in",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator allows informational next step without pending follow-up action", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Maske",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske kann sinnvoll sein. Danach kannst du zur Routine zurückgehen.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Danach kannst du zur Routine zurückgehen.",
+    },
+    pending_followup_action: null,
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator blocks hidden pending action behind informational next step", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske kann sinnvoll sein. Danach kannst du zur Routine zurückgehen.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Danach kannst du zur Routine zurückgehen.",
+    },
+    pending_followup_action: {
+      kind: "advisor_response",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "pending_followup_action_hidden"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("AgentV2 validator blocks hidden pending follow-up actions without visible offer", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: null,
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "pending_followup_action_hidden"))
+})
+
+test("AgentV2 validator blocks next-step offers that are not rendered in the visible answer", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Ich kann dir danach konkrete Masken empfehlen.",
+    },
+    pending_followup_action: {
+      kind: "product_recommendation",
+      category: "mask",
+      routine_layer: null,
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "visible_payload_not_rendered"))
+})
+
+test("AgentV2 validator blocks visible product offers stored as advisor follow-up actions", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Ein Leave-in kann bei dir gut passen. Soll ich dir passende Leave-ins empfehlen?",
+      category_or_topic: "leave_in",
+      key_points_de: ["Leave-in kann als Booster helfen."],
+      next_step_offer_de: "Soll ich dir passende Leave-ins empfehlen?",
+    },
+    pending_followup_action: {
+      kind: "advisor_response",
+      category: "none",
+      routine_layer: "basics",
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Erklär mir, warum Leave-in passt.",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_kind_mismatch",
+  )
+  assert.ok(error)
+  assert.equal(error.reason_code, "pending_followup_action_kind_mismatch")
+  assert.equal(error.expected, "pending_followup_action.kind=product_recommendation")
+  assert.match(error.repair_hint ?? "", /product_recommendation/)
+})
+
+test("AgentV2 validator accepts visible product offers with matching pending product action", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Ein Leave-in kann bei dir gut passen. Wenn du möchtest, empfehle ich dir passende Leave-ins.",
+      category_or_topic: "leave_in",
+      key_points_de: ["Leave-in kann als Booster helfen."],
+      next_step_offer_de: "Wenn du möchtest, empfehle ich dir passende Leave-ins.",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    pending_followup_action: {
+      kind: "product_recommendation",
+      category: "leave_in",
+      routine_layer: null,
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Erklär mir, warum Leave-in passt.",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator blocks visible routine mutation offers stored as advisor follow-up actions", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Maske",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske wäre eher ein optionaler Zusatz. Wenn du möchtest, kann ich sie in deine Routine einbauen.",
+      category_or_topic: "mask",
+      key_points_de: ["Maske ist ein optionaler Zusatz."],
+      next_step_offer_de: "Wenn du möchtest, kann ich sie in deine Routine einbauen.",
+    },
+    pending_followup_action: {
+      kind: "advisor_response",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Ist eine Maske sinnvoll?",
+    recentEvidenceText: "Ist eine Maske sinnvoll?",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "pending_followup_action_kind_mismatch"),
+  )
+})
+
+test("AgentV2 validator accepts product-worded routine mutation offers", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Das Produkt passt eher als leichter Zusatz. Soll ich das Produkt in deine Routine einbauen?",
+      category_or_topic: "leave_in",
+      key_points_de: ["Der Zusatz sollte leicht bleiben."],
+      next_step_offer_de: "Soll ich das Produkt in deine Routine einbauen?",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "leave_in",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Ist dieses Leave-in sinnvoll?",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator blocks advice-style routine offers stored as routine mutations", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "leave_in",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Leave-in",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Das Leave-in kann als leichter Zusatz sinnvoll sein. Ich kann dir zeigen, wie du es in deine Routine einbaust.",
+      category_or_topic: "leave_in",
+      key_points_de: ["Der Zusatz sollte leicht bleiben."],
+      next_step_offer_de: "Ich kann dir zeigen, wie du es in deine Routine einbaust.",
+    },
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "leave_in"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "leave_in",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Ist dieses Leave-in sinnvoll?",
+    recentEvidenceText: "Leave-in",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  const error = result.errors.find(
+    (finding) => finding.validator_id === "pending_followup_action_kind_mismatch",
+  )
+  assert.ok(error, JSON.stringify(result.errors, null, 2))
+  assert.equal(error.reason_code, "pending_followup_action_kind_mismatch")
+  assert.equal(error.expected, "pending_followup_action.kind=advisor_response")
+  assert.match(error.repair_hint ?? "", /advisor_response/)
+})
+
+test("AgentV2 validator blocks routine mutation category drift from visible offers", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Maske",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske wäre eher ein optionaler Zusatz. Soll ich die Maske in deine Routine einbauen?",
+      category_or_topic: "mask",
+      key_points_de: ["Maske ist ein optionaler Zusatz."],
+      next_step_offer_de: "Soll ich die Maske in deine Routine einbauen?",
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "leave_in",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Ist eine Maske sinnvoll?",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some(
+      (error) => error.validator_id === "pending_followup_action_category_mismatch",
+    ),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("AgentV2 validator does not count mirrored next-step offer as a second visible question", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "category_education",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "ob eine Maske bei mir sinnvoll wäre",
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "mask"),
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: true,
+      routine_layer: "basics",
+      step_id: null,
+      category: null,
+      return_path: ["basics"],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Eine Maske kann bei dir sinnvoll sein, aber eher als gelegentliche Zusatzpflege.\n\nSoll ich sie in deine Routine einbauen?",
+      category_or_topic: "Haarmaske",
+      key_points_de: ["Maske ist Zusatzpflege, nicht Conditioner-Ersatz."],
+      next_step_offer_de: "Soll ich sie in deine Routine einbauen?",
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage:
+      "Ich überlege, ob eine Maske bei mir sinnvoll wäre. Frag mich, ob du sie in meine Routine einbauen sollst.",
+    recentEvidenceText:
+      "Ich überlege, ob eine Maske bei mir sinnvoll wäre. Frag mich, ob du sie in meine Routine einbauen sollst.",
+    toolCallHistory: [],
+    routineThreadContext: {
+      active: true,
+      current_layer: "basics",
+      last_answer_mode: "routine",
+      last_routine_categories: ["shampoo", "conditioner", "leave_in"],
+      last_user_goal: "einfache Routine",
+      summary_de: "Einfache Basisroutine mit Shampoo, Conditioner und Leave-in.",
+      visible_steps: [
+        {
+          step_id: "base-shampoo",
+          label_de: "Shampoo",
+          category: "shampoo",
+          order: 1,
+          routine_layer: "basics",
+        },
+      ],
+      pending_followup_action: null,
+    },
+    currentRoutineLayer: "basics",
+    requiredGuidancePackageIds: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("AgentV2 validator schema blocks routine action fields on product follow-up actions", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Ich kann dir danach konkrete Masken empfehlen.",
+    },
+    pending_followup_action: {
+      kind: "product_recommendation",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: "add_step",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "terminal_schema"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("AgentV2 validator schema blocks routine action fields on advisor follow-up actions", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    request_interpretation: requestInterpretation({
+      primary_intent: "routine_explanation",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Routine und Feuchtigkeit",
+    }),
+    payload: {
+      user_facing_answer_de:
+        "Mehr Feuchtigkeit erreichst du vor allem über sanftere Reinigung und passende Pflegeabstände.\n\nAls Nächstes kann ich dir die Feuchtigkeitslogik deiner Routine erklären.",
+      category_or_topic: "routine_hydration",
+      key_points_de: ["Mehr Feuchtigkeit braucht nicht automatisch einen neuen Routine-Schritt."],
+      next_step_offer_de:
+        "Als Nächstes kann ich dir die Feuchtigkeitslogik deiner Routine erklären.",
+    },
+    pending_followup_action: {
+      kind: "advisor_response",
+      category: "none",
+      routine_layer: "basics",
+      routine_action: "create",
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Wie bekomme ich mehr Feuchtigkeit in meine Routine?",
+    recentEvidenceText: "Routine und Feuchtigkeit",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "terminal_schema"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("AgentV2 validator schema blocks routine mutation follow-up without routine action", () => {
+  const answer = createValidGeneralAdviceAnswer({
+    payload: {
+      user_facing_answer_de: "Eine Maske kann sinnvoll sein.",
+      category_or_topic: "mask",
+      key_points_de: ["Optionaler Zusatz."],
+      next_step_offer_de: "Ich kann danach deine Routine anpassen.",
+    },
+    pending_followup_action: {
+      kind: "routine_mutation",
+      category: "mask",
+      routine_layer: "basics",
+      routine_action: null,
+      source: "assistant_offer",
+    },
+  })
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Maske",
+    recentEvidenceText: "Maske",
+    toolCallHistory: [],
+    knownHardRuleIds: [],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "terminal_schema"),
+    JSON.stringify(result.errors, null, 2),
+  )
 })
 
 test("validator accepts social and domain-boundary answers when gate-consistent", () => {
@@ -1558,6 +2422,38 @@ test("validator blocks non-diagnostic request interpretation evidence quotes", (
   assert.ok(result.errors.some((error) => error.validator_id === "request_interpretation_evidence"))
 })
 
+test("validator returns repair metadata for ungrounded evidence quotes", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        evidence_quote: "anti frizz protocol",
+      }),
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "Was hilft gegen Frizz bei meinem Haarprofil?",
+      recentEvidenceText: "Was hilft gegen Frizz bei meinem Haarprofil?",
+      toolCallHistory: [
+        selectProductsToolCall({
+          user_request: "Was hilft gegen Frizz bei meinem Haarprofil?",
+          evidence_quote: "anti frizz protocol",
+        }),
+      ],
+    },
+  )
+
+  const error = result.errors.find(
+    (candidate) => candidate.validator_id === "request_interpretation_evidence",
+  )
+  assert.ok(error)
+  assert.equal(error.path?.join("."), "request_interpretation.evidence_quote")
+  assert.equal(error.rejected_value, "anti frizz protocol")
+  assert.equal(error.suggested_value, "Was hilft gegen Frizz bei meinem Haarprofil?")
+  assert.equal(error.reason_code, "evidence_quote_not_in_context")
+  assert.match(String(error.repair_hint), /suggested_value/)
+})
+
 test("validator allows full short user messages as evidence quotes", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -1580,6 +2476,48 @@ test("validator allows full short user messages as evidence quotes", () => {
   )
 
   assert.equal(result.ok, true)
+})
+
+test("validator allows exact short concern terms as evidence quotes", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "category_education",
+        routine_intent: "none",
+        care_category: "none",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Frizz",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+        used_product_tool: false,
+        product_ids: [],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Gegen Frizz hilft bei deinem Profil vor allem leichte Pflege in den Längen.",
+        category_or_topic: "frizz",
+        key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Was hilft gegen Frizz bei meinem Haarprofil?",
+      recentEvidenceText: "Was hilft gegen Frizz bei meinem Haarprofil?",
+      toolCallHistory: [{ name: "load_advisor_guidance", call_id: "call_guidance" }],
+      requiredGuidancePackageIds: [],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.equal(result.warnings.length, 0, JSON.stringify(result.warnings, null, 2))
 })
 
 test("validator allows decorative quote marks and punctuation differences in evidence quotes", () => {
@@ -1676,9 +2614,10 @@ test("validator allows evidence quotes from active routine visible step labels",
         category: "leave_in",
         return_path: ["routine"],
       },
+      pending_followup_action: null,
       payload: {
         user_facing_answer_de:
-          "**Test Shampoo** passt als leichter erster Zusatz in deine Routine.",
+          "**Test Shampoo** passt als leichter erster Zusatz in deine Routine. Danach kannst du zur Routine zurückgehen.",
         recommendations: [
           {
             product_id: "prod_1",
@@ -1835,6 +2774,94 @@ test("validator rejects vague or invented evidence quotes", () => {
       evidence_quote,
     )
   }
+})
+
+test("validator sanitizer can repair evidence quote metadata only", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "general_advice",
+    request_interpretation: requestInterpretation({
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "anti frizz protocol",
+    }),
+    tool_grounding: {
+      ...baseAnswer.tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+      used_product_tool: false,
+      product_ids: [],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Gegen Frizz hilft bei deinem Profil vor allem leichte Pflege in den Längen.",
+      category_or_topic: "frizz",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+  }
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    recentEvidenceText: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    toolCallHistory: [{ name: "load_advisor_guidance", call_id: "call_guidance" }],
+    requiredGuidancePackageIds: [],
+  })
+
+  assert.ok(result.sanitized_answer)
+  const sanitized = sanitizeRepairableEvidenceQuote(result.sanitized_answer, result.errors)
+
+  assert.ok(sanitized)
+  assert.equal(
+    sanitized.answer.request_interpretation.evidence_quote,
+    "Was hilft gegen Frizz bei meinem Haarprofil?",
+  )
+  assert.equal(sanitized.warning.validator_id, "request_interpretation_evidence_sanitized")
+  assert.equal(sanitized.warning.severity, "warn")
+})
+
+test("validator sanitizer refuses mixed or non-evidence failures", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "general_advice",
+    request_interpretation: requestInterpretation({
+      primary_intent: "general_advice",
+      product_request_kind: "category_education",
+      routine_intent: "none",
+      care_category: "none",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "anti frizz protocol",
+    }),
+    tool_grounding: {
+      ...baseAnswer.tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+      used_product_tool: false,
+      product_ids: ["unknown_product"],
+    },
+    payload: {
+      user_facing_answer_de:
+        "Gegen Frizz hilft bei deinem Profil vor allem leichte Pflege in den Längen.",
+      category_or_topic: "frizz",
+      key_points_de: ["Leichte Pflege in den Längen reduziert Reibung."],
+      next_step_offer_de: null,
+    },
+  }
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    selectedProductProjections: [],
+    latestUserMessage: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    recentEvidenceText: "Was hilft gegen Frizz bei meinem Haarprofil?",
+    toolCallHistory: [{ name: "load_advisor_guidance", call_id: "call_guidance" }],
+    requiredGuidancePackageIds: [],
+  })
+
+  assert.ok(result.sanitized_answer)
+  assert.equal(sanitizeRepairableEvidenceQuote(result.sanitized_answer, result.errors), null)
 })
 
 test("validator requires user-facing prose to mention each recommended product", () => {
@@ -2427,6 +3454,1013 @@ test("validator accepts explicit one and two product recommendation counts", () 
   assert.equal(two.ok, true)
 })
 
+test("validator accepts one visible recommendation per multi-category product slot", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 3,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_leave_in", "prod_deep_cleanse"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Alltagsshampoo**, **Leave-in Creme** und **Tiefenreinigungsshampoo** decken die drei Slots ab.",
+        recommendations: [
+          {
+            product_id: "prod_shampoo",
+            reason_de: "Passt als Alltagsshampoo für feines, welliges Haar.",
+            usage_de: null,
+            caveat_de: null,
+          },
+          {
+            product_id: "prod_leave_in",
+            reason_de: "Passt als Leave-in gegen Frizz.",
+            usage_de: null,
+            caveat_de: null,
+          },
+          {
+            product_id: "prod_deep_cleanse",
+            reason_de: "Passt als Tiefenreinigung für gelegentliche Klärung.",
+            usage_de: null,
+            caveat_de: null,
+          },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Alltagsshampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        selectedProjection("prod_deep_cleanse", "Tiefenreinigungsshampoo"),
+      ],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors))
+})
+
+test("validator still blocks single-category exact-count mismatches", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 2,
+        count_policy: "exact",
+      }),
+    },
+    {
+      ...baseValidationContext,
+      toolCallHistory: [
+        selectProductsToolCall({
+          requested_product_count: 2,
+          count_policy: "exact",
+        }),
+      ],
+      selectedProductProjections: [
+        {
+          valid_product_ids: ["prod_1", "prod_2"],
+          products: [
+            { product_id: "prod_1", name: "Test Shampoo" },
+            { product_id: "prod_2", name: "Second Shampoo" },
+          ],
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "requested_product_count"))
+})
+
+test("validator does not relax single-category exact-count requests into invented slots", () => {
+  const prompt = "Bitte empfiehl mir genau zwei Shampoos für feines welliges Haar."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 2,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_conditioner"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Shampoo** und **Conditioner** sind sichtbar, obwohl nur Shampoos gefragt waren.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_conditioner", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "conditioner",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Shampoo"),
+        selectedProjection("prod_conditioner", "Conditioner"),
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "request_interpretation_tool_args_match"),
+  )
+})
+
+test("validator does not let model-authored evidence unlock invented slots", () => {
+  const prompt = "Bitte empfiehl mir genau zwei Shampoos für feines welliges Haar."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 2,
+        count_policy: "exact",
+        evidence_quote: "zwei Shampoos und Conditioner",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_conditioner"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de: "**Shampoo** und **Conditioner** sind sichtbar.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_conditioner", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: "zwei Shampoos und Conditioner",
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "zwei Shampoos und Conditioner",
+        }),
+        selectProductsToolCall({
+          category: "conditioner",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "zwei Shampoos und Conditioner",
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Shampoo"),
+        selectedProjection("prod_conditioner", "Conditioner"),
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "request_interpretation_tool_args_match"),
+  )
+})
+
+test("validator blocks multi-slot answers that surface products outside selected projections", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 3,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_leave_in", "prod_unknown"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Alltagsshampoo**, **Leave-in Creme** und **Unbekanntes Produkt** decken die drei Slots ab.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_leave_in", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_unknown", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Alltagsshampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        {
+          valid_product_ids: [],
+          products: [],
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "known_product_ids"))
+})
+
+test("validator blocks multi-slot answers above the distinct category cap", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 4,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_leave_in", "prod_deep_cleanse", "prod_extra"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Alltagsshampoo**, **Leave-in Creme**, **Tiefenreinigungsshampoo** und **Extra Shampoo** sind sichtbar.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_leave_in", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_deep_cleanse", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_extra", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Alltagsshampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        {
+          valid_product_ids: ["prod_deep_cleanse", "prod_extra"],
+          products: [
+            { product_id: "prod_deep_cleanse", name: "Tiefenreinigungsshampoo" },
+            { product_id: "prod_extra", name: "Extra Shampoo" },
+          ],
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some(
+      (error) =>
+        error.validator_id === "requested_product_count" &&
+        error.message.includes("must not surface more visible recommendations"),
+    ),
+  )
+})
+
+test("validator does not relax multi-slot answers that double-fill one slot", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 3,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_deep_cleanse", "prod_deep_cleanse_extra"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Alltagsshampoo**, **Tiefenreinigungsshampoo** und **Extra Tiefenreinigung** sind sichtbar; das Leave-in fehlt.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_deep_cleanse", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          {
+            product_id: "prod_deep_cleanse_extra",
+            reason_de: "Passt.",
+            usage_de: null,
+            caveat_de: null,
+          },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Alltagsshampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        {
+          valid_product_ids: ["prod_deep_cleanse", "prod_deep_cleanse_extra"],
+          products: [
+            { product_id: "prod_deep_cleanse", name: "Tiefenreinigungsshampoo" },
+            { product_id: "prod_deep_cleanse_extra", name: "Extra Tiefenreinigung" },
+          ],
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "request_interpretation_tool_args_match"),
+  )
+})
+
+test("validator does not relax multi-slot answers with duplicate recommendation rows", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 3,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_leave_in"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Alltagsshampoo**, **Alltagsshampoo** und **Leave-in Creme** sind sichtbar; die Tiefenreinigung fehlt.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_shampoo", reason_de: "Doppelt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_leave_in", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Alltagsshampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        selectedProjection("prod_deep_cleanse", "Tiefenreinigungsshampoo"),
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "request_interpretation_tool_args_match"),
+  )
+})
+
+test("validator does not apply the multi-slot cap to non-A2 multi-category traces", () => {
+  const prompt = "Bitte empfiehl mir Shampoo und Leave-in."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "leave_in",
+        requested_product_count: null,
+        count_policy: "default",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_recommendation", "leave_in"),
+        product_ids: ["prod_shampoo", "prod_leave_in", "prod_extra"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Shampoo**, **Leave-in Creme** und **Extra Pflege** sind sichtbar.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_leave_in", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_extra", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          count_policy: "default",
+          requested_product_count: null,
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          count_policy: "default",
+          requested_product_count: null,
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        {
+          valid_product_ids: ["prod_shampoo", "prod_leave_in", "prod_extra"],
+          products: [
+            { product_id: "prod_shampoo", name: "Shampoo" },
+            { product_id: "prod_leave_in", name: "Leave-in Creme" },
+            { product_id: "prod_extra", name: "Extra Pflege" },
+          ],
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors))
+})
+
+test("validator does not relax exact counts for terminal-only multi-category slot shape", () => {
+  const prompt = "Bitte empfiehl mir zwei konkrete Produkte: Shampoo und Leave-in."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "leave_in",
+        requested_product_count: 2,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("product_recommendation", "leave_in"),
+        product_ids: ["prod_shampoo"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de: "**Shampoo** ist sichtbar; das Leave-in fehlt.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          count_policy: "default",
+          requested_product_count: null,
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          count_policy: "default",
+          requested_product_count: null,
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [selectedProjection("prod_shampoo", "Shampoo")],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "request_interpretation_tool_args_match"),
+  )
+})
+
+test("validator does not relax multi-slot answers using prior-turn selected products", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 3,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_prior_shampoo", "prod_leave_in", "prod_deep_cleanse"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Altes Shampoo**, **Leave-in Creme** und **Tiefenreinigungsshampoo** sind sichtbar.",
+        recommendations: [
+          {
+            product_id: "prod_prior_shampoo",
+            reason_de: "Passt.",
+            usage_de: null,
+            caveat_de: null,
+          },
+          { product_id: "prod_leave_in", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_deep_cleanse", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_prior_shampoo", "Altes Shampoo"),
+        selectedProjection("prod_current_shampoo", "Aktuelles Shampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        selectedProjection("prod_deep_cleanse", "Tiefenreinigungsshampoo"),
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "requested_product_count"))
+})
+
+test("validator does not relax multi-slot answers that omit a fillable slot", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 3,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_leave_in"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Alltagsshampoo** und **Leave-in Creme** sind sichtbar; die Tiefenreinigung fehlt.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_leave_in", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Alltagsshampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        selectedProjection("prod_deep_cleanse", "Tiefenreinigungsshampoo"),
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "requested_product_count"))
+})
+
+test("validator accepts partial success for multi-category product slots", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 3,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_leave_in"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Alltagsshampoo** und **Leave-in Creme** sind sicher genug; für Tiefenreinigung fehlt mir ein sicherer Treffer.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_leave_in", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Alltagsshampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        {
+          valid_product_ids: [],
+          products: [],
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors))
+})
+
+test("validator does not relax partial success that hides an empty slot", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 3,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_leave_in"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de: "**Alltagsshampoo** und **Leave-in Creme** decken deine Anfrage ab.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_leave_in", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Alltagsshampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        {
+          valid_product_ids: [],
+          products: [],
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "requested_product_count"))
+})
+
+test("validator does not relax partial success that names an empty slot without no-match copy", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 3,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_leave_in"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Alltagsshampoo** und **Leave-in Creme** passen; die Tiefenreinigung fehlt.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_leave_in", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Alltagsshampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        {
+          valid_product_ids: [],
+          products: [],
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "requested_product_count"))
+})
+
+test("validator does not relax missing-slot copy when safe language refers elsewhere", () => {
+  const prompt =
+    "Bitte empfiehl mir drei konkrete Produkte für feines welliges Haar mit Frizz: Alltagsshampoo, Leave-in und Tiefenreinigung."
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        care_category: "shampoo",
+        requested_product_count: 3,
+        count_policy: "exact",
+        evidence_quote: prompt,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        product_ids: ["prod_shampoo", "prod_leave_in"],
+      },
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Alltagsshampoo** und **Leave-in Creme** passen; die Tiefenreinigung fehlt, die beiden sichtbaren Optionen sind sicher.",
+        recommendations: [
+          { product_id: "prod_shampoo", reason_de: "Passt.", usage_de: null, caveat_de: null },
+          { product_id: "prod_leave_in", reason_de: "Passt.", usage_de: null, caveat_de: null },
+        ],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: prompt,
+      recentEvidenceText: prompt,
+      toolCallHistory: [
+        selectProductsToolCall({
+          category: "shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "leave_in",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+        selectProductsToolCall({
+          category: "deep_cleansing_shampoo",
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: prompt,
+        }),
+      ],
+      selectedProductProjections: [
+        selectedProjection("prod_shampoo", "Alltagsshampoo"),
+        selectedProjection("prod_leave_in", "Leave-in Creme"),
+        {
+          valid_product_ids: [],
+          products: [],
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "requested_product_count"))
+})
+
 test("validator allows routine product asks as product recommendations with routine context", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -2449,8 +4483,10 @@ test("validator allows routine product asks as product recommendations with rout
         ...baseAnswer.tool_grounding,
         routine_step_ids: ["base-shampoo"],
       },
+      pending_followup_action: null,
       payload: {
         ...baseAnswer.payload,
+        user_facing_answer_de: `${baseAnswer.payload.user_facing_answer_de} Danach gehen wir zur Routine zurück.`,
         next_step_offer_de: "Danach gehen wir zur Routine zurück.",
       },
     },
@@ -3130,9 +5166,16 @@ test("validator allows guidance-only general advice inside active routine thread
         category: "conditioner",
         return_path: ["routine"],
       },
+      pending_followup_action: {
+        kind: "routine_mutation",
+        category: "conditioner",
+        routine_layer: "basics",
+        routine_action: "modify",
+        source: "assistant_offer",
+      },
       payload: {
         user_facing_answer_de:
-          "In deiner vereinfachten Routine wäre Conditioner der Basis-Schritt; eine Maske ist eher optional.",
+          "In deiner vereinfachten Routine wäre Conditioner der Basis-Schritt; eine Maske ist eher optional. Wenn du magst, passe ich danach die Routine an.",
         category_or_topic: "conditioner_vs_mask",
         key_points_de: [
           "Conditioner ist der regelmäßige Pflegeabschluss.",
@@ -3894,6 +5937,55 @@ test("validator blocks objective bad conversation closers", () => {
   }
 })
 
+test("validator checks rendered clarification question close text", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "clarification",
+      request_interpretation: requestInterpretation({
+        primary_intent: "clarification",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "unknown",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Was soll ich tun?",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("clarification"),
+        used_product_tool: false,
+        product_ids: [],
+        hard_rule_ids: [],
+      },
+      payload: {
+        user_facing_answer_de: "Ich brauche dafür noch eine konkrete Richtung.",
+        question_de: "Möchtest du mehr Tipps?",
+        missing_keys: ["category"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      toolCallHistory: [],
+      latestUserMessage: "Was soll ich tun?",
+      recentEvidenceText: "Was soll ich tun?",
+      requiredGuidancePackageIds: [],
+      knownHardRuleIds: [],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some(
+      (error) =>
+        error.validator_id === "bad_conversation_close_generic" &&
+        error.path?.join(".") === "payload.question_de",
+    ),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
 test("validator warns but does not block weak conversation closers", () => {
   const result = validateAgentV2FinalAnswer(
     {
@@ -3942,51 +6034,60 @@ test("validator warns but does not block weak conversation closers", () => {
 })
 
 test("validator allows honest clean stop for unsupported INCI-list analysis", () => {
-  const result = validateAgentV2FinalAnswer(
-    {
-      ...baseAnswer,
-      answer_mode: "general_advice",
-      request_interpretation: requestInterpretation({
-        primary_intent: "general_advice",
-        product_request_kind: "none",
-        routine_intent: "none",
-        care_category: "none",
-        requested_product_count: null,
-        count_policy: "none",
-        evidence_quote: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
-      }),
-      tool_grounding: {
-        ...baseAnswer.tool_grounding,
-        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
-        used_product_tool: false,
-        product_ids: [],
-        hard_rule_ids: [],
-      },
-      payload: {
-        user_facing_answer_de:
-          "INCI-Listen kann ich hier nicht verlässlich prüfen oder bewerten. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
-        category_or_topic: "unsupported ingredient analysis",
-        key_points_de: ["INCI-Analyse ist kein unterstützter Beratungspfad."],
-        next_step_offer_de: null,
-      },
-    },
-    {
-      ...baseValidationContext,
-      selectedProductProjections: [],
-      toolCallHistory: [],
-      latestUserMessage: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
-      recentEvidenceText: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
-      requiredGuidancePackageIds: [],
-      knownHardRuleIds: [],
-    },
-  )
+  const allowedRefusals = [
+    "INCI-Listen kann ich hier nicht verlässlich prüfen oder bewerten. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
+    "Ich kann INCI-Listen hier nicht verlässlich analysieren. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
+    "Ich kann keine INCI-Listen analysieren. Wenn du eine konkrete Produkteigenschaft wissen willst, bleibe ich lieber bei den sicher hinterlegten Produktdaten.",
+  ]
 
-  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
-  assert.equal(
-    result.errors.some((error) => error.validator_id === "bad_conversation_close_unsupported_lane"),
-    false,
-    JSON.stringify(result.errors, null, 2),
-  )
+  for (const refusal of allowedRefusals) {
+    const result = validateAgentV2FinalAnswer(
+      {
+        ...baseAnswer,
+        answer_mode: "general_advice",
+        request_interpretation: requestInterpretation({
+          primary_intent: "general_advice",
+          product_request_kind: "none",
+          routine_intent: "none",
+          care_category: "none",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
+        }),
+        tool_grounding: {
+          ...baseAnswer.tool_grounding,
+          used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
+          used_product_tool: false,
+          product_ids: [],
+          hard_rule_ids: [],
+        },
+        payload: {
+          user_facing_answer_de: refusal,
+          category_or_topic: "unsupported ingredient analysis",
+          key_points_de: ["INCI-Analyse ist kein unterstützter Beratungspfad."],
+          next_step_offer_de: null,
+        },
+      },
+      {
+        ...baseValidationContext,
+        selectedProductProjections: [],
+        toolCallHistory: [],
+        latestUserMessage: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
+        recentEvidenceText: "Kannst du die INCI pruefen, wenn ich sie dir schicke?",
+        requiredGuidancePackageIds: [],
+        knownHardRuleIds: [],
+      },
+    )
+
+    assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+    assert.equal(
+      result.errors.some(
+        (error) => error.validator_id === "bad_conversation_close_unsupported_lane",
+      ),
+      false,
+      JSON.stringify(result.errors, null, 2),
+    )
+  }
 })
 
 test("validator blocks carried routine step ids when active routine thread has no visible steps", () => {
@@ -4091,8 +6192,10 @@ test("validator accepts routine product recommendation step ids from active rout
         category: "leave_in",
         return_path: ["routine"],
       },
+      pending_followup_action: null,
       payload: {
-        user_facing_answer_de: "**Test Shampoo** passt für den ersten Zusatz.",
+        user_facing_answer_de:
+          "**Test Shampoo** passt für den ersten Zusatz. Danach gehen wir zur Routine zurück.",
         recommendations: [
           {
             product_id: "prod_1",

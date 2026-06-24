@@ -41,6 +41,8 @@ Balanced category comparisons should not force one central category in `request_
 ## Fit And Placement Logic
 Conditioner fit is shaped mainly by hair thickness, weight sensitivity, length dryness, texture needs, and protein/moisture balance.
 
+Hair length changes conditioner amount and relevance. Very short hair may need only a tiny amount where hair actually feels dry or chemically stressed; do not force full lengths-and-ends copy when there is no real lengths zone. Short hair usually needs small, light placement away from roots. Medium, long, and very long hair can use normal lengths-and-ends placement, with long and very long hair needing more careful distribution rather than stronger repair claims by length alone.
+
 For fine hair or low density, use light-to-medium support, smaller amounts, and cautious placement away from the roots. Do not skip conditioner automatically: fine or low-density hair can still need length care; the adjustment is amount, weight, and placement.
 
 For curly, coily, coarse, chemically treated, rough, or hard-to-detangle hair, the category can lean toward more slip and conditioning intensity when the profile and tool facts support it. Keep scalp and buildup risk in view.

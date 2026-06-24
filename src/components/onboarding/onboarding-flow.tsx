@@ -18,7 +18,7 @@ import {
   EXTRA_PRODUCT_OPTIONS,
   PRODUCT_CATEGORY_LABELS,
 } from "@/lib/onboarding/product-options"
-import { normalizeProductFrequency, type ProductFrequency } from "@/lib/vocabulary"
+import { normalizeProductFrequency } from "@/lib/vocabulary"
 import type { HeatStyling } from "@/lib/vocabulary"
 
 // Import all screens
@@ -62,6 +62,7 @@ const TOWEL_MATERIAL_ICONS: Record<string, IconName> = {
   mikrofaser: "towel-mikrofaser",
   tshirt: "towel-tshirt",
   turban_mikrofaser: "towel-turban",
+  no_towel: "drying-air",
 }
 
 const TOWEL_TECHNIQUE_ICONS: Record<string, IconName> = {
@@ -505,6 +506,7 @@ export function OnboardingFlow({
           case "towel_material": {
             await saveHairProfile({
               towel_material: state.towelMaterial,
+              ...(state.towelMaterial === "no_towel" ? { towel_technique: null } : {}),
             })
             break
           }
@@ -856,7 +858,11 @@ export function OnboardingFlow({
             options={towelMaterialWithIcon}
             selected={store.towelMaterial}
             onSelect={(val) => {
-              store.setTowelMaterial(val as TowelMaterial)
+              const towelMaterial = val as TowelMaterial
+              store.setTowelMaterial(towelMaterial)
+              if (towelMaterial === "no_towel") {
+                store.setTowelTechnique(null)
+              }
               handleStepComplete("towel_material")
             }}
             onBack={handleBack}
@@ -955,6 +961,7 @@ export function OnboardingFlow({
             currentDrilldownIndex={store.currentDrilldownIndex}
             drilldownCount={store.drilldownCategories().length}
             selectedHeatTools={store.selectedHeatTools}
+            towelMaterial={store.towelMaterial}
           />
         </div>
       )}

@@ -40,6 +40,7 @@ export function normalizeRecommendationInput(input: RawRecommendationInput): Nor
 
   return {
     hairTexture: profile.hair_texture,
+    hairLength: profile.hair_length,
     thickness: profile.thickness,
     density: profile.density,
     concerns: profile.concerns ?? [],
