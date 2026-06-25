@@ -88,9 +88,19 @@ Manual/browser:
 - Simulated user review must check that the options are discoverable, selectable, saved, and understandable.
 - Product review should confirm the remaining decisions below before merge.
 
+## Research Follow-Up
+
+External evidence supports the narrow v1 behavior:
+
+- A perm is a chemical shape treatment and should contribute to chemical-stress/damage awareness.
+- Perm maintenance commonly overlaps with gentle handling, conditioning/moisture support, reduced heat stress, and curl/wave definition when the user wants to preserve or define the created shape.
+- This supports routing `permed` + explicit `curl_definition` into definition support without treating `permed` as natural curly hair.
+
+Terminology research suggests `Dauerwelle` is the clearer umbrella label. `Volumenwelle` is common in DACH salon language, but appears more like a softer or volume-oriented variant than a separate canonical category. Keeping `Dauerwelle / Volumenwelle` is understandable; shortening the option to `Dauerwelle` and mentioning `Volumenwelle` in helper copy may be cleaner.
+
 ## Decisions To Confirm
 
-1. The option labels stay `Dauerwelle / Volumenwelle` and `Chemisch geglättet`.
+1. The option labels stay `Dauerwelle / Volumenwelle` and `Chemisch geglättet`, or the perm label is shortened to `Dauerwelle`.
 2. The helper copy stays: `Gemeint ist alles, was Farbe oder Form länger verändert hat: Färben/Tönen, Aufhellen, Dauerwelle oder Glättung. Deine natürliche Struktur hast du schon angegeben.`
 3. `permed` only unlocks curl-definition support when `curl_definition` is an explicit goal.
 4. We defer a separate `treated_shape` field until there is stronger product need.
