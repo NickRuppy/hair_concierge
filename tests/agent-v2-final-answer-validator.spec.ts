@@ -549,6 +549,47 @@ test("validator does not require lookup from deterministic named-product context
   )
 })
 
+test("validator requires lookup when deterministic context identifies an evaluation even if model misses product candidate", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "clarification",
+      request_interpretation: requestInterpretation({
+        primary_intent: "unknown",
+        product_request_kind: "none",
+        care_category: "conditioner",
+        evidence_quote: "jean & lean conditioner",
+        specific_product_candidate: false,
+      }),
+      payload: {
+        user_facing_answer_de:
+          "Ich bin mir gerade nicht sicher, was du genau möchtest. Formulier es bitte einmal konkreter.",
+        question_de: "Welches Produkt meinst du genau?",
+        missing_keys: ["product_identity"],
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      recentEvidenceText: "kannst du mir sagen, was du von meinem jean & lean conditioner hältst",
+      toolCallHistory: [],
+      namedProductContext: {
+        display_name: "jean & lean Conditioner",
+        category: "conditioner",
+        plausible_exact_name: true,
+        named_product_intent: "evaluation",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "product_lookup_required"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
 test("validator requires lookup when visible answer claims about deterministic own-product context", () => {
   const result = validateAgentV2FinalAnswer(
     placementOnlyAdviceAnswer(
@@ -1187,7 +1228,14 @@ test("validator does not require lookup for broad product recommendations withou
   )
 })
 
-for (const status of ["ambiguous", "insufficient_identity", "not_found", "unsupported_category"]) {
+for (const status of [
+  "ambiguous",
+  "needs_variant_selection",
+  "category_mismatch",
+  "insufficient_identity",
+  "not_found",
+  "unsupported_category",
+]) {
   test(`validator blocks product recommendations after ${status} product lookup`, () => {
     const result = validateAgentV2FinalAnswer(baseAnswer, {
       ...baseValidationContext,
@@ -1219,6 +1267,190 @@ test("validator allows product recommendations after exact product lookup", () =
   })
 
   assert.equal(result.ok, true)
+})
+
+test("validator blocks unverified-product caveat for trusted selected product", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Syoss Intense Curls",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+        used_product_tool: true,
+        product_ids: ["prod_1"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Zu Syoss Intense Curls kann ich dir das nicht sicher bestätigen, weil ich diese Variante nicht als verifizierten Katalogtreffer prüfen kann.",
+        category_or_topic: "shampoo",
+        key_points_de: [],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      trustedSelectedProductIds: ["prod_1"],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: { id: "prod_1", name: "Syoss Intense Curls" },
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "trusted_product_unverified_caveat"),
+  )
+})
+
+test("validator allows identity-only acknowledgement for trusted selected product without product tool", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Syoss Intense Curls",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+        used_product_tool: false,
+        product_ids: [],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Alles klar, ich beziehe mich ab jetzt auf **Syoss Intense Curls Shampoo**.",
+        category_or_topic: "shampoo",
+        key_points_de: ["Produktidentität geklärt."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      latestUserMessage: "Syoss Intense Curls",
+      recentEvidenceText: "Syoss Intense Curls",
+      trustedSelectedProductIds: ["prod_1"],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: { id: "prod_1", name: "Syoss Intense Curls Shampoo" },
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, true)
+})
+
+test("validator requires product tool for trusted selected product suitability claims", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Passt das zu meinem Frizz?",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+        used_product_tool: false,
+        product_ids: [],
+      },
+      payload: {
+        user_facing_answer_de:
+          "**Syoss Intense Curls Shampoo** passt gut zu deinem Frizz, weil es mild reinigt und nicht beschwert.",
+        category_or_topic: "shampoo",
+        key_points_de: ["Passt gut zu Frizz."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      trustedSelectedProductIds: ["prod_1"],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: { id: "prod_1", name: "Syoss Intense Curls Shampoo" },
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_tool_required"))
+})
+
+test("validator allows claim-level hedge for trusted selected product", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Passt das zu meinem Frizz?",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+        used_product_tool: true,
+        product_ids: ["prod_1"],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Die Produktidentität ist klar: **Syoss Intense Curls Shampoo**. Ob es zu deinem Frizz passt, kann ich ohne weitere Produkteigenschaften nicht abschließend bewerten.",
+        category_or_topic: "shampoo",
+        key_points_de: ["Produkt klar, Fit-Claim nicht ausreichend belegt."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      trustedSelectedProductIds: ["prod_1"],
+      productLookupResults: [
+        {
+          status: "found_exact",
+          category: "shampoo",
+          product: { id: "prod_1", name: "Syoss Intense Curls Shampoo" },
+        },
+      ],
+    },
+  )
+
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "trusted_product_unverified_caveat"),
+    false,
+  )
 })
 
 test("validator allows claims for exact lookup products when another lookup is unresolved", () => {

@@ -824,9 +824,47 @@ export interface MessageRagContext {
   engine_trace?: RecommendationEngineTrace | null
   response_mode?: ResponseMode | null
   product_intake_offer?: ProductIntakeOffer | null
+  product_lookup_clarification?: ProductLookupClarification | null
+  product_lookup_selection?: ProductLookupSelectionContext | null
 }
 
 export type MessageDecisionContext = MessageRagContext
+
+export interface ProductLookupClarification {
+  id: string
+  kind: "variant_selection" | "category_mismatch"
+  source: "chat"
+  original_user_message?: string | null
+  query: {
+    brand_text: string | null
+    product_name_text: string | null
+    category: ProductIntakeCategoryKey
+  }
+  copy: {
+    prompt_de: string
+  }
+  candidates: ProductLookupClarificationCandidate[]
+  none_action: {
+    label_de: string
+    product_intake_offer: ProductIntakeOffer
+  }
+}
+
+export interface ProductLookupClarificationCandidate {
+  product_id: string
+  name: string
+  category: ProductIntakeCategoryKey | string | null
+  category_label_de: string
+  reason: "same_brand_same_category" | "category_mismatch"
+}
+
+export interface ProductLookupSelectionContext {
+  source: "product_lookup_clarification"
+  clarification_id: string
+  source_assistant_message_id: string
+  selected_product_id: string
+  selected_product_name: string
+}
 
 export interface ProductIntakeOffer {
   id: string
@@ -1302,6 +1340,10 @@ export interface ChatSSEEvent {
     | "content_delta"
     | "product_recommendations"
     | "product_intake_offer"
+    | "product_lookup_clarification"
+    | "product_lookup_selection"
+    | "assistant_message"
+    | "langfuse_trace"
     | "sources"
     | "confidence"
     | "retrieval_debug"

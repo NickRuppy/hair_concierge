@@ -191,6 +191,8 @@ export function buildNextAgentV2SessionState(params: {
           answer: params.answer,
         }),
       }),
+      active_resolved_product_context:
+        params.previousState.agent_v2.active_resolved_product_context,
       session_memory: mergeAgentV2SessionMemory({
         previous: params.previousState.agent_v2.session_memory,
         accepted: params.acceptedSessionMemoryWrites,

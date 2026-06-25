@@ -49,6 +49,24 @@ const catalog: ProductLookupCatalog = {
       lifecycleStatus: "active",
       isChaarlieRecommended: true,
     },
+    {
+      id: "syoss-intense-curls-shampoo",
+      name: "Intense Curls Shampoo",
+      brandId: "brand-syoss",
+      categoryKey: "shampoo",
+      isActive: true,
+      lifecycleStatus: "active",
+      isChaarlieRecommended: true,
+    },
+    {
+      id: "syoss-intense-keratin-mask",
+      name: "Intense Keratin Maske",
+      brandId: "brand-syoss",
+      categoryKey: "mask",
+      isActive: true,
+      lifecycleStatus: "active",
+      isChaarlieRecommended: true,
+    },
   ],
   identifiers: [],
 }
@@ -57,6 +75,7 @@ const brandCatalog: BrandResolutionCatalogInput = {
   brands: [
     { id: "brand-garnier", canonical_name: "Garnier" },
     { id: "brand-pantene", canonical_name: "Pantene" },
+    { id: "brand-syoss", canonical_name: "Syoss" },
   ],
   productLines: [
     { id: "line-fructis", brand_id: "brand-garnier", canonical_name: "Fructis" },
@@ -173,7 +192,7 @@ test("lookup rejects unsupported categories without offering intake", () => {
   assert.equal(result.intake_offer, null)
 })
 
-test("lookup returns ambiguous when matching evidence points to multiple products", () => {
+test("lookup asks the user to select a variant when same-category catalog neighbors exist", () => {
   const result = lookupProductCandidate({
     input: {
       category: "shampoo",
@@ -184,10 +203,72 @@ test("lookup returns ambiguous when matching evidence points to multiple product
     brandCatalog,
   })
 
-  assert.equal(result.status, "ambiguous")
+  assert.equal(result.status, "needs_variant_selection")
   assert.deepEqual(
     result.candidates.map((candidate) => candidate.product.id),
     ["pantene-shampoo-a", "pantene-shampoo-b"],
+  )
+  assert.equal(result.intake_offer, null)
+})
+
+test("lookup still shows a single same-category candidate for variant confirmation", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "shampoo",
+      brand_text: "Syoss",
+      product_name_text: "Intense Volume Shampoo",
+    },
+    catalog,
+    brandCatalog,
+  })
+
+  assert.equal(result.status, "needs_variant_selection")
+  assert.deepEqual(
+    result.candidates.map((candidate) => candidate.product.id),
+    ["syoss-intense-curls-shampoo"],
+  )
+  assert.equal(result.intake_offer, null)
+})
+
+test("lookup ignores weak wrong-category token overlap and offers intake", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "shampoo",
+      brand_text: "Syoss",
+      product_name_text: "Intense Volume Shampoo",
+    },
+    catalog: {
+      ...catalog,
+      products: [catalog.products[5]],
+    },
+    brandCatalog,
+    offerId: "offer-syoss-volume",
+  })
+
+  assert.equal(result.status, "not_found")
+  assert.deepEqual(result.candidates, [])
+  assert.equal(result.intake_offer?.id, "offer-syoss-volume")
+  assert.equal(result.intake_offer?.reason, "product_lookup_not_found")
+})
+
+test("lookup surfaces strong identity matches in another category as category mismatch", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "mask",
+      brand_text: "Garnier Fructis",
+      product_name_text: "Hair Food Aloe Conditioner",
+    },
+    catalog: {
+      ...catalog,
+      products: [catalog.products[1]],
+    },
+    brandCatalog,
+  })
+
+  assert.equal(result.status, "category_mismatch")
+  assert.deepEqual(
+    result.candidates.map((candidate) => candidate.product.id),
+    ["garnier-conditioner"],
   )
   assert.equal(result.intake_offer, null)
 })

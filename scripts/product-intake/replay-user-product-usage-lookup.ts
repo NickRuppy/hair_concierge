@@ -108,6 +108,8 @@ export function buildEmptyReplayReport(generatedAt = new Date().toISOString()): 
     status_counts: {
       found_exact: 0,
       ambiguous: 0,
+      needs_variant_selection: 0,
+      category_mismatch: 0,
       not_found: 0,
       insufficient_identity: 0,
       unsupported_category: 0,

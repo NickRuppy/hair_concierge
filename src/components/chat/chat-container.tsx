@@ -29,6 +29,7 @@ export function ChatContainer() {
     conversations,
     currentConversationId,
     sendMessage,
+    selectProductCandidate,
     submitFeedback,
     loadConversation,
     loadConversations,
@@ -575,8 +576,12 @@ export function ChatContainer() {
                       message={msg}
                       hairProfile={hairProfile}
                       onProductClick={handleProductClick}
+                      onSelectProductCandidate={selectProductCandidate}
                       onFeedback={submitFeedback}
                       isNew={newMessageIds.has(msg.id)}
+                      isStreamingMessage={
+                        isStreaming && idx === messages.length - 1 && msg.role === "assistant"
+                      }
                     />
                   </div>
                 )

@@ -25,6 +25,8 @@ export type ProductLookupCatalog = ProductIntakeCatalog
 export type ProductLookupStatus =
   | "found_exact"
   | "ambiguous"
+  | "needs_variant_selection"
+  | "category_mismatch"
   | "not_found"
   | "insufficient_identity"
   | "unsupported_category"
@@ -210,6 +212,54 @@ function meaningfulCandidates(params: {
   )
 }
 
+function candidateCategory(candidate: ProductIntakeMatchCandidate): string | null {
+  return productCategoryKey(candidate.product)
+}
+
+function isSameCategoryCandidate(
+  candidate: ProductIntakeMatchCandidate,
+  category: ProductIntakeCategoryKey,
+): boolean {
+  return candidateCategory(candidate) === category
+}
+
+function isStrongCategoryMismatchCandidate(params: {
+  candidate: ProductIntakeMatchCandidate
+  category: ProductIntakeCategoryKey
+  productNameText: string
+}): boolean {
+  if (isSameCategoryCandidate(params.candidate, params.category)) return false
+  if (!params.candidate.reasonCodes.includes("text_category_mismatch_review")) return false
+
+  const inputTokens = meaningfulProductTokens(params.productNameText)
+  if (inputTokens.length === 0) return false
+
+  const candidateTokens = new Set(
+    meaningfulProductTokens(productCleanName(params.candidate.product)),
+  )
+  return inputTokens.every((token) => candidateTokens.has(token))
+}
+
+function sortLookupCandidates(
+  candidates: ProductIntakeMatchCandidate[],
+  category: ProductIntakeCategoryKey,
+  productNameText: string,
+): ProductIntakeMatchCandidate[] {
+  return [...candidates].sort((left, right) => {
+    const sameCategoryDelta =
+      Number(isSameCategoryCandidate(right, category)) -
+      Number(isSameCategoryCandidate(left, category))
+    if (sameCategoryDelta !== 0) return sameCategoryDelta
+
+    const overlapDelta =
+      meaningfulTokenOverlap(productNameText, productCleanName(right.product)) -
+      meaningfulTokenOverlap(productNameText, productCleanName(left.product))
+    if (overlapDelta !== 0) return overlapDelta
+
+    return productCleanName(left.product).localeCompare(productCleanName(right.product), "de")
+  })
+}
+
 export function lookupProductCandidate(params: LookupProductCandidateParams): ProductLookupResult {
   const rawCategory = trimToNull(params.input.category)
   const normalizedCategory = normalizeCategoryKey(rawCategory)
@@ -315,12 +365,37 @@ export function lookupProductCandidate(params: LookupProductCandidateParams): Pr
     productNameText,
   })
 
-  if (candidates.length > 0) {
+  const sameCategoryCandidates = sortLookupCandidates(
+    candidates.filter((candidate) => isSameCategoryCandidate(candidate, category)),
+    category,
+    productNameText,
+  ).slice(0, 3)
+
+  if (sameCategoryCandidates.length > 0) {
     return {
-      status: "ambiguous",
+      status: "needs_variant_selection",
       category,
       product: null,
-      candidates,
+      candidates: sameCategoryCandidates,
+      missing_fields: [],
+      intake_offer: null,
+    }
+  }
+
+  const categoryMismatchCandidates = sortLookupCandidates(
+    candidates.filter((candidate) =>
+      isStrongCategoryMismatchCandidate({ candidate, category, productNameText }),
+    ),
+    category,
+    productNameText,
+  ).slice(0, 3)
+
+  if (categoryMismatchCandidates.length > 0) {
+    return {
+      status: "category_mismatch",
+      category,
+      product: null,
+      candidates: categoryMismatchCandidates,
       missing_fields: [],
       intake_offer: null,
     }

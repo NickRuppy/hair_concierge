@@ -166,7 +166,8 @@ test("AgentV2 lookup tool description covers partial product identity outcomes",
   assert.match(lookupTool.description, /category.*null/i)
   assert.match(lookupTool.description, /found_exact/)
   assert.match(lookupTool.description, /not_found/)
-  assert.match(lookupTool.description, /ambiguous/)
+  assert.match(lookupTool.description, /needs_variant_selection/)
+  assert.match(lookupTool.description, /category_mismatch/)
   assert.match(lookupTool.description, /insufficient_identity/)
   assert.match(lookupTool.description, /unsupported_category/)
   assert.match(lookupTool.description, /broad/i)
@@ -1841,6 +1842,77 @@ test("AgentV2 runtime executes product candidate lookup tool", async () => {
   assert.ok(result.trace.tool_calls.some((call) => call.name === "lookup_product_candidate"))
 })
 
+test("AgentV2 runtime treats trusted clarification selection as found exact lookup", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["shampoo"],
+    }),
+    terminalGeneralAdviceWithOverrides("call_2", {
+      request_interpretation: {
+        primary_intent: "general_advice",
+        care_category: "shampoo",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        specific_product_candidate: true,
+      },
+      tool_grounding: {
+        used_product_tool: false,
+        product_ids: [],
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+      },
+      payload: {
+        user_facing_answer_de: "Alles klar, ich beziehe mich auf **Syoss Intense Volume Shampoo**.",
+        category_or_topic: "shampoo",
+        key_points_de: ["Produktidentität geklärt."],
+        next_step_offer_de: null,
+      },
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Bitte bestätige das ausgewählte Produkt.",
+    recentMessages: [
+      {
+        role: "user",
+        content: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      },
+      {
+        role: "assistant",
+        content: "Ich finde mehrere mögliche Varianten. Welche meinst du?",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    trustedSelectedProductContext: {
+      source: "product_lookup_clarification",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      selected_product: {
+        id: "syoss-intense-volume-shampoo",
+        name: "Syoss Intense Volume Shampoo",
+        category: "shampoo",
+      },
+      lookup_identity: {
+        category: "shampoo",
+        brand_text: "Syoss",
+        product_name_text: "Intense Volume Shampoo",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.final_answer.request_interpretation.specific_product_candidate, true)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance"],
+  )
+})
+
 test("AgentV2 runtime repairs skipped named-product lookup by calling lookup tool", async () => {
   const client = fakeResponsesClientWithOutputs([
     guidanceCall("call_1", {
@@ -2493,6 +2565,329 @@ test("AgentV2 runtime injects surfaced product facts for referential follow-ups"
   assert.match(content, /shampoo/)
   assert.match(content, /Test Shampoo/)
   assert.match(content, /Use the recent conversation/)
+})
+
+test("AgentV2 runtime places active resolved product reminder after follow-up message", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  await runAgentV2ResponsesTurn({
+    client,
+    message: "und wie oft?",
+    recentMessages: [
+      {
+        role: "user",
+        content: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      },
+      {
+        role: "assistant",
+        content: "Ich finde mehrere mögliche Varianten.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    activeResolvedProductContext: {
+      source: "product_lookup_selection",
+      product_id: "syoss-intense-curls-shampoo",
+      name: "Syoss Intense Curls",
+      category: "shampoo",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+    },
+    productIntakeEnabled: true,
+    tools: fakeAgentV2Tools(),
+  })
+
+  const firstInput = getInputItems(client.requests[0])
+  const latestUserIndex = firstInput.findIndex((item) => asRecord(item)?.content === "und wie oft?")
+  const activeReminderIndex = firstInput.findIndex((item) =>
+    String(asRecord(item)?.content ?? "").includes("Active resolved product from the previous"),
+  )
+  const activeReminder = String(asRecord(firstInput[activeReminderIndex])?.content ?? "")
+
+  assert.ok(latestUserIndex >= 0)
+  assert.ok(activeReminderIndex > latestUserIndex)
+  assert.match(activeReminder, /Syoss Intense Curls/)
+  assert.match(activeReminder, /original_user_message is historical context only/)
+})
+
+test("AgentV2 runtime fallback answers active resolved product follow-ups without stale lookup copy", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["shampoo"],
+    }),
+    functionCall(
+      "call_2",
+      "select_products",
+      selectProductsArguments({
+        category: "shampoo",
+        user_request: "und wie oft?",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "und wie oft?",
+      }),
+    ),
+    functionCall("call_3", "lookup_product_candidate", {
+      category: "shampoo",
+      brand_text: "Syoss",
+      product_name_text: "Intense Volume Shampoo",
+      reason: "Stale lookup from prior unresolved product wording.",
+      evidence_quote: "Syoss Intense Volume Shampoo",
+    }),
+    terminalNamedProductRecommendation(
+      "call_4",
+      [{ product_id: "syoss-intense-volume-shampoo", name: "Syoss Intense Volume Shampoo" }],
+      {
+        care_category: "shampoo",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    ),
+    terminalNamedProductRecommendation(
+      "call_5",
+      [{ product_id: "syoss-intense-volume-shampoo", name: "Syoss Intense Volume Shampoo" }],
+      {
+        care_category: "shampoo",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    ),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "und wie oft?",
+    recentMessages: [
+      {
+        role: "user",
+        content: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      },
+      {
+        role: "assistant",
+        content: "Ich finde mehrere mögliche Varianten.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    activeResolvedProductContext: {
+      source: "product_lookup_selection",
+      product_id: "syoss-intense-curls-shampoo",
+      name: "Syoss Intense Curls",
+      category: "shampoo",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+    },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async () => ({
+        status: "needs_variant_selection",
+        category: "shampoo",
+        product: null,
+        candidates: [],
+      }),
+      select_products: async () => ({
+        valid_product_ids: ["syoss-intense-curls-shampoo"],
+        products: [{ product_id: "syoss-intense-curls-shampoo", name: "Syoss Intense Curls" }],
+      }),
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, "repair_failed")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Syoss Intense Curls/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Intense Volume/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Welche genaue Variante/i)
+})
+
+test("AgentV2 runtime fallback handles active resolved product fit follow-ups without inventing fit", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["shampoo"],
+    }),
+    functionCall(
+      "call_2",
+      "select_products",
+      selectProductsArguments({
+        category: "shampoo",
+        user_request: "passt das zu meinem Frizz?",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "passt das zu meinem Frizz?",
+      }),
+    ),
+    functionCall("call_3", "lookup_product_candidate", {
+      category: "shampoo",
+      brand_text: "Syoss",
+      product_name_text: "Intense Volume Shampoo",
+      reason: "Stale lookup from prior unresolved product wording.",
+      evidence_quote: "Syoss Intense Volume Shampoo",
+    }),
+    terminalNamedProductRecommendation(
+      "call_4",
+      [{ product_id: "syoss-intense-volume-shampoo", name: "Syoss Intense Volume Shampoo" }],
+      {
+        care_category: "shampoo",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    ),
+    terminalNamedProductRecommendation(
+      "call_5",
+      [{ product_id: "syoss-intense-volume-shampoo", name: "Syoss Intense Volume Shampoo" }],
+      {
+        care_category: "shampoo",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    ),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "passt das zu meinem Frizz?",
+    recentMessages: [
+      {
+        role: "user",
+        content: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      },
+      {
+        role: "assistant",
+        content: "Ich finde mehrere mögliche Varianten.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    activeResolvedProductContext: {
+      source: "product_lookup_selection",
+      product_id: "syoss-intense-curls-shampoo",
+      name: "Syoss Intense Curls",
+      category: "shampoo",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+    },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async () => ({
+        status: "needs_variant_selection",
+        category: "shampoo",
+        product: null,
+        candidates: [],
+      }),
+      select_products: async () => ({
+        valid_product_ids: ["syoss-intense-curls-shampoo"],
+        products: [{ product_id: "syoss-intense-curls-shampoo", name: "Syoss Intense Curls" }],
+      }),
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, "repair_failed")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Syoss Intense Curls/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /nicht abschließend bewerten/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Intense Volume/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /passt gut/i)
+})
+
+test("AgentV2 runtime repairs trusted selected product unverified caveat", async () => {
+  const selectedProduct = { product_id: "syoss-intense-curls-shampoo", name: "Syoss Intense Curls" }
+  const client = fakeResponsesClientWithOutputs([
+    terminalGeneralAdviceWithOverrides("call_1", {
+      request_interpretation: {
+        primary_intent: "general_advice",
+        product_request_kind: "product_detail",
+        care_category: "shampoo",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Syoss Intense Curls",
+        specific_product_candidate: true,
+      },
+      tool_grounding: {
+        used_product_tool: true,
+        product_ids: [selectedProduct.product_id],
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+      },
+      payload: {
+        user_facing_answer_de:
+          "Zu Syoss Intense Curls kann ich dir das nicht sicher bestätigen, weil ich diese Variante nicht als verifizierten Katalogtreffer prüfen kann.",
+        category_or_topic: "shampoo",
+        key_points_de: [],
+        next_step_offer_de: null,
+      },
+      pending_followup_action: null,
+    }),
+    terminalGeneralAdviceWithOverrides("call_2", {
+      request_interpretation: {
+        primary_intent: "general_advice",
+        product_request_kind: "product_detail",
+        care_category: "shampoo",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Syoss Intense Curls",
+        specific_product_candidate: true,
+      },
+      tool_grounding: {
+        used_product_tool: true,
+        product_ids: [selectedProduct.product_id],
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+      },
+      payload: {
+        user_facing_answer_de:
+          "Alles klar, ich bewerte ab jetzt Syoss Intense Curls. Bei deinem feinen, welligen Haar würde ich es als leichtes Shampoo einordnen und die Häufigkeit an deinem normalen Waschrhythmus ausrichten.",
+        category_or_topic: "shampoo",
+        key_points_de: ["Syoss Intense Curls ist die ausgewählte Produktidentität."],
+        next_step_offer_de: null,
+      },
+      pending_followup_action: null,
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message:
+      'Der Nutzer hat in der Produktklärung "Syoss Intense Curls" ausgewählt. Beantworte die offene Frage jetzt.',
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    trustedSelectedProductContext: {
+      source: "product_lookup_clarification",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      selected_product: {
+        id: selectedProduct.product_id,
+        name: selectedProduct.name,
+        category: "shampoo",
+      },
+      lookup_identity: {
+        category: "shampoo",
+        brand_text: "Syoss",
+        product_name_text: "Intense Volume Shampoo",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      select_products: async () => ({
+        valid_product_ids: [selectedProduct.product_id],
+        products: [selectedProduct],
+      }),
+    },
+  })
+
+  assert.equal(result.trace.repair_attempts.length, 1)
+  assert.ok(
+    result.trace.repair_attempts[0].validation_errors.some(
+      (error) => error.validator_id === "trusted_product_unverified_caveat",
+    ),
+  )
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Syoss Intense Curls/)
+  assert.doesNotMatch(
+    result.final_answer.payload.user_facing_answer_de,
+    /Katalogtreffer|nicht verifiz/i,
+  )
 })
 
 test("AgentV2 runtime injects named product context for plausible off-catalog product detail turns", async () => {
@@ -4321,7 +4716,7 @@ test("AgentV2 runtime degrades ambiguous product lookup repair failure to useful
     functionCall("call_1", "lookup_product_candidate", {
       category: "mask",
       brand_text: "Garnier",
-      product_name_text: "Hair Food",
+      product_name_text: "Garnier Hair Food",
       reason: "User asks for an opinion on a named product family.",
       evidence_quote: "Garnier Hair Food",
     }),
@@ -4384,6 +4779,7 @@ test("AgentV2 runtime degrades ambiguous product lookup repair failure to useful
   assert.equal(result.final_answer.answer_mode, "clarification")
   assert.match(result.final_answer.payload.user_facing_answer_de, /mehrere|nicht eindeutig|welche/i)
   assert.match(result.final_answer.payload.question_de, /welche|variante|genau/i)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Garnier Garnier/i)
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Gliss|Schaebens|Sante/)
 })
 

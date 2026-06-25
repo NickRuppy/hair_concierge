@@ -30,6 +30,7 @@ export interface AgentV2FinalAnswerValidationContext {
     valid_product_ids?: readonly string[]
     products?: readonly { product_id?: string; name?: string }[]
   }[]
+  trustedSelectedProductIds?: readonly string[]
   productLookupResults?: readonly AgentV2ProductLookupValidationResult[]
   routineProjections: readonly {
     routine_layer?: AgentV2RoutineLayer
@@ -99,7 +100,7 @@ export function validateAgentV2FinalAnswer(
   validateVisiblePayloadRendered(terminalAnswer, context, findings)
   validateInterpretationEvidence(terminalAnswer, context, findings)
   validateInterpretationConfidence(terminalAnswer, context, findings)
-  validateInterpretationAnswerMode(terminalAnswer, findings)
+  validateInterpretationAnswerMode(terminalAnswer, context, findings)
   validateTurnGateConsistency(terminalAnswer, context, findings)
   validateInterpretationToolHistory(terminalAnswer, context, findings)
   validateInterpretationToolArguments(terminalAnswer, context, findings)
@@ -111,6 +112,7 @@ export function validateAgentV2FinalAnswer(
   validateProductToolRequired(terminalAnswer, context, findings)
   validateNamedProductLookupRequired(terminalAnswer, context, findings)
   validateProductLookupResultClaims(terminalAnswer, context, findings)
+  validateTrustedSelectedProductCaveat(terminalAnswer, context, findings)
   validateNamedProductDetailAnswer(terminalAnswer, context, findings)
   validateRoutineToolRequired(terminalAnswer, context, findings)
   validateRoutineThreadContinuity(terminalAnswer, context, findings)
@@ -253,6 +255,8 @@ const BUILD_ROUTINE_REQUIRED_ARGUMENTS = [
 ] as const
 const UNRESOLVED_PRODUCT_LOOKUP_STATUSES = new Set([
   "ambiguous",
+  "needs_variant_selection",
+  "category_mismatch",
   "insufficient_identity",
   "not_found",
   "unsupported_category",
@@ -689,6 +693,7 @@ function validateInterpretationConfidence(
 
 function validateInterpretationAnswerMode(
   answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
   errors: AgentV2ValidationError[],
 ): void {
   const interpretation = answer.request_interpretation
@@ -697,7 +702,8 @@ function validateInterpretationAnswerMode(
     answer.answer_mode !== "product_recommendation" &&
     !isProductBackedRoutineAnswer(answer) &&
     answer.answer_mode !== "clarification" &&
-    answer.answer_mode !== "constraint_blocked"
+    answer.answer_mode !== "constraint_blocked" &&
+    !isGroundedByTrustedProductSelection(answer, context)
   ) {
     errors.push({
       validator_id: "request_interpretation_answer_mode",
@@ -872,7 +878,11 @@ function validateInterpretationToolHistory(
   )
   const interpretation = answer.request_interpretation
 
-  if (PRODUCT_TOOL_REQUEST_KINDS.has(interpretation.product_request_kind) && !hasProductToolCall) {
+  if (
+    PRODUCT_TOOL_REQUEST_KINDS.has(interpretation.product_request_kind) &&
+    !hasProductToolCall &&
+    !isGroundedByTrustedProductSelection(answer, context)
+  ) {
     errors.push({
       validator_id: "product_tool_required",
       message: "Concrete product interpretations require a select_products tool call.",
@@ -1328,7 +1338,10 @@ function getRequiredGuidancePackageIds(
     required.add(id)
   }
 
-  if (PRODUCT_TOOL_REQUEST_KINDS.has(answer.request_interpretation.product_request_kind)) {
+  if (
+    PRODUCT_TOOL_REQUEST_KINDS.has(answer.request_interpretation.product_request_kind) &&
+    !isGroundedByTrustedProductSelection(answer, context)
+  ) {
     required.add("base.product_recommendation.v1")
   }
 
@@ -1447,12 +1460,74 @@ function validateProductToolRequired(
     (answer.tool_grounding.product_ids.length > 0 ||
       payloadProductIds.length > 0 ||
       answer.answer_mode === "product_recommendation") &&
-    !hasProductToolCall
+    !hasProductToolCall &&
+    !isGroundedByTrustedProductSelection(answer, context)
   ) {
     errors.push({
       validator_id: "product_tool_required",
       message: "Product answers require a select_products tool call.",
       severity: "block",
+    })
+  }
+}
+
+function isGroundedByTrustedProductSelection(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  const trustedSelectedProductIds = new Set(context.trustedSelectedProductIds ?? [])
+  if (trustedSelectedProductIds.size === 0) return false
+  if (makesTrustedSelectedProductSpecificClaim(answer)) return false
+
+  const referencedProductIds = [
+    ...new Set([...answer.tool_grounding.product_ids, ...extractPayloadProductIds(answer)]),
+  ].filter((id) => id.trim().length > 0)
+  if (referencedProductIds.length === 0) return true
+  return referencedProductIds.every((productId) => trustedSelectedProductIds.has(productId))
+}
+
+function makesTrustedSelectedProductSpecificClaim(answer: AgentV2TerminalAnswer): boolean {
+  const visibleText = readUserFacingAnswer(answer.payload)
+  return hasNamedProductClaimPredicate(visibleText) || hasPronounProductClaim(visibleText)
+}
+
+function validateTrustedSelectedProductCaveat(
+  answer: AgentV2TerminalAnswer,
+  context: AgentV2FinalAnswerValidationContext,
+  errors: AgentV2ValidationError[],
+): void {
+  const trustedSelectedProductIds = new Set(context.trustedSelectedProductIds ?? [])
+  if (trustedSelectedProductIds.size === 0) return
+
+  const foundTrustedProductIds = new Set(
+    (context.productLookupResults ?? [])
+      .filter((result) => result.status === "found_exact" && result.product?.id)
+      .map((result) => result.product?.id as string),
+  )
+  if (![...trustedSelectedProductIds].some((productId) => foundTrustedProductIds.has(productId))) {
+    return
+  }
+
+  const visibleText = normalizeVisibleText(readUserFacingAnswer(answer.payload))
+  if (
+    /(?:nicht|kein|keine|keinen)\s+(?:als\s+)?(?:verifizierte[nrms]?|bestätigte[nrms]?|bestaetigte[nrms]?).{0,80}(?:katalogtreffer|produktdatensatz|produktdaten|produkt)/iu.test(
+      visibleText,
+    ) ||
+    /\b(?:produkt|variante|katalogtreffer|produktdatensatz|produktdaten)\b.{0,80}(?:kann|konnte|lässt|laesst).{0,60}(?:nicht|nicht\s+sicher).{0,60}(?:prüfen|pruefen|bewerten|bestätigen|bestaetigen)/iu.test(
+      visibleText,
+    ) ||
+    /(?:kann|konnte|lässt|laesst).{0,60}(?:nicht|nicht\s+sicher).{0,60}(?:prüfen|pruefen|bewerten|bestätigen|bestaetigen).{0,80}\b(?:produkt|variante|katalogtreffer|produktdatensatz|produktdaten)\b/iu.test(
+      visibleText,
+    )
+  ) {
+    errors.push({
+      validator_id: "trusted_product_unverified_caveat",
+      message:
+        "A trusted selected product is already a found_exact catalog product; do not describe it as unverified or not found.",
+      severity: "block",
+      path: ["payload", "user_facing_answer_de"],
+      repair_hint:
+        "Acknowledge the selected catalog product as the canonical product. If you lack enough specs for a detailed claim, say which claim is unsupported, not that the product itself is unverified.",
     })
   }
 }
@@ -1469,10 +1544,19 @@ function validateNamedProductLookupRequired(
     isNamedProductLookupTurn(answer) &&
     isLookupGuardedAnswerMode(answer)
 
+  const deterministicContextRequiresLookup =
+    isLookupGuardedAnswerMode(answer) && isNamedProductContextActionableForLookup(context)
+
   const visibleNamedProductClaimRequiresLookup =
     isLookupGuardedAnswerMode(answer) && makesUnresolvedNamedProductSpecificClaim(answer, context)
 
-  if (!modelRequiresLookup && !visibleNamedProductClaimRequiresLookup) return
+  if (
+    !modelRequiresLookup &&
+    !deterministicContextRequiresLookup &&
+    !visibleNamedProductClaimRequiresLookup
+  ) {
+    return
+  }
 
   if (hasMatchingProductLookupForAnswer(answer, context)) return
 
@@ -1482,6 +1566,18 @@ function validateNamedProductLookupRequired(
       "Named-product detail, suitability, or routine-add turns require lookup_product_candidate before a terminal answer.",
     severity: "block",
   })
+}
+
+function isNamedProductContextActionableForLookup(
+  context: AgentV2FinalAnswerValidationContext,
+): boolean {
+  const namedProductContext = context.namedProductContext
+  return (
+    namedProductContext?.plausible_exact_name === true &&
+    (namedProductContext.named_product_intent === "evaluation" ||
+      namedProductContext.named_product_intent === "current_use_product_question" ||
+      namedProductContext.named_product_intent === "routine_add")
+  )
 }
 
 function validateProductLookupResultClaims(
