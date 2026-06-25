@@ -51,7 +51,7 @@ const TREATMENT_LABELS: Record<string, string> = {
   natur: "Naturhaar",
   gefaerbt: "Gefärbt / getönt",
   blondiert: "Blondiert / aufgehellt",
-  dauerwelle: "Dauerwelle / Volumenwelle",
+  dauerwelle: "Dauerwelle",
   chemisch_geglaettet: "Chemisch geglättet",
 }
 

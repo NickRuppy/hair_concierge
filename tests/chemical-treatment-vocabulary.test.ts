@@ -21,7 +21,7 @@ test("chemical treatment labels use the approved German wording", () => {
   assert.equal(CHEMICAL_TREATMENT_LABELS.natural, "Naturhaar")
   assert.equal(CHEMICAL_TREATMENT_LABELS.colored, "Gefärbt / getönt")
   assert.equal(CHEMICAL_TREATMENT_LABELS.bleached, "Blondiert / aufgehellt")
-  assert.equal(CHEMICAL_TREATMENT_LABELS.permed, "Dauerwelle / Volumenwelle")
+  assert.equal(CHEMICAL_TREATMENT_LABELS.permed, "Dauerwelle")
   assert.equal(CHEMICAL_TREATMENT_LABELS.chemically_straightened, "Chemisch geglättet")
 })
 

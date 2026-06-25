@@ -197,7 +197,7 @@ export const quizQuestions: QuizQuestion[] = [
       },
       {
         value: "dauerwelle",
-        label: "Dauerwelle / Volumenwelle",
+        label: "Dauerwelle",
         description: "Chemisch dauerhaft gewellte oder gelockte Längen",
         icon: "treatment-permed",
       },

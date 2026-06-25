@@ -73,7 +73,7 @@ export const CHEMICAL_TREATMENT_LABELS: Record<string, string> = {
   natural: "Naturhaar",
   colored: "Gefärbt / getönt",
   bleached: "Blondiert / aufgehellt",
-  permed: "Dauerwelle / Volumenwelle",
+  permed: "Dauerwelle",
   chemically_straightened: "Chemisch geglättet",
 } satisfies Record<ChemicalTreatment, string>
 

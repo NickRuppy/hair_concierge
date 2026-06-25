@@ -60,7 +60,7 @@ test("builds rich Customer.io quiz traits with labels when consent is true", () 
   assert.deepEqual(sync.identifyTraits.chemical_treatment_labels, [
     "Gefärbt / getönt",
     "Blondiert / aufgehellt",
-    "Dauerwelle / Volumenwelle",
+    "Dauerwelle",
     "Chemisch geglättet",
   ])
   assert.deepEqual(sync.identifyTraits.goals, ["moisture", "shine"])
