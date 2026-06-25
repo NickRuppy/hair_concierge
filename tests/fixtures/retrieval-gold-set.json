@@ -3,7 +3,7 @@
     "query": "Welches Shampoo für fettige Kopfhaut und feines Haar?",
     "intent": "product_recommendation",
     "metadata_filter": { "thickness": "fine" },
-    "source_types": ["product_list", "book", "community_qa"],
+    "source_types": ["book", "community_qa"],
     "relevant_chunk_ids": ["__ANNOTATE__"],
     "_note": "Shampoo path: scalp concern + thickness filter"
   },
@@ -11,7 +11,7 @@
     "query": "Conditioner für Feuchtigkeitsmangel, feines Haar",
     "intent": "product_recommendation",
     "metadata_filter": { "thickness": "fine", "concern": "moisture_deficit" },
-    "source_types": ["product_list", "book", "community_qa"],
+    "source_types": ["book", "community_qa"],
     "relevant_chunk_ids": ["__ANNOTATE__"],
     "_note": "Conditioner path: protein/moisture mapping + thickness"
   },
@@ -80,7 +80,7 @@
     "query": "Shampoo ohne Sulfate für empfindliche Kopfhaut normales Haar",
     "intent": "product_recommendation",
     "metadata_filter": { "thickness": "normal" },
-    "source_types": ["product_list", "book", "community_qa"],
+    "source_types": ["book", "community_qa"],
     "relevant_chunk_ids": ["__ANNOTATE__"],
     "_note": "Shampoo: sensitive scalp + sulfate-free constraint"
   },
@@ -101,7 +101,7 @@
     "query": "Conditioner für dickes Haar mit Proteinüberschuss",
     "intent": "product_recommendation",
     "metadata_filter": { "thickness": "coarse", "concern": "protein_overload" },
-    "source_types": ["product_list", "book", "community_qa"],
+    "source_types": ["book", "community_qa"],
     "relevant_chunk_ids": ["__ANNOTATE__"],
     "_note": "Conditioner path: protein overload + coarse hair"
   },

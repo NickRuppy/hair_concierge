@@ -576,6 +576,43 @@ test("send magic link accepts PayPal intent tokens and consumes the provider mar
   })
 })
 
+test("send magic link stays successful if activation marker cleanup fails after OTP send", async () => {
+  const { deps } = stubDeps()
+  const captured: any[] = []
+  deps.supabase.auth.signInWithOtp = async () => ({
+    data: { user: null, session: null },
+    error: null,
+  })
+  deps.supabase.auth.admin.getUserById = async () => ({
+    data: { user: null },
+    error: { message: "user lookup failed" } as any,
+  })
+
+  const response = await handleSendMagicLink({ session_id: "cs_magic" }, {
+    stripe: deps.stripe,
+    supabase: deps.supabase,
+    siteUrl: "https://hair.example",
+    checkRateLimit: deps.checkRateLimit,
+    verifyCheckoutSessionForActivation: deps.verifyCheckoutSessionForActivation,
+    ensureCheckoutAccount: deps.ensureCheckoutAccount,
+    claimCheckoutActivation: async () => true,
+    releaseCheckoutActivationClaim: async () => {},
+    captureCheckoutException: (_error: unknown, details: Record<string, unknown>) => {
+      captured.push(details)
+    },
+  } as any)
+
+  expect(response.status).toBe(200)
+  expect(captured).toEqual([
+    expect.objectContaining({
+      provider: "stripe",
+      stage: "checkout_magic_link_activation",
+      reason: "activation_marker_cleanup_failed_after_otp",
+      status: 200,
+    }),
+  ])
+})
+
 test("magic-link activation fallback links quiz metadata when fulfilling checkout", async () => {
   const { deps } = stubDeps()
   let linked: { userId: string; email: string | undefined; leadId: string | undefined } | undefined

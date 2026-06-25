@@ -13,6 +13,16 @@ test("full CI marker in PR title forces all path-aware gates", () => {
   })
 })
 
+test("diff failures can force all path-aware gates without changed files", () => {
+  assert.deepEqual(classifyCiScope([], { forceFullCi: true }), {
+    chat_eval: true,
+    retrieval_eval: true,
+    playwright_smoke: true,
+    security_scan: true,
+    full_ci: true,
+  })
+})
+
 test("frontend route changes run Playwright but not chat or retrieval evals", () => {
   const scope = classifyCiScope(["src/app/profile/page.tsx"])
   assert.equal(scope.playwright_smoke, true)

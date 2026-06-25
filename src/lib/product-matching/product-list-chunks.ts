@@ -17,7 +17,6 @@ export interface ProductListChunkProduct {
   brand?: string
   category?: string
   suitable_thicknesses?: string[]
-  suitable_hair_textures?: string[]
   suitable_concerns?: string[]
   shampoo_bucket_pairs?: ShampooBucketPairInput[]
   tags?: string[]

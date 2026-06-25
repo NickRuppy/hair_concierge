@@ -16,14 +16,14 @@ export interface ShampooEligibilitySource {
   name?: string
   category?: string | null
   suitable_thicknesses?: string[]
-  suitable_hair_textures?: string[]
   suitable_concerns?: string[]
   shampoo_bucket_pairs?: ShampooBucketPairInput[]
 }
 
 function sortShampooPairs(pairs: ShampooBucketPair[]): ShampooBucketPair[] {
   return [...pairs].sort((a, b) => {
-    const thicknessDiff = HAIR_THICKNESSES.indexOf(a.thickness) - HAIR_THICKNESSES.indexOf(b.thickness)
+    const thicknessDiff =
+      HAIR_THICKNESSES.indexOf(a.thickness) - HAIR_THICKNESSES.indexOf(b.thickness)
     if (thicknessDiff !== 0) return thicknessDiff
 
     return SHAMPOO_BUCKETS.indexOf(a.shampoo_bucket) - SHAMPOO_BUCKETS.indexOf(b.shampoo_bucket)
@@ -44,29 +44,39 @@ function getProductLabel(product: ShampooEligibilitySource): string {
   return product.name ? `Shampoo "${product.name}"` : "Shampoo"
 }
 
-function normalizeThickness(value: string, product: ShampooEligibilitySource, sourceLabel: string): HairThickness {
+function normalizeThickness(
+  value: string,
+  product: ShampooEligibilitySource,
+  sourceLabel: string,
+): HairThickness {
   const normalizedValue = value.trim()
   if (HAIR_THICKNESSES.includes(normalizedValue as HairThickness)) {
     return normalizedValue as HairThickness
   }
 
   throw new Error(
-    `${getProductLabel(product)} hat eine ungueltige Haardicke in ${sourceLabel}: "${value}".`
+    `${getProductLabel(product)} hat eine ungueltige Haardicke in ${sourceLabel}: "${value}".`,
   )
 }
 
-function normalizeBucket(value: string, product: ShampooEligibilitySource, sourceLabel: string): ShampooBucket {
+function normalizeBucket(
+  value: string,
+  product: ShampooEligibilitySource,
+  sourceLabel: string,
+): ShampooBucket {
   const normalizedValue = value.trim()
   if (SHAMPOO_BUCKETS.includes(normalizedValue as ShampooBucket)) {
     return normalizedValue as ShampooBucket
   }
 
   throw new Error(
-    `${getProductLabel(product)} hat einen ungueltigen Shampoo-Bucket in ${sourceLabel}: "${value}".`
+    `${getProductLabel(product)} hat einen ungueltigen Shampoo-Bucket in ${sourceLabel}: "${value}".`,
   )
 }
 
-export function normalizeShampooBucketPairs(product: ShampooEligibilitySource): ShampooBucketPair[] {
+export function normalizeShampooBucketPairs(
+  product: ShampooEligibilitySource,
+): ShampooBucketPair[] {
   if (!isShampooCategory(product.category)) return []
 
   const explicitPairs = product.shampoo_bucket_pairs ?? []
@@ -75,12 +85,16 @@ export function normalizeShampooBucketPairs(product: ShampooEligibilitySource): 
       const rawBucket = pair.shampoo_bucket ?? pair.concern
       if (!rawBucket?.trim()) {
         throw new Error(
-          `${getProductLabel(product)} hat ein unvollstaendiges Exact-Pair in shampoo_bucket_pairs[${index}].`
+          `${getProductLabel(product)} hat ein unvollstaendiges Exact-Pair in shampoo_bucket_pairs[${index}].`,
         )
       }
 
       return {
-        thickness: normalizeThickness(pair.thickness, product, `shampoo_bucket_pairs[${index}].thickness`),
+        thickness: normalizeThickness(
+          pair.thickness,
+          product,
+          `shampoo_bucket_pairs[${index}].thickness`,
+        ),
         shampoo_bucket: normalizeBucket(rawBucket, product, `shampoo_bucket_pairs[${index}]`),
       }
     })
@@ -88,31 +102,11 @@ export function normalizeShampooBucketPairs(product: ShampooEligibilitySource): 
     return dedupeShampooPairs(normalizedPairs)
   }
 
-  const thicknesses = (product.suitable_thicknesses?.length
-    ? product.suitable_thicknesses
-    : product.suitable_hair_textures ?? [])
-    .map((value) => normalizeThickness(value, product, "suitable_thicknesses"))
-  const buckets = (product.suitable_concerns ?? [])
-    .map((value) => normalizeBucket(value, product, "suitable_concerns"))
-
-  if (thicknesses.length === 0 || buckets.length === 0) {
-    throw new Error(
-      `${getProductLabel(product)} braucht entweder shampoo_bucket_pairs oder gueltige suitable_thicknesses + suitable_concerns.`
-    )
-  }
-
-  return dedupeShampooPairs(
-    thicknesses.flatMap((thickness) =>
-      buckets.map((shampoo_bucket) => ({
-        thickness,
-        shampoo_bucket,
-      }))
-    )
-  )
+  throw new Error(`${getProductLabel(product)} braucht explizite shampoo_bucket_pairs.`)
 }
 
 export function mapShampooPairsToMetadata(
-  pairs: ShampooBucketPair[]
+  pairs: ShampooBucketPair[],
 ): Array<{ thickness: string; concern: string }> {
   return pairs.map((pair) => ({
     thickness: pair.thickness,

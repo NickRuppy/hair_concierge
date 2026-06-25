@@ -4,6 +4,7 @@ import test from "node:test"
 import {
   buildAgentV2GenerationMetadata,
   isAgentV2LangfuseObservationEnabled,
+  observeAgentV2ToolCall,
   summarizeAgentV2ToolInput,
   summarizeAgentV2ToolOutput,
   summarizeAgentV2TraceForLangfuse,
@@ -63,6 +64,10 @@ test("AgentV2 Langfuse summary contains path counts without raw context", () => 
       failure_stage: null,
       routine_thread_context_active: false,
       final_product_ids: ["product-1"],
+      turn_gate_status: null,
+      turn_gate_boundary_kind: null,
+      turn_gate_advisor_continuation_allowed: null,
+      turn_gate_latency_ms: null,
       langfuse_enabled: true,
     },
   )
@@ -111,6 +116,32 @@ test("AgentV2 Langfuse observation kill-switch disables observed client path", (
 
     process.env.AGENT_V2_LANGFUSE_OBSERVATION = "disabled"
     assert.equal(isAgentV2LangfuseObservationEnabled(), false)
+  } finally {
+    if (original === undefined) {
+      delete process.env.AGENT_V2_LANGFUSE_OBSERVATION
+    } else {
+      process.env.AGENT_V2_LANGFUSE_OBSERVATION = original
+    }
+  }
+})
+
+test("AgentV2 Langfuse observation kill-switch bypasses tool observations", async () => {
+  const original = process.env.AGENT_V2_LANGFUSE_OBSERVATION
+  let ran = false
+  try {
+    process.env.AGENT_V2_LANGFUSE_OBSERVATION = "disabled"
+
+    const result = await observeAgentV2ToolCall({
+      name: "select_products",
+      input: { category: "shampoo" },
+      run: async () => {
+        ran = true
+        return "ok"
+      },
+    })
+
+    assert.equal(result, "ok")
+    assert.equal(ran, true)
   } finally {
     if (original === undefined) {
       delete process.env.AGENT_V2_LANGFUSE_OBSERVATION
