@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { deriveDesiredVolumeFromGoals } from "../src/lib/hair-profile/derived"
 import { PROFILE_FIELD_CONFIG } from "../src/lib/profile/section-config"
 import type { HairProfile } from "../src/lib/types"
 
@@ -81,4 +82,11 @@ test("profile routine section shows length tip accessory night protection label"
     nightProtectionField.getValue(makeProfile({ night_protection: ["length_tip_accessory"] })),
     ["Längen-/Spitzenschutz (z. B. HairHOMIE)"],
   )
+})
+
+test("goals edit derives persisted desired volume from selected goals", () => {
+  assert.equal(deriveDesiredVolumeFromGoals(["volume"], null), "more")
+  assert.equal(deriveDesiredVolumeFromGoals(["less_volume"], null), "less")
+  assert.equal(deriveDesiredVolumeFromGoals(["shine"], null), null)
+  assert.equal(deriveDesiredVolumeFromGoals([], null), null)
 })

@@ -10,6 +10,7 @@ const githubBaseRef = process.env.GITHUB_BASE_REF?.trim()
 const baseRef = ciBaseRef || (githubBaseRef ? `origin/${githubBaseRef}` : "origin/main")
 const headRef = process.env.CI_HEAD_REF?.trim() || "HEAD"
 const diffBase = baseRef
+let forcedFullCi = false
 
 function git(args) {
   return execFileSync("git", args, { encoding: "utf8" }).trim()
@@ -21,11 +22,13 @@ function changedFiles() {
       .split("\n")
       .map((line) => line.trim())
       .filter(Boolean)
-  } catch {
-    return git(["diff", "--name-only", "HEAD~1...HEAD"])
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean)
+  } catch (error) {
+    forcedFullCi = true
+    console.warn(
+      `[changed-paths] Failed to diff ${diffBase}...${headRef}; forcing all path-aware CI gates.`,
+    )
+    if (error instanceof Error && error.message) console.warn(error.message)
+    return []
   }
 }
 
@@ -33,6 +36,7 @@ const files = changedFiles()
 const outputs = classifyCiScope(files, {
   prTitle: process.env.PR_TITLE ?? "",
   prBody: process.env.PR_BODY ?? "",
+  forceFullCi: forcedFullCi,
 })
 
 for (const [key, value] of Object.entries(outputs)) {

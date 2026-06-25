@@ -717,7 +717,8 @@ def convert_single_vtt(vtt_path: Path, out_dir: Path):
 # 4. EXCEL PRODUCT MATRIX CONVERSION
 # ---------------------------------------------------------------------------
 
-# Maps Excel hair labels to HairTexture enum values (fein/mittel/dick)
+# Maps Excel hair labels to thickness enum values (fein/mittel/dick).
+# The constant name is legacy; these are diameter/thickness buckets, not curl pattern.
 HAIR_TEXTURE_MAP = {
     "Feine Haare": "fine",
     "Normale Haare": "normal",
@@ -1016,10 +1017,11 @@ def convert_single_excel_matrix(xlsx_path: Path):
 
 
 def generate_matrix_markdown(category: str, matrix: dict, uses_ingredient_flags: bool = False):
-    """Write one Markdown file per cell (hair_texture x concern) for precise RAG retrieval.
+    """Write legacy product-list Markdown files per cell (thickness x concern).
 
-    Each file becomes a single chunk with rich metadata for hybrid search
-    (metadata filtering + vector similarity).
+    These files are retained for rollback/regeneration only. Current AgentV2
+    product recommendations use structured product data, not product_list RAG
+    chunks.
 
     For matrices whose trailing parens encode ingredient flags (conditioner-drogerie,
     leave-in, mask-drogerie, oil), those (Silikone)/(Kokos) annotations are stripped
@@ -1104,6 +1106,7 @@ def build_product_json_list(
     all flags are merged so the result is order-independent.
     """
     product_map: dict[str, dict] = {}
+    is_shampoo_category = category.strip().lower() == "shampoo"
 
     for hair_label, needs in matrix.items():
         hair_tag = HAIR_TEXTURE_MAP.get(hair_label)
@@ -1127,6 +1130,8 @@ def build_product_json_list(
                     }
                     if uses_ingredient_flags:
                         entry["ingredient_flags"] = []
+                    if is_shampoo_category:
+                        entry["shampoo_bucket_pairs"] = []
                     product_map[clean_name] = entry
                 entry = product_map[clean_name]
                 # Merge flags from this occurrence so that two cells with
@@ -1141,6 +1146,10 @@ def build_product_json_list(
                     entry["suitable_thicknesses"].append(hair_tag)
                 if concern_tag not in entry["suitable_concerns"]:
                     entry["suitable_concerns"].append(concern_tag)
+                if is_shampoo_category:
+                    pair = {"thickness": hair_tag, "shampoo_bucket": concern_tag}
+                    if pair not in entry["shampoo_bucket_pairs"]:
+                        entry["shampoo_bucket_pairs"].append(pair)
 
     return list(product_map.values())
 

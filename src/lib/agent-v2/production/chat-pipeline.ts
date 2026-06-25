@@ -38,6 +38,7 @@ import {
   deriveIntent,
   deriveMatchedProducts,
   deriveProductCategory,
+  deriveSelectedProductsResultForAnswer,
 } from "@/lib/agent-v2/production/product-output"
 import {
   buildRoutineThreadVisibleSteps,
@@ -473,12 +474,12 @@ export async function runAgentV2ProductionPipeline(
   )
   const selectedProductResults: SelectProductsToolResult[] = []
   const selectedProductProjections: ReturnType<typeof projectSelectProductsForAgentV2>[] = []
-  let latestSelectProductsResult: SelectProductsToolResult | null = null
+  const selectProductResultByProjection = new WeakMap<object, SelectProductsToolResult>()
   let latestRoutineProjection: AgentV2RoutineProjection | null = null
   const selectProducts = (deps.createSelectProductsTool ?? createSelectProductsTool)({
     onResult: (result) => {
-      latestSelectProductsResult = result
       selectedProductResults.push(result)
+      selectProductResultByProjection.set(result.projection, result)
     },
   })
   const buildRoutine = (deps.createBuildOrFixRoutineTool ?? createBuildOrFixRoutineTool)()
@@ -541,7 +542,6 @@ export async function runAgentV2ProductionPipeline(
     tools: {
       load_advisor_guidance: async (input) => loadAgentV2AdvisorGuidance(input),
       select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
-        latestSelectProductsResult = null
         const effectiveCareContext =
           executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
         const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
@@ -565,7 +565,7 @@ export async function runAgentV2ProductionPipeline(
           effectiveCareContext,
         })
         const rawResult =
-          latestSelectProductsResult ??
+          selectProductResultByProjection.get(projection) ??
           ({
             projection,
             products: [],
@@ -634,7 +634,10 @@ export async function runAgentV2ProductionPipeline(
   const matchedProducts = visibleFailure
     ? []
     : deriveMatchedProducts({ answer, selectedProductResults })
-  const { categoryDecision, engineTrace } = deriveEngineArtifacts(latestSelectProductsResult)
+  const selectedProductsResultForAnswer = visibleFailure
+    ? null
+    : deriveSelectedProductsResultForAnswer({ answer, selectedProductResults })
+  const { categoryDecision, engineTrace } = deriveEngineArtifacts(selectedProductsResultForAnswer)
   const exposedCategoryDecision = visibleFailure ? undefined : categoryDecision
   const exposedEngineTrace = visibleFailure ? undefined : engineTrace
   const attachmentMode = matchedProducts.length > 0 ? "cards" : "text_only"

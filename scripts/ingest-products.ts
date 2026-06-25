@@ -3,9 +3,10 @@
  *
  * Usage: npx tsx scripts/ingest-products.ts
  *
- * Expects: data/products.csv or data/products.json
+ * Expects: data/products.csv, data/products.json, or data/products-from-excel/*.json
  * CSV format: name,brand,description,category,affiliate_link,image_url,price_eur,tags,suitable_thicknesses,suitable_concerns
  * (tags, suitable_thicknesses, suitable_concerns are semicolon-separated within the field)
+ * Shampoo rows require JSON/excel sources with explicit shampoo_bucket_pairs.
  */
 
 import { createClient } from "@supabase/supabase-js"
@@ -93,7 +94,6 @@ interface ProductInput {
   price_eur?: number
   tags?: string[]
   suitable_thicknesses?: string[]
-  suitable_hair_textures?: string[]
   suitable_concerns?: string[]
   shampoo_bucket_pairs?: ShampooBucketPairInput[]
   is_active?: boolean
@@ -159,14 +159,11 @@ function logPreservedCommercialFields(
 }
 
 function normalizeProductInput(product: ProductInput, fallbackSortOrder: number): ProductInput {
-  const suitable_thicknesses = product.suitable_thicknesses?.length
-    ? product.suitable_thicknesses
-    : (product.suitable_hair_textures?.map((value) => value.trim()).filter(Boolean) ?? [])
-
   return {
     ...product,
     tags: product.tags?.map((value) => value.trim()).filter(Boolean) ?? [],
-    suitable_thicknesses,
+    suitable_thicknesses:
+      product.suitable_thicknesses?.map((value) => value.trim()).filter(Boolean) ?? [],
     suitable_concerns:
       product.suitable_concerns?.map((value) => value.trim()).filter(Boolean) ?? [],
     shampoo_bucket_pairs: product.shampoo_bucket_pairs?.map((pair) => ({
@@ -175,6 +172,30 @@ function normalizeProductInput(product: ProductInput, fallbackSortOrder: number)
       concern: pair.concern?.trim(),
     })),
     sort_order: product.sort_order ?? fallbackSortOrder,
+  }
+}
+
+function preflightProductSpecs(products: ProductInput[]): void {
+  const shampooErrors: string[] = []
+
+  for (const product of products) {
+    if (!isShampooCategory(product.category)) continue
+
+    try {
+      normalizeShampooBucketPairs(product)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      shampooErrors.push(`${product.name}: ${message}`)
+    }
+  }
+
+  if (shampooErrors.length > 0) {
+    throw new Error(
+      [
+        "Shampoo source validation failed before database writes.",
+        ...shampooErrors.map((message) => `- ${message}`),
+      ].join("\n"),
+    )
   }
 }
 
@@ -280,6 +301,12 @@ function parseCSV(content: string): ProductInput[] {
     headers.forEach((h, idx) => {
       obj[h] = values[idx] || ""
     })
+
+    if (isShampooCategory(obj.category)) {
+      throw new Error(
+        `Shampoo CSV row "${obj.name}" is unsupported. Use JSON/excel sources with explicit shampoo_bucket_pairs.`,
+      )
+    }
 
     products.push({
       id: obj.id || undefined,
@@ -587,6 +614,7 @@ async function main() {
   }
 
   products = products.map((product, index) => normalizeProductInput(product, index))
+  preflightProductSpecs(products)
 
   const requestedNames = parseProductNamesFilter(process.env.PRODUCT_NAMES)
   if (requestedNames) {
@@ -733,4 +761,7 @@ async function main() {
   console.log("\nDone! Product ingestion complete.")
 }
 
-main().catch(console.error)
+main().catch((error) => {
+  console.error(error)
+  process.exit(1)
+})

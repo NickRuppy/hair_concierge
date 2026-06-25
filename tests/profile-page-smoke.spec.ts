@@ -270,7 +270,7 @@ test.describe.serial("@ci Profile page smoke", () => {
       .single()
 
     if (goalsCleanupError) throw goalsCleanupError
-    expect(goalsCleanupRow?.desired_volume).toBeNull()
+    expect(goalsCleanupRow?.desired_volume).toBe("more")
 
     const { data: routineRows, error: routineRowsError } = await admin
       .from("user_product_usage")

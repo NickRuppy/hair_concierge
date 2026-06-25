@@ -1,7 +1,9 @@
 import {
   AgentV2TerminalAnswerSchema,
+  AgentV2PendingFollowupActionSchema,
   AgentV2TurnGateResultSchema,
   type AgentV2CareCategory,
+  type AgentV2PendingFollowupAction,
   type AgentV2RoutineLayer,
   type AgentV2RoutineThreadContext,
   type AgentV2RequestInterpretation,
@@ -512,13 +514,20 @@ export async function runAgentV2ResponsesTurn(params: {
       }
 
       const validation = validateAgentV2FinalAnswer(terminal.value, buildCurrentValidationContext())
+      const autoPendingFollowupRepair = repairMissingPendingFollowupAction({
+        validation,
+        context: buildCurrentValidationContext(),
+      })
 
-      if (validation.ok) {
+      if (validation.ok || autoPendingFollowupRepair?.validation.ok) {
+        const acceptedValidation = autoPendingFollowupRepair?.validation ?? validation
         trace.validation_errors = []
-        trace.validation_warnings = validation.warnings
-        trace.dropped_session_memory_writes = validation.dropped_session_memory_writes
+        trace.validation_warnings = acceptedValidation.warnings
+        trace.dropped_session_memory_writes = acceptedValidation.dropped_session_memory_writes
         const sanitizedAnswer =
-          validation.sanitized_answer ?? AgentV2TerminalAnswerSchema.parse(terminal.value)
+          autoPendingFollowupRepair?.answer ??
+          acceptedValidation.sanitized_answer ??
+          AgentV2TerminalAnswerSchema.parse(terminal.value)
         if (
           shortConfirmationWithoutPendingFollowup &&
           sanitizedAnswer.answer_mode !== "clarification"
@@ -1148,6 +1157,82 @@ function buildTerminalValidationOutput(
     error: "terminal_answer_validation_failed",
     validation_errors: errors.map((error) => compactValidationErrorForRepair(error)),
   })
+}
+
+function repairMissingPendingFollowupAction(params: {
+  validation: AgentV2FinalAnswerValidationResult
+  context: AgentV2FinalAnswerValidationContext
+}): { answer: AgentV2TerminalAnswer; validation: AgentV2FinalAnswerValidationResult } | null {
+  const answer = params.validation.sanitized_answer
+  if (!answer || answer.pending_followup_action) return null
+  if (answer.answer_mode !== "product_recommendation") return null
+  const blockingErrors = params.validation.errors.filter((error) => error.severity === "block")
+  if (
+    blockingErrors.length !== 1 ||
+    blockingErrors[0]?.validator_id !== "pending_followup_action_missing"
+  ) {
+    return null
+  }
+
+  const pendingFollowupAction = buildPendingFollowupActionFromValidationError(
+    answer,
+    blockingErrors[0],
+  )
+  if (!pendingFollowupAction) return null
+
+  const repairedAnswer = {
+    ...answer,
+    pending_followup_action: pendingFollowupAction,
+  }
+  const repairedValidation = validateAgentV2FinalAnswer(repairedAnswer, params.context)
+  return repairedValidation.ok
+    ? {
+        answer: repairedValidation.sanitized_answer ?? repairedAnswer,
+        validation: repairedValidation,
+      }
+    : null
+}
+
+function buildPendingFollowupActionFromValidationError(
+  answer: AgentV2TerminalAnswer,
+  error: AgentV2ValidationError,
+): AgentV2PendingFollowupAction | null {
+  const expected = typeof error.expected === "string" ? error.expected : ""
+  const category = normalizePendingFollowupCategory(answer.request_interpretation.care_category)
+  const routineLayer = answer.routine_context.routine_layer ?? null
+
+  if (expected === "pending_followup_action.kind=advisor_response") {
+    return parsePendingFollowupAction({
+      kind: "advisor_response",
+      category,
+      routine_layer: routineLayer,
+      routine_action: null,
+      source: "assistant_offer",
+    })
+  }
+
+  if (expected === "pending_followup_action.kind=product_recommendation" && category) {
+    return parsePendingFollowupAction({
+      kind: "product_recommendation",
+      category,
+      routine_layer: null,
+      routine_action: null,
+      source: "assistant_offer",
+    })
+  }
+
+  return null
+}
+
+function normalizePendingFollowupCategory(
+  category: AgentV2CareCategory,
+): AgentV2CareCategory | null {
+  return category === "unknown" || category === "none" ? null : category
+}
+
+function parsePendingFollowupAction(value: unknown): AgentV2PendingFollowupAction | null {
+  const parsed = AgentV2PendingFollowupActionSchema.safeParse(value)
+  return parsed.success ? parsed.data : null
 }
 
 function compactValidationErrorForRepair(error: AgentV2ValidationError): Record<string, unknown> {

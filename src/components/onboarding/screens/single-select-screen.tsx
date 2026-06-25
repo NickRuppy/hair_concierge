@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import type { IconName } from "@/components/ui/icon"
@@ -23,22 +23,45 @@ export function SingleSelectScreen({
   onBack,
 }: SingleSelectScreenProps) {
   const advancingRef = useRef(false)
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [localSelected, setLocalSelected] = useState(selected)
+
+  useEffect(() => {
+    setLocalSelected(selected)
+  }, [selected])
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current)
+    }
+  }, [])
+
+  function cancelPendingAdvance() {
+    if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current)
+    advanceTimerRef.current = null
+    advancingRef.current = false
+  }
 
   function handleSelect(value: string) {
     if (advancingRef.current) return
     advancingRef.current = true
     setLocalSelected(value)
-    setTimeout(() => {
+    advanceTimerRef.current = setTimeout(() => {
       onSelect(value)
+      advanceTimerRef.current = null
       advancingRef.current = false
     }, 400)
+  }
+
+  function handleBack() {
+    cancelPendingAdvance()
+    onBack()
   }
 
   return (
     <div>
       <button
-        onClick={onBack}
+        onClick={handleBack}
         aria-label="Zurück"
         className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors mb-2"
       >
