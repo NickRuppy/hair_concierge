@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
@@ -26,4 +27,16 @@ test("quiz option card centers descriptive rows against the full text block", ()
 
   assert.match(html, /<div class="flex items-center gap-3">/)
   assert.doesNotMatch(html, /\bitems-start\b/)
+})
+
+test("single-select screen syncs prop changes and cancels delayed selection on back", async () => {
+  const source = await readFile(
+    "src/components/onboarding/screens/single-select-screen.tsx",
+    "utf8",
+  )
+
+  assert.match(source, /useEffect\(\(\) => \{\s*setLocalSelected\(selected\)/)
+  assert.match(source, /clearTimeout\(advanceTimerRef\.current\)/)
+  assert.match(source, /function handleBack\(\)/)
+  assert.match(source, /cancelPendingAdvance\(\)/)
 })

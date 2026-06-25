@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { deriveDesiredVolumeFromGoals } from "../src/lib/hair-profile/derived"
 import { PROFILE_FIELD_CONFIG } from "../src/lib/profile/section-config"
 import type { HairProfile } from "../src/lib/types"
 
@@ -69,4 +70,23 @@ test("profile quiz section includes editable hair length after density", () => {
   assert.equal(hairLengthField.label, "Haarlänge")
   assert.deepEqual(hairLengthField.editTarget, { kind: "quiz" })
   assert.equal(hairLengthField.getValue(makeProfile({ hair_length: "long" })), "Lang")
+})
+
+test("profile routine section shows length tip accessory night protection label", () => {
+  const nightProtectionField = PROFILE_FIELD_CONFIG.find(
+    (field) => field.key === "night_protection",
+  )
+
+  assert.ok(nightProtectionField)
+  assert.deepEqual(
+    nightProtectionField.getValue(makeProfile({ night_protection: ["length_tip_accessory"] })),
+    ["Längen-/Spitzenschutz (z. B. HairHOMIE)"],
+  )
+})
+
+test("goals edit derives persisted desired volume from selected goals", () => {
+  assert.equal(deriveDesiredVolumeFromGoals(["volume"], null), "more")
+  assert.equal(deriveDesiredVolumeFromGoals(["less_volume"], null), "less")
+  assert.equal(deriveDesiredVolumeFromGoals(["shine"], null), null)
+  assert.equal(deriveDesiredVolumeFromGoals([], null), null)
 })

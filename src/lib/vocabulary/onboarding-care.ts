@@ -95,7 +95,7 @@ export const NIGHT_PROTECTIONS = [
   "silk_satin_bonnet",
   "loose_tied",
   "pineapple",
-  "tight_hairstyles",
+  "length_tip_accessory",
 ] as const
 export type NightProtection = (typeof NIGHT_PROTECTIONS)[number]
 
@@ -104,7 +104,7 @@ export const NIGHT_PROTECTION_LABELS = {
   silk_satin_bonnet: "Seidenhaube / Bonnet",
   loose_tied: "Locker zusammengebunden",
   pineapple: "Pineapple (hoher lockerer Dutt)",
-  tight_hairstyles: "Enge Frisuren (Zöpfe, straffe Dutts)",
+  length_tip_accessory: "Längen-/Spitzenschutz (z. B. HairHOMIE)",
 } as const satisfies Record<NightProtection, string>
 
 const NIGHT_PROTECTION_CANONICAL_VALUES = new Set<string>(NIGHT_PROTECTIONS)

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 import { formatBillingMembershipStatus } from "../src/lib/billing/display"
 
@@ -28,4 +29,13 @@ test("billing status falls back to the raw status when canceled access is alread
   )
 
   assert.equal(label, "canceled")
+})
+
+test("manage subscription button resets loading after request failures", () => {
+  const source = readFileSync("src/components/profile/manage-subscription-button.tsx", "utf8")
+
+  assert.match(source, /try \{/)
+  assert.match(source, /catch \{/)
+  assert.match(source, /setLoading\(false\)/)
+  assert.match(source, /Konnte Portal nicht öffnen\./)
 })

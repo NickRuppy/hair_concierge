@@ -157,7 +157,16 @@ export async function handleSendMagicLink(
       return { status: 500, body: { error: SEND_ERROR } }
     }
 
-    await consumeCheckoutPasswordMarker(deps, account.userId, parsed.target.activationId)
+    try {
+      await consumeCheckoutPasswordMarker(deps, account.userId, parsed.target.activationId)
+    } catch (markerError) {
+      console.error("[send-magic-link] activation marker cleanup failed:", markerError)
+      ;(deps.captureCheckoutException ?? captureCheckoutException)(markerError, {
+        ...checkoutActivationTargetSentryDetails(parsed.target, "checkout_magic_link_activation"),
+        status: 200,
+        reason: "activation_marker_cleanup_failed_after_otp",
+      })
+    }
 
     return { status: 200, body: { ok: true, email: account.email } }
   } catch (err) {

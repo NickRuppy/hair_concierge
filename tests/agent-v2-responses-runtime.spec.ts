@@ -1572,6 +1572,9 @@ function fakeAgentV2Tools() {
         categories: Array.isArray(input.categories)
           ? (input.categories as Parameters<typeof selectGuidancePackageIds>[0]["categories"])
           : [],
+        topics: Array.isArray(input.topics)
+          ? (input.topics as Parameters<typeof selectGuidancePackageIds>[0]["topics"])
+          : [],
         routine_layer: (typeof input.routine_layer === "string"
           ? input.routine_layer
           : null) as Parameters<typeof selectGuidancePackageIds>[0]["routine_layer"],
@@ -4542,6 +4545,63 @@ test("AgentV2 runtime repairs visible follow-up offers without hidden pending st
   const serializedRepairInput = JSON.stringify(repairInput)
   assert.match(serializedRepairInput, /pending_followup_action_missing/)
   assert.match(serializedRepairInput, /do not repeat or rephrase a confirmable next-step offer/)
+})
+
+test("AgentV2 runtime fills missing advisor follow-up action on otherwise valid product answers", async () => {
+  const products = [{ product_id: "leave-in-1", name: "Leichtes Leave-in" }]
+  const terminal = terminalNamedProductRecommendation("call_3", products, {
+    care_category: "leave_in",
+    requested_product_count: 1,
+    count_policy: "default",
+    evidence_quote: "leichtes Leave-in gegen Frizz",
+  })
+  const terminalArguments = JSON.parse(terminal.arguments)
+  terminalArguments.extracted_constraints.product_categories = ["leave_in"]
+  terminalArguments.payload.user_facing_answer_de =
+    "**Leichtes Leave-in** passt gut zu deinem Profil. Wenn du magst, erkläre ich dir danach kurz die Anwendung."
+  terminalArguments.payload.next_step_offer_de =
+    "Wenn du magst, erkläre ich dir danach kurz die Anwendung."
+  terminalArguments.pending_followup_action = null
+
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["leave_in"],
+    }),
+    functionCall("call_2", "select_products", {
+      ...selectProductsArguments({
+        category: "leave_in",
+        user_request: "Ich brauche ein leichtes Leave-in gegen Frizz.",
+        evidence_quote: "leichtes Leave-in gegen Frizz",
+        requested_product_count: 1,
+      }),
+    }),
+    rawFunctionCall(terminal.call_id, terminal.name, JSON.stringify(terminalArguments)),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ich brauche ein leichtes Leave-in gegen Frizz.",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: {
+      ...fakeAgentV2Tools(),
+      select_products: async () => ({
+        valid_product_ids: products.map((product) => product.product_id),
+        products,
+      }),
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.final_answer.answer_mode, "product_recommendation")
+  assert.deepEqual(result.final_answer.pending_followup_action, {
+    kind: "advisor_response",
+    category: "leave_in",
+    routine_layer: null,
+    routine_action: null,
+    source: "assistant_offer",
+  })
 })
 
 test("AgentV2 runtime sanitizes evidence metadata after one failed repair when answer is otherwise valid", async () => {

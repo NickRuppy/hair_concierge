@@ -127,6 +127,31 @@ test("loadAdvisorGuidance resolves semantic usage input to normalized topic and 
   assert.ok(guidance.proactive_next_step_options.some((item) => /product picks/i.test(item)))
 })
 
+test("loadAdvisorGuidance loads night protection topic guidance", async () => {
+  const guidance = await loadAdvisorGuidance({
+    intent: "problem_context",
+    category: "night_protection",
+    categories: [],
+    profileFocus: ["mechanical_stress", "tangling_detangling"],
+    message: "Meine Haare verknoten nachts stark. Was hilft beim Schlafen?",
+    userContext: createUserContext({
+      profile: createHairProfile({
+        hair_length: "long",
+        night_protection: [],
+      }),
+      suggested_overlays: ["overlay:mechanical_stress"],
+    }),
+    conversationState: null,
+  })
+
+  assert.deepEqual(guidance.loaded_guidance_ids, [
+    "playbook:troubleshoot_hair_issue",
+    "topic:night_protection",
+  ])
+  assert.match(guidance.key_advice_points.join("\n"), /friction|tangling/i)
+  assert.match(guidance.category_implications.join("\n"), /HairHOMIE|length\/tip/i)
+})
+
 test("loadAdvisorGuidance loads explicitly compared categories and comparison playbook", async () => {
   const guidance = await loadAdvisorGuidance({
     intent: "compare_or_decide",

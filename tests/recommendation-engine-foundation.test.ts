@@ -122,6 +122,53 @@ test("low-damage fixture yields low repair need with protective factors", () => 
   assert.ok(damage.activeProtectiveFactors.includes("night_protection_present"))
 })
 
+test("length tip accessory counts as present night protection", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      night_protection: ["length_tip_accessory"],
+    },
+    [],
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+  const damage = buildDamageAssessment(normalized)
+
+  assert.ok(damage.activeProtectiveFactors.includes("night_protection_present"))
+  assert.ok(!damage.activeDamageDrivers.includes("missing_night_protection"))
+})
+
+test("explicit empty night protection is treated as lack of protection", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      night_protection: [],
+    },
+    [],
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+  const damage = buildDamageAssessment(normalized)
+
+  assert.ok(damage.activeDamageDrivers.includes("missing_night_protection"))
+  assert.ok(!damage.activeProtectiveFactors.includes("night_protection_present"))
+})
+
+test("legacy tight hairstyles night protection normalizes to explicit lack of protection", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      night_protection: ["tight_hairstyles"],
+    } as never,
+    [],
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+  const damage = buildDamageAssessment(normalized)
+
+  assert.deepEqual(adapted.input.profile.night_protection, [])
+  assert.deepEqual(normalized.nightProtection, [])
+  assert.ok(damage.activeDamageDrivers.includes("missing_night_protection"))
+  assert.ok(!damage.activeProtectiveFactors.includes("night_protection_present"))
+})
+
 test("unknown night protection is not treated like explicit lack of protection", () => {
   const adapted = adaptRecommendationInputFromPersistence(
     {

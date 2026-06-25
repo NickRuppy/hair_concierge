@@ -131,6 +131,10 @@ export async function observeAgentV2ToolCall<T>(params: {
   input: Record<string, unknown>
   run: () => Promise<T>
 }): Promise<T> {
+  if (!isAgentV2LangfuseObservationEnabled()) {
+    return params.run()
+  }
+
   const observation = startObservation(
     `agent-v2-tool:${params.name}`,
     {

@@ -34,7 +34,7 @@ Bekannte Nutzerjobs:
 
 Bekannte Zusatzlogik:
 - concerns: oily_roots, dry_lengths, dandruff_or_flakes, irritation, frizz. Nur setzen, wenn explizit in der aktuellen Nutzer-Nachricht erkennbar.
-- Topic-IDs: topic:shampoo, topic:conditioner, topic:leave_in, topic:mask, topic:bond_builder, topic:cwc_owc, topic:deep_cleansing, topic:dry_shampoo, topic:peeling, topic:general_haircare, topic:hair_oiling.
+- Topic-IDs: topic:shampoo, topic:conditioner, topic:leave_in, topic:mask, topic:bond_builder, topic:cwc_owc, topic:deep_cleansing, topic:dry_shampoo, topic:peeling, topic:general_haircare, topic:hair_oiling, topic:night_protection.
 - Routine-IDs: routine:curl_definition, routine:straight_low_definition.
 - Overlay-IDs nur anfordern, wenn die Nutzerfrage oder der Profilkontext sie wirklich braucht.`
 

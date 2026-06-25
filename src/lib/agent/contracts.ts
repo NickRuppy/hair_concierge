@@ -49,6 +49,7 @@ export const GUIDANCE_IDS = [
   "topic:dry_shampoo",
   "topic:peeling",
   "topic:general_haircare",
+  "topic:night_protection",
   "topic:hair_oiling",
 ] as const
 

@@ -15,6 +15,7 @@ function readArg(name, fallback = null) {
 const outputPath = readArg("--output", "clawpatch-summary.md")
 const baseRef = readArg("--base", process.env.CI_BASE_REF ?? null)
 const featuresDir = ".clawpatch/features"
+const diffWarnings = []
 
 const slices = [
   {
@@ -51,7 +52,7 @@ const slices = [
     ],
   },
   {
-    name: "Product matching and catalog chunks",
+    name: "Product matching and legacy catalog chunks",
     patterns: [
       "src/lib/product-matching",
       "scripts/ingest-product-chunks.ts",
@@ -110,7 +111,11 @@ function changedFiles() {
         files.add(file)
       }
     }
-  } catch {
+  } catch (error) {
+    diffWarnings.push(
+      `Base diff \`${baseRef}...HEAD\` failed; touched slices may be incomplete. Review tooling should treat this as broad scope.`,
+    )
+    if (error instanceof Error && error.message) diffWarnings.push(error.message)
   }
   for (const gitArgs of [
     ["diff", "--name-only"],
@@ -236,6 +241,9 @@ for (const slice of slices) {
 lines.push("")
 lines.push("## Notes")
 lines.push("")
+for (const warning of diffWarnings) {
+  lines.push(`- Warning: ${warning}`)
+}
 lines.push("- Clawpatch-generated test links are triage hints, not proof of adequate coverage.")
 lines.push("- Keep generated `.clawpatch/` state out of git; upload artifacts from CI instead.")
 lines.push("- Use `docs/codex-review-map.md` for repo-specific review risks and verification commands.")

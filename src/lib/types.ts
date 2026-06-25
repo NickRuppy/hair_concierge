@@ -579,6 +579,7 @@ export type RoutineTopicId =
   | "bond_builder"
   | "brush_tools"
   | "lockenrefresh"
+  | "night_protection"
   | "cwc"
   | "owc"
 

@@ -1,14 +1,15 @@
 /**
- * Product Matrix → content_chunks Ingestion
+ * Legacy Product Matrix → content_chunks Ingestion
  *
  * Reads the JSON files from data/products-from-excel/, groups products by
  * category × thickness × concern, and creates rich text chunks with
  * embeddings in the content_chunks table (source_type = 'product_list').
  *
- * This makes product data discoverable via RAG vector search alongside
- * the existing product table (which is used for structured matching).
+ * This workflow is retired for production chat. Current AgentV2 chat uses
+ * structured products and category specs instead of product_list chunks.
  *
- * Usage: npx tsx scripts/ingest-product-chunks.ts [--dry-run]
+ * Usage:
+ *   ALLOW_LEGACY_PRODUCT_LIST_CHUNKS=1 npx tsx scripts/ingest-product-chunks.ts [--dry-run]
  */
 
 import { createClient } from "@supabase/supabase-js"
@@ -33,6 +34,7 @@ if (fs.existsSync(envPath)) {
 
 const EMBEDDING_MODEL = "text-embedding-3-large"
 const EMBEDDING_BATCH_SIZE = 10
+const LEGACY_PRODUCT_LIST_CHUNKS_FLAG = "ALLOW_LEGACY_PRODUCT_LIST_CHUNKS"
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -75,9 +77,16 @@ async function main() {
   const dryRun = process.argv.includes("--dry-run")
 
   console.log("=".repeat(60))
-  console.log("Product Matrix → content_chunks Ingestion")
+  console.log("Legacy Product Matrix → content_chunks Ingestion")
   if (dryRun) console.log("(DRY RUN)")
   console.log("=".repeat(60))
+
+  if (process.env[LEGACY_PRODUCT_LIST_CHUNKS_FLAG] !== "1") {
+    console.error(
+      `Error: product_list content chunks are retired. Set ${LEGACY_PRODUCT_LIST_CHUNKS_FLAG}=1 only for an intentional legacy rollback/regeneration run.`,
+    )
+    process.exit(1)
+  }
 
   // Read all JSON files from data/products-from-excel/
   const excelDir = path.join(process.cwd(), "data", "products-from-excel")

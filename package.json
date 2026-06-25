@@ -51,7 +51,7 @@
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
     "langfuse:seed-datasets": "tsx scripts/langfuse/seed-datasets.ts",
     "langfuse:setup-review-queues": "tsx scripts/langfuse/setup-review-queues.ts",
-    "prepare": "husky"
+    "prepare": "node -e \"if (!process.env.npm_config_omit?.split(',').includes('dev')) process.exit(1)\" || husky"
   },
   "dependencies": {
     "@customerio/cdp-analytics-browser": "^0.4.16",

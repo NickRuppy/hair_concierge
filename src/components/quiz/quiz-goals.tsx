@@ -17,14 +17,13 @@ function toggleGoal(current: string[], goal: string): string[] {
   if (current.includes(goal)) {
     return current.filter((g) => g !== goal)
   }
-  if (current.length >= MAX_GOALS) {
-    return current
-  }
-  let next = [...current]
+  let next = current
   if (goal === "volume") next = next.filter((g) => g !== "less_volume")
   if (goal === "less_volume") next = next.filter((g) => g !== "volume")
-  next.push(goal)
-  return next
+  if (next.length >= MAX_GOALS) {
+    return current
+  }
+  return [...next, goal]
 }
 
 export function QuizGoals() {

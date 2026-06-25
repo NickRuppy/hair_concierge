@@ -17,26 +17,35 @@ export function ManageSubscriptionButton({
 
   async function onClick() {
     setLoading(true)
-    const res = await fetch(
-      provider === "paypal" ? "/api/paypal/cancel-subscription" : "/api/stripe/portal-session",
-      { method: "POST" },
-    )
-    if (!res.ok) {
+    try {
+      const res = await fetch(
+        provider === "paypal" ? "/api/paypal/cancel-subscription" : "/api/stripe/portal-session",
+        { method: "POST" },
+      )
+      if (!res.ok) {
+        setLoading(false)
+        alert(
+          provider === "paypal"
+            ? "Kündigung konnte nicht gespeichert werden."
+            : "Konnte Portal nicht öffnen.",
+        )
+        return
+      }
+      if (provider === "paypal") {
+        setCancelled(true)
+        setLoading(false)
+        return
+      }
+      const { url } = await res.json()
+      window.location.href = url
+    } catch {
       setLoading(false)
       alert(
         provider === "paypal"
           ? "Kündigung konnte nicht gespeichert werden."
           : "Konnte Portal nicht öffnen.",
       )
-      return
     }
-    if (provider === "paypal") {
-      setCancelled(true)
-      setLoading(false)
-      return
-    }
-    const { url } = await res.json()
-    window.location.href = url
   }
 
   if (provider === "paypal") {

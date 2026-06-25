@@ -61,7 +61,7 @@ export function hasFullCiMarker({ prTitle = "", prBody = "" } = {}) {
 }
 
 export function classifyCiScope(files, prContext = {}) {
-  const fullCi = hasFullCiMarker(prContext)
+  const fullCi = hasFullCiMarker(prContext) || prContext.forceFullCi === true
   const chatFiles = files.filter((file) => !CHAT_EXCLUDE.includes(file))
   return {
     chat_eval: fullCi || chatFiles.some((file) => matches(file, CHAT_PREFIXES, CHAT_EXACT)),
