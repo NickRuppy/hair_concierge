@@ -545,6 +545,16 @@ test("loadGuidance loads every callable v1 guidance kind", async () => {
   }
 })
 
+test("chemical treatment overlay includes perm created-shape maintenance guardrails", async () => {
+  const result = await loadGuidance(["overlay:chemical_or_color_treated"])
+  const content = result.items[0].content
+
+  assert.match(content, /Perm \/ created-shape maintenance/i)
+  assert.match(content, /chemical treatment/i)
+  assert.match(content, /not natural curl/i)
+  assert.match(content, /do not auto-select curl-definition/i)
+})
+
 test("overlay guidance uses normalized advisor sections", async () => {
   const overlayIds = GUIDANCE_IDS.filter((id): id is GuidanceId => id.startsWith("overlay:"))
   const result = await loadGuidance(overlayIds)

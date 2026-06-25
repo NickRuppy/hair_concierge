@@ -186,6 +186,27 @@ test("straight natural texture plus perm supports explicit curl definition goal 
   assert.equal(straightenedCareNeeds.definitionSupportNeed, "none")
 })
 
+test("perm alone creates mild maintenance needs without curl definition", () => {
+  const normalized = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        hair_texture: "straight",
+        chemical_treatment: ["permed"],
+        goals: [],
+      },
+      [],
+    ).input,
+  )
+  const damage = buildDamageAssessment(normalized)
+  const careNeeds = buildCareNeedAssessment(normalized, damage)
+
+  assert.equal(careNeeds.hydrationNeed, "low")
+  assert.equal(careNeeds.smoothingNeed, "low")
+  assert.equal(careNeeds.detanglingNeed, "none")
+  assert.equal(careNeeds.definitionSupportNeed, "none")
+})
+
 test("severe-damage fixture yields severe structural load and bond builder recommendation", () => {
   const adapted = adaptRecommendationInputFromPersistence(
     SEVERE_DAMAGE_PROFILE,

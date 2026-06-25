@@ -26,6 +26,7 @@ Chemical treatment logic:
 - `permed` and `chemically_straightened` count as active chemical treatments.
 - Both count as shape-changing treatments.
 - Both contribute conservative chemical stress/damage weight.
+- `permed` also creates a mild maintenance context for moisture and smoothing support, reflecting typical perm care without turning it into a curl-definition goal.
 
 Curl-definition logic:
 
@@ -54,6 +55,7 @@ Recommendation logic:
 
 - Extend chemical treatment helpers for active, shape-changing, and perm-specific checks.
 - Apply chemical stress conservatively for the new treatments.
+- Add a lite perm-maintenance modifier: low moisture/smoothing support for `permed` even when curl definition is not an explicit goal.
 - Allow perm + explicit curl-definition goal to reach definition-support and leave-in routing.
 - Keep chemical straightening out of curl-definition unlocks.
 
@@ -95,6 +97,7 @@ External evidence supports the narrow v1 behavior:
 - A perm is a chemical shape treatment and should contribute to chemical-stress/damage awareness.
 - Perm maintenance commonly overlaps with gentle handling, conditioning/moisture support, reduced heat stress, and curl/wave definition when the user wants to preserve or define the created shape.
 - This supports routing `permed` + explicit `curl_definition` into definition support without treating `permed` as natural curly hair.
+- The implemented lite modifier uses that evidence only for gentle moisture/smoothing support; it does not auto-select or infer `curl_definition`.
 
 Terminology research suggests `Dauerwelle` is the clearer umbrella label. `Volumenwelle` is common in DACH salon language, but appears more like a softer or volume-oriented variant than a separate canonical category. The implemented label therefore uses `Dauerwelle` while the underlying parser still recognizes `Volumenwelle` mentions as perm-related context.
 
@@ -102,6 +105,6 @@ Terminology research suggests `Dauerwelle` is the clearer umbrella label. `Volum
 
 1. The option labels stay `Dauerwelle` and `Chemisch geglättet`.
 2. The helper copy stays: `Gemeint ist alles, was Farbe oder Form länger verändert hat: Färben/Tönen, Aufhellen, Dauerwelle oder Glättung. Deine natürliche Struktur hast du schon angegeben.`
-3. `permed` only unlocks curl-definition support when `curl_definition` is an explicit goal.
+3. `permed` creates mild moisture/smoothing maintenance support but only unlocks curl-definition support when `curl_definition` is an explicit goal.
 4. We defer a separate `treated_shape` field until there is stronger product need.
 5. We intentionally omit a generic `Sonstige chemische Behandlung` option for now.

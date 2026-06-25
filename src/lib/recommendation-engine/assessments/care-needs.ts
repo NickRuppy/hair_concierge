@@ -43,6 +43,7 @@ export function buildCareNeedAssessment(
   if (profile.concerns.includes("dryness")) hydrationScore += 2
   if (profile.goals.includes("moisture")) hydrationScore += 2
   if (hasBleachTreatment(profile.chemicalTreatment)) hydrationScore += 1
+  if (hasPermTreatment(profile.chemicalTreatment)) hydrationScore += 1
 
   if (profile.concerns.includes("frizz")) smoothingScore += 2
   if (profile.goals.includes("less_frizz")) smoothingScore += 2
@@ -50,6 +51,7 @@ export function buildCareNeedAssessment(
     smoothingScore += 1
   }
   if (profile.cuticleCondition === "rough") smoothingScore += 1
+  if (hasPermTreatment(profile.chemicalTreatment)) smoothingScore += 1
 
   if (profile.concerns.includes("frizz")) detanglingScore += 1
   if (profile.concerns.includes("tangling")) detanglingScore += 2

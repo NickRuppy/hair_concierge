@@ -227,6 +227,24 @@ test("chemical straightening does not unlock curl-definition leave-in routing", 
   assert.notEqual(decision.targetProfile?.stylingPrepNeed, "definition")
 })
 
+test("perm maintenance can route leave-in to gentle support without curl definition", () => {
+  const { normalized, damage, careNeeds, plan } = buildEngineState({
+    ...LOW_DAMAGE_PROFILE,
+    hair_texture: "straight",
+    chemical_treatment: ["permed"],
+    goals: [],
+  })
+  const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
+
+  assert.equal(careNeeds.definitionSupportNeed, "none")
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.targetProfile?.needBucket, "detangle_smooth")
+  assert.notEqual(decision.targetProfile?.needBucket, "curl_definition")
+  assert.notEqual(decision.targetProfile?.stylingPrepNeed, "definition")
+  assert.ok(decision.targetProfile?.careBenefits.includes("detangle_smooth"))
+  assert.ok(!decision.targetProfile?.careBenefits.includes("curl_definition"))
+})
+
 test("explicit leave-in heat requests build a high heat target even when routine plan is quiet", () => {
   const heatProfile = {
     ...LOW_DAMAGE_PROFILE,
