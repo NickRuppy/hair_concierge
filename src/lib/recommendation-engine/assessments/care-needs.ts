@@ -3,6 +3,7 @@ import type {
   DamageAssessment,
   NormalizedProfile,
 } from "@/lib/recommendation-engine/types"
+import { hasBleachTreatment, hasPermTreatment } from "@/lib/profile/chemical-treatment"
 import { maxDamageLevel, scoreToDamageLevel } from "@/lib/recommendation-engine/utils/levels"
 
 function deriveVolumeDirection(
@@ -11,6 +12,18 @@ function deriveVolumeDirection(
   if (goals.includes("volume")) return "volume"
   if (goals.includes("less_volume")) return "less_volume"
   return "neutral"
+}
+
+function hasNaturalDefinitionTexture(profile: NormalizedProfile): boolean {
+  return (
+    profile.hairTexture === "wavy" ||
+    profile.hairTexture === "curly" ||
+    profile.hairTexture === "coily"
+  )
+}
+
+function hasExplicitPermDefinitionGoal(profile: NormalizedProfile): boolean {
+  return profile.goals.includes("curl_definition") && hasPermTreatment(profile.chemicalTreatment)
 }
 
 export function buildCareNeedAssessment(
@@ -29,7 +42,8 @@ export function buildCareNeedAssessment(
   }
   if (profile.concerns.includes("dryness")) hydrationScore += 2
   if (profile.goals.includes("moisture")) hydrationScore += 2
-  if (profile.chemicalTreatment.includes("bleached")) hydrationScore += 1
+  if (hasBleachTreatment(profile.chemicalTreatment)) hydrationScore += 1
+  if (hasPermTreatment(profile.chemicalTreatment)) hydrationScore += 1
 
   if (profile.concerns.includes("frizz")) smoothingScore += 2
   if (profile.goals.includes("less_frizz")) smoothingScore += 2
@@ -37,33 +51,24 @@ export function buildCareNeedAssessment(
     smoothingScore += 1
   }
   if (profile.cuticleCondition === "rough") smoothingScore += 1
+  if (hasPermTreatment(profile.chemicalTreatment)) smoothingScore += 1
 
   if (profile.concerns.includes("frizz")) detanglingScore += 1
   if (profile.concerns.includes("tangling")) detanglingScore += 2
   if (damage.repairPriority === "high") detanglingScore += 2
   if (profile.cuticleCondition === "slightly_rough") detanglingScore += 1
   if (profile.cuticleCondition === "rough") detanglingScore += 2
-  if (
-    profile.hairTexture === "wavy" ||
-    profile.hairTexture === "curly" ||
-    profile.hairTexture === "coily"
-  ) {
+  if (hasNaturalDefinitionTexture(profile)) {
     detanglingScore += 1
   }
 
   if (
     profile.goals.includes("curl_definition") &&
-    (profile.hairTexture === "wavy" ||
-      profile.hairTexture === "curly" ||
-      profile.hairTexture === "coily")
+    (hasNaturalDefinitionTexture(profile) || hasExplicitPermDefinitionGoal(profile))
   ) {
     definitionScore += 3
   }
-  if (
-    profile.hairTexture === "wavy" ||
-    profile.hairTexture === "curly" ||
-    profile.hairTexture === "coily"
-  ) {
+  if (hasNaturalDefinitionTexture(profile)) {
     definitionScore += 1
   }
 

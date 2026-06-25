@@ -177,10 +177,10 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
       const naturCard = page.locator(".quiz-card", { hasText: "Naturhaar" })
       const coloredCard = page.locator(".quiz-card", {
-        hasText: "Gefärbt / Getönt",
+        hasText: "Gefärbt / getönt",
       })
       const bleachedCard = page.locator(".quiz-card", {
-        hasText: "Blondiert / Aufgehellt",
+        hasText: "Blondiert / aufgehellt",
       })
 
       await naturCard.click()
@@ -507,7 +507,7 @@ test.describe.serial("Quiz to onboarding E2E", () => {
 
       const naturCard = page.locator(".quiz-card", { hasText: "Naturhaar" })
       const coloredCard = page.locator(".quiz-card", {
-        hasText: "Gefärbt / Getönt",
+        hasText: "Gefärbt / getönt",
       })
 
       await coloredCard.click()

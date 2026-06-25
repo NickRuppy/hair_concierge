@@ -3,6 +3,7 @@ import type {
   HeatExposureTier,
   NormalizedProfile,
 } from "@/lib/recommendation-engine/types"
+import { hasColorOrBleachTreatment } from "@/lib/profile/chemical-treatment"
 import {
   compareProductFrequencies,
   type ProductFrequency,
@@ -74,10 +75,7 @@ export function hasDeepCleansingVulnerability(
     reasonCodes.push("high_damage")
   }
 
-  if (
-    profile.chemicalTreatment.includes("colored") ||
-    profile.chemicalTreatment.includes("bleached")
-  ) {
+  if (hasColorOrBleachTreatment(profile.chemicalTreatment)) {
     reasonCodes.push("color_or_bleach")
   }
 

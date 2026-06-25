@@ -1327,6 +1327,26 @@ test.describe("Routine planner", () => {
       ).toBe(true)
     })
 
+    test("bleached plus colored counts as severe bond-builder damage context", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          chemical_treatment: ["bleached", "colored"],
+          cuticle_condition: "smooth",
+          concerns: [],
+          protein_moisture_balance: "stretches_bounces",
+        }),
+        "Welche Routine passt zu meinem blondierten und gefärbten Haar?",
+      )
+
+      const bondSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+
+      expect(
+        bondSlot?.rationale.some((line) => line.includes("Kombination aus K18 und Olaplex")),
+      ).toBe(true)
+    })
+
     test("moderate + chemical treatment leans Olaplex", () => {
       const plan = buildRoutinePlan(
         createProfile({
@@ -1587,6 +1607,25 @@ test.describe("Routine planner", () => {
           "occasional-bond-builder",
         ]),
       )
+    })
+
+    test("bleached plus colored and hair damage still select care-product-first", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          concerns: ["hair_damage"],
+          cuticle_condition: "smooth",
+          chemical_treatment: ["bleached", "colored"],
+          protein_moisture_balance: "stretches_bounces",
+          current_routine_products: ["shampoo", "conditioner"],
+        }),
+        "Meine Haare sind blondiert, gefärbt und fühlen sich geschädigt an.",
+      )
+
+      expect(plan.priority_lever).toMatchObject({
+        id: "care-product-first",
+        source: "care_risk",
+        slot_id: "base-conditioner",
+      })
     })
 
     test("severe active damage still selects care-product-first when reset signal is weak oil usage", () => {

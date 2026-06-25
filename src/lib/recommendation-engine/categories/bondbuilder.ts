@@ -25,7 +25,12 @@ function deriveLaneHints(damage: DamageAssessment): {
   reasonCodes: string[]
 } {
   const drivers = damage.activeDamageDrivers
-  const chemicalCrosslinkLane = includesAny(drivers, ["bleached_hair", "colored_hair"])
+  const chemicalCrosslinkLane = includesAny(drivers, [
+    "bleached_hair",
+    "colored_hair",
+    "permed_hair",
+    "chemically_straightened_hair",
+  ])
   const peptideChainLane = includesAny(drivers, [
     "brittle_snap_pattern",
     "protein_direction_weakness",

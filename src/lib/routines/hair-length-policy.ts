@@ -9,6 +9,7 @@ import {
   getLengthCareIntensity,
   suppressLengthOnlyCare,
 } from "@/lib/recommendation-engine/hair-length"
+import { hasActiveChemicalTreatment } from "@/lib/profile/chemical-treatment"
 
 export function hasHeatExposureNeed(context: RoutineContext): boolean {
   return (
@@ -34,7 +35,6 @@ function isNeedDrivenCareSlot(
 ): boolean {
   const concerns = new Set(context.concerns)
   const goals = new Set(context.goals)
-  const treatments = new Set(context.chemical_treatment)
   const explicitTopicIds = new Set(context.explicit_topic_ids)
 
   if (slot.topic_ids.some((topicId) => explicitTopicIds.has(topicId))) return true
@@ -43,7 +43,7 @@ function isNeedDrivenCareSlot(
   if (hasHeatExposureNeed(context)) return true
   if (concerns.has("dryness") || concerns.has("frizz") || concerns.has("tangling")) return true
   if (goals.has("moisture") || goals.has("less_frizz") || goals.has("curl_definition")) return true
-  if (treatments.has("colored") || treatments.has("bleached")) return true
+  if (hasActiveChemicalTreatment(context.chemical_treatment)) return true
 
   return slot.action === "avoid"
 }

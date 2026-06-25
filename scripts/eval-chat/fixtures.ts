@@ -329,7 +329,7 @@ export const SCENARIOS: EvalScenario[] = [
         },
         content: {
           must_be_german: true,
-          required_keywords: ["Anwendung"],
+          required_keywords: ["Anwendung", "anwende"],
           forbidden_keywords: ["handtuchtrockene", "Formulier es bitte", "konkreter"],
         },
         judge: {

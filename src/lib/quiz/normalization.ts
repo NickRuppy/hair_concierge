@@ -20,7 +20,13 @@ export const QUIZ_CONCERN_VALUES = [
   "frizz",
   "tangling",
 ] as const
-export const QUIZ_TREATMENT_VALUES = ["natur", "gefaerbt", "blondiert"] as const
+export const QUIZ_TREATMENT_VALUES = [
+  "natur",
+  "gefaerbt",
+  "blondiert",
+  "dauerwelle",
+  "chemisch_geglaettet",
+] as const
 
 type StoredQuizAnswers = Partial<QuizAnswers> & {
   goals?: string[]

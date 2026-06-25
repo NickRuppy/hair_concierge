@@ -12,6 +12,7 @@ test("chat eval fixtures include a CI-smoke short-confirmation follow-up scenari
   assert.match(scenario.turns[0]?.message ?? "", /Leave-in gegen Frizz/)
   assert.equal(scenario.turns[1]?.message, "Ja bitte")
   assert.equal(scenario.turns[0]?.metadata?.product_count_min, 1)
+  assert.ok(scenario.turns[0]?.content?.required_keywords?.includes("anwende"))
   assert.ok(
     scenario.turns[1]?.content?.forbidden_keywords?.some((keyword) =>
       keyword.includes("nicht sicher"),

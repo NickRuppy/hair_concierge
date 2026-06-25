@@ -173,6 +173,7 @@ export function QuizScalpQuestion() {
       <div className="flex items-center gap-3 mb-4">
         <button
           onClick={handleBack}
+          aria-label="Zurück"
           className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />

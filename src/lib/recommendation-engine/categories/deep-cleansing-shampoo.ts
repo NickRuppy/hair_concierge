@@ -9,6 +9,7 @@ import type {
   ResetFocus,
   ResetIntensity,
 } from "@/lib/recommendation-engine/types"
+import { hasColorOrBleachTreatment } from "@/lib/profile/chemical-treatment"
 import { deriveScalpTypeFocus, getPlannedStep } from "@/lib/recommendation-engine/categories/shared"
 
 export interface DeepCleansingShampooFitSpec {
@@ -37,9 +38,7 @@ function deriveTargetIntensity(
 }
 
 function isColorTreated(profile: NormalizedProfile): boolean {
-  return (
-    profile.chemicalTreatment.includes("colored") || profile.chemicalTreatment.includes("bleached")
-  )
+  return hasColorOrBleachTreatment(profile.chemicalTreatment)
 }
 
 export function buildDeepCleansingShampooCategoryDecision(

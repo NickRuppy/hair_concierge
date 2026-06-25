@@ -130,6 +130,25 @@ test("AgentV2 parses current-turn context signals from direct tool input", () =>
   })
 })
 
+test("AgentV2 accepts shape-changing chemical treatment profile augments", () => {
+  for (const treatment of ["permed", "chemically_straightened"]) {
+    assert.deepEqual(
+      parseCurrentCareFactToolInput({
+        kind: "profile_augment",
+        field: "chemicalTreatment",
+        value: treatment,
+        evidenceQuote: treatment,
+      }),
+      {
+        kind: "profile_augment",
+        field: "chemicalTreatment",
+        value: treatment,
+        evidenceQuote: treatment,
+      },
+    )
+  }
+})
+
 test("AgentV2 rejects invalid current-care profile values", () => {
   assert.throws(
     () =>

@@ -7,6 +7,7 @@ Advisor interpretation:
 - Treat chemical processing as a fragility and porosity context, with bleach usually the stronger damage signal.
 - Separate three user jobs: color maintenance, damage stabilization, and dryness/manageability support.
 - Product color-protection claims must come from supported product data; do not infer them from names, descriptions, or generic category fit.
+- Perm / created-shape maintenance: Treat a perm as chemical treatment plus a created wave/curl shape. It can support moisture, gentle handling, frizz control, lower heat stress, and optional definition when the user wants to preserve the formed shape; it is not natural curl and does not auto-select curl-definition as the user's goal.
 - For scalp burning, rash, swelling, or strong irritation after a chemical service, keep advice conservative and point away from cosmetic troubleshooting.
 
 Category implications:
@@ -20,11 +21,13 @@ Category implications:
 Routine implications:
 - Reduce compounding stress: heat, rough detangling, tight styling, and too-frequent chemical services can outrun product benefits.
 - When color maintenance is the user's main goal, mention that product data determines whether color-safe guidance is supported.
+- When perm maintenance is relevant, frame wave/curl support as preserving or defining the chemically created shape, not as changing the user's natural texture.
 - When damage is the main goal, route toward repair/protection and gentle handling rather than color claims.
 
 Avoid:
 - Do not claim a product protects color unless the selected-product data says so.
 - Do not promise reversal of bleach/color/chemical damage.
+- Do not describe permed hair as naturally curly, and do not auto-select curl-definition from perm history alone.
 - Do not make sulfate-free or any single ingredient rule a hard requirement from this overlay alone.
 - Do not ignore scalp symptoms after dye, bleach, relaxer, perm, or smoothing services.
 

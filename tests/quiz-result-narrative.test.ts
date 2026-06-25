@@ -232,6 +232,40 @@ test("severe structural signals can mention bondbuilder support in the main leve
   ])
 })
 
+test("chemical straightening with roughness routes to stability without changing natural texture", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "wavy",
+    thickness: "normal",
+    fingertest: "rau",
+    pulltest: "stretches_bounces",
+    treatment: ["chemisch_geglaettet"],
+    concerns: ["hair_damage"],
+    goals: ["healthier_hair"],
+  })
+
+  assert.equal(narrative.rows[0]?.scope, "HAAR")
+  assert.equal(narrative.rows[0]?.before, "strapazierte Längen")
+  assert.equal(narrative.rows[0]?.after, "spürbar fester")
+  assert.equal(narrative.rows[2]?.scope, "HAAR")
+  assert.equal(narrative.needs.mainLeverTitle, "Mehr Stabilität in die Längen bringen")
+  assert.match(narrative.needs.mainLeverProducts, /Bondbuilder/i)
+})
+
+test("dauerwelle alone does not hard-route to the bondbuilder stability lever", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "wavy",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    treatment: ["dauerwelle"],
+    concerns: [],
+    goals: ["curl_definition"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Wellen und Locken besser definieren")
+  assert.doesNotMatch(narrative.needs.mainLeverProducts, /Bondbuilder/i)
+})
+
 test("surface branch explains the main lever with multiple fitting categories", () => {
   const narrative = buildQuizResultNarrative({
     structure: "wavy",
@@ -289,6 +323,42 @@ test("split-ends branch explains the main lever with tip-focused product guidanc
     { name: "Leichtes Haaröl", description: "Schützt und glättet die Spitzen." },
     { name: "Leave-in", description: "Hält die Spitzen geschmeidig." },
   ])
+})
+
+test("chemical stress tiers calibrate split-end narrative severity", () => {
+  const untreated = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "fine",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    concerns: ["split_ends"],
+    goals: ["less_split_ends"],
+  })
+  const colored = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "fine",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    treatment: ["gefaerbt"],
+    concerns: ["split_ends"],
+    goals: ["less_split_ends"],
+  })
+  const bleached = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "fine",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    treatment: ["blondiert"],
+    concerns: ["split_ends"],
+    goals: ["less_split_ends"],
+  })
+
+  assert.equal(untreated.primaryConcern, "split_ends")
+  assert.equal(colored.primaryConcern, "split_ends")
+  assert.equal(bleached.primaryConcern, "split_ends")
+  assert.equal(untreated.rows[1]?.currentPosition, 34)
+  assert.equal(colored.rows[1]?.currentPosition, 50)
+  assert.equal(bleached.rows[1]?.currentPosition, 66)
 })
 
 test("fallback branch still offers a concise but fuller product bridge", () => {
@@ -502,6 +572,36 @@ test("curl-definition branch fires when primaryGoal=curl_definition and structur
       description: "Hält die Locken weich und beweglich.",
     },
   ])
+})
+
+test("curl-definition branch supports straight natural texture when a perm is selected", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    treatment: ["dauerwelle"],
+    concerns: [],
+    goals: ["curl_definition"],
+  })
+
+  assert.equal(narrative.needs.mainLeverTitle, "Wellen und Locken besser definieren")
+  assert.match(narrative.needs.mainLeverProducts, /Curl-Leave-in/i)
+})
+
+test("chemical straightening does not unlock curl-definition narrative for straight natural texture", () => {
+  const narrative = buildQuizResultNarrative({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    treatment: ["chemisch_geglaettet"],
+    concerns: [],
+    goals: ["curl_definition"],
+  })
+
+  assert.notEqual(narrative.needs.mainLeverTitle, "Wellen und Locken besser definieren")
+  assert.doesNotMatch(narrative.needs.mainLeverProducts, /Curl-Leave-in/i)
 })
 
 test("shine branch fires when primaryGoal=shine and no earlier branch matches", () => {

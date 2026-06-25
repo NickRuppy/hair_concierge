@@ -21,21 +21,32 @@ export default function QuizLayout({ children }: { children: React.ReactNode }) 
     if (previousStepRef.current === step) return
     previousStepRef.current = step
 
-    const frame = window.requestAnimationFrame(() => {
+    const resetStepScroll = () => {
       const container = step === 11 ? resultScrollRef.current : standardScrollRef.current
       container?.scrollTo({ top: 0 })
       window.scrollTo({ top: 0 })
+      return container
+    }
 
-      const heading = container?.querySelector<HTMLElement>("h1, h2")
-      if (heading) {
-        if (!heading.hasAttribute("tabindex")) {
-          heading.setAttribute("tabindex", "-1")
+    let secondFrame = 0
+    const firstFrame = window.requestAnimationFrame(() => {
+      resetStepScroll()
+      secondFrame = window.requestAnimationFrame(() => {
+        const container = resetStepScroll()
+        const heading = container?.querySelector<HTMLElement>("h1, h2")
+        if (heading) {
+          if (!heading.hasAttribute("tabindex")) {
+            heading.setAttribute("tabindex", "-1")
+          }
+          heading.focus({ preventScroll: true })
         }
-        heading.focus({ preventScroll: true })
-      }
+      })
     })
 
-    return () => window.cancelAnimationFrame(frame)
+    return () => {
+      window.cancelAnimationFrame(firstFrame)
+      window.cancelAnimationFrame(secondFrame)
+    }
   }, [step])
 
   // Results page (step 11): full-width centered layout, no brand panel
