@@ -178,7 +178,7 @@ export interface HairProfile {
   towel_material: TowelMaterial | null
   towel_technique: TowelTechnique | null
   drying_method: DryingMethod | null
-  brush_type: BrushType | null
+  brush_type: BrushType[] | null
   night_protection: NightProtection[] | null
   uses_heat_protection: boolean
   additional_notes: string | null

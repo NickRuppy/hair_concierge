@@ -46,13 +46,19 @@ test("AgentV2 exposes set_current_care_context with current-turn fact schema", (
       evidenceQuote: "I use a flat iron twice a week",
     }),
     CurrentCareFactInputSchema.parse({
+      kind: "profile_override",
+      field: "brushType",
+      value: ["fingers"],
+      evidenceQuote: "Actually I only finger-detangle",
+    }),
+    CurrentCareFactInputSchema.parse({
       kind: "context_signal",
       code: "flat_fast",
       evidenceQuote: "my hair gets flat fast",
     }),
   ]
 
-  assert.equal(accepted.length, 6)
+  assert.equal(accepted.length, 7)
 })
 
 test("AgentV2 model-facing current-care tool schema uses direct root fields", () => {
@@ -147,6 +153,112 @@ test("AgentV2 accepts shape-changing chemical treatment profile augments", () =>
       },
     )
   }
+})
+
+test("AgentV2 parses brush type as a current-turn profile override array", () => {
+  assert.deepEqual(
+    parseCurrentCareFactToolInput({
+      kind: "profile_override",
+      field: "brushType",
+      value: "fingers",
+      evidenceQuote: "Actually I only finger-detangle",
+    }),
+    {
+      kind: "profile_override",
+      field: "brushType",
+      value: ["fingers"],
+      evidenceQuote: "Actually I only finger-detangle",
+    },
+  )
+
+  assert.deepEqual(
+    parseCurrentCareFactToolInput({
+      kind: "profile_override",
+      field: "brushType",
+      value: ["paddle", "round", "paddle"],
+      evidenceQuote: "I use a paddle brush and a round brush",
+    }),
+    {
+      kind: "profile_override",
+      field: "brushType",
+      value: ["paddle", "round"],
+      evidenceQuote: "I use a paddle brush and a round brush",
+    },
+  )
+
+  assert.deepEqual(
+    parseCurrentCareFactToolInput({
+      kind: "profile_override",
+      field: "brushType",
+      value: "none_regular",
+      evidenceQuote: "I do not use a brush regularly",
+    }),
+    {
+      kind: "profile_override",
+      field: "brushType",
+      value: [],
+      evidenceQuote: "I do not use a brush regularly",
+    },
+  )
+
+  assert.deepEqual(
+    parseCurrentCareFactToolInput({
+      kind: "profile_override",
+      field: "brushType",
+      value: ["none_regular", "none_regular"],
+      evidenceQuote: "I do not use a brush regularly",
+    }),
+    {
+      kind: "profile_override",
+      field: "brushType",
+      value: [],
+      evidenceQuote: "I do not use a brush regularly",
+    },
+  )
+
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        kind: "profile_override",
+        field: "brushType",
+        value: true,
+        evidenceQuote: "I brush my hair",
+      }),
+    /Invalid current care fact tool input/,
+  )
+
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        kind: "profile_override",
+        field: "brushType",
+        value: "unknown",
+        evidenceQuote: "I use a mystery brush",
+      }),
+    /Invalid current care fact tool input/,
+  )
+
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        kind: "profile_override",
+        field: "brushType",
+        value: ["unknown"],
+        evidenceQuote: "I use a mystery brush",
+      }),
+    /Invalid current care fact tool input/,
+  )
+
+  assert.throws(
+    () =>
+      parseCurrentCareFactToolInput({
+        kind: "profile_override",
+        field: "brushType",
+        value: ["none_regular", "paddle"],
+        evidenceQuote: "I do not use a brush but also a paddle brush",
+      }),
+    /Invalid current care fact tool input/,
+  )
 })
 
 test("AgentV2 rejects invalid current-care profile values", () => {

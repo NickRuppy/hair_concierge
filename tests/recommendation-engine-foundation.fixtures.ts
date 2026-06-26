@@ -53,7 +53,7 @@ export const LOW_DAMAGE_PROFILE = buildProfile({
   styling_tools: [],
   towel_technique: "gentle_press",
   drying_method: "air_dry",
-  brush_type: "wide_tooth_comb",
+  brush_type: ["wide_tooth_comb"],
   night_protection: ["silk_satin_pillow"],
   uses_heat_protection: false,
 })
@@ -75,7 +75,7 @@ export const SEVERE_DAMAGE_PROFILE = buildProfile({
   towel_material: "frottee",
   towel_technique: "rough_rubbing",
   drying_method: "blow_dry",
-  brush_type: "paddle",
+  brush_type: ["paddle"],
   night_protection: [],
   uses_heat_protection: false,
 })

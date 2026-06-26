@@ -241,6 +241,68 @@ test("current-turn profile override replaces a scalar normalized field", () => {
   ])
 })
 
+test("current-turn brush type override replaces saved brush tools for this turn", () => {
+  const rawInput = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      brush_type: ["paddle"],
+    },
+    [],
+  ).input
+
+  const context = buildEffectiveCareContext(rawInput, [
+    {
+      kind: "profile_override",
+      field: "brushType",
+      value: ["fingers"],
+      evidenceQuote: "Ich entwirre eigentlich nur mit den Fingern",
+      source: "current_turn",
+    },
+  ])
+
+  assert.deepEqual(context.normalized.brushType, ["fingers"])
+  assert.deepEqual(context.conflicts, [
+    {
+      fieldPath: "profile.brushType",
+      savedValue: ["paddle"],
+      currentTurnValue: ["fingers"],
+      source: "current_turn",
+      evidenceQuote: "Ich entwirre eigentlich nur mit den Fingern",
+    },
+  ])
+})
+
+test("current-turn brush type override can clear saved brush tools for this turn", () => {
+  const rawInput = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      brush_type: ["paddle"],
+    },
+    [],
+  ).input
+
+  const context = buildEffectiveCareContext(rawInput, [
+    {
+      kind: "profile_override",
+      field: "brushType",
+      value: [],
+      evidenceQuote: "Ich nutze gerade keine Bürste regelmäßig",
+      source: "current_turn",
+    },
+  ])
+
+  assert.deepEqual(context.normalized.brushType, [])
+  assert.deepEqual(context.conflicts, [
+    {
+      fieldPath: "profile.brushType",
+      savedValue: ["paddle"],
+      currentTurnValue: [],
+      source: "current_turn",
+      evidenceQuote: "Ich nutze gerade keine Bürste regelmäßig",
+    },
+  ])
+})
+
 test("context signals are retained without changing the effective profile", () => {
   const rawInput = adaptRecommendationInputFromPersistence(LOW_DAMAGE_PROFILE, []).input
   const facts: CurrentTurnCareFact[] = [

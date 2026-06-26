@@ -28,6 +28,7 @@ import {
   AgentV2GuidanceCategorySchema,
   LoadAgentV2AdvisorGuidanceInputSchema,
 } from "@/lib/agent-v2/tools/guidance-tool"
+import { normalizeBrushTypeValues } from "@/lib/profile/brush-type"
 import { INVENTORY_CATEGORIES } from "@/lib/recommendation-engine/contracts"
 import {
   BRUSH_TYPES,
@@ -225,7 +226,7 @@ export const CurrentCareFactToolParametersSchema = z.strictObject({
     "context_signal",
   ]),
   field: z.union([ProfileFactFieldSchema, ProfileArrayFactFieldSchema]).nullable(),
-  value: z.union([z.string(), z.boolean()]).nullable(),
+  value: z.union([z.string(), z.array(z.string()), z.boolean()]).nullable(),
   category: InventoryCategorySchema.nullable(),
   present: z.boolean().nullable(),
   frequency: ProductFrequencySchema.nullable(),
@@ -238,6 +239,8 @@ export type ProfileFactField = z.infer<typeof ProfileFactFieldSchema>
 export type ProfileArrayFactField = z.infer<typeof ProfileArrayFactFieldSchema>
 
 type CurrentCareFactToolParameters = z.infer<typeof CurrentCareFactToolParametersSchema>
+type CurrentCareFactToolValue = NonNullable<CurrentCareFactToolParameters["value"]>
+const BRUSH_TYPE_SET = new Set<string>(BRUSH_TYPES)
 
 export const ClassifyTurnGateToolParametersSchema = z.strictObject({
   gate_status: AgentV2TurnGateResultSchema.shape.gate_status.describe(
@@ -381,7 +384,7 @@ function toCurrentCareFactToolParameters(
       input.kind === "profile_override" || input.kind === "profile_augment" ? input.field : null,
     value:
       input.kind === "profile_override" || input.kind === "profile_augment"
-        ? (input.value as string | boolean)
+        ? (input.value as CurrentCareFactToolValue)
         : null,
     category:
       input.kind === "routine_presence" || input.kind === "routine_frequency"
@@ -394,12 +397,27 @@ function toCurrentCareFactToolParameters(
   }
 }
 
-function normalizeProfileOverrideValue(field: ProfileFactField, value: string | boolean): unknown {
+function normalizeProfileOverrideValue(field: ProfileFactField, value: CurrentCareFactToolValue): unknown {
   if (field === "usesHeatProtection") {
     if (typeof value !== "boolean") {
       throw new Error("Invalid current care fact tool input")
     }
     return value
+  }
+  if (field === "brushType") {
+    if (Array.isArray(value)) {
+      const uniqueValues = [...new Set(value)]
+      const hasInvalidValue = value.some((item) => item !== "none_regular" && !BRUSH_TYPE_SET.has(item))
+      const mixesNoneWithBrushes = uniqueValues.includes("none_regular") && uniqueValues.length > 1
+      if (hasInvalidValue || mixesNoneWithBrushes) {
+        throw new Error("Invalid current care fact tool input")
+      }
+    }
+    const normalized = normalizeBrushTypeValues(value)
+    if (normalized === null) {
+      throw new Error("Invalid current care fact tool input")
+    }
+    return normalized
   }
   if (typeof value !== "string") {
     throw new Error("Invalid current care fact tool input")
@@ -418,8 +436,10 @@ function normalizeProfileOverrideValue(field: ProfileFactField, value: string | 
     towelMaterial: TOWEL_MATERIALS,
     towelTechnique: TOWEL_TECHNIQUES,
     dryingMethod: DRYING_METHODS,
-    brushType: BRUSH_TYPES,
-  } satisfies Record<Exclude<ProfileFactField, "usesHeatProtection">, readonly string[]>
+  } satisfies Record<
+    Exclude<ProfileFactField, "usesHeatProtection" | "brushType">,
+    readonly string[]
+  >
 
   return normalizeEnumLikeValue(allowedValuesByField[field], value)
 }

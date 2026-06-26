@@ -17,7 +17,7 @@ const FULL_PROFILE: HairProfileOverrides = {
   heat_styling: "rarely",
   drying_method: "air_dry",
   towel_technique: "rough_rubbing",
-  brush_type: "paddle",
+  brush_type: ["paddle"],
   night_protection: [],
   goals: ["shine"],
   onboarding_completed: true,

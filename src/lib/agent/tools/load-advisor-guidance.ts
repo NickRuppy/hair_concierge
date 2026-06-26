@@ -461,7 +461,7 @@ function hasMechanicalStress(userContext: UserContextProjection): boolean {
   return (
     hasActiveHeatStyling(profile) ||
     Boolean(profile?.styling_tools?.length) ||
-    Boolean(profile?.brush_type) ||
+    Boolean(profile?.brush_type?.length) ||
     Boolean(profile?.drying_method && profile.drying_method !== "air_dry") ||
     hasDerivedSignal(userContext, "mechanical") ||
     hasDerivedSignal(userContext, "friction") ||
