@@ -37,7 +37,7 @@ export type KnownProductCategoryKey = (typeof KNOWN_PRODUCT_CATEGORY_KEYS)[numbe
 
 export const PRODUCT_CATEGORY_DISPLAY_LABELS: Record<SupportedProductCategoryKey, string> = {
   shampoo: "Shampoo",
-  conditioner: "Conditioner (Drogerie)",
+  conditioner: "Conditioner",
   leave_in: "Leave-in",
   mask: "Maske",
   oil: "Öle",

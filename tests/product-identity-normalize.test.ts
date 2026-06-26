@@ -27,6 +27,7 @@ test("canonical category constants include supported and known unsupported keys"
 
   assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes("heat_protectant"), true)
   assert.equal(KNOWN_PRODUCT_CATEGORY_KEYS.includes("hairspray"), true)
+  assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.conditioner, "Conditioner")
   assert.equal(PRODUCT_CATEGORY_DISPLAY_LABELS.leave_in, "Leave-in")
 })
 
