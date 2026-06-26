@@ -15,10 +15,10 @@ Canonical correction passes may update reviewed normalization data and identity 
 
 ## Production Baseline
 
-The verified production baseline has 239 products and these current categories:
+The verified production baseline has 239 products. After `20260625120000_conditioner_category_label_cleanup.sql` is applied, the active category labels are:
 
 - `Bondbuilder`
-- `Conditioner (Drogerie)`
+- `Conditioner`
 - `Leave-in`
 - `Maske`
 - `Öle`
@@ -26,12 +26,12 @@ The verified production baseline has 239 products and these current categories:
 - `Tiefenreinigungsshampoo`
 - `Trockenshampoo`
 
-Canonical category keys are internal stable keys for these existing category labels:
+Canonical category keys are internal stable keys for these active category labels. Legacy raw labels such as `Conditioner (Drogerie)` may still be accepted as input aliases, but the active human-readable category label is `Conditioner`. Inactive or historical product rows may retain the legacy string.
 
-| Current category        | Canonical category key   |
+| Active category         | Canonical category key   |
 | ----------------------- | ------------------------ |
 | Bondbuilder             | `bondbuilder`            |
-| Conditioner (Drogerie)  | `conditioner`            |
+| Conditioner             | `conditioner`            |
 | Leave-in                | `leave_in`               |
 | Maske                   | `mask`                   |
 | Öle                     | `oil`                    |
