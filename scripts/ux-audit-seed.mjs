@@ -44,7 +44,7 @@ const { error: hpErr } = await admin.from("hair_profiles").upsert({
   towel_material: "frottee",
   towel_technique: "gentle_press",
   drying_method: "air_dry",
-  brush_type: "wide_tooth_comb",
+  brush_type: ["wide_tooth_comb"],
   night_protection: null,
 }, { onConflict: "user_id" })
 if (hpErr) console.log("hair_profiles upsert error:", hpErr.message)
