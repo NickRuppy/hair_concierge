@@ -87,6 +87,7 @@ export function selectGuidancePackageIds(
     input.answer_mode_hint === "routine"
   ) {
     ids.push("base.general_advice.v1")
+    ids.push("base.goal_concern_levers.v1")
   }
 
   for (const category of input.categories) {
