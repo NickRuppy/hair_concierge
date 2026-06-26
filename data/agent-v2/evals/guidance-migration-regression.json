@@ -85,6 +85,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.conditioner.v1"
       ],
       "must_not_contain": [
@@ -106,6 +107,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.conditioner.v1"
       ],
       "must_not_contain": [
@@ -129,6 +131,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.conditioner.v1"
       ],
       "must_not_contain": [
@@ -150,6 +153,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.conditioner.v1",
         "category.mask.v1"
       ],
@@ -174,6 +178,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.conditioner.v1"
       ],
       "must_not_contain": [
@@ -197,6 +202,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.conditioner.v1"
       ],
       "must_not_contain": [
@@ -219,6 +225,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.conditioner.v1",
         "category.leave_in.v1"
       ],
@@ -242,7 +249,8 @@
         "build_or_fix_routine"
       ],
       "expected_guidance": [
-        "base.routine_building.v1"
+        "base.routine_building.v1",
+        "base.goal_concern_levers.v1"
       ],
       "must_not_contain": [
         "Ich bin mir gerade nicht sicher"
@@ -267,7 +275,8 @@
       ],
       "expected_guidance": [
         "base.routine_building.v1",
-        "base.product_recommendation.v1"
+        "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1"
       ],
       "must_not_contain": [
         "Formulier es bitte",
@@ -292,7 +301,8 @@
         "select_products"
       ],
       "expected_guidance": [
-        "base.product_recommendation.v1"
+        "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1"
       ],
       "must_not_contain": [
         "Was meinst du genau",
@@ -338,6 +348,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.bondbuilder.v1"
       ],
       "must_not_contain": [
@@ -402,6 +413,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.bondbuilder.v1"
       ],
       "must_not_contain": [
@@ -447,6 +459,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.bondbuilder.v1"
       ],
       "must_not_contain": [
@@ -469,6 +482,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.bondbuilder.v1"
       ],
       "must_not_contain": [
@@ -490,6 +504,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.deep_cleansing_shampoo.v1"
       ],
       "must_not_contain": [
@@ -512,6 +527,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.deep_cleansing_shampoo.v1"
       ],
       "must_not_contain": [
@@ -533,6 +549,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.dry_shampoo.v1"
       ],
       "must_not_contain": [
@@ -558,6 +575,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.dry_shampoo.v1"
       ],
       "must_not_contain": [
@@ -579,6 +597,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.deep_cleansing_shampoo.v1"
       ],
       "must_not_contain": [
@@ -602,6 +621,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.deep_cleansing_shampoo.v1"
       ],
       "must_not_contain": [
@@ -628,6 +648,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.deep_cleansing_shampoo.v1"
       ],
       "must_not_contain": [
@@ -650,6 +671,7 @@
       ],
       "expected_guidance": [
         "base.routine_building.v1",
+        "base.goal_concern_levers.v1",
         "category.deep_cleansing_shampoo.v1"
       ],
       "must_not_contain": [
@@ -671,6 +693,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.deep_cleansing_shampoo.v1",
         "category.peeling.v1"
       ],
@@ -698,6 +721,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.dry_shampoo.v1"
       ],
       "must_not_contain": [
@@ -724,6 +748,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.dry_shampoo.v1"
       ],
       "must_not_contain": [
@@ -746,6 +771,7 @@
       ],
       "expected_guidance": [
         "base.routine_building.v1",
+        "base.goal_concern_levers.v1",
         "category.dry_shampoo.v1"
       ],
       "must_not_contain": [
@@ -789,6 +815,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.peeling.v1"
       ],
       "must_not_contain": [
@@ -836,6 +863,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.oil.v1"
       ],
       "must_not_contain": [
@@ -857,6 +885,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.oil.v1"
       ],
       "must_not_contain": [
@@ -883,6 +912,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.oil.v1"
       ],
       "must_not_contain": [
@@ -912,6 +942,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.oil.v1"
       ],
       "must_not_contain": [
@@ -957,6 +988,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.peeling.v1"
       ],
       "must_not_contain": [
@@ -981,6 +1013,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.peeling.v1"
       ],
       "must_not_contain": [
@@ -1002,6 +1035,7 @@
       ],
       "expected_guidance": [
         "base.general_advice.v1",
+        "base.goal_concern_levers.v1",
         "category.leave_in.v1"
       ],
       "must_not_contain": [
@@ -1025,7 +1059,8 @@
         "build_or_fix_routine"
       ],
       "expected_guidance": [
-        "base.routine_building.v1"
+        "base.routine_building.v1",
+        "base.goal_concern_levers.v1"
       ],
       "must_not_contain": [
         "Formulier es bitte",
@@ -1072,6 +1107,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.shampoo.v1"
       ],
       "must_not_contain": [
@@ -1116,7 +1152,8 @@
       ],
       "expected_guidance": [
         "base.routine_building.v1",
-        "base.general_advice.v1"
+        "base.general_advice.v1",
+        "base.goal_concern_levers.v1"
       ],
       "must_not_contain": [
         "Formulier es bitte"
@@ -1241,6 +1278,7 @@
       ],
       "expected_guidance": [
         "base.product_recommendation.v1",
+        "base.goal_concern_levers.v1",
         "category.shampoo.v1"
       ],
       "expected_answer_mode": "product_recommendation",

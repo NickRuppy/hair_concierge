@@ -318,7 +318,13 @@ function requiredGuidanceForAnswer(answerMode: string, category = "none"): strin
   const ids = ["base.advisor_rules.v1", "base.answer_contract.v1", "base.tone_and_format.v1"]
   if (answerMode === "product_recommendation") ids.push("base.product_recommendation.v1")
   if (answerMode === "routine") ids.push("base.routine_building.v1")
-  if (answerMode === "general_advice") ids.push("base.general_advice.v1")
+  if (
+    answerMode === "general_advice" ||
+    answerMode === "product_recommendation" ||
+    answerMode === "routine"
+  ) {
+    ids.push("base.general_advice.v1", "base.goal_concern_levers.v1")
+  }
   if (answerMode === "safety_boundary") ids.push("base.safety_boundaries.v1")
 
   const categoryMap: Record<string, string> = {
@@ -4757,6 +4763,7 @@ test("AgentV2 runtime repairs missing guidance and product tools in order", asyn
     "base.advisor_rules.v1",
     "base.answer_contract.v1",
     "base.general_advice.v1",
+    "base.goal_concern_levers.v1",
     "base.product_recommendation.v1",
     "base.tone_and_format.v1",
     "category.conditioner.v1",

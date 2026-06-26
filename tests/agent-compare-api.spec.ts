@@ -43,8 +43,9 @@ test("compare lab route keeps heavy dev-only runners behind dynamic imports", as
   assert.doesNotMatch(routeSource, /import .*run-agentic-tool-loop/)
   assert.doesNotMatch(routeSource, /import .*run-shadow-agent/)
   assert.doesNotMatch(routeSource, /from \"@\/lib\/agent\/compare\/run-compare\"/)
-  assert.match(routeSource, /importDevOnlyModule/)
-  assert.doesNotMatch(routeSource, /await import\(\"@\/lib\/agent-v2\/compare\/run-agent-v2\"\)/)
+  assert.match(routeSource, /await import\(\"@\/lib\/agent-v2\/compare\/run-agent-v2\"\)/)
+  assert.match(routeSource, /await import\(\"@\/lib\/agent\/compare\/run-agentic-tool-loop\"\)/)
+  assert.doesNotMatch(routeSource, /import\(path\)/)
 })
 
 test("GET returns eligible users and an optional selected-user snapshot in development", async () =>

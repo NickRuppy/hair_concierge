@@ -41,46 +41,30 @@ interface AgentCompareRouteDeps {
 
 const defaultRouteDeps: AgentCompareRouteDeps = {
   listEligibleCompareUsers: async () => {
-    const loadedModule = await importDevOnlyModule<typeof import("@/lib/agent/compare/test-users")>(
-      "@/lib/agent/compare/test-users",
-    )
+    const loadedModule = await import("@/lib/agent/compare/test-users")
     return loadedModule.listEligibleCompareUsers()
   },
   loadCompareUserSnapshot: async (userId) => {
-    const loadedModule = await importDevOnlyModule<typeof import("@/lib/agent/compare/test-users")>(
-      "@/lib/agent/compare/test-users",
-    )
+    const loadedModule = await import("@/lib/agent/compare/test-users")
     return loadedModule.loadCompareUserSnapshot(userId)
   },
   runCurrentComparisonForUser: async (request) => {
-    const loadedModule = await importDevOnlyModule<
-      typeof import("@/lib/agent/compare/run-shadow-agent")
-    >("@/lib/agent/compare/run-shadow-agent")
+    const loadedModule = await import("@/lib/agent/compare/run-shadow-agent")
     return loadedModule.runClassicAgentComparisonForUser(request)
   },
   runShadowComparisonForUser: async (request) => {
-    const loadedModule = await importDevOnlyModule<
-      typeof import("@/lib/agent/compare/run-agentic-tool-loop")
-    >("@/lib/agent/compare/run-agentic-tool-loop")
+    const loadedModule = await import("@/lib/agent/compare/run-agentic-tool-loop")
     return loadedModule.runToolLoopComparisonForUser(request)
   },
   runAgentV2ComparisonForUser: runAgentV2ComparisonForUser,
   runAgentV2CareBalanceComparisonForUser: async (request) => {
-    const loadedModule = await importDevOnlyModule<
-      typeof import("@/lib/agent-v2/compare/run-agent-v2")
-    >("@/lib/agent-v2/compare/run-agent-v2")
+    const loadedModule = await import("@/lib/agent-v2/compare/run-agent-v2")
     return loadedModule.runAgentV2ComparisonForUser(request, { includeCareBalanceContext: true })
   },
 }
 
-async function importDevOnlyModule<T>(path: string): Promise<T> {
-  return import(path) as Promise<T>
-}
-
 async function runAgentV2ComparisonForUser(request: AgentCompareUserRequest) {
-  const loadedModule = await importDevOnlyModule<
-    typeof import("@/lib/agent-v2/compare/run-agent-v2")
-  >("@/lib/agent-v2/compare/run-agent-v2")
+  const loadedModule = await import("@/lib/agent-v2/compare/run-agent-v2")
   return loadedModule.runAgentV2ComparisonForUser(request)
 }
 
