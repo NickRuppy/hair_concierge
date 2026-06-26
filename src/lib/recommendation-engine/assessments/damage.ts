@@ -6,6 +6,7 @@ import type {
   NormalizedProfile,
   RepairPriority,
 } from "@/lib/recommendation-engine/types"
+import { getBrushMechanicalStressContribution } from "@/lib/profile/brush-type"
 import { isExplicitNoneArray } from "@/lib/profile/signal-derivations"
 import {
   getChemicalTreatmentDamageDrivers,
@@ -207,10 +208,9 @@ export function buildDamageAssessment(profile: NormalizedProfile): DamageAssessm
     activeProtectiveFactors.push("gentle_towel_technique")
   }
 
-  if (profile.brushType === "paddle" || profile.brushType === "round") {
-    mechanicalScore += 1
-    activeDamageDrivers.push("high_stress_brush")
-  }
+  const brushMechanicalStress = getBrushMechanicalStressContribution(profile.brushType)
+  mechanicalScore += brushMechanicalStress.score
+  activeDamageDrivers.push(...brushMechanicalStress.drivers)
 
   if (isExplicitNoneArray(profile.nightProtection)) {
     mechanicalScore += 1

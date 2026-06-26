@@ -6,6 +6,7 @@ import type {
   StylingTool,
   TowelTechnique,
 } from "@/lib/vocabulary"
+import { hasMechanicalStressBrush } from "@/lib/profile/brush-type"
 
 export function hasAnsweredArrayValues<T>(value: readonly T[] | null | undefined): boolean {
   return Array.isArray(value) && value.length > 0
@@ -17,9 +18,9 @@ export function isExplicitNoneArray<T>(value: readonly T[] | null | undefined): 
 
 export function hasDirectMechanicalStressSignals(
   towelTechnique: TowelTechnique | null | undefined,
-  brushType: BrushType | null | undefined,
+  brushTypes: readonly BrushType[] | null | undefined,
 ): boolean {
-  return towelTechnique === "rough_rubbing" || brushType === "paddle" || brushType === "round"
+  return towelTechnique === "rough_rubbing" || hasMechanicalStressBrush(brushTypes)
 }
 
 export function deriveLeaveInStylingContextFromStages(

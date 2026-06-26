@@ -297,8 +297,17 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     label: "Bürste / Kamm",
     sectionKey: "routine",
     editTarget: { kind: "onboarding", step: "brush_type" },
-    getValue: (profile) =>
-      profile?.brush_type ? (BRUSH_TYPE_LABELS[profile.brush_type] ?? profile.brush_type) : null,
+    getValue: (profile) => {
+      if (profile?.brush_type?.length) {
+        return optionLabels(profile.brush_type, BRUSH_TYPE_LABELS)
+      }
+
+      if (profile?.brush_type && profile.brush_type.length === 0) {
+        return "Keine regelmäßige Bürste"
+      }
+
+      return null
+    },
   },
   {
     key: "night_protection",

@@ -84,6 +84,18 @@ test("profile routine section shows length tip accessory night protection label"
   )
 })
 
+test("profile routine section distinguishes unanswered brush type from explicit none", () => {
+  const brushTypeField = PROFILE_FIELD_CONFIG.find((field) => field.key === "brush_type")
+
+  assert.ok(brushTypeField)
+  assert.equal(brushTypeField.getValue(makeProfile({ brush_type: null })), null)
+  assert.equal(brushTypeField.getValue(makeProfile({ brush_type: [] })), "Keine regelmäßige Bürste")
+  assert.deepEqual(brushTypeField.getValue(makeProfile({ brush_type: ["paddle", "round"] })), [
+    "Paddle-Bürste",
+    "Rundbürste",
+  ])
+})
+
 test("goals edit derives persisted desired volume from selected goals", () => {
   assert.equal(deriveDesiredVolumeFromGoals(["volume"], null), "more")
   assert.equal(deriveDesiredVolumeFromGoals(["less_volume"], null), "less")

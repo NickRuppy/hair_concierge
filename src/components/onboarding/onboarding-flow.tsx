@@ -8,6 +8,7 @@ import { useOnboardingStore } from "@/lib/onboarding/store"
 import type { OnboardingEditScope, OnboardingStep } from "@/lib/onboarding/store"
 import { shouldHydrateStoredHeatProtection } from "@/lib/onboarding/heat-protection-hydration"
 import { buildProductUsagePayloads } from "@/lib/onboarding/product-usage-save"
+import { normalizeBrushTypeValues } from "@/lib/profile/brush-type"
 import {
   isUnselectedShampooFallbackItem,
   SHAMPOO_CATEGORY,
@@ -83,7 +84,6 @@ const BRUSH_TYPE_ICONS: Record<string, IconName> = {
   round: "brush-round",
   boar_bristle: "brush-boar-bristle",
   fingers: "brush-fingers",
-  none_regular: "brush-none",
 }
 
 const NIGHT_PROTECTION_ICONS: Record<string, IconName> = {
@@ -169,6 +169,7 @@ function getFinalContinueLabel(
     (currentStep === "product_drilldown" ||
       currentStep === "heat_tools" ||
       currentStep === "drying_method" ||
+      currentStep === "brush_type" ||
       currentStep === "night_protection")
   ) {
     return "Speichern und zurück zum Profil"
@@ -250,8 +251,9 @@ export function OnboardingFlow({
       } else if (Array.isArray(hairProfile.drying_method) && hairProfile.drying_method.length > 0) {
         store.setDryingMethod(hairProfile.drying_method[0] as DryingMethod)
       }
-      if (hairProfile.brush_type) {
-        store.setBrushType(hairProfile.brush_type as BrushType)
+      const storedBrushTypes = normalizeBrushTypeValues(hairProfile.brush_type)
+      if (storedBrushTypes) {
+        store.setBrushType(storedBrushTypes)
       }
       if (Array.isArray(hairProfile.night_protection)) {
         store.setNightProtection(normalizeNightProtectionValues(hairProfile.night_protection) ?? [])
@@ -666,6 +668,16 @@ export function OnboardingFlow({
     }
   }, [])
 
+  const toggleBrushType = useCallback((value: string) => {
+    const { brushType, setBrushType } = useOnboardingStore.getState()
+    const selectedBrushTypes = brushType ?? []
+    if (selectedBrushTypes.includes(value as BrushType)) {
+      setBrushType(selectedBrushTypes.filter((v) => v !== value))
+    } else {
+      setBrushType([...selectedBrushTypes, value as BrushType])
+    }
+  }, [])
+
   // ── Don't render until hydrated ──
 
   if (!hydrated) {
@@ -900,16 +912,31 @@ export function OnboardingFlow({
 
       case "brush_type":
         return (
-          <SingleSelectScreen
-            title="Welche Bürste oder welchen Kamm nutzt du?"
-            subtitle="Das falsche Tool kann Haarbruch verursachen. Zeig uns, was du nutzt."
+          <MultiSelectScreen
+            title="Welche Bürsten oder Kämme nutzt du?"
+            subtitle="Mehrfachauswahl möglich. Wähle alles aus, was du regelmäßig nutzt."
             options={brushTypeWithIcon}
-            selected={store.brushType}
-            onSelect={(val) => {
-              store.setBrushType(val as BrushType)
+            selected={store.brushType ?? []}
+            onToggle={toggleBrushType}
+            onContinue={() => handleStepComplete("brush_type")}
+            onBack={handleBack}
+            continueLabel={getFinalContinueLabel(
+              "brush_type",
+              store,
+              editScope,
+              singleStepEdit,
+              returnTo,
+            )}
+            noneLabel={
+              editScope === "routine" || singleStepEdit
+                ? "Keine regelmäßige Bürste speichern"
+                : "Nichts davon"
+            }
+            onNone={() => {
+              store.setBrushType([])
               handleStepComplete("brush_type")
             }}
-            onBack={handleBack}
+            isSaving={savingStep === "brush_type"}
           />
         )
 

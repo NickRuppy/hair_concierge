@@ -70,7 +70,6 @@ export const BRUSH_TYPES = [
   "round",
   "boar_bristle",
   "fingers",
-  "none_regular",
 ] as const
 export type BrushType = (typeof BRUSH_TYPES)[number]
 
@@ -81,7 +80,6 @@ export const BRUSH_TYPE_LABELS = {
   round: "Rundbürste",
   boar_bristle: "Wildschweinborsten-Bürste",
   fingers: "Nur Finger",
-  none_regular: "Keine regelmäßige Bürste",
 } as const satisfies Record<BrushType, string>
 
 export const BRUSH_TYPE_OPTIONS = BRUSH_TYPES.map((value) => ({

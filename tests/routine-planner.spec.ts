@@ -838,7 +838,7 @@ test.describe("Routine planner", () => {
         density: "medium",
         concerns: [],
         cuticle_condition: "smooth",
-        brush_type: "paddle",
+        brush_type: ["paddle"],
         current_routine_products: ["shampoo", "conditioner"],
       }),
       "Welche Routine passt zu meinen Locken, wenn sie sich an Waschtagen schnell verhaken?",
@@ -987,7 +987,7 @@ test.describe("Routine planner", () => {
         concerns: ["dryness"],
         cuticle_condition: "rough",
         scalp_condition: "dry_flakes",
-        brush_type: "paddle",
+        brush_type: ["paddle"],
         current_routine_products: ["shampoo", "conditioner"],
       }),
       "Welche Routine passt zu meinen Locken?",
@@ -1503,7 +1503,7 @@ test.describe("Routine planner", () => {
     test("rough brushing proactively adds a brush tools slot", () => {
       const plan = buildRoutinePlan(
         createProfile({
-          brush_type: "paddle",
+          brush_type: ["paddle"],
         }),
         "Welche Routine passt zu mir?",
       )

@@ -82,7 +82,7 @@ interface OnboardingState {
   towelMaterial: TowelMaterial | null
   towelTechnique: TowelTechnique | null
   dryingMethod: DryingMethod | null
-  brushType: BrushType | null
+  brushType: BrushType[] | null
   nightProtection: NightProtection[]
 
   // Navigation
@@ -104,7 +104,7 @@ interface OnboardingState {
   setTowelMaterial: (val: TowelMaterial | null) => void
   setTowelTechnique: (val: TowelTechnique | null) => void
   setDryingMethod: (val: DryingMethod | null) => void
-  setBrushType: (val: BrushType | null) => void
+  setBrushType: (val: BrushType[] | null) => void
   setNightProtection: (val: NightProtection[]) => void
 
   // Computed helpers
@@ -150,7 +150,7 @@ const initialData = {
   towelMaterial: null as TowelMaterial | null,
   towelTechnique: null as TowelTechnique | null,
   dryingMethod: null as DryingMethod | null,
-  brushType: null as BrushType | null,
+  brushType: null as BrushType[] | null,
   nightProtection: [] as NightProtection[],
 }
 
