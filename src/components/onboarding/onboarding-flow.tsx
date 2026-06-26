@@ -729,7 +729,7 @@ export function OnboardingFlow({
         return (
           <ProductChecklistScreen
             title="Deine Basis-Produkte"
-            subtitle="Welche Produkte nutzt du regelmäßig?"
+            subtitle="Was kommt aktuell in deiner Basis-Routine vor?"
             options={BASIC_PRODUCT_OPTIONS}
             selected={store.selectedBasicProducts}
             onToggle={toggleBasicProduct}
@@ -743,7 +743,7 @@ export function OnboardingFlow({
         return (
           <ProductChecklistScreen
             title="Weitere Produkte"
-            subtitle="Nutzt du auch etwas davon?"
+            subtitle="Was nutzt du außerdem regelmäßig?"
             options={EXTRA_PRODUCT_OPTIONS}
             selected={store.selectedExtraProducts}
             onToggle={toggleExtraProduct}
@@ -871,7 +871,7 @@ export function OnboardingFlow({
       case "towel_technique":
         return (
           <SingleSelectScreen
-            title="Wie trocknest du?"
+            title="Wie gehst du mit dem Handtuch meistens vor?"
             subtitle="Rubbeln oder sanft ausdrücken?"
             options={towelTechniqueWithIcon}
             selected={store.towelTechnique}
