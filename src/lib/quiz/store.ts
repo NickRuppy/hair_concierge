@@ -1,5 +1,6 @@
 import { create } from "zustand"
 import { clearQuizDraft, loadQuizDraft, saveQuizDraft } from "./draft"
+import { QUIZ_QUESTION_STEPS } from "./questions"
 import type { QuizStep, LeadCaptureSubStep, QuizAnswers, LeadData } from "./types"
 
 interface QuizState {
@@ -21,7 +22,7 @@ interface QuizState {
   reset: () => void
 }
 
-const STEP_ORDER: QuizStep[] = [2, 3, 13, 15, 4, 5, 7, 6, 8, 12, 9, 10, 11, 14]
+const STEP_ORDER: QuizStep[] = [...QUIZ_QUESTION_STEPS, 9, 10, 11, 14]
 
 function nextStep(current: QuizStep): QuizStep {
   const idx = STEP_ORDER.indexOf(current)

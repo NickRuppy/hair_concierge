@@ -1,5 +1,5 @@
 import type { LeadCaptureSubStep, QuizStep } from "./types"
-import { QUIZ_TOTAL_QUESTIONS } from "./questions"
+import { getQuizQuestionNumber, QUIZ_TOTAL_QUESTIONS } from "./questions"
 
 export interface QuizBrandPanelContent {
   eyebrow: string | null
@@ -9,19 +9,17 @@ export interface QuizBrandPanelContent {
   variant: "landing" | "journey"
 }
 
-const QUESTION_PANEL_CONTENT: Partial<
-  Record<QuizStep, { questionNumber: number; description: string }>
-> = {
-  2: { questionNumber: 1, description: "Deine natürliche Haarstruktur." },
-  3: { questionNumber: 2, description: "Dicke einzelner Haare." },
-  13: { questionNumber: 3, description: "Wie voll dein Haar insgesamt ist." },
-  15: { questionNumber: 4, description: "Wie lang deine Haare aktuell sind." },
-  4: { questionNumber: 5, description: "Wie sich die Oberfläche anfühlt." },
-  5: { questionNumber: 6, description: "Wie belastbar die Längen sind." },
-  7: { questionNumber: 7, description: "Wie stark dein Haar behandelt ist." },
-  6: { questionNumber: 8, description: "Was an der Kopfhaut mitspielt." },
-  8: { questionNumber: 9, description: "Was dich gerade ausbremst." },
-  12: { questionNumber: 10, description: "Worauf wir hinarbeiten." },
+const QUESTION_PANEL_DESCRIPTIONS: Partial<Record<QuizStep, string>> = {
+  2: "Deine natürliche Haarstruktur.",
+  3: "Dicke einzelner Haare.",
+  13: "Wie voll dein Haar insgesamt ist.",
+  15: "Wie lang deine Haare aktuell sind.",
+  4: "Wie sich die Oberfläche anfühlt.",
+  5: "Wie belastbar die Längen sind.",
+  7: "Wie stark dein Haar behandelt ist.",
+  6: "Was an der Kopfhaut mitspielt.",
+  8: "Was dich gerade ausbremst.",
+  12: "Worauf wir hinarbeiten.",
 }
 
 export function getQuizBrandPanelContent(
@@ -30,12 +28,13 @@ export function getQuizBrandPanelContent(
 ): QuizBrandPanelContent {
   void leadCaptureSubStep
 
-  const questionContent = QUESTION_PANEL_CONTENT[step]
-  if (questionContent) {
+  const questionDescription = QUESTION_PANEL_DESCRIPTIONS[step]
+  const questionNumber = getQuizQuestionNumber(step)
+  if (questionDescription && questionNumber) {
     return {
-      eyebrow: `FRAGE ${questionContent.questionNumber} VON ${QUIZ_TOTAL_QUESTIONS}`,
-      description: questionContent.description,
-      progressCurrent: questionContent.questionNumber,
+      eyebrow: `FRAGE ${questionNumber} VON ${QUIZ_TOTAL_QUESTIONS}`,
+      description: questionDescription,
+      progressCurrent: questionNumber,
       progressComplete: false,
       variant: "journey",
     }

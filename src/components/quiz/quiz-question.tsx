@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import { toggleTreatmentSelection } from "@/lib/quiz/normalization"
 import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
+import { InfoTip } from "@/components/ui/info-tip"
+import { INFO_TIPS } from "@/lib/help/info-tips"
 
 const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswers> = {
   2: "structure",
@@ -84,6 +86,7 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
   }
 
   const multiHasSelection = Array.isArray(localSelection) && localSelection.length > 0
+  const infoTip = question.infoTipId ? INFO_TIPS[question.infoTipId] : null
 
   return (
     <div className="flex flex-col" key={question.step}>
@@ -105,7 +108,17 @@ export function QuizQuestion({ question }: QuizQuestionProps) {
       </div>
 
       {/* Title */}
-      <h2 className="font-header text-3xl leading-tight text-foreground mb-2">{question.title}</h2>
+      <div className="mb-2 flex items-baseline gap-2">
+        <h2 className="font-header text-3xl leading-tight text-foreground">{question.title}</h2>
+        {infoTip && (
+          <InfoTip
+            title={infoTip.title}
+            body={infoTip.body}
+            label={`Info zu ${question.title}`}
+            buttonClassName="h-7 w-7"
+          />
+        )}
+      </div>
 
       {/* Instruction */}
       <p className="text-sm text-muted-foreground leading-relaxed mb-5">{question.instruction}</p>
