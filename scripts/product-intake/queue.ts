@@ -7,12 +7,7 @@ import {
   type ProductIntakeQueueRow,
 } from "./queue-reporting"
 
-const ACTIONABLE_STATUSES = [
-  "pending_review",
-  "researching",
-  "ready_for_review",
-  "needs_more_info",
-] as const
+const REVIEW_LANE_STATUSES = ["researching", "ready_for_review", "needs_more_info"] as const
 const QUEUE_SELECT = [
   "id",
   "created_at",
@@ -134,7 +129,7 @@ function buildQueueQuery(params: {
   if (params.statusFilter) {
     query = query.eq("status", params.statusFilter)
   } else if (!params.includeClosed) {
-    query = query.in("status", [...ACTIONABLE_STATUSES])
+    query = query.in("status", [...REVIEW_LANE_STATUSES])
   }
   if (params.categoryFilter) {
     query = query.eq("category", params.categoryFilter)

@@ -227,6 +227,19 @@ test("identifiers are optional when reviewed source evidence is complete", () =>
   assert.deepEqual(result.normalizedPayload.final.identifiers, [])
 })
 
+test("null image URL is allowed for an explicit reviewed no-image approval path", () => {
+  const payload = reviewedPayload("mask", validCategorySpecs("mask"))
+  payload.final.product.image_url = null as never
+  payload.final.field_rationales["product.image_url"] =
+    "Reviewer explicitly approved this product without a final image for now."
+
+  const result = validateProductIntakeApprovalPayload(payload)
+
+  assert.equal(result.ok, true)
+  if (!result.ok) return
+  assert.equal(result.normalizedPayload.final.product.image_url, null)
+})
+
 test("barcode-like identifiers are canonicalized before approval writes", () => {
   const payload = reviewedPayload("mask", validCategorySpecs("mask"))
   payload.final.identifiers = [{ type: "EAN", value: "40000-123 45678" }]

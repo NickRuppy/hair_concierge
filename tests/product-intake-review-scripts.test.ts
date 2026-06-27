@@ -34,10 +34,13 @@ const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
   scripts: Record<string, string>
 }
 const approveScript = readFileSync("scripts/product-intake/approve.ts", "utf8")
+const approvePackageScript = readFileSync("scripts/product-intake/approve-package.ts", "utf8")
 const linkExistingScript = readFileSync("scripts/product-intake/link-existing.ts", "utf8")
 const queueScript = readFileSync("scripts/product-intake/queue.ts", "utf8")
+const prepareResearchScript = readFileSync("scripts/product-intake/prepare-research.ts", "utf8")
 const requestInfoScript = readFileSync("scripts/product-intake/request-info.ts", "utf8")
 const researchScript = readFileSync("scripts/product-intake/research.ts", "utf8")
+const reviewActionsScript = readFileSync("scripts/product-intake/review-actions.ts", "utf8")
 const promoteScript = readFileSync("scripts/product-intake/promote.ts", "utf8")
 const notifyPendingScript = readFileSync("scripts/product-intake/notify-pending.ts", "utf8")
 const cleanupPhotosScript = readFileSync("scripts/product-intake/cleanup-photos.ts", "utf8")
@@ -53,12 +56,20 @@ test("Phase 4A package scripts expose the script-first review workflow", () => {
     "tsx scripts/product-intake/review.ts",
   )
   assert.equal(
+    packageJson.scripts["products:intake:prepare-research"],
+    "tsx scripts/product-intake/prepare-research.ts",
+  )
+  assert.equal(
     packageJson.scripts["products:intake:research"],
     "tsx scripts/product-intake/research.ts",
   )
   assert.equal(
     packageJson.scripts["products:intake:approve"],
     "tsx scripts/product-intake/approve.ts",
+  )
+  assert.equal(
+    packageJson.scripts["products:intake:approve-package"],
+    "tsx scripts/product-intake/approve-package.ts",
   )
   assert.equal(
     packageJson.scripts["products:intake:approve-ready"],
@@ -157,11 +168,22 @@ test("destructive review scripts default to dry-run and require explicit confirm
   assert.match(productsRouteSource, /\.eq\("is_chaarlie_recommended", true\)/)
   assert.match(selectionSource, /\.eq\("is_chaarlie_recommended", true\)/)
 
-  assert.match(researchScript, /Refusing to update closed submission/)
-  assert.match(researchScript, /\.eq\("status", submission\.status\)/)
-  assert.match(researchScript, /\.eq\("updated_at", submission\.updated_at\)/)
+  assert.match(reviewActionsScript, /Refusing to update closed submission/)
+  assert.match(reviewActionsScript, /\.eq\("status", params\.submission\.status\)/)
+  assert.match(reviewActionsScript, /\.eq\("updated_at", params\.submission\.updated_at\)/)
   assert.match(researchScript, /submission\.researched_payload \?\? {}/)
-  assert.match(researchScript, /error\?\.message \?\? "no row updated"/)
+  assert.match(reviewActionsScript, /error\?\.message \?\? "no row updated"/)
+  assert.match(researchScript, /saveResearchedPayload/)
+  assert.match(reviewActionsScript, /saveResearchedPayload/)
+  assert.match(reviewActionsScript, /dryRunResearchedPayload/)
+  assert.match(prepareResearchScript, /statusFilter:\s*"pending_review"/)
+  assert.doesNotMatch(prepareResearchScript, /\.update\(/)
+  assert.match(approvePackageScript, /Approve-package writes require --confirm/)
+  assert.match(approvePackageScript, /approveSubmissionById/)
+  assert.match(approvePackageScript, /saveResearchedPayload/)
+  assert.doesNotMatch(approvePackageScript, /product_intake_link_existing_product/)
+  assert.match(queueScript, /REVIEW_LANE_STATUSES = \[/)
+  assert.doesNotMatch(queueScript, /REVIEW_LANE_STATUSES = \[\s*"pending_review"/)
   assert.match(queueScript, /--report|flagBool\(args, "report"\)/)
   assert.match(queueScript, /flag\(args, "category"\)/)
   assert.match(queueScript, /flag\(args, "source"\)/)
@@ -370,6 +392,68 @@ test("queue reporting derives ops status, filters, report counts, and csv output
   assert.match(csv.value, /"Hair Food, Aloe"/)
 })
 
+test("queue loader defaults to review lane and preserves explicit pending backlog filter", async () => {
+  const now = new Date("2026-06-17T12:00:00.000Z")
+  const baseRow: ProductIntakeQueueRow = {
+    id: "submission-base",
+    created_at: "2026-06-17T10:00:00.000Z",
+    updated_at: "2026-06-17T11:00:00.000Z",
+    user_id: "user-base",
+    source: "chat",
+    category: "mask",
+    brand_text: "Garnier",
+    product_name_text: "Hair Food",
+    front_image_path: null,
+    barcode_image_path: null,
+    status: "pending_review",
+    notification_sent_at: null,
+    cleanup_after: null,
+    photos_deleted_at: null,
+    researched_payload: {},
+  }
+  const rows: ProductIntakeQueueRow[] = [
+    { ...baseRow, id: "pending", status: "pending_review" },
+    { ...baseRow, id: "researching", status: "researching" },
+    { ...baseRow, id: "ready", status: "ready_for_review" },
+    { ...baseRow, id: "needs-info", status: "needs_more_info" },
+    { ...baseRow, id: "approved", status: "approved" },
+  ]
+
+  const reviewLaneRows = await loadQueueRows({
+    supabase: fakeQueueSupabase(rows),
+    statusFilter: null,
+    categoryFilter: null,
+    sourceFilter: null,
+    includeClosed: false,
+    minAgeDays: null,
+    maxAgeDays: null,
+    resultLimit: null,
+    now,
+  })
+
+  assert.deepEqual(
+    reviewLaneRows.map((row) => row.status),
+    ["researching", "ready_for_review", "needs_more_info"],
+  )
+
+  const pendingRows = await loadQueueRows({
+    supabase: fakeQueueSupabase(rows),
+    statusFilter: "pending_review",
+    categoryFilter: null,
+    sourceFilter: null,
+    includeClosed: false,
+    minAgeDays: null,
+    maxAgeDays: null,
+    resultLimit: null,
+    now,
+  })
+
+  assert.deepEqual(
+    pendingRows.map((row) => row.id),
+    ["pending"],
+  )
+})
+
 test("queue loader pages complete exports while preserving explicit sample limits", async () => {
   const now = new Date("2026-06-17T12:00:00.000Z")
   const rows = Array.from(
@@ -396,7 +480,7 @@ test("queue loader pages complete exports while preserving explicit sample limit
   const exportSupabase = fakeQueueSupabase(rows)
   const exportRows = await loadQueueRows({
     supabase: exportSupabase,
-    statusFilter: null,
+    statusFilter: "pending_review",
     categoryFilter: null,
     sourceFilter: null,
     includeClosed: false,
@@ -425,7 +509,7 @@ test("queue loader pages complete exports while preserving explicit sample limit
   const sampleSupabase = fakeQueueSupabase(largeSampleRows)
   const sampleRows = await loadQueueRows({
     supabase: sampleSupabase,
-    statusFilter: null,
+    statusFilter: "pending_review",
     categoryFilter: null,
     sourceFilter: null,
     includeClosed: false,

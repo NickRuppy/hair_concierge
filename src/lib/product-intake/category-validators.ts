@@ -196,7 +196,7 @@ const reviewedProductSchema = z
     clean_name: trimmedString,
     category_key: z.enum(PRODUCT_INTAKE_REVIEW_CATEGORY_KEYS),
     affiliate_link: urlString,
-    image_url: urlString,
+    image_url: urlString.nullable(),
     price_eur: z.number().finite().nonnegative(),
     currency: currencyString,
     purchase_link_status: z.enum(["available", "unavailable"]),

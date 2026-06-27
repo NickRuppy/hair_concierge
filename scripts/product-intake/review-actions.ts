@@ -5,6 +5,7 @@ import { sendProductIntakeReviewNotification } from "@/lib/product-intake/notifi
 import { captureProductIntakeException } from "@/lib/observability/product-intake"
 import type {
   ProductIntakeFinalReviewedPayload,
+  ProductIntakeResearchedPayload,
   ProductIntakeTargetSpecOperation,
 } from "@/lib/product-intake/category-validators"
 import { dryRunProductIntakeReadyForReview } from "@/lib/product-intake/review-workflow"
@@ -12,6 +13,13 @@ import type { ProductSubmission } from "@/lib/types"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 export type ReviewActionSubmission = ProductSubmission
+
+const OPEN_RESEARCH_STATUSES = [
+  "pending_review",
+  "researching",
+  "ready_for_review",
+  "needs_more_info",
+] as const
 
 export async function loadSubmission(
   supabase: SupabaseClient,
@@ -60,6 +68,102 @@ export function validateSubmissionReady(submission: ReviewActionSubmission) {
     category: submission.category,
     researched_payload: submission.researched_payload,
   })
+}
+
+export function buildResearchPayloadDraft(submission: ReviewActionSubmission) {
+  const researchedPayload = submission.researched_payload ?? {}
+
+  return {
+    draft: {
+      product: {
+        canonical_brand: submission.brand_text,
+        clean_name: submission.product_name_text,
+        category_key: submission.category,
+      },
+      raw_submission: {
+        id: submission.id,
+        source: submission.source,
+        intake_method: submission.intake_method,
+        frequency_range: submission.frequency_range,
+        front_image_path: submission.front_image_path,
+        barcode_image_path: submission.barcode_image_path,
+      },
+      sources: [],
+      field_rationales: {},
+    },
+    final: (researchedPayload as { final?: unknown }).final,
+  }
+}
+
+export function dryRunResearchedPayload(params: {
+  submission: ReviewActionSubmission
+  researchedPayload: ProductIntakeResearchedPayload | Record<string, unknown>
+  markReady: boolean
+}) {
+  const dryRun = dryRunProductIntakeReadyForReview({
+    id: params.submission.id,
+    category: params.submission.category,
+    researched_payload: params.researchedPayload,
+  })
+  const nextStatus = params.markReady && dryRun.ok ? "ready_for_review" : "researching"
+
+  return {
+    submission_id: params.submission.id,
+    status: params.submission.status,
+    next_status: nextStatus,
+    dry_run: dryRun,
+    researched_payload: params.researchedPayload,
+  }
+}
+
+export async function saveResearchedPayload(params: {
+  supabase: SupabaseClient
+  submission: ReviewActionSubmission
+  researchedPayload: ProductIntakeResearchedPayload | Record<string, unknown>
+  markReady: boolean
+  now?: () => Date
+}) {
+  if (
+    !OPEN_RESEARCH_STATUSES.includes(
+      params.submission.status as (typeof OPEN_RESEARCH_STATUSES)[number],
+    )
+  ) {
+    throw new Error(
+      `Refusing to update closed submission ${params.submission.id} with status ${params.submission.status}`,
+    )
+  }
+  if (!params.submission.updated_at) {
+    throw new Error(
+      `Refusing to update submission ${params.submission.id} without updated_at guard`,
+    )
+  }
+
+  const dryRun = dryRunResearchedPayload({
+    submission: params.submission,
+    researchedPayload: params.researchedPayload,
+    markReady: params.markReady,
+  })
+  const updatedAt = (params.now?.() ?? new Date()).toISOString()
+
+  const { data, error } = await params.supabase
+    .from("product_submissions")
+    .update({
+      researched_payload: params.researchedPayload,
+      status: dryRun.next_status,
+      updated_at: updatedAt,
+    })
+    .eq("id", params.submission.id)
+    .eq("status", params.submission.status)
+    .eq("updated_at", params.submission.updated_at)
+    .in("status", [...OPEN_RESEARCH_STATUSES])
+    .select("id")
+    .single()
+
+  if (error || !data) {
+    throw new Error(`save researched payload: ${error?.message ?? "no row updated"}`)
+  }
+
+  return dryRun
 }
 
 type ApprovalRpcResult = {
