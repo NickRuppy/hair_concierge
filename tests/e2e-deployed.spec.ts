@@ -89,35 +89,35 @@ test.describe("Deployed App E2E Tests", () => {
     await startButton.waitFor({ state: "visible" })
     await startButton.click()
 
-    // Step 1: Hair structure question (question 1/7)
+    // Step 1: Hair structure question (question 1/10)
     await expect(page.getByText(/Haarstruktur/i)).toBeVisible({ timeout: 15000 })
 
     // Click "Glatt" option — should auto-advance after 400ms
     await page.getByText("Glatt").first().click()
 
-    // Step 2: Hair thickness (question 2/7)
+    // Step 2: Hair thickness (question 2/10)
     await expect(page.getByText(/Wie dick fühlt sich ein einzelnes Haar/i)).toBeVisible({
       timeout: 10000,
     })
-    await expect(page.getByText("2/7")).toBeVisible()
+    await expect(page.getByText("2/10")).toBeVisible()
 
     // Click "Mittel"
     await page.getByText("Mittel").first().click()
 
-    // Step 3: Surface test (question 3/7)
-    await expect(page.getByText(/Wie fühlt sich dein Haar an/i)).toBeVisible({
+    // Step 3: Hair density (question 3/10)
+    await expect(page.getByText(/Wie dicht ist dein Haar insgesamt/i)).toBeVisible({
       timeout: 10000,
     })
-    await expect(page.getByText("3/7")).toBeVisible()
+    await expect(page.getByText("3/10")).toBeVisible()
 
-    // Click "Glatt wie Glas"
-    await page.getByText("Glatt wie Glas").click()
+    // Click "Mittlere Dichte"
+    await page.getByText("Mittlere Dichte").click()
 
-    // Step 4: Pull test (question 4/7)
-    await expect(page.getByText("WIE ELASTISCH IST DEIN HAAR?", { exact: false })).toBeVisible({
+    // Step 4: Hair length (question 4/10)
+    await expect(page.getByText(/Wie lang sind deine Haare aktuell/i)).toBeVisible({
       timeout: 10000,
     })
-    await expect(page.getByText("4/7")).toBeVisible()
+    await expect(page.getByText("4/10")).toBeVisible()
   })
 
   test("quiz flow: navigate through scalp question progressive disclosure", async ({ page }) => {
@@ -126,8 +126,9 @@ test.describe("Deployed App E2E Tests", () => {
       timeout: 15000,
     })
 
-    // Navigate to scalp question (step 6, question 6/7)
-    // Steps: start -> Q1(texture) -> Q2(thickness) -> Q3(surface) -> Q4(pull) -> Q5(chemical) -> Q6(scalp)
+    // Navigate to scalp question (step 6, question 8/10)
+    // Steps: start -> Q1(texture) -> Q2(thickness) -> Q3(density) -> Q4(length)
+    // -> Q5(surface) -> Q6(pull) -> Q7(chemical) -> Q8(scalp)
     const startBtn = page.getByRole("button", { name: /QUIZ STARTEN/i })
     await startBtn.waitFor({ state: "visible" })
     await startBtn.click()
@@ -135,26 +136,32 @@ test.describe("Deployed App E2E Tests", () => {
     await expect(page.getByText(/Haarstruktur/i)).toBeVisible({ timeout: 15000 })
 
     await page.getByText("Glatt").first().click()
-    await expect(page.getByText("2/7")).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText("2/10")).toBeVisible({ timeout: 10000 })
 
     await page.getByText("Mittel").first().click()
-    await expect(page.getByText("3/7")).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText("3/10")).toBeVisible({ timeout: 10000 })
+
+    await page.getByText("Mittlere Dichte").click()
+    await expect(page.getByText("4/10")).toBeVisible({ timeout: 10000 })
+
+    await page.getByText("Mittellang").click()
+    await expect(page.getByText("5/10")).toBeVisible({ timeout: 10000 })
 
     await page.getByText("Glatt wie Glas").click()
-    await expect(page.getByText("4/7")).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText("6/10")).toBeVisible({ timeout: 10000 })
 
     await page.getByText("Dehnt sich und geht zurück").click()
-    await expect(page.getByText("5/7")).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText("7/10")).toBeVisible({ timeout: 10000 })
 
-    // Chemical treatment (question 5/7)
-    await expect(
-      page.getByText("SIND DEINE HAARE CHEMISCH BEHANDELT?", { exact: false }),
-    ).toBeVisible({ timeout: 10000 })
+    // Chemical treatment (question 7/10)
+    await expect(page.getByText(/Sind deine Haare chemisch behandelt/i)).toBeVisible({
+      timeout: 10000,
+    })
     await page.locator(".quiz-card", { hasText: "Naturhaar" }).click()
     await page.getByRole("button", { name: /^Weiter$/i }).click()
 
-    // Should be on scalp type question (6/7)
-    await expect(page.getByText("6/7")).toBeVisible({ timeout: 10000 })
+    // Should be on scalp type question (8/10)
+    await expect(page.getByText("8/10")).toBeVisible({ timeout: 10000 })
     await expect(
       page.getByRole("heading", { name: /Wie schnell fetten deine Ansätze nach/i }),
     ).toBeVisible({ timeout: 10000 })
@@ -163,13 +170,13 @@ test.describe("Deployed App E2E Tests", () => {
     await page.getByText("Ausgeglichen").click()
 
     // Gate question should appear
-    await expect(page.getByText("BESCHWERDEN WIE SCHUPPEN", { exact: false })).toBeVisible({
+    await expect(page.getByText(/Beschwerden wie Schuppen/i)).toBeVisible({
       timeout: 5000,
     })
 
     // Click "NEIN" to skip condition and advance to the new concerns page
-    await page.getByRole("button", { name: "NEIN" }).click()
-    await expect(page.getByText("7/7")).toBeVisible({ timeout: 10000 })
+    await page.getByRole("button", { name: /^Nein$/i }).click()
+    await expect(page.getByText("9/10")).toBeVisible({ timeout: 10000 })
     await expect(page.getByText(/Welche Haarprobleme/i)).toBeVisible({ timeout: 10000 })
   })
 

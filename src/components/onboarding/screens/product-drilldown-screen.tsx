@@ -3,10 +3,14 @@
 import { ArrowLeft } from "lucide-react"
 import { PRODUCT_FREQUENCY_OPTIONS } from "@/lib/vocabulary"
 import type { ProductFrequency } from "@/lib/vocabulary"
+import { InfoTip } from "@/components/ui/info-tip"
+import { INFO_TIPS, type InfoTipId } from "@/lib/help/info-tips"
 
 interface ProductDrilldownScreenProps {
   category: string
   categoryLabel: string
+  categoryTitle?: string
+  infoTipId?: InfoTipId
   subtitle?: string
   productName: string
   frequency: ProductFrequency | null
@@ -19,6 +23,8 @@ interface ProductDrilldownScreenProps {
 
 export function ProductDrilldownScreen({
   categoryLabel,
+  categoryTitle,
+  infoTipId,
   subtitle,
   productName,
   frequency,
@@ -28,6 +34,8 @@ export function ProductDrilldownScreen({
   onBack,
   continueLabel = "Weiter",
 }: ProductDrilldownScreenProps) {
+  const tip = infoTipId ? INFO_TIPS[infoTipId] : null
+
   return (
     <div>
       <button
@@ -38,9 +46,21 @@ export function ProductDrilldownScreen({
         <ArrowLeft className="h-5 w-5" />
       </button>
 
-      <h1 className="animate-fade-in-up font-header text-3xl leading-tight text-foreground mb-2">
-        Dein {categoryLabel}
-      </h1>
+      <div className="animate-fade-in-up mb-2 flex items-start justify-between gap-3">
+        <h1 className="min-w-0 flex-1 font-header text-3xl leading-tight text-foreground">
+          {categoryTitle ?? `Dein ${categoryLabel}`}
+        </h1>
+        {tip && (
+          <div className="mt-1 flex shrink-0 justify-end">
+            <InfoTip
+              title={tip.title}
+              body={tip.body}
+              label={`Info zu ${categoryLabel}`}
+              buttonClassName="h-7 w-7"
+            />
+          </div>
+        )}
+      </div>
 
       <p
         className="animate-fade-in-up text-sm text-[var(--text-sub)] mb-6"

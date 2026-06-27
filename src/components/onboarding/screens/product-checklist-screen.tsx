@@ -3,11 +3,13 @@
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import type { IconName } from "@/components/ui/icon"
+import { InfoTip } from "@/components/ui/info-tip"
+import { INFO_TIPS, type InfoTipId } from "@/lib/help/info-tips"
 
 interface ProductChecklistScreenProps {
   title: string
   subtitle: string
-  options: { value: string; label: string; icon: IconName }[]
+  options: { value: string; label: string; icon: IconName; infoTipId?: InfoTipId }[]
   selected: string[]
   onToggle: (value: string) => void
   onContinue: () => void
@@ -56,17 +58,31 @@ export function ProductChecklistScreen({
       </p>
 
       <div className="space-y-3 mb-6">
-        {options.map((option, i) => (
-          <QuizOptionCard
-            key={option.value}
-            icon={option.icon}
-            label={option.label}
-            active={selected.includes(option.value)}
-            disabled={isSaving}
-            onClick={() => onToggle(option.value)}
-            animationDelay={100 + i * 60}
-          />
-        ))}
+        {options.map((option, i) => {
+          const tip = option.infoTipId ? INFO_TIPS[option.infoTipId] : null
+
+          return (
+            <QuizOptionCard
+              key={option.value}
+              icon={option.icon}
+              label={option.label}
+              active={selected.includes(option.value)}
+              disabled={isSaving}
+              onClick={() => onToggle(option.value)}
+              animationDelay={100 + i * 60}
+              trailing={
+                tip ? (
+                  <InfoTip
+                    title={tip.title}
+                    body={tip.body}
+                    label={`Info zu ${option.label}`}
+                    buttonClassName="h-7 w-7"
+                  />
+                ) : undefined
+              }
+            />
+          )
+        })}
       </div>
 
       {noneLabel && onNone && (

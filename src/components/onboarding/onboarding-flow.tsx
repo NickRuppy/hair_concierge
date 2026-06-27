@@ -17,6 +17,7 @@ import { OnboardingProgressBar } from "@/components/onboarding/onboarding-progre
 import {
   BASIC_PRODUCT_OPTIONS,
   EXTRA_PRODUCT_OPTIONS,
+  PRODUCT_CATEGORY_DRILLDOWN_TITLES,
   PRODUCT_CATEGORY_LABELS,
 } from "@/lib/onboarding/product-options"
 import { normalizeProductFrequency } from "@/lib/vocabulary"
@@ -275,12 +276,12 @@ export function OnboardingFlow({
     }
 
     // Resume scenario: populate product selections from user_product_usage rows
-    if (productUsage.length > 0) {
-      const basicValues = BASIC_PRODUCT_OPTIONS.map((o) => o.value)
-      const extraValues = EXTRA_PRODUCT_OPTIONS.map((o) => o.value)
-      const basics: string[] = []
-      const extras: string[] = []
+    const basicValues = BASIC_PRODUCT_OPTIONS.map((o) => o.value)
+    const extraValues = EXTRA_PRODUCT_OPTIONS.map((o) => o.value)
+    const basics: string[] = []
+    const extras: string[] = []
 
+    if (productUsage.length > 0) {
       for (const row of productUsage) {
         const cat = row.category as string
         const productName = typeof row.product_name === "string" ? row.product_name : null
@@ -306,16 +307,30 @@ export function OnboardingFlow({
           })
         }
       }
+    }
 
-      if (basics.length > 0) store.setSelectedBasicProducts(basics)
-      if (extras.length > 0) store.setSelectedExtraProducts(extras)
+    if (step === "product_drilldown" && initialDrilldownCategory) {
+      if (
+        basicValues.includes(initialDrilldownCategory) &&
+        !basics.includes(initialDrilldownCategory)
+      ) {
+        basics.push(initialDrilldownCategory)
+      } else if (
+        extraValues.includes(initialDrilldownCategory) &&
+        !extras.includes(initialDrilldownCategory)
+      ) {
+        extras.push(initialDrilldownCategory)
+      }
+    }
 
-      if (step === "product_drilldown" && initialDrilldownCategory) {
-        const orderedCategories = [...basics, ...extras]
-        const targetIndex = orderedCategories.indexOf(initialDrilldownCategory)
-        if (targetIndex >= 0) {
-          store.setCurrentDrilldownIndex(targetIndex)
-        }
+    if (basics.length > 0) store.setSelectedBasicProducts(basics)
+    if (extras.length > 0) store.setSelectedExtraProducts(extras)
+
+    if (step === "product_drilldown" && initialDrilldownCategory) {
+      const orderedCategories = [...basics, ...extras]
+      const targetIndex = orderedCategories.indexOf(initialDrilldownCategory)
+      if (targetIndex >= 0) {
+        store.setCurrentDrilldownIndex(targetIndex)
       }
     }
 
@@ -711,6 +726,12 @@ export function OnboardingFlow({
   const nightProtectionWithIcon = NIGHT_PROTECTION_OPTIONS.map((o) => ({
     ...o,
     icon: NIGHT_PROTECTION_ICONS[o.value] ?? fallbackIcon,
+    infoTipId:
+      o.value === "silk_satin_bonnet"
+        ? ("routine.bonnet" as const)
+        : o.value === "pineapple"
+          ? ("routine.pineapple" as const)
+          : undefined,
   }))
 
   // ── Drilldown helpers ──
@@ -775,6 +796,12 @@ export function OnboardingFlow({
           <ProductDrilldownScreen
             category={currentCategory}
             categoryLabel={PRODUCT_CATEGORY_LABELS[currentCategory] ?? currentCategory}
+            categoryTitle={PRODUCT_CATEGORY_DRILLDOWN_TITLES[currentCategory]}
+            infoTipId={
+              [...BASIC_PRODUCT_OPTIONS, ...EXTRA_PRODUCT_OPTIONS].find(
+                (option) => option.value === currentCategory,
+              )?.infoTipId
+            }
             subtitle={CATEGORY_SUBTITLES[currentCategory]}
             productName={currentDrilldown.productName}
             frequency={currentDrilldown.frequency}
@@ -885,6 +912,8 @@ export function OnboardingFlow({
           <SingleSelectScreen
             title="Wie gehst du mit dem Handtuch meistens vor?"
             subtitle="Rubbeln oder sanft ausdrücken?"
+            titleInfoTipId="routine.towel_technique"
+            titleInfoLabel="Info zu sanftem Trocknen"
             options={towelTechniqueWithIcon}
             selected={store.towelTechnique}
             onSelect={(val) => {
@@ -900,6 +929,8 @@ export function OnboardingFlow({
           <SingleSelectScreen
             title="Wie trocknest du dein Haar hauptsächlich?"
             subtitle="Hitze ist der größte Stressfaktor — wir passen deinen Plan daran an."
+            titleInfoTipId="routine.diffuser"
+            titleInfoLabel="Info zu Diffusor"
             options={dryingMethodWithIcon}
             selected={store.dryingMethod}
             onSelect={(val) => {

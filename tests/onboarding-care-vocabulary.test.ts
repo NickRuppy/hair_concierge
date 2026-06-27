@@ -57,6 +57,8 @@ test("night protection options include length tip accessory and remove tight hai
     NIGHT_PROTECTION_LABELS.length_tip_accessory,
     "Längen-/Spitzenschutz (z. B. HairHOMIE)",
   )
+  assert.equal(NIGHT_PROTECTION_LABELS.silk_satin_bonnet, "Bonnet / Schlafhaube")
+  assert.equal(NIGHT_PROTECTION_LABELS.pineapple, "Pineapple")
   assert.ok(!NIGHT_PROTECTIONS.includes("tight_hairstyles" as never))
 })
 

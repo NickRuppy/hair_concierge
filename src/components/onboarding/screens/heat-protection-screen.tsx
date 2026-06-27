@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react"
 import { ArrowLeft } from "lucide-react"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
+import { InfoTip } from "@/components/ui/info-tip"
+import { INFO_TIPS } from "@/lib/help/info-tips"
 
 interface HeatProtectionScreenProps {
   selected: boolean | null
@@ -13,6 +15,7 @@ interface HeatProtectionScreenProps {
 export function HeatProtectionScreen({ selected, onSelect, onBack }: HeatProtectionScreenProps) {
   const advancingRef = useRef(false)
   const [localSelected, setLocalSelected] = useState(selected)
+  const tip = INFO_TIPS["routine.heat_protection"]
 
   useEffect(() => {
     setLocalSelected(selected)
@@ -38,9 +41,19 @@ export function HeatProtectionScreen({ selected, onSelect, onBack }: HeatProtect
         <ArrowLeft className="h-5 w-5" />
       </button>
 
-      <h1 className="animate-fade-in-up font-header text-3xl leading-tight text-foreground mb-6">
-        Benutzt du Hitzeschutz?
-      </h1>
+      <div className="animate-fade-in-up mb-6 flex items-start justify-between gap-3">
+        <h1 className="min-w-0 flex-1 font-header text-3xl leading-tight text-foreground">
+          Benutzt du Hitzeschutz?
+        </h1>
+        <div className="mt-1 flex shrink-0 justify-end">
+          <InfoTip
+            title={tip.title}
+            body={tip.body}
+            label="Info zu Hitzeschutz"
+            buttonClassName="h-7 w-7"
+          />
+        </div>
+      </div>
 
       <div className="space-y-3">
         <QuizOptionCard

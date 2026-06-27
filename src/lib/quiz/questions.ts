@@ -1,15 +1,36 @@
-import type { QuizQuestion } from "./types"
+import type { QuizQuestion, QuizStep } from "./types"
 import { HAIR_LENGTH_OPTIONS } from "@/lib/vocabulary"
 
-export const QUIZ_TOTAL_QUESTIONS = 10
+export const QUIZ_QUESTION_STEPS = [
+  2, 3, 13, 15, 4, 5, 7, 6, 8, 12,
+] as const satisfies readonly QuizStep[]
+
+export const QUIZ_TOTAL_QUESTIONS = QUIZ_QUESTION_STEPS.length
+
+export function getQuizQuestionNumber(step: QuizStep): number | undefined {
+  const index = QUIZ_QUESTION_STEPS.indexOf(step as (typeof QUIZ_QUESTION_STEPS)[number])
+  return index === -1 ? undefined : index + 1
+}
+
+export function getRemainingQuizQuestions(step: QuizStep): number | undefined {
+  const questionNumber = getQuizQuestionNumber(step)
+  return questionNumber === undefined ? undefined : QUIZ_TOTAL_QUESTIONS - questionNumber
+}
+
+function remainingQuestionsText(step: QuizStep, prefix: string, suffix = "Fragen"): string {
+  const remaining = getRemainingQuizQuestions(step)
+  if (remaining === 1) return `${prefix} — eine Frage noch.`
+  return `${prefix} — noch ${remaining ?? 0} ${suffix}.`
+}
 
 export const quizQuestions: QuizQuestion[] = [
   {
     step: 2,
-    questionNumber: 1,
+    questionNumber: getQuizQuestionNumber(2) ?? 1,
     title: "Welche Haarstruktur haben die meisten deiner Haare?",
+    infoTipId: "quiz.hair_texture",
     instruction:
-      "Schau dir eine typische nasse Strähne an und wähle unten aus, welche Form sie annimmt.\n\nBei Dauerwelle oder chemischer Glättung: Wähle hier deine natürliche Struktur am Ansatz, nicht die chemisch umgeformten Längen.",
+      "Wähle die natürliche Form deiner Haare, so gut du sie erkennen kannst. Wenn deine Längen chemisch geglättet oder dauergewellt sind, hilft der unbehandelte Ansatz als Orientierung.",
     options: [
       {
         value: "straight",
@@ -37,12 +58,13 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Super — noch 9 kurze Fragen.",
+    motivation: remainingQuestionsText(2, "Super", "kurze Fragen"),
   },
   {
     step: 3,
-    questionNumber: 2,
+    questionNumber: getQuizQuestionNumber(3) ?? 2,
     title: "Wie dick fühlt sich ein einzelnes Haar bei dir meistens an?",
+    infoTipId: "quiz.thickness",
     instruction: "Vergleiche ein einzelnes Haar mit einem Nähfaden.",
     options: [
       {
@@ -69,10 +91,10 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     step: 13,
-    questionNumber: 3,
+    questionNumber: getQuizQuestionNumber(13) ?? 3,
     title: "Wie dicht ist dein Haar insgesamt?",
-    instruction:
-      "Jetzt geht es nicht mehr um ein einzelnes Haar, sondern um die Haarmenge auf dem Kopf. Schau zum Beispiel auf Scheitel, Zopf-Umfang und wie viel Kopfhaut sichtbar ist.",
+    infoTipId: "quiz.density",
+    instruction: "Schau zum Beispiel auf Scheitel, Zopf-Umfang und wie viel Kopfhaut sichtbar ist.",
     options: [
       {
         value: "low",
@@ -98,7 +120,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     step: 15,
-    questionNumber: 4,
+    questionNumber: getQuizQuestionNumber(15) ?? 4,
     title: "Wie lang sind deine Haare aktuell?",
     instruction:
       "Bei Locken oder Coils zählt die sanft gestreckte Länge einer Strähne.\n\nWenn du zwischen zwei Längen liegst, wähle die längere Option.",
@@ -114,10 +136,10 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     step: 4,
-    questionNumber: 5,
-    title: "Wie fühlt sich dein Haar an?",
+    questionNumber: getQuizQuestionNumber(4) ?? 5,
+    title: "Wie fühlt sich deine Haaroberfläche an?",
     instruction:
-      "Nimm ein gewaschenes, trockenes Haar aus deiner Bürste \u2013 es darf kein Produkt mehr drauf sein. Schließ die Augen und fahre ganz langsam mit zwei Fingern von der Wurzel zur Spitze. Konzentrier dich darauf, was du fühlst:",
+      "Fahre langsam mit zwei Fingern über ein sauberes, trockenes Haar: glatt, leicht uneben oder rau?",
     options: [
       {
         value: "glatt",
@@ -143,10 +165,11 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     step: 5,
-    questionNumber: 6,
+    questionNumber: getQuizQuestionNumber(5) ?? 6,
     title: "Wie elastisch ist dein Haar?",
+    infoTipId: "quiz.pull_test",
     instruction:
-      "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefühl, nicht reißen. Beobachte genau, was passiert:\n\nZiehe nur leicht. Uns geht es um die Tendenz, nicht um Perfektion.",
+      "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig \u2013 wirklich mit Gefühl, nicht reißen. Beobachte genau, was passiert.",
     options: [
       {
         value: "stretches_bounces",
@@ -168,11 +191,11 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
     selectionMode: "single",
-    motivation: "Gut gemacht — noch 4 Fragen.",
+    motivation: remainingQuestionsText(5, "Gut gemacht"),
   },
   {
     step: 7,
-    questionNumber: 7,
+    questionNumber: getQuizQuestionNumber(7) ?? 7,
     title: "Sind deine Haare chemisch behandelt?",
     instruction:
       "Gemeint ist alles, was Farbe oder Form länger verändert hat: Färben/Tönen, Aufhellen, Dauerwelle oder Glättung. Deine natürliche Struktur hast du schon angegeben.",
@@ -213,7 +236,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     step: 8,
-    questionNumber: 9,
+    questionNumber: getQuizQuestionNumber(8) ?? 9,
     title: "Welche Haarprobleme beschäftigen dich gerade am meisten?",
     instruction:
       "Wähle bis zu 3 Punkte aus, die aktuell am besten zu deinen Längen und Spitzen passen.",
@@ -257,7 +280,7 @@ export const quizQuestions: QuizQuestion[] = [
     ],
     selectionMode: "multi",
     maxSelections: 3,
-    motivation: "Fast geschafft — eine Frage noch.",
+    motivation: remainingQuestionsText(8, "Fast geschafft"),
   },
 ]
 

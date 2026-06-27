@@ -99,9 +99,9 @@ export type NightProtection = (typeof NIGHT_PROTECTIONS)[number]
 
 export const NIGHT_PROTECTION_LABELS = {
   silk_satin_pillow: "Seidenkissenbezug",
-  silk_satin_bonnet: "Seidenhaube / Bonnet",
+  silk_satin_bonnet: "Bonnet / Schlafhaube",
   loose_tied: "Locker zusammengebunden",
-  pineapple: "Pineapple (hoher lockerer Dutt)",
+  pineapple: "Pineapple",
   length_tip_accessory: "Längen-/Spitzenschutz (z. B. HairHOMIE)",
 } as const satisfies Record<NightProtection, string>
 

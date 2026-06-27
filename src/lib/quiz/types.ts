@@ -21,6 +21,7 @@ export type LeadCaptureSubStep = "name" | "email" | "consent"
 export type SelectionMode = "single" | "multi"
 
 import type { IconName } from "@/components/ui/icon"
+import type { InfoTipId } from "@/lib/help/info-tips"
 import type { HairLength, ProfileConcern } from "@/lib/vocabulary"
 
 export interface QuizOption {
@@ -35,6 +36,7 @@ export interface QuizQuestion {
   questionNumber: number
   title: string
   instruction: string
+  infoTipId?: InfoTipId
   options: QuizOption[]
   selectionMode: SelectionMode
   maxSelections?: number
