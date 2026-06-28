@@ -6,6 +6,8 @@ import {
 } from "@/components/chat/product-display-model"
 import type { Product } from "@/lib/types"
 import { Icon, type IconName } from "@/components/ui/icon"
+import { getProductIdentityDisplayLabel } from "@/lib/product-lines/display"
+import { ProductImage } from "./product-image"
 
 interface ProductCardProps {
   product: Product
@@ -50,6 +52,7 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
   const iconName = categoryIconName(product.category)
   const facts = buildCompactProductFacts(product)
   const price = formatProductPrice(product.price_eur, product.currency)
+  const identityLabel = getProductIdentityDisplayLabel(product)
 
   return (
     <button
@@ -57,19 +60,22 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
       onClick={() => onClick(product)}
       className="flex w-full min-w-0 cursor-pointer items-center gap-3 overflow-hidden rounded-xl border border-border bg-card p-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-sm"
     >
-      {/* Category icon */}
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--brand-plum-ice)]">
-        <Icon name={iconName} size={18} className="text-primary" />
-      </div>
+      {product.image_url ? (
+        <ProductImage imageUrl={product.image_url} category={product.category} size="sm" />
+      ) : (
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--brand-plum-ice)]">
+          <Icon name={iconName} size={18} className="text-primary" />
+        </div>
+      )}
 
       {/* Product info */}
       <div className="min-w-0 flex-1">
+        {identityLabel && (
+          <p className="truncate text-[11px] text-[var(--text-caption)]">{identityLabel}</p>
+        )}
         <p className="truncate text-[13px] font-semibold text-[var(--text-heading)]">
           {product.name}
         </p>
-        {product.brand && (
-          <p className="truncate text-[11px] text-[var(--text-caption)]">{product.brand}</p>
-        )}
         {facts.length > 0 && (
           <div className="mt-1 flex min-w-0 flex-wrap gap-1">
             {facts.map((fact) => (

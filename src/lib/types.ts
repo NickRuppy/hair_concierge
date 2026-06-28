@@ -251,6 +251,8 @@ export interface Product {
   short_description: string | null
 
   category: string | null
+  product_line_id?: string | null
+  product_line_name?: string | null
   affiliate_link: string | null
   purchase_link_status?: "available" | "unavailable" | null
   purchase_link_checked_at?: string | null

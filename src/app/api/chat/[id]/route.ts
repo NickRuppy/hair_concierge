@@ -3,6 +3,55 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { deleteConversationSourcedMemories } from "@/lib/chat-runtime/user-memory"
 import { ERR_UNAUTHORIZED, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
+import { attachProductLineNamesToProducts } from "@/lib/product-lines/display"
+import type { Product } from "@/lib/types"
+
+type MessageWithProductRecommendations = {
+  product_recommendations?: Product[] | null
+}
+
+export async function attachProductLineNamesToMessages<T extends MessageWithProductRecommendations>(
+  messages: T[],
+  client?: unknown,
+): Promise<T[]> {
+  const productLists = messages.map((message) =>
+    Array.isArray(message.product_recommendations) ? message.product_recommendations : [],
+  )
+  const products = productLists.flat()
+  if (products.length === 0) return messages
+
+  let enrichedProducts: Product[]
+  try {
+    enrichedProducts = await attachProductLineNamesToProducts(
+      products,
+      client ?? createAdminClient(),
+      {
+        onError: (error) =>
+          console.error(
+            "Failed to load product lines for persisted recommendation products:",
+            error,
+          ),
+      },
+    )
+  } catch (error) {
+    console.error("Failed to enrich persisted recommendation products:", error)
+    return messages
+  }
+  if (enrichedProducts === products) return messages
+
+  let cursor = 0
+  return messages.map((message, index) => {
+    const originalProducts = productLists[index]
+    if (!originalProducts || originalProducts.length === 0) return message
+
+    const nextProducts = enrichedProducts.slice(cursor, cursor + originalProducts.length)
+    cursor += originalProducts.length
+    return {
+      ...message,
+      product_recommendations: nextProducts,
+    }
+  })
+}
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -33,7 +82,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     .eq("conversation_id", id)
     .order("created_at", { ascending: true })
 
-  return NextResponse.json({ conversation, messages: messages || [] })
+  const messagesWithProductLines = await attachProductLineNamesToMessages(messages || [])
+
+  return NextResponse.json({ conversation, messages: messagesWithProductLines })
 }
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {

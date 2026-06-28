@@ -5,12 +5,7 @@ import {
 } from "@/lib/leave-in/constants"
 import type { HairProfile, LeaveInRecommendationMetadata, Product } from "@/lib/types"
 
-export type CompactProductFactSource =
-  | "format"
-  | "heat_protection"
-  | "care_focus"
-  | "weight"
-  | "category"
+export type CompactProductFactSource = "format" | "heat_protection" | "weight" | "category"
 
 export interface CompactProductFact {
   label: string
@@ -21,12 +16,6 @@ export interface DrawerProductProfileRow {
   label: string
   value: string
 }
-
-const BALANCE_LABELS = {
-  moisture: "Feuchtigkeit",
-  balanced: "ausgewogen",
-  protein: "Protein",
-} as const
 
 const BALANCE_ROW_LABELS = {
   moisture: "Feuchtigkeit",
@@ -139,12 +128,17 @@ export const UNAVAILABLE_PURCHASE_LINK_HELPER =
   "Der hinterlegte Shop meldet den Artikel aktuell als online nicht verfügbar."
 
 export function buildCompactProductFacts(product: Product): CompactProductFact[] {
+  const categoryLabel = getProductCategoryLabel(
+    product.recommendation_meta?.category ?? product.category,
+  )
+
   if (isLeaveInProduct(product)) {
-    const facts: CompactProductFact[] = []
+    const facts: CompactProductFact[] = categoryLabel
+      ? [{ label: categoryLabel, source: "category" }]
+      : []
     const meta = getLeaveInMeta(product)
     const format = meta?.product_format ?? product.leave_in_specs?.format ?? null
     const weight = meta?.product_weight ?? product.leave_in_specs?.weight ?? null
-    const balance = meta?.product_balance_direction ?? null
 
     if (format) {
       facts.push({ label: LEAVE_IN_FORMAT_LABELS[format], source: "format" })
@@ -154,17 +148,6 @@ export function buildCompactProductFacts(product: Product): CompactProductFact[]
       facts.push({ label: "Hitzeschutz", source: "heat_protection" })
     }
 
-    if (balance) {
-      facts.push({ label: `Pflege: ${BALANCE_LABELS[balance]}`, source: "care_focus" })
-    } else {
-      const benefit = firstLeaveInCareBenefit(
-        meta?.product_care_benefits ?? product.leave_in_specs?.care_benefits,
-      )
-      if (benefit) {
-        facts.push({ label: `Pflege: ${benefit}`, source: "care_focus" })
-      }
-    }
-
     if (facts.length < 3 && weight) {
       facts.push({ label: LEAVE_IN_WEIGHT_LABELS[weight], source: "weight" })
     }
@@ -172,9 +155,6 @@ export function buildCompactProductFacts(product: Product): CompactProductFact[]
     return facts.slice(0, 3)
   }
 
-  const categoryLabel = getProductCategoryLabel(
-    product.recommendation_meta?.category ?? product.category,
-  )
   return categoryLabel ? [{ label: categoryLabel, source: "category" }] : []
 }
 
