@@ -2,6 +2,7 @@
 
 import type { Product, HairProfile } from "@/lib/types"
 import { Badge } from "@/components/ui/badge"
+import { getProductIdentityDisplayParts } from "@/lib/product-lines/display"
 import {
   BottomSheet,
   BottomSheetContent,
@@ -48,6 +49,7 @@ export function ProductDetailDrawer({
   const shopLabel = getProductShopCtaLabel(product)
   const purchaseLinkHelperText = getPurchaseLinkHelperText(product)
   const showAffiliateDisclosure = shouldShowAffiliateDisclosure(product)
+  const [displayBrand, displayLine] = getProductIdentityDisplayParts(product)
 
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange}>
@@ -55,8 +57,11 @@ export function ProductDetailDrawer({
         <BottomSheetHeader className="gap-4 pb-4">
           <ProductImage imageUrl={product.image_url} category={product.category} size="lg" />
           <div className="min-w-0 flex-1">
-            {product.brand && (
-              <p className="text-sm font-medium text-muted-foreground">{product.brand}</p>
+            {displayBrand && (
+              <p className="text-sm font-medium text-muted-foreground">{displayBrand}</p>
+            )}
+            {displayLine && (
+              <p className="text-xs font-medium text-muted-foreground">{displayLine}</p>
             )}
             <BottomSheetTitle className="text-lg">{product.name}</BottomSheetTitle>
             {categoryLabel && (

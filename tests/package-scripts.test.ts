@@ -53,3 +53,11 @@ test("prepare skips Husky when dev dependencies are omitted", () => {
   assert.match(script, /includes\('dev'\)/)
   assert.match(script, /husky/)
 })
+
+test("chat ci smoke uses bounded eval concurrency", () => {
+  const script = packageJson.scripts?.["test:chat:ci"] ?? ""
+
+  assert.match(script, /scripts\/eval-chat\/run\.ts/)
+  assert.match(script, /--ci-smoke/)
+  assert.match(script, /--concurrency 2/)
+})

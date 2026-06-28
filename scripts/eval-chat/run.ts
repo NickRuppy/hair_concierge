@@ -7,6 +7,7 @@
  *   npx tsx scripts/eval-chat/run.ts --scenario owc-followup
  *   npx tsx scripts/eval-chat/run.ts --ci-smoke
  *   npx tsx scripts/eval-chat/run.ts --skip-judge
+ *   npx tsx scripts/eval-chat/run.ts --ci-smoke --concurrency 2
  */
 
 import fs from "fs"
@@ -39,12 +40,15 @@ import {
   buildFailedTurnDebugArtifact,
   fetchEvalServerInfo,
   writeFailedTurnDebugArtifact,
+  type EvalServerInfo,
 } from "./debug-artifacts"
+import { mapWithConcurrency } from "./concurrency"
 import type {
   ScenarioResult,
   TurnResult,
   AssertionResult,
   LangfuseExperimentSummary,
+  EvalScenario,
 } from "./types"
 
 // ── CLI args ─────────────────────────────────────────────────────────────
@@ -58,6 +62,7 @@ function parseArgs() {
   let langfusePublish = process.env.LANGFUSE_EVAL_PUBLISH === "1"
   let langfuseRunName: string | null = null
   let langfuseExperimentName = "Chaarlie Chat Eval"
+  let concurrency = Number(process.env.CHAT_EVAL_CONCURRENCY ?? "1")
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--base-url" && args[i + 1]) {
@@ -74,7 +79,13 @@ function parseArgs() {
       langfuseRunName = args[++i]
     } else if (args[i] === "--langfuse-experiment-name" && args[i + 1]) {
       langfuseExperimentName = args[++i]
+    } else if (args[i] === "--concurrency" && args[i + 1]) {
+      concurrency = Number(args[++i])
     }
+  }
+
+  if (!Number.isFinite(concurrency) || concurrency < 1) {
+    concurrency = 1
   }
 
   return {
@@ -85,10 +96,204 @@ function parseArgs() {
     langfusePublish,
     langfuseRunName,
     langfuseExperimentName,
+    concurrency: Math.floor(concurrency),
   }
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────
+
+async function runScenario(params: {
+  scenario: EvalScenario
+  baseUrl: string
+  supabaseUrl: string
+  serviceRoleKey: string
+  anonKey: string
+  skipJudge: boolean
+  serverInfo: EvalServerInfo
+}): Promise<{ result: ScenarioResult; debugArtifactPaths: string[]; logs: string[] }> {
+  const { scenario, baseUrl, supabaseUrl, serviceRoleKey, anonKey, skipJudge, serverInfo } = params
+  const logs: string[] = [`\n--- ${scenario.id}: ${scenario.name} ---`]
+  const debugArtifactPaths: string[] = []
+  const log = (line: string) => logs.push(line)
+
+  // Fresh user per scenario (isolates state)
+  const session = await createTestSession(supabaseUrl, serviceRoleKey, anonKey)
+
+  try {
+    await upsertHairProfile(
+      session.admin,
+      session.userId,
+      scenario.hair_profile,
+      scenario.routine_inventory ?? [],
+    )
+
+    let conversationId: string | null = null
+    const turnResults: TurnResult[] = []
+    const conversationHistory: string[] = []
+
+    for (let i = 0; i < scenario.turns.length; i++) {
+      const turn = scenario.turns[i]
+      log(`  Turn ${i + 1}: "${turn.message.slice(0, 60)}..."`)
+
+      const sse = await sendMessage(
+        baseUrl,
+        session.cookie,
+        turn.message,
+        conversationId ?? undefined,
+      )
+
+      if (sse.error) {
+        log(`    ERROR: ${sse.error.slice(0, 200)}`)
+      }
+
+      // Track conversation ID for multi-turn
+      if (sse.conversation_id) {
+        conversationId = sse.conversation_id
+      }
+
+      // Run assertions
+      const assertions: AssertionResult[] = []
+
+      if (turn.metadata) {
+        assertions.push(...runMetadataAssertions(sse, turn.metadata))
+      }
+
+      if (turn.content) {
+        assertions.push(...runContentAssertions(sse, turn.content))
+      }
+
+      // DB persistence check (verify rag_context is persisted)
+      if (conversationId && sse.content.length > 0) {
+        // Small delay to let async persistence complete
+        await new Promise((r) => setTimeout(r, 1000))
+        const dbMsg = await fetchLatestAssistantMessage(session.admin, conversationId)
+        if (dbMsg) {
+          const dbSourceCount = dbMsg.rag_context?.sources
+            ? (dbMsg.rag_context.sources as unknown[]).length
+            : 0
+          assertions.push({
+            tier: "db",
+            name: "message_persisted",
+            passed: dbMsg.content !== null && dbMsg.content.length > 0,
+            expected: "assistant message persisted",
+            actual: dbMsg.content ? `${dbMsg.content.length} chars` : "null",
+          })
+          assertions.push({
+            tier: "db",
+            name: "rag_context_persisted",
+            passed:
+              dbSourceCount === sse.sources.length ||
+              (sse.sources.length === 0 && dbSourceCount === 0),
+            expected: `${sse.sources.length} sources`,
+            actual: `${dbSourceCount} sources`,
+          })
+        }
+      }
+
+      // LLM judge
+      let judgeResult = null
+      if (turn.judge && !skipJudge) {
+        judgeResult = await runJudge(
+          turn.message,
+          sse,
+          turn.judge,
+          scenario.hair_profile,
+          scenario.routine_inventory,
+          conversationHistory.length > 0 ? conversationHistory.join("\n") : undefined,
+        )
+
+        assertions.push({
+          tier: "judge",
+          name: "llm_judge",
+          passed: judgeResult.verdict === "pass",
+          expected: "pass",
+          actual: `${judgeResult.verdict} (${judgeResult.score.toFixed(2)})`,
+        })
+      }
+
+      const qualityRubric = skipJudge
+        ? null
+        : await runQualityRubric(
+            turn.message,
+            sse,
+            scenario.hair_profile,
+            scenario.routine_inventory,
+            conversationHistory.length > 0 ? conversationHistory.join("\n") : undefined,
+          )
+
+      const allPassed = assertions.every((a) => a.passed)
+      const failCount = assertions.filter((a) => !a.passed).length
+
+      log(
+        `    ${allPassed ? "PASS" : "FAIL"} (${assertions.length - failCount}/${assertions.length} assertions)` +
+          ` [${sse.latency_ms}ms]`,
+      )
+
+      if (!allPassed) {
+        for (const f of assertions.filter((a) => !a.passed)) {
+          log(
+            `      [${f.severity ?? "hard"}][${f.tier}] ${f.name}: expected ${f.expected}, got ${f.actual}`,
+          )
+        }
+        try {
+          const traceLookup = await fetchConversationTurnTrace(session.admin, {
+            assistantMessageId: sse.assistant_message_id,
+            conversationId,
+          })
+          const artifact = buildFailedTurnDebugArtifact({
+            baseUrl,
+            scenarioId: scenario.id,
+            scenarioName: scenario.name,
+            turnIndex: i + 1,
+            message: turn.message,
+            sseResult: sse,
+            assertions,
+            serverInfo,
+            traceRow: traceLookup.traceRow,
+            traceError: traceLookup.error,
+          })
+          const artifactPath = writeFailedTurnDebugArtifact(artifact)
+          debugArtifactPaths.push(artifactPath)
+          log(`      Debug artifact: ${artifactPath}`)
+        } catch (error) {
+          log(
+            `      Debug artifact failed: ${error instanceof Error ? error.message : String(error)}`,
+          )
+        }
+      }
+
+      turnResults.push({
+        turn_index: i + 1,
+        message: turn.message,
+        sse_result: sse,
+        assertions,
+        judge_result: judgeResult,
+        quality_rubric: qualityRubric,
+        all_passed: allPassed,
+      })
+
+      // Build conversation context for judge
+      conversationHistory.push(`Nutzer: ${turn.message}`)
+      if (sse.content) {
+        conversationHistory.push(`Assistent: ${sse.content.slice(0, 200)}`)
+      }
+    }
+
+    const scenarioPassed = turnResults.every((t) => t.all_passed)
+    return {
+      result: {
+        id: scenario.id,
+        name: scenario.name,
+        passed: scenarioPassed,
+        turns: turnResults,
+      },
+      debugArtifactPaths,
+      logs,
+    }
+  } finally {
+    await session.cleanup()
+  }
+}
 
 async function main() {
   const {
@@ -99,6 +304,7 @@ async function main() {
     langfusePublish,
     langfuseRunName,
     langfuseExperimentName,
+    concurrency,
   } = parseArgs()
   const startTime = Date.now()
 
@@ -125,7 +331,7 @@ async function main() {
   }
 
   console.log(
-    `Running ${scenarios.length} scenario(s) against ${baseUrl}${skipJudge ? " (skip judge)" : ""}`,
+    `Running ${scenarios.length} scenario(s) against ${baseUrl}${skipJudge ? " (skip judge)" : ""} with concurrency ${concurrency}`,
   )
   const serverInfo = await fetchEvalServerInfo(baseUrl)
   if (serverInfo.available) {
@@ -140,188 +346,24 @@ async function main() {
     console.log(`Server debug: unavailable (${serverInfo.error})`)
   }
 
-  const results: ScenarioResult[] = []
   const debugArtifactPaths: string[] = []
   let langfuseExperiment: LangfuseExperimentSummary | null = null
 
-  for (const scenario of scenarios) {
-    console.log(`\n--- ${scenario.id}: ${scenario.name} ---`)
-
-    // Fresh user per scenario (isolates state)
-    const session = await createTestSession(supabaseUrl, serviceRoleKey, anonKey)
-
-    try {
-      await upsertHairProfile(
-        session.admin,
-        session.userId,
-        scenario.hair_profile,
-        scenario.routine_inventory ?? [],
-      )
-
-      let conversationId: string | null = null
-      const turnResults: TurnResult[] = []
-      const conversationHistory: string[] = []
-
-      for (let i = 0; i < scenario.turns.length; i++) {
-        const turn = scenario.turns[i]
-        console.log(`  Turn ${i + 1}: "${turn.message.slice(0, 60)}..."`)
-
-        const sse = await sendMessage(
-          baseUrl,
-          session.cookie,
-          turn.message,
-          conversationId ?? undefined,
-        )
-
-        if (sse.error) {
-          console.log(`    ERROR: ${sse.error.slice(0, 200)}`)
-        }
-
-        // Track conversation ID for multi-turn
-        if (sse.conversation_id) {
-          conversationId = sse.conversation_id
-        }
-
-        // Run assertions
-        const assertions: AssertionResult[] = []
-
-        if (turn.metadata) {
-          assertions.push(...runMetadataAssertions(sse, turn.metadata))
-        }
-
-        if (turn.content) {
-          assertions.push(...runContentAssertions(sse, turn.content))
-        }
-
-        // DB persistence check (verify rag_context is persisted)
-        if (conversationId && sse.content.length > 0) {
-          // Small delay to let async persistence complete
-          await new Promise((r) => setTimeout(r, 1000))
-          const dbMsg = await fetchLatestAssistantMessage(session.admin, conversationId)
-          if (dbMsg) {
-            const dbSourceCount = dbMsg.rag_context?.sources
-              ? (dbMsg.rag_context.sources as unknown[]).length
-              : 0
-            assertions.push({
-              tier: "db",
-              name: "message_persisted",
-              passed: dbMsg.content !== null && dbMsg.content.length > 0,
-              expected: "assistant message persisted",
-              actual: dbMsg.content ? `${dbMsg.content.length} chars` : "null",
-            })
-            assertions.push({
-              tier: "db",
-              name: "rag_context_persisted",
-              passed:
-                dbSourceCount === sse.sources.length ||
-                (sse.sources.length === 0 && dbSourceCount === 0),
-              expected: `${sse.sources.length} sources`,
-              actual: `${dbSourceCount} sources`,
-            })
-          }
-        }
-
-        // LLM judge
-        let judgeResult = null
-        if (turn.judge && !skipJudge) {
-          judgeResult = await runJudge(
-            turn.message,
-            sse,
-            turn.judge,
-            scenario.hair_profile,
-            scenario.routine_inventory,
-            conversationHistory.length > 0 ? conversationHistory.join("\n") : undefined,
-          )
-
-          assertions.push({
-            tier: "judge",
-            name: "llm_judge",
-            passed: judgeResult.verdict === "pass",
-            expected: "pass",
-            actual: `${judgeResult.verdict} (${judgeResult.score.toFixed(2)})`,
-          })
-        }
-
-        const qualityRubric = skipJudge
-          ? null
-          : await runQualityRubric(
-              turn.message,
-              sse,
-              scenario.hair_profile,
-              scenario.routine_inventory,
-              conversationHistory.length > 0 ? conversationHistory.join("\n") : undefined,
-            )
-
-        const allPassed = assertions.every((a) => a.passed)
-        const failCount = assertions.filter((a) => !a.passed).length
-
-        console.log(
-          `    ${allPassed ? "PASS" : "FAIL"} (${assertions.length - failCount}/${assertions.length} assertions)` +
-            ` [${sse.latency_ms}ms]`,
-        )
-
-        if (!allPassed) {
-          for (const f of assertions.filter((a) => !a.passed)) {
-            console.log(
-              `      [${f.severity ?? "hard"}][${f.tier}] ${f.name}: expected ${f.expected}, got ${f.actual}`,
-            )
-          }
-          try {
-            const traceLookup = await fetchConversationTurnTrace(session.admin, {
-              assistantMessageId: sse.assistant_message_id,
-              conversationId,
-            })
-            const artifact = buildFailedTurnDebugArtifact({
-              baseUrl,
-              scenarioId: scenario.id,
-              scenarioName: scenario.name,
-              turnIndex: i + 1,
-              message: turn.message,
-              sseResult: sse,
-              assertions,
-              serverInfo,
-              traceRow: traceLookup.traceRow,
-              traceError: traceLookup.error,
-            })
-            const artifactPath = writeFailedTurnDebugArtifact(artifact)
-            debugArtifactPaths.push(artifactPath)
-            console.log(`      Debug artifact: ${artifactPath}`)
-          } catch (error) {
-            console.log(
-              `      Debug artifact failed: ${
-                error instanceof Error ? error.message : String(error)
-              }`,
-            )
-          }
-        }
-
-        turnResults.push({
-          turn_index: i + 1,
-          message: turn.message,
-          sse_result: sse,
-          assertions,
-          judge_result: judgeResult,
-          quality_rubric: qualityRubric,
-          all_passed: allPassed,
-        })
-
-        // Build conversation context for judge
-        conversationHistory.push(`Nutzer: ${turn.message}`)
-        if (sse.content) {
-          conversationHistory.push(`Assistent: ${sse.content.slice(0, 200)}`)
-        }
-      }
-
-      const scenarioPassed = turnResults.every((t) => t.all_passed)
-      results.push({
-        id: scenario.id,
-        name: scenario.name,
-        passed: scenarioPassed,
-        turns: turnResults,
-      })
-    } finally {
-      await session.cleanup()
-    }
+  const scenarioRuns = await mapWithConcurrency(scenarios, concurrency, (scenario) =>
+    runScenario({
+      scenario,
+      baseUrl,
+      supabaseUrl,
+      serviceRoleKey,
+      anonKey,
+      skipJudge,
+      serverInfo,
+    }),
+  )
+  const results = scenarioRuns.map((run) => run.result)
+  for (const run of scenarioRuns) {
+    console.log(run.logs.join("\n"))
+    debugArtifactPaths.push(...run.debugArtifactPaths)
   }
 
   if (langfusePublish) {

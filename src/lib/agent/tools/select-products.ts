@@ -24,6 +24,8 @@ import {
 import { applyProductMemoryConstraints } from "@/lib/chat-runtime/user-memory"
 import type { MatchedProduct } from "@/lib/product-matching/matcher"
 import type { UserMemoryContext } from "@/lib/chat-runtime/user-memory"
+import { attachProductLineNamesToProducts } from "@/lib/product-lines/display"
+import { createAdminClient } from "@/lib/supabase/admin"
 import type {
   BondbuilderRecommendationMetadata,
   ConditionerRecommendationMetadata,
@@ -180,6 +182,7 @@ export interface SelectedProductResult {
   product_id: string
   name: string
   brand: string | null
+  product_line_name?: string | null
   price_eur: number | null
   currency: string | null
   fit_reason: string
@@ -270,6 +273,7 @@ function projectDisplayableProduct(
     product_id: product.id,
     name: product.name,
     brand: product.brand,
+    product_line_name: product.product_line_name ?? null,
     price_eur: product.price_eur,
     currency: product.currency,
     fit_reason: buildDisplayableFitReason(product),
@@ -3465,7 +3469,15 @@ export function createSelectProductsTool(
       routineItems,
       runtime,
     })
-    const constrainedProducts = applyProductMemoryConstraints(products, memoryContext)
+    const productsWithLineNames = await attachProductLineNamesToProducts(
+      products,
+      createAdminClient(),
+      {
+        onError: (error) =>
+          console.error("Failed to load product lines for recommendation products:", error),
+      },
+    )
+    const constrainedProducts = applyProductMemoryConstraints(productsWithLineNames, memoryContext)
     const projection = projectSelectedProducts(
       constrainedProducts,
       effectiveHairProfile,

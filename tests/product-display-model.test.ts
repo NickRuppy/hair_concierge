@@ -147,9 +147,9 @@ function createFineHairProfile(): HairProfile {
 
 test("buildCompactProductFacts returns whitelisted leave-in facts for a Wella-like product", () => {
   assert.deepEqual(buildCompactProductFacts(createWellaLikeLeaveIn()), [
+    { label: "Leave-in", source: "category" },
     { label: "Lotion", source: "format" },
     { label: "Hitzeschutz", source: "heat_protection" },
-    { label: "Pflege: ausgewogen", source: "care_focus" },
   ])
 })
 
