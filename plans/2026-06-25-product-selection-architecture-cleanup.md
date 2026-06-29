@@ -2,9 +2,9 @@
 
 Date: 2026-06-25
 
-Status: Reviewed by Claude and patched for accepted findings. User decisions are aligned;
-implementation handoff is blocked only on whether to create a local checkpoint commit before this
-behavior-preserving refactor.
+Status: Implementation complete. A local checkpoint commit was created before this
+behavior-preserving refactor. Phases 1-6 are implemented, review findings have been addressed, and
+targeted tests are passing.
 
 Claude review:
 `/Users/nick/AI_work/hair_conscierge/.worktrees/product-intake-full-flow-smoke/plans/2026-06-25-product-selection-architecture-cleanup.claude-review.md`
@@ -222,94 +222,94 @@ assertions.
 
 ### Phase 1: Canonical Model And Duplicate-Type Inventory
 
-- [ ] Add `src/lib/product-intake/resolved-product-selection.ts`.
-- [ ] Define `ResolvedProductSelection`.
-- [ ] Add helpers for:
-  - [ ] building from clarification/candidate/product row
-  - [ ] converting to persisted `ProductLookupSelectionContext`
-  - [ ] checking whether a card already has a persisted selection
-  - [ ] producing stable selection key inputs by reusing/moving the existing route helper rather
+- [x] Add `src/lib/product-intake/resolved-product-selection.ts`.
+- [x] Define `ResolvedProductSelection`.
+- [x] Add helpers for:
+  - [x] building from clarification/candidate/product row
+  - [x] converting to persisted `ProductLookupSelectionContext`
+  - [x] checking whether a card already has a persisted selection
+  - [x] producing stable selection key inputs by reusing/moving the existing route helper rather
     than inventing a second idempotency scheme
-- [ ] Add focused unit tests for the helpers.
-- [ ] Before moving code, explicitly inventory and collapse these duplicate or divergent types:
-  - [ ] `AgentV2ActiveResolvedProductContext` in
+- [x] Add focused unit tests for the helpers.
+- [x] Before moving code, explicitly inventory and collapse these duplicate or divergent types:
+  - [x] `AgentV2ActiveResolvedProductContext` in
     `src/lib/agent-v2/runtime/responses-agent.ts`
-  - [ ] `AgentV2ActiveResolvedProductContext` in
+  - [x] `AgentV2ActiveResolvedProductContext` in
     `src/lib/agent-v2/production/persisted-session-state.ts`
-  - [ ] `AgentV2StoredProductProjection` in
+  - [x] `AgentV2StoredProductProjection` in
     `src/lib/agent-v2/production/persisted-session-state.ts`
-  - [ ] `AgentV2StoredProductProjection` in
+  - [x] `AgentV2StoredProductProjection` in
     `src/lib/agent-v2/production/chat-pipeline.ts`
-- [ ] Choose one exported home for each collapsed AgentV2 type before extracting the outcome
+- [x] Choose one exported home for each collapsed AgentV2 type before extracting the outcome
   builder. Do not leave same-named local aliases with divergent shapes.
 
 ### Phase 2: AgentV2 Adapters
 
-- [ ] Add `src/lib/agent-v2/resolved-product-selection-adapter.ts`.
-- [ ] Move shared selected-product context types out of runtime/production-local declarations and
+- [x] Add `src/lib/agent-v2/resolved-product-selection-adapter.ts`.
+- [x] Move shared selected-product context types out of runtime/production-local declarations and
   into an AgentV2 shared module that both runtime and production can import without cycles.
-- [ ] Move or wrap selected-product conversion logic from:
-  - [ ] `src/lib/agent-v2/runtime/responses-agent.ts`
-  - [ ] `src/lib/agent-v2/production/chat-pipeline.ts`
-  - [ ] `src/app/api/chat/product-selection/route.ts`
-- [ ] Preserve the current active-to-trusted transform exactly:
-  - [ ] persisted active context source is `product_lookup_selection`
-  - [ ] runtime trusted context source is `product_lookup_clarification`
-  - [ ] active follow-up lookup identity currently synthesizes `brand_text: null`,
+- [x] Move or wrap selected-product conversion logic from:
+  - [x] `src/lib/agent-v2/runtime/responses-agent.ts`
+  - [x] `src/lib/agent-v2/production/chat-pipeline.ts`
+  - [x] `src/app/api/chat/product-selection/route.ts`
+- [x] Preserve the current active-to-trusted transform exactly:
+  - [x] persisted active context source is `product_lookup_selection`
+  - [x] runtime trusted context source is `product_lookup_clarification`
+  - [x] active follow-up lookup identity currently synthesizes `brand_text: null`,
     `product_name_text: selected product name`, and `evidence_quote: selected product name`
-- [ ] Ensure validator grounding still receives equivalent trusted selected-product data.
-- [ ] Preserve current trust boundary:
-  - [ ] identity selection is trusted
-  - [ ] detailed product-property and suitability claims still require normal product-tool grounding
-- [ ] Add or keep assertion-level tests proving adapter output is equivalent to the current inline
+- [x] Ensure validator grounding still receives equivalent trusted selected-product data.
+- [x] Preserve current trust boundary:
+  - [x] identity selection is trusted
+  - [x] detailed product-property and suitability claims still require normal product-tool grounding
+- [x] Add or keep assertion-level tests proving adapter output is equivalent to the current inline
   trusted lookup/projection shape for fixed representative inputs.
 
 ### Phase 3: Product Lookup Turn Outcome Extraction
 
-- [ ] Add `src/lib/agent-v2/production/product-lookup-turn-outcome.ts`.
-- [ ] Move product lookup helper functions out of `chat-pipeline.ts`.
-- [ ] Keep the public behavior unchanged:
-  - [ ] `not_found` creates intake offer only when structured lookup metadata supports it
-  - [ ] `needs_variant_selection` creates clarification card
-  - [ ] `category_mismatch` creates mismatch clarification card
-  - [ ] background product mentions do not render intake/cards
-  - [ ] active resolved product follow-ups do not re-render stale cards
-- [ ] Reduce `chat-pipeline.ts` to orchestration calls and state assembly.
+- [x] Add `src/lib/agent-v2/production/product-lookup-turn-outcome.ts`.
+- [x] Move product lookup helper functions out of `chat-pipeline.ts`.
+- [x] Keep the public behavior unchanged:
+  - [x] `not_found` creates intake offer only when structured lookup metadata supports it
+  - [x] `needs_variant_selection` creates clarification card
+  - [x] `category_mismatch` creates mismatch clarification card
+  - [x] background product mentions do not render intake/cards
+  - [x] active resolved product follow-ups do not re-render stale cards
+- [x] Reduce `chat-pipeline.ts` to orchestration calls and state assembly.
 
 ### Phase 4: Selection Route Uses Canonical Model
 
-- [ ] Refactor `src/app/api/chat/product-selection/route.ts` to build `ResolvedProductSelection`.
-- [ ] Derive:
-  - [ ] `product_lookup_selection` message metadata
-  - [ ] trusted selected product context for AgentV2
-  - [ ] stable selection assistant-message ID inputs
-- [ ] Preserve:
-  - [ ] user-owned conversation check before source message lookup
-  - [ ] source message constrained by conversation
-  - [ ] selected candidate must belong to persisted card
-  - [ ] selected product must be active/eligible
-  - [ ] card is single-use per source assistant message + clarification
-  - [ ] duplicate-key replay returns canonical persisted metadata
+- [x] Refactor `src/app/api/chat/product-selection/route.ts` to build `ResolvedProductSelection`.
+- [x] Derive:
+  - [x] `product_lookup_selection` message metadata
+  - [x] trusted selected product context for AgentV2
+  - [x] stable selection assistant-message ID inputs
+- [x] Preserve:
+  - [x] user-owned conversation check before source message lookup
+  - [x] source message constrained by conversation
+  - [x] selected candidate must belong to persisted card
+  - [x] selected product must be active/eligible
+  - [x] card is single-use per source assistant message + clarification
+  - [x] duplicate-key replay returns canonical persisted metadata
 
 ### Phase 5: Test Split
 
-- [ ] Start this phase only after Phases 1-4 are green. Do not let test movement obscure behavior
+- [x] Start this phase only after Phases 1-4 are green. Do not let test movement obscure behavior
   changes from the architecture extraction.
-- [ ] Move product lookup clarification tests into a focused file.
-- [ ] Move product-selection route/replay tests into a focused file.
-- [ ] Move active resolved product follow-up tests into a focused file if this reduces fixture churn.
-- [ ] Keep shared fake builders small and local unless reuse is clearly needed.
-- [ ] Verify no test coverage is lost by checking old test names against moved test names.
-- [ ] Run focused tests before and after movement. If movement causes fixture churn that obscures the
+- [x] Move product lookup clarification tests into a focused file.
+- [x] Move product-selection route/replay tests into a focused file.
+- [x] Move active resolved product follow-up tests into a focused file if this reduces fixture churn.
+- [x] Keep shared fake builders small and local unless reuse is clearly needed.
+- [x] Verify no test coverage is lost by checking old test names against moved test names.
+- [x] Run focused tests before and after movement. If movement causes fixture churn that obscures the
   behavior-preserving extraction, stop and bring the split scope back for user decision.
 
 ### Phase 6: Plan And Review Evidence
 
-- [ ] Update `plans/2026-06-25-product-lookup-clarification-card.md` to reference this cleanup as
+- [x] Update `plans/2026-06-25-product-lookup-clarification-card.md` to reference this cleanup as
   completed before ship.
-- [ ] Record accepted/deferred structural findings in this plan.
-- [ ] Run final code review after cleanup.
-- [ ] Run at least one non-product chat smoke/eval because this refactor touches the shared AgentV2
+- [x] Record accepted/deferred structural findings in this plan.
+- [x] Run final code review after cleanup.
+- [x] Run at least one non-product chat smoke/eval because this refactor touches the shared AgentV2
   runtime/pipeline path, not only product lookup turns.
 
 ## Required Verification
@@ -332,6 +332,25 @@ npm run ci:verify
 ```
 
 If tests are split, run the new focused files explicitly as well.
+
+Verification evidence from implementation:
+
+- Passed: `npx tsx --test tests/resolved-product-selection.test.ts tests/agent-v2-resolved-product-selection-adapter.spec.ts`.
+- Passed after final review hardening: `npx tsx --test tests/agent-v2-resolved-product-selection-adapter.spec.ts`.
+- Passed after final review hardening: `npx tsx --test tests/agent-v2-resolved-product-selection-adapter.spec.ts tests/agent-v2-product-selection.spec.ts tests/agent-v2-product-lookup-clarification.spec.ts tests/agent-v2-production-chat-pipeline.spec.ts` (68/68).
+- Passed: `npx tsx --test tests/agent-v2-product-selection.spec.ts`.
+- Passed: `npx tsx --test tests/agent-v2-product-selection.spec.ts tests/agent-v2-product-lookup-clarification.spec.ts tests/agent-v2-production-chat-pipeline.spec.ts`.
+- Passed: `npx tsx --test tests/product-intake-lookup.test.ts tests/product-intake-replay-user-product-usage-lookup.spec.ts tests/chat-product-mentions.test.tsx tests/resolved-product-selection.test.ts tests/agent-v2-resolved-product-selection-adapter.spec.ts`.
+- Passed: `npx tsx --test tests/agent-v2-contracts.spec.ts tests/agent-v2-responses-runtime.spec.ts tests/agent-v2-final-answer-validator.spec.ts tests/agent-v2-production-chat-pipeline.spec.ts tests/agent-v2-named-product-context.spec.ts tests/agent-v2-product-selection.spec.ts tests/agent-v2-product-lookup-clarification.spec.ts`.
+- Passed: `npm run typecheck`.
+- Passed: `npm run lint` with existing warnings outside this cleanup.
+- Passed: `git diff --check`.
+- Passed: `npm run ci:verify` with existing warnings outside this cleanup.
+- Not applicable locally as a bare command: `npm run test:chat` targets the default eval server on
+  `localhost:3000`, where no server was listening in this worktree.
+- Passed on the active worktree server: `npx tsx scripts/eval-chat/run.ts --skip-judge --base-url
+  http://localhost:3543` completed 16/16 scenarios and 100/100 assertions. Report:
+  `test-results/chat-eval/chat-eval-2026-06-25T18-37-35.json`.
 
 Manual/browser smoke after cleanup:
 
@@ -362,6 +381,14 @@ Manual/browser smoke after cleanup:
 - Accepted as scoped cleanup: client stream handling can keep its current shape unless the
   extraction naturally creates a small `mergeAssistantRagContext` helper.
 - Accepted: split product lookup/selection tests out of the giant production pipeline spec.
+- Accepted from final code review: add a direct adapter unit test for active resolved product
+  precedence (`trusted selected product` > `deterministic lookup` > `clear on new actionable
+  product` > `previous active product`).
+- Classified from final code review: route-level string trimming/null normalization is acceptable
+  and preferable for product identity metadata.
+- Classified from final code review: an earlier `vague-first-message` chat eval failure was outside
+  product selection cleanup because it had no product lookup, selection, intake card, or product
+  clarification involvement. The latest active-server eval now passes this scenario.
 
 ## Claude Review Finding Classification
 

@@ -6,6 +6,7 @@ import { ProductIntakePersistenceError } from "../src/lib/product-intake/errors"
 import { validateProductIntakeImageFile } from "../src/lib/product-intake/image-validation"
 import { isMissingProductIntakeUploadError } from "../src/lib/product-intake/repository"
 import { createProductIntakePostHandler } from "../src/lib/product-intake/route-handlers"
+import { createDefaultAgentV2ConversationState } from "../src/lib/agent-v2/production/persisted-session-state"
 import {
   chatProductIntakeSubmissionSchema,
   onboardingProductIntakeSubmissionSchema,
@@ -72,6 +73,7 @@ type FakeRepoOptions = {
   conversationIds?: string[]
   uploadedPaths?: string[]
   failCommitKinds?: Array<"front" | "barcode">
+  failMatchedUsage?: boolean
   failSubmissionLink?: boolean
   submissions?: ProductIntakeSubmissionRow[]
 }
@@ -188,6 +190,10 @@ function createFakeRepository(options: FakeRepoOptions = {}) {
     },
     async replaceUsageWithMatchedProduct(params) {
       calls.push(`replace_usage_matched:${params.productId}`)
+      if (options.failMatchedUsage) {
+        throw new Error("failed matched usage")
+      }
+
       const oldSubmissionId = usage?.product_submission_id ?? null
       const usagePatch = {
         user_id: params.userId,
@@ -472,9 +478,47 @@ test("matched photo intake verifies and clears tmp uploads without creating a su
   assert.deepEqual(fake.calls, [
     `verify_image:${frontPath}`,
     `verify_image:${barcodePath}`,
+    "replace_usage_matched:product-garnier-mask",
     `remove_images:${frontPath},${barcodePath}`,
+  ])
+})
+
+test("matched photo intake keeps tmp uploads if matched usage write fails", async () => {
+  const frontPath = `tmp/${USER_ID}/front.jpg`
+  const barcodePath = `tmp/${USER_ID}/barcode.jpg`
+  const fake = createFakeRepository({
+    uploadedPaths: [frontPath, barcodePath],
+    failMatchedUsage: true,
+  })
+  const input = onboardingProductIntakeSubmissionSchema.parse({
+    intake_method: "photo",
+    category: "mask",
+    frequency_range: "weekly_1x",
+    brand_text: "Garnier Fructis",
+    product_name_text: "Hair Food Aloe Maske",
+    front_image_path: frontPath,
+    barcode_image_path: barcodePath,
+  })
+
+  await assert.rejects(
+    () =>
+      submitProductIntake({
+        userId: USER_ID,
+        source: "onboarding",
+        input,
+        repository: fake.repository,
+        now: () => "2026-06-13T10:00:00.000Z",
+      }),
+    /failed matched usage/,
+  )
+
+  assert.deepEqual(fake.calls, [
+    `verify_image:${frontPath}`,
+    `verify_image:${barcodePath}`,
     "replace_usage_matched:product-garnier-mask",
   ])
+  assert.equal(fake.usage, null)
+  assert.deepEqual(fake.submissions, [])
 })
 
 test("unknown manual intake creates a pending submission and pending usage slot", async () => {
@@ -1308,6 +1352,75 @@ test("route handler returns controlled disabled response before auth or persiste
 
   assert.equal(response.status, 503)
   assert.equal(body.code, "product_intake_disabled")
+})
+
+test("chat route persists pending product context after product intake submission", async () => {
+  const fake = createFakeRepository({ conversationIds: [CONVERSATION_ID] })
+  const persistedTransitions: unknown[] = []
+  const handler = createProductIntakePostHandler("chat", {
+    isEnabled: () => true,
+    createServerClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({
+            data: { user: { id: USER_ID } },
+          }),
+        },
+      }) as never,
+    createAdminClient: (() => ({})) as never,
+    createRepository: () => fake.repository,
+    loadConversationState: async () => createDefaultAgentV2ConversationState(),
+    persistConversationStateTransition: async (_admin, params) => {
+      persistedTransitions.push(params.transition)
+      return { status: "persisted", error: null }
+    },
+    now: () => "2026-06-28T18:00:00.000Z",
+  })
+
+  const response = await handler(
+    new Request("https://example.test/api/product-intake/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        intake_method: "manual",
+        category: "conditioner",
+        frequency_range: "weekly_3_4x",
+        brand_text: "Jean & Lean",
+        product_name_text: "Mystery Rose Conditioner",
+        source_conversation_id: CONVERSATION_ID,
+      }),
+    }),
+  )
+  const body = await response.json()
+
+  assert.equal(response.status, 202)
+  assert.equal(body.status, "pending_review")
+  assert.equal(persistedTransitions.length, 1)
+
+  const transition = persistedTransitions[0] as {
+    reason?: string
+    next_state?: {
+      agent_v2?: {
+        active_product_contexts?: Array<Record<string, unknown>>
+        active_resolved_product_context?: unknown
+      }
+    }
+  }
+  assert.equal(transition.reason, "product_intake_submission_context")
+  assert.deepEqual(transition.next_state?.agent_v2?.active_product_contexts, [
+    {
+      status: "pending_review",
+      product_id: null,
+      submission_id: body.submission.id,
+      category: "conditioner",
+      brand_text: "Jean & Lean",
+      product_name_text: "Mystery Rose Conditioner",
+      display_name: "Jean & Lean Mystery Rose Conditioner",
+      original_user_message: "Ich habe Jean & Lean Mystery Rose Conditioner eingereicht.",
+      source: "product_intake_submission",
+      updated_at: "2026-06-28T18:00:00.000Z",
+    },
+  ])
+  assert.equal(transition.next_state?.agent_v2?.active_resolved_product_context, null)
 })
 
 test("route handler returns controlled client error for wrong-user upload paths", async () => {

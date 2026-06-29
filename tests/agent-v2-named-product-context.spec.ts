@@ -58,6 +58,19 @@ test("detects unquoted named product from add-to-routine wording", () => {
 test("detects common own-product suitability and routine-add phrasing", () => {
   assert.deepEqual(
     buildAgentV2NamedProductContext({
+      latestMessage: "Okay passt das Syoss Volume Shampoo zu mir?",
+      recentMessages: [],
+    }),
+    {
+      display_name: "Syoss Volume Shampoo",
+      category: "shampoo",
+      plausible_exact_name: true,
+      named_product_intent: "current_use_product_question",
+    },
+  )
+
+  assert.deepEqual(
+    buildAgentV2NamedProductContext({
       latestMessage: "Ich benutze Pantene Pro-V Volume Pur Shampoo. Passt das zu mir?",
       recentMessages: [],
     }),

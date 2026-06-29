@@ -25,7 +25,7 @@
       "rule_id": "category.mask.supported_claims_only",
       "severity": "block",
       "source": "categories/mask.md",
-      "message": "Use select_products or supported product data for mask weight, balance, intensity, fit, category membership, and requested-property caveats; do not infer these from names or marketing."
+      "message": "Use verified product data or internal select_products projection facts for resolved named masks before stating mask weight, balance, intensity, fit, category membership, and requested-property caveats; do not infer these from names or marketing."
     },
     {
       "rule_id": "category.mask.routine_explanation_vs_mutation",
@@ -87,7 +87,7 @@
       "rubric_id": "category.mask.product_detail_hooks",
       "priority": "high",
       "source": "categories/mask.md",
-      "message": "For named masks and claim checks such as protein-rich/free, moisture-focused, lightweight/rich, color-protective, repair-supported, scalp-directed, silicone-free, coconut-free, oil-free, or profile fit, use product_detail with product metadata or select_products."
+      "message": "For named masks and claim checks such as protein-rich/free, moisture-focused, lightweight/rich, color-protective, repair-supported, scalp-directed, silicone-free, coconut-free, oil-free, or profile fit, use lookup_product_candidate first and product_detail with verified product metadata or internal select_products projection facts."
     },
     {
       "rubric_id": "category.mask.safety_none",
@@ -100,12 +100,12 @@
     {
       "grounding_id": "category.mask.product_claims",
       "tool": "select_products",
-      "when": "Concrete mask names, category membership, product order, weight, balance, intensity, fit, named-product detail, claim checks, or unsupported requested-signal caveats are mentioned."
+      "when": "Concrete mask recommendations, category membership, product order, or internal projection facts for resolved named-mask assessment are needed, including weight, balance, intensity, fit, named-product detail, claim checks, or unsupported requested-signal caveats. Start named-product assessment with lookup_product_candidate."
     },
     {
       "grounding_id": "category.mask.product_protocol",
       "tool": "select_products",
-      "when": "Exact mask timing, cadence, order, follow-up conditioner, scalp use, color-protection, repair support, or profile-specific product claims are mentioned; use product metadata or select_products rather than category prose."
+      "when": "Exact mask timing, cadence, order, follow-up conditioner, scalp use, color-protection, repair support, or profile-specific product claims need internal projection facts after identity is resolved; use product metadata or select_products projection rather than category prose."
     },
     {
       "grounding_id": "category.mask.routine_mutation",

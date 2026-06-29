@@ -838,7 +838,7 @@ export interface ProductLookupClarification {
   query: {
     brand_text: string | null
     product_name_text: string | null
-    category: ProductIntakeCategoryKey
+    category: ProductIntakeCategoryKey | null
   }
   copy: {
     prompt_de: string
@@ -870,7 +870,7 @@ export interface ProductIntakeOffer {
   id: string
   source: "chat"
   reason: "product_lookup_not_found" | "needs_more_info"
-  category: ProductIntakeCategoryKey
+  category?: ProductIntakeCategoryKey | null
   frequency_range?: ProductFrequency | null
   intake_method?: ProductIntakeMethod | null
   submission_id?: string

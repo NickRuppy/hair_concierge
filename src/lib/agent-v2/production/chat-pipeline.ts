@@ -18,28 +18,33 @@ import {
 import { buildAgentV2ProductToolMessage } from "@/lib/agent-v2/runtime/product-tool-context"
 import {
   type AgentV2AnswerMode,
-  AgentV2CareCategorySchema,
   type AgentV2RoutineLayer,
   type AgentV2RoutineThreadContext,
   type AgentV2SafetyMode,
   type AgentV2SessionMemoryWrite,
   type AgentV2TerminalAnswer,
-  type AgentV2Trace,
 } from "@/lib/agent-v2/contracts"
+import { buildAgentV2NamedProductContext } from "@/lib/agent-v2/named-product-context"
+import { runAgentV2ResponsesTurn } from "@/lib/agent-v2/runtime/responses-agent"
 import {
-  buildAgentV2NamedProductContext,
-  getAgentV2NamedProductCategoryReferenceTerms,
-  type AgentV2NamedProductContext,
-} from "@/lib/agent-v2/named-product-context"
-import {
-  runAgentV2ResponsesTurn,
+  buildActiveResolvedProductContext,
+  buildPrimaryResolvedProductContext,
+  mergeActiveProductContexts,
+  type AgentV2ActiveProductContext,
+  type AgentV2ActiveResolvedProductContext,
+  type AgentV2StoredProductProjection,
   type AgentV2TrustedSelectedProductContext,
-} from "@/lib/agent-v2/runtime/responses-agent"
+} from "@/lib/agent-v2/resolved-product-selection-adapter"
+import {
+  buildProductLookupTurnOutcome,
+  normalizeProductLookupExecutionInput,
+  type ProductLookupCatalogLoader,
+  type ProductLookupExecution,
+} from "@/lib/agent-v2/production/product-lookup-turn-outcome"
 import { loadAgentV2AdvisorGuidance } from "@/lib/agent-v2/tools/guidance-tool"
 import {
   lookupProductCandidate,
   type ProductLookupCatalog,
-  type ProductLookupResult,
 } from "@/lib/product-intake/product-lookup"
 import {
   isProductEligibleForMode,
@@ -47,15 +52,13 @@ import {
   productLifecycleStatus,
 } from "@/lib/product-catalog/eligibility"
 import { createSupabaseProductIntakeRepository } from "@/lib/product-intake/repository"
-import type { BrandResolutionCatalogInput } from "@/lib/product-identity/brand-resolution"
+import type { ProductIntakeSubmissionRow } from "@/lib/product-intake/repository-types"
+import { loadVerifiedSpecProductIds } from "@/lib/product-intake/spec-readiness"
 import {
   projectRoutineForAgentV2,
   type AgentV2RoutineProjection,
 } from "@/lib/agent-v2/tools/routine-projection"
-import {
-  projectSelectProductsForAgentV2,
-  type AgentV2SelectProductsProjection,
-} from "@/lib/agent-v2/tools/select-products-projection"
+import { projectSelectProductsForAgentV2 } from "@/lib/agent-v2/tools/select-products-projection"
 import {
   buildAgentV2Classification,
   buildAgentV2RouterDecision,
@@ -73,7 +76,6 @@ import {
 } from "@/lib/agent-v2/production/session-state"
 import {
   AGENT_V2_PRODUCTION_ENGINE,
-  type AgentV2ActiveResolvedProductContext,
   normalizeAgentV2ConversationState,
   type AgentV2ConversationStateTransition,
   type AgentV2ConversationStateV2,
@@ -101,7 +103,6 @@ import type {
   LangfusePromptReference,
   Message,
   Product,
-  ProductIntakeCategoryKey,
   ProductLookupClarification,
   RouterDecision,
 } from "@/lib/types"
@@ -116,25 +117,11 @@ type AgentV2ResponsesClient = Parameters<typeof runAgentV2ResponsesTurn>[0]["cli
 type AgentV2RuntimeToolExecutionContext = {
   effectiveCareContext?: EffectiveCareContext
 }
-type AgentV2StoredProductProjection = Partial<AgentV2SelectProductsProjection>
 type AgentV2ProductionTraceTiming = {
   modelMs: number | null
   toolMs: number | null
   gateMs: number | null
 }
-type ProductLookupExecutionInput = {
-  category: string | null
-  brand_text: string | null
-  product_name_text: string | null
-}
-type ProductLookupExecution = {
-  input: ProductLookupExecutionInput
-  result: ProductLookupResult
-}
-type ProductLookupCatalogLoader = () => Promise<{
-  catalog: ProductLookupCatalog
-  brandCatalog: BrandResolutionCatalogInput
-}>
 
 export interface PipelineParams {
   message: string
@@ -183,6 +170,7 @@ interface ProductionAgentV2PipelineDeps {
   getManagedTextPromptTemplate?: typeof getManagedTextPromptTemplate
   observeAgentV2ToolCall?: typeof observeAgentV2ToolCall
   createProductIntakeRepository?: typeof createSupabaseProductIntakeRepository
+  createAdminClient?: typeof createAdminClient
 }
 
 const ROUTINE_PRODUCT_CATEGORY_VALUES = new Set<RoutineProduct>([
@@ -194,664 +182,6 @@ const ROUTINE_PRODUCT_CATEGORY_VALUES = new Set<RoutineProduct>([
   "heat_protectant",
 ])
 
-function selectProductIntakeOfferForAnswer(
-  answer: AgentV2TerminalAnswer,
-  executions: readonly ProductLookupExecution[],
-  latestUserMessage: string,
-  options: { allowFallbackIntake?: boolean } = {},
-): ProductLookupResult["intake_offer"] {
-  const eligible = executions.filter(
-    (execution) => execution.result.status === "not_found" && execution.result.intake_offer,
-  )
-  if (eligible.length === 0) return null
-
-  const matchingOffer =
-    eligible.find((execution) =>
-      productLookupExecutionMatchesAnswer(execution, answer, latestUserMessage),
-    )?.result.intake_offer ?? null
-
-  if (answerSupportsProductIntakeOffer(answer)) {
-    return matchingOffer
-  }
-
-  if (options.allowFallbackIntake) {
-    return (
-      matchingOffer ?? (eligible.length === 1 ? (eligible[0]?.result.intake_offer ?? null) : null)
-    )
-  }
-
-  return null
-}
-
-const PRODUCT_LOOKUP_CATEGORY_LABELS: Record<ProductIntakeCategoryKey, string> = {
-  shampoo: "Shampoo",
-  conditioner: "Conditioner",
-  leave_in: "Leave-in",
-  mask: "Maske/Kur",
-  oil: "Öl",
-  dry_shampoo: "Trockenshampoo",
-  deep_cleansing_shampoo: "Tiefenreinigungsshampoo",
-  bondbuilder: "Bondbuilder",
-}
-
-function isProductIntakeCategoryKey(value: string | null): value is ProductIntakeCategoryKey {
-  return Object.prototype.hasOwnProperty.call(PRODUCT_LOOKUP_CATEGORY_LABELS, value ?? "")
-}
-
-function productLookupCandidateCategory(candidate: ProductLookupResult["candidates"][number]) {
-  return candidate.product.categoryKey ?? candidate.product.category_key ?? null
-}
-
-function productLookupCandidateName(candidate: ProductLookupResult["candidates"][number]) {
-  return candidate.product.cleanName ?? candidate.product.name
-}
-
-function selectProductLookupClarificationForAnswer(
-  answer: AgentV2TerminalAnswer,
-  executions: readonly ProductLookupExecution[],
-  latestUserMessage: string,
-  options: { allowFallbackClarification?: boolean } = {},
-): ProductLookupClarification | null {
-  if (!options.allowFallbackClarification && !answerSupportsProductIntakeOffer(answer)) return null
-
-  const eligibleExecutions = executions.filter(
-    (candidate) =>
-      (candidate.result.status === "ambiguous" ||
-        candidate.result.status === "needs_variant_selection" ||
-        candidate.result.status === "category_mismatch") &&
-      candidate.result.candidates.length > 0,
-  )
-  const execution =
-    eligibleExecutions.find((candidate) =>
-      productLookupExecutionMatchesAnswer(candidate, answer, latestUserMessage),
-    ) ?? (eligibleExecutions.length === 1 ? eligibleExecutions[0] : null)
-  if (!execution) return null
-
-  const category = isProductIntakeCategoryKey(execution.result.category)
-    ? execution.result.category
-    : null
-  if (!category) return null
-
-  const kind =
-    execution.result.status === "category_mismatch" ? "category_mismatch" : "variant_selection"
-  const candidates = execution.result.candidates.slice(0, 3).map((candidate) => {
-    const candidateCategory = productLookupCandidateCategory(candidate)
-    const reason =
-      candidateCategory && candidateCategory !== category
-        ? "category_mismatch"
-        : "same_brand_same_category"
-    return {
-      product_id: candidate.productId,
-      name: productLookupCandidateName(candidate),
-      category: candidateCategory,
-      category_label_de: isProductIntakeCategoryKey(candidateCategory)
-        ? PRODUCT_LOOKUP_CATEGORY_LABELS[candidateCategory]
-        : "Produkt",
-      reason,
-    } satisfies ProductLookupClarification["candidates"][number]
-  })
-
-  const brandText = execution.input.brand_text?.trim() ?? ""
-  const productNameText = execution.input.product_name_text?.trim() ?? ""
-  const productNameAlreadyContainsBrand =
-    Boolean(brandText) &&
-    Boolean(productNameText) &&
-    productNameText.toLocaleLowerCase("de-DE").startsWith(brandText.toLocaleLowerCase("de-DE"))
-  const requestedName =
-    (productNameAlreadyContainsBrand
-      ? productNameText
-      : [brandText, productNameText].filter(Boolean).join(" ")
-    ).trim() || answer.request_interpretation.evidence_quote
-  const categoryLabel = PRODUCT_LOOKUP_CATEGORY_LABELS[category]
-  const firstCandidateCategoryLabel = candidates[0]?.category_label_de ?? "einer anderen Kategorie"
-  const prompt =
-    kind === "category_mismatch"
-      ? `Ich finde ${requestedName} bei uns nur als ${firstCandidateCategoryLabel}, nicht als ${categoryLabel}. Wenn du dieses Produkt meinst, wähle es aus. Wenn du ein anderes Produkt meinst, füge es hinzu.`
-      : candidates.length === 1
-        ? `Ich finde ${requestedName} nicht eindeutig, aber ich habe dieses ${categoryLabel} in unserer Datenbank gefunden.`
-        : `Ich finde ${requestedName} nicht eindeutig, aber ich habe diese ${categoryLabel} in unserer Datenbank gefunden.`
-
-  return {
-    id: `product-lookup-${execution.result.intake_offer?.id ?? crypto.randomUUID()}`,
-    kind,
-    source: "chat",
-    original_user_message: latestUserMessage,
-    query: {
-      brand_text: execution.input.brand_text,
-      product_name_text: execution.input.product_name_text,
-      category,
-    },
-    copy: {
-      prompt_de: prompt,
-    },
-    candidates,
-    none_action: {
-      label_de: "Nein, mein Produkt hinzufügen",
-      product_intake_offer: execution.result.intake_offer ?? {
-        id: `product-intake-${crypto.randomUUID()}`,
-        source: "chat",
-        reason: "product_lookup_not_found",
-        category,
-        extracted_identity: {
-          ...(execution.input.brand_text ? { brand_text: execution.input.brand_text } : {}),
-          ...(execution.input.product_name_text
-            ? { product_name_text: execution.input.product_name_text }
-            : {}),
-        },
-      },
-    },
-  }
-}
-
-function productLookupExecutionHasClarificationCandidates(execution: ProductLookupExecution) {
-  return (
-    (execution.result.status === "ambiguous" ||
-      execution.result.status === "needs_variant_selection" ||
-      execution.result.status === "category_mismatch") &&
-    execution.result.candidates.length > 0
-  )
-}
-
-function traceLookupCallCanRecoverClarification(call: AgentV2Trace["tool_calls"][number]): boolean {
-  if (call.name !== "lookup_product_candidate") return false
-  return (
-    call.output_summary === "product_lookup:ambiguous" ||
-    call.output_summary === "product_lookup:needs_variant_selection" ||
-    call.output_summary === "product_lookup:category_mismatch"
-  )
-}
-
-function readProductLookupInputFromTraceCall(
-  call: AgentV2Trace["tool_calls"][number],
-): ProductLookupExecutionInput | null {
-  if (call.name !== "lookup_product_candidate") return null
-  const args = call.arguments
-  if (!args || typeof args !== "object" || Array.isArray(args)) return null
-  const input = {
-    category: typeof args.category === "string" ? args.category : null,
-    brand_text: typeof args.brand_text === "string" ? args.brand_text : null,
-    product_name_text: typeof args.product_name_text === "string" ? args.product_name_text : null,
-  }
-  if (!input.category && !input.brand_text && !input.product_name_text) return null
-  return input
-}
-
-async function recoverProductLookupClarificationExecutionsFromTrace(params: {
-  trace: AgentV2Trace
-  existingExecutions: readonly ProductLookupExecution[]
-  loadProductLookupCatalogs: ProductLookupCatalogLoader
-  requestId: string
-}): Promise<ProductLookupExecution[]> {
-  if (params.existingExecutions.some(productLookupExecutionHasClarificationCandidates)) {
-    return [...params.existingExecutions]
-  }
-
-  const calls = params.trace.tool_calls.filter(traceLookupCallCanRecoverClarification)
-  if (calls.length === 0) return [...params.existingExecutions]
-
-  const recoveredExecutions: ProductLookupExecution[] = []
-  const { catalog, brandCatalog } = await params.loadProductLookupCatalogs()
-  for (const call of calls) {
-    const input = readProductLookupInputFromTraceCall(call)
-    if (!input) continue
-    const result = lookupProductCandidate({
-      input,
-      catalog,
-      brandCatalog,
-      offerId: `product-intake-${params.requestId}`,
-      eligibilityMode: "intake_dedupe",
-    })
-    if (productLookupExecutionHasClarificationCandidates({ input, result })) {
-      recoveredExecutions.push({ input, result })
-    }
-  }
-
-  if (recoveredExecutions.length === 0) return [...params.existingExecutions]
-  return [...params.existingExecutions, ...recoveredExecutions]
-}
-
-async function buildDeterministicNamedProductLookupFallback(params: {
-  namedProductContext: AgentV2NamedProductContext | null
-  existingExecutions: readonly ProductLookupExecution[]
-  trace: AgentV2Trace
-  loadProductLookupCatalogs: ProductLookupCatalogLoader
-  requestId: string
-}): Promise<{ answer: AgentV2TerminalAnswer; execution: ProductLookupExecution } | null> {
-  const context = params.namedProductContext
-  if (!context || context.named_product_intent === "background") return null
-  if (params.existingExecutions.length > 0) return null
-  if (params.trace.tool_calls.some((call) => call.name === "lookup_product_candidate")) return null
-  if (!isProductIntakeCategoryKey(context.category)) return null
-
-  const { catalog, brandCatalog } = await params.loadProductLookupCatalogs()
-  const input = buildLookupInputFromNamedProductContext(context, brandCatalog)
-  if (!input) return null
-
-  const result = lookupProductCandidate({
-    input,
-    catalog,
-    brandCatalog,
-    offerId: `product-intake-${params.requestId}`,
-    eligibilityMode: "intake_dedupe",
-  })
-  if (result.status === "insufficient_identity" || result.status === "unsupported_category") {
-    return null
-  }
-
-  return {
-    execution: { input, result },
-    answer: buildDeterministicNamedProductFallbackAnswer({
-      context,
-      lookupResult: result,
-      usedGuidancePackageIds: params.trace.loaded_guidance_package_ids,
-    }),
-  }
-}
-
-function buildRecoveredNotFoundProductLookupFailureFallback(params: {
-  namedProductContext: AgentV2NamedProductContext | null
-  executions: readonly ProductLookupExecution[]
-  trace: AgentV2Trace
-  latestUserMessage: string
-}): AgentV2TerminalAnswer | null {
-  const context = params.namedProductContext
-  if (!context || context.named_product_intent === "background") return null
-  if (!params.trace.failure_stage) return null
-
-  const eligibleExecutions = params.executions.filter(
-    (execution) => execution.result.status === "not_found" && execution.result.intake_offer,
-  )
-  if (eligibleExecutions.length === 0) return null
-
-  const matchingExecution =
-    eligibleExecutions.find((execution) =>
-      productLookupExecutionMatchesNamedProductContext(
-        execution,
-        context,
-        params.latestUserMessage,
-      ),
-    ) ?? (eligibleExecutions.length === 1 ? eligibleExecutions[0] : null)
-  if (!matchingExecution) return null
-
-  return buildDeterministicNamedProductFallbackAnswer({
-    context,
-    lookupResult: matchingExecution.result,
-    usedGuidancePackageIds: params.trace.loaded_guidance_package_ids,
-  })
-}
-
-function productLookupExecutionMatchesNamedProductContext(
-  execution: ProductLookupExecution,
-  context: AgentV2NamedProductContext,
-  latestUserMessage: string,
-): boolean {
-  const category = AgentV2CareCategorySchema.safeParse(execution.input.category)
-  if (category.success && category.data !== context.category) return false
-
-  const identityParts = [
-    execution.input.brand_text && execution.input.product_name_text
-      ? `${execution.input.brand_text} ${execution.input.product_name_text}`
-      : null,
-    execution.input.product_name_text,
-  ].filter((part): part is string => Boolean(part?.trim()))
-  if (identityParts.length === 0) return false
-
-  const evidenceParts = [context.display_name, latestUserMessage].filter((part) =>
-    Boolean(part.trim()),
-  )
-  return identityParts.some((identity) =>
-    evidenceParts.some((evidence) =>
-      normalizedProductTextOverlaps(identity, evidence, execution.input.brand_text),
-    ),
-  )
-}
-
-function buildLookupInputFromNamedProductContext(
-  context: AgentV2NamedProductContext,
-  brandCatalog: BrandResolutionCatalogInput,
-): ProductLookupExecutionInput | null {
-  if (!isProductIntakeCategoryKey(context.category)) return null
-
-  const category = context.category
-  const categoryProductName = getFallbackProductNameForCategory(category)
-  const displayName = context.display_name.trim()
-  const displayWithoutCategory = stripTrailingCategoryTerm(displayName, category)
-  if (!displayWithoutCategory) return null
-
-  const knownBrandPrefix = findKnownBrandPrefix(displayWithoutCategory, brandCatalog)
-  if (knownBrandPrefix) {
-    const productNameRemainder = displayWithoutCategory.slice(knownBrandPrefix.raw.length).trim()
-    return {
-      category,
-      brand_text: knownBrandPrefix.raw,
-      product_name_text: [productNameRemainder, categoryProductName].filter(Boolean).join(" "),
-    }
-  }
-
-  const tokens = Array.from(
-    displayWithoutCategory.matchAll(/[\p{L}\p{M}\p{N}&'.-]+/gu),
-    (match) => match[0],
-  )
-  if (tokens.length === 0) return null
-  if (tokens.some((token) => token === "&")) {
-    return {
-      category,
-      brand_text: displayWithoutCategory,
-      product_name_text: categoryProductName,
-    }
-  }
-  if (tokens.length >= 3) {
-    return {
-      category,
-      brand_text: tokens.slice(0, 2).join(" "),
-      product_name_text: [...tokens.slice(2), categoryProductName].join(" "),
-    }
-  }
-
-  return {
-    category,
-    brand_text: displayWithoutCategory,
-    product_name_text: categoryProductName,
-  }
-}
-
-function stripTrailingCategoryTerm(displayName: string, category: ProductIntakeCategoryKey) {
-  const terms = [
-    PRODUCT_LOOKUP_CATEGORY_LABELS[category],
-    ...getAgentV2NamedProductCategoryReferenceTerms(category),
-  ]
-    .map((term) => term.trim())
-    .filter(Boolean)
-    .sort((left, right) => right.length - left.length)
-
-  const normalizedDisplay = normalizeProductLookupText(displayName)
-  for (const term of terms) {
-    const normalizedTerm = normalizeProductLookupText(term)
-    if (normalizedDisplay === normalizedTerm || normalizedDisplay.endsWith(` ${normalizedTerm}`)) {
-      const rawSuffixStart = findRawSuffixStartByNormalizedTerm(displayName, normalizedTerm)
-      return displayName.slice(0, rawSuffixStart ?? displayName.length - term.length).trim()
-    }
-  }
-  return displayName
-}
-
-function findRawSuffixStartByNormalizedTerm(text: string, normalizedTerm: string): number | null {
-  for (let start = 0; start < text.length; start += 1) {
-    if (start > 0 && !/\s/u.test(text[start - 1] ?? "")) continue
-    if (normalizeProductLookupText(text.slice(start)) === normalizedTerm) return start
-  }
-  return null
-}
-
-function findRawPrefixByNormalizedTerm(text: string, normalizedTerm: string): string | null {
-  for (let end = 1; end <= text.length; end += 1) {
-    const normalizedSlice = normalizeProductLookupText(text.slice(0, end))
-    if (normalizedSlice === normalizedTerm) {
-      const remainder = text.slice(end)
-      if (!remainder || /^\s/u.test(remainder)) return text.slice(0, end).trim()
-    }
-    if (normalizedSlice.length > normalizedTerm.length + 2) return null
-  }
-  return null
-}
-
-function findKnownBrandPrefix(
-  text: string,
-  brandCatalog: BrandResolutionCatalogInput,
-): { raw: string; normalizedLength: number } | null {
-  const candidates = [
-    ...brandCatalog.brands.map(
-      (brand) => brand.canonical_name ?? brand.canonicalName ?? brand.name,
-    ),
-    ...(brandCatalog.brandAliases ?? []).map((alias) => alias.alias),
-  ]
-    .filter((candidate): candidate is string => Boolean(candidate?.trim()))
-    .sort((left, right) => right.length - left.length)
-
-  const normalizedText = normalizeProductLookupText(text)
-  for (const candidate of candidates) {
-    const normalizedCandidate = normalizeProductLookupText(candidate)
-    if (
-      normalizedText === normalizedCandidate ||
-      normalizedText.startsWith(`${normalizedCandidate} `)
-    ) {
-      const rawPrefix = findRawPrefixByNormalizedTerm(text, normalizedCandidate)
-      return { raw: rawPrefix ?? candidate, normalizedLength: normalizedCandidate.length }
-    }
-  }
-  return null
-}
-
-function getFallbackProductNameForCategory(category: ProductIntakeCategoryKey) {
-  switch (category) {
-    case "mask":
-      return "Maske"
-    case "oil":
-      return "Öl"
-    case "deep_cleansing_shampoo":
-      return "Tiefenreinigungsshampoo"
-    case "dry_shampoo":
-      return "Trockenshampoo"
-    default:
-      return PRODUCT_LOOKUP_CATEGORY_LABELS[category]
-  }
-}
-
-function buildDeterministicNamedProductFallbackAnswer(params: {
-  context: AgentV2NamedProductContext
-  lookupResult: ProductLookupResult
-  usedGuidancePackageIds: readonly string[]
-}): AgentV2TerminalAnswer {
-  const category = params.context.category
-  const displayName = params.context.display_name
-  const baseAnswer = {
-    interpreted_intent: "Deterministic named-product lookup fallback after model skipped lookup.",
-    request_interpretation: {
-      primary_intent: "product_recommendation",
-      product_request_kind: "product_detail",
-      routine_intent: "none",
-      care_category: category,
-      requested_product_count: null,
-      count_policy: "none",
-      evidence_quote: displayName,
-      specific_product_candidate: true,
-      confidence: 0,
-    },
-    confidence: 0,
-    extracted_constraints: {
-      hair_concerns: [],
-      goals: [],
-      product_categories: [category],
-      budget_eur: null,
-      avoid_ingredients: [],
-      allergies: [],
-      preferences: [],
-      routine_layer: null,
-      raw_constraints: [displayName],
-    },
-    missing_information: [],
-    safety_flags: [],
-    tool_grounding: {
-      used_guidance_package_ids: [...params.usedGuidancePackageIds],
-      used_product_tool: true,
-      used_routine_tool: false,
-      product_ids: [],
-      routine_step_ids: [],
-      hard_rule_ids: ["product.no_uncatalogued_products"],
-    },
-    routine_context: {
-      active: false,
-      routine_layer: null,
-      step_id: null,
-      category,
-      return_path: [],
-    },
-    pending_followup_action: null,
-    session_memory_writes: [],
-  } satisfies Omit<AgentV2TerminalAnswer, "answer_mode" | "payload">
-
-  if (params.lookupResult.status === "found_exact" && params.lookupResult.product) {
-    const productName = displayName
-    const userFacingAnswer = `Ich habe ${productName} in unserer Produktdatenbank gefunden und nutze ab jetzt genau diesen Produktdatensatz als Bezug. Damit ist klar, welches Produkt du meinst.`
-    return {
-      ...baseAnswer,
-      answer_mode: "general_advice",
-      payload: {
-        user_facing_answer_de: userFacingAnswer,
-        category_or_topic: category,
-        key_points_de: [userFacingAnswer],
-        next_step_offer_de: null,
-      },
-    }
-  }
-
-  if (params.lookupResult.status !== "not_found") {
-    const userFacingAnswer = `Diesen konkreten ${displayName} kann ich aktuell nicht eindeutig als verifizierten Produktdatensatz bewerten. Bitte wähle die passende Variante aus oder füge dein Produkt hinzu, damit ich nichts Falsches bewerte.`
-    return {
-      ...baseAnswer,
-      answer_mode: "clarification",
-      payload: {
-        user_facing_answer_de: userFacingAnswer,
-        question_de: "Welche Variante meinst du?",
-        missing_keys: ["product_variant"],
-      },
-    }
-  }
-
-  const userFacingAnswer = `Diesen konkreten ${displayName} kann ich aktuell nicht zuverlässig bewerten, weil er noch nicht als verifizierter Produktdatensatz in unserer Datenbank ist. Ich möchte dazu nichts erfinden. Wenn du magst, kannst du ihn hinzufügen, dann prüfen wir ihn sauber.`
-
-  return {
-    ...baseAnswer,
-    answer_mode: "constraint_blocked",
-    payload: {
-      user_facing_answer_de: userFacingAnswer,
-      blocking_constraints: ["product_not_verified"],
-      safe_alternative_de: "Du kannst das Produkt hinzufügen, damit wir es konkret prüfen können.",
-    },
-  }
-}
-
-function answerSupportsProductIntakeOffer(answer: AgentV2TerminalAnswer): boolean {
-  if (!answer.request_interpretation.specific_product_candidate) return false
-  const { product_request_kind: productRequestKind, routine_intent: routineIntent } =
-    answer.request_interpretation
-  if (
-    productRequestKind === "specific_products" ||
-    productRequestKind === "compare_products" ||
-    productRequestKind === "product_detail"
-  ) {
-    return true
-  }
-  return routineIntent === "modify" || routineIntent === "replace_product"
-}
-
-function productLookupExecutionMatchesAnswer(
-  execution: ProductLookupExecution,
-  answer: AgentV2TerminalAnswer,
-  latestUserMessage: string,
-): boolean {
-  if (
-    answerNeedsLookupCategoryTargetMatch(answer) &&
-    !lookupCategoryMatchesAnswer(execution, answer)
-  ) {
-    return false
-  }
-
-  const identityParts = [
-    execution.input.brand_text && execution.input.product_name_text
-      ? `${execution.input.brand_text} ${execution.input.product_name_text}`
-      : null,
-    !execution.input.brand_text ? execution.input.product_name_text : null,
-    execution.result.product?.name,
-  ].filter((part): part is string => Boolean(part?.trim()))
-
-  if (identityParts.length === 0) return true
-
-  const evidenceParts = [answer.request_interpretation.evidence_quote, latestUserMessage].filter(
-    (part): part is string => Boolean(part?.trim()),
-  )
-  return identityParts.some((identity) =>
-    evidenceParts.some(
-      (evidence) =>
-        normalizedProductTextOverlaps(identity, evidence, execution.input.brand_text) &&
-        lookupCategoryMatchesEvidence(execution.input.category, evidence, answer),
-    ),
-  )
-}
-
-function answerNeedsLookupCategoryTargetMatch(answer: AgentV2TerminalAnswer): boolean {
-  return (
-    answer.request_interpretation.product_request_kind === "specific_products" ||
-    answer.request_interpretation.product_request_kind === "compare_products"
-  )
-}
-
-function lookupCategoryMatchesAnswer(
-  execution: ProductLookupExecution,
-  answer: AgentV2TerminalAnswer,
-): boolean {
-  const lookupCategory = AgentV2CareCategorySchema.safeParse(execution.input.category)
-  if (
-    !lookupCategory.success ||
-    lookupCategory.data === "none" ||
-    lookupCategory.data === "unknown"
-  ) {
-    return false
-  }
-  const answerCategory = answer.request_interpretation.care_category
-  if (answerCategory === "none" || answerCategory === "unknown") return false
-  return lookupCategory.data === answerCategory
-}
-
-function lookupCategoryMatchesEvidence(
-  category: string | null,
-  evidence: string,
-  answer?: AgentV2TerminalAnswer,
-): boolean {
-  if (!category) return true
-  const parsedCategory = AgentV2CareCategorySchema.safeParse(category)
-  if (!parsedCategory.success) return true
-  if (
-    answer &&
-    parsedCategory.data !== "none" &&
-    parsedCategory.data !== "unknown" &&
-    answer.request_interpretation.care_category === parsedCategory.data
-  ) {
-    return true
-  }
-  const categoryTerms = getAgentV2NamedProductCategoryReferenceTerms(parsedCategory.data)
-  if (categoryTerms.length === 0) return true
-  const normalizedEvidence = normalizeProductLookupText(evidence)
-  return categoryTerms.some((term) => normalizedEvidence.includes(normalizeProductLookupText(term)))
-}
-
-function normalizedProductTextOverlaps(
-  a: string,
-  b: string,
-  requiredBrand?: string | null,
-): boolean {
-  const normalizedA = normalizeProductLookupText(a)
-  const normalizedB = normalizeProductLookupText(b)
-  if (!normalizedA || !normalizedB) return false
-  const normalizedRequiredBrand = requiredBrand ? normalizeProductLookupText(requiredBrand) : ""
-  if (normalizedRequiredBrand && !normalizedB.includes(normalizedRequiredBrand)) return false
-  return (
-    normalizedA === normalizedB ||
-    normalizedA.includes(normalizedB) ||
-    normalizedB.includes(normalizedA)
-  )
-}
-
-function normalizeProductLookupText(value: string): string {
-  return value
-    .toLocaleLowerCase("de-DE")
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/[\p{P}\p{S}]+/gu, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-}
-
 async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; durationMs: number }> {
   const start = performance.now()
   const result = await work()
@@ -859,6 +189,119 @@ async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; dur
     result,
     durationMs: Math.round(performance.now() - start),
   }
+}
+
+function selectProductAssessmentTargetProductIds(params: {
+  productRequestKind: string | null
+  category: string | null
+  executions: readonly ProductLookupExecution[]
+  trustedSelectedProductContext: AgentV2TrustedSelectedProductContext | null
+  activeResolvedProductContext: AgentV2ActiveResolvedProductContext | null
+}): string[] {
+  if (params.productRequestKind !== "product_detail" || !params.category) return []
+
+  const requestedCategory = params.category
+  const ids: string[] = []
+  const latestExactLookup = [...params.executions]
+    .reverse()
+    .find(
+      (execution) =>
+        execution.result.status === "found_exact" &&
+        execution.result.product?.id &&
+        productAssessmentCategoryMatches(
+          execution.result.product.category_key ?? execution.result.category,
+          requestedCategory,
+        ),
+    )
+
+  if (latestExactLookup?.result.product?.id) {
+    ids.push(latestExactLookup.result.product.id)
+  }
+
+  if (
+    params.trustedSelectedProductContext?.selected_product.id &&
+    productAssessmentCategoryMatches(
+      params.trustedSelectedProductContext.selected_product.category,
+      requestedCategory,
+    )
+  ) {
+    ids.push(params.trustedSelectedProductContext.selected_product.id)
+  }
+
+  if (
+    params.activeResolvedProductContext?.product_id &&
+    productAssessmentCategoryMatches(
+      params.activeResolvedProductContext.category,
+      requestedCategory,
+    )
+  ) {
+    ids.push(params.activeResolvedProductContext.product_id)
+  }
+
+  return [...new Set(ids)]
+}
+
+function selectProductAssessmentTargetProductHints(params: {
+  targetProductIds: readonly string[]
+  executions: readonly ProductLookupExecution[]
+  trustedSelectedProductContext: AgentV2TrustedSelectedProductContext | null
+  activeResolvedProductContext: AgentV2ActiveResolvedProductContext | null
+}) {
+  const targetProductIdSet = new Set(params.targetProductIds)
+  const hints: Array<{ product_id: string; name: string; category: string | null }> = []
+
+  const latestExactLookup = [...params.executions]
+    .reverse()
+    .find(
+      (execution) =>
+        execution.result.status === "found_exact" &&
+        execution.result.product?.id &&
+        targetProductIdSet.has(execution.result.product.id),
+    )
+
+  if (latestExactLookup?.result.product?.id) {
+    hints.push({
+      product_id: latestExactLookup.result.product.id,
+      name: latestExactLookup.result.product.name,
+      category:
+        latestExactLookup.result.product.category_key ?? latestExactLookup.result.category ?? null,
+    })
+  }
+
+  const trustedProduct = params.trustedSelectedProductContext?.selected_product
+  if (
+    trustedProduct &&
+    targetProductIdSet.has(trustedProduct.id) &&
+    !hints.some((hint) => hint.product_id === trustedProduct.id)
+  ) {
+    hints.push({
+      product_id: trustedProduct.id,
+      name: trustedProduct.name,
+      category: trustedProduct.category,
+    })
+  }
+
+  const activeProduct = params.activeResolvedProductContext
+  if (
+    activeProduct &&
+    targetProductIdSet.has(activeProduct.product_id) &&
+    !hints.some((hint) => hint.product_id === activeProduct.product_id)
+  ) {
+    hints.push({
+      product_id: activeProduct.product_id,
+      name: activeProduct.name,
+      category: activeProduct.category,
+    })
+  }
+
+  return hints
+}
+
+function productAssessmentCategoryMatches(
+  productCategory: string | null | undefined,
+  requestedCategory: string,
+): boolean {
+  return (productCategory ?? "").trim() === requestedCategory.trim()
 }
 
 function sumFiniteLatencies(values: readonly (number | null | undefined)[]): number | null {
@@ -1079,14 +522,143 @@ function getMatchedRoutineProductIds(items: unknown[]): Set<string> {
   return productIds
 }
 
+type PendingSubmissionIdentity = Pick<
+  ProductIntakeSubmissionRow,
+  "id" | "brand_text" | "product_name_text" | "category" | "status" | "updated_at"
+>
+
+function buildPendingActiveProductContextsFromRoutineInventory(
+  items: unknown[],
+  originalUserMessage: string,
+  submissionIdentities: ReadonlyMap<string, PendingSubmissionIdentity> = new Map(),
+): AgentV2ActiveProductContext[] {
+  return items.flatMap((item) => {
+    if (!item || typeof item !== "object" || Array.isArray(item)) return []
+
+    const record = item as Record<string, unknown>
+    const matchStatus = record.match_status ?? record.matchStatus
+    if (matchStatus !== "pending_review" && matchStatus !== "needs_more_info") return []
+
+    const submissionId = readOptionalString(
+      record.product_submission_id ?? record.productSubmissionId,
+    )
+    const submissionIdentity = submissionId
+      ? (submissionIdentities.get(submissionId) ?? null)
+      : null
+    if (submissionIdentity && !PENDING_CONTEXT_SUBMISSION_STATUSES.has(submissionIdentity.status)) {
+      return []
+    }
+    const productName =
+      readOptionalString(submissionIdentity?.product_name_text) ??
+      readOptionalString(
+        record.product_name ??
+          record.productName ??
+          record.product_name_text ??
+          record.productNameText,
+      )
+    const brandText =
+      readOptionalString(submissionIdentity?.brand_text) ??
+      readOptionalString(
+        record.brand_text ?? record.brandText ?? record.brand_name ?? record.brandName,
+      )
+    const displayName = [brandText, productName].filter(Boolean).join(" ").trim()
+    if (!submissionId || !displayName) return []
+
+    return [
+      {
+        status: "pending_review",
+        product_id: null,
+        submission_id: submissionId,
+        category:
+          readOptionalString(submissionIdentity?.category) ?? readOptionalString(record.category),
+        brand_text: brandText,
+        product_name_text: productName,
+        display_name: displayName,
+        original_user_message: originalUserMessage,
+        source: "product_intake_submission",
+        updated_at:
+          readOptionalString(submissionIdentity?.updated_at) ??
+          readOptionalString(record.updated_at ?? record.updatedAt) ??
+          new Date(0).toISOString(),
+      },
+    ]
+  })
+}
+
+async function loadPendingSubmissionIdentities(params: {
+  items: unknown[]
+  userId: string
+  createProductIntakeRepository?: typeof createSupabaseProductIntakeRepository
+}): Promise<Map<string, PendingSubmissionIdentity>> {
+  const submissionIds = Array.from(
+    new Set(
+      params.items.flatMap((item) => {
+        if (!item || typeof item !== "object" || Array.isArray(item)) return []
+        const record = item as Record<string, unknown>
+        const matchStatus = record.match_status ?? record.matchStatus
+        if (matchStatus !== "pending_review" && matchStatus !== "needs_more_info") return []
+        const submissionId = readOptionalString(
+          record.product_submission_id ?? record.productSubmissionId,
+        )
+        return submissionId ? [submissionId] : []
+      }),
+    ),
+  )
+  if (submissionIds.length === 0) return new Map()
+
+  const repository =
+    params.createProductIntakeRepository?.() ?? createSupabaseProductIntakeRepository()
+  const rows = await Promise.all(
+    submissionIds.map((submissionId) =>
+      repository.findProductSubmission(submissionId, params.userId).catch((error) => {
+        console.warn("[agent-v2] pending product submission identity lookup failed", {
+          submissionId,
+          error,
+        })
+        return null
+      }),
+    ),
+  )
+
+  return new Map(
+    rows.flatMap((row) => {
+      if (!row) return []
+      return [
+        [
+          row.id,
+          {
+            id: row.id,
+            brand_text: row.brand_text,
+            product_name_text: row.product_name_text,
+            category: row.category,
+            status: row.status,
+            updated_at: row.updated_at,
+          },
+        ],
+      ]
+    }),
+  )
+}
+
+const PENDING_CONTEXT_SUBMISSION_STATUSES = new Set<ProductIntakeSubmissionRow["status"]>([
+  "pending_review",
+  "researching",
+  "ready_for_review",
+  "needs_more_info",
+])
+
+function readOptionalString(value: unknown): string | null {
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null
+}
+
 function scopeLookupCatalogForUser(
   catalog: ProductLookupCatalog,
-  ownedProductIds: ReadonlySet<string>,
+  verifiedOwnedProductIds: ReadonlySet<string>,
 ): ProductLookupCatalog {
   const products = catalog.products.filter(
     (product) =>
       isProductEligibleForMode(product, "general_recommendation") ||
-      (ownedProductIds.has(product.id) &&
+      (verifiedOwnedProductIds.has(product.id) &&
         productIsActive(product) &&
         productLifecycleStatus(product) === "active"),
   )
@@ -1108,6 +680,7 @@ function buildConversationStateTransition(params: {
   classification: ClassificationResult
   routineThreadContext: AgentV2RoutineThreadContext
   priorSelectedProductProjections: readonly AgentV2StoredProductProjection[]
+  activeProductContexts?: readonly AgentV2ActiveProductContext[]
   activeResolvedProductContext?: AgentV2ActiveResolvedProductContext | null
   acceptedSessionMemoryWrites: readonly AgentV2SessionMemoryWrite[]
 }): AgentV2ConversationStateTransition {
@@ -1119,9 +692,13 @@ function buildConversationStateTransition(params: {
     agent_v2: {
       routine_thread_context: params.routineThreadContext,
       prior_selected_product_projections: [...params.priorSelectedProductProjections],
+      active_product_contexts:
+        params.activeProductContexts === undefined
+          ? previousState.agent_v2.active_product_contexts
+          : [...params.activeProductContexts].slice(-3),
       active_resolved_product_context:
         params.activeResolvedProductContext === undefined
-          ? previousState.agent_v2.active_resolved_product_context
+          ? buildPrimaryResolvedProductContext(previousState.agent_v2.active_product_contexts)
           : params.activeResolvedProductContext,
       session_memory: mergeAgentV2SessionMemory({
         previous: previousState.agent_v2.session_memory,
@@ -1141,76 +718,6 @@ function buildConversationStateTransition(params: {
     ),
     classifier_override: null,
     updated_by_engine: AGENT_V2_PRODUCTION_ENGINE,
-  }
-}
-
-function buildActiveResolvedProductContext(
-  context: AgentV2TrustedSelectedProductContext | null | undefined,
-): AgentV2ActiveResolvedProductContext | null {
-  if (!context) return null
-  return {
-    source: "product_lookup_selection",
-    product_id: context.selected_product.id,
-    name: context.selected_product.name,
-    category: context.selected_product.category,
-    original_user_message: context.original_user_message,
-  }
-}
-
-function buildActiveResolvedProductContextFromLookup(params: {
-  fallback: { execution: ProductLookupExecution } | null
-  originalUserMessage: string
-  displayName: string | null
-}): AgentV2ActiveResolvedProductContext | null {
-  const execution = params.fallback?.execution
-  if (!execution) return null
-  const result = execution.result
-  if (result?.status !== "found_exact" || !result.product) return null
-
-  return {
-    source: "product_lookup_selection",
-    product_id: result.product.id,
-    name: params.displayName?.trim() || result.product.name,
-    category: result.product.category_key ?? execution.input.category ?? null,
-    original_user_message: params.originalUserMessage,
-  }
-}
-
-function buildNextActiveResolvedProductContext(params: {
-  previous: AgentV2ActiveResolvedProductContext | null
-  trustedSelectedProductContext?: AgentV2TrustedSelectedProductContext | null
-  deterministicResolvedProductContext: AgentV2ActiveResolvedProductContext | null
-  latestMessageNamesActionableProduct: boolean
-}): AgentV2ActiveResolvedProductContext | null {
-  const selectedContext = buildActiveResolvedProductContext(params.trustedSelectedProductContext)
-  if (selectedContext) return selectedContext
-  if (params.deterministicResolvedProductContext) return params.deterministicResolvedProductContext
-  if (params.latestMessageNamesActionableProduct) return null
-  return params.previous
-}
-
-function buildStoredProjectionForTrustedSelectedProduct(
-  context: AgentV2TrustedSelectedProductContext | null | undefined,
-): AgentV2StoredProductProjection | null {
-  if (!context) return null
-  return {
-    tool_name: "select_products",
-    category: context.selected_product.category as AgentV2StoredProductProjection["category"],
-    valid_product_ids: [context.selected_product.id],
-    products: [
-      {
-        product_id: context.selected_product.id,
-        rank: 1,
-        name: context.selected_product.name,
-        brand: null,
-        price_eur: null,
-        currency: null,
-        fit_reason: "Vom Nutzer aus der Produktklärung ausgewählt.",
-        caveat: null,
-        supported_claims: [],
-        unsupported_requested_signals: [],
-      },
-    ],
   }
 }
 
@@ -1271,6 +778,7 @@ export async function runAgentV2ProductionPipeline(
     throw new Error("AgentV2 production chat requires a conversation id before orchestration.")
   }
 
+  const createPipelineAdminClient = deps.createAdminClient ?? createAdminClient
   const startedAt = new Date().toISOString()
   const ownsConversation = await (
     deps.verifyConversationOwnership ?? verifyAgentV2ProductionConversationOwnership
@@ -1297,7 +805,10 @@ export async function runAgentV2ProductionPipeline(
     measureAsync(() =>
       deps.loadConversationState
         ? deps.loadConversationState({ conversationId, userId })
-        : loadAgentV2ConversationStateForUser(createAdminClient(), { conversationId, userId }),
+        : loadAgentV2ConversationStateForUser(createPipelineAdminClient(), {
+            conversationId,
+            userId,
+          }),
     ),
   ])
 
@@ -1315,26 +826,48 @@ export async function runAgentV2ProductionPipeline(
   const routineThreadContext = buildRoutineThreadContextFromConversationState(conversationState)
   const priorSelectedProductProjections =
     conversationState.agent_v2.prior_selected_product_projections
+  const pendingSubmissionIdentities = await loadPendingSubmissionIdentities({
+    items: userContext.routine_inventory,
+    userId,
+    createProductIntakeRepository: deps.createProductIntakeRepository,
+  })
+  const pendingRoutineProductContexts = buildPendingActiveProductContextsFromRoutineInventory(
+    userContext.routine_inventory,
+    message,
+    pendingSubmissionIdentities,
+  )
+  const activeProductContexts = mergeActiveProductContexts({
+    previous: conversationState.agent_v2.active_product_contexts,
+    next: pendingRoutineProductContexts,
+    latestMessageNamesActionableProduct: false,
+  })
   const activeResolvedProductContext =
     buildActiveResolvedProductContext(params.trustedSelectedProductContext) ??
-    conversationState.agent_v2.active_resolved_product_context
+    buildPrimaryResolvedProductContext(activeProductContexts)
   const sessionMemory = conversationState.agent_v2.session_memory
   const runTurn = deps.runAgentV2ResponsesTurn ?? runAgentV2ResponsesTurn
   const productIntakeEnabled = params.productIntakeEnabled === true
-  let productLookupCatalogPromise: Promise<{
-    catalog: ProductLookupCatalog
-    brandCatalog: BrandResolutionCatalogInput
-  }> | null = null
-  const loadProductLookupCatalogs = () => {
+  const ownedProductIds = getMatchedRoutineProductIds(userContext.routine_inventory)
+  let productLookupCatalogPromise: ReturnType<ProductLookupCatalogLoader> | null = null
+  const loadProductLookupCatalogs: ProductLookupCatalogLoader = () => {
     productLookupCatalogPromise ??= (async () => {
       const repository =
         deps.createProductIntakeRepository?.() ?? createSupabaseProductIntakeRepository()
-      const ownedProductIds = getMatchedRoutineProductIds(userContext.routine_inventory)
       const [catalog, brandCatalog] = await Promise.all([
         repository.loadCatalog({ eligibilityMode: "intake_dedupe" }),
         repository.loadBrandResolutionCatalog(),
       ])
-      return { catalog: scopeLookupCatalogForUser(catalog, ownedProductIds), brandCatalog }
+      const ownedCatalogProducts = catalog.products.filter((product) =>
+        ownedProductIds.has(product.id),
+      )
+      const verifiedOwnedProductIds =
+        ownedCatalogProducts.length === 0
+          ? new Set<string>()
+          : await loadVerifiedSpecProductIds({
+              client: createPipelineAdminClient() as never,
+              products: ownedCatalogProducts,
+            })
+      return { catalog: scopeLookupCatalogForUser(catalog, verifiedOwnedProductIds), brandCatalog }
     })()
     return productLookupCatalogPromise
   }
@@ -1386,6 +919,7 @@ export async function runAgentV2ProductionPipeline(
     currentRoutineLayer: routineThreadContext?.active ? routineThreadContext.current_layer : null,
     routineThreadContext,
     priorSelectedProductProjections,
+    activeProductContexts,
     activeResolvedProductContext,
     safetyMode,
     productIntakeEnabled,
@@ -1399,18 +933,17 @@ export async function runAgentV2ProductionPipeline(
           throw new Error("product intake lookup tool is disabled")
         }
         const { catalog, brandCatalog } = await loadProductLookupCatalogs()
-        const lookupInput = {
-          category: typeof input.category === "string" ? input.category : null,
-          brand_text: typeof input.brand_text === "string" ? input.brand_text : null,
-          product_name_text:
-            typeof input.product_name_text === "string" ? input.product_name_text : null,
-        }
+        const lookupInput = normalizeProductLookupExecutionInput(input)
         const result = lookupProductCandidate({
           input: lookupInput,
           catalog,
           brandCatalog,
           offerId: `product-intake-${requestId}`,
-          eligibilityMode: "intake_dedupe",
+          eligibilityMode: "user_visible",
+          eligibilityContext: {
+            ownedProductIds: new Set(catalog.products.map((product) => product.id)),
+            hasVerifiedSpecs: true,
+          },
         })
         productLookupExecutions.push({ input: lookupInput, result })
         return result
@@ -1430,6 +963,20 @@ export async function runAgentV2ProductionPipeline(
           latestMessage: message,
           recentMessages,
         })
+        const targetProductIds = selectProductAssessmentTargetProductIds({
+          productRequestKind:
+            typeof input.product_request_kind === "string" ? input.product_request_kind : null,
+          category: typeof input.category === "string" ? input.category : null,
+          executions: productLookupExecutions,
+          trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
+          activeResolvedProductContext,
+        })
+        const targetProductHints = selectProductAssessmentTargetProductHints({
+          targetProductIds,
+          executions: productLookupExecutions,
+          trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
+          activeResolvedProductContext,
+        })
         let rawResult: SelectProductsToolResult | null = null
         const selectProductsForCall = (deps.createSelectProductsTool ?? createSelectProductsTool)({
           onResult: (result) => {
@@ -1443,6 +990,8 @@ export async function runAgentV2ProductionPipeline(
           memoryContext,
           routineItems: effectiveRoutineItems,
           effectiveCareContext,
+          targetProductIds,
+          targetProductHints,
         })
         const resultForProjection =
           rawResult ??
@@ -1505,75 +1054,27 @@ export async function runAgentV2ProductionPipeline(
     latestMessage: params.message,
     recentMessages,
   })
-  const latestMessageNamesNewProduct = Boolean(latestNamedProductContext)
-  const suppressStaleLookupActions =
-    Boolean(activeResolvedProductContext) && !latestMessageNamesNewProduct
-  const deterministicLookupFallback =
-    productIntakeEnabled && !suppressStaleLookupActions
-      ? await buildDeterministicNamedProductLookupFallback({
-          namedProductContext: latestNamedProductContext,
-          existingExecutions: productLookupExecutions,
-          trace: result.trace,
-          loadProductLookupCatalogs,
-          requestId,
-        })
-      : null
-  if (deterministicLookupFallback) {
-    productLookupExecutions.push(deterministicLookupFallback.execution)
-  }
-  const recoveredNotFoundLookupFailureFallback =
-    productIntakeEnabled && !suppressStaleLookupActions
-      ? buildRecoveredNotFoundProductLookupFailureFallback({
-          namedProductContext: latestNamedProductContext,
-          executions: productLookupExecutions,
-          trace: result.trace,
-          latestUserMessage: params.message,
-        })
-      : null
-  const deterministicResolvedProductContext = buildActiveResolvedProductContextFromLookup({
-    fallback: deterministicLookupFallback,
-    originalUserMessage: params.message,
-    displayName: latestNamedProductContext?.display_name ?? null,
+  const productLookupOutcome = await buildProductLookupTurnOutcome({
+    productIntakeEnabled,
+    safetyMode,
+    activeProductContexts,
+    activeResolvedProductContext,
+    trustedSelectedProductContext: params.trustedSelectedProductContext,
+    namedProductContext: latestNamedProductContext,
+    executions: productLookupExecutions,
+    trace: result.trace,
+    finalAnswer: result.final_answer,
+    latestUserMessage: params.message,
+    loadProductLookupCatalogs,
+    requestId,
   })
-  const latestMessageNamesActionableProduct = Boolean(
-    latestNamedProductContext && latestNamedProductContext.named_product_intent !== "background",
-  )
-
-  const answer =
-    deterministicLookupFallback?.answer ??
-    recoveredNotFoundLookupFailureFallback ??
-    result.final_answer
-  const visibleFailure =
-    result.trace.failure_stage !== null &&
-    !deterministicLookupFallback &&
-    !recoveredNotFoundLookupFailureFallback
-  const productIntakeOffer =
-    productIntakeEnabled && !suppressStaleLookupActions
-      ? selectProductIntakeOfferForAnswer(answer, productLookupExecutions, params.message, {
-          allowFallbackIntake: visibleFailure,
-        })
-      : null
-  const productLookupExecutionsForClarification =
-    productIntakeEnabled && !suppressStaleLookupActions
-      ? await recoverProductLookupClarificationExecutionsFromTrace({
-          trace: result.trace,
-          existingExecutions: productLookupExecutions,
-          loadProductLookupCatalogs,
-          requestId,
-        })
-      : productLookupExecutions
-  const productLookupClarification = productIntakeEnabled
-    ? suppressStaleLookupActions
-      ? null
-      : selectProductLookupClarificationForAnswer(
-          answer,
-          productLookupExecutionsForClarification,
-          params.message,
-          {
-            allowFallbackClarification: visibleFailure,
-          },
-        )
-    : null
+  const {
+    answer,
+    visibleFailure,
+    productIntakeOffer,
+    productLookupClarification,
+    trustedSelectedProductProjection,
+  } = productLookupOutcome
   const intent = deriveIntent(answer)
   const productCategory = visibleFailure ? null : deriveProductCategory(answer)
   const routerDecision = buildAgentV2RouterDecision({ answer, visibleFailure })
@@ -1617,13 +1118,7 @@ export async function runAgentV2ProductionPipeline(
             projections: selectedProductProjections,
             answer,
           }),
-          ...(buildStoredProjectionForTrustedSelectedProduct(params.trustedSelectedProductContext)
-            ? [
-                buildStoredProjectionForTrustedSelectedProduct(
-                  params.trustedSelectedProductContext,
-                ) as AgentV2StoredProductProjection,
-              ]
-            : []),
+          ...(trustedSelectedProductProjection ? [trustedSelectedProductProjection] : []),
         ],
       })
   const persistedVisibleRoutineSteps =
@@ -1639,14 +1134,8 @@ export async function runAgentV2ProductionPipeline(
       visible_steps: persistedVisibleRoutineSteps,
     },
     priorSelectedProductProjections: nextPriorSelectedProductProjections,
-    activeResolvedProductContext: visibleFailure
-      ? activeResolvedProductContext
-      : buildNextActiveResolvedProductContext({
-          previous: activeResolvedProductContext,
-          trustedSelectedProductContext: params.trustedSelectedProductContext,
-          deterministicResolvedProductContext,
-          latestMessageNamesActionableProduct,
-        }),
+    activeProductContexts: productLookupOutcome.nextActiveProductContexts,
+    activeResolvedProductContext: productLookupOutcome.nextActiveResolvedProductContext,
     acceptedSessionMemoryWrites: result.accepted_session_memory_writes,
   })
   const debugTrace = buildPipelineTraceDraft({

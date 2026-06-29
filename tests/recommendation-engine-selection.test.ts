@@ -369,6 +369,38 @@ test("engine conditioner reranking requires specs for owned non-recommended asse
   )
 })
 
+test("engine conditioner reranking preserves explicit assessment target inside the limit", () => {
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
+  const decision = runtime.categories.conditioner
+  const candidates = [
+    createMatchedProduct("top-1", "Conditioner", { combined_score: 0.99 }),
+    createMatchedProduct("top-2", "Conditioner", { combined_score: 0.98 }),
+    createMatchedProduct("top-3", "Conditioner", { combined_score: 0.97 }),
+    createMatchedProduct("assessment-target", "Conditioner", { combined_score: 0.1 }),
+  ]
+  const specs = candidates.map(
+    (candidate): ProductConditionerRerankSpecs => ({
+      product_id: candidate.id,
+      weight: "medium",
+      repair_level: "high",
+      balance_direction: "moisture",
+      ingredient_flags: [],
+    }),
+  )
+
+  const reranked = rerankConditionerProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    hairProfile: SEVERE_DAMAGE_PROFILE,
+    preserveProductIds: ["assessment-target"],
+  })
+
+  assert.equal(reranked.length, 3)
+  assert.equal(reranked[0]?.id, "assessment-target")
+  assert.ok(reranked.some((product) => product.id === "assessment-target"))
+})
+
 test("engine mask reranking rewards complete fit metadata over unknown balance", () => {
   const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
   const decision = runtime.categories.mask
@@ -1245,6 +1277,90 @@ test("engine shampoo reranking treats exact normal bucket with gentle intensity 
   assert.equal(meta?.cleansing_intensity, "gentle")
   assert.equal(meta?.fit_status, "supportive")
   assert.doesNotMatch(meta?.tradeoffs.join("\n") ?? "", /Fallback/)
+})
+
+test("engine shampoo reranking preserves included assessment target products inside the limit", () => {
+  const balancedProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    thickness: "fine" as const,
+    scalp_type: "balanced" as const,
+    scalp_condition: null,
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(balancedProfile, [])
+  const decision = runtime.categories.shampoo
+
+  const candidates = [
+    createMatchedProduct("global-1", "Shampoo", { combined_score: 1 }),
+    createMatchedProduct("global-2", "Shampoo", { combined_score: 0.99 }),
+    createMatchedProduct("global-3", "Shampoo", { combined_score: 0.98 }),
+    createMatchedProduct("included-target", "Shampoo", {
+      combined_score: 0,
+      is_chaarlie_recommended: false,
+    }),
+  ]
+
+  const reranked = rerankShampooProductsWithEngine({
+    candidates,
+    decision,
+    hairProfile: balancedProfile,
+    bucketByProductId: new Map(candidates.map((candidate) => [candidate.id, "normal" as const])),
+    specs: candidates.map((candidate) => ({
+      product_id: candidate.id,
+      thickness: "fine" as const,
+      shampoo_bucket: "normal" as const,
+      scalp_route: "balanced" as const,
+      cleansing_intensity: "gentle" as const,
+    })),
+    includeProductIds: ["included-target"],
+    preserveProductIds: ["included-target"],
+  })
+
+  assert.equal(reranked.length, 3)
+  assert.ok(
+    reranked.some((product) => product.id === "included-target"),
+    reranked.map((product) => product.id).join(", "),
+  )
+})
+
+test("engine shampoo reranking does not force routine-owned products without assessment targeting", () => {
+  const balancedProfile = {
+    ...LOW_DAMAGE_PROFILE,
+    thickness: "fine" as const,
+    scalp_type: "balanced" as const,
+    scalp_condition: null,
+  }
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(balancedProfile, [])
+  const decision = runtime.categories.shampoo
+
+  const candidates = [
+    createMatchedProduct("global-1", "Shampoo", { combined_score: 1 }),
+    createMatchedProduct("global-2", "Shampoo", { combined_score: 0.99 }),
+    createMatchedProduct("global-3", "Shampoo", { combined_score: 0.98 }),
+    createMatchedProduct("owned-routine-product", "Shampoo", {
+      combined_score: 0,
+      is_chaarlie_recommended: false,
+    }),
+  ]
+
+  const reranked = rerankShampooProductsWithEngine({
+    candidates,
+    decision,
+    hairProfile: balancedProfile,
+    bucketByProductId: new Map(candidates.map((candidate) => [candidate.id, "normal" as const])),
+    specs: candidates.map((candidate) => ({
+      product_id: candidate.id,
+      thickness: "fine" as const,
+      shampoo_bucket: "normal" as const,
+      scalp_route: "balanced" as const,
+      cleansing_intensity: "gentle" as const,
+    })),
+    includeProductIds: ["owned-routine-product"],
+  })
+
+  assert.deepEqual(
+    reranked.map((product) => product.id),
+    ["global-1", "global-2", "global-3"],
+  )
 })
 
 test("engine shampoo reranking excludes mismatches when enough acceptable fits exist", () => {

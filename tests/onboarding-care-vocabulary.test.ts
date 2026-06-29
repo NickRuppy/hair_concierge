@@ -8,6 +8,7 @@ import {
   normalizeNightProtectionValues,
   normalizeTowelTechniqueValue,
 } from "../src/lib/vocabulary/onboarding-care"
+import { TOWEL_MATERIAL_ICONS } from "../src/components/onboarding/onboarding-display-config"
 
 test("towel technique canonicalizes legacy German values", () => {
   assert.equal(normalizeTowelTechniqueValue("rubbeln"), "rough_rubbing")
@@ -30,6 +31,7 @@ test("towel material options include no towel as the final explicit option", () 
     TOWEL_MATERIAL_LABELS.no_towel,
     "Kein Handtuch: Ich lasse meine Haare tropfnass trocknen",
   )
+  assert.equal(TOWEL_MATERIAL_ICONS.no_towel, "drying-air")
 })
 
 test("night protection canonicalizes legacy loose braid and bun values", () => {

@@ -3,9 +3,14 @@
 Date: 2026-06-25
 
 Status: Implemented in the integrated smoke worktree; latest review findings have been patched.
-Targeted tests, typecheck, `git diff --check`, direct SSE/API smoke, and authenticated
-browser-click smoke are passing. Earlier `ci:verify` and simulated-user-review evidence have been
-collected in this pass; final autoreview/shipflow remain open.
+Targeted tests, typecheck, `git diff --check`, direct SSE/API smoke, authenticated browser-click
+smoke, and the 2026-06-26 integrated full-flow smoke are passing mechanically. The integrated smoke
+found one remaining UX/trust decision: candidate clarification cards render correctly, but the
+assistant message can still sound repetitive and partially answer before the user selects the exact
+product. Earlier `ci:verify` and simulated-user-review evidence have been collected in this pass.
+The pre-ship product-selection architecture cleanup has also been completed and documented in
+`/Users/nick/AI_work/hair_conscierge/.worktrees/product-intake-full-flow-smoke/plans/2026-06-25-product-selection-architecture-cleanup.md`;
+final autoreview/shipflow remain open after that smoke finding is patched or explicitly accepted.
 
 Claude review:
 `/Users/nick/AI_work/hair_conscierge/.worktrees/product-intake-full-flow-smoke/plans/2026-06-25-product-lookup-clarification-card.claude-review.md`.

@@ -1126,6 +1126,93 @@ test("selectProducts includes owned verified non-recommended products for assess
   )
 })
 
+test("selectProducts narrows product-detail assessment grounding to target product ids", async () => {
+  const targetProduct = createShampooMatchedProduct("target-shampoo", 1, [
+    "Resolved exact product from lookup.",
+  ])
+  const otherProduct = createShampooMatchedProduct("other-shampoo", 0.99, [
+    "Higher generic category score.",
+  ])
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, includeProductIds }) => {
+      assert.equal(category, "shampoo")
+      assert.deepEqual(includeProductIds, ["target-shampoo"])
+      return [otherProduct, targetProduct]
+    },
+  })
+
+  const result = await tool({
+    category: "shampoo",
+    message: "Passt das Syoss Shampoo zu mir?",
+    hairProfile: {
+      thickness: "fine",
+      scalp_type: "balanced",
+      scalp_condition: null,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    targetProductIds: ["target-shampoo"],
+  })
+
+  assert.deepEqual(
+    result.products.map((product) => product.product_id),
+    ["target-shampoo"],
+  )
+  assert.equal(
+    result.products[0]?.supported_claims.some((claim) => claim.field === "cleansing_intensity"),
+    true,
+  )
+})
+
+test("selectProducts preserves resolved assessment target when engine returns no products", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, includeProductIds, preserveProductIds }) => {
+      assert.equal(category, "shampoo")
+      assert.deepEqual(includeProductIds, ["target-shampoo"])
+      assert.deepEqual(preserveProductIds, ["target-shampoo"])
+      return []
+    },
+  })
+
+  const result = await tool({
+    category: "shampoo",
+    message: "Passt das Syoss Shampoo zu mir?",
+    hairProfile: {
+      thickness: "fine",
+      scalp_type: "balanced",
+      scalp_condition: null,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    targetProductIds: ["target-shampoo"],
+    targetProductHints: [
+      {
+        product_id: "target-shampoo",
+        name: "Syoss Intense Volume Shampoo",
+        category: "shampoo",
+      },
+    ],
+  })
+
+  assert.equal(result.product_response_policy, "recommend_with_caveat")
+  assert.deepEqual(
+    result.products.map((product) => product.product_id),
+    ["target-shampoo"],
+  )
+  assert.equal(result.products[0]?.supported_claims.length, 0)
+  assert.match(result.category_guidance, /geprüfter Produktdaten/)
+})
+
 test("selectProducts applies leave-in texture and density overrides with profile notices", async () => {
   const observed: {
     hairTexture?: HairProfile["hair_texture"]

@@ -9,8 +9,8 @@ function foldGermanText(value: string): string {
 function normalizeNoSymbol(value: string): string {
   return foldGermanText(value)
     .toLowerCase()
-    .replace(/n[º°]/g, "no")
-    .replace(/[\u2018\u2019'`´](?=\p{Letter})/gu, "")
+    .replace(/n[º°]\s*/g, "no ")
+    .replace(/[\u2018\u2019\u02bc'`´](?=\p{Letter})/gu, "")
     .replace(/[_-]+/g, " ")
     .replace(/[^\p{Letter}\p{Number}]+/gu, " ")
     .trim()

@@ -37,7 +37,7 @@
       "rule_id": "category.conditioner.product_detail_requires_catalog",
       "severity": "block",
       "source": "categories/conditioner.md",
-      "message": "For named conditioner detail or claim checks, use product catalog data or select_products before stating weight, protein/moisture role, color-safe status, compatibility, silicone-free or fragrance-free status, repair claims, or usage protocol."
+      "message": "For named conditioner detail or claim checks, use lookup_product_candidate first, then verified product catalog data or internal select_products projection facts before stating weight, protein/moisture role, color-safe status, compatibility, silicone-free or fragrance-free status, repair claims, or usage protocol."
     },
     {
       "rule_id": "category.conditioner.no_current_routine_invention",
@@ -135,7 +135,7 @@
     {
       "grounding_id": "category.conditioner.product_detail_claims",
       "tool": "select_products",
-      "when": "A named conditioner or conditioner claim is checked for weight, protein/moisture role, color-safe status, compatibility, silicone-free or fragrance-free status, repair claims, or exact usage."
+      "when": "Internal projection facts are needed after a named conditioner has been resolved for weight, protein/moisture role, color-safe status, compatibility, silicone-free or fragrance-free status, repair claims, or exact usage. Start identity resolution with lookup_product_candidate."
     },
     {
       "grounding_id": "category.conditioner.saved_or_current_routine_changes",

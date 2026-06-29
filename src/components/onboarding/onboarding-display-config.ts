@@ -5,6 +5,7 @@ export const TOWEL_MATERIAL_ICONS: Record<string, IconName> = {
   mikrofaser: "towel-mikrofaser",
   tshirt: "towel-tshirt",
   turban_mikrofaser: "towel-turban",
+  no_towel: "drying-air",
 }
 
 export const TOWEL_TECHNIQUE_ICONS: Record<string, IconName> = {

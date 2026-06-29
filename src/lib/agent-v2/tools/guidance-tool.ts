@@ -24,7 +24,7 @@ export type AgentV2GuidanceCategory = z.infer<typeof AgentV2GuidanceCategorySche
 
 export const LoadAgentV2AdvisorGuidanceInputSchema = z.object({
   answer_mode_hint: AgentV2AnswerModeSchema.nullable().describe(
-    "Expected answer mode. Use product_recommendation for concrete product asks, named-product detail checks, and product-specific claim checks even when the final answer may ask for clarification because catalog data is missing.",
+    "Expected answer mode. Use product_assessment for named-product assessment/detail checks when that answer mode is available; use product_recommendation for concrete product asks and as a compatibility hint for assessment grounding without forcing visible recommendation cards.",
   ),
   categories: z
     .array(AgentV2GuidanceCategorySchema)
@@ -59,6 +59,7 @@ export function selectGuidancePackageIds(
 
   if (
     input.answer_mode_hint === "product_recommendation" ||
+    (input.answer_mode_hint as string | null) === "product_assessment" ||
     input.answer_mode_hint === "constraint_blocked"
   ) {
     ids.push("base.product_recommendation.v1")
@@ -71,6 +72,7 @@ export function selectGuidancePackageIds(
   if (
     input.answer_mode_hint === "general_advice" ||
     input.answer_mode_hint === "product_recommendation" ||
+    (input.answer_mode_hint as string | null) === "product_assessment" ||
     input.answer_mode_hint === "routine"
   ) {
     ids.push("base.general_advice.v1")

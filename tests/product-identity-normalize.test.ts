@@ -62,6 +62,10 @@ test("normalizeText folds accents, punctuation, case, and spacing", () => {
 
 test("normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics", () => {
   assert.equal(normalizeIdentityText("  OLAPLEX   Nº. 5 -- Leave-In  "), "olaplex no 5 leave in")
+  assert.equal(
+    normalizeIdentityText("OLAPLEX N°5 Bond Maintenance"),
+    "olaplex no 5 bond maintenance",
+  )
   assert.equal(normalizeIdentityText("Olaplex No 5 Leave In"), "olaplex no 5 leave in")
   assert.equal(normalizeIdentityText("Garnier Fructis / Hair-Food"), "garnier fructis hair food")
 })
@@ -69,6 +73,7 @@ test("normalizeIdentityText is stable for case, whitespace, punctuation, and saf
 test("normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites", () => {
   assert.equal(normalizeIdentityText("L'Oréal"), "loreal")
   assert.equal(normalizeIdentityText("L’Oréal"), "loreal")
+  assert.equal(normalizeIdentityText("LʼOréal"), "loreal")
   assert.equal(normalizeIdentityText("Loreal"), "loreal")
 })
 

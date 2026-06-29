@@ -31,7 +31,7 @@
       "rule_id": "category.shampoo.no_product_name_claim_inference",
       "severity": "block",
       "source": "categories/shampoo.md",
-      "message": "Do not infer color-safe, sulfate-free, fragrance-free, anti-dandruff, sensitive-scalp, repair, growth, shine, cadence, or protocol claims from shampoo names or brand lines."
+      "message": "Do not infer color-safe, sulfate-free, fragrance-free, anti-dandruff, sensitive-scalp, repair, growth, shine, cadence, or protocol claims from shampoo names or brand lines; resolve named product identity first."
     },
     {
       "rule_id": "category.shampoo.normal_not_reset_lane",
@@ -88,7 +88,7 @@
     {
       "grounding_id": "category.shampoo.product_claims_and_protocol",
       "tool": "select_products",
-      "when": "Concrete shampoo names, recommendation order, named product detail, color-safe, sulfate-free, fragrance-free, anti-dandruff, sensitive-scalp, repair, growth, shine, exact cadence, or usage protocol claims are mentioned."
+      "when": "Concrete shampoo recommendations, recommendation order, or internal projection facts for resolved named-shampoo assessment are needed. Use lookup_product_candidate before product-specific named-shampoo claims."
     },
     {
       "grounding_id": "category.shampoo.routine_mutation_state",

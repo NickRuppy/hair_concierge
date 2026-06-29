@@ -278,6 +278,38 @@ function stripScore<T extends ScoredEngineProduct>(products: T[]): MatchedProduc
   })
 }
 
+function sliceWithIncludedProductIds<T extends MatchedProduct>(
+  products: T[],
+  includeProductIds: readonly string[] | undefined,
+  limit: number,
+): T[] {
+  const includedProductIds = new Set(includeProductIds ?? [])
+  if (includedProductIds.size === 0 || products.length <= limit) return products.slice(0, limit)
+
+  const selected: T[] = []
+  const selectedIds = new Set<string>()
+
+  for (const product of products) {
+    if (!includedProductIds.has(product.id)) continue
+    selected.push(product)
+    selectedIds.add(product.id)
+    if (selected.length >= limit) return selected
+  }
+
+  for (const product of products) {
+    if (selectedIds.has(product.id)) continue
+    selected.push(product)
+    if (selected.length >= limit) break
+  }
+
+  return selected
+}
+
+function appendUnselectedProducts<T extends MatchedProduct>(selected: T[], pool: T[]): T[] {
+  const seen = new Set(selected.map((product) => product.id))
+  return [...selected, ...pool.filter((product) => !seen.has(product.id))]
+}
+
 function shampooSpecKey(
   productId: string,
   shampooBucket: ShampooFitSpec["shampoo_bucket"],
@@ -536,8 +568,17 @@ export function rerankConditionerProductsWithEngine(params: {
   hairProfile: HairProfile | null
   runtime?: RecommendationEngineRuntime
   includeProductIds?: readonly string[]
+  preserveProductIds?: readonly string[]
 }): MatchedProduct[] {
-  const { candidates, specs, decision, hairProfile, runtime, includeProductIds } = params
+  const {
+    candidates,
+    specs,
+    decision,
+    hairProfile,
+    runtime,
+    includeProductIds,
+    preserveProductIds,
+  } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
   const careBalanceRow = getCareBalanceRow(runtime, "conditioner")
@@ -631,14 +672,16 @@ export function rerankConditionerProductsWithEngine(params: {
     (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
   )
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(acceptable.slice(0, SELECTION_LIMIT))
+    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
   }
 
   const fallback = scored
     .filter((product) => product._fitStatus === "mismatch" || product._fitStatus === "unknown")
     .map(markConditionerFallback)
 
-  return stripScore([...acceptable, ...fallback].slice(0, SELECTION_LIMIT))
+  return stripScore(
+    sliceWithIncludedProductIds([...acceptable, ...fallback], preserveProductIds, SELECTION_LIMIT),
+  )
 }
 
 export function rerankShampooProductsWithEngine(params: {
@@ -651,6 +694,7 @@ export function rerankShampooProductsWithEngine(params: {
   >
   specs?: ProductShampooSpecRow[]
   includeProductIds?: readonly string[]
+  preserveProductIds?: readonly string[]
 }): MatchedProduct[] {
   const {
     candidates,
@@ -659,6 +703,7 @@ export function rerankShampooProductsWithEngine(params: {
     bucketByProductId,
     specs = [],
     includeProductIds,
+    preserveProductIds,
   } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const targetProfile = decision.targetProfile
@@ -726,14 +771,20 @@ export function rerankShampooProductsWithEngine(params: {
 
   const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(acceptable.slice(0, SELECTION_LIMIT))
+    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
   }
 
   const mismatches = scored
     .filter((product) => product._fitStatus === "mismatch")
     .map(markShampooFallback)
 
-  return stripScore([...acceptable, ...mismatches].slice(0, SELECTION_LIMIT))
+  return stripScore(
+    sliceWithIncludedProductIds(
+      [...acceptable, ...mismatches],
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
+  )
 }
 
 function buildOilUsageHint(decision: OilCategoryDecision): string {
@@ -806,6 +857,7 @@ export function rerankOilProductsWithEngine(params: {
   eligibilityRows?: ProductOilEligibilityRow[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: readonly string[]
+  preserveProductIds?: readonly string[]
 }): MatchedProduct[] {
   const {
     candidates,
@@ -814,6 +866,7 @@ export function rerankOilProductsWithEngine(params: {
     eligibilityRows = [],
     runtime,
     includeProductIds,
+    preserveProductIds,
   } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const targetProfile = decision.targetProfile
@@ -936,7 +989,7 @@ export function rerankOilProductsWithEngine(params: {
   })
 
   scored.sort(compareScoredProducts)
-  return stripScore(scored).slice(0, SELECTION_LIMIT)
+  return stripScore(sliceWithIncludedProductIds(scored, preserveProductIds, SELECTION_LIMIT))
 }
 
 export function rerankBondbuilderProductsWithEngine(params: {
@@ -945,6 +998,7 @@ export function rerankBondbuilderProductsWithEngine(params: {
   decision: BondbuilderCategoryDecision
   message?: string
   includeProductIds?: readonly string[]
+  preserveProductIds?: readonly string[]
   outgoingRelationshipsByProductId?: Map<string, ProductRelationshipRow[]>
   incomingRelationshipsByProductId?: Map<string, ProductRelationshipRow[]>
   relatedProductsById?: Map<string, RelatedProduct>
@@ -955,6 +1009,7 @@ export function rerankBondbuilderProductsWithEngine(params: {
     decision,
     message = "",
     includeProductIds = [],
+    preserveProductIds,
     outgoingRelationshipsByProductId = new Map<string, ProductRelationshipRow[]>(),
     incomingRelationshipsByProductId = new Map<string, ProductRelationshipRow[]>(),
     relatedProductsById = new Map<string, RelatedProduct>(),
@@ -1076,7 +1131,13 @@ export function rerankBondbuilderProductsWithEngine(params: {
     if (selected.length >= limit) break
   }
 
-  return stripScore(selected).slice(0, limit)
+  return stripScore(
+    sliceWithIncludedProductIds(
+      appendUnselectedProducts(selected, scored),
+      preserveProductIds,
+      limit,
+    ),
+  )
 }
 
 type RequestedBondbuilderBrand = "k18" | "olaplex" | "epres"
@@ -1168,8 +1229,9 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
   decision: DeepCleansingShampooCategoryDecision
   runtime?: RecommendationEngineRuntime
   includeProductIds?: readonly string[]
+  preserveProductIds?: readonly string[]
 }): MatchedProduct[] {
-  const { candidates, specs, decision, runtime, includeProductIds } = params
+  const { candidates, specs, decision, runtime, includeProductIds, preserveProductIds } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
   const careBalanceRow = getCareBalanceRow(runtime, "deep_cleansing_shampoo")
@@ -1247,14 +1309,14 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
     target.colorSafeRequest
 
   if (acceptable.length > 0) {
-    return stripScore(acceptable.slice(0, SELECTION_LIMIT))
+    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
   }
 
   if (strictRequest) {
     return []
   }
 
-  return stripScore(scored).slice(0, SELECTION_LIMIT)
+  return stripScore(sliceWithIncludedProductIds(scored, preserveProductIds, SELECTION_LIMIT))
 }
 
 function buildDryShampooUsageHint(): string {
@@ -1266,8 +1328,9 @@ export function rerankDryShampooProductsWithEngine(params: {
   specs: ProductDryShampooSpecs[]
   decision: DryShampooCategoryDecision
   includeProductIds?: readonly string[]
+  preserveProductIds?: readonly string[]
 }): MatchedProduct[] {
-  const { candidates, specs, decision, includeProductIds } = params
+  const { candidates, specs, decision, includeProductIds, preserveProductIds } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
 
@@ -1321,7 +1384,7 @@ export function rerankDryShampooProductsWithEngine(params: {
 
   scored.sort(compareScoredProducts)
   const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
-  return stripScore(acceptable).slice(0, SELECTION_LIMIT)
+  return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
 }
 
 function buildPeelingUsageHint(decision: PeelingCategoryDecision): string {
@@ -1337,8 +1400,9 @@ export function rerankPeelingProductsWithEngine(params: {
   specs: ProductPeelingSpecs[]
   decision: PeelingCategoryDecision
   includeProductIds?: readonly string[]
+  preserveProductIds?: readonly string[]
 }): MatchedProduct[] {
-  const { candidates, specs, decision, includeProductIds } = params
+  const { candidates, specs, decision, includeProductIds, preserveProductIds } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
 
@@ -1379,7 +1443,7 @@ export function rerankPeelingProductsWithEngine(params: {
   })
 
   scored.sort(compareScoredProducts)
-  return stripScore(scored).slice(0, SELECTION_LIMIT)
+  return stripScore(sliceWithIncludedProductIds(scored, preserveProductIds, SELECTION_LIMIT))
 }
 
 function mapEngineLeaveInNeedToLegacy(
@@ -1481,6 +1545,7 @@ export function rerankLeaveInProductsWithEngine(params: {
   requestedFormats?: readonly LeaveInFormat[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: readonly string[]
+  preserveProductIds?: readonly string[]
 }): MatchedProduct[] {
   const {
     candidates,
@@ -1490,6 +1555,7 @@ export function rerankLeaveInProductsWithEngine(params: {
     requestedFormats = [],
     runtime,
     includeProductIds,
+    preserveProductIds,
   } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
@@ -1617,11 +1683,17 @@ export function rerankLeaveInProductsWithEngine(params: {
       if (selected.length >= SELECTION_LIMIT) break
     }
 
-    return stripScore(selected.slice(0, SELECTION_LIMIT))
+    return stripScore(
+      sliceWithIncludedProductIds(
+        appendUnselectedProducts(selected, scored),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(acceptable.slice(0, SELECTION_LIMIT))
+    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
   }
 
   const fallback = scored
@@ -1631,7 +1703,9 @@ export function rerankLeaveInProductsWithEngine(params: {
     )
     .map(markLeaveInFallback)
 
-  return stripScore([...acceptable, ...fallback].slice(0, SELECTION_LIMIT))
+  return stripScore(
+    sliceWithIncludedProductIds([...acceptable, ...fallback], preserveProductIds, SELECTION_LIMIT),
+  )
 }
 
 function selectRequestedLeaveInFormatPicks(
@@ -1784,8 +1858,9 @@ export function rerankMaskProductsWithEngine(params: {
   specs: ProductMaskSpecs[]
   decision: MaskCategoryDecision
   includeProductIds?: readonly string[]
+  preserveProductIds?: readonly string[]
 }): MatchedProduct[] {
-  const { candidates, specs, decision, includeProductIds } = params
+  const { candidates, specs, decision, includeProductIds, preserveProductIds } = params
   if (!decision.relevant || !decision.targetProfile) return []
   const target = decision.targetProfile
 
@@ -1847,7 +1922,7 @@ export function rerankMaskProductsWithEngine(params: {
     (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
   )
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(acceptable.slice(0, SELECTION_LIMIT))
+    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
   }
 
   const fallback = scored
@@ -1857,7 +1932,9 @@ export function rerankMaskProductsWithEngine(params: {
     )
     .map(markMaskFallback)
 
-  return stripScore([...acceptable, ...fallback].slice(0, SELECTION_LIMIT))
+  return stripScore(
+    sliceWithIncludedProductIds([...acceptable, ...fallback], preserveProductIds, SELECTION_LIMIT),
+  )
 }
 
 function mapBalanceTargetToConcernCodes(
@@ -1926,6 +2003,7 @@ export async function selectConditionerProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
+  preserveProductIds?: string[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -1989,6 +2067,7 @@ export async function selectConditionerProductsWithEngine(params: {
     hairProfile,
     runtime,
     includeProductIds: params.includeProductIds,
+    preserveProductIds: params.preserveProductIds,
   })
 }
 
@@ -1997,6 +2076,7 @@ export async function selectShampooProductsWithEngine(params: {
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
   includeProductIds?: string[]
+  preserveProductIds?: string[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime = buildRecommendationEngineRuntimeFromPersistence(
@@ -2083,6 +2163,7 @@ export async function selectShampooProductsWithEngine(params: {
     bucketByProductId,
     specs: (specs ?? []) as ProductShampooSpecRow[],
     includeProductIds: params.includeProductIds,
+    preserveProductIds: params.preserveProductIds,
   })
 }
 
@@ -2092,6 +2173,7 @@ export async function selectOilProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
+  preserveProductIds?: string[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const requestContext = buildRecommendationRequestContext({
@@ -2152,6 +2234,7 @@ export async function selectOilProductsWithEngine(params: {
       hairProfile,
       runtime,
       includeProductIds: params.includeProductIds,
+      preserveProductIds: params.preserveProductIds,
     })
   }
 
@@ -2178,6 +2261,7 @@ export async function selectOilProductsWithEngine(params: {
     eligibilityRows: typedEligibilityRows,
     runtime,
     includeProductIds: params.includeProductIds,
+    preserveProductIds: params.preserveProductIds,
   })
 }
 
@@ -2187,6 +2271,7 @@ export async function selectLeaveInProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
+  preserveProductIds?: string[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2256,6 +2341,7 @@ export async function selectLeaveInProductsWithEngine(params: {
     hairProfile,
     requestedFormats: runtime.requestContext.leaveInRequestedFormats,
     includeProductIds: params.includeProductIds,
+    preserveProductIds: params.preserveProductIds,
   })
 }
 
@@ -2265,6 +2351,7 @@ export async function selectMaskProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
+  preserveProductIds?: string[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2322,6 +2409,7 @@ export async function selectMaskProductsWithEngine(params: {
     specs: (specs ?? []) as ProductMaskSpecs[],
     decision,
     includeProductIds: params.includeProductIds,
+    preserveProductIds: params.preserveProductIds,
   })
 }
 
@@ -2331,6 +2419,7 @@ export async function selectBondbuilderProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
+  preserveProductIds?: string[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2470,6 +2559,7 @@ export async function selectBondbuilderProductsWithEngine(params: {
     decision,
     message,
     includeProductIds: params.includeProductIds,
+    preserveProductIds: params.preserveProductIds,
     outgoingRelationshipsByProductId,
     incomingRelationshipsByProductId,
     relatedProductsById,
@@ -2482,6 +2572,7 @@ export async function selectDeepCleansingShampooProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
+  preserveProductIds?: string[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2535,6 +2626,7 @@ export async function selectDeepCleansingShampooProductsWithEngine(params: {
     specs: (specs ?? []) as ProductDeepCleansingShampooSpecs[],
     decision,
     includeProductIds: params.includeProductIds,
+    preserveProductIds: params.preserveProductIds,
   })
 }
 
@@ -2544,6 +2636,7 @@ export async function selectDryShampooProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
+  preserveProductIds?: string[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems, runtime: providedRuntime } = params
   const runtime =
@@ -2597,6 +2690,7 @@ export async function selectDryShampooProductsWithEngine(params: {
     specs: (specs ?? []) as ProductDryShampooSpecs[],
     decision,
     includeProductIds: params.includeProductIds,
+    preserveProductIds: params.preserveProductIds,
   })
 }
 
@@ -2606,6 +2700,7 @@ export async function selectPeelingProductsWithEngine(params: {
   routineItems: PersistenceRoutineItemRow[]
   runtime?: RecommendationEngineRuntime
   includeProductIds?: string[]
+  preserveProductIds?: string[]
 }): Promise<MatchedProduct[]> {
   const { message, hairProfile, routineItems } = params
   const runtime =
@@ -2651,5 +2746,6 @@ export async function selectPeelingProductsWithEngine(params: {
     specs: (specs ?? []) as ProductPeelingSpecs[],
     decision,
     includeProductIds: params.includeProductIds,
+    preserveProductIds: params.preserveProductIds,
   })
 }

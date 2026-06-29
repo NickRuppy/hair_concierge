@@ -48,9 +48,15 @@ const INTERNAL_RANKING_LANGUAGE_PATTERNS = [
   /\btreffer\s+mit\b/,
   /\bprodukt\s*fit\b/,
 ]
+const INTERNAL_INSTRUCTION_LEAKAGE_PATTERN =
+  /\bich\s+(?:soll|muss)\s+(?:keine?|nicht|nur|erst|immer|laut|gem(?:ae|ä)ss)\b/iu
 
 const BARE_JA_OPENING_PATTERN = /^[\s>*_`#-]*(?:\d+[.)]\s*)?ja\s*(?:[-–—]|,)\s*/iu
 const CLOSURE_BLOCK_FINDINGS_ENABLED = true
+const DUPLICATE_VISIBLE_PARAGRAPH_FINDINGS_ENABLED = true
+const DUPLICATE_PARAGRAPH_MIN_NORMALIZED_LENGTH = 80
+const SIMILAR_ADJACENT_PARAGRAPH_MIN_NORMALIZED_LENGTH = 120
+const SIMILAR_ADJACENT_PARAGRAPH_TOKEN_OVERLAP = 0.82
 
 export function validateUserFacingLanguage(
   answer: AgentV2TerminalAnswer,
@@ -99,6 +105,18 @@ export function validateUserFacingLanguage(
         path: text.path,
       })
     }
+
+    if (INTERNAL_INSTRUCTION_LEAKAGE_PATTERN.test(text.value)) {
+      findings.push({
+        validator_id: "user_facing_instruction_leakage",
+        message:
+          "User-facing prose describes internal assistant instructions; phrase the limitation as natural user-facing context.",
+        severity: "block",
+        path: text.path,
+        repair_hint:
+          "Replace internal wording like 'Ich soll...' with natural wording such as 'Ich kann das Produkt noch nicht sicher bewerten...'.",
+      })
+    }
   }
 
   const opening = userFacingTexts.find((text) => text.path.at(-1) === "user_facing_answer_de")
@@ -116,7 +134,84 @@ export function validateUserFacingLanguage(
     })
   }
 
+  if (opening) {
+    analyzeDuplicateVisibleParagraphs(opening.value, opening.path).forEach((finding) =>
+      findings.push(finding),
+    )
+  }
+
   analyzeConversationClose(answer, context).forEach((finding) => findings.push(finding))
+}
+
+function analyzeDuplicateVisibleParagraphs(
+  text: string,
+  path: Array<string | number>,
+): AgentV2ValidationError[] {
+  if (!DUPLICATE_VISIBLE_PARAGRAPH_FINDINGS_ENABLED) return []
+
+  const normalizedParagraphs = splitVisibleParagraphs(text)
+    .map((paragraph) => normalizeGermanText(paragraph))
+    .filter(Boolean)
+
+  const seenLongParagraphs = new Set<string>()
+  for (const paragraph of normalizedParagraphs) {
+    if (paragraph.length < DUPLICATE_PARAGRAPH_MIN_NORMALIZED_LENGTH) continue
+    if (seenLongParagraphs.has(paragraph)) {
+      return [duplicateVisibleParagraphFinding(path)]
+    }
+    seenLongParagraphs.add(paragraph)
+  }
+
+  for (let index = 1; index < normalizedParagraphs.length; index += 1) {
+    const previous = normalizedParagraphs[index - 1]
+    const current = normalizedParagraphs[index]
+    if (
+      previous.length >= SIMILAR_ADJACENT_PARAGRAPH_MIN_NORMALIZED_LENGTH &&
+      current.length >= SIMILAR_ADJACENT_PARAGRAPH_MIN_NORMALIZED_LENGTH &&
+      hasHighParagraphOverlap(previous, current)
+    ) {
+      return [duplicateVisibleParagraphFinding(path)]
+    }
+  }
+
+  return []
+}
+
+function splitVisibleParagraphs(text: string): string[] {
+  return text
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+}
+
+function hasHighParagraphOverlap(first: string, second: string): boolean {
+  const firstTokens = new Set(first.split(" ").filter(Boolean))
+  const secondTokens = new Set(second.split(" ").filter(Boolean))
+  if (firstTokens.size === 0 || secondTokens.size === 0) return false
+
+  let shared = 0
+  for (const token of firstTokens) {
+    if (secondTokens.has(token)) shared += 1
+  }
+
+  const smallerParagraphOverlap = shared / Math.min(firstTokens.size, secondTokens.size)
+  const unionSize = new Set([...firstTokens, ...secondTokens]).size
+  const jaccardOverlap = shared / unionSize
+
+  return (
+    smallerParagraphOverlap >= SIMILAR_ADJACENT_PARAGRAPH_TOKEN_OVERLAP &&
+    jaccardOverlap >= SIMILAR_ADJACENT_PARAGRAPH_TOKEN_OVERLAP
+  )
+}
+
+function duplicateVisibleParagraphFinding(path: Array<string | number>): AgentV2ValidationError {
+  return {
+    validator_id: "user_facing_duplicate_visible_paragraph",
+    message:
+      "User-facing answer repeats the same medium/long visible paragraph; keep the answer concise and do not duplicate repair or card handoff copy.",
+    severity: "warn",
+    path,
+  }
 }
 
 export function analyzeConversationClose(

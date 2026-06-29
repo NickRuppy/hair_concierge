@@ -3,7 +3,13 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { format } from "date-fns"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
-import type { Message, CitationSource, Product, HairProfile } from "@/lib/types"
+import type {
+  Message,
+  CitationSource,
+  Product,
+  HairProfile,
+  ProductLookupSelectionContext,
+} from "@/lib/types"
 import type { Components } from "react-markdown"
 import { ThumbsDown, ThumbsUp } from "lucide-react"
 import ReactMarkdown from "react-markdown"
@@ -85,6 +91,7 @@ interface ChatMessageProps {
   /** True for messages appended during this session (not history loads) */
   isNew?: boolean
   isStreamingMessage?: boolean
+  resolvedProductLookupSelection?: ProductLookupSelectionContext | null
 }
 
 /**
@@ -233,6 +240,7 @@ export function ChatMessage({
   onFeedback,
   isNew,
   isStreamingMessage = false,
+  resolvedProductLookupSelection = null,
 }: ChatMessageProps) {
   const isUser = message.role === "user"
 
@@ -380,6 +388,7 @@ export function ChatMessage({
             conversationId={message.conversation_id}
             assistantMessageId={message.id}
             selectionDisabled={isStreamingMessage}
+            resolvedSelection={resolvedProductLookupSelection}
             onSelectProduct={selectProductFromClarification}
           />
         ) : null}

@@ -348,9 +348,7 @@ function inferNamedProductIntent(params: {
   hasRoutineAdd: boolean
 }): AgentV2NamedProductIntent {
   if (params.hasRoutineAdd) return "routine_add"
-  if (params.hasCurrentUse && params.hasCurrentUseProductQuestion) {
-    return "current_use_product_question"
-  }
+  if (params.hasCurrentUseProductQuestion) return "current_use_product_question"
   if (params.hasProductEvaluation) return "evaluation"
   return "background"
 }

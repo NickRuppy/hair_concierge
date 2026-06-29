@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Check, Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import type { ProductLookupClarification } from "@/lib/types"
+import type { ProductLookupClarification, ProductLookupSelectionContext } from "@/lib/types"
 import { ProductIntakeCard } from "./product-intake-card"
 
 type ProductLookupClarificationCardProps = {
@@ -17,6 +17,7 @@ type ProductLookupClarificationCardProps = {
   }) => Promise<void> | void
   assistantMessageId?: string
   selectionDisabled?: boolean
+  resolvedSelection?: ProductLookupSelectionContext | null
 }
 
 export function ProductLookupClarificationCard({
@@ -25,17 +26,25 @@ export function ProductLookupClarificationCard({
   onSelectProduct,
   assistantMessageId,
   selectionDisabled = false,
+  resolvedSelection = null,
 }: ProductLookupClarificationCardProps) {
   const [showIntake, setShowIntake] = useState(false)
   const [selectingProductId, setSelectingProductId] = useState<string | null>(null)
+  const [submittedProductId, setSubmittedProductId] = useState<string | null>(null)
   const [selectionError, setSelectionError] = useState<string | null>(null)
+  const selectedProductId =
+    resolvedSelection?.clarification_id === clarification.id
+      ? resolvedSelection.selected_product_id
+      : null
+  const hasLockedSelection = Boolean(selectedProductId || submittedProductId || selectingProductId)
 
   const canSelect =
     Boolean(onSelectProduct) &&
     Boolean(conversationId) &&
     Boolean(assistantMessageId) &&
     !assistantMessageId?.startsWith("temp-") &&
-    !selectionDisabled
+    !selectionDisabled &&
+    !hasLockedSelection
 
   if (
     !clarification?.id ||
@@ -50,6 +59,7 @@ export function ProductLookupClarificationCard({
   async function selectProduct(productId: string) {
     if (!onSelectProduct || !canSelect || selectingProductId) return
     setSelectingProductId(productId)
+    setSubmittedProductId(productId)
     setSelectionError(null)
     try {
       await onSelectProduct({
@@ -63,6 +73,7 @@ export function ProductLookupClarificationCard({
           ? error.message
           : "Das Produkt konnte nicht ausgewählt werden. Bitte versuche es erneut.",
       )
+      setSubmittedProductId(null)
     } finally {
       setSelectingProductId(null)
     }
@@ -73,32 +84,45 @@ export function ProductLookupClarificationCard({
       <p className="text-sm leading-relaxed text-foreground">{clarification.copy.prompt_de}</p>
 
       <div className="mt-3 space-y-2">
-        {clarification.candidates.map((candidate) => (
-          <div
-            key={candidate.product_id}
-            className="flex min-w-0 items-center gap-3 rounded-xl border border-border bg-background p-3"
-          >
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-[var(--text-heading)]">
-                {candidate.name}
-              </p>
-              <span className="mt-1 inline-flex max-w-full items-center rounded-full bg-[var(--brand-plum-ice)] px-2 py-0.5 text-[11px] font-medium text-primary">
-                {candidate.category_label_de}
-              </span>
-            </div>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              disabled={!canSelect || selectingProductId !== null}
-              onClick={() => selectProduct(candidate.product_id)}
-              className="shrink-0 gap-1.5"
+        {clarification.candidates.map((candidate) => {
+          const isSelected = candidate.product_id === selectedProductId
+          const isSubmitted = candidate.product_id === submittedProductId
+
+          return (
+            <div
+              key={candidate.product_id}
+              className={`flex min-w-0 items-center gap-3 rounded-xl border p-3 ${
+                isSelected
+                  ? "border-primary/50 bg-[var(--brand-plum-ice)]"
+                  : "border-border bg-background"
+              }`}
             >
-              <Check className="h-4 w-4" aria-hidden="true" />
-              {selectingProductId === candidate.product_id ? "Wird ausgewählt" : "Auswählen"}
-            </Button>
-          </div>
-        ))}
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-[var(--text-heading)]">
+                  {candidate.name}
+                </p>
+                <span className="mt-1 inline-flex max-w-full items-center rounded-full bg-[var(--brand-plum-ice)] px-2 py-0.5 text-[11px] font-medium text-primary">
+                  {candidate.category_label_de}
+                </span>
+              </div>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={!canSelect || selectingProductId !== null}
+                onClick={() => selectProduct(candidate.product_id)}
+                className="shrink-0 gap-1.5"
+              >
+                <Check className="h-4 w-4" aria-hidden="true" />
+                {isSelected
+                  ? "Ausgewählt"
+                  : selectingProductId === candidate.product_id || isSubmitted
+                    ? "Wird ausgewählt"
+                    : "Auswählen"}
+              </Button>
+            </div>
+          )
+        })}
       </div>
 
       {selectionError ? (
@@ -107,18 +131,20 @@ export function ProductLookupClarificationCard({
         </p>
       ) : null}
 
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => setShowIntake((value) => !value)}
-        className="mt-3 w-full justify-center gap-1.5"
-      >
-        <Plus className="h-4 w-4" aria-hidden="true" />
-        {clarification.none_action.label_de}
-      </Button>
+      {!hasLockedSelection ? (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => setShowIntake((value) => !value)}
+          className="mt-3 w-full justify-center gap-1.5"
+        >
+          <Plus className="h-4 w-4" aria-hidden="true" />
+          {clarification.none_action.label_de}
+        </Button>
+      ) : null}
 
-      {showIntake ? (
+      {showIntake && !hasLockedSelection ? (
         <div className="mt-3">
           <ProductIntakeCard
             offer={clarification.none_action.product_intake_offer}

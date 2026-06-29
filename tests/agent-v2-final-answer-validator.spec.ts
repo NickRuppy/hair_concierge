@@ -22,7 +22,9 @@ function emptyExtractedConstraints() {
 
 function requiredGuidanceForAnswer(answerMode: string, category = "none"): string[] {
   const ids = ["base.advisor_rules.v1", "base.answer_contract.v1", "base.tone_and_format.v1"]
-  if (answerMode === "product_recommendation") ids.push("base.product_recommendation.v1")
+  if (answerMode === "product_recommendation" || answerMode === "product_assessment") {
+    ids.push("base.product_recommendation.v1")
+  }
   if (answerMode === "routine") ids.push("base.routine_building.v1")
   if (answerMode === "general_advice") ids.push("base.general_advice.v1")
   if (answerMode === "safety_boundary") ids.push("base.safety_boundaries.v1")
@@ -492,6 +494,539 @@ test("validator accepts known product ids", () => {
   const result = validateAgentV2FinalAnswer(baseAnswer, baseValidationContext)
 
   assert.equal(result.ok, true)
+})
+
+test("validator accepts grounded text-only product assessment without visible recommendations", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "product_assessment",
+    interpreted_intent: "User asks whether a named shampoo suits them.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      care_category: "shampoo",
+      requested_product_count: 1,
+      count_policy: "exact",
+      evidence_quote: "Passt Test Shampoo zu mir?",
+      specific_product_candidate: true,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: ["prod_1"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      assessment_kind: "fit",
+      assessed_product_ids: ["prod_1"],
+      user_facing_answer_de:
+        "Test Shampoo kann zu deinem Profil passen, wenn es am Ansatz gut reinigt und die Längen nicht beschwert.",
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    latestUserMessage: "Passt Test Shampoo zu mir?",
+    recentEvidenceText: "Passt Test Shampoo zu mir?",
+    toolCallHistory: [
+      {
+        ...lookupProductCandidateToolCall(),
+        arguments: {
+          category: "shampoo",
+          brand_text: "Brand",
+          product_name_text: "Test Shampoo",
+          reason: "User asks whether a named shampoo suits them.",
+          evidence_quote: "Test Shampoo",
+        },
+      },
+    ],
+    productLookupResults: [
+      {
+        status: "found_exact",
+        category: "shampoo",
+        input_identity: {
+          category: "shampoo",
+          brand_text: "Brand",
+          product_name_text: "Test Shampoo",
+          evidence_quote: "Test Shampoo",
+        },
+        product: { id: "prod_1", name: "Test Shampoo" },
+      },
+    ],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator accepts found-exact lookup grounding for product assessment with matching product facts", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "product_assessment",
+    interpreted_intent: "User asks whether a named shampoo suits them.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Passt das Syoss Volume Shampoo zu mir?",
+      specific_product_candidate: true,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: ["prod_syoss_volume"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      assessment_kind: "fit",
+      assessed_product_ids: ["prod_syoss_volume"],
+      user_facing_answer_de:
+        "Syoss Volume Shampoo kann als leichtes Shampoo grundsätzlich zu deinem Profil passen; für Frizz bleiben Conditioner und Leave-in wichtiger.",
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    latestUserMessage: "Passt das Syoss Volume Shampoo zu mir?",
+    recentEvidenceText: "Passt das Syoss Volume Shampoo zu mir?",
+    selectedProductProjections: [
+      {
+        ...baseValidationContext.selectedProductProjections[0],
+        valid_product_ids: ["prod_syoss_volume"],
+        products: [
+          {
+            product_id: "prod_syoss_volume",
+            name: "Syoss Volume Shampoo",
+            supported_claims: [
+              {
+                field: "shampoo_bucket",
+                value: "light",
+                evidence: "product_spec",
+                label: "leichte Reinigung",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    toolCallHistory: [
+      {
+        ...lookupProductCandidateToolCall(),
+        arguments: {
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Syoss Volume Shampoo",
+          reason: "User asks whether a named shampoo suits them.",
+          evidence_quote: "Syoss Volume Shampoo",
+        },
+      },
+      selectProductsToolCall({
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Syoss Volume Shampoo",
+      }),
+    ],
+    productLookupResults: [
+      {
+        status: "found_exact",
+        category: "shampoo",
+        input_identity: {
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Syoss Volume Shampoo",
+          evidence_quote: "Syoss Volume Shampoo",
+        },
+        product: { id: "prod_syoss_volume", name: "Syoss Volume Shampoo" },
+      },
+    ],
+  })
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator blocks product assessment from found-exact identity without product facts", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "product_assessment",
+    interpreted_intent: "User asks whether a named shampoo suits them.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Passt das Syoss Volume Shampoo zu mir?",
+      specific_product_candidate: true,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: ["prod_syoss_volume"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      assessment_kind: "fit",
+      assessed_product_ids: ["prod_syoss_volume"],
+      user_facing_answer_de:
+        "Syoss Volume Shampoo passt gut zu deinem Profil, weil es leicht reinigt und nicht beschwert.",
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    latestUserMessage: "Passt das Syoss Volume Shampoo zu mir?",
+    recentEvidenceText: "Passt das Syoss Volume Shampoo zu mir?",
+    selectedProductProjections: [],
+    toolCallHistory: [
+      {
+        ...lookupProductCandidateToolCall(),
+        arguments: {
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Syoss Volume Shampoo",
+          reason: "User asks whether a named shampoo suits them.",
+          evidence_quote: "Syoss Volume Shampoo",
+        },
+      },
+    ],
+    productLookupResults: [
+      {
+        status: "found_exact",
+        category: "shampoo",
+        input_identity: {
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Syoss Volume Shampoo",
+          evidence_quote: "Syoss Volume Shampoo",
+        },
+        product: { id: "prod_syoss_volume", name: "Syoss Volume Shampoo" },
+      },
+    ],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_assessment_grounding"))
+})
+
+test("validator blocks product assessment that omits the resolved product name", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "product_assessment",
+    interpreted_intent: "User asks whether a named shampoo suits them.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Passt das Syoss Volume Shampoo zu mir?",
+      specific_product_candidate: true,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: ["prod_syoss_volume"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      assessment_kind: "fit",
+      assessed_product_ids: ["prod_syoss_volume"],
+      user_facing_answer_de:
+        "Das passt grundsätzlich gut zu dir, aber eher als normales Volumen-Shampoo als als Lösung für deine Längen.",
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    latestUserMessage: "Passt das Syoss Volume Shampoo zu mir?",
+    recentEvidenceText: "Passt das Syoss Volume Shampoo zu mir?",
+    selectedProductProjections: [],
+    toolCallHistory: [
+      {
+        ...lookupProductCandidateToolCall(),
+        arguments: {
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Syoss Volume Shampoo",
+          reason: "User asks whether a named shampoo suits them.",
+          evidence_quote: "Syoss Volume Shampoo",
+        },
+      },
+    ],
+    productLookupResults: [
+      {
+        status: "found_exact",
+        category: "shampoo",
+        input_identity: {
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Syoss Volume Shampoo",
+          evidence_quote: "Syoss Volume Shampoo",
+        },
+        product: { id: "prod_syoss_volume", name: "Syoss Volume Shampoo" },
+      },
+    ],
+  })
+
+  assert.equal(result.ok, false)
+  assert.equal(
+    result.errors.some((error) => error.validator_id === "product_assessment_visible_identity"),
+    true,
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("validator blocks mixed product assessment prose for an unresolved second product", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "product_assessment",
+    interpreted_intent: "User compares one verified shampoo with one unresolved conditioner.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "compare_products",
+      care_category: "unknown",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Vergleich Syoss Volume Shampoo und Urban Alchemy Moisture Mist Conditioner",
+      specific_product_candidate: true,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "shampoo"),
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: ["prod_syoss_volume"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      assessment_kind: "comparison",
+      assessed_product_ids: ["prod_syoss_volume"],
+      user_facing_answer_de:
+        "Syoss Volume Shampoo passt gut als leichte Reinigung. Urban Alchemy Moisture Mist Conditioner passt ebenfalls gut zu deinem feinen Haar, weil er leicht wirkt.",
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    latestUserMessage:
+      "Vergleich Syoss Volume Shampoo und Urban Alchemy Moisture Mist Conditioner.",
+    recentEvidenceText:
+      "Vergleich Syoss Volume Shampoo und Urban Alchemy Moisture Mist Conditioner.",
+    selectedProductProjections: [],
+    toolCallHistory: [
+      {
+        ...lookupProductCandidateToolCall(),
+        arguments: {
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Volume Shampoo",
+          reason: "User asks for a named-product comparison.",
+          evidence_quote: "Syoss Volume Shampoo",
+        },
+      },
+      {
+        ...lookupProductCandidateToolCall(),
+        arguments: {
+          category: "conditioner",
+          brand_text: "Urban Alchemy",
+          product_name_text: "Moisture Mist Conditioner",
+          reason: "User asks for a named-product comparison.",
+          evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+        },
+      },
+    ],
+    productLookupResults: [
+      {
+        status: "found_exact",
+        category: "shampoo",
+        input_identity: {
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Volume Shampoo",
+          evidence_quote: "Syoss Volume Shampoo",
+        },
+        product: { id: "prod_syoss_volume", name: "Syoss Volume Shampoo" },
+      },
+      {
+        status: "not_found",
+        category: "conditioner",
+        input_identity: {
+          category: "conditioner",
+          brand_text: "Urban Alchemy",
+          product_name_text: "Moisture Mist Conditioner",
+          evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+        },
+        product: null,
+      },
+    ],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("validator blocks product assessment for unresolved lookup contexts", () => {
+  const answer = {
+    ...baseAnswer,
+    answer_mode: "product_assessment",
+    interpreted_intent: "User asks whether an unresolved named conditioner suits them.",
+    request_interpretation: requestInterpretation({
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      care_category: "conditioner",
+      requested_product_count: 1,
+      count_policy: "exact",
+      evidence_quote: "Jean & Lean Conditioner",
+      specific_product_candidate: true,
+    }),
+    tool_grounding: {
+      used_guidance_package_ids: requiredGuidanceForAnswer("product_assessment", "conditioner"),
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: ["prod_1"],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    payload: {
+      assessment_kind: "fit",
+      assessed_product_ids: ["prod_1"],
+      user_facing_answer_de: "Dieser Conditioner passt gut zu deinem Profil.",
+    },
+  }
+
+  const result = validateAgentV2FinalAnswer(answer, {
+    ...baseValidationContext,
+    latestUserMessage: "Was hältst du von meinem Jean & Lean Conditioner?",
+    recentEvidenceText: "Was hältst du von meinem Jean & Lean Conditioner?",
+    toolCallHistory: [
+      {
+        ...lookupProductCandidateToolCall(),
+        arguments: {
+          category: "conditioner",
+          brand_text: "Jean & Lean",
+          product_name_text: "Conditioner",
+          reason: "User asks about a named conditioner.",
+          evidence_quote: "Jean & Lean Conditioner",
+        },
+      },
+    ],
+    productLookupResults: [
+      {
+        status: "needs_variant_selection",
+        category: "conditioner",
+        input_identity: {
+          category: "conditioner",
+          brand_text: "Jean & Lean",
+          product_name_text: "Conditioner",
+          evidence_quote: "Jean & Lean Conditioner",
+        },
+        product: null,
+      },
+    ],
+  })
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "product_assessment_grounding"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("validator blocks pronoun product advice while active product review is pending", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...placementOnlyAdviceAnswer(
+        "Passt es zu mir?",
+        "Das Produkt passt gut zu deinem feinen Haar, weil es wahrscheinlich eher leicht wirkt.",
+      ),
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        routine_intent: "none",
+        care_category: "conditioner",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Passt es zu mir?",
+        specific_product_candidate: true,
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: [
+          ...requiredGuidanceForAnswer("general_advice", "conditioner"),
+          "base.product_recommendation.v1",
+        ],
+        used_product_tool: false,
+        product_ids: [],
+      },
+    },
+    {
+      ...baseValidationContext,
+      latestUserMessage: "Passt es zu mir?",
+      recentEvidenceText:
+        "Jean & Len Granatapfel Rose Conditioner wurde gerade zur Prüfung eingereicht. Passt es zu mir?",
+      selectedProductProjections: [],
+      toolCallHistory: [],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "conditioner",
+          input_identity: {
+            category: "conditioner",
+            brand_text: "Jean & Len",
+            product_name_text: "Granatapfel Rose Conditioner",
+            evidence_quote: "Jean & Len Granatapfel Rose Conditioner",
+          },
+          product: null,
+        },
+      ],
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(
+    result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
+
+test("validator rejects recommendation-card payload fields for product assessment", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "product_assessment",
+      payload: {
+        user_facing_answer_de: "Test Shampoo passt gut.",
+        recommendations: [
+          {
+            product_id: "prod_1",
+            reason_de: "Passt.",
+            usage_de: null,
+            caveat_de: null,
+          },
+        ],
+        comparison_notes_de: [],
+        usage_notes_de: [],
+        next_step_offer_de: null,
+      },
+    },
+    baseValidationContext,
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "terminal_schema"))
 })
 
 test("AgentV2 validator blocks confirmable next step without pending follow-up action", () => {
@@ -1922,6 +2457,38 @@ test("validator allows generic category context after unresolved lookup", () => 
   )
 
   assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+})
+
+test("validator blocks personalized category suitability after unresolved intake-card lookup", () => {
+  const result = validateAgentV2FinalAnswer(
+    placementOnlyAdviceAnswer(
+      "Ich benutze Jean & Len Conditioner Granatapfel. Passt das zu mir?",
+      "Jean & Len Conditioner Granatapfel kann ich nicht sicher beurteilen. Für dein feines, welliges Haar wäre grundsätzlich eher ein leichter bis mittelgewichtiger Conditioner passend.",
+    ),
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      latestUserMessage: "Ich benutze Jean & Len Conditioner Granatapfel. Passt das zu mir?",
+      recentEvidenceText: "Ich benutze Jean & Len Conditioner Granatapfel. Passt das zu mir?",
+      toolCallHistory: [lookupProductCandidateToolCall()],
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "conditioner",
+          product: null,
+        },
+      ],
+      namedProductContext: {
+        display_name: "Jean & Len Conditioner Granatapfel",
+        category: "conditioner",
+        plausible_exact_name: true,
+        named_product_intent: "current_use_product_question",
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "product_lookup_unresolved"))
 })
 
 test("validator allows cautious product deferrals after unresolved lookup", () => {
@@ -3462,6 +4029,23 @@ test("validator blocks internal product-ranking language in user-facing copy", (
   assert.ok(
     result.errors.some((error) => error.validator_id === "user_facing_internal_ranking_language"),
   )
+})
+
+test("validator blocks internal instruction phrasing in user-facing copy", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "Ich soll keine ungeprüfte Produktbewertung aus dem Namen ableiten. Bitte wähle kurz die passende Variante aus.",
+      },
+    },
+    baseValidationContext,
+  )
+
+  assert.equal(result.ok, false)
+  assert.ok(result.errors.some((error) => error.validator_id === "user_facing_instruction_leakage"))
 })
 
 test("validator warns on catalog metadata phrasing in visible payload routine step actions", () => {
@@ -7772,6 +8356,161 @@ test("validator warns but does not block weak conversation closers", () => {
   assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
   assert.ok(
     result.warnings.some((warning) => warning.validator_id === "conversation_close_weak"),
+    JSON.stringify(result.warnings, null, 2),
+  )
+})
+
+test("validator warns on duplicated medium-length visible answer paragraphs", () => {
+  const duplicatedParagraph =
+    "Ich habe das Produkt noch nicht eindeutig in unserer Datenbank gefunden. Bitte wähle gleich in der Karte aus, ob eine der Optionen dein Produkt ist, damit ich es nicht vorschnell bewerte."
+
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "none",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Ist dieses Produkt gut?",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
+        used_product_tool: false,
+        product_ids: [],
+        hard_rule_ids: [],
+      },
+      payload: {
+        user_facing_answer_de: `${duplicatedParagraph}\n\n${duplicatedParagraph}`,
+        category_or_topic: "product lookup",
+        key_points_de: ["Produkt erst nach Auswahl bewerten."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      toolCallHistory: [],
+      latestUserMessage: "Ist dieses Produkt gut?",
+      recentEvidenceText: "Ist dieses Produkt gut?",
+      requiredGuidancePackageIds: [],
+      knownHardRuleIds: [],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.ok(
+    result.warnings.some(
+      (warning) =>
+        warning.validator_id === "user_facing_duplicate_visible_paragraph" &&
+        warning.path?.join(".") === "payload.user_facing_answer_de",
+    ),
+    JSON.stringify(result.warnings, null, 2),
+  )
+})
+
+test("validator warns on adjacent long visible answer paragraphs with high overlap", () => {
+  const firstParagraph =
+    "Ich habe das Produkt noch nicht eindeutig in unserer Datenbank gefunden. Bitte wähle gleich in der Karte aus, ob eine der Optionen dein Produkt ist, damit ich es nicht vorschnell bewerte."
+  const secondParagraph =
+    "Ich habe dieses Produkt noch nicht eindeutig in unserer Datenbank gefunden. Bitte wähle gleich in der Karte aus, ob eine der Optionen dein Produkt ist, damit ich es nicht vorschnell einschätze."
+
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "none",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Ist dieses Produkt gut?",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
+        used_product_tool: false,
+        product_ids: [],
+        hard_rule_ids: [],
+      },
+      payload: {
+        user_facing_answer_de: `${firstParagraph}\n\n${secondParagraph}`,
+        category_or_topic: "product lookup",
+        key_points_de: ["Produkt erst nach Auswahl bewerten."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      toolCallHistory: [],
+      latestUserMessage: "Ist dieses Produkt gut?",
+      recentEvidenceText: "Ist dieses Produkt gut?",
+      requiredGuidancePackageIds: [],
+      knownHardRuleIds: [],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.ok(
+    result.warnings.some(
+      (warning) => warning.validator_id === "user_facing_duplicate_visible_paragraph",
+    ),
+    JSON.stringify(result.warnings, null, 2),
+  )
+})
+
+test("validator ignores repeated short visible answer labels", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      answer_mode: "general_advice",
+      request_interpretation: requestInterpretation({
+        primary_intent: "general_advice",
+        product_request_kind: "none",
+        routine_intent: "none",
+        care_category: "none",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "Was ist die Reihenfolge?",
+      }),
+      tool_grounding: {
+        ...baseAnswer.tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice"),
+        used_product_tool: false,
+        product_ids: [],
+        hard_rule_ids: [],
+      },
+      payload: {
+        user_facing_answer_de: "Shampoo\n\nShampoo\n\nConditioner\n\nConditioner",
+        category_or_topic: "routine order",
+        key_points_de: ["Shampoo vor Conditioner."],
+        next_step_offer_de: null,
+      },
+    },
+    {
+      ...baseValidationContext,
+      selectedProductProjections: [],
+      toolCallHistory: [],
+      latestUserMessage: "Was ist die Reihenfolge?",
+      recentEvidenceText: "Was ist die Reihenfolge?",
+      requiredGuidancePackageIds: [],
+      knownHardRuleIds: [],
+    },
+  )
+
+  assert.equal(result.ok, true, JSON.stringify(result.errors, null, 2))
+  assert.equal(
+    result.warnings.some(
+      (warning) => warning.validator_id === "user_facing_duplicate_visible_paragraph",
+    ),
+    false,
     JSON.stringify(result.warnings, null, 2),
   )
 })

@@ -128,10 +128,11 @@ If the user asks for a requested number of reset products:
 - exact count applies when enough grounded suitable products are available; if fewer are available, return fewer and explain the fit/availability constraint
 
 If the user asks about a named deep-cleansing product, whether it is clarifying, chelating, color-safe, service-prep suitable, scalp-exfoliating, gentle, compatible, or has an exact cadence/protocol:
-- primary_intent: product_recommendation
+- primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+- answer_mode: product_assessment after identity is resolved
 - product_request_kind: product_detail
 - care_category: deep_cleansing_shampoo
-- requires_tool: product catalog data or select_products
+- requires_tool: lookup_product_candidate first, then product catalog data or internal select_products projection facts when product claims need grounding
 - treat this as a product fact/claim check, not necessarily a recommendation/card flow
 - do not infer from product name, brand line, marketing family, or category guidance alone
 - specifically, do not infer chelation, color safety, service-prep fit, scalp-exfoliation, gentleness, compatibility, cadence, protocol, or reset lane without product metadata

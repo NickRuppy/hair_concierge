@@ -1,6 +1,7 @@
 "use client"
 
 import { useId, useMemo, useState } from "react"
+import { CheckCircle2 } from "lucide-react"
 import {
   PRODUCT_CATEGORY_DISPLAY_LABELS,
   SUPPORTED_PRODUCT_CATEGORY_KEYS,
@@ -29,10 +30,12 @@ type ProductIntakeCardProps = {
   conversationId: string
 }
 
+type ProductIntakeSubmittedStatus = "pending_review" | "matched"
+
 export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardProps) {
   const brandListId = useId()
   const [method, setMethod] = useState<ProductIntakeMethod>(offer.intake_method ?? "photo")
-  const [category, setCategory] = useState<ProductIntakeCategoryKey | "">(offer.category)
+  const [category, setCategory] = useState<ProductIntakeCategoryKey | "">(offer.category ?? "")
   const [frequency, setFrequency] = useState<ProductFrequency | "">(offer.frequency_range ?? "")
   const [brandText, setBrandText] = useState(offer.extracted_identity?.brand_text ?? "")
   const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null)
@@ -52,7 +55,7 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
   >({})
   const brandOptions = useProductIntakeBrandOptions(brandText)
   const [busy, setBusy] = useState<ProductIntakeImageKind | "submit" | null>(null)
-  const [status, setStatus] = useState<string | null>(null)
+  const [submittedStatus, setSubmittedStatus] = useState<ProductIntakeSubmittedStatus | null>(null)
   const [error, setError] = useState<string | null>(null)
   const missingFields = useMemo(() => offer.missing_fields ?? [], [offer.missing_fields])
   const hasMissingField = (needle: string) =>
@@ -121,7 +124,6 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
     if (!file) return
     setBusy(kind)
     setError(null)
-    setStatus(null)
 
     try {
       const upload = await uploadProductIntakeImage(kind, file)
@@ -150,7 +152,6 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
     if (!ready || busy) return
     setBusy("submit")
     setError(null)
-    setStatus(null)
 
     if (!category || !frequency) {
       setBusy(null)
@@ -200,11 +201,7 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
         throw new Error(body.error ?? "Produkt konnte nicht gespeichert werden.")
       }
 
-      setStatus(
-        body.status === "matched"
-          ? "Produkt gespeichert. Du kannst dazu direkt weiterfragen."
-          : "Danke, wir prüfen dein Produkt und melden uns hier im Chat.",
-      )
+      setSubmittedStatus(body.status === "matched" ? "matched" : "pending_review")
     } catch (submitError) {
       setError(
         submitError instanceof Error
@@ -216,13 +213,17 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
     }
   }
 
+  if (submittedStatus) {
+    return <ProductIntakeSubmittedState status={submittedStatus} />
+  }
+
   return (
     <div className="w-full min-w-0 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
-      <p className="mb-3 text-sm leading-relaxed text-foreground">
-        {offer.reason === "needs_more_info"
-          ? "Wir brauchen noch eine Ergänzung, damit wir dein Produkt sauber prüfen können."
-          : "Danke für dein Produkt. Wir haben es noch nicht sicher in unserer Datenbank und prüfen es gerne konkret für dich."}
-      </p>
+      {offer.reason === "needs_more_info" ? (
+        <p className="mb-3 text-sm leading-relaxed text-foreground">
+          Wir brauchen noch eine Ergänzung, damit wir dein Produkt sauber prüfen können.
+        </p>
+      ) : null}
       {missingFieldLabels.length > 0 ? (
         <div className="mb-3 rounded-xl border border-secondary/25 bg-[var(--brand-coral-light)] px-3 py-2 text-xs leading-relaxed text-foreground">
           Ergänze bitte: {missingFieldLabels.join(", ")}
@@ -289,17 +290,50 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
         />
 
         {error ? <p className="text-xs text-destructive">{error}</p> : null}
-        {status ? <p className="text-xs text-emerald-700">{status}</p> : null}
 
         <Button
           type="button"
           onClick={() => submit()}
-          disabled={!ready || busy !== null || Boolean(status)}
+          disabled={!ready || busy !== null}
           variant="cta"
           className="w-full"
         >
           {busy === "submit" ? "Speichern..." : "Produkt einreichen"}
         </Button>
+      </div>
+    </div>
+  )
+}
+
+export function ProductIntakeSubmittedState({ status }: { status: ProductIntakeSubmittedStatus }) {
+  const copy =
+    status === "matched"
+      ? {
+          headline: "Produkt gespeichert.",
+          body: "Du kannst dazu jetzt direkt weiterfragen.",
+        }
+      : {
+          headline: "Danke, wir prüfen dein Produkt.",
+          body: "Wir melden uns hier im Chat. Du kannst inzwischen einfach weiterfragen.",
+        }
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="w-full min-w-0 rounded-2xl border border-emerald-200 bg-card p-5 shadow-sm animate-fade-in-up-fast"
+    >
+      <div className="flex items-start gap-3">
+        <span
+          className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700"
+          aria-hidden="true"
+        >
+          <CheckCircle2 className="h-5 w-5" />
+        </span>
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-[var(--text-heading)]">{copy.headline}</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy.body}</p>
+        </div>
       </div>
     </div>
   )

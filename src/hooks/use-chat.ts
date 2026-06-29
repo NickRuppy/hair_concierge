@@ -60,6 +60,18 @@ function redirectToAuthIfNeeded(response: Response): boolean {
   return true
 }
 
+export function readChatStreamErrorMessage(data: unknown): string {
+  if (typeof data === "string" && data.trim()) return data
+  if (data && typeof data === "object" && !Array.isArray(data)) {
+    const message = (data as { message?: unknown; error?: unknown }).message
+    if (typeof message === "string" && message.trim()) return message
+    const error = (data as { error?: unknown }).error
+    if (typeof error === "string" && error.trim()) return error
+  }
+
+  return "Das Produkt konnte nicht ausgewählt werden. Bitte versuche es erneut."
+}
+
 export function useChat(): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>([])
   const [isStreaming, setIsStreaming] = useState(false)
@@ -302,10 +314,7 @@ export function useChat(): UseChatReturn {
         })
         break
       case "error": {
-        const message =
-          typeof event.data === "string"
-            ? event.data
-            : "Das Produkt konnte nicht ausgewählt werden. Bitte versuche es erneut."
+        const message = readChatStreamErrorMessage(event.data)
         console.error("Stream error:", event.data)
         if (throwOnError) {
           throw new Error(message)

@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Use product recommendations only when the user wants concrete products or explicitly asks for a product inside an active routine discussion.
+Use product recommendations only when the user wants concrete products, explicitly asks for alternatives, or explicitly asks for a product inside an active routine discussion.
 
 ## Use When
 
-Use for concrete category picks, product alternatives, and routine product deep dives.
+Use for concrete category picks, visible product alternatives, and routine product deep dives.
 
 ## Agent May Decide
 
@@ -18,11 +18,11 @@ For short follow-ups like "ja, sag mir gerne welche gut passt", use the recent c
 
 ## Code And Tools Decide
 
-select_products decides available product IDs, ranking, supported claims, missing inputs, blockers, comparison facts, and no-match status.
+`lookup_product_candidate` decides named-product identity before assessment or intake. `select_products` decides available product IDs, ranking, supported claims, missing inputs, blockers, comparison facts, and no-match status for visible recommendation output; it may also provide internal product projection facts for a resolved named-product assessment.
 
 ## Required Grounding
 
-Every product ID must come from select_products. Every product claim must come from supported_claims, comparison_facts, profile_basis, category_guidance, or explicit caveats in the projection.
+Every visible recommended product ID must come from `select_products`. Every assessed named product must come from verified identity context such as `lookup_product_candidate`, a selected lookup candidate, trusted active resolved product context, or product projection facts loaded for that resolved ID. Every product claim must come from supported claims, comparison facts, profile basis, category guidance, verified lookup context, or explicit caveats in the projection.
 
 Product names are names only. Do not turn words in a name, brand, line, or description into claims such as volume, shine, color protection, sensitive-scalp support, repair, silicone-free, protein-free, coconut-free, oil-free, or heat-protection temperature unless those facts are explicitly surfaced as supported claims or comparison facts.
 
@@ -38,21 +38,25 @@ When a requested product detail is not grounded, offer generic attributes, safe 
 
 Do not invite photo or link checks unless current tooling can actually process and ground them for this turn. This also applies to external reviews, ingredient-list screenshots, retailer pages, and packaging photos.
 
-## Product Detail And Claim Checks
+## Named-Product Assessment And Claim Checks
 
-Named-product detail checks are product-grounded turns, even when the answer is "I cannot safely confirm that claim from the selected product facts."
+Named-product detail checks are product-grounded turns, not necessarily visible recommendation-card turns, even when the answer is "I cannot safely confirm that claim from the selected product facts."
 
 For questions such as "Kann ich Produkt X als Hitzeschutz benutzen?", "Ist Produkt X farbsicher?", "Ist das chelatierend?", "Ist das silikonfrei?", or "Wie oft benutzt man Produkt X?":
 
-- call `select_products` before the terminal answer
+- Start with `lookup_product_candidate` for identity resolution before product-specific claims, assessment, or intake.
 - set `product_request_kind: product_detail`
-- use `answer_mode: product_recommendation`, `clarification`, or `constraint_blocked`
-- keep `requested_product_count`, `count_policy`, `care_category`, and `evidence_quote` identical between `select_products` and terminal `request_interpretation`
-- include `base.product_recommendation.v1` and the relevant category package in `tool_grounding.used_guidance_package_ids`
+- use `answer_mode: product_assessment` when the answer assesses named resolved products; use `clarification` when identity is ambiguous or missing, and `constraint_blocked` when a product-specific claim cannot be grounded
+- request_interpretation still uses `product_detail` or `compare_products` so validators can see what kind of named-product assessment was requested
+- may reuse `select_products` or product projection data internally after identity is resolved when catalog facts are needed
+- do not emit visible recommendation cards for internal projection grounding; visible recommendation cards require an explicit product recommendation, alternative, or concrete product-pick request
+- include `base.product_recommendation.v1` as compatibility guidance plus the relevant category package in `tool_grounding.used_guidance_package_ids`
 
 If the tool cannot safely identify the product or support the requested claim, do not answer from the product name. Ask for the exact variant only when that could unlock supported metadata; otherwise explain the unsupported claim in the user-facing fallback style above and continue with grounded facts.
 
-When `named_product_context` says the user already gave a plausible exact product name, do not ask for the exact name again. If `select_products` cannot verify that named product as an exact or supported product-detail match, use `constraint_blocked`: say it is not a verified catalog hit, do not evaluate it exactly, and do not substitute unrelated catalog recommendations as the answer. You may add a cautious category-level note only when it is clearly not presented as a product-specific evaluation.
+When `named_product_context` says the user already gave a plausible exact product name, do not ask for the exact name again. Use lookup state to decide whether the named product is resolved, ambiguous, or not found. If the named product is not verified as an exact or selected product-detail match, use clarification or `constraint_blocked`: say it is not a verified catalog hit, do not evaluate it exactly, and do not substitute unrelated catalog recommendations as the answer. You may add a cautious category-level note only when it is clearly not presented as a product-specific evaluation.
+
+For alternatives, offer text first unless the user explicitly asks for recommendations or product cards. Example: "Wenn du möchtest, kann ich dir danach passende Alternativen zeigen." Do not show unrelated catalog cards in response to a pure named-product assessment.
 
 ## Recommendation Framing
 
@@ -107,9 +111,9 @@ When the user asks which product to add next or asks for the product behind a ro
 
 ## Product Comparisons
 
-For product A/B, "statt", "vs", "mehr Benefit", or "brauche ich X?" asks, answer the decision directly before suggesting adjacent products.
+For named product A/B, "statt", "vs", "mehr Benefit", or "brauche ich X?" asks, resolve each named identity first and answer as `product_assessment` when the user asks which named product fits better. Use visible product recommendations only when the user asks for new options beyond the named products.
 
-Compare products only with `comparison_facts` and product-level supported claims. If options are effectively equivalent from the supported facts, say the difference is small instead of inventing contrast. Use price only when it is surfaced or when meaningful fit differences are weak.
+Compare products only with verified lookup context, `comparison_facts`, and product-level supported claims. If options are effectively equivalent from the supported facts, say the difference is small instead of inventing contrast. Use price only when it is surfaced or when meaningful fit differences are weak.
 
 Distinguish `not_recommended` from `no_catalog_match`: not recommended means the category is probably not the best lever; no catalog match means the category may fit but the current catalog cannot safely support a product pick.
 

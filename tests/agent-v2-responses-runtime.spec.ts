@@ -164,12 +164,9 @@ test("AgentV2 lookup tool description covers partial product identity outcomes",
 
   assert.match(lookupTool.description, /concrete product candidate/)
   assert.match(lookupTool.description, /category.*null/i)
-  assert.match(lookupTool.description, /found_exact/)
-  assert.match(lookupTool.description, /not_found/)
-  assert.match(lookupTool.description, /needs_variant_selection/)
-  assert.match(lookupTool.description, /category_mismatch/)
-  assert.match(lookupTool.description, /insufficient_identity/)
-  assert.match(lookupTool.description, /unsupported_category/)
+  assert.match(lookupTool.description, /assistant_guidance/)
+  assert.match(lookupTool.description, /source of truth/i)
+  assert.match(lookupTool.description, /answer, clarify, or hand off to product intake/)
   assert.match(lookupTool.description, /broad/i)
 })
 
@@ -259,6 +256,9 @@ test("AgentV2 strict tool schemas avoid open records and root unions", () => {
   const submitFinalAnswerSchema = JSON.stringify(submitFinalAnswerTool.parameters)
   assert.match(submitFinalAnswerSchema, /pending_followup_action/)
   assert.doesNotMatch(submitFinalAnswerSchema, /pending_routine_action/)
+  assert.match(submitFinalAnswerSchema, /assessment_kind/)
+  assert.match(submitFinalAnswerSchema, /assessed_product_ids/)
+  assert.match(submitFinalAnswerSchema, /user_facing_answer_de/)
 })
 
 function assertRequiredToolFields(
@@ -1042,12 +1042,12 @@ function terminalOffCatalogNamedProductBlocked(call_id: string) {
     },
     payload: {
       user_facing_answer_de:
-        "Den Urban Alchemy Moisture Mist Conditioner habe ich nicht als verifizierten Katalogtreffer. Ich kann ihn deshalb nicht exakt bewerten. Von der Kategorie her klingt ein leichter Conditioner für dein feines, lockiges, trockenes oder frizziges Haar plausibel; achte vor allem auf Beschwerung und genug Slip.",
+        "Den Urban Alchemy Moisture Mist Conditioner habe ich nicht als verifizierten Katalogtreffer. Ich kann ihn deshalb nicht exakt bewerten. Die Karte unten sammelt die Infos, damit wir ihn konkret prüfen können.",
       blocking_constraints: [
         "kein verifizierter Katalogtreffer für Urban Alchemy Moisture Mist Conditioner",
       ],
       safe_alternative_de:
-        "Ich kann ihn vorsichtig gegen verifizierte Conditioner einordnen, ohne ihn als geprüftes Produkt zu bewerten.",
+        "Nach der Prüfung kann das Produkt mit verifizierten Eigenschaften bewertet werden.",
     },
   })
 }
@@ -1839,6 +1839,16 @@ test("AgentV2 runtime executes product candidate lookup tool", async () => {
 
   assert.equal(toolInputs.length, 1)
   assert.equal(toolInputs[0]?.category, "shampoo")
+  const lookupOutputItem = getInputItems(client.requests[1] ?? {}).find(
+    (item) =>
+      asRecord(item)?.type === "function_call_output" && asRecord(item)?.call_id === "call_1",
+  )
+  const lookupOutput = JSON.parse(String(asRecord(lookupOutputItem)?.output ?? "{}"))
+  assert.deepEqual(lookupOutput.assistant_guidance, {
+    pending_ui_action: "product_intake_card",
+    assistant_instruction_de:
+      "Dieses Produkt ist noch nicht in der Datenbank. Erkläre kurz und natürlich, dass es zur Prüfung hinzugefügt werden kann, ohne es fachlich zu bewerten.",
+  })
   assert.ok(result.trace.tool_calls.some((call) => call.name === "lookup_product_candidate"))
 })
 
@@ -1910,6 +1920,82 @@ test("AgentV2 runtime treats trusted clarification selection as found exact look
   assert.deepEqual(
     result.trace.tool_calls.map((call) => call.name),
     ["load_advisor_guidance"],
+  )
+})
+
+test("AgentV2 runtime validates pending active product context as unresolved product evidence", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["conditioner"],
+    }),
+    terminalGeneralAdviceWithOverrides("call_2", {
+      request_interpretation: {
+        primary_intent: "product_recommendation",
+        care_category: "conditioner",
+        evidence_quote: "Passt es zu mir?",
+        product_request_kind: "product_detail",
+        requested_product_count: null,
+        count_policy: "none",
+        specific_product_candidate: true,
+      },
+      tool_grounding: {
+        used_product_tool: false,
+        product_ids: [],
+        used_guidance_package_ids: [
+          ...requiredGuidanceForAnswer("general_advice", "conditioner"),
+          "base.product_recommendation.v1",
+        ],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Das Produkt passt gut zu deinem feinen Haar, weil es wahrscheinlich eher leicht wirkt.",
+        category_or_topic: "conditioner",
+        key_points_de: ["Das Produkt passt zu deinem Profil."],
+        next_step_offer_de: null,
+      },
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Passt es zu mir?",
+    recentMessages: [
+      {
+        role: "assistant",
+        content:
+          "Danke, wir prüfen Jean & Len Granatapfel Rose Conditioner und melden uns hier im Chat.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    activeProductContexts: [
+      {
+        status: "pending_review",
+        product_id: null,
+        submission_id: "submission_jean_len",
+        category: "conditioner",
+        brand_text: "Jean & Len",
+        product_name_text: "Granatapfel Rose Conditioner",
+        display_name: "Jean & Len Granatapfel Rose Conditioner",
+        original_user_message:
+          "Ich nutze Jean & Len Granatapfel Rose Conditioner. Passt das zu mir?",
+        source: "product_intake_submission",
+        updated_at: "2026-06-28T00:00:00.000Z",
+      },
+    ],
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.ok(
+    result.trace.repair_attempts[0]?.validation_errors.some(
+      (error) => error.validator_id === "product_lookup_unresolved",
+    ),
+    JSON.stringify(result.trace.repair_attempts, null, 2),
+  )
+  assert.doesNotMatch(
+    result.final_answer.payload.user_facing_answer_de,
+    /passt gut zu deinem feinen Haar/i,
   )
 })
 
@@ -2371,6 +2457,7 @@ test("AgentV2 turn gate must run before advisor tools when enabled", async () =>
   )
   const gateToolCall = result.trace.tool_calls.find((call) => call.name === "classify_turn_gate")
   assert.equal(result.trace.turn_gate?.latency_ms, gateToolCall?.latency_ms)
+  assert.match(JSON.stringify(client.requests[1]), /allowed_answer_modes[\s\S]*product_assessment/)
 })
 
 test("AgentV2 social gate allows only a social terminal answer", async () => {

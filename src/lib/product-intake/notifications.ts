@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { MessageRagContext, ProductIntakeOffer, ProductSubmission } from "@/lib/types"
@@ -48,6 +49,37 @@ function sanitizeMissingFields(fields: unknown): string[] {
     .filter((field): field is string => typeof field === "string")
     .map((field) => field.trim())
     .filter(Boolean)
+}
+
+function isDuplicateKeyError(
+  error: { code?: string | null; message?: string | null } | null | undefined,
+) {
+  if (!error) return false
+  return error.code === "23505" || /duplicate key|unique constraint/i.test(error.message ?? "")
+}
+
+function createStableUuidFromParts(parts: readonly string[]): string {
+  const hash = createHash("sha256").update(parts.join("\u001f")).digest()
+  hash[6] = (hash[6] & 0x0f) | 0x50
+  hash[8] = (hash[8] & 0x3f) | 0x80
+  const hex = hash.subarray(0, 16).toString("hex")
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+}
+
+function productIntakeReviewMessageId(submission: ProductSubmissionForNotification): string {
+  return createStableUuidFromParts(["product-intake-review", submission.id, submission.status])
+}
+
+async function bumpConversationUpdatedAtBestEffort(params: {
+  supabase: SupabaseClient
+  conversationId: string
+  updatedAt: string
+}): Promise<void> {
+  try {
+    await bumpConversationUpdatedAt(params)
+  } catch (error) {
+    console.warn("[product-intake] notification conversation bump failed", error)
+  }
 }
 
 export function buildProductIntakeReviewMessage(
@@ -218,6 +250,24 @@ async function markNotificationSent(params: {
   return Boolean(data?.id)
 }
 
+async function releaseNotificationSentClaim(params: {
+  supabase: SupabaseClient
+  submissionId: string
+  status: ProductSubmissionForNotification["status"]
+  sentAt: string
+}): Promise<void> {
+  const { error } = await params.supabase
+    .from("product_submissions")
+    .update({ notification_sent_at: null })
+    .eq("id", params.submissionId)
+    .eq("status", params.status)
+    .eq("notification_sent_at", params.sentAt)
+
+  if (error) {
+    throw new Error(`release product intake notification claim: ${error.message}`)
+  }
+}
+
 async function bumpConversationUpdatedAt(params: {
   supabase: SupabaseClient
   conversationId: string
@@ -237,65 +287,87 @@ export async function sendProductIntakeReviewNotification(
   supabase: SupabaseClient,
   submission: ProductSubmissionForNotification,
 ): Promise<ProductIntakeNotificationResult> {
-  if (submission.notification_sent_at) {
-    return { sent: false, reason: "already_sent" }
-  }
-
   const content = buildProductIntakeReviewMessage(submission)
   if (!content) {
     return { sent: false, reason: "no_message_needed" }
   }
 
-  const conversationId = await conversationIdForSubmission(supabase, submission)
-  const existingMessageId = await existingProductIntakeReviewMessageId({
-    supabase,
-    conversationId,
-    submissionId: submission.id,
-    status: submission.status,
-  })
+  const sentAt = submission.notification_sent_at ?? new Date().toISOString()
+  const shouldClaimNotification = !submission.notification_sent_at
 
-  if (existingMessageId) {
-    const sentAt = new Date().toISOString()
+  if (shouldClaimNotification) {
     const marked = await markNotificationSent({
       supabase,
       submissionId: submission.id,
       status: submission.status,
       sentAt,
     })
-    if (marked) {
-      await bumpConversationUpdatedAt({ supabase, conversationId, updatedAt: sentAt })
+
+    if (!marked) {
+      return { sent: false, reason: "already_sent" }
     }
-    return { sent: false, reason: "already_sent" }
   }
 
-  const sentAt = new Date().toISOString()
-  const { data: message, error: messageError } = await supabase
-    .from("messages")
-    .insert({
-      conversation_id: conversationId,
-      role: "assistant",
-      content,
-      rag_context: buildProductIntakeReviewRagContext(submission),
+  let notificationMaterialized = false
+
+  try {
+    const conversationId = await conversationIdForSubmission(supabase, submission)
+    const existingMessageId = await existingProductIntakeReviewMessageId({
+      supabase,
+      conversationId,
+      submissionId: submission.id,
+      status: submission.status,
     })
-    .select("id")
-    .single()
 
-  if (messageError || !message?.id) {
-    throw new Error(`send product intake review notification: ${messageError?.message ?? "no id"}`)
+    if (existingMessageId) {
+      notificationMaterialized = true
+      await bumpConversationUpdatedAtBestEffort({ supabase, conversationId, updatedAt: sentAt })
+      return { sent: false, reason: "already_sent" }
+    }
+
+    const messageId = productIntakeReviewMessageId(submission)
+    const { data: message, error: messageError } = await supabase
+      .from("messages")
+      .insert({
+        id: messageId,
+        conversation_id: conversationId,
+        role: "assistant",
+        content,
+        rag_context: buildProductIntakeReviewRagContext(submission),
+      })
+      .select("id")
+      .single()
+
+    if (isDuplicateKeyError(messageError)) {
+      notificationMaterialized = true
+      await bumpConversationUpdatedAtBestEffort({ supabase, conversationId, updatedAt: sentAt })
+      return { sent: false, reason: "already_sent" }
+    }
+
+    if (messageError || !message?.id) {
+      throw new Error(
+        `send product intake review notification: ${messageError?.message ?? "no id"}`,
+      )
+    }
+
+    notificationMaterialized = true
+    await bumpConversationUpdatedAtBestEffort({ supabase, conversationId, updatedAt: sentAt })
+
+    return { sent: true, conversationId, messageId: message.id }
+  } catch (error) {
+    if (shouldClaimNotification && !notificationMaterialized) {
+      try {
+        await releaseNotificationSentClaim({
+          supabase,
+          submissionId: submission.id,
+          status: submission.status,
+          sentAt,
+        })
+      } catch (releaseError) {
+        console.warn("[product-intake] notification claim rollback failed", releaseError)
+      }
+    }
+
+    throw error
   }
-
-  const marked = await markNotificationSent({
-    supabase,
-    submissionId: submission.id,
-    status: submission.status,
-    sentAt,
-  })
-
-  if (!marked) {
-    return { sent: false, reason: "already_sent" }
-  }
-
-  await bumpConversationUpdatedAt({ supabase, conversationId, updatedAt: sentAt })
-
-  return { sent: true, conversationId, messageId: message.id }
 }

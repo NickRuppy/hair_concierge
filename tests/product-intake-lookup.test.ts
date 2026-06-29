@@ -59,10 +59,37 @@ const catalog: ProductLookupCatalog = {
       isChaarlieRecommended: true,
     },
     {
+      id: "syoss-intense-volume-shampoo",
+      name: "Intense Volume Shampoo",
+      brandId: "brand-syoss",
+      categoryKey: "shampoo",
+      isActive: true,
+      lifecycleStatus: "active",
+      isChaarlieRecommended: true,
+    },
+    {
+      id: "syoss-oil-repair-shampoo",
+      name: "Oil Repair Shampoo",
+      brandId: "brand-syoss",
+      categoryKey: "shampoo",
+      isActive: true,
+      lifecycleStatus: "active",
+      isChaarlieRecommended: true,
+    },
+    {
       id: "syoss-intense-keratin-mask",
       name: "Intense Keratin Maske",
       brandId: "brand-syoss",
       categoryKey: "mask",
+      isActive: true,
+      lifecycleStatus: "active",
+      isChaarlieRecommended: true,
+    },
+    {
+      id: "olaplex-no7-oil",
+      name: "No.7 Bonding Oil",
+      brandId: "brand-olaplex",
+      categoryKey: "oil",
       isActive: true,
       lifecycleStatus: "active",
       isChaarlieRecommended: true,
@@ -76,6 +103,7 @@ const brandCatalog: BrandResolutionCatalogInput = {
     { id: "brand-garnier", canonical_name: "Garnier" },
     { id: "brand-pantene", canonical_name: "Pantene" },
     { id: "brand-syoss", canonical_name: "Syoss" },
+    { id: "brand-olaplex", canonical_name: "Olaplex" },
   ],
   productLines: [
     { id: "line-fructis", brand_id: "brand-garnier", canonical_name: "Fructis" },
@@ -107,6 +135,7 @@ test("user-visible lookup does not return exact hits for non-Chaarlie-recommende
       products: [catalog.products[0]],
     },
     brandCatalog,
+    offerId: "test-offer",
   })
 
   assert.equal(result.status, "not_found")
@@ -127,7 +156,33 @@ test("intake-dedupe lookup can find active non-Chaarlie-recommended products", (
       products: [catalog.products[0]],
     },
     brandCatalog,
+    offerId: "test-offer",
     eligibilityMode: "intake_dedupe",
+  })
+
+  assert.equal(result.status, "found_exact")
+  assert.equal(result.product?.id, "garnier-mask")
+  assert.equal(result.product?.is_chaarlie_recommended, false)
+  assert.equal(result.intake_offer, null)
+})
+
+test("user-visible lookup can find active non-Chaarlie-recommended products owned by the user", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "mask",
+      brand_text: "Garnier Fructis",
+      product_name_text: "Hair Food Aloe Maske",
+    },
+    catalog: {
+      ...catalog,
+      products: [catalog.products[0]],
+    },
+    brandCatalog,
+    offerId: "test-offer",
+    eligibilityContext: {
+      ownedProductIds: new Set(["garnier-mask"]),
+      hasVerifiedSpecs: true,
+    },
   })
 
   assert.equal(result.status, "found_exact")
@@ -153,6 +208,7 @@ test("user-visible lookup does not return exact hits for non-active-lifecycle pr
       ],
     },
     brandCatalog,
+    offerId: "test-offer",
   })
 
   assert.equal(result.status, "not_found")
@@ -161,19 +217,71 @@ test("user-visible lookup does not return exact hits for non-active-lifecycle pr
   assert.equal(result.intake_offer?.reason, "product_lookup_not_found")
 })
 
-test("lookup needs category before it can make a conclusive product decision", () => {
+test("lookup asks for more product identity when category is omitted and product text is generic", () => {
   const result = lookupProductCandidate({
     input: {
       brand_text: "Garnier Fructis",
-      product_name_text: "Hair Food Aloe Maske",
+      product_name_text: "Produkt",
     },
     catalog,
     brandCatalog,
+    offerId: "test-offer",
   })
 
   assert.equal(result.status, "insufficient_identity")
-  assert.deepEqual(result.missing_fields, ["category"])
+  assert.deepEqual(result.missing_fields, ["productNameText"])
   assert.equal(result.intake_offer, null)
+})
+
+test("lookup offers intake when category and concrete product text are present but brand is unsplit", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "conditioner",
+      product_name_text: "Jean & Lean Conditioner Mystery Rose",
+    },
+    catalog,
+    brandCatalog,
+    offerId: "test-offer",
+  })
+
+  assert.equal(result.status, "not_found")
+  assert.equal(result.category, "conditioner")
+  assert.deepEqual(result.candidates, [])
+  assert.deepEqual(result.intake_offer?.extracted_identity, {
+    product_name_text: "Jean & Lean Conditioner Mystery Rose",
+  })
+})
+
+test("category-less lookup prefers explicit product type over oil ingredient wording", () => {
+  const result = lookupProductCandidate({
+    input: {
+      brand_text: "Syoss",
+      product_name_text: "Oil Repair Shampoo",
+    },
+    catalog,
+    brandCatalog,
+    offerId: "test-offer",
+  })
+
+  assert.equal(result.status, "found_exact")
+  assert.equal(result.category, "shampoo")
+  assert.equal(result.product?.id, "syoss-oil-repair-shampoo")
+})
+
+test("category-less lookup does not let oil wording override conditioner identity", () => {
+  const result = lookupProductCandidate({
+    input: {
+      brand_text: "Garnier Fructis",
+      product_name_text: "Hair Food Aloe Oil Conditioner",
+    },
+    catalog,
+    brandCatalog,
+    offerId: "test-offer",
+  })
+
+  assert.equal(result.status, "found_exact")
+  assert.equal(result.category, "conditioner")
+  assert.equal(result.product?.id, "garnier-conditioner")
 })
 
 test("lookup rejects unsupported categories without offering intake", () => {
@@ -185,6 +293,7 @@ test("lookup rejects unsupported categories without offering intake", () => {
     },
     catalog,
     brandCatalog,
+    offerId: "test-offer",
   })
 
   assert.equal(result.status, "unsupported_category")
@@ -201,6 +310,7 @@ test("lookup asks the user to select a variant when same-category catalog neighb
     },
     catalog,
     brandCatalog,
+    offerId: "test-offer",
   })
 
   assert.equal(result.status, "needs_variant_selection")
@@ -211,7 +321,7 @@ test("lookup asks the user to select a variant when same-category catalog neighb
   assert.equal(result.intake_offer, null)
 })
 
-test("lookup still shows a single same-category candidate for variant confirmation", () => {
+test("lookup treats a unique canonical product name as an exact product match", () => {
   const result = lookupProductCandidate({
     input: {
       category: "shampoo",
@@ -220,12 +330,140 @@ test("lookup still shows a single same-category candidate for variant confirmati
     },
     catalog,
     brandCatalog,
+    offerId: "test-offer",
+  })
+
+  assert.equal(result.status, "found_exact")
+  assert.equal(result.product?.id, "syoss-intense-volume-shampoo")
+  assert.equal(result.intake_offer, null)
+})
+
+test("lookup asks for variant selection instead of exact match for a weak partial name", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "shampoo",
+      brand_text: "Pantene Pro-V",
+      product_name_text: "Repair",
+    },
+    catalog: {
+      ...catalog,
+      products: [catalog.products[2]],
+    },
+    brandCatalog,
+    offerId: "test-offer",
+  })
+
+  assert.equal(result.status, "needs_variant_selection")
+  assert.deepEqual(
+    result.candidates.map((candidate) => candidate.product.id),
+    ["pantene-shampoo-a"],
+  )
+  assert.equal(result.intake_offer, null)
+})
+
+test("lookup can find unique No/Nr numbered products without a category hint", () => {
+  for (const productNameText of ["No.7 Bonding Oil", "No 7 Bonding Oil", "Nr. 7 Bonding Oil"]) {
+    const result = lookupProductCandidate({
+      input: {
+        brand_text: "Olaplex",
+        product_name_text: productNameText,
+      },
+      catalog,
+      brandCatalog,
+      offerId: "test-offer",
+    })
+
+    assert.equal(result.status, "found_exact")
+    assert.equal(result.category, "oil")
+    assert.equal(result.product?.id, "olaplex-no7-oil")
+    assert.equal(result.intake_offer, null)
+  }
+})
+
+test("category-less lookup asks for variant selection when identity is still ambiguous", () => {
+  const result = lookupProductCandidate({
+    input: {
+      brand_text: "Pantene Pro-V",
+      product_name_text: "Repair Care",
+    },
+    catalog,
+    brandCatalog,
+    offerId: "test-offer",
+  })
+
+  assert.equal(result.status, "needs_variant_selection")
+  assert.equal(result.category, null)
+  assert.deepEqual(
+    result.candidates.map((candidate) => candidate.product.id),
+    ["pantene-shampoo-a", "pantene-shampoo-b"],
+  )
+  assert.equal(result.intake_offer, null)
+})
+
+test("user-visible lookup can include current user's verified non-recommended products", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "mask",
+      brand_text: "Garnier Fructis",
+      product_name_text: "Hair Food Aloe Maske",
+    },
+    catalog: {
+      ...catalog,
+      products: [catalog.products[0]],
+    },
+    brandCatalog,
+    offerId: "test-offer",
+    eligibilityContext: {
+      ownedProductIds: ["garnier-mask"],
+      hasVerifiedSpecs: true,
+    },
+  })
+
+  assert.equal(result.status, "found_exact")
+  assert.equal(result.product?.id, "garnier-mask")
+  assert.equal(result.product?.is_chaarlie_recommended, false)
+  assert.equal(result.intake_offer, null)
+})
+
+test("lookup still shows a single same-category candidate for variant confirmation", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "shampoo",
+      brand_text: "Syoss",
+      product_name_text: "Intense Volume Shampoo",
+    },
+    catalog: {
+      ...catalog,
+      products: [catalog.products[4]],
+    },
+    brandCatalog,
+    offerId: "test-offer",
   })
 
   assert.equal(result.status, "needs_variant_selection")
   assert.deepEqual(
     result.candidates.map((candidate) => candidate.product.id),
     ["syoss-intense-curls-shampoo"],
+  )
+  assert.equal(result.intake_offer, null)
+})
+
+test("lookup asks for confirmation instead of intake when generic oil text has one same-brand oil", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "oil",
+      brand_text: "OLAPLEX no5",
+      product_name_text: "Haaröl",
+    },
+    catalog,
+    brandCatalog,
+    offerId: "offer-olaplex-oil",
+  })
+
+  assert.equal(result.status, "needs_variant_selection")
+  assert.deepEqual(
+    result.candidates.map((candidate) => candidate.product.id),
+    ["olaplex-no7-oil"],
   )
   assert.equal(result.intake_offer, null)
 })
@@ -239,7 +477,7 @@ test("lookup ignores weak wrong-category token overlap and offers intake", () =>
     },
     catalog: {
       ...catalog,
-      products: [catalog.products[5]],
+      products: [catalog.products[6]],
     },
     brandCatalog,
     offerId: "offer-syoss-volume",
@@ -263,6 +501,7 @@ test("lookup surfaces strong identity matches in another category as category mi
       products: [catalog.products[1]],
     },
     brandCatalog,
+    offerId: "test-offer",
   })
 
   assert.equal(result.status, "category_mismatch")
@@ -332,6 +571,7 @@ test("lookup asks for more identity before offering intake for generic brand cat
     },
     catalog,
     brandCatalog,
+    offerId: "test-offer",
   })
 
   assert.equal(pantene.status, "insufficient_identity")
@@ -346,6 +586,7 @@ test("lookup asks for more identity before offering intake for generic brand cat
     },
     catalog,
     brandCatalog,
+    offerId: "test-offer",
   })
 
   assert.equal(garnier.status, "insufficient_identity")
@@ -360,6 +601,7 @@ test("lookup asks for more identity before offering intake for generic brand cat
     },
     catalog,
     brandCatalog,
+    offerId: "test-offer",
   })
 
   assert.equal(redundantBrand.status, "insufficient_identity")

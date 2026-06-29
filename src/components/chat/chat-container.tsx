@@ -16,6 +16,7 @@ import { ArrowDown, Menu } from "lucide-react"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { Icon } from "@/components/ui/icon"
 import type { Product } from "@/lib/types"
+import { buildResolvedProductLookupSelectionByMessageId } from "@/lib/chat/product-lookup-selection-ui"
 
 const JUMP_TO_LATEST_THRESHOLD_PX = 80
 const USER_OVERRIDE_DISTANCE_PX = 200
@@ -39,6 +40,10 @@ export function ChatContainer() {
 
   const { hairProfile } = useHairProfile()
   const suggestedPrompts = useMemo(() => generateSuggestedPrompts(hairProfile), [hairProfile])
+  const resolvedProductLookupSelectionByMessageId = useMemo(
+    () => buildResolvedProductLookupSelectionByMessageId(messages),
+    [messages],
+  )
 
   const [sidebarState, setSidebarState] = useState<"closed" | "open" | "closing">("closed")
   const sidebarPanelRef = useRef<HTMLDivElement>(null)
@@ -582,6 +587,9 @@ export function ChatContainer() {
                       isStreamingMessage={
                         isStreaming && idx === messages.length - 1 && msg.role === "assistant"
                       }
+                      resolvedProductLookupSelection={resolvedProductLookupSelectionByMessageId.get(
+                        msg.id,
+                      )}
                     />
                   </div>
                 )

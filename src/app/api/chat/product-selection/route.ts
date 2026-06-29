@@ -6,9 +6,30 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { isProductIntakeEnabled } from "@/lib/product-intake/config"
 import { isProductEligibleForMode } from "@/lib/product-catalog/eligibility"
 import { runAgentV2ProductionPipeline } from "@/lib/agent-v2/production/chat-pipeline"
+import {
+  buildActiveProductContextFromTrustedSelection,
+  buildPrimaryResolvedProductContext,
+  buildTrustedSelectedProductContext,
+  mergeActiveProductContexts,
+} from "@/lib/agent-v2/resolved-product-selection-adapter"
+import {
+  AGENT_V2_PRODUCTION_ENGINE,
+  normalizeAgentV2ConversationState,
+  type AgentV2ConversationStateTransition,
+} from "@/lib/agent-v2/production/persisted-session-state"
 import { buildAssistantDecisionContext, buildDoneEventData } from "@/lib/chat-runtime/stream-events"
 import { persistConversationStateTransition } from "@/lib/chat-runtime/conversation-state-store"
 import { ERR_UNAUTHORIZED } from "@/lib/vocabulary"
+import {
+  hasVerifiedProductSpecs,
+  type SpecReadinessClient,
+} from "@/lib/product-intake/spec-readiness"
+import {
+  buildResolvedProductSelection,
+  getResolvedProductSelectionStableKeyParts,
+  productLookupSelectionResolvesSourceCard,
+  toProductLookupSelectionContext,
+} from "@/lib/product-intake/resolved-product-selection"
 import type {
   MessageRagContext,
   ProductLookupClarification,
@@ -35,6 +56,18 @@ type ProductSelectionRuntimeDeps = {
   randomUUID?: () => string
 }
 
+type ProductSelectionFilterQuery = {
+  eq: (column: string, value: string) => ProductSelectionFilterQuery
+  limit: (count: number) => PromiseLike<{ data: unknown[] | null; error: unknown | null }>
+  maybeSingle: () => Promise<{ data: unknown | null; error: unknown | null }>
+}
+
+type ProductSelectionAdminClient = {
+  from: (table: string) => {
+    select: (columns: string) => ProductSelectionFilterQuery
+  }
+}
+
 function readString(value: unknown): string | null {
   return typeof value === "string" && value.trim().length > 0 ? value.trim() : null
 }
@@ -48,7 +81,11 @@ function readClarification(value: unknown): ProductLookupClarification | null {
 
 function findExistingSelectionMessage(
   rows: unknown,
-  selection: ProductLookupSelectionContext,
+  sourceCard: {
+    clarificationId: string
+    sourceAssistantMessageId: string
+    selectedProductId?: string | null
+  },
 ): {
   id?: string | null
   content?: string | null
@@ -64,11 +101,7 @@ function findExistingSelectionMessage(
       if (!row || typeof row !== "object" || Array.isArray(row)) return false
       const record = row as { rag_context?: MessageRagContext | null }
       const existing = record.rag_context?.product_lookup_selection
-      return (
-        existing?.source === "product_lookup_clarification" &&
-        existing.clarification_id === selection.clarification_id &&
-        existing.source_assistant_message_id === selection.source_assistant_message_id
-      )
+      return productLookupSelectionResolvesSourceCard(existing, sourceCard)
     }) ?? null
   )
 }
@@ -244,6 +277,141 @@ function streamProductSelectionError(message = "Produktauswahl konnte nicht vera
   })
 }
 
+async function isSelectedProductVisibleToUser(params: {
+  admin: ProductSelectionAdminClient
+  userId: string
+  product: {
+    id?: string | null
+    category?: string | null
+    category_key?: string | null
+    is_active?: boolean | null
+    lifecycle_status?: string | null
+    is_chaarlie_recommended?: boolean | null
+  }
+}): Promise<boolean> {
+  if (isProductEligibleForMode(params.product, "general_recommendation")) return true
+  if (!params.product.id) return false
+
+  const { data, error } = await params.admin
+    .from("user_product_usage")
+    .select("id")
+    .eq("user_id", params.userId)
+    .eq("product_id", params.product.id)
+    .eq("match_status", "matched")
+    .maybeSingle()
+
+  if (error) {
+    console.error("Failed to verify selected product ownership:", error)
+    return false
+  }
+
+  if (!data) return false
+
+  const hasVerifiedSpecs = await hasVerifiedProductSpecs({
+    client: params.admin,
+    productId: params.product.id,
+    categoryKey: params.product.category_key ?? params.product.category,
+  })
+
+  return isProductEligibleForMode(params.product, "owned_assessment", {
+    isUserOwned: true,
+    hasVerifiedSpecs,
+  })
+}
+
+async function loadCurrentAgentV2State(params: {
+  admin: ReturnType<typeof createAdminClient>
+  conversationId: string
+  userId: string
+}) {
+  const { data, error } = await params.admin
+    .from("conversation_states")
+    .select("state")
+    .eq("conversation_id", params.conversationId)
+    .eq("user_id", params.userId)
+    .maybeSingle()
+
+  if (error) {
+    console.error("Failed to load product selection conversation state:", error)
+    return null
+  }
+
+  return normalizeAgentV2ConversationState(data?.state)
+}
+
+function resolveStoredSelection(params: {
+  clarification: ProductLookupClarification
+  selectionContext: ProductLookupSelectionContext | null | undefined
+  sourceAssistantMessageId: string
+}): ReturnType<typeof buildResolvedProductSelection> | null {
+  const selectedProductId = params.selectionContext?.selected_product_id
+  if (!selectedProductId) return null
+  const selectedCandidate = params.clarification.candidates.find(
+    (candidate) => candidate.product_id === selectedProductId,
+  )
+  if (!selectedCandidate) return null
+
+  return buildResolvedProductSelection({
+    clarification: params.clarification,
+    selectedCandidate,
+    selectedProduct: {
+      id: selectedProductId,
+      name: params.selectionContext?.selected_product_name ?? selectedCandidate.name,
+      category_key: selectedCandidate.category,
+    },
+    sourceAssistantMessageId: params.sourceAssistantMessageId,
+  })
+}
+
+async function persistResolvedSelectionState(params: {
+  admin: ReturnType<typeof createAdminClient>
+  persistConversationStateTransition: typeof persistConversationStateTransition
+  conversationId: string
+  userId: string
+  resolvedSelection: ReturnType<typeof buildResolvedProductSelection>
+}): Promise<boolean> {
+  const previousState = await loadCurrentAgentV2State({
+    admin: params.admin,
+    conversationId: params.conversationId,
+    userId: params.userId,
+  })
+  if (!previousState) return false
+  const trustedContext = buildTrustedSelectedProductContext(params.resolvedSelection)
+  const activeContext = buildActiveProductContextFromTrustedSelection(trustedContext)
+  if (!activeContext) return false
+  const activeProductContexts = mergeActiveProductContexts({
+    previous: previousState.agent_v2.active_product_contexts,
+    next: [activeContext],
+    latestMessageNamesActionableProduct: true,
+  })
+  const nextState = {
+    ...previousState,
+    agent_v2: {
+      ...previousState.agent_v2,
+      active_product_contexts: activeProductContexts,
+      active_resolved_product_context: buildPrimaryResolvedProductContext(activeProductContexts),
+    },
+  }
+  const transition: AgentV2ConversationStateTransition = {
+    previous_state: previousState,
+    next_state: nextState,
+    reason: "product_lookup_selection_resolved",
+    changed_fields: [
+      "agent_v2.active_product_contexts",
+      "agent_v2.active_resolved_product_context",
+    ],
+    classifier_override: null,
+    updated_by_engine: AGENT_V2_PRODUCTION_ENGINE,
+  }
+  const result = await params.persistConversationStateTransition(params.admin, {
+    conversationId: params.conversationId,
+    userId: params.userId,
+    transition,
+  })
+
+  return result.status !== "failed"
+}
+
 export function createProductSelectionPostHandler(overrides: ProductSelectionRuntimeDeps = {}) {
   const deps = {
     createClient,
@@ -338,7 +506,11 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
     if (
       productError ||
       !selectedProduct ||
-      !isProductEligibleForMode(selectedProduct, "intake_dedupe")
+      !(await isSelectedProductVisibleToUser({
+        admin: admin as unknown as ProductSelectionAdminClient,
+        userId: user.id,
+        product: selectedProduct,
+      }))
     ) {
       return NextResponse.json(
         { error: "Dieses Produkt ist nicht mehr verfügbar." },
@@ -346,21 +518,14 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       )
     }
 
-    const selectedProductName =
-      typeof selectedProduct.name === "string" && selectedProduct.name.trim()
-        ? selectedProduct.name
-        : selectedCandidate.name
-    const selectedProductCategory =
-      readString(selectedProduct.category_key) ??
-      readString(selectedProduct.category) ??
-      readString(selectedCandidate.category)
-    const selectionContext: ProductLookupSelectionContext = {
-      source: "product_lookup_clarification",
-      clarification_id: clarificationId,
-      source_assistant_message_id: sourceAssistantMessageId,
-      selected_product_id: selectedProductId,
-      selected_product_name: selectedProductName,
-    }
+    const resolvedSelection = buildResolvedProductSelection({
+      clarification,
+      selectedCandidate,
+      selectedProduct,
+      sourceAssistantMessageId,
+    })
+    const selectedProductName = resolvedSelection.selectedProduct.name
+    const selectionContext = toProductLookupSelectionContext(resolvedSelection)
 
     const { data: existingMessages } = await admin
       .from("messages")
@@ -372,18 +537,47 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       .order("created_at", { ascending: false })
       .limit(50)
 
-    const existingSelectionMessage = findExistingSelectionMessage(
-      existingMessages,
-      selectionContext,
-    )
+    const existingSelectionMessage = findExistingSelectionMessage(existingMessages, {
+      clarificationId,
+      sourceAssistantMessageId,
+      selectedProductId,
+    })
+    const conflictingSelectionMessage = existingSelectionMessage
+      ? null
+      : findExistingSelectionMessage(existingMessages, {
+          clarificationId,
+          sourceAssistantMessageId,
+        })
+    if (conflictingSelectionMessage) {
+      return streamProductSelectionError(
+        "Diese Produktauswahl wurde bereits beantwortet. Bitte starte die Auswahl neu, wenn du ein anderes Produkt meinst.",
+      )
+    }
     const existingSelection =
       existingSelectionMessage?.rag_context?.product_lookup_selection ?? selectionContext
     if (existingSelectionMessage) {
+      const storedResolvedSelection =
+        resolveStoredSelection({
+          clarification,
+          selectionContext: existingSelection,
+          sourceAssistantMessageId,
+        }) ?? resolvedSelection
+      const statePersisted = await persistResolvedSelectionState({
+        admin,
+        persistConversationStateTransition: deps.persistConversationStateTransition,
+        conversationId,
+        userId: user.id,
+        resolvedSelection: storedResolvedSelection,
+      })
+      if (!statePersisted) {
+        return streamProductSelectionError()
+      }
+
       return streamAssistantContinuation({
         conversationId,
         contentStream: createTextStream(existingSelectionMessage.content ?? ""),
         assistantMessageId: existingSelectionMessage.id ?? null,
-        productRecommendations: existingSelectionMessage.product_recommendations ?? null,
+        productRecommendations: null,
         productLookupSelection: existingSelection,
         langfuseTraceId: existingSelectionMessage.langfuse_trace_id ?? null,
         langfuseTraceUrl: existingSelectionMessage.langfuse_trace_url ?? null,
@@ -400,16 +594,15 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
         }),
       })
     }
-    const assistantSelectionMessageId = createStableUuidFromParts([
-      "product_lookup_selection",
-      conversationId,
-      sourceAssistantMessageId,
-      clarificationId,
-    ])
+    const assistantSelectionMessageId = createStableUuidFromParts(
+      getResolvedProductSelectionStableKeyParts({
+        conversationId,
+        clarificationId,
+        sourceAssistantMessageId,
+        selectedProductId,
+      }),
+    )
 
-    const originalUserMessage =
-      clarification.original_user_message?.trim() ||
-      `Ich meine ${selectedProductName}. Kannst du dieses Produkt bewerten?`
     const selectionTurnMessage = `Der Nutzer hat in der Produktklärung "${selectedProductName}" ausgewählt. Diese Auswahl ersetzt die zuvor unklare Produktangabe. Beantworte die offene Frage jetzt ausschließlich für "${selectedProductName}". Nutze die ursprüngliche Nachricht nur, um die Frageabsicht zu verstehen, nicht als Produktidentität.`
 
     const pipelineResult = await deps.runAgentV2ProductionPipeline({
@@ -418,26 +611,7 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       userId: user.id,
       requestId: deps.randomUUID(),
       productIntakeEnabled: deps.productIntakeEnabled(),
-      trustedSelectedProductContext: {
-        source: "product_lookup_clarification",
-        original_user_message: originalUserMessage,
-        selected_product: {
-          id: selectedProductId,
-          name: selectedProductName,
-          category: selectedProductCategory,
-        },
-        lookup_identity: {
-          category: selectedProductCategory,
-          brand_text: clarification.query.brand_text,
-          product_name_text: clarification.query.product_name_text,
-          evidence_quote:
-            clarification.query.brand_text || clarification.query.product_name_text
-              ? [clarification.query.brand_text, clarification.query.product_name_text]
-                  .filter(Boolean)
-                  .join(" ")
-              : selectedProductName,
-        },
-      },
+      trustedSelectedProductContext: buildTrustedSelectedProductContext(resolvedSelection),
     })
 
     const fullContent = await readTextStream(pipelineResult.stream)
@@ -448,8 +622,16 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       responseMode: pipelineResult.routerDecision.response_mode,
       productLookupSelection: selectionContext,
     })
-    const productRecommendations =
-      pipelineResult.matchedProducts.length > 0 ? pipelineResult.matchedProducts : null
+    const productRecommendations = null
+    const statePersistenceResult = await deps.persistConversationStateTransition(admin, {
+      conversationId,
+      userId: user.id,
+      transition: pipelineResult.conversationStateTransition,
+    })
+    if (statePersistenceResult.status === "failed") {
+      return streamProductSelectionError()
+    }
+
     const { data: assistantMessage, error: assistantMessageError } = await admin
       .from("messages")
       .insert({
@@ -473,12 +655,28 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
         .single()
       const duplicateSelection =
         duplicateMessage?.rag_context?.product_lookup_selection ?? selectionContext
+      const storedResolvedSelection =
+        resolveStoredSelection({
+          clarification,
+          selectionContext: duplicateSelection,
+          sourceAssistantMessageId,
+        }) ?? resolvedSelection
+      const statePersisted = await persistResolvedSelectionState({
+        admin,
+        persistConversationStateTransition: deps.persistConversationStateTransition,
+        conversationId,
+        userId: user.id,
+        resolvedSelection: storedResolvedSelection,
+      })
+      if (!statePersisted) {
+        return streamProductSelectionError()
+      }
 
       return streamAssistantContinuation({
         conversationId,
         contentStream: createTextStream(duplicateMessage?.content ?? ""),
         assistantMessageId: duplicateMessage?.id ?? assistantSelectionMessageId,
-        productRecommendations: duplicateMessage?.product_recommendations ?? null,
+        productRecommendations: null,
         productLookupSelection: duplicateSelection,
         langfuseTraceId: duplicateMessage?.langfuse_trace_id ?? null,
         langfuseTraceUrl: duplicateMessage?.langfuse_trace_url ?? null,
@@ -508,12 +706,6 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
       .from("conversations")
       .update({ updated_at: new Date().toISOString() })
       .eq("id", conversationId)
-
-    await deps.persistConversationStateTransition(admin, {
-      conversationId,
-      userId: user.id,
-      transition: pipelineResult.conversationStateTransition,
-    })
 
     return streamAssistantContinuation({
       conversationId,

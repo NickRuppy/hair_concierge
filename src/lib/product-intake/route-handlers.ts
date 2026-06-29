@@ -5,9 +5,11 @@ import { ERR_INVALID_DATA, ERR_UNAUTHORIZED } from "@/lib/vocabulary"
 import { isProductIntakeEnabled } from "@/lib/product-intake/config"
 import {
   chatProductIntakeSubmissionSchema,
+  type ChatProductIntakeSubmissionInput,
   onboardingProductIntakeCancelSchema,
   onboardingProductIntakeSubmissionSchema,
 } from "@/lib/product-intake/schemas"
+import type { ProductIntakeSubmissionResult } from "@/lib/product-intake/types"
 import {
   cancelProductIntakeUsage,
   ProductIntakeConflictError,
@@ -17,6 +19,19 @@ import {
 } from "@/lib/product-intake/submissions"
 import { createSupabaseProductIntakeRepository } from "@/lib/product-intake/repository"
 import { ProductIntakeUserInputError } from "@/lib/product-intake/errors"
+import {
+  loadAgentV2ConversationStateForUser,
+  persistConversationStateTransition,
+} from "@/lib/chat-runtime/conversation-state-store"
+import {
+  AGENT_V2_PRODUCTION_ENGINE,
+  type AgentV2ConversationStateTransition,
+} from "@/lib/agent-v2/production/persisted-session-state"
+import {
+  buildPrimaryResolvedProductContext,
+  mergeActiveProductContexts,
+  type AgentV2ActiveProductContext,
+} from "@/lib/agent-v2/resolved-product-selection-adapter"
 
 type ProductIntakeRouteSource = "onboarding" | "chat"
 
@@ -25,6 +40,9 @@ type ProductIntakePostHandlerDeps = {
   createAdminClient?: typeof createAdminClient
   isEnabled?: () => boolean
   createRepository?: (admin: ReturnType<typeof createAdminClient>) => ProductIntakeRepository
+  loadConversationState?: typeof loadAgentV2ConversationStateForUser
+  persistConversationStateTransition?: typeof persistConversationStateTransition
+  now?: () => string
 }
 
 const DISABLED_RESPONSE = {
@@ -41,6 +59,9 @@ export function createProductIntakePostHandler(
     createAdminClient,
     isEnabled: isProductIntakeEnabled,
     createRepository: createSupabaseProductIntakeRepository,
+    loadConversationState: loadAgentV2ConversationStateForUser,
+    persistConversationStateTransition,
+    now: () => new Date().toISOString(),
     ...overrides,
   }
 
@@ -83,6 +104,18 @@ export function createProductIntakePostHandler(
         repository,
       })
 
+      if (source === "chat") {
+        await persistChatProductIntakeContext({
+          admin,
+          userId: user.id,
+          input: parsed.data as ChatProductIntakeSubmissionInput,
+          result,
+          loadConversationState: deps.loadConversationState,
+          persistConversationStateTransition: deps.persistConversationStateTransition,
+          now: deps.now,
+        })
+      }
+
       return NextResponse.json(result, { status: result.status === "matched" ? 200 : 202 })
     } catch (error) {
       if (error instanceof ProductIntakeConflictError) {
@@ -114,6 +147,94 @@ export function createProductIntakePostHandler(
         { status: 500 },
       )
     }
+  }
+}
+
+async function persistChatProductIntakeContext(params: {
+  admin: ReturnType<typeof createAdminClient>
+  userId: string
+  input: ChatProductIntakeSubmissionInput
+  result: ProductIntakeSubmissionResult
+  loadConversationState: typeof loadAgentV2ConversationStateForUser
+  persistConversationStateTransition: typeof persistConversationStateTransition
+  now: () => string
+}) {
+  const conversationId = params.input.source_conversation_id ?? null
+  if (!conversationId) return
+
+  const activeContext = buildActiveProductContextFromChatSubmission({
+    input: params.input,
+    result: params.result,
+    nowIso: params.now(),
+  })
+  if (!activeContext) return
+
+  try {
+    const previousState = await params.loadConversationState(params.admin, {
+      conversationId,
+      userId: params.userId,
+    })
+    const activeProductContexts = mergeActiveProductContexts({
+      previous: previousState.agent_v2.active_product_contexts,
+      next: [activeContext],
+      latestMessageNamesActionableProduct: true,
+    })
+    const nextState = {
+      ...previousState,
+      agent_v2: {
+        ...previousState.agent_v2,
+        active_product_contexts: activeProductContexts,
+        active_resolved_product_context: buildPrimaryResolvedProductContext(activeProductContexts),
+      },
+    }
+    const transition: AgentV2ConversationStateTransition = {
+      previous_state: previousState,
+      next_state: nextState,
+      reason: "product_intake_submission_context",
+      changed_fields: [
+        "agent_v2.active_product_contexts",
+        "agent_v2.active_resolved_product_context",
+      ],
+      classifier_override: null,
+      updated_by_engine: AGENT_V2_PRODUCTION_ENGINE,
+    }
+    const persistence = await params.persistConversationStateTransition(params.admin, {
+      conversationId,
+      userId: params.userId,
+      transition,
+    })
+
+    if (persistence.status === "failed") {
+      console.error("[product-intake] failed to persist chat product context", persistence.error)
+    }
+  } catch (error) {
+    console.error("[product-intake] failed to persist chat product context", error)
+  }
+}
+
+function buildActiveProductContextFromChatSubmission(params: {
+  input: ChatProductIntakeSubmissionInput
+  result: ProductIntakeSubmissionResult
+  nowIso: string
+}): AgentV2ActiveProductContext | null {
+  const productNameText = params.input.product_name_text?.trim() || null
+  if (!productNameText) return null
+
+  const brandText = params.input.brand_text?.trim() || null
+  const displayName = [brandText, productNameText].filter(Boolean).join(" ").trim()
+  const isMatched = params.result.status === "matched" && params.result.matched_product_id
+
+  return {
+    status: isMatched ? "resolved" : "pending_review",
+    product_id: isMatched ? params.result.matched_product_id : null,
+    submission_id: isMatched ? null : (params.result.submission?.id ?? null),
+    category: params.result.category,
+    brand_text: brandText,
+    product_name_text: productNameText,
+    display_name: displayName,
+    original_user_message: `Ich habe ${displayName} eingereicht.`,
+    source: "product_intake_submission",
+    updated_at: params.nowIso,
   }
 }
 

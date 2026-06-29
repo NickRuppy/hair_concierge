@@ -254,12 +254,14 @@ async function verifySubmissionImages(params: {
   }
 }
 
-async function verifyAndCleanupMatchedPhotoUploads(params: {
+async function verifyMatchedPhotoUploads(params: {
   repository: ProductIntakeRepository
   userId: string
   input: ProductIntakeSubmissionInput
-}) {
-  if (params.input.intake_method !== "photo") return
+}): Promise<{ frontImagePath: string | null; barcodeImagePath: string | null }> {
+  if (params.input.intake_method !== "photo") {
+    return { frontImagePath: null, barcodeImagePath: null }
+  }
 
   const frontImagePath =
     "front_image_path" in params.input ? (params.input.front_image_path ?? null) : null
@@ -272,11 +274,8 @@ async function verifyAndCleanupMatchedPhotoUploads(params: {
     frontImagePath,
     barcodeImagePath,
   })
-  await cleanupTemporarySubmissionImages({
-    repository: params.repository,
-    frontImagePath,
-    barcodeImagePath,
-  })
+
+  return { frontImagePath, barcodeImagePath }
 }
 
 function toSubmittedUsage(row: ProductIntakeUsageRow) {
@@ -828,7 +827,7 @@ export async function submitProductIntake(
   const now = params.now?.() ?? new Date().toISOString()
 
   if (match.status === "matched" && match.productId) {
-    await verifyAndCleanupMatchedPhotoUploads({
+    const matchedPhotoUploads = await verifyMatchedPhotoUploads({
       repository: params.repository,
       userId: params.userId,
       input: params.input,
@@ -842,6 +841,11 @@ export async function submitProductIntake(
       existingUsage,
       productId: match.productId,
       now,
+    })
+
+    await cleanupTemporarySubmissionImages({
+      repository: params.repository,
+      ...matchedPhotoUploads,
     })
 
     return {

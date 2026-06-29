@@ -20,6 +20,8 @@ export function deriveMatchedProducts(params: {
   answer: AgentV2TerminalAnswer
   selectedProductResults: SelectProductsToolResult[]
 }): Product[] {
+  if (params.answer.answer_mode !== "product_recommendation") return []
+
   const surfacedProductIds = collectSurfacedProductIds(params.answer)
   const productsById = new Map<string, Product>()
 
@@ -35,7 +37,6 @@ export function deriveMatchedProducts(params: {
   })
 
   if (surfacedProductIds.length > 0) return surfacedProducts
-  if (params.answer.answer_mode !== "product_recommendation") return []
 
   return params.selectedProductResults.at(-1)?.products ?? []
 }
@@ -68,6 +69,7 @@ export function deriveIntent(answer: AgentV2TerminalAnswer): IntentType {
     return "general_chat"
   }
   if (answer.answer_mode === "product_recommendation") return "product_recommendation"
+  if (answer.answer_mode === "product_assessment") return "hair_care_advice"
   if (
     answer.answer_mode === "routine" ||
     answer.request_interpretation.primary_intent.startsWith("routine_")

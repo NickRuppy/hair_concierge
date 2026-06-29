@@ -159,6 +159,7 @@ async function main() {
       input: mapping.input,
       catalog,
       brandCatalog,
+      offerId: `replay-${report.tested_rows}`,
       eligibilityMode: "intake_dedupe",
     })
 

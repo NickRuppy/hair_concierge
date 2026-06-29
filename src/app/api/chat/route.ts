@@ -514,17 +514,12 @@ export function createChatPostHandler(overrides: ChatPostHandlerDeps = {}) {
                           : "assistant_message_id_missing",
               }
 
-              if (productIntakeOfferToSend) {
-                conversationStatePersistence = {
-                  status: "skipped",
-                  error: "product_intake_deferred_no_state_mutation",
-                }
-              } else if (productLookupClarificationToSend) {
+              if (productLookupClarificationToSend) {
                 conversationStatePersistence = {
                   status: "skipped",
                   error: "product_lookup_clarification_deferred_no_state_mutation",
                 }
-              } else if (isVisibleFailure) {
+              } else if (isVisibleFailure && !productIntakeOfferToSend) {
                 conversationStatePersistence = {
                   status: "skipped",
                   error: "visible_failure_no_state_mutation",

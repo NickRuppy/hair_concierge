@@ -17,6 +17,7 @@ import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import {
   isProductEligibleForMode,
   productIsChaarlieRecommended,
+  type ProductEligibilityContext,
 } from "@/lib/product-catalog/eligibility"
 import type { ProductIntakeCategoryKey, ProductIntakeOffer } from "@/lib/types"
 
@@ -59,8 +60,9 @@ export type LookupProductCandidateParams = {
   input: ProductLookupInput
   catalog: ProductLookupCatalog
   brandCatalog?: BrandResolutionCatalogInput | null
-  offerId?: string
+  offerId: string
   eligibilityMode?: "user_visible" | "intake_dedupe"
+  eligibilityContext?: ProductEligibilityContext
 }
 
 const SUPPORTED_CATEGORY_SET = new Set<string>(SUPPORTED_PRODUCT_CATEGORY_KEYS)
@@ -77,6 +79,10 @@ const LOW_VALUE_PRODUCT_TOKENS = new Set([
   "haarkur",
   "leave",
   "in",
+  "no",
+  "nr",
+  "haarol",
+  "haaroel",
   "ol",
   "oel",
   "oil",
@@ -90,6 +96,23 @@ const LOW_VALUE_PRODUCT_TOKENS = new Set([
   "produkt",
   "product",
 ])
+
+const CATEGORY_HINTS: Array<[ProductIntakeCategoryKey, string[]]> = [
+  ["deep_cleansing_shampoo", ["tiefenreinigungsshampoo", "deep cleansing shampoo"]],
+  ["dry_shampoo", ["trockenshampoo", "dry shampoo"]],
+  ["leave_in", ["leave in", "leave-in", "leave"]],
+  ["conditioner", ["conditioner", "spulung", "spuelung"]],
+  ["mask", ["maske", "mask", "haarkur", "kur"]],
+  ["bondbuilder", ["bondbuilder"]],
+  ["shampoo", ["shampoo", "shampo", "shampoing"]],
+  ["oil", ["haarol", "haaroel", "ol", "oel", "oil"]],
+]
+
+type TextLookupCandidate = {
+  product: ProductIntakeCatalogProduct
+  overlap: number
+  exactLike: boolean
+}
 
 function trimToNull(value: string | null | undefined): string | null {
   const trimmed = value?.trim() ?? ""
@@ -116,6 +139,10 @@ function productCategoryKey(product: ProductIntakeCatalogProduct): string | null
   return product.categoryKey ?? product.category_key ?? null
 }
 
+function productBrandId(product: ProductIntakeCatalogProduct): string | null {
+  return product.brandId ?? product.brand_id ?? null
+}
+
 function productCleanName(product: ProductIntakeCatalogProduct): string {
   return product.cleanName ?? product.name
 }
@@ -127,13 +154,23 @@ function productChaarlieRecommended(product: ProductIntakeCatalogProduct): boole
 function lookupCatalogForEligibilityMode(
   catalog: ProductLookupCatalog,
   mode: NonNullable<LookupProductCandidateParams["eligibilityMode"]>,
+  context?: ProductEligibilityContext,
 ): ProductLookupCatalog {
-  const eligibilityMode = mode === "intake_dedupe" ? "intake_dedupe" : "general_recommendation"
+  if (mode === "user_visible") {
+    return {
+      ...catalog,
+      products: catalog.products.filter(
+        (product) =>
+          isProductEligibleForMode(product, "general_recommendation") ||
+          isProductEligibleForMode(product, "owned_assessment", context),
+      ),
+    }
+  }
 
   return {
     ...catalog,
     products: catalog.products.filter((product) =>
-      isProductEligibleForMode(product, eligibilityMode),
+      isProductEligibleForMode(product, "intake_dedupe"),
     ),
   }
 }
@@ -180,21 +217,34 @@ function buildIntakeOffer(params: {
   }
 }
 
+function normalizeLookupToken(token: string): string {
+  return token === "nr" ? "no" : token
+}
+
+function meaningfulTokenSet(value: string): Set<string> {
+  return new Set(meaningfulProductTokens(value))
+}
+
 function meaningfulTokenOverlap(left: string, right: string): number {
-  const leftTokens = new Set(
-    tokenizeProductName(left).filter((token) => !LOW_VALUE_PRODUCT_TOKENS.has(token)),
-  )
+  const leftTokens = meaningfulTokenSet(left)
   if (leftTokens.size === 0) return 0
 
-  return tokenizeProductName(right).filter(
-    (token) => !LOW_VALUE_PRODUCT_TOKENS.has(token) && leftTokens.has(token),
-  ).length
+  return meaningfulProductTokens(right).filter((token) => leftTokens.has(token)).length
 }
 
 function meaningfulProductTokens(value: string): string[] {
-  return tokenizeProductName(value).filter(
-    (token) => token.length > 1 && !LOW_VALUE_PRODUCT_TOKENS.has(token),
-  )
+  return tokenizeProductName(value)
+    .map(normalizeLookupToken)
+    .filter(
+      (token) => (token.length > 1 || /^\d+$/.test(token)) && !LOW_VALUE_PRODUCT_TOKENS.has(token),
+    )
+}
+
+function isStrongExactLike(inputTokens: string[], productTokens: Set<string>): boolean {
+  const inputTokenSet = new Set(inputTokens)
+  if (inputTokenSet.size === 0 || inputTokenSet.size !== productTokens.size) return false
+
+  return Array.from(inputTokenSet).every((token) => productTokens.has(token))
 }
 
 function hasPreciseProductIdentity(value: string): boolean {
@@ -260,26 +310,179 @@ function sortLookupCandidates(
   })
 }
 
+function productCategoryHintFromText(value: string | null): ProductIntakeCategoryKey | null {
+  if (!value) return null
+
+  const normalized = ` ${tokenizeProductName(value).join(" ")} `
+  for (const [category, aliases] of CATEGORY_HINTS) {
+    if (
+      aliases.some((alias) => {
+        const normalizedAlias = tokenizeProductName(alias).join(" ")
+        return normalizedAlias ? normalized.includes(` ${normalizedAlias} `) : false
+      })
+    ) {
+      return category
+    }
+  }
+
+  return null
+}
+
+function toTextLookupCandidate(
+  product: ProductIntakeCatalogProduct,
+  confidence: ProductIntakeMatchCandidate["confidence"] = "review",
+): ProductIntakeMatchCandidate {
+  const reason = confidence === "exact" ? "brand_name_category_exact" : "fuzzy_candidates_review"
+  return {
+    product,
+    productId: product.id,
+    confidence,
+    reason,
+    reasonCodes: [reason],
+  }
+}
+
+function textLookupCandidates(params: {
+  catalog: ProductLookupCatalog
+  brandId: string
+  lineId: string | null
+  productNameText: string
+}): TextLookupCandidate[] {
+  const inputTokens = meaningfulProductTokens(params.productNameText)
+  if (inputTokens.length === 0) return []
+
+  return params.catalog.products
+    .filter((product) => productBrandId(product) === params.brandId)
+    .filter((product) =>
+      !params.lineId
+        ? true
+        : product.productLineId === params.lineId || product.product_line_id === params.lineId,
+    )
+    .map((product) => {
+      const productTokens = meaningfulTokenSet(productCleanName(product))
+      const overlap = inputTokens.filter((token) => productTokens.has(token)).length
+      return {
+        product,
+        overlap,
+        exactLike: overlap > 0 && isStrongExactLike(inputTokens, productTokens),
+      }
+    })
+    .filter((candidate) => candidate.overlap > 0)
+}
+
+function sortTextLookupCandidates(candidates: TextLookupCandidate[]): TextLookupCandidate[] {
+  return [...candidates].sort((left, right) => {
+    const exactDelta = Number(right.exactLike) - Number(left.exactLike)
+    if (exactDelta !== 0) return exactDelta
+
+    const overlapDelta = right.overlap - left.overlap
+    if (overlapDelta !== 0) return overlapDelta
+
+    return productCleanName(left.product).localeCompare(productCleanName(right.product), "de")
+  })
+}
+
+function findConfidentExactTextCandidate(params: {
+  candidates: TextLookupCandidate[]
+  category: ProductIntakeCategoryKey
+}): TextLookupCandidate | null {
+  const exactCandidates = params.candidates.filter(
+    (candidate) => candidate.exactLike && productCategoryKey(candidate.product) === params.category,
+  )
+
+  return exactCandidates.length === 1 ? exactCandidates[0] : null
+}
+
+function lookupWithoutCategory(params: {
+  catalog: ProductLookupCatalog
+  brandId: string
+  lineId: string | null
+  productNameText: string
+}): ProductLookupResult {
+  const candidates = sortTextLookupCandidates(
+    textLookupCandidates({
+      catalog: params.catalog,
+      brandId: params.brandId,
+      lineId: params.lineId,
+      productNameText: params.productNameText,
+    }),
+  )
+  const exactCandidates = candidates.filter((candidate) => candidate.exactLike)
+
+  if (exactCandidates.length === 1) {
+    const product = exactCandidates[0].product
+    return {
+      status: "found_exact",
+      category: productCategoryKey(product),
+      product: toLookupProduct(product),
+      candidates: [toTextLookupCandidate(product, "exact")],
+      missing_fields: [],
+      intake_offer: null,
+    }
+  }
+
+  if (candidates.length > 0) {
+    return {
+      status: "needs_variant_selection",
+      category: null,
+      product: null,
+      candidates: candidates
+        .slice(0, 3)
+        .map((candidate) => toTextLookupCandidate(candidate.product)),
+      missing_fields: [],
+      intake_offer: null,
+    }
+  }
+
+  return emptyResult({
+    status: "insufficient_identity",
+    category: null,
+    missingFields: ["category"],
+  })
+}
+
+function brandCategoryFallbackCandidates(params: {
+  catalog: ProductLookupCatalog
+  brandId: string | null
+  category: ProductIntakeCategoryKey
+}): ProductIntakeMatchCandidate[] {
+  if (!params.brandId) return []
+
+  return params.catalog.products
+    .filter((product) => productBrandId(product) === params.brandId)
+    .filter((product) => productCategoryKey(product) === params.category)
+    .sort((left, right) => productCleanName(left).localeCompare(productCleanName(right), "de"))
+    .slice(0, 3)
+    .map((product) => ({
+      product,
+      productId: product.id,
+      confidence: "review" as const,
+      reason: "fuzzy_candidates_review" as const,
+      reasonCodes: ["fuzzy_candidates_review" as const],
+    }))
+}
+
 export function lookupProductCandidate(params: LookupProductCandidateParams): ProductLookupResult {
   const rawCategory = trimToNull(params.input.category)
-  const normalizedCategory = normalizeCategoryKey(rawCategory)
-  if (!normalizedCategory) {
+  const productNameText = trimToNull(params.input.product_name_text)
+  const normalizedCategory =
+    normalizeCategoryKey(rawCategory) ?? productCategoryHintFromText(productNameText)
+
+  if (rawCategory && !SUPPORTED_CATEGORY_SET.has(normalizedCategory ?? rawCategory)) {
     return emptyResult({
-      status: "insufficient_identity",
-      category: null,
-      missingFields: ["category"],
+      status: "unsupported_category",
+      category: normalizedCategory ?? rawCategory,
     })
   }
 
-  if (!SUPPORTED_CATEGORY_SET.has(normalizedCategory)) {
+  if (normalizedCategory && !SUPPORTED_CATEGORY_SET.has(normalizedCategory)) {
     return emptyResult({
       status: "unsupported_category",
       category: normalizedCategory,
     })
   }
 
-  const category = normalizedCategory as ProductIntakeCategoryKey
-  const productNameText = trimToNull(params.input.product_name_text)
+  const category = normalizedCategory as ProductIntakeCategoryKey | null
   const providedBrandId = trimToNull(params.input.brand_id)
   const providedLineId = trimToNull(params.input.product_line_id)
   const brandText = trimToNull(params.input.brand_text)
@@ -299,7 +502,11 @@ export function lookupProductCandidate(params: LookupProductCandidateParams): Pr
   const resolvedBrandId = providedBrandId ?? brandId(resolved?.brand ?? null)
   const resolvedLineId = providedLineId ?? lineId(resolved?.productLine ?? null)
 
-  if (!resolvedBrandId && !brandText) {
+  if (
+    !resolvedBrandId &&
+    !brandText &&
+    (!category || !hasPreciseProductIdentity(productNameText))
+  ) {
     return emptyResult({
       status: "insufficient_identity",
       category,
@@ -313,8 +520,38 @@ export function lookupProductCandidate(params: LookupProductCandidateParams): Pr
   })
   const precisionIdentity =
     !resolvedBrandId && brandText ? `${brandText} ${cleanProductName}` : cleanProductName
+  const eligibleCatalog = lookupCatalogForEligibilityMode(
+    params.catalog,
+    params.eligibilityMode ?? "user_visible",
+    params.eligibilityContext,
+  )
 
   if (!hasPreciseProductIdentity(precisionIdentity)) {
+    if (!category) {
+      return emptyResult({
+        status: "insufficient_identity",
+        category: null,
+        missingFields: ["productNameText"],
+      })
+    }
+
+    const brandCategoryFallback = brandCategoryFallbackCandidates({
+      catalog: eligibleCatalog,
+      brandId: resolvedBrandId,
+      category,
+    })
+
+    if (brandCategoryFallback.length === 1) {
+      return {
+        status: "needs_variant_selection",
+        category,
+        product: null,
+        candidates: brandCategoryFallback,
+        missing_fields: [],
+        intake_offer: null,
+      }
+    }
+
     return emptyResult({
       status: "insufficient_identity",
       category,
@@ -322,7 +559,40 @@ export function lookupProductCandidate(params: LookupProductCandidateParams): Pr
     })
   }
 
+  if (!category) {
+    if (!resolvedBrandId) {
+      return emptyResult({
+        status: "insufficient_identity",
+        category: null,
+        missingFields: ["category"],
+      })
+    }
+
+    return lookupWithoutCategory({
+      catalog: eligibleCatalog,
+      brandId: resolvedBrandId,
+      lineId: resolvedLineId,
+      productNameText,
+    })
+  }
+
   if (!resolvedBrandId) {
+    if (!brandText && hasPreciseProductIdentity(productNameText)) {
+      return {
+        status: "not_found",
+        category,
+        product: null,
+        candidates: [],
+        missing_fields: [],
+        intake_offer: buildIntakeOffer({
+          offerId: params.offerId,
+          category,
+          brandText: null,
+          productNameText,
+        }),
+      }
+    }
+
     return {
       status: "not_found",
       category,
@@ -330,7 +600,7 @@ export function lookupProductCandidate(params: LookupProductCandidateParams): Pr
       candidates: [],
       missing_fields: [],
       intake_offer: buildIntakeOffer({
-        offerId: params.offerId ?? crypto.randomUUID(),
+        offerId: params.offerId,
         category,
         brandText,
         productNameText,
@@ -346,7 +616,7 @@ export function lookupProductCandidate(params: LookupProductCandidateParams): Pr
       cleanProductName,
       productName: productNameText,
     },
-    lookupCatalogForEligibilityMode(params.catalog, params.eligibilityMode ?? "user_visible"),
+    eligibleCatalog,
   )
 
   if (match.status === "matched" && match.matchedProduct) {
@@ -364,6 +634,27 @@ export function lookupProductCandidate(params: LookupProductCandidateParams): Pr
     candidates: match.candidates,
     productNameText,
   })
+  const textCandidates = textLookupCandidates({
+    catalog: eligibleCatalog,
+    brandId: resolvedBrandId,
+    lineId: resolvedLineId,
+    productNameText,
+  })
+  const confidentExactTextCandidate = findConfidentExactTextCandidate({
+    candidates: textCandidates,
+    category,
+  })
+
+  if (confidentExactTextCandidate) {
+    return {
+      status: "found_exact",
+      category,
+      product: toLookupProduct(confidentExactTextCandidate.product),
+      candidates: [toTextLookupCandidate(confidentExactTextCandidate.product, "exact")],
+      missing_fields: [],
+      intake_offer: null,
+    }
+  }
 
   const sameCategoryCandidates = sortLookupCandidates(
     candidates.filter((candidate) => isSameCategoryCandidate(candidate, category)),
@@ -416,7 +707,7 @@ export function lookupProductCandidate(params: LookupProductCandidateParams): Pr
     candidates: [],
     missing_fields: [],
     intake_offer: buildIntakeOffer({
-      offerId: params.offerId ?? crypto.randomUUID(),
+      offerId: params.offerId,
       category,
       brandText,
       productNameText,
