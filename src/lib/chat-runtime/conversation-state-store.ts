@@ -79,6 +79,27 @@ export async function loadAgentV2ConversationState(
   return normalizeAgentV2ConversationState(data?.state)
 }
 
+export async function loadAgentV2ConversationStateForUser(
+  supabase: SupabaseClient,
+  params: { conversationId: string | null | undefined; userId: string },
+): Promise<AgentV2ConversationStateV2> {
+  if (!params.conversationId) return normalizeAgentV2ConversationState(null)
+
+  const { data, error } = await supabase
+    .from("conversation_states")
+    .select("state")
+    .eq("conversation_id", params.conversationId)
+    .eq("user_id", params.userId)
+    .maybeSingle()
+
+  if (error) {
+    console.error("Failed to load AgentV2 conversation state:", error)
+    return normalizeAgentV2ConversationState(null)
+  }
+
+  return normalizeAgentV2ConversationState(data?.state)
+}
+
 export async function persistConversationStateTransition(
   supabase: SupabaseClient,
   params: {

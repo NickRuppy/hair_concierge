@@ -1,0 +1,18 @@
+create table public.beta_feedback (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete set null,
+  message text not null check (length(message) between 1 and 4000),
+  page_url text check (page_url is null or length(page_url) <= 2048),
+  user_agent text check (user_agent is null or length(user_agent) <= 512),
+  created_at timestamptz not null default now()
+);
+
+alter table public.beta_feedback enable row level security;
+
+create policy "users insert own feedback"
+  on public.beta_feedback for insert
+  to authenticated
+  with check (user_id = auth.uid());
+
+create index beta_feedback_created_at_idx
+  on public.beta_feedback (created_at desc);;

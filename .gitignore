@@ -94,6 +94,9 @@ test-screenshots*/
 # local eval / compare-lab artifacts
 /tmp/
 
+# local product-intake review packages; may contain user submission data
+/ops/product-intake-research/
+
 # local Clawpatch review artifacts
 /.clawpatch/
 /clawpatch-report.md

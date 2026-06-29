@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  isGloballyRecommendableProduct,
   rankProductsForDeterministicMatch,
   sortMatchedProducts,
   type MatchedProduct,
@@ -24,6 +25,8 @@ function createProduct(id: string, overrides: Partial<Product> = {}): Product {
     suitable_thicknesses: ["fine", "normal", "coarse"],
     suitable_concerns: ["protein", "feuchtigkeit"],
     is_active: true,
+    lifecycle_status: "active",
+    is_chaarlie_recommended: true,
     sort_order: 0,
     created_at: "2026-05-03T00:00:00.000Z",
     updated_at: "2026-05-03T00:00:00.000Z",
@@ -56,6 +59,32 @@ test("deterministic product ranking keeps legacy suitability arrays as ranking s
   assert.equal(ranked[1].combined_score, 0)
 })
 
+test("deterministic product ranking preserves explicitly included owned candidates beyond count", () => {
+  const catalogFit = createProduct("catalog-fit", {
+    suitable_thicknesses: ["fine"],
+    suitable_concerns: ["protein"],
+  })
+  const ownedCandidate = createProduct("owned-candidate", {
+    is_chaarlie_recommended: false,
+    suitable_thicknesses: [],
+    suitable_concerns: [],
+    sort_order: 99,
+  })
+
+  const ranked = rankProductsForDeterministicMatch([catalogFit, ownedCandidate], {
+    thickness: "fine",
+    concerns: ["protein"],
+    count: 1,
+    includeProductIds: ["owned-candidate"],
+  })
+
+  assert.deepEqual(
+    ranked.map((product) => product.id),
+    ["catalog-fit", "owned-candidate"],
+  )
+  assert.equal(ranked[1].combined_score, 0)
+})
+
 test("deterministic matcher sort lets structured scores win before catalog tie-breakers", () => {
   const cheapButWeak: MatchedProduct = {
     ...createProduct("cheap", { price_eur: 5, sort_order: 0 }),
@@ -72,4 +101,20 @@ test("deterministic matcher sort lets structured scores win before catalog tie-b
     [cheapButWeak, pricierFit].sort(sortMatchedProducts).map((product) => product.id),
     ["fit", "cheap"],
   )
+})
+
+test("global product matchers exclude non-recommended and inactive lifecycle products", () => {
+  assert.equal(
+    isGloballyRecommendableProduct(
+      createProduct("user-submitted", { is_chaarlie_recommended: false }),
+    ),
+    false,
+  )
+  assert.equal(
+    isGloballyRecommendableProduct(
+      createProduct("discontinued", { lifecycle_status: "discontinued" }),
+    ),
+    false,
+  )
+  assert.equal(isGloballyRecommendableProduct(createProduct("curated")), true)
 })

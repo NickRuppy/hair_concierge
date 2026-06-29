@@ -8,10 +8,12 @@ import {
 import { readPendingFollowupAction } from "@/lib/agent-v2/pending-followup-action"
 import type { AgentV2RoutineProjection } from "@/lib/agent-v2/tools/routine-projection"
 import type { AgentV2SelectProductsProjection } from "@/lib/agent-v2/tools/select-products-projection"
-import type {
-  AgentV2ConversationStateV2,
-  AgentV2StoredProductProjection,
-} from "@/lib/agent-v2/production/persisted-session-state"
+import {
+  buildPrimaryResolvedProductContext,
+  type AgentV2ActiveProductContext,
+  type AgentV2StoredProductProjection,
+} from "@/lib/agent-v2/resolved-product-selection-adapter"
+import type { AgentV2ConversationStateV2 } from "@/lib/agent-v2/production/persisted-session-state"
 
 export function collectSurfacedProductIds(answer: AgentV2TerminalAnswer): string[] {
   const ids = new Set(answer.tool_grounding.product_ids)
@@ -159,6 +161,7 @@ export function buildNextAgentV2SessionState(params: {
   answer: AgentV2TerminalAnswer
   routineProjection: AgentV2RoutineProjection | null
   selectedProductProjections: readonly AgentV2SelectProductsProjection[]
+  activeProductContexts?: readonly AgentV2ActiveProductContext[]
   acceptedSessionMemoryWrites: readonly AgentV2SessionMemoryWrite[]
   visibleFailure: boolean
 }): AgentV2ConversationStateV2 {
@@ -191,6 +194,15 @@ export function buildNextAgentV2SessionState(params: {
           answer: params.answer,
         }),
       }),
+      active_product_contexts:
+        params.activeProductContexts === undefined
+          ? params.previousState.agent_v2.active_product_contexts
+          : [...params.activeProductContexts].slice(-3),
+      active_resolved_product_context: buildPrimaryResolvedProductContext(
+        params.activeProductContexts === undefined
+          ? params.previousState.agent_v2.active_product_contexts
+          : params.activeProductContexts,
+      ),
       session_memory: mergeAgentV2SessionMemory({
         previous: params.previousState.agent_v2.session_memory,
         accepted: params.acceptedSessionMemoryWrites,

@@ -34,6 +34,63 @@ test("AgentV2 exposes only the V0 advisor toolset", () => {
   }
 })
 
+test("AgentV2 exposes product intake lookup only when explicitly enabled", () => {
+  const tools = buildAgentV2ResponsesTools({
+    safetyMode: "normal",
+    productIntakeEnabled: true,
+  })
+  const names = tools.map((tool) => tool.name).sort()
+
+  assert.deepEqual(names, [
+    "build_or_fix_routine",
+    "load_advisor_guidance",
+    "lookup_product_candidate",
+    "select_products",
+    "set_current_care_context",
+    "submit_final_answer",
+  ])
+})
+
+test("AgentV2 omits product intake lookup tool when product intake is disabled", () => {
+  const tools = buildAgentV2ResponsesTools({
+    safetyMode: "normal",
+    productIntakeEnabled: false,
+  })
+  const names = tools.map((tool) => tool.name).sort()
+
+  assert.deepEqual(names, [
+    "build_or_fix_routine",
+    "load_advisor_guidance",
+    "select_products",
+    "set_current_care_context",
+    "submit_final_answer",
+  ])
+})
+
+test("AgentV2 disabled product intake guidance does not promise an intake card", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  await runAgentV2ResponsesTurn({
+    client,
+    message: "Kannst du den Moisture Mist Conditioner von Urban Alchemy bewerten?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: false,
+    tools: fakeAgentV2Tools(),
+  })
+
+  const firstInput = getInputItems(client.requests[0])
+  const namedProductContextItem = firstInput
+    .map(asRecord)
+    .find((item) =>
+      String(item?.content ?? "").includes("Current user named a plausible exact product"),
+    )
+  const content = String(namedProductContextItem?.content ?? "")
+  assert.doesNotMatch(content, /lookup_product_candidate/)
+  assert.doesNotMatch(content, /intake card/i)
+  assert.match(content, /without offering product intake/)
+})
+
 test("AgentV2 restricted safety toolset omits product selection", () => {
   const names = buildAgentV2ResponsesTools({ safetyMode: "restricted" })
     .map((tool) => tool.name)
@@ -97,8 +154,27 @@ test("AgentV2 product and guidance tool descriptions route bond repair brands to
   assert.match(productTool.description, /instead of leave_in or mask/)
 })
 
+test("AgentV2 lookup tool description covers partial product identity outcomes", () => {
+  const tools = buildAgentV2ResponsesTools({
+    safetyMode: "normal",
+    productIntakeEnabled: true,
+  })
+  const lookupTool = tools.find((candidate) => candidate.name === "lookup_product_candidate")
+  assert.ok(lookupTool)
+
+  assert.match(lookupTool.description, /concrete product candidate/)
+  assert.match(lookupTool.description, /category.*null/i)
+  assert.match(lookupTool.description, /assistant_guidance/)
+  assert.match(lookupTool.description, /source of truth/i)
+  assert.match(lookupTool.description, /answer, clarify, or hand off to product intake/)
+  assert.match(lookupTool.description, /broad/i)
+})
+
 test("AgentV2 strict tool schemas avoid open records and root unions", () => {
-  const tools = buildAgentV2ResponsesTools({ safetyMode: "normal" })
+  const tools = buildAgentV2ResponsesTools({
+    safetyMode: "normal",
+    productIntakeEnabled: true,
+  })
 
   for (const tool of tools) {
     const serialized = JSON.stringify(tool.parameters)
@@ -126,6 +202,13 @@ test("AgentV2 strict tool schemas avoid open records and root unions", () => {
     "product_request_kind",
     "requested_product_count",
     "count_policy",
+    "evidence_quote",
+  ])
+  assertRequiredToolFields(tools, "lookup_product_candidate", [
+    "category",
+    "brand_text",
+    "product_name_text",
+    "reason",
     "evidence_quote",
   ])
   assertRequiredToolFields(tools, "build_or_fix_routine", [
@@ -173,6 +256,9 @@ test("AgentV2 strict tool schemas avoid open records and root unions", () => {
   const submitFinalAnswerSchema = JSON.stringify(submitFinalAnswerTool.parameters)
   assert.match(submitFinalAnswerSchema, /pending_followup_action/)
   assert.doesNotMatch(submitFinalAnswerSchema, /pending_routine_action/)
+  assert.match(submitFinalAnswerSchema, /assessment_kind/)
+  assert.match(submitFinalAnswerSchema, /assessed_product_ids/)
+  assert.match(submitFinalAnswerSchema, /user_facing_answer_de/)
 })
 
 function assertRequiredToolFields(
@@ -385,6 +471,7 @@ function requestInterpretation(
     requested_product_count: number | null
     count_policy: "none" | "exact" | "default" | "cap"
     evidence_quote: string
+    specific_product_candidate: boolean
     confidence: number
   }> = {},
 ) {
@@ -396,6 +483,7 @@ function requestInterpretation(
     requested_product_count: null,
     count_policy: "none",
     evidence_quote: "eine Maske",
+    specific_product_candidate: false,
     confidence: 0.9,
     ...overrides,
   }
@@ -405,9 +493,18 @@ function terminalGeneralAdvice(
   call_id: string,
   interpretationOverrides: Parameters<typeof requestInterpretation>[0] = {},
 ) {
+  const category =
+    typeof interpretationOverrides.care_category === "string"
+      ? interpretationOverrides.care_category
+      : "mask"
+  const base = terminalGeneralAdviceArguments()
   return terminalCall(call_id, {
-    ...terminalGeneralAdviceArguments(),
+    ...base,
     request_interpretation: requestInterpretation(interpretationOverrides),
+    tool_grounding: {
+      ...base.tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", category),
+    },
     pending_followup_action: {
       kind: "product_recommendation",
       category: "mask",
@@ -416,7 +513,8 @@ function terminalGeneralAdvice(
       source: "assistant_offer",
     },
     payload: {
-      ...terminalGeneralAdviceArguments().payload,
+      ...base.payload,
+      category_or_topic: category,
       user_facing_answer_de:
         "Eine Maske ist optional und hängt vom Pflegebedarf ab. Ich kann dir danach eine passende Maske empfehlen.",
       next_step_offer_de: "Ich kann dir danach eine passende Maske empfehlen.",
@@ -537,7 +635,14 @@ function terminalDomainBoundary(
   })
 }
 
-function terminalClarification(call_id: string) {
+function terminalClarification(
+  call_id: string,
+  interpretationOverrides: Parameters<typeof requestInterpretation>[0] = {},
+) {
+  const isConcreteProductClarification =
+    interpretationOverrides.product_request_kind === "specific_products" ||
+    interpretationOverrides.product_request_kind === "compare_products" ||
+    interpretationOverrides.product_request_kind === "product_detail"
   return terminalCall(call_id, {
     ...terminalGeneralAdviceArguments(),
     answer_mode: "clarification",
@@ -548,9 +653,12 @@ function terminalClarification(call_id: string) {
       care_category: "unknown",
       count_policy: "none",
       evidence_quote: "Brauche ich",
+      ...interpretationOverrides,
     }),
     tool_grounding: {
-      used_guidance_package_ids: requiredGuidanceForAnswer("clarification", "none"),
+      used_guidance_package_ids: isConcreteProductClarification
+        ? [...requiredGuidanceForAnswer("clarification", "none"), "base.product_recommendation.v1"]
+        : requiredGuidanceForAnswer("clarification", "none"),
       used_product_tool: false,
       used_routine_tool: false,
       product_ids: [],
@@ -916,6 +1024,7 @@ function terminalOffCatalogNamedProductBlocked(call_id: string) {
       requested_product_count: 1,
       count_policy: "none",
       evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
+      specific_product_candidate: true,
     }),
     extracted_constraints: {
       ...emptyExtractedConstraints(),
@@ -933,12 +1042,41 @@ function terminalOffCatalogNamedProductBlocked(call_id: string) {
     },
     payload: {
       user_facing_answer_de:
-        "Den Urban Alchemy Moisture Mist Conditioner habe ich nicht als verifizierten Katalogtreffer. Ich kann ihn deshalb nicht exakt bewerten. Von der Kategorie her klingt ein leichter Conditioner für dein feines, lockiges, trockenes oder frizziges Haar plausibel; achte vor allem auf Beschwerung und genug Slip.",
+        "Den Urban Alchemy Moisture Mist Conditioner habe ich nicht als verifizierten Katalogtreffer. Ich kann ihn deshalb nicht exakt bewerten. Die Karte unten sammelt die Infos, damit wir ihn konkret prüfen können.",
       blocking_constraints: [
         "kein verifizierter Katalogtreffer für Urban Alchemy Moisture Mist Conditioner",
       ],
       safe_alternative_de:
-        "Ich kann ihn vorsichtig gegen verifizierte Conditioner einordnen, ohne ihn als geprüftes Produkt zu bewerten.",
+        "Nach der Prüfung kann das Produkt mit verifizierten Eigenschaften bewertet werden.",
+    },
+  })
+}
+
+function terminalNamedProductDeferredGeneralAdvice(call_id: string) {
+  const base = terminalGeneralAdviceArguments()
+  return terminalCall(call_id, {
+    ...base,
+    request_interpretation: requestInterpretation({
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "conditioner",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+    }),
+    tool_grounding: {
+      ...base.tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "conditioner"),
+    },
+    payload: {
+      user_facing_answer_de:
+        "Den Urban Alchemy Moisture Mist Conditioner habe ich noch nicht als verifizierten Katalogtreffer. Ich kann ihn deshalb nicht exakt bewerten.",
+      category_or_topic: "conditioner",
+      key_points_de: [
+        "Ohne verifizierten Katalogtreffer bewerte ich das konkrete Produkt nicht exakt.",
+      ],
+      next_step_offer_de: null,
     },
   })
 }
@@ -1583,6 +1721,7 @@ function fakeAgentV2Tools() {
       markdown_brief: "Guidance.",
     }),
     select_products: async () => ({ valid_product_ids: [] }),
+    lookup_product_candidate: async () => ({ status: "insufficient_identity" }),
     build_or_fix_routine: async () => ({ visible_steps: [] }),
   }
 }
@@ -1658,6 +1797,633 @@ test("AgentV2 runtime executes tool call then terminal answer", async () => {
   )
 })
 
+test("AgentV2 runtime executes product candidate lookup tool", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    functionCall("call_1", "lookup_product_candidate", {
+      category: "shampoo",
+      brand_text: "Pantene Pro-V",
+      product_name_text: "Volume Pur Shampoo",
+      reason: "The user asks whether their own named product suits them.",
+      evidence_quote: "Pantene Pro-V Volume Pur Shampoo",
+    }),
+    terminalGeneralAdvice("call_2"),
+  ])
+  const toolInputs: Record<string, unknown>[] = []
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ich nutze Pantene Pro-V Volume Pur Shampoo. Passt das zu mir?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async (input) => {
+        toolInputs.push(input)
+        return {
+          status: "not_found",
+          category: "shampoo",
+          intake_offer: {
+            id: "offer-1",
+            source: "chat",
+            reason: "product_lookup_not_found",
+            category: "shampoo",
+            extracted_identity: {
+              brand_text: "Pantene Pro-V",
+              product_name_text: "Volume Pur Shampoo",
+            },
+          },
+        }
+      },
+    },
+  })
+
+  assert.equal(toolInputs.length, 1)
+  assert.equal(toolInputs[0]?.category, "shampoo")
+  const lookupOutputItem = getInputItems(client.requests[1] ?? {}).find(
+    (item) =>
+      asRecord(item)?.type === "function_call_output" && asRecord(item)?.call_id === "call_1",
+  )
+  const lookupOutput = JSON.parse(String(asRecord(lookupOutputItem)?.output ?? "{}"))
+  assert.deepEqual(lookupOutput.assistant_guidance, {
+    pending_ui_action: "product_intake_card",
+    assistant_instruction_de:
+      "Dieses Produkt ist noch nicht in der Datenbank. Erkläre kurz und natürlich, dass es zur Prüfung hinzugefügt werden kann, ohne es fachlich zu bewerten.",
+  })
+  assert.ok(result.trace.tool_calls.some((call) => call.name === "lookup_product_candidate"))
+})
+
+test("AgentV2 runtime treats trusted clarification selection as found exact lookup", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["shampoo"],
+    }),
+    terminalGeneralAdviceWithOverrides("call_2", {
+      request_interpretation: {
+        primary_intent: "general_advice",
+        care_category: "shampoo",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "exact",
+        specific_product_candidate: true,
+      },
+      tool_grounding: {
+        used_product_tool: false,
+        product_ids: [],
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+      },
+      payload: {
+        user_facing_answer_de: "Alles klar, ich beziehe mich auf **Syoss Intense Volume Shampoo**.",
+        category_or_topic: "shampoo",
+        key_points_de: ["Produktidentität geklärt."],
+        next_step_offer_de: null,
+      },
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Bitte bestätige das ausgewählte Produkt.",
+    recentMessages: [
+      {
+        role: "user",
+        content: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      },
+      {
+        role: "assistant",
+        content: "Ich finde mehrere mögliche Varianten. Welche meinst du?",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    trustedSelectedProductContext: {
+      source: "product_lookup_clarification",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      selected_product: {
+        id: "syoss-intense-volume-shampoo",
+        name: "Syoss Intense Volume Shampoo",
+        category: "shampoo",
+      },
+      lookup_identity: {
+        category: "shampoo",
+        brand_text: "Syoss",
+        product_name_text: "Intense Volume Shampoo",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.final_answer.request_interpretation.specific_product_candidate, true)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance"],
+  )
+})
+
+test("AgentV2 runtime validates pending active product context as unresolved product evidence", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["conditioner"],
+    }),
+    terminalGeneralAdviceWithOverrides("call_2", {
+      request_interpretation: {
+        primary_intent: "product_recommendation",
+        care_category: "conditioner",
+        evidence_quote: "Passt es zu mir?",
+        product_request_kind: "product_detail",
+        requested_product_count: null,
+        count_policy: "none",
+        specific_product_candidate: true,
+      },
+      tool_grounding: {
+        used_product_tool: false,
+        product_ids: [],
+        used_guidance_package_ids: [
+          ...requiredGuidanceForAnswer("general_advice", "conditioner"),
+          "base.product_recommendation.v1",
+        ],
+      },
+      payload: {
+        user_facing_answer_de:
+          "Das Produkt passt gut zu deinem feinen Haar, weil es wahrscheinlich eher leicht wirkt.",
+        category_or_topic: "conditioner",
+        key_points_de: ["Das Produkt passt zu deinem Profil."],
+        next_step_offer_de: null,
+      },
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Passt es zu mir?",
+    recentMessages: [
+      {
+        role: "assistant",
+        content:
+          "Danke, wir prüfen Jean & Len Granatapfel Rose Conditioner und melden uns hier im Chat.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    activeProductContexts: [
+      {
+        status: "pending_review",
+        product_id: null,
+        submission_id: "submission_jean_len",
+        category: "conditioner",
+        brand_text: "Jean & Len",
+        product_name_text: "Granatapfel Rose Conditioner",
+        display_name: "Jean & Len Granatapfel Rose Conditioner",
+        original_user_message:
+          "Ich nutze Jean & Len Granatapfel Rose Conditioner. Passt das zu mir?",
+        source: "product_intake_submission",
+        updated_at: "2026-06-28T00:00:00.000Z",
+      },
+    ],
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.ok(
+    result.trace.repair_attempts[0]?.validation_errors.some(
+      (error) => error.validator_id === "product_lookup_unresolved",
+    ),
+    JSON.stringify(result.trace.repair_attempts, null, 2),
+  )
+  assert.doesNotMatch(
+    result.final_answer.payload.user_facing_answer_de,
+    /passt gut zu deinem feinen Haar/i,
+  )
+})
+
+test("AgentV2 runtime repairs skipped named-product lookup by calling lookup tool", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["conditioner"],
+    }),
+    terminalOffCatalogNamedProductBlocked("call_2"),
+    functionCall("call_3", "lookup_product_candidate", {
+      category: "conditioner",
+      brand_text: "Urban Alchemy",
+      product_name_text: "Moisture Mist Conditioner",
+      reason: "The user asks whether their own named product suits them.",
+      evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+    }),
+    functionCall(
+      "call_4",
+      "select_products",
+      selectProductsArguments({
+        category: "conditioner",
+        user_request: "Urban Alchemy Moisture Mist Conditioner",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+      }),
+    ),
+    terminalOffCatalogNamedProductBlocked("call_5"),
+  ])
+  const lookupInputs: Record<string, unknown>[] = []
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Kannst du den Moisture Mist Conditioner von Urban Alchemy bewerten?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async (input) => {
+        lookupInputs.push(input)
+        return {
+          status: "not_found",
+          category: "conditioner",
+          product: null,
+          intake_offer: {
+            id: "offer-1",
+            source: "chat",
+            reason: "product_lookup_not_found",
+            category: "conditioner",
+            extracted_identity: {
+              brand_text: "Urban Alchemy",
+              product_name_text: "Moisture Mist Conditioner",
+            },
+          },
+        }
+      },
+      select_products: async () => ({
+        valid_product_ids: [],
+        products: [],
+      }),
+    },
+  })
+
+  assert.equal(result.final_answer.answer_mode, "constraint_blocked")
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.trace.repair_attempts.length, 1)
+  assert.ok(
+    result.trace.repair_attempts[0].validation_errors.some(
+      (error) => error.validator_id === "product_lookup_required",
+    ),
+  )
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "lookup_product_candidate", "select_products"],
+  )
+  assert.equal(lookupInputs.length, 1)
+  assert.equal(lookupInputs[0]?.category, "conditioner")
+})
+
+test("AgentV2 runtime requires lookup before own-product suitability answer classified as general advice", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["conditioner"],
+    }),
+    terminalGeneralAdvice("call_2", {
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: "conditioner",
+      requested_product_count: 1,
+      count_policy: "exact",
+      evidence_quote: "Ich benutze Urban Alchemy Moisture Mist Conditioner",
+      specific_product_candidate: true,
+    }),
+    functionCall("call_3", "lookup_product_candidate", {
+      category: "conditioner",
+      brand_text: "Urban Alchemy",
+      product_name_text: "Moisture Mist Conditioner",
+      reason: "The user asks whether their own named product suits them.",
+      evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+    }),
+    functionCall(
+      "call_4",
+      "select_products",
+      selectProductsArguments({
+        category: "conditioner",
+        user_request: "Urban Alchemy Moisture Mist Conditioner",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+      }),
+    ),
+    terminalOffCatalogNamedProductBlocked("call_5"),
+  ])
+  const lookupInputs: Record<string, unknown>[] = []
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ich benutze Urban Alchemy Moisture Mist Conditioner. Passt das zu mir?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async (input) => {
+        lookupInputs.push(input)
+        return {
+          status: "not_found",
+          category: "conditioner",
+          product: null,
+          intake_offer: {
+            id: "offer-1",
+            source: "chat",
+            reason: "product_lookup_not_found",
+            category: "conditioner",
+            extracted_identity: {
+              brand_text: "Urban Alchemy",
+              product_name_text: "Moisture Mist Conditioner",
+            },
+          },
+        }
+      },
+      select_products: async () => ({
+        valid_product_ids: [],
+        products: [],
+      }),
+    },
+  })
+
+  assert.notEqual(result.final_answer.answer_mode, "product_recommendation")
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /passt gut/i)
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.trace.repair_attempts.length, 1)
+  assert.ok(
+    result.trace.repair_attempts[0].validation_errors.some(
+      (error) => error.validator_id === "product_lookup_required",
+    ),
+  )
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "lookup_product_candidate", "select_products"],
+  )
+  assert.equal(lookupInputs.length, 1)
+  assert.equal(lookupInputs[0]?.category, "conditioner")
+})
+
+test("AgentV2 runtime repairs clarification before own-product suitability lookup", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["conditioner"],
+    }),
+    terminalClarification("call_2", {
+      product_request_kind: "product_detail",
+      care_category: "conditioner",
+      evidence_quote: "Ich benutze Urban Alchemy Moisture Mist Conditioner",
+      specific_product_candidate: true,
+    }),
+    functionCall("call_3", "lookup_product_candidate", {
+      category: "conditioner",
+      brand_text: "Urban Alchemy",
+      product_name_text: "Moisture Mist Conditioner",
+      reason: "The user asks whether their own named product suits them.",
+      evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+    }),
+    functionCall(
+      "call_4",
+      "select_products",
+      selectProductsArguments({
+        category: "conditioner",
+        user_request: "Urban Alchemy Moisture Mist Conditioner",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+      }),
+    ),
+    terminalOffCatalogNamedProductBlocked("call_5"),
+  ])
+  const lookupInputs: Record<string, unknown>[] = []
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ich benutze Urban Alchemy Moisture Mist Conditioner. Passt das zu mir?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async (input) => {
+        lookupInputs.push(input)
+        return {
+          status: "not_found",
+          category: "conditioner",
+          product: null,
+          intake_offer: {
+            id: "offer-1",
+            source: "chat",
+            reason: "product_lookup_not_found",
+            category: "conditioner",
+            extracted_identity: {
+              brand_text: "Urban Alchemy",
+              product_name_text: "Moisture Mist Conditioner",
+            },
+          },
+        }
+      },
+      select_products: async () => ({
+        valid_product_ids: [],
+        products: [],
+      }),
+    },
+  })
+
+  assert.notEqual(result.final_answer.answer_mode, "product_recommendation")
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /passt gut/i)
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.trace.repair_attempts.length, 1)
+  assert.ok(
+    result.trace.repair_attempts[0].validation_errors.some(
+      (error) => error.validator_id === "product_lookup_required",
+    ),
+  )
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "lookup_product_candidate", "select_products"],
+  )
+  assert.equal(lookupInputs.length, 1)
+  assert.equal(lookupInputs[0]?.category, "conditioner")
+})
+
+test("AgentV2 runtime does not force lookup for background current-use product mentions", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["shampoo"],
+    }),
+    terminalGeneralAdvice("call_2", {
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Wie oft sollte ich meine Haare waschen",
+    }),
+  ])
+  const lookupInputs: Record<string, unknown>[] = []
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ich benutze Pantene Pro-V Shampoo. Wie oft sollte ich meine Haare waschen?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async (input) => {
+        lookupInputs.push(input)
+        return {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+        }
+      },
+    },
+  })
+
+  const firstInput = getInputItems(client.requests[0])
+  const namedProductContextItem = firstInput
+    .map(asRecord)
+    .find((item) =>
+      String(item?.content ?? "").includes("Current user named a plausible exact product"),
+    )
+  const content = String(namedProductContextItem?.content ?? "")
+
+  assert.equal(result.final_answer.answer_mode, "general_advice")
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.trace.repair_attempts.length, 0)
+  assert.equal(lookupInputs.length, 0)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance"],
+  )
+  assert.match(content, /background/i)
+  assert.doesNotMatch(content, /not_found/)
+  assert.doesNotMatch(content, /intake card/)
+})
+
+test("AgentV2 runtime does not force lookup when background product precedes a different category ask", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["mask"],
+    }),
+    terminalGeneralAdvice("call_2", {
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "mask",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Welche Maske passt zu mir",
+    }),
+  ])
+  const lookupInputs: Record<string, unknown>[] = []
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ich benutze Pantene Pro-V Shampoo. Welche Maske passt zu mir?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async (input) => {
+        lookupInputs.push(input)
+        return {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+        }
+      },
+    },
+  })
+
+  assert.equal(result.final_answer.answer_mode, "general_advice")
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.trace.repair_attempts.length, 0)
+  assert.equal(lookupInputs.length, 0)
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance"],
+  )
+})
+
+test("AgentV2 runtime blocks product recommendations after unresolved product lookup", async () => {
+  const products = [{ product_id: "prod_1", name: "Test Conditioner" }]
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["conditioner"],
+    }),
+    functionCall("call_2", "lookup_product_candidate", {
+      category: "conditioner",
+      brand_text: "Urban Alchemy",
+      product_name_text: "Moisture Mist Conditioner",
+      reason: "The user asks whether their own named product suits them.",
+      evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+    }),
+    functionCall(
+      "call_3",
+      "select_products",
+      selectProductsArguments({
+        category: "conditioner",
+        user_request: "Urban Alchemy Moisture Mist Conditioner",
+        evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+      }),
+    ),
+    terminalNamedProductRecommendation("call_4", products, {
+      evidence_quote: "Urban Alchemy Moisture Mist Conditioner",
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Passt der Urban Alchemy Moisture Mist Conditioner zu mir?",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async () => ({
+        status: "not_found",
+        category: "conditioner",
+        product: null,
+        intake_offer: {
+          id: "offer-1",
+          source: "chat",
+          reason: "product_lookup_not_found",
+          category: "conditioner",
+          extracted_identity: {
+            brand_text: "Urban Alchemy",
+            product_name_text: "Moisture Mist Conditioner",
+          },
+        },
+      }),
+      select_products: async () => ({
+        valid_product_ids: products.map((product) => product.product_id),
+        products,
+      }),
+    },
+  })
+
+  assert.equal(result.final_answer.answer_mode, "clarification")
+  assert.equal(result.trace.repair_attempts.length, 1)
+  assert.ok(
+    result.trace.repair_attempts[0].validation_errors.some(
+      (error) => error.validator_id === "product_lookup_unresolved",
+    ),
+  )
+})
+
 test("AgentV2 turn gate must run before advisor tools when enabled", async () => {
   const client = fakeResponsesClientWithOutputs([
     functionCall("gate_1", "classify_turn_gate", {
@@ -1691,6 +2457,7 @@ test("AgentV2 turn gate must run before advisor tools when enabled", async () =>
   )
   const gateToolCall = result.trace.tool_calls.find((call) => call.name === "classify_turn_gate")
   assert.equal(result.trace.turn_gate?.latency_ms, gateToolCall?.latency_ms)
+  assert.match(JSON.stringify(client.requests[1]), /allowed_answer_modes[\s\S]*product_assessment/)
 })
 
 test("AgentV2 social gate allows only a social terminal answer", async () => {
@@ -1887,6 +2654,329 @@ test("AgentV2 runtime injects surfaced product facts for referential follow-ups"
   assert.match(content, /Use the recent conversation/)
 })
 
+test("AgentV2 runtime places active resolved product reminder after follow-up message", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  await runAgentV2ResponsesTurn({
+    client,
+    message: "und wie oft?",
+    recentMessages: [
+      {
+        role: "user",
+        content: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      },
+      {
+        role: "assistant",
+        content: "Ich finde mehrere mögliche Varianten.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    activeResolvedProductContext: {
+      source: "product_lookup_selection",
+      product_id: "syoss-intense-curls-shampoo",
+      name: "Syoss Intense Curls",
+      category: "shampoo",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+    },
+    productIntakeEnabled: true,
+    tools: fakeAgentV2Tools(),
+  })
+
+  const firstInput = getInputItems(client.requests[0])
+  const latestUserIndex = firstInput.findIndex((item) => asRecord(item)?.content === "und wie oft?")
+  const activeReminderIndex = firstInput.findIndex((item) =>
+    String(asRecord(item)?.content ?? "").includes("Active resolved product from the previous"),
+  )
+  const activeReminder = String(asRecord(firstInput[activeReminderIndex])?.content ?? "")
+
+  assert.ok(latestUserIndex >= 0)
+  assert.ok(activeReminderIndex > latestUserIndex)
+  assert.match(activeReminder, /Syoss Intense Curls/)
+  assert.match(activeReminder, /original_user_message is historical context only/)
+})
+
+test("AgentV2 runtime fallback answers active resolved product follow-ups without stale lookup copy", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["shampoo"],
+    }),
+    functionCall(
+      "call_2",
+      "select_products",
+      selectProductsArguments({
+        category: "shampoo",
+        user_request: "und wie oft?",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "und wie oft?",
+      }),
+    ),
+    functionCall("call_3", "lookup_product_candidate", {
+      category: "shampoo",
+      brand_text: "Syoss",
+      product_name_text: "Intense Volume Shampoo",
+      reason: "Stale lookup from prior unresolved product wording.",
+      evidence_quote: "Syoss Intense Volume Shampoo",
+    }),
+    terminalNamedProductRecommendation(
+      "call_4",
+      [{ product_id: "syoss-intense-volume-shampoo", name: "Syoss Intense Volume Shampoo" }],
+      {
+        care_category: "shampoo",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    ),
+    terminalNamedProductRecommendation(
+      "call_5",
+      [{ product_id: "syoss-intense-volume-shampoo", name: "Syoss Intense Volume Shampoo" }],
+      {
+        care_category: "shampoo",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    ),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "und wie oft?",
+    recentMessages: [
+      {
+        role: "user",
+        content: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      },
+      {
+        role: "assistant",
+        content: "Ich finde mehrere mögliche Varianten.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    activeResolvedProductContext: {
+      source: "product_lookup_selection",
+      product_id: "syoss-intense-curls-shampoo",
+      name: "Syoss Intense Curls",
+      category: "shampoo",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+    },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async () => ({
+        status: "needs_variant_selection",
+        category: "shampoo",
+        product: null,
+        candidates: [],
+      }),
+      select_products: async () => ({
+        valid_product_ids: ["syoss-intense-curls-shampoo"],
+        products: [{ product_id: "syoss-intense-curls-shampoo", name: "Syoss Intense Curls" }],
+      }),
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, "repair_failed")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Syoss Intense Curls/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Intense Volume/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Welche genaue Variante/i)
+})
+
+test("AgentV2 runtime fallback handles active resolved product fit follow-ups without inventing fit", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "general_advice",
+      categories: ["shampoo"],
+    }),
+    functionCall(
+      "call_2",
+      "select_products",
+      selectProductsArguments({
+        category: "shampoo",
+        user_request: "passt das zu meinem Frizz?",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "passt das zu meinem Frizz?",
+      }),
+    ),
+    functionCall("call_3", "lookup_product_candidate", {
+      category: "shampoo",
+      brand_text: "Syoss",
+      product_name_text: "Intense Volume Shampoo",
+      reason: "Stale lookup from prior unresolved product wording.",
+      evidence_quote: "Syoss Intense Volume Shampoo",
+    }),
+    terminalNamedProductRecommendation(
+      "call_4",
+      [{ product_id: "syoss-intense-volume-shampoo", name: "Syoss Intense Volume Shampoo" }],
+      {
+        care_category: "shampoo",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    ),
+    terminalNamedProductRecommendation(
+      "call_5",
+      [{ product_id: "syoss-intense-volume-shampoo", name: "Syoss Intense Volume Shampoo" }],
+      {
+        care_category: "shampoo",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    ),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "passt das zu meinem Frizz?",
+    recentMessages: [
+      {
+        role: "user",
+        content: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      },
+      {
+        role: "assistant",
+        content: "Ich finde mehrere mögliche Varianten.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    activeResolvedProductContext: {
+      source: "product_lookup_selection",
+      product_id: "syoss-intense-curls-shampoo",
+      name: "Syoss Intense Curls",
+      category: "shampoo",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+    },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async () => ({
+        status: "needs_variant_selection",
+        category: "shampoo",
+        product: null,
+        candidates: [],
+      }),
+      select_products: async () => ({
+        valid_product_ids: ["syoss-intense-curls-shampoo"],
+        products: [{ product_id: "syoss-intense-curls-shampoo", name: "Syoss Intense Curls" }],
+      }),
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, "repair_failed")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Syoss Intense Curls/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /nicht abschließend bewerten/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Intense Volume/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /passt gut/i)
+})
+
+test("AgentV2 runtime repairs trusted selected product unverified caveat", async () => {
+  const selectedProduct = { product_id: "syoss-intense-curls-shampoo", name: "Syoss Intense Curls" }
+  const client = fakeResponsesClientWithOutputs([
+    terminalGeneralAdviceWithOverrides("call_1", {
+      request_interpretation: {
+        primary_intent: "general_advice",
+        product_request_kind: "product_detail",
+        care_category: "shampoo",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Syoss Intense Curls",
+        specific_product_candidate: true,
+      },
+      tool_grounding: {
+        used_product_tool: true,
+        product_ids: [selectedProduct.product_id],
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+      },
+      payload: {
+        user_facing_answer_de:
+          "Zu Syoss Intense Curls kann ich dir das nicht sicher bestätigen, weil ich diese Variante nicht als verifizierten Katalogtreffer prüfen kann.",
+        category_or_topic: "shampoo",
+        key_points_de: [],
+        next_step_offer_de: null,
+      },
+      pending_followup_action: null,
+    }),
+    terminalGeneralAdviceWithOverrides("call_2", {
+      request_interpretation: {
+        primary_intent: "general_advice",
+        product_request_kind: "product_detail",
+        care_category: "shampoo",
+        requested_product_count: 1,
+        count_policy: "exact",
+        evidence_quote: "Syoss Intense Curls",
+        specific_product_candidate: true,
+      },
+      tool_grounding: {
+        used_product_tool: true,
+        product_ids: [selectedProduct.product_id],
+        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "shampoo"),
+      },
+      payload: {
+        user_facing_answer_de:
+          "Alles klar, ich bewerte ab jetzt Syoss Intense Curls. Bei deinem feinen, welligen Haar würde ich es als leichtes Shampoo einordnen und die Häufigkeit an deinem normalen Waschrhythmus ausrichten.",
+        category_or_topic: "shampoo",
+        key_points_de: ["Syoss Intense Curls ist die ausgewählte Produktidentität."],
+        next_step_offer_de: null,
+      },
+      pending_followup_action: null,
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message:
+      'Der Nutzer hat in der Produktklärung "Syoss Intense Curls" ausgewählt. Beantworte die offene Frage jetzt.',
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    trustedSelectedProductContext: {
+      source: "product_lookup_clarification",
+      original_user_message: "Ich nutze Syoss Intense Volume Shampoo. Passt das zu mir?",
+      selected_product: {
+        id: selectedProduct.product_id,
+        name: selectedProduct.name,
+        category: "shampoo",
+      },
+      lookup_identity: {
+        category: "shampoo",
+        brand_text: "Syoss",
+        product_name_text: "Intense Volume Shampoo",
+        evidence_quote: "Syoss Intense Volume Shampoo",
+      },
+    },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      select_products: async () => ({
+        valid_product_ids: [selectedProduct.product_id],
+        products: [selectedProduct],
+      }),
+    },
+  })
+
+  assert.equal(result.trace.repair_attempts.length, 1)
+  assert.ok(
+    result.trace.repair_attempts[0].validation_errors.some(
+      (error) => error.validator_id === "trusted_product_unverified_caveat",
+    ),
+  )
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Syoss Intense Curls/)
+  assert.doesNotMatch(
+    result.final_answer.payload.user_facing_answer_de,
+    /Katalogtreffer|nicht verifiz/i,
+  )
+})
+
 test("AgentV2 runtime injects named product context for plausible off-catalog product detail turns", async () => {
   const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
 
@@ -1895,6 +2985,7 @@ test("AgentV2 runtime injects named product context for plausible off-catalog pr
     message: "Kannst du den Moisture Mist Conditioner von Urban Alchemy bewerten?",
     recentMessages: [],
     userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
     tools: fakeAgentV2Tools(),
   })
 
@@ -1908,7 +2999,12 @@ test("AgentV2 runtime injects named product context for plausible off-catalog pr
   assert.match(content, /Urban Alchemy Moisture Mist Conditioner/)
   assert.match(content, /conditioner/)
   assert.match(content, /not catalog-verified/)
+  assert.match(content, /lookup_product_candidate/)
+  assert.match(content, /partial/)
+  assert.match(content, /category\/use can be unclear/)
+  assert.match(content, /not_found/)
   assert.match(content, /constraint_blocked/)
+  assert.doesNotMatch(content, /specific enough/)
   assert.deepEqual(result.trace.named_product_context, {
     display_name: "Urban Alchemy Moisture Mist Conditioner",
     category: "conditioner",
@@ -1936,6 +3032,9 @@ test("AgentV2 runtime injects terminal payload field guidance", async () => {
   assert.match(content, /general_advice/)
   assert.match(content, /concrete product ask inside an active routine/)
   assert.match(content, /complete final German answer/)
+  assert.match(content, /specific_product_candidate/)
+  assert.match(content, /plausible concrete product candidate/)
+  assert.match(content, /Keep it false for background product mentions/)
   assert.match(content, /next_step_offer_de may be null/)
   assert.match(content, /routine_context/)
   assert.doesNotMatch(content, /use payload\.next_step_offer_de to return to the routine/)
@@ -3623,7 +4722,14 @@ test("AgentV2 runtime repairs off-catalog named product detail substitutes to co
       answer_mode_hint: "product_recommendation",
       categories: ["conditioner"],
     }),
-    functionCall("call_2", "select_products", {
+    functionCall("call_2", "lookup_product_candidate", {
+      category: "conditioner",
+      brand_text: "Urban Alchemy",
+      product_name_text: "Moisture Mist Conditioner",
+      reason: "User asks about a named conditioner.",
+      evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
+    }),
+    functionCall("call_3", "select_products", {
       ...selectProductsArguments({
         category: "conditioner",
         reason: "User asks about a named conditioner.",
@@ -3634,13 +4740,13 @@ test("AgentV2 runtime repairs off-catalog named product detail substitutes to co
         evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
       }),
     }),
-    terminalNamedProductRecommendation("call_3", substituteProducts, {
+    terminalNamedProductRecommendation("call_4", substituteProducts, {
       product_request_kind: "product_detail",
       requested_product_count: 1,
       count_policy: "none",
       evidence_quote: "Moisture Mist Conditioner von Urban Alchemy",
     }),
-    terminalOffCatalogNamedProductBlocked("call_4"),
+    terminalOffCatalogNamedProductBlocked("call_5"),
   ])
 
   const result = await runAgentV2ResponsesTurn({
@@ -3656,8 +4762,14 @@ test("AgentV2 runtime repairs off-catalog named product detail substitutes to co
       routineInventory: [],
       sessionMemory: [],
     },
+    productIntakeEnabled: true,
     tools: {
       ...fakeAgentV2Tools(),
+      lookup_product_candidate: async () => ({
+        status: "not_found",
+        category: "conditioner",
+        product: null,
+      }),
       select_products: async () => ({
         valid_product_ids: substituteProducts.map((product) => product.product_id),
         products: substituteProducts,
@@ -3674,10 +4786,88 @@ test("AgentV2 runtime repairs off-catalog named product detail substitutes to co
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Balea Aqua Hyaluron/)
   assert.equal(result.trace.validation_errors.length, 0)
   assert.equal(result.trace.repair_attempts.length, 1)
-  assert.equal(
-    result.trace.repair_attempts[0].validation_errors[0].validator_id,
-    "named_product_detail_unverified",
+  const repairValidatorIds = result.trace.repair_attempts[0].validation_errors.map(
+    (error) => error.validator_id,
   )
+  assert.ok(repairValidatorIds.includes("product_lookup_unresolved"))
+  assert.ok(repairValidatorIds.includes("named_product_detail_unverified"))
+})
+
+test("AgentV2 runtime degrades ambiguous product lookup repair failure to useful clarification", async () => {
+  const substituteProducts = [
+    { product_id: "mask_1", name: "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske" },
+    { product_id: "mask_2", name: "Schaebens Argan-Öl Haarmaske" },
+    { product_id: "mask_3", name: "Sante Intense Hydration" },
+  ]
+  const client = fakeResponsesClientWithOutputs([
+    functionCall("call_1", "lookup_product_candidate", {
+      category: "mask",
+      brand_text: "Garnier",
+      product_name_text: "Garnier Hair Food",
+      reason: "User asks for an opinion on a named product family.",
+      evidence_quote: "Garnier Hair Food",
+    }),
+    guidanceCall("call_2", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["mask"],
+    }),
+    functionCall("call_3", "select_products", {
+      ...selectProductsArguments({
+        category: "mask",
+        reason: "User asks for a named mask product detail.",
+        user_request: "Was hältst du von Garnier Hair Food?",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "Garnier Hair Food",
+      }),
+    }),
+    terminalNamedProductRecommendation("call_4", substituteProducts, {
+      care_category: "mask",
+      product_request_kind: "product_detail",
+      requested_product_count: 3,
+      count_policy: "default",
+      evidence_quote: "Garnier Hair Food",
+    }),
+    terminalNamedProductRecommendation("call_5", substituteProducts, {
+      care_category: "mask",
+      product_request_kind: "product_detail",
+      requested_product_count: 3,
+      count_policy: "default",
+      evidence_quote: "Garnier Hair Food",
+    }),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Was hältst du von Garnier Hair Food?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: { hair_texture: "wavy", thickness: "fine", concerns: ["frizz"] },
+      routineInventory: [],
+      sessionMemory: [],
+    },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      lookup_product_candidate: async () => ({
+        status: "ambiguous",
+        category: "mask",
+        product: null,
+      }),
+      select_products: async () => ({
+        valid_product_ids: substituteProducts.map((product) => product.product_id),
+        products: substituteProducts,
+      }),
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, "repair_failed")
+  assert.equal(result.final_answer.answer_mode, "clarification")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /mehrere|nicht eindeutig|welche/i)
+  assert.match(result.final_answer.payload.question_de, /welche|variante|genau/i)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Garnier Garnier/i)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Gliss|Schaebens|Sante/)
 })
 
 test("AgentV2 runtime repairs product recommendations to respect an explicit count", async () => {
@@ -6163,6 +7353,9 @@ test("AgentV2 hard short circuit bypasses model and product tools", async () => 
       },
       select_products: async () => {
         throw new Error("products should not be called")
+      },
+      lookup_product_candidate: async () => {
+        throw new Error("lookup should not be called")
       },
       build_or_fix_routine: async () => {
         throw new Error("routine should not be called")

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { productSchema } from "@/lib/validators"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "@/lib/vocabulary"
+import { parseAdminProductFilters } from "@/lib/admin/product-filters"
 import { NextResponse } from "next/server"
 import { isBondbuilderCategory, type ProductBondbuilderSpecs } from "@/lib/bondbuilder/constants"
 import {
@@ -24,7 +25,7 @@ import {
 import { isPeelingCategory, type ProductPeelingSpecs } from "@/lib/peeling/constants"
 import { HAIR_THICKNESSES } from "@/lib/vocabulary"
 
-export async function GET() {
+export async function GET(request: Request) {
   const supabase = await createClient()
   const {
     data: { user },
@@ -44,10 +45,28 @@ export async function GET() {
     return NextResponse.json({ error: ERR_FORBIDDEN }, { status: 403 })
   }
 
-  const { data: products, error } = await supabase
-    .from("products")
-    .select("*")
-    .order("sort_order", { ascending: true })
+  const { searchParams } = new URL(request.url)
+  const filters = parseAdminProductFilters(searchParams)
+
+  let query = supabase.from("products").select("*").order("sort_order", { ascending: true })
+
+  if (filters.origin) {
+    query = query.eq("origin", filters.origin)
+  }
+
+  if (filters.recommendation) {
+    query = query.eq("is_chaarlie_recommended", filters.recommendation === "recommended")
+  }
+
+  if (filters.lifecycle) {
+    query = query.eq("lifecycle_status", filters.lifecycle)
+  }
+
+  if (filters.active) {
+    query = query.eq("is_active", filters.active === "active")
+  }
+
+  const { data: products, error } = await query
 
   if (error) {
     return NextResponse.json({ error: fehler("Laden", "der Produkte") }, { status: 500 })

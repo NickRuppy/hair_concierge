@@ -38,6 +38,21 @@ For `answer_mode: social`, use `primary_intent: smalltalk`, `product_request_kin
 
 For `answer_mode: domain_boundary`, use `primary_intent: unknown`, `product_request_kind: none`, `routine_intent: none`, `care_category: none`, `requested_product_count: null`, `count_policy: none`, and a short quote from the latest user message.
 
+## Named-Product Assessment
+When the user asks whether a named product fits them, how to use it, what a product-specific claim means, or whether named product A is better than named product B, treat the turn as named-product assessment rather than a broad recommendation.
+
+Use `lookup_product_candidate` first for identity resolution before product-specific claims or intake. When the product identity is verified and the answer assesses the named product(s), use `answer_mode: product_assessment` once that mode is available; keep `request_interpretation.product_request_kind` as `product_detail` or `compare_products` so the validator can see the original request shape.
+
+`select_products` may still provide internal product projection facts for resolved product IDs, but that grounding does not require visible recommendation cards. Visible product recommendation cards require an explicit request for product recommendations, alternatives, or product picks.
+
+For `answer_mode: product_assessment`, the payload shape is only:
+
+- `assessment_kind`: `fit`, `comparison`, `detail`, or `routine_usage`
+- `assessed_product_ids`: the verified product IDs being assessed, max 3
+- `user_facing_answer_de`: the complete visible German answer
+
+Do not use product-recommendation payload fields in `product_assessment`. Put usage caveats, comparison notes, next-step wording, and all rationale directly into `user_facing_answer_de`; do not include `recommendations`, `comparison_notes_de`, `usage_notes_de`, or `next_step_offer_de`.
+
 ## Social And Domain Boundary Modes
 `social` payload:
 - `user_facing_answer_de`: the complete visible answer.

@@ -30,7 +30,7 @@
       "rule_id": "category.dry_shampoo.product_detail_requires_catalog",
       "severity": "block",
       "source": "categories/dry-shampoo.md",
-      "message": "For named dry shampoo detail or claim checks, use product catalog data or select_products before stating tint, no-white-cast, volume, fragrance, fragrance-free status, format, invisible finish, sensitive-scalp positioning, exact cadence, or protocol claims; treat this as a fact check, not necessarily a recommendation/card flow."
+      "message": "For named dry shampoo detail or claim checks, use lookup_product_candidate first, then verified product catalog data or internal select_products projection facts before stating tint, no-white-cast, volume, fragrance, fragrance-free status, format, invisible finish, sensitive-scalp positioning, exact cadence, or protocol claims; treat this as a fact check, not necessarily a recommendation/card flow."
     },
     {
       "rule_id": "category.dry_shampoo.no_product_name_claim_inference",
@@ -42,7 +42,7 @@
       "rule_id": "category.dry_shampoo.no_white_cast_requires_metadata",
       "severity": "block",
       "source": "categories/dry-shampoo.md",
-      "message": "No-white-cast, white-residue, and invisible-finish claims require explicit selected product metadata; without it, answer with safe uncertainty and only confirmed color, format, root-use, or product facts."
+      "message": "No-white-cast, white-residue, and invisible-finish claims require explicit verified product metadata; without it, answer with safe uncertainty and only confirmed color, format, root-use, or product facts."
     },
     {
       "rule_id": "category.dry_shampoo.no_irritation_free_guarantee",
@@ -122,7 +122,7 @@
       "rubric_id": "category.dry_shampoo.product_detail_hooks",
       "priority": "high",
       "source": "categories/dry-shampoo.md",
-      "message": "For named products and dry-shampoo claims, use product_detail as a product fact/claim check and avoid inferring claims from names, brand lines, marketing families, or category prose."
+      "message": "For named products and dry-shampoo claims, use lookup_product_candidate with product_detail as a product fact/claim check and avoid inferring claims from names, brand lines, marketing families, or category prose."
     },
     {
       "rubric_id": "category.dry_shampoo.assessment_hook",
@@ -141,12 +141,12 @@
     {
       "grounding_id": "category.dry_shampoo.product_claims_and_usage",
       "tool": "select_products",
-      "when": "Concrete dry shampoo names, recommendation order, category membership, no-white-cast, tint, volume, fragrance or fragrance-free status, invisible finish, sensitive-scalp positioning, exact cadence, or exact usage directions are mentioned."
+      "when": "Concrete dry shampoo recommendations, recommendation order, category membership, or internal projection facts for resolved named dry-shampoo assessment are needed, including no-white-cast, tint, volume, fragrance or fragrance-free status, invisible finish, sensitive-scalp positioning, exact cadence, or exact usage directions."
     },
     {
       "grounding_id": "category.dry_shampoo.product_detail_claims",
       "tool": "select_products",
-      "when": "A named dry shampoo or product claim is checked for tint, no-white-cast, volume, fragrance or fragrance-free status, format, invisible finish, sensitive-scalp positioning, exact cadence, or usage protocol."
+      "when": "Internal projection facts are needed after a named dry shampoo or product claim is resolved for tint, no-white-cast, volume, fragrance or fragrance-free status, format, invisible finish, sensitive-scalp positioning, exact cadence, or usage protocol. Start identity resolution with lookup_product_candidate."
     },
     {
       "grounding_id": "category.dry_shampoo.routine_mutation",

@@ -2,7 +2,7 @@
   "package_id": "base.answer_contract.v1",
   "version": 1,
   "scope": {
-    "answer_modes": ["product_recommendation", "routine", "general_advice", "clarification", "constraint_blocked", "safety_boundary", "social", "domain_boundary"],
+    "answer_modes": ["product_recommendation", "product_assessment", "routine", "general_advice", "clarification", "constraint_blocked", "safety_boundary", "social", "domain_boundary"],
     "categories": [],
     "routine_layers": [],
     "safety_modes": ["normal", "restricted", "hard_short_circuit"]
@@ -70,6 +70,12 @@
       "priority": "high",
       "source": "base/answer-contract.md",
       "message": "payload.user_facing_answer_de is the complete final German answer shown to the user; do not treat recommendations, visible_steps, usage_notes_de, or blocking_constraints as hidden content that the app will render later."
+    },
+    {
+      "rubric_id": "answer.product_assessment_payload_shape",
+      "priority": "high",
+      "source": "base/answer-contract.md",
+      "message": "For answer_mode product_assessment, payload must contain only user_facing_answer_de, assessment_kind, and assessed_product_ids; put usage caveats, comparison notes, next-step wording, and all rationale directly into user_facing_answer_de."
     },
     {
       "rubric_id": "answer.visible_payload_rendered_in_prose",

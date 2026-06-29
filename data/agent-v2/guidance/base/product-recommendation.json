@@ -13,7 +13,7 @@
       "severity": "block",
       "source": "base/product-recommendation.md",
       "validator_id": "known_product_ids",
-      "message": "Do not name or surface products unless they came from select_products."
+      "message": "Do not name or surface visible recommendation products unless they came from select_products. Named-product assessments require verified identity context before product-specific claims."
     },
     {
       "rule_id": "product.claims_from_supported_claims",
@@ -23,25 +23,25 @@
       "message": "Product-fit claims must be supported by selected product projection fields."
     },
     {
-      "rule_id": "product.product_detail_requires_select_products",
+      "rule_id": "product.named_detail_requires_verified_identity",
       "severity": "block",
       "source": "base/product-recommendation.md",
-      "validator_id": "product_tool_required",
-      "message": "Named-product detail and product-specific claim checks require select_products before the terminal answer."
+      "validator_id": "product_assessment_grounding",
+      "message": "Named-product detail and product-specific claim checks require verified lookup, selected candidate, active resolved product context, or internally loaded product projection facts before product-specific assessment."
     },
     {
-      "rule_id": "product.product_detail_tool_args_match_terminal",
+      "rule_id": "product.product_detail_grounding_matches_terminal",
       "severity": "block",
       "source": "base/product-recommendation.md",
       "validator_id": "request_interpretation_tool_args_match",
-      "message": "For product_detail turns, select_products arguments and terminal request_interpretation must match on kind, count, category, and evidence."
+      "message": "For product_detail assessment turns, lookup/projection grounding and terminal request_interpretation must match on assessed identity, kind, category, and evidence."
     },
     {
       "rule_id": "product.named_detail_no_repeat_or_substitute",
       "severity": "block",
       "source": "base/product-recommendation.md",
       "validator_id": "named_product_detail_unverified",
-      "message": "When the user already gave a plausible exact named product and select_products cannot verify it, do not ask for the exact name again or substitute unrelated catalog recommendations; use constraint_blocked."
+      "message": "When the user already gave a plausible exact named product and lookup/projection grounding cannot verify it, do not ask for the exact name again or substitute unrelated catalog recommendations; clarify identity or use constraint_blocked."
     }
   ],
   "soft_rubrics": [
@@ -124,10 +124,10 @@
       "message": "For product comparisons, decide the asked tradeoff first, compare only comparison_facts and supported claims, keep caveated fallbacks visible, and say when options are effectively equivalent."
     },
     {
-      "rubric_id": "product.detail_check_after_tool",
+      "rubric_id": "product.detail_check_after_lookup",
       "priority": "high",
       "source": "base/product-recommendation.md",
-      "message": "For named-product claim checks, call select_products first; if the catalog cannot confirm the product or claim, ask for the exact variant only when the user has not already provided one, or explain the unsupported claim instead of inferring from the name."
+      "message": "For named-product claim checks, resolve identity with lookup first; if verified product facts cannot confirm the product or claim, ask for the exact variant only when the user has not already provided one, or explain the unsupported claim instead of inferring from the name."
     },
     {
       "rubric_id": "product.user_facing_unsupported_claim_fallback",
@@ -149,9 +149,14 @@
       "when": "The final answer names concrete products or shows product cards."
     },
     {
-      "grounding_id": "product.product_detail_must_use_select_products",
+      "grounding_id": "product.named_detail_identity_resolution",
+      "tool": "lookup_product_candidate",
+      "when": "The user asks about a named product or product-specific claim, including fit, heat protection, color safety, chelating, ingredient-free status, cadence, compatibility, or protocol."
+    },
+    {
+      "grounding_id": "product.product_detail_projection_facts",
       "tool": "select_products",
-      "when": "The user asks about a named product or product-specific claim, including heat protection, color safety, chelating, ingredient-free status, cadence, compatibility, or protocol."
+      "when": "A resolved named-product assessment needs internal product projection facts; this does not by itself authorize visible recommendation cards."
     }
   ],
   "ask_when": [

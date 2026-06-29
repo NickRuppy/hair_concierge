@@ -8,7 +8,7 @@ import {
 } from "../src/lib/agent-v2/production/chat-pipeline"
 import { createChatPostHandler } from "../src/app/api/chat/route"
 import { loadAgentV2ProductionConversationHistory } from "../src/lib/agent-v2/production/conversation-history"
-import { deriveMatchedProducts } from "../src/lib/agent-v2/production/product-output"
+import { deriveIntent, deriveMatchedProducts } from "../src/lib/agent-v2/production/product-output"
 import { createDefaultConversationState } from "../src/lib/chat-runtime/conversation-state"
 import { buildRecommendationEngineRuntimeForChat } from "../src/lib/recommendation-engine"
 import type {
@@ -25,11 +25,24 @@ import type { ConversationState, HairProfile, Message, Product } from "../src/li
 import {
   createDefaultAgentV2ConversationState,
   normalizeAgentV2ConversationState,
+  summarizeAgentV2ConversationState,
   type AgentV2ConversationStateV2,
 } from "../src/lib/agent-v2/production/persisted-session-state"
 import { buildRetrievalDebugEventData } from "../src/lib/chat-runtime/debug-trace"
 
 type SelectProductsToolParams = Parameters<ReturnType<typeof createSelectProductsTool>>[0]
+
+const verifyConversationOwnership = async ({
+  conversationId,
+  userId,
+}: {
+  conversationId: string
+  userId: string
+}) => {
+  assert.equal(typeof conversationId, "string")
+  assert.equal(typeof userId, "string")
+  return true
+}
 
 function createProduct(id: string): Product & { similarity: number } {
   return {
@@ -199,6 +212,7 @@ function createAgentV2Result(): AgentV2ResponsesTurnResult {
         requested_product_count: 1,
         count_policy: "exact",
         evidence_quote: "Welches Shampoo passt?",
+        specific_product_candidate: false,
         confidence: 0.95,
       },
       confidence: 0.92,
@@ -305,6 +319,7 @@ test("AgentV2 persisted state defaults to an empty version-2 envelope", () => {
   assert.equal(state.engine, "agent_v2_care_balance")
   assert.equal(state.agent_v2.routine_thread_context, null)
   assert.deepEqual(state.agent_v2.prior_selected_product_projections, [])
+  assert.equal(state.agent_v2.active_resolved_product_context, null)
   assert.deepEqual(state.agent_v2.session_memory, [])
 })
 
@@ -473,6 +488,7 @@ test("AgentV2 persisted state ignores legacy behavior fields without flat AgentV
   assert.equal(state.engine, "agent_v2_care_balance")
   assert.equal(state.agent_v2.routine_thread_context, null)
   assert.deepEqual(state.agent_v2.prior_selected_product_projections, [])
+  assert.equal(state.agent_v2.active_resolved_product_context, null)
   assert.deepEqual(state.agent_v2.session_memory, [])
 })
 
@@ -525,6 +541,64 @@ test("AgentV2 persisted state promotes flat AgentV2 fields from current version-
   assert.equal(state.agent_v2.session_memory.length, 1)
 })
 
+test("AgentV2 persisted state normalizes legacy active product context into max-three array shape", () => {
+  const state = normalizeAgentV2ConversationState({
+    version: 1,
+    agent_v2_active_resolved_product_context: {
+      source: "product_lookup_selection",
+      product_id: "product-legacy",
+      name: "Syoss Intense Volume Shampoo",
+      category: "shampoo",
+      original_user_message: "passt das Syoss Volume Shampoo zu mir?",
+    },
+  })
+
+  assert.deepEqual(state.agent_v2.active_product_contexts, [
+    {
+      status: "resolved",
+      product_id: "product-legacy",
+      submission_id: null,
+      category: "shampoo",
+      brand_text: null,
+      product_name_text: "Syoss Intense Volume Shampoo",
+      display_name: "Syoss Intense Volume Shampoo",
+      original_user_message: "passt das Syoss Volume Shampoo zu mir?",
+      source: "product_lookup_selection",
+      updated_at: "1970-01-01T00:00:00.000Z",
+    },
+  ])
+  assert.equal(state.agent_v2.active_resolved_product_context?.product_id, "product-legacy")
+})
+
+test("AgentV2 persisted state keeps only three active product contexts and derives primary resolved product", () => {
+  const state = normalizeAgentV2ConversationState({
+    version: 2,
+    engine: "agent_v2_care_balance",
+    agent_v2: {
+      active_product_contexts: ["one", "two", "three", "four"].map((label, index) => ({
+        status: "resolved",
+        product_id: `product-${label}`,
+        submission_id: null,
+        category: index % 2 === 0 ? "shampoo" : "conditioner",
+        brand_text: "Brand",
+        product_name_text: `Produkt ${label}`,
+        display_name: `Produkt ${label}`,
+        original_user_message: `Frage zu Produkt ${label}`,
+        source: index === 0 ? "lookup_exact" : "product_lookup_selection",
+        updated_at: `2026-06-28T10:0${index}:00.000Z`,
+      })),
+    },
+  })
+
+  assert.deepEqual(
+    state.agent_v2.active_product_contexts.map((context) => context.product_id),
+    ["product-two", "product-three", "product-four"],
+  )
+  const summary = summarizeAgentV2ConversationState(state)
+  assert.equal(summary.active_product_context_count, 3)
+  assert.equal(summary.active_resolved_product.product_id, "product-four")
+})
+
 test("AgentV2 persisted state normalizes legacy pending routine action into pending follow-up action", () => {
   const state = normalizeAgentV2ConversationState({
     version: 1,
@@ -571,6 +645,57 @@ test("AgentV2 persisted state recovers from malformed persisted state", () => {
   assert.deepEqual(state.agent_v2.prior_selected_product_projections, [])
   assert.deepEqual(state.agent_v2.session_memory, [])
   assert.equal(state.agent_v2.routine_thread_context, null)
+})
+
+test("AgentV2 production pipeline rejects mismatched user and conversation before loading history or state", async () => {
+  let historyLoaded = false
+  let stateLoaded = false
+
+  await assert.rejects(
+    () =>
+      runAgentV2ProductionPipeline(
+        {
+          message: "Hallo",
+          conversationId: "conversation-owned-by-user-2",
+          userId: "user-1",
+          requestId: "request-ownership",
+        },
+        {
+          verifyConversationOwnership: async ({ conversationId, userId }) => {
+            assert.equal(conversationId, "conversation-owned-by-user-2")
+            assert.equal(userId, "user-1")
+            return false
+          },
+          loadConversationHistory: async () => {
+            historyLoaded = true
+            return []
+          },
+          getUserContext: async () => ({
+            profile: createCompleteHairProfile(),
+            routine_inventory: [],
+            relevant_memory: [],
+            derived_signals: [],
+            suggested_overlays: [],
+            missing_profile: [],
+          }),
+          loadUserMemoryContext: async () => ({
+            enabled: true,
+            entries: [],
+            promptContext: null,
+            dislikedProductNames: [],
+          }),
+          loadConversationState: async () => {
+            stateLoaded = true
+            return createDefaultConversationState()
+          },
+          runAgentV2ResponsesTurn: async () => createAgentV2Result(),
+        },
+      ),
+    /does not belong to user/i,
+  )
+
+  assert.equal(historyLoaded, false)
+  assert.equal(stateLoaded, false)
 })
 
 test("AgentV2 production pipeline returns cards, trace, and CareBalance context", async () => {
@@ -621,6 +746,7 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () =>
         [
           {
@@ -721,6 +847,11 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
       visible_step_count: 0,
     },
     prior_product_projection_count: 1,
+    active_product_context_count: 0,
+    active_resolved_product: {
+      product_id: null,
+      category: null,
+    },
     session_memory_count: 0,
     changed_fields: ["agent_v2"],
   })
@@ -734,6 +865,260 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
   })
   assert.equal(failedDebugEvent.agent_v2_visible_failure, true)
   assert.equal(failedDebugEvent.visible_failure, true)
+})
+
+test("AgentV2 production pipeline passes lookup-sourced exact product hints into product assessment", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const lookupProduct = createProduct("lookup-shampoo")
+  lookupProduct.name = "Intense Volume Shampoo"
+  lookupProduct.brand = "Syoss"
+
+  const selection: SelectProductsToolResult = {
+    projection: {
+      category: "shampoo",
+      decision: "recommended",
+      product_response_policy: "recommend",
+      policy_reason: "Exact lookup product assessment.",
+      profile_basis: [],
+      category_guidance: "Shampoo passt als konkrete Produktbewertung.",
+      products: [
+        {
+          rank: 1,
+          product_id: lookupProduct.id,
+          name: lookupProduct.name,
+          brand: lookupProduct.brand,
+          price_eur: lookupProduct.price_eur,
+          currency: lookupProduct.currency,
+          fit_reason: "Passt als leichtes Shampoo.",
+          caveat: null,
+          supported_claims: [],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [lookupProduct],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: "shampoo",
+      message: "Passt Syoss Intense Volume Shampoo zu mir?",
+    }),
+  }
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Passt Syoss Intense Volume Shampoo zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-lookup-target-hint",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({
+            products: [
+              {
+                id: lookupProduct.id,
+                name: lookupProduct.name,
+                brandId: "brand-syoss",
+                categoryKey: "shampoo",
+                isActive: true,
+                lifecycleStatus: "active",
+                isChaarlieRecommended: true,
+              },
+            ],
+            identifiers: [],
+          }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-syoss", canonical_name: "Syoss" }],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      createSelectProductsTool:
+        (options = {}) =>
+        async (input: SelectProductsToolParams) => {
+          assert.deepEqual(input.targetProductIds, [lookupProduct.id])
+          assert.deepEqual(input.targetProductHints, [
+            {
+              product_id: lookupProduct.id,
+              name: lookupProduct.name,
+              category: "shampoo",
+            },
+          ])
+          options.onResult?.(selection)
+          return selection.projection
+        },
+      runAgentV2ResponsesTurn: async (params) => {
+        const lookupResult = await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Intense Volume Shampoo",
+        })
+        assert.equal((lookupResult as { status?: string }).status, "found_exact")
+
+        await params.tools.select_products({
+          category: "shampoo",
+          product_request_kind: "product_detail",
+        })
+        return createAgentV2Result()
+      },
+    },
+  )
+})
+
+test("AgentV2 production pipeline keeps parallel select_products results isolated", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const shampooProduct = createProduct("shampoo-product")
+  const conditionerProduct = createProduct("conditioner-product")
+  const shampooSelection: SelectProductsToolResult = {
+    projection: {
+      category: "shampoo",
+      decision: "recommended",
+      product_response_policy: "recommend",
+      policy_reason: "Explicit shampoo comparison.",
+      profile_basis: [],
+      category_guidance: "Shampoo passt als konkrete Produktempfehlung.",
+      products: [
+        {
+          rank: 1,
+          product_id: shampooProduct.id,
+          name: shampooProduct.name,
+          brand: shampooProduct.brand,
+          price_eur: shampooProduct.price_eur,
+          currency: shampooProduct.currency,
+          fit_reason: "Passt als Shampoo.",
+          caveat: null,
+          supported_claims: [],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [shampooProduct],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: "shampoo",
+      message: "Vergleiche Shampoo und Conditioner.",
+    }),
+  }
+  const conditionerSelection: SelectProductsToolResult = {
+    projection: {
+      category: "conditioner",
+      decision: "recommended",
+      product_response_policy: "recommend",
+      policy_reason: "Explicit conditioner comparison.",
+      profile_basis: [],
+      category_guidance: "Conditioner passt als konkrete Produktempfehlung.",
+      products: [
+        {
+          rank: 1,
+          product_id: conditionerProduct.id,
+          name: conditionerProduct.name,
+          brand: conditionerProduct.brand,
+          price_eur: conditionerProduct.price_eur,
+          currency: conditionerProduct.currency,
+          fit_reason: "Passt als Conditioner.",
+          caveat: null,
+          supported_claims: [],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [conditionerProduct],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: "conditioner",
+      message: "Vergleiche Shampoo und Conditioner.",
+    }),
+  }
+  const resolvers = new Map<string, (value: SelectProductsToolResult) => void>()
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Vergleiche Shampoo und Conditioner.",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-parallel-select-products",
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createSelectProductsTool:
+        (options = {}) =>
+        async (input: SelectProductsToolParams) =>
+          new Promise((resolve) => {
+            resolvers.set(input.category, (result) => {
+              options.onResult?.(result)
+              resolve(result.projection)
+            })
+          }),
+      runAgentV2ResponsesTurn: async (params) => {
+        const shampooPromise = params.tools.select_products({ category: "shampoo" })
+        const conditionerPromise = params.tools.select_products({ category: "conditioner" })
+
+        resolvers.get("conditioner")?.(conditionerSelection)
+        resolvers.get("shampoo")?.(shampooSelection)
+
+        const [shampooProjection, conditionerProjection] = (await Promise.all([
+          shampooPromise,
+          conditionerPromise,
+        ])) as [AgentV2SelectProductsProjection, AgentV2SelectProductsProjection]
+
+        assert.equal(shampooProjection.category, "shampoo")
+        assert.equal(conditionerProjection.category, "conditioner")
+        return createAgentV2Result()
+      },
+    },
+  )
 })
 
 test("AgentV2 production pipeline exposes boundary answer mode without products", async () => {
@@ -751,6 +1136,7 @@ test("AgentV2 production pipeline exposes boundary answer mode without products"
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: "welchen nagellack soll ich kaufen?",
+      specific_product_candidate: false,
       confidence: 0.9,
     },
     tool_grounding: {
@@ -821,6 +1207,7 @@ test("AgentV2 production pipeline exposes boundary answer mode without products"
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: hairProfile,
@@ -1146,6 +1533,7 @@ test("AgentV2 production pipeline uses observed OpenAI and managed prompt refs b
         requestId: "request-1",
       },
       {
+        verifyConversationOwnership,
         loadConversationHistory: async () => [],
         getUserContext: async () => ({
           profile: createCompleteHairProfile(),
@@ -1226,6 +1614,7 @@ test("AgentV2 production pipeline can disable observed OpenAI via rollback flag"
         requestId: "request-1",
       },
       {
+        verifyConversationOwnership,
         loadConversationHistory: async () => [],
         getUserContext: async () => ({
           profile: createCompleteHairProfile(),
@@ -1330,6 +1719,7 @@ test("AgentV2 production pipeline treats any runtime failure stage as visible fa
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: hairProfile,
@@ -1437,6 +1827,70 @@ test("AgentV2 product cards do not fall back to unrelated current-turn products 
   )
 })
 
+test("AgentV2 product assessment does not render product cards from grounding ids", () => {
+  const currentProduct = createProduct("current-product")
+  const hairProfile = createCompleteHairProfile()
+  const base = createAgentV2Result().final_answer
+  const answer = {
+    ...base,
+    answer_mode: "product_assessment",
+    tool_grounding: {
+      ...base.tool_grounding,
+      product_ids: [currentProduct.id],
+    },
+    payload: {
+      assessment_kind: "fit",
+      assessed_product_ids: [currentProduct.id],
+      user_facing_answer_de: "Dieses Produkt kann ich textlich einordnen.",
+    },
+  } as typeof base
+
+  assert.deepEqual(
+    deriveMatchedProducts({
+      answer,
+      selectedProductResults: [
+        {
+          projection: {
+            category: "shampoo",
+            decision: "recommended",
+            product_response_policy: "recommend",
+            policy_reason: "Internal assessment grounding.",
+            profile_basis: [],
+            category_guidance: "",
+            products: [
+              {
+                rank: 1,
+                product_id: currentProduct.id,
+                name: currentProduct.name,
+                brand: currentProduct.brand,
+                price_eur: currentProduct.price_eur,
+                currency: currentProduct.currency,
+                fit_reason: "Internal product facts.",
+                caveat: null,
+                supported_claims: [],
+                unsupported_requested_signals: [],
+              },
+            ],
+            comparison_facts: null,
+            missing_info: [],
+            unsupported_requested_signals: [],
+          },
+          products: [currentProduct],
+          effectiveHairProfile: hairProfile,
+          runtime: buildRecommendationEngineRuntimeForChat({
+            hairProfile,
+            routineItems: [],
+            productCategory: "shampoo",
+            message: "Passt dieses Produkt?",
+          }),
+        },
+      ],
+    }),
+    [],
+  )
+  assert.equal(deriveIntent(answer), "hair_care_advice")
+})
+
 test("AgentV2 production safety mode hard-stops severe persistent shedding", () => {
   assert.equal(
     classifyAgentV2ProductionSafetyMode(
@@ -1485,6 +1939,7 @@ test("AgentV2 production pipeline carries persisted routine thread context into 
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: createCompleteHairProfile(),
@@ -1558,6 +2013,7 @@ test("AgentV2 production pipeline carries persisted surfaced product facts into 
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: createCompleteHairProfile(),
@@ -1593,6 +2049,305 @@ test("AgentV2 production pipeline carries persisted surfaced product facts into 
   assert.equal(receivedPriorProjectionCount, 1)
 })
 
+test("AgentV2 production pipeline passes pending routine inventory submissions into the runtime", async () => {
+  let receivedActiveProductContexts: unknown
+  let receivedActiveResolvedProductContext: unknown = "not-called"
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Passt es zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-pending-routine-inventory-product",
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile(),
+        routine_inventory: [
+          {
+            category: "shampoo",
+            product_name: "Repair Shampoo",
+            frequency_range: "weekly_1_2x",
+            brand_text: "Testmarke",
+            product_id: null,
+            product_submission_id: "submission-pending-review",
+            match_status: "pending_review",
+          },
+          {
+            category: "conditioner",
+            product_name: "Soft Conditioner",
+            frequency_range: "weekly_1_2x",
+            brand_text: "Andere Marke",
+            product_id: null,
+            product_submission_id: "submission-needs-more-info",
+            match_status: "needs_more_info",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          findProductSubmission: async (submissionId: string) => {
+            if (submissionId === "submission-pending-review") {
+              return {
+                id: submissionId,
+                brand_text: "Testmarke",
+                product_name_text: "Repair Shampoo",
+                category: "shampoo",
+                status: "pending_review",
+                updated_at: "1970-01-01T00:00:00.000Z",
+              }
+            }
+            if (submissionId === "submission-needs-more-info") {
+              return {
+                id: submissionId,
+                brand_text: "Andere Marke",
+                product_name_text: "Soft Conditioner",
+                category: "conditioner",
+                status: "needs_more_info",
+                updated_at: "1970-01-01T00:00:00.000Z",
+              }
+            }
+            return null
+          },
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        receivedActiveProductContexts = params.activeProductContexts
+        receivedActiveResolvedProductContext = params.activeResolvedProductContext
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.deepEqual(receivedActiveProductContexts, [
+    {
+      status: "pending_review",
+      product_id: null,
+      submission_id: "submission-pending-review",
+      category: "shampoo",
+      brand_text: "Testmarke",
+      product_name_text: "Repair Shampoo",
+      display_name: "Testmarke Repair Shampoo",
+      original_user_message: "Passt es zu mir?",
+      source: "product_intake_submission",
+      updated_at: "1970-01-01T00:00:00.000Z",
+    },
+    {
+      status: "pending_review",
+      product_id: null,
+      submission_id: "submission-needs-more-info",
+      category: "conditioner",
+      brand_text: "Andere Marke",
+      product_name_text: "Soft Conditioner",
+      display_name: "Andere Marke Soft Conditioner",
+      original_user_message: "Passt es zu mir?",
+      source: "product_intake_submission",
+      updated_at: "1970-01-01T00:00:00.000Z",
+    },
+  ])
+  assert.equal(receivedActiveResolvedProductContext, null)
+})
+
+test("AgentV2 production pipeline does not keep terminal submissions as pending routine context", async () => {
+  let receivedActiveProductContexts: unknown = "not-called"
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Passt es zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-terminal-routine-inventory-product",
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile(),
+        routine_inventory: [
+          {
+            category: "shampoo",
+            product_name: "Repair Shampoo",
+            frequency_range: "weekly_1_2x",
+            brand_text: "Testmarke",
+            product_id: null,
+            product_submission_id: "submission-approved",
+            match_status: "pending_review",
+          },
+          {
+            category: "conditioner",
+            product_name: "Soft Conditioner",
+            frequency_range: "weekly_1_2x",
+            brand_text: "Andere Marke",
+            product_id: null,
+            product_submission_id: "submission-rejected",
+            match_status: "needs_more_info",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createProductIntakeRepository: () =>
+        ({
+          findProductSubmission: async (submissionId: string) => {
+            if (submissionId === "submission-approved") {
+              return {
+                id: submissionId,
+                brand_text: "Testmarke",
+                product_name_text: "Repair Shampoo",
+                category: "shampoo",
+                status: "approved",
+                updated_at: "1970-01-01T00:00:00.000Z",
+              }
+            }
+            if (submissionId === "submission-rejected") {
+              return {
+                id: submissionId,
+                brand_text: "Andere Marke",
+                product_name_text: "Soft Conditioner",
+                category: "conditioner",
+                status: "rejected",
+                updated_at: "1970-01-01T00:00:00.000Z",
+              }
+            }
+            return null
+          },
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        receivedActiveProductContexts = params.activeProductContexts
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.deepEqual(receivedActiveProductContexts, [])
+})
+
+test("AgentV2 production pipeline hides owned lookup products without verified specs", async () => {
+  let lookupStatus: string | null = null
+  const ownedProductId = "owned-volume-shampoo"
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Passt mein Testmarke Volume Shampoo zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-owned-unverified-lookup",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile(),
+        routine_inventory: [
+          {
+            category: "shampoo",
+            product_name: "Volume Shampoo",
+            frequency_range: "weekly_1_2x",
+            brand_text: "Testmarke",
+            product_id: ownedProductId,
+            product_submission_id: null,
+            match_status: "matched",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({
+            products: [
+              {
+                id: ownedProductId,
+                name: "Volume Shampoo",
+                brand_id: "brand-owned",
+                category_key: "shampoo",
+                is_active: true,
+                lifecycle_status: "active",
+                is_chaarlie_recommended: false,
+              },
+            ],
+            identifiers: [],
+          }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-owned", canonical_name: "Testmarke" }],
+            product_lines: [],
+            brandAliases: [{ brand_id: "brand-owned", alias: "Testmarke" }],
+          }),
+        }) as never,
+      createAdminClient: () =>
+        ({
+          from: () => ({
+            select: () => ({
+              eq: () => ({
+                limit: async () => ({ data: [], error: null }),
+              }),
+            }),
+          }),
+        }) as never,
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      runAgentV2ResponsesTurn: async (params) => {
+        const lookupResult = (await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_id: "brand-owned",
+          product_name_text: "Volume Shampoo",
+        })) as { status: string }
+        lookupStatus = lookupResult.status
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.equal(lookupStatus, "not_found")
+})
+
 test("AgentV2 production pipeline carries session memory through conversation state", async () => {
   const persistedMemory: AgentV2SessionMemoryWrite = {
     type: "preference",
@@ -1622,6 +2377,7 @@ test("AgentV2 production pipeline carries session memory through conversation st
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: createCompleteHairProfile(),
@@ -1674,6 +2430,7 @@ test("AgentV2 production pipeline ignores legacy V1 routine fields without flat 
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: createCompleteHairProfile(),

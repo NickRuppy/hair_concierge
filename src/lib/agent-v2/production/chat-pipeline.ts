@@ -6,7 +6,10 @@ import {
   createSelectProductsTool,
   type SelectProductsToolResult,
 } from "@/lib/agent/tools/select-products"
-import { loadAgentV2ProductionConversationHistory } from "@/lib/agent-v2/production/conversation-history"
+import {
+  loadAgentV2ProductionConversationHistory,
+  verifyAgentV2ProductionConversationOwnership,
+} from "@/lib/agent-v2/production/conversation-history"
 import {
   buildAgentV2GenerationMetadata,
   isAgentV2LangfuseObservationEnabled,
@@ -21,16 +24,41 @@ import {
   type AgentV2SessionMemoryWrite,
   type AgentV2TerminalAnswer,
 } from "@/lib/agent-v2/contracts"
+import { buildAgentV2NamedProductContext } from "@/lib/agent-v2/named-product-context"
 import { runAgentV2ResponsesTurn } from "@/lib/agent-v2/runtime/responses-agent"
+import {
+  buildActiveResolvedProductContext,
+  buildPrimaryResolvedProductContext,
+  mergeActiveProductContexts,
+  type AgentV2ActiveProductContext,
+  type AgentV2ActiveResolvedProductContext,
+  type AgentV2StoredProductProjection,
+  type AgentV2TrustedSelectedProductContext,
+} from "@/lib/agent-v2/resolved-product-selection-adapter"
+import {
+  buildProductLookupTurnOutcome,
+  normalizeProductLookupExecutionInput,
+  type ProductLookupCatalogLoader,
+  type ProductLookupExecution,
+} from "@/lib/agent-v2/production/product-lookup-turn-outcome"
 import { loadAgentV2AdvisorGuidance } from "@/lib/agent-v2/tools/guidance-tool"
+import {
+  lookupProductCandidate,
+  type ProductLookupCatalog,
+} from "@/lib/product-intake/product-lookup"
+import {
+  isProductEligibleForMode,
+  productIsActive,
+  productLifecycleStatus,
+} from "@/lib/product-catalog/eligibility"
+import { createSupabaseProductIntakeRepository } from "@/lib/product-intake/repository"
+import type { ProductIntakeSubmissionRow } from "@/lib/product-intake/repository-types"
+import { loadVerifiedSpecProductIds } from "@/lib/product-intake/spec-readiness"
 import {
   projectRoutineForAgentV2,
   type AgentV2RoutineProjection,
 } from "@/lib/agent-v2/tools/routine-projection"
-import {
-  projectSelectProductsForAgentV2,
-  type AgentV2SelectProductsProjection,
-} from "@/lib/agent-v2/tools/select-products-projection"
+import { projectSelectProductsForAgentV2 } from "@/lib/agent-v2/tools/select-products-projection"
 import {
   buildAgentV2Classification,
   buildAgentV2RouterDecision,
@@ -52,7 +80,7 @@ import {
   type AgentV2ConversationStateTransition,
   type AgentV2ConversationStateV2,
 } from "@/lib/agent-v2/production/persisted-session-state"
-import { loadAgentV2ConversationState as loadPersistedConversationState } from "@/lib/chat-runtime/conversation-state-store"
+import { loadAgentV2ConversationStateForUser } from "@/lib/chat-runtime/conversation-state-store"
 import { buildPipelineTraceDraft, type PipelineTraceDraft } from "@/lib/chat-runtime/debug-trace"
 import { loadUserMemoryContext, type UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import {
@@ -75,6 +103,7 @@ import type {
   LangfusePromptReference,
   Message,
   Product,
+  ProductLookupClarification,
   RouterDecision,
 } from "@/lib/types"
 import type { RoutineProduct } from "@/lib/vocabulary"
@@ -88,7 +117,6 @@ type AgentV2ResponsesClient = Parameters<typeof runAgentV2ResponsesTurn>[0]["cli
 type AgentV2RuntimeToolExecutionContext = {
   effectiveCareContext?: EffectiveCareContext
 }
-type AgentV2StoredProductProjection = Partial<AgentV2SelectProductsProjection>
 type AgentV2ProductionTraceTiming = {
   modelMs: number | null
   toolMs: number | null
@@ -100,6 +128,8 @@ export interface PipelineParams {
   conversationId?: string
   userId: string
   requestId: string
+  productIntakeEnabled?: boolean
+  trustedSelectedProductContext?: AgentV2TrustedSelectedProductContext | null
 }
 
 export interface PipelineResult {
@@ -118,14 +148,20 @@ export interface PipelineResult {
   debugTrace: PipelineTraceDraft
   visibleFailure?: boolean
   answerMode: AgentV2AnswerMode
+  productIntakeOffer?: import("@/lib/types").ProductIntakeOffer | null
+  productLookupClarification?: ProductLookupClarification | null
 }
 
 interface ProductionAgentV2PipelineDeps {
   client?: AgentV2ResponsesClient
+  verifyConversationOwnership?: (params: {
+    conversationId: string
+    userId: string
+  }) => Promise<boolean>
   loadConversationHistory?: (conversationId: string, userId: string) => Promise<Message[]>
   getUserContext?: (userId: string) => Promise<UserContextProjection>
   loadUserMemoryContext?: (userId: string) => Promise<UserMemoryContext>
-  loadConversationState?: (conversationId: string, userId: string) => Promise<unknown>
+  loadConversationState?: (params: { conversationId: string; userId: string }) => Promise<unknown>
   createSelectProductsTool?: typeof createSelectProductsTool
   createBuildOrFixRoutineTool?: typeof createBuildOrFixRoutineTool
   runAgentV2ResponsesTurn?: typeof runAgentV2ResponsesTurn
@@ -133,6 +169,8 @@ interface ProductionAgentV2PipelineDeps {
   getObservedOpenAI?: typeof getObservedOpenAI
   getManagedTextPromptTemplate?: typeof getManagedTextPromptTemplate
   observeAgentV2ToolCall?: typeof observeAgentV2ToolCall
+  createProductIntakeRepository?: typeof createSupabaseProductIntakeRepository
+  createAdminClient?: typeof createAdminClient
 }
 
 const ROUTINE_PRODUCT_CATEGORY_VALUES = new Set<RoutineProduct>([
@@ -151,6 +189,119 @@ async function measureAsync<T>(work: () => Promise<T>): Promise<{ result: T; dur
     result,
     durationMs: Math.round(performance.now() - start),
   }
+}
+
+function selectProductAssessmentTargetProductIds(params: {
+  productRequestKind: string | null
+  category: string | null
+  executions: readonly ProductLookupExecution[]
+  trustedSelectedProductContext: AgentV2TrustedSelectedProductContext | null
+  activeResolvedProductContext: AgentV2ActiveResolvedProductContext | null
+}): string[] {
+  if (params.productRequestKind !== "product_detail" || !params.category) return []
+
+  const requestedCategory = params.category
+  const ids: string[] = []
+  const latestExactLookup = [...params.executions]
+    .reverse()
+    .find(
+      (execution) =>
+        execution.result.status === "found_exact" &&
+        execution.result.product?.id &&
+        productAssessmentCategoryMatches(
+          execution.result.product.category_key ?? execution.result.category,
+          requestedCategory,
+        ),
+    )
+
+  if (latestExactLookup?.result.product?.id) {
+    ids.push(latestExactLookup.result.product.id)
+  }
+
+  if (
+    params.trustedSelectedProductContext?.selected_product.id &&
+    productAssessmentCategoryMatches(
+      params.trustedSelectedProductContext.selected_product.category,
+      requestedCategory,
+    )
+  ) {
+    ids.push(params.trustedSelectedProductContext.selected_product.id)
+  }
+
+  if (
+    params.activeResolvedProductContext?.product_id &&
+    productAssessmentCategoryMatches(
+      params.activeResolvedProductContext.category,
+      requestedCategory,
+    )
+  ) {
+    ids.push(params.activeResolvedProductContext.product_id)
+  }
+
+  return [...new Set(ids)]
+}
+
+function selectProductAssessmentTargetProductHints(params: {
+  targetProductIds: readonly string[]
+  executions: readonly ProductLookupExecution[]
+  trustedSelectedProductContext: AgentV2TrustedSelectedProductContext | null
+  activeResolvedProductContext: AgentV2ActiveResolvedProductContext | null
+}) {
+  const targetProductIdSet = new Set(params.targetProductIds)
+  const hints: Array<{ product_id: string; name: string; category: string | null }> = []
+
+  const latestExactLookup = [...params.executions]
+    .reverse()
+    .find(
+      (execution) =>
+        execution.result.status === "found_exact" &&
+        execution.result.product?.id &&
+        targetProductIdSet.has(execution.result.product.id),
+    )
+
+  if (latestExactLookup?.result.product?.id) {
+    hints.push({
+      product_id: latestExactLookup.result.product.id,
+      name: latestExactLookup.result.product.name,
+      category:
+        latestExactLookup.result.product.category_key ?? latestExactLookup.result.category ?? null,
+    })
+  }
+
+  const trustedProduct = params.trustedSelectedProductContext?.selected_product
+  if (
+    trustedProduct &&
+    targetProductIdSet.has(trustedProduct.id) &&
+    !hints.some((hint) => hint.product_id === trustedProduct.id)
+  ) {
+    hints.push({
+      product_id: trustedProduct.id,
+      name: trustedProduct.name,
+      category: trustedProduct.category,
+    })
+  }
+
+  const activeProduct = params.activeResolvedProductContext
+  if (
+    activeProduct &&
+    targetProductIdSet.has(activeProduct.product_id) &&
+    !hints.some((hint) => hint.product_id === activeProduct.product_id)
+  ) {
+    hints.push({
+      product_id: activeProduct.product_id,
+      name: activeProduct.name,
+      category: activeProduct.category,
+    })
+  }
+
+  return hints
+}
+
+function productAssessmentCategoryMatches(
+  productCategory: string | null | undefined,
+  requestedCategory: string,
+): boolean {
+  return (productCategory ?? "").trim() === requestedCategory.trim()
 }
 
 function sumFiniteLatencies(values: readonly (number | null | undefined)[]): number | null {
@@ -343,10 +494,184 @@ function buildAgentV2EffectiveRoutineItems(
             category: item.category,
             product_name: item.productName,
             frequency_range: item.frequencyBand,
+            product_id: item.matchStatus === "matched" ? item.productId : null,
+            product_submission_id:
+              item.matchStatus === "pending_review" || item.matchStatus === "needs_more_info"
+                ? item.productSubmissionId
+                : null,
+            match_status: item.matchStatus,
           },
         ]
       : [],
   )
+}
+
+function getMatchedRoutineProductIds(items: unknown[]): Set<string> {
+  const productIds = new Set<string>()
+
+  for (const item of items) {
+    if (!item || typeof item !== "object" || Array.isArray(item)) continue
+    const record = item as Record<string, unknown>
+    const matchStatus = record.match_status ?? record.matchStatus
+    const productId = record.product_id ?? record.productId
+    if (matchStatus === "matched" && typeof productId === "string" && productId.length > 0) {
+      productIds.add(productId)
+    }
+  }
+
+  return productIds
+}
+
+type PendingSubmissionIdentity = Pick<
+  ProductIntakeSubmissionRow,
+  "id" | "brand_text" | "product_name_text" | "category" | "status" | "updated_at"
+>
+
+function buildPendingActiveProductContextsFromRoutineInventory(
+  items: unknown[],
+  originalUserMessage: string,
+  submissionIdentities: ReadonlyMap<string, PendingSubmissionIdentity> = new Map(),
+): AgentV2ActiveProductContext[] {
+  return items.flatMap((item) => {
+    if (!item || typeof item !== "object" || Array.isArray(item)) return []
+
+    const record = item as Record<string, unknown>
+    const matchStatus = record.match_status ?? record.matchStatus
+    if (matchStatus !== "pending_review" && matchStatus !== "needs_more_info") return []
+
+    const submissionId = readOptionalString(
+      record.product_submission_id ?? record.productSubmissionId,
+    )
+    const submissionIdentity = submissionId
+      ? (submissionIdentities.get(submissionId) ?? null)
+      : null
+    if (submissionIdentity && !PENDING_CONTEXT_SUBMISSION_STATUSES.has(submissionIdentity.status)) {
+      return []
+    }
+    const productName =
+      readOptionalString(submissionIdentity?.product_name_text) ??
+      readOptionalString(
+        record.product_name ??
+          record.productName ??
+          record.product_name_text ??
+          record.productNameText,
+      )
+    const brandText =
+      readOptionalString(submissionIdentity?.brand_text) ??
+      readOptionalString(
+        record.brand_text ?? record.brandText ?? record.brand_name ?? record.brandName,
+      )
+    const displayName = [brandText, productName].filter(Boolean).join(" ").trim()
+    if (!submissionId || !displayName) return []
+
+    return [
+      {
+        status: "pending_review",
+        product_id: null,
+        submission_id: submissionId,
+        category:
+          readOptionalString(submissionIdentity?.category) ?? readOptionalString(record.category),
+        brand_text: brandText,
+        product_name_text: productName,
+        display_name: displayName,
+        original_user_message: originalUserMessage,
+        source: "product_intake_submission",
+        updated_at:
+          readOptionalString(submissionIdentity?.updated_at) ??
+          readOptionalString(record.updated_at ?? record.updatedAt) ??
+          new Date(0).toISOString(),
+      },
+    ]
+  })
+}
+
+async function loadPendingSubmissionIdentities(params: {
+  items: unknown[]
+  userId: string
+  createProductIntakeRepository?: typeof createSupabaseProductIntakeRepository
+}): Promise<Map<string, PendingSubmissionIdentity>> {
+  const submissionIds = Array.from(
+    new Set(
+      params.items.flatMap((item) => {
+        if (!item || typeof item !== "object" || Array.isArray(item)) return []
+        const record = item as Record<string, unknown>
+        const matchStatus = record.match_status ?? record.matchStatus
+        if (matchStatus !== "pending_review" && matchStatus !== "needs_more_info") return []
+        const submissionId = readOptionalString(
+          record.product_submission_id ?? record.productSubmissionId,
+        )
+        return submissionId ? [submissionId] : []
+      }),
+    ),
+  )
+  if (submissionIds.length === 0) return new Map()
+
+  const repository =
+    params.createProductIntakeRepository?.() ?? createSupabaseProductIntakeRepository()
+  const rows = await Promise.all(
+    submissionIds.map((submissionId) =>
+      repository.findProductSubmission(submissionId, params.userId).catch((error) => {
+        console.warn("[agent-v2] pending product submission identity lookup failed", {
+          submissionId,
+          error,
+        })
+        return null
+      }),
+    ),
+  )
+
+  return new Map(
+    rows.flatMap((row) => {
+      if (!row) return []
+      return [
+        [
+          row.id,
+          {
+            id: row.id,
+            brand_text: row.brand_text,
+            product_name_text: row.product_name_text,
+            category: row.category,
+            status: row.status,
+            updated_at: row.updated_at,
+          },
+        ],
+      ]
+    }),
+  )
+}
+
+const PENDING_CONTEXT_SUBMISSION_STATUSES = new Set<ProductIntakeSubmissionRow["status"]>([
+  "pending_review",
+  "researching",
+  "ready_for_review",
+  "needs_more_info",
+])
+
+function readOptionalString(value: unknown): string | null {
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null
+}
+
+function scopeLookupCatalogForUser(
+  catalog: ProductLookupCatalog,
+  verifiedOwnedProductIds: ReadonlySet<string>,
+): ProductLookupCatalog {
+  const products = catalog.products.filter(
+    (product) =>
+      isProductEligibleForMode(product, "general_recommendation") ||
+      (verifiedOwnedProductIds.has(product.id) &&
+        productIsActive(product) &&
+        productLifecycleStatus(product) === "active"),
+  )
+  const allowedProductIds = new Set(products.map((product) => product.id))
+
+  return {
+    ...catalog,
+    products,
+    identifiers: catalog.identifiers?.filter((identifier) => {
+      const productId = identifier.productId ?? identifier.product_id
+      return Boolean(productId && allowedProductIds.has(productId))
+    }),
+  }
 }
 
 function buildConversationStateTransition(params: {
@@ -355,6 +680,8 @@ function buildConversationStateTransition(params: {
   classification: ClassificationResult
   routineThreadContext: AgentV2RoutineThreadContext
   priorSelectedProductProjections: readonly AgentV2StoredProductProjection[]
+  activeProductContexts?: readonly AgentV2ActiveProductContext[]
+  activeResolvedProductContext?: AgentV2ActiveResolvedProductContext | null
   acceptedSessionMemoryWrites: readonly AgentV2SessionMemoryWrite[]
 }): AgentV2ConversationStateTransition {
   const previousState = params.previousState
@@ -365,6 +692,14 @@ function buildConversationStateTransition(params: {
     agent_v2: {
       routine_thread_context: params.routineThreadContext,
       prior_selected_product_projections: [...params.priorSelectedProductProjections],
+      active_product_contexts:
+        params.activeProductContexts === undefined
+          ? previousState.agent_v2.active_product_contexts
+          : [...params.activeProductContexts].slice(-3),
+      active_resolved_product_context:
+        params.activeResolvedProductContext === undefined
+          ? buildPrimaryResolvedProductContext(previousState.agent_v2.active_product_contexts)
+          : params.activeResolvedProductContext,
       session_memory: mergeAgentV2SessionMemory({
         previous: previousState.agent_v2.session_memory,
         accepted: params.acceptedSessionMemoryWrites,
@@ -443,7 +778,16 @@ export async function runAgentV2ProductionPipeline(
     throw new Error("AgentV2 production chat requires a conversation id before orchestration.")
   }
 
+  const createPipelineAdminClient = deps.createAdminClient ?? createAdminClient
   const startedAt = new Date().toISOString()
+  const ownsConversation = await (
+    deps.verifyConversationOwnership ?? verifyAgentV2ProductionConversationOwnership
+  )({ conversationId, userId })
+
+  if (!ownsConversation) {
+    throw new Error("AgentV2 production conversation does not belong to user.")
+  }
+
   const [
     { result: conversationHistory, durationMs: historyLoadMs },
     { result: userContext, durationMs: contextLoadMs },
@@ -460,8 +804,11 @@ export async function runAgentV2ProductionPipeline(
     measureAsync(() => (deps.loadUserMemoryContext ?? loadUserMemoryContext)(userId)),
     measureAsync(() =>
       deps.loadConversationState
-        ? deps.loadConversationState(conversationId, userId)
-        : loadPersistedConversationState(createAdminClient(), conversationId, userId),
+        ? deps.loadConversationState({ conversationId, userId })
+        : loadAgentV2ConversationStateForUser(createPipelineAdminClient(), {
+            conversationId,
+            userId,
+          }),
     ),
   ])
 
@@ -473,20 +820,57 @@ export async function runAgentV2ProductionPipeline(
   )
   const selectedProductResults: SelectProductsToolResult[] = []
   const selectedProductProjections: ReturnType<typeof projectSelectProductsForAgentV2>[] = []
-  let latestSelectProductsResult: SelectProductsToolResult | null = null
+  const productLookupExecutions: ProductLookupExecution[] = []
   let latestRoutineProjection: AgentV2RoutineProjection | null = null
-  const selectProducts = (deps.createSelectProductsTool ?? createSelectProductsTool)({
-    onResult: (result) => {
-      latestSelectProductsResult = result
-      selectedProductResults.push(result)
-    },
-  })
   const buildRoutine = (deps.createBuildOrFixRoutineTool ?? createBuildOrFixRoutineTool)()
   const routineThreadContext = buildRoutineThreadContextFromConversationState(conversationState)
   const priorSelectedProductProjections =
     conversationState.agent_v2.prior_selected_product_projections
+  const pendingSubmissionIdentities = await loadPendingSubmissionIdentities({
+    items: userContext.routine_inventory,
+    userId,
+    createProductIntakeRepository: deps.createProductIntakeRepository,
+  })
+  const pendingRoutineProductContexts = buildPendingActiveProductContextsFromRoutineInventory(
+    userContext.routine_inventory,
+    message,
+    pendingSubmissionIdentities,
+  )
+  const activeProductContexts = mergeActiveProductContexts({
+    previous: conversationState.agent_v2.active_product_contexts,
+    next: pendingRoutineProductContexts,
+    latestMessageNamesActionableProduct: false,
+  })
+  const activeResolvedProductContext =
+    buildActiveResolvedProductContext(params.trustedSelectedProductContext) ??
+    buildPrimaryResolvedProductContext(activeProductContexts)
   const sessionMemory = conversationState.agent_v2.session_memory
   const runTurn = deps.runAgentV2ResponsesTurn ?? runAgentV2ResponsesTurn
+  const productIntakeEnabled = params.productIntakeEnabled === true
+  const ownedProductIds = getMatchedRoutineProductIds(userContext.routine_inventory)
+  let productLookupCatalogPromise: ReturnType<ProductLookupCatalogLoader> | null = null
+  const loadProductLookupCatalogs: ProductLookupCatalogLoader = () => {
+    productLookupCatalogPromise ??= (async () => {
+      const repository =
+        deps.createProductIntakeRepository?.() ?? createSupabaseProductIntakeRepository()
+      const [catalog, brandCatalog] = await Promise.all([
+        repository.loadCatalog({ eligibilityMode: "intake_dedupe" }),
+        repository.loadBrandResolutionCatalog(),
+      ])
+      const ownedCatalogProducts = catalog.products.filter((product) =>
+        ownedProductIds.has(product.id),
+      )
+      const verifiedOwnedProductIds =
+        ownedCatalogProducts.length === 0
+          ? new Set<string>()
+          : await loadVerifiedSpecProductIds({
+              client: createPipelineAdminClient() as never,
+              products: ownedCatalogProducts,
+            })
+      return { catalog: scopeLookupCatalogForUser(catalog, verifiedOwnedProductIds), brandCatalog }
+    })()
+    return productLookupCatalogPromise
+  }
   const safetyMode = classifyAgentV2ProductionSafetyMode(message)
   const managedPrompt = await (deps.getManagedTextPromptTemplate ?? getManagedTextPromptTemplate)(
     LANGFUSE_PROMPTS.agentV2ResponsesCareBalance,
@@ -535,13 +919,36 @@ export async function runAgentV2ProductionPipeline(
     currentRoutineLayer: routineThreadContext?.active ? routineThreadContext.current_layer : null,
     routineThreadContext,
     priorSelectedProductProjections,
+    activeProductContexts,
+    activeResolvedProductContext,
     safetyMode,
+    productIntakeEnabled,
+    trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
     langfuseMode: "enabled",
     observeToolCall: deps.observeAgentV2ToolCall ?? observeAgentV2ToolCall,
     tools: {
       load_advisor_guidance: async (input) => loadAgentV2AdvisorGuidance(input),
+      lookup_product_candidate: async (input) => {
+        if (!productIntakeEnabled) {
+          throw new Error("product intake lookup tool is disabled")
+        }
+        const { catalog, brandCatalog } = await loadProductLookupCatalogs()
+        const lookupInput = normalizeProductLookupExecutionInput(input)
+        const result = lookupProductCandidate({
+          input: lookupInput,
+          catalog,
+          brandCatalog,
+          offerId: `product-intake-${requestId}`,
+          eligibilityMode: "user_visible",
+          eligibilityContext: {
+            ownedProductIds: new Set(catalog.products.map((product) => product.id)),
+            hasVerifiedSpecs: true,
+          },
+        })
+        productLookupExecutions.push({ input: lookupInput, result })
+        return result
+      },
       select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
-        latestSelectProductsResult = null
         const effectiveCareContext =
           executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
         const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
@@ -556,23 +963,46 @@ export async function runAgentV2ProductionPipeline(
           latestMessage: message,
           recentMessages,
         })
-        const projection = await selectProducts({
-          category: input.category as Parameters<typeof selectProducts>[0]["category"],
+        const targetProductIds = selectProductAssessmentTargetProductIds({
+          productRequestKind:
+            typeof input.product_request_kind === "string" ? input.product_request_kind : null,
+          category: typeof input.category === "string" ? input.category : null,
+          executions: productLookupExecutions,
+          trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
+          activeResolvedProductContext,
+        })
+        const targetProductHints = selectProductAssessmentTargetProductHints({
+          targetProductIds,
+          executions: productLookupExecutions,
+          trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
+          activeResolvedProductContext,
+        })
+        let rawResult: SelectProductsToolResult | null = null
+        const selectProductsForCall = (deps.createSelectProductsTool ?? createSelectProductsTool)({
+          onResult: (result) => {
+            rawResult = result
+          },
+        })
+        const projection = await selectProductsForCall({
+          category: input.category as Parameters<typeof selectProductsForCall>[0]["category"],
           message: productToolMessage,
           hairProfile: effectiveHairProfile,
           memoryContext,
           routineItems: effectiveRoutineItems,
           effectiveCareContext,
+          targetProductIds,
+          targetProductHints,
         })
-        const rawResult =
-          latestSelectProductsResult ??
+        const resultForProjection =
+          rawResult ??
           ({
             projection,
             products: [],
             effectiveHairProfile,
             runtime: {} as SelectProductsToolResult["runtime"],
           } satisfies SelectProductsToolResult)
-        const agentProjection = projectSelectProductsForAgentV2(rawResult, {
+        selectedProductResults.push(resultForProjection)
+        const agentProjection = projectSelectProductsForAgentV2(resultForProjection, {
           includeCareBalanceContext: true,
         })
         selectedProductProjections.push(agentProjection)
@@ -620,8 +1050,31 @@ export async function runAgentV2ProductionPipeline(
   const agentMs = Math.round(performance.now() - agentStart)
   const agentTiming = summarizeAgentV2ProductionTraceTiming(result.trace)
 
-  const answer = result.final_answer
-  const visibleFailure = result.trace.failure_stage !== null
+  const latestNamedProductContext = buildAgentV2NamedProductContext({
+    latestMessage: params.message,
+    recentMessages,
+  })
+  const productLookupOutcome = await buildProductLookupTurnOutcome({
+    productIntakeEnabled,
+    safetyMode,
+    activeProductContexts,
+    activeResolvedProductContext,
+    trustedSelectedProductContext: params.trustedSelectedProductContext,
+    namedProductContext: latestNamedProductContext,
+    executions: productLookupExecutions,
+    trace: result.trace,
+    finalAnswer: result.final_answer,
+    latestUserMessage: params.message,
+    loadProductLookupCatalogs,
+    requestId,
+  })
+  const {
+    answer,
+    visibleFailure,
+    productIntakeOffer,
+    productLookupClarification,
+    trustedSelectedProductProjection,
+  } = productLookupOutcome
   const intent = deriveIntent(answer)
   const productCategory = visibleFailure ? null : deriveProductCategory(answer)
   const routerDecision = buildAgentV2RouterDecision({ answer, visibleFailure })
@@ -634,7 +1087,9 @@ export async function runAgentV2ProductionPipeline(
   const matchedProducts = visibleFailure
     ? []
     : deriveMatchedProducts({ answer, selectedProductResults })
-  const { categoryDecision, engineTrace } = deriveEngineArtifacts(latestSelectProductsResult)
+  const { categoryDecision, engineTrace } = deriveEngineArtifacts(
+    selectedProductResults.at(-1) ?? null,
+  )
   const exposedCategoryDecision = visibleFailure ? undefined : categoryDecision
   const exposedEngineTrace = visibleFailure ? undefined : engineTrace
   const attachmentMode = matchedProducts.length > 0 ? "cards" : "text_only"
@@ -658,10 +1113,13 @@ export async function runAgentV2ProductionPipeline(
     ? priorSelectedProductProjections
     : mergePriorSelectedProductProjections({
         previous: priorSelectedProductProjections,
-        next: collectTrustedSurfacedProductProjections({
-          projections: selectedProductProjections,
-          answer,
-        }),
+        next: [
+          ...collectTrustedSurfacedProductProjections({
+            projections: selectedProductProjections,
+            answer,
+          }),
+          ...(trustedSelectedProductProjection ? [trustedSelectedProductProjection] : []),
+        ],
       })
   const persistedVisibleRoutineSteps =
     nextRoutineThreadContext.visible_steps.length > 0
@@ -676,6 +1134,8 @@ export async function runAgentV2ProductionPipeline(
       visible_steps: persistedVisibleRoutineSteps,
     },
     priorSelectedProductProjections: nextPriorSelectedProductProjections,
+    activeProductContexts: productLookupOutcome.nextActiveProductContexts,
+    activeResolvedProductContext: productLookupOutcome.nextActiveResolvedProductContext,
     acceptedSessionMemoryWrites: result.accepted_session_memory_writes,
   })
   const debugTrace = buildPipelineTraceDraft({
@@ -763,5 +1223,7 @@ export async function runAgentV2ProductionPipeline(
     debugTrace,
     visibleFailure,
     answerMode: answer.answer_mode,
+    productIntakeOffer,
+    productLookupClarification,
   }
 }

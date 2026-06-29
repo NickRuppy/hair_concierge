@@ -37,7 +37,7 @@
       "rule_id": "category.peeling.product_detail_requires_catalog",
       "severity": "block",
       "source": "categories/peeling.md",
-      "message": "For named peeling detail or claim checks, use product catalog data or select_products before stating mechanical, chemical, scalp-suitable, sensitive-scalp, anti-dandruff, treatment-like, compatibility, exact frequency, or protocol claims."
+      "message": "For named peeling detail or claim checks, use lookup_product_candidate first, then verified product catalog data or internal select_products projection facts before stating mechanical, chemical, scalp-suitable, sensitive-scalp, anti-dandruff, treatment-like, compatibility, exact frequency, or protocol claims."
     },
     {
       "rule_id": "category.peeling.no_name_based_method_or_sensitivity_inference",
@@ -93,7 +93,7 @@
       "rubric_id": "category.peeling.product_detail_hooks",
       "priority": "high",
       "source": "categories/peeling.md",
-      "message": "For named products and scalp-use claims, use primary_intent product_recommendation with product_request_kind product_detail; treat the turn as a product fact or claim check, not automatically as a recommendation or card flow."
+      "message": "For named products and scalp-use claims, use lookup_product_candidate with product_request_kind product_detail; treat the turn as a product assessment/fact check, not automatically as a recommendation or card flow."
     },
     {
       "rubric_id": "category.peeling.requested_count_availability_caveat",
@@ -106,12 +106,12 @@
     {
       "grounding_id": "category.peeling.product_claims",
       "tool": "select_products",
-      "when": "Concrete peeling names, recommendation order, category membership, product fit, caveats, scalp suitability, sensitive-scalp suitability, anti-dandruff claims, treatment-like claims, active role, exact frequency, or exact protocol are mentioned."
+      "when": "Concrete peeling recommendations, recommendation order, category membership, or internal projection facts for resolved named-peeling assessment are needed, including product fit, caveats, scalp suitability, sensitive-scalp suitability, anti-dandruff claims, treatment-like claims, active role, exact frequency, or exact protocol."
     },
     {
       "grounding_id": "category.peeling.product_detail_claims",
       "tool": "select_products",
-      "when": "A named peeling or product claim is checked as product_detail for mechanical/chemical method, scalp suitability, sensitive-scalp fit, anti-dandruff positioning, treatment-like role, compatibility, exact frequency, or scalp-use protocol."
+      "when": "Internal projection facts are needed after a named peeling or product claim is resolved as product_detail for mechanical/chemical method, scalp suitability, sensitive-scalp fit, anti-dandruff positioning, treatment-like role, compatibility, exact frequency, or scalp-use protocol. Start identity resolution with lookup_product_candidate."
     },
     {
       "grounding_id": "category.peeling.routine_mutation",

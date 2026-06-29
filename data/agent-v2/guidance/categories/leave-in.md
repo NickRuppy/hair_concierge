@@ -100,17 +100,19 @@ If the user asks for concrete leave-ins:
 - requires_tool: select_products
 
 If the user asks about a named leave-in, whether a leave-in is light or heavy, what role it has, which format it is, whether it is fragranced or fragrance-free, whether it defines curls, whether it can replace conditioner, whether it gives heat protection or an exact temperature, or whether a product claim is true:
-- primary_intent: product_recommendation
+- primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+- answer_mode: product_assessment after identity is resolved
 - product_request_kind: product_detail
 - care_category: leave_in
-- requires_tool: product catalog data or select_products
+- requires_tool: lookup_product_candidate first, then product catalog data or internal select_products projection facts when product claims need grounding
 - do not infer from product name, brand line, marketing family, or category guidance alone
 
 If the user asks about heat protection from a concrete leave-in:
-- primary_intent: product_recommendation
+- primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+- answer_mode: product_assessment after identity is resolved
 - product_request_kind: product_detail, specific_products, or compare_products
 - care_category: leave_in
-- requires_tool: select_products or product catalog data
+- requires_tool: lookup_product_candidate first, then product catalog data or internal select_products projection facts when heat-protection claims need grounding
 
 If the user asks mainly for heat protection rather than leave-on conditioning:
 - primary_intent: category_education or product_recommendation depending on wording

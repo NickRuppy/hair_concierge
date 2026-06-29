@@ -25,8 +25,17 @@ import {
   type PendingRoutineMutationBlockReason,
   type PendingRoutineMutationPolicy,
 } from "@/lib/agent-v2/pending-followup-action"
+import { enrichAgentV2ProductLookupResultForAssistant } from "@/lib/agent-v2/product-lookup-policy"
 import { AGENT_V2_RESPONSES_SYSTEM_PROMPT } from "@/lib/agent-v2/runtime/prompt"
 import { createAgentV2Trace } from "@/lib/agent-v2/runtime/trace"
+import {
+  activeProductContextToTrustedSelectedProductContext,
+  buildTrustedSelectedProductLookupResult,
+  buildTrustedSelectedProductProjection,
+  type AgentV2ActiveProductContext,
+  type AgentV2ActiveResolvedProductContext,
+  type AgentV2TrustedSelectedProductContext,
+} from "@/lib/agent-v2/resolved-product-selection-adapter"
 import { LoadAgentV2AdvisorGuidanceInputSchema } from "@/lib/agent-v2/tools/guidance-tool"
 import type { AgentV2RoutineProjection } from "@/lib/agent-v2/tools/routine-projection"
 import type { AgentV2SelectProductsProjection } from "@/lib/agent-v2/tools/select-products-projection"
@@ -34,6 +43,7 @@ import type { CareBalanceToolContext } from "@/lib/agent/tools/care-balance-cont
 import {
   BuildOrFixRoutineToolInputSchema,
   ClassifyTurnGateToolParametersSchema,
+  LookupProductCandidateToolInputSchema,
   type CurrentCareFactInput,
   SelectProductsToolInputSchema,
   buildAgentV2ResponsesTools,
@@ -44,6 +54,7 @@ import {
   validateAgentV2FinalAnswer,
   type AgentV2FinalAnswerValidationContext,
   type AgentV2FinalAnswerValidationResult,
+  type AgentV2ProductLookupValidationResult,
 } from "@/lib/agent-v2/validation/final-answer-validator"
 import { adaptRecommendationInputFromPersistence } from "@/lib/recommendation-engine/adapters/from-persistence"
 import { buildEffectiveCareContext } from "@/lib/recommendation-engine/effective-care-context"
@@ -64,6 +75,7 @@ type AgentV2ToolName =
   | "classify_turn_gate"
   | "load_advisor_guidance"
   | "set_current_care_context"
+  | "lookup_product_candidate"
   | "select_products"
   | "build_or_fix_routine"
 type AgentV2RuntimeToolName = keyof AgentV2RuntimeTools
@@ -98,6 +110,10 @@ interface AgentV2RuntimeTools {
     executionContext?: AgentV2RuntimeToolExecutionContext,
   ) => Promise<unknown>
   select_products: (
+    input: Record<string, unknown>,
+    executionContext?: AgentV2RuntimeToolExecutionContext,
+  ) => Promise<unknown>
+  lookup_product_candidate: (
     input: Record<string, unknown>,
     executionContext?: AgentV2RuntimeToolExecutionContext,
   ) => Promise<unknown>
@@ -209,6 +225,10 @@ export async function runAgentV2ResponsesTurn(params: {
   priorSelectedProductProjections?: readonly Partial<AgentV2SelectProductsProjection>[]
   tools: AgentV2RuntimeTools
   safetyMode?: AgentV2SafetyMode
+  productIntakeEnabled?: boolean
+  trustedSelectedProductContext?: AgentV2TrustedSelectedProductContext | null
+  activeProductContexts?: readonly AgentV2ActiveProductContext[]
+  activeResolvedProductContext?: AgentV2ActiveResolvedProductContext | null
   policyOverrides?: Partial<AgentV2ModelPolicy>
   langfuseMode?: "disabled" | "enabled"
   observeToolCall?: <T>(params: {
@@ -218,6 +238,7 @@ export async function runAgentV2ResponsesTurn(params: {
   }) => Promise<T>
 }): Promise<AgentV2ResponsesTurnResult> {
   const safetyMode = params.safetyMode ?? "normal"
+  const productIntakeEnabled = params.productIntakeEnabled === true
   const policy = { ...getAgentV2ModelPolicy(), ...params.policyOverrides }
   const routineThreadContext = normalizeRoutineThreadContext(params.routineThreadContext ?? null)
   const trace = createAgentV2Trace({
@@ -257,13 +278,62 @@ export async function runAgentV2ResponsesTurn(params: {
   const shortConfirmationWithoutPendingFollowup =
     isShortFollowupConfirmation && !pendingFollowupAction
   const turnGateEnabled = policy.turn_gate_enabled
-  const toolDefinitions = buildAgentV2ResponsesTools({ safetyMode, turnGateEnabled })
+  const toolDefinitions = buildAgentV2ResponsesTools({
+    safetyMode,
+    turnGateEnabled,
+    productIntakeEnabled,
+  })
   const allowedExecutableTools = new Set(
     toolDefinitions
       .map((tool) => tool.name)
       .filter((name): name is AgentV2ToolName => isExecutableToolName(name)),
   )
-  const selectedProductProjections: AgentV2SelectProductsProjection[] = []
+  const trustedSelectedProductContext = params.trustedSelectedProductContext ?? null
+  const activeProductContexts = (params.activeProductContexts ?? []).slice(-3)
+  const activeResolvedProductContext =
+    trustedSelectedProductContext ??
+    (params.activeResolvedProductContext
+      ? {
+          source: "product_lookup_clarification" as const,
+          original_user_message: params.activeResolvedProductContext.original_user_message,
+          selected_product: {
+            id: params.activeResolvedProductContext.product_id,
+            name: params.activeResolvedProductContext.name,
+            category: params.activeResolvedProductContext.category,
+          },
+          lookup_identity: {
+            category: params.activeResolvedProductContext.category,
+            brand_text: null,
+            product_name_text: params.activeResolvedProductContext.name,
+            evidence_quote: params.activeResolvedProductContext.name,
+          },
+        }
+      : null)
+  const trustedSelectedProductProjection = activeResolvedProductContext
+    ? buildTrustedSelectedProductProjection(activeResolvedProductContext)
+    : null
+  const activeProductProjections = activeProductContexts
+    .map((context) => activeProductContextToTrustedSelectedProductContext(context))
+    .filter((context): context is AgentV2TrustedSelectedProductContext => Boolean(context))
+    .map((context) => buildTrustedSelectedProductProjection(context))
+  const selectedProductProjections: AgentV2SelectProductsProjection[] =
+    trustedSelectedProductProjection
+      ? [trustedSelectedProductProjection, ...activeProductProjections]
+      : activeProductProjections
+  const activeResolvedLookupResults = activeProductContexts
+    .map((context) => activeProductContextToTrustedSelectedProductContext(context))
+    .filter((context): context is AgentV2TrustedSelectedProductContext => Boolean(context))
+    .map((context) => buildTrustedSelectedProductLookupResult(context))
+  const activePendingLookupResults = activeProductContexts
+    .map(activePendingProductContextToLookupResult)
+    .filter((result): result is AgentV2ProductLookupValidationResult => Boolean(result))
+  const productLookupResults: AgentV2ProductLookupValidationResult[] = activeResolvedProductContext
+    ? [
+        buildTrustedSelectedProductLookupResult(activeResolvedProductContext),
+        ...activeResolvedLookupResults,
+        ...activePendingLookupResults,
+      ]
+    : [...activeResolvedLookupResults, ...activePendingLookupResults]
   const routineProjections: AgentV2RoutineProjection[] = []
   const currentTurnCareFacts: CurrentTurnCareFact[] = []
   let effectiveCareContext = buildEffectiveCareContextForTurn(
@@ -288,6 +358,10 @@ export async function runAgentV2ResponsesTurn(params: {
     routineToolPolicy,
     turnGateEnabled,
     namedProductContext,
+    productIntakeEnabled,
+    trustedSelectedProductContext,
+    activeProductContexts,
+    params.activeResolvedProductContext ?? null,
   )
   const buildCurrentClarificationFallback = () =>
     isNonProceedTurnGate(turnGateAuthorized)
@@ -315,12 +389,24 @@ export async function runAgentV2ResponsesTurn(params: {
           safetyMode,
           routineThreadContext,
           trace,
+          activeResolvedProductContext,
         })
   const buildCurrentValidationContext = (): AgentV2FinalAnswerValidationContext => ({
     selectedProductProjections: [
       ...(params.priorSelectedProductProjections ?? []),
       ...selectedProductProjections,
     ],
+    productLookupResults,
+    trustedSelectedProductIds: activeResolvedProductContext
+      ? [
+          activeResolvedProductContext.selected_product.id,
+          ...activeProductContexts.flatMap((context) =>
+            context.status === "resolved" && context.product_id ? [context.product_id] : [],
+          ),
+        ]
+      : activeProductContexts.flatMap((context) =>
+          context.status === "resolved" && context.product_id ? [context.product_id] : [],
+        ),
     routineProjections,
     latestUserMessage: params.message,
     recentEvidenceText: buildRecentEvidenceText(params.recentMessages, routineThreadContext),
@@ -335,6 +421,7 @@ export async function runAgentV2ResponsesTurn(params: {
     knownHardRuleIds: [...knownHardRuleIds],
     turnGate: turnGateEnabled ? turnGateAuthorized : null,
     namedProductContext,
+    productIntakeEnabled,
   })
 
   for (let step = 0; step < policy.max_model_steps; step += 1) {
@@ -852,22 +939,32 @@ export async function runAgentV2ResponsesTurn(params: {
             run: runTool,
           })
         : await runTool()
+      const assistantVisibleOutput =
+        call.name === "lookup_product_candidate"
+          ? enrichAgentV2ProductLookupResultForAssistant(output)
+          : output
       const toolLatencyMs = Math.round(performance.now() - toolStartedAt)
-      inputItems.push(buildFunctionCallOutput(call.call_id, output))
+      inputItems.push(buildFunctionCallOutput(call.call_id, assistantVisibleOutput))
       trace.tool_calls.push({
         call_id: call.call_id,
         name: call.name,
         arguments: executableArguments,
-        output_summary: summarizeToolOutput(output),
+        output_summary: summarizeToolOutput(assistantVisibleOutput),
         latency_ms: toolLatencyMs,
       })
 
       if (call.name === "load_advisor_guidance") {
-        collectGuidanceTrace(output, trace, knownHardRuleIds)
+        collectGuidanceTrace(assistantVisibleOutput, trace, knownHardRuleIds)
+      } else if (call.name === "lookup_product_candidate") {
+        const lookupResult = summarizeProductLookupResult(
+          assistantVisibleOutput,
+          executableArguments,
+        )
+        if (lookupResult) productLookupResults.push(lookupResult)
       } else if (call.name === "select_products") {
-        selectedProductProjections.push(output as AgentV2SelectProductsProjection)
+        selectedProductProjections.push(assistantVisibleOutput as AgentV2SelectProductsProjection)
       } else if (call.name === "build_or_fix_routine") {
-        routineProjections.push(output as AgentV2RoutineProjection)
+        routineProjections.push(assistantVisibleOutput as AgentV2RoutineProjection)
       }
 
       if (repairState && call.name === repairState.requiredTools[repairState.nextToolIndex]) {
@@ -898,6 +995,10 @@ function buildInputItems(
   routineToolPolicy: RoutineToolPolicy,
   turnGateEnabled: boolean,
   namedProductContext: AgentV2NamedProductContext | null,
+  productIntakeEnabled: boolean,
+  trustedSelectedProductContext: AgentV2TrustedSelectedProductContext | null,
+  activeProductContexts: readonly AgentV2ActiveProductContext[],
+  activeResolvedProductContext: AgentV2ActiveResolvedProductContext | null,
 ): unknown[] {
   const items: unknown[] = [
     {
@@ -982,7 +1083,32 @@ function buildInputItems(
   if (namedProductContext) {
     items.push({
       role: "system",
-      content: buildNamedProductContextGuidance(namedProductContext),
+      content: buildNamedProductContextGuidance(namedProductContext, { productIntakeEnabled }),
+    })
+  }
+
+  if (trustedSelectedProductContext) {
+    items.push({
+      role: "system",
+      content: `The user just selected a product from a trusted Chaarlie catalog clarification card. Treat this as a verified found_exact product lookup for this turn: selected_product is a catalog-resolved product, not an unknown or unverified product. The selected product identity replaces the previously ambiguous product wording from the original message. Acknowledge the selection briefly in German and answer the pending original product question using only the selected product identity. Do not say the selected product is not verified, not found, not a catalog hit, or cannot be checked as a product. If a requested claim is unsupported by available product facts, say that specific claim is not available instead of calling the product unverified. Do not answer as if the unresolved original product name was selected. Do not ask which variant again and do not call lookup_product_candidate again for this selected product unless the user introduces a different product. ${JSON.stringify(
+        trustedSelectedProductContext,
+      )}`,
+    })
+  }
+
+  if (activeProductContexts.length > 0) {
+    items.push({
+      role: "system",
+      content: `Conversation-scoped active product context. Use only when the latest user message naturally continues one of these product topics; do not force it into unrelated questions or broad product recommendations. If the latest user asks for broad category recommendations such as welche Shampoos/Conditioner allgemein, leave the single-product context and use the normal recommendation path instead of asking which variant. Resolved entries can support product_assessment when grounded by product facts; pending_review entries block product-specific advice and should be described as still under review. Max three entries are kept. ${JSON.stringify(
+        activeProductContexts.map((context) => ({
+          status: context.status,
+          product_id: context.product_id,
+          submission_id: context.submission_id,
+          category: context.category,
+          display_name: context.display_name,
+          source: context.source,
+        })),
+      )}`,
     })
   }
 
@@ -994,28 +1120,62 @@ function buildInputItems(
     })
   }
 
-  items.push(
-    ...recentMessages,
-    {
-      role: "user",
-      content: message,
-    },
-    {
+  items.push(...recentMessages, {
+    role: "user",
+    content: message,
+  })
+
+  if (!trustedSelectedProductContext && activeResolvedProductContext) {
+    items.push({
       role: "system",
-      content: `Conversation-scoped AgentV2 working memory. Use only when relevant to the latest user message; do not override current user intent: ${JSON.stringify(userContext.sessionMemory)}`,
-    },
-  )
+      content: `Active resolved product from the previous product clarification. The selected_product name/id/category is the canonical product identity for natural follow-ups such as "wie oft?", "passt das?", "soll ich es behalten?", or "wie nutze ich es?" when the user appears to continue the same product topic. It is a catalog-resolved product, not an unknown or unverified product. original_user_message is historical context only; do not use its older unresolved product wording as the product identity, do not ask which variant again, and do not call lookup_product_candidate for that older wording unless the user names a different product in the latest message. If the latest user asks for broad category recommendations such as welche Shampoos/Conditioner allgemein, leave this single-product context and use the normal recommendation path. Do not say the selected_product itself is not verified or not a catalog hit; if a specific requested claim is unsupported, say that claim is unavailable. Do not force this active product into unrelated new topics. ${JSON.stringify(
+        activeResolvedProductContext,
+      )}`,
+    })
+  }
+
+  items.push({
+    role: "system",
+    content: `Conversation-scoped AgentV2 working memory. Use only when relevant to the latest user message; do not override current user intent: ${JSON.stringify(userContext.sessionMemory)}`,
+  })
 
   return items
 }
 
-function buildNamedProductContextGuidance(context: AgentV2NamedProductContext): string {
-  return [
+function buildNamedProductContextGuidance(
+  context: AgentV2NamedProductContext,
+  params: { productIntakeEnabled: boolean },
+): string {
+  if (context.named_product_intent === "background") {
+    return [
+      `Current user named a plausible exact product as background context: "${context.display_name}" (${context.category}). Treat it as user-provided but not catalog-verified.`,
+      "The latest user request is not an exact opinion, suitability, use, or routine-add question about that product.",
+      "Answer the actual user question with category-level guidance. Do not evaluate the named product or offer product intake unless the user asks a follow-up about that product.",
+    ].join(" ")
+  }
+
+  const productAssessmentGuidance = params.productIntakeEnabled
+    ? "For product_detail, comparison, routine_usage, or fit questions about this named product, resolve identity with lookup_product_candidate first. Use product_assessment for verified product-specific answers, not broad product_recommendation."
+    : "For product_detail, comparison, routine_usage, or fit questions about this named product, use product_assessment only when the product is already verified by available catalog facts; otherwise answer cautiously."
+  const guidance = [
     `Current user named a plausible exact product: "${context.display_name}" (${context.category}). Treat it as user-provided but not catalog-verified.`,
-    "For product_detail, still call select_products before the terminal answer.",
-    "If select_products returns no exact or supported product_detail match, do not ask for the exact name again and do not substitute unrelated catalog alternatives as the answer.",
-    "Use constraint_blocked or a cautious non-evaluative answer: say it is not a verified catalog hit, cannot be evaluated exactly, and only discuss category-level plausibility or limitations if useful.",
-  ].join(" ")
+    productAssessmentGuidance,
+    "If the product is unresolved, do not ask for the exact name again and do not substitute unrelated catalog alternatives as the answer.",
+  ]
+
+  if (params.productIntakeEnabled) {
+    guidance.push(
+      "Also call lookup_product_candidate for this concrete product candidate before product-specific answers. A partial product identity is allowed and category/use can be unclear; pass category null when needed and use the result to distinguish found_exact, needs_variant_selection, category_mismatch, unsupported_category, insufficient_identity, and not_found.",
+      "Read assistant_guidance in the lookup result; it is the source of truth for whether to answer from catalog data, hand off to an intake card, hand off to a clarification card, or ask for missing details.",
+      "When assistant_guidance.pending_ui_action is not none, use constraint_blocked or clarification and write only a short natural German handoff to that action. Do not assess the product, infer from nearby variants, or give a category-level verdict while identity is unresolved.",
+    )
+  } else {
+    guidance.push(
+      "If select_products cannot verify an exact catalog hit, answer cautiously without offering product intake: say it is not a verified catalog hit and ask for the exact product/category only when needed.",
+    )
+  }
+
+  return guidance.join(" ")
 }
 
 function normalizeRoutineThreadContext(
@@ -1228,7 +1388,8 @@ function buildRepairSubmitInstruction(): Record<string, unknown> {
 function buildTerminalPayloadFieldGuidance(): string {
   return [
     "AgentV2 terminal payload fields by answer_mode. Choose exactly one answer_mode and make payload match that mode.",
-    "Every submit_final_answer must include request_interpretation with primary_intent, product_request_kind, routine_intent, care_category, requested_product_count, count_policy, evidence_quote, and confidence.",
+    "Every submit_final_answer must include request_interpretation with primary_intent, product_request_kind, routine_intent, care_category, requested_product_count, count_policy, evidence_quote, specific_product_candidate, and confidence.",
+    "Set request_interpretation.specific_product_candidate true when the latest turn or active context contains a plausible concrete product candidate that the user wants to assess, compare, identify, add, or use in this answer, even if brand/name/category is partial. Keep it false for background product mentions, broad category asks, broad brand-family asks, generic category education, social turns, domain-boundary turns, and safety-boundary turns.",
     "When you call select_products, its product_request_kind, requested_product_count, count_policy, category, and evidence_quote must match terminal request_interpretation. Tool category maps to request_interpretation.care_category.",
     "When you call build_or_fix_routine, its routine_intent, requested_layer, requested_category, and evidence_quote must match terminal request_interpretation and routine_context.",
     "Routine payload visible_steps and tool_grounding.routine_step_ids must use only step IDs returned by build_or_fix_routine or already present in active routine context. Never invent product-named routine step IDs.",
@@ -1239,6 +1400,10 @@ function buildTerminalPayloadFieldGuidance(): string {
     "Do not treat recommendations, visible_steps, usage_notes_de, or blocking_constraints as hidden content that the app will render later.",
     "If a product, routine step, usage note, or blocking constraint is user-visible in payload fields, include it in user_facing_answer_de.",
     "product_recommendation payload: user_facing_answer_de, recommendations, comparison_notes_de, usage_notes_de, next_step_offer_de.",
+    "product_assessment payload: user_facing_answer_de, assessment_kind, assessed_product_ids.",
+    "For product_assessment, put every visible usage caveat, comparison note, and fit rationale inside user_facing_answer_de. Do not include recommendations, comparison_notes_de, usage_notes_de, next_step_offer_de, or any product_recommendation-only payload fields.",
+    "For product_assessment, assessed_product_ids must list the verified product IDs you assessed; use the IDs returned by lookup_product_candidate, trusted product selection, active resolved product context, or internal product projection facts.",
+    "For product_assessment, visibly name the resolved assessed product(s) in user_facing_answer_de so the user can see which exact catalog product the judgment is about.",
     "routine payload: user_facing_answer_de, routine_layer, visible_steps, next_layer_options, next_step_offer_de.",
     "general_advice payload: user_facing_answer_de, category_or_topic, key_points_de, next_step_offer_de.",
     "clarification payload: user_facing_answer_de, question_de, missing_keys.",
@@ -1246,8 +1411,8 @@ function buildTerminalPayloadFieldGuidance(): string {
     "safety_boundary payload: user_facing_answer_de, boundary_reason_de, next_step_de.",
     "social payload: user_facing_answer_de, pivot_de.",
     "domain_boundary payload: user_facing_answer_de, boundary_kind, redirect_topic_de.",
-    "For social answers, set request_interpretation to primary_intent smalltalk, product_request_kind none, routine_intent none, care_category none, requested_product_count null, count_policy none, and quote the latest user message.",
-    "For domain_boundary answers, set request_interpretation to primary_intent unknown, product_request_kind none, routine_intent none, care_category none, requested_product_count null, count_policy none, and quote the latest user message.",
+    "For social answers, set request_interpretation to primary_intent smalltalk, product_request_kind none, routine_intent none, care_category none, requested_product_count null, count_policy none, specific_product_candidate false, and quote the latest user message.",
+    "For domain_boundary answers, set request_interpretation to primary_intent unknown, product_request_kind none, routine_intent none, care_category none, requested_product_count null, count_policy none, specific_product_candidate false, and quote the latest user message.",
     "Social and domain_boundary answers are complete visible answers. They must not use product or routine tools, product_ids, routine_step_ids, session_memory_writes, active routine_context, or pending_followup_action.",
     "Set pending_followup_action to null unless you explicitly offer a future action the user can confirm.",
     "Do not copy a routine action completed in the current answer into pending_followup_action; current-turn routine work belongs in request_interpretation.routine_intent, routine tool calls, and routine payloads.",
@@ -1257,8 +1422,8 @@ function buildTerminalPayloadFieldGuidance(): string {
     "When resolving a short confirmation of pending_followup_action.kind advisor_response, do not call select_products or build_or_fix_routine; answer the confirmed explanation from guidance and recent context.",
     "Only pending_followup_action.kind routine_mutation can authorize build_or_fix_routine on a short next-turn confirmation.",
     "Before submitting non-trivial category, product, routine, or general advice, load the relevant guidance package. Terminal tool_grounding.used_guidance_package_ids must include required base packages and category packages.",
-    "For named-product detail or product-specific claim checks, including heat protection, color safety, chelating, ingredient-free status, exact cadence, or product protocol, call select_products before submitting any terminal answer. Use product_request_kind product_detail. If the tool cannot confirm the product or claim, answer as clarification or constraint_blocked after the tool call; when named_product_context says the user already gave a plausible exact product name, use constraint_blocked instead of repeated clarification. Do not infer from the product name.",
-    "For product_detail turns, terminal request_interpretation must match select_products on product_request_kind, requested_product_count, count_policy, care_category/category, and evidence_quote, even if the answer is clarification or constraint_blocked.",
+    "For named-product detail or product-specific claim checks, including heat protection, color safety, chelating, ingredient-free status, exact cadence, or product protocol, resolve product identity before making claims. When product intake lookup is enabled, call lookup_product_candidate first. If identity is found/resolved and product facts are needed, select_products may be used as internal grounding; the final answer should be product_assessment unless the user asked for alternatives or broad recommendations. If lookup cannot resolve the product, answer as clarification or constraint_blocked and do not infer from the product name.",
+    "For product_detail turns, terminal request_interpretation must match the resolved product/category and current user question. Product_assessment answers must ground assessed_product_ids in lookup, trusted selection, active context, or product projection facts.",
     "For a concrete product ask inside an active routine, including a short acceptance of the previous offer such as matching products for that routine step, use answer_mode product_recommendation, set request_interpretation.product_request_kind to specific_products, call select_products first, keep routine_context.active=true, include routine_context step/category when known, and preserve routine_context.return_path. Return to the routine through routine_context and visible prose only when useful. Do not also call build_or_fix_routine unless the latest user message asks to change the routine.",
     "For pure summary, recap, overview, or explanation follow-ups inside an active routine thread, answer from routineThreadContext as general_advice, keep routine_context.active=true, set routine_intent none, and do not call build_or_fix_routine.",
     "For first-turn routine build, simplify, improve, change, add, remove, rebalance, or lightweight-routine asks, call build_or_fix_routine before the terminal answer. Keep pure placement/order/usage questions and non-mutating category comparisons explanation-only with routine_intent none and no routine payload.",
@@ -1626,6 +1791,11 @@ function validateExecutableToolArguments(
     return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
   }
 
+  if (name === "lookup_product_candidate") {
+    const parsed = LookupProductCandidateToolInputSchema.safeParse(value)
+    return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
+  }
+
   if (name === "build_or_fix_routine") {
     const parsed = BuildOrFixRoutineToolInputSchema.safeParse(value)
     return parsed.success ? { ok: true, value: parsed.data } : { ok: false }
@@ -1659,6 +1829,7 @@ function isExecutableToolName(name: string): name is AgentV2ToolName {
     name === "classify_turn_gate" ||
     name === "load_advisor_guidance" ||
     name === "set_current_care_context" ||
+    name === "lookup_product_candidate" ||
     name === "select_products" ||
     name === "build_or_fix_routine"
   )
@@ -1694,6 +1865,12 @@ function buildRepairState(
     allowedExecutableTools.has("load_advisor_guidance")
   ) {
     requiredTools.push("load_advisor_guidance")
+  }
+  if (
+    validatorIds.has("product_lookup_required") &&
+    allowedExecutableTools.has("lookup_product_candidate")
+  ) {
+    requiredTools.push("lookup_product_candidate")
   }
   if (
     validatorIds.has("product_tool_required") &&
@@ -1785,6 +1962,9 @@ function summarizeToolOutput(output: unknown): string {
   if ("gate_status" in output && typeof output.gate_status === "string") {
     return `turn_gate:${output.gate_status}`
   }
+  if ("status" in output && typeof output.status === "string") {
+    return `product_lookup:${output.status}`
+  }
   if ("valid_product_ids" in output && Array.isArray(output.valid_product_ids)) {
     return `products:${output.valid_product_ids.length}`
   }
@@ -1795,6 +1975,44 @@ function summarizeToolOutput(output: unknown): string {
     return "guidance"
   }
   return "tool_output"
+}
+
+function summarizeProductLookupResult(
+  output: unknown,
+  input: unknown,
+): AgentV2ProductLookupValidationResult | null {
+  if (!output || typeof output !== "object" || Array.isArray(output)) return null
+
+  const record = output as Record<string, unknown>
+  if (typeof record.status !== "string") return null
+  const inputRecord =
+    input && typeof input === "object" && !Array.isArray(input)
+      ? (input as Record<string, unknown>)
+      : null
+
+  const product =
+    record.product && typeof record.product === "object" && !Array.isArray(record.product)
+      ? (record.product as Record<string, unknown>)
+      : null
+
+  return {
+    status: record.status,
+    category: typeof record.category === "string" ? record.category : null,
+    input_identity: {
+      category: typeof inputRecord?.category === "string" ? inputRecord.category : null,
+      brand_text: typeof inputRecord?.brand_text === "string" ? inputRecord.brand_text : null,
+      product_name_text:
+        typeof inputRecord?.product_name_text === "string" ? inputRecord.product_name_text : null,
+      evidence_quote:
+        typeof inputRecord?.evidence_quote === "string" ? inputRecord.evidence_quote : null,
+    },
+    product: product
+      ? {
+          id: typeof product.id === "string" ? product.id : undefined,
+          name: typeof product.name === "string" ? product.name : undefined,
+        }
+      : null,
+  }
 }
 
 function authorizeTurnGate(value: unknown): AgentV2TurnGateResult {
@@ -1840,6 +2058,7 @@ function buildTurnGateToolOutput(
         : gate.gate_status === "proceed"
           ? [
               "product_recommendation",
+              "product_assessment",
               "routine",
               "general_advice",
               "clarification",
@@ -1984,6 +2203,7 @@ function buildNonProceedTurnGateFallback(
         requested_product_count: null,
         count_policy: "none",
         evidence_quote: evidenceQuote,
+        specific_product_candidate: false,
         confidence: Math.max(gate.confidence, 0.7),
       },
       confidence: Math.max(gate.confidence, 0.7),
@@ -2037,6 +2257,7 @@ function buildDomainBoundaryFallbackAnswer(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: params.evidenceQuote,
+      specific_product_candidate: false,
       confidence,
     },
     confidence,
@@ -2173,6 +2394,7 @@ function buildBroadHairConcernFallback(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: params.message.slice(0, 240) || "unklare Haarfrage",
+      specific_product_candidate: false,
       confidence: 0.58,
     },
     confidence: 0.58,
@@ -2275,9 +2497,24 @@ function buildKnownIntentFallbackAnswer(params: {
   safetyMode: AgentV2SafetyMode
   routineThreadContext: AgentV2RoutineThreadContext | null
   trace: AgentV2Trace
+  activeResolvedProductContext: AgentV2TrustedSelectedProductContext | null
 }): AgentV2TerminalAnswer | null {
   if (params.safetyMode !== "normal") return null
+
+  const activeResolvedProductFallback = buildActiveResolvedProductFollowupFallback({
+    message: params.message,
+    trace: params.trace,
+    activeResolvedProductContext: params.activeResolvedProductContext,
+  })
+  if (activeResolvedProductFallback) return activeResolvedProductFallback
+
   if (params.reason !== "generic" && params.reason !== "composition_failed") return null
+
+  const productLookupFallback = buildProductLookupClarificationFallback({
+    message: params.message,
+    trace: params.trace,
+  })
+  if (productLookupFallback) return productLookupFallback
 
   const placementCategory = detectRoutinePlacementFallbackCategory(params.trace, params.message)
   if (
@@ -2342,6 +2579,249 @@ function buildKnownIntentFallbackAnswer(params: {
   }
 
   return null
+}
+
+function buildActiveResolvedProductFollowupFallback(params: {
+  message: string
+  trace: AgentV2Trace
+  activeResolvedProductContext: AgentV2TrustedSelectedProductContext | null
+}): AgentV2TerminalAnswer | null {
+  const activeProduct = params.activeResolvedProductContext?.selected_product
+  if (!activeProduct) return null
+  const isSelectionTurn = isTrustedProductSelectionTurnMessage(params.message)
+
+  const latestMessageNamesNewProduct = Boolean(
+    buildAgentV2NamedProductContext({
+      latestMessage: params.message,
+      recentMessages: [],
+    }),
+  )
+  if (!isSelectionTurn && latestMessageNamesNewProduct) return null
+  if (!isSelectionTurn && !isActiveResolvedProductFollowupMessage(params.message)) return null
+
+  const category = readFallbackCareCategory(activeProduct.category)
+  const productName = activeProduct.name.trim() || "das ausgewählte Produkt"
+  const categoryLabel = getFallbackCareCategoryLabelDe(category)
+  const isFitFollowup = isActiveResolvedProductFitFollowupMessage(params.message)
+  const userFacingAnswer = isSelectionTurn
+    ? `Alles klar, ich beziehe mich ab jetzt auf **${productName}**. Damit ist die Produktidentität eindeutig geklärt; du kannst dazu direkt weiterfragen, zum Beispiel zur Häufigkeit, Einordnung oder ob du es in deiner Routine behalten solltest.`
+    : isFitFollowup
+      ? `Die Produktidentität ist klar: **${productName}**. Ob es genau zu deinem Frizz oder deinem Haarprofil passt, kann ich ohne weitere Produkteigenschaften nicht abschließend bewerten. Als ${categoryLabel} kann ich es erst sicher einordnen, wenn die relevanten Produktdaten vorliegen.`
+      : category === "shampoo"
+        ? `Für **${productName}**: Orientier dich an deinem normalen Waschrhythmus. Wenn du gerade 3–4× pro Woche wäschst, kannst du es bei diesen Wäschen verwenden. Gib Shampoo vor allem auf Kopfhaut und Ansatz und spül es gründlich aus; die Längen bekommen nur den Schaum beim Ausspülen ab.`
+        : `Für **${productName}**: Ich würde es in deiner Routine wie ${categoryLabel} behandeln und erst einmal nach Bedarf statt starr jeden Tag nutzen. Wenn du mir sagst, wie dein Haar danach wirkt, kann ich Dosierung und Häufigkeit feiner einordnen.`
+
+  return {
+    answer_mode: "general_advice",
+    interpreted_intent: "Active resolved product follow-up fallback after terminal repair failed.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: category,
+      requested_product_count: 1,
+      count_policy: "exact",
+      evidence_quote: params.message.slice(0, 240) || productName,
+      specific_product_candidate: true,
+      confidence: 0,
+    },
+    confidence: 0,
+    extracted_constraints: {
+      ...buildEmptyExtractedConstraints(),
+      product_categories: category === "unknown" ? [] : [category],
+      raw_constraints: [params.message.slice(0, 240) || productName],
+    },
+    missing_information: [],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: params.trace.loaded_guidance_package_ids,
+      used_product_tool: true,
+      used_routine_tool: params.trace.tool_calls.some(
+        (call) => call.name === "build_or_fix_routine",
+      ),
+      product_ids: [activeProduct.id],
+      routine_step_ids: [],
+      hard_rule_ids: ["product.active_resolved_product_context"],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category: category === "unknown" ? null : category,
+      return_path: [],
+    },
+    pending_followup_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: userFacingAnswer,
+      category_or_topic: category === "unknown" ? "product_usage" : category,
+      key_points_de: [`Aktives Produkt: ${productName}`],
+      next_step_offer_de: null,
+    },
+  }
+}
+
+function isTrustedProductSelectionTurnMessage(message: string): boolean {
+  return (
+    /produktklärung|produktklaerung/iu.test(message) && /ausgewählt|ausgewaehlt/iu.test(message)
+  )
+}
+
+function isActiveResolvedProductFollowupMessage(message: string): boolean {
+  return (
+    /\b(?:wie\s+oft|h(?:ä|ae)ufig|anwenden|verwenden|benutzen|nutzen|dosier\w*|menge|viel|kombinieren)\b/iu.test(
+      message,
+    ) || isActiveResolvedProductFitFollowupMessage(message)
+  )
+}
+
+function isActiveResolvedProductFitFollowupMessage(message: string): boolean {
+  return /\b(?:passt|geeignet|behalten|weiterverwenden|weiter\s+verwenden|routine)\b/iu.test(
+    message,
+  )
+}
+
+function getFallbackCareCategoryLabelDe(category: AgentV2CareCategory): string {
+  switch (category) {
+    case "shampoo":
+      return "ein Shampoo"
+    case "conditioner":
+      return "einen Conditioner"
+    case "mask":
+      return "eine Maske"
+    case "leave_in":
+      return "ein Leave-in"
+    case "oil":
+      return "ein Öl"
+    case "bondbuilder":
+      return "einen Bondbuilder"
+    case "deep_cleansing_shampoo":
+      return "ein Tiefenreinigungsshampoo"
+    case "dry_shampoo":
+      return "ein Trockenshampoo"
+    case "peeling":
+      return "ein Kopfhaut-Peeling"
+    default:
+      return "dieses Produkt"
+  }
+}
+
+function buildProductLookupClarificationFallback(params: {
+  message: string
+  trace: AgentV2Trace
+}): AgentV2TerminalAnswer | null {
+  const latestLookupCall = [...params.trace.tool_calls]
+    .reverse()
+    .find((call) => call.name === "lookup_product_candidate")
+  const lookupStatus = readProductLookupStatus(latestLookupCall?.output_summary)
+  if (
+    lookupStatus !== "ambiguous" &&
+    lookupStatus !== "needs_variant_selection" &&
+    lookupStatus !== "category_mismatch" &&
+    lookupStatus !== "insufficient_identity" &&
+    lookupStatus !== "unsupported_category"
+  ) {
+    return null
+  }
+
+  const lookupArgs = latestLookupCall?.arguments ?? {}
+  const evidenceQuote =
+    readNonEmptyString(lookupArgs.evidence_quote) ?? params.message.slice(0, 240)
+  const displayName = buildProductLookupDisplayName(lookupArgs, evidenceQuote)
+  const category = readFallbackCareCategory(lookupArgs.category)
+  const userFacingAnswer =
+    lookupStatus === "unsupported_category"
+      ? `Ich kann ${displayName} in dieser Produktkategorie aktuell noch nicht sauber in unserer Produktdatenbank prüfen. Deshalb möchte ich dazu nichts erfinden.`
+      : lookupStatus === "insufficient_identity"
+        ? `Ich brauche zu ${displayName} noch etwas mehr Info, bevor ich es zuverlässig prüfen kann. Welche genaue Produktvariante oder Kategorie meinst du?`
+        : lookupStatus === "category_mismatch"
+          ? `Ich finde ${displayName} bei uns nur in einer anderen Produktkategorie. Bitte wähle die passende Variante aus oder füge dein Produkt neu hinzu, damit ich nichts Falsches bewerte.`
+          : `Ich finde zu ${displayName} mehrere mögliche Varianten und möchte nichts Falsches bewerten. Welche genaue Variante meinst du?`
+  const question =
+    lookupStatus === "unsupported_category"
+      ? "Um welche der unterstützten Kategorien geht es: Shampoo, Conditioner, Leave-in, Maske, Öl, Trockenshampoo, Tiefenreinigungsshampoo oder Bondbuilder?"
+      : "Welche genaue Variante meinst du?"
+
+  return {
+    answer_mode: "clarification",
+    interpreted_intent: "Product lookup clarification fallback after terminal repair failed.",
+    request_interpretation: {
+      primary_intent: "clarification",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: category,
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: evidenceQuote,
+      specific_product_candidate: true,
+      confidence: 0,
+    },
+    confidence: 0,
+    extracted_constraints: {
+      ...buildEmptyExtractedConstraints(),
+      product_categories: category === "unknown" ? [] : [category],
+      raw_constraints: [evidenceQuote],
+    },
+    missing_information: [
+      {
+        key: lookupStatus === "unsupported_category" ? "supported_category" : "product_identity",
+        label_de:
+          lookupStatus === "unsupported_category"
+            ? "unterstützte Produktkategorie"
+            : "genaue Produktvariante",
+        blocking: true,
+        question_de: question,
+      },
+    ],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: params.trace.loaded_guidance_package_ids,
+      used_product_tool: true,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: ["product.no_uncatalogued_products"],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category: category === "unknown" ? null : category,
+      return_path: [],
+    },
+    pending_followup_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: userFacingAnswer,
+      question_de: question,
+      missing_keys: [
+        lookupStatus === "unsupported_category" ? "supported_category" : "product_identity",
+      ],
+    },
+  }
+}
+
+function readProductLookupStatus(outputSummary: unknown): string | null {
+  if (typeof outputSummary !== "string") return null
+  const match = /^product_lookup:([a-z_]+)$/.exec(outputSummary.trim())
+  return match?.[1] ?? null
+}
+
+function buildProductLookupDisplayName(args: Record<string, unknown>, fallback: string): string {
+  const brand = readNonEmptyString(args.brand_text)
+  const productName = readNonEmptyString(args.product_name_text)
+  const productNameAlreadyContainsBrand =
+    brand !== null &&
+    productName !== null &&
+    productName.toLocaleLowerCase("de-DE").startsWith(brand.toLocaleLowerCase("de-DE"))
+  const combined = (
+    productNameAlreadyContainsBrand ? productName : [brand, productName].filter(Boolean).join(" ")
+  ).trim()
+  return combined || fallback || "dieses Produkt"
+}
+
+function readNonEmptyString(value: unknown): string | null {
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null
 }
 
 function isLightweightMaskOilDecisionFallbackEligible(
@@ -2445,6 +2925,7 @@ function buildLightweightMaskOilDecisionFallback(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: evidenceQuote,
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -2609,6 +3090,7 @@ function buildRoutineKnownIntentFallback(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: evidenceQuote,
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -2718,6 +3200,7 @@ function buildRoutinePlacementFallback(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: params.message.slice(0, 240) || "Routine-Platzierung",
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -2843,6 +3326,7 @@ function buildFallbackAnswer(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: "unclear",
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -2902,6 +3386,7 @@ function buildRecoveredAssistantTextFallback(params: {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: params.message.slice(0, 240) || "unclear",
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -2965,6 +3450,7 @@ function buildRestrictedSafetyFallback(message: string): AgentV2TerminalAnswer {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: message.slice(0, 240) || "unclear",
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -3010,6 +3496,7 @@ function buildEmptyProductResultFallback(message: string): AgentV2TerminalAnswer
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: message.slice(0, 240) || "unclear",
+      specific_product_candidate: false,
       confidence: 0,
     },
     confidence: 0,
@@ -3055,6 +3542,7 @@ function buildSafetyBoundaryAnswer(message: string): AgentV2TerminalAnswer {
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: message.slice(0, 240) || "safety concern",
+      specific_product_candidate: false,
       confidence: 1,
     },
     confidence: 1,
@@ -3102,6 +3590,24 @@ function buildEmptyExtractedConstraints(): AgentV2TerminalAnswer["extracted_cons
     preferences: [],
     routine_layer: null,
     raw_constraints: [],
+  }
+}
+
+function activePendingProductContextToLookupResult(
+  context: AgentV2ActiveProductContext,
+): AgentV2ProductLookupValidationResult | null {
+  if (context.status !== "pending_review") return null
+
+  return {
+    status: "not_found",
+    category: context.category,
+    input_identity: {
+      category: context.category,
+      brand_text: context.brand_text,
+      product_name_text: context.product_name_text ?? context.display_name,
+      evidence_quote: context.original_user_message || context.display_name,
+    },
+    product: null,
   }
 }
 

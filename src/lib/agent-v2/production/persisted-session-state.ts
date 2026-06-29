@@ -5,6 +5,12 @@ import {
   type AgentV2SessionMemoryWrite,
 } from "@/lib/agent-v2/contracts"
 import { readPendingFollowupAction } from "@/lib/agent-v2/pending-followup-action"
+import type {
+  AgentV2ActiveProductContext,
+  AgentV2ActiveResolvedProductContext,
+  AgentV2StoredProductProjection,
+} from "@/lib/agent-v2/resolved-product-selection-adapter"
+import { buildPrimaryResolvedProductContext } from "@/lib/agent-v2/resolved-product-selection-adapter"
 import type { AgentV2SelectProductsProjection } from "@/lib/agent-v2/tools/select-products-projection"
 import type {
   SupportedProductClaim,
@@ -13,17 +19,14 @@ import type {
 
 export const AGENT_V2_PRODUCTION_ENGINE = "agent_v2_care_balance" as const
 
-export type AgentV2StoredProductProjection = Pick<
-  Partial<AgentV2SelectProductsProjection>,
-  "tool_name" | "category" | "valid_product_ids" | "products"
->
-
 export interface AgentV2ConversationStateV2 {
   version: 2
   engine: typeof AGENT_V2_PRODUCTION_ENGINE
   agent_v2: {
     routine_thread_context: AgentV2RoutineThreadContext | null
     prior_selected_product_projections: AgentV2StoredProductProjection[]
+    active_product_contexts: AgentV2ActiveProductContext[]
+    active_resolved_product_context: AgentV2ActiveResolvedProductContext | null
     session_memory: AgentV2SessionMemoryWrite[]
   }
 }
@@ -38,6 +41,8 @@ export interface LegacyConversationStateV1 {
   last_product_category?: unknown
   agent_v2_routine_thread_context?: unknown
   agent_v2_prior_selected_product_projections?: unknown
+  agent_v2_active_product_contexts?: unknown
+  agent_v2_active_resolved_product_context?: unknown
   agent_v2_session_memory?: unknown
 }
 
@@ -71,6 +76,8 @@ export function createDefaultAgentV2ConversationState(): AgentV2ConversationStat
     agent_v2: {
       routine_thread_context: null,
       prior_selected_product_projections: [],
+      active_product_contexts: [],
+      active_resolved_product_context: null,
       session_memory: [],
     },
   }
@@ -84,6 +91,8 @@ export function normalizeAgentV2ConversationState(value: unknown): AgentV2Conver
     return buildAgentV2State({
       routineThreadContext: agentV2.routine_thread_context,
       priorSelectedProductProjections: agentV2.prior_selected_product_projections,
+      activeProductContexts: agentV2.active_product_contexts,
+      activeResolvedProductContext: agentV2.active_resolved_product_context,
       sessionMemory: agentV2.session_memory,
     })
   }
@@ -91,6 +100,8 @@ export function normalizeAgentV2ConversationState(value: unknown): AgentV2Conver
   return buildAgentV2State({
     routineThreadContext: value.agent_v2_routine_thread_context,
     priorSelectedProductProjections: value.agent_v2_prior_selected_product_projections,
+    activeProductContexts: value.agent_v2_active_product_contexts,
+    activeResolvedProductContext: value.agent_v2_active_resolved_product_context,
     sessionMemory: value.agent_v2_session_memory,
   })
 }
@@ -104,6 +115,11 @@ export function summarizeAgentV2ConversationState(state: AgentV2ConversationStat
     visible_step_count: number
   }
   prior_product_projection_count: number
+  active_product_context_count: number
+  active_resolved_product: {
+    product_id: string | null
+    category: string | null
+  }
   session_memory_count: number
 } {
   const routineThread = state.agent_v2.routine_thread_context
@@ -116,6 +132,15 @@ export function summarizeAgentV2ConversationState(state: AgentV2ConversationStat
       visible_step_count: routineThread?.visible_steps.length ?? 0,
     },
     prior_product_projection_count: state.agent_v2.prior_selected_product_projections.length,
+    active_product_context_count: state.agent_v2.active_product_contexts.length,
+    active_resolved_product: {
+      product_id:
+        buildPrimaryResolvedProductContext(state.agent_v2.active_product_contexts)?.product_id ??
+        null,
+      category:
+        buildPrimaryResolvedProductContext(state.agent_v2.active_product_contexts)?.category ??
+        null,
+    },
     session_memory_count: state.agent_v2.session_memory.length,
   }
 }
@@ -123,8 +148,14 @@ export function summarizeAgentV2ConversationState(state: AgentV2ConversationStat
 function buildAgentV2State(params: {
   routineThreadContext: unknown
   priorSelectedProductProjections: unknown
+  activeProductContexts: unknown
+  activeResolvedProductContext: unknown
   sessionMemory: unknown
 }): AgentV2ConversationStateV2 {
+  const activeProductContexts = normalizeActiveProductContexts(
+    params.activeProductContexts,
+    params.activeResolvedProductContext,
+  )
   return {
     ...createDefaultAgentV2ConversationState(),
     agent_v2: {
@@ -132,8 +163,93 @@ function buildAgentV2State(params: {
       prior_selected_product_projections: normalizePriorProductProjections(
         params.priorSelectedProductProjections,
       ),
+      active_product_contexts: activeProductContexts,
+      active_resolved_product_context: buildPrimaryResolvedProductContext(activeProductContexts),
       session_memory: normalizeSessionMemory(params.sessionMemory),
     },
+  }
+}
+
+function normalizeActiveProductContexts(
+  value: unknown,
+  legacyActiveResolvedProductContext: unknown,
+): AgentV2ActiveProductContext[] {
+  const normalized = Array.isArray(value)
+    ? value.flatMap((entry) => {
+        const context = normalizeActiveProductContext(entry)
+        return context ? [context] : []
+      })
+    : []
+
+  if (normalized.length > 0) return normalized.slice(-3)
+
+  const legacyResolved = normalizeActiveResolvedProductContext(legacyActiveResolvedProductContext)
+  if (!legacyResolved) return []
+  const legacyContext: AgentV2ActiveProductContext = {
+    status: "resolved",
+    product_id: legacyResolved.product_id,
+    submission_id: null,
+    category: legacyResolved.category,
+    brand_text: null,
+    product_name_text: legacyResolved.name,
+    display_name: legacyResolved.name,
+    original_user_message: legacyResolved.original_user_message,
+    source: "product_lookup_selection",
+    updated_at: new Date(0).toISOString(),
+  }
+  return [legacyContext]
+}
+
+function normalizeActiveProductContext(value: unknown): AgentV2ActiveProductContext | null {
+  if (!isRecord(value)) return null
+  const status =
+    value.status === "resolved" || value.status === "pending_review" ? value.status : null
+  const displayName = typeof value.display_name === "string" ? value.display_name.trim() : ""
+  const originalUserMessage =
+    typeof value.original_user_message === "string" ? value.original_user_message : null
+  const source =
+    value.source === "lookup_exact" ||
+    value.source === "product_lookup_selection" ||
+    value.source === "product_intake_submission"
+      ? value.source
+      : null
+  if (!status || !displayName || !originalUserMessage || !source) return null
+
+  const productId = typeof value.product_id === "string" ? value.product_id : null
+  const submissionId = typeof value.submission_id === "string" ? value.submission_id : null
+  if (status === "resolved" && !productId) return null
+
+  return {
+    status,
+    product_id: productId,
+    submission_id: submissionId,
+    category: typeof value.category === "string" ? value.category : null,
+    brand_text: typeof value.brand_text === "string" ? value.brand_text : null,
+    product_name_text: typeof value.product_name_text === "string" ? value.product_name_text : null,
+    display_name: displayName,
+    original_user_message: originalUserMessage,
+    source,
+    updated_at: typeof value.updated_at === "string" ? value.updated_at : new Date(0).toISOString(),
+  }
+}
+
+function normalizeActiveResolvedProductContext(
+  value: unknown,
+): AgentV2ActiveResolvedProductContext | null {
+  if (!isRecord(value)) return null
+  if (value.source !== "product_lookup_selection") return null
+  const productId = typeof value.product_id === "string" ? value.product_id : null
+  const name = typeof value.name === "string" ? value.name : null
+  const originalUserMessage =
+    typeof value.original_user_message === "string" ? value.original_user_message : null
+  if (!productId || !name || !originalUserMessage) return null
+
+  return {
+    source: "product_lookup_selection",
+    product_id: productId,
+    name,
+    category: typeof value.category === "string" ? value.category : null,
+    original_user_message: originalUserMessage,
   }
 }
 

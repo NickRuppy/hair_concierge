@@ -264,6 +264,7 @@ export interface Product {
   shampoo_bucket_pairs?: ShampooBucketPair[] | null
   is_active: boolean
   lifecycle_status?: ProductLifecycleStatus | null
+  is_chaarlie_recommended?: boolean | null
   sort_order: number
   conditioner_specs?: ProductConditionerSpecs | null
   leave_in_specs?: ProductLeaveInSpecs | null
@@ -301,6 +302,114 @@ export type ProductSummary = Pick<
   | "created_at"
   | "updated_at"
 >
+
+export type CanonicalProductCategoryKey =
+  | "shampoo"
+  | "conditioner"
+  | "mask"
+  | "leave_in"
+  | "oil"
+  | "dry_shampoo"
+  | "deep_cleansing_shampoo"
+  | "bondbuilder"
+  | "heat_protectant"
+  | "serum"
+  | "scrub"
+  | "peeling"
+  | "styling_gel"
+  | "styling_mousse"
+  | "styling_cream"
+  | "hairspray"
+
+export type ProductIntakeCategoryKey =
+  | "shampoo"
+  | "conditioner"
+  | "mask"
+  | "leave_in"
+  | "oil"
+  | "dry_shampoo"
+  | "deep_cleansing_shampoo"
+  | "bondbuilder"
+
+export type ProductIntakeMethod = "manual" | "photo"
+export type ProductUsageSource = "onboarding" | "chat" | "profile" | "script"
+export type ProductSubmissionSource = Extract<ProductUsageSource, "onboarding" | "chat">
+export type ProductUsageMatchStatus = "text_only" | "matched" | "pending_review" | "needs_more_info"
+
+export type ProductSubmissionStatus =
+  | "pending_review"
+  | "researching"
+  | "ready_for_review"
+  | "needs_more_info"
+  | "matched_existing"
+  | "approved"
+  | "rejected"
+  | "cancelled_by_user"
+
+export type ProductFrontImageValidationStatus =
+  | "valid_product_front"
+  | "uncertain"
+  | "not_a_product_photo"
+  | "unsafe_or_inappropriate"
+
+export type ProductBarcodeImageValidationStatus =
+  | "valid_barcode"
+  | "uncertain"
+  | "not_a_product_photo"
+  | "unsafe_or_inappropriate"
+
+export interface UserProductUsage {
+  id: string
+  user_id: string
+  category: CanonicalProductCategoryKey
+  product_name: string | null
+  frequency_range: ProductFrequency | null
+  brand_text: string | null
+  product_id: string | null
+  product_submission_id: string | null
+  match_status: ProductUsageMatchStatus
+  intake_method: ProductIntakeMethod | null
+  source: ProductUsageSource | null
+  front_image_path: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface ProductSubmission {
+  id: string
+  user_id: string
+  user_product_usage_id: string | null
+  source: ProductSubmissionSource
+  source_conversation_id: string | null
+  intake_method: ProductIntakeMethod
+  category: ProductIntakeCategoryKey
+  brand_text: string | null
+  product_name_text: string | null
+  frequency_range: ProductFrequency
+  front_image_path: string | null
+  barcode_image_path: string | null
+  front_image_validation_status: ProductFrontImageValidationStatus | null
+  front_image_validation_metadata: Record<string, unknown>
+  barcode_image_validation_status: ProductBarcodeImageValidationStatus | null
+  barcode_image_validation_metadata: Record<string, unknown>
+  previous_product_id: string | null
+  previous_product_snapshot: Record<string, unknown>
+  status: ProductSubmissionStatus
+  researched_payload: Record<string, unknown>
+  intake_history: Array<Record<string, unknown>>
+  approved_product_id: string | null
+  reviewed_at: string | null
+  reviewed_by: string | null
+  review_notes: string | null
+  user_facing_resolution_reason: string | null
+  user_facing_next_step: string | null
+  user_facing_missing_fields: string[]
+  notification_sent_at: string | null
+  cleanup_after: string | null
+  photos_deleted_at: string | null
+  created_at: string
+  updated_at: string
+}
 
 export interface BaseRecommendationMetadata {
   category:
@@ -714,9 +823,66 @@ export interface MessageRagContext {
   category_decision?: ChatCategoryDecision | null
   engine_trace?: RecommendationEngineTrace | null
   response_mode?: ResponseMode | null
+  product_intake_offer?: ProductIntakeOffer | null
+  product_lookup_clarification?: ProductLookupClarification | null
+  product_lookup_selection?: ProductLookupSelectionContext | null
 }
 
 export type MessageDecisionContext = MessageRagContext
+
+export interface ProductLookupClarification {
+  id: string
+  kind: "variant_selection" | "category_mismatch"
+  source: "chat"
+  original_user_message?: string | null
+  query: {
+    brand_text: string | null
+    product_name_text: string | null
+    category: ProductIntakeCategoryKey | null
+  }
+  copy: {
+    prompt_de: string
+  }
+  candidates: ProductLookupClarificationCandidate[]
+  none_action: {
+    label_de: string
+    product_intake_offer: ProductIntakeOffer
+  }
+}
+
+export interface ProductLookupClarificationCandidate {
+  product_id: string
+  name: string
+  category: ProductIntakeCategoryKey | string | null
+  category_label_de: string
+  reason: "same_brand_same_category" | "category_mismatch"
+}
+
+export interface ProductLookupSelectionContext {
+  source: "product_lookup_clarification"
+  clarification_id: string
+  source_assistant_message_id: string
+  selected_product_id: string
+  selected_product_name: string
+}
+
+export interface ProductIntakeOffer {
+  id: string
+  source: "chat"
+  reason: "product_lookup_not_found" | "needs_more_info"
+  category?: ProductIntakeCategoryKey | null
+  frequency_range?: ProductFrequency | null
+  intake_method?: ProductIntakeMethod | null
+  submission_id?: string
+  existing_usage_id?: string | null
+  committed_front_image_path?: string | null
+  committed_barcode_image_path?: string | null
+  missing_fields?: string[]
+  extracted_identity?: {
+    brand_text?: string
+    product_name_text?: string
+  }
+}
 
 export interface ChatPromptMessageSnapshot {
   role: "system" | "user" | "assistant"
@@ -1173,6 +1339,11 @@ export interface ChatSSEEvent {
     | "conversation_id"
     | "content_delta"
     | "product_recommendations"
+    | "product_intake_offer"
+    | "product_lookup_clarification"
+    | "product_lookup_selection"
+    | "assistant_message"
+    | "langfuse_trace"
     | "sources"
     | "confidence"
     | "retrieval_debug"

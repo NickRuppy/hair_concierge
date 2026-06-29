@@ -88,6 +88,9 @@ function ensureRoutineItem(
     present: true,
     productName: null,
     frequencyBand: null,
+    productId: null,
+    productSubmissionId: null,
+    matchStatus: null,
   }
   profile.routineInventory[fact.category] = item
   return item

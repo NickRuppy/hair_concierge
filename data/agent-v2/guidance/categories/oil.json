@@ -43,19 +43,19 @@
       "rule_id": "category.oil.no_product_name_claim_inference",
       "severity": "block",
       "source": "categories/oil.md",
-      "message": "Do not infer oil role, heat protection, color protection, scalp suitability, ingredient effects, fragrance, silicone-free status, oil-free status, exact cadence, or exact protocol from product names, brand lines, or category prose."
+      "message": "Do not infer oil role, heat protection, color protection, scalp suitability, ingredient effects, fragrance, silicone-free status, oil-free status, exact cadence, or exact protocol from product names, brand lines, or category prose; resolve named product identity first."
     },
     {
       "rule_id": "category.oil.no_unsupported_heat_protection",
       "severity": "block",
       "source": "categories/oil.md",
-      "message": "Plain oil is not a heat protectant without product-specific support; unless selected product metadata has an explicit supported heat-protection claim, recommend a real heat protectant before heat, meaning a product with explicit heat-protectant claim before heat, and keep oil only as finish/after styling or pre-wash length protection where appropriate."
+      "message": "Plain oil is not a heat protectant without product-specific support; unless verified product metadata has an explicit supported heat-protection claim, recommend a real heat protectant before heat, meaning a product with explicit heat-protectant claim before heat, and keep oil only as finish/after styling or pre-wash length protection where appropriate."
     },
     {
       "rule_id": "category.oil.product_detail_requires_catalog",
       "severity": "block",
       "source": "categories/oil.md",
-      "message": "For named oil, serum, ingredient, or product-specific claim checks, use product catalog data or select_products before stating role, heat protection, color protection, scalp suitability, ingredient effects, fragrance, silicone-free status, oil-free status, exact cadence, or exact protocol; for a single named product detail check, keep requested_product_count 1 and count_policy exact aligned between select_products and the terminal request_interpretation."
+      "message": "For named oil, serum, ingredient, or product-specific claim checks, use lookup_product_candidate first, then verified product catalog data or internal select_products projection facts before stating role, heat protection, color protection, scalp suitability, ingredient effects, fragrance, silicone-free status, oil-free status, exact cadence, or exact protocol."
     },
     {
       "rule_id": "category.oil.routine_explanation_vs_mutation",
@@ -142,12 +142,12 @@
     {
       "grounding_id": "category.oil.product_claims",
       "tool": "select_products",
-      "when": "Concrete oil names, category membership, recommendation order, finish/pre-wash role, weight, fit, availability, or product claims are mentioned."
+      "when": "Concrete oil recommendations, category membership, recommendation order, or internal projection facts for resolved named-oil assessment are needed, including finish/pre-wash role, weight, fit, availability, or product claims."
     },
     {
       "grounding_id": "category.oil.product_detail_claims",
       "tool": "select_products",
-      "when": "Named oil, serum, ingredient, heat claim, scalp suitability, fragrance, color protection, silicone-free/oil-free status, exact cadence, or product-specific oil claim is checked; keep count fields aligned as 1 exact for a single named-product detail check."
+      "when": "Internal projection facts are needed after a named oil, serum, ingredient, heat claim, scalp suitability, fragrance, color protection, silicone-free/oil-free status, exact cadence, or product-specific oil claim is resolved. Start identity resolution with lookup_product_candidate."
     },
     {
       "grounding_id": "category.oil.routine_mutation",
