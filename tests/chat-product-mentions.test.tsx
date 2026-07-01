@@ -9,7 +9,11 @@ import {
   ProductIntakeSubmittedState,
 } from "@/components/chat/product-intake-card"
 import { ProductLookupClarificationCard } from "@/components/chat/product-lookup-clarification-card"
-import { hasExistingProductSelectionMessage, readChatStreamErrorMessage } from "@/hooks/use-chat"
+import {
+  applyChatStreamEventToMessages,
+  hasExistingProductSelectionMessage,
+  readChatStreamErrorMessage,
+} from "@/hooks/use-chat"
 import { findResolvedProductLookupSelectionForMessage } from "@/lib/chat/product-lookup-selection-ui"
 import type { Message, Product, ProductIntakeOffer, ProductLookupClarification } from "@/lib/types"
 
@@ -474,6 +478,35 @@ test("product selection helper detects already streamed selection messages", () 
     }),
     true,
   )
+})
+
+test("targeted product selection stream events do not mutate the source clarification message", () => {
+  const clarificationMessage = createAssistantMessage("Welche genaue Variante meinst du?", [])
+  clarificationMessage.id = "message-clarification-1"
+  clarificationMessage.rag_context = {
+    sources: [],
+    product_lookup_clarification: createProductLookupClarification(),
+  }
+  const selectionPlaceholder = createAssistantMessage("", [])
+  selectionPlaceholder.id = "temp-assistant-selection-1"
+
+  const withContent = applyChatStreamEventToMessages(
+    [clarificationMessage, selectionPlaceholder],
+    { type: "content_delta", data: "Die Syoss Intense Curls passt eher gut zu dir." },
+    { targetAssistantMessageId: "temp-assistant-selection-1" },
+  )
+
+  assert.equal(withContent[0]?.content, "Welche genaue Variante meinst du?")
+  assert.equal(withContent[1]?.content, "Die Syoss Intense Curls passt eher gut zu dir.")
+
+  const withServerId = applyChatStreamEventToMessages(
+    withContent,
+    { type: "assistant_message", data: { id: "assistant-selection-1" } },
+    { targetAssistantMessageId: "temp-assistant-selection-1" },
+  )
+
+  assert.equal(withServerId[0]?.id, "message-clarification-1")
+  assert.equal(withServerId[1]?.id, "assistant-selection-1")
 })
 
 test("chat stream error helper preserves structured server error messages", () => {

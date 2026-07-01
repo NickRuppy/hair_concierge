@@ -11,9 +11,13 @@ export type ProductSelectionParams = {
   selectedProductId: string
 }
 
-type ChatStreamEvent = {
+export type ChatStreamEvent = {
   type: string
   data?: unknown
+}
+
+type ChatStreamApplyOptions = {
+  targetAssistantMessageId?: string | null
 }
 
 export function hasExistingProductSelectionMessage(
@@ -70,6 +74,188 @@ export function readChatStreamErrorMessage(data: unknown): string {
   }
 
   return "Das Produkt konnte nicht ausgewählt werden. Bitte versuche es erneut."
+}
+
+function findAssistantMessageIndex(
+  messages: readonly Message[],
+  targetAssistantMessageId?: string | null,
+): number {
+  if (targetAssistantMessageId) {
+    const targetIndex = messages.findIndex(
+      (message) => message.role === "assistant" && message.id === targetAssistantMessageId,
+    )
+    if (targetIndex >= 0) return targetIndex
+  }
+
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    if (messages[index]?.role === "assistant") return index
+  }
+
+  return -1
+}
+
+export function applyChatStreamEventToMessages(
+  messages: readonly Message[],
+  event: ChatStreamEvent,
+  options: ChatStreamApplyOptions = {},
+): Message[] {
+  switch (event.type) {
+    case "conversation_id":
+      return messages.map((message) =>
+        message.conversation_id ? message : { ...message, conversation_id: String(event.data) },
+      )
+    case "content_delta": {
+      const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
+      if (targetIndex < 0) return [...messages]
+      const updated = [...messages]
+      const target = updated[targetIndex]
+      if (!target || target.role !== "assistant") return updated
+      updated[targetIndex] = {
+        ...target,
+        content: (target.content || "") + String(event.data ?? ""),
+      }
+      return updated
+    }
+    case "langfuse_trace": {
+      const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
+      if (targetIndex < 0) return [...messages]
+      const updated = [...messages]
+      const target = updated[targetIndex]
+      if (!target || target.role !== "assistant") return updated
+      const data = event.data as { trace_id?: string | null } | null | undefined
+      updated[targetIndex] = {
+        ...target,
+        langfuse_trace_id: data?.trace_id ?? null,
+      }
+      return updated
+    }
+    case "product_recommendations": {
+      const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
+      if (targetIndex < 0) return [...messages]
+      const updated = [...messages]
+      const target = updated[targetIndex]
+      if (!target || target.role !== "assistant") return updated
+      updated[targetIndex] = {
+        ...target,
+        product_recommendations: event.data as Message["product_recommendations"],
+      }
+      return updated
+    }
+    case "product_intake_offer": {
+      const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
+      if (targetIndex < 0) return [...messages]
+      const updated = [...messages]
+      const target = updated[targetIndex]
+      if (!target || target.role !== "assistant") return updated
+      updated[targetIndex] = {
+        ...target,
+        rag_context: {
+          ...(target.rag_context ?? { sources: [], category_decision: null }),
+          product_intake_offer: event.data as NonNullable<
+            Message["rag_context"]
+          >["product_intake_offer"],
+        },
+      }
+      return updated
+    }
+    case "product_lookup_clarification": {
+      const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
+      if (targetIndex < 0) return [...messages]
+      const updated = [...messages]
+      const target = updated[targetIndex]
+      if (!target || target.role !== "assistant") return updated
+      updated[targetIndex] = {
+        ...target,
+        rag_context: {
+          ...(target.rag_context ?? { sources: [], category_decision: null }),
+          product_lookup_clarification: event.data as NonNullable<
+            Message["rag_context"]
+          >["product_lookup_clarification"],
+        },
+      }
+      return updated
+    }
+    case "product_lookup_selection": {
+      const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
+      if (targetIndex < 0) return [...messages]
+      const updated = [...messages]
+      const target = updated[targetIndex]
+      if (!target || target.role !== "assistant") return updated
+      updated[targetIndex] = {
+        ...target,
+        rag_context: {
+          ...(target.rag_context ?? { sources: [], category_decision: null }),
+          product_lookup_selection: event.data as NonNullable<
+            Message["rag_context"]
+          >["product_lookup_selection"],
+        },
+      }
+      return updated
+    }
+    case "assistant_message": {
+      const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
+      if (targetIndex < 0) return [...messages]
+      const updated = [...messages]
+      const target = updated[targetIndex]
+      if (!target || target.role !== "assistant") return updated
+      const data = event.data as
+        | {
+            id?: string | null
+            langfuse_trace_id?: string | null
+            langfuse_trace_url?: string | null
+          }
+        | null
+        | undefined
+      updated[targetIndex] = {
+        ...target,
+        id: data?.id ?? target.id,
+        langfuse_trace_id: data?.langfuse_trace_id ?? target.langfuse_trace_id,
+        langfuse_trace_url: data?.langfuse_trace_url ?? target.langfuse_trace_url,
+      }
+      return updated
+    }
+    case "sources": {
+      const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
+      if (targetIndex < 0) return [...messages]
+      const updated = [...messages]
+      const target = updated[targetIndex]
+      if (!target || target.role !== "assistant") return updated
+      updated[targetIndex] = {
+        ...target,
+        rag_context: {
+          ...(target.rag_context ?? { category_decision: null }),
+          sources: event.data as NonNullable<Message["rag_context"]>["sources"],
+        },
+      }
+      return updated
+    }
+    case "done": {
+      const targetIndex = findAssistantMessageIndex(messages, options.targetAssistantMessageId)
+      if (targetIndex < 0) return [...messages]
+      const updated = [...messages]
+      const target = updated[targetIndex]
+      if (!target || target.role !== "assistant") return updated
+      const data = event.data as
+        | {
+            category_decision?: NonNullable<Message["rag_context"]>["category_decision"]
+          }
+        | null
+        | undefined
+      updated[targetIndex] = {
+        ...target,
+        rag_context: {
+          sources: target.rag_context?.sources ?? [],
+          category_decision: data?.category_decision ?? null,
+          product_intake_offer: target.rag_context?.product_intake_offer ?? null,
+          product_lookup_clarification: target.rag_context?.product_lookup_clarification ?? null,
+          product_lookup_selection: target.rag_context?.product_lookup_selection ?? null,
+        },
+      }
+      return updated
+    }
+    default:
+      return [...messages]
+  }
 }
 
 export function useChat(): UseChatReturn {
@@ -144,188 +330,40 @@ export function useChat(): UseChatReturn {
     setCurrentConversationId(null)
   }, [])
 
-  const applyChatStreamEvent = useCallback((event: ChatStreamEvent, throwOnError = false) => {
-    switch (event.type) {
-      case "conversation_id":
-        setCurrentConversationId(String(event.data))
-        setMessages((prev) =>
-          prev.map((message) =>
-            message.conversation_id ? message : { ...message, conversation_id: String(event.data) },
-          ),
-        )
-        break
-      case "content_delta":
-        setMessages((prev) => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last && last.role === "assistant") {
-            updated[updated.length - 1] = {
-              ...last,
-              content: (last.content || "") + String(event.data ?? ""),
-            }
+  const applyChatStreamEvent = useCallback(
+    (event: ChatStreamEvent, throwOnError = false, options: ChatStreamApplyOptions = {}) => {
+      switch (event.type) {
+        case "conversation_id":
+          setCurrentConversationId(String(event.data))
+        case "content_delta":
+        case "langfuse_trace":
+        case "product_recommendations":
+        case "product_intake_offer":
+        case "product_lookup_clarification":
+        case "product_lookup_selection":
+        case "assistant_message":
+        case "sources":
+        case "done":
+          setMessages((prev) => applyChatStreamEventToMessages(prev, event, options))
+          break
+        case "error": {
+          const message = readChatStreamErrorMessage(event.data)
+          console.error("Stream error:", event.data)
+          if (throwOnError) {
+            throw new Error(message)
           }
-          return updated
-        })
-        break
-      case "langfuse_trace":
-        setMessages((prev) => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last?.role === "assistant") {
-            const data = event.data as { trace_id?: string | null } | null | undefined
-            updated[updated.length - 1] = {
-              ...last,
-              langfuse_trace_id: data?.trace_id ?? null,
-            }
-          }
-          return updated
-        })
-        break
-      case "product_recommendations":
-        setMessages((prev) => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last?.role === "assistant") {
-            updated[updated.length - 1] = {
-              ...last,
-              product_recommendations: event.data as Message["product_recommendations"],
-            }
-          }
-          return updated
-        })
-        break
-      case "product_intake_offer":
-        setMessages((prev) => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last?.role === "assistant") {
-            updated[updated.length - 1] = {
-              ...last,
-              rag_context: {
-                ...(last.rag_context ?? { sources: [], category_decision: null }),
-                product_intake_offer: event.data as NonNullable<
-                  Message["rag_context"]
-                >["product_intake_offer"],
-              },
-            }
-          }
-          return updated
-        })
-        break
-      case "product_lookup_clarification":
-        setMessages((prev) => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last?.role === "assistant") {
-            updated[updated.length - 1] = {
-              ...last,
-              rag_context: {
-                ...(last.rag_context ?? { sources: [], category_decision: null }),
-                product_lookup_clarification: event.data as NonNullable<
-                  Message["rag_context"]
-                >["product_lookup_clarification"],
-              },
-            }
-          }
-          return updated
-        })
-        break
-      case "product_lookup_selection":
-        setMessages((prev) => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last?.role === "assistant") {
-            updated[updated.length - 1] = {
-              ...last,
-              rag_context: {
-                ...(last.rag_context ?? { sources: [], category_decision: null }),
-                product_lookup_selection: event.data as NonNullable<
-                  Message["rag_context"]
-                >["product_lookup_selection"],
-              },
-            }
-          }
-          return updated
-        })
-        break
-      case "assistant_message":
-        setMessages((prev) => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last?.role === "assistant") {
-            const data = event.data as
-              | {
-                  id?: string | null
-                  langfuse_trace_id?: string | null
-                  langfuse_trace_url?: string | null
-                }
-              | null
-              | undefined
-            updated[updated.length - 1] = {
-              ...last,
-              id: data?.id ?? last.id,
-              langfuse_trace_id: data?.langfuse_trace_id ?? last.langfuse_trace_id,
-              langfuse_trace_url: data?.langfuse_trace_url ?? last.langfuse_trace_url,
-            }
-          }
-          return updated
-        })
-        break
-      case "sources":
-        setMessages((prev) => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last?.role === "assistant") {
-            updated[updated.length - 1] = {
-              ...last,
-              rag_context: {
-                ...(last.rag_context ?? { category_decision: null }),
-                sources: event.data as NonNullable<Message["rag_context"]>["sources"],
-              },
-            }
-          }
-          return updated
-        })
-        break
-      case "done":
-        setMessages((prev) => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last?.role === "assistant") {
-            const data = event.data as
-              | {
-                  category_decision?: NonNullable<Message["rag_context"]>["category_decision"]
-                }
-              | null
-              | undefined
-            updated[updated.length - 1] = {
-              ...last,
-              rag_context: {
-                sources: last.rag_context?.sources ?? [],
-                category_decision: data?.category_decision ?? null,
-                product_intake_offer: last.rag_context?.product_intake_offer ?? null,
-                product_lookup_clarification:
-                  last.rag_context?.product_lookup_clarification ?? null,
-                product_lookup_selection: last.rag_context?.product_lookup_selection ?? null,
-              },
-            }
-          }
-          return updated
-        })
-        break
-      case "error": {
-        const message = readChatStreamErrorMessage(event.data)
-        console.error("Stream error:", event.data)
-        if (throwOnError) {
-          throw new Error(message)
+          break
         }
-        break
       }
-    }
-  }, [])
+    },
+    [],
+  )
 
   const readChatEventStream = useCallback(
-    async (res: Response, options?: { throwOnError?: boolean }) => {
+    async (
+      res: Response,
+      options?: { throwOnError?: boolean; targetAssistantMessageId?: string | null },
+    ) => {
       const reader = res.body?.getReader()
       if (!reader) throw new Error("Kein Stream")
 
@@ -353,7 +391,9 @@ export function useChat(): UseChatReturn {
           }
 
           try {
-            applyChatStreamEvent(event, options?.throwOnError ?? false)
+            applyChatStreamEvent(event, options?.throwOnError ?? false, {
+              targetAssistantMessageId: options?.targetAssistantMessageId,
+            })
           } catch (error) {
             if (error instanceof Error && options?.throwOnError) {
               throw error
@@ -437,7 +477,7 @@ export function useChat(): UseChatReturn {
           throw new Error("Unerwartete Chat-Antwort")
         }
 
-        await readChatEventStream(res)
+        await readChatEventStream(res, { targetAssistantMessageId: assistantMessage.id })
 
         // Refresh conversations list
         loadConversations()
@@ -537,7 +577,10 @@ export function useChat(): UseChatReturn {
           throw new Error("Unerwartete Chat-Antwort")
         }
 
-        await readChatEventStream(res, { throwOnError: true })
+        await readChatEventStream(res, {
+          throwOnError: true,
+          targetAssistantMessageId: assistantPlaceholderId,
+        })
         loadConversations()
       } catch (error) {
         setMessages((prev) =>
