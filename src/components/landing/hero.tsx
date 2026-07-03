@@ -1,6 +1,4 @@
-import Image from "next/image"
 import Link from "next/link"
-import { TOM } from "@/data/team"
 
 const outcomeChecks = [
   "Dein Haarprofil",
@@ -74,24 +72,15 @@ export function Hero() {
             </span>
           </Link>
 
-          <figure className="mt-6 flex items-start gap-3.5 rounded-[14px] bg-[var(--brand-plum-ice)] p-4">
-            <Image
-              src={TOM.imageUrl}
-              alt={TOM.name}
-              width={96}
-              height={96}
-              className="h-12 w-12 shrink-0 rounded-full border-2 border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] object-cover object-[52%_18%]"
-            />
-            <div>
-              <blockquote className="mb-2 font-header text-[15px] italic leading-[1.4] text-[var(--brand-plum-darkest)]">
-                „Ich sage es immer: Ohne Analyse ist jede Produktempfehlung Glücksspiel. Deswegen
-                empfehle ich genau das hier.“
-              </blockquote>
-              <figcaption className="font-mono text-[10px] font-medium uppercase tracking-[0.06em] text-[var(--brand-plum)]">
-                {`${TOM.name} · ${TOM.role} · ${TOM.experienceYears} Jahre Erfahrung`}
-              </figcaption>
-            </div>
-          </figure>
+          <div className="mt-6 rounded-[14px] bg-[var(--brand-plum-ice)] p-4">
+            <p className="mb-2 font-header text-[17px] leading-[1.35] text-[var(--brand-plum-darkest)]">
+              Analyse statt Produkt-Raten.
+            </p>
+            <p className="text-[14px] leading-relaxed text-muted-foreground">
+              Chaarlie verbindet Haarprofil, Kopfhaut, Ziele und Routine zu Empfehlungen, die du
+              nachvollziehen kannst.
+            </p>
+          </div>
 
           <div className="mt-4 flex items-center justify-center gap-2">
             <span aria-hidden="true" className="text-lg tracking-[2px] text-[var(--brand-plum)]">
