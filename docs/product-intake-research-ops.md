@@ -46,12 +46,80 @@ Never run this command without Nick explicitly approving that exact package.
 - The review app saves only package-local files such as `payload.json`,
   `image-review.json`, `property-review.json`, `image-finalization.json`, and
   `package-approval.json`.
-- The review app must not call Supabase write APIs, approval commands, upload
-  commands, or migrations.
+- The legacy local package review app must not call Supabase write APIs,
+  approval commands, upload commands, or migrations.
+- The new internal review cockpit may write durable job/research/review state
+  rows and may save researched preview payloads for Nick's review. Product
+  publish, image upload, user linking, and notification remain guarded writes.
 - Approval commands must be dry-run first unless Nick explicitly chooses to
   apply.
 - If a product may already exist, prefer linking the existing product over
   creating a duplicate.
+
+## Internal Review Cockpit Phase 1-2 Local Flow
+
+The internal cockpit introduces a separate local app plus durable job,
+artifact, review-decision, and rework state. Codex CLI research is available
+through the worker only when explicitly started with `--execute-codex`; final
+publish is still guarded.
+
+Local app:
+
+```bash
+npm run products:intake:review-cockpit:dev
+```
+
+Preview-only worker smoke check:
+
+```bash
+npm run products:intake:codex-worker -- --json
+```
+
+Real local Codex research worker:
+
+```bash
+npm run products:intake:codex-worker -- --execute-codex --json
+```
+
+Persistent local Codex research worker for review-cockpit testing:
+
+```bash
+npm run products:intake:codex-worker -- --execute-codex --watch --concurrency=2 --poll-ms=30000
+```
+
+What the cockpit can do locally:
+
+- Show a DB-backed queue of open product submissions and research jobs.
+- Enqueue/retry `product_intake_research_jobs` rows.
+- Claim at most two queued or rework jobs by default with the local worker.
+- Write visible progress and research artifacts for claimed jobs.
+- Save researched preview payloads onto `product_submissions.researched_payload`
+  when Codex returns a complete final payload.
+- Save Nick's field, image, and final handoff decisions.
+- Create one product-level rework job from all saved comments.
+- Create a publish preflight artifact that names blockers.
+- Expose a publish route that is fail-closed and records a blocked publish
+  artifact. The route must not write products until it is wired to the
+  canonical package/image approval gate.
+
+What this cockpit intentionally cannot do yet:
+
+- Process final product images.
+- Publish products into Supabase from the cockpit. Use the canonical
+  `approve-package --apply --confirm` command until the cockpit integrates that
+  same image/package gate.
+- Notify users unless that guarded publish route or the existing approval
+  command is explicitly run.
+
+The internal app is local no-login for development. Do not deploy it publicly
+without a deployment-level protection gate.
+
+Required migrations before the action buttons work:
+
+- `supabase/migrations/20260630120000_product_intake_research_jobs.sql`
+- `supabase/migrations/20260630130000_product_intake_research_artifacts_decisions.sql`
+- `supabase/migrations/20260701090000_product_intake_rework_resets_attempts.sql`
+- `supabase/migrations/20260701100000_product_intake_auto_enqueue.sql`
 
 ## Required Environment
 
@@ -114,6 +182,34 @@ Closed statuses should be visible only when explicitly filtered:
 
 ### 2. Prepare Local Research Packages
 
+Use the research queue runner for normal operation:
+
+```bash
+npm run products:intake:research-queue -- --limit=10
+```
+
+The runner is local and dry-run/read-only for Supabase writes. It loads the
+pending queue, creates missing local package folders, reuses existing package
+folders for submissions that were already prepared, and prints a Codex worklist
+with package state, blockers, and next commands.
+
+The runner also performs package-local image discovery for packages whose image
+candidate is missing, remote-only, or broken. It searches trusted product-source
+paths that are already in the package and can fall back to retailer product
+search APIs such as dm when the page is JavaScript-backed or stale. Successful
+image searches write only local package files:
+
+- `image-search-request.json`
+- `image-search-result.json`
+- `image-candidates.json`
+- `images/source/replacement-*.png`
+
+Completed image searches are not repeated on the daily run unless you pass
+`--force-image-search`.
+
+Use the lower-level preparer only when you specifically want package shells
+without the worklist:
+
 ```bash
 npm run products:intake:prepare-research -- --limit=10
 ```
@@ -144,6 +240,18 @@ Expected package files:
 
 Fresh packages may start incomplete. That is expected. A first package can have
 `validation.json` with `ok: false` until research is complete.
+
+Package states:
+
+- `package_needs_research`: no `payload.final` yet. This is only a prepared
+  shell and is not ready for Nick to review. This state also applies when
+  product facts validate but the package has no renderable, package-local raw
+  image candidate in `image-candidates.json`.
+- `package_in_progress`: final research exists, but validation or image
+  finalization is still incomplete.
+- `package_ready_for_review`: researched product data validates and the image
+  decision is finalized.
+- `package_blocked`: local package files are unreadable or structurally invalid.
 
 ### 3. Research Product Identity First
 
@@ -212,6 +320,37 @@ Preferred source order:
    shop.
 3. Other search result only when source quality is clear and noted.
 
+Image-source standard for Codex research agents:
+
+- Exact product and variant must match: brand, line, product name, package type,
+  size, and regional label when visible.
+- Prefer a transparent alpha PNG/WebP cutout. Otherwise use a clean plain white
+  or very light background that can be removed reliably.
+- The candidate should be a front-facing, full-product packshot of one saleable
+  unit only: bottle, jar, tube, tub, spray, pouch, or sachet.
+- The ideal image has no visible shadow, halo, base reflection, mirrored floor,
+  pedestal, or extra packaging. A mild removable base reflection is only a
+  fallback when the candidate is otherwise exact, product-only, front-facing,
+  high-resolution, and cleaner exact candidates do not exist.
+- Reject outer boxes, cartons, secondary packaging, product-plus-box photos,
+  bundles, multipacks, cropped products, watermarks, retailer badges, sale
+  overlays, lifestyle/model/bathroom/shelf/hand-held/editorial images, dark
+  backgrounds, strong reflections, and heavy shadows.
+- Rank candidates in this order: exact identity and market first, product-only
+  front shot second, processing-clean background third, resolution and label
+  legibility fourth. Reject cleaner-looking images if they are box-only,
+  product-plus-box, wrong region, wrong variant, old packaging, or too small.
+- Practical lesson from the Plantur 39 shampoo test: a high-resolution, exact,
+  product-only, white-background packshot with a mild base reflection can still
+  be the best candidate if Apple Vision removes the reflection cleanly and the
+  finalizer plus magenta QA pass. Do not block that case merely because the raw
+  source is not transparent. Do block heavy mirrored floors, dark shadow tails,
+  or reflections that remain visible after processing.
+- Do not choose a mediocre image just to unblock the package. If no candidate
+  meets the standard, mark the image candidate as `needs_image_search`, explain
+  why, name the best rejected candidate, and keep the package in
+  research/rework.
+
 The review app must show:
 
 - user-uploaded front photo, if available
@@ -230,6 +369,11 @@ The reviewer must be able to say:
 If images do not render, cache them into the package under `images/source/` and
 update `image-candidates.json` to point at package-local files. The reviewer
 must be able to visually inspect the image before approval.
+
+Research is not complete until this image candidate exists. A package with a
+valid `payload.final` but no cached `image-candidates.json` entry remains
+`package_needs_research`; the daily queue runner must keep it on Codex's
+research worklist instead of handing it to Nick as review-ready.
 
 ### 6. Remove Background Locally
 
@@ -389,6 +533,54 @@ EOF
 
 Always run magenta QA again after shadow work.
 
+### Processing A Mild Reflection Source
+
+This is the expected path when the best exact image is a product-only packshot
+on a clean white/light background but the raw source has a mild base reflection.
+
+Use this only when the image is exact, front-facing, full product visible,
+product-only, and high-resolution enough for review.
+
+1. Download the source image into the package or temp work folder.
+2. Run Apple Vision background removal:
+
+   ```bash
+   swift scripts/product-images/removebg.swift <output-dir> <source-image>
+   ```
+
+3. If direct Vision output fails, use the padded fallback:
+
+   ```bash
+   swift scripts/product-images/removebg-padded.swift <source-image> <output-file.png>
+   ```
+
+4. Run the product image finalizer, either through the worker or package command:
+
+   ```bash
+   npm run products:intake:finalize-image -- ops/product-intake-research/YYYY-MM-DD/<submission-id>
+   ```
+
+5. Review both outputs:
+
+   - magenta QA for leftover halo, shadow tail, reflection, or cutout damage
+   - neutral Chaarlie final image for the actual product-card appearance
+
+Accept when:
+
+- finalizer quality gate passes
+- final image is `1200x1200`
+- product remains intact and readable
+- no visible floor reflection or heavy shadow remains
+- magenta QA shows at most a small soft edge/halo
+
+Reject and search again when:
+
+- base reflection remains visible in the final image
+- the cutout loses product content
+- there is a dark/opaque tail near the bottom
+- halo is strong enough to be obvious on magenta or neutral background
+- the product identity was only approximate
+
 ### 7. Generate The Final Chaarlie Image
 
 After the reviewer approves an image candidate and
@@ -543,13 +735,14 @@ The recurring Codex job should do only the read/prep side:
 ```bash
 cd /Users/nick/AI_work/hair_conscierge/.worktrees/product-intake-full-flow-smoke
 npm run products:intake:queue -- --status pending_review --report
-npm run products:intake:prepare-research -- --limit=5
+npm run products:intake:research-queue -- --limit=5
 ```
 
 The daily job should report:
 
-- created package paths
-- skipped existing packages
+- package state by submission
+- created and reused package paths
+- automatic image-search status by package
 - blockers
 - submissions needing more user information
 - packages ready for review
@@ -559,7 +752,7 @@ The daily job must not run:
 - `products:intake:upload-image --apply`
 - `products:intake:approve-package --apply`
 - migrations
-- any Supabase write command
+- any Supabase write command unless Nick explicitly approves the exact command
 
 Once this stack is merged, move the automation from the integration worktree to
 the final shipping/mainline worktree.

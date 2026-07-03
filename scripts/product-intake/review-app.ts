@@ -1,8 +1,11 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http"
+import { createHash } from "node:crypto"
 import { existsSync } from "node:fs"
-import { lstat, readdir, readFile, realpath, writeFile } from "node:fs/promises"
+import { lstat, mkdir, readdir, readFile, realpath, writeFile } from "node:fs/promises"
 import { join, relative, resolve, sep } from "node:path"
 import { pathToFileURL } from "node:url"
+
+import sharp from "sharp"
 
 import { PRODUCT_INTAKE_BUCKET } from "@/lib/product-intake/image-validation"
 import {
@@ -16,7 +19,9 @@ import {
   validateProductIntakeImageFinalization,
   type ProductIntakeImageFinalizationDecision,
 } from "./image-finalization"
+import { finalizeProductIntakePackageImage } from "./finalize-package-image"
 import { IMAGE_FINALIZATION_FILE, RESEARCH_PACKAGE_ROOT } from "./prepare-research"
+import { approveResearchPackage } from "./approve-package"
 
 type JsonRecord = Record<string, any>
 
@@ -28,19 +33,29 @@ export type ReviewPackageSummary = {
   product_name_text: string | null
   validation_ok: boolean | null
   image_status: string
+  image_candidate_status: ImageCandidateStatus
+  package_state: ReviewPackageState
+  package_state_reason: string
 }
 
 export type ReviewPackageDetail = {
   package_path: string
+  package_state: ReviewPackageState
+  package_state_reason: string
   submission: JsonRecord
   payload: JsonRecord
   validation: unknown | null
   stored_validation: unknown | null
   image_candidates: JsonRecord[]
+  image_candidate_status: ImageCandidateStatus
   image_finalization: JsonRecord | null
   image_candidate_review: JsonRecord | null
+  image_search_request: JsonRecord | null
+  image_search_result: JsonRecord | null
   property_review: JsonRecord | null
   package_approval: JsonRecord | null
+  approval_dry_run: JsonRecord | null
+  approval_apply: JsonRecord | null
   source_links: ReviewSourceLink[]
   image_assets: ReviewImageAsset[]
   property_rows: ReviewPropertyRow[]
@@ -82,6 +97,31 @@ export type ImageCandidateReviewDecision = {
   reviewed_at: string
 }
 
+export type ImageSearchRequest = {
+  status: "requested"
+  query: string
+  requirements: string[]
+  reject: string[]
+  preferred_sources: string[]
+  notes: string
+  requested_by: string
+  requested_at: string
+}
+
+export type ImageSearchResult = {
+  status: "candidate_found" | "no_candidate_found"
+  query: string
+  message: string
+  attempted_pages: string[]
+  attempted_images: string[]
+  rejected: Array<{ url: string; reason: string }>
+  candidate: JsonRecord | null
+  local_file: string | null
+  source_page_url: string | null
+  source_image_url: string | null
+  searched_at: string
+}
+
 export type PropertyReviewDecision = {
   path: string
   status: "approved" | "change_requested"
@@ -107,6 +147,20 @@ type PendingImageDecision = {
 }
 
 type ImageFinalizationDecision = ProductIntakeImageFinalizationDecision | PendingImageDecision
+
+export type ImageCandidateStatus = "ready" | "missing" | "remote_only" | "broken"
+
+export type ReviewPackageState =
+  | "package_needs_research"
+  | "package_in_progress"
+  | "package_rework_requested"
+  | "package_ready_for_review"
+  | "package_blocked"
+
+export type ReviewPackageStateResult = {
+  package_state: ReviewPackageState
+  package_state_reason: string
+}
 
 function isRecord(value: unknown): value is JsonRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value)
@@ -233,8 +287,610 @@ function imageStatus(value: unknown): string {
   return isRecord(value) ? (stringValue(value.status) ?? "unknown") : "missing"
 }
 
+function imageReviewStatus(value: unknown): string {
+  const status = imageStatus(value)
+  if (status === "pending" && isRecord(value) && stringValue(value.final_file)) {
+    return "final_ready"
+  }
+  return status
+}
+
 function validationOk(value: unknown): boolean | null {
   return isRecord(value) && typeof value.ok === "boolean" ? value.ok : null
+}
+
+function productSearchName(params: { submission: JsonRecord; payload: JsonRecord }): string {
+  const product = isRecord(params.payload.final?.product)
+    ? params.payload.final.product
+    : isRecord(params.payload.draft?.product)
+      ? params.payload.draft.product
+      : {}
+  return [
+    stringValue(product.canonical_brand) ?? stringValue(params.submission.brand_text),
+    stringValue(product.product_line),
+    stringValue(product.clean_name) ?? stringValue(params.submission.product_name_text),
+  ]
+    .filter(Boolean)
+    .join(" ")
+}
+
+function buildImageSearchRequest(params: {
+  submission: JsonRecord
+  payload: JsonRecord
+  notes?: string | null
+  requestedBy: string
+  requestedAt: string
+}): ImageSearchRequest {
+  const productName = productSearchName({ submission: params.submission, payload: params.payload })
+  const gtin = Array.isArray(params.payload.final?.identifiers)
+    ? params.payload.final.identifiers
+        .filter(isRecord)
+        .map((identifier: JsonRecord) => stringValue(identifier.value))
+        .find(Boolean)
+    : null
+  const queryParts = [
+    productName,
+    gtin,
+    "official product image front packshot transparent background",
+  ].filter(Boolean)
+
+  return {
+    status: "requested",
+    query: queryParts.join(" "),
+    requirements: [
+      "Exaktes Produkt / exact product: Marke, Linie, Produktname und Packung muessen zum Research-Payload passen.",
+      "Frontale Packshot-Ansicht / front-facing packshot: ganze Flasche/Tube/Dose sichtbar, nicht angeschnitten.",
+      "Hintergrund / background: transparent or plain light background; keine dunkle, reflektierende oder Lifestyle-Szene.",
+      "Qualitaet: mindestens ca. 700 px auf der langen Kante, scharf, keine Wasserzeichen.",
+      "Quelle: bevorzugt offizielle Brand-/Henkel-/Hersteller-Quelle oder vertrauenswuerdiger Retailer.",
+    ],
+    reject: [
+      "Kein Lifestyle-, Model-, Badezimmer- oder Regalbild.",
+      "Keine dunklen / dark Spiegelungs-/Glow-Hintergruende, wenn sie nicht sauber entfernt werden koennen.",
+      "Keine falsche Variante, falsche Groesse, altes Packaging oder aehnliche Produktlinie.",
+      "Kein niedrig aufgeloestes, verpixeltes oder schraeg fotografiertes Bild.",
+    ],
+    preferred_sources: [
+      "Offizielle Brand-/Hersteller-Produktseite",
+      "Hersteller-DAM oder CDN-Bild",
+      "Retailer-Produktseite mit exakt passender GTIN",
+    ],
+    notes: params.notes?.trim() ?? "",
+    requested_by: params.requestedBy,
+    requested_at: params.requestedAt,
+  }
+}
+
+function packageGtin(payload: JsonRecord): string | null {
+  if (!Array.isArray(payload.final?.identifiers)) return null
+  return (
+    payload.final.identifiers
+      .filter(isRecord)
+      .find((identifier: JsonRecord) => stringValue(identifier.type)?.toLowerCase() === "gtin")
+      ?.value ?? null
+  )
+}
+
+function uniqueStrings(values: Array<string | null | undefined>): string[] {
+  return [...new Set(values.filter((value): value is string => Boolean(value)))]
+}
+
+function sourcePageUrls(payload: JsonRecord): string[] {
+  const product = isRecord(payload.final?.product) ? payload.final.product : null
+  const sourceUrls = sourceLinks(payload).map((source) => source.url)
+  return uniqueStrings([
+    ...sourceUrls,
+    safeHttpUrl(product?.affiliate_link),
+    safeHttpUrl(product?.image_url),
+  ])
+}
+
+function looksLikeDirectImageUrl(url: string): boolean {
+  return (
+    /\.(?:png|jpe?g|webp)(?:[?#].*)?$/i.test(url) ||
+    /^https:\/\/dm\.henkel-dam\.com\/is\/image\/henkel\//i.test(url) ||
+    /^https:\/\/products\.dm-static\.com\/images\//i.test(url)
+  )
+}
+
+function normalizedImageFetchUrl(url: string): string {
+  if (/^https:\/\/dm\.henkel-dam\.com\/is\/image\/henkel\//i.test(url) && !url.includes("?")) {
+    return `${url}?fmt=png-alpha&qlt=90&wid=900`
+  }
+  if (/^https:\/\/products\.dm-static\.com\/images\//i.test(url)) {
+    return url.replace(/h_\d+,w_\d+/i, "h_1000,w_1000").replace(/w_\d+,h_\d+/i, "w_1000,h_1000")
+  }
+  return url
+}
+
+function dmDanFromUrl(url: string): string | null {
+  try {
+    const parsed = new URL(url)
+    if (parsed.hostname !== "www.dm.de") return null
+    return parsed.pathname.match(/\/p\/d\/(\d+)/)?.[1] ?? null
+  } catch {
+    return null
+  }
+}
+
+function dmSearchUrl(query: string): string {
+  const url = new URL("https://product-search.services.dmtech.com/de/search/crawl")
+  url.searchParams.set("query", query)
+  return url.toString()
+}
+
+function dmTileUrl(dan: string): string {
+  return `https://products.dm.de/product/products/tiles/DE/dans/${dan}`
+}
+
+function dmProductPageUrl(self: unknown): string | null {
+  const value = stringValue(self)
+  if (!value) return null
+  try {
+    return new URL(value, "https://www.dm.de").toString()
+  } catch {
+    return null
+  }
+}
+
+function dmTileImageUrls(product: unknown): Array<{ imageUrl: string; pageUrl: string | null }> {
+  if (!isRecord(product)) return []
+  const tileData = isRecord(product.tileData) ? product.tileData : product
+  const pageUrl = dmProductPageUrl(product.self) ?? dmProductPageUrl(tileData.self)
+  const images = Array.isArray(tileData.images) ? tileData.images : []
+  return images
+    .filter(isRecord)
+    .map((image) => stringValue(image.tileSrc) ?? stringValue(image.src))
+    .filter((url): url is string => Boolean(url))
+    .map((url) => ({ imageUrl: normalizedImageFetchUrl(url), pageUrl }))
+}
+
+async function dmProductImagesFromDan(
+  dan: string,
+): Promise<Array<{ imageUrl: string; pageUrl: string | null }>> {
+  const response = await fetchWithTimeout(dmTileUrl(dan))
+  if (!response.ok) return []
+  const body = await response.json()
+  const product = isRecord(body) && isRecord(body.products) ? body.products[dan] : null
+  return dmTileImageUrls(product)
+}
+
+async function dmProductImagesFromSearch(
+  query: string,
+): Promise<Array<{ imageUrl: string; pageUrl: string | null }>> {
+  const response = await fetchWithTimeout(dmSearchUrl(query))
+  if (!response.ok) return []
+  const body = await response.json()
+  const products = isRecord(body) && Array.isArray(body.products) ? body.products : []
+  return products.flatMap((product) => dmTileImageUrls(product))
+}
+
+function htmlImageUrls(html: string, pageUrl: string): string[] {
+  const urls = new Set<string>()
+  const directImagePattern =
+    /https?:\/\/[^"'<>\\\s]+(?:\.(?:png|jpe?g|webp)|\/is\/image\/henkel\/[^"'<>\\\s]+)(?:\?[^"'<>\\\s]*)?/gi
+  for (const match of html.matchAll(directImagePattern)) {
+    const safe = safeHttpUrl(match[0].replaceAll("&amp;", "&"))
+    if (safe) urls.add(safe)
+  }
+
+  const attributePattern = /\b(?:src|content|data-src|data-original)=["']([^"']+)["']/gi
+  for (const match of html.matchAll(attributePattern)) {
+    const raw = match[1]?.replaceAll("&amp;", "&")
+    if (!raw || !looksLikeDirectImageUrl(raw)) continue
+    try {
+      const resolved = new URL(raw, pageUrl).toString()
+      const safe = safeHttpUrl(resolved)
+      if (safe) urls.add(safe)
+    } catch {
+      // Ignore malformed image attributes from retailer pages.
+    }
+  }
+
+  return [...urls]
+}
+
+function rejectImageUrlBeforeDownload(url: string): string | null {
+  const lowered = url.toLowerCase()
+  if (/(?:_usp-|_how-|_moo-|_vn-|_ra-|mood|teaser|background|banner)/i.test(lowered)) {
+    return "URL looks like a marketing/lifestyle tile, not a clean packshot."
+  }
+  return null
+}
+
+const GENERIC_IMAGE_MATCH_TOKENS = new Set([
+  "and",
+  "background",
+  "conditioner",
+  "front",
+  "haar",
+  "hair",
+  "image",
+  "leave",
+  "mask",
+  "official",
+  "oil",
+  "packshot",
+  "product",
+  "shampoo",
+  "transparent",
+])
+
+function normalizedSearchTokens(value: string): string[] {
+  return [
+    ...new Set(
+      value
+        .toLowerCase()
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .split(/[^a-z0-9]+/g)
+        .filter((token) => token.length >= 3 && !GENERIC_IMAGE_MATCH_TOKENS.has(token)),
+    ),
+  ]
+}
+
+function imageIdentityMismatchReason(params: {
+  imageUrl: string
+  sourcePageUrl: string | null
+  productName: string
+  gtin: string | null
+}): string | null {
+  const haystack = `${params.imageUrl} ${params.sourcePageUrl ?? ""}`.toLowerCase()
+  if (params.gtin && haystack.includes(params.gtin)) return null
+
+  const tokens = normalizedSearchTokens(params.productName)
+  if (tokens.length === 0) return null
+  const matchedTokens = tokens.filter((token) => haystack.includes(token))
+  const minimumMatches = tokens.length === 1 ? 1 : 2
+  if (matchedTokens.length >= minimumMatches) return null
+
+  return `Image source identity does not match enough product tokens (${matchedTokens.length}/${minimumMatches}).`
+}
+
+async function fetchWithTimeout(url: string): Promise<Response> {
+  return fetch(url, {
+    redirect: "follow",
+    signal: AbortSignal.timeout(8000),
+    headers: {
+      "user-agent": "Hair Concierge product-intake review app/1.0",
+      accept: "text/html,image/avif,image/webp,image/png,image/jpeg,*/*;q=0.8",
+    },
+  })
+}
+
+async function inspectCandidateImage(buffer: Buffer): Promise<{
+  width: number
+  height: number
+  alphaCoverage: number
+  darkOpaqueCoverage: number
+  normalizedPng: Buffer
+}> {
+  const image = sharp(buffer, { failOn: "none" }).rotate()
+  const metadata = await image.metadata()
+  const width = metadata.width ?? 0
+  const height = metadata.height ?? 0
+  const normalizedPng = await image.png().toBuffer()
+  const raw = await sharp(normalizedPng).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  const pixels = raw.info.width * raw.info.height
+  let alphaPixels = 0
+  let darkOpaquePixels = 0
+  for (let offset = 0; offset < raw.data.length; offset += 4) {
+    const red = raw.data[offset] ?? 0
+    const green = raw.data[offset + 1] ?? 0
+    const blue = raw.data[offset + 2] ?? 0
+    const alpha = raw.data[offset + 3] ?? 0
+    const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+    if (alpha > 16) alphaPixels += 1
+    if (alpha > 245 && luminance < 42) darkOpaquePixels += 1
+  }
+
+  return {
+    width,
+    height,
+    alphaCoverage: pixels > 0 ? alphaPixels / pixels : 0,
+    darkOpaqueCoverage: pixels > 0 ? darkOpaquePixels / pixels : 0,
+    normalizedPng,
+  }
+}
+
+function candidateImageRejectionReason(params: {
+  width: number
+  height: number
+  darkOpaqueCoverage: number
+}): string | null {
+  if (Math.max(params.width, params.height) < 600) {
+    return "Image is too small for final product asset review."
+  }
+  if (params.darkOpaqueCoverage > 0.35) {
+    return "Image still has a mostly opaque dark background."
+  }
+  return null
+}
+
+async function searchReplacementImageCandidate(params: {
+  packagePath: string
+  submission: JsonRecord
+  payload: JsonRecord
+  request: ImageSearchRequest
+  searchedAt: string
+}): Promise<ImageSearchResult> {
+  const attemptedPages: string[] = []
+  const attemptedImages: string[] = []
+  const rejected: ImageSearchResult["rejected"] = []
+  const productName = productSearchName({ submission: params.submission, payload: params.payload })
+  const gtin = packageGtin(params.payload)
+  const pageUrls = sourcePageUrls(params.payload)
+  const imageUrls = new Map<string, { sourcePageUrl: string | null; enforceIdentity: boolean }>()
+
+  for (const pageUrl of pageUrls) {
+    const dmDan = dmDanFromUrl(pageUrl)
+    if (dmDan) {
+      attemptedPages.push(dmTileUrl(dmDan))
+      try {
+        for (const image of await dmProductImagesFromDan(dmDan)) {
+          if (!imageUrls.has(image.imageUrl)) {
+            imageUrls.set(image.imageUrl, {
+              sourcePageUrl: image.pageUrl ?? pageUrl,
+              enforceIdentity: false,
+            })
+          }
+        }
+      } catch (error) {
+        rejected.push({
+          url: dmTileUrl(dmDan),
+          reason: `dm product image API could not be read: ${(error as Error).message}`,
+        })
+      }
+    }
+
+    if (looksLikeDirectImageUrl(pageUrl)) {
+      imageUrls.set(normalizedImageFetchUrl(pageUrl), {
+        sourcePageUrl: null,
+        enforceIdentity: false,
+      })
+      continue
+    }
+    attemptedPages.push(pageUrl)
+    try {
+      const response = await fetchWithTimeout(pageUrl)
+      if (!response.ok) {
+        rejected.push({ url: pageUrl, reason: `Source page returned HTTP ${response.status}.` })
+        continue
+      }
+      const html = await response.text()
+      for (const imageUrl of htmlImageUrls(html, pageUrl)) {
+        if (!imageUrls.has(imageUrl)) {
+          imageUrls.set(imageUrl, {
+            sourcePageUrl: pageUrl,
+            enforceIdentity: false,
+          })
+        }
+      }
+    } catch (error) {
+      rejected.push({
+        url: pageUrl,
+        reason: `Source page could not be read: ${(error as Error).message}`,
+      })
+    }
+  }
+
+  if (imageUrls.size === 0 && productName) {
+    const searchUrl = dmSearchUrl(productName)
+    attemptedPages.push(searchUrl)
+    try {
+      for (const image of await dmProductImagesFromSearch(productName)) {
+        if (!imageUrls.has(image.imageUrl)) {
+          imageUrls.set(image.imageUrl, {
+            sourcePageUrl: image.pageUrl,
+            enforceIdentity: true,
+          })
+        }
+      }
+    } catch (error) {
+      rejected.push({
+        url: searchUrl,
+        reason: `dm product search could not be read: ${(error as Error).message}`,
+      })
+    }
+  }
+
+  for (const [imageUrl, source] of imageUrls) {
+    const sourcePageUrl = source.sourcePageUrl
+    const preflightRejection = rejectImageUrlBeforeDownload(imageUrl)
+    if (preflightRejection) {
+      rejected.push({ url: imageUrl, reason: preflightRejection })
+      continue
+    }
+    if (source.enforceIdentity) {
+      const identityRejection = imageIdentityMismatchReason({
+        imageUrl,
+        sourcePageUrl,
+        productName,
+        gtin,
+      })
+      if (identityRejection) {
+        rejected.push({ url: imageUrl, reason: identityRejection })
+        continue
+      }
+    }
+
+    attemptedImages.push(imageUrl)
+    try {
+      const response = await fetchWithTimeout(normalizedImageFetchUrl(imageUrl))
+      if (!response.ok) {
+        rejected.push({ url: imageUrl, reason: `Image returned HTTP ${response.status}.` })
+        continue
+      }
+      const buffer = Buffer.from(await response.arrayBuffer())
+      const inspection = await inspectCandidateImage(buffer)
+      const rejectionReason = candidateImageRejectionReason(inspection)
+      if (rejectionReason) {
+        rejected.push({ url: imageUrl, reason: rejectionReason })
+        continue
+      }
+
+      const hash = createHash("sha256").update(inspection.normalizedPng).digest("hex").slice(0, 12)
+      const localFile = `images/source/replacement-${hash}.png`
+      const localPath = join(params.packagePath, localFile)
+      await mkdir(join(params.packagePath, "images", "source"), { recursive: true })
+      await writeFile(localPath, inspection.normalizedPng)
+
+      const candidate: JsonRecord = {
+        label: "Neuer Bildkandidat aus Quellensuche",
+        source_page_url: sourcePageUrl,
+        source_image_url: imageUrl,
+        source_type: "search_result",
+        source_provenance: "review_app_source_search",
+        local_file: localFile,
+        notes: [
+          "Automatisch aus den Research-Quellen gefunden.",
+          productName ? `Produktabgleich: ${productName}` : null,
+          gtin ? `GTIN im Suchkontext: ${gtin}` : null,
+          params.request.notes || null,
+        ]
+          .filter(Boolean)
+          .join(" "),
+        inspected: {
+          width: inspection.width,
+          height: inspection.height,
+          alpha_coverage: Number(inspection.alphaCoverage.toFixed(4)),
+          dark_opaque_coverage: Number(inspection.darkOpaqueCoverage.toFixed(4)),
+        },
+      }
+
+      const existingRaw = await readOptionalJson(join(params.packagePath, "image-candidates.json"))
+      const existingCandidates = imageCandidates(existingRaw)
+      const alreadyExists = existingCandidates.some(
+        (existing) => stringValue(existing.source_image_url) === imageUrl,
+      )
+      const nextCandidates = alreadyExists
+        ? existingCandidates.map((existing) =>
+            stringValue(existing.source_image_url) === imageUrl
+              ? {
+                  ...existing,
+                  source_page_url: stringValue(existing.source_page_url) ?? sourcePageUrl,
+                  source_type: stringValue(existing.source_type) ?? candidate.source_type,
+                  source_provenance:
+                    stringValue(existing.source_provenance) ?? candidate.source_provenance,
+                  inspected: isRecord(existing.inspected)
+                    ? existing.inspected
+                    : candidate.inspected,
+                }
+              : existing,
+          )
+        : [...existingCandidates, candidate]
+      await writeJson(join(params.packagePath, "image-candidates.json"), {
+        candidates: nextCandidates,
+      })
+
+      return {
+        status: "candidate_found",
+        query: params.request.query,
+        message: "Neuer Bildkandidat gefunden und lokal im Paket gespeichert.",
+        attempted_pages: attemptedPages,
+        attempted_images: attemptedImages,
+        rejected,
+        candidate,
+        local_file: stringValue(candidate.local_file),
+        source_page_url: sourcePageUrl,
+        source_image_url: imageUrl,
+        searched_at: params.searchedAt,
+      }
+    } catch (error) {
+      rejected.push({
+        url: imageUrl,
+        reason: `Image could not be processed: ${(error as Error).message}`,
+      })
+    }
+  }
+
+  return {
+    status: "no_candidate_found",
+    query: params.request.query,
+    message:
+      "Keine bessere Quelle in den vorhandenen Research-Links gefunden. Codex/Web-Recherche oder manuelle Bildquelle noetig.",
+    attempted_pages: attemptedPages,
+    attempted_images: attemptedImages,
+    rejected,
+    candidate: null,
+    local_file: null,
+    source_page_url: null,
+    source_image_url: null,
+    searched_at: params.searchedAt,
+  }
+}
+
+export function classifyReviewPackageState(params: {
+  payload: unknown
+  validation: unknown
+  imageFinalization: unknown
+  imageCandidateStatus?: ImageCandidateStatus
+  propertyReviewStatus?: "change_requested" | null
+}): ReviewPackageStateResult {
+  if (!isRecord(params.payload)) {
+    return {
+      package_state: "package_blocked",
+      package_state_reason: "payload.json is missing or not an object",
+    }
+  }
+
+  if (!isRecord(params.payload.final)) {
+    return {
+      package_state: "package_needs_research",
+      package_state_reason: "No final researched payload yet",
+    }
+  }
+
+  const image = imageStatus(params.imageFinalization)
+  const imageReady = image === "approved_asset" || image === "no_image_approved_for_now"
+  const productReady = validationOk(params.validation) === true
+  const candidateStatus = params.imageCandidateStatus ?? null
+
+  if (productReady && params.propertyReviewStatus === "change_requested") {
+    return {
+      package_state: "package_rework_requested",
+      package_state_reason:
+        "Nick requested property changes; update the research payload before final approval",
+    }
+  }
+
+  if (productReady && imageReady) {
+    return {
+      package_state: "package_ready_for_review",
+      package_state_reason: "Product data and image decision are ready for Nick review",
+    }
+  }
+
+  if (productReady && !imageReady && candidateStatus === "missing") {
+    return {
+      package_state: "package_needs_research",
+      package_state_reason: "No product image candidate in package",
+    }
+  }
+
+  if (productReady && !imageReady && candidateStatus === "remote_only") {
+    return {
+      package_state: "package_needs_research",
+      package_state_reason: "Product image candidate is not cached locally",
+    }
+  }
+
+  if (productReady && !imageReady && candidateStatus === "broken") {
+    return {
+      package_state: "package_needs_research",
+      package_state_reason: "Product image candidate local file is missing",
+    }
+  }
+
+  const blockers = [
+    productReady ? null : "product data is not validation-ready",
+    imageReady ? null : "image decision is not finalized",
+  ].filter(Boolean)
+
+  return {
+    package_state: "package_in_progress",
+    package_state_reason: blockers.join("; "),
+  }
 }
 
 function supportedReviewCategory(value: unknown): ProductIntakeReviewCategoryKey | null {
@@ -434,6 +1090,40 @@ function imageCandidates(value: unknown): JsonRecord[] {
   return candidates.filter((candidate): candidate is JsonRecord => isRecord(candidate))
 }
 
+export function imageCandidateStatus(params: {
+  rootDir: string
+  packagePath: string
+  imageCandidates: JsonRecord[]
+}): ImageCandidateStatus {
+  if (params.imageCandidates.length === 0) return "missing"
+
+  let hasRemoteCandidate = false
+  let hasBrokenLocalCandidate = false
+
+  for (const candidate of params.imageCandidates) {
+    const localFile = stringValue(candidate.local_file)
+    const sourceImageUrl = safeHttpUrl(candidate.source_image_url)
+    if (sourceImageUrl) hasRemoteCandidate = true
+
+    if (!localFile) continue
+
+    try {
+      const localPath = resolvePackageFilePath({
+        rootDir: params.rootDir,
+        packagePath: params.packagePath,
+        filePath: localFile,
+      })
+      if (existsSync(localPath)) return "ready"
+      hasBrokenLocalCandidate = true
+    } catch {
+      hasBrokenLocalCandidate = true
+    }
+  }
+
+  if (hasBrokenLocalCandidate) return "broken"
+  return hasRemoteCandidate ? "remote_only" : "missing"
+}
+
 function propertyRows(params: {
   payload: JsonRecord
   sources: ReviewSourceLink[]
@@ -476,6 +1166,10 @@ function isCurrentPropertyReview(
   return isRecord(decision) && decision.proposed_value === row.value
 }
 
+function propertyReviewStatus(rows: ReviewPropertyRow[]): "change_requested" | null {
+  return rows.some((row) => row.review?.status === "change_requested") ? "change_requested" : null
+}
+
 function imageAssets(params: {
   rootDir: string
   packagePath: string
@@ -508,7 +1202,7 @@ function imageAssets(params: {
   }
 
   let hasPackageCandidate = false
-  for (const candidate of params.imageCandidates) {
+  for (const candidate of [...params.imageCandidates].reverse()) {
     const localFile = stringValue(candidate.local_file)
     const sourceImageUrl = safeHttpUrl(candidate.source_image_url)
     const sourcePageUrl = safeHttpUrl(candidate.source_page_url)
@@ -693,6 +1387,123 @@ function validateFinalDecision(payload: JsonRecord, decision: ImageFinalizationD
   }
 }
 
+type ApprovedImageSourceType = "brand" | "retailer" | "marketplace" | "search_result" | "unknown"
+
+function approvedImageSourceType(value: unknown): ApprovedImageSourceType {
+  if (
+    value === "brand" ||
+    value === "retailer" ||
+    value === "marketplace" ||
+    value === "search_result" ||
+    value === "unknown"
+  ) {
+    return value
+  }
+  return "search_result"
+}
+
+function normalizeApprovedImageDecision(
+  decision: ImageFinalizationDecision,
+): ImageFinalizationDecision {
+  if (decision.status !== "approved_asset") return decision
+  const sourceType = approvedImageSourceType(decision.source_type)
+  if (sourceType === decision.source_type) return decision
+
+  return {
+    ...decision,
+    source_type: sourceType,
+    notes: [decision.notes, `Original review-app source type: ${String(decision.source_type)}`]
+      .filter(Boolean)
+      .join(" "),
+  }
+}
+
+function commandPackagePath(packagePath: string): string {
+  const relativePath = relative(process.cwd(), packagePath)
+  return relativePath.startsWith("..") ? packagePath : relativePath
+}
+
+function approvalCommands(packagePath: string): { dry_run: string; apply: string } {
+  const packageArg = commandPackagePath(packagePath)
+  const base = `npm run products:intake:approve-package -- --package ${packageArg} --reviewed-by nick`
+  return {
+    dry_run: base,
+    apply: `${base} --apply --confirm`,
+  }
+}
+
+async function runApprovalDryRun(params: {
+  rootDir: string
+  packagePath: string
+  reviewedBy: string
+  reviewNotes: string | null
+}): Promise<JsonRecord> {
+  const packagePath = resolvePackagePath(params)
+  const commands = approvalCommands(packagePath)
+  try {
+    const result = await approveResearchPackage({
+      packageDir: packagePath,
+      reviewedBy: params.reviewedBy,
+      reviewNotes: params.reviewNotes,
+      apply: false,
+      confirm: false,
+    })
+    const record = {
+      ok: true,
+      generated_at: new Date().toISOString(),
+      commands,
+      result,
+    }
+    await writeJson(join(packagePath, "approval-dry-run.json"), record)
+    return record
+  } catch (error) {
+    const record = {
+      ok: false,
+      generated_at: new Date().toISOString(),
+      commands,
+      error: (error as Error).message,
+    }
+    await writeJson(join(packagePath, "approval-dry-run.json"), record)
+    return record
+  }
+}
+
+async function runApprovalApply(params: {
+  rootDir: string
+  packagePath: string
+  reviewedBy: string
+  reviewNotes: string | null
+}): Promise<JsonRecord> {
+  const packagePath = resolvePackagePath(params)
+  const commands = approvalCommands(packagePath)
+  try {
+    const result = await approveResearchPackage({
+      packageDir: packagePath,
+      reviewedBy: params.reviewedBy,
+      reviewNotes: params.reviewNotes,
+      apply: true,
+      confirm: true,
+    })
+    const record = {
+      ok: true,
+      applied_at: new Date().toISOString(),
+      commands,
+      result,
+    }
+    await writeJson(join(packagePath, "approval-apply.json"), record)
+    return record
+  } catch (error) {
+    const record = {
+      ok: false,
+      applied_at: new Date().toISOString(),
+      commands,
+      error: (error as Error).message,
+    }
+    await writeJson(join(packagePath, "approval-apply.json"), record)
+    return record
+  }
+}
+
 function cloneJsonRecord(value: JsonRecord): JsonRecord {
   return JSON.parse(JSON.stringify(value)) as JsonRecord
 }
@@ -721,6 +1532,23 @@ export async function listReviewPackages(params: {
           ? storedValidation
           : (livePackageValidation({ submission, payload, packagePath }) ?? storedValidation)
       const imageFinalization = await readOptionalJson(join(packagePath, IMAGE_FINALIZATION_FILE))
+      const rawImageCandidates = await readOptionalJson(join(packagePath, "image-candidates.json"))
+      const propertyReview = await readOptionalJson(join(packagePath, "property-review.json"))
+      const sources = isRecord(payload) ? sourceLinks(payload) : []
+      const rows = isRecord(payload) ? propertyRows({ payload, sources, propertyReview }) : []
+      const candidates = imageCandidates(rawImageCandidates)
+      const candidateStatus = imageCandidateStatus({
+        rootDir: params.rootDir,
+        packagePath,
+        imageCandidates: candidates,
+      })
+      const packageState = classifyReviewPackageState({
+        payload,
+        validation,
+        imageFinalization,
+        imageCandidateStatus: candidateStatus,
+        propertyReviewStatus: propertyReviewStatus(rows),
+      })
 
       summaries.push({
         package_path: packagePath,
@@ -729,7 +1557,9 @@ export async function listReviewPackages(params: {
         brand_text: submissionField(submission, "brand_text"),
         product_name_text: submissionField(submission, "product_name_text"),
         validation_ok: validationOk(validation),
-        image_status: imageStatus(imageFinalization),
+        image_status: imageReviewStatus(imageFinalization),
+        image_candidate_status: candidateStatus,
+        ...packageState,
       })
     }
   }
@@ -750,8 +1580,12 @@ export async function readReviewPackage(params: {
   const candidates = imageCandidates(rawImageCandidates)
   const imageFinalization = await readOptionalJson(join(packagePath, IMAGE_FINALIZATION_FILE))
   const imageCandidateReview = await readOptionalJson(join(packagePath, "image-review.json"))
+  const imageSearchRequest = await readOptionalJson(join(packagePath, "image-search-request.json"))
+  const imageSearchResult = await readOptionalJson(join(packagePath, "image-search-result.json"))
   const propertyReview = await readOptionalJson(join(packagePath, "property-review.json"))
   const packageApproval = await readOptionalJson(join(packagePath, "package-approval.json"))
+  const approvalDryRun = await readOptionalJson(join(packagePath, "approval-dry-run.json"))
+  const approvalApply = await readOptionalJson(join(packagePath, "approval-apply.json"))
 
   if (!isRecord(submission)) {
     throw new Error(`submission.json must contain an object: ${packagePath}`)
@@ -773,18 +1607,37 @@ export async function readReviewPackage(params: {
   }
 
   const sources = sourceLinks(payload)
+  const rows = propertyRows({ payload, sources, propertyReview })
+  const candidateStatus = imageCandidateStatus({
+    rootDir: params.rootDir,
+    packagePath,
+    imageCandidates: candidates,
+  })
+  const packageState = classifyReviewPackageState({
+    payload,
+    validation,
+    imageFinalization,
+    imageCandidateStatus: candidateStatus,
+    propertyReviewStatus: propertyReviewStatus(rows),
+  })
 
   return {
     package_path: packagePath,
+    ...packageState,
     submission,
     payload,
     validation,
     stored_validation: storedValidation,
     image_candidates: candidates,
+    image_candidate_status: candidateStatus,
     image_finalization: imageFinalization,
     image_candidate_review: imageCandidateReview,
+    image_search_request: isRecord(imageSearchRequest) ? imageSearchRequest : null,
+    image_search_result: isRecord(imageSearchResult) ? imageSearchResult : null,
     property_review: propertyReview,
     package_approval: packageApproval,
+    approval_dry_run: isRecord(approvalDryRun) ? approvalDryRun : null,
+    approval_apply: isRecord(approvalApply) ? approvalApply : null,
     source_links: sources,
     image_assets: imageAssets({
       rootDir: params.rootDir,
@@ -794,7 +1647,7 @@ export async function readReviewPackage(params: {
       imageCandidates: candidates,
       imageFinalization,
     }),
-    property_rows: propertyRows({ payload, sources, propertyReview }),
+    property_rows: rows,
     research_md: await readOptionalText(join(packagePath, "research.md")),
     approval_md: await readOptionalText(join(packagePath, "approval.md")),
   }
@@ -808,6 +1661,78 @@ export async function saveImageCandidateReview(params: {
   const packagePath = resolvePackagePath(params)
   await writeJson(join(packagePath, "image-review.json"), params.decision)
   return readReviewPackage({ rootDir: params.rootDir, packagePath })
+}
+
+export async function processApprovedImageCandidate(params: {
+  rootDir: string
+  packagePath: string
+  reviewedBy?: string
+}): Promise<ReviewPackageDetail> {
+  const packagePath = resolvePackagePath(params)
+  await finalizeProductIntakePackageImage({
+    packageDir: packagePath,
+    reviewedBy: params.reviewedBy ?? "codex",
+  })
+  return readReviewPackage({ rootDir: params.rootDir, packagePath })
+}
+
+export async function requestReplacementImageSearch(params: {
+  rootDir: string
+  packagePath: string
+  notes?: string | null
+  requestedBy: string
+  requestedAt: string
+}): Promise<{
+  detail: ReviewPackageDetail
+  image_search_request: ImageSearchRequest
+  image_search_result: ImageSearchResult
+}> {
+  const packagePath = resolvePackagePath(params)
+  const submission = await readOptionalJson(join(packagePath, "submission.json"))
+  const payload = await readOptionalJson(join(packagePath, "payload.json"))
+  if (!isRecord(submission) || !isRecord(payload)) {
+    throw new Error("Image search requires valid submission.json and payload.json")
+  }
+
+  const request = buildImageSearchRequest({
+    submission,
+    payload,
+    notes: params.notes,
+    requestedBy: params.requestedBy,
+    requestedAt: params.requestedAt,
+  })
+
+  await writeJson(join(packagePath, "image-search-request.json"), request)
+  await writeJson(join(packagePath, "image-review.json"), {
+    status: "needs_new_candidate",
+    candidate_url: null,
+    notes: request.notes,
+    reviewed_by: params.requestedBy,
+    reviewed_at: params.requestedAt,
+  } satisfies ImageCandidateReviewDecision)
+  const searchResult = await searchReplacementImageCandidate({
+    packagePath,
+    submission,
+    payload,
+    request,
+    searchedAt: params.requestedAt,
+  })
+  await writeJson(join(packagePath, "image-search-result.json"), searchResult)
+  if (searchResult.status === "candidate_found") {
+    await writeJson(join(packagePath, "image-review.json"), {
+      status: "comment",
+      candidate_url: searchResult.local_file,
+      notes: "Neue Rohbild-Quelle gefunden. Bitte diesen Kandidaten pruefen.",
+      reviewed_by: params.requestedBy,
+      reviewed_at: params.requestedAt,
+    } satisfies ImageCandidateReviewDecision)
+  }
+
+  return {
+    detail: await readReviewPackage({ rootDir: params.rootDir, packagePath }),
+    image_search_request: request,
+    image_search_result: searchResult,
+  }
 }
 
 export async function savePropertyReviewDecision(params: {
@@ -855,11 +1780,13 @@ export async function savePackageApprovalDecision(params: {
     isRecord(detail.property_review) && isRecord(detail.property_review.decisions)
       ? detail.property_review.decisions
       : {}
-  const missing = detail.property_rows.filter(
-    (row) =>
+  const missing = detail.property_rows.filter((row) => {
+    if (row.path === "product.image_url" && imageFinalization.ok) return false
+    return (
       !isCurrentPropertyReview(row, decisions[row.path]) ||
-      decisions[row.path].status !== "approved",
-  )
+      decisions[row.path].status !== "approved"
+    )
+  })
   if (missing.length > 0) {
     throw new Error(
       `All properties must be approved before final approval (${missing.length} open).`,
@@ -877,6 +1804,7 @@ export async function saveImageFinalizationDecision(params: {
   decision: ImageFinalizationDecision
 }): Promise<ReviewPackageDetail> {
   const packagePath = resolvePackagePath(params)
+  const decision = normalizeApprovedImageDecision(params.decision)
   const payloadPath = join(packagePath, "payload.json")
   const payload = await readJson(payloadPath)
   const existingDecision = await readOptionalJson(join(packagePath, IMAGE_FINALIZATION_FILE))
@@ -897,21 +1825,24 @@ export async function saveImageFinalizationDecision(params: {
   }
 
   const nextPayload = cloneJsonRecord(payload)
-  const payloadChanged = patchPayloadForDecision(nextPayload, params.decision)
-  validateFinalDecision(nextPayload, params.decision)
+  const payloadChanged = patchPayloadForDecision(nextPayload, decision)
+  validateFinalDecision(nextPayload, decision)
 
   if (payloadChanged) {
     await writeJson(payloadPath, nextPayload)
-    await writeJson(join(packagePath, IMAGE_FINALIZATION_FILE), params.decision)
+    await writeJson(join(packagePath, IMAGE_FINALIZATION_FILE), decision)
   } else {
-    await writeJson(join(packagePath, IMAGE_FINALIZATION_FILE), params.decision)
+    await writeJson(join(packagePath, IMAGE_FINALIZATION_FILE), decision)
   }
 
   return readReviewPackage({ rootDir: params.rootDir, packagePath })
 }
 
 function jsonResponse(response: ServerResponse, status: number, value: unknown) {
-  response.writeHead(status, { "content-type": "application/json; charset=utf-8" })
+  response.writeHead(status, {
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-store, max-age=0",
+  })
   response.end(JSON.stringify(value, null, 2))
 }
 
@@ -934,7 +1865,10 @@ async function fileResponse(response: ServerResponse, path: string) {
 }
 
 function htmlResponse(response: ServerResponse, value: string) {
-  response.writeHead(200, { "content-type": "text/html; charset=utf-8" })
+  response.writeHead(200, {
+    "content-type": "text/html; charset=utf-8",
+    "cache-control": "no-store, max-age=0",
+  })
   response.end(value)
 }
 
@@ -1022,6 +1956,45 @@ async function routeRequest(params: {
       return
     }
 
+    if (params.request.method === "POST" && url.pathname === "/api/package/process-image") {
+      const body = await readRequestJson(params.request)
+      if (!isRecord(body) || typeof body.packagePath !== "string") {
+        throw new Error("Expected { packagePath }")
+      }
+      const detail = await processApprovedImageCandidate({
+        rootDir: params.rootDir,
+        packagePath: body.packagePath,
+        reviewedBy: stringValue(body.reviewedBy) ?? "nick",
+      })
+      jsonResponse(params.response, 200, {
+        ok: true,
+        image_finalization: detail.image_finalization,
+        detail,
+      })
+      return
+    }
+
+    if (params.request.method === "POST" && url.pathname === "/api/package/request-image-search") {
+      const body = await readRequestJson(params.request)
+      if (!isRecord(body) || typeof body.packagePath !== "string") {
+        throw new Error("Expected { packagePath }")
+      }
+      const result = await requestReplacementImageSearch({
+        rootDir: params.rootDir,
+        packagePath: body.packagePath,
+        notes: stringValue(body.notes) ?? "",
+        requestedBy: stringValue(body.requestedBy) ?? "nick",
+        requestedAt: stringValue(body.requestedAt) ?? new Date().toISOString(),
+      })
+      jsonResponse(params.response, 200, {
+        ok: true,
+        image_search_request: result.image_search_request,
+        image_search_result: result.image_search_result,
+        detail: result.detail,
+      })
+      return
+    }
+
     if (params.request.method === "POST" && url.pathname === "/api/package/property-review") {
       const body = await readRequestJson(params.request)
       if (!isRecord(body) || typeof body.packagePath !== "string" || !isRecord(body.decision)) {
@@ -1044,15 +2017,36 @@ async function routeRequest(params: {
       if (!isRecord(body) || typeof body.packagePath !== "string" || !isRecord(body.decision)) {
         throw new Error("Expected { packagePath, decision }")
       }
-      jsonResponse(
-        params.response,
-        200,
-        await savePackageApprovalDecision({
-          rootDir: params.rootDir,
-          packagePath: body.packagePath,
-          decision: body.decision as PackageApprovalDecision,
-        }),
-      )
+      const decision = body.decision as PackageApprovalDecision
+      await savePackageApprovalDecision({
+        rootDir: params.rootDir,
+        packagePath: body.packagePath,
+        decision,
+      })
+      const approvalDryRun = await runApprovalDryRun({
+        rootDir: params.rootDir,
+        packagePath: body.packagePath,
+        reviewedBy: decision.reviewed_by,
+        reviewNotes: decision.notes,
+      })
+      const approvalApply =
+        body.applyToSupabase === true && approvalDryRun.ok
+          ? await runApprovalApply({
+              rootDir: params.rootDir,
+              packagePath: body.packagePath,
+              reviewedBy: decision.reviewed_by,
+              reviewNotes: decision.notes,
+            })
+          : null
+      const detail = await readReviewPackage({
+        rootDir: params.rootDir,
+        packagePath: body.packagePath,
+      })
+      jsonResponse(params.response, 200, {
+        ...detail,
+        approval_dry_run: approvalDryRun,
+        approval_apply: approvalApply ?? detail.approval_apply,
+      })
       return
     }
 
@@ -1308,6 +2302,101 @@ export function renderAppHtml(): string {
         gap: 10px;
         margin-top: 12px;
       }
+      .processing-feedback {
+        border: 1px solid #e7ded9;
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 12px;
+        background: #fbfaf8;
+      }
+      .processing-feedback.running {
+        border-color: #d86273;
+        background: #fff4f5;
+      }
+      .processing-feedback.ready,
+      .processing-feedback.approved {
+        border-color: #9ad7b3;
+        background: #f0fbf5;
+      }
+      .processing-feedback.needs-work,
+      .processing-feedback.error {
+        border-color: #e4a4a4;
+        background: #fff5f5;
+      }
+      .processing-title {
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+      .processing-body {
+        color: #5f5653;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .processing-progress {
+        height: 8px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: #ebe3df;
+        margin: 10px 0 8px;
+      }
+      .processing-progress-fill {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: #d86273;
+        transition: width 180ms ease;
+      }
+      .processing-feedback.ready .processing-progress-fill,
+      .processing-feedback.approved .processing-progress-fill {
+        background: #31a46b;
+      }
+      .processing-feedback.needs-work .processing-progress-fill,
+      .processing-feedback.error .processing-progress-fill {
+        background: #d45b5b;
+      }
+      .search-feedback {
+        border: 1px solid #e1d7d2;
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 12px;
+        background: #fff;
+      }
+      .search-feedback.requested {
+        border-color: #cdbb88;
+        background: #fff9e8;
+      }
+      .search-feedback.running {
+        border-color: #d86273;
+        background: #fff4f5;
+      }
+      .search-feedback.running .processing-progress-fill {
+        background: #d86273;
+      }
+      .search-feedback.found {
+        border-color: #9fd9b8;
+        background: #effaf4;
+      }
+      .search-feedback.found .processing-progress-fill {
+        background: #31a46b;
+      }
+      .search-feedback.none {
+        border-color: #e0b86e;
+        background: #fff9e8;
+      }
+      .search-feedback.none .processing-progress-fill {
+        background: #d99a2b;
+      }
+      .search-feedback h4 {
+        margin: 0 0 6px;
+        font-size: 14px;
+      }
+      .search-feedback ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+        color: #5f5653;
+        font-size: 13px;
+        line-height: 1.45;
+      }
       .reference-strip {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1397,6 +2486,12 @@ export function renderAppHtml(): string {
       .property-review-table th:nth-child(3) { width: 28%; }
       .property-review-table th:nth-child(4) { width: 16%; }
       .property-review-table th:nth-child(5) { width: 18%; }
+      .property-row.change-requested td {
+        background: #fff8e8;
+      }
+      .property-row.approved td {
+        background: #f8fdf9;
+      }
       .property-name { font-weight: 700; }
       .property-path {
         color: #8a817d;
@@ -1425,6 +2520,12 @@ export function renderAppHtml(): string {
         min-height: 42px;
         padding: 8px;
         font-size: 13px;
+      }
+      .property-note-help {
+        margin-top: 6px;
+        color: #756c69;
+        font-size: 12px;
+        line-height: 1.35;
       }
       .small-button-row {
         border: 1px solid #eadfdb;
@@ -1535,6 +2636,11 @@ export function renderAppHtml(): string {
         background: #f0fbf4;
         color: #14613a;
       }
+      .status-card.danger {
+        border-color: #ee9ca7;
+        background: #fff5f6;
+        color: #8d2637;
+      }
       .toolbar {
         display: flex;
         flex-wrap: wrap;
@@ -1578,6 +2684,7 @@ export function renderAppHtml(): string {
       const statusLabel = (value) => ({
         missing: "Bild fehlt",
         pending: "Bild offen",
+        final_ready: "Finalbild bereit",
         needs_image_work: "Bildarbeit offen",
         approved_asset: "Bild freigegeben",
         no_image_approved_for_now: "Ohne Bild freigegeben",
@@ -1587,6 +2694,13 @@ export function renderAppHtml(): string {
         : value === false
           ? "Produktdaten noch nicht bereit"
           : "Produktdaten ungeprueft";
+      const packageStateLabel = (value) => ({
+        package_needs_research: "Noch nicht recherchiert",
+        package_in_progress: "Research in Arbeit",
+        package_rework_requested: "Aenderung angefordert",
+        package_ready_for_review: "Bereit zur Review",
+        package_blocked: "Paket blockiert",
+      }[value] || "Paketstatus unklar");
       const imageReviewLabel = (value) => ({
         candidate_approved: "Bild passt",
         needs_new_candidate: "Anderes Bild benoetigt",
@@ -1605,6 +2719,159 @@ export function renderAppHtml(): string {
       const packageApprovalLabel = (value) => ({
         approved_for_import: "Final freigegeben",
       }[value] || "Noch nicht final freigegeben");
+      const imageDisplayStatus = (image) =>
+        image?.status === "pending" && image?.final_file
+          ? "final_ready"
+          : image?.status || "missing";
+      const imageProcessingFeedback = (detail) => {
+        const review = detail.image_candidate_review || {};
+        const image = detail.image_finalization || {};
+        if (image.status === "approved_asset") {
+          return {
+            state: "approved",
+            percent: 100,
+            title: "Finalbild freigegeben",
+            body: "Das normalisierte Produktbild ist lokal fuer den Import freigegeben.",
+          };
+        }
+        if (image.status === "pending" && image.final_file) {
+          return {
+            state: "ready",
+            percent: 100,
+            title: "Finalbild ist bereit zur Review",
+            body: "Die Verarbeitung ist abgeschlossen. Pruefe unten das finale Chaarlie-Bild und gib es frei, wenn Groesse und Hintergrund passen.",
+          };
+        }
+        if (image.status === "needs_image_work") {
+          return {
+            state: "needs-work",
+            percent: 100,
+            title: "Bildverarbeitung braucht Arbeit",
+            body:
+              image.notes ||
+              "Die Verarbeitung ist gelaufen, aber die Qualitaetspruefung hat das Bild nicht freigegeben.",
+          };
+        }
+        if (review.status === "candidate_approved") {
+          return {
+            state: "running",
+            percent: 40,
+            title: "Bildverarbeitung wartet",
+            body: "Das Quellbild ist bestaetigt. Starte die Verarbeitung mit dem Button, falls sie noch nicht gelaufen ist.",
+          };
+        }
+        return {
+          state: "idle",
+          percent: 0,
+          title: "Bildverarbeitung",
+          body: "Noch nicht gestartet. Wenn das Quellbild stimmt, klicke auf Bild passt & verarbeiten.",
+        };
+      };
+      const renderProcessingFeedback = (detail) => {
+        const feedback = imageProcessingFeedback(detail);
+        return \`
+          <div id="processing-feedback" class="processing-feedback \${escapeHtml(feedback.state)}" aria-live="polite">
+            <div class="processing-title">\${escapeHtml(feedback.title)}</div>
+            <div class="processing-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="\${escapeHtml(feedback.percent)}">
+              <div class="processing-progress-fill" style="width: \${escapeHtml(feedback.percent)}%;"></div>
+            </div>
+            <div class="processing-body">\${escapeHtml(feedback.body)}</div>
+          </div>
+        \`;
+      };
+      const imageSearchGuidelines = [
+        "Exaktes Produkt: Marke, Linie, Produktname und Packung muessen passen.",
+        "frontale Packshot-Ansicht: ganze Packung sichtbar, nicht angeschnitten.",
+        "Hintergrund: transparent oder plain light/white, keine dunkle Spiegelung.",
+        "Qualitaet: scharf, ausreichend gross, keine Wasserzeichen.",
+        "Kein Lifestyle-, Model-, Badezimmer-, Regal- oder Stimmungsbild.",
+      ];
+      const renderImageSearchFeedback = (detail) => {
+        const request = detail.image_search_request || null;
+        const result = detail.image_search_result || null;
+        const state = result?.status === "candidate_found"
+          ? "found"
+          : result?.status === "no_candidate_found"
+            ? "none"
+            : request?.status === "requested"
+              ? "running"
+              : "";
+        const title = result?.status === "candidate_found"
+          ? "Bildsuche abgeschlossen: neuer Kandidat gefunden"
+          : result?.status === "no_candidate_found"
+            ? "Bildsuche abgeschlossen: kein besseres Bild gefunden"
+            : request?.status === "requested"
+              ? "Bildsuche laeuft"
+              : "Bildsuche";
+        const progress = result ? 100 : request?.status === "requested" ? 45 : 0;
+        const body = result?.status === "candidate_found"
+          ? \`Neuer Bildkandidat gefunden: \${escapeHtml(result.local_file || result.source_image_url || "")}\`
+          : result?.status === "no_candidate_found"
+            ? escapeHtml(result.message || "Die automatische Suche ist fertig. Es laeuft gerade keine weitere Suche.")
+            : request?.status === "requested"
+              ? \`Suche gerade in den vorhandenen Research-Quellen nach: \${escapeHtml(request.query || "")}\`
+              : "Noch nicht gestartet. Der Button sucht sofort in den vorhandenen Research-Quellen.";
+        const attemptedPages = Array.isArray(result?.attempted_pages) ? result.attempted_pages.length : 0;
+        const attemptedImages = Array.isArray(result?.attempted_images) ? result.attempted_images.length : 0;
+        const rejected = Array.isArray(result?.rejected) ? result.rejected.length : 0;
+        const meta = result
+          ? \`Fertig am \${escapeHtml(result.searched_at || "unbekannt")} · \${escapeHtml(attemptedPages)} Quellen · \${escapeHtml(attemptedImages)} Bilder · \${escapeHtml(rejected)} verworfen · keine Suche aktiv\`
+          : request
+            ? \`Gestartet am \${escapeHtml(request.requested_at || "unbekannt")} · Suche aktiv\`
+            : "Keine Suche aktiv";
+        return \`
+          <div id="search-feedback" class="search-feedback \${state}" aria-live="polite">
+            <h4>\${escapeHtml(title)}</h4>
+            <div class="processing-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="\${escapeHtml(progress)}">
+              <div class="processing-progress-fill" style="width: \${escapeHtml(progress)}%;"></div>
+            </div>
+            <div class="processing-body">\${body}</div>
+            <div class="meta">\${meta}</div>
+            \${result?.status === "no_candidate_found" ? '<div class="meta">Naechster Schritt: Codex/Web-Recherche oder manuelle Bildquelle, weil die Paket-Quellen nichts Besseres geliefert haben.</div>' : ""}
+            <ul>
+              \${imageSearchGuidelines.map((item) => \`<li>\${escapeHtml(item)}</li>\`).join("")}
+            </ul>
+          </div>
+        \`;
+      };
+      const renderApprovalDryRun = (detail) => {
+        const dryRun = detail.approval_dry_run || null;
+        const apply = detail.approval_apply || null;
+        if (apply?.ok) {
+          return \`
+            <div class="status-card success">
+              <strong>Supabase-Import abgeschlossen</strong>
+              <div class="meta">Bild, Produktdaten, Submission-Freigabe und Folgeaktionen wurden ueber den Approve-Workflow ausgefuehrt.</div>
+              \${apply.applied_at ? \`<div class="meta">Importiert am \${escapeHtml(apply.applied_at)}</div>\` : ""}
+            </div>
+          \`;
+        }
+        if (apply && !apply.ok) {
+          return \`
+            <div class="status-card danger">
+              <strong>Supabase-Import fehlgeschlagen</strong>
+              <div class="meta">\${escapeHtml(apply.error || "Bitte Fehler pruefen.")}</div>
+              \${apply.commands?.apply ? \`<pre>\${escapeHtml(apply.commands.apply)}</pre>\` : ""}
+            </div>
+          \`;
+        }
+        if (!dryRun) {
+          return \`
+            <div class="status-card">
+              <strong>Supabase-Import</strong>
+              <div class="meta">Wird nach deiner finalen Paketfreigabe automatisch gestartet.</div>
+            </div>
+          \`;
+        }
+        const command = dryRun.commands?.apply || "";
+        return \`
+          <div class="status-card \${dryRun.ok ? "success" : ""}">
+            <strong>\${dryRun.ok ? "Import-Dry-Run bestanden" : "Import-Dry-Run fehlgeschlagen"}</strong>
+            <div class="meta">\${escapeHtml(dryRun.ok ? "Das Paket ist bereit fuer den Supabase-Import." : dryRun.error || "Bitte Fehler pruefen.")}</div>
+            \${command ? \`<pre>\${escapeHtml(command)}</pre>\` : ""}
+          </div>
+        \`;
+      };
       const renderSources = (sources) => sources?.length
         ? sources.map((source) => \`
             <a class="source-link" href="\${escapeHtml(source.url)}" target="_blank">
@@ -1634,7 +2901,7 @@ export function renderAppHtml(): string {
             <img src="\${escapeHtml(candidate.url)}" alt="\${escapeHtml(candidate.label)}" loading="lazy" onerror="this.closest('.hero-image').classList.add('broken')" />
             <div class="image-fallback"><div><strong>Bildvorschlag nicht ladbar.</strong><br /><span>Die Quelle liefert kein Bild. Bitte anderes Bild suchen lassen.</span></div></div>
           </div>
-          <p class="meta"><a href="\${escapeHtml(candidate.url)}" target="_blank">Bildquelle oeffnen</a></p>
+          <p class="meta">Rohbild-Kandidat aus der Quelle. Noch nicht final verarbeitet. <a href="\${escapeHtml(candidate.url)}" target="_blank">Bildquelle oeffnen</a></p>
         \`;
       };
       const renderFinalImage = (detail) => {
@@ -1719,7 +2986,7 @@ export function renderAppHtml(): string {
               </thead>
               <tbody>
                 \${rows.map((row, index) => \`
-                  <tr data-property-index="\${index}">
+                  <tr class="property-row \${escapeHtml(row.review?.status === "change_requested" ? "change-requested" : row.review?.status === "approved" ? "approved" : "")}" data-property-index="\${index}">
                     <td>
                       <div class="property-name">\${escapeHtml(row.label)}</div>
                       <div class="property-path">\${escapeHtml(row.path)}</div>
@@ -1733,12 +3000,13 @@ export function renderAppHtml(): string {
                     </td>
                     <td>
                       <textarea class="property-note" aria-label="Kommentar oder korrigierter Wert">\${escapeHtml(row.review?.notes || row.review?.reviewer_value || "")}</textarea>
+                      <div class="property-note-help">Kommentar schreiben und dann "Aenderung anfordern" klicken, damit Codex diese Eigenschaft ueberarbeitet.</div>
                     </td>
                     <td>
                       <span class="badge">\${escapeHtml(row.review?.status || "offen")}</span>
                       <div class="property-actions-inline">
                         <button class="small-button-row primary property-approve" data-index="\${index}">Passt</button>
-                        <button class="small-button-row property-change" data-index="\${index}">Aendern</button>
+                        <button class="small-button-row property-change" data-index="\${index}">Aenderung anfordern</button>
                       </div>
                     </td>
                   </tr>\`).join("")}
@@ -1761,6 +3029,7 @@ export function renderAppHtml(): string {
               <button class="row \${pack.package_path === selectedPath ? "active" : ""}" data-path="\${escapeHtml(pack.package_path)}">
                 <strong>\${escapeHtml(pack.brand_text || "Keine Marke")} · \${escapeHtml(pack.product_name_text || "Ohne Produktname")}</strong>
                 <div class="meta">\${escapeHtml(pack.category || "keine Kategorie")} · \${escapeHtml(pack.submission_id || "keine ID")}</div>
+                <span class="badge">\${escapeHtml(packageStateLabel(pack.package_state))}</span>
                 <span class="badge">\${escapeHtml(statusLabel(pack.image_status))}</span>
                 <span class="badge">\${escapeHtml(validationLabel(pack.validation_ok))}</span>
               </button>\`).join("")
@@ -1772,32 +3041,75 @@ export function renderAppHtml(): string {
 
       async function loadDetail(path) {
         selectedPath = path;
+        if (window.location.hash !== "#" + encodeURIComponent(path)) {
+          window.history.replaceState(null, "", "#" + encodeURIComponent(path));
+        }
         await loadPackages();
         const detail = await requestJson(\`/api/package?path=\${encodeURIComponent(path)}\`);
         currentDetail = detail;
         const submission = detail.submission || {};
         const product = detail.payload?.final?.product || detail.payload?.draft?.product || {};
       const image = detail.image_finalization || {};
-      const imageStatus = image.status || "missing";
+      const imageStatus = imageDisplayStatus(image);
         const refreshWarning = detail.image_refresh_error
           ? '<div class="warning">User-Upload-Links konnten nicht erneuert werden: ' + escapeHtml(detail.image_refresh_error) + '</div>'
           : "";
         const candidate = imageAsset(detail, "candidate_product_image");
         const packageApproval = detail.package_approval || {};
+        const researchQueueCommand = "npm run products:intake:research-queue -- --limit=5";
+        if (detail.package_state === "package_needs_research" || detail.package_state === "package_blocked") {
+          $("detail").innerHTML = \`
+            <div class="intro">
+              <h2>\${escapeHtml(product.canonical_brand || submission.brand_text || "Produkt vorbereiten")}</h2>
+              <p><strong>\${escapeHtml(product.clean_name || submission.product_name_text || "")}</strong></p>
+              <p>Dieses Paket ist noch kein Review-Paket. Es enthaelt bisher nur die User-Eingabe und braucht zuerst Research durch Codex.</p>
+              <div class="steps">
+                <div class="step"><strong>Status</strong>\${escapeHtml(packageStateLabel(detail.package_state))}</div>
+                <div class="step"><strong>Grund</strong>\${escapeHtml(detail.package_state_reason || "Noch kein finaler Research-Payload.")}</div>
+                <div class="step"><strong>Naechster Schritt</strong>Research-Queue ausfuehren und Paket fuellen.</div>
+              </div>
+            </div>
+            <section class="review-section">
+              <h2>Noch nicht reviewbar</h2>
+              <p class="meta">Nick soll hier erst pruefen, wenn Produktidentitaet, Quellen, Eigenschaften und Bildentscheidung recherchiert wurden.</p>
+              <div class="status-card">
+                <strong>Naechster lokaler Command</strong>
+                <pre>\${escapeHtml(researchQueueCommand)}</pre>
+              </div>
+              <h3>User-Fotos als Referenz</h3>
+              \${refreshWarning}
+              <div class="reference-strip">\${renderReferenceImages(detail)}</div>
+            </section>
+            <details>
+              <summary>Technischen Payload anzeigen</summary>
+              <pre>\${escapeHtml(JSON.stringify(detail.payload, null, 2))}</pre>
+            </details>
+            <details>
+              <summary>Research-Rohtext anzeigen</summary>
+              <pre>\${escapeHtml(detail.research_md || "")}</pre>
+            </details>
+            <details>
+              <summary>Approval-Checkliste anzeigen</summary>
+              <pre>\${escapeHtml(detail.approval_md || "")}</pre>
+            </details>
+          \`;
+          return;
+        }
         $("detail").innerHTML = \`
           <div class="intro">
             <h2>\${escapeHtml(product.canonical_brand || submission.brand_text || "Produkt pruefen")}</h2>
             <p><strong>\${escapeHtml(product.clean_name || submission.product_name_text || "")}</strong></p>
             <p>Pruefe hier das vorgeschlagene Produktbild und die recherchierten Eigenschaften. Speichere nur deine Review-Entscheidungen; keine Supabase-Freigabe passiert hier.</p>
             <div class="steps">
-              <div class="step"><strong>Produktbild</strong>Bild ansehen, bestaetigen oder neue Suche anfordern.</div>
+              <div class="step"><strong>1. Rohbild</strong>Quellbild ansehen, bestaetigen oder neue Suche anfordern.</div>
+              <div class="step"><strong>2. Verarbeitung</strong>Nach Bestaetigung wird daraus lokal das finale Chaarlie-Bild erzeugt.</div>
               <div class="step"><strong>Eigenschaften</strong>Wert, Begruendung und Quellen je Eigenschaft pruefen.</div>
-              <div class="step"><strong>Notizen</strong>Korrekturen direkt am Bild oder an der Eigenschaft speichern.</div>
             </div>
           </div>
 
           <section class="review-section">
-            <h2>Produktbild pruefen</h2>
+            <h2>1. Rohbild-Kandidat auswaehlen</h2>
+            <p class="meta">Das ist die unverarbeitete Bildquelle aus Research oder Bildsuche. Wenn sie exakt passt, startet der Button danach die lokale Verarbeitung.</p>
             <div class="image-review-grid">
               <div>
                 \${renderCandidateImage(detail)}
@@ -1808,10 +3120,12 @@ export function renderAppHtml(): string {
                 <label>Kommentar zum Bild</label>
                 <textarea id="image-review-notes">\${escapeHtml(detail.image_candidate_review?.notes || "")}</textarea>
                 <div class="review-actions">
-                  <button class="small-button primary" id="image-approve">Bild passt</button>
+                  <button class="small-button primary" id="image-approve">Bild passt &amp; verarbeiten</button>
                   <button class="small-button" id="image-reject">Anderes Bild suchen</button>
                   <button class="small-button" id="image-comment">Kommentar speichern</button>
                 </div>
+                \${renderProcessingFeedback(detail)}
+                \${renderImageSearchFeedback(detail)}
               </div>
               <div>
                 <h3>User-Fotos als Referenz</h3>
@@ -1824,8 +3138,8 @@ export function renderAppHtml(): string {
           </section>
 
           <section class="review-section">
-            <h2>Finales Chaarlie-Bild freigeben</h2>
-            <p class="meta">Pruefe das fertig normalisierte Produktbild auf Chaarlie-Hintergrund. Erst diese Freigabe macht es zum DB-Bild.</p>
+            <h2>2. Finalbild nach Verarbeitung pruefen</h2>
+            <p class="meta">Hier erscheint das lokal zugeschnittene und normalisierte Produktbild nach der Verarbeitung. Erst diese Freigabe macht es zum Kandidaten fuer das spaetere DB-Bild.</p>
             <div class="catalog-comparison">
               <h3>Groessenvergleich mit bestehenden DB-Bildern</h3>
               <p class="meta">Alle vier Bilder stehen im gleichen Format nebeneinander. Vergleiche Objektgroesse, Randabstand und Hintergrund direkt in dieser Reihe.</p>
@@ -1858,7 +3172,7 @@ export function renderAppHtml(): string {
 
           <section class="review-section">
             <h2>Eigenschaften pruefen</h2>
-            <p class="meta">Jede Zeile zeigt den vorgeschlagenen Wert, die Research-Begruendung und die Quellen. Links passt, rechts Aenderung mit Kommentar.</p>
+            <p class="meta">Jede Zeile zeigt Wert, Research-Begruendung und Quellen. Fuer Korrekturen schreibe einen Kommentar und klicke "Aenderung anfordern"; das Paket wird dann zur Codex-Ueberarbeitung markiert.</p>
             <div class="toolbar">
               <button class="small-button primary" id="approve-all-properties">Alle Eigenschaften passen</button>
               <span class="badge">\${escapeHtml((detail.property_rows || []).filter((row) => row.review?.status === "approved").length)} / \${escapeHtml((detail.property_rows || []).length)} freigegeben</span>
@@ -1868,15 +3182,16 @@ export function renderAppHtml(): string {
 
           <section class="review-section">
             <h2>Finale Paketfreigabe</h2>
-            <div class="status-card \${packageApproval.status === "approved_for_import" ? "success" : ""}">
-              <strong>\${escapeHtml(packageApprovalLabel(packageApproval.status))}</strong>
+            <div class="status-card \${detail.approval_apply?.ok || packageApproval.status === "approved_for_import" ? "success" : ""}">
+              <strong>\${escapeHtml(detail.approval_apply?.ok ? "Final freigegeben und importiert" : packageApprovalLabel(packageApproval.status))}</strong>
               \${packageApproval.reviewed_at ? \`<div class="meta">Gespeichert am \${escapeHtml(packageApproval.reviewed_at)}</div>\` : ""}
               \${packageApproval.notes ? \`<div class="meta">\${escapeHtml(packageApproval.notes)}</div>\` : ""}
             </div>
-            <p class="meta">Speichert nur die lokale Review-Freigabe im Paket. Es wird nichts in Supabase geschrieben.</p>
+            <p class="meta">Finale Freigabe startet den Supabase-Import: finales Bild hochladen, Produktdaten speichern, Submission freigeben und Folgeaktionen ausloesen.</p>
             <label>Finale Notiz</label>
             <textarea id="package-approval-notes">\${escapeHtml(packageApproval.notes || "")}</textarea>
-            <button class="small-button primary" id="package-approve">Paket final freigeben</button>
+            <button class="small-button primary" id="package-approve" \${detail.approval_apply?.ok ? "disabled" : ""}>Paket final freigeben &amp; importieren</button>
+            \${renderApprovalDryRun(detail)}
           </section>
 
           <details>
@@ -1896,7 +3211,7 @@ export function renderAppHtml(): string {
           saveImageReview("candidate_approved", candidate?.url || null),
         );
         $("image-reject").addEventListener("click", () =>
-          saveImageReview("needs_new_candidate", candidate?.url || null),
+          requestImageSearch(),
         );
         $("image-comment").addEventListener("click", () =>
           saveImageReview("comment", candidate?.url || null),
@@ -1914,21 +3229,168 @@ export function renderAppHtml(): string {
       }
 
       async function saveImageReview(status, candidateUrl) {
-        await requestJson("/api/package/image-review", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            packagePath: selectedPath,
-            decision: {
-              status,
-              candidate_url: candidateUrl,
-              notes: $("image-review-notes").value.trim(),
-              reviewed_by: "nick",
-              reviewed_at: new Date().toISOString(),
-            },
-          }),
+        const approveButton = $("image-approve");
+        const originalLabel = approveButton.textContent;
+        if (status === "candidate_approved") {
+          approveButton.disabled = true;
+          approveButton.textContent = "Bild wird verarbeitet...";
+          setProcessingFeedback({
+            state: "running",
+            percent: 25,
+            title: "Bildentscheidung wird gespeichert",
+            body: "Deine Auswahl wird im lokalen Paket gespeichert.",
+          });
+        }
+        try {
+          await requestJson("/api/package/image-review", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              packagePath: selectedPath,
+              decision: {
+                status,
+                candidate_url: candidateUrl,
+                notes: $("image-review-notes").value.trim(),
+                reviewed_by: "nick",
+                reviewed_at: new Date().toISOString(),
+              },
+            }),
+          });
+          if (status === "candidate_approved") {
+            setProcessingFeedback({
+              state: "running",
+              percent: 65,
+              title: "Bild wird verarbeitet",
+              body: "Das Bild wird lokal zugeschnitten, normalisiert und fuer die finale Review vorbereitet.",
+            });
+            const processResult = await requestJson("/api/package/process-image", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                packagePath: selectedPath,
+                reviewedBy: "nick",
+              }),
+            });
+            const processedImage = processResult.image_finalization || {};
+            if (processedImage.status === "pending") {
+              setProcessingFeedback({
+                state: "ready",
+                percent: 100,
+                title: "Finalbild ist bereit zur Review",
+                body: "Die Verarbeitung ist fertig. Pruefe unten das finale Chaarlie-Bild.",
+              });
+            } else if (processedImage.status === "needs_image_work") {
+              setProcessingFeedback({
+                state: "needs-work",
+                percent: 100,
+                title: "Bildverarbeitung braucht Arbeit",
+                body:
+                  processedImage.notes ||
+                  "Die Verarbeitung ist gelaufen, aber das Bild braucht noch Arbeit.",
+              });
+            } else {
+              setProcessingFeedback({
+                state: "running",
+                percent: 90,
+                title: "Bildverarbeitung abgeschlossen",
+                body: "Die Detailansicht wird aktualisiert.",
+              });
+            }
+          }
+          await loadDetail(selectedPath);
+        } catch (error) {
+          if (status === "candidate_approved") {
+            setProcessingFeedback({
+              state: "error",
+              percent: 100,
+              title: "Bildverarbeitung fehlgeschlagen",
+              body: error.message,
+            });
+          }
+          alert(error.message);
+          await loadDetail(selectedPath);
+        } finally {
+          approveButton.disabled = false;
+          approveButton.textContent = originalLabel;
+        }
+      }
+
+      function setProcessingFeedback(feedback) {
+        const element = $("processing-feedback");
+        if (!element) return;
+        const percent = Math.max(0, Math.min(100, Number(feedback.percent || 0)));
+        element.className = "processing-feedback " + (feedback.state || "running");
+        element.querySelector(".processing-title").textContent =
+          feedback.title || "Bildverarbeitung";
+        element.querySelector(".processing-body").textContent = feedback.body || "";
+        const progress = element.querySelector(".processing-progress");
+        progress.setAttribute("aria-valuenow", String(percent));
+        element.querySelector(".processing-progress-fill").style.width = percent + "%";
+      }
+
+      async function requestImageSearch() {
+        const searchButton = $("image-reject");
+        const notes = $("image-review-notes").value.trim();
+        const originalLabel = searchButton.textContent;
+        searchButton.disabled = true;
+        searchButton.textContent = "Bildsuche laeuft...";
+        setSearchFeedback({
+          state: "running",
+          title: "Bildsuche laeuft",
+          body: "Die App prueft jetzt die vorhandenen Research-Quellen. Bitte auf dieser Ansicht bleiben; das Ergebnis erscheint gleich hier.",
+          percent: 45,
         });
-        await loadDetail(selectedPath);
+        try {
+          const result = await requestJson("/api/package/request-image-search", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              packagePath: selectedPath,
+              notes,
+              requestedBy: "nick",
+              requestedAt: new Date().toISOString(),
+            }),
+          });
+          const found = result.image_search_result?.status === "candidate_found";
+          setSearchFeedback({
+            state: found ? "found" : "none",
+            title: found
+              ? "Bildsuche abgeschlossen: neuer Kandidat gefunden"
+              : "Bildsuche abgeschlossen: kein besseres Bild gefunden",
+            body: found
+              ? "Gespeichert: " + (result.image_search_result?.local_file || "neuer Kandidat")
+              : result.image_search_result?.message ||
+                "Keine bessere Quelle in den vorhandenen Research-Links gefunden.",
+            percent: 100,
+          });
+          await loadDetail(selectedPath);
+        } catch (error) {
+          setSearchFeedback({
+            state: "error",
+            title: "Bildsuche konnte nicht angefordert werden",
+            body: error.message,
+          });
+          alert(error.message);
+          await loadDetail(selectedPath);
+        } finally {
+          searchButton.disabled = false;
+          searchButton.textContent = originalLabel;
+        }
+      }
+
+      function setSearchFeedback(feedback) {
+        const element = $("search-feedback");
+        if (!element) return;
+        element.className = "search-feedback " + (feedback.state || "running");
+        const title = element.querySelector("h4");
+        if (title) title.textContent = feedback.title || "Bildsuche";
+        const body = element.querySelector(".processing-body");
+        if (body) body.textContent = feedback.body || "";
+        const percent = Math.max(0, Math.min(100, Number(feedback.percent || 0)));
+        const progress = element.querySelector(".processing-progress");
+        if (progress) progress.setAttribute("aria-valuenow", String(percent));
+        const fill = element.querySelector(".processing-progress-fill");
+        if (fill) fill.style.width = percent + "%";
       }
 
       async function saveImageFinalization(status) {
@@ -1979,23 +3441,32 @@ export function renderAppHtml(): string {
         const row = currentDetail.property_rows[index];
         const card = document.querySelector('[data-property-index="' + index + '"]');
         const notes = card?.querySelector(".property-note")?.value?.trim() || "";
-        await requestJson("/api/package/property-review", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            packagePath: selectedPath,
-            decision: {
-              path: row.path,
-              status,
-              proposed_value: row.value,
-              reviewer_value: status === "change_requested" ? notes : null,
-              notes,
-              reviewed_by: "nick",
-              reviewed_at: new Date().toISOString(),
-            },
-          }),
-        });
-        await loadDetail(selectedPath);
+        if (status === "change_requested" && !notes) {
+          alert("Bitte schreibe kurz, was Codex an dieser Eigenschaft aendern soll.");
+          card?.querySelector(".property-note")?.focus();
+          return;
+        }
+        try {
+          await requestJson("/api/package/property-review", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              packagePath: selectedPath,
+              decision: {
+                path: row.path,
+                status,
+                proposed_value: row.value,
+                reviewer_value: status === "change_requested" ? notes : null,
+                notes,
+                reviewed_by: "nick",
+                reviewed_at: new Date().toISOString(),
+              },
+            }),
+          });
+          await loadDetail(selectedPath);
+        } catch (error) {
+          alert(error.message);
+        }
       }
 
       async function saveAllPropertiesApproved() {
@@ -2022,12 +3493,25 @@ export function renderAppHtml(): string {
       }
 
       async function savePackageApproval() {
+        const product = currentDetail.payload?.final?.product || currentDetail.payload?.draft?.product || {};
+        const label = [product.canonical_brand, product.clean_name].filter(Boolean).join(" ") || "dieses Paket";
+        const confirmed = window.confirm(
+          "Paket final freigeben und in Supabase uebernehmen?\\n\\n" +
+            label +
+            "\\n\\nDas laedt das finale Bild hoch, speichert Produktdaten, gibt die Submission frei und kann User-Benachrichtigungen ausloesen."
+        );
+        if (!confirmed) return;
+        const button = $("package-approve");
+        const originalLabel = button.textContent;
+        button.disabled = true;
+        button.textContent = "Freigabe & Import laufen...";
         try {
           await requestJson("/api/package/package-approval", {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
               packagePath: selectedPath,
+              applyToSupabase: true,
               decision: {
                 status: "approved_for_import",
                 notes: $("package-approval-notes").value.trim(),
@@ -2039,12 +3523,22 @@ export function renderAppHtml(): string {
           await loadDetail(selectedPath);
         } catch (error) {
           alert(error.message);
+        } finally {
+          button.disabled = false;
+          button.textContent = originalLabel;
         }
       }
 
-      loadPackages().catch((error) => {
-        $("package-list").innerHTML = '<div class="empty">' + escapeHtml(error.message) + '</div>';
-      });
+      loadPackages()
+        .then(() => {
+          const pathFromHash = window.location.hash
+            ? decodeURIComponent(window.location.hash.slice(1))
+            : "";
+          if (pathFromHash) return loadDetail(pathFromHash);
+        })
+        .catch((error) => {
+          $("package-list").innerHTML = '<div class="empty">' + escapeHtml(error.message) + '</div>';
+        });
     </script>
   </body>
 </html>`

@@ -1,3 +1,5 @@
+import { pathToFileURL } from "node:url"
+
 import { createSupabaseClientFromEnv, flag, flagBool, flagInt, hashUserId, parseArgs } from "./cli"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import {
@@ -73,7 +75,7 @@ async function main() {
   }
 }
 
-if (process.argv[1]?.endsWith("queue.ts")) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((error) => {
     console.error(error instanceof Error ? error.message : error)
     process.exitCode = 1

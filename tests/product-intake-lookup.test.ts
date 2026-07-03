@@ -94,6 +94,22 @@ const catalog: ProductLookupCatalog = {
       lifecycleStatus: "active",
       isChaarlieRecommended: true,
     },
+    {
+      id: "balea-natural-beauty-oil",
+      name: "Pflegeöl Natural Beauty",
+      cleanName: "Pflegeöl Natural Beauty",
+      knownTitles: [
+        "Balea Pflegeöl Natural Beauty",
+        "Balea Natural Beauty Bio-Argan Haaröl",
+        "Bio-Argan Haaröl",
+        "Bio-Argan Oil",
+      ],
+      brandId: "brand-balea",
+      categoryKey: "oil",
+      isActive: true,
+      lifecycleStatus: "active",
+      isChaarlieRecommended: true,
+    },
   ],
   identifiers: [],
 }
@@ -104,6 +120,7 @@ const brandCatalog: BrandResolutionCatalogInput = {
     { id: "brand-pantene", canonical_name: "Pantene" },
     { id: "brand-syoss", canonical_name: "Syoss" },
     { id: "brand-olaplex", canonical_name: "Olaplex" },
+    { id: "brand-balea", canonical_name: "Balea" },
   ],
   productLines: [
     { id: "line-fructis", brand_id: "brand-garnier", canonical_name: "Fructis" },
@@ -119,6 +136,11 @@ const brandCatalog: BrandResolutionCatalogInput = {
       brand_id: "brand-pantene",
       product_line_id: "line-pro-v",
       alias: "Pantene Pro-V",
+    },
+    {
+      brand_id: "brand-balea",
+      product_line_id: null,
+      alias: "Balea Natural Beauty",
     },
   ],
 }
@@ -282,6 +304,23 @@ test("category-less lookup does not let oil wording override conditioner identit
   assert.equal(result.status, "found_exact")
   assert.equal(result.category, "conditioner")
   assert.equal(result.product?.id, "garnier-conditioner")
+})
+
+test("lookup recognizes reviewed product title aliases for renamed catalog products", () => {
+  const result = lookupProductCandidate({
+    input: {
+      category: "oil",
+      brand_text: "Balea Natural Beauty",
+      product_name_text: "Bio-Argan Haaröl",
+    },
+    catalog,
+    brandCatalog,
+    offerId: "test-offer",
+  })
+
+  assert.equal(result.status, "found_exact")
+  assert.equal(result.product?.id, "balea-natural-beauty-oil")
+  assert.equal(result.intake_offer, null)
 })
 
 test("lookup rejects unsupported categories without offering intake", () => {

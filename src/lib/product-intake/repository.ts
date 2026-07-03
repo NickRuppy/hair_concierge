@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto"
 
+import productCatalogNormalization from "../../../data/product-catalog-normalization.json"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
   GENERAL_RECOMMENDATION_PRODUCT_SQL_FILTER,
@@ -18,6 +19,19 @@ import type {
   ProductIntakeUsageRow,
 } from "@/lib/product-intake/repository-types"
 import type { ProductIntakeCategoryKey } from "@/lib/types"
+
+type ProductCatalogNormalizationDocument = {
+  products?: Array<{
+    product_id?: string
+    known_titles?: string[]
+  }>
+}
+
+const normalizationKnownTitlesByProductId = new Map(
+  ((productCatalogNormalization as ProductCatalogNormalizationDocument).products ?? [])
+    .filter((product) => product.product_id)
+    .map((product) => [product.product_id as string, product.known_titles ?? []]),
+)
 
 function requireData<T>(
   result: { data: T | null; error: { message?: string } | null },
@@ -128,7 +142,10 @@ export function createSupabaseProductIntakeRepository(
       const products = requireData<ProductIntakeCatalogProduct[]>(
         productsResult,
         "load products for intake matching",
-      )
+      ).map((product) => ({
+        ...product,
+        known_titles: normalizationKnownTitlesByProductId.get(product.id) ?? product.known_titles,
+      }))
       const identifiers = requireData<ProductIntakeCatalog["identifiers"]>(
         identifiersResult,
         "load product identifiers for intake matching",

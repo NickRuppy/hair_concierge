@@ -64,7 +64,7 @@ type ProductIntakeSpecRowByTable = {
   product_shampoo_specs: {
     thickness: string
     shampoo_bucket: string
-    scalp_route?: string | null
+    scalp_route: string
     cleansing_intensity?: string | null
   }
   product_conditioner_specs: {
@@ -389,19 +389,45 @@ function validateSpecs<T>(
 const scalpRouteSchema = z.enum(["oily", "balanced", "dry", "dandruff", "dry_flakes", "irritated"])
 const cleansingIntensitySchema = z.enum(["gentle", "regular", "clarifying"])
 
+function scalpRouteMatchesShampooBucket(
+  bucket: (typeof SHAMPOO_BUCKETS)[number],
+  route: z.infer<typeof scalpRouteSchema>,
+): boolean {
+  switch (bucket) {
+    case "dehydriert-fettig":
+      return route === "oily"
+    case "irritationen":
+      return route === "irritated"
+    case "normal":
+      return route === "balanced"
+    case "schuppen":
+      return route === "dandruff" || route === "dry_flakes"
+    case "trocken":
+      return route === "dry"
+  }
+}
+
 const shampooRowSchema = z
   .object({
     thickness: z.enum(HAIR_THICKNESSES),
     shampoo_bucket: z.enum(SHAMPOO_BUCKETS),
-    scalp_route: scalpRouteSchema.nullable().optional(),
+    scalp_route: scalpRouteSchema,
     cleansing_intensity: cleansingIntensitySchema.nullable().optional(),
   })
   .strict()
+  .superRefine((row, ctx) => {
+    if (!scalpRouteMatchesShampooBucket(row.shampoo_bucket, row.scalp_route)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["scalp_route"],
+        message: "scalp_route must match shampoo_bucket",
+      })
+    }
+  })
 
 const shampooSpecsSchema = z
   .object({
     product_shampoo_specs: z.array(shampooRowSchema).min(1),
-    scalp_route: scalpRouteSchema.nullable().optional(),
     cleansing_intensity: cleansingIntensitySchema.nullable().optional(),
   })
   .strict()
@@ -555,18 +581,11 @@ function validateShampoo(
       const operationRow: ProductIntakeSpecRowByTable["product_shampoo_specs"] = {
         thickness: row.thickness,
         shampoo_bucket: row.shampoo_bucket,
-      }
-
-      if (hasOwn(row, "scalp_route")) {
-        operationRow.scalp_route = row.scalp_route
-      } else if (hasOwn(specs, "scalp_route")) {
-        operationRow.scalp_route = specs.scalp_route
+        scalp_route: row.scalp_route,
       }
 
       if (hasOwn(row, "cleansing_intensity")) {
         operationRow.cleansing_intensity = row.cleansing_intensity
-      } else if (hasOwn(specs, "cleansing_intensity")) {
-        operationRow.cleansing_intensity = specs.cleansing_intensity
       }
 
       return operationRow

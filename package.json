@@ -2,6 +2,10 @@
   "name": "chaarlie",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "engines": {
     "node": ">=22 <23",
     "npm": ">=10"
@@ -50,6 +54,7 @@
     "products:intake:queue": "tsx scripts/product-intake/queue.ts",
     "products:intake:review": "tsx scripts/product-intake/review.ts",
     "products:intake:prepare-research": "tsx scripts/product-intake/prepare-research.ts",
+    "products:intake:research-queue": "tsx scripts/product-intake/research-queue.ts",
     "products:intake:review-app": "tsx scripts/product-intake/review-app.ts",
     "products:intake:finalize-image": "tsx scripts/product-intake/finalize-package-image.ts",
     "products:intake:upload-image": "tsx scripts/product-intake/upload-package-image.ts",
@@ -62,6 +67,13 @@
     "products:intake:notify-pending": "tsx scripts/product-intake/notify-pending.ts",
     "products:intake:promote": "tsx scripts/product-intake/promote.ts",
     "products:intake:cleanup-storage": "tsx scripts/product-intake/cleanup-storage.ts",
+    "products:intake:review-cockpit:dev": "npm run dev --workspace @chaarlie/product-intake-review",
+    "products:intake:review-cockpit:build": "npm run build --workspace @chaarlie/product-intake-review",
+    "products:intake:review-cockpit:typecheck": "npm run typecheck --workspace @chaarlie/product-intake-review",
+    "products:intake:review-cockpit:lint": "npm run lint --workspace @chaarlie/product-intake-review",
+    "products:intake:review-cockpit:verify": "npm run typecheck --workspace @chaarlie/product-intake-review && npm run lint --workspace @chaarlie/product-intake-review && npm run build --workspace @chaarlie/product-intake-review",
+    "products:intake:core:typecheck": "npm run typecheck --workspace @chaarlie/product-intake-core",
+    "products:intake:codex-worker": "tsx scripts/product-intake/codex-research-worker.ts",
     "stress:smoke": "k6 run -e K6_PROFILE=smoke scripts/k6/launch-flow.js",
     "stress:average": "k6 run -e K6_PROFILE=average scripts/k6/launch-flow.js",
     "stress:spike": "k6 run -e K6_PROFILE=spike scripts/k6/launch-flow.js",
