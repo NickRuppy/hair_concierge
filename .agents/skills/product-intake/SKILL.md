@@ -1,9 +1,9 @@
 ---
-name: product-intake-research
+name: product-intake
 description: Use for Hair Concierge product-intake review-center work, including new product submissions, product research, brand review, image search/processing, affiliate URL and price sourcing, category property payloads, worker/job status debugging, rework loops, manual product additions, and guarded final product handoff into Supabase.
 ---
 
-# Product Intake Research
+# Product Intake
 
 ## Purpose
 
