@@ -2024,7 +2024,6 @@ test("projectSelectedProducts labels deep-cleansing reset facts without raw enum
           reset_focus: "broad_spectrum_detox",
           reset_intensity: "medium",
           scalp_type_focus: "balanced",
-          color_treated_suitability: "suitable",
           fit_status: "ideal",
           caution_flags: [],
         } satisfies DeepCleansingShampooRecommendationMetadata,
@@ -2050,6 +2049,7 @@ test("projectSelectedProducts labels deep-cleansing reset facts without raw enum
   assert.match(renderedFacts, /Reset-Intensität: mittel/)
   assert.match(renderedFacts, /Kopfhaut-Fokus: ausgeglichene Kopfhaut/)
   assert.match(renderedFacts, /Fit: idealer Treffer/)
+  assert.doesNotMatch(renderedFacts, /Farbschutz|coloriertes Haar|color_treated_suitability/i)
   assert.doesNotMatch(renderedFacts, /broad_spectrum_detox|product_sebum_buildup|medium|balanced/)
 })
 

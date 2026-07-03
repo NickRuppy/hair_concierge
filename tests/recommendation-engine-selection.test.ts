@@ -1987,8 +1987,6 @@ test("engine deep-cleansing shampoo reranking prefers the exact scalp focus over
       resetNeedLevel: "likely",
       resetFocus: "product_sebum_buildup",
       targetIntensity: "medium",
-      colorTreatedCaution: false,
-      colorSafeRequest: false,
       cautionFlags: [],
     },
     notes: [],
@@ -2043,8 +2041,6 @@ test("engine deep-cleansing shampoo reranking prefers broad-spectrum reset for m
       resetNeedLevel: "strong",
       resetFocus: "metal_mineral_hard_water",
       targetIntensity: "medium",
-      colorTreatedCaution: true,
-      colorSafeRequest: true,
       cautionFlags: ["color_or_bleach_caution"],
     },
     notes: [],
@@ -2082,10 +2078,10 @@ test("engine deep-cleansing shampoo reranking prefers broad-spectrum reset for m
 
   assert.equal(reranked[0]?.id, "broad")
   assert.equal(meta?.reset_focus, "broad_spectrum_detox")
-  assert.equal(meta?.color_treated_suitability, "suitable")
+  assert.doesNotMatch(JSON.stringify(meta), /color_treated_suitability|Farbschutz|Farbschonung/i)
 })
 
-test("engine deep-cleansing shampoo reranking softly prefers gentle color-safe reset under CareBalance vulnerability", () => {
+test("engine deep-cleansing shampoo reranking softly prefers gentle reset under CareBalance vulnerability", () => {
   const profile = {
     ...LOW_DAMAGE_PROFILE,
     hair_texture: "curly" as const,
@@ -2109,8 +2105,6 @@ test("engine deep-cleansing shampoo reranking softly prefers gentle color-safe r
       resetNeedLevel: "likely",
       resetFocus: "product_sebum_buildup",
       targetIntensity: "medium",
-      colorTreatedCaution: true,
-      colorSafeRequest: false,
       cautionFlags: ["color_or_bleach_caution"],
     },
     notes: [],
@@ -2119,7 +2113,7 @@ test("engine deep-cleansing shampoo reranking softly prefers gentle color-safe r
   const reranked = rerankDeepCleansingShampooProductsWithEngine({
     candidates: [
       createMatchedProduct("medium-reset", "Deep Cleansing Shampoo", { combined_score: 0.86 }),
-      createMatchedProduct("gentle-color-safe", "Deep Cleansing Shampoo", {
+      createMatchedProduct("gentle-reset", "Deep Cleansing Shampoo", {
         combined_score: 0.72,
       }),
     ],
@@ -2132,7 +2126,7 @@ test("engine deep-cleansing shampoo reranking softly prefers gentle color-safe r
         color_treated_suitability: "unsuitable_or_unknown",
       },
       {
-        product_id: "gentle-color-safe",
+        product_id: "gentle-reset",
         scalp_type_focus: "balanced",
         reset_intensity: "gentle",
         reset_focus: "product_sebum_buildup",
@@ -2150,14 +2144,15 @@ test("engine deep-cleansing shampoo reranking softly prefers gentle color-safe r
       ?.recommendation,
     "decrease_frequency",
   )
-  assert.equal(reranked[0]?.id, "gentle-color-safe")
+  assert.equal(reranked[0]?.id, "gentle-reset")
   const meta = reranked[0]?.recommendation_meta as
     | DeepCleansingShampooRecommendationMetadata
     | undefined
-  assert.match(JSON.stringify(meta), /care_balance|deep_cleansing_vulnerability|gentle/i)
+  assert.match(JSON.stringify(meta), /care_balance|deep_cleansing_vulnerability|sanfter|gentle/i)
+  assert.doesNotMatch(JSON.stringify(meta), /color_treated_suitability|Farbschutz|Farbschonung/i)
 })
 
-test("engine deep-cleansing shampoo reranking suppresses unsupported mineral and color-safe matches", () => {
+test("engine deep-cleansing shampoo reranking suppresses unsupported mineral matches", () => {
   const decision: DeepCleansingShampooCategoryDecision = {
     category: "deep_cleansing_shampoo",
     relevant: true,
@@ -2169,8 +2164,6 @@ test("engine deep-cleansing shampoo reranking suppresses unsupported mineral and
       resetNeedLevel: "strong",
       resetFocus: "metal_mineral_hard_water",
       targetIntensity: "medium",
-      colorTreatedCaution: true,
-      colorSafeRequest: true,
       cautionFlags: ["color_or_bleach_caution"],
     },
     notes: [],

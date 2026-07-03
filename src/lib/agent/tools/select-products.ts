@@ -146,7 +146,6 @@ export const SUPPORTED_PRODUCT_CLAIM_FIELDS = [
   "oil_subtype",
   "reset_focus",
   "reset_intensity",
-  "color_treated_suitability",
   "primary_effect",
   "hair_color_fit",
   "scalp_sensitivity_fit",
@@ -354,10 +353,6 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
               : null,
             meta?.category === "deep_cleansing_shampoo" && meta.reset_intensity
               ? `Reset-Intensität: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
-              : null,
-            meta?.category === "deep_cleansing_shampoo" &&
-            meta.color_treated_suitability === "suitable"
-              ? "Farbschutz: strukturiert geeignet"
               : null,
           ]).slice(0, 3),
         ]
@@ -1430,14 +1425,6 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
         "product_spec",
         meta.scalp_type_focus
           ? `Kopfhaut-Fokus: ${DEEP_CLEANSING_SCALP_FOCUS_LABELS[meta.scalp_type_focus]}`
-          : null,
-      ),
-      buildClaim(
-        "color_treated_suitability",
-        meta.color_treated_suitability === "suitable" ? "geeignet für coloriertes Haar" : null,
-        "product_spec",
-        meta.color_treated_suitability === "suitable"
-          ? "Strukturiert als geeignet für coloriertes Haar gepflegt"
           : null,
       ),
       buildClaim(
@@ -2891,7 +2878,7 @@ function buildProductResponsePolicy(params: {
         : category === "conditioner"
           ? "Conditioner wird über Haardicke, Haardichte, Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensität entschieden."
           : category === "deep_cleansing_shampoo"
-            ? "Tiefenreinigung wird nur bei Reset-Signalen empfohlen und über Reset-Fokus, Intensität, Kopfhaut-Fokus und Farbschutz-Metadaten entschieden."
+            ? "Tiefenreinigung wird nur bei Reset-Signalen empfohlen und über Reset-Fokus, Intensität und Kopfhaut-Fokus entschieden."
             : category === "bondbuilder"
               ? "Bondbuilder wird über strukturellen Damage-Bedarf, Einsatzmodus und Bondbuilding-Lane entschieden."
               : category === "dry_shampoo"
@@ -3008,7 +2995,7 @@ function buildCategoryGuidance(params: {
     }
 
     if (decision === "no_catalog_match") {
-      return "Tiefenreinigung kann passen, aber der aktuelle Katalog liefert keinen sicheren Treffer mit gepflegten Reset-Spezifikationen. Keine Kalk-, Chlor-, Metall- oder Farbschutzclaims ohne strukturierte Felder erfinden."
+      return "Tiefenreinigung kann passen, aber der aktuelle Katalog liefert keinen sicheren Treffer mit gepflegten Reset-Spezifikationen. Keine Kalk-, Chlor- oder Metallclaims ohne strukturierte Felder erfinden."
     }
 
     if (decision === "not_recommended") {

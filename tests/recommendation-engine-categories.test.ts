@@ -1109,8 +1109,6 @@ test("category set activates support/reset categories for oily buildup-heavy rou
     resetNeedLevel: "likely",
     resetFocus: "product_sebum_buildup",
     targetIntensity: "medium",
-    colorTreatedCaution: false,
-    colorSafeRequest: false,
     cautionFlags: [],
   })
 
