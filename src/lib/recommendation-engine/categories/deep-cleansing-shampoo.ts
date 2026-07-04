@@ -9,14 +9,12 @@ import type {
   ResetFocus,
   ResetIntensity,
 } from "@/lib/recommendation-engine/types"
-import { hasColorOrBleachTreatment } from "@/lib/profile/chemical-treatment"
 import { deriveScalpTypeFocus, getPlannedStep } from "@/lib/recommendation-engine/categories/shared"
 
 export interface DeepCleansingShampooFitSpec {
   scalp_type_focus: "oily" | "balanced" | "dry" | null
   reset_intensity?: ResetIntensity | null
   reset_focus?: ResetFocus | null
-  color_treated_suitability?: "suitable" | "unsuitable_or_unknown" | null
 }
 
 function deriveTargetIntensity(
@@ -35,10 +33,6 @@ function deriveTargetIntensity(
   }
 
   return cautious ? "gentle" : "medium"
-}
-
-function isColorTreated(profile: NormalizedProfile): boolean {
-  return hasColorOrBleachTreatment(profile.chemicalTreatment)
 }
 
 export function buildDeepCleansingShampooCategoryDecision(
@@ -102,8 +96,6 @@ export function buildDeepCleansingShampooCategoryDecision(
       resetNeedLevel: reset.level,
       resetFocus: reset.resetFocus ?? "product_sebum_buildup",
       targetIntensity: deriveTargetIntensity(reset, profile),
-      colorTreatedCaution: isColorTreated(profile),
-      colorSafeRequest: requestContext.colorSafeRequest,
       cautionFlags: reset.cautionFlags,
     },
     notes,
@@ -160,12 +152,6 @@ export function evaluateDeepCleansingShampooFit(
     reasonCodes.push("deep_cleansing_reset_intensity_mismatch")
   }
 
-  if (target.colorSafeRequest && spec.color_treated_suitability === "suitable") {
-    reasonCodes.push("deep_cleansing_color_safe_exact_match")
-  } else if (target.colorSafeRequest && spec.color_treated_suitability !== "suitable") {
-    reasonCodes.push("deep_cleansing_color_safe_mismatch")
-  }
-
   if (!target.scalpTypeFocus || !spec.scalp_type_focus) {
     missingFields.push("scalp_type_focus")
     return {
@@ -183,10 +169,7 @@ export function evaluateDeepCleansingShampooFit(
     reasonCodes.push("deep_cleansing_scalp_focus_mismatch")
   }
 
-  if (
-    reasonCodes.includes("deep_cleansing_reset_focus_mismatch") ||
-    reasonCodes.includes("deep_cleansing_color_safe_mismatch")
-  ) {
+  if (reasonCodes.includes("deep_cleansing_reset_focus_mismatch")) {
     return { status: "mismatch", reasonCodes, missingFields }
   }
 

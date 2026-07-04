@@ -461,7 +461,6 @@ export interface DeepCleansingShampooRecommendationMetadata extends BaseRecommen
   reset_need_level: ResetLevel
   reset_focus?: ResetFocus | null
   reset_intensity?: ResetIntensity | null
-  color_treated_suitability?: ProductDeepCleansingShampooSpecs["color_treated_suitability"] | null
   fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
   caution_flags?: string[]
 }

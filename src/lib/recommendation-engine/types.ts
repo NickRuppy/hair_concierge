@@ -528,8 +528,6 @@ export interface DeepCleansingShampooTargetProfile {
   resetNeedLevel: ResetLevel
   resetFocus: ResetFocus | null
   targetIntensity: ResetIntensity | null
-  colorTreatedCaution: boolean
-  colorSafeRequest: boolean
   cautionFlags: string[]
 }
 
