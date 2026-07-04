@@ -39,8 +39,10 @@ test.describe("Deployed App E2E Tests", () => {
 
     // Key landing signals should be present
     await expect(page.getByText("chaarlie", { exact: true })).toBeVisible()
-    await expect(page.getByText("Tom Hannemann", { exact: false })).toBeVisible()
-    await expect(page.getByRole("img", { name: "Tom Hannemann" })).toBeVisible()
+    const pageMarkup = await page.locator("html").evaluate((element) => element.innerHTML)
+    expect(pageMarkup).not.toMatch(
+      /\bTom\b|Hannemann|Hahnemann|Hahneman|tomhannemann|tom@|\/images\/team\/tom/i,
+    )
     await expect(page.getByText("4,9/5", { exact: false })).toBeVisible()
     await expect(page.getByText("Starte heute damit", { exact: false })).toBeVisible()
     await expect(page.getByRole("link", { name: /Anmelden/i })).toHaveAttribute(

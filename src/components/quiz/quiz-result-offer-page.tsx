@@ -5,7 +5,6 @@ import { ResultOfferCountdown } from "@/components/quiz/result-offer-countdown"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import { QuizResultTransformationCard } from "@/components/quiz/quiz-result-transformation-card"
 import { QuizResultLeverRows } from "@/components/quiz/quiz-result-lever-rows"
-import { TOM } from "@/data/team"
 import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
 import { STRIPE_PRICING_PLANS } from "@/lib/stripe/pricing-plans"
 
@@ -245,32 +244,27 @@ export function QuizResultOfferPageShell({
         </section>
 
         <section className="border-t border-border py-8">
-          <div className="flex gap-4">
-            {/* eslint-disable-next-line @next/next/no-img-element -- renderToStaticMarkup tests do not load Next image remote config. */}
-            <img
-              src={TOM.imageUrl}
-              alt={TOM.name}
-              className="size-20 shrink-0 rounded-full border-2 border-[var(--brand-plum-light)] object-cover"
-            />
-            <div>
-              <blockquote className="font-header text-[15px] italic leading-[1.55] text-[var(--brand-plum-darkest)]">
-                &ldquo;Viele Frauen überladen ihr Haar mit Feuchtigkeit, dabei fehlt Protein. Das
-                Haar wird weich, bricht aber trotzdem. Genau das erkennt Chaarlie.&rdquo;
-              </blockquote>
-              <p className="mt-2 text-[13px] font-bold text-[var(--brand-plum-darkest)]">
-                {TOM.shortName}
-              </p>
-              <p className="text-[12px] text-[var(--text-caption)]">{TOM.role}</p>
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {["18 Jahre Erfahrung", "900+ Kundinnen", "Bekannt aus SAT.1"].map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.06em] text-[var(--brand-plum)]"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
+          <div className="rounded-[16px] border border-[var(--brand-plum-light)] bg-[var(--brand-plum-ice)] p-5">
+            <p className="mb-2 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--brand-plum)]">
+              Warum diese Empfehlung?
+            </p>
+            <h2 className="font-header text-[23px] font-medium leading-[1.2] text-[var(--brand-plum-darkest)]">
+              Chaarlie bewertet erst dein Haar, dann die Produkte.
+            </h2>
+            <p className="mt-3 text-[14px] leading-[1.6] text-muted-foreground">
+              Jede Routine wird aus deinem Profil, deinen Zielen und deinen aktuellen Gewohnheiten
+              abgeleitet. So bleibt klar, warum ein Produkt passt und wann eine einfachere
+              Alternative reicht.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {["Analyse zuerst", "Konkrete Gründe", "Keine eigenen Produkte"].map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full border border-[var(--brand-plum-light)] bg-white px-2.5 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.06em] text-[var(--brand-plum)]"
+                >
+                  {item}
+                </span>
+              ))}
             </div>
           </div>
         </section>
