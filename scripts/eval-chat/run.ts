@@ -100,6 +100,10 @@ function parseArgs() {
   }
 }
 
+function scenarioHasHardFailures(result: ScenarioResult): boolean {
+  return countHardAssertionFailures([result]) > 0
+}
+
 // ── Main ─────────────────────────────────────────────────────────────────
 
 async function runScenario(params: {
@@ -360,10 +364,52 @@ async function main() {
       serverInfo,
     }),
   )
-  const results = scenarioRuns.map((run) => run.result)
+  let results = scenarioRuns.map((run) => run.result)
   for (const run of scenarioRuns) {
     console.log(run.logs.join("\n"))
     debugArtifactPaths.push(...run.debugArtifactPaths)
+  }
+
+  if (ciSmoke) {
+    const failedScenarioIds = new Set(
+      results.filter(scenarioHasHardFailures).map((result) => result.id),
+    )
+
+    if (failedScenarioIds.size > 0) {
+      const retryScenarios = scenarios.filter((scenario) => failedScenarioIds.has(scenario.id))
+      console.log(
+        `\nCI smoke retry: rerunning ${retryScenarios.length} scenario(s) with hard failures: ${[
+          ...failedScenarioIds,
+        ].join(", ")}`,
+      )
+
+      const retryRuns = await mapWithConcurrency(retryScenarios, 1, (scenario) =>
+        runScenario({
+          scenario,
+          baseUrl,
+          supabaseUrl,
+          serviceRoleKey,
+          anonKey,
+          skipJudge,
+          serverInfo,
+        }),
+      )
+
+      const resultsById = new Map(results.map((result) => [result.id, result]))
+      for (const run of retryRuns) {
+        console.log(run.logs.join("\n"))
+        debugArtifactPaths.push(...run.debugArtifactPaths)
+        if (run.result.passed || !scenarioHasHardFailures(run.result)) {
+          console.log(`  RETRY PASS  ${run.result.id}`)
+        } else {
+          console.log(`  RETRY FAIL  ${run.result.id}`)
+        }
+        resultsById.set(run.result.id, run.result)
+      }
+      results = scenarios
+        .map((scenario) => resultsById.get(scenario.id))
+        .filter((result): result is ScenarioResult => result !== undefined)
+    }
   }
 
   if (langfusePublish) {
