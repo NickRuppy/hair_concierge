@@ -1,7 +1,7 @@
 import { execFile, execFileSync, spawn } from "node:child_process"
 import { closeSync, existsSync, mkdirSync, openSync } from "node:fs"
 import net from "node:net"
-import { dirname, join } from "node:path"
+import { dirname, join, resolve } from "node:path"
 
 type LaunchOptions = {
   openBrowser: boolean
@@ -11,6 +11,7 @@ type LaunchOptions = {
 type RunningProcess = {
   pid: number
   command: string
+  cwd: string | null
 }
 
 const DEFAULT_PORT = 3910
@@ -28,11 +29,17 @@ async function main() {
   mkdirSync(logDir, { recursive: true })
 
   const url = `http://localhost:${options.port}`
-  const appWasRunning = await isPortListening(options.port)
+  const appProcess = findListeningProcess(options.port)
+  const appWasRunning = Boolean(appProcess)
   const workerWasRunning = findRunningWorkerProcess()
 
-  if (appWasRunning) {
-    console.log(`Review Center laeuft bereits auf ${url}.`)
+  if (appProcess) {
+    assertProcessBelongsToRepo(
+      appProcess,
+      repoRoot,
+      `Port ${options.port} ist bereits von einem anderen Worktree belegt.`,
+    )
+    console.log(`Review Center laeuft bereits auf ${url} (pid ${appProcess.pid}).`)
   } else {
     const appLog = join(logDir, "review-center.log")
     const app = spawnDetached(
@@ -55,6 +62,11 @@ async function main() {
   }
 
   if (workerWasRunning) {
+    assertProcessBelongsToRepo(
+      workerWasRunning,
+      repoRoot,
+      "Ein Codex Worker laeuft bereits aus einem anderen Worktree.",
+    )
     console.log(`Codex Worker laeuft bereits (pid ${workerWasRunning.pid}).`)
   } else {
     const workerLog = join(logDir, "codex-worker.log")
@@ -161,13 +173,88 @@ function findRunningWorkerProcess(): RunningProcess | null {
       if (!match) continue
       const pid = Number.parseInt(match[1] ?? "", 10)
       if (!Number.isFinite(pid) || pid === currentPid) continue
-      return { pid, command: match[2] ?? line }
+      return { pid, command: match[2] ?? line, cwd: findProcessCwd(pid) }
     }
   } catch {
     return null
   }
 
   return null
+}
+
+function findListeningProcess(port: number): RunningProcess | null {
+  try {
+    const output = execFileSync("lsof", ["-nP", `-iTCP:${port}`, "-sTCP:LISTEN", "-Fp"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+    const pidLine = output
+      .split("\n")
+      .map((line) => line.trim())
+      .find((line) => line.startsWith("p"))
+    const pid = Number.parseInt(pidLine?.slice(1) ?? "", 10)
+    if (!Number.isFinite(pid)) return null
+
+    return {
+      pid,
+      command: findProcessCommand(pid) ?? `pid ${pid}`,
+      cwd: findProcessCwd(pid),
+    }
+  } catch {
+    return null
+  }
+}
+
+function findProcessCommand(pid: number): string | null {
+  try {
+    const output = execFileSync("ps", ["-p", String(pid), "-o", "command="], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim()
+    return output.length > 0 ? output : null
+  } catch {
+    return null
+  }
+}
+
+function findProcessCwd(pid: number): string | null {
+  try {
+    const output = execFileSync("lsof", ["-a", "-p", String(pid), "-d", "cwd", "-Fn"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+    const cwdLine = output
+      .split("\n")
+      .map((line) => line.trim())
+      .find((line) => line.startsWith("n"))
+    return cwdLine ? cwdLine.slice(1) : null
+  } catch {
+    return null
+  }
+}
+
+function assertProcessBelongsToRepo(
+  processInfo: RunningProcess,
+  repoRoot: string,
+  message: string,
+) {
+  if (processBelongsToRepo(processInfo, repoRoot)) return
+
+  const cwd = processInfo.cwd ?? "unbekannt"
+  throw new Error(
+    `${message} pid=${processInfo.pid}; cwd=${cwd}; command=${processInfo.command}. ` +
+      "Beende diesen Prozess oder starte den Launcher aus dem passenden Worktree.",
+  )
+}
+
+function processBelongsToRepo(processInfo: RunningProcess, repoRoot: string) {
+  const normalizedRepo = resolve(repoRoot)
+  if (processInfo.cwd) {
+    const normalizedCwd = resolve(processInfo.cwd)
+    return normalizedCwd === normalizedRepo || normalizedCwd.startsWith(`${normalizedRepo}/`)
+  }
+
+  return processInfo.command.includes(normalizedRepo)
 }
 
 function isPortListening(port: number): Promise<boolean> {
