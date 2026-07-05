@@ -423,6 +423,22 @@ test("conditioner fit stays unknown until balance_direction is backfilled", () =
   assert.equal(exactFit.status, "ideal")
 })
 
+test("conditioner fit evaluates real dimensions when legacy thickness data is empty", () => {
+  const { normalized, damage, plan } = buildEngineState()
+  const decision = buildConditionerCategoryDecision(normalized, damage, plan)
+
+  const fit = evaluateConditionerFit(decision, {
+    weight: "medium",
+    repair_level: "high",
+    balance_direction: "moisture",
+    suitable_thicknesses: [],
+  })
+
+  assert.notEqual(fit.status, "unknown")
+  assert.deepEqual(fit.missingFields, [])
+  assert.ok(fit.reasonCodes.includes("conditioner_thickness_unknown"))
+})
+
 test("conditioner fit treats thickness exclusion as a mismatch", () => {
   const { normalized, damage, plan } = buildEngineState()
   const decision = buildConditionerCategoryDecision(normalized, damage, plan)
@@ -590,6 +606,38 @@ test("leave-in fit derives canonical targets from the current leave-in schema", 
   })
 
   assert.equal(fit.status, "supportive")
+})
+
+test("leave-in fit calls a heat-activated product a mismatch for a no-heat profile instead of blaming data", () => {
+  const airDryProfile = {
+    ...SEVERE_DAMAGE_PROFILE,
+    hair_texture: "wavy" as const,
+    thickness: "fine" as const,
+    density: "medium" as const,
+    drying_method: "air_dry" as const,
+    heat_styling: "never" as const,
+    styling_tools: [],
+    uses_heat_protection: false,
+  }
+  const { normalized, damage, careNeeds, plan } = buildEngineState(airDryProfile, [])
+  const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
+
+  const fit = evaluateLeaveInFit(decision, {
+    format: "spray",
+    weight: "light",
+    roles: ["styling_prep"],
+    provides_heat_protection: true,
+    heat_protection_max_c: 230,
+    heat_activation_required: true,
+    care_benefits: ["moisture", "anti_frizz", "shine"],
+    ingredient_flags: ["silicones", "polymers", "humectants"],
+    application_stage: ["towel_dry", "pre_heat", "post_style"],
+    suitable_thicknesses: [],
+  })
+
+  assert.equal(fit.status, "mismatch")
+  assert.deepEqual(fit.missingFields, [])
+  assert.ok(fit.reasonCodes.includes("leave_in_heat_activation_without_heat_mismatch"))
 })
 
 test("leave-in fit mismatches when heat styling support is missing", () => {

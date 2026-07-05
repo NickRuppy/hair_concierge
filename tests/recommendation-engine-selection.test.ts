@@ -26,6 +26,7 @@ import {
   type PeelingCategoryDecision,
   buildRecommendationRequestContext,
   buildRecommendationEngineRuntimeFromPersistence,
+  enrichCandidatesWithStructuredThicknesses,
   rerankBondbuilderProductsWithEngine,
   rerankConditionerProductsWithEngine,
   rerankDeepCleansingShampooProductsWithEngine,
@@ -399,6 +400,78 @@ test("engine conditioner reranking preserves explicit assessment target inside t
   assert.equal(reranked.length, 3)
   assert.equal(reranked[0]?.id, "assessment-target")
   assert.ok(reranked.some((product) => product.id === "assessment-target"))
+})
+
+test("candidates with empty legacy thickness arrays get structured thicknesses backfilled", () => {
+  const legacyEmpty = createMatchedProduct("intake-product", "Conditioner", {
+    combined_score: 0.5,
+  })
+  legacyEmpty.suitable_thicknesses = []
+  const legacyFilled = createMatchedProduct("catalog-product", "Conditioner", {
+    combined_score: 0.6,
+  })
+  legacyFilled.suitable_thicknesses = ["fine"]
+
+  const enriched = enrichCandidatesWithStructuredThicknesses(
+    [legacyEmpty, legacyFilled],
+    [
+      { product_id: "intake-product", thickness: "fine" },
+      { product_id: "intake-product", thickness: "normal" },
+      { product_id: "catalog-product", thickness: "coarse" },
+    ],
+  )
+
+  assert.deepEqual(
+    enriched.find((product) => product.id === "intake-product")?.suitable_thicknesses,
+    ["fine", "normal"],
+  )
+  assert.deepEqual(
+    enriched.find((product) => product.id === "catalog-product")?.suitable_thicknesses,
+    ["fine"],
+  )
+})
+
+test("engine conditioner reranking preserves mismatch assessment target when enough acceptable products exist", () => {
+  const runtime = buildRecommendationEngineRuntimeFromPersistence(SEVERE_DAMAGE_PROFILE, [])
+  const decision = runtime.categories.conditioner
+  const candidates = [
+    createMatchedProduct("top-1", "Conditioner", { combined_score: 0.99 }),
+    createMatchedProduct("top-2", "Conditioner", { combined_score: 0.98 }),
+    createMatchedProduct("top-3", "Conditioner", { combined_score: 0.97 }),
+    createMatchedProduct("assessment-target", "Conditioner", {
+      combined_score: 0.1,
+      is_chaarlie_recommended: false,
+    }),
+  ]
+  const specs: ProductConditionerRerankSpecs[] = [
+    ...["top-1", "top-2", "top-3"].map((product_id) => ({
+      product_id,
+      weight: "medium" as const,
+      repair_level: "high" as const,
+      balance_direction: "moisture" as const,
+      ingredient_flags: [],
+    })),
+    {
+      product_id: "assessment-target",
+      weight: "rich",
+      repair_level: "low",
+      balance_direction: "protein",
+      ingredient_flags: [],
+    },
+  ]
+
+  const reranked = rerankConditionerProductsWithEngine({
+    candidates,
+    specs,
+    decision,
+    hairProfile: SEVERE_DAMAGE_PROFILE,
+    includeProductIds: ["assessment-target"],
+    preserveProductIds: ["assessment-target"],
+  })
+
+  const target = reranked.find((product) => product.id === "assessment-target")
+  assert.ok(target, "expected mismatch assessment target to stay in engine output")
+  assert.ok(target.recommendation_meta, "expected assessment target to carry engine metadata")
 })
 
 test("engine mask reranking rewards complete fit metadata over unknown balance", () => {

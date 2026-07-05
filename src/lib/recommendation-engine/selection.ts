@@ -310,6 +310,68 @@ function appendUnselectedProducts<T extends MatchedProduct>(selected: T[], pool:
   return [...selected, ...pool.filter((product) => !seen.has(product.id))]
 }
 
+type StructuredThicknessRow = { product_id: string; thickness: string | null }
+
+export function enrichCandidatesWithStructuredThicknesses<T extends MatchedProduct>(
+  candidates: T[],
+  rows: readonly StructuredThicknessRow[],
+): T[] {
+  if (rows.length === 0) return candidates
+  const thicknessesByProductId = new Map<string, string[]>()
+  for (const row of rows) {
+    if (row.thickness !== "fine" && row.thickness !== "normal" && row.thickness !== "coarse") {
+      continue
+    }
+    const list = thicknessesByProductId.get(row.product_id) ?? []
+    if (!list.includes(row.thickness)) list.push(row.thickness)
+    thicknessesByProductId.set(row.product_id, list)
+  }
+  if (thicknessesByProductId.size === 0) return candidates
+
+  return candidates.map((candidate) => {
+    if (candidate.suitable_thicknesses.length > 0) return candidate
+    const structured = thicknessesByProductId.get(candidate.id)
+    return structured && structured.length > 0
+      ? { ...candidate, suitable_thicknesses: structured }
+      : candidate
+  })
+}
+
+async function loadStructuredThicknessRows(params: {
+  supabase: ReturnType<typeof createAdminClient>
+  table: "product_conditioner_specs" | "product_leave_in_eligibility"
+  candidates: readonly MatchedProduct[]
+}): Promise<StructuredThicknessRow[]> {
+  const missingIds = params.candidates
+    .filter((candidate) => candidate.suitable_thicknesses.length === 0)
+    .map((candidate) => candidate.id)
+  if (missingIds.length === 0) return []
+
+  const { data, error } = await params.supabase
+    .from(params.table)
+    .select("product_id, thickness")
+    .in("product_id", missingIds)
+  if (error) {
+    console.error(`Failed to load structured thicknesses from ${params.table}:`, error)
+    return []
+  }
+  return (data ?? []) as StructuredThicknessRow[]
+}
+
+function withPreservedProducts<T extends MatchedProduct>(
+  pool: T[],
+  scored: readonly T[],
+  preserveProductIds: readonly string[] | undefined,
+): T[] {
+  if (!preserveProductIds || preserveProductIds.length === 0) return pool
+  const preservedIds = new Set(preserveProductIds)
+  const poolIds = new Set(pool.map((product) => product.id))
+  const missingPreserved = scored.filter(
+    (product) => preservedIds.has(product.id) && !poolIds.has(product.id),
+  )
+  return missingPreserved.length > 0 ? [...pool, ...missingPreserved] : pool
+}
+
 function shampooSpecKey(
   productId: string,
   shampooBucket: ShampooFitSpec["shampoo_bucket"],
@@ -672,7 +734,13 @@ export function rerankConditionerProductsWithEngine(params: {
     (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
   )
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+    return stripScore(
+      sliceWithIncludedProductIds(
+        withPreservedProducts(acceptable, scored, preserveProductIds),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   const fallback = scored
@@ -771,7 +839,13 @@ export function rerankShampooProductsWithEngine(params: {
 
   const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+    return stripScore(
+      sliceWithIncludedProductIds(
+        withPreservedProducts(acceptable, scored, preserveProductIds),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   const mismatches = scored
@@ -1309,11 +1383,23 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
     target.colorSafeRequest
 
   if (acceptable.length > 0) {
-    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+    return stripScore(
+      sliceWithIncludedProductIds(
+        withPreservedProducts(acceptable, scored, preserveProductIds),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   if (strictRequest) {
-    return []
+    return stripScore(
+      sliceWithIncludedProductIds(
+        withPreservedProducts([], scored, preserveProductIds),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   return stripScore(sliceWithIncludedProductIds(scored, preserveProductIds, SELECTION_LIMIT))
@@ -1384,7 +1470,13 @@ export function rerankDryShampooProductsWithEngine(params: {
 
   scored.sort(compareScoredProducts)
   const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
-  return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+  return stripScore(
+    sliceWithIncludedProductIds(
+      withPreservedProducts(acceptable, scored, preserveProductIds),
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
+  )
 }
 
 function buildPeelingUsageHint(decision: PeelingCategoryDecision): string {
@@ -1693,7 +1785,13 @@ export function rerankLeaveInProductsWithEngine(params: {
   }
 
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+    return stripScore(
+      sliceWithIncludedProductIds(
+        withPreservedProducts(acceptable, scored, preserveProductIds),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   const fallback = scored
@@ -1704,7 +1802,11 @@ export function rerankLeaveInProductsWithEngine(params: {
     .map(markLeaveInFallback)
 
   return stripScore(
-    sliceWithIncludedProductIds([...acceptable, ...fallback], preserveProductIds, SELECTION_LIMIT),
+    sliceWithIncludedProductIds(
+      withPreservedProducts([...acceptable, ...fallback], scored, preserveProductIds),
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
   )
 }
 
@@ -1922,7 +2024,13 @@ export function rerankMaskProductsWithEngine(params: {
     (product) => product._fitStatus !== "mismatch" && product._fitStatus !== "unknown",
   )
   if (acceptable.length >= SELECTION_LIMIT) {
-    return stripScore(sliceWithIncludedProductIds(acceptable, preserveProductIds, SELECTION_LIMIT))
+    return stripScore(
+      sliceWithIncludedProductIds(
+        withPreservedProducts(acceptable, scored, preserveProductIds),
+        preserveProductIds,
+        SELECTION_LIMIT,
+      ),
+    )
   }
 
   const fallback = scored
@@ -1933,7 +2041,11 @@ export function rerankMaskProductsWithEngine(params: {
     .map(markMaskFallback)
 
   return stripScore(
-    sliceWithIncludedProductIds([...acceptable, ...fallback], preserveProductIds, SELECTION_LIMIT),
+    sliceWithIncludedProductIds(
+      withPreservedProducts([...acceptable, ...fallback], scored, preserveProductIds),
+      preserveProductIds,
+      SELECTION_LIMIT,
+    ),
   )
 }
 
@@ -2043,22 +2155,34 @@ export async function selectConditionerProductsWithEngine(params: {
     })
   }
 
-  const candidates = dedupeById([...strictCandidates, ...genericCandidates])
-  if (candidates.length === 0) return []
+  const rawCandidates = dedupeById([...strictCandidates, ...genericCandidates])
+  if (rawCandidates.length === 0) return []
 
   const supabase = createAdminClient()
-  const { data: specs, error } = await supabase
-    .from("product_conditioner_rerank_specs")
-    .select("*")
-    .in(
-      "product_id",
-      candidates.map((candidate) => candidate.id),
-    )
+  const [{ data: specs, error }, structuredThicknessRows] = await Promise.all([
+    supabase
+      .from("product_conditioner_rerank_specs")
+      .select("*")
+      .in(
+        "product_id",
+        rawCandidates.map((candidate) => candidate.id),
+      ),
+    loadStructuredThicknessRows({
+      supabase,
+      table: "product_conditioner_specs",
+      candidates: rawCandidates,
+    }),
+  ])
 
   if (error) {
     console.error("Failed to load conditioner specs for recommendation engine:", error)
     return []
   }
+
+  const candidates = enrichCandidatesWithStructuredThicknesses(
+    rawCandidates,
+    structuredThicknessRows,
+  )
 
   return rerankConditionerProductsWithEngine({
     candidates,
@@ -2314,25 +2438,37 @@ export async function selectLeaveInProductsWithEngine(params: {
 
   const supabase = createAdminClient()
   const specDrivenCandidates = await loadLeaveInSpecDrivenCandidates({ supabase, decision })
-  const candidates = dedupeById([
+  const rawCandidates = dedupeById([
     ...strictCandidates,
     ...genericCandidates,
     ...specDrivenCandidates,
   ])
-  if (candidates.length === 0) return []
+  if (rawCandidates.length === 0) return []
 
-  const { data: specs, error } = await supabase
-    .from("product_leave_in_specs")
-    .select("*")
-    .in(
-      "product_id",
-      candidates.map((candidate) => candidate.id),
-    )
+  const [{ data: specs, error }, structuredThicknessRows] = await Promise.all([
+    supabase
+      .from("product_leave_in_specs")
+      .select("*")
+      .in(
+        "product_id",
+        rawCandidates.map((candidate) => candidate.id),
+      ),
+    loadStructuredThicknessRows({
+      supabase,
+      table: "product_leave_in_eligibility",
+      candidates: rawCandidates,
+    }),
+  ])
 
   if (error) {
     console.error("Failed to load leave-in specs for recommendation engine:", error)
     return []
   }
+
+  const candidates = enrichCandidatesWithStructuredThicknesses(
+    rawCandidates,
+    structuredThicknessRows,
+  )
 
   return rerankLeaveInProductsWithEngine({
     candidates,
