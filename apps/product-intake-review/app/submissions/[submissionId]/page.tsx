@@ -484,6 +484,7 @@ function WorkerQueueSnapshot({
 }) {
   const activeRows = snapshot.rows.filter((row) => activeWorkerStatuses.has(row.job?.status ?? ""))
   const waitingRows = snapshot.rows.filter(isClaimableWaitingRow).sort(sortByWorkerClaimOrder)
+  const currentRow = snapshot.rows.find((row) => row.submission_id === currentSubmissionId) ?? null
   const currentWaitingIndex = waitingRows.findIndex(
     (row) => row.submission_id === currentSubmissionId,
   )
@@ -492,15 +493,11 @@ function WorkerQueueSnapshot({
     ...waitingRows.slice(0, WORKER_VISIBLE_SLOTS),
     ...(currentWaitingRow ? [currentWaitingRow] : []),
   ])
-
-  const headline =
-    activeRows.length > 0
-      ? `Aktuell arbeitet der Worker an ${activeRows.length} Aufgabe(n).`
-      : "Der Worker arbeitet gerade an keiner Aufgabe."
-  const explanation =
-    activeRows.length > 0
-      ? "Dein Job bleibt eingereiht, bis ein Worker-Slot frei wird."
-      : "Wenn Jobs nur eingereiht sind, pollt der Worker gerade nicht oder ist zwischen zwei Polls."
+  const currentStatus = describeCurrentWorkerSnapshot(
+    currentRow,
+    currentWaitingIndex,
+    activeRows.length,
+  )
 
   return (
     <section className="panel workerSnapshotPanel" aria-labelledby="worker-snapshot-heading">
@@ -517,10 +514,10 @@ function WorkerQueueSnapshot({
       {!snapshot.error ? (
         <div className="workerSnapshotBody">
           <div className="workerSnapshotSummary">
-            <strong>{headline}</strong>
-            <p>{explanation}</p>
-            {currentWaitingIndex >= 0 ? (
-              <p>Dieser Job steht aktuell auf Wartelistenplatz {currentWaitingIndex + 1}.</p>
+            <strong>{currentStatus.headline}</strong>
+            <p>{currentStatus.explanation}</p>
+            {currentStatus.detail ? (
+              <p className="workerCurrentStatus">{currentStatus.detail}</p>
             ) : null}
           </div>
           <div className="workerSnapshotColumns">
@@ -541,6 +538,77 @@ function WorkerQueueSnapshot({
       ) : null}
     </section>
   )
+}
+
+function describeCurrentWorkerSnapshot(
+  row: ProductIntakeQueueRow | null,
+  waitingIndex: number,
+  activeCount: number,
+) {
+  const job = row?.job
+  if (!job) {
+    return {
+      headline:
+        activeCount > 0
+          ? `Aktuell arbeitet der Worker an ${activeCount} Aufgabe(n).`
+          : "Der Worker arbeitet gerade an keiner Aufgabe.",
+      explanation: "Dieser Submission ist noch kein Research-Job zugeordnet.",
+      detail: null,
+    }
+  }
+
+  const stage = `Stage: ${job.stage}`
+  const updated = `Update: ${formatTimestamp(job.updated_at)}`
+  const queuePosition =
+    waitingIndex >= 0 ? `Wartelistenplatz: ${waitingIndex + 1}` : "Wartelistenplatz: wird berechnet"
+
+  switch (job.status) {
+    case "queued":
+    case "waiting_for_rework":
+      return {
+        headline: "Dieser Job ist eingereiht und wartet auf den naechsten Worker-Poll.",
+        explanation:
+          "Noch nicht vom Worker abgeholt. Sobald ein Slot frei ist, wechselt der Status zu running.",
+        detail: `${queuePosition} · ${stage} · ${updated}`,
+      }
+    case "running":
+    case "publish_preflight":
+    case "publishing":
+      return {
+        headline: "Dieser Job wird gerade vom Worker bearbeitet.",
+        explanation:
+          "Ein Worker-Lock ist sichtbar. Diese Seite aktualisiert sich automatisch, bis Review oder Fehler erscheint.",
+        detail: `Worker: ${job.locked_by ?? "unbekannt"} · ${stage} · ${updated}`,
+      }
+    case "waiting_for_review":
+      return {
+        headline: "Worker ist fertig - Review ist bereit.",
+        explanation: "Der Job wurde abgearbeitet und wartet jetzt auf deine Review-Entscheidung.",
+        detail: `${stage} · ${updated}`,
+      }
+    case "blocked":
+    case "failed":
+      return {
+        headline: "Worker-Lauf ist blockiert oder fehlgeschlagen.",
+        explanation:
+          job.last_error ??
+          "Der Grund steht im aktiven Research-Status. Retry oder Rework reiht den Job erneut ein.",
+        detail: `${stage} · ${updated}`,
+      }
+    case "done":
+      return {
+        headline: "Worker-Job ist abgeschlossen.",
+        explanation: "Fuer diesen Job ist keine Worker-Aktion mehr offen.",
+        detail: `${stage} · ${updated}`,
+      }
+    default:
+      return {
+        headline: "Worker-Status pruefen.",
+        explanation:
+          "Der Job hat einen Status, der noch nicht eindeutig im Review Center erklaert ist.",
+        detail: `Status: ${job.status} · ${stage} · ${updated}`,
+      }
+  }
 }
 
 function WorkerSnapshotList({
@@ -637,7 +705,22 @@ function queueRowStatusText(row: ProductIntakeQueueRow) {
   const job = row.job
   if (!job) return "Noch kein Research-Job."
   const lock = job.locked_by ? ` · Lock: ${job.locked_by}` : ""
-  return `Update ${formatTimestamp(job.updated_at)}${lock}`
+  switch (job.status) {
+    case "queued":
+    case "waiting_for_rework":
+      return `Noch nicht vom Worker abgeholt · Wartet seit ${formatTimestamp(job.updated_at)}`
+    case "running":
+    case "publish_preflight":
+    case "publishing":
+      return `Vom Worker abgeholt · ${formatTimestamp(job.locked_at ?? job.updated_at)}${lock}`
+    case "waiting_for_review":
+      return `Worker fertig · Review bereit seit ${formatTimestamp(job.updated_at)}`
+    case "blocked":
+    case "failed":
+      return `Gestoppt · ${job.last_error ?? `Update ${formatTimestamp(job.updated_at)}`}`
+    default:
+      return `Update ${formatTimestamp(job.updated_at)}${lock}`
+  }
 }
 
 function MilestoneLane({

@@ -536,6 +536,12 @@ test("detail page exposes research artifacts, comments, rework, and preflight co
   assert.match(detailPageSource, /Worker-Arbeitsstatus/)
   assert.match(detailPageSource, /Aktuell arbeitet der Worker an/)
   assert.match(detailPageSource, /Der Worker arbeitet gerade an keiner Aufgabe/)
+  assert.match(
+    detailPageSource,
+    /Dieser Job ist eingereiht und wartet auf den naechsten Worker-Poll/,
+  )
+  assert.match(detailPageSource, /Noch nicht vom Worker abgeholt/)
+  assert.match(detailPageSource, /Dieser Job wird gerade vom Worker bearbeitet/)
   assert.match(detailPageSource, /Naechste Jobs/)
   assert.match(detailPageSource, /Aktueller Job/)
   assert.match(detailPageSource, /Aktiver Research-Status/)
