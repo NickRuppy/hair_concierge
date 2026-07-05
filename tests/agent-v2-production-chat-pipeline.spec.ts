@@ -2277,6 +2277,131 @@ test("AgentV2 production pipeline passes pending routine inventory submissions i
   assert.equal(receivedActiveResolvedProductContext, null)
 })
 
+test("AgentV2 production pipeline resolves pending intake context from approved review notification", async () => {
+  let receivedActiveProductContexts: unknown = "not-called"
+  let receivedActiveResolvedProductContext: unknown = "not-called"
+
+  const messageDefaults = {
+    conversation_id: "conversation-1",
+    product_recommendations: null,
+    token_usage: null,
+    langfuse_trace_id: null,
+    langfuse_trace_url: null,
+    user_feedback_score: null,
+    user_feedback_at: null,
+  }
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "passt der zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-approved-intake-recovery",
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () =>
+        [
+          {
+            ...messageDefaults,
+            id: "m1",
+            role: "user",
+            content: "ich nutze den NEQI Conditioner Diamond Glass, passt der zu mir?",
+            rag_context: null,
+            created_at: "2026-07-05T19:27:13.000Z",
+          },
+          {
+            ...messageDefaults,
+            id: "m2",
+            role: "assistant",
+            content:
+              "Ich habe **NEQI Diamond Glass Conditioner** noch nicht in unserer Datenbank. Gib es bitte unten kurz ein.",
+            rag_context: null,
+            created_at: "2026-07-05T19:27:14.000Z",
+          },
+          {
+            ...messageDefaults,
+            id: "m3",
+            role: "assistant",
+            content:
+              "Gute Nachrichten: Wir haben **NEQI Diamond Glass Conditioner** geprüft und in deiner Routine verknüpft.",
+            rag_context: {
+              sources: [],
+              product_intake_review: {
+                submission_id: "sub-1",
+                status: "approved",
+                approved_product_id: "product-neqi-dgc",
+              },
+            },
+            created_at: "2026-07-05T19:53:12.000Z",
+          },
+        ] satisfies Message[],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile(),
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        ({
+          ...createDefaultConversationState(),
+          version: 2,
+          engine: "agent_v2_care_balance",
+          agent_v2: {
+            active_product_contexts: [
+              {
+                status: "pending_review",
+                product_id: null,
+                submission_id: "sub-1",
+                category: "conditioner",
+                brand_text: "NEQI",
+                product_name_text: "Diamond Glass Conditioner",
+                display_name: "NEQI Diamond Glass Conditioner",
+                original_user_message: "Ich habe NEQI Diamond Glass Conditioner eingereicht.",
+                source: "product_intake_submission",
+                updated_at: "2026-07-05T19:30:00.000Z",
+              },
+            ],
+          },
+        }) as unknown as ConversationState,
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      runAgentV2ResponsesTurn: async (params) => {
+        receivedActiveProductContexts = params.activeProductContexts
+        receivedActiveResolvedProductContext = params.activeResolvedProductContext
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.ok(Array.isArray(receivedActiveProductContexts))
+  const contexts = receivedActiveProductContexts as Array<Record<string, unknown>>
+  const recovered = contexts.find((context) => context.submission_id === "sub-1")
+  assert.ok(recovered, "expected the intake context for sub-1 to be present")
+  assert.equal(recovered.status, "resolved")
+  assert.equal(recovered.product_id, "product-neqi-dgc")
+  assert.equal(recovered.display_name, "NEQI Diamond Glass Conditioner")
+  assert.ok(
+    !contexts.some((context) => context.status === "pending_review"),
+    "expected no stale pending_review context after approval recovery",
+  )
+  assert.equal(
+    (receivedActiveResolvedProductContext as Record<string, unknown> | null)?.product_id,
+    "product-neqi-dgc",
+  )
+})
+
 test("AgentV2 production pipeline does not keep terminal submissions as pending routine context", async () => {
   let receivedActiveProductContexts: unknown = "not-called"
 
@@ -2512,6 +2637,304 @@ test("AgentV2 production pipeline targets approved routine product facts on fit 
     category: "shampoo",
     original_user_message: "Okay und passt er zu mir?",
   })
+})
+
+test("AgentV2 production pipeline keeps approved product target when stale prior category leaks into tool call", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const approvedProduct = createProduct("primary")
+  approvedProduct.id = "approved-conditioner"
+  approvedProduct.name = "PANTENE PRO-V Moisture Boost Conditioner"
+  approvedProduct.brand = "PANTENE PRO-V"
+  approvedProduct.category = "Conditioner"
+
+  const selection: SelectProductsToolResult = {
+    projection: {
+      category: "conditioner",
+      decision: "recommended",
+      product_response_policy: "recommend_with_caveat",
+      policy_reason: "Approved user-owned product target.",
+      profile_basis: [],
+      category_guidance: "Conditioner wird als konkretes Zielprodukt bewertet.",
+      products: [
+        {
+          rank: 1,
+          product_id: approvedProduct.id,
+          name: approvedProduct.name,
+          brand: approvedProduct.brand,
+          price_eur: approvedProduct.price_eur,
+          currency: approvedProduct.currency,
+          fit_reason: "Produktdaten wurden geladen.",
+          caveat: null,
+          supported_claims: [
+            {
+              field: "weight",
+              value: "light",
+              evidence: "product_spec",
+              label: "leichte Pflege",
+            },
+          ],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [approvedProduct],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: "conditioner",
+      message: "ja passt er zu mir?",
+    }),
+  }
+  let selectedProductsCalled = false
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "ja passt er zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-approved-product-fit-stale-category",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () =>
+        [
+          {
+            ...createMessage(0),
+            role: "assistant",
+            content:
+              "Ich kann den exakten PANTENE PRO-V Moisture Boost Conditioner so noch nicht sicher zuordnen - in der Datenbank taucht dazu nur die Leave-in-Variante auf.",
+          },
+          {
+            ...createMessage(1),
+            role: "assistant",
+            content:
+              "Gute Nachrichten: Wir haben **PANTENE PRO-V Moisture Boost Conditioner** geprüft und in deiner Routine verknüpft.\n\nDu kannst mich jetzt konkret dazu fragen, und ich berücksichtige es bei passenden Empfehlungen.",
+          },
+        ] satisfies Message[],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [
+          {
+            category: "conditioner",
+            product_name: "Moisture Boost Conditioner",
+            frequency_range: "weekly_3_4x",
+            brand_text: "PANTENE PRO-V",
+            product_id: approvedProduct.id,
+            product_submission_id: "submission-conditioner",
+            match_status: "matched",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        ({
+          ...createDefaultConversationState(),
+          agent_v2_active_product_contexts: [
+            {
+              status: "resolved",
+              product_id: approvedProduct.id,
+              submission_id: "submission-conditioner",
+              category: "conditioner",
+              brand_text: "PANTENE PRO-V",
+              product_name_text: "Moisture Boost Conditioner",
+              display_name: "PANTENE PRO-V Moisture Boost Conditioner",
+              original_user_message: "passt der PANTENE PRO-V Conditioner Moisture Boost zu mir?",
+              source: "product_intake_review",
+              updated_at: "2026-07-05T17:54:00.000Z",
+            },
+          ],
+        }) as ConversationState,
+      createSelectProductsTool:
+        (options = {}) =>
+        async (input: SelectProductsToolParams) => {
+          selectedProductsCalled = true
+          assert.equal(input.category, "conditioner")
+          assert.deepEqual(input.targetProductIds, [approvedProduct.id])
+          assert.deepEqual(input.targetProductHints, [
+            {
+              product_id: approvedProduct.id,
+              name: "PANTENE PRO-V Moisture Boost Conditioner",
+              category: "conditioner",
+            },
+          ])
+          options.onResult?.(selection)
+          return selection.projection
+        },
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.select_products({
+          category: "leave_in",
+          product_request_kind: "product_detail",
+          reason: "The user asks if the active product fits.",
+          user_request: "ja passt er zu mir?",
+          constraints: [],
+          requested_product_count: 1,
+          count_policy: "exact",
+          evidence_quote: "ja passt er zu mir?",
+        })
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.equal(selectedProductsCalled, true)
+})
+
+test("AgentV2 production pipeline does not target-only filter alternatives from active product", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const activeProduct = createProduct("active-conditioner")
+  activeProduct.name = "Schwarzkopf GLISS Liquid Silk Spülung"
+  activeProduct.brand = "Schwarzkopf GLISS"
+  activeProduct.category = "Conditioner"
+  const alternativeProduct = createProduct("alternative-conditioner")
+  alternativeProduct.name = "Guhl Panthenol + Reparatur 2in1 Kur & Spülung"
+  alternativeProduct.brand = "Guhl"
+  alternativeProduct.category = "Conditioner"
+
+  const selection: SelectProductsToolResult = {
+    projection: {
+      category: "conditioner",
+      decision: "recommended",
+      product_response_policy: "recommend_with_caveat",
+      policy_reason: "Alternativen zum aktuellen Conditioner.",
+      profile_basis: [],
+      category_guidance: "Conditioner-Alternativen werden verglichen.",
+      products: [
+        {
+          rank: 1,
+          product_id: alternativeProduct.id,
+          name: alternativeProduct.name,
+          brand: alternativeProduct.brand,
+          price_eur: alternativeProduct.price_eur,
+          currency: alternativeProduct.currency,
+          fit_reason: "Alternative mit passender Pflegewirkung.",
+          caveat: null,
+          supported_claims: [
+            {
+              field: "weight",
+              value: "medium",
+              evidence: "product_spec",
+              label: "mittlere Pflege",
+            },
+          ],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [alternativeProduct],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: "conditioner",
+      message: "okay, was wären sonst Alternativen?",
+    }),
+  }
+  let selectedProductsCalled = false
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "okay, was wären sonst Alternativen?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-active-product-alternatives-no-target-filter",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () =>
+        [
+          {
+            ...createMessage(0),
+            role: "assistant",
+            content: "**Schwarzkopf GLISS Liquid Silk Spülung** passt zu dir tendenziell gut.",
+          },
+        ] satisfies Message[],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [
+          {
+            category: "conditioner",
+            product_name: "Liquid Silk Spülung",
+            frequency_range: "weekly_3_4x",
+            brand_text: "Schwarzkopf GLISS",
+            product_id: activeProduct.id,
+            product_submission_id: "submission-gliss",
+            match_status: "matched",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        ({
+          ...createDefaultConversationState(),
+          agent_v2_active_product_contexts: [
+            {
+              status: "resolved",
+              product_id: activeProduct.id,
+              submission_id: "submission-gliss",
+              category: "conditioner",
+              brand_text: "Schwarzkopf GLISS",
+              product_name_text: "Liquid Silk Spülung",
+              display_name: "Schwarzkopf GLISS Liquid Silk Spülung",
+              original_user_message: "Ja passt das zu mir?",
+              source: "routine_inventory",
+              updated_at: "2026-07-05T16:15:00.000Z",
+            },
+          ],
+        }) as ConversationState,
+      createSelectProductsTool:
+        (options = {}) =>
+        async (input: SelectProductsToolParams) => {
+          selectedProductsCalled = true
+          assert.equal(input.category, "conditioner")
+          assert.deepEqual(input.targetProductIds, [])
+          assert.deepEqual(input.targetProductHints, [])
+          options.onResult?.(selection)
+          return selection.projection
+        },
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.select_products({
+          category: "conditioner",
+          product_request_kind: "product_detail",
+          reason: "The user asks for alternatives to the active product.",
+          user_request: "okay, was wären sonst Alternativen?",
+          constraints: [],
+          requested_product_count: 3,
+          count_policy: "at_least",
+          evidence_quote: "okay, was wären sonst Alternativen?",
+        })
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.equal(selectedProductsCalled, true)
 })
 
 test("AgentV2 production pipeline resolves redundant lookup through active routine product id", async () => {

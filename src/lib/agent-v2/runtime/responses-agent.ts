@@ -713,7 +713,15 @@ export async function runAgentV2ResponsesTurn(params: {
         pendingFollowupAction,
         isShortFollowupConfirmation,
       })
-      repairState = buildRepairState(validation.errors, repairAllowedExecutableTools)
+      repairState = buildRepairState(validation.errors, repairAllowedExecutableTools, {
+        requireProductFactsForTrustedAssessment: shouldRepairTrustedAssessmentWithProductFacts({
+          errors: validation.errors,
+          trustedProductIds: new Set(buildCurrentValidationContext().trustedSelectedProductIds),
+          selectProductsAlreadyCalled: trace.tool_calls.some(
+            (call) => call.name === "select_products",
+          ),
+        }),
+      })
       trace.bounded_repair_kind = repairState.kind
       if (repairState.kind === "unrepairable") {
         trace.failure_stage = "repair_failed"
@@ -1878,9 +1886,30 @@ function isAgentV2RuntimeToolName(name: AgentV2ToolName): name is AgentV2Runtime
   return name !== "set_current_care_context" && name !== "classify_turn_gate"
 }
 
+function shouldRepairTrustedAssessmentWithProductFacts(params: {
+  errors: AgentV2ValidationError[]
+  trustedProductIds: ReadonlySet<string>
+  selectProductsAlreadyCalled: boolean
+}): boolean {
+  if (params.selectProductsAlreadyCalled) return false
+  if (params.trustedProductIds.size === 0) return false
+  const groundingError = params.errors.find(
+    (error) => error.validator_id === "product_assessment_grounding",
+  )
+  if (!groundingError) return false
+  const assessedIds = Array.isArray(groundingError.rejected_value)
+    ? groundingError.rejected_value.filter(
+        (id): id is string => typeof id === "string" && id.trim().length > 0,
+      )
+    : []
+  if (assessedIds.length === 0 || assessedIds.length > 3) return false
+  return assessedIds.every((id) => params.trustedProductIds.has(id))
+}
+
 function buildRepairState(
   errors: AgentV2ValidationError[],
   allowedExecutableTools: ReadonlySet<AgentV2ToolName>,
+  options?: { requireProductFactsForTrustedAssessment?: boolean },
 ): AgentV2RepairState {
   const validatorIds = new Set(errors.map((error) => error.validator_id))
   const requiredTools: AgentV2ToolName[] = []
@@ -1923,6 +1952,14 @@ function buildRepairState(
     allowedExecutableTools.has("build_or_fix_routine")
   ) {
     requiredTools.push("build_or_fix_routine")
+  }
+  if (
+    options?.requireProductFactsForTrustedAssessment &&
+    validatorIds.has("product_assessment_grounding") &&
+    allowedExecutableTools.has("select_products") &&
+    !requiredTools.includes("select_products")
+  ) {
+    requiredTools.push("select_products")
   }
 
   if (requiredTools.length > 0) {

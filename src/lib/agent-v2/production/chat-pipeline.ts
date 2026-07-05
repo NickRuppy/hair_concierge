@@ -246,6 +246,37 @@ function selectProductAssessmentTargetProductIds(params: {
   return [...new Set(ids)]
 }
 
+function selectProductsCategoryForAssessment(params: {
+  productRequestKind: string | null
+  category: string | null
+  activeResolvedProductContext: AgentV2ActiveResolvedProductContext | null
+}): string | null {
+  if (
+    params.productRequestKind === "product_detail" &&
+    params.activeResolvedProductContext?.product_id &&
+    params.activeResolvedProductContext.category
+  ) {
+    return params.activeResolvedProductContext.category
+  }
+
+  return params.category
+}
+
+function isSelectProductsAlternativesRequest(params: {
+  latestUserMessage: string
+  input: Record<string, unknown>
+}): boolean {
+  const text = [
+    params.latestUserMessage,
+    typeof params.input.user_request === "string" ? params.input.user_request : "",
+    typeof params.input.evidence_quote === "string" ? params.input.evidence_quote : "",
+  ].join(" ")
+  const normalized = normalizeRoutineProductReferenceText(text)
+  return /\b(?:alternative|alternativen|alternativ|andere|anderen|sonst|weitere|weiteren|statt|ersetzen|ersatz)\b/u.test(
+    normalized,
+  )
+}
+
 function selectProductAssessmentTargetProductHints(params: {
   targetProductIds: readonly string[]
   executions: readonly ProductLookupExecution[]
@@ -474,6 +505,34 @@ function projectRecentMessages(messages: Message[]): RecentConversationMessage[]
     if (message.role !== "user" && message.role !== "assistant") return []
     const content = message.content?.trim()
     return content ? [{ role: message.role, content }] : []
+  })
+}
+
+function resolveApprovedIntakeReviewContexts(
+  contexts: readonly AgentV2ActiveProductContext[],
+  history: readonly Message[],
+  nowIso: string,
+): AgentV2ActiveProductContext[] {
+  const approvedProductIdsBySubmissionId = new Map<string, string>()
+  for (const message of history) {
+    if (message.role !== "assistant") continue
+    const review = message.rag_context?.product_intake_review
+    if (!review?.submission_id || !review.approved_product_id) continue
+    if (review.status !== "approved" && review.status !== "matched_existing") continue
+    approvedProductIdsBySubmissionId.set(review.submission_id, review.approved_product_id)
+  }
+  if (approvedProductIdsBySubmissionId.size === 0) return [...contexts]
+
+  return contexts.map((context) => {
+    if (context.status !== "pending_review" || !context.submission_id) return context
+    const approvedProductId = approvedProductIdsBySubmissionId.get(context.submission_id)
+    if (!approvedProductId) return context
+    return {
+      ...context,
+      status: "resolved" as const,
+      product_id: approvedProductId,
+      updated_at: nowIso,
+    }
   })
 }
 
@@ -1216,7 +1275,11 @@ export async function runAgentV2ProductionPipeline(
     pendingSubmissionIdentities,
   )
   const activeProductContexts = mergeActiveProductContexts({
-    previous: conversationState.agent_v2.active_product_contexts,
+    previous: resolveApprovedIntakeReviewContexts(
+      conversationState.agent_v2.active_product_contexts,
+      conversationHistory,
+      startedAt,
+    ),
     next: [...pendingRoutineProductContexts, ...matchedRoutineProductContexts],
     latestMessageNamesActionableProduct: isActionableNamedProductContext(latestNamedProductContext),
   })
@@ -1334,6 +1397,18 @@ export async function runAgentV2ProductionPipeline(
         return result
       },
       select_products: async (input, executionContext?: AgentV2RuntimeToolExecutionContext) => {
+        const productRequestKind =
+          typeof input.product_request_kind === "string" ? input.product_request_kind : null
+        const requestedCategory = typeof input.category === "string" ? input.category : null
+        const effectiveCategory = selectProductsCategoryForAssessment({
+          productRequestKind,
+          category: requestedCategory,
+          activeResolvedProductContext,
+        })
+        const isAlternativesRequest = isSelectProductsAlternativesRequest({
+          latestUserMessage: message,
+          input,
+        })
         const effectiveCareContext =
           executionContext?.effectiveCareContext ?? readAgentV2EffectiveCareContext(input)
         const effectiveHairProfile = buildAgentV2EffectiveHairProfile(
@@ -1348,14 +1423,15 @@ export async function runAgentV2ProductionPipeline(
           latestMessage: message,
           recentMessages,
         })
-        const targetProductIds = selectProductAssessmentTargetProductIds({
-          productRequestKind:
-            typeof input.product_request_kind === "string" ? input.product_request_kind : null,
-          category: typeof input.category === "string" ? input.category : null,
-          executions: productLookupExecutions,
-          trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
-          activeResolvedProductContext,
-        })
+        const targetProductIds = isAlternativesRequest
+          ? []
+          : selectProductAssessmentTargetProductIds({
+              productRequestKind,
+              category: effectiveCategory,
+              executions: productLookupExecutions,
+              trustedSelectedProductContext: params.trustedSelectedProductContext ?? null,
+              activeResolvedProductContext,
+            })
         const targetProductHints = selectProductAssessmentTargetProductHints({
           targetProductIds,
           executions: productLookupExecutions,
@@ -1369,7 +1445,7 @@ export async function runAgentV2ProductionPipeline(
           },
         })
         const projection = await selectProductsForCall({
-          category: input.category as Parameters<typeof selectProductsForCall>[0]["category"],
+          category: effectiveCategory as Parameters<typeof selectProductsForCall>[0]["category"],
           message: productToolMessage,
           hairProfile: effectiveHairProfile,
           memoryContext,

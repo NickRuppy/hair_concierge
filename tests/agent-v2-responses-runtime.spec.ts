@@ -2167,6 +2167,140 @@ test("AgentV2 runtime requires lookup before own-product suitability answer clas
   assert.equal(lookupInputs[0]?.category, "conditioner")
 })
 
+test("AgentV2 runtime repairs ungrounded trusted product assessment by loading product facts", async () => {
+  const productId = "neqi-diamond-glass-conditioner"
+  const productName = "Neqi Diamond Glass Conditioner"
+  const assessmentTerminal = (call_id: string, usedProductTool: boolean) =>
+    terminalCall(call_id, {
+      ...terminalGeneralAdviceArguments(),
+      answer_mode: "product_assessment",
+      interpreted_intent: "Der Nutzer fragt, ob der geprüfte Conditioner zu ihm passt.",
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "product_detail",
+        care_category: "conditioner",
+        requested_product_count: null,
+        count_policy: "none",
+        evidence_quote: "passt der zu mir",
+        specific_product_candidate: true,
+      }),
+      extracted_constraints: {
+        ...emptyExtractedConstraints(),
+        product_categories: ["conditioner"],
+      },
+      tool_grounding: {
+        ...terminalGeneralAdviceArguments().tool_grounding,
+        used_guidance_package_ids: requiredGuidanceForAnswer(
+          "product_recommendation",
+          "conditioner",
+        ),
+        used_product_tool: usedProductTool,
+        product_ids: [productId],
+      },
+      payload: {
+        assessment_kind: "fit",
+        assessed_product_ids: [productId],
+        user_facing_answer_de: `**${productName}** passt zu deinem Profil: Er pflegt feines Haar, ohne zu beschweren.`,
+      },
+    })
+
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["conditioner"],
+    }),
+    assessmentTerminal("call_2", false),
+    functionCall(
+      "call_3",
+      "select_products",
+      selectProductsArguments({
+        category: "conditioner",
+        user_request: "passt der zu mir?",
+        product_request_kind: "product_detail",
+        requested_product_count: 1,
+        count_policy: "none",
+        evidence_quote: "passt der zu mir",
+      }),
+    ),
+    assessmentTerminal("call_4", true),
+  ])
+  const selectInputs: Record<string, unknown>[] = []
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "passt der zu mir?",
+    recentMessages: [
+      {
+        role: "user",
+        content: "ich nutze den NEQI Conditioner Diamond Glass, passt der zu mir?",
+      },
+      {
+        role: "assistant",
+        content:
+          "Gute Nachrichten: Wir haben **Neqi Diamond Glass Conditioner** geprüft und in deiner Routine verknüpft.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    activeResolvedProductContext: {
+      source: "routine_inventory",
+      product_id: productId,
+      name: productName,
+      category: "conditioner",
+      original_user_message: "passt der zu mir?",
+    },
+    productIntakeEnabled: true,
+    tools: {
+      ...fakeAgentV2Tools(),
+      select_products: async (input) => {
+        selectInputs.push(input)
+        return {
+          tool_name: "select_products",
+          category: "conditioner",
+          decision: "recommended",
+          product_response_policy: "recommend",
+          policy_reason: "Target product facts loaded for the trusted assessed product.",
+          valid_product_ids: [productId],
+          products: [
+            {
+              product_id: productId,
+              rank: 1,
+              name: productName,
+              brand: "Neqi",
+              price_eur: null,
+              currency: null,
+              fit_reason: "Leichter Conditioner für feines Haar.",
+              caveat: null,
+              supported_claims: ["Leichte Pflege für feines Haar"],
+              unsupported_requested_signals: [],
+            },
+          ],
+          missing_required_data: [],
+          constraint_blockers: [],
+          comparison_facts: null,
+          allowed_claim_sources: ["selected_products.supported_claims"],
+          trace: { profile_basis: [], category_guidance: "" },
+        }
+      },
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.final_answer.answer_mode, "product_assessment")
+  assert.equal(result.trace.bounded_repair_kind, "missing_guidance_or_tools")
+  assert.deepEqual(
+    result.trace.tool_calls.map((call) => call.name),
+    ["load_advisor_guidance", "select_products"],
+  )
+  assert.ok(
+    result.trace.repair_attempts[0]?.validation_errors.some(
+      (error) => error.validator_id === "product_assessment_grounding",
+    ),
+  )
+  assert.equal(selectInputs.length, 1)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Neqi Diamond Glass Conditioner/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Welche genaue Variante/i)
+})
+
 test("AgentV2 runtime repairs clarification before own-product suitability lookup", async () => {
   const client = fakeResponsesClientWithOutputs([
     guidanceCall("call_1", {
