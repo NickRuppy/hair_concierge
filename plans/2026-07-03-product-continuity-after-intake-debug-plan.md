@@ -1111,6 +1111,21 @@ This slice targets the latest local failures:
 6. `Ja:` is the same style problem as `Ja -` / `Ja —`.
    - Sanitize it into the useful sentence instead of allowing awkward visible copy or killing the answer.
 
+7. Active resolved product state wins over stale model/tool-call category.
+   - If the latest turn is a same-topic fit/detail follow-up and there is one trusted active resolved product, the runtime must load facts for that exact `product_id` and its canonical category.
+   - Do not allow a stale category from an old clarification card, old assistant text, or model tool arguments to redirect facts lookup to another category.
+   - This is not a wording-specific shortcut. It is a state contract: known resolved product identity first, facts lookup second, final answer third.
+
+8. Product lookup/intake cards must share resolved state.
+   - If the user submits their own product from a clarification card, the parent clarification card should immediately lock/collapse instead of still offering candidate selection and "add your own".
+   - If a later review notification approves the submitted product, historical cards should render as resolved/non-actionable after reload.
+   - The user should not see an intake path again for a reviewed/resolved product.
+
+9. Reviewed/resolved product facts failure is internal, not a user intake path.
+   - After the normal "checked and linked" notification, the product should behave like any other database product.
+   - If facts cannot be loaded for that product ID, fix the read/bridge path; do not ask the user to add the product again.
+   - A fallback may only be a narrow honest internal-facts-missing message while tests expose the data-read defect.
+
 ### Implementation Tasks
 
 1. Add regressions before changing behavior.
@@ -1119,6 +1134,9 @@ This slice targets the latest local failures:
    - `current product -> das Shampoo -> Welche Alternativen wären gut?` keeps the shampoo reference.
    - `current conditioner -> passt der zu mir?` uses product facts when specs exist, or gives only the honest missing-facts fallback if facts truly cannot be loaded.
    - `Ja:` current routine identity answer is sanitized.
+   - approved product follow-up with stale prior category/tool args still calls product facts for the approved product ID/category.
+   - clarification card plus own-product submit locks/collapses the stale candidate UI.
+   - approved intake review makes old clarification/intake cards non-actionable in chat history.
 
 2. Harden the existing matched-routine active context bridge.
    - Do not build a second parallel context mechanism.
@@ -1140,6 +1158,11 @@ This slice targets the latest local failures:
    - For fit/detail answers, require category facts or selected-product projection facts tied to the trusted product ID.
    - Empty `supported_claims` must not satisfy grounding; target the existing `productIdsWithProductAssessmentFacts` / `validateProductAssessmentGrounding` path in `src/lib/agent-v2/validation/final-answer-validator.ts`.
    - If facts are missing for a reviewed product, surface that as a data-read failure fallback, not an intake or variant flow.
+   - In `src/lib/agent-v2/production/chat-pipeline.ts`, normalize `select_products` calls for same-topic active resolved product assessments before the tool runs:
+     - `targetProductIds` must include the trusted active resolved product ID.
+     - `category` must be the trusted product's canonical category.
+     - old `product_request_kind: product_detail` calls with stale category must be corrected, not rejected into generic fallback.
+   - Keep this correction scoped to target/detail assessment turns. Alternatives should use the active product as a baseline, not force the result set to only that product.
 
 5. Repair alternatives flow.
    - For `Alternativen dazu`, use the active resolved product as comparison baseline.
@@ -1157,6 +1180,12 @@ This slice targets the latest local failures:
    - Include `Ja:` at the beginning of otherwise useful current-routine identity answers.
    - Keep the existing hard style guard for unrelated answers.
 
+8. Fix clarification-card and intake-card state coupling.
+   - Add a parent callback or shared local state between `ProductLookupClarificationCard` and nested `ProductIntakeCard` so successful own-product submission locks the parent card immediately.
+   - Extend the persisted resolved-card derivation in `src/lib/chat/product-lookup-selection-ui.ts` or adjacent chat UI state helpers so later approved product-intake review messages mark the original clarification card as resolved/non-actionable.
+   - Prefer submission ID or stored offer ID matching. Use normalized brand/product/category only as a fallback for old messages.
+   - Keep this UI-only state separate from the product-facts grounding contract; a locked card does not authorize factual claims by itself.
+
 ### Verification Additions
 
 Run focused tests:
@@ -1168,7 +1197,7 @@ Run focused tests:
 Then run:
 
 ```bash
-./node_modules/.bin/tsx --test tests/agent-v2-responses-runtime.spec.ts tests/agent-v2-final-answer-validator.spec.ts tests/agent-v2-product-lookup-clarification.spec.ts tests/agent-v2-production-chat-pipeline.spec.ts
+./node_modules/.bin/tsx --test tests/agent-v2-responses-runtime.spec.ts tests/agent-v2-final-answer-validator.spec.ts tests/agent-v2-product-lookup-clarification.spec.ts tests/agent-v2-production-chat-pipeline.spec.ts tests/chat-product-mentions.test.tsx
 npm run typecheck
 ```
 
@@ -1210,6 +1239,9 @@ Settled:
 12. `lookup_product_candidate` should not be required for the same already-resolved active routine product.
 13. The patch must be category-general, not a shampoo/conditioner bandaid.
 14. Extend the bare-`Ja` sanitizer to include `Ja:`.
+15. Active resolved product state overrides stale category/tool args for same-topic target/detail assessments.
+16. Clarification cards and intake cards must share resolved/submitted state; old cards should not stay actionable after own-product submit or review approval.
+17. Reviewed/resolved products must never route back to product intake because facts failed to load.
 
 Remaining risks:
 
@@ -1222,3 +1254,25 @@ Remaining risks:
 ## Stop Line
 
 Implementation may begin after Nick explicitly approves this finalized plan. Stop before staging, committing, pushing, opening PRs, migrations, or production/Supabase apply commands unless separately approved.
+
+## Follow-up: Fit evaluation must not blame data (2026-07-06)
+
+Root cause chain fixed in this branch:
+
+1. `evaluateConditionerFit` / `evaluateLeaveInFit` early-returned whole-fit `unknown`
+   ("Daten unvollständig") when `suitable_thicknesses` was empty, even with complete
+   structured specs. Fixed: empty legacy thickness array now degrades only the
+   thickness dimension to `unknown`; the other dimensions produce a real verdict
+   (e.g. heat-activated leave-in vs. no-heat profile -> `mismatch`).
+2. The reranks sourced `suitable_thicknesses` only from the legacy `products` column,
+   which the intake approval pipeline never writes. Fixed: conditioner/leave-in select
+   functions backfill candidate thicknesses from `product_conditioner_specs` /
+   `product_leave_in_eligibility` (`enrichCandidatesWithStructuredThicknesses`).
+3. Backfilled `products.suitable_thicknesses` for all 13 intake-approved products
+   (conditioner/leave_in/shampoo) from their structured spec tables on 2026-07-06.
+4. OPEN (review-center branch): the approval flow that creates the `products` row
+   (product-intake-full-flow-smoke worktree) should derive and write
+   `suitable_thicknesses` from the approved category specs so new approvals do not
+   recreate empty legacy arrays. Port together with the notifications state-transition
+   patch when the branches merge. The engine no longer depends on it (see 2), so this
+   is consistency, not correctness.
