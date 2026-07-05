@@ -210,7 +210,8 @@ function normalizeActiveProductContext(value: unknown): AgentV2ActiveProductCont
   const source =
     value.source === "lookup_exact" ||
     value.source === "product_lookup_selection" ||
-    value.source === "product_intake_submission"
+    value.source === "product_intake_submission" ||
+    value.source === "routine_inventory"
       ? value.source
       : null
   if (!status || !displayName || !originalUserMessage || !source) return null
@@ -237,7 +238,14 @@ function normalizeActiveResolvedProductContext(
   value: unknown,
 ): AgentV2ActiveResolvedProductContext | null {
   if (!isRecord(value)) return null
-  if (value.source !== "product_lookup_selection") return null
+  const source =
+    value.source === "lookup_exact" ||
+    value.source === "product_lookup_selection" ||
+    value.source === "product_intake_submission" ||
+    value.source === "routine_inventory"
+      ? value.source
+      : null
+  if (!source) return null
   const productId = typeof value.product_id === "string" ? value.product_id : null
   const name = typeof value.name === "string" ? value.name : null
   const originalUserMessage =
@@ -245,7 +253,7 @@ function normalizeActiveResolvedProductContext(
   if (!productId || !name || !originalUserMessage) return null
 
   return {
-    source: "product_lookup_selection",
+    source,
     product_id: productId,
     name,
     category: typeof value.category === "string" ? value.category : null,

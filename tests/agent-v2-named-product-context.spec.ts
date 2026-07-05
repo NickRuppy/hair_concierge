@@ -58,6 +58,19 @@ test("detects unquoted named product from add-to-routine wording", () => {
 test("detects common own-product suitability and routine-add phrasing", () => {
   assert.deepEqual(
     buildAgentV2NamedProductContext({
+      latestMessage: "Passt Schwarzkopf GLISS Conditioner Liquid Silk zu mir?",
+      recentMessages: [],
+    }),
+    {
+      display_name: "Schwarzkopf GLISS Liquid Silk Conditioner",
+      category: "conditioner",
+      plausible_exact_name: true,
+      named_product_intent: "evaluation",
+    },
+  )
+
+  assert.deepEqual(
+    buildAgentV2NamedProductContext({
       latestMessage: "Okay passt das Syoss Volume Shampoo zu mir?",
       recentMessages: [],
     }),

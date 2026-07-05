@@ -570,6 +570,94 @@ test("AgentV2 persisted state normalizes legacy active product context into max-
   assert.equal(state.agent_v2.active_resolved_product_context?.product_id, "product-legacy")
 })
 
+test("AgentV2 persisted state keeps routine-inventory active product contexts", () => {
+  const state = normalizeAgentV2ConversationState({
+    version: 2,
+    engine: "agent_v2_care_balance",
+    agent_v2: {
+      active_product_contexts: [
+        {
+          status: "resolved",
+          product_id: "routine-conditioner",
+          submission_id: null,
+          category: "conditioner",
+          brand_text: "John Frieda",
+          product_name_text: "Frizz Ease Wunder-Reparatur Conditioner",
+          display_name: "John Frieda Frizz Ease Wunder-Reparatur Conditioner",
+          original_user_message: "Ja passt das zu mir?",
+          source: "routine_inventory",
+          updated_at: "2026-07-03T14:15:00.000Z",
+        },
+      ],
+    },
+  })
+
+  assert.equal(state.agent_v2.active_product_contexts.length, 1)
+  assert.equal(state.agent_v2.active_product_contexts[0]?.source, "routine_inventory")
+  assert.equal(state.agent_v2.active_resolved_product_context?.product_id, "routine-conditioner")
+  assert.equal(state.agent_v2.active_resolved_product_context?.source, "routine_inventory")
+})
+
+test("AgentV2 production pipeline activates matched routine shampoo identity from current-product question", async () => {
+  let receivedActiveResolvedProductContext: unknown = "not-called"
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Weißt du welches Shampoo ich gerade benutze?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-current-shampoo-identity-context",
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: createCompleteHairProfile(),
+        routine_inventory: [
+          {
+            category: "shampoo",
+            product_name: "Syoss Intense Volume Shampoo",
+            frequency_range: "weekly_3_4x",
+            brand_text: "Syoss",
+            product_id: "syoss-intense-volume-shampoo",
+            product_submission_id: null,
+            match_status: "matched",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      runAgentV2ResponsesTurn: async (params) => {
+        receivedActiveResolvedProductContext = params.activeResolvedProductContext
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.deepEqual(receivedActiveResolvedProductContext, {
+    source: "routine_inventory",
+    product_id: "syoss-intense-volume-shampoo",
+    name: "Syoss Intense Volume Shampoo",
+    category: "shampoo",
+    original_user_message: "Weißt du welches Shampoo ich gerade benutze?",
+  })
+})
+
 test("AgentV2 persisted state keeps only three active product contexts and derives primary resolved product", () => {
   const state = normalizeAgentV2ConversationState({
     version: 2,
@@ -1900,6 +1988,29 @@ test("AgentV2 production safety mode hard-stops severe persistent shedding", () 
   )
 })
 
+test("AgentV2 production safety mode does not treat hair-loss product names as symptoms", () => {
+  assert.equal(
+    classifyAgentV2ProductionSafetyMode("Passt das Plantur 39 Anti-Haarverlust Shampoo zu mir?"),
+    "normal",
+  )
+  assert.equal(
+    classifyAgentV2ProductionSafetyMode(
+      "Was hältst du von dem Anti-Haarausfall Shampoo bei kreisrundem Haarausfall?",
+    ),
+    "restricted",
+  )
+  assert.equal(
+    classifyAgentV2ProductionSafetyMode(
+      "Ist dieses Anti-Haarausfall Serum nach der Schwangerschaft okay?",
+    ),
+    "restricted",
+  )
+  assert.equal(
+    classifyAgentV2ProductionSafetyMode("Ich habe Haarausfall, passt das Shampoo trotzdem?"),
+    "restricted",
+  )
+})
+
 test("AgentV2 production pipeline carries persisted routine thread context into the runtime", async () => {
   const pendingRoutineContext: AgentV2RoutineThreadContext = {
     active: true,
@@ -2253,6 +2364,427 @@ test("AgentV2 production pipeline does not keep terminal submissions as pending 
   )
 
   assert.deepEqual(receivedActiveProductContexts, [])
+})
+
+test("AgentV2 production pipeline targets approved routine product facts on fit follow-up", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const approvedProduct = createProduct("primary")
+  approvedProduct.name = "L'Oréal Paris Elvital Glycolic Gloss Shampoo"
+  const selection: SelectProductsToolResult = {
+    projection: {
+      category: "shampoo",
+      decision: "recommended",
+      product_response_policy: "recommend_with_caveat",
+      policy_reason: "Approved user-owned product target.",
+      profile_basis: [],
+      category_guidance: "Shampoo wird als konkretes Zielprodukt bewertet.",
+      products: [
+        {
+          rank: 1,
+          product_id: approvedProduct.id,
+          name: approvedProduct.name,
+          brand: approvedProduct.brand,
+          price_eur: approvedProduct.price_eur,
+          currency: approvedProduct.currency,
+          fit_reason: "Produktdaten wurden geladen.",
+          caveat: null,
+          supported_claims: [
+            {
+              field: "shampoo_bucket",
+              value: "normal",
+              evidence: "product_spec",
+              label: "normale Reinigung",
+            },
+          ],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [approvedProduct],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: "shampoo",
+      message: "Okay und passt er zu mir?",
+    }),
+  }
+  let receivedActiveResolvedProductContext: unknown = null
+  let selectedProductsCalled = false
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Okay und passt er zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-approved-product-fit",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () =>
+        [
+          {
+            ...createMessage(0),
+            role: "assistant",
+            content:
+              "Gute Nachrichten: Wir haben **L'Oréal Paris Elvital Glycolic Gloss Shampoo** geprüft und in deiner Routine verknüpft.\n\nDu kannst mich jetzt konkret dazu fragen, und ich berücksichtige es bei passenden Empfehlungen.",
+          },
+        ] satisfies Message[],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [
+          {
+            category: "shampoo",
+            product_name: "Glycolic Gloss Shampoo",
+            frequency_range: "weekly_3_4x",
+            brand_text: "L'Oréal Paris Elvital",
+            product_id: approvedProduct.id,
+            product_submission_id: "submission-1",
+            match_status: "matched",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        ({
+          ...createDefaultConversationState(),
+          agent_v2_active_product_contexts: [
+            {
+              status: "pending_review",
+              product_id: null,
+              submission_id: "submission-1",
+              category: "shampoo",
+              brand_text: "L'Oréal Paris Elvital",
+              product_name_text: "Glycolic Gloss Shampoo",
+              display_name: "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+              original_user_message:
+                "passt das L'Oréal Paris Elvital Shampoo Glycolic Gloss zu mir?",
+              source: "product_intake_submission",
+              updated_at: "2026-07-03T13:25:00.000Z",
+            },
+          ],
+        }) as ConversationState,
+      createSelectProductsTool:
+        (options = {}) =>
+        async (input: SelectProductsToolParams) => {
+          selectedProductsCalled = true
+          assert.equal(input.category, "shampoo")
+          assert.deepEqual(input.targetProductIds, [approvedProduct.id])
+          assert.deepEqual(input.targetProductHints, [
+            {
+              product_id: approvedProduct.id,
+              name: "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+              category: "shampoo",
+            },
+          ])
+          options.onResult?.(selection)
+          return selection.projection
+        },
+      runAgentV2ResponsesTurn: async (params) => {
+        receivedActiveResolvedProductContext = params.activeResolvedProductContext
+        await params.tools.select_products({
+          category: "shampoo",
+          product_request_kind: "product_detail",
+        })
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.equal(selectedProductsCalled, true)
+  assert.deepEqual(receivedActiveResolvedProductContext, {
+    source: "routine_inventory",
+    product_id: approvedProduct.id,
+    name: "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+    category: "shampoo",
+    original_user_message: "Okay und passt er zu mir?",
+  })
+})
+
+test("AgentV2 production pipeline resolves redundant lookup through active routine product id", async () => {
+  const hairProfile = createCompleteHairProfile()
+  let lookupStatus: string | null = null
+  let lookupProductId: string | null = null
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Und passt das zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-active-routine-lookup-short-circuit",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [
+        {
+          ...createMessage(0),
+          role: "assistant",
+          content:
+            "Ich sehe **Syoss Intense Volume Shampoo** als dein aktuelles Shampoo in deiner Routine.",
+        },
+      ],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [
+          {
+            category: "shampoo",
+            product_name: "Syoss Intense Volume Shampoo",
+            product_id: "syoss-volume-id",
+            match_status: "matched",
+            frequency_range: "weekly_3_4x",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createAdminClient: () =>
+        ({
+          from: () => ({
+            select: () => ({
+              eq: () => ({
+                limit: async () => ({ data: [{ product_id: "syoss-volume-id" }], error: null }),
+              }),
+            }),
+          }),
+        }) as never,
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({
+            products: [
+              {
+                id: "syoss-volume-id",
+                name: "Syoss Intense Volume Shampoo",
+                cleanName: "Intense Volume Shampoo",
+                categoryKey: "shampoo",
+                isActive: true,
+                lifecycleStatus: "active",
+                isChaarlieRecommended: false,
+              },
+              {
+                id: "syoss-curls-id",
+                name: "Syoss Intense Curls",
+                cleanName: "Intense Curls",
+                categoryKey: "shampoo",
+                isActive: true,
+                lifecycleStatus: "active",
+                isChaarlieRecommended: false,
+              },
+            ],
+            identifiers: [],
+          }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        assert.equal(params.activeResolvedProductContext?.product_id, "syoss-volume-id")
+        const lookup = (await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Syoss",
+          product_name_text: "Intense Volume Shampoo",
+          reason: "Resolve current routine product before fit assessment.",
+          evidence_quote: "Und passt das zu mir?",
+        })) as { status: string; product?: { id?: string | null } | null }
+        lookupStatus = lookup.status
+        lookupProductId = lookup.product?.id ?? null
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.equal(lookupStatus, "found_exact")
+  assert.equal(lookupProductId, "syoss-volume-id")
+  assert.equal(result.productLookupClarification, null)
+})
+
+test("AgentV2 production pipeline does not resolve sibling product lookups through the active product shortcut", async () => {
+  const hairProfile = createCompleteHairProfile()
+  let lookupStatus: string | null = null
+  let lookupProductId: string | null = null
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Und was ist mit der No. 5 Bond Maintenance Variante?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-active-sibling-lookup",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        ({
+          ...createDefaultConversationState(),
+          agent_v2_active_product_contexts: [
+            {
+              status: "resolved",
+              product_id: "olaplex-no4-id",
+              submission_id: null,
+              category: "shampoo",
+              brand_text: "Olaplex",
+              product_name_text: "No. 4 Bond Maintenance Shampoo",
+              display_name: "Olaplex No. 4 Bond Maintenance Shampoo",
+              original_user_message: "Passt mein Olaplex No. 4 Bond Maintenance Shampoo zu mir?",
+              source: "routine_inventory",
+              updated_at: "2026-07-05T12:00:00.000Z",
+            },
+          ],
+        }) as ConversationState,
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({
+            products: [
+              {
+                id: "olaplex-no4-id",
+                name: "Olaplex No. 4 Bond Maintenance Shampoo",
+                cleanName: "No. 4 Bond Maintenance Shampoo",
+                categoryKey: "shampoo",
+                isActive: true,
+                lifecycleStatus: "active",
+                isChaarlieRecommended: false,
+              },
+            ],
+            identifiers: [],
+          }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-olaplex", canonical_name: "Olaplex" }],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        assert.equal(params.activeResolvedProductContext?.product_id, "olaplex-no4-id")
+        const lookup = (await params.tools.lookup_product_candidate({
+          category: null,
+          brand_text: "Olaplex",
+          product_name_text: "No. 5 Bond Maintenance Conditioner",
+          reason: "User asks about a sibling product variant.",
+          evidence_quote: "No. 5 Bond Maintenance Variante",
+        })) as { status: string; product?: { id?: string | null } | null }
+        lookupStatus = lookup.status
+        lookupProductId = lookup.product?.id ?? null
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.notEqual(lookupStatus, "found_exact")
+  assert.notEqual(lookupProductId, "olaplex-no4-id")
+})
+
+test("AgentV2 production pipeline drops routine context when user names a different product", async () => {
+  const hairProfile = createCompleteHairProfile()
+  let receivedActiveResolvedProductContext: unknown = "not-called"
+
+  await runAgentV2ProductionPipeline(
+    {
+      message: "Passt Schwarzkopf GLISS Conditioner Liquid Silk zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-named-different-product-drops-routine-context",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [
+          {
+            category: "conditioner",
+            product_name: "Jean&Len Colorglow Granatapfel Rose Conditioner",
+            product_id: "jean-len-conditioner-id",
+            match_status: "matched",
+            frequency_range: "weekly_3_4x",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        ({
+          ...createDefaultConversationState(),
+          agent_v2_active_product_contexts: [
+            {
+              status: "resolved",
+              product_id: "jean-len-conditioner-id",
+              submission_id: null,
+              category: "conditioner",
+              brand_text: "Jean&Len",
+              product_name_text: "Colorglow Granatapfel Rose Conditioner",
+              display_name: "Jean&Len Colorglow Granatapfel Rose Conditioner",
+              original_user_message: "Weißt du welchen Conditioner ich gerade benutze?",
+              source: "routine_inventory",
+              updated_at: "2026-07-05T16:20:00.000Z",
+            },
+          ],
+        }) as ConversationState,
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        receivedActiveResolvedProductContext = params.activeResolvedProductContext
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  assert.equal(receivedActiveResolvedProductContext, null)
 })
 
 test("AgentV2 production pipeline hides owned lookup products without verified specs", async () => {

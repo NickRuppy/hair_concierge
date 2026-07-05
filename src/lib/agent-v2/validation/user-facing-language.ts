@@ -51,7 +51,7 @@ const INTERNAL_RANKING_LANGUAGE_PATTERNS = [
 const INTERNAL_INSTRUCTION_LEAKAGE_PATTERN =
   /\bich\s+(?:soll|muss)\s+(?:keine?|nicht|nur|erst|immer|laut|gem(?:ae|ä)ss)\b/iu
 
-const BARE_JA_OPENING_PATTERN = /^[\s>*_`#-]*(?:\d+[.)]\s*)?ja\s*(?:[-–—]|,)\s*/iu
+const BARE_JA_OPENING_PATTERN = /^[\s>*_`#-]*(?:\d+[.)]\s*)?ja\s*(?:[-–—]|,|:)\s*/iu
 const CLOSURE_BLOCK_FINDINGS_ENABLED = true
 const DUPLICATE_VISIBLE_PARAGRAPH_FINDINGS_ENABLED = true
 const DUPLICATE_PARAGRAPH_MIN_NORMALIZED_LENGTH = 80

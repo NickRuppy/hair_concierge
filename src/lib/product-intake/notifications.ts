@@ -1,6 +1,21 @@
 import { createHash } from "node:crypto"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import {
+  loadAgentV2ConversationStateForUser,
+  persistConversationStateTransition,
+} from "@/lib/chat-runtime/conversation-state-store"
+import {
+  AGENT_V2_PRODUCTION_ENGINE,
+  type AgentV2ConversationStateTransition,
+  type AgentV2ConversationStateV2,
+} from "@/lib/agent-v2/production/persisted-session-state"
+import {
+  buildPrimaryResolvedProductContext,
+  mergeActiveProductContexts,
+  type AgentV2ActiveProductContext,
+} from "@/lib/agent-v2/resolved-product-selection-adapter"
+import { hasVerifiedProductSpecs } from "@/lib/product-intake/spec-readiness"
 import type { MessageRagContext, ProductIntakeOffer, ProductSubmission } from "@/lib/types"
 
 const ONBOARDING_REVIEW_CONVERSATION_TITLE = "Produktprüfung"
@@ -42,6 +57,10 @@ export type ProductIntakeReviewRagContext = Partial<MessageRagContext> & {
 
 function productLabel(submission: ProductSubmissionForNotification): string {
   return [submission.brand_text, submission.product_name_text].filter(Boolean).join(" ").trim()
+}
+
+function productIntakeReviewIsResolved(submission: ProductSubmissionForNotification): boolean {
+  return submission.status === "approved" || submission.status === "matched_existing"
 }
 
 function sanitizeMissingFields(fields: unknown): string[] {
@@ -151,6 +170,125 @@ export function buildProductIntakeReviewRagContext(
   }
 
   return context
+}
+
+export function buildAgentV2ProductIntakeReviewStateTransition(params: {
+  previousState: AgentV2ConversationStateV2
+  submission: ProductSubmissionForNotification
+  nowIso: string
+}): AgentV2ConversationStateTransition | null {
+  if (!productIntakeReviewIsResolved(params.submission)) return null
+  if (!params.submission.approved_product_id) return null
+
+  const displayName = productLabel(params.submission)
+  if (!displayName) return null
+
+  const previousContexts = params.previousState.agent_v2.active_product_contexts
+  const matchingPreviousContext = previousContexts.find((context) =>
+    activeProductContextMatchesReviewSubmission(context, params.submission),
+  )
+  const resolvedContext: AgentV2ActiveProductContext = {
+    status: "resolved",
+    product_id: params.submission.approved_product_id,
+    submission_id: params.submission.id,
+    category: params.submission.category,
+    brand_text: params.submission.brand_text,
+    product_name_text: params.submission.product_name_text,
+    display_name: displayName,
+    original_user_message:
+      matchingPreviousContext?.original_user_message ??
+      `Produktprüfung abgeschlossen: ${displayName}`,
+    source: "product_intake_submission",
+    updated_at: params.nowIso,
+  }
+  const activeProductContexts = mergeActiveProductContexts({
+    previous: previousContexts.filter(
+      (context) => !activeProductContextMatchesReviewSubmission(context, params.submission),
+    ),
+    next: [resolvedContext],
+    latestMessageNamesActionableProduct: false,
+  })
+  const nextState: AgentV2ConversationStateV2 = {
+    ...params.previousState,
+    agent_v2: {
+      ...params.previousState.agent_v2,
+      active_product_contexts: activeProductContexts,
+      active_resolved_product_context: buildPrimaryResolvedProductContext(activeProductContexts),
+    },
+  }
+
+  return {
+    previous_state: params.previousState,
+    next_state: nextState,
+    reason: "product_intake_review_resolved_context",
+    changed_fields: [
+      "agent_v2.active_product_contexts",
+      "agent_v2.active_resolved_product_context",
+    ],
+    classifier_override: null,
+    updated_by_engine: AGENT_V2_PRODUCTION_ENGINE,
+  }
+}
+
+function activeProductContextMatchesReviewSubmission(
+  context: AgentV2ActiveProductContext,
+  submission: ProductSubmissionForNotification,
+): boolean {
+  if (context.submission_id === submission.id) return true
+  if (context.source !== "product_intake_submission") return false
+  if (context.category !== submission.category) return false
+  if (context.product_name_text !== submission.product_name_text) return false
+
+  const contextBrand = context.brand_text?.trim() || null
+  const submissionBrand = submission.brand_text?.trim() || null
+  return !contextBrand || !submissionBrand || contextBrand === submissionBrand
+}
+
+async function persistAgentV2ProductIntakeReviewState(params: {
+  supabase: SupabaseClient
+  submission: ProductSubmissionForNotification
+  conversationId: string
+  nowIso: string
+}): Promise<void> {
+  const previousState = await loadAgentV2ConversationStateForUser(params.supabase, {
+    conversationId: params.conversationId,
+    userId: params.submission.user_id,
+  })
+  const transition = buildAgentV2ProductIntakeReviewStateTransition({
+    previousState,
+    submission: params.submission,
+    nowIso: params.nowIso,
+  })
+  if (!transition) return
+
+  const persistence = await persistConversationStateTransition(params.supabase, {
+    conversationId: params.conversationId,
+    userId: params.submission.user_id,
+    transition,
+  })
+  if (persistence.status === "failed") {
+    console.error(
+      "[product-intake] failed to persist review-resolved AgentV2 product context",
+      persistence.error,
+    )
+    throw new Error(
+      `persist product intake review AgentV2 context: ${persistence.error ?? "unknown error"}`,
+    )
+  }
+}
+
+async function productIntakeReviewNotificationIsReady(params: {
+  supabase: SupabaseClient
+  submission: ProductSubmissionForNotification
+}): Promise<boolean> {
+  if (!productIntakeReviewIsResolved(params.submission)) return true
+  if (!params.submission.approved_product_id) return false
+
+  return hasVerifiedProductSpecs({
+    client: params.supabase as never,
+    productId: params.submission.approved_product_id,
+    categoryKey: params.submission.category,
+  })
 }
 
 async function findOrCreateOnboardingReviewConversation(
@@ -291,6 +429,10 @@ export async function sendProductIntakeReviewNotification(
   if (!content) {
     return { sent: false, reason: "no_message_needed" }
   }
+  const readyToNotify = await productIntakeReviewNotificationIsReady({ supabase, submission })
+  if (!readyToNotify) {
+    return { sent: false, reason: "no_message_needed" }
+  }
 
   const sentAt = submission.notification_sent_at ?? new Date().toISOString()
   const shouldClaimNotification = !submission.notification_sent_at
@@ -312,6 +454,12 @@ export async function sendProductIntakeReviewNotification(
 
   try {
     const conversationId = await conversationIdForSubmission(supabase, submission)
+    await persistAgentV2ProductIntakeReviewState({
+      supabase,
+      submission,
+      conversationId,
+      nowIso: sentAt,
+    })
     const existingMessageId = await existingProductIntakeReviewMessageId({
       supabase,
       conversationId,

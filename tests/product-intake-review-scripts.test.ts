@@ -19,9 +19,14 @@ import {
   type ProductIntakeQueueRow,
 } from "../scripts/product-intake/queue-reporting"
 import {
+  buildAgentV2ProductIntakeReviewStateTransition,
   buildProductIntakeReviewMessage,
   buildProductIntakeReviewRagContext,
 } from "../src/lib/product-intake/notifications"
+import {
+  createDefaultAgentV2ConversationState,
+  type AgentV2ConversationStateV2,
+} from "../src/lib/agent-v2/production/persisted-session-state"
 import type { ProductSubmission } from "../src/lib/types"
 import { parseArgs } from "../scripts/product-intake/cli"
 import { loadQueueRows } from "../scripts/product-intake/queue"
@@ -926,6 +931,125 @@ test("review notifications explain approved products in user-facing German", () 
   assert.match(message ?? "", /Gute Nachrichten/)
   assert.match(message ?? "", /Garnier Hair Food Aloe/)
   assert.match(message ?? "", /Routine/)
+})
+
+test("approved review notifications resolve stale AgentV2 product intake context", () => {
+  const previousState: AgentV2ConversationStateV2 = {
+    ...createDefaultAgentV2ConversationState(),
+    agent_v2: {
+      ...createDefaultAgentV2ConversationState().agent_v2,
+      active_product_contexts: [
+        {
+          status: "pending_review",
+          product_id: null,
+          submission_id: "submission-1",
+          category: "shampoo",
+          brand_text: "L'Oréal Paris Elvital",
+          product_name_text: "Glycolic Gloss Shampoo",
+          display_name: "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+          original_user_message: "passt das L'Oréal Paris Elvital Shampoo Glycolic Gloss zu mir?",
+          source: "product_intake_submission",
+          updated_at: "2026-07-03T13:25:00.000Z",
+        },
+      ],
+      active_resolved_product_context: null,
+    },
+  }
+
+  const transition = buildAgentV2ProductIntakeReviewStateTransition({
+    previousState,
+    submission: notificationSubmission({
+      id: "submission-1",
+      category: "shampoo",
+      brand_text: "L'Oréal Paris Elvital",
+      product_name_text: "Glycolic Gloss Shampoo",
+      approved_product_id: "prod-loreal-glycolic",
+      status: "approved",
+    }),
+    nowIso: "2026-07-03T16:18:00.000Z",
+  })
+
+  assert.ok(transition)
+  assert.equal(transition.reason, "product_intake_review_resolved_context")
+  assert.deepEqual(transition.changed_fields, [
+    "agent_v2.active_product_contexts",
+    "agent_v2.active_resolved_product_context",
+  ])
+  assert.deepEqual(transition.next_state.agent_v2.active_product_contexts, [
+    {
+      status: "resolved",
+      product_id: "prod-loreal-glycolic",
+      submission_id: "submission-1",
+      category: "shampoo",
+      brand_text: "L'Oréal Paris Elvital",
+      product_name_text: "Glycolic Gloss Shampoo",
+      display_name: "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+      original_user_message: "passt das L'Oréal Paris Elvital Shampoo Glycolic Gloss zu mir?",
+      source: "product_intake_submission",
+      updated_at: "2026-07-03T16:18:00.000Z",
+    },
+  ])
+  assert.equal(
+    transition.next_state.agent_v2.active_resolved_product_context?.product_id,
+    "prod-loreal-glycolic",
+  )
+})
+
+test("approved review notifications remove matching stale intake context without submission id", () => {
+  const previousState: AgentV2ConversationStateV2 = {
+    ...createDefaultAgentV2ConversationState(),
+    agent_v2: {
+      ...createDefaultAgentV2ConversationState().agent_v2,
+      active_product_contexts: [
+        {
+          status: "pending_review",
+          product_id: null,
+          submission_id: null,
+          category: "shampoo",
+          brand_text: null,
+          product_name_text: "Glycolic Gloss Shampoo",
+          display_name: "Glycolic Gloss Shampoo",
+          original_user_message: "passt das L'Oréal Paris Elvital Shampoo Glycolic Gloss zu mir?",
+          source: "product_intake_submission",
+          updated_at: "2026-07-03T13:25:00.000Z",
+        },
+      ],
+      active_resolved_product_context: null,
+    },
+  }
+
+  const transition = buildAgentV2ProductIntakeReviewStateTransition({
+    previousState,
+    submission: notificationSubmission({
+      id: "submission-1",
+      category: "shampoo",
+      brand_text: "L'Oréal Paris Elvital",
+      product_name_text: "Glycolic Gloss Shampoo",
+      approved_product_id: "prod-loreal-glycolic",
+      status: "approved",
+    }),
+    nowIso: "2026-07-03T16:18:00.000Z",
+  })
+
+  assert.ok(transition)
+  assert.deepEqual(transition.next_state.agent_v2.active_product_contexts, [
+    {
+      status: "resolved",
+      product_id: "prod-loreal-glycolic",
+      submission_id: "submission-1",
+      category: "shampoo",
+      brand_text: "L'Oréal Paris Elvital",
+      product_name_text: "Glycolic Gloss Shampoo",
+      display_name: "L'Oréal Paris Elvital Glycolic Gloss Shampoo",
+      original_user_message: "passt das L'Oréal Paris Elvital Shampoo Glycolic Gloss zu mir?",
+      source: "product_intake_submission",
+      updated_at: "2026-07-03T16:18:00.000Z",
+    },
+  ])
+  assert.equal(
+    transition.next_state.agent_v2.active_resolved_product_context?.product_id,
+    "prod-loreal-glycolic",
+  )
 })
 
 test("review notifications include actionable missing-info and rejection reasons", () => {

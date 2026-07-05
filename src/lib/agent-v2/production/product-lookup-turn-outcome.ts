@@ -92,7 +92,9 @@ export async function buildProductLookupTurnOutcome(params: {
   loadProductLookupCatalogs: ProductLookupCatalogLoader
   requestId: string
 }): Promise<ProductLookupTurnOutcome> {
-  const latestMessageNamesNewProduct = Boolean(params.namedProductContext)
+  const latestMessageNamesNewProduct = Boolean(
+    params.namedProductContext && params.namedProductContext.named_product_intent !== "background",
+  )
   const suppressStaleLookupActions =
     Boolean(params.activeResolvedProductContext) && !latestMessageNamesNewProduct
   const productLookupActionsAllowed =
@@ -202,8 +204,16 @@ export async function buildProductLookupTurnOutcome(params: {
       : null
   const answer =
     visibleFailure && productIntakeOffer
-      ? withProductIntakeVisibleFailureCopy(baseAnswer)
-      : baseAnswer
+      ? withProductIntakeVisibleFailureCopy(baseAnswer, {
+          executions: executionsWithFallback,
+          productIntakeOffer,
+        })
+      : answerDefersUnknownProductForIntake && productIntakeOffer
+        ? withProductIntakeActionIntroCopy(baseAnswer, {
+            executions: executionsWithFallback,
+            productIntakeOffer,
+          })
+        : baseAnswer
   const executionsForClarification =
     productLookupActionsAllowed &&
     !pendingReviewProductLookupFailureFallback &&
@@ -269,7 +279,18 @@ export async function buildProductLookupTurnOutcome(params: {
   }
 }
 
-function withProductIntakeVisibleFailureCopy(answer: AgentV2TerminalAnswer): AgentV2TerminalAnswer {
+function withProductIntakeVisibleFailureCopy(
+  answer: AgentV2TerminalAnswer,
+  params: {
+    executions: readonly ProductLookupExecution[]
+    productIntakeOffer: ProductIntakeOffer
+  },
+): AgentV2TerminalAnswer {
+  const displayName = selectVisibleFailureProductIdentity(params)
+  const userFacingAnswer = displayName
+    ? `Ich weiß, dass du **${displayName}** meinst. ${PRODUCT_INTAKE_VISIBLE_FAILURE_COPY}`
+    : PRODUCT_INTAKE_VISIBLE_FAILURE_COPY
+
   switch (answer.answer_mode) {
     case "product_recommendation":
     case "product_assessment":
@@ -282,7 +303,7 @@ function withProductIntakeVisibleFailureCopy(answer: AgentV2TerminalAnswer): Age
         ...answer,
         payload: {
           ...answer.payload,
-          user_facing_answer_de: PRODUCT_INTAKE_VISIBLE_FAILURE_COPY,
+          user_facing_answer_de: userFacingAnswer,
         },
       } as AgentV2TerminalAnswer
     case "safety_boundary":
@@ -292,6 +313,135 @@ function withProductIntakeVisibleFailureCopy(answer: AgentV2TerminalAnswer): Age
 
   const exhaustive: never = answer
   return exhaustive
+}
+
+function withProductIntakeActionIntroCopy(
+  answer: AgentV2TerminalAnswer,
+  params: {
+    executions: readonly ProductLookupExecution[]
+    productIntakeOffer: ProductIntakeOffer
+  },
+): AgentV2TerminalAnswer {
+  const currentText = userFacingAnswerText(answer).trim()
+  if (!currentText || productIntakeActionIsIntroduced(currentText)) return answer
+
+  const displayName = selectVisibleFailureProductIdentity(params)
+  const intro = displayName
+    ? `Ich habe **${displayName}** noch nicht in unserer Datenbank. Gib es bitte unten kurz ein, dann kann ich es genauer für dich prüfen.`
+    : "Das konkrete Produkt haben wir noch nicht in unserer Datenbank. Gib es bitte unten kurz ein, dann kann ich es genauer für dich prüfen."
+  const roughGuidance = buildCoarseFallbackGuidanceText(currentText, displayName)
+  const userFacingAnswer = roughGuidance ? `${intro}\n\n${roughGuidance}` : intro
+
+  switch (answer.answer_mode) {
+    case "product_recommendation":
+    case "product_assessment":
+    case "routine":
+    case "general_advice":
+    case "clarification":
+    case "constraint_blocked":
+    case "social":
+      return {
+        ...answer,
+        payload: {
+          ...answer.payload,
+          user_facing_answer_de: userFacingAnswer,
+        },
+      } as AgentV2TerminalAnswer
+    case "safety_boundary":
+    case "domain_boundary":
+      return answer
+  }
+
+  const exhaustive: never = answer
+  return exhaustive
+}
+
+function productIntakeActionIsIntroduced(text: string): boolean {
+  const firstParagraph = splitProductIntakeParagraphs(text)[0] ?? text
+  return (
+    /\b(?:unten|hier|karte|formular|foto|daten)\b/iu.test(firstParagraph) &&
+    /\b(?:gib|eingeben|hochladen|einreichen|hinzuf(?:ue|ü)gen|prüfen|pruefen)\b/iu.test(
+      firstParagraph,
+    )
+  )
+}
+
+function buildCoarseFallbackGuidanceText(text: string, displayName: string | null): string {
+  const paragraphs = splitProductIntakeParagraphs(text)
+  const remaining = paragraphs.filter(
+    (paragraph, index) =>
+      !isRedundantProductIntakeDeferralParagraph(paragraph, {
+        displayName,
+        allowDisplayNameAgnosticDrop: index === 0,
+      }),
+  )
+  const normalized = remaining.join("\n\n").trim()
+  if (!normalized) return ""
+  if (/^was ich dir schon grob sagen kann\b/iu.test(normalized)) return normalized
+  return `Was ich dir schon grob sagen kann: ${normalized}`
+}
+
+function splitProductIntakeParagraphs(text: string): string[] {
+  return text
+    .split(/\n\s*\n/u)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+}
+
+function isRedundantProductIntakeDeferralParagraph(
+  paragraph: string,
+  options: { displayName: string | null; allowDisplayNameAgnosticDrop?: boolean },
+): boolean {
+  if (!paragraph) return false
+  const normalizedParagraph = normalizeProductLookupText(paragraph)
+  const normalizedDisplayName = options.displayName
+    ? normalizeProductLookupText(options.displayName)
+    : ""
+  const mentionsDisplayName = Boolean(
+    normalizedDisplayName && normalizedParagraph.includes(normalizedDisplayName),
+  )
+  const hasCoarseProfileOrCategoryGuidance =
+    /\b(?:haarprofil|profil|frizz|wellig(?:es|e|er|em|en)?|lockig(?:es|e|er|em|en)?|gef(?:ae|ä)rbt(?:es|e|er|em|en)?|fein(?:es|e|er|em|en)?|trocken(?:es|e|er|em|en)?|fettig(?:es|e|er|em|en)?|ansatz|l(?:ae|ä)ngen|kopfhaut|profitiert|leichter?|schwerer?|eher\s+von)\b/iu.test(
+      paragraph,
+    )
+  const defersExactProduct =
+    /\b(?:nicht|noch nicht)\b[\s\S]{0,120}\b(?:sicher zuordnen|zuordnen|bewerte|bewerten|verifiziert|verifizierte|produktdaten|datenbank|katalog)\b/iu.test(
+      paragraph,
+    ) || /\b(?:bewerte|bewerten)\b[\s\S]{0,80}\b(?:nicht|nichts)\b/iu.test(paragraph)
+  return (
+    defersExactProduct &&
+    (mentionsDisplayName || Boolean(options.allowDisplayNameAgnosticDrop)) &&
+    !hasCoarseProfileOrCategoryGuidance &&
+    !productIntakeActionIsIntroduced(paragraph)
+  )
+}
+
+function selectVisibleFailureProductIdentity(params: {
+  executions: readonly ProductLookupExecution[]
+  productIntakeOffer: ProductIntakeOffer
+}): string | null {
+  const eligible = params.executions.filter(
+    (execution) => execution.result.status === "not_found" && execution.result.intake_offer,
+  )
+  const matching =
+    eligible.find(
+      (execution) => execution.result.intake_offer?.id === params.productIntakeOffer.id,
+    ) ?? (eligible.length === 1 ? eligible[0] : null)
+  if (!matching) return null
+
+  return buildLookupInputDisplayName(matching.input)
+}
+
+function buildLookupInputDisplayName(input: ProductLookupExecutionInput): string | null {
+  const brand = input.brand_text?.trim() || null
+  const productName = input.product_name_text?.trim() || null
+  if (brand && productName) {
+    if (normalizeProductLookupText(productName).includes(normalizeProductLookupText(brand))) {
+      return productName
+    }
+    return `${brand} ${productName}`
+  }
+  return productName ?? brand
 }
 
 function selectProductIntakeOfferForAnswer(
@@ -429,6 +579,7 @@ function selectProductLookupClarificationForAnswer(
       productLookupExecutionMatchesAnswer(candidate, answer, latestUserMessage),
     ) ?? (eligibleExecutions.length === 1 ? eligibleExecutions[0] : null)
   if (!execution) return null
+  if (answerIsGroundedAlternativesRecommendation(answer, latestUserMessage)) return null
 
   const candidateCategories = execution.result.candidates
     .map((candidate) => productLookupCandidateCategory(candidate))
@@ -503,6 +654,39 @@ function selectProductLookupClarificationForAnswer(
       },
     },
   }
+}
+
+function answerIsGroundedAlternativesRecommendation(
+  answer: AgentV2TerminalAnswer,
+  latestUserMessage: string,
+): boolean {
+  if (answer.answer_mode !== "product_recommendation") return false
+  if (answer.request_interpretation.product_request_kind !== "specific_products") return false
+  if (!answer.tool_grounding.used_product_tool) return false
+
+  const recommendationProductIds = answer.payload.recommendations
+    .map((recommendation) => recommendation.product_id)
+    .filter((productId): productId is string => Boolean(productId))
+  if (recommendationProductIds.length === 0) return false
+
+  const groundedProductIds = new Set(answer.tool_grounding.product_ids)
+  if (groundedProductIds.size > 0) {
+    const allRecommendationsGrounded = recommendationProductIds.every((productId) =>
+      groundedProductIds.has(productId),
+    )
+    if (!allRecommendationsGrounded) return false
+  }
+
+  const requestText = normalizeProductLookupText(
+    [
+      latestUserMessage,
+      answer.request_interpretation.evidence_quote,
+      answer.payload.user_facing_answer_de,
+    ].join(" "),
+  )
+  return /\b(?:alternative|alternativen|alternativ|andere|anderen|sonst|weitere|weiteren|statt|ersetzen|ersatz)\b/u.test(
+    requestText,
+  )
 }
 
 function productLookupExecutionHasClarificationCandidates(execution: ProductLookupExecution) {

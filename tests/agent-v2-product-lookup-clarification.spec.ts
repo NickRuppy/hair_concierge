@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { runAgentV2ProductionPipeline } from "../src/lib/agent-v2/production/chat-pipeline"
+import { buildProductLookupTurnOutcome } from "../src/lib/agent-v2/production/product-lookup-turn-outcome"
 import { createDefaultConversationState } from "../src/lib/chat-runtime/conversation-state"
 import type { AgentV2ResponsesTurnResult } from "../src/lib/agent-v2/runtime/responses-agent"
 import type { ConversationState, HairProfile, Message } from "../src/lib/types"
@@ -254,6 +255,124 @@ function createFakeSpecReadinessClient(params: { verifiedSpecProductIds: readonl
     },
   }
 }
+
+test("AgentV2 product lookup outcome does not add variant card after grounded alternatives answer", async () => {
+  const agentResult = createAgentV2Result()
+  const baseAnswer = agentResult.final_answer as Extract<
+    AgentV2ResponsesTurnResult["final_answer"],
+    { answer_mode: "product_recommendation" }
+  >
+  const finalAnswer: Extract<
+    AgentV2ResponsesTurnResult["final_answer"],
+    { answer_mode: "product_recommendation" }
+  > = {
+    ...baseAnswer,
+    request_interpretation: {
+      ...baseAnswer.request_interpretation,
+      care_category: "conditioner",
+      requested_product_count: 3,
+      evidence_quote: "was wären sonst Alternativen",
+    },
+    extracted_constraints: {
+      ...baseAnswer.extracted_constraints,
+      product_categories: ["conditioner"],
+      raw_constraints: ["was wären sonst Alternativen"],
+    },
+    tool_grounding: {
+      ...baseAnswer.tool_grounding,
+      product_ids: ["alt-1", "alt-2", "alt-3"],
+    },
+    routine_context: {
+      ...baseAnswer.routine_context,
+      category: "conditioner",
+    },
+    payload: {
+      user_facing_answer_de:
+        "Zu Schwarzkopf GLISS Conditioner Liquid Silk passen diese Alternativen für dein feines, welliges Haar gut.",
+      recommendations: [
+        {
+          product_id: "alt-1",
+          reason_de: "Leichte Alternative mit mehr Glätte.",
+          usage_de: null,
+          caveat_de: null,
+        },
+        {
+          product_id: "alt-2",
+          reason_de: "Etwas intensiver, aber noch passend für die Längen.",
+          usage_de: null,
+          caveat_de: null,
+        },
+        {
+          product_id: "alt-3",
+          reason_de: "Ähnliche Richtung, wenn du mehr Pflege suchst.",
+          usage_de: null,
+          caveat_de: null,
+        },
+      ],
+      comparison_notes_de: [],
+      usage_notes_de: ["Starte sparsam in Längen und Spitzen."],
+      next_step_offer_de: null,
+    },
+  }
+
+  const outcome = await buildProductLookupTurnOutcome({
+    productIntakeEnabled: true,
+    safetyMode: "normal",
+    activeResolvedProductContext: null,
+    namedProductContext: null,
+    executions: [
+      {
+        input: {
+          category: "conditioner",
+          brand_text: "Schwarzkopf GLISS",
+          product_name_text: "Conditioner Liquid Silk",
+        },
+        result: {
+          status: "needs_variant_selection",
+          category: "conditioner",
+          product: null,
+          candidates: [
+            {
+              productId: "baseline-variant",
+              product: {
+                id: "baseline-variant",
+                name: "Schwarzkopf GLISS Liquid Silk Spülung",
+                cleanName: "Liquid Silk Spülung",
+                categoryKey: "conditioner",
+                isActive: true,
+                lifecycleStatus: "active",
+                isChaarlieRecommended: false,
+              },
+              confidence: "review",
+              reason: "fuzzy_candidates_review",
+              reasonCodes: ["fuzzy_candidates_review"],
+            },
+          ],
+          missing_fields: [],
+          intake_offer: null,
+        },
+      },
+    ],
+    trace: agentResult.trace,
+    finalAnswer,
+    latestUserMessage: "okay, was wären sonst Alternativen?",
+    loadProductLookupCatalogs: async () => ({
+      catalog: { products: [], identifiers: [] },
+      brandCatalog: {
+        brands: [],
+        productLines: [],
+        brandAliases: [],
+      },
+    }),
+    requestId: "request-grounded-alternatives",
+  })
+
+  assert.equal(outcome.productLookupClarification, null)
+  assert.equal(
+    outcome.answer.payload.user_facing_answer_de,
+    finalAnswer.payload.user_facing_answer_de,
+  )
+})
 
 test("AgentV2 production pipeline surfaces product intake offer from lookup result", async () => {
   const hairProfile = createCompleteHairProfile()
@@ -926,7 +1045,7 @@ test("AgentV2 production pipeline recovers product intake offer from failed not-
   const responseText = await readStream(result.stream)
   assert.match(responseText, /Jean & Lean Conditioner/)
   assert.match(responseText, /noch nicht in unserer Datenbank/)
-  assert.match(responseText, /füge es kurz hinzu/)
+  assert.match(responseText, /unten kurz ein/)
   assert.doesNotMatch(responseText, /Antwort gerade nicht sauber zusammensetzen/)
 })
 
@@ -1019,8 +1138,201 @@ test("AgentV2 production pipeline uses warm intake copy for visible lookup failu
   const responseText = await readStream(result.stream)
   assert.equal(
     responseText,
-    "Das konkrete Produkt haben wir noch nicht in unserer Datenbank. Wenn du magst, gib es kurz hier ein, dann prüfen wir es für dich.",
+    "Ich weiß, dass du **Jean & Lean Conditioner** meinst. Das konkrete Produkt haben wir noch nicht in unserer Datenbank. Wenn du magst, gib es kurz hier ein, dann prüfen wir es für dich.",
   )
+})
+
+test("AgentV2 production pipeline preserves inferred routine product identity in visible lookup failure copy", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.trace.failure_stage = "repair_failed"
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "clarification",
+    interpreted_intent: "Generic fallback after failed product lookup repair.",
+    request_interpretation: {
+      primary_intent: "clarification",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "unknown",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "unclear",
+      specific_product_candidate: false,
+      confidence: 0,
+    },
+    payload: {
+      user_facing_answer_de:
+        "Ich bin mir gerade nicht sicher, was du genau möchtest. Formulier es bitte einmal konkreter.",
+      question_de: "Was genau möchtest du zu deiner Haarpflege wissen?",
+      missing_keys: [],
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "und passt das zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-inferred-routine-product-intake",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [
+        {
+          ...createMessage(0),
+          role: "assistant",
+          content:
+            "Ja, ich sehe **Renewing Argan Oil of Morocco Shampoo** als dein aktuelles Shampoo in deiner Routine.",
+        },
+      ],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [
+          {
+            category: "shampoo",
+            product_name: "Renewing Argan Oil of Morocco Shampoo",
+            brand_text: "Renewing Argan Oil of Morocco",
+            product_id: null,
+            match_status: "matched",
+            frequency_range: "weekly_3_4x",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "Renewing Argan Oil of Morocco",
+          product_name_text: "Shampoo",
+          reason: "The latest follow-up asks whether the current routine shampoo fits the user.",
+          evidence_quote: "Renewing Argan Oil of Morocco Shampoo",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  const responseText = await readStream(result.stream)
+  assert.equal(
+    responseText,
+    "Ich weiß, dass du **Renewing Argan Oil of Morocco Shampoo** meinst. Das konkrete Produkt haben wir noch nicht in unserer Datenbank. Wenn du magst, gib es kurz hier ein, dann prüfen wir es für dich.",
+  )
+})
+
+test("AgentV2 production pipeline promotes matched routine product follow-ups to resolved product context", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "general_advice",
+    interpreted_intent: "Answered product fit from resolved routine product context.",
+    request_interpretation: {
+      ...agentResult.final_answer.request_interpretation,
+      primary_intent: "general_advice",
+      product_request_kind: "product_detail",
+      care_category: "conditioner",
+      specific_product_candidate: true,
+      evidence_quote: "passt der zu mir",
+    },
+    payload: {
+      user_facing_answer_de:
+        "Ich beziehe mich auf John Frieda Frizz Ease Wunder-Reparatur Conditioner.",
+      category_or_topic: "conditioner",
+      key_points_de: ["Produkt ist aus der Routine aufgelöst."],
+      next_step_offer_de: null,
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Okay und passt der zu mir?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-matched-routine-product-context",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [
+        {
+          ...createMessage(0),
+          role: "assistant",
+          content:
+            "Ja, ich sehe **Conditioner Frizz Ease Wunder-Reparatur** als dein aktuelles Conditioner in deiner Routine.",
+        },
+      ],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [
+          {
+            category: "conditioner",
+            product_name: "Conditioner Frizz Ease Wunder-Reparatur",
+            brand_text: "John Frieda",
+            product_id: "john-frieda-frizz-ease-conditioner",
+            match_status: "matched",
+            frequency_range: "weekly_2x",
+          },
+        ],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        assert.equal(
+          params.activeResolvedProductContext?.product_id,
+          "john-frieda-frizz-ease-conditioner",
+        )
+        assert.equal(params.activeResolvedProductContext?.category, "conditioner")
+        assert.equal(
+          params.activeResolvedProductContext?.name,
+          "John Frieda Conditioner Frizz Ease Wunder-Reparatur",
+        )
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(result.productIntakeOffer, null)
 })
 
 test("AgentV2 production pipeline still attaches intake when concrete not-found metadata is under-specified", async () => {
@@ -1113,7 +1425,7 @@ test("AgentV2 production pipeline still attaches intake when concrete not-found 
   })
   assert.equal(
     await readStream(result.stream),
-    "Ich habe Codex Smoke Mango Conditioner noch nicht in unserer Datenbank. Wenn du magst, füge es kurz hinzu, dann prüfen wir es konkret für dich.",
+    "Ich habe **Codex Smoke Mango Conditioner** noch nicht in unserer Datenbank. Gib es bitte unten kurz ein, dann kann ich es genauer für dich prüfen.",
   )
 })
 
@@ -1201,7 +1513,174 @@ test("AgentV2 production pipeline attaches intake when concrete not-found lookup
   })
   assert.equal(
     await readStream(result.stream),
-    "Ich habe Jean & Lean Conditioner Mystery Rose noch nicht in unserer Datenbank. Wenn du magst, füge es kurz hinzu, dann prüfen wir es konkret für dich.",
+    "Ich habe **Jean & Lean Conditioner Mystery Rose** noch nicht in unserer Datenbank. Gib es bitte unten kurz ein, dann kann ich es genauer für dich prüfen.",
+  )
+})
+
+test("AgentV2 production pipeline introduces intake card before coarse fallback guidance", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "constraint_blocked",
+    interpreted_intent:
+      "User asked whether a concrete conditioner suits them; product lookup could not verify the exact product.",
+    request_interpretation: {
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: "conditioner",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "Schwarzkopf GLISS Conditioner Liquid Silk",
+      specific_product_candidate: true,
+      confidence: 0.83,
+    },
+    payload: {
+      user_facing_answer_de:
+        "Ich kann Schwarzkopf GLISS Conditioner Liquid Silk noch nicht sicher zuordnen, deshalb bewerte ich ihn nicht ins Blaue hinein.\n\nDein Haarprofil ist klar genug für eine grobe Einordnung: feines, welliges, gefärbtes Haar mit Frizz profitiert meist eher von einem leichten Conditioner als von etwas sehr Schwerem. Für diese konkrete Variante fehlt mir aber die verifizierte Zuordnung.",
+      blocking_constraints: ["product_not_verified"],
+      safe_alternative_de:
+        "Allgemein passt für dein Profil eher ein leichter Conditioner als ein sehr schwerer.",
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "passt dieses produkt zu mir: Schwarzkopf GLISS Conditioner Liquid Silk?",
+      conversationId: "conversation-intake-before-coarse-guidance",
+      userId: "user-1",
+      requestId: "request-intake-before-coarse-guidance",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-schwarzkopf-gliss", canonical_name: "Schwarzkopf GLISS" }],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "conditioner",
+          brand_text: "Schwarzkopf GLISS",
+          product_name_text: "Conditioner Liquid Silk",
+          reason: "User asks whether this concrete conditioner suits them.",
+          evidence_quote: "Schwarzkopf GLISS Conditioner Liquid Silk",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(result.productIntakeOffer?.reason, "product_lookup_not_found")
+  assert.equal(
+    await readStream(result.stream),
+    "Ich habe **Schwarzkopf GLISS Conditioner Liquid Silk** noch nicht in unserer Datenbank. Gib es bitte unten kurz ein, dann kann ich es genauer für dich prüfen.\n\nWas ich dir schon grob sagen kann: Dein Haarprofil ist klar genug für eine grobe Einordnung: feines, welliges, gefärbtes Haar mit Frizz profitiert meist eher von einem leichten Conditioner als von etwas sehr Schwerem. Für diese konkrete Variante fehlt mir aber die verifizierte Zuordnung.",
+  )
+})
+
+test("AgentV2 production pipeline drops duplicate intake deferral from coarse fallback guidance", async () => {
+  const hairProfile = createCompleteHairProfile()
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "constraint_blocked",
+    interpreted_intent:
+      "User asked whether a concrete shampoo suits them; product lookup could not verify the exact product.",
+    request_interpretation: {
+      primary_intent: "product_recommendation",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "L'ORÉAL PARIS ELVITAL Shampoo Glycolic Gloss",
+      specific_product_candidate: true,
+      confidence: 0.83,
+    },
+    payload: {
+      user_facing_answer_de:
+        "Ich habe L'ORÉAL PARIS ELVITAL Shampoo noch nicht in unserer Datenbank. Wenn du magst, füge es kurz hinzu, dann prüfen wir es konkret für dich.",
+      blocking_constraints: ["product_not_verified"],
+      safe_alternative_de: null,
+    },
+  }
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "passt das L'ORÉAL PARIS ELVITAL Shampoo Glycolic Gloss zu mir?",
+      conversationId: "conversation-intake-duplicate-deferral",
+      userId: "user-1",
+      requestId: "request-intake-duplicate-deferral",
+      productIntakeEnabled: true,
+    },
+    {
+      verifyConversationOwnership,
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      createProductIntakeRepository: () =>
+        ({
+          loadCatalog: async () => ({ products: [], identifiers: [] }),
+          loadBrandResolutionCatalog: async () => ({
+            brands: [{ id: "brand-loreal-elvital", canonical_name: "L'ORÉAL PARIS ELVITAL" }],
+            productLines: [],
+            brandAliases: [],
+          }),
+        }) as never,
+      runAgentV2ResponsesTurn: async (params) => {
+        await params.tools.lookup_product_candidate({
+          category: "shampoo",
+          brand_text: "L'ORÉAL PARIS ELVITAL",
+          product_name_text: "Shampoo Glycolic Gloss",
+          reason: "User asks whether this concrete shampoo suits them.",
+          evidence_quote: "L'ORÉAL PARIS ELVITAL Shampoo Glycolic Gloss",
+        })
+        return agentResult
+      },
+    },
+  )
+
+  assert.equal(result.productIntakeOffer?.reason, "product_lookup_not_found")
+  assert.equal(
+    await readStream(result.stream),
+    "Ich habe **L'ORÉAL PARIS ELVITAL Shampoo Glycolic Gloss** noch nicht in unserer Datenbank. Gib es bitte unten kurz ein, dann kann ich es genauer für dich prüfen.",
   )
 })
 
@@ -1852,7 +2331,7 @@ test("AgentV2 production pipeline resolves exact deterministic lookup fallback i
   assert.equal(result.productLookupClarification, null)
   const nextState = result.conversationStateTransition.next_state as AgentV2ConversationStateV2
   assert.deepEqual(nextState.agent_v2.active_resolved_product_context, {
-    source: "product_lookup_selection",
+    source: "lookup_exact",
     product_id: "syoss-intense-curls-shampoo",
     name: "Syoss Intense Curls Shampoo",
     category: "shampoo",

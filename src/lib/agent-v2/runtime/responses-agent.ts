@@ -208,7 +208,7 @@ function isDeterministicRuntimeFallbackAnswer(
 
 function isAllowedRuntimeFallbackRoutineToolMismatch(error: AgentV2ValidationError): boolean {
   return (
-    error.validator_id === "request_interpretation_tool_args_match" &&
+    error.validator_id === "tool_args_side_effect_mismatch" &&
     error.path?.[0] === "request_interpretation" &&
     error.path?.[1] === "routine_intent" &&
     /routine_intent/i.test(error.message)
@@ -340,6 +340,18 @@ export async function runAgentV2ResponsesTurn(params: {
     params.userContext,
     currentTurnCareFacts,
   )
+  const currentProductIdentityGuidancePackageIds = [
+    ...new Set([...trace.loaded_guidance_package_ids, "base.general_advice.v1"]),
+  ]
+  const currentProductIdentityAnswer = buildCurrentRoutineProductIdentityAnswer({
+    message: params.message,
+    routineInventory: params.userContext.routineInventory,
+    usedGuidancePackageIds: currentProductIdentityGuidancePackageIds,
+  })
+  if (currentProductIdentityAnswer) {
+    trace.loaded_guidance_package_ids = currentProductIdentityGuidancePackageIds
+    return completeWithAnswer(currentProductIdentityAnswer, trace)
+  }
   const knownHardRuleIds = new Set<string>()
   let executableToolCalls = 0
   let repairUsed = false
@@ -386,6 +398,7 @@ export async function runAgentV2ResponsesTurn(params: {
       : buildKnownIntentFallbackAnswer({
           reason,
           message: params.message,
+          recentMessages: params.recentMessages,
           safetyMode,
           routineThreadContext,
           trace,
@@ -545,6 +558,14 @@ export async function runAgentV2ResponsesTurn(params: {
       trace.failure_stage = missingTerminalRepairUsed
         ? "missing_terminal_failed"
         : "missing_terminal_answer"
+      const knownIntentFallback = buildCurrentKnownIntentFallbackAnswer("generic")
+      if (knownIntentFallback) {
+        return completeWithKnownFallback(
+          knownIntentFallback,
+          trace,
+          buildCurrentValidationContext(),
+        )
+      }
       return completeWithAnswer(buildCurrentClarificationFallback(), trace)
     }
 
@@ -1080,6 +1101,18 @@ function buildInputItems(
     })
   }
 
+  const currentRoutineProductFollowupContext = buildCurrentRoutineProductFollowupContext({
+    message,
+    recentMessages,
+    routineInventory: userContext.routineInventory,
+  })
+  if (currentRoutineProductFollowupContext) {
+    items.push({
+      role: "system",
+      content: buildCurrentRoutineProductFollowupGuidance(currentRoutineProductFollowupContext),
+    })
+  }
+
   if (namedProductContext) {
     items.push({
       role: "system",
@@ -1167,7 +1200,8 @@ function buildNamedProductContextGuidance(
     guidance.push(
       "Also call lookup_product_candidate for this concrete product candidate before product-specific answers. A partial product identity is allowed and category/use can be unclear; pass category null when needed and use the result to distinguish found_exact, needs_variant_selection, category_mismatch, unsupported_category, insufficient_identity, and not_found.",
       "Read assistant_guidance in the lookup result; it is the source of truth for whether to answer from catalog data, hand off to an intake card, hand off to a clarification card, or ask for missing details.",
-      "When assistant_guidance.pending_ui_action is not none, use constraint_blocked or clarification and write only a short natural German handoff to that action. Do not assess the product, infer from nearby variants, or give a category-level verdict while identity is unresolved.",
+      "When assistant_guidance.pending_ui_action is product_intake_card, make the first paragraph a short natural German handoff: say the exact product is not in our database yet and the user can enter or upload it below so Chaarlie can check it more precisely. Do not assess the product or infer from nearby variants while identity is unresolved; if useful, a second paragraph may give only coarse category/profile context.",
+      "When assistant_guidance.pending_ui_action is another non-none value, use constraint_blocked or clarification and write only a short natural German handoff to that action. Do not assess the product, infer from nearby variants, or give a category-level verdict while identity is unresolved.",
     )
   } else {
     guidance.push(
@@ -1360,12 +1394,17 @@ function buildRepairInstruction(
   )
     ? " For pending_followup_action_missing: do not repeat or rephrase a confirmable next-step offer unless you also set a matching pending_followup_action. If unsure, remove the offer, set next_step_offer_de to null, and close with a decisive helpful answer."
     : ""
+  const compositionRepairPolicy = errors.some(
+    (error) => error.validator_id === "visible_payload_not_rendered",
+  )
+    ? " For visible_payload_not_rendered: the structured payload can be valid while the German visible prose failed to render required elements. Recompose payload.user_facing_answer_de as natural, concise German prose from the existing payload only. Include the exact required payload elements named by the validation error, such as product names, assessed product, visible routine step labels, concrete blocker, clarification question/options, or confirmable offer. Do not invent claims, products, product facts, routine steps, or side effects."
+    : ""
 
   return {
     role: "system",
     content: `Repair the AgentV2 terminal answer. Validation failed with: ${JSON.stringify(
       errors.map((error) => compactValidationErrorForRepair(error)),
-    )}. ${repairPolicy}${followupRepairPolicy} When a validation error includes suggested_value, use it exactly unless it conflicts with the latest user message or returned tool outputs. When repair_hint is present, follow it before changing unrelated fields. Keep all product/routine claims grounded in returned tool outputs. Match payload fields to answer_mode exactly.\n\n${buildTerminalPayloadFieldGuidance()}`,
+    )}. ${repairPolicy}${followupRepairPolicy}${compositionRepairPolicy} When a validation error includes suggested_value, use it exactly unless it conflicts with the latest user message or returned tool outputs. When repair_hint is present, follow it before changing unrelated fields. Keep all product/routine claims grounded in returned tool outputs. Match payload fields to answer_mode exactly.\n\n${buildTerminalPayloadFieldGuidance()}`,
   }
 }
 
@@ -2494,6 +2533,7 @@ function selectFallbackReason(
 function buildKnownIntentFallbackAnswer(params: {
   reason: AgentV2FallbackReason
   message: string
+  recentMessages: Array<{ role: string; content: string }>
   safetyMode: AgentV2SafetyMode
   routineThreadContext: AgentV2RoutineThreadContext | null
   trace: AgentV2Trace
@@ -2509,6 +2549,13 @@ function buildKnownIntentFallbackAnswer(params: {
   if (activeResolvedProductFallback) return activeResolvedProductFallback
 
   if (params.reason !== "generic" && params.reason !== "composition_failed") return null
+
+  const recentRecommendationFitFallback = buildRecentRecommendationFitClarificationFallback({
+    message: params.message,
+    recentMessages: params.recentMessages,
+    usedGuidancePackageIds: params.trace.loaded_guidance_package_ids,
+  })
+  if (recentRecommendationFitFallback) return recentRecommendationFitFallback
 
   const productLookupFallback = buildProductLookupClarificationFallback({
     message: params.message,
@@ -2590,26 +2637,38 @@ function buildActiveResolvedProductFollowupFallback(params: {
   if (!activeProduct) return null
   const isSelectionTurn = isTrustedProductSelectionTurnMessage(params.message)
 
+  const latestNamedProductContext = buildAgentV2NamedProductContext({
+    latestMessage: params.message,
+    recentMessages: [],
+  })
   const latestMessageNamesNewProduct = Boolean(
-    buildAgentV2NamedProductContext({
-      latestMessage: params.message,
-      recentMessages: [],
-    }),
+    latestNamedProductContext && latestNamedProductContext.named_product_intent !== "background",
+  )
+  const category = readFallbackCareCategory(activeProduct.category)
+  const isCategoryClarification = isActiveResolvedProductCategoryClarificationMessage(
+    params.message,
+    category,
   )
   if (!isSelectionTurn && latestMessageNamesNewProduct) return null
-  if (!isSelectionTurn && !isActiveResolvedProductFollowupMessage(params.message)) return null
+  if (
+    !isSelectionTurn &&
+    !isCategoryClarification &&
+    !isActiveResolvedProductFollowupMessage(params.message)
+  ) {
+    return null
+  }
 
-  const category = readFallbackCareCategory(activeProduct.category)
   const productName = activeProduct.name.trim() || "das ausgewählte Produkt"
   const categoryLabel = getFallbackCareCategoryLabelDe(category)
   const isFitFollowup = isActiveResolvedProductFitFollowupMessage(params.message)
-  const userFacingAnswer = isSelectionTurn
-    ? `Alles klar, ich beziehe mich ab jetzt auf **${productName}**. Damit ist die Produktidentität eindeutig geklärt; du kannst dazu direkt weiterfragen, zum Beispiel zur Häufigkeit, Einordnung oder ob du es in deiner Routine behalten solltest.`
-    : isFitFollowup
-      ? `Die Produktidentität ist klar: **${productName}**. Ob es genau zu deinem Frizz oder deinem Haarprofil passt, kann ich ohne weitere Produkteigenschaften nicht abschließend bewerten. Als ${categoryLabel} kann ich es erst sicher einordnen, wenn die relevanten Produktdaten vorliegen.`
-      : category === "shampoo"
-        ? `Für **${productName}**: Orientier dich an deinem normalen Waschrhythmus. Wenn du gerade 3–4× pro Woche wäschst, kannst du es bei diesen Wäschen verwenden. Gib Shampoo vor allem auf Kopfhaut und Ansatz und spül es gründlich aus; die Längen bekommen nur den Schaum beim Ausspülen ab.`
-        : `Für **${productName}**: Ich würde es in deiner Routine wie ${categoryLabel} behandeln und erst einmal nach Bedarf statt starr jeden Tag nutzen. Wenn du mir sagst, wie dein Haar danach wirkt, kann ich Dosierung und Häufigkeit feiner einordnen.`
+  const userFacingAnswer =
+    isSelectionTurn || isCategoryClarification
+      ? `Alles klar, ich beziehe mich ab jetzt auf **${productName}**. Damit ist die Produktidentität eindeutig geklärt; du kannst dazu direkt weiterfragen, zum Beispiel zur Häufigkeit, Einordnung oder ob du es in deiner Routine behalten solltest.`
+      : isFitFollowup
+        ? `Ich weiß, dass du **${productName}** meinst. Ob es wirklich gut zu dir passt, kann ich gerade nicht zuverlässig aus den verfügbaren Produktdaten ableiten. Sicher ist nur: Ich würde es erst bewerten, wenn die konkreten Produktfakten sauber geladen sind; bis dahin würde ich kein klares Ja oder Nein daraus machen.`
+        : category === "shampoo"
+          ? `Für **${productName}**: Orientier dich an deinem normalen Waschrhythmus. Wenn du gerade 3–4× pro Woche wäschst, kannst du es bei diesen Wäschen verwenden. Gib Shampoo vor allem auf Kopfhaut und Ansatz und spül es gründlich aus; die Längen bekommen nur den Schaum beim Ausspülen ab.`
+          : `Für **${productName}**: Ich würde es in deiner Routine wie ${categoryLabel} behandeln und erst einmal nach Bedarf statt starr jeden Tag nutzen. Wenn du mir sagst, wie dein Haar danach wirkt, kann ich Dosierung und Häufigkeit feiner einordnen.`
 
   return {
     answer_mode: "general_advice",
@@ -2661,6 +2720,356 @@ function buildActiveResolvedProductFollowupFallback(params: {
   }
 }
 
+function buildRecentRecommendationFitClarificationFallback(params: {
+  message: string
+  recentMessages: Array<{ role: string; content: string }>
+  usedGuidancePackageIds: string[]
+}): AgentV2TerminalAnswer | null {
+  if (!isActiveResolvedProductFitFollowupMessage(params.message)) return null
+  if (!hasAmbiguousProductReference(params.message)) return null
+
+  const recentProducts = extractRecentVisibleProductNames(params.recentMessages)
+  if (recentProducts.length < 2) return null
+
+  const visibleExamples = recentProducts.slice(0, 3)
+  const examplesText = visibleExamples.join(", ")
+  const category = inferVisibleRecommendationCategory(params.recentMessages)
+  const categoryLabel =
+    category === "shampoo"
+      ? "Shampoos"
+      : category === "deep_cleansing_shampoo"
+        ? "Tiefenreinigungsshampoos"
+        : "Produkte"
+
+  return {
+    answer_mode: "clarification",
+    interpreted_intent:
+      "Recent product recommendation fit follow-up fallback after terminal repair failed.",
+    request_interpretation: {
+      primary_intent: "clarification",
+      product_request_kind: "product_detail",
+      routine_intent: "none",
+      care_category: category,
+      requested_product_count: 1,
+      count_policy: "exact",
+      evidence_quote: params.message.slice(0, 240) || "passt das zu mir",
+      specific_product_candidate: false,
+      confidence: 0.55,
+    },
+    confidence: 0.55,
+    extracted_constraints: {
+      ...buildEmptyExtractedConstraints(),
+      product_categories: category === "unknown" ? [] : [category],
+      raw_constraints: [params.message],
+    },
+    missing_information: [],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: params.usedGuidancePackageIds,
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category: null,
+      return_path: [],
+    },
+    pending_followup_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: `Meinst du eines der eben genannten ${categoryLabel}, zum Beispiel **${examplesText}**? Sag mir kurz welches, dann ordne ich es zu deinem Profil ein. Ohne genaue Produktwahl würde ich daraus kein klares Ja oder Nein machen.`,
+      question_de: `Welches der eben genannten ${categoryLabel} meinst du?`,
+      missing_keys: ["product_identity"],
+    },
+  }
+}
+
+function hasAmbiguousProductReference(message: string): boolean {
+  return /\b(?:das|dieses|den|dem|die|es|dazu|davon)\b/iu.test(message)
+}
+
+function extractRecentVisibleProductNames(
+  recentMessages: Array<{ role: string; content: string }>,
+): string[] {
+  const names: string[] = []
+  for (const message of [...recentMessages].reverse()) {
+    if (message.role !== "assistant") continue
+    const boldMatches = message.content.matchAll(/\*\*([^*\n]{3,120})\*\*/g)
+    for (const match of boldMatches) {
+      const candidate = normalizeVisibleProductName(match[1])
+      if (candidate && !names.includes(candidate)) names.push(candidate)
+      if (names.length >= 3) return names
+    }
+  }
+  return names
+}
+
+function normalizeVisibleProductName(value: string): string | null {
+  const trimmed = value.replace(/\s+/g, " ").trim()
+  if (trimmed.length < 3 || trimmed.length > 120) return null
+  if (/^(?:tipp|hinweis|warum|anwendung|routine|fazit|wichtig)$/iu.test(trimmed)) return null
+  return trimmed
+}
+
+function inferVisibleRecommendationCategory(
+  recentMessages: Array<{ role: string; content: string }>,
+): AgentV2CareCategory {
+  const recentAssistantText = recentMessages
+    .slice(-4)
+    .filter((message) => message.role === "assistant")
+    .map((message) => message.content)
+    .join("\n")
+  const normalized = normalizeAgentV2EvidenceText(recentAssistantText)
+  if (
+    /\btiefenreinigungsshampoo|tiefenreinigungs shampoo|deep cleansing shampoo\b/.test(normalized)
+  ) {
+    return "deep_cleansing_shampoo"
+  }
+  if (/\bshampoo|shampoos\b/.test(normalized)) return "shampoo"
+  return "unknown"
+}
+
+function buildCurrentRoutineProductIdentityAnswer(params: {
+  message: string
+  routineInventory: unknown[]
+  usedGuidancePackageIds: string[]
+}): AgentV2TerminalAnswer | null {
+  if (!isCurrentRoutineProductIdentityQuestion(params.message)) return null
+
+  const category = detectCurrentRoutineIdentityCategory(params.message)
+  if (!category) return null
+
+  const routineProduct = findRoutineProductIdentity(params.routineInventory, category)
+  if (!routineProduct.found) return null
+
+  const categoryLabel = getFallbackCareCategoryLabelDe(category)
+  const currentCategoryLabel = getFallbackCurrentCareCategoryLabelDe(category)
+  const currentCategoryKeyPointLabel = getFallbackCurrentCareCategoryKeyPointLabelDe(category)
+  const productName = routineProduct.productName
+  const userFacingAnswer = productName
+    ? routineProduct.pending
+      ? `Ich sehe **${productName}** als ${categoryLabel} in deiner Routine, aber es ist noch in Prüfung. Ich würde es deshalb gerade nur als gespeicherte Produkt-Identität behandeln und noch nicht fachlich bewerten.`
+      : `Ich sehe **${productName}** als ${currentCategoryLabel} in deiner Routine.`
+    : `Ich sehe, dass du ${categoryLabel} nutzt, aber nicht den genauen Produktnamen.`
+
+  return {
+    answer_mode: "general_advice",
+    interpreted_intent: "Current routine product identity acknowledgement.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "unknown",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: params.message.slice(0, 240) || "aktuelles Produkt",
+      specific_product_candidate: false,
+      confidence: 0.9,
+    },
+    confidence: 0.9,
+    extracted_constraints: {
+      ...buildEmptyExtractedConstraints(),
+      product_categories: [category],
+      raw_constraints: [params.message.slice(0, 240) || "aktuelles Produkt"],
+    },
+    missing_information: [],
+    safety_flags: [],
+    tool_grounding: {
+      used_guidance_package_ids: params.usedGuidancePackageIds,
+      used_product_tool: false,
+      used_routine_tool: false,
+      product_ids: [],
+      routine_step_ids: [],
+      hard_rule_ids: [],
+    },
+    routine_context: {
+      active: false,
+      routine_layer: null,
+      step_id: null,
+      category,
+      return_path: [],
+    },
+    pending_followup_action: null,
+    session_memory_writes: [],
+    payload: {
+      user_facing_answer_de: userFacingAnswer,
+      category_or_topic: category,
+      key_points_de: productName
+        ? [`${currentCategoryKeyPointLabel}: ${productName}`]
+        : [`Aktuelle Kategorie vorhanden: ${categoryLabel}`],
+      next_step_offer_de: null,
+    },
+  }
+}
+
+function buildCurrentRoutineProductFollowupContext(params: {
+  message: string
+  recentMessages: Array<{ role: string; content: string }>
+  routineInventory: unknown[]
+}): { category: AgentV2CareCategory; productName: string; pending: boolean } | null {
+  if (!isActiveResolvedProductFitFollowupMessage(params.message)) return null
+  if (!hasAmbiguousProductReference(params.message)) return null
+
+  return findRoutineProductIdentityMentionedRecently(params.routineInventory, params.recentMessages)
+}
+
+function buildCurrentRoutineProductFollowupGuidance(params: {
+  category: AgentV2CareCategory
+  productName: string
+  pending: boolean
+}): string {
+  const payload = {
+    category: params.category,
+    product_name: params.productName,
+    match_status: params.pending ? "pending_review" : "matched_or_saved",
+    inferred_from: "recent assistant answer plus saved routine inventory",
+  }
+  const pendingGuidance = params.pending
+    ? "If this routine product is pending review, do not assess fit yet; explain that you know which product they mean, but it is still under review."
+    : "For fit/suitability questions, call lookup_product_candidate for this product before making a product-specific fit claim."
+  return [
+    "Current routine product follow-up context.",
+    `The latest user message uses an ambiguous product reference, and the recent conversation plus saved routine identify it as "${params.productName}" (${params.category}).`,
+    "Treat the request as product_detail/suitability about this product, not as an unknown-product clarification.",
+    pendingGuidance,
+    "If lookup cannot return usable product facts, say in German that you know which product they mean, but need product facts before judging whether it fits; then hand off to product intake if available.",
+    "Do not answer as if the product identity is unknown.",
+    JSON.stringify(payload),
+  ].join(" ")
+}
+
+function isCurrentRoutineProductIdentityQuestion(message: string): boolean {
+  const normalized = normalizeAgentV2EvidenceText(message)
+  if (
+    !/\b(?:kennst|weisst|weiss|siehst|gespeichert|gemerkt)\b/u.test(normalized) ||
+    !/\b(?:benutze|benutz|verwende|nutze|aktuell|gerade|routine|mein|meine|meinen)\b/u.test(
+      normalized,
+    )
+  ) {
+    return false
+  }
+  if (
+    /\b(?:passt|geeignet|bewerten|bewerte|wie oft|haeufig|haufig|anwenden|vergleich|besser|alternative|alternativen|enthaelt|enthält|sollte|empfiehl|empfehlen|empfehlung|ersetzen|austauschen|wechseln|einbauen|hinzufuegen|hinzufügen)\b/u.test(
+      normalized,
+    )
+  ) {
+    return false
+  }
+
+  const mentionsSupportedCategory =
+    /\b(?:trockenshampoo|tiefenreinigungsshampoo|shampoo|conditioner|spuelung|spulung|maske|leave in|leave-in|oel|ol|produkt)\b/u.test(
+      normalized,
+    )
+  if (!mentionsSupportedCategory) return false
+
+  return (
+    /\b(?:welches|welche|welchen)\b.{0,80}\b(?:ich|mein|meine|meinen)\b.{0,80}\b(?:benutze|benutz|verwende|nutze|aktuell|gerade)\b/u.test(
+      normalized,
+    ) ||
+    /\b(?:das|den|die|mein|meine|meinen)\b.{0,80}\b(?:trockenshampoo|tiefenreinigungsshampoo|shampoo|conditioner|spuelung|spulung|maske|leave in|leave-in|oel|ol|produkt)\b.{0,80}\b(?:benutze|benutz|verwende|nutze)\b/u.test(
+      normalized,
+    ) ||
+    /\b(?:mein|meine|meinen)\b.{0,40}\b(?:aktuell|gerade|routine)\b.{0,80}\b(?:trockenshampoo|tiefenreinigungsshampoo|shampoo|conditioner|spuelung|spulung|maske|leave in|leave-in|oel|ol|produkt)\b/u.test(
+      normalized,
+    ) ||
+    /\b(?:in|aus)\b.{0,20}\b(?:meiner|meine|meinen)\b.{0,20}\broutine\b/u.test(normalized)
+  )
+}
+
+function detectCurrentRoutineIdentityCategory(message: string): AgentV2CareCategory | null {
+  const normalized = normalizeAgentV2EvidenceText(message)
+  if (/\btrockenshampoo\b/u.test(normalized)) return "dry_shampoo"
+  if (/\btiefenreinigungsshampoo\b/u.test(normalized)) return "deep_cleansing_shampoo"
+  if (/\b(?:conditioner|spuelung|spulung)\b/u.test(normalized)) return "conditioner"
+  if (/\bmaske\b/u.test(normalized)) return "mask"
+  if (/\bleave(?:\s|-)?in\b/u.test(normalized)) return "leave_in"
+  if (/\b(?:oel|ol)\b/u.test(normalized)) return "oil"
+  if (/\bshampoo\b/u.test(normalized)) return "shampoo"
+  return null
+}
+
+function findRoutineProductIdentity(
+  routineInventory: unknown[],
+  category: AgentV2CareCategory,
+): { found: boolean; productName: string | null; pending: boolean } {
+  for (const item of routineInventory) {
+    if (!item || typeof item !== "object" || Array.isArray(item)) continue
+    const record = item as Record<string, unknown>
+    if (readFallbackCareCategory(readRoutineString(record, ["category"])) !== category) continue
+
+    const productName = readRoutineString(record, [
+      "product_name",
+      "productName",
+      "name",
+      "display_name",
+      "displayName",
+      "product_name_text",
+      "productNameText",
+    ])
+    const matchStatus = readRoutineString(record, ["match_status", "matchStatus"])
+    return {
+      found: true,
+      productName,
+      pending: matchStatus === "pending_review" || matchStatus === "needs_more_info",
+    }
+  }
+
+  return { found: false, productName: null, pending: false }
+}
+
+function findRoutineProductIdentityMentionedRecently(
+  routineInventory: unknown[],
+  recentMessages: Array<{ role: string; content: string }>,
+): { category: AgentV2CareCategory; productName: string; pending: boolean } | null {
+  const recentAssistantText = normalizeAgentV2EvidenceText(
+    recentMessages
+      .slice(-4)
+      .filter((message) => message.role === "assistant")
+      .map((message) => message.content)
+      .join("\n"),
+  )
+  if (!recentAssistantText) return null
+
+  for (const item of routineInventory) {
+    if (!item || typeof item !== "object" || Array.isArray(item)) continue
+    const record = item as Record<string, unknown>
+    const category = readFallbackCareCategory(readRoutineString(record, ["category"]))
+    if (category === "unknown") continue
+    const productName = readRoutineString(record, [
+      "product_name",
+      "productName",
+      "name",
+      "display_name",
+      "displayName",
+      "product_name_text",
+      "productNameText",
+    ])
+    if (!productName) continue
+    if (!recentAssistantText.includes(normalizeAgentV2EvidenceText(productName))) continue
+    const matchStatus = readRoutineString(record, ["match_status", "matchStatus"])
+    return {
+      category,
+      productName,
+      pending: matchStatus === "pending_review" || matchStatus === "needs_more_info",
+    }
+  }
+
+  return null
+}
+
+function readRoutineString(record: Record<string, unknown>, keys: string[]): string | null {
+  for (const key of keys) {
+    const value = record[key]
+    if (typeof value === "string" && value.trim().length > 0) return value.trim()
+  }
+  return null
+}
+
 function isTrustedProductSelectionTurnMessage(message: string): boolean {
   return (
     /produktklärung|produktklaerung/iu.test(message) && /ausgewählt|ausgewaehlt/iu.test(message)
@@ -2673,6 +3082,47 @@ function isActiveResolvedProductFollowupMessage(message: string): boolean {
       message,
     ) || isActiveResolvedProductFitFollowupMessage(message)
   )
+}
+
+function isActiveResolvedProductCategoryClarificationMessage(
+  message: string,
+  category: AgentV2CareCategory,
+): boolean {
+  const normalized = message
+    .toLocaleLowerCase("de-DE")
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+
+  if (!normalized) return false
+
+  const categoryTerms: Partial<Record<AgentV2CareCategory, readonly string[]>> = {
+    shampoo: ["shampoo"],
+    conditioner: ["conditioner", "spulung", "spuelung"],
+    mask: ["maske", "haarmaske", "mask"],
+    leave_in: ["leave in", "leavein"],
+    oil: ["ol", "oel", "haarol", "haaroel", "oil"],
+    bondbuilder: ["bondbuilder", "bond builder"],
+    deep_cleansing_shampoo: ["tiefenreinigungsshampoo", "deep cleansing shampoo"],
+    dry_shampoo: ["trockenshampoo", "dry shampoo"],
+    peeling: ["peeling", "kopfhaut peeling", "scalp scrub"],
+  }
+  const terms = categoryTerms[category] ?? []
+  if (terms.length === 0) return false
+
+  return terms.some((term) => {
+    const normalizedTerm = term.replace(/\s+/g, " ")
+    return new RegExp(
+      `^(?:das|der|die|den|dem|dieses|diese|diesen)?\\s*${escapeRegExp(normalizedTerm)}$`,
+      "iu",
+    ).test(normalized)
+  })
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 }
 
 function isActiveResolvedProductFitFollowupMessage(message: string): boolean {
@@ -2703,6 +3153,57 @@ function getFallbackCareCategoryLabelDe(category: AgentV2CareCategory): string {
       return "ein Kopfhaut-Peeling"
     default:
       return "dieses Produkt"
+  }
+}
+
+function getFallbackCareCategoryNounDe(category: AgentV2CareCategory): string {
+  switch (category) {
+    case "shampoo":
+      return "Shampoo"
+    case "conditioner":
+      return "Conditioner"
+    case "mask":
+      return "Maske"
+    case "leave_in":
+      return "Leave-in"
+    case "oil":
+      return "Öl"
+    case "bondbuilder":
+      return "Bondbuilder"
+    case "deep_cleansing_shampoo":
+      return "Tiefenreinigungsshampoo"
+    case "dry_shampoo":
+      return "Trockenshampoo"
+    case "peeling":
+      return "Kopfhaut-Peeling"
+    default:
+      return "Produkt"
+  }
+}
+
+function getFallbackCurrentCareCategoryLabelDe(category: AgentV2CareCategory): string {
+  switch (category) {
+    case "conditioner":
+      return "deinen aktuellen Conditioner"
+    case "mask":
+      return "deine aktuelle Maske"
+    case "bondbuilder":
+      return "deinen aktuellen Bondbuilder"
+    default:
+      return `dein aktuelles ${getFallbackCareCategoryNounDe(category)}`
+  }
+}
+
+function getFallbackCurrentCareCategoryKeyPointLabelDe(category: AgentV2CareCategory): string {
+  switch (category) {
+    case "conditioner":
+      return "Aktueller Conditioner"
+    case "mask":
+      return "Aktuelle Maske"
+    case "bondbuilder":
+      return "Aktueller Bondbuilder"
+    default:
+      return `Aktuelles ${getFallbackCareCategoryNounDe(category)}`
   }
 }
 

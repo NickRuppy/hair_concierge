@@ -20,17 +20,24 @@ export interface AgentV2TrustedSelectedProductContext {
 }
 
 export interface AgentV2ActiveResolvedProductContext {
-  source: "product_lookup_selection"
+  source: AgentV2ActiveResolvedProductContextSource
   product_id: string
   name: string
   category: string | null
   original_user_message: string
 }
 
+export type AgentV2ActiveResolvedProductContextSource =
+  | "lookup_exact"
+  | "product_lookup_selection"
+  | "product_intake_submission"
+  | "routine_inventory"
+
 export type AgentV2ActiveProductContextSource =
   | "lookup_exact"
   | "product_lookup_selection"
   | "product_intake_submission"
+  | "routine_inventory"
 
 export interface AgentV2ActiveProductContext {
   status: "resolved" | "pending_review"
@@ -255,7 +262,7 @@ export function activeProductContextToResolvedProductContext(
 ): AgentV2ActiveResolvedProductContext | null {
   if (!context || context.status !== "resolved" || !context.product_id) return null
   return {
-    source: "product_lookup_selection",
+    source: context.source,
     product_id: context.product_id,
     name: context.display_name,
     category: context.category,

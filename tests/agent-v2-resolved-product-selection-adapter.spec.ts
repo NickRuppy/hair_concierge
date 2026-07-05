@@ -135,6 +135,29 @@ test("preserves active and stored projection conversion shapes", () => {
   })
 })
 
+test("preserves routine inventory provenance when deriving resolved context", () => {
+  const routineContext: AgentV2ActiveProductContext = {
+    status: "resolved",
+    product_id: "routine-shampoo",
+    submission_id: null,
+    category: "shampoo",
+    brand_text: "Syoss",
+    product_name_text: "Intense Volume Shampoo",
+    display_name: "Syoss Intense Volume Shampoo",
+    original_user_message: "Weißt du welches Shampoo ich gerade benutze?",
+    source: "routine_inventory",
+    updated_at: "2026-07-05T12:00:00.000Z",
+  }
+
+  assert.deepEqual(buildPrimaryResolvedProductContext([routineContext]), {
+    source: "routine_inventory",
+    product_id: "routine-shampoo",
+    name: "Syoss Intense Volume Shampoo",
+    category: "shampoo",
+    original_user_message: "Weißt du welches Shampoo ich gerade benutze?",
+  })
+})
+
 test("builds active context from found-exact lookup result without trusting unknown results", () => {
   assert.deepEqual(
     buildActiveResolvedProductContextFromLookup({

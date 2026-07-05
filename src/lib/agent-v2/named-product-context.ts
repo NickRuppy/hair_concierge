@@ -73,7 +73,7 @@ const CURRENT_USE_PHRASE =
   /\bich\s+(?:nutze|benutze|verwende|habe|nehme)\b|\b(?:nutze|benutze|verwende|nehme)\s+ich\b/iu
 
 const PRODUCT_EVALUATION_PHRASE =
-  /\bwas\s+h(?:ae|ä)ltst\s+du\s+vo(?:n|m|r)\b|\bwas\s+haelst\s+du\s+vo(?:n|m|r)\b|\bwas\s+du\s+vo(?:n|m|r)\b[\s\S]{0,120}\bh(?:ae|ä)ltst\b|\bwas\s+du\s+vo(?:n|m|r)\b[\s\S]{0,120}\bhaelst\b|\b(?:bewerten|beurteilen|einsch(?:ae|ä)tzen|einschaetzen)\b/iu
+  /\bwas\s+h(?:ae|ä)ltst\s+du\s+vo(?:n|m|r)\b|\bwas\s+haelst\s+du\s+vo(?:n|m|r)\b|\bwas\s+du\s+vo(?:n|m|r)\b[\s\S]{0,120}\bh(?:ae|ä)ltst\b|\bwas\s+du\s+vo(?:n|m|r)\b[\s\S]{0,120}\bhaelst\b|\b(?:bewerten|beurteilen|einsch(?:ae|ä)tzen|einschaetzen)\b|\bpasst\b[\s\S]{0,140}\b(?:zu\s+mir|f(?:ue|ü)r\s+mich)\b/iu
 
 const CURRENT_USE_PRODUCT_QUESTION_PHRASE =
   /\bpasst\s+(?:das|dieses(?:\s+produkt)?|der|die|er|sie|es)\b[\s\S]{0,80}\b(?:zu\s+mir|f(?:ue|ü)r\s+mich)\b|\bist\s+(?:das|dieses(?:\s+produkt)?|der|die|er|sie|es)\b[\s\S]{0,40}\b(?:gut|geeignet|okay|ok|empfehlenswert)\b|\b(?:kann|soll|sollte)\s+ich\s+(?:das|dieses(?:\s+produkt)?|ihn|sie|es)\b[\s\S]{0,80}\b(?:weiter\s*)?(?:verwenden|nutzen|benutzen|nehmen|behalten)\b/iu
@@ -83,6 +83,9 @@ const PRODUCT_ROUTINE_ADD_PHRASE =
 
 const GENERIC_CATEGORY_QUESTION =
   /\bwelch(?:er|en|es|e)\b|\bkannst\s+du\s+mir\b.*\bempfehlen\b|\bempfiehlst\s+du\b|\bempfehlung(?:en)?\b/iu
+
+const GENERIC_CATEGORY_FIT_QUESTION =
+  /\bpasst\s+(?:ein|eine|einen|einem|einer)\s+[\p{L}\p{M}\p{N}\s-]{0,40}?(?:shampoo|conditioner|sp(?:ue|ü)lung|maske|haarmaske|leave[ -]?in|(?:haar\s*)?(?:oel|öl|oil)|bondbuilder|peeling)\b/iu
 
 const QUOTED_PRODUCT_NAME = /["“”]([^"“”]{2,80})["“”]/u
 
@@ -125,6 +128,7 @@ const LEADING_COMMAND_WORDS = new Set([
   "integriere",
   "nimm",
   "packe",
+  "passt",
 ])
 
 const LOOSE_NAME_BOUNDARY_WORDS = new Set([
@@ -237,11 +241,13 @@ export function buildAgentV2NamedProductContext(params: {
   const brand = extractBrandAfterVon(latestMessage, category)
   const quotedProductName = extractQuotedProductName(latestMessage)
   const hasCurrentUse = hasCurrentUsePhrasing(latestMessage)
-  const hasProductEvaluation = hasProductEvaluationPhrasing(latestMessage)
+  const hasGenericCategoryQuestion = isGenericCategoryQuestion(latestMessage)
+  const hasProductEvaluation =
+    hasProductEvaluationPhrasing(latestMessage) && !hasGenericCategoryQuestion
   const hasCurrentUseProductQuestion = hasCurrentUseProductQuestionPhrasing(latestMessage)
   const hasRoutineAdd = hasProductRoutineAddPhrasing(latestMessage)
 
-  if (isGenericCategoryQuestion(latestMessage) && !brand && !quotedProductName && !hasCurrentUse) {
+  if (hasGenericCategoryQuestion && !brand && !quotedProductName && !hasCurrentUse) {
     return null
   }
   if (
@@ -354,7 +360,7 @@ function inferNamedProductIntent(params: {
 }
 
 function isGenericCategoryQuestion(message: string): boolean {
-  return GENERIC_CATEGORY_QUESTION.test(message)
+  return GENERIC_CATEGORY_QUESTION.test(message) || GENERIC_CATEGORY_FIT_QUESTION.test(message)
 }
 
 function extractCategoryAdjacentProductName(
@@ -373,11 +379,14 @@ function extractCategoryAdjacentProductName(
   const nameBeforeCategory =
     getCapitalizedNameTail(beforeCategory) ??
     (options.allowLooseName ? getLooseNameTail(beforeCategory) : null)
-  if (nameBeforeCategory !== null) return `${nameBeforeCategory} ${config.displayLabel}`
 
   const nameAfterCategory =
     getCapitalizedNameHead(afterCategory) ??
     (options.allowLooseName ? getLooseNameHead(afterCategory) : null)
+  if (nameBeforeCategory !== null && nameAfterCategory !== null) {
+    return `${nameBeforeCategory} ${config.displayLabel} ${nameAfterCategory}`
+  }
+  if (nameBeforeCategory !== null) return `${nameBeforeCategory} ${config.displayLabel}`
   if (nameAfterCategory !== null) return `${config.displayLabel} ${nameAfterCategory}`
 
   return null

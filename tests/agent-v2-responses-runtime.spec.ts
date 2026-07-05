@@ -1847,7 +1847,7 @@ test("AgentV2 runtime executes product candidate lookup tool", async () => {
   assert.deepEqual(lookupOutput.assistant_guidance, {
     pending_ui_action: "product_intake_card",
     assistant_instruction_de:
-      "Dieses Produkt ist noch nicht in der Datenbank. Erkläre kurz und natürlich, dass es zur Prüfung hinzugefügt werden kann, ohne es fachlich zu bewerten.",
+      "Dieses Produkt ist noch nicht in der Datenbank. Erkläre im ersten Absatz kurz und natürlich, dass der Nutzer es unten in der Karte eingeben oder hochladen kann, damit Chaarlie es genauer prüfen kann. Bewerte das konkrete Produkt nicht fachlich; wenn hilfreich, darfst du danach höchstens eine grobe Kategorie- oder Profil-Einordnung geben.",
   })
   assert.ok(result.trace.tool_calls.some((call) => call.name === "lookup_product_candidate"))
 })
@@ -2654,6 +2654,359 @@ test("AgentV2 runtime injects surfaced product facts for referential follow-ups"
   assert.match(content, /Use the recent conversation/)
 })
 
+test("AgentV2 runtime acknowledges known current shampoo identity from routine context", async () => {
+  const client = fakeResponsesClientWithOutputs([])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Du kennst ja das Shampoo, das ich gerade benutze, oder?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [
+        {
+          category: "shampoo",
+          product_name: "Balea Aqua Shampoo",
+          product_id: "balea-aqua-shampoo",
+          match_status: "matched",
+        },
+      ],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(client.requests.length, 0)
+  assert.equal(result.final_answer.answer_mode, "general_advice")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Balea Aqua Shampoo/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /aktuelles Shampoo/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /passt/i)
+  const shortcutValidation = validateAgentV2FinalAnswer(result.final_answer, {
+    selectedProductProjections: [],
+    routineProjections: [],
+    latestUserMessage: "Du kennst ja das Shampoo, das ich gerade benutze, oder?",
+    recentEvidenceText: "Du kennst ja das Shampoo, das ich gerade benutze, oder?",
+    toolCallHistory: [],
+    safetyMode: "normal",
+    requiredGuidancePackageIds: [],
+    loadedGuidancePackageIds: result.trace.loaded_guidance_package_ids,
+    currentRoutineLayer: null,
+  })
+  assert.equal(shortcutValidation.ok, true, JSON.stringify(shortcutValidation.errors, null, 2))
+})
+
+test("AgentV2 runtime lets generic current product questions with multiple routine products reach the agent", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  await runAgentV2ResponsesTurn({
+    client,
+    message: "Weißt du welches Produkt ich gerade benutze?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [
+        {
+          category: "shampoo",
+          product_name: "Balea Aqua Shampoo",
+          product_id: "balea-aqua-shampoo",
+          match_status: "matched",
+        },
+        {
+          category: "conditioner",
+          product_name: "John Frieda Frizz Ease Wunder-Reparatur Conditioner",
+          product_id: "john-frieda-frizz-ease-conditioner",
+          match_status: "matched",
+        },
+      ],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.ok(client.requests.length > 0)
+  const firstInput = getInputItems(client.requests[0])
+  const inputText = JSON.stringify(firstInput)
+  assert.match(inputText, /Balea Aqua Shampoo/)
+  assert.match(inputText, /John Frieda Frizz Ease Wunder-Reparatur Conditioner/)
+})
+
+test("AgentV2 runtime sanitizes bare Ja opening instead of discarding useful routine inventory answers", async () => {
+  const answer = terminalCall("call_1", {
+    ...terminalGeneralAdviceArguments(),
+    request_interpretation: requestInterpretation({
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "none",
+      evidence_quote: "welches Produkt ich gerade benutze",
+    }),
+    tool_grounding: {
+      ...terminalGeneralAdviceArguments().tool_grounding,
+      used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+    },
+    routine_context: {
+      active: true,
+      routine_layer: "basics",
+      step_id: null,
+      category: null,
+      return_path: [],
+    },
+    pending_followup_action: null,
+    payload: {
+      user_facing_answer_de:
+        "Ja: aus deinem Profil sehe ich aktuell **Balea Aqua Shampoo** und **John Frieda Frizz Ease Wunder-Reparatur Conditioner**.",
+      category_or_topic: "deine aktuelle Routine",
+      key_points_de: ["Shampoo", "Conditioner"],
+      next_step_offer_de: null,
+    },
+  })
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_guidance", {
+      answer_mode_hint: "general_advice",
+      categories: [],
+      routine_layer: "basics",
+    }),
+    answer,
+    answer,
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Weißt du welches Produkt ich gerade benutze?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [
+        {
+          category: "shampoo",
+          product_name: "Balea Aqua Shampoo",
+          product_id: "balea-aqua-shampoo",
+          match_status: "matched",
+        },
+        {
+          category: "conditioner",
+          product_name: "John Frieda Frizz Ease Wunder-Reparatur Conditioner",
+          product_id: "john-frieda-frizz-ease-conditioner",
+          match_status: "matched",
+        },
+      ],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, null, JSON.stringify(result.trace.validation_errors))
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Balea Aqua Shampoo/)
+  assert.match(
+    result.final_answer.payload.user_facing_answer_de,
+    /John Frieda Frizz Ease Wunder-Reparatur Conditioner/,
+  )
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /^Ja\b/u)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /nicht sicher, was du/i)
+  assert.ok(
+    result.trace.validation_warnings.some(
+      (warning) => warning.reason_code === "user_facing_bare_ja_opening_sanitized",
+    ),
+  )
+})
+
+test("AgentV2 runtime distinguishes category-only current shampoo context from exact identity", async () => {
+  const client = fakeResponsesClientWithOutputs([])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Weißt du welches Shampoo ich aktuell benutze?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [{ category: "shampoo", product_name: null }],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(client.requests.length, 0)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Shampoo nutzt/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /nicht den genauen Produktnamen/)
+})
+
+test("AgentV2 runtime acknowledges known current conditioner identity from routine context", async () => {
+  const client = fakeResponsesClientWithOutputs([])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Weißt du welchen Conditioner ich gerade benutze?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [
+        {
+          category: "conditioner",
+          product_name: "John Frieda Frizz Ease Wunder-Reparatur Conditioner",
+          product_id: "john-frieda-frizz-ease-conditioner",
+          match_status: "matched",
+        },
+      ],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(client.requests.length, 0)
+  assert.match(
+    result.final_answer.payload.user_facing_answer_de,
+    /John Frieda Frizz Ease Wunder-Reparatur Conditioner/,
+  )
+  assert.match(result.final_answer.payload.user_facing_answer_de, /aktuellen Conditioner/)
+})
+
+test("AgentV2 runtime keeps current dry shampoo identity separate from regular shampoo", async () => {
+  const client = fakeResponsesClientWithOutputs([])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Weißt du welches Trockenshampoo ich aktuell benutze?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [
+        {
+          category: "shampoo",
+          product_name: "Balea Aqua Shampoo",
+          match_status: "matched",
+        },
+        {
+          category: "dry_shampoo",
+          product_name: "Batiste Blush Trockenshampoo",
+          match_status: "matched",
+        },
+      ],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(client.requests.length, 0)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Batiste Blush/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /aktuelles Trockenshampoo/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Balea Aqua/)
+})
+
+test("AgentV2 runtime does not answer dry shampoo identity from regular shampoo inventory", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Weißt du welches Trockenshampoo ich aktuell benutze?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [
+        {
+          category: "shampoo",
+          product_name: "Balea Aqua Shampoo",
+          match_status: "matched",
+        },
+      ],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.ok(client.requests.length > 0)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Balea Aqua/)
+})
+
+test("AgentV2 runtime does not let identity shortcut hijack recommendation phrasing", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  await runAgentV2ResponsesTurn({
+    client,
+    message: "Kennst du ein Shampoo, das ich aktuell benutzen sollte?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [
+        {
+          category: "shampoo",
+          product_name: "Balea Aqua Shampoo",
+          match_status: "matched",
+        },
+      ],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.ok(client.requests.length > 0)
+})
+
+test("AgentV2 runtime does not let identity shortcut hijack replacement requests", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  await runAgentV2ResponsesTurn({
+    client,
+    message: "Weißt du welches Shampoo ich benutze und kannst du es ersetzen?",
+    recentMessages: [],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [
+        {
+          category: "shampoo",
+          product_name: "Balea Aqua Shampoo",
+          match_status: "matched",
+        },
+      ],
+      sessionMemory: [],
+    },
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.ok(client.requests.length > 0)
+})
+
+test("AgentV2 runtime guides current routine product fit follow-ups through lookup", async () => {
+  const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
+
+  await runAgentV2ResponsesTurn({
+    client,
+    message: "und passt das zu mir?",
+    recentMessages: [
+      {
+        role: "assistant",
+        content:
+          "Ja, ich sehe **Renewing Argan Oil of Morocco Shampoo** als dein aktuelles Shampoo in deiner Routine.",
+      },
+    ],
+    userContext: {
+      hairProfile: null,
+      routineInventory: [
+        {
+          category: "shampoo",
+          product_name: "Renewing Argan Oil of Morocco Shampoo",
+          match_status: "matched",
+        },
+      ],
+      sessionMemory: [],
+    },
+    productIntakeEnabled: true,
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.ok(client.requests.length > 0)
+  const firstInput = getInputItems(client.requests[0])
+  const routineProductContextItem = firstInput
+    .map(asRecord)
+    .find((item) =>
+      String(item?.content ?? "").includes("Current routine product follow-up context"),
+    )
+  const content = String(routineProductContextItem?.content ?? "")
+  assert.match(content, /Renewing Argan Oil of Morocco Shampoo/)
+  assert.match(content, /lookup_product_candidate/)
+  assert.match(content, /product_detail/)
+  assert.match(content, /do not answer as if the product identity is unknown/i)
+})
+
 test("AgentV2 runtime places active resolved product reminder after follow-up message", async () => {
   const client = fakeResponsesClientWithOutputs([terminalGeneralAdvice("call_1")])
 
@@ -2787,7 +3140,7 @@ test("AgentV2 runtime fallback answers active resolved product follow-ups withou
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Welche genaue Variante/i)
 })
 
-test("AgentV2 runtime fallback handles active resolved product fit follow-ups without inventing fit", async () => {
+test("AgentV2 runtime fallback answers resolved product fit follow-ups without generic clarification", async () => {
   const client = fakeResponsesClientWithOutputs([
     guidanceCall("call_1", {
       answer_mode_hint: "general_advice",
@@ -2798,11 +3151,11 @@ test("AgentV2 runtime fallback handles active resolved product fit follow-ups wi
       "select_products",
       selectProductsArguments({
         category: "shampoo",
-        user_request: "passt das zu meinem Frizz?",
+        user_request: "Okay ja kannst du mir kurz sagen ob das zu mir passt?",
         product_request_kind: "product_detail",
         requested_product_count: 1,
         count_policy: "none",
-        evidence_quote: "passt das zu meinem Frizz?",
+        evidence_quote: "ob das zu mir passt",
       }),
     ),
     functionCall("call_3", "lookup_product_candidate", {
@@ -2838,7 +3191,7 @@ test("AgentV2 runtime fallback handles active resolved product fit follow-ups wi
 
   const result = await runAgentV2ResponsesTurn({
     client,
-    message: "passt das zu meinem Frizz?",
+    message: "Okay ja kannst du mir kurz sagen ob das zu mir passt?",
     recentMessages: [
       {
         role: "user",
@@ -2875,9 +3228,41 @@ test("AgentV2 runtime fallback handles active resolved product fit follow-ups wi
 
   assert.equal(result.trace.failure_stage, "repair_failed")
   assert.match(result.final_answer.payload.user_facing_answer_de, /Syoss Intense Curls/)
-  assert.match(result.final_answer.payload.user_facing_answer_de, /nicht abschließend bewerten/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /nicht zuverlässig/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /nicht sicher, was du/i)
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Intense Volume/)
   assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /passt gut/i)
+})
+
+test("AgentV2 runtime fallback asks which recent recommendation a fit follow-up means", async () => {
+  const client = fakeResponsesClientWithOutputs([
+    rawFunctionCall("call_1", "submit_final_answer", "{}"),
+    rawFunctionCall("call_2", "submit_final_answer", "{}"),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Okay ja kannst du mir kurz sagen ob das zu mir passt?",
+    recentMessages: [
+      {
+        role: "assistant",
+        content:
+          "Ich würde dir diese Shampoos anschauen: **Balea Professional Tiefenreinigung Shampoo**, **OGX Coconut Curls Shampoo** und **Neqi Repair Reveal Shampoo**.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    productIntakeEnabled: true,
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, "repair_failed")
+  assert.equal(result.final_answer.answer_mode, "clarification")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Meinst du eines/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Balea Professional/)
+  assert.match(result.final_answer.payload.user_facing_answer_de, /OGX Coconut Curls/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /nicht sicher, was du/i)
+  assert.deepEqual(result.final_answer.payload.missing_keys, ["product_identity"])
+  assert.deepEqual(result.final_answer.tool_grounding.product_ids, [])
 })
 
 test("AgentV2 runtime repairs trusted selected product unverified caveat", async () => {
@@ -4981,6 +5366,12 @@ test("AgentV2 runtime repairs incomplete visible payload prose as terminal-only"
     "visible_payload_not_rendered",
   )
   assert.equal(result.trace.tool_calls.filter((call) => call.name === "select_products").length, 1)
+  const repairInput = getInputItems(client.requests[3])
+  const serializedRepairInput = JSON.stringify(repairInput)
+  assert.match(serializedRepairInput, /visible_payload_not_rendered/)
+  assert.match(serializedRepairInput, /Recompose payload\.user_facing_answer_de/)
+  assert.match(serializedRepairInput, /existing payload only/)
+  assert.match(serializedRepairInput, /Do not invent claims/)
 })
 
 test("AgentV2 runtime blocks unknown tool calls", async () => {
@@ -5024,6 +5415,34 @@ test("AgentV2 runtime returns safe fallback when no terminal answer is produced"
 
   assert.equal(result.trace.failure_stage, "missing_terminal_answer")
   assert.equal(result.final_answer.answer_mode, "clarification")
+})
+
+test("AgentV2 runtime acknowledges active resolved product category clarification without generic fallback", async () => {
+  const result = await runAgentV2ResponsesTurn({
+    client: fakeResponsesClientWithOutputs([{ type: "message", content: [] }]),
+    message: "das Shampoo",
+    recentMessages: [
+      {
+        role: "assistant",
+        content:
+          "Du benutzt aktuell **Syoss Intense Volume Shampoo** und den **Jean&Len Colorglow Granatapfel Rose Conditioner**.",
+      },
+    ],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    activeResolvedProductContext: {
+      source: "routine_inventory",
+      product_id: "syoss-intense-volume-shampoo",
+      name: "Syoss Intense Volume Shampoo",
+      category: "shampoo",
+      original_user_message: "Weißt du welches Produkt ich gerade benutze?",
+    },
+    productIntakeEnabled: true,
+    tools: fakeAgentV2Tools(),
+  })
+
+  assert.equal(result.trace.failure_stage, "missing_terminal_answer")
+  assert.match(result.final_answer.payload.user_facing_answer_de, /Syoss Intense Volume Shampoo/)
+  assert.doesNotMatch(result.final_answer.payload.user_facing_answer_de, /Formulier/)
 })
 
 test("AgentV2 runtime keeps restricted safety fallback when no terminal answer is produced", async () => {
@@ -5649,15 +6068,19 @@ test("AgentV2 runtime passes structured validation repair details back to the mo
   })
 
   assert.equal(result.trace.failure_stage, null)
-  const repairInput = getInputItems(client.requests[2])
-  const serializedRepairInput = JSON.stringify(repairInput)
-  assert.match(serializedRepairInput, /request_interpretation_evidence/)
-  assert.match(serializedRepairInput, /rejected_value/)
-  assert.match(serializedRepairInput, /suggested_value/)
-  assert.match(serializedRepairInput, /Was hilft gegen Frizz bei meinem Haarprofil/)
+  assert.equal(result.trace.repair_attempts.length, 0)
+  assert.equal(
+    result.final_answer.request_interpretation.evidence_quote,
+    "Was hilft gegen Frizz bei meinem Haarprofil?",
+  )
+  assert.ok(
+    result.trace.validation_warnings.some(
+      (warning) => warning.validator_id === "request_interpretation_evidence_sanitized",
+    ),
+  )
 })
 
-test("AgentV2 runtime repairs visible follow-up offers without hidden pending state", async () => {
+test("AgentV2 runtime fills visible follow-up offers without hidden pending state", async () => {
   const badFollowupOfferAnswer = terminalGeneralAdviceWithOverrides("call_1", {
     request_interpretation: {
       primary_intent: "general_advice",
@@ -5724,14 +6147,23 @@ test("AgentV2 runtime repairs visible follow-up offers without hidden pending st
   })
 
   assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.trace.repair_attempts.length, 0)
   assert.equal(result.final_answer.answer_mode, "general_advice")
   if (result.final_answer.answer_mode === "general_advice") {
     assert.equal(result.final_answer.payload.next_step_offer_de, null)
   }
-  const repairInput = getInputItems(client.requests[2])
-  const serializedRepairInput = JSON.stringify(repairInput)
-  assert.match(serializedRepairInput, /pending_followup_action_missing/)
-  assert.match(serializedRepairInput, /do not repeat or rephrase a confirmable next-step offer/)
+  assert.deepEqual(result.final_answer.pending_followup_action, {
+    kind: "advisor_response",
+    category: "leave_in",
+    routine_layer: null,
+    routine_action: null,
+    source: "assistant_offer",
+  })
+  assert.ok(
+    result.trace.validation_warnings.some(
+      (warning) => warning.reason_code === "pending_followup_action_filled",
+    ),
+  )
 })
 
 test("AgentV2 runtime sanitizes evidence metadata after one failed repair when answer is otherwise valid", async () => {

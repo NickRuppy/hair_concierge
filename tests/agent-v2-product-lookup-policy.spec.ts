@@ -25,7 +25,7 @@ test("Agent V2 product lookup policy maps not_found to intake-card handoff", () 
   assert.deepEqual(getAgentV2ProductLookupAssistantGuidance("not_found"), {
     pending_ui_action: "product_intake_card",
     assistant_instruction_de:
-      "Dieses Produkt ist noch nicht in der Datenbank. Erkläre kurz und natürlich, dass es zur Prüfung hinzugefügt werden kann, ohne es fachlich zu bewerten.",
+      "Dieses Produkt ist noch nicht in der Datenbank. Erkläre im ersten Absatz kurz und natürlich, dass der Nutzer es unten in der Karte eingeben oder hochladen kann, damit Chaarlie es genauer prüfen kann. Bewerte das konkrete Produkt nicht fachlich; wenn hilfreich, darfst du danach höchstens eine grobe Kategorie- oder Profil-Einordnung geben.",
   })
   assert.equal(isAgentV2ProductLookupUnresolvedStatus("not_found"), true)
   assert.equal(agentV2ProductLookupStatusBlocksProductSpecificAnswer("not_found"), true)

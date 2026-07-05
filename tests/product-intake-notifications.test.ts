@@ -38,15 +38,18 @@ function createNotificationSupabaseFake(
     existingMessageId?: string | null
     messageInsertError?: { code?: string; message: string } | null
     messageInsertId?: string | null
+    stateUpsertError?: { message: string } | null
     conversationUpdateError?: { message: string } | null
+    specRowsByTable?: Record<string, unknown[]>
   } = {},
 ) {
   const calls: string[] = []
   const insertedMessages: Array<Record<string, unknown>> = []
+  const upsertedStates: Array<Record<string, unknown>> = []
 
   class Query {
     private readonly table: string
-    private operation: "insert" | "select" | "update" | null = null
+    private operation: "insert" | "select" | "update" | "upsert" | null = null
     private selected = false
 
     constructor(table: string) {
@@ -58,6 +61,15 @@ function createNotificationSupabaseFake(
       calls.push(`insert:${this.table}`)
       if (this.table === "messages" && payload) {
         insertedMessages.push(payload)
+      }
+      return this
+    }
+
+    upsert(payload?: Record<string, unknown>) {
+      this.operation = "upsert"
+      calls.push(`upsert:${this.table}`)
+      if (this.table === "conversation_states" && payload) {
+        upsertedStates.push(payload)
       }
       return this
     }
@@ -128,6 +140,17 @@ function createNotificationSupabaseFake(
     }
 
     async then(resolve: (value: { data: unknown; error: { message: string } | null }) => unknown) {
+      if (this.table.startsWith("product_") && this.table.endsWith("_specs")) {
+        return resolve({
+          data: options.specRowsByTable?.[this.table] ?? [{ product_id: "product-1" }],
+          error: null,
+        })
+      }
+
+      if (this.table === "conversation_states" && this.operation === "upsert") {
+        return resolve({ data: null, error: options.stateUpsertError ?? null })
+      }
+
       if (this.table === "product_submissions" && this.operation === "update" && !this.selected) {
         calls.push("release:product_submissions")
         return resolve({ data: null, error: null })
@@ -144,11 +167,28 @@ function createNotificationSupabaseFake(
   return {
     calls,
     insertedMessages,
+    upsertedStates,
     from(table: string) {
       return new Query(table)
     },
   }
 }
+
+test("approved review notification skips without required category specs", async () => {
+  const supabase = createNotificationSupabaseFake({
+    specRowsByTable: { product_mask_specs: [] },
+  })
+
+  const result = await sendProductIntakeReviewNotification(
+    supabase as never,
+    notificationSubmission(),
+  )
+
+  assert.deepEqual(result, { sent: false, reason: "no_message_needed" })
+  assert.ok(!supabase.calls.includes("claim:product_submissions"))
+  assert.ok(!supabase.calls.includes("insert:messages"))
+  assert.ok(!supabase.calls.includes("upsert:conversation_states"))
+})
 
 test("review notification claims before inserting assistant message", async () => {
   const supabase = createNotificationSupabaseFake({ claimSucceeds: false })
@@ -159,7 +199,8 @@ test("review notification claims before inserting assistant message", async () =
   )
 
   assert.deepEqual(result, { sent: false, reason: "already_sent" })
-  assert.equal(supabase.calls[0], "update:product_submissions")
+  assert.equal(supabase.calls[0], "select:product_mask_specs")
+  assert.ok(supabase.calls.indexOf("claim:product_submissions") > 0)
   assert.ok(!supabase.calls.includes("insert:messages"))
 })
 
@@ -178,6 +219,7 @@ test("review notification retries when sent timestamp exists without matching me
   })
   assert.ok(supabase.calls.includes("select:messages"))
   assert.ok(supabase.calls.includes("insert:messages"))
+  assert.ok(supabase.calls.includes("upsert:conversation_states"))
   assert.ok(!supabase.calls.includes("claim:product_submissions"))
   assert.match(String(supabase.insertedMessages[0]?.id), /^[0-9a-f-]{36}$/)
 })
@@ -194,6 +236,22 @@ test("review notification releases sent claim when message insert fails", async 
 
   assert.ok(supabase.calls.includes("claim:product_submissions"))
   assert.ok(supabase.calls.includes("insert:messages"))
+  assert.ok(supabase.calls.includes("release:product_submissions"))
+})
+
+test("review notification does not send success message when resolved product context cannot persist", async () => {
+  const supabase = createNotificationSupabaseFake({
+    stateUpsertError: { message: "state write failed" },
+  })
+
+  await assert.rejects(
+    () => sendProductIntakeReviewNotification(supabase as never, notificationSubmission()),
+    /state write failed/,
+  )
+
+  assert.ok(supabase.calls.includes("claim:product_submissions"))
+  assert.ok(supabase.calls.includes("upsert:conversation_states"))
+  assert.ok(!supabase.calls.includes("insert:messages"))
   assert.ok(supabase.calls.includes("release:product_submissions"))
 })
 
