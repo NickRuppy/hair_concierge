@@ -58,7 +58,7 @@ function lockAgeMinutes(lockedAt: string): number {
 function nextActionFor(status: string, attemptCount = 0, maxAttempts = 0): string {
   const attemptsExhausted = maxAttempts > 0 && attemptCount >= maxAttempts
 
-  if (attemptsExhausted && status !== "done" && status !== "cancelled") {
+  if (attemptsExhausted && !["done", "cancelled", "waiting_for_review"].includes(status)) {
     return "Versuche aufgebraucht"
   }
 

@@ -1038,6 +1038,7 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /final_review_url/)
   assert.match(workerScript, /qa_review_url/)
   assert.match(workerScript, /chaarlie_neutral_background/)
+  assert.doesNotMatch(workerScript, /image\/avif,image\/webp,image\/png,image\/jpeg/)
   assert.match(workerScript, /finalizeProductImageAsset/)
   assert.match(workerScript, /Codex CLI research was not executed/)
   assert.match(workerScript, /expectedLockedBy: job\.locked_by/)
@@ -1257,6 +1258,11 @@ test("review decisions validate image and publish field paths", () => {
 })
 
 test("queue overview keeps active and completed submissions filterable", () => {
+  assert.match(queueRouteSource, /waiting_for_review/)
+  assert.match(
+    queueRouteSource,
+    /!\["done", "cancelled", "waiting_for_review"\]\.includes\(status\)/,
+  )
   assert.match(queuePageSource, /type QueueFilter = "active" \| "done" \| "all"/)
   assert.match(queuePageSource, /const completedSubmissionStatuses = new Set/)
   assert.match(queuePageSource, /isCompletedQueueRow/)

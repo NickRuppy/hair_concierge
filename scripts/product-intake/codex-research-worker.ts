@@ -428,7 +428,9 @@ async function processApprovedImageForReview(params: {
 
   const response = await fetch(sourceImageUrl, {
     headers: {
-      accept: "image/avif,image/webp,image/png,image/jpeg,*/*;q=0.8",
+      // Some CDNs serve AVIF/HEIF variants for .jpg URLs when asked, and the
+      // local Sharp/libvips build can read metadata but fail during pixel decode.
+      accept: "image/jpeg,image/png,image/webp,*/*;q=0.8",
       "user-agent": "ChaarlieProductIntakeReview/1.0",
     },
   })
