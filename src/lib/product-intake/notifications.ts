@@ -51,6 +51,9 @@ export type ProductIntakeReviewRagContext = Partial<MessageRagContext> & {
     submission_id: string
     status: ProductSubmissionForNotification["status"]
     approved_product_id: string | null
+    category: ProductSubmissionForNotification["category"]
+    brand_text: string | null
+    product_name_text: string | null
   }
   product_intake_offer?: ProductIntakeOffer
 }
@@ -144,6 +147,9 @@ export function buildProductIntakeReviewRagContext(
       submission_id: submission.id,
       status: submission.status,
       approved_product_id: submission.approved_product_id,
+      category: submission.category,
+      brand_text: submission.brand_text,
+      product_name_text: submission.product_name_text,
     },
   }
 

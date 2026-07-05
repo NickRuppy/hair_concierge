@@ -1423,6 +1423,101 @@ test("chat route persists pending product context after product intake submissio
   assert.equal(transition.next_state?.agent_v2?.active_resolved_product_context, null)
 })
 
+test("chat route persists submission linkage into the offer message rag context", async () => {
+  const fake = createFakeRepository({ conversationIds: [CONVERSATION_ID] })
+  const MESSAGE_ID = "0f1e2d3c-4b5a-6978-8796-a5b4c3d2e1f0"
+  const messageRow = {
+    id: MESSAGE_ID,
+    conversation_id: CONVERSATION_ID,
+    rag_context: {
+      sources: [],
+      product_intake_offer: {
+        id: "offer-1",
+        source: "chat",
+        reason: "product_lookup_not_found",
+        category: "conditioner",
+      },
+    },
+  }
+  const messageUpdates: Array<Record<string, unknown>> = []
+  const fakeAdmin = {
+    from: (table: string) => {
+      if (table === "conversations") {
+        return {
+          select: () => ({
+            eq: () => ({
+              eq: () => ({
+                maybeSingle: async () => ({ data: { id: CONVERSATION_ID }, error: null }),
+              }),
+            }),
+          }),
+        }
+      }
+      if (table === "messages") {
+        return {
+          select: () => ({
+            eq: () => ({
+              eq: () => ({
+                maybeSingle: async () => ({ data: messageRow, error: null }),
+              }),
+            }),
+          }),
+          update: (values: Record<string, unknown>) => {
+            messageUpdates.push(values)
+            return {
+              eq: () => ({
+                eq: async () => ({ error: null }),
+              }),
+            }
+          },
+        }
+      }
+      throw new Error(`Unexpected table: ${table}`)
+    },
+  }
+  const handler = createProductIntakePostHandler("chat", {
+    isEnabled: () => true,
+    createServerClient: async () =>
+      ({
+        auth: {
+          getUser: async () => ({
+            data: { user: { id: USER_ID } },
+          }),
+        },
+      }) as never,
+    createAdminClient: (() => fakeAdmin) as never,
+    createRepository: () => fake.repository,
+    loadConversationState: async () => createDefaultAgentV2ConversationState(),
+    persistConversationStateTransition: async () => ({ status: "persisted", error: null }),
+    now: () => "2026-07-06T08:00:00.000Z",
+  })
+
+  const response = await handler(
+    new Request("https://example.test/api/product-intake/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        intake_method: "manual",
+        category: "conditioner",
+        frequency_range: "weekly_3_4x",
+        brand_text: "Jean & Lean",
+        product_name_text: "Mystery Rose Conditioner",
+        source_conversation_id: CONVERSATION_ID,
+        source_message_id: MESSAGE_ID,
+        offer_id: "offer-1",
+      }),
+    }),
+  )
+  const body = await response.json()
+
+  assert.equal(response.status, 202)
+  assert.equal(messageUpdates.length, 1)
+  const updatedRag = messageUpdates[0]?.rag_context as {
+    product_intake_offer?: { submission_id?: string; submitted_status?: string }
+  }
+  assert.equal(updatedRag?.product_intake_offer?.submission_id, body.submission.id)
+  assert.equal(updatedRag?.product_intake_offer?.submitted_status, "pending_review")
+})
+
 test("route handler returns controlled client error for wrong-user upload paths", async () => {
   const fake = createFakeRepository()
   const handler = createProductIntakePostHandler("onboarding", {

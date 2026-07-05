@@ -23,16 +23,30 @@ import {
 } from "@/lib/product-intake/client"
 import { PRODUCT_FREQUENCY_OPTIONS, type ProductFrequency } from "@/lib/vocabulary"
 import { useProductIntakeBrandOptions } from "@/hooks/use-product-intake-brand-options"
+import type { ProductIntakeOfferState } from "@/lib/chat/product-lookup-selection-ui"
 import type { ProductIntakeCategoryKey, ProductIntakeOffer } from "@/lib/types"
 
 type ProductIntakeCardProps = {
   offer: ProductIntakeOffer
   conversationId: string
+  sourceMessageId?: string | null
+  persistedState?: ProductIntakeOfferState | null
+  onSubmitted?: (result: {
+    status: ProductIntakeSubmittedStatus
+    submissionId: string | null
+    matchedProductId: string | null
+  }) => void
 }
 
 type ProductIntakeSubmittedStatus = "pending_review" | "matched"
 
-export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardProps) {
+export function ProductIntakeCard({
+  offer,
+  conversationId,
+  sourceMessageId,
+  persistedState,
+  onSubmitted,
+}: ProductIntakeCardProps) {
   const brandListId = useId()
   const [method, setMethod] = useState<ProductIntakeMethod>(offer.intake_method ?? "photo")
   const [category, setCategory] = useState<ProductIntakeCategoryKey | "">(offer.category ?? "")
@@ -173,6 +187,9 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
       barcodeImageValidationStatus,
       barcodeImageValidationMetadata,
       sourceConversationId: conversationId,
+      sourceMessageId:
+        sourceMessageId && !sourceMessageId.startsWith("temp-") ? sourceMessageId : null,
+      offerId: offer.id,
       existingUsageId: offer.existing_usage_id,
       existingSubmissionId: offer.submission_id,
       replaceExistingConfirmed,
@@ -201,7 +218,13 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
         throw new Error(body.error ?? "Produkt konnte nicht gespeichert werden.")
       }
 
-      setSubmittedStatus(body.status === "matched" ? "matched" : "pending_review")
+      const nextStatus = body.status === "matched" ? "matched" : "pending_review"
+      setSubmittedStatus(nextStatus)
+      onSubmitted?.({
+        status: nextStatus,
+        submissionId: body.submission?.id ?? body.usage?.product_submission_id ?? null,
+        matchedProductId: body.matched_product_id ?? body.usage?.product_id ?? null,
+      })
     } catch (submitError) {
       setError(
         submitError instanceof Error
@@ -213,8 +236,13 @@ export function ProductIntakeCard({ offer, conversationId }: ProductIntakeCardPr
     }
   }
 
-  if (submittedStatus) {
-    return <ProductIntakeSubmittedState status={submittedStatus} />
+  if (persistedState?.resolvedIntakeReview) {
+    return <ProductIntakeSubmittedState status="matched" />
+  }
+
+  const effectiveSubmittedStatus = submittedStatus ?? persistedState?.submittedStatus ?? null
+  if (effectiveSubmittedStatus) {
+    return <ProductIntakeSubmittedState status={effectiveSubmittedStatus} />
   }
 
   return (

@@ -20,7 +20,11 @@ import { CombIcon } from "@/components/ui/comb-icon"
 import { ProductCard } from "./product-card"
 import { ProductIntakeCard } from "./product-intake-card"
 import { ProductLookupClarificationCard } from "./product-lookup-clarification-card"
-import type { ProductSelectionParams } from "@/hooks/use-chat"
+import type { ProductIntakeSubmissionPatch, ProductSelectionParams } from "@/hooks/use-chat"
+import type {
+  ProductIntakeOfferState,
+  ProductLookupClarificationState,
+} from "@/lib/chat/product-lookup-selection-ui"
 
 /**
  * Renumbers [N] citation markers in content so they appear as [1], [2], [3]
@@ -92,6 +96,9 @@ interface ChatMessageProps {
   isNew?: boolean
   isStreamingMessage?: boolean
   resolvedProductLookupSelection?: ProductLookupSelectionContext | null
+  productLookupClarificationState?: ProductLookupClarificationState | null
+  productIntakeOfferState?: ProductIntakeOfferState | null
+  onProductIntakeSubmitted?: (patch: ProductIntakeSubmissionPatch) => void
 }
 
 /**
@@ -241,6 +248,9 @@ export function ChatMessage({
   isNew,
   isStreamingMessage = false,
   resolvedProductLookupSelection = null,
+  productLookupClarificationState = null,
+  productIntakeOfferState = null,
+  onProductIntakeSubmitted,
 }: ChatMessageProps) {
   const isUser = message.role === "user"
 
@@ -379,6 +389,16 @@ export function ChatMessage({
           <ProductIntakeCard
             offer={message.rag_context.product_intake_offer}
             conversationId={message.conversation_id}
+            sourceMessageId={message.id}
+            persistedState={productIntakeOfferState}
+            onSubmitted={(result) =>
+              onProductIntakeSubmitted?.({
+                messageId: message.id,
+                offerId: message.rag_context?.product_intake_offer?.id ?? "",
+                submissionId: result.submissionId,
+                status: result.status,
+              })
+            }
           />
         ) : null}
 
@@ -388,8 +408,21 @@ export function ChatMessage({
             conversationId={message.conversation_id}
             assistantMessageId={message.id}
             selectionDisabled={isStreamingMessage}
-            resolvedSelection={resolvedProductLookupSelection}
+            resolvedSelection={
+              productLookupClarificationState?.resolvedSelection ?? resolvedProductLookupSelection
+            }
+            resolvedIntakeReview={productLookupClarificationState?.resolvedIntakeReview ?? null}
             onSelectProduct={selectProductFromClarification}
+            onIntakeSubmitted={(result) =>
+              onProductIntakeSubmitted?.({
+                messageId: message.id,
+                offerId:
+                  message.rag_context?.product_lookup_clarification?.none_action
+                    .product_intake_offer.id ?? "",
+                submissionId: result.submissionId,
+                status: result.status,
+              })
+            }
           />
         ) : null}
 

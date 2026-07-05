@@ -101,12 +101,16 @@ export const chatProductIntakeSubmissionSchema = z
   .discriminatedUnion("intake_method", [
     manualProductIntakeBaseSchema.extend({
       source_conversation_id: uuidString.optional(),
+      source_message_id: uuidString.optional(),
+      offer_id: z.string().min(1).optional(),
       existing_usage_id: uuidString.optional(),
       existing_submission_id: uuidString.optional(),
     }),
     photoProductIntakeBaseSchema.extend({
       front_image_path: uploadPathString.optional(),
       source_conversation_id: uuidString.optional(),
+      source_message_id: uuidString.optional(),
+      offer_id: z.string().min(1).optional(),
       existing_usage_id: uuidString.optional(),
       existing_submission_id: uuidString.optional(),
     }),

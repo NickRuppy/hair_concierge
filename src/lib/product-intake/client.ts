@@ -22,8 +22,16 @@ export type ProductIntakeResponseBody = {
   status?: "matched" | "pending_review"
   validation_status?: string
   validation_metadata?: ProductIntakeValidationMetadata
+  submission?: {
+    id?: string
+    status?: "pending_review"
+    category?: ProductIntakeCategoryKey
+  } | null
+  matched_product_id?: string | null
   usage?: {
     id?: string
+    product_id?: string | null
+    product_submission_id?: string | null
     front_image_path?: string | null
   }
 }
@@ -150,6 +158,8 @@ export function buildProductIntakeSubmissionPayload(params: {
   barcodeImageValidationStatus?: string | null
   barcodeImageValidationMetadata?: ProductIntakeValidationMetadata
   sourceConversationId?: string | null
+  sourceMessageId?: string | null
+  offerId?: string | null
   existingUsageId?: string | null
   existingSubmissionId?: string | null
   replaceExistingConfirmed?: boolean
@@ -160,6 +170,8 @@ export function buildProductIntakeSubmissionPayload(params: {
     ...(params.brandId ? { brand_id: params.brandId } : {}),
     ...(params.productLineId ? { product_line_id: params.productLineId } : {}),
     ...(params.sourceConversationId ? { source_conversation_id: params.sourceConversationId } : {}),
+    ...(params.sourceMessageId ? { source_message_id: params.sourceMessageId } : {}),
+    ...(params.offerId ? { offer_id: params.offerId } : {}),
     ...(params.existingUsageId ? { existing_usage_id: params.existingUsageId } : {}),
     ...(params.existingSubmissionId ? { existing_submission_id: params.existingSubmissionId } : {}),
     ...(params.replaceExistingConfirmed ? { replace_existing_confirmed: true } : {}),

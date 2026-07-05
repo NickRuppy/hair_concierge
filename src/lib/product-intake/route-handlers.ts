@@ -114,6 +114,12 @@ export function createProductIntakePostHandler(
           persistConversationStateTransition: deps.persistConversationStateTransition,
           now: deps.now,
         })
+        await persistChatProductIntakeOfferSubmission({
+          admin,
+          userId: user.id,
+          input: parsed.data as ChatProductIntakeSubmissionInput,
+          result,
+        })
       }
 
       return NextResponse.json(result, { status: result.status === "matched" ? 200 : 202 })
@@ -147,6 +153,95 @@ export function createProductIntakePostHandler(
         { status: 500 },
       )
     }
+  }
+}
+
+type OfferSubmissionMessageRow = {
+  id: string
+  conversation_id: string
+  rag_context: Record<string, unknown> | null
+}
+
+async function persistChatProductIntakeOfferSubmission(params: {
+  admin: ReturnType<typeof createAdminClient>
+  userId: string
+  input: ChatProductIntakeSubmissionInput
+  result: ProductIntakeSubmissionResult
+}): Promise<void> {
+  const conversationId = params.input.source_conversation_id ?? null
+  const messageId = params.input.source_message_id ?? null
+  const offerId = params.input.offer_id ?? null
+  if (!conversationId || !messageId || !offerId) return
+
+  const submittedStatus = params.result.status === "matched" ? "matched" : "pending_review"
+  const submissionId = params.result.submission?.id ?? null
+  if (submittedStatus === "pending_review" && !submissionId) return
+
+  try {
+    const { data: conversation } = await params.admin
+      .from("conversations")
+      .select("id")
+      .eq("id", conversationId)
+      .eq("user_id", params.userId)
+      .maybeSingle()
+    if (!conversation) return
+
+    const { data } = await params.admin
+      .from("messages")
+      .select("id, conversation_id, rag_context")
+      .eq("id", messageId)
+      .eq("conversation_id", conversationId)
+      .maybeSingle()
+    const message = data as OfferSubmissionMessageRow | null
+    if (!message) return
+
+    const rag = (message.rag_context ?? {}) as {
+      product_intake_offer?: { id?: string } & Record<string, unknown>
+      product_lookup_clarification?: {
+        none_action?: { product_intake_offer?: { id?: string } & Record<string, unknown> }
+      } & Record<string, unknown>
+    }
+    const submissionFields = {
+      ...(submissionId ? { submission_id: submissionId } : {}),
+      submitted_status: submittedStatus,
+    }
+
+    let nextRag: Record<string, unknown> | null = null
+    if (rag.product_intake_offer?.id === offerId) {
+      nextRag = {
+        ...rag,
+        product_intake_offer: { ...rag.product_intake_offer, ...submissionFields },
+      }
+    } else if (
+      rag.product_lookup_clarification?.none_action?.product_intake_offer?.id === offerId
+    ) {
+      const clarification = rag.product_lookup_clarification
+      nextRag = {
+        ...rag,
+        product_lookup_clarification: {
+          ...clarification,
+          none_action: {
+            ...clarification.none_action,
+            product_intake_offer: {
+              ...clarification.none_action?.product_intake_offer,
+              ...submissionFields,
+            },
+          },
+        },
+      }
+    }
+    if (!nextRag) return
+
+    const { error } = await params.admin
+      .from("messages")
+      .update({ rag_context: nextRag })
+      .eq("id", messageId)
+      .eq("conversation_id", conversationId)
+    if (error) {
+      console.error("[product-intake] failed to persist offer submission linkage", error)
+    }
+  } catch (error) {
+    console.error("[product-intake] failed to persist offer submission linkage", error)
   }
 }
 

@@ -16,7 +16,10 @@ import { ArrowDown, Menu } from "lucide-react"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { Icon } from "@/components/ui/icon"
 import type { Product } from "@/lib/types"
-import { buildResolvedProductLookupSelectionByMessageId } from "@/lib/chat/product-lookup-selection-ui"
+import {
+  buildProductIntakeOfferStateByMessageId,
+  buildProductLookupClarificationStateByMessageId,
+} from "@/lib/chat/product-lookup-selection-ui"
 
 const JUMP_TO_LATEST_THRESHOLD_PX = 80
 const USER_OVERRIDE_DISTANCE_PX = 200
@@ -36,12 +39,17 @@ export function ChatContainer() {
     loadConversations,
     deleteConversation,
     startNewConversation,
+    applyProductIntakeSubmission,
   } = useChat()
 
   const { hairProfile } = useHairProfile()
   const suggestedPrompts = useMemo(() => generateSuggestedPrompts(hairProfile), [hairProfile])
-  const resolvedProductLookupSelectionByMessageId = useMemo(
-    () => buildResolvedProductLookupSelectionByMessageId(messages),
+  const productLookupClarificationStateByMessageId = useMemo(
+    () => buildProductLookupClarificationStateByMessageId(messages),
+    [messages],
+  )
+  const productIntakeOfferStateByMessageId = useMemo(
+    () => buildProductIntakeOfferStateByMessageId(messages),
     [messages],
   )
 
@@ -587,9 +595,11 @@ export function ChatContainer() {
                       isStreamingMessage={
                         isStreaming && idx === messages.length - 1 && msg.role === "assistant"
                       }
-                      resolvedProductLookupSelection={resolvedProductLookupSelectionByMessageId.get(
+                      productLookupClarificationState={productLookupClarificationStateByMessageId.get(
                         msg.id,
                       )}
+                      productIntakeOfferState={productIntakeOfferStateByMessageId.get(msg.id)}
+                      onProductIntakeSubmitted={applyProductIntakeSubmission}
                     />
                   </div>
                 )

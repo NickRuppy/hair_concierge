@@ -4,8 +4,9 @@ import { useState } from "react"
 import { Check, Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import type { ProductLookupIntakeReviewResolution } from "@/lib/chat/product-lookup-selection-ui"
 import type { ProductLookupClarification, ProductLookupSelectionContext } from "@/lib/types"
-import { ProductIntakeCard } from "./product-intake-card"
+import { ProductIntakeCard, ProductIntakeSubmittedState } from "./product-intake-card"
 
 type ProductLookupClarificationCardProps = {
   clarification: ProductLookupClarification
@@ -18,6 +19,12 @@ type ProductLookupClarificationCardProps = {
   assistantMessageId?: string
   selectionDisabled?: boolean
   resolvedSelection?: ProductLookupSelectionContext | null
+  resolvedIntakeReview?: ProductLookupIntakeReviewResolution | null
+  onIntakeSubmitted?: (result: {
+    status: "pending_review" | "matched"
+    submissionId: string | null
+    matchedProductId: string | null
+  }) => void
 }
 
 export function ProductLookupClarificationCard({
@@ -27,16 +34,31 @@ export function ProductLookupClarificationCard({
   assistantMessageId,
   selectionDisabled = false,
   resolvedSelection = null,
+  resolvedIntakeReview = null,
+  onIntakeSubmitted,
 }: ProductLookupClarificationCardProps) {
   const [showIntake, setShowIntake] = useState(false)
   const [selectingProductId, setSelectingProductId] = useState<string | null>(null)
   const [submittedProductId, setSubmittedProductId] = useState<string | null>(null)
+  const persistedIntakeStatus = clarification?.none_action?.product_intake_offer?.submitted_status
+  const [submittedIntakeStatus, setSubmittedIntakeStatus] = useState<
+    "pending_review" | "matched" | null
+  >(persistedIntakeStatus ?? null)
   const [selectionError, setSelectionError] = useState<string | null>(null)
   const selectedProductId =
     resolvedSelection?.clarification_id === clarification.id
       ? resolvedSelection.selected_product_id
       : null
-  const hasLockedSelection = Boolean(selectedProductId || submittedProductId || selectingProductId)
+  const intakeLockStatus: "pending_review" | "matched" | null = resolvedIntakeReview
+    ? "matched"
+    : submittedIntakeStatus
+  const hasLockedSelection = Boolean(
+    selectedProductId ||
+    submittedProductId ||
+    selectingProductId ||
+    submittedIntakeStatus ||
+    resolvedIntakeReview,
+  )
 
   const canSelect =
     Boolean(onSelectProduct) &&
@@ -83,47 +105,53 @@ export function ProductLookupClarificationCard({
     <div className="w-full min-w-0 rounded-2xl border border-border/80 bg-card p-4 shadow-sm">
       <p className="text-sm leading-relaxed text-foreground">{clarification.copy.prompt_de}</p>
 
-      <div className="mt-3 space-y-2">
-        {clarification.candidates.map((candidate) => {
-          const isSelected = candidate.product_id === selectedProductId
-          const isSubmitted = candidate.product_id === submittedProductId
+      {intakeLockStatus ? (
+        <div className="mt-3">
+          <ProductIntakeSubmittedState status={intakeLockStatus} />
+        </div>
+      ) : (
+        <div className="mt-3 space-y-2">
+          {clarification.candidates.map((candidate) => {
+            const isSelected = candidate.product_id === selectedProductId
+            const isSubmitted = candidate.product_id === submittedProductId
 
-          return (
-            <div
-              key={candidate.product_id}
-              className={`flex min-w-0 items-center gap-3 rounded-xl border p-3 ${
-                isSelected
-                  ? "border-primary/50 bg-[var(--brand-plum-ice)]"
-                  : "border-border bg-background"
-              }`}
-            >
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-[var(--text-heading)]">
-                  {candidate.name}
-                </p>
-                <span className="mt-1 inline-flex max-w-full items-center rounded-full bg-[var(--brand-plum-ice)] px-2 py-0.5 text-[11px] font-medium text-primary">
-                  {candidate.category_label_de}
-                </span>
-              </div>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                disabled={!canSelect || selectingProductId !== null}
-                onClick={() => selectProduct(candidate.product_id)}
-                className="shrink-0 gap-1.5"
+            return (
+              <div
+                key={candidate.product_id}
+                className={`flex min-w-0 items-center gap-3 rounded-xl border p-3 ${
+                  isSelected
+                    ? "border-primary/50 bg-[var(--brand-plum-ice)]"
+                    : "border-border bg-background"
+                }`}
               >
-                <Check className="h-4 w-4" aria-hidden="true" />
-                {isSelected
-                  ? "Ausgewählt"
-                  : selectingProductId === candidate.product_id || isSubmitted
-                    ? "Wird ausgewählt"
-                    : "Auswählen"}
-              </Button>
-            </div>
-          )
-        })}
-      </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-[var(--text-heading)]">
+                    {candidate.name}
+                  </p>
+                  <span className="mt-1 inline-flex max-w-full items-center rounded-full bg-[var(--brand-plum-ice)] px-2 py-0.5 text-[11px] font-medium text-primary">
+                    {candidate.category_label_de}
+                  </span>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={!canSelect || selectingProductId !== null}
+                  onClick={() => selectProduct(candidate.product_id)}
+                  className="shrink-0 gap-1.5"
+                >
+                  <Check className="h-4 w-4" aria-hidden="true" />
+                  {isSelected
+                    ? "Ausgewählt"
+                    : selectingProductId === candidate.product_id || isSubmitted
+                      ? "Wird ausgewählt"
+                      : "Auswählen"}
+                </Button>
+              </div>
+            )
+          })}
+        </div>
+      )}
 
       {selectionError ? (
         <p className="mt-3 rounded-xl bg-destructive/10 px-3 py-2 text-sm text-destructive">
@@ -149,6 +177,12 @@ export function ProductLookupClarificationCard({
           <ProductIntakeCard
             offer={clarification.none_action.product_intake_offer}
             conversationId={conversationId}
+            sourceMessageId={assistantMessageId}
+            onSubmitted={(result) => {
+              setSubmittedIntakeStatus(result.status)
+              setShowIntake(false)
+              onIntakeSubmitted?.(result)
+            }}
           />
         </div>
       ) : null}

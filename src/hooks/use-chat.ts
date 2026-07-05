@@ -1,8 +1,11 @@
 "use client"
 
-import { useState, useCallback, useRef } from "react"
+import { useState, useCallback, useEffect, useMemo, useRef } from "react"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { hasPendingProductIntakeReview } from "@/lib/chat/product-lookup-selection-ui"
 import type { Message, Conversation } from "@/lib/types"
+
+const INTAKE_REVIEW_POLL_INTERVAL_MS = 20_000
 
 export type ProductSelectionParams = {
   conversationId: string
@@ -47,6 +50,7 @@ interface UseChatReturn {
   loadConversations: () => Promise<void>
   deleteConversation: (id: string) => Promise<void>
   startNewConversation: () => void
+  applyProductIntakeSubmission: (patch: ProductIntakeSubmissionPatch) => void
 }
 
 function redirectToAuthIfNeeded(response: Response): boolean {
@@ -258,6 +262,60 @@ export function applyChatStreamEventToMessages(
   }
 }
 
+export type ProductIntakeSubmissionPatch = {
+  messageId: string
+  offerId: string
+  submissionId: string | null
+  status: "pending_review" | "matched"
+}
+
+export function applyProductIntakeSubmissionToMessages(
+  messages: Message[],
+  patch: ProductIntakeSubmissionPatch,
+): Message[] {
+  return messages.map((message) => {
+    if (message.id !== patch.messageId || !message.rag_context) return message
+
+    const submissionFields = {
+      ...(patch.submissionId ? { submission_id: patch.submissionId } : {}),
+      submitted_status: patch.status,
+    }
+
+    const offer = message.rag_context.product_intake_offer
+    if (offer?.id === patch.offerId) {
+      return {
+        ...message,
+        rag_context: {
+          ...message.rag_context,
+          product_intake_offer: { ...offer, ...submissionFields },
+        },
+      }
+    }
+
+    const clarification = message.rag_context.product_lookup_clarification
+    if (clarification?.none_action?.product_intake_offer?.id === patch.offerId) {
+      return {
+        ...message,
+        rag_context: {
+          ...message.rag_context,
+          product_lookup_clarification: {
+            ...clarification,
+            none_action: {
+              ...clarification.none_action,
+              product_intake_offer: {
+                ...clarification.none_action.product_intake_offer,
+                ...submissionFields,
+              },
+            },
+          },
+        },
+      }
+    }
+
+    return message
+  })
+}
+
 export function useChat(): UseChatReturn {
   const [messages, setMessages] = useState<Message[]>([])
   const [isStreaming, setIsStreaming] = useState(false)
@@ -303,6 +361,38 @@ export function useChat(): UseChatReturn {
       console.error("Fehler beim Laden der Unterhaltung:", error)
     }
   }, [])
+
+  const awaitingIntakeReview = useMemo(() => hasPendingProductIntakeReview(messages), [messages])
+
+  const applyProductIntakeSubmission = useCallback((patch: ProductIntakeSubmissionPatch) => {
+    setMessages((prev) => applyProductIntakeSubmissionToMessages(prev, patch))
+  }, [])
+
+  useEffect(() => {
+    if (!currentConversationId || !awaitingIntakeReview || isStreaming) return
+
+    const conversationId = currentConversationId
+    let cancelled = false
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/chat/${conversationId}`)
+        if (cancelled || !res.ok) return
+        const data = await res.json()
+        const nextMessages = Array.isArray(data.messages) ? (data.messages as Message[]) : null
+        if (!nextMessages) return
+        setMessages((prev) =>
+          !cancelled && nextMessages.length > prev.length ? nextMessages : prev,
+        )
+      } catch {
+        // best-effort poll; next tick retries
+      }
+    }, INTAKE_REVIEW_POLL_INTERVAL_MS)
+
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+    }
+  }, [currentConversationId, awaitingIntakeReview, isStreaming])
 
   const deleteConversation = useCallback(
     async (id: string) => {
@@ -663,5 +753,6 @@ export function useChat(): UseChatReturn {
     loadConversations,
     deleteConversation,
     startNewConversation,
+    applyProductIntakeSubmission,
   }
 }

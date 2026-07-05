@@ -824,6 +824,14 @@ export interface MessageRagContext {
   engine_trace?: RecommendationEngineTrace | null
   response_mode?: ResponseMode | null
   product_intake_offer?: ProductIntakeOffer | null
+  product_intake_review?: {
+    submission_id: string
+    status: string
+    approved_product_id: string | null
+    category?: ProductIntakeCategoryKey | null
+    brand_text?: string | null
+    product_name_text?: string | null
+  } | null
   product_lookup_clarification?: ProductLookupClarification | null
   product_lookup_selection?: ProductLookupSelectionContext | null
 }
@@ -874,6 +882,7 @@ export interface ProductIntakeOffer {
   frequency_range?: ProductFrequency | null
   intake_method?: ProductIntakeMethod | null
   submission_id?: string
+  submitted_status?: "pending_review" | "matched" | null
   existing_usage_id?: string | null
   committed_front_image_path?: string | null
   committed_barcode_image_path?: string | null
