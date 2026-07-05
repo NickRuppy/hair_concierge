@@ -279,6 +279,24 @@ Local app:
 npm run products:intake:review-cockpit:dev
 ```
 
+Daily local launcher:
+
+```bash
+npm run products:intake:review-center
+```
+
+The launcher starts the review center on `http://localhost:3910`, starts the
+Codex worker with two concurrent slots when it is not already running, writes
+logs to `.tmp/product-intake-review-center/`, and opens the browser. On macOS,
+double-click the Finder launcher to run the same command:
+
+```text
+scripts/product-intake/Product Intake Review Center.command
+```
+
+It is safe to run again; existing app and worker processes are reused instead
+of started twice.
+
 Preview-only worker smoke check:
 
 ```bash

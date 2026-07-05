@@ -74,6 +74,7 @@
     "products:intake:review-cockpit:verify": "npm run typecheck --workspace @chaarlie/product-intake-review && npm run lint --workspace @chaarlie/product-intake-review && npm run build --workspace @chaarlie/product-intake-review",
     "products:intake:core:typecheck": "npm run typecheck --workspace @chaarlie/product-intake-core",
     "products:intake:codex-worker": "tsx scripts/product-intake/codex-research-worker.ts",
+    "products:intake:review-center": "tsx scripts/product-intake/review-center-launcher.ts",
     "stress:smoke": "k6 run -e K6_PROFILE=smoke scripts/k6/launch-flow.js",
     "stress:average": "k6 run -e K6_PROFILE=average scripts/k6/launch-flow.js",
     "stress:spike": "k6 run -e K6_PROFILE=spike scripts/k6/launch-flow.js",
