@@ -2108,12 +2108,21 @@ function validateProductLookupResultClaims(
     // intake killing an unrelated leave-in recommendation).
     if (
       answer.answer_mode === "product_recommendation" &&
-      answer.request_interpretation.product_request_kind === "specific_products" &&
-      answerCareCategory !== "none" &&
-      answerCareCategory !== "unknown"
+      answer.request_interpretation.product_request_kind === "specific_products"
     ) {
       const lookupCategory = result.input_identity?.category ?? result.category ?? null
-      if (lookupCategory && lookupCategory !== answerCareCategory) return false
+      if (
+        answerCareCategory !== "none" &&
+        answerCareCategory !== "unknown" &&
+        lookupCategory &&
+        lookupCategory !== answerCareCategory
+      ) {
+        return false
+      }
+      // Same-category generic recommendations are only blocked when the answer
+      // actually references the unresolved product identity; a pending intake
+      // must not veto the whole category (Jun-29 narrowing decision).
+      return unresolvedLookupResultMatchesAnswerClaim(result, answer, context)
     }
     return (
       unresolvedLookupResultMatchesAnswerClaim(result, answer, context) ||

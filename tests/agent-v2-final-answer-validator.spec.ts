@@ -9718,3 +9718,38 @@ test("pending intake lookup for another category does not block a grounded recom
     JSON.stringify(result.errors, null, 2),
   )
 })
+
+test("pending same-category intake does not veto a generic recommendation for other products", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "specific_products",
+        care_category: "shampoo",
+        evidence_quote: "kannst du mir ein shampoo empfehlen?",
+      }),
+    },
+    {
+      ...baseValidationContext,
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Herbal Essences",
+            product_name_text: "Shampoo Limettenduft, Tiefenreinigung & Glanz",
+            evidence_quote: "Ich habe Herbal Essences Shampoo Limettenduft eingereicht.",
+          },
+          product: null,
+        },
+      ],
+    },
+  )
+
+  assert.ok(
+    !result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})
