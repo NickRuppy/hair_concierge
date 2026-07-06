@@ -1012,6 +1012,7 @@ test("AgentV2 select-products state stays tied to the overlapping tool call resu
       requestId: "request-1",
     },
     {
+      verifyConversationOwnership,
       loadConversationHistory: async () => [],
       getUserContext: async () => ({
         profile: hairProfile,
