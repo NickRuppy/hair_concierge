@@ -90,7 +90,7 @@ test("keeps pending product usage rows visible as current routine context", () =
   ])
 
   assert.deepEqual(hydrated?.current_routine_products, ["mask"])
-  assert.equal(hydrated?.products_used, "Maske: Unverified Mask")
+  assert.equal(hydrated?.products_used, "Haarmaske: Unverified Mask")
 })
 
 test("uses the highest shampoo cadence when duplicate shampoo rows exist", () => {
