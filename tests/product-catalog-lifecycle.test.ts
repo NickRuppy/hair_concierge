@@ -91,7 +91,7 @@ test("internal admin eligibility does not impose catalog visibility filters", ()
 
 test("products select policy migration keeps user-visible catalog reads recommended-only", () => {
   const migration = readFileSync(
-    "supabase/migrations/20260618120000_product_visibility_policy_lifecycle.sql",
+    "supabase/migrations/20260706120000_product_visibility_policy_lifecycle.sql",
     "utf8",
   )
 
