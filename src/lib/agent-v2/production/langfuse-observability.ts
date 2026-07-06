@@ -14,6 +14,9 @@ type AgentV2TraceLike = {
   failure_stage: string | null
   routine_thread_context_active: boolean
   final_product_ids: readonly string[]
+  followup_offer?: { type?: unknown } | null
+  followup_offer_execution?: string | null
+  followup_offer_resolution?: string | null
   turn_gate?: {
     authorized?: { gate_status?: unknown; boundary_kind?: unknown } | null
     safety_mode?: unknown
@@ -61,6 +64,12 @@ export function summarizeAgentV2TraceForLangfuse(trace: AgentV2TraceLike) {
     failure_stage: trace.failure_stage,
     routine_thread_context_active: trace.routine_thread_context_active,
     final_product_ids: trace.final_product_ids,
+    followup_offer_type:
+      typeof trace.followup_offer?.type === "string" ? trace.followup_offer.type : null,
+    followup_offer_execution:
+      typeof trace.followup_offer_execution === "string" ? trace.followup_offer_execution : null,
+    followup_offer_resolution:
+      typeof trace.followup_offer_resolution === "string" ? trace.followup_offer_resolution : null,
     turn_gate_status:
       typeof trace.turn_gate?.authorized?.gate_status === "string"
         ? trace.turn_gate.authorized.gate_status

@@ -353,6 +353,271 @@ export const SCENARIOS: EvalScenario[] = [
   },
 
   {
+    id: "followup-offer-recommend-confirmation",
+    name: "Follow-up offer: recommend",
+    description:
+      "Multi-turn: category advice should offer concrete products, and 'Ja bitte' should resolve to recommendations",
+    hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message:
+          "Ich bin unsicher, ob eine Maske bei Frizz sinnvoll ist. Erklär es kurz und biete danach an, konkrete Masken zu empfehlen, aber empfiehl noch keine Produkte.",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Maske", "empfehlen"],
+          forbidden_keywords: ["Formulier es bitte", "konkreter"],
+        },
+        judge: {
+          expected_behavior:
+            "Should explain whether a mask can help and visibly offer concrete mask recommendations without already listing products.",
+        },
+      },
+      {
+        message: "Ja bitte",
+        metadata: { product_count_min: 1 },
+        content: {
+          must_be_german: true,
+          required_keywords: ["Maske"],
+          forbidden_keywords: ["nicht sicher", "worauf beziehst du dich"],
+        },
+        judge: {
+          expected_behavior:
+            "Should resolve the active recommendation offer and recommend concrete masks.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "followup-offer-compare-confirmation",
+    name: "Follow-up offer: compare",
+    description:
+      "Multi-turn: a visible comparison offer should resolve into a comparison after short confirmation",
+    hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message:
+          "Sag mir kurz, ob Leave-in oder Maske gegen Frizz naheliegender ist, und biete danach an, beide Optionen genauer zu vergleichen.",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Leave-in", "Maske", "vergleichen"],
+          forbidden_keywords: ["Formulier es bitte", "konkreter"],
+        },
+        judge: {
+          expected_behavior:
+            "Should give a brief direction and visibly offer a more detailed Leave-in vs mask comparison.",
+        },
+      },
+      {
+        message: "Ja bitte",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Leave-in", "Maske"],
+          forbidden_keywords: ["nicht sicher", "worauf beziehst du dich"],
+        },
+        judge: {
+          expected_behavior:
+            "Should compare Leave-in and mask in response to the confirmed visible comparison offer.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "followup-offer-plan-confirmation",
+    name: "Follow-up offer: plan",
+    description:
+      "Multi-turn: a small guidance-plan offer should resolve without creating or mutating structured routine state",
+    hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message:
+          "Ich will Frizz diese Woche reduzieren. Gib mir einen kurzen Tipp und biete danach an, einen kleinen 3-Tage-Testplan zu machen, aber erstelle ihn noch nicht.",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Frizz", "Testplan"],
+          forbidden_keywords: ["Tag 1", "Tag 2", "Tag 3", "Formulier es bitte"],
+        },
+        judge: {
+          expected_behavior:
+            "Should give a short tip and visibly offer a small 3-day guidance plan without already creating it.",
+        },
+      },
+      {
+        message: "Ja bitte",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Tag", "Frizz"],
+          forbidden_keywords: ["nicht sicher", "worauf beziehst du dich"],
+        },
+        judge: {
+          expected_behavior:
+            "Should provide a small visible 3-day guidance plan, not rebuild or mutate the structured routine.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "followup-offer-adjust-confirmation",
+    name: "Follow-up offer: adjust",
+    description:
+      "Multi-turn: a visible routine-adjustment offer should resolve to routine adjustment on short confirmation",
+    hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message:
+          "Ich nutze Shampoo und Conditioner, aber Frizz bleibt. Sag kurz, welcher Leave-in-Schritt helfen könnte, und biete danach an, ihn in meine Routine einzubauen.",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Leave-in", "Routine"],
+          forbidden_keywords: ["Formulier es bitte", "konkreter"],
+        },
+        judge: {
+          expected_behavior:
+            "Should explain the likely Leave-in step and visibly offer to add it to the user's routine.",
+        },
+      },
+      {
+        message: "Ja bitte",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Leave-in", "Routine"],
+          forbidden_keywords: ["nicht sicher", "worauf beziehst du dich"],
+        },
+        judge: {
+          expected_behavior:
+            "Should resolve the visible adjust offer and add/integrate the Leave-in step into the routine.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "followup-offer-troubleshoot-confirmation",
+    name: "Follow-up offer: troubleshoot",
+    description:
+      "Multi-turn: a visible troubleshooting offer should resolve into diagnosis-style advice",
+    hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message:
+          "Mein Leave-in macht meine Haare manchmal strähnig. Nenne kurz eine wahrscheinliche Ursache und biete danach an, die Anwendung zu troubleshooten.",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Leave-in", "Anwendung"],
+          forbidden_keywords: ["Formulier es bitte", "konkreter"],
+        },
+        judge: {
+          expected_behavior:
+            "Should name a likely cause and visibly offer troubleshooting without already doing the full troubleshooting flow.",
+        },
+      },
+      {
+        message: "Ja bitte",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Menge", "Ansatz"],
+          forbidden_keywords: ["nicht sicher", "worauf beziehst du dich"],
+        },
+        judge: {
+          expected_behavior:
+            "Should troubleshoot Leave-in application, likely covering amount, placement, and avoiding the roots.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "followup-offer-missing-contextual-clarification",
+    name: "Follow-up offer missing context clarification",
+    description:
+      "Multi-turn: 'Ja bitte' without an active visible offer should ask contextual clarification",
+    hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message: "Ich habe Frizz und feines Haar.",
+        content: {
+          must_be_german: true,
+          forbidden_keywords: ["Soll ich"],
+        },
+        judge: {
+          expected_behavior:
+            "Should respond helpfully but not necessarily create a confirmable follow-up offer.",
+        },
+      },
+      {
+        message: "Ja bitte",
+        content: {
+          must_be_german: true,
+          required_keywords: ["wobei"],
+          forbidden_keywords: ["nicht sicher, was du genau"],
+        },
+        judge: {
+          expected_behavior:
+            "Should not invent an old offer; should ask what the user wants confirmed or clarified.",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "followup-offer-cleared-contextual-clarification",
+    name: "Follow-up offer cleared context clarification",
+    description:
+      "Multi-turn: an unrelated user turn clears an active offer, so later 'Ja bitte' asks clarification",
+    hair_profile: { ...FULL_PROFILE },
+    routine_inventory: FULL_ROUTINE_INVENTORY,
+    turns: [
+      {
+        message:
+          "Ich brauche ein leichtes Leave-in gegen Frizz. Nenne mir Produkte und biete danach an, die Anwendung kurz zu erklären, aber erklär sie noch nicht.",
+        metadata: {
+          response_mode: ["recommend_and_refine", "answer_direct"],
+          product_count_min: 1,
+        },
+        content: {
+          must_be_german: true,
+          required_keywords: ["Leave-in", "Anwendung"],
+        },
+        judge: {
+          expected_behavior:
+            "Should recommend a leave-in and visibly offer to explain application later.",
+        },
+      },
+      {
+        message: "Andere Frage: Brauche ich wirklich jedes Mal Conditioner?",
+        content: {
+          must_be_german: true,
+          required_keywords: ["Conditioner"],
+        },
+        judge: {
+          expected_behavior:
+            "Should answer the new conditioner question and clear the previous application offer.",
+        },
+      },
+      {
+        message: "Ja bitte",
+        content: {
+          must_be_german: true,
+          required_keywords: ["wobei"],
+          forbidden_keywords: ["Leave-in anwenden", "Längen"],
+        },
+        judge: {
+          expected_behavior:
+            "Should not resolve the stale Leave-in offer after an unrelated turn; should ask what the user means.",
+        },
+      },
+    ],
+  },
+
+  {
     id: "routine-summary-followup",
     name: "Routine summary follow-up",
     description:

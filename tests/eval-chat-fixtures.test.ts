@@ -30,9 +30,32 @@ test("chat eval fixtures keep representative multi-turn runtime prompts", () => 
     new Set([
       "owc-followup",
       "leave-in-offer-confirmation",
+      "followup-offer-recommend-confirmation",
+      "followup-offer-compare-confirmation",
+      "followup-offer-plan-confirmation",
+      "followup-offer-adjust-confirmation",
+      "followup-offer-troubleshoot-confirmation",
+      "followup-offer-missing-contextual-clarification",
+      "followup-offer-cleared-contextual-clarification",
       "routine-summary-followup",
       "explicit-branch-followup",
       "clarification-cap",
     ]),
   )
+})
+
+test("chat eval fixtures include representative follow-up offer scenarios", () => {
+  const ids = new Set(SCENARIOS.map((scenario) => scenario.id))
+
+  for (const id of [
+    "followup-offer-recommend-confirmation",
+    "followup-offer-compare-confirmation",
+    "followup-offer-plan-confirmation",
+    "followup-offer-adjust-confirmation",
+    "followup-offer-troubleshoot-confirmation",
+    "followup-offer-missing-contextual-clarification",
+    "followup-offer-cleared-contextual-clarification",
+  ]) {
+    assert.equal(ids.has(id), true, `${id} missing`)
+  }
 })

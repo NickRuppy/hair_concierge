@@ -461,6 +461,14 @@ test("AgentV2TerminalAnswerSchema accepts social and domain-boundary payloads", 
 })
 
 test("AgentV2TraceSchema accepts turn-gate trace fields", () => {
+  const followupOffer = {
+    type: "apply",
+    label_de: "Ich kann dir die Anwendung genauer erklären.",
+    care_category: "leave_in",
+    product_categories: [],
+    routine_layer: null,
+    routine_action: null,
+  }
   const trace = AgentV2TraceSchema.parse({
     engine: "agent_v2",
     model: DEFAULT_AGENT_V2_MODEL,
@@ -494,6 +502,9 @@ test("AgentV2TraceSchema accepts turn-gate trace fields", () => {
     loaded_guidance_package_ids: [],
     validation_errors: [],
     validation_warnings: [],
+    followup_offer: followupOffer,
+    followup_offer_execution: "advisor_response",
+    followup_offer_resolution: "resolved",
     request_interpretation: null,
     request_interpretation_summary: null,
     bounded_repair_kind: null,
@@ -510,6 +521,51 @@ test("AgentV2TraceSchema accepts turn-gate trace fields", () => {
   })
 
   assert.equal(trace.turn_gate?.authorized?.gate_status, "social")
+  assert.deepEqual(trace.followup_offer, followupOffer)
+  assert.equal(trace.followup_offer_execution, "advisor_response")
+  assert.equal(trace.followup_offer_resolution, "resolved")
+})
+
+test("AgentV2 exposes a compatible followup_offer schema without replacing current terminal contract", async () => {
+  const contracts = (await import("../src/lib/agent-v2/contracts")) as Record<string, unknown>
+  const schema = contracts.AgentV2FollowupOfferSchema as
+    | { parse: (value: unknown) => unknown; safeParse: (value: unknown) => { success: boolean } }
+    | undefined
+
+  assert.equal(typeof schema?.parse, "function")
+
+  assert.deepEqual(
+    schema?.parse({
+      type: "recommend",
+      label_de: "Ich kann dir passende Masken empfehlen.",
+      care_category: "mask",
+      product_categories: ["mask"],
+      routine_layer: null,
+      routine_action: null,
+    }),
+    {
+      type: "recommend",
+      label_de: "Ich kann dir passende Masken empfehlen.",
+      care_category: "mask",
+      product_categories: ["mask"],
+      routine_layer: null,
+      routine_action: null,
+    },
+  )
+
+  assert.equal(
+    schema?.safeParse({
+      type: "recommend",
+      label_de: "Ich kann dir passende Styling-Produkte empfehlen.",
+      care_category: "styling",
+      product_categories: ["styling"],
+      routine_layer: null,
+      routine_action: null,
+    }).success,
+    false,
+  )
+
+  assert.equal(typeof contracts.AgentV2PendingFollowupActionSchema, "object")
 })
 
 test("AgentV2TerminalAnswerSchema requires request interpretation", () => {

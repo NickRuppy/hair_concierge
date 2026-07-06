@@ -67,6 +67,12 @@ test("buildFailedTurnDebugArtifact snapshots sanitized AgentV2 failure details",
         },
         agent_v2_trace: {
           failure_stage: "repair_failed",
+          followup_offer: {
+            type: "recommend",
+            label_de: "Ich kann dir passende Shampoos empfehlen.",
+          },
+          followup_offer_execution: "product_selection",
+          followup_offer_resolution: "resolved",
           loaded_guidance_package_ids: ["base.product_recommendation.v1"],
           validation_errors: [
             {
@@ -115,6 +121,9 @@ test("buildFailedTurnDebugArtifact snapshots sanitized AgentV2 failure details",
     (artifact.agent_v2?.repair_attempts[0] as Record<string, unknown>)?.["validation_errors"],
     [{ validator_id: "request_interpretation_evidence" }],
   )
+  assert.equal(artifact.agent_v2?.followup_offer_type, "recommend")
+  assert.equal(artifact.agent_v2?.followup_offer_execution, "product_selection")
+  assert.equal(artifact.agent_v2?.followup_offer_resolution, "resolved")
   assert.equal(
     (artifact.agent_v2?.tool_calls[0] as Record<string, unknown>)?.name,
     "select_products",

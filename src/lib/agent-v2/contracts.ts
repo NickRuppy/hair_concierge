@@ -139,7 +139,13 @@ export const AgentV2PendingFollowupKindSchema = z.enum([
 
 export type AgentV2PendingFollowupKind = z.infer<typeof AgentV2PendingFollowupKindSchema>
 
-const AgentV2ConcreteProductFollowupCategorySchema = z.enum(SELECTABLE_PRODUCT_CATEGORIES)
+export const AgentV2SelectableProductCategorySchema = z.enum(SELECTABLE_PRODUCT_CATEGORIES)
+
+export type AgentV2SelectableProductCategory = z.infer<
+  typeof AgentV2SelectableProductCategorySchema
+>
+
+const AgentV2ConcreteProductFollowupCategorySchema = AgentV2SelectableProductCategorySchema
 
 const AgentV2PendingRoutineActionSchema = z.enum([
   "create",
@@ -175,6 +181,58 @@ export const AgentV2PendingFollowupActionSchema = z.discriminatedUnion("kind", [
 ])
 
 export type AgentV2PendingFollowupAction = z.infer<typeof AgentV2PendingFollowupActionSchema>
+
+export const AgentV2FollowupOfferTypeSchema = z.enum([
+  "elaborate",
+  "apply",
+  "recommend",
+  "compare",
+  "plan",
+  "adjust",
+  "troubleshoot",
+])
+
+export type AgentV2FollowupOfferType = z.infer<typeof AgentV2FollowupOfferTypeSchema>
+
+export const AgentV2FollowupExecutionSchema = z.enum([
+  "advisor_response",
+  "product_selection",
+  "routine_mutation",
+])
+
+export type AgentV2FollowupExecution = z.infer<typeof AgentV2FollowupExecutionSchema>
+
+export const AgentV2RoutineMutationActionSchema = z.enum([
+  "create",
+  "modify",
+  "add_step",
+  "remove_step",
+  "replace_product",
+  "change_frequency",
+  "simplify",
+])
+
+export type AgentV2RoutineMutationAction = z.infer<typeof AgentV2RoutineMutationActionSchema>
+
+export const AgentV2FollowupOfferSchema = z.strictObject({
+  type: AgentV2FollowupOfferTypeSchema,
+  label_de: z.string().trim().min(1),
+  care_category: AgentV2CareCategorySchema.nullable(),
+  product_categories: z.array(AgentV2SelectableProductCategorySchema).max(3),
+  routine_layer: AgentV2RoutineLayerSchema.nullable(),
+  routine_action: AgentV2RoutineMutationActionSchema.nullable(),
+})
+
+export type AgentV2FollowupOffer = z.infer<typeof AgentV2FollowupOfferSchema>
+
+export const AgentV2FollowupOfferResolutionSchema = z.enum([
+  "none",
+  "resolved",
+  "missing_offer_clarification",
+  "cleared_before_turn",
+])
+
+export type AgentV2FollowupOfferResolution = z.infer<typeof AgentV2FollowupOfferResolutionSchema>
 
 export const AgentV2CountPolicySchema = z.enum(["none", "exact", "default", "cap"])
 
@@ -557,6 +615,9 @@ export const AgentV2TraceSchema = z.object({
   loaded_guidance_package_ids: z.array(z.string()),
   validation_errors: z.array(AgentV2ValidationErrorSchema),
   validation_warnings: z.array(AgentV2ValidationErrorSchema),
+  followup_offer: AgentV2FollowupOfferSchema.nullable().optional(),
+  followup_offer_execution: AgentV2FollowupExecutionSchema.nullable().optional(),
+  followup_offer_resolution: AgentV2FollowupOfferResolutionSchema.optional(),
   request_interpretation: AgentV2RequestInterpretationSchema.nullable(),
   request_interpretation_summary: z.string().nullable(),
   bounded_repair_kind: z

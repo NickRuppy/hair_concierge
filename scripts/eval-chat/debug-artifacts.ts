@@ -73,6 +73,9 @@ export interface FailedTurnDebugArtifact {
     tool_calls: unknown[]
     loaded_guidance_package_ids: string[]
     bounded_repair_kind: unknown
+    followup_offer_type: unknown
+    followup_offer_execution: unknown
+    followup_offer_resolution: unknown
   } | null
 }
 
@@ -156,6 +159,11 @@ function summarizeAgentV2Trace(
     tool_calls: compactArray(agentV2.tool_calls),
     loaded_guidance_package_ids: compactStringArray(agentV2.loaded_guidance_package_ids),
     bounded_repair_kind: compactValue(agentV2.bounded_repair_kind),
+    followup_offer_type: isRecord(agentV2.followup_offer)
+      ? compactValue(agentV2.followup_offer.type)
+      : null,
+    followup_offer_execution: compactValue(agentV2.followup_offer_execution),
+    followup_offer_resolution: compactValue(agentV2.followup_offer_resolution),
   }
 }
 
