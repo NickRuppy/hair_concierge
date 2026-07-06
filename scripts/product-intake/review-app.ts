@@ -1468,42 +1468,6 @@ async function runApprovalDryRun(params: {
   }
 }
 
-async function runApprovalApply(params: {
-  rootDir: string
-  packagePath: string
-  reviewedBy: string
-  reviewNotes: string | null
-}): Promise<JsonRecord> {
-  const packagePath = resolvePackagePath(params)
-  const commands = approvalCommands(packagePath)
-  try {
-    const result = await approveResearchPackage({
-      packageDir: packagePath,
-      reviewedBy: params.reviewedBy,
-      reviewNotes: params.reviewNotes,
-      apply: true,
-      confirm: true,
-    })
-    const record = {
-      ok: true,
-      applied_at: new Date().toISOString(),
-      commands,
-      result,
-    }
-    await writeJson(join(packagePath, "approval-apply.json"), record)
-    return record
-  } catch (error) {
-    const record = {
-      ok: false,
-      applied_at: new Date().toISOString(),
-      commands,
-      error: (error as Error).message,
-    }
-    await writeJson(join(packagePath, "approval-apply.json"), record)
-    return record
-  }
-}
-
 function cloneJsonRecord(value: JsonRecord): JsonRecord {
   return JSON.parse(JSON.stringify(value)) as JsonRecord
 }
@@ -3182,10 +3146,10 @@ export function renderAppHtml(): string {
               \${packageApproval.reviewed_at ? \`<div class="meta">Gespeichert am \${escapeHtml(packageApproval.reviewed_at)}</div>\` : ""}
               \${packageApproval.notes ? \`<div class="meta">\${escapeHtml(packageApproval.notes)}</div>\` : ""}
             </div>
-            <p class="meta">Finale Freigabe startet den Supabase-Import: finales Bild hochladen, Produktdaten speichern, Submission freigeben und Folgeaktionen ausloesen.</p>
+            <p class="meta">Finale Freigabe speichert die Review-Entscheidung und erstellt den Import-Dry-Run. Der Supabase-Import passiert danach bewusst per CLI-Handoff.</p>
             <label>Finale Notiz</label>
             <textarea id="package-approval-notes">\${escapeHtml(packageApproval.notes || "")}</textarea>
-            <button class="small-button primary" id="package-approve" \${detail.approval_apply?.ok ? "disabled" : ""}>Paket final freigeben &amp; importieren</button>
+            <button class="small-button primary" id="package-approve" \${detail.approval_apply?.ok ? "disabled" : ""}>Freigabe-Entscheidung speichern</button>
             \${renderApprovalDryRun(detail)}
           </section>
 

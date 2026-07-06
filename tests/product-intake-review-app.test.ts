@@ -997,7 +997,7 @@ test("review app explains broken images and final image metadata", () => {
   assert.match(html, /Supabase-Import abgeschlossen/)
   assert.match(html, /Supabase-Import fehlgeschlagen/)
   assert.match(html, /Import-Dry-Run/)
-  assert.match(html, /Paket final freigeben &amp; importieren/)
+  assert.match(html, /Freigabe-Entscheidung speichern/)
   assert.doesNotMatch(html, /applyToSupabase/)
   assert.match(html, /Freigabe-Entscheidung speichern\?/)
   assert.match(html, /approve-package -- --apply --confirm/)

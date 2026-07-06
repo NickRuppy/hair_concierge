@@ -42,7 +42,7 @@ const activeRefreshStatuses = new Set([
   "publish_preflight",
   "publishing",
 ])
-type BusyAction = "research" | "rework" | "preflight" | "publish" | "decision"
+type BusyAction = "research" | "rework" | "preflight" | "decision"
 type ImageSearchActionState = "idle" | "saving" | "queued"
 type ImageProcessingActionState = "idle" | "queued"
 type ActionMessage = {
@@ -663,46 +663,21 @@ export function SubmissionActions({
         <ActionCard
           action={
             <button
-              className={publishCompleted ? "completedButton" : "smallButton dangerButton"}
+              className={publishCompleted ? "completedButton" : "smallButton secondaryButton"}
               type="button"
-              disabled={isBusy || !readyForFinalApproval || publishCompleted}
-              onClick={() =>
-                void postAction(
-                  `/api/submissions/${submissionId}/publish`,
-                  { confirm: true },
-                  {
-                    action: "publish",
-                    busyMessage:
-                      "Supabase-Handoff laeuft. Produkt, User-Link und Benachrichtigung werden geschrieben.",
-                  },
-                )
-              }
+              disabled
             >
-              {busyAction === "publish"
-                ? "Freigabe laeuft..."
-                : publishCompleted
-                  ? "Bereits in Supabase freigegeben"
-                  : "Produkt in Supabase freigeben"}
+              {publishCompleted ? "Bereits in Supabase freigegeben" : "CLI-Handoff erforderlich"}
             </button>
           }
-          status={
-            busyAction === "publish"
-              ? "busy"
-              : publishCompleted
-                ? "done"
-                : readyForFinalApproval
-                  ? "active"
-                  : "pending"
-          }
+          status={publishCompleted ? "done" : readyForFinalApproval ? "active" : "pending"}
           title="4. Finaler Handoff"
         >
-          {busyAction === "publish"
-            ? "Supabase-Handoff laeuft. Bitte warten, bis Erfolg oder Fehler angezeigt wird."
-            : publishCompleted
-              ? "Produkt wurde in Supabase freigegeben."
-              : readyForFinalApproval
-                ? "Bild und Eigenschaften sind freigegeben. Naechster Klick startet den Supabase-Handoff."
-                : "Wird aktiv, sobald Finalbild und Eigenschaften freigegeben sind."}
+          {publishCompleted
+            ? "Produkt wurde in Supabase freigegeben."
+            : readyForFinalApproval
+              ? "Bild und Eigenschaften sind freigegeben. Finaler Supabase-Handoff passiert per CLI."
+              : "Wird aktiv, sobald Finalbild und Eigenschaften freigegeben sind."}
         </ActionCard>
       </div>
 
@@ -812,26 +787,11 @@ export function SubmissionActions({
             Publish-Preflight
           </button>
           <button
-            className={publishCompleted ? "completedButton" : "smallButton dangerButton"}
+            className={publishCompleted ? "completedButton" : "smallButton secondaryButton"}
             type="button"
-            disabled={isBusy || !readyForFinalApproval || publishCompleted}
-            onClick={() =>
-              void postAction(
-                `/api/submissions/${submissionId}/publish`,
-                { confirm: true },
-                {
-                  action: "publish",
-                  busyMessage:
-                    "Supabase-Handoff laeuft. Produkt, User-Link und Benachrichtigung werden geschrieben.",
-                },
-              )
-            }
+            disabled
           >
-            {busyAction === "publish"
-              ? "Freigabe laeuft..."
-              : publishCompleted
-                ? "Bereits in Supabase freigegeben"
-                : "Produkt final freigeben"}
+            {publishCompleted ? "Bereits in Supabase freigegeben" : "CLI-Handoff erforderlich"}
           </button>
         </div>
       </section>
@@ -1022,8 +982,8 @@ function ImageSearchProgress({
         ))}
       </ol>
       <p className="imageSearchProgressHint">
-        Fertig ist die Bildsuche, wenn hier "Neuen Bildvorschlag pruefen" steht und im Bildvorschlag
-        ein neuer Kandidat erscheint.
+        Fertig ist die Bildsuche, wenn hier &quot;Neuen Bildvorschlag pruefen&quot; steht und im
+        Bildvorschlag ein neuer Kandidat erscheint.
       </p>
     </section>
   )

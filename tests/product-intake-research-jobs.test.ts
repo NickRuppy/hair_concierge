@@ -590,7 +590,7 @@ test("detail page exposes research artifacts, comments, rework, and preflight co
   assert.match(reviewCockpitCss, /cardProgress/)
   assert.match(reviewCockpitCss, /actionMessage-error/)
   assert.match(submissionActionsSource, /busyAction/)
-  assert.match(submissionActionsSource, /Freigabe laeuft/)
+  assert.match(submissionActionsSource, /CLI-Handoff erforderlich/)
   assert.match(submissionActionsSource, /actionMessage-error/)
   assert.match(submissionActionsSource, /workflowCard-busy/)
   assert.match(submissionActionsSource, /completedButton/)
@@ -632,7 +632,7 @@ test("detail page exposes research artifacts, comments, rework, and preflight co
   assert.match(submissionActionsSource, /Finales Bild passt/)
   assert.match(submissionActionsSource, /saveQuickDecision/)
   assert.match(submissionActionsSource, /final\.image/)
-  assert.match(submissionActionsSource, /Produkt final freigeben/)
+  assert.match(submissionActionsSource, /Finaler Supabase-Handoff passiert per CLI/)
   assert.match(submissionActionsSource, /Publish-Preflight/)
   assert.match(submissionActionsSource, /reviewActionPanel/)
   assert.match(reviewCockpitCss, /cardActions/)
@@ -1053,7 +1053,7 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.doesNotMatch(workerScript, /createAdminClient/)
 })
 
-test("publish route requires confirm and calls the canonical approval helper", () => {
+test("publish route is fail-closed and leaves final writes to the CLI handoff", () => {
   const publishRouteSource = readFileSync(
     "apps/product-intake-review/app/api/submissions/[submissionId]/publish/route.ts",
     "utf8",
@@ -1067,17 +1067,13 @@ test("publish route requires confirm and calls the canonical approval helper", (
   assert.match(repositorySource, /latest_publish_decision/)
   assert.match(repositorySource, /Finales Bild wurde noch nicht freigegeben/)
   assert.match(repositorySource, /Finaler Produkt-Handoff wurde noch nicht freigegeben/)
-  assert.match(publishRouteSource, /body\.confirm !== true/)
-  assert.match(publishRouteSource, /publishRouteEnabled: true/)
-  assert.match(publishRouteSource, /prepareFinalImageForPublish/)
-  assert.match(publishRouteSource, /approveSubmissionById/)
-  assert.match(publishRouteSource, /assertAppliedApprovalResult/)
-  assert.match(publishRouteSource, /apply: true/)
-  assert.match(publishRouteSource, /confirm: true/)
-  assert.match(publishRouteSource, /approved_product_id_missing/)
-  assert.match(publishRouteSource, /approval_validation_failed/)
-  assert.match(publishRouteSource, /notification/)
-  assert.match(publishRouteSource, /Produkt wurde in Supabase freigegeben/)
+  assert.match(publishRouteSource, /Finaler Supabase-Handoff ist im Review Center gesperrt/)
+  assert.match(publishRouteSource, /products:intake:approve-package/)
+  assert.doesNotMatch(publishRouteSource, /approveSubmissionById/)
+  assert.doesNotMatch(publishRouteSource, /apply: true/)
+  assert.doesNotMatch(publishRouteSource, /confirm: true/)
+  assert.doesNotMatch(publishRouteSource, /appendResearchArtifact/)
+  assert.doesNotMatch(publishRouteSource, /Produkt wurde in Supabase freigegeben/)
   assert.match(preflightRouteSource, /publishRouteEnabled: false/)
   assert.match(preflightRouteSource, /validateSubmissionReady/)
   assert.match(preflightRouteSource, /approval_validation_failed/)
