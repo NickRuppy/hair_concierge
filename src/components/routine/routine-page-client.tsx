@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation"
 import { MessageCircle, RefreshCw } from "lucide-react"
 
 import { Header } from "@/components/layout/header"
-import { ProductDetailDrawer } from "@/components/chat/product-detail-drawer"
 import { Button } from "@/components/ui/button"
 import { launchRoutineChatTrigger, type RoutineChatTriggerType } from "@/lib/routines/chat-triggers"
 import type { RoutineUiCard, RoutineUiShape } from "@/lib/routines/types"
-import type { HairProfile, Product } from "@/lib/types"
+import type { HairProfile } from "@/lib/types"
+import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 import { RoutineCard } from "./routine-card"
+import { RoutineDrawer } from "./routine-drawer"
 
 type RoutineApiBody =
   | { routine?: RoutineUiShape | { routine?: RoutineUiShape }; cards?: RoutineUiCard[] }
@@ -90,6 +91,85 @@ export function RoutinePageClient() {
   useEffect(() => {
     void loadRoutine()
   }, [loadRoutine])
+
+  const patchFrequency = useCallback(
+    async (card: RoutineUiCard, frequency: ProductFrequency) => {
+      if (!card.usageRow?.id) return
+      const previousRoutine = routine
+      setBusyKey(`frequency:${card.id}`)
+      setError(null)
+      setRoutine((current) => ({
+        ...current,
+        cards: current.cards.map((candidate) =>
+          candidate.id === card.id
+            ? {
+                ...candidate,
+                currentFrequency: frequency,
+                usageRow: candidate.usageRow
+                  ? { ...candidate.usageRow, frequency_range: frequency }
+                  : candidate.usageRow,
+              }
+            : candidate,
+        ),
+      }))
+
+      try {
+        const response = await fetch(`/api/routine/products/${card.usageRow.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ frequency_range: frequency }),
+        })
+
+        if (!response.ok) {
+          throw new Error(await readError(response, "Nutzung konnte nicht gespeichert werden."))
+        }
+      } catch (saveError) {
+        setRoutine(previousRoutine)
+        setError(
+          saveError instanceof Error
+            ? saveError.message
+            : "Nutzung konnte nicht gespeichert werden.",
+        )
+      } finally {
+        setBusyKey(null)
+      }
+    },
+    [routine],
+  )
+
+  const removeUsage = useCallback(
+    async (card: RoutineUiCard) => {
+      if (!card.usageRow?.id) return
+      const previousRoutine = routine
+      setBusyKey(`remove:${card.id}`)
+      setError(null)
+      setDrawerCardId(null)
+      setRoutine((current) => ({
+        ...current,
+        cards: current.cards.filter((candidate) => candidate.id !== card.id),
+      }))
+
+      try {
+        const response = await fetch(`/api/routine/products/${card.usageRow.id}`, {
+          method: "DELETE",
+        })
+
+        if (!response.ok) {
+          throw new Error(await readError(response, "Produkt konnte nicht entfernt werden."))
+        }
+      } catch (removeError) {
+        setRoutine(previousRoutine)
+        setError(
+          removeError instanceof Error
+            ? removeError.message
+            : "Produkt konnte nicht entfernt werden.",
+        )
+      } finally {
+        setBusyKey(null)
+      }
+    },
+    [routine],
+  )
 
   const dismissSuggestion = useCallback(
     async (card: RoutineUiCard) => {
@@ -174,10 +254,6 @@ export function RoutinePageClient() {
               <h1 className="mt-1 text-2xl font-semibold text-[var(--text-heading)] sm:text-3xl">
                 Deine aktuelle Haarpflege
               </h1>
-              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                Prüfe deine gespeicherten Produkte, passe Nutzungsfrequenzen an und kläre offene
-                Kategorien direkt im Chat.
-              </p>
             </div>
             <div className="grid min-w-[260px] grid-cols-3 gap-2 text-center text-xs">
               <div className="rounded-md border border-border px-3 py-2">
@@ -188,7 +264,7 @@ export function RoutinePageClient() {
                 <p className="text-lg font-semibold text-[var(--text-heading)]">
                   {summary.pending}
                 </p>
-                <p className="text-muted-foreground">Prüfung</p>
+                <p className="text-muted-foreground">in Prüfung</p>
               </div>
               <div className="rounded-md border border-border px-3 py-2">
                 <p className="text-lg font-semibold text-[var(--text-heading)]">
@@ -262,25 +338,16 @@ export function RoutinePageClient() {
           )}
         </div>
       </main>
-      <ProductDetailDrawer
-        product={(drawerCard?.product ?? null) as Product | null}
+      <RoutineDrawer
+        card={drawerCard}
         hairProfile={routine.hairProfile}
-        open={Boolean(drawerCard?.product)}
+        busy={Boolean(busyKey)}
         onOpenChange={(open) => {
           if (!open) setDrawerCardId(null)
         }}
-        routineAction={
-          drawerCard?.product
-            ? {
-                category: drawerCard.category,
-                productId: drawerCard.product.id,
-                alreadyInRoutine: Boolean(
-                  drawerCard.usageRow?.product_id === drawerCard.product.id,
-                ),
-                onChanged: loadRoutine,
-              }
-            : undefined
-        }
+        onFrequencyChange={(targetCard, frequency) => void patchFrequency(targetCard, frequency)}
+        onRemove={(targetCard) => void removeUsage(targetCard)}
+        onChat={(targetCard, type) => void startChat(targetCard, type)}
       />
     </>
   )
