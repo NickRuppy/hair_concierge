@@ -828,6 +828,20 @@ test("targeted product selection stream events do not mutate the source clarific
   assert.equal(withServerId[1]?.id, "assistant-selection-1")
 })
 
+test("targeted stream events with a missing assistant id do not mutate the last assistant message", () => {
+  const existingAssistant = createAssistantMessage("Bestehende Antwort", [])
+  existingAssistant.id = "assistant-existing"
+
+  const updated = applyChatStreamEventToMessages(
+    [existingAssistant],
+    { type: "content_delta", data: " Falscher Nachtrag." },
+    { targetAssistantMessageId: "temp-assistant-missing" },
+  )
+
+  assert.equal(updated[0]?.id, "assistant-existing")
+  assert.equal(updated[0]?.content, "Bestehende Antwort")
+})
+
 test("chat stream error helper preserves structured server error messages", () => {
   assert.equal(
     readChatStreamErrorMessage({ message: "Dieses Produkt wurde bereits ausgewählt." }),

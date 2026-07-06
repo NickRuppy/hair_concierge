@@ -21,6 +21,7 @@ export type ChatStreamEvent = {
 
 type ChatStreamApplyOptions = {
   targetAssistantMessageId?: string | null
+  expectedCurrentConversationId?: string | null
 }
 
 export function hasExistingProductSelectionMessage(
@@ -88,7 +89,7 @@ function findAssistantMessageIndex(
     const targetIndex = messages.findIndex(
       (message) => message.role === "assistant" && message.id === targetAssistantMessageId,
     )
-    if (targetIndex >= 0) return targetIndex
+    return targetIndex
   }
 
   for (let index = messages.length - 1; index >= 0; index -= 1) {
@@ -322,6 +323,17 @@ export function useChat(): UseChatReturn {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null)
   const abortRef = useRef<AbortController | null>(null)
+  const currentConversationIdRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    currentConversationIdRef.current = currentConversationId
+  }, [currentConversationId])
+
+  const abortActiveStream = useCallback(() => {
+    abortRef.current?.abort()
+    abortRef.current = null
+    setIsStreaming(false)
+  }, [])
 
   const loadConversations = useCallback(async () => {
     try {
@@ -346,21 +358,25 @@ export function useChat(): UseChatReturn {
     }
   }, [])
 
-  const loadConversation = useCallback(async (id: string) => {
-    try {
-      const res = await fetch(`/api/chat/${id}`)
-      if (!res.ok) {
-        console.error("Fehler beim Laden der Unterhaltung:", res.status, res.statusText)
-        return
-      }
+  const loadConversation = useCallback(
+    async (id: string) => {
+      try {
+        abortActiveStream()
+        const res = await fetch(`/api/chat/${id}`)
+        if (!res.ok) {
+          console.error("Fehler beim Laden der Unterhaltung:", res.status, res.statusText)
+          return
+        }
 
-      const data = await res.json()
-      setMessages(data.messages || [])
-      setCurrentConversationId(id)
-    } catch (error) {
-      console.error("Fehler beim Laden der Unterhaltung:", error)
-    }
-  }, [])
+        const data = await res.json()
+        setMessages(data.messages || [])
+        setCurrentConversationId(id)
+      } catch (error) {
+        console.error("Fehler beim Laden der Unterhaltung:", error)
+      }
+    },
+    [abortActiveStream],
+  )
 
   const awaitingIntakeReview = useMemo(() => hasPendingProductIntakeReview(messages), [messages])
 
@@ -405,6 +421,7 @@ export function useChat(): UseChatReturn {
 
         setConversations((prev) => prev.filter((c) => c.id !== id))
         if (currentConversationId === id) {
+          abortActiveStream()
           setMessages([])
           setCurrentConversationId(null)
         }
@@ -412,18 +429,24 @@ export function useChat(): UseChatReturn {
         console.error("Fehler beim Loeschen der Unterhaltung:", error)
       }
     },
-    [currentConversationId],
+    [abortActiveStream, currentConversationId],
   )
 
   const startNewConversation = useCallback(() => {
+    abortActiveStream()
     setMessages([])
     setCurrentConversationId(null)
-  }, [])
+  }, [abortActiveStream])
 
   const applyChatStreamEvent = useCallback(
     (event: ChatStreamEvent, throwOnError = false, options: ChatStreamApplyOptions = {}) => {
       switch (event.type) {
         case "conversation_id":
+          if (
+            currentConversationIdRef.current !== (options.expectedCurrentConversationId ?? null)
+          ) {
+            break
+          }
           setCurrentConversationId(String(event.data))
         case "content_delta":
         case "langfuse_trace":
@@ -450,15 +473,13 @@ export function useChat(): UseChatReturn {
   )
 
   const readChatEventStream = useCallback(
-    async (
-      res: Response,
-      options?: { throwOnError?: boolean; targetAssistantMessageId?: string | null },
-    ) => {
+    async (res: Response, options?: ChatStreamApplyOptions & { throwOnError?: boolean }) => {
       const reader = res.body?.getReader()
       if (!reader) throw new Error("Kein Stream")
 
       const decoder = new TextDecoder()
       let buffer = ""
+      let targetAssistantMessageId = options?.targetAssistantMessageId ?? null
 
       while (true) {
         const { done, value } = await reader.read()
@@ -482,8 +503,18 @@ export function useChat(): UseChatReturn {
 
           try {
             applyChatStreamEvent(event, options?.throwOnError ?? false, {
-              targetAssistantMessageId: options?.targetAssistantMessageId,
+              targetAssistantMessageId,
+              expectedCurrentConversationId: options?.expectedCurrentConversationId,
             })
+            if (event.type === "assistant_message") {
+              const nextId =
+                event.data && typeof event.data === "object" && "id" in event.data
+                  ? (event.data as { id?: unknown }).id
+                  : null
+              if (typeof nextId === "string" && nextId.trim()) {
+                targetAssistantMessageId = nextId
+              }
+            }
           } catch (error) {
             if (error instanceof Error && options?.throwOnError) {
               throw error
@@ -567,7 +598,10 @@ export function useChat(): UseChatReturn {
           throw new Error("Unerwartete Chat-Antwort")
         }
 
-        await readChatEventStream(res, { targetAssistantMessageId: assistantMessage.id })
+        await readChatEventStream(res, {
+          targetAssistantMessageId: assistantMessage.id,
+          expectedCurrentConversationId: currentConversationId,
+        })
 
         // Refresh conversations list
         loadConversations()
@@ -670,6 +704,7 @@ export function useChat(): UseChatReturn {
         await readChatEventStream(res, {
           throwOnError: true,
           targetAssistantMessageId: assistantPlaceholderId,
+          expectedCurrentConversationId: conversationId,
         })
         loadConversations()
       } catch (error) {

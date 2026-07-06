@@ -145,7 +145,7 @@ function productBrandId(product: ProductIntakeCatalogProduct): string | null {
 }
 
 function productCleanName(product: ProductIntakeCatalogProduct): string {
-  return product.cleanName ?? product.name
+  return product.cleanName ?? product.clean_name ?? product.name
 }
 
 function productChaarlieRecommended(product: ProductIntakeCatalogProduct): boolean | null {

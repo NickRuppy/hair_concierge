@@ -222,6 +222,145 @@ function summarizeLookupResult(result: unknown): { status: string; productId: st
   }
 }
 
+test("product lookup outcome does not let one pending product answer for a different not-found product", async () => {
+  const agentResult = createAgentV2Result()
+  const outcome = await buildProductLookupTurnOutcome({
+    productIntakeEnabled: true,
+    safetyMode: "normal",
+    activeProductContexts: [
+      {
+        status: "pending_review",
+        product_id: null,
+        submission_id: "submission-pantene-volume",
+        category: "shampoo",
+        brand_text: "Pantene",
+        product_name_text: "Volume Pur Shampoo",
+        display_name: "Pantene Volume Pur Shampoo",
+        original_user_message: "Ich nutze Pantene Volume Pur Shampoo.",
+        source: "product_intake_submission",
+        updated_at: "2026-07-06T08:00:00.000Z",
+      },
+    ],
+    activeResolvedProductContext: null,
+    executions: [
+      {
+        input: {
+          category: "shampoo",
+          brand_text: "Redken",
+          product_name_text: "All Soft Shampoo",
+        },
+        result: {
+          status: "not_found",
+          category: "shampoo",
+          product: null,
+          candidates: [],
+          missing_fields: [],
+          intake_offer: {
+            id: "product-intake-redken",
+            source: "chat",
+            reason: "product_lookup_not_found",
+            category: "shampoo",
+            extracted_identity: {
+              brand_text: "Redken",
+              product_name_text: "All Soft Shampoo",
+            },
+          },
+        },
+      },
+    ],
+    trace: agentResult.trace,
+    finalAnswer: agentResult.final_answer,
+    latestUserMessage: "Was hältst du von Redken All Soft Shampoo?",
+    namedProductContext: {
+      display_name: "Redken All Soft Shampoo",
+      category: "shampoo",
+      plausible_exact_name: true,
+      named_product_intent: "evaluation",
+    },
+    loadProductLookupCatalogs: async () => ({
+      catalog: { products: [], identifiers: [] },
+      brandCatalog: { brands: [], productLines: [], brandAliases: [] },
+    }),
+    requestId: "request-pending-different-product",
+  })
+
+  assert.equal(outcome.answer, agentResult.final_answer)
+  assert.equal(outcome.productIntakeOffer?.id, "product-intake-redken")
+})
+
+test("product lookup outcome keeps newer resolved same-category context ahead of older pending context", async () => {
+  const agentResult = createAgentV2Result()
+  agentResult.final_answer = {
+    ...agentResult.final_answer,
+    answer_mode: "general_advice",
+    interpreted_intent: "User asks a follow-up about the currently resolved shampoo.",
+    request_interpretation: {
+      primary_intent: "general_advice",
+      product_request_kind: "none",
+      routine_intent: "none",
+      care_category: "shampoo",
+      requested_product_count: null,
+      count_policy: "none",
+      evidence_quote: "wie oft sollte ich das Shampoo benutzen",
+      specific_product_candidate: false,
+      confidence: 0.72,
+    },
+    payload: {
+      user_facing_answer_de:
+        "Nutze das ausgewählte Shampoo so oft, wie es zu deiner Waschfrequenz passt.",
+      category_or_topic: "shampoo",
+      key_points_de: ["Das aktuell ausgewählte Shampoo bleibt der Fokus."],
+      next_step_offer_de: null,
+    },
+  }
+
+  const outcome = await buildProductLookupTurnOutcome({
+    productIntakeEnabled: true,
+    safetyMode: "normal",
+    activeProductContexts: [
+      {
+        status: "pending_review",
+        product_id: null,
+        submission_id: "submission-pantene-volume",
+        category: "shampoo",
+        brand_text: "Pantene",
+        product_name_text: "Volume Pur Shampoo",
+        display_name: "Pantene Volume Pur Shampoo",
+        original_user_message: "Ich nutze Pantene Volume Pur Shampoo.",
+        source: "product_intake_submission",
+        updated_at: "2026-07-06T08:00:00.000Z",
+      },
+      {
+        status: "resolved",
+        product_id: "redken-all-soft",
+        submission_id: null,
+        category: "shampoo",
+        brand_text: "Redken",
+        product_name_text: "All Soft Shampoo",
+        display_name: "Redken All Soft Shampoo",
+        original_user_message: "Ich meinte Redken All Soft Shampoo.",
+        source: "product_lookup_selection",
+        updated_at: "2026-07-06T08:01:00.000Z",
+      },
+    ],
+    activeResolvedProductContext: null,
+    namedProductContext: null,
+    executions: [],
+    trace: agentResult.trace,
+    finalAnswer: agentResult.final_answer,
+    latestUserMessage: "Wie oft sollte ich das Shampoo benutzen?",
+    loadProductLookupCatalogs: async () => ({
+      catalog: { products: [], identifiers: [] },
+      brandCatalog: { brands: [], productLines: [], brandAliases: [] },
+    }),
+    requestId: "request-resolved-beats-pending",
+  })
+
+  assert.equal(outcome.answer, agentResult.final_answer)
+  assert.equal(outcome.nextActiveResolvedProductContext?.product_id, "redken-all-soft")
+  assert.doesNotMatch(outcome.answer.payload.user_facing_answer_de, /noch in Prüfung/)
+})
+
 function createFakeSpecReadinessClient(params: { verifiedSpecProductIds: readonly string[] }) {
   return {
     from(table: string) {

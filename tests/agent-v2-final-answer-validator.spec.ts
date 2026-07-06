@@ -971,7 +971,7 @@ test("validator blocks mixed product assessment prose for an unresolved second p
       hard_rule_ids: [],
     },
     payload: {
-      assessment_kind: "comparison",
+      assessment_kind: "fit",
       assessed_product_ids: ["prod_syoss_volume"],
       user_facing_answer_de:
         "Syoss Volume Shampoo passt gut als leichte Reinigung. Urban Alchemy Moisture Mist Conditioner passt ebenfalls gut zu deinem feinen Haar, weil er leicht wirkt.",

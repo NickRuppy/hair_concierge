@@ -148,6 +148,7 @@ export async function buildProductLookupTurnOutcome(params: {
     pendingReviewFallbackAllowed && !pendingReviewProductLookupFailureFallback
       ? buildPendingReviewCategoryFollowupFallback({
           activeProductContexts: params.activeProductContexts ?? [],
+          executions: executionsWithFallback,
           trace: params.trace,
           latestUserMessage: params.latestUserMessage,
         })
@@ -1053,7 +1054,6 @@ function buildPendingReviewProductLookupFailureFallback(params: {
   const context = findPendingReviewProductContextForNotFoundLookup({
     activeProductContexts: params.activeProductContexts,
     executions: params.executions,
-    latestUserMessage: params.latestUserMessage,
   })
   if (!context) return null
 
@@ -1062,18 +1062,37 @@ function buildPendingReviewProductLookupFailureFallback(params: {
 
 function buildPendingReviewCategoryFollowupFallback(params: {
   activeProductContexts: readonly AgentV2ActiveProductContext[]
+  executions: readonly ProductLookupExecution[]
   trace: AgentV2Trace
   latestUserMessage: string
 }): AgentV2TerminalAnswer | null {
   const pendingContexts = params.activeProductContexts.filter(
     (context) => context.status === "pending_review" && context.category,
   )
-  const matchingContexts = pendingContexts.filter((context) =>
-    latestMessageLooksLikePendingProductFollowupForCategory({
-      latestUserMessage: params.latestUserMessage,
-      category: context.category,
-    }),
-  )
+  const matchingContexts = pendingContexts.filter((context) => {
+    if (
+      !latestMessageLooksLikePendingProductFollowupForCategory({
+        latestUserMessage: params.latestUserMessage,
+        category: context.category,
+      })
+    ) {
+      return false
+    }
+    if (
+      hasNewerResolvedProductContextForCategory(params.activeProductContexts, context) &&
+      !latestMessageMentionsPendingProductContext(context, params.latestUserMessage)
+    ) {
+      return false
+    }
+    if (
+      params.executions.some((execution) =>
+        productLookupExecutionNamesDifferentProductForPendingContext(context, execution),
+      )
+    ) {
+      return false
+    }
+    return true
+  })
   if (matchingContexts.length !== 1) return null
 
   return buildPendingReviewProductAnswer({
@@ -1170,33 +1189,45 @@ function latestMessageLooksLikePendingProductFollowupForCategory(params: {
   )
 }
 
-function findPendingReviewProductContextForNotFoundLookup(params: {
-  activeProductContexts: readonly AgentV2ActiveProductContext[]
-  executions: readonly ProductLookupExecution[]
-  latestUserMessage: string
-}): AgentV2ActiveProductContext | null {
-  const pendingContexts = params.activeProductContexts.filter(
-    (context) => context.status === "pending_review",
+function hasNewerResolvedProductContextForCategory(
+  contexts: readonly AgentV2ActiveProductContext[],
+  pendingContext: AgentV2ActiveProductContext,
+): boolean {
+  if (!pendingContext.category) return false
+  const pendingUpdatedAt = activeProductContextUpdatedAtMs(pendingContext)
+  return contexts.some(
+    (context) =>
+      context.status === "resolved" &&
+      context.category === pendingContext.category &&
+      activeProductContextUpdatedAtMs(context) > pendingUpdatedAt,
   )
-  if (pendingContexts.length === 0) return null
-
-  const notFoundExecutions = params.executions.filter(
-    (execution) => execution.result.status === "not_found",
-  )
-  for (const execution of notFoundExecutions) {
-    const matchingContext = pendingContexts.find((context) =>
-      pendingReviewContextMatchesLookupExecution(context, execution, params.latestUserMessage),
-    )
-    if (matchingContext) return matchingContext
-  }
-
-  return null
 }
 
-function pendingReviewContextMatchesLookupExecution(
+function activeProductContextUpdatedAtMs(context: AgentV2ActiveProductContext): number {
+  const parsed = Date.parse(context.updated_at)
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+function latestMessageMentionsPendingProductContext(
+  context: AgentV2ActiveProductContext,
+  latestUserMessage: string,
+): boolean {
+  const identityParts = [
+    context.brand_text && context.product_name_text
+      ? `${context.brand_text} ${context.product_name_text}`
+      : null,
+    context.product_name_text,
+    context.display_name,
+  ].filter((part): part is string => Boolean(part?.trim()))
+
+  return identityParts.some((identity) =>
+    normalizedProductTextOverlaps(identity, latestUserMessage, context.brand_text),
+  )
+}
+
+function productLookupExecutionNamesDifferentProductForPendingContext(
   context: AgentV2ActiveProductContext,
   execution: ProductLookupExecution,
-  latestUserMessage: string,
 ): boolean {
   if (
     execution.input.category &&
@@ -1222,20 +1253,75 @@ function pendingReviewContextMatchesLookupExecution(
     context.display_name,
   ].filter((part): part is string => Boolean(part?.trim()))
 
-  return lookupIdentityParts.some(
-    (lookupIdentity) =>
-      contextIdentityParts.some((contextIdentity) =>
-        normalizedProductTextOverlaps(
-          lookupIdentity,
-          contextIdentity,
-          execution.input.brand_text ?? context.brand_text,
-        ),
-      ) ||
+  return !lookupIdentityParts.some((lookupIdentity) =>
+    contextIdentityParts.some((contextIdentity) =>
       normalizedProductTextOverlaps(
         lookupIdentity,
-        latestUserMessage,
+        contextIdentity,
         execution.input.brand_text ?? context.brand_text,
       ),
+    ),
+  )
+}
+
+function findPendingReviewProductContextForNotFoundLookup(params: {
+  activeProductContexts: readonly AgentV2ActiveProductContext[]
+  executions: readonly ProductLookupExecution[]
+}): AgentV2ActiveProductContext | null {
+  const pendingContexts = params.activeProductContexts.filter(
+    (context) => context.status === "pending_review",
+  )
+  if (pendingContexts.length === 0) return null
+
+  const notFoundExecutions = params.executions.filter(
+    (execution) => execution.result.status === "not_found",
+  )
+  for (const execution of notFoundExecutions) {
+    const matchingContext = pendingContexts.find((context) =>
+      pendingReviewContextMatchesLookupExecution(context, execution),
+    )
+    if (matchingContext) return matchingContext
+  }
+
+  return null
+}
+
+function pendingReviewContextMatchesLookupExecution(
+  context: AgentV2ActiveProductContext,
+  execution: ProductLookupExecution,
+): boolean {
+  if (
+    execution.input.category &&
+    context.category &&
+    execution.input.category !== context.category
+  ) {
+    return false
+  }
+
+  const lookupIdentityParts = [
+    execution.input.brand_text && execution.input.product_name_text
+      ? `${execution.input.brand_text} ${execution.input.product_name_text}`
+      : null,
+    execution.input.product_name_text,
+  ].filter((part): part is string => Boolean(part?.trim()))
+  if (lookupIdentityParts.length === 0) return false
+
+  const contextIdentityParts = [
+    context.brand_text && context.product_name_text
+      ? `${context.brand_text} ${context.product_name_text}`
+      : null,
+    context.product_name_text,
+    context.display_name,
+  ].filter((part): part is string => Boolean(part?.trim()))
+
+  return lookupIdentityParts.some((lookupIdentity) =>
+    contextIdentityParts.some((contextIdentity) =>
+      normalizedProductTextOverlaps(
+        lookupIdentity,
+        contextIdentity,
+        execution.input.brand_text ?? context.brand_text,
+      ),
+    ),
   )
 }
 

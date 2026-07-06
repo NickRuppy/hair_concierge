@@ -1880,13 +1880,14 @@ function validateProductAssessmentGrounding(
   const groundedProductIds = new Set(answer.tool_grounding.product_ids)
   const resolvedProductIds = new Set(collectResolvedProductAssessmentIds(context))
 
+  const invalidCount = assessedProductIds.length !== 1
   const missingFromGrounding = assessedProductIds.filter((id) => !groundedProductIds.has(id))
   const missingResolvedIdentity = assessedProductIds.filter((id) => !resolvedProductIds.has(id))
   const missingProductFacts = assessedProductIds.filter((id) => !productFactProductIds.has(id))
 
   if (
     assessedProductIds.length === 0 ||
-    assessedProductIds.length > 3 ||
+    invalidCount ||
     missingProductFacts.length > 0 ||
     missingFromGrounding.length > 0 ||
     missingResolvedIdentity.length > 0
@@ -1894,12 +1895,12 @@ function validateProductAssessmentGrounding(
     errors.push({
       validator_id: "product_assessment_grounding",
       message:
-        "Product assessment requires 1-3 assessed product IDs grounded by verified product identity and matching product projection facts.",
+        "Product assessment requires exactly one assessed product ID grounded by verified product identity and matching product projection facts.",
       severity: "block",
       path: ["payload", "assessed_product_ids"],
       rejected_value: assessedProductIds,
       expected:
-        "Each assessed product ID appears in tool_grounding.product_ids, is resolved by found_exact lookup or trusted selected-product context, and has matching select_products projection facts.",
+        "The single assessed product ID appears in tool_grounding.product_ids, is resolved by found_exact lookup or trusted selected-product context, and has matching select_products projection facts.",
     })
   }
 }
@@ -1952,7 +1953,7 @@ function validateProductAssessmentVisibleIdentity(
       .map((item) => item.name)
       .join(", ")}`,
     repair_hint:
-      "Start or frame the product_assessment answer with the canonical assessed product name(s), then continue with the grounded fit or usage answer. Do not use only a generic category or shortened marketing descriptor.",
+      "Start or frame the product_assessment answer with the canonical assessed product name, then continue with the grounded fit or usage answer. Do not use only a generic category or shortened marketing descriptor.",
   })
 }
 

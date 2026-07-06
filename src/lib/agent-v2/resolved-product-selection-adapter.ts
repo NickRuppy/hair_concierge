@@ -295,7 +295,7 @@ export function buildPrimaryResolvedProductContext(
   contexts: readonly AgentV2ActiveProductContext[],
 ): AgentV2ActiveResolvedProductContext | null {
   for (let index = contexts.length - 1; index >= 0; index -= 1) {
-    if (contexts[index]?.status === "pending_review") return null
+    if (contexts[index]?.status === "pending_review") continue
     const resolved = activeProductContextToResolvedProductContext(contexts[index])
     if (resolved) return resolved
   }

@@ -141,6 +141,39 @@ test("identifier path ignores inactive products", () => {
   )
 })
 
+test("text matching uses snake_case clean_name rows from the repository boundary", () => {
+  const snakeCaseCatalog: ProductIntakeCatalog = {
+    products: [
+      {
+        id: "olaplex-no-3",
+        name: "Olaplex No. 3 Hair Perfector",
+        clean_name: "No. 3 Hair Perfector",
+        image_url: "https://example.test/olaplex-no-3.webp",
+        brand_id: "brand-olaplex",
+        product_line_id: null,
+        category_key: "mask",
+        is_active: true,
+        lifecycle_status: "active",
+        is_chaarlie_recommended: true,
+      },
+    ],
+    identifiers: [],
+  }
+
+  const result = matchProductIntake(
+    {
+      selectedCategoryKey: "mask",
+      brandId: "brand-olaplex",
+      cleanProductName: "No. 3 Hair Perfector",
+    },
+    snakeCaseCatalog,
+  )
+
+  assert.equal(result.status, "matched")
+  assert.equal(result.matchedProduct?.id, "olaplex-no-3")
+  assert.equal(result.matchedProduct?.image_url, "https://example.test/olaplex-no-3.webp")
+})
+
 test("GTIN/EAN with mixed-category exact evidence stays review-only", () => {
   const mixedCategoryCatalog: ProductIntakeCatalog = {
     products: [

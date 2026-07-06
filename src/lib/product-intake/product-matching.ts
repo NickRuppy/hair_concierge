@@ -13,6 +13,9 @@ export type ProductIntakeCatalogProduct = {
   id: string
   name: string
   cleanName?: string | null
+  clean_name?: string | null
+  imageUrl?: string | null
+  image_url?: string | null
   brandId?: string | null
   brand_id?: string | null
   productLineId?: string | null
@@ -120,7 +123,7 @@ function productIsActive(product: ProductIntakeCatalogProduct): boolean {
 }
 
 function productCleanName(product: ProductIntakeCatalogProduct): string {
-  return product.cleanName ?? product.name
+  return product.cleanName ?? product.clean_name ?? product.name
 }
 
 function productKnownTitles(product: ProductIntakeCatalogProduct): string[] {
@@ -310,10 +313,6 @@ function sameBrand(product: ProductIntakeCatalogProduct, brandId: string | null)
 
 function sameLine(product: ProductIntakeCatalogProduct, lineId: string | null): boolean {
   return Boolean(lineId) && productLineId(product) === lineId
-}
-
-function normalizedProductName(product: ProductIntakeCatalogProduct): string {
-  return normalizeIdentityText(productCleanName(product))
 }
 
 function normalizedProductNameVariants(product: ProductIntakeCatalogProduct): string[] {

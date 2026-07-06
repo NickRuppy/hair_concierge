@@ -298,25 +298,20 @@ export const AgentV2ProductRecommendationPayloadSchema = z.strictObject({
   next_step_offer_de: z.string().nullable(),
 })
 
-export const AgentV2ProductAssessmentKindSchema = z.enum([
-  "fit",
-  "comparison",
-  "detail",
-  "routine_usage",
-])
+export const AgentV2ProductAssessmentKindSchema = z.enum(["fit", "detail", "routine_usage"])
 
 export type AgentV2ProductAssessmentKind = z.infer<typeof AgentV2ProductAssessmentKindSchema>
 
 export const AgentV2ProductAssessmentPayloadSchema = z.strictObject({
   assessment_kind: AgentV2ProductAssessmentKindSchema.describe(
-    "Type of named-product assessment: fit, comparison, detail, or routine_usage.",
+    "Type of single resolved-product assessment: fit, detail, or routine_usage. Product comparisons belong in product_recommendation/select_products, not product_assessment.",
   ),
   assessed_product_ids: z
     .array(z.string().min(1))
     .min(1)
-    .max(3)
+    .max(1)
     .describe(
-      "The verified product IDs being assessed. Must come from lookup_product_candidate, selected clarification context, active resolved product context, or internal product facts for the resolved product.",
+      "The single verified product ID being assessed. Must come from lookup_product_candidate, selected clarification context, active resolved product context, or internal product facts for the resolved product.",
     ),
   user_facing_answer_de: z
     .string()

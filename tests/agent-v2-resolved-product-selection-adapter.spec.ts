@@ -256,7 +256,7 @@ test("chooses the next active resolved product context by explicit precedence", 
   )
 })
 
-test("does not expose an older resolved product as primary when the newest product is pending", () => {
+test("skips pending entries when selecting the primary resolved product context", () => {
   const contexts: AgentV2ActiveProductContext[] = [
     {
       status: "resolved",
@@ -284,7 +284,13 @@ test("does not expose an older resolved product as primary when the newest produ
     },
   ]
 
-  assert.equal(buildPrimaryResolvedProductContext(contexts), null)
+  assert.deepEqual(buildPrimaryResolvedProductContext(contexts), {
+    source: "lookup_exact",
+    product_id: "syoss-intense-curls-shampoo",
+    name: "Syoss Intense Curls Shampoo",
+    category: "shampoo",
+    original_user_message: "Passt Syoss Intense Curls Shampoo zu mir?",
+  })
 })
 
 test("replaces a pending intake offer context with the submitted pending product context", () => {
