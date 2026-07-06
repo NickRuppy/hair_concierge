@@ -1,0 +1,7 @@
+-- Remote-history mirror only.
+--
+-- The canonical beta_feedback table migration is
+-- 20260528120000_beta_feedback.sql. This version exists in linked Supabase
+-- migration history from an earlier out-of-band push, so keep the file as an
+-- explicit no-op to avoid fresh reset/preview environments recreating the same
+-- table and policy.

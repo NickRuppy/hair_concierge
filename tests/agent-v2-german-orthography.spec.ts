@@ -97,6 +97,46 @@ const ALLOWLIST: AllowlistEntry[] = [
     reason: "mask/oil detector intentionally accepts user-transliterated oil terms",
   },
   {
+    file: "src/lib/agent-v2/runtime/responses-agent.ts",
+    id: "weiss",
+    match: /^weiss(?:t)?$/i,
+    pattern: /kennst\|weisst\|weiss\|siehst/,
+    reason:
+      "current-routine identity detector intentionally accepts normalized user-transliterated input",
+  },
+  {
+    file: "src/lib/agent-v2/runtime/responses-agent.ts",
+    id: "haeufig",
+    match: /^haeufig$/i,
+    pattern: /wie oft\|haeufig\|haufig\|anwenden/,
+    reason:
+      "current-routine identity detector intentionally accepts normalized user-transliterated input",
+  },
+  {
+    file: "src/lib/agent-v2/runtime/responses-agent.ts",
+    id: "hinzufuegen",
+    match: /^hinzufuegen$/i,
+    pattern: /einbauen\|hinzufuegen\|hinzufügen/,
+    reason:
+      "current-routine identity detector intentionally accepts normalized user-transliterated input",
+  },
+  {
+    file: "src/lib/agent-v2/runtime/responses-agent.ts",
+    id: "spuelung",
+    match: /^spuelung$/i,
+    pattern: /conditioner.*spuelung|spuelung.*maske|\["conditioner", "spulung", "spuelung"\]/,
+    reason:
+      "current-routine identity detector intentionally accepts normalized user-transliterated category input",
+  },
+  {
+    file: "src/lib/agent-v2/runtime/responses-agent.ts",
+    id: "oel",
+    match: /^(?:oel|haaroel)$/i,
+    pattern: /oel\|ol|oil: \["ol", "oel", "haarol", "haaroel", "oil"\]/,
+    reason:
+      "current-routine identity detector intentionally accepts normalized user-transliterated oil input",
+  },
+  {
     file: "src/lib/agent/tools/select-products.ts",
     id: "oel",
     match: /^oel$/i,

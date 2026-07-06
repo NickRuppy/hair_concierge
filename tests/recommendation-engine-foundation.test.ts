@@ -32,6 +32,34 @@ test("persistence adapter maps supported routine categories and reports unsuppor
   )
 })
 
+test("persistence adapter merges duplicate category identity as one coherent state", () => {
+  const adapted = adaptRecommendationInputFromPersistence(LOW_DAMAGE_PROFILE, [
+    {
+      category: "conditioner",
+      product_name: "Typed Conditioner",
+      frequency_range: "weekly_1x",
+      match_status: "text_only",
+      product_id: null,
+      product_submission_id: null,
+    },
+    {
+      category: "conditioner",
+      product_name: "Matched Conditioner",
+      frequency_range: "weekly_3_4x",
+      match_status: "matched",
+      product_id: "product-conditioner",
+      product_submission_id: null,
+    },
+  ])
+
+  const conditioner = adapted.input.routineInventory.find((item) => item.category === "conditioner")
+
+  assert.equal(conditioner?.match_status, "matched")
+  assert.equal(conditioner?.product_id, "product-conditioner")
+  assert.equal(conditioner?.product_submission_id, null)
+  assert.equal(conditioner?.frequency_range, "weekly_3_4x")
+})
+
 test("normalization produces a full inventory map keyed by V1 inventory categories", () => {
   const adapted = adaptRecommendationInputFromPersistence(
     SEVERE_DAMAGE_PROFILE,
@@ -75,6 +103,31 @@ test("normalization keeps explicit derived shampoo cadence when fallback row is 
 
   assert.equal(normalized.shampooFrequency, "less_than_monthly")
   assert.equal(normalized.routineInventory.shampoo, null)
+})
+
+test("adapter preserves routine-derived shampoo cadence when profile row is missing", () => {
+  const adapted = adaptRecommendationInputFromPersistence(null, [
+    {
+      category: "shampoo",
+      product_name: "Known Shampoo",
+      frequency_range: "weekly_3_4x",
+    },
+  ])
+  const normalized = normalizeRecommendationInput(adapted.input)
+
+  assert.equal(adapted.input.profile.shampoo_frequency, "weekly_3_4x")
+  assert.equal(normalized.shampooFrequency, "weekly_3_4x")
+  assert.equal(normalized.routineInventory.shampoo?.present, true)
+})
+
+test("adapter preserves explicit derived shampoo cadence when profile row is missing", () => {
+  const adapted = adaptRecommendationInputFromPersistence(null, [], {
+    derivedShampooFrequency: "weekly_1x",
+  })
+  const normalized = normalizeRecommendationInput(adapted.input)
+
+  assert.equal(adapted.input.profile.shampoo_frequency, "weekly_1x")
+  assert.equal(normalized.shampooFrequency, "weekly_1x")
 })
 
 test("normalization does not infer wash cadence from raw deprecated profile field", () => {

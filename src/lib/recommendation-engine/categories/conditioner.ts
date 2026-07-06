@@ -85,12 +85,8 @@ export function evaluateConditionerFit(
   if (decision.targetProfile.balance && !spec.balance_direction) {
     missingFields.push("balance_direction")
   }
-  if (
-    decision.targetProfile.thickness &&
-    (!spec.suitable_thicknesses || spec.suitable_thicknesses.length === 0)
-  ) {
-    missingFields.push("suitable_thicknesses")
-  }
+  // Empty suitable_thicknesses is a legacy-column gap, not missing product data:
+  // the thickness dimension degrades to "unknown" below instead of blocking the fit.
 
   if (missingFields.length > 0) {
     return {

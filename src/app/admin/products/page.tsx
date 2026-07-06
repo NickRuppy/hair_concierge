@@ -4,6 +4,11 @@ import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
 import type { Product, ShampooBucketPair } from "@/lib/types"
 import { HAIR_THICKNESS_OPTIONS, PRODUCT_LIFECYCLE_STATUSES } from "@/lib/types"
+import {
+  buildAdminProductFilterQueryString,
+  DEFAULT_ADMIN_PRODUCT_FILTERS,
+  type AdminProductFilters,
+} from "@/lib/admin/product-filters"
 import { isBondbuilderCategory } from "@/lib/bondbuilder/constants"
 import { fehler } from "@/lib/vocabulary"
 import {
@@ -137,6 +142,10 @@ interface ProductForm {
   peeling_specs: PeelingSpecForm | null
 }
 
+type AdminProduct = Product & {
+  origin?: string | null
+}
+
 const emptyLeaveInSpecs: LeaveInSpecForm = {
   weight: "light",
   conditioner_relationship: "replacement_capable",
@@ -208,12 +217,13 @@ const emptyForm: ProductForm = {
 }
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<AdminProduct[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<ProductForm>(emptyForm)
+  const [filters, setFilters] = useState<AdminProductFilters>(DEFAULT_ADMIN_PRODUCT_FILTERS)
   const { toast } = useToast()
   const editingProduct = editingId
     ? (products.find((product) => product.id === editingId) ?? null)
@@ -225,28 +235,35 @@ export default function AdminProductsPage() {
     ? OIL_SUBTYPE_OPTIONS
     : getAllowedProductConcernOptions(form.category)
 
-  async function loadProducts() {
+  async function loadProducts(nextFilters: AdminProductFilters = filters, signal?: AbortSignal) {
     try {
       setLoading(true)
-      const res = await fetch("/api/admin/products")
+      const queryString = buildAdminProductFilterQueryString(nextFilters)
+      const res = await fetch(`/api/admin/products?${queryString}`, { signal })
+      if (signal?.aborted) return
       if (!res.ok) {
         const data = await res.json()
         throw new Error(data.error || fehler("Laden"))
       }
       const data = await res.json()
+      if (signal?.aborted) return
       setProducts(data.products)
     } catch (err: unknown) {
+      if (err instanceof DOMException && err.name === "AbortError") return
       const message = err instanceof Error ? err.message : fehler("Laden", "der Produkte")
       toast({ title: message, variant: "destructive" })
     } finally {
+      if (signal?.aborted) return
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    loadProducts()
+    const controller = new AbortController()
+    loadProducts(filters, controller.signal)
+    return () => controller.abort()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [filters])
 
   function handleNew() {
     setEditingId(null)
@@ -653,6 +670,18 @@ export default function AdminProductsPage() {
     return status === "discontinued" ? "Eingestellt" : "Aktuell"
   }
 
+  function formatOrigin(origin: string | null | undefined): string {
+    if (origin === "curated") return "Kuratiert"
+    if (origin === "user_submitted") return "Nutzerprodukt"
+    return "—"
+  }
+
+  function formatRecommendationStatus(product: AdminProduct): string {
+    if (product.is_chaarlie_recommended === true) return "Empfohlen"
+    if (product.is_chaarlie_recommended === false) return "Nicht empfohlen"
+    return "—"
+  }
+
   function formatShampooPair(pair: ShampooBucketPair): string {
     const thicknessLabel =
       HAIR_THICKNESS_OPTIONS.find((option) => option.value === pair.thickness)?.label ??
@@ -673,6 +702,108 @@ export default function AdminProductsPage() {
             Neues Produkt
           </button>
         )}
+      </div>
+
+      <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <label
+            htmlFor="product-origin-filter"
+            className="mb-1 block text-xs font-medium text-muted-foreground"
+          >
+            Herkunft
+          </label>
+          <select
+            id="product-origin-filter"
+            value={filters.origin}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                origin: e.target.value as AdminProductFilters["origin"],
+              }))
+            }
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            <option value="all">Alle</option>
+            <option value="curated">Kuratiert</option>
+            <option value="user_submitted">Nutzerprodukt</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="product-recommendation-filter"
+            className="mb-1 block text-xs font-medium text-muted-foreground"
+          >
+            Empfehlung
+          </label>
+          <select
+            id="product-recommendation-filter"
+            value={filters.recommendation_status}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                recommendation_status: e.target
+                  .value as AdminProductFilters["recommendation_status"],
+              }))
+            }
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            <option value="all">Alle</option>
+            <option value="recommended">Empfohlen</option>
+            <option value="not_recommended">Nicht empfohlen</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="product-lifecycle-filter"
+            className="mb-1 block text-xs font-medium text-muted-foreground"
+          >
+            Lebenszyklus
+          </label>
+          <select
+            id="product-lifecycle-filter"
+            value={filters.lifecycle_status}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                lifecycle_status: e.target.value as AdminProductFilters["lifecycle_status"],
+              }))
+            }
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            <option value="all">Alle</option>
+            {PRODUCT_LIFECYCLE_STATUSES.map((status) => (
+              <option key={status} value={status}>
+                {formatLifecycleStatus(status)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="product-active-filter"
+            className="mb-1 block text-xs font-medium text-muted-foreground"
+          >
+            Status
+          </label>
+          <select
+            id="product-active-filter"
+            value={filters.active_status}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                active_status: e.target.value as AdminProductFilters["active_status"],
+              }))
+            }
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            <option value="all">Alle</option>
+            <option value="active">Aktiv</option>
+            <option value="inactive">Inaktiv</option>
+          </select>
+        </div>
       </div>
 
       {showForm && (
@@ -1649,6 +1780,10 @@ export default function AdminProductsPage() {
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Marke</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Kategorie</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Herkunft</th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                  Empfehlung
+                </th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Preis</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Aktiv</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
@@ -1668,6 +1803,12 @@ export default function AdminProductsPage() {
                     {isShampooCategory(product.category) && (
                       <div className="mt-1 text-xs text-amber-600">Quellenverwaltet</div>
                     )}
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {formatOrigin(product.origin)}
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {formatRecommendationStatus(product)}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {formatPrice(product.price_eur)}

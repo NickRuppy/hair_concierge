@@ -16,6 +16,10 @@ import { ArrowDown, Menu } from "lucide-react"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { Icon } from "@/components/ui/icon"
 import type { Product } from "@/lib/types"
+import {
+  buildProductIntakeOfferStateByMessageId,
+  buildProductLookupClarificationStateByMessageId,
+} from "@/lib/chat/product-lookup-selection-ui"
 
 const JUMP_TO_LATEST_THRESHOLD_PX = 80
 const USER_OVERRIDE_DISTANCE_PX = 200
@@ -29,15 +33,25 @@ export function ChatContainer() {
     conversations,
     currentConversationId,
     sendMessage,
+    selectProductCandidate,
     submitFeedback,
     loadConversation,
     loadConversations,
     deleteConversation,
     startNewConversation,
+    applyProductIntakeSubmission,
   } = useChat()
 
   const { hairProfile } = useHairProfile()
   const suggestedPrompts = useMemo(() => generateSuggestedPrompts(hairProfile), [hairProfile])
+  const productLookupClarificationStateByMessageId = useMemo(
+    () => buildProductLookupClarificationStateByMessageId(messages),
+    [messages],
+  )
+  const productIntakeOfferStateByMessageId = useMemo(
+    () => buildProductIntakeOfferStateByMessageId(messages),
+    [messages],
+  )
 
   const [sidebarState, setSidebarState] = useState<"closed" | "open" | "closing">("closed")
   const sidebarPanelRef = useRef<HTMLDivElement>(null)
@@ -575,8 +589,17 @@ export function ChatContainer() {
                       message={msg}
                       hairProfile={hairProfile}
                       onProductClick={handleProductClick}
+                      onSelectProductCandidate={selectProductCandidate}
                       onFeedback={submitFeedback}
                       isNew={newMessageIds.has(msg.id)}
+                      isStreamingMessage={
+                        isStreaming && idx === messages.length - 1 && msg.role === "assistant"
+                      }
+                      productLookupClarificationState={productLookupClarificationStateByMessageId.get(
+                        msg.id,
+                      )}
+                      productIntakeOfferState={productIntakeOfferStateByMessageId.get(msg.id)}
+                      onProductIntakeSubmitted={applyProductIntakeSubmission}
                     />
                   </div>
                 )

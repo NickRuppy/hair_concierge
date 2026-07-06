@@ -102,10 +102,11 @@ If the user asks for a requested number of dry shampoos:
 - availability caveat: exact means the requested count when enough grounded, suitable, available products exist; if fewer fit, return fewer and explain the fit or availability limit
 
 If the user asks about a named dry shampoo, no-white-cast, tint, volume, fragrance, format, invisible finish, sensitive-scalp positioning, exact usage, or whether a product claim is true:
-- primary_intent: product_recommendation
+- primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+- answer_mode: product_assessment after identity is resolved
 - product_request_kind: product_detail
 - care_category: dry_shampoo
-- requires_tool: product catalog data or select_products
+- requires_tool: lookup_product_candidate first, then product catalog data or internal select_products projection facts when product claims need grounding
 - product detail behavior: treat this as a product fact/claim check, not necessarily a recommendation or product-card flow
 - do not infer from product name, brand line, marketing family, or category guidance alone
 - do not guarantee irritation-free use even if product metadata supports fragrance-free or sensitive-scalp positioning
@@ -151,7 +152,7 @@ German example distinctions:
 - "Welche Art Trockenshampoo passt zu feinem Haar?" or "Spray oder Puder: was ist der Unterschied?" means type/kind education: `primary_intent: category_education`, `product_request_kind: category_education`, no unasked product cards.
 - "Ist Trockenshampoo bei schnell fettendem Ansatz sinnvoll?" means category assessment: `primary_intent: general_advice`, `product_request_kind: none`, `care_category: dry_shampoo`.
 - "Nenn mir zwei Trockenshampoos für dunkles Haar" or "Welches Trockenshampoo kannst du empfehlen?" means concrete products: `primary_intent: product_recommendation`, `product_request_kind: specific_products`, `requires_tool: select_products`.
-- "Stimmt es, dass Produkt X keinen weißen Schleier macht?" means product fact/claim check: `primary_intent: product_recommendation`, `product_request_kind: product_detail`, and needs product metadata or `select_products` before the claim is answered.
+- "Stimmt es, dass Produkt X keinen weißen Schleier macht?" means named-product assessment/fact check: use `lookup_product_candidate`, `product_request_kind: product_detail`, and verified product metadata or internal `select_products` projection facts before the claim is answered.
 
 ## Agent May Decide
 - Whether dry shampoo is a useful bridge, optional, weak fit, or inappropriate because actual cleansing or safety handling is needed.

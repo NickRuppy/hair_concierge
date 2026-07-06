@@ -127,22 +127,24 @@ If the user asks which bondbuilder fits, asks for options, or asks for a count:
 - requires_tool: select_products
 
 If the user asks about a named bondbuilder, exact product protocol, lifecycle, successor status, technology lane, booster pairing, cleanse-after use, cadence, or a product-specific bond-repair claim:
-- primary_intent: product_recommendation
+- primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+- answer_mode: product_assessment after identity is resolved
 - product_request_kind: product_detail
 - care_category: bondbuilder
 - requested_product_count: 1 for a single named product or claim check
 - count_policy: exact for a single named product or claim check
 - load_advisor_guidance answer_mode_hint: product_recommendation
-- requires_tool: product catalog data or select_products
+- requires_tool: lookup_product_candidate first, then product catalog data or internal select_products projection facts when product claims need grounding
 - do_not_infer_from_name_or_brand_line: true
 - answer exact application, timing, cadence, wash-out, cleanse-after, and booster-pairing details only from selected product `supported_claims` with `field: usage_hint` or another explicit product metadata claim
 - if the selected product lacks a projected usage hint, say the exact protocol is not grounded instead of guessing from the internal protocol id, product name, or brand line
 
 If the user asks "K18 oder OLAPLEX?":
-- primary_intent: product_recommendation
+- primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+- answer_mode: product_assessment after both identities are resolved
 - product_request_kind: compare_products
 - care_category: bondbuilder
-- requires_tool: select_products or product catalog data
+- requires_tool: lookup_product_candidate for each named product, then product catalog data or internal select_products projection facts when comparison facts need grounding
 - compare the grounded products/protocols first and do not force product cards unless the user asks for concrete options, cards, or shopping-ready recommendations
 
 If the user asks bondbuilder versus mask, conditioner, protein, or deep cleansing:

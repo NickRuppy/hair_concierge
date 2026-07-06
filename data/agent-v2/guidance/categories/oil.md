@@ -125,13 +125,14 @@ If the user asks which oil fits, asks for options, or asks for a count:
 - requires_tool: select_products
 
 If the user asks about a named oil, serum, ingredient, heat claim, scalp suitability, fragrance, color protection, silicone-free/oil-free status, exact cadence, or product-specific oil claim:
-- primary_intent: product_recommendation
+- primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+- answer_mode: product_assessment after identity is resolved
 - product_request_kind: product_detail
 - care_category: oil
 - requested_product_count: 1 for a single named product or claim check
 - count_policy: exact for a single named product or claim check
 - load_advisor_guidance answer_mode_hint: product_recommendation
-- requires_tool: product catalog data or select_products
+- requires_tool: lookup_product_candidate first, then product catalog data or internal select_products projection facts when product claims need grounding
 - do_not_infer_from_name_or_brand_line: true
 - heat-protection claims require explicit selected product metadata; plain oil is not heat protection
 

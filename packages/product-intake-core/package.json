@@ -1,0 +1,17 @@
+{
+  "name": "@chaarlie/product-intake-core",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit --pretty false"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.95.3"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

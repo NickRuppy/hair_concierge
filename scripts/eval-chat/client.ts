@@ -5,6 +5,7 @@
  */
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
+import { randomUUID } from "node:crypto"
 import type { EvalConversationTurnTraceRow } from "./debug-artifacts"
 import type { SSEResult, HairProfileOverrides, RoutineInventorySeed } from "./types"
 
@@ -105,7 +106,7 @@ export async function createTestSession(
     auth: { autoRefreshToken: false, persistSession: false },
   })
 
-  const email = `eval-chat-${Date.now()}@test.hairconscierge.dev`
+  const email = `eval-chat-${randomUUID()}@test.hairconscierge.dev`
   const password = "eval-test-password-2026"
 
   const { data: userData, error: createErr } = await admin.auth.admin.createUser({

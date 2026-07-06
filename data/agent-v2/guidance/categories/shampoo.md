@@ -100,10 +100,11 @@ If the user asks for concrete shampoos:
 - requires_tool: select_products
 
 If the user asks about a named shampoo, ingredient/claim fit, or whether a specific shampoo is color-safe, sulfate-free, fragrance-free, anti-dandruff, sensitive-scalp, repair, growth, shine, or has an exact cadence/protocol:
-- primary_intent: product_recommendation
+- primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+- answer_mode: product_assessment after identity is resolved
 - product_request_kind: product_detail
 - care_category: shampoo
-- requires_tool: select_products or product catalog data
+- requires_tool: lookup_product_candidate first, then product catalog data or internal select_products projection facts when product claims need grounding
 
 If the user asks shampoo versus deep cleansing, dry shampoo, conditioner, leave-in, or mask:
 - primary_intent: category_education
@@ -173,7 +174,7 @@ If medically adjacent scalp symptoms appear:
 - Saved routine state and mutations.
 
 ## Required Grounding
-Use `select_products` before naming concrete shampoos as recommendations.
+Use `lookup_product_candidate` before assessing a named shampoo. Use `select_products` before naming concrete shampoos as recommendations or as internal projection grounding for a resolved named shampoo.
 
 Use product metadata before making color-safe, color-protection, dandruff, sensitive-scalp, fragrance, sulfate-free, repair, shine, or exact cadence claims.
 

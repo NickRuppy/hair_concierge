@@ -2,19 +2,47 @@ import type {
   ChatCategoryDecision,
   IntentType,
   MessageRagContext,
+  ProductIntakeOffer,
+  ProductLookupClarification,
+  ProductLookupSelectionContext,
   RecommendationEngineTrace,
   ResponseMode,
   RouterDecision,
   CitationSource,
 } from "@/lib/types"
 
+export type AssistantDecisionContextInput = {
+  sources: CitationSource[]
+  categoryDecision?: ChatCategoryDecision
+  engineTrace?: RecommendationEngineTrace | null
+  responseMode?: ResponseMode
+  productIntakeOffer?: ProductIntakeOffer | null
+  productLookupClarification?: ProductLookupClarification | null
+  productLookupSelection?: ProductLookupSelectionContext | null
+}
+
 export function buildAssistantDecisionContext(
-  sources: CitationSource[],
-  categoryDecision?: ChatCategoryDecision,
-  engineTrace?: RecommendationEngineTrace | null,
-  responseMode?: ResponseMode,
+  params: AssistantDecisionContextInput,
 ): MessageRagContext | null {
-  if (sources.length === 0 && !categoryDecision && !engineTrace && !responseMode) {
+  const {
+    sources,
+    categoryDecision,
+    engineTrace,
+    responseMode,
+    productIntakeOffer,
+    productLookupClarification,
+    productLookupSelection,
+  } = params
+
+  if (
+    sources.length === 0 &&
+    !categoryDecision &&
+    !engineTrace &&
+    !responseMode &&
+    !productIntakeOffer &&
+    !productLookupClarification &&
+    !productLookupSelection
+  ) {
     return null
   }
 
@@ -23,6 +51,9 @@ export function buildAssistantDecisionContext(
     category_decision: categoryDecision ?? null,
     engine_trace: engineTrace ?? null,
     response_mode: responseMode ?? null,
+    product_intake_offer: productIntakeOffer ?? null,
+    product_lookup_clarification: productLookupClarification ?? null,
+    product_lookup_selection: productLookupSelection ?? null,
   }
 }
 

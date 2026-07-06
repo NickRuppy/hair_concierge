@@ -110,10 +110,11 @@ If the user asks for a requested number of peeling products:
 - exact applies when enough grounded suitable products are available; if fewer are grounded and suitable, return fewer and explain fit or availability instead of padding
 
 If the user asks about a named peeling, whether it is mechanical, chemical, scalp-suitable, sensitive-scalp suitable, anti-dandruff, treatment-like, compatible, or has an exact scalp-use protocol/frequency:
-- primary_intent: product_recommendation
+- primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+- answer_mode: product_assessment after identity is resolved
 - product_request_kind: product_detail
 - care_category: peeling
-- requires_tool: product catalog data or select_products
+- requires_tool: lookup_product_candidate first, then product catalog data or internal select_products projection facts when product claims need grounding
 - do not infer from product name, brand line, marketing family, or category guidance alone
 - treat this as a product fact or claim check, not automatically as a recommendation or card flow
 

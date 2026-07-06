@@ -111,10 +111,11 @@ If the user asks for concrete masks:
 - requires_tool: select_products
 
 If the user asks about a named mask, whether a mask is protein-rich, protein-free, moisture-focused, lightweight, rich, color-protective, repair-supported, scalp-directed, silicone-free, coconut-free, oil-free, or fits their profile:
-- primary_intent: product_recommendation
+- primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+- answer_mode: product_assessment after identity is resolved
 - product_request_kind: product_detail
 - care_category: mask
-- requires_tool: product catalog data or select_products
+- requires_tool: lookup_product_candidate first, then product catalog data or internal select_products projection facts when product claims need grounding
 - do not infer from product name, brand line, marketing family, or category guidance alone
 
 If the user asks mask versus conditioner, leave-in, oil, or bondbuilder:

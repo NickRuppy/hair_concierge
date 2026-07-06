@@ -2,7 +2,11 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { hydrateHairProfileForConsumers } from "../src/lib/hair-profile/derived"
-import { UNSELECTED_SHAMPOO_PRODUCT_NAME } from "../src/lib/product-usage/shampoo-fallback"
+import {
+  coerceProductUsageFrequencyRows,
+  getVisibleProductUsageItems,
+  UNSELECTED_SHAMPOO_PRODUCT_NAME,
+} from "../src/lib/product-usage/shampoo-fallback"
 import type { HairProfile } from "../src/lib/types"
 
 function makeProfile(overrides: Partial<HairProfile> = {}): HairProfile {
@@ -73,6 +77,22 @@ test("hydrates wash cadence from shampoo product usage", () => {
   assert.deepEqual(hydrated?.current_routine_products, ["shampoo"])
 })
 
+test("keeps pending product usage rows visible as current routine context", () => {
+  const hydrated = hydrateHairProfileForConsumers(makeProfile(), [
+    {
+      category: "mask",
+      product_name: "Unverified Mask",
+      frequency_range: "weekly_1x",
+      product_id: null,
+      product_submission_id: "submission-1",
+      match_status: "pending_review",
+    },
+  ])
+
+  assert.deepEqual(hydrated?.current_routine_products, ["mask"])
+  assert.equal(hydrated?.products_used, "Haarmaske: Unverified Mask")
+})
+
 test("uses the highest shampoo cadence when duplicate shampoo rows exist", () => {
   const hydrated = hydrateHairProfileForConsumers(makeProfile({ shampoo_frequency: null }), [
     {
@@ -132,4 +152,36 @@ test("does not infer shampoo frequency from deprecated profile shampoo_frequency
   )
 
   assert.equal(hydrated?.shampoo_frequency, null)
+})
+
+test("product usage coercion drops malformed rows before visible filtering", () => {
+  const rows = coerceProductUsageFrequencyRows([
+    null,
+    42,
+    {},
+    {
+      category: "shampoo",
+      product_name: UNSELECTED_SHAMPOO_PRODUCT_NAME,
+      frequency_range: "less_than_monthly",
+    },
+    {
+      category: "mask",
+      product_name: "Repair Mask",
+      frequency_range: "weekly_1x",
+      product_id: "mask-1",
+      match_status: "matched",
+    },
+  ])
+
+  assert.equal(rows.length, 2)
+  assert.deepEqual(getVisibleProductUsageItems(rows), [
+    {
+      category: "mask",
+      product_name: "Repair Mask",
+      frequency_range: "weekly_1x",
+      product_id: "mask-1",
+      product_submission_id: null,
+      match_status: "matched",
+    },
+  ])
 })

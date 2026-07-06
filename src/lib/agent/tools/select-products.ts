@@ -23,6 +23,7 @@ import {
 } from "@/lib/agent/tools/care-balance-context"
 import { applyProductMemoryConstraints } from "@/lib/chat-runtime/user-memory"
 import type { MatchedProduct } from "@/lib/product-matching/matcher"
+import { isMatchedRoutineUsage } from "@/lib/product-usage/routine-identity"
 import type { UserMemoryContext } from "@/lib/chat-runtime/user-memory"
 import { attachProductLineNamesToProducts } from "@/lib/product-lines/display"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -241,8 +242,56 @@ export interface SelectProductsToolResult {
   runtime: RecommendationEngineRuntime
 }
 
+export type SelectProductsTargetProductHint = {
+  product_id: string
+  name: string
+  category: SelectableProductCategory | string | null
+}
+
 function uniqueNonEmpty(values: Array<string | null | undefined>): string[] {
   return [...new Set(values.map((value) => value?.trim() ?? "").filter(Boolean))]
+}
+
+function buildTargetAssessmentFallbackProjection(params: {
+  category: SelectableProductCategory
+  targetProductHints: readonly SelectProductsTargetProductHint[] | null | undefined
+  targetProductIds: readonly string[] | null | undefined
+}): SelectedProductsProjection | null {
+  const targetProductIdSet = new Set(uniqueNonEmpty([...(params.targetProductIds ?? [])]))
+  if (targetProductIdSet.size === 0) return null
+
+  const products = (params.targetProductHints ?? [])
+    .filter((hint) => targetProductIdSet.has(hint.product_id))
+    .slice(0, targetProductIdSet.size)
+    .map<SelectedProductResult>((hint, index) => ({
+      rank: index + 1,
+      product_id: hint.product_id,
+      name: hint.name,
+      brand: null,
+      price_eur: null,
+      currency: null,
+      fit_reason:
+        "Dieses Produkt wurde in der Unterhaltung eindeutig ausgewählt und dient als Ziel der Produktbewertung.",
+      caveat: null,
+      supported_claims: [],
+      unsupported_requested_signals: [],
+    }))
+
+  if (products.length === 0) return null
+
+  return {
+    category: params.category,
+    decision: "recommended",
+    product_response_policy: "recommend_with_caveat",
+    policy_reason: "Konkretes Produkt wurde eindeutig aufgelöst; keine Ersatzprodukte anhängen.",
+    profile_basis: [],
+    category_guidance:
+      "Bewerte das ausgewählte Produkt nur anhand geprüfter Produktdaten und nenne Unsicherheit klar.",
+    products,
+    comparison_facts: null,
+    missing_info: [],
+    unsupported_requested_signals: [],
+  }
 }
 
 function projectDisplayableProduct(
@@ -3184,36 +3233,122 @@ async function runCategoryEngine(params: {
   hairProfile: HairProfile | null
   routineItems: PersistenceRoutineItemRow[]
   runtime: RecommendationEngineRuntime
+  includeProductIds?: string[]
+  preserveProductIds?: string[]
 }): Promise<MatchedProduct[]> {
-  const { category, message, hairProfile, routineItems, runtime } = params
+  const {
+    category,
+    message,
+    hairProfile,
+    routineItems,
+    runtime,
+    includeProductIds,
+    preserveProductIds,
+  } = params
 
   switch (category) {
     case "shampoo":
-      return selectShampooProductsWithEngine({ message, hairProfile, routineItems })
+      return selectShampooProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        includeProductIds,
+        preserveProductIds,
+      })
     case "conditioner":
-      return selectConditionerProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectConditionerProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+        preserveProductIds,
+      })
     case "leave_in":
-      return selectLeaveInProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectLeaveInProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+        preserveProductIds,
+      })
     case "mask":
-      return selectMaskProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectMaskProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+        preserveProductIds,
+      })
     case "oil":
-      return selectOilProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectOilProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+        preserveProductIds,
+      })
     case "bondbuilder":
-      return selectBondbuilderProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectBondbuilderProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+        preserveProductIds,
+      })
     case "deep_cleansing_shampoo":
       return selectDeepCleansingShampooProductsWithEngine({
         message,
         hairProfile,
         routineItems,
         runtime,
+        includeProductIds,
+        preserveProductIds,
       })
     case "dry_shampoo":
-      return selectDryShampooProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectDryShampooProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+        preserveProductIds,
+      })
     case "peeling":
-      return selectPeelingProductsWithEngine({ message, hairProfile, routineItems, runtime })
+      return selectPeelingProductsWithEngine({
+        message,
+        hairProfile,
+        routineItems,
+        runtime,
+        includeProductIds,
+        preserveProductIds,
+      })
     default:
       unsupportedCategory(String(category))
   }
+}
+
+function ownedProductIdsForCategory(
+  routineItems: PersistenceRoutineItemRow[],
+  category: SelectableProductCategory,
+): string[] {
+  return [
+    ...new Set(
+      routineItems
+        .filter(
+          (item) =>
+            item.category === category &&
+            isMatchedRoutineUsage(item.match_status ?? null) &&
+            typeof item.product_id === "string" &&
+            item.product_id.length > 0,
+        )
+        .map((item) => item.product_id as string),
+    ),
+  ]
 }
 
 function applyShampooActiveOverrides(
@@ -3424,6 +3559,8 @@ export function createSelectProductsTool(
     concerns?: AgentConcern[] | null
     requestedGoal?: "shine" | null
     activeProfileSignals?: AgentActiveProfileSignal[] | null
+    targetProductIds?: string[] | null
+    targetProductHints?: SelectProductsTargetProductHint[] | null
   }): Promise<SelectedProductsProjection> {
     const {
       category,
@@ -3436,6 +3573,8 @@ export function createSelectProductsTool(
       concerns,
       requestedGoal,
       activeProfileSignals,
+      targetProductIds,
+      targetProductHints,
     } = params
     const effectiveHairProfile = applyActiveProfileOverrides({
       category,
@@ -3449,15 +3588,21 @@ export function createSelectProductsTool(
       message,
       effectiveCareContext,
     })
-    const products = await (options.runCategoryEngine ?? runCategoryEngine)({
+    const includeProductIds = uniqueNonEmpty([
+      ...ownedProductIdsForCategory(routineItems, category),
+      ...(targetProductIds ?? []),
+    ])
+    const engineProducts = await (options.runCategoryEngine ?? runCategoryEngine)({
       category,
       message,
       hairProfile: effectiveHairProfile,
       routineItems,
       runtime,
+      includeProductIds,
+      preserveProductIds: uniqueNonEmpty(targetProductIds ?? []),
     })
     const productsWithLineNames = await attachProductLineNamesToProducts(
-      products,
+      engineProducts,
       createAdminClient(),
       {
         onError: (error) =>
@@ -3465,8 +3610,13 @@ export function createSelectProductsTool(
       },
     )
     const constrainedProducts = applyProductMemoryConstraints(productsWithLineNames, memoryContext)
+    const targetProductIdSet = new Set(uniqueNonEmpty(targetProductIds ?? []))
+    const productsForProjection =
+      targetProductIdSet.size > 0
+        ? constrainedProducts.filter((product) => targetProductIdSet.has(product.id))
+        : constrainedProducts
     const projection = projectSelectedProducts(
-      constrainedProducts,
+      productsForProjection,
       effectiveHairProfile,
       category,
       runtime,
@@ -3489,14 +3639,22 @@ export function createSelectProductsTool(
         originalHairProfile: hairProfile,
       },
     )
+    const effectiveProjection =
+      targetProductIdSet.size > 0 && projection.products.length === 0
+        ? (buildTargetAssessmentFallbackProjection({
+            category,
+            targetProductHints,
+            targetProductIds,
+          }) ?? projection)
+        : projection
 
     options.onResult?.({
-      projection,
-      products: constrainedProducts,
+      projection: effectiveProjection,
+      products: productsForProjection,
       effectiveHairProfile,
       runtime,
     })
 
-    return projection
+    return effectiveProjection
   }
 }

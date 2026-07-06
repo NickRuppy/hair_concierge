@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Intake"
+  short_description: "Run the Chaarlie product-intake review workflow"
+  default_prompt: "Use $product-intake to research, review, or publish a product-intake submission."

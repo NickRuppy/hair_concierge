@@ -19,7 +19,7 @@
       "rule_id": "category.leave_in.no_unsupported_heat_protection",
       "severity": "block",
       "source": "categories/leave-in.md",
-      "message": "Do not claim heat protection, heat-protection consolidation, or exact heat-protection temperatures unless selected product data supports it."
+      "message": "Do not claim heat protection, heat-protection consolidation, or exact heat-protection temperatures unless verified product data supports it."
     },
     {
       "rule_id": "category.leave_in.no_scalp_care",
@@ -31,7 +31,7 @@
       "rule_id": "category.leave_in.no_ungrounded_product_detail_claims",
       "severity": "block",
       "source": "categories/leave-in.md",
-      "message": "Do not infer named leave-in weight, role, format, fragrance or fragrance-free status, curl definition, conditioner replacement, or claim truth from product names or marketing."
+      "message": "Do not infer named leave-in weight, role, format, fragrance or fragrance-free status, curl definition, conditioner replacement, or claim truth from product names or marketing; resolve named product identity first."
     },
     {
       "rule_id": "category.leave_in.routine_explanation_not_mutation",
@@ -100,7 +100,7 @@
     {
       "grounding_id": "category.leave_in.product_claims_and_heat_protection",
       "tool": "select_products",
-      "when": "Concrete leave-in names, product detail checks, heat protection, exact heat-protection temperature, weight, format, fragrance or fragrance-free status, curl definition, conditioner replacement, or product-specific role claims are mentioned."
+      "when": "Concrete leave-in recommendations or internal projection facts for a resolved named leave-in are needed, including heat protection, exact heat-protection temperature, weight, format, fragrance or fragrance-free status, curl definition, conditioner replacement, or product-specific role claims. Start named-product assessment with lookup_product_candidate."
     },
     {
       "grounding_id": "category.leave_in.routine_mutations",

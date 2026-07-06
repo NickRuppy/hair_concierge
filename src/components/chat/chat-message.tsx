@@ -3,7 +3,13 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { format } from "date-fns"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
-import type { Message, CitationSource, Product, HairProfile } from "@/lib/types"
+import type {
+  Message,
+  CitationSource,
+  Product,
+  HairProfile,
+  ProductLookupSelectionContext,
+} from "@/lib/types"
 import type { Components } from "react-markdown"
 import { ThumbsDown, ThumbsUp } from "lucide-react"
 import ReactMarkdown from "react-markdown"
@@ -12,6 +18,13 @@ import { CitationBadge } from "./citation-badge"
 import { ProductPopover } from "./product-popover"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { ProductCard } from "./product-card"
+import { ProductIntakeCard } from "./product-intake-card"
+import { ProductLookupClarificationCard } from "./product-lookup-clarification-card"
+import type { ProductIntakeSubmissionPatch, ProductSelectionParams } from "@/hooks/use-chat"
+import type {
+  ProductIntakeOfferState,
+  ProductLookupClarificationState,
+} from "@/lib/chat/product-lookup-selection-ui"
 
 /**
  * Renumbers [N] citation markers in content so they appear as [1], [2], [3]
@@ -77,9 +90,15 @@ interface ChatMessageProps {
   message: Message
   hairProfile: HairProfile | null
   onProductClick?: (product: Product) => void
+  onSelectProductCandidate?: (params: ProductSelectionParams) => Promise<void> | void
   onFeedback?: (messageId: string, score: -1 | 1) => Promise<void>
   /** True for messages appended during this session (not history loads) */
   isNew?: boolean
+  isStreamingMessage?: boolean
+  resolvedProductLookupSelection?: ProductLookupSelectionContext | null
+  productLookupClarificationState?: ProductLookupClarificationState | null
+  productIntakeOfferState?: ProductIntakeOfferState | null
+  onProductIntakeSubmitted?: (patch: ProductIntakeSubmissionPatch) => void
 }
 
 /**
@@ -224,8 +243,14 @@ export function ChatMessage({
   message,
   hairProfile,
   onProductClick,
+  onSelectProductCandidate,
   onFeedback,
   isNew,
+  isStreamingMessage = false,
+  resolvedProductLookupSelection = null,
+  productLookupClarificationState = null,
+  productIntakeOfferState = null,
+  onProductIntakeSubmitted,
 }: ChatMessageProps) {
   const isUser = message.role === "user"
 
@@ -256,6 +281,22 @@ export function ChatMessage({
   const [showAllProducts, setShowAllProducts] = useState(false)
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false)
   const visibleProducts = showAllProducts ? products : products.slice(0, 3)
+
+  const selectProductFromClarification = async (params: {
+    clarificationId: string
+    selectedProductId: string
+    sourceAssistantMessageId?: string
+  }) => {
+    if (!onSelectProductCandidate) {
+      throw new Error("Produktauswahl ist gerade nicht verfügbar.")
+    }
+    await onSelectProductCandidate({
+      conversationId: message.conversation_id,
+      assistantMessageId: params.sourceAssistantMessageId ?? message.id,
+      clarificationId: params.clarificationId,
+      selectedProductId: params.selectedProductId,
+    })
+  }
 
   const hasEnhancements = sources.length > 0 || productMap.size > 0
 
@@ -342,29 +383,74 @@ export function ChatMessage({
           </details>
         )}
 
+        {message.rag_context?.product_intake_offer &&
+        !message.rag_context?.product_lookup_clarification &&
+        !isUser ? (
+          <ProductIntakeCard
+            offer={message.rag_context.product_intake_offer}
+            conversationId={message.conversation_id}
+            sourceMessageId={message.id}
+            persistedState={productIntakeOfferState}
+            onSubmitted={(result) =>
+              onProductIntakeSubmitted?.({
+                messageId: message.id,
+                offerId: message.rag_context?.product_intake_offer?.id ?? "",
+                submissionId: result.submissionId,
+                status: result.status,
+              })
+            }
+          />
+        ) : null}
+
+        {message.rag_context?.product_lookup_clarification && !isUser ? (
+          <ProductLookupClarificationCard
+            clarification={message.rag_context.product_lookup_clarification}
+            conversationId={message.conversation_id}
+            assistantMessageId={message.id}
+            selectionDisabled={isStreamingMessage}
+            resolvedSelection={
+              productLookupClarificationState?.resolvedSelection ?? resolvedProductLookupSelection
+            }
+            resolvedIntakeReview={productLookupClarificationState?.resolvedIntakeReview ?? null}
+            onSelectProduct={selectProductFromClarification}
+            onIntakeSubmitted={(result) =>
+              onProductIntakeSubmitted?.({
+                messageId: message.id,
+                offerId:
+                  message.rag_context?.product_lookup_clarification?.none_action
+                    .product_intake_offer.id ?? "",
+                submissionId: result.submissionId,
+                status: result.status,
+              })
+            }
+          />
+        ) : null}
+
         {/* Product recommendation cards */}
-        {products.length > 0 && onProductClick && (
-          <div className="flex w-full min-w-0 max-w-full flex-col gap-1.5 pt-1">
-            {visibleProducts.map((p, i) => (
-              <div
-                key={p.id}
-                className="min-w-0 animate-fade-in-up-fast"
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                <ProductCard product={p} onClick={onProductClick} />
-              </div>
-            ))}
-            {products.length > 3 && !showAllProducts && (
-              <button
-                type="button"
-                onClick={() => setShowAllProducts(true)}
-                className="type-caption text-primary hover:underline text-left px-1"
-              >
-                +{products.length - 3} weitere Empfehlungen
-              </button>
-            )}
-          </div>
-        )}
+        {products.length > 0 &&
+          onProductClick &&
+          !message.rag_context?.product_lookup_clarification && (
+            <div className="flex w-full min-w-0 max-w-full flex-col gap-1.5 pt-1">
+              {visibleProducts.map((p, i) => (
+                <div
+                  key={p.id}
+                  className="min-w-0 animate-fade-in-up-fast"
+                  style={{ animationDelay: `${i * 100}ms` }}
+                >
+                  <ProductCard product={p} onClick={onProductClick} />
+                </div>
+              ))}
+              {products.length > 3 && !showAllProducts && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllProducts(true)}
+                  className="type-caption text-primary hover:underline text-left px-1"
+                >
+                  +{products.length - 3} weitere Empfehlungen
+                </button>
+              )}
+            </div>
+          )}
 
         {/* Timestamp */}
         {message.created_at && (

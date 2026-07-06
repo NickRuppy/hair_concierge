@@ -1,0 +1,6061 @@
+{
+  "metadata": {
+    "schema_version": "1.0",
+    "updated_at": "2026-06-12T10:05:20.201Z",
+    "source": "Generated from data/product-catalog-snapshot.json after production re-baseline on 2026-06-12.",
+    "production_baseline": {
+      "product_count": 239,
+      "categories": [
+        "Bondbuilder",
+        "Conditioner (Drogerie)",
+        "Leave-in",
+        "Maske",
+        "Shampoo",
+        "Tiefenreinigungsshampoo",
+        "Trockenshampoo",
+        "Öle"
+      ]
+    },
+    "notes": "Initial Phase 0 catalog identity mapping. Product-line splits are internal and conservative; users are not expected to understand product lines."
+  },
+  "products": [
+    {
+      "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "current_brand": "Epres",
+      "current_name": "Epres Bond Repair Treatment",
+      "current_category": "Bondbuilder",
+      "canonical_category_key": "bondbuilder",
+      "canonical_brand": "Epres",
+      "product_line": null,
+      "clean_name": "Bond Repair Treatment",
+      "aliases": [
+        {
+          "alias": "Epres",
+          "resolves_to": "brand",
+          "canonical_brand": "Epres",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Epres Bond Repair Treatment"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "current_brand": "K18",
+      "current_name": "K18 Leave-In Molecular Repair Hair Mask",
+      "current_category": "Bondbuilder",
+      "canonical_category_key": "bondbuilder",
+      "canonical_brand": "K18",
+      "product_line": null,
+      "clean_name": "Leave-In Molecular Repair Hair Mask",
+      "aliases": [
+        {
+          "alias": "K18",
+          "resolves_to": "brand",
+          "canonical_brand": "K18",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["K18 Leave-In Molecular Repair Hair Mask"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "aadbbab5-bcf5-4b46-b38a-5533648bcb1d",
+      "current_brand": "OLAPLEX",
+      "current_name": "OLAPLEX No.0 Intensive Bond Building Treatment",
+      "current_category": "Bondbuilder",
+      "canonical_category_key": "bondbuilder",
+      "canonical_brand": "OLAPLEX",
+      "product_line": null,
+      "clean_name": "No.0 Intensive Bond Building Treatment",
+      "aliases": [
+        {
+          "alias": "OLAPLEX",
+          "resolves_to": "brand",
+          "canonical_brand": "OLAPLEX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OLAPLEX No.0 Intensive Bond Building Treatment"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "917786d2-cf02-43d4-8a9f-7f872528d581",
+      "current_brand": "OLAPLEX",
+      "current_name": "OLAPLEX No.3 Hair Perfector",
+      "current_category": "Bondbuilder",
+      "canonical_category_key": "bondbuilder",
+      "canonical_brand": "OLAPLEX",
+      "product_line": null,
+      "clean_name": "No.3 Hair Perfector",
+      "aliases": [
+        {
+          "alias": "OLAPLEX",
+          "resolves_to": "brand",
+          "canonical_brand": "OLAPLEX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OLAPLEX No.3 Hair Perfector"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+      "current_brand": "OLAPLEX",
+      "current_name": "OLAPLEX No.3PLUS Complete Repair Treatment",
+      "current_category": "Bondbuilder",
+      "canonical_category_key": "bondbuilder",
+      "canonical_brand": "OLAPLEX",
+      "product_line": null,
+      "clean_name": "No.3PLUS Complete Repair Treatment",
+      "aliases": [
+        {
+          "alias": "OLAPLEX",
+          "resolves_to": "brand",
+          "canonical_brand": "OLAPLEX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OLAPLEX No.3PLUS Complete Repair Treatment"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "current_brand": "Alverde",
+      "current_name": "Alverde Conditioner Glanz",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Alverde",
+      "product_line": null,
+      "clean_name": "Conditioner Glanz",
+      "aliases": [
+        {
+          "alias": "Alverde",
+          "resolves_to": "brand",
+          "canonical_brand": "Alverde",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Alverde Conditioner Glanz"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "483b41d6-632c-4efe-9bcc-488c80bf5bb7",
+      "current_brand": "Balea",
+      "current_name": "Balea Med Ultra Sensitive Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Balea",
+      "product_line": "Med",
+      "clean_name": "Ultra Sensitive Conditioner",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Med",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Med"
+        }
+      ],
+      "known_titles": ["Balea Med Ultra Sensitive Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "current_brand": "Balea",
+      "current_name": "Balea Natural Beauty Hibiskus",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Balea",
+      "product_line": "Natural Beauty",
+      "clean_name": "Hibiskus",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Natural Beauty",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Natural Beauty"
+        }
+      ],
+      "known_titles": ["Balea Natural Beauty Hibiskus"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "current_brand": "Balea",
+      "current_name": "Balea Professional Aqua Hyaluron Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Balea",
+      "product_line": "Professional",
+      "clean_name": "Aqua Hyaluron Conditioner",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        }
+      ],
+      "known_titles": ["Balea Professional Aqua Hyaluron Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "current_brand": "Balea",
+      "current_name": "Balea Professional Oil Repair Intensiv Spülung",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Balea",
+      "product_line": "Professional",
+      "clean_name": "Oil Repair Intensiv Spülung",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        }
+      ],
+      "known_titles": ["Balea Professional Oil Repair Intensiv Spülung"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "63239c38-5633-4062-9e8d-d528ee71502a",
+      "current_brand": "Bali Curls",
+      "current_name": "Bali Curls Moisturising Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Bali Curls",
+      "product_line": null,
+      "clean_name": "Moisturising Conditioner",
+      "aliases": [
+        {
+          "alias": "Bali Curls",
+          "resolves_to": "brand",
+          "canonical_brand": "Bali Curls",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Bali Curls Moisturising Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "current_brand": "Cantu",
+      "current_name": "Cantu Conditioner Cream",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Cantu",
+      "product_line": null,
+      "clean_name": "Conditioner Cream",
+      "aliases": [
+        {
+          "alias": "Cantu",
+          "resolves_to": "brand",
+          "canonical_brand": "Cantu",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Cantu Conditioner Cream"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7539ab79-f4f6-49d7-9269-08034ef4de96",
+      "current_brand": "Cantu",
+      "current_name": "Cantu Leave-In Repair Cream",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Cantu",
+      "product_line": null,
+      "clean_name": "Leave-In Repair Cream",
+      "aliases": [
+        {
+          "alias": "Cantu",
+          "resolves_to": "brand",
+          "canonical_brand": "Cantu",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Cantu Leave-In Repair Cream"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "3901b2cf-6888-4363-9d5b-a695c0b3170b",
+      "current_brand": "Dejan Garz",
+      "current_name": "Dejan Garz The Foundation Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Dejan Garz",
+      "product_line": null,
+      "clean_name": "The Foundation Conditioner",
+      "aliases": [
+        {
+          "alias": "Dejan Garz",
+          "resolves_to": "brand",
+          "canonical_brand": "Dejan Garz",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Dejan Garz The Foundation Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "current_brand": "Garnier",
+      "current_name": "Garnier Hair Food Macadamia",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Garnier",
+      "product_line": "Fructis",
+      "clean_name": "Hair Food Macadamia",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        }
+      ],
+      "known_titles": ["Garnier Hair Food Macadamia"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "current_brand": "Garnier Fructis",
+      "current_name": "Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Garnier",
+      "product_line": "Fructis",
+      "clean_name": "Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        }
+      ],
+      "known_titles": [
+        "Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung",
+        "Garnier Fructis Hair Food Hair Food Aloe Vera Feuchtigkeits-Spülung"
+      ],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "current_brand": "Garnier Wahre Schätze",
+      "current_name": "Garnier Wahre Schätze Argan-Mandelcreme Spülung",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
+      "clean_name": "Argan-Mandelcreme Spülung",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        }
+      ],
+      "known_titles": ["Garnier Wahre Schätze Argan-Mandelcreme Spülung"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "8c3eda97-5009-40bb-959b-1a7d90f48b09",
+      "current_brand": "Garnier Wahre Schätze",
+      "current_name": "Garnier Wahre Schätze Kokosmilch & Macadamia Nährende Spülung",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
+      "clean_name": "Kokosmilch & Macadamia Nährende Spülung",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        }
+      ],
+      "known_titles": ["Garnier Wahre Schätze Kokosmilch & Macadamia Nährende Spülung"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "02113cc7-80c4-45a5-a56b-738ac96f4f02",
+      "current_brand": "Gliss",
+      "current_name": "Gliss Kur Aqua Revive Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Aqua Revive",
+      "clean_name": "Conditioner",
+      "aliases": [
+        {
+          "alias": "Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Gliss Kur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Glisskur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Gliss Kur Aqua Revive Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "current_brand": "Guhl",
+      "current_name": "Guhl Bond+ Reparatur Spülung",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Guhl",
+      "product_line": "Bond+",
+      "clean_name": "Reparatur Spülung",
+      "aliases": [
+        {
+          "alias": "Guhl",
+          "resolves_to": "brand",
+          "canonical_brand": "Guhl",
+          "product_line": null
+        },
+        {
+          "alias": "Guhl Bond+",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Guhl",
+          "product_line": "Bond+"
+        }
+      ],
+      "known_titles": ["Guhl Bond+ Reparatur Spülung"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "current_brand": "Guhl",
+      "current_name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Guhl",
+      "product_line": null,
+      "clean_name": "Panthenol + Reparatur 2in1 Kur & Spülung",
+      "aliases": [
+        {
+          "alias": "Guhl",
+          "resolves_to": "brand",
+          "canonical_brand": "Guhl",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Guhl Panthenol + Reparatur 2in1 Kur & Spülung"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "current_brand": "Hair Biology",
+      "current_name": "Hair Biology Full & Shining Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Hair Biology",
+      "product_line": null,
+      "clean_name": "Full & Shining Conditioner",
+      "aliases": [
+        {
+          "alias": "Hair Biology",
+          "resolves_to": "brand",
+          "canonical_brand": "Hair Biology",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Hair Biology Full & Shining Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "b4bcb392-22a7-4642-bcdf-1949ca959f67",
+      "current_brand": "Hask",
+      "current_name": "Hask Argan Oil Repairing Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Hask",
+      "product_line": null,
+      "clean_name": "Argan Oil Repairing Conditioner",
+      "aliases": [
+        {
+          "alias": "Hask",
+          "resolves_to": "brand",
+          "canonical_brand": "Hask",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Hask Argan Oil Repairing Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "37c65daf-cc2e-44ba-a976-ac0239c11f7d",
+      "current_brand": "Hask",
+      "current_name": "Hask Curl Care Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Hask",
+      "product_line": null,
+      "clean_name": "Curl Care Conditioner",
+      "aliases": [
+        {
+          "alias": "Hask",
+          "resolves_to": "brand",
+          "canonical_brand": "Hask",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Hask Curl Care Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "current_brand": "Herbal Essences",
+      "current_name": "Herbal Essences Aloe Vera Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Herbal Essences",
+      "product_line": null,
+      "clean_name": "Aloe Vera Conditioner",
+      "aliases": [
+        {
+          "alias": "Herbal Essences",
+          "resolves_to": "brand",
+          "canonical_brand": "Herbal Essences",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Herbal Essences Aloe Vera Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7964b930-7e88-4f93-89d3-fa437f8e753c",
+      "current_brand": "Isana",
+      "current_name": "Isana Professional Arganöl & Pflege Spülung",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Isana",
+      "product_line": null,
+      "clean_name": "Professional Arganöl & Pflege Spülung",
+      "aliases": [
+        {
+          "alias": "Isana",
+          "resolves_to": "brand",
+          "canonical_brand": "Isana",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Isana Professional Arganöl & Pflege Spülung"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "e1ad37be-9330-49b4-8add-872a30324122",
+      "current_brand": "Jean&Len",
+      "current_name": "Jean&Len Conditioner Keratin/Mandel",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Jean&Len",
+      "product_line": null,
+      "clean_name": "Conditioner Keratin/Mandel",
+      "aliases": [
+        {
+          "alias": "Jean&Len",
+          "resolves_to": "brand",
+          "canonical_brand": "Jean&Len",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Jean&Len Conditioner Keratin/Mandel"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d0180955-c3a0-4f53-8744-fbeb2c241688",
+      "current_brand": "L'Oréal Paris Elvital",
+      "current_name": "Elvital Fiber Booster Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "L'Oréal Paris",
+      "product_line": "Elvital",
+      "clean_name": "Fiber Booster Conditioner",
+      "aliases": [
+        {
+          "alias": "L'Oréal Paris",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
+          "alias": "L'Oréal Paris Elvital",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": "Elvital"
+        }
+      ],
+      "known_titles": [
+        "Elvital Fiber Booster Conditioner",
+        "L'Oréal Paris Elvital Fiber Booster Conditioner"
+      ],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "current_brand": "Langhaarmädchen",
+      "current_name": "Langhaarmädchen Beautiful Curls Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Langhaarmädchen",
+      "product_line": null,
+      "clean_name": "Beautiful Curls Conditioner",
+      "aliases": [
+        {
+          "alias": "Langhaarmädchen",
+          "resolves_to": "brand",
+          "canonical_brand": "Langhaarmädchen",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Langhaarmädchen Beautiful Curls Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "2a159694-6799-4be7-a0aa-572757c94801",
+      "current_brand": "Langhaarmädchen",
+      "current_name": "Langhaarmädchen Lovely Long Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Langhaarmädchen",
+      "product_line": null,
+      "clean_name": "Lovely Long Conditioner",
+      "aliases": [
+        {
+          "alias": "Langhaarmädchen",
+          "resolves_to": "brand",
+          "canonical_brand": "Langhaarmädchen",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Langhaarmädchen Lovely Long Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "ffd37427-0cb6-4d6a-8b83-ea904bf2b1d7",
+      "current_brand": "Monday",
+      "current_name": "Monday Moisture Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "MONDAY",
+      "product_line": null,
+      "clean_name": "Moisture Conditioner",
+      "aliases": [
+        {
+          "alias": "Monday",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "MONDAY",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "Monday Haircare",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "MONDAY Haircare",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Monday Moisture Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "95e47992-b45b-4847-ba87-b8c3e608fc63",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Moisture Mystery Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Neqi",
+      "product_line": "Moisture Mystery",
+      "clean_name": "Conditioner",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        },
+        {
+          "alias": "Neqi Moisture Mystery",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Neqi",
+          "product_line": "Moisture Mystery"
+        }
+      ],
+      "known_titles": ["Neqi Moisture Mystery Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "35ae622e-1458-42bf-a44d-1b23ecfd5516",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Repair Reveal Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Neqi",
+      "product_line": "Repair Reveal",
+      "clean_name": "Conditioner",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        },
+        {
+          "alias": "Neqi Repair Reveal",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Neqi",
+          "product_line": "Repair Reveal"
+        }
+      ],
+      "known_titles": ["Neqi Repair Reveal Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Volume Victory Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Neqi",
+      "product_line": "Volume Victory",
+      "clean_name": "Conditioner",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        },
+        {
+          "alias": "Neqi Volume Victory",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Neqi",
+          "product_line": "Volume Victory"
+        }
+      ],
+      "known_titles": ["Neqi Volume Victory Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "215522e5-95a6-469f-bc34-1fa74b311a23",
+      "current_brand": "Nivea",
+      "current_name": "Nivea Power Repair Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Nivea",
+      "product_line": null,
+      "clean_name": "Power Repair Conditioner",
+      "aliases": [
+        {
+          "alias": "Nivea",
+          "resolves_to": "brand",
+          "canonical_brand": "Nivea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Nivea Power Repair Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "current_brand": "Nivea",
+      "current_name": "Nivea Volumen & Kraft",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Nivea",
+      "product_line": null,
+      "clean_name": "Volumen & Kraft",
+      "aliases": [
+        {
+          "alias": "Nivea",
+          "resolves_to": "brand",
+          "canonical_brand": "Nivea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Nivea Volumen & Kraft"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4fca59e5-fbc4-4132-a821-dac6ff0cdb68",
+      "current_brand": "OGX",
+      "current_name": "OGX Biotin & Collagen Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "OGX",
+      "product_line": "Biotin & Collagen",
+      "clean_name": "Conditioner",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        },
+        {
+          "alias": "OGX Biotin & Collagen",
+          "resolves_to": "brand_line",
+          "canonical_brand": "OGX",
+          "product_line": "Biotin & Collagen"
+        }
+      ],
+      "known_titles": ["OGX Biotin & Collagen Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1bfa5b02-26d9-457b-a5e6-445cc2284490",
+      "current_brand": "OGX",
+      "current_name": "OGX Bond Protein Repair Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "OGX",
+      "product_line": "Bond Protein Repair",
+      "clean_name": "Conditioner",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        },
+        {
+          "alias": "OGX Bond Protein Repair",
+          "resolves_to": "brand_line",
+          "canonical_brand": "OGX",
+          "product_line": "Bond Protein Repair"
+        }
+      ],
+      "known_titles": ["OGX Bond Protein Repair Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "c2d7eb89-9a2e-4476-bb89-c0f33a2aa501",
+      "current_brand": "OGX",
+      "current_name": "OGX Renewing Argan Oil of Morocco Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "OGX",
+      "product_line": "Renewing Argan Oil of Morocco",
+      "clean_name": "Conditioner",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        },
+        {
+          "alias": "OGX Renewing Argan Oil of Morocco",
+          "resolves_to": "brand_line",
+          "canonical_brand": "OGX",
+          "product_line": "Renewing Argan Oil of Morocco"
+        }
+      ],
+      "known_titles": ["OGX Renewing Argan Oil of Morocco Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7bd5f94a-fb02-4505-a53a-2b100c265a5b",
+      "current_brand": "OGX",
+      "current_name": "OGX Renewing Argan Oil of Morocco Conditioner (legacy duplicate)",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "OGX",
+      "product_line": "Renewing Argan Oil of Morocco",
+      "clean_name": "Conditioner (legacy duplicate)",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        },
+        {
+          "alias": "OGX Renewing Argan Oil of Morocco",
+          "resolves_to": "brand_line",
+          "canonical_brand": "OGX",
+          "product_line": "Renewing Argan Oil of Morocco"
+        }
+      ],
+      "known_titles": ["OGX Renewing Argan Oil of Morocco Conditioner (legacy duplicate)"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "71d9bccb-74c7-499c-b5de-13ceef57ecde",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Pro-V Miracles Bond Repair Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Pantene",
+      "product_line": "Pro-V Miracles",
+      "clean_name": "Bond Repair Conditioner",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        },
+        {
+          "alias": "Pantene Pro-V Miracles",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Pantene",
+          "product_line": "Pro-V Miracles"
+        }
+      ],
+      "known_titles": ["Pantene Pro-V Miracles Bond Repair Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "98d08c22-97d2-4e06-872f-9f9447530452",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Pro-V Miracles Hydra Glow Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Pantene",
+      "product_line": "Pro-V Miracles",
+      "clean_name": "Hydra Glow Conditioner",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        },
+        {
+          "alias": "Pantene Pro-V Miracles",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Pantene",
+          "product_line": "Pro-V Miracles"
+        }
+      ],
+      "known_titles": ["Pantene Pro-V Miracles Hydra Glow Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "970aff48-a7a7-46e8-bad5-4f0600631329",
+      "current_brand": "Pomélo+Co",
+      "current_name": "Pomélo+Co Molecular Repair Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Pomélo+Co",
+      "product_line": null,
+      "clean_name": "Molecular Repair Conditioner",
+      "aliases": [
+        {
+          "alias": "Pomélo+Co",
+          "resolves_to": "brand",
+          "canonical_brand": "Pomélo+Co",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Pomélo+Co Molecular Repair Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "25931499-63ac-4076-b88c-8c23a38f0fa5",
+      "current_brand": "Pomélo+Co",
+      "current_name": "Pomélo+Co Shine Therapy Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Pomélo+Co",
+      "product_line": null,
+      "clean_name": "Shine Therapy Conditioner",
+      "aliases": [
+        {
+          "alias": "Pomélo+Co",
+          "resolves_to": "brand",
+          "canonical_brand": "Pomélo+Co",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Pomélo+Co Shine Therapy Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "01b11043-5c87-43d2-95b5-f1cabd845423",
+      "current_brand": "Sante",
+      "current_name": "SANTE Deep Repair Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Sante",
+      "product_line": null,
+      "clean_name": "Deep Repair Conditioner",
+      "aliases": [
+        {
+          "alias": "Sante",
+          "resolves_to": "brand",
+          "canonical_brand": "Sante",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["SANTE Deep Repair Conditioner", "Sante Deep Repair Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d2bb79a8-add1-4b74-9d4f-c03449175147",
+      "current_brand": "Sante",
+      "current_name": "Sante Intense Hydration Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Sante",
+      "product_line": null,
+      "clean_name": "Intense Hydration Conditioner",
+      "aliases": [
+        {
+          "alias": "Sante",
+          "resolves_to": "brand",
+          "canonical_brand": "Sante",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Sante Intense Hydration Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a62ae91c-69c6-466e-827e-350f518d73b5",
+      "current_brand": "Syoss",
+      "current_name": "Syoss Intense Curls Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Syoss",
+      "product_line": null,
+      "clean_name": "Intense Curls Conditioner",
+      "aliases": [
+        {
+          "alias": "Syoss",
+          "resolves_to": "brand",
+          "canonical_brand": "Syoss",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Syoss Intense Curls Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "ed382d40-6166-4d39-be2d-eab5a24793a6",
+      "current_brand": "Syoss",
+      "current_name": "Syoss Intense Keratin Conditioner",
+      "current_category": "Conditioner (Drogerie)",
+      "canonical_category_key": "conditioner",
+      "canonical_brand": "Syoss",
+      "product_line": null,
+      "clean_name": "Intense Keratin Conditioner",
+      "aliases": [
+        {
+          "alias": "Syoss",
+          "resolves_to": "brand",
+          "canonical_brand": "Syoss",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Syoss Intense Keratin Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+      "current_brand": "Alcina",
+      "current_name": "Alcina Hyaluron 2.0",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Alcina",
+      "product_line": null,
+      "clean_name": "Hyaluron 2.0",
+      "aliases": [
+        {
+          "alias": "Alcina",
+          "resolves_to": "brand",
+          "canonical_brand": "Alcina",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Alcina Hyaluron 2.0"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "f9595d2c-d86d-4bdb-9758-c98d1e213f3c",
+      "current_brand": "alverde",
+      "current_name": "alverde Leave-In Sprühkur Express 7in1",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Alverde",
+      "product_line": null,
+      "clean_name": "Leave-In Sprühkur Express 7in1",
+      "aliases": [
+        {
+          "alias": "alverde",
+          "resolves_to": "brand",
+          "canonical_brand": "Alverde",
+          "product_line": null
+        }
+      ],
+      "known_titles": [
+        "alverde Leave-In Sprühkur Express 7in1",
+        "Alverde Leave-In Sprühkur Express 7in1"
+      ],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "43cb9fbf-4b04-4554-a86a-7cb168536233",
+      "current_brand": "Authentic Beauty Concept",
+      "current_name": "Authentic Beauty Concept Hydrate Spray",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Authentic Beauty Concept",
+      "product_line": null,
+      "clean_name": "Hydrate Spray",
+      "aliases": [
+        {
+          "alias": "Authentic Beauty Concept",
+          "resolves_to": "brand",
+          "canonical_brand": "Authentic Beauty Concept",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Authentic Beauty Concept Hydrate Spray"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "current_brand": "Balea Aqua",
+      "current_name": "Balea Aqua Hyaluron 3in1",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Balea",
+      "product_line": "Professional",
+      "clean_name": "Aqua Hyaluron 3in1",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Aqua",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        }
+      ],
+      "known_titles": ["Balea Aqua Hyaluron 3in1"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "e3c4b607-8f81-462c-8a2b-e45c8b3a2976",
+      "current_brand": "Cantu",
+      "current_name": "Cantu Leave-In Repair Cream",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Cantu",
+      "product_line": null,
+      "clean_name": "Leave-In Repair Cream",
+      "aliases": [
+        {
+          "alias": "Cantu",
+          "resolves_to": "brand",
+          "canonical_brand": "Cantu",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Cantu Leave-In Repair Cream"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7db2bb60-0af6-4198-adec-28fad13251a6",
+      "current_brand": "Cantu",
+      "current_name": "Cantu Leave-In Repair Cream (legacy duplicate)",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Cantu",
+      "product_line": null,
+      "clean_name": "Leave-In Repair Cream (legacy duplicate)",
+      "aliases": [
+        {
+          "alias": "Cantu",
+          "resolves_to": "brand",
+          "canonical_brand": "Cantu",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Cantu Leave-In Repair Cream (legacy duplicate)"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "current_brand": "Color WOW",
+      "current_name": "Color WOW Money Mist",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Color WOW",
+      "product_line": null,
+      "clean_name": "Money Mist",
+      "aliases": [
+        {
+          "alias": "Color WOW",
+          "resolves_to": "brand",
+          "canonical_brand": "Color WOW",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Color WOW Money Mist"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "648ba537-5180-440e-81ad-2b310b447d87",
+      "current_brand": "Curlsmith",
+      "current_name": "Curlsmith Hydrate & Plump Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Curlsmith",
+      "product_line": null,
+      "clean_name": "Hydrate & Plump Leave-In",
+      "aliases": [
+        {
+          "alias": "Curlsmith",
+          "resolves_to": "brand",
+          "canonical_brand": "Curlsmith",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Curlsmith Hydrate & Plump Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+      "current_brand": "Curlsmith",
+      "current_name": "Curlsmith Multitasking Conditioner 3 in 1",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Curlsmith",
+      "product_line": null,
+      "clean_name": "Multitasking Conditioner 3 in 1",
+      "aliases": [
+        {
+          "alias": "Curlsmith",
+          "resolves_to": "brand",
+          "canonical_brand": "Curlsmith",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Curlsmith Multitasking Conditioner 3 in 1"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+      "current_brand": "Curlsmith",
+      "current_name": "Curlsmith Weightless Air Dry Cream",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Curlsmith",
+      "product_line": null,
+      "clean_name": "Weightless Air Dry Cream",
+      "aliases": [
+        {
+          "alias": "Curlsmith",
+          "resolves_to": "brand",
+          "canonical_brand": "Curlsmith",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Curlsmith Weightless Air Dry Cream"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "6b01025d-9e72-4514-b42e-bbb6065fbe1c",
+      "current_brand": "Elvital",
+      "current_name": "Elvital Öl Magique Midnight Serum",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "L'Oréal Paris",
+      "product_line": "Elvital",
+      "clean_name": "Öl Magique Midnight Serum",
+      "aliases": [
+        {
+          "alias": "L'Oréal Paris",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
+          "alias": "L'Oréal Paris Elvital",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": "Elvital"
+        }
+      ],
+      "known_titles": [
+        "Elvital Öl Magique Midnight Serum",
+        "L'Oréal Paris Elvital Öl Magique Midnight Serum"
+      ],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+      "current_brand": "EVO",
+      "current_name": "EVO Day of Grace Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "EVO",
+      "product_line": null,
+      "clean_name": "Day of Grace Leave-In",
+      "aliases": [
+        {
+          "alias": "EVO",
+          "resolves_to": "brand",
+          "canonical_brand": "EVO",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["EVO Day of Grace Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe",
+      "current_brand": "EVO",
+      "current_name": "EVO Happy Campers",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "EVO",
+      "product_line": null,
+      "clean_name": "Happy Campers",
+      "aliases": [
+        {
+          "alias": "EVO",
+          "resolves_to": "brand",
+          "canonical_brand": "EVO",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["EVO Happy Campers"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "current_brand": "EVO",
+      "current_name": "EVO Head Mistress",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "EVO",
+      "product_line": null,
+      "clean_name": "Head Mistress",
+      "aliases": [
+        {
+          "alias": "EVO",
+          "resolves_to": "brand",
+          "canonical_brand": "EVO",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["EVO Head Mistress"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+      "current_brand": "Garnier",
+      "current_name": "Garnier Hair Food Aloe Vera",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Garnier",
+      "product_line": "Fructis",
+      "clean_name": "Hair Food Aloe Vera",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        }
+      ],
+      "known_titles": ["Garnier Hair Food Aloe Vera"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "current_brand": "Garnier",
+      "current_name": "Garnier Hair Food Macadamia",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Garnier",
+      "product_line": "Fructis",
+      "clean_name": "Hair Food Macadamia",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        }
+      ],
+      "known_titles": ["Garnier Hair Food Macadamia"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+      "current_brand": "Gliss",
+      "current_name": "Gliss Ultimate Repair Sprüh-Conditioner",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Ultimate Repair",
+      "clean_name": "Sprüh-Conditioner",
+      "aliases": [
+        {
+          "alias": "Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Gliss Kur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Glisskur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Gliss Ultimate Repair Sprüh-Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
+      "current_brand": "HASK",
+      "current_name": "HASK Keratin 5-in-1 Spray",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Hask",
+      "product_line": null,
+      "clean_name": "Keratin 5-in-1 Spray",
+      "aliases": [
+        {
+          "alias": "HASK",
+          "resolves_to": "brand",
+          "canonical_brand": "Hask",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["HASK Keratin 5-in-1 Spray", "Hask Keratin 5-in-1 Spray"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "current_brand": "Isana",
+      "current_name": "Isana Feuchtigkeits Leave-In (Hyaluron)",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Isana",
+      "product_line": null,
+      "clean_name": "Feuchtigkeits Leave-In (Hyaluron)",
+      "aliases": [
+        {
+          "alias": "Isana",
+          "resolves_to": "brand",
+          "canonical_brand": "Isana",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Isana Feuchtigkeits Leave-In (Hyaluron)"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "696401be-16b5-4261-836f-28b57c1ecd59",
+      "current_brand": "It’s",
+      "current_name": "It’s a 10 Miracle Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "It's a 10",
+      "product_line": null,
+      "clean_name": "Miracle Leave-In",
+      "aliases": [
+        {
+          "alias": "It's a 10",
+          "resolves_to": "brand",
+          "canonical_brand": "It's a 10",
+          "product_line": null
+        },
+        {
+          "alias": "It’s",
+          "resolves_to": "brand",
+          "canonical_brand": "It's a 10",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["It’s a 10 Miracle Leave-In", "It's a 10 Miracle Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+      "current_brand": "It’s",
+      "current_name": "It’s a 10 Miracle Leave-In Lite",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "It's a 10",
+      "product_line": null,
+      "clean_name": "Miracle Leave-In Lite",
+      "aliases": [
+        {
+          "alias": "It's a 10",
+          "resolves_to": "brand",
+          "canonical_brand": "It's a 10",
+          "product_line": null
+        },
+        {
+          "alias": "It’s",
+          "resolves_to": "brand",
+          "canonical_brand": "It's a 10",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["It’s a 10 Miracle Leave-In Lite", "It's a 10 Miracle Leave-In Lite"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "current_brand": "K18",
+      "current_name": "K18 Hair Professional Molecular Repair Hair Mist",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "K18",
+      "product_line": null,
+      "clean_name": "Hair Professional Molecular Repair Hair Mist",
+      "aliases": [
+        {
+          "alias": "K18",
+          "resolves_to": "brand",
+          "canonical_brand": "K18",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["K18 Hair Professional Molecular Repair Hair Mist"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "current_brand": "Kevin Murphy",
+      "current_name": "Kevin Murphy Young Again",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Kevin Murphy",
+      "product_line": null,
+      "clean_name": "Young Again",
+      "aliases": [
+        {
+          "alias": "Kevin Murphy",
+          "resolves_to": "brand",
+          "canonical_brand": "Kevin Murphy",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Kevin Murphy Young Again"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "current_brand": "Living Proof",
+      "current_name": "Living Proof Restore Repair Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Living Proof",
+      "product_line": null,
+      "clean_name": "Restore Repair Leave-In",
+      "aliases": [
+        {
+          "alias": "Living Proof",
+          "resolves_to": "brand",
+          "canonical_brand": "Living Proof",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Living Proof Restore Repair Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+      "current_brand": "Maria Nila",
+      "current_name": "Maria Nila Coils & Curls Oil in Cream",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Maria Nila",
+      "product_line": "Coils & Curls",
+      "clean_name": "Oil in Cream",
+      "aliases": [
+        {
+          "alias": "Maria Nila",
+          "resolves_to": "brand",
+          "canonical_brand": "Maria Nila",
+          "product_line": null
+        },
+        {
+          "alias": "Maria Nila Coils & Curls",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Maria Nila",
+          "product_line": "Coils & Curls"
+        }
+      ],
+      "known_titles": ["Maria Nila Coils & Curls Oil in Cream"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "996eaa2a-ea4c-4dfb-b455-2782e82d9a44",
+      "current_brand": "Maria Nila",
+      "current_name": "Maria Nila Structure Repair",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Maria Nila",
+      "product_line": null,
+      "clean_name": "Structure Repair",
+      "aliases": [
+        {
+          "alias": "Maria Nila",
+          "resolves_to": "brand",
+          "canonical_brand": "Maria Nila",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Maria Nila Structure Repair"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "695414e1-3435-4304-943b-76677408980c",
+      "current_brand": "Maria Nila",
+      "current_name": "Maria Nila Structure Repair Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Maria Nila",
+      "product_line": "Structure Repair",
+      "clean_name": "Leave-In",
+      "aliases": [
+        {
+          "alias": "Maria Nila",
+          "resolves_to": "brand",
+          "canonical_brand": "Maria Nila",
+          "product_line": null
+        },
+        {
+          "alias": "Maria Nila Structure Repair",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Maria Nila",
+          "product_line": "Structure Repair"
+        }
+      ],
+      "known_titles": ["Maria Nila Structure Repair Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "3c769f60-283f-48c3-9549-cf84b73115d7",
+      "current_brand": "Maria Nila",
+      "current_name": "Maria Nila True Soft Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Maria Nila",
+      "product_line": "True Soft",
+      "clean_name": "Leave-In",
+      "aliases": [
+        {
+          "alias": "Maria Nila",
+          "resolves_to": "brand",
+          "canonical_brand": "Maria Nila",
+          "product_line": null
+        },
+        {
+          "alias": "Maria Nila True Soft",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Maria Nila",
+          "product_line": "True Soft"
+        }
+      ],
+      "known_titles": ["Maria Nila True Soft Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "current_brand": "Moroccanoil",
+      "current_name": "Moroccanoil All In One Leave In Conditioner",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Moroccanoil",
+      "product_line": null,
+      "clean_name": "All In One Leave In Conditioner",
+      "aliases": [
+        {
+          "alias": "Moroccanoil",
+          "resolves_to": "brand",
+          "canonical_brand": "Moroccanoil",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Moroccanoil All In One Leave In Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "9f94c225-61ec-455d-b303-f39e885e222a",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Build Boost Leave-In Balm",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Neqi",
+      "product_line": "Build Boost",
+      "clean_name": "Leave-In Balm",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        },
+        {
+          "alias": "Neqi Build Boost",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Neqi",
+          "product_line": "Build Boost"
+        }
+      ],
+      "known_titles": ["Neqi Build Boost Leave-In Balm"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "e6896862-523b-42b3-967d-41cbd16acf64",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Moisture Mystery",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Neqi",
+      "product_line": null,
+      "clean_name": "Moisture Mystery",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Neqi Moisture Mystery"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4827c174-92e9-4121-ab70-843d5c037ad0",
+      "current_brand": "Olaplex",
+      "current_name": "Olaplex No.5 Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "OLAPLEX",
+      "product_line": null,
+      "clean_name": "No.5 Leave-In",
+      "aliases": [
+        {
+          "alias": "Olaplex",
+          "resolves_to": "brand",
+          "canonical_brand": "OLAPLEX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Olaplex No.5 Leave-In", "OLAPLEX No.5 Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+      "current_brand": "Olaplex",
+      "current_name": "Olaplex No.6 Bond Smoother",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "OLAPLEX",
+      "product_line": null,
+      "clean_name": "No.6 Bond Smoother",
+      "aliases": [
+        {
+          "alias": "Olaplex",
+          "resolves_to": "brand",
+          "canonical_brand": "OLAPLEX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Olaplex No.6 Bond Smoother", "OLAPLEX No.6 Bond Smoother"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "current_brand": "OUAI",
+      "current_name": "OUAI Leave In Conditioner",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "OUAI",
+      "product_line": null,
+      "clean_name": "Leave In Conditioner",
+      "aliases": [
+        {
+          "alias": "OUAI",
+          "resolves_to": "brand",
+          "canonical_brand": "OUAI",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OUAI Leave In Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "35a372b6-c7ef-45cb-be0b-99cef476f247",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Bonding Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Pantene",
+      "product_line": null,
+      "clean_name": "Bonding Leave-In",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Pantene Bonding Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "e781ca9e-886d-40a1-bfe1-48177cfbf381",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Pantene",
+      "product_line": "Pro-V",
+      "clean_name": "Leave-In Moisture Boost HEAT&GLOW",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        },
+        {
+          "alias": "Pantene Pro-V",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Pantene",
+          "product_line": "Pro-V"
+        }
+      ],
+      "known_titles": ["Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Pro-V Miracles 7in1 Haaröl Spray",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Pantene",
+      "product_line": "Pro-V Miracles",
+      "clean_name": "7in1 Haaröl Spray",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        },
+        {
+          "alias": "Pantene Pro-V Miracles",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Pantene",
+          "product_line": "Pro-V Miracles"
+        }
+      ],
+      "known_titles": ["Pantene Pro-V Miracles 7in1 Haaröl Spray"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "915aa362-6479-41f2-bb59-0260493b3d58",
+      "current_brand": "Paul Mitchell",
+      "current_name": "Paul Mitchell Full Circle Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Paul Mitchell",
+      "product_line": null,
+      "clean_name": "Full Circle Leave-In",
+      "aliases": [
+        {
+          "alias": "Paul Mitchell",
+          "resolves_to": "brand",
+          "canonical_brand": "Paul Mitchell",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Paul Mitchell Full Circle Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+      "current_brand": "Redken",
+      "current_name": "Redken Acidic Color Gloss Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Redken",
+      "product_line": null,
+      "clean_name": "Acidic Color Gloss Leave-In",
+      "aliases": [
+        {
+          "alias": "Redken",
+          "resolves_to": "brand",
+          "canonical_brand": "Redken",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Redken Acidic Color Gloss Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+      "current_brand": "Redken",
+      "current_name": "Redken All Soft Mega Curls Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Redken",
+      "product_line": null,
+      "clean_name": "All Soft Mega Curls Leave-In",
+      "aliases": [
+        {
+          "alias": "Redken",
+          "resolves_to": "brand",
+          "canonical_brand": "Redken",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Redken All Soft Mega Curls Leave-In"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "current_brand": "Redken",
+      "current_name": "Redken Extreme Anti-Snap",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Redken",
+      "product_line": null,
+      "clean_name": "Extreme Anti-Snap",
+      "aliases": [
+        {
+          "alias": "Redken",
+          "resolves_to": "brand",
+          "canonical_brand": "Redken",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Redken Extreme Anti-Snap"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
+      "current_brand": "Redken",
+      "current_name": "Redken One United",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Redken",
+      "product_line": null,
+      "clean_name": "One United",
+      "aliases": [
+        {
+          "alias": "Redken",
+          "resolves_to": "brand",
+          "canonical_brand": "Redken",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Redken One United"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
+      "current_brand": "Urban Alchemy",
+      "current_name": "Urban Alchemy Repair & Revive Leave-In Spray",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Urban Alchemy",
+      "product_line": null,
+      "clean_name": "Repair & Revive Leave-In Spray",
+      "aliases": [
+        {
+          "alias": "Urban Alchemy",
+          "resolves_to": "brand",
+          "canonical_brand": "Urban Alchemy",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Urban Alchemy Repair & Revive Leave-In Spray"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "current_brand": "Wella Professionals",
+      "current_name": "Wella Ultimate Repair Protective Leave-In",
+      "current_category": "Leave-in",
+      "canonical_category_key": "leave_in",
+      "canonical_brand": "Wella Professionals",
+      "product_line": null,
+      "clean_name": "Wella Ultimate Repair Protective Leave-In",
+      "aliases": [
+        {
+          "alias": "Wella Professionals",
+          "resolves_to": "brand",
+          "canonical_brand": "Wella Professionals",
+          "product_line": null
+        }
+      ],
+      "known_titles": [
+        "Wella Ultimate Repair Protective Leave-In",
+        "Wella Professionals Wella Ultimate Repair Protective Leave-In"
+      ],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "current_brand": "Alterra",
+      "current_name": "Alterra Haarkur Bio-Granatapfel & Bio-Aloe Vera",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Alterra",
+      "product_line": null,
+      "clean_name": "Haarkur Bio-Granatapfel & Bio-Aloe Vera",
+      "aliases": [
+        {
+          "alias": "Alterra",
+          "resolves_to": "brand",
+          "canonical_brand": "Alterra",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Alterra Haarkur Bio-Granatapfel & Bio-Aloe Vera"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d5d67009-7aac-4299-938b-7218b8635a0c",
+      "current_brand": "Balea",
+      "current_name": "Balea 3 in 1 Intensivmaske",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "3 in 1 Intensivmaske",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Balea 3 in 1 Intensivmaske"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "current_brand": "Balea",
+      "current_name": "Balea Natural Beauty 3in1 Locken",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Balea",
+      "product_line": "Natural Beauty",
+      "clean_name": "3in1 Locken",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Natural Beauty",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Natural Beauty"
+        }
+      ],
+      "known_titles": ["Balea Natural Beauty 3in1 Locken"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+      "current_brand": "Balea",
+      "current_name": "Balea Natural Beauty reparierend",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Balea",
+      "product_line": "Natural Beauty",
+      "clean_name": "reparierend",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Natural Beauty",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Natural Beauty"
+        }
+      ],
+      "known_titles": ["Balea Natural Beauty reparierend"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "current_brand": "Balea",
+      "current_name": "Balea Professional Glow & Shine",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Balea",
+      "product_line": "Professional",
+      "clean_name": "Glow & Shine",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        }
+      ],
+      "known_titles": ["Balea Professional Glow & Shine"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+      "current_brand": "Balea",
+      "current_name": "Balea Professional Plex Care 2in1",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Balea",
+      "product_line": "Professional",
+      "clean_name": "Plex Care 2in1",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        }
+      ],
+      "known_titles": ["Balea Professional Plex Care 2in1"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4417217b-2843-47aa-8815-04a125b08341",
+      "current_brand": "Balea",
+      "current_name": "Balea Professionel Plexcare",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Professionel Plexcare",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Balea Professionel Plexcare"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "current_brand": "Balea Aqua",
+      "current_name": "Balea Aqua Hyaluron 3 in 1",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Balea",
+      "product_line": "Professional",
+      "clean_name": "Aqua Hyaluron 3 in 1",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Aqua",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        }
+      ],
+      "known_titles": ["Balea Aqua Hyaluron 3 in 1"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+      "current_brand": "Bali Curls",
+      "current_name": "Bali Curls Deep Hydration Mask",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Bali Curls",
+      "product_line": null,
+      "clean_name": "Deep Hydration Mask",
+      "aliases": [
+        {
+          "alias": "Bali Curls",
+          "resolves_to": "brand",
+          "canonical_brand": "Bali Curls",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Bali Curls Deep Hydration Mask"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "c4b9eaef-dfeb-41ea-9d28-9901660406b7",
+      "current_brand": "Bali Curls",
+      "current_name": "Bali Curls Haarkur Bonding Repair Overnight Elixir",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Bali Curls",
+      "product_line": null,
+      "clean_name": "Haarkur Bonding Repair Overnight Elixir",
+      "aliases": [
+        {
+          "alias": "Bali Curls",
+          "resolves_to": "brand",
+          "canonical_brand": "Bali Curls",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Bali Curls Haarkur Bonding Repair Overnight Elixir"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+      "current_brand": "Bali Curls",
+      "current_name": "Bali Curls SOS Protein Treatment",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Bali Curls",
+      "product_line": null,
+      "clean_name": "SOS Protein Treatment",
+      "aliases": [
+        {
+          "alias": "Bali Curls",
+          "resolves_to": "brand",
+          "canonical_brand": "Bali Curls",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Bali Curls SOS Protein Treatment"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+      "current_brand": "Fructis",
+      "current_name": "Fructis Hair Food Aloe Vera",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Garnier",
+      "product_line": "Fructis",
+      "clean_name": "Hair Food Aloe Vera",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        }
+      ],
+      "known_titles": ["Fructis Hair Food Aloe Vera"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+      "current_brand": "Fructis",
+      "current_name": "Fructis Hair Food Papaya",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Garnier",
+      "product_line": "Fructis",
+      "clean_name": "Hair Food Papaya",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        },
+        {
+          "alias": "Garnier Fructis Hair Food",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        }
+      ],
+      "known_titles": ["Fructis Hair Food Papaya"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "current_brand": "Gliss",
+      "current_name": "Gliss Aqua Revive",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Aqua Revive",
+      "clean_name": "4-in-1 Bonding Haarmaske",
+      "aliases": [
+        {
+          "alias": "Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Gliss Kur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Glisskur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Gliss Aqua Revive"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+      "current_brand": "Gliss",
+      "current_name": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": "Liquid Silk",
+      "clean_name": "Glanz 4-in-1 Bonding Haarmaske",
+      "aliases": [
+        {
+          "alias": "Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Gliss Kur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Glisskur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4e76bb70-b521-48e1-9708-4edc48b17c73",
+      "current_brand": "Glisskur",
+      "current_name": "Glisskur Liquid Silk",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Schwarzkopf GLISS",
+      "product_line": null,
+      "clean_name": "Liquid Silk",
+      "aliases": [
+        {
+          "alias": "Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Gliss Kur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Glisskur",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf Gliss",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        },
+        {
+          "alias": "Schwarzkopf GLISS",
+          "resolves_to": "brand",
+          "canonical_brand": "Schwarzkopf GLISS",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Glisskur Liquid Silk"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "c7326c6b-6175-4ec2-865f-68baf476c986",
+      "current_brand": "Guhl",
+      "current_name": "Guhl 30 sec. Feuchtigkeit",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Guhl",
+      "product_line": null,
+      "clean_name": "30 sec. Feuchtigkeit",
+      "aliases": [
+        {
+          "alias": "Guhl",
+          "resolves_to": "brand",
+          "canonical_brand": "Guhl",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Guhl 30 sec. Feuchtigkeit"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "current_brand": "Guhl",
+      "current_name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Guhl",
+      "product_line": null,
+      "clean_name": "Panthenol + Reparatur 2in1 Kur & Spülung",
+      "aliases": [
+        {
+          "alias": "Guhl",
+          "resolves_to": "brand",
+          "canonical_brand": "Guhl",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Guhl Panthenol + Reparatur 2in1 Kur & Spülung"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "current_brand": "Hask",
+      "current_name": "Hask Argan Oil Repairing Deep Conditioner",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Hask",
+      "product_line": null,
+      "clean_name": "Argan Oil Repairing Deep Conditioner",
+      "aliases": [
+        {
+          "alias": "Hask",
+          "resolves_to": "brand",
+          "canonical_brand": "Hask",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Hask Argan Oil Repairing Deep Conditioner"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "current_brand": "Isana",
+      "current_name": "Isana 3in1 Milchprotein & Mandel",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Isana",
+      "product_line": null,
+      "clean_name": "3in1 Milchprotein & Mandel",
+      "aliases": [
+        {
+          "alias": "Isana",
+          "resolves_to": "brand",
+          "canonical_brand": "Isana",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Isana 3in1 Milchprotein & Mandel"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+      "current_brand": "Jean&Len",
+      "current_name": "Jean&Len Tiefenreparatur Haarkur",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Jean&Len",
+      "product_line": null,
+      "clean_name": "Tiefenreparatur Haarkur",
+      "aliases": [
+        {
+          "alias": "Jean&Len",
+          "resolves_to": "brand",
+          "canonical_brand": "Jean&Len",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Jean&Len Tiefenreparatur Haarkur"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Build Boost",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Neqi",
+      "product_line": null,
+      "clean_name": "Build Boost",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Neqi Build Boost"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "b281d528-b312-4e44-98be-3e01f7e56644",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Gloss Glaze",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Neqi",
+      "product_line": null,
+      "clean_name": "Gloss Glaze",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Neqi Gloss Glaze"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "22d41784-5fc6-40bb-a4dc-92841322f933",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Peptide Power",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Neqi",
+      "product_line": null,
+      "clean_name": "Peptide Power",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Neqi Peptide Power"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d33543b0-6011-45f1-9bb2-125289ac849a",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Repair Reveal",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Neqi",
+      "product_line": null,
+      "clean_name": "Repair Reveal",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Neqi Repair Reveal"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Bond Repair",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Pantene",
+      "product_line": null,
+      "clean_name": "Bond Repair",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Pantene Bond Repair"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Hydra Glow",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Pantene",
+      "product_line": null,
+      "clean_name": "Hydra Glow",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Pantene Hydra Glow"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "077a94ae-fede-4773-9435-17022c2b89c0",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Keratin Repair & Care",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Pantene",
+      "product_line": null,
+      "clean_name": "Keratin Repair & Care",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Pantene Keratin Repair & Care"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+      "current_brand": "Pomélo+Co",
+      "current_name": "Pomélo+Co Shine Therapy",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Pomélo+Co",
+      "product_line": null,
+      "clean_name": "Shine Therapy",
+      "aliases": [
+        {
+          "alias": "Pomélo+Co",
+          "resolves_to": "brand",
+          "canonical_brand": "Pomélo+Co",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Pomélo+Co Shine Therapy"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "current_brand": "Sante",
+      "current_name": "Sante Intense Hydration",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Sante",
+      "product_line": null,
+      "clean_name": "Intense Hydration",
+      "aliases": [
+        {
+          "alias": "Sante",
+          "resolves_to": "brand",
+          "canonical_brand": "Sante",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Sante Intense Hydration"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "current_brand": "Schaebens",
+      "current_name": "Schaebens Argan-Öl Haarmaske",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Schaebens",
+      "product_line": null,
+      "clean_name": "Argan-Öl Haarmaske",
+      "aliases": [
+        {
+          "alias": "Schaebens",
+          "resolves_to": "brand",
+          "canonical_brand": "Schaebens",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Schaebens Argan-Öl Haarmaske"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "current_brand": "Syoss",
+      "current_name": "Syoss Haarkur Lamination Intense Glaze",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Syoss",
+      "product_line": null,
+      "clean_name": "Haarkur Lamination Intense Glaze",
+      "aliases": [
+        {
+          "alias": "Syoss",
+          "resolves_to": "brand",
+          "canonical_brand": "Syoss",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Syoss Haarkur Lamination Intense Glaze"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "961e3935-f823-44e7-8601-900c62855d3d",
+      "current_brand": "Syoss",
+      "current_name": "Syoss Intense Keratin",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Syoss",
+      "product_line": null,
+      "clean_name": "Intense Keratin",
+      "aliases": [
+        {
+          "alias": "Syoss",
+          "resolves_to": "brand",
+          "canonical_brand": "Syoss",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Syoss Intense Keratin"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "ea353b65-544d-48a8-a057-c3e733b66326",
+      "current_brand": "Wahre Schätze",
+      "current_name": "Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
+      "clean_name": "1-Minute Haarkur Argan & Camelia Öl",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Wahre Schaetze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        }
+      ],
+      "known_titles": ["Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+      "current_brand": "Wahre Schätze",
+      "current_name": "Wahre Schätze Avocado",
+      "current_category": "Maske",
+      "canonical_category_key": "mask",
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
+      "clean_name": "Avocado",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Wahre Schaetze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        }
+      ],
+      "known_titles": ["Wahre Schätze Avocado"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "current_brand": "Allgäuer Ölmühle",
+      "current_name": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Allgäuer Ölmühle",
+      "product_line": null,
+      "clean_name": "Bio Traubenkernöl",
+      "aliases": [
+        {
+          "alias": "Allgäuer Ölmühle",
+          "resolves_to": "brand",
+          "canonical_brand": "Allgäuer Ölmühle",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Allgäuer Ölmühle Bio Traubenkernöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1c43bc07-e3c6-4b8a-9b62-943147052e07",
+      "current_brand": "Balea",
+      "current_name": "Balea Oil Repair Haaröl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Oil Repair Haaröl",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Balea Oil Repair Haaröl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4f373d4f-fef8-4434-91c7-055133d8427f",
+      "current_brand": "Balea",
+      "current_name": "Balea Pflegeöl Natural Beauty",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Pflegeöl Natural Beauty",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Balea Pflegeöl Natural Beauty"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "fd83b493-f7be-4071-9642-3d5b92e30dc2",
+      "current_brand": "Balea",
+      "current_name": "Balea Traumlocken Öl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Traumlocken Öl",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Balea Traumlocken Öl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "current_brand": "benecos",
+      "current_name": "benecos BIO Körperöl Aprikosenkernöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "benecos",
+      "product_line": null,
+      "clean_name": "BIO Körperöl Aprikosenkernöl",
+      "aliases": [
+        {
+          "alias": "benecos",
+          "resolves_to": "brand",
+          "canonical_brand": "benecos",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["benecos BIO Körperöl Aprikosenkernöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "current_brand": "benecos",
+      "current_name": "benecos BIO Körperöl Macadamianussöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "benecos",
+      "product_line": null,
+      "clean_name": "BIO Körperöl Macadamianussöl",
+      "aliases": [
+        {
+          "alias": "benecos",
+          "resolves_to": "brand",
+          "canonical_brand": "benecos",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["benecos BIO Körperöl Macadamianussöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "current_brand": "benecos",
+      "current_name": "benecos BIO Körperöl Mandelöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "benecos",
+      "product_line": null,
+      "clean_name": "BIO Körperöl Mandelöl",
+      "aliases": [
+        {
+          "alias": "benecos",
+          "resolves_to": "brand",
+          "canonical_brand": "benecos",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["benecos BIO Körperöl Mandelöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "current_brand": "benecos",
+      "current_name": "benecos BIO Körperöl Wunderbaumsamenöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "benecos",
+      "product_line": null,
+      "clean_name": "BIO Körperöl Wunderbaumsamenöl",
+      "aliases": [
+        {
+          "alias": "benecos",
+          "resolves_to": "brand",
+          "canonical_brand": "benecos",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["benecos BIO Körperöl Wunderbaumsamenöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "current_brand": "BioGourmet",
+      "current_name": "BioGourmet Distelöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "BioGourmet",
+      "product_line": null,
+      "clean_name": "Distelöl",
+      "aliases": [
+        {
+          "alias": "BioGourmet",
+          "resolves_to": "brand",
+          "canonical_brand": "BioGourmet",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["BioGourmet Distelöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "current_brand": "dmBio",
+      "current_name": "dmBio Kokosöl nativ",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "dmBio",
+      "product_line": null,
+      "clean_name": "Kokosöl nativ",
+      "aliases": [
+        {
+          "alias": "dmBio",
+          "resolves_to": "brand",
+          "canonical_brand": "dmBio",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["dmBio Kokosöl nativ"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "current_brand": "dmBio",
+      "current_name": "dmBio natives Olivenöl extra",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "dmBio",
+      "product_line": null,
+      "clean_name": "natives Olivenöl extra",
+      "aliases": [
+        {
+          "alias": "dmBio",
+          "resolves_to": "brand",
+          "canonical_brand": "dmBio",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["dmBio natives Olivenöl extra"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "current_brand": "Dr. Scheller",
+      "current_name": "Dr. Scheller Jojobaöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Dr. Scheller",
+      "product_line": null,
+      "clean_name": "Jojobaöl",
+      "aliases": [
+        {
+          "alias": "Dr. Scheller",
+          "resolves_to": "brand",
+          "canonical_brand": "Dr. Scheller",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Dr. Scheller Jojobaöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+      "current_brand": "Dr. Scheller",
+      "current_name": "Dr. Scheller Reines Arganöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Dr. Scheller",
+      "product_line": null,
+      "clean_name": "Reines Arganöl",
+      "aliases": [
+        {
+          "alias": "Dr. Scheller",
+          "resolves_to": "brand",
+          "canonical_brand": "Dr. Scheller",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Dr. Scheller Reines Arganöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "current_brand": "Garnier",
+      "current_name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Garnier",
+      "product_line": "Fructis",
+      "clean_name": "Sleek & Stay Heat-Activated Serum",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        }
+      ],
+      "known_titles": ["Garnier Fructis Sleek & Stay Heat-Activated Serum"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1",
+      "current_brand": "Garnier",
+      "current_name": "Garnier Fructis Wunderöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Garnier",
+      "product_line": "Fructis",
+      "clean_name": "Wunderöl",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Garnier Fructis",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Fructis"
+        }
+      ],
+      "known_titles": ["Garnier Fructis Wunderöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "current_brand": "Garnier",
+      "current_name": "Garnier Wahre Schätze Curl Revival Öl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
+      "clean_name": "Curl Revival Öl",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        }
+      ],
+      "known_titles": ["Garnier Wahre Schätze Curl Revival Öl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+      "current_brand": "HASK",
+      "current_name": "HASK Argan Oil Repairing Shine Oil",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Hask",
+      "product_line": null,
+      "clean_name": "Argan Oil Repairing Shine Oil",
+      "aliases": [
+        {
+          "alias": "HASK",
+          "resolves_to": "brand",
+          "canonical_brand": "Hask",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["HASK Argan Oil Repairing Shine Oil", "Hask Argan Oil Repairing Shine Oil"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "current_brand": "Innersense",
+      "current_name": "Innersense Harmonic Treatment Oil",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Innersense",
+      "product_line": null,
+      "clean_name": "Harmonic Treatment Oil",
+      "aliases": [
+        {
+          "alias": "Innersense",
+          "resolves_to": "brand",
+          "canonical_brand": "Innersense",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Innersense Harmonic Treatment Oil"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "current_brand": "Jean&Len",
+      "current_name": "Jean&Len Repair Keratin & Mandel",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Jean&Len",
+      "product_line": null,
+      "clean_name": "Repair Keratin & Mandel",
+      "aliases": [
+        {
+          "alias": "Jean&Len",
+          "resolves_to": "brand",
+          "canonical_brand": "Jean&Len",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Jean&Len Repair Keratin & Mandel"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "current_brand": "KoRo",
+      "current_name": "KoRo MCT Öl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "KoRo",
+      "product_line": null,
+      "clean_name": "MCT Öl",
+      "aliases": [
+        {
+          "alias": "KoRo",
+          "resolves_to": "brand",
+          "canonical_brand": "KoRo",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["KoRo MCT Öl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "c05773dd-9656-4381-a0ab-8e9fc310c520",
+      "current_brand": "L’Oréal",
+      "current_name": "L’Oréal Elvital Öl Magique Jojoba",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "L'Oréal Paris",
+      "product_line": "Elvital",
+      "clean_name": "Öl Magique Jojoba",
+      "aliases": [
+        {
+          "alias": "L'Oréal Paris",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
+          "alias": "L’Oréal",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
+          "alias": "L'Oreal",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
+          "alias": "L'Oréal Paris Elvital",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": "Elvital"
+        },
+        {
+          "alias": "Elvital",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": "Elvital"
+        }
+      ],
+      "known_titles": ["L’Oréal Elvital Öl Magique Jojoba"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+      "current_brand": "L’Oréal",
+      "current_name": "L’Oréal Öl Magique Midnight Serum",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "L'Oréal Paris",
+      "product_line": "Elvital",
+      "clean_name": "Öl Magique Midnight Serum",
+      "aliases": [
+        {
+          "alias": "L'Oréal Paris",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
+          "alias": "L’Oréal",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
+          "alias": "L'Oreal",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": null
+        },
+        {
+          "alias": "L'Oréal Paris Elvital",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": "Elvital"
+        },
+        {
+          "alias": "Elvital",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Paris",
+          "product_line": "Elvital"
+        }
+      ],
+      "known_titles": ["L’Oréal Öl Magique Midnight Serum"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "current_brand": "Maria Nila",
+      "current_name": "Maria Nila True Soft Argan Oil",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Maria Nila",
+      "product_line": "True Soft",
+      "clean_name": "Argan Oil",
+      "aliases": [
+        {
+          "alias": "Maria Nila",
+          "resolves_to": "brand",
+          "canonical_brand": "Maria Nila",
+          "product_line": null
+        },
+        {
+          "alias": "Maria Nila True Soft",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Maria Nila",
+          "product_line": "True Soft"
+        }
+      ],
+      "known_titles": ["Maria Nila True Soft Argan Oil"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "current_brand": "MoriVeda",
+      "current_name": "MoriVeda Premium Moringaöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "MoriVeda",
+      "product_line": null,
+      "clean_name": "Premium Moringaöl",
+      "aliases": [
+        {
+          "alias": "MoriVeda",
+          "resolves_to": "brand",
+          "canonical_brand": "MoriVeda",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["MoriVeda Premium Moringaöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "current_brand": "NANOIL",
+      "current_name": "NANOIL Avocadoöl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "NANOIL",
+      "product_line": null,
+      "clean_name": "Avocadoöl",
+      "aliases": [
+        {
+          "alias": "NANOIL",
+          "resolves_to": "brand",
+          "canonical_brand": "NANOIL",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["NANOIL Avocadoöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "current_brand": "nedura",
+      "current_name": "nedura Schwarzkümmelöl ungefiltert",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "nedura",
+      "product_line": null,
+      "clean_name": "Schwarzkümmelöl ungefiltert",
+      "aliases": [
+        {
+          "alias": "nedura",
+          "resolves_to": "brand",
+          "canonical_brand": "nedura",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["nedura Schwarzkümmelöl ungefiltert"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "27a2dd61-6e54-4746-8e24-a698dbafbf91",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Opulent Oil",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Neqi",
+      "product_line": null,
+      "clean_name": "Opulent Oil",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Neqi Opulent Oil"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "current_brand": "NUTREEOIL",
+      "current_name": "NUTREEOIL Cacay Öl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "NUTREEOIL",
+      "product_line": null,
+      "clean_name": "Cacay Öl",
+      "aliases": [
+        {
+          "alias": "NUTREEOIL",
+          "resolves_to": "brand",
+          "canonical_brand": "NUTREEOIL",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["NUTREEOIL Cacay Öl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "current_brand": "Nuxe",
+      "current_name": "Nuxe Huile Prodigieuse Öl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Nuxe",
+      "product_line": null,
+      "clean_name": "Huile Prodigieuse Öl",
+      "aliases": [
+        {
+          "alias": "Nuxe",
+          "resolves_to": "brand",
+          "canonical_brand": "Nuxe",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Nuxe Huile Prodigieuse Öl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "current_brand": "OGX",
+      "current_name": "OGX Argan Oil",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "OGX",
+      "product_line": null,
+      "clean_name": "Argan Oil",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OGX Argan Oil"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "current_brand": "OGX",
+      "current_name": "OGX Argan weightless Öl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "OGX",
+      "product_line": null,
+      "clean_name": "Argan weightless Öl",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OGX Argan weightless Öl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "current_brand": "OGX",
+      "current_name": "OGX Bond Protein Repair",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "OGX",
+      "product_line": null,
+      "clean_name": "Bond Protein Repair",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OGX Bond Protein Repair"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+      "current_brand": "OGX",
+      "current_name": "OGX Miracle Coconut Oil",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "OGX",
+      "product_line": null,
+      "clean_name": "Miracle Coconut Oil",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OGX Miracle Coconut Oil"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "current_brand": "Olaplex",
+      "current_name": "Olaplex No.7 Bonding Oil",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "OLAPLEX",
+      "product_line": null,
+      "clean_name": "No.7 Bonding Oil",
+      "aliases": [
+        {
+          "alias": "Olaplex",
+          "resolves_to": "brand",
+          "canonical_brand": "OLAPLEX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Olaplex No.7 Bonding Oil", "OLAPLEX No.7 Bonding Oil"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Pro-V Coconut Oil",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Pantene",
+      "product_line": "Pro-V",
+      "clean_name": "Coconut Oil",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        },
+        {
+          "alias": "Pantene Pro-V",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Pantene",
+          "product_line": "Pro-V"
+        }
+      ],
+      "known_titles": ["Pantene Pro-V Coconut Oil"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "fe974387-b487-470e-9799-69bb4249070b",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Pro-V Keratin Protect Öl",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Pantene",
+      "product_line": "Pro-V",
+      "clean_name": "Keratin Protect Öl",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        },
+        {
+          "alias": "Pantene Pro-V",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Pantene",
+          "product_line": "Pro-V"
+        }
+      ],
+      "known_titles": ["Pantene Pro-V Keratin Protect Öl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Pro-V Miracles 7in1 Öl-Spray",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Pantene",
+      "product_line": "Pro-V Miracles",
+      "clean_name": "7in1 Öl-Spray",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        },
+        {
+          "alias": "Pantene Pro-V Miracles",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Pantene",
+          "product_line": "Pro-V Miracles"
+        }
+      ],
+      "known_titles": ["Pantene Pro-V Miracles 7in1 Öl-Spray"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "current_brand": "Primavera",
+      "current_name": "Primavera Calendulaöl Bio",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Primavera",
+      "product_line": null,
+      "clean_name": "Calendulaöl Bio",
+      "aliases": [
+        {
+          "alias": "Primavera",
+          "resolves_to": "brand",
+          "canonical_brand": "Primavera",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Primavera Calendulaöl Bio"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "current_brand": "Shiseido Fino",
+      "current_name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Shiseido Fino",
+      "product_line": null,
+      "clean_name": "Premium Touch Penetrating Hair Oil Essence",
+      "aliases": [
+        {
+          "alias": "Shiseido Fino",
+          "resolves_to": "brand",
+          "canonical_brand": "Shiseido Fino",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Shiseido Fino Premium Touch Penetrating Hair Oil Essence"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+      "current_brand": "Urban Alchemy",
+      "current_name": "Urban Alchemy Smooth Supreme Öl Serum",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Urban Alchemy",
+      "product_line": null,
+      "clean_name": "Smooth Supreme Öl Serum",
+      "aliases": [
+        {
+          "alias": "Urban Alchemy",
+          "resolves_to": "brand",
+          "canonical_brand": "Urban Alchemy",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Urban Alchemy Smooth Supreme Öl Serum"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "current_brand": "Weleda",
+      "current_name": "Weleda Hydra Shine Gloss Drops Alpen-Lein",
+      "current_category": "Öle",
+      "canonical_category_key": "oil",
+      "canonical_brand": "Weleda",
+      "product_line": null,
+      "clean_name": "Hydra Shine Gloss Drops Alpen-Lein",
+      "aliases": [
+        {
+          "alias": "Weleda",
+          "resolves_to": "brand",
+          "canonical_brand": "Weleda",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Weleda Hydra Shine Gloss Drops Alpen-Lein"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "current_brand": "Balea",
+      "current_name": "Balea 2 in 1 Urea 5%",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "2 in 1 Urea 5%",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Balea 2 in 1 Urea 5%"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "current_brand": "Balea",
+      "current_name": "Balea Aqua Hyaluron",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Balea",
+      "product_line": "Professional",
+      "clean_name": "Aqua Hyaluron",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Aqua",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        }
+      ],
+      "known_titles": ["Balea Aqua Hyaluron"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "current_brand": "Balea",
+      "current_name": "Balea Kopfhaut Sensitive Shampoo",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Kopfhaut Sensitive Shampoo",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Balea Kopfhaut Sensitive Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "current_brand": "Balea",
+      "current_name": "Balea Professional Ultimate Volume",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Balea",
+      "product_line": "Professional",
+      "clean_name": "Ultimate Volume",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Professional",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Professional"
+        }
+      ],
+      "known_titles": ["Balea Professional Ultimate Volume"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "current_brand": "Balea",
+      "current_name": "Balea Tiefenreinigung",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Tiefenreinigung",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Balea Tiefenreinigung"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "current_brand": "Balea",
+      "current_name": "Balea Ultra Sensitive",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Ultra Sensitive",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Balea Ultra Sensitive"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "current_brand": "Balea Med",
+      "current_name": "Balea Med Anti Schuppen",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Balea",
+      "product_line": "Med",
+      "clean_name": "Anti Schuppen",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        },
+        {
+          "alias": "Balea Med",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Balea",
+          "product_line": "Med"
+        }
+      ],
+      "known_titles": ["Balea Med Anti Schuppen"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "current_brand": "Cantu",
+      "current_name": "Cantu Shampoo Locken Pflege",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Cantu",
+      "product_line": null,
+      "clean_name": "Shampoo Locken Pflege",
+      "aliases": [
+        {
+          "alias": "Cantu",
+          "resolves_to": "brand",
+          "canonical_brand": "Cantu",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Cantu Shampoo Locken Pflege"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "current_brand": "Dejan Garz",
+      "current_name": "Dejan Garz Shampoo",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Dejan Garz",
+      "product_line": null,
+      "clean_name": "Shampoo",
+      "aliases": [
+        {
+          "alias": "Dejan Garz",
+          "resolves_to": "brand",
+          "canonical_brand": "Dejan Garz",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Dejan Garz Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "744de604-d266-453b-a56b-eea92c5ca565",
+      "current_brand": "Guhl",
+      "current_name": "Guhl Anti Schuppen",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Guhl",
+      "product_line": null,
+      "clean_name": "Anti Schuppen",
+      "aliases": [
+        {
+          "alias": "Guhl",
+          "resolves_to": "brand",
+          "canonical_brand": "Guhl",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Guhl Anti Schuppen"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "current_brand": "Guhl",
+      "current_name": "Guhl Frische und Leichtigkeit",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Guhl",
+      "product_line": null,
+      "clean_name": "Frische und Leichtigkeit",
+      "aliases": [
+        {
+          "alias": "Guhl",
+          "resolves_to": "brand",
+          "canonical_brand": "Guhl",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Guhl Frische und Leichtigkeit"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "current_brand": "Guhl",
+      "current_name": "Guhl Hyaluron+",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Guhl",
+      "product_line": null,
+      "clean_name": "Hyaluron+",
+      "aliases": [
+        {
+          "alias": "Guhl",
+          "resolves_to": "brand",
+          "canonical_brand": "Guhl",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Guhl Hyaluron+"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+      "current_brand": "Guhl",
+      "current_name": "Guhl Kopfhaut Sensitive",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Guhl",
+      "product_line": null,
+      "clean_name": "Kopfhaut Sensitive",
+      "aliases": [
+        {
+          "alias": "Guhl",
+          "resolves_to": "brand",
+          "canonical_brand": "Guhl",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Guhl Kopfhaut Sensitive"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "current_brand": "Guhl",
+      "current_name": "Guhl Kraft & Fülle",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Guhl",
+      "product_line": null,
+      "clean_name": "Kraft & Fülle",
+      "aliases": [
+        {
+          "alias": "Guhl",
+          "resolves_to": "brand",
+          "canonical_brand": "Guhl",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Guhl Kraft & Fülle"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "current_brand": "Hair Biology",
+      "current_name": "Hair Biology Revitalize & Soothe",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Hair Biology",
+      "product_line": null,
+      "clean_name": "Revitalize & Soothe",
+      "aliases": [
+        {
+          "alias": "Hair Biology",
+          "resolves_to": "brand",
+          "canonical_brand": "Hair Biology",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Hair Biology Revitalize & Soothe"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "current_brand": "Hask",
+      "current_name": "Hask Curl Care Shampoo",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Hask",
+      "product_line": null,
+      "clean_name": "Curl Care Shampoo",
+      "aliases": [
+        {
+          "alias": "Hask",
+          "resolves_to": "brand",
+          "canonical_brand": "Hask",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Hask Curl Care Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "current_brand": "Hask",
+      "current_name": "Hask Shampoo Argan Oil",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Hask",
+      "product_line": null,
+      "clean_name": "Shampoo Argan Oil",
+      "aliases": [
+        {
+          "alias": "Hask",
+          "resolves_to": "brand",
+          "canonical_brand": "Hask",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Hask Shampoo Argan Oil"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "current_brand": "Head & Shoulders",
+      "current_name": "Head & Shoulders Anti Schuppen Sensitive",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Head & Shoulders",
+      "product_line": null,
+      "clean_name": "Anti Schuppen Sensitive",
+      "aliases": [
+        {
+          "alias": "Head & Shoulders",
+          "resolves_to": "brand",
+          "canonical_brand": "Head & Shoulders",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Head & Shoulders Anti Schuppen Sensitive"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "current_brand": "Head & Shoulders",
+      "current_name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Head & Shoulders",
+      "product_line": null,
+      "clean_name": "DERMAXPRO Haarshampoo Sensitive Pflege",
+      "aliases": [
+        {
+          "alias": "Head & Shoulders",
+          "resolves_to": "brand",
+          "canonical_brand": "Head & Shoulders",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4fd5f4c3-83b2-4893-be8c-ada29b8ca718",
+      "current_brand": "Head & Shoulders",
+      "current_name": "Head & Shoulders DERMAXPRO Sanfte Kopfhautpflege",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Head & Shoulders",
+      "product_line": null,
+      "clean_name": "DERMAXPRO Sanfte Kopfhautpflege",
+      "aliases": [
+        {
+          "alias": "Head & Shoulders",
+          "resolves_to": "brand",
+          "canonical_brand": "Head & Shoulders",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Head & Shoulders DERMAXPRO Sanfte Kopfhautpflege"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "current_brand": "Head & Shoulders",
+      "current_name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Head & Shoulders",
+      "product_line": null,
+      "clean_name": "DERMAXPRO Shampoo Beruhigende Pflege",
+      "aliases": [
+        {
+          "alias": "Head & Shoulders",
+          "resolves_to": "brand",
+          "canonical_brand": "Head & Shoulders",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "686df4f6-4e8f-48e7-b823-5b1e89dd9cf2",
+      "current_brand": "Head & Shoulders",
+      "current_name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege (legacy duplicate)",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Head & Shoulders",
+      "product_line": null,
+      "clean_name": "DERMAXPRO Shampoo Beruhigende Pflege (legacy duplicate)",
+      "aliases": [
+        {
+          "alias": "Head & Shoulders",
+          "resolves_to": "brand",
+          "canonical_brand": "Head & Shoulders",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege (legacy duplicate)"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "current_brand": "Langhaarmädchen",
+      "current_name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Langhaarmädchen",
+      "product_line": null,
+      "clean_name": "Beautiful Curls Shampoo",
+      "aliases": [
+        {
+          "alias": "Langhaarmädchen",
+          "resolves_to": "brand",
+          "canonical_brand": "Langhaarmädchen",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Langhaarmädchen Beautiful Curls Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "current_brand": "Langhaarmädchen",
+      "current_name": "Langhaarmädchen Lovely Long",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Langhaarmädchen",
+      "product_line": null,
+      "clean_name": "Lovely Long",
+      "aliases": [
+        {
+          "alias": "Langhaarmädchen",
+          "resolves_to": "brand",
+          "canonical_brand": "Langhaarmädchen",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Langhaarmädchen Lovely Long"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "current_brand": "Lavera",
+      "current_name": "Lavera Basis Sensitiv",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Lavera",
+      "product_line": null,
+      "clean_name": "Basis Sensitiv",
+      "aliases": [
+        {
+          "alias": "Lavera",
+          "resolves_to": "brand",
+          "canonical_brand": "Lavera",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Lavera Basis Sensitiv"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "current_brand": "Monday Haircare",
+      "current_name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "MONDAY",
+      "product_line": null,
+      "clean_name": "Volume Kraft & Fülle Shampoo",
+      "aliases": [
+        {
+          "alias": "Monday",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "MONDAY",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "Monday Haircare",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        },
+        {
+          "alias": "MONDAY Haircare",
+          "resolves_to": "brand",
+          "canonical_brand": "MONDAY",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Monday Haircare Volume Kraft & Fülle Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Moisture Mystery",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Neqi",
+      "product_line": null,
+      "clean_name": "Moisture Mystery",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Neqi Moisture Mystery"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "current_brand": "Neqi",
+      "current_name": "Neqi Volume Victory",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Neqi",
+      "product_line": null,
+      "clean_name": "Volume Victory",
+      "aliases": [
+        {
+          "alias": "Neqi",
+          "resolves_to": "brand",
+          "canonical_brand": "Neqi",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Neqi Volume Victory"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "current_brand": "Nivea",
+      "current_name": "Nivea Shampoo&Conditioner 2in1",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Nivea",
+      "product_line": null,
+      "clean_name": "Shampoo&Conditioner 2in1",
+      "aliases": [
+        {
+          "alias": "Nivea",
+          "resolves_to": "brand",
+          "canonical_brand": "Nivea",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Nivea Shampoo&Conditioner 2in1"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "current_brand": "OGX",
+      "current_name": "OGX Biotin & Collagen",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "OGX",
+      "product_line": null,
+      "clean_name": "Biotin & Collagen",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OGX Biotin & Collagen"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "current_brand": "OGX",
+      "current_name": "OGX Keratin Oil",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "OGX",
+      "product_line": null,
+      "clean_name": "Keratin Oil",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OGX Keratin Oil"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "current_brand": "OGX",
+      "current_name": "OGX Renewing",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "OGX",
+      "product_line": null,
+      "clean_name": "Renewing",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OGX Renewing"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "current_brand": "OGX",
+      "current_name": "OGX Rosemary",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "OGX",
+      "product_line": null,
+      "clean_name": "Rosemary",
+      "aliases": [
+        {
+          "alias": "OGX",
+          "resolves_to": "brand",
+          "canonical_brand": "OGX",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["OGX Rosemary"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Anti Schuppen",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Pantene",
+      "product_line": null,
+      "clean_name": "Anti Schuppen",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Pantene Anti Schuppen"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Grow Abundance",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Pantene",
+      "product_line": null,
+      "clean_name": "Grow Abundance",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Pantene Grow Abundance"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Hydra Glow Shampoo",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Pantene",
+      "product_line": null,
+      "clean_name": "Hydra Glow Shampoo",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Pantene Hydra Glow Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "current_brand": "Pantene",
+      "current_name": "Pantene Pro-V Volumen Pur",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Pantene",
+      "product_line": "Pro-V",
+      "clean_name": "Volumen Pur",
+      "aliases": [
+        {
+          "alias": "Pantene",
+          "resolves_to": "brand",
+          "canonical_brand": "Pantene",
+          "product_line": null
+        },
+        {
+          "alias": "Pantene Pro-V",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Pantene",
+          "product_line": "Pro-V"
+        }
+      ],
+      "known_titles": ["Pantene Pro-V Volumen Pur"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "current_brand": "Salthouse",
+      "current_name": "Salthouse Anti Fett",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Salthouse",
+      "product_line": null,
+      "clean_name": "Anti Fett",
+      "aliases": [
+        {
+          "alias": "Salthouse",
+          "resolves_to": "brand",
+          "canonical_brand": "Salthouse",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Salthouse Anti Fett"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "current_brand": "Salthouse",
+      "current_name": "Salthouse Anti Juckreiz",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Salthouse",
+      "product_line": null,
+      "clean_name": "Anti Juckreiz",
+      "aliases": [
+        {
+          "alias": "Salthouse",
+          "resolves_to": "brand",
+          "canonical_brand": "Salthouse",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Salthouse Anti Juckreiz"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "current_brand": "Salthouse",
+      "current_name": "Salthouse Anti Schuppen",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Salthouse",
+      "product_line": null,
+      "clean_name": "Anti Schuppen",
+      "aliases": [
+        {
+          "alias": "Salthouse",
+          "resolves_to": "brand",
+          "canonical_brand": "Salthouse",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Salthouse Anti Schuppen"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "current_brand": "Sante",
+      "current_name": "Sante Glossy Shine",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Sante",
+      "product_line": null,
+      "clean_name": "Glossy Shine",
+      "aliases": [
+        {
+          "alias": "Sante",
+          "resolves_to": "brand",
+          "canonical_brand": "Sante",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Sante Glossy Shine"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "current_brand": "Sante",
+      "current_name": "Sante Sensitive Care",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Sante",
+      "product_line": null,
+      "clean_name": "Sensitive Care",
+      "aliases": [
+        {
+          "alias": "Sante",
+          "resolves_to": "brand",
+          "canonical_brand": "Sante",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Sante Sensitive Care"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "current_brand": "Schauma",
+      "current_name": "Schauma Anti Schuppen",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Schauma",
+      "product_line": null,
+      "clean_name": "Anti Schuppen",
+      "aliases": [
+        {
+          "alias": "Schauma",
+          "resolves_to": "brand",
+          "canonical_brand": "Schauma",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Schauma Anti Schuppen"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "current_brand": "Sebamed",
+      "current_name": "Sebamed Anti Schuppen",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Sebamed",
+      "product_line": null,
+      "clean_name": "Anti Schuppen",
+      "aliases": [
+        {
+          "alias": "Sebamed",
+          "resolves_to": "brand",
+          "canonical_brand": "Sebamed",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Sebamed Anti Schuppen"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "current_brand": "Sebamed",
+      "current_name": "Sebamed Anti Schuppen Plus",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Sebamed",
+      "product_line": null,
+      "clean_name": "Anti Schuppen Plus",
+      "aliases": [
+        {
+          "alias": "Sebamed",
+          "resolves_to": "brand",
+          "canonical_brand": "Sebamed",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Sebamed Anti Schuppen Plus"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "current_brand": "Sebamed",
+      "current_name": "Sebamed Every-Day Shampoo",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Sebamed",
+      "product_line": null,
+      "clean_name": "Every-Day Shampoo",
+      "aliases": [
+        {
+          "alias": "Sebamed",
+          "resolves_to": "brand",
+          "canonical_brand": "Sebamed",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Sebamed Every-Day Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "current_brand": "Sebamed",
+      "current_name": "Sebamed Urea 5%",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Sebamed",
+      "product_line": null,
+      "clean_name": "Urea 5%",
+      "aliases": [
+        {
+          "alias": "Sebamed",
+          "resolves_to": "brand",
+          "canonical_brand": "Sebamed",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Sebamed Urea 5%"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "current_brand": "Swiss-O-Par",
+      "current_name": "Swiss-O-Par Teebaumöl",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Swiss-O-Par",
+      "product_line": null,
+      "clean_name": "Teebaumöl",
+      "aliases": [
+        {
+          "alias": "Swiss-O-Par",
+          "resolves_to": "brand",
+          "canonical_brand": "Swiss-O-Par",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Swiss-O-Par Teebaumöl"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "current_brand": "Syoss",
+      "current_name": "Syoss Intense Curls",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Syoss",
+      "product_line": null,
+      "clean_name": "Intense Curls",
+      "aliases": [
+        {
+          "alias": "Syoss",
+          "resolves_to": "brand",
+          "canonical_brand": "Syoss",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Syoss Intense Curls"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "7200bb0b-7463-433b-86c8-744f5c1431de",
+      "current_brand": "Wahre Schätze",
+      "current_name": "Wahre Schätze Aktivkohle",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
+      "clean_name": "Aktivkohle",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Wahre Schaetze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        }
+      ],
+      "known_titles": ["Wahre Schätze Aktivkohle"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "current_brand": "Wahre Schätze",
+      "current_name": "Wahre Schätze Sanfte Hafermilch",
+      "current_category": "Shampoo",
+      "canonical_category_key": "shampoo",
+      "canonical_brand": "Garnier",
+      "product_line": "Wahre Schätze",
+      "clean_name": "Sanfte Hafermilch",
+      "aliases": [
+        {
+          "alias": "Garnier",
+          "resolves_to": "brand",
+          "canonical_brand": "Garnier",
+          "product_line": null
+        },
+        {
+          "alias": "Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Wahre Schaetze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        },
+        {
+          "alias": "Garnier Wahre Schätze",
+          "resolves_to": "brand_line",
+          "canonical_brand": "Garnier",
+          "product_line": "Wahre Schätze"
+        }
+      ],
+      "known_titles": ["Wahre Schätze Sanfte Hafermilch"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "6d6c3ff2-9d12-4f27-a56f-b5b72cf53318",
+      "current_brand": "Bumble and bumble",
+      "current_name": "Sunday Clarifying Shampoo",
+      "current_category": "Tiefenreinigungsshampoo",
+      "canonical_category_key": "deep_cleansing_shampoo",
+      "canonical_brand": "Bumble and bumble",
+      "product_line": null,
+      "clean_name": "Sunday Clarifying Shampoo",
+      "aliases": [
+        {
+          "alias": "Bumble and bumble",
+          "resolves_to": "brand",
+          "canonical_brand": "Bumble and bumble",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Sunday Clarifying Shampoo", "Bumble and bumble Sunday Clarifying Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d0936238-7412-40bc-ba7a-3c268f17d0f4",
+      "current_brand": "Davines",
+      "current_name": "SOLU Shampoo",
+      "current_category": "Tiefenreinigungsshampoo",
+      "canonical_category_key": "deep_cleansing_shampoo",
+      "canonical_brand": "Davines",
+      "product_line": null,
+      "clean_name": "SOLU Shampoo",
+      "aliases": [
+        {
+          "alias": "Davines",
+          "resolves_to": "brand",
+          "canonical_brand": "Davines",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["SOLU Shampoo", "Davines SOLU Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "3f9328d8-1f6a-44e9-affd-fc219d1e691a",
+      "current_brand": "K18",
+      "current_name": "PEPTIDE PREP Detox Shampoo",
+      "current_category": "Tiefenreinigungsshampoo",
+      "canonical_category_key": "deep_cleansing_shampoo",
+      "canonical_brand": "K18",
+      "product_line": null,
+      "clean_name": "PEPTIDE PREP Detox Shampoo",
+      "aliases": [
+        {
+          "alias": "K18",
+          "resolves_to": "brand",
+          "canonical_brand": "K18",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["PEPTIDE PREP Detox Shampoo", "K18 PEPTIDE PREP Detox Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "514ffd65-e4a5-4f7f-96c5-0f194e3b3b36",
+      "current_brand": "L'Oreal Professionnel",
+      "current_name": "Serie Expert Metal DX Shampoo",
+      "current_category": "Tiefenreinigungsshampoo",
+      "canonical_category_key": "deep_cleansing_shampoo",
+      "canonical_brand": "L'Oréal Professionnel",
+      "product_line": "Metal DX",
+      "clean_name": "Shampoo",
+      "aliases": [
+        {
+          "alias": "L'Oréal Professionnel",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Professionnel",
+          "product_line": null
+        },
+        {
+          "alias": "L'Oreal Professionnel",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Professionnel",
+          "product_line": null
+        },
+        {
+          "alias": "L'Oréal Professionnel Paris",
+          "resolves_to": "brand",
+          "canonical_brand": "L'Oréal Professionnel",
+          "product_line": null
+        },
+        {
+          "alias": "Metal DX",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Professionnel",
+          "product_line": "Metal DX"
+        },
+        {
+          "alias": "Serie Expert Metal DX",
+          "resolves_to": "brand_line",
+          "canonical_brand": "L'Oréal Professionnel",
+          "product_line": "Metal DX"
+        }
+      ],
+      "known_titles": [
+        "Serie Expert Metal DX Shampoo",
+        "L'Oreal Professionnel Serie Expert Metal DX Shampoo"
+      ],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d105d245-5993-4b89-b45d-1bf0a86650e3",
+      "current_brand": "Living Proof",
+      "current_name": "Clarifying Detox Shampoo",
+      "current_category": "Tiefenreinigungsshampoo",
+      "canonical_category_key": "deep_cleansing_shampoo",
+      "canonical_brand": "Living Proof",
+      "product_line": null,
+      "clean_name": "Clarifying Detox Shampoo",
+      "aliases": [
+        {
+          "alias": "Living Proof",
+          "resolves_to": "brand",
+          "canonical_brand": "Living Proof",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Clarifying Detox Shampoo", "Living Proof Clarifying Detox Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "6513692a-b54f-4acc-9c77-5799d3dd200c",
+      "current_brand": "Malibu C",
+      "current_name": "Hard Water Wellness Shampoo",
+      "current_category": "Tiefenreinigungsshampoo",
+      "canonical_category_key": "deep_cleansing_shampoo",
+      "canonical_brand": "Malibu C",
+      "product_line": null,
+      "clean_name": "Hard Water Wellness Shampoo",
+      "aliases": [
+        {
+          "alias": "Malibu C",
+          "resolves_to": "brand",
+          "canonical_brand": "Malibu C",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Hard Water Wellness Shampoo", "Malibu C Hard Water Wellness Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "caa94951-57d9-441d-bd46-5d7debbf365f",
+      "current_brand": "Moroccanoil",
+      "current_name": "Clarifying Shampoo",
+      "current_category": "Tiefenreinigungsshampoo",
+      "canonical_category_key": "deep_cleansing_shampoo",
+      "canonical_brand": "Moroccanoil",
+      "product_line": null,
+      "clean_name": "Clarifying Shampoo",
+      "aliases": [
+        {
+          "alias": "Moroccanoil",
+          "resolves_to": "brand",
+          "canonical_brand": "Moroccanoil",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Clarifying Shampoo", "Moroccanoil Clarifying Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "1a6e731e-8fb2-43b4-9f4c-2d7f6dd06dca",
+      "current_brand": "OLAPLEX",
+      "current_name": "No.4C Bond Maintenance Clarifying Shampoo",
+      "current_category": "Tiefenreinigungsshampoo",
+      "canonical_category_key": "deep_cleansing_shampoo",
+      "canonical_brand": "OLAPLEX",
+      "product_line": null,
+      "clean_name": "No.4C Bond Maintenance Clarifying Shampoo",
+      "aliases": [
+        {
+          "alias": "OLAPLEX",
+          "resolves_to": "brand",
+          "canonical_brand": "OLAPLEX",
+          "product_line": null
+        }
+      ],
+      "known_titles": [
+        "No.4C Bond Maintenance Clarifying Shampoo",
+        "OLAPLEX No.4C Bond Maintenance Clarifying Shampoo"
+      ],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "e937c8aa-fc99-4731-b848-e5bd988fcc17",
+      "current_brand": "OUAI",
+      "current_name": "Detox Shampoo",
+      "current_category": "Tiefenreinigungsshampoo",
+      "canonical_category_key": "deep_cleansing_shampoo",
+      "canonical_brand": "OUAI",
+      "product_line": null,
+      "clean_name": "Detox Shampoo",
+      "aliases": [
+        {
+          "alias": "OUAI",
+          "resolves_to": "brand",
+          "canonical_brand": "OUAI",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Detox Shampoo", "OUAI Detox Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "a1d705b4-b973-486d-b853-2c795b6db681",
+      "current_brand": "Redken",
+      "current_name": "Hair Cleansing Cream Shampoo",
+      "current_category": "Tiefenreinigungsshampoo",
+      "canonical_category_key": "deep_cleansing_shampoo",
+      "canonical_brand": "Redken",
+      "product_line": null,
+      "clean_name": "Hair Cleansing Cream Shampoo",
+      "aliases": [
+        {
+          "alias": "Redken",
+          "resolves_to": "brand",
+          "canonical_brand": "Redken",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Hair Cleansing Cream Shampoo", "Redken Hair Cleansing Cream Shampoo"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "current_brand": "Balea",
+      "current_name": "Trockenshampoo Kopfhaut Sensitive",
+      "current_category": "Trockenshampoo",
+      "canonical_category_key": "dry_shampoo",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Kopfhaut Sensitive",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": [
+        "Trockenshampoo Kopfhaut Sensitive",
+        "Balea Trockenshampoo Kopfhaut Sensitive"
+      ],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "current_brand": "Balea",
+      "current_name": "Trockenshampoo Schaum Kopfhaut Sensitive",
+      "current_category": "Trockenshampoo",
+      "canonical_category_key": "dry_shampoo",
+      "canonical_brand": "Balea",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Schaum Kopfhaut Sensitive",
+      "aliases": [
+        {
+          "alias": "Balea",
+          "resolves_to": "brand",
+          "canonical_brand": "Balea",
+          "product_line": null
+        }
+      ],
+      "known_titles": [
+        "Trockenshampoo Schaum Kopfhaut Sensitive",
+        "Balea Trockenshampoo Schaum Kopfhaut Sensitive"
+      ],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "ff309c8a-ecd5-415c-9016-1b726c9fb3a4",
+      "current_brand": "Batiste",
+      "current_name": "Trockenshampoo Blond",
+      "current_category": "Trockenshampoo",
+      "canonical_category_key": "dry_shampoo",
+      "canonical_brand": "Batiste",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Blond",
+      "aliases": [
+        {
+          "alias": "Batiste",
+          "resolves_to": "brand",
+          "canonical_brand": "Batiste",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Trockenshampoo Blond", "Batiste Trockenshampoo Blond"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "d28643c8-c340-4514-826a-6c1ac8419fe9",
+      "current_brand": "Batiste",
+      "current_name": "Trockenshampoo Bruenett",
+      "current_category": "Trockenshampoo",
+      "canonical_category_key": "dry_shampoo",
+      "canonical_brand": "Batiste",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Bruenett",
+      "aliases": [
+        {
+          "alias": "Batiste",
+          "resolves_to": "brand",
+          "canonical_brand": "Batiste",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Trockenshampoo Bruenett", "Batiste Trockenshampoo Bruenett"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "6a1116a0-731f-46bb-9dd6-a0db89de5a13",
+      "current_brand": "Batiste",
+      "current_name": "Trockenshampoo dunkel",
+      "current_category": "Trockenshampoo",
+      "canonical_category_key": "dry_shampoo",
+      "canonical_brand": "Batiste",
+      "product_line": null,
+      "clean_name": "Trockenshampoo dunkel",
+      "aliases": [
+        {
+          "alias": "Batiste",
+          "resolves_to": "brand",
+          "canonical_brand": "Batiste",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Trockenshampoo dunkel", "Batiste Trockenshampoo dunkel"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "786a1396-914e-4739-a32c-1c3ead39a3d1",
+      "current_brand": "Batiste",
+      "current_name": "Trockenshampoo Original",
+      "current_category": "Trockenshampoo",
+      "canonical_category_key": "dry_shampoo",
+      "canonical_brand": "Batiste",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Original",
+      "aliases": [
+        {
+          "alias": "Batiste",
+          "resolves_to": "brand",
+          "canonical_brand": "Batiste",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Trockenshampoo Original", "Batiste Trockenshampoo Original"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "57ec7a8e-aa1b-4260-81d6-7ec3dbc899b8",
+      "current_brand": "Batiste",
+      "current_name": "Trockenshampoo Sensible Kopfhaut",
+      "current_category": "Trockenshampoo",
+      "canonical_category_key": "dry_shampoo",
+      "canonical_brand": "Batiste",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Sensible Kopfhaut",
+      "aliases": [
+        {
+          "alias": "Batiste",
+          "resolves_to": "brand",
+          "canonical_brand": "Batiste",
+          "product_line": null
+        }
+      ],
+      "known_titles": [
+        "Trockenshampoo Sensible Kopfhaut",
+        "Batiste Trockenshampoo Sensible Kopfhaut"
+      ],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "2b2161a2-6c09-435f-adbb-49da44d434ae",
+      "current_brand": "got2b",
+      "current_name": "Trockenshampoo Extra Volumen",
+      "current_category": "Trockenshampoo",
+      "canonical_category_key": "dry_shampoo",
+      "canonical_brand": "got2b",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Extra Volumen",
+      "aliases": [
+        {
+          "alias": "got2b",
+          "resolves_to": "brand",
+          "canonical_brand": "got2b",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Trockenshampoo Extra Volumen", "got2b Trockenshampoo Extra Volumen"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "dc8b8d4a-8ca9-452c-8d04-03b785b63275",
+      "current_brand": "got2b",
+      "current_name": "Trockenshampoo Liquid to Dry",
+      "current_category": "Trockenshampoo",
+      "canonical_category_key": "dry_shampoo",
+      "canonical_brand": "got2b",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Liquid to Dry",
+      "aliases": [
+        {
+          "alias": "got2b",
+          "resolves_to": "brand",
+          "canonical_brand": "got2b",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Trockenshampoo Liquid to Dry", "got2b Trockenshampoo Liquid to Dry"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    },
+    {
+      "product_id": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+      "current_brand": "ISANA",
+      "current_name": "Trockenshampoo Jedes Haar",
+      "current_category": "Trockenshampoo",
+      "canonical_category_key": "dry_shampoo",
+      "canonical_brand": "Isana",
+      "product_line": null,
+      "clean_name": "Trockenshampoo Jedes Haar",
+      "aliases": [
+        {
+          "alias": "ISANA",
+          "resolves_to": "brand",
+          "canonical_brand": "Isana",
+          "product_line": null
+        }
+      ],
+      "known_titles": ["Trockenshampoo Jedes Haar", "Isana Trockenshampoo Jedes Haar"],
+      "identifiers": [],
+      "notes": null,
+      "review_status": "reviewed"
+    }
+  ]
+}

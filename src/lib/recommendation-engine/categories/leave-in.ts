@@ -422,12 +422,8 @@ export function evaluateLeaveInFit(
   if (decision.targetProfile.conditionerRelationship && spec.roles.length === 0) {
     missingFields.push("roles")
   }
-  if (
-    decision.targetProfile.thickness &&
-    (!spec.suitable_thicknesses || spec.suitable_thicknesses.length === 0)
-  ) {
-    missingFields.push("suitable_thicknesses")
-  }
+  // Empty suitable_thicknesses is a legacy-column gap, not missing product data:
+  // the thickness dimension degrades to "unknown" below instead of blocking the fit.
   if (
     decision.targetProfile.careBenefits.includes("heat_protect") &&
     spec.application_stage.length === 0

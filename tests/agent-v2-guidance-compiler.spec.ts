@@ -1040,9 +1040,16 @@ test("product guidance preserves old claim boundaries and comparison fallback ru
 
   assert.match(brief, /Product names are names only/i)
   assert.match(brief, /Named-product detail checks are product-grounded turns/i)
-  assert.match(brief, /call `select_products` before the terminal answer/i)
+  assert.match(brief, /Start with `lookup_product_candidate`/i)
+  assert.match(brief, /not necessarily visible recommendation-card turns/i)
+  assert.match(
+    brief,
+    /use `answer_mode: product_assessment` when the answer assesses named resolved products/i,
+  )
+  assert.match(brief, /may reuse `select_products` or product projection data internally/i)
+  assert.doesNotMatch(brief, /call `select_products` before the terminal answer/i)
   assert.match(brief, /product_request_kind: product_detail/i)
-  assert.match(brief, /identical between `select_products` and terminal `request_interpretation`/i)
+  assert.match(brief, /request_interpretation still uses `product_detail` or `compare_products`/i)
   assert.match(brief, /unsupported_requested_signals/i)
   assert.match(brief, /comparison_facts/i)
   assert.match(brief, /caveated fallback/i)
@@ -1054,8 +1061,8 @@ test("product guidance preserves old claim boundaries and comparison fallback ru
   assert.ok(
     metadata.hard_rules.some(
       (rule) =>
-        rule.rule_id === "product.named_detail_no_repeat_or_substitute" &&
-        rule.validator_id === "named_product_detail_unverified",
+        rule.rule_id === "product.named_detail_requires_verified_identity" &&
+        rule.validator_id === "product_assessment_grounding",
     ),
   )
   assert.ok(
@@ -1067,7 +1074,40 @@ test("product guidance preserves old claim boundaries and comparison fallback ru
     ),
   )
   assert.ok(
-    metadata.soft_rubrics.some((rubric) => rubric.rubric_id === "product.detail_check_after_tool"),
+    metadata.soft_rubrics.some(
+      (rubric) => rubric.rubric_id === "product.detail_check_after_lookup",
+    ),
+  )
+})
+
+test("named-product assessment guidance does not force visible recommendation cards", async () => {
+  const result = await loadAgentV2GuidancePackages([
+    "base.answer_contract.v1",
+    "base.product_recommendation.v1",
+    "category.shampoo.v1",
+  ])
+  const brief = result.markdown_brief
+  const answerContract = JSON.parse(
+    readFileSync("data/agent-v2/guidance/base/answer-contract.json", "utf8"),
+  ) as {
+    scope: { answer_modes: string[] }
+    soft_rubrics: Array<{ rubric_id: string; message: string }>
+  }
+
+  assert.match(brief, /Named-Product Assessment/i)
+  assert.match(brief, /lookup_product_candidate/i)
+  assert.match(brief, /answer_mode: product_assessment/i)
+  assert.match(brief, /assessment_kind/i)
+  assert.match(brief, /assessed_product_ids/i)
+  assert.match(brief, /Do not use product-recommendation payload fields in `product_assessment`/i)
+  assert.match(brief, /visible recommendation cards require/i)
+  assert.match(brief, /explicit request for product recommendations/i)
+  assert.doesNotMatch(brief, /named-product detail checks.*answer_mode: product_recommendation/i)
+  assert.ok(answerContract.scope.answer_modes.includes("product_assessment"))
+  assert.ok(
+    answerContract.soft_rubrics.some(
+      (rubric) => rubric.rubric_id === "answer.product_assessment_payload_shape",
+    ),
   )
 })
 

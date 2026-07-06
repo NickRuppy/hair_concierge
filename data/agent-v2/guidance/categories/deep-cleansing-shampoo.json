@@ -30,7 +30,7 @@
       "rule_id": "category.deep_cleansing.product_detail_requires_catalog",
       "severity": "block",
       "source": "categories/deep-cleansing-shampoo.md",
-      "message": "For named reset products or claim checks, use product catalog data or select_products before stating clarifying, chelating, hard-water, metal, color-safe, service-prep, scalp-exfoliating, compatibility, cadence, or protocol claims; treat product_detail as a fact/claim check, not necessarily a recommendation/card flow."
+      "message": "For named reset products or claim checks, use lookup_product_candidate first, then verified product catalog data or internal select_products projection facts before stating clarifying, chelating, hard-water, metal, color-safe, service-prep, scalp-exfoliating, compatibility, cadence, or protocol claims; treat product_detail as a fact/claim check, not necessarily a recommendation/card flow."
     },
     {
       "rule_id": "category.deep_cleansing.no_claim_inference_from_name",
@@ -42,7 +42,7 @@
       "rule_id": "category.deep_cleansing.chelation_color_safe_requires_metadata",
       "severity": "block",
       "source": "categories/deep-cleansing-shampoo.md",
-      "message": "Chelating and color-safe claims need product metadata; if unsupported, use safe uncertainty, mention only grounded reset-category facts, and do not offer photo or link checks unless current tooling can ingest and ground them."
+      "message": "Chelating and color-safe claims need verified product metadata; if unsupported, use safe uncertainty, mention only grounded reset-category facts, and do not offer photo or link checks unless current tooling can ingest and ground them."
     },
     {
       "rule_id": "category.deep_cleansing.requested_count_availability",
@@ -116,7 +116,7 @@
       "rubric_id": "category.deep_cleansing.product_detail_hooks",
       "priority": "high",
       "source": "categories/deep-cleansing-shampoo.md",
-      "message": "For named products and reset claims, use primary_intent product_recommendation with product_request_kind product_detail; answer as a grounded product fact/claim check and avoid inferring claims from names, brand lines, marketing families, or category prose."
+      "message": "For named products and reset claims, use lookup_product_candidate with product_request_kind product_detail; answer as grounded product assessment/fact check and avoid inferring claims from names, brand lines, marketing families, or category prose."
     },
     {
       "rubric_id": "category.deep_cleansing.assessment_general_advice",
@@ -135,12 +135,12 @@
     {
       "grounding_id": "category.deep_cleansing.product_claims_and_reset_lane",
       "tool": "select_products",
-      "when": "Concrete deep-cleansing product names, recommendation order, category membership, clarifying, chelating, hard-water, metal-removal, scalp-exfoliation, color-safe, service-prep, compatibility, cadence, or protocol claims are mentioned."
+      "when": "Concrete deep-cleansing recommendations, recommendation order, category membership, or internal projection facts for resolved named-reset assessment are needed, including clarifying, chelating, hard-water, metal-removal, scalp-exfoliation, color-safe, service-prep, compatibility, cadence, or protocol claims."
     },
     {
       "grounding_id": "category.deep_cleansing.product_detail_claims",
       "tool": "select_products",
-      "when": "A named deep-cleansing product or product claim is checked for reset lane, clarifying/chelating status, hard-water or metal removal, gentleness, color safety, pre-service support, scalp-exfoliation, compatibility, exact cadence, exact placement, or usage protocol."
+      "when": "Internal projection facts are needed after a named deep-cleansing product or product claim is resolved for reset lane, clarifying/chelating status, hard-water or metal removal, gentleness, color safety, pre-service support, scalp-exfoliation, compatibility, exact cadence, exact placement, or usage protocol. Start identity resolution with lookup_product_candidate."
     },
     {
       "grounding_id": "category.deep_cleansing.routine_mutation",

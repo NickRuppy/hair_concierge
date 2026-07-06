@@ -110,10 +110,11 @@ If the user asks for concrete conditioner products:
   requires_tool: select_products
 
 If the user asks about a named conditioner, whether a conditioner is light or heavy, what protein/moisture role it has, whether it is color-safe, compatible with their needs, silicone-free, fragrance-free, repairing, or whether a product claim is true:
-  primary_intent: product_recommendation
+  primary_intent: product_recommendation when the user asks for alternatives; otherwise keep the terminal answer in named-product assessment
+  answer_mode: product_assessment after identity is resolved
   product_request_kind: product_detail
   care_category: conditioner
-  requires_tool: product catalog data or select_products
+  requires_tool: lookup_product_candidate first, then product catalog data or internal select_products projection facts when product claims need grounding
   do not infer from product name, brand line, marketing family, or category guidance alone
 
 If the user asks where conditioner belongs in a routine or how to use it without asking to change a saved or current routine:

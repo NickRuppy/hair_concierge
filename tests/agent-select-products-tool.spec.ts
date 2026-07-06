@@ -1060,6 +1060,159 @@ test("selectProducts applies leave-in thickness overrides and surfaces profile d
   )
 })
 
+test("selectProducts includes owned verified non-recommended products for assessment", async () => {
+  const ownedProduct = createMatchedProduct("owned-conditioner", 1, {
+    name: "Owned Conditioner",
+    is_chaarlie_recommended: false,
+    recommendation_meta: {
+      category: "conditioner",
+      score: 1,
+      top_reasons: ["In deiner Routine gespeichert und verifiziert."],
+      tradeoffs: [],
+      usage_hint: "Wie in deiner Routine angegeben nutzen.",
+      matched_profile: {
+        thickness: "normal",
+        density: null,
+        protein_moisture_balance: null,
+        cuticle_condition: null,
+        chemical_treatment: [],
+      },
+      matched_weight: "medium",
+      matched_repair_level: "medium",
+      matched_balance_need: "balanced",
+      product_weight: "medium",
+      product_repair_level: "medium",
+      product_balance_direction: "balanced",
+      fit_status: "supportive",
+    },
+  })
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, routineItems, includeProductIds }) => {
+      assert.equal(category, "conditioner")
+      assert.equal(routineItems[0]?.product_id, "owned-conditioner")
+      assert.deepEqual(includeProductIds, ["owned-conditioner"])
+      return [ownedProduct]
+    },
+  })
+
+  const result = await tool({
+    category: "conditioner",
+    message: "Passt mein Conditioner zu mir?",
+    hairProfile: LOW_DAMAGE_PROFILE as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [
+      {
+        category: "conditioner",
+        product_name: "Owned Conditioner",
+        frequency_range: "weekly_2x",
+        product_id: "owned-conditioner",
+        product_submission_id: null,
+        match_status: "matched",
+      },
+    ],
+  })
+
+  assert.equal(result.products[0]?.product_id, "owned-conditioner")
+  assert.equal(result.products[0]?.name, "Owned Conditioner")
+  assert.match(result.products[0]?.fit_reason ?? "", /Balance: ausgewogene Pflege/)
+  assert.equal(
+    result.products[0]?.supported_claims.some((claim) => claim.field === "weight"),
+    true,
+  )
+})
+
+test("selectProducts narrows product-detail assessment grounding to target product ids", async () => {
+  const targetProduct = createShampooMatchedProduct("target-shampoo", 1, [
+    "Resolved exact product from lookup.",
+  ])
+  const otherProduct = createShampooMatchedProduct("other-shampoo", 0.99, [
+    "Higher generic category score.",
+  ])
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, includeProductIds }) => {
+      assert.equal(category, "shampoo")
+      assert.deepEqual(includeProductIds, ["target-shampoo"])
+      return [otherProduct, targetProduct]
+    },
+  })
+
+  const result = await tool({
+    category: "shampoo",
+    message: "Passt das Syoss Shampoo zu mir?",
+    hairProfile: {
+      thickness: "fine",
+      scalp_type: "balanced",
+      scalp_condition: null,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    targetProductIds: ["target-shampoo"],
+  })
+
+  assert.deepEqual(
+    result.products.map((product) => product.product_id),
+    ["target-shampoo"],
+  )
+  assert.equal(
+    result.products[0]?.supported_claims.some((claim) => claim.field === "cleansing_intensity"),
+    true,
+  )
+})
+
+test("selectProducts preserves resolved assessment target when engine returns no products", async () => {
+  const tool = createSelectProductsTool({
+    runCategoryEngine: async ({ category, includeProductIds, preserveProductIds }) => {
+      assert.equal(category, "shampoo")
+      assert.deepEqual(includeProductIds, ["target-shampoo"])
+      assert.deepEqual(preserveProductIds, ["target-shampoo"])
+      return []
+    },
+  })
+
+  const result = await tool({
+    category: "shampoo",
+    message: "Passt das Syoss Shampoo zu mir?",
+    hairProfile: {
+      thickness: "fine",
+      scalp_type: "balanced",
+      scalp_condition: null,
+    } as HairProfile,
+    memoryContext: {
+      enabled: false,
+      entries: [],
+      promptContext: null,
+      dislikedProductNames: [],
+    },
+    routineItems: [],
+    targetProductIds: ["target-shampoo"],
+    targetProductHints: [
+      {
+        product_id: "target-shampoo",
+        name: "Syoss Intense Volume Shampoo",
+        category: "shampoo",
+      },
+    ],
+  })
+
+  assert.equal(result.product_response_policy, "recommend_with_caveat")
+  assert.deepEqual(
+    result.products.map((product) => product.product_id),
+    ["target-shampoo"],
+  )
+  assert.equal(result.products[0]?.supported_claims.length, 0)
+  assert.match(result.category_guidance, /geprüfter Produktdaten/)
+})
+
 test("selectProducts applies leave-in texture and density overrides with profile notices", async () => {
   const observed: {
     hairTexture?: HairProfile["hair_texture"]

@@ -10,6 +10,7 @@ import {
   AgentV2GeneralAdvicePayloadSchema,
   AgentV2MissingInformationSchema,
   AgentV2PendingFollowupActionSchema,
+  AgentV2ProductAssessmentPayloadSchema,
   AgentV2ProductRecommendationPayloadSchema,
   AgentV2ProductRequestKindSchema,
   AgentV2RequestInterpretationSchema,
@@ -62,6 +63,7 @@ export interface AgentV2ResponsesToolDefinition {
 export function buildAgentV2ResponsesTools(params: {
   safetyMode: "normal" | "restricted" | "hard_short_circuit"
   turnGateEnabled?: boolean
+  productIntakeEnabled?: boolean
 }): AgentV2ResponsesToolDefinition[] {
   if (params.safetyMode === "hard_short_circuit") {
     throw new Error("Hard short circuit bypasses the AgentV2 tool loop")
@@ -85,7 +87,7 @@ export function buildAgentV2ResponsesTools(params: {
       type: "function",
       name: "load_advisor_guidance",
       description:
-        "Load compact AgentV2 advisor guidance packages for the current answer mode, categories, topics, routine layer, and safety mode. Use this before category-specific claims, product recommendations, routine answers, and non-trivial general advice so the final answer is grounded in AgentV2 guidance rather than model memory. For named-product detail checks and product-specific claim checks, use answer_mode_hint product_recommendation even if the final answer may clarify because catalog data is missing; examples include 'Ist Produkt X farbsicher?' and 'Kann ich Produkt X als Hitzeschutz benutzen?'. For hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo questions, load deep_cleansing_shampoo instead of normal shampoo. For K18, OLAPLEX, Epres, acidic bonding, bond repair, or exact bond-repair protocol questions, load bondbuilder even when the product behaves like a leave-in or mask. For sleep-friction, satin/silk pillowcase, bonnet, pineapple, loose night hairstyle, HairHOMIE, or length/tip accessory questions, load topic night_protection.",
+        "Load compact AgentV2 advisor guidance packages for the current answer mode, categories, topics, routine layer, and safety mode. Use this before category-specific claims, product recommendations, named-product assessments, routine answers, and non-trivial general advice so the final answer is grounded in AgentV2 guidance rather than model memory. For named-product assessment/detail and product-specific claim checks such as 'Ist Produkt X farbsicher?' or 'Kann ich Produkt X als Hitzeschutz benutzen?', load the relevant category guidance and use answer_mode_hint product_assessment when that mode is available; otherwise load the same guidance with product_recommendation as the compatibility hint without forcing visible recommendation cards. For hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo questions, load deep_cleansing_shampoo instead of normal shampoo. For K18, OLAPLEX, Epres, acidic bonding, bond repair, or exact bond-repair protocol questions, load bondbuilder even when the product behaves like a leave-in or mask. For sleep-friction, satin/silk pillowcase, bonnet, pineapple, loose night hairstyle, HairHOMIE, or length/tip accessory questions, load topic night_protection.",
       strict: true,
       parameters: toStrictJsonSchema(LoadAgentV2AdvisorGuidanceInputSchema),
     },
@@ -115,18 +117,43 @@ export function buildAgentV2ResponsesTools(params: {
   )
 
   if (params.safetyMode === "normal") {
-    tools.splice(1, 0, {
+    const productTools: AgentV2ResponsesToolDefinition[] = []
+
+    if (params.productIntakeEnabled === true) {
+      productTools.push({
+        type: "function",
+        name: "lookup_product_candidate",
+        description:
+          "Look up a concrete product candidate in the product catalog when the user wants Chaarlie to work with that specific product: e.g. evaluate their own product, ask whether it suits them, compare named products, add one to their routine, continue using it, or clarify a named product. This is the agent-directed identity-resolution step before product assessment, product-specific answers, or product intake. Partial identity is allowed. Pass category when known from the message, context, or product name; if category/use is unclear, pass category null and clarify naturally from the lookup result. Do not call this for broad recommendation asks like 'welches Shampoo empfiehlst du?' unless the user names a concrete product candidate. Read assistant_guidance in the tool result before final answering; it is the source of truth for whether to answer, clarify, or hand off to product intake from verified identity.",
+        strict: true,
+        parameters: toStrictJsonSchema(LookupProductCandidateToolInputSchema),
+      })
+    }
+
+    productTools.push({
       type: "function",
       name: "select_products",
       description:
-        "Select grounded products from the catalog for an explicit product ask, comparison, or named-product detail/claim check. German category-fit questions such as 'welches Shampoo passt zu feinem Haar?', 'welche Spülung passt?', or 'was soll ich kaufen?' are explicit product asks and require select_products. For product_detail turns such as 'Can I use Product X as heat protectant?', 'Is Product X color-safe?', or 'Is Product X chelating?', this tool is required before any terminal answer, including clarification or unsupported-claim answers. Load product_recommendation guidance first and use product_request_kind product_detail. For product asks inside active routine threads, use product_request_kind specific_products and preserve routine context in the final answer. For hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo asks, use category deep_cleansing_shampoo instead of shampoo. For K18, OLAPLEX, Epres, acidic bonding, bond repair, or exact bond-repair protocol asks, use category bondbuilder instead of leave_in or mask.",
+        "Select grounded products from the catalog for explicit product recommendations, system-chosen catalog comparisons, named-product comparisons, or internal product-facts/projection grounding when one resolved named product needs catalog facts. German category-fit questions such as 'welches Shampoo passt zu feinem Haar?', 'welche Spülung passt?', or 'was soll ich kaufen?' are explicit product asks and require select_products with visible recommendation output. Named-product assessment/detail turns such as 'Can I use Product X as heat protectant?', 'Is Product X color-safe?', or 'Is Product X chelating?' must start with lookup_product_candidate for identity resolution; use select_products only when product projection facts are needed after identity is resolved, and do not turn that internal grounding into recommendation cards unless the user explicitly asks for alternatives, product recommendations, or a comparison. Load product_assessment/category guidance for one-product assessment turns when available; use product_recommendation guidance for actual recommendations, comparisons, and compatibility grounding. For product asks inside active routine threads, use product_request_kind specific_products and preserve routine context in the final answer. For hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo asks, use category deep_cleansing_shampoo instead of shampoo. For K18, OLAPLEX, Epres, acidic bonding, bond repair, or exact bond-repair protocol asks, use category bondbuilder instead of leave_in or mask.",
       strict: true,
       parameters: toStrictJsonSchema(SelectProductsToolInputSchema),
     })
+
+    tools.splice(1, 0, ...productTools)
   }
 
   return tools
 }
+
+export const LookupProductCandidateToolInputSchema = z.strictObject({
+  category: z.string().nullable(),
+  brand_text: z.string().nullable(),
+  product_name_text: z.string().nullable(),
+  reason: z.string(),
+  evidence_quote: z.string().min(1),
+})
+
+export type LookupProductCandidateToolInput = z.infer<typeof LookupProductCandidateToolInputSchema>
 
 export const SelectProductsToolInputSchema = z.strictObject({
   category: AgentV2GuidanceCategorySchema.describe(
@@ -397,7 +424,10 @@ function toCurrentCareFactToolParameters(
   }
 }
 
-function normalizeProfileOverrideValue(field: ProfileFactField, value: CurrentCareFactToolValue): unknown {
+function normalizeProfileOverrideValue(
+  field: ProfileFactField,
+  value: CurrentCareFactToolValue,
+): unknown {
   if (field === "usesHeatProtection") {
     if (typeof value !== "boolean") {
       throw new Error("Invalid current care fact tool input")
@@ -407,7 +437,9 @@ function normalizeProfileOverrideValue(field: ProfileFactField, value: CurrentCa
   if (field === "brushType") {
     if (Array.isArray(value)) {
       const uniqueValues = [...new Set(value)]
-      const hasInvalidValue = value.some((item) => item !== "none_regular" && !BRUSH_TYPE_SET.has(item))
+      const hasInvalidValue = value.some(
+        (item) => item !== "none_regular" && !BRUSH_TYPE_SET.has(item),
+      )
       const mixesNoneWithBrushes = uniqueValues.includes("none_regular") && uniqueValues.length > 1
       if (hasInvalidValue || mixesNoneWithBrushes) {
         throw new Error("Invalid current care fact tool input")
@@ -477,6 +509,7 @@ const AgentV2TerminalAnswerToolParametersSchema = z.strictObject({
   session_memory_writes: z.array(AgentV2SessionMemoryWriteSchema),
   payload: z.union([
     AgentV2ProductRecommendationPayloadSchema,
+    AgentV2ProductAssessmentPayloadSchema,
     AgentV2RoutinePayloadSchema,
     AgentV2GeneralAdvicePayloadSchema,
     AgentV2ClarificationPayloadSchema,

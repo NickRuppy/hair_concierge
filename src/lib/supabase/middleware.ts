@@ -125,7 +125,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // --- Subscription paywall ---------------------------------------------
-  const SUB_REQUIRED_PREFIXES = ["/onboarding", "/chat", "/api/chat"]
+  const SUB_REQUIRED_PREFIXES = ["/onboarding", "/chat", "/api/chat", "/api/product-intake"]
   const needsSub = SUB_REQUIRED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
 
   if (needsSub) {

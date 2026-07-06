@@ -172,6 +172,9 @@ test("current-turn routine presence can clear or create a routine item", () => {
     present: true,
     productName: null,
     frequencyBand: null,
+    productId: null,
+    productSubmissionId: null,
+    matchStatus: null,
   })
   assert.deepEqual(
     context.conflicts.map((conflict) => conflict.fieldPath),

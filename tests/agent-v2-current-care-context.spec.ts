@@ -511,6 +511,7 @@ test("AgentV2 runtime applies current-turn facts to the same effective context f
         downstreamContexts.push(executionContext?.effectiveCareContext)
         return { valid_product_ids: [], products: [] }
       },
+      lookup_product_candidate: async () => ({ status: "insufficient_identity" }),
       build_or_fix_routine: async (
         _input,
         executionContext?: { effectiveCareContext?: unknown },
@@ -625,6 +626,7 @@ function terminalGeneralAdvice(call_id: string, overrides: { evidence_quote: str
       requested_product_count: null,
       count_policy: "none",
       evidence_quote: overrides.evidence_quote,
+      specific_product_candidate: false,
       confidence: 0.9,
     },
     confidence: 0.9,
@@ -688,6 +690,7 @@ function fakeAgentV2Tools() {
   return {
     load_advisor_guidance: async () => ({ loaded_package_ids: [] }),
     select_products: async () => ({ valid_product_ids: [], products: [] }),
+    lookup_product_candidate: async () => ({ status: "insufficient_identity" }),
     build_or_fix_routine: async () => ({ routine_layer: "basics", visible_steps: [] }),
   }
 }

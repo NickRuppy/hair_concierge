@@ -3,6 +3,7 @@ import { SELECTABLE_PRODUCT_CATEGORIES } from "@/lib/agent/contracts"
 
 export const AgentV2AnswerModeSchema = z.enum([
   "product_recommendation",
+  "product_assessment",
   "routine",
   "general_advice",
   "clarification",
@@ -187,6 +188,7 @@ export const AgentV2RequestInterpretationSchema = z.strictObject({
   requested_product_count: z.number().int().min(0).max(6).nullable(),
   count_policy: AgentV2CountPolicySchema,
   evidence_quote: z.string().min(1),
+  specific_product_candidate: z.boolean(),
   confidence: z.number().min(0).max(1),
 })
 
@@ -296,6 +298,28 @@ export const AgentV2ProductRecommendationPayloadSchema = z.strictObject({
   next_step_offer_de: z.string().nullable(),
 })
 
+export const AgentV2ProductAssessmentKindSchema = z.enum(["fit", "detail", "routine_usage"])
+
+export type AgentV2ProductAssessmentKind = z.infer<typeof AgentV2ProductAssessmentKindSchema>
+
+export const AgentV2ProductAssessmentPayloadSchema = z.strictObject({
+  assessment_kind: AgentV2ProductAssessmentKindSchema.describe(
+    "Type of single resolved-product assessment: fit, detail, or routine_usage. Product comparisons belong in product_recommendation/select_products, not product_assessment.",
+  ),
+  assessed_product_ids: z
+    .array(z.string().min(1))
+    .min(1)
+    .max(1)
+    .describe(
+      "The single verified product ID being assessed. Must come from lookup_product_candidate, selected clarification context, active resolved product context, or internal product facts for the resolved product.",
+    ),
+  user_facing_answer_de: z
+    .string()
+    .describe(
+      "Complete German answer shown to the user. Include all assessment rationale and usage caveats here; product_assessment has no recommendations or usage_notes_de fields.",
+    ),
+})
+
 export const AgentV2RoutineStepPayloadSchema = z.strictObject({
   step_id: z.string(),
   label_de: z.string(),
@@ -365,6 +389,10 @@ export const AgentV2TerminalAnswerSchema = z.discriminatedUnion("answer_mode", [
   AgentV2TerminalAnswerBaseSchema.extend({
     answer_mode: z.literal("product_recommendation"),
     payload: AgentV2ProductRecommendationPayloadSchema,
+  }),
+  AgentV2TerminalAnswerBaseSchema.extend({
+    answer_mode: z.literal("product_assessment"),
+    payload: AgentV2ProductAssessmentPayloadSchema,
   }),
   AgentV2TerminalAnswerBaseSchema.extend({
     answer_mode: z.literal("routine"),
