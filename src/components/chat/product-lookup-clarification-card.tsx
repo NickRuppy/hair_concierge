@@ -113,7 +113,12 @@ export function ProductLookupClarificationCard({
         </div>
       ) : (
         <div className="mt-3 space-y-2">
-          {clarification.candidates.map((candidate) => {
+          {(selectedProductId || submittedProductId
+            ? clarification.candidates.filter(
+                (candidate) => candidate.product_id === (selectedProductId ?? submittedProductId),
+              )
+            : clarification.candidates
+          ).map((candidate) => {
             const isSelected = candidate.product_id === selectedProductId
             const isSubmitted = candidate.product_id === submittedProductId
             const candidateDisplayName = getProductDisplayName(candidate.name, {

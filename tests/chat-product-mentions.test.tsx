@@ -385,13 +385,18 @@ test("assistant product lookup clarification keeps candidate actions locked whil
 
   await firstCandidateButton.props.onClick()
 
-  const buttonsAfterResolvedRequest = findButtons(harness.render())
-  const secondCandidateButton = buttonsAfterResolvedRequest.at(1)
-  assert.ok(secondCandidateButton)
-
-  assert.equal(textContent(secondCandidateButton), "Auswählen")
-  assert.equal(secondCandidateButton.props.disabled, true)
-  await secondCandidateButton.props.onClick()
+  const rerendered = harness.render()
+  const buttonsAfterResolvedRequest = findButtons(rerendered)
+  // Only the picked candidate stays visible; its button is locked.
+  const candidateButtons = buttonsAfterResolvedRequest.filter((button) =>
+    /Auswählen|Ausgewählt|Wird ausgewählt/.test(textContent(button)),
+  )
+  assert.equal(candidateButtons.length, 1)
+  const remainingButton = candidateButtons[0]
+  assert.ok(remainingButton)
+  assert.equal(remainingButton.props.disabled, true)
+  assert.doesNotMatch(renderToStaticMarkup(rerendered), /Syoss Volume Lift/)
+  await remainingButton.props.onClick()
   assert.deepEqual(selectedProductIds, ["product-syoss-intense-curls"])
 })
 
@@ -967,4 +972,26 @@ test("assistant product lookup clarification hides legacy duplicate suffixes in 
 
   assert.match(html, /Curls Shampoo/)
   assert.doesNotMatch(html, /legacy duplicate/)
+})
+
+test("clarification card shows only the selected candidate after selection", () => {
+  const html = renderToStaticMarkup(
+    <ProductLookupClarificationCard
+      clarification={createProductLookupClarificationWithTwoCandidates()}
+      conversationId="conversation-1"
+      assistantMessageId="message-clarification-1"
+      onSelectProduct={async () => {}}
+      resolvedSelection={{
+        source: "product_lookup_clarification",
+        clarification_id: "clarification-1",
+        source_assistant_message_id: "message-clarification-1",
+        selected_product_id: "product-syoss-intense-curls",
+        selected_product_name: "Syoss Intense Curls",
+      }}
+    />,
+  )
+
+  assert.match(html, /Syoss Intense Curls/)
+  assert.doesNotMatch(html, /Syoss Volume Lift/)
+  assert.match(html, /Ausgewählt/)
 })
