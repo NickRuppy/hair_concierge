@@ -9678,3 +9678,43 @@ test("validator drops invalid session memory without blocking valid final answer
   assert.equal(result.dropped_session_memory_writes.length, 1)
   assert.equal(result.dropped_session_memory_writes[0].validator_id, "session_memory_scope")
 })
+
+test("pending intake lookup for another category does not block a grounded recommendation", () => {
+  const result = validateAgentV2FinalAnswer(
+    {
+      ...baseAnswer,
+      request_interpretation: requestInterpretation({
+        primary_intent: "product_recommendation",
+        product_request_kind: "specific_products",
+        care_category: "leave_in",
+        evidence_quote: "kannst du mir noch einen leave-in empfehlen?",
+      }),
+      payload: {
+        ...baseAnswer.payload,
+        user_facing_answer_de:
+          "**Test Leave-in** passt gut zu deinem feinen Haar – nach dem Shampoo in die Längen einarbeiten. Dein Herbal Essences Shampoo Limettenduft ist übrigens noch in Prüfung.",
+      },
+    },
+    {
+      ...baseValidationContext,
+      productLookupResults: [
+        {
+          status: "not_found",
+          category: "shampoo",
+          input_identity: {
+            category: "shampoo",
+            brand_text: "Herbal Essences",
+            product_name_text: "Shampoo Limettenduft, Tiefenreinigung & Glanz",
+            evidence_quote: "Ich habe Herbal Essences Shampoo Limettenduft eingereicht.",
+          },
+          product: null,
+        },
+      ],
+    },
+  )
+
+  assert.ok(
+    !result.errors.some((error) => error.validator_id === "product_lookup_unresolved"),
+    JSON.stringify(result.errors, null, 2),
+  )
+})

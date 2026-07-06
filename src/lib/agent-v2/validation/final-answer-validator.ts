@@ -2101,11 +2101,25 @@ function validateProductLookupResultClaims(
       .filter((result) => result.status === "found_exact" && result.product?.id)
       .map((result) => result.product?.id as string),
   )
-  const relevantUnresolvedLookupResults = unresolvedLookupResults.filter(
-    (result) =>
+  const answerCareCategory = answer.request_interpretation.care_category
+  const relevantUnresolvedLookupResults = unresolvedLookupResults.filter((result) => {
+    // A pending/unresolved lookup for one category must not block a grounded
+    // recommendation turn for a different category (e.g. a pending shampoo
+    // intake killing an unrelated leave-in recommendation).
+    if (
+      answer.answer_mode === "product_recommendation" &&
+      answer.request_interpretation.product_request_kind === "specific_products" &&
+      answerCareCategory !== "none" &&
+      answerCareCategory !== "unknown"
+    ) {
+      const lookupCategory = result.input_identity?.category ?? result.category ?? null
+      if (lookupCategory && lookupCategory !== answerCareCategory) return false
+    }
+    return (
       unresolvedLookupResultMatchesAnswerClaim(result, answer, context) ||
-      unresolvedLookupResultMatchesPendingCategoryAssessment(result, answer),
-  )
+      unresolvedLookupResultMatchesPendingCategoryAssessment(result, answer)
+    )
+  })
   if (
     isGroundedAlternativesBaselineRecommendation({
       answer,
