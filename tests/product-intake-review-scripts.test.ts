@@ -10,6 +10,7 @@ import {
   shouldCapturePromotionError,
   validatePromotableProduct,
 } from "../scripts/product-intake/promote"
+import { deriveSuitableThicknessesFromSpecOperations } from "../scripts/product-intake/approve"
 import {
   buildQueueReport,
   matchesQueueFilters,
@@ -1132,4 +1133,51 @@ test("needs-more-info notifications ignore malformed missing fields", () => {
   )
 
   assert.deepEqual(context.product_intake_offer?.missing_fields, ["Produktname", "Barcodefoto"])
+})
+
+test("approval derives suitable thicknesses from category spec operations", () => {
+  assert.deepEqual(
+    deriveSuitableThicknessesFromSpecOperations([
+      {
+        type: "upsert",
+        table: "product_conditioner_specs",
+        rows: [
+          { product_id: "p1", thickness: "fine", protein_moisture_balance: "snaps" },
+          { product_id: "p1", thickness: "normal", protein_moisture_balance: "snaps" },
+          { product_id: "p1", thickness: "fine", protein_moisture_balance: "stretches_stays" },
+        ],
+      },
+      {
+        type: "upsert",
+        table: "product_conditioner_rerank_specs",
+        rows: [{ product_id: "p1", weight: "medium" }],
+      },
+    ] as never),
+    ["fine", "normal"],
+  )
+
+  assert.deepEqual(
+    deriveSuitableThicknessesFromSpecOperations([
+      {
+        type: "upsert",
+        table: "product_leave_in_eligibility",
+        rows: [
+          { product_id: "p2", thickness: "coarse", need_bucket: "repair" },
+          { product_id: "p2", thickness: "invalid-value", need_bucket: "repair" },
+        ],
+      },
+    ] as never),
+    ["coarse"],
+  )
+
+  assert.deepEqual(
+    deriveSuitableThicknessesFromSpecOperations([
+      {
+        type: "upsert",
+        table: "product_mask_specs",
+        rows: [{ product_id: "p3", weight: "light" }],
+      },
+    ] as never),
+    [],
+  )
 })

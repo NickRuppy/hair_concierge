@@ -2029,15 +2029,10 @@ async function routeRequest(params: {
         reviewedBy: decision.reviewed_by,
         reviewNotes: decision.notes,
       })
-      const approvalApply =
-        body.applyToSupabase === true && approvalDryRun.ok
-          ? await runApprovalApply({
-              rootDir: params.rootDir,
-              packagePath: body.packagePath,
-              reviewedBy: decision.reviewed_by,
-              reviewNotes: decision.notes,
-            })
-          : null
+      // Supabase publish is intentionally not reachable over HTTP: the ops rule
+      // is that only `products:intake:approve-package -- --apply --confirm`
+      // writes to Supabase. This endpoint records the decision and dry-runs.
+      const approvalApply = null
       const detail = await readReviewPackage({
         rootDir: params.rootDir,
         packagePath: body.packagePath,
@@ -3496,9 +3491,9 @@ export function renderAppHtml(): string {
         const product = currentDetail.payload?.final?.product || currentDetail.payload?.draft?.product || {};
         const label = [product.canonical_brand, product.clean_name].filter(Boolean).join(" ") || "dieses Paket";
         const confirmed = window.confirm(
-          "Paket final freigeben und in Supabase uebernehmen?\\n\\n" +
+          "Freigabe-Entscheidung speichern?\\n\\n" +
             label +
-            "\\n\\nDas laedt das finale Bild hoch, speichert Produktdaten, gibt die Submission frei und kann User-Benachrichtigungen ausloesen."
+            "\\n\\nDer Supabase-Import passiert danach bewusst per CLI: npm run products:intake:approve-package -- --apply --confirm"
         );
         if (!confirmed) return;
         const button = $("package-approve");
@@ -3511,7 +3506,6 @@ export function renderAppHtml(): string {
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
               packagePath: selectedPath,
-              applyToSupabase: true,
               decision: {
                 status: "approved_for_import",
                 notes: $("package-approval-notes").value.trim(),

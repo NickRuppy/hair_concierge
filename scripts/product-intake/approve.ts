@@ -10,6 +10,7 @@ import {
   captureProductIntakeException,
   flushProductIntakeSentry,
 } from "@/lib/observability/product-intake"
+import type { ProductIntakeTargetSpecOperation } from "@/lib/product-intake/category-validators"
 import {
   appendProductAdditionRecord,
   approveReviewedSubmission,
@@ -18,6 +19,35 @@ import {
   productAdditionRecordPathForDate,
   validateSubmissionReady,
 } from "./review-actions"
+
+export function deriveSuitableThicknessesFromSpecOperations(
+  specOperations: readonly ProductIntakeTargetSpecOperation[],
+): string[] {
+  const thicknesses = new Set<string>()
+  for (const operation of specOperations) {
+    for (const row of operation.rows) {
+      const thickness = (row as { thickness?: unknown }).thickness
+      if (thickness === "fine" || thickness === "normal" || thickness === "coarse") {
+        thicknesses.add(thickness)
+      }
+    }
+  }
+  return [...thicknesses].sort()
+}
+
+async function writeSuitableThicknessesForApprovedProduct(params: {
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>
+  productId: string
+  specOperations: readonly ProductIntakeTargetSpecOperation[]
+}): Promise<void> {
+  const thicknesses = deriveSuitableThicknessesFromSpecOperations(params.specOperations)
+  if (thicknesses.length === 0) return
+  const { error } = await params.supabase
+    .from("products")
+    .update({ suitable_thicknesses: thicknesses })
+    .eq("id", params.productId)
+  if (error) throw error
+}
 
 export async function approveSubmissionById(params: {
   submissionId: string
@@ -83,6 +113,19 @@ export async function approveSubmissionById(params: {
     reviewedAt,
     reviewNotes: params.reviewNotes,
   })
+
+  try {
+    await writeSuitableThicknessesForApprovedProduct({
+      supabase,
+      productId: approval.product_id,
+      specOperations: validation.targetSpecOperations,
+    })
+  } catch (error) {
+    console.error(
+      `Approved, but failed to write suitable_thicknesses for product ${approval.product_id}:`,
+      error,
+    )
+  }
 
   let additionRecordPath: string | null = null
   try {

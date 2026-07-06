@@ -11,6 +11,15 @@ CREATE INDEX IF NOT EXISTS user_product_usage_user_product_matched_idx
 
 GRANT SELECT ON TABLE public.product_lines TO anon, authenticated;
 
+-- Renamed from 20260618120000: that version collided with the already-applied
+-- add_hair_length_to_profiles migration, so this file was silently skipped by
+-- db push and the visibility boundary never reached prod.
+
+-- Drop the permissive legacy policy that exposed every active product to any
+-- authenticated user; the scoped policies below replace it.
+DROP POLICY IF EXISTS "products_select"
+  ON public.products;
+
 DROP POLICY IF EXISTS "products_select_active"
   ON public.products;
 
