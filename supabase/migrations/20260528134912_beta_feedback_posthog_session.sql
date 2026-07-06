@@ -1,3 +1,7 @@
-alter table public.beta_feedback
-  add column posthog_session_id text
-    check (posthog_session_id is null or length(posthog_session_id) <= 128);;
+-- Remote-history mirror only.
+--
+-- The canonical posthog_session_id beta_feedback column migration is
+-- 20260528160000_beta_feedback_posthog_session.sql. This version exists in
+-- linked Supabase migration history from an earlier out-of-band push, so keep
+-- the file as an explicit no-op to avoid fresh reset/preview environments
+-- adding the same column twice.

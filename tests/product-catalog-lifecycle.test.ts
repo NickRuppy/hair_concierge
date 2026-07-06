@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { readFileSync } from "node:fs"
+import { readdirSync, readFileSync } from "node:fs"
 import test from "node:test"
 
 import { isProductEligibleForMode } from "../src/lib/product-catalog/eligibility"
@@ -95,6 +95,7 @@ test("products select policy migration keeps user-visible catalog reads recommen
     "utf8",
   )
 
+  assert.match(migration, /DROP POLICY IF EXISTS "products_select"/)
   assert.match(migration, /CREATE POLICY "products_select_active"/)
   assert.match(migration, /is_active = true/)
   assert.match(migration, /lifecycle_status = 'active'/)
@@ -107,6 +108,30 @@ test("products select policy migration keeps user-visible catalog reads recommen
   assert.match(migration, /GRANT SELECT ON TABLE public\.product_lines TO anon, authenticated/)
   assert.match(migration, /CREATE POLICY product_lines_select_public/)
   assert.match(migration, /ON public\.product_lines/)
+})
+
+test("supabase migrations have unique version prefixes", () => {
+  const migrationNames = readdirSync("supabase/migrations").filter((name) => name.endsWith(".sql"))
+  const versions = migrationNames.map((name) => name.split("_", 1)[0])
+  const duplicates = versions.filter((version, index) => versions.indexOf(version) !== index)
+
+  assert.deepEqual(duplicates, [])
+})
+
+test("beta feedback remote-history mirror migrations are no-ops", () => {
+  const betaFeedbackMirror = readFileSync(
+    "supabase/migrations/20260528130643_beta_feedback.sql",
+    "utf8",
+  )
+  const posthogSessionMirror = readFileSync(
+    "supabase/migrations/20260528134912_beta_feedback_posthog_session.sql",
+    "utf8",
+  )
+
+  assert.match(betaFeedbackMirror, /Remote-history mirror only/)
+  assert.doesNotMatch(betaFeedbackMirror, /create table public\.beta_feedback/i)
+  assert.match(posthogSessionMirror, /Remote-history mirror only/)
+  assert.doesNotMatch(posthogSessionMirror, /add column posthog_session_id/i)
 })
 
 test("active product without outgoing relationship is primary-eligible", () => {
