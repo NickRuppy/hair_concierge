@@ -631,6 +631,19 @@ export function createProductSelectionPostHandler(overrides: ProductSelectionRun
     if (statePersistenceResult.status === "failed") {
       return streamProductSelectionError()
     }
+    // The pipeline transition drops the turn's new contexts on visible-failure
+    // turns, which would lose the just-confirmed selection. Merge it in
+    // explicitly so follow-ups keep the trusted product identity.
+    const selectionStatePersisted = await persistResolvedSelectionState({
+      admin,
+      persistConversationStateTransition: deps.persistConversationStateTransition,
+      conversationId,
+      userId: user.id,
+      resolvedSelection,
+    })
+    if (!selectionStatePersisted) {
+      return streamProductSelectionError()
+    }
 
     const { data: assistantMessage, error: assistantMessageError } = await admin
       .from("messages")

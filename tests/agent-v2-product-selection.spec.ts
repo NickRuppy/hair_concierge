@@ -1299,7 +1299,7 @@ test("chat product selection returns existing selection answer on replay", async
     ],
   })
   let pipelineCalled = false
-  let persistedSelectionTransition: unknown = null
+  const persistedSelectionTransitions: unknown[] = []
   const handler = createProductSelectionPostHandler({
     createClient: async () =>
       ({
@@ -1313,7 +1313,7 @@ test("chat product selection returns existing selection answer on replay", async
       throw new Error("pipeline should not be called")
     },
     persistConversationStateTransition: async (_admin, params) => {
-      persistedSelectionTransition = params.transition
+      persistedSelectionTransitions.push(params.transition)
       return { status: "persisted", error: null }
     },
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
@@ -1339,7 +1339,7 @@ test("chat product selection returns existing selection answer on replay", async
   assert.equal(pipelineCalled, false)
   assert.equal(admin.insertedMessages.length, 0)
   const activeProductContext = (
-    persistedSelectionTransition as {
+    persistedSelectionTransitions.at(-1) as {
       next_state?: { agent_v2?: { active_product_contexts?: unknown[] } }
     }
   )?.next_state?.agent_v2?.active_product_contexts?.[0] as
@@ -1546,7 +1546,7 @@ test("chat product selection continues with trusted selected product context", a
   })
   let trustedContext: unknown = null
   let selectionTurnMessage: string | null = null
-  let persistedSelectionTransition: unknown = null
+  const persistedSelectionTransitions: unknown[] = []
   const handler = createProductSelectionPostHandler({
     createClient: async () =>
       ({
@@ -1591,7 +1591,7 @@ test("chat product selection continues with trusted selected product context", a
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
     persistConversationStateTransition: async (_admin, params) => {
-      persistedSelectionTransition = params.transition
+      persistedSelectionTransitions.push(params.transition)
       return { status: "persisted", error: null }
     },
   })
@@ -1646,7 +1646,18 @@ test("chat product selection continues with trusted selected product context", a
       selected_product_name: "Syoss Intense Volume Shampoo",
     },
   )
-  assert.deepEqual(persistedSelectionTransition, { next_state: "selection" })
+  assert.deepEqual(persistedSelectionTransitions[0], { next_state: "selection" })
+  const selectionResolvedTransition = persistedSelectionTransitions.at(-1) as {
+    reason?: string
+    next_state?: {
+      agent_v2?: { active_resolved_product_context?: { product_id?: string } | null }
+    }
+  }
+  assert.equal(selectionResolvedTransition?.reason, "product_lookup_selection_resolved")
+  assert.equal(
+    selectionResolvedTransition?.next_state?.agent_v2?.active_resolved_product_context?.product_id,
+    "syoss-intense-volume-shampoo",
+  )
 })
 
 test("chat product selection allows user-owned non-recommended selected products", async () => {
@@ -2029,7 +2040,7 @@ test("chat product selection duplicate-key persistence does not mutate state twi
       message: "duplicate key value violates unique constraint",
     },
   })
-  let persistedSelectionTransition: unknown = null
+  const persistedSelectionTransitions: unknown[] = []
   const handler = createProductSelectionPostHandler({
     createClient: async () =>
       ({
@@ -2067,7 +2078,7 @@ test("chat product selection duplicate-key persistence does not mutate state twi
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
     persistConversationStateTransition: async (_admin, params) => {
-      persistedSelectionTransition = params.transition
+      persistedSelectionTransitions.push(params.transition)
       return { status: "persisted", error: null }
     },
   })
@@ -2092,7 +2103,7 @@ test("chat product selection duplicate-key persistence does not mutate state twi
   assert.doesNotMatch(responseText, /error/)
   assert.match(responseText, /product_lookup_selection/)
   const activeProductContext = (
-    persistedSelectionTransition as {
+    persistedSelectionTransitions.at(-1) as {
       next_state?: { agent_v2?: { active_product_contexts?: unknown[] } }
     }
   )?.next_state?.agent_v2?.active_product_contexts?.[0] as
@@ -2240,7 +2251,7 @@ test("chat product selection persists resolved state before assistant message in
     },
     messageInsertError: { message: "database unavailable" },
   })
-  let persistedSelectionTransition: unknown = null
+  const persistedSelectionTransitions: unknown[] = []
   const handler = createProductSelectionPostHandler({
     createClient: async () =>
       ({
@@ -2278,7 +2289,7 @@ test("chat product selection persists resolved state before assistant message in
     }),
     buildDoneEventData: ({ intent }: { intent: string }) => ({ intent }),
     persistConversationStateTransition: async (_admin, params) => {
-      persistedSelectionTransition = params.transition
+      persistedSelectionTransitions.push(params.transition)
       return { status: "persisted", error: null }
     },
   })
@@ -2299,7 +2310,11 @@ test("chat product selection persists resolved state before assistant message in
   assert.equal(response.status, 200)
   assert.match(responseText, /"type":"error"/)
   assert.match(responseText, /Produktauswahl konnte nicht verarbeitet werden/)
-  assert.deepEqual(persistedSelectionTransition, { next_state: "selection" })
+  assert.deepEqual(persistedSelectionTransitions[0], { next_state: "selection" })
+  assert.equal(
+    (persistedSelectionTransitions.at(-1) as { reason?: string } | undefined)?.reason,
+    "product_lookup_selection_resolved",
+  )
 })
 
 test("chat route does not infer product intake offer from raw user message", async () => {
