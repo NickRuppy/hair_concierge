@@ -43,6 +43,7 @@ const approvePackageScript = readFileSync("scripts/product-intake/approve-packag
 const linkExistingScript = readFileSync("scripts/product-intake/link-existing.ts", "utf8")
 const queueScript = readFileSync("scripts/product-intake/queue.ts", "utf8")
 const prepareResearchScript = readFileSync("scripts/product-intake/prepare-research.ts", "utf8")
+const researchQueueScript = readFileSync("scripts/product-intake/research-queue.ts", "utf8")
 const requestInfoScript = readFileSync("scripts/product-intake/request-info.ts", "utf8")
 const researchScript = readFileSync("scripts/product-intake/research.ts", "utf8")
 const reviewActionsScript = readFileSync("scripts/product-intake/review-actions.ts", "utf8")
@@ -63,6 +64,10 @@ test("Phase 4A package scripts expose the script-first review workflow", () => {
   assert.equal(
     packageJson.scripts["products:intake:prepare-research"],
     "tsx scripts/product-intake/prepare-research.ts",
+  )
+  assert.equal(
+    packageJson.scripts["products:intake:research-queue"],
+    "tsx scripts/product-intake/research-queue.ts",
   )
   assert.equal(
     packageJson.scripts["products:intake:research"],
@@ -183,6 +188,12 @@ test("destructive review scripts default to dry-run and require explicit confirm
   assert.match(reviewActionsScript, /dryRunResearchedPayload/)
   assert.match(prepareResearchScript, /statusFilter:\s*"pending_review"/)
   assert.doesNotMatch(prepareResearchScript, /\.update\(/)
+  assert.doesNotMatch(researchQueueScript, /flagBool\(args,\s*["']apply["']/)
+  assert.doesNotMatch(researchQueueScript, /\.update\(/)
+  assert.doesNotMatch(researchQueueScript, /\.insert\(/)
+  assert.doesNotMatch(researchQueueScript, /\.upsert\(/)
+  assert.doesNotMatch(researchQueueScript, /\.delete\(/)
+  assert.doesNotMatch(researchQueueScript, /--apply/)
   assert.match(approvePackageScript, /Approve-package writes require --confirm/)
   assert.match(approvePackageScript, /approveSubmissionById/)
   assert.match(approvePackageScript, /saveResearchedPayload/)

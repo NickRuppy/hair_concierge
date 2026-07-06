@@ -5,22 +5,28 @@ submissions or internal catalog work.
 
 The goal is simple: every approved product should enter the catalog with the
 same standard of identity, category properties, sources, image quality, user
-linking, and chat notification. The workflow is intentionally local-first until
-Nick explicitly approves a write to Supabase.
+linking, and chat notification. Research and review are local/operator-driven;
+the final Supabase write is guarded and must be explicitly triggered by Nick.
 
 ## Core Rule
 
-Codex and the local review app may prepare and edit local package files. They
-must not write researched products into Supabase.
+Codex and the local review tools may prepare research, preview payloads, image
+assets, review decisions, and publish preflight artifacts. They must not write a
+researched product into Supabase unless Nick explicitly starts the final handoff
+for that product.
 
-Only this explicit approval command may write the reviewed product, upload the
-final image, link it to the user, and send the chat notification:
+The legacy package flow uses this explicit approval command to write the
+reviewed product, upload the final image, link it to the user, and send the chat
+notification:
 
 ```bash
 npm run products:intake:approve-package -- --package ops/product-intake-research/YYYY-MM-DD/<submission-id> --reviewed-by nick --apply --confirm
 ```
 
-Never run this command without Nick explicitly approving that exact package.
+Never run this command without Nick explicitly approving that exact package. In
+the review center, the equivalent approval is the final handoff action after the
+processed image and category properties are approved; that route must remain
+fail-closed and explicit.
 
 ## What This Workflow Covers
 
@@ -46,12 +52,304 @@ Never run this command without Nick explicitly approving that exact package.
 - The review app saves only package-local files such as `payload.json`,
   `image-review.json`, `property-review.json`, `image-finalization.json`, and
   `package-approval.json`.
-- The review app must not call Supabase write APIs, approval commands, upload
-  commands, or migrations.
+- The legacy local package review app must not call Supabase write APIs,
+  approval commands, upload commands, or migrations.
+- The internal review center may write durable job/research/review state rows,
+  save researched preview payloads, run local image processing, and prepare
+  publish preflight artifacts. Product publish, image upload, user linking, and
+  notification remain guarded writes behind Nick's explicit final handoff.
 - Approval commands must be dry-run first unless Nick explicitly chooses to
   apply.
 - If a product may already exist, prefer linking the existing product over
   creating a duplicate.
+
+## Standard Product Research Contract
+
+This contract is the source of truth for both automated review-center research
+and manual product additions. A product is not ready for Nick's final review
+until all four lanes are complete:
+
+1. Product identity is resolved to canonical brand, optional line, clean product
+   name, supported category key, identifiers, and sources.
+2. A reviewable raw product image candidate exists and can be visually compared
+   with the submitted product.
+3. Category-specific properties are filled using the exact database values that
+   will be written, not prose labels.
+4. Commercial fields have an approval-safe purchase URL and current price, or a
+   documented blocker after all preferred sources were searched.
+
+### Identity And Brand Review
+
+Resolve identity before researching properties or images:
+
+- Check whether the exact product already exists, including products with
+  `is_chaarlie_recommended = false`.
+- Use the canonical brand table when possible. If the brand is new or ambiguous,
+  stop in brand review and ask Nick to confirm spelling, brand, line, and clean
+  product name before using it in the final payload.
+- Split identity fields carefully:
+  - `canonical_brand`: brand only, using the canonical table spelling.
+  - `product_line`: real product family/line only, or `null`.
+  - `clean_name`: saleable product name without repeating the brand/line.
+  - `category_key`: one of the supported intake categories.
+- Do not let retailer title quirks decide the final split. Different shops often
+  combine brand, line, variant, and category differently.
+- User photos/OCR can support identity, but the final identity must be backed by
+  product pages, retailer PDPs, or reliable identifiers.
+
+### Source And Purchase URL Priority
+
+Use this evidence order for product identity, property research, and commercial
+fields:
+
+1. Official brand/manufacturer product page.
+2. Reputable German/EU retailer PDPs: dm, Rossmann, Müller/mueller.de, Douglas,
+   Hagel-Shop, Flaconi, Notino, Otto, and similar stable shops.
+3. Barcode/GTIN lookup.
+4. Secondary listings only when primary sources are missing.
+5. User photo/OCR only as identity evidence.
+
+Purchase URL preference is category-specific:
+
+| Category | Preferred purchase URL order |
+|---|---|
+| Shampoo, conditioner, mask, dry shampoo, deep cleansing shampoo | dm > Rossmann > Müller > brand-direct > Amazon DE |
+| Leave-in | dm > brand-direct > Rossmann > Amazon DE |
+| Oil | brand-direct > Amazon DE > dm > Rossmann |
+| Bondbuilder / pro / high-end products | brand-direct or reputable specialist retailer can beat dm/Rossmann when that PDP is the stable canonical source |
+
+Before returning no `affiliate_link` or no `price_eur`, the worker or manual
+operator must search the preferred hosts with both the submitted name and the
+researched canonical identity. Use explicit site searches:
+
+```text
+site:dm.de
+site:rossmann.de
+site:mueller.de
+site:douglas.de
+site:hagel-shop.de
+site:flaconi.de
+site:notino.de
+site:otto.de
+site:amazon.de
+```
+
+Reject these as final affiliate links:
+
+- price-comparison pages such as idealo, geizhals, billiger, or preisvergleich
+- search, category, brand-listing, or brand-landing pages
+- eBay, Kleinanzeigen, AliExpress, secondhand, or marketplace-only listings
+- `amazon.com` for the German market; use `amazon.de` only as fallback
+- non-German/non-EU PDPs unless explicitly documented as identity-only evidence
+
+The chosen `affiliate_link` should be a concrete product detail page. The
+`price_eur`, `purchase_link_status`, `purchase_link_checked_at`, and
+`price_checked_at` must come from the same current commercial evidence whenever
+possible.
+
+### Image Candidate Standard
+
+The raw image candidate is the image Nick approves before background removal and
+final sizing. Research is incomplete until the review center shows a renderable
+candidate.
+
+Ideal raw image:
+
+- exact product and variant: brand, line, product name, packaging type, size, and
+  regional label when visible
+- single saleable unit only: bottle, jar, tube, tub, spray, pouch, sachet
+- front-facing packshot with the full product visible and not cropped
+- transparent PNG/WebP preferred; otherwise plain white or very light
+  background
+- no outer box, carton, bundle, product-plus-box composition, model, shelf,
+  bathroom, hand-held, lifestyle, editorial, watermark, badge, or sale overlay
+- no visible shadow, halo, base reflection, mirrored floor, pedestal, or dark
+  background; a mild removable base reflection is only acceptable after cleaner
+  exact candidates were checked
+- at least roughly 800 px on the long side, with the label readable enough for
+  identity review
+
+Processing must produce the final Chaarlie-ready asset:
+
+- raw image approval starts local image processing
+- inspect alpha first; do not re-run a model on a clean transparent cutout
+- use Apple Vision/rembg only when needed
+- review magenta QA for shadows, halos, background haze, and cutout damage
+- final image must be a `1200x1200` WebP on the neutral Chaarlie product
+  background
+- upload the final processed image to the Supabase `product-images` bucket
+  during guarded publish; do not write raw retailer image URLs into the final
+  catalog row
+
+### Category Property Matrix
+
+The review center must show the exact values that will be inserted into the
+database. Do not show prose like `Ja, bis 230 C` in the review table. For
+example, heat protection is stored as boolean/integer fields.
+
+Every final payload must include:
+
+- `final.product`: `canonical_brand`, `product_line`, `clean_name`,
+  `category_key`, `affiliate_link`, `image_url`, `price_eur`, `currency: "EUR"`,
+  `purchase_link_status`, `purchase_link_checked_at`, `price_checked_at`
+- `final.identifiers[]` with `type` in `ean`, `gtin`, `barcode`,
+  `retailer_sku`, or `retailer_url`
+- `final.sources[]`
+- `final.field_rationales` for product fields and every category spec table
+- `final.category_specs` only for the category-specific tables below
+- `final.review.manual_reviewed: true` only after Nick has approved the final
+  image and properties
+
+Supported categories and required spec tables:
+
+| Category key | Required category specs |
+|---|---|
+| `shampoo` | `product_shampoo_specs[]`: one or more rows with `thickness` (`fine`, `normal`, `coarse`), `shampoo_bucket` (`schuppen`, `irritationen`, `normal`, `dehydriert-fettig`, `trocken`), `scalp_route` (`oily`, `balanced`, `dry`, `dandruff`, `dry_flakes`, `irritated`), optional `cleansing_intensity` (`gentle`, `regular`, `clarifying`) |
+| `conditioner` | `product_conditioner_specs[]`: `thickness`, `protein_moisture_balance` (`snaps`, `stretches_bounces`, `stretches_stays`); plus `product_conditioner_rerank_specs`: `weight` (`light`, `medium`, `rich`), `repair_level` (`low`, `medium`, `high`), `balance_direction` (`protein`, `moisture`, `balanced`, or `null`), `ingredient_flags` |
+| `mask` | `product_mask_specs`: `weight` (`light`, `medium`, `rich`), `concentration` (`low`, `medium`, `high`), `balance_direction`, `ingredient_flags` |
+| `leave_in` | `product_leave_in_specs`: `format` (`spray`, `milk`, `lotion`, `cream`, `serum`), `weight`, `roles`, `provides_heat_protection`, `heat_protection_max_c`, `heat_activation_required`, `care_benefits`, `ingredient_flags`, `application_stage`; plus `product_leave_in_fit_specs`; plus `product_leave_in_eligibility[]` |
+| `oil` | `product_oil_eligibility[]`: `thickness`, `oil_subtype` (`natuerliches-oel`, `styling-oel`, `trocken-oel`), `oil_purpose` (`pre_wash_oiling`, `styling_finish`, `light_finish`, or `null`), `ingredient_flags` |
+| `dry_shampoo` | `product_dry_shampoo_specs`: `primary_effect` (`classic_refresh`, `volume_texture`, `sensitive_refresh`), `hair_color_fit` (`universal`, `blonde_light`, `brown`, `dark`), `scalp_sensitivity_fit` (`sensitive_ok`, `normal_only`), `format` (`aerosol_spray`, `powder`, `foam_or_liquid`) |
+| `deep_cleansing_shampoo` | `product_deep_cleansing_shampoo_specs`: `scalp_type_focus` (`oily`, `balanced`, `dry`), `reset_intensity` (`gentle`, `medium`, `strong`), `reset_focus` (`product_sebum_buildup`, `metal_mineral_hard_water`, `broad_spectrum_detox`), `color_treated_suitability` (`suitable`, `unsuitable_or_unknown`) |
+| `bondbuilder` | `product_bondbuilder_specs`: `bond_repair_intensity` (`maintenance`, `intensive`), `application_mode` (`pre_shampoo`, `post_wash_leave_in`), `bond_repair_axis` (`disulfide_crosslink`, `peptide_chain`), `treatment_mode` (`rinse_out`, `leave_in`), `product_format` (`cream_treatment`, `primer_treatment`, `leave_in_mask`, `spray_treatment`), `usage_protocol` (`olaplex_3plus`, `olaplex_0_booster`, `olaplex_3_legacy`, `k18_leave_in`, `epres_spray`) |
+
+Shared categorical values:
+
+- `ingredient_flags`: `silicones`, `polymers`, `oils`, `proteins`,
+  `humectants`
+- `balance_direction`: `protein`, `moisture`, `balanced`, or `null`
+- `thickness` always means hair diameter: `fine`, `normal`, `coarse`
+- `weight`: `light`, `medium`, `rich`
+
+Leave-in-specific values:
+
+- `roles`: `replacement_conditioner`, `extension_conditioner`, `styling_prep`,
+  `oil_replacement`
+- `care_benefits`: `moisture`, `protein`, `repair`, `detangling`,
+  `anti_frizz`, `shine`, `curl_definition`, `volume`
+- `application_stage`: `towel_dry`, `dry_hair`, `pre_heat`, `post_style`
+- `product_leave_in_fit_specs.conditioner_relationship`:
+  `replacement_capable` or `booster_only`
+- `product_leave_in_fit_specs.care_benefits`: `heat_protect`,
+  `curl_definition`, `repair`, `detangle_smooth`
+- `product_leave_in_eligibility.need_bucket`: `heat_protect`,
+  `curl_definition`, `repair`, `moisture_anti_frizz`, `shine_protect`
+- `product_leave_in_eligibility.styling_context`: `air_dry`,
+  `non_heat_style`, `heat_style`
+- If sources say after washing, damp hair, towel-dried hair, or no-rinse use,
+  map that to `towel_dry`, not a prose value such as `post_wash`.
+- If heat protection is claimed, store it as
+  `provides_heat_protection: true` and, when stated, an integer
+  `heat_protection_max_c`. Do not store a combined sentence.
+
+Shampoo-specific rule:
+
+- `shampoo_bucket` is a scalp/route bucket, not a dry-lengths or damaged-hair
+  bucket. Use `trocken` only when dry scalp or dry flakes are supported by the
+  sources. Dry hair alone is not dry scalp.
+- `shampoo_bucket` and `scalp_route` must agree:
+  - `normal` -> `balanced`
+  - `trocken` -> `dry`
+  - `dehydriert-fettig` -> `oily`
+  - `schuppen` -> `dandruff` or `dry_flakes`
+  - `irritationen` -> `irritated`
+
+Manual addition checklist:
+
+1. Resolve canonical identity and brand review first.
+2. Search commercial/source pages in the priority order above.
+3. Pick a raw image that meets the image standard and run it through the same
+   processing/QA path.
+4. Fill only the category spec tables required for the product category.
+5. Check that every review-table value is the exact DB value.
+6. Run approval validation/preflight before any Supabase write.
+7. Publish only after Nick approves final image, category properties, and final
+   handoff.
+
+## Internal Review Cockpit Phase 1-2 Local Flow
+
+The internal cockpit introduces a separate local app plus durable job,
+artifact, review-decision, and rework state. Codex CLI research is available
+through the worker only when explicitly started with `--execute-codex`; final
+publish is still guarded.
+
+Local app:
+
+```bash
+npm run products:intake:review-cockpit:dev
+```
+
+Daily local launcher:
+
+```bash
+npm run products:intake:review-center
+```
+
+The launcher starts the review center on `http://localhost:3910`, starts the
+Codex worker with two concurrent slots when it is not already running, writes
+logs to `.tmp/product-intake-review-center/`, and opens the browser. On macOS,
+double-click the Finder launcher to run the same command:
+
+```text
+scripts/product-intake/Product Intake Review Center.command
+```
+
+It is safe to run again; existing app and worker processes are reused instead
+of started twice.
+
+Preview-only worker smoke check:
+
+```bash
+npm run products:intake:codex-worker -- --json
+```
+
+Real local Codex research worker:
+
+```bash
+npm run products:intake:codex-worker -- --execute-codex --json
+```
+
+Persistent local Codex research worker for review-cockpit testing:
+
+```bash
+npm run products:intake:codex-worker -- --execute-codex --watch --concurrency=2 --poll-ms=30000
+```
+
+What the cockpit can do locally:
+
+- Show a DB-backed queue of open product submissions and research jobs.
+- Enqueue/retry `product_intake_research_jobs` rows.
+- Claim at most two queued or rework jobs by default with the local worker.
+- Write visible progress and research artifacts for claimed jobs.
+- Save researched preview payloads onto `product_submissions.researched_payload`
+  when Codex returns a complete final payload.
+- Save Nick's brand, field, image, and final handoff decisions.
+- Create one product-level rework job from all saved comments.
+- Run local image processing after raw image approval and surface processing
+  progress, magenta QA, and the final processed image for review.
+- Create a publish preflight artifact that names blockers.
+- Expose a publish route that is fail-closed and writes only after Nick clicks
+  the final handoff for a product whose image and properties are approved.
+
+What this cockpit intentionally must not do:
+
+- Auto-publish just because research finished.
+- Write a final product while brand, image, properties, or publish preflight has
+  blockers.
+- Write raw retailer image URLs into the final product row instead of the
+  uploaded `product-images` storage URL.
+- Notify users unless the guarded publish route or the legacy approval command
+  has actually completed.
+
+The internal app is local no-login for development. Do not deploy it publicly
+without a deployment-level protection gate.
+
+Required migrations before the action buttons work:
+
+- `supabase/migrations/20260630120000_product_intake_research_jobs.sql`
+- `supabase/migrations/20260630130000_product_intake_research_artifacts_decisions.sql`
+- `supabase/migrations/20260701090000_product_intake_rework_resets_attempts.sql`
+- `supabase/migrations/20260701100000_product_intake_auto_enqueue.sql`
 
 ## Required Environment
 
@@ -114,6 +412,34 @@ Closed statuses should be visible only when explicitly filtered:
 
 ### 2. Prepare Local Research Packages
 
+Use the research queue runner for normal operation:
+
+```bash
+npm run products:intake:research-queue -- --limit=10
+```
+
+The runner is local and dry-run/read-only for Supabase writes. It loads the
+pending queue, creates missing local package folders, reuses existing package
+folders for submissions that were already prepared, and prints a Codex worklist
+with package state, blockers, and next commands.
+
+The runner also performs package-local image discovery for packages whose image
+candidate is missing, remote-only, or broken. It searches trusted product-source
+paths that are already in the package and can fall back to retailer product
+search APIs such as dm when the page is JavaScript-backed or stale. Successful
+image searches write only local package files:
+
+- `image-search-request.json`
+- `image-search-result.json`
+- `image-candidates.json`
+- `images/source/replacement-*.png`
+
+Completed image searches are not repeated on the daily run unless you pass
+`--force-image-search`.
+
+Use the lower-level preparer only when you specifically want package shells
+without the worklist:
+
 ```bash
 npm run products:intake:prepare-research -- --limit=10
 ```
@@ -144,6 +470,18 @@ Expected package files:
 
 Fresh packages may start incomplete. That is expected. A first package can have
 `validation.json` with `ok: false` until research is complete.
+
+Package states:
+
+- `package_needs_research`: no `payload.final` yet. This is only a prepared
+  shell and is not ready for Nick to review. This state also applies when
+  product facts validate but the package has no renderable, package-local raw
+  image candidate in `image-candidates.json`.
+- `package_in_progress`: final research exists, but validation or image
+  finalization is still incomplete.
+- `package_ready_for_review`: researched product data validates and the image
+  decision is finalized.
+- `package_blocked`: local package files are unreadable or structurally invalid.
 
 ### 3. Research Product Identity First
 
@@ -212,6 +550,37 @@ Preferred source order:
    shop.
 3. Other search result only when source quality is clear and noted.
 
+Image-source standard for Codex research agents:
+
+- Exact product and variant must match: brand, line, product name, package type,
+  size, and regional label when visible.
+- Prefer a transparent alpha PNG/WebP cutout. Otherwise use a clean plain white
+  or very light background that can be removed reliably.
+- The candidate should be a front-facing, full-product packshot of one saleable
+  unit only: bottle, jar, tube, tub, spray, pouch, or sachet.
+- The ideal image has no visible shadow, halo, base reflection, mirrored floor,
+  pedestal, or extra packaging. A mild removable base reflection is only a
+  fallback when the candidate is otherwise exact, product-only, front-facing,
+  high-resolution, and cleaner exact candidates do not exist.
+- Reject outer boxes, cartons, secondary packaging, product-plus-box photos,
+  bundles, multipacks, cropped products, watermarks, retailer badges, sale
+  overlays, lifestyle/model/bathroom/shelf/hand-held/editorial images, dark
+  backgrounds, strong reflections, and heavy shadows.
+- Rank candidates in this order: exact identity and market first, product-only
+  front shot second, processing-clean background third, resolution and label
+  legibility fourth. Reject cleaner-looking images if they are box-only,
+  product-plus-box, wrong region, wrong variant, old packaging, or too small.
+- Practical lesson from the Plantur 39 shampoo test: a high-resolution, exact,
+  product-only, white-background packshot with a mild base reflection can still
+  be the best candidate if Apple Vision removes the reflection cleanly and the
+  finalizer plus magenta QA pass. Do not block that case merely because the raw
+  source is not transparent. Do block heavy mirrored floors, dark shadow tails,
+  or reflections that remain visible after processing.
+- Do not choose a mediocre image just to unblock the package. If no candidate
+  meets the standard, mark the image candidate as `needs_image_search`, explain
+  why, name the best rejected candidate, and keep the package in
+  research/rework.
+
 The review app must show:
 
 - user-uploaded front photo, if available
@@ -230,6 +599,11 @@ The reviewer must be able to say:
 If images do not render, cache them into the package under `images/source/` and
 update `image-candidates.json` to point at package-local files. The reviewer
 must be able to visually inspect the image before approval.
+
+Research is not complete until this image candidate exists. A package with a
+valid `payload.final` but no cached `image-candidates.json` entry remains
+`package_needs_research`; the daily queue runner must keep it on Codex's
+research worklist instead of handing it to Nick as review-ready.
 
 ### 6. Remove Background Locally
 
@@ -389,6 +763,54 @@ EOF
 
 Always run magenta QA again after shadow work.
 
+### Processing A Mild Reflection Source
+
+This is the expected path when the best exact image is a product-only packshot
+on a clean white/light background but the raw source has a mild base reflection.
+
+Use this only when the image is exact, front-facing, full product visible,
+product-only, and high-resolution enough for review.
+
+1. Download the source image into the package or temp work folder.
+2. Run Apple Vision background removal:
+
+   ```bash
+   swift scripts/product-images/removebg.swift <output-dir> <source-image>
+   ```
+
+3. If direct Vision output fails, use the padded fallback:
+
+   ```bash
+   swift scripts/product-images/removebg-padded.swift <source-image> <output-file.png>
+   ```
+
+4. Run the product image finalizer, either through the worker or package command:
+
+   ```bash
+   npm run products:intake:finalize-image -- ops/product-intake-research/YYYY-MM-DD/<submission-id>
+   ```
+
+5. Review both outputs:
+
+   - magenta QA for leftover halo, shadow tail, reflection, or cutout damage
+   - neutral Chaarlie final image for the actual product-card appearance
+
+Accept when:
+
+- finalizer quality gate passes
+- final image is `1200x1200`
+- product remains intact and readable
+- no visible floor reflection or heavy shadow remains
+- magenta QA shows at most a small soft edge/halo
+
+Reject and search again when:
+
+- base reflection remains visible in the final image
+- the cutout loses product content
+- there is a dark/opaque tail near the bottom
+- halo is strong enough to be obvious on magenta or neutral background
+- the product identity was only approximate
+
 ### 7. Generate The Final Chaarlie Image
 
 After the reviewer approves an image candidate and
@@ -543,13 +965,14 @@ The recurring Codex job should do only the read/prep side:
 ```bash
 cd /Users/nick/AI_work/hair_conscierge/.worktrees/product-intake-full-flow-smoke
 npm run products:intake:queue -- --status pending_review --report
-npm run products:intake:prepare-research -- --limit=5
+npm run products:intake:research-queue -- --limit=5
 ```
 
 The daily job should report:
 
-- created package paths
-- skipped existing packages
+- package state by submission
+- created and reused package paths
+- automatic image-search status by package
 - blockers
 - submissions needing more user information
 - packages ready for review
@@ -559,7 +982,7 @@ The daily job must not run:
 - `products:intake:upload-image --apply`
 - `products:intake:approve-package --apply`
 - migrations
-- any Supabase write command
+- any Supabase write command unless Nick explicitly approves the exact command
 
 Once this stack is merged, move the automation from the integration worktree to
 the final shipping/mainline worktree.

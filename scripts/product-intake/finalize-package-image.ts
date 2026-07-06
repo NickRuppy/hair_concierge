@@ -15,7 +15,7 @@ const MAGENTA_QA_BACKGROUND = { r: 255, g: 0, b: 255 }
 
 type JsonRecord = Record<string, any>
 
-type CutoutQualityGate =
+export type CutoutQualityGate =
   | {
       status: "pass"
       checks: Record<string, number>
@@ -43,6 +43,35 @@ export type FinalizedPackageImage = {
   sha256: string
 }
 
+export type FinalizeProductImageAssetOptions = {
+  sourceFile: string
+  label: string
+  outputDir: string
+  publicPathPrefix: string
+  dateFolder: string
+  submissionId: string
+  preparedCutoutFile?: string | null
+  sourcePageUrl?: string | null
+  sourceImageUrl?: string | null
+  sourceType?: string | null
+  reviewedBy?: string | null
+}
+
+export type FinalizedProductImageAsset = {
+  sourceFile: string
+  selectedNoBgFile: string
+  qaFile: string
+  finalFile: string
+  qaReviewUrl: string
+  finalReviewUrl: string
+  publicUrl: string
+  storagePath: string
+  sha256: string
+  qualityGate: CutoutQualityGate
+  sourceAlphaCoverage: number
+  processingMethod: "local"
+}
+
 function readJson(path: string): JsonRecord {
   return JSON.parse(readFileSync(path, "utf8")) as JsonRecord
 }
@@ -61,6 +90,19 @@ function isRecord(value: unknown): value is JsonRecord {
 
 function stringValue(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null
+}
+
+function imageSourceType(value: unknown): string {
+  if (
+    value === "brand" ||
+    value === "retailer" ||
+    value === "marketplace" ||
+    value === "search_result" ||
+    value === "unknown"
+  ) {
+    return value
+  }
+  return "search_result"
 }
 
 function slug(value: string): string {
@@ -308,6 +350,118 @@ async function writeComposite(params: {
     .toFile(params.output)
 }
 
+export async function finalizeProductImageAsset(
+  options: FinalizeProductImageAssetOptions,
+): Promise<FinalizedProductImageAsset> {
+  const sourceFile = resolve(options.sourceFile)
+  const preparedCutoutFile = options.preparedCutoutFile ? resolve(options.preparedCutoutFile) : null
+  const sourceMeta = await sharp(sourceFile).metadata()
+  const hasPreparedCutout = preparedCutoutFile ? existsSync(preparedCutoutFile) : false
+
+  if (!sourceMeta.hasAlpha && !hasPreparedCutout) {
+    throw new Error(
+      `Selected image has no alpha channel: ${sourceFile}. Run the documented Vision/rembg background-removal step first and place the cutout in images/selected-nobg/.`,
+    )
+  }
+
+  mkdirSync(options.outputDir, { recursive: true })
+  const baseSlug =
+    slug(options.label) || slug(basename(sourceFile, extname(sourceFile))) || "product"
+  const selectedNoBgFile = join(options.outputDir, `${baseSlug}-nobg.png`)
+  const qaFile = join(options.outputDir, `${baseSlug}-magenta.webp`)
+
+  const { data: sourceData, info: sourceInfo } = await sharp(sourceFile)
+    .rotate()
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+  const sourceAlphaCoverage = sourceMeta.hasAlpha
+    ? alphaCoverage(sourceData, sourceInfo.width, sourceInfo.height)
+    : 0
+
+  let data = sourceData
+  let info = sourceInfo
+  let qualityGate = cutoutQualityGate({
+    data: sourceData,
+    width: sourceInfo.width,
+    height: sourceInfo.height,
+    sourceAlphaCoverage,
+    usedPreparedCutout: false,
+  })
+
+  if (!sourceMeta.hasAlpha || (qualityGate.status !== "pass" && hasPreparedCutout)) {
+    const prepared = await sharp(preparedCutoutFile as string)
+      .rotate()
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true })
+    const preparedQualityGate = cutoutQualityGate({
+      data: prepared.data,
+      width: prepared.info.width,
+      height: prepared.info.height,
+      sourceAlphaCoverage,
+      usedPreparedCutout: true,
+    })
+
+    if (!sourceMeta.hasAlpha || preparedQualityGate.status === "pass") {
+      data = prepared.data
+      info = prepared.info
+      qualityGate = preparedQualityGate
+    }
+  }
+
+  const bounds = contentBounds(data, info.width, info.height)
+  await sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } })
+    .png()
+    .toFile(selectedNoBgFile)
+
+  const productBuffer = await sharp(data, {
+    raw: { width: info.width, height: info.height, channels: 4 },
+  })
+    .extract(bounds)
+    .resize({ ...targetProductSize(bounds), fit: "fill" })
+    .png()
+    .toBuffer()
+
+  await writeComposite({
+    input: productBuffer,
+    output: qaFile,
+    background: MAGENTA_QA_BACKGROUND,
+  })
+
+  const finalDraftFile = join(options.outputDir, `${baseSlug}-draft.webp`)
+  await writeComposite({
+    input: productBuffer,
+    output: finalDraftFile,
+    background: BACKGROUND,
+  })
+
+  const sha256 = sha256File(finalDraftFile)
+  const finalFile = join(options.outputDir, `${baseSlug}-${sha256.slice(0, 12)}.webp`)
+  if (finalFile !== finalDraftFile) {
+    renameSync(finalDraftFile, finalFile)
+  }
+
+  const storagePath = `product-intake/${options.dateFolder}/${options.submissionId}/${basename(finalFile)}`
+  const publicUrl = `${PRODUCT_IMAGE_PUBLIC_URL_PREFIX}${storagePath}`
+  const normalizedPrefix = options.publicPathPrefix.replace(/\/+$/g, "")
+
+  return {
+    sourceFile,
+    selectedNoBgFile,
+    qaFile,
+    finalFile,
+    qaReviewUrl: `${normalizedPrefix}/${basename(qaFile)}`,
+    finalReviewUrl: `${normalizedPrefix}/${basename(finalFile)}`,
+    publicUrl,
+    storagePath,
+    sha256,
+    qualityGate,
+    sourceAlphaCoverage,
+    processingMethod: "local",
+  }
+}
+
 export async function finalizeProductIntakePackageImage(
   options: FinalizePackageImageOptions,
 ): Promise<FinalizedPackageImage> {
@@ -445,7 +599,8 @@ export async function finalizeProductIntakePackageImage(
     public_url: publicUrl,
     source_page_url: stringValue(candidate.source_page_url),
     source_image_url: stringValue(candidate.source_image_url),
-    source_type: stringValue(candidate.source_type) ?? "unknown",
+    source_type: imageSourceType(candidate.source_type),
+    source_provenance: stringValue(candidate.source_provenance),
     quality_confidence: "high",
     processing_method: "local",
     selected_source_file: relative(packageDir, sourceFile),

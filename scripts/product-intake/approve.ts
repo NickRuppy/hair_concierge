@@ -38,6 +38,9 @@ export async function approveSubmissionById(params: {
       missing_fields: validation.missingFields,
     })
     process.exitCode = 1
+    if (params.apply) {
+      throw new Error(`approval_validation_failed: ${validation.missingFields.join(", ")}`)
+    }
     return null
   }
 
@@ -123,7 +126,7 @@ export async function approveSubmissionById(params: {
     notification,
   })
 
-  return approval
+  return { ...approval, notification }
 }
 
 async function main() {

@@ -9,6 +9,7 @@ import {
 } from "@/lib/product-identity/brand-resolution"
 import {
   matchProductIntake,
+  productNameVariants,
   type ProductIntakeCatalog,
   type ProductIntakeCatalogProduct,
   type ProductIntakeMatchCandidate,
@@ -232,6 +233,10 @@ function meaningfulTokenOverlap(left: string, right: string): number {
   return meaningfulProductTokens(right).filter((token) => leftTokens.has(token)).length
 }
 
+function maxMeaningfulTokenOverlap(left: string, variants: string[]): number {
+  return Math.max(0, ...variants.map((variant) => meaningfulTokenOverlap(left, variant)))
+}
+
 function meaningfulProductTokens(value: string): string[] {
   return tokenizeProductName(value)
     .map(normalizeLookupToken)
@@ -258,7 +263,7 @@ function meaningfulCandidates(params: {
   return params.candidates.filter(
     (candidate) =>
       candidate.confidence === "exact" ||
-      meaningfulTokenOverlap(params.productNameText, productCleanName(candidate.product)) > 0,
+      maxMeaningfulTokenOverlap(params.productNameText, productNameVariants(candidate.product)) > 0,
   )
 }
 
@@ -285,7 +290,9 @@ function isStrongCategoryMismatchCandidate(params: {
   if (inputTokens.length === 0) return false
 
   const candidateTokens = new Set(
-    meaningfulProductTokens(productCleanName(params.candidate.product)),
+    productNameVariants(params.candidate.product).flatMap((variant) =>
+      meaningfulProductTokens(variant),
+    ),
   )
   return inputTokens.every((token) => candidateTokens.has(token))
 }
@@ -302,8 +309,8 @@ function sortLookupCandidates(
     if (sameCategoryDelta !== 0) return sameCategoryDelta
 
     const overlapDelta =
-      meaningfulTokenOverlap(productNameText, productCleanName(right.product)) -
-      meaningfulTokenOverlap(productNameText, productCleanName(left.product))
+      maxMeaningfulTokenOverlap(productNameText, productNameVariants(right.product)) -
+      maxMeaningfulTokenOverlap(productNameText, productNameVariants(left.product))
     if (overlapDelta !== 0) return overlapDelta
 
     return productCleanName(left.product).localeCompare(productCleanName(right.product), "de")
@@ -359,12 +366,18 @@ function textLookupCandidates(params: {
         : product.productLineId === params.lineId || product.product_line_id === params.lineId,
     )
     .map((product) => {
-      const productTokens = meaningfulTokenSet(productCleanName(product))
-      const overlap = inputTokens.filter((token) => productTokens.has(token)).length
+      const variantMatches = productNameVariants(product).map((variant) => {
+        const productTokens = meaningfulTokenSet(variant)
+        return {
+          overlap: inputTokens.filter((token) => productTokens.has(token)).length,
+          exactLike: isStrongExactLike(inputTokens, productTokens),
+        }
+      })
+      const overlap = Math.max(0, ...variantMatches.map((match) => match.overlap))
       return {
         product,
         overlap,
-        exactLike: overlap > 0 && isStrongExactLike(inputTokens, productTokens),
+        exactLike: overlap > 0 && variantMatches.some((match) => match.exactLike),
       }
     })
     .filter((candidate) => candidate.overlap > 0)

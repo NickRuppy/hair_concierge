@@ -25,6 +25,8 @@ export type ProductIntakeCatalogProduct = {
   lifecycle_status?: string | null
   isChaarlieRecommended?: boolean | null
   is_chaarlie_recommended?: boolean | null
+  knownTitles?: string[] | null
+  known_titles?: string[] | null
 }
 
 export type ProductIntakeCatalogIdentifier = {
@@ -119,6 +121,21 @@ function productIsActive(product: ProductIntakeCatalogProduct): boolean {
 
 function productCleanName(product: ProductIntakeCatalogProduct): string {
   return product.cleanName ?? product.name
+}
+
+function productKnownTitles(product: ProductIntakeCatalogProduct): string[] {
+  return product.knownTitles ?? product.known_titles ?? []
+}
+
+export function productNameVariants(product: ProductIntakeCatalogProduct): string[] {
+  const seen = new Set<string>()
+  return [productCleanName(product), product.name, ...productKnownTitles(product)]
+    .map((value) => value.trim())
+    .filter((value) => {
+      if (!value || seen.has(value)) return false
+      seen.add(value)
+      return true
+    })
 }
 
 function identifierProductId(identifier: ProductIntakeCatalogIdentifier): string {
@@ -299,6 +316,17 @@ function normalizedProductName(product: ProductIntakeCatalogProduct): string {
   return normalizeIdentityText(productCleanName(product))
 }
 
+function normalizedProductNameVariants(product: ProductIntakeCatalogProduct): string[] {
+  return productNameVariants(product).map(normalizeIdentityText).filter(Boolean)
+}
+
+function productNameMatches(
+  product: ProductIntakeCatalogProduct,
+  normalizedInputName: string,
+): boolean {
+  return normalizedProductNameVariants(product).includes(normalizedInputName)
+}
+
 function categoryExactMatches(
   products: readonly ProductIntakeCatalogProduct[],
   categoryKey: string,
@@ -358,8 +386,12 @@ function fuzzyTextCandidates(
     .filter((product) => sameBrand(product, brandId))
     .filter((product) => (!lineId ? true : sameLine(product, lineId)))
     .map((product) => {
-      const productTokens = new Set(tokenizeProductName(productCleanName(product)))
-      const overlap = Array.from(inputTokens).filter((token) => productTokens.has(token)).length
+      const overlap = Math.max(
+        ...productNameVariants(product).map((variant) => {
+          const productTokens = new Set(tokenizeProductName(variant))
+          return Array.from(inputTokens).filter((token) => productTokens.has(token)).length
+        }),
+      )
       return { product, overlap }
     })
     .filter(({ overlap }) => overlap > 0)
@@ -452,7 +484,7 @@ export function matchProductIntake(
         (product) =>
           sameBrand(product, brandId) &&
           sameLine(product, lineId) &&
-          normalizedProductName(product) === normalizedInputName,
+          productNameMatches(product, normalizedInputName),
       )
     : []
   const sameCategoryLineMatches = categoryExactMatches(lineMatches, selectedCategoryKey)
@@ -495,7 +527,7 @@ export function matchProductIntake(
   const brandNameMatches = products.filter(
     (product) =>
       sameBrand(product, brandId) &&
-      normalizedProductName(product) === normalizedInputName &&
+      productNameMatches(product, normalizedInputName) &&
       (!lineId || !productLineId(product)),
   )
   const sameCategoryBrandNameMatches = categoryExactMatches(brandNameMatches, selectedCategoryKey)
