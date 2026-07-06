@@ -25,6 +25,8 @@ import { applyProductMemoryConstraints } from "@/lib/chat-runtime/user-memory"
 import type { MatchedProduct } from "@/lib/product-matching/matcher"
 import { isMatchedRoutineUsage } from "@/lib/product-usage/routine-identity"
 import type { UserMemoryContext } from "@/lib/chat-runtime/user-memory"
+import { attachProductLineNamesToProducts } from "@/lib/product-lines/display"
+import { createAdminClient } from "@/lib/supabase/admin"
 import type {
   BondbuilderRecommendationMetadata,
   ConditionerRecommendationMetadata,
@@ -145,7 +147,6 @@ export const SUPPORTED_PRODUCT_CLAIM_FIELDS = [
   "oil_subtype",
   "reset_focus",
   "reset_intensity",
-  "color_treated_suitability",
   "primary_effect",
   "hair_color_fit",
   "scalp_sensitivity_fit",
@@ -181,6 +182,7 @@ export interface SelectedProductResult {
   product_id: string
   name: string
   brand: string | null
+  product_line_name?: string | null
   price_eur: number | null
   currency: string | null
   fit_reason: string
@@ -319,6 +321,7 @@ function projectDisplayableProduct(
     product_id: product.id,
     name: product.name,
     brand: product.brand,
+    product_line_name: product.product_line_name ?? null,
     price_eur: product.price_eur,
     currency: product.currency,
     fit_reason: buildDisplayableFitReason(product),
@@ -399,10 +402,6 @@ function buildComparisonFacts(products: MatchedProduct[]): Record<string, string
               : null,
             meta?.category === "deep_cleansing_shampoo" && meta.reset_intensity
               ? `Reset-Intensität: ${DEEP_CLEANSING_RESET_INTENSITY_LABELS[meta.reset_intensity]}`
-              : null,
-            meta?.category === "deep_cleansing_shampoo" &&
-            meta.color_treated_suitability === "suitable"
-              ? "Farbschutz: strukturiert geeignet"
               : null,
           ]).slice(0, 3),
         ]
@@ -1478,14 +1477,6 @@ function buildSupportedProductClaims(product: MatchedProduct): SupportedProductC
           : null,
       ),
       buildClaim(
-        "color_treated_suitability",
-        meta.color_treated_suitability === "suitable" ? "geeignet für coloriertes Haar" : null,
-        "product_spec",
-        meta.color_treated_suitability === "suitable"
-          ? "Strukturiert als geeignet für coloriertes Haar gepflegt"
-          : null,
-      ),
-      buildClaim(
         "fit_status",
         meta.fit_status ? DEEP_CLEANSING_FIT_STATUS_LABELS[meta.fit_status] : null,
         "category_decision",
@@ -1848,6 +1839,14 @@ function userMessageForUnsupportedSignal(signal: AgentActiveProfileSignal): stri
 
   if (signal.field === "chemical_treatment" && signal.value === "bleached") {
     return "Zu blondiertem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den sicheren Produktangaben."
+  }
+
+  if (signal.field === "chemical_treatment" && signal.value === "permed") {
+    return "Zur Dauerwelle habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den sicheren Produktangaben."
+  }
+
+  if (signal.field === "chemical_treatment" && signal.value === "chemically_straightened") {
+    return "Zu chemisch geglättetem Haar habe ich bei diesen Produkten aktuell keine sichere Spezialangabe. Ich bewerte sie deshalb nach den sicheren Produktangaben."
   }
 
   if (signal.field === "scalp_condition" && signal.value === "irritated") {
@@ -2928,7 +2927,7 @@ function buildProductResponsePolicy(params: {
         : category === "conditioner"
           ? "Conditioner wird über Haardicke, Haardichte, Gewicht, Protein-/Feuchtigkeitsbalance und Pflegeintensität entschieden."
           : category === "deep_cleansing_shampoo"
-            ? "Tiefenreinigung wird nur bei Reset-Signalen empfohlen und über Reset-Fokus, Intensität, Kopfhaut-Fokus und Farbschutz-Metadaten entschieden."
+            ? "Tiefenreinigung wird nur bei Reset-Signalen empfohlen und über Reset-Fokus, Intensität und Kopfhaut-Fokus entschieden."
             : category === "bondbuilder"
               ? "Bondbuilder wird über strukturellen Damage-Bedarf, Einsatzmodus und Bondbuilding-Lane entschieden."
               : category === "dry_shampoo"
@@ -3045,7 +3044,7 @@ function buildCategoryGuidance(params: {
     }
 
     if (decision === "no_catalog_match") {
-      return "Tiefenreinigung kann passen, aber der aktuelle Katalog liefert keinen sicheren Treffer mit gepflegten Reset-Spezifikationen. Keine Kalk-, Chlor-, Metall- oder Farbschutzclaims ohne strukturierte Felder erfinden."
+      return "Tiefenreinigung kann passen, aber der aktuelle Katalog liefert keinen sicheren Treffer mit gepflegten Reset-Spezifikationen. Keine Kalk-, Chlor- oder Metallclaims ohne strukturierte Felder erfinden."
     }
 
     if (decision === "not_recommended") {
@@ -3602,7 +3601,15 @@ export function createSelectProductsTool(
       includeProductIds,
       preserveProductIds: uniqueNonEmpty(targetProductIds ?? []),
     })
-    const constrainedProducts = applyProductMemoryConstraints(engineProducts, memoryContext)
+    const productsWithLineNames = await attachProductLineNamesToProducts(
+      engineProducts,
+      createAdminClient(),
+      {
+        onError: (error) =>
+          console.error("Failed to load product lines for recommendation products:", error),
+      },
+    )
+    const constrainedProducts = applyProductMemoryConstraints(productsWithLineNames, memoryContext)
     const targetProductIdSet = new Set(uniqueNonEmpty(targetProductIds ?? []))
     const productsForProjection =
       targetProductIdSet.size > 0

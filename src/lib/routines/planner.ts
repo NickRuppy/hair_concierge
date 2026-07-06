@@ -23,6 +23,13 @@ import {
   applyHairLengthRoutinePolicy,
   hasHeatExposureNeed,
 } from "@/lib/routines/hair-length-policy"
+import {
+  getChemicalTreatmentDamageDrivers,
+  hasActiveChemicalTreatment,
+  hasBleachTreatment,
+  hasColorOrBleachTreatment,
+  hasShapeChangingTreatment,
+} from "@/lib/profile/chemical-treatment"
 import { hasDirectMechanicalStressSignals } from "@/lib/profile/signal-derivations"
 import {
   buildRecommendationEngineRuntimeFromPersistence,
@@ -56,6 +63,7 @@ const ROUTINE_TOPIC_LABELS: Record<RoutineTopicId, string> = {
   bond_builder: "Bond Builder",
   brush_tools: "Bürsten & Tools",
   lockenrefresh: "Lockenrefresh",
+  night_protection: "Nachtschutz",
   cwc: "CWC",
   owc: "OWC",
 }
@@ -162,6 +170,21 @@ const REFRESH_TERMS = [
   "between wash",
   "tag danach",
   "naechster tag",
+]
+
+const NIGHT_PROTECTION_TERMS = [
+  "nachtschutz",
+  "schlafen",
+  "schlaffrisur",
+  "seidenkissen",
+  "satinkissen",
+  "seidenhaube",
+  "bonnet",
+  "pineapple",
+  "hairhomie",
+  "hair homie",
+  "längenschutz",
+  "spitzenschutz",
 ]
 
 const CWC_TERMS = ["cwc", "cwc methode", "conditioner wash conditioner"]
@@ -392,7 +415,7 @@ function hasHardResetSignals(profile: HairProfile | null, normalizedMessage: str
 function hasDrynessDamageSignals(profile: HairProfile | null): boolean {
   const concerns = new Set(profile?.concerns ?? [])
   const goals = new Set(profile?.goals ?? [])
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const treatments = profile?.chemical_treatment ?? []
 
   return (
     concerns.has("dryness") ||
@@ -406,8 +429,7 @@ function hasDrynessDamageSignals(profile: HairProfile | null): boolean {
     goals.has("less_split_ends") ||
     profile?.cuticle_condition === "slightly_rough" ||
     profile?.cuticle_condition === "rough" ||
-    treatments.has("colored") ||
-    treatments.has("bleached")
+    hasActiveChemicalTreatment(treatments)
   )
 }
 
@@ -420,16 +442,16 @@ function hasFrequentUnprotectedHeat(profile: HairProfile | null): boolean {
 
 function hasDamageSignals(profile: HairProfile | null): boolean {
   const concerns = new Set(profile?.concerns ?? [])
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const treatments = profile?.chemical_treatment ?? []
 
   return (
     profile?.protein_moisture_balance === "snaps" ||
+    profile?.protein_moisture_balance === "stretches_stays" ||
     concerns.has("breakage") ||
     concerns.has("hair_damage") ||
     concerns.has("split_ends") ||
     profile?.cuticle_condition === "rough" ||
-    treatments.has("colored") ||
-    treatments.has("bleached") ||
+    hasActiveChemicalTreatment(treatments) ||
     hasFrequentUnprotectedHeat(profile)
   )
 }
@@ -438,27 +460,36 @@ function hasBondBuilderSignals(profile: HairProfile | null): boolean {
   if (!hasDamageSignals(profile)) return false
 
   const concerns = new Set(profile?.concerns ?? [])
-  const treatments = new Set(profile?.chemical_treatment ?? [])
-  const hasColoredOnly =
-    treatments.has("colored") &&
-    !treatments.has("bleached") &&
+  const treatments = profile?.chemical_treatment ?? []
+  const hasBondbuilderDamageContext =
+    concerns.has("breakage") ||
+    concerns.has("hair_damage") ||
+    concerns.has("split_ends") ||
+    profile?.cuticle_condition === "rough" ||
+    profile?.protein_moisture_balance === "snaps" ||
+    profile?.protein_moisture_balance === "stretches_stays" ||
+    hasFrequentUnprotectedHeat(profile)
+  const hasCautiousTreatmentOnly =
+    (hasColorOrBleachTreatment(treatments) || hasShapeChangingTreatment(treatments)) &&
+    !hasBleachTreatment(treatments) &&
     !concerns.has("breakage") &&
     !concerns.has("hair_damage") &&
     !concerns.has("split_ends") &&
     profile?.cuticle_condition !== "rough" &&
+    profile?.protein_moisture_balance !== "snaps" &&
+    profile?.protein_moisture_balance !== "stretches_stays" &&
     !hasFrequentUnprotectedHeat(profile)
 
-  return !hasColoredOnly
+  return hasBleachTreatment(treatments) || hasBondbuilderDamageContext || !hasCautiousTreatmentOnly
 }
 
 function countDamageSignals(profile: HairProfile | null): number {
   const concerns = new Set(profile?.concerns ?? [])
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const treatments = profile?.chemical_treatment ?? []
   let count = 0
 
   if (profile?.protein_moisture_balance === "snaps") count++
-  if (treatments.has("bleached")) count++
-  if (treatments.has("colored")) count++
+  count += getChemicalTreatmentDamageDrivers(treatments).length
   if (profile?.cuticle_condition === "rough") count++
   if (concerns.has("breakage")) count++
   if (concerns.has("hair_damage")) count++
@@ -469,10 +500,10 @@ function countDamageSignals(profile: HairProfile | null): number {
 }
 
 function deriveBondBuilderSeverity(profile: HairProfile | null): "moderate" | "severe" {
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const treatments = profile?.chemical_treatment ?? []
 
   if (profile?.protein_moisture_balance === "snaps") return "severe"
-  if (treatments.has("bleached") && countDamageSignals(profile) >= 2) return "severe"
+  if (hasBleachTreatment(treatments) && countDamageSignals(profile) >= 2) return "severe"
   if (countDamageSignals(profile) >= 3) return "severe"
 
   return "moderate"
@@ -487,11 +518,7 @@ function hasFrequentWashNeed(shampooFrequency: HairProfile["shampoo_frequency"])
 }
 
 function hasMechanicalStressNeed(profile: HairProfile | null): boolean {
-  return hasDirectMechanicalStressSignals(
-    profile?.towel_technique,
-    profile?.brush_type,
-    profile?.night_protection,
-  )
+  return hasDirectMechanicalStressSignals(profile?.towel_technique, profile?.brush_type)
 }
 
 function hasWashProtectionNeed(profile: HairProfile | null): boolean {
@@ -510,10 +537,10 @@ function hasStrongDrynessDamageCluster(profile: HairProfile | null): boolean {
 }
 
 function countOwcSupportSignals(profile: HairProfile | null, context: RoutineContext): number {
-  const treatments = new Set(profile?.chemical_treatment ?? [])
+  const treatments = profile?.chemical_treatment ?? []
   let count = 0
 
-  if (treatments.has("colored") || treatments.has("bleached")) count++
+  if (hasActiveChemicalTreatment(treatments)) count++
   if (profile?.cuticle_condition === "rough" || profile?.cuticle_condition === "slightly_rough") {
     count++
   }
@@ -671,6 +698,7 @@ function getExplicitTopicIds(message: string): RoutineTopicId[] {
   if (includesAny(normalizedMessage, BOND_BUILDER_TERMS)) topics.push("bond_builder")
   if (hasExplicitBrushToolsRequest(normalizedMessage)) topics.push("brush_tools")
   if (includesAny(normalizedMessage, REFRESH_TERMS)) topics.push("lockenrefresh")
+  if (includesAny(normalizedMessage, NIGHT_PROTECTION_TERMS)) topics.push("night_protection")
   if (includesAny(normalizedMessage, CWC_TERMS)) topics.push("cwc")
   if (includesAny(normalizedMessage, OWC_TERMS)) topics.push("owc")
 
@@ -758,8 +786,7 @@ function hasProactiveHairOilingFit(context: RoutineContext): boolean {
     context.goals.includes("moisture") ||
     context.cuticle_condition === "slightly_rough" ||
     context.cuticle_condition === "rough" ||
-    context.chemical_treatment.includes("colored") ||
-    context.chemical_treatment.includes("bleached")
+    hasActiveChemicalTreatment(context.chemical_treatment)
   )
 }
 
@@ -769,6 +796,59 @@ function hasScalpHairOilingFit(context: RoutineContext): boolean {
     context.scalp_condition !== "dry_flakes" &&
     context.scalp_condition !== "dandruff" &&
     context.scalp_condition !== "irritated"
+  )
+}
+
+function hasExplicitNoNightProtection(profile: HairProfile | null): boolean {
+  return Array.isArray(profile?.night_protection) && profile.night_protection.length === 0
+}
+
+function hasSelectedNightProtection(profile: HairProfile | null): boolean {
+  return Array.isArray(profile?.night_protection) && profile.night_protection.length > 0
+}
+
+function hasNightProtectionConcernOrGoalFit(context: RoutineContext): boolean {
+  return (
+    context.concerns.includes("breakage") ||
+    context.concerns.includes("split_ends") ||
+    context.concerns.includes("hair_damage") ||
+    context.concerns.includes("tangling") ||
+    context.concerns.includes("frizz") ||
+    context.goals.includes("less_frizz") ||
+    context.goals.includes("curl_definition") ||
+    context.goals.includes("healthier_hair") ||
+    context.goals.includes("anti_breakage") ||
+    context.goals.includes("strengthen") ||
+    context.goals.includes("less_split_ends")
+  )
+}
+
+function hasLongHairNightProtectionFit(profile: HairProfile | null): boolean {
+  return profile?.hair_length === "long" || profile?.hair_length === "very_long"
+}
+
+function shouldAddNightProtectionSlot(
+  profile: HairProfile | null,
+  context: RoutineContext,
+): boolean {
+  if (!hasExplicitNoNightProtection(profile)) return false
+
+  return (
+    context.explicit_topic_ids.includes("night_protection") ||
+    hasNightProtectionConcernOrGoalFit(context) ||
+    hasLongHairNightProtectionFit(profile)
+  )
+}
+
+function shouldAdjustNightProtectionSlot(
+  profile: HairProfile | null,
+  context: RoutineContext,
+): boolean {
+  if (!hasSelectedNightProtection(profile)) return false
+
+  return (
+    context.explicit_topic_ids.includes("night_protection") ||
+    (hasLongHairNightProtectionFit(profile) && hasNightProtectionConcernOrGoalFit(context))
   )
 }
 
@@ -873,6 +953,23 @@ export function activateRoutineTopics(
         ? "Lockenrefresh wurde direkt angefragt."
         : "Zwischenwaschtage bei Wellen oder Locken brauchen häufig eine Refresh-Option.",
       50,
+      true,
+    )
+  }
+
+  if (
+    explicit.has("night_protection") ||
+    shouldAddNightProtectionSlot(profile, context) ||
+    shouldAdjustNightProtectionSlot(profile, context)
+  ) {
+    push(
+      "night_protection",
+      explicit.has("night_protection")
+        ? "Nachtschutz wurde direkt angefragt."
+        : hasSelectedNightProtection(profile)
+          ? "Bestehender Nachtschutz trifft auf Reibungs-, Frizz- oder Längen-Signale."
+          : "Kein ausgewählter Nachtschutz trifft auf Reibungs-, Frizz- oder Längen-Signale.",
+      65,
       true,
     )
   }
@@ -1424,6 +1521,61 @@ function buildOwcTechniqueSlot(
   }
 }
 
+function buildNightProtectionSlot(
+  profile: HairProfile | null,
+  context: RoutineContext,
+  action: Extract<RoutineSlotAction, "add" | "adjust">,
+): RoutineSlotAdvice {
+  const longHair = hasLongHairNightProtectionFit(profile)
+  const curlOrWave =
+    context.hair_texture === "wavy" ||
+    context.hair_texture === "curly" ||
+    context.hair_texture === "coily"
+  const example = longHair
+    ? "Längen-/Spitzenschutz (z. B. HairHOMIE), lockeres Zusammennehmen oder eine sehr weiche Fixierung"
+    : curlOrWave
+      ? "Satin-/Seidenkissenbezug, Bonnet oder Pineapple"
+      : "Satin-/Seidenkissenbezug, Bonnet oder lockerer Zopf"
+
+  const isAdjust = action === "adjust"
+
+  return {
+    id: "maintenance-night-protection",
+    kind: "instruction",
+    phase: "maintenance",
+    label: isAdjust ? "Nachtschutz prüfen/anpassen" : "Nachtschutz",
+    action,
+    category: null,
+    cadence: "nachts",
+    rationale: isAdjust
+      ? [
+          "Du hast bereits Nachtschutz ausgewählt; deshalb geht es hier ums Prüfen, nicht ums automatisch mehr Machen.",
+          `Wenn Verknoten, Frizz oder Bruch über Nacht trotzdem bleiben, prüfe, ob eine andere Option oder eine zusätzlich lockere Option besser passt: ${example}.`,
+        ]
+      : [
+          "Du hast aktuell keinen Nachtschutz ausgewählt; das ist ein kleiner, aber sinnvoller Reibungshebel.",
+          longHair
+            ? "Bei langen Haaren ist ein Längen-/Spitzenschutz (z. B. HairHOMIE) oder lockeres Fixieren oft praktischer als nur offen schlafen."
+            : curlOrWave
+              ? "Bei Wellen oder Locken kann ein Bonnet, Pineapple oder Satin-/Seidenkissenbezug helfen, die Form über Nacht ruhiger zu halten."
+              : "Ein Satin-/Seidenkissenbezug ist die niedrigste Einstiegshürde, wenn du keine Haube oder Fixierung magst.",
+        ],
+    caveats: isAdjust
+      ? [
+          "Das ist kein Repair-Schritt und kein Muss; bitte nicht standardmäßig stapeln, wenn dein jetziger Schutz funktioniert.",
+          "Alles sollte locker sitzen und nicht am Haaransatz ziehen.",
+        ]
+      : [
+          "Das ist kein Repair-Schritt und kein Muss; es reduziert vor allem Reibung, Verknoten und Morgen-Frizz.",
+          "Alles sollte locker sitzen und nicht am Haaransatz ziehen.",
+        ],
+    topic_ids: ["night_protection"],
+    product_linkable: false,
+    product_query: null,
+    attachment_priority: 45,
+  }
+}
+
 function buildRoutineSlots(
   profile: HairProfile | null,
   context: RoutineContext,
@@ -1533,6 +1685,12 @@ function buildRoutineSlots(
     product_query: "Ich suche einen Conditioner für meine Basisroutine.",
     attachment_priority: 20,
   })
+
+  if (shouldAddNightProtectionSlot(profile, context)) {
+    pushRoutineSlot(buildNightProtectionSlot(profile, context, "add"))
+  } else if (shouldAdjustNightProtectionSlot(profile, context)) {
+    pushRoutineSlot(buildNightProtectionSlot(profile, context, "adjust"))
+  }
 
   const explicitWashProtectionWithoutNeed =
     activeWashProtectionTopic !== null &&
@@ -1826,8 +1984,8 @@ function buildRoutineSlots(
       })
     } else {
       const severity = deriveBondBuilderSeverity(profile)
-      const treatments = new Set(profile?.chemical_treatment ?? [])
-      const hasChemical = treatments.has("bleached") || treatments.has("colored")
+      const treatments = profile?.chemical_treatment ?? []
+      const hasChemical = hasActiveChemicalTreatment(treatments)
 
       const bondRationale: string[] =
         severity === "severe"
@@ -1942,7 +2100,7 @@ function hasSevereActiveDamageSignals(
     (concerns.has("hair_damage") ||
       concerns.has("split_ends") ||
       context.cuticle_condition === "rough" ||
-      context.chemical_treatment.includes("bleached"))
+      hasBleachTreatment(context.chemical_treatment))
   ) {
     return true
   }
@@ -2151,6 +2309,19 @@ function isGoalDirectedSlot(plan: RoutinePlan, slot: RoutineSlotAdvice): boolean
 
   if (slot.id === "maintenance-refresh" && goalCodes.has("curl_definition")) return true
   if (
+    slot.topic_ids.includes("night_protection") &&
+    [
+      "less_frizz",
+      "curl_definition",
+      "healthier_hair",
+      "anti_breakage",
+      "strengthen",
+      "less_split_ends",
+    ].some((goal) => goalCodes.has(goal))
+  ) {
+    return true
+  }
+  if (
     slot.category === "leave_in" &&
     ["less_frizz", "curl_definition", "moisture", "shine"].some((goal) => goalCodes.has(goal))
   ) {
@@ -2180,6 +2351,15 @@ function isProblemDirectedSlot(plan: RoutinePlan, slot: RoutineSlotAdvice): bool
   if (
     slot.topic_ids.some((topicId) =>
       ["tiefenreinigung", "bond_builder", "brush_tools"].includes(topicId),
+    )
+  ) {
+    return true
+  }
+
+  if (
+    slot.topic_ids.includes("night_protection") &&
+    ["breakage", "split_ends", "hair_damage", "tangling", "frizz"].some((concern) =>
+      concernCodes.has(concern),
     )
   ) {
     return true
@@ -2337,11 +2517,18 @@ export function buildRoutinePlan(
     requestedCategory: options.forceRequestedCategory ?? null,
     preferRequestedCategory: Boolean(options.forceRequestedCategory),
   }
+  const hasNightProtectionSlot = sections.some((section) =>
+    section.slots.some((slot) => slot.id === "maintenance-night-protection"),
+  )
+  const requestedDeepDiveOptions =
+    context.explicit_topic_ids.includes("night_protection") && hasNightProtectionSlot
+      ? { requestedTopicId: "night_protection" as const }
+      : {}
   const layerProjections = {
     basics: projectRoutinePlanForLayer(planWithPriority, "basics", requestedProjectionOptions),
     goals: projectRoutinePlanForLayer(planWithPriority, "goals"),
     problems: projectRoutinePlanForLayer(planWithPriority, "problems"),
-    deep_dive: projectRoutinePlanForLayer(planWithPriority, "deep_dive"),
+    deep_dive: projectRoutinePlanForLayer(planWithPriority, "deep_dive", requestedDeepDiveOptions),
   }
 
   return {

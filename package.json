@@ -37,7 +37,7 @@
     "test:agent": "tsx --test tests/agent-guidance.spec.ts tests/agent-guidance-tracing.spec.ts tests/agentic-tool-loop.spec.ts tests/agent-route-packet.spec.ts tests/agent-get-user-context.spec.ts tests/agent-select-products-tool.spec.ts tests/agent-routine-tool.spec.ts tests/agent-shadow.spec.ts tests/agent-v2-production-chat-pipeline.spec.ts tests/agent-v2-product-lookup-clarification.spec.ts tests/agent-v2-product-selection.spec.ts tests/agent-v2-product-lookup-policy.spec.ts tests/agent-v2-resolved-product-selection-adapter.spec.ts tests/agent-final-render-prompt.spec.ts tests/agent-compare-api.spec.ts tests/agent-compare-product-trace.spec.ts tests/agent-compare-runner.spec.ts tests/agent-compare-test-users.spec.ts tests/agent-v2-contracts.spec.ts tests/agent-v2-guidance-compiler.spec.ts tests/agent-v2-tool-projections.spec.ts tests/agent-v2-final-answer-validator.spec.ts tests/agent-v2-german-orthography.spec.ts tests/agent-v2-responses-runtime.spec.ts tests/agent-v2-compare-runner.spec.ts tests/agent-v2-manual-regression.spec.ts",
     "test:playwright:contracts": "playwright test tests/chat-debug-trace.spec.ts tests/conversation-state.spec.ts tests/routine-planner.spec.ts tests/stripe-gating.spec.ts tests/stripe-intervals.spec.ts tests/stripe-webhook-handlers.spec.ts tests/user-memory.spec.ts --project=chromium",
     "test:contracts": "npm run test:node && npm run test:agent && npm run test:playwright:contracts",
-    "test:chat:ci": "tsx scripts/eval-chat/run.ts --skip-judge --ci-smoke",
+    "test:chat:ci": "tsx scripts/eval-chat/run.ts --skip-judge --ci-smoke --concurrency 2",
     "test:retrieval:ci": "tsx scripts/eval-retrieval.ts --hybrid-only --min-hybrid-ndcg10 0.72 --min-hybrid-recall20 0.88 --skip-unannotated-gold-set",
     "audit:products": "tsx scripts/audit-product-metadata.ts",
     "products:identity:export": "tsx scripts/product-identity/export-catalog.ts",
@@ -62,6 +62,9 @@
     "products:intake:notify-pending": "tsx scripts/product-intake/notify-pending.ts",
     "products:intake:promote": "tsx scripts/product-intake/promote.ts",
     "products:intake:cleanup-storage": "tsx scripts/product-intake/cleanup-storage.ts",
+    "catalog:additions:prepare": "tsx scripts/catalog-additions/prepare-2026-06-27-products.ts --prepare-review",
+    "catalog:additions:dry-run": "tsx scripts/catalog-additions/prepare-2026-06-27-products.ts --dry-run",
+    "catalog:additions:apply": "tsx scripts/catalog-additions/prepare-2026-06-27-products.ts --apply --confirm-project=pqdkhefxsxkyeqelqegq",
     "stress:smoke": "k6 run -e K6_PROFILE=smoke scripts/k6/launch-flow.js",
     "stress:average": "k6 run -e K6_PROFILE=average scripts/k6/launch-flow.js",
     "stress:spike": "k6 run -e K6_PROFILE=spike scripts/k6/launch-flow.js",
@@ -73,7 +76,7 @@
     "langfuse:sync-prompts": "tsx scripts/langfuse/sync-prompts.ts",
     "langfuse:seed-datasets": "tsx scripts/langfuse/seed-datasets.ts",
     "langfuse:setup-review-queues": "tsx scripts/langfuse/setup-review-queues.ts",
-    "prepare": "husky"
+    "prepare": "node -e \"if (!process.env.npm_config_omit?.split(',').includes('dev')) process.exit(1)\" || husky"
   },
   "dependencies": {
     "@customerio/cdp-analytics-browser": "^0.4.16",
@@ -118,6 +121,7 @@
     "lint-staged": "^16.4.0",
     "playwright": "^1.59.1",
     "prettier": "^3.8.3",
+    "sharp": "^0.34.5",
     "start-server-and-test": "^2.1.5",
     "supabase": "^2.98.0",
     "tailwindcss": "^4.2.4",

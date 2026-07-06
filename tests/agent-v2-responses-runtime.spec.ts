@@ -404,7 +404,13 @@ function requiredGuidanceForAnswer(answerMode: string, category = "none"): strin
   const ids = ["base.advisor_rules.v1", "base.answer_contract.v1", "base.tone_and_format.v1"]
   if (answerMode === "product_recommendation") ids.push("base.product_recommendation.v1")
   if (answerMode === "routine") ids.push("base.routine_building.v1")
-  if (answerMode === "general_advice") ids.push("base.general_advice.v1")
+  if (
+    answerMode === "general_advice" ||
+    answerMode === "product_recommendation" ||
+    answerMode === "routine"
+  ) {
+    ids.push("base.general_advice.v1", "base.goal_concern_levers.v1")
+  }
   if (answerMode === "safety_boundary") ids.push("base.safety_boundaries.v1")
 
   const categoryMap: Record<string, string> = {
@@ -1709,6 +1715,9 @@ function fakeAgentV2Tools() {
           : null) as Parameters<typeof selectGuidancePackageIds>[0]["answer_mode_hint"],
         categories: Array.isArray(input.categories)
           ? (input.categories as Parameters<typeof selectGuidancePackageIds>[0]["categories"])
+          : [],
+        topics: Array.isArray(input.topics)
+          ? (input.topics as Parameters<typeof selectGuidancePackageIds>[0]["topics"])
           : [],
         routine_layer: (typeof input.routine_layer === "string"
           ? input.routine_layer
@@ -6300,6 +6309,63 @@ test("AgentV2 runtime fills visible follow-up offers without hidden pending stat
   )
 })
 
+test("AgentV2 runtime fills missing advisor follow-up action on otherwise valid product answers", async () => {
+  const products = [{ product_id: "leave-in-1", name: "Leichtes Leave-in" }]
+  const terminal = terminalNamedProductRecommendation("call_3", products, {
+    care_category: "leave_in",
+    requested_product_count: 1,
+    count_policy: "default",
+    evidence_quote: "leichtes Leave-in gegen Frizz",
+  })
+  const terminalArguments = JSON.parse(terminal.arguments)
+  terminalArguments.extracted_constraints.product_categories = ["leave_in"]
+  terminalArguments.payload.user_facing_answer_de =
+    "**Leichtes Leave-in** passt gut zu deinem Profil. Wenn du magst, erkläre ich dir danach kurz die Anwendung."
+  terminalArguments.payload.next_step_offer_de =
+    "Wenn du magst, erkläre ich dir danach kurz die Anwendung."
+  terminalArguments.pending_followup_action = null
+
+  const client = fakeResponsesClientWithOutputs([
+    guidanceCall("call_1", {
+      answer_mode_hint: "product_recommendation",
+      categories: ["leave_in"],
+    }),
+    functionCall("call_2", "select_products", {
+      ...selectProductsArguments({
+        category: "leave_in",
+        user_request: "Ich brauche ein leichtes Leave-in gegen Frizz.",
+        evidence_quote: "leichtes Leave-in gegen Frizz",
+        requested_product_count: 1,
+      }),
+    }),
+    rawFunctionCall(terminal.call_id, terminal.name, JSON.stringify(terminalArguments)),
+  ])
+
+  const result = await runAgentV2ResponsesTurn({
+    client,
+    message: "Ich brauche ein leichtes Leave-in gegen Frizz.",
+    recentMessages: [],
+    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+    tools: {
+      ...fakeAgentV2Tools(),
+      select_products: async () => ({
+        valid_product_ids: products.map((product) => product.product_id),
+        products,
+      }),
+    },
+  })
+
+  assert.equal(result.trace.failure_stage, null)
+  assert.equal(result.final_answer.answer_mode, "product_recommendation")
+  assert.deepEqual(result.final_answer.pending_followup_action, {
+    kind: "advisor_response",
+    category: "leave_in",
+    routine_layer: null,
+    routine_action: null,
+    source: "assistant_offer",
+  })
+})
+
 test("AgentV2 runtime sanitizes evidence metadata after one failed repair when answer is otherwise valid", async () => {
   const badEvidenceAnswer = terminalGeneralAdviceWithOverrides("call_1", {
     request_interpretation: {
@@ -6453,6 +6519,7 @@ test("AgentV2 runtime repairs missing guidance and product tools in order", asyn
     "base.advisor_rules.v1",
     "base.answer_contract.v1",
     "base.general_advice.v1",
+    "base.goal_concern_levers.v1",
     "base.product_recommendation.v1",
     "base.tone_and_format.v1",
     "category.conditioner.v1",

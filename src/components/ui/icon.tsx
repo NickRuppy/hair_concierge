@@ -69,6 +69,7 @@ import {
   Atom,
   Flower2,
   Eraser,
+  Ribbon,
 } from "lucide-react"
 
 type HairLengthIconProps = ComponentPropsWithoutRef<LucideIcon>
@@ -138,6 +139,101 @@ const HairLengthMedium = createHairLengthIcon(12.8, "HairLengthMedium")
 const HairLengthLong = createHairLengthIcon(16.2, "HairLengthLong")
 const HairLengthVeryLong = createHairLengthIcon(19.6, "HairLengthVeryLong")
 
+const TreatmentPermedIcon = forwardRef<SVGSVGElement, HairLengthIconProps>(
+  (
+    {
+      color = "currentColor",
+      size = 24,
+      strokeWidth = 2,
+      absoluteStrokeWidth,
+      className,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const width = Number(size)
+    const numericStrokeWidth = Number(strokeWidth)
+    const resolvedStrokeWidth =
+      absoluteStrokeWidth && Number.isFinite(width) && Number.isFinite(numericStrokeWidth)
+        ? (numericStrokeWidth * 24) / width
+        : strokeWidth
+
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke={color}
+        strokeWidth={resolvedStrokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+        {...props}
+      >
+        <path d="M4 8c2 0 2-3 4-3s2 3 4 3 2-3 4-3 2 3 4 3" />
+        <path d="M4 14c2 0 2-3 4-3s2 3 4 3 2-3 4-3 2 3 4 3" />
+        <path d="M8 19h8" />
+        <circle cx="6" cy="19" r="1" fill={color} stroke="none" />
+        <circle cx="18" cy="19" r="1" fill={color} stroke="none" />
+        {children}
+      </svg>
+    )
+  },
+)
+TreatmentPermedIcon.displayName = "TreatmentPermedIcon"
+
+const TreatmentStraightenedIcon = forwardRef<SVGSVGElement, HairLengthIconProps>(
+  (
+    {
+      color = "currentColor",
+      size = 24,
+      strokeWidth = 2,
+      absoluteStrokeWidth,
+      className,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const width = Number(size)
+    const numericStrokeWidth = Number(strokeWidth)
+    const resolvedStrokeWidth =
+      absoluteStrokeWidth && Number.isFinite(width) && Number.isFinite(numericStrokeWidth)
+        ? (numericStrokeWidth * 24) / width
+        : strokeWidth
+
+    return (
+      <svg
+        ref={ref}
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke={color}
+        strokeWidth={resolvedStrokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+        {...props}
+      >
+        <path d="M7 5v14" />
+        <path d="M12 5v14" />
+        <path d="M17 5v14" />
+        <path d="M5 9h14" />
+        <path d="M5 15h14" />
+        <circle cx="12" cy="21" r="1" fill={color} stroke="none" />
+        {children}
+      </svg>
+    )
+  },
+)
+TreatmentStraightenedIcon.displayName = "TreatmentStraightenedIcon"
+
 // Each key is a semantic icon name. Values are Lucide icons today,
 // swappable to custom SVG components later in this single file.
 const iconMap = {
@@ -168,6 +264,8 @@ const iconMap = {
   "treatment-natural": Leaf,
   "treatment-colored": Pipette,
   "treatment-lightened": FlameKindling,
+  "treatment-permed": TreatmentPermedIcon,
+  "treatment-straightened": TreatmentStraightenedIcon,
   // Products
   "product-shampoo": ShowerHead,
   "product-conditioner": Droplets,
@@ -247,6 +345,7 @@ const iconMap = {
   "night-loose-braid": Link2,
   "night-loose-bun": Circle,
   "night-pineapple": TrendingUp,
+  "night-length-accessory": Ribbon,
   // Goals
   "goal-moisture": Droplets,
   "goal-shine": Sun,

@@ -480,7 +480,7 @@ export function buildInterventionPlan(
   if (profile.towelTechnique === "rough_rubbing") {
     behaviorReasons.push("rough_towel_handling")
   }
-  if (profile.brushType === "paddle" || profile.brushType === "round") {
+  if (profile.brushType?.some((brushType) => brushType === "paddle" || brushType === "round")) {
     behaviorReasons.push("rough_brushing")
   }
   if (isExplicitNoneArray(profile.nightProtection)) {

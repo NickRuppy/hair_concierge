@@ -17,7 +17,7 @@ export interface HairProfileOverrides {
   styling_tools?: string[] | null
   drying_method?: string | null
   towel_technique?: string | null
-  brush_type?: string | null
+  brush_type?: string[] | null
   night_protection?: string[] | null
   goals?: string[]
   uses_heat_protection?: boolean

@@ -70,6 +70,30 @@ test("planner emits behavior-first and missing-protection actions for severe hea
   )
 })
 
+test("planner emits night protection behavior gap for explicit no protection", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      concerns: ["breakage", "tangling"],
+      night_protection: [],
+    },
+    [],
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+  const damage = buildDamageAssessment(normalized)
+  const careNeeds = buildCareNeedAssessment(normalized, damage)
+  const plan = buildInterventionPlan(normalized, damage, careNeeds)
+
+  assert.ok(
+    plan.steps.some(
+      (step) =>
+        step.category === "behavior" &&
+        step.action === "behavior_change_only" &&
+        step.reasonCodes.includes("insufficient_night_protection"),
+    ),
+  )
+})
+
 test("planner defers bondbuilder when structural case is consider-level rather than recommend-level", () => {
   const adapted = adaptRecommendationInputFromPersistence(
     {

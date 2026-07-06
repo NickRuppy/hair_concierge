@@ -21,6 +21,24 @@ test("colored and bleached can be combined", () => {
   assert.deepEqual(withBleach, ["gefaerbt", "blondiert"])
 })
 
+test("chemical shape treatments combine with color treatments in canonical order", () => {
+  let selected = toggleTreatmentSelection([], "chemisch_geglaettet")
+  selected = toggleTreatmentSelection(selected, "gefaerbt")
+  selected = toggleTreatmentSelection(selected, "dauerwelle")
+  selected = toggleTreatmentSelection(selected, "blondiert")
+
+  assert.deepEqual(selected, ["gefaerbt", "blondiert", "dauerwelle", "chemisch_geglaettet"])
+})
+
+test("chemical shape treatments remain exclusive with natur", () => {
+  assert.deepEqual(toggleTreatmentSelection(["natur"], "chemisch_geglaettet"), [
+    "chemisch_geglaettet",
+  ])
+  assert.deepEqual(toggleTreatmentSelection(["dauerwelle", "chemisch_geglaettet"], "natur"), [
+    "natur",
+  ])
+})
+
 test("legacy pulltest values are normalized", () => {
   const normalized = normalizeStoredQuizAnswers({
     structure: "curly",
@@ -132,7 +150,7 @@ test("canonicalization drops invalid natur conflicts", () => {
     has_scalp_issue: false,
     scalp_condition: "gereizt",
     concerns: ["frizz", "breakage", "dryness"],
-    treatment: ["natur", "blondiert", "gefaerbt"],
+    treatment: ["natur", "chemisch_geglaettet", "blondiert", "gefaerbt", "dauerwelle"],
   })
 
   assert.equal(canonical.has_scalp_issue, false)
@@ -140,7 +158,12 @@ test("canonicalization drops invalid natur conflicts", () => {
   assert.equal(canonical.scalp_condition, undefined)
   assert.deepEqual(canonical.concerns, ["breakage", "dryness", "frizz"])
   assert.equal(canonical.concerns_other_text, undefined)
-  assert.deepEqual(canonical.treatment, ["gefaerbt", "blondiert"])
+  assert.deepEqual(canonical.treatment, [
+    "gefaerbt",
+    "blondiert",
+    "dauerwelle",
+    "chemisch_geglaettet",
+  ])
 })
 
 test("goals are passed through when valid (sorted to canonical GOALS order)", () => {

@@ -4,6 +4,7 @@ import {
   deriveLeaveInStylingContextFromStages,
   hasDirectMechanicalStressSignals,
 } from "@/lib/profile/signal-derivations"
+import { hasBrushFrictionSignal } from "@/lib/profile/brush-type"
 
 const BRUSH_TOOLS_TERMS = [
   "buerste",
@@ -109,14 +110,8 @@ export function hasExplicitBrushToolsRequest(normalizedMessage: string): boolean
 /** Accepts an already-normalized message string (via normalizeText). */
 export function hasBrushToolsNeed(profile: HairProfile | null, normalizedMessage: string): boolean {
   return (
-    hasDirectMechanicalStressSignals(
-      profile?.towel_technique,
-      profile?.brush_type,
-      profile?.night_protection,
-    ) ||
-    profile?.brush_type === "paddle" ||
-    profile?.brush_type === "round" ||
-    profile?.brush_type === "boar_bristle" ||
+    hasDirectMechanicalStressSignals(profile?.towel_technique, profile?.brush_type) ||
+    hasBrushFrictionSignal(profile?.brush_type) ||
     includesAny(normalizedMessage, DETANGLING_TERMS)
   )
 }
@@ -130,7 +125,6 @@ export function buildBrushToolsSlot(
   const hasMechanicalStressSignals = hasDirectMechanicalStressSignals(
     profile?.towel_technique,
     profile?.brush_type,
-    profile?.night_protection,
   )
   const stylingContext = deriveLeaveInStylingContextFromStages(
     profile?.drying_method,
@@ -151,8 +145,7 @@ export function buildBrushToolsSlot(
       CURLY_TEXTURES.has(context.hair_texture))
   const sectioningRelevant = includesAny(normalizedMessage, SECTIONING_TERMS)
   const dryStylingBrushRelevant =
-    profile?.brush_type === "paddle" ||
-    profile?.brush_type === "round" ||
+    profile?.brush_type?.some((brushType) => brushType === "paddle" || brushType === "round") ||
     includesAny(normalizedMessage, DRY_STYLING_BRUSH_TERMS)
 
   const rationale: string[] = []
@@ -234,11 +227,7 @@ export function buildBrushToolsSlot(
     )
   }
 
-  const needsAdjustment =
-    profile?.brush_type === "paddle" ||
-    profile?.brush_type === "round" ||
-    profile?.brush_type === "boar_bristle" ||
-    hasMechanicalStressSignals
+  const needsAdjustment = hasBrushFrictionSignal(profile?.brush_type) || hasMechanicalStressSignals
   const action: RoutineSlotAction = needsAdjustment ? "adjust" : "add"
 
   return {

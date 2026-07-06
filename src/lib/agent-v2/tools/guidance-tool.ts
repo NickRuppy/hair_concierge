@@ -22,6 +22,10 @@ export const AgentV2GuidanceCategorySchema = z.enum([
 
 export type AgentV2GuidanceCategory = z.infer<typeof AgentV2GuidanceCategorySchema>
 
+export const AgentV2GuidanceTopicSchema = z.enum(["night_protection"])
+
+export type AgentV2GuidanceTopic = z.infer<typeof AgentV2GuidanceTopicSchema>
+
 export const LoadAgentV2AdvisorGuidanceInputSchema = z.object({
   answer_mode_hint: AgentV2AnswerModeSchema.nullable().describe(
     "Expected answer mode. Use product_assessment for named-product assessment/detail checks when that answer mode is available; use product_recommendation for concrete product asks and as a compatibility hint for assessment grounding without forcing visible recommendation cards.",
@@ -31,11 +35,20 @@ export const LoadAgentV2AdvisorGuidanceInputSchema = z.object({
     .describe(
       "Guidance categories to load. Use deep_cleansing_shampoo, not shampoo, for hard-water, metal/mineral, chelating, clarifying, detox, reset, buildup, or coated/waxy shampoo questions even when the product name contains Shampoo. Use bondbuilder for named bond-repair products or brands such as K18, OLAPLEX, Epres, acidic bonding, or bond repair, even when the catalog item is leave-in-like or mask-like.",
     ),
+  topics: z.preprocess(
+    (value) => value ?? [],
+    z
+      .array(AgentV2GuidanceTopicSchema)
+      .describe(
+        "Non-product advisory topics to load. Use night_protection for sleep-friction, satin/silk pillowcase, bonnet, pineapple, loose night hairstyle, HairHOMIE, or length/tip accessory questions.",
+      ),
+  ),
   routine_layer: AgentV2RoutineLayerSchema.nullable(),
   safety_mode: AgentV2SafetyModeSchema,
 })
 
 export type LoadAgentV2AdvisorGuidanceInput = z.infer<typeof LoadAgentV2AdvisorGuidanceInputSchema>
+type SelectGuidancePackageIdsInput = LoadAgentV2AdvisorGuidanceInput
 
 export async function loadAgentV2AdvisorGuidance(input: unknown) {
   const parsed = LoadAgentV2AdvisorGuidanceInputSchema.parse(input)
@@ -45,7 +58,7 @@ export async function loadAgentV2AdvisorGuidance(input: unknown) {
 }
 
 export function selectGuidancePackageIds(
-  input: LoadAgentV2AdvisorGuidanceInput,
+  input: SelectGuidancePackageIdsInput,
 ): AgentV2GuidancePackageId[] {
   const ids: AgentV2GuidancePackageId[] = [
     "base.advisor_rules.v1",
@@ -76,10 +89,15 @@ export function selectGuidancePackageIds(
     input.answer_mode_hint === "routine"
   ) {
     ids.push("base.general_advice.v1")
+    ids.push("base.goal_concern_levers.v1")
   }
 
   for (const category of input.categories) {
     ids.push(`category.${category}.v1` as AgentV2GuidancePackageId)
+  }
+
+  for (const topic of input.topics ?? []) {
+    ids.push(`topic.${topic}.v1` as AgentV2GuidancePackageId)
   }
 
   return [...new Set(ids)]

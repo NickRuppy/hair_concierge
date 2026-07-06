@@ -6,6 +6,7 @@ import type {
   ResetLevel,
   ResetTriggerSource,
 } from "@/lib/recommendation-engine/types"
+import { hasColorOrBleachTreatment } from "@/lib/profile/chemical-treatment"
 import { isProductFrequencyAtLeast, type ProductFrequency } from "@/lib/vocabulary"
 
 function addSignal(
@@ -59,10 +60,7 @@ function deriveCautionFlags(profile: NormalizedProfile): string[] {
   if (profile.hairTexture === "curly" || profile.hairTexture === "coily") {
     flags.add(`${profile.hairTexture}_hair`)
   }
-  if (
-    profile.chemicalTreatment.includes("bleached") ||
-    profile.chemicalTreatment.includes("colored")
-  ) {
+  if (hasColorOrBleachTreatment(profile.chemicalTreatment)) {
     flags.add("color_or_bleach_caution")
   }
   if (profile.cuticleCondition === "rough") {

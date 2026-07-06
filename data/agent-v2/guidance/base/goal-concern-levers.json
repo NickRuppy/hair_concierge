@@ -1,0 +1,88 @@
+{
+  "package_id": "base.goal_concern_levers.v1",
+  "version": 1,
+  "scope": {
+    "answer_modes": ["general_advice", "product_recommendation", "routine"],
+    "categories": [],
+    "routine_layers": [],
+    "safety_modes": ["normal", "restricted"]
+  },
+  "hard_rules": [
+    {
+      "rule_id": "goal_concern.no_medical_overclaim",
+      "severity": "block",
+      "source": "base/goal-concern-levers.md",
+      "message": "Do not claim products or routines treat hair loss, thinning, scalp disease, persistent dandruff, pain, inflammation, or sudden shedding."
+    },
+    {
+      "rule_id": "goal_concern.no_permanent_split_end_repair",
+      "severity": "block",
+      "source": "base/goal-concern-levers.md",
+      "message": "Do not claim products permanently repair existing split ends; products may only smooth or camouflage their appearance."
+    },
+    {
+      "rule_id": "goal_concern.repair_support_requires_damage_signals",
+      "severity": "block",
+      "source": "base/goal-concern-levers.md",
+      "message": "Do not present bond, protein, or repair treatments as default answers for healthy hair, ordinary shine/frizz/softness/dryness, shedding, hair loss, scalp concerns, or vague repair wording. Mention them only as conditional structural-damage support when bleach, chemical service, repeated high heat, strong breakage, brittle lengths, or mushy/gummy/over-elastic wet feel make structural damage plausible; use Bondbuilder category guidance for concrete bond-repair relevance, product, lane, or protocol answers."
+    }
+  ],
+  "soft_rubrics": [
+    {
+      "rubric_id": "goal_concern.first_lever",
+      "priority": "high",
+      "source": "base/goal-concern-levers.md",
+      "message": "For goal or concern questions, name the most likely first lever before adding products, routines, or advanced techniques."
+    },
+    {
+      "rubric_id": "goal_concern.profile_conflicts",
+      "priority": "high",
+      "source": "base/goal-concern-levers.md",
+      "message": "Balance goals and concerns against profile conflicts such as fine hair plus volume, oily roots plus dry lengths, color protection plus cleansing, or curl definition plus frizz."
+    },
+    {
+      "rubric_id": "goal_concern.avoid_heavy_defaults",
+      "priority": "high",
+      "source": "base/goal-concern-levers.md",
+      "message": "Do not default to heavy masks, oils, rich creams, scalp oils, or OWC for fine, low-density, oily-root, flat, coated, or volume-seeking profiles."
+    },
+    {
+      "rubric_id": "goal_concern.separate_scalp_lengths",
+      "priority": "high",
+      "source": "base/goal-concern-levers.md",
+      "message": "Separate scalp/root levers from length/end levers when the user's goal or concern mixes oiliness, dryness, buildup, flakes, or volume."
+    },
+    {
+      "rubric_id": "goal_concern.safety_boundary",
+      "priority": "high",
+      "source": "base/goal-concern-levers.md",
+      "message": "For hair loss, visible thinning, widening part, clumps, sudden or persistent shedding, patchy loss, postpartum/illness/medication context, persistent dandruff, pain, burning, redness, swelling, sores, weeping areas, or pus, respect the existing safety-boundary behavior before cosmetic product advice."
+    },
+    {
+      "rubric_id": "goal_concern.dandruff_scalp_focused",
+      "priority": "high",
+      "source": "base/goal-concern-levers.md",
+      "message": "For dandruff or flakes, keep anti-dandruff guidance scalp-focused, according to label, and length-protective for curls, color, bleach, relaxing, or dry lengths. Include a brief non-diagnostic escalation sentence for persistent, severe, inflammatory, painful, weeping, pus, hair-loss-associated, or not-improving cases."
+    },
+    {
+      "rubric_id": "goal_concern.dry_shampoo_bridge_only",
+      "priority": "medium",
+      "source": "base/goal-concern-levers.md",
+      "message": "For oily roots, dry shampoo may be a short-term bridge only; repeated layering or replacing wet scalp cleansing should route toward actual washing, reset/simplification, or safety wording depending on symptoms."
+    },
+    {
+      "rubric_id": "goal_concern.evidence_strength",
+      "priority": "medium",
+      "source": "base/goal-concern-levers.md",
+      "message": "When evidence is profile-dependent or weak, use conservative wording such as meist, oft, eher, wenn, or als erster Schritt."
+    }
+  ],
+  "required_grounding": [],
+  "ask_when": [
+    {
+      "condition": "first_lever_or_safety_boundary_unclear",
+      "question_policy": "ask_one_material_question_or_answer_with_sensible_default"
+    }
+  ],
+  "markdown_path": "base/goal-concern-levers.md"
+}

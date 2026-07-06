@@ -44,6 +44,7 @@ import {
   SCALP_TYPE_LABELS,
 } from "@/lib/types"
 import {
+  CHEMICAL_TREATMENTS,
   PRODUCT_FREQUENCY_LABELS,
   fehler,
   HAIR_LENGTH_OPTIONS,
@@ -126,11 +127,11 @@ const QUIZ_SCALP_CONDITION_OPTIONS = [
   { value: "irritated", label: SCALP_CONDITION_LABELS.irritated },
 ]
 
-const QUIZ_CHEMICAL_TREATMENT_OPTIONS: Array<{ value: ChemicalTreatment; label: string }> = [
-  { value: "natural", label: CHEMICAL_TREATMENT_LABELS.natural },
-  { value: "colored", label: CHEMICAL_TREATMENT_LABELS.colored },
-  { value: "bleached", label: CHEMICAL_TREATMENT_LABELS.bleached },
-]
+const QUIZ_CHEMICAL_TREATMENT_OPTIONS: Array<{ value: ChemicalTreatment; label: string }> =
+  CHEMICAL_TREATMENTS.map((value) => ({
+    value,
+    label: CHEMICAL_TREATMENT_LABELS[value],
+  }))
 
 const QUIZ_CONCERN_OPTIONS: Array<{ value: ProfileConcern; label: string }> = [
   { value: "hair_damage", label: PROFILE_CONCERN_LABELS.hair_damage },
@@ -235,7 +236,8 @@ function toggleChemicalTreatment(
     return withoutNatural.filter((value) => value !== treatment)
   }
 
-  return [...withoutNatural, treatment]
+  const next = [...withoutNatural, treatment]
+  return CHEMICAL_TREATMENTS.filter((value) => value !== "natural" && next.includes(value))
 }
 
 function hasProfileFieldValue(value: ProfileFieldValue): boolean {
@@ -1178,7 +1180,7 @@ export default function ProfilePage() {
                       >
                         <QuizEditorField
                           title="Chemische Behandlungen"
-                          text="Was dein Haar in der Vergangenheit chemisch mitgemacht hat."
+                          text="Was in deinen Längen noch vorhanden ist; Pflege, Bondbuilder und normales Hitzestyling zählen hier nicht."
                         >
                           <div className="flex flex-wrap gap-2">
                             {QUIZ_CHEMICAL_TREATMENT_OPTIONS.map((option) => {

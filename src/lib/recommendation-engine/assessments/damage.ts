@@ -6,7 +6,15 @@ import type {
   NormalizedProfile,
   RepairPriority,
 } from "@/lib/recommendation-engine/types"
+import { getBrushMechanicalStressContribution } from "@/lib/profile/brush-type"
 import { isExplicitNoneArray } from "@/lib/profile/signal-derivations"
+import {
+  getChemicalTreatmentDamageDrivers,
+  getChemicalTreatmentDamageWeight,
+  hasBleachTreatment,
+  hasColorOrBleachTreatment,
+  hasShapeChangingTreatment,
+} from "@/lib/profile/chemical-treatment"
 import { scoreToDamageLevel } from "@/lib/recommendation-engine/utils/levels"
 
 function deriveStructuralConcernContribution(profile: NormalizedProfile): {
@@ -74,8 +82,23 @@ function deriveBondBuilderPriority(
   profile: NormalizedProfile,
   structuralLevel: DamageLevel,
 ): BondBuilderPriority {
-  const hasBleach = profile.chemicalTreatment.includes("bleached")
+  const hasBleach = hasBleachTreatment(profile.chemicalTreatment)
+  const hasShapeChangingStress = hasShapeChangingTreatment(profile.chemicalTreatment)
   const hasSnapPattern = profile.proteinMoistureBalance === "snaps"
+  const hasRepairGoal =
+    profile.goals.includes("anti_breakage") ||
+    profile.goals.includes("strengthen") ||
+    profile.goals.includes("healthier_hair")
+  const hasShapeDamageContext =
+    profile.cuticleCondition === "rough" ||
+    profile.concerns.includes("breakage") ||
+    profile.concerns.includes("hair_damage") ||
+    hasSnapPattern ||
+    profile.proteinMoistureBalance === "stretches_stays" ||
+    profile.heatStyling === "daily" ||
+    profile.heatStyling === "several_weekly" ||
+    hasRepairGoal ||
+    hasColorOrBleachTreatment(profile.chemicalTreatment)
 
   if (
     structuralLevel === "severe" ||
@@ -85,7 +108,12 @@ function deriveBondBuilderPriority(
     return "recommend"
   }
 
-  if (hasBleach || hasSnapPattern || structuralLevel === "high") {
+  if (
+    hasBleach ||
+    hasSnapPattern ||
+    structuralLevel === "high" ||
+    (hasShapeChangingStress && hasShapeDamageContext && structuralLevel === "moderate")
+  ) {
     return "consider"
   }
 
@@ -133,13 +161,8 @@ export function buildDamageAssessment(profile: NormalizedProfile): DamageAssessm
       missingInputs.push("protein_moisture_balance")
   }
 
-  if (profile.chemicalTreatment.includes("bleached")) {
-    structuralScore += 4
-    activeDamageDrivers.push("bleached_hair")
-  } else if (profile.chemicalTreatment.includes("colored")) {
-    structuralScore += 2
-    activeDamageDrivers.push("colored_hair")
-  }
+  structuralScore += getChemicalTreatmentDamageWeight(profile.chemicalTreatment)
+  activeDamageDrivers.push(...getChemicalTreatmentDamageDrivers(profile.chemicalTreatment))
 
   const structuralConcernContribution = deriveStructuralConcernContribution(profile)
   structuralScore += structuralConcernContribution.score
@@ -185,10 +208,9 @@ export function buildDamageAssessment(profile: NormalizedProfile): DamageAssessm
     activeProtectiveFactors.push("gentle_towel_technique")
   }
 
-  if (profile.brushType === "paddle" || profile.brushType === "round") {
-    mechanicalScore += 1
-    activeDamageDrivers.push("high_stress_brush")
-  }
+  const brushMechanicalStress = getBrushMechanicalStressContribution(profile.brushType)
+  mechanicalScore += brushMechanicalStress.score
+  activeDamageDrivers.push(...brushMechanicalStress.drivers)
 
   if (isExplicitNoneArray(profile.nightProtection)) {
     mechanicalScore += 1

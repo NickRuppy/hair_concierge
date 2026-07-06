@@ -175,6 +175,53 @@ test("low-damage fixture yields low repair need with protective factors", () => 
   assert.ok(damage.activeProtectiveFactors.includes("night_protection_present"))
 })
 
+test("length tip accessory counts as present night protection", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      night_protection: ["length_tip_accessory"],
+    },
+    [],
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+  const damage = buildDamageAssessment(normalized)
+
+  assert.ok(damage.activeProtectiveFactors.includes("night_protection_present"))
+  assert.ok(!damage.activeDamageDrivers.includes("missing_night_protection"))
+})
+
+test("explicit empty night protection is treated as lack of protection", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      night_protection: [],
+    },
+    [],
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+  const damage = buildDamageAssessment(normalized)
+
+  assert.ok(damage.activeDamageDrivers.includes("missing_night_protection"))
+  assert.ok(!damage.activeProtectiveFactors.includes("night_protection_present"))
+})
+
+test("legacy tight hairstyles night protection normalizes to explicit lack of protection", () => {
+  const adapted = adaptRecommendationInputFromPersistence(
+    {
+      ...LOW_DAMAGE_PROFILE,
+      night_protection: ["tight_hairstyles"],
+    } as never,
+    [],
+  )
+  const normalized = normalizeRecommendationInput(adapted.input)
+  const damage = buildDamageAssessment(normalized)
+
+  assert.deepEqual(adapted.input.profile.night_protection, [])
+  assert.deepEqual(normalized.nightProtection, [])
+  assert.ok(damage.activeDamageDrivers.includes("missing_night_protection"))
+  assert.ok(!damage.activeProtectiveFactors.includes("night_protection_present"))
+})
+
 test("unknown night protection is not treated like explicit lack of protection", () => {
   const adapted = adaptRecommendationInputFromPersistence(
     {
@@ -204,6 +251,62 @@ test("low-damage fixture keeps care needs conservative", () => {
   assert.equal(careNeeds.volumeDirection, "neutral")
 })
 
+test("straight natural texture plus perm supports explicit curl definition goal only", () => {
+  const permedDefinition = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        hair_texture: "straight",
+        chemical_treatment: ["permed"],
+        goals: ["curl_definition"],
+      },
+      [],
+    ).input,
+  )
+  const permedDamage = buildDamageAssessment(permedDefinition)
+  const permedCareNeeds = buildCareNeedAssessment(permedDefinition, permedDamage)
+
+  assert.equal(permedCareNeeds.definitionSupportNeed, "moderate")
+  assert.equal(permedCareNeeds.detanglingNeed, "none")
+
+  const straightenedDefinition = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        hair_texture: "straight",
+        chemical_treatment: ["chemically_straightened"],
+        goals: ["curl_definition"],
+      },
+      [],
+    ).input,
+  )
+  const straightenedDamage = buildDamageAssessment(straightenedDefinition)
+  const straightenedCareNeeds = buildCareNeedAssessment(straightenedDefinition, straightenedDamage)
+
+  assert.equal(straightenedCareNeeds.definitionSupportNeed, "none")
+})
+
+test("perm alone creates mild maintenance needs without curl definition", () => {
+  const normalized = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        hair_texture: "straight",
+        chemical_treatment: ["permed"],
+        goals: [],
+      },
+      [],
+    ).input,
+  )
+  const damage = buildDamageAssessment(normalized)
+  const careNeeds = buildCareNeedAssessment(normalized, damage)
+
+  assert.equal(careNeeds.hydrationNeed, "low")
+  assert.equal(careNeeds.smoothingNeed, "low")
+  assert.equal(careNeeds.detanglingNeed, "none")
+  assert.equal(careNeeds.definitionSupportNeed, "none")
+})
+
 test("severe-damage fixture yields severe structural load and bond builder recommendation", () => {
   const adapted = adaptRecommendationInputFromPersistence(
     SEVERE_DAMAGE_PROFILE,
@@ -223,6 +326,57 @@ test("severe-damage fixture yields severe structural load and bond builder recom
   assert.ok(damage.activeDamageDrivers.includes("bleached_hair"))
   assert.ok(damage.activeDamageDrivers.includes("missing_heat_protection"))
   assert.ok(damage.activeDamageDrivers.includes("towel_rubbing"))
+})
+
+test("chemical treatments contribute capped structural damage with accumulating drivers", () => {
+  const normalized = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        chemical_treatment: ["colored", "permed"],
+      },
+      [],
+    ).input,
+  )
+  const damage = buildDamageAssessment(normalized)
+
+  assert.equal(damage.structuralLevel, "moderate")
+  assert.ok(damage.activeDamageDrivers.includes("colored_hair"))
+  assert.ok(damage.activeDamageDrivers.includes("permed_hair"))
+})
+
+test("chemical straightening alone is elevated stress without forcing bondbuilder recommendation", () => {
+  const normalized = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        chemical_treatment: ["chemically_straightened"],
+      },
+      [],
+    ).input,
+  )
+  const damage = buildDamageAssessment(normalized)
+
+  assert.equal(damage.structuralLevel, "moderate")
+  assert.equal(damage.bondBuilderPriority, "none")
+  assert.ok(damage.activeDamageDrivers.includes("chemically_straightened_hair"))
+})
+
+test("bleach caps chemical structural stress at the strongest tier", () => {
+  const normalized = normalizeRecommendationInput(
+    adaptRecommendationInputFromPersistence(
+      {
+        ...LOW_DAMAGE_PROFILE,
+        chemical_treatment: ["bleached", "chemically_straightened"],
+      },
+      [],
+    ).input,
+  )
+  const damage = buildDamageAssessment(normalized)
+
+  assert.equal(damage.structuralLevel, "high")
+  assert.ok(damage.activeDamageDrivers.includes("bleached_hair"))
+  assert.ok(damage.activeDamageDrivers.includes("chemically_straightened_hair"))
 })
 
 test("severe-damage fixture drives high care needs and heat protection urgency", () => {

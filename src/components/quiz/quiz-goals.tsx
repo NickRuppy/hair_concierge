@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { QuizProgressBar } from "./quiz-progress-bar"
-import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
+import { getQuizQuestionNumber, QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 import { useQuizStore } from "@/lib/quiz/store"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { cn } from "@/lib/utils"
@@ -17,14 +17,13 @@ function toggleGoal(current: string[], goal: string): string[] {
   if (current.includes(goal)) {
     return current.filter((g) => g !== goal)
   }
-  if (current.length >= MAX_GOALS) {
-    return current
-  }
-  let next = [...current]
+  let next = current
   if (goal === "volume") next = next.filter((g) => g !== "less_volume")
   if (goal === "less_volume") next = next.filter((g) => g !== "volume")
-  next.push(goal)
-  return next
+  if (next.length >= MAX_GOALS) {
+    return current
+  }
+  return [...next, goal]
 }
 
 export function QuizGoals() {
@@ -54,6 +53,7 @@ export function QuizGoals() {
   }, [selectedGoals, goNext])
 
   const canContinue = selectedGoals.length > 0
+  const questionNumber = getQuizQuestionNumber(12) ?? QUIZ_TOTAL_QUESTIONS
 
   return (
     <div className="flex flex-col" key="quiz-goals">
@@ -66,10 +66,10 @@ export function QuizGoals() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
+          <QuizProgressBar current={questionNumber} total={QUIZ_TOTAL_QUESTIONS} />
         </div>
         <span className="text-sm text-[var(--text-caption)] tabular-nums">
-          {QUIZ_TOTAL_QUESTIONS}/{QUIZ_TOTAL_QUESTIONS}
+          {questionNumber}/{QUIZ_TOTAL_QUESTIONS}
         </span>
       </div>
 
@@ -96,8 +96,9 @@ export function QuizGoals() {
               type="button"
               onClick={() => handleToggle(goal)}
               disabled={isDisabled}
+              aria-pressed={isSelected}
               className={cn(
-                "animate-fade-in-up flex h-full min-h-[104px] flex-col rounded-2xl border px-4 py-4 text-left transition-all duration-200",
+                "relative animate-fade-in-up flex h-full min-h-[104px] items-center rounded-2xl border px-4 py-5 pr-12 text-left transition-all duration-200",
                 isSelected
                   ? "border-[var(--brand-plum)] bg-[rgba(var(--brand-plum-rgb),0.08)] shadow-[0_14px_36px_-28px_rgba(var(--brand-plum-rgb),0.45)]"
                   : "border-border bg-card hover:border-primary/30 hover:bg-muted/40",
@@ -105,38 +106,27 @@ export function QuizGoals() {
               )}
               style={{ animationDelay: `${i * 40}ms` }}
             >
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <span
-                  className={cn(
-                    "rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors",
-                    isSelected
-                      ? "bg-white/85 text-[var(--brand-plum)]"
-                      : "bg-muted text-[var(--text-caption)]",
-                  )}
-                >
-                  {isSelected ? "Ausgewählt" : "Ziel"}
-                </span>
-                <div
-                  className={cn(
-                    "flex h-6 w-6 items-center justify-center rounded-full border transition-colors",
-                    isSelected
-                      ? "border-[var(--brand-plum)] bg-[var(--brand-plum)] text-primary-foreground"
-                      : "border-border bg-white text-transparent",
-                  )}
-                >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path
-                      d="M2.5 6L5 8.5L9.5 4"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-              </div>
               <span className="text-[15px] font-semibold leading-snug text-foreground sm:text-base">
                 {getAvailableGoalLabel(goal, hairTexture)}
+              </span>
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "absolute right-4 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border transition-colors",
+                  isSelected
+                    ? "border-[var(--brand-plum)] bg-[var(--brand-plum)] text-primary-foreground"
+                    : "border-border bg-white text-transparent",
+                )}
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path
+                    d="M2.5 6L5 8.5L9.5 4"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </span>
             </button>
           )

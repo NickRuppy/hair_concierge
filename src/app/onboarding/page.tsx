@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation"
+import { permanentRedirect, redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow"
@@ -6,15 +6,18 @@ import { linkQuizToProfile } from "@/lib/quiz/link-to-profile"
 import { getOnboardingEditScope, type OnboardingStep } from "@/lib/onboarding/store"
 import { resolveIntakeState } from "@/lib/auth/intake-state"
 import { isProductIntakeEnabled } from "@/lib/product-intake/config"
+import { PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
+
+type OnboardingSearchParams = {
+  lead?: string | string[]
+  step?: string | string[]
+  returnTo?: string | string[]
+  category?: string | string[]
+  editMode?: string | string[]
+}
 
 interface OnboardingPageProps {
-  searchParams: Promise<{
-    lead?: string | string[]
-    step?: string | string[]
-    returnTo?: string | string[]
-    category?: string | string[]
-    editMode?: string | string[]
-  }>
+  searchParams: Promise<OnboardingSearchParams>
 }
 
 const VALID_ONBOARDING_STEPS = new Set<OnboardingStep>([
@@ -33,6 +36,53 @@ const VALID_ONBOARDING_STEPS = new Set<OnboardingStep>([
   "night_protection",
   "celebration",
 ])
+const VALID_PRODUCT_CATEGORIES = new Set(PRODUCT_CATEGORY_ORDER)
+const PRODUCT_CATEGORY_ALIASES: Record<string, string> = {
+  bond_builder: "bondbuilder",
+  hair_oil: "oil",
+  scalp_peeling: "peeling",
+}
+
+function firstSearchParamValue(value: string | string[] | undefined): string | null {
+  return (Array.isArray(value) ? value[0] : value) ?? null
+}
+
+function canonicalizeProductCategory(value: string | string[] | undefined): string | null {
+  const candidate = firstSearchParamValue(value)?.trim()
+  if (!candidate) {
+    return null
+  }
+  return PRODUCT_CATEGORY_ALIASES[candidate] ?? candidate
+}
+
+function appendSearchParam(
+  params: URLSearchParams,
+  key: keyof OnboardingSearchParams,
+  value: string | string[] | undefined,
+) {
+  if (Array.isArray(value)) {
+    value.forEach((item) => params.append(key, item))
+    return
+  }
+
+  if (value) {
+    params.set(key, value)
+  }
+}
+
+function buildCanonicalOnboardingPath(
+  searchParams: OnboardingSearchParams,
+  canonicalCategory: string,
+) {
+  const params = new URLSearchParams()
+  appendSearchParam(params, "lead", searchParams.lead)
+  appendSearchParam(params, "step", searchParams.step)
+  appendSearchParam(params, "returnTo", searchParams.returnTo)
+  params.set("category", canonicalCategory)
+  appendSearchParam(params, "editMode", searchParams.editMode)
+
+  return `/onboarding?${params.toString()}`
+}
 
 function resolveOnboardingStep(value: string | string[] | undefined): OnboardingStep | null {
   const candidate = Array.isArray(value) ? value[0] : value
@@ -51,11 +101,11 @@ function resolveReturnTo(value: string | string[] | undefined): string | null {
 }
 
 function resolveDrilldownCategory(value: string | string[] | undefined): string | null {
-  const candidate = Array.isArray(value) ? value[0] : value
-  if (!candidate?.trim()) {
+  const normalizedCandidate = canonicalizeProductCategory(value)
+  if (!normalizedCandidate) {
     return null
   }
-  return candidate.trim()
+  return VALID_PRODUCT_CATEGORIES.has(normalizedCandidate) ? normalizedCandidate : null
 }
 
 function resolveSingleStepEdit(value: string | string[] | undefined) {
@@ -76,6 +126,15 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
   const singleStepEdit = resolveSingleStepEdit(resolvedSearchParams.editMode)
   const editScope =
     returnTo && forcedStep && !singleStepEdit ? getOnboardingEditScope(forcedStep) : null
+  const rawDrilldownCategory = firstSearchParamValue(resolvedSearchParams.category)?.trim()
+
+  if (
+    rawDrilldownCategory &&
+    initialDrilldownCategory &&
+    rawDrilldownCategory !== initialDrilldownCategory
+  ) {
+    permanentRedirect(buildCanonicalOnboardingPath(resolvedSearchParams, initialDrilldownCategory))
+  }
 
   const {
     data: { user },

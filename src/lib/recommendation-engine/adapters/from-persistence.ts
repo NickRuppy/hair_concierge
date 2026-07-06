@@ -9,6 +9,7 @@ import {
 } from "@/lib/hair-profile/derived"
 import {
   chooseHigherProductFrequency,
+  normalizeNightProtectionValues,
   normalizeProductFrequency,
   type ProductFrequency,
   type ProductFrequencyInput,
@@ -124,7 +125,7 @@ function buildRawHairProfileInput(
     towel_technique: profile.towel_technique,
     drying_method: profile.drying_method,
     brush_type: profile.brush_type,
-    night_protection: profile.night_protection ?? null,
+    night_protection: normalizeNightProtectionValues(profile.night_protection),
     uses_heat_protection: profile.uses_heat_protection ?? false,
   }
 }

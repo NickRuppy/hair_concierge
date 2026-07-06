@@ -6,6 +6,7 @@ import type { Product, HairProfile } from "@/lib/types"
 import { ProductImage } from "./product-image"
 import { Badge } from "@/components/ui/badge"
 import { getPersonalizationSentence } from "@/lib/product-utils"
+import { getProductIdentityDisplayParts } from "@/lib/product-lines/display"
 
 interface ProductPopoverProps {
   product: Product
@@ -101,6 +102,7 @@ export function ProductPopover({
   }, [visible])
 
   const personalization = getPersonalizationSentence(product, hairProfile)
+  const [displayBrand, displayLine] = getProductIdentityDisplayParts(product)
 
   const popoverContent = visible && (
     <div
@@ -119,9 +121,14 @@ export function ProductPopover({
         <span className="flex items-start gap-3">
           <ProductImage imageUrl={product.image_url} category={product.category} size="sm" />
           <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-            {product.brand && (
+            {displayBrand && (
               <span className="block text-[11px] font-medium text-muted-foreground">
-                {product.brand}
+                {displayBrand}
+              </span>
+            )}
+            {displayLine && (
+              <span className="block truncate text-[11px] font-medium text-muted-foreground">
+                {displayLine}
               </span>
             )}
             <span className="block text-sm font-semibold leading-tight">{product.name}</span>

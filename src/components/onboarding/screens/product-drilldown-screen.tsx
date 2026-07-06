@@ -30,10 +30,14 @@ const PRODUCT_FREQUENCY_SLIDER_STOPS = PRODUCT_FREQUENCY_OPTIONS.map((option) =>
     .replace("5-6x/Woche", "5-6x/W")
     .replace("Täglich", "tgl."),
 }))
+import { InfoTip } from "@/components/ui/info-tip"
+import { INFO_TIPS, type InfoTipId } from "@/lib/help/info-tips"
 
 interface ProductDrilldownScreenProps {
   category: string
   categoryLabel: string
+  categoryTitle?: string
+  infoTipId?: InfoTipId
   subtitle?: string
   intakeMethod: OnboardingProductIntakeMethod | null
   productName: string
@@ -87,6 +91,8 @@ function hasRequiredFields(params: {
 export function ProductDrilldownScreen({
   category,
   categoryLabel,
+  categoryTitle,
+  infoTipId,
   subtitle,
   intakeMethod,
   productName,
@@ -163,6 +169,7 @@ export function ProductDrilldownScreen({
       productLineId: selectedOption?.product_line_id ?? null,
     })
   }
+  const tip = infoTipId ? INFO_TIPS[infoTipId] : null
 
   return (
     <div>
@@ -174,9 +181,21 @@ export function ProductDrilldownScreen({
         <ArrowLeft className="h-5 w-5" />
       </button>
 
-      <h1 className="animate-fade-in-up font-header text-3xl leading-tight text-foreground mb-2">
-        Dein {categoryLabel}
-      </h1>
+      <div className="animate-fade-in-up mb-2 flex items-start justify-between gap-3">
+        <h1 className="min-w-0 flex-1 font-header text-3xl leading-tight text-foreground">
+          {categoryTitle ?? `Dein ${categoryLabel}`}
+        </h1>
+        {tip && (
+          <div className="mt-1 flex shrink-0 justify-end">
+            <InfoTip
+              title={tip.title}
+              body={tip.body}
+              label={`Info zu ${categoryLabel}`}
+              buttonClassName="h-7 w-7"
+            />
+          </div>
+        )}
+      </div>
 
       <p
         className="animate-fade-in-up text-sm text-[var(--text-sub)] mb-6"

@@ -46,12 +46,15 @@ python3 scripts/convert_sources.py
 Generates:
 - `data/markdown/products/<slug>/` — legacy markdown product files per thickness x concern cell
 - `data/products-from-excel/<slug>.json` — product catalog entries
+- For Shampoo, `data/products-from-excel/shampoo.json` includes explicit `shampoo_bucket_pairs` so Shampoo eligibility is exact and does not fall back from generic concern metadata.
 
-### 3. Ingest product-list chunks (content_chunks)
+### 3. Legacy: product-list chunks (retired for production chat)
 ```bash
-npx tsx scripts/ingest-product-chunks.ts
+ALLOW_LEGACY_PRODUCT_LIST_CHUNKS=1 npx tsx scripts/ingest-product-chunks.ts
 ```
-Reads `data/products-from-excel/*.json`, builds grouped `category x thickness x concern` chunks, embeds them, and stores them in `content_chunks` with `source_type = 'product_list'`.
+This legacy rollback/regeneration path reads `data/products-from-excel/*.json`, builds grouped `category x thickness x concern` chunks, embeds them, and stores them in `content_chunks` with `source_type = 'product_list'`.
+
+Current AgentV2 production chat does not use `product_list` content chunks for product recommendations. Do not run this step during normal product catalog updates. The general markdown ingestion script also requires `ALLOW_LEGACY_PRODUCT_LIST_CHUNKS=1` before it will ingest `source_type = 'product_list'` markdown.
 
 ### 4. Ingest into product catalog (products table)
 ```bash
@@ -60,8 +63,9 @@ npx tsx scripts/ingest-products.ts
 Reads all JSON from `data/products-from-excel/*.json`. Upserts by product name.
 
 ### 5. Verify
-- `content_chunks`: grouped product-list rows with `source_type = 'product_list'`
 - `products`: products with correct `suitable_thicknesses` and `suitable_concerns`
+- For Shampoo categories, source rows must provide exact `shampoo_bucket_pairs` (`thickness + shampoo_bucket`). `scripts/convert_sources.py` writes these pairs for Shampoo matrices; Shampoo eligibility is no longer derived from `suitable_thicknesses + suitable_concerns`.
+- `content_chunks` with `source_type = 'product_list'` are legacy only and should not be present as a current production recommendation source.
 
 ## Architecture Notes
 
@@ -70,10 +74,10 @@ Reads all JSON from `data/products-from-excel/*.json`. Upserts by product name.
 - Each chunk contains descriptive German prose plus the matching product names for that category/thickness/concern combination.
 - Metadata in JSONB column includes `category`, `thickness`, `concern`, `product_count`, `product_names`, and `language`.
 
-### Retrieval and product-list chunks
-- `src/lib/product-matching/product-list-chunks.ts` builds grouped product-list chunks from product catalog rows for ingestion into `content_chunks`.
-- `scripts/ingest-product-chunks.ts` writes current product-list chunks with category, thickness, concern, and product-name metadata.
-- `scripts/eval-retrieval.ts` evaluates dense and hybrid retrieval metrics against the Supabase match RPCs and the retrieval gold set.
+### Legacy retrieval and product-list chunks
+- `src/lib/product-matching/product-list-chunks.ts` builds grouped legacy product-list chunks from product catalog rows for guarded ingestion into `content_chunks`.
+- `scripts/ingest-product-chunks.ts` is guarded by `ALLOW_LEGACY_PRODUCT_LIST_CHUNKS=1` and should only be used for intentional legacy rollback/regeneration.
+- `scripts/eval-retrieval.ts` evaluates dense and hybrid retrieval metrics against the Supabase match RPCs and the retrieval gold set. It is not the current AgentV2 product recommendation path.
 
 ### Thickness mapping (Excel -> DB)
 | Excel Label | DB Value | Thickness enum |
@@ -93,8 +97,8 @@ Reads all JSON from `data/products-from-excel/*.json`. Upserts by product name.
 
 ### Key files
 - `scripts/convert_sources.py` — Step 4: Excel conversion
-- `scripts/ingest-product-chunks.ts` — current product-list chunk ingestion into `content_chunks`
+- `scripts/ingest-product-chunks.ts` — guarded legacy product-list chunk ingestion into `content_chunks`
 - `scripts/ingest-products.ts` — products -> `products` table
-- `src/lib/product-matching/product-list-chunks.ts` — builds product-list chunks for ingestion
+- `src/lib/product-matching/product-list-chunks.ts` — builds legacy product-list chunks for guarded ingestion
 - `scripts/eval-retrieval.ts` — evaluates retrieval metrics against Supabase RPCs
-- `scripts/ingest-markdown.ts` — general/legacy markdown ingestion, not the current product-list chunk workflow
+- `scripts/ingest-markdown.ts` — general/legacy markdown ingestion; `product_list` markdown is guarded by `ALLOW_LEGACY_PRODUCT_LIST_CHUNKS=1`

@@ -103,7 +103,7 @@ test.describe("Routine planner", () => {
       createProfile({
         hair_texture: "straight",
         hair_length: "very_short",
-        night_protection: ["tight_hairstyles"],
+        towel_technique: "rough_rubbing",
         current_routine_products: ["shampoo", "conditioner"],
       }),
       "Welche Routine passt zu mir?",
@@ -131,6 +131,166 @@ test.describe("Routine planner", () => {
     expect(plan.sections.flatMap((section) => section.slots.map((slot) => slot.id))).toContain(
       "maintenance-brush-tools",
     )
+  })
+
+  test("routine plan adds night protection guardrail for explicit no protection and breakage or tangling", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "wavy",
+        hair_length: "long",
+        concerns: ["breakage", "tangling"],
+        goals: ["less_frizz"],
+        night_protection: [],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir?",
+    )
+
+    const slot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((candidate) => candidate.id === "maintenance-night-protection")
+
+    expect(slot).toBeDefined()
+    expect(slot?.label).toBe("Nachtschutz")
+    expect(slot?.action).toBe("add")
+    expect(slot?.kind).toBe("instruction")
+    expect(slot?.topic_ids).toContain("night_protection")
+    expect(slot?.product_linkable).toBe(false)
+    expect(slot?.rationale.join(" ")).toMatch(/HairHOMIE|Längen-\/Spitzenschutz/i)
+  })
+
+  test("routine plan adds night protection for explicit no protection and long hair alone", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "straight",
+        hair_length: "long",
+        concerns: [],
+        goals: [],
+        night_protection: [],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir?",
+    )
+
+    const slot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((candidate) => candidate.id === "maintenance-night-protection")
+
+    expect(slot).toBeDefined()
+    expect(slot?.action).toBe("add")
+    expect(slot?.topic_ids).toEqual(["night_protection"])
+  })
+
+  test("routine plan adjusts existing night protection for explicit night-protection requests", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "wavy",
+        hair_length: "medium",
+        concerns: ["dryness"],
+        night_protection: ["silk_satin_pillow"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Sollte ich meinen Nachtschutz nachts ändern?",
+    )
+
+    const slot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((candidate) => candidate.id === "maintenance-night-protection")
+    const projection = projectRoutinePlanForLayer(plan, "deep_dive", {
+      requestedTopicId: "night_protection",
+    })
+
+    expect(slot).toBeDefined()
+    expect(slot?.label).toBe("Nachtschutz prüfen/anpassen")
+    expect(slot?.action).toBe("adjust")
+    expect(slot?.topic_ids).toEqual(["night_protection"])
+    expect(slot?.product_linkable).toBe(false)
+    expect(slot?.product_query).toBeNull()
+    expect([...slot!.rationale, ...slot!.caveats].join(" ")).toMatch(
+      /bereits.*Nachtschutz|ander.*zusätzlich|nicht.*standardmäßig.*stapeln/i,
+    )
+    expect(projection.visible_slot_ids).toEqual(["maintenance-night-protection"])
+    expect(projection.requested_topic_id).toBe("night_protection")
+    expect(plan.layer_projections?.deep_dive.visible_slot_ids).toEqual([
+      "maintenance-night-protection",
+    ])
+    expect(plan.layer_projections?.deep_dive.requested_topic_id).toBe("night_protection")
+  })
+
+  test("routine plan does not store night protection deep dive when explicit request has legacy missing input", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: null,
+        hair_length: null,
+        concerns: [],
+        goals: [],
+        night_protection: null,
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Nachtschutz?",
+    )
+
+    const storedDeepDive = plan.layer_projections?.deep_dive
+    const slotIds = plan.sections.flatMap((section) => section.slots.map((slot) => slot.id))
+
+    expect(slotIds).not.toContain("maintenance-night-protection")
+    expect(storedDeepDive?.visible_slot_ids).not.toContain("maintenance-night-protection")
+    expect(storedDeepDive?.requested_topic_id).not.toBe("night_protection")
+  })
+
+  test("routine plan proactively adjusts existing night protection for long hair with matching concerns", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "wavy",
+        hair_length: "long",
+        concerns: ["breakage", "tangling"],
+        night_protection: ["length_tip_accessory"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir?",
+    )
+
+    const slot = plan.sections
+      .flatMap((section) => section.slots)
+      .find((candidate) => candidate.id === "maintenance-night-protection")
+
+    expect(slot).toBeDefined()
+    expect(slot?.label).toBe("Nachtschutz prüfen/anpassen")
+    expect(slot?.action).toBe("adjust")
+    expect(slot?.topic_ids).toEqual(["night_protection"])
+    expect(slot?.rationale.join(" ")).toMatch(/Längen-\/Spitzenschutz|HairHOMIE/i)
+  })
+
+  test("routine plan does not adjust existing night protection without explicit ask or strong fit", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "wavy",
+        hair_length: "medium",
+        concerns: ["dryness"],
+        night_protection: ["silk_satin_pillow"],
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir?",
+    )
+
+    const slotIds = plan.sections.flatMap((section) => section.slots.map((slot) => slot.id))
+    expect(slotIds).not.toContain("maintenance-night-protection")
+  })
+
+  test("routine plan treats null night protection as legacy missing input, not explicit no protection", () => {
+    const plan = buildRoutinePlan(
+      createProfile({
+        hair_texture: "wavy",
+        hair_length: "long",
+        concerns: ["breakage"],
+        night_protection: null,
+        current_routine_products: ["shampoo", "conditioner"],
+      }),
+      "Welche Routine passt zu mir?",
+    )
+
+    const slotIds = plan.sections.flatMap((section) => section.slots.map((slot) => slot.id))
+    expect(slotIds).not.toContain("maintenance-night-protection")
   })
 
   test("very short profile can still receive need-driven CWC guidance", () => {
@@ -678,7 +838,7 @@ test.describe("Routine planner", () => {
         density: "medium",
         concerns: [],
         cuticle_condition: "smooth",
-        brush_type: "paddle",
+        brush_type: ["paddle"],
         current_routine_products: ["shampoo", "conditioner"],
       }),
       "Welche Routine passt zu meinen Locken, wenn sie sich an Waschtagen schnell verhaken?",
@@ -827,7 +987,7 @@ test.describe("Routine planner", () => {
         concerns: ["dryness"],
         cuticle_condition: "rough",
         scalp_condition: "dry_flakes",
-        brush_type: "paddle",
+        brush_type: ["paddle"],
         current_routine_products: ["shampoo", "conditioner"],
       }),
       "Welche Routine passt zu meinen Locken?",
@@ -1167,6 +1327,26 @@ test.describe("Routine planner", () => {
       ).toBe(true)
     })
 
+    test("bleached plus colored counts as severe bond-builder damage context", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          chemical_treatment: ["bleached", "colored"],
+          cuticle_condition: "smooth",
+          concerns: [],
+          protein_moisture_balance: "stretches_bounces",
+        }),
+        "Welche Routine passt zu meinem blondierten und gefärbten Haar?",
+      )
+
+      const bondSlot = plan.sections
+        .flatMap((section) => section.slots)
+        .find((slot) => slot.id === "occasional-bond-builder")
+
+      expect(
+        bondSlot?.rationale.some((line) => line.includes("Kombination aus K18 und Olaplex")),
+      ).toBe(true)
+    })
+
     test("moderate + chemical treatment leans Olaplex", () => {
       const plan = buildRoutinePlan(
         createProfile({
@@ -1323,7 +1503,7 @@ test.describe("Routine planner", () => {
     test("rough brushing proactively adds a brush tools slot", () => {
       const plan = buildRoutinePlan(
         createProfile({
-          brush_type: "paddle",
+          brush_type: ["paddle"],
         }),
         "Welche Routine passt zu mir?",
       )
@@ -1427,6 +1607,25 @@ test.describe("Routine planner", () => {
           "occasional-bond-builder",
         ]),
       )
+    })
+
+    test("bleached plus colored and hair damage still select care-product-first", () => {
+      const plan = buildRoutinePlan(
+        createProfile({
+          concerns: ["hair_damage"],
+          cuticle_condition: "smooth",
+          chemical_treatment: ["bleached", "colored"],
+          protein_moisture_balance: "stretches_bounces",
+          current_routine_products: ["shampoo", "conditioner"],
+        }),
+        "Meine Haare sind blondiert, gefärbt und fühlen sich geschädigt an.",
+      )
+
+      expect(plan.priority_lever).toMatchObject({
+        id: "care-product-first",
+        source: "care_risk",
+        slot_id: "base-conditioner",
+      })
     })
 
     test("severe active damage still selects care-product-first when reset signal is weak oil usage", () => {

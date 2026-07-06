@@ -1,7 +1,8 @@
 import { INVENTORY_CATEGORIES } from "@/lib/recommendation-engine/contracts"
 import { normalizeRoutineUsageIdentityCamel } from "@/lib/product-usage/routine-identity"
+import { normalizeBrushTypeValues } from "@/lib/profile/brush-type"
 import { getVisibleProductUsageItems } from "@/lib/product-usage/shampoo-fallback"
-import { normalizeProductFrequency } from "@/lib/vocabulary"
+import { normalizeNightProtectionValues, normalizeProductFrequency } from "@/lib/vocabulary"
 import type {
   InventoryCategory,
   NormalizedProfile,
@@ -61,8 +62,8 @@ export function normalizeRecommendationInput(input: RawRecommendationInput): Nor
     towelMaterial: profile.towel_material,
     towelTechnique: profile.towel_technique,
     dryingMethod: profile.drying_method,
-    brushType: profile.brush_type,
-    nightProtection: profile.night_protection ?? null,
+    brushType: normalizeBrushTypeValues(profile.brush_type),
+    nightProtection: normalizeNightProtectionValues(profile.night_protection),
     usesHeatProtection: profile.uses_heat_protection ?? false,
     routineInventory: normalizeRoutineInventory(input.routineInventory),
   }

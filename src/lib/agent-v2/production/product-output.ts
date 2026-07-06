@@ -41,6 +41,28 @@ export function deriveMatchedProducts(params: {
   return params.selectedProductResults.at(-1)?.products ?? []
 }
 
+export function deriveSelectedProductsResultForAnswer(params: {
+  answer: AgentV2TerminalAnswer
+  selectedProductResults: SelectProductsToolResult[]
+}): SelectProductsToolResult | null {
+  const surfacedProductIds = new Set(collectSurfacedProductIds(params.answer))
+
+  if (surfacedProductIds.size > 0) {
+    return (
+      params.selectedProductResults.find((result) =>
+        result.products.some((product) => surfacedProductIds.has(product.id)),
+      ) ??
+      params.selectedProductResults.find((result) =>
+        result.projection.products.some((product) => surfacedProductIds.has(product.product_id)),
+      ) ??
+      null
+    )
+  }
+
+  if (params.answer.answer_mode !== "product_recommendation") return null
+  return params.selectedProductResults.at(-1) ?? null
+}
+
 export function deriveEngineArtifacts(selectedProductsResult: SelectProductsToolResult | null): {
   categoryDecision: ChatCategoryDecision | undefined
   engineTrace: RecommendationEngineTrace | undefined

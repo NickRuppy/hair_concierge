@@ -955,6 +955,117 @@ test("AgentV2 production pipeline returns cards, trace, and CareBalance context"
   assert.equal(failedDebugEvent.visible_failure, true)
 })
 
+test("AgentV2 select-products state stays tied to the overlapping tool call result", async () => {
+  const primaryProduct = createProduct("primary")
+  const otherProduct = createProduct("other")
+  const hairProfile = createCompleteHairProfile()
+  const makeSelection = (
+    category: "shampoo" | "conditioner",
+    product: Product & { similarity: number },
+  ): SelectProductsToolResult => ({
+    projection: {
+      category,
+      decision: "recommended",
+      product_response_policy: "recommend",
+      policy_reason: `Explicit ${category} ask.`,
+      profile_basis: [],
+      category_guidance: `${category} guidance.`,
+      products: [
+        {
+          rank: 1,
+          product_id: product.id,
+          name: product.name,
+          brand: product.brand,
+          price_eur: product.price_eur,
+          currency: product.currency,
+          fit_reason: `Passt ${product.id}.`,
+          caveat: null,
+          supported_claims: [],
+          unsupported_requested_signals: [],
+        },
+      ],
+      comparison_facts: null,
+      missing_info: [],
+      unsupported_requested_signals: [],
+    },
+    products: [product],
+    effectiveHairProfile: hairProfile,
+    runtime: buildRecommendationEngineRuntimeForChat({
+      hairProfile,
+      routineItems: [],
+      productCategory: category,
+      message: "Welches Shampoo passt?",
+    }),
+  })
+  const shampooSelection = makeSelection("shampoo", primaryProduct)
+  const conditionerSelection = makeSelection("conditioner", otherProduct)
+  let resolveConditionerObserved: (() => void) | null = null
+  const conditionerObserved = new Promise<void>((resolve) => {
+    resolveConditionerObserved = resolve
+  })
+
+  const result = await runAgentV2ProductionPipeline(
+    {
+      message: "Welches Shampoo passt?",
+      conversationId: "conversation-1",
+      userId: "user-1",
+      requestId: "request-1",
+    },
+    {
+      loadConversationHistory: async () => [],
+      getUserContext: async () => ({
+        profile: hairProfile,
+        routine_inventory: [],
+        relevant_memory: [],
+        derived_signals: [],
+        suggested_overlays: [],
+        missing_profile: [],
+      }),
+      loadUserMemoryContext: async () => ({
+        enabled: true,
+        entries: [],
+        promptContext: null,
+        dislikedProductNames: [],
+      }),
+      loadConversationState: async (): Promise<ConversationState> =>
+        createDefaultConversationState(),
+      client: {
+        responses: {
+          create: async () => ({ output: [] }),
+        },
+      },
+      createSelectProductsTool:
+        (options = {}) =>
+        async (params: SelectProductsToolParams) => {
+          if (params.category === "shampoo") {
+            options.onResult?.(shampooSelection)
+            await conditionerObserved
+            return shampooSelection.projection
+          }
+
+          options.onResult?.(conditionerSelection)
+          resolveConditionerObserved?.()
+          return conditionerSelection.projection
+        },
+      runAgentV2ResponsesTurn: async (params) => {
+        await Promise.all([
+          params.tools.select_products({ category: "shampoo" }),
+          params.tools.select_products({ category: "conditioner" }),
+        ])
+        return createAgentV2Result()
+      },
+    },
+  )
+
+  const nextState = result.conversationStateTransition.next_state as AgentV2ConversationStateV2
+  assert.equal(
+    nextState.agent_v2.prior_selected_product_projections[0]?.products?.[0]?.product_id,
+    "primary",
+  )
+  assert.equal(result.categoryDecision?.category, "shampoo")
+  assert.equal(result.engineTrace?.request_context.requestedCategory, "shampoo")
+})
+
 test("AgentV2 production pipeline passes lookup-sourced exact product hints into product assessment", async () => {
   const hairProfile = createCompleteHairProfile()
   const lookupProduct = createProduct("lookup-shampoo")

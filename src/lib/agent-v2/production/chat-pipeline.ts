@@ -71,6 +71,7 @@ import {
   deriveIntent,
   deriveMatchedProducts,
   deriveProductCategory,
+  deriveSelectedProductsResultForAnswer,
 } from "@/lib/agent-v2/production/product-output"
 import {
   buildRoutineThreadVisibleSteps,
@@ -1544,9 +1545,10 @@ export async function runAgentV2ProductionPipeline(
   const matchedProducts = visibleFailure
     ? []
     : deriveMatchedProducts({ answer, selectedProductResults })
-  const { categoryDecision, engineTrace } = deriveEngineArtifacts(
-    selectedProductResults.at(-1) ?? null,
-  )
+  const selectedProductsResultForAnswer = visibleFailure
+    ? null
+    : deriveSelectedProductsResultForAnswer({ answer, selectedProductResults })
+  const { categoryDecision, engineTrace } = deriveEngineArtifacts(selectedProductsResultForAnswer)
   const exposedCategoryDecision = visibleFailure ? undefined : categoryDecision
   const exposedEngineTrace = visibleFailure ? undefined : engineTrace
   const attachmentMode = matchedProducts.length > 0 ? "cards" : "text_only"

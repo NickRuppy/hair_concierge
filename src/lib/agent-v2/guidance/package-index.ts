@@ -4,6 +4,7 @@ export const AGENT_V2_GUIDANCE_PACKAGE_IDS = [
   "base.product_recommendation.v1",
   "base.routine_building.v1",
   "base.general_advice.v1",
+  "base.goal_concern_levers.v1",
   "base.safety_boundaries.v1",
   "base.tone_and_format.v1",
   "category.shampoo.v1",
@@ -15,6 +16,7 @@ export const AGENT_V2_GUIDANCE_PACKAGE_IDS = [
   "category.deep_cleansing_shampoo.v1",
   "category.dry_shampoo.v1",
   "category.peeling.v1",
+  "topic.night_protection.v1",
 ] as const
 
 export type AgentV2GuidancePackageId = (typeof AGENT_V2_GUIDANCE_PACKAGE_IDS)[number]
@@ -43,6 +45,7 @@ const PACKAGE_ENTRIES: Record<AgentV2GuidancePackageId, AgentV2GuidancePackageEn
   "base.product_recommendation.v1": baseEntry("product-recommendation"),
   "base.routine_building.v1": baseEntry("routine-building"),
   "base.general_advice.v1": baseEntry("general-advice"),
+  "base.goal_concern_levers.v1": baseEntry("goal-concern-levers"),
   "base.safety_boundaries.v1": baseEntry("safety-boundaries"),
   "base.tone_and_format.v1": baseEntry("tone-and-format"),
   "category.shampoo.v1": categoryEntry("shampoo"),
@@ -54,6 +57,7 @@ const PACKAGE_ENTRIES: Record<AgentV2GuidancePackageId, AgentV2GuidancePackageEn
   "category.deep_cleansing_shampoo.v1": categoryEntry("deep-cleansing-shampoo"),
   "category.dry_shampoo.v1": categoryEntry("dry-shampoo"),
   "category.peeling.v1": categoryEntry("peeling"),
+  "topic.night_protection.v1": topicEntry("night-protection"),
 }
 
 export function getAgentV2GuidancePackageEntry(id: string): AgentV2GuidancePackageEntry | null {
@@ -86,10 +90,23 @@ function categoryEntry(slug: string): AgentV2GuidancePackageEntry {
   }
 }
 
+function topicEntry(slug: string): AgentV2GuidancePackageEntry {
+  const id = topicIdFromSlug(slug)
+  return {
+    id,
+    metadataPath: `data/agent-v2/guidance/topics/${slug}.json`,
+    markdownPath: `data/agent-v2/guidance/topics/${slug}.md`,
+  }
+}
+
 function baseIdFromSlug(slug: string): AgentV2GuidancePackageId {
   return `base.${slug.replaceAll("-", "_")}.v1` as AgentV2GuidancePackageId
 }
 
 function categoryIdFromSlug(slug: string): AgentV2GuidancePackageId {
   return `category.${slug.replaceAll("-", "_")}.v1` as AgentV2GuidancePackageId
+}
+
+function topicIdFromSlug(slug: string): AgentV2GuidancePackageId {
+  return `topic.${slug.replaceAll("-", "_")}.v1` as AgentV2GuidancePackageId
 }

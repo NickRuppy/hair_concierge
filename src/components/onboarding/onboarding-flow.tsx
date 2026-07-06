@@ -8,7 +8,11 @@ import { emptyProductDrilldown, useOnboardingStore } from "@/lib/onboarding/stor
 import type { OnboardingEditScope, OnboardingStep } from "@/lib/onboarding/store"
 import { shouldHydrateStoredHeatProtection } from "@/lib/onboarding/heat-protection-hydration"
 import { buildProductUsagePayloads } from "@/lib/onboarding/product-usage-save"
-import { isUnselectedShampooFallbackItem } from "@/lib/product-usage/shampoo-fallback"
+import { normalizeBrushTypeValues } from "@/lib/profile/brush-type"
+import {
+  isUnselectedShampooFallbackItem,
+  SHAMPOO_CATEGORY,
+} from "@/lib/product-usage/shampoo-fallback"
 import { useOnboardingProductIntakeController } from "@/hooks/use-onboarding-product-intake-controller"
 import { OnboardingProgressBar } from "@/components/onboarding/onboarding-progress-bar"
 import { ProductReplacementDialog } from "@/components/onboarding/product-replacement-dialog"
@@ -27,6 +31,7 @@ import {
 import {
   BASIC_PRODUCT_OPTIONS,
   EXTRA_PRODUCT_OPTIONS,
+  PRODUCT_CATEGORY_DRILLDOWN_TITLES,
   PRODUCT_CATEGORY_LABELS,
 } from "@/lib/onboarding/product-options"
 import { normalizeProductFrequency } from "@/lib/vocabulary"
@@ -161,8 +166,9 @@ export function OnboardingFlow({
       } else if (Array.isArray(hairProfile.drying_method) && hairProfile.drying_method.length > 0) {
         store.setDryingMethod(hairProfile.drying_method[0] as DryingMethod)
       }
-      if (hairProfile.brush_type) {
-        store.setBrushType(hairProfile.brush_type as BrushType)
+      const storedBrushTypes = normalizeBrushTypeValues(hairProfile.brush_type)
+      if (storedBrushTypes) {
+        store.setBrushType(storedBrushTypes)
       }
       if (Array.isArray(hairProfile.night_protection)) {
         store.setNightProtection(normalizeNightProtectionValues(hairProfile.night_protection) ?? [])
@@ -184,12 +190,12 @@ export function OnboardingFlow({
     }
 
     // Resume scenario: populate product selections from user_product_usage rows
-    if (productUsage.length > 0) {
-      const basicValues = BASIC_PRODUCT_OPTIONS.map((o) => o.value)
-      const extraValues = EXTRA_PRODUCT_OPTIONS.map((o) => o.value)
-      const basics: string[] = []
-      const extras: string[] = []
+    const basicValues = BASIC_PRODUCT_OPTIONS.map((o) => o.value)
+    const extraValues = EXTRA_PRODUCT_OPTIONS.map((o) => o.value)
+    const basics: string[] = []
+    const extras: string[] = []
 
+    if (productUsage.length > 0) {
       for (const row of productUsage) {
         const cat = row.category as string
         const productName = typeof row.product_name === "string" ? row.product_name : null
@@ -215,16 +221,30 @@ export function OnboardingFlow({
           )
         }
       }
+    }
 
-      if (basics.length > 0) store.setSelectedBasicProducts(basics)
-      if (extras.length > 0) store.setSelectedExtraProducts(extras)
+    if (step === "product_drilldown" && initialDrilldownCategory) {
+      if (
+        basicValues.includes(initialDrilldownCategory) &&
+        !basics.includes(initialDrilldownCategory)
+      ) {
+        basics.push(initialDrilldownCategory)
+      } else if (
+        extraValues.includes(initialDrilldownCategory) &&
+        !extras.includes(initialDrilldownCategory)
+      ) {
+        extras.push(initialDrilldownCategory)
+      }
+    }
 
-      if (step === "product_drilldown" && initialDrilldownCategory) {
-        const orderedCategories = [...basics, ...extras]
-        const targetIndex = orderedCategories.indexOf(initialDrilldownCategory)
-        if (targetIndex >= 0) {
-          store.setCurrentDrilldownIndex(targetIndex)
-        }
+    if (basics.length > 0) store.setSelectedBasicProducts(basics)
+    if (extras.length > 0) store.setSelectedExtraProducts(extras)
+
+    if (step === "product_drilldown" && initialDrilldownCategory) {
+      const orderedCategories = [...basics, ...extras]
+      const targetIndex = orderedCategories.indexOf(initialDrilldownCategory)
+      if (targetIndex >= 0) {
+        store.setCurrentDrilldownIndex(targetIndex)
       }
     }
 
@@ -600,6 +620,16 @@ export function OnboardingFlow({
     }
   }, [])
 
+  const toggleBrushType = useCallback((value: string) => {
+    const { brushType, setBrushType } = useOnboardingStore.getState()
+    const selectedBrushTypes = brushType ?? []
+    if (selectedBrushTypes.includes(value as BrushType)) {
+      setBrushType(selectedBrushTypes.filter((v) => v !== value))
+    } else {
+      setBrushType([...selectedBrushTypes, value as BrushType])
+    }
+  }, [])
+
   // ── Don't render until hydrated ──
 
   if (!hydrated) {
@@ -630,11 +660,15 @@ export function OnboardingFlow({
     icon: BRUSH_TYPE_ICONS[o.value] ?? fallbackIcon,
   }))
 
-  const nightProtectionWithIcon = NIGHT_PROTECTION_OPTIONS.filter(
-    (o) => o.value !== "tight_hairstyles",
-  ).map((o) => ({
+  const nightProtectionWithIcon = NIGHT_PROTECTION_OPTIONS.map((o) => ({
     ...o,
     icon: NIGHT_PROTECTION_ICONS[o.value] ?? fallbackIcon,
+    infoTipId:
+      o.value === "silk_satin_bonnet"
+        ? ("routine.bonnet" as const)
+        : o.value === "pineapple"
+          ? ("routine.pineapple" as const)
+          : undefined,
   }))
 
   // ── Drilldown helpers ──
@@ -665,7 +699,7 @@ export function OnboardingFlow({
         return (
           <ProductChecklistScreen
             title="Deine Basis-Produkte"
-            subtitle="Welche Produkte nutzt du regelmäßig?"
+            subtitle="Was kommt aktuell in deiner Basis-Routine vor?"
             options={BASIC_PRODUCT_OPTIONS}
             selected={store.selectedBasicProducts}
             onToggle={toggleBasicProduct}
@@ -679,7 +713,7 @@ export function OnboardingFlow({
         return (
           <ProductChecklistScreen
             title="Weitere Produkte"
-            subtitle="Nutzt du auch etwas davon?"
+            subtitle="Was nutzt du außerdem regelmäßig?"
             options={EXTRA_PRODUCT_OPTIONS}
             selected={store.selectedExtraProducts}
             onToggle={toggleExtraProduct}
@@ -699,6 +733,12 @@ export function OnboardingFlow({
           <ProductDrilldownScreen
             category={currentCategory}
             categoryLabel={PRODUCT_CATEGORY_LABELS[currentCategory] ?? currentCategory}
+            categoryTitle={PRODUCT_CATEGORY_DRILLDOWN_TITLES[currentCategory]}
+            infoTipId={
+              [...BASIC_PRODUCT_OPTIONS, ...EXTRA_PRODUCT_OPTIONS].find(
+                (option) => option.value === currentCategory,
+              )?.infoTipId
+            }
             subtitle={CATEGORY_SUBTITLES[currentCategory]}
             intakeMethod={currentDrilldown.intakeMethod}
             productName={currentDrilldown.productName}
@@ -837,8 +877,10 @@ export function OnboardingFlow({
       case "towel_technique":
         return (
           <SingleSelectScreen
-            title="Wie trocknest du?"
+            title="Wie gehst du mit dem Handtuch meistens vor?"
             subtitle="Rubbeln oder sanft ausdrücken?"
+            titleInfoTipId="routine.towel_technique"
+            titleInfoLabel="Info zu sanftem Trocknen"
             options={towelTechniqueWithIcon}
             selected={store.towelTechnique}
             onSelect={(val) => {
@@ -854,6 +896,8 @@ export function OnboardingFlow({
           <SingleSelectScreen
             title="Wie trocknest du dein Haar hauptsächlich?"
             subtitle="Hitze ist der größte Stressfaktor — wir passen deinen Plan daran an."
+            titleInfoTipId="routine.diffuser"
+            titleInfoLabel="Info zu Diffusor"
             options={dryingMethodWithIcon}
             selected={store.dryingMethod}
             onSelect={(val) => {
@@ -866,16 +910,31 @@ export function OnboardingFlow({
 
       case "brush_type":
         return (
-          <SingleSelectScreen
-            title="Welche Bürste oder welchen Kamm nutzt du?"
-            subtitle="Das falsche Tool kann Haarbruch verursachen. Zeig uns, was du nutzt."
+          <MultiSelectScreen
+            title="Welche Bürsten oder Kämme nutzt du?"
+            subtitle="Mehrfachauswahl möglich. Wähle alles aus, was du regelmäßig nutzt."
             options={brushTypeWithIcon}
-            selected={store.brushType}
-            onSelect={(val) => {
-              store.setBrushType(val as BrushType)
+            selected={store.brushType ?? []}
+            onToggle={toggleBrushType}
+            onContinue={() => handleStepComplete("brush_type")}
+            onBack={handleBack}
+            continueLabel={getFinalContinueLabel(
+              "brush_type",
+              store,
+              editScope,
+              singleStepEdit,
+              returnTo,
+            )}
+            noneLabel={
+              editScope === "routine" || singleStepEdit
+                ? "Keine regelmäßige Bürste speichern"
+                : "Nichts davon"
+            }
+            onNone={() => {
+              store.setBrushType([])
               handleStepComplete("brush_type")
             }}
-            onBack={handleBack}
+            isSaving={savingStep === "brush_type"}
           />
         )
 
@@ -883,7 +942,7 @@ export function OnboardingFlow({
         return (
           <MultiSelectScreen
             title="Wie schützt du dein Haar nachts?"
-            subtitle="Nachts verliert dein Haar Feuchtigkeit. Schon kleine Änderungen helfen."
+            subtitle="Mehrfachauswahl möglich. Wähle alles aus, was du nachts nutzt."
             options={nightProtectionWithIcon}
             selected={store.nightProtection}
             onToggle={toggleNightProtection}

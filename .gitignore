@@ -107,3 +107,6 @@ test-screenshots*/
 !/data/affiliate-research/
 /data/affiliate-research/*
 !/data/affiliate-research/.gitkeep
+
+# Local operator/review artifacts
+/ops/

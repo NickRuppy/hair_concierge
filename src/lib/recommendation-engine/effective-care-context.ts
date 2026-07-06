@@ -26,6 +26,7 @@ function cloneNormalizedProfile(profile: NormalizedProfile): NormalizedProfile {
     goals: [...profile.goals],
     stylingTools: profile.stylingTools === null ? null : [...profile.stylingTools],
     chemicalTreatment: [...profile.chemicalTreatment],
+    brushType: profile.brushType === null ? null : [...profile.brushType],
     nightProtection: profile.nightProtection === null ? null : [...profile.nightProtection],
     routineInventory: {
       shampoo: cloneRoutineItem(profile.routineInventory.shampoo),

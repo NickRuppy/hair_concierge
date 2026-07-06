@@ -210,7 +210,7 @@ function deriveSuggestedOverlays(
   if (
     (hairProfile?.heat_styling && hairProfile.heat_styling !== "never") ||
     Boolean(hairProfile?.styling_tools?.length) ||
-    Boolean(hairProfile?.brush_type) ||
+    Boolean(hairProfile?.brush_type?.length) ||
     Boolean(hairProfile?.drying_method && hairProfile.drying_method !== "air_dry")
   ) {
     addOverlay("overlay:mechanical_stress")

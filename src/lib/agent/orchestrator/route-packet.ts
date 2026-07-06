@@ -340,6 +340,23 @@ function deriveActiveProfileSignalsFromMessage(message: string): AgentActiveProf
     addSignal("chemical_treatment", "bleached", "qualifier", "blondiertes Haar")
   }
 
+  if (/\b(?:dauerwelle\w*|volumenwelle\w*|perms?)\b/.test(normalized)) {
+    addSignal("chemical_treatment", "permed", "qualifier", "Dauerwelle")
+  }
+
+  const mentionsChemicalStraightening =
+    /\b(?:chemisch\w*|keratin[-\s]*|brazilian\s+blowout|relaxer\w*|japanisch\w*)\b.{0,40}\b(?:ge?glatt\w*|ge?glaett\w*|glattung\w*|glaettung\w*)\b/.test(
+      normalized,
+    ) ||
+    /\b(?:ge?glatt\w*|ge?glaett\w*|glattung\w*|glaettung\w*)\b.{0,40}\b(?:chemisch\w*|keratin[-\s]*|brazilian\s+blowout|relaxer\w*|japanisch\w*)\b/.test(
+      normalized,
+    ) ||
+    /\b(?:brazilian\s+blowout|relaxer\w*)\b/.test(normalized)
+
+  if (mentionsChemicalStraightening) {
+    addSignal("chemical_treatment", "chemically_straightened", "qualifier", "Chemisch geglättet")
+  }
+
   if (/\b(?:fohn\w*|foehn\w*|föhn\w*|blow\s*dry\w*)\b/.test(normalized)) {
     addSignal("styling_tools", "blow_dryer", "override", "foehnen")
   }
@@ -348,7 +365,10 @@ function deriveActiveProfileSignalsFromMessage(message: string): AgentActiveProf
     addSignal("styling_tools", "diffuser", "override", "Diffusor")
   }
 
-  if (/\b(?:glatt\w*|glaett\w*|glatteisen|glaetteisen|flat\s*iron)\b/.test(normalized)) {
+  const mentionsFlatIron = /\b(?:glatteisen|glaetteisen|flat\s*iron)\b/.test(normalized)
+  const mentionsGenericStraightening = /\b(?:glatt\w*|glaett\w*)\b/.test(normalized)
+
+  if (mentionsFlatIron || (!mentionsChemicalStraightening && mentionsGenericStraightening)) {
     addSignal("styling_tools", "flat_iron", "override", "glaetten")
   }
 

@@ -108,7 +108,7 @@ test.describe.serial("@ci Profile page smoke", () => {
       towel_material: "frottee",
       towel_technique: "gentle_press",
       drying_method: "air_dry",
-      brush_type: "wide_tooth_comb",
+      brush_type: ["wide_tooth_comb"],
       night_protection: [],
       goals: ["shine", "volume"],
       desired_volume: "more",
@@ -270,7 +270,7 @@ test.describe.serial("@ci Profile page smoke", () => {
       .single()
 
     if (goalsCleanupError) throw goalsCleanupError
-    expect(goalsCleanupRow?.desired_volume).toBeNull()
+    expect(goalsCleanupRow?.desired_volume).toBe("more")
 
     const { data: routineRows, error: routineRowsError } = await admin
       .from("user_product_usage")

@@ -38,6 +38,7 @@ const EMBEDDING_BATCH_SIZE = 10
 const DB_INSERT_BATCH_SIZE = 50
 const CONTEXT_CONCURRENCY = 10
 const MD_DIR = path.join(process.cwd(), "data", "markdown-cleaned")
+const LEGACY_PRODUCT_LIST_CHUNKS_FLAG = "ALLOW_LEGACY_PRODUCT_LIST_CHUNKS"
 
 // Source types that benefit from contextual prefix generation (Anthropic technique).
 // QA chunks are self-contained; product_list/product_links already have cell context.
@@ -54,7 +55,7 @@ function getSupabase() {
   if (!_supabase) {
     _supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
     )
   }
   return _supabase
@@ -94,7 +95,11 @@ interface Chunk {
 // Chunking config per source type
 const CHUNK_CONFIG: Record<
   string,
-  { size: number; overlap: number; strategy: "recursive" | "qa" | "natural" | "structured" | "community_qa" }
+  {
+    size: number
+    overlap: number
+    strategy: "recursive" | "qa" | "natural" | "structured" | "community_qa"
+  }
 > = {
   book: { size: 2000, overlap: 200, strategy: "structured" },
   transcript: { size: 1600, overlap: 200, strategy: "recursive" },
@@ -120,6 +125,17 @@ function mapSourceType(fmType: string): string {
     narrative: "narrative",
   }
   return mapping[fmType] || fmType
+}
+
+function assertProductListIngestionAllowed(sourceType: string): void {
+  if (sourceType !== "product_list" || process.env[LEGACY_PRODUCT_LIST_CHUNKS_FLAG] === "1") {
+    return
+  }
+
+  console.error(
+    `Error: product_list content chunks are retired. Set ${LEGACY_PRODUCT_LIST_CHUNKS_FLAG}=1 only for an intentional legacy rollback/regeneration run.`,
+  )
+  process.exit(1)
 }
 
 // ---------------------------------------------------------------------------
@@ -263,13 +279,11 @@ function chunkStructured(
   text: string,
   chunkSize: number,
   overlap: number,
-  frontMatter: FrontMatter
+  frontMatter: FrontMatter,
 ): string[] {
   const chapterTitle = (frontMatter.chapter_title as string) || ""
   const chapterNum = (frontMatter.chapter as string) || ""
-  const h1Prefix = chapterNum
-    ? `Kapitel ${chapterNum}: ${chapterTitle}`
-    : chapterTitle
+  const h1Prefix = chapterNum ? `Kapitel ${chapterNum}: ${chapterTitle}` : chapterTitle
 
   // Split text into sections by H2 headers
   const h2Pattern = /\n## (.+)\n/g
@@ -319,9 +333,7 @@ function chunkStructured(
   const allChunks: string[] = []
 
   for (const section of sections) {
-    const contextLine = section.heading
-      ? `${h1Prefix} > ${section.heading}`
-      : h1Prefix
+    const contextLine = section.heading ? `${h1Prefix} > ${section.heading}` : h1Prefix
 
     const sectionChunks = chunkRecursive(section.body, chunkSize, overlap)
     for (const chunk of sectionChunks) {
@@ -376,7 +388,11 @@ function chunkCommunityQA(text: string): { content: string; extraMeta: Record<st
     let extraMeta: Record<string, unknown> = {}
     const metaMatch = cleaned.match(/<!-- metadata: ({.*}) -->/)
     if (metaMatch) {
-      try { extraMeta = JSON.parse(metaMatch[1]) } catch { /* use defaults */ }
+      try {
+        extraMeta = JSON.parse(metaMatch[1])
+      } catch {
+        /* use defaults */
+      }
       content = cleaned.replace(/\n?<!-- metadata: {.*?} -->/, "").trim()
     }
 
@@ -453,7 +469,7 @@ function chunkContent(text: string, sourceType: string, frontMatter?: FrontMatte
  */
 async function addContextualPrefixes(
   chunks: Chunk[],
-  sourceDocuments: Map<string, string>
+  sourceDocuments: Map<string, string>,
 ): Promise<void> {
   let completed = 0
 
@@ -496,7 +512,9 @@ async function addContextualPrefixes(
     } catch (err) {
       // Graceful: chunk proceeds without prefix on failure
       const msg = err instanceof Error ? err.message : String(err)
-      process.stderr.write(`  Warning: context generation failed for ${chunk.sourceName}[${chunk.chunkIndex}]: ${msg}\n`)
+      process.stderr.write(
+        `  Warning: context generation failed for ${chunk.sourceName}[${chunk.chunkIndex}]: ${msg}\n`,
+      )
     }
 
     completed++
@@ -589,8 +607,11 @@ async function main() {
   const skipContext = args.includes("--skip-context")
   const sourceFilterIdx = args.indexOf("--source")
   const sourceFilter = sourceFilterIdx !== -1 ? args[sourceFilterIdx + 1] : null
+  if (sourceFilter) {
+    assertProductListIngestionAllowed(sourceFilter)
+  }
 
-  console.log("=" .repeat(60))
+  console.log("=".repeat(60))
   console.log("RAG Markdown Ingestion Pipeline")
   console.log(dryRun ? "(DRY RUN - no embedding or storage)" : "")
   if (skipContext) console.log("(SKIP CONTEXT - no contextual prefix generation)")
@@ -611,8 +632,10 @@ async function main() {
   for (const filePath of allFiles) {
     const parsed = readMarkdownFile(filePath)
     const fmSourceType = (parsed.frontMatter.source_type as string) || "unknown"
+    const dbSourceType = mapSourceType(fmSourceType)
 
-    if (sourceFilter && mapSourceType(fmSourceType) !== sourceFilter) continue
+    if (sourceFilter && dbSourceType !== sourceFilter) continue
+    assertProductListIngestionAllowed(dbSourceType)
 
     if (!filesByType[fmSourceType]) {
       filesByType[fmSourceType] = []
@@ -686,7 +709,12 @@ async function main() {
     }
 
     // Add contextual prefixes for eligible source types
-    if (!skipContext && !dryRun && CONTEXTUAL_SOURCE_TYPES.has(fmSourceType) && allChunks.length > 0) {
+    if (
+      !skipContext &&
+      !dryRun &&
+      CONTEXTUAL_SOURCE_TYPES.has(fmSourceType) &&
+      allChunks.length > 0
+    ) {
       await addContextualPrefixes(allChunks, sourceDocuments)
     }
 
@@ -716,18 +744,18 @@ async function main() {
   console.log("SUMMARY")
   console.log("=".repeat(60))
   console.log(
-    `${"Source Type".padEnd(18)} ${"Files".padStart(5)} ${"Chunks".padStart(7)} ${"Chars".padStart(9)} ${"~Tokens".padStart(9)}`
+    `${"Source Type".padEnd(18)} ${"Files".padStart(5)} ${"Chunks".padStart(7)} ${"Chars".padStart(9)} ${"~Tokens".padStart(9)}`,
   )
   console.log("-".repeat(52))
   for (const s of stats) {
     console.log(
-      `${s.type.padEnd(18)} ${String(s.files).padStart(5)} ${String(s.chunks).padStart(7)} ${String(s.chars).padStart(9)} ${String(Math.ceil(s.chars / 4)).padStart(9)}`
+      `${s.type.padEnd(18)} ${String(s.files).padStart(5)} ${String(s.chunks).padStart(7)} ${String(s.chars).padStart(9)} ${String(Math.ceil(s.chars / 4)).padStart(9)}`,
     )
   }
   console.log("-".repeat(52))
   const grandChars = stats.reduce((sum, s) => sum + s.chars, 0)
   console.log(
-    `${"TOTAL".padEnd(18)} ${String(stats.reduce((s, x) => s + x.files, 0)).padStart(5)} ${String(totalChunks).padStart(7)} ${String(grandChars).padStart(9)} ${String(Math.ceil(grandChars / 4)).padStart(9)}`
+    `${"TOTAL".padEnd(18)} ${String(stats.reduce((s, x) => s + x.files, 0)).padStart(5)} ${String(totalChunks).padStart(7)} ${String(grandChars).padStart(9)} ${String(Math.ceil(grandChars / 4)).padStart(9)}`,
   )
 
   if (dryRun) {
@@ -735,21 +763,23 @@ async function main() {
     const embeddingCost = (grandChars / 4 / 1_000_000) * 0.02
     // Estimate contextual prefix cost: ~6K input + ~150 output tokens per eligible chunk
     // Use DB-mapped types for matching
-    const contextualDbTypes = new Set(
-      [...CONTEXTUAL_SOURCE_TYPES].map((t) => mapSourceType(t))
-    )
+    const contextualDbTypes = new Set([...CONTEXTUAL_SOURCE_TYPES].map((t) => mapSourceType(t)))
     const eligibleChunks = stats
       .filter((s) => contextualDbTypes.has(s.type))
       .reduce((sum, s) => sum + s.chunks, 0)
     // gpt-4o-mini: $0.15/1M input, $0.60/1M output
-    const contextInputCost = (eligibleChunks * 1600 / 1_000_000) * 0.15
-    const contextOutputCost = (eligibleChunks * 50 / 1_000_000) * 0.60
+    const contextInputCost = ((eligibleChunks * 1600) / 1_000_000) * 0.15
+    const contextOutputCost = ((eligibleChunks * 50) / 1_000_000) * 0.6
     const contextCost = contextInputCost + contextOutputCost
     console.log(`Estimated embedding cost: ~$${embeddingCost.toFixed(4)}`)
     if (!skipContext) {
-      console.log(`Estimated context generation cost: ~$${contextCost.toFixed(4)} (${eligibleChunks} chunks)`)
+      console.log(
+        `Estimated context generation cost: ~$${contextCost.toFixed(4)} (${eligibleChunks} chunks)`,
+      )
     }
-    console.log(`Estimated total cost: ~$${(embeddingCost + (skipContext ? 0 : contextCost)).toFixed(4)}`)
+    console.log(
+      `Estimated total cost: ~$${(embeddingCost + (skipContext ? 0 : contextCost)).toFixed(4)}`,
+    )
   } else {
     console.log(`\nStored ${totalStored} chunks in Supabase content_chunks`)
   }

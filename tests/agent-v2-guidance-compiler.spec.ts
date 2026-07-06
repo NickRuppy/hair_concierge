@@ -8,6 +8,7 @@ import {
 } from "../src/lib/agent-v2/guidance/package-index"
 import { loadAgentV2GuidancePackages } from "../src/lib/agent-v2/guidance/compiler"
 import { selectGuidancePackageIds } from "../src/lib/agent-v2/tools/guidance-tool"
+import { GOALS, PROFILE_CONCERNS } from "../src/lib/vocabulary/concerns-goals"
 
 function listMarkdownSources(directory: string): string[] {
   return readdirSync(directory)
@@ -28,6 +29,7 @@ test("AgentV2 guidance index includes all required base packages", () => {
     "base.product_recommendation.v1",
     "base.routine_building.v1",
     "base.general_advice.v1",
+    "base.goal_concern_levers.v1",
     "base.safety_boundaries.v1",
     "base.tone_and_format.v1",
   ]) {
@@ -51,6 +53,13 @@ test("AgentV2 guidance index includes every active product category", () => {
     assert.ok((AGENT_V2_GUIDANCE_PACKAGE_IDS as readonly string[]).includes(id))
     assert.ok(getAgentV2GuidancePackageEntry(id))
   }
+})
+
+test("AgentV2 guidance index includes night protection topic package", () => {
+  const id = "topic.night_protection.v1"
+
+  assert.ok((AGENT_V2_GUIDANCE_PACKAGE_IDS as readonly string[]).includes(id))
+  assert.ok(getAgentV2GuidancePackageEntry(id))
 })
 
 test("AgentV2 category metadata declares grounding and ask policies", () => {
@@ -86,6 +95,46 @@ test("loadAgentV2GuidancePackages loads structured metadata plus markdown brief"
   assert.ok(result.packages[0].markdown_brief.length > 80)
   assert.ok(result.packages[0].hard_rules.every((rule) => rule.rule_id.length > 0))
   assert.ok(result.hard_rules.some((rule) => rule.rule_id === "product.no_uncatalogued_products"))
+})
+
+test("loadAgentV2GuidancePackages loads goal and concern lever guidance", async () => {
+  const result = await loadAgentV2GuidancePackages(["base.goal_concern_levers.v1"])
+  const brief = result.markdown_brief
+
+  assert.match(brief, /Goal: Mehr Volumen/)
+  assert.match(brief, /Concern: Haarausfall/)
+  assert.match(brief, /Spliss/)
+  assert.ok(result.soft_rubrics.some((rubric) => rubric.rubric_id === "goal_concern.first_lever"))
+})
+
+test("goal and concern lever guidance covers every onboarding goal and concern", async () => {
+  const result = await loadAgentV2GuidancePackages(["base.goal_concern_levers.v1"])
+  const brief = result.markdown_brief
+
+  for (const goal of GOALS) {
+    assert.match(brief, new RegExp(`## Goal: .* / \`${goal}\``), `missing goal ${goal}`)
+  }
+
+  for (const concern of PROFILE_CONCERNS) {
+    assert.match(brief, new RegExp(`## Concern: .* / \`${concern}\``), `missing concern ${concern}`)
+  }
+})
+
+test("loadAgentV2GuidancePackages loads night protection topic guidance", async () => {
+  const result = await loadAgentV2GuidancePackages(["topic.night_protection.v1"])
+  const brief = result.markdown_brief
+
+  assert.match(brief, /low-friction behavior lever/i)
+  assert.match(brief, /HairHOMIE/i)
+  assert.match(brief, /length\/tip accessory/i)
+  assert.match(brief, /night_protection: \[\]/i)
+  assert.match(brief, /null.*legacy|legacy.*null/i)
+  assert.match(brief, /breakage|split ends|hair damage|tangling|frizz/i)
+  assert.ok(
+    result.hard_rules.some(
+      (rule) => rule.rule_id === "topic.night_protection.low_friction_not_repair",
+    ),
+  )
 })
 
 test("loadAgentV2GuidancePackages rejects unknown package ids", async () => {
@@ -131,6 +180,7 @@ test("routine layer hint loads routine guidance even without an answer mode hint
   const ids = selectGuidancePackageIds({
     answer_mode_hint: null,
     categories: [],
+    topics: [],
     routine_layer: "basics",
     safety_mode: "normal",
   })
@@ -142,6 +192,7 @@ test("safety boundary answer mode hint loads safety guidance in normal safety mo
   const ids = selectGuidancePackageIds({
     answer_mode_hint: "safety_boundary",
     categories: [],
+    topics: [],
     routine_layer: null,
     safety_mode: "normal",
   })
@@ -149,11 +200,12 @@ test("safety boundary answer mode hint loads safety guidance in normal safety mo
   assert.ok(ids.includes("base.safety_boundaries.v1"))
 })
 
-test("broad general advice loads for advice, product, and routine turns", () => {
+test("broad general advice and goal-concern levers load for advice, product, and routine turns", () => {
   for (const answer_mode_hint of ["general_advice", "product_recommendation", "routine"] as const) {
     const ids = selectGuidancePackageIds({
       answer_mode_hint,
       categories: [],
+      topics: [],
       routine_layer: null,
       safety_mode: "normal",
     })
@@ -162,7 +214,24 @@ test("broad general advice loads for advice, product, and routine turns", () => 
       ids.includes("base.general_advice.v1"),
       `${answer_mode_hint} should load base.general_advice.v1`,
     )
+    assert.ok(
+      ids.includes("base.goal_concern_levers.v1"),
+      `${answer_mode_hint} should load base.goal_concern_levers.v1`,
+    )
   }
+})
+
+test("night protection topic hint loads night protection guidance", () => {
+  const ids = selectGuidancePackageIds({
+    answer_mode_hint: "general_advice",
+    categories: [],
+    topics: ["night_protection"],
+    routine_layer: null,
+    safety_mode: "normal",
+  })
+
+  assert.ok(ids.includes("base.general_advice.v1"))
+  assert.ok(ids.includes("topic.night_protection.v1"))
 })
 
 test("routine guidance keeps broad basics answers profile-linked and staged", async () => {

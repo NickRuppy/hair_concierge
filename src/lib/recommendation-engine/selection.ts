@@ -1252,7 +1252,7 @@ function buildDeepCleansingTopReasons(params: {
   const tradeoffs: string[] = []
 
   if (fit.status === "mismatch") {
-    tradeoffs.push("Kein sicherer Match für den angefragten Reset-Fokus oder Farbschutz.")
+    tradeoffs.push("Kein sicherer Match für den angefragten Reset-Fokus.")
   } else if (spec?.reset_focus === "metal_mineral_hard_water") {
     positives.push("Strukturiert für Kalk-, Mineral- oder Chlor-Kontext gepflegt.")
   } else if (spec?.reset_focus === "broad_spectrum_detox") {
@@ -1276,19 +1276,10 @@ function buildDeepCleansingTopReasons(params: {
   } else if (fit.status === "unknown") {
     tradeoffs.push("Die Tiefenreinigungs-Spezifikation ist noch nicht vollständig gepflegt.")
   } else if (fit.status === "mismatch") {
-    tradeoffs.push("Weicht beim Reset-Fokus oder bei Farbschutz-Anforderungen ab.")
-  }
-
-  if (decision.targetProfile?.colorTreatedCaution) {
-    tradeoffs.push(
-      "Bei gefärbtem oder blondiertem Haar konservativ dosieren und seltener einsetzen.",
-    )
+    tradeoffs.push("Weicht beim Reset-Fokus zu deutlich vom Bedarf ab.")
   }
   if (decision.targetProfile?.cautionFlags.includes("sensitive_or_irritated_scalp")) {
     tradeoffs.push("Nicht als Behandlung für gereizte Kopfhaut, Juckreiz oder Schuppen einordnen.")
-  }
-  if (decision.targetProfile?.colorSafeRequest && spec?.color_treated_suitability !== "suitable") {
-    tradeoffs.push("Farbschonung ist für dieses Produkt nicht strukturiert belegt.")
   }
 
   return {
@@ -1324,12 +1315,7 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
       spec as DeepCleansingShampooFitSpec | null,
     )
     const { positives, tradeoffs } = buildDeepCleansingTopReasons({ decision, fit, spec })
-    const careBalanceBonus =
-      preferGentleReset && spec?.reset_intensity === "gentle"
-        ? 40
-        : preferGentleReset && spec?.color_treated_suitability === "suitable"
-          ? 28
-          : 0
+    const careBalanceBonus = preferGentleReset && spec?.reset_intensity === "gentle" ? 40 : 0
     const score =
       toBaseScore(product) +
       fitStatusAdjustment(fit.status) +
@@ -1341,11 +1327,10 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
           : 0) +
       (spec?.reset_intensity === target.targetIntensity ? 10 : 0) +
       (spec?.scalp_type_focus === target.scalpTypeFocus ? 16 : 0) +
-      (target.colorSafeRequest && spec?.color_treated_suitability === "suitable" ? 12 : 0) +
       careBalanceBonus
     const careBalanceReason =
       careBalanceBonus > 0
-        ? "CareBalance-Hinweis: vulnerable Reset-Nutzung, daher sanfter oder farbsicherer Reset-Fit bevorzugt."
+        ? "CareBalance-Hinweis: vulnerable Reset-Nutzung, daher sanfter Reset-Fit bevorzugt."
         : null
 
     const recommendationMeta: DeepCleansingShampooRecommendationMetadata = {
@@ -1360,7 +1345,6 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
       reset_need_level: target.resetNeedLevel,
       reset_focus: spec?.reset_focus ?? target.resetFocus,
       reset_intensity: spec?.reset_intensity ?? target.targetIntensity,
-      color_treated_suitability: spec?.color_treated_suitability ?? null,
       fit_status: fit.status,
       caution_flags: target.cautionFlags,
     }
@@ -1378,9 +1362,7 @@ export function rerankDeepCleansingShampooProductsWithEngine(params: {
 
   const acceptable = scored.filter((product) => product._fitStatus !== "mismatch")
   const strictRequest =
-    target.resetFocus === "metal_mineral_hard_water" ||
-    target.resetFocus === "broad_spectrum_detox" ||
-    target.colorSafeRequest
+    target.resetFocus === "metal_mineral_hard_water" || target.resetFocus === "broad_spectrum_detox"
 
   if (acceptable.length > 0) {
     return stripScore(

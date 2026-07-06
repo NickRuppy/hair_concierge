@@ -5,7 +5,11 @@ import { useQuizStore } from "@/lib/quiz/store"
 import { QuizOptionCard } from "./quiz-option-card"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { ArrowLeft } from "lucide-react"
-import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
+import {
+  getQuizQuestionNumber,
+  getRemainingQuizQuestions,
+  QUIZ_TOTAL_QUESTIONS,
+} from "@/lib/quiz/questions"
 
 type Phase = "type" | "gate" | "condition"
 
@@ -166,6 +170,8 @@ export function QuizScalpQuestion() {
   }, [phase, goBack, setAnswer])
 
   const pastTypePhase = phase !== "type"
+  const questionNumber = getQuizQuestionNumber(6) ?? 8
+  const remainingQuestions = getRemainingQuizQuestions(6) ?? 0
 
   return (
     <div className="flex flex-col" key="scalp-question">
@@ -173,15 +179,16 @@ export function QuizScalpQuestion() {
       <div className="flex items-center gap-3 mb-4">
         <button
           onClick={handleBack}
+          aria-label="Zurück"
           className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div className="flex-1">
-          <QuizProgressBar current={8} total={QUIZ_TOTAL_QUESTIONS} />
+          <QuizProgressBar current={questionNumber} total={QUIZ_TOTAL_QUESTIONS} />
         </div>
         <span className="text-sm text-[var(--text-caption)] tabular-nums">
-          8/{QUIZ_TOTAL_QUESTIONS}
+          {questionNumber}/{QUIZ_TOTAL_QUESTIONS}
         </span>
       </div>
 
@@ -292,7 +299,9 @@ export function QuizScalpQuestion() {
       </div>
 
       {/* Motivation text — always anchored at bottom */}
-      <p className="mt-3 text-center text-sm text-[var(--text-caption)]">Gut — noch 2 Fragen.</p>
+      <p className="mt-3 text-center text-sm text-[var(--text-caption)]">
+        Gut — noch {remainingQuestions} Fragen.
+      </p>
     </div>
   )
 }

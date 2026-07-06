@@ -178,7 +178,7 @@ export interface HairProfile {
   towel_material: TowelMaterial | null
   towel_technique: TowelTechnique | null
   drying_method: DryingMethod | null
-  brush_type: BrushType | null
+  brush_type: BrushType[] | null
   night_protection: NightProtection[] | null
   uses_heat_protection: boolean
   additional_notes: string | null
@@ -251,6 +251,8 @@ export interface Product {
   short_description: string | null
 
   category: string | null
+  product_line_id?: string | null
+  product_line_name?: string | null
   affiliate_link: string | null
   purchase_link_status?: "available" | "unavailable" | null
   purchase_link_checked_at?: string | null
@@ -568,7 +570,6 @@ export interface DeepCleansingShampooRecommendationMetadata extends BaseRecommen
   reset_need_level: ResetLevel
   reset_focus?: ResetFocus | null
   reset_intensity?: ResetIntensity | null
-  color_treated_suitability?: ProductDeepCleansingShampooSpecs["color_treated_suitability"] | null
   fit_status?: "ideal" | "supportive" | "mismatch" | "unknown" | "not_applicable"
   caution_flags?: string[]
 }
@@ -688,6 +689,7 @@ export type RoutineTopicId =
   | "bond_builder"
   | "brush_tools"
   | "lockenrefresh"
+  | "night_protection"
   | "cwc"
   | "owc"
 

@@ -21,6 +21,7 @@ export interface AgentV2SelectProductsProjection {
     rank: number
     name: string
     brand: string | null
+    product_line_name?: string | null
     price_eur: number | null
     currency: string | null
     fit_reason: string
@@ -60,6 +61,7 @@ export function projectSelectProductsForAgentV2(
       rank: product.rank,
       name: product.name,
       brand: product.brand,
+      product_line_name: product.product_line_name ?? null,
       price_eur: product.price_eur,
       currency: product.currency,
       fit_reason: product.fit_reason,

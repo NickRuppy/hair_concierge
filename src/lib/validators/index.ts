@@ -52,6 +52,15 @@ import {
   RESET_INTENSITIES,
 } from "@/lib/recommendation-engine/contracts"
 
+const brushTypeSchema = z
+  .union([
+    z.array(z.enum(BRUSH_TYPES)).transform((values) => [...new Set(values)]),
+    z.enum(BRUSH_TYPES).transform((value) => [value]),
+    z.literal("none_regular").transform(() => []),
+  ])
+  .nullable()
+  .default(null)
+
 export const hairProfileFullSchema = z.object({
   hair_texture: z.enum(HAIR_TEXTURES).nullable(),
   thickness: z.enum(HAIR_THICKNESSES).nullable(),
@@ -67,7 +76,7 @@ export const hairProfileFullSchema = z.object({
   towel_material: z.enum(TOWEL_MATERIALS).nullable().default(null),
   towel_technique: z.enum(TOWEL_TECHNIQUES).nullable().default(null),
   drying_method: z.enum(DRYING_METHODS).nullable().default(null),
-  brush_type: z.enum(BRUSH_TYPES).nullable().default(null),
+  brush_type: brushTypeSchema,
   night_protection: z.array(z.enum(NIGHT_PROTECTIONS)).nullable().default(null),
   uses_heat_protection: z.boolean().default(false),
   additional_notes: z.string().nullable().default(null),

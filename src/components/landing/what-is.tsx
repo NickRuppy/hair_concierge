@@ -31,8 +31,8 @@ const valueBlocks: ValueBlock[] = [
   },
   {
     paths: <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />,
-    title: "Friseurmeisterlich beraten",
-    body: "Friseurmeister Tom Hannemann begleitet das Team beratend. Keine Heilsversprechen, nur ehrliche Empfehlungen.",
+    title: "Ehrlich statt pauschal",
+    body: "Chaarlie trennt Haarprofil, Kopfhaut und Routine sauber voneinander. Keine Heilsversprechen, nur nachvollziehbare Empfehlungen.",
   },
 ]
 

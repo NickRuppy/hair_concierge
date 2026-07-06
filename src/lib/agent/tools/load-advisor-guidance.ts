@@ -27,6 +27,7 @@ export const ADVISOR_GUIDANCE_CATEGORIES = [
   "peeling",
   "cwc_owc",
   "general_haircare",
+  "night_protection",
 ] as const
 
 export type AdvisorGuidanceCategory = (typeof ADVISOR_GUIDANCE_CATEGORIES)[number]
@@ -95,6 +96,7 @@ const CATEGORY_GUIDANCE_ID: Record<AdvisorGuidanceCategory, GuidanceId> = {
   peeling: "topic:peeling",
   cwc_owc: "topic:cwc_owc",
   general_haircare: "topic:general_haircare",
+  night_protection: "topic:night_protection",
 }
 
 const INTENT_PLAYBOOK_ID: Record<AdvisorGuidanceIntent, GuidanceId | null> = {
@@ -459,7 +461,7 @@ function hasMechanicalStress(userContext: UserContextProjection): boolean {
   return (
     hasActiveHeatStyling(profile) ||
     Boolean(profile?.styling_tools?.length) ||
-    Boolean(profile?.brush_type) ||
+    Boolean(profile?.brush_type?.length) ||
     Boolean(profile?.drying_method && profile.drying_method !== "air_dry") ||
     hasDerivedSignal(userContext, "mechanical") ||
     hasDerivedSignal(userContext, "friction") ||

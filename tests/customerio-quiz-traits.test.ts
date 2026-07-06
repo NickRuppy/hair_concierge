@@ -22,7 +22,7 @@ test("builds rich Customer.io quiz traits with labels when consent is true", () 
       scalp_condition: "gereizt",
       concerns: ["dryness", "frizz"],
       concerns_other_text: "please do not send me",
-      treatment: ["blondiert"],
+      treatment: ["gefaerbt", "blondiert", "dauerwelle", "chemisch_geglaettet"],
       goals: ["moisture", "shine"],
     },
   })
@@ -51,8 +51,18 @@ test("builds rich Customer.io quiz traits with labels when consent is true", () 
   assert.equal(sync.identifyTraits.scalp_condition_label, "Gereizte Kopfhaut")
   assert.deepEqual(sync.identifyTraits.concerns, ["dryness", "frizz"])
   assert.deepEqual(sync.identifyTraits.concern_labels, ["Trockenheit", "Frizz"])
-  assert.deepEqual(sync.identifyTraits.chemical_treatment, ["blondiert"])
-  assert.deepEqual(sync.identifyTraits.chemical_treatment_labels, ["Blondiert"])
+  assert.deepEqual(sync.identifyTraits.chemical_treatment, [
+    "gefaerbt",
+    "blondiert",
+    "dauerwelle",
+    "chemisch_geglaettet",
+  ])
+  assert.deepEqual(sync.identifyTraits.chemical_treatment_labels, [
+    "Gefärbt / getönt",
+    "Blondiert / aufgehellt",
+    "Dauerwelle",
+    "Chemisch geglättet",
+  ])
   assert.deepEqual(sync.identifyTraits.goals, ["moisture", "shine"])
   assert.deepEqual(sync.identifyTraits.goal_labels, ["Mehr Feuchtigkeit", "Mehr Glanz"])
   assert.equal("concerns_other_text" in sync.identifyTraits, false)

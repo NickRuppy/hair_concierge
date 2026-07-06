@@ -164,7 +164,7 @@ async function seedLocalDevProfile(
       towel_material: "mikrofaser",
       towel_technique: "gentle_press",
       drying_method: "air_dry",
-      brush_type: null,
+      brush_type: ["wide_tooth_comb"],
       night_protection: [],
       uses_heat_protection: false,
     },

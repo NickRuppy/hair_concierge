@@ -70,7 +70,6 @@ export const BRUSH_TYPES = [
   "round",
   "boar_bristle",
   "fingers",
-  "none_regular",
 ] as const
 export type BrushType = (typeof BRUSH_TYPES)[number]
 
@@ -81,7 +80,6 @@ export const BRUSH_TYPE_LABELS = {
   round: "Rundbürste",
   boar_bristle: "Wildschweinborsten-Bürste",
   fingers: "Nur Finger",
-  none_regular: "Keine regelmäßige Bürste",
 } as const satisfies Record<BrushType, string>
 
 export const BRUSH_TYPE_OPTIONS = BRUSH_TYPES.map((value) => ({
@@ -95,16 +93,16 @@ export const NIGHT_PROTECTIONS = [
   "silk_satin_bonnet",
   "loose_tied",
   "pineapple",
-  "tight_hairstyles",
+  "length_tip_accessory",
 ] as const
 export type NightProtection = (typeof NIGHT_PROTECTIONS)[number]
 
 export const NIGHT_PROTECTION_LABELS = {
   silk_satin_pillow: "Seidenkissenbezug",
-  silk_satin_bonnet: "Seidenhaube / Bonnet",
+  silk_satin_bonnet: "Bonnet / Schlafhaube",
   loose_tied: "Locker zusammengebunden",
-  pineapple: "Pineapple (hoher lockerer Dutt)",
-  tight_hairstyles: "Enge Frisuren (Zöpfe, straffe Dutts)",
+  pineapple: "Pineapple",
+  length_tip_accessory: "Längen-/Spitzenschutz (z. B. HairHOMIE)",
 } as const satisfies Record<NightProtection, string>
 
 const NIGHT_PROTECTION_CANONICAL_VALUES = new Set<string>(NIGHT_PROTECTIONS)

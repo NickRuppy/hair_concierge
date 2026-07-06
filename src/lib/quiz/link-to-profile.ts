@@ -67,6 +67,8 @@ export function buildProfileDataFromQuizAnswers(answers: QuizAnswers): Record<st
     natur: "natural",
     gefaerbt: "colored",
     blondiert: "bleached",
+    dauerwelle: "permed",
+    chemisch_geglaettet: "chemically_straightened",
   }
   if (answers.treatment) {
     profileData.chemical_treatment = answers.treatment.map((t: string) => TREATMENT_MAP[t] ?? t)

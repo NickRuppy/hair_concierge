@@ -67,9 +67,10 @@ test("compact product card renders identity, price, whitelisted facts, and a qui
 
   assert.match(html, /Wella Ultimate Repair Leave-In/)
   assert.match(html, /Wella/)
+  assert.match(html, /Leave-in/)
   assert.match(html, /Lotion/)
   assert.match(html, /Hitzeschutz/)
-  assert.match(html, /Pflege: ausgewogen/)
+  assert.doesNotMatch(html, /Pflege:/)
   assert.match(html, /lucide-sparkles/)
   assert.doesNotMatch(html, /lucide-shower-head/)
 
@@ -81,6 +82,79 @@ test("compact product card renders identity, price, whitelisted facts, and a qui
 
   assert.match(html, /Produktdetails öffnen/)
   assert.match(html, /lucide-chevron-right[\s\S]*aria-hidden="true"/)
+})
+
+test("compact product card surfaces the product category as the first fact chip", () => {
+  const product = {
+    ...createWellaLikeLeaveIn(),
+    name: "Ultimate Repair",
+    category: "Leave-in",
+  }
+
+  const html = renderToStaticMarkup(<ProductCard product={product} onClick={() => {}} />)
+
+  const categoryIndex = html.indexOf(">Leave-in<")
+  const formatIndex = html.indexOf(">Lotion<")
+
+  assert.notEqual(categoryIndex, -1)
+  assert.notEqual(formatIndex, -1)
+  assert.ok(categoryIndex < formatIndex)
+  assert.match(html, /Hitzeschutz/)
+  assert.doesNotMatch(html, /Mittel/)
+  assert.doesNotMatch(html, /Pflege:/)
+})
+
+test("compact product card uses product image when available", () => {
+  const product = createWellaLikeLeaveIn()
+  product.image_url = "https://example.com/wella-leave-in.webp"
+
+  const html = renderToStaticMarkup(<ProductCard product={product} onClick={() => {}} />)
+
+  assert.match(html, /wella-leave-in\.webp/)
+  assert.doesNotMatch(html, /lucide-sparkles/)
+})
+
+test("compact product card renders product line as identity metadata", () => {
+  const product = {
+    ...createWellaLikeLeaveIn(),
+    name: "Leave-In Moisturizing Mist",
+    brand: "Neqi",
+    product_line_name: "NEQI x @_the.beautiful.people",
+  } as Product
+
+  const html = renderToStaticMarkup(<ProductCard product={product} onClick={() => {}} />)
+
+  assert.match(html, /Neqi/)
+  assert.match(html, /NEQI x @_the\.beautiful\.people/)
+  assert.ok(
+    html.indexOf("Neqi · NEQI x @_the.beautiful.people") <
+      html.indexOf("Leave-In Moisturizing Mist"),
+  )
+  assert.match(
+    html,
+    /text-\[11px\][^"]*text-\[var\(--text-caption\)\][^>]*>Neqi · NEQI x @_the\.beautiful\.people/,
+  )
+  assert.match(
+    html,
+    /text-\[13px\][^"]*font-semibold[^"]*text-\[var\(--text-heading\)\][^>]*>Leave-In Moisturizing Mist/,
+  )
+})
+
+test("compact product card does not duplicate line names embedded in brand", () => {
+  const product = {
+    ...createWellaLikeLeaveIn(),
+    name: "Haarmaske Aktivkohle",
+    brand: "Garnier Wahre Schätze",
+    product_line_name: "Wahre Schätze",
+    category: "Maske",
+    recommendation_meta: null,
+    leave_in_specs: null,
+  } as Product
+
+  const html = renderToStaticMarkup(<ProductCard product={product} onClick={() => {}} />)
+
+  assert.match(html, /Garnier · Wahre Schätze/)
+  assert.doesNotMatch(html, /Garnier Wahre Schätze · Wahre Schätze/)
 })
 
 test("compact product card does not surface unmapped raw category values", () => {

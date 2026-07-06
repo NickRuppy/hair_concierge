@@ -36,7 +36,7 @@ const items: FaqItem[] = [
   {
     question: "Wer steht hinter Chaarlie?",
     answer:
-      "Chaarlie ist ein Produkt der Haarmony LLC (Delaware, USA). Friseurmeister Tom Hannemann begleitet das Team beratend. Wir verkaufen keine eigenen Produkte und sind keinem Hersteller verpflichtet.",
+      "Chaarlie ist ein Produkt der Haarmony LLC (Delaware, USA). Wir verkaufen keine eigenen Produkte und sind keinem Hersteller verpflichtet.",
   },
   {
     question: "Was passiert mit meinen Daten?",

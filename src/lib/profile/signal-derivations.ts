@@ -3,10 +3,10 @@ import type {
   BrushType,
   DryingMethod,
   HeatStyling,
-  NightProtection,
   StylingTool,
   TowelTechnique,
 } from "@/lib/vocabulary"
+import { hasMechanicalStressBrush } from "@/lib/profile/brush-type"
 
 export function hasAnsweredArrayValues<T>(value: readonly T[] | null | undefined): boolean {
   return Array.isArray(value) && value.length > 0
@@ -18,31 +18,9 @@ export function isExplicitNoneArray<T>(value: readonly T[] | null | undefined): 
 
 export function hasDirectMechanicalStressSignals(
   towelTechnique: TowelTechnique | null | undefined,
-  brushType: BrushType | null | undefined,
-  nightProtection: readonly NightProtection[] | null | undefined,
+  brushTypes: readonly BrushType[] | null | undefined,
 ): boolean {
-  return (
-    towelTechnique === "rough_rubbing" ||
-    brushType === "paddle" ||
-    brushType === "round" ||
-    (nightProtection?.includes("tight_hairstyles") ?? false)
-  )
-}
-
-export function deriveMechanicalStressLevelFromBehaviors(
-  towelTechnique: TowelTechnique | null | undefined,
-  brushType: BrushType | null | undefined,
-  nightProtection: readonly NightProtection[] | null | undefined,
-): "low" | "medium" | "high" {
-  let count = 0
-
-  if (towelTechnique === "rough_rubbing") count += 1
-  if (brushType === "paddle" || brushType === "round") count += 1
-  if (nightProtection?.includes("tight_hairstyles")) count += 1
-
-  if (count === 0) return "low"
-  if (count === 1) return "medium"
-  return "high"
+  return towelTechnique === "rough_rubbing" || hasMechanicalStressBrush(brushTypes)
 }
 
 export function deriveLeaveInStylingContextFromStages(

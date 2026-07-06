@@ -85,6 +85,24 @@ test("quiz schema does not use colored as a concern code", () => {
   )
 })
 
+test("quiz schema accepts multiple non-natural chemical treatment values", () => {
+  const parsed = quizAnswersSchema.parse({
+    ...createBaseAnswers(),
+    treatment: ["dauerwelle", "chemisch_geglaettet"],
+  })
+
+  assert.deepEqual(parsed.treatment, ["dauerwelle", "chemisch_geglaettet"])
+})
+
+test("quiz schema rejects natur combined with a chemical shape treatment", () => {
+  assert.throws(() =>
+    quizAnswersSchema.parse({
+      ...createBaseAnswers(),
+      treatment: ["natur", "chemisch_geglaettet"],
+    }),
+  )
+})
+
 test("quiz schema rejects free-text notes above 50 characters", () => {
   const parsed = quizAnswersSchema.safeParse({
     ...createBaseAnswers(),

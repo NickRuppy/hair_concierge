@@ -197,6 +197,54 @@ test("explicit low-need leave-in requests build a request-scoped target", () => 
   assert.ok(categories.leaveIn.planReasonCodes.includes("explicit_leave_in_request"))
 })
 
+test("straight natural texture with perm and definition goal routes leave-in to curl definition", () => {
+  const { normalized, damage, careNeeds, plan } = buildEngineState({
+    ...LOW_DAMAGE_PROFILE,
+    hair_texture: "straight",
+    chemical_treatment: ["permed"],
+    goals: ["curl_definition"],
+  })
+  const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
+
+  assert.equal(careNeeds.definitionSupportNeed, "moderate")
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.targetProfile?.needBucket, "curl_definition")
+  assert.equal(decision.targetProfile?.stylingPrepNeed, "definition")
+  assert.ok(decision.targetProfile?.careBenefits.includes("curl_definition"))
+})
+
+test("chemical straightening does not unlock curl-definition leave-in routing", () => {
+  const { normalized, damage, careNeeds, plan } = buildEngineState({
+    ...LOW_DAMAGE_PROFILE,
+    hair_texture: "straight",
+    chemical_treatment: ["chemically_straightened"],
+    goals: ["curl_definition"],
+  })
+  const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
+
+  assert.equal(careNeeds.definitionSupportNeed, "none")
+  assert.notEqual(decision.targetProfile?.needBucket, "curl_definition")
+  assert.notEqual(decision.targetProfile?.stylingPrepNeed, "definition")
+})
+
+test("perm maintenance can route leave-in to gentle support without curl definition", () => {
+  const { normalized, damage, careNeeds, plan } = buildEngineState({
+    ...LOW_DAMAGE_PROFILE,
+    hair_texture: "straight",
+    chemical_treatment: ["permed"],
+    goals: [],
+  })
+  const decision = buildLeaveInCategoryDecision(normalized, damage, careNeeds, plan)
+
+  assert.equal(careNeeds.definitionSupportNeed, "none")
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.targetProfile?.needBucket, "detangle_smooth")
+  assert.notEqual(decision.targetProfile?.needBucket, "curl_definition")
+  assert.notEqual(decision.targetProfile?.stylingPrepNeed, "definition")
+  assert.ok(decision.targetProfile?.careBenefits.includes("detangle_smooth"))
+  assert.ok(!decision.targetProfile?.careBenefits.includes("curl_definition"))
+})
+
 test("explicit leave-in heat requests build a high heat target even when routine plan is quiet", () => {
   const heatProfile = {
     ...LOW_DAMAGE_PROFILE,
@@ -1109,8 +1157,6 @@ test("category set activates support/reset categories for oily buildup-heavy rou
     resetNeedLevel: "likely",
     resetFocus: "product_sebum_buildup",
     targetIntensity: "medium",
-    colorTreatedCaution: false,
-    colorSafeRequest: false,
     cautionFlags: [],
   })
 
@@ -1232,6 +1278,36 @@ test("explicit low-need bondbuilder request stays optional instead of disappeari
   assert.ok(
     categories.bondbuilder.planReasonCodes.includes("bondbuilder_explicit_optional_low_need"),
   )
+})
+
+test("permed hair alone does not hard-route to bondbuilder", () => {
+  const { normalized, damage, careNeeds, plan } = buildEngineState({
+    ...LOW_DAMAGE_PROFILE,
+    chemical_treatment: ["permed"],
+  })
+  const categories = buildCategoryRecommendationSet(
+    normalized,
+    damage,
+    careNeeds,
+    plan,
+    emptyRecommendationRequestContext(),
+  )
+
+  assert.equal(damage.bondBuilderPriority, "none")
+  assert.equal(categories.bondbuilder.relevant, false)
+})
+
+test("chemical straightening with roughness supports bondbuilder consideration", () => {
+  const { normalized, damage, plan } = buildEngineState({
+    ...LOW_DAMAGE_PROFILE,
+    chemical_treatment: ["chemically_straightened"],
+    cuticle_condition: "rough",
+  })
+  const decision = buildBondbuilderCategoryDecision(normalized, damage, plan)
+
+  assert.equal(decision.relevant, true)
+  assert.equal(decision.targetProfile?.chemicalCrosslinkLane, true)
+  assert.ok(decision.planReasonCodes.includes("bondbuilder_chemical_crosslink_lane"))
 })
 
 test("peeling fit rejects physical scrub when the target route is dryness-safe", () => {
